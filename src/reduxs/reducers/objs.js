@@ -11,6 +11,5 @@ module.exports = function (state = {}, action = {}) {
   if (action.type === actions.SET_OBJS) {
     return _.assign({}, state, _.zipObject([action.key], [action.value]))
   }
-
   return state
 }
