@@ -1,0 +1,79 @@
+:global {
+  html,
+  body {
+    color: #333;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  a {
+    display: flex;
+    text-decoration: none !important;
+  }
+  a:link {
+    text-decoration: none !important;
+  }
+  a:visited {
+    text-decoration: none !important;
+  }
+  a:active {
+    text-decoration: none !important;
+  }
+  a {
+    color: #fff;
+  }
+  .clearfix:after {
+    content: '020';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+
+  .clearfix {
+    /* 触发 hasLayout */
+    zoom: 1;
+  }
+  .step_sx {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 127px;
+    margin: 10px auto 70px;
+  }
+  .warn_desc {
+    color: #666;
+    font-size: 24px;
+    margin-bottom: 11px;
+    i {
+      width: 10px;
+      height: 10px;
+      margin-bottom: 2px;
+      display: inline-block;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      margin-right: 10px;
+    }
+  }
+  html:not([data-scale]) .am-list-body:before {
+    background-color: transparent !important;
+  }
+
+  .am-list-item.am-input-item {
+    padding-left: 0 !important;
+  }
+  .btn-primary {
+    background-color: #4ca6ff !important;
+    border-radius: 4px !important;
+  }
+  .am-list-item {
+    padding-left: 0 !important;
+  }
+  .am-list-item .am-list-line {
+    padding-right: 0 !important;
+  }
+  .navBar {
+    margin-bottom: 50px;
+    width: 100%;
+  }
+}

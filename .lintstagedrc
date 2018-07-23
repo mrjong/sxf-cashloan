@@ -1,0 +1,7 @@
+
+{
+  "*.{js}": ["prettier --write --fix","git add","eslint --fix"],
+  "*.{less,scss}": ["prettier --write","git add","stylelint"],
+  "*.less": "stylelint --syntax=less",
+  "*.scss": "stylelint --syntax=scss --fix"
+}
