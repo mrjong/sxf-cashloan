@@ -11,7 +11,7 @@ export default class ButtonCustom extends React.PureComponent {
   static propTypes = {
     className: PropTypes.string,
     active: PropTypes.bool,
-    children: PropTypes.string,
+    children: PropTypes.node,
     onClick: PropTypes.func,
   };
 
