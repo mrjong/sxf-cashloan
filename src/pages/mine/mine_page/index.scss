@@ -1,0 +1,30 @@
+.mineContainer {
+  .userInf {
+    line-height: 100px;
+    background: #ffd958;
+    padding: 50px 40px;
+    display: flex;
+    align-items: center;
+    img {
+      width: 100px;
+      height: 100px;
+      margin-right: 31px;
+    }
+    span {
+      font-size: 36px;
+      color: #fff;
+    }
+  }
+  .commonMargin {
+    margin-top: 24px;
+  }
+  .logout {
+    height: 100px;
+    background: #fff;
+    line-height: 100px;
+    font-size: 30px;
+    color: rgba(51, 51, 51, 1);
+    text-align: center;
+    margin-top: 42px;
+  }
+}
