@@ -7,8 +7,7 @@ import Footer from 'components/footer';
 import { setBackGround } from 'utils/Background.js'
 import style from './style.scss';
 
-@setBackGround('#f5f5f5')
-export default class Login extends parentComponent {
+export default class Zhang extends parentComponent {
   constructor(props) {
     super(props);
 
@@ -20,12 +19,13 @@ export default class Login extends parentComponent {
 
   render() {
     return (
-      <div>
-          <ZButton onClick={this.handleButtonClick} >确定</ZButton>
-          <Panel title="借款信息">内容。。。。。</Panel>
-          <Panel title="借款信息">内容。。。。。</Panel>
-          <Panel title="借款信息">内容。。。。。</Panel>
-          <Footer {...this.props}> </Footer>
+      <div className={style.zhang_wrap}>
+        <ZButton onClick={this.handleButtonClick} >确定</ZButton>
+        <Panel title="借款信息">内容。。。。。</Panel>
+        <Panel title="借款信息">内容。。。。。</Panel>
+        <Panel title="借款信息">内容。。。。。</Panel>
+        <div style={{height: '1000px'}}>ff  </div>
+        <Footer>  </Footer>
       </div>
     )
   }

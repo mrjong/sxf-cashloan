@@ -6,8 +6,8 @@ import propTypes from 'prop-types';
 import ReactLoading from 'components/loading';
 import fetchInit from 'utils/FetchInit';
 import Header from 'components/header';
-
-import styles from './style.scss';
+import Footer from 'components/footer';
+import store from 'reduxs/store';
 
 window.isOk = false;
 
@@ -47,15 +47,13 @@ export default class Application extends React.Component {
 
   render() {
     let {showLoading} = this.state;
+    const { titleHeaderObj } = store.getState().objs;
+    const footerHide = titleHeaderObj ? titleHeaderObj.footerHide : true;
     return (
-      <div style={{paddingBottom: '1rem'}}>
-        {
-          <div>
-            <Header title={this.props.titleHeader}/>
-            {this.props.children}
-            {showLoading === 'true' && <ReactLoading/>}
-          </div>
-        }
+      <div className="application_wrap" style={{paddingBottom: footerHide ? 'unset' : '1rem'}}>
+        <Header title={this.props.titleHeader}/>
+        {this.props.children}
+        {showLoading === 'true' && <ReactLoading/>}
       </div>
     );
   }
