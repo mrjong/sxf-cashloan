@@ -1,0 +1,33 @@
+$color-bg-default: #fff; // 默认背景颜色
+$color-border-line-left: #ebde74; // 标题竖线背景颜色
+$color-border-line: #e5e5e5; // 标题横线颜色
+
+$color-text-default: #333; // 默认文字颜色
+$font-size-default: 0.36rem;
+
+$height-default: 0.9rem; // 默认高度
+$border-radius: 1rem; // 默认圆角
+
+.panel_wrap {
+  background-color: $color-bg-default;
+  .panle_title {
+    position: relative;
+    padding: 0.3rem;
+    text-indent: 0.3rem;
+    font-size: 0.36rem;
+    color: #333;
+    border-bottom: 1px solid $color-border-line;
+  }
+  .panle_title:before {
+    content: '';
+    position: absolute;
+    left: 0.3rem;
+    top: 0.32rem;
+    bottom: 0.32rem;
+    width: 0.08rem;
+    background-color: $color-border-line-left;
+  }
+}
+.panel_wrap + .panel_wrap {
+  margin-top: 0.24rem;
+}
