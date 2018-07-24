@@ -12,10 +12,10 @@ export default class Lists extends React.Component {
   }
 
   render() {
-    const { listsInf } = this.props;
+    const { listsInf, className } = this.props;
     const Item = List.Item;
     return (
-      <div className={styles.listsContainer}>
+      <div className={`${styles.listsContainer} ${className}`}>
         <List
         >
           {
@@ -25,7 +25,7 @@ export default class Lists extends React.Component {
                   className={item.label.icon ? styles.hasIcon : null}
                   arrow={item.arrowHide ? '' : 'horizontal'}
                   onClick={item.clickCb}
-                  extra={<span style={{ color: item.extra.color }}>{item.extra.name}</span>}
+                  extra={<span style={{ color: item.extra && item.extra.color }}>{item.extra && item.extra.name}</span>}
                   thumb={item.label.icon}
                   key={index} 
                 >
