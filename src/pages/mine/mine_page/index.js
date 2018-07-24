@@ -1,11 +1,9 @@
-import React from 'react';
-import parentComponent from 'pages/common/parentComponent';
-import Footer from 'components/footer';
+import React, { PureComponent } from 'react';
 import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/lists';
 import styles from './index.scss';
 
-export default class MinePage extends parentComponent {
+export default class MinePage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -76,8 +74,7 @@ export default class MinePage extends parentComponent {
         <Lists listsInf={listsArr} className={styles.commonMargin} />
         <Lists listsInf={listsArr2} className={styles.commonMargin} />
         <Lists listsInf={listsArr3} className={styles.commonMargin} />
-        <div onClick = {this.logout} className={styles.logout}>退出登录</div>
-        <Footer />
+        <div onClick={this.logout} className={styles.logout}>退出登录</div>
       </div>
     )
   }

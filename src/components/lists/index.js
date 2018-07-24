@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { List } from 'antd-mobile';
 import styles from './lists.scss';
 
-export default class Lists extends React.Component {
+export default class Lists extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -19,7 +19,7 @@ export default class Lists extends React.Component {
         <List
         >
           {
-            listsInf.map((item,index) => {
+            listsInf.map((item, index) => {
               return (
                 <Item
                   className={item.label.icon ? styles.hasIcon : null}
@@ -27,7 +27,7 @@ export default class Lists extends React.Component {
                   onClick={item.clickCb}
                   extra={<span style={{ color: item.extra && item.extra.color }}>{item.extra && item.extra.name}</span>}
                   thumb={item.label.icon}
-                  key={index} 
+                  key={index}
                 >
                   {item.label.name}
                 </Item>

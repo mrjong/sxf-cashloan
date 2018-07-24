@@ -1,10 +1,9 @@
-import React from 'react';
-import parentComponent from 'pages/common/parentComponent';
+import React, { PureComponent } from 'react';
 import Lists from 'components/lists';
 import ButtonCustom from 'components/button';
 import styles from './index.scss';
 
-export default class BindCreditPage extends parentComponent {
+export default class BindCreditPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

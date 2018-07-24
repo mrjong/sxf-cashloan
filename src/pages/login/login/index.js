@@ -1,14 +1,12 @@
-import React from 'react';
-import parentComponent from 'pages/common/parentComponent';
+import React, { PureComponent } from 'react';
 
-export default class Login extends parentComponent {
+export default class Login extends PureComponent {
   constructor(props) {
     super(props);
-
   }
 
   ccc() {
-    this.props.history.push('/login/home')
+    this.props.history.push('/home/home')
   }
 
   render() {

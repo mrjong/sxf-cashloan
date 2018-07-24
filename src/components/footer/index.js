@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import store from 'reduxs/store';
 import sng1 from 'assets/images/footer/home.png';
 import sng2 from 'assets/images/footer/home-not.png';
 import sng3 from 'assets/images/footer/mine.png';
@@ -45,7 +44,7 @@ function TabBarList(props) {
   return tabBarBottom;
 }
 
-export default class Footer extends React.Component {
+export default class Footer extends PureComponent {
   static propTypes = {
     data: PropTypes.array,
   };
@@ -80,9 +79,7 @@ export default class Footer extends React.Component {
   };
 
   render() {
-    let { data } = this.props;
-    const { titleHeaderObj } = store.getState().objs;
-    const footerHide = titleHeaderObj ? titleHeaderObj.footerHide : true;
+    let { data, footerHide } = this.props;
 
     return footerHide ? null : <div className={styles.footer}>{<TabBarList tabList={data} />}</div>;
   }

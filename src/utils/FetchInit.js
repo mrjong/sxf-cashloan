@@ -3,7 +3,7 @@ import {Toast} from 'antd-mobile'
 
 const fetchinit = (init) => {
   fetch.axiosInstance.interceptors.request.use(cfg => {
-    init.setState({'showLoading': "true"})
+    // Toast.loading()
 
     return cfg;
   }, error => {

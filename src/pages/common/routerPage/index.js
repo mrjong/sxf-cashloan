@@ -1,24 +1,68 @@
-/*eslint-disable*/
-import React from 'react';
-import Loadable from 'react-loadable';
-
-import Routes from '../../router';
-// import Loadings from './component/loading'
-// import ErrorPages from './component/ErrorPage'
-
-const Loading = ({error, pastDelay}) => {
-  if (pastDelay) {
-    return <div>loading</div>;
-  } else if (error) {
-    return <div>err</div>;
+import React, { PureComponent } from 'react';
+import Routers from 'pages/router';
+import errPage from 'pages/common/err_page';
+import Header from 'components/header';
+import Footer from 'components/footer';
+export default class router_Page extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
-  return null;
-};
-Routes.forEach(value => {
-  value.component = Loadable({
-    loader: value.component,
-    loading: Loading,
-    delay: 3000,
-  });
-});
-export default Routes;
+  componentWillReceiveProps(nextProps) {
+    this.loadComponent(nextProps);
+  }
+  componentWillMount() {
+    this.loadComponent(this.props);
+  }
+  loadComponent = async props => {
+    const { match, history, location } = props;
+    try {
+      let route
+      let routerList = Routers
+      for (let i = 0; i < routerList.length; i++) {
+        if (match.url === routerList[i].path) {
+          route = routerList[i]
+        }
+      }
+      if (route) {
+        let component = await route.component()
+        this.setState({
+          ...route,
+          component: React.createElement(component.default, { match, history, params: location.state }),
+        })
+      } else {
+        this.setState({
+          title: '错误',
+          component: React.createElement(errPage, {
+            match, history, params: {
+              pageType: '404'
+            }
+          }),
+        })
+      }
+    } catch (error) {
+      this.setState({
+        title: '错误',
+        component: React.createElement(errPage, {
+          match, history, params: {
+            pageType: '404'
+          }
+        }),
+      })
+    }
+
+  };
+  render() {
+
+    const { component, title, footerHide, headerHide } = this.state
+    return (
+      <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
+        <div>
+          <Header  title={title} headerHide={headerHide} />
+          <div>{component}</div>
+          <Footer footerHide={footerHide} />
+        </div>
+      </div>
+    );
+  }
+}
