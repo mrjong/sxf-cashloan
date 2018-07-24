@@ -1,0 +1,24 @@
+$color-bg-default: #ebde74; // 默认背景颜色
+$color-bg--active: #e8e206; // 高亮背景颜色
+
+$color-text-default: #333; // 默认文字颜色
+
+$height-default: 0.9rem; // 默认高度
+$border-radius: 1rem; // 默认圆角
+
+.sxp_button {
+  display: block;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+  line-height: $height-default;
+  color: $color-text-default;
+  background-color: $color-bg-default;
+  border-radius: $border-radius;
+  border: 0;
+  cursor: pointer;
+  &_active {
+    background-color: $color-bg--active;
+  }
+}
