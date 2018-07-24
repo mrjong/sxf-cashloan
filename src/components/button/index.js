@@ -17,7 +17,7 @@ export default class ButtonCustom extends React.PureComponent {
 
   static defaultProps = {
     className: '',
-    active: true,
+    active: false,
     children: '按钮',
     onClick: () => {
       console.log('点击按钮，默认方法');
