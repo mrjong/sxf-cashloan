@@ -14,6 +14,7 @@ export default class Lists extends PureComponent {
   render() {
     const { listsInf, className } = this.props;
     const Item = List.Item;
+    const Brief = Item.Brief;
     return (
       <div className={`${styles.listsContainer} ${className}`}>
         <List
@@ -30,6 +31,7 @@ export default class Lists extends PureComponent {
                   key={index}
                 >
                   {item.label.name}
+                  <Brief>{item.label.brief}</Brief>
                 </Item>
               )
             })
