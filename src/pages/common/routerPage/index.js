@@ -9,13 +9,16 @@ export default class router_Page extends PureComponent {
     this.state = {};
   }
   componentWillReceiveProps(nextProps) {
+    console.log(123);
     this.loadComponent(nextProps);
   }
   componentWillMount() {
+    console.log(1233);
     this.loadComponent(this.props);
   }
   loadComponent = async props => {
     const { match, history, location } = props;
+
     try {
       let route
       let routerList = Routers
@@ -25,6 +28,8 @@ export default class router_Page extends PureComponent {
         }
       }
       if (route) {
+        console.log(12)
+
         let component = await route.component()
         this.setState({
           route: { ...route },
@@ -53,21 +58,22 @@ export default class router_Page extends PureComponent {
 
   };
   render() {
-
-    const { component, title, footerHide, headerHide, route } = this.state
+    const { component, route } = this.state;
+    if (!route) {
+      return <div>{component}</div>;
+    }
+    const { title, footerHide, headerHide } = route;
     return (
       <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
-        <div>
           {!headerHide ?
-            <Header headerProps={route} /> : null
+            <Header {...this.props} /> : null
           }
 
-          <div>{component}</div>
+          {component}
           {
             !footerHide ? <Footer footerProps={route} /> : null
           }
 
-        </div>
       </div>
     );
   }
