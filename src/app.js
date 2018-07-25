@@ -18,11 +18,11 @@ if (!window.sa) {
 initAnalytics();
 const renders = Component =>
   render(
-    <Provider store={store}>
+    // <Provider>
       <BrowserRouter>
         <Component />
-      </BrowserRouter>
-    </Provider>,
+      </BrowserRouter>,
+    // </Provider>,
     document.getElementById('root'),
   );
 renders(router);

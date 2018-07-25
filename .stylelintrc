@@ -16,6 +16,7 @@
     "function-whitespace-after": null,
     "indentation": null,
     "number-leading-zero": null,
+    "block-closing-brace-newline-after":null,
     "number-no-trailing-zeros": null,
     "rule-empty-line-before": null,
     "selector-combinator-space-after": null,

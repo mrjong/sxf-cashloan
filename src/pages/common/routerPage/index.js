@@ -27,7 +27,7 @@ export default class router_Page extends PureComponent {
       if (route) {
         let component = await route.component()
         this.setState({
-          ...route,
+          route: { ...route },
           component: React.createElement(component.default, { match, history, params: location.state }),
         })
       } else {
@@ -54,13 +54,19 @@ export default class router_Page extends PureComponent {
   };
   render() {
 
-    const { component, title, footerHide, headerHide } = this.state
+    const { component, title, footerHide, headerHide, route } = this.state
     return (
       <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
         <div>
-          <Header  title={title} headerHide={headerHide} />
+          {!headerHide ?
+            <Header headerProps={route} /> : null
+          }
+
           <div>{component}</div>
-          <Footer footerHide={footerHide} />
+          {
+            !footerHide ? <Footer footerProps={route} /> : null
+          }
+
         </div>
       </div>
     );
