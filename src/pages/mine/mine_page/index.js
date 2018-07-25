@@ -10,7 +10,7 @@ export default class mine_page extends PureComponent {
       userPhone: '152****6273'
     }
   }
-
+  // 退出
   logout = () => {
     alert('退出')
   };
@@ -33,7 +33,7 @@ export default class mine_page extends PureComponent {
           icon: require('assets/images/mine/menu_ico2.png')
         },
         clickCb: () => {
-          alert(11);
+          this.props.history.push('/mine/credit_extension_page')
         },
       },
     ];

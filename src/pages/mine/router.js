@@ -14,8 +14,11 @@ export default [
   {
     path: '/mine/credit_extension_page',
     title: '风控授信项',
-    arrowHide: true,
     component: () => import('pages/mine/credit_extension_page'),
-    footerShow: true,
   },
+  // {
+  //   path: '/mine/credit_extension_page',
+  //   title: '选择银行卡',
+  //   component: () => import('pages/mine/credit_extension_page'),
+  // },
 ];

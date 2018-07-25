@@ -14,6 +14,9 @@
     .am-list-item img {
       width: 42px;
       height: auto;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
     }
     .am-list-extra span {
       font-size: 30px;
@@ -30,10 +33,11 @@
       border-color: #e5e5e5;
     }
     .am-list-item .am-list-thumb:first-child {
-      margin-right: 26px;
-      position: absolute;
-      top: 50%;
-      margin-top: -40px;
+      margin-right: 0;
+      // margin-right: 26px;
+      // position: absolute;
+      // top: 50%;
+      // margin-top: -40px;
     }
     .am-list-item .am-list-line .am-list-brief {
       font-size: 28px;
