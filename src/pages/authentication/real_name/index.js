@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import parentComponent from 'pages/common/parentComponent';
+import React, { Component, PureComponent } from 'react';
 import { setBackGround } from '../../../utils/Background';
 import updateLeft from '../../../assets/images/real_name/1@2x.png';
 import updateRight from '../../../assets/images/real_name/2@2x.png';
@@ -11,7 +10,7 @@ import style from './index.scss';
 
 @setBackGround('#F5F5F5')
 
-class RealName extends parentComponent {
+class RealName extends PureComponent {
   state = {
     selectFlag: false,
     leftValue: updateLeft,

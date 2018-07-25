@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import parentComponent from 'pages/common/parentComponent';
+import React, { Component, PureComponent } from 'react';
 
-export default class essential_information extends parentComponent {
+export default class essential_information extends PureComponent {
   state = {};
 
   componentWillMount() {
