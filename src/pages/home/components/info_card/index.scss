@@ -1,0 +1,28 @@
+.info_card {
+  position: relative;
+  padding-bottom: 0.8rem;
+  z-index: 100;
+  width: 6rem;
+  margin: -0.5rem auto 0;
+  border-radius: 0.16rem;
+  overflow: hidden;
+  text-align: center;
+  background-color: #fff;
+  .info_main {
+    text-align: center;
+    color: #f6e1a9;
+    font-size: 0.46rem;
+    line-height: 2.82rem;
+    background-color: #151515;
+  }
+  .info_sub {
+    margin-top: 0.8rem;
+    font-size: 0.36rem;
+    color: #333;
+    font-weight: bold;
+  }
+  .info_button {
+    margin-top: 0.72rem;
+    width: 4.26rem;
+  }
+}

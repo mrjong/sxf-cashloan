@@ -11,8 +11,7 @@ export default class Header extends PureComponent {
   }
 
   render() {
-    console.log(this.props)
-    const { headerProps } = this.props
+    const { title, headerHide, arrowHide, headerProps} = this.props
     const ua = window.navigator.userAgent
     return (
       <div>

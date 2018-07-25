@@ -124,6 +124,7 @@ module.exports = function (options) {
         utils: path.resolve(__dirname, '../src/utils'),
         routers: path.resolve(__dirname, '../src/routers'),
         assets: path.resolve(__dirname, '../src/assets'),
+        example: path.resolve(__dirname, '../src/example'),
       },
     },
   };

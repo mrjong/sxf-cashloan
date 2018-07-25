@@ -31,7 +31,7 @@ export default class Home extends PureComponent {
                 </div>
               </div>
             </div>
-            <div className={styles.report_values}>数据加载中</div>
+            <div className={styles.report_values}>数据加载中11</div>
           </div>
         </div>
       </div>

@@ -18,6 +18,7 @@ export default class router_Page extends PureComponent {
   }
   loadComponent = async props => {
     const { match, history, location } = props;
+
     try {
       let route
       let routerList = Routers
@@ -52,24 +53,15 @@ export default class router_Page extends PureComponent {
         }),
       })
     }
-
   };
   render() {
-
-    const { component, title, footerHide, headerHide, route } = this.state
+    const { component, route } = this.state;
+    const { headerHide = false, footerHide = true } = route;
     return (
       <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
-        <div>
-          {!headerHide ?
-            <Header headerProps={route} /> : null
-          }
-
-          <div>{component}</div>
-          {
-            !footerHide ? <Footer footerProps={route} /> : null
-          }
-
-        </div>
+        {headerHide ? null : <Header {...this.props} headerProps={route} />}
+        {component}
+        {footerHide ? null : <Footer footerProps={route} />}
       </div>
     );
   }

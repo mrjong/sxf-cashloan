@@ -1,3 +1,9 @@
 .order_page {
-  color: red;
+  .order_list {
+    :global {
+      .am-list-item {
+        min-height: 140px;
+      }
+    }
+  }
 }

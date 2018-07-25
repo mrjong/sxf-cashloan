@@ -31,7 +31,9 @@ export default class Lists extends PureComponent {
                   key={index}
                 >
                   {item.label.name}
-                  <Brief>{item.label.brief}</Brief>
+                  {
+                    item.label.brief ? <Brief>{item.label.brief}</Brief> : null
+                  }
                 </Item>
               )
             })

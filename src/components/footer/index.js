@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import sng1 from 'assets/images/footer/home.png';
-import sng2 from 'assets/images/footer/home-not.png';
-import sng3 from 'assets/images/footer/mine.png';
-import sng4 from 'assets/images/footer/mine-not.png';
+import iconBank from 'assets/images/footer/icon_bank.png';
+import iconBankActive from 'assets/images/footer/icon_bank_active.png';
+import iconBill from 'assets/images/footer/icon_bill.png';
+import iconBillActive from 'assets/images/footer/icon_bill_active.png';
+import iconMine from 'assets/images/footer/icon_mine.png';
+import iconMineActive from 'assets/images/footer/icon_mine_active.png';
+
 import styles from './index.scss';
 /*
 * 接收一个配置文件数组
@@ -40,38 +43,41 @@ function TabBarList(props) {
   }
   let tabBarBottom = null;
   tabBarBottom = tabList.map(item => <TabItem key={item.url ? item.url : new Date().getTime()} data={item} />);
-  console.log(tabBarBottom, 'tabBarBottom');
   return tabBarBottom;
 }
 
 export default class Footer extends PureComponent {
   static propTypes = {
     data: PropTypes.array,
+    footerProps: PropTypes.object,
   };
 
   static defaultProps = {
+    footerProps: {
+      footerHide: true,
+    },
     data: [
       {
-        title: '首页',
-        url: '/lisi',
-        icon: sng1,
-        icon_not: sng2,
+        title: '还卡',
+        url: '/home/home',
+        icon: iconBankActive,
+        icon_not: iconBank,
         color: '#6A6D70',
         color_not: '#CECFD3',
       },
       {
         title: '账单',
-        url: '/zhangsan',
-        icon: sng1,
-        icon_not: sng2,
+        url: '/example/button/',
+        icon: iconBillActive,
+        icon_not: iconBill,
         color: '#6A6D70',
         color_not: '#CECFD3',
       },
       {
         title: '我的',
-        url: '/zhang',
-        icon: sng3,
-        icon_not: sng4,
+        url: '/mine/mine_page',
+        icon: iconMineActive,
+        icon_not: iconMine,
         color: '#6A6D70',
         color_not: '#CECFD3',
       },
@@ -79,8 +85,8 @@ export default class Footer extends PureComponent {
   };
 
   render() {
-    let { data, footerHide } = this.props;
-
+    let { data, footerProps } = this.props;
+    const { footerHide } = footerProps;
     return footerHide ? null : <div className={styles.footer}>{<TabBarList tabList={data} />}</div>;
   }
 }
