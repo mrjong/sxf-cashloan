@@ -1,6 +1,6 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Link, NavLink, withRouter } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import sng1 from 'assets/images/footer/home.png';
 import sng2 from 'assets/images/footer/home-not.png';
 import sng3 from 'assets/images/footer/mine.png';
@@ -21,7 +21,7 @@ import styles from './index.scss';
 function TabItem(props) {
   const { data } = props;
   return (
-    <Link exact='true' replace to={data.url} key={data.url} className={styles.item}>
+    <NavLink replace to={data.url} key={data.url} className={styles.item}>
       <img src={window.location.pathname === data.url ? data.icon : data.icon_not} alt="" />
       <div
         className={styles.title}
@@ -29,7 +29,7 @@ function TabItem(props) {
       >
         {data.title}
       </div>
-    </Link>
+    </NavLink>
   );
 }
 
@@ -43,13 +43,16 @@ function TabBarList(props) {
   return tabBarBottom;
 }
 
-@withRouter
 export default class Footer extends PureComponent {
   static propTypes = {
     data: PropTypes.array,
+    footerProps: PropTypes.object,
   };
 
   static defaultProps = {
+    footerProps: {
+      footerHide: true,
+    },
     data: [
       {
         title: '首页',
@@ -79,8 +82,8 @@ export default class Footer extends PureComponent {
   };
 
   render() {
-    let { data, footerHide } = this.props;
-    console.log(this.props, 'this.props');
+    let { data, footerProps } = this.props;
+    const { footerHide } = footerProps;
     return footerHide ? null : <div className={styles.footer}>{<TabBarList tabList={data} />}</div>;
   }
 }

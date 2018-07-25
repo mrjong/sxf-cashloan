@@ -1,5 +1,5 @@
 import React, {
-  PureComponent
+  Component,
 } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
@@ -27,7 +27,7 @@ const RouterPage = Loadable({
   LoadingComponent,
   delay: 300
 });
-export default class Routers extends PureComponent {
+export default class Routers extends Component {
   render() {
     return (
       <Switch>
