@@ -1,9 +1,74 @@
 .home_page {
   flex: 1;
+  .content_wrap {
+    margin-top: -0.5rem;
+  }
   .tip_bottom {
     margin-top: 0.77rem;
     font-size: 0.3rem;
     text-align: center;
     color: #c7c6cc;
+  }
+}
+.modal_content {
+  position: relative;
+  padding-bottom: 0.53rem;
+  .modal_cancel_btn {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.24rem;
+    border: 0;
+    background-color: transparent;
+    padding: 0.1rem;
+    font-size: 0.36rem;
+    color: #333;
+  }
+  .modal_title {
+    margin: 0;
+    padding: 0.33rem 0;
+    color: #333;
+    font-size: 0.36rem;
+    font-weight: bold;
+    /* @include setBottomLine(); */
+  }
+  .modal_list {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    .list_item {
+      padding-top: 0.31rem;
+      padding-bottom: 0.31rem;
+      margin-left: 0.6rem;
+      padding-right: 0.45rem;
+    }
+    .list_item + .list_item {
+      border-top: 1px solid #e5e5e5;
+    }
+    .item_info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item_name {
+      color: #333;
+      font-size: 0.34rem;
+      line-height: 1;
+    }
+    .item_value {
+      font-size: 0.4rem;
+      font-weight: bold;
+      color: #333;
+      line-height: 1;
+    }
+    .item_tip {
+      text-align: left;
+      margin-top: 0.15rem;
+      font-size: 0.24rem;
+      color: #f66;
+      line-height: 1.2;
+    }
+  }
+  .modal_btn {
+    margin-top: 0.6rem;
+    width: 6.2rem;
   }
 }
