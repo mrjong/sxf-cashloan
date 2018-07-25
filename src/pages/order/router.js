@@ -4,6 +4,6 @@ export default [
       title: '账单',
       arrowHide: true,
       component: () => import('pages/order/order_page'),
-      footerShow: true,
+      footerHide: false,
     },
   ];

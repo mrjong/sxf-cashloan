@@ -31,9 +31,9 @@ export default class Routers extends PureComponent {
   render() {
     return (
       <Switch>
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/:modules/:page" component={RouterPage} />
         <Route exact path="/" component={LoginPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/:modules/:page" component={RouterPage} />
       </Switch>
     );
   }

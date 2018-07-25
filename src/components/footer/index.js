@@ -44,17 +44,10 @@ function TabBarList(props) {
 }
 
 @withRouter
-export default class Footer extends Component {
+export default class Footer extends PureComponent {
   static propTypes = {
     data: PropTypes.array,
   };
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps, 'nextProps');
-  }
-  shouldComponentUpdate() {
-    return true;
-  }
 
   static defaultProps = {
     data: [
@@ -87,7 +80,7 @@ export default class Footer extends Component {
 
   render() {
     let { data, footerHide } = this.props;
-
+    console.log(this.props, 'this.props');
     return footerHide ? null : <div className={styles.footer}>{<TabBarList tabList={data} />}</div>;
   }
 }
