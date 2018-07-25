@@ -6,7 +6,7 @@ arrowHide: 是否隐藏箭头，true为隐藏，不传默认是不隐藏
 
 extra: 为右侧部分（name为显示内容，color为颜色）
 
-label: 为左侧label部分(name为label的内容，icon为label的图标）
+label: 为左侧label部分(name为label的内容，icon为label的图标，brief为副标题）
 
 clickCb: 为点击执行的方法
 
@@ -20,7 +20,8 @@ const listsArr = [
         },
         label: {
           name: '测试',
-          icon: ''
+          icon: '',
+		  brief: '111'	
         },
       },
 

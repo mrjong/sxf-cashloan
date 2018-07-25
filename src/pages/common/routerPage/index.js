@@ -6,14 +6,14 @@ import Footer from 'components/footer';
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      route: {},
+    };
   }
   componentWillReceiveProps(nextProps) {
-    console.log(123);
     this.loadComponent(nextProps);
   }
   componentWillMount() {
-    console.log(1233);
     this.loadComponent(this.props);
   }
   loadComponent = async props => {
@@ -28,8 +28,6 @@ export default class router_Page extends PureComponent {
         }
       }
       if (route) {
-        console.log(12)
-
         let component = await route.component()
         this.setState({
           route: { ...route },
@@ -66,7 +64,7 @@ export default class router_Page extends PureComponent {
     return (
       <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
           {!headerHide ?
-            <Header {...this.props} /> : null
+            <Header {...this.props} headerProps={route}  /> : null
           }
 
           {component}

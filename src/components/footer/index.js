@@ -54,7 +54,6 @@ export default class Footer extends Component {
   }
   shouldComponentUpdate() {
     return true;
-    console.log(111, 'nextProps');
   }
 
   static defaultProps = {

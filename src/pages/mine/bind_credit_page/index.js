@@ -3,11 +3,11 @@ import Lists from 'components/lists';
 import ButtonCustom from 'components/button';
 import styles from './index.scss';
 
-export default class BindCreditPage extends PureComponent {
+export default class bind_credit_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userPhone: '152****6273'
+      
     }
   }
 
@@ -35,11 +35,11 @@ export default class BindCreditPage extends PureComponent {
       },
     ];
     return (
-      <div className={styles.creditContainer}>
-        <Lists listsInf={listsArr} className={styles.commonMargin} />
+      <div className={styles.bind_credit_page}>
+        <Lists listsInf={listsArr} className={styles.common_margin} />
         <p className={styles.tips}>借款资金将转入您绑定代信用卡中，请注意查收</p>
-        <ButtonCustom onClick={this.handleButtonClick} className={styles.confirmBtn}>确认购买</ButtonCustom>
-        <span className={styles.supportType}>支持银行卡类型</span>
+        <ButtonCustom onClick={this.handleButtonClick} className={styles.confirm_btn}>确认购买</ButtonCustom>
+        <span className={styles.support_type}>支持银行卡类型</span>
       </div>
     )
   }
