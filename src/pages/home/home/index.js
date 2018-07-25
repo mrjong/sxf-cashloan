@@ -1,10 +1,8 @@
-import React from 'react';
-import parentComponent from 'pages/common/parentComponent';
+import React, { PureComponent } from 'react';
 
-export default class Home extends parentComponent {
+export default class Home extends PureComponent {
   constructor(props) {
     super(props);
-
   }
 
   cc() {

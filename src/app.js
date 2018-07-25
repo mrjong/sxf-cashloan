@@ -1,14 +1,13 @@
 /*eslint-disable*/
 import React from 'react';
-import {render} from 'react-dom';
-import {Provider} from 'react-redux';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 import store from 'reduxs/store';
 import router from 'routers';
 import 'utils/Back';
-import {BrowserRouter} from 'react-router-dom';
-import Layout from './pages/common/layout';
+import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
-import {initAnalytics} from './utils/Analytins';
+import { initAnalytics } from './utils/Analytins';
 import fastClick from 'fastclick';
 
 fastClick.attach(document.body);
@@ -19,13 +18,11 @@ if (!window.sa) {
 initAnalytics();
 const renders = Component =>
   render(
-    <Provider store={store}>
-      <Layout>
-        <BrowserRouter>
-          <Component/>
-        </BrowserRouter>
-      </Layout>
-    </Provider>,
+    // <Provider>
+      <BrowserRouter>
+        <Component />
+      </BrowserRouter>,
+    // </Provider>,
     document.getElementById('root'),
   );
 renders(router);

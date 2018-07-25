@@ -1,11 +1,7 @@
 export default [
   {
-    path: '/login/login',
-    title: {
-      title: '登录',
-      headerHide: true,
-      footerHide: true,
-    },
+    path: '/login',
+    title: '登录',
     component: () => import('pages/login/login'),
   },
 ];
