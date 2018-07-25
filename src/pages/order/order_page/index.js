@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import Lists from 'components/list'
+import Lists from 'components/lists';
 import styles from './index.scss';
 
 export default class order_page extends PureComponent {
