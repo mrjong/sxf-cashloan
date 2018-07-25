@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { List } from 'antd-mobile';
-import styles from './lists.scss';
+import styles from './index.scss';
 
 export default class Lists extends PureComponent {
   constructor(props) {

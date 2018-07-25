@@ -1,0 +1,19 @@
+.count_container {
+  width: 170px;
+  height: 50px;
+  background: #ebde74;
+  line-height: 50px;
+  font-size: 24px;
+  color: rgba(51, 51, 51, 1);
+  padding: 0;
+}
+:global {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    html:not([data-scale]) .am-button-primary::before {
+      border-color: #ebde74;
+    }
+  }
+  .am-button-primary {
+    border-color: #ebde74;
+  }
+}
