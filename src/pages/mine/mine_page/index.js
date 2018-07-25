@@ -7,7 +7,8 @@ export default class mine_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userPhone: '152****6273'
+      userPhone: '152****6273',
+      isLogin: true,
     }
   }
   // 退出
@@ -43,11 +44,17 @@ export default class mine_page extends PureComponent {
           name: '信用卡管理',
           icon: require('assets/images/mine/menu_ico3.png'),
         },
+        clickCb: () => {
+          this.props.history.push('/mine/select_credit_page')
+        },
       },
       {
         label: {
           name: '储蓄卡管理',
-          icon: require('assets/images/mine/menu_ico4.png')
+          icon: require('assets/images/mine/menu_ico4.png'),
+        },
+        clickCb: () => {
+          this.props.history.push('/mine/select_save_page')
         },
       },
     ];
@@ -65,16 +72,35 @@ export default class mine_page extends PureComponent {
         },
       },
     ];
+    const listsArr4 = [
+      {
+        extra: {
+          name: '未购买',
+          color: '#FF5A5A',
+        },
+        label: {
+          name: '会员卡',
+          icon: require('assets/images/mine/menu_ico7.png')
+        },
+      },
+     ];
+    const {userPhone, isLogin} = this.state;
     return (
       <div className={styles.mine_page}>
         <div className={styles.user_inf} >
           <img src={avatar} alt="用户头像" />
-          <span>{this.state.userPhone}</span>
+          <span>{isLogin ? userPhone : '登录／注册'}</span>
         </div>
+        <Lists listsInf={listsArr4} />
         <Lists listsInf={listsArr} className={styles.common_margin} />
         <Lists listsInf={listsArr2} className={styles.common_margin} />
         <Lists listsInf={listsArr3} className={styles.common_margin} />
-        <div onClick={this.logout} className={styles.logout}>退出登录</div>
+        {
+          isLogin ? 
+          <div onClick={this.logout} className={styles.logout}>退出登录</div>
+           : 
+          null
+        }
       </div>
     )
   }
