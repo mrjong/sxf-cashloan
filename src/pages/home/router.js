@@ -1,9 +1,8 @@
 export default [
   {
-    path: '/login/home',
-    title: '首页',
-    headerHide: true,
-    footerHide: true,
+    path: '/home/home',
+    title: '还卡',
+    footerHide: false,
     component: () => import('pages/home/home'),
   },
 ];
