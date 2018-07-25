@@ -5,5 +5,16 @@ import LoginRoute from 'pages/login/router'; // 首页
 import Example from 'example/router'; // 例子
 
 import AuthenticationRoute from 'pages/authentication/router'; // 授信项
+import MembershipCardRoute from 'pages/membership_card/router';
+import ConfirmAgency from 'pages/confirm/router';
 
-export default [...AuthRoute, ...LoginRoute, ...AuthenticationRoute, ...MineRoute, ...OrderRoute, ...Example];
+export default [
+  ...AuthRoute,
+  ...LoginRoute,
+  ...AuthenticationRoute,
+  ...MineRoute,
+  ...MembershipCardRoute,
+  ...OrderRoute,
+  ...Example,
+  ...ConfirmAgency,
+];
