@@ -7,7 +7,7 @@ export default class bind_credit_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userPhone: '152****6273'
+      
     }
   }
 

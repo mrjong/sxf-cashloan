@@ -4,6 +4,7 @@ export default [
     title: '个人中心',
     arrowHide: true,
     component: () => import('pages/mine/mine_page'),
+    footerShow: true,
   },
   {
     path: '/mine/bind_credit_page',
