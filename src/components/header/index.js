@@ -11,20 +11,21 @@ export default class Header extends PureComponent {
   }
 
   render() {
-    const { title, headerHide, arrowHide } = this.props
+    console.log(this.props)
+    const { headerProps } = this.props
     const ua = window.navigator.userAgent
     return (
       <div>
-        {/MicroMessenger/i.test(ua) || /SuiXingPay-Mpos/i.test(ua) || /SuiXingPay-Cashier/i.test(ua) || headerHide ? (
+        {/MicroMessenger/i.test(ua) || /SuiXingPay-Mpos/i.test(ua) || /SuiXingPay-Cashier/i.test(ua) || headerProps.headerHide ? (
           ''
         ) : (
             <div className={styles.title}>
-              {!arrowHide ? (
+              {!headerProps.arrowHide ? (
                 <div className={styles.arrows}>
                   <div className={styles.left} onClick={() => this.goBack()} />
                 </div>
               ) : null}
-              <div className={styles.center}>{title}</div>
+              <div className={styles.center}>{headerProps.title}</div>
             </div>
           )}
       </div>

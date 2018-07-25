@@ -6,7 +6,9 @@ import Footer from 'components/footer';
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      route: {},
+    };
   }
   componentWillReceiveProps(nextProps) {
     this.loadComponent(nextProps);
