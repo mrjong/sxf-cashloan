@@ -11,4 +11,11 @@ export default [
     title: '绑定信用卡',
     component: () => import('pages/mine/bind_credit_page'),
   },
+  {
+    path: '/mine/credit_extension_page',
+    title: '风控授信项',
+    arrowHide: true,
+    component: () => import('pages/mine/credit_extension_page'),
+    footerShow: true,
+  },
 ];
