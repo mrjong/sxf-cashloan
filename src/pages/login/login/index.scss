@@ -1,3 +1,67 @@
-body {
-  color: red;
+.loginContent {
+  .loginLog {
+    padding-top: 1rem;
+    text-align: center;
+    padding-bottom: 1.33rem;
+
+    img {
+      width: 1.9rem;
+      height: 1.9rem;
+    }
+  }
+
+  .inputItem {
+    height: 100px;
+    width: 619px;
+    position: relative;
+    border-bottom: 1px solid #e5e5e5;
+    margin: 0 auto;
+    line-height: 100px;
+    .phone {
+      width: 40px;
+      position: relative;
+      top: 9px;
+    }
+    .input {
+      border: none;
+      margin-left: 53px;
+      font-size: 30px;
+      flex: 1;
+      background: rgba(0, 0, 0, 0);
+    }
+    .input::placeholder {
+      font-size: 30px;
+      color: #c7c6c4;
+      vertical-align: bottom;
+    }
+  }
+  .imgCode {
+    position: relative;
+    left: 0.15rem;
+    top: 0.19rem;
+    img {
+      width: 1.73rem;
+      height: 0.6rem;
+    }
+  }
+  .inline {
+    width: 0.01rem;
+    height: 0.3rem;
+    background: #e5e5e5;
+    display: inline-block;
+    position: relative;
+    top: 3px;
+    left: 5px;
+  }
+  .smsCode {
+    position: relative;
+    left: 0.45rem;
+    color: #999;
+    font-size: 0.28rem;
+  }
+  .sureBtn {
+    width: 6.2rem;
+    margin-top: 141px;
+    margin-bottom: 1rem;
+  }
 }

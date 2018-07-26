@@ -2,6 +2,7 @@ import React, {PureComponent } from 'react';
 import { setBackGround } from '../../../utils/Background';
 import vipIcon from '../../../assets/images/menbership_card/组 5.png';
 import style from './index.scss'
+import ButtonCustom from 'components/button';
 
 @setBackGround('#fff')
 
@@ -42,9 +43,7 @@ export default class card_home extends PureComponent {
 
         </div>
 
-        <div className={style.sureBtn} >
-          确认购买
-        </div>
+        <ButtonCustom  className={style.sureBtn}>确认购买</ButtonCustom>
 
         <div className={style.vipIcon}>
           <img src={vipIcon}/>

@@ -6,6 +6,7 @@ import updateRight from '../../../assets/images/real_name/2@2x.png';
 import updateBottom from '../../../assets/images/real_name/@2x.png';
 import FEZipImage from '../../../components/fzp-image';
 import { InputItem,Toast } from 'antd-mobile';
+import ButtonCustom from 'components/button';
 import style from './index.scss';
 
 @createForm()
@@ -56,11 +57,10 @@ export default class RealName extends PureComponent {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { idName, idNo } = getFieldsValue();
-    let selectFlag = true;
-    if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
-      selectFlag = false;
-    }
+    // let selectFlag = true;
+    // if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
+    //   selectFlag = false;
+    // }
     return (
       <div className={style.nameDiv}>
         <div className={style.updateTitle}>上传身份证正 、反面</div>
@@ -149,9 +149,7 @@ export default class RealName extends PureComponent {
           <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行实名认证</p>
           <p className={style.desOne}>*实名信息一旦认证，不可修复</p>
         </div>
-        <div className={selectFlag ? style.sureBtn : style.sureSelectBtn} onClick={this.handleSure}>
-          确定
-        </div>
+        <ButtonCustom onClick={this.handleSure} className={style.sureBtn}>确定</ButtonCustom>
       </div>
     );
   }
