@@ -28,18 +28,18 @@
         .bank_ico {
           position: relative;
           display: inline-block;
-          width: 80px;
-          height: 80px;
+          width: 60px;
+          height: 60px;
           background-image: url('../../../assets/images/mine/selectCard/gr_bank.png');
           background-repeat: no-repeat;
           background-size: 50px 1700px;
-          top: 30px;
+          top: 18px;
         }
         .bank_ico_ICBC {
           background-position: center 0;
         }
         .bank_ico_CCB {
-          background-position: center -80px;
+          background-position: center -60px;
         }
       }
       .bank_name {

@@ -1,4 +1,4 @@
-.bind_save_page {
+.bind_bank_card_child {
   margin-top: 41px;
   :global {
     // 覆盖antd list样式
@@ -27,7 +27,8 @@
     margin-bottom: 162px;
   }
   .confirm_btn {
-    width: 620px;
+    margin-top: 0.84rem;
+    width: 6.2rem;
   }
   .support_type {
     position: fixed;

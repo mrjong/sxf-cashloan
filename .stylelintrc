@@ -15,6 +15,7 @@
     "function-max-empty-lines": null,
     "function-whitespace-after": null,
     "indentation": null,
+    "unit-case":null,
     "number-leading-zero": null,
     "block-closing-brace-newline-after":null,
     "number-no-trailing-zeros": null,

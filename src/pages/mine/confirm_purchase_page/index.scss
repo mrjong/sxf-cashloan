@@ -1,4 +1,4 @@
-.bind_save_page {
+.confirm_purchase_page {
   margin-top: 41px;
   :global {
     // 覆盖antd list样式
@@ -20,14 +20,17 @@
     }
   }
   .tips {
-    font-size: 28px;
-    color: rgba(157, 157, 157, 1);
-    padding: 0 32px;
-    margin-top: 20px;
-    margin-bottom: 162px;
+    font-size: 24px;
+    color: rgba(40, 40, 40, 1);
+    padding: 0 65px;
+    margin-top: 32px;
+    a {
+      color: #ebde74;
+    }
   }
   .confirm_btn {
     width: 620px;
+    margin-top: 111px;
   }
   .support_type {
     position: fixed;

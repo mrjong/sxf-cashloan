@@ -7,6 +7,11 @@ export default [
     footerHide: false,
   },
   {
+    path: '/mine/bind_bank_card',
+    title: '绑定银行卡',
+    component: () => import('pages/mine/bind_bank_card'),
+  },
+  {
     path: '/mine/bind_credit_page',
     title: '绑定信用卡',
     component: () => import('pages/mine/bind_credit_page'),
@@ -30,5 +35,10 @@ export default [
     path: '/mine/select_save_page',
     title: '选择储蓄卡',
     component: () => import('pages/mine/select_save_page'),
+  },
+  {
+    path: '/mine/confirm_purchase_page',
+    title: '确认购买',
+    component: () => import('pages/mine/confirm_purchase_page'),
   },
 ];

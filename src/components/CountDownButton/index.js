@@ -79,7 +79,7 @@ export default class CountDownButton extends React.Component {
         disabled={counting}
         onClick={() => {
           if (!counting && enable && selfEnable) {
-            this.setState({ selfEnable: false });
+            // this.setState({ selfEnable: false });
             this.props.onClick(this.shouldStartCountting);
           }
         }}
