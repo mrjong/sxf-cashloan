@@ -1,10 +1,11 @@
-import React, { PureComponent } from "react"
+import React, { Component, PureComponent } from "react"
 import styles from "./Header.scss"
 
-export default class Header extends PureComponent {
+export default class Header extends Component {
   goBack() {
     // window.history.back()
-    this.props.history.back()
+    this.props.history.goBack()
+
   }
 
   componentDidMount() {
