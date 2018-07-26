@@ -1,0 +1,72 @@
+.bind_save_page {
+  margin-top: 41px;
+  :global {
+    // 覆盖antd list样式
+    .am-list-item {
+      min-height: 90px;
+    }
+    .am-list-body div:not(:last-child) .am-list-line {
+      border-color: #e5e5e5;
+    }
+    .am-list-item .am-list-line .am-list-content,
+    .am-list-item .am-input-label,
+    .am-list-item .am-list-line .am-list-extra,
+    .am-list-item .am-input-control input {
+      font-size: 30px;
+      color: #333;
+    }
+    .am-list-item .am-input-control input {
+      text-align: right;
+    }
+  }
+  .tips {
+    font-size: 28px;
+    color: rgba(157, 157, 157, 1);
+    padding: 0 32px;
+    margin-top: 20px;
+    margin-bottom: 162px;
+  }
+  .confirm_btn {
+    width: 620px;
+  }
+  .support_type {
+    position: fixed;
+    left: 0;
+    bottom: 64px;
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    color: rgba(77, 166, 255, 1);
+  }
+  // 倒计时样式
+  .time_container {
+    position: relative;
+    padding-right: 228px;
+    .count_btn {
+      position: absolute;
+      right: 30px;
+      top: 50%;
+      margin-top: -25px;
+    }
+    :global {
+      .am-list-item .am-list-line {
+        border-bottom: none;
+      }
+      .am-list-line::after {
+        background-color: transparent !important;
+      }
+    }
+  }
+}
+
+:global {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    html:not([data-scale]) .am-list-body div:not(:last-child) .am-list-line::after {
+      background-color: #e5e5e5;
+    }
+    html:not([data-scale]) .am-list-body::after,
+    html:not([data-scale]) .am-list-body::before {
+      background-color: transparent;
+    }
+  }
+}

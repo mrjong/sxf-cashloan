@@ -31,4 +31,9 @@ export default [
     title: '选择储蓄卡',
     component: () => import('pages/mine/select_save_page'),
   },
+  {
+    path: '/mine/confirm_purchase_page',
+    title: '确认购买',
+    component: () => import('pages/mine/confirm_purchase_page'),
+  },
 ];
