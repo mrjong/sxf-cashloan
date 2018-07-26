@@ -4,7 +4,7 @@ import { setBackGround } from '../../../utils/Background';
 import { InputItem, Picker, List, Toast } from 'antd-mobile';
 import informationMore from '../../../assets/images/real_name/更多-1@2x.png';
 import AsyncCascadePicker from '../../../components/async-cascad-picker/index.jsx';
-import ButtonCustom from 'components/button';
+import ButtonCustom from '../../../components/button';
 import fetch from 'sx-fetch';
 import style from './index.scss';
 

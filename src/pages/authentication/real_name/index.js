@@ -6,7 +6,7 @@ import updateRight from '../../../assets/images/real_name/2@2x.png';
 import updateBottom from '../../../assets/images/real_name/@2x.png';
 import FEZipImage from '../../../components/fzp-image';
 import { InputItem,Toast } from 'antd-mobile';
-import ButtonCustom from 'components/button';
+import ButtonCustom from '../../../components/button';
 import style from './index.scss';
 
 @createForm()

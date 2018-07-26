@@ -6,7 +6,7 @@ import imgCode from '../../../assets/images/login/1.png';
 import number from '../../../assets/images/login/number.png';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
-import ButtonCustom from 'components/button';
+import ButtonCustom from '../../../components/button';
 
 @setBackGround('#fff')
 
