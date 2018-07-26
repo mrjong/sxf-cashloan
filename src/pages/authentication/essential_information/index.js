@@ -4,6 +4,7 @@ import { setBackGround } from '../../../utils/Background';
 import { InputItem, Picker, List, Toast } from 'antd-mobile';
 import informationMore from '../../../assets/images/real_name/更多-1@2x.png';
 import AsyncCascadePicker from '../../../components/async-cascad-picker/index.jsx';
+import ButtonCustom from 'components/button';
 import fetch from 'sx-fetch';
 import style from './index.scss';
 
@@ -76,8 +77,8 @@ export default class essential_information extends PureComponent {
     });
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleSubmit = () => {
+    // e.preventDefault();
     const { loading } = this.state;
     if (loading) return; // 防止重复提交
 
@@ -283,9 +284,7 @@ export default class essential_information extends PureComponent {
             *输入有效的紧急联系人信息，有利于提升您的审批额度，我们将对您提供的信息严格保密
           </p>
         </div>
-        <div className={style.sureBtn} onClick={this.handleSubmit}>
-          下一步
-        </div>
+        <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>下一步</ButtonCustom>
       </div>
     );
   }
