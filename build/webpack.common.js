@@ -105,12 +105,19 @@ module.exports = function (options) {
         exclude: [/node_modules[\\/]react(-router)?[\\/]/, /node_modules[\\/]items-store[\\/]/],
       },
       disableHostCheck: true,
+      // proxy: {
+      //   '/api': {
+      //     target: 'http://172.16.136.41:8091/ptm',
+      //     pathRewrite: {'^/api': ''},
+      //     changeOrigin: true,
+      //   },
+      // },
       proxy: {
         '/api': {
-          target: 'http://172.16.138.162:7776/',
-          // target: 'http://172.18.40.32:8080/', // 世昌
-          pathRewrite: {'^/api': ''},
-          changeOrigin: true,
+          target: 'http://172.16.154.47:8080', //目标接口域名
+          pathRewrite: { '^/api': '/api' }, //重写接口
+          changeOrigin: true, //是否跨域
+          // demo=>  'http://localhost:8080/api' ===> 'http://www.abc.com/api'
         },
       },
     },
@@ -120,7 +127,6 @@ module.exports = function (options) {
       alias: {
         pages: path.resolve(__dirname, '../src/pages'),
         components: path.resolve(__dirname, '../src/components'),
-        reduxs: path.resolve(__dirname, '../src/reduxs'),
         utils: path.resolve(__dirname, '../src/utils'),
         routers: path.resolve(__dirname, '../src/routers'),
         assets: path.resolve(__dirname, '../src/assets'),

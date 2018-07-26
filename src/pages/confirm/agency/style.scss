@@ -17,7 +17,7 @@
     }
     .item_value {
       font-size: 0.3rem;
-      color: #333333;
+      color: #333;
       font-weight: bold;
     }
     .item_action {
@@ -58,11 +58,12 @@
   .modal_title {
     font-size: 0.36rem;
     color: #333;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1PX  solid #e5e5e5;
     padding-bottom: 0.3rem;
   }
   .bill_list {
     padding: 0.1rem;
+    max-height: 500px;
   }
   .list_item {
     display: flex;
@@ -75,7 +76,7 @@
   }
   .item_value {
     font-size: 0.3rem;
-    color: #333333;
+    color: #333;
     font-weight: bold;
   }
 }

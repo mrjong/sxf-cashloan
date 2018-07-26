@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { List } from 'antd-mobile';
+import ListDesc from './listDesc'
 import styles from './index.scss';
 
 export default class Lists extends PureComponent {
@@ -9,6 +10,13 @@ export default class Lists extends PureComponent {
 
   componentWillMount() {
 
+  }
+  getExtra = (list) => {
+    let extraList = []
+    list.forEach((item, index) => {
+      extraList.push(<span key={index} style={{ color: item.color }}>{item.name}</span>)
+    });
+    return extraList
   }
 
   render() {
@@ -21,20 +29,28 @@ export default class Lists extends PureComponent {
         >
           {
             listsInf.map((item, index) => {
+              console.log(item)
               return (
-                <Item
-                  className={item.label.icon ? styles.hasIcon : null}
-                  arrow={item.arrowHide ? '' : 'horizontal'}
-                  onClick={item.clickCb}
-                  extra={<span style={{ color: item.extra && item.extra.color }}>{item.extra && item.extra.name}</span>}
-                  thumb={item.label.icon}
-                  key={index}
-                >
-                  {item.label.name}
-                  {
-                    item.label.brief ? <Brief>{item.label.brief}</Brief> : null
-                  }
-                </Item>
+                <div key={index}>
+                  <Item
+                    className={item.label.icon ? styles.hasIcon : null}
+                    arrow={item.arrowHide ? item.arrowHide : 'horizontal'}
+                    onClick={item.clickCb}
+                    extra={Object.prototype.toString.call(item.extra) === '[object Array]' ? this.getExtra(item.extra) : <span style={{ color: item.extra && item.extra.color }}>{item.extra && item.extra.name}</span>}
+                    thumb={item.label.icon}
+                  >
+                    {item.label.name}
+                    {
+                      item.label.brief ? <Brief>{item.label.brief}</Brief> : null
+                    }
+                  </Item>
+                  <div>
+                    {item.listDesc && item.listDesc.value && item.listDesc.value.length > 0 && item.showDesc ?
+                      <ListDesc listdescinfo={item.listDesc.value}></ListDesc> : null
+                    }
+
+                  </div>
+                </div>
               )
             })
           }

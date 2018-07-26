@@ -11,9 +11,9 @@ label: 为左侧label部分(name为label的内容，icon为label的图标，brie
 clickCb: 为点击执行的方法
 
 const listsArr = [
-
+// 箭头方向(右,上,下), 可选horizontal,up,down,empty，如果是empty则存在对应的dom,但是不显示
 	{
-        arrowHide: true,
+        arrowHide: 'empty',
         extra: {
           name: '已认证',
           color: '#4CA6FF',

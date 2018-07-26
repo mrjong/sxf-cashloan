@@ -20,6 +20,7 @@
     }
     .am-list-extra span {
       font-size: 30px;
+      display: block;
     }
     .am-list-item .am-list-line .am-list-arrow {
       width: 16px;
@@ -47,6 +48,11 @@
         padding-left: 68px;
       }
     }
+  }
+  .item_desc{
+    background-color: #F5F5F5;
+    padding-left: 34px;
+    padding-right: 34px;
   }
 }
 :global {

@@ -32,8 +32,8 @@
     /* @include setBottomLine(); */
   }
   .modal_list {
-    border-top: 1px solid #e5e5e5;
-    border-bottom: 1px solid #e5e5e5;
+    border-top: 1PX  solid #e5e5e5;
+    border-bottom: 1PX  solid #e5e5e5;
     .list_item {
       padding-top: 0.31rem;
       padding-bottom: 0.31rem;
@@ -41,7 +41,7 @@
       padding-right: 0.45rem;
     }
     .list_item + .list_item {
-      border-top: 1px solid #e5e5e5;
+      border-top: 1PX  solid #e5e5e5;
     }
     .item_info {
       display: flex;

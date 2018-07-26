@@ -10,7 +10,7 @@ export default class err_page extends PureComponent {
     render() {
         return (
             <div>
-                错误页面88
+                错误页面404
       </div>
         );
     }

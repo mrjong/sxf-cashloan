@@ -1,18 +1,24 @@
 import React, { PureComponent } from 'react';
-
+import fetch from "sx-fetch"
+const API = {
+  logindemo: '/login'
+}
+@fetch.inject()
 export default class Login extends PureComponent {
   constructor(props) {
     super(props);
   }
 
-  ccc() {
-    this.props.history.push('/home/home')
+  login() {
+    this.props.$fetch.post(API.logindemo, null, { loading: false }).then(res => {
+      console.log(res)
+    })
   }
 
   render() {
     return (
       <div>
-        <div onClick={() => this.ccc()}> 登录了</div>
+        <div onClick={() => this.login()}> 点击登录</div>
       </div>
     )
   }

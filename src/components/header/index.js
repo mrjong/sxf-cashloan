@@ -2,19 +2,16 @@ import React, { PureComponent } from "react"
 import styles from "./Header.scss"
 
 export default class Header extends PureComponent {
-  goBack() {
-    // window.history.back()
-    this.props.history.back()
+  goBack = () => {
+    this.props.history.goBack()
+    console.log(this.props)
   }
-
-  componentDidMount() {
-  }
-
   render() {
-    const { title, headerHide, arrowHide, headerProps} = this.props
+    const { headerProps } = this.props
     const ua = window.navigator.userAgent
     return (
       <div>
+        {/* 各个渠道是否隐藏头部 */}
         {/MicroMessenger/i.test(ua) || /SuiXingPay-Mpos/i.test(ua) || /SuiXingPay-Cashier/i.test(ua) || headerProps.headerHide ? (
           ''
         ) : (

@@ -50,7 +50,7 @@ export default class order_page extends PureComponent {
                     },
                 },
                 {
-                    arrowHide: true,
+                    arrowHide: 'empty',
                     extra: {
                         name: '放款失败',
                         color: '#F44258',

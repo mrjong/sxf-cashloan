@@ -1,0 +1,27 @@
+.order_detail_page{
+    flex: 1;
+    padding: 0.24rem 0 0;
+    background-color: #f1f1f1;
+    .panel_conten {
+      padding: 0.3rem;
+      .list_item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+      }
+      .item_name {
+        font-size: 0.3rem;
+        color: #252729;
+        display: flex;
+        align-items: center;
+      }
+      .item_value {
+        font-size: 0.3rem;
+        color: #333;
+        font-weight: bold;
+      }
+    }
+    .mt24{
+        margin-top: 24px;
+    }
+}

@@ -2,7 +2,7 @@ export default [
   {
     path: '/mine/mine_page',
     title: '个人中心',
-    arrowHide: true,
+    arrowHide: 'empty',
     component: () => import('pages/mine/mine_page'),
     footerHide: false,
   },
