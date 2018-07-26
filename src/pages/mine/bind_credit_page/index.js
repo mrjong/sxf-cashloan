@@ -3,7 +3,7 @@ import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem, Toast } from 'antd-mobile';
 import ButtonCustom from 'components/button';
-import { validator } from 'utils/validator';
+import { validators } from 'utils/validator';
 import styles from './index.scss';
 
 @fetch.inject()
@@ -13,7 +13,7 @@ export default class bind_credit_page extends PureComponent {
     super(props);
     this.state = {
       loading: false,
-      userName: '张三',
+      userName: '',
     };
   }
 
@@ -29,7 +29,7 @@ export default class bind_credit_page extends PureComponent {
 
   // 校验信用卡卡号
   validateCarNumber = (rule, value, callback) => {
-    if (!validator.bankCardNumber(value)) {
+    if (!validators.bankCardNumber(value)) {
       callback('请输入合法的持卡人卡号');
     } else {
       callback();
@@ -43,14 +43,51 @@ export default class bind_credit_page extends PureComponent {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const params ={
-          cardNo:values.valueInputCarNumber,
+        const params = {
+          cardNo: values.valueInputCarNumber,
         }
         // values中存放的是经过 getFieldProps 包装的表单元素的值
         console.log(values);
-        this.props.$fetch.post(`/withhold/card/bindConfirm`, params).then((res) => {
-
-        })
+        //判断是否登录
+        const token = sessionStorage.getItem("tokenId");
+        if (token) {
+          // 通过输入的银行卡号 查出查到卡banCd
+          this.props.$fetch.post(`/cmm/qrycardbin`, params).then((result) => {
+            if (result.bankCd===null || result.bankCd==='' || result.cardTyp==='D') {
+              Toast.info('请输入正确的信用卡号')
+            } else {
+              const params1= {
+                bankCd: result.bankCd,
+                cardTyp: 'C', //卡类型。
+                cardNo: values.valueInputCarNumber, //持卡人卡号
+              }
+              this.props.$fetch.post(`/withhold/card/bindConfirm`, params1).then((result) => {
+                if (result.msgCode === 'PTM0000') {
+                  // bindCreditConfirm()
+                  if (sessionStorage.getItem('creditCardManagement')) {
+                    this.props.history.push('/creditCardManagement')
+                  } else {
+                    //提交申请 判断是否绑定信用卡和储蓄卡
+                    this.props.$fetch.post('/my/chkCard').then(result=>{
+                        if(result.msgCode==="PTM2003"){
+                            this.props.history.push('/storageCard')
+                        } else {
+                            sessionStorage.getItem('storageCardSourceLenderAgain') ?
+                            this.props.history.push('/backConfirm') : this.props.history.push('/home')
+                        }
+                    })
+                  }
+                } else {
+                  Toast.info(result.msgInfo)
+                }
+              })
+            }
+          }, (error) => {
+            error.msgInfo  && Toast.info(error.msgInfo );
+          })
+        } else {
+          Toast.info('请先去登录');
+        }
         // TODO 发送请求等操作
       } else {
         // 如果存在错误，获取第一个字段的第一个错误进行提示
