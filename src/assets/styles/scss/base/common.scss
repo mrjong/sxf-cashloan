@@ -1,0 +1,15 @@
+/* ========================== 公共样式 ========================== */
+
+/* ==== 协议提示文字 和 链接颜色 ==== */
+:global {
+  .protocol_tip {
+    margin-top: 0.3rem;
+    color: #282828;
+    font-size: 0.24rem;
+    margin-right: auto;
+    margin-left: auto;
+    .protocol_link {
+      color: #ebde74;
+    }
+  }
+}
