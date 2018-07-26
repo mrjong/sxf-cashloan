@@ -60,7 +60,7 @@ const isAvailableFun = {
   },
 };
 
-export default {
+export {
   getParamsFromUrl,
   getDeviceType,
   guid,

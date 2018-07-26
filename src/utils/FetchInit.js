@@ -1,5 +1,6 @@
-import fetch from 'sx-fetch'
-import { Toast } from 'antd-mobile'
+import fetch from 'sx-fetch';
+import Cookie from 'js-cookie';
+import { Toast } from 'antd-mobile';
 
 const fetchinit = () => {
   // 拦截请求
@@ -22,9 +23,18 @@ const fetchinit = () => {
   });
   fetch.init({
     timeout: 10000, // 默认超时
-    baseURL: '/api', // baseurl
+    baseURL: '/wap', // baseurl
     onShowErrorTip: (err, errorTip) => {
       if (errorTip) Toast.fail('请求超时，请稍后重试');
+    },
+    headers: {
+      common: {
+        // X-Requested-With: 'XMLHttpRequest',
+        token: Cookie.get('fin-v-card-token'),
+      },
+      // post: {
+      //   'Content-Type': 'application/x-www-form-urlencoded'
+      // }
     },
     onShowSuccessTip: (response, successTip) => {
       Toast.hide()
