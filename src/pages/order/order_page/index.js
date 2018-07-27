@@ -71,12 +71,12 @@ export default class order_page extends PureComponent {
         // -2放款中 -1放款失败  0还款中 1已逾期  2还款登记中 4已结清
         //自账单： sts: -2放款中 -1放款失败 0 未到期（还款中）  1 已逾期  2处理中 3已撤销 4 已结清
         // this.props.init('spread',null)
-        this.props.$fetch.post('/bill/list',{startRow:"0",limitRow: '10'}).then(result=>{
+        this.props.$fetch.post('/bill/list', { startRow: "0", limitRow: '10', qryType: '0' }).then(result => {
             let billList = [];
-            if(result.msgCode!=='PTM0000'){
-                Toast.info(result.msgInfo,1)
+            if (result.msgCode !== 'PTM0000') {
+                Toast.info(result.msgInfo, 1)
             }
-            for(var i=0; i<result.billList.length; i++){
+            for (var i = 0; i < result.billList.length; i++) {
                 billList.push({
                     extra: {
                         name: result.billList[i].billStsNm,
@@ -88,8 +88,8 @@ export default class order_page extends PureComponent {
                     },
                 })
             }
-            this.setState({orderList: billList});
-        },error=>{
+            this.setState({ orderList: billList });
+        }, error => {
             console.log(error)
         })
     }
@@ -99,12 +99,12 @@ export default class order_page extends PureComponent {
             <div className={styles.order_page}>
                 {
                     this.state.orderList.length ?
-                    <Lists listsInf={this.state.orderList} className={styles.order_list} />
-                    :
-                    <div className={styles.no_data}>
-                        <img src={noOrderIco} alt="" />
-                        <p>暂无账单</p>
-                    </div>
+                        <Lists listsInf={this.state.orderList} className={styles.order_list} />
+                        :
+                        <div className={styles.no_data}>
+                            <img src={noOrderIco} alt="" />
+                            <p>暂无账单</p>
+                        </div>
                 }
             </div>
         )
