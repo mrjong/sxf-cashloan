@@ -15,7 +15,7 @@ function LoadingComponent() {
   return <div>loading</div>;
 }
 const LoginPage = Loadable({
-  loader: () => import('pages/login/login'),
+  loader: () => import('pages/login/login_page'),
   loading: Loading,
   LoadingComponent,
   delay: 300

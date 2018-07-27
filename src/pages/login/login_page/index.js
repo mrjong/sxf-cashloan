@@ -3,12 +3,10 @@ import { createForm } from 'rc-form';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
-import { getDeviceType } from 'utils/common';
+import { getDeviceType,getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import log from '../../../assets/images/login/22@2x.png';
 import phone from '../../../assets/images/login/phone.png';
-import code from '../../../assets/images/login/code.png';
-import imgCode from '../../../assets/images/login/1.png';
 import number from '../../../assets/images/login/number.png';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
@@ -17,7 +15,7 @@ import ButtonCustom from '../../../components/button';
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
-export default class LoginPage extends PureComponent {
+export default class login_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +46,6 @@ export default class LoginPage extends PureComponent {
             smsCd : values.smsCd, // IP地址
             usrCnl : sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel'): '', // 用户渠道
             location : this.props.locationAddress, // 定位地址
-            
         }).then(res=> {
             // loginGoLogin()
             if(res.msgCode !== 'PTM0000'){
@@ -93,7 +90,10 @@ export default class LoginPage extends PureComponent {
     //   }
     // }, 1000);
     this.props.form.validateFields((err, values) => {
-      if (!err) {
+      if(err&&err.smsCd){
+        delete(err.smsCd)
+      }
+      if (!err||JSON.stringify(err)==="{}") {
         // 发送验证码
         this.props.$fetch.post(`/cmm/sendsms`,{
           type: '6',
@@ -117,16 +117,8 @@ export default class LoginPage extends PureComponent {
             }, 1000);
           }
         })
-      } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            Toast.info(errMessage);
-          }
-        }
+      }else{
+        Toast.info(getFirstError(err))
       }
     })
   }
@@ -154,21 +146,6 @@ export default class LoginPage extends PureComponent {
           />
         </div>
 
-        <div className={style.inputItem}>
-          <img src={code} className={style.phone} />
-          <input
-            className={style.input}
-            placeholder='请输入图形码'
-            {...getFieldProps('imgCode', {
-              rules: [
-                { required: true, message: '请输入图形码' },
-              ],
-            })}
-          />
-          <span className={style.imgCode}>
-            <img src={imgCode} />
-          </span>
-        </div>
 
         <div className={style.inputItem}>
           <img src={number} className={style.phone} />
@@ -176,9 +153,9 @@ export default class LoginPage extends PureComponent {
             className={style.input}
             placeholder='请输入验证码'
             {...getFieldProps('smsCd', {
-              // rules: [
-              //   { required: true, message: '请输入验证码' },
-              // ],
+              rules: [
+                { required: true, message: '请输入验证码' },
+              ],
             })}
           />
           <span className={style.inline} />
