@@ -10,7 +10,6 @@ export default class order_page extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            // orderList: [],
             orderList: [
                 {
                     extra: {
