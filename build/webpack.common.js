@@ -105,17 +105,10 @@ module.exports = function (options) {
         exclude: [/node_modules[\\/]react(-router)?[\\/]/, /node_modules[\\/]items-store[\\/]/],
       },
       disableHostCheck: true,
-      // proxy: {
-      //   '/api': {
-      //     target: 'http://172.16.136.41:8091/ptm',
-      //     pathRewrite: {'^/api': ''},
-      //     changeOrigin: true,
-      //   },
-      // },
       proxy: {
-        '/api': {
-          target: 'http://172.16.154.47:8080', //目标接口域名
-          pathRewrite: { '^/api': '/api' }, //重写接口
+        '/wap': {
+          target: 'http://172.16.154.47:8080/wap', //目标接口域名
+          pathRewrite: { '^/wap': '' }, //重写接口
           changeOrigin: true, //是否跨域
           // demo=>  'http://localhost:8080/api' ===> 'http://www.abc.com/api'
         },
