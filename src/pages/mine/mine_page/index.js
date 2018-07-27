@@ -1,8 +1,14 @@
 import React, { PureComponent } from 'react';
+import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/lists';
 import styles from './index.scss';
 
+const API = {
+  VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
+};
+
+@fetch.inject()
 export default class mine_page extends PureComponent {
   constructor(props) {
     super(props);
@@ -10,6 +16,17 @@ export default class mine_page extends PureComponent {
       userPhone: '152****6273',
     };
   }
+  componentWillMount() {
+    this.queryVipCard();
+  }
+  // 查询用户会员卡状态
+  queryVipCard = () => {
+    this.props.$fetch.post(API.VIPCARD).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        console.log(result);
+      }
+    });
+  };
   // 退出
   logout = () => {
     alert('退出')

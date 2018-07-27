@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { Toast } from 'antd-mobile';
 import { getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import log from '../../../assets/images/login/22@2x.png';
@@ -63,7 +62,7 @@ export default class login_page extends PureComponent {
           location: this.props.locationAddress, // 定位地址
         }).then(res => {
           if (res.msgCode !== 'PTM0000') {
-            res.msgInfo && Toast.info(res.msgInfo);
+            res.msgInfo && this.props.toast.info(res.msgInfo);
             return
           }
           sessionStorage.setItem('authorizedNotLoginStats', true)
@@ -71,10 +70,10 @@ export default class login_page extends PureComponent {
           sessionStorage.setItem('userId', res.data.userId);
           sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
         }, err => {
-          err.msgInfo && Toast.info(err.msgInfo);
+          err.msgInfo && this.props.toast.info(err.msgInfo);
         });
       } else {
-        Toast.info(getFirstError(err))
+        this.props.toast.info(getFirstError(err))
       }
     })
   };
@@ -108,12 +107,12 @@ export default class login_page extends PureComponent {
           osType: osType
         }).then((result) => {
           if (result.msgCode !== 'PTM0000') {
-            Toast.info(result.msgInfo)
+            this.props.toast.info(result.msgInfo)
             this.setState({ valueInputImgCode: '' })
             // this.getImgCode()
             return false
           } else {
-            Toast.info('发送成功，请注意查收！')
+            this.props.toast.info('发送成功，请注意查收！')
             this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo })
             timmer = setInterval(() => {
               this.setState({ flag: false, timers: i-- + '"' });
@@ -126,7 +125,7 @@ export default class login_page extends PureComponent {
           }
         })
       } else {
-        Toast.info(getFirstError(err))
+        this.props.toast.info(getFirstError(err))
       }
     })
   }

@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Toast } from 'antd-mobile'
 import Lists from 'components/lists';
 import fetch from 'sx-fetch';
 import noOrderIco from 'assets/images/order/no_order_ico.png';
@@ -73,7 +72,7 @@ export default class order_page extends PureComponent {
         this.props.$fetch.post('/bill/list', { startRow: "0", limitRow: '10', qryType: '0' }).then(result => {
             let billList = [];
             if (result.msgCode !== 'PTM0000') {
-                Toast.info(result.msgInfo, 1)
+                this.props.toast.info(result.msgInfo, 1)
             }
             for (var i = 0; i < result.billList.length; i++) {
                 billList.push({
