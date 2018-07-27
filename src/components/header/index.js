@@ -8,7 +8,7 @@ export default class Header extends Component {
 
   }
   render() {
-    const { headerProps } = this.props
+    const { headerProps, newTitle } = this.props
     const ua = window.navigator.userAgent
     return (
       <div>
@@ -22,7 +22,7 @@ export default class Header extends Component {
                   <div className={styles.left} onClick={() => this.goBack()} />
                 </div>
               ) : null}
-              <div className={styles.center}>{headerProps.title}</div>
+              <div className={styles.center}>{newTitle || headerProps.title}</div>
             </div>
           )}
       </div>

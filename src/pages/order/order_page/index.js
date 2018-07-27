@@ -42,6 +42,7 @@ export default class message_page extends PureComponent {
     }
     scrollTop = 0
     componentWillMount() {
+        this.props.setTitle('newTitle')
         var _body = document.getElementsByTagName("body")[0]
         _body.style.backgroundColor = "#efeff4"
         // 处理详情返回之后
