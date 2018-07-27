@@ -19,6 +19,18 @@ export default class mine_page extends PureComponent {
     const listsArr = [
       {
         extra: {
+          name: '未购买',
+          color: '#FF5A5A',
+        },
+        label: {
+          name: '会员卡',
+          icon: require('assets/images/mine/menu_ico7.png')
+        },
+      },
+    ];
+    const listsArr2 = [
+      {
+        extra: {
           name: '已认证',
           color: '#4CA6FF',
         },
@@ -32,29 +44,27 @@ export default class mine_page extends PureComponent {
           name: '信用加分',
           icon: require('assets/images/mine/menu_ico2.png')
         },
-        clickCb: () => {
-          this.props.history.push('/mine/credit_extension_page')
-        },
+        // clickCb: () => {
+        //   this.props.history.push('/mine/credit_extension_page')
+        // },
       },
-    ];
-    const listsArr2 = [
       {
         label: {
           name: '信用卡管理',
           icon: require('assets/images/mine/menu_ico3.png'),
         },
-        clickCb: () => {
-          this.props.history.push('/mine/select_credit_page')
-        },
+        // clickCb: () => {
+        //   this.props.history.push('/mine/select_credit_page')
+        // },
       },
       {
         label: {
           name: '储蓄卡管理',
           icon: require('assets/images/mine/menu_ico4.png'),
         },
-        clickCb: () => {
-          this.props.history.push('/mine/select_save_page')
-        },
+        // clickCb: () => {
+        //   this.props.history.push('/mine/select_save_page')
+        // },
       },
     ];
     const listsArr3 = [
@@ -64,25 +74,8 @@ export default class mine_page extends PureComponent {
           icon: require('assets/images/mine/menu_ico5.png')
         },
       },
-      {
-        label: {
-          name: '账号安全',
-          icon: require('assets/images/mine/menu_ico6.png')
-        },
-      },
     ];
-    const listsArr4 = [
-      {
-        extra: {
-          name: '未购买',
-          color: '#FF5A5A',
-        },
-        label: {
-          name: '会员卡',
-          icon: require('assets/images/mine/menu_ico7.png')
-        },
-      },
-     ];
+    
     const { userPhone } = this.state;
     return (
       <div className={styles.mine_page}>
@@ -90,8 +83,7 @@ export default class mine_page extends PureComponent {
           <img src={avatar} alt="用户头像" />
           <span>{userPhone}</span>
         </div>
-        <Lists listsInf={listsArr4} />
-        <Lists listsInf={listsArr} className={styles.common_margin} />
+        <Lists listsInf={listsArr} />
         <Lists listsInf={listsArr2} className={styles.common_margin} />
         <Lists listsInf={listsArr3} className={styles.common_margin} />
         <div onClick={this.logout} className={styles.logout}>退出登录</div>
