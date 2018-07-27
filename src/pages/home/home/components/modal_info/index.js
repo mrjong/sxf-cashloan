@@ -1,13 +1,13 @@
+import { store } from 'utils/common';
+import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
+
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import SButton from 'components/button';
 import TabList from '../tag_list';
-import { store } from 'utils/common';
 
 import style from './style.scss';
-import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 
 const API = {
   QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
@@ -79,7 +79,6 @@ export default class ModalInfo extends PureComponent {
   // 数据回显
   recoveryPageData = () => {
     let pageData = store.getRepaymentModalData();
-    console.log(pageData, 'pageData');
     pageData.repaymentAmount = 8299.89;
     this.setState({ ...pageData });
   };
@@ -96,7 +95,6 @@ export default class ModalInfo extends PureComponent {
 
   // 代扣 Tag 点击事件
   handleRepaymentTagClick = data => {
-    console.log('代扣 Tag 点击事件', data);
     this.setState({
       repaymentDate: data.value,
       repaymentIndex: data.index,
@@ -105,7 +103,6 @@ export default class ModalInfo extends PureComponent {
 
   // 还款 Tag 点击事件
   handleLendersTagClick = data => {
-    console.log('还款 Tag 点击事件');
     this.setState({
       lendersDate: data.value,
       lendersIndex: data.index,
@@ -176,7 +173,11 @@ export default class ModalInfo extends PureComponent {
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还期限</label>
-              <TabList tagList={repaymentDateList} defaultindex={repaymentIndex} onClick={this.handleRepaymentTagClick} />
+              <TabList
+                tagList={repaymentDateList}
+                defaultindex={repaymentIndex}
+                onClick={this.handleRepaymentTagClick}
+              />
             </div>
             <p className={style.item_tip}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
           </li>
@@ -187,7 +188,7 @@ export default class ModalInfo extends PureComponent {
             </div>
             <p className={style.item_tip}>选择还款日前一天（2018-7-12日）放款，将最大成本节 约您代资金</p>
           </li>
-          <li onClick={this.handleClickChoiseBank} className={style.list_item}>
+          <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>
               <label className={style.item_name}>还款银行卡</label>
               <span className={[style.item_value, style.item_value_bank].join(' ')}>

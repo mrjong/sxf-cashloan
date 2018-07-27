@@ -24,9 +24,7 @@ export default class TagList extends React.PureComponent {
     onClick: () => {},
   };
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps, 'nextProps');
-  }
+  componentWillReceiveProps(nextProps) {}
 
   componentWillMount() {
     this.setState({ currentIndex: this.props.defaultindex }, this.passInitData);
