@@ -29,7 +29,7 @@ export default class ButtonCustom extends React.PureComponent {
                         listdescinfo.length > 0 && listdescinfo.map((item, index) => {
                             console.log(index)
                             return (
-                                <li key={index} className={`clearfix ${styles.list_desc_container}`}>
+                                <li key={index} className={`${styles.list_desc_container}`}>
                                     <div className={styles.list_desc_content}>
                                         <label>{item.label.name}</label>
                                     </div>

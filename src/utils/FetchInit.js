@@ -2,11 +2,12 @@ import fetch from 'sx-fetch'
 import { Toast } from 'antd-mobile'
 
 const fetchinit = () => {
+  let timer
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(cfg => {
     if (!cfg.hideLoading) {
-        // 防止时间短，出现loading 导致闪烁
-      setTimeout(() => {
+      // 防止时间短，出现loading 导致闪烁
+      timer = setTimeout(() => {
         Toast.loading('数据加载中...', 10)
       }, 300);
     }
@@ -24,9 +25,13 @@ const fetchinit = () => {
     timeout: 10000, // 默认超时
     baseURL: '/api', // baseurl
     onShowErrorTip: (err, errorTip) => {
-      if (errorTip) Toast.fail('请求超时，请稍后重试');
+      console.log(err)
+      clearTimeout(timer)
+      Toast.hide()
+      if (errorTip) Toast.fail('服务器繁忙，请稍后重试');
     },
     onShowSuccessTip: (response, successTip) => {
+      clearTimeout(timer)
       Toast.hide()
       switch (response.data.msgCode) {
         case '0000':

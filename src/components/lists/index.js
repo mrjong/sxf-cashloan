@@ -29,13 +29,12 @@ export default class Lists extends PureComponent {
         >
           {
             listsInf.map((item, index) => {
-              console.log(item)
               return (
                 <div key={index}>
                   <Item
                     className={item.label.icon ? styles.hasIcon : null}
                     arrow={item.arrowHide ? item.arrowHide : 'horizontal'}
-                    onClick={item.clickCb}
+                    onClick={() => { this.props.clickCb(item) }}
                     extra={Object.prototype.toString.call(item.extra) === '[object Array]' ? this.getExtra(item.extra) : <span style={{ color: item.extra && item.extra.color }}>{item.extra && item.extra.name}</span>}
                     thumb={item.label.icon}
                   >
@@ -45,8 +44,8 @@ export default class Lists extends PureComponent {
                     }
                   </Item>
                   <div>
-                    {item.listDesc && item.listDesc.value && item.listDesc.value.length > 0 && item.showDesc ?
-                      <ListDesc listdescinfo={item.listDesc.value}></ListDesc> : null
+                    {item.listDesc && item.showDesc ?
+                      <ListDesc listdescinfo={item.listDesc}></ListDesc> : null
                     }
 
                   </div>

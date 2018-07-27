@@ -67,7 +67,7 @@ export default class Footer extends PureComponent {
       },
       {
         title: '账单',
-        url: '/example/button/',
+        url: '/order/order_page',
         icon: iconBillActive,
         icon_not: iconBill,
         color: '#6A6D70',
