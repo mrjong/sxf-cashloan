@@ -33,15 +33,15 @@ export default class mine_page extends PureComponent {
   };
   // 第一组里的点击事件
   clickhandle = item => {
-    this.props.history.push(item.jumpToUrl)
+    this.props.history.push(item.jumpToUrl);
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    this.props.history.push(item.jumpToUrl)
+    this.props.history.push(item.jumpToUrl);
   };
   // 第三组里的点击事件
   clickhandle3 = item => {
-    this.props.history.push(item.jumpToUrl)
+    this.props.history.push(item.jumpToUrl);
   };
   render() {
     // 定义list所需的数据
