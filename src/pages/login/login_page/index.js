@@ -11,7 +11,7 @@ import number from '../../../assets/images/login/number.png';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
 import ButtonCustom from '../../../components/button';
-
+let timmer
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -25,11 +25,15 @@ export default class login_page extends PureComponent {
       smsJrnNo: '', // 短信流水号
     };
   }
+
   componentWillMount() {
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
       phoneValue: '18500214321'
     });
+  }
+  componentWillUnmount() {
+    clearInterval(timmer)
   }
 
   // 校验手机号
@@ -67,15 +71,7 @@ export default class login_page extends PureComponent {
           err.msgInfo && Toast.info(err.msgInfo);
         });
       } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            Toast.info(errMessage);
-          }
-        }
+        Toast.info(getFirstError(err))
       }
     })
   };
@@ -116,7 +112,7 @@ export default class login_page extends PureComponent {
           } else {
             Toast.info('发送成功，请注意查收！')
             this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo })
-            let timmer = setInterval(() => {
+            timmer = setInterval(() => {
               this.setState({ flag: false, timers: i-- + '"' });
               if (i === -1) {
                 clearInterval(timmer);
@@ -144,6 +140,7 @@ export default class login_page extends PureComponent {
         <div className={style.inputItem}>
           <img src={phone} className={style.phone} />
           <input
+            maxLength="11"
             className={style.input}
             placeholder='请输入手机号'
             {...getFieldProps('phoneValue', {
@@ -161,6 +158,7 @@ export default class login_page extends PureComponent {
           <input
             className={style.input}
             placeholder='请输入验证码'
+            maxLength="6"
             {...getFieldProps('smsCd', {
               rules: [
                 { required: true, message: '请输入验证码' },
