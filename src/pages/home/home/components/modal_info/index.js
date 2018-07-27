@@ -20,45 +20,45 @@ export default class ModalInfo extends PureComponent {
     this.state = {
       repaymentAmount: '',
       repaymentDate: '',
+      repaymentIndex: 0,
       lendersDate: '',
+      lendersIndex: 0,
+      repaymentDateList: [
+        {
+          name: '30天',
+          value: '30天',
+        },
+        {
+          name: '3个月',
+          value: '3个月',
+        },
+        {
+          name: '7天(会员专属)',
+          value: '7天(会员专属)',
+        },
+      ],
+      lendersDateList: [
+        {
+          name: '还款日前一天',
+          value: '还款日前一天',
+        },
+        {
+          name: '立即放款',
+          value: '立即放款',
+          style: {
+            width: '2.07rem',
+          },
+        },
+      ],
     };
   }
 
   static propTypes = {
     children: PropTypes.node,
-    repaymentDateList: PropTypes.array,
-    lendersDateList: PropTypes.array,
     onClose: PropTypes.func,
   };
 
   static defaultProps = {
-    repaymentDateList: [
-      {
-        name: '30天',
-        value: '30天',
-      },
-      {
-        name: '3个月',
-        value: '3个月',
-      },
-      {
-        name: '7天(会员专属)',
-        value: '7天(会员专属)',
-      },
-    ],
-    lendersDateList: [
-      {
-        name: '还款日前一天',
-        value: '还款日前一天',
-      },
-      {
-        name: '立即放款',
-        value: '立即放款',
-        style: {
-          width: '2.07rem',
-        },
-      },
-    ],
     children: '',
     onClose: () => {
       console.log('弹框关闭方法，需要传递进来');
@@ -68,7 +68,6 @@ export default class ModalInfo extends PureComponent {
   componentWillMount() {
     const pageData = store.getRepaymentModalData();
     if (pageData) {
-      console.log(pageData, 'pageData111');
       this.recoveryPageData();
     } else {
       this.requestGetRepaymentDateList();
@@ -80,34 +79,36 @@ export default class ModalInfo extends PureComponent {
   // 数据回显
   recoveryPageData = () => {
     let pageData = store.getRepaymentModalData();
+    console.log(pageData, 'pageData');
     pageData.repaymentAmount = 8299.89;
     this.setState({ ...pageData });
   };
 
   // 保存当前页面数据
   saveCurrentPageData = () => {
-    console.log(store, 'store');
-    const { repaymentDate, lendersDate } = this.state;
-    const currentPageData = {
-      repaymentDate,
-      lendersDate,
-    };
-    store.setRepaymentModalData(currentPageData);
+    store.setRepaymentModalData(this.state);
+  };
+
+  // 清除当前页面数据
+  clearCurrentPageData = () => {
+    store.setRepaymentModalData(null);
   };
 
   // 代扣 Tag 点击事件
-  handleRepaymentTagClick = value => {
-    console.log('代扣 Tag 点击事件');
+  handleRepaymentTagClick = data => {
+    console.log('代扣 Tag 点击事件', data);
     this.setState({
-      repaymentDate: value,
+      repaymentDate: data.value,
+      repaymentIndex: data.index,
     });
   };
 
   // 还款 Tag 点击事件
-  handleLendersTagClick = value => {
+  handleLendersTagClick = data => {
     console.log('还款 Tag 点击事件');
     this.setState({
-      lendersDate: value,
+      lendersDate: data.value,
+      lendersIndex: data.index,
     });
   };
 
@@ -124,8 +125,9 @@ export default class ModalInfo extends PureComponent {
   };
 
   // 确认按钮点击事件
-  handleClickConfirm() {
+  handleClickConfirm = () => {
     console.log('点击确认按钮');
+    this.clearCurrentPageData();
   }
 
   // 获取代还期限列表 还款日期列表
@@ -156,8 +158,8 @@ export default class ModalInfo extends PureComponent {
   };
 
   render() {
-    const { repaymentAmount } = this.state;
-    const { repaymentDateList, lendersDateList, onClose } = this.props;
+    const { repaymentAmount, repaymentDateList, repaymentIndex, lendersDateList, lendersIndex } = this.state;
+    const { onClose } = this.props;
     return (
       <div className={style.modal_content}>
         <button className={style.modal_cancel_btn} onClick={event => this._handleClick(onClose, event)}>
@@ -174,14 +176,14 @@ export default class ModalInfo extends PureComponent {
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还期限</label>
-              <TabList tagList={repaymentDateList} onClick={this.handleRepaymentTagClick} />
+              <TabList tagList={repaymentDateList} defaultindex={repaymentIndex} onClick={this.handleRepaymentTagClick} />
             </div>
             <p className={style.item_tip}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>放款日期</label>
-              <TabList tagList={lendersDateList} onClick={this.handleLendersTagClick} />
+              <TabList tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
             </div>
             <p className={style.item_tip}>选择还款日前一天（2018-7-12日）放款，将最大成本节 约您代资金</p>
           </li>
