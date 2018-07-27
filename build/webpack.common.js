@@ -95,7 +95,7 @@ module.exports = function (options) {
     devServer: {
       hot: true,
       host: '0.0.0.0',
-      port: 8060,
+      port: 8010,
       publicPath: '/',
       clientLogLevel: 'none',
       contentBase: path.resolve(__dirname, '../src'),
