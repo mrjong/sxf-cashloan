@@ -1,7 +1,10 @@
 .credit_extension_page {
   margin-top: 24px;
-  .commit_btn {
+  .commit_btn,.not_commit_btn {
     width: 620px;
     margin-top: 114px;
+  }
+  .not_commit_btn{
+    background: #e5e5e5;
   }
 }
