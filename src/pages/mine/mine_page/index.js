@@ -8,8 +8,7 @@ export default class mine_page extends PureComponent {
     super(props);
     this.state = {
       userPhone: '152****6273',
-      isLogin: true,
-    }
+    };
   }
   // 退出
   logout = () => {
@@ -84,23 +83,18 @@ export default class mine_page extends PureComponent {
         },
       },
      ];
-    const {userPhone, isLogin} = this.state;
+    const { userPhone } = this.state;
     return (
       <div className={styles.mine_page}>
-        <div className={styles.user_inf} >
+        <div className={styles.user_inf}>
           <img src={avatar} alt="用户头像" />
-          <span>{isLogin ? userPhone : '登录／注册'}</span>
+          <span>{userPhone}</span>
         </div>
         <Lists listsInf={listsArr4} />
         <Lists listsInf={listsArr} className={styles.common_margin} />
         <Lists listsInf={listsArr2} className={styles.common_margin} />
         <Lists listsInf={listsArr3} className={styles.common_margin} />
-        {
-          isLogin ? 
-          <div onClick={this.logout} className={styles.logout}>退出登录</div>
-           : 
-          null
-        }
+        <div onClick={this.logout} className={styles.logout}>退出登录</div>
       </div>
     )
   }
