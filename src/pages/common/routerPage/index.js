@@ -3,6 +3,7 @@ import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
 import Header from 'components/header';
 import Footer from 'components/footer';
+import { Toast } from 'antd-mobile'
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
@@ -31,7 +32,7 @@ export default class router_Page extends PureComponent {
         let component = await route.component()
         this.setState({
           route: { ...route },
-          component: React.createElement(component.default, { match, history, params: location.state }),
+          component: React.createElement(component.default, { match, history, params: location.state, toast: Toast }),
         })
       } else {
         this.setState({
