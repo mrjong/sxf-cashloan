@@ -2,11 +2,19 @@ import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { setBackGround } from '../../../utils/Background';
 import { InputItem, Picker, List, Toast } from 'antd-mobile';
+import { validators } from '../../../utils/validator';
 import informationMore from '../../../assets/images/real_name/更多-1@2x.png';
 import AsyncCascadePicker from '../../../components/async-cascad-picker/index.jsx';
 import ButtonCustom from '../../../components/button';
 import fetch from 'sx-fetch';
 import style from './index.scss';
+
+
+const API = {
+  getProv: '/rcm/qryProv',
+  getRelat: '/rcm/qryRelat',
+  submitData: '/auth/personalData',
+};
 
 @fetch.inject()
 @createForm()
@@ -26,7 +34,6 @@ export default class essential_information extends PureComponent {
   };
 
   componentWillMount() {
-
   }
 
   componentDidMount() {
@@ -81,27 +88,28 @@ export default class essential_information extends PureComponent {
     // e.preventDefault();
     const { loading } = this.state;
     if (loading) return; // 防止重复提交
-
     this.props.form.validateFields((err, values) => {
+      console.log(values);
       if (!err) {
-        const params ={
-          provNm:values.provValue[0],
-          cityNm:values.provValue[1],
-          usrDtlAddr:values.address,
-          usrDtlAddrLctn:'',
-          cntRelTyp1:values.cntRelTyp1[0],
-          cntUsrNm1:values.friendName,
-          cntMblNo1:values.friendPhone,
-          cntRelTyp2:values.cntRelTyp2[0],
-          cntUsrNm2:values.relativesName,
-          cntMblNo2:values.relativesPhone,
-          credCorpOrg:''
-        }
+        const params = {
+          provNm: values.city[0],
+          cityNm: values.city[1],
+          usrDtlAddr: values.address,
+          usrDtlAddrLctn: '',
+          cntRelTyp1: values.cntRelTyp1[0],
+          cntUsrNm1: values.friendName,
+          cntMblNo1: values.friendPhone,
+          cntRelTyp2: values.cntRelTyp2[0],
+          cntUsrNm2: values.relativesName,
+          cntMblNo2: values.relativesPhone,
+          credCorpOrg: '',
+        };
         // values中存放的是经过 getFieldDecorator 包装的表单元素的值
-        console.log(values);
-        this.props.$fetch.post(`/wap/auth/personalData`, params).then((res) => {
+        this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
+          if (result && result.msgCode === 'PTM0000') {
 
-        })
+          }
+        });
         // TODO 发送请求等操作
       } else {
         // 如果存在错误，获取第一个字段的第一个错误进行提示
@@ -118,6 +126,15 @@ export default class essential_information extends PureComponent {
 
   };
 
+  // 校验手机号
+  validatePhone = (rule, value, callback) => {
+    if (!validators.phone(value)) {
+      callback('请输入合法的手机号');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -127,20 +144,20 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('city', {
             initialValue: this.state.provValue,
             rules: [{ required: true, message: '请选择城市' }],
-            onChange :(value, label)=>{
-              this.setState({provValue: value});
-            }
+            onChange: (value, label) => {
+              this.setState({ provValue: value });
+            },
           })(
             // 这里面的组件，要有 value onChange属性就行，一般都是表单组件，自定义组件，提供了value onChange 属性的也可以用，也可以通过 valuePropName 来指定，这个就是高级一点的用法了。
             <AsyncCascadePicker
               title="选择省市"
               loadData={[
-                () => this.props.$fetch.post(`/wap/rcm/qryProv`)
+                () => this.props.$fetch.get(`${API.getProv}`)
                   .then((result) => {
                     const prov = (result && result.data && result.data.length) ? result.data : [];
                     return prov.map(item => ({ value: item.key, label: item.value }));
                   }),
-                (provCd) => this.props.$fetch.get(`/wap/rcm/qryProv?pid=${provCd}`)
+                (provCd) => this.props.$fetch.get(`/rcm/qryProv?pid=${provCd}`)
                   .then(result => {
                     const city = (result && result.data && result.data.length) ? result.data : [];
                     return city.map(item => ({ value: item.key, label: item.value }));
@@ -151,7 +168,7 @@ export default class essential_information extends PureComponent {
               <List.Item>
                 居住城市
               </List.Item>
-            </AsyncCascadePicker>
+            </AsyncCascadePicker>,
           )}
           <img className={style.informationMore} src={informationMore}/>
         </div>
@@ -182,23 +199,21 @@ export default class essential_information extends PureComponent {
             initialValue: this.state.relatValue,
             rules: [{ required: true, message: '请选择联系人关系' }],
           })(
-            <Picker
+            <AsyncCascadePicker
               title="选择联系人"
-              cols={1}
-              data={[
-                { value: '01', label: '配偶' },
-                { value: '02', label: '父母' },
-                { value: '03', label: '子女' },
-                { value: '04', label: '兄弟姐妹' },
+              loadData={[
+                () => this.props.$fetch.get(`${API.getRelat}/1`)
+                  .then((result) => {
+                    const prov = (result && result.data && result.data.length) ? result.data : [];
+                    return prov.map(item => ({ value: item.key, label: item.value }));
+                  }),
               ]}
+              cols={1}
             >
-              <List.Item
-                extra={this.getRelatLabel()}
-                onClick={this.handleRelatItemClick}
-              >
+              <List.Item>
                 关系
               </List.Item>
-            </Picker>,
+            </AsyncCascadePicker>,
           )}
           <img className={style.informationMore} src={informationMore}/>
         </div>
@@ -216,7 +231,9 @@ export default class essential_information extends PureComponent {
         </div>
         <div className={`${style.labelDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendPhone', {
-            rules: [{ required: true, message: '请输入联系人电话' }],
+            rules: [
+              { required: true, message: '请输入联系人电话' },
+              { validator: this.validatePhone }],
           })(
             <InputItem
               placeholder="联系人电话须与借款人有通话行为"
@@ -234,23 +251,21 @@ export default class essential_information extends PureComponent {
             rules: [{ required: true, message: '请选择联系人关系' }],
             onChange: () => 123, // value 和 onChange 都不用写，getFieldDecorator 已经处理了，如果需要写onChange，在这写
           })(
-            <Picker
+            <AsyncCascadePicker
               title="选择联系人"
-              cols={1}
-              data={[
-                { value: '10', label: '亲属' },
-                { value: '11', label: '同事' },
-                { value: '12', label: '同学' },
-                { value: '13', label: '朋友' },
+              loadData={[
+                () => this.props.$fetch.get(`${API.getRelat}/1`)
+                  .then((result) => {
+                    const prov = (result && result.data && result.data.length) ? result.data : [];
+                    return prov.map(item => ({ value: item.key, label: item.value }));
+                  }),
               ]}
+              cols={1}
             >
-              <List.Item
-                extra={this.getRelatLabellTwo()}
-                onClick={this.handleRelatItemClickTwo}
-              >
+              <List.Item>
                 关系
               </List.Item>
-            </Picker>,
+            </AsyncCascadePicker>,
           )}
           <img className={style.informationMore} src={informationMore}/>
         </div>
@@ -268,7 +283,9 @@ export default class essential_information extends PureComponent {
         </div>
         <div className={`${style.labelDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesPhone', {
-            rules: [{ required: true, message: '请输入联系人电话' }],
+            rules: [
+              { required: true, message: '请输入联系人电话' },
+              { validator: this.validatePhone }],
           })(
             <InputItem
               placeholder="联系人电话须与借款人有通话行为"

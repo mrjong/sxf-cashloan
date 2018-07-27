@@ -1,38 +1,48 @@
 import React, { PureComponent } from 'react';
-import Lists from 'components/lists';
-import ButtonCustom from 'components/button';
+import Lists from '../../../components/lists';
+import ButtonCustom from '../../../components/button';
 import styles from './index.scss';
+import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 
-
 const API = {
-  getStw: '/wap/my/getStsw',
+  getStw: '/my/getStsw',
+  getOperator: '/auth/operatorAuth',
+  getZmxy: '/auth/getZhimaUrl',
 };
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
 
 @fetch.inject()
 
 export default class credit_extension_page extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
+  state = {
+    stswData: [],
+    flag: false,
+    submitFlag: false,
+  };
+
   componentWillMount() {
+    // 查询 授信项状态
     this.props.$fetch.get(`${API.getStw}`).then(result => {
-      console.log(result)
-        // if (result && result.data !== null) {
-        //   this.setState({
-        //     smsJrnNo: result.data,
-        //   });
-        // }
+        if (result && result.data !== null) {
+          this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
+
+          // 判断四项认证是否都认证成功
+          const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
+          if (isAllValid) {
+            this.setState({ submitFlag: true });
+          }
+        }
       },
     );
   }
 
   componentWillUnmount() {
-
   }
-
 
   // 提交代还金申请
   commitApply = () => {
@@ -40,86 +50,61 @@ export default class credit_extension_page extends PureComponent {
   };
 
 
+  getStateData = item => {
+    // 跳转 实名认证
+    if (item.extra.code === 'idCheck' && item.extra.name === '未认证') {
+      this.props.history.push('/authentication/real_name');
+    }
+    // 跳转基本信息
+    else if (item.extra.code === 'basicInf' && item.extra.name === '未认证') {
+      this.props.history.push('/authentication/essential_information');
+    }
+    // 跳转运营商
+    else if (item.extra.code === 'operator' && item.extra.name === '未认证') {
+      this.props.$fetch.get(`${API.getOperator}`).then(result => {
+        console.log(2222, result);
+        if (result.msgCode === 'PTM0000' && result.data.url) {
+          window.location.href = result.data.url;
+        } else {
+          this.props.toast.info(result.msgInfo);
+        }
+      });
+    }
+    // 跳转 芝麻信用
+    else if (item.extra.code === 'zmxy' && item.extra.name === '未认证') {
+      this.props.$fetch.get(`${API.getZmxy}`).then(result => {
+        console.log(333, result);
+        if (result.msgCode === 'PTM0000' && result.data.pageUrl) {
+          window.location.href = result.data.pageUrl;
+        } else {
+          this.props.toast.info(result.msgInfo);
+        }
+      });
+    }
+    else {
+      Toast.info(item.extra.name);
+    }
+  };
 
   render() {
-    const listsArr = [
-      {
+    const { submitFlag, stswData } = this.state;
+    const data = stswData.map(item => {
+      return {
         extra: {
-          name: '已认证',
-          color: '#2BDE73',
+          code: item.code,
+          name: item.stsw.dicDetailValue,
+          color: item.stsw.color,
         },
         label: {
-          name: '实名认证',
+          name: item.name,
         },
-        clickCb: () => {
-          alert(11);
-        },
-      },
-      {
-        extra: {
-          name: '待认证',
-          color: '#F83F4C',
-        },
-        label: {
-          name: '基本信息认证',
-        },
-        clickCb: () => {
-          alert(12);
-        },
-      },
-      {
-        extra: {
-          name: '已认证',
-          color: '#2BDE73',
-        },
-        label: {
-          name: '运营商认证',
-        },
-        clickCb: () => {
-          alert(13);
-        },
-      },
-      {
-        extra: {
-          name: '已认证',
-          color: '#2BDE73',
-        },
-        label: {
-          name: '芝麻分认证',
-        },
-        clickCb: () => {
-          alert(14);
-        },
-      },
-    ];
+      };
+    });
     return (
       <div className={styles.credit_extension_page}>
-        <Lists listsInf={listsArr}/>
+        <Lists listsInf={data} clickCb={this.getStateData}/>
 
-        {/*<List renderHeader={() => '基础信息'} className="my-list">*/}
-          {/*{stswData && stswData.map(item => {*/}
-            {/*const { code, name, stsw: { dicDetailValue, color } } = item;*/}
-            {/*const isSuccess = dicDetailValue === '认证成功'; // 由于后端数据原因，这里只能通过中文判断了*/}
-            {/*const isSuccessIng = dicDetailValue === '认证中';*/}
-            {/*// 判断是否是需要展示的信息*/}
-            {/*if (authCodes.indexOf(code) > -1) {*/}
-              {/*return (*/}
-                {/*<Item*/}
-                  {/*key={code}*/}
-                  {/*extra={<span style={{ color }}>{dicDetailValue}</span>}*/}
-                  {/*arrow={isSuccess || isSuccessIng ? '<span style={{"margin-right":"30px"}}></span>' : 'horizontal'}*/}
-                  {/*onClick={() => {*/}
-                    {/*// 非认证成功才触发事件*/}
-                    {/*!isSuccess && !isSuccessIng && this.getUsrInfo(item);*/}
-                  {/*}}*/}
-                {/*>{name}</Item>*/}
-              {/*);*/}
-            {/*}*/}
-            {/*return null;*/}
-          {/*})}*/}
-        {/*</List>*/}
-
-        <ButtonCustom onClick={this.commitApply} className={styles.commit_btn}>提交代还金申请</ButtonCustom>
+        <ButtonCustom onClick={this.commitApply} className={submitFlag ? styles.commit_btn : styles.not_commit_btn}>提交代还金申请</ButtonCustom>
       </div>
     );
   }
