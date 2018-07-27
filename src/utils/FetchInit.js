@@ -32,10 +32,8 @@ const fetchinit = () => {
       if (errorTip) Toast.fail('服务器繁忙，请稍后重试');
     },
     headers: {
-      common: {
-        // X-Requested-With: 'XMLHttpRequest',
-        token: Cookie.get('fin-v-card-token'),
-      },
+      // X-Requested-With: 'XMLHttpRequest',
+      'fin-v-card-token': Cookie.get('fin-v-card-token'),
       // post: {
       //   'Content-Type': 'application/x-www-form-urlencoded'
       // }

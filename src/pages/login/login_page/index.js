@@ -11,7 +11,11 @@ import number from '../../../assets/images/login/number.png';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
 import ButtonCustom from '../../../components/button';
-
+let timmer
+const API = {
+  smsForLogin: '/signup/smsForLogin',
+  sendsms: '/cmm/sendsms'
+}
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -25,11 +29,15 @@ export default class login_page extends PureComponent {
       smsJrnNo: '', // 短信流水号
     };
   }
+
   componentWillMount() {
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
       phoneValue: '18500214321'
     });
+  }
+  componentWillUnmount() {
+    clearInterval(timmer)
   }
 
   // 校验手机号
@@ -46,7 +54,7 @@ export default class login_page extends PureComponent {
     const osType = getDeviceType();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.$fetch.post('/signup/smsForLogin', {
+        this.props.$fetch.post(API.smsForLogin, {
           mblNo: values.phoneValue, // 手机号
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
           osType: osType, // 操作系统
@@ -54,28 +62,19 @@ export default class login_page extends PureComponent {
           usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : '', // 用户渠道
           location: this.props.locationAddress, // 定位地址
         }).then(res => {
-          // loginGoLogin()
           if (res.msgCode !== 'PTM0000') {
             res.msgInfo && Toast.info(res.msgInfo);
             return
           }
           sessionStorage.setItem('authorizedNotLoginStats', true)
-          Cookie.set('fin-v-card-token', res.tokenId);
-          sessionStorage.setItem('userId', res.userId);
+          Cookie.set('fin-v-card-token', res.data.tokenId);
+          sessionStorage.setItem('userId', res.data.userId);
           sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);
         });
       } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            Toast.info(errMessage);
-          }
-        }
+        Toast.info(getFirstError(err))
       }
     })
   };
@@ -103,7 +102,7 @@ export default class login_page extends PureComponent {
       }
       if (!err || JSON.stringify(err) === "{}") {
         // 发送验证码
-        this.props.$fetch.post(`/cmm/sendsms`, {
+        this.props.$fetch.post(API.sendsms, {
           type: '6',
           mblNo: values.phoneValue,
           osType: osType
@@ -116,7 +115,7 @@ export default class login_page extends PureComponent {
           } else {
             Toast.info('发送成功，请注意查收！')
             this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo })
-            let timmer = setInterval(() => {
+            timmer = setInterval(() => {
               this.setState({ flag: false, timers: i-- + '"' });
               if (i === -1) {
                 clearInterval(timmer);
@@ -144,6 +143,7 @@ export default class login_page extends PureComponent {
         <div className={style.inputItem}>
           <img src={phone} className={style.phone} />
           <input
+            maxLength="11"
             className={style.input}
             placeholder='请输入手机号'
             {...getFieldProps('phoneValue', {
@@ -161,6 +161,7 @@ export default class login_page extends PureComponent {
           <input
             className={style.input}
             placeholder='请输入验证码'
+            maxLength="6"
             {...getFieldProps('smsCd', {
               rules: [
                 { required: true, message: '请输入验证码' },
