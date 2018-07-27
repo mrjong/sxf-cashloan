@@ -3,7 +3,7 @@ import { createForm } from 'rc-form';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
-import { getDeviceType,getFirstError } from 'utils/common';
+import { getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import log from '../../../assets/images/login/22@2x.png';
 import phone from '../../../assets/images/login/phone.png';
@@ -11,7 +11,11 @@ import number from '../../../assets/images/login/number.png';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
 import ButtonCustom from '../../../components/button';
-
+let timmer
+const API = {
+  smsForLogin: '/signup/smsForLogin',
+  sendsms: '/cmm/sendsms'
+}
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -25,6 +29,17 @@ export default class login_page extends PureComponent {
       smsJrnNo: '', // 短信流水号
     };
   }
+
+  componentWillMount() {
+    this.props.form.getFieldProps('phoneValue');
+    this.props.form.setFieldsValue({
+      phoneValue: '18500214321'
+    });
+  }
+  componentWillUnmount() {
+    clearInterval(timmer)
+  }
+
   // 校验手机号
   validatePhone = (rule, value, callback) => {
     if (!validators.phone(value)) {
@@ -39,36 +54,27 @@ export default class login_page extends PureComponent {
     const osType = getDeviceType();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.$fetch.post('/signup/smsForLogin',{
-            mblNo : values.phoneValue, // 手机号
-            smsJrnNo : this.state.smsJrnNo, // 短信流水号
-            osType : osType, // 操作系统
-            smsCd : values.smsCd, // IP地址
-            usrCnl : sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel'): '', // 用户渠道
-            location : this.props.locationAddress, // 定位地址
-        }).then(res=> {
-            // loginGoLogin()
-            if(res.msgCode !== 'PTM0000'){
-                res.msgInfo && Toast.info(res.msgInfo);
-                return
-            }
-            sessionStorage.setItem('authorizedNotLoginStats',true)
-            Cookie.set('fin-v-card-token',res.tokenId);
-            sessionStorage.setItem('userId',res.userId);
-            sessionStorage.getItem("active")==='active' ? this.props.history.replace('/activePage'):this.props.history.replace('/home/home');
-        },err => {
-            err.msgInfo && Toast.info(err.msgInfo);
+        this.props.$fetch.post(API.smsForLogin, {
+          mblNo: values.phoneValue, // 手机号
+          smsJrnNo: this.state.smsJrnNo, // 短信流水号
+          osType: osType, // 操作系统
+          smsCd: values.smsCd, // IP地址
+          usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : '', // 用户渠道
+          location: this.props.locationAddress, // 定位地址
+        }).then(res => {
+          if (res.msgCode !== 'PTM0000') {
+            res.msgInfo && Toast.info(res.msgInfo);
+            return
+          }
+          sessionStorage.setItem('authorizedNotLoginStats', true)
+          Cookie.set('fin-v-card-token', res.data.tokenId);
+          sessionStorage.setItem('userId', res.data.userId);
+          sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
+        }, err => {
+          err.msgInfo && Toast.info(err.msgInfo);
         });
       } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            Toast.info(errMessage);
-          }
-        }
+        Toast.info(getFirstError(err))
       }
     })
   };
@@ -80,6 +86,7 @@ export default class login_page extends PureComponent {
     }
   }
 
+  // 获得手机验证码
   getSmsCode(i) {
     const osType = getDeviceType();
     // let timmer = setInterval(() => {
@@ -90,34 +97,35 @@ export default class login_page extends PureComponent {
     //   }
     // }, 1000);
     this.props.form.validateFields((err, values) => {
-      if(err&&err.smsCd){
-        delete(err.smsCd)
+      if (err && err.smsCd) {
+        delete (err.smsCd)
       }
-      if (!err||JSON.stringify(err)==="{}") {
+      if (!err || JSON.stringify(err) === "{}") {
         // 发送验证码
-        this.props.$fetch.post(`/cmm/sendsms`,{
+        this.props.$fetch.post(API.sendsms, {
           type: '6',
           mblNo: values.phoneValue,
           osType: osType
-        }).then((result)=> {
-          if(result.msgCode !== 'PTM0000'){
+        }).then((result) => {
+          if (result.msgCode !== 'PTM0000') {
             Toast.info(result.msgInfo)
-            this.setState({valueInputImgCode:''})
+            this.setState({ valueInputImgCode: '' })
             // this.getImgCode()
             return false
           } else {
-            this.setState({timeflag:false, smsJrnNo: result.data.smsJrnNo})
-            let timmer = setInterval(()=> {
-              this.setState({flag:false,timers:i--+'"'});
-              if(i === -1) {
+            Toast.info('发送成功，请注意查收！')
+            this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo })
+            timmer = setInterval(() => {
+              this.setState({ flag: false, timers: i-- + '"' });
+              if (i === -1) {
                 clearInterval(timmer);
-                this.setState({timers:"重新获取",timeflag:true,flag:true});
+                this.setState({ timers: "重新获取", timeflag: true, flag: true });
                 // this.getImgCode()
               }
             }, 1000);
           }
         })
-      }else{
+      } else {
         Toast.info(getFirstError(err))
       }
     })
@@ -134,7 +142,8 @@ export default class login_page extends PureComponent {
 
         <div className={style.inputItem}>
           <img src={phone} className={style.phone} />
-          <input 
+          <input
+            maxLength="11"
             className={style.input}
             placeholder='请输入手机号'
             {...getFieldProps('phoneValue', {
@@ -152,6 +161,7 @@ export default class login_page extends PureComponent {
           <input
             className={style.input}
             placeholder='请输入验证码'
+            maxLength="6"
             {...getFieldProps('smsCd', {
               rules: [
                 { required: true, message: '请输入验证码' },
