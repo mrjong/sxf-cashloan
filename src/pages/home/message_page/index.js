@@ -7,6 +7,12 @@ import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, Tabs, Badge, ListView, Toast } from "antd-mobile"
 let totalPage = false
+const API = {
+  'msgRead': "/my/msgRead",
+  'msgCount': "/my/msgCount",
+  "defTable": '/my/defTable',
+  "msgInfo": '/my/msgInfo'
+}
 @fetch.inject()
 export default class message_page extends PureComponent {
   constructor(props) {
@@ -36,14 +42,6 @@ export default class message_page extends PureComponent {
     }
   }
   scrollTop = 0
-
-  componentDidUpdate() {
-    if (this.state.useBodyScroll) {
-      document.body.style.overflow = "auto"
-    } else {
-      document.body.style.overflow = "hidden"
-    }
-  }
   componentWillMount() {
     var _body = document.getElementsByTagName("body")[0]
     _body.style.backgroundColor = "#efeff4"
@@ -87,6 +85,13 @@ export default class message_page extends PureComponent {
       this.msgCount()
     }
   }
+  componentDidUpdate() {
+    if (this.state.useBodyScroll) {
+      document.body.style.overflow = "auto"
+    } else {
+      document.body.style.overflow = "hidden"
+    }
+  }
   componentWillUnmount() {
     var _body = document.getElementsByTagName("body")[0]
     _body.style.backgroundColor = "#fff"
@@ -94,7 +99,7 @@ export default class message_page extends PureComponent {
   }
   // 消息 tab
   getTab = () => {
-    this.props.$fetch.post("/my/defTable").then(res => {
+    this.props.$fetch.post(API.defTable).then(res => {
       if (res.msgCode === "PTM0000") {
         this.setState(
           {
@@ -113,7 +118,7 @@ export default class message_page extends PureComponent {
   msgOneRead = obj => {
     console.log(obj)
     if (obj.sts === "0") {
-      this.props.$fetch.post("/my/msgRead", { uuid: obj.uuid }).then(res => {
+      this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then(res => {
         if (res.msgCode === "PTM0000") {
           this.msgCount(obj)
           this.getDesc(obj)
@@ -146,17 +151,17 @@ export default class message_page extends PureComponent {
     sessionStorage.setItem("msgObj", JSON.stringify(obj))
     switch (obj.detailType) {
       case "0":
-        this.props.history.push("/showMessageDesc")
+        this.props.history.push("/home/message_detail_page")
         break
       case "1":
-        if (sessionStorage.getItem("h5Channel").indexOf("MPOS") < 0) {
+        if (sessionStorage.getItem("h5Channel") && sessionStorage.getItem("h5Channel").indexOf("MPOS") < 0) {
           window.open(obj.detail)
         } else {
           location.href = obj.detail
         }
         break
       case "2":
-        this.props.history.push("/showMessageDesc")
+        this.props.history.push("/home/message_detail_page")
         break
       case "3":
         // app页面
@@ -179,7 +184,7 @@ export default class message_page extends PureComponent {
       Toast.loading('数据加载中...', 10000);
     }
     let data = await this.props.$fetch
-      .post("/my/msgInfo", {
+      .post(API.msgInfo, {
         type: this.state.msgType + 1,
         curPage: pIndex,
         loading: true
@@ -234,7 +239,6 @@ export default class message_page extends PureComponent {
         tabState: true
       })
     }
-    console.log(list)
     this.setState({
       rData: list,
       Listlength: list.length,
@@ -268,7 +272,7 @@ export default class message_page extends PureComponent {
   }
   // 获取消息条数
   msgCount = obj => {
-    this.props.$fetch.post("/my/msgCount").then(res => {
+    this.props.$fetch.post(API.msgCount).then(res => {
       if (res.msgCode === "PTM0000") {
         if (res.data && res.data.count && res.data.count > 0) {
           this.setState({
@@ -359,11 +363,9 @@ export default class message_page extends PureComponent {
               />
             ) : null}
             <div className={style.desc}>{obj.dec}</div>
-            {/* {obj.detailType !== "0" ? ( */}
             <div className={style.handle}>
               查看详情<i />
             </div>
-            {/* ) : null} */}
           </div>
         </div>
       )
@@ -378,7 +380,6 @@ export default class message_page extends PureComponent {
             key={this.state.useBodyScroll ? "0" : "1"}
             ref={el => (this.lv = el)}
             dataSource={this.state.dataSource}
-            // renderHeader={() => <span>Pull to refresh</span>}
             renderFooter={() => (
               <div style={{ padding: 30, textAlign: "center" }}>
                 {this.state.isLoading ? "加载中..." : "已无更多消息"}
@@ -426,9 +427,6 @@ export default class message_page extends PureComponent {
             onChange={(tab, index) => {
               this.changeTab(tab, index)
             }}
-          // onTabClick={(tab, index) => {
-          //   this.clickTab(tab, index)
-          // }}
           >
             {this.state.tabs.map((item2, index2) => (
               <div key={index2}>{item("iview" + index2)}</div>
