@@ -10,7 +10,7 @@ import ConfirmAgency from 'pages/confirm/router';
 
 export default [
   ...AuthRoute,
-  ...LoginRoute,
+  // ...LoginRoute,
   ...AuthenticationRoute,
   ...MineRoute,
   ...MembershipCardRoute,
