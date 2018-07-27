@@ -1,0 +1,75 @@
+.bank_card_wrap {
+  position: relative;
+  margin: 0 auto;
+  z-index: 100;
+  width: 6.8rem;
+  height: 3.62rem;
+  border-radius: 0.16rem;
+  overflow: hidden;
+  text-align: center;
+  background-color: #272727;
+  background-image: url('assets/images/home/bank_card_bg.png');
+  background-size: cover;
+  .bill_update_btn {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.4rem;
+    display: block;
+    height: 0.4rem;
+    line-height: 0.4rem;
+    width: 1.38rem;
+    text-align: center;
+    font-size: 0.24rem;
+    color: #150e07;
+    border: 0;
+    background-color: transparent;
+    background-image: url('assets/images/home/bill_update_bg.png');
+    background-size: cover;
+  }
+  .card_preview {
+    margin-top: 0.68rem;
+    padding: 0 0.34rem;
+    display: flex;
+    .card_icon {
+      margin-right: 0.23rem;
+      height: 0.9rem;
+      width: 0.9rem;
+      border: 1PX  solid red;
+    }
+    .card_info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      color: #ebde74;
+    }
+    .card_info_name {
+      font-size: 0.36rem;
+    }
+    .card_info_num {
+      font-size: 0.3rem;
+    }
+  }
+
+  .bill_preview {
+    margin-top: 0.7rem;
+    display: flex;
+    padding: 0 0.5rem;
+    .bill_item {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+    .bill_value {
+      line-height: 1;
+      font-size: 0.3rem;
+      color: #ebde74;
+    }
+    .bill_name {
+      margin-top: 0.14rem;
+      line-height: 1;
+      font-size: 0.28rem;
+      color: #827c6c;
+    }
+  }
+}

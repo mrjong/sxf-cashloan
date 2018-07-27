@@ -12,6 +12,10 @@ import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
 import ButtonCustom from '../../../components/button';
 let timmer
+const API = {
+  smsForLogin: '/signup/smsForLogin',
+  sendsms: '/cmm/sendsms'
+}
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -50,7 +54,7 @@ export default class login_page extends PureComponent {
     const osType = getDeviceType();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.$fetch.post('/signup/smsForLogin', {
+        this.props.$fetch.post(API.smsForLogin, {
           mblNo: values.phoneValue, // 手机号
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
           osType: osType, // 操作系统
@@ -58,14 +62,13 @@ export default class login_page extends PureComponent {
           usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : '', // 用户渠道
           location: this.props.locationAddress, // 定位地址
         }).then(res => {
-          // loginGoLogin()
           if (res.msgCode !== 'PTM0000') {
             res.msgInfo && Toast.info(res.msgInfo);
             return
           }
           sessionStorage.setItem('authorizedNotLoginStats', true)
-          Cookie.set('fin-v-card-token', res.tokenId);
-          sessionStorage.setItem('userId', res.userId);
+          Cookie.set('fin-v-card-token', res.data.tokenId);
+          sessionStorage.setItem('userId', res.data.userId);
           sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);
@@ -99,7 +102,7 @@ export default class login_page extends PureComponent {
       }
       if (!err || JSON.stringify(err) === "{}") {
         // 发送验证码
-        this.props.$fetch.post(`/cmm/sendsms`, {
+        this.props.$fetch.post(API.sendsms, {
           type: '6',
           mblNo: values.phoneValue,
           osType: osType
