@@ -42,8 +42,7 @@ export default class select_credit_page extends PureComponent {
       corpBusTyp: "01"
     }).then(
       res => {
-        if (res.msgCode === "PTM0000") {
-          this.props.toast.info(res.msgInfo)
+        if (res.msgCode === "PTM0000" && data) {
           this.setState({
             cardList: res.data
           })

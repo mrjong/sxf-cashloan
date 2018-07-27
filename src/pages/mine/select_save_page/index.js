@@ -42,7 +42,7 @@ export default class select_save_page extends PureComponent {
       corpBusTyp: "02"
     }).then(
       res => {
-        if (res.msgCode === "PTM0000") {
+        if (res.msgCode === "PTM0000" && data) {
           this.props.toast.info(res.msgInfo)
           this.setState({
             cardList: res.data
