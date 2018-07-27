@@ -1,20 +1,27 @@
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import SButton from 'components/button';
 import TabList from '../tag_list';
+import { store } from 'utils/common';
 
 import style from './style.scss';
+import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 
 const API = {
-  BANNER: '/my/getBannerList',
+  QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
 };
 
 @fetch.inject()
 export default class ModalInfo extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      repaymentAmount: '',
+      repaymentDate: '',
+      lendersDate: '',
+    };
   }
 
   static propTypes = {
@@ -58,14 +65,50 @@ export default class ModalInfo extends PureComponent {
     },
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    const pageData = store.getRepaymentModalData();
+    if (pageData) {
+      console.log(pageData, 'pageData111');
+      this.recoveryPageData();
+    } else {
+      this.requestGetRepaymentDateList();
+    }
+  }
 
-  handleRepaymentTagClick = () => {
-    console.log('还款Tag');
+  componentWillUnmount() {}
+
+  // 数据回显
+  recoveryPageData = () => {
+    let pageData = store.getRepaymentModalData();
+    pageData.repaymentAmount = 8299.89;
+    this.setState({ ...pageData });
   };
 
-  handleLendersTagClick = () => {
-    console.log('放  款Tag');
+  // 保存当前页面数据
+  saveCurrentPageData = () => {
+    console.log(store, 'store');
+    const { repaymentDate, lendersDate } = this.state;
+    const currentPageData = {
+      repaymentDate,
+      lendersDate,
+    };
+    store.setRepaymentModalData(currentPageData);
+  };
+
+  // 代扣 Tag 点击事件
+  handleRepaymentTagClick = value => {
+    console.log('代扣 Tag 点击事件');
+    this.setState({
+      repaymentDate: value,
+    });
+  };
+
+  // 还款 Tag 点击事件
+  handleLendersTagClick = value => {
+    console.log('还款 Tag 点击事件');
+    this.setState({
+      lendersDate: value,
+    });
   };
 
   // 按钮点击事件
@@ -74,14 +117,20 @@ export default class ModalInfo extends PureComponent {
     callback && callback();
   };
 
+  // 选择银行卡
+  handleClickChoiseBank = () => {
+    this.saveCurrentPageData();
+    // this.props.history.push('/mine/select_credit_page');
+  };
+
   // 确认按钮点击事件
   handleClickConfirm() {
     console.log('点击确认按钮');
   }
 
-  // 获取代还期限列表
+  // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    this.props.$fetch.get(API.BANNER).then(result => {
+    this.props.$fetch.post(`${API.QUERY_REPAY_INFO}`).then(result => {
       if (result && result.code === '0000' && result.data !== null) {
         console.log(result);
       }
@@ -107,6 +156,7 @@ export default class ModalInfo extends PureComponent {
   };
 
   render() {
+    const { repaymentAmount } = this.state;
     const { repaymentDateList, lendersDateList, onClose } = this.props;
     return (
       <div className={style.modal_content}>
@@ -118,7 +168,7 @@ export default class ModalInfo extends PureComponent {
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
-              <span className={style.item_value}>960.77</span>
+              <span className={style.item_value}>{repaymentAmount}</span>
             </div>
           </li>
           <li className={style.list_item}>
@@ -135,10 +185,13 @@ export default class ModalInfo extends PureComponent {
             </div>
             <p className={style.item_tip}>选择还款日前一天（2018-7-12日）放款，将最大成本节 约您代资金</p>
           </li>
-          <li className={style.list_item}>
+          <li onClick={this.handleClickChoiseBank} className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>还款银行卡</label>
-              <span className={style.item_value}>工商银行(2222)</span>
+              <span className={[style.item_value, style.item_value_bank].join(' ')}>
+                工商银行(2222)
+                <img className={style.icon} src={icon_arrow_right_default} alt="" />
+              </span>
             </div>
           </li>
         </ul>
