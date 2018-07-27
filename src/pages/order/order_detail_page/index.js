@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/lists';
 import Panel from 'components/panel/index.js';
-import noOrderIco from 'assets/images/order/no_order_ico.png';
 import styles from './index.scss';
 
 export default class order_detail_page extends PureComponent {

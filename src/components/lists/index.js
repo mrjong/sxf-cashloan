@@ -43,12 +43,10 @@ export default class Lists extends PureComponent {
                       item.label.brief ? <Brief>{item.label.brief}</Brief> : null
                     }
                   </Item>
-                  <div>
-                    {item.listDesc && item.showDesc ?
-                      <ListDesc listdescinfo={item.listDesc}></ListDesc> : null
-                    }
-
-                  </div>
+                  {
+                    item.listDesc && item.showDesc ?
+                    <div><ListDesc listdescinfo={item.listDesc}></ListDesc></div> : null 
+                  }
                 </div>
               )
             })

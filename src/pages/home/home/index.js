@@ -25,7 +25,7 @@ export default class HomePage extends PureComponent {
   }
 
   componentWillMount() {
-    this.requestGetBannerList();
+    // this.requestGetBannerList();
   }
 
   handleShowModal = () => {
@@ -63,7 +63,6 @@ export default class HomePage extends PureComponent {
           {type === '2' && <BankContent onClick={this.handleClickBack} showModalFun={this.handleShowModal} />}
         </div>
         {type === '1' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
-
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent onClose={this.handleCloseModal} />
