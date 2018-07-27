@@ -1,112 +1,405 @@
-import React, { PureComponent } from 'react';
-import { Toast } from 'antd-mobile'
-import Lists from 'components/lists';
-import fetch from 'sx-fetch';
-import noOrderIco from 'assets/images/order/no_order_ico.png';
-import styles from './index.scss';
-
+import React, {
+    PureComponent
+} from "react"
+import style from "./index.scss"
+import fetch from "sx-fetch"
+import { PullToRefresh, List, Tabs, Badge, ListView } from "antd-mobile"
+let totalPage = false
+const Item = List.Item;
+const API = {
+    'msgRead': "/my/msgRead",
+    'msgCount': "/my/msgCount",
+    "defTable": '/my/defTable',
+    "msgInfo": '/my/msgInfo'
+}
 @fetch.inject()
-export default class order_page extends PureComponent {
+export default class message_page extends PureComponent {
     constructor(props) {
-        super(props);
+        super(props)
+        const dataSource = new ListView.DataSource({
+            rowHasChanged: (row1, row2) => row1 !== row2
+        })
+
         this.state = {
-            orderList: [
-                {
-                    extra: {
-                        name: '已逾期',
-                        color: '#F44258',
-                    },
-                    label: {
-                        name: '5000.00',
-                        brief: '2018年01月11日'
-                    },
-                },
-                {
-                    extra: {
-                        name: '还款中',
-                        color: '#34A6FF',
-                    },
-                    label: {
-                        name: '5000.00',
-                        brief: '2018年01月11日'
-                    },
-                },
-                {
-                    extra: {
-                        name: '已结清',
-                        color: '#C7C7CC',
-                    },
-                    label: {
-                        name: '5000.00',
-                        brief: '2018年01月11日'
-                    },
-                },
-                {
-                    extra: {
-                        name: '放款中',
-                        color: '#34A6FF',
-                    },
-                    label: {
-                        name: '5000.00',
-                        brief: '2018年01月11日'
-                    },
-                },
-                {
-                    arrowHide: 'empty',
-                    extra: {
-                        name: '放款失败',
-                        color: '#F44258',
-                    },
-                    label: {
-                        name: '5000.00',
-                        brief: '2018年01月11日'
-                    },
-                },
+            dataSource,
+            refreshing: true,
+            isLoading: true,
+            height: document.documentElement.clientHeight,
+            useBodyScroll: false,
+            pageIndex: 1,
+            Listlength: 0,
+            rData: [],
+            tabState: false,
+            msgReadAllState: false,
+            msgType: 0,
+            hasMore: true,
+            tabs: [
+                { title: <Badge>活动通知</Badge> },
+                { title: <Badge>系统通知</Badge> },
+                { title: <Badge>公告通知</Badge> }
             ]
         }
     }
+    scrollTop = 0
     componentWillMount() {
-        //账单列表
-        // -2放款中 -1放款失败  0还款中 1已逾期  2还款登记中 4已结清
-        //自账单： sts: -2放款中 -1放款失败 0 未到期（还款中）  1 已逾期  2处理中 3已撤销 4 已结清
-        // this.props.init('spread',null)
-        this.props.$fetch.post('/bill/list', { startRow: "0", limitRow: '10', qryType: '0' }).then(result => {
-            let billList = [];
-            if (result.msgCode !== 'PTM0000') {
-                Toast.info(result.msgInfo, 1)
-            }
-            for (var i = 0; i < result.billList.length; i++) {
-                billList.push({
-                    extra: {
-                        name: result.billList[i].billStsNm,
-                        color: result.billList[i].color,
+        this.props.setTitle('newTitle')
+        var _body = document.getElementsByTagName("body")[0]
+        _body.style.backgroundColor = "#efeff4"
+        // 处理详情返回之后
+        let backDatastr = sessionStorage.getItem("backData")
+        if (backDatastr && backDatastr !== "{}") {
+            let backData = JSON.parse(sessionStorage.getItem("backData"))
+            totalPage = backData.totalPage
+
+            this.setState(
+                {
+                    msgType: backData.msgType,
+                    rData: backData.rData,
+                    pageIndex: backData.pageIndex,
+                    hasMore: true,
+                    Listlength: backData.rData.length
+                },
+                () => {
+                    this.msgCount()
+                    // scrollTop = backData.scrollTop
+                    this.setState(
+                        {
+                            dataSource: this.state.dataSource.cloneWithRows(backData.rData),
+                            tabState: true,
+                            refreshing: false,
+                            isLoading: false
+                        },
+                        () => {
+                            document
+                                .getElementsByClassName("iview" + backData.msgType)[0].scrollTop = backData.scrollTop
+                            // .scrollTo(0, backData.scrollTop)
+                        }
+                    )
+                    sessionStorage.removeItem("backData")
+                }
+            )
+        } else {
+            // 获取消息tab
+            this.getTab()
+            // 获取消息条数
+            this.msgCount()
+        }
+    }
+    componentDidUpdate() {
+        if (this.state.useBodyScroll) {
+            document.body.style.overflow = "auto"
+        } else {
+            document.body.style.overflow = "hidden"
+        }
+    }
+    componentWillUnmount() {
+        var _body = document.getElementsByTagName("body")[0]
+        _body.style.backgroundColor = "#fff"
+        document.body.style.overflow = "auto"
+    }
+    // 消息 tab
+    getTab = () => {
+        this.props.$fetch.post(API.defTable).then(res => {
+            if (res.msgCode === "PTM0000") {
+                this.setState(
+                    {
+                        msgType: Number(res.data.type) - 1
                     },
-                    label: {
-                        name: result.billList[i].billAmt,
-                        brief: result.billList[i].billDt,  // '2018年01月11日'
-                    },
-                })
+                    () => {
+                        this.getCommonData("tabshow")
+                    }
+                )
+            } else {
+                this.props.toast.info(res.msgInfo)
             }
-            this.setState({ orderList: billList });
-        }, error => {
-            console.log(error)
         })
     }
+    // 单个请求读取
+    msgOneRead = obj => {
+        console.log(obj)
+        if (obj.sts === "0") {
+            this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then(res => {
+                if (res.msgCode === "PTM0000") {
+                    this.msgCount(obj)
+                    this.getDesc(obj)
+                } else {
+                    this.props.toast.info(res.msgInfo)
+                }
+            })
+        } else {
+            this.getDesc(obj)
+        }
+    }
 
+    getDesc = obj => {
+        let rData = this.state.rData
+        rData.forEach((item, index) => {
+            if (item.uuid === obj.uuid) {
+                rData[index].sts = 1
+            }
+        })
+        let backData = {
+            scrollTop: this.scrollTop || 0,
+            rData,
+            msgType: this.state.msgType,
+            pageIndex: this.state.pageIndex,
+            totalPage: totalPage
+        }
+        console.log(obj)
+        // 0:无，1:URL，2:文本，3:APP"
+        sessionStorage.setItem("backData", JSON.stringify(backData))
+        sessionStorage.setItem("msgObj", JSON.stringify(obj))
+        switch (obj.detailType) {
+            case "0":
+                this.props.history.push("/home/message_detail_page")
+                break
+            case "1":
+                if (sessionStorage.getItem("h5Channel") && sessionStorage.getItem("h5Channel").indexOf("MPOS") < 0) {
+                    window.open(obj.detail)
+                } else {
+                    location.href = obj.detail
+                }
+                break
+            case "2":
+                this.props.history.push("/home/message_detail_page")
+                break
+            case "3":
+                // app页面
+                break
+
+            default:
+                break
+        }
+    }
+    // 获取每一页数据
+    genData = async (pIndex = 1) => {
+        if (totalPage && totalPage < pIndex) {
+            this.setState({
+                isLoading: false,
+                pageIndex: totalPage
+            })
+            return []
+        }
+        if (pIndex === 1) {
+            Toast.loading('数据加载中...', 10000);
+        }
+        let data = await this.props.$fetch
+            .post(API.msgInfo, {
+                type: this.state.msgType + 1,
+                curPage: pIndex,
+                loading: true
+            })
+            .then(res => {
+                if (pIndex === 1) {
+                    setTimeout(() => {
+                        Toast.hide();
+                    }, 600);
+                }
+                if (res.msgCode === "PTM0000") {
+                    if (pIndex === 1) {
+                        totalPage = res.data.totalPage
+                        this.setState({
+                            hasMore: false
+                        })
+                    }
+                    let dataArr = []
+                    // dataArr = res.data.msgList
+                    for (let i = res.data.msgList.length - 1; i >= 0; i--) {
+                        dataArr.push({
+                            ...res.data.msgList[i]
+                        })
+                    }
+                    return dataArr
+                } else {
+                    return []
+                }
+            }).catch(err => {
+                if (pIndex === 1) {
+                    setTimeout(() => {
+                        Toast.hide();
+                    }, 600);
+                }
+            })
+        return data
+    }
+    // 刷新
+    onRefresh = () => {
+        totalPage = false
+        this.setState({ refreshing: true, isLoading: true })
+        this.getCommonData()
+    }
+    // 公用
+    getCommonData = async tab => {
+        this.setState({
+            isLoading: true
+        })
+        let list = await this.genData(1)
+        if (tab === "tabshow") {
+            this.setState({
+                tabState: true
+            })
+        }
+        this.setState({
+            rData: list,
+            Listlength: list.length,
+            dataSource: this.state.dataSource.cloneWithRows(list),
+            refreshing: false,
+            isLoading: false,
+            pageIndex: 1
+        })
+    }
+    // 渲染每一页完成之后
+    onEndReached = async event => {
+        if (this.state.isLoading && !this.state.hasMore) {
+            this.setState({
+                pageIndex: totalPage ? totalPage : 1
+            })
+            return
+        }
+        this.setState({ isLoading: true })
+        let list = await this.genData(++this.state.pageIndex)
+        if (list.length === 0) {
+            return
+        }
+        this.setState({
+            rData: [...this.state.rData, ...list],
+            dataSource: this.state.dataSource.cloneWithRows([
+                ...this.state.rData,
+                ...list
+            ]),
+            isLoading: false
+        })
+    }
+    // 获取消息条数
+    msgCount = obj => {
+        this.props.$fetch.post(API.msgCount).then(res => {
+            if (res.msgCode === "PTM0000") {
+                if (res.data && res.data.count && res.data.count > 0) {
+                    this.setState({
+                        msgReadAllState: true
+                    })
+                } else {
+                    this.setState({
+                        msgReadAllState: false
+                    })
+                }
+                if (obj && JSON.stringify(obj) !== "{}") {
+                    $("[data-id=ids" + obj.uuid + "]").css("display", "none")
+                }
+            } else {
+                this.props.toast.info(res.msgInfo)
+            }
+        })
+    }
+    // 一键读取
+    msgReadAll = () => {
+        this.props.$fetch.post("/my/msgReadAll").then(res => {
+            if (res.msgCode === "PTM0000") {
+                this.setState(
+                    {
+                        msgReadAllState: false
+                    },
+                    () => {
+                        $(".uuids").css("display", "none")
+                        this.props.toast.info("已全部读取")
+                    }
+                )
+            } else {
+                this.props.toast.info(res.msgInfo)
+            }
+        })
+    }
+    // 滚动高度
+    handleScroll = event => {
+        this.scrollTop = event.target.scrollTop
+    }
+    // 查看详情
+    gotoDesc = obj => {
+        this.msgOneRead(obj)
+    }
+    // 切换tab
+    changeTab = (tab, index) => {
+        this.setState(
+            {
+                msgType: index,
+                rData: []
+            },
+            () => {
+                this.getCommonData()
+            }
+        )
+    }
     render() {
+        const separator = (sectionID, rowID) => (
+            <div key={`${sectionID}-${rowID}`} />
+        )
+        let index = this.state.rData && this.state.rData.length - 1
+        const row = (rowData, sectionID, rowID) => {
+            if (index < 0) {
+                index = this.state.rData && this.state.rData.length - 1
+            }
+            const obj = this.state.rData && this.state.rData[index--]
+            return (
+                <List renderHeader={() => 'Text Wrapping'} className="my-list">
+                    <Item data-seed="logId">Single line，long text will be hidden with ellipsis；</Item>
+                    <Item wrap>Multiple line，long text will wrap；Long Text Long Text Long Text Long Text Long Text Long Text</Item>
+                    <Item extra="extra content" multipleLine align="top" wrap>
+                        Multiple line and long text will wrap. Long Text Long Text Long Text
+                </Item>
+                    <Item extra="no arrow" arrow="empty" className="spe" wrap>
+                        In rare cases, the text of right side will wrap in the single line with long text. long text long text long text
+                </Item>
+                </List>
+            )
+        }
+        const item = () => {
+            if (this.state.rData && this.state.rData.length > 0) {
+                return (
+                    <ListView
+                        initialListSize={this.state.Listlength}
+                        onScroll={this.handleScroll}
+                        key={this.state.useBodyScroll ? "0" : "1"}
+                        ref={el => (this.lv = el)}
+                        dataSource={this.state.dataSource}
+                        renderFooter={() => (
+                            <div style={{ padding: 30, textAlign: "center" }}>
+                                {this.state.isLoading ? "数据加载中..." : "已无更多账单"}
+                            </div>
+                        )}
+                        renderRow={row}
+                        renderSeparator={separator}
+                        useBodyScroll={this.state.useBodyScroll}
+                        style={
+                            this.state.useBodyScroll
+                                ? {}
+                                : {
+                                    height: this.state.height
+                                }
+                        }
+                        pullToRefresh={
+                            <PullToRefresh
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh}
+                            />
+                        }
+                        onEndReached={this.onEndReached}
+                        pageSize={1}
+                    />
+                )
+            } else {
+                return (
+                    <div className={style.no_data}>
+                        <i />暂无账单
+            </div>
+                )
+            }
+        }
         return (
-            <div className={styles.order_page}>
+            <div className={style.order_page}>
                 {
-                    this.state.orderList.length ?
-                        <Lists listsInf={this.state.orderList} className={styles.order_list} />
-                        :
-                        <div className={styles.no_data}>
-                            <img src={noOrderIco} alt="" />
-                            <p>暂无账单</p>
-                        </div>
+                    item()
                 }
             </div>
         )
     }
 }
-

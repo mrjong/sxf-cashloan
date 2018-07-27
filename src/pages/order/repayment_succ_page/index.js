@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import succIco from 'assets/images/order/success_ico.png';
+// import succIco from 'assets/images/order/success_ico.png';
 import ButtonCustom from 'components/button';
 import styles from './index.scss';
 
@@ -24,7 +24,7 @@ export default class repayment_succ_page extends PureComponent {
         return (
             <div className={styles.repayment_succ_page}>
                 <div className={styles.tips}>
-                    <img src={succIco} alt="" />
+                    {/* <img src={succIco} alt="" /> */}
                     <p>恭喜，您的账单已结清</p>
                 </div>
                 <div className={styles.details}>

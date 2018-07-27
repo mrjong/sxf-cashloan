@@ -1,3 +1,5 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .order_page {
   .order_list {
     :global {
@@ -7,13 +9,26 @@
     }
   }
   .no_data {
-    text-align: center;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    color: #999;
+    margin-top: 500px;
     font-size: 36px;
-    color: rgba(134, 145, 157, 1);
-    margin-top: 170px;
-    img {
-      width: 178px;
-      margin-bottom: 20px;
+    // height: 400px;
+    text-align: center;
+    i {
+      width: 168px;
+      display: inline-block;
+      height: 131px;
+      position: absolute;
+      top: -160px;
+      vertical-align: middle;
+      @include bg-image('../../../assets/images/order/no_bill');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      //  background: black;
+      box-sizing: border-box;
     }
   }
 }

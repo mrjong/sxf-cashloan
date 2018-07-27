@@ -3,11 +3,13 @@ import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
 import Header from 'components/header';
 import Footer from 'components/footer';
+import { Toast } from 'antd-mobile'
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       route: {},
+      newTitle: ''
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -31,7 +33,13 @@ export default class router_Page extends PureComponent {
         let component = await route.component()
         this.setState({
           route: { ...route },
-          component: React.createElement(component.default, { match, history, params: location.state }),
+          component: React.createElement(component.default, {
+            match, history, params: location.state, toast: Toast, setTitle: (title) => {
+              this.setState({
+                newTitle: title
+              })
+            }
+          }),
         })
       } else {
         this.setState({
@@ -55,11 +63,11 @@ export default class router_Page extends PureComponent {
     }
   };
   render() {
-    const { component, route } = this.state;
+    const { component, route, newTitle } = this.state;
     const { headerHide = false, footerHide = true } = route;
     return (
       <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
-        {headerHide ? null : <Header {...this.props} headerProps={route} />}
+        {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
         {component}
         {footerHide ? null : <Footer footerProps={route} />}
       </div>
