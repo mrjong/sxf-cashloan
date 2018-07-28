@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
+import { store } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
@@ -74,19 +75,26 @@ export default class bind_save_page extends PureComponent {
   bindSaveCard = params1 => {
     this.props.$fetch.post(API.BINDCARD, params1).then((data) => {
       // bindStorageConfirm()
-      if ( data.msgCode === 'PTM0000') {
-        if(sessionStorage.getItem('storageCardManagement')){
-          this.props.history.push('/storageCardManagementOutside')
-        }else{
-          const agrNo = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).agrNo
-          if (!agrNo) {
-            sessionStorage.getItem('storageCardSourceLenderAgain') === 'true' ?
-            this.props.history.push('/backConfirmOutside') : this.props.history.push('/homeOutside')
-          } else {
-            this.props.history.replace(`/chooseStorageBankCardOutside?agrNo=${agrNo}`)
-          }
-          //storageCardSourceLenderAgain 再次借款标识
+      if (data.msgCode === 'PTM0000') {
+        const backUrlData = store.getBackUrl();
+        store.removeBackUrl();
+        if (backUrlData) {
+          this.props.history.push(backUrlData);
+        } else {
+          this.props.history.push('/mine/select_save_page');
         }
+        // if(sessionStorage.getItem('storageCardManagement')){
+        //   this.props.history.push('/storageCardManagementOutside')
+        // }else{
+        //   const agrNo = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).agrNo
+        //   if (!agrNo) {
+        //     sessionStorage.getItem('storageCardSourceLenderAgain') === 'true' ?
+        //     this.props.history.push('/backConfirmOutside') : this.props.history.push('/homeOutside')
+        //   } else {
+        //     this.props.history.replace(`/chooseStorageBankCardOutside?agrNo=${agrNo}`)
+        //   }
+        //   //storageCardSourceLenderAgain 再次借款标识
+        // }
       } else {
         this.props.toast.info(data.msgInfo);
         this.setState({ valueInputCarSms: '' });
