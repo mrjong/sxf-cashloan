@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/lists';
@@ -6,21 +7,28 @@ import styles from './index.scss';
 
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
+  LOGOUT: '/signup/logout', // 用户退出登陆
+  GETSTSW: '/my/getStsw', // 获取用户授信信息列表
 };
+
+const needDisplayOptions = ['idCheck'];
 
 @fetch.inject()
 export default class mine_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      stswData: [], // 用户授信信息列表
       userPhone: '152****6273',
-      memberInf: {
+      memberInf: { // 会员卡信息
         status: '',
         color: '',
       },
+      jumpFlag: false, //  是否可以跳转页面
     };
   }
   componentWillMount() {
+    this.checkAuth();
     this.queryVipCard();
   }
   // 查询用户会员卡状态
@@ -29,32 +37,72 @@ export default class mine_page extends PureComponent {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         switch (result.data.memSts) {
           case '0':
-            this.setState({memberInf: {status: '未购买', color: '#FF5A5A'}});
+            this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
             break;
           case '1':
-            this.setState({memberInf: {status: '已购买', color: '#4CA6FF'}});
+            this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
             break;
           case '2':
-            this.setState({memberInf: {status: '处理中', color: '#4CA6FF'}});
+            this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
             break;
           default:
             break;
         }
-        console.log();
       }
     });
   };
+  // 查询是否实名认证
+  checkAuth = () => {
+    this.props.$fetch.get(`${API.GETSTSW}`).then(result => {
+      if (result && result.data !== null) {
+        this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
+        // 判断是否实名认证
+        const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
+        if (isAllValid) {
+          this.setState({ jumpFlag: true });
+        }
+      }
+    });
+  };
+  
   // 退出
   logout = () => {
-    alert('退出')
+    this.props.$fetch.get(API.LOGOUT).then(result => {
+      if (result && result.msgCode !== 'PTM0000') {
+        result.msgInfo && this.props.toast.info(result.msgInfo);
+        return;
+      }
+      this.props.history.push('/login')
+      sessionStorage.clear();
+      Cookie.remove('fin-v-card-token');
+    }, err => {
+      err.msgInfo && this.props.toast.info(err.msgInfo);
+    });
   };
   // 第一组里的点击事件
   clickhandle = item => {
-    this.props.history.push(item.jumpToUrl);
+    if(this.state.jumpFlag) {
+      this.props.history.push(item.jumpToUrl);
+    } else {
+      this.props.toast.info('请先进行实名认证', 2, () => {
+        this.props.history.push('/authentication/real_name');
+      })
+    }
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    this.props.history.push(item.jumpToUrl);
+    if(item.jumpToUrl == '/authentication/real_name') {
+      this.props.history.push(item.jumpToUrl);
+    } else {
+      if(this.state.jumpFlag) {
+        this.props.history.push(item.jumpToUrl);
+      } else {
+        this.props.toast.info('请先进行实名认证', 2, () => {
+          this.props.history.push('/authentication/real_name');
+        })
+      }
+    }
+    
   };
   // 第三组里的点击事件
   clickhandle3 = item => {
@@ -78,8 +126,8 @@ export default class mine_page extends PureComponent {
     const listsArr2 = [
       {
         extra: {
-          name: '已认证',
-          color: '#4CA6FF',
+          name: this.state.stswData[0] && this.state.stswData[0].stsw.dicDetailValue,
+          color: this.state.stswData[0] && this.state.stswData[0].stsw.color,
         },
         label: {
           name: '实名认证',
