@@ -3,7 +3,6 @@ import { createForm } from 'rc-form';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { Toast } from 'antd-mobile'
 import { getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import log from '../../../assets/images/login/22@2x.png';
