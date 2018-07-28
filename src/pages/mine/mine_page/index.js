@@ -122,7 +122,7 @@ export default class mine_page extends PureComponent {
           name: '会员卡',
           icon: require('assets/images/mine/menu_ico7.png')
         },
-        jumpToUrl: '/membership_card/card_home',
+        jumpToUrl: '/mine/membership_card_page',
       },
     ];
     const listsArr2 = [
