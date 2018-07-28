@@ -58,6 +58,7 @@ export default class bind_credit_page extends PureComponent {
         store.removeBackUrl();
         if (backUrlData) {
           this.props.history.push(backUrlData);
+          store.setCardData(JSON.stringify(result.data));
         } else {
           this.props.history.push('/mine/select_credit_page');
         }
@@ -83,7 +84,7 @@ export default class bind_credit_page extends PureComponent {
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
       console.log(!result.data)
-      if (result.data && result.data.cardTyp !== 'D') {
+      if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'D') {
         const params1 = {
           bankCd: result.data.bankCd,
           cardTyp: 'C', //卡类型。

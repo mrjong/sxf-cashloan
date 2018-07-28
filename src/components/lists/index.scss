@@ -21,6 +21,9 @@
     .am-list-extra span {
       font-size: 30px;
       display: block;
+      & +span{
+        font-size: 28px !important;
+      }
     }
     .am-list-item .am-list-line .am-list-arrow {
       width: 16px;

@@ -42,6 +42,15 @@
   color: #e6e6e6;
   font-size: 0.24rem;
   text-align: center;
+  padding: 0 30px;
+  .right{
+    margin-left: 10px;
+    display: inline-block;
+  }
+  .left{
+    margin-right: 10px;
+    display: inline-block;
+  }
 }
 .sureBtn {
   width: 6.2rem !important;
