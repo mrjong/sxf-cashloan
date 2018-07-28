@@ -86,20 +86,20 @@ export default class mine_page extends PureComponent {
       this.props.history.push(item.jumpToUrl);
     } else {
       this.props.toast.info('请先进行实名认证', 2, () => {
-        this.props.history.push('/authentication/real_name');
+        this.props.history.push('/home/real_name');
       })
     }
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    if (item.jumpToUrl == '/authentication/real_name') {
+    if (item.jumpToUrl == '/home/real_name') {
       this.props.history.push(item.jumpToUrl);
     } else {
       if (this.state.jumpFlag) {
         this.props.history.push(item.jumpToUrl);
       } else {
         this.props.toast.info('请先进行实名认证', 2, () => {
-          this.props.history.push('/authentication/real_name');
+          this.props.history.push('/home/real_name');
         })
       }
     }
@@ -122,7 +122,7 @@ export default class mine_page extends PureComponent {
           name: '会员卡',
           icon: require('assets/images/mine/menu_ico7.png')
         },
-        jumpToUrl: '/membership_card/card_home',
+        jumpToUrl: '/mine/membership_card_page',
       },
     ];
     const listsArr2 = [
@@ -135,7 +135,7 @@ export default class mine_page extends PureComponent {
           name: '实名认证',
           icon: require('assets/images/mine/menu_ico.png')
         },
-        jumpToUrl: '/authentication/real_name',
+        jumpToUrl: '/home/real_name',
       },
       {
         label: {

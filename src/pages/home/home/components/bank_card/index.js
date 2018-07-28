@@ -12,18 +12,20 @@ export default class BankCard extends React.PureComponent {
   static propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
-    onClick: PropTypes.func,
+    contentData: PropTypes.object,
     bankIcon: PropTypes.string,
     bankName: PropTypes.string,
     cardNoHid: PropTypes.string,
     cardBillDt: PropTypes.string,
     cardBillAmt: PropTypes.string,
     overDt: PropTypes.string,
+    onClick: PropTypes.func,
   };
 
   static defaultProps = {
     className: '',
     children: '',
+    contentData: {},
     bankIcon: '',
     bankName: '****',
     cardNoHid: '**** **** **** ****',
@@ -43,6 +45,7 @@ export default class BankCard extends React.PureComponent {
     const {
       className,
       children,
+      contentData,
       onClick,
       bankIcon,
       bankName,
@@ -53,9 +56,11 @@ export default class BankCard extends React.PureComponent {
     } = this.props;
     return (
       <div className={style.bank_card_wrap}>
-        <button className={style.bill_update_btn} onClick={this.handleUpdate}>
-          更新账单
-        </button>
+        {contentData.indexSts === 'LN0002' ? null : (
+          <button className={style.bill_update_btn} onClick={this.handleUpdate}>
+            更新账单
+          </button>
+        )}
         <div className={style.card_preview}>
           <img className={style.card_icon} src={bankIcon} alt="" />
           <div className={style.card_info}>

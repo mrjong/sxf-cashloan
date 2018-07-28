@@ -1,6 +1,6 @@
 import sng4 from 'assets/images/carousel/banner.png';
 import React, { PureComponent } from 'react';
-import { Modal } from 'antd-mobile';
+import { Modal, Toast } from 'antd-mobile';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -13,6 +13,7 @@ import style from './style.scss';
 const API = {
   BANNER: '/my/getBannerList',
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
+  CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 };
 
 const mockData = {
@@ -110,6 +111,18 @@ const mockData = {
        "overDt":"7"
      }
   },
+  LN0010: {
+    "indexSts":"LN0010",
+     "indexMsg":"爬取失败/老用户",
+     "indexData":{
+       "bankName":"招商银行",
+       "bankNo":"ICBC",
+       "cardNoHid":"6785 **** **** 6654",
+       "cardBillDt":"2018-07-17",
+       "cardBillAmt":"786.45",
+       "overDt":"7"
+     }
+  },
 }
 
 @fetch.inject()
@@ -117,10 +130,11 @@ export default class HomePage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      typeCode: 'LN0003',
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }, { src: sng4, url: '' }, { src: sng4, url: '' }],
-      usrIndexInfo: mockData.LN0001,
+      usrIndexInfo: mockData.LN0003,
+      mockType: 1,
+      haselescard: 'true',
     };
   }
 
@@ -145,57 +159,96 @@ export default class HomePage extends PureComponent {
     console.log('代还');
   };
 
-  // 获取 banner 列表
-  requestGetBannerList = () => {
-    this.props.$fetch.get(API.BANNER).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
-        console.log(result);
-      }
-    });
-  };
-
+  // 智能按钮点击事件
   handleSmartClick = () => {
     const { usrIndexInfo } = this.state;
     switch (usrIndexInfo.indexSts) {
       case 'LN0001': // 新用户，信用卡未授权
-        console.log('LN0001');
+        this.applyCardRepay();
         break;
-      case 'LN0002': // 账单爬取中/账单爬取失败/老用户
+      case 'LN0002': // 账单爬取中
         console.log('LN0002');
         break;
-      case 'LN0003': // 账单爬取成功
-        console.log('LN0003');
+      case 'LN0003': // 账单爬取成功 (直接跳数据风控)
+        console.log('LN0003 风控信息？');
+        console.log('直接跳数据风控');
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
+        Toast.info('您的代还资格正在审核中，请耐心等待');
         break;
       case 'LN0005': // 暂无代还资格
         console.log('LN0005');
+        Toast.info('您暂时没有代还资格，请2018-8-1日再试');
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
+        this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
+        Toast.info('您的代还资金将于2018-8-1，请耐心等待');
         break;
       case 'LN0008': // 放款失败
-        console.log('LN0008');
+        console.log('LN0008 这个该怎么跳呀？');
         break;
       case 'LN0009': // 放款成功
-        console.log('LN0001');
+        console.log('LN0009');
+        this.props.history.push('/order/order_page');
+        break;
+      case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
+        console.log('LN0010');
         break;
       default:
         console.log('default');
     }
   };
 
-  // 获取首页信息
-  requestGetUsrInfo = () => {
-    this.props.$fetch.post(API.USR_INDEX_INFO).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
-        console.log(result);
+  // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
+  applyCardRepay = () => {
+    this.props.$fetch.post(API.CARD_AUTH).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        console.log(result, 'result');
+        this.props.history.push(result.data.url);
+      } else {
+        Toast.info(result.msgInfo);
       }
     });
+  };
+
+  // 请求用户绑卡状态
+  requestBindCardState = () => {
+    this.props.$fetch.post('someurl').then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        console.log(result, 'result');
+        if (this.state.mockType === 1) {
+          console.log('有风控且绑信用卡储蓄卡');
+          this.handleShowModal();
+        } else if (this.state.mockType === 2) {
+          console.log('有风控没绑信用卡 跳绑信用卡页面');
+          this.props.history.push('/mine/bind_credit_page');
+        } else if (this.state.mockType === 3) {
+          console.log('有风控没绑储蓄卡 跳绑储蓄卡页面');
+          this.props.history.push('/mine/bind_save_page');
+        }
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
+  };
+
+  // 一键还卡事件处理逻辑
+  oneKeyRepayment = () => {
+    if (this.state.mockType === 1) {
+      console.log('有风控且绑信用卡储蓄卡');
+      this.handleShowModal();
+    } else if (this.state.mockType === 2) {
+      console.log('有风控且绑信用卡');
+    } else if (this.state.mockType === 3) {
+      console.log('有风控且绑储蓄卡');
+    } else {
+      console.log('无风控');
+    }
   };
 
   // 根据码来控制显示内容
@@ -205,7 +258,7 @@ export default class HomePage extends PureComponent {
         this.props.setTitle('LN0001');
         console.log('LN0001');
         break;
-      case 'LN0002': // 账单爬取中/账单爬取失败/老用户
+      case 'LN0002': // 账单爬取中
         console.log('LN0002');
         break;
       case 'LN0003': // 账单爬取成功
@@ -230,13 +283,37 @@ export default class HomePage extends PureComponent {
       case 'LN0009': // 放款成功
         console.log('LN0001');
         break;
+      case 'LN0010': // 账单爬取失败/老用户
+        console.log('LN0010');
+        break;
       default:
         console.log('default');
     }
   };
 
+  // 获取 banner 列表
+  requestGetBannerList = () => {
+    this.props.$fetch.post(API.BANNER).then(result => {
+      if (result && result.code === '0000' && result.data !== null) {
+        console.log(result);
+      }
+    });
+  };
+
+  // 获取首页信息
+  requestGetUsrInfo = () => {
+    this.props.$fetch.post(API.USR_INDEX_INFO).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        console.log(result);
+        this.setState({
+          usrIndexInfo: result.data,
+        });
+      }
+    });
+  };
+
   render() {
-    const { typeCode, bannerList, usrIndexInfo } = this.state;
+    const { bannerList, usrIndexInfo } = this.state;
     const { history } = this.props;
     let componentsDisplay = null;
     switch (usrIndexInfo.indexSts) {
@@ -249,7 +326,7 @@ export default class HomePage extends PureComponent {
           </InfoCard>
         );
         break;
-      case 'LN0002': // 账单爬取中/账单爬取失败/老用户
+      case 'LN0002': // 账单爬取中
       case 'LN0003': // 账单爬取成功
       case 'LN0004': // 代还资格审核中
       case 'LN0005': // 暂无代还资格
@@ -257,11 +334,14 @@ export default class HomePage extends PureComponent {
       case 'LN0007': // 放款中
       case 'LN0008': // 放款失败
       case 'LN0009': // 放款成功
+      case 'LN0010': // 账单爬取失败/老用户
         componentsDisplay = (
-          <BankContent contentData={usrIndexInfo} showModalFun={this.handleShowModal}>
-            <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-              申请信用卡代还
-            </SButton>
+          <BankContent contentData={usrIndexInfo} history={history} haselescard={this.state.haselescard}>
+            {usrIndexInfo.indexSts === 'LN0002' || usrIndexInfo.indexSts === 'LN0010' ? null : (
+              <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                {usrIndexInfo.indexMsg}
+              </SButton>
+            )}
           </BankContent>
         );
         break;
@@ -272,7 +352,7 @@ export default class HomePage extends PureComponent {
       <div className={style.home_page}>
         <Carousels data={bannerList} />
         <div className={style.content_wrap}>{componentsDisplay}</div>
-        {typeCode === 'LN0001' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
+        {usrIndexInfo.indexSts === 'LN0001' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent onClose={this.handleCloseModal} history={history} />

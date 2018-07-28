@@ -28,7 +28,7 @@ export default class credit_extension_page extends PureComponent {
   componentWillMount() {
     // 查询 授信项状态
     this.props.$fetch.get(`${API.getStw}`).then(result => {
-        if (result && result.data !== null) {
+        if (result && result.data !== null&& result.msgCode==='PTM0000') {
           this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
 
           // 判断四项认证是否都认证成功
@@ -53,16 +53,15 @@ export default class credit_extension_page extends PureComponent {
   getStateData = item => {
     // 跳转 实名认证
     if (item.extra.code === 'idCheck' && item.extra.name === '未认证') {
-      this.props.history.push('/authentication/real_name');
+      this.props.history.push('/home/real_name');
     }
     // 跳转基本信息
     else if (item.extra.code === 'basicInf' && item.extra.name === '未认证') {
-      this.props.history.push('/authentication/essential_information');
+      this.props.history.push('/home/essential_information');
     }
     // 跳转运营商
     else if (item.extra.code === 'operator' && item.extra.name === '未认证') {
-      this.props.$fetch.get(`${API.getOperator}`).then(result => {
-        console.log(2222, result);
+      this.props.$fetch.post(`${API.getOperator}`).then(result => {
         if (result.msgCode === 'PTM0000' && result.data.url) {
           window.location.href = result.data.url;
         } else {
@@ -73,9 +72,8 @@ export default class credit_extension_page extends PureComponent {
     // 跳转 芝麻信用
     else if (item.extra.code === 'zmxy' && item.extra.name === '未认证') {
       this.props.$fetch.get(`${API.getZmxy}`).then(result => {
-        console.log(333, result);
-        if (result.msgCode === 'PTM0000' && result.data.pageUrl) {
-          window.location.href = result.data.pageUrl;
+        if (result.msgCode === 'PTM0000' && result.data.authUrl) {
+          window.location.href = result.data.authUrl;
         } else {
           this.props.toast.info(result.msgInfo);
         }
