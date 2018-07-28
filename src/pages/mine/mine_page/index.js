@@ -14,6 +14,10 @@ export default class mine_page extends PureComponent {
     super(props);
     this.state = {
       userPhone: '152****6273',
+      memberInf: {
+        status: '',
+        color: '',
+      },
     };
   }
   componentWillMount() {
@@ -21,9 +25,22 @@ export default class mine_page extends PureComponent {
   }
   // 查询用户会员卡状态
   queryVipCard = () => {
-    this.props.$fetch.post(API.VIPCARD).then(result => {
+    this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result);
+        switch (result.data.memSts) {
+          case '0':
+            this.setState({memberInf: {status: '未购买', color: '#FF5A5A'}});
+            break;
+          case '1':
+            this.setState({memberInf: {status: '已购买', color: '#4CA6FF'}});
+            break;
+          case '2':
+            this.setState({memberInf: {status: '处理中', color: '#4CA6FF'}});
+            break;
+          default:
+            break;
+        }
+        console.log();
       }
     });
   };
@@ -48,8 +65,8 @@ export default class mine_page extends PureComponent {
     const listsArr = [
       {
         extra: {
-          name: '未购买',
-          color: '#FF5A5A',
+          name: this.state.memberInf.status,
+          color: this.state.memberInf.color,
         },
         label: {
           name: '会员卡',
