@@ -13,18 +13,18 @@ export default class select_save_page extends PureComponent {
     this.state = {
       agrNo: '1',
       cardList: [
-        {
-          bankName: '建设银行',
-          lastCardNo: '2345',
-          bankCode: 'CCB',
-          agrNo: '1',
-        },
-        {
-          bankName: '工商银行',
-          lastCardNo: '2345',
-          bankCode: 'ICBC',
-          agrNo: '2',
-        },
+        // {
+        //   bankName: '建设银行',
+        //   lastCardNo: '2345',
+        //   bankCode: 'CCB',
+        //   agrNo: '1',
+        // },
+        // {
+        //   bankName: '工商银行',
+        //   lastCardNo: '2345',
+        //   bankCode: 'ICBC',
+        //   agrNo: '2',
+        // },
       ]
     }
   }
@@ -40,10 +40,9 @@ export default class select_save_page extends PureComponent {
       corpBusTyp: "02"
     }).then(
       res => {
-        if (res.msgCode === "PTM0000" && res.data) {
-          this.props.toast.info(res.msgInfo)
+        if (res.msgCode === "PTM0000") {
           this.setState({
-            cardList: res.data
+            cardList: res.data ? res.data : []
           })
         } else {
           res.msgInfo && this.props.toast.info(res.msgInfo)
