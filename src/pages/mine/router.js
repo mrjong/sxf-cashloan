@@ -47,4 +47,14 @@ export default [
     title: '确认购买',
     component: () => import('pages/mine/confirm_purchase_page'),
   },
+  {
+    path: '/mine/support_credit_page',
+    title: '信用卡支持银行类型',
+    component: () => import('pages/mine/support_credit_page'),
+  },
+  {
+    path: '/mine/support_save_page',
+    title: '储蓄卡支持银行类型',
+    component: () => import('pages/mine/support_save_page'),
+  },
 ];

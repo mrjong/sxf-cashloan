@@ -21,6 +21,7 @@ export const validators = {
             }
         }
     },
+    name:val=> /^([\u4e00-\u9fa5])|(\\.)|(\\·){1,10}$/.test(val),
     chLength: (val, min, max) => { // 中文字符长度校验
         let minNum = min ? min : 1;
         let maxNum = max ? max : 100000;
