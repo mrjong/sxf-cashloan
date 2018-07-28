@@ -31,6 +31,7 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    console.log(this.props)
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
       phoneValue: '18500214321'
@@ -59,7 +60,7 @@ export default class login_page extends PureComponent {
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
           osType: osType, // 操作系统
           smsCd: values.smsCd, // IP地址
-          usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : '', // 用户渠道
+          usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : 'h5', // 用户渠道
           location: this.props.locationAddress, // 定位地址
         }).then(res => {
           if (res.msgCode !== 'PTM0000') {

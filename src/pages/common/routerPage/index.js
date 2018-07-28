@@ -26,6 +26,9 @@ export default class router_Page extends PureComponent {
       let routerList = Routers
       for (let i = 0; i < routerList.length; i++) {
         if (match.url === routerList[i].path) {
+          this.setState({
+            newTitle: routerList[i].title
+          })
           route = routerList[i]
         }
       }
