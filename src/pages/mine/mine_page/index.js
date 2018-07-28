@@ -33,6 +33,7 @@ export default class mine_page extends PureComponent {
   }
   // 查询用户会员卡状态
   queryVipCard = () => {
+
     this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         switch (result.data.memSts) {
@@ -64,7 +65,7 @@ export default class mine_page extends PureComponent {
       }
     });
   };
-  
+
   // 退出
   logout = () => {
     this.props.$fetch.get(API.LOGOUT).then(result => {
@@ -81,7 +82,7 @@ export default class mine_page extends PureComponent {
   };
   // 第一组里的点击事件
   clickhandle = item => {
-    if(this.state.jumpFlag) {
+    if (this.state.jumpFlag) {
       this.props.history.push(item.jumpToUrl);
     } else {
       this.props.toast.info('请先进行实名认证', 2, () => {
@@ -91,10 +92,10 @@ export default class mine_page extends PureComponent {
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    if(item.jumpToUrl == '/authentication/real_name') {
+    if (item.jumpToUrl == '/authentication/real_name') {
       this.props.history.push(item.jumpToUrl);
     } else {
-      if(this.state.jumpFlag) {
+      if (this.state.jumpFlag) {
         this.props.history.push(item.jumpToUrl);
       } else {
         this.props.toast.info('请先进行实名认证', 2, () => {
@@ -102,7 +103,7 @@ export default class mine_page extends PureComponent {
         })
       }
     }
-    
+
   };
   // 第三组里的点击事件
   clickhandle3 = item => {
@@ -110,6 +111,7 @@ export default class mine_page extends PureComponent {
   };
   render() {
     // 定义list所需的数据
+
     const listsArr = [
       {
         extra: {
@@ -120,7 +122,7 @@ export default class mine_page extends PureComponent {
           name: '会员卡',
           icon: require('assets/images/mine/menu_ico7.png')
         },
-        jumpToUrl: '/membership_card/card_home',
+        jumpToUrl: '/mine/membership_card_page',
       },
     ];
     const listsArr2 = [

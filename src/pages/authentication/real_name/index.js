@@ -1,19 +1,32 @@
-import React, {PureComponent } from 'react';
+import React, { Component } from 'react';
 import { setBackGround } from '../../../utils/Background';
 import { createForm } from 'rc-form';
 import updateLeft from '../../../assets/images/real_name/1@2x.png';
 import updateRight from '../../../assets/images/real_name/2@2x.png';
 import updateBottom from '../../../assets/images/real_name/@2x.png';
 import FEZipImage from '../../../components/fzp-image';
-import { InputItem,Toast } from 'antd-mobile';
+import { InputItem, Toast } from 'antd-mobile';
 import ButtonCustom from '../../../components/button';
 import style from './index.scss';
+import fetch from 'sx-fetch';
+import { getDeviceType, getFirstError } from 'utils/common';
 
+const isEquipment = window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+
+const API = {
+  getImgUrl: '/auth/ocrIdChk',
+  submitName: '/auth/idChk',
+};
+
+@fetch.inject()
 @createForm()
 @setBackGround('#F5F5F5')
-
-export default class RealName extends PureComponent {
+export default class RealName extends Component {
   state = {
+    idName: '',
+    idNo: '',
+    ocrZhengData: {},
+    ocrFanData: {},
     selectFlag: false,
     leftValue: updateLeft,
     rightValue: updateRight,
@@ -31,32 +44,137 @@ export default class RealName extends PureComponent {
 
   }
 
-  handleSure = (e) => {
-    e.preventDefault();
-    const { loading } = this.state;
-    if (loading) return; // 防止重复提交
+  handleNameChange = value => {
+    this.setState({ idName: value });
+  };
+  handleNumberChange = value => {
+    this.setState({ idNo: value });
+  };
 
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        // values中存放的是经过 getFieldDecorator 包装的表单元素的值
-        console.log(values);
-        // TODO 发送请求等操作
+  // 上传身份证正面
+  handleChangePositive = ({ base64Data }) => {
+    if (!(isEquipment)) {
+      this.props.toast.info('请使用手机设备');
+      return;
+    }
+    this.setState({ showFloat: true });
+    this.setState({ leftValue: base64Data });
+    const params = {
+      imageBase64: this.state.leftValue, //身份证正面图片信息
+      ocrType: '2',
+    };
+    this.props.$fetch.post(`${API.getImgUrl}`, params, { timeout: 30000 }).then((result) => {
+      console.log(111, result);
+
+      if (result.msgCode === 'PTM0000') {
+        this.setState({ ocrZhengData: result.data });
+        this.setState({ idName: result.data.idName || '' });
+        this.setState({ idNo: result.data.idNo || '' });
+        this.setState({ showFloat: false });
+        this.setState({ leftUploaded: true });
       } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            Toast.info(errMessage);
-          }
-        }
+        this.props.toast.info(result.msgInfo);
+        this.setState({ leftUploaded: false });
+        this.setState({ showFloat: false });
+      }
+    }).catch(() => {
+      this.setState({ showFloat: false });
+    });
+  };
+
+  // 上传身份证反面
+  handleChangeSide = ({ base64Data }) => {
+    if (!(isEquipment)) {
+      this.props.toast.info('请使用手机设备');
+      return;
+    }
+    this.setState({ showFloat: true });
+    this.setState({ rightValue: base64Data });
+    const params1 = {
+      imageBase64: this.state.rightValue, //身份证反面图片信息
+      ocrType: '3',
+    };
+    this.props.$fetch.post(`${API.getImgUrl}`, params1, { timeout: 30000 }).then((res) => {
+      if (res.msgCode === 'PTM0000') {
+        this.setState({ ocrFanData: res.data });
+        this.setState({ rightUploaded: true });
+        this.setState({ showFloat: false });
+      } else {
+        this.props.toast.info(res.msgInfo);
+        this.setState({ rightUploaded: false });
+        this.setState({ showFloat: false });
+      }
+    }).catch(() => {
+      this.setState({ showFloat: false });
+    });
+  };
+  // 手持身份证照片
+  handleChangeBottom = ({ base64Data }) => {
+    if (!(isEquipment)) {
+      this.props.toast.info('请使用手机设备');
+      return;
+    }
+    this.setState({ showFloat: true });
+    this.setState({ footerValue: base64Data });
+    const params1 = {
+      imageBase64: this.state.footerValue, //手持身份证照片
+      ocrType: '1',
+    };
+    this.props.$fetch.post(`${API.getImgUrl}`, params1, { timeout: 30000 }).then((res) => {
+      if (res.msgCode === 'PTM0000') {
+        this.setState({ ocrData: res.data });
+        this.setState({ footerUploaded: true });
+        this.setState({ showFloat: false });
+      } else {
+        this.props.toast.info(res.msgInfo);
+        this.setState({ footerUploaded: false });
+      }
+    }).catch(() => {
+      this.setState({ showFloat: false });
+    });
+  };
+
+  handleSubmit = () => {
+    if (!/^([\u4e00-\u9fa5])|(\\.)|(\\·){1,10}$/.test()) {
+      this.props.toast.info('请输入合法的姓名');
+      return false;
+    }
+    if (!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.state.idNo)) {
+      this.props.toast.info('请输入合法的身份证');
+      return false;
+    }
+    const { ocrZhengData = {}, ocrFanData = {}, ocrData = {}, idName, idNo } = this.state;
+    const osType = getDeviceType();
+    const params = {
+      idCardFrontUrl: ocrZhengData.imgUrl,    //正面URL
+      idCardBackUrl: ocrFanData.imgUrl,     //反面URL
+      handCardImgUrl: ocrData,    //手持正面URL
+      idNo: idNo,           // 证件号码
+      idNoOld: idNo,         // 修改前证件号码
+      usrNm: idName,       //证件姓名
+      usrNmOld: idName,    //修改前证件姓名
+      usrGender: ocrZhengData.sex,      //性别
+      usrNation: ocrZhengData.nation,   //民族
+      usrBirthDt: ocrZhengData.birthday, //出生年月日
+      issuAuth: ocrFanData.signOrg,     //签发机关
+      idEffDt: ocrFanData.signTime,     //证件有效期起始日期
+      idExpDt: ocrFanData.signEndTime,  //证件有效期截止日期
+      idAddr: ocrZhengData.address,     //居住地址
+      osType: osType,        //操作系统类型
+      idAddrLctn: '',         //身份证户籍地经纬度
+      usrBrowInfo: '',        //授信浏览器信息
+    };
+    this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
+      if (result && result.data !== null && result.msgCode === 'PTM0000') {
+        this.props.history.replace('/mine/credit_extension_page');
+      }
+      else {
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     // let selectFlag = true;
     // if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
     //   selectFlag = false;
@@ -69,7 +187,7 @@ export default class RealName extends PureComponent {
             <FEZipImage
               style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
               value={this.state.leftValue}
-              // onChange={this.handleChangePositive}
+              onChange={this.handleChangePositive}
               // beforeCompress={this.handleBeforeCompress}
               // afterCompress={this.handleAfterCompress}
             />
@@ -79,7 +197,7 @@ export default class RealName extends PureComponent {
             <FEZipImage
               style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
               value={this.state.rightValue}
-              // onChange={this.handleChangeSide}
+              onChange={this.handleChangeSide}
               // beforeCompress={this.handleBeforeCompress}
               // afterCompress={this.handleAfterCompress}
             />
@@ -89,40 +207,22 @@ export default class RealName extends PureComponent {
         </div>
         <div className={style.clear}/>
         <div className={style.labelDiv}>
-          {
-            getFieldDecorator('idName', {
-              rules: [
-                { required: true, message: '请输入姓名' },
-                { max: 3, message: '最长3个字符' },
-              ],
-            })(
-              <InputItem
-                placeholder="借款人本人姓名"
-                type="text"
-              >
-                姓名
-              </InputItem>,
-            )
-          }
+          <InputItem onChange={this.handleNameChange}
+                     placeholder="借款人本人姓名"
+                     value={this.state.idName}
+          >
+            姓名
+          </InputItem>
         </div>
         <div className={style.clear}/>
         <div className={style.inline} style={{ height: '0.04rem' }}/>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
-          {
-            getFieldDecorator('idNo', {
-              rules: [
-                { required: true, message: '请输入身份证号' },
-                { max: 25, message: '最长15-25个字符' },
-              ],
-            })(
-              <InputItem
-                placeholder="借款人身份证号"
-                type="text"
-              >
-                身份证号
-              </InputItem>,
-            )
-          }
+          <InputItem onChange={this.handleNumberChange}
+                     placeholder="借款人身份证号"
+                     value={this.state.idNo}
+          >
+            身份证号
+          </InputItem>
         </div>
         <div className={style.clear}/>
         <div className={style.updateTitle}>上传本人手持身份证照片</div>
@@ -131,7 +231,7 @@ export default class RealName extends PureComponent {
             <FEZipImage
               style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
               value={this.state.footerValue}
-              // onChange={this.handleChangeBottom}
+              onChange={this.handleChangeBottom}
               // beforeCompress={this.handleBeforeCompress}
               // afterCompress={this.handleAfterCompress}
             />
@@ -149,7 +249,7 @@ export default class RealName extends PureComponent {
           <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行实名认证</p>
           <p className={style.desOne}>*实名信息一旦认证，不可修复</p>
         </div>
-        <ButtonCustom onClick={this.handleSure} className={style.sureBtn}>确定</ButtonCustom>
+        <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>确定</ButtonCustom>
       </div>
     );
   }

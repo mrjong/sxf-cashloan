@@ -88,9 +88,24 @@ const store = {
     return storage.session.getItem('backUrl');
   },
 
-  // 获取跳转的url
+  // 清除跳转的url
   removeBackUrl() {
     return storage.session.removeItem('backUrl');
+  },
+  
+  // 保存跳转路由中的银行卡信息
+  setCardData(data) {
+    storage.session.setItem('cardData', data);
+  },
+
+  // 获取跳转路由中的银行卡信息
+  getCardData() {
+    return storage.session.getItem('cardData');
+  },
+
+  // 清除跳转路由中的银行卡信息
+  removeCardData() {
+    return storage.session.removeItem('cardData');
   },
 }
 

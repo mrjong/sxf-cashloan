@@ -14,7 +14,7 @@ export default class Lists extends PureComponent {
   getExtra = (list) => {
     let extraList = []
     list.forEach((item, index) => {
-      extraList.push(<span key={index} style={{ color: item.color }}>{item.name}</span>)
+      extraList.push(<span key={index} style={{ color: item.color, fontSize: '0.34rem' }}>{item.name}</span>)
     });
     return extraList
   }
@@ -44,8 +44,8 @@ export default class Lists extends PureComponent {
                     }
                   </Item>
                   {
-                    item.listDesc && item.showDesc ?
-                    <div><ListDesc listdescinfo={item.listDesc}></ListDesc></div> : null 
+                    item.feeInfos && item.showDesc ?
+                      <div><ListDesc listdescinfo={item.feeInfos}></ListDesc></div> : null
                   }
                 </div>
               )

@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import selectedImg from 'assets/images/mine/selectCard/selected_ico.png';
-import addCardImg from 'assets/images/mine/selectCard/add_icon.png';
 import styles from './index.scss';
 
 const API = {
@@ -42,9 +40,9 @@ export default class select_credit_page extends PureComponent {
       corpBusTyp: "01"
     }).then(
       res => {
-        if (res.msgCode === "PTM0000" && data) {
+        if (res.msgCode === "PTM0000") {
           this.setState({
-            cardList: res.data
+            cardList: res.data ? res.data : []
           })
         } else {
           res.msgInfo && this.props.toast.info(res.msgInfo)
@@ -98,11 +96,7 @@ export default class select_credit_page extends PureComponent {
                     <span className={styles.bank_name}>{item.bankName}</span>
                     <span>···· {item.lastCardNo}</span>
                     { isSelected ? (
-                      <img
-                        className={styles.selected_ico}
-                        src={selectedImg}
-                        alt=""
-                      />
+                      <i className={styles.selected_ico}></i>
                     ) : null}
                   </li>
                 )
@@ -112,7 +106,7 @@ export default class select_credit_page extends PureComponent {
           </div>
           : null
         }
-        <p onClick={this.addCard} className={styles.add_card}><img src={addCardImg} alt=""/>新增授权卡</p>
+        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
       </div>
     )
   }

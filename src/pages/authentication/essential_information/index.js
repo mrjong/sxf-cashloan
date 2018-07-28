@@ -31,6 +31,7 @@ export default class essential_information extends PureComponent {
     relatTwoValue: [],
 
     provValue: [],             // 选中的省市区
+    provLabel: [],
   };
 
   componentWillMount() {
@@ -92,8 +93,8 @@ export default class essential_information extends PureComponent {
       console.log(values);
       if (!err) {
         const params = {
-          provNm: values.city[0],
-          cityNm: values.city[1],
+          provNm: this.state.provLabel[0],
+          cityNm: this.state.provLabel[1],
           usrDtlAddr: values.address,
           usrDtlAddrLctn: '',
           cntRelTyp1: values.cntRelTyp1[0],
@@ -134,6 +135,14 @@ export default class essential_information extends PureComponent {
       callback();
     }
   };
+  // 校验姓名
+  validateName = (rule, value, callback) => {
+    if (!validators.name(value)) {
+      callback('请输入合法的姓名');
+    } else {
+      callback();
+    }
+  };
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -142,10 +151,10 @@ export default class essential_information extends PureComponent {
         <div className={style.infromationTitle}>个人信息</div>
         <div className={style.labelDiv}>
           {getFieldDecorator('city', {
-            initialValue: this.state.provValue,
             rules: [{ required: true, message: '请选择城市' }],
             onChange: (value, label) => {
               this.setState({ provValue: value });
+              this.setState({ provLabel: label });
             },
           })(
             // 这里面的组件，要有 value onChange属性就行，一般都是表单组件，自定义组件，提供了value onChange 属性的也可以用，也可以通过 valuePropName 来指定，这个就是高级一点的用法了。
@@ -160,7 +169,7 @@ export default class essential_information extends PureComponent {
                 (provCd) => this.props.$fetch.get(`/rcm/qryProv?pid=${provCd}`)
                   .then(result => {
                     const city = (result && result.data && result.data.length) ? result.data : [];
-                    return city.map(item => ({ value: item.key, label: item.value }));
+                    return city.map(item => ({ value: item.value, label: item.value }));
                   }),
               ]}
               cols={2}
@@ -219,7 +228,9 @@ export default class essential_information extends PureComponent {
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
-            rules: [{ required: true, message: '请输入姓名' }],
+            rules: [
+              { required: true, message: '请输入姓名' },
+              { validator: this.validateName }],
           })(
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
@@ -271,7 +282,9 @@ export default class essential_information extends PureComponent {
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
-            rules: [{ required: true, message: '请输入姓名' }],
+            rules: [
+              { required: true, message: '请输入姓名' },
+              { validator: this.validateName }],
           })(
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
