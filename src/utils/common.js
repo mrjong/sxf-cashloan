@@ -77,6 +77,21 @@ const store = {
   getRepaymentModalData() {
     return storage.session.getItem('confirmRepaymentModalData');
   },
+
+  // 保存跳转的url
+  setBackUrl(data) {
+    storage.session.setItem('backUrl', data);
+  },
+
+  // 获取跳转的url
+  getBackUrl() {
+    return storage.session.getItem('backUrl');
+  },
+
+  // 获取跳转的url
+  removeBackUrl() {
+    return storage.session.removeItem('backUrl');
+  },
 }
 
 /*rc-form 获取第一个错误 */
