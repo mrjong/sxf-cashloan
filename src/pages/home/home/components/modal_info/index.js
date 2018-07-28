@@ -127,7 +127,7 @@ export default class ModalInfo extends PureComponent {
   handleClickConfirm = () => {
     console.log('点击确认按钮');
     this.clearCurrentPageData();
-    this.props.history.push('/confirm/agency');
+    this.props.history.push('/home/agency');
   }
 
   // 获取代还期限列表 还款日期列表

@@ -53,11 +53,11 @@ export default class credit_extension_page extends PureComponent {
   getStateData = item => {
     // 跳转 实名认证
     if (item.extra.code === 'idCheck' && item.extra.name === '未认证') {
-      this.props.history.push('/authentication/real_name');
+      this.props.history.push('/home/real_name');
     }
     // 跳转基本信息
     else if (item.extra.code === 'basicInf' && item.extra.name === '未认证') {
-      this.props.history.push('/authentication/essential_information');
+      this.props.history.push('/home/essential_information');
     }
     // 跳转运营商
     else if (item.extra.code === 'operator' && item.extra.name === '未认证') {
