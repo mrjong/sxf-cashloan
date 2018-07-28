@@ -1,4 +1,4 @@
-import React, {PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { setBackGround } from '../../../utils/Background';
 import vipIcon from '../../../assets/images/menbership_card/组 5.png';
 import style from './index.scss'
@@ -6,7 +6,7 @@ import ButtonCustom from 'components/button';
 
 @setBackGround('#fff')
 
-export default class card_home extends PureComponent {
+export default class membership_card_page extends PureComponent {
   state = {};
 
   componentWillMount() {
@@ -20,7 +20,7 @@ export default class card_home extends PureComponent {
   render() {
     return (
       <div>
-        <div className={style.cardHome}>
+        <div className={style.membership_card_page}>
           <div className={style.cardMoney}>
             68 <span className={style.icon}>￥</span>
           </div>
