@@ -25,6 +25,7 @@ export default class repayment_succ_page extends PureComponent {
             <div className={styles.repayment_succ_page}>
                 <div className={styles.tips}>
                     {/* <img src={succIco} alt="" /> */}
+                    <i className={styles.success_ico}></i>
                     <p>恭喜，您的账单已结清</p>
                 </div>
                 <div className={styles.details}>

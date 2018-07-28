@@ -58,6 +58,7 @@ export default class bind_credit_page extends PureComponent {
         store.removeBackUrl();
         if (backUrlData) {
           this.props.history.push(backUrlData);
+          store.setCardData(JSON.stringify(result.data));
         } else {
           this.props.history.push('/mine/select_credit_page');
         }
