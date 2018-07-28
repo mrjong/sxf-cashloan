@@ -7,11 +7,16 @@ import iconClose from 'assets/images/confirm_agency/icon_close.png';
 
 import style from './style.scss';
 
+const API = {
+  REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
+};
+
 export default class ConfirmAgencyPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       isShowModal: false,
+      repayInfo: {},
     }
   }
 
@@ -31,15 +36,45 @@ export default class ConfirmAgencyPage extends PureComponent {
     console.log('点击按钮');
   };
 
+  // 获取确认代还信息
+  requestGetRepayInfo = () => {
+    this.setState({
+      repayInfo: {
+        "cardBillAmt": "687.67",
+      "prdList": [
+          {
+              "prdName":"3个月",
+            "prdId":"432424"
+          },
+        {
+              "prdName":"1个月",
+            "prdId":"4324224"
+          }
+      ],
+      "overDt": "7",
+      "bankName": "招商银行" ,
+      "cardNoHid": "6747 **** **** 6654",
+      "withHoldAgrNo":"332423534534534534535",
+      "withDrawAgrNo": "034253534564645645645",
+      "cardBillDt":"2018-07-17"
+      }
+    });
+    this.props.$fetch.post(API.REPAY_INFO).then(result => {
+      if (result && result.code === '0000' && result.data !== null) {
+        console.log(result);
+      }
+    });
+  };
+
   render() {
-    const { isShowModal } = this.state;
+    const { isShowModal, repayInfo } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
           <ul className={style.panel_conten}>
             <li className={style.list_item}>
               <label className={style.item_name}>签约金额(元)</label>
-              <span className={style.item_value}>1000.00</span>
+              <span className={style.item_value}>{repayInfo.cardBillAmt}</span>
             </li>
             <li className={style.list_item}>
               <label className={style.item_name}>
