@@ -5,7 +5,7 @@ import OrderRoute from 'pages/order/router'; // 账单
 import Example from 'example/router'; // 例子
 
 import AuthenticationRoute from 'pages/authentication/router'; // 授信项
-import MembershipCardRoute from 'pages/membership_card/router';
+// import MembershipCardRoute from 'pages/membership_card/router';
 import ConfirmAgency from 'pages/confirm/router';
 
 export default [
@@ -13,7 +13,7 @@ export default [
   // ...LoginRoute,
   ...AuthenticationRoute,
   ...MineRoute,
-  ...MembershipCardRoute,
+  // ...MembershipCardRoute,
   ...OrderRoute,
   ...Example,
   ...ConfirmAgency,
