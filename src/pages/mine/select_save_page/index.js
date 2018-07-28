@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import selectedImg from 'assets/images/mine/selectCard/selected_ico.png';
-import addCardImg from 'assets/images/mine/selectCard/add_icon.png';
 import styles from './index.scss';
 
 const API = {
@@ -15,18 +13,18 @@ export default class select_save_page extends PureComponent {
     this.state = {
       agrNo: '1',
       cardList: [
-        // {
-        //   bankName: '建设银行',
-        //   lastCardNo: '2345',
-        //   bankCode: 'CCB',
-        //   agrNo: '1',
-        // },
-        // {
-        //   bankName: '工商银行',
-        //   lastCardNo: '2345',
-        //   bankCode: 'ICBC',
-        //   agrNo: '2',
-        // },
+        {
+          bankName: '建设银行',
+          lastCardNo: '2345',
+          bankCode: 'CCB',
+          agrNo: '1',
+        },
+        {
+          bankName: '工商银行',
+          lastCardNo: '2345',
+          bankCode: 'ICBC',
+          agrNo: '2',
+        },
       ]
     }
   }
@@ -42,7 +40,7 @@ export default class select_save_page extends PureComponent {
       corpBusTyp: "02"
     }).then(
       res => {
-        if (res.msgCode === "PTM0000") {
+        if (res.msgCode === "PTM0000" && res.data) {
           this.props.toast.info(res.msgInfo)
           this.setState({
             cardList: res.data
@@ -99,11 +97,7 @@ export default class select_save_page extends PureComponent {
                     <span className={styles.bank_name}>{item.bankName}</span>
                     <span>···· {item.lastCardNo}</span>
                     { isSelected ? (
-                      <img
-                        className={styles.selected_ico}
-                        src={selectedImg}
-                        alt=""
-                      />
+                      <i className={styles.selected_ico}></i>
                     ) : null}
                   </li>
                 )
@@ -113,7 +107,7 @@ export default class select_save_page extends PureComponent {
           </div>
           : null
         }
-        <p onClick={this.addCard} className={styles.add_card}><img src={addCardImg} alt=""/>新增授权卡</p>
+        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
       </div>
     )
   }

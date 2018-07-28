@@ -15,10 +15,10 @@ export default class BankCard extends React.PureComponent {
     onClick: PropTypes.func,
     bankIcon: PropTypes.string,
     bankName: PropTypes.string,
-    bankNum: PropTypes.string,
-    billDate: PropTypes.string,
-    billAmount: PropTypes.string,
-    repaymentDate: PropTypes.string,
+    cardNoHid: PropTypes.string,
+    cardBillDt: PropTypes.string,
+    cardBillAmt: PropTypes.string,
+    overDt: PropTypes.string,
   };
 
   static defaultProps = {
@@ -26,10 +26,10 @@ export default class BankCard extends React.PureComponent {
     children: '',
     bankIcon: '',
     bankName: '****',
-    bankNum: '**** **** **** ****',
-    billDate: '---',
-    billAmount: '---',
-    repaymentDate: '---',
+    cardNoHid: '**** **** **** ****',
+    cardBillDt: '---',
+    cardBillAmt: '---',
+    overDt: '---',
     onClick: () => {
       console.log('点击按钮，默认方法');
     },
@@ -46,10 +46,10 @@ export default class BankCard extends React.PureComponent {
       onClick,
       bankIcon,
       bankName,
-      bankNum,
-      billDate,
-      billAmount,
-      repaymentDate,
+      cardNoHid,
+      cardBillDt,
+      cardBillAmt,
+      overDt,
     } = this.props;
     return (
       <div className={style.bank_card_wrap}>
@@ -60,20 +60,20 @@ export default class BankCard extends React.PureComponent {
           <img className={style.card_icon} src={bankIcon} alt="" />
           <div className={style.card_info}>
             <span className={style.card_info_name}>{bankName}</span>
-            <span className={style.card_info_num}>{bankNum}</span>
+            <span className={style.card_info_num}>{cardNoHid}</span>
           </div>
         </div>
         <div className={style.bill_preview}>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{billDate}</span>
+            <span className={style.bill_value}>{cardBillDt}</span>
             <span className={style.bill_name}>账单日</span>
           </div>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{billAmount}</span>
+            <span className={style.bill_value}>{cardBillAmt}</span>
             <span className={style.bill_name}>账单金额</span>
           </div>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{repaymentDate}</span>
+            <span className={style.bill_value}>{overDt}</span>
             <span className={style.bill_name}>还款日</span>
           </div>
         </div>

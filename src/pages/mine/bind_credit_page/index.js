@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
+import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/button';
 import { validators } from 'utils/validator';
+import { store } from 'utils/common';
 import styles from './index.scss';
 
 const API = {
@@ -30,13 +32,13 @@ export default class bind_credit_page extends PureComponent {
   // 获取信用卡信息
   queryUserInf = () => {
     this.props.$fetch.get(API.GETUSERINF)
-    .then((result) => {
-      if(result.data){
-        this.setState({ userName: result.data.usrNm })
-      }
-    }, (error) => {
-      error.msgInfo && this.props.toast.info(error.msgInfo);
-    })
+      .then((result) => {
+        if (result.data) {
+          this.setState({ userName: result.data.usrNm })
+        }
+      }, (error) => {
+        error.msgInfo && this.props.toast.info(error.msgInfo);
+      })
   };
 
   // 校验信用卡卡号
@@ -52,19 +54,27 @@ export default class bind_credit_page extends PureComponent {
     this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
       if (result.msgCode === 'PTM0000') {
         // bindCreditConfirm()
-        if (sessionStorage.getItem('creditCardManagement')) {
-          this.props.history.push('/creditCardManagement')
+        const backUrlData = store.getBackUrl();
+        store.removeBackUrl();
+        if (backUrlData) {
+          this.props.history.push(backUrlData);
+          store.setCardData(JSON.stringify(result.data));
         } else {
-          //提交申请 判断是否绑定信用卡和储蓄卡
-          this.props.$fetch.post('/my/chkCard').then(result=>{
-              if(result.msgCode==="PTM2003"){
-                  this.props.history.push('/storageCard')
-              } else {
-                  sessionStorage.getItem('storageCardSourceLenderAgain') ?
-                  this.props.history.push('/backConfirm') : this.props.history.push('/home')
-              }
-          })
+          this.props.history.push('/mine/select_credit_page');
         }
+        // if (sessionStorage.getItem('creditCardManagement')) {
+        //   this.props.history.push('/creditCardManagement')
+        // } else {
+        //   //提交申请 判断是否绑定信用卡和储蓄卡
+        //   this.props.$fetch.post('/my/chkCard').then(result => {
+        //     if (result.msgCode === "PTM2003") {
+        //       this.props.history.push('/storageCard')
+        //     } else {
+        //       sessionStorage.getItem('storageCardSourceLenderAgain') ?
+        //         this.props.history.push('/backConfirm') : this.props.history.push('/home')
+        //     }
+        //   })
+        // }
       } else {
         this.props.toast.info(result.msgInfo)
       }
@@ -73,18 +83,19 @@ export default class bind_credit_page extends PureComponent {
   // 通过输入的银行卡号 查出查到卡banCd
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      if (result.bankCd===null || result.bankCd==='' || result.cardTyp==='D') {
-        this.props.toast.info('请输入有效银行卡号')
-      } else {
-        const params1= {
-          bankCd: result.bankCd,
+      console.log(!result.data)
+      if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'D') {
+        const params1 = {
+          bankCd: result.data.bankCd,
           cardTyp: 'C', //卡类型。
           cardNo: values.valueInputCarNumber, //持卡人卡号
         }
         this.bindConfirm(params1);
+      } else {
+        this.props.toast.info('请输入有效银行卡号')
       }
     }, (error) => {
-      error.msgInfo  && this.props.toast.info(error.msgInfo );
+      error.msgInfo && this.props.toast.info(error.msgInfo);
     })
   };
   // 确认购买
@@ -99,9 +110,8 @@ export default class bind_credit_page extends PureComponent {
           cardNo: values.valueInputCarNumber,
         }
         // values中存放的是经过 getFieldProps 包装的表单元素的值
-        console.log(values);
         //判断是否登录
-        const token = sessionStorage.getItem("tokenId");
+        const token = Cookie.get('fin-v-card-token');
         if (token) {
           this.checkCard(params, values);
         } else {

@@ -37,6 +37,12 @@ export default [
     component: () => import('pages/mine/select_save_page'),
   },
   {
+    path: '/mine/membership_card_page',
+    title: '会员卡购买',
+    // arrowHide: true,
+    component: () => import('pages/mine/membership_card_page'),
+  },
+  {
     path: '/mine/confirm_purchase_page',
     title: '确认购买',
     component: () => import('pages/mine/confirm_purchase_page'),

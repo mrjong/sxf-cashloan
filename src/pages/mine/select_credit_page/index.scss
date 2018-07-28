@@ -1,4 +1,5 @@
-// @import '../../../assets/styles/scss/base/fn.scss';
+@import '../../../assets/styles/scss/base/fn';
+
 .select_credit_page {
   .card_tit {
     margin-top: 59px;
@@ -24,24 +25,6 @@
       font-size: 32px;
       color: rgba(51, 51, 51, 1);
       padding: 0 30px;
-      :global {
-        .bank_ico {
-          position: relative;
-          display: inline-block;
-          width: 60px;
-          height: 60px;
-          background-image: url('../../../assets/images/mine/selectCard/gr_bank.png');
-          background-repeat: no-repeat;
-          background-size: 50px 1700px;
-          top: 18px;
-        }
-        .bank_ico_ICBC {
-          background-position: center 0;
-        }
-        .bank_ico_CCB {
-          background-position: center -60px;
-        }
-      }
       .bank_name {
         margin: 0 24px 0 30px;
       }
@@ -52,6 +35,9 @@
         width: 50px;
         height: 50px;
         margin-top: -25px;
+        @include bg-image('../../../assets/images/mine/selectCard/selected_ico');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
       }
     }
     li.active {
@@ -64,12 +50,16 @@
     color: rgba(235, 222, 116, 1);
     text-align: center;
     margin: 60px 0 30px 0;
-    img {
+    .add_ico {
       position: relative;
       width: 32px;
       height: 32px;
       margin-right: 10px;
       top: 5px;
+      display: inline-block;
+      @include bg-image('../../../assets/images/mine/selectCard/add_icon');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
     }
   }
 }

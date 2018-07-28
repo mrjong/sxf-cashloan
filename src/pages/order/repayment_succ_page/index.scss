@@ -1,10 +1,16 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .repayment_succ_page {
   .tips {
     text-align: center;
     padding: 61px 0 71px 0;
     background: #fff;
     margin-bottom: 20px;
-    img {
+    .success_ico {
+      display: inline-block;
+      @include bg-image('../../../assets/images/order/success_ico');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
       width: 128px;
       height: 128px;
     }

@@ -1,3 +1,5 @@
+import storage from './storage';
+
 // 从url中返回search参数，返回对象
 const getParamsFromUrl = url => {
   let theRequest = {};
@@ -32,6 +34,7 @@ const guid = () => {
   return `${S4() + S4()}-${S4()}-${S4()}-${S4()}-${S4()}${S4()}${S4()}`;
 };
 
+// 安卓关闭页面方法
 const closePage = () => {
   if (window.Sxp) {
     return window.Sxp.closePage();
@@ -41,16 +44,19 @@ const closePage = () => {
   }
 };
 
+// 正则校验表达式
 const verifyReg = {
   phoneReg: /^[1][3,4,5,7,8][0-9]{9}$/,
   bankCardSimple: /^\d{14,25}$/,
 };
 
+// 正则校验工厂函数
 const verfifyFactory = (val, testReg) => {
   // 一些其他判断 。。。。
   return val !== '' && testReg.test(val);
 };
 
+// 正则校验基本类型
 const isAvailableFun = {
   phone(val, testReg = verifyReg.phoneReg) {
     return verfifyFactory(val, testReg);
@@ -59,6 +65,50 @@ const isAvailableFun = {
     return verfifyFactory(val, testReg);
   },
 };
+
+// 本地存储
+const store = {
+  // 保存确认代还信息弹框数据
+  setRepaymentModalData(data) {
+    storage.session.setItem('confirmRepaymentModalData', data);
+  },
+
+  // 获取确认代还信息弹框数据
+  getRepaymentModalData() {
+    return storage.session.getItem('confirmRepaymentModalData');
+  },
+
+  // 保存跳转的url
+  setBackUrl(data) {
+    storage.session.setItem('backUrl', data);
+  },
+
+  // 获取跳转的url
+  getBackUrl() {
+    return storage.session.getItem('backUrl');
+  },
+
+  // 清除跳转的url
+  removeBackUrl() {
+    return storage.session.removeItem('backUrl');
+  },
+  
+  // 保存跳转路由中的银行卡信息
+  setCardData(data) {
+    storage.session.setItem('cardData', data);
+  },
+
+  // 获取跳转路由中的银行卡信息
+  getCardData() {
+    return storage.session.getItem('cardData');
+  },
+
+  // 清除跳转路由中的银行卡信息
+  removeCardData() {
+    return storage.session.removeItem('cardData');
+  },
+}
+
 /*rc-form 获取第一个错误 */
 const getFirstError = error => {
   if (error) {
@@ -77,4 +127,5 @@ export {
   verifyReg,
   isAvailableFun,
   getFirstError,
+  store,
 };

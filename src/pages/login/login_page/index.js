@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
+import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile'
