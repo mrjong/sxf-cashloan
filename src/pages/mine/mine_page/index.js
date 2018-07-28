@@ -14,6 +14,20 @@ export default class mine_page extends PureComponent {
     super(props);
     this.state = {
       userPhone: '152****6273',
+      memSts: '',
+      listsArr: [
+        {
+          extra: {
+            name: '未购买',
+            color: '#FF5A5A',
+          },
+          label: {
+            name: '会员卡',
+            icon: require('assets/images/mine/menu_ico7.png')
+          },
+          jumpToUrl: '/membership_card/card_home',
+        },
+      ]
     };
   }
   componentWillMount() {
@@ -21,9 +35,11 @@ export default class mine_page extends PureComponent {
   }
   // 查询用户会员卡状态
   queryVipCard = () => {
-    this.props.$fetch.post(API.VIPCARD).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result);
+    this.props.$fetch.get(API.VIPCARD).then(res => {
+      if (res.msgCode === 'PTM0000') {
+        this.setState({
+          memSts: res.data.memSts
+        })
       }
     });
   };
@@ -45,19 +61,6 @@ export default class mine_page extends PureComponent {
   };
   render() {
     // 定义list所需的数据
-    const listsArr = [
-      {
-        extra: {
-          name: '未购买',
-          color: '#FF5A5A',
-        },
-        label: {
-          name: '会员卡',
-          icon: require('assets/images/mine/menu_ico7.png')
-        },
-        jumpToUrl: '/membership_card/card_home',
-      },
-    ];
     const listsArr2 = [
       {
         extra: {

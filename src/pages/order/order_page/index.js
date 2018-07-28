@@ -4,14 +4,16 @@ import React, {
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, Tabs, Badge, ListView } from "antd-mobile"
-let totalPage = false
+import sessionStorageMap from 'utils/sessionStorageMap'
+let hasNext = true
 const Item = List.Item;
+const Brief = Item.Brief;
 const API = {
     'msgRead': "/my/msgRead",
     'msgCount': "/my/msgCount",
-    "defTable": '/my/defTable',
-    "msgInfo": '/my/msgInfo'
+    "billList": '/bill/list'
 }
+
 @fetch.inject()
 export default class message_page extends PureComponent {
     constructor(props) {
@@ -33,24 +35,18 @@ export default class message_page extends PureComponent {
             msgReadAllState: false,
             msgType: 0,
             hasMore: true,
-            tabs: [
-                { title: <Badge>活动通知</Badge> },
-                { title: <Badge>系统通知</Badge> },
-                { title: <Badge>公告通知</Badge> }
-            ]
+            limitRow: 10
         }
     }
     scrollTop = 0
     componentWillMount() {
-        this.props.setTitle('newTitle')
         var _body = document.getElementsByTagName("body")[0]
-        _body.style.backgroundColor = "#efeff4"
+        // _body.style.backgroundColor = "#efeff4"
         // 处理详情返回之后
         let backDatastr = sessionStorage.getItem("backData")
         if (backDatastr && backDatastr !== "{}") {
             let backData = JSON.parse(sessionStorage.getItem("backData"))
-            totalPage = backData.totalPage
-
+            hasNext = backData.hasNext
             this.setState(
                 {
                     msgType: backData.msgType,
@@ -60,7 +56,7 @@ export default class message_page extends PureComponent {
                     Listlength: backData.rData.length
                 },
                 () => {
-                    this.msgCount()
+                    // this.msgCount()
                     // scrollTop = backData.scrollTop
                     this.setState(
                         {
@@ -79,10 +75,9 @@ export default class message_page extends PureComponent {
                 }
             )
         } else {
-            // 获取消息tab
-            this.getTab()
+            this.getCommonData()
             // 获取消息条数
-            this.msgCount()
+            // this.msgCount()
         }
     }
     componentDidUpdate() {
@@ -94,41 +89,7 @@ export default class message_page extends PureComponent {
     }
     componentWillUnmount() {
         var _body = document.getElementsByTagName("body")[0]
-        _body.style.backgroundColor = "#fff"
         document.body.style.overflow = "auto"
-    }
-    // 消息 tab
-    getTab = () => {
-        this.props.$fetch.post(API.defTable).then(res => {
-            if (res.msgCode === "PTM0000") {
-                this.setState(
-                    {
-                        msgType: Number(res.data.type) - 1
-                    },
-                    () => {
-                        this.getCommonData("tabshow")
-                    }
-                )
-            } else {
-                this.props.toast.info(res.msgInfo)
-            }
-        })
-    }
-    // 单个请求读取
-    msgOneRead = obj => {
-        console.log(obj)
-        if (obj.sts === "0") {
-            this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then(res => {
-                if (res.msgCode === "PTM0000") {
-                    this.msgCount(obj)
-                    this.getDesc(obj)
-                } else {
-                    this.props.toast.info(res.msgInfo)
-                }
-            })
-        } else {
-            this.getDesc(obj)
-        }
     }
 
     getDesc = obj => {
@@ -143,7 +104,7 @@ export default class message_page extends PureComponent {
             rData,
             msgType: this.state.msgType,
             pageIndex: this.state.pageIndex,
-            totalPage: totalPage
+            hasNext: hasNext
         }
         console.log(obj)
         // 0:无，1:URL，2:文本，3:APP"
@@ -173,40 +134,42 @@ export default class message_page extends PureComponent {
     }
     // 获取每一页数据
     genData = async (pIndex = 1) => {
-        if (totalPage && totalPage < pIndex) {
+        if (!hasNext) {
             this.setState({
                 isLoading: false,
-                pageIndex: totalPage
+                pageIndex: this.state.pageIndex - 1
             })
             return []
         }
         if (pIndex === 1) {
-            Toast.loading('数据加载中...', 10000);
+            this.props.toast.loading('数据加载中...', 10000);
         }
-        let data = await this.props.$fetch
-            .post(API.msgInfo, {
-                type: this.state.msgType + 1,
-                curPage: pIndex,
-                loading: true
-            })
+        let data = await this.props.$fetch.post(API.billList, {
+            qryType: '0',
+            startRow: pIndex,
+            limitRow: this.state.limitRow
+        })
             .then(res => {
                 if (pIndex === 1) {
                     setTimeout(() => {
-                        Toast.hide();
+                        this.props.toast.hide();
                     }, 600);
                 }
                 if (res.msgCode === "PTM0000") {
                     if (pIndex === 1) {
-                        totalPage = res.data.totalPage
                         this.setState({
                             hasMore: false
                         })
                     }
+                    // 判断是否为最后一页
+                    if (res.data.length < this.state.limitRow) {
+                        hasNext = false
+                    }
                     let dataArr = []
                     // dataArr = res.data.msgList
-                    for (let i = res.data.msgList.length - 1; i >= 0; i--) {
+                    for (let i = res.data.length - 1; i >= 0; i--) {
                         dataArr.push({
-                            ...res.data.msgList[i]
+                            ...res.data[i]
                         })
                     }
                     return dataArr
@@ -216,7 +179,7 @@ export default class message_page extends PureComponent {
             }).catch(err => {
                 if (pIndex === 1) {
                     setTimeout(() => {
-                        Toast.hide();
+                        this.props.toast.hide();
                     }, 600);
                 }
             })
@@ -224,21 +187,17 @@ export default class message_page extends PureComponent {
     }
     // 刷新
     onRefresh = () => {
-        totalPage = false
+        hasNext = true
         this.setState({ refreshing: true, isLoading: true })
         this.getCommonData()
     }
     // 公用
-    getCommonData = async tab => {
+    getCommonData = async () => {
         this.setState({
             isLoading: true
         })
         let list = await this.genData(1)
-        if (tab === "tabshow") {
-            this.setState({
-                tabState: true
-            })
-        }
+        console.log(list)
         this.setState({
             rData: list,
             Listlength: list.length,
@@ -252,7 +211,7 @@ export default class message_page extends PureComponent {
     onEndReached = async event => {
         if (this.state.isLoading && !this.state.hasMore) {
             this.setState({
-                pageIndex: totalPage ? totalPage : 1
+                pageIndex: this.state.pageIndex - 1 ? this.state.pageIndex - 1 : 1
             })
             return
         }
@@ -270,52 +229,18 @@ export default class message_page extends PureComponent {
             isLoading: false
         })
     }
-    // 获取消息条数
-    msgCount = obj => {
-        this.props.$fetch.post(API.msgCount).then(res => {
-            if (res.msgCode === "PTM0000") {
-                if (res.data && res.data.count && res.data.count > 0) {
-                    this.setState({
-                        msgReadAllState: true
-                    })
-                } else {
-                    this.setState({
-                        msgReadAllState: false
-                    })
-                }
-                if (obj && JSON.stringify(obj) !== "{}") {
-                    $("[data-id=ids" + obj.uuid + "]").css("display", "none")
-                }
-            } else {
-                this.props.toast.info(res.msgInfo)
-            }
-        })
-    }
-    // 一键读取
-    msgReadAll = () => {
-        this.props.$fetch.post("/my/msgReadAll").then(res => {
-            if (res.msgCode === "PTM0000") {
-                this.setState(
-                    {
-                        msgReadAllState: false
-                    },
-                    () => {
-                        $(".uuids").css("display", "none")
-                        this.props.toast.info("已全部读取")
-                    }
-                )
-            } else {
-                this.props.toast.info(res.msgInfo)
-            }
-        })
-    }
     // 滚动高度
     handleScroll = event => {
         this.scrollTop = event.target.scrollTop
     }
     // 查看详情
     gotoDesc = obj => {
-        this.msgOneRead(obj)
+        // 账单状态(0：初登记,1：待还款,2：处理中,3：已撤销,4：已还清;已撤销状态专用于免手续费时间限制内的全额退款)
+        if (obj.billSts === '2' || obj.billSts === '3') {
+            return
+        }
+        sessionStorage.setItem(sessionStorageMap.bill.billNo, JSON.stringify(obj.billNo))
+        this.props.history.push('/order/order_detail_page')
     }
     // 切换tab
     changeTab = (tab, index) => {
@@ -339,16 +264,12 @@ export default class message_page extends PureComponent {
                 index = this.state.rData && this.state.rData.length - 1
             }
             const obj = this.state.rData && this.state.rData[index--]
+            console.log(obj)
             return (
-                <List renderHeader={() => 'Text Wrapping'} className="my-list">
-                    <Item data-seed="logId">Single line，long text will be hidden with ellipsis；</Item>
-                    <Item wrap>Multiple line，long text will wrap；Long Text Long Text Long Text Long Text Long Text Long Text</Item>
-                    <Item extra="extra content" multipleLine align="top" wrap>
-                        Multiple line and long text will wrap. Long Text Long Text Long Text
-                </Item>
-                    <Item extra="no arrow" arrow="empty" className="spe" wrap>
-                        In rare cases, the text of right side will wrap in the single line with long text. long text long text long text
-                </Item>
+                <List className="my-list">
+                    <Item onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} className="spe" wrap>
+                        {obj.billAmt}<Brief>{obj.billDt}</Brief>
+                    </Item>
                 </List>
             )
         }

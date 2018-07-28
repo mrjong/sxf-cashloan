@@ -27,19 +27,21 @@ export default class ButtonCustom extends React.PureComponent {
                 <ul className={styles.list_desc_container_box}>
                     {
                         listdescinfo.length > 0 && listdescinfo.map((item, index) => {
-                            console.log(index)
-                            return (
-                                <li key={index} className={`${styles.list_desc_container}`}>
-                                    <div className={styles.list_desc_content}>
-                                        <label>{item.label.name}</label>
-                                    </div>
-                                    <div className={styles.list_desc_extra}>
-                                        <span>
-                                            {item.extra.name}
-                                        </span>
-                                    </div>
-                                </li>
-                            )
+                            if (parseInt(item.feeAmt) !== 0) {
+                                console.log(index)
+                                return (
+                                    <li key={index} className={`${styles.list_desc_container}`}>
+                                        <div className={styles.list_desc_content}>
+                                            <label>{item.feeNm}</label>
+                                        </div>
+                                        <div className={styles.list_desc_extra}>
+                                            <span>
+                                                {item.feeAmt}
+                                            </span>
+                                        </div>
+                                    </li>
+                                )
+                            }
                         })
                     }
                 </ul>
