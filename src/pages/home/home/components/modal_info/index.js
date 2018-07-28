@@ -55,11 +55,13 @@ export default class ModalInfo extends PureComponent {
 
   static propTypes = {
     children: PropTypes.node,
+    history: PropTypes.object,
     onClose: PropTypes.func,
   };
 
   static defaultProps = {
     children: '',
+    history: {},
     onClose: () => {
       console.log('弹框关闭方法，需要传递进来');
     },
@@ -125,6 +127,7 @@ export default class ModalInfo extends PureComponent {
   handleClickConfirm = () => {
     console.log('点击确认按钮');
     this.clearCurrentPageData();
+    this.props.history.push('/confirm/agency');
   }
 
   // 获取代还期限列表 还款日期列表
