@@ -3,34 +3,48 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/lists';
+import Moudles from 'components/moudles';
 import styles from './index.scss';
 
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
   LOGOUT: '/signup/logout', // 用户退出登陆
   GETSTSW: '/my/getStsw', // 获取用户授信信息列表
+  USERSTATUS: '/signup/getUsrSts', // 用户状态获取
 };
 
-const needDisplayOptions = ['idCheck'];
 
 @fetch.inject()
 export default class mine_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      stswData: [], // 用户授信信息列表
-      userPhone: '152****6273',
+      showMoudle: false, // 是否展示确认退出的modal
+      realNmFlg: false, // 用户是否实名
+      mblNoHid: '',
       memberInf: { // 会员卡信息
         status: '',
         color: '',
       },
-      jumpFlag: false, //  是否可以跳转页面
     };
   }
   componentWillMount() {
-    this.checkAuth();
+    this.getUsrInfo();
     this.queryVipCard();
   }
+  // 获取用户信息
+  getUsrInfo = () => {
+    this.props.$fetch.get(API.USERSTATUS).then(res => {
+      if (res.msgCode !== 'PTM0000') {
+        res.msgInfo && this.props.toast.info(res.msgInfo);
+        return
+      }
+      this.setState({ mblNoHid: res.mblNoHid, realNmFlg: res.realNmFlg === '1' ? true : false });
+      //TODO ...
+    }, err => {
+      err.msgInfo && this.props.toast.info(err.msgInfo);
+    })
+  };
   // 查询用户会员卡状态
   queryVipCard = () => {
 
@@ -52,25 +66,13 @@ export default class mine_page extends PureComponent {
       }
     });
   };
-  // 查询是否实名认证
-  checkAuth = () => {
-    this.props.$fetch.get(`${API.GETSTSW}`).then(result => {
-      if (result && result.data !== null) {
-        this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
-        // 判断是否实名认证
-        const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
-        if (isAllValid) {
-          this.setState({ jumpFlag: true });
-        }
-      }
-    });
-  };
 
   // 退出
   logout = () => {
     this.props.$fetch.get(API.LOGOUT).then(result => {
       if (result && result.msgCode !== 'PTM0000') {
         result.msgInfo && this.props.toast.info(result.msgInfo);
+        this.setState({ showMoudle: false })
         return;
       }
       this.props.history.push('/login')
@@ -82,24 +84,52 @@ export default class mine_page extends PureComponent {
   };
   // 第一组里的点击事件
   clickhandle = item => {
-    if (this.state.jumpFlag) {
+    const { mblNoHid, realNmFlg } = this.state;
+    if (mblNoHid && realNmFlg) {
       this.props.history.push(item.jumpToUrl);
-    } else {
+    }
+    if (!mblNoHid) {
+      this.props.toast.info('用户未登录', 2, () => {
+        this.props.history.push('/login');
+      })
+    }
+    if (!realNmFlg) {
       this.props.toast.info('请先进行实名认证', 2, () => {
-        this.props.history.push('/home/real_name');
+        // let isWx=this.is_weixn()
+        // if (isWx) {
+        //     //在微信中打开
+        //     this.props.history.replace('/wxName')
+        // }
+        //else{
+        this.props.history.push('/home/real_name')
+        //}
       })
     }
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    if (item.jumpToUrl == '/home/real_name') {
+    if (item.jumpToUrl === '/home/real_name') {
       this.props.history.push(item.jumpToUrl);
     } else {
-      if (this.state.jumpFlag) {
+      const { mblNoHid, realNmFlg } = this.state;
+      if (mblNoHid && realNmFlg) {
         this.props.history.push(item.jumpToUrl);
-      } else {
+      }
+      if (!mblNoHid) {
+        this.props.toast.info('用户未登录', 2, () => {
+          this.props.history.push('/login');
+        })
+      }
+      if (!realNmFlg) {
         this.props.toast.info('请先进行实名认证', 2, () => {
-          this.props.history.push('/home/real_name');
+          // let isWx=this.is_weixn()
+          // if (isWx) {
+          //     //在微信中打开
+          //     this.props.history.replace('/wxName')
+          // }
+          //else{
+          this.props.history.push('/home/real_name')
+          //}
         })
       }
     }
@@ -110,8 +140,8 @@ export default class mine_page extends PureComponent {
     this.props.history.push(item.jumpToUrl);
   };
   render() {
+    const { mblNoHid, showMoudle, realNmFlg } = this.state;
     // 定义list所需的数据
-
     const listsArr = [
       {
         extra: {
@@ -128,8 +158,8 @@ export default class mine_page extends PureComponent {
     const listsArr2 = [
       {
         extra: {
-          name: this.state.stswData[0] && this.state.stswData[0].stsw.dicDetailValue,
-          color: this.state.stswData[0] && this.state.stswData[0].stsw.color,
+          name: mblNoHid && realNmFlg ? '已认证' : '未认证',
+          color: mblNoHid && realNmFlg ? '#4CA6FF' : '#F83F4C',
         },
         label: {
           name: '实名认证',
@@ -168,17 +198,24 @@ export default class mine_page extends PureComponent {
         jumpToUrl: '',
       },
     ];
-    const { userPhone } = this.state;
     return (
       <div className={styles.mine_page}>
         <div className={styles.user_inf}>
           <img src={avatar} alt="用户头像" />
-          <span>{userPhone}</span>
+          <span>{mblNoHid}</span>
         </div>
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
         <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} />
-        <div onClick={this.logout} className={styles.logout}>退出登录</div>
+        <div
+          onClick={() => {
+            this.setState({ showMoudle: true })
+          }}
+          className={styles.logout}
+        >
+          退出登录
+        </div>
+        {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} />}
       </div>
     )
   }
