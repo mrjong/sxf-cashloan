@@ -82,7 +82,7 @@ export default class card_home extends PureComponent {
   render() {
     const { data } = this.state
     return (
-      <div className={styles.membership_card_page}>
+      <div className={style.membership_card_page}>
         {data && data.map((item, index) => {
           return (<div key={index} className={style.cardHome}>
             <div className={style.cardMoney}>

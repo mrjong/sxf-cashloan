@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
+import { store } from 'utils/common';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 
 const API = {
   BANKLIST: '/my/card/list', // 银行卡列表
 }
+
+const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
 
 @fetch.inject()
 export default class select_save_page extends PureComponent {
@@ -29,6 +32,9 @@ export default class select_save_page extends PureComponent {
     }
   }
   componentWillMount() {
+    if (!backUrlData) {
+      this.props.setTitle('储蓄卡管理');
+    }
     this.queryBankList();
   }
 
@@ -57,12 +63,14 @@ export default class select_save_page extends PureComponent {
 
   // 选择银行卡
   selectCard = obj => {
-    this.setState({
-      // bankName: obj.bankName,
-      // lastCardNo: obj.lastCardNo,
-      // bankCode: obj.bankCode,
-      agrNo: obj.agrNo,
-    });
+    if (backUrlData) {
+      this.setState({
+        // bankName: obj.bankName,
+        // lastCardNo: obj.lastCardNo,
+        // bankCode: obj.bankCode,
+        agrNo: obj.agrNo,
+      });
+    }
   };
   // 新增授权卡
   addCard = () => {
@@ -96,9 +104,14 @@ export default class select_save_page extends PureComponent {
                         <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
                         <span className={styles.bank_name}>{item.bankName}</span>
                         <span>···· {item.lastCardNo}</span>
-                        {isSelected ? (
-                          <i className={styles.selected_ico}></i>
-                        ) : null}
+                        {
+                          backUrlData ?
+                            isSelected ? (
+                              <i className={styles.selected_ico}></i>
+                            ) : null
+                            :
+                            <button className={styles.unbind_btn} onClick={this.unbindCard.bind(this, item.agrNo)}>解绑</button>
+                        }
                       </li>
                     )
                   })
