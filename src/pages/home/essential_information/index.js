@@ -7,6 +7,7 @@ import informationMore from '../../../assets/images/real_name/更多-1@2x.png';
 import AsyncCascadePicker from '../../../components/async-cascad-picker/index.jsx';
 import ButtonCustom from '../../../components/button';
 import fetch from 'sx-fetch';
+import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
 
 
@@ -86,32 +87,36 @@ export default class essential_information extends PureComponent {
   }
 
   handleSubmit = () => {
-    // e.preventDefault();
     const { loading } = this.state;
     if (loading) return; // 防止重复提交
+    const city = this.state.provLabel[0];
+    const prov = this.state.provLabel[1];
+    // 调基本信息接口
     this.props.form.validateFields((err, values) => {
-      console.log(values);
       if (!err) {
-        const params = {
-          provNm: this.state.provLabel[0],
-          cityNm: this.state.provLabel[1],
-          usrDtlAddr: values.address,
-          usrDtlAddrLctn: '',
-          cntRelTyp1: values.cntRelTyp1[0],
-          cntUsrNm1: values.friendName,
-          cntMblNo1: values.friendPhone,
-          cntRelTyp2: values.cntRelTyp2[0],
-          cntUsrNm2: values.relativesName,
-          cntMblNo2: values.relativesPhone,
-          credCorpOrg: '',
-        };
-        // values中存放的是经过 getFieldDecorator 包装的表单元素的值
-        this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
-          if (result && result.msgCode === 'PTM0000') {
+        const data = `${city}${prov}${values.address}`;
+        console.log(111, data);
+        getLngLat(data).then(lngLat => {
+          const params = {
+            provNm: this.state.provLabel[0],
+            cityNm: this.state.provLabel[1],
+            usrDtlAddr: values.address,
+            usrDtlAddrLctn: lngLat,
+            cntRelTyp1: values.cntRelTyp1[0],
+            cntUsrNm1: values.friendName,
+            cntMblNo1: values.friendPhone,
+            cntRelTyp2: values.cntRelTyp2[0],
+            cntUsrNm2: values.relativesName,
+            cntMblNo2: values.relativesPhone,
+            credCorpOrg: '',
+          };
+          // values中存放的是经过 getFieldDecorator 包装的表单元素的值
+          this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
+            if (result && result.msgCode === 'PTM0000') {
 
-          }
+            }
+          });
         });
-        // TODO 发送请求等操作
       } else {
         // 如果存在错误，获取第一个字段的第一个错误进行提示
         const keys = Object.keys(err);
@@ -185,14 +190,10 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('address', {
             rules: [
               { required: true, message: '请输入常住地址' },
-              {
-                // 自定义校验规则
-                validator: (rule, value, callback) => {
-                  if (value && value[0] === '10') return callback('不能选择亲属');
-                  callback();
-                },
-              },
             ],
+            onChange: (value) => {
+              this.setState({ address: value });
+            },
           })(
             <InputItem
               placeholder="xx市xx区县xx街道xx门牌号"

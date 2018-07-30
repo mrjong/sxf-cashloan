@@ -24,7 +24,6 @@ export default class credit_extension_page extends PureComponent {
     flag: false,
     submitFlag: false,
   };
-
   componentWillMount() {
     // 查询 授信项状态
     this.props.$fetch.get(`${API.getStw}`).then(result => {
