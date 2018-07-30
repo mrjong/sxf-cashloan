@@ -12,6 +12,7 @@ const API = {
   GETUSERINF: '/my/getRealInfo', // 获取用户信息
   GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
   BINDCARD: '/withhold/card/bindConfirm', // 绑定银行卡
+  CHECKCARD: '/my/chkCard', // 是否绑定了一张信用卡一张储蓄卡
 };
 
 @fetch.inject()
@@ -57,24 +58,18 @@ export default class bind_credit_page extends PureComponent {
         const backUrlData = store.getBackUrl();
         store.removeBackUrl();
         if (backUrlData) {
-          this.props.history.push(backUrlData);
-          store.setCardData(JSON.stringify(result.data));
+          // 提交申请 判断是否绑定信用卡和储蓄卡
+          this.props.$fetch.get(API.CHECKCARD).then(result => {
+            if (result.msgCode === "PTM2003") {
+              this.props.history.push('/mine/bind_save_page');
+            } else {
+              this.props.history.push(backUrlData);
+              store.setCardData(JSON.stringify(result.data));
+            }
+          })
         } else {
-          this.props.history.push('/mine/select_credit_page');
+          this.props.history.replace('/mine/select_credit_page');
         }
-        // if (sessionStorage.getItem('creditCardManagement')) {
-        //   this.props.history.push('/creditCardManagement')
-        // } else {
-        //   //提交申请 判断是否绑定信用卡和储蓄卡
-        //   this.props.$fetch.post('/my/chkCard').then(result => {
-        //     if (result.msgCode === "PTM2003") {
-        //       this.props.history.push('/storageCard')
-        //     } else {
-        //       sessionStorage.getItem('storageCardSourceLenderAgain') ?
-        //         this.props.history.push('/backConfirm') : this.props.history.push('/home')
-        //     }
-        //   })
-        // }
       } else {
         this.props.toast.info(result.msgInfo)
       }
@@ -132,6 +127,11 @@ export default class bind_credit_page extends PureComponent {
     });
   };
 
+  // 跳转到支持的银行
+  supporBank = () => {
+    this.props.history.push('/mine/support_credit_page');
+  };
+
   render() {
     const Item = List.Item;
     const { getFieldProps } = this.props.form;
@@ -158,7 +158,7 @@ export default class bind_credit_page extends PureComponent {
         </List>
         <p className={styles.tips}>借款资金将转入您绑定代信用卡中，请注意查收</p>
         <ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>确认购买</ButtonCustom>
-        <span className={styles.support_type}>支持银行卡类型</span>
+        <span className={styles.support_type} onClick={this.supporBank}>支持银行卡类型</span>
       </div>
     )
   }
