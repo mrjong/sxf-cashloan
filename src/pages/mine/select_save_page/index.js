@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
@@ -63,14 +64,14 @@ export default class select_save_page extends PureComponent {
 
   // 选择银行卡
   selectCard = obj => {
-    if (backUrlData) {
-      this.setState({
-        // bankName: obj.bankName,
-        // lastCardNo: obj.lastCardNo,
-        // bankCode: obj.bankCode,
-        agrNo: obj.agrNo,
-      });
-    }
+    // if (backUrlData) {
+    this.setState({
+      // bankName: obj.bankName,
+      // lastCardNo: obj.lastCardNo,
+      // bankCode: obj.bankCode,
+      agrNo: obj.agrNo,
+    });
+    // }
   };
   // 新增授权卡
   addCard = () => {
@@ -88,32 +89,54 @@ export default class select_save_page extends PureComponent {
                 {
                   this.state.cardList.map((item, index) => {
                     const isSelected = this.state.agrNo === item.agrNo;
-                    return (
-                      <li
-                        className={isSelected ? styles.active : ''}
-                        key={index}
-                        onClick={
-                          this.selectCard.bind(this, {
-                            bankName: item.bankName,
-                            lastCardNo: item.lastCardNo,
-                            bankCode: item.bankCode,
-                            agrNo: item.agrNo
-                          })
-                        }
-                      >
-                        <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
-                        <span className={styles.bank_name}>{item.bankName}</span>
-                        <span>···· {item.lastCardNo}</span>
-                        {
-                          backUrlData ?
+                    if (backUrlData) {
+                      return (
+                        <li
+                          className={isSelected ? styles.active : ''}
+                          key={index}
+                          onClick={
+                            this.selectCard.bind(this, {
+                              bankName: item.bankName,
+                              lastCardNo: item.lastCardNo,
+                              bankCode: item.bankCode,
+                              agrNo: item.agrNo
+                            })
+                          }
+                        >
+                          <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+                          <span className={styles.bank_name}>{item.bankName}</span>
+                          <span>···· {item.lastCardNo}</span>
+                          {
                             isSelected ? (
                               <i className={styles.selected_ico}></i>
                             ) : null
-                            :
-                            <button className={styles.unbind_btn} onClick={this.unbindCard.bind(this, item.agrNo)}>解绑</button>
-                        }
-                      </li>
-                    )
+                          }
+                        </li>
+                      )
+                    } else {
+                      return (
+                        <li
+                          key={index}
+                        >
+                          <SwipeAction
+                            autoClose
+                            right={[
+                              {
+                                text: '解绑',
+                                onPress: () => { this.unbindCard(item.agrNo) },
+                                style: { backgroundColor: '#FF5A5A', color: 'white' },
+                              },
+                            ]}
+                            onOpen={() => console.log('global open')}
+                            onClose={() => console.log('global close')}
+                          >
+                            <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+                            <span className={styles.bank_name}>{item.bankName}</span>
+                            <span>···· {item.lastCardNo}</span>
+                          </SwipeAction>
+                        </li>
+                      )
+                    }
                   })
                 }
               </ul>
