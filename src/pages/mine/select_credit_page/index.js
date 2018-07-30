@@ -5,6 +5,7 @@ import styles from './index.scss';
 
 const API = {
   BANKLIST: '/my/card/list', // 银行卡列表
+  UNBINDCARD: '/my/card/unbind', // 解出银行卡绑定
 }
 
 const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
@@ -15,7 +16,7 @@ export default class select_credit_page extends PureComponent {
     super(props);
     this.state = {
       agrNo: '', // 银行卡协议号
-      cardList: [], 
+      cardList: [],
     }
   }
   componentWillMount() {
@@ -36,6 +37,29 @@ export default class select_credit_page extends PureComponent {
               cardList: res.cardList ? res.cardList : []
             })
           } else {
+            if(res.msgCode === 'PTM3021') {
+              this.setState({
+                cardList: []
+              });
+              return ;
+            }
+            res.msgInfo && this.props.toast.info(res.msgInfo)
+          }
+        },
+        error => {
+          error.msgInfo && this.props.toast.info(error.msgInfo);
+        }
+      )
+  };
+
+  // 解绑银行卡
+  unbindCard = agrNo => {
+    this.props.$fetch
+      .get(`${API.UNBINDCARD}/${agrNo}`).then(
+        res => {
+          if (res.msgCode === "PTM0000") {
+            this.queryBankList();
+          } else {
             res.msgInfo && this.props.toast.info(res.msgInfo)
           }
         },
@@ -47,7 +71,7 @@ export default class select_credit_page extends PureComponent {
 
   // 选择银行卡
   selectCard = obj => {
-    if(backUrlData){
+    if (backUrlData) {
       this.setState({
         // bankName: obj.bankName,
         // lastCardNo: obj.lastCardNo,
@@ -55,7 +79,7 @@ export default class select_credit_page extends PureComponent {
         agrNo: obj.agrNo,
       });
     }
-    
+
   };
   // 新增授权卡
   addCard = () => {
@@ -91,11 +115,11 @@ export default class select_credit_page extends PureComponent {
                         <span>···· {item.lastCardNo}</span>
                         {
                           backUrlData ?
-                          isSelected ? (
-                            <i className={styles.selected_ico}></i>
-                          ) : null
-                          :
-                          <button className={styles.unbind_btn}>解绑</button>
+                            isSelected ? (
+                              <i className={styles.selected_ico}></i>
+                            ) : null
+                            :
+                            <button className={styles.unbind_btn} onClick={this.unbindCard.bind(this, item.agrNo)}>解绑</button>
                         }
                       </li>
                     )

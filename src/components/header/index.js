@@ -18,8 +18,8 @@ export default class Header extends Component {
         ) : (
             <div className={styles.title}>
               {!headerProps.arrowHide ? (
-                <div className={styles.arrows}>
-                  <div className={styles.left} onClick={() => this.goBack()} />
+                <div className={styles.arrows} onClick={() => this.goBack()}>
+                  <div className={styles.left} />
                 </div>
               ) : null}
               <div className={styles.center}>{newTitle || headerProps.title}</div>
