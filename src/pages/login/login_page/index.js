@@ -31,6 +31,8 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    // 移除cookie
+    Cookie.remove('fin-v-card-token');
     console.log(this.props)
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
