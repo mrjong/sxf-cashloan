@@ -22,9 +22,10 @@ export default class bind_save_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userName: '',
-      enable: true,
-      isCheck: true,
+      userName: '', // 持卡人姓名
+      enable: true, // 计时器是否可用
+      isCheck: true, // 是否校验这一项
+      cardData: {}, // 绑定的卡的数据
     }
   }
   componentWillMount() {
@@ -60,8 +61,9 @@ export default class bind_save_page extends PureComponent {
   // 绑卡之前进行校验
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
+      this.setState({cardData: { cardNo: values.valueInputCarNumber, ...result.data}})
       const params1 = {
-        bankCd: result.bankCd,
+        bankCd: result.data.bankCd,
         cardTyp: 'D', //卡类型。
         cardNo: values.valueInputCarNumber, //持卡人卡号
         mblNo: values.valueInputCarPhone, //预留手机号
@@ -81,7 +83,7 @@ export default class bind_save_page extends PureComponent {
         store.removeBackUrl();
         if (backUrlData) {
           this.props.history.push(backUrlData);
-          store.setCardData(JSON.stringify(result.data));
+          store.setCardData(JSON.stringify(this.state.cardData));
         } else {
           this.props.history.replace('/mine/select_save_page');
         }
@@ -138,17 +140,15 @@ export default class bind_save_page extends PureComponent {
   countDownHandler = fn => {
     this.setState({ isCheck: false }, () => {
       this.props.form.validateFields((err, values) => {
-        console.log(err);
         if (!err) {
           const params = {
             cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
           };
           this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-            console.log(result.bankCd);
             if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'C') {
               this.props.$fetch.post(API.GETCODE, {
                 mblNo: values.valueInputCarPhone,
-                bankCd: result.bankCd,
+                bankCd: result.data.bankCd,
                 cardTyp: 'D', //卡类型。
                 cardNo: values.valueInputCarNumber, //持卡人卡号
               }).then((result) => {
@@ -191,7 +191,6 @@ export default class bind_save_page extends PureComponent {
   render() {
     const Item = List.Item;
     const { getFieldProps } = this.props.form;
-    console.log(this.state.isCheck);
     return (
       <div className={styles.bind_save_page}>
         <List>
