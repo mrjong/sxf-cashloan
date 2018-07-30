@@ -78,7 +78,6 @@ export default class bind_credit_page extends PureComponent {
   // 通过输入的银行卡号 查出查到卡banCd
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      console.log(!result.data)
       if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'D') {
         const params1 = {
           bankCd: result.data.bankCd,

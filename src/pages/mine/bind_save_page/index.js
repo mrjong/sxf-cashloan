@@ -144,13 +144,11 @@ export default class bind_save_page extends PureComponent {
             cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
           };
           this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-            if (result.bankCd === null || result.bankCd === '' || result.cardTyp === 'C') {
-              this.props.toast.info('请输入有效银行卡号')
-            }
-            else {
+            console.log(result.bankCd);
+            if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'C') {
               this.props.$fetch.post(API.GETCODE, {
                 mblNo: values.valueInputCarPhone,
-                // bankCd: result.bankCd,
+                bankCd: result.bankCd,
                 cardTyp: 'D', //卡类型。
                 cardNo: values.valueInputCarNumber, //持卡人卡号
               }).then((result) => {
@@ -166,6 +164,8 @@ export default class bind_save_page extends PureComponent {
                 error.retMsg && this.props.toast.info(error.retMsg);
               })
               // return true
+            } else {
+              this.props.toast.info('请输入有效银行卡号')
             }
           })
         } else {

@@ -33,7 +33,7 @@ export default class Moudles extends PureComponent {
     }
 
     render() {
-        let { cb, logOut } = this.props
+        let { cb, logOut, textCont } = this.props
         return (
 
             <Modal
@@ -44,7 +44,7 @@ export default class Moudles extends PureComponent {
                 className={styles.moudle}
             >
                 <div className={styles.textCon}>
-                    确认退出登录？
+                    {textCont}
                 </div>
                 <div className={styles.btnCon}>
                     <span className={styles.btn} onClick={() => cb.setState({ showMoudle: false })}>取消</span>

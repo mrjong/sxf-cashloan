@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
+import Moudles from 'components/moudles';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 
@@ -19,6 +20,8 @@ export default class select_credit_page extends PureComponent {
     this.state = {
       agrNo: '', // 银行卡协议号
       cardList: [],
+      showMoudle: false, // 是否展示确认解绑的modal
+      unbindData: '', // 解绑卡的数据
     }
   }
   componentWillMount() {
@@ -30,6 +33,11 @@ export default class select_credit_page extends PureComponent {
     } else {
       this.queryBankList();
     }
+    // if(){
+    //   this.setState({
+    //     agrNo: obj.agrNo,
+    //   });
+    // }
   }
 
   // 获取会员卡的信用卡银行列表
@@ -88,6 +96,7 @@ export default class select_credit_page extends PureComponent {
     this.props.$fetch
       .get(`${API.UNBINDCARD}/${agrNo}`).then(
         res => {
+          this.setState({ showMoudle: false, unbindData: '' })
           if (res.msgCode === "PTM0000") {
             this.queryBankList();
           } else {
@@ -100,6 +109,11 @@ export default class select_credit_page extends PureComponent {
       )
   };
 
+  // 点击解绑按钮
+  unbindHandler= params => {
+    this.setState({ showMoudle: true, unbindData: params })
+  };
+
   // 选择银行卡
   selectCard = obj => {
     // if (backUrlData) {
@@ -109,6 +123,8 @@ export default class select_credit_page extends PureComponent {
       // bankCode: obj.bankCode,
       agrNo: obj.agrNo,
     });
+    this.props.history.replace(backUrlData);
+    store.setCardData(JSON.stringify(obj));
     // }
 
   };
@@ -162,7 +178,7 @@ export default class select_credit_page extends PureComponent {
                             right={[
                               {
                                 text: '解绑',
-                                onPress: () => {this.unbindCard(item.agrNo)},
+                                onPress: () => {this.unbindHandler(item.agrNo)},
                                 style: { backgroundColor: '#FF5A5A', color: 'white' },
                               },
                             ]}
@@ -183,6 +199,7 @@ export default class select_credit_page extends PureComponent {
             : null
         }
         <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
+        {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />}
       </div>
     )
   }
