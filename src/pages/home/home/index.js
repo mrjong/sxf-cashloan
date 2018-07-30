@@ -7,6 +7,7 @@ import Carousels from 'components/carousel';
 import InfoCard from './components/info_card/index.js';
 import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
+import MsgBadge from './components/msg-badge';
 
 import style from './style.scss';
 
@@ -14,6 +15,7 @@ const API = {
   BANNER: '/my/getBannerList',
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
+  CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 };
 
 const mockData = {
@@ -23,107 +25,107 @@ const mockData = {
     indexData: {},
   },
   LN0002: {
-    "indexSts":"LN0002",
-     "indexMsg":"账单爬取中",
-     "indexData":{}
+    indexSts: 'LN0002',
+    indexMsg: '账单爬取中',
+    indexData: {},
   },
   LN0003: {
-    "indexSts":"LN0003",
-      "indexMsg":"一键还卡",
-      "indexData":{
-          "bankName":"招商银行",
-        "bankNo":"ICBC",
-        "cardNoHid":"6785 **** **** 6654",
-        "cardBillDt":"2018-07-17",
-        "cardBillAmt":"786.45",
-        "overDt":"7"
-      }
+    indexSts: 'LN0003',
+    indexMsg: '一键还卡',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0004: {
-    "indexSts":"LN0004",
-      "indexMsg":"代还资格审核中",
-      "indexData":{
-          "bankName":"招商银行",
-        "bankNo":"ICBC",
-        "cardNoHid":"6785 **** **** 6654",
-        "cardBillDt":"2018-07-17",
-        "cardBillAmt":"786.45",
-        "overDt":"7"
-      }
+    indexSts: 'LN0004',
+    indexMsg: '代还资格审核中',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0005: {
-    "indexSts":"LN0005",
-      "indexMsg":"暂无代还资格",
-      "indexData":{
-          "bankName":"招商银行",
-        "bankNo":"ICBC",
-        "cardNoHid":"6785 **** **** 6654",
-        "cardBillDt":"2018-07-17",
-        "cardBillAmt":"786.45",
-        "overDt":"7"
-      }
+    indexSts: 'LN0005',
+    indexMsg: '暂无代还资格',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0006: {
-    "indexSts":"LN0006",
-     "indexMsg":"一键还卡",
-     "indexData":{
-         "bankName":"招商银行",
-       "bankNo":"ICBC",
-       "cardNoHid":"6785 **** **** 6654",
-       "cardBillDt":"2018-07-17",
-       "cardBillAmt":"786.45",
-       "overDt":"7"
-     }
+    indexSts: 'LN0006',
+    indexMsg: '一键还卡',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0007: {
-    "indexSts":"LN0007",
-      "indexMsg":"放款准备中",
-      "indexData":{
-          "bankName":"招商银行",
-        "bankNo":"ICBC",
-        "cardNoHid":"6785 **** **** 6654",
-        "cardBillDt":"2018-07-17",
-        "cardBillAmt":"786.45",
-        "overDt":"7"
-      }
+    indexSts: 'LN0007',
+    indexMsg: '放款准备中',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0008: {
-    "indexSts":"LN0008",
-      "indexMsg":"一键还卡",
-      "indexData":{
-          "bankName":"招商银行",
-        "bankNo":"ICBC",
-        "cardNoHid":"6785 **** **** 6654",
-        "cardBillDt":"2018-07-17",
-        "cardBillAmt":"786.45",
-        "overDt":"7"
-      }
+    indexSts: 'LN0008',
+    indexMsg: '一键还卡',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0009: {
-    "indexSts":"LN0009",
-     "indexMsg":"查看代还订单",
-     "indexData":{
-         "bankName":"招商银行",
-       "bankNo":"ICBC",
-       "cardNoHid":"6785 **** **** 6654",
-       "cardBillDt":"2018-07-17",
-       "cardBillAmt":"786.45",
-       "overDt":"7"
-     }
+    indexSts: 'LN0009',
+    indexMsg: '查看代还订单',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
   LN0010: {
-    "indexSts":"LN0010",
-     "indexMsg":"爬取失败/老用户",
-     "indexData":{
-       "bankName":"招商银行",
-       "bankNo":"ICBC",
-       "cardNoHid":"6785 **** **** 6654",
-       "cardBillDt":"2018-07-17",
-       "cardBillAmt":"786.45",
-       "overDt":"7"
-     }
+    indexSts: 'LN0010',
+    indexMsg: '爬取失败/老用户',
+    indexData: {
+      bankName: '招商银行',
+      bankNo: 'ICBC',
+      cardNoHid: '6785 **** **** 6654',
+      cardBillDt: '2018-07-17',
+      cardBillAmt: '786.45',
+      overDt: '7',
+    },
   },
-}
+};
 
 @fetch.inject()
 export default class HomePage extends PureComponent {
@@ -132,7 +134,7 @@ export default class HomePage extends PureComponent {
     this.state = {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }, { src: sng4, url: '' }, { src: sng4, url: '' }],
-      usrIndexInfo: mockData.LN0003,
+      usrIndexInfo: mockData.LN0006,
       mockType: 1,
       haselescard: 'true',
     };
@@ -170,8 +172,8 @@ export default class HomePage extends PureComponent {
         console.log('LN0002');
         break;
       case 'LN0003': // 账单爬取成功 (直接跳数据风控)
-        console.log('LN0003 风控信息？');
-        console.log('直接跳数据风控');
+        console.log('LN0003 无风控信息 直接跳数据风控');
+        this.props.history.push('/mine/credit_extension_page');
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
@@ -183,7 +185,8 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        this.requestBindCardState();
+        this.handleShowModal();
+        // this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
@@ -218,20 +221,18 @@ export default class HomePage extends PureComponent {
 
   // 请求用户绑卡状态
   requestBindCardState = () => {
-    this.props.$fetch.post('someurl').then(result => {
+    this.props.$fetch.get(API.CHECK_CARD).then(result => {
+      console.log(result, 'result');
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result, 'result');
-        if (this.state.mockType === 1) {
-          console.log('有风控且绑信用卡储蓄卡');
-          this.handleShowModal();
-        } else if (this.state.mockType === 2) {
-          console.log('有风控没绑信用卡 跳绑信用卡页面');
-          this.props.history.push('/mine/bind_credit_page');
-        } else if (this.state.mockType === 3) {
-          console.log('有风控没绑储蓄卡 跳绑储蓄卡页面');
-          this.props.history.push('/mine/bind_save_page');
-        }
-      } else {
+        console.log('有风控且绑信用卡储蓄卡');
+        this.handleShowModal();
+      } else if (result && result.msgCode === 'PTM2001') {
+        console.log('有风控没绑储蓄卡 跳绑储蓄卡页面');
+        this.props.history.push('/mine/bind_save_page');
+      }else if (result && result.msgCode === 'PTM2002') {
+        console.log('有风控没绑信用卡 跳绑信用卡页面');
+        this.props.history.push('/mine/bind_credit_page');
+      }  else {
         Toast.info(result.msgInfo);
       }
     });
@@ -350,7 +351,9 @@ export default class HomePage extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-        <Carousels data={bannerList} />
+        <Carousels data={bannerList}>
+          <MsgBadge />
+        </Carousels>
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {usrIndexInfo.indexSts === 'LN0001' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
         {/* 确认代还信息弹框 */}
