@@ -23,13 +23,11 @@ export default [
   {
     path: '/home/essential_information',
     title: '基本信息认证',
-    arrowHide: true,
     component: () => import('pages/home/essential_information'),
   },
   {
     path: '/home/real_name',
     title: '实名认证',
-    arrowHide: true,
     component: () => import('pages/home/real_name'),
   },
 ];
