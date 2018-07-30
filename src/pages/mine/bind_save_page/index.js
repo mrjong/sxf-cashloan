@@ -150,9 +150,7 @@ export default class bind_save_page extends PureComponent {
             else {
               this.props.$fetch.post(API.GETCODE, {
                 mblNo: values.valueInputCarPhone,
-                // name: this.state.userName,
-                // userId: window.sessionStorage.getItem('userId'),
-                bankCd: result.bankCd,
+                // bankCd: result.bankCd,
                 cardTyp: 'D', //卡类型。
                 cardNo: values.valueInputCarNumber, //持卡人卡号
               }).then((result) => {

@@ -20,6 +20,9 @@ export default class select_credit_page extends PureComponent {
     }
   }
   componentWillMount() {
+    if (!backUrlData) {
+      this.props.setTitle('信用卡管理');
+    }
     this.queryBankList();
   }
 

@@ -159,7 +159,7 @@ export default class mine_page extends PureComponent {
       {
         extra: {
           name: mblNoHid && realNmFlg ? '已认证' : '未认证',
-          color: mblNoHid && realNmFlg ? '#4CA6FF' : '#F83F4C',
+          color: mblNoHid && realNmFlg ? '#4CA6FF' : '#FF5A5A',
         },
         label: {
           name: '实名认证',
