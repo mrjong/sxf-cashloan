@@ -2,10 +2,23 @@ import SButton from 'components/button';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
 import PropTypes from 'prop-types';
+import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
 import style from './index.scss';
 
+const API = {
+  CRED_CARD_COUNT: '/index/usrCredCardCoun', // 授信信用卡数量查询
+};
+
+@fetch.inject()
 export default class BankContent extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      credCardCount: 0,
+    };
+  }
+
   static propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
@@ -20,15 +33,35 @@ export default class BankContent extends React.PureComponent {
     contentData: {},
   };
 
+  componentWillMount() {
+    if (this.props.contentData.indexMsg === '一键还卡') {
+      this.requestCredCardCount();
+    }
+  }
+
   // 代还其他信用卡点击事件
   repayForOtherBank = () => {
-    if(this.props.haselescard === 'true') {
+    if (this.state.credCardCount > 1) {
       console.log('跳选择授信卡页');
       // this.props.push('');
     } else {
       console.log('跳魔蝎');
       // this.props.push('');
     }
+  };
+
+  // 请求信信用卡数量
+  requestCredCardCount = () => {
+    this.props.$fetch.post(API.CRED_CARD_COUNT).then(result => {
+      if (result && result.msgCode === 'PTM0000') {
+        console.log(result, 'result');
+        this.setState({
+          credCardCount: result.data,
+        });
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    })
   };
 
   render() {

@@ -12,7 +12,7 @@ export default class Tab extends PureComponent {
   }
 
   render() {
-    const { tabTit, children } = this.props;
+    const { tabTit, children, ...restProps } = this.props;
     const tabUnderLineWidth = `${50 * (tabTit.length / 2) * 0.8}%`;
     return (
       <div className={styles.tabContainer}>
@@ -40,6 +40,7 @@ export default class Tab extends PureComponent {
               );
             }}
           />}
+          {...restProps}
         >
           {children}
         </Tabs>
