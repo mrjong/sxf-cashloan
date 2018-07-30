@@ -22,7 +22,8 @@ export default class bind_credit_page extends PureComponent {
     super(props);
     this.state = {
       loading: false,
-      userName: '',
+      userName: '', // 持卡人姓名
+      cardData: {}, // 绑定的卡的数据
     };
   }
 
@@ -64,7 +65,7 @@ export default class bind_credit_page extends PureComponent {
               this.props.history.push('/mine/bind_save_page');
             } else {
               this.props.history.push(backUrlData);
-              store.setCardData(JSON.stringify(result.data));
+              store.setCardData(JSON.stringify(this.state.cardData));
             }
           })
         } else {
@@ -78,7 +79,7 @@ export default class bind_credit_page extends PureComponent {
   // 通过输入的银行卡号 查出查到卡banCd
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      console.log(!result.data)
+      this.setState({cardData: { cardNo: values.valueInputCarNumber, ...result.data}})
       if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'D') {
         const params1 = {
           bankCd: result.data.bankCd,
