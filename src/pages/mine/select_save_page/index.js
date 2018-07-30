@@ -6,6 +6,8 @@ import styles from './index.scss';
 
 const API = {
   BANKLIST: '/my/card/list', // 银行卡列表
+  UNBINDCARD: '/my/card/unbind', // 解出银行卡绑定
+  VIPBANKLIST: '/my/quickpay/cardList', // 会员卡的银行卡列表
 }
 
 const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
@@ -36,8 +38,33 @@ export default class select_save_page extends PureComponent {
     if (!backUrlData) {
       this.props.setTitle('储蓄卡管理');
     }
-    this.queryBankList();
+    if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
+      this.queryVipBankList();
+    } else {
+      this.queryBankList();
+    }
   }
+  // 获取会员卡的银行列表
+  queryVipBankList = () => {
+    this.props.$fetch
+      .post(API.VIPBANKLIST, {
+        type: '5',
+        corpBusTyp: '01'
+      }).then(
+        res => {
+          if (res.msgCode === "PTM0000") {
+            this.setState({
+              cardList: res.data ? res.data : []
+            })
+          } else {
+            res.msgInfo && this.props.toast.info(res.msgInfo)
+          }
+        },
+        error => {
+          error.msgInfo && this.props.toast.info(error.msgInfo);
+        }
+      )
+  };
 
   // 获取储蓄卡银行卡列表
   queryBankList = () => {
@@ -50,7 +77,7 @@ export default class select_save_page extends PureComponent {
         res => {
           if (res.msgCode === "PTM0000") {
             this.setState({
-              cardList: res.data ? res.cardList : []
+              cardList: res.cardList ? res.cardList : []
             })
           } else {
             res.msgInfo && this.props.toast.info(res.msgInfo)
@@ -60,7 +87,24 @@ export default class select_save_page extends PureComponent {
           error.msgInfo && this.props.toast.info(error.msgInfo);
         }
       )
-  }
+  };
+
+  // 解绑银行卡
+  unbindCard = agrNo => {
+    this.props.$fetch
+      .get(`${API.UNBINDCARD}/${agrNo}`).then(
+        res => {
+          if (res.msgCode === "PTM0000") {
+            this.queryBankList();
+          } else {
+            res.msgInfo && this.props.toast.info(res.msgInfo)
+          }
+        },
+        error => {
+          error.msgInfo && this.props.toast.info(error.msgInfo);
+        }
+      )
+  };
 
   // 选择银行卡
   selectCard = obj => {
