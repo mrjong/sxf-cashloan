@@ -3,6 +3,7 @@ import { createForm } from 'rc-form';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
+import fetchinit from "utils/FetchInit"
 import { getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import log from '../../../assets/images/login/22@2x.png';
@@ -72,7 +73,10 @@ export default class login_page extends PureComponent {
           sessionStorage.setItem('authorizedNotLoginStats', true)
           Cookie.set('fin-v-card-token', res.data.tokenId);
           sessionStorage.setItem('userId', res.data.userId);
-          sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
+          fetch.defaults.headers['fin-v-card-token'] = res.data.tokenId;
+          setTimeout(() => {
+            sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
+          }, 0);
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);
         });

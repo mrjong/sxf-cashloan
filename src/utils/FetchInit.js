@@ -52,9 +52,9 @@ const fetchinit = () => {
           return;
         case 'PTM1000': // 用户登录超时
           Toast.info(response.data.msgInfo)
-          setTimeout(() => {
-            window.location.pathname = '/login'
-          }, 3000);
+          // setTimeout(() => {
+          //   window.location.pathname = '/login'
+          // }, 3000);
           return;
         case 'PTM0100': // 未登录
           Toast.info(response.data.msgInfo)
