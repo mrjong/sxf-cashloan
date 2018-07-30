@@ -100,6 +100,10 @@
   :global(.bank_ico_){
     @include bg-image('../../../assets/images/mine/selectCard/bank22');
   }
+  //广州银行
+  :global(.bank_ico_GZB) {
+    @include bg-image('../../../assets/images/mine/selectCard/bank23');
+  }
   // //嘉兴银行
   // :global(.bank_ico_JXBANK){
   //   background-Image: url('../image/10@2x.png');
@@ -155,10 +159,6 @@
   // //汉口银行
   // :global(.bank_ico_HKB) {
   //   background-Image: url('../image/32@2x.png');
-  // }
-  // //广州银行
-  // :global(.bank_ico_GZB) {
-  //   background-Image: url('../image/33@2x.png');
   // }
   // //江苏银行
   // :global(.bank_ico_JSB) {
