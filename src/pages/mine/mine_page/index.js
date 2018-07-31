@@ -199,7 +199,7 @@ export default class mine_page extends PureComponent {
           name: '常见问题',
           icon: require('assets/images/mine/menu_ico5.png')
         },
-        jumpToUrl: '',
+        jumpToUrl: '/mine/fqa_page',
       },
     ];
     return (

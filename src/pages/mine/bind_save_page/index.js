@@ -186,6 +186,7 @@ export default class bind_save_page extends PureComponent {
         <List>
           <Item extra={this.state.userName}>持卡人</Item>
           <InputItem
+           maxLength="19"
             {...getFieldProps('valueInputCarNumber', {
               rules: [
                 { required: true, message: '请输入有效银行卡号' },
@@ -197,6 +198,7 @@ export default class bind_save_page extends PureComponent {
             储蓄卡卡号
           </InputItem>
           <InputItem
+           maxLength="11"
             {...getFieldProps('valueInputCarPhone', {
               rules: [
                 { required: true, message: '请输入银行卡绑定的有效手机号' },
@@ -209,6 +211,7 @@ export default class bind_save_page extends PureComponent {
           </InputItem>
           <div className={styles.time_container}>
             <InputItem
+            maxLength="6"
               {...getFieldProps('valueInputCarSms', {
                 rules: [
                   { required: true, message: '请输入正确的短信验证码' },
