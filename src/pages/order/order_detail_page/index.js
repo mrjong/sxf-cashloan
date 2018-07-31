@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/lists';
 import Panel from 'components/panel/index.js';
-import styles from './index.scss';
-import fetch from "sx-fetch"
+import fetch from "sx-fetch";
 import SButton from 'components/button';
-import sessionStorageMap from 'utils/sessionStorageMap'
-import { Modal } from 'antd-mobile'
+import sessionStorageMap from 'utils/sessionStorageMap';
+import { store } from 'utils/common';
+import { Modal } from 'antd-mobile';
+import styles from './index.scss';
+
 const API = {
     'qryDtl': "/bill/qryDtl",
     'payback': '/bill/payback'
@@ -165,8 +167,9 @@ export default class order_detail_page extends PureComponent {
         })
     }
     selectBank = () => {
-        sessionStorage.setItem('backUrl', '/order/order_detail_page')
-        this.props.history.replace('/mine/select_save_page')
+        store.setBackUrl('/order/order_detail_page');
+        // sessionStorage.setItem('backUrl', '/order/order_detail_page')
+        this.props.history.push('/mine/select_save_page');
     }
     render() {
         const { billDesc, money } = this.state
