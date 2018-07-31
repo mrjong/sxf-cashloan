@@ -55,8 +55,8 @@ const fetchinit = () => {
       if (errorTip) Toast.fail('服务器繁忙，请稍后重试');
     },
     headers: {
-      // 'fin-v-card-token': Cookie.get('fin-v-card-token'),
-      'fin-v-card-token': '912f2d1fc23445f4b8c3f0e0bcc10fe0',
+      'fin-v-card-token': Cookie.get('fin-v-card-token'),
+      // 'fin-v-card-token': '912f2d1fc23445f4b8c3f0e0bcc10fe0',
     },
     onShowSuccessTip: (response, successTip) => {
       switch (response.data.msgCode) {

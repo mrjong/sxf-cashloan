@@ -187,15 +187,16 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        this.handleShowModal();
-        // this.requestBindCardState();
+        // this.handleShowModal();
+        this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
         Toast.info('您的代还资金将于2018-8-1，请耐心等待');
         break;
       case 'LN0008': // 放款失败
-        console.log('LN0008 这个该怎么跳呀？');
+        console.log('LN0008 也跳账单页');
+        this.props.history.push('/order/order_page');
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
@@ -226,15 +227,23 @@ export default class HomePage extends PureComponent {
   requestBindCardState = () => {
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
       console.log(result, 'result');
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+      if (result && result.msgCode === 'PTM0000') {
         console.log('有风控且绑信用卡储蓄卡');
         this.handleShowModal();
-      } else if (result && result.msgCode === 'PTM2001') {
+      } else if (result && result.msgCode === 'PTM2003') {
         console.log('有风控没绑储蓄卡 跳绑储蓄卡页面');
-        this.props.history.push('/mine/bind_save_page');
+        store.setBackUrl('/home/home');
+        Toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.push('/mine/bind_save_page');
+        }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         console.log('有风控没绑信用卡 跳绑信用卡页面');
-        this.props.history.push('/mine/bind_credit_page');
+        store.setBackUrl('/home/home');
+        Toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.push('/mine/bind_credit_page');
+        }, 3000);
       } else {
         Toast.info(result.msgInfo);
       }
