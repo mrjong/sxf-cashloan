@@ -2,7 +2,11 @@
   overflow-y: auto;
   .user_inf {
     line-height: 100px;
-    background: #ffd958;
+    background: #FFDA58;
+    background: -webkit-linear-gradient(left, #FFD958, #FFDA58); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #FFD958, #FFDA58); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #FFD958, #FFDA58); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #FFD958, #FFDA58); /* 标准的语法 */
     padding: 50px 40px;
     display: flex;
     align-items: center;

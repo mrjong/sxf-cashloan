@@ -9,6 +9,8 @@ const API = {
   getStw: '/my/getStsw',
   getOperator: '/auth/operatorAuth',
   getZmxy: '/auth/getZhimaUrl',
+  submitState: '/bill/apply',
+  isBankCard:'/my/chkCard'
 };
 const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
 
@@ -27,7 +29,7 @@ export default class credit_extension_page extends PureComponent {
   componentWillMount() {
     // 查询 授信项状态
     this.props.$fetch.get(`${API.getStw}`).then(result => {
-        if (result && result.data !== null&& result.msgCode==='PTM0000') {
+        if (result && result.data !== null && result.msgCode==='PTM0000') {
           this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
 
           // 判断四项认证是否都认证成功
@@ -45,42 +47,72 @@ export default class credit_extension_page extends PureComponent {
 
   // 提交代还金申请
   commitApply = () => {
-    alert('点击');
+    const address= sessionStorage.getItem('location');
+    const params={
+      location:address,
+    };
+    this.props.$fetch.post(`${API.submitState}`,params).then(result => {
+      // 提交风控返回成功
+      if(result && result.data!==null && result.msgCode==='0000'){
+        //判断是否绑卡
+        this.props.$fetch.get(`${API.isBankCard}`).then(result => {
+          // 跳转至储蓄卡
+          if(result && result.data!==null && result.msgCode==='PTM2001'){
+            this.props.toast.info(result.msgInfo);
+            this.props.history.push('/mine/bind_save_page');
+          }
+          // 跳转至信用卡
+          if(result && result.data!==null && result.msgCode==='PTM2002'){
+            this.props.toast.info(result.msgInfo);
+
+            this.props.history.push('/mine/bind_credit_page');
+          }
+          // 跳转至首页
+          else{
+            this.props.history.push('/home/home');
+          }
+        })
+      }
+    })
   };
 
 
   getStateData = item => {
     // 跳转 实名认证
     if (item.extra.code === 'idCheck' && item.extra.name === '未认证') {
+      this.props.toast.info('请先去实名认证');
       this.props.history.push('/home/real_name');
     }
-    // 跳转基本信息
-    else if (item.extra.code === 'basicInf' && item.extra.name === '未认证') {
-      this.props.history.push('/home/essential_information');
+    else{
+      // 跳转基本信息
+      if (item.extra.code === 'basicInf' && item.extra.name === '未认证') {
+        this.props.history.push('/home/essential_information');
+      }
+      // 跳转运营商
+       if (item.extra.code === 'operator' && item.extra.name === '未认证') {
+        this.props.$fetch.post(`${API.getOperator}`).then(result => {
+          if (result.msgCode === 'PTM0000' && result.data.url) {
+            window.location.href = result.data.url;
+          } else {
+            this.props.toast.info(result.msgInfo);
+          }
+        });
+      }
+      // 跳转 芝麻信用
+      if (item.extra.code === 'zmxy' && item.extra.name === '未认证') {
+        this.props.$fetch.get(`${API.getZmxy}`).then(result => {
+          if (result.msgCode === 'PTM0000' && result.data.authUrl) {
+            window.location.href = result.data.authUrl;
+          } else {
+            this.props.toast.info(result.msgInfo);
+          }
+        });
+      }
+      else {
+        Toast.info(item.extra.name);
+      }
     }
-    // 跳转运营商
-    else if (item.extra.code === 'operator' && item.extra.name === '未认证') {
-      this.props.$fetch.post(`${API.getOperator}`).then(result => {
-        if (result.msgCode === 'PTM0000' && result.data.url) {
-          window.location.href = result.data.url;
-        } else {
-          this.props.toast.info(result.msgInfo);
-        }
-      });
-    }
-    // 跳转 芝麻信用
-    else if (item.extra.code === 'zmxy' && item.extra.name === '未认证') {
-      this.props.$fetch.get(`${API.getZmxy}`).then(result => {
-        if (result.msgCode === 'PTM0000' && result.data.authUrl) {
-          window.location.href = result.data.authUrl;
-        } else {
-          this.props.toast.info(result.msgInfo);
-        }
-      });
-    }
-    else {
-      Toast.info(item.extra.name);
-    }
+
   };
 
   render() {
@@ -101,7 +133,7 @@ export default class credit_extension_page extends PureComponent {
       <div className={styles.credit_extension_page}>
         <Lists listsInf={data} clickCb={this.getStateData}/>
 
-        <ButtonCustom onClick={this.commitApply} className={submitFlag ? styles.commit_btn : styles.not_commit_btn}>提交代还金申请</ButtonCustom>
+        <ButtonCustom onClick={submitFlag?this.commitApply:null} className={submitFlag ? styles.commit_btn : styles.not_commit_btn}>提交代还金申请</ButtonCustom>
       </div>
     );
   }

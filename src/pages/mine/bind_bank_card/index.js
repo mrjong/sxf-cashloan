@@ -1,24 +1,39 @@
 import React, { PureComponent } from 'react';
 import STabs from 'components/tabs';
-import CreditCard from './credit_card';
-import SaveCard from './save_card';
+import FormContent from './form-content';
 import style from './index.scss';
 
+const tabBar = [
+  {
+    title: '信用卡',
+    value: 'C',
+  },
+  {
+    title: '储蓄卡',
+    value: 'D',
+  },
+];
+
 export default class BindBankCardPage extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      formtype: 'C',
+    };
+  }
+  handleChangeTabs = (tab, index) => {
+    this.setState({
+      formtype: tab.value,
+    });
+  };
+
   render() {
-    const tabBar = [
-      {
-        title: '信用卡',
-      },
-      {
-        title: '储蓄卡',
-      },
-    ];
+    const { formtype } = this.state;
     return (
       <div className={style.bind_bank_card_page}>
-        <STabs tabTit={tabBar}>
-          <CreditCard />
-          <SaveCard />
+        <STabs tabTit={tabBar} onChange={this.handleChangeTabs}>
+          <FormContent formtype={formtype} />
+          <FormContent formtype={formtype} />
         </STabs>
         <p className="protocol_tip" style={{ width: '6.2rem' }}>
           点击“确认绑定”，表示同意

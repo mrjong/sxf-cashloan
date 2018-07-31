@@ -133,12 +133,16 @@ export default class mine_page extends PureComponent {
         })
       }
     }
-
   };
   // 第三组里的点击事件
   clickhandle3 = item => {
     this.props.history.push(item.jumpToUrl);
   };
+  // 点击退出登录后弹框
+  logoutHandler = () => {
+    this.setState({ showMoudle: true })
+  };
+
   render() {
     const { mblNoHid, showMoudle, realNmFlg } = this.state;
     // 定义list所需的数据
@@ -159,7 +163,7 @@ export default class mine_page extends PureComponent {
       {
         extra: {
           name: mblNoHid && realNmFlg ? '已认证' : '未认证',
-          color: mblNoHid && realNmFlg ? '#4CA6FF' : '#F83F4C',
+          color: mblNoHid && realNmFlg ? '#4CA6FF' : '#FF5A5A',
         },
         label: {
           name: '实名认证',
@@ -208,14 +212,12 @@ export default class mine_page extends PureComponent {
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
         <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} />
         <div
-          onClick={() => {
-            this.setState({ showMoudle: true })
-          }}
+          onClick={this.logoutHandler}
           className={styles.logout}
         >
           退出登录
         </div>
-        {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} />}
+        {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} textCont="确认退出登录？" />}
       </div>
     )
   }
