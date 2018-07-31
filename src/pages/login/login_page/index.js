@@ -8,6 +8,7 @@ import { validators } from 'utils/validator';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
 
+let timmer
 const API = {
   smsForLogin: '/signup/smsForLogin',
   sendsms: '/cmm/sendsms',
@@ -37,10 +38,10 @@ export default class login_page extends PureComponent {
       phoneValue: '18500214321',
     });
   }
-  //
-  // componentWillUnmount() {
-  //   clearInterval(timmer);
-  // }
+
+  componentWillUnmount() {
+    clearInterval(timmer);
+  }
 
   // 校验手机号
   validatePhone = (rule, value, callback) => {
@@ -110,7 +111,7 @@ export default class login_page extends PureComponent {
           } else {
             Toast.info('发送成功，请注意查收！');
             this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-            let timmer = setInterval(() => {
+            timmer = setInterval(() => {
               this.setState({ flag: false, timers: i-- + '"' });
               if (i === -1) {
                 clearInterval(timmer);
