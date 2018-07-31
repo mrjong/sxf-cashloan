@@ -10,6 +10,8 @@ import ButtonCustom from '../../../components/button';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { getDeviceType, getFirstError } from 'utils/common';
+import { store } from 'utils/common';
+
 
 const isEquipment = window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
 
@@ -166,6 +168,7 @@ export default class RealName extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
+        store.setAuthFlag("1");
         this.props.history.replace('/mine/credit_extension_page');
       }
       else {
