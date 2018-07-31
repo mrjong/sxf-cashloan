@@ -64,6 +64,7 @@ export default class ModalInfo extends PureComponent {
     } else {
       this.requestGetRepaymentDateList();
     }
+    this.getCardDataFromSession();
   }
 
   componentWillUnmount() {}
@@ -82,6 +83,19 @@ export default class ModalInfo extends PureComponent {
   // 清除当前页面数据
   clearCurrentPageData = () => {
     store.setRepaymentModalData(null);
+  };
+
+  // 获取 session 中的银行卡信息
+  getCardDataFromSession = () => {
+    const cardData = store.getCardData();
+    if (cardData) {
+      this.setState(
+        {
+          repaymentCardInfo: cardData,
+        },
+        store.setCardData(null),
+      );
+    }
   };
 
   // 代扣 Tag 点击事件
@@ -109,6 +123,8 @@ export default class ModalInfo extends PureComponent {
   // 选择银行卡
   handleClickChoiseBank = () => {
     this.saveCurrentPageData();
+    store.setBackUrl('/home/home');
+    // todo 通过接口判断跳页面
     // this.props.history.push('/mine/select_credit_page');
   };
 

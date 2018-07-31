@@ -1,6 +1,7 @@
 import sng4 from 'assets/images/carousel/banner.png';
 import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
+import { store } from 'utils/common';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -134,7 +135,8 @@ export default class HomePage extends PureComponent {
     this.state = {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }, { src: sng4, url: '' }, { src: sng4, url: '' }],
-      usrIndexInfo: mockData.LN0006,
+      usrIndexInfo: '',
+      // usrIndexInfo: mockData.LN0001,
       mockType: 1,
       haselescard: 'true',
     };
@@ -142,7 +144,7 @@ export default class HomePage extends PureComponent {
 
   componentWillMount() {
     // this.requestGetBannerList();
-    // this.requestGetUsrInfo();
+    this.requestGetUsrInfo();
   }
 
   handleShowModal = () => {
@@ -210,9 +212,10 @@ export default class HomePage extends PureComponent {
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
         console.log(result, 'result');
-        this.props.history.push(result.data.url);
+        store.setMoxieBackUrl('/home/home');
+        window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);
       }
@@ -355,6 +358,7 @@ export default class HomePage extends PureComponent {
           <MsgBadge />
         </Carousels>
         <div className={style.content_wrap}>{componentsDisplay}</div>
+        {/* todo: 这行文字要不要显示 */}
         {usrIndexInfo.indexSts === 'LN0001' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">

@@ -30,7 +30,6 @@ export default class CreditCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userName: '张三',
       idCard: '12310802983010172',
       bank: '',
       safeCode: '',
@@ -44,17 +43,32 @@ export default class CreditCard extends PureComponent {
   static propTypes = {
     children: PropTypes.node,
     formtype: PropTypes.string,
+    userinfo: PropTypes.object,
+    banklist: PropTypes.array,
   };
 
   static defaultProps = {
     children: '',
     formtype: '信用卡',
+    userinfo: {},
+    banklist: [
+      {
+        label: '招商',
+        value: '11',
+      },
+      {
+        label: '建设',
+        value: '22',
+      },
+    ],
   };
 
   // 确认购买
   confirmBuy = () => {
     alert('点击');
   };
+
+  componentWillMount() {}
 
   // 验证是否选择银行
   verifyBankChoise = (rule, value, callback) => {
@@ -113,17 +127,6 @@ export default class CreditCard extends PureComponent {
     }
   };
 
-  handleSubmit = () => {
-    const { userName, idCard, bank, bankCardNo, safeCode, validityDate, phoneNo, verifyCode } = this.state;
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log(values, 'values');
-      } else {
-        Toast.info(getFirstError(err))
-      }
-    })
-  };
-
   // 点击发送验证码
   countDownHandler = fn => {
     this.requestVerifyCode(fn);
@@ -131,17 +134,27 @@ export default class CreditCard extends PureComponent {
 
   // 发送验证码
   requestVerifyCode = fn => {
+    const { formtype, userinfo } = this.props;
     const { getFieldsValue } = this.props.form;
     const formData = getFieldsValue();
-    const { phoneNo } = formData;
-    const params = {
-      phoneNo
+    const { bank, validityDate, bankCardNo, phoneNo, safeCode } = formData;
+    let params = {
+      provCd: '',
+      provNm: '',
+      bnkMblNo: phoneNo,
+      cardNo: bankCardNo,
+      bankCd: bank[0],
+      cardTyp: formtype,
     };
-    this.props.$fetch.get(API.VERIFY_CODE_URL).then(result => {
+    if (formtype === 'C') {
+      params.cvv2 = safeCode;
+      params.expDt = formatDate(validityDate).replace(/\s+/g, '');
+    }
+    this.props.$fetch.post(API.VERIFY_CODE_URL, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         console.log(result, 'result');
         this.setState({
-          smsJrnNo: result.data,
+          smsJrnNo: result.data.smsJrnNo,
         });
         fn(true);
       } else {
@@ -150,18 +163,25 @@ export default class CreditCard extends PureComponent {
     })
   };
 
+  handleSubmit = () => {
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log(values, 'values');
+        this.requestBindBankCard();
+      } else {
+        Toast.info(getFirstError(err));
+      }
+    });
+  };
+
   // 绑定银行卡请求
-  requestBindBankCard = formData => {
-    const { userInfo, smsJrnNo } = this.state;
-    const { nameEnc, certNoEnc } = userInfo;
-    const { userName, idCard, bank, bankCardNo, safeCode, validityDate, phoneNo, verifyCode } = formData;
+  requestBindBankCard = () => {
+    const { smsJrnNo } = this.state;
+    const { getFieldsValue } = this.props.form;
+    const formData = getFieldsValue();
+    const { verifyCode } = formData;
     const params = {
-      name: userName, // 姓名密文
-      certNo: certNoEnc, // 身份证号密文
-      cardNo: bankCardNum.replace(/\s+/g, ''), // 卡号
-      mblNo: phoneNum.replace(/\s+/g, ''), // 手机号
-      checkCode: verifyCode, // 验证码
-      bankCode: bank[0], // 银行代码
+      smsCd: verifyCode, // 短信验证码
       smsJrnNo, // 短信流水号
     };
     this.props.$fetch.post(BIND_CARD_URL, params).then(
@@ -179,32 +199,22 @@ export default class CreditCard extends PureComponent {
   };
 
   render() {
-    const { userName, idCard, bank, bankCardNo, safeCode, validityDate, phoneNo, verifyCode } = this.state;
-    const { formtype } = this.props;
+    const { idCard, bank, bankCardNo, safeCode, validityDate, phoneNo, verifyCode } = this.state;
+    const { formtype, userinfo, banklist } = this.props;
     const { getFieldProps } = this.props.form;
-    const bankList = [
-      {
-        label: '招商',
-        value: '11',
-      },
-      {
-        label: '建设',
-        value: '22',
-      },
-    ];
     return (
       <div className={styles.bind_bank_card_child}>
         <List>
-          <InputItem value={userName} editable={false}>
+          <InputItem value={userinfo.userName} editable={false}>
             姓名
           </InputItem>
-          <InputItem value={idCard} editable={false}>
+          <InputItem value={userinfo.certNoEnc} editable={false}>
             身份证
           </InputItem>
           <Picker
             extra="请选择银行"
             cols={1}
-            data={bankList}
+            data={banklist}
             {...getFieldProps('bank', {
               rules: [{ required: true, message: '请选择银行' }, { validator: this.verifyBankChoise }],
             })}

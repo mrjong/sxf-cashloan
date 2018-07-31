@@ -1,6 +1,7 @@
 import SButton from 'components/button';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
+import { Toast } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
@@ -52,16 +53,20 @@ export default class BankContent extends React.PureComponent {
 
   // 请求信信用卡数量
   requestCredCardCount = () => {
-    this.props.$fetch.post(API.CRED_CARD_COUNT).then(result => {
-      if (result && result.msgCode === 'PTM0000') {
-        console.log(result, 'result');
-        this.setState({
-          credCardCount: result.data,
-        });
-      } else {
-        Toast.info(result.msgInfo);
-      }
-    })
+    this.props.$fetch
+      .post(API.CRED_CARD_COUNT).then(result => {
+        if (result && result.msgCode === 'PTM0000') {
+          console.log(result, 'result');
+          this.setState({
+            credCardCount: result.data,
+          });
+        } else {
+          Toast.info(result.msgInfo);
+        }
+      })
+      .catch(err => {
+        Toast.info(err.message);
+      });
   };
 
   render() {

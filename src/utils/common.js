@@ -92,7 +92,7 @@ const store = {
   removeBackUrl() {
     return storage.session.removeItem('backUrl');
   },
-  
+
   // 保存跳转路由中的银行卡信息
   setCardData(data) {
     storage.session.setItem('cardData', data);
@@ -107,7 +107,22 @@ const store = {
   removeCardData() {
     return storage.session.removeItem('cardData');
   },
-}
+
+  // 设置跳转魔蝎授权页 授权后返回的url
+  setMoxieBackUrl(data) {
+    storage.session.setItem('moxieBackUrl', data);
+  },
+
+  // 获取跳转魔蝎授权页 授权后返回的url
+  getMoxieBackUrl() {
+    return storage.session.getItem('moxieBackUrl');
+  },
+
+  // 清除跳转魔蝎授权页 授权后返回的url
+  removeMoxieBackUrl() {
+    return storage.session.removeItem('moxieBackUrl');
+  },
+};
 
 /*rc-form 获取第一个错误 */
 const getFirstError = error => {

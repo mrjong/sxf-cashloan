@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import fetch from 'sx-fetch';
+import { store } from 'utils/common';
+import { Toast } from 'antd-mobile';
 import style from './index.scss';
 
 const _handleClick = (onClick, event) => {
@@ -8,6 +11,11 @@ const _handleClick = (onClick, event) => {
   !!onClick && onClick();
 };
 
+const API = {
+  CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
+};
+
+@fetch.inject()
 export default class BankCard extends React.PureComponent {
   static propTypes = {
     className: PropTypes.string,
@@ -38,7 +46,20 @@ export default class BankCard extends React.PureComponent {
   };
 
   handleUpdate = () => {
-    console.log('更新账单');
+    this.applyCardRepay();
+  };
+
+  // 跳魔蝎
+  applyCardRepay = () => {
+    this.props.$fetch.post(API.CARD_AUTH).then(result => {
+      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+        console.log(result, 'result');
+        store.setMoxieBackUrl('/home/home');
+        window.location.href = result.data.url;
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
   };
 
   render() {
