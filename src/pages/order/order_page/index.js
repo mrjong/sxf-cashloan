@@ -3,7 +3,7 @@ import React, {
 } from "react"
 import style from "./index.scss"
 import fetch from "sx-fetch"
-import { PullToRefresh, List, Tabs, Badge, ListView } from "antd-mobile"
+import { PullToRefresh, List, ListView } from "antd-mobile"
 import sessionStorageMap from 'utils/sessionStorageMap'
 let hasNext = true
 const Item = List.Item;
@@ -35,16 +35,15 @@ export default class message_page extends PureComponent {
             msgReadAllState: false,
             msgType: 0,
             hasMore: true,
-            limitRow: 100
+            limitRow: 10
         }
     }
     scrollTop = 0
     componentWillMount() {
-        sessionStorage.removeItem(sessionStorageMap.bill.billNo)
         // 处理详情返回之后
-        let backDatastr = sessionStorage.getItem("backData")
+        let backDatastr = sessionStorage.getItem(sessionStorageMap.bill.backData)
         if (backDatastr && backDatastr !== "{}") {
-            let backData = JSON.parse(sessionStorage.getItem("backData"))
+            let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
             hasNext = backData.hasNext
             this.setState(
                 {
@@ -55,8 +54,6 @@ export default class message_page extends PureComponent {
                     Listlength: backData.rData.length
                 },
                 () => {
-                    // this.msgCount()
-                    // scrollTop = backData.scrollTop
                     this.setState(
                         {
                             dataSource: this.state.dataSource.cloneWithRows(backData.rData),
@@ -65,11 +62,12 @@ export default class message_page extends PureComponent {
                             isLoading: false
                         },
                         () => {
+                            console.log(document.getElementById(backData.billNo))
                             document.getElementById(backData.billNo).scrollTop = backData.scrollTop
                             // .scrollTo(0, backData.scrollTop)
                         }
                     )
-                    sessionStorage.removeItem("backData")
+                    sessionStorage.removeItem(sessionStorageMap.bill.backData)
                 }
             )
         } else {
@@ -77,18 +75,18 @@ export default class message_page extends PureComponent {
         }
     }
     componentDidUpdate() {
-        // if (this.state.useBodyScroll) {
-        //     document.body.style.overflow = "auto"
-        // } else {
-        //     document.body.style.overflow = "hidden"
-        // }
+        if (this.state.useBodyScroll) {
+            document.body.style.overflow = "auto"
+        } else {
+            document.body.style.overflow = "hidden"
+        }
     }
     componentWillUnmount() {
-        // var _body = document.getElementsByTagName("body")[0]
-        // document.body.style.overflow = "auto"
+        document.body.style.overflow = "hidden"
     }
     // 获取每一页数据
     genData = async (pIndex = 0) => {
+        console.log(pIndex, hasNext)
         if (!hasNext) {
             this.setState({
                 isLoading: false,
@@ -122,10 +120,12 @@ export default class message_page extends PureComponent {
                     }
                     let dataArr = []
                     // dataArr = res.data.msgList
+                    // for (let x = 0; x < 10; x++) {
                     for (let i = res.data.length - 1; i >= 0; i--) {
                         dataArr.push({
                             ...res.data[i]
                         })
+                        // }
                     }
                     return dataArr
                 } else {
@@ -161,20 +161,21 @@ export default class message_page extends PureComponent {
             dataSource: this.state.dataSource.cloneWithRows(list),
             refreshing: false,
             isLoading: false,
-            pageIndex: 1
+            pageIndex: 0
         })
     }
     // 渲染每一页完成之后
     onEndReached = async event => {
         if (this.state.isLoading && !this.state.hasMore) {
             this.setState({
-                pageIndex: this.state.pageIndex - 1 ? this.state.pageIndex - 1 : 1
+                pageIndex: this.state.pageIndex - 1 ? this.state.pageIndex - 1 : 0
             })
             return
         }
         this.setState({ isLoading: true })
         let list = await this.genData(++this.state.pageIndex)
         if (list.length === 0) {
+            this.setState({ isLoading: false })
             return
         }
         this.setState({
@@ -203,9 +204,9 @@ export default class message_page extends PureComponent {
             pageIndex: this.state.pageIndex,
             hasNext: hasNext
         }
-        console.log(obj)
+
         // 0:无，1:URL，2:文本，3:APP"
-        sessionStorage.setItem("backData", JSON.stringify(backData))
+        sessionStorage.setItem(sessionStorageMap.bill.backData, JSON.stringify(backData))
         sessionStorage.setItem(sessionStorageMap.bill.billNo, JSON.stringify(obj.billNo))
         this.props.history.push('/order/order_detail_page')
     }
@@ -231,7 +232,6 @@ export default class message_page extends PureComponent {
                 index = this.state.rData && this.state.rData.length - 1
             }
             const obj = this.state.rData && this.state.rData[index--]
-            console.log(obj)
             return (
                 <Item id={obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} className="spe" wrap>
                     {obj.billAmt}<Brief>{obj.billDt}</Brief>

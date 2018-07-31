@@ -11,16 +11,14 @@ const fetchinit = () => {
     num++
     if (!cfg.hideLoading) {
       // 防止时间短，出现loading 导致闪烁
-      console.log(timer)
       timer = setTimeout(() => {
         // 处理多个请求，只要一个loading
-        timerList.push(timer)
         if (timerList.length > 1) {
           return
         }
         Toast.loading('数据加载中...', 10)
       }, 300);
-      console.log(timer)
+      timerList.push(timer)
     }
     return cfg;
   }, error => {
@@ -31,7 +29,9 @@ const fetchinit = () => {
     num--
     if (num <= 0) {
       if (timer) {
-        clearTimeout(timer)
+        for (let i = 0; i < timerList.length; i++) {
+          clearTimeout(timerList[i])
+        }
         timer = undefined
         timerList = []
         Toast.hide()
@@ -41,7 +41,11 @@ const fetchinit = () => {
     }
     return response;
   }, error => {
-    clearTimeout(timer)
+    num--
+    console.log('22222222', timerList)
+    for (let i = 0; i < timerList.length; i++) {
+      clearTimeout(timerList[i])
+    }
     timer = undefined
     timerList = []
     Toast.hide()
@@ -63,15 +67,15 @@ const fetchinit = () => {
           return;
         case 'PTM1000': // 用户登录超时
           Toast.info(response.data.msgInfo)
-          // setTimeout(() => {
-          //   window.location.pathname = '/login'
-          // }, 3000);
+          setTimeout(() => {
+            window.location.pathname = '/login'
+          }, 3000);
           return;
         case 'PTM0100': // 未登录
           Toast.info(response.data.msgInfo)
-          // setTimeout(() => {
-          //   window.location.pathname = '/login'
-          // }, 3000);
+          setTimeout(() => {
+            window.location.pathname = '/login'
+          }, 3000);
           return;
         default:
           return;
