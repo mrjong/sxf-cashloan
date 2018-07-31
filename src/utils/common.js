@@ -122,6 +122,50 @@ const store = {
   removeMoxieBackUrl() {
     return storage.session.removeItem('moxieBackUrl');
   },
+
+  // 保存会员卡是否购买的flag
+  setVIPFlag(data) {
+    storage.session.setItem('VIPFlag', data);
+  },
+
+  // 获取会员卡是否购买的flag
+  getVIPFlag() {
+    return storage.session.getItem('VIPFlag');
+  },
+
+  // 清除会员卡是否购买的flag
+  removeVIPFlag() {
+    return storage.session.removeItem('VIPFlag');
+  },
+
+  // 保存是否实名认证的flag
+  setAuthFlag(data) {
+    storage.session.setItem('authFlag', data);
+  },
+
+  // 获取是否实名认证的flag
+  getAuthFlag() {
+    return storage.session.getItem('authFlag');
+  },
+
+  // 清除是否实名认证的flag
+  removeAuthFlag() {
+    return storage.session.removeItem('authFlag');
+  },
+  // 保存用户手机号
+  setUserPhone(data) {
+    storage.session.setItem('userPhone', data);
+  },
+
+  // 获取用户手机号
+  getUserPhone() {
+    return storage.session.getItem('userPhone');
+  },
+
+  // 清除用户手机号
+  removeUserPhone() {
+    return storage.session.removeItem('userPhone');
+  },
 };
 
 /*rc-form 获取第一个错误 */
