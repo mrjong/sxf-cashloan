@@ -8,6 +8,7 @@ import sessionStorageMap from 'utils/sessionStorageMap'
 import { Modal } from 'antd-mobile'
 const API = {
     'qryDtl': "/bill/qryDtl",
+    'payback': '/bill/payback'
 }
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
@@ -16,7 +17,8 @@ export default class order_detail_page extends PureComponent {
         this.state = {
             billDesc: {},
             showMoudle: false,
-            orderList: []
+            orderList: [],
+            money: ''
         }
     }
     componentWillMount() {
@@ -31,6 +33,7 @@ export default class order_detail_page extends PureComponent {
         })
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
+                    res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     this.setState({
                         billDesc: res.data,
                         perdList: res.data.perdList
@@ -57,7 +60,7 @@ export default class order_detail_page extends PureComponent {
                     brief: perdList[i].perdDueDt
                 },
                 extra: [{
-                    name: perdList[i].perdWaitRepAmt,
+                    name: perdList[i].perdTotAmt,
                     color: '#333'
                 }, {
                     name: perdList[i].perdStsNm,
@@ -118,9 +121,34 @@ export default class order_detail_page extends PureComponent {
         })
 
     }
-
+    // 立即还款
+    handleClickConfirm = () => {
+        let billNo = sessionStorage.getItem(sessionStorageMap.bill.billNo)
+        this.props.$fetch.post(API.payback, {
+            billNo: JSON.parse(billNo),
+            thisRepTotAmt: this.state.money,
+            cardAgrNo: cardNo ? cardNo : wthdCrdNoLast,
+        }).then(res => {
+            if (res.msgCode === 'PTM0000') {
+                this.setState({
+                    billDesc: res.data,
+                    perdList: res.data.perdList
+                }, () => {
+                    this.showPerdList(res.data.perdNum)
+                })
+            } else {
+                this.props.toast.info(res.msgInfo)
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    selectBank = () => {
+        sessionStorage.setItem('backUrl', '/order/order_detail_page')
+        this.props.history.replace('/mine/select_save_page')
+    }
     render() {
-        const { billDesc } = this.state
+        const { billDesc, money } = this.state
         return (
             <div className={styles.order_detail_page}>
                 <Panel title="借款信息">
@@ -141,7 +169,7 @@ export default class order_detail_page extends PureComponent {
                         </li>
                         <li className={styles.list_item}>
                             <label className={styles.item_name}>放款时间</label>
-                            <span className={styles.item_value}>{}</span>
+                            <span className={styles.item_value}>{billDesc && billDesc.loanDt}</span>
                         </li>
                         <li className={styles.list_item}>
                             <label className={styles.item_name}>收款银行卡</label>
@@ -161,20 +189,20 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 ? <div className={styles.submit_btn}>
-                        <SButton onClick={this.handleClickConfirm}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>
-                        <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>2/3</span>期账单，请保证卡内余额大于该 期账单金额</div>
+                        <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc && billDesc.perdLth}</span>期账单，请保证卡内余额大于该 期账单金额</div>
                     </div> : <div className={styles.mb50}></div>
                 }
                 <Modal popup visible={this.state.showMoudle} onClose={this.handleCloseModal} animationType="slide-up">
                     <div className={styles.modal_box}>
-                        <div className={styles.modal_title}>付款详情<i></i></div>
+                        <div className={styles.modal_title}>付款详情<i onClick={() => { this.setState({ showMoudle: false }) }}></i></div>
                         <div className={styles.modal_flex}>
-                            <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>158.00元</span>
+                            <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{money}元</span>
                         </div>
                         <div className={styles.modal_flex}>
-                            <span className={styles.modal_label}>还款银行卡</span><span className={`${styles.modal_value}`}>158.00元 </span>&nbsp;<i></i>
+                            <span className={styles.modal_label}>还款银行卡</span><span onClick={this.selectBank} className={`${styles.modal_value}`}>{billDesc && billDesc.wthdCrdCorpOrgNm}({billDesc && billDesc.wthdCrdNoLast}) </span>&nbsp;<i></i>
                         </div>
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款

@@ -31,12 +31,12 @@ export default class bind_save_page extends PureComponent {
   }
   // 获取信用卡信息
   queryUserInf = () => {
-    this.props.$fetch.get(API. GETUSERINF).then((result) => {
-      if(result.data){
+    this.props.$fetch.get(API.GETUSERINF).then((result) => {
+      if (result.data) {
         this.setState({ userName: result.data.usrNm })
       }
     }, (error) => {
-      error.msgInfo  && this.props.toast.info(error.msgInfo );
+      error.msgInfo && this.props.toast.info(error.msgInfo);
     })
   };
 
@@ -58,7 +58,7 @@ export default class bind_save_page extends PureComponent {
   };
   // 绑卡之前进行校验
   checkCard = (params, values) => {
-    this.props.$fetch.post(API. GECARDINF, params).then((result) => {
+    this.props.$fetch.post(API.GECARDINF, params).then((result) => {
       const params1 = {
         bankCd: result.bankCd,
         cardTyp: 'D', //卡类型。
@@ -68,7 +68,7 @@ export default class bind_save_page extends PureComponent {
       };
       this.bindSaveCard(params1);
     }, (error) => {
-        error.msgInfo && this.props.toast.info(error.msgInfo );
+      error.msgInfo && this.props.toast.info(error.msgInfo);
     });
   };
   // 绑定储蓄卡
@@ -138,25 +138,25 @@ export default class bind_save_page extends PureComponent {
           cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
         };
         this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-          if(result.bankCd===null || result.bankCd==='' || result.cardTyp==='C'){
+          if (result.bankCd === null || result.bankCd === '' || result.cardTyp === 'C') {
             this.props.toast.info('请输入有效银行卡号')
           }
-          else{
-            this.props.$fetch.post(API.GETCODE,{
-                mblNo: values.valueInputCarPhone,
-                bankCd: result.bankCd,
-                cardTyp: 'D', //卡类型。
-                cardNo: values.valueInputCarNumber, //持卡人卡号
-            }).then((result)=> {
-                if(result.msgCode !== 'PTM0000'){
-                    this.props.toast.info(result.msgInfo)
-                    // return false
-                } else {
-                    // bindStorageGetCode()
-                    fn(true);
-                }
-            },(error)=> {
-                error.retMsg  && this.props.toast.info(error.retMsg );
+          else {
+            this.props.$fetch.post(API.GETCODE, {
+              mblNo: values.valueInputCarPhone,
+              bankCd: result.bankCd,
+              cardTyp: 'D', //卡类型。
+              cardNo: values.valueInputCarNumber, //持卡人卡号
+            }).then((result) => {
+              if (result.msgCode !== 'PTM0000') {
+                this.props.toast.info(result.msgInfo)
+                // return false
+              } else {
+                // bindStorageGetCode()
+                fn(true);
+              }
+            }, (error) => {
+              error.retMsg && this.props.toast.info(error.retMsg);
             })
             // return true
           }
@@ -183,6 +183,7 @@ export default class bind_save_page extends PureComponent {
         <List>
           <Item extra={this.state.userName}>持卡人</Item>
           <InputItem
+            maxLength="19"
             {...getFieldProps('valueInputCarNumber', {
               rules: [
                 { required: true, message: '请输入有效银行卡号' },
@@ -194,6 +195,7 @@ export default class bind_save_page extends PureComponent {
             储蓄卡卡号
           </InputItem>
           <InputItem
+            maxLength="11"
             {...getFieldProps('valueInputCarPhone', {
               rules: [
                 { required: true, message: '请输入银行卡绑定的有效手机号' },
@@ -206,6 +208,7 @@ export default class bind_save_page extends PureComponent {
           </InputItem>
           <div className={styles.time_container}>
             <InputItem
+              maxLength="6"
               {...getFieldProps('valueInputCarSms', {
                 rules: [
                   { required: true, message: '请输入正确的短信验证码' },
