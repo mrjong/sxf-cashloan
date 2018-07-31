@@ -14,7 +14,7 @@ export const address =() => {
                     var lnglatXY=`${res.locations[0].lng},${res.locations[0].lat}`;//地图上所标点的坐标
                     console.log('lnglatXY:',lnglatXY);
                     sessionStorage.setItem('location',lnglatXY)
-                    store.dispatch(actions.setVars('location',lnglatXY));
+                    // store.dispatch(actions.setVars('location',lnglatXY));
                     new AMap.service('AMap.Geocoder',function(){//回调函数
                         //实例化Geocoder
                         var geocoder = new AMap.Geocoder();
