@@ -59,11 +59,13 @@ export default class ModalInfo extends PureComponent {
 
   componentWillMount() {
     const pageData = store.getRepaymentModalData();
+    console.log(pageData, 'pageData');
     if (pageData) {
       this.recoveryPageData();
     } else {
       this.requestGetRepaymentDateList();
     }
+    this.getCardDataFromSession();
   }
 
   componentWillUnmount() {}
@@ -82,6 +84,19 @@ export default class ModalInfo extends PureComponent {
   // 清除当前页面数据
   clearCurrentPageData = () => {
     store.setRepaymentModalData(null);
+  };
+
+  // 获取 session 中的银行卡信息
+  getCardDataFromSession = () => {
+    const cardData = store.getCardData();
+    if (cardData) {
+      this.setState(
+        {
+          repaymentCardInfo: cardData,
+        },
+        store.setCardData(null),
+      );
+    }
   };
 
   // 代扣 Tag 点击事件
@@ -109,6 +124,8 @@ export default class ModalInfo extends PureComponent {
   // 选择银行卡
   handleClickChoiseBank = () => {
     this.saveCurrentPageData();
+    store.setBackUrl('/home/home');
+    // todo 通过接口判断跳页面
     // this.props.history.push('/mine/select_credit_page');
   };
 
@@ -119,35 +136,35 @@ export default class ModalInfo extends PureComponent {
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    const demoData = {
-      cardBillAmt: '687.67',
-      prdList: [
-        {
-          prdName: '3个月',
-          prdId: '432424',
-        },
-        {
-          prdName: '1个月',
-          prdId: '4324224',
-        },
-        {
-          prdName: '7天(会员专属)',
-          prdId: '4324225',
-        },
-      ],
-      overDt: '7',
-      bankName: '招商银行',
-      cardNoHid: '6747 **** **** 6654',
-      withHoldAgrNo: '332423534534534534535',
-      withDrawAgrNo: '034253534564645645645',
-      cardBillDt: '2018-07-17',
-    };
-
-    this.setState({
-      repayInfo: demoData,
-      repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
-    });
-    return;
+    // const demoData = {
+    //   cardBillAmt: '687.67',
+    //   prdList: [
+    //     {
+    //       prdName: '3个月',
+    //       prdId: '432424',
+    //     },
+    //     {
+    //       prdName: '1个月',
+    //       prdId: '4324224',
+    //     },
+    //     {
+    //       prdName: '7天(会员专属)',
+    //       prdId: '4324225',
+    //     },
+    //   ],
+    //   overDt: '7',
+    //   bankName: '招商银行',
+    //   cardNoHid: '6747 **** **** 6654',
+    //   withHoldAgrNo: '332423534534534534535',
+    //   withDrawAgrNo: '034253534564645645645',
+    //   cardBillDt: '2018-07-17',
+    // };
+    //
+    // this.setState({
+    //   repayInfo: demoData,
+    //   repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
+    // });
+    // return;
     this.props.$fetch.post(`${API.QUERY_REPAY_INFO}`).then(result => {
       if (result && result.code === '0000' && result.data !== null) {
         this.setState({

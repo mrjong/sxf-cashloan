@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { setBackGround } from '../../../utils/Background';
 import { createForm } from 'rc-form';
-import updateLeft from '../../../assets/images/real_name/1@2x.png';
-import updateRight from '../../../assets/images/real_name/2@2x.png';
-import updateBottom from '../../../assets/images/real_name/@2x.png';
+import updateLeft from '../../../assets/images/real_name/left.png';
+import updateRight from '../../../assets/images/real_name/right.png';
+import updateBottom from '../../../assets/images/real_name/bottom.png';
 import FEZipImage from '../../../components/fzp-image';
 import { InputItem, Toast } from 'antd-mobile';
 import ButtonCustom from '../../../components/button';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { getDeviceType, getFirstError } from 'utils/common';
+import { store } from 'utils/common';
+
 
 const isEquipment = window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
 
@@ -166,6 +168,7 @@ export default class RealName extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
+        store.setAuthFlag("1");
         this.props.history.replace('/mine/credit_extension_page');
       }
       else {

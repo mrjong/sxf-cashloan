@@ -1,6 +1,6 @@
 @import '../base/fn';
 
-:global(.bank_ico) {
+  :global(.bank_ico) {
     position: relative;
     display: inline-block;
     width: 60px;
@@ -9,100 +9,183 @@
     background-size: 100%;
     top: 18px;
   }
-  //中国银行
-  :global(.bank_ico_BOC){
+  :global(.bank_golden_ico) {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  // logo的ico
+  :global(.logo_ico) {
+    @include bg-image('../../../assets/images/home/logo');
+  }
+  // 中国银行
+  :global(.bank_ico_BOC) {
     @include bg-image('../../../assets/images/mine/selectCard/bank1');
   }
-  //中国工商银行
+  :global(.bank_golden_ico_BOC) {
+    @include bg-image('../../../assets/images/home/bank_golden1');
+  }
+  // 中国工商银行
   :global(.bank_ico_ICBC) {
     @include bg-image('../../../assets/images/mine/selectCard/bank2');
   }
-  //中国建设银行
+  :global(.bank_golden_ico_ICBC) {
+    @include bg-image('../../../assets/images/home/bank_golden2');
+  }
+  // 中国建设银行
   :global(.bank_ico_CCB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank3');
   }
-  //中国农业银行
+  :global(.bank_golden_ico_CCB) {
+    @include bg-image('../../../assets/images/home/bank_golden3');
+  }
+  // 中国农业银行
   :global(.bank_ico_ABC) {
     @include bg-image('../../../assets/images/mine/selectCard/bank4');
   }
-  //中国招商银行
+  :global(.bank_golden_ico_ABC) {
+    @include bg-image('../../../assets/images/home/bank_golden4');
+  }
+  // 中国招商银行
   :global(.bank_ico_CMB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank5');
   }
-  //中国浦东发展银行
+  :global(.bank_golden_ico_CMB) {
+    @include bg-image('../../../assets/images/home/bank_golden5');
+  }
+  // 中国浦东发展银行
   :global(.bank_ico_SPDB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank6');
   }
-  //中国光大银行
+  :global(.bank_golden_ico_SPDB) {
+    @include bg-image('../../../assets/images/home/bank_golden6');
+  }
+  // 中国光大银行
   :global(.bank_ico_CEBB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank7');
   }
-  //华夏银行
+  :global(.bank_golden_ico_CEBB) {
+    @include bg-image('../../../assets/images/home/bank_golden7');
+  }
+  // 华夏银行
   :global(.bank_ico_HXB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank8');
   }
-  //北京银行
+  :global(.bank_golden_ico_HXB) {
+    @include bg-image('../../../assets/images/home/bank_golden8');
+  }
+  // 北京银行
   :global(.bank_ico_BOB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank9');
   }
-  //交通银行
+  :global(.bank_golden_ico_BOB) {
+    @include bg-image('../../../assets/images/home/bank_golden9');
+  }
+  // 交通银行
   :global(.bank_ico_BCOM) {
     @include bg-image('../../../assets/images/mine/selectCard/bank10');
   }
-  //中国民生银行
+  :global(.bank_golden_ico_BCOM) {
+    @include bg-image('../../../assets/images/home/bank_golden10');
+  }
+  // 中国民生银行
   :global(.bank_ico_CMBC) {
     @include bg-image('../../../assets/images/mine/selectCard/bank11');
   }
-  //平安银行
+  :global(.bank_golden_ico_CMBC) {
+    @include bg-image('../../../assets/images/home/bank_golden11');
+  }
+  // 平安银行
   :global(.bank_ico_PAB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank12');
   }
-  //中信银行
+  :global(.bank_golden_ico_PAB) {
+    @include bg-image('../../../assets/images/home/bank_golden12');
+  }
+  // 中信银行
   :global(.bank_ico_ECITIC) {
     @include bg-image('../../../assets/images/mine/selectCard/bank13');
   }
-  //渤海银行
+  :global(.bank_golden_ico_ECITIC) {
+    @include bg-image('../../../assets/images/home/bank_golden13');
+  }
+  // 渤海银行
   :global(.bank_ico_CBHB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank14');
   }
-  //中国邮政储蓄银行
+  :global(.bank_golden_ico_CBHB) {
+    @include bg-image('../../../assets/images/home/bank_golden14');
+  }
+  // 中国邮政储蓄银行
   :global(.bank_ico_PSBC) {
     @include bg-image('../../../assets/images/mine/selectCard/bank15');
   }
-  //兴业银行
+  :global(.bank_golden_ico_PSBC) {
+    @include bg-image('../../../assets/images/home/bank_golden15');
+  }
+  // 兴业银行
   :global(.bank_ico_CIB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank16');
   }
-  //广东发展银行
+  :global(.bank_golden_ico_CIB) {
+    @include bg-image('../../../assets/images/home/bank_golden16');
+  }
+  // 广东发展银行
   :global(.bank_ico_GDB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank17');
   }
-  //上海银行
+  :global(.bank_golden_ico_GDB) {
+    @include bg-image('../../../assets/images/home/bank_golden17');
+  }
+  // 上海银行
   :global(.bank_ico_BOS) {
     @include bg-image('../../../assets/images/mine/selectCard/bank18');
   }
-  //花旗银行
+  :global(.bank_golden_ico_BOS) {
+    @include bg-image('../../../assets/images/home/bank_golden18');
+  }
+  // 花旗银行
   :global(.bank_ico_CITI) {
     @include bg-image('../../../assets/images/mine/selectCard/bank19');
   }
   :global(.bank_ico_OTB1) {
+    @include bg-image('../../../assets/images/home/bank_golden19');
+  }
+  :global(.bank_golden_ico_CITI) {
     @include bg-image('../../../assets/images/mine/selectCard/bank19');
   }
-  //浙商银行
+  :global(.bank_golden_ico_OTB1) {
+    @include bg-image('../../../assets/images/home/bank_golden19');
+  }
+  // 浙商银行
   :global(.bank_ico_ZJCCB){
     @include bg-image('../../../assets/images/mine/selectCard/bank20');
   }
-  //汇丰银行
+  :global(.bank_golden_ico_ZJCCB){
+    @include bg-image('../../../assets/images/home/bank_golden20');
+  }
+  // 汇丰银行
   :global(.bank_ico_){
     @include bg-image('../../../assets/images/mine/selectCard/bank21');
   }
-  //农业发展银行
+  :global(.bank_golden_ico_){
+    @include bg-image('../../../assets/images/home/bank_golden21');
+  }
+  // 农业发展银行
   :global(.bank_ico_){
     @include bg-image('../../../assets/images/mine/selectCard/bank22');
   }
-  //广州银行
+  :global(.bank_golden_ico_){
+    @include bg-image('../../../assets/images/home/bank_golden22');
+  }
+  // 广州银行
   :global(.bank_ico_GZB) {
     @include bg-image('../../../assets/images/mine/selectCard/bank23');
+  }
+  :global(.bank_golden_ico_GZB) {
+    @include bg-image('../../../assets/images/home/bank_golden23');
   }
   // //嘉兴银行
   // :global(.bank_ico_JXBANK){

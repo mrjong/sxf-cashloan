@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
+import { store } from 'utils/common';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/lists';
@@ -12,7 +13,6 @@ const API = {
   GETSTSW: '/my/getStsw', // 获取用户授信信息列表
   USERSTATUS: '/signup/getUsrSts', // 用户状态获取
 };
-
 
 @fetch.inject()
 export default class mine_page extends PureComponent {
@@ -29,8 +29,30 @@ export default class mine_page extends PureComponent {
     };
   }
   componentWillMount() {
-    this.getUsrInfo();
-    this.queryVipCard();
+    // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
+    if (store.getAuthFlag()) {
+      this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: store.getAuthFlag() === '1' ? true : false });
+    } else {
+      this.getUsrInfo();
+    }
+    // 判断session是否存了购买会员卡的状态，没有调用接口，有的话直接从session里取
+    if (store.getVIPFlag()) {
+      switch (store.getVIPFlag()) {
+        case '0':
+          this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
+          break;
+        case '1':
+          this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
+          break;
+        case '2':
+          this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
+          break;
+        default:
+          break;
+      }
+    } else {
+      this.queryVipCard();
+    }
   }
   // 获取用户信息
   getUsrInfo = () => {
@@ -39,6 +61,8 @@ export default class mine_page extends PureComponent {
         res.msgInfo && this.props.toast.info(res.msgInfo);
         return
       }
+      store.setUserPhone(res.mblNoHid);
+      store.setAuthFlag(res.realNmFlg);
       this.setState({ mblNoHid: res.mblNoHid, realNmFlg: res.realNmFlg === '1' ? true : false });
       //TODO ...
     }, err => {
@@ -47,9 +71,9 @@ export default class mine_page extends PureComponent {
   };
   // 查询用户会员卡状态
   queryVipCard = () => {
-
     this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        store.setVIPFlag(result.data.memSts);
         switch (result.data.memSts) {
           case '0':
             this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
