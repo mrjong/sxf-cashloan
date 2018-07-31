@@ -5,6 +5,7 @@ import styles from './index.scss';
 
 const API = {
   CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
+  CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
 }
 
 const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
@@ -71,8 +72,14 @@ export default class credit_list_page extends PureComponent {
   };
   // 新增授权卡
   addCard = () => {
-    // this.props.history.push('/mine/bind_credit_page')
-
+    this.props.$fetch.post(API.CARDAUTH).then(result => {
+      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+        store.setMoxieBackUrl('/mine/credit_list_page');
+        window.location.href = result.data.url;
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
   };
 
   render() {
