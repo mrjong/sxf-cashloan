@@ -74,7 +74,7 @@ export default class credit_list_page extends PureComponent {
   addCard = () => {
     this.props.$fetch.post(API.CARDAUTH).then(result => {
       if (result && result.msgCode === 'RCM0000' && result.data !== null) {
-        store.setMoxieBackUrl('/home/home');
+        store.setMoxieBackUrl('/mine/credit_list_page');
         window.location.href = result.data.url;
       } else {
         this.props.toast.info(result.msgInfo);
