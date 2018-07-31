@@ -218,7 +218,8 @@ export default class CreditCard extends PureComponent {
     this.props.$fetch.post(API.BIND_CARD_URL, params).then(
       result => {
         if (result && result.msgCode === 'PTM0000') {
-          this.props.history.push('/')
+          // TODO: 保存数据给下个页面
+          this.props.history.push('/mine/confirm_purchase_page')
         } else {
           Toast.info(result.msg);
         }
