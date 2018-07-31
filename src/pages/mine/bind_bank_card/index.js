@@ -48,11 +48,12 @@ export default class BindBankCardPage extends PureComponent {
 
   render() {
     const { userInfo } = this.state;
+    const { history } = this.props;
     return (
       <div className={style.bind_bank_card_page}>
         <STabs tabTit={tabBar} onChange={this.handleChangeTabs}>
-          <FormContent formtype="C" userinfo={userInfo} />
-          <FormContent formtype="D" userinfo={userInfo} />
+          <FormContent formtype="C" userinfo={userInfo} history={history} />
+          <FormContent formtype="D" userinfo={userInfo} history={history} />
         </STabs>
         <p className="protocol_tip" style={{ width: '6.2rem' }}>
           点击“确认绑定”，表示同意

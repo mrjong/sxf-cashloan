@@ -8,7 +8,7 @@ import BankCard from '../bank_card';
 import style from './index.scss';
 
 const API = {
-  CRED_CARD_COUNT: '/index/usrCredCardCoun', // 授信信用卡数量查询
+  CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 };
 
 @fetch.inject()
@@ -44,7 +44,7 @@ export default class BankContent extends React.PureComponent {
   repayForOtherBank = () => {
     if (this.state.credCardCount > 1) {
       console.log('跳选择授信卡页');
-      // this.props.push('');
+      // this.props.push({ path: '/mine/credit_list_page', search: '?autId=xxxx' });
     } else {
       console.log('跳魔蝎');
       // this.props.push('');
