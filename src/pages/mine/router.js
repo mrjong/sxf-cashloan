@@ -57,4 +57,9 @@ export default [
     title: '储蓄卡支持银行类型',
     component: () => import('pages/mine/support_save_page'),
   },
+  {
+    path: '/mine/credit_list_page',
+    title: '选择授权卡',
+    component: () => import('pages/mine/credit_list_page'),
+  },
 ];
