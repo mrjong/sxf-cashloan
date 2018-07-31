@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { setBackGround } from '../../../utils/Background';
 import { createForm } from 'rc-form';
-import updateLeft from '../../../assets/images/real_name/1@2x.png';
-import updateRight from '../../../assets/images/real_name/2@2x.png';
-import updateBottom from '../../../assets/images/real_name/@2x.png';
+import updateLeft from '../../../assets/images/real_name/left.png';
+import updateRight from '../../../assets/images/real_name/right.png';
+import updateBottom from '../../../assets/images/real_name/bottom.png';
 import FEZipImage from '../../../components/fzp-image';
 import { InputItem, Toast } from 'antd-mobile';
 import ButtonCustom from '../../../components/button';

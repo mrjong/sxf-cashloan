@@ -3,7 +3,7 @@ import { createForm } from 'rc-form';
 import { setBackGround } from '../../../utils/Background';
 import { InputItem, Picker, List, Toast } from 'antd-mobile';
 import { validators } from '../../../utils/validator';
-import informationMore from '../../../assets/images/real_name/更多-1@2x.png';
+import informationMore from '../../../assets/images/real_name/more.png';
 import AsyncCascadePicker from '../../../components/async-cascad-picker/index.jsx';
 import ButtonCustom from '../../../components/button';
 import fetch from 'sx-fetch';
