@@ -37,10 +37,10 @@ export default class login_page extends PureComponent {
       phoneValue: '18500214321',
     });
   }
-
-  componentWillUnmount() {
-    clearInterval(timmer);
-  }
+  //
+  // componentWillUnmount() {
+  //   clearInterval(timmer);
+  // }
 
   // 校验手机号
   validatePhone = (rule, value, callback) => {
