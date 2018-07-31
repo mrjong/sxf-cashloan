@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
+import Moudles from 'components/moudles';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 
@@ -17,21 +18,10 @@ export default class select_save_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      agrNo: '1',
-      cardList: [
-        // {
-        //   bankName: '建设银行',
-        //   lastCardNo: '2345',
-        //   bankCode: 'CCB',
-        //   agrNo: '1',
-        // },
-        // {
-        //   bankName: '工商银行',
-        //   lastCardNo: '2345',
-        //   bankCode: 'ICBC',
-        //   agrNo: '2',
-        // },
-      ]
+      agrNo: '',
+      cardList: [],
+      showMoudle: false, // 是否展示确认解绑的modal
+      unbindData: '', // 解绑卡的数据
     }
   }
   componentWillMount() {
@@ -49,7 +39,7 @@ export default class select_save_page extends PureComponent {
     this.props.$fetch
       .post(API.VIPBANKLIST, {
         type: '5',
-        corpBusTyp: '01'
+        corpBusTyp: '01',
       }).then(
         res => {
           if (res.msgCode === "PTM0000") {
@@ -80,6 +70,12 @@ export default class select_save_page extends PureComponent {
               cardList: res.cardList ? res.cardList : []
             })
           } else {
+            if (res.msgCode === 'PTM3021') {
+              this.setState({
+                cardList: []
+              });
+              return;
+            }
             res.msgInfo && this.props.toast.info(res.msgInfo)
           }
         },
@@ -89,11 +85,17 @@ export default class select_save_page extends PureComponent {
       )
   };
 
+  // 点击解绑按钮
+  unbindHandler= params => {
+    this.setState({ showMoudle: true, unbindData: params })
+  };
+
   // 解绑银行卡
   unbindCard = agrNo => {
     this.props.$fetch
       .get(`${API.UNBINDCARD}/${agrNo}`).then(
         res => {
+          this.setState({ showMoudle: false, unbindData: '' })
           if (res.msgCode === "PTM0000") {
             this.queryBankList();
           } else {
@@ -115,6 +117,8 @@ export default class select_save_page extends PureComponent {
       // bankCode: obj.bankCode,
       agrNo: obj.agrNo,
     });
+    this.props.history.replace(backUrlData);
+    store.setCardData(JSON.stringify(obj));
     // }
   };
   // 新增授权卡
@@ -167,7 +171,7 @@ export default class select_save_page extends PureComponent {
                             right={[
                               {
                                 text: '解绑',
-                                onPress: () => { this.unbindCard(item.agrNo) },
+                                onPress: () => { this.unbindHandler(item.agrNo) },
                                 style: { backgroundColor: '#FF5A5A', color: 'white' },
                               },
                             ]}
@@ -188,6 +192,7 @@ export default class select_save_page extends PureComponent {
             : null
         }
         <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
+        {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />}
       </div>
     )
   }

@@ -12,7 +12,7 @@ import MsgBadge from './components/msg-badge';
 import style from './style.scss';
 
 const API = {
-  BANNER: '/my/getBannerList',
+  BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
@@ -229,10 +229,10 @@ export default class HomePage extends PureComponent {
       } else if (result && result.msgCode === 'PTM2001') {
         console.log('有风控没绑储蓄卡 跳绑储蓄卡页面');
         this.props.history.push('/mine/bind_save_page');
-      }else if (result && result.msgCode === 'PTM2002') {
+      } else if (result && result.msgCode === 'PTM2002') {
         console.log('有风控没绑信用卡 跳绑信用卡页面');
         this.props.history.push('/mine/bind_credit_page');
-      }  else {
+      } else {
         Toast.info(result.msgInfo);
       }
     });

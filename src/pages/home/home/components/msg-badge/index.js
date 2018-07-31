@@ -5,7 +5,7 @@ import fetch from 'sx-fetch';
 import style from './index.scss';
 
 const API = {
-  MSG_COUNT: '/my/msgCount',
+  MSG_COUNT: '/my/msgCount', // h5-查询未读消息总数
 };
 
 @fetch.inject()

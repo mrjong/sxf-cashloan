@@ -6,7 +6,6 @@ import { store } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
-import qs from 'qs';
 import styles from './index.scss';
 
 const API = {
@@ -22,9 +21,9 @@ export default class bind_save_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userName: '',
-      enable: true,
-      isCheck: true,
+      userName: '', // 持卡人姓名
+      enable: true, // 计时器是否可用
+      cardData: {}, // 绑定的卡的数据
     }
   }
   componentWillMount() {
@@ -60,8 +59,9 @@ export default class bind_save_page extends PureComponent {
   // 绑卡之前进行校验
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
+      this.setState({ cardData: { cardNo: values.valueInputCarNumber, ...result.data } })
       const params1 = {
-        bankCd: result.bankCd,
+        bankCd: result.data.bankCd,
         cardTyp: 'D', //卡类型。
         cardNo: values.valueInputCarNumber, //持卡人卡号
         mblNo: values.valueInputCarPhone, //预留手机号
@@ -81,7 +81,7 @@ export default class bind_save_page extends PureComponent {
         store.removeBackUrl();
         if (backUrlData) {
           this.props.history.push(backUrlData);
-          store.setCardData(JSON.stringify(result.data));
+          store.setCardData(JSON.stringify(this.state.cardData));
         } else {
           this.props.history.replace('/mine/select_save_page');
         }
@@ -105,81 +105,71 @@ export default class bind_save_page extends PureComponent {
   };
   // 确认购买
   confirmBuy = () => {
-    this.setState({ isCheck: true }, () => {
-      this.props.form.validateFields((err, values) => {
-        if (!err) {
-          // 参数
-          const params = {
-            cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
-          };
-          this.checkCard(params, values);
-          //判断是否登录
-          // const token = sessionStorage.getItem('tokenId');
-          // if (token) {
-          //   this.checkCard(params, values);
-          // } else {
-          //   this.props.toast.info('请先去登录');
-          // }
-        } else {
-          // 如果存在错误，获取第一个字段的第一个错误进行提示
-          const keys = Object.keys(err);
-          if (keys && keys.length) {
-            const errs = err[keys[0]].errors;
-            if (errs && errs.length) {
-              const errMessage = errs[0].message;
-              this.props.toast.info(errMessage);
-            }
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        // 参数
+        const params = {
+          cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
+        };
+        this.checkCard(params, values);
+        //判断是否登录
+        // const token = sessionStorage.getItem('tokenId');
+        // if (token) {
+        //   this.checkCard(params, values);
+        // } else {
+        //   this.props.toast.info('请先去登录');
+        // }
+      } else {
+        // 如果存在错误，获取第一个字段的第一个错误进行提示
+        const keys = Object.keys(err);
+        if (keys && keys.length) {
+          const errs = err[keys[0]].errors;
+          if (errs && errs.length) {
+            const errMessage = errs[0].message;
+            this.props.toast.info(errMessage);
           }
         }
-      });
+      }
     });
   };
   // 点击开始倒计时
   countDownHandler = fn => {
-    this.setState({ isCheck: false }, () => {
-      this.props.form.validateFields((err, values) => {
-        console.log(err);
-        if (!err) {
-          const params = {
-            cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
-          };
-          this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-            if (result.bankCd === null || result.bankCd === '' || result.cardTyp === 'C') {
-              this.props.toast.info('请输入有效银行卡号')
-            }
-            else {
-              this.props.$fetch.post(API.GETCODE, {
-                mblNo: values.valueInputCarPhone,
-                // bankCd: result.bankCd,
-                cardTyp: 'D', //卡类型。
-                cardNo: values.valueInputCarNumber, //持卡人卡号
-              }).then((result) => {
-                if (result.msgCode !== 'PTM0000') {
-                  this.props.toast.info(result.msgInfo)
-                  // return false
-                } else {
-                  // bindStorageGetCode()
-                  this.props.toast.info('发送成功，请注意查收！');
-                  fn(true);
-                }
-              }, (error) => {
-                error.retMsg && this.props.toast.info(error.retMsg);
-              })
-              // return true
-            }
-          })
-        } else {
-          // 如果存在错误，获取第一个字段的第一个错误进行提示
-          const keys = Object.keys(err);
-          if (keys && keys.length) {
-            const errs = err[keys[0]].errors;
-            if (errs && errs.length) {
-              const errMessage = errs[0].message;
-              this.props.toast.info(errMessage);
-            }
+    // console.log()
+    const formData = this.props.form.getFieldsValue();
+    if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
+      this.props.toast.info('请输入有效银行卡号');
+      return;
+    }
+    if (!validators.phone(formData.valueInputCarPhone)) {
+      this.props.toast.info('请输入银行卡绑定的有效手机号');
+      return;
+    }
+    const params = {
+      cardNo: formData.valueInputCarNumber, //持卡人储蓄卡号
+    };
+    this.props.$fetch.post(API.GECARDINF, params).then((result) => {
+      if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'C') {
+        this.props.$fetch.post(API.GETCODE, {
+          mblNo: formData.valueInputCarPhone,
+          bankCd: result.data.bankCd,
+          cardTyp: 'D', //卡类型。
+          cardNo: formData.valueInputCarNumber, //持卡人卡号
+        }).then((result) => {
+          if (result.msgCode !== 'PTM0000') {
+            this.props.toast.info(result.msgInfo)
+            // return false
+          } else {
+            // bindStorageGetCode()
+            this.props.toast.info('发送成功，请注意查收！');
+            fn(true);
           }
-        }
-      });
+        }, (error) => {
+          error.retMsg && this.props.toast.info(error.retMsg);
+        })
+        // return true
+      } else {
+        this.props.toast.info('请输入有效银行卡号')
+      }
     });
   };
 
@@ -191,12 +181,12 @@ export default class bind_save_page extends PureComponent {
   render() {
     const Item = List.Item;
     const { getFieldProps } = this.props.form;
-    console.log(this.state.isCheck);
     return (
       <div className={styles.bind_save_page}>
         <List>
           <Item extra={this.state.userName}>持卡人</Item>
           <InputItem
+           maxLength="19"
             {...getFieldProps('valueInputCarNumber', {
               rules: [
                 { required: true, message: '请输入有效银行卡号' },
@@ -208,6 +198,7 @@ export default class bind_save_page extends PureComponent {
             储蓄卡卡号
           </InputItem>
           <InputItem
+           maxLength="11"
             {...getFieldProps('valueInputCarPhone', {
               rules: [
                 { required: true, message: '请输入银行卡绑定的有效手机号' },
@@ -219,25 +210,17 @@ export default class bind_save_page extends PureComponent {
             手机号
           </InputItem>
           <div className={styles.time_container}>
-            {
-              this.state.isCheck ?
-                <InputItem
-                  {...getFieldProps('valueInputCarSms', {
-                    rules: [
-                      { required: true, message: '请输入正确的短信验证码' },
-                    ]
-                  })}
-                  placeholder="请输入短信验证码"
-                >
-                  验证码
-              </InputItem>
-                :
-                <InputItem
-                  placeholder="请输入短信验证码"
-                >
-                  验证码
-              </InputItem>
-            }
+            <InputItem
+            maxLength="6"
+              {...getFieldProps('valueInputCarSms', {
+                rules: [
+                  { required: true, message: '请输入正确的短信验证码' },
+                ]
+              })}
+              placeholder="请输入短信验证码"
+            >
+              验证码
+            </InputItem>
             <div className={styles.count_btn}>
               <CountDownButton enable={this.state.enable} onClick={this.countDownHandler} timerActiveTitle={['', '"']} />
             </div>

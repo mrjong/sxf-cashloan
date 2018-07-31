@@ -13,7 +13,14 @@
       border-color: #ebde74;
     }
   }
-  .am-button-primary {
+  .am-button-primary{
     border-color: #ebde74;
+  }
+  .am-button-primary.am-button-active {
+    background: #ebde74;
+    color: #333;
+  }
+  a.am-button-primary:hover{
+    text-decoration: none;
   }
 }

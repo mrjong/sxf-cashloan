@@ -1,5 +1,6 @@
 /node_modules
 /dist
+/dist.zip
 /_mac
 .vagrant
 .idea

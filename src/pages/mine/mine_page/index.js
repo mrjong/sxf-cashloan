@@ -199,7 +199,7 @@ export default class mine_page extends PureComponent {
           name: '常见问题',
           icon: require('assets/images/mine/menu_ico5.png')
         },
-        jumpToUrl: '',
+        jumpToUrl: '/mine/fqa_page',
       },
     ];
     return (
@@ -217,7 +217,7 @@ export default class mine_page extends PureComponent {
         >
           退出登录
         </div>
-        {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} />}
+        {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} textCont="确认退出登录？" />}
       </div>
     )
   }

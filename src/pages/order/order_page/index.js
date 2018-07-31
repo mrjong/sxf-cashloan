@@ -28,20 +28,19 @@ export default class message_page extends PureComponent {
             isLoading: true,
             height: document.documentElement.clientHeight,
             useBodyScroll: false,
-            pageIndex: 1,
+            pageIndex: 0,
             Listlength: 0,
             rData: [],
             tabState: false,
             msgReadAllState: false,
             msgType: 0,
             hasMore: true,
-            limitRow: 10
+            limitRow: 100
         }
     }
     scrollTop = 0
     componentWillMount() {
-        var _body = document.getElementsByTagName("body")[0]
-        // _body.style.backgroundColor = "#efeff4"
+        sessionStorage.removeItem(sessionStorageMap.bill.billNo)
         // 处理详情返回之后
         let backDatastr = sessionStorage.getItem("backData")
         if (backDatastr && backDatastr !== "{}") {
@@ -66,8 +65,7 @@ export default class message_page extends PureComponent {
                             isLoading: false
                         },
                         () => {
-                            document
-                                .getElementsByClassName("iview" + backData.msgType)[0].scrollTop = backData.scrollTop
+                            document.getElementById(backData.billNo).scrollTop = backData.scrollTop
                             // .scrollTo(0, backData.scrollTop)
                         }
                     )
@@ -76,64 +74,21 @@ export default class message_page extends PureComponent {
             )
         } else {
             this.getCommonData()
-            // 获取消息条数
-            // this.msgCount()
         }
     }
     componentDidUpdate() {
-        if (this.state.useBodyScroll) {
-            document.body.style.overflow = "auto"
-        } else {
-            document.body.style.overflow = "hidden"
-        }
+        // if (this.state.useBodyScroll) {
+        //     document.body.style.overflow = "auto"
+        // } else {
+        //     document.body.style.overflow = "hidden"
+        // }
     }
     componentWillUnmount() {
-        var _body = document.getElementsByTagName("body")[0]
-        document.body.style.overflow = "auto"
-    }
-
-    getDesc = obj => {
-        let rData = this.state.rData
-        rData.forEach((item, index) => {
-            if (item.uuid === obj.uuid) {
-                rData[index].sts = 1
-            }
-        })
-        let backData = {
-            scrollTop: this.scrollTop || 0,
-            rData,
-            msgType: this.state.msgType,
-            pageIndex: this.state.pageIndex,
-            hasNext: hasNext
-        }
-        console.log(obj)
-        // 0:无，1:URL，2:文本，3:APP"
-        sessionStorage.setItem("backData", JSON.stringify(backData))
-        sessionStorage.setItem("msgObj", JSON.stringify(obj))
-        switch (obj.detailType) {
-            case "0":
-                this.props.history.push("/home/message_detail_page")
-                break
-            case "1":
-                if (sessionStorage.getItem("h5Channel") && sessionStorage.getItem("h5Channel").indexOf("MPOS") < 0) {
-                    window.open(obj.detail)
-                } else {
-                    location.href = obj.detail
-                }
-                break
-            case "2":
-                this.props.history.push("/home/message_detail_page")
-                break
-            case "3":
-                // app页面
-                break
-
-            default:
-                break
-        }
+        // var _body = document.getElementsByTagName("body")[0]
+        // document.body.style.overflow = "auto"
     }
     // 获取每一页数据
-    genData = async (pIndex = 1) => {
+    genData = async (pIndex = 0) => {
         if (!hasNext) {
             this.setState({
                 isLoading: false,
@@ -141,22 +96,22 @@ export default class message_page extends PureComponent {
             })
             return []
         }
-        if (pIndex === 1) {
+        if (pIndex === 0) {
             this.props.toast.loading('数据加载中...', 10000);
         }
         let data = await this.props.$fetch.post(API.billList, {
-            qryType: '0',
+            qryType: 0,
             startRow: pIndex,
             limitRow: this.state.limitRow
         })
             .then(res => {
-                if (pIndex === 1) {
+                if (pIndex === 0) {
                     setTimeout(() => {
                         this.props.toast.hide();
                     }, 600);
                 }
                 if (res.msgCode === "PTM0000") {
-                    if (pIndex === 1) {
+                    if (pIndex === 0) {
                         this.setState({
                             hasMore: false
                         })
@@ -177,7 +132,7 @@ export default class message_page extends PureComponent {
                     return []
                 }
             }).catch(err => {
-                if (pIndex === 1) {
+                if (pIndex === 0) {
                     setTimeout(() => {
                         this.props.toast.hide();
                     }, 600);
@@ -187,16 +142,18 @@ export default class message_page extends PureComponent {
     }
     // 刷新
     onRefresh = () => {
-        hasNext = true
-        this.setState({ refreshing: true, isLoading: true })
-        this.getCommonData()
+        setTimeout(() => {
+            hasNext = true
+            this.setState({ refreshing: true, isLoading: true })
+            this.getCommonData()
+        }, 600);
     }
     // 公用
     getCommonData = async () => {
         this.setState({
             isLoading: true
         })
-        let list = await this.genData(1)
+        let list = await this.genData(0)
         console.log(list)
         this.setState({
             rData: list,
@@ -239,6 +196,16 @@ export default class message_page extends PureComponent {
         if (obj.billSts === '2' || obj.billSts === '3') {
             return
         }
+        let backData = {
+            scrollTop: this.scrollTop || 0,
+            rData: this.state.rData,
+            billNo: obj.billNo,
+            pageIndex: this.state.pageIndex,
+            hasNext: hasNext
+        }
+        console.log(obj)
+        // 0:无，1:URL，2:文本，3:APP"
+        sessionStorage.setItem("backData", JSON.stringify(backData))
         sessionStorage.setItem(sessionStorageMap.bill.billNo, JSON.stringify(obj.billNo))
         this.props.history.push('/order/order_detail_page')
     }
@@ -266,11 +233,9 @@ export default class message_page extends PureComponent {
             const obj = this.state.rData && this.state.rData[index--]
             console.log(obj)
             return (
-                <List className="my-list">
-                    <Item onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} className="spe" wrap>
-                        {obj.billAmt}<Brief>{obj.billDt}</Brief>
-                    </Item>
-                </List>
+                <Item id={obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} className="spe" wrap>
+                    {obj.billAmt}<Brief>{obj.billDt}</Brief>
+                </Item>
             )
         }
         const item = () => {
@@ -299,6 +264,7 @@ export default class message_page extends PureComponent {
                         }
                         pullToRefresh={
                             <PullToRefresh
+                                damping={60}
                                 refreshing={this.state.refreshing}
                                 onRefresh={this.onRefresh}
                             />
