@@ -59,6 +59,7 @@ export default class ModalInfo extends PureComponent {
 
   componentWillMount() {
     const pageData = store.getRepaymentModalData();
+    console.log(pageData, 'pageData');
     if (pageData) {
       this.recoveryPageData();
     } else {
@@ -135,35 +136,35 @@ export default class ModalInfo extends PureComponent {
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    const demoData = {
-      cardBillAmt: '687.67',
-      prdList: [
-        {
-          prdName: '3个月',
-          prdId: '432424',
-        },
-        {
-          prdName: '1个月',
-          prdId: '4324224',
-        },
-        {
-          prdName: '7天(会员专属)',
-          prdId: '4324225',
-        },
-      ],
-      overDt: '7',
-      bankName: '招商银行',
-      cardNoHid: '6747 **** **** 6654',
-      withHoldAgrNo: '332423534534534534535',
-      withDrawAgrNo: '034253534564645645645',
-      cardBillDt: '2018-07-17',
-    };
-
-    this.setState({
-      repayInfo: demoData,
-      repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
-    });
-    return;
+    // const demoData = {
+    //   cardBillAmt: '687.67',
+    //   prdList: [
+    //     {
+    //       prdName: '3个月',
+    //       prdId: '432424',
+    //     },
+    //     {
+    //       prdName: '1个月',
+    //       prdId: '4324224',
+    //     },
+    //     {
+    //       prdName: '7天(会员专属)',
+    //       prdId: '4324225',
+    //     },
+    //   ],
+    //   overDt: '7',
+    //   bankName: '招商银行',
+    //   cardNoHid: '6747 **** **** 6654',
+    //   withHoldAgrNo: '332423534534534534535',
+    //   withDrawAgrNo: '034253534564645645645',
+    //   cardBillDt: '2018-07-17',
+    // };
+    //
+    // this.setState({
+    //   repayInfo: demoData,
+    //   repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
+    // });
+    // return;
     this.props.$fetch.post(`${API.QUERY_REPAY_INFO}`).then(result => {
       if (result && result.code === '0000' && result.data !== null) {
         this.setState({

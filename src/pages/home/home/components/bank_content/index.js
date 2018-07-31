@@ -35,7 +35,7 @@ export default class BankContent extends React.PureComponent {
   };
 
   componentWillMount() {
-    if (this.props.contentData.indexMsg === '一键还卡') {
+    if (this.props.contentData.indexMsg === '一键代还') {
       this.requestCredCardCount();
     }
   }
@@ -75,7 +75,7 @@ export default class BankContent extends React.PureComponent {
       <div className={style.bank_content_wrap} {...restProps}>
         <BankCard contentData={contentData} {...contentData.indexData} />
         {children}
-        {contentData.indexMsg === '一键还卡' ? (
+        {contentData.indexMsg === '一键代还' ? (
           <button className={style.link_tip} onClick={this.repayForOtherBank}>
             代还其它信用卡
             <img className={style.link_arrow_img} src={iconArrow} alt="" />
