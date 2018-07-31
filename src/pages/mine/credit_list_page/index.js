@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/common';
 import fetch from 'sx-fetch';
+import qs from 'qs';
 import styles from './index.scss';
 
 const API = {
@@ -23,11 +24,12 @@ export default class credit_list_page extends PureComponent {
   }
   componentWillMount() {
     this.queryBankList();
-    // if(){
-    //   this.setState({
-    //     autId: obj.autId,
-    //   });
-    // }
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    if(queryData.autId){
+      this.setState({
+        autId: queryData.autId,
+      });
+    }
   }
 
   // 获取信用卡银行卡列表
@@ -103,7 +105,7 @@ export default class credit_list_page extends PureComponent {
                       >
                         <span className={`bank_ico bank_ico_${item.bankNo}`}></span>
                         <span className={styles.bank_name}>{item.bankName}</span>
-                        <span>···· {item.lastCardNo}</span>
+                        <span>···· {item.last}</span>
                         {
                           isSelected ? (
                             <i className={styles.selected_ico}></i>

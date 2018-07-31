@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/lists';
 import Panel from 'components/panel/index.js';
-import styles from './index.scss';
-import fetch from "sx-fetch"
+import fetch from "sx-fetch";
 import SButton from 'components/button';
-import sessionStorageMap from 'utils/sessionStorageMap'
-import { Modal } from 'antd-mobile'
+import sessionStorageMap from 'utils/sessionStorageMap';
+import { store } from 'utils/common';
+import { Modal } from 'antd-mobile';
+import styles from './index.scss';
+
 const API = {
     'qryDtl': "/bill/qryDtl",
     'payback': '/bill/payback'
@@ -23,6 +25,9 @@ export default class order_detail_page extends PureComponent {
     }
     componentWillMount() {
         this.getLoanInfo()
+    }
+    componentWillUnmount() {
+        sessionStorage.removeItem(sessionStorageMap.bill.billNo)
     }
 
     // 获取还款信息
@@ -76,7 +81,7 @@ export default class order_detail_page extends PureComponent {
             }
             item.feeInfos.push({
                 feeNm: '合计',
-                feeAmt: perdList[i].perdWaitRepAmt
+                feeAmt: Number(perdList[i].perdTotAmt)
             })
             perdListArray.push(item)
         }
@@ -123,20 +128,38 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
+        const { billDesc } = this.state
         let billNo = sessionStorage.getItem(sessionStorageMap.bill.billNo)
         this.props.$fetch.post(API.payback, {
             billNo: JSON.parse(billNo),
             thisRepTotAmt: this.state.money,
-            cardAgrNo: cardNo ? cardNo : wthdCrdNoLast,
+            cardAgrNo: billDesc.wthCrdAgrNo,
+            repayStsw: billDesc.billPerdStsw,
+            usrBusCnl: 'WEB'
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
+                this.props.toast.info('还款成功')
                 this.setState({
-                    billDesc: res.data,
-                    perdList: res.data.perdList
-                }, () => {
-                    this.showPerdList(res.data.perdNum)
+                    showMoudle: false
                 })
+                if (Number(billDesc.perdNum) === Number(billDesc.perdLth)) {
+                    sessionStorage.removeItem(sessionStorageMap.bill.backData)
+                    sessionStorage.setItem(sessionStorageMap.orderSuccess, JSON.stringify({
+                        perdLth: billDesc.perdLth,
+                        perdUnit: billDesc.perdUnit,
+                        billPrcpAmt: billDesc.billPrcpAmt,
+                        billRegDt: billDesc.billRegDt
+                    }))
+                    setTimeout(() => {
+                        this.props.history.replace('/order/repayment_succ_page')
+                    }, 3000);
+                } else {
+                    this.getLoanInfo()
+                }
             } else {
+                this.setState({
+                    showMoudle: false
+                })
                 this.props.toast.info(res.msgInfo)
             }
         }).catch(err => {
@@ -144,8 +167,9 @@ export default class order_detail_page extends PureComponent {
         })
     }
     selectBank = () => {
-        sessionStorage.setItem('backUrl', '/order/order_detail_page')
-        this.props.history.replace('/mine/select_save_page')
+        store.setBackUrl('/order/order_detail_page');
+        // sessionStorage.setItem('backUrl', '/order/order_detail_page')
+        this.props.history.push('/mine/select_save_page');
     }
     render() {
         const { billDesc, money } = this.state

@@ -1,5 +1,7 @@
 export default {
     bill: {
-        billNo: 'billNo'
+        billNo: 'billNo',
+        orderSuccess: 'orderSuccess',
+        backData:'backData'
     }
 }

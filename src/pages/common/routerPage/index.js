@@ -32,6 +32,7 @@ export default class router_Page extends PureComponent {
           route = routerList[i]
         }
       }
+      console.log(route)
       if (route) {
         let component = await route.component()
         this.setState({
