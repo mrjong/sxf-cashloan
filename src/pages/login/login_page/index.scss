@@ -1,73 +1,75 @@
 .loginContent {
   .loginLog {
-    padding-top: 1rem;
+    background-image: url('../../../assets/images/login/loginBg.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-origin: content-box;
+    width: 750px;
+    height: 1334px;
     text-align: center;
-    padding-bottom: 1.33rem;
-
-    img {
-      width: 1.9rem;
-      height: 1.9rem;
-    }
   }
 
-  .inputItem {
-    height: 100px;
-    width: 619px;
+  .centent {
     position: relative;
-    border-bottom: 1px solid #e5e5e5;
-    margin: 0 auto;
-    line-height: 100px;
-    .phone {
-      width: 40px;
-      position: relative;
-      top: 9px;
-    }
-    .input {
+    top: 7.5rem;
+    .loginInput {
+      width: 5.59rem;
+      height: 0.85rem;
+      line-height: 0.85rem;
+      float: left;
+      padding-left: 0.31rem;
+      margin: 0.25rem 0.79rem;
+      border-radius: 0.07rem;
       border: none;
-      margin-left: 53px;
-      font-size: 30px;
-      flex: 1;
-      background: rgba(0, 0, 0, 0);
     }
-    .input::placeholder {
-      font-size: 30px;
-      color: #c7c6c4;
-      vertical-align: bottom;
+    input::placeholder {
+      color: #999;
+      font-size: 0.27rem;
     }
-  }
-  .imgCode {
-    position: relative;
-    left: 0.15rem;
-    top: 0.19rem;
-    img {
-      width: 1.73rem;
-      height: 0.6rem;
+    .smsCode {
+      color: #fff;
+      background: #FFC601;
+      font-size: 0.27rem;
+      display: inline;
+      left: 4.8rem;
+      top: 1.76rem;
+      position: absolute;
+      width: 1.64rem;
+      height: 0.5rem;
+      line-height: 0.5rem;
+      text-align: center;
     }
-  }
-  .inline {
-    width: 0.01rem;
-    height: 0.3rem;
-    background: #e5e5e5;
-    display: inline-block;
-    position: relative;
-    top: 3px;
-    left: 5px;
-  }
-  .smsCode {
-    position: relative;
-    left: 0.45rem;
-    color: #999;
-    font-size: 0.28rem;
-  }
-  .smsCodeNumber {
-    position: relative;
-    left: 0.7rem;
-    color: #53a9fe;
-    font-size: 0.28rem;
-  }
-  .sureBtn {
-    width: 6.2rem;
-    margin-top: 141px;
-    margin-bottom: 1rem;
+    .smsCodeNumber {
+      color: #fff;
+      background: #B9B9B9;
+      font-size: 0.27rem;
+      display: inline;
+      left: 4.8rem;
+      top: 1.76rem;
+      position: absolute;
+      width: 1.64rem;
+      height: 0.5rem;
+      line-height: 0.5rem;
+      text-align: center;
+    }
+    .sureBtn {
+      display: inline;
+      background: #FFE401;
+      color: #333;
+      font-size: 0.48rem;
+      padding: 0.15rem 2rem;
+      position: relative;
+      top: 0.3rem;
+      border-radius: 0.07rem;
+      border: none;
+    }
+    .agreement {
+      color: #fff;
+      font-size: 0.18rem;
+      position: relative;
+      top: 0.7rem;
+      text-align: left;
+      margin: 0 0.8rem;
+    }
   }
 }
