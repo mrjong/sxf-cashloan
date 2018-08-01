@@ -15,7 +15,7 @@ export default class repayment_succ_page extends PureComponent {
         }
     }
     componentWillMount() {
-        let test = sessionStorage.getItem(sessionStorageMap.orderSuccess)
+        let test = sessionStorage.getItem(sessionStorageMap.bill.orderSuccess)
         if (test) {
             let orderSuccess = JSON.parse(test)
             this.setState({

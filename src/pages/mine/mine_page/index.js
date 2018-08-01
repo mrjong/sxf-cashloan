@@ -63,6 +63,7 @@ export default class mine_page extends PureComponent {
       }
       store.setUserPhone(res.mblNoHid);
       store.setAuthFlag(res.realNmFlg);
+      store.setUserInfo(res);
       this.setState({ mblNoHid: res.mblNoHid, realNmFlg: res.realNmFlg === '1' ? true : false });
       //TODO ...
     }, err => {
