@@ -21,6 +21,7 @@ export default class select_save_page extends PureComponent {
     this.state = {
       agrNo: '',
       cardList: [],
+      isClickAdd: false, // 是否点击了添加授权卡
       // showMoudle: false, // 是否展示确认解绑的modal
       // unbindData: '', // 解绑卡的数据
     }
@@ -44,6 +45,11 @@ export default class select_save_page extends PureComponent {
       });
     }
   }
+  componentWillUnmount() {
+    if(!this.state.isClickAdd){
+      store.removeBackUrl(); // 清除session里的backurl的值
+    }
+  }
   // 获取会员卡的银行列表
   queryVipBankList = () => {
     this.props.$fetch
@@ -56,6 +62,7 @@ export default class select_save_page extends PureComponent {
             this.setState({
               cardList: res.data ? res.data : []
             })
+            this.getSelectedData();
           } else {
             res.msgInfo && this.props.toast.info(res.msgInfo)
           }
@@ -65,7 +72,17 @@ export default class select_save_page extends PureComponent {
         }
       )
   };
-
+  // 获取选中的银行卡数据
+  getSelectedData = () => {
+    // 进入组件时默认存入选中的一项
+    if (backUrlData) {
+      let cardData = [];
+      if (this.state.cardList.length) {
+        cardData = this.state.cardList.filter(item => item.agrNo === this.state.agrNo);
+      }
+      store.setCardData(cardData[0]);
+    }
+  };
   // 获取储蓄卡银行卡列表
   queryBankList = () => {
     this.props.$fetch
@@ -79,6 +96,7 @@ export default class select_save_page extends PureComponent {
             this.setState({
               cardList: res.cardList ? res.cardList : []
             })
+            this.getSelectedData();
           } else {
             if (res.msgCode === 'PTM3021') {
               this.setState({
@@ -96,10 +114,10 @@ export default class select_save_page extends PureComponent {
   };
 
   // 点击解绑按钮
-  unbindHandler= params => {
+  unbindHandler = params => {
     Modal.alert('', '确认解绑该卡？', [
-      { text: '取消', onPress: () => {} },
-      { text: '确定', onPress: () => {this.unbindCard(params)}},
+      { text: '取消', onPress: () => { } },
+      { text: '确定', onPress: () => { this.unbindCard(params) } },
     ]);
     // this.setState({ showMoudle: true, unbindData: params })
   };
@@ -137,6 +155,7 @@ export default class select_save_page extends PureComponent {
   };
   // 新增授权卡
   addCard = () => {
+    this.setState({isClickAdd: true});
     this.props.history.push('/mine/bind_save_page')
   };
 

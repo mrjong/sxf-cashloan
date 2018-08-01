@@ -11,6 +11,8 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { getDeviceType, getFirstError } from 'utils/common';
 import { store } from 'utils/common';
+import { validators } from '../../../utils/validator';
+
 const { Item } = List;
 
 
@@ -37,7 +39,7 @@ export default class real_name_page extends Component {
     leftUploaded: false,
     rightUploaded: false,
     footerUploaded: false,
-    showState: false
+    showState: false,
   };
 
   componentWillMount() {
@@ -45,12 +47,12 @@ export default class real_name_page extends Component {
     if (userInfo && JSON.stringify(userInfo) !== '{}') {
       this.setState({
         userInfo,
-        showState: true
-      })
+        showState: true,
+      });
     } else {
       this.setState({
-        showState: true
-      })
+        showState: true,
+      });
     }
   }
 
@@ -143,11 +145,11 @@ export default class real_name_page extends Component {
   };
 
   handleSubmit = () => {
-    if (!/^([\u4e00-\u9fa5])|(\\.)|(\\·){1,10}$/.test()) {
+    if (!validators.name(this.state.idName)) {
       this.props.toast.info('请输入合法的姓名');
       return false;
     }
-    if (!/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(this.state.idNo)) {
+    if (!validators.iDCardNumber(this.state.idNo)) {
       this.props.toast.info('请输入合法的身份证');
       return false;
     }
@@ -157,10 +159,10 @@ export default class real_name_page extends Component {
       idCardFrontUrl: ocrZhengData.imgUrl,    //正面URL
       idCardBackUrl: ocrFanData.imgUrl,     //反面URL
       handCardImgUrl: ocrData,    //手持正面URL
-      idNo: idNo,           // 证件号码
-      idNoOld: idNo,         // 修改前证件号码
-      usrNm: idName,       //证件姓名
-      usrNmOld: idName,    //修改前证件姓名
+      idNo: idNo,                       // 证件号码
+      idNoOld: ocrZhengData.idNo,       // 修改前证件号码
+      usrNm: idName,                     //证件姓名
+      usrNmOld:  ocrZhengData.idName,    //修改前证件姓名
       usrGender: ocrZhengData.sex,      //性别
       usrNation: ocrZhengData.nation,   //民族
       usrBirthDt: ocrZhengData.birthday, //出生年月日
@@ -174,7 +176,7 @@ export default class real_name_page extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
-        store.setAuthFlag("1");
+        store.setAuthFlag('1');
         this.props.history.replace('/mine/credit_extension_page');
       }
       else {
@@ -190,7 +192,7 @@ export default class real_name_page extends Component {
     // }
     return (
       <div className={style.real_name_page}>
-        {this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? <div >
+        {this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? <div>
           <div className={style.updateTitle}>上传身份证正 、反面</div>
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
@@ -198,8 +200,8 @@ export default class real_name_page extends Component {
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
                 value={this.state.leftValue}
                 onChange={this.handleChangePositive}
-              // beforeCompress={this.handleBeforeCompress}
-              // afterCompress={this.handleAfterCompress}
+                // beforeCompress={this.handleBeforeCompress}
+                // afterCompress={this.handleAfterCompress}
               />
               <p>拍摄身份证正面</p>
             </div>
@@ -208,33 +210,33 @@ export default class real_name_page extends Component {
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
                 value={this.state.rightValue}
                 onChange={this.handleChangeSide}
-              // beforeCompress={this.handleBeforeCompress}
-              // afterCompress={this.handleAfterCompress}
+                // beforeCompress={this.handleBeforeCompress}
+                // afterCompress={this.handleAfterCompress}
               />
               <p>拍摄身份证反面</p>
             </div>
-            <div className={style.clear} />
+            <div className={style.clear}/>
           </div>
-          <div className={style.clear} />
+          <div className={style.clear}/>
           <div className={style.labelDiv}>
             <InputItem onChange={this.handleNameChange}
-              placeholder="借款人本人姓名"
-              value={this.state.idName}
+                       placeholder="借款人本人姓名"
+                       value={this.state.idName}
             >
               姓名
-          </InputItem>
+            </InputItem>
           </div>
-          <div className={style.clear} />
-          <div className={style.inline} style={{ height: '0.04rem' }} />
+          <div className={style.clear}/>
+          <div className={style.inline} style={{ height: '0.04rem' }}/>
           <div className={style.labelDiv} style={{ marginTop: 0 }}>
             <InputItem onChange={this.handleNumberChange}
-              placeholder="借款人身份证号"
-              value={this.state.idNo}
+                       placeholder="借款人身份证号"
+                       value={this.state.idNo}
             >
               身份证号
-          </InputItem>
+            </InputItem>
           </div>
-          <div className={style.clear} />
+          <div className={style.clear}/>
           <div className={style.updateTitle}>上传本人手持身份证照片</div>
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
@@ -242,8 +244,8 @@ export default class real_name_page extends Component {
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
                 value={this.state.footerValue}
                 onChange={this.handleChangeBottom}
-              // beforeCompress={this.handleBeforeCompress}
-              // afterCompress={this.handleAfterCompress}
+                // beforeCompress={this.handleBeforeCompress}
+                // afterCompress={this.handleAfterCompress}
               />
               <p>上传手持身份证</p>
             </div>
@@ -251,9 +253,9 @@ export default class real_name_page extends Component {
               <div className={style.examples}>参考示例</div>
               <div className={style.examplesDes}>
                 照片上的身份证信息和持证人脸部须清晰可辨。照片格式支持jpg、png等格式。
+              </div>
             </div>
-            </div>
-            <div className={style.clear} />
+            <div className={style.clear}/>
           </div>
           <div className={style.des}>
             <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行实名认证</p>
@@ -263,7 +265,7 @@ export default class real_name_page extends Component {
         </div> : null}
         {
           this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? <div className={style.isTrue}>
-            <List >
+            <List>
               <InputItem value={this.state.userInfo && this.state.userInfo.nameHid} editable={false}>姓名</InputItem>
               <InputItem value={this.state.userInfo && this.state.userInfo.idNoHid} editable={false}>身份证号</InputItem>
             </List>

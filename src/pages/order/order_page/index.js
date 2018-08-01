@@ -64,21 +64,22 @@ export default class message_page extends PureComponent {
                             tabState: true,
                             refreshing: false,
                             isLoading: false
-                        },
-                        () => {
-                            document
-                            .getElementsByClassName("orderScroll")[0].scrollTo(0, backData.scrollTop)
-                            // .scrollTop = backData.scrollTop
-                            // .scrollTo(0, backData.scrollTop)
                         }
                     )
-                    sessionStorage.removeItem(sessionStorageMap.bill.backData)
                 }
             )
         } else {
             hasNext = true
             this.getCommonData()
 
+        }
+    }
+    componentDidMount() {
+        // 返回展示数据
+        let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
+        if (sessionStorage.getItem(sessionStorageMap.bill.backData)) {
+            setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
+            sessionStorage.removeItem(sessionStorageMap.bill.backData)
         }
     }
     componentDidUpdate() {
@@ -165,7 +166,7 @@ export default class message_page extends PureComponent {
             isLoading: true
         })
         let list = await this.genData(0)
-        console.log(list)
+        console.log('33333333333', list)
         this.setState({
             rData: list,
             Listlength: list.length,
@@ -190,12 +191,14 @@ export default class message_page extends PureComponent {
             return
         }
         this.setState({
-            rData: [...this.state.rData, ...list],
+            rData: [...list, ...this.state.rData],
             dataSource: this.state.dataSource.cloneWithRows([
-                ...this.state.rData,
-                ...list
+                ...list,
+                ...this.state.rData
             ]),
             isLoading: false
+        }, () => {
+            console.log(this.state.rData)
         })
     }
     // 滚动高度
@@ -264,6 +267,7 @@ export default class message_page extends PureComponent {
                             </div>
                         )}
                         renderRow={row}
+                        direction="down"
                         renderSeparator={separator}
                         useBodyScroll={this.state.useBodyScroll}
                         style={

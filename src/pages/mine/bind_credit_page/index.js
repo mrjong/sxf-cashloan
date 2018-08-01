@@ -57,7 +57,6 @@ export default class bind_credit_page extends PureComponent {
       if (result.msgCode === 'PTM0000') {
         // bindCreditConfirm()
         const backUrlData = store.getBackUrl();
-        store.removeBackUrl();
         if (backUrlData) {
           // 提交申请 判断是否绑定信用卡和储蓄卡
           this.props.$fetch.get(API.CHECKCARD).then(result => {
@@ -66,6 +65,7 @@ export default class bind_credit_page extends PureComponent {
             } else {
               this.props.history.push(backUrlData);
               store.setCardData(this.state.cardData);
+              store.removeBackUrl();
             }
           })
         } else {
