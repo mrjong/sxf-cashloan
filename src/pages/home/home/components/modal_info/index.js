@@ -64,7 +64,6 @@ export default class ModalInfo extends Component {
 
   componentWillMount() {
     const pageData = store.getRepaymentModalData();
-    console.log(pageData, 'pageData');
     if (pageData) {
       this.recoveryPageData();
     } else {
@@ -131,10 +130,11 @@ export default class ModalInfo extends Component {
     this.saveCurrentPageData();
     store.setBackUrl('/home/home');
     // todo 通过接口判断跳页面
+    const { repayInfo } = this.state;
     const { indexData } = this.props;
     this.props.history.push({
       pathname: '/mine/select_save_page',
-      search: `?agrNo=${storeCardData && storeCardData.agrNo ? storeCardData.agrNo : indexData.agrNo}`,
+      search: `?agrNo=${storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo}`,
     });
   };
 
@@ -190,7 +190,7 @@ export default class ModalInfo extends Component {
     const { indexData } = this.props;
     const params = {
       withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
-      withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
+      withHoldAgrNo: storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo, // 还款卡号主键
       prdId: repaymentDate.value, // 产品ID
       autId: indexData.autId, // 信用卡账单ID
       repayType: lendersDate.value, // 还款方式
@@ -228,7 +228,7 @@ export default class ModalInfo extends Component {
             </div>
           </li>
           <li className={style.list_item}>
-            <div className={style.item_info}>
+            <div className={style.item_info_special}>
               <label className={style.item_name}>代还期限</label>
               <TabList
                 tagList={repaymentDateList}
@@ -236,7 +236,7 @@ export default class ModalInfo extends Component {
                 onClick={this.handleRepaymentTagClick}
               />
             </div>
-            <p className={style.item_tip}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
+            <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>

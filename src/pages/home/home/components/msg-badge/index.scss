@@ -6,19 +6,25 @@
     display: flex;
     align-items: center;
     padding: .1rem;
+    margin-top: .3rem;
   }
   .msg_badge_icon {
     display: inline-block;
-    height: .3rem;
-    width: .3rem;
+    height: .5rem;
+    width: .5rem;
   }
   .msg_badge_text {
+    position: relative;
+    top: -.2rem;
+    left: -.2rem;
     display: inline-block;
     padding: .05rem .1rem;
-    margin-left: .2rem;
     border-radius: .2rem;
-    background-color: red;
-    font-size: .3rem;
+    background-color: #FF4848;
+    font-size: .22rem;
     line-height: 1;
+    color: #fff;
+    transform: scale3d(.8, .8, 1);
+    border: 1PX solid #fff;
   }
 }
