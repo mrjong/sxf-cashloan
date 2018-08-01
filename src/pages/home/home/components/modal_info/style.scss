@@ -38,11 +38,20 @@
       justify-content: space-between;
       align-items: center;
     }
+    .item_info_special {
+      text-align: left;
+      .item_name {
+        margin-right: .2rem;
+      }
+      button {
+        margin-right: .2rem;
+        margin-bottom: .2rem;
+      }
+    }
     .item_name {
       color: #333;
       font-size: 0.34rem;
       line-height: 1;
-      flex-basis: 1.4rem;
     }
     .item_value {
       font-size: 0.4rem;
