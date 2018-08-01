@@ -164,7 +164,7 @@ export default class order_detail_page extends PureComponent {
                     // 刷新当前list
                     setTimeout(() => {
                         this.getLoanInfo()
-                    }, 100);
+                    }, 500);
                 }
             } else {
                 this.setState({
