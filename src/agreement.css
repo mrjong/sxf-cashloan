@@ -68,6 +68,9 @@ body, p {
   margin-bottom: 6px;
 }
 
+/*
+  table内容居中对齐
+*/
 table {
   font-size: 12px;
   color: #666;
@@ -76,6 +79,9 @@ table {
   text-align: center;
 }
 
+/*
+  table内容左对齐
+*/
 .tableLeft {
   text-align: left;
 }
@@ -102,6 +108,9 @@ table {
   margin-bottom: 40px;
 }
 
+/*
+  金额部分带横线
+*/
 .bottomLine {
   display: inline-block;
   width: 50px;
