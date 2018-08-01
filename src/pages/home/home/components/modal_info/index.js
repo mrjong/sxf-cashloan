@@ -1,7 +1,7 @@
 import { store, getDeviceType } from 'utils/common';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Toast } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
@@ -15,8 +15,11 @@ const API = {
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
 };
 
+const storeCardData = store.getCardData();
+store.removeCardData();
+
 @fetch.inject()
-export default class ModalInfo extends PureComponent {
+export default class ModalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -128,7 +131,11 @@ export default class ModalInfo extends PureComponent {
     this.saveCurrentPageData();
     store.setBackUrl('/home/home');
     // todo 通过接口判断跳页面
-    // this.props.history.push('/mine/select_credit_page');
+    const { indexData } = this.props;
+    this.props.history.push({
+      pathname: '/mine/select_save_page',
+      search: `?agrNo=${storeCardData && storeCardData.agrNo ? storeCardData.agrNo : indexData.agrNo}`,
+    });
   };
 
   // 确认按钮点击事件
@@ -191,12 +198,13 @@ export default class ModalInfo extends PureComponent {
       osType: getDeviceType(), // 操作系统
     };
     this.props.$fetch.post(API.CONFIRM_REPAYMENT, params).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
-        console.log(result);
+      if (result && result.msgCode === 'PTM0000') {
+        console.log(result, '9090');
         // todo 什么时候清数据 是这个时候吗？还是在agency页面，取决于下个页面可以返回吗？
         // 保存返回的信息 给下个页面用
+        const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${repayInfo.cardBillAmt}`;
         this.clearCurrentPageData();
-        this.props.history.push('/home/agency');
+        this.props.history.push({ pathname: '/home/agency', search });
       } else {
         Toast.info(result.msgInfo)
       }
@@ -241,7 +249,8 @@ export default class ModalInfo extends PureComponent {
             <div className={style.item_info}>
               <label className={style.item_name}>还款银行卡</label>
               <span className={[style.item_value, style.item_value_bank].join(' ')}>
-                {repayInfo.bankName}({repayInfo.cardNoHid})
+                {storeCardData && storeCardData.bankName ? storeCardData.bankName : repayInfo.bankName}
+                ({storeCardData && storeCardData.lastCardNo ? storeCardData.lastCardNo : repayInfo.cardNoHid})
                 <img className={style.icon} src={icon_arrow_right_default} alt="" />
               </span>
             </div>

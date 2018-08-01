@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Modal } from 'antd-mobile';
+import { getParamsFromUrl } from 'utils/common'
 import fetch from 'sx-fetch';
 import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
@@ -9,7 +10,7 @@ import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import style from './style.scss';
 
 const API = {
-  REPAY_INFO: '/bill/prebill', // 0105-确认代还信息查询接口
+  REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
 };
 
 @fetch.inject()
@@ -66,13 +67,15 @@ export default class ConfirmAgencyPage extends PureComponent {
         ],
       },
     });
-    const params = {
-      prdId: '', // 申请产品id
-      cardId: '', // 信用卡id
-      wtdwTyp: '', // 提现方式
-      billPrcpAmt: '', // 账单本金
-    };
-    this.props.$fetch.post(API.REPAY_INFO, params).then(result => {
+    // const params = {
+    //   prdId: '', // 申请产品id
+    //   cardId: '', // 信用卡id
+    //   wtdwTyp: '', // 提现方式
+    //   billPrcpAmt: '', // 账单本金
+    // };
+    const urlParams = getParamsFromUrl(window.location.search);
+    const requestParams = { ...urlParams };
+    this.props.$fetch.post(API.REPAY_INFO, requestParams).then(result => {
       if (result && result.code === 'PTM0000' && result.data !== null) {
         console.log(result);
         this.setState({
