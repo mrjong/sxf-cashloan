@@ -73,7 +73,9 @@
 // modal样式覆盖
 :global{
   .am-modal-body{
-    line-height: 3;
+    .am-modal-alert-content{
+      line-height: 3;
+    }
   }
 }
 
