@@ -29,13 +29,13 @@ export default class fqa_page extends PureComponent {
       <div className={styles.fqa_page} >
         <iframe
           className={styles.container}
-          src="/disting/fqa"
+          src="/disting/#/fqa"
           name="fqa"
           id="fqa"
           onLoad={() => {
-            // window.frames['fqa'].setData({
-            //   name:'11111111'
-            // });
+            window.frames['fqa'].setData({
+              name:'11111111'
+            });
           }}
           width="100%"
           height="100%"
