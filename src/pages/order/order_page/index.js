@@ -48,6 +48,7 @@ export default class message_page extends PureComponent {
         if (backDatastr && backDatastr !== "{}") {
             let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
             hasNext = backData.hasNext
+            console.log(backData.rData)
             this.setState(
                 {
                     msgType: backData.msgType,
@@ -65,8 +66,9 @@ export default class message_page extends PureComponent {
                             isLoading: false
                         },
                         () => {
-                            console.log(document.getElementById(backData.billNo))
-                            document.getElementById(backData.billNo).scrollTop = backData.scrollTop
+                            document
+                            .getElementsByClassName("orderScroll")[0].scrollTo(0, backData.scrollTop)
+                            // .scrollTop = backData.scrollTop
                             // .scrollTo(0, backData.scrollTop)
                         }
                     )
@@ -104,7 +106,7 @@ export default class message_page extends PureComponent {
         }
         let data = await this.props.$fetch.post(API.billList, {
             qryType: 0,
-            startRow: pIndex,
+            startRow: pIndex * (this.state.limitRow),
             limitRow: this.state.limitRow
         })
             .then(res => {
@@ -242,7 +244,7 @@ export default class message_page extends PureComponent {
             }
             const obj = this.state.rData && this.state.rData[index--]
             return (
-                <Item id={obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} className="spe" wrap>
+                <Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} wrap>
                     {obj.billAmt}<Brief>{obj.billDt}</Brief>
                 </Item>
             )
@@ -291,10 +293,12 @@ export default class message_page extends PureComponent {
             }
         }
         return (
-            <div className={style.order_page}>
-                {
-                    item()
-                }
+            <div className="orderScroll">
+                <div className={style.order_page}>
+                    {
+                        item()
+                    }
+                </div>
             </div>
         )
     }
