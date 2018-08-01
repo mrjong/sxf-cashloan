@@ -47,7 +47,7 @@ export default class router_Page extends PureComponent {
         })
       } else {
         this.setState({
-          title: '错误',
+          newTitle: '重新加载',
           component: React.createElement(errPage, {
             match, history, params: {
               pageType: '404'
@@ -57,7 +57,7 @@ export default class router_Page extends PureComponent {
       }
     } catch (error) {
       this.setState({
-        title: '错误',
+        newTitle: '重新加载',
         component: React.createElement(errPage, {
           match, history, params: {
             pageType: '404'
