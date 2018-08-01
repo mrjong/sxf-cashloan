@@ -2,7 +2,7 @@
 
 .loginContent {
   .loginLog {
-    @include bg-image('../../../assets/images/login/loginBg.png');
+    @include bg-image('../../../assets/images/login/loginBg');
     background-repeat: no-repeat;
     background-size: 100%;
     background-origin: content-box;
