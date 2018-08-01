@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
-import Moudles from 'components/moudles';
+import { Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
@@ -21,8 +21,8 @@ export default class select_save_page extends PureComponent {
     this.state = {
       agrNo: '',
       cardList: [],
-      showMoudle: false, // 是否展示确认解绑的modal
-      unbindData: '', // 解绑卡的数据
+      // showMoudle: false, // 是否展示确认解绑的modal
+      // unbindData: '', // 解绑卡的数据
     }
   }
   componentWillMount() {
@@ -97,11 +97,11 @@ export default class select_save_page extends PureComponent {
 
   // 点击解绑按钮
   unbindHandler= params => {
-    Modal.alert('', '确认退出登录？', [
+    Modal.alert('', '确认解绑该卡？', [
       { text: '取消', onPress: () => {} },
-      { text: '确定', onPress: () => {this.logout()}},
+      { text: '确定', onPress: () => {this.unbindCard(params)}},
     ]);
-    this.setState({ showMoudle: true, unbindData: params })
+    // this.setState({ showMoudle: true, unbindData: params })
   };
 
   // 解绑银行卡
@@ -109,7 +109,7 @@ export default class select_save_page extends PureComponent {
     this.props.$fetch
       .get(`${API.UNBINDCARD}/${agrNo}`).then(
         res => {
-          this.setState({ showMoudle: false, unbindData: '' })
+          // this.setState({ showMoudle: false, unbindData: '' })
           if (res.msgCode === "PTM0000") {
             this.queryBankList();
           } else {
@@ -206,7 +206,7 @@ export default class select_save_page extends PureComponent {
             : null
         }
         <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
-        {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />}
+        {/* {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />} */}
       </div>
     )
   }
