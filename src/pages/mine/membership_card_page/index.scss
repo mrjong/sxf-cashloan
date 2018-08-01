@@ -1,5 +1,6 @@
+@import '../../../assets/styles/scss/base/fn';
 .membership_card_page {
-  background-image: url('../../../assets/images/menbership_card/组 7@2x.png');
+  @include bg-image('../../../assets/images/menbership_card/vipcard');
   background-repeat: no-repeat;
   background-size: 100%;
   background-origin: content-box;
@@ -8,6 +9,9 @@
   margin: 0 auto;
   margin-top: 0.43rem;
   margin-bottom: 1.27rem;
+  .btn{
+    margin-top: 130px;
+  }
 }
 .cardMoney {
   color: #ea2c32;

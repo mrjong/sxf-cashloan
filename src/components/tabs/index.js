@@ -18,7 +18,6 @@ export default class Tab extends PureComponent {
       <div className={styles.tabContainer}>
         <Tabs
           tabs={tabTit}
-          initialPage={0}
           renderTab={tab => <span>{tab.title}</span>}
           renderTabBar={(props) => <Tabs.DefaultTabBar
             {...props}

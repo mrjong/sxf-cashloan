@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import fetch from "sx-fetch"
 import { setBackGround } from 'utils/Background';
-import vipIcon from 'assets/images/menbership_card/组 5.png';
+import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss'
 import ButtonCustom from 'components/button';
 
@@ -82,39 +82,42 @@ export default class card_home extends PureComponent {
   render() {
     const { data } = this.state
     return (
-      <div className={style.membership_card_page}>
-        {data && data.map((item, index) => {
-          return (<div key={index} className={styles.cardHome}>
-            <div className={styles.cardMoney}>
-              {item.memPrdNm} <span className={styles.icon}>￥</span>
-            </div>
-            <div className={styles.cardTitle}>
-              <span className={styles.left}>
-                {item.memPrdDes && item.memPrdDes.split("|")[0]}
-              </span>
-              <span className={styles.right}>
-                {item.memPrdDes && item.memPrdDes.split("|")[1]}
-              </span>
-            </div>
-            <div className={styles.cardTitle}>
-              有效期{item.menTerm}个月
+      <div className={styles.membership_card_page} >
+        {
+          data && data.map((item, index) => {
+            return (<div key={index} className={styles.cardHome}>
+              <div className={styles.cardMoney}>
+                {item.memPrdNm} <span className={styles.icon}>￥</span>
+              </div>
+              <div className={styles.cardTitle}>
+                <span className={styles.left}>
+                  {item.memPrdDes && item.memPrdDes.split("|")[0]}
+                </span>
+                <span className={styles.right}>
+                  {item.memPrdDes && item.memPrdDes.split("|")[1]}
+                </span>
+              </div>
+              <div className={styles.cardTitle}>
+                有效期{item.menTerm}个月
             </div>
 
-            {/*<div className={styles.cardNumber}>*/}
-            {/*8888 **** **** 8888*/}
-            {/*</div>*/}
-            {/*<div className={styles.cardTitle}>*/}
-            {/*30天明星产品1次使用权  刷卡优惠超值套餐*/}
-            {/*</div>*/}
-            {/*<div className={styles.cardTitle}>*/}
-            {/*有效期至2018/8/1*/}
-            {/*</div>*/}
+              {/*<div className={styles.cardNumber}>*/}
+              {/*8888 **** **** 8888*/}
+              {/*</div>*/}
+              {/*<div className={styles.cardTitle}>*/}
+              {/*30天明星产品1次使用权  刷卡优惠超值套餐*/}
+              {/*</div>*/}
+              {/*<div className={styles.cardTitle}>*/}
+              {/*有效期至2018/8/1*/}
+              {/*</div>*/}
 
-          </div>)
-        })
+            </div>)
+          })
         }
 
-        <ButtonCustom onClick={this.buy} className={styles.sureBtn}>确认购买</ButtonCustom>
+        < div className={styles.btn} >
+          <ButtonCustom onClick={this.buy} className={styles.sureBtn}>确认购买</ButtonCustom>
+        </div >
 
         <div className={styles.vipIcon}>
           <img src={vipIcon} />
@@ -130,7 +133,7 @@ export default class card_home extends PureComponent {
         <div className={styles.prompt}>
           特别提醒：刷卡超值优惠券将在7天内完成发放，可于“MPOS-我的-优惠券”进行查看，且有效期为30天请及时使用
         </div>
-      </div>
+      </div >
     );
   }
 }

@@ -23,10 +23,11 @@ export default class BankCard extends React.PureComponent {
     contentData: PropTypes.object,
     bankIcon: PropTypes.string,
     bankName: PropTypes.string,
+    bankNo: PropTypes.string,
     cardNoHid: PropTypes.string,
     cardBillDt: PropTypes.string,
-    cardBillAmt: PropTypes.string,
-    overDt: PropTypes.string,
+    cardBillAmt: PropTypes.number,
+    overDt: PropTypes.number,
     onClick: PropTypes.func,
   };
 
@@ -36,6 +37,7 @@ export default class BankCard extends React.PureComponent {
     contentData: {},
     bankIcon: '',
     bankName: '****',
+    bankNo: '',
     cardNoHid: '**** **** **** ****',
     cardBillDt: '---',
     cardBillAmt: '---',
@@ -70,11 +72,13 @@ export default class BankCard extends React.PureComponent {
       onClick,
       bankIcon,
       bankName,
+      bankNo,
       cardNoHid,
       cardBillDt,
       cardBillAmt,
       overDt,
     } = this.props;
+    const iconClass = bankNo ? `bank_golden_ico_${bankNo}` : 'logo_ico'
     return (
       <div className={style.bank_card_wrap}>
         {contentData.indexSts === 'LN0002' ? null : (
@@ -83,7 +87,7 @@ export default class BankCard extends React.PureComponent {
           </button>
         )}
         <div className={style.card_preview}>
-          <img className={style.card_icon} src={bankIcon} alt="" />
+          <span className={[style.card_icon, iconClass].join(' ')}></span>
           <div className={style.card_info}>
             <span className={style.card_info_name}>{bankName}</span>
             <span className={style.card_info_num}>{cardNoHid}</span>

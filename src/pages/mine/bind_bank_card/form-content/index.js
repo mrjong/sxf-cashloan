@@ -11,8 +11,9 @@ import styles from '../index.scss';
 const { Item } = List;
 
 const API = {
-  VERIFY_CODE_URL: '/quickpay/paySms', // 0309-会员卡购买-快捷支付获取验证码
-  BIND_CARD_URL: '/my/quickpay/pay', // 0310-会员卡购买-快捷支付验证码确认
+  BANK_LIST_URL: '/rcm/qrySurportBank', // 0104-银行卡列表查询(通用)
+  VERIFY_CODE_URL: '/my/quickpay/signSms', // 0307-会员卡购买-快捷支付获取验证码
+  BIND_CARD_URL: '/my/quickpay/sign', // 0308-会员卡购买-快捷支付验证码确认
 };
 
 function formatDate(date) {
@@ -37,6 +38,7 @@ export default class CreditCard extends PureComponent {
       phoneNo: '',
       verifyCode: '',
       smsJrnNo: '', // 短信流水号
+      bankList: [],
     };
   }
 
@@ -44,23 +46,14 @@ export default class CreditCard extends PureComponent {
     children: PropTypes.node,
     formtype: PropTypes.string,
     userinfo: PropTypes.object,
-    banklist: PropTypes.array,
+    history: PropTypes.object,
   };
 
   static defaultProps = {
     children: '',
-    formtype: '信用卡',
+    formtype: 'C',
     userinfo: {},
-    banklist: [
-      {
-        label: '招商',
-        value: '11',
-      },
-      {
-        label: '建设',
-        value: '22',
-      },
-    ],
+    history: {},
   };
 
   // 确认购买
@@ -68,7 +61,31 @@ export default class CreditCard extends PureComponent {
     alert('点击');
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.requestBankList({
+      cardTyp: this.props.formtype,
+      corpBusTyp: '31',
+    });
+  }
+
+  // 获取银行卡列表
+  requestBankList = params => {
+    this.props.$fetch.post(API.BANK_LIST_URL, params).then(res => {
+      if (res.msgCode === 'PTM0000' && res.data !== null) {
+        console.log(res, 'res');
+        const formatData = res.data.map(item => ({
+          value: item.bankCd,
+          label: item.bankNm,
+          ...item,
+        }));
+        this.setState({
+          bankList: formatData,
+        });
+      } else {
+        Toast.info(res.msgInfo);
+      }
+    });
+  };
 
   // 验证是否选择银行
   verifyBankChoise = (rule, value, callback) => {
@@ -129,7 +146,23 @@ export default class CreditCard extends PureComponent {
 
   // 点击发送验证码
   countDownHandler = fn => {
-    this.requestVerifyCode(fn);
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log(values, 'values');
+        this.requestVerifyCode(fn);
+      } else {
+        let errorFieldList = [];
+        for (let i in err) {
+          errorFieldList.push(i);
+        }
+        // 这里必须通过长度限制，因为 for 循环不保证顺序
+        if (errorFieldList.length === 1 && errorFieldList[0] === 'verifyCode') {
+          this.requestVerifyCode(fn);
+        } else {
+          Toast.info(getFirstError(err));
+        }
+      }
+    });
   };
 
   // 发送验证码
@@ -139,9 +172,7 @@ export default class CreditCard extends PureComponent {
     const formData = getFieldsValue();
     const { bank, validityDate, bankCardNo, phoneNo, safeCode } = formData;
     let params = {
-      provCd: '',
-      provNm: '',
-      bnkMblNo: phoneNo,
+      mblNo: phoneNo,
       cardNo: bankCardNo,
       bankCd: bank[0],
       cardTyp: formtype,
@@ -152,7 +183,7 @@ export default class CreditCard extends PureComponent {
     }
     this.props.$fetch.post(API.VERIFY_CODE_URL, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
-        console.log(result, 'result');
+        console.log(result, 'result11');
         this.setState({
           smsJrnNo: result.data.smsJrnNo,
         });
@@ -184,10 +215,11 @@ export default class CreditCard extends PureComponent {
       smsCd: verifyCode, // 短信验证码
       smsJrnNo, // 短信流水号
     };
-    this.props.$fetch.post(BIND_CARD_URL, params).then(
+    this.props.$fetch.post(API.BIND_CARD_URL, params).then(
       result => {
-        if (result && result.data !== null) {
-          console.log(result.data, 'result.data');
+        if (result && result.msgCode === 'PTM0000') {
+          // TODO: 保存数据给下个页面
+          this.props.history.push('/mine/confirm_purchase_page')
         } else {
           Toast.info(result.msg);
         }
@@ -199,22 +231,22 @@ export default class CreditCard extends PureComponent {
   };
 
   render() {
-    const { idCard, bank, bankCardNo, safeCode, validityDate, phoneNo, verifyCode } = this.state;
-    const { formtype, userinfo, banklist } = this.props;
+    const { bankList } = this.state;
+    const { formtype, userinfo } = this.props;
     const { getFieldProps } = this.props.form;
     return (
       <div className={styles.bind_bank_card_child}>
         <List>
-          <InputItem value={userinfo.userName} editable={false}>
+          <InputItem value={userinfo.usrNm} editable={false}>
             姓名
           </InputItem>
-          <InputItem value={userinfo.certNoEnc} editable={false}>
+          <InputItem value={userinfo.idNoHid} editable={false}>
             身份证
           </InputItem>
           <Picker
             extra="请选择银行"
             cols={1}
-            data={banklist}
+            data={bankList}
             {...getFieldProps('bank', {
               rules: [{ required: true, message: '请选择银行' }, { validator: this.verifyBankChoise }],
             })}

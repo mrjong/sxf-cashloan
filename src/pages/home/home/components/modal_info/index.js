@@ -46,12 +46,14 @@ export default class ModalInfo extends PureComponent {
   static propTypes = {
     children: PropTypes.node,
     history: PropTypes.object,
+    indexData: PropTypes.object,
     onClose: PropTypes.func,
   };
 
   static defaultProps = {
     children: '',
     history: {},
+    indexData: {},
     onClose: () => {
       console.log('弹框关闭方法，需要传递进来');
     },
@@ -59,6 +61,7 @@ export default class ModalInfo extends PureComponent {
 
   componentWillMount() {
     const pageData = store.getRepaymentModalData();
+    console.log(pageData, 'pageData');
     if (pageData) {
       this.recoveryPageData();
     } else {
@@ -135,62 +138,54 @@ export default class ModalInfo extends PureComponent {
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    const demoData = {
-      cardBillAmt: '687.67',
-      prdList: [
-        {
-          prdName: '3个月',
-          prdId: '432424',
-        },
-        {
-          prdName: '1个月',
-          prdId: '4324224',
-        },
-        {
-          prdName: '7天(会员专属)',
-          prdId: '4324225',
-        },
-      ],
-      overDt: '7',
-      bankName: '招商银行',
-      cardNoHid: '6747 **** **** 6654',
-      withHoldAgrNo: '332423534534534534535',
-      withDrawAgrNo: '034253534564645645645',
-      cardBillDt: '2018-07-17',
-    };
-
-    this.setState({
-      repayInfo: demoData,
-      repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
-    });
-    return;
-    this.props.$fetch.post(`${API.QUERY_REPAY_INFO}`).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
+    // const demoData = {
+    //   cardBillAmt: '687.67',
+    //   prdList: [
+    //     {
+    //       prdName: '3个月',
+    //       prdId: '432424',
+    //     },
+    //     {
+    //       prdName: '1个月',
+    //       prdId: '4324224',
+    //     },
+    //     {
+    //       prdName: '7天(会员专属)',
+    //       prdId: '4324225',
+    //     },
+    //   ],
+    //   overDt: '7',
+    //   bankName: '招商银行',
+    //   cardNoHid: '6747 **** **** 6654',
+    //   withHoldAgrNo: '332423534534534534535',
+    //   withDrawAgrNo: '034253534564645645645',
+    //   cardBillDt: '2018-07-17',
+    // };
+    //
+    // this.setState({
+    //   repayInfo: demoData,
+    //   repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
+    // });
+    // return;
+    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${this.props.indexData.autId}`).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         this.setState({
-          repayInfo: result,
-          repaymentDateList: result.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
+          repayInfo: result.data,
+          repaymentDateList: result.data.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
         });
-      }
-    });
-  };
-
-  // 获取还款日期列表
-  requestGetLendersDateList = () => {
-    this.props.$fetch.get(API.BANNER).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
-        console.log(result);
       }
     });
   };
 
   // 确认代还信息
   requestConfirmRepaymentInfo = () => {
-    const { lendersDate } = this.state;
+    const { lendersDate, repayInfo, repaymentDate } = this.state;
+    const { indexData } = this.props;
     const params = {
-      withDrawAgrNo: '', // 代还信用卡主键
-      withHoldAgrNo: '', // 还款卡号主键
-      prdId: '', // 产品ID
-      autId: '', // 信用卡账单ID
+      withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
+      withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
+      prdId: repaymentDate.value, // 产品ID
+      autId: indexData.autId, // 信用卡账单ID
       repayType: lendersDate.value, // 还款方式
       usrBusCnl: '', // 操作渠道
       osType: getDeviceType(), // 操作系统
@@ -198,6 +193,8 @@ export default class ModalInfo extends PureComponent {
     this.props.$fetch.post(API.CONFIRM_REPAYMENT, params).then(result => {
       if (result && result.code === '0000' && result.data !== null) {
         console.log(result);
+        // todo 什么时候清数据 是这个时候吗？还是在agency页面，取决于下个页面可以返回吗？
+        // 保存返回的信息 给下个页面用
         this.clearCurrentPageData();
         this.props.history.push('/home/agency');
       } else {
@@ -238,13 +235,13 @@ export default class ModalInfo extends PureComponent {
               <label className={style.item_name}>放款日期</label>
               <TabList tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
             </div>
-            <p className={style.item_tip}>选择还款日前一天（2018-7-12日）放款，将最大成本节 约您代资金</p>
+            <p className={style.item_tip}>选择还款日前一天（{repayInfo.cardBillDt}）放款，将最大成本节约您代资金</p>
           </li>
           <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>
               <label className={style.item_name}>还款银行卡</label>
               <span className={[style.item_value, style.item_value_bank].join(' ')}>
-                工商银行(2222)
+                {repayInfo.bankName}({repayInfo.cardNoHid})
                 <img className={style.icon} src={icon_arrow_right_default} alt="" />
               </span>
             </div>

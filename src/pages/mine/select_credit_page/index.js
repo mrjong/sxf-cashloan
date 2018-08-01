@@ -3,6 +3,7 @@ import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
 import Moudles from 'components/moudles';
 import fetch from 'sx-fetch';
+import qs from 'qs';
 import styles from './index.scss';
 
 const API = {
@@ -33,11 +34,12 @@ export default class select_credit_page extends PureComponent {
     } else {
       this.queryBankList();
     }
-    // if(){
-    //   this.setState({
-    //     agrNo: obj.agrNo,
-    //   });
-    // }
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    if (queryData.agrNo) {
+      this.setState({
+        agrNo: queryData.agrNo,
+      });
+    }
   }
 
   // 获取会员卡的信用卡银行列表
@@ -110,7 +112,7 @@ export default class select_credit_page extends PureComponent {
   };
 
   // 点击解绑按钮
-  unbindHandler= params => {
+  unbindHandler = params => {
     this.setState({ showMoudle: true, unbindData: params })
   };
 
@@ -178,7 +180,7 @@ export default class select_credit_page extends PureComponent {
                             right={[
                               {
                                 text: '解绑',
-                                onPress: () => {this.unbindHandler(item.agrNo)},
+                                onPress: () => { this.unbindHandler(item.agrNo) },
                                 style: { backgroundColor: '#FF5A5A', color: 'white' },
                               },
                             ]}

@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Modal } from 'antd-mobile';
+import fetch from 'sx-fetch';
 import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
 import iconQuestion from 'assets/images/confirm_agency/icon_question.png';
@@ -8,9 +9,10 @@ import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import style from './style.scss';
 
 const API = {
-  REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
+  REPAY_INFO: '/bill/prebill', // 0105-确认代还信息查询接口
 };
 
+@fetch.inject()
 export default class ConfirmAgencyPage extends PureComponent {
   constructor(props) {
     super(props);
@@ -18,6 +20,10 @@ export default class ConfirmAgencyPage extends PureComponent {
       isShowModal: false,
       repayInfo: {},
     }
+  }
+
+  componentWillMount() {
+    this.requestGetRepayInfo();
   }
 
   handleShowModal = () => {
@@ -40,28 +46,38 @@ export default class ConfirmAgencyPage extends PureComponent {
   requestGetRepayInfo = () => {
     this.setState({
       repayInfo: {
-        "cardBillAmt": "687.67",
-      "prdList": [
+        billPrcpAmt: '805.9',
+        perdTotAmt: '230',
+        loanDt: '2018-09-12',
+        perdCnt: '4',
+        perd: [
           {
-              "prdName":"3个月",
-            "prdId":"432424"
+            perdNum: '1/3',
+            perdTotAmt: '200',
           },
-        {
-              "prdName":"1个月",
-            "prdId":"4324224"
-          }
-      ],
-      "overDt": "7",
-      "bankName": "招商银行" ,
-      "cardNoHid": "6747 **** **** 6654",
-      "withHoldAgrNo":"332423534534534534535",
-      "withDrawAgrNo": "034253534564645645645",
-      "cardBillDt":"2018-07-17"
-      }
+          {
+            perdNum: '2/3',
+            perdTotAmt: '200',
+          },
+          {
+            perdNum: '3/3',
+            perdTotAmt: '200',
+          },
+        ],
+      },
     });
-    this.props.$fetch.post(API.REPAY_INFO).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
+    const params = {
+      prdId: '', // 申请产品id
+      cardId: '', // 信用卡id
+      wtdwTyp: '', // 提现方式
+      billPrcpAmt: '', // 账单本金
+    };
+    this.props.$fetch.post(API.REPAY_INFO, params).then(result => {
+      if (result && result.code === 'PTM0000' && result.data !== null) {
         console.log(result);
+        this.setState({
+          repayInfo: result.data
+        });
       }
     });
   };
@@ -74,7 +90,7 @@ export default class ConfirmAgencyPage extends PureComponent {
           <ul className={style.panel_conten}>
             <li className={style.list_item}>
               <label className={style.item_name}>签约金额(元)</label>
-              <span className={style.item_value}>{repayInfo.cardBillAmt}</span>
+              <span className={style.item_value}>{repayInfo.billPrcpAmt}</span>
             </li>
             <li className={style.list_item}>
               <label className={style.item_name}>
@@ -83,15 +99,15 @@ export default class ConfirmAgencyPage extends PureComponent {
                   <img className={style.item_action_icon} src={iconQuestion} alt="" />
                 </button>
               </label>
-              <span className={style.item_value}>1000.00</span>
+              <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
             </li>
             <li className={style.list_item}>
               <label className={style.item_name}>借款期限</label>
-              <span className={style.item_value}>1000.00</span>
+              <span className={style.item_value}>{repayInfo.perdCnt}</span>
             </li>
             <li className={style.list_item}>
               <label className={style.item_name}>放款日期</label>
-              <span className={style.item_value}>1000.00</span>
+              <span className={style.item_value}>{repayInfo.loanDt}</span>
             </li>
           </ul>
         </Panel>
@@ -113,18 +129,12 @@ export default class ConfirmAgencyPage extends PureComponent {
             <img className={style.modal_close_btn} onClick={this.handleCloseModal} src={iconClose} alt="" />
             <h2 className={style.modal_title}>每期应还</h2>
             <ul className={style.bill_list}>
-              <li className={style.list_item}>
-                <label className={style.item_name}>第1/3期</label>
-                <span className={style.item_value}>1000.00</span>
-              </li>
-              <li className={style.list_item}>
-                <label className={style.item_name}>第2/3期</label>
-                <span className={style.item_value}>1000.00</span>
-              </li>
-              <li className={style.list_item}>
-                <label className={style.item_name}>第3/3期</label>
-                <span className={style.item_value}>1000.00</span>
-              </li>
+              {repayInfo.perd.map(item => (
+                <li className={style.list_item} key={item.perdNum}>
+                  <label className={style.item_name}>{item.perdNum}</label>
+                  <span className={style.item_value}>{item.perdTotAmt}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </Modal>

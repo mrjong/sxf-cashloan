@@ -5,6 +5,7 @@ import ReactDOM from "react-dom"
 
 import style from "./index.scss"
 import fetch from "sx-fetch"
+import STabs from 'components/tabs';
 import { PullToRefresh, Tabs, Badge, ListView, Toast } from "antd-mobile"
 let totalPage = false
 const API = {
@@ -421,8 +422,8 @@ export default class message_page extends PureComponent {
           </div>
         ) : null}
         {this.state.tabState ? (
-          <Tabs
-            tabs={this.state.tabs}
+          <STabs
+            tabTit={this.state.tabs}
             initialPage={this.state.msgType}
             onChange={(tab, index) => {
               this.changeTab(tab, index)
@@ -431,7 +432,7 @@ export default class message_page extends PureComponent {
             {this.state.tabs.map((item2, index2) => (
               <div key={index2}>{item("iview" + index2)}</div>
             ))}
-          </Tabs>
+          </STabs>
         ) : null}
       </div>
     )
