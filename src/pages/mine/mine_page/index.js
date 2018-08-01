@@ -4,7 +4,7 @@ import { store } from 'utils/common';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/lists';
-import Moudles from 'components/moudles';
+import { Modal } from 'antd-mobile';
 import styles from './index.scss';
 
 const API = {
@@ -19,7 +19,7 @@ export default class mine_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showMoudle: false, // 是否展示确认退出的modal
+      // showMoudle: false, // 是否展示确认退出的modal
       realNmFlg: false, // 用户是否实名
       mblNoHid: '',
       memberInf: { // 会员卡信息
@@ -97,7 +97,7 @@ export default class mine_page extends PureComponent {
     this.props.$fetch.get(API.LOGOUT).then(result => {
       if (result && result.msgCode !== 'PTM0000') {
         result.msgInfo && this.props.toast.info(result.msgInfo);
-        this.setState({ showMoudle: false })
+        // this.setState({ showMoudle: false })
         return;
       }
       this.props.history.push('/login')
@@ -165,11 +165,15 @@ export default class mine_page extends PureComponent {
   };
   // 点击退出登录后弹框
   logoutHandler = () => {
-    this.setState({ showMoudle: true })
+    Modal.alert('', '确认退出登录？', [
+      { text: '取消', onPress: () => {} },
+      { text: '确定', onPress: () => {this.logout()}},
+    ]);
+    // this.setState({ showMoudle: true })
   };
 
   render() {
-    const { mblNoHid, showMoudle, realNmFlg } = this.state;
+    const { mblNoHid, realNmFlg } = this.state;
     // 定义list所需的数据
     const listsArr = [
       {
@@ -242,7 +246,7 @@ export default class mine_page extends PureComponent {
         >
           退出登录
         </div>
-        {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} textCont="确认退出登录？" />}
+        {/* {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} textCont="确认退出登录？" />} */}
       </div>
     )
   }

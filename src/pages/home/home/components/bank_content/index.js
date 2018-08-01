@@ -2,17 +2,19 @@ import SButton from 'components/button';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
 import { Toast } from 'antd-mobile';
+import { store } from 'utils/common';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
 import style from './index.scss';
 
 const API = {
+  CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 };
 
 @fetch.inject()
-export default class BankContent extends React.PureComponent {
+export default class BankContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,13 +44,27 @@ export default class BankContent extends React.PureComponent {
 
   // 代还其他信用卡点击事件
   repayForOtherBank = () => {
-    if (this.state.credCardCount > 1) {
+    console.log(this.state.credCardCount, 'this.state.credCardCount');
+    if (this.state.credCardCount > 0) {
       console.log('跳选择授信卡页');
-      // this.props.push({ path: '/mine/credit_list_page', search: '?autId=xxxx' });
+      const { contentData } = this.props;
+      this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexData.autId}` });
     } else {
       console.log('跳魔蝎');
-      // this.props.push('');
+      this.goToMoXie();
     }
+  };
+
+  // 通过接口跳魔蝎
+  goToMoXie = () => {
+    this.props.$fetch.post(API.CARD_AUTH).then(result => {
+      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+        store.setMoxieBackUrl('/home/home');
+        window.location.href = result.data.url;
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
   };
 
   // 请求信信用卡数量
@@ -58,7 +74,7 @@ export default class BankContent extends React.PureComponent {
         if (result && result.msgCode === 'PTM0000') {
           console.log(result, 'result');
           this.setState({
-            credCardCount: result.data,
+            credCardCount: result.data.count,
           });
         } else {
           Toast.info(result.msgInfo);

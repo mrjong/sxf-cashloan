@@ -33,3 +33,8 @@
     margin: 42px 0;
   }
 }
+:global(){
+  .am-modal-body{
+    line-height: 3;
+  }
+}

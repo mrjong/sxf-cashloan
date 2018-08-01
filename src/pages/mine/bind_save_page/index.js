@@ -81,7 +81,7 @@ export default class bind_save_page extends PureComponent {
         store.removeBackUrl();
         if (backUrlData) {
           this.props.history.push(backUrlData);
-          store.setCardData(JSON.stringify(this.state.cardData));
+          store.setCardData(this.state.cardData);
         } else {
           this.props.history.replace('/mine/select_save_page');
         }
