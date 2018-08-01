@@ -166,8 +166,8 @@ export default class mine_page extends PureComponent {
   // 点击退出登录后弹框
   logoutHandler = () => {
     Modal.alert('', '确认退出登录？', [
-      { text: '取消', onPress: () => {} },
-      { text: '确定', onPress: () => {this.logout()}},
+      { text: '取消', onPress: () => { } },
+      { text: '确定', onPress: () => { this.logout() } },
     ]);
     // this.setState({ showMoudle: true })
   };
@@ -221,8 +221,6 @@ export default class mine_page extends PureComponent {
         },
         jumpToUrl: '/mine/select_save_page',
       },
-    ];
-    const listsArr3 = [
       {
         label: {
           name: '常见问题',
@@ -231,6 +229,15 @@ export default class mine_page extends PureComponent {
         jumpToUrl: '/mine/fqa_page',
       },
     ];
+    // const listsArr3 = [
+    //   {
+    //     label: {
+    //       name: '常见问题',
+    //       icon: require('assets/images/mine/menu_ico5.png')
+    //     },
+    //     jumpToUrl: '/mine/fqa_page',
+    //   },
+    // ];
     return (
       <div className={styles.mine_page}>
         <div className={styles.user_inf}>
@@ -239,7 +246,7 @@ export default class mine_page extends PureComponent {
         </div>
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
-        <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} />
+        {/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
         <div
           onClick={this.logoutHandler}
           className={styles.logout}
