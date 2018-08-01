@@ -65,7 +65,7 @@ export default class bind_credit_page extends PureComponent {
               this.props.history.push('/mine/bind_save_page');
             } else {
               this.props.history.push(backUrlData);
-              store.setCardData(JSON.stringify(this.state.cardData));
+              store.setCardData(this.state.cardData);
             }
           })
         } else {
