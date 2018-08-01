@@ -72,7 +72,6 @@ export default class BankContent extends React.Component {
     this.props.$fetch
       .post(API.CRED_CARD_COUNT).then(result => {
         if (result && result.msgCode === 'PTM0000') {
-          console.log(result, 'result');
           this.setState({
             credCardCount: result.data.count,
           });

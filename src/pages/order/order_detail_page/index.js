@@ -27,9 +27,9 @@ export default class order_detail_page extends PureComponent {
     componentWillMount() {
         this.getLoanInfo()
         let bankInfo = store.getCardData()
-        if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
+        if (bankInfo && bankInfo !== {}) {
             this.setState({
-                bankInfo: JSON.parse(bankInfo),
+                bankInfo: bankInfo,
                 showMoudle: true
             }, () => {
                 store.removeCardData()

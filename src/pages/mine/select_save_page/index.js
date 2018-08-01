@@ -13,6 +13,7 @@ const API = {
 }
 
 const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
+store.removeBackUrl(); // 清除session里的backurl的值
 
 @fetch.inject()
 export default class select_save_page extends PureComponent {
