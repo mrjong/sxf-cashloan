@@ -33,3 +33,11 @@
     margin: 42px 0;
   }
 }
+// modal样式覆盖
+:global{
+  .am-modal-body{
+    .am-modal-alert-content{
+      line-height: 3;
+    }
+  }
+}

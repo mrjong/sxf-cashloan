@@ -317,7 +317,6 @@ export default class HomePage extends PureComponent {
   requestGetUsrInfo = () => {
     this.props.$fetch.post(API.USR_INDEX_INFO).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result);
         this.setState({
           usrIndexInfo: result.data,
         });

@@ -72,7 +72,6 @@ export default class CreditCard extends PureComponent {
   requestBankList = params => {
     this.props.$fetch.post(API.BANK_LIST_URL, params).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
-        console.log(res, 'res');
         const formatData = res.data.map(item => ({
           value: item.bankCd,
           label: item.bankNm,
@@ -114,6 +113,15 @@ export default class CreditCard extends PureComponent {
     }
   };
 
+  // 验证安全码为数字
+  verifyNumber = (rule, value, callback) => {
+    if (!validators.number(value)) {
+      callback('格式不对，请输入数字');
+    } else {
+      callback();
+    }
+  };
+
   // 验证有效期
   verifyValidityDate(value) {
     let isVerify = false;
@@ -148,7 +156,6 @@ export default class CreditCard extends PureComponent {
   countDownHandler = fn => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log(values, 'values');
         this.requestVerifyCode(fn);
       } else {
         let errorFieldList = [];
@@ -183,7 +190,6 @@ export default class CreditCard extends PureComponent {
     }
     this.props.$fetch.post(API.VERIFY_CODE_URL, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
-        console.log(result, 'result11');
         this.setState({
           smsJrnNo: result.data.smsJrnNo,
         });
@@ -197,7 +203,6 @@ export default class CreditCard extends PureComponent {
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log(values, 'values');
         this.requestBindBankCard();
       } else {
         Toast.info(getFirstError(err));
@@ -268,7 +273,11 @@ export default class CreditCard extends PureComponent {
               placeholder="请输入信用卡背后3位数字"
               maxLength="3"
               {...getFieldProps('safeCode', {
-                rules: [{ required: true, message: '请输入信用卡背后3位数字' }, { validator: this.verifySafeCode }],
+                rules: [
+                  { required: true, message: '请输入信用卡背后3位数字' },
+                  { validator: this.verifyNumber },
+                  { validator: this.verifySafeCode },
+                ],
               })}
             >
               安全码

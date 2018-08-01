@@ -27,9 +27,9 @@ export default class order_detail_page extends PureComponent {
     componentWillMount() {
         this.getLoanInfo()
         let bankInfo = store.getCardData()
-        if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
+        if (bankInfo && bankInfo !== {}) {
             this.setState({
-                bankInfo: JSON.parse(bankInfo),
+                bankInfo: bankInfo,
                 showMoudle: true
             }, () => {
                 store.removeCardData()
@@ -182,7 +182,7 @@ export default class order_detail_page extends PureComponent {
     // 选择银行卡
     selectBank = () => {
         store.setBackUrl('/order/order_detail_page');
-        this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.lastCardNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
+        this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.agrNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
     }
     render() {
         const { billDesc, money } = this.state

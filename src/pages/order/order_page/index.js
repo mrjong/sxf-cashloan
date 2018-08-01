@@ -48,6 +48,7 @@ export default class message_page extends PureComponent {
         if (backDatastr && backDatastr !== "{}") {
             let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
             hasNext = backData.hasNext
+            console.log(backData.rData)
             this.setState(
                 {
                     msgType: backData.msgType,
@@ -63,20 +64,22 @@ export default class message_page extends PureComponent {
                             tabState: true,
                             refreshing: false,
                             isLoading: false
-                        },
-                        () => {
-                            console.log(document.getElementById(backData.billNo))
-                            document.getElementById(backData.billNo).scrollTop = backData.scrollTop
-                            // .scrollTo(0, backData.scrollTop)
                         }
                     )
-                    sessionStorage.removeItem(sessionStorageMap.bill.backData)
                 }
             )
         } else {
             hasNext = true
             this.getCommonData()
 
+        }
+    }
+    componentDidMount() {
+        // 返回展示数据
+        let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
+        if (sessionStorage.getItem(sessionStorageMap.bill.backData)) {
+            setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
+            sessionStorage.removeItem(sessionStorageMap.bill.backData)
         }
     }
     componentDidUpdate() {
@@ -104,7 +107,7 @@ export default class message_page extends PureComponent {
         }
         let data = await this.props.$fetch.post(API.billList, {
             qryType: 0,
-            startRow: pIndex,
+            startRow: pIndex * (this.state.limitRow),
             limitRow: this.state.limitRow
         })
             .then(res => {
@@ -163,7 +166,7 @@ export default class message_page extends PureComponent {
             isLoading: true
         })
         let list = await this.genData(0)
-        console.log(list)
+        console.log('33333333333', list)
         this.setState({
             rData: list,
             Listlength: list.length,
@@ -188,12 +191,14 @@ export default class message_page extends PureComponent {
             return
         }
         this.setState({
-            rData: [...this.state.rData, ...list],
+            rData: [...list, ...this.state.rData],
             dataSource: this.state.dataSource.cloneWithRows([
-                ...this.state.rData,
-                ...list
+                ...list,
+                ...this.state.rData
             ]),
             isLoading: false
+        }, () => {
+            console.log(this.state.rData)
         })
     }
     // 滚动高度
@@ -242,7 +247,7 @@ export default class message_page extends PureComponent {
             }
             const obj = this.state.rData && this.state.rData[index--]
             return (
-                <Item id={obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} className="spe" wrap>
+                <Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} wrap>
                     {obj.billAmt}<Brief>{obj.billDt}</Brief>
                 </Item>
             )
@@ -262,6 +267,7 @@ export default class message_page extends PureComponent {
                             </div>
                         )}
                         renderRow={row}
+                        direction="down"
                         renderSeparator={separator}
                         useBodyScroll={this.state.useBodyScroll}
                         style={
@@ -291,10 +297,12 @@ export default class message_page extends PureComponent {
             }
         }
         return (
-            <div className={style.order_page}>
-                {
-                    item()
-                }
+            <div className="orderScroll">
+                <div className={style.order_page}>
+                    {
+                        item()
+                    }
+                </div>
             </div>
         )
     }

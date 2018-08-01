@@ -78,10 +78,10 @@ export default class bind_save_page extends PureComponent {
       // bindStorageConfirm()
       if (data.msgCode === 'PTM0000') {
         const backUrlData = store.getBackUrl();
-        store.removeBackUrl();
         if (backUrlData) {
-          this.props.history.push(backUrlData);
-          store.setCardData(JSON.stringify(this.state.cardData));
+          this.props.history.replace(backUrlData);
+          store.setCardData(this.state.cardData);
+          store.removeBackUrl();
         } else {
           this.props.history.replace('/mine/select_save_page');
         }

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
-import Moudles from 'components/moudles';
+import { Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
@@ -21,8 +21,9 @@ export default class select_save_page extends PureComponent {
     this.state = {
       agrNo: '',
       cardList: [],
-      showMoudle: false, // 是否展示确认解绑的modal
-      unbindData: '', // 解绑卡的数据
+      isClickAdd: false, // 是否点击了添加授权卡
+      // showMoudle: false, // 是否展示确认解绑的modal
+      // unbindData: '', // 解绑卡的数据
     }
   }
   componentWillMount() {
@@ -44,6 +45,11 @@ export default class select_save_page extends PureComponent {
       });
     }
   }
+  componentWillUnmount() {
+    if(!this.state.isClickAdd){
+      store.removeBackUrl(); // 清除session里的backurl的值
+    }
+  }
   // 获取会员卡的银行列表
   queryVipBankList = () => {
     this.props.$fetch
@@ -56,6 +62,7 @@ export default class select_save_page extends PureComponent {
             this.setState({
               cardList: res.data ? res.data : []
             })
+            this.getSelectedData();
           } else {
             res.msgInfo && this.props.toast.info(res.msgInfo)
           }
@@ -65,7 +72,17 @@ export default class select_save_page extends PureComponent {
         }
       )
   };
-
+  // 获取选中的银行卡数据
+  getSelectedData = () => {
+    // 进入组件时默认存入选中的一项
+    if (backUrlData) {
+      let cardData = [];
+      if (this.state.cardList.length) {
+        cardData = this.state.cardList.filter(item => item.agrNo === this.state.agrNo);
+      }
+      store.setCardData(cardData[0]);
+    }
+  };
   // 获取储蓄卡银行卡列表
   queryBankList = () => {
     this.props.$fetch
@@ -79,6 +96,7 @@ export default class select_save_page extends PureComponent {
             this.setState({
               cardList: res.cardList ? res.cardList : []
             })
+            this.getSelectedData();
           } else {
             if (res.msgCode === 'PTM3021') {
               this.setState({
@@ -96,8 +114,12 @@ export default class select_save_page extends PureComponent {
   };
 
   // 点击解绑按钮
-  unbindHandler= params => {
-    this.setState({ showMoudle: true, unbindData: params })
+  unbindHandler = params => {
+    Modal.alert('', '确认解绑该卡？', [
+      { text: '取消', onPress: () => { } },
+      { text: '确定', onPress: () => { this.unbindCard(params) } },
+    ]);
+    // this.setState({ showMoudle: true, unbindData: params })
   };
 
   // 解绑银行卡
@@ -105,7 +127,7 @@ export default class select_save_page extends PureComponent {
     this.props.$fetch
       .get(`${API.UNBINDCARD}/${agrNo}`).then(
         res => {
-          this.setState({ showMoudle: false, unbindData: '' })
+          // this.setState({ showMoudle: false, unbindData: '' })
           if (res.msgCode === "PTM0000") {
             this.queryBankList();
           } else {
@@ -128,11 +150,12 @@ export default class select_save_page extends PureComponent {
       agrNo: obj.agrNo,
     });
     this.props.history.replace(backUrlData);
-    store.setCardData(JSON.stringify(obj));
+    store.setCardData(obj);
     // }
   };
   // 新增授权卡
   addCard = () => {
+    this.setState({isClickAdd: true});
     this.props.history.push('/mine/bind_save_page')
   };
 
@@ -202,7 +225,7 @@ export default class select_save_page extends PureComponent {
             : null
         }
         <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
-        {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />}
+        {/* {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />} */}
       </div>
     )
   }

@@ -70,4 +70,12 @@
     }
   }
 }
+// modal样式覆盖
+:global{
+  .am-modal-body{
+    .am-modal-alert-content{
+      line-height: 3;
+    }
+  }
+}
 
