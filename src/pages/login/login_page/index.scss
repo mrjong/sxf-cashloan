@@ -1,6 +1,8 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .loginContent {
   .loginLog {
-    background-image: url('../../../assets/images/login/loginBg.png');
+    @include bg-image('../../../assets/images/login/loginBg.png');
     background-repeat: no-repeat;
     background-size: 100%;
     background-origin: content-box;
