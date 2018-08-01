@@ -11,6 +11,7 @@ import style from './style.scss';
 
 const API = {
   REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
+  CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
 };
 
 @fetch.inject()
@@ -19,7 +20,9 @@ export default class ConfirmAgencyPage extends PureComponent {
     super(props);
     this.state = {
       isShowModal: false,
-      repayInfo: {},
+      repayInfo: {
+        perd: [],
+      },
     }
   }
 
@@ -81,8 +84,8 @@ export default class ConfirmAgencyPage extends PureComponent {
     const urlParams = getParamsFromUrl(window.location.search);
     const requestParams = { ...urlParams };
     this.props.$fetch.post(API.REPAY_INFO, requestParams).then(result => {
-      if (result && result.code === 'PTM0000' && result.data !== null) {
-        console.log(result);
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        console.log(result, '000');
         this.setState({
           repayInfo: result.data
         });
@@ -121,6 +124,7 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   render() {
     const { isShowModal, repayInfo } = this.state;
+    console.log(repayInfo, 'repayInfo')
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">

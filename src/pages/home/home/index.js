@@ -136,7 +136,7 @@ export default class HomePage extends PureComponent {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }, { src: sng4, url: '' }, { src: sng4, url: '' }],
       usrIndexInfo: '',
-      // usrIndexInfo: mockData.LN0001,
+      // usrIndexInfo: mockData.LN0006,
       mockType: 1,
       haselescard: 'true',
     };

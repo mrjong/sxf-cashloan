@@ -34,6 +34,7 @@ export default class TagList extends React.PureComponent {
   passInitData = () => {
     const { currentIndex } = this.state;
     const { onClick, tagList } = this.props;
+    console.log(tagList, 'tagList');
     this._handleClick(onClick, currentIndex, tagList[currentIndex]);
   };
 

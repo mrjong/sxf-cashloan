@@ -77,6 +77,7 @@ export default class ModalInfo extends Component {
 
   // 代扣 Tag 点击事件
   handleRepaymentTagClick = data => {
+    console.log(data, 'data');
     this.setState({
       repaymentDate: data.value,
       repaymentIndex: data.index,
@@ -101,7 +102,7 @@ export default class ModalInfo extends Component {
   handleClickChoiseBank = () => {
     const { repayInfo } = this.state;
     store.setRepaymentModalData(this.state);
-    store.setBackUrl('/home/home');
+    store.setBackUrl('/home/home?showModal=true');
     this.props.history.push({
       pathname: '/mine/select_save_page',
       search: `?agrNo=${storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo}`,
