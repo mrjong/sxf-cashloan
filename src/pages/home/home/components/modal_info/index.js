@@ -15,7 +15,7 @@ const API = {
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
 };
 
-const storeCardData = store.getCardData();
+let storeCardData = '';
 
 @fetch.inject()
 export default class ModalInfo extends Component {
@@ -69,6 +69,10 @@ export default class ModalInfo extends Component {
     }
   }
 
+  componentDidMount() {
+    storeCardData = store.getCardData();
+  }
+
   // 数据回显
   recoveryPageData = () => {
     let pageData = store.getRepaymentModalData();
@@ -77,7 +81,6 @@ export default class ModalInfo extends Component {
 
   // 代扣 Tag 点击事件
   handleRepaymentTagClick = data => {
-    console.log(data, 'data');
     this.setState({
       repaymentDate: data.value,
       repaymentIndex: data.index,

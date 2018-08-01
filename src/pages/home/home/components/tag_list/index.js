@@ -24,18 +24,25 @@ export default class TagList extends React.PureComponent {
     onClick: () => {},
   };
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    if (this.props.tagList.length !== nextProps.tagList.length) {
+      this.passInitData(nextProps);
+    }
+  }
 
   componentWillMount() {
     this.setState({ currentIndex: this.props.defaultindex }, this.passInitData);
   }
 
   // 因为默认选中第一个 所以页面一进来就触发方法，将当前的数据传回去。
-  passInitData = () => {
+  passInitData = nextProps => {
     const { currentIndex } = this.state;
     const { onClick, tagList } = this.props;
-    console.log(tagList, 'tagList');
-    this._handleClick(onClick, currentIndex, tagList[currentIndex]);
+    if (nextProps) {
+      this._handleClick(onClick, nextProps.defaultindex, nextProps.tagList[nextProps.defaultindex]);
+    } else {
+      this._handleClick(onClick, currentIndex, tagList[currentIndex]);
+    }
   };
 
   _handleClick = (onClick, index, value) => {
