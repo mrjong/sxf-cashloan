@@ -56,6 +56,7 @@ export default class router_Page extends PureComponent {
         })
       }
     } catch (error) {
+      console.log(error);
       this.setState({
         newTitle: '重新加载',
         component: React.createElement(errPage, {
