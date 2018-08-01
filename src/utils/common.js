@@ -166,6 +166,14 @@ const store = {
   removeUserPhone() {
     return storage.session.removeItem('userPhone');
   },
+  // 保存用户信息
+  setUserInfo(data) {
+    return storage.session.setItem('userInfo', data);
+  },
+  // 获取用户信息
+  getUserInfo() {
+    return storage.session.getItem('userInfo');
+  },
 };
 
 /*rc-form 获取第一个错误 */

@@ -20,14 +20,22 @@ export default class order_detail_page extends PureComponent {
             billDesc: {},
             showMoudle: false,
             orderList: [],
-            money: ''
+            money: '',
+            bankInfo: {}
         }
     }
     componentWillMount() {
         this.getLoanInfo()
-    }
-    componentWillUnmount() {
-        sessionStorage.removeItem(sessionStorageMap.bill.billNo)
+        let bankInfo = store.getCardData()
+        if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
+            this.setState({
+                bankInfo: JSON.parse(bankInfo),
+                showMoudle: true
+            }, () => {
+                store.removeCardData()
+            })
+        }
+
     }
 
     // 获取还款信息
@@ -91,7 +99,6 @@ export default class order_detail_page extends PureComponent {
     }
     // 展开隐藏
     clickCb = (item) => {
-        console.log(item)
         switch (item.arrowHide) {
             case 'empty':
                 break;
@@ -119,7 +126,6 @@ export default class order_detail_page extends PureComponent {
                 this.state.orderList[i].arrowHide = 'down'
             }
         }
-        console.log(item)
         this.state.orderList[item.key] = item
         this.setState({
             orderList: [...this.state.orderList]
@@ -133,18 +139,18 @@ export default class order_detail_page extends PureComponent {
         this.props.$fetch.post(API.payback, {
             billNo: JSON.parse(billNo),
             thisRepTotAmt: this.state.money,
-            cardAgrNo: billDesc.wthCrdAgrNo,
+            cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
             usrBusCnl: 'WEB'
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
-                this.props.toast.info('还款成功')
                 this.setState({
                     showMoudle: false
                 })
                 if (Number(billDesc.perdNum) === Number(billDesc.perdLth)) {
+                    this.props.toast.info('还款完成')
                     sessionStorage.removeItem(sessionStorageMap.bill.backData)
-                    sessionStorage.setItem(sessionStorageMap.orderSuccess, JSON.stringify({
+                    sessionStorage.setItem(sessionStorageMap.bill.orderSuccess, JSON.stringify({
                         perdLth: billDesc.perdLth,
                         perdUnit: billDesc.perdUnit,
                         billPrcpAmt: billDesc.billPrcpAmt,
@@ -152,9 +158,13 @@ export default class order_detail_page extends PureComponent {
                     }))
                     setTimeout(() => {
                         this.props.history.replace('/order/repayment_succ_page')
-                    }, 3000);
+                    }, 2000);
                 } else {
-                    this.getLoanInfo()
+                    this.props.toast.info('还款成功')
+                    // 刷新当前list
+                    setTimeout(() => {
+                        this.getLoanInfo()
+                    }, 100);
                 }
             } else {
                 this.setState({
@@ -163,13 +173,17 @@ export default class order_detail_page extends PureComponent {
                 this.props.toast.info(res.msgInfo)
             }
         }).catch(err => {
+            this.setState({
+                showMoudle: false
+            })
             console.log(err)
         })
     }
+    // 选择银行卡
     selectBank = () => {
         store.setBackUrl('/order/order_detail_page');
-        // sessionStorage.setItem('backUrl', '/order/order_detail_page')
-        this.props.history.push('/mine/select_save_page');
+        console.log(this.state.bankInfo)
+        this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.lastCardNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
     }
     render() {
         const { billDesc, money } = this.state
@@ -219,14 +233,19 @@ export default class order_detail_page extends PureComponent {
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc && billDesc.perdLth}</span>期账单，请保证卡内余额大于该 期账单金额</div>
                     </div> : <div className={styles.mb50}></div>
                 }
-                <Modal popup visible={this.state.showMoudle} onClose={this.handleCloseModal} animationType="slide-up">
+                <Modal popup visible={this.state.showMoudle} onClose={() => { this.setState({ showMoudle: false }) }} animationType="slide-up">
                     <div className={styles.modal_box}>
                         <div className={styles.modal_title}>付款详情<i onClick={() => { this.setState({ showMoudle: false }) }}></i></div>
                         <div className={styles.modal_flex}>
                             <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{money}元</span>
                         </div>
                         <div className={styles.modal_flex}>
-                            <span className={styles.modal_label}>还款银行卡</span><span onClick={this.selectBank} className={`${styles.modal_value}`}>{billDesc && billDesc.wthdCrdCorpOrgNm}({billDesc && billDesc.wthdCrdNoLast}) </span>&nbsp;<i></i>
+                            <span className={styles.modal_label}>还款银行卡</span><span onClick={this.selectBank} className={`${styles.modal_value}`}>
+                                {
+                                    this.state.bankInfo && this.state.bankInfo.bankName ? <span>{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})</span> : <span>{billDesc && billDesc.wthdCrdCorpOrgNm}({billDesc && billDesc.wthdCrdNoLast})</span>
+                                }
+
+                            </span>&nbsp;<i></i>
                         </div>
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款

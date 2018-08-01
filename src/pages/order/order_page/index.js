@@ -40,8 +40,11 @@ export default class message_page extends PureComponent {
     }
     scrollTop = 0
     componentWillMount() {
+        sessionStorage.removeItem(sessionStorageMap.bill.billNo)
         // 处理详情返回之后
         let backDatastr = sessionStorage.getItem(sessionStorageMap.bill.backData)
+        console.log('222222222', backDatastr)
+
         if (backDatastr && backDatastr !== "{}") {
             let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
             hasNext = backData.hasNext
@@ -71,7 +74,9 @@ export default class message_page extends PureComponent {
                 }
             )
         } else {
+            hasNext = true
             this.getCommonData()
+
         }
     }
     componentDidUpdate() {
@@ -82,7 +87,7 @@ export default class message_page extends PureComponent {
         }
     }
     componentWillUnmount() {
-        document.body.style.overflow = "hidden"
+        document.body.style.overflow = "auto"
     }
     // 获取每一页数据
     genData = async (pIndex = 0) => {
@@ -134,6 +139,10 @@ export default class message_page extends PureComponent {
             }).catch(err => {
                 if (pIndex === 0) {
                     setTimeout(() => {
+                        this.setState({
+                            isLoading: false,
+                            refreshing: false
+                        })
                         this.props.toast.hide();
                     }, 600);
                 }
@@ -248,7 +257,7 @@ export default class message_page extends PureComponent {
                         ref={el => (this.lv = el)}
                         dataSource={this.state.dataSource}
                         renderFooter={() => (
-                            <div style={{ padding: 30, textAlign: "center" }}>
+                            <div className={style.has_more}>
                                 {this.state.isLoading ? "数据加载中..." : "已无更多账单"}
                             </div>
                         )}
