@@ -371,7 +371,7 @@ export default class HomePage extends PureComponent {
         {usrIndexInfo.indexSts === 'LN0001' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
-          <ModalContent onClose={this.handleCloseModal} history={history} />
+          <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
         </Modal>
       </div>
     );

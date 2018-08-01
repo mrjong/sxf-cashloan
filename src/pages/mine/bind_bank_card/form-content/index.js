@@ -46,12 +46,14 @@ export default class CreditCard extends PureComponent {
     children: PropTypes.node,
     formtype: PropTypes.string,
     userinfo: PropTypes.object,
+    history: PropTypes.object,
   };
 
   static defaultProps = {
     children: '',
     formtype: 'C',
     userinfo: {},
+    history: {},
   };
 
   // 确认购买
@@ -215,8 +217,9 @@ export default class CreditCard extends PureComponent {
     };
     this.props.$fetch.post(API.BIND_CARD_URL, params).then(
       result => {
-        if (result && result.data !== null) {
-          console.log(result.data, 'result.data');
+        if (result && result.msgCode === 'PTM0000') {
+          // TODO: 保存数据给下个页面
+          this.props.history.push('/mine/confirm_purchase_page')
         } else {
           Toast.info(result.msg);
         }
