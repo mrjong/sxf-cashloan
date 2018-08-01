@@ -42,50 +42,6 @@ export default class essential_information extends PureComponent {
 
   }
 
-  //  亲属联系人点击
-  handleRelatItemClick = () => {
-    let { relatData, relatValue } = this.state;
-    this.setState({ relatVisible: true });
-    if (!relatData || !relatData.length) return;
-
-    if (!relatValue || !relatValue.length) {
-      const firstProv = relatData[0];
-      relatValue = [firstProv.value];
-      this.setState({ relatValue });
-    }
-  };
-
-  // 朋友联系人点击
-  handleRelatItemClickTwo = () => {
-    let { relatTwoData, relatTwoValue } = this.state;
-    this.setState({ relatTwoVisible: true });
-    if (!relatTwoData || !relatTwoData.length) return;
-
-    if (!relatTwoValue || !relatTwoValue.length) {
-      const firstProv = relatTwoData[0];
-      relatTwoValue = [firstProv.value];
-      this.setState({ relatTwoValue });
-    }
-  };
-
-  // 获取item中亲属联系人显示用的label
-  getRelatLabel() {
-    const { relatData, relatValue } = this.state;
-    return relatValue.map(item => {
-      const rel = relatData.find(it => it.value === item);
-      if (rel) return rel.name;
-    });
-  }
-
-  // 获取item中朋友联系人显示用的label
-  getRelatLabellTwo() {
-    const { relatTwoData, relatTwoValue } = this.state;
-    return relatTwoValue.map(item => {
-      const rel = relatTwoData.find(it => it.value === item);
-      if (rel) return rel.name;
-    });
-  }
-
   handleSubmit = () => {
     const { loading } = this.state;
     if (loading) return; // 防止重复提交
