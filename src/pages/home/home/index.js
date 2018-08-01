@@ -145,6 +145,19 @@ export default class HomePage extends PureComponent {
   componentWillMount() {
     this.requestGetBannerList();
     this.requestGetUsrInfo();
+
+    let bankInfo = store.getCardData();
+    if (bankInfo && bankInfo !== {}) {
+      this.setState(
+        {
+          isShowModal: true,
+        },
+        () => {
+          console.log('该不该清数据');
+          store.removeCardData();
+        },
+      );
+    }
   }
 
   handleShowModal = () => {
@@ -214,7 +227,6 @@ export default class HomePage extends PureComponent {
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'RCM0000' && result.data !== null) {
-        console.log(result, 'result');
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;
       } else {
@@ -226,7 +238,6 @@ export default class HomePage extends PureComponent {
   // 请求用户绑卡状态
   requestBindCardState = () => {
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
-      console.log(result, 'result');
       if (result && result.msgCode === 'PTM0000') {
         console.log('有风控且绑信用卡储蓄卡');
         this.handleShowModal();
@@ -248,20 +259,6 @@ export default class HomePage extends PureComponent {
         Toast.info(result.msgInfo);
       }
     });
-  };
-
-  // 一键还卡事件处理逻辑
-  oneKeyRepayment = () => {
-    if (this.state.mockType === 1) {
-      console.log('有风控且绑信用卡储蓄卡');
-      this.handleShowModal();
-    } else if (this.state.mockType === 2) {
-      console.log('有风控且绑信用卡');
-    } else if (this.state.mockType === 3) {
-      console.log('有风控且绑储蓄卡');
-    } else {
-      console.log('无风控');
-    }
   };
 
   // 获取 banner 列表
