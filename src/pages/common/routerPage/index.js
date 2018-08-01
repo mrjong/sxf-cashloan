@@ -71,7 +71,7 @@ export default class router_Page extends PureComponent {
     const { component, route, newTitle } = this.state;
     const { headerHide = false, footerHide = true } = route;
     return (
-      <div className="application_wrap" style={{ marginBottom: footerHide ? 'unset' : '1rem' }}>
+      <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
         {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
         {component}
         {footerHide ? null : <Footer footerProps={route} />}
