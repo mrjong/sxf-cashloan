@@ -15,8 +15,7 @@ const API = {
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
 };
 
-const storeCardData = store.getCardData();
-store.removeCardData();
+let storeCardData = '';
 
 @fetch.inject()
 export default class ModalInfo extends Component {
@@ -24,7 +23,6 @@ export default class ModalInfo extends Component {
     super(props);
     this.state = {
       repayInfo: {},
-      repaymentAmount: '',
       repaymentDate: '',
       repaymentIndex: 0,
       lendersDate: '',
@@ -69,38 +67,16 @@ export default class ModalInfo extends Component {
     } else {
       this.requestGetRepaymentDateList();
     }
-    this.getCardDataFromSession();
   }
 
-  componentWillUnmount() {}
+  componentDidMount() {
+    storeCardData = store.getCardData();
+  }
 
   // 数据回显
   recoveryPageData = () => {
     let pageData = store.getRepaymentModalData();
     this.setState({ ...pageData });
-  };
-
-  // 保存当前页面数据
-  saveCurrentPageData = () => {
-    store.setRepaymentModalData(this.state);
-  };
-
-  // 清除当前页面数据
-  clearCurrentPageData = () => {
-    store.setRepaymentModalData(null);
-  };
-
-  // 获取 session 中的银行卡信息
-  getCardDataFromSession = () => {
-    const cardData = store.getCardData();
-    if (cardData) {
-      this.setState(
-        {
-          repaymentCardInfo: cardData,
-        },
-        store.setCardData(null),
-      );
-    }
   };
 
   // 代扣 Tag 点击事件
@@ -127,11 +103,9 @@ export default class ModalInfo extends Component {
 
   // 选择银行卡
   handleClickChoiseBank = () => {
-    this.saveCurrentPageData();
-    store.setBackUrl('/home/home');
-    // todo 通过接口判断跳页面
     const { repayInfo } = this.state;
-    const { indexData } = this.props;
+    store.setRepaymentModalData(this.state);
+    store.setBackUrl('/home/home?showModal=true');
     this.props.history.push({
       pathname: '/mine/select_save_page',
       search: `?agrNo=${storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo}`,
@@ -140,40 +114,18 @@ export default class ModalInfo extends Component {
 
   // 确认按钮点击事件
   handleClickConfirm = () => {
-    this.requestConfirmRepaymentInfo();
+    const { lendersDate, repayInfo, repaymentDate } = this.state;
+    const { indexData } = this.props;
+    const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${repayInfo.cardBillAmt}`;
+    // 跳转确认代还页面之前 将当前弹框数据保存下来
+    store.setRepaymentModalData(this.state);
+    // 跳转确认代还页面之前 将当前信用卡信息保存下来
+    store.setHomeCardIndexData(indexData);
+    this.props.history.push({ pathname: '/home/agency', search });
   };
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    // const demoData = {
-    //   cardBillAmt: '687.67',
-    //   prdList: [
-    //     {
-    //       prdName: '3个月',
-    //       prdId: '432424',
-    //     },
-    //     {
-    //       prdName: '1个月',
-    //       prdId: '4324224',
-    //     },
-    //     {
-    //       prdName: '7天(会员专属)',
-    //       prdId: '4324225',
-    //     },
-    //   ],
-    //   overDt: '7',
-    //   bankName: '招商银行',
-    //   cardNoHid: '6747 **** **** 6654',
-    //   withHoldAgrNo: '332423534534534534535',
-    //   withDrawAgrNo: '034253534564645645645',
-    //   cardBillDt: '2018-07-17',
-    // };
-    //
-    // this.setState({
-    //   repayInfo: demoData,
-    //   repaymentDateList: demoData.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
-    // });
-    // return;
     this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${this.props.indexData.autId}`).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         this.setState({
@@ -184,35 +136,8 @@ export default class ModalInfo extends Component {
     });
   };
 
-  // 确认代还信息
-  requestConfirmRepaymentInfo = () => {
-    const { lendersDate, repayInfo, repaymentDate } = this.state;
-    const { indexData } = this.props;
-    const params = {
-      withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
-      withHoldAgrNo: storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo, // 还款卡号主键
-      prdId: repaymentDate.value, // 产品ID
-      autId: indexData.autId, // 信用卡账单ID
-      repayType: lendersDate.value, // 还款方式
-      usrBusCnl: '', // 操作渠道
-      osType: getDeviceType(), // 操作系统
-    };
-    this.props.$fetch.post(API.CONFIRM_REPAYMENT, params).then(result => {
-      if (result && result.msgCode === 'PTM0000') {
-        console.log(result, '9090');
-        // todo 什么时候清数据 是这个时候吗？还是在agency页面，取决于下个页面可以返回吗？
-        // 保存返回的信息 给下个页面用
-        const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${repayInfo.cardBillAmt}`;
-        this.clearCurrentPageData();
-        this.props.history.push({ pathname: '/home/agency', search });
-      } else {
-        Toast.info(result.msgInfo)
-      }
-    });
-  };
-
   render() {
-    const { repayInfo, repaymentAmount, repaymentDateList, repaymentIndex, lendersDateList, lendersIndex } = this.state;
+    const { repayInfo, repaymentDateList, repaymentIndex, lendersDateList, lendersIndex } = this.state;
     const { onClose } = this.props;
     return (
       <div className={style.modal_content}>

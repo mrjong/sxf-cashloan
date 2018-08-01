@@ -180,4 +180,3 @@ export default class credit_extension_page extends PureComponent {
     );
   }
 }
-

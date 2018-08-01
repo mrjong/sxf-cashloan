@@ -136,15 +136,28 @@ export default class HomePage extends PureComponent {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }, { src: sng4, url: '' }, { src: sng4, url: '' }],
       usrIndexInfo: '',
-      // usrIndexInfo: mockData.LN0001,
+      // usrIndexInfo: mockData.LN0006,
       mockType: 1,
       haselescard: 'true',
     };
   }
 
   componentWillMount() {
-    // this.requestGetBannerList();
+    this.requestGetBannerList();
     this.requestGetUsrInfo();
+
+    let bankInfo = store.getCardData();
+    if (bankInfo && bankInfo !== {}) {
+      this.setState(
+        {
+          isShowModal: true,
+        },
+        () => {
+          console.log('该不该清数据');
+          store.removeCardData();
+        },
+      );
+    }
   }
 
   handleShowModal = () => {
@@ -214,7 +227,6 @@ export default class HomePage extends PureComponent {
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'RCM0000' && result.data !== null) {
-        console.log(result, 'result');
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;
       } else {
@@ -226,7 +238,6 @@ export default class HomePage extends PureComponent {
   // 请求用户绑卡状态
   requestBindCardState = () => {
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
-      console.log(result, 'result');
       if (result && result.msgCode === 'PTM0000') {
         console.log('有风控且绑信用卡储蓄卡');
         this.handleShowModal();
@@ -250,65 +261,17 @@ export default class HomePage extends PureComponent {
     });
   };
 
-  // 一键还卡事件处理逻辑
-  oneKeyRepayment = () => {
-    if (this.state.mockType === 1) {
-      console.log('有风控且绑信用卡储蓄卡');
-      this.handleShowModal();
-    } else if (this.state.mockType === 2) {
-      console.log('有风控且绑信用卡');
-    } else if (this.state.mockType === 3) {
-      console.log('有风控且绑储蓄卡');
-    } else {
-      console.log('无风控');
-    }
-  };
-
-  // 根据码来控制显示内容
-  showContentByCode = code => {
-    switch (code) {
-      case 'LN0001': // 新用户，信用卡未授权
-        this.props.setTitle('LN0001');
-        console.log('LN0001');
-        break;
-      case 'LN0002': // 账单爬取中
-        console.log('LN0002');
-        break;
-      case 'LN0003': // 账单爬取成功
-        this.props.setTitle('LN0003');
-        console.log('LN0003');
-        break;
-      case 'LN0004': // 代还资格审核中
-        console.log('LN0004');
-        break;
-      case 'LN0005': // 暂无代还资格
-        console.log('LN0005');
-        break;
-      case 'LN0006': // 风控审核通过
-        console.log('LN0006');
-        break;
-      case 'LN0007': // 放款中
-        console.log('LN0007');
-        break;
-      case 'LN0008': // 放款失败
-        console.log('LN0008');
-        break;
-      case 'LN0009': // 放款成功
-        console.log('LN0001');
-        break;
-      case 'LN0010': // 账单爬取失败/老用户
-        console.log('LN0010');
-        break;
-      default:
-        console.log('default');
-    }
-  };
-
   // 获取 banner 列表
   requestGetBannerList = () => {
     this.props.$fetch.post(API.BANNER).then(result => {
-      if (result && result.code === '0000' && result.data !== null) {
-        console.log(result);
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        this.setState({
+          bannerList: result.data.map(item => ({
+            src: `data:image/png;base64,${item.picUrl}`,
+            // src: sng4,
+            url: item.gotoFlag !== 0 ? item.gotoUrl : '',
+          })),
+        });
       }
     });
   };

@@ -47,7 +47,7 @@ export default class router_Page extends PureComponent {
         })
       } else {
         this.setState({
-          title: '错误',
+          newTitle: '重新加载',
           component: React.createElement(errPage, {
             match, history, params: {
               pageType: '404'
@@ -56,8 +56,9 @@ export default class router_Page extends PureComponent {
         })
       }
     } catch (error) {
+      console.log(error);
       this.setState({
-        title: '错误',
+        newTitle: '重新加载',
         component: React.createElement(errPage, {
           match, history, params: {
             pageType: '404'
@@ -70,7 +71,7 @@ export default class router_Page extends PureComponent {
     const { component, route, newTitle } = this.state;
     const { headerHide = false, footerHide = true } = route;
     return (
-      <div className="application_wrap" style={{ marginBottom: footerHide ? 'unset' : '1rem' }}>
+      <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
         {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
         {component}
         {footerHide ? null : <Footer footerProps={route} />}
