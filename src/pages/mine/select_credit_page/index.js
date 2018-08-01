@@ -126,7 +126,7 @@ export default class select_credit_page extends PureComponent {
       agrNo: obj.agrNo,
     });
     this.props.history.replace(backUrlData);
-    store.setCardData(JSON.stringify(obj));
+    store.setCardData(obj);
     // }
 
   };

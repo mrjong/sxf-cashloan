@@ -97,6 +97,10 @@ export default class select_save_page extends PureComponent {
 
   // 点击解绑按钮
   unbindHandler= params => {
+    Modal.alert('', '确认退出登录？', [
+      { text: '取消', onPress: () => {} },
+      { text: '确定', onPress: () => {this.logout()}},
+    ]);
     this.setState({ showMoudle: true, unbindData: params })
   };
 
@@ -128,7 +132,7 @@ export default class select_save_page extends PureComponent {
       agrNo: obj.agrNo,
     });
     this.props.history.replace(backUrlData);
-    store.setCardData(JSON.stringify(obj));
+    store.setCardData(obj);
     // }
   };
   // 新增授权卡

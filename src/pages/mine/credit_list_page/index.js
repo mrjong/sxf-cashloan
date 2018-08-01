@@ -68,7 +68,7 @@ export default class credit_list_page extends PureComponent {
       autId: obj.autId,
     });
     this.props.history.replace(backUrlData);
-    store.setCardData(JSON.stringify(obj));
+    store.setCardData(obj);
     // }
 
   };
