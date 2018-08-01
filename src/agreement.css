@@ -113,6 +113,6 @@ table {
 */
 .bottomLine {
   display: inline-block;
-  width: 50px;
+  width: 150px;
   border-bottom: 1PX solid #333;
 }
