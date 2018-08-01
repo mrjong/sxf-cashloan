@@ -41,9 +41,10 @@ export default class message_page extends PureComponent {
     scrollTop = 0
     componentWillMount() {
         sessionStorage.removeItem(sessionStorageMap.bill.billNo)
-
         // 处理详情返回之后
         let backDatastr = sessionStorage.getItem(sessionStorageMap.bill.backData)
+        console.log('222222222', backDatastr)
+
         if (backDatastr && backDatastr !== "{}") {
             let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
             hasNext = backData.hasNext
@@ -73,7 +74,9 @@ export default class message_page extends PureComponent {
                 }
             )
         } else {
+            hasNext = true
             this.getCommonData()
+
         }
     }
     componentDidUpdate() {
@@ -84,7 +87,7 @@ export default class message_page extends PureComponent {
         }
     }
     componentWillUnmount() {
-        document.body.style.overflow = "hidden"
+        document.body.style.overflow = "auto"
     }
     // 获取每一页数据
     genData = async (pIndex = 0) => {
