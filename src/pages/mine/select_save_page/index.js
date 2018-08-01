@@ -3,6 +3,7 @@ import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/common';
 import Moudles from 'components/moudles';
 import fetch from 'sx-fetch';
+import qs from 'qs';
 import styles from './index.scss';
 
 const API = {
@@ -25,13 +26,22 @@ export default class select_save_page extends PureComponent {
     }
   }
   componentWillMount() {
+    // 改变title值
     if (!backUrlData) {
       this.props.setTitle('储蓄卡管理');
     }
+    // 根据不同页面跳转过来查询不同接口
     if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
       this.queryVipBankList();
     } else {
       this.queryBankList();
+    }
+    // 设置跳转过来选中的效果
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    if (queryData.agrNo) {
+      this.setState({
+        agrNo: queryData.agrNo,
+      });
     }
   }
   // 获取会员卡的银行列表
