@@ -78,6 +78,26 @@ const store = {
     return storage.session.getItem('confirmRepaymentModalData');
   },
 
+  // 清除认代还信息弹框数据
+  removeRepaymentModalData() {
+    storage.session.removeItem('confirmRepaymentModalData');
+  },
+
+  // 保存首页信用卡信息
+  setHomeCardIndexData(data) {
+    storage.session.setItem('homeCardIndexData', data);
+  },
+
+  // 获取首页信用卡信息
+  getHomeCardIndexData() {
+    return storage.session.getItem('homeCardIndexData');
+  },
+
+  // 清除首页信用卡信息
+  removeHomeCardIndexData() {
+    storage.session.removeItem('homeCardIndexData');
+  },
+
   // 保存跳转的url
   setBackUrl(data) {
     storage.session.setItem('backUrl', data);
