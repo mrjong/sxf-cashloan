@@ -4,7 +4,7 @@ import { List, InputItem, Picker, DatePicker, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import fetch from 'sx-fetch';
 import { validators } from 'utils/validator';
-import { getFirstError } from 'utils/common';
+import { store, getFirstError } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import styles from '../index.scss';
@@ -192,6 +192,7 @@ export default class CreditCard extends PureComponent {
       if (result && result.msgCode === 'PTM0000') {
         this.setState({
           smsJrnNo: result.data.smsJrnNo,
+          agrNo: result.data.smsJrnNo,
         });
         fn(true);
       } else {
@@ -224,7 +225,8 @@ export default class CreditCard extends PureComponent {
       result => {
         if (result && result.msgCode === 'PTM0000') {
           // TODO: 保存数据给下个页面
-          this.props.history.push('/mine/confirm_purchase_page')
+          this.passDataToNextPage();
+          this.props.history.push('/mine/confirm_purchase_page');
         } else {
           Toast.info(result.msg);
         }
@@ -233,6 +235,27 @@ export default class CreditCard extends PureComponent {
         console.log(err);
       },
     );
+  };
+
+  // 保存数据给下个页面
+  passDataToNextPage = () => {
+    const { formtype } = this.props;
+    const { bankList, agrNo } = this.state;
+    const { getFieldsValue } = this.props.form;
+    const formData = getFieldsValue();
+    const { bank, bankCardNo } = formData;
+    let paramVip = store.getParamVip() || {};
+    const passParams = {
+      // money: paramVip.money,
+      // memPrdId: 'paramVip.memPrdId',
+      bankName: bankList.filter(item => item && item.value === bank[0])[0].label,
+      agrNo,
+      cardTyp: formtype,
+      lastCardNo: bankCardNo.slice(-4),
+      bankCode: bankList.filter(item => item && item.value === bank[0])[0].value,
+    };
+    Object.assign(paramVip, passParams);
+    store.setParamVip(paramVip);
   };
 
   render() {

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
+import dayjs from 'dayjs';
 import { store } from 'utils/common';
 import { Toast } from 'antd-mobile';
 import style from './index.scss';
@@ -95,7 +96,7 @@ export default class BankCard extends React.PureComponent {
         </div>
         <div className={style.bill_preview}>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{cardBillDt}</span>
+            <span className={style.bill_value}>{dayjs(cardBillDt).format('YYYY/MM/DD')}</span>
             <span className={style.bill_name}>账单日</span>
           </div>
           <div className={style.bill_item}>

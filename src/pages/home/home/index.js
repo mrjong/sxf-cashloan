@@ -1,6 +1,7 @@
-import sng4 from 'assets/images/carousel/banner.png';
+import sng4 from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
+import dayjs from 'dayjs';
 import { store } from 'utils/common';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
@@ -68,7 +69,7 @@ const mockData = {
   },
   LN0006: {
     indexSts: 'LN0006',
-    indexMsg: '一键还卡',
+    indexMsg: '一键代还',
     indexData: {
       bankName: '招商银行',
       bankNo: 'ICBC',
@@ -134,10 +135,9 @@ export default class HomePage extends PureComponent {
     super(props);
     this.state = {
       isShowModal: false,
-      bannerList: [{ src: sng4, url: '' }, { src: sng4, url: '' }, { src: sng4, url: '' }],
+      bannerList: [{ src: sng4, url: '' }],
       usrIndexInfo: '',
       // usrIndexInfo: mockData.LN0006,
-      mockType: 1,
       haselescard: 'true',
     };
   }
@@ -200,12 +200,12 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        // this.handleShowModal();
-        this.requestBindCardState();
+        this.handleShowModal();
+        // this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
-        Toast.info('您的代还资金将于2018-8-1，请耐心等待');
+        Toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}，请耐心等待`);
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 也跳账单页');
@@ -335,7 +335,7 @@ export default class HomePage extends PureComponent {
         </Carousels>
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* todo: 这行文字要不要显示 */}
-        {usrIndexInfo.indexSts === 'LN0001' && <div className={style.tip_bottom}>怕逾期，用还到</div>}
+        <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
