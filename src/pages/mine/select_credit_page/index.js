@@ -12,7 +12,7 @@ const API = {
   VIPBANKLIST: '/my/quickpay/cardList', // 会员卡的银行卡列表
 }
 
-const backUrlData = ''; // 从除了我的里面其他页面进去
+let backUrlData = ''; // 从除了我的里面其他页面进去
 
 @fetch.inject()
 export default class select_credit_page extends PureComponent {
