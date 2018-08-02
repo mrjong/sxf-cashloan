@@ -226,7 +226,7 @@ export default class CreditCard extends PureComponent {
         if (result && result.msgCode === 'PTM0000') {
           // TODO: 保存数据给下个页面
           this.passDataToNextPage();
-          this.props.history.push('/mine/confirm_purchase_page');
+          this.props.history.replace('/mine/confirm_purchase_page');
         } else {
           Toast.info(result.msg);
         }
