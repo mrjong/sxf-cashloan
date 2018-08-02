@@ -35,13 +35,6 @@ export default class essential_information extends PureComponent {
     provLabel: [],
   };
 
-  componentWillMount() {
-  }
-
-  componentDidMount() {
-
-  }
-
   handleSubmit = () => {
     const { loading } = this.state;
     if (loading) return; // 防止重复提交
