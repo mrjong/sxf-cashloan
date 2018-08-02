@@ -32,18 +32,7 @@ export default class credit_extension_page extends PureComponent {
 
   componentWillMount() {
     // 查询 授信项状态
-    this.props.$fetch.get(`${API.getStw}`).then(result => {
-        if (result && result.data !== null && result.msgCode === 'PTM0000') {
-          this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
-
-          // 判断四项认证是否都认证成功
-          const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
-          if (isAllValid) {
-            this.setState({ submitFlag: true });
-          }
-        }
-      },
-    );
+    this.requestGetStatus();
     //芝麻信用的回调
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     const params = query.params;
@@ -75,6 +64,22 @@ export default class credit_extension_page extends PureComponent {
 
   componentWillUnmount() {
   }
+
+  // 获取授信列表状态
+  requestGetStatus = () => {
+    this.props.$fetch.get(`${API.getStw}`).then(result => {
+        if (result && result.data !== null && result.msgCode === 'PTM0000') {
+          this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
+
+          // 判断四项认证是否都认证成功
+          const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
+          if (isAllValid) {
+            this.setState({ submitFlag: true });
+          }
+        }
+      },
+    );
+  };
 
   // 提交代还金申请
   commitApply = () => {
@@ -144,8 +149,15 @@ export default class credit_extension_page extends PureComponent {
           break;
         case 'zmxy':
           this.props.$fetch.get(`${API.getZmxy}`).then(result => {
-            if (result.msgCode === 'PTM0000' && result.data.authUrl) {
-              window.location.href = result.data.authUrl;
+            if (result.msgCode === 'PTM0000') {
+              if (result.data.authUrl) {
+                window.location.href = result.data.authUrl;
+              } else {
+                this.props.toast.info('授信成功');
+                setTimeout(() => {
+                  this.requestGetStatus();
+                }, 3000);
+              }
             } else {
               this.props.toast.info(result.msgInfo);
             }

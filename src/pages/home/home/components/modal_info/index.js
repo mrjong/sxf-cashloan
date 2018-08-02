@@ -3,6 +3,7 @@ import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_defaul
 
 import React, { Component } from 'react';
 import { Toast } from 'antd-mobile';
+import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import SButton from 'components/button';
@@ -168,7 +169,9 @@ export default class ModalInfo extends Component {
               <label className={style.item_name}>放款日期</label>
               <TabList tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
             </div>
-            <p className={style.item_tip}>选择还款日前一天（{repayInfo.cardBillDt}）放款，将最大成本节约您代资金</p>
+            <p className={style.item_tip}>
+              选择还款日前一天（{dayjs(repayInfo.cardBillDt).subtract(1, 'day')}）放款，将最大成本节约您代资金
+            </p>
           </li>
           <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>
