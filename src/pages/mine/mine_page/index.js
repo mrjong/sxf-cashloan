@@ -29,6 +29,8 @@ export default class mine_page extends PureComponent {
     };
   }
   componentWillMount() {
+    // 移除会员卡出入口
+    store.removeVipBackUrl()
     // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
     if (store.getAuthFlag()) {
       this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: store.getAuthFlag() === '1' ? true : false });
@@ -75,6 +77,8 @@ export default class mine_page extends PureComponent {
     this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setVIPFlag(result.data.memSts);
+        store.setVIPInfo(result.data)
+        store.setVipBackUrl('/mine/mine_page')
         switch (result.data.memSts) {
           case '0':
             this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });

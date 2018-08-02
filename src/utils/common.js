@@ -202,11 +202,36 @@ const store = {
   getParamVip() {
     return storage.session.getItem('paramVip');
   },
-
   // 清除会员卡参数
   removeParamVip() {
     return storage.session.removeItem('paramVip');
   },
+  // 保存会员卡信息
+  setVIPInfo(data) {
+    return storage.session.setItem('vIPInfo', data);
+  },
+  // 获取会员卡信息
+  getVIPInfo() {
+    return storage.session.getItem('vIPInfo');
+  },
+  // 清除会员卡信息
+  removeVIPInfo() {
+    return storage.session.removeItem('vIPInfo');
+  },
+  // 保存会员卡入口与出口
+  setVipBackUrl(data) {
+    return storage.session.setItem('vipBackUrl', data);
+  },
+  // 获取会员卡入口与出口
+  getVipBackUrl() {
+    return storage.session.getItem('vipBackUrl');
+  },
+  // 移除会员卡入口与出口
+  removeVipBackUrl() {
+    return storage.session.removeItem('vipBackUrl');
+  },
+
+
 };
 
 /*rc-form 获取第一个错误 */

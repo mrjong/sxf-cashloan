@@ -32,6 +32,7 @@ export default class login_page extends PureComponent {
   componentWillMount() {
     // 移除cookie
     Cookie.remove('fin-v-card-token');
+    sessionStorage.clear()
     console.log(this.props);
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
@@ -69,9 +70,7 @@ export default class login_page extends PureComponent {
             res.msgInfo && Toast.info(res.msgInfo);
             return;
           }
-          sessionStorage.setItem('authorizedNotLoginStats', true);
           Cookie.set('fin-v-card-token', res.data.tokenId);
-          sessionStorage.setItem('userId', res.data.userId);
           sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);
