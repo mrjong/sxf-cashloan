@@ -186,19 +186,21 @@ export default class bind_save_page extends PureComponent {
         <List>
           <Item extra={this.state.userName}>持卡人</Item>
           <InputItem
-           maxLength="19"
+           maxLength="25"
             {...getFieldProps('valueInputCarNumber', {
               rules: [
                 { required: true, message: '请输入有效银行卡号' },
                 { validator: this.validateCarNumber },
               ],
             })}
+            type="number"
             placeholder="请输入储蓄卡卡号"
           >
             储蓄卡卡号
           </InputItem>
           <InputItem
            maxLength="11"
+           type="number"
             {...getFieldProps('valueInputCarPhone', {
               rules: [
                 { required: true, message: '请输入银行卡绑定的有效手机号' },

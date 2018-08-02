@@ -56,7 +56,7 @@ export default class confirm_purchase_page extends PureComponent {
               if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
                 res.msgInfo && this.props.toast.info(res.msgInfo)
                 setTimeout(() => {
-                  this.props.history.replace("/homeOutside")
+                  this.props.history.replace("/home/home")
                 }, 3000)
               } else {
                 if (this.state.cardTyp === "C") {
@@ -85,12 +85,11 @@ export default class confirm_purchase_page extends PureComponent {
       if (err && err.yzmCode) {
         delete err.yzmCode
       }
-      console.log(err,values)
-      return
+      console.log(err, values)
       if (!err || JSON.stringify(err) === '{}') {
         this.props.$fetch.post("/my/quickpay/paySms", {
-          cvv2: '',
-          expDt: this.state.xyCardDate,
+          cvv2: values.cvv2,
+          expDt: formatDate(values.expDt).replace(/\s+/g, ''),
           agrNo: this.setState.agrNo
         }).then(
           res => {
@@ -100,19 +99,6 @@ export default class confirm_purchase_page extends PureComponent {
               this.setState({
                 smsJrnNo: res.smsJrnNo
               })
-              this.setState({ timeflag: false })
-              let timmer = setInterval(() => {
-                this.setState({ flag: false, timers: `${i--}"` })
-                if (i === -1) {
-                  clearInterval(timmer)
-                  this.setState({
-                    timers: "重新获取",
-                    timeflag: true,
-                    flag: true
-                  })
-                  this.setState({ valueInputSms: "" })
-                }
-              }, 1000)
             } else {
               res.msgInfo && this.props.toast.info(res.msgInfo)
             }
@@ -160,7 +146,7 @@ export default class confirm_purchase_page extends PureComponent {
               <InputItem
                 type="number"
                 maxLength="3"
-                {...getFieldProps('xyCardNum', {
+                {...getFieldProps('cvv2', {
                   rules: [
                     { required: true, message: '请输入信用卡背后3位数字' },
                     { validator: this.validateAccount },
@@ -173,7 +159,7 @@ export default class confirm_purchase_page extends PureComponent {
               <DatePicker
                 mode="month"
                 title="选择有效期"
-                {...getFieldProps('xyCardDate', {
+                {...getFieldProps('expDt', {
                   rules: [
                     { required: true, message: '请选择有效期' }
                   ],

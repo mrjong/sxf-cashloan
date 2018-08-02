@@ -176,7 +176,7 @@ export default class real_name_page extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
-        store.setAuthFlag('1');
+        store.removeAuthFlag();
         this.props.history.replace('/mine/credit_extension_page');
       }
       else {
@@ -258,8 +258,8 @@ export default class real_name_page extends Component {
           <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>确定</ButtonCustom>
         </div> : null}
         {
-          this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? <div className={style.isTrue}>
-            <List>
+          this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? <div>
+            <List  className={style.is_true}>
               <InputItem value={this.state.userInfo && this.state.userInfo.nameHid} editable={false}>姓名</InputItem>
               <InputItem value={this.state.userInfo && this.state.userInfo.idNoHid} editable={false}>身份证号</InputItem>
             </List>

@@ -284,6 +284,7 @@ export default class CreditCard extends PureComponent {
           <InputItem
             placeholder="请输入银行卡卡号"
             maxLength="25"
+            type="number"
             {...getFieldProps('bankCardNo', {
               rules: [{ required: true, message: '请输入银行卡卡号' }, { validator: this.verifyBankNum }],
             })}
@@ -295,6 +296,7 @@ export default class CreditCard extends PureComponent {
             <InputItem
               placeholder="请输入信用卡背后3位数字"
               maxLength="3"
+              type="number"
               {...getFieldProps('safeCode', {
                 rules: [
                   { required: true, message: '请输入信用卡背后3位数字' },
@@ -324,6 +326,7 @@ export default class CreditCard extends PureComponent {
           <InputItem
             placeholder="请输入银行卡预留手机号"
             maxLength="11"
+            type="number"
             {...getFieldProps('phoneNo', {
               rules: [{ required: true, message: '请输入银行卡预留手机号' }, { validator: this.verifyPhoneNum }],
             })}
@@ -334,6 +337,7 @@ export default class CreditCard extends PureComponent {
           <div className={styles.time_container}>
             <InputItem
               maxLength="6"
+              type="number"
               {...getFieldProps('verifyCode', {
                 rules: [{ required: true, message: '请输入短信验证码' }, { validator: this.verifyVerifyCode }],
               })}

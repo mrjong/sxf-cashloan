@@ -169,7 +169,6 @@ export default class mine_page extends PureComponent {
       { text: '取消', onPress: () => { } },
       { text: '确定', onPress: () => { this.logout() } },
     ]);
-    // this.setState({ showMoudle: true })
   };
 
   render() {
@@ -229,15 +228,6 @@ export default class mine_page extends PureComponent {
         jumpToUrl: '/mine/fqa_page',
       },
     ];
-    // const listsArr3 = [
-    //   {
-    //     label: {
-    //       name: '常见问题',
-    //       icon: require('assets/images/mine/menu_ico5.png')
-    //     },
-    //     jumpToUrl: '/mine/fqa_page',
-    //   },
-    // ];
     return (
       <div className={styles.mine_page}>
         <div className={styles.user_inf}>

@@ -134,6 +134,7 @@ export default class login_page extends PureComponent {
         <div className={style.loginLog}>
           <div className={style.centent}>
             <input
+              type="number"
               maxLength="11"
               className={style.loginInput}
               placeholder='请输入您的手机号'
@@ -145,6 +146,7 @@ export default class login_page extends PureComponent {
               })}
             />
             <input
+              type="number"
               maxLength="6"
               className={style.loginInput}
               placeholder='请输入短信验证码'
@@ -159,7 +161,7 @@ export default class login_page extends PureComponent {
             }}>
               {this.state.timers}
             </div>
-            <div style={{ clear: 'both' }}/>
+            <div style={{ clear: 'both' }} />
             <div className={style.sureBtn} onClick={this.goLogin}>一键代还</div>
 
             <div className={style.agreement}>

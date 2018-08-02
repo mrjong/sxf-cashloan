@@ -58,10 +58,10 @@ export default class essential_information extends PureComponent {
             cntMblNo2: values.relativesPhone,
             credCorpOrg: '',
           };
-          if(values.friendPhone===values.relativesPhone){
+          if (values.friendPhone === values.relativesPhone) {
             this.props.toast.info('手机号不能相同');
           }
-          else{
+          else {
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
@@ -137,7 +137,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('address', {
@@ -178,7 +178,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
@@ -201,6 +201,8 @@ export default class essential_information extends PureComponent {
               { validator: this.validatePhone }],
           })(
             <InputItem
+              type="number"
+              maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
               type="text"
             >
@@ -232,7 +234,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
@@ -255,6 +257,8 @@ export default class essential_information extends PureComponent {
               { validator: this.validatePhone }],
           })(
             <InputItem
+              type="number"
+              maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
               type="text"
             >
