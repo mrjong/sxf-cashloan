@@ -3,7 +3,7 @@ import { createForm } from 'rc-form';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { getDeviceType, getFirstError } from 'utils/common';
+import { store, getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
@@ -63,7 +63,7 @@ export default class login_page extends PureComponent {
           osType: osType, // 操作系统
           smsCd: values.smsCd, // IP地址
           usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : 'h5', // 用户渠道
-          location: this.props.locationAddress, // 定位地址
+          location: store.getPosition(), // 定位地址 TODO 从session取
         }).then(res => {
           if (res.msgCode !== 'PTM0000') {
             res.msgInfo && Toast.info(res.msgInfo);
@@ -173,4 +173,3 @@ export default class login_page extends PureComponent {
     );
   }
 }
-

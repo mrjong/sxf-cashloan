@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import Lists from '../../../components/lists';
+import { store } from 'utils/common';
 import ButtonCustom from '../../../components/button';
 import styles from './index.scss';
 import { Toast } from 'antd-mobile';
@@ -77,7 +78,7 @@ export default class credit_extension_page extends PureComponent {
 
   // 提交代还金申请
   commitApply = () => {
-    const address = sessionStorage.getItem('location');
+    const address = store.getPosition();
     const params = {
       location: address,
     };

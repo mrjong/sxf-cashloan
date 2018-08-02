@@ -2,6 +2,10 @@ import storage from './storage';
 
 // 从url中返回search参数，返回对象
 const getParamsFromUrl = url => {
+  if (!url) {
+    console.log(url, 'location.search为空');
+    return false;
+  }
   let theRequest = {};
   if (url.indexOf('?') !== -1) {
     const str = url.substr(1);
@@ -206,6 +210,20 @@ const store = {
   // 清除会员卡参数
   removeParamVip() {
     return storage.session.removeItem('paramVip');
+  },
+
+  // 保存定位信息
+  setPosition(data) {
+    return storage.session.setItem('position', data);
+  },
+  // 获取定位信息
+  getPosition() {
+    return storage.session.getItem('position');
+  },
+
+  // 清除定位信息
+  removePosition() {
+    return storage.session.removeItem('position');
   },
 };
 
