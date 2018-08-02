@@ -47,6 +47,7 @@ export default class CreditCard extends PureComponent {
     formtype: PropTypes.string,
     userinfo: PropTypes.object,
     history: PropTypes.object,
+    handledismiss: PropTypes.func,
   };
 
   static defaultProps = {
@@ -54,6 +55,9 @@ export default class CreditCard extends PureComponent {
     formtype: 'C',
     userinfo: {},
     history: {},
+    handledismiss: () => {
+      console.log('picker 取消事件');
+    },
   };
 
   // 确认购买
@@ -275,6 +279,9 @@ export default class CreditCard extends PureComponent {
             extra="请选择银行"
             cols={1}
             data={bankList}
+            onVisibleChange={value => {
+              this.props.handledismiss(value);
+            }}
             {...getFieldProps('bank', {
               rules: [{ required: true, message: '请选择银行' }, { validator: this.verifyBankChoise }],
             })}

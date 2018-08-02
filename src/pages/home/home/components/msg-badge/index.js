@@ -37,12 +37,10 @@ export default class MsgBadge extends React.PureComponent {
     const { count } = this.state;
     return (
       <Link to='/home/message_page' className={style.msg_badge_wrap}>
-        {count > 0 ? (
-          <div className={style.msg_badge_content}>
-            <img className={style.msg_badge_icon} src={iconMsg} alt="" />
-            <span className={style.msg_badge_text}>{count > 99 ? '99+' : count}</span>
-          </div>
-        ) : null}
+        <div className={style.msg_badge_content} style={{ margin: count > 0 ? '.17rem -.17rem 0 0' : '0' }}>
+          <img className={style.msg_badge_icon} src={iconMsg} alt="" />
+          {count > 0 ? <span className={style.msg_badge_text}>{count > 99 ? '99+' : count}</span> : null}
+        </div>
       </Link>
     );
   }

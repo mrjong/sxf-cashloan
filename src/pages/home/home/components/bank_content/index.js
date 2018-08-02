@@ -59,8 +59,9 @@ export default class BankContent extends React.Component {
 
   // 通过接口跳魔蝎
   goToMoXie = () => {
-    this.props.$fetch.post(API.CARD_AUTH).then(result => {
+    this.props.fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        // TODO 授信页面？
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;
       } else {

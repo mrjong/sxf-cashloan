@@ -47,7 +47,7 @@ export default class login_page extends PureComponent {
   // 校验手机号
   validatePhone = (rule, value, callback) => {
     if (!validators.phone(value)) {
-      callback('请输入合法的手机号');
+      callback('请输入正确手机号');
     } else {
       callback();
     }
@@ -139,7 +139,7 @@ export default class login_page extends PureComponent {
               placeholder='请输入您的手机号'
               {...getFieldProps('phoneValue', {
                 rules: [
-                  { required: true, message: '请输入手机号' },
+                  { required: true, message: '请输入正确手机号' },
                   { validator: this.validatePhone },
                 ],
               })}
@@ -151,7 +151,7 @@ export default class login_page extends PureComponent {
               placeholder='请输入短信验证码'
               {...getFieldProps('smsCd', {
                 rules: [
-                  { required: true, message: '请输入验证码' },
+                  { required: true, message: '请输入正确验证码' },
                 ],
               })}
             />

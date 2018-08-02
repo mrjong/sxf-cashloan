@@ -25,7 +25,7 @@ export default class TagList extends React.PureComponent {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.tagList.length !== nextProps.tagList.length) {
+    if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.defaultindex !== nextProps.defaultindex)) {
       this.passInitData(nextProps);
     }
   }
@@ -49,6 +49,9 @@ export default class TagList extends React.PureComponent {
     this.setState({
       currentIndex: index,
     });
+    if (!value || value.disable) {
+      return false;
+    }
     const params = {
       index,
       value,
@@ -63,9 +66,9 @@ export default class TagList extends React.PureComponent {
       <Tag
         key={index}
         className={className}
-        active={index === currentIndex}
+        active={!item.disable && index === currentIndex}
         onClick={() => this._handleClick(onClick, index, item)}
-        style={{ ...item.style }}
+        style={{ backgroundColor: item.disable ? '#ccc' : '', ...item.style }}
         {...restProps}
       >
         {item.name || item}
