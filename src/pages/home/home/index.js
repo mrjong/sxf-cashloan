@@ -311,7 +311,12 @@ export default class HomePage extends PureComponent {
       case 'LN0009': // 放款成功
       case 'LN0010': // 账单爬取失败/老用户
         componentsDisplay = (
-          <BankContent contentData={usrIndexInfo} history={history} haselescard={this.state.haselescard}>
+          <BankContent
+            fetch={this.props.$fetch}
+            contentData={usrIndexInfo}
+            history={history}
+            haselescard={this.state.haselescard}
+          >
             {usrIndexInfo.indexSts === 'LN0002' || usrIndexInfo.indexSts === 'LN0010' ? null : (
               <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
                 {usrIndexInfo.indexMsg}
