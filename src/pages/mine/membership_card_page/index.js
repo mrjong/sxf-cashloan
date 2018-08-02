@@ -113,7 +113,7 @@ export default class card_home extends PureComponent {
                 </span>
               </div>
               <div className={styles.cardTitle}>
-                有效期{item.menTerm}个月
+                有效期{item.menTerm || 0}个月
             </div>
             </div>)
           }) : null
