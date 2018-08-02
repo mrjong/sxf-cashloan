@@ -31,3 +31,4 @@ export default [
     title: '实名认证',
     component: () => import('pages/home/real_name'),
   },
+];
