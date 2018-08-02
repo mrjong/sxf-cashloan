@@ -89,12 +89,12 @@ export default class credit_extension_page extends PureComponent {
           // 跳转至储蓄卡
           if (result && result.data !== null && result.msgCode === 'PTM2001') {
             this.props.toast.info(result.msgInfo);
-            this.props.history.push({ pathname: '/mine/bind_save_page', search: '?needSaveBankCardInfo=false' });
+            this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
           }
           // 跳转至信用卡
           if (result && result.data !== null && result.msgCode === 'PTM2002') {
             this.props.toast.info(result.msgInfo);
-            this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?needSaveBankCardInfo=false' });
+            this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
           }
           // 跳转至首页
           else {
