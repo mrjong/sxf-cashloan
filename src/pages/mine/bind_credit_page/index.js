@@ -5,8 +5,9 @@ import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/button';
 import { validators } from 'utils/validator';
-import { store } from 'utils/common';
+import { store, getFirstError } from 'utils/common';
 import styles from './index.scss';
+import qs from 'qs';
 
 const API = {
   GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -63,9 +64,15 @@ export default class bind_credit_page extends PureComponent {
             if (result.msgCode === "PTM2003") {
               this.props.history.push('/mine/bind_save_page');
             } else {
-              this.props.history.push(backUrlData);
-              store.setCardData(this.state.cardData);
+              // 首页不需要存储银行卡的情况，防止弹窗出现
+              const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+              if (queryData && queryData.noBankInfo) {
+                store.removeCardData();
+              } else {
+                store.setCardData(this.state.cardData);
+              }
               store.removeBackUrl();
+              this.props.history.push(backUrlData);
             }
           })
         } else {
@@ -79,7 +86,7 @@ export default class bind_credit_page extends PureComponent {
   // 通过输入的银行卡号 查出查到卡banCd
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      this.setState({cardData: { cardNo: values.valueInputCarNumber, ...result.data}})
+      this.setState({ cardData: { cardNo: values.valueInputCarNumber, ...result.data } })
       if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'D') {
         const params1 = {
           bankCd: result.data.bankCd,
@@ -105,25 +112,10 @@ export default class bind_credit_page extends PureComponent {
         const params = {
           cardNo: values.valueInputCarNumber,
         }
-        // values中存放的是经过 getFieldProps 包装的表单元素的值
-        //判断是否登录
-        const token = Cookie.get('fin-v-card-token');
-        if (token) {
-          this.checkCard(params, values);
-        } else {
-          this.props.toast.info('请先去登录');
-        }
+        this.checkCard(params, values);
         // TODO 发送请求等操作
       } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            this.props.toast.info(errMessage);
-          }
-        }
+        this.props.toast.info(getFirstError(err));
       }
     });
   };
@@ -160,7 +152,7 @@ export default class bind_credit_page extends PureComponent {
           </InputItem>
         </List>
         <p className={styles.tips}>借款资金将转入您绑定代信用卡中，请注意查收</p>
-        <ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>确认购买</ButtonCustom>
+        <ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>确认</ButtonCustom>
         <span className={styles.support_type} onClick={this.supporBank}>支持银行卡类型</span>
       </div>
     )

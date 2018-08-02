@@ -7,7 +7,7 @@ import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
 import styles from './index.scss';
-
+import qs from 'qs';
 const API = {
   GETUSERINF: '/my/getRealInfo', // 获取用户信息
   GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
@@ -79,9 +79,15 @@ export default class bind_save_page extends PureComponent {
       if (data.msgCode === 'PTM0000') {
         const backUrlData = store.getBackUrl();
         if (backUrlData) {
-          this.props.history.replace(backUrlData);
-          store.setCardData(this.state.cardData);
+          // 首页不需要存储银行卡的情况，防止弹窗出现
+          const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+          if (queryData && queryData.noBankInfo) {
+            store.removeCardData();
+          } else {
+            store.setCardData(this.state.cardData);
+          }
           store.removeBackUrl();
+          this.props.history.replace(backUrlData);
         } else {
           this.props.history.replace('/mine/select_save_page');
         }
@@ -186,7 +192,7 @@ export default class bind_save_page extends PureComponent {
         <List>
           <Item extra={this.state.userName}>持卡人</Item>
           <InputItem
-           maxLength="25"
+            maxLength="25"
             {...getFieldProps('valueInputCarNumber', {
               rules: [
                 { required: true, message: '请输入有效银行卡号' },
@@ -199,8 +205,8 @@ export default class bind_save_page extends PureComponent {
             储蓄卡卡号
           </InputItem>
           <InputItem
-           maxLength="11"
-           type="number"
+            maxLength="11"
+            type="number"
             {...getFieldProps('valueInputCarPhone', {
               rules: [
                 { required: true, message: '请输入银行卡绑定的有效手机号' },
@@ -213,7 +219,7 @@ export default class bind_save_page extends PureComponent {
           </InputItem>
           <div className={styles.time_container}>
             <InputItem
-            maxLength="6"
+              maxLength="6"
               {...getFieldProps('valueInputCarSms', {
                 rules: [
                   { required: true, message: '请输入正确的短信验证码' },
