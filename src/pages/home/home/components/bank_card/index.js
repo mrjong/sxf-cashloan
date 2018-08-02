@@ -55,7 +55,7 @@ export default class BankCard extends React.PureComponent {
   // 跳魔蝎
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
-      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         console.log(result, 'result');
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;

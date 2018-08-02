@@ -124,7 +124,7 @@ export default class HomePage extends PureComponent {
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
-      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;
       } else {
