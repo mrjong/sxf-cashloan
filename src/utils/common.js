@@ -202,6 +202,11 @@ const store = {
   getParamVip() {
     return storage.session.getItem('paramVip');
   },
+
+  // 清除会员卡参数
+  removeParamVip() {
+    return storage.session.removeItem('paramVip');
+  },
 };
 
 /*rc-form 获取第一个错误 */
