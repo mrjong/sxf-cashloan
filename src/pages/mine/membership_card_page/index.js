@@ -4,7 +4,7 @@ import { setBackGround } from 'utils/Background';
 import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss'
 import ButtonCustom from 'components/button';
-
+import { store } from 'utils/common';
 @setBackGround('#fff')
 @fetch.inject()
 export default class card_home extends PureComponent {
@@ -56,8 +56,8 @@ export default class card_home extends PureComponent {
             money: this.state.money,
             memPrdId: this.state.select
           }
-          sessionStorage.setItem("paramVip", JSON.stringify(param))
-          this.props.history.push("/mine/bind_bank_card")
+          store.setParamVip(param)
+          this.props.history.push("/mine/confirm_purchase_page")
         } else if (res.msgCode === "PTM0000") {
           let param = {
             money: this.state.money,
@@ -68,8 +68,8 @@ export default class card_home extends PureComponent {
             lastCardNo: res.data[0].lastCardNo,
             bankCode: res.data[0].bankCode
           }
-          sessionStorage.setItem("paramVip", JSON.stringify(param))
-          this.props.history.push("/vipbuy")
+          store.setParamVip(param)
+          this.props.history.push("/mine/confirm_purchase_page")
         } else {
           this.props.toast.info(res.msgInfo)
         }
@@ -85,9 +85,11 @@ export default class card_home extends PureComponent {
       <div className={styles.membership_card_page} >
         {
           data && data.map((item, index) => {
-            return (<div key={index} className={styles.cardHome}>
+            return (<div key={index} onClick={() => {
+              this.selectOne(item.memPrdId, item.price)
+            }} className={styles.cardHome}>
               <div className={styles.cardMoney}>
-                {item.memPrdNm} <span className={styles.icon}>￥</span>
+                {item.price} <span className={styles.icon}>￥</span>
               </div>
               <div className={styles.cardTitle}>
                 <span className={styles.left}>

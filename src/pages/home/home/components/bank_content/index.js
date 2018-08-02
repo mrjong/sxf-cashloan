@@ -4,7 +4,7 @@ import React from 'react';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/common';
 import PropTypes from 'prop-types';
-import fetch from 'sx-fetch';
+// import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
 import style from './index.scss';
 
@@ -13,7 +13,7 @@ const API = {
   CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 };
 
-@fetch.inject()
+// @fetch.inject()
 export default class BankContent extends React.Component {
   constructor(props) {
     super(props);
@@ -25,8 +25,9 @@ export default class BankContent extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
-    history:PropTypes.object,
+    history: PropTypes.object,
     contentData: PropTypes.object,
+    fetch: PropTypes.object,
   };
 
   static defaultProps = {
@@ -34,6 +35,7 @@ export default class BankContent extends React.Component {
     children: '',
     history: {},
     contentData: {},
+    fetch: {},
   };
 
   componentWillMount() {
@@ -45,7 +47,7 @@ export default class BankContent extends React.Component {
   // 代还其他信用卡点击事件
   repayForOtherBank = () => {
     console.log(this.state.credCardCount, 'this.state.credCardCount');
-    if (this.state.credCardCount > 0) {
+    if (this.state.credCardCount > 1) {
       console.log('跳选择授信卡页');
       const { contentData } = this.props;
       this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexData.autId}` });
@@ -69,7 +71,7 @@ export default class BankContent extends React.Component {
 
   // 请求信信用卡数量
   requestCredCardCount = () => {
-    this.props.$fetch
+    this.props.fetch
       .post(API.CRED_CARD_COUNT).then(result => {
         if (result && result.msgCode === 'PTM0000') {
           this.setState({

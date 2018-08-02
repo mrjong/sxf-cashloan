@@ -144,7 +144,9 @@ export default class ConfirmAgencyPage extends PureComponent {
             </li>
             <li className={style.list_item}>
               <label className={style.item_name}>借款期限</label>
-              <span className={style.item_value}>{repayInfo.perdCnt}</span>
+              <span className={style.item_value}>
+                {repayInfo.perdLth} {repayInfo.perdUnit === 'M' ? '个月' : '天'}
+              </span>
             </li>
             <li className={style.list_item}>
               <label className={style.item_name}>放款日期</label>
@@ -172,7 +174,7 @@ export default class ConfirmAgencyPage extends PureComponent {
             <ul className={style.bill_list}>
               {repayInfo.perd.map(item => (
                 <li className={style.list_item} key={item.perdNum}>
-                  <label className={style.item_name}>{item.perdNum}</label>
+                  <label className={style.item_name}>{item.perdNum}/{repayInfo.perdCnt}期</label>
                   <span className={style.item_value}>{item.perdTotAmt}</span>
                 </li>
               ))}

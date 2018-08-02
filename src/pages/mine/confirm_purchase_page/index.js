@@ -1,52 +1,96 @@
 import React, { PureComponent } from 'react';
-import { List, Picker, DatePicker, InputItem } from 'antd-mobile';
+import { List, DatePicker, InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton'
 import styles from './index.scss';
+import { store, getFirstError } from 'utils/common';
 
 @createForm()
 export default class confirm_purchase_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      cardData: [], // 支付银行卡的数据
-      cardVisible: false, // 联系人是否显示
-      cardValue: [], // 选中的银行卡
       periodValue: '', // 有效期的选中值
-      payMoney: '158.00',
+      money: '',
+      twice: true,
+      cardTyp: 'C'
     }
+  }
+  componentWillMount() {
+    // 获取缓存
+    let paramVip = store.getParamVip('paramVip')
+    if (paramVip && paramVip.money) {
+      this.setState({
+        money: paramVip.money,
+        memPrdId: paramVip.memPrdId,
+        bankName: paramVip.bankName,
+        agrNo: paramVip.agrNo,
+        // cardTyp: paramVip.cardTyp,
+        lastCardNo: paramVip.lastCardNo,
+        bankCode: paramVip.bankCode
+      })
+    }
+
   }
   // 确认购买
   confirmBuy = () => {
-    alert('点击')
+    this.props.form.validateFields((err, values) => {
+      console.log(err)
+      if (!err) {
+        this.props.$fetch
+          .post("/my/quickpay/pay", {
+            userId: "",
+            mblNo: "",
+            agrNo: this.state.agrNo,
+            smsJrnNo: this.state.smsJrnNo,
+            smsCd: this.state.yzmCode,
+            txAmt: Number(this.state.money),
+            payType: "01",
+            memCardNo: this.state.memCardNo
+          })
+          .then(
+            res => {
+              if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
+                res.msgInfo && this.props.toast.info(res.msgInfo)
+                setTimeout(() => {
+                  this.props.history.replace("/homeOutside")
+                }, 3000)
+              } else {
+                if (this.state.cardTyp === "C") {
+                  this.setState({
+                    twice: true
+                  })
+                }
+                this.setState({
+                  yzmCode: ""
+                })
+                res.msgInfo && this.props.toast.info(res.msgInfo)
+              }
+            },
+            err => {
+              console.log(err)
+            }
+          )
+      } else {
+        this.props.toast.info(getFirstError(err));
+      }
+    })
   };
   // 点击开始倒计时
   countDownHandler = fn => {
-    fn(true);
-  };
-
-  // 获取item中支付银行卡显示用的label
-  getCardLabel = () => {
-    const { cardData, cardValue } = this.state;
-    return cardValue.map(item => {
-      const rel = cardData.find(it => it.value === item);
-      if (rel) return rel.name;
-    });
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        fn(true);
+      } else {
+        this.props.info.info(getFirstError(err));
+      }
+    })
   };
 
   // 支付银行卡点击
   handleCardItemClick = () => {
-    let { cardData, cardValue } = this.state;
-    this.setState({ cardVisible: true });
-    if (!cardData || !cardData.length) return;
-
-    if (!cardValue || !cardValue.length) {
-      const firstProv = cardData[0];
-      cardValue = [firstProv.value];
-      this.setState({ cardValue });
-    }
+    this.props.history.push('/mine/')
   };
   // 格式化显示有效期
   formatDate = date => {
@@ -64,69 +108,55 @@ export default class confirm_purchase_page extends PureComponent {
     return (
       <div className={styles.confirm_purchase_page}>
         <List>
-          <Picker
-            title="选择支付银行卡"
-            cols={1}
-            data={[
-              { value: '01', label: '招商银行' },
-              { value: '02', label: '工商银行' },
-              { value: '03', label: '建设银行' },
-              { value: '04', label: '北京银行' },
-            ]}
-            {...getFieldProps('bankCard', {
-              initialValue: this.state.cardValue,
-            })}
+          <Item
+            extra={`招商银行(1223)`}
+            arrow="horizontal"
+            onClick={this.handleCardItemClick}
           >
-            <Item
-              extra={this.getCardLabel()}
-              arrow="horizontal"
-              onClick={this.handleCardItemClick}
-            >
-              支付银行卡
+            支付银行卡
               </Item>
-          </Picker>
-          <Item extra={`${this.state.payMoney}元`}>支付金额</Item>
-          <InputItem
-            // {...getFieldProps('account', {
-            //   // initialValue: 'little ant',
-            //   rules: [
-            //     { required: true, message: 'Please input account' },
-            //     { validator: this.validateAccount },
-            //   ],
-            // })}
-            // clear
-            // error={!!getFieldError('account')}
-            // onErrorClick={() => {
-            //   alert(getFieldError('account').join('、'));
-            // }}
-            placeholder="请输入信用卡背后3位数字"
-          >
-            安全码
-          </InputItem>
-          <DatePicker
-            mode="month"
-            title="选择有效期"
-            extra={<span style={{ color: '#C7C6CC' }}>年／月</span>}
-            value={this.state.periodValue}
-            onChange={date => this.setState({ periodValue: date })}
-            format={val => this.formatDate(val)}
-          >
-            <Item arrow="horizontal">有效期</Item>
-          </DatePicker>
+          <Item extra={`${this.state.money}元`}>支付金额</Item>
+          {
+            this.state.twice && this.state.cardTyp === "C" ? <div>
+              <InputItem
+                type="number"
+                maxLength="3"
+                {...getFieldProps('xyCardNum', {
+                  rules: [
+                    { required: true, message: '请输入信用卡背后3位数字' },
+                    { validator: this.validateAccount },
+                  ],
+                })}
+                placeholder="请输入信用卡背后3位数字"
+              >
+                安全码
+         </InputItem>
+              <DatePicker
+                mode="month"
+                title="选择有效期"
+                {...getFieldProps('xyCardDate', {
+                  rules: [
+                    { required: true, message: '请选择有效期' }
+                  ],
+                })}
+                extra={<span style={{ color: '#C7C6CC' }}>年／月</span>}
+                value={this.state.periodValue}
+                onChange={date => this.setState({ periodValue: date })}
+                format={val => this.formatDate(val)}
+              >
+                <Item arrow="horizontal">有效期</Item>
+              </DatePicker>
+            </div> : null
+          }
           <div className={styles.time_container}>
             <InputItem
-              // {...getFieldProps('account', {
-              //   // initialValue: 'little ant',
-              //   rules: [
-              //     { required: true, message: 'Please input account' },
-              //     { validator: this.validateAccount },
-              //   ],
-              // })}
-              // clear
-              // error={!!getFieldError('account')}
-              // onErrorClick={() => {
-              //   alert(getFieldError('account').join('、'));
-              // }}
+              type="number"
+              maxLength="6"
+              {...getFieldProps('yzmCode', {
+                rules: [
+                  { required: true, message: '请输入短信验证码' },
+                ],
+              })}
               placeholder="请输入短信验证码"
             >
               验证码

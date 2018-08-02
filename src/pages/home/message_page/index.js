@@ -44,8 +44,8 @@ export default class message_page extends PureComponent {
   }
   scrollTop = 0
   componentWillMount() {
-    var _body = document.getElementsByTagName("body")[0]
-    _body.style.backgroundColor = "#efeff4"
+    // var _body = document.getElementsByTagName("body")[0]
+    // _body.style.backgroundColor = "#efeff4"
     // 处理详情返回之后
     let backDatastr = sessionStorage.getItem("backData")
     if (backDatastr && backDatastr !== "{}") {
@@ -94,8 +94,8 @@ export default class message_page extends PureComponent {
     }
   }
   componentWillUnmount() {
-    var _body = document.getElementsByTagName("body")[0]
-    _body.style.backgroundColor = "#fff"
+    // var _body = document.getElementsByTagName("body")[0]
+    // _body.style.backgroundColor = "#fff"
     document.body.style.overflow = "auto"
   }
   // 消息 tab

@@ -194,6 +194,14 @@ const store = {
   getUserInfo() {
     return storage.session.getItem('userInfo');
   },
+  // 保存会员卡参数
+  setParamVip(data) {
+    return storage.session.setItem('paramVip', data);
+  },
+  // 获取会员卡参数
+  getParamVip() {
+    return storage.session.getItem('paramVip');
+  },
 };
 
 /*rc-form 获取第一个错误 */
