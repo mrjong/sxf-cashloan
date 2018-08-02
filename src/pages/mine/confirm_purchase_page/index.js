@@ -28,7 +28,7 @@ export default class confirm_purchase_page extends PureComponent {
         memPrdId: paramVip.memPrdId,
         bankName: paramVip.bankName,
         agrNo: paramVip.agrNo,
-        // cardTyp: paramVip.cardTyp,
+        cardTyp: paramVip.cardTyp,
         lastCardNo: paramVip.lastCardNo,
         bankCode: paramVip.bankCode
       })
@@ -38,7 +38,7 @@ export default class confirm_purchase_page extends PureComponent {
   // 确认购买
   confirmBuy = () => {
     this.props.form.validateFields((err, values) => {
-      console.log(err)
+      console.log(err, values)
       if (!err) {
         this.props.$fetch
           .post("/my/quickpay/pay", {
@@ -46,7 +46,7 @@ export default class confirm_purchase_page extends PureComponent {
             mblNo: "",
             agrNo: this.state.agrNo,
             smsJrnNo: this.state.smsJrnNo,
-            smsCd: this.state.yzmCode,
+            smsCd: values.yzmCode,
             txAmt: Number(this.state.money),
             payType: "01",
             memCardNo: this.state.memCardNo
@@ -55,8 +55,9 @@ export default class confirm_purchase_page extends PureComponent {
             res => {
               if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
                 res.msgInfo && this.props.toast.info(res.msgInfo)
+                const backUrlData = store.getBackUrl();
                 setTimeout(() => {
-                  this.props.history.replace("/home/home")
+                  this.props.history.replace(backUrlData)
                 }, 3000)
               } else {
                 if (this.state.cardTyp === "C") {
@@ -85,19 +86,26 @@ export default class confirm_purchase_page extends PureComponent {
       if (err && err.yzmCode) {
         delete err.yzmCode
       }
-      console.log(err, values)
+      const obj = {
+        userId: "",
+        mblNo: "",
+        agrNo: this.state.agrNo,
+        txAmt: Number(this.state.money),
+        payType: "01",
+        memPrdId: this.state.memPrdId
+      }
+      if (this.state.twice && this.state.cardTyp === 'C') {
+        obj.expDt = this.formatDate(values.expDt).replace(/\s+/g, '')
+        obj.cvv2 = values.cvv2
+      }
       if (!err || JSON.stringify(err) === '{}') {
-        this.props.$fetch.post("/my/quickpay/paySms", {
-          cvv2: values.cvv2,
-          expDt: formatDate(values.expDt).replace(/\s+/g, ''),
-          agrNo: this.setState.agrNo
-        }).then(
+        this.props.$fetch.post("/my/quickpay/paySms", obj).then(
           res => {
             if (res.msgCode === "PTM0000") {
               this.props.toast.info('发送成功');
               fn(true);
               this.setState({
-                smsJrnNo: res.smsJrnNo
+                smsJrnNo: res.data.smsJrnNo
               })
             } else {
               res.msgInfo && this.props.toast.info(res.msgInfo)
@@ -115,7 +123,12 @@ export default class confirm_purchase_page extends PureComponent {
 
   // 支付银行卡点击
   handleCardItemClick = () => {
-    this.props.history.push('/mine/')
+    store.setBackUrl('/mine/confirm_purchase_page');
+    if (this.state.cardTyp === 'C') {
+      this.props.history.push(`/mine/select_credit_page?agrNo=${this.state.agrNo}`)
+    } else {
+      this.props.history.push(`/mine/select_save_page?agrNo=${this.state.agrNo}`)
+    }
   };
   // 格式化显示有效期
   formatDate = date => {
@@ -134,7 +147,7 @@ export default class confirm_purchase_page extends PureComponent {
       <div className={styles.confirm_purchase_page}>
         <List>
           <Item
-            extra={`招商银行(1223)`}
+            extra={`${this.state.bankName}(${this.state.lastCardNo})`}
             arrow="horizontal"
             onClick={this.handleCardItemClick}
           >

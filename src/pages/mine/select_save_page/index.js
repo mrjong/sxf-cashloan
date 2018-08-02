@@ -47,7 +47,7 @@ export default class select_save_page extends PureComponent {
     }
   }
   componentWillUnmount() {
-    if(!this.state.isClickAdd){
+    if (!this.state.isClickAdd) {
       store.removeBackUrl(); // 清除session里的backurl的值
     }
   }
@@ -56,7 +56,7 @@ export default class select_save_page extends PureComponent {
     this.props.$fetch
       .post(API.VIPBANKLIST, {
         type: '5',
-        corpBusTyp: '01',
+        corpBusTyp: '31',
       }).then(
         res => {
           if (res.msgCode === "PTM0000") {
@@ -156,8 +156,13 @@ export default class select_save_page extends PureComponent {
   };
   // 新增授权卡
   addCard = () => {
-    this.setState({isClickAdd: true});
-    this.props.history.push('/mine/bind_save_page')
+    if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
+      this.setState({ isClickAdd: true });
+      this.props.history.replace('/mine/bind_bank_card')
+    } else {
+      this.setState({ isClickAdd: true });
+      this.props.history.push('/mine/bind_save_page')
+    }
   };
 
   render() {

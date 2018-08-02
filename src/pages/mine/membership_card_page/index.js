@@ -11,20 +11,33 @@ export default class card_home extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      status: false,
+      cardState: ''
     };
   }
 
   componentWillMount() {
-    this.getCard()
+    let cardInfo = store.getVIPInfo()
+    if (cardInfo && cardInfo.memSts === '1') {
+      this.setState({
+        cardInfo,
+        status: true,
+        cardState: '1'
+      })
+    } else {
+      this.getProCard()
+    }
   }
 
-  // 获取会员卡信息
-  getCard = () => {
+  // 获取会员卡产品信息
+  getProCard = () => {
     this.props.$fetch.post('/my/quickpay/queryMemPrdInfo').then(res => {
       if (res.msgCode === "PTM0000") {
         this.setState({
           data: res.data,
+          status: true,
+          cardState: '0',
           select: res.data[0].memPrdId,
           money: res.data[0].price
         })
@@ -48,7 +61,7 @@ export default class card_home extends PureComponent {
   checkoutCard = () => {
     this.props.$fetch.post("/my/quickpay/cardList", {
       type: '5',
-      corpBusTyp: '02'
+      corpBusTyp: '31'
     }).then(
       res => {
         if (res.msgCode === "PTM3021") {
@@ -57,7 +70,7 @@ export default class card_home extends PureComponent {
             memPrdId: this.state.select
           }
           store.setParamVip(param)
-          this.props.history.push("/mine/confirm_purchase_page")
+          this.props.history.push("/mine/bind_bank_card")
         } else if (res.msgCode === "PTM0000") {
           let param = {
             money: this.state.money,
@@ -84,7 +97,7 @@ export default class card_home extends PureComponent {
     return (
       <div className={styles.membership_card_page} >
         {
-          data && data.map((item, index) => {
+          this.state.status && this.state.cardState === '0' ? data && data.map((item, index) => {
             return (<div key={index} onClick={() => {
               this.selectOne(item.memPrdId, item.price)
             }} className={styles.cardHome}>
@@ -102,19 +115,29 @@ export default class card_home extends PureComponent {
               <div className={styles.cardTitle}>
                 有效期{item.menTerm}个月
             </div>
-
-              {/*<div className={styles.cardNumber}>*/}
-              {/*8888 **** **** 8888*/}
-              {/*</div>*/}
-              {/*<div className={styles.cardTitle}>*/}
-              {/*30天明星产品1次使用权  刷卡优惠超值套餐*/}
-              {/*</div>*/}
-              {/*<div className={styles.cardTitle}>*/}
-              {/*有效期至2018/8/1*/}
-              {/*</div>*/}
-
             </div>)
-          })
+          }) : null
+        }{
+          this.state.status && this.state.cardState === '1' ? cardInfo && cardInfo.memList && cardInfo.memList.map((item, index) => {
+            return (<div key={index} onClick={() => {
+              this.selectOne(item.memPrdId, item.price)
+            }} className={styles.cardHome}>
+              <div className={styles.cardMoney}>
+                {item.price} <span className={styles.icon}>￥</span>
+              </div>
+              <div className={styles.cardTitle}>
+                <span className={styles.left}>
+                  {item.memPrdDes && item.memPrdDes.split("|")[0]}
+                </span>
+                <span className={styles.right}>
+                  {item.memPrdDes && item.memPrdDes.split("|")[1]}
+                </span>
+              </div>
+              <div className={styles.cardTitle}>
+                有效期至2018/8/1
+            </div>
+            </div>)
+          }) : null
         }
 
         < div className={styles.btn} >
