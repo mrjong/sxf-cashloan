@@ -1,5 +1,6 @@
+import { store } from 'utils/common';
 export const address =() => {
-    if(sessionStorage.getItem('location')){
+    if(store.getPosition()){
         return
     }
     var geolocation = new BMap.Geolocation();
@@ -13,7 +14,8 @@ export const address =() => {
                 new AMap.convertFrom(`${lngValue},${latValue}`,'baidu',function (status, res) {
                     var lnglatXY=`${res.locations[0].lng},${res.locations[0].lat}`;//地图上所标点的坐标
                     console.log('lnglatXY:',lnglatXY);
-                    sessionStorage.setItem('location',lnglatXY)
+                    store.setPosition(lnglatXY);
+                    // sessionStorage.setItem('location',lnglatXY)
                     // store.dispatch(actions.setVars('location',lnglatXY));
                     new AMap.service('AMap.Geocoder',function(){//回调函数
                         //实例化Geocoder
@@ -59,8 +61,8 @@ export function getAddress() {
     return new Promise((resolve, reject) => {
         new AMap.service('AMap.Geocoder',function(){
             const geocoder = new AMap.Geocoder();
-            const address = sessionStorage.getItem('location');
-            console.log(" const address = sessionStorage.getItem('location'):", address);
+            const address = store.getPosition();
+            console.log(" store.getPosition()", address);
             if(address) {
                 const addressData = address.split(',').map(item => window.parseFloat(item, 10))
                 geocoder.getAddress(addressData, function(status, result) {
@@ -76,5 +78,3 @@ export function getAddress() {
         })
     });
 };
-
-

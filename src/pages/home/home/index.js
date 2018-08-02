@@ -1,8 +1,9 @@
 import sng4 from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
+import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
-import { store } from 'utils/common';
+import { store, getParamsFromUrl } from 'utils/common';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -10,7 +11,6 @@ import InfoCard from './components/info_card/index.js';
 import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
-
 import style from './style.scss';
 
 const API = {
@@ -18,115 +18,6 @@ const API = {
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
-};
-
-const mockData = {
-  LN0001: {
-    indexSts: 'LN0001',
-    indexMsg: '信用卡未授权',
-    indexData: {},
-  },
-  LN0002: {
-    indexSts: 'LN0002',
-    indexMsg: '账单爬取中',
-    indexData: {},
-  },
-  LN0003: {
-    indexSts: 'LN0003',
-    indexMsg: '一键还卡',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0004: {
-    indexSts: 'LN0004',
-    indexMsg: '代还资格审核中',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0005: {
-    indexSts: 'LN0005',
-    indexMsg: '暂无代还资格',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0006: {
-    indexSts: 'LN0006',
-    indexMsg: '一键代还',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0007: {
-    indexSts: 'LN0007',
-    indexMsg: '放款准备中',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0008: {
-    indexSts: 'LN0008',
-    indexMsg: '一键还卡',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0009: {
-    indexSts: 'LN0009',
-    indexMsg: '查看代还订单',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
-  LN0010: {
-    indexSts: 'LN0010',
-    indexMsg: '爬取失败/老用户',
-    indexData: {
-      bankName: '招商银行',
-      bankNo: 'ICBC',
-      cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
-      cardBillAmt: '786.45',
-      overDt: '7',
-    },
-  },
 };
 
 @fetch.inject()
@@ -143,6 +34,7 @@ export default class HomePage extends PureComponent {
   }
 
   componentWillMount() {
+    this.getTokenFromUrl();
     this.requestGetBannerList();
     this.requestGetUsrInfo();
 
@@ -160,20 +52,26 @@ export default class HomePage extends PureComponent {
     }
   }
 
+  // 从 url 中获取参数，如果有 token 就设置下
+  getTokenFromUrl = () => {
+    const urlParams = getParamsFromUrl(window.location.search);
+    if (urlParams.token) {
+      Cookie.set('fin-v-card-token', urlParams.token);
+    }
+  };
+
+  // 关闭弹框
   handleShowModal = () => {
     this.setState({
       isShowModal: true,
     });
   };
 
+  // 打开弹框
   handleCloseModal = () => {
     this.setState({
       isShowModal: false,
     });
-  };
-
-  handleClickBack = () => {
-    console.log('代还');
   };
 
   // 智能按钮点击事件
@@ -226,7 +124,7 @@ export default class HomePage extends PureComponent {
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
-      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;
       } else {
@@ -239,17 +137,17 @@ export default class HomePage extends PureComponent {
   requestBindCardState = () => {
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
       if (result && result.msgCode === 'PTM0000') {
-        console.log('有风控且绑信用卡储蓄卡');
+        // 有风控且绑信用卡储蓄卡
         this.handleShowModal();
       } else if (result && result.msgCode === 'PTM2003') {
-        console.log('有风控没绑储蓄卡 跳绑储蓄卡页面');
+        // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
         Toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
-        console.log('有风控没绑信用卡 跳绑信用卡页面');
+        // 有风控没绑信用卡 跳绑信用卡页面
         store.setBackUrl('/home/home');
         Toast.info(result.msgInfo);
         setTimeout(() => {

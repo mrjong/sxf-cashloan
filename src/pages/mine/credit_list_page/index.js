@@ -75,7 +75,7 @@ export default class credit_list_page extends PureComponent {
   // 新增授权卡
   addCard = () => {
     this.props.$fetch.post(API.CARDAUTH).then(result => {
-      if (result && result.msgCode === 'RCM0000' && result.data !== null) {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/mine/credit_list_page');
         window.location.href = result.data.url;
       } else {
@@ -124,4 +124,3 @@ export default class credit_list_page extends PureComponent {
     )
   }
 }
-
