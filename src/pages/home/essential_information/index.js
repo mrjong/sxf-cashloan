@@ -58,12 +58,17 @@ export default class essential_information extends PureComponent {
             cntMblNo2: values.relativesPhone,
             credCorpOrg: '',
           };
-          // values中存放的是经过 getFieldDecorator 包装的表单元素的值
-          this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
-            if (result && result.msgCode === 'PTM0000') {
-              this.props.history.replace('/mine/credit_extension_page');
-            }
-          });
+          if(values.friendPhone===values.relativesPhone){
+            this.props.toast.info('手机号不能相同');
+          }
+          else{
+            // values中存放的是经过 getFieldDecorator 包装的表单元素的值
+            this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
+              if (result && result.msgCode === 'PTM0000') {
+                this.props.history.replace('/mine/credit_extension_page');
+              }
+            });
+          }
         });
       } else {
         // 如果存在错误，获取第一个字段的第一个错误进行提示
