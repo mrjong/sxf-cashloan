@@ -204,7 +204,6 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
-              type="text"
             >
               联系人电话
             </InputItem>,
@@ -260,7 +259,6 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
-              type="text"
             >
               联系人电话
             </InputItem>,
@@ -277,4 +275,3 @@ export default class essential_information extends PureComponent {
     );
   }
 }
-
