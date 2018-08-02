@@ -4,9 +4,11 @@ import { createForm } from 'rc-form';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton'
 import styles from './index.scss';
+import fetch from 'sx-fetch';
 import { store, getFirstError } from 'utils/common';
 
 @createForm()
+@fetch.inject()
 export default class confirm_purchase_page extends PureComponent {
   constructor(props) {
     super(props);
@@ -77,13 +79,50 @@ export default class confirm_purchase_page extends PureComponent {
       }
     })
   };
-  // 点击开始倒计时
+  // 获取验证码
   countDownHandler = fn => {
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        fn(true);
+      if (err && err.yzmCode) {
+        delete err.yzmCode
+      }
+      console.log(err,values)
+      return
+      if (!err || JSON.stringify(err) === '{}') {
+        this.props.$fetch.post("/my/quickpay/paySms", {
+          cvv2: '',
+          expDt: this.state.xyCardDate,
+          agrNo: this.setState.agrNo
+        }).then(
+          res => {
+            if (res.msgCode === "PTM0000") {
+              this.props.toast.info('发送成功');
+              fn(true);
+              this.setState({
+                smsJrnNo: res.smsJrnNo
+              })
+              this.setState({ timeflag: false })
+              let timmer = setInterval(() => {
+                this.setState({ flag: false, timers: `${i--}"` })
+                if (i === -1) {
+                  clearInterval(timmer)
+                  this.setState({
+                    timers: "重新获取",
+                    timeflag: true,
+                    flag: true
+                  })
+                  this.setState({ valueInputSms: "" })
+                }
+              }, 1000)
+            } else {
+              res.msgInfo && this.props.toast.info(res.msgInfo)
+            }
+          },
+          err => {
+            console.log(err)
+          }
+        )
       } else {
-        this.props.info.info(getFirstError(err));
+        this.props.toast.info(getFirstError(err));
       }
     })
   };
@@ -140,8 +179,6 @@ export default class confirm_purchase_page extends PureComponent {
                   ],
                 })}
                 extra={<span style={{ color: '#C7C6CC' }}>年／月</span>}
-                value={this.state.periodValue}
-                onChange={date => this.setState({ periodValue: date })}
                 format={val => this.formatDate(val)}
               >
                 <Item arrow="horizontal">有效期</Item>

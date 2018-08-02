@@ -35,7 +35,7 @@ export default class login_page extends PureComponent {
     console.log(this.props);
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
-      phoneValue: '18500214321',
+      phoneValue: '',
     });
   }
 
@@ -72,7 +72,6 @@ export default class login_page extends PureComponent {
           sessionStorage.setItem('authorizedNotLoginStats', true);
           Cookie.set('fin-v-card-token', res.data.tokenId);
           sessionStorage.setItem('userId', res.data.userId);
-          fetch.defaults.headers['fin-v-card-token'] = res.data.tokenId;
           sessionStorage.getItem("active") === 'active' ? this.props.history.replace('/activePage') : this.props.history.replace('/home/home');
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);

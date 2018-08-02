@@ -4,6 +4,8 @@ import errPage from 'pages/common/err_page';
 import Header from 'components/header';
 import Footer from 'components/footer';
 import { Toast } from 'antd-mobile'
+import Cookie from 'js-cookie';
+
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
@@ -19,6 +21,15 @@ export default class router_Page extends PureComponent {
     this.loadComponent(this.props);
   }
   loadComponent = async props => {
+    // 未登录
+    const token = Cookie.get('fin-v-card-token');
+    if (!token) {
+      sessionStorage.clear()
+      Toast.info('请先登录')
+      setTimeout(() => {
+        window.location.pathname = '/login'
+      }, 3000);
+    }
     const { match, history, location } = props;
 
     try {

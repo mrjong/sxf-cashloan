@@ -8,6 +8,7 @@ const fetchinit = () => {
   var num = 0
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(cfg => {
+    fetch.defaults.headers['fin-v-card-token'] = Cookie.get('fin-v-card-token');
     num++
     if (!cfg.hideLoading) {
       // 防止时间短，出现loading 导致闪烁
