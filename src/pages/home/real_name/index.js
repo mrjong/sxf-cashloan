@@ -200,8 +200,6 @@ export default class real_name_page extends Component {
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
                 value={this.state.leftValue}
                 onChange={this.handleChangePositive}
-                // beforeCompress={this.handleBeforeCompress}
-                // afterCompress={this.handleAfterCompress}
               />
               <p>拍摄身份证正面</p>
             </div>
@@ -210,8 +208,6 @@ export default class real_name_page extends Component {
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
                 value={this.state.rightValue}
                 onChange={this.handleChangeSide}
-                // beforeCompress={this.handleBeforeCompress}
-                // afterCompress={this.handleAfterCompress}
               />
               <p>拍摄身份证反面</p>
             </div>
@@ -244,8 +240,6 @@ export default class real_name_page extends Component {
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
                 value={this.state.footerValue}
                 onChange={this.handleChangeBottom}
-                // beforeCompress={this.handleBeforeCompress}
-                // afterCompress={this.handleAfterCompress}
               />
               <p>上传手持身份证</p>
             </div>

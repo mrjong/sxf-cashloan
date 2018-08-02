@@ -31,9 +31,3 @@ export default [
     title: '实名认证',
     component: () => import('pages/home/real_name'),
   },
-  // {
-  //   path: '/home/demo',
-  //   title: '新登录',
-  //   component: () => import('pages/home/demo'),
-  // },
-];

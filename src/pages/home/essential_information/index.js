@@ -51,7 +51,6 @@ export default class essential_information extends PureComponent {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const data = `${city}${prov}${values.address}`;
-        console.log(111, data);
         getLngLat(data).then(lngLat => {
           const params = {
             provNm: this.state.provLabel[0],
@@ -69,7 +68,7 @@ export default class essential_information extends PureComponent {
           // values中存放的是经过 getFieldDecorator 包装的表单元素的值
           this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
             if (result && result.msgCode === 'PTM0000') {
-
+              this.props.history.replace('/mine/credit_extension_page');
             }
           });
         });
