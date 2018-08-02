@@ -45,7 +45,7 @@ export default class select_credit_page extends PureComponent {
   }
   componentWillUnmount() {
     // 如果点击的不是添加授权卡则清掉session里的backurl的值
-    if(!this.state.isClickAdd){
+    if (!this.state.isClickAdd) {
       store.removeBackUrl(); // 清除session里的backurl的值
     }
   }
@@ -158,8 +158,13 @@ export default class select_credit_page extends PureComponent {
   };
   // 新增授权卡
   addCard = () => {
-    this.setState({isClickAdd: true});
-    this.props.history.push('/mine/bind_credit_page')
+    if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
+      this.setState({ isClickAdd: true });
+      this.props.history.replace('/mine/bind_bank_card')
+    } else {
+      this.setState({ isClickAdd: true });
+      this.props.history.push('/mine/bind_credit_page')
+    }
   };
 
   render() {
@@ -179,7 +184,7 @@ export default class select_credit_page extends PureComponent {
                           className={isSelected ? styles.active : ''}
                           key={index}
                           onClick={
-                            this.selectCard.bind(this, {
+                            () => this.selectCard({
                               bankName: item.bankName,
                               lastCardNo: item.lastCardNo,
                               bankCode: item.bankCode,
