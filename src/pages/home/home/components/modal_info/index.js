@@ -23,6 +23,7 @@ export default class ModalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      cardBillAmt: 0,
       dateDiff: 0,
       repayInfo: {},
       repaymentDate: '',
@@ -86,6 +87,7 @@ export default class ModalInfo extends Component {
     this.setState({
       repaymentDate: data.value,
       repaymentIndex: data.index,
+      cardBillAmt: data.value.cardBillAmt,
     });
   };
 
@@ -116,9 +118,9 @@ export default class ModalInfo extends Component {
 
   // 确认按钮点击事件
   handleClickConfirm = () => {
-    const { lendersDate, repayInfo, repaymentDate } = this.state;
+    const { lendersDate, repayInfo, repaymentDate, cardBillAmt } = this.state;
     const { indexData } = this.props;
-    const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${repayInfo.cardBillAmt}`;
+    const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
     // 跳转确认代还页面之前 将当前弹框数据保存下来
     store.setRepaymentModalData(this.state);
     // 跳转确认代还页面之前 将当前信用卡信息保存下来
@@ -138,7 +140,11 @@ export default class ModalInfo extends Component {
         }
         this.setState({
           repayInfo: result.data,
-          repaymentDateList: result.data.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
+          repaymentDateList: result.data.prdList.map(item => ({
+            name: item.prdName,
+            value: item.prdId,
+            cardBillAmt: item.cardBillAmt,
+          })),
           dateDiff: diff,
           lendersIndex: diff <= 2 ? 1 : 0,
           lendersDateList: lendersDateListFormat,
@@ -148,7 +154,15 @@ export default class ModalInfo extends Component {
   };
 
   render() {
-    const { repayInfo, repaymentDateList, repaymentIndex, lendersDateList, lendersIndex, dateDiff } = this.state;
+    const {
+      repayInfo,
+      repaymentDateList,
+      repaymentIndex,
+      lendersDateList,
+      lendersIndex,
+      dateDiff,
+      cardBillAmt,
+    } = this.state;
     const { onClose } = this.props;
 
     let lendersTip = '';
@@ -175,7 +189,7 @@ export default class ModalInfo extends Component {
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
-              <span className={style.item_value}>{repayInfo.cardBillAmt}</span>
+              <span className={style.item_value}>{cardBillAmt}</span>
             </div>
           </li>
           <li className={style.list_item}>

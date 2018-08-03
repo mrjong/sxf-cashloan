@@ -27,7 +27,7 @@ export default class ButtonCustom extends React.PureComponent {
                 <ul className={styles.list_desc_container_box}>
                     {
                         listdescinfo.length > 0 && listdescinfo.map((item, index) => {
-                            if (parseInt(item.feeAmt) !== 0) {
+                            if (parseFloat(item.feeAmt) !== 0) {
                                 console.log(index)
                                 return (
                                     <li key={index} className={`${styles.list_desc_container}`}>

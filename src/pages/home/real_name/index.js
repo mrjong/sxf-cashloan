@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Cookie from 'js-cookie';
 import { setBackGround } from '../../../utils/Background';
 import { createForm } from 'rc-form';
 import updateLeft from '../../../assets/images/real_name/left.png';
@@ -176,7 +177,8 @@ export default class real_name_page extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
-        store.removeAuthFlag();
+        // store.removeAuthFlag();
+        Cookie.remove('authFlag');
         this.props.history.replace('/mine/credit_extension_page');
       }
       else {

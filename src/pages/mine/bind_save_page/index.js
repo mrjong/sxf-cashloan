@@ -59,15 +59,19 @@ export default class bind_save_page extends PureComponent {
   // 绑卡之前进行校验
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      this.setState({ cardData: { cardNo: values.valueInputCarNumber, ...result.data } })
-      const params1 = {
-        bankCd: result.data.bankCd,
-        cardTyp: 'D', //卡类型。
-        cardNo: values.valueInputCarNumber, //持卡人卡号
-        mblNo: values.valueInputCarPhone, //预留手机号
-        smsCd: values.valueInputCarSms, //短信验证码
-      };
-      this.bindSaveCard(params1);
+      if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
+        this.setState({ cardData: { cardNo: values.valueInputCarNumber, ...result.data } })
+        const params1 = {
+          bankCd: result.data.bankCd,
+          cardTyp: 'D', //卡类型。
+          cardNo: values.valueInputCarNumber, //持卡人卡号
+          mblNo: values.valueInputCarPhone, //预留手机号
+          smsCd: values.valueInputCarSms, //短信验证码
+        };
+        this.bindSaveCard(params1);
+      } else {
+        this.props.toast.info('请输入有效银行卡号')
+      }
     }, (error) => {
       error.msgInfo && this.props.toast.info(error.msgInfo);
     });
@@ -154,7 +158,7 @@ export default class bind_save_page extends PureComponent {
       cardNo: formData.valueInputCarNumber, //持卡人储蓄卡号
     };
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      if (result.msgCode === 'PTM0000' && result.data && result.data.cardTyp !== 'C') {
+      if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
         this.props.$fetch.post(API.GETCODE, {
           mblNo: formData.valueInputCarPhone,
           bankCd: result.data.bankCd,
