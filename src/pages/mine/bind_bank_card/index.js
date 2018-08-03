@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import STabs from 'components/tabs';
+import { store } from 'utils/common';
 import FormContent from './form-content';
 import style from './index.scss';
 
@@ -32,6 +33,9 @@ export default class BindBankCardPage extends PureComponent {
 
   componentWillMount() {
     this.requestUserInfo();
+  }
+  componentWillUnmount() {
+    store.removeBackUrl(); // 清除session里的backurl的值
   }
 
   // 获取用户信息
