@@ -44,8 +44,8 @@ export default class message_page extends PureComponent {
   }
   scrollTop = 0
   componentWillMount() {
-    // var _body = document.getElementsByTagName("body")[0]
-    // _body.style.backgroundColor = "#efeff4"
+    var _body = document.getElementsByTagName("body")[0]
+    _body.style.backgroundColor = "#f5f5f9"
     // 处理详情返回之后
     let backDatastr = sessionStorage.getItem("backData")
     if (backDatastr && backDatastr !== "{}") {

@@ -8,7 +8,7 @@ export default [
   },
   {
     path: '/home/message_page',
-    title: '消息',
+    title: '消息中心',
     component: () => import('pages/home/message_page'),
   },
   {
