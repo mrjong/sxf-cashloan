@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { List, DatePicker, InputItem } from 'antd-mobile';
+import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton'
@@ -58,6 +59,7 @@ export default class confirm_purchase_page extends PureComponent {
               if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
                 res.msgInfo && this.props.toast.info(res.msgInfo)
                 const backUrlData = store.getBackUrl();
+                Cookie.remove('VIPFlag');
                 setTimeout(() => {
                   this.props.history.replace(backUrlData)
                 }, 3000)
