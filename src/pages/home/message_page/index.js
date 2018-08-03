@@ -131,7 +131,8 @@ export default class message_page extends PureComponent {
       this.getDesc(obj)
     }
   }
-
+  
+  // 去详情
   getDesc = obj => {
     let rData = this.state.rData
     rData.forEach((item, index) => {

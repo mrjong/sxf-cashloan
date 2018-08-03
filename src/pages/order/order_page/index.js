@@ -40,7 +40,6 @@ export default class message_page extends PureComponent {
     }
     scrollTop = 0
     componentWillMount() {
-        sessionStorage.removeItem(sessionStorageMap.bill.billNo)
         // 处理详情返回之后
         let backDatastr = sessionStorage.getItem(sessionStorageMap.bill.backData)
         console.log('222222222', backDatastr)
@@ -221,8 +220,7 @@ export default class message_page extends PureComponent {
 
         // 0:无，1:URL，2:文本，3:APP"
         sessionStorage.setItem(sessionStorageMap.bill.backData, JSON.stringify(backData))
-        sessionStorage.setItem(sessionStorageMap.bill.billNo, JSON.stringify(obj.billNo))
-        this.props.history.push('/order/order_detail_page')
+        this.props.history.push(`/order/order_detail_page?billNo=${obj.billNo}`)
     }
     // 切换tab
     changeTab = (tab, index) => {

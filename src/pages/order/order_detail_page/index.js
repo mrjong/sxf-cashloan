@@ -7,6 +7,7 @@ import sessionStorageMap from 'utils/sessionStorageMap';
 import { store } from 'utils/common';
 import { Modal } from 'antd-mobile';
 import styles from './index.scss';
+import qs from 'qs';
 
 const API = {
     'qryDtl': "/bill/qryDtl",
@@ -25,7 +26,14 @@ export default class order_detail_page extends PureComponent {
         }
     }
     componentWillMount() {
-        this.getLoanInfo()
+        const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+        this.setState({
+            queryData
+        }, () => {
+            this.getLoanInfo()
+        })
+
+        // 选择银行卡回来
         let bankInfo = store.getCardData()
         if (bankInfo && bankInfo !== {}) {
             this.setState({
@@ -35,14 +43,18 @@ export default class order_detail_page extends PureComponent {
                 store.removeCardData()
             })
         }
-
     }
 
     // 获取还款信息
     getLoanInfo = () => {
-        let billNo = sessionStorage.getItem(sessionStorageMap.bill.billNo)
+        if (!this.state.queryData || !this.state.queryData.billNo) {
+            this.props.toast.info('订单号不能为空')
+            setTimeout(() => {
+                this.props.history.goBack()
+            }, 3000);
+        }
         this.props.$fetch.post(API.qryDtl, {
-            billNo: JSON.parse(billNo)
+            billNo: this.state.queryData.billNo
         })
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
@@ -135,9 +147,8 @@ export default class order_detail_page extends PureComponent {
     // 立即还款
     handleClickConfirm = () => {
         const { billDesc } = this.state
-        let billNo = sessionStorage.getItem(sessionStorageMap.bill.billNo)
         this.props.$fetch.post(API.payback, {
-            billNo: JSON.parse(billNo),
+            billNo: this.state.queryData.billNo,
             thisRepTotAmt: this.state.money,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,

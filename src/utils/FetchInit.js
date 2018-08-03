@@ -49,7 +49,6 @@ const fetchinit = () => {
   }, error => {
     console.log(error)
     num--
-    console.log('22222222', timerList)
     for (let i = 0; i < timerList.length; i++) {
       clearTimeout(timerList[i])
     }

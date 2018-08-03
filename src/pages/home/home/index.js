@@ -27,8 +27,7 @@ export default class HomePage extends PureComponent {
     this.state = {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }],
-      // usrIndexInfo: '',
-      usrIndexInfo: mockData.LN0006,
+      usrIndexInfo: '',
       haselescard: 'true',
     };
   }
@@ -107,11 +106,11 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 也跳账单页');
-        this.props.history.push('/order/order_page');
+        this.props.history.push(`/order/order_detail_page?billNo=${usrIndexInfo.indexData.billNo}`);
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
-        this.props.history.push('/order/order_page');
+        this.props.history.push(`/order/order_detail_page?billNo=${usrIndexInfo.indexData.billNo}`);
         break;
       case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
         console.log('LN0010');

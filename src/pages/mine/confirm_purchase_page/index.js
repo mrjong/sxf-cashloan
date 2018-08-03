@@ -33,7 +33,9 @@ export default class confirm_purchase_page extends PureComponent {
         bankCode: paramVip.bankCode
       })
     }
-
+  }
+  componentWillUnmount() {
+    store.removeCardData()
   }
   // 确认购买
   confirmBuy = () => {
