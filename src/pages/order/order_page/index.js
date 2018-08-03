@@ -246,7 +246,7 @@ export default class message_page extends PureComponent {
             }
             const obj = this.state.rData && this.state.rData[index--]
             return (
-                <Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} wrap>
+                <Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} wrap>
                     {obj.billAmt}<Brief>{obj.billDt}</Brief>
                 </Item>
             )
