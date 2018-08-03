@@ -28,6 +28,7 @@ export default class credit_extension_page extends PureComponent {
     stswData: [],
     flag: false,
     submitFlag: false,
+    isShowBtn: true, // 是否展示提交代还金申请按钮
   };
 
   componentWillMount() {
@@ -37,6 +38,10 @@ export default class credit_extension_page extends PureComponent {
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     const params = query.params;
     const sign = query.sign;
+    const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
+    if (isShowCommit && isShowCommit === 'false') {
+      this.setState({ isShowBtn: false })
+    }
     if (params && sign) {
       const data = {
         params,
@@ -68,16 +73,16 @@ export default class credit_extension_page extends PureComponent {
   // 获取授信列表状态
   requestGetStatus = () => {
     this.props.$fetch.get(`${API.getStw}`).then(result => {
-        if (result && result.data !== null && result.msgCode === 'PTM0000') {
-          this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
+      if (result && result.data !== null && result.msgCode === 'PTM0000') {
+        this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
 
-          // 判断四项认证是否都认证成功
-          const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
-          if (isAllValid) {
-            this.setState({ submitFlag: true });
-          }
+        // 判断四项认证是否都认证成功
+        const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
+        if (isAllValid) {
+          this.setState({ submitFlag: true });
         }
-      },
+      }
+    },
     );
   };
 
@@ -170,7 +175,7 @@ export default class credit_extension_page extends PureComponent {
   };
 
   render() {
-    const { submitFlag, stswData } = this.state;
+    const { submitFlag, stswData, isShowBtn } = this.state;
     const data = stswData.map(item => {
       return {
         dicDetailCd: item.stsw.dicDetailCd,
@@ -186,9 +191,13 @@ export default class credit_extension_page extends PureComponent {
     });
     return (
       <div className={styles.credit_extension_page}>
-        <Lists listsInf={data} clickCb={this.getStateData}/>
-
-        <ButtonCustom onClick={submitFlag ? this.commitApply : null} className={submitFlag ? styles.commit_btn : styles.not_commit_btn}>提交代还金申请</ButtonCustom>
+        <Lists listsInf={data} clickCb={this.getStateData} />
+        {
+          isShowBtn ?
+            <ButtonCustom onClick={submitFlag ? this.commitApply : null} className={submitFlag ? styles.commit_btn : styles.not_commit_btn}>提交代还金申请</ButtonCustom>
+            :
+            null
+        }
       </div>
     );
   }
