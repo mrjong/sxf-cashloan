@@ -19,7 +19,7 @@ const API = {
 
 function formatDate(date) {
   const pad = n => (n < 10 ? `0${n}` : n);
-  const dateStr = `${pad(date.getMonth() + 1)}/ ${date
+  const dateStr = `${pad(date.getMonth() + 1)} / ${date
     .getFullYear()
     .toString()
     .slice(-2)}`;
@@ -322,7 +322,7 @@ export default class CreditCard extends PureComponent {
             <DatePicker
               mode="month"
               title="选择日期"
-              extra="月／年"
+              extra={<div style={{ color: '#C7C6CC' }}>月 / 年</div>}
               format={val => formatDate(val)}
               onVisibleChange={value => {
                 this.props.handledismiss(value);

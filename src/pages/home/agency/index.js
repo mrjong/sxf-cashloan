@@ -12,6 +12,7 @@ import style from './style.scss';
 const API = {
   REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
+  SAVE_REPAY_CARD: '/bill/saveRepayCard', // 0210-代还的银行卡信息校验缓存
 };
 
 @fetch.inject()
@@ -27,13 +28,17 @@ export default class ConfirmAgencyPage extends PureComponent {
   }
 
   componentWillMount() {
+    this.requestSendInfoForProtocol();
     // 获取参数
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-    this.setState({
-      queryData
-    }, () => {
-      this.requestGetRepayInfo();
-    })
+    this.setState(
+      {
+        queryData,
+      },
+      () => {
+        this.requestGetRepayInfo();
+      },
+    );
   }
 
   handleShowModal = () => {
@@ -57,13 +62,31 @@ export default class ConfirmAgencyPage extends PureComponent {
     store.setRepaymentModalData(null);
   };
 
+  // 给后台缓存协议接口
+  requestSendInfoForProtocol = () => {
+    const modalData = store.getRepaymentModalData();
+    const storeCardData = store.getCardData();
+    const { repayInfo } = modalData;
+    const params = {
+      withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
+      withHoldAgrNo: storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo, // 还款卡号主键
+    };
+    this.props.$fetch.post(API.SAVE_REPAY_CARD, params).then(result => {
+      if (result && result.msgCode === 'PTM0000') {
+        console.log(result, '给后端协议缓存信息');
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
+  };
+
   // 获取确认代还信息
   requestGetRepayInfo = () => {
     this.props.$fetch.post(API.REPAY_INFO, this.state.queryData).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         console.log(result, '000');
         this.setState({
-          repayInfo: result.data
+          repayInfo: result.data,
         });
       }
     });
