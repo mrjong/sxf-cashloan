@@ -9,7 +9,17 @@
     margin-right: auto;
     margin-left: auto;
     .protocol_link {
-      color: #ebde74;
+      color: #4DA6FF;
     }
+  }
+}
+
+// 覆盖 antd mobile picke和modal样式
+:global {
+  .am-picker-popup-header .am-picker-popup-header-right.am-picker-popup-item,.am-modal-button-group-h a.am-modal-button{
+    color: #ffc601;
+  }
+  .am-picker-popup-header .am-picker-popup-item,.am-modal-button-group-h a.am-modal-button:first-child{
+    color: #666;
   }
 }

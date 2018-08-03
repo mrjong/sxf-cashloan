@@ -32,14 +32,14 @@ export default class mine_page extends PureComponent {
     // 移除会员卡出入口
     store.removeVipBackUrl()
     // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
-    if (store.getAuthFlag()) {
-      this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: store.getAuthFlag() === '1' ? true : false });
+    if (Cookie.get('authFlag')) {
+      this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: Cookie.get('authFlag') === '1' ? true : false });
     } else {
       this.getUsrInfo();
     }
     // 判断session是否存了购买会员卡的状态，没有调用接口，有的话直接从session里取
-    if (store.getVIPFlag()) {
-      switch (store.getVIPFlag()) {
+    if (Cookie.get('VIPFlag')) {
+      switch (Cookie.get('VIPFlag')) {
         case '0':
           this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
           break;
@@ -64,7 +64,11 @@ export default class mine_page extends PureComponent {
         return
       }
       store.setUserPhone(res.mblNoHid);
-      store.setAuthFlag(res.realNmFlg);
+      // store.setAuthFlag(res.realNmFlg);
+      let inOnwMinute = new Date(new Date().getTime() + 1 * 60 * 1000);
+      Cookie.set('authFlag', res.realNmFlg, {
+        expires: inOnwMinute,
+      });
       store.setUserInfo(res);
       this.setState({ mblNoHid: res.mblNoHid, realNmFlg: res.realNmFlg === '1' ? true : false });
       //TODO ...
@@ -76,7 +80,11 @@ export default class mine_page extends PureComponent {
   queryVipCard = () => {
     this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        store.setVIPFlag(result.data.memSts);
+        // store.setVIPFlag(result.data.memSts);
+        let inOnwMinute = new Date(new Date().getTime() + 1 * 60 * 1000);
+        Cookie.set('VIPFlag', result.data.memSts, {
+          expires: inOnwMinute,
+        });
         store.setVIPInfo(result.data)
         store.setVipBackUrl('/mine/mine_page')
         switch (result.data.memSts) {

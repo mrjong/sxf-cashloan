@@ -191,7 +191,7 @@ export default class CreditCard extends PureComponent {
       if (result && result.msgCode === 'PTM0000') {
         this.setState({
           smsJrnNo: result.data.payMsgId,
-          agrNo: result.data.smsJrnNo,
+          agrNo: result.data.agrNo,
         });
         fn(true);
       } else {
@@ -234,7 +234,7 @@ export default class CreditCard extends PureComponent {
             this.props.history.goBack();
           }
         } else {
-          Toast.info(result.msg);
+          Toast.info(result.msgInfo);
         }
       },
       err => {
