@@ -270,7 +270,7 @@ export default class essential_information extends PureComponent {
             *输入有效的紧急联系人信息，有利于提升您的审批额度，我们将对您提供的信息严格保密
           </p>
         </div>
-        <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>下一步</ButtonCustom>
+        <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>完成</ButtonCustom>
       </div>
     );
   }
