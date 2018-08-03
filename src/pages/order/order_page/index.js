@@ -206,8 +206,9 @@ export default class message_page extends PureComponent {
     }
     // 查看详情
     gotoDesc = obj => {
-        // 账单状态(0：初登记,1：待还款,2：处理中,3：已撤销,4：已还清;已撤销状态专用于免手续费时间限制内的全额退款)
-        if (obj.billSts === '2' || obj.billSts === '3') {
+        // 账单状态(0：初登记,1：待还款,2：处理中,3：已撤销,4：已还清;已撤销状态专用于免手续费时间限制内的全额退款)， -2: 放款中
+        const noDetailsPageArr = ['2', '3', '-2'];
+        if (noDetailsPageArr.includes(obj.billSts)) {
             return
         }
         let backData = {
