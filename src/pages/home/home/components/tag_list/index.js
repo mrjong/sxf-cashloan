@@ -46,12 +46,12 @@ export default class TagList extends React.PureComponent {
   };
 
   _handleClick = (onClick, index, value) => {
-    this.setState({
-      currentIndex: index,
-    });
     if (!value || value.disable) {
       return false;
     }
+    this.setState({
+      currentIndex: index,
+    });
     const params = {
       index,
       value,

@@ -88,7 +88,7 @@ export default class BankCard extends React.PureComponent {
     } else if (parseInt(overDt, 10) === 0) {
       overDtStr = '今天到期';
     } else if (overDt < 0) {
-      overDtStr = `已逾期${Math.abs(overDt)}天`;
+      overDtStr = '已到期';
     }
     return (
       <div className={style.bank_card_wrap}>

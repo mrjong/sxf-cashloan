@@ -89,11 +89,12 @@ export default class BankContent extends React.Component {
 
   render() {
     const { className, children, contentData, ...restProps } = this.props;
+    const showEntranceArr = ['LN0003', 'LN0006', 'LN0008', 'LN0009']
     return (
       <div className={style.bank_content_wrap} {...restProps}>
         <BankCard contentData={contentData} {...contentData.indexData} />
         {children}
-        {contentData.indexMsg === '一键代还' ? (
+        {showEntranceArr.includes(contentData.indexSts) ? (
           <button className={style.link_tip} onClick={this.repayForOtherBank}>
             代还其它信用卡
             <img className={style.link_arrow_img} src={iconArrow} alt="" />

@@ -19,10 +19,10 @@ const API = {
 
 function formatDate(date) {
   const pad = n => (n < 10 ? `0${n}` : n);
-  const dateStr = `${date
+  const dateStr = `${pad(date.getMonth() + 1)} / ${date
     .getFullYear()
     .toString()
-    .slice(-2)} / ${pad(date.getMonth() + 1)}`;
+    .slice(-2)}`;
   return dateStr;
 }
 
@@ -32,12 +32,6 @@ export default class CreditCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      idCard: '12310802983010172',
-      bank: '',
-      safeCode: '',
-      validityDate: '',
-      phoneNo: '',
-      verifyCode: '',
       smsJrnNo: '', // 短信流水号
       bankList: [],
     };
@@ -298,7 +292,7 @@ export default class CreditCard extends PureComponent {
           </Picker>
           <InputItem
             placeholder="请输入银行卡卡号"
-            maxLength="25"
+            maxLength="24"
             type="number"
             {...getFieldProps('bankCardNo', {
               rules: [{ required: true, message: '请输入银行卡卡号' }, { validator: this.verifyBankNum }],
@@ -328,8 +322,11 @@ export default class CreditCard extends PureComponent {
             <DatePicker
               mode="month"
               title="选择日期"
-              extra="年／月"
+              extra={<div style={{ color: '#C7C6CC' }}>月 / 年</div>}
               format={val => formatDate(val)}
+              onVisibleChange={value => {
+                this.props.handledismiss(value);
+              }}
               {...getFieldProps('validityDate', {
                 rules: [{ required: true, message: '请选择日期' }],
               })}
