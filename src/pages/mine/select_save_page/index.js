@@ -153,6 +153,9 @@ export default class select_save_page extends PureComponent {
     });
     this.props.history.goBack();
     store.setCardData(obj);
+    let paramVip = store.getParamVip() || {};
+    Object.assign(paramVip, obj);
+    store.setParamVip(paramVip);
     // }
   };
   // 新增授权卡
