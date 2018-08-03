@@ -124,13 +124,25 @@ export default class ConfirmAgencyPage extends PureComponent {
   read = (type) => {
     switch (type) {
       // 借款合同
-      case 'loan_contract':
+      case 'loan_contract_page':
         this.props.$fetch.post('/bill/qryContractInfo', {
           prdId: this.state.queryData.prdId,
           wtdwTyp: this.state.queryData.wtdwTyp,
           billPrcpAmt: this.state.queryData.billPrcpAmt
         }).then(result => {
           if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+            let todayDt = {
+              getFullYear: new Date().getFullYear(),
+              getDate: new Date().getDate(),
+              getMonth: new Date().getMonth() + 1,
+              billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
+              billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
+              billDate: result.preBillRespVo.billDueDt.slice(6)
+            }
+            let object = Object.assign(
+              Object.assign(result, result.preBillRespVo),
+              todayDt
+            )
             // this.props.history.push('/protocol/loan_contract_page/')
           } else {
             this.props.toast.info(result.msgInfo);
@@ -178,7 +190,7 @@ export default class ConfirmAgencyPage extends PureComponent {
         </ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          <a onClick={() => { this.read('loan_contract') }} className={style.protocol_link}>
+          <a onClick={() => { this.read('loan_contract_page') }} className={style.protocol_link}>
             《借款合同》
           </a>
           <a className={style.protocol_link} href=" ">
