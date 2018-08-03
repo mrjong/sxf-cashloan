@@ -154,6 +154,9 @@ export default class select_credit_page extends PureComponent {
     // this.props.history.replace(backUrlData);
     this.props.history.goBack();
     store.setCardData(obj);
+    let paramVip = store.getParamVip() || {};
+    Object.assign(paramVip, obj);
+    store.setParamVip(paramVip);
     // }
 
   };
