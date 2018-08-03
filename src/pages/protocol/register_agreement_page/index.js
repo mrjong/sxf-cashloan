@@ -16,11 +16,6 @@ export default class register_agreement_page extends PureComponent {
                 src="/disting/#/register_agreement_page"
                 name="register_agreement_page"
                 id="register_agreement_page"
-                onLoad={() => {
-                    window.frames['register_agreement_page'].setData({
-                        name: '11111111'
-                    });
-                }}
                 width="100%"
                 height="100%"
                 frameBorder="0"

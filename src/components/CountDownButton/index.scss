@@ -23,4 +23,8 @@
   a.am-button-primary:hover{
     text-decoration: none;
   }
+  .am-button-primary.am-button-disabled{
+    color: #fff;
+    background: #B9B9B9;
+  }
 }

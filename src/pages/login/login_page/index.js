@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast } from 'antd-mobile';
+import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store, getDeviceType, getFirstError } from 'utils/common';
@@ -30,6 +30,7 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    document.title = "登录和注册"
     // 移除cookie
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear()
@@ -125,18 +126,18 @@ export default class login_page extends PureComponent {
     });
   }
   // 跳转协议
-  go=(url)=>{
+  go = (url) => {
     this.props.history.push(`/protocol/${url}`)
   }
-
   render() {
     const { getFieldProps } = this.props.form;
     return (
       <div className={style.loginContent}>
         <div className={style.loginLog}>
           <div className={style.centent}>
-            <input
+            <InputItem
               maxLength="11"
+              type="number"
               className={style.loginInput}
               placeholder='请输入您的手机号'
               {...getFieldProps('phoneValue', {
@@ -146,7 +147,8 @@ export default class login_page extends PureComponent {
                 ],
               })}
             />
-            <input
+            <InputItem
+              type="number"
               maxLength="6"
               className={style.loginInput}
               placeholder='请输入短信验证码'
