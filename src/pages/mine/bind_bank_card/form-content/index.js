@@ -190,7 +190,7 @@ export default class CreditCard extends PureComponent {
     this.props.$fetch.post(API.VERIFY_CODE_URL, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         this.setState({
-          smsJrnNo: result.data.smsJrnNo,
+          smsJrnNo: result.data.payMsgId,
           agrNo: result.data.smsJrnNo,
         });
         fn(true);
