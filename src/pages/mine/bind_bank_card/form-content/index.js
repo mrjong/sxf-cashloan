@@ -298,7 +298,7 @@ export default class CreditCard extends PureComponent {
           </Picker>
           <InputItem
             placeholder="请输入银行卡卡号"
-            maxLength="25"
+            maxLength="24"
             type="number"
             {...getFieldProps('bankCardNo', {
               rules: [{ required: true, message: '请输入银行卡卡号' }, { validator: this.verifyBankNum }],

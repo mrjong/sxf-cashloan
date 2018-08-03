@@ -133,7 +133,7 @@ export default class bind_credit_page extends PureComponent {
         <List>
           <Item extra={this.state.userName}>持卡人</Item>
           <InputItem
-            maxLength="25"
+            maxLength="24"
             type="number"
             {...getFieldProps('valueInputCarNumber', {
               rules: [
