@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn';
 .nameDiv {
   width: 100%;
   height: 100%;
@@ -114,7 +115,10 @@
 .noBorder {
   :global {
     .am-list-item.am-list-item-middle .am-list-line {
-      border-bottom: none;
+      // border-bottom: none;
+      &:after{
+        @include setBottomLine(transparent);
+      }
     }
   }
 }
@@ -143,6 +147,9 @@
     font-size: 0.3rem;
   }
   .am-list-item.am-list-item-middle .am-list-line {
-    border-bottom: 1PX  solid #e5e5e5;
+    // border-bottom: 1PX  solid #e5e5e5;rrr
+    &:after{
+      @include setBottomLine();
+    }
   }
 }
