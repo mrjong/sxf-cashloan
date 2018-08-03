@@ -113,7 +113,7 @@ export default class BankCard extends React.PureComponent {
           </div>
           <div className={style.bill_item}>
             <span className={style.bill_value}>
-              {typeof cardBillAmt === 'number' ? parseInt(cardBillAmt, 10).toFixed(2) : cardBillAmt}
+              {typeof cardBillAmt === 'number' ? parseFloat(cardBillAmt, 10).toFixed(2) : cardBillAmt}
             </span>
             <span className={style.bill_name}>账单金额</span>
           </div>

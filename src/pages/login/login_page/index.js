@@ -70,7 +70,7 @@ export default class login_page extends PureComponent {
             res.msgInfo && Toast.info(res.msgInfo);
             return;
           }
-          Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 7 });
+          Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
           this.props.history.replace('/home/home');
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);
