@@ -143,7 +143,7 @@ export default class select_save_page extends PureComponent {
 
   // 选择银行卡
   selectCard = obj => {
-    console.log(backUrlData)
+    // console.log(backUrlData)
     // if (backUrlData) {
     this.setState({
       // bankName: obj.bankName,

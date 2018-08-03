@@ -137,7 +137,7 @@ export default class mine_page extends PureComponent {
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    if (item.jumpToUrl === '/home/real_name') {
+    if (item.jumpToUrl === '/home/real_name' || item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' || item.jumpToUrl === '/mine/fqa_page') {
       this.props.history.push(item.jumpToUrl);
     } else {
       const { mblNoHid, realNmFlg } = this.state;
@@ -208,7 +208,7 @@ export default class mine_page extends PureComponent {
           name: '信用加分',
           icon: require('assets/images/mine/menu_ico2.png')
         },
-        jumpToUrl: '/mine/credit_extension_page',
+        jumpToUrl: '/mine/credit_extension_page?isShowCommit=false',
       },
       {
         label: {

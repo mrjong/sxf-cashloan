@@ -70,7 +70,7 @@ export default class card_home extends PureComponent {
             memPrdId: this.state.select
           }
           store.setParamVip(param)
-          this.props.history.push("/mine/bind_bank_card")
+          this.props.history.push("/mine/bind_bank_card?firstBind=true")
         } else if (res.msgCode === "PTM0000") {
           let param = {
             money: this.state.money,
