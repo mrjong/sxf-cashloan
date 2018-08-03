@@ -22,7 +22,8 @@ export default class order_detail_page extends PureComponent {
             showMoudle: false,
             orderList: [],
             money: '',
-            bankInfo: {}
+            bankInfo: {},
+            hideBtn: false
         }
     }
     componentWillMount() {
@@ -75,9 +76,17 @@ export default class order_detail_page extends PureComponent {
 
     // 显示还款计划
     showPerdList = (perdNum) => {
+        this.setState({
+            hideBtn: false
+        })
         let perdListArray = []
         let perdList = this.state.perdList
         for (let i = 0; i < perdList.length; i++) {
+            if (perdList[i].predSts === '2') {
+                this.setState({
+                    hideBtn: true
+                })
+            }
             let item = {
                 key: i,
                 label: {
@@ -196,7 +205,7 @@ export default class order_detail_page extends PureComponent {
         this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.agrNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
     }
     render() {
-        const { billDesc, money } = this.state
+        const { billDesc, money, hideBtn } = this.state
         return (
             <div className={styles.order_detail_page}>
                 <Panel title="借款信息">
@@ -236,7 +245,7 @@ export default class order_detail_page extends PureComponent {
                 </Panel>
 
                 {
-                    billDesc.perdNum !== 999 ? <div className={styles.submit_btn}>
+                    billDesc.perdNum !== 999 && hideBtn ? <div className={styles.submit_btn}>
                         <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>

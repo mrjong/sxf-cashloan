@@ -149,7 +149,10 @@ export default class ConfirmAgencyPage extends PureComponent {
           }
         });
         break;
-
+      case 'delegation_withhold_page':
+        break;
+      case 'financial_service_page':
+        break;
       default:
         break;
     }
@@ -193,10 +196,10 @@ export default class ConfirmAgencyPage extends PureComponent {
           <a onClick={() => { this.read('loan_contract_page') }} className={style.protocol_link}>
             《借款合同》
           </a>
-          <a className={style.protocol_link} href=" ">
+          <a onClick={() => { this.read('delegation_withhold_page') }} className={style.protocol_link} href=" ">
             《委托扣款协议》
           </a>
-          <a className={style.protocol_link} href=" ">
+          <a onClick={() => { this.read('financial_service_page') }} className={style.protocol_link} href=" ">
             《金融服务协议》
           </a>
 
