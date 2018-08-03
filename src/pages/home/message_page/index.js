@@ -131,7 +131,7 @@ export default class message_page extends PureComponent {
       this.getDesc(obj)
     }
   }
-  
+
   // 去详情
   getDesc = obj => {
     let rData = this.state.rData
@@ -418,9 +418,7 @@ export default class message_page extends PureComponent {
     return (
       <div className={style.message_page}>
         {this.state.msgReadAllState ? (
-          <div onClick={this.msgReadAll} className={style.allRead}>
-            <i />一键读取
-          </div>
+          <div onClick={this.msgReadAll} className={style.allRead}></div>
         ) : null}
         {this.state.tabState ? (
           <STabs

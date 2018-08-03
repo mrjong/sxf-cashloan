@@ -54,24 +54,10 @@
     bottom: 90px;
     right: 50px;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 34px;
-    padding: 20px 40px;
-    color: #fff;
-    font-size: 28px;
-    text-align: center;
-    i {
-      width: 32px;
-      display: inline-block;
-      height: 32px;
-      vertical-align: middle;
-      @include bg-image('../../../assets/images/message/Shape');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      margin-right: 12px;
-      //  background: black;
-      box-sizing: border-box;
-    }
+    width: 2.1rem;
+    height: .68rem;
+    background-size: contain;
+    @include bg-image('../../../assets/images/message/read_all');
   }
   .msgItem {
     margin-top: 40px;
