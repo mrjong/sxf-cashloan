@@ -53,34 +53,6 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 获取确认代还信息
   requestGetRepayInfo = () => {
-    // this.setState({
-    //   repayInfo: {
-    //     billPrcpAmt: '805.9',
-    //     perdTotAmt: '230',
-    //     loanDt: '2018-09-12',
-    //     perdCnt: '4',
-    //     perd: [
-    //       {
-    //         perdNum: '1/3',
-    //         perdTotAmt: '200',
-    //       },
-    //       {
-    //         perdNum: '2/3',
-    //         perdTotAmt: '200',
-    //       },
-    //       {
-    //         perdNum: '3/3',
-    //         perdTotAmt: '200',
-    //       },
-    //     ],
-    //   },
-    // });
-    // const params = {
-    //   prdId: '', // 申请产品id
-    //   cardId: '', // 信用卡id
-    //   wtdwTyp: '', // 提现方式
-    //   billPrcpAmt: '', // 账单本金
-    // };
     const urlParams = getParamsFromUrl(window.location.search);
     const requestParams = { ...urlParams };
     this.props.$fetch.post(API.REPAY_INFO, requestParams).then(result => {
@@ -124,7 +96,6 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   render() {
     const { isShowModal, repayInfo } = this.state;
-    console.log(repayInfo, 'repayInfo')
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -174,7 +145,7 @@ export default class ConfirmAgencyPage extends PureComponent {
             <ul className={style.bill_list}>
               {repayInfo.perd.map(item => (
                 <li className={style.list_item} key={item.perdNum}>
-                  <label className={style.item_name}>{item.perdNum}/{repayInfo.perdCnt}期</label>
+                  <label className={style.item_name}>{`${item.perdNum}/${repayInfo.perdCnt}期`}</label>
                   <span className={style.item_value}>{item.perdTotAmt}</span>
                 </li>
               ))}
