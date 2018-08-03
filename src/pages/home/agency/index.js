@@ -6,7 +6,7 @@ import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
 import iconQuestion from 'assets/images/confirm_agency/icon_question.png';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
-
+import qs from 'qs';
 import style from './style.scss';
 
 const API = {
@@ -27,7 +27,13 @@ export default class ConfirmAgencyPage extends PureComponent {
   }
 
   componentWillMount() {
-    this.requestGetRepayInfo();
+    // 获取参数
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    this.setState({
+      queryData
+    }, () => {
+      this.requestGetRepayInfo();
+    })
   }
 
   handleShowModal = () => {
@@ -53,9 +59,7 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 获取确认代还信息
   requestGetRepayInfo = () => {
-    const urlParams = getParamsFromUrl(window.location.search);
-    const requestParams = { ...urlParams };
-    this.props.$fetch.post(API.REPAY_INFO, requestParams).then(result => {
+    this.props.$fetch.post(API.REPAY_INFO, this.state.queryData).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         console.log(result, '000');
         this.setState({
@@ -93,7 +97,28 @@ export default class ConfirmAgencyPage extends PureComponent {
       }
     });
   };
+  // 查看合同
+  read = (type) => {
+    switch (type) {
+      // 借款合同
+      case 'loan_contract':
+        this.props.$fetch.post('/bill/qryContractInfo', {
+          prdId: this.state.queryData.prdId,
+          wtdwTyp: this.state.queryData.wtdwTyp,
+          billPrcpAmt: this.state.queryData.billPrcpAmt
+        }).then(result => {
+          if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+            // this.props.history.push('/protocol/loan_contract_page/')
+          } else {
+            this.props.toast.info(result.msgInfo);
+          }
+        });
+        break;
 
+      default:
+        break;
+    }
+  }
   render() {
     const { isShowModal, repayInfo } = this.state;
     return (
@@ -130,12 +155,16 @@ export default class ConfirmAgencyPage extends PureComponent {
         </ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          <a className={style.protocol_link} href=" ">
+          <a onClick={() => { this.read('loan_contract') }} className={style.protocol_link}>
             《借款合同》
           </a>
           <a className={style.protocol_link} href=" ">
             《委托扣款协议》
           </a>
+          <a className={style.protocol_link} href=" ">
+            《金融服务协议》
+          </a>
+
         </p>
 
         <Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>

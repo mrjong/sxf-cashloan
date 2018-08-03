@@ -151,7 +151,8 @@ export default class select_credit_page extends PureComponent {
       // bankCode: obj.bankCode,
       agrNo: obj.agrNo,
     });
-    this.props.history.replace(backUrlData);
+    // this.props.history.replace(backUrlData);
+    this.props.history.goBack();
     store.setCardData(obj);
     // }
 

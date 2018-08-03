@@ -8,6 +8,7 @@ import { store, getFirstError } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import styles from '../index.scss';
+import qs from 'qs';
 const { Item } = List;
 
 const API = {
@@ -224,7 +225,14 @@ export default class CreditCard extends PureComponent {
         if (result && result.msgCode === 'PTM0000') {
           // TODO: 保存数据给下个页面
           this.passDataToNextPage();
-          this.props.history.replace('/mine/confirm_purchase_page');
+          // 如果第一次没有绑卡就是replace，其他情况都是goback
+          const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+          if (queryData && queryData.firstBind) {
+            this.props.history.replace('/mine/confirm_purchase_page');
+          } else {
+            // this.props.history.replace('/mine/confirm_purchase_page');
+            this.props.history.goBack();
+          }
         } else {
           Toast.info(result.msg);
         }
@@ -284,7 +292,7 @@ export default class CreditCard extends PureComponent {
           </Picker>
           <InputItem
             placeholder="请输入银行卡卡号"
-            maxLength="25"
+            maxLength="24"
             type="number"
             {...getFieldProps('bankCardNo', {
               rules: [{ required: true, message: '请输入银行卡卡号' }, { validator: this.verifyBankNum }],
