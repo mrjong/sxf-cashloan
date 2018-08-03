@@ -206,8 +206,9 @@ export default class message_page extends PureComponent {
     }
     // 查看详情
     gotoDesc = obj => {
-        // 账单状态(0：初登记,1：待还款,2：处理中,3：已撤销,4：已还清;已撤销状态专用于免手续费时间限制内的全额退款)
-        if (obj.billSts === '2' || obj.billSts === '3') {
+        // 账单状态(0：初登记,1：待还款,2：处理中,3：已撤销,4：已还清;已撤销状态专用于免手续费时间限制内的全额退款)， -2: 放款中
+        const noDetailsPageArr = ['2', '3', '-2'];
+        if (noDetailsPageArr.includes(obj.billSts)) {
             return
         }
         let backData = {
@@ -245,7 +246,7 @@ export default class message_page extends PureComponent {
             }
             const obj = this.state.rData && this.state.rData[index--]
             return (
-                <Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} wrap>
+                <Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color, fontWeight: 600 }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '2' || obj.billSts === '3' ? 'empty' : 'horizontal'} wrap>
                     {obj.billAmt}<Brief>{obj.billDt}</Brief>
                 </Item>
             )

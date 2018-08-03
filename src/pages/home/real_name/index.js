@@ -199,7 +199,7 @@ export default class real_name_page extends Component {
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
               <FEZipImage
-                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
+                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
                 value={this.state.leftValue}
                 onChange={this.handleChangePositive}
               />
@@ -207,7 +207,7 @@ export default class real_name_page extends Component {
             </div>
             <div className={style.updateImgRight}>
               <FEZipImage
-                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
+                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
                 value={this.state.rightValue}
                 onChange={this.handleChangeSide}
               />
@@ -239,7 +239,7 @@ export default class real_name_page extends Component {
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
               <FEZipImage
-                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', border: '1px solid #eee', margin: '0 auto' }}
+                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
                 value={this.state.footerValue}
                 onChange={this.handleChangeBottom}
               />

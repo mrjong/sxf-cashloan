@@ -180,6 +180,8 @@ export default class HomePage extends PureComponent {
         this.setState({
           usrIndexInfo: result.data,
         });
+      } else {
+        Toast.info(result.msgInfo)
       }
     });
   };

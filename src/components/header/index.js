@@ -8,6 +8,7 @@ export default class Header extends Component {
   render() {
     const { headerProps, newTitle } = this.props
     const ua = window.navigator.userAgent
+    document.title = newTitle || headerProps.title
     return (
       <div>
         {/* 各个渠道是否隐藏头部 */}
