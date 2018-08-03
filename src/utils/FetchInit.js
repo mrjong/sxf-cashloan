@@ -5,7 +5,7 @@ import { Toast } from 'antd-mobile';
 const fetchinit = () => {
   let timer = undefined
   let timerList = []
-  var num = 0
+  let num = 0
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(cfg => {
     const TOKEN = Cookie.get('fin-v-card-token');

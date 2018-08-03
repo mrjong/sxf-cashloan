@@ -5,7 +5,7 @@ import Header from 'components/header';
 import Footer from 'components/footer';
 import { Toast } from 'antd-mobile'
 import Cookie from 'js-cookie';
-
+import pagesIgnore from 'utils/pagesIgnore'
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
@@ -21,9 +21,8 @@ export default class router_Page extends PureComponent {
     this.loadComponent(this.props);
   }
   loadComponent = async props => {
-    // 未登录
     const token = Cookie.get('fin-v-card-token');
-    if (!token) {
+    if (!pagesIgnore(props) && !token) {
       sessionStorage.clear()
       Toast.info('请先登录')
       setTimeout(() => {
@@ -34,16 +33,15 @@ export default class router_Page extends PureComponent {
 
     try {
       let route
-      let routerList = Routers
-      for (let i = 0; i < routerList.length; i++) {
-        if (match.url === routerList[i].path) {
+      console.log(Routers)
+      for (let i = 0; i < Routers.length; i++) {
+        if (match.url === Routers[i].path) {
           this.setState({
-            newTitle: routerList[i].title
+            newTitle: Routers[i].title
           })
-          route = routerList[i]
+          route = Routers[i]
         }
       }
-      console.log(route)
       if (route) {
         let component = await route.component()
         this.setState({

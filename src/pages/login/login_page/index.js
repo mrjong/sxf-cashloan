@@ -124,7 +124,10 @@ export default class login_page extends PureComponent {
       }
     });
   }
-
+  // 跳转协议
+  go=(url)=>{
+    this.props.history.push(`/protocol/${url}`)
+  }
 
   render() {
     const { getFieldProps } = this.props.form;
@@ -133,7 +136,6 @@ export default class login_page extends PureComponent {
         <div className={style.loginLog}>
           <div className={style.centent}>
             <input
-              type="number"
               maxLength="11"
               className={style.loginInput}
               placeholder='请输入您的手机号'
@@ -145,7 +147,6 @@ export default class login_page extends PureComponent {
               })}
             />
             <input
-              type="number"
               maxLength="6"
               className={style.loginInput}
               placeholder='请输入短信验证码'
@@ -164,7 +165,7 @@ export default class login_page extends PureComponent {
             <div className={style.sureBtn} onClick={this.goLogin}>一键代还</div>
 
             <div className={style.agreement}>
-              注册即视为同意 <span>《注册及授信协议》</span><span>《用户隐私协议》</span>
+              注册即视为同意 <span onClick={() => { this.go('register_agreement_page') }}>《注册及授信协议》</span><span onClick={() => { this.go('privacy_agreement_page') }}>《用户隐私协议》</span>
             </div>
           </div>
         </div>

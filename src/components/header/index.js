@@ -4,13 +4,6 @@ import styles from "./Header.scss"
 export default class Header extends Component {
   goBack() {
     this.props.history.goBack()
-    console.log('22222',this.props.history)
-  //  if(){
-  //   this.props.history.goBack()
-  //   this.props.history.goBack()
-  //  }else{
-  //   this.props.history.goBack()
-  //  }
   }
   render() {
     const { headerProps, newTitle } = this.props
