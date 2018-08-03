@@ -12,7 +12,7 @@ import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
 import style from './style.scss';
-
+import mockData from './mockData';
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -27,8 +27,8 @@ export default class HomePage extends PureComponent {
     this.state = {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }],
-      usrIndexInfo: '',
-      // usrIndexInfo: mockData.LN0006,
+      // usrIndexInfo: '',
+      usrIndexInfo: mockData.LN0006,
       haselescard: 'true',
     };
   }
@@ -98,8 +98,8 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        this.handleShowModal();
-        // this.requestBindCardState();
+        // this.handleShowModal();
+        this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');

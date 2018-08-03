@@ -23,6 +23,7 @@ export default class ModalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      dateDiff: 0,
       repayInfo: {},
       repaymentDate: '',
       repaymentIndex: 0,
@@ -129,17 +130,41 @@ export default class ModalInfo extends Component {
   requestGetRepaymentDateList = () => {
     this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${this.props.indexData.autId}`).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
+        const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
+        let lendersDateListFormat = this.state.lendersDateList;
+        if (diff <= 2) {
+          lendersDateListFormat[0].disable = true;
+        }
         this.setState({
           repayInfo: result.data,
           repaymentDateList: result.data.prdList.map(item => ({ name: item.prdName, value: item.prdId })),
+          dateDiff: diff,
+          lendersIndex: diff <= 2 ? 1 : 0,
+          lendersDateList: lendersDateListFormat,
         });
       }
     });
   };
 
   render() {
-    const { repayInfo, repaymentDateList, repaymentIndex, lendersDateList, lendersIndex } = this.state;
+    const { repayInfo, repaymentDateList, repaymentIndex, lendersDateList, lendersIndex, dateDiff } = this.state;
     const { onClose } = this.props;
+
+    let lendersTip = '';
+    if (dateDiff > 2 && lendersIndex === 0) {
+      lendersTip = (
+        <p className={style.item_tip}>
+          选择还款日前一天（{dayjs(repayInfo.cardBillDt)
+            .subtract(1, 'day')
+            .format('YYYY-MM-DD')}）放款，将最大成本节约您代资金
+        </p>
+      );
+    }
+
+    if (dateDiff <= 2 && lendersIndex === 1) {
+      lendersTip = <p className={style.item_tip}>选择立即放款，将最大程度节约您的成本</p>;
+    }
     return (
       <div className={style.modal_content}>
         <button className={style.modal_cancel_btn} onClick={event => this._handleClick(onClose, event)}>
@@ -169,9 +194,7 @@ export default class ModalInfo extends Component {
               <label className={style.item_name}>放款日期</label>
               <TabList tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
             </div>
-            <p className={style.item_tip}>
-              选择还款日前一天（{dayjs(repayInfo.cardBillDt).subtract(1, 'day')}）放款，将最大成本节约您代资金
-            </p>
+            {lendersTip}
           </li>
           <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>

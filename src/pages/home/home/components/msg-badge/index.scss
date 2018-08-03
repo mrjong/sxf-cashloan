@@ -2,11 +2,11 @@
   position: absolute;
   top: 0;
   right: 0;
+  overflow: hidden;
   .msg_badge_content {
     display: flex;
     align-items: center;
-    padding: .1rem;
-    margin-top: .3rem;
+    padding: .17rem;
   }
   .msg_badge_icon {
     display: inline-block;

@@ -79,7 +79,17 @@ export default class BankCard extends React.PureComponent {
       cardBillAmt,
       overDt,
     } = this.props;
-    const iconClass = bankNo ? `bank_golden_ico_${bankNo}` : 'logo_ico'
+    const iconClass = bankNo ? `bank_golden_ico_${bankNo}` : 'logo_ico';
+    let overDtStr = '';
+    if (overDt === '---') {
+      overDtStr = overDt;
+    } else if (overDt > 0) {
+      overDtStr = `${overDt}天后到期`;
+    } else if (parseInt(overDt, 10) === 0) {
+      overDtStr = '今天到期';
+    } else if (overDt < 0) {
+      overDtStr = `已逾期${Math.abs(overDt)}天`;
+    }
     return (
       <div className={style.bank_card_wrap}>
         {contentData.indexSts === 'LN0002' ? null : (
@@ -96,15 +106,19 @@ export default class BankCard extends React.PureComponent {
         </div>
         <div className={style.bill_preview}>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{dayjs(cardBillDt).format('YYYY/MM/DD')}</span>
+            <span className={style.bill_value}>
+              {cardBillDt === '---' ? cardBillDt : dayjs(cardBillDt).format('YYYY/MM/DD')}
+            </span>
             <span className={style.bill_name}>账单日</span>
           </div>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{cardBillAmt}</span>
+            <span className={style.bill_value}>
+              {typeof cardBillAmt === 'number' ? parseInt(cardBillAmt, 10).toFixed(2) : cardBillAmt}
+            </span>
             <span className={style.bill_name}>账单金额</span>
           </div>
           <div className={style.bill_item}>
-            <span className={style.bill_value}>{overDt}</span>
+            <span className={style.bill_value}>{overDtStr}</span>
             <span className={style.bill_name}>还款日</span>
           </div>
         </div>
