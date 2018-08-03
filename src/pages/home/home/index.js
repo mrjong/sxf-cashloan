@@ -93,7 +93,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0005': // 暂无代还资格
         console.log('LN0005');
-        Toast.info('您暂时没有代还资格，请2018-8-1日再试');
+        Toast.info(`您暂时没有代还资格，请${usrIndexInfo.indexData.netAppyDate}日再试`);
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
@@ -102,7 +102,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
-        Toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}，请耐心等待`);
+        Toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 也跳账单页');

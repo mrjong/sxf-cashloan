@@ -121,7 +121,6 @@ export default class ConfirmAgencyPage extends PureComponent {
   }
   render() {
     const { isShowModal, repayInfo } = this.state;
-    console.log(repayInfo, 'repayInfo')
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -175,7 +174,7 @@ export default class ConfirmAgencyPage extends PureComponent {
             <ul className={style.bill_list}>
               {repayInfo.perd.map(item => (
                 <li className={style.list_item} key={item.perdNum}>
-                  <label className={style.item_name}>{item.perdNum}/{repayInfo.perdCnt}期</label>
+                  <label className={style.item_name}>{`${item.perdNum}/${repayInfo.perdCnt}期`}</label>
                   <span className={style.item_value}>{item.perdTotAmt}</span>
                 </li>
               ))}
