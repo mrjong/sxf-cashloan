@@ -82,7 +82,7 @@ export default class order_detail_page extends PureComponent {
         let perdListArray = []
         let perdList = this.state.perdList
         for (let i = 0; i < perdList.length; i++) {
-            if (perdList[i].predSts === '2') {
+            if (perdList[i].perdStsNm === '处理中') {
                 this.setState({
                     hideBtn: true
                 })
@@ -105,6 +105,7 @@ export default class order_detail_page extends PureComponent {
             }
             if (perdNum !== 999 && perdList[i].perdNum === perdNum) {
                 item.showDesc = true
+                item.arrowHide = 'up'
             } else {
                 item.showDesc = false
             }
@@ -245,7 +246,7 @@ export default class order_detail_page extends PureComponent {
                 </Panel>
 
                 {
-                    billDesc.perdNum !== 999 && hideBtn ? <div className={styles.submit_btn}>
+                    billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
                         <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>

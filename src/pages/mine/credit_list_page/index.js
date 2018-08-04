@@ -25,7 +25,7 @@ export default class credit_list_page extends PureComponent {
   componentWillMount() {
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-    if(queryData.autId){
+    if (queryData.autId) {
       this.setState({
         autId: queryData.autId,
       });
@@ -67,7 +67,9 @@ export default class credit_list_page extends PureComponent {
       // bankCode: obj.bankCode,
       autId: obj.autId,
     });
-    this.props.history.replace(backUrlData);
+    this.props.$fetch.get(`/index/cacheCredCard/${obj.autId}`).then(() => {
+      this.props.history.replace(backUrlData);
+    })
     store.setCardData(obj);
     // }
 

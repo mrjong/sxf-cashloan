@@ -10,8 +10,7 @@ import { InputItem, List } from 'antd-mobile';
 import ButtonCustom from '../../../components/button';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import { getDeviceType, getFirstError } from 'utils/common';
-import { store } from 'utils/common';
+import { getDeviceType, store } from 'utils/common';
 import { validators } from '../../../utils/validator';
 
 const { Item } = List;
@@ -85,11 +84,10 @@ export default class real_name_page extends Component {
         this.setState({ leftUploaded: true });
       } else {
         this.props.toast.info(result.msgInfo);
-        this.setState({ leftUploaded: false });
-        this.setState({ showFloat: false });
+        this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
       }
     }).catch(() => {
-      this.setState({ showFloat: false });
+      this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
     });
   };
 
@@ -112,11 +110,10 @@ export default class real_name_page extends Component {
         this.setState({ showFloat: false });
       } else {
         this.props.toast.info(res.msgInfo);
-        this.setState({ rightUploaded: false });
-        this.setState({ showFloat: false });
+        this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
       }
     }).catch(() => {
-      this.setState({ showFloat: false });
+      this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
     });
   };
   // 手持身份证照片
@@ -138,14 +135,22 @@ export default class real_name_page extends Component {
         this.setState({ showFloat: false });
       } else {
         this.props.toast.info(res.msgInfo);
-        this.setState({ footerUploaded: false });
+        this.setState({ footerUploaded: false, footerValue: updateBottom });
       }
     }).catch(() => {
-      this.setState({ showFloat: false });
+      this.setState({ showFloat: false, footerValue: updateBottom });
     });
   };
 
   handleSubmit = () => {
+    if (!this.state.leftUploaded) {
+      this.props.toast.info('请上传身份证正面');
+      return false;
+    }
+    if (!this.state.rightUploaded) {
+      this.props.toast.info('请上传身份证反面');
+      return false;
+    }
     if (!validators.name(this.state.idName)) {
       this.props.toast.info('请输入正确的姓名');
       return false;
@@ -154,16 +159,21 @@ export default class real_name_page extends Component {
       this.props.toast.info('请输入正确的身份证号');
       return false;
     }
+    if (!this.state.footerUploaded) {
+      this.props.toast.info('请上传手持身份证');
+      return false;
+    }
     const { ocrZhengData = {}, ocrFanData = {}, ocrData = {}, idName, idNo } = this.state;
+    console.log(ocrZhengData)
     const osType = getDeviceType();
     const params = {
       idCardFrontUrl: ocrZhengData.imgUrl,    //正面URL
       idCardBackUrl: ocrFanData.imgUrl,     //反面URL
       handCardImgUrl: ocrData,    //手持正面URL
-      idNo: idNo,                       // 证件号码
-      idNoOld: ocrZhengData.idNo,       // 修改前证件号码
+      idNo: idNo.toLocaleUpperCase(),                       // 证件号码
+      idNoOld: ocrZhengData.idNo && ocrZhengData.idNo.toLocaleUpperCase(),       // 修改前证件号码
       usrNm: idName,                     //证件姓名
-      usrNmOld:  ocrZhengData.idName,    //修改前证件姓名
+      usrNmOld: ocrZhengData.idName,    //修改前证件姓名
       usrGender: ocrZhengData.sex,      //性别
       usrNation: ocrZhengData.nation,   //民族
       usrBirthDt: ocrZhengData.birthday, //出生年月日
@@ -213,28 +223,29 @@ export default class real_name_page extends Component {
               />
               <p>拍摄身份证反面</p>
             </div>
-            <div className={style.clear}/>
+            <div className={style.clear} />
           </div>
-          <div className={style.clear}/>
+          <div className={style.clear} />
           <div className={style.labelDiv}>
             <InputItem onChange={this.handleNameChange}
-                       placeholder="借款人本人姓名"
-                       value={this.state.idName}
+              placeholder="借款人本人姓名"
+              value={this.state.idName}
             >
               姓名
             </InputItem>
           </div>
-          <div className={style.clear}/>
-          <div className={style.inline} style={{ height: '0.04rem' }}/>
+          <div className={style.clear} />
+          <div className={style.inline} style={{ height: '0.04rem' }} />
           <div className={style.labelDiv} style={{ marginTop: 0 }}>
             <InputItem onChange={this.handleNumberChange}
-                       placeholder="借款人身份证号"
-                       value={this.state.idNo}
+              placeholder="借款人身份证号"
+              value={this.state.idNo}
+              maxLength="18"
             >
               身份证号
             </InputItem>
           </div>
-          <div className={style.clear}/>
+          <div className={style.clear} />
           <div className={style.updateTitle}>上传本人手持身份证照片</div>
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
@@ -251,7 +262,7 @@ export default class real_name_page extends Component {
                 照片上的身份证信息和持证人脸部须清晰可辨。照片格式支持jpg、png等格式。
               </div>
             </div>
-            <div className={style.clear}/>
+            <div className={style.clear} />
           </div>
           <div className={style.des}>
             <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行实名认证</p>
@@ -261,7 +272,7 @@ export default class real_name_page extends Component {
         </div> : null}
         {
           this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? <div>
-            <List  className={style.is_true}>
+            <List className={style.is_true}>
               <InputItem value={this.state.userInfo && this.state.userInfo.nameHid} editable={false}>姓名</InputItem>
               <InputItem value={this.state.userInfo && this.state.userInfo.idNoHid} editable={false}>身份证号</InputItem>
             </List>

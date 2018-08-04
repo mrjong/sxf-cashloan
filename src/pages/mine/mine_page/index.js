@@ -100,6 +100,8 @@ export default class mine_page extends PureComponent {
           default:
             break;
         }
+      } else {
+        this.props.toast.info(result.msgInfo);
       }
     });
   };

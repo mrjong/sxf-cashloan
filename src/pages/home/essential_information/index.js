@@ -9,6 +9,7 @@ import ButtonCustom from '../../../components/button';
 import fetch from 'sx-fetch';
 import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
+import { getFirstError } from 'utils/common';
 
 
 const API = {
@@ -66,20 +67,14 @@ export default class essential_information extends PureComponent {
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
                 this.props.history.replace('/mine/credit_extension_page');
+              } else {
+                this.props.toast.info(result.msgInfo);
               }
             });
           }
         });
       } else {
-        // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            Toast.info(errMessage);
-          }
-        }
+        this.props.toast.info(getFirstError(err))
       }
     });
 
@@ -124,7 +119,7 @@ export default class essential_information extends PureComponent {
                     const prov = (result && result.data && result.data.length) ? result.data : [];
                     return prov.map(item => ({ value: item.key, label: item.value }));
                   }),
-                (provCd) => this.props.$fetch.get(`/rcm/qryProv?pid=${provCd}`)
+                (provCd) => this.props.$fetch.get(`/rcm/qryCity/${provCd}`)
                   .then(result => {
                     const city = (result && result.data && result.data.length) ? result.data : [];
                     return city.map(item => ({ value: item.value, label: item.value }));
