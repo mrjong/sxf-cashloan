@@ -26,6 +26,16 @@
     .mt24{
         margin-top: 24px;
     }
+  .order_list {
+    :global {
+      .am-list-content {
+        font-weight: bold;
+      }
+      .am-list-brief {
+        font-weight: normal;
+      }
+    }
+  }
 }
 .modal_box{
   padding: 30px 30px 60px;
