@@ -33,6 +33,7 @@ export default class select_credit_page extends PureComponent {
     }
     if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
       this.queryVipBankList();
+      this.props.setTitle('选择银行卡');
     } else {
       this.queryBankList();
     }
@@ -54,8 +55,8 @@ export default class select_credit_page extends PureComponent {
   queryVipBankList = () => {
     this.props.$fetch
       .post(API.VIPBANKLIST, {
-        type: '4',
-        corpBusTyp: '01'
+        type: '5',
+        corpBusTyp: '31'
       }).then(
         res => {
           if (res.msgCode === 'PTM0000') {
