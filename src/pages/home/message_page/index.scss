@@ -54,6 +54,7 @@
     width: 2.1rem;
     height: .68rem;
     background-size: contain;
+    background-repeat: no-repeat;
     @include bg-image('../../../assets/images/message/read_all');
   }
   .msgItem {

@@ -27,7 +27,7 @@ export default class HomePage extends PureComponent {
     this.state = {
       isShowModal: false,
       bannerList: [{ src: sng4, url: '' }],
-      usrIndexInfo: '',
+      usrIndexInfo: mockData.LN0006,
       haselescard: 'true',
     };
   }
@@ -35,7 +35,7 @@ export default class HomePage extends PureComponent {
   componentWillMount() {
     this.getTokenFromUrl();
     this.requestGetBannerList();
-    this.requestGetUsrInfo();
+    // this.requestGetUsrInfo();
 
     let bankInfo = store.getCardData();
     if (bankInfo && bankInfo !== {}) {
