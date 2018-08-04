@@ -67,9 +67,6 @@ export default class credit_extension_page extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-  }
-
   // 获取授信列表状态
   requestGetStatus = () => {
     this.props.$fetch.get(`${API.getStw}`).then(result => {
@@ -81,6 +78,8 @@ export default class credit_extension_page extends PureComponent {
         if (isAllValid) {
           this.setState({ submitFlag: true });
         }
+      } else {
+        this.props.toast.info(result.msgInfo);
       }
     },
     );

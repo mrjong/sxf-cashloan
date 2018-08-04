@@ -149,6 +149,8 @@ export default class ModalInfo extends Component {
           lendersIndex: diff <= 2 ? 1 : 0,
           lendersDateList: lendersDateListFormat,
         });
+      } else {
+        this.props.toast.info(result.msgInfo);
       }
     });
   };

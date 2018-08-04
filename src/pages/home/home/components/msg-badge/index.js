@@ -29,6 +29,8 @@ export default class MsgBadge extends React.PureComponent {
         this.setState({
           count: result.data.count,
         });
+      } else {
+        this.props.toast.info(result.msgInfo);
       }
     });
   };

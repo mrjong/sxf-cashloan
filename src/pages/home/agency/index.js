@@ -88,6 +88,8 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.setState({
           repayInfo: result.data,
         });
+      } else {
+        this.props.toast.info(result.msgInfo)
       }
     });
   };
