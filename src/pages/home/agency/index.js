@@ -148,20 +148,21 @@ export default class ConfirmAgencyPage extends PureComponent {
       wtdwTyp: this.state.queryData.wtdwTyp,
       billPrcpAmt: this.state.queryData.billPrcpAmt
     }).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        let todayDt = {
-          getFullYear: new Date().getFullYear(),
-          getDate: new Date().getDate(),
-          getMonth: new Date().getMonth() + 1,
-          billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
-          billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
-          billDate: result.preBillRespVo.billDueDt.slice(6)
-        }
-        let object = Object.assign(
-          Object.assign(result, result.preBillRespVo),
-          todayDt
-        )
-        // this.props.history.push('/protocol/loan_contract_page/')
+      if (result && result.msgCode === 'PTM0000') {
+        // let todayDt = {
+        //   getFullYear: new Date().getFullYear(),
+        //   getDate: new Date().getDate(),
+        //   getMonth: new Date().getMonth() + 1,
+        //   billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
+        //   billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
+        //   billDate: result.preBillRespVo.billDueDt.slice(6)
+        // }
+        // let object = Object.assign(
+        //   Object.assign(result, result.preBillRespVo),
+        //   todayDt
+        // )
+        store.setProtocolFinancialData(result);
+        this.props.history.push('/protocol/loan_contract_page');
       } else {
         this.props.toast.info(result.msgInfo);
       }
@@ -179,9 +180,9 @@ export default class ConfirmAgencyPage extends PureComponent {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setProtocolFinancialData(result.data);
         if (type === 'financial') {
-          this.props.history.push('/protocol/financial_service_page/');
+          this.props.history.push('/protocol/financial_service_page');
         } else {
-          this.props.history.push('/protocol/delegation_withhold_page/');
+          this.props.history.push('/protocol/delegation_withhold_page');
         }
       } else {
         this.props.toast.info(result.msgInfo);
