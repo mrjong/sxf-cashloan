@@ -95,23 +95,25 @@ export default class credit_extension_page extends PureComponent {
     this.props.$fetch.post(`${API.submitState}`, params).then(result => {
       // 提交风控返回成功
       if (result && result.data !== null && result.msgCode === '0000') {
-        //判断是否绑卡
-        this.props.$fetch.get(`${API.isBankCard}`).then(result => {
-          // 跳转至储蓄卡
-          if (result && result.data !== null && result.msgCode === 'PTM2001') {
-            this.props.toast.info(result.msgInfo);
-            this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-          }
-          // 跳转至信用卡
-          if (result && result.data !== null && result.msgCode === 'PTM2002') {
-            this.props.toast.info(result.msgInfo);
-            this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
-          }
-          // 跳转至首页
-          else {
-            this.props.history.push('/home/home');
-          }
-        });
+        this.props.toast('您的代还申请已提交成功，将在1个工作日内返回结果', 3, () => {
+          //判断是否绑卡
+          this.props.$fetch.get(`${API.isBankCard}`).then(result => {
+            // 跳转至储蓄卡
+            if (result && result.data !== null && result.msgCode === 'PTM2001') {
+              this.props.toast.info(result.msgInfo);
+              this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+            }
+            // 跳转至信用卡
+            if (result && result.data !== null && result.msgCode === 'PTM2002') {
+              this.props.toast.info(result.msgInfo);
+              this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+            }
+            // 跳转至首页
+            else {
+              this.props.history.push('/home/home');
+            }
+          });
+        })
       }
       else {
         this.props.toast.info(result.msgInfo);

@@ -140,7 +140,7 @@ export default class CreditCard extends PureComponent {
   // 验证验证码
   verifyVerifyCode = (rule, value, callback) => {
     if (value && value.length !== 6) {
-      callback('请输入正确的短信验证码');
+      callback('请输入正确验证码');
     } else {
       callback();
     }
@@ -346,7 +346,7 @@ export default class CreditCard extends PureComponent {
               maxLength="6"
               type="number"
               {...getFieldProps('verifyCode', {
-                rules: [{ required: true, message: '请输入正确的短信验证码' }, { validator: this.verifyVerifyCode }],
+                rules: [{ required: true, message: '请输入正确验证码' }, { validator: this.verifyVerifyCode }],
               })}
             >
               验证码

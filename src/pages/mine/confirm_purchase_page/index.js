@@ -196,7 +196,7 @@ export default class confirm_purchase_page extends PureComponent {
               maxLength="6"
               {...getFieldProps('yzmCode', {
                 rules: [
-                  { required: true, message: '请输入短信验证码' },
+                  { required: true, message: '请输入正确验证码' },
                 ],
               })}
               placeholder="请输入短信验证码"
