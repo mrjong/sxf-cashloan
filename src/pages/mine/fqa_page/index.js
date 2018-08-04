@@ -32,11 +32,6 @@ export default class fqa_page extends PureComponent {
           src="/disting/#/fqa"
           name="fqa"
           id="fqa"
-          onLoad={() => {
-            window.frames['fqa'].setData({
-              name:'11111111'
-            });
-          }}
           width="100%"
           height="100%"
           frameBorder="0"
