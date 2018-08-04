@@ -246,6 +246,16 @@ const store = {
   removePosition() {
     return storage.session.removeItem('position');
   },
+
+  setProtocolFinancialData(data) {
+    return storage.session.setItem('protocolFinancialData', data);
+  },
+  getProtocolFinancialData() {
+    return storage.session.getItem('protocolFinancialData');
+  },
+  removeProtocolFinancialData() {
+    return storage.session.removeItem('protocolFinancialData');
+  }
 };
 
 /*rc-form 获取第一个错误 */

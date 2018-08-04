@@ -6,8 +6,9 @@ import { store } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
-import styles from './index.scss';
 import qs from 'qs';
+import styles from './index.scss';
+
 const API = {
   GETUSERINF: '/my/getRealInfo', // 获取用户信息
   GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
@@ -226,7 +227,7 @@ export default class bind_save_page extends PureComponent {
               maxLength="6"
               {...getFieldProps('valueInputCarSms', {
                 rules: [
-                  { required: true, message: '请输入正确的短信验证码' },
+                  { required: true, message: '请输入正确验证码' },
                 ]
               })}
               placeholder="请输入短信验证码"
