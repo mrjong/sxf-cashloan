@@ -16,8 +16,8 @@ export default class fqa_page extends PureComponent {
         <iframe
           className={styles.container}
           src="/disting/#/fqa_page"
-          name="fqa"
-          id="fqa"
+          name="fqa_page"
+          id="fqa_page"
           width="100%"
           height="100%"
           frameBorder="0"
