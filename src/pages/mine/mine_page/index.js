@@ -122,7 +122,7 @@ export default class mine_page extends PureComponent {
   // 第一组里的点击事件
   clickhandle = item => {
     const { mblNoHid, realNmFlg } = this.state;
-    if (mblNoHid && realNmFlg) {
+    if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
       this.props.history.push(item.jumpToUrl);
     }
     if (!mblNoHid) {

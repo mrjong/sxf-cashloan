@@ -130,7 +130,7 @@ export default class credit_extension_page extends PureComponent {
       if (item.extra.code === 'idCheck') {
         this.props.history.push('/home/real_name');
       } else {
-        this.props.toast.info('请先去实名认证');
+        this.props.toast.info('请先实名认证');
         setTimeout(() => {
           this.props.history.push('/home/real_name');
         }, 3000);

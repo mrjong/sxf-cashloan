@@ -58,7 +58,7 @@ export default class confirm_purchase_page extends PureComponent {
             res => {
               if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
                 res.msgInfo && this.props.toast.info(res.msgInfo)
-                const backUrlData = store.getBackUrl();
+                const backUrlData = store.getVipBackUrl();
                 Cookie.remove('VIPFlag');
                 setTimeout(() => {
                   this.props.history.replace(backUrlData)
