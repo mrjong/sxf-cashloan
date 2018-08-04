@@ -177,6 +177,9 @@ export default class HomePage extends PureComponent {
   requestGetUsrInfo = () => {
     this.props.$fetch.post(API.USR_INDEX_INFO).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        // let resultData = result.data;
+        // const sessionCardData = store.getSomeData();
+        // Object.assign(resultData.indexData, sessionCardData);
         this.setState({
           usrIndexInfo: result.data,
         });
