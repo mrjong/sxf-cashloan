@@ -55,11 +55,6 @@ export default class CreditCard extends PureComponent {
     },
   };
 
-  // 确认购买
-  confirmBuy = () => {
-    alert('点击');
-  };
-
   componentWillMount() {
     this.requestBankList({
       cardTyp: this.props.formtype,
@@ -97,7 +92,7 @@ export default class CreditCard extends PureComponent {
   // 验证银行卡号
   verifyBankNum = (rule, value, callback) => {
     if (!validators.bankCardNumber(value)) {
-      callback('银行卡号不正确');
+      callback('请输入正确的银行卡号');
     } else {
       callback();
     }
@@ -136,7 +131,7 @@ export default class CreditCard extends PureComponent {
   // 验证手机号码
   verifyPhoneNum = (rule, value, callback) => {
     if (!validators.phone(value)) {
-      callback('手机号码格式不正确');
+      callback('请输入正确的手机号');
     } else {
       callback();
     }
@@ -145,7 +140,7 @@ export default class CreditCard extends PureComponent {
   // 验证验证码
   verifyVerifyCode = (rule, value, callback) => {
     if (value && value.length !== 6) {
-      callback('验证码格式不正确');
+      callback('请输入正确的短信验证码');
     } else {
       callback();
     }
@@ -295,7 +290,7 @@ export default class CreditCard extends PureComponent {
             maxLength="24"
             type="number"
             {...getFieldProps('bankCardNo', {
-              rules: [{ required: true, message: '请输入银行卡卡号' }, { validator: this.verifyBankNum }],
+              rules: [{ required: true, message: '请输入正确的银行卡号' }, { validator: this.verifyBankNum }],
             })}
           >
             卡号
@@ -340,7 +335,7 @@ export default class CreditCard extends PureComponent {
             maxLength="11"
             type="number"
             {...getFieldProps('phoneNo', {
-              rules: [{ required: true, message: '请输入银行卡预留手机号' }, { validator: this.verifyPhoneNum }],
+              rules: [{ required: true, message: '请输入正确的手机号' }, { validator: this.verifyPhoneNum }],
             })}
           >
             手机号
@@ -351,7 +346,7 @@ export default class CreditCard extends PureComponent {
               maxLength="6"
               type="number"
               {...getFieldProps('verifyCode', {
-                rules: [{ required: true, message: '请输入短信验证码' }, { validator: this.verifyVerifyCode }],
+                rules: [{ required: true, message: '请输入正确的短信验证码' }, { validator: this.verifyVerifyCode }],
               })}
             >
               验证码
