@@ -21,5 +21,13 @@ export default [
         path: '/protocol/financial_service_page',
         title: '金融服务协议',
         component: () => import('pages/protocol/financial_service_page'),
+    }, {
+        path: '/protocol/shortcut_bind_card_page',
+        title: '随行付快捷绑卡支付协议',
+        component: () => import('pages/protocol/shortcut_bind_card_page'),
+    }, {
+        path: '/protocol/club_vip_service_page',
+        title: '随行付VIP俱乐部会员服务协议',
+        component: () => import('pages/protocol/club_vip_service_page'),
     }
 ];

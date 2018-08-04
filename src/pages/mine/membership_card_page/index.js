@@ -102,18 +102,18 @@ export default class card_home extends PureComponent {
               this.selectOne(item.memPrdId, item.price)
             }} className={styles.cardHome}>
               <div className={styles.cardMoney}>
-                {item.price} <span className={styles.icon}>￥</span>
+                {item.price || '--'} <span className={styles.icon}>￥</span>
               </div>
               <div className={styles.cardTitle}>
                 <span className={styles.left}>
-                  {item.memPrdDes && item.memPrdDes.split("|")[0]}
+                  {item.memPrdDes && item.memPrdDes.split("|")[0] || '--'}
                 </span>
                 <span className={styles.right}>
-                  {item.memPrdDes && item.memPrdDes.split("|")[1]}
+                  {item.memPrdDes && item.memPrdDes.split("|")[1] || '--'}
                 </span>
               </div>
               <div className={styles.cardTitle}>
-                有效期{item.menTerm || 0}个月
+                有效期{item.menTerm || '--'}个月
             </div>
             </div>)
           }) : null
@@ -139,11 +139,12 @@ export default class card_home extends PureComponent {
             </div>)
           }) : null
         }
-
-        < div className={styles.btn} >
-          <ButtonCustom onClick={this.buy} className={styles.sureBtn}>确认购买</ButtonCustom>
-        </div >
-
+        {
+          this.state.status ?
+            < div className={styles.btn} >
+              <ButtonCustom onClick={this.buy} className={styles.sureBtn}>确认购买</ButtonCustom>
+            </div > : null
+        }
         <div className={styles.vipIcon}>
           <img src={vipIcon} />
         </div>
