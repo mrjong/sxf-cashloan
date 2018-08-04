@@ -16,7 +16,7 @@ export default class confirm_purchase_page extends PureComponent {
     this.state = {
       periodValue: '', // 有效期的选中值
       money: '',
-      twice: true,
+      twice: false,
       cardTyp: 'C'
     }
   }

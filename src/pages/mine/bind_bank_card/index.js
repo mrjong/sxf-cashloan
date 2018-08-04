@@ -56,6 +56,9 @@ export default class BindBankCardPage extends PureComponent {
       swipeable: !value,
     });
   }
+  go=()=>{
+    this.props.history.push('/protocol/shortcut_bind_card_page')
+  }
 
   render() {
     const { userInfo, swipeable } = this.state;
@@ -68,7 +71,7 @@ export default class BindBankCardPage extends PureComponent {
         </STabs>
         <p className="protocol_tip" style={{ width: '6.2rem' }}>
           点击“确认绑定”，表示同意
-          <a className="protocol_link" href=" ">
+          <a className="protocol_link" onClick={this.go}>
             《随行付快捷绑卡支付协议》
           </a>
         </p>
