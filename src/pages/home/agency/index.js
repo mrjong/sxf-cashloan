@@ -13,6 +13,7 @@ const API = {
   REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
   SAVE_REPAY_CARD: '/bill/saveRepayCard', // 0210-代还的银行卡信息校验缓存
+  FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
 };
 
 @fetch.inject()
@@ -125,38 +126,72 @@ export default class ConfirmAgencyPage extends PureComponent {
     switch (type) {
       // 借款合同
       case 'loan_contract_page':
-        this.props.$fetch.post('/bill/qryContractInfo', {
-          prdId: this.state.queryData.prdId,
-          wtdwTyp: this.state.queryData.wtdwTyp,
-          billPrcpAmt: this.state.queryData.billPrcpAmt
-        }).then(result => {
-          if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-            let todayDt = {
-              getFullYear: new Date().getFullYear(),
-              getDate: new Date().getDate(),
-              getMonth: new Date().getMonth() + 1,
-              billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
-              billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
-              billDate: result.preBillRespVo.billDueDt.slice(6)
-            }
-            let object = Object.assign(
-              Object.assign(result, result.preBillRespVo),
-              todayDt
-            )
-            // this.props.history.push('/protocol/loan_contract_page/')
-          } else {
-            this.props.toast.info(result.msgInfo);
-          }
-        });
+        this.requestProtocolData();
         break;
       case 'delegation_withhold_page':
+        this.requestFinacialService();
         break;
       case 'financial_service_page':
+        this.requestFinacialService();
         break;
       default:
         break;
     }
   }
+
+  // 获取活动
+  requestProtocolData = () => {
+    this.props.$fetch.post('/bill/qryContractInfo', {
+      prdId: this.state.queryData.prdId,
+      wtdwTyp: this.state.queryData.wtdwTyp,
+      billPrcpAmt: this.state.queryData.billPrcpAmt
+    }).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        let todayDt = {
+          getFullYear: new Date().getFullYear(),
+          getDate: new Date().getDate(),
+          getMonth: new Date().getMonth() + 1,
+          billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
+          billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
+          billDate: result.preBillRespVo.billDueDt.slice(6)
+        }
+        let object = Object.assign(
+          Object.assign(result, result.preBillRespVo),
+          todayDt
+        )
+        // this.props.history.push('/protocol/loan_contract_page/')
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
+  };
+
+  // 获取金融服务合同请求
+  requestFinacialService = () => {
+    const params = {
+      prdId: this.state.queryData.prdId,
+      wtdwTyp: this.state.queryData.wtdwTyp,
+      billPrcpAmt: this.state.queryData.billPrcpAmt,
+    };
+    this.props.$fetch.post(API.FINACIAL_SERVIE_PROTOCOL, params).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        console.log(result, 'result');
+        let todayDt = {
+          getFullYear: new Date().getFullYear(),
+          getDate: new Date().getDate(),
+          getMonth: new Date().getMonth() + 1,
+          billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
+          billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
+          billDate: result.preBillRespVo.billDueDt.slice(6),
+        };
+        let object = Object.assign(Object.assign(result, result.preBillRespVo), todayDt);
+        // this.props.history.push('/protocol/financial_service_page/');
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
+  };
+
   render() {
     const { isShowModal, repayInfo } = this.state;
     return (
