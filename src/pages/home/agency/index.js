@@ -129,10 +129,10 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.requestProtocolData();
         break;
       case 'delegation_withhold_page':
-        this.requestFinacialService();
+        this.requestFinacialService('withhold');
         break;
       case 'financial_service_page':
-        this.requestFinacialService();
+        this.requestFinacialService('financial');
         break;
       default:
         break;
@@ -167,7 +167,7 @@ export default class ConfirmAgencyPage extends PureComponent {
   };
 
   // 获取金融服务合同请求
-  requestFinacialService = () => {
+  requestFinacialService = type => {
     const params = {
       prdId: this.state.queryData.prdId,
       wtdwTyp: this.state.queryData.wtdwTyp,
@@ -175,17 +175,12 @@ export default class ConfirmAgencyPage extends PureComponent {
     };
     this.props.$fetch.post(API.FINACIAL_SERVIE_PROTOCOL, params).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result, 'result');
-        let todayDt = {
-          getFullYear: new Date().getFullYear(),
-          getDate: new Date().getDate(),
-          getMonth: new Date().getMonth() + 1,
-          billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
-          billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
-          billDate: result.preBillRespVo.billDueDt.slice(6),
-        };
-        let object = Object.assign(Object.assign(result, result.preBillRespVo), todayDt);
-        // this.props.history.push('/protocol/financial_service_page/');
+        store.setProtocolFinancialData(result.data);
+        if (type === 'financial') {
+          this.props.history.push('/protocol/financial_service_page/');
+        } else {
+          this.props.history.push('/protocol/delegation_withhold_page/');
+        }
       } else {
         this.props.toast.info(result.msgInfo);
       }
@@ -231,10 +226,10 @@ export default class ConfirmAgencyPage extends PureComponent {
           <a onClick={() => { this.read('loan_contract_page') }} className={style.protocol_link}>
             《借款合同》
           </a>
-          <a onClick={() => { this.read('delegation_withhold_page') }} className={style.protocol_link} href=" ">
+          <a onClick={() => { this.read('delegation_withhold_page') }} className={style.protocol_link}>
             《委托扣款协议》
           </a>
-          <a onClick={() => { this.read('financial_service_page') }} className={style.protocol_link} href=" ">
+          <a onClick={() => { this.read('financial_service_page') }} className={style.protocol_link}>
             《金融服务协议》
           </a>
 

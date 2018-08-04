@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.scss';
 export default class delegation_withhold_page extends PureComponent {
+    
     render() {
         return (
             <iframe
@@ -8,6 +9,9 @@ export default class delegation_withhold_page extends PureComponent {
                 src="/disting/#/delegation_withhold_page"
                 name="delegation_withhold_page"
                 id="delegation_withhold_page"
+                 onLoad={() => {
+                    window.frames['delegation_withhold_page'].setData();
+                }}
                 width="100%"
                 height="100%"
                 frameBorder="0"
