@@ -12,18 +12,16 @@ export default class Header extends Component {
     return (
       <div>
         {/* 各个渠道是否隐藏头部 */}
-        {/MicroMessenger/i.test(ua) || /SuiXingPay-Mpos/i.test(ua) || /SuiXingPay-Cashier/i.test(ua) || headerProps.headerHide ? (
-          ''
-        ) : (
-            <div className={styles.title}>
-              {!headerProps.arrowHide ? (
-                <div className={styles.arrows} onClick={() => this.goBack()}>
-                  <div className={styles.left} />
-                </div>
-              ) : null}
-              <div className={styles.center}>{newTitle || headerProps.title}</div>
-            </div>
-          )}
+        {!/MicroMessenger/i.test(ua) && !/SuiXingPay-Mpos/i.test(ua) && !/SuiXingPay-Cashier/i.test(ua) && !headerProps.headerHide ? (
+          <div className={styles.title}>
+            {!headerProps.arrowHide ? (
+              <div className={styles.arrows} onClick={() => this.goBack()}>
+                <div className={styles.left} />
+              </div>
+            ) : null}
+            <div className={styles.center}>{newTitle || headerProps.title}</div>
+          </div>
+        ) : null}
       </div>
     )
   }
