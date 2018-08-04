@@ -35,6 +35,7 @@ export default class select_save_page extends PureComponent {
     // 根据不同页面跳转过来查询不同接口
     if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
       this.queryVipBankList();
+      this.props.setTitle('选择银行卡');
     } else {
       this.queryBankList();
     }

@@ -147,11 +147,11 @@ export default class real_name_page extends Component {
 
   handleSubmit = () => {
     if (!validators.name(this.state.idName)) {
-      this.props.toast.info('请输入合法的姓名');
+      this.props.toast.info('请输入正确的姓名');
       return false;
     }
     if (!validators.iDCardNumber(this.state.idNo)) {
-      this.props.toast.info('请输入合法的身份证');
+      this.props.toast.info('请输入正确的身份证号');
       return false;
     }
     const { ocrZhengData = {}, ocrFanData = {}, ocrData = {}, idName, idNo } = this.state;

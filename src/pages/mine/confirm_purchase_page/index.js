@@ -58,7 +58,7 @@ export default class confirm_purchase_page extends PureComponent {
             res => {
               if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
                 res.msgInfo && this.props.toast.info(res.msgInfo)
-                const backUrlData = store.getBackUrl();
+                const backUrlData = store.getVipBackUrl();
                 Cookie.remove('VIPFlag');
                 setTimeout(() => {
                   this.props.history.replace(backUrlData)
@@ -128,11 +128,13 @@ export default class confirm_purchase_page extends PureComponent {
   // 支付银行卡点击
   handleCardItemClick = () => {
     store.setBackUrl('/mine/confirm_purchase_page');
-    if (this.state.cardTyp === 'C') {
-      this.props.history.push(`/mine/select_credit_page?agrNo=${this.state.agrNo}`)
-    } else {
-      this.props.history.push(`/mine/select_save_page?agrNo=${this.state.agrNo}`)
-    }
+    // 都跳转到选择信用卡的一个页面，然后在里面判断
+    this.props.history.push(`/mine/select_credit_page?agrNo=${this.state.agrNo}`);
+    // if (this.state.cardTyp === 'C') {
+    //   this.props.history.push(`/mine/select_credit_page?agrNo=${this.state.agrNo}`)
+    // } else {
+    //   this.props.history.push(`/mine/select_save_page?agrNo=${this.state.agrNo}`)
+    // }
   };
   // 格式化显示有效期
   formatDate = date => {

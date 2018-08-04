@@ -49,6 +49,7 @@ export default class BankContent extends React.Component {
     console.log(this.state.credCardCount, 'this.state.credCardCount');
     if (this.state.credCardCount > 1) {
       console.log('跳选择授信卡页');
+      store.setBackUrl('/home/home');
       const { contentData } = this.props;
       this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexData.autId}` });
     } else {
