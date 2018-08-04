@@ -245,7 +245,7 @@ export default class order_detail_page extends PureComponent {
                 </Panel>
 
                 {
-                    billDesc.perdNum !== 999 && hideBtn ? <div className={styles.submit_btn}>
+                    billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
                         <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>
