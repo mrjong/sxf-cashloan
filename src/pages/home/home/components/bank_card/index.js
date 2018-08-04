@@ -80,7 +80,7 @@ export default class BankCard extends React.PureComponent {
       overDt,
     } = this.props;
     const iconClass = bankNo ? `bank_golden_ico_${bankNo}` : 'logo_ico';
-    let overDtStr = '';
+    let overDtStr = '---';
     if (overDt === '---') {
       overDtStr = overDt;
     } else if (overDt > 0) {
@@ -107,13 +107,13 @@ export default class BankCard extends React.PureComponent {
         <div className={style.bill_preview}>
           <div className={style.bill_item}>
             <span className={style.bill_value}>
-              {cardBillDt === '---' ? cardBillDt : dayjs(cardBillDt).format('YYYY/MM/DD')}
+              {!cardBillDt || cardBillDt === '---' ? '---' : dayjs(cardBillDt).format('YYYY/MM/DD')}
             </span>
             <span className={style.bill_name}>账单日</span>
           </div>
           <div className={style.bill_item}>
             <span className={style.bill_value}>
-              {typeof cardBillAmt === 'number' ? parseFloat(cardBillAmt, 10).toFixed(2) : cardBillAmt}
+              {!cardBillAmt || cardBillAmt === '---' ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)}
             </span>
             <span className={style.bill_name}>账单金额</span>
           </div>
