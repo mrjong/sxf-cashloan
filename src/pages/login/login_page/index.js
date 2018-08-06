@@ -7,6 +7,7 @@ import { store, getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
 import { setBackGround } from '../../../utils/Background';
+import { address } from 'utils/Address'
 
 let timmer
 const API = {
@@ -39,6 +40,9 @@ export default class login_page extends PureComponent {
     this.props.form.setFieldsValue({
       phoneValue: '',
     });
+  }
+  componentDidMount() {
+    address()
   }
 
   componentWillUnmount() {

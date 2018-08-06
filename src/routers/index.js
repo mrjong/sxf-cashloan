@@ -5,14 +5,14 @@ import { Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
 const Loading = ({ error, pastDelay }) => {
   if (pastDelay) {
-    return <div>loading</div>;
+    return <div></div>;
   } else if (error) {
     return <div>err</div>;
   }
   return null;
 };
 function LoadingComponent() {
-  return <div>loading</div>;
+  return <div></div>;
 }
 const LoginPage = Loadable({
   loader: () => import('pages/login/login_page'),

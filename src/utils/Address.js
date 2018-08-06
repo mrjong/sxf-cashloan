@@ -6,6 +6,7 @@ export const address =() => {
     var geolocation = new BMap.Geolocation();
     geolocation.getCurrentPosition(function(r){
         console.log('this.getStatus() == BMAP_STATUS_SUCCESS:', this.getStatus());
+        
         if(this.getStatus() == BMAP_STATUS_SUCCESS){
             const lngValue = r.point && r.point.lng;
             const latValue = r.point && r.point.lat;
