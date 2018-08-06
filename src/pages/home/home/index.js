@@ -219,7 +219,9 @@ export default class HomePage extends PureComponent {
             history={history}
             haselescard={this.state.haselescard}
           >
-            {usrIndexInfo.indexSts === 'LN0002' || usrIndexInfo.indexSts === 'LN0010' ? null : (
+            {usrIndexInfo.indexData.autSts !== '2' ||
+            usrIndexInfo.indexSts === 'LN0002' ||
+            usrIndexInfo.indexSts === 'LN0010' ? null : (
               <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
                 {usrIndexInfo.indexMsg}
               </SButton>

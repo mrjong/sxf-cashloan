@@ -5,7 +5,8 @@ import Header from 'components/header';
 import Footer from 'components/footer';
 import { Toast } from 'antd-mobile'
 import Cookie from 'js-cookie';
-import pagesIgnore from 'utils/pagesIgnore'
+import pagesIgnore from 'utils/pagesIgnore';
+import TFDInit from 'utils/getTongFuDun';
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
@@ -34,6 +35,8 @@ export default class router_Page extends PureComponent {
     try {
       let route
       console.log(Routers)
+      // 通付盾 获取设备指纹
+      TFDInit();
       for (let i = 0; i < Routers.length; i++) {
         if (match.url === Routers[i].path) {
           this.setState({

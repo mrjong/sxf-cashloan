@@ -2,7 +2,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import router from 'routers';
-// import 'utils/Back';
+import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchinit from "utils/FetchInit"
