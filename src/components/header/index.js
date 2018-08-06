@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from "react"
-import styles from "./Header.scss"
+import styles from "./header.scss"
 
 export default class Header extends Component {
   goBack() {
