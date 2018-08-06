@@ -5,6 +5,7 @@ import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss'
 import ButtonCustom from 'components/button';
 import { store } from 'utils/common';
+import dayjs from 'dayjs';
 @setBackGround('#fff')
 @fetch.inject()
 export default class card_home extends PureComponent {
@@ -93,7 +94,7 @@ export default class card_home extends PureComponent {
     )
   }
   render() {
-    const { data } = this.state
+    const { data, cardInfo, cardState } = this.state
     return (
       <div className={styles.membership_card_page} >
         {
@@ -123,7 +124,7 @@ export default class card_home extends PureComponent {
               this.selectOne(item.memPrdId, item.price)
             }} className={styles.cardHome}>
               <div className={styles.cardMoney}>
-                {item.price} <span className={styles.icon}>￥</span>
+                {item.cardAmt} <span className={styles.icon}>￥</span>
               </div>
               <div className={styles.cardTitle}>
                 <span className={styles.left}>
@@ -134,13 +135,13 @@ export default class card_home extends PureComponent {
                 </span>
               </div>
               <div className={styles.cardTitle}>
-                有效期至2018/8/1
-            </div>
+                有效期至{item.cardExpDt && dayjs(item.cardExpDt).format('YYYY/MM/DD')}
+              </div>
             </div>)
           }) : null
         }
         {
-          this.state.status ?
+          this.state.status && cardState === '0' ?
             < div className={styles.btn} >
               <ButtonCustom onClick={this.buy} className={styles.sureBtn}>确认购买</ButtonCustom>
             </div > : null
