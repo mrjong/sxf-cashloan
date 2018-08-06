@@ -74,7 +74,7 @@ export default class essential_information extends PureComponent {
           }
         });
       } else {
-        this.props.toast.info(getFirstError(err))
+        this.props.toast.info(getFirstError(err));
       }
     });
 
@@ -92,6 +92,13 @@ export default class essential_information extends PureComponent {
   validateName = (rule, value, callback) => {
     if (!validators.name(value)) {
       callback('请输入合法的姓名');
+    } else {
+      callback();
+    }
+  };
+  validateAddress = (rule, value, callback) => {
+    if ((value).length>50) {
+      callback('请输入合法常住地址');
     } else {
       callback();
     }
@@ -132,12 +139,13 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore} />
+          <img className={style.informationMore} src={informationMore}/>
         </div>
         <div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('address', {
             rules: [
               { required: true, message: '请输入常住地址' },
+              { validator: this.validateAddress },
             ],
             onChange: (value) => {
               this.setState({ address: value });
@@ -173,7 +181,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore} />
+          <img className={style.informationMore} src={informationMore}/>
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
@@ -228,7 +236,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore} />
+          <img className={style.informationMore} src={informationMore}/>
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
