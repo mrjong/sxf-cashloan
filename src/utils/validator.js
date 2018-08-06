@@ -20,7 +20,7 @@ export const validators = {
       return true;
     }
   },
-  name: val => /^(([\u4e00-\u9fa5])|(\\.)|(\\·)){2,20}$/.test(val),
+  name: val => /^([\u4e00-\u9fa5]){2,20}$/.test(val),
   chLength: (val, min, max) => {
     // 中文字符长度校验
     let minNum = min || 1;

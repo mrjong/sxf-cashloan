@@ -178,7 +178,7 @@ export default class essential_information extends PureComponent {
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
             rules: [
-              { required: true, message: '请输入正确的联系人姓名' },
+              { required: true, message: '请输入联系人姓名' },
               { validator: this.validateName }],
           })(
             <InputItem
@@ -192,7 +192,7 @@ export default class essential_information extends PureComponent {
         <div className={`${style.labelDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendPhone', {
             rules: [
-              { required: true, message: '请输入正确的联系人手机号' },
+              { required: true, message: '请输入联系人手机号' },
               { validator: this.validatePhone }],
           })(
             <InputItem
@@ -233,7 +233,7 @@ export default class essential_information extends PureComponent {
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
             rules: [
-              { required: true, message: '请输入正确的联系人姓名' },
+              { required: true, message: '请输入联系人姓名' },
               { validator: this.validateName }],
           })(
             <InputItem
@@ -247,7 +247,7 @@ export default class essential_information extends PureComponent {
         <div className={`${style.labelDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesPhone', {
             rules: [
-              { required: true, message: '请输入正确的联系人手机号' },
+              { required: true, message: '请输入联系人手机号' },
               { validator: this.validatePhone }],
           })(
             <InputItem
