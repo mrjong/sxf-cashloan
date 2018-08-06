@@ -73,6 +73,11 @@ export default class credit_list_page extends PureComponent {
     this.props.$fetch.get(`/index/cacheCredCard/${obj.autId}`).then(() => {
       this.props.history.replace(backUrlData);
     })
+    // 如果选择的是同一张卡则不清除session里的RepaymentModalData
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    if (queryData.autId && queryData.autId !== obj.autId) {
+      store.removeRepaymentModalData();
+    }
     // store.setCardData(obj);
     // }
 
