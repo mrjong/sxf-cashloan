@@ -90,7 +90,7 @@ export default class BankContent extends React.Component {
 
   render() {
     const { className, children, contentData, ...restProps } = this.props;
-    const showEntranceArr = ['LN0003', 'LN0006']
+    const showEntranceArr = ['LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010'];
     return (
       <div className={style.bank_content_wrap} {...restProps}>
         <BankCard contentData={contentData} {...contentData.indexData} />
