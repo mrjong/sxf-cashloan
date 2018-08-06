@@ -34,36 +34,10 @@ export default class credit_extension_page extends PureComponent {
   componentWillMount() {
     // 查询 授信项状态
     this.requestGetStatus();
-    //芝麻信用的回调
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-    const params = query.params;
-    const sign = query.sign;
     const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
     if (isShowCommit && isShowCommit === 'false') {
       this.setState({ isShowBtn: false })
-    }
-    if (params && sign) {
-      const data = {
-        params,
-        sign,
-      };
-      this.props.$fetch.post(`${API.getXMURL}`, data).then((res) => {
-
-        if (res && res.data !== null && res.msgCode === 'PTM0000') {
-
-          this.props.$fetch.get(`${API.getStw}`).then((result) => {
-
-            if (result && result.data !== null && result.msgCode === 'PTM0000') {
-
-              this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
-            } else {
-              this.props.toast.info(result.msgInfo);
-            }
-          });
-        } else {
-          this.props.toast.info(res.msgInfo);
-        }
-      });
     }
   }
 

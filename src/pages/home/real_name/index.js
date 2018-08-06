@@ -17,7 +17,7 @@ const { Item } = List;
 
 
 const isEquipment = window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-
+let timer
 const API = {
   getImgUrl: '/auth/ocrIdChk',
   submitName: '/auth/idChk',
@@ -40,6 +40,7 @@ export default class real_name_page extends Component {
     rightUploaded: false,
     footerUploaded: false,
     showState: false,
+    disabledupload:'false'
   };
 
   componentWillMount() {
@@ -65,6 +66,11 @@ export default class real_name_page extends Component {
 
   // 上传身份证正面
   handleChangePositive = ({ base64Data }) => {
+    if(!base64Data){
+      this.setState({
+        disabledupload: 'false'
+      })
+    }
     if (!(isEquipment)) {
       this.props.toast.info('请使用手机设备');
       return;
@@ -76,6 +82,9 @@ export default class real_name_page extends Component {
       ocrType: '2',
     };
     this.props.$fetch.post(`${API.getImgUrl}`, params, { timeout: 30000 }).then((result) => {
+      this.setState({
+        disabledupload: 'false'
+      })
       if (result.msgCode === 'PTM0000') {
         this.setState({ ocrZhengData: result.data });
         this.setState({ idName: result.data.idName || '' });
@@ -87,12 +96,20 @@ export default class real_name_page extends Component {
         this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
       }
     }).catch(() => {
+      this.setState({
+        disabledupload: 'false'
+      })
       this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
     });
   };
 
   // 上传身份证反面
   handleChangeSide = ({ base64Data }) => {
+    if(!base64Data){
+      this.setState({
+        disabledupload: 'false'
+      })
+    }
     if (!(isEquipment)) {
       this.props.toast.info('请使用手机设备');
       return;
@@ -104,6 +121,9 @@ export default class real_name_page extends Component {
       ocrType: '3',
     };
     this.props.$fetch.post(`${API.getImgUrl}`, params1, { timeout: 30000 }).then((res) => {
+      this.setState({
+        disabledupload: 'false'
+      })
       if (res.msgCode === 'PTM0000') {
         this.setState({ ocrFanData: res.data });
         this.setState({ rightUploaded: true });
@@ -113,11 +133,19 @@ export default class real_name_page extends Component {
         this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
       }
     }).catch(() => {
+      this.setState({
+        disabledupload: 'false'
+      })
       this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
     });
   };
   // 手持身份证照片
   handleChangeBottom = ({ base64Data }) => {
+    if(!base64Data){
+      this.setState({
+        disabledupload: 'false'
+      })
+    }
     if (!(isEquipment)) {
       this.props.toast.info('请使用手机设备');
       return;
@@ -129,6 +157,9 @@ export default class real_name_page extends Component {
       ocrType: '1',
     };
     this.props.$fetch.post(`${API.getImgUrl}`, params1, { timeout: 30000 }).then((res) => {
+      this.setState({
+        disabledupload: 'false'
+      })
       if (res.msgCode === 'PTM0000') {
         this.setState({ ocrData: res.data });
         this.setState({ footerUploaded: true });
@@ -138,6 +169,9 @@ export default class real_name_page extends Component {
         this.setState({ footerUploaded: false, footerValue: updateBottom });
       }
     }).catch(() => {
+      this.setState({
+        disabledupload: 'false'
+      })
       this.setState({ showFloat: false, footerValue: updateBottom });
     });
   };
@@ -196,8 +230,21 @@ export default class real_name_page extends Component {
       }
     });
   };
-
+  handleBeforeCompress=(type)=>{
+    console.log('正在压缩图片')
+    if(this.state.disabledupload==='true'){
+      this.props.toast.loading('压缩图片中...')
+    }
+    this.setState({
+      disabledupload: 'true'
+    })
+  }
+  handleAfterCompress=()=>{
+    console.log('上传成功')
+    // this.props.toast.info('上传成功')
+  }
   render() {
+    const { disabledupload } =this.state
     // let selectFlag = true;
     // if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
     //   selectFlag = false;
@@ -209,17 +256,23 @@ export default class real_name_page extends Component {
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
               <FEZipImage
+                disabledupload={disabledupload}
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
                 value={this.state.leftValue}
                 onChange={this.handleChangePositive}
+                beforeCompress={this.handleBeforeCompress}
+                afterCompress={this.handleAfterCompress}
               />
               <p>拍摄身份证正面</p>
             </div>
             <div className={style.updateImgRight}>
               <FEZipImage
+                disabledupload={disabledupload}
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
                 value={this.state.rightValue}
                 onChange={this.handleChangeSide}
+                beforeCompress={this.handleBeforeCompress}
+                afterCompress={this.handleAfterCompress}
               />
               <p>拍摄身份证反面</p>
             </div>
@@ -250,9 +303,12 @@ export default class real_name_page extends Component {
           <div className={style.updateContent}>
             <div className={style.updateImgLeft}>
               <FEZipImage
+                disabledupload={disabledupload}
                 style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
                 value={this.state.footerValue}
                 onChange={this.handleChangeBottom}
+                beforeCompress={this.handleBeforeCompress}
+                afterCompress={this.handleAfterCompress}
               />
               <p>上传手持身份证</p>
             </div>
