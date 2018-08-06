@@ -19,7 +19,7 @@ export default class FEZIpImage extends Component {
             e.preventDefault();
             const files = this.files;
             const file = files[0];
-            const quality = file.size > 500000 ? 0.4 : 1;
+            const quality = file&&file.size > 500000 ? 0.4 : 1;
             beforeCompress();
 
             lrz(file, {quality})
@@ -36,6 +36,11 @@ export default class FEZIpImage extends Component {
     }
 
     handleChange = (e) => {
+      const {disabledupload}=this.props
+      console.log(disabledupload)
+      if(disabledupload==='true'){
+        return
+      }
         e.preventDefault();
         const {onChange, beforeCompress, afterCompress} = this.props;
         const fileSelectorEl = this.fileSelectorInput;
@@ -43,7 +48,7 @@ export default class FEZIpImage extends Component {
         if (fileSelectorEl && fileSelectorEl.files && fileSelectorEl.files.length) {
             const files = fileSelectorEl.files;
             const file = files[0];
-            const quality = file.size > 500000 ? 0.4 : 1;
+            const quality = file&&file.size > 500000 ? 0.4 : 1;
             beforeCompress();
 
             lrz(file, {quality})
@@ -69,6 +74,7 @@ export default class FEZIpImage extends Component {
             className,
             style,
             onChange,
+          disabledupload,
             beforeCompress,
             afterCompress,
             accept,
@@ -86,6 +92,7 @@ export default class FEZIpImage extends Component {
                 <input
                     ref={(input) => this.fileSelectorInput = input}
                     type="file"
+                    disabled={disabledupload==='false'?false:true}
                     accept={accept}
                     capture="camera"
                 />
