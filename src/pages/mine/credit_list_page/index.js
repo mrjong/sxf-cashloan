@@ -31,6 +31,9 @@ export default class credit_list_page extends PureComponent {
       });
     }
   }
+  componentWillUnmount() {
+    store.removeBackUrl();
+  }
 
   // 获取信用卡银行卡列表
   queryBankList = () => {
