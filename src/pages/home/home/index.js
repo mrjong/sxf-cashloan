@@ -59,14 +59,14 @@ export default class HomePage extends PureComponent {
     }
   };
 
-  // 关闭弹框
+  // 打开弹框
   handleShowModal = () => {
     this.setState({
       isShowModal: true,
     });
   };
 
-  // 打开弹框
+  // 关闭弹框
   handleCloseModal = () => {
     this.setState({
       isShowModal: false,
@@ -219,9 +219,9 @@ export default class HomePage extends PureComponent {
             history={history}
             haselescard={this.state.haselescard}
           >
-            {usrIndexInfo.indexData.autSts !== '2' ||
-            usrIndexInfo.indexSts === 'LN0002' ||
-            usrIndexInfo.indexSts === 'LN0010' ? null : (
+            {usrIndexInfo.indexSts === 'LN0002' ||
+            usrIndexInfo.indexSts === 'LN0010' ||
+            (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
               <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
                 {usrIndexInfo.indexMsg}
               </SButton>
