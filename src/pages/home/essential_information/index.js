@@ -160,7 +160,7 @@ export default class essential_information extends PureComponent {
             <AsyncCascadePicker
               title="选择联系人"
               loadData={[
-                () => this.props.$fetch.get(`${API.getRelat}/1`)
+                () => this.props.$fetch.get(`${API.getRelat}/2`)
                   .then((result) => {
                     const prov = (result && result.data && result.data.length) ? result.data : [];
                     return prov.map(item => ({ value: item.key, label: item.value }));
