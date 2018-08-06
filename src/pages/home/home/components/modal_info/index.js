@@ -14,6 +14,7 @@ import style from './style.scss';
 const API = {
   QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
+  CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
 };
 
 let storeCardData = '';
@@ -118,6 +119,24 @@ export default class ModalInfo extends Component {
 
   // 确认按钮点击事件
   handleClickConfirm = () => {
+    this.requestCheckWithHoldCard();
+  };
+
+  // 储蓄卡是否支持代扣校验接口
+  requestCheckWithHoldCard = () => {
+    const { repayInfo } = this.state;
+    const agrNo = storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo;
+    this.props.$fetch.get(`${API.CHECK_WITH_HOLD_CARD}/${agrNo}`).then(res => {
+      if (res && res.msgCode === 'PTM0000') {
+        this.beforeJump();
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
+  };
+
+  // 如果当前还款卡支持代扣 则跳转确认页面
+  beforeJump() {
     const { lendersDate, repayInfo, repaymentDate, cardBillAmt } = this.state;
     const { indexData } = this.props;
     const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
@@ -126,7 +145,7 @@ export default class ModalInfo extends Component {
     // 跳转确认代还页面之前 将当前信用卡信息保存下来
     store.setHomeCardIndexData(indexData);
     this.props.history.push({ pathname: '/home/agency', search });
-  };
+  }
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
@@ -150,7 +169,7 @@ export default class ModalInfo extends Component {
           lendersDateList: lendersDateListFormat,
         });
       } else {
-        this.props.toast.info(result.msgInfo);
+        Toast.info(result.msgInfo);
       }
     });
   };
