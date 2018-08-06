@@ -125,7 +125,7 @@ export default class credit_extension_page extends PureComponent {
     const { stswData } = this.state;
     const firstOption = stswData.filter(item => item.code === 'idCheck')[0];
     console.log(firstOption, 'firstOption');
-    if (item.dicDetailCd === '2') {
+    if (item.dicDetailCd === '2' || item.dicDetailCd === '1') {
       Toast.info(item.extra.name);
     } else if (firstOption.stsw.dicDetailCd !== '2') {
       if (item.extra.code === 'idCheck') {
