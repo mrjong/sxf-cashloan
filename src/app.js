@@ -7,7 +7,6 @@ import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchinit from "utils/FetchInit"
 import { initAnalytics } from './utils/Analytins';
-import {address} from './utils/Address'
 import fastClick from 'fastclick';
 
 fastClick.attach(document.body);
@@ -16,7 +15,6 @@ if (!window.sa) {
   window.sa = sa;
 }
 fetchinit();
-address();
 initAnalytics();
 const renders = Component =>
   render(
