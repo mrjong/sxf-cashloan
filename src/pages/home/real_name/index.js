@@ -233,7 +233,7 @@ export default class real_name_page extends Component {
   handleBeforeCompress=(type)=>{
     console.log('正在压缩图片')
     if(this.state.disabledupload==='true'){
-      this.props.toast.info('压缩图片中...')
+      this.props.toast.loading('压缩图片中...')
     }
     this.setState({
       disabledupload: 'true'
