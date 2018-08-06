@@ -329,7 +329,7 @@ export default class real_name_page extends Component {
         {
           this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? <div>
             <List className={style.is_true}>
-              <InputItem value={this.state.userInfo && this.state.userInfo.nameHid} editable={false}>姓名</InputItem>
+              <InputItem value={this.state.userInfo && this.state.userInfo.name} editable={false}>姓名</InputItem>
               <InputItem value={this.state.userInfo && this.state.userInfo.idNoHid} editable={false}>身份证号</InputItem>
             </List>
           </div> : null
