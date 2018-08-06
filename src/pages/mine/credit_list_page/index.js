@@ -70,7 +70,7 @@ export default class credit_list_page extends PureComponent {
     this.props.$fetch.get(`/index/cacheCredCard/${obj.autId}`).then(() => {
       this.props.history.replace(backUrlData);
     })
-    store.setCardData(obj);
+    // store.setCardData(obj);
     // }
 
   };
