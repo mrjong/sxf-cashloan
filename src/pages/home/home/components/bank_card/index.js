@@ -49,7 +49,12 @@ export default class BankCard extends React.PureComponent {
   };
 
   handleUpdate = () => {
-    this.applyCardRepay();
+    const { indexSts } = this.props.contentData;
+    if (indexSts && indexSts === 'LN0009') {
+      Toast.info('您有未结清的账单，暂时不能更新');
+    } else {
+      this.applyCardRepay();
+    }
   };
 
   // 跳魔蝎

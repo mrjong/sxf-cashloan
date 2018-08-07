@@ -38,7 +38,7 @@ export default class credit_extension_page extends PureComponent {
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     urlQuery = this.props.history.location.search;
     const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
-    if (isShowCommit && isShowCommit === 'false') {
+    if (!isShowCommit || isShowCommit === 'false') {
       this.setState({ isShowBtn: false })
     }
   }

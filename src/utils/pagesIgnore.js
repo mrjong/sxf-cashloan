@@ -1,6 +1,6 @@
-export default (props) => {
-    if (props && props.match && props.match.params && props.match.params.modules) {
-        let pageList = ['protocol']
-        return pageList.includes(props.match.params.modules)
-    }
-}
+export default (pathname = window.location.pathname) => {
+  if (pathname) {
+    let pageList = ['/protocol/'];
+    return pageList.some(item => item && pathname.indexOf(item) > -1);
+  }
+};

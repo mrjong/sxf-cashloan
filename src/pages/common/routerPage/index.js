@@ -23,7 +23,7 @@ export default class router_Page extends PureComponent {
   }
   loadComponent = async props => {
     const token = Cookie.get('fin-v-card-token');
-    if (!pagesIgnore(props) && !token) {
+    if (!pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear()
       Toast.info('请先登录')
       // setTimeout(() => {
@@ -35,8 +35,10 @@ export default class router_Page extends PureComponent {
     try {
       let route
       console.log(Routers)
-      // 通付盾 获取设备指纹
-      TFDInit();
+      if (!pagesIgnore(window.location.pathname)) {
+        // 通付盾 获取设备指纹
+        TFDInit();
+      }
       for (let i = 0; i < Routers.length; i++) {
         if (match.url === Routers[i].path) {
           this.setState({

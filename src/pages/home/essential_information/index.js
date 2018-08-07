@@ -66,7 +66,7 @@ export default class essential_information extends PureComponent {
             credCorpOrg: '',
           };
           if (values.friendPhone === values.relativesPhone) {
-            this.props.toast.info('手机号不能相同');
+            this.props.toast.info('联系人手机号重复，请重新填写');
           }
           else {
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
@@ -89,7 +89,7 @@ export default class essential_information extends PureComponent {
   // 校验手机号
   validatePhone = (rule, value, callback) => {
     if (!validators.phone(value)) {
-      callback('请输入合法的手机号');
+      callback('请输入正确的联系人手机号');
     } else {
       callback();
     }
@@ -97,14 +97,14 @@ export default class essential_information extends PureComponent {
   // 校验姓名
   validateName = (rule, value, callback) => {
     if (!validators.name(value)) {
-      callback('请输入合法的姓名');
+      callback('请输入正确的联系人的姓名');
     } else {
       callback();
     }
   };
   validateAddress = (rule, value, callback) => {
     if ((value).length>50) {
-      callback('请输入合法常住地址');
+      callback('请输入正确的常住地址');
     } else {
       callback();
     }

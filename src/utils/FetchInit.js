@@ -1,6 +1,7 @@
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
+import pagesIgnore from 'utils/pagesIgnore';
 
 const fetchinit = () => {
   let timer = undefined
@@ -73,12 +74,10 @@ const fetchinit = () => {
         case 'PTM0000':
           return;
         case 'PTM1000': // 用户登录超时
-          Toast.info(response.data.msgInfo)
-          setTimeout(() => {
-            window.location.pathname = '/login'
-          }, 3000);
-          return;
         case 'PTM0100': // 未登录
+          if (pagesIgnore(window.location.pathname)) {
+            return;
+          }
           Toast.info(response.data.msgInfo)
           setTimeout(() => {
             window.location.pathname = '/login'
