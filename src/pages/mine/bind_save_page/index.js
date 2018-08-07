@@ -94,7 +94,8 @@ export default class bind_save_page extends PureComponent {
           store.removeBackUrl();
           this.props.history.replace(backUrlData);
         } else {
-          this.props.history.replace('/mine/select_save_page');
+          // this.props.history.replace('/mine/select_save_page');
+          this.props.history.goBack()
         }
         // if(sessionStorage.getItem('storageCardManagement')){
         //   this.props.history.push('/storageCardManagementOutside')

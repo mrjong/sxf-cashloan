@@ -13,6 +13,7 @@ export default {
     indexSts: 'LN0003',
     indexMsg: '一键还卡',
     indexData: {
+      autSts: '2',
       bankName: '招商银行',
       bankNo: 'ICBC',
       cardNoHid: '6785 **** **** 6654',

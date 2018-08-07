@@ -76,7 +76,8 @@ export default class bind_credit_page extends PureComponent {
             }
           })
         } else {
-          this.props.history.replace('/mine/select_credit_page');
+          // this.props.history.replace('/mine/select_credit_page');
+          this.props.history.goBack()
         }
       } else {
         this.props.toast.info(result.msgInfo)

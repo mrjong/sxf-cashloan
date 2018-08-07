@@ -23,6 +23,8 @@ const API = {
   submitName: '/auth/idChk',
 };
 
+let urlQuery = '';
+
 @fetch.inject()
 @createForm()
 @setBackGround('#F5F5F5')
@@ -44,6 +46,7 @@ export default class real_name_page extends Component {
   };
 
   componentWillMount() {
+    urlQuery = this.props.history.location.search;
     let userInfo = store.getUserInfo();
     if (userInfo && JSON.stringify(userInfo) !== '{}') {
       this.setState({
@@ -223,7 +226,7 @@ export default class real_name_page extends Component {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
         // store.removeAuthFlag();
         Cookie.remove('authFlag');
-        this.props.history.replace('/mine/credit_extension_page');
+        this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
       }
       else {
         this.props.toast.info(result.msgInfo);

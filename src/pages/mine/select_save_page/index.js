@@ -235,7 +235,7 @@ export default class select_save_page extends PureComponent {
             </div>
             : null
         }
-        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
+        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>绑定储蓄卡</p>
         {/* {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />} */}
       </div>
     )
