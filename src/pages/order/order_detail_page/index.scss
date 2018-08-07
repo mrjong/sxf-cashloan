@@ -48,7 +48,7 @@
     flex: 1;
   }
   i{
-    @include setArrow(right,15px,#A9AEB6,1px);
+    @include setArrow(right,15px,#A9AEB6,1PX);
     top: 20px;
   }
 }

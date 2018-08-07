@@ -36,7 +36,7 @@ export default class ButtonCustom extends React.PureComponent {
                                         </div>
                                         <div className={styles.list_desc_extra}>
                                             <span>
-                                                {item.feeAmt}
+                                                {(parseFloat(item.feeAmt)).toFixed(2)}
                                             </span>
                                         </div>
                                     </li>

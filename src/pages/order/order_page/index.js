@@ -4,7 +4,7 @@ import React, {
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
-import sessionStorageMap from 'utils/sessionStorageMap'
+import { store } from 'utils/common'
 let hasNext = true
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -41,11 +41,9 @@ export default class message_page extends PureComponent {
     scrollTop = 0
     componentWillMount() {
         // 处理详情返回之后
-        let backDatastr = sessionStorage.getItem(sessionStorageMap.bill.backData)
-        console.log('222222222', backDatastr)
-
-        if (backDatastr && backDatastr !== "{}") {
-            let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
+        let backDatastr = store.getBackData()
+        if (backDatastr && JSON.stringify(backDatastr) !== "{}") {
+            let backData = store.getBackData()
             hasNext = backData.hasNext
             console.log(backData.rData)
             this.setState(
@@ -75,21 +73,10 @@ export default class message_page extends PureComponent {
     }
     componentDidMount() {
         // 返回展示数据
-        let backData = JSON.parse(sessionStorage.getItem(sessionStorageMap.bill.backData))
-        if (sessionStorage.getItem(sessionStorageMap.bill.backData)) {
+        let backData = store.getBackData()
+        if (store.getBackData()) {
             setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
-            sessionStorage.removeItem(sessionStorageMap.bill.backData)
         }
-    }
-    componentDidUpdate() {
-        if (this.state.useBodyScroll) {
-            document.body.style.overflow = "auto"
-        } else {
-            document.body.style.overflow = "hidden"
-        }
-    }
-    componentWillUnmount() {
-        document.body.style.overflow = "auto"
     }
     // 获取每一页数据
     genData = async (pIndex = 0) => {
@@ -220,8 +207,9 @@ export default class message_page extends PureComponent {
         }
 
         // 0:无，1:URL，2:文本，3:APP"
-        sessionStorage.setItem(sessionStorageMap.bill.backData, JSON.stringify(backData))
-        this.props.history.push(`/order/order_detail_page?billNo=${obj.billNo}`)
+        store.setBackData(backData)
+        store.setBillNo(obj.billNo)
+        this.props.history.push(`/order/order_detail_page`)
     }
     // 切换tab
     changeTab = (tab, index) => {

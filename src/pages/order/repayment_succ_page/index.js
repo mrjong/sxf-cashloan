@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/button';
 import styles from './index.scss';
-import sessionStorageMap from 'utils/sessionStorageMap'
-
+import { store } from 'utils/common'
 export default class repayment_succ_page extends PureComponent {
     constructor(props) {
         super(props);
@@ -15,7 +14,7 @@ export default class repayment_succ_page extends PureComponent {
         }
     }
     componentWillMount() {
-        let test = sessionStorage.getItem(sessionStorageMap.bill.orderSuccess)
+        let test = store.getOrderSuccess()
         if (test) {
             let orderSuccess = JSON.parse(test)
             this.setState({

@@ -255,6 +255,36 @@ const store = {
   },
   removeProtocolFinancialData() {
     return storage.session.removeItem('protocolFinancialData');
+  },
+  // 付款成功信息
+  getOrderSuccess() {
+    return storage.session.getItem('orderSuccess');
+  },
+  // 借款成功信息
+  setOrderSuccess(data) {
+    return storage.session.setItem('orderSuccess', data);
+  },
+  // 付款成功信息
+  removeOrderSuccess() {
+    return storage.session.removeItem('orderSuccess');
+  },
+  // 订单信息
+  getBackData() {
+    return storage.session.getItem('backData');
+  },
+  // 订单信息
+  setBackData(data) {
+    return storage.session.setItem('backData', data);
+  },
+  // 订单信息
+  removeBackData() {
+    return storage.session.removeItem('backData');
+  },
+  setBillNo(data) {
+    return storage.session.setItem('billNo', data);
+  },
+  getBillNo() {
+    return storage.session.getItem('billNo');
   }
 };
 

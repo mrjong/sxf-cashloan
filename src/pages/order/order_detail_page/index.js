@@ -3,7 +3,6 @@ import Lists from 'components/lists';
 import Panel from 'components/panel/index.js';
 import fetch from "sx-fetch";
 import SButton from 'components/button';
-import sessionStorageMap from 'utils/sessionStorageMap';
 import { store } from 'utils/common';
 import { Modal } from 'antd-mobile';
 import styles from './index.scss';
@@ -27,9 +26,15 @@ export default class order_detail_page extends PureComponent {
         }
     }
     componentWillMount() {
-        const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+        if (!store.getBillNo()) {
+            this.props.toast.info('订单号不能为空')
+            setTimeout(() => {
+                this.props.history.goBack()
+            }, 3000);
+            return
+        }
         this.setState({
-            queryData
+            billNo: store.getBillNo()
         }, () => {
             this.getLoanInfo()
         })
@@ -48,14 +53,8 @@ export default class order_detail_page extends PureComponent {
 
     // 获取还款信息
     getLoanInfo = () => {
-        if (!this.state.queryData || !this.state.queryData.billNo) {
-            this.props.toast.info('订单号不能为空')
-            setTimeout(() => {
-                this.props.history.goBack()
-            }, 3000);
-        }
         this.props.$fetch.post(API.qryDtl, {
-            billNo: this.state.queryData.billNo
+            billNo: this.state.billNo
         })
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
@@ -91,7 +90,7 @@ export default class order_detail_page extends PureComponent {
                 key: i,
                 label: {
                     name: `${i + 1}/${perdList.length}期`,
-                    brief: perdList[i].perdDueDt
+                    brief: perdList[i].perdDueDt + '还款'
                 },
                 extra: [{
                     name: perdList[i].perdTotAmt,
@@ -158,7 +157,7 @@ export default class order_detail_page extends PureComponent {
     handleClickConfirm = () => {
         const { billDesc } = this.state
         this.props.$fetch.post(API.payback, {
-            billNo: this.state.queryData.billNo,
+            billNo: this.state.billNo,
             thisRepTotAmt: this.state.money,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
@@ -170,13 +169,13 @@ export default class order_detail_page extends PureComponent {
                 })
                 if (Number(billDesc.perdNum) === Number(billDesc.perdLth)) {
                     this.props.toast.info('还款完成')
-                    sessionStorage.removeItem(sessionStorageMap.bill.backData)
-                    sessionStorage.setItem(sessionStorageMap.bill.orderSuccess, JSON.stringify({
+                    store.removeBackData()
+                    store.setOrderSuccess({
                         perdLth: billDesc.perdLth,
                         perdUnit: billDesc.perdUnit,
                         billPrcpAmt: billDesc.billPrcpAmt,
                         billRegDt: billDesc.billRegDt
-                    }))
+                    })
                     setTimeout(() => {
                         this.props.history.replace('/order/repayment_succ_page')
                     }, 2000);
