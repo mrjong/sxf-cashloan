@@ -35,7 +35,7 @@ export default class order_detail_page extends PureComponent {
         })
 
         // 选择银行卡回来
-        let bankInfo = store.getCardData()
+        let bankInfo = store.getCardData();
         if (bankInfo && bankInfo !== {}) {
             this.setState({
                 bankInfo: bankInfo,
