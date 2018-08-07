@@ -61,7 +61,7 @@ export default class bind_save_page extends PureComponent {
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
       if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
-        this.setState({ cardData: { cardNo: values.valueInputCarNumber, ...result.data } })
+        this.setState({ cardData: { cardNo: values.valueInputCarNumber, lastCardNo: values.valueInputCarNumber.slice(-4), ...result.data } })
         const params1 = {
           bankCd: result.data.bankCd,
           cardTyp: 'D', //卡类型。

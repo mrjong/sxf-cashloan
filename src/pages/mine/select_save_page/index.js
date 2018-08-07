@@ -47,7 +47,16 @@ export default class select_save_page extends PureComponent {
       });
     }
   }
+  componentDidMount() {
+    // 改变body的背景色
+    if (backUrlData) {
+      document.getElementsByTagName('body')[0].className = 'white';
+    } else {
+      document.getElementsByTagName('body')[0].className = '';
+    }
+  }
   componentWillUnmount() {
+    document.getElementsByTagName('body')[0].className = '';
     if (!this.state.isClickAdd) {
       store.removeBackUrl(); // 清除session里的backurl的值
     }

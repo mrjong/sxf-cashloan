@@ -44,7 +44,16 @@ export default class select_credit_page extends PureComponent {
       });
     }
   }
+  componentDidMount() {
+    // 改变body的背景色
+    if (backUrlData) {
+      document.getElementsByTagName('body')[0].className = 'white';
+    } else {
+      document.getElementsByTagName('body')[0].className = '';
+    }
+  }
   componentWillUnmount() {
+    document.getElementsByTagName('body')[0].className = '';
     // 如果点击的不是添加授权卡则清掉session里的backurl的值
     if (!this.state.isClickAdd) {
       store.removeBackUrl(); // 清除session里的backurl的值
