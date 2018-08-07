@@ -42,6 +42,10 @@ export default class order_detail_page extends PureComponent {
 
     }
 
+    componentWillUnmount() {
+        store.removeCardData()
+    }
+
     // 获取还款信息
     getLoanInfo = () => {
         this.props.$fetch.post(API.qryDtl, {
@@ -113,7 +117,7 @@ export default class order_detail_page extends PureComponent {
             }
             item.feeInfos.push({
                 feeNm: '合计',
-                feeAmt: Number(perdList[i].perdTotAmt)
+                feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
             })
             perdListArray.push(item)
         }

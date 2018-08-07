@@ -5,6 +5,7 @@ import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/common'
+import dayjs from 'dayjs'
 let hasNext = true
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -117,7 +118,8 @@ export default class message_page extends PureComponent {
                     // for (let x = 0; x < 10; x++) {
                     for (let i = res.data.length - 1; i >= 0; i--) {
                         dataArr.push({
-                            ...res.data[i]
+                            ...res.data[i],
+                            billDt: `${dayjs(res.data[i].billDt).format('YYYY年MM月DD日')}借款`,
                         })
                         // }
                     }
@@ -152,7 +154,6 @@ export default class message_page extends PureComponent {
             isLoading: true
         })
         let list = await this.genData(0)
-        console.log('33333333333', list)
         this.setState({
             rData: list,
             Listlength: list.length,
@@ -160,7 +161,13 @@ export default class message_page extends PureComponent {
             refreshing: false,
             isLoading: false,
             pageIndex: 0
+        }, () => {
+            let backData = {
+                rData: this.state.rData,
+            }
+            store.setBackData(backData)
         })
+
     }
     // 渲染每一页完成之后
     onEndReached = async event => {
@@ -194,7 +201,7 @@ export default class message_page extends PureComponent {
     // 查看详情
     gotoDesc = obj => {
         // 账单状态(0：初登记,1：待还款,2：处理中,3：已撤销,4：已还清;已撤销状态专用于免手续费时间限制内的全额退款)， -2: 放款中
-        const noDetailsPageArr = ['2', '3', '-2'];
+        const noDetailsPageArr = ['2', '3', '-2', '-1'];
         if (noDetailsPageArr.includes(obj.billSts)) {
             return
         }
