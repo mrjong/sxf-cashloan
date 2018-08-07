@@ -42,7 +42,7 @@ export default class real_name_page extends Component {
     rightUploaded: false,
     footerUploaded: false,
     showState: false,
-    disabledupload:'false'
+    disabledupload: 'false'
   };
 
   componentWillMount() {
@@ -69,7 +69,7 @@ export default class real_name_page extends Component {
 
   // 上传身份证正面
   handleChangePositive = ({ base64Data }) => {
-    if(!base64Data){
+    if (!base64Data) {
       this.setState({
         disabledupload: 'false'
       })
@@ -108,7 +108,7 @@ export default class real_name_page extends Component {
 
   // 上传身份证反面
   handleChangeSide = ({ base64Data }) => {
-    if(!base64Data){
+    if (!base64Data) {
       this.setState({
         disabledupload: 'false'
       })
@@ -144,7 +144,7 @@ export default class real_name_page extends Component {
   };
   // 手持身份证照片
   handleChangeBottom = ({ base64Data }) => {
-    if(!base64Data){
+    if (!base64Data) {
       this.setState({
         disabledupload: 'false'
       })
@@ -233,21 +233,20 @@ export default class real_name_page extends Component {
       }
     });
   };
-  handleBeforeCompress=(type)=>{
+  handleBeforeCompress = (type) => {
     console.log('正在压缩图片')
-    if(this.state.disabledupload==='true'){
-      this.props.toast.loading('压缩图片中...')
-    }
     this.setState({
       disabledupload: 'true'
+    }, () => {
+      this.props.toast.loading('压缩图片中...')
     })
   }
-  handleAfterCompress=()=>{
+  handleAfterCompress = () => {
     console.log('上传成功')
     // this.props.toast.info('上传成功')
   }
   render() {
-    const { disabledupload } =this.state
+    const { disabledupload } = this.state
     // let selectFlag = true;
     // if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
     //   selectFlag = false;
