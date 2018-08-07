@@ -67,36 +67,34 @@ export default class credit_extension_page extends PureComponent {
     const params = {
       location: address,
     };
-    this.props.$fetch.post(`${API.submitState}`, params).then(result => {
+    this.props.$fetch.post(`${API.submitState}`, params).then(res => {
       // 提交风控返回成功
-      if (result && result.data !== null && result.msgCode === 'PTM0000') {
-        this.props.toast('您的代还申请已提交成功，将在1个工作日内返回结果', 3, () => {
-          //判断是否绑卡
-          this.props.$fetch.get(`${API.isBankCard}`).then(result => {
-            // 跳转至储蓄卡
-            if (result && result.data !== null && result.msgCode === 'PTM2001') {
-              this.props.toast.info(result.msgInfo);
-              setTimeout(()=>{
-                this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-              },3000)
-            }
-            // 跳转至信用卡
-            if (result && result.data !== null && result.msgCode === 'PTM2002') {
-              this.props.toast.info(result.msgInfo);
-              setTimeout(()=>{
-                this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
-              },3000)
-
-            }
-            // 跳转至首页
-            else {
-              this.props.history.push('/home/home');
-            }
-          });
-        })
+      if (res && res.data !== null && res.msgCode === 'PTM0000') {
+        this.props.toast.info(res.msgInfo, 3, () => {
+          this.checkIsBandCard();
+        });
+      } else {
+        this.props.toast.info(res.msgInfo);
       }
-      else {
+    });
+  };
+
+  // 判断是否绑卡
+  checkIsBandCard = () => {
+    this.props.$fetch.get(`${API.isBankCard}`).then(result => {
+      // 跳转至储蓄卡
+      if (result && result.data !== null && result.msgCode === 'PTM2001') {
         this.props.toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+        }, 3000);
+      } else if (result && result.data !== null && result.msgCode === 'PTM2002') {
+        this.props.toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+        }, 3000);
+      } else {
+        this.props.history.push('/home/home');
       }
     });
   };
