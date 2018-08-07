@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/common';
 import styles from '../index.scss';
+import headerIgnore from 'utils/headerIgnore'
 const API = {
   FUNACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend',
 }
@@ -22,7 +23,7 @@ export default class financial_service_page extends PureComponent {
     return (
       <iframe
         title="financial_service_page"
-        className={styles.container}
+        className={headerIgnore() ? styles.container2 : styles.container}
         src="/disting/#/financial_service_page"
         name="financial_service_page"
         id="financial_service_page"

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/common';
 import styles from '../index.scss';
+import headerIgnore from 'utils/headerIgnore'
 export default class delegation_withhold_page extends PureComponent {
     constructor(props) {
         super(props);
@@ -17,7 +18,7 @@ export default class delegation_withhold_page extends PureComponent {
     render() {
         return (
             <iframe
-                className={styles.container}
+                className={headerIgnore() ? styles.container2 : styles.container}
                 src="/disting/#/delegation_withhold_page"
                 name="delegation_withhold_page"
                 id="delegation_withhold_page"
