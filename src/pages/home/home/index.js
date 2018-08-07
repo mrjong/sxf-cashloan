@@ -105,9 +105,10 @@ export default class HomePage extends PureComponent {
         Toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
         break;
       case 'LN0008': // 放款失败
-        console.log('LN0008 也跳账单页');
-        store.setBillNo(usrIndexInfo.indexData.billNo)
-        this.props.history.push(`/order/order_detail_page`);
+        console.log('LN0008 不跳账单页 走弹框流程');
+        this.requestBindCardState();
+        // store.setBillNo(usrIndexInfo.indexData.billNo)
+        // this.props.history.push(`/order/order_detail_page`);
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
