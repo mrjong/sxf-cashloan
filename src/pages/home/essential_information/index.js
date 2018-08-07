@@ -18,6 +18,8 @@ const API = {
   submitData: '/auth/personalData',
 };
 
+let urlQuery = '';
+
 @fetch.inject()
 @createForm()
 @setBackGround('#F5F5F5')
@@ -35,6 +37,10 @@ export default class essential_information extends PureComponent {
     provValue: [],             // 选中的省市区
     provLabel: [],
   };
+
+  componentWillMount() {
+    urlQuery = this.props.history.location.search;
+  }
 
   handleSubmit = () => {
     const { loading } = this.state;
@@ -66,7 +72,7 @@ export default class essential_information extends PureComponent {
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
-                this.props.history.replace('/mine/credit_extension_page');
+                this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
                 this.props.toast.info(result.msgInfo);
               }

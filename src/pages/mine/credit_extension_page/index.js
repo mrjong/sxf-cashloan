@@ -15,6 +15,7 @@ const API = {
   isBankCard: '/my/chkCard',         // 是否绑定信用卡和储蓄卡
   getXMURL: '/auth/zmAuth',            // 芝麻认证之后的回调状态
 };
+let urlQuery = '';
 const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
 
 @fetch.inject()
@@ -35,6 +36,7 @@ export default class credit_extension_page extends PureComponent {
     // 查询 授信项状态
     this.requestGetStatus();
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    urlQuery = this.props.history.location.search;
     const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
     if (isShowCommit && isShowCommit === 'false') {
       this.setState({ isShowBtn: false })
@@ -67,7 +69,7 @@ export default class credit_extension_page extends PureComponent {
     };
     this.props.$fetch.post(`${API.submitState}`, params).then(result => {
       // 提交风控返回成功
-      if (result && result.data !== null && result.msgCode === '0000') {
+      if (result && result.data !== null && result.msgCode === 'PTM0000') {
         this.props.toast('您的代还申请已提交成功，将在1个工作日内返回结果', 3, () => {
           //判断是否绑卡
           this.props.$fetch.get(`${API.isBankCard}`).then(result => {
@@ -103,25 +105,25 @@ export default class credit_extension_page extends PureComponent {
       Toast.info(item.extra.name);
     } else if (firstOption.stsw.dicDetailCd !== '2') {
       if (item.extra.code === 'idCheck') {
-        this.props.history.push('/home/real_name');
+        this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
       } else {
         this.props.toast.info('请先实名认证');
         setTimeout(() => {
-          this.props.history.push('/home/real_name');
+          this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
         }, 3000);
       }
     } else {
       switch (item.extra.code) {
         case 'idCheck':
-          this.props.history.push('/home/real_name');
+          this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
           break;
         case 'basicInf':
-          this.props.history.push('/home/essential_information');
+          this.props.history.push({ pathname: '/home/essential_information', search: urlQuery });
           break;
         case 'operator':
           this.props.$fetch.post(`${API.getOperator}`).then(result => {
             if (result.msgCode === 'PTM0000' && result.data.url) {
-              store.setMoxieBackUrl('/mine/credit_extension_page');
+              store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
               window.location.href = result.data.url;
             } else {
               this.props.toast.info(result.msgInfo);
@@ -132,7 +134,7 @@ export default class credit_extension_page extends PureComponent {
           this.props.$fetch.get(`${API.getZmxy}`).then(result => {
             if (result.msgCode === 'PTM0000') {
               if (result.data.authUrl) {
-                store.setMoxieBackUrl('/mine/credit_extension_page')
+                store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`)
                 window.location.href = result.data.authUrl;
               } else {
                 this.props.toast.info('授信成功');
