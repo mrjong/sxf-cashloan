@@ -77,14 +77,14 @@ export default class credit_extension_page extends PureComponent {
             if (result && result.data !== null && result.msgCode === 'PTM2001') {
               this.props.toast.info(result.msgInfo);
               setTimeout(()=>{
-                this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+                this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
               },3000)
             }
             // 跳转至信用卡
             if (result && result.data !== null && result.msgCode === 'PTM2002') {
               this.props.toast.info(result.msgInfo);
               setTimeout(()=>{
-                this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+                this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
               },3000)
 
             }

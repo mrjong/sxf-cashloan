@@ -16,7 +16,7 @@ export default class repayment_succ_page extends PureComponent {
     componentWillMount() {
         let test = store.getOrderSuccess()
         if (test) {
-            let orderSuccess = JSON.parse(test)
+            let orderSuccess = test
             this.setState({
                 orderSuccess
             })

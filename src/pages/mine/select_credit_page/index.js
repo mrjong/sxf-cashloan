@@ -163,9 +163,13 @@ export default class select_credit_page extends PureComponent {
   };
   // 新增授权卡
   addCard = () => {
-    if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
+    if (backUrlData) {
       this.setState({ isClickAdd: true });
-      this.props.history.replace('/mine/bind_bank_card')
+      if (backUrlData === '/mine/confirm_purchase_page') {
+        this.props.history.replace('/mine/bind_bank_card')
+      } else {
+        this.props.history.replace('/mine/bind_save_page')
+      }
     } else {
       this.setState({ isClickAdd: true });
       this.props.history.push('/mine/bind_credit_page')

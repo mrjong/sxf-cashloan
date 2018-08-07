@@ -39,16 +39,7 @@ export default class order_detail_page extends PureComponent {
             this.getLoanInfo()
         })
 
-        // 选择银行卡回来
-        let bankInfo = store.getCardData();
-        if (bankInfo && bankInfo !== {}) {
-            this.setState({
-                bankInfo: bankInfo,
-                showMoudle: true
-            }, () => {
-                store.removeCardData()
-            })
-        }
+
     }
 
     // 获取还款信息
@@ -63,6 +54,18 @@ export default class order_detail_page extends PureComponent {
                         billDesc: res.data,
                         perdList: res.data.perdList
                     }, () => {
+                        // 选择银行卡回来
+                        let bankInfo = store.getCardData();
+                        if (bankInfo && bankInfo !== {}) {
+                            this.setState({
+                                showMoudle: true
+                            }, () => {
+                                this.setState({
+                                    bankInfo: bankInfo,
+                                })
+                                store.removeCardData()
+                            })
+                        }
                         this.showPerdList(res.data.perdNum)
                     })
                 } else {
@@ -206,6 +209,7 @@ export default class order_detail_page extends PureComponent {
     }
     render() {
         const { billDesc, money, hideBtn } = this.state
+        console.log(this.state.bankInfo && this.state.bankInfo.bankName);
         return (
             <div className={styles.order_detail_page}>
                 <Panel title="借款信息">
@@ -249,7 +253,7 @@ export default class order_detail_page extends PureComponent {
                         <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>
-                        <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc && billDesc.perdLth}</span>期账单，请保证卡内余额大于该 期账单金额</div>
+                        <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
                     </div> : <div className={styles.mb50}></div>
                 }
                 <Modal popup visible={this.state.showMoudle} onClose={() => { this.setState({ showMoudle: false }) }} animationType="slide-up">

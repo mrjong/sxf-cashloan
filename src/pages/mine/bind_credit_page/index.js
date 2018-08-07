@@ -62,7 +62,7 @@ export default class bind_credit_page extends PureComponent {
           // 提交申请 判断是否绑定信用卡和储蓄卡
           this.props.$fetch.get(API.CHECKCARD).then(result => {
             if (result.msgCode === "PTM2003") {
-              this.props.history.push('/mine/bind_save_page');
+              this.props.history.replace('/mine/bind_save_page');
             } else {
               // 首页不需要存储银行卡的情况，防止弹窗出现
               const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
@@ -72,7 +72,8 @@ export default class bind_credit_page extends PureComponent {
                 store.setCardData(this.state.cardData);
               }
               store.removeBackUrl();
-              this.props.history.push(backUrlData);
+              // this.props.history.push(backUrlData);
+              this.props.history.goBack();
             }
           })
         } else {
