@@ -26,9 +26,9 @@ export default class router_Page extends PureComponent {
     if (!pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear()
       Toast.info('请先登录')
-      setTimeout(() => {
-        window.location.pathname = '/login'
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.pathname = '/login'
+      // }, 3000);
     }
     const { match, history, location } = props;
 

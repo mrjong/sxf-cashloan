@@ -215,8 +215,8 @@ export default class order_detail_page extends PureComponent {
                 <Panel title="借款信息">
                     <ul className={styles.panel_conten}>
                         <li className={styles.list_item}>
-                            <label className={styles.item_name}>借款本金</label>
-                            <span className={styles.item_value}>{billDesc && billDesc.billPrcpAmt ? `¥${billDesc.billPrcpAmt}` : ''}</span>
+                            <label className={styles.item_name}>借款本金(元)</label>
+                            <span className={styles.item_value}>{billDesc && billDesc.billPrcpAmt ? `${billDesc.billPrcpAmt}` : ''}</span>
                         </li>
                         <li className={styles.list_item}>
                             <label className={styles.item_name}>
