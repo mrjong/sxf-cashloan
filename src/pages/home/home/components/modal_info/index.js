@@ -130,7 +130,7 @@ export default class ModalInfo extends Component {
       if (res && res.msgCode === 'PTM0000') {
         this.beforeJump();
       } else {
-        Toast.info(result.msgInfo);
+        Toast.info(res.msgInfo);
       }
     });
   };
@@ -229,7 +229,7 @@ export default class ModalInfo extends Component {
               <label className={style.item_name}>放款日期</label>
               <TabList tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
             </div>
-            {lendersTip}
+            <p className={style.item_tip}>{lendersTip}</p>
           </li>
           <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>

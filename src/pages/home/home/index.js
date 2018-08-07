@@ -85,7 +85,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0003': // 账单爬取成功 (直接跳数据风控)
         console.log('LN0003 无风控信息 直接跳数据风控');
-        this.props.history.push('/mine/credit_extension_page');
+        this.props.history.push({pathname: '/mine/credit_extension_page', search: '?isShowCommit=true'});
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');

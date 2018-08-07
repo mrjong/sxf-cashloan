@@ -18,6 +18,8 @@ const API = {
   submitData: '/auth/personalData',
 };
 
+let urlQuery = '';
+
 @fetch.inject()
 @createForm()
 @setBackGround('#F5F5F5')
@@ -35,6 +37,10 @@ export default class essential_information extends PureComponent {
     provValue: [],             // 选中的省市区
     provLabel: [],
   };
+
+  componentWillMount() {
+    urlQuery = this.props.history.location.search;
+  }
 
   handleSubmit = () => {
     const { loading } = this.state;
@@ -66,7 +72,7 @@ export default class essential_information extends PureComponent {
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
-                this.props.history.replace('/mine/credit_extension_page');
+                this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
                 this.props.toast.info(result.msgInfo);
               }
@@ -74,7 +80,7 @@ export default class essential_information extends PureComponent {
           }
         });
       } else {
-        this.props.toast.info(getFirstError(err))
+        this.props.toast.info(getFirstError(err));
       }
     });
 
@@ -92,6 +98,13 @@ export default class essential_information extends PureComponent {
   validateName = (rule, value, callback) => {
     if (!validators.name(value)) {
       callback('请输入合法的姓名');
+    } else {
+      callback();
+    }
+  };
+  validateAddress = (rule, value, callback) => {
+    if ((value).length>50) {
+      callback('请输入合法常住地址');
     } else {
       callback();
     }
@@ -132,12 +145,13 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore} />
+          <img className={style.informationMore} src={informationMore}/>
         </div>
         <div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('address', {
             rules: [
               { required: true, message: '请输入常住地址' },
+              { validator: this.validateAddress },
             ],
             onChange: (value) => {
               this.setState({ address: value });
@@ -173,7 +187,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore} />
+          <img className={style.informationMore} src={informationMore}/>
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
@@ -228,7 +242,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore} />
+          <img className={style.informationMore} src={informationMore}/>
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
