@@ -39,16 +39,7 @@ export default class order_detail_page extends PureComponent {
             this.getLoanInfo()
         })
 
-        // 选择银行卡回来
-        let bankInfo = store.getCardData();
-        if (bankInfo && bankInfo !== {}) {
-            this.setState({
-                bankInfo: bankInfo,
-                showMoudle: true
-            }, () => {
-                store.removeCardData()
-            })
-        }
+
     }
 
     // 获取还款信息
@@ -63,6 +54,18 @@ export default class order_detail_page extends PureComponent {
                         billDesc: res.data,
                         perdList: res.data.perdList
                     }, () => {
+                        // 选择银行卡回来
+                        let bankInfo = store.getCardData();
+                        if (bankInfo && bankInfo !== {}) {
+                            this.setState({
+                                showMoudle: true
+                            }, () => {
+                                this.setState({
+                                    bankInfo: bankInfo,
+                                })
+                                store.removeCardData()
+                            })
+                        }
                         this.showPerdList(res.data.perdNum)
                     })
                 } else {
@@ -206,6 +209,7 @@ export default class order_detail_page extends PureComponent {
     }
     render() {
         const { billDesc, money, hideBtn } = this.state
+        console.log(this.state.bankInfo && this.state.bankInfo.bankName);
         return (
             <div className={styles.order_detail_page}>
                 <Panel title="借款信息">
