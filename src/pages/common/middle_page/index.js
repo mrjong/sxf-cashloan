@@ -33,7 +33,7 @@ export default class middle_page extends Component {
       store.removeMoxieBackUrl();
       window.location.href = moxieBackUrl;
     } else {
-      this.props.push('/home/home')
+      this.props.history.push('/home/home')
     }
   }
   render() {

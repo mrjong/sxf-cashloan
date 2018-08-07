@@ -1,4 +1,4 @@
-import sng4 from 'assets/images/carousel/placeholder.png';
+import defaultBanner from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
@@ -26,7 +26,7 @@ export default class HomePage extends PureComponent {
     super(props);
     this.state = {
       isShowModal: false,
-      bannerList: [{ src: sng4, url: '' }],
+      bannerList: [],
       usrIndexInfo: '',
       haselescard: 'true',
     };
@@ -167,7 +167,6 @@ export default class HomePage extends PureComponent {
         this.setState({
           bannerList: result.data.map(item => ({
             src: `data:image/png;base64,${item.picUrl}`,
-            // src: sng4,
             url: item.gotoFlag !== 0 ? item.gotoUrl : '',
           })),
         });
@@ -236,9 +235,14 @@ export default class HomePage extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-        <Carousels data={bannerList}>
-          <MsgBadge />
-        </Carousels>
+        {bannerList.length > 0 ? (
+          <Carousels data={bannerList}>
+            <MsgBadge />
+          </Carousels>
+        ) : (
+          <img className={style.default_banner} src={defaultBanner} alt="banner" />
+        )}
+
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* todo: 这行文字要不要显示 */}
         <div className={style.tip_bottom}>怕逾期，用还到</div>
