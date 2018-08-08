@@ -17,7 +17,11 @@
     background-size: 100%;
   }
   // logo的ico
-  :global(.logo_ico) {
+  :global(.black_logo) {
+    @include bg-image('../../../assets/images/mine/selectCard/black_logo');
+  }
+   // 黑色logo的ico
+   :global(.logo_ico) {
     @include bg-image('../../../assets/images/home/logo');
   }
   // 中国银行

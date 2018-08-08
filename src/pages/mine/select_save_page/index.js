@@ -237,7 +237,7 @@ export default class select_save_page extends PureComponent {
                         <li
                           key={index}
                         >
-                          <SwipeAction
+                          {/* <SwipeAction
                             autoClose
                             right={[
                               {
@@ -248,11 +248,11 @@ export default class select_save_page extends PureComponent {
                             ]}
                             onOpen={() => console.log('global open')}
                             onClose={() => console.log('global close')}
-                          >
-                            <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
-                            <span className={styles.bank_name}>{item.bankName}</span>
-                            <span>···· {item.lastCardNo}</span>
-                          </SwipeAction>
+                          > */}
+                          <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+                          <span className={styles.bank_name}>{item.bankName}</span>
+                          <span>···· {item.lastCardNo}</span>
+                          {/* </SwipeAction> */}
                         </li>
                       )
                     }
