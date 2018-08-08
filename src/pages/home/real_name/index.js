@@ -70,6 +70,7 @@ export default class real_name_page extends Component {
   // 上传身份证正面
   handleChangePositive = ({ base64Data }) => {
     if (!base64Data) {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -85,6 +86,7 @@ export default class real_name_page extends Component {
       ocrType: '2',
     };
     this.props.$fetch.post(`${API.getImgUrl}`, params, { timeout: 30000 }).then((result) => {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -99,6 +101,7 @@ export default class real_name_page extends Component {
         this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
       }
     }).catch(() => {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -109,6 +112,7 @@ export default class real_name_page extends Component {
   // 上传身份证反面
   handleChangeSide = ({ base64Data }) => {
     if (!base64Data) {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -124,6 +128,7 @@ export default class real_name_page extends Component {
       ocrType: '3',
     };
     this.props.$fetch.post(`${API.getImgUrl}`, params1, { timeout: 30000 }).then((res) => {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -136,6 +141,7 @@ export default class real_name_page extends Component {
         this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
       }
     }).catch(() => {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -145,6 +151,7 @@ export default class real_name_page extends Component {
   // 手持身份证照片
   handleChangeBottom = ({ base64Data }) => {
     if (!base64Data) {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -160,6 +167,7 @@ export default class real_name_page extends Component {
       ocrType: '1',
     };
     this.props.$fetch.post(`${API.getImgUrl}`, params1, { timeout: 30000 }).then((res) => {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -172,6 +180,7 @@ export default class real_name_page extends Component {
         this.setState({ footerUploaded: false, footerValue: updateBottom });
       }
     }).catch(() => {
+      this.props.toast.hide()
       this.setState({
         disabledupload: 'false'
       })
@@ -238,7 +247,7 @@ export default class real_name_page extends Component {
     this.setState({
       disabledupload: 'true'
     }, () => {
-      this.props.toast.loading('压缩图片中...')
+      this.props.toast.loading('压缩图片中...', 0)
     })
   }
   handleAfterCompress = () => {
