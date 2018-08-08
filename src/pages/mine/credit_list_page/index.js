@@ -104,6 +104,7 @@ export default class credit_list_page extends PureComponent {
                 {
                   this.state.cardList.map((item, index) => {
                     const isSelected = this.state.autId === item.autId;
+                    const icoClass = item.autSts === '2' ? `bank_ico bank_ico_${item.bankNo}` : `bank_ico black_logo`;
                     return (
                       <li
                         className={isSelected ? styles.active : ''}
@@ -112,9 +113,20 @@ export default class credit_list_page extends PureComponent {
                           this.selectCard.bind(this, item)
                         }
                       >
-                        <span className={`bank_ico bank_ico_${item.bankNo}`}></span>
-                        <span className={styles.bank_name}>{item.bankName}</span>
-                        <span>···· {item.last}</span>
+                        <span className={icoClass}></span>
+                        {
+                          item.autSts === '1' ?
+                            <span className={`${styles.bank_name} ${styles.pending}`}>审核中 ····</span>
+                          : item.autSts === '3' ?
+                            <span className={`${styles.bank_name} ${styles.failed}`}>审核失败</span>
+                          :
+                            <span className={styles.bank_name}>{item.bankName}</span>
+                        }
+                        {
+                          item.autSts === '2' ?
+                          <span>···· {item.last}</span>
+                          : null
+                        }
                         {
                           isSelected ? (
                             <i className={styles.selected_ico}></i>

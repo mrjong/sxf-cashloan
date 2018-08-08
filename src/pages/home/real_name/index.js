@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
-import { setBackGround } from '../../../utils/Background';
 import { createForm } from 'rc-form';
 import updateLeft from '../../../assets/images/real_name/left.png';
 import updateRight from '../../../assets/images/real_name/right.png';
@@ -13,7 +12,6 @@ import fetch from 'sx-fetch';
 import { getDeviceType, store } from 'utils/common';
 import { validators } from '../../../utils/validator';
 
-const { Item } = List;
 
 
 const isEquipment = window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
@@ -27,7 +25,6 @@ let urlQuery = '';
 
 @fetch.inject()
 @createForm()
-@setBackGround('#F5F5F5')
 export default class real_name_page extends Component {
   state = {
     idName: '',
@@ -250,10 +247,9 @@ export default class real_name_page extends Component {
       this.props.toast.loading('压缩图片中...', 0)
     })
   }
-  handleAfterCompress = () => {
-    console.log('上传成功')
-    // this.props.toast.info('上传成功')
-  }
+  // handleAfterCompress = () => {
+  //   this.props.toast.hide();
+  // }
   render() {
     const { disabledupload } = this.state
     // let selectFlag = true;

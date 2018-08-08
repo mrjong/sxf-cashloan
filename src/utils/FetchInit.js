@@ -87,9 +87,6 @@ const fetchinit = () => {
           return;
       }
     },
-    // isMock: (url) => {
-    //   return url.startsWith('/mock');
-    // }
   });
 }
 

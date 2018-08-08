@@ -24,7 +24,13 @@
       // padding: 0 30px;
       padding-left: 30px;
       .bank_name {
-        margin: 0 24px 0 30px;
+        margin: 0 24px 0 42px;
+      }
+      .bank_name.pending{
+        color: #34A6FF;
+      }
+      .bank_name.failed{
+        color: #F44258;
       }
       .selected_ico {
         position: absolute;
