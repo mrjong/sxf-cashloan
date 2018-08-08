@@ -22,6 +22,7 @@ export default class select_credit_page extends PureComponent {
       agrNo: '', // 银行卡协议号
       cardList: [],
       isClickAdd: false, // 是否点击了添加授权卡
+      isVipEnter: false, // 是否是会员卡页面进入
       // showMoudle: false, // 是否展示确认解绑的modal
       // unbindData: '', // 解绑卡的数据
     }
@@ -34,6 +35,7 @@ export default class select_credit_page extends PureComponent {
     if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
       this.queryVipBankList();
       this.props.setTitle('选择银行卡');
+      this.setState({isVipEnter: true});
     } else {
       this.queryBankList();
     }
@@ -44,7 +46,16 @@ export default class select_credit_page extends PureComponent {
       });
     }
   }
+  componentDidMount() {
+    // 改变body的背景色
+    if (backUrlData) {
+      document.getElementsByTagName('body')[0].className = 'white';
+    } else {
+      document.getElementsByTagName('body')[0].className = '';
+    }
+  }
   componentWillUnmount() {
+    document.getElementsByTagName('body')[0].className = '';
     // 如果点击的不是添加授权卡则清掉session里的backurl的值
     if (!this.state.isClickAdd) {
       store.removeBackUrl(); // 清除session里的backurl的值
@@ -166,7 +177,7 @@ export default class select_credit_page extends PureComponent {
     if (backUrlData) {
       this.setState({ isClickAdd: true });
       if (backUrlData === '/mine/confirm_purchase_page') {
-        this.props.history.replace('/mine/bind_bank_card')
+        this.props.history.replace('/mine/bind_bank_card');
       } else {
         this.props.history.replace('/mine/bind_save_page')
       }
@@ -182,7 +193,7 @@ export default class select_credit_page extends PureComponent {
         {
           this.state.cardList.length ?
             <div>
-              <p className={styles.card_tit}>已绑定信用卡</p>
+              <p className={styles.card_tit}>{this.state.isVipEnter ? '已绑定银行卡' : '已绑定信用卡'}</p>
               <ul className={styles.card_list}>
                 {
                   this.state.cardList.map((item, index) => {
@@ -241,7 +252,7 @@ export default class select_credit_page extends PureComponent {
             </div>
             : null
         }
-        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>绑定信用卡</p>
+        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>{this.state.isVipEnter ? '绑定银行卡' : '绑定信用卡'}</p>
         {/* {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />} */}
       </div>
     )

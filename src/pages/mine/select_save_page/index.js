@@ -47,7 +47,16 @@ export default class select_save_page extends PureComponent {
       });
     }
   }
+  componentDidMount() {
+    // 改变body的背景色
+    if (backUrlData) {
+      document.getElementsByTagName('body')[0].className = 'white';
+    } else {
+      document.getElementsByTagName('body')[0].className = '';
+    }
+  }
   componentWillUnmount() {
+    document.getElementsByTagName('body')[0].className = '';
     if (!this.state.isClickAdd) {
       store.removeBackUrl(); // 清除session里的backurl的值
     }
@@ -82,7 +91,14 @@ export default class select_save_page extends PureComponent {
       if (this.state.cardList.length) {
         cardData = this.state.cardList.filter(item => item.agrNo === this.state.agrNo);
       }
-      store.setCardData(cardData[0]);
+      let cardDatas = {};
+      // 如果是首页则多存一个参数为showModal的字段，以便首页弹框
+      if (backUrlData === '/home/home') {
+        cardDatas = { showModal: true, ...cardData[0] };
+      } else {
+        cardDatas = cardData[0];
+      }
+      store.setCardData(cardDatas);
     }
   };
   // 获取储蓄卡银行卡列表
@@ -153,7 +169,14 @@ export default class select_save_page extends PureComponent {
       agrNo: obj.agrNo,
     });
     this.props.history.goBack();
-    store.setCardData(obj);
+    let cardDatas = {};
+    // 如果是首页则多存一个参数为showModal的字段，以便首页弹框
+    if (backUrlData === '/home/home') {
+      cardDatas = { showModal: true, ...obj };
+    } else {
+      cardDatas = obj;
+    }
+    store.setCardData(cardDatas);
     let paramVip = store.getParamVip() || {};
     Object.assign(paramVip, obj);
     store.setParamVip(paramVip);

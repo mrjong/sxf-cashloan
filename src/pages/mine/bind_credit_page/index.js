@@ -58,6 +58,7 @@ export default class bind_credit_page extends PureComponent {
       if (result.msgCode === 'PTM0000') {
         // bindCreditConfirm()
         const backUrlData = store.getBackUrl();
+        const cardDatas = { agrNo: result.data.agrNo, ...this.state.cardData }
         if (backUrlData) {
           // 提交申请 判断是否绑定信用卡和储蓄卡
           this.props.$fetch.get(API.CHECKCARD).then(result => {
@@ -69,7 +70,7 @@ export default class bind_credit_page extends PureComponent {
               if (queryData && queryData.noBankInfo) {
                 store.removeCardData();
               } else {
-                store.setCardData(this.state.cardData);
+                store.setCardData(cardDatas);
               }
               store.removeBackUrl();
               // this.props.history.push(backUrlData);
@@ -88,7 +89,7 @@ export default class bind_credit_page extends PureComponent {
   // 通过输入的银行卡号 查出查到卡banCd
   checkCard = (params, values) => {
     this.props.$fetch.post(API.GECARDINF, params).then((result) => {
-      this.setState({ cardData: { cardNo: values.valueInputCarNumber, ...result.data } })
+      this.setState({ cardData: { cardNo: values.valueInputCarNumber, lastCardNo: values.valueInputCarNumber.slice(-4), ...result.data } })
       if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'D') {
         const params1 = {
           bankCd: result.data.bankCd,

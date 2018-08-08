@@ -62,7 +62,6 @@ export default class credit_list_page extends PureComponent {
 
   // 选择银行卡
   selectCard = obj => {
-    console.log(obj);
     // if (backUrlData) {
     this.setState({
       // bankName: obj.bankName,
