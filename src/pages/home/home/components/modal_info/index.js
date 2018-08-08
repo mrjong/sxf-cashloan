@@ -17,7 +17,6 @@ const API = {
   CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
 };
 
-let storeCardData = '';
 
 @fetch.inject()
 export default class ModalInfo extends Component {
@@ -73,9 +72,7 @@ export default class ModalInfo extends Component {
     }
   }
 
-  componentDidMount() {
-    storeCardData = store.getCardData();
-  }
+  componentDidMount() {}
 
   // 数据回显
   recoveryPageData = () => {
@@ -113,7 +110,7 @@ export default class ModalInfo extends Component {
     store.setBackUrl('/home/home?showModal=true');
     this.props.history.push({
       pathname: '/mine/select_save_page',
-      search: `?agrNo=${storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo}`,
+      search: `?agrNo=${repayInfo.withHoldAgrNo}`,
     });
   };
 
@@ -125,7 +122,7 @@ export default class ModalInfo extends Component {
   // 储蓄卡是否支持代扣校验接口
   requestCheckWithHoldCard = () => {
     const { repayInfo } = this.state;
-    const agrNo = storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo;
+    const agrNo = repayInfo.withHoldAgrNo;
     this.props.$fetch.get(`${API.CHECK_WITH_HOLD_CARD}/${agrNo}`).then(res => {
       if (res && res.msgCode === 'PTM0000') {
         this.beforeJump();
@@ -229,14 +226,14 @@ export default class ModalInfo extends Component {
               <label className={style.item_name}>放款日期</label>
               <TabList tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
             </div>
-            <p className={style.item_tip}>{lendersTip}</p>
+            {lendersTip}
           </li>
           <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>
               <label className={style.item_name}>还款银行卡</label>
               <span className={[style.item_value, style.item_value_bank].join(' ')}>
-                {storeCardData && storeCardData.bankName ? storeCardData.bankName : repayInfo.bankName}
-                ({storeCardData && storeCardData.lastCardNo ? storeCardData.lastCardNo : repayInfo.cardNoHid})
+                {repayInfo.bankName}
+                ({repayInfo.cardNoHid})
                 <img className={style.icon} src={icon_arrow_right_default} alt="" />
               </span>
             </div>
