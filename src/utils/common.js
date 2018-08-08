@@ -17,6 +17,7 @@ const getParamsFromUrl = url => {
   return theRequest;
 };
 
+
 // 获取设备类型，返回字符串
 const getDeviceType = () => {
   const u = navigator.userAgent;
@@ -285,7 +286,19 @@ const store = {
   },
   getBillNo() {
     return storage.session.getItem('billNo');
-  }
+  },
+  // 消息详情
+  setMsgObj(data) {
+    return storage.session.setItem('MsgObj', data);
+  },
+  // 消息详情
+  getMsgObj() {
+    return storage.session.getItem('MsgObj');
+  },
+  // 消息详情
+  removeMsgObj() {
+    return storage.session.removeItem('MsgObj');
+  },
 };
 
 /*rc-form 获取第一个错误 */

@@ -6,6 +6,8 @@ import ReactDOM from "react-dom"
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import STabs from 'components/tabs';
+import { store } from "utils/common";
+
 import { PullToRefresh, Tabs, Badge, ListView, Toast } from "antd-mobile"
 let totalPage = false
 const API = {
@@ -69,14 +71,8 @@ export default class message_page extends PureComponent {
               tabState: true,
               refreshing: false,
               isLoading: false
-            },
-            () => {
-              document
-                .getElementsByClassName("iview" + backData.msgType)[0].scrollTop = backData.scrollTop
-              // .scrollTo(0, backData.scrollTop)
-            }
-          )
-          sessionStorage.removeItem("backData")
+            })
+          // sessionStorage.removeItem("backData")
         }
       )
     } else {
@@ -85,6 +81,14 @@ export default class message_page extends PureComponent {
       // 获取消息条数
       this.msgCount()
     }
+  }
+  componentDidMount() {
+      // 返回展示数据
+      // let backData = store.getBackData()
+      let backDatastr = sessionStorage.getItem("backData")
+      if (backDatastr) {
+          setTimeout(() => this.lv.scrollTo(0, (JSON.parse(backDatastr)).scrollTop), 0);
+      }
   }
   componentDidUpdate() {
     if (this.state.useBodyScroll) {
@@ -150,7 +154,7 @@ export default class message_page extends PureComponent {
     console.log(obj)
     // 0:无，1:URL，2:文本，3:APP"
     sessionStorage.setItem("backData", JSON.stringify(backData))
-    sessionStorage.setItem("msgObj", JSON.stringify(obj))
+    store.setMsgObj(obj)
     switch (obj.detailType) {
       case "0":
         this.props.history.push("/home/message_detail_page")

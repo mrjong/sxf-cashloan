@@ -1,6 +1,6 @@
-import React, { PureComponent } from "react"
-import style from "./index.scss"
-
+import React, { PureComponent } from "react";
+import style from "./index.scss";
+import { store } from "utils/common";
 export default class Desc extends PureComponent {
   constructor(props) {
     super(props)
@@ -9,13 +9,13 @@ export default class Desc extends PureComponent {
     }
   }
   componentWillMount() {
-    let msgObj = JSON.parse(sessionStorage.getItem("msgObj"))
+    let msgObj = store.getMsgObj()
     this.setState({
       msgObj
     })
   }
   componentWillUnmount() {
-    sessionStorage.removeItem("msgObj")
+    store.removeMsgObj()
   }
 
   render() {
