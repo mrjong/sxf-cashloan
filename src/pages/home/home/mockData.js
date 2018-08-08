@@ -86,6 +86,7 @@ export default {
     indexSts: 'LN0009',
     indexMsg: '查看代还订单',
     indexData: {
+      autSts: '2',
       bankName: '招商银行',
       bankNo: 'ICBC',
       cardNoHid: '6785 **** **** 6654',

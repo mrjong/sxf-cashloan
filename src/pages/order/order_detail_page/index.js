@@ -42,6 +42,10 @@ export default class order_detail_page extends PureComponent {
 
     }
 
+    componentWillUnmount() {
+        store.removeCardData()
+    }
+
     // 获取还款信息
     getLoanInfo = () => {
         this.props.$fetch.post(API.qryDtl, {
@@ -113,7 +117,7 @@ export default class order_detail_page extends PureComponent {
             }
             item.feeInfos.push({
                 feeNm: '合计',
-                feeAmt: Number(perdList[i].perdTotAmt)
+                feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
             })
             perdListArray.push(item)
         }
@@ -215,8 +219,8 @@ export default class order_detail_page extends PureComponent {
                 <Panel title="借款信息">
                     <ul className={styles.panel_conten}>
                         <li className={styles.list_item}>
-                            <label className={styles.item_name}>借款本金</label>
-                            <span className={styles.item_value}>{billDesc && billDesc.billPrcpAmt ? `¥${billDesc.billPrcpAmt}` : ''}</span>
+                            <label className={styles.item_name}>借款本金(元)</label>
+                            <span className={styles.item_value}>{billDesc && billDesc.billPrcpAmt ? `${billDesc.billPrcpAmt}` : ''}</span>
                         </li>
                         <li className={styles.list_item}>
                             <label className={styles.item_name}>
@@ -253,7 +257,7 @@ export default class order_detail_page extends PureComponent {
                         <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>
-                        <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc && billDesc.perdLth}</span>期账单，请保证卡内余额大于该 期账单金额</div>
+                        <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
                     </div> : <div className={styles.mb50}></div>
                 }
                 <Modal popup visible={this.state.showMoudle} onClose={() => { this.setState({ showMoudle: false }) }} animationType="slide-up">

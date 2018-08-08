@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.scss';
+import headerIgnore from 'utils/headerIgnore'
 export default class register_agreement_page extends PureComponent {
     constructor(props) {
         super(props);
@@ -12,7 +13,7 @@ export default class register_agreement_page extends PureComponent {
     render() {
         return (
             <iframe
-                className={styles.container}
+                className={headerIgnore() ? styles.container2 : styles.container}
                 src="/disting/#/register_agreement_page"
                 name="register_agreement_page"
                 id="register_agreement_page"

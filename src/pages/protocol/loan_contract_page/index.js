@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/common';
 import styles from '../index.scss';
-
+import headerIgnore from 'utils/headerIgnore'
 export default class loan_contract_page extends PureComponent {
     constructor(props) {
         super(props);
@@ -20,7 +20,7 @@ export default class loan_contract_page extends PureComponent {
     render() {
         return (
             <iframe
-                className={styles.container}
+                className={headerIgnore() ? styles.container2 : styles.container}
                 src="/disting/#/loan_contract_page"
                 name="loan_contract_page"
                 id="loan_contract_page"

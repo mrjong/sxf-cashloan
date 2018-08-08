@@ -1,6 +1,8 @@
 @import '../../../assets/styles/scss/base/fn';
 
 .loginContent {
+  height: 100%;
+  overflow: auto;
   .loginLog {
     @include bg-image('../../../assets/images/login/loginBg');
     background-repeat: no-repeat;

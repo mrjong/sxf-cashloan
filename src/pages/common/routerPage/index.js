@@ -23,20 +23,22 @@ export default class router_Page extends PureComponent {
   }
   loadComponent = async props => {
     const token = Cookie.get('fin-v-card-token');
-    if (!pagesIgnore(props) && !token) {
+    if (!pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear()
       Toast.info('请先登录')
-      setTimeout(() => {
-        window.location.pathname = '/login'
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.pathname = '/login'
+      // }, 3000);
     }
     const { match, history, location } = props;
 
     try {
       let route
       console.log(Routers)
-      // 通付盾 获取设备指纹
-      TFDInit();
+      if (!pagesIgnore(window.location.pathname)) {
+        // 通付盾 获取设备指纹
+        TFDInit();
+      }
       for (let i = 0; i < Routers.length; i++) {
         if (match.url === Routers[i].path) {
           this.setState({
@@ -83,10 +85,12 @@ export default class router_Page extends PureComponent {
     const { component, route, newTitle } = this.state;
     const { headerHide = false, footerHide = true } = route;
     return (
-      <div className="application_wrap" style={{ paddingBottom: footerHide ? 'unset' : '1rem' }}>
-        {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
-        {component}
-        {footerHide ? null : <Footer footerProps={route} />}
+      <div className="application_view">
+        <div className="application_page">
+          {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
+          {footerHide ? null : <Footer footerProps={route} />}
+          <div className="application_content">{component}</div>
+        </div>
       </div>
     );
   }
