@@ -87,6 +87,8 @@ export default class Footer extends PureComponent {
   render() {
     let { data, footerProps } = this.props;
     const { footerHide } = footerProps;
-    return footerHide ? null : <div className={styles.footer}>{<TabBarList tabList={data} />}</div>;
+    return footerHide ? null : (
+      <div className={[styles.footer, 'application_footerbar'].join(' ')}>{<TabBarList tabList={data} />}</div>
+    );
   }
 }

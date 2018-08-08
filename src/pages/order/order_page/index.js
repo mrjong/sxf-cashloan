@@ -27,7 +27,7 @@ export default class message_page extends PureComponent {
             dataSource,
             refreshing: true,
             isLoading: true,
-            height: document.documentElement.clientHeight,
+            height: '100%',
             useBodyScroll: false,
             pageIndex: 0,
             Listlength: 0,
@@ -291,7 +291,7 @@ export default class message_page extends PureComponent {
             }
         }
         return (
-            <div className="orderScroll">
+            <div className={style.orderScroll}>
                 <div className={style.order_page}>
                     {
                         item()
