@@ -3,8 +3,8 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/common';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
+import { logoutAppHandler } from 'utils/common';
 import Lists from 'components/lists';
-import { Modal } from 'antd-mobile';
 import styles from './index.scss';
 
 const API = {
@@ -107,20 +107,7 @@ export default class mine_page extends PureComponent {
   };
 
   // 退出
-  logout = () => {
-    this.props.$fetch.get(API.LOGOUT).then(result => {
-      if (result && result.msgCode !== 'PTM0000') {
-        result.msgInfo && this.props.toast.info(result.msgInfo);
-        // this.setState({ showMoudle: false })
-        return;
-      }
-      this.props.history.push('/login')
-      sessionStorage.clear();
-      Cookie.remove('fin-v-card-token');
-    }, err => {
-      err.msgInfo && this.props.toast.info(err.msgInfo);
-    });
-  };
+
   // 第一组里的点击事件
   clickhandle = item => {
     const { mblNoHid, realNmFlg } = this.state;
@@ -179,10 +166,7 @@ export default class mine_page extends PureComponent {
   };
   // 点击退出登录后弹框
   logoutHandler = () => {
-    Modal.alert('', '确认退出登录？', [
-      { text: '取消', onPress: () => { } },
-      { text: '确定', onPress: () => { this.logout() } },
-    ]);
+    logoutAppHandler(this)
   };
 
   render() {
