@@ -1,3 +1,5 @@
+import { Modal } from 'antd-mobile';
+import Cookie from 'js-cookie';
 import storage from './storage';
 
 // 从url中返回search参数，返回对象
@@ -48,6 +50,36 @@ const closePage = () => {
     return window.passValue();
   }
 };
+
+// 点击退出
+const logoutAppHandler = that => {
+  Modal.alert('', '确认退出登录？', [
+    { text: '取消', onPress: () => { } },
+    { text: '确定', onPress: () => { logoutApp(that) } },
+  ]);
+}
+
+// 退出的api
+const API = {
+  LOGOUT: '/signup/logout', // 用户退出登陆
+};
+
+// 退出功能
+const logoutApp = that => {
+  that.props.$fetch.get(API.LOGOUT).then(result => {
+    if (result && result.msgCode !== 'PTM0000') {
+      result.msgInfo && that.props.toast.info(result.msgInfo);
+      // that.setState({ showMoudle: false })
+      return;
+    }
+    that.props.history.push('/login')
+    sessionStorage.clear();
+    Cookie.remove('fin-v-card-token');
+  }, err => {
+    err.msgInfo && that.props.toast.info(err.msgInfo);
+  });
+}
+
 
 // 正则校验表达式
 const verifyReg = {
@@ -332,4 +364,5 @@ export {
   isAvailableFun,
   getFirstError,
   store,
+  logoutAppHandler,
 };
