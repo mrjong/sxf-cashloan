@@ -116,7 +116,7 @@ export default class credit_list_page extends PureComponent {
                         <span className={icoClass}></span>
                         {
                           item.autSts === '1' ?
-                            <span className={`${styles.bank_name} ${styles.pending}`}>审核中····</span>
+                            <span className={`${styles.bank_name} ${styles.pending}`}>审核中 ····</span>
                           : item.autSts === '3' ?
                             <span className={`${styles.bank_name} ${styles.failed}`}>审核失败</span>
                           :
