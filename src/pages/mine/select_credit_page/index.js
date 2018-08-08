@@ -35,7 +35,7 @@ export default class select_credit_page extends PureComponent {
     if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
       this.queryVipBankList();
       this.props.setTitle('选择银行卡');
-      this.setState({isVipEnter: true});
+      this.setState({ isVipEnter: true });
     } else {
       this.queryBankList();
     }
@@ -227,7 +227,7 @@ export default class select_credit_page extends PureComponent {
                         <li
                           key={index}
                         >
-                          <SwipeAction
+                          {/* <SwipeAction
                             autoClose
                             right={[
                               {
@@ -238,11 +238,11 @@ export default class select_credit_page extends PureComponent {
                             ]}
                             onOpen={() => console.log('global open')}
                             onClose={() => console.log('global close')}
-                          >
-                            <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
-                            <span className={styles.bank_name}>{item.bankName}</span>
-                            <span>···· {item.lastCardNo}</span>
-                          </SwipeAction>
+                          > */}
+                          <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+                          <span className={styles.bank_name}>{item.bankName}</span>
+                          <span>···· {item.lastCardNo}</span>
+                          {/* </SwipeAction> */}
                         </li>
                       )
                     }
