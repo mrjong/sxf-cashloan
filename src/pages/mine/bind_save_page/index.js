@@ -82,14 +82,21 @@ export default class bind_save_page extends PureComponent {
     this.props.$fetch.post(API.BINDCARD, params1).then((data) => {
       // bindStorageConfirm()
       if (data.msgCode === 'PTM0000') {
+        let cardDatas = {};
         const backUrlData = store.getBackUrl();
         if (backUrlData) {
+          // 如果是首页则多存一个参数为showModal的字段，以便首页弹框
+          if (backUrlData === '/home/home') {
+            cardDatas = { agrNo: data.data.agrNo, showModal: true, ...this.state.cardData };
+          } else {
+            cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
+          }
           // 首页不需要存储银行卡的情况，防止弹窗出现
           const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
           if (queryData && queryData.noBankInfo) {
             store.removeCardData();
           } else {
-            store.setCardData(this.state.cardData);
+            store.setCardData(cardDatas);
           }
           store.removeBackUrl();
           // this.props.history.replace(backUrlData);
@@ -147,7 +154,6 @@ export default class bind_save_page extends PureComponent {
   };
   // 点击开始倒计时
   countDownHandler = fn => {
-    // console.log()
     const formData = this.props.form.getFieldsValue();
     if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
       this.props.toast.info('请输入有效银行卡号');
