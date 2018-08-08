@@ -299,6 +299,18 @@ const store = {
   removeMsgObj() {
     return storage.session.removeItem('MsgObj');
   },
+  // 消息详情
+  setMsgBackData(data) {
+    return storage.session.setItem('MsgBackData', data);
+  },
+  // 消息详情
+  getMsgBackData() {
+    return storage.session.getItem('MsgBackData');
+  },
+  // 消息详情
+  removeMsgBackData() {
+    return storage.session.removeItem('MsgBackData');
+  },
 };
 
 /*rc-form 获取第一个错误 */

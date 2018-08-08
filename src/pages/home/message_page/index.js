@@ -2,13 +2,12 @@ import React, {
   PureComponent
 } from "react"
 import ReactDOM from "react-dom"
-
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import STabs from 'components/tabs';
 import { store } from "utils/common";
 
-import { PullToRefresh, Tabs, Badge, ListView, Toast } from "antd-mobile"
+import { PullToRefresh, Badge, ListView, Toast } from "antd-mobile"
 let totalPage = false
 const API = {
   'msgRead': "/my/msgRead",
@@ -49,9 +48,8 @@ export default class message_page extends PureComponent {
     var _body = document.getElementsByTagName("body")[0]
     _body.style.backgroundColor = "#f5f5f9"
     // 处理详情返回之后
-    let backDatastr = sessionStorage.getItem("backData")
-    if (backDatastr && backDatastr !== "{}") {
-      let backData = JSON.parse(sessionStorage.getItem("backData"))
+    let backData=store.getMsgBackData()
+    if (backData && JSON.stringify(backData) !== "{}") {
       totalPage = backData.totalPage
 
       this.setState(
@@ -64,15 +62,18 @@ export default class message_page extends PureComponent {
         },
         () => {
           this.msgCount()
-          // scrollTop = backData.scrollTop
           this.setState(
             {
               dataSource: this.state.dataSource.cloneWithRows(backData.rData),
               tabState: true,
               refreshing: false,
               isLoading: false
+            }, () => {
+              document
+                .getElementsByClassName("iview" + backData.msgType)[0].scrollTop = backData.scrollTop
+
             })
-          // sessionStorage.removeItem("backData")
+            store.removeMsgBackData()
         }
       )
     } else {
@@ -81,26 +82,6 @@ export default class message_page extends PureComponent {
       // 获取消息条数
       this.msgCount()
     }
-  }
-  componentDidMount() {
-      // 返回展示数据
-      // let backData = store.getBackData()
-      let backDatastr = sessionStorage.getItem("backData")
-      if (backDatastr) {
-          setTimeout(() => this.lv.scrollTo(0, (JSON.parse(backDatastr)).scrollTop), 0);
-      }
-  }
-  componentDidUpdate() {
-    if (this.state.useBodyScroll) {
-      document.body.style.overflow = "auto"
-    } else {
-      document.body.style.overflow = "hidden"
-    }
-  }
-  componentWillUnmount() {
-    // var _body = document.getElementsByTagName("body")[0]
-    // _body.style.backgroundColor = "#fff"
-    document.body.style.overflow = "auto"
   }
   // 消息 tab
   getTab = () => {
@@ -153,7 +134,7 @@ export default class message_page extends PureComponent {
     }
     console.log(obj)
     // 0:无，1:URL，2:文本，3:APP"
-    sessionStorage.setItem("backData", JSON.stringify(backData))
+    store.setMsgBackData(backData)
     store.setMsgObj(obj)
     switch (obj.detailType) {
       case "0":
