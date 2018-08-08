@@ -38,13 +38,21 @@ export default class HomePage extends PureComponent {
     this.requestGetUsrInfo();
 
     let bankInfo = store.getCardData();
+    let repayInfoData = store.getRepaymentModalData();
     if (bankInfo && bankInfo !== {}) {
+      if (repayInfoData && repayInfoData !== {}) {
+        // 如果存在 bankInfo 并且弹框缓存数据崔仔 则更新弹框缓存的数据
+        repayInfoData.repayInfo.bankName = bankInfo.bankName;
+        repayInfoData.repayInfo.cardNoHid = bankInfo.lastCardNo;
+        repayInfoData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
+        store.setRepaymentModalData(repayInfoData);
+      }
+      // 如果存在 bankInfo 则弹框 用完就清除
       this.setState(
         {
           isShowModal: true,
         },
         () => {
-          console.log('该不该清数据');
           store.removeCardData();
         },
       );
