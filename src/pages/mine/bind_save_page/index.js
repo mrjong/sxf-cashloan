@@ -30,6 +30,9 @@ export default class bind_save_page extends PureComponent {
   componentWillMount() {
     this.queryUserInf();
   }
+  componentWillUnmount() {
+    store.removeBackUrl(); // 清除session里的backurl的值
+  }
   // 获取信用卡信息
   queryUserInf = () => {
     this.props.$fetch.get(API.GETUSERINF).then((result) => {
