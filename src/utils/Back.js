@@ -40,6 +40,5 @@
 }('XBack');
 
 XBack.listen(function () {
-    alert(111);
 //   location.href = location.origin + `/auth/home?token=${localStorage.getItem('sxtoken')}`;
 });
