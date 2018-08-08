@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import lrz from 'lrz';
 import styles from './index.scss';
 
@@ -13,22 +13,24 @@ export default class FEZIpImage extends Component {
     };
 
 
-    componentDidMount(){
-        const {onChange, beforeCompress, afterCompress} = this.props;
+    componentDidMount() {
+        const { onChange, beforeCompress, afterCompress } = this.props;
         this.fileSelectorInput.addEventListener('change', function (e) {
             e.preventDefault();
             const files = this.files;
             const file = files[0];
-            const quality = file&&file.size > 500000 ? 0.4 : 1;
-            beforeCompress();
-
-            lrz(file, {quality})
+            const quality = file && file.size > 500000 ? 0.4 : 1;
+            if (file) {
+                beforeCompress();
+            } else {
+                afterCompress();
+            }
+            lrz(file, { quality })
                 .then((rst) => {
                     const base64Data = rst.base64;
                     const size = rst.fileLen;
                     const fileName = file.name;
-
-                    onChange({base64Data, size, fileName});
+                    onChange({ base64Data, size, fileName });
                 })
                 .catch(console.error)
                 .always(afterCompress);
@@ -36,28 +38,28 @@ export default class FEZIpImage extends Component {
     }
 
     handleChange = (e) => {
-      const {disabledupload}=this.props
-      console.log(disabledupload)
-      if(disabledupload==='true'){
-        return
-      }
+        const { disabledupload } = this.props
+        console.log(disabledupload)
+        if (disabledupload === 'true') {
+            return
+        }
         e.preventDefault();
-        const {onChange, beforeCompress, afterCompress} = this.props;
+        const { onChange, beforeCompress, afterCompress } = this.props;
         const fileSelectorEl = this.fileSelectorInput;
 
         if (fileSelectorEl && fileSelectorEl.files && fileSelectorEl.files.length) {
             const files = fileSelectorEl.files;
             const file = files[0];
-            const quality = file&&file.size > 500000 ? 0.4 : 1;
+            const quality = file && file.size > 500000 ? 0.4 : 1;
             beforeCompress();
 
-            lrz(file, {quality})
+            lrz(file, { quality })
                 .then((rst) => {
                     const base64Data = rst.base64;
                     const size = rst.fileLen;
                     const fileName = file.name;
 
-                    onChange({base64Data, size, fileName});
+                    onChange({ base64Data, size, fileName });
                     afterCompress();
                 })
                 .catch((err) => {
@@ -74,7 +76,7 @@ export default class FEZIpImage extends Component {
             className,
             style,
             onChange,
-          disabledupload,
+            disabledupload,
             beforeCompress,
             afterCompress,
             accept,
@@ -85,14 +87,14 @@ export default class FEZIpImage extends Component {
 
         return (
             <div
-                style={{...style, backgroundImage: `url(${value})`}}
+                style={{ ...style, backgroundImage: `url(${value})` }}
                 className={`${styles.imageUploadBtn} ${className}`}
                 {...others}
             >
                 <input
                     ref={(input) => this.fileSelectorInput = input}
                     type="file"
-                    disabled={disabledupload==='false'?false:true}
+                    disabled={disabledupload === 'false' ? false : true}
                     accept={accept}
                     capture="camera"
                 />
