@@ -66,11 +66,10 @@ export default class ConfirmAgencyPage extends PureComponent {
   // 给后台缓存协议接口
   requestSendInfoForProtocol = () => {
     const modalData = store.getRepaymentModalData();
-    const storeCardData = store.getCardData();
     const { repayInfo } = modalData;
     const params = {
       withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
-      withHoldAgrNo: storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo, // 还款卡号主键
+      withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
     };
     this.props.$fetch.post(API.SAVE_REPAY_CARD, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
@@ -99,11 +98,10 @@ export default class ConfirmAgencyPage extends PureComponent {
   requestConfirmRepaymentInfo = () => {
     const modalData = store.getRepaymentModalData();
     const homeCardIndexData = store.getHomeCardIndexData();
-    const storeCardData = store.getCardData();
     const { lendersDate, repayInfo, repaymentDate } = modalData;
     const params = {
       withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
-      withHoldAgrNo: storeCardData && storeCardData.agrNo ? storeCardData.agrNo : repayInfo.withHoldAgrNo, // 还款卡号主键
+      withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
       prdId: repaymentDate.value, // 产品ID
       autId: homeCardIndexData.autId, // 信用卡账单ID
       repayType: lendersDate.value, // 还款方式

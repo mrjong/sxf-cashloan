@@ -46,7 +46,6 @@ export default class BankContent extends React.Component {
 
   // 代还其他信用卡点击事件
   repayForOtherBank = () => {
-    console.log(this.state.credCardCount, 'this.state.credCardCount');
     if (this.state.credCardCount > 1) {
       console.log('跳选择授信卡页');
       store.setBackUrl('/home/home');
