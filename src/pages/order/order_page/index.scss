@@ -6,20 +6,20 @@
 .order_page {
   height: 100%;
   .no_data {
+    box-sizing: border-box;
     position: relative;
     height: 100%;
     width: 100%;
     color: #999;
-    margin-top: 500px;
     font-size: 36px;
     // height: 400px;
+    padding-top: 170px;
     text-align: center;
     i {
+      display: block;
+      margin: 0 auto;
       width: 168px;
-      display: inline-block;
       height: 131px;
-      position: absolute;
-      top: -160px;
       vertical-align: middle;
       @include bg-image('../../../assets/images/order/no_bill');
       background-repeat: no-repeat;
