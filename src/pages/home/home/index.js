@@ -106,7 +106,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0005': // 暂无代还资格
         console.log('LN0005');
-        Toast.info(`您暂时没有代还资格，请${usrIndexInfo.indexData.netAppyDate}日再试`);
+        Toast.info(`您暂时没有代还资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`);
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');

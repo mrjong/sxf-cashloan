@@ -50,12 +50,13 @@ export default {
     indexSts: 'LN0006',
     indexMsg: '一键代还',
     indexData: {
+      autSts: '2',
       bankName: '招商银行',
       bankNo: 'ICBC',
       cardNoHid: '6785 **** **** 6654',
-      cardBillDt: '2018-07-17',
+      cardBillDt: null,
       cardBillAmt: '786.45',
-      overDt: '-1',
+      overDt: null,
     },
   },
   LN0007: {
