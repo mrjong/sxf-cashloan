@@ -1,4 +1,5 @@
-import { Modal } from 'antd-mobile';
+import { Modal, Toast } from 'antd-mobile';
+import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import storage from './storage';
 
@@ -77,6 +78,7 @@ const logoutAppHandler = that => {
 const API = {
   LOGOUT: '/signup/logout', // 用户退出登陆
 };
+
 
 // 退出功能
 const logoutApp = that => {
