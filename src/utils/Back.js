@@ -16,6 +16,12 @@ if (window.history && window.history.pushState) {
           case '/mine/mine_page':
             logoutAppHandler()
             break;
+          case '/mine/bind_credit_page':
+            window.ReactRouterHistory.push('/home/home')
+            break;
+          case '/mine/bind_save_page':
+            window.ReactRouterHistory.push('/home/home')
+            break;
           case '/order/repayment_succ_page':
             window.ReactRouterHistory.push('/home/home')
             break;

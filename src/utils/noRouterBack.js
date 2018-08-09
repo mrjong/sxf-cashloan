@@ -1,6 +1,6 @@
 
 module.exports = () => {
-    let home = ['/home/home', '/order/order_page', '/mine/mine_page', '/mine/credit_extension_page', '/order/repayment_succ_page']
+    let home = ['/home/home', '/order/order_page', '/mine/mine_page', '/mine/credit_extension_page', '/order/repayment_succ_page', '/mine/bind_credit_page', '/mine/bind_save_page']
 
     if (window.history && window.history.pushState) {
         $(window).on('popstate', function () {
