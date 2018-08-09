@@ -103,7 +103,12 @@ export default class bind_save_page extends PureComponent {
           }
           store.removeBackUrl();
           // this.props.history.replace(backUrlData);
-          this.props.history.goBack()
+          // 如果是从四项认证进入，绑卡成功则回到首页
+          if (store.getCheckCardRouter() === 'checkCardRouter') {
+            this.props.history.push('/home/home');
+          } else {
+            this.props.history.goBack();
+          }
         } else {
           // this.props.history.replace('/mine/select_save_page');
           this.props.history.goBack()

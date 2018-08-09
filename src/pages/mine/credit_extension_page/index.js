@@ -86,11 +86,13 @@ export default class credit_extension_page extends PureComponent {
     this.props.$fetch.get(`${API.isBankCard}`).then(result => {
       // 跳转至储蓄卡
       if (result && result.msgCode === 'PTM2003') {
+        store.setCheckCardRouter('checkCardRouter');
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
+        store.setCheckCardRouter('checkCardRouter');
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });

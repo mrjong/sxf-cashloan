@@ -21,26 +21,12 @@ if (window.history && window.history.pushState) {
           case '/mine/mine_page':
             logoutAppHandler();
             break;
-          case '/mine/bind_credit_page':
-            if (store.getBackUrl() === '/mine/credit_extension_page') {
-              window.ReactRouterHistory.push('/home/home')
-            } else {
-              window.ReactRouterHistory.goBack();
-            }
-            break;
-          case '/mine/bind_save_page':
-            if (store.getBackUrl() === '/mine/credit_extension_page') {
-              window.ReactRouterHistory.push('/home/home')
-            } else {
-              window.ReactRouterHistory.goBack();
-            }
-            break;
           case '/order/repayment_succ_page':
             window.ReactRouterHistory.push('/home/home')
             break;
           case '/mine/credit_extension_page':
             const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-            if (queryData.isShowCommit === 'true') {
+            if (queryData.isShowCommit === 'true' || store.getCheckCardRouter() === 'checkCardRouter') {
               window.ReactRouterHistory.push('/home/home')
             } else {
               window.ReactRouterHistory.push('/mine/mine_page')

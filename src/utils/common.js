@@ -384,15 +384,15 @@ const store = {
   removeHistoryRouter() {
     return storage.session.removeItem('historyRouter');
   },
-  // 保存四项认证
+  // 保存四项认证进入绑卡页的标识
   setCheckCardRouter(data) {
     return storage.session.setItem('checkCardRouter', data);
   },
-  // 获取定位信息
+  // 获取四项认证进入绑卡页的标识
   getCheckCardRouter() {
     return storage.session.getItem('checkCardRouter');
   },
-  // 清除定位信息
+  // 清除四项认证进入绑卡页的标识
   removeCheckCardRouter() {
     return storage.session.removeItem('checkCardRouter');
   },

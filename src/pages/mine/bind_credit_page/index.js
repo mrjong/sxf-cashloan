@@ -74,7 +74,12 @@ export default class bind_credit_page extends PureComponent {
               }
               store.removeBackUrl();
               // this.props.history.push(backUrlData);
-              this.props.history.goBack();
+              // 如果是从四项认证进入，绑卡成功则回到首页
+              if (store.getCheckCardRouter() === 'checkCardRouter') {
+                this.props.history.push('/home/home');
+              } else {
+                this.props.history.goBack();
+              }
             }
           })
         } else {
