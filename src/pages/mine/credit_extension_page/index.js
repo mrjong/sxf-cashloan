@@ -6,6 +6,7 @@ import styles from './index.scss';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
+const noRouterBack = require('utils/noRouterBack')
 
 const API = {
   getStw: '/my/getStsw',             // 获取4个认证项的状态
@@ -33,6 +34,7 @@ export default class credit_extension_page extends PureComponent {
   };
 
   componentWillMount() {
+    noRouterBack() // 禁用浏览器返回
     // 查询 授信项状态
     this.requestGetStatus();
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });

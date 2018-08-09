@@ -81,7 +81,7 @@ const fetchinit = () => {
           }
           Toast.info(response.data.msgInfo)
           setTimeout(() => {
-            window.location.pathname = '/login'
+            window.ReactRouterHistory.push('/login')
           }, 3000);
           return;
         default:
