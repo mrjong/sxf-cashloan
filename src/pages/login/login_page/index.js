@@ -7,7 +7,14 @@ import { store, getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
 import { address } from 'utils/Address'
-
+import qs from 'qs'
+$('input').on('click', function () {
+  var target = this;
+  // 使用定时器是为了让输入框上滑时更加自然
+  setTimeout(function () {
+    target.scrollIntoView(true);
+  }, 100);
+});
 let timmer
 const API = {
   smsForLogin: '/signup/smsForLogin',
@@ -63,6 +70,7 @@ export default class login_page extends PureComponent {
       Toast.info('请先获取短信验证码')
       return
     }
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.$fetch.post(API.smsForLogin, {
@@ -70,7 +78,7 @@ export default class login_page extends PureComponent {
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
           osType: osType, // 操作系统
           smsCd: values.smsCd, // IP地址
-          usrCnl: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : 'h5', // 用户渠道
+          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
           location: store.getPosition(), // 定位地址 TODO 从session取
         }).then(res => {
           if (res.msgCode !== 'PTM0000') {

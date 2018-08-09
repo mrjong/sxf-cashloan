@@ -8,6 +8,7 @@ import { validators } from 'utils/validator';
 import { store, getFirstError } from 'utils/common';
 import styles from './index.scss';
 import qs from 'qs';
+const noRouterBack = require('utils/noRouterBack')
 
 const API = {
   GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -29,6 +30,7 @@ export default class bind_credit_page extends PureComponent {
   }
 
   componentWillMount() {
+    noRouterBack() // 禁用浏览器返回
     this.queryUserInf();
   }
 
