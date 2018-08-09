@@ -229,7 +229,7 @@ export default class real_name_page extends Component {
       usrBrowInfo: '',        //授信浏览器信息
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
-      if (result && result.data !== null && result.msgCode === 'PTM0000') {
+      if (result && result.msgCode === 'PTM0000') {
         // store.removeAuthFlag();
         Cookie.remove('authFlag');
         this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });

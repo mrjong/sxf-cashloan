@@ -34,16 +34,19 @@ export default class MsgBadge extends React.PureComponent {
       }
     });
   };
+  jumpToMsg = () => {
+    window.ReactRouterHistory.push('/home/message_page')
+  }
 
   render() {
     const { count } = this.state;
     return (
-      <Link to='/home/message_page' className={style.msg_badge_wrap}>
+      <div onClick = {this.jumpToMsg} className={style.msg_badge_wrap}>
         <div className={style.msg_badge_content} style={{ margin: count > 0 ? '.17rem -.17rem 0 0' : '0' }}>
           <img className={style.msg_badge_icon} src={iconMsg} alt="" />
           {count > 0 ? <span className={style.msg_badge_text}>{count > 99 ? '99+' : count}</span> : null}
         </div>
-      </Link>
+      </div>
     );
   }
 }

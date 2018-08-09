@@ -71,7 +71,7 @@ export default class credit_extension_page extends PureComponent {
     };
     this.props.$fetch.post(`${API.submitState}`, params).then(res => {
       // 提交风控返回成功
-      if (res && res.data !== null && res.msgCode === 'PTM0000') {
+      if (res && res.msgCode === 'PTM0000') {
         this.props.toast.info(res.msgInfo, 3, () => {
           this.checkIsBandCard();
         });

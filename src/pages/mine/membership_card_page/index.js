@@ -1,12 +1,10 @@
 import React, { PureComponent } from 'react';
 import fetch from "sx-fetch"
-import { setBackGround } from 'utils/Background';
 import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss'
 import ButtonCustom from 'components/button';
 import { store } from 'utils/common';
 import dayjs from 'dayjs';
-@setBackGround('#fff')
 @fetch.inject()
 export default class card_home extends PureComponent {
   constructor(props) {

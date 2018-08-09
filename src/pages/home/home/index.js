@@ -13,7 +13,8 @@ import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
 import style from './style.scss';
 import mockData from './mockData';
-import noRouterBack from 'utils/noRouterBack'
+// import noRouterBack from 'utils/noRouterBack'
+const noRouterBack = require('utils/noRouterBack')
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口

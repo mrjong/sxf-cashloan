@@ -87,7 +87,6 @@ export default class ConfirmAgencyPage extends PureComponent {
   requestGetRepayInfo = () => {
     this.props.$fetch.post(API.REPAY_INFO, this.state.queryData).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result, '000');
         this.setState({
           repayInfo: result.data,
         });
