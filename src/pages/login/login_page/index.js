@@ -6,7 +6,6 @@ import fetch from 'sx-fetch';
 import { store, getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
-import { setBackGround } from '../../../utils/Background';
 import { address } from 'utils/Address'
 
 let timmer
@@ -15,7 +14,6 @@ const API = {
   sendsms: '/cmm/sendsms',
 };
 
-@setBackGround('#fff')
 @fetch.inject()
 @createForm()
 

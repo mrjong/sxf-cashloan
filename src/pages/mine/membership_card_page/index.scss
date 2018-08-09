@@ -2,13 +2,12 @@
 .membership_card_page {
   @include bg-image('../../../assets/images/menbership_card/vipcard');
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: 6.2rem;
   background-origin: content-box;
-  width: 620px;
-  // height: 330px;
-  margin: 0 auto;
-  padding-top: 0.43rem;
-  margin-bottom: 1.27rem;
+  background-color: #fff;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: .43rem .65rem 1.27rem;
   .btn{
     margin-top: 130px;
   }

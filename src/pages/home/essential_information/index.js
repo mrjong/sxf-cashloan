@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { setBackGround } from '../../../utils/Background';
 import { InputItem, Picker, List, Toast } from 'antd-mobile';
 import { validators } from '../../../utils/validator';
 import informationMore from '../../../assets/images/real_name/more.png';
@@ -22,7 +21,6 @@ let urlQuery = '';
 
 @fetch.inject()
 @createForm()
-@setBackGround('#F5F5F5')
 export default class essential_information extends PureComponent {
   state = {
     loading: false,
