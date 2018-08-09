@@ -20,6 +20,20 @@ if (window.history && window.history.pushState) {
               logoutAppHandler();
             }
             break;
+          case '/mine/bind_credit_page':
+            if (store.getBackUrl() === '/mine/credit_extension_page') {
+              window.ReactRouterHistory.push('/home/home')
+            } else {
+              window.ReactRouterHistory.goBack();
+            }
+            break;
+          case '/mine/bind_save_page':
+            if (store.getBackUrl() === '/mine/credit_extension_page') {
+              window.ReactRouterHistory.push('/home/home')
+            } else {
+              window.ReactRouterHistory.goBack();
+            }
+            break;
           case '/order/repayment_succ_page':
             window.ReactRouterHistory.push('/home/home')
             break;
