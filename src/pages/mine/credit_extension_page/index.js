@@ -88,12 +88,14 @@ export default class credit_extension_page extends PureComponent {
       if (result && result.msgCode === 'PTM2003') {
         store.setCheckCardRouter('checkCardRouter');
         this.props.toast.info(result.msgInfo);
+        store.setBackUrl('/mine/credit_extension_page');
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         store.setCheckCardRouter('checkCardRouter');
         this.props.toast.info(result.msgInfo);
+        store.setBackUrl('/mine/credit_extension_page');
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
         }, 3000);

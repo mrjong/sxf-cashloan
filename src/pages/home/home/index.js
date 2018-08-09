@@ -36,8 +36,6 @@ export default class HomePage extends PureComponent {
   componentWillMount() {
     // 清除订单缓存
     store.removeBackData();
-    // 清除四项认证进入绑卡页的标识
-    store.removeCheckCardRouter();
     noRouterBack() // 禁用浏览器返回
     this.getTokenFromUrl();
     this.requestGetBannerList();

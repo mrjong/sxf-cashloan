@@ -31,6 +31,8 @@ if (window.history && window.history.pushState) {
             } else {
               window.ReactRouterHistory.push('/mine/mine_page')
             }
+            // 清除四项认证进入绑卡页的标识
+            store.removeCheckCardRouter();
             break;
           default:
             // window.ReactRouterHistory.goBack()
