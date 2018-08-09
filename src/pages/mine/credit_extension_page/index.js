@@ -34,6 +34,11 @@ export default class credit_extension_page extends PureComponent {
   };
 
   componentWillMount() {
+    if (store.getCheckCardRouter() === 'checkCardRouter') {
+      store.removeBackUrl();
+      this.props.history.push('/home/home');
+      return;
+    }
     noRouterBack() // 禁用浏览器返回
     // 查询 授信项状态
     this.requestGetStatus();

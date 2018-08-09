@@ -26,13 +26,11 @@ if (window.history && window.history.pushState) {
             break;
           case '/mine/credit_extension_page':
             const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-            if (queryData.isShowCommit === 'true' || store.getCheckCardRouter() === 'checkCardRouter') {
+            if (queryData.isShowCommit === 'true') {
               window.ReactRouterHistory.push('/home/home')
             } else {
               window.ReactRouterHistory.push('/mine/mine_page')
             }
-            // 清除四项认证进入绑卡页的标识
-            store.removeCheckCardRouter();
             break;
           default:
             // window.ReactRouterHistory.goBack()

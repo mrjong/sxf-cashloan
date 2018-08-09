@@ -58,7 +58,7 @@ export default class bind_credit_page extends PureComponent {
       if (result.msgCode === 'PTM0000') {
         // bindCreditConfirm()
         const backUrlData = store.getBackUrl();
-        const cardDatas = { agrNo: result.data.agrNo, ...this.state.cardData }
+        const cardDatas = { agrNo: result.data && result.data.agrNo ? result.data.agrNo : '', ...this.state.cardData }
         if (backUrlData) {
           // 提交申请 判断是否绑定信用卡和储蓄卡
           this.props.$fetch.get(API.CHECKCARD).then(result => {
