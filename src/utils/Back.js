@@ -10,15 +10,16 @@ if (window.history && window.history.pushState) {
       let historyRouter = store.getHistoryRouter()
       var hash = window.location.hash;
       if (hash === '') {
+        // 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
+        if (store.getMoxieBackUrl()) {
+          store.removeMoxieBackUrl();
+          return;
+        }
         switch (historyRouter) {
           case '/home/home':
           case '/order/order_page':
           case '/mine/mine_page':
-            if (store.getMoxieBackUrl()) {
-              store.removeMoxieBackUrl();
-            } else {
-              logoutAppHandler();
-            }
+            logoutAppHandler();
             break;
           case '/mine/bind_credit_page':
             if (store.getBackUrl() === '/mine/credit_extension_page') {
