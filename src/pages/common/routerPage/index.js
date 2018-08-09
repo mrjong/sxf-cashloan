@@ -33,7 +33,7 @@ export default class router_Page extends PureComponent {
       sessionStorage.clear()
       Toast.info('请先登录')
       setTimeout(() => {
-        window.location.pathname = '/login'
+        window.ReactRouterHistory.push('/login')
       }, 3000);
     }
     const { match, history, location } = props;
