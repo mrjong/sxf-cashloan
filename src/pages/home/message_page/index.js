@@ -136,6 +136,7 @@ export default class message_page extends PureComponent {
     // 0:无，1:URL，2:文本，3:APP"
     store.setMsgBackData(backData)
     store.setMsgObj(obj)
+    console.log(obj.detailType)
     switch (obj.detailType) {
       case "0":
         this.props.history.push("/home/message_detail_page")
