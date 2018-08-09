@@ -24,6 +24,7 @@ export default class ConfirmAgencyPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isShowTipModal: false,
       isShowModal: false,
       repayInfo: {
         perd: [],
@@ -44,6 +45,19 @@ export default class ConfirmAgencyPage extends PureComponent {
       },
     );
   }
+
+  handleShowTipModal = () => {
+    this.setState({
+      isShowTipModal: true,
+    });
+  };
+
+  handleCloseTipModal = () => {
+    this.setState({
+      isShowTipModal: false,
+    });
+    this.jumpToHome();
+  };
 
   handleShowModal = () => {
     this.setState({
@@ -117,14 +131,7 @@ export default class ConfirmAgencyPage extends PureComponent {
         // 清除上个页面中的弹框数据
         store.removeRepaymentModalData();
         store.removeHomeCardIndexData();
-        Modal.alert('"还到"已接入央行平台，逾期将影响您的个人信用！', tipText, [
-          {
-            text: '我知道了',
-            onPress: () => {
-              this.props.history.replace('/home/home');
-            },
-          },
-        ]);
+        this.handleShowTipModal();
       } else {
         Toast.info(result.msgInfo);
       }
@@ -186,8 +193,12 @@ export default class ConfirmAgencyPage extends PureComponent {
     });
   };
 
+  jumpToHome = () => {
+    this.props.history.replace('/home/home');
+  };
+
   render() {
-    const { isShowModal, repayInfo } = this.state;
+    const { isShowModal, repayInfo, isShowTipModal } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -231,8 +242,24 @@ export default class ConfirmAgencyPage extends PureComponent {
           <a onClick={() => { this.read('financial_service_page') }} className={style.protocol_link}>
             《金融服务协议》
           </a>
-
         </p>
+
+
+        <Modal
+          wrapClassName={style.modal_tip_warp}
+          visible={isShowTipModal}
+          transparent
+          onClose={this.handleCloseTipModal}
+          footer={[{ text: '我知道了', onPress: this.handleCloseTipModal }]}
+        >
+          <div className={style.modal_tip_content}>
+            <h3 className={style.modl_tip_title}>"还到"已接入央行平台，逾期将影响您的个人信用！</h3>
+            <p className={style.modl_tip_text}>
+              若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。
+              这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
+            </p>
+          </div>
+        </Modal>
 
         <Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
           <div className={style.modal_content}>

@@ -150,8 +150,9 @@ export default class ModalInfo extends Component {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
         const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
+        console.log(diff, diff)
         let lendersDateListFormat = this.state.lendersDateList;
-        if (diff <= 2) {
+        if (!result.data.cardBillDt || diff <= 2) {
           lendersDateListFormat[0].disable = true;
         }
         this.setState({
@@ -162,7 +163,7 @@ export default class ModalInfo extends Component {
             cardBillAmt: item.cardBillAmt,
           })),
           dateDiff: diff,
-          lendersIndex: diff <= 2 ? 1 : 0,
+          lendersIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
           lendersDateList: lendersDateListFormat,
         });
       } else {

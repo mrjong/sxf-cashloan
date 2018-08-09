@@ -82,3 +82,24 @@
     font-weight: bold;
   }
 }
+.modal_tip_warp{
+  :global{
+    .am-modal-button-group-v .am-modal-button{
+      color: #EBDE74;
+    }
+  }
+}
+.modal_tip_content {
+  position: relative;
+  text-align: left;
+  .modl_tip_title {
+    font-size: .36rem;
+    color: #333;
+  }
+  .modl_tip_text {
+    margin-top: .2rem;
+    font-size: .28rem;
+    line-height: 1.4;
+    color: #666;
+  }
+}
