@@ -8,7 +8,6 @@ import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
 import qs from 'qs';
 import styles from './index.scss';
-const noRouterBack = require('utils/noRouterBack')
 
 const API = {
   GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -29,7 +28,6 @@ export default class bind_save_page extends PureComponent {
     }
   }
   componentWillMount() {
-    noRouterBack() // 禁用浏览器返回
     this.queryUserInf();
   }
   componentWillUnmount() {

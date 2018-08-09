@@ -384,6 +384,18 @@ const store = {
   removeHistoryRouter() {
     return storage.session.removeItem('historyRouter');
   },
+  // 保存四项认证
+  setCheckCardRouter(data) {
+    return storage.session.setItem('checkCardRouter', data);
+  },
+  // 获取定位信息
+  getCheckCardRouter() {
+    return storage.session.getItem('checkCardRouter');
+  },
+  // 清除定位信息
+  removeCheckCardRouter() {
+    return storage.session.removeItem('checkCardRouter');
+  },
 };
 
 /*rc-form 获取第一个错误 */
