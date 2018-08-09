@@ -80,17 +80,18 @@ const API = {
 
 // 退出功能
 const logoutApp = that => {
-  that.props.$fetch.get(API.LOGOUT).then(result => {
+  fetch.get(API.LOGOUT).then(result => {
     if (result && result.msgCode !== 'PTM0000') {
-      result.msgInfo && that.props.toast.info(result.msgInfo);
-      // that.setState({ showMoudle: false })
+      result.msgInfo && Toast.info(result.msgInfo);
       return;
     }
-    that.props.history.push('/login')
+    window.ReactRouterHistory.push('/login')
     sessionStorage.clear();
     Cookie.remove('fin-v-card-token');
+    Cookie.remove('authFlag');
+    Cookie.remove('VIPFlag');
   }, err => {
-    err.msgInfo && that.props.toast.info(err.msgInfo);
+    err.msgInfo && Toast.info(err.msgInfo);
   });
 }
 
