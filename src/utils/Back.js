@@ -28,6 +28,9 @@ if (window.history && window.history.pushState) {
               window.ReactRouterHistory.push('/mine/mine_page')
             }
             break;
+          default:
+            // window.ReactRouterHistory.goBack()
+            break
         }
       }
     }
