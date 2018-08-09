@@ -14,6 +14,7 @@ if (window.history && window.history.pushState) {
           case '/home/home':
           case '/order/order_page':
           case '/mine/mine_page':
+          case 'first-come-in':
             logoutAppHandler()
             break;
           case '/order/repayment_succ_page':

@@ -22,6 +22,9 @@ export default class router_Page extends PureComponent {
     store.setHistoryRouter(location.pathname)
   }
   componentWillMount() {
+    if (!store.getHistoryRouter()) {
+      store.setHistoryRouter('first-come-in')
+    }
     if (!window.ReactRouterHistory) {
       window.ReactRouterHistory = this.props.history
     }
