@@ -17,7 +17,6 @@ if (window.history && window.history.pushState) {
             logoutAppHandler()
             break;
           case '/order/repayment_succ_page':
-          case '/home/message_page':
             window.ReactRouterHistory.push('/home/home')
             break;
           case '/mine/credit_extension_page':

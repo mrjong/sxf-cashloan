@@ -30,7 +30,8 @@
       font-size: 14PX;
       display: block;
       & +span{
-        font-size: 12PX !important; // 28px
+        font-size: 28px !important;
+        line-height: 1.5;
       }
     }
     .am-list-item .am-list-line .am-list-arrow {
