@@ -64,6 +64,7 @@ export default class HomePage extends PureComponent {
     const urlParams = getParamsFromUrl(window.location.search);
     if (urlParams.token) {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
+      store.setToken(urlParams.token)
     }
   };
 

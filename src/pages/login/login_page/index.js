@@ -80,6 +80,7 @@ export default class login_page extends PureComponent {
             return;
           }
           Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+          store.setToken(res.data.tokenId)
           this.props.history.replace('/home/home');
         }, err => {
           err.msgInfo && Toast.info(err.msgInfo);

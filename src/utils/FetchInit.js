@@ -2,14 +2,15 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
-
+import { store } from 'utils/common'
 const fetchinit = () => {
   let timer = undefined
   let timerList = []
   let num = 0
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(cfg => {
-    const TOKEN = Cookie.get('fin-v-card-token');
+    // const TOKEN = Cookie.get('fin-v-card-token');
+    const TOKEN = store.getToken('fin-v-card-token');
     if (TOKEN) {
       cfg.headers['fin-v-card-token'] = TOKEN;
     } else {
