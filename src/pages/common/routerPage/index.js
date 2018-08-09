@@ -18,8 +18,13 @@ export default class router_Page extends PureComponent {
   }
   componentWillReceiveProps(nextProps) {
     this.loadComponent(nextProps);
+    console.log(nextProps, 'nextProps');
+    store.setHistoryRouter(location.pathname)
   }
   componentWillMount() {
+    if (!window.ReactRouterHistory) {
+      window.ReactRouterHistory = this.props.history
+    }
     this.loadComponent(this.props);
   }
   loadComponent = async props => {
@@ -27,15 +32,14 @@ export default class router_Page extends PureComponent {
     if (!store.getToken() && !pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear()
       Toast.info('请先登录')
-      // setTimeout(() => {
-      //   window.location.pathname = '/login'
-      // }, 3000);
+      setTimeout(() => {
+        window.location.pathname = '/login'
+      }, 3000);
     }
     const { match, history, location } = props;
 
     try {
       let route
-      console.log(Routers)
       if (!pagesIgnore(window.location.pathname)) {
         // 通付盾 获取设备指纹
         TFDInit();
@@ -49,6 +53,7 @@ export default class router_Page extends PureComponent {
         }
       }
       if (route) {
+
         let component = await route.component()
         this.setState({
           route: { ...route },
