@@ -1,44 +1,34 @@
-/**
- * 使用 HTML5 的 History 新 API pushState 来曲线监听 Android 设备的返回按钮
- * @author azrael
- * @date 2013/02/04
- * @version 1.0
- * @example
- * XBack.listen(function(){
-		alert('oh! you press the back button');
-	});
- */
-;!function (pkg, undefined) {
-  var STATE = 'x-back';
-  var element;
-
-  var onPopState = function (event) {
-    event.state === STATE && fire();
-  }
-
-  var record = function (state) {
-    history.pushState(state, null, location.href);
-  }
-
-  var fire = function () {
-    var event = document.createEvent('Events');
-    event.initEvent(STATE, false, false);
-    element.dispatchEvent(event);
-  }
-
-  var listen = function (listener) {
-      element.addEventListener(STATE, listener, false);
+import { logoutAppHandler } from 'utils/common';
+import qs from 'qs'
+import { store } from 'utils/common'
+if (window.history && window.history.pushState) {
+  $(window).on('popstate', function () {
+    var hashLocation = location.hash;
+    var hashSplit = hashLocation.split("#!/");
+    var hashName = hashSplit[1];
+    if (hashName !== '') {
+      let historyRouter = store.getHistoryRouter()
+      var hash = window.location.hash;
+      if (hash === '') {
+        switch (historyRouter) {
+          case '/home/home':
+          case '/order/order_page':
+          case '/mine/mine_page':
+            logoutAppHandler()
+            break;
+          case '/order/repayment_succ_page':
+            window.ReactRouterHistory.push('/home/home')
+            break;
+          case '/mine/credit_extension_page':
+            const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+            if (queryData.isShowCommit === 'true') {
+              window.ReactRouterHistory.push('/home/home')
+            } else {
+              window.ReactRouterHistory.push('/mine/mine_page')
+            }
+            break;
+        }
+      }
     }
-
-  ;!function () {
-    element = document.createElement('span');
-    window.addEventListener('popstate', onPopState);
-    this.listen = listen;
-    record(STATE);
-  }.call(window[pkg] = window[pkg] || {});
-
-}('XBack');
-
-XBack.listen(function () {
-//   location.href = location.origin + `/auth/home?token=${localStorage.getItem('sxtoken')}`;
-});
+  });
+}

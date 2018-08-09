@@ -1,5 +1,4 @@
-import { Modal, Toast } from 'antd-mobile';
-import fetch from 'sx-fetch';
+import { Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import storage from './storage';
 
@@ -53,11 +52,25 @@ const closePage = () => {
 };
 
 // 点击退出
-const logoutAppHandler = () => {
-  Modal.alert('', '确认退出登录？', [
-    { text: '取消', onPress: () => { } },
-    { text: '确定', onPress: () => { logoutApp() } },
-  ]);
+let state = false
+
+const logoutAppHandler = that => {
+  if (!state) {
+    state = true
+    Modal.alert('', '确认退出登录？', [
+      {
+        text: '取消', onPress: () => {
+          state = false
+        }
+      },
+      {
+        text: '确定', onPress: () => {
+          state = false
+          logoutApp(that)
+        }
+      },
+    ]);
+  }
 }
 
 // 退出的api
@@ -66,19 +79,18 @@ const API = {
 };
 
 // 退出功能
-const logoutApp = () => {
-  fetch.get(API.LOGOUT).then(result => {
+const logoutApp = that => {
+  that.props.$fetch.get(API.LOGOUT).then(result => {
     if (result && result.msgCode !== 'PTM0000') {
-      result.msgInfo && Toast.info(result.msgInfo);
+      result.msgInfo && that.props.toast.info(result.msgInfo);
+      // that.setState({ showMoudle: false })
       return;
     }
-    window.location.pathname = '/login';
+    that.props.history.push('/login')
     sessionStorage.clear();
     Cookie.remove('fin-v-card-token');
-    Cookie.remove('authFlag');
-    Cookie.remove('VIPFlag');
   }, err => {
-    err.msgInfo && Toast.info(err.msgInfo);
+    err.msgInfo && that.props.toast.info(err.msgInfo);
   });
 }
 
@@ -356,6 +368,18 @@ const store = {
   // session-token
   removeToken() {
     return storage.session.removeItem('fin-card-token');
+  },
+  // session-token
+  setHistoryRouter(data) {
+    return storage.session.setItem('historyRouter', data);
+  },
+  // session-token
+  getHistoryRouter() {
+    return storage.session.getItem('historyRouter');
+  },
+  // session-token
+  removeHistoryRouter() {
+    return storage.session.removeItem('historyRouter');
   },
 };
 

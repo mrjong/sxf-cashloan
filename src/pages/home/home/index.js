@@ -13,6 +13,7 @@ import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
 import style from './style.scss';
 import mockData from './mockData';
+import noRouterBack from 'utils/noRouterBack'
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -31,8 +32,10 @@ export default class HomePage extends PureComponent {
       haselescard: 'true',
     };
   }
-
   componentWillMount() {
+    // 清除订单缓存
+    store.removeBackData()
+    noRouterBack() // 禁用浏览器返回
     this.getTokenFromUrl();
     this.requestGetBannerList();
     this.requestGetUsrInfo();
@@ -94,7 +97,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0003': // 账单爬取成功 (直接跳数据风控)
         console.log('LN0003 无风控信息 直接跳数据风控');
-        this.props.history.push({pathname: '/mine/credit_extension_page', search: '?isShowCommit=true'});
+        this.props.history.push({ pathname: '/mine/credit_extension_page', search: '?isShowCommit=true' });
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
@@ -231,12 +234,12 @@ export default class HomePage extends PureComponent {
             haselescard={this.state.haselescard}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
-            usrIndexInfo.indexSts === 'LN0010' ||
-            (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-              <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-                {usrIndexInfo.indexMsg}
-              </SButton>
-            )}
+              usrIndexInfo.indexSts === 'LN0010' ||
+              (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+                <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                  {usrIndexInfo.indexMsg}
+                </SButton>
+              )}
           </BankContent>
         );
         break;
@@ -250,8 +253,8 @@ export default class HomePage extends PureComponent {
             <MsgBadge />
           </Carousels>
         ) : (
-          <img className={style.default_banner} src={defaultBanner} alt="banner" />
-        )}
+            <img className={style.default_banner} src={defaultBanner} alt="banner" />
+          )}
 
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* todo: 这行文字要不要显示 */}
