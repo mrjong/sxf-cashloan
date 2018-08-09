@@ -122,7 +122,7 @@ export default class ConfirmAgencyPage extends PureComponent {
           {
             text: '我知道了',
             onPress: () => {
-              this.props.history.push('/home/home');
+              this.props.history.replace('/home/home');
             },
           },
         ]);
