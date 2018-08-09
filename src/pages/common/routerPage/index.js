@@ -5,6 +5,7 @@ import Header from 'components/header';
 import Footer from 'components/footer';
 import { Toast } from 'antd-mobile'
 import Cookie from 'js-cookie';
+import { store } from 'utils/common'
 import pagesIgnore from 'utils/pagesIgnore';
 import TFDInit from 'utils/getTongFuDun';
 export default class router_Page extends PureComponent {
@@ -23,7 +24,7 @@ export default class router_Page extends PureComponent {
   }
   loadComponent = async props => {
     const token = Cookie.get('fin-v-card-token');
-    if (!pagesIgnore(window.location.pathname) && !token) {
+    if (!store.getToken() && !pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear()
       Toast.info('请先登录')
       // setTimeout(() => {

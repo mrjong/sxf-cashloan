@@ -345,6 +345,18 @@ const store = {
   removeMsgBackData() {
     return storage.session.removeItem('MsgBackData');
   },
+  // session-token
+  setToken(data) {
+    return storage.session.setItem('fin-card-token', data);
+  },
+  // session-token
+  getToken() {
+    return storage.session.getItem('fin-card-token');
+  },
+  // session-token
+  removeToken() {
+    return storage.session.removeItem('fin-card-token');
+  },
 };
 
 /*rc-form 获取第一个错误 */
