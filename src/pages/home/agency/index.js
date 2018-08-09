@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
-import { store, getParamsFromUrl, getDeviceType } from 'utils/common';
+import { store, getDeviceType } from 'utils/common';
 import fetch from 'sx-fetch';
 import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
@@ -16,6 +16,9 @@ const API = {
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
 };
 
+const tipText =
+  '若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。';
+
 @fetch.inject()
 export default class ConfirmAgencyPage extends PureComponent {
   constructor(props) {
@@ -25,7 +28,7 @@ export default class ConfirmAgencyPage extends PureComponent {
       repayInfo: {
         perd: [],
       },
-    }
+    };
   }
 
   componentWillMount() {
@@ -89,7 +92,7 @@ export default class ConfirmAgencyPage extends PureComponent {
           repayInfo: result.data,
         });
       } else {
-        this.props.toast.info(result.msgInfo)
+        Toast.info(result.msgInfo)
       }
     });
   };
@@ -115,14 +118,21 @@ export default class ConfirmAgencyPage extends PureComponent {
         // 清除上个页面中的弹框数据
         store.removeRepaymentModalData();
         store.removeHomeCardIndexData();
-        this.props.history.push('/home/home');
+        Modal.alert('"还到"已接入央行平台，逾期将影响您的个人信用！', tipText, [
+          {
+            text: '我知道了',
+            onPress: () => {
+              this.props.history.push('/home/home');
+            },
+          },
+        ]);
       } else {
-        Toast.info(result.msgInfo)
+        Toast.info(result.msgInfo);
       }
     });
   };
   // 查看合同
-  read = (type) => {
+  read = type => {
     switch (type) {
       // 借款合同
       case 'loan_contract_page':
@@ -137,34 +147,23 @@ export default class ConfirmAgencyPage extends PureComponent {
       default:
         break;
     }
-  }
+  };
 
   // 获取活动
   requestProtocolData = () => {
     this.props.$fetch.post('/bill/qryContractInfo', {
-      prdId: this.state.queryData.prdId,
-      wtdwTyp: this.state.queryData.wtdwTyp,
-      billPrcpAmt: this.state.queryData.billPrcpAmt
-    }).then(result => {
-      if (result && result.msgCode === 'PTM0000') {
-        // let todayDt = {
-        //   getFullYear: new Date().getFullYear(),
-        //   getDate: new Date().getDate(),
-        //   getMonth: new Date().getMonth() + 1,
-        //   billFullYear: result.preBillRespVo.billDueDt.slice(0, 4),
-        //   billMonth: result.preBillRespVo.billDueDt.slice(4, 6),
-        //   billDate: result.preBillRespVo.billDueDt.slice(6)
-        // }
-        // let object = Object.assign(
-        //   Object.assign(result, result.preBillRespVo),
-        //   todayDt
-        // )
-        store.setProtocolFinancialData(result);
-        this.props.history.push('/protocol/loan_contract_page');
-      } else {
-        this.props.toast.info(result.msgInfo);
-      }
-    });
+        prdId: this.state.queryData.prdId,
+        wtdwTyp: this.state.queryData.wtdwTyp,
+        billPrcpAmt: this.state.queryData.billPrcpAmt,
+      })
+      .then(result => {
+        if (result && result.msgCode === 'PTM0000') {
+          store.setProtocolFinancialData(result);
+          this.props.history.push('/protocol/loan_contract_page');
+        } else {
+          this.props.toast.info(result.msgInfo);
+        }
+      });
   };
 
   // 获取金融服务合同请求
