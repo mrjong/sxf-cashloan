@@ -1,7 +1,8 @@
 .confirm_agency_page {
-  flex: 1;
   padding: 0.24rem 0 0;
-  background-color: #f1f1f1;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
   .panel_conten {
     padding: 0.3rem;
     .list_item {
