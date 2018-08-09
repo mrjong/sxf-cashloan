@@ -52,7 +52,7 @@ export default class credit_extension_page extends PureComponent {
         this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
 
         // 判断四项认证是否都认证成功
-        const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailValue === '认证成功');
+        const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailCd === '2' || item.stsw.dicDetailCd === '1');
         if (isAllValid) {
           this.setState({ submitFlag: true });
         }

@@ -68,7 +68,7 @@ export default class mine_page extends PureComponent {
       }
       store.setUserPhone(res.mblNoHid);
       // store.setAuthFlag(res.realNmFlg);
-      let inOnwMinute = new Date(new Date().getTime() + 1 * 60 * 1000);
+      let inOnwMinute = new Date(new Date().getTime() + 1 * 15 * 1000);
       Cookie.set('authFlag', res.realNmFlg, {
         expires: inOnwMinute,
       });
@@ -84,7 +84,7 @@ export default class mine_page extends PureComponent {
     this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // store.setVIPFlag(result.data.memSts);
-        let inOnwMinute = new Date(new Date().getTime() + 1 * 60 * 1000);
+        let inOnwMinute = new Date(new Date().getTime() + 1 * 15 * 1000);
         Cookie.set('VIPFlag', result.data.memSts, {
           expires: inOnwMinute,
         });
