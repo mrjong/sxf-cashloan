@@ -8,13 +8,7 @@ import { validators } from 'utils/validator';
 import style from './index.scss';
 import { address } from 'utils/Address'
 import qs from 'qs'
-$('input').on('click', function () {
-  var target = this;
-  // 使用定时器是为了让输入框上滑时更加自然
-  setTimeout(function () {
-    target.scrollIntoView(true);
-  }, 100);
-});
+
 let timmer
 const API = {
   smsForLogin: '/signup/smsForLogin',
