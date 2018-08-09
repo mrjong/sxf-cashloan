@@ -85,12 +85,12 @@ export default class credit_extension_page extends PureComponent {
   checkIsBandCard = () => {
     this.props.$fetch.get(`${API.isBankCard}`).then(result => {
       // 跳转至储蓄卡
-      if (result && result.data !== null && result.msgCode === 'PTM2003') {
+      if (result && result.msgCode === 'PTM2003') {
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
-      } else if (result && result.data !== null && result.msgCode === 'PTM2002') {
+      } else if (result && result.msgCode === 'PTM2002') {
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
