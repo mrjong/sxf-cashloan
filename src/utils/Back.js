@@ -14,7 +14,11 @@ if (window.history && window.history.pushState) {
           case '/home/home':
           case '/order/order_page':
           case '/mine/mine_page':
-            logoutAppHandler()
+            if (store.getMoxieBackUrl()) {
+              store.removeMoxieBackUrl();
+            } else {
+              logoutAppHandler();
+            }
             break;
           case '/order/repayment_succ_page':
             window.ReactRouterHistory.push('/home/home')
