@@ -17,6 +17,12 @@ if (window.history && window.history.pushState) {
         }
         switch (historyRouter) {
           case '/home/home':
+            if (window.handleCloseHomeModal) {
+              window.handleCloseHomeModal();
+              return;
+            }
+            logoutAppHandler();
+            break;
           case '/order/order_page':
           case '/mine/mine_page':
             logoutAppHandler();

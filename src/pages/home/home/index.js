@@ -76,6 +76,7 @@ export default class HomePage extends PureComponent {
 
   // 打开弹框
   handleShowModal = () => {
+    window.handleCloseHomeModal = this.handleCloseModal;
     this.setState({
       isShowModal: true,
     });
@@ -83,6 +84,7 @@ export default class HomePage extends PureComponent {
 
   // 关闭弹框
   handleCloseModal = () => {
+    window.handleCloseHomeModal = null;
     this.setState({
       isShowModal: false,
     });
