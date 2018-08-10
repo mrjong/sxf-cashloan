@@ -5,16 +5,16 @@ export const address =() => {
     }
     var geolocation = new BMap.Geolocation();
     geolocation.getCurrentPosition(function(r){
-        console.log('this.getStatus() == BMAP_STATUS_SUCCESS:', this.getStatus());
+        // console.log('this.getStatus() == BMAP_STATUS_SUCCESS:', this.getStatus());
         
         if(this.getStatus() == BMAP_STATUS_SUCCESS){
             const lngValue = r.point && r.point.lng;
             const latValue = r.point && r.point.lat;
-            console.log('const latValue = r.point && r.point.lat：', r);
+            // console.log('const latValue = r.point && r.point.lat：', r);
             if(latValue && lngValue){
                 new AMap.convertFrom(`${lngValue},${latValue}`,'baidu',function (status, res) {
                     var lnglatXY=`${res.locations[0].lng},${res.locations[0].lat}`;//地图上所标点的坐标
-                    console.log('lnglatXY:',lnglatXY);
+                    // console.log('lnglatXY:',lnglatXY);
                     store.setPosition(lnglatXY);
                     // sessionStorage.setItem('location',lnglatXY)
                     // store.dispatch(actions.setVars('location',lnglatXY));
@@ -23,14 +23,14 @@ export const address =() => {
                         var geocoder = new AMap.Geocoder();
                         geocoder.getAddress(lnglatXY, function(status, result) {
                             if (status === 'complete' && result.info === 'OK') {
-                                console.log('高德转化百度'+result.regeocode.formattedAddress)
+                                // console.log('高德转化百度'+result.regeocode.formattedAddress)
                             }else{
                                 //获取地址失败
                             }
                         });
                         geocoder.getLocation(lnglatXY, function(status, result) {
                             if (status === 'complete' && result.info === 'OK') {
-                                console.log(result,1231123)
+                                // console.log(result,1231123)
                             }else{
                             }
                         });
@@ -38,7 +38,7 @@ export const address =() => {
                 })
             }
         } else {
-            console.log('failed'+this.getStatus());
+            // console.log('failed'+this.getStatus());
         }
     });
 }
@@ -63,7 +63,7 @@ export function getAddress() {
         new AMap.service('AMap.Geocoder',function(){
             const geocoder = new AMap.Geocoder();
             const address = store.getPosition();
-            console.log(" store.getPosition()", address);
+            // console.log(" store.getPosition()", address);
             if(address) {
                 const addressData = address.split(',').map(item => window.parseFloat(item, 10))
                 geocoder.getAddress(addressData, function(status, result) {

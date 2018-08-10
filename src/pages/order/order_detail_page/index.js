@@ -203,7 +203,6 @@ export default class order_detail_page extends PureComponent {
             this.setState({
                 showMoudle: false
             })
-            console.log(err)
         })
     }
     // 选择银行卡
@@ -213,7 +212,6 @@ export default class order_detail_page extends PureComponent {
     }
     render() {
         const { billDesc, money, hideBtn } = this.state
-        console.log(this.state.bankInfo && this.state.bankInfo.bankName);
         return (
             <div className={styles.order_detail_page}>
                 <Panel title="借款信息">

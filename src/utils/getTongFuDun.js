@@ -20,19 +20,19 @@ function getTongFuDun() {
 function requestBackReport() {
   fetch.get(`${TONFUDUN_BAOBEI}/${sessionId}`)
     .then(user => {
-      console.log(user);
+      // console.log(user);
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
     })
     .finally(() => {
-      console.log('请求完成'); // 无论请求成功或失败都会执行。
+      // console.log('请求完成'); // 无论请求成功或失败都会执行。
     });
 }
 
 // 请求通付盾接口 执行的回调
 function jspCallBack(res) {
-  console.log(res, 'res');
+  // console.log(res, 'res');
   window.showTongLoading = true;
   if (res.success) {
     requestBackReport();

@@ -39,7 +39,6 @@ export default class FEZIpImage extends Component {
 
     handleChange = (e) => {
         const { disabledupload } = this.props
-        console.log(disabledupload)
         if (disabledupload === 'true') {
             return
         }

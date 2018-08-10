@@ -20,7 +20,7 @@ export default class ButtonCustom extends React.PureComponent {
     active: false,
     children: '按钮',
     onClick: () => {
-      console.log('点击按钮，默认方法');
+      
     },
   };
 

@@ -102,7 +102,6 @@ export default class message_page extends PureComponent {
   }
   // 单个请求读取
   msgOneRead = obj => {
-    console.log(obj)
     if (obj.sts === "0") {
       this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then(res => {
         if (res.msgCode === "PTM0000") {
@@ -132,11 +131,9 @@ export default class message_page extends PureComponent {
       pageIndex: this.state.pageIndex,
       totalPage: totalPage
     }
-    console.log(obj)
     // 0:无，1:URL，2:文本，3:APP"
     store.setMsgBackData(backData)
     store.setMsgObj(obj)
-    console.log(obj.detailType)
     switch (obj.detailType) {
       case "0":
         this.props.history.push("/home/message_detail_page")

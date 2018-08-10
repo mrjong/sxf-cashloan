@@ -10,7 +10,7 @@ export default class ButtonPage extends PureComponent {
   }
 
   handleButtonClick = () => {
-    console.log('点击按钮');
+    
   };
 
   render() {

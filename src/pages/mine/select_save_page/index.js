@@ -160,7 +160,6 @@ export default class select_save_page extends PureComponent {
 
   // 选择银行卡
   selectCard = obj => {
-    // console.log(backUrlData)
     // if (backUrlData) {
     this.setState({
       // bankName: obj.bankName,
@@ -246,8 +245,8 @@ export default class select_save_page extends PureComponent {
                                 style: { backgroundColor: '#FF5A5A', color: 'white' },
                               },
                             ]}
-                            onOpen={() => console.log('global open')}
-                            onClose={() => console.log('global close')}
+                            onOpen={() => {}}
+                            onClose={() => {}}
                           > */}
                           <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
                           <span className={styles.bank_name}>{item.bankName}</span>

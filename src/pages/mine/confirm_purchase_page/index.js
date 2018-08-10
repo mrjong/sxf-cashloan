@@ -41,7 +41,6 @@ export default class confirm_purchase_page extends PureComponent {
   // 确认购买
   confirmBuy = () => {
     this.props.form.validateFields((err, values) => {
-      console.log(err, values)
       if (!err) {
         this.props.$fetch
           .post("/my/quickpay/pay", {

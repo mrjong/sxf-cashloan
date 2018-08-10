@@ -48,7 +48,6 @@ export default class message_page extends PureComponent {
         if (backDatastr && JSON.stringify(backDatastr) !== "{}") {
             let backData = store.getBackData()
             hasNext = backData.hasNext
-            console.log(backData.rData)
             this.setState(
                 {
                     msgType: backData.msgType,
@@ -83,7 +82,6 @@ export default class message_page extends PureComponent {
     }
     // 获取每一页数据
     genData = async (pIndex = 0) => {
-        console.log(pIndex, hasNext)
         if (!hasNext) {
             this.setState({
                 isLoading: false,
@@ -193,7 +191,7 @@ export default class message_page extends PureComponent {
             ]),
             isLoading: false
         }, () => {
-            console.log(this.state.rData)
+
         })
     }
     // 滚动高度

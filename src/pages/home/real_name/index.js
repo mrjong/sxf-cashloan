@@ -207,7 +207,6 @@ export default class real_name_page extends Component {
       return false;
     }
     const { ocrZhengData = {}, ocrFanData = {}, ocrData = {}, idName, idNo } = this.state;
-    console.log(ocrZhengData)
     const osType = getDeviceType();
     const params = {
       idCardFrontUrl: ocrZhengData.imgUrl,    //正面URL
@@ -240,7 +239,6 @@ export default class real_name_page extends Component {
     });
   };
   handleBeforeCompress = (type) => {
-    console.log('正在压缩图片')
     this.setState({
       disabledupload: 'true'
     }, () => {

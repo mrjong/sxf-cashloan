@@ -18,7 +18,6 @@ export default class router_Page extends PureComponent {
   }
   componentWillReceiveProps(nextProps) {
     this.loadComponent(nextProps);
-    console.log(nextProps, 'nextProps');
     store.setHistoryRouter(location.pathname)
   }
   componentWillMount() {

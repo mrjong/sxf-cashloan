@@ -20,7 +20,7 @@ export default class Tag extends React.PureComponent {
     active: false,
     children: 'tag',
     onClick: () => {
-      console.log('点击按钮，默认方法');
+      
     },
   };
 

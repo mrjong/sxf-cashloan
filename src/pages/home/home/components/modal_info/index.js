@@ -59,7 +59,7 @@ export default class ModalInfo extends Component {
     history: {},
     indexData: {},
     onClose: () => {
-      console.log('弹框关闭方法，需要传递进来');
+      
     },
   };
 
@@ -150,7 +150,6 @@ export default class ModalInfo extends Component {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
         const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
-        console.log(diff, diff)
         let lendersDateListFormat = this.state.lendersDateList;
         if (!result.data.cardBillDt || diff <= 2) {
           lendersDateListFormat[0].disable = true;

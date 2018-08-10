@@ -6,7 +6,6 @@ import storage from './storage';
 // 从url中返回search参数，返回对象
 const getParamsFromUrl = url => {
   if (!url) {
-    console.log(url, 'location.search为空');
     return false;
   }
   let theRequest = {};

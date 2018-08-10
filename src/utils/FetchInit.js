@@ -63,7 +63,6 @@ const fetchinit = () => {
     timeout: 10000, // 默认超时
     baseURL: '/wap', // baseurl
     onShowErrorTip: (err, errorTip) => {
-      console.log(errorTip)
       if (errorTip) Toast.fail('服务器繁忙，请稍后重试');
     },
     headers: {

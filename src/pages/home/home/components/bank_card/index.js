@@ -7,7 +7,6 @@ import { Toast } from 'antd-mobile';
 import style from './index.scss';
 
 const _handleClick = (onClick, event) => {
-  console.log(event, 'event');
   event.preventDefault();
   !!onClick && onClick();
 };
@@ -44,7 +43,7 @@ export default class BankCard extends React.PureComponent {
     cardBillAmt: '---',
     overDt: '---',
     onClick: () => {
-      console.log('点击按钮，默认方法');
+      
     },
   };
 
@@ -61,7 +60,6 @@ export default class BankCard extends React.PureComponent {
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result, 'result');
         store.setMoxieBackUrl('/home/home');
         window.location.href = result.data.url;
       } else {

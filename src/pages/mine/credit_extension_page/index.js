@@ -34,6 +34,7 @@ export default class credit_extension_page extends PureComponent {
   };
 
   componentWillMount() {
+    // alert(store.getCheckCardRouter() === 'checkCardRouter')
     if (store.getCheckCardRouter() === 'checkCardRouter') {
       store.removeBackUrl();
       this.props.history.push('/home/home');
@@ -114,7 +115,6 @@ export default class credit_extension_page extends PureComponent {
   getStateData = item => {
     const { stswData } = this.state;
     const firstOption = stswData.filter(item => item.code === 'idCheck')[0];
-    console.log(firstOption, 'firstOption');
     if (item.dicDetailCd === '2' || item.dicDetailCd === '1') {
       Toast.info(item.extra.name);
     } else if (firstOption.stsw.dicDetailCd !== '2') {
@@ -162,7 +162,7 @@ export default class credit_extension_page extends PureComponent {
           });
           break;
         default:
-          console.log(1);
+          break;
       }
     }
   };

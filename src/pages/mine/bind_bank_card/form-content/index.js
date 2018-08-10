@@ -51,7 +51,7 @@ export default class CreditCard extends PureComponent {
     userinfo: {},
     history: {},
     handledismiss: () => {
-      console.log('picker 取消事件');
+      
     },
   };
 

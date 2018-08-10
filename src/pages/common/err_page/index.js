@@ -8,7 +8,7 @@ export default class err_page extends PureComponent {
         this.state = {};
     }
     componentWillMount() {
-        console.log(this.props)
+        
     }
     // 重新加载
     reloadHandler = () => {

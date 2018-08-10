@@ -90,7 +90,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     };
     this.props.$fetch.post(API.SAVE_REPAY_CARD, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
-        console.log(result, '给后端协议缓存信息');
+        
       } else {
         Toast.info(result.msgInfo);
       }

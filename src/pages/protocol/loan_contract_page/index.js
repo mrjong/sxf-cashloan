@@ -10,7 +10,6 @@ export default class loan_contract_page extends PureComponent {
         };
     }
     componentWillMount() {
-        console.log(store.getProtocolFinancialData());
         this.setState({ contractInf: store.getProtocolFinancialData() });
     }
     componentWillUnmount() {

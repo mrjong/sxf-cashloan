@@ -236,8 +236,8 @@ export default class select_credit_page extends PureComponent {
                                 style: { backgroundColor: '#FF5A5A', color: 'white' },
                               },
                             ]}
-                            onOpen={() => console.log('global open')}
-                            onClose={() => console.log('global close')}
+                            onOpen={() => {}}
+                            onClose={() => {}}
                           > */}
                           <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
                           <span className={styles.bank_name}>{item.bankName}</span>
