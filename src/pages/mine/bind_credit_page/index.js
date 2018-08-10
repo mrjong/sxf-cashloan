@@ -63,7 +63,13 @@ export default class bind_credit_page extends PureComponent {
           // 提交申请 判断是否绑定信用卡和储蓄卡
           this.props.$fetch.get(API.CHECKCARD).then(result => {
             if (result.msgCode === "PTM2003") {
-              this.props.history.replace('/mine/bind_save_page');
+              // 进入绑定储蓄卡页面，如何不需要存银行卡（防止弹窗出现）则加一个noBankInfo
+              const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+              if (queryData && queryData.noBankInfo) {
+                this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+              }else{
+                this.props.history.replace('/mine/bind_save_page');
+              }
             } else {
               // 首页不需要存储银行卡的情况，防止弹窗出现
               const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
