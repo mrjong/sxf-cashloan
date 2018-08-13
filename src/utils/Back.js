@@ -17,7 +17,6 @@ if (window.history && window.history.pushState) {
         }
         switch (historyRouter) {
           case '/home/home':
-            console.log(window.handleCloseHomeModal);
             if (window.handleCloseHomeModal) {
               window.handleCloseHomeModal();
               return;
