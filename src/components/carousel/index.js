@@ -39,7 +39,7 @@ export default class Carousels extends React.Component {
     const { data, children, ...restProps } = this.props;
     return (
       <div className={style.carouse_wrap}>
-        <Carousel {...restProps}>
+        <Carousel dots={false} {...restProps}>
           {data.map(val => (
             <a
               key={val}

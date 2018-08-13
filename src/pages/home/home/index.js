@@ -238,12 +238,12 @@ export default class HomePage extends PureComponent {
             haselescard={this.state.haselescard}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
-            usrIndexInfo.indexSts === 'LN0010' ||
-            (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-              <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-                {usrIndexInfo.indexMsg}
-              </SButton>
-            )}
+              usrIndexInfo.indexSts === 'LN0010' ||
+              (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+                <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                  {usrIndexInfo.indexMsg}
+                </SButton>
+              )}
           </BankContent>
         );
         break;
@@ -257,8 +257,9 @@ export default class HomePage extends PureComponent {
             <MsgBadge />
           </Carousels>
         ) : (
-          <img className={style.default_banner} src={defaultBanner} alt="banner" />
-        )}
+            <img className={style.default_banner} src={defaultBanner} alt="banner" />
+          )
+        }
 
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* todo: 这行文字要不要显示 */}
@@ -267,7 +268,7 @@ export default class HomePage extends PureComponent {
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
         </Modal>
-      </div>
+      </div >
     );
   }
 }
