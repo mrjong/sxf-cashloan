@@ -12,9 +12,7 @@ import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
 import style from './style.scss';
-import mockData from './mockData';
-// import noRouterBack from 'utils/noRouterBack'
-const noRouterBack = require('utils/noRouterBack')
+const noRouterBack = require('utils/noRouterBack');
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -38,7 +36,7 @@ export default class HomePage extends PureComponent {
     store.removeBackData();
     // 清除四项认证进入绑卡页的标识
     store.removeCheckCardRouter();
-    noRouterBack() // 禁用浏览器返回
+    noRouterBack(); // 禁用浏览器返回
     this.getTokenFromUrl();
     this.requestGetBannerList();
     this.requestGetUsrInfo();
@@ -71,7 +69,7 @@ export default class HomePage extends PureComponent {
     const urlParams = getParamsFromUrl(window.location.search);
     if (urlParams.token) {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
-      store.setToken(urlParams.token)
+      store.setToken(urlParams.token);
     }
   };
 
@@ -130,8 +128,8 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
-        store.setBillNo(usrIndexInfo.indexData.billNo)
-        this.props.history.push(`/order/order_detail_page`);
+        store.setBillNo(usrIndexInfo.indexData.billNo);
+        this.props.history.push('/order/order_detail_page');
         break;
       case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
         console.log('LN0010');
@@ -204,7 +202,7 @@ export default class HomePage extends PureComponent {
           usrIndexInfo: result.data,
         });
       } else {
-        Toast.info(result.msgInfo)
+        Toast.info(result.msgInfo);
       }
     });
   };
@@ -240,12 +238,12 @@ export default class HomePage extends PureComponent {
             haselescard={this.state.haselescard}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
-              usrIndexInfo.indexSts === 'LN0010' ||
-              (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-                <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-                  {usrIndexInfo.indexMsg}
-                </SButton>
-              )}
+            usrIndexInfo.indexSts === 'LN0010' ||
+            (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+              <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                {usrIndexInfo.indexMsg}
+              </SButton>
+            )}
           </BankContent>
         );
         break;
@@ -259,8 +257,8 @@ export default class HomePage extends PureComponent {
             <MsgBadge />
           </Carousels>
         ) : (
-            <img className={style.default_banner} src={defaultBanner} alt="banner" />
-          )}
+          <img className={style.default_banner} src={defaultBanner} alt="banner" />
+        )}
 
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* todo: 这行文字要不要显示 */}
