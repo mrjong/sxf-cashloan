@@ -41,23 +41,23 @@ export default class mine_page extends PureComponent {
       this.getUsrInfo();
     }
     // 判断session是否存了购买会员卡的状态，没有调用接口，有的话直接从session里取
-    if (Cookie.get('VIPFlag')) {
-      switch (Cookie.get('VIPFlag')) {
-        case '0':
-          this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
-          break;
-        case '1':
-          this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
-          break;
-        case '2':
-          this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
-          break;
-        default:
-          break;
-      }
-    } else {
-      this.queryVipCard();
-    }
+    // if (Cookie.get('VIPFlag')) {
+    //   switch (Cookie.get('VIPFlag')) {
+    //     case '0':
+    //       this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
+    //       break;
+    //     case '1':
+    //       this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
+    //       break;
+    //     case '2':
+    //       this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // } else {
+    //   this.queryVipCard();
+    // }
   }
   // 获取用户信息
   getUsrInfo = () => {
@@ -176,17 +176,17 @@ export default class mine_page extends PureComponent {
     const { mblNoHid, realNmFlg } = this.state;
     // 定义list所需的数据
     const listsArr = [
-      {
-        extra: {
-          name: this.state.memberInf.status,
-          color: this.state.memberInf.color,
-        },
-        label: {
-          name: '会员卡',
-          icon: require('assets/images/mine/menu_ico7.png')
-        },
-        jumpToUrl: '/mine/membership_card_page',
-      },
+      // {
+      //   extra: {
+      //     name: this.state.memberInf.status,
+      //     color: this.state.memberInf.color,
+      //   },
+      //   label: {
+      //     name: '会员卡',
+      //     icon: require('assets/images/mine/menu_ico7.png')
+      //   },
+      //   jumpToUrl: '/mine/membership_card_page',
+      // },
     ];
     const listsArr2 = [
       {
