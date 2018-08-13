@@ -26,6 +26,7 @@ export default class BankCard extends React.PureComponent {
     bankNo: PropTypes.string,
     cardNoHid: PropTypes.string,
     cardBillDt: PropTypes.string,
+    billDt: PropTypes.string,
     cardBillAmt: PropTypes.number,
     overDt: PropTypes.number,
     onClick: PropTypes.func,
@@ -40,6 +41,7 @@ export default class BankCard extends React.PureComponent {
     bankNo: '',
     cardNoHid: '**** **** **** ****',
     cardBillDt: '---',
+    billDt: '---',
     cardBillAmt: '---',
     overDt: '---',
     onClick: () => {
@@ -79,6 +81,7 @@ export default class BankCard extends React.PureComponent {
       bankNo,
       cardNoHid,
       cardBillDt,
+      billDt,
       cardBillAmt,
       overDt,
     } = this.props;
@@ -110,7 +113,7 @@ export default class BankCard extends React.PureComponent {
         <div className={style.bill_preview}>
           <div className={style.bill_item}>
             <span className={style.bill_value}>
-              {!cardBillDt || cardBillDt === '---' ? '---' : dayjs(cardBillDt).format('YYYY/MM/DD')}
+              {!billDt || billDt === '---' ? '---' : dayjs(billDt).format('YYYY/MM/DD')}
             </span>
             <span className={style.bill_name}>账单日</span>
           </div>
