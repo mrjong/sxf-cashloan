@@ -59,6 +59,7 @@ export default class HomePage extends PureComponent {
           isShowModal: true,
         },
         () => {
+          window.handleCloseHomeModal = this.handleCloseModal;
           store.removeCardData();
         },
       );
