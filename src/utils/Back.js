@@ -28,7 +28,10 @@ if (window.history && window.history.pushState) {
             logoutAppHandler();
             break;
           case '/order/repayment_succ_page':
-            window.ReactRouterHistory.push('/home/home')
+            window.ReactRouterHistory.push('/home/home');
+            break;
+          case '/mine/credit_list_page':
+            window.ReactRouterHistory.push('/home/home');
             break;
           case '/mine/credit_extension_page':
             const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
