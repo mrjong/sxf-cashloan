@@ -395,6 +395,18 @@ const store = {
   removeCheckCardRouter() {
     return storage.session.removeItem('checkCardRouter');
   },
+  // 保存 banner 信息
+  setBannerData(data) {
+    return storage.session.setItem('bannerData', data);
+  },
+  // 获取 banner 信息
+  getBannerData() {
+    return storage.session.getItem('bannerData');
+  },
+  // 去除 banner 信息
+  removeBannerData() {
+    return storage.session.removeItem('bannerData');
+  },
 };
 
 /*rc-form 获取第一个错误 */

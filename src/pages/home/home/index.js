@@ -38,8 +38,17 @@ export default class HomePage extends PureComponent {
     store.removeCheckCardRouter();
     noRouterBack(); // 禁用浏览器返回
     this.getTokenFromUrl();
-    this.requestGetBannerList();
     this.requestGetUsrInfo();
+
+    const bannerAble = Cookie.getJSON('bannerAble');
+    if (bannerAble) {
+      this.setState({
+        bannerList: store.getBannerData(),
+      });
+    } else {
+      store.removeBannerData();
+      this.requestGetBannerList();
+    }
 
     let bankInfo = store.getCardData();
     let repayInfoData = store.getRepaymentModalData();
@@ -179,13 +188,17 @@ export default class HomePage extends PureComponent {
 
   // 获取 banner 列表
   requestGetBannerList = () => {
-    this.props.$fetch.post(API.BANNER).then(result => {
+    this.props.$fetch.post(API.BANNER, null, { hideLoading: true }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        const bannerData = result.data.map(item => ({
+          src: `data:image/png;base64,${item.picUrl}`,
+          url: item.gotoFlag !== 0 ? item.gotoUrl : '',
+        }));
+        const inFifteenMinutes = new Date(new Date().getTime() + 1000 * 60 * 2);
+        Cookie.set('bannerAble', true, { expires: inFifteenMinutes });
+        store.setBannerData(bannerData);
         this.setState({
-          bannerList: result.data.map(item => ({
-            src: `data:image/png;base64,${item.picUrl}`,
-            url: item.gotoFlag !== 0 ? item.gotoUrl : '',
-          })),
+          bannerList: bannerData,
         });
       }
     });
@@ -238,12 +251,12 @@ export default class HomePage extends PureComponent {
             haselescard={this.state.haselescard}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
-              usrIndexInfo.indexSts === 'LN0010' ||
-              (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-                <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-                  {usrIndexInfo.indexMsg}
-                </SButton>
-              )}
+            usrIndexInfo.indexSts === 'LN0010' ||
+            (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+              <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                {usrIndexInfo.indexMsg}
+              </SButton>
+            )}
           </BankContent>
         );
         break;
@@ -252,14 +265,13 @@ export default class HomePage extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-        {bannerList.length > 0 ? (
+        {bannerList && bannerList.length > 0 ? (
           <Carousels data={bannerList}>
             <MsgBadge />
           </Carousels>
         ) : (
-            <img className={style.default_banner} src={defaultBanner} alt="banner" />
-          )
-        }
+          <img className={style.default_banner} src={defaultBanner} alt="banner" />
+        )}
 
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* TODO: 这行文字要不要显示 */}

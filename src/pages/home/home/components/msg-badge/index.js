@@ -24,7 +24,7 @@ export default class MsgBadge extends React.PureComponent {
 
   // 获取 未读消息条数 列表
   requestMsgCount = () => {
-    this.props.$fetch.post(API.MSG_COUNT).then(result => {
+    this.props.$fetch.post(API.MSG_COUNT, null, { hideLoading: true }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         this.setState({
           count: result.data.count,
