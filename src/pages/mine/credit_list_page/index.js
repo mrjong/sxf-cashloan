@@ -3,6 +3,7 @@ import { store } from 'utils/common';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
+const noRouterBack = require('utils/noRouterBack');
 
 const API = {
   CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -23,6 +24,7 @@ export default class credit_list_page extends PureComponent {
     }
   }
   componentWillMount() {
+    noRouterBack(); // 禁用浏览器返回
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId) {
