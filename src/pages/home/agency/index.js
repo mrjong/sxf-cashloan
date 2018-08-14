@@ -90,7 +90,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     };
     this.props.$fetch.post(API.SAVE_REPAY_CARD, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
-        
+
       } else {
         Toast.info(result.msgInfo);
       }
@@ -207,15 +207,17 @@ export default class ConfirmAgencyPage extends PureComponent {
               <label className={style.item_name}>签约金额(元)</label>
               <span className={style.item_value}>{repayInfo.billPrcpAmt}</span>
             </li>
-            <li className={style.list_item}>
-              <label className={style.item_name}>
-                每期应还金额(元)
-                <button className={style.item_action} onClick={this.handleShowModal}>
-                  <img className={style.item_action_icon} src={iconQuestion} alt="" />
-                </button>
-              </label>
-              <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
-            </li>
+            {repayInfo.perdUnit === 'D' ? (
+              <li className={style.list_item}>
+                <label className={style.item_name}>应还金额(元)</label>
+                <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
+              </li>
+            ) : (
+              <li className={style.list_item}>
+                <label className={style.item_name}>还款计划</label>
+                <span style={{color: '#4DA6FF'}} className={style.item_value} onClick={this.handleShowModal}>点击查看</span>
+              </li>
+            )}
             <li className={style.list_item}>
               <label className={style.item_name}>借款期限</label>
               <span className={style.item_value}>
@@ -264,7 +266,7 @@ export default class ConfirmAgencyPage extends PureComponent {
         <Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
           <div className={style.modal_content}>
             <img className={style.modal_close_btn} onClick={this.handleCloseModal} src={iconClose} alt="" />
-            <h2 className={style.modal_title}>每期应还</h2>
+            <h2 className={style.modal_title}>还款计划</h2>
             <ul className={style.bill_list}>
               {repayInfo.perd.map(item => (
                 <li className={style.list_item} key={item.perdNum}>

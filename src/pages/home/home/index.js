@@ -262,7 +262,7 @@ export default class HomePage extends PureComponent {
         }
 
         <div className={style.content_wrap}>{componentsDisplay}</div>
-        {/* todo: 这行文字要不要显示 */}
+        {/* TODO: 这行文字要不要显示 */}
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">

@@ -231,7 +231,9 @@ export default class real_name_page extends Component {
       if (result && result.msgCode === 'PTM0000') {
         // store.removeAuthFlag();
         Cookie.remove('authFlag');
-        this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
+        // TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
+        this.props.history.goBack();
+        // this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
       }
       else {
         this.props.toast.info(result.msgInfo);

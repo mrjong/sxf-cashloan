@@ -17,9 +17,7 @@ const API = {
 export default class BankContent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      credCardCount: 0,
-    };
+    this.state = {};
   }
 
   static propTypes = {
@@ -38,15 +36,9 @@ export default class BankContent extends React.Component {
     fetch: {},
   };
 
-  componentWillMount() {
-    if (this.props.contentData.indexMsg === '一键代还') {
-      this.requestCredCardCount();
-    }
-  }
-
   // 代还其他信用卡点击事件
-  repayForOtherBank = () => {
-    if (this.state.credCardCount > 1) {
+  repayForOtherBank = count => {
+    if (count > 1) {
       store.setBackUrl('/home/home');
       const { contentData } = this.props;
       this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexData.autId}` });
@@ -60,7 +52,9 @@ export default class BankContent extends React.Component {
     this.props.fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // TODO 授信页面？
-        store.setMoxieBackUrl('/home/home');
+        // TODO: 完成认证后返回信用卡列表页？
+        const { contentData } = this.props;
+        store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexData.autId}`);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);
@@ -73,9 +67,7 @@ export default class BankContent extends React.Component {
     this.props.fetch
       .post(API.CRED_CARD_COUNT).then(result => {
         if (result && result.msgCode === 'PTM0000') {
-          this.setState({
-            credCardCount: result.data.count,
-          });
+          this.repayForOtherBank(result.data.count);
         } else {
           Toast.info(result.msgInfo);
         }
@@ -93,7 +85,7 @@ export default class BankContent extends React.Component {
         <BankCard contentData={contentData} {...contentData.indexData} />
         {children}
         {showEntranceArr.includes(contentData.indexSts) ? (
-          <button className={style.link_tip} onClick={this.repayForOtherBank}>
+          <button className={style.link_tip} onClick={this.requestCredCardCount}>
             代还其它信用卡
             <img className={style.link_arrow_img} src={iconArrow} alt="" />
           </button>
