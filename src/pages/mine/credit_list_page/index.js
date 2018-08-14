@@ -29,6 +29,7 @@ export default class credit_list_page extends PureComponent {
       this.setState({
         autId: queryData.autId,
       });
+      this.sendSelectedCard(queryData.autId, false);
     }
   }
   componentWillUnmount() {
@@ -69,9 +70,10 @@ export default class credit_list_page extends PureComponent {
       // bankCode: obj.bankCode,
       autId: obj.autId,
     });
-    this.props.$fetch.get(`/index/cacheCredCard/${obj.autId}`).then(() => {
-      this.props.history.replace(backUrlData);
-    })
+    this.sendSelectedCard(obj.autId, true);
+    // this.props.$fetch.get(`/index/cacheCredCard/${obj.autId}`).then(() => {
+    //   this.props.history.replace(backUrlData);
+    // })
     // 如果选择的是同一张卡则不清除session里的RepaymentModalData
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId && queryData.autId !== obj.autId) {
@@ -79,7 +81,14 @@ export default class credit_list_page extends PureComponent {
     }
     // store.setCardData(obj);
     // }
-
+  };
+  // 告诉后台选中的是哪张卡
+  sendSelectedCard = (autId, jumpFlag) => {
+    this.props.$fetch.get(`/index/cacheCredCard/${autId}`).then(() => {
+      if (jumpFlag) {
+        this.props.history.replace(backUrlData);
+      }
+    });
   };
   // 新增授权卡
   addCard = () => {
@@ -118,15 +127,15 @@ export default class credit_list_page extends PureComponent {
                         {
                           item.autSts === '1' ?
                             <span className={`${styles.bank_name} ${styles.pending}`}>审核中 ····</span>
-                          : item.autSts === '3' ?
-                            <span className={`${styles.bank_name} ${styles.failed}`}>审核失败</span>
-                          :
-                            <span className={styles.bank_name}>{item.bankName}</span>
+                            : item.autSts === '3' ?
+                              <span className={`${styles.bank_name} ${styles.failed}`}>审核失败</span>
+                              :
+                              <span className={styles.bank_name}>{item.bankName}</span>
                         }
                         {
                           item.autSts === '2' ?
-                          <span>···· {item.last}</span>
-                          : null
+                            <span>···· {item.last}</span>
+                            : null
                         }
                         {
                           isSelected ? (
