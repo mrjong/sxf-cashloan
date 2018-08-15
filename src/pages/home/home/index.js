@@ -40,16 +40,6 @@ export default class HomePage extends PureComponent {
     this.getTokenFromUrl();
     this.requestGetUsrInfo();
 
-    const bannerAble = Cookie.getJSON('bannerAble');
-    const bannerDataFromSession = store.getBannerData();
-    if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
-      this.setState({
-        bannerList: bannerDataFromSession,
-      });
-    } else {
-      this.requestGetBannerList();
-    }
-
     let bankInfo = store.getCardData();
     let repayInfoData = store.getRepaymentModalData();
     if (bankInfo && bankInfo !== {}) {
@@ -214,6 +204,17 @@ export default class HomePage extends PureComponent {
         this.setState({
           usrIndexInfo: result.data,
         });
+
+        // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
+        const bannerAble = Cookie.getJSON('bannerAble');
+        const bannerDataFromSession = store.getBannerData();
+        if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
+          this.setState({
+            bannerList: bannerDataFromSession,
+          });
+        } else {
+          this.requestGetBannerList();
+        }
       } else {
         Toast.info(result.msgInfo);
       }
