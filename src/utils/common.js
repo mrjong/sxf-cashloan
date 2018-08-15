@@ -373,15 +373,15 @@ const store = {
   },
   // session-token
   setHistoryRouter(data) {
-    return storage.session.setItem('historyRouter', data);
+    return storage.local.setItem('historyRouter', data);
   },
   // session-token
   getHistoryRouter() {
-    return storage.session.getItem('historyRouter');
+    return storage.local.getItem('historyRouter');
   },
   // session-token
   removeHistoryRouter() {
-    return storage.session.removeItem('historyRouter');
+    return storage.local.removeItem('historyRouter');
   },
   // 保存四项认证进入绑卡页的标识
   setCheckCardRouter(data) {
