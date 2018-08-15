@@ -45,7 +45,7 @@ export default class BankCard extends React.PureComponent {
     cardBillAmt: '---',
     overDt: '---',
     onClick: () => {
-      
+
     },
   };
 
@@ -98,7 +98,9 @@ export default class BankCard extends React.PureComponent {
     }
     return (
       <div className={style.bank_card_wrap}>
-        {contentData.indexSts === 'LN0002' ? null : (
+        {contentData.indexSts === 'LN0002' ? (
+          <button className={style.bill_update_btn}>授权中</button>
+        ) : (
           <button className={style.bill_update_btn} onClick={this.handleUpdate}>
             更新账单
           </button>

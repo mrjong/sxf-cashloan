@@ -83,6 +83,7 @@ export default class BankContent extends React.Component {
     return (
       <div className={style.bank_content_wrap} {...restProps}>
         <BankCard contentData={contentData} {...contentData.indexData} />
+        {contentData.indexSts === 'LN0010' ? <p className={style.abnormal_tip}>请点击重新更新信用卡账单</p> : null}
         {children}
         {showEntranceArr.includes(contentData.indexSts) ? (
           <button className={style.link_tip} onClick={this.requestCredCardCount}>
