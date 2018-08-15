@@ -24,6 +24,7 @@ export default class credit_list_page extends PureComponent {
     }
   }
   componentWillMount() {
+    store.setHistoryRouter(window.location.pathname);
     noRouterBack(); // 禁用浏览器返回
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });

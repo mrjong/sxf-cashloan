@@ -40,7 +40,7 @@ export default class middle_page extends Component {
     const moxieBackUrl = store.getMoxieBackUrl();
     if (moxieBackUrl) {
       store.removeMoxieBackUrl();
-      window.location.href = moxieBackUrl;
+      this.props.history.replace(moxieBackUrl);
     } else {
       this.props.history.push('/home/home');
     }
