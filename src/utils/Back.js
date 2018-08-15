@@ -6,7 +6,7 @@ import { logoutAppHandler } from 'utils/common';
 import qs from 'qs'
 import { store } from 'utils/common'
 if (window.history && window.history.pushState) {
-  $(window).on('popstate', function () {
+window.onpopstate = function () {
     var hashLocation = location.hash;
     var hashSplit = hashLocation.split("#!/");
     var hashName = hashSplit[1];
@@ -51,5 +51,5 @@ if (window.history && window.history.pushState) {
         }
       }
     }
-  });
+  };
 }
