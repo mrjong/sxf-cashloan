@@ -41,12 +41,12 @@ export default class HomePage extends PureComponent {
     this.requestGetUsrInfo();
 
     const bannerAble = Cookie.getJSON('bannerAble');
-    if (bannerAble) {
+    const bannerDataFromSession = store.getBannerData();
+    if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
       this.setState({
-        bannerList: store.getBannerData(),
+        bannerList: bannerDataFromSession,
       });
     } else {
-      store.removeBannerData();
       this.requestGetBannerList();
     }
 
@@ -265,14 +265,17 @@ export default class HomePage extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-        {bannerList && bannerList.length > 0 ? (
-          <Carousels data={bannerList}>
-            <MsgBadge />
-          </Carousels>
+        {usrIndexInfo ? (
+          bannerList && bannerList.length > 0 ? (
+            <Carousels data={bannerList}>
+              <MsgBadge />
+            </Carousels>
+          ) : (
+            <img className={style.default_banner} src={defaultBanner} alt="banner" />
+          )
         ) : (
           <img className={style.default_banner} src={defaultBanner} alt="banner" />
         )}
-
         <div className={style.content_wrap}>{componentsDisplay}</div>
         {/* TODO: 这行文字要不要显示 */}
         <div className={style.tip_bottom}>怕逾期，用还到</div>
