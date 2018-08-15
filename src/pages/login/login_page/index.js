@@ -8,6 +8,7 @@ import fetch from 'sx-fetch';
 import { store, getDeviceType, getFirstError } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
+const noRouterBack = require('utils/noRouterBack');
 
 let timmer;
 const API = {
@@ -30,6 +31,7 @@ export default class login_page extends PureComponent {
 
   componentWillMount() {
     document.title = '登录和注册';
+    noRouterBack();
     // 移除cookie
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear();

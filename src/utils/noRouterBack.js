@@ -1,5 +1,6 @@
 module.exports = () => {
   let home = [
+    '/login',
     '/home/home',
     '/order/order_page',
     '/mine/mine_page',

@@ -20,6 +20,9 @@ if (window.history && window.history.pushState) {
           return;
         }
         switch (historyRouter) {
+          case '/login':
+            return;
+            break;
           case '/home/home':
             if (window.handleCloseHomeModal) {
               window.handleCloseHomeModal();
