@@ -278,13 +278,12 @@ export default class HomePage extends PureComponent {
           <img className={style.default_banner} src={defaultBanner} alt="banner" />
         )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
-        {/* TODO: 这行文字要不要显示 */}
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
         </Modal>
-      </div >
+      </div>
     );
   }
 }
