@@ -138,7 +138,7 @@ export default class credit_extension_page extends PureComponent {
           this.props.$fetch.post(`${API.getOperator}`).then(result => {
             if (result.msgCode === 'PTM0000' && result.data.url) {
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
-              window.location.href = result.data.url;
+              window.location.href = result.data.url+'&hideStep=true';
             } else {
               this.props.toast.info(result.msgInfo);
             }
