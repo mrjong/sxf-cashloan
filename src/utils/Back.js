@@ -1,3 +1,7 @@
+// TODO: 添加一个返回监听需要改动三个地方
+// 1、在此文件中加一个 case；
+// 2、在对应的 page 页面中引入 noRouterBack.js；
+// 3、在 noRouterBack.js 中添加页面的路由。
 import { logoutAppHandler } from 'utils/common';
 import qs from 'qs'
 import { store } from 'utils/common'
