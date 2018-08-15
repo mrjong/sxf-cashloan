@@ -183,17 +183,17 @@ const store = {
 
   // 设置跳转魔蝎授权页 授权后返回的url
   setMoxieBackUrl(data) {
-    storage.session.setItem('moxieBackUrl', data);
+    storage.local.setItem('moxieBackUrl', data);
   },
 
   // 获取跳转魔蝎授权页 授权后返回的url
   getMoxieBackUrl() {
-    return storage.session.getItem('moxieBackUrl');
+    return storage.local.getItem('moxieBackUrl');
   },
 
   // 清除跳转魔蝎授权页 授权后返回的url
   removeMoxieBackUrl() {
-    return storage.session.removeItem('moxieBackUrl');
+    return storage.local.removeItem('moxieBackUrl');
   },
 
   // 保存会员卡是否购买的flag
