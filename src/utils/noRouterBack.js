@@ -10,12 +10,12 @@ module.exports = () => {
   ];
 
   if (window.history && window.history.pushState) {
-    $(window).on('popstate', function() {
+    window.addEventListener("popstate", function () {
       if (home.includes(location.pathname)) {
         window.history.pushState('forward', null, '#');
         window.history.forward(1);
       }
-    });
+    }, false);
   }
 
   if (home.includes(location.pathname)) {

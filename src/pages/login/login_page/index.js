@@ -145,23 +145,26 @@ export default class login_page extends PureComponent {
   // 处理键盘挡住输入框
   handleScrollToView = id => {
     // $('#loginWrap').scrollTop($('#loginContent').height());
-    $('#loginWrap').animate({
-      scrollTop: $('#loginContent').height(),
-    }, 300);
+    this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
+    // $('#loginWrap').animate({
+    //   scrollTop: $('#loginContent').height(),
+    // }, 300);
     setTimeout(() => {
-      $('#loginWrap').animate({
-        scrollTop: $('#loginContent').height(),
-      }, 300);
+      this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
+      // $('#loginWrap').animate({
+      //   scrollTop: $('#loginContent').height(),
+      // }, 300);
       // $('#loginWrap').scrollTop($('#loginContent').height());
-      $(id).focus();
+      // $(id).focus();
+      document.getElementById(id).focus();
     }, 100);
   };
 
   render() {
     const { getFieldProps } = this.props.form;
     return (
-      <div id="loginWrap" className={style.loginContent}>
-        <div id="loginContent" className={style.loginLog}>
+      <div ref="loginWrap" className={style.loginContent}>
+        <div ref="loginContent" className={style.loginLog}>
           <div className={style.centent}>
             <InputItem
               id="inputPhone"
