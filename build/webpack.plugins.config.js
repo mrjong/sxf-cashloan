@@ -24,7 +24,7 @@ let plugins = [
     chunksSortMode: 'dependency'       //按dependency的顺序引入
   }),
   new webpack.HotModuleReplacementPlugin(), //热更新插件
-  new webpack.ProvidePlugin({$: "jquery", _: 'lodash'}),
+  // new webpack.ProvidePlugin({$: "jquery", _: 'lodash'}),
 ]
 
 //生产插件

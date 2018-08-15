@@ -10,7 +10,7 @@ const fetchinit = () => {
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(cfg => {
     // const TOKEN = Cookie.get('fin-v-card-token');
-    const TOKEN = store.getToken('fin-v-card-token');
+    const TOKEN = store.getToken('fin-v-card-token') || Cookie.get('fin-v-card-token');
     if (TOKEN) {
       cfg.headers['fin-v-card-token'] = TOKEN;
     } else {
