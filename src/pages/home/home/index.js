@@ -40,16 +40,6 @@ export default class HomePage extends PureComponent {
     this.getTokenFromUrl();
     this.requestGetUsrInfo();
 
-    const bannerAble = Cookie.getJSON('bannerAble');
-    if (bannerAble) {
-      this.setState({
-        bannerList: store.getBannerData(),
-      });
-    } else {
-      store.removeBannerData();
-      this.requestGetBannerList();
-    }
-
     let bankInfo = store.getCardData();
     let repayInfoData = store.getRepaymentModalData();
     if (bankInfo && bankInfo !== {}) {
@@ -214,6 +204,17 @@ export default class HomePage extends PureComponent {
         this.setState({
           usrIndexInfo: result.data,
         });
+
+        // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
+        const bannerAble = Cookie.getJSON('bannerAble');
+        const bannerDataFromSession = store.getBannerData();
+        if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
+          this.setState({
+            bannerList: bannerDataFromSession,
+          });
+        } else {
+          this.requestGetBannerList();
+        }
       } else {
         Toast.info(result.msgInfo);
       }
@@ -265,22 +266,24 @@ export default class HomePage extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-        {bannerList && bannerList.length > 0 ? (
-          <Carousels data={bannerList}>
-            <MsgBadge />
-          </Carousels>
+        {usrIndexInfo ? (
+          bannerList && bannerList.length > 0 ? (
+            <Carousels data={bannerList}>
+              <MsgBadge />
+            </Carousels>
+          ) : (
+            <img className={style.default_banner} src={defaultBanner} alt="banner" />
+          )
         ) : (
           <img className={style.default_banner} src={defaultBanner} alt="banner" />
         )}
-
         <div className={style.content_wrap}>{componentsDisplay}</div>
-        {/* TODO: 这行文字要不要显示 */}
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
         </Modal>
-      </div >
+      </div>
     );
   }
 }
