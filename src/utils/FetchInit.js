@@ -2,7 +2,7 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
-import { store } from 'utils/common'
+import { store } from 'utils/common';
 const fetchinit = () => {
   let timer = undefined
   let timerList = []
