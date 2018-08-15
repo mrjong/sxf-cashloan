@@ -8,6 +8,7 @@ import iconQuestion from 'assets/images/confirm_agency/icon_question.png';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
 import style from './style.scss';
+import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
 
 const API = {
   REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
@@ -213,9 +214,11 @@ export default class ConfirmAgencyPage extends PureComponent {
                 <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
               </li>
             ) : (
-              <li className={style.list_item}>
+              <li className={style.list_item} onClick={this.handleShowModal}>
                 <label className={style.item_name}>还款计划</label>
-                <span style={{color: '#4DA6FF'}} className={style.item_value} onClick={this.handleShowModal}>点击查看</span>
+                <span style={{ color: '#4DA6FF' }} className={style.item_value}>
+                  <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
+                </span>
               </li>
             )}
             <li className={style.list_item}>
