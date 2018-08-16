@@ -7,6 +7,7 @@ import qs from 'qs'
 import { store } from 'utils/common'
 if (window.history && window.history.pushState) {
   window.addEventListener("popstate", function () {
+    window.history.pushState(null, null, document.URL);
     var hashLocation = location.hash;
     var hashSplit = hashLocation.split("#!/");
     var hashName = hashSplit[1];
@@ -17,6 +18,11 @@ if (window.history && window.history.pushState) {
         // 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
         if (store.getMoxieBackUrl()) {
           store.removeMoxieBackUrl();
+          return;
+        }
+        // 如果从banner跳到外链 则不处理
+        if (store.getOutLinkUrl()) {
+          store.removeOutLinkUrl();
           return;
         }
         switch (historyRouter) {

@@ -425,6 +425,19 @@ const store = {
   removeBannerData() {
     return storage.local.removeItem('bannerData');
   },
+
+  // 保存 去外链标识
+  setOutLinkUrl(data) {
+    return storage.local.setItem('outLintUrl', data);
+  },
+  // 获取 去外链标识
+  getOutLinkUrl() {
+    return storage.local.getItem('outLintUrl');
+  },
+  // 去除 去外链标识
+  removeOutLinkUrl() {
+    return storage.local.removeItem('outLintUrl');
+  },
 };
 
 /*rc-form 获取第一个错误 */
