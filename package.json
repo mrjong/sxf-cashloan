@@ -13,6 +13,7 @@
     "react-loadable": "^5.4.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "rimraf": "^2.6.2",
     "sa-sdk-javascript": "^1.10.3",
     "sx-fetch": "^0.2.4"
   },
