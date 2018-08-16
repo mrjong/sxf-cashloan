@@ -4,10 +4,10 @@
 // 3、在 noRouterBack.js 中添加页面的路由。
 import { logoutAppHandler } from 'utils/common';
 import qs from 'qs'
-import { store } from 'utils/common'
+import { store, changeHistoryState } from 'utils/common'
 if (window.history && window.history.pushState) {
   window.addEventListener("popstate", function () {
-    window.history.pushState(null, null, document.URL);
+    changeHistoryState();
     var hashLocation = location.hash;
     var hashSplit = hashLocation.split("#!/");
     var hashName = hashSplit[1];

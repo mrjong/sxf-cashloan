@@ -5,10 +5,9 @@ import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { store, getDeviceType, getFirstError, isSomeBrowser } from 'utils/common';
+import { store, getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
-const noRouterBack = require('utils/noRouterBack');
 
 let timmer;
 const API = {
@@ -30,8 +29,8 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    changeHistoryState();
     document.title = '登录和注册';
-    noRouterBack();
     // 移除cookie
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear();
@@ -87,7 +86,7 @@ export default class login_page extends PureComponent {
               // store.setToken(res.data.tokenId);
 
               // TODO: 根据设备类型存储token
-              if (isSomeBrowser('vivobrowser')) {
+              if (isBugBrowser()) {
                 store.setToken(res.data.tokenId);
               } else {
                 store.setTokenSession(res.data.tokenId);

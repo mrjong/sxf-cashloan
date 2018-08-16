@@ -31,10 +31,20 @@ const getDeviceType = () => {
   return osType;
 };
 
-// 获取设备类型，返回字符串
+// 检测是否是某种浏览器
 const isSomeBrowser = type => {
   const u = navigator.userAgent.toLowerCase();
   return (u.indexOf(type) > -1) && (u.indexOf('micromessenger') <= -1);
+};
+
+// 定义需要特殊处理的浏览器
+const bugBrowserArr = ['vivobrowser', 'oppobrowser'];
+
+// 检测是否是某种 bug 浏览器
+const isBugBrowser = () => {
+  const u = navigator.userAgent.toLowerCase();
+  const bugBrowserList = bugBrowserArr.filter(item => u.indexOf(item) > -1);
+  return (bugBrowserList.length > 0) && (u.indexOf('micromessenger') <= -1);
 };
 
 function S4() {
@@ -123,6 +133,24 @@ const isAvailableFun = {
   bankCardSimple(val, testReg = verifyReg.bankCardSimple) {
     return verfifyFactory(val, testReg);
   },
+};
+
+// 定义需要拦截的路由
+const interceptRouteArr = [
+  '/login',
+  '/home/home',
+  '/order/order_page',
+  '/mine/mine_page',
+  '/mine/credit_extension_page',
+  '/order/repayment_succ_page',
+  '/mine/credit_list_page',
+];
+
+// 在需要路由拦截的页面 pushState
+const changeHistoryState = () => {
+  if (interceptRouteArr.includes(window.location.pathname)) {
+    window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+  }
 };
 
 // 本地存储
@@ -454,6 +482,7 @@ export {
   getParamsFromUrl,
   getDeviceType,
   isSomeBrowser,
+  isBugBrowser,
   guid,
   closePage,
   verifyReg,
@@ -461,4 +490,6 @@ export {
   getFirstError,
   store,
   logoutAppHandler,
+  interceptRouteArr,
+  changeHistoryState,
 };

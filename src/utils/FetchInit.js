@@ -2,7 +2,7 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
-import { store, isSomeBrowser } from 'utils/common';
+import { store, isBugBrowser } from 'utils/common';
 const fetchinit = () => {
   let timer;
   let timerList = [];
@@ -13,7 +13,7 @@ const fetchinit = () => {
       // const TOKEN = Cookie.get('fin-v-card-token');
       // TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
       let tokenFromStotage = '';
-      if (isSomeBrowser('vivobrowser')) {
+      if (isBugBrowser()) {
         tokenFromStotage = store.getToken();
       } else {
         tokenFromStotage = store.getTokenSession();
