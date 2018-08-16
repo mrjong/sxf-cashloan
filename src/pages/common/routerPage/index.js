@@ -32,7 +32,8 @@ export default class router_Page extends PureComponent {
   loadComponent = async props => {
     const token = Cookie.get('fin-v-card-token');
     if (!store.getToken() && !pagesIgnore(window.location.pathname) && !token) {
-      sessionStorage.clear()
+      sessionStorage.clear();
+      localStorage.clear();
       Toast.info('请先登录')
       setTimeout(() => {
         window.ReactRouterHistory.push('/login')

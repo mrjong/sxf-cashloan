@@ -2,7 +2,7 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
-import { store } from 'utils/common'
+import { store } from 'utils/common';
 const fetchinit = () => {
   let timer = undefined
   let timerList = []
@@ -10,7 +10,8 @@ const fetchinit = () => {
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(cfg => {
     // const TOKEN = Cookie.get('fin-v-card-token');
-    const TOKEN = store.getToken('fin-v-card-token') || Cookie.get('fin-v-card-token');
+    // TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
+    const TOKEN = store.getToken('fin-v-card-token');
     if (TOKEN) {
       cfg.headers['fin-v-card-token'] = TOKEN;
     } else {
