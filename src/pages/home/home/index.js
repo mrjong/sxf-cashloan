@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
-import { store, getParamsFromUrl } from 'utils/common';
+import { store, getParamsFromUrl, isSomeBrowser } from 'utils/common';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -68,7 +68,11 @@ export default class HomePage extends PureComponent {
     const urlParams = getParamsFromUrl(window.location.search);
     if (urlParams.token) {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
-      store.setToken(urlParams.token);
+      if (isSomeBrowser('vivobrowser')) {
+        store.setToken(urlParams.token);
+      } else {
+        store.setTokenSession(urlParams.token);
+      }
     }
   };
 

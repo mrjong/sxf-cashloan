@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Carousel } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
+import { store } from 'utils/common';
 import style from './index.scss';
 
 @withRouter
@@ -35,16 +36,20 @@ export default class Carousels extends React.Component {
     children: '',
   };
 
+  handleLinkClick = url => {
+    store.setOutLinkUrl(url);
+    window.location.href = url;
+  };
+
   render() {
     const { data, children, ...restProps } = this.props;
     return (
       <div className={style.carouse_wrap}>
         <Carousel dots={false} {...restProps}>
           {data.map(val => (
-            <a
+            <div
               key={val}
-              href={val.url ? val.url : null}
-              target=""
+              onClick={val.url ? () => {this.handleLinkClick(val.url)} : null}
               style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
             >
               <img
@@ -56,7 +61,7 @@ export default class Carousels extends React.Component {
                   this.setState({ imgHeight: 'auto' });
                 }}
               />
-            </a>
+            </div>
           ))}
         </Carousel>
         {children}

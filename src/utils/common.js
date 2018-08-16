@@ -19,7 +19,6 @@ const getParamsFromUrl = url => {
   return theRequest;
 };
 
-
 // 获取设备类型，返回字符串
 const getDeviceType = () => {
   const u = navigator.userAgent;
@@ -30,6 +29,12 @@ const getDeviceType = () => {
         ? 'IOS'
         : 'PC';
   return osType;
+};
+
+// 获取设备类型，返回字符串
+const isSomeBrowser = type => {
+  const u = navigator.userAgent.toLowerCase();
+  return (u.indexOf(type) > -1) && (u.indexOf('micromessenger') <= -1);
 };
 
 function S4() {
@@ -360,27 +365,39 @@ const store = {
   removeMsgBackData() {
     return storage.local.removeItem('MsgBackData');
   },
-  // session-token
+  // local-token
   setToken(data) {
     return storage.local.setItem('fin-card-token', data);
   },
-  // session-token
+  // local-token
   getToken() {
     return storage.local.getItem('fin-card-token');
   },
-  // session-token
+  // local-token
   removeToken() {
     return storage.local.removeItem('fin-card-token');
   },
   // session-token
+  setTokenSession(data) {
+    return storage.session.setItem('fin-card-token', data);
+  },
+  // session-token
+  getTokenSession() {
+    return storage.session.getItem('fin-card-token');
+  },
+  // session-token
+  removeTokenSession() {
+    return storage.session.removeItem('fin-card-token');
+  },
+
   setHistoryRouter(data) {
     return storage.local.setItem('historyRouter', data);
   },
-  // session-token
+
   getHistoryRouter() {
     return storage.local.getItem('historyRouter');
   },
-  // session-token
+
   removeHistoryRouter() {
     return storage.local.removeItem('historyRouter');
   },
@@ -408,6 +425,19 @@ const store = {
   removeBannerData() {
     return storage.local.removeItem('bannerData');
   },
+
+  // 保存 去外链标识
+  setOutLinkUrl(data) {
+    return storage.local.setItem('outLintUrl', data);
+  },
+  // 获取 去外链标识
+  getOutLinkUrl() {
+    return storage.local.getItem('outLintUrl');
+  },
+  // 去除 去外链标识
+  removeOutLinkUrl() {
+    return storage.local.removeItem('outLintUrl');
+  },
 };
 
 /*rc-form 获取第一个错误 */
@@ -423,6 +453,7 @@ const getFirstError = error => {
 export {
   getParamsFromUrl,
   getDeviceType,
+  isSomeBrowser,
   guid,
   closePage,
   verifyReg,

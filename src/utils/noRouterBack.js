@@ -9,17 +9,19 @@ module.exports = () => {
     '/mine/credit_list_page',
   ];
 
-  if (window.history && window.history.pushState) {
-    window.addEventListener("popstate", function () {
-      if (home.includes(location.pathname)) {
-        window.history.pushState('forward', null, '#');
-        window.history.forward(1);
-      }
-    }, false);
-  }
+  // if (window.history && window.history.pushState) {
+  //   window.addEventListener('popstate', function () {
+  //       if (home.includes(window.location.pathname)) {
+  //         window.history.pushState(null, null, document.URL);
+  //         // window.history.forward(1);
+  //       }
+  //     },
+  //     false,
+  //   );
+  // }
 
-  if (home.includes(location.pathname)) {
-    window.history.pushState('forward', null, '#'); //在IE中必须得有这两行
-    window.history.forward(1);
+  if (home.includes(window.location.pathname)) {
+    window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+    // window.history.forward(1);
   }
 };

@@ -2,64 +2,72 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
-import { store } from 'utils/common';
+import { store, isSomeBrowser } from 'utils/common';
 const fetchinit = () => {
-  let timer = undefined
-  let timerList = []
-  let num = 0
+  let timer;
+  let timerList = [];
+  let num = 0;
   // 拦截请求
-  fetch.axiosInstance.interceptors.request.use(cfg => {
-    // const TOKEN = Cookie.get('fin-v-card-token');
-    // TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
-    const TOKEN = store.getToken('fin-v-card-token');
-    if (TOKEN) {
-      cfg.headers['fin-v-card-token'] = TOKEN;
-    } else {
-      cfg.headers['fin-v-card-token'] = '';
-    }
-    num++
-    if (!cfg.hideLoading) {
-      // 防止时间短，出现loading 导致闪烁
-      timer = setTimeout(() => {
-        // 处理多个请求，只要一个loading
-        if (timerList.length > 1) {
-          return
-        }
-        Toast.loading('数据加载中...', 10)
-      }, 300);
-      timerList.push(timer)
-    }
-    return cfg;
-  }, error => {
-    return Promise.reject(error);
-  });
-  // 响应拦截
-  fetch.axiosInstance.interceptors.response.use(response => {
-    num--
-    if (num <= 0) {
-      if (timer) {
-        for (let i = 0; i < timerList.length; i++) {
-          clearTimeout(timerList[i])
-        }
-        timer = undefined
-        timerList = []
-        Toast.hide()
+  fetch.axiosInstance.interceptors.request.use(
+    cfg => {
+      // const TOKEN = Cookie.get('fin-v-card-token');
+      // TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
+      let tokenFromStotage = '';
+      if (isSomeBrowser('vivobrowser')) {
+        tokenFromStotage = store.getToken();
+      } else {
+        tokenFromStotage = store.getTokenSession();
       }
-    } else {
-      Toast.loading('数据加载中...', 10)
-    }
-    return response;
-  }, error => {
-    console.log(error)
-    num--
-    for (let i = 0; i < timerList.length; i++) {
-      clearTimeout(timerList[i])
-    }
-    timer = undefined
-    timerList = []
-    Toast.hide()
-    return Promise.reject(error);
-  });
+      if (tokenFromStotage) {
+        cfg.headers['fin-v-card-token'] = tokenFromStotage;
+      } else {
+        cfg.headers['fin-v-card-token'] = '';
+      }
+      num++;
+      if (!cfg.hideLoading) {
+        // 防止时间短，出现loading 导致闪烁
+        timer = setTimeout(() => {
+          // 处理多个请求，只要一个loading
+          if (timerList.length > 1) {
+            return;
+          }
+          Toast.loading('数据加载中...', 10);
+        }, 300);
+        timerList.push(timer);
+      }
+      return cfg;
+    },
+    error => Promise.reject(error));
+  // 响应拦截
+  fetch.axiosInstance.interceptors.response.use(
+    response => {
+      num--;
+      if (num <= 0) {
+        if (timer) {
+          for (let i = 0; i < timerList.length; i++) {
+            clearTimeout(timerList[i]);
+          }
+          timer = undefined;
+          timerList = [];
+          Toast.hide();
+        }
+      } else {
+        Toast.loading('数据加载中...', 10);
+      }
+      return response;
+    },
+    error => {
+      console.log(error);
+      num--;
+      for (let i = 0; i < timerList.length; i++) {
+        clearTimeout(timerList[i]);
+      }
+      timer = undefined;
+      timerList = [];
+      Toast.hide();
+      return Promise.reject(error);
+    },
+  );
   fetch.init({
     timeout: 10000, // 默认超时
     baseURL: '/wap', // baseurl
@@ -85,10 +93,9 @@ const fetchinit = () => {
           }, 3000);
           return;
         default:
-          return;
       }
     },
   });
-}
+};
 
-export default fetchinit
+export default fetchinit;

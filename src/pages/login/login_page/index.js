@@ -5,7 +5,7 @@ import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { store, getDeviceType, getFirstError } from 'utils/common';
+import { store, getDeviceType, getFirstError, isSomeBrowser } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
 const noRouterBack = require('utils/noRouterBack');
@@ -83,7 +83,15 @@ export default class login_page extends PureComponent {
                 return;
               }
               Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-              store.setToken(res.data.tokenId);
+
+              // store.setToken(res.data.tokenId);
+
+              // TODO: 根据设备类型存储token
+              if (isSomeBrowser('vivobrowser')) {
+                store.setToken(res.data.tokenId);
+              } else {
+                store.setTokenSession(res.data.tokenId);
+              }
               this.props.history.push('/home/home');
             },
             error => {
