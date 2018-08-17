@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Toast } from 'antd-mobile';
 import { Carousel } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
 import { store } from 'utils/store';
@@ -38,6 +39,7 @@ export default class Carousels extends React.Component {
 
   handleLinkClick = url => {
     store.setOutLinkUrl(url);
+    Toast.loading('加载中...', 0);
     window.location.href = url;
   };
 

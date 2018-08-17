@@ -56,6 +56,7 @@ export default class BankContent extends React.Component {
         // TODO: 完成认证后返回信用卡列表页？
         const { contentData } = this.props;
         store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`);
+        Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);

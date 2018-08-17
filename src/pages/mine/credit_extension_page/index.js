@@ -136,6 +136,7 @@ export default class credit_extension_page extends PureComponent {
           this.props.$fetch.post(`${API.getOperator}`).then(result => {
             if (result.msgCode === 'PTM0000' && result.data.url) {
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+              this.props.toast.loading('加载中...', 0);
               window.location.href = result.data.url+'&hideStep=true';
             } else {
               this.props.toast.info(result.msgInfo);
@@ -146,7 +147,8 @@ export default class credit_extension_page extends PureComponent {
           this.props.$fetch.get(`${API.getZmxy}`).then(result => {
             if (result.msgCode === 'PTM0000') {
               if (result.data.authUrl) {
-                store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`)
+                store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+                this.props.toast.loading('加载中...', 0);
                 window.location.href = result.data.authUrl;
               } else {
                 this.props.toast.info('授信成功');

@@ -109,6 +109,7 @@ export default class credit_list_page extends PureComponent {
         } else {
           store.setMoxieBackUrl('/mine/credit_list_page');
         }
+        this.props.toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         this.props.toast.info(result.msgInfo);

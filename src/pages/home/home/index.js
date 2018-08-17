@@ -146,6 +146,7 @@ export default class HomePage extends PureComponent {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
+        Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);
