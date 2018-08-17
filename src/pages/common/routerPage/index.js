@@ -14,7 +14,8 @@ export default class router_Page extends PureComponent {
     super(props);
     this.state = {
       route: {},
-      newTitle: ''
+      newTitle: '',
+      showPage: false,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -43,8 +44,9 @@ export default class router_Page extends PureComponent {
       localStorage.clear();
       Toast.info('请先登录');
       setTimeout(() => {
-        window.ReactRouterHistory.push('/login')
+        window.ReactRouterHistory.push('/login');
       }, 3000);
+      return;
     }
     const { match, history, location } = props;
 
@@ -53,8 +55,6 @@ export default class router_Page extends PureComponent {
       if (!pagesIgnore(window.location.pathname)) {
         // 通付盾 获取设备指纹
         TFDInit();
-
-
       }
       for (let i = 0; i < Routers.length; i++) {
         if (match.url === Routers[i].path) {
@@ -65,9 +65,11 @@ export default class router_Page extends PureComponent {
         }
       }
       if (route) {
+
         changeHistoryState();
         let component = await route.component()
         this.setState({
+          showPage: true,
           route: { ...route },
           component: React.createElement(component.default, {
             match, history, params: location.state, toast: Toast, setTitle: (title) => {
@@ -100,9 +102,9 @@ export default class router_Page extends PureComponent {
     }
   };
   render() {
-    const { component, route, newTitle } = this.state;
+    const { component, route, newTitle,showPage=false } = this.state;
     const { headerHide = false, footerHide = true } = route;
-    return (
+    return showPage ? (
       <div className="application_view">
         <div className="application_page">
           {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
@@ -110,6 +112,6 @@ export default class router_Page extends PureComponent {
           <div className="application_content">{component}</div>
         </div>
       </div>
-    );
+    ) : null;
   }
 }

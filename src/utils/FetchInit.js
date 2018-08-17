@@ -79,13 +79,21 @@ const fetchinit = () => {
         case 'PTM0000':
           return;
         case 'PTM1000': // 用户登录超时
+          if (pagesIgnore(window.location.pathname)) {
+            return;
+          }
+          Toast.info('登录超时，请重新登陆');
+          setTimeout(() => {
+            window.ReactRouterHistory.push('/login');
+          }, 3000);
+          return;
         case 'PTM0100': // 未登录
           if (pagesIgnore(window.location.pathname)) {
             return;
           }
-          Toast.info(response.data.msgInfo)
+          Toast.info('请先登录');
           setTimeout(() => {
-            window.ReactRouterHistory.push('/login')
+            window.ReactRouterHistory.push('/login');
           }, 3000);
           return;
         default:
