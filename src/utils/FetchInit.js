@@ -72,11 +72,7 @@ const fetchinit = () => {
     timeout: 10000, // 默认超时
     baseURL: '/wap', // baseurl
     onShowErrorTip: (err, errorTip) => {
-      if (errorTip) Toast.fail('服务器繁忙，请稍后重试');
-    },
-    headers: {
-      'fin-v-card-token': Cookie.get('fin-v-card-token'),
-      // 'fin-v-card-token': '912f2d1fc23445f4b8c3f0e0bcc10fe0',
+      if (errorTip) Toast.fail('系统开小差，请稍后重试');
     },
     onShowSuccessTip: (response, successTip) => {
       switch (response.data.msgCode) {
