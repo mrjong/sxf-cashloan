@@ -33,7 +33,6 @@ export default class credit_extension_page extends PureComponent {
   };
 
   componentWillMount() {
-    alert(store.getCheckCardRouter())
     if (store.getCheckCardRouter() === 'checkCardRouter') {
       store.removeBackUrl();
       this.props.history.push('/home/home');
@@ -148,6 +147,7 @@ export default class credit_extension_page extends PureComponent {
           this.props.$fetch.get(`${API.getZmxy}`).then(result => {
             if (result.msgCode === 'PTM0000') {
               if (result.data.authUrl) {
+                store.setCheckCardRouter('');
                 store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
                 this.props.toast.loading('加载中...', 0);
                 window.location.href = result.data.authUrl;
