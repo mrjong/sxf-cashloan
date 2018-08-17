@@ -41,7 +41,7 @@ export default class BankContent extends React.Component {
     if (count > 1) {
       store.setBackUrl('/home/home');
       const { contentData } = this.props;
-      this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexData.autId}` });
+      this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}` });
     } else {
       this.goToMoXie();
     }
@@ -54,7 +54,7 @@ export default class BankContent extends React.Component {
         // TODO 授信页面？
         // TODO: 完成认证后返回信用卡列表页？
         const { contentData } = this.props;
-        store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexData.autId}`);
+        store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);
@@ -65,7 +65,8 @@ export default class BankContent extends React.Component {
   // 请求信信用卡数量
   requestCredCardCount = () => {
     this.props.fetch
-      .post(API.CRED_CARD_COUNT).then(result => {
+      .post(API.CRED_CARD_COUNT)
+      .then(result => {
         if (result && result.msgCode === 'PTM0000') {
           this.repayForOtherBank(result.data.count);
         } else {

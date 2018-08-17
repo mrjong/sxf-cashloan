@@ -42,7 +42,7 @@ export default class middle_page extends Component {
       store.removeMoxieBackUrl();
       this.props.history.replace(moxieBackUrl);
     } else {
-      this.props.history.push('/home/home');
+      this.props.history.replace('/home/home');
     }
   };
   render() {

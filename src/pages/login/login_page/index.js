@@ -29,7 +29,8 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
-    changeHistoryState();
+    window.history.pushState(null, null, document.URL);
+    // changeHistoryState();
     document.title = '登录和注册';
     // 移除cookie
     Cookie.remove('fin-v-card-token');

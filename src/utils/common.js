@@ -34,7 +34,7 @@ const getDeviceType = () => {
 // 检测是否是某种浏览器
 const isSomeBrowser = type => {
   const u = navigator.userAgent.toLowerCase();
-  return (u.indexOf(type) > -1) && (u.indexOf('micromessenger') <= -1);
+  return u.indexOf(type) > -1 && u.indexOf('micromessenger') <= -1;
 };
 
 // 定义需要特殊处理的浏览器
@@ -44,7 +44,7 @@ const bugBrowserArr = ['vivobrowser', 'oppobrowser'];
 const isBugBrowser = () => {
   const u = navigator.userAgent.toLowerCase();
   const bugBrowserList = bugBrowserArr.filter(item => u.indexOf(item) > -1);
-  return (bugBrowserList.length > 0) && (u.indexOf('micromessenger') <= -1);
+  return bugBrowserList.length > 0 && u.indexOf('micromessenger') <= -1;
 };
 
 function S4() {
@@ -67,51 +67,54 @@ const closePage = () => {
 };
 
 // 点击退出
-let state = false
+let state = false;
 
 const logoutAppHandler = that => {
   if (!state) {
-    state = true
+    state = true;
     Modal.alert('', '确认退出登录？', [
       {
-        text: '取消', onPress: () => {
-          state = false
-        }
+        text: '取消',
+        onPress: () => {
+          state = false;
+        },
       },
       {
-        text: '确定', onPress: () => {
-          state = false
-          logoutApp(that)
-        }
+        text: '确定',
+        onPress: () => {
+          state = false;
+          logoutApp(that);
+        },
       },
     ]);
   }
-}
+};
 
 // 退出的api
 const API = {
   LOGOUT: '/signup/logout', // 用户退出登陆
 };
 
-
 // 退出功能
 const logoutApp = that => {
-  fetch.get(API.LOGOUT).then(result => {
-    if (result && result.msgCode !== 'PTM0000') {
-      result.msgInfo && Toast.info(result.msgInfo);
-      return;
-    }
-    window.ReactRouterHistory.push('/login')
-    sessionStorage.clear();
-    localStorage.clear();
-    Cookie.remove('fin-v-card-token');
-    Cookie.remove('authFlag');
-    Cookie.remove('VIPFlag');
-  }, err => {
-    err.msgInfo && Toast.info(err.msgInfo);
-  });
-}
-
+  fetch.get(API.LOGOUT).then(
+    result => {
+      if (result && result.msgCode !== 'PTM0000') {
+        result.msgInfo && Toast.info(result.msgInfo);
+        return;
+      }
+      window.ReactRouterHistory.push('/login');
+      sessionStorage.clear();
+      localStorage.clear();
+      Cookie.remove('fin-v-card-token');
+      Cookie.remove('authFlag');
+      Cookie.remove('VIPFlag');
+    },
+    err => {
+      err.msgInfo && Toast.info(err.msgInfo);
+    },
+  );
+};
 
 // 正则校验表达式
 const verifyReg = {

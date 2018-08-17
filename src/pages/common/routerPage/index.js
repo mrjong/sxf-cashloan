@@ -5,9 +5,10 @@ import Header from 'components/header';
 import Footer from 'components/footer';
 import { Toast } from 'antd-mobile'
 import Cookie from 'js-cookie';
-import { store, changeHistoryState } from 'utils/common'
+import { store, changeHistoryState, isBugBrowser } from 'utils/common';
 import pagesIgnore from 'utils/pagesIgnore';
 import TFDInit from 'utils/getTongFuDun';
+import { areRangesOverlapping } from 'date-fns';
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
@@ -31,10 +32,16 @@ export default class router_Page extends PureComponent {
   }
   loadComponent = async props => {
     const token = Cookie.get('fin-v-card-token');
-    if (!store.getToken() && !pagesIgnore(window.location.pathname) && !token) {
+    let tokenFromStotage = '';
+    if (isBugBrowser()) {
+      tokenFromStotage = store.getToken();
+    } else {
+      tokenFromStotage = store.getTokenSession();
+    }
+    if (!tokenFromStotage && !pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear();
       localStorage.clear();
-      Toast.info('请先登录')
+      Toast.info('请先登录');
       setTimeout(() => {
         window.ReactRouterHistory.push('/login')
       }, 3000);
