@@ -9,7 +9,7 @@ const API = {
   CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
 }
 
-const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
+let backUrlData = ''; // 从除了我的里面其他页面进去
 
 @fetch.inject()
 export default class credit_list_page extends PureComponent {
@@ -18,9 +18,8 @@ export default class credit_list_page extends PureComponent {
     this.state = {
       autId: '', // 账单id
       cardList: [],
-      showMoudle: false, // 是否展示确认解绑的modal
-      unbindData: '', // 解绑卡的数据
-    }
+    };
+    backUrlData = store.getBackUrl();
   }
   componentWillMount() {
     store.setHistoryRouter(window.location.pathname);
@@ -85,11 +84,20 @@ export default class credit_list_page extends PureComponent {
   };
   // 告诉后台选中的是哪张卡
   sendSelectedCard = (autId, jumpFlag) => {
-    this.props.$fetch.get(`/index/cacheCredCard/${autId}`).then(() => {
-      if (jumpFlag) {
-        this.props.history.replace(backUrlData);
-      }
-    });
+    this.props.$fetch.get(`/index/cacheCredCard/${autId}`).then(
+      res => {
+        if (res.msgCode === "PTM0000") {
+          if (jumpFlag) {
+            this.props.history.replace(backUrlData);
+          }
+        } else {
+          res.msgInfo && this.props.toast.info(res.msgInfo)
+        }
+      },
+      error => {
+        error.msgInfo && this.props.toast.info(error.msgInfo);
+      },
+    );
   };
   // 新增授权卡
   addCard = () => {
