@@ -13,6 +13,10 @@ if (window.history && window.history.pushState) {
         window.history.pushState(null, null, document.URL);
         return;
       }
+      if (window.location.pathname === '/login') {
+        window.history.pushState(null, null, document.URL);
+        return;
+      }
       changeHistoryState();
       let hashLocation = window.location.hash;
       const hashSplit = hashLocation.split('#!/');
@@ -31,13 +35,13 @@ if (window.history && window.history.pushState) {
             store.removeOutLinkUrl();
             return;
           }
-          if  (window.location.pathname === '/') {
+          if (window.location.pathname === '/') {
             return;
           }
           const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
           switch (historyRouter) {
             case '/login':
-              break;
+              return;
             case '/home/home':
               if (window.handleCloseHomeModal) {
                 window.handleCloseHomeModal();
