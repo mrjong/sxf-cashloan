@@ -2,9 +2,9 @@
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 // 3、在 noRouterBack.js 中添加页面的路由。
-import { logoutAppHandler } from 'utils/common';
+import { logoutAppHandler, changeHistoryState } from 'utils/common';
 import qs from 'qs';
-import { store, changeHistoryState } from 'utils/common';
+import { store } from 'utils/store';
 if (window.history && window.history.pushState) {
   window.addEventListener(
     'popstate',

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';

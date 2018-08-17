@@ -4,7 +4,8 @@ import { List, InputItem, Picker, DatePicker, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import fetch from 'sx-fetch';
 import { validators } from 'utils/validator';
-import { store, getFirstError } from 'utils/common';
+import { store } from 'utils/store';
+import { getFirstError } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import styles from '../index.scss';
@@ -51,7 +52,7 @@ export default class CreditCard extends PureComponent {
     userinfo: {},
     history: {},
     handledismiss: () => {
-      
+
     },
   };
 

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/button';
 import styles from './index.scss';
-import { store } from 'utils/common'
+import { store } from 'utils/store';
 import 'utils/noRouterBack'
 export default class repayment_succ_page extends PureComponent {
     constructor(props) {

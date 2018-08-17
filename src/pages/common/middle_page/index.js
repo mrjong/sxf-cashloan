@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 const API = {

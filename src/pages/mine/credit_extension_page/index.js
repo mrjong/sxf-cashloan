@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Lists from '../../../components/lists';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import ButtonCustom from '../../../components/button';
 import styles from './index.scss';
 import { Toast } from 'antd-mobile';

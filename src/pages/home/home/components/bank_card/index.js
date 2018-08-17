@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
 import style from './index.scss';
 

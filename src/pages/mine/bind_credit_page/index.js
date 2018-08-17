@@ -5,7 +5,8 @@ import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/button';
 import { validators } from 'utils/validator';
-import { store, getFirstError } from 'utils/common';
+import { store } from 'utils/store';
+import { getFirstError } from 'utils/common';
 import styles from './index.scss';
 import qs from 'qs';
 

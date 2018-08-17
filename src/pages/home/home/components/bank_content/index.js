@@ -2,7 +2,7 @@ import SButton from 'components/button';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
 import { Toast } from 'antd-mobile';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import PropTypes from 'prop-types';
 // import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
@@ -39,6 +39,7 @@ export default class BankContent extends React.Component {
   // 代还其他信用卡点击事件
   repayForOtherBank = count => {
     if (count > 1) {
+      console.log(store, 'store');
       store.setBackUrl('/home/home');
       const { contentData } = this.props;
       this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}` });

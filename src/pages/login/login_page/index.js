@@ -5,7 +5,8 @@ import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { store, getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
+import { store } from 'utils/store';
+import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
 
@@ -36,6 +37,9 @@ export default class login_page extends PureComponent {
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear();
     localStorage.clear();
+
+    console.log(store, 'store');
+
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
       phoneValue: '',

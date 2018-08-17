@@ -9,7 +9,8 @@ import { InputItem, List } from 'antd-mobile';
 import ButtonCustom from '../../../components/button';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import { getDeviceType, store } from 'utils/common';
+import { store } from 'utils/store';
+import { getDeviceType } from 'utils/common';
 import { validators } from '../../../utils/validator';
 
 

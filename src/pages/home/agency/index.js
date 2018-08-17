@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
-import { store, getDeviceType } from 'utils/common';
+import { store } from 'utils/store';
+import { getDeviceType } from 'utils/common';
 import fetch from 'sx-fetch';
 import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
-import iconQuestion from 'assets/images/confirm_agency/icon_question.png';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
 import style from './style.scss';

@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import style from "./index.scss";
-import { store } from "utils/common";
+import { store } from 'utils/store';
 export default class Desc extends PureComponent {
   constructor(props) {
     super(props)

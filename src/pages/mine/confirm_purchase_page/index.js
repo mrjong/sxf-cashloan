@@ -6,7 +6,8 @@ import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton'
 import styles from './index.scss';
 import fetch from 'sx-fetch';
-import { store, getFirstError } from 'utils/common';
+import { store } from 'utils/store';
+import { getFirstError } from 'utils/common';
 
 @createForm()
 @fetch.inject()

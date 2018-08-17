@@ -3,12 +3,12 @@ import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
 import Header from 'components/header';
 import Footer from 'components/footer';
-import { Toast } from 'antd-mobile'
+import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
-import { store, changeHistoryState, isBugBrowser } from 'utils/common';
+import { store } from 'utils/store';
+import { changeHistoryState, isBugBrowser } from 'utils/common';
 import pagesIgnore from 'utils/pagesIgnore';
 import TFDInit from 'utils/getTongFuDun';
-import { areRangesOverlapping } from 'date-fns';
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);

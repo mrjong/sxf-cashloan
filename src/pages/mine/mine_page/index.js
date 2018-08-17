@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import { logoutAppHandler } from 'utils/common';

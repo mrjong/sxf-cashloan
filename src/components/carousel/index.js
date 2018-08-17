@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Carousel } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import style from './index.scss';
 
 @withRouter
