@@ -31,7 +31,7 @@ if (window.history && window.history.pushState) {
             store.removeOutLinkUrl();
             return;
           }
-          if  (window.location.pathname === '/') {
+          if (window.location.pathname === '/') {
             return;
           }
           const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });

@@ -38,7 +38,7 @@ export default class login_page extends PureComponent {
     sessionStorage.clear();
     localStorage.clear();
 
-    console.log(store, 'store');
+    store.setHistoryRouter(window.location.pathname);
 
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({

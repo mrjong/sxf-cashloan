@@ -85,7 +85,7 @@ const fetchinit = () => {
           }
           Toast.info('登录超时，请重新登陆');
           setTimeout(() => {
-            window.ReactRouterHistory.push('/login');
+            window.ReactRouterHistory.replace('/login');
           }, 3000);
           return;
         case 'PTM0100': // 未登录
@@ -94,7 +94,7 @@ const fetchinit = () => {
           }
           Toast.info('请先登录');
           setTimeout(() => {
-            window.ReactRouterHistory.push('/login');
+            window.ReactRouterHistory.replace('/login');
           }, 3000);
           return;
         default:
