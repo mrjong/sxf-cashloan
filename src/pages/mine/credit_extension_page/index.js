@@ -183,6 +183,13 @@ export default class credit_extension_page extends PureComponent {
         },
       };
     });
+    if (isShowBtn) {
+      // document.title = '风控授信项';
+      this.props.setTitle('信用认证');
+    } else {
+      // document.title = '信用加分';
+      this.props.setTitle('信用加分');
+    }
     return (
       <div className={styles.credit_extension_page}>
         <Lists listsInf={data} clickCb={this.getStateData} />
