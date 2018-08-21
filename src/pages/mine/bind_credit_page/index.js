@@ -17,6 +17,8 @@ const API = {
   CHECKCARD: '/my/chkCard', // 是否绑定了一张信用卡一张储蓄卡
 };
 
+let isFetching = false;
+
 @fetch.inject()
 @createForm()
 export default class bind_credit_page extends PureComponent {
@@ -118,18 +120,19 @@ export default class bind_credit_page extends PureComponent {
   };
   // 确认购买
   confirmBuy = () => {
-    // e.preventDefault();
-    const { loading } = this.state;
-    if (loading) return; // 防止重复提交
-
+    if (isFetching) {
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        isFetching = true;
         const params = {
           cardNo: values.valueInputCarNumber,
         }
         this.checkCard(params, values);
         // TODO 发送请求等操作
       } else {
+        isFetching = false;
         this.props.toast.info(getFirstError(err));
       }
     });

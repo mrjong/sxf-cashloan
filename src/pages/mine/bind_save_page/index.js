@@ -16,6 +16,8 @@ const API = {
   GETCODE: '/withhold/card/bindApply', // 绑定银行卡短信验证码获取
 };
 
+let isFetching = false;
+
 @fetch.inject()
 @createForm()
 export default class bind_save_page extends PureComponent {
@@ -133,8 +135,12 @@ export default class bind_save_page extends PureComponent {
   };
   // 确认购买
   confirmBuy = () => {
+    if (isFetching) {
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        isFetching = true;
         // 参数
         const params = {
           cardNo: values.valueInputCarNumber, //持卡人储蓄卡号
@@ -148,6 +154,7 @@ export default class bind_save_page extends PureComponent {
         //   this.props.toast.info('请先去登录');
         // }
       } else {
+        isFetching = false;
         // 如果存在错误，获取第一个字段的第一个错误进行提示
         const keys = Object.keys(err);
         if (keys && keys.length) {
