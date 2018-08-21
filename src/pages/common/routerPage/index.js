@@ -3,9 +3,10 @@ import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
 import Header from 'components/header';
 import Footer from 'components/footer';
-import { Toast } from 'antd-mobile'
+import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
-import { store } from 'utils/common'
+import { store } from 'utils/store';
+import { changeHistoryState, isBugBrowser } from 'utils/common';
 import pagesIgnore from 'utils/pagesIgnore';
 import TFDInit from 'utils/getTongFuDun';
 export default class router_Page extends PureComponent {
@@ -13,7 +14,8 @@ export default class router_Page extends PureComponent {
     super(props);
     this.state = {
       route: {},
-      newTitle: ''
+      newTitle: '',
+      showPage: false,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -31,13 +33,20 @@ export default class router_Page extends PureComponent {
   }
   loadComponent = async props => {
     const token = Cookie.get('fin-v-card-token');
-    if (!store.getToken() && !pagesIgnore(window.location.pathname) && !token) {
+    let tokenFromStotage = '';
+    if (isBugBrowser()) {
+      tokenFromStotage = store.getToken();
+    } else {
+      tokenFromStotage = store.getTokenSession();
+    }
+    if (!tokenFromStotage && !pagesIgnore(window.location.pathname) && !token) {
       sessionStorage.clear();
       localStorage.clear();
-      Toast.info('请先登录')
+      Toast.info('请先登录');
       setTimeout(() => {
-        window.ReactRouterHistory.push('/login')
+        window.ReactRouterHistory.push('/login');
       }, 3000);
+      return;
     }
     const { match, history, location } = props;
 
@@ -57,8 +66,10 @@ export default class router_Page extends PureComponent {
       }
       if (route) {
 
+        changeHistoryState();
         let component = await route.component()
         this.setState({
+          showPage: true,
           route: { ...route },
           component: React.createElement(component.default, {
             match, history, params: location.state, toast: Toast, setTitle: (title) => {
@@ -91,9 +102,9 @@ export default class router_Page extends PureComponent {
     }
   };
   render() {
-    const { component, route, newTitle } = this.state;
+    const { component, route, newTitle,showPage=false } = this.state;
     const { headerHide = false, footerHide = true } = route;
-    return (
+    return showPage ? (
       <div className="application_view">
         <div className="application_page">
           {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
@@ -101,6 +112,6 @@ export default class router_Page extends PureComponent {
           <div className="application_content">{component}</div>
         </div>
       </div>
-    );
+    ) : null;
   }
 }

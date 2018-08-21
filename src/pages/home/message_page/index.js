@@ -5,7 +5,7 @@ import ReactDOM from "react-dom"
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import STabs from 'components/tabs';
-import { store } from "utils/common";
+import { store } from 'utils/store';
 
 import { PullToRefresh, Badge, ListView, Toast } from "antd-mobile"
 let totalPage = false

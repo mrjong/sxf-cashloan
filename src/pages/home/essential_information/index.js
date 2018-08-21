@@ -18,7 +18,7 @@ const API = {
 };
 
 let urlQuery = '';
-
+let isFetching = false;
 @fetch.inject()
 @createForm()
 export default class essential_information extends PureComponent {
@@ -41,6 +41,9 @@ export default class essential_information extends PureComponent {
   }
 
   handleSubmit = () => {
+    if (isFetching) {
+      return;
+    }
     const { loading } = this.state;
     if (loading) return; // 防止重复提交
     const city = this.state.provLabel[0];
@@ -65,23 +68,25 @@ export default class essential_information extends PureComponent {
           };
           if (values.friendPhone === values.relativesPhone) {
             this.props.toast.info('联系人手机号重复，请重新填写');
-          }
-          else {
+            isFetching = false;
+          } else {
+            isFetching = true;
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
                 this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
+                isFetching = false;
                 this.props.toast.info(result.msgInfo);
               }
             });
           }
         });
       } else {
+        isFetching = false;
         this.props.toast.info(getFirstError(err));
       }
     });
-
   };
 
   // 校验手机号
@@ -101,7 +106,7 @@ export default class essential_information extends PureComponent {
     }
   };
   validateAddress = (rule, value, callback) => {
-    if ((value).length>50) {
+    if (value && (value).length>50) {
       callback('请输入正确的常住地址');
     } else {
       callback();

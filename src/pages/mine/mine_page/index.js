@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import { logoutAppHandler } from 'utils/common';
 import Lists from 'components/lists';
 import styles from './index.scss';
-const noRouterBack = require('utils/noRouterBack')
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
   LOGOUT: '/signup/logout', // 用户退出登陆
@@ -29,7 +28,6 @@ export default class mine_page extends PureComponent {
     };
   }
   componentWillMount() {
-    noRouterBack() // 禁用浏览器返回
     // 清除订单缓存
     store.removeBackData()
     // 移除会员卡出入口

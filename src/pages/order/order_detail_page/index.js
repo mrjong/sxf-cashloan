@@ -3,7 +3,7 @@ import Lists from 'components/lists';
 import Panel from 'components/panel/index.js';
 import fetch from "sx-fetch";
 import SButton from 'components/button';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import styles from './index.scss';
 import qs from 'qs';

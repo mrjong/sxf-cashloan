@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import styles from '../index.scss';
 import headerIgnore from 'utils/headerIgnore'
 export default class loan_contract_page extends PureComponent {

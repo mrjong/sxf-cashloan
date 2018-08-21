@@ -4,7 +4,8 @@ import { List, InputItem, Picker, DatePicker, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import fetch from 'sx-fetch';
 import { validators } from 'utils/validator';
-import { store, getFirstError } from 'utils/common';
+import { store } from 'utils/store';
+import { getFirstError } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import styles from '../index.scss';
@@ -25,6 +26,8 @@ function formatDate(date) {
     .slice(-2)}`;
   return dateStr;
 }
+
+let isFetching = false;
 
 @fetch.inject()
 @createForm()
@@ -51,7 +54,7 @@ export default class CreditCard extends PureComponent {
     userinfo: {},
     history: {},
     handledismiss: () => {
-      
+
     },
   };
 
@@ -196,10 +199,15 @@ export default class CreditCard extends PureComponent {
   };
 
   handleSubmit = () => {
+    if (isFetching) {
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        isFetching = true;
         this.requestBindBankCard();
       } else {
+        isFetching = false;
         Toast.info(getFirstError(err));
       }
     });

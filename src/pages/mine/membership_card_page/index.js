@@ -3,7 +3,7 @@ import fetch from "sx-fetch"
 import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss'
 import ButtonCustom from 'components/button';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import dayjs from 'dayjs';
 @fetch.inject()
 export default class card_home extends PureComponent {

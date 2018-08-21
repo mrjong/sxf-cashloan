@@ -3,7 +3,8 @@ import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
-import { store, getParamsFromUrl } from 'utils/common';
+import { store } from 'utils/store';
+import { getParamsFromUrl, isBugBrowser } from 'utils/common';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -12,7 +13,6 @@ import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
 import style from './style.scss';
-const noRouterBack = require('utils/noRouterBack');
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -36,7 +36,6 @@ export default class HomePage extends PureComponent {
     store.removeBackData();
     // 清除四项认证进入绑卡页的标识
     store.removeCheckCardRouter();
-    noRouterBack(); // 禁用浏览器返回
     this.getTokenFromUrl();
     this.requestGetUsrInfo();
 
@@ -68,7 +67,11 @@ export default class HomePage extends PureComponent {
     const urlParams = getParamsFromUrl(window.location.search);
     if (urlParams.token) {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
-      store.setToken(urlParams.token);
+      if (isBugBrowser()) {
+        store.setToken(urlParams.token);
+      } else {
+        store.setTokenSession(urlParams.token);
+      }
     }
   };
 
@@ -143,6 +146,7 @@ export default class HomePage extends PureComponent {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
+        Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);

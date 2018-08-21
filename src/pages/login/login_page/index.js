@@ -5,10 +5,10 @@ import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
-import { store, getDeviceType, getFirstError } from 'utils/common';
+import { store } from 'utils/store';
+import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
 import { validators } from 'utils/validator';
 import style from './index.scss';
-const noRouterBack = require('utils/noRouterBack');
 
 let timmer;
 const API = {
@@ -30,18 +30,23 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    // 登录页单独处理
+    window.history.pushState(null, null, document.URL);
     document.title = '登录和注册';
-    noRouterBack();
     // 移除cookie
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear();
     localStorage.clear();
+
+    store.setHistoryRouter(window.location.pathname);
+
     this.props.form.getFieldProps('phoneValue');
     this.props.form.setFieldsValue({
       phoneValue: '',
     });
   }
   componentDidMount() {
+    // 获取地址
     address();
   }
 
@@ -69,13 +74,13 @@ export default class login_page extends PureComponent {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.$fetch.post(API.smsForLogin, {
-            mblNo: values.phoneValue, // 手机号
-            smsJrnNo: this.state.smsJrnNo, // 短信流水号
-            osType, // 操作系统
-            smsCd: values.smsCd, // IP地址
-            usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
-            location: store.getPosition(), // 定位地址 TODO 从session取
-          })
+          mblNo: values.phoneValue, // 手机号
+          smsJrnNo: this.state.smsJrnNo, // 短信流水号
+          osType, // 操作系统
+          smsCd: values.smsCd, // IP地址
+          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
+          location: store.getPosition(), // 定位地址 TODO 从session取
+        })
           .then(
             res => {
               if (res.msgCode !== 'PTM0000') {
@@ -83,7 +88,15 @@ export default class login_page extends PureComponent {
                 return;
               }
               Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-              store.setToken(res.data.tokenId);
+
+              // store.setToken(res.data.tokenId);
+
+              // TODO: 根据设备类型存储token
+              if (isBugBrowser()) {
+                store.setToken(res.data.tokenId);
+              } else {
+                store.setTokenSession(res.data.tokenId);
+              }
               this.props.history.push('/home/home');
             },
             error => {
@@ -113,10 +126,10 @@ export default class login_page extends PureComponent {
       if (!err || JSON.stringify(err) === '{}') {
         // 发送验证码
         this.props.$fetch.post(API.sendsms, {
-            type: '6',
-            mblNo: values.phoneValue,
-            osType,
-          })
+          type: '6',
+          mblNo: values.phoneValue,
+          osType,
+        })
           .then(result => {
             if (result.msgCode !== 'PTM0000') {
               Toast.info(result.msgInfo);

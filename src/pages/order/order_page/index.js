@@ -4,9 +4,8 @@ import React, {
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
-import { store } from 'utils/common'
+import { store } from 'utils/store';
 import dayjs from 'dayjs'
-const noRouterBack = require('utils/noRouterBack')
 let hasNext = true
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -42,7 +41,6 @@ export default class message_page extends PureComponent {
     }
     scrollTop = 0
     componentWillMount() {
-        noRouterBack() // 禁用浏览器返回
         // 处理详情返回之后
         let backDatastr = store.getBackData()
         if (backDatastr && JSON.stringify(backDatastr) !== "{}") {

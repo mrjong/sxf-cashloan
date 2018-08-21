@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
-const noRouterBack = require('utils/noRouterBack');
 
 const API = {
   CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
   CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
+  CACHECREDCARD: '/index/cacheCredCard', // 后台缓存信用卡
 }
 
-const backUrlData = store.getBackUrl(); // 从除了我的里面其他页面进去
+let backUrlData = ''; // 从除了我的里面其他页面进去
 
 @fetch.inject()
 export default class credit_list_page extends PureComponent {
@@ -19,13 +19,11 @@ export default class credit_list_page extends PureComponent {
     this.state = {
       autId: '', // 账单id
       cardList: [],
-      showMoudle: false, // 是否展示确认解绑的modal
-      unbindData: '', // 解绑卡的数据
-    }
+    };
+    backUrlData = store.getBackUrl();
   }
   componentWillMount() {
     store.setHistoryRouter(window.location.pathname);
-    noRouterBack(); // 禁用浏览器返回
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId) {
@@ -87,18 +85,32 @@ export default class credit_list_page extends PureComponent {
   };
   // 告诉后台选中的是哪张卡
   sendSelectedCard = (autId, jumpFlag) => {
-    this.props.$fetch.get(`/index/cacheCredCard/${autId}`).then(() => {
-      if (jumpFlag) {
-        this.props.history.replace(backUrlData);
-      }
-    });
+    this.props.$fetch.get(`${API.CACHECREDCARD}/${autId}`).then(
+      res => {
+        if (res.msgCode === "PTM0000") {
+          if (jumpFlag) {
+            this.props.history.replace(backUrlData);
+          }
+        } else {
+          res.msgInfo && this.props.toast.info(res.msgInfo)
+        }
+      },
+      error => {
+        error.msgInfo && this.props.toast.info(error.msgInfo);
+      },
+    );
   };
   // 新增授权卡
   addCard = () => {
     this.props.$fetch.post(API.CARDAUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-        store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
+        if (queryData.autId) {
+          store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
+        } else {
+          store.setMoxieBackUrl('/mine/credit_list_page');
+        }
+        this.props.toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         this.props.toast.info(result.msgInfo);

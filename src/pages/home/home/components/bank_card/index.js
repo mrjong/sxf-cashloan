@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
 import style from './index.scss';
 
@@ -63,6 +63,7 @@ export default class BankCard extends React.PureComponent {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
+        Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);

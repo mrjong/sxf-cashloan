@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
 import Lists from '../../../components/lists';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import ButtonCustom from '../../../components/button';
 import styles from './index.scss';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
-const noRouterBack = require('utils/noRouterBack')
 
 const API = {
   getStw: '/my/getStsw',             // 获取4个认证项的状态
@@ -34,13 +33,11 @@ export default class credit_extension_page extends PureComponent {
   };
 
   componentWillMount() {
-    // alert(store.getCheckCardRouter() === 'checkCardRouter')
     if (store.getCheckCardRouter() === 'checkCardRouter') {
       store.removeBackUrl();
       this.props.history.push('/home/home');
       return;
     }
-    noRouterBack() // 禁用浏览器返回
     // 查询 授信项状态
     this.requestGetStatus();
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
@@ -137,7 +134,9 @@ export default class credit_extension_page extends PureComponent {
         case 'operator':
           this.props.$fetch.post(`${API.getOperator}`).then(result => {
             if (result.msgCode === 'PTM0000' && result.data.url) {
+              store.setCheckCardRouter('');
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+              this.props.toast.loading('加载中...', 0);
               window.location.href = result.data.url+'&hideStep=true';
             } else {
               this.props.toast.info(result.msgInfo);
@@ -148,7 +147,9 @@ export default class credit_extension_page extends PureComponent {
           this.props.$fetch.get(`${API.getZmxy}`).then(result => {
             if (result.msgCode === 'PTM0000') {
               if (result.data.authUrl) {
-                store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`)
+                store.setCheckCardRouter('');
+                store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+                this.props.toast.loading('加载中...', 0);
                 window.location.href = result.data.authUrl;
               } else {
                 this.props.toast.info('授信成功');
@@ -182,6 +183,13 @@ export default class credit_extension_page extends PureComponent {
         },
       };
     });
+    if (isShowBtn) {
+      // document.title = '风控授信项';
+      this.props.setTitle('信用认证');
+    } else {
+      // document.title = '信用加分';
+      this.props.setTitle('信用加分');
+    }
     return (
       <div className={styles.credit_extension_page}>
         <Lists listsInf={data} clickCb={this.getStateData} />

@@ -2,7 +2,7 @@ import SButton from 'components/button';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
 import { Toast } from 'antd-mobile';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import PropTypes from 'prop-types';
 // import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
@@ -41,7 +41,7 @@ export default class BankContent extends React.Component {
     if (count > 1) {
       store.setBackUrl('/home/home');
       const { contentData } = this.props;
-      this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexData.autId}` });
+      this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}` });
     } else {
       this.goToMoXie();
     }
@@ -54,7 +54,9 @@ export default class BankContent extends React.Component {
         // TODO 授信页面？
         // TODO: 完成认证后返回信用卡列表页？
         const { contentData } = this.props;
-        store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexData.autId}`);
+        store.setBackUrl('/home/home');
+        store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`);
+        Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
       } else {
         Toast.info(result.msgInfo);
@@ -65,7 +67,8 @@ export default class BankContent extends React.Component {
   // 请求信信用卡数量
   requestCredCardCount = () => {
     this.props.fetch
-      .post(API.CRED_CARD_COUNT).then(result => {
+      .post(API.CRED_CARD_COUNT)
+      .then(result => {
         if (result && result.msgCode === 'PTM0000') {
           this.repayForOtherBank(result.data.count);
         } else {
@@ -83,7 +86,9 @@ export default class BankContent extends React.Component {
     return (
       <div className={style.bank_content_wrap} {...restProps}>
         <BankCard contentData={contentData} {...contentData.indexData} />
-        {contentData.indexSts === 'LN0010' ? <p className={style.abnormal_tip}>请点击重新更新信用卡账单</p> : null}
+        {contentData.indexSts === 'LN0010' ? (
+          <p className={style.abnormal_tip}>点击更新账单，获取最新信用卡信息</p>
+        ) : null}
         {children}
         {showEntranceArr.includes(contentData.indexSts) ? (
           <button className={style.link_tip} onClick={this.requestCredCardCount}>

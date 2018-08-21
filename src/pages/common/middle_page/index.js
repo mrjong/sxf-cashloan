@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { store } from 'utils/common';
+import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 const API = {
@@ -42,7 +42,7 @@ export default class middle_page extends Component {
       store.removeMoxieBackUrl();
       this.props.history.replace(moxieBackUrl);
     } else {
-      this.props.history.push('/home/home');
+      this.props.history.replace('/home/home');
     }
   };
   render() {
