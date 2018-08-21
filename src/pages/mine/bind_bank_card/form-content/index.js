@@ -27,6 +27,8 @@ function formatDate(date) {
   return dateStr;
 }
 
+let isFetching = false;
+
 @fetch.inject()
 @createForm()
 export default class CreditCard extends PureComponent {
@@ -197,10 +199,15 @@ export default class CreditCard extends PureComponent {
   };
 
   handleSubmit = () => {
+    if (isFetching) {
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        isFetching = true;
         this.requestBindBankCard();
       } else {
+        isFetching = false;
         Toast.info(getFirstError(err));
       }
     });
