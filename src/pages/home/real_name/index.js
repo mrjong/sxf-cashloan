@@ -23,7 +23,7 @@ const API = {
 };
 
 let urlQuery = '';
-
+let isFetching = false;
 @fetch.inject()
 @createForm()
 export default class real_name_page extends Component {
@@ -40,7 +40,7 @@ export default class real_name_page extends Component {
     rightUploaded: false,
     footerUploaded: false,
     showState: false,
-    disabledupload: 'false'
+    disabledupload: 'false',
   };
 
   componentWillMount() {
@@ -187,6 +187,10 @@ export default class real_name_page extends Component {
   };
 
   handleSubmit = () => {
+    if (isFetching) {
+      console.log('不可点击');
+      return;
+    }
     if (!this.state.leftUploaded) {
       this.props.toast.info('请上传身份证正面');
       return false;
@@ -207,6 +211,7 @@ export default class real_name_page extends Component {
       this.props.toast.info('请上传手持身份证');
       return false;
     }
+    isFetching = true;
     const { ocrZhengData = {}, ocrFanData = {}, ocrData = {}, idName, idNo } = this.state;
     const osType = getDeviceType();
     const params = {
@@ -237,6 +242,7 @@ export default class real_name_page extends Component {
         // this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
       }
       else {
+        isFetching = false;
         this.props.toast.info(result.msgInfo);
       }
     });
