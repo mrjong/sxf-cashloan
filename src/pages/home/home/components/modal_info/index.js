@@ -149,7 +149,7 @@ export default class ModalInfo extends Component {
     this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${this.props.indexData.autId}`).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
-        const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
+        const diff = result.data.overDt;
         let lendersDateListFormat = this.state.lendersDateList;
         if (!result.data.cardBillDt || diff <= 2) {
           lendersDateListFormat[0].disable = true;
