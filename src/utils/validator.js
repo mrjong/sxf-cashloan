@@ -22,7 +22,7 @@ export const validators = {
   },
   name: val => /^([\u4e00-\u9fa5]){2,20}$/.test(val),
   chLength: (val, min, max) => {
-    // 中文字符长度校验
+    // 中文字符长度校验121
     let minNum = min || 1;
     let maxNum = max || 100000;
     let chReg = new RegExp(`^(([\u4e00-\u9fa5])|(\\.)|(\\·)){${minNum},${maxNum}}$`);
