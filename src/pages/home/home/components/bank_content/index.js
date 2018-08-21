@@ -39,7 +39,6 @@ export default class BankContent extends React.Component {
   // 代还其他信用卡点击事件
   repayForOtherBank = count => {
     if (count > 1) {
-      console.log(store, 'store');
       store.setBackUrl('/home/home');
       const { contentData } = this.props;
       this.props.history.push({ pathname: '/mine/credit_list_page', search: `?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}` });
@@ -55,6 +54,7 @@ export default class BankContent extends React.Component {
         // TODO 授信页面？
         // TODO: 完成认证后返回信用卡列表页？
         const { contentData } = this.props;
+        store.setBackUrl('/home/home');
         store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`);
         Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
