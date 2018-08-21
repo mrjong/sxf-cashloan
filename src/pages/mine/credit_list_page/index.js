@@ -7,6 +7,7 @@ import styles from './index.scss';
 const API = {
   CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
   CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
+  CACHECREDCARD: '/index/cacheCredCard', // 后台缓存信用卡
 }
 
 let backUrlData = ''; // 从除了我的里面其他页面进去
@@ -84,7 +85,7 @@ export default class credit_list_page extends PureComponent {
   };
   // 告诉后台选中的是哪张卡
   sendSelectedCard = (autId, jumpFlag) => {
-    this.props.$fetch.get(`/index/cacheCredCard/${autId}`).then(
+    this.props.$fetch.get(`${API.CACHECREDCARD}/${autId}`).then(
       res => {
         if (res.msgCode === "PTM0000") {
           if (jumpFlag) {
