@@ -30,8 +30,8 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    // 登录页单独处理
     window.history.pushState(null, null, document.URL);
-    // changeHistoryState();
     document.title = '登录和注册';
     // 移除cookie
     Cookie.remove('fin-v-card-token');
@@ -46,6 +46,7 @@ export default class login_page extends PureComponent {
     });
   }
   componentDidMount() {
+    // 获取地址
     address();
   }
 
@@ -73,13 +74,13 @@ export default class login_page extends PureComponent {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.$fetch.post(API.smsForLogin, {
-            mblNo: values.phoneValue, // 手机号
-            smsJrnNo: this.state.smsJrnNo, // 短信流水号
-            osType, // 操作系统
-            smsCd: values.smsCd, // IP地址
-            usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
-            location: store.getPosition(), // 定位地址 TODO 从session取
-          })
+          mblNo: values.phoneValue, // 手机号
+          smsJrnNo: this.state.smsJrnNo, // 短信流水号
+          osType, // 操作系统
+          smsCd: values.smsCd, // IP地址
+          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
+          location: store.getPosition(), // 定位地址 TODO 从session取
+        })
           .then(
             res => {
               if (res.msgCode !== 'PTM0000') {
@@ -125,10 +126,10 @@ export default class login_page extends PureComponent {
       if (!err || JSON.stringify(err) === '{}') {
         // 发送验证码
         this.props.$fetch.post(API.sendsms, {
-            type: '6',
-            mblNo: values.phoneValue,
-            osType,
-          })
+          type: '6',
+          mblNo: values.phoneValue,
+          osType,
+        })
           .then(result => {
             if (result.msgCode !== 'PTM0000') {
               Toast.info(result.msgInfo);
