@@ -3,6 +3,7 @@
 .loginContent {
   height: 100%;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   .loginLog {
     @include bg-image('../../../assets/images/login/loginBg');
     background-repeat: no-repeat;
