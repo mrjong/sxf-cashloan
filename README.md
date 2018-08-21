@@ -129,6 +129,7 @@ src/pages
 * [x] 封装请求 统一处理错误提示，token获取等。FetchInit.js
 * [x] 提取公用方法 common.js
 * [ ] 文件 Eslint 统一风格 （部分文件eslint）
+* [ ] 防连点问题未处理
 
 ## 注意事项
 
