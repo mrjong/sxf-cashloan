@@ -6,16 +6,16 @@ import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchinit from "utils/FetchInit"
-// import { initAnalytics } from './utils/Analytins';
+import { initAnalytics } from './utils/Analytins';
 import fastClick from 'fastclick';
 
 fastClick.attach(document.body);
-// var sa = require('sa-sdk-javascript/sensorsdata.min.js');
-// if (!window.sa) {
-//   window.sa = sa;
-// }
+var sa = require('sa-sdk-javascript/sensorsdata.min.js');
+if (!window.sa) {
+  window.sa = sa;
+}
 fetchinit();
-// initAnalytics();
+initAnalytics();
 const renders = Component =>
   render(
     <BrowserRouter>

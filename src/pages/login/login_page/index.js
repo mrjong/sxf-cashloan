@@ -8,6 +8,8 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
 import { validators } from 'utils/validator';
+import { buriedPointEvent } from 'utils/Analytins';
+import { HOME } from 'utils/AnalytinsType';
 import style from './index.scss';
 
 let timmer;
@@ -30,6 +32,9 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
+    buriedPointEvent(HOME.LOGIN, {
+      name: 'zhang',
+    });
     // 登录页单独处理
     window.history.pushState(null, null, document.URL);
     document.title = '登录和注册';
