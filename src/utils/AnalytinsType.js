@@ -10,4 +10,4 @@ const ORDER = {
   DEMO: 'DEMO',
 };
 
-export { HOME, MINE, ORDER }
+export { HOME, MINE, ORDER };

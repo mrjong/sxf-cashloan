@@ -23,3 +23,6 @@ ide.general.xml
 
 .DS_Store
 standardjs-error.log
+
+.project
+.settings
