@@ -9,6 +9,8 @@ import { store } from 'utils/store';
 import { changeHistoryState, isBugBrowser } from 'utils/common';
 import pagesIgnore from 'utils/pagesIgnore';
 import TFDInit from 'utils/getTongFuDun';
+import { pageView } from 'utils/Analytins';
+
 export default class router_Page extends PureComponent {
   constructor(props) {
     super(props);
@@ -89,6 +91,7 @@ export default class router_Page extends PureComponent {
           }),
         })
       }
+      pageView();
     } catch (error) {
       console.log(error);
       this.setState({
@@ -102,7 +105,7 @@ export default class router_Page extends PureComponent {
     }
   };
   render() {
-    const { component, route, newTitle,showPage=false } = this.state;
+    const { component, route, newTitle, showPage = false } = this.state;
     const { headerHide = false, footerHide = true } = route;
     return showPage ? (
       <div className="application_view">

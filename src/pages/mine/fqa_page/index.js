@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
+import headerIgnore from 'utils/headerIgnore';
+import { buriedPointEvent } from 'utils/Analytins';
+import { MINE } from 'utils/AnalytinsType';
 import styles from './index.scss';
-import headerIgnore from 'utils/headerIgnore'
 
 export default class fqa_page extends PureComponent {
   constructor(props) {
@@ -8,6 +10,10 @@ export default class fqa_page extends PureComponent {
     this.state = {
     };
   }
+  componentDidMount() {
+    buriedPointEvent(MINE.FAQ);
+  }
+
   render() {
     return (
       <div className={styles.fqa_page} >

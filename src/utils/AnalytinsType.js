@@ -3,7 +3,7 @@ const HOME = {
 };
 
 const MINE = {
-  DEMO: 'DEMO',
+  FAQ: 'FAQ',
 };
 
 const ORDER = {
