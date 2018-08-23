@@ -32,9 +32,6 @@ export default class login_page extends PureComponent {
   }
 
   componentWillMount() {
-    buriedPointEvent(HOME.LOGIN, {
-      name: 'zhang',
-    });
     // 登录页单独处理
     window.history.pushState(null, null, document.URL);
     document.title = '登录和注册';
@@ -53,6 +50,10 @@ export default class login_page extends PureComponent {
   componentDidMount() {
     // 获取地址
     address();
+
+    buriedPointEvent(HOME.LOGIN, {
+      name: 'zhang',
+    });
   }
 
   componentWillUnmount() {
