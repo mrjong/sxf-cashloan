@@ -12,6 +12,7 @@ import { getFirstError } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
 import { home } from 'utils/AnalytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
+import qs from 'qs';
 
 const pageKey = home.basicInfoBury;
 
@@ -84,11 +85,10 @@ export default class essential_information extends PureComponent {
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
                 // 埋点-基本信息页-确定按钮
-                buriedPointEvent(home.basicInfoComplete, {
-                  entry: '',
-                });
+                this.confirmBuryPoint(true);
                 this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
+                this.confirmBuryPoint(false, result.msgInfo);
                 isFetching = false;
                 this.props.toast.info(result.msgInfo);
               }
@@ -99,6 +99,18 @@ export default class essential_information extends PureComponent {
         isFetching = false;
         this.props.toast.info(getFirstError(err));
       }
+    });
+  };
+
+  // 点击确定按钮埋点
+  confirmBuryPoint = (isSucc, failInf) => {
+    const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    // 是否是从我的里面进入
+    const isFromMine = query.isShowCommit;
+    buriedPointEvent(home.basicInfoComplete, {
+      entry: !isFromMine || isFromMine === 'false' ? '我的' : '风控授信项',
+      is_success: isSucc,
+      fail_cause: failInf,
     });
   };
 
