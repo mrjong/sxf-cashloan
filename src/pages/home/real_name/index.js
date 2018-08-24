@@ -12,6 +12,9 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils/common';
 import { validators } from '../../../utils/validator';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
+import qs from 'qs';
 
 
 
@@ -78,6 +81,7 @@ export default class real_name_page extends Component {
       return;
     }
     this.setState({ showFloat: true });
+    buriedPointEvent(home.informationMyselfFrontCard);
     this.setState({ leftValue: base64Data });
     const params = {
       imageBase64: this.state.leftValue, //身份证正面图片信息
@@ -120,6 +124,7 @@ export default class real_name_page extends Component {
       return;
     }
     this.setState({ showFloat: true });
+    buriedPointEvent(home.informationMyselfBackCard);
     this.setState({ rightValue: base64Data });
     const params1 = {
       imageBase64: this.state.rightValue, //身份证反面图片信息
@@ -159,6 +164,7 @@ export default class real_name_page extends Component {
       return;
     }
     this.setState({ showFloat: true });
+    buriedPointEvent(home.informationTapHoldIdCard);
     this.setState({ footerValue: base64Data });
     const params1 = {
       imageBase64: this.state.footerValue, //手持身份证照片
@@ -235,6 +241,7 @@ export default class real_name_page extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.msgCode === 'PTM0000') {
+        this.confirmBuryPoint(true);
         // store.removeAuthFlag();
         Cookie.remove('authFlag');
         // TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
@@ -242,6 +249,7 @@ export default class real_name_page extends Component {
         // this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
       }
       else {
+        this.confirmBuryPoint(false, result.msgInfo);
         isFetching = false;
         this.props.toast.info(result.msgInfo);
       }
@@ -254,6 +262,17 @@ export default class real_name_page extends Component {
       this.props.toast.loading('压缩图片中...', 0)
     })
   }
+  // 点击确定按钮埋点
+  confirmBuryPoint = (isSucc, failInf) => {
+    const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    // 是否是从我的里面进入
+    const isFromMine = query.isShowCommit;
+    buriedPointEvent(home.informationConfirm, {
+      entry: !isFromMine || isFromMine === 'false' ? '我的' : '风控授信项',
+      is_success: isSucc,
+      fail_cause: failInf,
+    });
+  };
   // handleAfterCompress = () => {
   //   this.props.toast.hide();
   // }
@@ -297,10 +316,11 @@ export default class real_name_page extends Component {
             <InputItem onChange={this.handleNameChange}
               placeholder="借款人本人姓名"
               value={this.state.idName}
-            >
-              姓名
+              onFocus={ () => {buriedPointEvent(home.informationTapNameInp)} }
+          >
+            姓名
             </InputItem>
-          </div>
+        </div>
           <div className={style.clear} />
           <div className={style.inline} style={{ height: '0.04rem' }} />
           <div className={style.labelDiv} style={{ marginTop: 0 }}>
@@ -308,6 +328,7 @@ export default class real_name_page extends Component {
               placeholder="借款人身份证号"
               value={this.state.idNo}
               maxLength="18"
+              onFocus={ () => {buriedPointEvent(home.informationTapIDInp)} }
             >
               身份证号
             </InputItem>

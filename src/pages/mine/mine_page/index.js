@@ -113,7 +113,8 @@ export default class mine_page extends PureComponent {
   clickhandle = item => {
     const { mblNoHid, realNmFlg } = this.state;
     if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
-      this.props.history.push(item.jumpToUrl);
+      // this.props.history.push(item.jumpToUrl);
+      this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
     }
     if (!mblNoHid) {
       this.props.toast.info('用户未登录', 2, () => {

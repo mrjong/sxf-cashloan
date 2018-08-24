@@ -1,11 +1,14 @@
 import React, { PureComponent } from 'react';
-import Lists from '../../../components/lists';
+import Lists from 'components/lists';
 import { store } from 'utils/store';
-import ButtonCustom from '../../../components/button';
-import styles from './index.scss';
+import ButtonCustom from 'components/button';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/Analytins';
+import { mine } from 'utils/AnalytinsType';
+import styles from './index.scss';
+
 
 const API = {
   getStw: '/my/getStsw',             // 获取4个认证项的状态
@@ -44,7 +47,14 @@ export default class credit_extension_page extends PureComponent {
     urlQuery = this.props.history.location.search;
     const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
     if (!isShowCommit || isShowCommit === 'false') {
-      this.setState({ isShowBtn: false })
+      this.setState({ isShowBtn: false });
+      buriedPointEvent(mine.creditExtension, {
+        entry: '我的',
+      });
+    } else {
+      buriedPointEvent(mine.creditExtension, {
+        entry: '风控授信项',
+      });
     }
   }
 
@@ -137,7 +147,7 @@ export default class credit_extension_page extends PureComponent {
               store.setCheckCardRouter('');
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
               this.props.toast.loading('加载中...', 0);
-              window.location.href = result.data.url+'&hideStep=true';
+              window.location.href = result.data.url + '&hideStep=true';
             } else {
               this.props.toast.info(result.msgInfo);
             }

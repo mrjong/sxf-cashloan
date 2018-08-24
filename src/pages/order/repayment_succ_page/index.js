@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/button';
-import styles from './index.scss';
 import { store } from 'utils/store';
+import { buriedPointEvent } from 'utils/Analytins';
+import { order } from 'utils/AnalytinsType';
 import 'utils/noRouterBack'
+import styles from './index.scss';
+
 export default class repayment_succ_page extends PureComponent {
     constructor(props) {
         super(props);
@@ -26,6 +29,7 @@ export default class repayment_succ_page extends PureComponent {
 
     // 返回首页
     backHome = () => {
+        buriedPointEvent(order.returnHome);
         this.props.history.push('/home/home')
     }
 
