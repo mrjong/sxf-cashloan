@@ -10,6 +10,8 @@ import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import styles from '../index.scss';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/Analytins';
+import { membership } from 'utils/AnalytinsType';
 const { Item } = List;
 
 const API = {
@@ -215,6 +217,7 @@ export default class CreditCard extends PureComponent {
 
   // 绑定银行卡请求
   requestBindBankCard = () => {
+    const { formtype, userinfo } = this.props;
     const { smsJrnNo } = this.state;
     const { getFieldsValue } = this.props.form;
     const formData = getFieldsValue();
@@ -226,6 +229,12 @@ export default class CreditCard extends PureComponent {
     this.props.$fetch.post(API.BIND_CARD_URL, params).then(
       result => {
         if (result && result.msgCode === 'PTM0000') {
+          // 埋点-会员卡购买页-绑定银行卡
+          if (formtype === 'C') {
+            buriedPointEvent(membership.bindCardCredit);
+          } else {
+            buriedPointEvent(membership.bindCardSave);
+          }
           // TODO: 保存数据给下个页面
           this.passDataToNextPage();
           // 如果第一次没有绑卡就是replace，其他情况都是goback

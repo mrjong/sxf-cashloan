@@ -28,4 +28,11 @@ const order = {
   repaymentFirst: 'DC_ORDER_DETAILS_REPAYMENT_FIRST', // 账单详情页-付款详情-立即还款按钮
 };
 
-export { login, home, mine, order };
+const membership = {
+  confirmBuyPre: 'DC_MEMBERSHIP_CONFIRM_BUY_PRE', // 会员卡购买页-确认购买按钮
+  bindCardCredit: 'DC_MEMBERSHIP_BIND_CARD_CREDIT', // 会员卡购买页-绑定银行卡-信用卡页-确认绑定按钮
+  bindCardSave: 'DC_MEMBERSHIP_BIND_CARD_SAVE', // 会员卡购买页-绑定银行卡-储蓄卡页-确认绑定按钮
+  confirmBuy: 'DC_MEMBERSHIP_CONFIRM_BUY', // 会员卡购买-确认购买页-确认购买按钮
+};
+
+export { login, home, mine, order, membership };

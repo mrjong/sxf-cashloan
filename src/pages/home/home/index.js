@@ -278,7 +278,7 @@ export default class HomePage extends PureComponent {
       <div className={style.home_page}>
         {usrIndexInfo ? (
           bannerList && bannerList.length > 0 ? (
-            <Carousels data={bannerList}>
+            <Carousels data={bannerList} entryFrom="banner">
               <MsgBadge />
             </Carousels>
           ) : (
