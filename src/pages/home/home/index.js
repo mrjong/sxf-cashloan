@@ -5,6 +5,8 @@ import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getParamsFromUrl, isBugBrowser } from 'utils/common';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -96,6 +98,8 @@ export default class HomePage extends PureComponent {
     const { usrIndexInfo } = this.state;
     switch (usrIndexInfo.indexSts) {
       case 'LN0001': // 新用户，信用卡未授权
+        // 埋点-首页-点击申请信用卡代还按钮
+        buriedPointEvent(home.applyCreditRepayment);
         this.applyCardRepay();
         break;
       case 'LN0002': // 账单爬取中
@@ -115,7 +119,8 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        // this.handleShowModal();
+        // 埋点-首页-点击一键还卡（代还）
+        buriedPointEvent(home.easyRepay);
         this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
@@ -125,13 +130,14 @@ export default class HomePage extends PureComponent {
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
         this.requestBindCardState();
-        // store.setBillNo(usrIndexInfo.indexData.billNo)
-        // this.props.history.push(`/order/order_detail_page`);
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
+        // 埋点-首页-点击查看代还账单
+        buriedPointEvent(home.viewBill);
         store.setBillNo(usrIndexInfo.indexData.billNo);
-        this.props.history.push('/order/order_detail_page');
+        // entryFrom 给打点使用，区分从哪个页面进入订单页的
+        this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
         break;
       case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
         console.log('LN0010');
