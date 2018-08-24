@@ -8,7 +8,7 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
 import { validators } from 'utils/validator';
-import { buriedPointEvent } from 'utils/Analytins';
+import { buriedPointEvent, pageView } from 'utils/Analytins';
 import { login } from 'utils/AnalytinsType';
 import style from './index.scss';
 
@@ -50,6 +50,7 @@ export default class login_page extends PureComponent {
   componentDidMount() {
     // 获取地址
     address();
+    pageView();
   }
 
   componentWillUnmount() {
