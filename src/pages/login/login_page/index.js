@@ -9,7 +9,7 @@ import { store } from 'utils/store';
 import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
 import { validators } from 'utils/validator';
 import { buriedPointEvent } from 'utils/Analytins';
-import { HOME } from 'utils/AnalytinsType';
+import { login } from 'utils/AnalytinsType';
 import style from './index.scss';
 
 let timmer;
@@ -50,10 +50,6 @@ export default class login_page extends PureComponent {
   componentDidMount() {
     // 获取地址
     address();
-
-    buriedPointEvent(HOME.LOGIN, {
-      name: 'zhang',
-    });
   }
 
   componentWillUnmount() {
@@ -79,6 +75,8 @@ export default class login_page extends PureComponent {
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        // 埋点-注册登录页一键代还
+        buriedPointEvent(login.submit);
         this.props.$fetch.post(API.smsForLogin, {
           mblNo: values.phoneValue, // 手机号
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
@@ -130,6 +128,8 @@ export default class login_page extends PureComponent {
         delete (err.smsCd);
       }
       if (!err || JSON.stringify(err) === '{}') {
+        // 埋点-登录页获取验证码
+        buriedPointEvent(login.getCode);
         // 发送验证码
         this.props.$fetch.post(API.sendsms, {
           type: '6',
