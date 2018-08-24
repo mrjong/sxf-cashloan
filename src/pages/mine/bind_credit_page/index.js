@@ -7,6 +7,8 @@ import ButtonCustom from 'components/button';
 import { validators } from 'utils/validator';
 import { store } from 'utils/store';
 import { getFirstError } from 'utils/common';
+import { buriedPointEvent } from 'utils/Analytins';
+import { mine } from 'utils/AnalytinsType';
 import styles from './index.scss';
 import qs from 'qs';
 
@@ -59,7 +61,10 @@ export default class bind_credit_page extends PureComponent {
   bindConfirm = params1 => {
     this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
       if (result.msgCode === 'PTM0000') {
-        // bindCreditConfirm()
+        buriedPointEvent(mine.creditConfirm, {
+          entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+          is_success: true,
+        });
         const backUrlData = store.getBackUrl();
         const cardDatas = { agrNo: result.data && result.data.agrNo ? result.data.agrNo : '', ...this.state.cardData }
         if (backUrlData) {
@@ -70,7 +75,7 @@ export default class bind_credit_page extends PureComponent {
               const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
               if (queryData && queryData.noBankInfo) {
                 this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-              }else{
+              } else {
                 this.props.history.replace('/mine/bind_save_page');
               }
             } else {
@@ -96,6 +101,12 @@ export default class bind_credit_page extends PureComponent {
           this.props.history.goBack()
         }
       } else {
+        isFetching = false;
+        buriedPointEvent(mine.creditConfirm, {
+          entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+          is_success: false,
+          fail_cause: result.msgInfo,
+        });
         this.props.toast.info(result.msgInfo)
       }
     })
@@ -112,7 +123,13 @@ export default class bind_credit_page extends PureComponent {
         }
         this.bindConfirm(params1);
       } else {
+        isFetching = false;
         this.props.toast.info('请输入有效银行卡号')
+        buriedPointEvent(mine.creditConfirm, {
+          entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+          is_success: false,
+          fail_cause: result.msgInfo,
+        });
       }
     }, (error) => {
       error.msgInfo && this.props.toast.info(error.msgInfo);
@@ -132,10 +149,27 @@ export default class bind_credit_page extends PureComponent {
         this.checkCard(params, values);
         // TODO 发送请求等操作
       } else {
+        if (!this.jsonIsNull(values)) {
+          buriedPointEvent(mine.creditConfirm, {
+            entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+            is_success: false,
+            fail_cause: getFirstError(err),
+          });
+        }
         isFetching = false;
         this.props.toast.info(getFirstError(err));
       }
     });
+  };
+
+  // 判断json里的每一项是否为空
+  jsonIsNull = values => {
+    for (let val in values) {
+      if (values[val] === undefined || values[val] === '') {
+        return true;
+      }
+    }
+    return false;
   };
 
   // 跳转到支持的银行

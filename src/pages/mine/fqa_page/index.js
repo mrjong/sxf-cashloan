@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import headerIgnore from 'utils/headerIgnore';
 import { buriedPointEvent } from 'utils/Analytins';
-import { MINE } from 'utils/AnalytinsType';
+import { mine } from 'utils/AnalytinsType';
 import styles from './index.scss';
 
 export default class fqa_page extends PureComponent {
@@ -11,7 +11,7 @@ export default class fqa_page extends PureComponent {
     };
   }
   componentDidMount() {
-    buriedPointEvent(MINE.FAQ);
+    buriedPointEvent(mine.faq);
   }
 
   render() {

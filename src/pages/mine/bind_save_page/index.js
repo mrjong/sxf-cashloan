@@ -6,7 +6,9 @@ import { store } from 'utils/store';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
+import { buriedPointEvent } from 'utils/Analytins';
 import { mine } from 'utils/AnalytinsType';
+import { getFirstError } from 'utils/common';
 import qs from 'qs';
 import styles from './index.scss';
 
@@ -78,7 +80,12 @@ export default class bind_save_page extends PureComponent {
         this.bindSaveCard(params1);
       } else {
         isFetching = false;
-        this.props.toast.info('请输入有效银行卡号')
+        this.props.toast.info('请输入有效银行卡号');
+        buriedPointEvent(mine.saveConfirm, {
+          entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
+          is_success: false,
+          fail_cause: result.msgInfo,
+        });
       }
     }, (error) => {
       error.msgInfo && this.props.toast.info(error.msgInfo);
@@ -89,6 +96,10 @@ export default class bind_save_page extends PureComponent {
     this.props.$fetch.post(API.BINDCARD, params1).then((data) => {
       // bindStorageConfirm()
       if (data.msgCode === 'PTM0000') {
+        buriedPointEvent(mine.saveConfirm, {
+          entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
+          is_success: true,
+        });
         let cardDatas = {};
         const backUrlData = store.getBackUrl();
         if (backUrlData) {
@@ -131,6 +142,11 @@ export default class bind_save_page extends PureComponent {
         // }
       } else {
         isFetching = false;
+        buriedPointEvent(mine.saveConfirm, {
+          entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
+          is_success: false,
+          fail_cause: data.msgInfo,
+        });
         this.props.toast.info(data.msgInfo);
         this.setState({ valueInputCarSms: '' });
       }
@@ -157,18 +173,27 @@ export default class bind_save_page extends PureComponent {
         //   this.props.toast.info('请先去登录');
         // }
       } else {
+        if (!this.jsonIsNull(values)) {
+          buriedPointEvent(mine.saveConfirm, {
+            entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
+            is_success: false,
+            fail_cause: getFirstError(err),
+          });
+        }
         isFetching = false;
         // 如果存在错误，获取第一个字段的第一个错误进行提示
-        const keys = Object.keys(err);
-        if (keys && keys.length) {
-          const errs = err[keys[0]].errors;
-          if (errs && errs.length) {
-            const errMessage = errs[0].message;
-            this.props.toast.info(errMessage);
-          }
-        }
+        this.props.toast.info(getFirstError(err));
       }
     });
+  };
+  // 判断json里的每一项是否为空
+  jsonIsNull = values => {
+    for (let val in values) {
+      if (values[val] === undefined || values[val] === '') {
+        return true;
+      }
+    }
+    return false;
   };
   // 点击开始倒计时
   countDownHandler = fn => {
