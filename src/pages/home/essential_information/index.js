@@ -9,7 +9,7 @@ import fetch from 'sx-fetch';
 import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
 import { getFirstError } from 'utils/common';
-
+import { buryingPoints } from "utils/buryPointMethods";
 
 const API = {
   getProv: '/rcm/qryProv',
@@ -37,7 +37,12 @@ export default class essential_information extends PureComponent {
   };
 
   componentWillMount() {
+    buryingPoints();
     urlQuery = this.props.history.location.search;
+  }
+
+  componentWillUnmount() {
+    buryingPoints();
   }
 
   handleSubmit = () => {
@@ -106,12 +111,48 @@ export default class essential_information extends PureComponent {
     }
   };
   validateAddress = (rule, value, callback) => {
-    if (value && (value).length>50) {
+    if (value && (value).length > 50) {
       callback('请输入正确的常住地址');
     } else {
       callback();
     }
   };
+
+  //input 获取焦点 width: 100%
+  inputOnFocus(e) {
+    console.log(e)
+    buryingPoints({
+      pageKey,
+      trigger: 'focus',
+      value: e.target.value,
+      label: e.target.getAttribute('data-label')
+    })
+  }
+
+  //input 失去焦点
+  inputOnBlur(e) {
+    buryingPoints({
+      pageKey,
+      trigger: 'blur',
+      value: e.target.value,
+      label: e.target.getAttribute('data-label')
+    })
+  }
+
+  selectClick(obj) {
+    buryingPoints({
+      trigger: 'open',
+      pageKey,
+      ...obj
+    })
+  }
+  selectSure(obj) {
+    buryingPoints({
+      trigger: 'sure',
+      pageKey,
+      ...obj
+    })
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -148,7 +189,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('address', {
@@ -163,6 +204,9 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="xx市xx区县xx街道xx门牌号"
               type="text"
+              onBlur={this.inputOnBlur}
+              data-label="resident_address"
+              onFocus={this.inputOnFocus}
             >
               常住地址
             </InputItem>,
@@ -190,7 +234,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
@@ -201,6 +245,9 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
               type="text"
+              onBlur={this.inputOnBlur}
+              data-label="contact_name_one"
+              onFocus={(e) => {this.inputOnFocus(e)}}
             >
               联系人姓名
             </InputItem>,
@@ -216,6 +263,9 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
+              onBlur={this.inputOnBlur}
+              data-label="contact_tel_one"
+              onFocus={this.inputOnFocus}
             >
               联系人电话
             </InputItem>,
@@ -245,7 +295,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
@@ -256,6 +306,9 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
               type="text"
+              onBlur={this.inputOnBlur}
+              data-label="contact_name_two"
+              onFocus={this.inputOnFocus}
             >
               联系人姓名
             </InputItem>,
@@ -271,6 +324,9 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
+              onBlur={this.inputOnBlur}
+              data-label="contact_tel_two"
+              onFocus={this.inputOnFocus}
             >
               联系人电话
             </InputItem>,
