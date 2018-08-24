@@ -6,6 +6,8 @@ import { Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 import SButton from 'components/button';
 import TabList from '../tag_list';
 
@@ -134,6 +136,8 @@ export default class ModalInfo extends Component {
 
   // 如果当前还款卡支持代扣 则跳转确认页面
   beforeJump() {
+    // 埋点-选择借款要素弹框页-点击确认按钮
+    buriedPointEvent(home.borrowingPreSubmit);
     const { lendersDate, repayInfo, repaymentDate, cardBillAmt } = this.state;
     const { indexData } = this.props;
     const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;

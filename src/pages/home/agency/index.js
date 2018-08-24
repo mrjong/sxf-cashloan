@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import { Modal, Toast } from 'antd-mobile';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils/common';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 import fetch from 'sx-fetch';
 import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
@@ -91,7 +93,6 @@ export default class ConfirmAgencyPage extends PureComponent {
     };
     this.props.$fetch.post(API.SAVE_REPAY_CARD, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
-
       } else {
         Toast.info(result.msgInfo);
       }
@@ -105,11 +106,21 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.setState({
           repayInfo: result.data,
         });
+        this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
       } else {
-        Toast.info(result.msgInfo)
+        Toast.info(result.msgInfo);
       }
     });
   };
+
+  // 埋点方法-根据代还期限埋不同的点
+  buriedDucationPoint(type, duration) {
+    if (type === 'M') {
+      buriedPointEvent(home[`durationMonth${duration}`]);
+    } else if (type === 'D') {
+      buriedPointEvent(home[`durationDay${duration}`]);
+    }
+  }
 
   // 确认代还信息
   requestConfirmRepaymentInfo = () => {
@@ -127,6 +138,9 @@ export default class ConfirmAgencyPage extends PureComponent {
     };
     this.props.$fetch.post(API.CONFIRM_REPAYMENT, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
+        buriedPointEvent(home.borrowingSubmit, {
+          is_success: true,
+        });
         // 清除卡信息
         store.removeCardData();
         // 清除上个页面中的弹框数据
@@ -134,6 +148,10 @@ export default class ConfirmAgencyPage extends PureComponent {
         store.removeHomeCardIndexData();
         this.handleShowTipModal();
       } else {
+        buriedPointEvent(home.borrowingSubmit, {
+          is_success: false,
+          fail_cause: result.msgInfo,
+        });
         Toast.info(result.msgInfo);
       }
     });
@@ -158,7 +176,8 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 获取活动
   requestProtocolData = () => {
-    this.props.$fetch.post('/bill/qryContractInfo', {
+    this.props.$fetch
+      .post('/bill/qryContractInfo', {
         prdId: this.state.queryData.prdId,
         wtdwTyp: this.state.queryData.wtdwTyp,
         billPrcpAmt: this.state.queryData.billPrcpAmt,
@@ -238,17 +257,31 @@ export default class ConfirmAgencyPage extends PureComponent {
         </ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          <a onClick={() => { this.read('loan_contract_page') }} className={style.protocol_link}>
+          <a
+            onClick={() => {
+              this.read('loan_contract_page');
+            }}
+            className={style.protocol_link}
+          >
             《借款合同》
           </a>
-          <a onClick={() => { this.read('delegation_withhold_page') }} className={style.protocol_link}>
+          <a
+            onClick={() => {
+              this.read('delegation_withhold_page');
+            }}
+            className={style.protocol_link}
+          >
             《委托扣款协议》
           </a>
-          <a onClick={() => { this.read('financial_service_page') }} className={style.protocol_link}>
+          <a
+            onClick={() => {
+              this.read('financial_service_page');
+            }}
+            className={style.protocol_link}
+          >
             《金融服务协议》
           </a>
         </p>
-
 
         <Modal
           wrapClassName={style.modal_tip_warp}

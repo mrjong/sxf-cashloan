@@ -4,6 +4,8 @@ import React from 'react';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
 import PropTypes from 'prop-types';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 // import fetch from 'sx-fetch';
 import BankCard from '../bank_card';
 import style from './index.scss';
@@ -66,6 +68,8 @@ export default class BankContent extends React.Component {
 
   // 请求信信用卡数量
   requestCredCardCount = () => {
+    // 埋点-首页-点击代还其他信用卡
+    buriedPointEvent(home.repayOtherCredit);
     this.props.fetch
       .post(API.CRED_CARD_COUNT)
       .then(result => {
