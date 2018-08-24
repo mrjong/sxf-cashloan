@@ -9,7 +9,11 @@ import fetch from 'sx-fetch';
 import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
 import { getFirstError } from 'utils/common';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
+
+const pageKey = home.basicInfoBury;
 
 const API = {
   getProv: '/rcm/qryProv',
@@ -79,6 +83,10 @@ export default class essential_information extends PureComponent {
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
+                // 埋点-基本信息页-确定按钮
+                buriedPointEvent(home.basicInfoComplete, {
+                  entry: '',
+                });
                 this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
                 isFetching = false;
