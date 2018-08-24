@@ -7,16 +7,19 @@ import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/Analytins';
 import { order } from 'utils/AnalytinsType';
+import qs from 'qs';
 import styles from './index.scss';
 
 const API = {
     'qryDtl': "/bill/qryDtl",
     'payback': '/bill/payback'
 }
+let entryFrom = '';
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
     constructor(props) {
         super(props);
+        entryFrom = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).entryFrom;
         this.state = {
             billDesc: {},
             showMoudle: false,
@@ -173,7 +176,7 @@ export default class order_detail_page extends PureComponent {
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
                 buriedPointEvent(order.repaymentFirst, {
-                    // entry: ,
+                    entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
                     is_success: true,
                 });
                 this.setState({
@@ -200,7 +203,7 @@ export default class order_detail_page extends PureComponent {
                 }
             } else {
                 buriedPointEvent(order.repaymentFirst, {
-                    // entry: ,
+                    entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
                     is_success: false,
                     fail_cause: res.msgInfo,
                 });
@@ -262,7 +265,7 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment); }}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment, {entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'}); }}>
                             主动还款
                         </SButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
