@@ -127,23 +127,22 @@ export default class essential_information extends PureComponent {
   };
 
   //input 获取焦点 width: 100%
-  inputOnFocus(e) {
-    console.log(e)
+  inputOnFocus(val, lab) {
     buryingPoints({
       pageKey,
       trigger: 'focus',
-      value: e.target.value,
-      label: e.target.getAttribute('data-label')
+      value: val,
+      label: lab,
     })
   }
 
   //input 失去焦点
-  inputOnBlur(e) {
+  inputOnBlur(val, lab) {
     buryingPoints({
       pageKey,
       trigger: 'blur',
-      value: e.target.value,
-      label: e.target.getAttribute('data-label')
+      value: val,
+      label: lab,
     })
   }
 
@@ -171,6 +170,10 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('city', {
             rules: [{ required: true, message: '请选择城市' }],
             onChange: (value, label) => {
+              this.selectSure({
+                value: JSON.stringify(value),
+                label: 'resident_city',
+              });
               this.setState({ provValue: value });
               this.setState({ provLabel: label });
             },
@@ -190,6 +193,14 @@ export default class essential_information extends PureComponent {
                     return city.map(item => ({ value: item.value, label: item.value }));
                   }),
               ]}
+              onVisibleChange={(bool) => {
+                if (bool) {
+                  this.selectClick({
+                    value: JSON.stringify(this.state.provValue),
+                    label: 'resident_city',
+                  });
+                }
+              }}
               cols={2}
             >
               <List.Item>
@@ -212,9 +223,8 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="xx市xx区县xx街道xx门牌号"
               type="text"
-              onBlur={this.inputOnBlur}
-              data-label="resident_address"
-              onFocus={this.inputOnFocus}
+              onBlur={(v) => { this.inputOnBlur(v, 'resident_address') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'resident_address') }}
             >
               常住地址
             </InputItem>,
@@ -225,6 +235,12 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('cntRelTyp1', {
             initialValue: this.state.relatValue,
             rules: [{ required: true, message: '请选择联系人关系' }],
+            onChange: (value, label) => {
+              this.selectSure({
+                value: JSON.stringify(value),
+                label: 'clan_relation',
+              });
+            },
           })(
             <AsyncCascadePicker
               title="选择联系人"
@@ -236,6 +252,14 @@ export default class essential_information extends PureComponent {
                   }),
               ]}
               cols={1}
+              onVisibleChange={(bool) => {
+                if (bool) {
+                  this.selectClick({
+                    value: JSON.stringify(this.state.relatValue),
+                    label: 'clan_relation',
+                  });
+                }
+              }}
             >
               <List.Item>
                 关系
@@ -253,9 +277,8 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
               type="text"
-              onBlur={this.inputOnBlur}
-              data-label="contact_name_one"
-              onFocus={(e) => {this.inputOnFocus(e)}}
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_name_one') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_name_one') }}
             >
               联系人姓名
             </InputItem>,
@@ -271,9 +294,8 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
-              onBlur={this.inputOnBlur}
-              data-label="contact_tel_one"
-              onFocus={this.inputOnFocus}
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_tel_one') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_tel_one') }}
             >
               联系人电话
             </InputItem>,
@@ -285,7 +307,13 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('cntRelTyp2', {
             initialValue: this.state.relatTwoValue, //  初始化回显 用这个字段
             rules: [{ required: true, message: '请选择联系人关系' }],
-            onChange: () => 123, // value 和 onChange 都不用写，getFieldDecorator 已经处理了，如果需要写onChange，在这写
+            onChange: (value, label) => {
+              this.selectSure({
+                value: JSON.stringify(value),
+                label: 'friend_relation',
+              });
+            },
+            // onChange: () => 123, // value 和 onChange 都不用写，getFieldDecorator 已经处理了，如果需要写onChange，在这写
           })(
             <AsyncCascadePicker
               title="选择联系人"
@@ -297,6 +325,14 @@ export default class essential_information extends PureComponent {
                   }),
               ]}
               cols={1}
+              onVisibleChange={(bool) => {
+                if (bool) {
+                  this.selectClick({
+                    value: JSON.stringify(this.state.relatTwoValue),
+                    label: 'friend_relation',
+                  });
+                }
+              }}
             >
               <List.Item>
                 关系
@@ -314,9 +350,8 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
               type="text"
-              onBlur={this.inputOnBlur}
-              data-label="contact_name_two"
-              onFocus={this.inputOnFocus}
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_name_two') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_name_two') }}
             >
               联系人姓名
             </InputItem>,
@@ -332,9 +367,8 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
-              onBlur={this.inputOnBlur}
-              data-label="contact_tel_two"
-              onFocus={this.inputOnFocus}
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_tel_two') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_tel_two') }}
             >
               联系人电话
             </InputItem>,

@@ -44,7 +44,7 @@ function buryingPoints(info) {
                 }
                 sa.track(info.pageKey, {
                     'label': info.label,
-                    'product_line': 'V卡',
+                    'product_line': '还到-余额代偿',
                     'channelType': sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : 'OTHER'
                 });
                 break;
@@ -60,7 +60,7 @@ function buryingPoints(info) {
                                 inforArr[i].value = info.value;
                                 sa.track(info.pageKey, {
                                     ...inforArr[i],
-                                    'product_line': 'V卡',
+                                    'product_line': '还到-余额代偿',
                                     'channelType': sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : 'OTHER'
                                 });
                             }

@@ -21,6 +21,7 @@ const home = {
   informationTapIDInp: 'DC_HOME_BASE_INFO_IDCARD', // 实名认证页-点击身份证号输入框
   informationTapHoldIdCard: 'DC_HOME_BASE_INFO_HOLD_IDCARD', // 实名认证页-点击手持身份证
   informationConfirm: 'DC_HOME_BASE_INFO_CONFIRM', // 实名认证页-确定按钮
+  basicInfoBury: 'DC_HOME_BASE_INFO_BURY', // 基本信息输入框下拉框埋点
   basicInfoComplete: 'DC_HOME_BASICINFO_COMPLETE', // 基本信息页-确定按钮
 };
 
