@@ -15,7 +15,8 @@ const mine = {
 };
 
 const order = {
-  demo: 'DEMO',
+  repayment: 'DC_ORDER_DETAILS_REPAYMENT', // 账单详情页-主动还款按钮
+  repaymentFirst: 'DC_ORDER_DETAILS_REPAYMENT_FIRST', // 账单详情页-付款详情-立即还款按钮
 };
 
 export { login, home, mine, order };

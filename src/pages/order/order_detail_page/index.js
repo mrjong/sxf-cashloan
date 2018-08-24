@@ -5,8 +5,9 @@ import fetch from "sx-fetch";
 import SButton from 'components/button';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
+import { buriedPointEvent } from 'utils/Analytins';
+import { order } from 'utils/AnalytinsType';
 import styles from './index.scss';
-import qs from 'qs';
 
 const API = {
     'qryDtl': "/bill/qryDtl",
@@ -171,6 +172,10 @@ export default class order_detail_page extends PureComponent {
             usrBusCnl: 'WEB'
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
+                buriedPointEvent(order.repaymentFirst, {
+                    // entry: ,
+                    is_success: true,
+                });
                 this.setState({
                     showMoudle: false
                 })
@@ -194,6 +199,11 @@ export default class order_detail_page extends PureComponent {
                     }, 3000);
                 }
             } else {
+                buriedPointEvent(order.repaymentFirst, {
+                    // entry: ,
+                    is_success: false,
+                    fail_cause: res.msgInfo,
+                });
                 this.setState({
                     showMoudle: false
                 })
@@ -252,7 +262,7 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment); }}>
                             主动还款
                         </SButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
