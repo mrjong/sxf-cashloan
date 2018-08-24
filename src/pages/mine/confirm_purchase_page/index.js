@@ -8,7 +8,8 @@ import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getFirstError } from 'utils/common';
-
+import { buriedPointEvent } from 'utils/Analytins';
+import { membership } from 'utils/AnalytinsType';
 @createForm()
 @fetch.inject()
 export default class confirm_purchase_page extends PureComponent {
@@ -57,6 +58,10 @@ export default class confirm_purchase_page extends PureComponent {
           .then(
             res => {
               if (res.msgCode === "PTM0000" || res.msgCode === "PTM3016") {
+                // 埋点-会员卡购买-确认购买页-确认购买按钮
+                buriedPointEvent(membership.confirmBuy, {
+                  is_success: true,
+                });
                 res.msgInfo && this.props.toast.info(res.msgInfo)
                 const backUrlData = store.getVipBackUrl();
                 Cookie.remove('VIPFlag');
@@ -72,6 +77,11 @@ export default class confirm_purchase_page extends PureComponent {
                 this.setState({
                   yzmCode: ""
                 })
+                // 埋点-会员卡购买-确认购买页-确认购买按钮
+                buriedPointEvent(membership.confirmBuy, {
+                  is_success: false,
+                  fail_cause: res.msgInfo
+                });
                 res.msgInfo && this.props.toast.info(res.msgInfo)
               }
             },

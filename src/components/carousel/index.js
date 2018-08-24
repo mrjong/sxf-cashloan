@@ -16,6 +16,7 @@ export default class Carousels extends React.Component {
   }
 
   static propTypes = {
+    entryFrom: PropTypes.string,
     data: PropTypes.array,
     autoplay: PropTypes.bool,
     infinite: PropTypes.bool,
@@ -25,6 +26,7 @@ export default class Carousels extends React.Component {
   };
 
   static defaultProps = {
+    entryFrom: 'banner',
     data: [],
     autoplay: true,
     infinite: true,
@@ -38,9 +40,20 @@ export default class Carousels extends React.Component {
   };
 
   handleLinkClick = url => {
+    const { entryFrom } = this.props;
     store.setOutLinkUrl(url);
     Toast.loading('加载中...', 0);
-    window.location.href = url;
+    let jumpUrl = '';
+    if (entryFrom) {
+      if (url.split('?')[1]) {
+        jumpUrl = `${url}&entryFrom=${entryFrom}`;
+      } else {
+        jumpUrl = `${url}?entryFrom=${entryFrom}`;
+      }
+    } else {
+      jumpUrl = url;
+    }
+    window.location.href = jumpUrl;
   };
 
   render() {
