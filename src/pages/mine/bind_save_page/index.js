@@ -6,6 +6,7 @@ import { store } from 'utils/store';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/CountDownButton';
 import { validators } from 'utils/validator';
+import { mine } from 'utils/AnalytinsType';
 import qs from 'qs';
 import styles from './index.scss';
 
@@ -76,6 +77,7 @@ export default class bind_save_page extends PureComponent {
         };
         this.bindSaveCard(params1);
       } else {
+        isFetching = false;
         this.props.toast.info('请输入有效银行卡号')
       }
     }, (error) => {
@@ -128,6 +130,7 @@ export default class bind_save_page extends PureComponent {
         //   //storageCardSourceLenderAgain 再次借款标识
         // }
       } else {
+        isFetching = false;
         this.props.toast.info(data.msgInfo);
         this.setState({ valueInputCarSms: '' });
       }
