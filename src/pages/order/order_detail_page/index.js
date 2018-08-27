@@ -55,6 +55,7 @@ export default class order_detail_page extends PureComponent {
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    // res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt-res.data.amount });
                     this.setState({
                         billDesc: res.data,
                         perdList: res.data.perdList
@@ -68,7 +69,8 @@ export default class order_detail_page extends PureComponent {
                             }, () => {
                                 this.setState({
                                     bankInfo: bankInfo,
-                                    couponInfo: couponInfo
+                                    couponInfo: couponInfo,
+                                    // money: this.state.money-couponInfo.amount
                                 })
                                 store.removeCardData();
                                 store.removeCouponData();
