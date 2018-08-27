@@ -96,14 +96,23 @@ export default class HomePage extends PureComponent {
   // 智能按钮点击事件
   handleSmartClick = () => {
     const { usrIndexInfo } = this.state;
+    if (usrIndexInfo.indexSts === 'LN0001') {
+      // 埋点-首页-点击申请信用卡代还按钮
+      buriedPointEvent(home.applyCreditRepayment);
+    } else if (usrIndexInfo.indexSts === 'LN0009') {
+      // 埋点-首页-点击查看代还账单
+      buriedPointEvent(home.viewBill);
+    } else {
+      // 埋点-首页-点击一键还卡（代还）
+      buriedPointEvent(home.easyRepay, {
+        stateType: usrIndexInfo.indexSts,
+      });
+    }
     switch (usrIndexInfo.indexSts) {
       case 'LN0001': // 新用户，信用卡未授权
-        // 埋点-首页-点击申请信用卡代还按钮
-        buriedPointEvent(home.applyCreditRepayment);
         this.applyCardRepay();
         break;
       case 'LN0002': // 账单爬取中
-        console.log('LN0002');
         break;
       case 'LN0003': // 账单爬取成功 (直接跳数据风控)
         console.log('LN0003 无风控信息 直接跳数据风控');
@@ -119,8 +128,6 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        // 埋点-首页-点击一键还卡（代还）
-        buriedPointEvent(home.easyRepay);
         this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
@@ -133,8 +140,6 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
-        // 埋点-首页-点击查看代还账单
-        buriedPointEvent(home.viewBill);
         store.setBillNo(usrIndexInfo.indexData.billNo);
         // entryFrom 给打点使用，区分从哪个页面进入订单页的
         this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });

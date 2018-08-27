@@ -77,10 +77,15 @@ export default class essential_information extends PureComponent {
               if (result && result.msgCode === 'PTM0000') {
                 // 埋点-基本信息页-确定按钮
                 buriedPointEvent(home.basicInfoComplete, {
-                  entry: '',
+                  is_success: true,
                 });
                 this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
+                // 埋点-基本信息页-确定按钮
+                buriedPointEvent(home.basicInfoComplete, {
+                  is_success: false,
+                  fail_cause: result.msgInfo,
+                });
                 isFetching = false;
                 this.props.toast.info(result.msgInfo);
               }

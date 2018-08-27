@@ -52,8 +52,6 @@ export default class BankCard extends React.PureComponent {
   };
 
   handleUpdate = () => {
-    // 埋点-首页-点击更新账单
-    buriedPointEvent(home.updateBill);
     const { indexSts } = this.props.contentData;
     if (indexSts && indexSts === 'LN0009') {
       Toast.info('您有未结清的账单，暂时不能更新');
@@ -64,6 +62,8 @@ export default class BankCard extends React.PureComponent {
 
   // 跳魔蝎
   applyCardRepay = () => {
+    // 埋点-首页-点击更新账单
+    buriedPointEvent(home.updateBill);
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
