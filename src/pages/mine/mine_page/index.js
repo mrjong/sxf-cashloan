@@ -192,7 +192,7 @@ export default class mine_page extends PureComponent {
         },
         label: {
           name: '优惠劵',
-          icon: require('assets/images/mine/menu_ico7.png')
+          icon: require('assets/images/mine/menu_ico8.png')
         },
         jumpToUrl: '/mine/coupon_page',
       },

@@ -1,3 +1,121 @@
-body{
-    color: red;
+@import '../../../assets/styles/scss/base/fn';
+:global {
+	.am-list-body {
+		background-color: #f5f5f5;
+		&::before,
+		&::after {
+			background-color: transparent !important;
+		}
+	}
+}
+.box {
+	margin: 20px 30px;
+	height: 200px;
+	position: relative;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	&:first-child {
+		margin-top: 30px;
+	}
+	&:after {
+		visibility: hidden;
+		display: block;
+		content: '.';
+		clear: both;
+		height: 0;
+	}
+
+	.leftBox {
+		float: left;
+		width: 2.15rem;
+		color: #fff;
+		font-size: 0.42rem;
+		text-align: center;
+		line-height: 200px;
+	}
+	.money {
+		font-size: 90px;
+	}
+	.rightBox {
+		height: 200px;
+		display: table-cell;
+		line-height: 1.5;
+		letter-spacing: 1px;
+		.title {
+			font-size: 26px;
+			margin-bottom: 15px;
+			color: #333;
+			font-weight: bold;
+		}
+		padding: 36px 25px;
+		font-size: 24px;
+		margin-left: 25px;
+		color: #6c6c6c;
+	}
+	.icon_status {
+		position: absolute;
+		width: 124px;
+		right: 50px;
+		top: 50%;
+		margin-top: -62px;
+		height: 124px;
+		vertical-align: middle;
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+	}
+	.icon_useing {
+		@include bg-image('../../../assets/images/coupon/useing');
+	}
+	.icon_use_over {
+		@include bg-image('../../../assets/images/coupon/use_over');
+	}
+	.icon_select_status {
+		position: absolute;
+		width: 34px;
+		right: 50px;
+		top: 50%;
+		margin-top: -17px;
+		height: 34px;
+		vertical-align: middle;
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+	}
+	.icon_select {
+		@include bg-image('../../../assets/images/coupon/is_select');
+	}
+	.icon_select_not {
+		@include bg-image('../../../assets/images/coupon/is_not_select');
+	}
+}
+.box_default {
+	@include bg-image('../../../assets/images/coupon/coupon_bj');
+}
+.box_active {
+	@include bg-image('../../../assets/images/coupon/coupon_bj_active');
+}
+.noMsg {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	color: #999;
+	margin-top: 500px;
+	font-size: 36px;
+	text-align: center;
+	padding-top: 90px;
+	i {
+		width: 320px;
+		display: inline-block;
+		height: 234px;
+		left: 50%;
+		margin-left: -160px;
+		position: absolute;
+		top: -160px;
+		vertical-align: middle;
+		@include bg-image('../../../assets/images/coupon/no_data');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		//  background: black;
+		box-sizing: border-box;
+	}
 }
