@@ -83,6 +83,8 @@ export default class credit_extension_page extends PureComponent {
       location: address,
     };
     this.props.$fetch.post(`${API.submitState}`, params).then(res => {
+      // 提交代还申请埋点
+      buriedPointEvent(mine.creditExtensionConfirm);
       // 提交风控返回成功
       if (res && res.msgCode === 'PTM0000') {
         this.props.toast.info(res.msgInfo, 3, () => {
@@ -136,14 +138,17 @@ export default class credit_extension_page extends PureComponent {
     } else {
       switch (item.extra.code) {
         case 'idCheck':
+          buriedPointEvent(mine.creditExtensionRealName);
           this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
           break;
         case 'basicInf':
+          buriedPointEvent(mine.creditExtensionBaseInfo);
           this.props.history.push({ pathname: '/home/essential_information', search: urlQuery });
           break;
         case 'operator':
           this.props.$fetch.post(`${API.getOperator}`).then(result => {
             if (result.msgCode === 'PTM0000' && result.data.url) {
+              buriedPointEvent(mine.creditExtensionOperator);
               store.setCheckCardRouter('');
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
               this.props.toast.loading('加载中...', 0);
@@ -156,6 +161,7 @@ export default class credit_extension_page extends PureComponent {
         case 'zmxy':
           this.props.$fetch.get(`${API.getZmxy}`).then(result => {
             if (result.msgCode === 'PTM0000') {
+              buriedPointEvent(mine.creditExtensionZM);
               if (result.data.authUrl) {
                 store.setCheckCardRouter('');
                 store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);

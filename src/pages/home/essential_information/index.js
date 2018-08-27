@@ -10,7 +10,11 @@ import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
 import { getFirstError } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { home, mine } from 'utils/AnalytinsType';
+import { buryingPoints } from "utils/buryPointMethods";
+import qs from 'qs';
+
+const pageKey = home.basicInfoBury;
 
 const API = {
   getProv: '/rcm/qryProv',
@@ -38,7 +42,12 @@ export default class essential_information extends PureComponent {
   };
 
   componentWillMount() {
+    buryingPoints();
     urlQuery = this.props.history.location.search;
+  }
+
+  componentWillUnmount() {
+    buryingPoints();
   }
 
   handleSubmit = () => {
@@ -76,16 +85,13 @@ export default class essential_information extends PureComponent {
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
                 // 埋点-基本信息页-确定按钮
-                buriedPointEvent(home.basicInfoComplete, {
-                  is_success: true,
+                this.confirmBuryPoint(true);
+                buriedPointEvent(mine.creditExtensionBack, {
+                  current_step: '基本信息认证',
                 });
                 this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
-                // 埋点-基本信息页-确定按钮
-                buriedPointEvent(home.basicInfoComplete, {
-                  is_success: false,
-                  fail_cause: result.msgInfo,
-                });
+                this.confirmBuryPoint(false, result.msgInfo);
                 isFetching = false;
                 this.props.toast.info(result.msgInfo);
               }
@@ -96,6 +102,18 @@ export default class essential_information extends PureComponent {
         isFetching = false;
         this.props.toast.info(getFirstError(err));
       }
+    });
+  };
+
+  // 点击确定按钮埋点
+  confirmBuryPoint = (isSucc, failInf) => {
+    const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    // 是否是从我的里面进入
+    const isFromMine = query.isShowCommit;
+    buriedPointEvent(home.basicInfoComplete, {
+      entry: !isFromMine || isFromMine === 'false' ? '我的' : '风控授信项',
+      is_success: isSucc,
+      fail_cause: failInf,
     });
   };
 
@@ -116,12 +134,47 @@ export default class essential_information extends PureComponent {
     }
   };
   validateAddress = (rule, value, callback) => {
-    if (value && (value).length>50) {
+    if (value && (value).length > 50) {
       callback('请输入正确的常住地址');
     } else {
       callback();
     }
   };
+
+  //input 获取焦点 width: 100%
+  inputOnFocus(val, lab) {
+    buryingPoints({
+      pageKey,
+      trigger: 'focus',
+      value: val,
+      label: lab,
+    })
+  }
+
+  //input 失去焦点
+  inputOnBlur(val, lab) {
+    buryingPoints({
+      pageKey,
+      trigger: 'blur',
+      value: val,
+      label: lab,
+    })
+  }
+
+  selectClick(obj) {
+    buryingPoints({
+      trigger: 'open',
+      pageKey,
+      ...obj
+    })
+  }
+  selectSure(obj) {
+    buryingPoints({
+      trigger: 'sure',
+      pageKey,
+      ...obj
+    })
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -132,6 +185,10 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('city', {
             rules: [{ required: true, message: '请选择城市' }],
             onChange: (value, label) => {
+              this.selectSure({
+                value: JSON.stringify(value),
+                label: 'resident_city',
+              });
               this.setState({ provValue: value });
               this.setState({ provLabel: label });
             },
@@ -151,6 +208,14 @@ export default class essential_information extends PureComponent {
                     return city.map(item => ({ value: item.value, label: item.value }));
                   }),
               ]}
+              onVisibleChange={(bool) => {
+                if (bool) {
+                  this.selectClick({
+                    value: JSON.stringify(this.state.provValue),
+                    label: 'resident_city',
+                  });
+                }
+              }}
               cols={2}
             >
               <List.Item>
@@ -158,7 +223,7 @@ export default class essential_information extends PureComponent {
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
           {getFieldDecorator('address', {
@@ -173,6 +238,8 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="xx市xx区县xx街道xx门牌号"
               type="text"
+              onBlur={(v) => { this.inputOnBlur(v, 'resident_address') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'resident_address') }}
             >
               常住地址
             </InputItem>,
@@ -183,6 +250,12 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('cntRelTyp1', {
             initialValue: this.state.relatValue,
             rules: [{ required: true, message: '请选择联系人关系' }],
+            onChange: (value, label) => {
+              this.selectSure({
+                value: JSON.stringify(value),
+                label: 'clan_relation',
+              });
+            },
           })(
             <AsyncCascadePicker
               title="选择联系人"
@@ -194,13 +267,21 @@ export default class essential_information extends PureComponent {
                   }),
               ]}
               cols={1}
+              onVisibleChange={(bool) => {
+                if (bool) {
+                  this.selectClick({
+                    value: JSON.stringify(this.state.relatValue),
+                    label: 'clan_relation',
+                  });
+                }
+              }}
             >
               <List.Item>
                 关系
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('friendName', {
@@ -211,6 +292,8 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
               type="text"
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_name_one') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_name_one') }}
             >
               联系人姓名
             </InputItem>,
@@ -226,6 +309,8 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_tel_one') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_tel_one') }}
             >
               联系人电话
             </InputItem>,
@@ -237,7 +322,13 @@ export default class essential_information extends PureComponent {
           {getFieldDecorator('cntRelTyp2', {
             initialValue: this.state.relatTwoValue, //  初始化回显 用这个字段
             rules: [{ required: true, message: '请选择联系人关系' }],
-            onChange: () => 123, // value 和 onChange 都不用写，getFieldDecorator 已经处理了，如果需要写onChange，在这写
+            onChange: (value, label) => {
+              this.selectSure({
+                value: JSON.stringify(value),
+                label: 'friend_relation',
+              });
+            },
+            // onChange: () => 123, // value 和 onChange 都不用写，getFieldDecorator 已经处理了，如果需要写onChange，在这写
           })(
             <AsyncCascadePicker
               title="选择联系人"
@@ -249,13 +340,21 @@ export default class essential_information extends PureComponent {
                   }),
               ]}
               cols={1}
+              onVisibleChange={(bool) => {
+                if (bool) {
+                  this.selectClick({
+                    value: JSON.stringify(this.state.relatTwoValue),
+                    label: 'friend_relation',
+                  });
+                }
+              }}
             >
               <List.Item>
                 关系
               </List.Item>
             </AsyncCascadePicker>,
           )}
-          <img className={style.informationMore} src={informationMore}/>
+          <img className={style.informationMore} src={informationMore} />
         </div>
         <div className={style.labelDiv} style={{ marginTop: 0 }}>
           {getFieldDecorator('relativesName', {
@@ -266,6 +365,8 @@ export default class essential_information extends PureComponent {
             <InputItem
               placeholder="请输入姓名(中文且至少2个汉字)"
               type="text"
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_name_two') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_name_two') }}
             >
               联系人姓名
             </InputItem>,
@@ -281,6 +382,8 @@ export default class essential_information extends PureComponent {
               type="number"
               maxLength="11"
               placeholder="联系人电话须与借款人有通话行为"
+              onBlur={(v) => { this.inputOnBlur(v, 'contact_tel_two') }}
+              onFocus={(v) => { this.inputOnFocus(v, 'contact_tel_two') }}
             >
               联系人电话
             </InputItem>,

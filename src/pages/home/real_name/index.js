@@ -13,7 +13,7 @@ import { store } from 'utils/store';
 import { getDeviceType } from 'utils/common';
 import { validators } from '../../../utils/validator';
 import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { home, mine } from 'utils/AnalytinsType';
 import qs from 'qs';
 
 
@@ -241,6 +241,9 @@ export default class real_name_page extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.msgCode === 'PTM0000') {
+        buriedPointEvent(mine.creditExtensionBack, {
+          current_step: '实名认证',
+        });
         this.confirmBuryPoint(true);
         // store.removeAuthFlag();
         Cookie.remove('authFlag');

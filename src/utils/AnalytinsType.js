@@ -21,6 +21,7 @@ const home = {
   informationTapIDInp: 'DC_HOME_BASE_INFO_IDCARD', // 实名认证页-点击身份证号输入框
   informationTapHoldIdCard: 'DC_HOME_BASE_INFO_HOLD_IDCARD', // 实名认证页-点击手持身份证
   informationConfirm: 'DC_HOME_BASE_INFO_CONFIRM', // 实名认证页-确定按钮
+  basicInfoBury: 'DC_HOME_BASE_INFO_BURY', // 基本信息输入框下拉框埋点
   basicInfoComplete: 'DC_HOME_BASICINFO_COMPLETE', // 基本信息页-确定按钮
 };
 
@@ -28,7 +29,13 @@ const mine = {
   faq: 'DC_MINE_FAQ', // 常见问题页
   saveConfirm: 'DC_MINE_SAVE_CONFIRM', // 绑定储蓄卡页-确定按钮
   creditConfirm: 'DC_MINE_CREDIT_CONFIRM', // 绑定信用卡页-确定按钮
-  creditExtension: 'DC_MINE_CREDIT_EXTENSION', // 风控授信项页
+  creditExtension: 'DC_MINE_CREDIT_EXTENSION', // 风控授信项页 从哪进入（首页、我的）
+  creditExtensionConfirm: 'DC_MINE_CREDIT_EXTENSION_CONFIRM', // 风控授信项页-点击提交代还金申请按钮
+  creditExtensionBack: 'DC_MINE_CREDIT_EXTENSION_BACK', // 风控授信项页
+  creditExtensionRealName: 'DC_MINE_CREDIT_EXTENSION_REAL_NAME', // 风控授信项页 点击实名认证
+  creditExtensionBaseInfo: 'DC_MINE_CREDIT_EXTENSION_BASE_INFO', // 风控授信项页 点击基本信息认证
+  creditExtensionOperator: 'DC_MINE_CREDIT_EXTENSION_OPERATOR', // 风控授信项页 点击运营商认证
+  creditExtensionZM: 'DC_MINE_CREDIT_EXTENSION_ZM', // 风控授信项页 点击芝麻分认证
 };
 
 const order = {
