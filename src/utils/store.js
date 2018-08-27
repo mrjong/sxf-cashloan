@@ -29,6 +29,7 @@ const storeListLocal = {
   CheckCardRouter: 'checkCardRouter', // 保存四项认证进入绑卡页的标识
   BannerData: 'bannerData', // 保存 banner 信息
   OutLinkUrl: 'outLintUrl', // 去外链标识
+  CouponData: 'couponData', // 跳转路由中优惠劵的信息
 };
 
 // 本地session存储 方法名与key值对应表
