@@ -185,6 +185,17 @@ export default class mine_page extends PureComponent {
       //   },
       //   jumpToUrl: '/mine/membership_card_page',
       // },
+        {
+        extra: {
+          name: this.state.memberInf.status,
+          color: this.state.memberInf.color,
+        },
+        label: {
+          name: '优惠劵',
+          icon: require('assets/images/mine/menu_ico7.png')
+        },
+        jumpToUrl: '/mine/coupon_page',
+      },
     ];
     const listsArr2 = [
       {
