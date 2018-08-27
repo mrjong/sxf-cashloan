@@ -8,6 +8,51 @@
 		}
 	}
 }
+.no_header{
+	:global {
+		.am-list-header {
+			padding: 0;
+		}
+	}
+	.reach_bottom{
+		width: 340px;
+		margin: 15px auto 0;
+		border-top: 1PX dotted rgba(157, 157, 157, 1);
+		span{
+			position: relative;
+			top: -0.9em;
+			background: #f5f5f5;
+			padding: 0 10px;
+		}
+	}
+	.no_use_coupon{
+		position: relative;
+		height: 90px;
+		line-height: 90px;
+		background: #fff;
+		margin: 30px 30px -10px 30px;
+		padding: 0 40px 0 20px;
+		font-size: 30px;
+		color: rgba(108, 108, 108, 1);
+		i{
+			position: absolute;
+			width: 34px;
+			right: 50px;
+			top: 50%;
+			margin-top: -17px;
+			height: 34px;
+			vertical-align: middle;
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+		.icon_select {
+			@include bg-image('../../../assets/images/coupon/is_select');
+		}
+		.icon_select_not {
+			@include bg-image('../../../assets/images/coupon/is_not_select');
+		}
+	}
+}
 .box {
 	margin: 20px 30px;
 	height: 200px;
@@ -33,6 +78,7 @@
 		font-size: 0.42rem;
 		text-align: center;
 		line-height: 200px;
+		height: 200px;
 	}
 	.money {
 		font-size: 90px;
@@ -66,6 +112,9 @@
 	}
 	.icon_useing {
 		@include bg-image('../../../assets/images/coupon/useing');
+	}
+	.icon_used {
+		@include bg-image('../../../assets/images/coupon/used');
 	}
 	.icon_use_over {
 		@include bg-image('../../../assets/images/coupon/use_over');

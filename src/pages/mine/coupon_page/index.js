@@ -3,20 +3,22 @@ import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import STabs from 'components/tabs';
+import qs from 'qs';
 import { store } from 'utils/store';
 
-import { PullToRefresh, Badge, ListView, Toast } from 'antd-mobile';
+import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 let totalPage = false;
+let receiveData = null;
 const API = {
-  msgRead: '/my/msgRead',
-  msgCount: '/my/msgCount',
   defTable: '/my/defTable',
   msgInfo: '/my/msgInfo',
 };
 @fetch.inject()
-export default class message_page extends PureComponent {
+export default class coupon_page extends PureComponent {
   constructor(props) {
     super(props);
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    receiveData = queryData;
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
@@ -31,10 +33,10 @@ export default class message_page extends PureComponent {
       Listlength: 0,
       rData: [],
       tabState: false,
-      msgReadAllState: false,
       msgType: 0,
       hasMore: true,
       tabs: [],
+      couponSelected: '',
     };
   }
   scrollTop = 0;
@@ -43,22 +45,19 @@ export default class message_page extends PureComponent {
   }
   // 消息 tab
   getTab = () => {
-    if (1 === 2) {
+    if (receiveData && receiveData.billNo) {
       this.setState({
         tabs: [
           {
-            title: '未使用',
+            title: '可使用',
             value: 0,
           },
           {
-            title: '已使用',
-            value: 0,
-          },
-          {
-            title: '未失效',
-            value: 0,
+            title: '不可使用',
+            value: 1,
           },
         ],
+        couponSelected: receiveData.couponId,
       });
     } else {
       this.setState({
@@ -69,72 +68,16 @@ export default class message_page extends PureComponent {
           },
           {
             title: '已使用',
-            value: 0,
+            value: 1,
           },
           {
-            title: '未失效',
-            value: 0,
+            title: '已失效',
+            value: 2,
           },
         ],
       });
     }
     this.getCommonData('tabshow')
-  };
-  // 单个请求读取
-  msgOneRead = obj => {
-    if (obj.sts === '0') {
-      this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then(res => {
-        if (res.msgCode === 'PTM0000') {
-          this.msgCount(obj);
-          this.getDesc(obj);
-        } else {
-          this.props.toast.info(res.msgInfo);
-        }
-      });
-    } else {
-      this.getDesc(obj);
-    }
-  };
-
-  // 去详情
-  getDesc = obj => {
-    let rData = this.state.rData;
-    rData.forEach((item, index) => {
-      if (item.uuid === obj.uuid) {
-        rData[index].sts = 1;
-      }
-    });
-    let backData = {
-      scrollTop: this.scrollTop || 0,
-      rData,
-      msgType: this.state.msgType,
-      pageIndex: this.state.pageIndex,
-      totalPage,
-    };
-    // 0:无，1:URL，2:文本，3:APP"
-    store.setMsgBackData(backData);
-    store.setMsgObj(obj);
-    switch (obj.detailType) {
-      case '0':
-        this.props.history.push('/home/message_detail_page');
-        break;
-      case '1':
-        if (localStorage.getItem('h5Channel') && localStorage.getItem('h5Channel').indexOf('MPOS') < 0) {
-          window.open(obj.detail);
-        } else {
-          location.href = obj.detail;
-        }
-        break;
-      case '2':
-        this.props.history.push('/home/message_detail_page');
-        break;
-      case '3':
-        // app页面
-        break;
-
-      default:
-        break;
-    }
   };
   // 获取每一页数据
   genData = async (pIndex = 1) => {
@@ -232,53 +175,16 @@ export default class message_page extends PureComponent {
       isLoading: false,
     });
   };
-  // 获取消息条数
-  msgCount = obj => {
-    this.props.$fetch.post(API.msgCount).then(res => {
-      if (res.msgCode === 'PTM0000') {
-        if (res.data && res.data.count && res.data.count > 0) {
-          this.setState({
-            msgReadAllState: true,
-          });
-        } else {
-          this.setState({
-            msgReadAllState: false,
-          });
-        }
-        if (obj && JSON.stringify(obj) !== '{}') {
-          $(`[data-id=ids${obj.uuid}]`).css('display', 'none');
-        }
-      } else {
-        this.props.toast.info(res.msgInfo);
-      }
-    });
-  };
-  // 一键读取
-  msgReadAll = () => {
-    this.props.$fetch.post('/my/msgReadAll').then(res => {
-      if (res.msgCode === 'PTM0000') {
-        this.setState(
-          {
-            msgReadAllState: false,
-          },
-          () => {
-            $('.uuids').css('display', 'none');
-            this.props.toast.info('已全部读取');
-          },
-        );
-      } else {
-        this.props.toast.info(res.msgInfo);
-      }
-    });
-  };
   // 滚动高度
   handleScroll = event => {
     this.scrollTop = event.target.scrollTop;
   };
-  // 查看详情
-  gotoDesc = obj => {
-    this.msgOneRead(obj);
-  };
+  // 选择优惠劵
+  selectCoupon = couponId => {
+    this.setState({
+      couponSelected: couponId
+    });
+  }
   // 切换tab
   changeTab = (tab, index) => {
     this.setState(
@@ -300,17 +206,21 @@ export default class message_page extends PureComponent {
       }
       const obj = this.state.rData && this.state.rData[index--];
       return (
-        <div key={rowID} className={1===1?[style.box,style.box_active].join(' '):[style.box,style.box_default].join(' ')}>
-        <div className={style.leftBox}>
-            <span>￥</span><span  className={style.money}>20</span>
-        </div>
-        <div className={style.rightBox}>
-        <i className={1===2?[style.icon_select_status,style.icon_select].join(' '):[style.icon_select_status,style.icon_select_not].join(' ')}></i>
-        {/* <i className={1===1?[style.icon_status,style.icon_useing].join(' '):[style.icon_status,style.icon_use_over].join(' ')}></i> */}
+        <div onClick={() => {this.selectCoupon(obj.uuid)}} key={rowID} className={1 === 2 ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+          <div className={style.leftBox}>
+            <span>￥</span><span className={style.money}>20</span>
+          </div>
+          <div className={style.rightBox}>
+            {
+              receiveData && receiveData.billNo ?
+                <i className={obj.uuid === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
+                :
+                <i className={1 === 2 ? [style.icon_status, style.icon_useing].join(' ') : 3 === 4 ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
+            }
             <div className={style.title}>借款签约优惠券</div>
             <div>20</div>
             <div>有效期至： 2018-10-01</div>
-        </div>
+          </div>
         </div>
       );
     };
@@ -318,15 +228,28 @@ export default class message_page extends PureComponent {
       if (this.state.rData && this.state.rData.length > 0) {
         return (
           <ListView
-            className={classN}
+            className={`${classN} ${style.no_header}`}
             initialListSize={this.state.Listlength}
             onScroll={this.handleScroll}
             key={this.state.useBodyScroll ? '0' : '1'}
             ref={el => (this.lv = el)}
             dataSource={this.state.dataSource}
+            renderHeader={() => 
+              {
+                return (
+                receiveData && receiveData.billNo &&  classN === 'iview0'?
+                <h3 onClick={() => {this.selectCoupon('null')}} className={style.no_use_coupon}>
+                  <span>不使用优惠券</span>
+                  <i className={'null' === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
+                </h3>
+                :
+                null
+                )
+              }
+            }
             renderFooter={() => (
-              <div style={{ paddingBottom: 30, textAlign: 'center' }}>
-                {this.state.isLoading ? '加载中...' : '已无更多优惠劵'}
+              <div style={{ paddingBottom: 30, textAlign: 'center' }} className={!this.state.isLoading ? style.reach_bottom : null}>
+                {this.state.isLoading ? '加载中...' : <span>已无更多优惠劵</span>}
               </div>
             )}
             renderRow={row}
@@ -336,8 +259,8 @@ export default class message_page extends PureComponent {
               this.state.useBodyScroll
                 ? {}
                 : {
-                    height: this.state.height,
-                  }
+                  height: this.state.height,
+                }
             }
             pullToRefresh={<PullToRefresh refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
             onEndReached={this.onEndReached}
@@ -354,7 +277,6 @@ export default class message_page extends PureComponent {
     };
     return (
       <div className={style.message_page}>
-        {this.state.msgReadAllState ? <div onClick={this.msgReadAll} className={style.allRead} /> : null}
         {this.state.tabState ? (
           <STabs
             tabTit={this.state.tabs}
