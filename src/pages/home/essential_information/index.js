@@ -10,7 +10,7 @@ import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
 import { getFirstError } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { home, mine } from 'utils/AnalytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
 import qs from 'qs';
 
@@ -86,6 +86,9 @@ export default class essential_information extends PureComponent {
               if (result && result.msgCode === 'PTM0000') {
                 // 埋点-基本信息页-确定按钮
                 this.confirmBuryPoint(true);
+                buriedPointEvent(mine.creditExtensionBack, {
+                  current_step: '基本信息认证',
+                });
                 this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
               } else {
                 this.confirmBuryPoint(false, result.msgInfo);
