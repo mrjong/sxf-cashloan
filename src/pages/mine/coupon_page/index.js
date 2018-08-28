@@ -10,8 +10,7 @@ import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 let totalPage = false;
 let receiveData = null;
 const API = {
-  defTable: '/my/defTable',
-  msgInfo: '/my/msgInfo',
+  couponList: '/coupon/list',
 };
 @fetch.inject()
 export default class coupon_page extends PureComponent {
@@ -92,8 +91,8 @@ export default class coupon_page extends PureComponent {
       Toast.loading('数据加载中...', 10000);
     }
     let data = await this.props.$fetch
-      .post(API.msgInfo, {
-        type: this.state.msgType + 1,
+      .post(API.couponList, {
+        type: `0${this.state.msgType + 1}`,
         curPage: pIndex,
         loading: true,
       })
@@ -206,20 +205,20 @@ export default class coupon_page extends PureComponent {
       }
       const obj = this.state.rData && this.state.rData[index--];
       return (
-        <div onClick={() => {this.selectCoupon(obj.uuid)}} key={rowID} className={1 === 2 ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+        <div onClick={() => {this.selectCoupon(obj.usrCoupNo)}} key={rowID} className={1 === 2 ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
           <div className={style.leftBox}>
-            <span>￥</span><span className={style.money}>20</span>
+            <span>￥</span><span className={style.money}>{obj.coupVal}</span>
           </div>
           <div className={style.rightBox}>
             {
               receiveData && receiveData.billNo ?
-                <i className={obj.uuid === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
+                <i className={obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
                 :
                 <i className={1 === 2 ? [style.icon_status, style.icon_useing].join(' ') : 3 === 4 ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
             }
             <div className={style.title}>借款签约优惠券</div>
-            <div>20</div>
-            <div>有效期至： 2018-10-01</div>
+            <div>{obj.coupDesc}</div>
+            <div>有效期至： {obj.validEndTm}</div>
           </div>
         </div>
       );
