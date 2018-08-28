@@ -102,9 +102,9 @@ const logoutApp = that => {
         return;
       }
       window.ReactRouterHistory.push('/login');
-      sessionStorage.clear();
-      localStorage.clear();
-      Cookie.remove('fin-v-card-token');
+      // sessionStorage.clear();
+      // localStorage.clear();
+      // Cookie.remove('fin-v-card-token');
       Cookie.remove('authFlag');
       Cookie.remove('VIPFlag');
     },

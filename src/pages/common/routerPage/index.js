@@ -42,8 +42,8 @@ export default class router_Page extends PureComponent {
       tokenFromStotage = store.getTokenSession();
     }
     if (!tokenFromStotage && !pagesIgnore(window.location.pathname) && !token) {
-      sessionStorage.clear();
-      localStorage.clear();
+      // sessionStorage.clear();
+      // localStorage.clear();
       Toast.info('请先登录');
       setTimeout(() => {
         window.ReactRouterHistory.push('/login');

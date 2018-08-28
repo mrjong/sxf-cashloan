@@ -35,10 +35,28 @@ export default class login_page extends PureComponent {
     // 登录页单独处理
     window.history.pushState(null, null, document.URL);
     document.title = '登录和注册';
+    // 保存h5Channel变量
+    const query = qs.parse(window.location.search, {
+      ignoreQueryPrefix: true,
+    });
+    const ua = window.navigator.userAgent;
+    const sessionH5Channel = sessionStorage.getItem('h5Channel');
+    
     // 移除cookie
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear();
     localStorage.clear();
+
+    // 重新添加h5Channel到session里
+    if (query.h5Channel) {
+      sessionStorage.setItem('h5Channel', query.h5Channel);
+    } else if (sessionH5Channel) {
+      sessionStorage.setItem('h5Channel', sessionH5Channel);
+    } else if (/SuiXingPay-Mpos/i.test(ua)) {
+      sessionStorage.setItem('h5Channel', 'MPOS');
+    } else {
+      sessionStorage.setItem('h5Channel', 'other');
+    }
 
     store.setHistoryRouter(window.location.pathname);
 
@@ -107,7 +125,7 @@ export default class login_page extends PureComponent {
             error => {
               error.msgInfo && Toast.info(error.msgInfo);
             },
-          );
+        );
       } else {
         Toast.info(getFirstError(err));
       }
