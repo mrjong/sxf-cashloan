@@ -159,9 +159,6 @@ export default class HomePage extends PureComponent {
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        buriedPointEvent(mine.creditExtension, {
-          entry: '首页',
-        });
         store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
         Toast.loading('加载中...', 0);
         window.location.href = result.data.url;
