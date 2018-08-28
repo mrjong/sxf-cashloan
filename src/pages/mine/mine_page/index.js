@@ -5,6 +5,8 @@ import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
 import { logoutAppHandler } from 'utils/common';
 import Lists from 'components/lists';
+import { buriedPointEvent } from 'utils/Analytins';
+import { mine } from 'utils/AnalytinsType';
 import styles from './index.scss';
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -137,6 +139,11 @@ export default class mine_page extends PureComponent {
   // 第二组里的点击事件
   clickhandle2 = item => {
     if (item.jumpToUrl === '/home/real_name' || item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' || item.jumpToUrl === '/mine/fqa_page') {
+      if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
+        buriedPointEvent(mine.creditExtension, {
+          entry: '我的',
+        });
+      }
       this.props.history.push(item.jumpToUrl);
     } else {
       const { mblNoHid, realNmFlg } = this.state;

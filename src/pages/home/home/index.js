@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getParamsFromUrl, isBugBrowser } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { home, mine } from 'utils/AnalytinsType';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -116,6 +116,9 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0003': // 账单爬取成功 (直接跳数据风控)
         console.log('LN0003 无风控信息 直接跳数据风控');
+        buriedPointEvent(mine.creditExtension, {
+          entry: '首页',
+        });
         this.props.history.push({ pathname: '/mine/credit_extension_page', search: '?isShowCommit=true' });
         break;
       case 'LN0004': // 代还资格审核中
@@ -156,6 +159,9 @@ export default class HomePage extends PureComponent {
   applyCardRepay = () => {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        buriedPointEvent(mine.creditExtension, {
+          entry: '首页',
+        });
         store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
         Toast.loading('加载中...', 0);
         window.location.href = result.data.url;

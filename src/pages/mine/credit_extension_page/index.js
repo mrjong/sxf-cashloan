@@ -48,13 +48,6 @@ export default class credit_extension_page extends PureComponent {
     const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
     if (!isShowCommit || isShowCommit === 'false') {
       this.setState({ isShowBtn: false });
-      buriedPointEvent(mine.creditExtension, {
-        entry: '我的',
-      });
-    } else {
-      buriedPointEvent(mine.creditExtension, {
-        entry: '风控授信项',
-      });
     }
   }
 
@@ -128,6 +121,7 @@ export default class credit_extension_page extends PureComponent {
       Toast.info(item.extra.name);
     } else if (firstOption.stsw.dicDetailCd !== '2') {
       if (item.extra.code === 'idCheck') {
+        buriedPointEvent(mine.creditExtensionRealName);
         this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
       } else {
         this.props.toast.info('请先实名认证');
