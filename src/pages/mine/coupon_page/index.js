@@ -91,10 +91,11 @@ export default class coupon_page extends PureComponent {
       Toast.loading('数据加载中...', 10000);
     }
     let data = await this.props.$fetch
-      .post(API.couponList, {
-        type: `0${this.state.msgType + 1}`,
-        curPage: pIndex,
-        loading: true,
+      .get(API.couponList, {
+        type: `0${this.state.msgType}`,
+        userChannel: 'web',
+        pageNo: pIndex,
+        // loading: true,
       })
       .then(res => {
         if (pIndex === 1) {
@@ -102,19 +103,30 @@ export default class coupon_page extends PureComponent {
             Toast.hide();
           }, 600);
         }
+        // let dataArr = [];
+        // // dataArr = res.data.msgList
+        // for (let i = res.length - 1; i >= 0; i--) {
+        //   dataArr.push({
+        //     ...res[i],
+        //   });
+        // }
+        // return dataArr;
         if (res.msgCode === 'PTM0000') {
+          let dataArr = [];
           if (pIndex === 1) {
-            totalPage = res.data.totalPage;
+            totalPage = res.data.totalSize;
+            dataArr.push(store.getCouponData());
             this.setState({
               hasMore: false,
             });
           }
-          let dataArr = [];
           // dataArr = res.data.msgList
           for (let i = res.data.msgList.length - 1; i >= 0; i--) {
-            dataArr.push({
-              ...res.data.msgList[i],
-            });
+            if(res.data.msgList[i].usrCoupNo !== store.getCouponData().usrCoupNo){
+              dataArr.push({
+                ...res.data.msgList[i],
+              });
+            }
           }
           return dataArr;
         }
@@ -205,7 +217,8 @@ export default class coupon_page extends PureComponent {
       }
       const obj = this.state.rData && this.state.rData[index--];
       return (
-        <div onClick={() => {this.selectCoupon(obj.usrCoupNo)}} key={rowID} className={1 === 2 ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+        // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
+        <div onClick={() => {this.selectCoupon(obj.usrCoupNo)}} key={rowID} className={obj.useSts === '00' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
           <div className={style.leftBox}>
             <span>￥</span><span className={style.money}>{obj.coupVal}</span>
           </div>
@@ -214,9 +227,9 @@ export default class coupon_page extends PureComponent {
               receiveData && receiveData.billNo ?
                 <i className={obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
                 :
-                <i className={1 === 2 ? [style.icon_status, style.icon_useing].join(' ') : 3 === 4 ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
+                <i className={obj.type === '01' ? [style.icon_status, style.icon_useing].join(' ') : obj.type === '02' ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
             }
-            <div className={style.title}>借款签约优惠券</div>
+            <div className={style.title}>{obj.coupNm}</div>
             <div>{obj.coupDesc}</div>
             <div>有效期至： {obj.validEndTm}</div>
           </div>

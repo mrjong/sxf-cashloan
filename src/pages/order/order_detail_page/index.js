@@ -219,11 +219,8 @@ export default class order_detail_page extends PureComponent {
     // 选择优惠劵
     selectCoupon = () => {
         store.setBackUrl('/order/order_detail_page');
-        if (this.state.couponInfo && this.state.couponInfo.couponId) {
-            this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}&couponId=${this.state.couponInfo.couponId}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc}, });
-        } else {
-            this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}&couponId=${this.state.billDesc.couponId}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc}, });
-        }
+        store.setCouponData(this.state.billDesc);
+        this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc}, });
     }
     render() {
         const { billDesc, money, hideBtn } = this.state
