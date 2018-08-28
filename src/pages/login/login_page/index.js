@@ -40,8 +40,8 @@ export default class login_page extends PureComponent {
       ignoreQueryPrefix: true,
     });
     const ua = window.navigator.userAgent;
-    const sessionH5Channel = sessionStorage.getItem('h5Channel');
-    
+    const sessionH5Channel = localStorage.getItem('h5Channel');
+
     // 移除cookie
     Cookie.remove('fin-v-card-token');
     sessionStorage.clear();
@@ -49,13 +49,13 @@ export default class login_page extends PureComponent {
 
     // 重新添加h5Channel到session里
     if (query.h5Channel) {
-      sessionStorage.setItem('h5Channel', query.h5Channel);
+      localStorage.setItem('h5Channel', query.h5Channel);
     } else if (sessionH5Channel) {
-      sessionStorage.setItem('h5Channel', sessionH5Channel);
+      localStorage.setItem('h5Channel', sessionH5Channel);
     } else if (/SuiXingPay-Mpos/i.test(ua)) {
-      sessionStorage.setItem('h5Channel', 'MPOS');
+      localStorage.setItem('h5Channel', 'MPOS');
     } else {
-      sessionStorage.setItem('h5Channel', 'other');
+      localStorage.setItem('h5Channel', 'other');
     }
 
     store.setHistoryRouter(window.location.pathname);

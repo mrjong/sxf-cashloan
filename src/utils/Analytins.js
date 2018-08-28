@@ -36,7 +36,7 @@ function getStaticParams() {
     project_name: document.title,
     forward_module: document.referrer,
     page_category: document.title,
-    channelType: sessionStorage.getItem('h5Channel') ? sessionStorage.getItem('h5Channel') : 'OTHER',
+    channelType: localStorage.getItem('h5Channel') ? localStorage.getItem('h5Channel') : 'OTHER',
   };
 }
 
