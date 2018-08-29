@@ -72,7 +72,7 @@ export default class order_detail_page extends PureComponent {
                                 this.setState({
                                     bankInfo: bankInfo,
                                     couponInfo: couponInfo,
-                                    money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt-couponInfo.coupVal
+                                    money: couponInfo && couponInfo.coupVal ? res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt-couponInfo.coupVal : res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt,
                                 })
                                 store.removeCardData();
                                 store.removeCouponData();
