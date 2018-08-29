@@ -40,6 +40,7 @@ export default class coupon_page extends PureComponent {
   }
   scrollTop = 0;
   componentWillMount() {
+
     this.getTab();
   }
   // 消息 tab
@@ -56,7 +57,7 @@ export default class coupon_page extends PureComponent {
             value: 1,
           },
         ],
-        couponSelected: receiveData.couponId,
+        couponSelected: store.getCouponData().usrCoupNo,
       });
     } else {
       this.setState({
@@ -90,43 +91,47 @@ export default class coupon_page extends PureComponent {
     if (pIndex === 1) {
       Toast.loading('数据加载中...', 10000);
     }
-    let data = await this.props.$fetch
-      .get(API.couponList, {
+    let sendParams = '';
+    if (receiveData && receiveData.billNo) {
+      sendParams = {
         type: `0${this.state.msgType}`,
-        userChannel: 'web',
+        pageNo: pIndex,
+        billNo: receiveData.billNo,
+        // loading: true,
+      };
+    } else {
+      sendParams = {
+        type: `0${this.state.msgType}`,
         pageNo: pIndex,
         // loading: true,
-      })
+      };
+    }
+    let data = await this.props.$fetch
+      .get(API.couponList, sendParams)
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
             Toast.hide();
           }, 600);
         }
-        // let dataArr = [];
-        // // dataArr = res.data.msgList
-        // for (let i = res.length - 1; i >= 0; i--) {
-        //   dataArr.push({
-        //     ...res[i],
-        //   });
-        // }
-        // return dataArr;
         if (res.msgCode === 'PTM0000') {
           let dataArr = [];
           if (pIndex === 1) {
-            totalPage = res.data.totalSize;
-            dataArr.push(store.getCouponData());
+            totalPage = res.totalSize;
             this.setState({
               hasMore: false,
             });
           }
-          // dataArr = res.data.msgList
-          for (let i = res.data.msgList.length - 1; i >= 0; i--) {
-            if(res.data.msgList[i].usrCoupNo !== store.getCouponData().usrCoupNo){
-              dataArr.push({
-                ...res.data.msgList[i],
-              });
+          for (let i = res.data.length - 1; i >= 0; i--) {
+            if ((this.state.msgType !== 0 || !receiveData || !receiveData.billNo) || (res.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
+              dataArr.push(
+                res.data[i],
+              );
             }
+          }
+          // 倒叙插入
+          if (pIndex === 1) {
+            if (receiveData && receiveData.billNo && this.state.msgType === 0) dataArr.push(store.getCouponData());
           }
           return dataArr;
         }
@@ -191,16 +196,23 @@ export default class coupon_page extends PureComponent {
     this.scrollTop = event.target.scrollTop;
   };
   // 选择优惠劵
-  selectCoupon = couponId => {
+  selectCoupon = obj => {
+    if (this.state.msgType === 1) {
+      return;
+    }
     this.setState({
-      couponSelected: couponId
+      couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
     });
-  }
+    const couponData = obj === 'null' ? {coupVal: 0, } : obj;
+    store.setCouponData(couponData);
+    // 跳转回详情页
+    // this.props.history.goBack();
+  };
   // 切换tab
   changeTab = (tab, index) => {
     this.setState(
       {
-        msgType: index,
+        msgType: tab.value,
         rData: [],
       },
       () => {
@@ -218,20 +230,20 @@ export default class coupon_page extends PureComponent {
       const obj = this.state.rData && this.state.rData[index--];
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
-        <div onClick={() => {this.selectCoupon(obj.usrCoupNo)}} key={rowID} className={obj.useSts === '00' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+        <div onClick={() => { this.selectCoupon(obj) }} key={rowID} className={obj && obj.useSts === '00' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
           <div className={style.leftBox}>
-            <span>￥</span><span className={style.money}>{obj.coupVal}</span>
+            <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
           </div>
           <div className={style.rightBox}>
             {
               receiveData && receiveData.billNo ?
-                <i className={obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
+                <i className={obj && obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
                 :
-                <i className={obj.type === '01' ? [style.icon_status, style.icon_useing].join(' ') : obj.type === '02' ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
+                <i className={obj && obj.useSts === '00' ? '' : obj && obj.useSts === '01' ? [style.icon_status, style.icon_useing].join(' ') : obj && obj.useSts === '02' ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
             }
-            <div className={style.title}>{obj.coupNm}</div>
-            <div>{obj.coupDesc}</div>
-            <div>有效期至： {obj.validEndTm}</div>
+            <div className={`${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
+            <div className={style.ellipsis}>{obj && obj.coupDesc}</div>
+            <div>有效期至： {obj && obj.validEndTm}</div>
           </div>
         </div>
       );
@@ -246,18 +258,17 @@ export default class coupon_page extends PureComponent {
             key={this.state.useBodyScroll ? '0' : '1'}
             ref={el => (this.lv = el)}
             dataSource={this.state.dataSource}
-            renderHeader={() => 
-              {
-                return (
-                receiveData && receiveData.billNo &&  classN === 'iview0'?
-                <h3 onClick={() => {this.selectCoupon('null')}} className={style.no_use_coupon}>
-                  <span>不使用优惠券</span>
-                  <i className={'null' === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
-                </h3>
-                :
-                null
-                )
-              }
+            renderHeader={() => {
+              return (
+                receiveData && receiveData.billNo && classN === 'iview0' ?
+                  <h3 onClick={() => { this.selectCoupon('null') }} className={style.no_use_coupon}>
+                    <span>不使用优惠券</span>
+                    <i className={'null' === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
+                  </h3>
+                  :
+                  null
+              )
+            }
             }
             renderFooter={() => (
               <div style={{ paddingBottom: 30, textAlign: 'center' }} className={!this.state.isLoading ? style.reach_bottom : null}>

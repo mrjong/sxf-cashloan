@@ -84,6 +84,7 @@
 		font-size: 90px;
 	}
 	.rightBox {
+		width: 475px;
 		height: 200px;
 		display: table-cell;
 		line-height: 1.5;
@@ -135,6 +136,9 @@
 	}
 	.icon_select_not {
 		@include bg-image('../../../assets/images/coupon/is_not_select');
+	}
+	.ellipsis {
+		@include ellipsis(420px);
 	}
 }
 .box_default {
