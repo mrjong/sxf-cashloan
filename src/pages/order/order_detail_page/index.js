@@ -170,13 +170,15 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
-        const { billDesc } = this.state
+        const { billDesc } = this.state;
+        const selectedCouponInf = store.getCouponData();
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
             thisRepTotAmt: this.state.money,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
-            usrBusCnl: 'WEB'
+            coupId: selectedCouponInf ? selectedCouponInf.usrCoupNo : this.state.billDesc.data.usrCoupNo,
+            usrBusCnl: 'WEB',
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
                 this.setState({
