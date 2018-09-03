@@ -4,6 +4,7 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import STabs from 'components/tabs';
 import qs from 'qs';
+import dayjs from 'dayjs';
 import { store } from 'utils/store';
 
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
@@ -114,7 +115,7 @@ export default class coupon_page extends PureComponent {
             Toast.hide();
           }, 600);
         }
-        if (res.msgCode === 'PTM0000') {
+        if (res.errorCode === 'PTM0000') {
           let dataArr = [];
           if (pIndex === 1) {
             totalPage = res.totalSize;
@@ -243,7 +244,7 @@ export default class coupon_page extends PureComponent {
             }
             <div className={`${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
             <div className={style.ellipsis}>{obj && obj.coupDesc}</div>
-            <div>有效期至： {obj && obj.validEndTm}</div>
+            <div>有效期至： {obj && obj.validEndTm.length && dayjs(obj.validEndTm.substring(0,obj.validEndTm.length-4)).format('YYYY-MM-DD')}</div>
           </div>
         </div>
       );
