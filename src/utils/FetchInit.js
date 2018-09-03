@@ -11,6 +11,7 @@ const fetchinit = () => {
   // 拦截请求
   fetch.axiosInstance.interceptors.request.use(
     cfg => {
+        console.log(cfg)
       // const TOKEN = Cookie.get('fin-v-card-token');
       // TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
       let tokenFromStotage = '';
