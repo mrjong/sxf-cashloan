@@ -22,17 +22,16 @@ export default class LandingPage extends PureComponent {
 
   // 根据 url 上的参数，获取图片
   getLandingImgByUrl() {
-    this.setState({
-      imgUrl: 'http://d.hiphotos.baidu.com/image/h%3D300/sign=a4a9770ac43d70cf53faac0dc8ddd1ba/024f78f0f736afc3a2a61a56be19ebc4b745125e.jpg',
-    });
-    return;
+    // this.setState({
+    //   imgUrl: 'http://d.hiphotos.baidu.com/image/h%3D300/sign=a4a9770ac43d70cf53faac0dc8ddd1ba/024f78f0f736afc3a2a61a56be19ebc4b745125e.jpg',
+    // });
+    // return;
     const searchParams = getParamsFromUrl(window.location.search);
     const landingId = searchParams.landingId || '';
     this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
-        console.log(res.data, 'res.data');
         this.setState({
-          imgUrl: res.data.imgUrl,
+          imgUrl: res.data.landingImage,
         });
       } else {
         Toast.info(res.msgInfo);
