@@ -178,12 +178,12 @@ export default class ConfirmAgencyPage extends PureComponent {
         },()=>{
             clearInterval(timer)
             clearTimeout(timerOut)
-            this.handleShowTipModal();
             this.setState({
                 visibleLoading: false
             })
         })
       if (result && result.msgCode === 'PTM0000') {
+        this.handleShowTipModal();
         buriedPointEvent(home.borrowingSubmit, {
           is_success: true,
         });
