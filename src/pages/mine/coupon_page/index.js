@@ -41,7 +41,6 @@ export default class coupon_page extends PureComponent {
   }
   scrollTop = 0;
   componentWillMount() {
-
     this.getTab();
   }
   // 消息 tab
@@ -206,6 +205,9 @@ export default class coupon_page extends PureComponent {
     });
     const couponData = obj === 'null' ? {coupVal: 0, usrCoupNo: 'null'} : obj;
     store.setCouponData(couponData);
+    if(this.props.history.location.state && this.props.history.location.state.cardData){
+      store.setCardData(this.props.history.location.state.cardData)
+    }
     // 跳转回详情页
     this.props.history.goBack();
   };
@@ -231,7 +233,7 @@ export default class coupon_page extends PureComponent {
       const obj = this.state.rData && this.state.rData[index--];
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
-        <div onClick={() => { this.selectCoupon(obj) }} key={rowID} className={obj && obj.useSts === '00' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+        <div onClick={receiveData && receiveData.billNo ? () => { this.selectCoupon(obj) } : null} key={rowID} className={obj && obj.useSts === '00' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
           <div className={style.leftBox}>
             <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
           </div>

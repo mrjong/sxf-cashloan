@@ -21,6 +21,7 @@ export default class order_detail_page extends PureComponent {
             showMoudle: false,
             orderList: [],
             money: '',
+            sendMoney: '',
             bankInfo: {},
             couponInfo: {},
             hideBtn: false
@@ -44,7 +45,7 @@ export default class order_detail_page extends PureComponent {
     }
 
     componentWillUnmount() {
-        // store.removeCardData()
+        store.removeCardData()
     }
 
     // 获取还款信息
@@ -55,6 +56,7 @@ export default class order_detail_page extends PureComponent {
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     if(res.data.data && res.data.data.coupVal){
                         res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt-res.data.data.coupVal });
                     }
@@ -186,7 +188,7 @@ export default class order_detail_page extends PureComponent {
         }
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
-            thisRepTotAmt: this.state.money,
+            thisRepTotAmt: this.state.sendMoney,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
             coupId: couponId,
