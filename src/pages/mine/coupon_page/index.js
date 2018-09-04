@@ -132,7 +132,7 @@ export default class coupon_page extends PureComponent {
           }
           // 倒叙插入
           if (pIndex === 1) {
-            if (receiveData && receiveData.billNo && this.state.msgType === 0 && store.getCouponData().usrCoupNo) dataArr.push(store.getCouponData());
+            if (receiveData && receiveData.billNo && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') dataArr.push(store.getCouponData());
           }
           return dataArr;
         }
@@ -204,10 +204,10 @@ export default class coupon_page extends PureComponent {
     this.setState({
       couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
     });
-    const couponData = obj === 'null' ? {coupVal: 0, usrCoupNo: null} : obj;
+    const couponData = obj === 'null' ? {coupVal: 0, usrCoupNo: 'null'} : obj;
     store.setCouponData(couponData);
     // 跳转回详情页
-    // this.props.history.goBack();
+    this.props.history.goBack();
   };
   // 切换tab
   changeTab = (tab, index) => {

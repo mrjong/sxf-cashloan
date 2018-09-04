@@ -171,13 +171,25 @@ export default class order_detail_page extends PureComponent {
     // 立即还款
     handleClickConfirm = () => {
         const { billDesc } = this.state;
-        const selectedCouponInf = store.getCouponData();
+        let couponId = '';
+        if (this.state.couponInfo &&  this.state.couponInfo.usrCoupNo) {
+            if (this.state.couponInfo.usrCoupNo !== 'null') {
+                couponId = this.state.couponInfo.usrCoupNo;
+            } else {
+                couponId = '';
+            }
+            
+        } else {
+            if(this.state.billDesc.data && this.state.billDesc.data.coupVal){
+                couponId = this.state.billDesc.data.usrCoupNo
+            }
+        }
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
             thisRepTotAmt: this.state.money,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
-            coupId: selectedCouponInf ? selectedCouponInf.usrCoupNo : this.state.billDesc.data.usrCoupNo,
+            coupId: couponId,
             usrBusCnl: 'WEB',
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
@@ -223,12 +235,27 @@ export default class order_detail_page extends PureComponent {
     // 选择优惠劵
     selectCoupon = () => {
         store.setBackUrl('/order/order_detail_page');
-        if (this.state.couponInfo &&  this.state.couponInfo !== {}) {
+        if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
             store.setCouponData(this.state.couponInfo);
         } else {
             store.setCouponData(this.state.billDesc.data);
         }
         this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc}, });
+    }
+    // 判断优惠劵显示
+    renderCoupon = () => {
+        if (this.state.couponInfo &&  this.state.couponInfo.usrCoupNo) {
+            if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
+            return ( <span>-{this.state.couponInfo.coupVal}元</span> )
+            } else {
+            return ( <span>不使用</span> )
+            }
+            
+        } else {
+            if(this.state.billDesc.data && this.state.billDesc.data.coupVal){
+                return ( <span>-{this.state.billDesc.data.coupVal}元</span> )
+            }
+        }
     }
     render() {
         const { billDesc, money, hideBtn } = this.state
@@ -298,9 +325,8 @@ export default class order_detail_page extends PureComponent {
                             this.state.billDesc.data && this.state.billDesc.data.coupVal ?
                             <span onClick={this.selectCoupon} className={`${styles.modal_value}`}>
                                 {
-                                    this.state.couponInfo && this.state.couponInfo.coupVal ? <span>-{this.state.couponInfo.coupVal}元</span> : <span>不使用</span>
+                                    this.renderCoupon()
                                 }
-
                             </span>
                             :
                             <span className={`${styles.modal_value}`}>无可用优惠券</span>
