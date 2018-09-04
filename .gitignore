@@ -24,10 +24,5 @@ ide.general.xml
 .DS_Store
 standardjs-error.log
 
-<<<<<<< HEAD
-.project
-.settings
-=======
 .settings
 .project
->>>>>>> origin/dev_landing_page
