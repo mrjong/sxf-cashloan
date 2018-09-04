@@ -169,8 +169,9 @@ export default class ConfirmAgencyPage extends PureComponent {
         },1000)
     })
 },300)
-    this.props.$fetch.post(API.CONFIRM_REPAYMENT, {...params,hideLoading: true},{
-        timeout:100000
+    this.props.$fetch.post(API.CONFIRM_REPAYMENT, params,{
+        timeout:100000,
+        hideLoading: true
     }).then(result => {
         this.setState({
             percent: 100
