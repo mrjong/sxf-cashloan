@@ -43,7 +43,8 @@ let getProdPlugins = function () {
   ])),
     plugins.push(new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        'NODE_ENV': JSON.stringify('production'),
+        'PROJECT_ENV': JSON.stringify('pro')
       },
       saUrl: JSON.stringify('https://www.vbillbank.com/shence/sa?project=production'),
     }))
@@ -72,7 +73,10 @@ let getTestPlugins = function () {
     {from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib'},
   ])),
     plugins.push(new webpack.DefinePlugin({
-
+      'process.env': {
+        'NODE_ENV': JSON.stringify('development'),
+        'PROJECT_ENV': JSON.stringify('test')
+      },
       saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
     }))
   plugins.push(new CleanWebpackPlugin('dist',
@@ -89,7 +93,8 @@ let getTestPlugins = function () {
 let getDevPlugins = function () {
   plugins.push(new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': JSON.stringify('development')
+      'NODE_ENV': JSON.stringify('development'),
+      'PROJECT_ENV': JSON.stringify('dev')
     },
     saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
   }))
