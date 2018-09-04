@@ -349,7 +349,7 @@ export default class ConfirmAgencyPage extends PureComponent {
         借款处理中...
         </div>
           <div className="progress"><Progress percent={percent} position="normal" /></div>
-          <div aria-hidden="true">{percent}</div>
+          {/* <div aria-hidden="true">{percent}</div> */}
         </div>
         </Modal>
         <Modal
