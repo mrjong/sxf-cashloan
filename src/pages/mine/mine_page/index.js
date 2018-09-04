@@ -113,27 +113,31 @@ export default class mine_page extends PureComponent {
 
   // 第一组里的点击事件
   clickhandle = item => {
-    const { mblNoHid, realNmFlg } = this.state;
-    if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
-      // this.props.history.push(item.jumpToUrl);
-      this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
-    }
-    if (!mblNoHid) {
-      this.props.toast.info('用户未登录', 2, () => {
-        this.props.history.push('/login');
-      })
-    }
-    if (!realNmFlg) {
-      this.props.toast.info('请先进行实名认证', 2, () => {
-        // let isWx=this.is_weixn()
-        // if (isWx) {
-        //     //在微信中打开
-        //     this.props.history.replace('/wxName')
-        // }
-        //else{
-        this.props.history.push('/home/real_name')
-        //}
-      })
+    if (item.jumpToUrl === '/mine/coupon_page') {
+      this.props.history.push(item.jumpToUrl);
+    } else {
+      const { mblNoHid, realNmFlg } = this.state;
+      if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
+        // this.props.history.push(item.jumpToUrl);
+        this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
+      }
+      if (!mblNoHid) {
+        this.props.toast.info('用户未登录', 2, () => {
+          this.props.history.push('/login');
+        })
+      }
+      if (!realNmFlg) {
+        this.props.toast.info('请先进行实名认证', 2, () => {
+          // let isWx=this.is_weixn()
+          // if (isWx) {
+          //     //在微信中打开
+          //     this.props.history.replace('/wxName')
+          // }
+          //else{
+          this.props.history.push('/home/real_name')
+          //}
+        })
+      }
     }
   };
   // 第二组里的点击事件
@@ -193,6 +197,17 @@ export default class mine_page extends PureComponent {
       //   },
       //   jumpToUrl: '/mine/membership_card_page',
       // },
+      {
+        extra: {
+          name: this.state.memberInf.status,
+          color: this.state.memberInf.color,
+        },
+        label: {
+          name: '优惠劵',
+          icon: require('assets/images/mine/menu_ico8.png')
+        },
+        jumpToUrl: '/mine/coupon_page',
+      },
     ];
     const listsArr2 = [
       {

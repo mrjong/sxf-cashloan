@@ -26,6 +26,7 @@ export default class order_detail_page extends PureComponent {
             orderList: [],
             money: '',
             bankInfo: {},
+            couponInfo: {},
             hideBtn: false
         }
     }
@@ -47,7 +48,7 @@ export default class order_detail_page extends PureComponent {
     }
 
     componentWillUnmount() {
-        store.removeCardData()
+        // store.removeCardData()
     }
 
     // 获取还款信息
@@ -58,20 +59,27 @@ export default class order_detail_page extends PureComponent {
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    if(res.data.data && res.data.data.coupVal){
+                        res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt-res.data.data.coupVal });
+                    }
                     this.setState({
                         billDesc: res.data,
                         perdList: res.data.perdList
                     }, () => {
                         // 选择银行卡回来
                         let bankInfo = store.getCardData();
-                        if (bankInfo && bankInfo !== {}) {
+                        let couponInfo = store.getCouponData();
+                        if ((bankInfo && bankInfo !== {}) || (couponInfo && couponInfo !== {})) {
                             this.setState({
                                 showMoudle: true
                             }, () => {
                                 this.setState({
                                     bankInfo: bankInfo,
+                                    couponInfo: couponInfo,
+                                    money: couponInfo && couponInfo.coupVal ? res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt-couponInfo.coupVal : res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt,
                                 })
-                                store.removeCardData()
+                                store.removeCardData();
+                                store.removeCouponData();
                             })
                         }
                         this.showPerdList(res.data.perdNum)
@@ -166,13 +174,27 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
-        const { billDesc } = this.state
+        const { billDesc } = this.state;
+        let couponId = '';
+        if (this.state.couponInfo &&  this.state.couponInfo.usrCoupNo) {
+            if (this.state.couponInfo.usrCoupNo !== 'null') {
+                couponId = this.state.couponInfo.usrCoupNo;
+            } else {
+                couponId = '';
+            }
+            
+        } else {
+            if(this.state.billDesc.data && this.state.billDesc.data.coupVal){
+                couponId = this.state.billDesc.data.usrCoupNo
+            }
+        }
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
             thisRepTotAmt: this.state.money,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
-            usrBusCnl: 'WEB'
+            coupId: couponId,
+            usrBusCnl: 'WEB',
         }).then(res => {
             if (res.msgCode === 'PTM0000') {
                 buriedPointEvent(order.repaymentFirst, {
@@ -222,6 +244,31 @@ export default class order_detail_page extends PureComponent {
     selectBank = () => {
         store.setBackUrl('/order/order_detail_page');
         this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.agrNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
+    }
+    // 选择优惠劵
+    selectCoupon = () => {
+        store.setBackUrl('/order/order_detail_page');
+        if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+            store.setCouponData(this.state.couponInfo);
+        } else {
+            store.setCouponData(this.state.billDesc.data);
+        }
+        this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc}, });
+    }
+    // 判断优惠劵显示
+    renderCoupon = () => {
+        if (this.state.couponInfo &&  this.state.couponInfo.usrCoupNo) {
+            if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
+            return ( <span>-{this.state.couponInfo.coupVal}元</span> )
+            } else {
+            return ( <span>不使用</span> )
+            }
+            
+        } else {
+            if(this.state.billDesc.data && this.state.billDesc.data.coupVal){
+                return ( <span>-{this.state.billDesc.data.coupVal}元</span> )
+            }
+        }
     }
     render() {
         const { billDesc, money, hideBtn } = this.state
@@ -284,6 +331,20 @@ export default class order_detail_page extends PureComponent {
                                 }
 
                             </span>&nbsp;<i></i>
+                        </div>
+                        <div className={styles.modal_flex}>
+                            <span className={styles.modal_label}>优惠券</span>
+                            {
+                            this.state.billDesc.data && this.state.billDesc.data.coupVal ?
+                            <span onClick={this.selectCoupon} className={`${styles.modal_value}`}>
+                                {
+                                    this.renderCoupon()
+                                }
+                            </span>
+                            :
+                            <span className={`${styles.modal_value}`}>无可用优惠券</span>
+                            }
+                            &nbsp;<i></i>
                         </div>
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款

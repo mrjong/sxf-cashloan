@@ -67,4 +67,9 @@ export default [
     title: '常见问题',
     component: () => import('pages/mine/fqa_page'),
   },
+  {
+    path: '/mine/coupon_page',
+    title: '优惠劵',
+    component: () => import('pages/mine/coupon_page'),
+  },
 ];
