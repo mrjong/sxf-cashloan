@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Toast } from 'antd-mobile';
+import { Modal, Toast, Progress } from 'antd-mobile';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
@@ -11,7 +11,8 @@ import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
 import style from './style.scss';
 import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
-
+let timer
+let timerOut
 const API = {
   REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
@@ -32,6 +33,7 @@ export default class ConfirmAgencyPage extends PureComponent {
       repayInfo: {
         perd: [],
       },
+      visibleLoading: false
     };
   }
 
@@ -47,6 +49,14 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.requestGetRepayInfo();
       },
     );
+  }
+  componentWillUnmount(){
+      if(timer){
+          clearInterval(timer)
+      }
+      if(timerOut){
+          clearTimeout(timerOut)
+      }
   }
 
   handleShowTipModal = () => {
@@ -82,6 +92,18 @@ export default class ConfirmAgencyPage extends PureComponent {
   clearModalPageData = () => {
     store.setRepaymentModalData(null);
   };
+  
+  // 设置百分比
+  setPercent=(percent)=>{
+    if(this.state.percent<90&&this.state.percent>=0){
+        console.log(Math.random()*10+1)
+        this.setState({
+            percent:this.state.percent + parseInt(Math.random()*10+1)
+        })
+}else{
+    clearInterval(timer)
+}
+  }
 
   // 给后台缓存协议接口
   requestSendInfoForProtocol = () => {
@@ -136,7 +158,30 @@ export default class ConfirmAgencyPage extends PureComponent {
       usrBusCnl: '', // 操作渠道
       osType: getDeviceType(), // 操作系统
     };
-    this.props.$fetch.post(API.CONFIRM_REPAYMENT, params).then(result => {
+    timerOut = setTimeout(()=>{
+    this.setState({
+        percent: 0,
+        visibleLoading: true
+    },()=>{
+        timer = setInterval(()=>{
+            this.setPercent()
+            ++this.state.time 
+        },1000)
+    })
+},300)
+    this.props.$fetch.post(API.CONFIRM_REPAYMENT, {...params,hideLoading: true},{
+        timeout:100000
+    }).then(result => {
+        this.setState({
+            percent: 100
+        },()=>{
+            clearInterval(timer)
+            clearTimeout(timerOut)
+            this.handleShowTipModal();
+            this.setState({
+                visibleLoading: false
+            })
+        })
       if (result && result.msgCode === 'PTM0000') {
         buriedPointEvent(home.borrowingSubmit, {
           is_success: true,
@@ -146,7 +191,6 @@ export default class ConfirmAgencyPage extends PureComponent {
         // 清除上个页面中的弹框数据
         store.removeRepaymentModalData();
         store.removeHomeCardIndexData();
-        this.handleShowTipModal();
       } else {
         buriedPointEvent(home.borrowingSubmit, {
           is_success: false,
@@ -154,6 +198,14 @@ export default class ConfirmAgencyPage extends PureComponent {
         });
         Toast.info(result.msgInfo);
       }
+    }).catch(err=>{
+        console.log(err)
+        clearInterval(timer)
+        clearTimeout(timerOut)
+        this.setState({
+            visibleLoading: false,
+            percent: 100
+        })
     });
   };
   // 查看合同
@@ -218,7 +270,7 @@ export default class ConfirmAgencyPage extends PureComponent {
   };
 
   render() {
-    const { isShowModal, repayInfo, isShowTipModal } = this.state;
+    const { isShowModal, repayInfo, isShowTipModal, visibleLoading,percent } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -282,7 +334,24 @@ export default class ConfirmAgencyPage extends PureComponent {
             《金融服务协议》
           </a>
         </p>
-
+        <Modal
+        wrapClassName={style.modalLoading}
+          visible={visibleLoading}
+          transparent
+          maskClosable={false}
+        //   onClose={this.onClose('modal1')}
+         
+        //   footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
+        //   wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+        >
+        <div className="show-info">
+        <div className={style.modalLoading}>
+        借款处理中...
+        </div>
+          <div className="progress"><Progress percent={percent} position="normal" /></div>
+          <div aria-hidden="true">{percent}</div>
+        </div>
+        </Modal>
         <Modal
           wrapClassName={style.modal_tip_warp}
           visible={isShowTipModal}

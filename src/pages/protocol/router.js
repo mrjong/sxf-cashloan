@@ -21,7 +21,7 @@ export default [
   },
   {
     path: '/protocol/financial_service_page',
-    title: '金融服务协议',
+    title: '随行付金融服务协议',
     component: () => import('pages/protocol/financial_service_page'),
   },
   {
