@@ -201,6 +201,7 @@ export default class HomePage extends PureComponent {
         const bannerData = result.data.map(item => ({
           src: `data:image/png;base64,${item.picUrl}`,
           url: item.gotoFlag !== 0 ? item.gotoUrl : '',
+          title: item.title,
         }));
         const inFifteenMinutes = new Date(new Date().getTime() + 1000 * 60 * 2);
         Cookie.set('bannerAble', true, { expires: inFifteenMinutes });

@@ -21,11 +21,14 @@ export default class LandingPage extends PureComponent {
 
   componentWillMount() {
     this.getLandingImgByUrl();
+    const searchParams = getParamsFromUrl(decodeURI(window.location.search));
+    const { pageTitle } = searchParams;
+    this.props.setTitle(pageTitle);
   }
 
   // 根据 url 上的参数，获取图片
   getLandingImgByUrl() {
-    const searchParams = getParamsFromUrl(window.location.search);
+    const searchParams = getParamsFromUrl(decodeURI(window.location.search));
     const landingId = searchParams.landingId || '';
     this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
@@ -49,21 +52,17 @@ export default class LandingPage extends PureComponent {
     } else if (PROJECT_ENV === 'test') {
       frameUrl = 'https://lns-wap-test.vbillbank.com/disting/#/landing_page';
     }
-    return (
-      <div>
-        {imgUrl ? (
-          <iframe
-            id="landingPage"
-            name="landingPage"
-            style={{ display: 'block' }}
-            title="落地页"
-            src={frameUrl}
-            width="100%"
-            height="100%"
-            frameBorder="0"
-          />
-        ) : null}
-      </div>
-    );
+    return imgUrl ? (
+      <iframe
+        id="landingPage"
+        name="landingPage"
+        style={{ display: 'block' }}
+        title="落地页"
+        src={frameUrl}
+        width="100%"
+        height="100%"
+        frameBorder="0"
+      />
+    ) : null;
   }
 }

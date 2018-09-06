@@ -39,21 +39,23 @@ export default class Carousels extends React.Component {
     children: '',
   };
 
-  handleLinkClick = url => {
+  handleLinkClick = item => {
+    const { url, title } = item;
     const { entryFrom } = this.props;
     store.setOutLinkUrl(url);
     Toast.loading('加载中...', 0);
     let jumpUrl = '';
     if (entryFrom) {
       if (url.split('?')[1]) {
-        jumpUrl = `${url}&entryFrom=${entryFrom}`;
+        jumpUrl = `${url}&entryFrom=${entryFrom}&pageTitle=${title}`;
       } else {
         jumpUrl = `${url}?entryFrom=${entryFrom}`;
       }
     } else {
-      jumpUrl = url;
+      jumpUrl = url
     }
-    window.location.href = jumpUrl;
+    // return;
+    window.location.href = encodeURI(jumpUrl);
   };
 
   render() {
@@ -61,14 +63,14 @@ export default class Carousels extends React.Component {
     return (
       <div className={style.carouse_wrap}>
         <Carousel dots={false} {...restProps}>
-          {data.map(val => (
+          {data.map(item => (
             <div
-              key={val}
-              onClick={val.url ? () => {this.handleLinkClick(val.url)} : null}
+              key={item}
+              onClick={item.url ? () => {this.handleLinkClick(item)} : null}
               style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
             >
               <img
-                src={val.src}
+                src={item.src}
                 alt=""
                 style={{ width: '100%', verticalAlign: 'top' }}
                 onLoad={() => {
