@@ -1,7 +1,7 @@
 export default [
   {
     path: '/landing/landing_page',
-    title: '落地页',
+    title: '',
     component: () => import('pages/landing/landing_page'),
   },
 ];
