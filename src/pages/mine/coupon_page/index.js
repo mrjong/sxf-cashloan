@@ -252,11 +252,21 @@ export default class coupon_page extends PureComponent {
       const obj = this.state.rData && this.state.rData[index--];
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
-        <div onClick={receiveData && receiveData.billNo ? () => { this.selectCoupon(obj) } : null} key={rowID} className={obj && obj.useSts === '00' || obj && obj.useSts === '01' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+        <div
+          onClick={receiveData && receiveData.billNo ? () => { this.selectCoupon(obj) } : null}
+          key={rowID}
+          className={obj && obj.useSts === '00' || obj && obj.useSts === '01' ?
+          [style.box, style.box_active].join(' ') :
+          [style.box, style.box_default].join(' ')}
+        >
           <div className={style.leftBox}>
             <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
           </div>
-          <div className={style.rightBox}>
+          <div
+            className={ receiveData && receiveData.billNo && this.state.msgType === 0 ?
+              `${style.rightBox} ${style.rightLittleBox}` : style.rightBox
+            }
+          >
             {
               receiveData && receiveData.billNo && this.state.msgType === 0 ?
                 <i className={obj && obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />

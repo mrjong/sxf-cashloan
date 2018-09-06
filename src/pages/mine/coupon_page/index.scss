@@ -103,13 +103,14 @@
 	.icon_status {
 		position: absolute;
 		width: 124px;
-		right: 50px;
+		right: 20px;
 		top: 50%;
 		margin-top: -62px;
 		height: 124px;
 		vertical-align: middle;
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
+		z-index: 1;
 	}
 	.icon_useing {
 		@include bg-image('../../../assets/images/coupon/useing');
@@ -123,7 +124,7 @@
 	.icon_select_status {
 		position: absolute;
 		width: 34px;
-		right: 50px;
+		right: 40px;
 		top: 50%;
 		margin-top: -17px;
 		height: 34px;
@@ -170,5 +171,12 @@
 		background-size: 100% 100%;
 		//  background: black;
 		box-sizing: border-box;
+	}
+}
+.box {
+	.rightLittleBox{
+		.ellipsis {
+			@include ellipsis(375px);
+		}
 	}
 }
