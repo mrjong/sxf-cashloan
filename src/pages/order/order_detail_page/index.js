@@ -72,8 +72,6 @@ export default class order_detail_page extends PureComponent {
                         // 选择银行卡回来
                         let bankInfo = store.getCardData();
                         let couponInfo = store.getCouponData();
-                        console.log(couponInfo);
-                        console.log(bankInfo)
                         if ((bankInfo && bankInfo !== {}) || (couponInfo && couponInfo !== {})) {
                             this.setState({
                                 showMoudle: true
