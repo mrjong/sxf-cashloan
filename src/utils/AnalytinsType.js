@@ -23,6 +23,7 @@ const home = {
   informationConfirm: 'DC_HOME_BASE_INFO_CONFIRM', // 实名认证页-确定按钮
   basicInfoBury: 'DC_HOME_BASE_INFO_BURY', // 基本信息输入框下拉框埋点
   basicInfoComplete: 'DC_HOME_BASICINFO_COMPLETE', // 基本信息页-确定按钮
+  landingPage: 'DC_HOME_LANDING_PAGE', // 落地页
 };
 
 const mine = {

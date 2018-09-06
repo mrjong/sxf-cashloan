@@ -3,6 +3,8 @@ import { getParamsFromUrl } from 'utils/common';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 
 const { PROJECT_ENV } = process.env;
 console.log(PROJECT_ENV, 'PROJECT_ENV');
@@ -32,6 +34,16 @@ export default class LandingPage extends PureComponent {
     const landingId = searchParams.landingId || '';
     this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
+        if (!res.data.landingImage) {
+          Toast.info('活动已过期!');
+          setTimeout(() => {
+            this.props.history.push('/home/home');
+          }, 3000);
+          return;
+        }
+        buriedPointEvent(home.landingPage, {
+          landingPoint: res.data.landingPoint,
+        });
         store.setLandingPageImgUrl(`data:image/png;base64,${res.data.landingImage}`);
         this.setState({
           imgUrl: res.data.landingImage,
