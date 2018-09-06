@@ -23,9 +23,6 @@ export default class LandingPage extends PureComponent {
 
   componentWillMount() {
     this.getLandingImgByUrl();
-    const searchParams = getParamsFromUrl(decodeURI(window.location.search));
-    const { pageTitle } = searchParams;
-    this.props.setTitle(pageTitle);
   }
 
   // 根据 url 上的参数，获取图片
@@ -41,6 +38,7 @@ export default class LandingPage extends PureComponent {
           }, 3000);
           return;
         }
+        this.props.setTitle(res.data.landingNm);
         buriedPointEvent(home.landingPage, {
           landingPoint: res.data.landingPoint,
         });
