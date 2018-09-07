@@ -5,28 +5,23 @@ import fetch from "sx-fetch";
 import SButton from 'components/button';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
-import { buriedPointEvent } from 'utils/Analytins';
-import { order } from 'utils/AnalytinsType';
-import qs from 'qs';
 import styles from './index.scss';
+import qs from 'qs';
 
 const API = {
     'qryDtl': "/bill/qryDtl",
     'payback': '/bill/payback'
 }
-let entryFrom = '';
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
     constructor(props) {
         super(props);
-        entryFrom = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).entryFrom;
         this.state = {
             billDesc: {},
             showMoudle: false,
             orderList: [],
             money: '',
             bankInfo: {},
-            couponInfo: {},
             hideBtn: false
         }
     }
@@ -48,7 +43,7 @@ export default class order_detail_page extends PureComponent {
     }
 
     componentWillUnmount() {
-        // store.removeCardData()
+        store.removeCardData()
     }
 
     // 获取还款信息
@@ -72,7 +67,7 @@ export default class order_detail_page extends PureComponent {
                                 this.setState({
                                     bankInfo: bankInfo,
                                 })
-                                store.removeCardData();
+                                store.removeCardData()
                             })
                         }
                         this.showPerdList(res.data.perdNum)
@@ -167,33 +162,15 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
-        const { billDesc } = this.state;
-        let couponId = '';
-        if (this.state.couponInfo &&  this.state.couponInfo.usrCoupNo) {
-            if (this.state.couponInfo.usrCoupNo !== 'null') {
-                couponId = this.state.couponInfo.usrCoupNo;
-            } else {
-                couponId = '';
-            }
-            
-        } else {
-            if(this.state.billDesc.data && this.state.billDesc.data.coupVal){
-                couponId = this.state.billDesc.data.usrCoupNo
-            }
-        }
+        const { billDesc } = this.state
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
             thisRepTotAmt: this.state.money,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
-            coupId: couponId,
-            usrBusCnl: 'WEB',
-        }).then(res => {
+            usrBusCnl: 'WEB'
+        }, {timeout: 20000}).then(res => {
             if (res.msgCode === 'PTM0000') {
-                buriedPointEvent(order.repaymentFirst, {
-                    entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
-                    is_success: true,
-                });
                 this.setState({
                     showMoudle: false
                 })
@@ -217,11 +194,6 @@ export default class order_detail_page extends PureComponent {
                     }, 3000);
                 }
             } else {
-                buriedPointEvent(order.repaymentFirst, {
-                    entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
-                    is_success: false,
-                    fail_cause: res.msgInfo,
-                });
                 this.setState({
                     showMoudle: false
                 })
@@ -280,7 +252,7 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment, {entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'}); }}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true }) }}>
                             主动还款
                         </SButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
@@ -300,20 +272,6 @@ export default class order_detail_page extends PureComponent {
 
                             </span>&nbsp;<i></i>
                         </div>
-                        {/* <div className={styles.modal_flex}>
-                            <span className={styles.modal_label}>优惠券</span>
-                            {
-                            this.state.billDesc.data && this.state.billDesc.data.coupVal ?
-                            <span onClick={this.selectCoupon} className={`${styles.modal_value}`}>
-                                {
-                                    this.renderCoupon()
-                                }
-                            </span>
-                            :
-                            <span className={`${styles.modal_value}`}>无可用优惠券</span>
-                            }
-                            &nbsp;<i></i>
-                        </div> */}
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款
                         </SButton>
