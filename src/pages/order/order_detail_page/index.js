@@ -24,7 +24,9 @@ export default class order_detail_page extends PureComponent {
             sendMoney: '',
             bankInfo: {},
             couponInfo: {},
-            hideBtn: false
+            hideBtn: false,
+            showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
+            ItrtAmt: 0, // 每期利息金额
         }
     }
     componentWillMount() {
@@ -57,11 +59,15 @@ export default class order_detail_page extends PureComponent {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
                     if (res.data.data && res.data.data.coupVal) {
                         // 优惠劵最大不超过每期利息
                         if (parseFloat(res.data.data.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
                             res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) });
+                            res.data.perdNum !== 999 && this.setState({ showItrtAmt: true });
+
                         } else {
+                            res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
                             res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - res.data.data.coupVal });
                         }
                     }
@@ -82,12 +88,17 @@ export default class order_detail_page extends PureComponent {
                                 })
                                 if (couponInfo && couponInfo !== {}) {
                                     this.setState({
-                                        money: couponInfo && couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
+                                        money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
                                             ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
-                                            couponInfo && couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-                                            res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - couponInfo.coupVal :
-                                            res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
+                                            couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
+                                                res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - couponInfo.coupVal :
+                                                res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
                                     })
+                                    if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
+                                        this.setState({ showItrtAmt: true });
+                                    } else {
+                                        this.setState({ showItrtAmt: false });
+                                    }
                                 }
                                 store.removeCardData();
                                 store.removeCouponData();
@@ -234,6 +245,7 @@ export default class order_detail_page extends PureComponent {
                 this.setState({
                     showMoudle: false
                 })
+                this.getLoanInfo();
                 this.props.toast.info(res.msgInfo)
             }
         }).catch(err => {
@@ -265,14 +277,23 @@ export default class order_detail_page extends PureComponent {
     renderCoupon = () => {
         if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
             if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
-                return (<span>-{this.state.couponInfo.coupVal}元</span>)
+                if (this.state.showItrtAmt) {
+                    return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
+                } else {
+                    return (<span>-{this.state.couponInfo.coupVal}元</span>)
+                }
             } else {
                 return (<span>不使用</span>)
             }
 
         } else {
             if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
-                return (<span>-{this.state.billDesc.data.coupVal}元</span>)
+                if (this.state.showItrtAmt) {
+                    return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
+                } else {
+                    return (<span>-{this.state.billDesc.data.coupVal}元</span>)
+                }
+
             }
         }
     }
@@ -338,7 +359,7 @@ export default class order_detail_page extends PureComponent {
 
                             </span>&nbsp;<i></i>
                         </div>
-                        <div className={styles.modal_flex}>
+                        <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
                             <span className={styles.modal_label}>优惠券</span>
                             {
                                 this.state.billDesc.data && this.state.billDesc.data.coupVal ?
