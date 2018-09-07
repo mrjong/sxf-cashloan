@@ -169,7 +169,7 @@ export default class order_detail_page extends PureComponent {
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
             usrBusCnl: 'WEB'
-        }, {timeout: 20000}).then(res => {
+        }).then(res => {
             if (res.msgCode === 'PTM0000') {
                 this.setState({
                     showMoudle: false
