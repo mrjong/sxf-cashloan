@@ -103,6 +103,8 @@ export default class order_detail_page extends PureComponent {
                                 store.removeCardData();
                                 store.removeCouponData();
                             })
+                        } else {
+                            this.setState({ couponInfo: null });
                         }
                         this.showPerdList(res.data.perdNum)
                     })
