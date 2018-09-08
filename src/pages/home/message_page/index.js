@@ -283,7 +283,8 @@ export default class message_page extends PureComponent {
           })
         }
         if (obj && JSON.stringify(obj) !== "{}") {
-          $("[data-id=ids" + obj.uuid + "]").css("display", "none")
+          // $("[data-id=ids" + obj.uuid + "]").css("display", "none")
+          this[`ids${obj.uuid}`].style.display = 'none';
         }
       } else {
         this.props.toast.info(res.msgInfo)
@@ -350,7 +351,7 @@ export default class message_page extends PureComponent {
             {obj.title ? (
               <div className={style.title}>
                 {obj.sts === "0" ? (
-                  <i className="uuids" data-id={"ids" + obj.uuid} />
+                  <i className="uuids" data-id={"ids" + obj.uuid} ref={el => (this[`ids${obj.uuid}`] = el)} />
                 ) : null}
                 {obj.title}
               </div>
