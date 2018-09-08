@@ -89,16 +89,19 @@
 		display: table-cell;
 		line-height: 1.5;
 		letter-spacing: 1px;
+		padding: 36px 25px;
+		font-size: 24px;
+		margin-left: 25px;
+		color: #6c6c6c;
 		.title {
 			font-size: 26px;
 			margin-bottom: 15px;
 			color: #333;
 			font-weight: bold;
 		}
-		padding: 36px 25px;
-		font-size: 24px;
-		margin-left: 25px;
-		color: #6c6c6c;
+		.textGray{
+			color: #DDD;
+		}
 	}
 	.icon_status {
 		position: absolute;
