@@ -171,7 +171,7 @@ export default class mine_page extends PureComponent {
   };
   // 点击退出登录后弹框
   logoutHandler = () => {
-    logoutAppHandler()
+    logoutAppHandler();
   };
 
   render() {
