@@ -62,6 +62,19 @@ export default class coupon_page extends PureComponent {
       }
     }
   }
+  componentDidMount() {
+    this.calcHeight();
+  }
+  calcHeight() {
+    const HeaderHeight = ReactDOM.findDOMNode(this.messageBox).offsetTop;
+    setTimeout(() => {
+      const tabBarHeight = ReactDOM.findDOMNode(this.messageTabBox).getElementsByClassName('am-tabs-tab-bar-wrap')[0].offsetHeight;
+      const hei = document.documentElement.clientHeight - tabBarHeight - HeaderHeight;
+      this.setState({
+        height: hei,
+      });
+    }, 600);
+  }
   // 消息 tab
   getTab = () => {
     if (receiveData && receiveData.billNo) {
@@ -136,7 +149,7 @@ export default class coupon_page extends PureComponent {
         if (res.errorCode === 'PTM0000') {
           let dataArr = [];
           if (pIndex === 1) {
-            totalPage = res.totalSize;
+            totalPage = Math.ceil(res.totalSize / 10);
             this.setState({
               hasMore: false,
             });
@@ -333,7 +346,7 @@ export default class coupon_page extends PureComponent {
       );
     };
     return (
-      <div className={style.message_page}>
+      <div className={style.message_page} ref={el => (this.messageBox = el)}>
         {this.state.tabState ? (
           <STabs
             tabTit={this.state.tabs}
@@ -341,6 +354,7 @@ export default class coupon_page extends PureComponent {
             onChange={(tab, index) => {
               this.changeTab(tab, index);
             }}
+            ref={el => (this.messageTabBox = el)}
           >
             {this.state.tabs.map((item2, index2) => (
               <div key={index2}>{item(`iview${index2}`)}</div>

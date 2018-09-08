@@ -82,6 +82,19 @@ export default class message_page extends PureComponent {
       this.msgCount()
     }
   }
+  componentDidMount() {
+    this.calcHeight();
+  }
+  calcHeight() {
+    const HeaderHeight = ReactDOM.findDOMNode(this.messageBox).offsetTop;
+    setTimeout(() => {
+      const tabBarHeight = ReactDOM.findDOMNode(this.messageTabBox).getElementsByClassName('am-tabs-tab-bar-wrap')[0].offsetHeight;
+      const hei = document.documentElement.clientHeight - tabBarHeight - HeaderHeight;
+      this.setState({
+        height: hei,
+      });
+    }, 600);
+  }
   // 消息 tab
   getTab = () => {
     this.props.$fetch.post(API.defTable).then(res => {
@@ -398,7 +411,7 @@ export default class message_page extends PureComponent {
       }
     }
     return (
-      <div className={style.message_page}>
+      <div className={style.message_page} ref={el => (this.messageBox = el)}>
         {this.state.msgReadAllState ? (
           <div onClick={this.msgReadAll} className={style.allRead}></div>
         ) : null}
@@ -409,6 +422,7 @@ export default class message_page extends PureComponent {
             onChange={(tab, index) => {
               this.changeTab(tab, index)
             }}
+            ref={el => (this.messageTabBox = el)}
           >
             {this.state.tabs.map((item2, index2) => (
               <div key={index2}>{item("iview" + index2)}</div>
