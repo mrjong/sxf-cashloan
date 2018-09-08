@@ -82,8 +82,10 @@ export default class message_page extends PureComponent {
       this.msgCount()
     }
   }
-  componentDidMount() {
-    this.calcHeight();
+  componentDidUpdate() {
+    if (this.state.tabState) {
+      this.calcHeight();
+    }
   }
   calcHeight() {
     const HeaderHeight = ReactDOM.findDOMNode(this.messageBox).offsetTop;
