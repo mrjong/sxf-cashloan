@@ -68,7 +68,7 @@ export default class order_detail_page extends PureComponent {
 
                         } else {
                             res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
-                            res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - res.data.data.coupVal });
+                            res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
                         }
                     }
                     this.setState({
@@ -91,7 +91,7 @@ export default class order_detail_page extends PureComponent {
                                         money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
                                             ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
                                             couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-                                                res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - couponInfo.coupVal :
+                                                ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - couponInfo.coupVal * 100) / 100).toFixed(2) :
                                                 res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
                                     })
                                     if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
