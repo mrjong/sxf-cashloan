@@ -181,31 +181,39 @@ export default class ConfirmAgencyPage extends PureComponent {
             this.setState({
                 visibleLoading: false
             })
+            if (result && result.msgCode === 'PTM0000') {
+                this.handleShowTipModal();
+                buriedPointEvent(home.borrowingSubmit, {
+                  is_success: true,
+                });
+                // 清除卡信息
+                store.removeCardData();
+                // 清除上个页面中的弹框数据
+                store.removeRepaymentModalData();
+                store.removeHomeCardIndexData();
+              }else if(result && result.msgCode === 'PTM7001'){
+                Toast.info(result.msgInfo);
+                  setTimeout(()=>{
+                    this.props.history.push('/home/home')
+                  },3000)
+              } else {
+                buriedPointEvent(home.borrowingSubmit, {
+                  is_success: false,
+                  fail_cause: result.msgInfo,
+                });
+                Toast.info(result.msgInfo);
+              }
         })
-      if (result && result.msgCode === 'PTM0000') {
-        this.handleShowTipModal();
-        buriedPointEvent(home.borrowingSubmit, {
-          is_success: true,
-        });
-        // 清除卡信息
-        store.removeCardData();
-        // 清除上个页面中的弹框数据
-        store.removeRepaymentModalData();
-        store.removeHomeCardIndexData();
-      } else {
-        buriedPointEvent(home.borrowingSubmit, {
-          is_success: false,
-          fail_cause: result.msgInfo,
-        });
-        Toast.info(result.msgInfo);
-      }
     }).catch(err=>{
         console.log(err)
         clearInterval(timer)
         clearTimeout(timerOut)
         this.setState({
-            visibleLoading: false,
             percent: 100
+        },()=>{
+            this.setState({
+                visibleLoading: false
+            })
         })
     });
   };
