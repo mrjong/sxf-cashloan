@@ -58,8 +58,6 @@ export default class order_detail_page extends PureComponent {
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-<<<<<<< HEAD
-=======
                     res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
                     if (res.data.data && res.data.data.coupVal) {
@@ -73,7 +71,6 @@ export default class order_detail_page extends PureComponent {
                             res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
                         }
                     }
->>>>>>> dev_discounts
                     this.setState({
                         billDesc: res.data,
                         perdList: res.data.perdList
@@ -86,10 +83,6 @@ export default class order_detail_page extends PureComponent {
                             }, () => {
                                 this.setState({
                                     bankInfo: bankInfo,
-<<<<<<< HEAD
-                                })
-                                store.removeCardData()
-=======
                                     couponInfo: couponInfo,
                                 })
                                 if (couponInfo && couponInfo !== {}) {
@@ -108,7 +101,6 @@ export default class order_detail_page extends PureComponent {
                                 }
                                 store.removeCardData();
                                 store.removeCouponData();
->>>>>>> dev_discounts
                             })
                         } else {
                             this.setState({ couponInfo: null });
@@ -205,9 +197,6 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
-<<<<<<< HEAD
-        const { billDesc } = this.state
-=======
         const { billDesc } = this.state;
         let couponId = '';
         if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
@@ -222,7 +211,6 @@ export default class order_detail_page extends PureComponent {
                 couponId = this.state.billDesc.data.usrCoupNo
             }
         }
->>>>>>> dev_discounts
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
             thisRepTotAmt: this.state.sendMoney,
@@ -271,8 +259,6 @@ export default class order_detail_page extends PureComponent {
         store.setBackUrl('/order/order_detail_page');
         this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.agrNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
     }
-<<<<<<< HEAD
-=======
     // 选择优惠劵
     selectCoupon = (useFlag) => {
         if (useFlag) {
@@ -311,7 +297,6 @@ export default class order_detail_page extends PureComponent {
             }
         }
     }
->>>>>>> dev_discounts
     render() {
         const { billDesc, money, hideBtn } = this.state
         return (
@@ -374,8 +359,6 @@ export default class order_detail_page extends PureComponent {
 
                             </span>&nbsp;<i></i>
                         </div>
-<<<<<<< HEAD
-=======
                         <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
                             <span className={styles.modal_label}>优惠券</span>
                             {
@@ -390,7 +373,6 @@ export default class order_detail_page extends PureComponent {
                             }
                             &nbsp;<i></i>
                         </div>
->>>>>>> dev_discounts
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款
                         </SButton>
