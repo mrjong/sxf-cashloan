@@ -335,8 +335,8 @@ export default class real_name_page extends Component {
             <div className={style.clear} />
           </div>
           <div className={style.des}>
-            <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行实名认证</p>
-            <p className={style.desOne}>*实名信息一旦认证，不可修复</p>
+            <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行身份认证</p>
+            <p className={style.desOne}>*身份信息一旦认证，不可修改</p>
           </div>
           <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>确定</ButtonCustom>
         </div> : null}
