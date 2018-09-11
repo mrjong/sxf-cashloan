@@ -179,7 +179,7 @@ export default class mine_page extends PureComponent {
   };
   // 点击退出登录后弹框
   logoutHandler = () => {
-    logoutAppHandler()
+    logoutAppHandler();
   };
 
   render() {
@@ -197,17 +197,17 @@ export default class mine_page extends PureComponent {
       //   },
       //   jumpToUrl: '/mine/membership_card_page',
       // },
-      // {
-      //   extra: {
-      //     name: this.state.memberInf.status,
-      //     color: this.state.memberInf.color,
-      //   },
-      //   label: {
-      //     name: '优惠劵',
-      //     icon: require('assets/images/mine/menu_ico8.png')
-      //   },
-      //   jumpToUrl: '/mine/coupon_page',
-      // },
+      {
+        extra: {
+          name: this.state.memberInf.status,
+          color: this.state.memberInf.color,
+        },
+        label: {
+          name: '优惠劵',
+          icon: require('assets/images/mine/menu_ico8.png'),
+        },
+        jumpToUrl: '/mine/coupon_page',
+      },
     ];
     const listsArr2 = [
       {

@@ -21,8 +21,12 @@ export default class order_detail_page extends PureComponent {
             showMoudle: false,
             orderList: [],
             money: '',
+            sendMoney: '',
             bankInfo: {},
-            hideBtn: false
+            couponInfo: {},
+            hideBtn: false,
+            showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
+            ItrtAmt: 0, // 每期利息金额
         }
     }
     componentWillMount() {
@@ -54,6 +58,22 @@ export default class order_detail_page extends PureComponent {
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+<<<<<<< HEAD
+=======
+                    res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
+                    if (res.data.data && res.data.data.coupVal) {
+                        // 优惠劵最大不超过每期利息
+                        if (parseFloat(res.data.data.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
+                            res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) });
+                            res.data.perdNum !== 999 && this.setState({ showItrtAmt: true });
+
+                        } else {
+                            res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
+                            res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
+                        }
+                    }
+>>>>>>> dev_discounts
                     this.setState({
                         billDesc: res.data,
                         perdList: res.data.perdList
@@ -66,9 +86,32 @@ export default class order_detail_page extends PureComponent {
                             }, () => {
                                 this.setState({
                                     bankInfo: bankInfo,
+<<<<<<< HEAD
                                 })
                                 store.removeCardData()
+=======
+                                    couponInfo: couponInfo,
+                                })
+                                if (couponInfo && couponInfo !== {}) {
+                                    this.setState({
+                                        money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
+                                            ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
+                                            couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
+                                                ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt - couponInfo.coupVal * 100) / 100).toFixed(2) :
+                                                res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
+                                    })
+                                    if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
+                                        this.setState({ showItrtAmt: true });
+                                    } else {
+                                        this.setState({ showItrtAmt: false });
+                                    }
+                                }
+                                store.removeCardData();
+                                store.removeCouponData();
+>>>>>>> dev_discounts
                             })
+                        } else {
+                            this.setState({ couponInfo: null });
                         }
                         this.showPerdList(res.data.perdNum)
                     })
@@ -162,10 +205,27 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
+<<<<<<< HEAD
         const { billDesc } = this.state
+=======
+        const { billDesc } = this.state;
+        let couponId = '';
+        if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+            if (this.state.couponInfo.usrCoupNo !== 'null') {
+                couponId = this.state.couponInfo.usrCoupNo;
+            } else {
+                couponId = '';
+            }
+
+        } else {
+            if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
+                couponId = this.state.billDesc.data.usrCoupNo
+            }
+        }
+>>>>>>> dev_discounts
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
-            thisRepTotAmt: this.state.money,
+            thisRepTotAmt: this.state.sendMoney,
             cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
             repayStsw: billDesc.billPerdStsw,
             usrBusCnl: 'WEB'
@@ -197,6 +257,7 @@ export default class order_detail_page extends PureComponent {
                 this.setState({
                     showMoudle: false
                 })
+                this.getLoanInfo();
                 this.props.toast.info(res.msgInfo)
             }
         }).catch(err => {
@@ -210,6 +271,47 @@ export default class order_detail_page extends PureComponent {
         store.setBackUrl('/order/order_detail_page');
         this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.agrNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
     }
+<<<<<<< HEAD
+=======
+    // 选择优惠劵
+    selectCoupon = (useFlag) => {
+        if (useFlag) {
+            this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { nouseCoupon: true, cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc }, });
+            return;
+        }
+        store.setBackUrl('/order/order_detail_page');
+        if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+            store.setCouponData(this.state.couponInfo);
+        } else {
+            store.setCouponData(this.state.billDesc.data);
+        }
+        this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc }, });
+    }
+    // 判断优惠劵显示
+    renderCoupon = () => {
+        if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+            if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
+                if (this.state.showItrtAmt) {
+                    return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
+                } else {
+                    return (<span>-{this.state.couponInfo.coupVal}元</span>)
+                }
+            } else {
+                return (<span>不使用</span>)
+            }
+
+        } else {
+            if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
+                if (this.state.showItrtAmt) {
+                    return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
+                } else {
+                    return (<span>-{this.state.billDesc.data.coupVal}元</span>)
+                }
+
+            }
+        }
+    }
+>>>>>>> dev_discounts
     render() {
         const { billDesc, money, hideBtn } = this.state
         return (
@@ -272,6 +374,23 @@ export default class order_detail_page extends PureComponent {
 
                             </span>&nbsp;<i></i>
                         </div>
+<<<<<<< HEAD
+=======
+                        <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
+                            <span className={styles.modal_label}>优惠券</span>
+                            {
+                                this.state.billDesc.data && this.state.billDesc.data.coupVal ?
+                                    <span onClick={() => { this.selectCoupon(false) }} className={`${styles.modal_value}`}>
+                                        {
+                                            this.renderCoupon()
+                                        }
+                                    </span>
+                                    :
+                                    <span onClick={() => { this.selectCoupon(true) }} className={`${styles.modal_value}`}>无可用优惠券</span>
+                            }
+                            &nbsp;<i></i>
+                        </div>
+>>>>>>> dev_discounts
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款
                         </SButton>

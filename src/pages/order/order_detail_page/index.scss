@@ -52,6 +52,14 @@
     top: 20px;
   }
 }
+.modal_flex2{
+  span{
+    flex: 5;
+  }
+  span:first-child{
+    flex: 1;
+  }
+}
 
 .modal_title{
   font-size: 36px;

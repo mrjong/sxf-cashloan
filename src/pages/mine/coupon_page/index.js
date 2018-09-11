@@ -10,6 +10,8 @@ import { store } from 'utils/store';
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 let totalPage = false;
 let receiveData = null;
+let nouseFlag = false;
+let saveBankData = null;  // 还款详情页带过来的银行信息
 const API = {
   couponList: '/coupon/list',
 };
@@ -19,6 +21,14 @@ export default class coupon_page extends PureComponent {
     super(props);
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     receiveData = queryData;
+    if (this.props.history.location.state && this.props.history.location.state.cardData) {
+      saveBankData = this.props.history.location.state.cardData
+    }
+    if (this.props.history.location.state && this.props.history.location.state.nouseCoupon) {
+      nouseFlag = true;
+    } else {
+      nouseFlag = false;
+    }
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
@@ -41,8 +51,29 @@ export default class coupon_page extends PureComponent {
   }
   scrollTop = 0;
   componentWillMount() {
-
     this.getTab();
+  }
+  componentWillUnmount() {
+    // 从不可使用的优惠劵点进来，显示弹框
+    console.log(nouseFlag)
+    if (nouseFlag) {
+      if (saveBankData) {
+        store.setCardData(saveBankData)
+      }
+    }
+  }
+  componentDidMount() {
+    this.calcHeight();
+  }
+  calcHeight() {
+    const HeaderHeight = ReactDOM.findDOMNode(this.messageBox).offsetTop;
+    setTimeout(() => {
+      const tabBarHeight = ReactDOM.findDOMNode(this.messageTabBox).getElementsByClassName('am-tabs-tab-bar-wrap')[0].offsetHeight;
+      const hei = document.documentElement.clientHeight - tabBarHeight - HeaderHeight;
+      this.setState({
+        height: hei,
+      });
+    }, 600);
   }
   // 消息 tab
   getTab = () => {
@@ -58,7 +89,7 @@ export default class coupon_page extends PureComponent {
             value: 1,
           },
         ],
-        couponSelected: store.getCouponData().usrCoupNo,
+        couponSelected: store.getCouponData() && store.getCouponData().usrCoupNo,
       });
     } else {
       this.setState({
@@ -115,18 +146,18 @@ export default class coupon_page extends PureComponent {
             Toast.hide();
           }, 600);
         }
-        if (res.errorCode === 'PTM0000') {
+        if (res.msgCode === 'PTM0000') {
           let dataArr = [];
           if (pIndex === 1) {
-            totalPage = res.totalSize;
+            totalPage = Math.ceil(res.data.totalSize / 10);
             this.setState({
               hasMore: false,
             });
           }
-          for (let i = res.data.length - 1; i >= 0; i--) {
-            if ((this.state.msgType !== 0 || !receiveData || !receiveData.billNo) || (res.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
+          for (let i = res.data.data.length - 1; i >= 0; i--) {
+            if ((this.state.msgType !== 0 || !receiveData || !receiveData.billNo) || (res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
               dataArr.push(
-                res.data[i],
+                res.data.data[i],
               );
             }
           }
@@ -204,8 +235,11 @@ export default class coupon_page extends PureComponent {
     this.setState({
       couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
     });
-    const couponData = obj === 'null' ? {coupVal: 0, usrCoupNo: 'null'} : obj;
+    const couponData = obj === 'null' ? { coupVal: 0, usrCoupNo: 'null' } : obj;
     store.setCouponData(couponData);
+    if (saveBankData) {
+      store.setCardData(saveBankData)
+    }
     // 跳转回详情页
     this.props.history.goBack();
   };
@@ -231,20 +265,32 @@ export default class coupon_page extends PureComponent {
       const obj = this.state.rData && this.state.rData[index--];
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
-        <div onClick={() => { this.selectCoupon(obj) }} key={rowID} className={obj && obj.useSts === '00' ? [style.box, style.box_active].join(' ') : [style.box, style.box_default].join(' ')}>
+        <div
+          onClick={receiveData && receiveData.billNo ? () => { this.selectCoupon(obj) } : null}
+          key={rowID}
+          className={obj && obj.useSts === '00' || obj && obj.useSts === '01' ?
+          [style.box, style.box_active].join(' ') :
+          [style.box, style.box_default].join(' ')}
+        >
           <div className={style.leftBox}>
             <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
           </div>
-          <div className={style.rightBox}>
+          <div
+            className={ receiveData && receiveData.billNo && this.state.msgType === 0 ?
+              `${style.rightBox} ${style.rightLittleBox}` : style.rightBox
+            }
+          >
             {
-              receiveData && receiveData.billNo ?
+              receiveData && receiveData.billNo && this.state.msgType === 0 ?
                 <i className={obj && obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
+                : 
+                receiveData && receiveData.billNo && this.state.msgType === 1  ? null
                 :
                 <i className={obj && obj.useSts === '00' ? '' : obj && obj.useSts === '01' ? [style.icon_status, style.icon_useing].join(' ') : obj && obj.useSts === '02' ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
             }
-            <div className={`${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
-            <div className={style.ellipsis}>{obj && obj.coupDesc}</div>
-            <div>有效期至： {obj && obj.validEndTm.length && dayjs(obj.validEndTm.substring(0,obj.validEndTm.length-4)).format('YYYY-MM-DD')}</div>
+            <div className={obj.useSts === '02' || obj.useSts === '03' ?  `${style.title} ${style.ellipsis} ${style.textGray}` : `${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
+            <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.ellipsis} ${style.textGray}` : style.ellipsis}>{obj && obj.coupDesc}</div>
+            <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>有效期至： {obj && obj.validEndTm.length && dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}</div>
           </div>
         </div>
       );
@@ -261,7 +307,7 @@ export default class coupon_page extends PureComponent {
             dataSource={this.state.dataSource}
             renderHeader={() => {
               return (
-                receiveData && receiveData.billNo && classN === 'iview0' ?
+                receiveData && receiveData.billNo && classN === 'iview0' && !nouseFlag ?
                   <h3 onClick={() => { this.selectCoupon('null') }} className={style.no_use_coupon}>
                     <span>不使用优惠券</span>
                     <i className={'null' === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
@@ -300,7 +346,7 @@ export default class coupon_page extends PureComponent {
       );
     };
     return (
-      <div className={style.message_page}>
+      <div className={style.message_page} ref={el => (this.messageBox = el)}>
         {this.state.tabState ? (
           <STabs
             tabTit={this.state.tabs}
@@ -308,6 +354,7 @@ export default class coupon_page extends PureComponent {
             onChange={(tab, index) => {
               this.changeTab(tab, index);
             }}
+            ref={el => (this.messageTabBox = el)}
           >
             {this.state.tabs.map((item2, index2) => (
               <div key={index2}>{item(`iview${index2}`)}</div>
