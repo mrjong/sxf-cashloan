@@ -146,18 +146,18 @@ export default class coupon_page extends PureComponent {
             Toast.hide();
           }, 600);
         }
-        if (res.errorCode === 'PTM0000') {
+        if (res.msgCode === 'PTM0000') {
           let dataArr = [];
           if (pIndex === 1) {
-            totalPage = Math.ceil(res.totalSize / 10);
+            totalPage = Math.ceil(res.data.totalSize / 10);
             this.setState({
               hasMore: false,
             });
           }
-          for (let i = res.data.length - 1; i >= 0; i--) {
-            if ((this.state.msgType !== 0 || !receiveData || !receiveData.billNo) || (res.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
+          for (let i = res.data.data.length - 1; i >= 0; i--) {
+            if ((this.state.msgType !== 0 || !receiveData || !receiveData.billNo) || (res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
               dataArr.push(
-                res.data[i],
+                res.data.data[i],
               );
             }
           }
