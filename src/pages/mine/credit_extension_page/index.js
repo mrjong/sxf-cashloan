@@ -29,6 +29,7 @@ export default class credit_extension_page extends PureComponent {
   }
 
   state = {
+    sourceData: [], // 原始总数据
     stswData: [],
     flag: false,
     submitFlag: false,
@@ -55,7 +56,10 @@ export default class credit_extension_page extends PureComponent {
   requestGetStatus = () => {
     this.props.$fetch.get(`${API.getStw}`).then(result => {
       if (result && result.data !== null && result.msgCode === 'PTM0000') {
-        this.setState({ stswData: result.data.filter(item => needDisplayOptions.includes(item.code)) });
+        this.setState({
+          sourceData: result.data,
+          stswData: result.data.filter(item => needDisplayOptions.includes(item.code)),
+        });
 
         // 判断四项认证是否都认证成功
         const isAllValid = this.state.stswData.every(item => item.stsw.dicDetailCd === '2' || item.stsw.dicDetailCd === '1');
@@ -65,12 +69,14 @@ export default class credit_extension_page extends PureComponent {
       } else {
         this.props.toast.info(result.msgInfo);
       }
-    },
-    );
+    });
   };
 
   // 提交代还金申请
   commitApply = () => {
+    if (!this.checkCreditCardStatus()) {
+      return;
+    }
     const address = store.getPosition();
     const params = {
       location: address,
@@ -87,6 +93,33 @@ export default class credit_extension_page extends PureComponent {
         this.props.toast.info(res.msgInfo);
       }
     });
+  };
+
+  // 判断信用卡状态
+  checkCreditCardStatus = () => {
+    const { sourceData } = this.state;
+    const creditCardStatus = sourceData.filter(item => item && item.code === 'card')[0].stsw.dicDetailCd;
+    let isCreditCardStatusVerify = false;
+    switch (creditCardStatus) {
+      case '1': // 认证中
+        // Toast.info('账单读取中，请稍后再提交');
+        isCreditCardStatusVerify = true;
+        break;
+      case '2': // 认证成功
+        isCreditCardStatusVerify = true;
+        break;
+      case '3': // 认证失败
+        Toast.info('账单读取失败，请返回首页更新账单');
+        isCreditCardStatusVerify = false;
+        break;
+      case '4': // 认证过期
+        Toast.info('账单已过期，请返回首页更新账单');
+        isCreditCardStatusVerify = false;
+        break;
+      default:
+        isCreditCardStatusVerify = false;
+    }
+    return isCreditCardStatusVerify;
   };
 
   // 判断是否绑卡
