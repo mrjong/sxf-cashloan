@@ -77,7 +77,7 @@ export default class coupon_page extends PureComponent {
   }
   // 消息 tab
   getTab = () => {
-    if (receiveData && receiveData.billNo) {
+    if (receiveData && (receiveData.billNo || receiveData.price)) {
       this.setState({
         tabs: [
           {
@@ -131,6 +131,13 @@ export default class coupon_page extends PureComponent {
         billNo: receiveData.billNo,
         // loading: true,
       };
+    } else if (receiveData && receiveData.price) {
+      sendParams = {
+        type: `0${this.state.msgType}`,
+        pageNo: pIndex,
+        price: receiveData.price,
+        // loading: true,
+      };
     } else {
       sendParams = {
         type: `0${this.state.msgType}`,
@@ -155,7 +162,7 @@ export default class coupon_page extends PureComponent {
             });
           }
           for (let i = res.data.data.length - 1; i >= 0; i--) {
-            if ((this.state.msgType !== 0 || !receiveData || !receiveData.billNo) || (res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
+            if ((this.state.msgType !== 0 || !receiveData || (!receiveData.billNo && !receiveData.price)) || (res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
               dataArr.push(
                 res.data.data[i],
               );
@@ -163,7 +170,7 @@ export default class coupon_page extends PureComponent {
           }
           // 倒叙插入
           if (pIndex === 1) {
-            if (receiveData && receiveData.billNo && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') dataArr.push(store.getCouponData());
+            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') dataArr.push(store.getCouponData());
           }
           return dataArr;
         }
@@ -266,29 +273,29 @@ export default class coupon_page extends PureComponent {
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
         <div
-          onClick={receiveData && receiveData.billNo ? () => { this.selectCoupon(obj) } : null}
+          onClick={receiveData && (receiveData.billNo || receiveData.price) ? () => { this.selectCoupon(obj) } : null}
           key={rowID}
           className={obj && obj.useSts === '00' || obj && obj.useSts === '01' ?
-          [style.box, style.box_active].join(' ') :
-          [style.box, style.box_default].join(' ')}
+            [style.box, style.box_active].join(' ') :
+            [style.box, style.box_default].join(' ')}
         >
           <div className={style.leftBox}>
             <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
           </div>
           <div
-            className={ receiveData && receiveData.billNo && this.state.msgType === 0 ?
+            className={receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ?
               `${style.rightBox} ${style.rightLittleBox}` : style.rightBox
             }
           >
             {
-              receiveData && receiveData.billNo && this.state.msgType === 0 ?
+              receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ?
                 <i className={obj && obj.usrCoupNo === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />
-                : 
-                receiveData && receiveData.billNo && this.state.msgType === 1  ? null
                 :
-                <i className={obj && obj.useSts === '00' ? '' : obj && obj.useSts === '01' ? [style.icon_status, style.icon_useing].join(' ') : obj && obj.useSts === '02' ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
+                receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 1 ? null
+                  :
+                  <i className={obj && obj.useSts === '00' ? '' : obj && obj.useSts === '01' ? [style.icon_status, style.icon_useing].join(' ') : obj && obj.useSts === '02' ? [style.icon_status, style.icon_used].join(' ') : [style.icon_status, style.icon_use_over].join(' ')} />
             }
-            <div className={obj.useSts === '02' || obj.useSts === '03' ?  `${style.title} ${style.ellipsis} ${style.textGray}` : `${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
+            <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.title} ${style.ellipsis} ${style.textGray}` : `${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
             <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.ellipsis} ${style.textGray}` : style.ellipsis}>{obj && obj.coupDesc}</div>
             <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>有效期至： {obj && obj.validEndTm.length && dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}</div>
           </div>
@@ -307,7 +314,7 @@ export default class coupon_page extends PureComponent {
             dataSource={this.state.dataSource}
             renderHeader={() => {
               return (
-                receiveData && receiveData.billNo && classN === 'iview0' && !nouseFlag ?
+                receiveData && (receiveData.billNo || receiveData.price) && classN === 'iview0' && !nouseFlag ?
                   <h3 onClick={() => { this.selectCoupon('null') }} className={style.no_use_coupon}>
                     <span>不使用优惠券</span>
                     <i className={'null' === this.state.couponSelected ? [style.icon_select_status, style.icon_select].join(' ') : [style.icon_select_status, style.icon_select_not].join(' ')} />

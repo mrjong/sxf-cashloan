@@ -33,7 +33,10 @@ export default class ConfirmAgencyPage extends PureComponent {
       repayInfo: {
         perd: [],
       },
-      visibleLoading: false
+      visibleLoading: false,
+      couponInfo: {}, // 优惠劵信息
+      showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
+      ItrtAmt: 0, // 首/末期利息金额
     };
   }
 
@@ -50,13 +53,13 @@ export default class ConfirmAgencyPage extends PureComponent {
       },
     );
   }
-  componentWillUnmount(){
-      if(timer){
-          clearInterval(timer)
-      }
-      if(timerOut){
-          clearTimeout(timerOut)
-      }
+  componentWillUnmount() {
+    if (timer) {
+      clearInterval(timer)
+    }
+    if (timerOut) {
+      clearTimeout(timerOut)
+    }
   }
 
   handleShowTipModal = () => {
@@ -92,17 +95,17 @@ export default class ConfirmAgencyPage extends PureComponent {
   clearModalPageData = () => {
     store.setRepaymentModalData(null);
   };
-  
+
   // 设置百分比
-  setPercent=(percent)=>{
-    if(this.state.percent<90&&this.state.percent>=0){
-        console.log(Math.random()*10+1)
-        this.setState({
-            percent:this.state.percent + parseInt(Math.random()*10+1)
-        })
-}else{
-    clearInterval(timer)
-}
+  setPercent = (percent) => {
+    if (this.state.percent < 90 && this.state.percent >= 0) {
+      console.log(Math.random() * 10 + 1)
+      this.setState({
+        percent: this.state.percent + parseInt(Math.random() * 10 + 1)
+      })
+    } else {
+      clearInterval(timer)
+    }
   }
 
   // 给后台缓存协议接口
@@ -128,12 +131,56 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.setState({
           repayInfo: result.data,
         });
+        this.dealMoney(result);
         this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
       } else {
         Toast.info(result.msgInfo);
       }
     });
   };
+
+  // 处理优惠券金额显示
+  dealMoney = (result) => {
+    let couponInfo = store.getCouponData();
+    this.setState({
+      couponInfo: couponInfo,
+    }, () => {
+      store.removeCouponData();
+    });
+    // 首期利息
+    const firstItrt = result.data.perd[0].perdItrtAmt;
+    // 末期利息
+    const lastItrt = result.data.perd[result.data.perd.length - 1].perdItrtAmt;
+    if (result.data.data.useStagTyp === '00') {
+      this.setState({
+        ItrtAmt: firstItrt,
+      })
+      this.compareMoney(couponInfo, firstItrt, result)
+    } else if (result.data.data.useStagTyp === '01') {
+      this.setState({
+        ItrtAmt: lastItrt,
+      })
+      this.compareMoney(couponInfo, lastItrt, result)
+    }
+  }
+
+  // 比较利息与优惠劵大小
+  compareMoney = (couponInfo, itrt, result) => {
+    if (couponInfo && couponInfo !== {}) {
+      if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(itrt)) {
+        this.setState({ showItrtAmt: true });
+      } else {
+        this.setState({ showItrtAmt: false });
+      }
+    } else if (result.data.data && result.data.data.coupVal) {
+      // 优惠劵最大不超过每期利息
+      if (parseFloat(result.data.data.coupVal) > parseFloat(itrt)) {
+        this.setState({ showItrtAmt: true });
+      } else {
+        this.setState({ showItrtAmt: false });
+      }
+    }
+  }
 
   // 埋点方法-根据代还期限埋不同的点
   buriedDucationPoint(type, duration) {
@@ -149,6 +196,19 @@ export default class ConfirmAgencyPage extends PureComponent {
     const modalData = store.getRepaymentModalData();
     const homeCardIndexData = store.getHomeCardIndexData();
     const { lendersDate, repayInfo, repaymentDate } = modalData;
+    let couponId = '';
+    if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+      if (this.state.couponInfo.usrCoupNo !== 'null') {
+        couponId = this.state.couponInfo.usrCoupNo;
+      } else {
+        couponId = '';
+      }
+
+    } else {
+      if (this.state.repayInfo.data && this.state.repayInfo.data.coupVal) {
+        couponId = this.state.repayInfo.data.usrCoupNo
+      }
+    }
     const params = {
       withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
       withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
@@ -156,65 +216,66 @@ export default class ConfirmAgencyPage extends PureComponent {
       autId: homeCardIndexData.autId, // 信用卡账单ID
       repayType: lendersDate.value, // 还款方式
       usrBusCnl: '', // 操作渠道
+      coupId: couponId, // 优惠劵id
       osType: getDeviceType(), // 操作系统
     };
-    timerOut = setTimeout(()=>{
-    this.setState({
+    timerOut = setTimeout(() => {
+      this.setState({
         percent: 0,
         visibleLoading: true
-    },()=>{
-        timer = setInterval(()=>{
-            this.setPercent()
-            ++this.state.time 
-        },1000)
-    })
-},300)
-    this.props.$fetch.post(API.CONFIRM_REPAYMENT, params,{
-        timeout:100000,
-        hideLoading: true
+      }, () => {
+        timer = setInterval(() => {
+          this.setPercent()
+          ++this.state.time
+        }, 1000)
+      })
+    }, 300)
+    this.props.$fetch.post(API.CONFIRM_REPAYMENT, params, {
+      timeout: 100000,
+      hideLoading: true
     }).then(result => {
-        this.setState({
-            percent: 100
-        },()=>{
-            clearInterval(timer)
-            clearTimeout(timerOut)
-            this.setState({
-                visibleLoading: false
-            })
-            if (result && result.msgCode === 'PTM0000') {
-                this.handleShowTipModal();
-                buriedPointEvent(home.borrowingSubmit, {
-                  is_success: true,
-                });
-                // 清除卡信息
-                store.removeCardData();
-                // 清除上个页面中的弹框数据
-                store.removeRepaymentModalData();
-                store.removeHomeCardIndexData();
-              }else if(result && result.msgCode === 'PTM7001'){
-                Toast.info(result.msgInfo);
-                  setTimeout(()=>{
-                    this.props.history.push('/home/home')
-                  },3000)
-              } else {
-                buriedPointEvent(home.borrowingSubmit, {
-                  is_success: false,
-                  fail_cause: result.msgInfo,
-                });
-                Toast.info(result.msgInfo);
-              }
-        })
-    }).catch(err=>{
-        console.log(err)
+      this.setState({
+        percent: 100
+      }, () => {
         clearInterval(timer)
         clearTimeout(timerOut)
         this.setState({
-            percent: 100
-        },()=>{
-            this.setState({
-                visibleLoading: false
-            })
+          visibleLoading: false
         })
+        if (result && result.msgCode === 'PTM0000') {
+          this.handleShowTipModal();
+          buriedPointEvent(home.borrowingSubmit, {
+            is_success: true,
+          });
+          // 清除卡信息
+          store.removeCardData();
+          // 清除上个页面中的弹框数据
+          store.removeRepaymentModalData();
+          store.removeHomeCardIndexData();
+        } else if (result && result.msgCode === 'PTM7001') {
+          Toast.info(result.msgInfo);
+          setTimeout(() => {
+            this.props.history.push('/home/home')
+          }, 3000)
+        } else {
+          buriedPointEvent(home.borrowingSubmit, {
+            is_success: false,
+            fail_cause: result.msgInfo,
+          });
+          Toast.info(result.msgInfo);
+        }
+      })
+    }).catch(err => {
+      console.log(err)
+      clearInterval(timer)
+      clearTimeout(timerOut)
+      this.setState({
+        percent: 100
+      }, () => {
+        this.setState({
+          visibleLoading: false
+        })
+      })
     });
   };
   // 查看合同
@@ -274,12 +335,55 @@ export default class ConfirmAgencyPage extends PureComponent {
     });
   };
 
+  // 选择优惠劵
+  selectCoupon = (useFlag) => {
+    if (useFlag) {
+      this.props.history.push({ pathname: '/mine/coupon_page', search: `?price=${this.state.repayInfo.billPrcpAmt}`, state: { nouseCoupon: true } });
+      return;
+    }
+    if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+      store.setCouponData(this.state.couponInfo);
+    } else {
+      store.setCouponData(this.state.repayInfo.data);
+    }
+    this.props.history.push({ pathname: '/mine/coupon_page', search: `?price=${this.state.repayInfo.billPrcpAmt}` });
+  }
+
   jumpToHome = () => {
     this.props.history.replace('/home/home');
   };
 
+  // 渲染优惠劵
+  renderCoupon = () => {
+    const { couponInfo, repayInfo, showItrtAmt, ItrtAmt } = this.state;
+    if (couponInfo && couponInfo.usrCoupNo) {
+      if (couponInfo.usrCoupNo !== 'null' && couponInfo.coupVal) {
+        // 抵扣金额
+        const discountMoney = showItrtAmt ? ItrtAmt : couponInfo.coupVal;
+        if (repayInfo.data.useStagTyp === '00') {
+          return (<span>{couponInfo.coupVal}元 / 抵扣首期利息{discountMoney}元</span>)
+        } else if (repayInfo.data.useStagTyp === '01') {
+          return (<span>{couponInfo.coupVal}元 / 抵扣末期利息{discountMoney}元</span>)
+        }
+      } else {
+        return (<span>不使用</span>)
+      }
+
+    } else {
+      // 抵扣金额
+      const resDiscountMoney = showItrtAmt ? ItrtAmt : repayInfo.data.coupVal;
+      if (repayInfo.data && repayInfo.data.coupVal) {
+        if (repayInfo.data.useStagTyp === '00') {
+          return (<span>{repayInfo.data.coupVal}元 / 抵扣首期利息{resDiscountMoney}元</span>)
+        } else if (repayInfo.data.useStagTyp === '01') {
+          return (<span>{repayInfo.data.coupVal}元 / 抵扣末期利息{resDiscountMoney}元</span>)
+        }
+      }
+    }
+  }
+
   render() {
-    const { isShowModal, repayInfo, isShowTipModal, visibleLoading,percent } = this.state;
+    const { isShowModal, repayInfo, isShowTipModal, visibleLoading, percent } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -294,13 +398,13 @@ export default class ConfirmAgencyPage extends PureComponent {
                 <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
               </li>
             ) : (
-              <li className={style.list_item} onClick={this.handleShowModal}>
-                <label className={style.item_name}>还款计划</label>
-                <span style={{ color: '#4DA6FF' }} className={style.item_value}>
-                  <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
-                </span>
-              </li>
-            )}
+                <li className={style.list_item} onClick={this.handleShowModal}>
+                  <label className={style.item_name}>还款计划</label>
+                  <span style={{ color: '#4DA6FF' }} className={style.item_value}>
+                    <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
+                  </span>
+                </li>
+              )}
             <li className={style.list_item}>
               <label className={style.item_name}>借款期限</label>
               <span className={style.item_value}>
@@ -310,6 +414,23 @@ export default class ConfirmAgencyPage extends PureComponent {
             <li className={style.list_item}>
               <label className={style.item_name}>放款日期</label>
               <span className={style.item_value}>{repayInfo.loanDt}</span>
+            </li>
+            <li className={style.list_item}>
+              <label className={style.item_name}>优惠劵</label>
+              {
+                repayInfo.data && repayInfo.data.coupVal ?
+                  <span onClick={() => { this.selectCoupon(false) }} className={style.item_value}>
+                    {
+                      this.renderCoupon()
+                    }
+                    <img style={{ marginLeft: '.1rem', }} className={style.list_item_arrow} src={iconArrowRight} />
+                  </span>
+                  :
+                  <span onClick={() => { this.selectCoupon(true) }} className={style.item_value}>
+                    无可用优惠券
+                    <img style={{ marginLeft: '.1rem', }} className={style.list_item_arrow} src={iconArrowRight} />
+                  </span>
+              }
             </li>
           </ul>
         </Panel>
@@ -344,22 +465,22 @@ export default class ConfirmAgencyPage extends PureComponent {
           </a>
         </p>
         <Modal
-        wrapClassName={style.modalLoading}
+          wrapClassName={style.modalLoading}
           visible={visibleLoading}
           transparent
           maskClosable={false}
         //   onClose={this.onClose('modal1')}
-         
+
         //   footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
         //   wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
-        <div className="show-info">
-        <div className={style.modalLoading}>
-        借款处理中...
+          <div className="show-info">
+            <div className={style.modalLoading}>
+              借款处理中...
         </div>
-          <div className="progress"><Progress percent={percent} position="normal" /></div>
-          {/* <div aria-hidden="true">{percent}</div> */}
-        </div>
+            <div className="progress"><Progress percent={percent} position="normal" /></div>
+            {/* <div aria-hidden="true">{percent}</div> */}
+          </div>
         </Modal>
         <Modal
           wrapClassName={style.modal_tip_warp}
