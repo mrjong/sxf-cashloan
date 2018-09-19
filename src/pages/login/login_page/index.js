@@ -243,10 +243,10 @@ export default class login_page extends PureComponent {
             <div className={style.agreement}>
               注册即视为同意
               <span onClick={() => { this.go('register_agreement_page') }}>
-                《注册及授信协议》
+                《随行付金融用户注册协议》
               </span>
               <span onClick={() => { this.go('privacy_agreement_page') }}>
-                《用户隐私协议》
+                《随行付用户隐私权政策》
               </span>
             </div>
           </div>
