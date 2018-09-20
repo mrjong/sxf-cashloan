@@ -252,6 +252,7 @@ export default class order_detail_page extends PureComponent {
                     }, 3000);
                 }
             } else {
+                this.props.toast.info(res.msgInfo)
                 buriedPointEvent(order.repaymentFirst, {
                     entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
                     is_success: false,
@@ -261,7 +262,6 @@ export default class order_detail_page extends PureComponent {
                     showMoudle: false
                 })
                 this.getLoanInfo();
-                this.props.toast.info(res.msgInfo)
             }
         }).catch(err => {
             this.setState({
