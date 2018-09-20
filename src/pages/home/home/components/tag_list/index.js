@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tag from '../tag';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
+import { store } from 'utils/store';
 
 export default class TagList extends React.PureComponent {
   constructor(props) {
@@ -25,8 +28,19 @@ export default class TagList extends React.PureComponent {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.burientype && !store.getHadShowModal()) {
+      buriedPointEvent(home.lenders, {
+        lenders_type: nextProps.tagList[nextProps.defaultindex].name,
+      });
+      store.setHadShowModal(true);
+    }
     if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.defaultindex !== nextProps.defaultindex)) {
       this.passInitData(nextProps);
+      if (nextProps.burientype) {
+        buriedPointEvent(home.lenders, {
+          lenders_type: nextProps.tagList[nextProps.defaultindex].name,
+        });
+      }
     }
   }
 
@@ -67,7 +81,18 @@ export default class TagList extends React.PureComponent {
         key={index}
         className={className}
         active={!item.disable && index === currentIndex}
-        onClick={() => this._handleClick(onClick, index, item)}
+        onClick={() => {
+          if (index !== currentIndex) {
+            this.setState({
+              currentIndex: index,
+            });
+            const params = {
+              index,
+              value: item,
+            };
+            onClick(params);
+          }
+        }}
         style={{ backgroundColor: item.disable ? '#ccc' : '', ...item.style }}
         {...restProps}
       >

@@ -31,6 +31,7 @@ const storeListLocal = {
   OutLinkUrl: 'outLintUrl', // 去外链标识
   CouponData: 'couponData', // 跳转路由中优惠劵的信息
   LandingPageImgUrl: 'landingPageImgUrl', // 落地页图片
+  HadShowModal: 'hadShowModal', // 是否开过弹框
 };
 
 // 本地session存储 方法名与key值对应表

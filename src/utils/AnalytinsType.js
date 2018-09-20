@@ -13,6 +13,7 @@ const home = {
   durationMonth3: 'DC_HOME_DURATION_MONTH_3', // 代还期限-3个月
   durationMonth6: 'DC_HOME_DURATION_MONTH_6', // 代还期限-6个月
   durationMonth12: 'DC_HOME_DURATION_MONTH_12', // 代还期限-12个月
+  lenders: 'DC_HOME_LENDERS', // 放款日期-立即放款
   borrowingPreSubmit: 'DC_HOME_BORROWING_PRE_SUBMIT', // 选择借款要素弹框页-点击确认按钮
   borrowingSubmit: 'DC_HOME_BORROWING_SUBMIT', // 代还确认页-点击确认借款按钮
   informationMyselfFrontCard: 'DC_HOME_BASE_INFO_FRONT_CARD', // 实名认证页-点击拍摄身份证正面

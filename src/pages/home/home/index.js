@@ -64,6 +64,11 @@ export default class HomePage extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    // 离开首页的时候 将 是否打开过底部弹框标志恢复
+    store.removeHadShowModal();
+  }
+
   // 从 url 中获取参数，如果有 token 就设置下
   getTokenFromUrl = () => {
     const urlParams = getParamsFromUrl(window.location.search);
