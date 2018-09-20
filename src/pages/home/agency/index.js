@@ -217,6 +217,7 @@ export default class ConfirmAgencyPage extends PureComponent {
       repayType: lendersDate.value, // 还款方式
       usrBusCnl: '', // 操作渠道
       coupId: couponId, // 优惠劵id
+      price: this.state.repayInfo.billPrcpAmt, // 签约金额
       osType: getDeviceType(), // 操作系统
     };
     timerOut = setTimeout(() => {
