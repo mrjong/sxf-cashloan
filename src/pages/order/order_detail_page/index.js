@@ -260,8 +260,11 @@ export default class order_detail_page extends PureComponent {
                 this.setState({
                     showMoudle: false
                 })
-                this.getLoanInfo();
                 this.props.toast.info(res.msgInfo);
+                // 刷新当前list
+                setTimeout(() => {
+                    this.getLoanInfo();
+                }, 3000);
             }
         }).catch(err => {
             this.setState({
