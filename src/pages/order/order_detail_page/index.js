@@ -261,7 +261,7 @@ export default class order_detail_page extends PureComponent {
                     showMoudle: false
                 })
                 this.getLoanInfo();
-                this.props.toast.info(res.msgInfo)
+                this.props.toast.info(res.msgInfo);
             }
         }).catch(err => {
             this.setState({
