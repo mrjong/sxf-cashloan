@@ -354,7 +354,7 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true });  buriedPointEvent(order.repayment, {entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'}); }}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment, {entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'}); }}>
                             主动还款
                         </SButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
