@@ -151,12 +151,12 @@ export default class ConfirmAgencyPage extends PureComponent {
     const firstItrt = result.data.perd[0].perdItrtAmt;
     // 末期利息
     const lastItrt = result.data.perd[result.data.perd.length - 1].perdItrtAmt;
-    if (result.data.data.useStagTyp === '00') {
+    if (result.data.data.useStagTyp === '01') {
       this.setState({
         ItrtAmt: firstItrt,
       })
       this.compareMoney(couponInfo, firstItrt, result)
-    } else if (result.data.data.useStagTyp === '01') {
+    } else if (result.data.data.useStagTyp === '00') {
       this.setState({
         ItrtAmt: lastItrt,
       })
@@ -357,13 +357,14 @@ export default class ConfirmAgencyPage extends PureComponent {
   // 渲染优惠劵
   renderCoupon = () => {
     const { couponInfo, repayInfo, showItrtAmt, ItrtAmt } = this.state;
+    console.log(couponInfo)
     if (couponInfo && couponInfo.usrCoupNo) {
       if (couponInfo.usrCoupNo !== 'null' && couponInfo.coupVal) {
         // 抵扣金额
         const discountMoney = showItrtAmt ? ItrtAmt : couponInfo.coupVal;
-        if (repayInfo.data.useStagTyp === '00') {
+        if (couponInfo.useStagTyp === '01') {
           return (<span>{couponInfo.coupVal}元 / 抵扣首期利息{discountMoney}元</span>)
-        } else if (repayInfo.data.useStagTyp === '01') {
+        } else if (couponInfo.useStagTyp === '00') {
           return (<span>{couponInfo.coupVal}元 / 抵扣末期利息{discountMoney}元</span>)
         }
       } else {
@@ -374,9 +375,9 @@ export default class ConfirmAgencyPage extends PureComponent {
       // 抵扣金额
       const resDiscountMoney = showItrtAmt ? ItrtAmt : repayInfo.data.coupVal;
       if (repayInfo.data && repayInfo.data.coupVal) {
-        if (repayInfo.data.useStagTyp === '00') {
+        if (repayInfo.data.useStagTyp === '01') {
           return (<span>{repayInfo.data.coupVal}元 / 抵扣首期利息{resDiscountMoney}元</span>)
-        } else if (repayInfo.data.useStagTyp === '01') {
+        } else if (repayInfo.data.useStagTyp === '00') {
           return (<span>{repayInfo.data.coupVal}元 / 抵扣末期利息{resDiscountMoney}元</span>)
         }
       }
