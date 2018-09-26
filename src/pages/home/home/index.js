@@ -201,7 +201,11 @@ export default class HomePage extends PureComponent {
 
   // 获取 banner 列表
   requestGetBannerList = () => {
-    this.props.$fetch.post(API.BANNER, null, { hideLoading: true }).then(result => {
+    const params = {
+      type: 1,
+      client: 'wap_out',
+    };
+    this.props.$fetch.post(API.BANNER, params, { hideLoading: true }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         const bannerData = result.data.map(item => ({
           src: `data:image/png;base64,${item.picUrl}`,
