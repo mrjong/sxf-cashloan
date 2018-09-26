@@ -4,7 +4,7 @@ import { Modal, Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { getParamsFromUrl, isBugBrowser } from 'utils/common';
+import { getParamsFromUrl, isBugBrowser, isWXOpen } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
 import { home, mine } from 'utils/AnalytinsType';
 import SButton from 'components/button';
@@ -22,9 +22,19 @@ const API = {
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 };
 
+let token = '';
+let tokenFromStotage = '';
+
 @fetch.inject()
 export default class HomePage extends PureComponent {
   constructor(props) {
+    // 获取token
+    token = Cookie.get('fin-v-card-token');
+    if (isBugBrowser()) {
+      tokenFromStotage = store.getToken();
+    } else {
+      tokenFromStotage = store.getTokenSession();
+    }
     super(props);
     this.state = {
       isShowModal: false,
@@ -39,8 +49,17 @@ export default class HomePage extends PureComponent {
     // 清除四项认证进入绑卡页的标识
     store.removeCheckCardRouter();
     this.getTokenFromUrl();
-    this.requestGetUsrInfo();
-
+    // 判断是否是微信打通（微信登陆）
+    // if (isWXOpen() && !tokenFromStotage && !token) {
+    if (true && !tokenFromStotage && !token) {
+      this.cacheBanner();
+    }else {
+      this.requestGetUsrInfo();
+    }
+    // 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
+    if (isWXOpen()) {
+      store.setHistoryRouter(window.location.pathname);
+    }
     let bankInfo = store.getCardData();
     let repayInfoData = store.getRepaymentModalData();
     if (bankInfo && bankInfo !== {}) {
@@ -230,18 +249,30 @@ export default class HomePage extends PureComponent {
         });
 
         // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
-        const bannerAble = Cookie.getJSON('bannerAble');
-        const bannerDataFromSession = store.getBannerData();
-        if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
-          this.setState({
-            bannerList: bannerDataFromSession,
-          });
-        } else {
-          this.requestGetBannerList();
-        }
+        this.cacheBanner();
       } else {
         Toast.info(result.msgInfo);
       }
+    });
+  };
+
+  // 缓存banner
+  cacheBanner = () => {
+    const bannerAble = Cookie.getJSON('bannerAble');
+    const bannerDataFromSession = store.getBannerData();
+    if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
+      this.setState({
+        bannerList: bannerDataFromSession,
+      });
+    } else {
+      this.requestGetBannerList();
+    }
+  }
+
+  // 去登陆
+  handleNeedLogin = () => {
+    Toast.info('请先登录', 3, () => {
+      this.props.history.push('/login');
     });
   };
 
@@ -276,17 +307,26 @@ export default class HomePage extends PureComponent {
             haselescard={this.state.haselescard}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
-            usrIndexInfo.indexSts === 'LN0010' ||
-            (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-              <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-                {usrIndexInfo.indexMsg}
-              </SButton>
-            )}
+              usrIndexInfo.indexSts === 'LN0010' ||
+              (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+                <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                  {usrIndexInfo.indexMsg}
+                </SButton>
+              )}
           </BankContent>
         );
         break;
       default:
         console.log('default');
+        // if(isWXOpen()){
+        componentsDisplay = (
+          <InfoCard contentData={usrIndexInfo}>
+            <SButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
+              申请信用卡代还
+              </SButton>
+          </InfoCard>
+        );
+      // }
     }
     return (
       <div className={style.home_page}>
@@ -296,11 +336,11 @@ export default class HomePage extends PureComponent {
               <MsgBadge />
             </Carousels>
           ) : (
-            <img className={style.default_banner} src={defaultBanner} alt="banner" />
-          )
+              <img className={style.default_banner} src={defaultBanner} alt="banner" />
+            )
         ) : (
-          <img className={style.default_banner} src={defaultBanner} alt="banner" />
-        )}
+            <img className={style.default_banner} src={defaultBanner} alt="banner" />
+          )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* 确认代还信息弹框 */}

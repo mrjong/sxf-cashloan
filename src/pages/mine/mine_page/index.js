@@ -7,6 +7,7 @@ import { logoutAppHandler } from 'utils/common';
 import Lists from 'components/lists';
 import { buriedPointEvent } from 'utils/Analytins';
 import { mine } from 'utils/AnalytinsType';
+import { isBugBrowser, isWXOpen } from 'utils/common';
 import styles from './index.scss';
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -15,10 +16,20 @@ const API = {
   USERSTATUS: '/signup/getUsrSts', // 用户状态获取
 };
 
+let token = '';
+let tokenFromStotage = '';
+
 @fetch.inject()
 export default class mine_page extends PureComponent {
   constructor(props) {
     super(props);
+    // 获取token
+    token = Cookie.get('fin-v-card-token');
+    if (isBugBrowser()) {
+      tokenFromStotage = store.getToken();
+    } else {
+      tokenFromStotage = store.getTokenSession();
+    }
     this.state = {
       // showMoudle: false, // 是否展示确认退出的modal
       realNmFlg: false, // 用户是否实名
@@ -30,34 +41,40 @@ export default class mine_page extends PureComponent {
     };
   }
   componentWillMount() {
+    // 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
+    if (isWXOpen()) {
+      store.setHistoryRouter(window.location.pathname);
+    }
     // 清除订单缓存
     store.removeBackData()
     // 移除会员卡出入口
-    store.removeVipBackUrl()
-    // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
-    if (Cookie.get('authFlag')) {
-      this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: Cookie.get('authFlag') === '1' ? true : false });
-    } else {
-      this.getUsrInfo();
+    store.removeVipBackUrl();
+    if (tokenFromStotage && token) {
+      // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
+      if (Cookie.get('authFlag')) {
+        this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: Cookie.get('authFlag') === '1' ? true : false });
+      } else {
+        this.getUsrInfo();
+      }
+      // 判断session是否存了购买会员卡的状态，没有调用接口，有的话直接从session里取
+      // if (Cookie.get('VIPFlag')) {
+      //   switch (Cookie.get('VIPFlag')) {
+      //     case '0':
+      //       this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
+      //       break;
+      //     case '1':
+      //       this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
+      //       break;
+      //     case '2':
+      //       this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      // } else {
+      //   this.queryVipCard();
+      // }
     }
-    // 判断session是否存了购买会员卡的状态，没有调用接口，有的话直接从session里取
-    // if (Cookie.get('VIPFlag')) {
-    //   switch (Cookie.get('VIPFlag')) {
-    //     case '0':
-    //       this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
-    //       break;
-    //     case '1':
-    //       this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
-    //       break;
-    //     case '2':
-    //       this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // } else {
-    //   this.queryVipCard();
-    // }
   }
   // 获取用户信息
   getUsrInfo = () => {
@@ -113,6 +130,12 @@ export default class mine_page extends PureComponent {
 
   // 第一组里的点击事件
   clickhandle = item => {
+    if (!tokenFromStotage && !token) {
+      this.props.toast.info('请先登录', 2, () => {
+        this.props.history.push('/login');
+      });
+      return;
+    }
     if (item.jumpToUrl === '/mine/coupon_page') {
       this.props.history.push(item.jumpToUrl);
     } else {
@@ -121,11 +144,11 @@ export default class mine_page extends PureComponent {
         // this.props.history.push(item.jumpToUrl);
         this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
       }
-      if (!mblNoHid) {
-        this.props.toast.info('用户未登录', 2, () => {
-          this.props.history.push('/login');
-        })
-      }
+      // if (!mblNoHid) {
+      //   this.props.toast.info('用户未登录', 2, () => {
+      //     this.props.history.push('/login');
+      //   })
+      // }
       if (!realNmFlg) {
         this.props.toast.info('请先进行实名认证', 2, () => {
           // let isWx=this.is_weixn()
@@ -142,6 +165,12 @@ export default class mine_page extends PureComponent {
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
+    if (!tokenFromStotage && !token) {
+      this.props.toast.info('请先登录', 2, () => {
+        this.props.history.push('/login');
+      });
+      return;
+    }
     if (item.jumpToUrl === '/home/real_name' || item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' || item.jumpToUrl === '/mine/fqa_page') {
       if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
         buriedPointEvent(mine.creditExtension, {
@@ -154,11 +183,11 @@ export default class mine_page extends PureComponent {
       if (mblNoHid && realNmFlg) {
         this.props.history.push(item.jumpToUrl);
       }
-      if (!mblNoHid) {
-        this.props.toast.info('用户未登录', 2, () => {
-          this.props.history.push('/login');
-        })
-      }
+      // if (!mblNoHid) {
+      //   this.props.toast.info('用户未登录', 2, () => {
+      //     this.props.history.push('/login');
+      //   })
+      // }
       if (!realNmFlg) {
         this.props.toast.info('请先进行实名认证', 2, () => {
           // let isWx=this.is_weixn()
@@ -175,12 +204,27 @@ export default class mine_page extends PureComponent {
   };
   // 第三组里的点击事件
   clickhandle3 = item => {
+    if (!tokenFromStotage && !token) {
+      this.props.toast.info('请先登录', 2, () => {
+        this.props.history.push('/login');
+      });
+      return;
+    }
     this.props.history.push(item.jumpToUrl);
   };
   // 点击退出登录后弹框
   logoutHandler = () => {
     logoutAppHandler();
   };
+  // 登陆
+  logInHandler = () => {
+    this.props.history.push('/login');
+    // sessionStorage.clear();
+    // localStorage.clear();
+    // Cookie.remove('fin-v-card-token');
+    // Cookie.remove('authFlag');
+    // Cookie.remove('VIPFlag');
+  }
 
   render() {
     const { mblNoHid, realNmFlg } = this.state;
@@ -254,17 +298,25 @@ export default class mine_page extends PureComponent {
       <div className={styles.mine_page}>
         <div className={styles.user_inf}>
           <img src={avatar} alt="用户头像" />
-          <span>{mblNoHid}</span>
+          {tokenFromStotage && token ?
+            <span>{mblNoHid}</span>
+            :
+            <span onClick={this.logInHandler}>登录/注册</span>
+          }
         </div>
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
         {/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
-        <div
-          onClick={this.logoutHandler}
-          className={styles.logout}
-        >
-          退出登录
-        </div>
+        {tokenFromStotage && token ?
+          (<div
+            onClick={this.logoutHandler}
+            className={styles.logout}
+          >
+            退出登录
+          </div>)
+          :
+          null
+        }
         {/* {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} textCont="确认退出登录？" />} */}
       </div>
     )

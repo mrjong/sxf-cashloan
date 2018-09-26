@@ -21,7 +21,7 @@ export default class wx_middle_page extends Component {
 		const u = navigator.userAgent;
 		const osType = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 ? 'ANDRIOD' : !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 'IOS' : 'PC';
 		sessionStorage.setItem('h5Channel', query.h5Channel)
-		if (window.location.search.slice(1) && query.code) {
+		if (query && query.code) {
 			this.props.$fetch.post(`/wx/authcb`, {
 				state: query.state,
 				code: query.code,
@@ -30,7 +30,7 @@ export default class wx_middle_page extends Component {
 			}).then(res => {
 				if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {                            //请求成功,跳到登录页(前提是不存在已登录未注册的情况)
 					console.log(res)
-					this.props.history.replace('/loginOutside')       //微信授权成功调到登录页
+					this.props.history.replace('/login')       //微信授权成功调到登录页
 				} else if (res.msgCode == 'WX0100') {
 					// $.cookie('fin_v_card_token_wechat', res.token, { path: '/', expires: 999 })
           // $.cookie('fin_v_card_token', res.loginToken, { path: '/', expires: 999 })

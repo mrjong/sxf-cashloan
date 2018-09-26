@@ -2,7 +2,7 @@
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 // 3、在 noRouterBack.js 中添加页面的路由。
-import { logoutAppHandler, changeHistoryState } from 'utils/common';
+import { logoutAppHandler, changeHistoryState, isWXOpen } from 'utils/common';
 import qs from 'qs';
 import { store } from 'utils/store';
 if (window.history && window.history.pushState) {
@@ -14,7 +14,12 @@ if (window.history && window.history.pushState) {
         return;
       }
       if (window.location.pathname === '/login') {
-        window.history.pushState(null, null, document.URL);
+        // if (isWXOpen()) {
+        if(true){
+          window.ReactRouterHistory.goBack()
+        } else {
+          window.history.pushState(null, null, document.URL);
+        }
         return;
       }
       changeHistoryState();
@@ -39,6 +44,7 @@ if (window.history && window.history.pushState) {
             return;
           }
           const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+          console.log(historyRouter)
           switch (historyRouter) {
             case '/login':
               return;
