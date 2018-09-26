@@ -206,16 +206,25 @@ export default class order_detail_page extends PureComponent {
         let couponId = '';
         if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
             if (this.state.couponInfo.usrCoupNo !== 'null') {
-                couponId = this.state.couponInfo.usrCoupNo;
+                if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
+                    couponId = '';
+                } else {
+                    couponId = this.state.couponInfo.usrCoupNo;
+                }
             } else {
                 couponId = '';
             }
 
         } else {
             if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
-                couponId = this.state.billDesc.data.usrCoupNo
+                if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
+                    couponId = '';
+                } else {
+                    couponId = this.state.billDesc.data.usrCoupNo
+                }
             }
         }
+        console.log(couponId);
         this.props.$fetch.post(API.payback, {
             billNo: this.state.billNo,
             thisRepTotAmt: this.state.sendMoney,
@@ -357,7 +366,7 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment, {entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'}); }}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' }); }}>
                             主动还款
                         </SButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
