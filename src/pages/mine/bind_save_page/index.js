@@ -290,7 +290,7 @@ export default class bind_save_page extends PureComponent {
             </div>
           </div>
         </List>
-        <p className={styles.tips}>*储蓄卡将作您的还款银行卡，还款日当天系统将自动扣款</p>
+        <p className={styles.tips}>*储蓄卡将作为您的还款银行卡，还款日当天系统将自动扣款</p>
         <ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>确认</ButtonCustom>
         <span className={styles.support_type} onClick={this.supporBank}>支持银行卡类型</span>
       </div>
