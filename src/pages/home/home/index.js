@@ -50,10 +50,10 @@ export default class HomePage extends PureComponent {
     store.removeCheckCardRouter();
     this.getTokenFromUrl();
     // 判断是否是微信打通（微信登陆）
-    // if (isWXOpen() && !tokenFromStotage && !token) {
-    if (true && !tokenFromStotage && !token) {
+    if (isWXOpen() && !tokenFromStotage && !token) {
+      // if (true && !tokenFromStotage && !token) {
       this.cacheBanner();
-    }else {
+    } else {
       this.requestGetUsrInfo();
     }
     // 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
@@ -275,7 +275,7 @@ export default class HomePage extends PureComponent {
 
   // 去登陆
   handleNeedLogin = () => {
-    Toast.info('请先登录', 3, () => {
+    Toast.info('请先登录', 2, () => {
       this.props.history.push('/login');
     });
   };
@@ -322,29 +322,34 @@ export default class HomePage extends PureComponent {
         break;
       default:
         console.log('default');
-        // if(isWXOpen()){
-        componentsDisplay = (
-          <InfoCard contentData={usrIndexInfo}>
-            <SButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
-              申请信用卡代还
+        if (isWXOpen()) {
+          componentsDisplay = (
+            <InfoCard contentData={usrIndexInfo}>
+              <SButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
+                申请信用卡代还
               </SButton>
-          </InfoCard>
-        );
-      // }
+            </InfoCard>
+          );
+        }
     }
     return (
       <div className={style.home_page}>
-        {usrIndexInfo ? (
-          bannerList && bannerList.length > 0 ? (
-            <Carousels data={bannerList} entryFrom="banner">
-              <MsgBadge />
-            </Carousels>
+        {isWXOpen() && !tokenFromStotage && !token ? (
+        // {true && !tokenFromStotage && !token ? (
+          <Carousels data={bannerList} entryFrom="banner"></Carousels>
+        )
+          :
+          usrIndexInfo ? (
+            bannerList && bannerList.length > 0 ? (
+              <Carousels data={bannerList} entryFrom="banner">
+                <MsgBadge />
+              </Carousels>
+            ) : (
+                <img className={style.default_banner} src={defaultBanner} alt="banner" />
+              )
           ) : (
               <img className={style.default_banner} src={defaultBanner} alt="banner" />
-            )
-        ) : (
-            <img className={style.default_banner} src={defaultBanner} alt="banner" />
-          )}
+            )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* 确认代还信息弹框 */}

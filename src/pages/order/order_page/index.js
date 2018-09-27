@@ -305,8 +305,8 @@ export default class message_page extends PureComponent {
                 return (
                     <div className={style.no_data}>
                         <i />暂无账单
-                        {/* {isWXOpen() ? */}
-                        {true ?
+                        {isWXOpen() && !tokenFromStotage && !token ?
+                        // {true ?
                             <SButton className={style.noLogin} onClick={this.goLogin}>
                                 去登录
                             </SButton>

@@ -17,6 +17,9 @@ export default class wx_middle_page extends Component {
     };
   }
   componentWillMount() {
+		// 移除cookie中的token
+		Cookie.remove('fin-v-card-token');
+		// 从url截取数据
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const u = navigator.userAgent;
 		const osType = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 ? 'ANDRIOD' : !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 'IOS' : 'PC';
@@ -31,13 +34,16 @@ export default class wx_middle_page extends Component {
 				if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {                            //请求成功,跳到登录页(前提是不存在已登录未注册的情况)
 					console.log(res)
 					this.props.history.replace('/login')       //微信授权成功调到登录页
-				} else if (res.msgCode == 'WX0100') {
-					// $.cookie('fin_v_card_token_wechat', res.token, { path: '/', expires: 999 })
-          // $.cookie('fin_v_card_token', res.loginToken, { path: '/', expires: 999 })
-          Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
-          Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-					sessionStorage.setItem('tokenId', res.loginToken)
-					sessionStorage.setItem('authorizedNotLoginStats', 'true')
+				} else if (res.msgCode == 'WX0100') { // 已授权不需要登陆
+          Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
+					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+					// TODO: 根据设备类型存储token
+					if (isBugBrowser()) { // 登陆的token
+						store.setToken(res.loginToken);
+					} else {
+						store.setTokenSession(res.loginToken);
+					}
+					// sessionStorage.setItem('authorizedNotLoginStats', 'true')
 					this.props.history.replace('/home/home')
 
 				} else {
@@ -55,20 +61,18 @@ export default class wx_middle_page extends Component {
 				if (res.msgCode == 'WX0101') {//没有授权
 					console.log(res)
 					console.log(res.url)
-          // $.cookie('fin_v_card_token_wechat', res.token, { path: '/', expires: 999 })
           Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
 					window.location.href = res.url
-				} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {  //已授权未登录
+				} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {  //已授权未登录 (静默授权为7天，7天后过期）
 					this.props.history.replace('/home/home')
 				} else if (res.msgCode == 'WX0100') {    //已授权已登录
-          // $.cookie('fin_v_card_token', res.loginToken, { path: '/', expires: 999 })
           Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-          if (isBugBrowser()) {
-            store.setToken(token);
-          } else {
-            store.setTokenSession(token);
-          }
-					// sessionStorage.setItem('tokenId', res.loginToken)
+					// TODO: 根据设备类型存储token
+					if (isBugBrowser()) { // 登陆的token
+						store.setToken(res.loginToken);
+					} else {
+						store.setTokenSession(res.loginToken);
+					}
 					// sessionStorage.setItem('authorizedNotLoginStats', 'true')
 					if (query.url) {
 						window.location.href = query.url

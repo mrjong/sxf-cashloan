@@ -14,8 +14,8 @@ if (window.history && window.history.pushState) {
         return;
       }
       if (window.location.pathname === '/login') {
-        // if (isWXOpen()) {
-        if(true){
+        if (isWXOpen()) {
+        // if(true){
           window.ReactRouterHistory.goBack()
         } else {
           window.history.pushState(null, null, document.URL);
