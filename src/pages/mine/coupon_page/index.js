@@ -361,6 +361,7 @@ export default class coupon_page extends PureComponent {
             onChange={(tab, index) => {
               this.changeTab(tab, index);
             }}
+            swipeable={false}
             ref={el => (this.messageTabBox = el)}
           >
             {this.state.tabs.map((item2, index2) => (
