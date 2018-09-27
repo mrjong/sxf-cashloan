@@ -203,7 +203,7 @@ export default class bind_credit_page extends PureComponent {
             信用卡卡号
           </InputItem>
         </List>
-        <p className={styles.tips}>借款资金将转入您绑定代信用卡中，请注意查收</p>
+        <p className={styles.tips}>借款资金将转入您绑定的信用卡中，请注意查收</p>
         <ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>确认</ButtonCustom>
         <span className={styles.support_type} onClick={this.supporBank}>支持银行卡类型</span>
       </div>
