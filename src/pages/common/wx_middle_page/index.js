@@ -33,7 +33,8 @@ export default class wx_middle_page extends Component {
 			}).then(res => {
 				if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {                            //请求成功,跳到登录页(前提是不存在已登录未注册的情况)
 					console.log(res)
-					this.props.history.replace('/login')       //微信授权成功调到登录页
+					// this.props.history.replace('/login')   
+					this.props.history.replace('/home/home') //微信授权成功调到登录页
 				} else if (res.msgCode == 'WX0100') { // 已授权不需要登陆
           Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });

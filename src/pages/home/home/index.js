@@ -276,7 +276,7 @@ export default class HomePage extends PureComponent {
   // 去登陆
   handleNeedLogin = () => {
     Toast.info('请先登录', 2, () => {
-      this.props.history.push('/login');
+      this.props.history.push({pathname: '/login', state: { isAllowBack: true }});
     });
   };
 
