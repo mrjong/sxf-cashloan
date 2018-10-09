@@ -14,8 +14,8 @@ if (window.history && window.history.pushState) {
         return;
       }
       if (window.location.pathname === '/login') {
-        // console.log(window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack)
-        let isAllowBack = window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack;
+        // console.log(window.ReactRouterHistory && window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack)
+        let isAllowBack = window.ReactRouterHistory && window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack;
         if (isWXOpen() && isAllowBack) {
           window.ReactRouterHistory.goBack()
         } else {
