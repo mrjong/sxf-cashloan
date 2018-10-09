@@ -6,7 +6,7 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
+import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState, isWXOpen } from 'utils/common';
 import { validators } from 'utils/validator';
 import { buriedPointEvent, pageView } from 'utils/Analytins';
 import { login } from 'utils/AnalytinsType';
@@ -120,12 +120,16 @@ export default class login_page extends PureComponent {
               } else {
                 store.setTokenSession(res.data.tokenId);
               }
-              this.props.history.push('/home/home');
+              if (isWXOpen()) {
+                this.props.history.goBack();
+              } else {
+                this.props.history.push('/home/home');
+              }
             },
             error => {
               error.msgInfo && Toast.info(error.msgInfo);
             },
-        );
+          );
       } else {
         Toast.info(getFirstError(err));
       }
