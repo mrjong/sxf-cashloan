@@ -101,7 +101,7 @@ export default class login_page extends PureComponent {
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
           osType, // 操作系统
           smsCd: values.smsCd, // IP地址
-          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
+          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : localStorage.getItem('h5Channel')||'h5', // 用户渠道
           location: store.getPosition(), // 定位地址 TODO 从session取
         })
           .then(
