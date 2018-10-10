@@ -121,7 +121,8 @@ export default class login_page extends PureComponent {
                 store.setTokenSession(res.data.tokenId);
               }
               if (isWXOpen()) {
-                this.props.history.goBack();
+                // this.props.history.goBack();
+                this.props.history.push('/home/home');
               } else {
                 this.props.history.push('/home/home');
               }
@@ -187,18 +188,9 @@ export default class login_page extends PureComponent {
 
   // 处理键盘挡住输入框
   handleScrollToView = id => {
-    // $('#loginWrap').scrollTop($('#loginContent').height());
     this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-    // $('#loginWrap').animate({
-    //   scrollTop: $('#loginContent').height(),
-    // }, 300);
     setTimeout(() => {
       this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-      // $('#loginWrap').animate({
-      //   scrollTop: $('#loginContent').height(),
-      // }, 300);
-      // $('#loginWrap').scrollTop($('#loginContent').height());
-      // $(id).focus();
       document.getElementById(id).focus();
     }, 100);
   };
