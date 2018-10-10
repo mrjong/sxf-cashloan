@@ -29,8 +29,10 @@ export default class wx_middle_page extends Component {
     const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const u = navigator.userAgent;
 		const osType = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 ? 'ANDRIOD' : !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 'IOS' : 'PC';
+        if(query&&query.h5Channel){
 		sessionStorage.setItem('h5Channel', query.h5Channel)
-		if (query && query.code) {
+        }
+        if (query && query.code) {
 			this.props.$fetch.post(`/wx/authcb`, {
 				state: query.state,
 				code: query.code,
