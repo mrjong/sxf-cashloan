@@ -155,10 +155,13 @@ export default class order_detail_page extends PureComponent {
             } else {
                 item.showDesc = false
             }
-            item.feeInfos.push({
-                feeNm: '合计',
-                feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
-            })
+            if(perdList[i].perdSts !== '4'){
+                item.feeInfos.push({
+                    feeNm: '剩余应还',
+                    feeAmt: Number(perdList[i].perdWaitRepAmt)
+                    // feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
+                })
+            }
             perdListArray.push(item)
         }
         this.setState({
