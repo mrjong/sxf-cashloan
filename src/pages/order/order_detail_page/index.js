@@ -140,7 +140,7 @@ export default class order_detail_page extends PureComponent {
                     brief: perdList[i].perdDueDt + '还款'
                 },
                 extra: [{
-                    name: perdList[i].perdTotAmt,
+                    name: perdList[i].perdWaitRepAmt,
                     color: '#333'
                 }, {
                     name: perdList[i].perdStsNm,
