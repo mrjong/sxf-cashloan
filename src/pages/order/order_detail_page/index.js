@@ -255,7 +255,7 @@ export default class order_detail_page extends PureComponent {
                         this.props.history.replace('/order/repayment_succ_page')
                     }, 2000);
                 } else {
-                    this.props.toast.info('还款成功')
+                    this.props.toast.info('申请还款成功')
                     // 刷新当前list
                     setTimeout(() => {
                         this.getLoanInfo()
