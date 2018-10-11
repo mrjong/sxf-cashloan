@@ -1,10 +1,13 @@
 import React, {
     PureComponent
 } from "react"
+import Cookie from 'js-cookie';
 import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/store';
+import { isBugBrowser, isWXOpen } from 'utils/common';
+import SButton from 'components/button';
 import dayjs from 'dayjs'
 let hasNext = true
 const Item = List.Item;
@@ -15,10 +18,20 @@ const API = {
     "billList": '/bill/list'
 }
 
+let token = '';
+let tokenFromStotage = '';
+
 @fetch.inject()
 export default class message_page extends PureComponent {
     constructor(props) {
         super(props)
+        // 获取token
+        token = Cookie.get('fin-v-card-token');
+        if (isBugBrowser()) {
+            tokenFromStotage = store.getToken();
+        } else {
+            tokenFromStotage = store.getTokenSession();
+        }
         const dataSource = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2
         })
@@ -41,6 +54,10 @@ export default class message_page extends PureComponent {
     }
     scrollTop = 0
     componentWillMount() {
+        // 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
+        if (isWXOpen()) {
+            store.setHistoryRouter(window.location.pathname);
+        }
         // 处理详情返回之后
         let backDatastr = store.getBackData()
         if (backDatastr && JSON.stringify(backDatastr) !== "{}") {
@@ -228,6 +245,10 @@ export default class message_page extends PureComponent {
             }
         )
     }
+    // 去登陆
+    goLogin = () => {
+        this.props.history.push('/login');
+    }
     render() {
         const separator = (sectionID, rowID) => (
             <div key={`${sectionID}-${rowID}`} />
@@ -284,7 +305,15 @@ export default class message_page extends PureComponent {
                 return (
                     <div className={style.no_data}>
                         <i />暂无账单
-            </div>
+                        {isWXOpen() && !tokenFromStotage && !token ?
+                        // {true ?
+                            <SButton className={style.noLogin} onClick={this.goLogin}>
+                                去登录
+                            </SButton>
+                            :
+                            null
+                        }
+                    </div>
                 )
             }
         }

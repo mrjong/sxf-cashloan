@@ -2,19 +2,42 @@
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 // 3、在 noRouterBack.js 中添加页面的路由。
-import { logoutAppHandler, changeHistoryState } from 'utils/common';
+import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'utils/common';
 import qs from 'qs';
+import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 if (window.history && window.history.pushState) {
   window.addEventListener(
     'popstate',
     () => {
+      // 获取token
+      let token = Cookie.get('fin-v-card-token');
+      let tokenFromStotage = '';
+      if (isBugBrowser()) {
+        tokenFromStotage = store.getToken();
+      } else {
+        tokenFromStotage = store.getTokenSession();
+      }
       if (window.location.pathname === '/') {
         window.history.pushState(null, null, document.URL);
         return;
       }
       if (window.location.pathname === '/login') {
-        window.history.pushState(null, null, document.URL);
+        console.log(window.ReactRouterHistory && window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack)
+        let isAllowBack = window.ReactRouterHistory && window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack;
+        if (isWXOpen() && isAllowBack) {
+          window.ReactRouterHistory.goBack()
+        } else if (isWXOpen()) {
+          // 微信中点击登陆按钮也触发这个方法，根据token区分
+          if (tokenFromStotage && token) {
+            window.ReactRouterHistory.goBack()
+          } else {
+            window.close();
+            WeixinJSBridge.call('closeWindow');
+          }
+        } else {
+          window.history.pushState(null, null, document.URL);
+        }
         return;
       }
       changeHistoryState();
@@ -39,6 +62,7 @@ if (window.history && window.history.pushState) {
             return;
           }
           const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+          console.log(historyRouter)
           switch (historyRouter) {
             case '/login':
               return;
@@ -47,9 +71,21 @@ if (window.history && window.history.pushState) {
                 window.handleCloseHomeModal();
                 return;
               }
-              logoutAppHandler();
+              if (tokenFromStotage && token) {
+                logoutAppHandler();
+              }else if(isWXOpen() && !tokenFromStotage && !token){
+                window.close();
+                WeixinJSBridge.call('closeWindow');
+              }
               break;
             case '/order/order_page':
+              if (tokenFromStotage && token) {
+                logoutAppHandler();
+              }else if(isWXOpen() && !tokenFromStotage && !token){
+                window.close();
+                WeixinJSBridge.call('closeWindow');
+              }
+              break;
             case '/mine/mine_page':
               logoutAppHandler();
               break;

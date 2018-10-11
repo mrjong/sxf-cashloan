@@ -6,7 +6,7 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState } from 'utils/common';
+import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState, isWXOpen } from 'utils/common';
 import { validators } from 'utils/validator';
 import { buriedPointEvent, pageView } from 'utils/Analytins';
 import { login } from 'utils/AnalytinsType';
@@ -101,7 +101,7 @@ export default class login_page extends PureComponent {
           smsJrnNo: this.state.smsJrnNo, // 短信流水号
           osType, // 操作系统
           smsCd: values.smsCd, // IP地址
-          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'h5', // 用户渠道
+          usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : localStorage.getItem('h5Channel')||'h5', // 用户渠道
           location: store.getPosition(), // 定位地址 TODO 从session取
         })
           .then(
@@ -120,12 +120,17 @@ export default class login_page extends PureComponent {
               } else {
                 store.setTokenSession(res.data.tokenId);
               }
-              this.props.history.push('/home/home');
+              if (isWXOpen()) {
+                // this.props.history.goBack();
+                this.props.history.push('/home/home');
+              } else {
+                this.props.history.push('/home/home');
+              }
             },
             error => {
               error.msgInfo && Toast.info(error.msgInfo);
             },
-        );
+          );
       } else {
         Toast.info(getFirstError(err));
       }
@@ -183,18 +188,9 @@ export default class login_page extends PureComponent {
 
   // 处理键盘挡住输入框
   handleScrollToView = id => {
-    // $('#loginWrap').scrollTop($('#loginContent').height());
     this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-    // $('#loginWrap').animate({
-    //   scrollTop: $('#loginContent').height(),
-    // }, 300);
     setTimeout(() => {
       this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-      // $('#loginWrap').animate({
-      //   scrollTop: $('#loginContent').height(),
-      // }, 300);
-      // $('#loginWrap').scrollTop($('#loginContent').height());
-      // $(id).focus();
       document.getElementById(id).focus();
     }, 100);
   };
