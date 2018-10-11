@@ -164,6 +164,12 @@ const getFirstError = error => {
   return '';
 };
 
+// 判断是否是微信打开
+const isWXOpen = () => {
+  var ua = navigator.userAgent.toLowerCase();
+  return (/micromessenger/.test(ua)) ? true : false;
+}
+
 export {
   getParamsFromUrl,
   getDeviceType,
@@ -177,4 +183,5 @@ export {
   logoutAppHandler,
   interceptRouteArr,
   changeHistoryState,
+  isWXOpen,
 };
