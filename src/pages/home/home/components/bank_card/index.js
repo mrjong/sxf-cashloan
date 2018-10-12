@@ -29,8 +29,8 @@ export default class BankCard extends React.PureComponent {
     cardNoHid: PropTypes.string,
     cardBillDt: PropTypes.string,
     billDt: PropTypes.string,
-    cardBillAmt: PropTypes.number,
-    overDt: PropTypes.number,
+    cardBillAmt: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    overDt: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onClick: PropTypes.func,
   };
 
