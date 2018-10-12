@@ -157,7 +157,7 @@ export default class order_detail_page extends PureComponent {
             }
             item.feeInfos.push({
                 feeNm: '优惠劵',
-                feeAmt: '-'+perdList[i].derateFineAmt,
+                feeAmt: '-'+perdList[i].deductionAmt,
             });
             // 判断是否结清
             if (perdList[i].perdSts === '4') {
