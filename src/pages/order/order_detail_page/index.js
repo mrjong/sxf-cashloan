@@ -155,7 +155,19 @@ export default class order_detail_page extends PureComponent {
             } else {
                 item.showDesc = false
             }
-            if(perdList[i].perdSts !== '4'){
+            item.feeInfos.push({
+                feeNm: '优惠劵',
+                feeAmt: '-'+perdList[i].derateFineAmt,
+            });
+            // 判断是否结清
+            if (perdList[i].perdSts === '4') {
+                item.isClear = true;
+            } else {
+                item.isClear = false;
+                item.feeInfos.push({
+                    feeNm: '已还金额',
+                    feeAmt: perdList[i].perdTotRepAmt,
+                });
                 item.feeInfos.push({
                     feeNm: '剩余应还',
                     feeAmt: Number(perdList[i].perdWaitRepAmt)
@@ -258,7 +270,7 @@ export default class order_detail_page extends PureComponent {
                         this.props.history.replace('/order/repayment_succ_page')
                     }, 2000);
                 } else {
-                    this.props.toast.info('还款成功')
+                    this.props.toast.info('申请还款成功')
                     // 刷新当前list
                     setTimeout(() => {
                         this.getLoanInfo()
