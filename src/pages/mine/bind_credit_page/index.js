@@ -20,6 +20,7 @@ const API = {
 };
 
 let isFetching = false;
+let backUrlData = ''; // 从除了我的里面其他页面进去
 
 @fetch.inject()
 @createForm()
@@ -31,10 +32,17 @@ export default class bind_credit_page extends PureComponent {
       userName: '', // 持卡人姓名
       cardData: {}, // 绑定的卡的数据
     };
+    backUrlData = store.getBackUrl();
   }
 
   componentWillMount() {
+    isFetching = false;
+    store.removeBackUrl();
     this.queryUserInf();
+  }
+
+  componentWillUnmount() {
+    isFetching = false;
   }
 
   // 获取信用卡信息
@@ -62,10 +70,9 @@ export default class bind_credit_page extends PureComponent {
     this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
       if (result.msgCode === 'PTM0000') {
         buriedPointEvent(mine.creditConfirm, {
-          entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+          entry: backUrlData ? '绑定信用卡' : '信用卡管理',
           is_success: true,
         });
-        const backUrlData = store.getBackUrl();
         const cardDatas = { agrNo: result.data && result.data.agrNo ? result.data.agrNo : '', ...this.state.cardData }
         if (backUrlData) {
           // 提交申请 判断是否绑定信用卡和储蓄卡
@@ -73,6 +80,7 @@ export default class bind_credit_page extends PureComponent {
             if (result.msgCode === "PTM2003") {
               // 进入绑定储蓄卡页面，如何不需要存银行卡（防止弹窗出现）则加一个noBankInfo
               const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+              store.setBackUrl(backUrlData);
               if (queryData && queryData.noBankInfo) {
                 this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
               } else {
@@ -103,7 +111,7 @@ export default class bind_credit_page extends PureComponent {
       } else {
         isFetching = false;
         buriedPointEvent(mine.creditConfirm, {
-          entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+          entry: backUrlData ? '绑定信用卡' : '信用卡管理',
           is_success: false,
           fail_cause: result.msgInfo,
         });
@@ -126,7 +134,7 @@ export default class bind_credit_page extends PureComponent {
         isFetching = false;
         this.props.toast.info('请输入有效银行卡号')
         buriedPointEvent(mine.creditConfirm, {
-          entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+          entry: backUrlData ? '绑定信用卡' : '信用卡管理',
           is_success: false,
           fail_cause: result.msgInfo,
         });
@@ -151,7 +159,7 @@ export default class bind_credit_page extends PureComponent {
       } else {
         if (!this.jsonIsNull(values)) {
           buriedPointEvent(mine.creditConfirm, {
-            entry: store.getBackUrl() ? '绑定信用卡' : '信用卡管理',
+            entry: backUrlData ? '绑定信用卡' : '信用卡管理',
             is_success: false,
             fail_cause: getFirstError(err),
           });

@@ -33,9 +33,11 @@ export default class bind_save_page extends PureComponent {
     }
   }
   componentWillMount() {
+    isFetching = false;
     this.queryUserInf();
   }
   componentWillUnmount() {
+    isFetching = false;
     store.removeBackUrl(); // 清除session里的backurl的值
   }
   // 获取信用卡信息
