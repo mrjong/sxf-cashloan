@@ -132,16 +132,14 @@ export default class ModalInfo extends Component {
         store.setBackUrl('/home/home');
         Toast.info(result.msgInfo);
         setTimeout(() => {
-          // this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-          this.props.history.push({ pathname: '/mine/bind_save_page',});
+          this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         // 有风控没绑信用卡 跳绑信用卡页面
         store.setBackUrl('/home/home');
         Toast.info(result.msgInfo);
         setTimeout(() => {
-          // this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
-          this.props.history.push({ pathname: '/mine/bind_credit_page',});
+          this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
         }, 3000);
       } else {
         Toast.info(result.msgInfo);
