@@ -1,3 +1,4 @@
+import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
 import React, { PureComponent } from 'react';
 import { Modal, Toast, Progress } from 'antd-mobile';
 import { store } from 'utils/store';
@@ -10,18 +11,15 @@ import Panel from 'components/panel/index.js';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
 import style from './style.scss';
-import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
-let timer
-let timerOut
+let timer;
+let timerOut;
 const API = {
   REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
   SAVE_REPAY_CARD: '/bill/saveRepayCard', // 0210-代还的银行卡信息校验缓存
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
+  CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 };
-
-const tipText =
-  '若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。';
 
 @fetch.inject()
 export default class ConfirmAgencyPage extends PureComponent {
@@ -43,6 +41,7 @@ export default class ConfirmAgencyPage extends PureComponent {
   componentWillMount() {
     this.requestSendInfoForProtocol();
     // 获取参数
+    // eslint-disable-next-line
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     this.setState(
       {
@@ -55,10 +54,10 @@ export default class ConfirmAgencyPage extends PureComponent {
   }
   componentWillUnmount() {
     if (timer) {
-      clearInterval(timer)
+      clearInterval(timer);
     }
     if (timerOut) {
-      clearTimeout(timerOut)
+      clearTimeout(timerOut);
     }
   }
 
@@ -85,10 +84,6 @@ export default class ConfirmAgencyPage extends PureComponent {
     this.setState({
       isShowModal: false,
     });
-  };
-
-  handleButtonClick = () => {
-    this.requestConfirmRepaymentInfo();
   };
 
   // 清除上个页面中的弹框数据
@@ -191,6 +186,36 @@ export default class ConfirmAgencyPage extends PureComponent {
     }
   }
 
+  handleButtonClick = () => {
+    this.requestBindCardState();
+  };
+
+  // 请求用户绑卡状态
+  requestBindCardState = () => {
+    this.props.$fetch.get(API.CHECK_CARD).then(result => {
+      if (result && result.msgCode === 'PTM0000') {
+        // 有风控且绑信用卡储蓄卡
+        this.requestConfirmRepaymentInfo();
+      } else if (result && result.msgCode === 'PTM2003') {
+        // 有风控没绑储蓄卡 跳绑储蓄卡页面
+        store.setBackUrl('/home/agency');
+        Toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+        }, 3000);
+      } else if (result && result.msgCode === 'PTM2002') {
+        // 有风控没绑信用卡 跳绑信用卡页面
+        store.setBackUrl('/home/agency');
+        Toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+        }, 3000);
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
+  };
+
   // 确认代还信息
   requestConfirmRepaymentInfo = () => {
     const modalData = store.getRepaymentModalData();
@@ -221,63 +246,74 @@ export default class ConfirmAgencyPage extends PureComponent {
       osType: getDeviceType(), // 操作系统
     };
     timerOut = setTimeout(() => {
-      this.setState({
-        percent: 0,
-        visibleLoading: true
-      }, () => {
-        timer = setInterval(() => {
-          this.setPercent()
-          ++this.state.time
-        }, 1000)
-      })
-    }, 300)
+      this.setState(
+        {
+          percent: 0,
+          visibleLoading: true,
+        },
+        () => {
+          timer = setInterval(() => {
+            this.setPercent();
+            ++this.state.time;
+          }, 1000);
+        },
+      );
+    }, 300);
     this.props.$fetch.post(API.CONFIRM_REPAYMENT, params, {
-      timeout: 100000,
-      hideLoading: true
-    }).then(result => {
-      this.setState({
-        percent: 100
-      }, () => {
-        clearInterval(timer)
-        clearTimeout(timerOut)
-        this.setState({
-          visibleLoading: false
-        })
-        if (result && result.msgCode === 'PTM0000') {
-          this.handleShowTipModal();
-          buriedPointEvent(home.borrowingSubmit, {
-            is_success: true,
-          });
-          // 清除卡信息
-          store.removeCardData();
-          // 清除上个页面中的弹框数据
-          store.removeRepaymentModalData();
-          store.removeHomeCardIndexData();
-        } else if (result && result.msgCode === 'PTM7001') {
-          Toast.info(result.msgInfo);
-          setTimeout(() => {
-            this.props.history.push('/home/home')
-          }, 3000)
-        } else {
-          buriedPointEvent(home.borrowingSubmit, {
-            is_success: false,
-            fail_cause: result.msgInfo,
-          });
-          Toast.info(result.msgInfo);
-        }
+        timeout: 100000,
+        hideLoading: true,
       })
-    }).catch(err => {
-      console.log(err)
-      clearInterval(timer)
-      clearTimeout(timerOut)
-      this.setState({
-        percent: 100
-      }, () => {
-        this.setState({
-          visibleLoading: false
-        })
+      .then(result => {
+        this.setState(
+          {
+            percent: 100,
+          },
+          () => {
+            clearInterval(timer);
+            clearTimeout(timerOut);
+            this.setState({
+              visibleLoading: false,
+            });
+            if (result && result.msgCode === 'PTM0000') {
+              this.handleShowTipModal();
+              buriedPointEvent(home.borrowingSubmit, {
+                is_success: true,
+              });
+              // 清除卡信息
+              store.removeCardData();
+              // 清除上个页面中的弹框数据
+              store.removeRepaymentModalData();
+              store.removeHomeCardIndexData();
+            } else if (result && result.msgCode === 'PTM7001') {
+              Toast.info(result.msgInfo);
+              setTimeout(() => {
+                this.props.history.push('/home/home');
+              }, 3000);
+            } else {
+              buriedPointEvent(home.borrowingSubmit, {
+                is_success: false,
+                fail_cause: result.msgInfo,
+              });
+              Toast.info(result.msgInfo);
+            }
+          },
+        );
       })
-    });
+      .catch(err => {
+        console.log(err);
+        clearInterval(timer);
+        clearTimeout(timerOut);
+        this.setState(
+          {
+            percent: 100,
+          },
+          () => {
+            this.setState({
+              visibleLoading: false,
+            });
+          },
+        );
+      });
   };
   // 查看合同
   read = type => {
@@ -400,13 +436,14 @@ export default class ConfirmAgencyPage extends PureComponent {
                 <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
               </li>
             ) : (
-                <li className={style.list_item} onClick={this.handleShowModal}>
-                  <label className={style.item_name}>还款计划</label>
-                  <span style={{ color: '#4DA6FF' }} className={style.item_value}>
-                    <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
-                  </span>
-                </li>
-              )}
+              <li className={style.list_item} onClick={this.handleShowModal}>
+                <label className={style.item_name}>还款计划</label>
+                <span style={{ color: '#4DA6FF' }} className={style.item_value}>
+                  <span style={{ color: '#aaa', marginRight: '.1rem', display: 'inline-block', fontWeight: 'normal' }}>点击查看</span>
+                  <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
+                </span>
+              </li>
+            )}
             <li className={style.list_item}>
               <label className={style.item_name}>借款期限</label>
               <span className={style.item_value}>

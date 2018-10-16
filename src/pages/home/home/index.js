@@ -15,6 +15,7 @@ import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
 import style from './style.scss';
+
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -249,7 +250,7 @@ export default class HomePage extends PureComponent {
         // const sessionCardData = store.getSomeData();
         // Object.assign(resultData.indexData, sessionCardData);
         this.setState({
-          usrIndexInfo: result.data,
+          usrIndexInfo: result.data.indexData ? result.data : Object.assign({}, result.data, { indexData: {} }),
         });
 
         // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口

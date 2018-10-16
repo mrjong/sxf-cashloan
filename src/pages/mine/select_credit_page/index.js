@@ -227,7 +227,7 @@ export default class select_credit_page extends PureComponent {
                         <li
                           key={index}
                         >
-                          {/* <SwipeAction
+                          <SwipeAction
                             autoClose
                             right={[
                               {
@@ -238,11 +238,11 @@ export default class select_credit_page extends PureComponent {
                             ]}
                             onOpen={() => {}}
                             onClose={() => {}}
-                          > */}
+                          >
                           <span className={`bank_ico bank_ico_${item.bankCode}`}></span>
                           <span className={styles.bank_name}>{item.bankName}</span>
                           <span>···· {item.lastCardNo}</span>
-                          {/* </SwipeAction> */}
+                          </SwipeAction>
                         </li>
                       )
                     }

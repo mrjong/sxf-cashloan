@@ -17,8 +17,8 @@ const API = {
   QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
   CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
+  CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 };
-
 
 @fetch.inject()
 export default class ModalInfo extends Component {
@@ -118,7 +118,33 @@ export default class ModalInfo extends Component {
 
   // 确认按钮点击事件
   handleClickConfirm = () => {
-    this.requestCheckWithHoldCard();
+    this.requestBindCardState();
+  };
+
+  // 请求用户绑卡状态
+  requestBindCardState = () => {
+    this.props.$fetch.get(API.CHECK_CARD).then(result => {
+      if (result && result.msgCode === 'PTM0000') {
+        // 有风控且绑信用卡储蓄卡
+        this.requestCheckWithHoldCard();
+      } else if (result && result.msgCode === 'PTM2003') {
+        // 有风控没绑储蓄卡 跳绑储蓄卡页面
+        store.setBackUrl('/home/home');
+        Toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+        }, 3000);
+      } else if (result && result.msgCode === 'PTM2002') {
+        // 有风控没绑信用卡 跳绑信用卡页面
+        store.setBackUrl('/home/home');
+        Toast.info(result.msgInfo);
+        setTimeout(() => {
+          this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+        }, 3000);
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
   };
 
   // 储蓄卡是否支持代扣校验接口
