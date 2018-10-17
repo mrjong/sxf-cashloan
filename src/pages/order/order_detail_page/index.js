@@ -155,6 +155,13 @@ export default class order_detail_page extends PureComponent {
             } else {
                 item.showDesc = false
             }
+            // 暂时把优惠劵的金额加在利息上，改变后台返回的利息数量
+            for(let j=0; j < item.feeInfos.length; j++){
+                if(item.feeInfos[j].feeNm === '利息'){
+                    item.feeInfos[j].feeAmt = (item.feeInfos[j].feeAmt * 100 + perdList[i].deductionAmt * 100)/100
+                }
+            }
+
             item.feeInfos.push({
                 feeNm: '优惠劵',
                 feeAmt: '-'+perdList[i].deductionAmt,
