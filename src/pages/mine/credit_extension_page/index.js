@@ -19,7 +19,8 @@ const API = {
   getXMURL: '/auth/zmAuth',            // 芝麻认证之后的回调状态
 };
 let urlQuery = '';
-const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
+// const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator'];
 
 @fetch.inject()
 
