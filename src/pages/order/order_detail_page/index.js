@@ -155,10 +155,37 @@ export default class order_detail_page extends PureComponent {
             } else {
                 item.showDesc = false
             }
+            // 已还金额-减免金额
+            let perdTotRepAmt = 0;
+            // 暂时把优惠劵的金额加在利息上，改变后台返回的利息数量
+            for(let j=0; j < item.feeInfos.length; j++){
+                if(item.feeInfos[j].feeNm === '利息'){
+                    item.feeInfos[j].feeAmt = (item.feeInfos[j].feeAmt * 100 + perdList[i].deductionAmt * 100)/100
+                }
+                if(item.feeInfos[j].feeNm === '减免金额'){
+                    perdTotRepAmt = item.feeInfos[j].feeAmt;
+                }
+            }
+
             item.feeInfos.push({
-                feeNm: '合计',
-                feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
-            })
+                feeNm: '优惠劵',
+                feeAmt: '-'+perdList[i].deductionAmt,
+            });
+            // 判断是否结清
+            if (perdList[i].perdSts === '4') {
+                item.isClear = true;
+            } else {
+                item.isClear = false;
+                item.feeInfos.push({
+                    feeNm: '已还金额',
+                    feeAmt: (perdList[i].perdTotRepAmt*100 + perdTotRepAmt*100)/100,
+                });
+                item.feeInfos.push({
+                    feeNm: '剩余应还',
+                    feeAmt: Number(perdList[i].perdWaitRepAmt)
+                    // feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
+                })
+            }
             perdListArray.push(item)
         }
         this.setState({

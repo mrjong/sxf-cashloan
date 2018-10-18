@@ -45,7 +45,7 @@ export default class Lists extends PureComponent {
                   </Item>
                   {
                     item.feeInfos && item.showDesc ?
-                      <div><ListDesc listdescinfo={item.feeInfos}></ListDesc></div> : null
+                      <div><ListDesc isClear={item.isClear} listdescinfo={item.feeInfos}></ListDesc></div> : null
                   }
                 </div>
               )
