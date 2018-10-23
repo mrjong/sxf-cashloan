@@ -289,7 +289,7 @@ export default class order_detail_page extends PureComponent {
                 this.setState({
                     showMoudle: false
                 })
-                if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth)) {
+                if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
                     this.props.toast.info('还款完成')
                     store.removeBackData()
                     store.setOrderSuccess({
