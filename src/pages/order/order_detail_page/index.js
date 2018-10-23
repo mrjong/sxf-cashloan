@@ -31,6 +31,7 @@ export default class order_detail_page extends PureComponent {
             hideBtn: false,
             showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
             ItrtAmt: 0, // 每期利息金额
+            isPayAll: false, // 是否一键结清
         }
     }
     componentWillMount() {
@@ -229,8 +230,9 @@ export default class order_detail_page extends PureComponent {
     }
     // 立即还款
     handleClickConfirm = () => {
-        const { billDesc } = this.state;
+        const { billDesc, isPayAll } = this.state;
         let couponId = '';
+        let sendParams = {}
         if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
             if (this.state.couponInfo.usrCoupNo !== 'null') {
                 // // 首末期利息为0时coupId为空
@@ -253,14 +255,32 @@ export default class order_detail_page extends PureComponent {
                 // }
             }
         }
-        this.props.$fetch.post(API.payback, {
-            billNo: this.state.billNo,
-            thisRepTotAmt: this.state.sendMoney,
-            cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
-            repayStsw: billDesc.billPerdStsw,
-            coupId: couponId,
-            usrBusCnl: 'WEB'
-        }).then(res => {
+        // 判断是否为一键结清
+        let repayStswStr = '';
+        if (isPayAll) {
+            if(billDesc.billPerdStsw.indexOf('1')>-1){ // 只适用里面有一个1的情况
+                repayStswStr = billDesc.billPerdStsw.split('1')[0]+'1'+billDesc.billPerdStsw.split('1')[1].replace(/0/g, '1')
+            }else{
+                return;
+            }
+            sendParams = {
+                billNo: this.state.billNo,
+                thisRepTotAmt: billDesc.waitRepAmt,
+                cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
+                repayStsw: repayStswStr,
+                usrBusCnl: 'WEB'
+            }
+        } else {
+            sendParams = {
+                billNo: this.state.billNo,
+                thisRepTotAmt: this.state.sendMoney,
+                cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
+                repayStsw: billDesc.billPerdStsw,
+                coupId: couponId,
+                usrBusCnl: 'WEB'
+            }
+        }
+        this.props.$fetch.post(API.payback, sendParams).then(res => {
             if (res.msgCode === 'PTM0000') {
                 buriedPointEvent(order.repaymentFirst, {
                     entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
@@ -352,11 +372,18 @@ export default class order_detail_page extends PureComponent {
             }
         }
     }
+    // 一键结清
+    payAllOrder = () => {
+        this.setState({ 
+            showMoudle: true,
+            isPayAll: true,
+        });
+    }
     render() {
-        const { billDesc, money, hideBtn } = this.state
+        const { billDesc, money, hideBtn, isPayAll } = this.state
         return (
             <div className={styles.order_detail_page}>
-                <Panel title="借款信息">
+                <Panel title="借款信息" className={styles.loadInfBox}>
                     <ul className={styles.panel_conten}>
                         <li className={styles.list_item}>
                             <label className={styles.item_name}>借款本金(元)</label>
@@ -385,7 +412,12 @@ export default class order_detail_page extends PureComponent {
                             <span className={styles.item_value}>{billDesc && billDesc.wthdCrdCorpOrgNm}({billDesc && billDesc.wthdCrdNoLast})</span>
                         </li>
                     </ul>
-
+                    {
+                        billDesc.perdNum !== 999 && !hideBtn ?
+                        <span className={styles.payAll} onClick={this.payAllOrder}>一键结清</span>
+                            :
+                        null
+                    }
                 </Panel>
                 <Panel title="还款计划" className={styles.mt24}>
                     <Lists listsInf={this.state.orderList} clickCb={this.clickCb} className={styles.order_list} />
@@ -394,7 +426,7 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true }); buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' }); }}>
+                        <SButton onClick={() => { this.setState({ showMoudle: true, isPayAll: false, }); buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' }); }}>
                             主动还款
                         </SButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
@@ -404,7 +436,7 @@ export default class order_detail_page extends PureComponent {
                     <div className={styles.modal_box}>
                         <div className={styles.modal_title}>付款详情<i onClick={() => { this.setState({ showMoudle: false }) }}></i></div>
                         <div className={styles.modal_flex}>
-                            <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{money}元</span>
+                            <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{isPayAll ? billDesc && billDesc.waitRepAmt : money}元</span>
                         </div>
                         <div className={styles.modal_flex}>
                             <span className={styles.modal_label}>还款银行卡</span><span onClick={this.selectBank} className={`${styles.modal_value}`}>
@@ -414,20 +446,24 @@ export default class order_detail_page extends PureComponent {
 
                             </span>&nbsp;<i></i>
                         </div>
-                        <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
-                            <span className={styles.modal_label}>优惠券</span>
-                            {
-                                this.state.billDesc.data && this.state.billDesc.data.coupVal ?
-                                    <span onClick={() => { this.selectCoupon(false) }} className={`${styles.modal_value}`}>
-                                        {
-                                            this.renderCoupon()
-                                        }
-                                    </span>
-                                    :
-                                    <span onClick={() => { this.selectCoupon(true) }} className={`${styles.modal_value}`}>无可用优惠券</span>
-                            }
-                            &nbsp;<i></i>
-                        </div>
+                        { // 一键结清不显示优惠劵
+                            !isPayAll ?
+                            <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
+                                <span className={styles.modal_label}>优惠券</span>
+                                {
+                                    this.state.billDesc.data && this.state.billDesc.data.coupVal ?
+                                        <span onClick={() => { this.selectCoupon(false) }} className={`${styles.modal_value}`}>
+                                            {
+                                                this.renderCoupon()
+                                            }
+                                        </span>
+                                        :
+                                        <span onClick={() => { this.selectCoupon(true) }} className={`${styles.modal_value}`}>无可用优惠券</span>
+                                }
+                                &nbsp;<i></i>
+                            </div>
+                            : null
+                        }
                         <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款
                         </SButton>
