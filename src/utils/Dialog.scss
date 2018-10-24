@@ -1,0 +1,73 @@
+.dialog_container{
+    position: fixed;
+    height: 100%;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 99999;
+}
+.weui_dialog{
+    position: fixed;
+    z-index: 100000;
+    width: 560px;
+    height: 407px;
+    top: 40%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background-color: #FFF;
+    text-align: center;
+    overflow: hidden;
+    background-image: url(../assets/images/dialog/back_img@2x.png);
+    background-size: 560px 407px;
+    background-repeat: no-repeat;
+}
+.content_box{
+    font-size: 30px;
+    position: absolute;
+    top: 220px;
+    width: 100%;
+    text-align: center;
+    line-height: 60px;
+    .money{
+        color: #F66;
+    }
+    .btn_container{
+        display: flex;
+        padding: 20px 80px;
+    }
+    .btn_one{
+        flex: 1;
+        border: 1PX solid #4DA6FF;
+        color: #4DA6FF;
+        margin-right: 30px;
+        border-radius: 30px;
+        cursor: pointer;
+        &:hover{
+            opacity: 0.5;
+        }
+    }
+    .btn_one_new{
+        color: #ebde74;
+        border-color: #ebde74;
+    }
+    .btn_two{
+        flex: 1;
+        color: #fff;
+        background-color: #4DA6FF;
+        border: 1PX solid #4DA6FF;
+        margin-left: 30px;
+        border-radius: 30px;
+        cursor: pointer;
+        &:hover{
+            opacity: 0.5;
+        }
+    }
+    .btn_two_new{
+        background-color: #ebde74;
+        border-color: #ebde74;
+    }
+}

@@ -180,7 +180,7 @@ export default class credit_extension_page extends PureComponent {
               store.setCheckCardRouter('');
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
               this.props.toast.loading('加载中...', 0);
-              window.location.href = result.data.url + '&hideStep=true';
+              window.location.href = result.data.url + '&hideStep=true&project=xdc';
             } else {
               this.props.toast.info(result.msgInfo);
             }

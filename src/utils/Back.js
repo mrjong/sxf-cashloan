@@ -2,10 +2,41 @@
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 // 3、在 noRouterBack.js 中添加页面的路由。
+import React from 'react'
 import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'utils/common';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
+import PopUp from 'utils/PopUp'
+import Dialog from 'utils/Dialog'
+
+let initDialog = (errMsg) => {
+  let obj = new PopUp(< Dialog open content={
+    errMsg || '连接服务器失败，请稍后重试'
+  }
+    actions={
+      [{
+        label: '确定',
+        className: 'rob-btn rob-btn-danger rob-btn-circle'
+      }]
+    }
+    onRequestClose={
+      (res) => {
+        if (!res) {
+          history.back(history.back(setTimeout(() => {
+            obj.close()
+          }, 100)))
+        } else {
+          obj.close()
+        }
+      }
+    }
+  //   actionClassName="rob-alert-button rob-alert-button-color rob-alert-button-45"
+  />)
+  return obj
+}
+let obj = initDialog('22222');
+
 if (window.history && window.history.pushState) {
   window.addEventListener(
     'popstate',
@@ -17,6 +48,18 @@ if (window.history && window.history.pushState) {
         tokenFromStotage = store.getToken();
       } else {
         tokenFromStotage = store.getTokenSession();
+      }
+      // 返回拦截弹窗
+      let userInfo = store.getUserInfo();
+      if (window.location.pathname === '/home/essential_information' || window.location.pathname === '/home/real_name') {
+        if (window.location.pathname === '/home/real_name' && userInfo && userInfo.nameHid) {
+          history.back();
+        } else {
+          document.activeElement.blur();
+          obj.show()
+          // window.history.pushState(null, null, document.URL);
+        }
+        return;
       }
       if (window.location.pathname === '/') {
         window.history.pushState(null, null, document.URL);
