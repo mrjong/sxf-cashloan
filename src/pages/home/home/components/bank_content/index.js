@@ -85,13 +85,16 @@ export default class BankContent extends React.Component {
   };
 
   render() {
-    const { className, children, contentData, ...restProps } = this.props;
+    const { className, children, contentData, progressNum, ...restProps } = this.props;
     const showEntranceArr = ['LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010'];
     return (
       <div className={style.bank_content_wrap} {...restProps}>
         <BankCard contentData={contentData} {...contentData.indexData} />
         {contentData.indexSts === 'LN0010' ? (
           <p className={style.abnormal_tip}>点击更新账单，获取最新信用卡信息</p>
+        ) : null}
+        {contentData.indexSts === 'LN0003' ? (
+            <p className={style.progress_box}>还差<span>{progressNum}</span>步即可完成申请</p>
         ) : null}
         {children}
         {showEntranceArr.includes(contentData.indexSts) ? (

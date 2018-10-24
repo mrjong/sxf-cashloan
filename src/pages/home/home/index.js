@@ -21,6 +21,7 @@ const API = {
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
+  GETSTSW: '/my/getStsw', // 获取首页进度
 };
 
 let token = '';
@@ -42,6 +43,7 @@ export default class HomePage extends PureComponent {
       bannerList: [],
       usrIndexInfo: '',
       haselescard: 'true',
+      percentSatus: '',
     };
   }
   componentWillMount() {
@@ -117,6 +119,59 @@ export default class HomePage extends PureComponent {
       isShowModal: false,
     });
   };
+
+  // 首页进度
+  getPercent = ()=>{
+    this.props.$fetch.post(API.GETSTSW).then((result) => {
+        if(result && result.data !==null){
+            console.log(result)
+            this.calculatePercent(result.data)
+        }
+    }, err => {
+        err.msgInfo && this.props.toast.info(err.msgInfo);
+    })
+  }
+
+  // 进度计算
+  calculatePercent = (list)=>{
+    let codes =[]
+    list.forEach(element => {
+      // element.code === 'zmxy'
+        if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck' || element.code === 'faceDetect'){
+            codes.push(element.stsw.dicDetailCd)
+        }
+    });
+    console.log(codes)
+    // case '1': // 认证中
+    // case '2': // 认证成功
+    // case '3': // 认证失败
+    // case '4': // 认证过期
+    let newCodes2 = codes.filter((ele,index,array)=>{
+        return ele === '1'|| ele === '2'
+    })
+    // 还差 3 步 ：四项认证项，完成任何一项认证项且未失效
+    // 还差 2 步 ：四项认证项，完成任何两项认证项且未失效
+    // 还差 1 步 ：四项认证项，完成任何三项认证项且未失效
+    switch (newCodes2.length) {
+      case 1: // 新用户，信用卡未授权
+        this.setState({
+          percentSatus: '3'
+        });
+        break;
+      case 2: // 新用户，信用卡未授权
+        this.setState({
+          percentSatus: '2'
+        });
+        break;
+      case 3: // 新用户，信用卡未授权
+        this.setState({
+          percentSatus: '1'
+        });
+        break;
+      default:
+        console.log('default');
+    }
+  }
 
   // 智能按钮点击事件
   handleSmartClick = () => {
@@ -249,6 +304,13 @@ export default class HomePage extends PureComponent {
         // let resultData = result.data;
         // const sessionCardData = store.getSomeData();
         // Object.assign(resultData.indexData, sessionCardData);
+        // result.data.indexSts = 'LN0003'
+        // result.data.indexData = {
+        //   autSts : '2'
+        // }
+        if (result.data.indexSts === 'LN0003') {
+          this.getPercent();
+        }
         this.setState({
           usrIndexInfo: result.data.indexData ? result.data : Object.assign({}, result.data, { indexData: {} }),
         });
@@ -282,7 +344,7 @@ export default class HomePage extends PureComponent {
   };
 
   render() {
-    const { bannerList, usrIndexInfo } = this.state;
+    const { bannerList, usrIndexInfo, percentSatus } = this.state;
     const { history } = this.props;
     let componentsDisplay = null;
     switch (usrIndexInfo.indexSts) {
@@ -310,6 +372,7 @@ export default class HomePage extends PureComponent {
             contentData={usrIndexInfo}
             history={history}
             haselescard={this.state.haselescard}
+            progressNum={percentSatus}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
               usrIndexInfo.indexSts === 'LN0010' ||
