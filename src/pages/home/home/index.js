@@ -182,7 +182,7 @@ export default class HomePage extends PureComponent {
             },
           );
         }, 300);
-        this.requestBindCardState(true);
+        this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
@@ -190,7 +190,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
-        this.requestBindCardState(false);
+        this.requestBindCardState();
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
@@ -232,8 +232,8 @@ export default class HomePage extends PureComponent {
   };
 
   // 请求用户绑卡状态
-  requestBindCardState = (flag) => {
-    this.props.$fetch.get(API.CHECK_CARD, null, { hideLoading: flag }).then(result => {
+  requestBindCardState = () => {
+    this.props.$fetch.get(API.CHECK_CARD, null, { hideLoading: true }).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
         this.repayCheck();
