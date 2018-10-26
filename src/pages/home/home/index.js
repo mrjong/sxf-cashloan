@@ -168,21 +168,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        timerOut = setTimeout(() => { // 进度条
-          this.setState(
-            {
-              percent: 0,
-              visibleLoading: true,
-            },
-            () => {
-              timer = setInterval(() => {
-                this.setPercent();
-                ++this.state.time;
-              }, 1000);
-            },
-          );
-        }, 300);
-        this.requestBindCardState();
+        this.repayCheck();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
@@ -190,7 +176,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
-        this.requestBindCardState();
+        this.repayCheck();
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
@@ -233,10 +219,10 @@ export default class HomePage extends PureComponent {
 
   // 请求用户绑卡状态
   requestBindCardState = () => {
-    this.props.$fetch.get(API.CHECK_CARD, null, { hideLoading: true }).then(result => {
+    this.props.$fetch.get(API.CHECK_CARD).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
-        this.repayCheck();
+        this.handleShowModal();
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
@@ -259,24 +245,42 @@ export default class HomePage extends PureComponent {
 
   // 复借风控校验接口
   repayCheck = () => {
-    this.props.$fetch.post(API.AGENT_REPAY_CHECK, null, { hideLoading: true }).then(result => {
+    timerOut = setTimeout(() => { // 进度条
       this.setState(
         {
-          percent: 100,
+          percent: 0,
+          visibleLoading: true,
         },
         () => {
-          clearInterval(timer);
-          clearTimeout(timerOut);
-          this.setState({
-            visibleLoading: false,
-          });
-          if (result && result.msgCode === 'PTM0000') {
-            this.handleShowModal();
-          } else { // 失败的话刷新首页
-            Toast.info(result.msgInfo);
-            this.requestGetUsrInfo();
-          }
-      })
+          timer = setInterval(() => {
+            this.setPercent();
+            ++this.state.time;
+          }, 1000);
+        },
+      );
+    }, 300);
+    this.props.$fetch.post(API.AGENT_REPAY_CHECK, null,
+      {
+        timeout: 100000,
+        hideLoading: true,
+      }).then(result => {
+        this.setState(
+          {
+            percent: 100,
+          },
+          () => {
+            clearInterval(timer);
+            clearTimeout(timerOut);
+            this.setState({
+              visibleLoading: false,
+            });
+            if (result && result.msgCode === 'PTM0000') {
+              this.requestBindCardState();
+            } else { // 失败的话刷新首页
+              Toast.info(result.msgInfo);
+              this.requestGetUsrInfo();
+            }
+        })
     })
     .catch(err => {
       console.log(err);
