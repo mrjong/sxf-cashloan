@@ -241,6 +241,7 @@ export default class real_name_page extends Component {
     };
     this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
       if (result && result.msgCode === 'PTM0000') {
+        store.setBackFlag(true);
         buriedPointEvent(mine.creditExtensionBack, {
           current_step: '实名认证',
         });

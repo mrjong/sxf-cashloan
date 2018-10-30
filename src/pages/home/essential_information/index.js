@@ -84,6 +84,7 @@ export default class essential_information extends PureComponent {
             // values中存放的是经过 getFieldDecorator 包装的表单元素的值
             this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
               if (result && result.msgCode === 'PTM0000') {
+                store.setBackFlag(true);
                 // 埋点-基本信息页-确定按钮
                 this.confirmBuryPoint(true);
                 buriedPointEvent(mine.creditExtensionBack, {

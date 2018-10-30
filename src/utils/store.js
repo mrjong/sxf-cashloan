@@ -33,6 +33,7 @@ const storeListLocal = {
   LandingPageImgUrl: 'landingPageImgUrl', // 落地页图片
   HadShowModal: 'hadShowModal', // 是否开过弹框
   JumpUrl: 'jumpUrl', // 调整的url
+  BackFlag: 'backFlag', // 是否返回的flag
 };
 
 // 本地session存储 方法名与key值对应表
