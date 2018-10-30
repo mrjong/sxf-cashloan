@@ -170,6 +170,9 @@ export default class HomePage extends PureComponent {
         break;
       default:
         console.log('default');
+        this.setState({
+          percentSatus: '',
+        });
     }
   }
 
