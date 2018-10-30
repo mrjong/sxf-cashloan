@@ -93,7 +93,7 @@ export default class BankContent extends React.Component {
         {contentData.indexSts === 'LN0010' ? (
           <p className={style.abnormal_tip}>点击更新账单，获取最新信用卡信息</p>
         ) : null}
-        {contentData.indexSts === 'LN0003' ? (
+        {contentData.indexSts === 'LN0003' && progressNum ? (
             <p className={style.progress_box}>还差<span>{progressNum}</span>步即可完成申请</p>
         ) : null}
         {children}
