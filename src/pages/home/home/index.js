@@ -137,7 +137,8 @@ export default class HomePage extends PureComponent {
     let codes =[]
     list.forEach(element => {
       // element.code === 'zmxy'
-        if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck' || element.code === 'faceDetect'){
+        // if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck' || element.code === 'faceDetect'){
+        if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck'){        
             codes.push(element.stsw.dicDetailCd)
         }
     });
