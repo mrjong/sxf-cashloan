@@ -263,6 +263,7 @@ export default class real_name_page extends Component {
     });
   };
   handleBeforeCompress = (type) => {
+    store.setDisableBack(true);
     this.setState({
       disabledupload: 'true'
     }, () => {
@@ -280,9 +281,10 @@ export default class real_name_page extends Component {
       fail_cause: failInf,
     });
   };
-  // handleAfterCompress = () => {
-  //   this.props.toast.hide();
-  // }
+  handleAfterCompress = () => {
+    store.removeDisableBack();
+    // this.props.toast.hide();
+  }
   render() {
     const { disabledupload } = this.state
     // let selectFlag = true;

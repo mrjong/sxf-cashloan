@@ -34,6 +34,7 @@ const storeListLocal = {
   HadShowModal: 'hadShowModal', // 是否开过弹框
   JumpUrl: 'jumpUrl', // 调整的url
   BackFlag: 'backFlag', // 是否返回的flag
+  DisableBack: 'disableBack', // 禁止返回的标识
 };
 
 // 本地session存储 方法名与key值对应表
