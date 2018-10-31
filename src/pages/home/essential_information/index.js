@@ -13,6 +13,7 @@ import { buriedPointEvent } from 'utils/Analytins';
 import { home, mine } from 'utils/AnalytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
 import qs from 'qs';
+import { store } from 'utils/store';
 
 const pageKey = home.basicInfoBury;
 
@@ -42,6 +43,9 @@ export default class essential_information extends PureComponent {
   };
 
   componentWillMount() {
+    if (store.getBackFlag()) {
+      store.removeBackFlag(); // 清除返回的flag
+    }
     buryingPoints();
     urlQuery = this.props.history.location.search;
   }

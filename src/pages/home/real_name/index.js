@@ -47,6 +47,9 @@ export default class real_name_page extends Component {
   };
 
   componentWillMount() {
+    if (store.getBackFlag()) {
+      store.removeBackFlag(); // 清除返回的flag
+    }
     urlQuery = this.props.history.location.search;
     let userInfo = store.getUserInfo();
     if (userInfo && JSON.stringify(userInfo) !== '{}') {
