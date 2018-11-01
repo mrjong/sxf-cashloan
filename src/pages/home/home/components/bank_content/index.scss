@@ -1,4 +1,5 @@
 .bank_content_wrap {
+  position: relative;
   .abnormal_tip {
     font-size: .26rem;
     color: #F66;
@@ -25,5 +26,16 @@
     // vertical-align: middle;
     margin-left: .1rem;
     line-height: 100%;
+  }
+  .progress_box{
+    position: absolute;
+    top: 3.95rem;
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    color: rgba(138, 138, 138, 1);
+    span{
+      color: #FE0000;
+    }
   }
 }
