@@ -150,25 +150,25 @@ export default class HomePage extends PureComponent {
     let newCodes2 = codes.filter((ele,index,array)=>{
         return ele === '1'|| ele === '2'
     })
-    // 还差 3 步 ：四项认证项，完成任何一项认证项且未失效
-    // 还差 2 步 ：四项认证项，完成任何两项认证项且未失效
-    // 还差 1 步 ：四项认证项，完成任何三项认证项且未失效
+    // 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
+    // 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
+    // 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
     switch (newCodes2.length) {
       case 1: // 新用户，信用卡未授权
-        this.setState({
-          percentSatus: '3'
-        });
-        break;
-      case 2: // 新用户，信用卡未授权
         this.setState({
           percentSatus: '2'
         });
         break;
-      case 3: // 新用户，信用卡未授权
+      case 2: // 新用户，信用卡未授权
         this.setState({
           percentSatus: '1'
         });
         break;
+      // case 3: // 新用户，信用卡未授权
+      //   this.setState({
+      //     percentSatus: '1'
+      //   });
+      //   break;
       default:
         console.log('default');
         this.setState({
