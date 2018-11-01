@@ -23,9 +23,16 @@ let initDialog = (errMsg) => {
     onRequestClose={
       (res) => {
         if (!res) {
-          history.back(history.back(setTimeout(() => {
-            obj.close()
-          }, 100)));
+          history.go(-2);
+          obj.close();
+          // if (getDeviceType()==='IOS') {
+          //   history.go(-2);
+          //   obj.close();
+          // } else {
+          //   history.back(history.back(setTimeout(() => {
+          //     obj.close()
+          //   }, 100)));
+          // }
         } else {
           obj.close()
         }
@@ -57,7 +64,8 @@ if (window.history && window.history.pushState) {
       }
       if (window.location.pathname === '/home/essential_information' || window.location.pathname === '/home/real_name') {
         if((window.location.pathname === '/home/real_name' && userInfo && userInfo.nameHid) || (window.location.pathname === '/home/real_name' && backFlag) || (window.location.pathname === '/home/essential_information' && backFlag)) {
-          history.back();
+          history.go(-2);
+          // history.back();
         } else {
           document.activeElement.blur();
           obj.show()
