@@ -277,8 +277,9 @@ export default class HomePage extends PureComponent {
             if (result && result.msgCode === 'PTM0000') {
               this.requestBindCardState();
             } else { // 失败的话刷新首页
-              Toast.info(result.msgInfo);
-              this.requestGetUsrInfo();
+              Toast.info(result.msgInfo, 3 ,() => {
+                this.requestGetUsrInfo();
+              });
             }
         })
     })
