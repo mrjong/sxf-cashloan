@@ -79,6 +79,26 @@
 		text-align: center;
 		line-height: 200px;
 		height: 200px;
+		.couponType2{
+			font-size: 48px;
+		}
+		.couponType3{
+			font-size: 44px;
+			i{
+				font-size: 108px;
+			}
+		}
+		.couponType4{
+			display: inline-block;
+			font-size: 28px;
+			line-height: 1.3;
+			i{
+				font-size: 48px;
+			}
+			.dayNum{
+				font-size: 108px;
+			}
+		}
 	}
 	.money {
 		font-size: 90px;

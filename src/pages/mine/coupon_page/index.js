@@ -162,6 +162,7 @@ export default class coupon_page extends PureComponent {
             });
           }
           for (let i = res.data.data.length - 1; i >= 0; i--) {
+            // res.data.data[i].coupCategory = '00'
             if ((this.state.msgType !== 0 || !receiveData || (!receiveData.billNo && !receiveData.price)) || (res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
               dataArr.push(
                 res.data.data[i],
@@ -270,6 +271,7 @@ export default class coupon_page extends PureComponent {
         index = this.state.rData && this.state.rData.length - 1;
       }
       const obj = this.state.rData && this.state.rData[index--];
+      console.log(obj,'obj')
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
         <div
@@ -280,7 +282,18 @@ export default class coupon_page extends PureComponent {
             [style.box, style.box_default].join(' ')}
         >
           <div className={style.leftBox}>
-            <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
+            {
+              obj && obj.coupCategory === '00' ?
+              <span>￥<i className={style.money}>{obj && obj.coupVal}</i></span>
+              : obj && obj.coupCategory === '03' ?
+              <span className={style.couponType2}>免息券</span>
+              : obj && obj.coupCategory === '01' ?
+              <span className={style.couponType3}><i>{obj && obj.coupVal}</i>折</span>
+              : obj && obj.coupCategory === '02' ?
+              <span className={style.couponType4}><i>免</i><i className={style.dayNum}>{obj && obj.coupVal}</i><br /><span className={style.littleFont}>天息费</span></span>
+              :
+              null
+            }
           </div>
           <div
             className={receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ?
