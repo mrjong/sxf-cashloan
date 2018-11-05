@@ -19,6 +19,7 @@ const API = {
   SAVE_REPAY_CARD: '/bill/saveRepayCard', // 0210-代还的银行卡信息校验缓存
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
+  COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 };
 
 @fetch.inject()
@@ -33,8 +34,9 @@ export default class ConfirmAgencyPage extends PureComponent {
       },
       visibleLoading: false,
       couponInfo: {}, // 优惠劵信息
-      showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
-      ItrtAmt: 0, // 首/末期利息金额
+      // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
+      // ItrtAmt: 0, // 首/末期利息金额
+      deratePrice: '', // 后台计算的优惠劵减免金额
     };
   }
 
@@ -136,46 +138,74 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 处理优惠券金额显示
   dealMoney = (result) => {
+    const { queryData, repayInfo } = this.state;
     let couponInfo = store.getCouponData();
-    this.setState({
-      couponInfo: couponInfo,
-    }, () => {
-      store.removeCouponData();
-    });
-    // 首期利息
-    const firstItrt = result.data.perd[0].perdItrtAmt;
-    // 末期利息
-    const lastItrt = result.data.perd[result.data.perd.length - 1].perdItrtAmt;
-    if (result.data.data.useStagTyp === '01') {
-      this.setState({
-        ItrtAmt: firstItrt,
-      })
-      this.compareMoney(couponInfo, firstItrt, result)
-    } else if (result.data.data.useStagTyp === '00') {
-      this.setState({
-        ItrtAmt: lastItrt,
-      })
-      this.compareMoney(couponInfo, lastItrt, result)
+    store.removeCouponData();
+    let params = {};
+    if (couponInfo && couponInfo !== {}) {
+      params = {
+        coupId: couponInfo.usrCoupNo, // 优惠劵id
+        type: '00', // 00为借款 01为还款
+        price: repayInfo.billPrcpAmt,
+      };
+    } else {
+      params = {
+        prdId: queryData.prdId,
+        coupId: result.data.data.usrCoupNo, // 优惠劵id
+        type: '00', // 00为借款 01为还款
+        price: repayInfo.billPrcpAmt,
+      };
     }
+    this.props.$fetch.post(API.COUPON_COUNT, params).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        this.setState({
+          couponInfo,
+          deratePrice: result.data.deratePrice,
+        });
+      } else {
+        Toast.info(result.msgInfo);
+      }
+    });
+    // let couponInfo = store.getCouponData();
+    // this.setState({
+    //   couponInfo: couponInfo,
+    // }, () => {
+    //   store.removeCouponData();
+    // });
+    // // 首期利息
+    // const firstItrt = result.data.perd[0].perdItrtAmt;
+    // // 末期利息
+    // const lastItrt = result.data.perd[result.data.perd.length - 1].perdItrtAmt;
+    // if (result.data.data.useStagTyp === '01') {
+    //   this.setState({
+    //     ItrtAmt: firstItrt,
+    //   })
+    //   this.compareMoney(couponInfo, firstItrt, result)
+    // } else if (result.data.data.useStagTyp === '00') {
+    //   this.setState({
+    //     ItrtAmt: lastItrt,
+    //   })
+    //   this.compareMoney(couponInfo, lastItrt, result)
+    // }
   }
 
   // 比较利息与优惠劵大小
-  compareMoney = (couponInfo, itrt, result) => {
-    if (couponInfo && couponInfo !== {}) {
-      if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(itrt)) {
-        this.setState({ showItrtAmt: true });
-      } else {
-        this.setState({ showItrtAmt: false });
-      }
-    } else if (result.data.data && result.data.data.coupVal) {
-      // 优惠劵最大不超过每期利息
-      if (parseFloat(result.data.data.coupVal) > parseFloat(itrt)) {
-        this.setState({ showItrtAmt: true });
-      } else {
-        this.setState({ showItrtAmt: false });
-      }
-    }
-  }
+  // compareMoney = (couponInfo, itrt, result) => {
+  //   if (couponInfo && couponInfo !== {}) {
+  //     if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(itrt)) {
+  //       this.setState({ showItrtAmt: true });
+  //     } else {
+  //       this.setState({ showItrtAmt: false });
+  //     }
+  //   } else if (result.data.data && result.data.data.coupVal) {
+  //     // 优惠劵最大不超过每期利息
+  //     if (parseFloat(result.data.data.coupVal) > parseFloat(itrt)) {
+  //       this.setState({ showItrtAmt: true });
+  //     } else {
+  //       this.setState({ showItrtAmt: false });
+  //     }
+  //   }
+  // }
 
   // 埋点方法-根据代还期限埋不同的点
   buriedDucationPoint(type, duration) {
@@ -392,17 +422,11 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 渲染优惠劵
   renderCoupon = () => {
-    const { couponInfo, repayInfo, showItrtAmt, ItrtAmt } = this.state;
+    const { couponInfo, repayInfo, deratePrice } = this.state;
     console.log(couponInfo)
     if (couponInfo && couponInfo.usrCoupNo) {
       if (couponInfo.usrCoupNo !== 'null' && couponInfo.coupVal) {
-        // 抵扣金额
-        const discountMoney = showItrtAmt ? ItrtAmt : couponInfo.coupVal;
-        if (couponInfo.useStagTyp === '01') {
-          return (<span>{couponInfo.coupVal}元 / 抵扣首期利息{discountMoney}元</span>)
-        } else if (couponInfo.useStagTyp === '00') {
-          return (<span>{couponInfo.coupVal}元 / 抵扣末期利息{discountMoney}元</span>)
-        }
+        return (<span>-{deratePrice}元</span>)
       } else {
         return (<span>不使用</span>)
       }
@@ -418,6 +442,31 @@ export default class ConfirmAgencyPage extends PureComponent {
         }
       }
     }
+    
+    // if (couponInfo && couponInfo.usrCoupNo) {
+    //   if (couponInfo.usrCoupNo !== 'null' && couponInfo.coupVal) {
+    //     // 抵扣金额
+    //     const discountMoney = showItrtAmt ? ItrtAmt : couponInfo.coupVal;
+    //     if (couponInfo.useStagTyp === '01') {
+    //       return (<span>{couponInfo.coupVal}元 / 抵扣首期利息{discountMoney}元</span>)
+    //     } else if (couponInfo.useStagTyp === '00') {
+    //       return (<span>{couponInfo.coupVal}元 / 抵扣末期利息{discountMoney}元</span>)
+    //     }
+    //   } else {
+    //     return (<span>不使用</span>)
+    //   }
+
+    // } else {
+    //   // 抵扣金额
+    //   const resDiscountMoney = showItrtAmt ? ItrtAmt : repayInfo.data.coupVal;
+    //   if (repayInfo.data && repayInfo.data.coupVal) {
+    //     if (repayInfo.data.useStagTyp === '01') {
+    //       return (<span>{repayInfo.data.coupVal}元 / 抵扣首期利息{resDiscountMoney}元</span>)
+    //     } else if (repayInfo.data.useStagTyp === '00') {
+    //       return (<span>{repayInfo.data.coupVal}元 / 抵扣末期利息{resDiscountMoney}元</span>)
+    //     }
+    //   }
+    // }
   }
 
   render() {
