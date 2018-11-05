@@ -12,7 +12,8 @@ import qs from 'qs';
 
 const API = {
     'qryDtl': "/bill/qryDtl",
-    'payback': '/bill/payback'
+    'payback': '/bill/payback',
+    COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 }
 let entryFrom = '';
 @fetch.inject()
@@ -63,18 +64,18 @@ export default class order_detail_page extends PureComponent {
                 if (res.msgCode === 'PTM0000') {
                     res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-                    res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
-                    if (res.data.data && res.data.data.coupVal && res.data.perdNum !== 999) {
-                        // 优惠劵最大不超过每期利息
-                        if (parseFloat(res.data.data.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
-                            res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) });
-                            res.data.perdNum !== 999 && this.setState({ showItrtAmt: true });
+                    // res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
+                    // if (res.data.data && res.data.data.coupVal && res.data.perdNum !== 999) {
+                    //     // 优惠劵最大不超过每期利息
+                    //     if (parseFloat(res.data.data.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
+                    //         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) });
+                    //         res.data.perdNum !== 999 && this.setState({ showItrtAmt: true });
 
-                        } else {
-                            res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
-                            res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
-                        }
-                    }
+                    //     } else {
+                    //         res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
+                    //         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
+                    //     }
+                    // }
                     this.setState({
                         billDesc: res.data,
                         perdList: res.data.perdList
@@ -88,22 +89,24 @@ export default class order_detail_page extends PureComponent {
                             }, () => {
                                 this.setState({
                                     bankInfo: bankInfo,
-                                    couponInfo: couponInfo,
+                                    // couponInfo: couponInfo,
                                 })
-                                if (couponInfo && couponInfo !== {}) {
-                                    this.setState({
-                                        money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-                                            ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
-                                            couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-                                                ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - couponInfo.coupVal * 100) / 100).toFixed(2) :
-                                                res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
-                                    })
-                                    if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
-                                        this.setState({ showItrtAmt: true });
-                                    } else {
-                                        this.setState({ showItrtAmt: false });
-                                    }
-                                }
+                                this.dealMoney(res.data);
+                                // // 前端计算优惠劵减免金额
+                                // if (couponInfo && couponInfo !== {}) {
+                                //     this.setState({
+                                //         money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
+                                //             ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
+                                //             couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
+                                //                 ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - couponInfo.coupVal * 100) / 100).toFixed(2) :
+                                //                 res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
+                                //     })
+                                //     if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
+                                //         this.setState({ showItrtAmt: true });
+                                //     } else {
+                                //         this.setState({ showItrtAmt: false });
+                                //     }
+                                // }
                                 store.removeCardData();
                                 store.removeCouponData();
                             })
@@ -118,6 +121,42 @@ export default class order_detail_page extends PureComponent {
             }).catch(err => {
                 console.log(err)
             })
+    }
+
+    // 后台计算优惠券减免金额以及本次还款金额
+    dealMoney = (result) => {
+        const { queryData, repayInfo } = this.state;
+        let couponInfo = store.getCouponData();
+        store.removeCouponData();
+        let params = {};
+        // 如果没有coupId直接不调用接口
+        if(!result.data || !couponInfo || couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal){
+          return;
+        }
+        if (couponInfo && couponInfo !== {}) {
+          params = {
+            coupId: couponInfo.usrCoupNo, // 优惠劵id
+            type: '01', // 00为借款 01为还款
+            price: repayInfo.billPrcpAmt,
+          };
+        } else {
+          params = {
+            prdId: queryData.prdId,
+            coupId: result.data.usrCoupNo, // 优惠劵id
+            type: '01', // 00为借款 01为还款
+            price: repayInfo.billPrcpAmt,
+          };
+        }
+        this.props.$fetch.post(API.COUPON_COUNT, params).then(result => {
+          if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+            this.setState({
+              couponInfo,
+              deratePrice: result.data.deratePrice,
+            });
+          } else {
+            Toast.info(result.msgInfo);
+          }
+        });
     }
 
     // 显示还款计划
@@ -330,27 +369,27 @@ export default class order_detail_page extends PureComponent {
     }
     // 判断优惠劵显示
     renderCoupon = () => {
-        if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-            if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
-                if (this.state.showItrtAmt) {
-                    return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
-                } else {
-                    return (<span>-{this.state.couponInfo.coupVal}元</span>)
-                }
-            } else {
-                return (<span>不使用</span>)
-            }
+        // if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+        //     if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
+        //         if (this.state.showItrtAmt) {
+        //             return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
+        //         } else {
+        //             return (<span>-{this.state.couponInfo.coupVal}元</span>)
+        //         }
+        //     } else {
+        //         return (<span>不使用</span>)
+        //     }
 
-        } else {
-            if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
-                if (this.state.showItrtAmt) {
-                    return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
-                } else {
-                    return (<span>-{this.state.billDesc.data.coupVal}元</span>)
-                }
+        // } else {
+        //     if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
+        //         if (this.state.showItrtAmt) {
+        //             return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
+        //         } else {
+        //             return (<span>-{this.state.billDesc.data.coupVal}元</span>)
+        //         }
 
-            }
-        }
+        //     }
+        // }
     }
     render() {
         const { billDesc, money, hideBtn } = this.state

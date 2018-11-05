@@ -153,7 +153,7 @@ export default class coupon_page extends PureComponent {
             Toast.hide();
           }, 600);
         }
-        if (res.msgCode === 'PTM0000') {
+        if (res.msgCode === 'PTM0000' && res.data) {
           let dataArr = [];
           if (pIndex === 1) {
             totalPage = Math.ceil(res.data.totalSize / 10);

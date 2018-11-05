@@ -128,7 +128,7 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.setState({
           repayInfo: result.data,
         });
-        this.dealMoney(result);
+        this.dealMoney(result.data);
         this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
       } else {
         Toast.info(result.msgInfo);
@@ -142,6 +142,10 @@ export default class ConfirmAgencyPage extends PureComponent {
     let couponInfo = store.getCouponData();
     store.removeCouponData();
     let params = {};
+    // 如果没有coupId直接不调用接口
+    if(!result.data || !couponInfo || couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal){
+      return;
+    }
     if (couponInfo && couponInfo !== {}) {
       params = {
         coupId: couponInfo.usrCoupNo, // 优惠劵id
@@ -151,7 +155,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     } else {
       params = {
         prdId: queryData.prdId,
-        coupId: result.data.data.usrCoupNo, // 优惠劵id
+        coupId: result.data.usrCoupNo, // 优惠劵id
         type: '00', // 00为借款 01为还款
         price: repayInfo.billPrcpAmt,
       };
@@ -423,24 +427,11 @@ export default class ConfirmAgencyPage extends PureComponent {
   // 渲染优惠劵
   renderCoupon = () => {
     const { couponInfo, repayInfo, deratePrice } = this.state;
-    console.log(couponInfo)
-    if (couponInfo && couponInfo.usrCoupNo) {
-      if (couponInfo.usrCoupNo !== 'null' && couponInfo.coupVal) {
-        return (<span>-{deratePrice}元</span>)
-      } else {
-        return (<span>不使用</span>)
-      }
-
+    console.log(deratePrice)
+    if (deratePrice) {
+      return (<span>-{deratePrice}元</span>)
     } else {
-      // 抵扣金额
-      const resDiscountMoney = showItrtAmt ? ItrtAmt : repayInfo.data.coupVal;
-      if (repayInfo.data && repayInfo.data.coupVal) {
-        if (repayInfo.data.useStagTyp === '01') {
-          return (<span>{repayInfo.data.coupVal}元 / 抵扣首期利息{resDiscountMoney}元</span>)
-        } else if (repayInfo.data.useStagTyp === '00') {
-          return (<span>{repayInfo.data.coupVal}元 / 抵扣末期利息{resDiscountMoney}元</span>)
-        }
-      }
+      return (<span>不使用</span>)
     }
     
     // if (couponInfo && couponInfo.usrCoupNo) {
