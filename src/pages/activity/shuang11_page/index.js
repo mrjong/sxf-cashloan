@@ -96,7 +96,8 @@ export default class shuang11_page extends PureComponent {
 				type
 			});
 			return;
-		}
+        }
+        store.setTokenSession(token)
 		this.typeUp(type);
 	};
 
