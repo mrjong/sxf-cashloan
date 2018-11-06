@@ -366,49 +366,44 @@ export default class shuang11_page extends PureComponent {
 					</div>
 				</div>
 				{/* 弹窗 */}
-				{this.state.login_box ? (
-					<div>
-						<div className={style.alert_bg} />
-						<img className={style.login_bg} src={login_bg} />
-						<div className={style.login_box}>
-							<img src={close} onClick={this.closeFunc} className={style.close} />
+				<div style={{ display: this.state.login_box ? 'block' : 'none' }}>
+					<div className={style.alert_bg} />
+					<img className={style.login_bg} src={login_bg} />
+					<div className={style.login_box}>
+						<img src={close} onClick={this.closeFunc} className={style.close} />
+						<input
+							pattern="[0-9]*"
+							maxLength="11"
+							type="text"
+							{...getFieldProps('phoneValue', {
+								rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
+							})}
+							placeholder="请输入手机号码"
+						/>
+						<div className={style.sms_box}>
 							<input
 								pattern="[0-9]*"
-								maxLength="11"
+								maxLength="6"
 								type="text"
-								{...getFieldProps('phoneValue', {
-									rules: [
-										{ required: true, message: '请输入正确手机号' },
-										{ validator: this.validatePhone }
-									]
+								placeholder="请输入短信验证码"
+								{...getFieldProps('smsCd', {
+									rules: [ { required: true, message: '请输入正确验证码' } ]
 								})}
-								placeholder="请输入手机号码"
 							/>
-							<div className={style.sms_box}>
-								<input
-									pattern="[0-9]*"
-									maxLength="6"
-									type="text"
-									placeholder="请输入短信验证码"
-									{...getFieldProps('smsCd', {
-										rules: [ { required: true, message: '请输入正确验证码' } ]
-									})}
-								/>
-								<button
-									onClick={() => {
-										this.state.timeflag ? this.getTime(59) : '';
-									}}
-									className={this.state.flag ? style.btn_sms : style.btn_sms_dis}
-								>
-									{this.state.timers}
-								</button>
-							</div>
-							<button onClick={this.goLogin} className={style.btn_login}>
-								登录领取
+							<button
+								onClick={() => {
+									this.state.timeflag ? this.getTime(59) : '';
+								}}
+								className={this.state.flag ? style.btn_sms : style.btn_sms_dis}
+							>
+								{this.state.timers}
 							</button>
 						</div>
+						<button onClick={this.goLogin} className={style.btn_login}>
+							登录领取
+						</button>
 					</div>
-				) : null}
+				</div>
 				{/* 新用户 */}
 				{this.state.showAlert && this.state.alertType === 'alert_new_user' ? (
 					<div className={style.alert_bg}>

@@ -8,7 +8,9 @@ import 'assets/styles/scss/main.scss';
 import fetchinit from "utils/FetchInit"
 import { initAnalytics } from './utils/Analytins';
 import fastClick from 'fastclick';
-
+fastClick.prototype.focus = function(targetElement) {
+    targetElement.focus();
+  };
 fastClick.attach(document.body);
 var sa = require('sa-sdk-javascript/sensorsdata.min.js');
 if (!window.sa) {
