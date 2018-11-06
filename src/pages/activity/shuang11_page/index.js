@@ -32,7 +32,8 @@ let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
-	chkUser: '/event/chkUser'
+	chkUser: '/event/chkUser',
+	receive: '/event/receive'
 };
 
 @fetch.inject()
@@ -48,14 +49,15 @@ export default class shuang11_page extends PureComponent {
 			login_box: false,
 			showAlert: false,
 			alertType: '',
+			type: '',
 			img5: img_5_qiang,
 			img7: img_7_qiang,
 			img10: img_10_qiang,
-			img15: img_15_qiang,
+			img15: img_15_qiang
 		};
 	}
 	componentWillMount() {
-        // 返现上一次刷新的状态
+		// 返现上一次刷新的状态
 		if (sessionStorage.getItem('img5')) {
 			this.setState({
 				img5: sessionStorage.getItem('img5')
@@ -80,17 +82,20 @@ export default class shuang11_page extends PureComponent {
 	// 关闭登录弹窗
 	closeFunc = () => {
 		this.setState({
-			login_box: false
+			login_box: false,
+			type: ''
 		});
 	};
 
 	// 图片点击
 	imgClick = (type) => {
+		document.getElementById('root').style.overflow = 'hidden';
 		const token = Cookie.get('fin-v-card-token');
 		console.log(token);
 		if (!token) {
 			this.setState({
-				login_box: true
+				login_box: true,
+				type
 			});
 			return;
 		}
@@ -102,7 +107,7 @@ export default class shuang11_page extends PureComponent {
 		switch (type) {
 			case '5':
 				if (this.state.img5 === img_5_over) {
-					Toast.info('今日您已抢券,请明天再试~');
+					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img5 === img_5_use) {
@@ -121,7 +126,7 @@ export default class shuang11_page extends PureComponent {
 				break;
 			case '7':
 				if (this.state.img7 === img_7_over) {
-					Toast.info('今日您已抢券,请明天再试~');
+					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img7 === img_7_use) {
@@ -140,7 +145,7 @@ export default class shuang11_page extends PureComponent {
 				break;
 			case '10':
 				if (this.state.img10 === img_10_over) {
-					Toast.info('今日您已抢券,请明天再试~');
+					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img10 === img_10_use) {
@@ -151,7 +156,7 @@ export default class shuang11_page extends PureComponent {
 				break;
 			case '15':
 				if (this.state.img15 === img_15_over) {
-					Toast.info('今日您已抢券,请明天再试~');
+					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img15 === img_15_use) {
@@ -187,6 +192,8 @@ export default class shuang11_page extends PureComponent {
 					return;
 				}
 				if (type === '10') {
+					// 调用领券接口
+					this.receive(type);
 					this.setState({
 						img10: res1.data.coupon10 === '0' ? img_10_use : img_10_over
 					});
@@ -199,6 +206,8 @@ export default class shuang11_page extends PureComponent {
 					}
 				}
 				if (type === '15') {
+					// 调用领券接口
+					this.receive(type);
 					this.setState({
 						img15: res1.data.coupon15 === '0' ? img_15_use : img_15_over
 					});
@@ -214,6 +223,10 @@ export default class shuang11_page extends PureComponent {
 				Toast.info(res1.msgInfo);
 			}
 		});
+	};
+	// 领券
+	receive = (type) => {
+		this.props.$fetch.get(`${API.receive}/COUPON_${type}`);
 	};
 	//获得手机验证码
 	getTime(i) {
@@ -289,9 +302,8 @@ export default class shuang11_page extends PureComponent {
 								res.msgInfo && Toast.info(res.msgInfo);
 								return;
 							}
-							sa.login(res.data.userId);
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-
+							this.imgClick(this.state.type);
 							// store.setToken(res.data.tokenId);
 
 							// TODO: 根据设备类型存储token
@@ -320,7 +332,7 @@ export default class shuang11_page extends PureComponent {
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
-			<div>
+			<div id="huodong">
 				<div className={style.bg}>
 					<img src={bg} className={style.bg_img} />
 					<div className={style.img_box}>
