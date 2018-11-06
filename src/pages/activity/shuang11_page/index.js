@@ -89,7 +89,6 @@ export default class shuang11_page extends PureComponent {
 
 	// 图片点击
 	imgClick = (type) => {
-		document.getElementById('root').style.overflow = 'hidden';
 		const token = Cookie.get('fin-v-card-token');
 		console.log(token);
 		if (!token) {
