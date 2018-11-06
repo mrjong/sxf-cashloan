@@ -90,14 +90,18 @@ export default class shuang11_page extends PureComponent {
 	// 图片点击
 	imgClick = (type) => {
 		const token = Cookie.get('fin-v-card-token');
-		console.log(token);
 		if (!token) {
 			this.setState({
 				login_box: true,
 				type
 			});
 			return;
-		}
+        }
+        if (isBugBrowser()) {
+            store.setToken(token);
+          } else {
+            store.setTokenSession(token);
+          }
 		this.typeUp(type);
 	};
 
