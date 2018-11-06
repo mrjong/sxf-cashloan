@@ -184,9 +184,9 @@ export default class shuang11_page extends PureComponent {
 					// 调用领券接口
 					this.receive(type);
 					this.setState({
-						img10: res1.data.coupon10 === '0' ? img_10_use : img_10_over
+						img10: res1.data.coupon10 === '0' ? img_10_use : img_10_use
 					});
-					localStorage.setItem('img10', res1.data.coupon10 === '0' ? img_10_use : img_10_over);
+					localStorage.setItem('img10', res1.data.coupon10 === '0' ? img_10_use : img_10_use);
 					if (res1.data.coupon10 === '0') {
 						this.setState({
 							showAlert: true,
@@ -198,9 +198,9 @@ export default class shuang11_page extends PureComponent {
 					// 调用领券接口
 					this.receive(type);
 					this.setState({
-						img15: res1.data.coupon15 === '0' ? img_15_use : img_15_over
+						img15: res1.data.coupon15 === '0' ? img_15_use : img_15_use
 					});
-					localStorage.setItem('img15', res1.data.coupon15 === '0' ? img_15_use : img_15_over);
+					localStorage.setItem('img15', res1.data.coupon15 === '0' ? img_15_use : img_15_use);
 					if (res1.data.coupon10 === '0') {
 						this.setState({
 							showAlert: true,
