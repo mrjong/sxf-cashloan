@@ -4,6 +4,16 @@
     flex: 1;
     padding: 0.24rem 0 0;
     background-color: #f1f1f1;
+    .loadInfBox{
+      position: relative;
+    }
+    .payAll{
+      position: absolute;
+      top: 38px;
+      right: 41px;
+      font-size: 30px;
+      color: rgba(254, 143, 0, 1);
+    }
     .panel_conten {
       padding: 0.3rem;
       .list_item {
