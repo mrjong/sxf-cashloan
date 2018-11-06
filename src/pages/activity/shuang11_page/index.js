@@ -37,7 +37,7 @@ const API = {
 
 @fetch.inject()
 @createForm()
-export default class login_page extends PureComponent {
+export default class shuang11_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
