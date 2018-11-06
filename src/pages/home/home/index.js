@@ -275,9 +275,11 @@ export default class HomePage extends PureComponent {
               visibleLoading: false,
             });
             if (result && result.msgCode === 'PTM0000') {
-              this.requestBindCardState();
+              Toast.info('资质检测完成，可正常借款', 3 ,() => {
+                this.requestBindCardState();
+              });
             } else { // 失败的话刷新首页
-              Toast.info(result.msgInfo, 3 ,() => {
+              Toast.info(result.msgInfo, 2 ,() => {
                 this.requestGetUsrInfo();
               });
             }
