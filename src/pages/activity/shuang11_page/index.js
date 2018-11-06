@@ -208,7 +208,7 @@ export default class shuang11_page extends PureComponent {
 					}
 				}
 			} else if (res1 && res1.msgCode === 'PTM1000') {
-                this.imgClick(type)
+				this.imgClick(type);
 				this.setState({
 					login_box: true,
 					type: ''
@@ -357,6 +357,17 @@ export default class shuang11_page extends PureComponent {
 								}}
 								src={this.state.img15}
 							/>
+							<button
+								style={{ marginTop: '20px' }}
+								onClick={() => {
+									Toast.info('清理成功');
+									sessionStorage.clear();
+									localStorage.clear();
+									Cookie.remove('fin-v-card-token');
+								}}
+							>
+								一键清除缓存
+							</button>
 						</div>
 					</div>
 				</div>
