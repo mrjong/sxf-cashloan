@@ -5,6 +5,7 @@ import Common from 'pages/common/router'; // 魔蝎中转页
 import Protocol from 'pages/protocol/router'; // 协议
 import Login from 'pages/login/router'; // 协议
 import LandingPage from 'pages/landing/router'; // 落地页
+import OthersRoute from 'pages/others/router'; // 其他页面（下载页）
 
 export default [
   ...AuthRoute,
@@ -13,5 +14,6 @@ export default [
   ...Login,
   ...Common,
   ...Protocol,
-  ...LandingPage
+  ...LandingPage,
+  ...OthersRoute,
 ];
