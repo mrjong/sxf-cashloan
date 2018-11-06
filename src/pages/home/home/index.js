@@ -48,6 +48,7 @@ export default class HomePage extends PureComponent {
       haselescard: 'true',
       visibleLoading: false,
       percent: 0,
+      showToast: false,
     };
   }
   componentWillMount() {
@@ -250,6 +251,7 @@ export default class HomePage extends PureComponent {
         {
           percent: 0,
           visibleLoading: true,
+          showToast: true,
         },
         () => {
           timer = setInterval(() => {
@@ -275,9 +277,16 @@ export default class HomePage extends PureComponent {
               visibleLoading: false,
             });
             if (result && result.msgCode === 'PTM0000') {
-              Toast.info('资质检测完成，可正常借款', 3 ,() => {
+              if (this.state.showToast) {
+                this.setState({
+                  showToast: false,
+                });
+                Toast.info('资质检测完成，可正常借款', 3, () => {
+                  this.requestBindCardState();
+                });
+              } else {
                 this.requestBindCardState();
-              });
+              }
             } else { // 失败的话刷新首页
               Toast.info(result.msgInfo, 2 ,() => {
                 this.requestGetUsrInfo();
