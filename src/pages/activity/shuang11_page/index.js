@@ -174,17 +174,7 @@ export default class shuang11_page extends PureComponent {
 	};
 	// 判断用户是否可以领劵
 	chkUser = (type) => {
-		this.props.$fetch.get(`${API.chkUser}`).then((res) => {
-			let res1 = {
-				msgCode: 'PTM0000',
-				msgInfo: 'SUCCESS',
-				data: {
-					userRegDt: '1',
-					coupon10: '0',
-					coupon15: '0'
-				}
-			};
-			console.log(res1);
+		this.props.$fetch.get(`${API.chkUser}`).then((res1) => {
 			if (res1 && res1.msgCode === 'PTM0000') {
 				// 0：老用户；1：新用户；
 				if (res1.data.userRegDt === '0') {
