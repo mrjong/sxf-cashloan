@@ -58,24 +58,24 @@ export default class shuang11_page extends PureComponent {
 	}
 	componentWillMount() {
 		// 返现上一次刷新的状态
-		if (sessionStorage.getItem('img5')) {
+		if (localStorage.getItem('img5')) {
 			this.setState({
-				img5: sessionStorage.getItem('img5')
+				img5: localStorage.getItem('img5')
 			});
 		}
-		if (sessionStorage.getItem('img7')) {
+		if (localStorage.getItem('img7')) {
 			this.setState({
-				img7: sessionStorage.getItem('img7')
+				img7: localStorage.getItem('img7')
 			});
 		}
-		if (sessionStorage.getItem('img10')) {
+		if (localStorage.getItem('img10')) {
 			this.setState({
-				img10: sessionStorage.getItem('img10')
+				img10: localStorage.getItem('img10')
 			});
 		}
-		if (sessionStorage.getItem('img15')) {
+		if (localStorage.getItem('img15')) {
 			this.setState({
-				img15: sessionStorage.getItem('img15')
+				img15: localStorage.getItem('img15')
 			});
 		}
 	}
@@ -96,12 +96,7 @@ export default class shuang11_page extends PureComponent {
 				type
 			});
 			return;
-        }
-        if (isBugBrowser()) {
-            store.setToken(token);
-          } else {
-            store.setTokenSession(token);
-          }
+		}
 		this.typeUp(type);
 	};
 
@@ -124,7 +119,7 @@ export default class shuang11_page extends PureComponent {
 					this.setState({
 						img5: img_5_over
 					});
-					sessionStorage.setItem('img5', img_5_over);
+					localStorage.setItem('img5', img_5_over);
 				}, 1000);
 				break;
 			case '7':
@@ -143,7 +138,7 @@ export default class shuang11_page extends PureComponent {
 					this.setState({
 						img7: img_7_over
 					});
-					sessionStorage.setItem('img7', img_7_over);
+					localStorage.setItem('img7', img_7_over);
 				}, 1000);
 				break;
 			case '10':
@@ -190,7 +185,7 @@ export default class shuang11_page extends PureComponent {
 					this.setState({
 						img10: res1.data.coupon10 === '0' ? img_10_use : img_10_over
 					});
-					sessionStorage.setItem('img10', res1.data.coupon10 === '0' ? img_10_use : img_10_over);
+					localStorage.setItem('img10', res1.data.coupon10 === '0' ? img_10_use : img_10_over);
 					if (res1.data.coupon10 === '0') {
 						this.setState({
 							showAlert: true,
@@ -204,7 +199,7 @@ export default class shuang11_page extends PureComponent {
 					this.setState({
 						img15: res1.data.coupon15 === '0' ? img_15_use : img_15_over
 					});
-					sessionStorage.setItem('img15', res1.data.coupon15 === '0' ? img_15_use : img_15_over);
+					localStorage.setItem('img15', res1.data.coupon15 === '0' ? img_15_use : img_15_over);
 					if (res1.data.coupon10 === '0') {
 						this.setState({
 							showAlert: true,
@@ -212,6 +207,12 @@ export default class shuang11_page extends PureComponent {
 						});
 					}
 				}
+			} else if (res1 && res1.msgCode === 'PTM1000') {
+                this.imgClick(type)
+				this.setState({
+					login_box: true,
+					type: ''
+				});
 			} else {
 				Toast.info(res1.msgInfo);
 			}
