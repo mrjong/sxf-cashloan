@@ -4,7 +4,7 @@ import qs from 'qs';
 import { getDeviceType } from 'utils/common';
 import { Toast } from 'antd-mobile';
 import styles from './index.scss';
-import downloadBtn from '../images/download/download_btn.jpg';
+import downloadBtn from './img/download_btn.jpg';
 
 const API = {
     

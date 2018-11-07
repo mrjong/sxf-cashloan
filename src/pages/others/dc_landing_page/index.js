@@ -8,7 +8,7 @@ import { validators } from 'utils/validator';
 import Cookie from 'js-cookie';
 import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils/common';
 import styles from './index.scss';
-import bannerImg from '../images/dc_landing/banner.png';
+import bannerImg from './img/banner.png';
 
 let timmer;
 const API = {
