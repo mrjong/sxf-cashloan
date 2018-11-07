@@ -7,7 +7,7 @@ import styles from './index.scss';
 import downloadBtn from './img/download_btn.jpg';
 
 const API = {
-    DOWNLOADURL: '/version/getDownloadUrl',
+    DOWNLOADURL: 'download/getDownloadUrl',
 }
 @fetch.inject()
 export default class download_page extends PureComponent {
@@ -26,7 +26,7 @@ export default class download_page extends PureComponent {
         .then(res => {
             if (res.msgCode === 'PTM0000') {
                 this.setState({
-                    downloadUrl: res.data.uid,
+                    downloadUrl: res.data,
                 })
             } else {
                 res.msgInfo && Toast.info(res.msgInfo);
