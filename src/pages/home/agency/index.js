@@ -143,19 +143,22 @@ export default class ConfirmAgencyPage extends PureComponent {
     store.removeCouponData();
     let params = {};
     // 如果没有coupId直接不调用接口
-    if(!result.data || !couponInfo || couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal){
+    if(!result.data){
       return;
     }
+    // if(!result.data || !couponInfo || couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal){
+    //   return;
+    // }
     if (couponInfo && couponInfo !== {}) {
       params = {
-        coupId: couponInfo.usrCoupNo, // 优惠劵id
+        couponId: couponInfo.usrCoupNo, // 优惠劵id
         type: '00', // 00为借款 01为还款
         price: repayInfo.billPrcpAmt,
       };
     } else {
       params = {
-        prdId: queryData.prdId,
-        coupId: result.data.usrCoupNo, // 优惠劵id
+        // prdId: queryData.prdId,
+        couponId: result.data.usrCoupNo, // 优惠劵id
         type: '00', // 00为借款 01为还款
         price: repayInfo.billPrcpAmt,
       };
