@@ -7,7 +7,7 @@ import styles from './index.scss';
 import downloadBtn from './img/download_btn.jpg';
 
 const API = {
-    
+    DOWNLOADURL: '/version/getDownloadUrl',
 }
 @fetch.inject()
 export default class download_page extends PureComponent {
@@ -18,15 +18,15 @@ export default class download_page extends PureComponent {
         }
     }
     componentWillMount() {
-
+        this.getDownloadUrl();
     }
 
     getDownloadUrl = () => {
-        this.props.$fetch.post(API.smsForLogin, {})
+        this.props.$fetch.get(API.DOWNLOADURL, {})
         .then(res => {
             if (res.msgCode === 'PTM0000') {
                 this.setState({
-                    downloadUrl: res.data,
+                    downloadUrl: res.data.uid,
                 })
             } else {
                 res.msgInfo && Toast.info(res.msgInfo);
