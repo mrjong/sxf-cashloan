@@ -30,8 +30,9 @@ export default class order_detail_page extends PureComponent {
             bankInfo: {},
             couponInfo: {},
             hideBtn: false,
-            showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
-            ItrtAmt: 0, // 每期利息金额
+            // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
+            // ItrtAmt: 0, // 每期利息金额
+            deratePrice: '',
         }
     }
     componentWillMount() {
@@ -82,7 +83,7 @@ export default class order_detail_page extends PureComponent {
                     }, () => {
                         // 选择银行卡回来
                         let bankInfo = store.getCardData();
-                        let couponInfo = store.getCouponData();
+                        // let couponInfo = store.getCouponData();
                         if (bankInfo && bankInfo !== {}) {
                             this.setState({
                                 showMoudle: true
@@ -91,7 +92,10 @@ export default class order_detail_page extends PureComponent {
                                     bankInfo: bankInfo,
                                     // couponInfo: couponInfo,
                                 })
-                                this.dealMoney(res.data);
+                                store.removeCardData();
+                                if (res.data && res.data.data && res.data.perdNum !== 999) {
+                                    this.dealMoney(res.data);
+                                }
                                 // // 前端计算优惠劵减免金额
                                 // if (couponInfo && couponInfo !== {}) {
                                 //     this.setState({
@@ -107,11 +111,12 @@ export default class order_detail_page extends PureComponent {
                                 //         this.setState({ showItrtAmt: false });
                                 //     }
                                 // }
-                                store.removeCardData();
-                                store.removeCouponData();
                             })
                         } else {
-                            this.setState({ couponInfo: null });
+                            if (res.data && res.data.data && res.data.perdNum !== 999) {
+                                this.dealMoney(res.data);
+                            }
+                            // this.setState({ couponInfo: null });
                         }
                         this.showPerdList(res.data.perdNum)
                     })
@@ -125,33 +130,42 @@ export default class order_detail_page extends PureComponent {
 
     // 后台计算优惠券减免金额以及本次还款金额
     dealMoney = (result) => {
-        const { queryData, repayInfo } = this.state;
         let couponInfo = store.getCouponData();
         store.removeCouponData();
         let params = {};
         // 如果没有coupId直接不调用接口
-        if(!result.data || !couponInfo || couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal){
-          return;
+        if (couponInfo && (couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal)) {
+            // 不使用优惠劵的情况
+            this.setState({
+              couponInfo,
+            });
+            return;
         }
         if (couponInfo && couponInfo !== {}) {
           params = {
-            coupId: couponInfo.usrCoupNo, // 优惠劵id
+            billNo: this.state.billNo,
+            couponId: couponInfo.usrCoupNo, // 优惠劵id
             type: '01', // 00为借款 01为还款
-            price: repayInfo.billPrcpAmt,
+            currentStage: result.perdNum,
+            price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
+            totalStage: result.perdLth,
           };
         } else {
           params = {
-            prdId: queryData.prdId,
-            coupId: result.data.usrCoupNo, // 优惠劵id
+            billNo: this.state.billNo,
+            couponId: result.data.usrCoupNo, // 优惠劵id
             type: '01', // 00为借款 01为还款
-            price: repayInfo.billPrcpAmt,
+            currentStage: result.perdNum,
+            price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
+            totalStage: result.perdLth,
           };
         }
-        this.props.$fetch.post(API.COUPON_COUNT, params).then(result => {
+        this.props.$fetch.get(API.COUPON_COUNT, params).then(result => {
           if (result && result.msgCode === 'PTM0000' && result.data !== null) {
             this.setState({
               couponInfo,
               deratePrice: result.data.deratePrice,
+              money: result.data.resultPrice,
             });
           } else {
             Toast.info(result.msgInfo);
@@ -369,6 +383,12 @@ export default class order_detail_page extends PureComponent {
     }
     // 判断优惠劵显示
     renderCoupon = () => {
+        const { deratePrice } = this.state;
+        if (deratePrice) {
+            return (<span>-{deratePrice}元</span>)
+        } else {
+            return (<span>不使用</span>)
+        }
         // if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
         //     if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
         //         if (this.state.showItrtAmt) {

@@ -143,27 +143,29 @@ export default class ConfirmAgencyPage extends PureComponent {
     store.removeCouponData();
     let params = {};
     // 如果没有coupId直接不调用接口
-    if(!result.data){
+    if (couponInfo && (couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal)) {
+      // 不使用优惠劵的情况
+      this.setState({
+        couponInfo,
+      });
       return;
     }
-    // if(!result.data || !couponInfo || couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal){
-    //   return;
-    // }
     if (couponInfo && couponInfo !== {}) {
       params = {
+        prodId: queryData.prdId,
         couponId: couponInfo.usrCoupNo, // 优惠劵id
         type: '00', // 00为借款 01为还款
         price: repayInfo.billPrcpAmt,
       };
     } else {
       params = {
-        // prdId: queryData.prdId,
+        prodId: queryData.prdId,
         couponId: result.data.usrCoupNo, // 优惠劵id
         type: '00', // 00为借款 01为还款
         price: repayInfo.billPrcpAmt,
       };
     }
-    this.props.$fetch.post(API.COUPON_COUNT, params).then(result => {
+    this.props.$fetch.get(API.COUPON_COUNT, params).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         this.setState({
           couponInfo,
@@ -429,8 +431,7 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 渲染优惠劵
   renderCoupon = () => {
-    const { couponInfo, repayInfo, deratePrice } = this.state;
-    console.log(deratePrice)
+    const { deratePrice } = this.state;
     if (deratePrice) {
       return (<span>-{deratePrice}元</span>)
     } else {
