@@ -1,6 +1,6 @@
 import defaultBanner from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
-import { Modal, Toast } from 'antd-mobile';
+import { Modal, Toast, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
@@ -22,10 +22,14 @@ const API = {
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
   GETSTSW: '/my/getStsw', // 获取首页进度
+  AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
 };
 
 let token = '';
 let tokenFromStotage = '';
+
+let timer;
+let timerOut;
 
 @fetch.inject()
 export default class HomePage extends PureComponent {
@@ -44,6 +48,9 @@ export default class HomePage extends PureComponent {
       usrIndexInfo: '',
       haselescard: 'true',
       percentSatus: '',
+      visibleLoading: false,
+      percent: 0,
+      showToast: false,
     };
   }
   componentWillMount() {
@@ -89,6 +96,12 @@ export default class HomePage extends PureComponent {
   componentWillUnmount() {
     // 离开首页的时候 将 是否打开过底部弹框标志恢复
     store.removeHadShowModal();
+    if (timer) {
+      clearInterval(timer);
+    }
+    if (timerOut) {
+      clearTimeout(timerOut);
+    }
   }
 
   // 从 url 中获取参数，如果有 token 就设置下
@@ -215,7 +228,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
-        this.requestBindCardState();
+        this.repayCheck();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
@@ -223,7 +236,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
-        this.requestBindCardState();
+        this.repayCheck();
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
@@ -238,6 +251,18 @@ export default class HomePage extends PureComponent {
         console.log('default');
     }
   };
+
+  // 设置百分比
+  setPercent = (percent) => {
+    if (this.state.percent < 90 && this.state.percent >= 0) {
+      console.log(Math.random() * 10 + 1)
+      this.setState({
+        percent: this.state.percent + parseInt(Math.random() * 10 + 1)
+      })
+    } else {
+      clearInterval(timer)
+    }
+  }
 
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
@@ -277,6 +302,73 @@ export default class HomePage extends PureComponent {
       }
     });
   };
+
+  // 复借风控校验接口
+  repayCheck = () => {
+    timerOut = setTimeout(() => { // 进度条
+      this.setState(
+        {
+          percent: 0,
+          visibleLoading: true,
+          showToast: true,
+        },
+        () => {
+          timer = setInterval(() => {
+            this.setPercent();
+            ++this.state.time;
+          }, 1000);
+        },
+      );
+    }, 800);
+    this.props.$fetch.post(API.AGENT_REPAY_CHECK, null,
+      {
+        timeout: 100000,
+        hideLoading: true,
+      }).then(result => {
+        this.setState(
+          {
+            percent: 100,
+          },
+          () => {
+            clearInterval(timer);
+            clearTimeout(timerOut);
+            this.setState({
+              visibleLoading: false,
+            });
+            if (result && result.msgCode === 'PTM0000') {
+              if (this.state.showToast) {
+                this.setState({
+                  showToast: false,
+                });
+                Toast.info('资质检测完成，可正常借款', 3, () => {
+                  this.requestBindCardState();
+                });
+              } else {
+                this.requestBindCardState();
+              }
+            } else { // 失败的话刷新首页
+              Toast.info(result.msgInfo, 2 ,() => {
+                this.requestGetUsrInfo();
+              });
+            }
+        })
+    })
+    .catch(err => {
+      console.log(err);
+      clearInterval(timer);
+      clearTimeout(timerOut);
+      this.setState(
+        {
+          percent: 100,
+        },
+        () => {
+          this.setState({
+            visibleLoading: false,
+          });
+        },
+      );
+    })
+  }
 
   // 获取 banner 列表
   requestGetBannerList = () => {
@@ -348,7 +440,7 @@ export default class HomePage extends PureComponent {
   };
 
   render() {
-    const { bannerList, usrIndexInfo, percentSatus } = this.state;
+    const { bannerList, usrIndexInfo, visibleLoading, percent,percentSatus } = this.state;
     const { history } = this.props;
     let componentsDisplay = null;
     switch (usrIndexInfo.indexSts) {
@@ -423,6 +515,24 @@ export default class HomePage extends PureComponent {
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
+        </Modal>
+        <Modal
+          wrapClassName={style.modalLoadingBox}
+          visible={visibleLoading}
+          transparent
+          maskClosable={false}
+        //   onClose={this.onClose('modal1')}
+
+        //   footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
+        //   wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+        >
+          <div className="show-info">
+            <div className={style.modalLoading}>
+              资质检测中...
+            </div>
+            <div className="progress"><Progress percent={percent} position="normal" /></div>
+            {/* <div aria-hidden="true">{percent}</div> */}
+          </div>
         </Modal>
       </div>
     );
