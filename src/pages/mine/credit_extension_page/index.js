@@ -180,7 +180,8 @@ export default class credit_extension_page extends PureComponent {
               store.setCheckCardRouter('');
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
               this.props.toast.loading('加载中...', 0);
-              window.location.href = result.data.url + '&hideStep=true&project=xdc';
+              // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&hideStep=true&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
+              window.location.href = result.data.url + `&hideStep=true&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
             } else {
               this.props.toast.info(result.msgInfo);
             }
