@@ -260,7 +260,7 @@ export default class HomePage extends PureComponent {
           }, 1000);
         },
       );
-    }, 300);
+    }, 800);
     this.props.$fetch.post(API.AGENT_REPAY_CHECK, null,
       {
         timeout: 100000,
