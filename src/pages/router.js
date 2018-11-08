@@ -6,6 +6,7 @@ import Protocol from 'pages/protocol/router'; // 协议
 import Login from 'pages/login/router'; // 协议
 import LandingPage from 'pages/landing/router'; // 落地页
 import ActivityPage from 'pages/activity/router'; // 活动
+import OthersRoute from 'pages/others/router'; // 其他页面（下载页）
 
 export default [
   ...AuthRoute,
@@ -15,5 +16,6 @@ export default [
   ...Common,
   ...Protocol,
   ...LandingPage,
-  ...ActivityPage
+  ...ActivityPage,
+  ...OthersRoute
 ];
