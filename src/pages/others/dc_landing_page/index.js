@@ -77,12 +77,9 @@ export default class dc_landing_page extends PureComponent {
                         } else {
                             store.setTokenSession(res.data.tokenId);
                         }
-                        if (isWXOpen()) {
-                            // this.props.history.goBack();
+                        Toast.info('领取成功，请去APP打开使用', 2, () => {
                             this.props.history.push('/others/download_page');
-                        } else {
-                            this.props.history.push('/others/download_page');
-                        }
+                        })
                     },
                     error => {
                         error.msgInfo && Toast.info(error.msgInfo);

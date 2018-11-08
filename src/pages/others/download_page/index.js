@@ -41,8 +41,9 @@ export default class download_page extends PureComponent {
         const phoneType = getDeviceType();
         if (phoneType === 'ANDRIOD') {
             window.location.href = downloadUrl;
+            // window.location.href = 'http://172.16.138.162:8920/app-release.apk'
         } else {
-            Toast.info('暂未开放')
+            Toast.info('暂不支持ios下载')
         }
     }
 
