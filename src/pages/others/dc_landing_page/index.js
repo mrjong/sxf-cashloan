@@ -78,7 +78,7 @@ export default class dc_landing_page extends PureComponent {
                             store.setTokenSession(res.data.tokenId);
                         }
                         Toast.info('领取成功，请去APP打开使用', 2, () => {
-                            this.props.history.push('/others/download_page');
+                            this.props.history.replace('/others/download_page');
                         })
                     },
                     error => {
