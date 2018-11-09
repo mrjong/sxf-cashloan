@@ -113,6 +113,7 @@ export default class coupon_page extends PureComponent {
   };
   // 获取每一页数据
   genData = async (pIndex = 1) => {
+    console.log(pIndex)
     if (totalPage && totalPage < pIndex) {
       this.setState({
         isLoading: false,
@@ -214,10 +215,11 @@ export default class coupon_page extends PureComponent {
   };
   // 渲染每一页完成之后
   onEndReached = async event => {
+    console.log(this.state.isLoading && !this.state.hasMore)
     if (this.state.isLoading && !this.state.hasMore) {
-      this.setState({
-        pageIndex: totalPage || 1,
-      });
+      // this.setState({
+      //   pageIndex: totalPage || 1,
+      // });
       return;
     }
     this.setState({ isLoading: true });
@@ -271,7 +273,6 @@ export default class coupon_page extends PureComponent {
         index = this.state.rData && this.state.rData.length - 1;
       }
       const obj = this.state.rData && this.state.rData[index--];
-      console.log(obj,'obj')
       return (
         // "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
         <div
@@ -321,6 +322,7 @@ export default class coupon_page extends PureComponent {
           <ListView
             className={`${classN} ${style.no_header}`}
             initialListSize={this.state.Listlength}
+            onEndReachedThreshold={100}
             onScroll={this.handleScroll}
             key={this.state.useBodyScroll ? '0' : '1'}
             ref={el => (this.lv = el)}
