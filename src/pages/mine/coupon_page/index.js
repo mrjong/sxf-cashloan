@@ -55,7 +55,6 @@ export default class coupon_page extends PureComponent {
   }
   componentWillUnmount() {
     // 从不可使用的优惠劵点进来，显示弹框
-    console.log(nouseFlag)
     if (nouseFlag) {
       if (saveBankData) {
         store.setCardData(saveBankData)
@@ -113,7 +112,6 @@ export default class coupon_page extends PureComponent {
   };
   // 获取每一页数据
   genData = async (pIndex = 1) => {
-    console.log(pIndex)
     if (totalPage && totalPage < pIndex) {
       this.setState({
         isLoading: false,
@@ -215,7 +213,6 @@ export default class coupon_page extends PureComponent {
   };
   // 渲染每一页完成之后
   onEndReached = async event => {
-    console.log(this.state.isLoading && !this.state.hasMore)
     if (this.state.isLoading && !this.state.hasMore) {
       // this.setState({
       //   pageIndex: totalPage || 1,
