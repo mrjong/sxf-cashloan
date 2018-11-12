@@ -130,11 +130,12 @@ export default class coupon_page extends PureComponent {
         billNo: receiveData.billNo,
         // loading: true,
       };
-    } else if (receiveData && receiveData.price) {
+    } else if (receiveData && receiveData.price && receiveData.perCont) {
       sendParams = {
         type: `0${this.state.msgType}`,
         pageNo: pIndex,
         price: receiveData.price,
+        perCont:receiveData.perCont
         // loading: true,
       };
     } else {

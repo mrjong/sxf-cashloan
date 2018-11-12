@@ -413,8 +413,9 @@ export default class ConfirmAgencyPage extends PureComponent {
 
   // 选择优惠劵
   selectCoupon = (useFlag) => {
+      console.log('1111111111111',useFlag)
     if (useFlag) {
-      this.props.history.push({ pathname: '/mine/coupon_page', search: `?price=${this.state.repayInfo.billPrcpAmt}`, state: { nouseCoupon: true } });
+      this.props.history.push({ pathname: '/mine/coupon_page', search: `?price=${this.state.repayInfo.billPrcpAmt}&perCont=${this.state.repayInfo.perdUnit === 'M' ? this.state.repayInfo.perdLth : 1}`, state: { nouseCoupon: true } });
       return;
     }
     if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
@@ -422,7 +423,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     } else {
       store.setCouponData(this.state.repayInfo.data);
     }
-    this.props.history.push({ pathname: '/mine/coupon_page', search: `?price=${this.state.repayInfo.billPrcpAmt}` });
+    this.props.history.push({ pathname: '/mine/coupon_page', search: `?price=${this.state.repayInfo.billPrcpAmt}&perCont=${this.state.repayInfo.perdUnit === 'M' ? this.state.repayInfo.perdLth : 1}` });
   }
 
   jumpToHome = () => {
