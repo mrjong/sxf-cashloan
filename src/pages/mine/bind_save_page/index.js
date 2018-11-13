@@ -97,7 +97,7 @@ export default class bind_save_page extends PureComponent {
   bindSaveCard = params1 => {
     this.props.$fetch.post(API.BINDCARD, params1).then((data) => {
       // bindStorageConfirm()
-      if (data.msgCode === 'PTM0000') {
+      if (data.msgCode === 'PTM0000' || data.msgCode === 'PTM0010') {
         buriedPointEvent(mine.saveConfirm, {
           entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
           is_success: true,

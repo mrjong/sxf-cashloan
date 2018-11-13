@@ -68,7 +68,7 @@ export default class bind_credit_page extends PureComponent {
   // 绑定银行卡
   bindConfirm = params1 => {
     this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
-      if (result.msgCode === 'PTM0000') {
+      if (result.msgCode === 'PTM0000' || result.msgCode === 'PTM0010') {
         buriedPointEvent(mine.creditConfirm, {
           entry: backUrlData ? '绑定信用卡' : '信用卡管理',
           is_success: true,
