@@ -80,8 +80,10 @@ if (window.history && window.history.pushState) {
       if (window.location.pathname === '/login') {
         console.log(window.ReactRouterHistory && window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack)
         let isAllowBack = window.ReactRouterHistory && window.ReactRouterHistory.location.state && window.ReactRouterHistory.location.state.isAllowBack;
-        if (isWXOpen() && isAllowBack) {
-          window.ReactRouterHistory.goBack()
+        let protocolBack = store.getLoginBack();
+        store.removeLoginBack();
+        if (isWXOpen() && (isAllowBack || protocolBack)) {
+          // window.ReactRouterHistory.goBack()
         } else if (isWXOpen()) {
           // 微信中点击登陆按钮也触发这个方法，根据token区分
           if (tokenFromStotage && token) {

@@ -35,6 +35,7 @@ const storeListLocal = {
   JumpUrl: 'jumpUrl', // 调整的url
   BackFlag: 'backFlag', // 是否返回的flag
   DisableBack: 'disableBack', // 禁止返回的标识
+  LoginBack: 'loginBack', // 登录页协议返回
 };
 
 // 本地session存储 方法名与key值对应表
