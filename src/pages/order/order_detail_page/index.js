@@ -63,7 +63,10 @@ export default class order_detail_page extends PureComponent {
         })
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
-                    res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    const calcMoney = res.data.perdNum !== 999 && ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt*100 - res.data.perdList[res.data.perdNum - 1].deductionAmt*100)/100).toFixed(2);
+                    console.log(calcMoney)
+                    // res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
+                    res.data.perdNum !== 999 && this.setState({ money: calcMoney });                    
                     res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     // res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
                     // if (res.data.data && res.data.data.coupVal && res.data.perdNum !== 999) {
@@ -236,7 +239,8 @@ export default class order_detail_page extends PureComponent {
                 });
                 item.feeInfos.push({
                     feeNm: '剩余应还',
-                    feeAmt: Number(perdList[i].perdWaitRepAmt)
+                    // feeAmt: Number(perdList[i].perdWaitRepAmt)
+                    feeAmt: ((perdList[i].perdWaitRepAmt*100 - perdList[i].deductionAmt*100)/100).toFixed(2),
                     // feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
                 })
             }
