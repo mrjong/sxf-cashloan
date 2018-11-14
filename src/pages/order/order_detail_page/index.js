@@ -64,7 +64,6 @@ export default class order_detail_page extends PureComponent {
             .then(res => {
                 if (res.msgCode === 'PTM0000') {
                     const calcMoney = res.data.perdNum !== 999 && ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt*100 - res.data.perdList[res.data.perdNum - 1].deductionAmt*100)/100).toFixed(2);
-                    console.log(calcMoney)
                     // res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
                     res.data.perdNum !== 999 && this.setState({ money: calcMoney });                    
                     res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
