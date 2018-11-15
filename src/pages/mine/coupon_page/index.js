@@ -55,7 +55,6 @@ export default class coupon_page extends PureComponent {
   }
   componentWillUnmount() {
     // 从不可使用的优惠劵点进来，显示弹框
-    console.log(nouseFlag)
     if (nouseFlag) {
       if (saveBankData) {
         store.setCardData(saveBankData)
@@ -131,11 +130,12 @@ export default class coupon_page extends PureComponent {
         billNo: receiveData.billNo,
         // loading: true,
       };
-    } else if (receiveData && receiveData.price) {
+    } else if (receiveData && receiveData.price && receiveData.perCont) {
       sendParams = {
         type: `0${this.state.msgType}`,
         pageNo: pIndex,
         price: receiveData.price,
+        perCont:receiveData.perCont
         // loading: true,
       };
     } else {
@@ -153,7 +153,7 @@ export default class coupon_page extends PureComponent {
             Toast.hide();
           }, 600);
         }
-        if (res.msgCode === 'PTM0000') {
+        if (res.msgCode === 'PTM0000' && res.data) {
           let dataArr = [];
           if (pIndex === 1) {
             totalPage = Math.ceil(res.data.totalSize / 10);
@@ -162,6 +162,7 @@ export default class coupon_page extends PureComponent {
             });
           }
           for (let i = res.data.data.length - 1; i >= 0; i--) {
+            // res.data.data[i].coupCategory = '00'
             if ((this.state.msgType !== 0 || !receiveData || (!receiveData.billNo && !receiveData.price)) || (res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo)) {
               dataArr.push(
                 res.data.data[i],
@@ -214,9 +215,9 @@ export default class coupon_page extends PureComponent {
   // 渲染每一页完成之后
   onEndReached = async event => {
     if (this.state.isLoading && !this.state.hasMore) {
-      this.setState({
-        pageIndex: totalPage || 1,
-      });
+      // this.setState({
+      //   pageIndex: totalPage || 1,
+      // });
       return;
     }
     this.setState({ isLoading: true });
@@ -242,7 +243,7 @@ export default class coupon_page extends PureComponent {
     this.setState({
       couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
     });
-    const couponData = obj === 'null' ? { coupVal: 0, usrCoupNo: 'null' } : obj;
+    const couponData = obj === 'null' ? { coupVal: -1, usrCoupNo: 'null' } : obj;
     store.setCouponData(couponData);
     if (saveBankData) {
       store.setCardData(saveBankData)
@@ -280,7 +281,18 @@ export default class coupon_page extends PureComponent {
             [style.box, style.box_default].join(' ')}
         >
           <div className={style.leftBox}>
-            <span>￥</span><span className={style.money}>{obj && obj.coupVal}</span>
+            {
+              obj && obj.coupCategory === '00' ?
+              <span>￥<i className={style.money}>{obj && obj.coupVal}</i></span>
+              : obj && obj.coupCategory === '03' ?
+              <span className={style.couponType2}>免息券</span>
+              : obj && obj.coupCategory === '01' ?
+              <span className={style.couponType3}><i>{obj && obj.coupVal}</i>折</span>
+              : obj && obj.coupCategory === '02' ?
+              <span className={style.couponType4}><i>免</i><i className={style.dayNum}>{obj && obj.coupVal}</i><br /><span className={style.littleFont}>天息费</span></span>
+              :
+              null
+            }
           </div>
           <div
             className={receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ?
@@ -308,6 +320,7 @@ export default class coupon_page extends PureComponent {
           <ListView
             className={`${classN} ${style.no_header}`}
             initialListSize={this.state.Listlength}
+            onEndReachedThreshold={100}
             onScroll={this.handleScroll}
             key={this.state.useBodyScroll ? '0' : '1'}
             ref={el => (this.lv = el)}
