@@ -135,7 +135,6 @@ export default class order_detail_page extends PureComponent {
         let couponInfo = store.getCouponData();
         store.removeCouponData();
         let params = {};
-        console.log(couponInfo)
         // 如果没有coupId直接不调用接口
         if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
             // 不使用优惠劵的情况
