@@ -374,6 +374,7 @@ export default class order_detail_page extends PureComponent {
     // 选择优惠劵
     selectCoupon = (useFlag) => {
         if (useFlag) {
+            store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
             this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { nouseCoupon: true, cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc }, });
             return;
         }
