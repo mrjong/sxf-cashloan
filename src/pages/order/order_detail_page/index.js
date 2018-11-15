@@ -135,8 +135,9 @@ export default class order_detail_page extends PureComponent {
         let couponInfo = store.getCouponData();
         store.removeCouponData();
         let params = {};
+        console.log(couponInfo)
         // 如果没有coupId直接不调用接口
-        if (couponInfo && (couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal)) {
+        if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
             // 不使用优惠劵的情况
             this.setState({
               couponInfo,
@@ -170,7 +171,7 @@ export default class order_detail_page extends PureComponent {
               money: result.data.resultPrice,
             });
           } else {
-            Toast.info(result.msgInfo);
+            this.props.toast.info(result.msgInfo);
           }
         });
     }
@@ -301,7 +302,7 @@ export default class order_detail_page extends PureComponent {
             }
 
         } else {
-            if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
+            if (this.state.billDesc.data && this.state.billDesc.data.usrCoupNo) {
                 // // 首末期利息为0时coupId为空
                 // if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
                 //     couponId = '';
@@ -389,8 +390,8 @@ export default class order_detail_page extends PureComponent {
     // 判断优惠劵显示
     renderCoupon = () => {
         const { deratePrice } = this.state;
-        if (deratePrice) {
-            return (<span>-{deratePrice}元</span>)
+        if (deratePrice !== '') {
+            return (<span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>)
         } else {
             return (<span>不使用</span>)
         }

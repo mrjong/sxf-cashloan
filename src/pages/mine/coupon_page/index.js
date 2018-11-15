@@ -243,7 +243,7 @@ export default class coupon_page extends PureComponent {
     this.setState({
       couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
     });
-    const couponData = obj === 'null' ? { coupVal: 0, usrCoupNo: 'null' } : obj;
+    const couponData = obj === 'null' ? { coupVal: -1, usrCoupNo: 'null' } : obj;
     store.setCouponData(couponData);
     if (saveBankData) {
       store.setCardData(saveBankData)
