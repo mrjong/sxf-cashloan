@@ -95,6 +95,7 @@ export default class HomePage extends PureComponent {
   }
   // 用户标识
   queryUsrSCOpenId = () =>{
+      alert(sessionStorage.getItem('QueryUsrSCOpenId'));
       if(!sessionStorage.getItem('QueryUsrSCOpenId')){
           this.props.$fetch.get(API.queryUsrSCOpenId).then((res)=>{
               console.log(res)
