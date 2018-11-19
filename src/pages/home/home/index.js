@@ -48,8 +48,6 @@ export default class HomePage extends PureComponent {
     };
   }
   componentWillMount() {
-    // 登录埋点
-    this.queryUsrSCOpenId()
     // 清除订单缓存
     store.removeBackData();
     // 清除四项认证进入绑卡页的标识
@@ -87,6 +85,10 @@ export default class HomePage extends PureComponent {
         },
       );
     }
+  }
+  componentDidMount(){
+        // 登录埋点
+    this.queryUsrSCOpenId()
   }
 
   componentWillUnmount() {
