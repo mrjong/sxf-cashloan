@@ -95,11 +95,13 @@ export default class HomePage extends PureComponent {
   }
   // 用户标识
   queryUsrSCOpenId = () =>{
-      if(!store.getQueryUsrSCOpenId()){
+      if(!sessionStorage.getItem('QueryUsrSCOpenId')){
           this.props.$fetch.get(API.queryUsrSCOpenId).then((res)=>{
               console.log(res)
-              sa.login(res.data);
-              store.setQueryUsrSCOpenId(res.data)
+              if(res.msgCode==='PTM0000'){
+                sa.login(res.data);
+                sessionStorage.setItem('QueryUsrSCOpenId',res.data)
+              }
           })
       }
   }
