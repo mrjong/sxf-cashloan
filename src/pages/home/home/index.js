@@ -22,7 +22,6 @@ const API = {
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
   GETSTSW: '/my/getStsw', // 获取首页进度
-  queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 };
 
 let token = '';
@@ -86,27 +85,9 @@ export default class HomePage extends PureComponent {
       );
     }
   }
-  componentDidMount(){
-        // 登录埋点
-    this.queryUsrSCOpenId()
-  }
-
   componentWillUnmount() {
     // 离开首页的时候 将 是否打开过底部弹框标志恢复
     store.removeHadShowModal();
-  }
-  // 用户标识
-  queryUsrSCOpenId = () =>{
-      alert(sessionStorage.getItem('QueryUsrSCOpenId'));
-      if(!sessionStorage.getItem('QueryUsrSCOpenId')){
-          this.props.$fetch.get(API.queryUsrSCOpenId).then((res)=>{
-              console.log(res)
-              if(res.msgCode==='PTM0000'){
-                sa.login(res.data);
-                sessionStorage.setItem('QueryUsrSCOpenId',res.data)
-              }
-          })
-      }
   }
   // 从 url 中获取参数，如果有 token 就设置下
   getTokenFromUrl = () => {
