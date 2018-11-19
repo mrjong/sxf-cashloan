@@ -110,7 +110,6 @@ export default class login_page extends PureComponent {
                 res.msgInfo && Toast.info(res.msgInfo);
                 return;
               }
-              sa.login(res.data.userId);
               Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
               // store.setToken(res.data.tokenId);

@@ -22,6 +22,7 @@ const API = {
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
   GETSTSW: '/my/getStsw', // 获取首页进度
+  queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 };
 
 let token = '';
@@ -47,6 +48,8 @@ export default class HomePage extends PureComponent {
     };
   }
   componentWillMount() {
+    // 登录埋点
+    this.queryUsrSCOpenId()
     // 清除订单缓存
     store.removeBackData();
     // 清除四项认证进入绑卡页的标识
@@ -90,7 +93,16 @@ export default class HomePage extends PureComponent {
     // 离开首页的时候 将 是否打开过底部弹框标志恢复
     store.removeHadShowModal();
   }
-
+  // 用户标识
+  queryUsrSCOpenId = () =>{
+      if(!store.getQueryUsrSCOpenId()){
+          this.props.$fetch.get(API.queryUsrSCOpenId).then((res)=>{
+              console.log(res)
+              sa.login(res.data);
+              store.setQueryUsrSCOpenId(res.data)
+          })
+      }
+  }
   // 从 url 中获取参数，如果有 token 就设置下
   getTokenFromUrl = () => {
     const urlParams = getParamsFromUrl(window.location.search);
