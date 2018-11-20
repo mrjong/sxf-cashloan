@@ -7,6 +7,7 @@ import iconMsg from 'assets/images/home/icon_msg.png';
 
 const API = {
   MSG_COUNT: '/my/msgCount', // h5-查询未读消息总数
+  queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 };
 
 @fetch.inject()
@@ -20,7 +21,22 @@ export default class MsgBadge extends React.PureComponent {
 
   componentWillMount() {
     this.requestMsgCount();
+     // 登录埋点
+     this.queryUsrSCOpenId()
   }
+    // 用户标识
+    queryUsrSCOpenId = () =>{
+        // alert(sessionStorage.getItem('QueryUsrSCOpenId'));
+        if(!sessionStorage.getItem('QueryUsrSCOpenId')){
+            this.props.$fetch.get(API.queryUsrSCOpenId).then((res)=>{
+                console.log(res)
+                if(res.msgCode==='PTM0000'){
+                  sa.login(res.data);
+                  sessionStorage.setItem('QueryUsrSCOpenId',res.data)
+                }
+            })
+        }
+    }
 
   // 获取 未读消息条数 列表
   requestMsgCount = () => {

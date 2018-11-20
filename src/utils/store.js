@@ -22,7 +22,7 @@ const storeListLocal = {
   OrderSuccess: 'orderSuccess', // 付款成功信息
   BackData: 'backData', // 订单信息
   BillNo: 'billNo',
-  MsgObj: 'MsgObj', // // 消息详情
+MsgObj: 'MsgObj', // // 消息详情
   MsgBackData: 'MsgBackData', // 消息详情
   Token: 'fin-card-token', // local-token
   HistoryRouter: 'historyRouter', // 历史路由
@@ -36,6 +36,7 @@ const storeListLocal = {
   BackFlag: 'backFlag', // 是否返回的flag
   DisableBack: 'disableBack', // 禁止返回的标识
   LoginBack: 'loginBack', // 登录页协议返回
+  QueryUsrSCOpenId: 'QueryUsrSCOpenId', // 用户标识
 };
 
 // 本地session存储 方法名与key值对应表
