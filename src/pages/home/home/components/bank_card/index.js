@@ -68,7 +68,8 @@ export default class BankCard extends React.PureComponent {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
         Toast.loading('加载中...', 0);
-        window.location.href = result.data.url;
+        // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
+        window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {
         Toast.info(result.msgInfo);
       }

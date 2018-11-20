@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import PopUp from 'utils/PopUp'
 import Dialog from 'utils/Dialog'
-
+const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
   let obj = new PopUp(< Dialog open content={
     errMsg || '连接服务器失败，请稍后重试'
@@ -62,6 +62,23 @@ if (window.history && window.history.pushState) {
       if(store.getDisableBack()){
         return;
       }
+      // 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
+      if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam')>0) {
+        if (queryData.isShowCommit === 'true') {
+          window.ReactRouterHistory.push('/home/home');
+          return
+        } else {
+          window.ReactRouterHistory.push('/mine/mine_page');
+          return
+        }
+      }
+      if (window.location.pathname === '/mine/credit_list_page' && window.location.search.indexOf('noBackParam')>0) {
+        window.ReactRouterHistory.push('/home/home');
+      }
+      if (window.location.pathname === '/home/home' && window.location.search.indexOf('noBackParam')>0) {
+        logoutAppHandler();
+        return
+      }
       if (window.location.pathname === '/home/essential_information' || window.location.pathname === '/home/real_name') {
         if((window.location.pathname === '/home/real_name' && userInfo && userInfo.nameHid) || (window.location.pathname === '/home/real_name' && backFlag) || (window.location.pathname === '/home/essential_information' && backFlag)) {
           history.go(-2);
@@ -108,19 +125,18 @@ if (window.history && window.history.pushState) {
         let hash = window.location.hash;
         if (hash === '') {
           // 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
+          console.log('----+',store.getMoxieBackUrl())
           if (store.getMoxieBackUrl()) {
             store.removeMoxieBackUrl();
-            return;
           }
+
           // 如果从banner跳到外链 则不处理
           if (store.getOutLinkUrl()) {
             store.removeOutLinkUrl();
-            return;
           }
           if (window.location.pathname === '/') {
             return;
           }
-          const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
           console.log(historyRouter)
           switch (historyRouter) {
             case '/login':
