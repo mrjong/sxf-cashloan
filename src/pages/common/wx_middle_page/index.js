@@ -108,13 +108,13 @@ export default class wx_middle_page extends Component {
 	jumpRouter = () => {
 		if (isBugBrowser()) { // 登陆的token
 			if(store.getJumpUrl()){
-				this.props.history.replace(store.getJumpUrl())
+				this.props.history.push(store.getJumpUrl())
 			}else{
 				this.props.history.replace('/home/home') //微信授权成功调到登录页
 			}
 		} else {
 			if(store.getJumpUrlSession()){
-				this.props.history.replace(store.getJumpUrlSession())
+				this.props.history.push(store.getJumpUrlSession())
 			}else{
 				this.props.history.replace('/home/home') //微信授权成功调到登录页
 			}
