@@ -252,7 +252,9 @@ export default class huodong11_page extends PureComponent {
 	};
 	// 领券
 	receive = (type) => {
-		this.props.$fetch.get(`${API.receive}/COUPON_${type}`);
+		if(type){
+            this.props.$fetch.get(`${API.receive}/COUPON_${type}`);
+        }
 	};
 	//获得手机验证码
 	getTime(i) {
