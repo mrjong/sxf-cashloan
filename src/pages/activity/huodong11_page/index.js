@@ -232,7 +232,7 @@ export default class huodong11_page extends PureComponent {
 						img15: res1.data.coupon15 === '0' ? img_15_use : img_15_use
 					});
 					localStorage.setItem(`${id}img15`, res1.data.coupon15 === '0' ? img_15_use : img_15_use);
-					if (res1.data.coupon10 === '0') {
+					if (res1.data.coupon15 === '0') {
 						this.setState({
 							showAlert: true,
 							alertType: 'alert_15'
