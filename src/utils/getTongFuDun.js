@@ -12,7 +12,7 @@ const elementId = 'tonfudunScript';
 
 function getTongFuDun() {
   element.id = elementId;
-  element.src = `https://pws.payegis.com.cn/did/js/dp.js?appId=${appId}&sessionId=${sessionId}&ts=${ts}&callback=OnngFuDunCallBack`;
+  element.src = `https://pws.tongfudun.com/did/js/dp.js?appId=${appId}&sessionId=${sessionId}&ts=${ts}&callback=OnngFuDunCallBack`;
   document.body.appendChild(element);
 }
 
