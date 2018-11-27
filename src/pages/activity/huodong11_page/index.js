@@ -362,7 +362,7 @@ export default class huodong11_page extends PureComponent {
 		const { getFieldProps } = this.props.form;
 		return (
 			<div id="huodong">
-				<button
+				{/* <button
 					onClick={() => {
 						sessionStorage.clear();
 						localStorage.clear();
@@ -371,7 +371,7 @@ export default class huodong11_page extends PureComponent {
 					}}
 				>
 					一键清除缓存
-				</button>
+				</button> */}
 				<div className={style.bg}>
 					<img src={bg} className={style.bg_img} />
 					<div className={style.img_box}>
