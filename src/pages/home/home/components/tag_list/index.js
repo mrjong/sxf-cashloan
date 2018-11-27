@@ -82,6 +82,9 @@ export default class TagList extends React.PureComponent {
         className={className}
         active={!item.disable && index === currentIndex}
         onClick={() => {
+            if(item.disable){
+                return;
+               }
           if (index !== currentIndex) {
             this.setState({
               currentIndex: index,
