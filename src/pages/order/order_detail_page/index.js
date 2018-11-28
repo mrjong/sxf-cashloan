@@ -238,8 +238,8 @@ export default class order_detail_page extends PureComponent {
                 });
                 item.feeInfos.push({
                     feeNm: '剩余应还',
-                    // feeAmt: Number(perdList[i].perdWaitRepAmt)
-                    feeAmt: ((perdList[i].perdWaitRepAmt*100 - perdList[i].deductionAmt*100)/100).toFixed(2),
+                    feeAmt: Number(perdList[i].perdWaitRepAmt)
+                    // feeAmt: ((perdList[i].perdWaitRepAmt*100 - perdList[i].deductionAmt*100)/100).toFixed(2),
                     // feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
                 })
             }
