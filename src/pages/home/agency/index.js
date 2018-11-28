@@ -128,7 +128,9 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.setState({
           repayInfo: result.data,
         });
-        this.dealMoney(result.data);
+        if (result.data.data && result.data.data.usrCoupNo) {
+          this.dealMoney(result.data);
+        }
         this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
       } else {
         Toast.info(result.msgInfo);
