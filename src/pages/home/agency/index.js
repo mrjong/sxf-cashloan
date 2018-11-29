@@ -145,7 +145,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     store.removeCouponData();
     let params = {};
     // 如果没有coupId直接不调用接口
-    if (couponInfo && (couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal)) {
+    if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
       // 不使用优惠劵的情况
       this.setState({
         couponInfo,
