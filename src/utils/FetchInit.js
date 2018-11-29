@@ -12,8 +12,10 @@ const fetchinit = () => {
 	fetch.axiosInstance.interceptors.request.use(
 		(cfg) => {
             console.log(cfg);
-            // 非微信去掉 fn-v-card-token-wechat
+			// 非微信去掉 fn-v-card-token-wechat
+			if(!isWXOpen()){
                 Cookie.remove('fin-v-card-token-wechat')
+            }
 			// const TOKEN = Cookie.get('fin-v-card-token');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStotage = '';
