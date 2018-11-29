@@ -128,7 +128,9 @@ export default class ConfirmAgencyPage extends PureComponent {
         this.setState({
           repayInfo: result.data,
         });
-        this.dealMoney(result.data);
+        if (result.data.data && result.data.data.usrCoupNo) {
+          this.dealMoney(result.data);
+        }
         this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
       } else {
         Toast.info(result.msgInfo);
@@ -143,7 +145,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     store.removeCouponData();
     let params = {};
     // 如果没有coupId直接不调用接口
-    if (couponInfo && (couponInfo.usrCoupNo === 'null' || !couponInfo.coupVal)) {
+    if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
       // 不使用优惠劵的情况
       this.setState({
         couponInfo,
@@ -269,7 +271,7 @@ export default class ConfirmAgencyPage extends PureComponent {
       }
 
     } else {
-      if (this.state.repayInfo.data && this.state.repayInfo.data.coupVal) {
+      if (this.state.repayInfo.data && this.state.repayInfo.data.usrCoupNo) {
         couponId = this.state.repayInfo.data.usrCoupNo
       }
     }
