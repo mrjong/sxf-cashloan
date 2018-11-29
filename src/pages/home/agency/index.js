@@ -271,7 +271,7 @@ export default class ConfirmAgencyPage extends PureComponent {
       }
 
     } else {
-      if (this.state.repayInfo.data && this.state.repayInfo.data.coupVal) {
+      if (this.state.repayInfo.data && this.state.repayInfo.data.usrCoupNo) {
         couponId = this.state.repayInfo.data.usrCoupNo
       }
     }
