@@ -10,5 +10,11 @@ export default [
 		title: '全民免息狂欢',
 		arrowHide: true,
 		component: () => import('pages/activity/huodong11_page')
+	},
+	{
+		path: '/activity/dazhuanpan',
+		title: '大转盘',
+		arrowHide: true,
+		component: () => import('pages/activity/dazhuanpan')
 	}
 ];
