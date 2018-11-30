@@ -1,0 +1,11 @@
+.login_box {
+	.login_bg {
+		width: 100%;
+		display: block;
+	}
+}
+:global {
+	.am-modal.am-modal-transparent .am-modal-content {
+		padding-top: 0;
+	}
+}

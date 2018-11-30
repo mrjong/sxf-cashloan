@@ -3,6 +3,7 @@ import fetch from 'sx-fetch';
 import styles from './index.scss';
 import AwardShow from './components/AwardShow';
 import RuleShow from './components/RuleShow';
+import LoginAlert from './components/LoginAlert';
 import { setBackGround } from 'utils/setBackGround';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
@@ -117,6 +118,9 @@ export default class dc_landing_page extends PureComponent {
 		const { awardList, time, transformType } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
+              <div>
+                <LoginAlert />
+                </div>
 				<div className={styles.bg}>
 					<img className={styles.img} src={bg} />
 					<div className={styles.hd_box}>
@@ -161,6 +165,7 @@ export default class dc_landing_page extends PureComponent {
 						</div>
 					</div>
 				</div>
+              
 			</div>
 		);
 	}
