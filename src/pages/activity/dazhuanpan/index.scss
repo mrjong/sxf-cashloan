@@ -46,10 +46,35 @@
 				}
 			}
 		}
+		.myAward {
+			text-align: center;
+			span{
+				width: 237px;
+				font-size: 30px;
+				color: #fff;
+				background-color: #F52650;
+				padding: 10px 30px;
+				border-radius: 6px;
+				font-weight: 600;
+				display: inline-block;
+				margin-top: 30px;
+			}
+		}
+		.message_bottom {
+			font-size: .4rem;
+			letter-spacing: 0.04rem;
+			width: 80%;
+			margin: .4rem auto;
+			text-align: center;
+			color: #fff;
+			span {
+				color: #FFF100;
+			}
+		}
 	}
 }
 .get_award_list {
-	margin: 35px 20px 15px;
+	margin: 35px 0 15px;
 }
 .get_rule_desc {
 	margin: 50px 25px;

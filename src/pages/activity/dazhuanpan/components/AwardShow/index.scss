@@ -1,14 +1,19 @@
 .message {
-    font-size: 0.24rem;
-    height: 60px;
-    text-align: center;
-    border-radius: 0.6rem;
-    overflow: hidden;
-    color: #333;
-    background-color: #fff;
-    width: 100%;
+    width: 80%;
     margin: 0 auto;
-    span {
-        color: #FE0000;
+    .awardCarousel {
+        background: #fff;
+        font-size: 0.24rem;
+        text-align: center;
+        border-radius: 0.6rem;
+        overflow: hidden;
+        color: #333;
+        .carouselItem{
+            height: 60px;
+            line-height: 60px;
+            span {
+                color: #FE0000;
+            }
+        }
     }
 }

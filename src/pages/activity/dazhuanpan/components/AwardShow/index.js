@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Carousel } from 'antd-mobile';
 import style from './index.scss'
 var picH = 35; //移动高度
 var scrollstep = 3; //移动步幅,越大越快
@@ -15,9 +16,9 @@ var jiangpinList = [ '20元减息券', '杜蕾斯1盒', '100元减息券', '3期
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');
-		Mar2 = document.getElementById('Marquee2');
-		child_div2 = Mar2.getElementsByClassName('new_tels');
-		child_div = Mar.getElementsByClassName('new_tels');
+		// Mar2 = document.getElementById('Marquee2');
+		// child_div2 = Mar2.getElementsByClassName('new_tels');
+		// child_div = Mar.getElementsByClassName('new_tels');
 		setTimeout(this.start, stoptime);
 	}
 	start = () => {
@@ -65,34 +66,23 @@ export default class AwardShow extends Component {
 		return telNo;
 	};
 	render() {
+		const {allUsersAward} = this.props;
 		return (
-			<div>
-				<div id="Marquee2" style={{ display: 'none' }}>
-					<div
-						className="new_tels"
-						style={{
-							height: '.6rem',
-							lineHeight: '.6rem'
-						}}
-					>
-						恭喜136****7912获得<span>10元减息券</span>
-					</div>
-				</div>
-				<div ref="Mar" id="Marquee" className={style.message}>
-					<div
-						className="new_tels"
-						style={{
-							height: '.6rem',
-							lineHeight: '.6rem'
-						}}
-					>
-						恭喜 1{this.generateMixed(1)}
-						{Math.ceil(Math.random() * 9)}****{Math.ceil(Math.random() * 9)}
-						{Math.ceil(Math.random() * 9)}
-						{Math.ceil(Math.random() * 9)}
-						{Math.ceil(Math.random() * 9)}获得 <span>{this.getJiangpin(1)}</span>
-					</div>
-				</div>
+			<div className={style.message}>
+				<Carousel className={style.awardCarousel}
+					vertical
+					dots={false}
+					dragging={false}
+					swiping={false}
+					autoplay
+					infinite
+				>
+				{allUsersAward.map((item, index) => {
+										return (
+					<div key={index} className={style.carouselItem}>恭喜{item.mblHid}获得<span>{item.valDes}</span></div>
+					)
+				})}
+				</Carousel>
 			</div>
 		);
 	}
