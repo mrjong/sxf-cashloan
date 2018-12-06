@@ -29,134 +29,71 @@ export default class dazhuanpan_page extends PureComponent {
 		this.state = {
 			numdeg: 0,
 			time: 0,
-			realDeg: 45,
-			transformType: 'linear',
-			awardList: [
-				{
-					prizeId: 1,
-					name: '一等奖',
-					imgUrl: item1,
-					type: '红包',
-					valType: '个',
-					valDes: '5'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				},
-				{
-					prizeId: 2,
-					name: '二等奖',
-					imgUrl: item1,
-					type: '优惠券',
-					valType: '折',
-					valDes: '1'
-				}
-			],
-			total: '1',
+			transformType: 'cubic-bezier(.3,.25,.0001,1)',
+			awardList: [],
+			ruleDesc: '',
+			alert_img: '',
+			count: '1',
 			allUsersAward: [],
 			type: '', // 弹框类型
-			userAwardList: [], // 用户中奖列表
+			userAwardList: [] // 用户中奖列表
 		};
 	}
 	isTurn = false;
 	componentWillMount() {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.activeId) {
+			config.activeId = queryData.activeId;
+		}
 		token = Cookie.get('fin-v-card-token');
-		// if (token) {
-		// 	this.getCount();
-		// }
 		this.setState({
-			total:
-				sessionStorage.getItem('total') && Number(sessionStorage.getItem('total')) > 0
-					? sessionStorage.getItem('total')
-					: !sessionStorage.getItem('total') ? 1 : 0
+			count:
+				sessionStorage.getItem('count') && Number(sessionStorage.getItem('count')) > 0
+					? sessionStorage.getItem('count')
+					: !sessionStorage.getItem('count') ? 1 : 0
 		});
 		this.getConfigList();
 	}
-	// start = () => {
-	// 	if (this.isTurn) {
-	// 		return;
-	// 	}
-	// 	this.setState({
-	// 		numdeg: 360 * 1,
-	// 		time: 10,
-	// 		transformType: 'ease-in'
-	// 	});
-	// 	let demotime = parseInt(Math.random() * 10) * 1000;
-	// 	console.log(demotime);
-	// 	setTimeout(() => {
-	// 		this.setState(
-	// 			{
-	// 				numdeg: this.state.realDeg - 25,
-	// 				time: 3,
-	// 				transformType: 'ease-out'
-	// 			},
-	// 			() => {
-	// 				console.log(this.state.time);
-	// 			}
-	// 		);
-	// 	}, demotime);
-	// };
-
 	// 刷新大转盘数据
 	refreshPage = () => {
 		this.getCount();
-	}
+	};
 
 	// 获取活动配置list
 	getConfigList = () => {
 		this.props.$fetch.post(API.activeConfig, { activeId: config.activeId }).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data && res.data.type === '04') { // type 拆红包00, 砸金蛋01, 刮刮乐02, 老虎机03,大转盘04
-				if(res.data.recordShow === '01'){ // 是否展示其他用户抽奖记录  01是 00 否
-					this.getAwardList('00');
+			if (res.msgCode === 'PTM0000') {
+				if (res.data.data) {
+					switch (res.data.data.type) {
+						case '00':
+							Toast.info(res.msgInfo);
+							break;
+						case '01':
+							Toast.info(res.msgInfo);
+							break;
+						case '02':
+							Toast.info(res.msgInfo);
+							break;
+						case '03':
+							Toast.info(res.msgInfo);
+							break;
+						case '大转盘':
+							// 是否展示其他用户抽奖记录  01是 00 否
+							if (res.data && res.data.data && res.data.data.recordShow === '00') {
+								this.getAwardList('00');
+							}
+							this.setState({
+								awardList: res.data.data.prizeList,
+								ruleDesc: res.data.data.ruleDesc
+							});
+							break;
+
+						default:
+							break;
+					}
+				} else if (res.data.code === 'PCC-MARKET-0001' || res.data.code === 'PCC-MARKET-0002') {
+					Toast.info(res.data.msg);
 				}
-				this.setState({
-					awardList: res.data.prizeList
-				});
 			} else {
 				Toast.info(res.msgInfo);
 			}
@@ -167,17 +104,15 @@ export default class dazhuanpan_page extends PureComponent {
 	getCount = () => {
 		this.props.$fetch.post(API.userCount, { activeId: config.activeId }).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				if (res.data.total && Number(res.data.total) > 0) {
-					this.getDraw(res.data.total);
+				if (res.data.data.count && Number(res.data.data.count) > 0) {
+					this.getDraw(res.data.data.count);
 				} else {
-					sessionStorage.setItem('total', 0);
+					sessionStorage.setItem('count', 0);
 					this.setState({
-						total: '0'
+						count: '0'
 					});
-					this.showAlertFunc({
-						type: 'alert',
-						title: '抱歉，没有抽奖机会',
-						content: '今日机会已用完，请您明日再来'
+					this.setState({
+						type: 'no_chance'
 					});
 				}
 			} else {
@@ -187,6 +122,13 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 获取我的奖品
 	getMyAward = () => {
+		token = Cookie.get('fin-v-card-token');
+		if (!token) {
+			this.setState({
+				type: 'alert_tel'
+			});
+			return;
+		}
 		this.getAwardList('01');
 	};
 	// 用户中奖列表
@@ -199,12 +141,12 @@ export default class dazhuanpan_page extends PureComponent {
 			if (res.msgCode === 'PTM0000') {
 				if (type === '01') {
 					this.setState({
-						userAwardList: res.data,
+						userAwardList: res.data.data,
 						type: 'jiangpin'
 					});
 				} else if (type === '00') {
 					this.setState({
-						allUsersAward: res.data,
+						allUsersAward: (res.data && res.data.data) || []
 					});
 				}
 			} else {
@@ -213,19 +155,15 @@ export default class dazhuanpan_page extends PureComponent {
 		});
 	};
 	// 用户抽奖
-	getDraw = (total) => {
-		const osType = getDeviceType();
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+	getDraw = (count) => {
 		const params = {
-			activeId: config.activeId,
-			channel: queryData && queryData.h5Channel ? queryData.h5Channel : localStorage.getItem('h5Channel') || 'h5', // 用户渠道
-			osType: osType
+			activeId: config.activeId
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				sessionStorage.setItem('total', Number(total) > 0 ? Number(total) - 1 : '0');
+				sessionStorage.setItem('count', Number(count) > 0 ? Number(count) - 1 : '0');
 				this.setState({
-					total: Number(total) > 0 ? Number(total) - 1 : '0'
+					count: Number(count) > 0 ? Number(count) - 1 : '0'
 				});
 				this.zhuanpan(res.data);
 			} else {
@@ -236,63 +174,87 @@ export default class dazhuanpan_page extends PureComponent {
 	// 转盘开始转
 	zhuanpan = (obj) => {
 		this.isRotated = true;
-		var index = Number(obj.prizeId);
+		let index = '';
+		this.state.awardList.forEach((item, index2) => {
+			if (obj.prizeId === item.prizeId) {
+				index = index2 + 1;
+			}
+		});
+		if (!index) {
+			return;
+		}
 		setTimeout(() => {
 			this.setState({
-				num: index + this.state.num //得到本次位置
+				num: Number(index) + this.state.num //得到本次位置
 			});
+			let deg = 360 / this.state.awardList.length;
 			this.setState(
 				{
 					numdeg:
-						360 * 8 +
+						360 * 1 +
 						this.state.numdeg +
-						(8 - index) * this.state.deg +
-						this.state.deg / 2 +
-						(360 - this.state.numdeg % 360)
+						(this.state.awardList.length - index) * deg +
+						deg / 2 +
+						(360 - this.state.numdeg % 360),
+					time: 7.5
 				},
 				() => {
-					// console.log(this.state.numdeg);
+					console.log(this.state.numdeg);
 				}
 			);
 			setTimeout(() => {
+				// 00 优惠券  01 积分  02 红包 03 实物   04 谢谢惠顾
 				// console.log(this.state.context[index]);
-				switch (index) {
-					case 2: // 杜蕾斯
-						this.setState({
-							type: 'alert_dls'
-						});
-						break;
-					case 7: // 20减息券
-						this.setState({
-							showAlert1: true,
-							type: 'alert_10'
-						});
-						break;
+				this.setState({
+					type: 'alert_img',
+					alert_img: `data:image/png;base64,${obj.imgUrl}`
+				});
+				// switch (obj.type) {
+				// 	case '01':
+				// 		this.setState({
+				// 			type: 'no_award'
+				// 		});
+				// 		break;
+				// 	case '02':
+				// 		this.setState({
+				// 			type: 'no_award'
+				// 		});
+				// 		break;
+				// 	case '04':
+				// 		this.setState({
+				// 			type: 'alert_img',
+				// 			alert_img: `data:image/png;base64,${obj.imgUrl}`
+				// 		});
+				// 		break;
+				// 	// case '04':
+				// 	// 	this.setState({
+				// 	// 		type: 'no_award'
+				// 	// 	});
+				// 	// 	break;
 
-					default:
-						this.showAlertFunc({
-							type: 'alert',
-							title: '抱歉，未抽中奖品',
-							content: '谢谢参与～'
-						});
-				}
+				// 	default:
+				// 		this.setState({
+				// 			type: 'no_award'
+				// 		});
+				// }
 				this.isRotated = false; //旋转改为false说明没有旋转
-			}, 6000);
+			}, 7000);
 		}, 0);
 	};
 
 	// 转盘按钮
 	onloadZhuan = async () => {
+		token = Cookie.get('fin-v-card-token');
 		if (!token) {
 			this.setState({
-				type: 'alert_tel',
+				type: 'alert_tel'
 			});
 			return;
 		}
-		if (sessionStorage.getItem('total') && Number(sessionStorage.getItem('total')) <= 0) {
+		if (sessionStorage.getItem('count') && Number(sessionStorage.getItem('count')) <= 0) {
 			this.setState({
-				total: '0',
-				type: 'no_chance',
+				count: '0',
+				type: 'no_chance'
 			});
 			return;
 		}
@@ -300,24 +262,38 @@ export default class dazhuanpan_page extends PureComponent {
 		this.getCount();
 	};
 
+	setalertType = (type) => {
+		this.setState({
+			type
+		});
+	};
+	// 立即使用
+	goRoute = () => {
+		console.log('立即使用');
+		// this.props.history.replace('/home');
+	};
 	render() {
-		const { awardList, time, transformType, type, userAwardList, allUsersAward, total } = this.state;
+		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
-				<div>{type ? <LoginAlert refreshPageFn={this.refreshPage} alertType={type} userAwardList={userAwardList} /> : null}</div>
+				<LoginAlert
+					alert_img={alert_img}
+					refreshPageFn={this.refreshPage}
+					setalertType={this.setalertType}
+					alertType={type}
+					goRoute={this.goRoute}
+					userAwardList={userAwardList}
+				/>
 				<div className={styles.bg}>
 					<img className={styles.img} src={bg} />
 					<div className={styles.hd_box}>
-						{
-							allUsersAward && allUsersAward.length ?
+						{allUsersAward && allUsersAward.length ? (
 							<div className={styles.get_award_list}>
 								<AwardShow allUsersAward={allUsersAward} />
 							</div>
-							:
-							null
-						}
+						) : null}
 						<div className={styles.message_bottom}>
-							今日剩余<span>{total}</span>次抽奖机会
+							今日剩余<span>{count}</span>次抽奖机会
 						</div>
 						<div className={styles.zp_bg_box}>
 							{/* 转盘灯 */}
@@ -328,6 +304,7 @@ export default class dazhuanpan_page extends PureComponent {
 							<div
 								className={styles.zp_box}
 								style={{
+									overflow: 'hidden',
 									transform: `scale(0.85) rotate(${this.state.numdeg}deg)`,
 									WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
 									transition: `-webkit-transform ${time}s ${transformType}`,
@@ -342,7 +319,7 @@ export default class dazhuanpan_page extends PureComponent {
 											<img
 												key={index}
 												className={styles.img1}
-												src={item.imgUrl}
+												src={`data:image/png;base64,${item.imgUrl}`}
 												style={{
 													transform: `rotate(${index * (360 / awardList.length)}deg)`
 												}}
@@ -355,9 +332,11 @@ export default class dazhuanpan_page extends PureComponent {
 						<div className={styles.myAward} onClick={this.getMyAward}>
 							<span>我的奖品</span>
 						</div>
-						<div className={styles.get_rule_desc}>
-							<RuleShow />
-						</div>
+						{this.state.ruleDesc ? (
+							<div className={styles.get_rule_desc}>
+								<RuleShow ruleDesc={this.state.ruleDesc} />
+							</div>
+						) : null}
 					</div>
 				</div>
 			</div>

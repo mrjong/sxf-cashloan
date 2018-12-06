@@ -12,7 +12,8 @@
 			width: 100%;
 		}
 		.zp_bg_box {
-			transform: scale(0.95);
+            transform: scale(0.95);
+            overflow: hidden;
 			position: relative;
 			.zp_bg {
 				width: 100%;

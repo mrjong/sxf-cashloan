@@ -19,7 +19,18 @@
         /* margin: 0 auto; */
         left: 50%;
         transform: translate(-50%, 0%);
-	}
+    }
+    .btn_alert{
+        a {
+            background: -webkit-gradient(linear, 31% 0%, 100% 100%, from(#A35DF1), to(#6D78F0), color-stop(1.0, #A35DF1));
+            background: -moz-linear-gradient(left, #A35DF1, #6D78F0);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#A35DF1', endColorstr='#6D78F0');
+            border-radius: 60px;
+            width: 80%;
+            font-size: 36px;
+            margin: 0 auto;
+        }
+    }
 	// alert_10
 	.alert_btn {
         width: 2.74rem;
@@ -32,6 +43,7 @@
 	}
 	// jiangpin
 	.alert_list {
+        max-height: 400px;
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 12px;
@@ -107,7 +119,7 @@
 		padding: 0;
 	}
 	.am-modal.big_modal .am-modal-content .am-modal-body{
-		padding: 0;
+        padding: 0;
 	}
 	.am-modal.big_modal .am-modal-content{
 		background: none;
@@ -118,7 +130,8 @@
 	}
 	.titleBox{
 		top: 0;
-		left: 0;
+        left: 0;
+        z-index: 10;
 		box-sizing: border-box;
 		position: absolute;
 		width: 100%;

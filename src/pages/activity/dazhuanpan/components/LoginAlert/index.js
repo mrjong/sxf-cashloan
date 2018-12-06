@@ -14,22 +14,39 @@ export default class LoginAlert extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			modal1: true,
+			modal1: false
 		};
 	}
 	componentDidMount() {}
-	// 立即使用
-	goRoute = () => {
-		this.props.history.replace('/home');
-	};
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.alertType) {
+			this.setState({
+				modal1: true
+			});
+		} else {
+			this.setState({
+				modal1: false
+			});
+		}
+	}
 	onClose = () => {};
 	closeModal = () => {
+		this.setState(
+			{
+				modal1: false
+			},
+			() => {
+				this.props.setalertType();
+			}
+		);
+	};
+	showModal = () => {
 		this.setState({
-			modal1: false
+			modal1: true
 		});
-	}
+	};
 	render() {
-		const { alertType, userAwardList, refreshPageFn } = this.props;
+		const { alertType, userAwardList, refreshPageFn, alert_img } = this.props;
 		let componentsDisplay = null;
 		let closeArr = [ 'closeImg' ];
 		let titleBoxArr = [ 'titleBox' ];
@@ -37,7 +54,7 @@ export default class LoginAlert extends Component {
 		let titText = '';
 		switch (alertType) {
 			case 'alert_tel': // 登录
-				componentsDisplay = <LoginComponent refreshPageFn={refreshPageFn} closeCb = {this.closeModal} />;
+				componentsDisplay = <LoginComponent refreshPageFn={refreshPageFn} closeCb={this.closeModal} />;
 				break;
 			case 'alert_dls': //
 				loginModal = [ 'login_modal', 'big_modal' ];
@@ -53,14 +70,14 @@ export default class LoginAlert extends Component {
 					</div>
 				);
 				break;
-			case 'alert_10': //
+			case 'alert_img': //
 				loginModal = [ 'login_modal', 'big_modal' ];
 				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
 				componentsDisplay = (
 					<div>
-						<img src={alert_10} className={style.alert_10} />
+						<img src={this.props.alert_img} className={style.alert_10} />
 						<div>
-							<img src={alert_btn} onClick={this.goRoute} className={style.alert_btn} />
+							<img src={alert_btn} onClick={this.props.goRoute} className={style.alert_btn} />
 						</div>
 					</div>
 				);
@@ -72,7 +89,7 @@ export default class LoginAlert extends Component {
 					<div>
 						<img src={alert_1000} className={style.alert_10} />
 						<div>
-							<img src={alert_btn} onClick={this.goRoute} className={style.alert_btn} />
+							<img src={alert_btn} onClick={this.props.goRoute} className={style.alert_btn} />
 						</div>
 					</div>
 				);
@@ -83,19 +100,20 @@ export default class LoginAlert extends Component {
 					<div className={style.alert_list}>
 						{userAwardList && userAwardList.length !== 0 ? (
 							<List>
-								{userAwardList.map((item, key) => {
-									return (
-										<Item
-											extra={
-												<Button type="warning" size="small" inline onClick={this.goRoute}>
-													立即使用
-												</Button>
-											}
-										>
-											{item.desc}
-										</Item>
-									);
-								})}
+								{userAwardList &&
+									userAwardList.map((item, key) => {
+										return (
+											<Item
+												extra={
+													<Button type="warning" size="small" inline onClick={this.props.goRoute}>
+														立即使用
+													</Button>
+												}
+											>
+												{item.valDes}
+											</Item>
+										);
+									})}
 							</List>
 						) : (
 							<div className={style.text_center_two}>
@@ -110,8 +128,11 @@ export default class LoginAlert extends Component {
 				titText = '抱歉，未抽中奖品';
 				loginModal = [ 'login_modal', 'special_bg_modal' ];
 				componentsDisplay = (
-					<div className={style.text_center}>
+					<div className={[ style.text_center, style.btn_alert ].join(' ')}>
 						谢谢参与～
+						<Button onClick={this.props.goRoute} type="primary">
+							立即借款
+						</Button>
 					</div>
 				);
 				break;
@@ -121,7 +142,7 @@ export default class LoginAlert extends Component {
 				componentsDisplay = (
 					<div className={style.noChance}>
 						今日机会已用完，请您明日再来
-						<Button onClick={this.goRoute} type="primary">
+						<Button onClick={this.props.goRoute} type="primary">
 							立即借款
 						</Button>
 						<div className={style.text_small_box}>
@@ -145,11 +166,7 @@ export default class LoginAlert extends Component {
 					<div className="login_content">
 						<div className={titleBoxArr.join(' ')}>
 							{titText}
-							<img
-								className={closeArr.join(' ')}
-								src={closeImg}
-								onClick={this.closeModal}
-							/>
+							<img className={closeArr.join(' ')} src={closeImg} onClick={this.closeModal} />
 						</div>
 						<div className={style.login_box}>{componentsDisplay}</div>
 					</div>
