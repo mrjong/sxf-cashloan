@@ -1,5 +1,6 @@
 .dazhuanpan {
-	overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+	// overflow: scroll;
 	.bg {
 		position: relative;
 		.img {

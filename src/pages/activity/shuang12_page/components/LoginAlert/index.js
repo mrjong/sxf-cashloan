@@ -3,11 +3,12 @@ import { Modal, Button, Toast, Flex, List } from 'antd-mobile';
 import LoginComponent from '../LoginComponent';
 import style from './index.scss';
 import closeImg from '../../img/20181024_close.png';
-import alert_10 from '../../img/20181024_alert_10.png';
-import alert_btn from '../../img/20181024_alert_btn.png';
-import alert_1000 from '../../img/20181024_alert_1000.png';
-import alert_dls from '../../img/20181024_alert_dls.png';
-
+import alert_new_user from '../../img/alert_new_user.png';
+import alert_btn_new_user from '../../img/alert_btn_new_user.png';
+import alert_15 from '../../img/alert_15.png';
+import alert_btn from '../../img/alert_btn.png';
+import { buriedPointEvent } from 'utils/Analytins';
+import { activity_shuang12 } from 'utils/AnalytinsType';
 const Item = List.Item;
 
 export default class LoginAlert extends Component {
@@ -53,23 +54,9 @@ export default class LoginAlert extends Component {
 		let loginModal = [ 'login_modal' ];
 		let titText = '';
 		switch (alertType) {
-            case 'alert_tel': // 登录
-                titText = '抢<span class="golden_text">12期</span>免息立减券';
+			case 'alert_tel': // 登录
+				titText = '抢<span class="golden_text">12期</span>免息立减券';
 				componentsDisplay = <LoginComponent refreshPageFn={refreshPageFn} closeCb={this.closeModal} />;
-				break;
-			case 'alert_dls': //
-				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
-				componentsDisplay = (
-					<div>
-						<img src={alert_dls} className={style.alert_10} />
-						<div>
-							<a className={style.alert_tel_num} href="tel:400-088-7626">
-								<span>客服电话：</span>400-088-7626
-							</a>
-						</div>
-					</div>
-				);
 				break;
 			case 'alert_img': //
 				loginModal = [ 'login_modal', 'big_modal' ];
@@ -82,28 +69,30 @@ export default class LoginAlert extends Component {
 						</div>
 					</div>
 				);
-                break;
-                case 'alert_newUser': //
+				break;
+			case 'alert_newUser': //
 				loginModal = [ 'login_modal', 'big_modal' ];
 				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
 				componentsDisplay = (
 					<div>
-						<img src={this.props.alert_img} className={style.alert_10} />
+						<img style={{ width: '80%' }} src={alert_new_user} className={style.alert_10} />
 						<div>
-							<img src={alert_btn} onClick={this.props.goRoute} className={style.alert_btn} />
+							<img
+								className={style.alert_btn_box}
+								src={alert_btn_new_user}
+								onClick={this.props.goRoute}
+							/>
 						</div>
 					</div>
 				);
 				break;
 			case 'alert_15': //
 				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
+				titleBoxArr = [ 'titleBox', 'noTitle_15' ];
 				componentsDisplay = (
 					<div>
 						<img src={alert_15} className={style.alert_10} />
-						<div>
-							<img src={alert_btn} onClick={this.props.goRoute} className={style.alert_btn} />
-						</div>
+						<img src={alert_btn} onClick={this.props.goRoute} className={style.alert_btn} />
 					</div>
 				);
 				break;
@@ -128,7 +117,7 @@ export default class LoginAlert extends Component {
 													</Button>
 												}
 											>
-												{item.valDes}
+												{item.desc}
 											</Item>
 										);
 									})}
@@ -153,7 +142,11 @@ export default class LoginAlert extends Component {
 						<div>4.本活动优惠券仅限在还到官方渠道使用；</div>
 						<div>5.对于刷票（如：羊毛党），违法，赌博，等恶意行为，我司有权取消该类用户的参与资格，我司将追究其法律责任；</div>
 						<div>6.本活动最终解释权归还到所有，如有疑问</div>
-						<div>请拨打客服热线：<a className={style.tel} href="tel:4000887626">400-088-7626</a>。</div>
+						<div>
+							请拨打客服热线：<a className={style.tel} href="tel:4000887626">
+								400-088-7626
+							</a>。
+						</div>
 					</div>
 				);
 				break;
@@ -164,7 +157,7 @@ export default class LoginAlert extends Component {
 					<div className={[ style.text_center, style.btn_alert ].join(' ')}>
 						谢谢参与～
 						<Button onClick={this.props.goRoute} type="primary">
-							立即借款
+							立即拿钱
 						</Button>
 					</div>
 				);
@@ -175,13 +168,20 @@ export default class LoginAlert extends Component {
 				componentsDisplay = (
 					<div className={style.noChance}>
 						今日机会已用完，请您明日再来
-						<Button onClick={this.props.goRoute} type="primary">
-							立即借款
+						<Button
+							onClick={() => {
+								// 打开弹窗按钮
+								buriedPointEvent(activity_shuang12.shuang12_draw_over_click);
+								this.props.goRoute();
+							}}
+							type="primary"
+						>
+							立即拿钱
 						</Button>
-						<div className={style.text_small_box}>
+						{/* <div className={style.text_small_box}>
 							<div className={style.text_small}>完成授信和借款分别可获得1次机会</div>
 							<div className={style.text_small}>授信机会+1 借款机会+1</div>
-						</div>
+						</div> */}
 					</div>
 				);
 				break;
@@ -198,7 +198,7 @@ export default class LoginAlert extends Component {
 				>
 					<div className="login_content">
 						<div className={titleBoxArr.join(' ')}>
-							<div dangerouslySetInnerHTML={{__html: titText+''}}></div>
+							<div dangerouslySetInnerHTML={{ __html: titText + '' }} />
 							<img className={closeArr.join(' ')} src={closeImg} onClick={this.closeModal} />
 						</div>
 						<div className={style.login_box}>{componentsDisplay}</div>

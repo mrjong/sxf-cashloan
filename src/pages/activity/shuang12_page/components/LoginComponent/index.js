@@ -8,6 +8,8 @@ import { validators } from 'utils/validator';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
+import { buriedPointEvent } from 'utils/Analytins';
+import { activity_shuang12 } from 'utils/AnalytinsType';
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -86,6 +88,8 @@ export default class LoginComponent extends Component {
 	}
 	// 确定去登陆按钮
 	goLogin = () => {
+		// 登录按钮
+		buriedPointEvent(activity_shuang12.shuang12_login_click);
 		const { closeCb, refreshPageFn } = this.props;
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
@@ -176,7 +180,7 @@ export default class LoginComponent extends Component {
 				</div>
 				<div className={style.a_btn}>
 					<Button size="small" onClick={this.goLogin} type="primary">
-						确定
+						立即抽免息
 					</Button>
 				</div>
 			</div>

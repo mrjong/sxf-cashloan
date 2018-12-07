@@ -1,19 +1,12 @@
-export const setTitle = (getTitle) => {
-  const title = getTitle
-  if (title) {
-    document.title = title.title
-  }
-  var mobile = navigator.userAgent.toLowerCase();
-  if (/iphone|ipad|ipod/.test(mobile)) {
-    var iframe = document.createElement('iframe');
-    iframe.style.display = 'none'
-    var iframeCallback = function () {
-      setTimeout(function () {
-        iframe.removeEventListener('load', iframeCallback);
-        document.body.removeChild(iframe);
-      }, 0);
-    }
-    iframe.addEventListener('load', iframeCallback);
-    document.body.appendChild(iframe);
-  }
-}
+export default (getTitle) => {
+	var i = document.createElement('iframe');
+	i.src = 'https://lns-wap.vbillbank.com/favicon.ico';
+	i.style.display = 'none';
+	i.onload = function() {
+		setTimeout(function() {
+			i.remove();
+		}, 9);
+	};
+	document.title = getTitle;
+	document.body.appendChild(i);
+};

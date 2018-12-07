@@ -12,12 +12,13 @@ import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
 import zp_btn from './img/zp_btn.png';
 import zp_yuan from './img/zp_yuan.png';
-import config from './config.js';
 import Cookie from 'js-cookie';
+import { buriedPointEvent } from 'utils/Analytins';
+import { activity_shuang12 } from 'utils/AnalytinsType';
 const API = {
-	activeConfig: '/bigPan/list', // 活动配置接口
 	count: '/bigPan/count', // 用户抽奖次数查询
 	userDraw: '/bigPan/draw', // 用户抽奖
+	awardRecords: '/bigPan/list', // 我的奖品
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 let token = '';
@@ -29,7 +30,7 @@ export default class dazhuanpan_page extends PureComponent {
 		this.state = {
 			numdeg: 0,
 			time: 0,
-			transformType: 'cubic-bezier(.3,.25,.0001,1)',
+			transformType: 'cubic-bezier(.5,.25,.0001,1)',
 			awardList: [],
 			ruleDesc: '',
 			alert_img: '',
@@ -55,9 +56,21 @@ export default class dazhuanpan_page extends PureComponent {
 	}
 	// 刷新大转盘数据
 	refreshPage = () => {
-		this.gettotal();
+		// this.gettotal();
 	};
-
+	// 用户中奖列表
+	getAwardList = () => {
+		this.props.$fetch.post(API.awardRecords).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				this.setState({
+					type: 'jiangpin',
+					userAwardList: res.data
+				});
+			} else {
+				Toast.info(res.msgInfo);
+			}
+		});
+	};
 	// 大转盘活动-用户抽奖剩余次数查询
 	gettotal = () => {
 		let id = sessionStorage.getItem('QueryUsrSCOpenId');
@@ -74,11 +87,14 @@ export default class dazhuanpan_page extends PureComponent {
 						type: 'no_chance'
 					});
 				}
-			} else if (res.msgCode === 'PTM455') {
+			} else if (res.msgCode === 'PTM1000' || res.msgCode === 'PTM0100') {
+				Cookie.remove('fin-v-card-token');
+				// 打开弹窗按钮
+				buriedPointEvent(activity_shuang12.shuang12_login_open);
 				this.setState({
-					type: 'alert_newUser',
-					total: '0'
+					type: 'alert_tel'
 				});
+				return;
 			} else {
 				Toast.info(res.msgInfo);
 			}
@@ -88,12 +104,14 @@ export default class dazhuanpan_page extends PureComponent {
 	getMyAward = () => {
 		token = Cookie.get('fin-v-card-token');
 		if (!token) {
+			// 打开弹窗按钮
+			buriedPointEvent(activity_shuang12.shuang12_login_open);
 			this.setState({
 				type: 'alert_tel'
 			});
 			return;
 		}
-		this.getAwardList('01');
+		this.getAwardList();
 	};
 	getcache = () => {
 		if (!sessionStorage.getItem('QueryUsrSCOpenId')) {
@@ -126,21 +144,21 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 用户抽奖
 	getDraw = (total, id) => {
-		const params = {
-			activeId: config.activeId
-		};
-		this.props.$fetch.post(API.userDraw, params).then((res) => {
+		this.props.$fetch.post(API.userDraw).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				localStorage.setItem(`${id}total`, Number(total) > 0 ? Number(total) - 1 : '0');
 				this.setState({
 					total: Number(total) > 0 ? Number(total) - 1 : '0'
 				});
 				this.zhuanpan(res.data);
-			} else if (res.msgCode === 'PTM455') {
+			} else if (res.msgCode === 'PTM1000' || res.msgCode === 'PTM0100') {
+				Cookie.remove('fin-v-card-token');
+				// 打开弹窗按钮
+				buriedPointEvent(activity_shuang12.shuang12_login_open);
 				this.setState({
-					type: 'alert_newUser',
-					total: '0'
+					type: 'alert_tel'
 				});
+				return;
 			} else {
 				Toast.info(res.msgInfo);
 			}
@@ -149,28 +167,15 @@ export default class dazhuanpan_page extends PureComponent {
 	// 转盘开始转
 	zhuanpan = (obj) => {
 		this.isRotated = true;
-		let index = '';
-		this.state.awardList.forEach((item, index2) => {
-			if (obj.prizeId === item.prizeId) {
-				index = index2 + 1;
-			}
-		});
-		if (!index) {
-			return;
-		}
+		let index = Number(obj.prizeId);
 		setTimeout(() => {
 			this.setState({
 				num: Number(index) + this.state.num //得到本次位置
 			});
-			let deg = 360 / this.state.awardList.length;
+			let deg = 360 / 8;
 			this.setState(
 				{
-					numdeg:
-						360 * 1 +
-						this.state.numdeg +
-						(this.state.awardList.length - index) * deg +
-						deg / 2 +
-						(360 - this.state.numdeg % 360),
+					numdeg: 360 * 4 + this.state.numdeg + (8 - index) * deg + deg / 2 + (360 - this.state.numdeg % 360),
 					time: 7.5
 				},
 				() => {
@@ -178,18 +183,8 @@ export default class dazhuanpan_page extends PureComponent {
 				}
 			);
 			setTimeout(() => {
-				switch (obj.type) {
-					case '01':
-						this.setState({
-							type: 'no_award'
-						});
-						break;
-					case '02':
-						this.setState({
-							type: 'no_award'
-						});
-						break;
-					case '04':
+				switch (obj.prizeId) {
+					case '7':
 						this.setState({
 							type: 'alert_15'
 						});
@@ -203,11 +198,14 @@ export default class dazhuanpan_page extends PureComponent {
 			}, 7000);
 		}, 0);
 	};
-
 	// 转盘按钮
 	onloadZhuan = async () => {
+		// 立即抽奖按钮
+		buriedPointEvent(activity_shuang12.shuang12_go_draw);
 		token = Cookie.get('fin-v-card-token');
 		if (!token) {
+			// 打开弹窗按钮
+			buriedPointEvent(activity_shuang12.shuang12_login_open);
 			this.setState({
 				type: 'alert_tel'
 			});
@@ -233,7 +231,7 @@ export default class dazhuanpan_page extends PureComponent {
 	// 立即使用
 	goRoute = () => {
 		// console.log('立即使用');
-		this.props.history.replace('/home');
+		this.props.history.replace('/home/home');
 	};
 	render() {
 		const { time, transformType, type, userAwardList, total, alert_img } = this.state;

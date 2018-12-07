@@ -9,9 +9,8 @@ var Mar = '';
 var Mar2 = '';
 var child_div = '';
 var child_div2 = '';
-var child_div3 = '';
 var chars = [ '3', '5', '7', '8' ];
-var jiangpinList = [ '20元减息券', '杜蕾斯1盒', '100元减息券', '3期免息券', '首期免息券', '50元减息券', '12期免息券' ];
+var jiangpinList = [ '15元免息券', '30天免息券', '7天免息券', '12期免息券', '50元免息券', '30元免息券' ];
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');

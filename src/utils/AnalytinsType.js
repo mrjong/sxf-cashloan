@@ -64,4 +64,11 @@ const activity = {
     yhq_click_15: 'DC_YHQ_CLICK_15'// 点击弹窗立即使用15
 };
 
-export { login, home, mine, order, membership, activity };
+const activity_shuang12 = {
+    shuang12_go_draw: 'DC_SHUANG12_GO_DRAW', // 立即抽奖
+	shuang12_login_open: 'DC_SHUANG12_LOGIN_OPEN', // 打开登录弹窗
+	shuang12_login_click: 'DC_SHUANG12_LOGIN_CLICK', // 登录点击按钮
+	shuang12_draw_over_click: 'DC_SHUANG12_DRAW_OVER_CLICK', // 抽完拿钱按钮
+};
+
+export { login, home, mine, order, membership, activity, activity_shuang12 };

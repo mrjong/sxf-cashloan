@@ -13,7 +13,7 @@ export default [
 	},
 	{
 		path: '/activity/shuang12_page',
-		title: '新用户专享',
+		title: '免息提款机',
 		arrowHide: true,
 		component: () => import('pages/activity/shuang12_page')
 	}
