@@ -1,0 +1,22 @@
+.withdrawing_page{
+	text-align: center;
+	.withdrawingCont{
+		background: #fff;
+		padding: 81px 0;
+		img{
+			width: 128px;
+			vertical-align: top;
+		}
+	}
+	.withdrawMoney{
+		font-size: 72px;
+		font-weight: 400;
+		color: rgba(37, 39, 41, 1);
+		margin: 40px 0;
+	}
+	.withdrawingTip{
+		font-size: 40px;
+		font-weight: 400;
+		color: rgba(76, 166, 255, 1);
+	}
+}

@@ -72,4 +72,34 @@ export default [
     title: '优惠劵',
     component: () => import('pages/mine/coupon_page'),
   },
+  {
+    path: '/mine/wallet_page',
+    title: '我的钱包账户',
+    component: () => import('pages/mine/wallet_page'),
+  },
+  {
+    path: '/mine/income_page',
+    title: '收入',
+    component: () => import('pages/mine/income_page'),
+  },
+  {
+    path: '/mine/withdraw_page',
+    title: '提现',
+    component: () => import('pages/mine/withdraw_page'),
+  },
+  {
+    path: '/mine/withdraw_succ_page',
+    title: '提现成功',
+    component: () => import('pages/mine/withdraw_succ_page'),
+  },
+  {
+    path: '/mine/withdraw_fail_page',
+    title: '提现失败',
+    component: () => import('pages/mine/withdraw_fail_page'),
+  },
+  {
+    path: '/mine/withdrawing_page',
+    title: '提现中',
+    component: () => import('pages/mine/withdrawing_page'),
+  },
 ];
