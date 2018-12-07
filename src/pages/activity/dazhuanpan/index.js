@@ -56,7 +56,7 @@ export default class dazhuanpan_page extends PureComponent {
 	}
 	// 刷新大转盘数据
 	refreshPage = () => {
-		this.getCount();
+		// this.getCount();
 	};
 
 	// 获取活动配置list
