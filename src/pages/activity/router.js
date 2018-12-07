@@ -10,5 +10,11 @@ export default [
 		title: '全民免息狂欢',
 		arrowHide: true,
 		component: () => import('pages/activity/huodong11_page')
+	},
+	{
+		path: '/activity/shuang12_page',
+		title: '新用户专享',
+		arrowHide: true,
+		component: () => import('pages/activity/shuang12_page')
 	}
 ];
