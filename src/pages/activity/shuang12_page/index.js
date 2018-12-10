@@ -60,6 +60,8 @@ export default class dazhuanpan_page extends PureComponent {
 			});
 		}
 	}
+	componentDidMount() {
+	}
 	// 刷新大转盘数据
 	refreshPage = () => {
 		// this.gettotal();

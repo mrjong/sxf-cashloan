@@ -3,7 +3,7 @@ import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
 import { store } from 'utils/store';
-import { isBugBrowser,isWXOpen } from 'utils/common';
+import { isBugBrowser, isWXOpen } from 'utils/common';
 const fetchinit = () => {
 	let timer;
 	let timerList = [];
@@ -11,11 +11,11 @@ const fetchinit = () => {
 	// 拦截请求
 	fetch.axiosInstance.interceptors.request.use(
 		(cfg) => {
-            console.log(cfg);
+			console.log(cfg);
 			// 非微信去掉 fn-v-card-token-wechat
-			if(!isWXOpen()){
-                Cookie.remove('fin-v-card-token-wechat')
-            }
+			if (!isWXOpen()) {
+				Cookie.remove('fin-v-card-token-wechat');
+			}
 			// const TOKEN = Cookie.get('fin-v-card-token');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStotage = '';
@@ -45,7 +45,12 @@ const fetchinit = () => {
 			}
 			return cfg;
 		},
-		(error) => Promise.reject(error)
+		(error) => {
+			console.log('sessionStorage:', sessionStorage);
+			console.log('localStorage', localStorage);
+			console.log('cookie', document.cookie);
+			Promise.reject(error);
+		}
 	);
 	// 响应拦截
 	fetch.axiosInstance.interceptors.response.use(
@@ -81,6 +86,9 @@ const fetchinit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
+			console.log('sessionStorage:', sessionStorage);
+			console.log('localStorage', localStorage);
+			console.log('cookie', document.cookie);
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {
@@ -90,7 +98,10 @@ const fetchinit = () => {
 				case 'PTM1000': // 用户登录超时
 					if (pagesIgnore(window.location.pathname)) {
 						return;
-					}
+                    }
+                    console.log('sessionStorage:', sessionStorage);
+                    console.log('localStorage', localStorage);
+                    console.log('cookie', document.cookie);
 					Toast.info('登录超时，请重新登陆');
 					setTimeout(() => {
 						window.ReactRouterHistory.replace('/login');
