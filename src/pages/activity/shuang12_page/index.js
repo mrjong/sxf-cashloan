@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
+import { store } from 'utils/store';
 import AwardShowMock from './components/AwardShowMock';
 import RuleShow from './components/RuleShow';
 import LoginAlert from './components/LoginAlert';
 import { setBackGround } from 'utils/setBackGround';
-import { getDeviceType } from 'utils/common';
+import { isBugBrowser } from 'utils/common';
 import { Toast } from 'antd-mobile';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
@@ -47,6 +48,11 @@ export default class dazhuanpan_page extends PureComponent {
 		});
 		const token = Cookie.get('fin-v-card-token');
 		if (token) {
+			if (isBugBrowser()) {
+				store.setToken(token);
+			} else {
+				store.setTokenSession(token);
+			}
 			this.getcache();
 		} else {
 			this.setState({
