@@ -156,8 +156,10 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 用户抽奖
 	getDraw = (count) => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const params = {
-			activeId: config.activeId
+			activeId: config.activeId,
+			channel: queryData && queryData.h5Channel ? queryData.h5Channel : sessionStorage.getItem('h5Channel') || localStorage.getItem('h5Channel') || 'h5' // 用户渠道
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
@@ -191,7 +193,7 @@ export default class dazhuanpan_page extends PureComponent {
 			this.setState(
 				{
 					numdeg:
-						360 * 1 +
+						360 * 4 +
 						this.state.numdeg +
 						(this.state.awardList.length - index) * deg +
 						deg / 2 +
