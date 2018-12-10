@@ -56,7 +56,7 @@ export default class AwardShow extends Component {
 	};
 	// 拼凑号码+文字
 	getNode = () => {
-		let telNo = `<div id="demo" class="new_tels" style="height:.6rem;line-height:.6rem">恭喜 1${this.generateMixed(
+		let telNo = `<div id="demo" class="new_tels" style="height:.4rem;line-height:.4rem">恭喜 1${this.generateMixed(
 			1
 		)}${Math.ceil(Math.random() * 9)}****${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(
 			Math.random() * 9
@@ -70,8 +70,8 @@ export default class AwardShow extends Component {
 					<div
 						className="new_tels"
 						style={{
-							height: '.6rem',
-							lineHeight: '.6rem'
+							height: '.4rem',
+							lineHeight: '.4rem'
 						}}
 					>
 						恭喜136****7912获得<span>10元减息券</span>
@@ -81,8 +81,8 @@ export default class AwardShow extends Component {
 					<div
 						className="new_tels"
 						style={{
-							height: '.6rem',
-							lineHeight: '.6rem'
+							height: '.4rem',
+							lineHeight: '.4rem'
 						}}
 					>
 						恭喜 1{this.generateMixed(1)}
