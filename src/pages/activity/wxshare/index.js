@@ -193,9 +193,18 @@ export default class dc_landing_page extends PureComponent {
 				Toast.info(getFirstError(err));
 			}
 		});
-	}
+    }
+    checkJsApi=()=>{
+        wx.checkJsApi({
+            jsApiList: ['checkJsApi', 'updateAppMessageShareData', 'updateTimelineShareData'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+            success: function(res) {
+                alert(JSON.stringify(res))
+            // 以键值对的形式返回，可用的api值true，不可用为false
+            // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+            }
+        });
+    }
 	share = (type) => {
-		alert(type);
 		switch (type) {
 			case 'wx_hy':
 			case 'qq_hy':
@@ -332,6 +341,14 @@ export default class dc_landing_page extends PureComponent {
 						}}
 					>
 						<span>分享微博</span>
+					</div>
+                    <div
+						className={styles.sureBtn}
+						onClick={() => {
+							this.checkJsApi();
+						}}
+					>
+						<span>检查</span>
 					</div>
 				</div>
 			</div>
