@@ -51,28 +51,28 @@ export default class dc_landing_page extends PureComponent {
 					});
 					wx.ready(function() {
 						var shareData = {
-							title: '${title}',
-							desc: '${description}',
-							link: '${url}',
-							imgUrl: '${headImgUrl}',
+							title: '测试标题',
+							desc: '测试描述',
+							link: 'www.bai.com',
+							imgUrl: '',
 							success: function(res) {
-								//alert('已分享');
+								alert('已分享');
 							},
 							cancel: function(res) {}
 						};
 						wx.onMenuShareAppMessage({
-							title: '${title}',
-							desc: '${description}',
-							link: '${url}',
-							imgUrl: '${headImgUrl}',
+							title: '测试标题',
+							desc: '测试描述',
+							link: 'www.bai.com',
+							imgUrl: '',
 							trigger: function(res) {
-								//  alert('用户点击发送给朋友');
+								 alert('用户点击发送给朋友');
 							},
 							success: function(res) {
-								//alert('已分享');
+								alert('已分享');
 							},
 							cancel: function(res) {
-								//alert('已取消');
+								alert('已取消');
 							},
 							fail: function(res) {
 								alert(JSON.stringify(res));
