@@ -13,7 +13,8 @@ import bannerImg from './img/banner.png';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms'
+	sendsms: '/cmm/sendsms',
+	jscfg: '/wx/jscfg'
 };
 @fetch.inject()
 @createForm()
@@ -27,7 +28,65 @@ export default class dc_landing_page extends PureComponent {
 			smsJrnNo: '' // 短信流水号
 		};
 	}
-	componentWillMount() {}
+	componentWillMount() {
+		// document.write("<script src='https://res.wx.qq.com/open/js/jweixin-1.4.0.js'></script>");
+		if (wx) {
+			const params = {
+				channelCode: '01',
+				redirectUrl: window.location.href
+			};
+
+			this.props.$fetch.post(`/wx/jscfg`, params).then((result) => {
+				console.log('result', result);
+				if (result) {
+					const { appId, timestamp, nonceStr, signature } = result;
+
+					wx.config({
+						debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+						appId, // 必填，公众号的唯一标识
+						timestamp, // 必填，生成签名的时间戳
+						nonceStr, // 必填，生成签名的随机串
+						signature, // 必填，签名
+						jsApiList: [ 'checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage' ] // 必填，需要使用的JS接口列表
+					});
+					wx.ready(function() {
+						var shareData = {
+							title: '${title}',
+							desc: '${description}',
+							link: '${url}',
+							imgUrl: '${headImgUrl}',
+							success: function(res) {
+								//alert('已分享');
+							},
+							cancel: function(res) {}
+						};
+						wx.onMenuShareAppMessage({
+							title: '${title}',
+							desc: '${description}',
+							link: '${url}',
+							imgUrl: '${headImgUrl}',
+							trigger: function(res) {
+								//  alert('用户点击发送给朋友');
+							},
+							success: function(res) {
+								//alert('已分享');
+							},
+							cancel: function(res) {
+								//alert('已取消');
+							},
+							fail: function(res) {
+								alert(JSON.stringify(res));
+							}
+						});
+						wx.onMenuShareTimeline(shareData);
+					});
+					wx.error(function(res) {
+						alert('error: ' + res.errMsg);
+					});
+				}
+			});
+		}
+	}
 
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
