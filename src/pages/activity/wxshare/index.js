@@ -218,6 +218,47 @@ export default class dc_landing_page extends PureComponent {
 				});
 				break;
 
+			case 'wx_area':
+				wx.onMenuShareTimeline({
+					title: '分享给好友标题',
+					desc: '分享给好友描述',
+					link: 'https://lns-front-test.vbillbank.com/newUser',
+					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
+					trigger: function(res) {
+						alert('用户点击发送给朋友');
+					},
+					success: function(res) {
+						alert('已分享');
+					},
+					cancel: function(res) {
+						alert('已取消');
+					},
+					fail: function(res) {
+						alert(JSON.stringify(res));
+					}
+				});
+				break;
+			case 'qq_hy':
+				wx.updateAppMessageShareData({
+					title: '分享给好友标题',
+					desc: '分享给好友描述',
+					link: 'https://lns-front-test.vbillbank.com/newUser',
+					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
+					trigger: function(res) {
+						alert('用户点击发送给朋友');
+					},
+					success: function(res) {
+						alert('已分享');
+					},
+					cancel: function(res) {
+						alert('已取消');
+					},
+					fail: function(res) {
+						alert(JSON.stringify(res));
+					}
+				});
+				break;
+
 			default:
 				break;
 		}
@@ -281,7 +322,7 @@ export default class dc_landing_page extends PureComponent {
 					<div
 						className={styles.sureBtn}
 						onClick={() => {
-							this.share('qq');
+							this.share('qq_hy');
 						}}
 					>
 						<span>分享给QQ</span>
