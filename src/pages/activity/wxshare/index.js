@@ -49,37 +49,37 @@ export default class dc_landing_page extends PureComponent {
 						signature, // 必填，签名
 						jsApiList: [ 'checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage' ] // 必填，需要使用的JS接口列表
 					});
-					wx.ready(function() {
-						var shareData = {
-							title: '测试标题',
-							desc: '测试描述',
-							link: 'www.bai.com',
-							imgUrl: '',
-							success: function(res) {
-								alert('已分享');
-							},
-							cancel: function(res) {}
-						};
-						wx.onMenuShareAppMessage({
-							title: '测试标题',
-							desc: '测试描述',
-							link: 'www.bai.com',
-							imgUrl: '',
-							trigger: function(res) {
-								 alert('用户点击发送给朋友');
-							},
-							success: function(res) {
-								alert('已分享');
-							},
-							cancel: function(res) {
-								alert('已取消');
-							},
-							fail: function(res) {
-								alert(JSON.stringify(res));
-							}
-						});
-						wx.onMenuShareTimeline(shareData);
-					});
+					// wx.ready(function() {
+					// 	var shareData = {
+					// 		title: '测试标题',
+					// 		desc: '测试描述',
+					// 		link: 'www.bai.com',
+					// 		imgUrl: '',
+					// 		success: function(res) {
+					// 			alert('已分享');
+					// 		},
+					// 		cancel: function(res) {}
+					// 	};
+					// 	wx.onMenuShareAppMessage({
+					// 		title: '测试标题',
+					// 		desc: '测试描述',
+					// 		link: 'www.bai.com',
+					// 		imgUrl: '',
+					// 		trigger: function(res) {
+					// 			 alert('用户点击发送给朋友');
+					// 		},
+					// 		success: function(res) {
+					// 			alert('已分享');
+					// 		},
+					// 		cancel: function(res) {
+					// 			alert('已取消');
+					// 		},
+					// 		fail: function(res) {
+					// 			alert(JSON.stringify(res));
+					// 		}
+					// 	});
+					// 	wx.onMenuShareTimeline(shareData);
+					// });
 					wx.error(function(res) {
 						alert('error: ' + res.errMsg);
 					});
@@ -194,7 +194,34 @@ export default class dc_landing_page extends PureComponent {
 			}
 		});
 	}
+	share = (type) => {
+		alert(key);
+		switch (type) {
+			case 'wx_hy':
+				wx.onMenuShareAppMessage({
+					title: '分享给好友标题',
+					desc: '分享给好友描述',
+					link: 'https://lns-front-test.vbillbank.com/newUser',
+					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
+					trigger: function(res) {
+						alert('用户点击发送给朋友');
+					},
+					success: function(res) {
+						alert('已分享');
+					},
+					cancel: function(res) {
+						alert('已取消');
+					},
+					fail: function(res) {
+						alert(JSON.stringify(res));
+					}
+				});
+				break;
 
+			default:
+				break;
+		}
+	};
 	render() {
 		// const {  } = this.state
 		const { getFieldProps } = this.props.form;
@@ -234,6 +261,46 @@ export default class dc_landing_page extends PureComponent {
 					</div>
 					<div className={styles.sureBtn} onClick={this.goLogin}>
 						<span>免费借款</span>
+					</div>
+					<div
+						className={styles.sureBtn}
+						onClick={() => {
+							this.share('wx_hy');
+						}}
+					>
+						<span>分享给朋友</span>
+					</div>
+					<div
+						className={styles.sureBtn}
+						onClick={() => {
+							this.share('wx_area');
+						}}
+					>
+						<span>分享给朋友圈</span>
+					</div>
+					<div
+						className={styles.sureBtn}
+						onClick={() => {
+							this.share('qq');
+						}}
+					>
+						<span>分享给QQ</span>
+					</div>
+					<div
+						className={styles.sureBtn}
+						onClick={() => {
+							this.share('qq_area');
+						}}
+					>
+						<span>分享给QQ空间</span>
+					</div>
+					<div
+						className={styles.sureBtn}
+						onClick={() => {
+							this.share('wb');
+						}}
+					>
+						<span>分享微博</span>
 					</div>
 				</div>
 			</div>
