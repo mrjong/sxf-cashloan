@@ -119,8 +119,6 @@ export default class LoginComponent extends Component {
 							}
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
-							// store.setToken(res.data.tokenId);
-
 							// TODO: 根据设备类型存储token
 							if (isBugBrowser()) {
 								store.setToken(res.data.tokenId);
