@@ -138,7 +138,7 @@ export default class dazhuanpan_page extends PureComponent {
 			activeId: config.activeId,
 			type // 01 当前用户 00 所有用户
 		};
-		this.props.$fetch.post(API.awardRecords, params).then((res) => {
+		this.props.$fetch.post(API.recordForUser, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				this.setState({
 					userAwardList: res.data.data,
