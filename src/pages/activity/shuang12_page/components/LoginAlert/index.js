@@ -10,7 +10,16 @@ import alert_btn from '../../img/alert_btn.png';
 import { buriedPointEvent } from 'utils/Analytins';
 import { activity_shuang12 } from 'utils/AnalytinsType';
 const Item = List.Item;
-
+function closest(el, selector) {
+    const matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
+    while (el) {
+        if (matchesSelector.call(el, selector)) {
+            return el;
+        }
+        el = el.parentElement;
+    }
+    return null;
+}
 export default class LoginAlert extends Component {
 	constructor(props) {
 		super(props);
@@ -45,7 +54,16 @@ export default class LoginAlert extends Component {
 		this.setState({
 			modal1: true
 		});
-	};
+    };
+    onWrapTouchStart = (e) => {
+        if (!/iPhone|iPod|iPad/i.test(navigator.userAgent)) {
+            return;
+        }
+        const pNode = closest(e.target, '.am-modal-content');
+        if (!pNode) {
+            e.preventDefault();
+        }
+    }
 	render() {
 		const { alertType, userAwardList, refreshPageFn, alert_img } = this.props;
 		let componentsDisplay = null;
@@ -189,11 +207,12 @@ export default class LoginAlert extends Component {
 				break;
 		}
 		return (
-			<div className={style.login_alert}>
+			<div className={style.login_alert} >
 				<Modal
 					className={loginModal.join(' ')}
 					visible={this.state.modal1}
-					transparent
+                    transparent
+                    wrapProps={{ onTouchStart: this.onWrapTouchStart }}
 					onClose={this.onClose('modal1')}
 				>
 					<div className="login_content">
