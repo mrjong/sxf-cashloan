@@ -17,6 +17,7 @@ import Cookie from 'js-cookie';
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
 	awardRecords: '/activeConfig/records', // 用户中奖记录展示
+	recordForUser: '/activeConfig/recordForUser', // 用户中奖记录展示
 	userCount: '/activeConfig/count', // 用户抽奖次数查询
 	userDraw: '/activeConfig/draw' // 用户抽奖
 };
@@ -79,7 +80,7 @@ export default class dazhuanpan_page extends PureComponent {
 							break;
 						case '大转盘':
 							// 是否展示其他用户抽奖记录  01是 00 否
-							if (res.data && res.data.data && res.data.data.recordShow === '00') {
+							if (res.data && res.data.data && res.data.data.recordShow !== '00') {
 								this.getAwardList('00');
 							}
 							this.setState({
@@ -129,7 +130,24 @@ export default class dazhuanpan_page extends PureComponent {
 			});
 			return;
 		}
-		this.getAwardList('01');
+		this.getrecordForUser('01');
+	};
+	// 用户中奖列表
+	getrecordForUser = (type) => {
+		const params = {
+			activeId: config.activeId,
+			type // 01 当前用户 00 所有用户
+		};
+		this.props.$fetch.post(API.awardRecords, params).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				this.setState({
+					userAwardList: res.data.data,
+					type: 'jiangpin'
+				});
+			} else {
+				Toast.info(res.msgInfo);
+			}
+		});
 	};
 	// 用户中奖列表
 	getAwardList = (type) => {
@@ -139,16 +157,9 @@ export default class dazhuanpan_page extends PureComponent {
 		};
 		this.props.$fetch.post(API.awardRecords, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				if (type === '01') {
-					this.setState({
-						userAwardList: res.data.data,
-						type: 'jiangpin'
-					});
-				} else if (type === '00') {
-					this.setState({
-						allUsersAward: (res.data && res.data.data) || []
-					});
-				}
+				this.setState({
+					allUsersAward: (res.data && res.data.data) || []
+				});
 			} else {
 				Toast.info(res.msgInfo);
 			}
@@ -159,7 +170,10 @@ export default class dazhuanpan_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const params = {
 			activeId: config.activeId,
-			channel: queryData && queryData.h5Channel ? queryData.h5Channel : sessionStorage.getItem('h5Channel') || localStorage.getItem('h5Channel') || 'h5' // 用户渠道
+			channel:
+				queryData && queryData.h5Channel
+					? queryData.h5Channel
+					: sessionStorage.getItem('h5Channel') || localStorage.getItem('h5Channel') || 'h5' // 用户渠道
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
