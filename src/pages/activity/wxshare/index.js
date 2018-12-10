@@ -195,9 +195,10 @@ export default class dc_landing_page extends PureComponent {
 		});
 	}
 	share = (type) => {
-		alert(key);
+		alert(type);
 		switch (type) {
-			case 'wx_hy':
+            case 'wx_hy':
+            case 'qq_hy':
 				wx.onMenuShareAppMessage({
 					title: '分享给好友标题',
 					desc: '分享给好友描述',
@@ -220,8 +221,8 @@ export default class dc_landing_page extends PureComponent {
 
 			case 'wx_area':
 				wx.onMenuShareTimeline({
-					title: '分享给好友标题',
-					desc: '分享给好友描述',
+					title: '分享给朋友圈标题',
+					desc: '分享给朋友圈描述',
 					link: 'https://lns-front-test.vbillbank.com/newUser',
 					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
 					trigger: function(res) {
@@ -240,21 +241,23 @@ export default class dc_landing_page extends PureComponent {
 				break;
 			case 'qq_hy':
 				wx.updateAppMessageShareData({
-					title: '分享给好友标题',
-					desc: '分享给好友描述',
+					title: '分享给qq好友标题',
+					desc: '分享给qq好友描述',
 					link: 'https://lns-front-test.vbillbank.com/newUser',
 					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					trigger: function(res) {
-						alert('用户点击发送给朋友');
-					},
-					success: function(res) {
-						alert('已分享');
-					},
-					cancel: function(res) {
-						alert('已取消');
-					},
-					fail: function(res) {
-						alert(JSON.stringify(res));
+					success: function() {
+						alert('分享成功')
+					}
+				});
+                break;
+                case 'qq_area':
+				wx.updateTimelineShareData({
+					title: 'qq空间',
+					desc: 'qq空间描述',
+					link: 'https://lns-front-test.vbillbank.com/newUser',
+					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
+					success: function() {
+						alert('分享成功')
 					}
 				});
 				break;
