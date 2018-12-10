@@ -47,7 +47,7 @@ export default class dc_landing_page extends PureComponent {
 						timestamp, // 必填，生成签名的时间戳
 						nonceStr, // 必填，生成签名的随机串
 						signature, // 必填，签名
-						jsApiList: [ 'checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage' ] // 必填，需要使用的JS接口列表
+						jsApiList: [ 'checkJsApi', 'updateAppMessageShareData', 'updateTimelineShareData' ] // 必填，需要使用的JS接口列表
 					});
 					// wx.ready(function() {
 					// 	var shareData = {
@@ -197,16 +197,13 @@ export default class dc_landing_page extends PureComponent {
 	share = (type) => {
 		alert(type);
 		switch (type) {
-            case 'wx_hy':
-            case 'qq_hy':
-				wx.onMenuShareAppMessage({
+			case 'wx_hy':
+			case 'qq_hy':
+				wx.updateAppMessageShareData({
 					title: '分享给好友标题',
 					desc: '分享给好友描述',
 					link: 'https://lns-front-test.vbillbank.com/newUser',
 					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					trigger: function(res) {
-						alert('用户点击发送给朋友');
-					},
 					success: function(res) {
 						alert('已分享');
 					},
@@ -220,14 +217,12 @@ export default class dc_landing_page extends PureComponent {
 				break;
 
 			case 'wx_area':
-				wx.onMenuShareTimeline({
+			case 'qq_area':
+				wx.updateTimelineShareData({
 					title: '分享给朋友圈标题',
 					desc: '分享给朋友圈描述',
 					link: 'https://lns-front-test.vbillbank.com/newUser',
 					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					trigger: function(res) {
-						alert('用户点击发送给朋友');
-					},
 					success: function(res) {
 						alert('已分享');
 					},
@@ -239,25 +234,17 @@ export default class dc_landing_page extends PureComponent {
 					}
 				});
 				break;
-			case 'qq_hy':
-				wx.updateAppMessageShareData({
-					title: '分享给qq好友标题',
-					desc: '分享给qq好友描述',
+			case 'wb':
+				wx.onMenuShareWeibo({
+					title: '分享给朋友圈标题',
+					desc: '分享给朋友圈描述',
 					link: 'https://lns-front-test.vbillbank.com/newUser',
 					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
 					success: function() {
-						alert('分享成功')
-					}
-				});
-                break;
-                case 'qq_area':
-				wx.updateTimelineShareData({
-					title: 'qq空间',
-					desc: 'qq空间描述',
-					link: 'https://lns-front-test.vbillbank.com/newUser',
-					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					success: function() {
-						alert('分享成功')
+						// 用户确认分享后执行的回调函数
+					},
+					cancel: function() {
+						// 用户取消分享后执行的回调函数
 					}
 				});
 				break;
