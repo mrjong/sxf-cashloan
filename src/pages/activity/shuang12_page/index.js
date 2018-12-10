@@ -31,7 +31,7 @@ export default class dazhuanpan_page extends PureComponent {
 		this.state = {
 			numdeg: 0,
 			time: 0,
-			transformType: 'cubic-bezier(.5,.25,.0001,1)',
+			transformType: 'cubic-bezier(.3,.5,.0001,1)',
 			awardList: [],
 			ruleDesc: '',
 			alert_img: '',
