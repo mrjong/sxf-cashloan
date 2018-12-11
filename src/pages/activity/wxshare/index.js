@@ -49,37 +49,47 @@ export default class dc_landing_page extends PureComponent {
 						signature, // 必填，签名
 						jsApiList: [ 'checkJsApi', 'updateAppMessageShareData', 'updateTimelineShareData' ] // 必填，需要使用的JS接口列表
 					});
-					// wx.ready(function() {
-					// 	var shareData = {
-					// 		title: '测试标题',
-					// 		desc: '测试描述',
-					// 		link: 'www.bai.com',
-					// 		imgUrl: '',
-					// 		success: function(res) {
-					// 			alert('已分享');
-					// 		},
-					// 		cancel: function(res) {}
-					// 	};
-					// 	wx.onMenuShareAppMessage({
-					// 		title: '测试标题',
-					// 		desc: '测试描述',
-					// 		link: 'www.bai.com',
-					// 		imgUrl: '',
-					// 		trigger: function(res) {
-					// 			 alert('用户点击发送给朋友');
-					// 		},
-					// 		success: function(res) {
-					// 			alert('已分享');
-					// 		},
-					// 		cancel: function(res) {
-					// 			alert('已取消');
-					// 		},
-					// 		fail: function(res) {
-					// 			alert(JSON.stringify(res));
-					// 		}
-					// 	});
-					// 	wx.onMenuShareTimeline(shareData);
-					// });
+					wx.ready(function() {
+						let shareData = {
+							title: '还到nb',
+							desc: '还到很牛x',
+							https: '//lns-wap-test.vbillbank.com/activity/wxshare',
+							imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg'
+						};
+						wx.updateAppMessageShareData({
+							...shareData,
+							success: function(res) {
+								alert('已分享');
+							},
+							cancel: function(res) {
+								alert('已取消');
+							},
+							fail: function(res) {
+								alert(JSON.stringify(res));
+							}
+						});
+						wx.updateTimelineShareData({
+							...shareData,
+							success: function(res) {
+								alert('已分享');
+							},
+							cancel: function(res) {
+								alert('已取消');
+							},
+							fail: function(res) {
+								alert(JSON.stringify(res));
+							}
+						});
+						wx.onMenuShareWeibo({
+							...shareData,
+							success: function() {
+								// 用户确认分享后执行的回调函数
+							},
+							cancel: function() {
+								// 用户取消分享后执行的回调函数
+							}
+						});
+					});
 					wx.error(function(res) {
 						alert('error: ' + res.errMsg);
 					});
@@ -193,75 +203,7 @@ export default class dc_landing_page extends PureComponent {
 				Toast.info(getFirstError(err));
 			}
 		});
-    }
-    checkJsApi=()=>{
-        wx.checkJsApi({
-            jsApiList: ['checkJsApi', 'updateAppMessageShareData', 'updateTimelineShareData'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
-            success: function(res) {
-                alert(JSON.stringify(res))
-            // 以键值对的形式返回，可用的api值true，不可用为false
-            // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
-            }
-        });
-    }
-	share = (type) => {
-		switch (type) {
-			case 'wx_hy':
-			case 'qq_hy':
-				wx.updateAppMessageShareData({
-					title: '分享给好友标题',
-					desc: '分享给好友描述',
-					link: 'https://lns-front-test.vbillbank.com/newUser',
-					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					success: function(res) {
-						alert('已分享');
-					},
-					cancel: function(res) {
-						alert('已取消');
-					},
-					fail: function(res) {
-						alert(JSON.stringify(res));
-					}
-				});
-				break;
-
-			case 'wx_area':
-			case 'qq_area':
-				wx.updateTimelineShareData({
-					title: '分享给朋友圈标题',
-					desc: '分享给朋友圈描述',
-					link: 'https://lns-front-test.vbillbank.com/newUser',
-					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					success: function(res) {
-						alert('已分享');
-					},
-					cancel: function(res) {
-						alert('已取消');
-					},
-					fail: function(res) {
-						alert(JSON.stringify(res));
-					}
-				});
-				break;
-			case 'wb':
-				wx.onMenuShareWeibo({
-					title: '分享给朋友圈标题',
-					desc: '分享给朋友圈描述',
-					link: 'https://lns-front-test.vbillbank.com/newUser',
-					imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg',
-					success: function() {
-						// 用户确认分享后执行的回调函数
-					},
-					cancel: function() {
-						// 用户取消分享后执行的回调函数
-					}
-				});
-				break;
-
-			default:
-				break;
-		}
-	};
+	}
 	render() {
 		// const {  } = this.state
 		const { getFieldProps } = this.props.form;
@@ -301,54 +243,6 @@ export default class dc_landing_page extends PureComponent {
 					</div>
 					<div className={styles.sureBtn} onClick={this.goLogin}>
 						<span>免费借款</span>
-					</div>
-					<div
-						className={styles.sureBtn}
-						onClick={() => {
-							this.share('wx_hy');
-						}}
-					>
-						<span>分享给朋友</span>
-					</div>
-					<div
-						className={styles.sureBtn}
-						onClick={() => {
-							this.share('wx_area');
-						}}
-					>
-						<span>分享给朋友圈</span>
-					</div>
-					<div
-						className={styles.sureBtn}
-						onClick={() => {
-							this.share('qq_hy');
-						}}
-					>
-						<span>分享给QQ</span>
-					</div>
-					<div
-						className={styles.sureBtn}
-						onClick={() => {
-							this.share('qq_area');
-						}}
-					>
-						<span>分享给QQ空间</span>
-					</div>
-					<div
-						className={styles.sureBtn}
-						onClick={() => {
-							this.share('wb');
-						}}
-					>
-						<span>分享微博</span>
-					</div>
-                    <div
-						className={styles.sureBtn}
-						onClick={() => {
-							this.checkJsApi();
-						}}
-					>
-						<span>检查</span>
 					</div>
 				</div>
 			</div>
