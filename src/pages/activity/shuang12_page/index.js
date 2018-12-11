@@ -56,7 +56,7 @@ export default class dazhuanpan_page extends PureComponent {
 			this.getcache();
 		} else {
 			this.setState({
-				total: 1
+				total: 3
 			});
 		}
 	}
@@ -145,7 +145,7 @@ export default class dazhuanpan_page extends PureComponent {
 			});
 		} else {
 			this.setState({
-				total: 1
+				total: 3
 			});
 		}
 	};
