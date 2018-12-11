@@ -6,6 +6,7 @@ import STabs from 'components/tabs';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
+import { SXFToast } from 'utils/SXFLoading';
 
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 let totalPage = false;
@@ -120,7 +121,7 @@ export default class coupon_page extends PureComponent {
       return [];
     }
     if (pIndex === 1) {
-      Toast.loading('数据加载中...', 10000);
+        SXFToast.loading('数据加载中...', 10000);
     }
     let sendParams = '';
     if (receiveData && receiveData.billNo) {
@@ -150,7 +151,7 @@ export default class coupon_page extends PureComponent {
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
-            Toast.hide();
+            SXFToast.hide();
           }, 600);
         }
         if (res.msgCode === 'PTM0000' && res.data) {
@@ -180,7 +181,7 @@ export default class coupon_page extends PureComponent {
       .catch(err => {
         if (pIndex === 1) {
           setTimeout(() => {
-            Toast.hide();
+            SXFToast.hide();
           }, 600);
         }
       });

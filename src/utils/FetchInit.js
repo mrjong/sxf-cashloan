@@ -1,9 +1,11 @@
+import React from 'react'
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
 import { store } from 'utils/store';
-import { isBugBrowser,isWXOpen } from 'utils/common';
+import { SXFToast } from 'utils/SXFLoading';
+import { isBugBrowser, isWXOpen } from 'utils/common';
 const fetchinit = () => {
 	let timer;
 	let timerList = [];
@@ -11,11 +13,11 @@ const fetchinit = () => {
 	// 拦截请求
 	fetch.axiosInstance.interceptors.request.use(
 		(cfg) => {
-            console.log(cfg);
+			console.log(cfg);
 			// 非微信去掉 fn-v-card-token-wechat
-			if(!isWXOpen()){
-                Cookie.remove('fin-v-card-token-wechat')
-            }
+			if (!isWXOpen()) {
+				Cookie.remove('fin-v-card-token-wechat');
+			}
 			// const TOKEN = Cookie.get('fin-v-card-token');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStotage = '';
@@ -39,7 +41,7 @@ const fetchinit = () => {
 					if (timerList.length > 1) {
 						return;
 					}
-					Toast.loading('数据加载中...', 10);
+					SXFToast.loading('数据加载中...', 0);
 				}, 300);
 				timerList.push(timer);
 			}
@@ -58,10 +60,10 @@ const fetchinit = () => {
 					}
 					timer = undefined;
 					timerList = [];
-					Toast.hide();
+					SXFToast.hide();
 				}
 			} else {
-				Toast.loading('数据加载中...', 10);
+				SXFToast.loading('数据加载中...', 10);
 			}
 			return response;
 		},
@@ -73,7 +75,7 @@ const fetchinit = () => {
 			}
 			timer = undefined;
 			timerList = [];
-			Toast.hide();
+			SXFToast.hide();
 			return Promise.reject(error);
 		}
 	);

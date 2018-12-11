@@ -5,7 +5,7 @@ import { Carousel } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
 import { store } from 'utils/store';
 import style from './index.scss';
-
+import { SXFToast } from 'utils/SXFLoading';
 @withRouter
 export default class Carousels extends React.Component {
   constructor(props) {
@@ -43,7 +43,7 @@ export default class Carousels extends React.Component {
     const { url, title } = item;
     const { entryFrom } = this.props;
     store.setOutLinkUrl(url);
-    Toast.loading('加载中...', 0);
+    SXFToast.loading('加载中...', 0);
     let jumpUrl = '';
     if (entryFrom) {
       if (url.split('?')[1]) {

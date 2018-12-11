@@ -66,7 +66,22 @@ export default class PopUp {
     }
     ReactDOM.render(
       <div>
+        <div className="rob-images-lg-box-bg" />
+        <div className="rob-images-box-lg">
+          { /* <div className="rob-images-screen-box">
+            <span>
+              <i className="icon-download1" onClick={this.props.handleReloadImage} />
+            </span>
+            <span className="error">
+              <i className="qb-icon-delete2" onClick={this.removeContainer} />
+            </span>
+            <span className="success">
+              <i className="qb-icon-delete2" onClick={this.props.handleCutting} />
+            </span>
+          </div> */ }
+          <a className="rob-images-lg-close" title="关闭" onClick={this.removeContainer}>×</a>
           {this.Component}
+        </div>
       </div>
       , this.container
     )

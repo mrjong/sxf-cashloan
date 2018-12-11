@@ -30,6 +30,7 @@ import alert_10 from './img/alert_10.png';
 import alert_15 from './img/alert_15.png';
 import { buriedPointEvent } from 'utils/Analytins';
 import { activity } from 'utils/AnalytinsType';
+import { SXFToast } from 'utils/SXFLoading';
 
 let timmer;
 const API = {
@@ -140,9 +141,9 @@ export default class huodong11_page extends PureComponent {
 					this.goRoute();
 					return;
 				}
-				Toast.loading('数据加载中...');
+				SXFToast.loading('数据加载中...');
 				setTimeout(() => {
-					Toast.hide();
+					SXFToast.hide();
 					Toast.info('您来晚了，奖品已抢光');
 					this.setState({
 						img5: img_5_over
@@ -159,9 +160,9 @@ export default class huodong11_page extends PureComponent {
 					this.goRoute();
 					return;
 				}
-				Toast.loading('数据加载中...');
+				SXFToast.loading('数据加载中...');
 				setTimeout(() => {
-					Toast.hide();
+					SXFToast.hide();
 					Toast.info('您来晚了，奖品已抢光');
 					this.setState({
 						img7: img_7_over
