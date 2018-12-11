@@ -136,13 +136,18 @@ export default class LoginComponent extends Component {
 				Toast.info(getFirstError(err));
 			}
 		});
-	};
+    };
+    onBlur = ()=>{
+        console.log('222222222');
+        $('body').animate( {scrollTop: 0}, 500);
+    }
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={style.inputContent}>
 				<div>
 					<input
+						onBlur={this.onBlur}
 						maxLength={11}
 						type="text"
 						pattern="[0-9]*"
@@ -155,7 +160,8 @@ export default class LoginComponent extends Component {
 				</div>
 				<div className={style.inputCode}>
 					<input
-						maxLength={6}
+                        maxLength={6}
+                        onBlur={this.onBlur}
 						type="text"
 						pattern="[0-9]*"
 						{...getFieldProps('smsCd', {
