@@ -65,7 +65,8 @@ const fetchinit = () => {
 			} else {
 				SXFToast.loading('数据加载中...', 10);
 			}
-			return response;
+            // return response;
+            return Promise.reject('222222');
 		},
 		(error) => {
 			console.log(error);
@@ -75,7 +76,8 @@ const fetchinit = () => {
 			}
 			timer = undefined;
 			timerList = [];
-			SXFToast.hide();
+            SXFToast.hide();
+            console.log('-----------------------')
 			return Promise.reject(error);
 		}
 	);
@@ -83,6 +85,7 @@ const fetchinit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
+            console.log(err)
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {

@@ -1,4 +1,4 @@
-.mask_transparent {
+.sxf_mask_transparent {
 	position: fixed;
 	z-index: 1000;
 	top: 0;
@@ -6,22 +6,22 @@
 	left: 0;
 	bottom: 0;
 }
-.toast {
+.sxf_toast {
 	position: fixed;
 	z-index: 5000;
-	width: 2rem;
+	width: 1.5rem;
 	padding: 10px;
 	top: 50%;
 	left: 50%;
 	background: #fff;
 	text-align: center;
-	border-radius: 6px;
+	border-radius: 15px;
 	color: #fff;
 	transform: translate(-50%, -50%);
 	img {
-		width: 50%;
+		width: 70%;
 		display: block;
-		margin: 0 auto 15px;
+		margin: 15px auto 15px;
 	}
 	.text {
 		color: #333;
