@@ -14,7 +14,9 @@ let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
-	jscfg: '/wx/jscfg'
+    jscfg: '/wx/jscfg',
+    getShareUrl:'/active/invite/getShareUrl',
+    
 };
 @fetch.inject()
 @createForm()
