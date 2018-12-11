@@ -58,16 +58,15 @@
 	text-align: center;
 	padding-top: 90px;
 	i {
-		width: 320px;
-		display: inline-block;
-		height: 234px;
+		width: 735px;
+		height: 358px;
 		left: 50%;
-		margin-left: -160px;
+		margin-left: -367.5px;
 		position: absolute;
-		top: -160px;
+		top: -338px;
 		vertical-align: middle;
 		// @include bg-image('../../../assets/images/coupon/no_data');
-		// background-image: url("../image/no_data@2x.png");
+		background-image: url(assets/images/mine/wallet/no_data.png);
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		//  background: black;
@@ -80,7 +79,7 @@
 		  font-size: 26px;
 		}
 		.am-list-body {
-		  background-color: #efeff4;
+		  background-color: #f5f5f5;
 		  &::before {
 			background-color: transparent !important;
 		  }
@@ -89,7 +88,7 @@
 		  }
 		}
 		.am-tabs-content-wrap {
-		  background-color: #efeff4;
+		  background-color: #f5f5f5;
 		}
 		.am-list-view-scrollview {
 		  border: none !important;

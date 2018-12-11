@@ -13,7 +13,7 @@ const API = {
   couponList: '/coupon/list',
 };
 @fetch.inject()
-@setBackGround('#efeff4')
+// @setBackGround('#efeff4')
 export default class withdraw_succ_page extends PureComponent {
   constructor(props) {
     super(props);

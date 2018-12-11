@@ -12,7 +12,7 @@ const API = {
   couponList: '/coupon/list',
 };
 @fetch.inject()
-@setBackGround('#efeff4')
+// @setBackGround('#efeff4')
 export default class income_page extends PureComponent {
   constructor(props) {
     super(props);
@@ -133,6 +133,14 @@ export default class income_page extends PureComponent {
       refreshing: false,
       isLoading: false,
       pageIndex: 1,
+    }, () => {
+      if(!(this.state.rData && this.state.rData.length > 0)){
+        var bodyDom = document.getElementsByTagName("body")[0];
+        bodyDom.style.backgroundColor = "#fff";
+      } else {
+        var bodyDom = document.getElementsByTagName("body")[0];
+        bodyDom.style.backgroundColor = "#f5f5f5";
+      }
     });
   };
   // 渲染每一页完成之后
@@ -217,7 +225,7 @@ export default class income_page extends PureComponent {
       return (
         <div className={style.noMsg}>
           <i />
-          还没有收入哦～
+          暂无收入
         </div>
       );
     };
