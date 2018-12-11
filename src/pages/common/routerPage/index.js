@@ -27,6 +27,8 @@ export default class router_Page extends PureComponent {
 		store.setHistoryRouter(location.pathname);
 	}
 	componentWillMount() {
+		// 出现打印插件
+		vconsole();
 		if (!store.getHistoryRouter()) {
 			store.setHistoryRouter('first-come-in');
 		}
@@ -38,7 +40,7 @@ export default class router_Page extends PureComponent {
 	componentDidMount() {
 		const query = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (query.consoleshow) {
-			vconsole('0',query.consoleshow);
+			vconsole('0', query.consoleshow);
 		}
 	}
 	componentWillUnmount() {
@@ -123,9 +125,11 @@ export default class router_Page extends PureComponent {
 		}
 	};
 	consoleshow = (e) => {
+		if (sessionStorage.getItem('consoleshow')) {
+			return;
+		}
 		const leftInstance = e.screenX;
 		const screenWidth = window.innerWidth;
-		console.log(leftInstance, screenWidth);
 		if (leftInstance < screenWidth) {
 			consoleshowStr += '0';
 			console.log('靠左边');
@@ -135,10 +139,10 @@ export default class router_Page extends PureComponent {
 		}
 		if (consoleshowStr.indexOf('00001111') > -1) {
 			consoleshowStr = '';
-		}else{
-            vconsole(consoleshowStr)
-        }
-		console.log(consoleshowStr);
+		} else {
+			vconsole(consoleshowStr);
+		}
+		// console.log(consoleshowStr);
 	};
 	render() {
 		const { component, route, newTitle, showPage = false } = this.state;
