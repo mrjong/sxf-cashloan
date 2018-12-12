@@ -73,7 +73,7 @@ export default class wallet_page extends PureComponent {
           <span className={style.divideLine}></span>
           <span className={style.withdraw} onClick={this.goWithdraw}>提现<img src={rightArrow} className={style.rightArrow}/></span>
         </div>
-        <Modal popup visible={this.state.showMoudle} onClose={() => { this.setState({ showMoudle: false }) }} animationType="slide-up">
+        <Modal popup visible={showMoudle} onClose={() => { this.setState({ showMoudle: false }) }} animationType="slide-up">
           <div className={style.modal_box}>
             <div className={style.modal_title}>提现到银行卡<i onClick={() => { this.setState({ showMoudle: false }) }}></i></div>
             <div className={`${style.modal_flex} ${style.with_border}`}>

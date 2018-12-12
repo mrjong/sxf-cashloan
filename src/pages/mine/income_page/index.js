@@ -187,7 +187,6 @@ export default class income_page extends PureComponent {
               <p className={style.incomeTime}>时间：{'xxxx-xx-xx xx:xx'}</p>
               <p>有效期至：{'2018-12-01'}</p>
             </div>
-            <span className={style.expired}></span>
           </div>
         </div>
       );

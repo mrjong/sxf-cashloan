@@ -188,7 +188,6 @@ export default class withdraw_page extends PureComponent {
               <p>提现金额</p>
               <p className={style.withdrawTime}>时间：{'xxxx-xx-xx xx:xx'}</p>
             </div>
-            <span className={style.expired}></span>
           </div>
         </div>
       );
