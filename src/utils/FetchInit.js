@@ -41,7 +41,7 @@ const fetchinit = () => {
 					if (timerList.length > 1) {
 						return;
 					}
-					SXFToast.loading('数据加载中...', 0);
+					SXFToast.loading('数据加载中...', 10);
 				}, 300);
 				timerList.push(timer);
 			}

@@ -5,8 +5,8 @@ import SXFLoading from 'components/SXFLoading';
 let popUp = new PopUp(<SXFLoading />);
 export const SXFToast = {
 	loading: (content, duration, onClose, mask) => {
-		popUp = new PopUp(<SXFLoading mask />);
-		Toast.hide();
+        popUp.close();        
+        Toast.hide();
 		popUp.show();
 		if (!duration) {
 			setTimeout(() => {

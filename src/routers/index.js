@@ -31,10 +31,9 @@ export default class Routers extends Component {
 	render() {
 		return (
 			<Switch>
-				<Redirect exact path="/" to="/login" />;
-				<Route exact path="/login" component={LoginPage} />
-				<Redirect exact path="/:modules" to="/login" />
-				<Route exact path="/:modules/:page" component={RouterPage} />
+                <Route exact path="/" component={LoginPage} />
+				<Route  path="/login" component={LoginPage} />
+				<Route path="/:modules/:page" component={RouterPage} />
 			</Switch>
 		);
 	}
