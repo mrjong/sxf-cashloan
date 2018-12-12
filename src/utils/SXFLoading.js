@@ -2,10 +2,10 @@ import React from 'react';
 import PopUp from 'components/PopUp';
 import { Toast } from 'antd-mobile';
 import SXFLoading from 'components/SXFLoading';
-let popUp;
+let popUp = new PopUp(<SXFLoading />);
 export const SXFToast = {
 	loading: (content, duration, onClose, mask) => {
-		popUp = new PopUp(<SXFLoading content mask />);
+		popUp = new PopUp(<SXFLoading mask />);
 		Toast.hide();
 		popUp.show();
 		if (!duration) {

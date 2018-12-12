@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
@@ -65,8 +65,7 @@ const fetchinit = () => {
 			} else {
 				SXFToast.loading('数据加载中...', 10);
 			}
-            // return response;
-            return Promise.reject('222222');
+			return response;
 		},
 		(error) => {
 			console.log(error);
@@ -76,8 +75,7 @@ const fetchinit = () => {
 			}
 			timer = undefined;
 			timerList = [];
-            SXFToast.hide();
-            console.log('-----------------------')
+			SXFToast.hide();
 			return Promise.reject(error);
 		}
 	);
@@ -85,7 +83,7 @@ const fetchinit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
-            console.log(err)
+			SXFToast.hide();
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {

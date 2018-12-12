@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
-import style from './index.scss';
-import loading_error from 'assets/images/error/loading_error.png';
+import Blank from 'components/Blank';
 const API = {
 	getXMURL: '/auth/zmAuth' // 芝麻认证之后的回调状态
 };
@@ -37,7 +36,7 @@ export default class middle_page extends Component {
 					}
 				})
 				.catch((err) => {
-                    console.log('err',err);
+					console.log('err', err);
 					this.setState({
 						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
@@ -49,11 +48,14 @@ export default class middle_page extends Component {
 					this.goRouter();
 				})
 				.catch((err) => {
-					console.log('err',err);
 					this.setState({
 						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
+		} else {
+			this.setState({
+				errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+			});
 		}
 	}
 	goRouter = () => {
@@ -66,13 +68,6 @@ export default class middle_page extends Component {
 		}
 	};
 	render() {
-		return this.state.errorInf ? (
-			<div className={style.auth_page}>
-				<div>
-					<img src={loading_error} />
-				</div>
-				<div className={style.text} dangerouslySetInnerHTML={{ __html: this.state.errorInf }} />
-			</div>
-		) : null;
+		return <Blank errorInf={this.state.errorInf} />;
 	}
 }

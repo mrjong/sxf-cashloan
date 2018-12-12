@@ -88,10 +88,11 @@ export default class router_Page extends PureComponent {
 				});
 			} else {
 				this.setState({
-					newTitle: '重新加载',
+                    newTitle: '重新加载',
+                    showPage:true,
 					component: React.createElement(errPage, {
 						match,
-						history,
+                        history,
 						params: {
 							pageType: '404'
 						}
@@ -102,7 +103,8 @@ export default class router_Page extends PureComponent {
 		} catch (error) {
 			console.log(error);
 			this.setState({
-				newTitle: '重新加载',
+                newTitle: '重新加载',
+                showPage:true,
 				component: React.createElement(errPage, {
 					match,
 					history,
@@ -115,7 +117,7 @@ export default class router_Page extends PureComponent {
 	};
 	render() {
 		const { component, route, newTitle, showPage = false } = this.state;
-		const { headerHide = false, footerHide = true } = route;
+        const { headerHide = false, footerHide = true } = route;
 		return showPage ? (
 			<div className="application_view">
 				<div className="application_page">

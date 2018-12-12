@@ -4,8 +4,8 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { isBugBrowser } from 'utils/common';
-import style from './index.scss';
-import loading_error from 'assets/images/error/loading_error.png';
+import Blank from 'components/Blank';
+
 const API = {
 	isAccessLogin: '/gateway/anydoor' // 是否有登录的权限
 };
@@ -51,13 +51,6 @@ export default class auth_page extends Component {
 		this.props.history.replace('/home/home');
 	};
 	render() {
-		return this.state.errorInf ? (
-			<div className={style.auth_page}>
-				<div>
-					<img src={loading_error} />
-				</div>
-				<div className={style.text} dangerouslySetInnerHTML={{ __html: this.state.errorInf }} />
-			</div>
-		) : null;
+		return <Blank errorInf={this.state.errorInf} />;
 	}
 }
