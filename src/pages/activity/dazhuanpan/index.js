@@ -10,6 +10,8 @@ import { getDeviceType } from 'utils/common';
 import { Toast } from 'antd-mobile';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
+import over from './img/over.png';
+import notstart from './img/notstart.png';
 import zp_btn from './img/zp_btn.png';
 import item1 from './img/item1.png';
 import config from './config.js';
@@ -34,6 +36,7 @@ export default class dazhuanpan_page extends PureComponent {
 			awardList: [],
 			ruleDesc: '',
 			alert_img: '',
+			codeInfo: '',
 			count: '1',
 			allUsersAward: [],
 			type: '', // 弹框类型
@@ -93,7 +96,10 @@ export default class dazhuanpan_page extends PureComponent {
 							break;
 					}
 				} else if (res.data.code === 'PCC-MARKET-0001' || res.data.code === 'PCC-MARKET-0002') {
-					Toast.info(res.data.msg);
+					// Toast.info(res.data.msg);
+					this.setState({
+						codeInfo: res.data.code
+					});
 				}
 			} else {
 				Toast.info(res.msgInfo);
@@ -225,34 +231,6 @@ export default class dazhuanpan_page extends PureComponent {
 					type: 'alert_img',
 					alert_img: `data:image/png;base64,${obj.imgUrl}`
 				});
-				// switch (obj.type) {
-				// 	case '01':
-				// 		this.setState({
-				// 			type: 'no_award'
-				// 		});
-				// 		break;
-				// 	case '02':
-				// 		this.setState({
-				// 			type: 'no_award'
-				// 		});
-				// 		break;
-				// 	case '04':
-				// 		this.setState({
-				// 			type: 'alert_img',
-				// 			alert_img: `data:image/png;base64,${obj.imgUrl}`
-				// 		});
-				// 		break;
-				// 	// case '04':
-				// 	// 	this.setState({
-				// 	// 		type: 'no_award'
-				// 	// 	});
-				// 	// 	break;
-
-				// 	default:
-				// 		this.setState({
-				// 			type: 'no_award'
-				// 		});
-				// }
 				this.isRotated = false; //旋转改为false说明没有旋转
 			}, 7000);
 		}, 0);
@@ -292,69 +270,78 @@ export default class dazhuanpan_page extends PureComponent {
 		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
-				<LoginAlert
-					alert_img={alert_img}
-					refreshPageFn={this.refreshPage}
-					setalertType={this.setalertType}
-					alertType={type}
-					goRoute={this.goRoute}
-					userAwardList={userAwardList}
-				/>
-				<div className={styles.bg}>
-					<img className={styles.img} src={bg} />
-					<div className={styles.hd_box}>
-						{allUsersAward && allUsersAward.length ? (
-							<div className={styles.get_award_list}>
-								<AwardShow allUsersAward={allUsersAward} />
-							</div>
-						) : null}
-						<div className={styles.message_bottom}>
-							今日剩余<span>{count}</span>次抽奖机会
-						</div>
-						<div className={styles.zp_bg_box}>
-							{/* 转盘灯 */}
-							<img className={styles.zp_bg} src={zp_bg} />
-							{/* 按钮 */}
-							<img className={styles.zp_btn} src={zp_btn} onClick={this.onloadZhuan} />
-							{/* 转盘 */}
-							<div
-								className={styles.zp_box}
-								style={{
-									overflow: 'hidden',
-									transform: `scale(0.85) rotate(${this.state.numdeg}deg)`,
-									WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
-									transition: `-webkit-transform ${time}s ${transformType}`,
-									transition: `transform ${time}s ${transformType}`,
-									transition: `transform ${time}s ${transformType}`
-								}}
-							>
-								{/* 奖品 */}
-								<div className={styles.zp_img_box}>
-									{awardList.map((item, index) => {
-										return (
-											<img
-												key={index}
-												className={styles.img1}
-												src={`data:image/png;base64,${item.imgUrl}`}
-												style={{
-													transform: `rotate(${index * (360 / awardList.length)}deg)`
-												}}
-											/>
-										);
-									})}
-								</div>
-							</div>
-						</div>
-						<div className={styles.myAward} onClick={this.getMyAward}>
-							<span>我的奖品</span>
-						</div>
-						{this.state.ruleDesc ? (
-							<div className={styles.get_rule_desc}>
-								<RuleShow ruleDesc={this.state.ruleDesc} />
-							</div>
-						) : null}
+				{this.state.codeInfo ? (
+					<div className={styles.active_img_box}>
+						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}
 					</div>
-				</div>
+				) : null}
+				{!this.state.codeInfo ? (
+					<div>
+						<LoginAlert
+							alert_img={alert_img}
+							refreshPageFn={this.refreshPage}
+							setalertType={this.setalertType}
+							alertType={type}
+							goRoute={this.goRoute}
+							userAwardList={userAwardList}
+						/>
+						<div className={styles.bg}>
+							<img className={styles.img} src={bg} />
+							<div className={styles.hd_box}>
+								{allUsersAward && allUsersAward.length ? (
+									<div className={styles.get_award_list}>
+										<AwardShow allUsersAward={allUsersAward} />
+									</div>
+								) : null}
+								<div className={styles.message_bottom}>
+									今日剩余<span>{count}</span>次抽奖机会
+								</div>
+								<div className={styles.zp_bg_box}>
+									{/* 转盘灯 */}
+									<img className={styles.zp_bg} src={zp_bg} />
+									{/* 按钮 */}
+									<img className={styles.zp_btn} src={zp_btn} onClick={this.onloadZhuan} />
+									{/* 转盘 */}
+									<div
+										className={styles.zp_box}
+										style={{
+											overflow: 'hidden',
+											transform: `scale(0.85) rotate(${this.state.numdeg}deg)`,
+											WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
+											transition: `-webkit-transform ${time}s ${transformType}`,
+											transition: `transform ${time}s ${transformType}`,
+											transition: `transform ${time}s ${transformType}`
+										}}
+									>
+										{/* 奖品 */}
+										<div className={styles.zp_img_box}>
+											{awardList.map((item, index) => {
+												return (
+													<img
+														key={index}
+														className={styles.img1}
+														src={`data:image/png;base64,${item.imgUrl}`}
+														style={{
+															transform: `rotate(${index * (360 / awardList.length)}deg)`
+														}}
+													/>
+												);
+											})}
+										</div>
+									</div>
+								</div>
+								<div className={styles.myAward} onClick={this.getMyAward}>
+									<span>我的奖品</span>
+								</div>
+								{this.state.ruleDesc ? (
+									<div className={styles.get_rule_desc}>
+										<RuleShow ruleDesc={this.state.ruleDesc} />
+									</div>
+								) : null}
+							</div>
+						</div>
+					</div>
+				) : null}
 			</div>
 		);
 	}
