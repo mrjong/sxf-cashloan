@@ -55,7 +55,11 @@ export default class dazhuanpan_page extends PureComponent {
             });
             Toast.info('活动id不能为空')
 			return;
-		}
+		}else{
+            this.setState({
+				codeInfo: ''
+            }); 
+        }
 		token = Cookie.get('fin-v-card-token');
 		this.setState({
 			count:
