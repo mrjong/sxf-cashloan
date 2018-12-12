@@ -49,6 +49,13 @@ export default class dazhuanpan_page extends PureComponent {
 		if (queryData.activeId) {
 			config.activeId = queryData.activeId;
 		}
+		if (!queryData.activeId) {
+			this.setState({
+				codeInfo: 'PCC-MARKET-0002'
+            });
+            Toast.info('活动id不能为空')
+			return;
+		}
 		token = Cookie.get('fin-v-card-token');
 		this.setState({
 			count:
@@ -87,6 +94,7 @@ export default class dazhuanpan_page extends PureComponent {
 								this.getAwardList('00');
 							}
 							this.setState({
+								codeInfo: '',
 								awardList: res.data.data.prizeList,
 								ruleDesc: res.data.data.ruleDesc
 							});
