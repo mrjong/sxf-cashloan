@@ -96,8 +96,7 @@ export default class wx_middle_page extends Component {
 						console.log(res);
 						console.log(res.url);
 						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
-                        // window.location.href = decodeURIComponent(res.url);
-                         window.location.href = res.url;
+                         window.location.href = decodeURIComponent(res.url);
 					} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
 						//已授权未登录 (静默授权为7天，7天后过期）
 						// this.props.history.replace('/home/home')
