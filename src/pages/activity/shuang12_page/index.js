@@ -7,7 +7,7 @@ import AwardShowMock from './components/AwardShowMock';
 import RuleShow from './components/RuleShow';
 import LoginAlert from './components/LoginAlert';
 import { setBackGround } from 'utils/setBackGround';
-import { isBugBrowser } from 'utils/common';
+import { isBugBrowser,getNowDate } from 'utils/common';
 import { Toast } from 'antd-mobile';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
@@ -86,7 +86,7 @@ export default class dazhuanpan_page extends PureComponent {
 				if (res.data && Number(res.data.total) > 0) {
 					this.getDraw(res.data.total, id);
 				} else {
-					localStorage.setItem(`${id}total`, 0);
+					localStorage.setItem(`${getNowDate()}${id}total`, 0);
 					this.setState({
 						total: '0'
 					});
@@ -139,9 +139,9 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	getStatus = (id) => {
 		// 返现上一次刷新的状态
-		if (localStorage.getItem(`${id}total`)) {
+		if (localStorage.getItem(`${getNowDate()}${id}total`)) {
 			this.setState({
-				total: localStorage.getItem(`${id}total`)
+				total: localStorage.getItem(`${getNowDate()}${id}total`)
 			});
 		} else {
 			this.setState({
@@ -153,7 +153,7 @@ export default class dazhuanpan_page extends PureComponent {
 	getDraw = (total, id) => {
 		this.props.$fetch.post(API.userDraw).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				localStorage.setItem(`${id}total`, Number(total) > 0 ? Number(total) - 1 : '0');
+				localStorage.setItem(`${getNowDate()}${id}total`, Number(total) > 0 ? Number(total) - 1 : '0');
 				this.setState({
 					total: Number(total) > 0 ? Number(total) - 1 : '0'
 				});
@@ -207,6 +207,7 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 转盘按钮
 	onloadZhuan = async () => {
+		this.gettotal();
 		// 立即抽奖按钮
 		buriedPointEvent(activity_shuang12.shuang12_go_draw);
 		token = Cookie.get('fin-v-card-token');
@@ -219,7 +220,7 @@ export default class dazhuanpan_page extends PureComponent {
 			return;
 		}
 		let id = sessionStorage.getItem('QueryUsrSCOpenId');
-		if (id && localStorage.getItem(`${id}total`) && Number(localStorage.getItem(`${id}total`)) <= 0) {
+		if (id && localStorage.getItem(`${getNowDate()}${id}total`) && Number(localStorage.getItem(`${getNowDate()}${id}total`)) <= 0) {
 			this.setState({
 				total: '0',
 				type: 'no_chance'
@@ -227,7 +228,6 @@ export default class dazhuanpan_page extends PureComponent {
 			return;
 		}
 		if (this.isRotated) return; //如果正在旋转退出程序
-		this.gettotal();
 	};
 
 	setalertType = (type) => {

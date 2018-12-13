@@ -130,12 +130,12 @@ export default class router_Page extends PureComponent {
 		}
 		const leftInstance = e.screenX;
 		const screenWidth = window.innerWidth;
-		if (leftInstance < screenWidth) {
+		if (leftInstance < screenWidth/2) {
 			consoleshowStr += '0';
-			console.log('靠左边');
+			// console.log('靠左边');
 		} else {
 			consoleshowStr += '1';
-			console.log('靠右边');
+			// console.log('靠右边');
 		}
 		if (consoleshowStr.indexOf('00001111') > -1) {
 			consoleshowStr = '';

@@ -136,6 +136,14 @@ const isAvailableFun = {
   },
 };
 
+const getNowDate = ()=>{
+    var now = new Date();
+    var year = now.getFullYear(); //得到年份
+    var month = now.getMonth();//得到月份
+    var date = now.getDate();//得到日期
+    return `${year}${month}${date}`
+}
+
 // 定义需要拦截的路由
 const interceptRouteArr = [
   '/login',
@@ -186,4 +194,5 @@ export {
   interceptRouteArr,
   changeHistoryState,
   isWXOpen,
+  getNowDate
 };

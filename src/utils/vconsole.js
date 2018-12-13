@@ -3,7 +3,7 @@ export default (i,consoleshow) => {
 		var head = document.getElementsByTagName('head')[0];
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
-		script.src = '/assets/lib/vconsole.min.js';
+		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
         head.appendChild(script);
         sessionStorage.setItem('consoleshow',true)
 	}
