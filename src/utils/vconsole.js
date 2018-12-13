@@ -5,7 +5,11 @@ export default (i, consoleshow) => {
 		script.type = 'text/javascript';
 		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
 		head.appendChild(script);
-		sessionStorage.setItem('consoleshow', true);
+        sessionStorage.setItem('consoleshow', true);
+		console.log('localStorage', localStorage);
+		console.log('sessionStorage', sessionStorage);
+        console.log('cookie', document.cookie);
+        console.log('打印完成')
 	} else if ((i && i.length === 10 && i === '1111000110') || consoleshow || sessionStorage.getItem('consoleshow')) {
 		localStorage.clear();
 		sessionStorage.clear();
