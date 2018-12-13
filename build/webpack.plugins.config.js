@@ -42,6 +42,7 @@ let getProdPlugins = function () {
     {from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib'},
     {from: path.resolve(__dirname, '../*.txt'), to: './'},
     {from: path.resolve(__dirname, '../*.html'), to: './'},
+    {from: path.resolve(__dirname, '../*.apk'), to: './'},
   ])),
     plugins.push(new webpack.DefinePlugin({
       'process.env': {
@@ -75,6 +76,7 @@ let getTestPlugins = function () {
     {from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib'},
     {from: path.resolve(__dirname, '../*.txt'), to: './'},
     {from: path.resolve(__dirname, '../*.html'), to: './'},
+    {from: path.resolve(__dirname, '../*.apk'), to: './'},
   ])),
     plugins.push(new webpack.DefinePlugin({
       'process.env': {
