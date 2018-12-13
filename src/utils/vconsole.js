@@ -18,7 +18,8 @@ export default (i, consoleshow) => {
 		sessionStorage.setItem('consoleshow', true);
 		console.log('localStorage', localStorage);
 		console.log('sessionStorage', sessionStorage);
-		console.log('cookie', document.cookie);
+        console.log('cookie', document.cookie);
+        console.log('清除完成')
 	}
 };
 function clearAllCookie() {
