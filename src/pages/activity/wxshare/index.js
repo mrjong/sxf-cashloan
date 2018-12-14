@@ -47,7 +47,7 @@ export default class dc_landing_page extends PureComponent {
 		this.wxshare();
 	}
 	wxshare = () => {
-        const _this = this
+		const _this = this;
 		if (wx) {
 			const params = {
 				channelCode: '01',
@@ -72,30 +72,7 @@ export default class dc_landing_page extends PureComponent {
 							title: '邀请有礼',
 							desc: '还到很牛x',
 							link: _this.state.href,
-							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png'
-						};
-						wx.updateAppMessageShareData({
-							...shareData,
-							success: function(res) {
-								_this.doInvite();
-								Toast.info('分享成功');
-							},
-							cancel: function(res) {
-								Toast.info('取消成功');
-							}
-						});
-						wx.updateTimelineShareData({
-							...shareData,
-							success: function(res) {
-								_this.doInvite();
-								Toast.info('分享成功');
-							},
-							cancel: function(res) {
-								Toast.info('取消成功');
-							}
-						});
-						wx.onMenuShareWeibo({
-							...shareData,
+							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
 							success: function() {
 								_this.doInvite();
 								Toast.info('分享成功');
@@ -103,7 +80,18 @@ export default class dc_landing_page extends PureComponent {
 							cancel: function() {
 								Toast.info('取消成功');
 							}
-						});
+						};
+						// wx.updateAppMessageShareData(shareData);
+						// wx.updateTimelineShareData(shareData);
+                        // wx.onMenuShareWeibo(shareData);
+                        
+                        // 老版sdk
+                        wx.onMenuShareTimeline(shareData)
+                        wx.onMenuShareAppMessage(shareData)
+                        wx.onMenuShareQQ(shareData)
+                        wx.onMenuShareWeibo(shareData)
+                        wx.onMenuShareQZone(shareData)
+
 					});
 					wx.error(function(res) {
 						Toast.info('error: ' + res.errMsg);
