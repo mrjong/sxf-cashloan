@@ -40,7 +40,7 @@ export default class download_page extends PureComponent {
         const { downloadUrl } = this.state;
         const phoneType = getDeviceType();
         if (phoneType === 'ANDRIOD') {
-            Toast.info('安全下载中...')
+            Toast.info('安全下载中')
             window.location.href = downloadUrl;
             // window.location.href = 'http://172.16.138.162:8920/app-release.apk'
         } else {
