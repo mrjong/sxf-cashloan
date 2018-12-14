@@ -84,16 +84,16 @@ export default class dc_landing_page extends PureComponent {
 								Toast.info('取消成功');
 							}
 						};
-						wx.updateAppMessageShareData(shareData);
-						wx.updateTimelineShareData(shareData);
-						wx.onMenuShareWeibo(shareData);
-						// if(wx.onMenuShareAppMessage){ //微信文档中提到这两个接口即将弃用，故判断
-						//     wx.onMenuShareAppMessage(shareData);//1.0 分享到朋友
-						//     wx.onMenuShareTimeline(shareData);//1.0分享到朋友圈
-						// }else{
-						//     wx.updateAppMessageShareData(shareData);//1.4 分享到朋友
-						//     wx.updateTimelineShareData(shareData);//1.4分享到朋友圈
-						// }
+						// wx.updateAppMessageShareData(shareData);
+						// wx.updateTimelineShareData(shareData);
+						// wx.onMenuShareWeibo(shareData);
+						if(wx.onMenuShareAppMessage){ //微信文档中提到这两个接口即将弃用，故判断
+						    wx.onMenuShareAppMessage(shareData);//1.0 分享到朋友
+						    wx.onMenuShareTimeline(shareData);//1.0分享到朋友圈
+						}else{
+						    wx.updateAppMessageShareData(shareData);//1.4 分享到朋友
+						    wx.updateTimelineShareData(shareData);//1.4分享到朋友圈
+						}
 						// 老版sdk
 						// wx.onMenuShareTimeline(shareData)
 						// wx.onMenuShareAppMessage(shareData)
@@ -269,7 +269,7 @@ export default class dc_landing_page extends PureComponent {
 		return (
 			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				{this.state.showInput ? (
+				{!this.state.hideInput ? (
 					<div className={styles.content}>
 						<InputItem
 							id="inputPhone"
