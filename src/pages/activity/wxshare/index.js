@@ -14,40 +14,45 @@ let timmer;
 const API = {
 	smsForLogin: '/invite/smsForLogin',
 	sendsms: '/cmm/sendsms',
-    jscfg: '/wx/jscfg',
-    getShareUrl:'/active/invite/getShareUrl',
-    
+	jscfg: '/wx/jscfg',
+	getShareUrl: '/invite/getShareUrl',
+	doInvite: '/invite/doInvite'
 };
+const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 @fetch.inject()
 @createForm()
 export default class dc_landing_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
+			showInput: true,
 			timers: '获取验证码',
-            timeflag: true,
-            activeId:'',
+			timeflag: true,
+			href: location.href,
+			activeId: '',
+			urlCode: '',
 			flag: true,
 			smsJrnNo: '' // 短信流水号
 		};
 	}
 	componentWillMount() {
-        // document.write("<script src='https://res.wx.qq.com/open/js/jweixin-1.4.0.js'></script>");
-        const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-        if(!queryData.activeId){
-            this.props.toast.info('活动id不能为空')
-            return 
-        }else{
-            this.setState({
-                activeId:queryData.activeId
-            })
-        }        
+		if (!queryData.activeId) {
+			this.props.toast.info('活动id不能为空');
+			return;
+		} else {
+			this.setState({
+				activeId: queryData.activeId
+			});
+		}
+		this.wxshare();
+	}
+	wxshare = () => {
 		if (wx) {
 			const params = {
 				channelCode: '01',
 				redirectUrl: window.location.href
 			};
-
+			// 获取 微信 sdk
 			this.props.$fetch.post(`/wx/jscfg`, params).then((result) => {
 				console.log('result', result);
 				if (result) {
@@ -63,53 +68,49 @@ export default class dc_landing_page extends PureComponent {
 					});
 					wx.ready(function() {
 						let shareData = {
-							title: '还到nb',
+							title: '邀请有礼',
 							desc: '还到很牛x',
-							https: '//lns-wap-test.vbillbank.com/activity/wxshare',
-							imgUrl: 'http://pic28.photophoto.cn/20130818/0020033143720852_b.jpg'
+							link: this.state.href,
+							imgUrl: './black_logo_2x.png'
 						};
 						wx.updateAppMessageShareData({
 							...shareData,
 							success: function(res) {
-								alert('已分享');
+								this.doInvite();
+								Toast.info('分享成功');
 							},
 							cancel: function(res) {
-								alert('已取消');
-							},
-							fail: function(res) {
-								alert(JSON.stringify(res));
+								Toast.info('取消成功');
 							}
 						});
 						wx.updateTimelineShareData({
 							...shareData,
 							success: function(res) {
-								alert('已分享');
+								this.doInvite();
+								Toast.info('分享成功');
 							},
 							cancel: function(res) {
-								alert('已取消');
-							},
-							fail: function(res) {
-								alert(JSON.stringify(res));
+								Toast.info('取消成功');
 							}
 						});
 						wx.onMenuShareWeibo({
 							...shareData,
 							success: function() {
-								// 用户确认分享后执行的回调函数
+								this.doInvite();
+								Toast.info('分享成功');
 							},
 							cancel: function() {
-								// 用户取消分享后执行的回调函数
+								Toast.info('取消成功');
 							}
 						});
 					});
 					wx.error(function(res) {
-						alert('error: ' + res.errMsg);
+						console.log('error: ' + res.errMsg);
 					});
 				}
 			});
 		}
-	}
-
+	};
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
 		if (!validators.phone(value)) {
@@ -119,14 +120,14 @@ export default class dc_landing_page extends PureComponent {
 		}
 	};
 
-	//去登陆按钮
+	//活动页登陆入口
 	goLogin = () => {
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
-        }
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		}
+
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				// 埋点-注册登录页一键代还
@@ -138,10 +139,11 @@ export default class dc_landing_page extends PureComponent {
 						osType, // 操作系统
 						smsCd: values.smsCd, // IP地址
 						usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
-                        location: store.getPosition(), // 定位地址 TODO 从session取
-                        activeId:Number(this.state.activeId),
-                        activeSecId:''|| 0,
-                        activeThirdId:'' || 0
+						location: store.getPosition(), // 定位地址 TODO 从session取
+						activeId: Number(this.state.activeId),
+						activeSecId: 6,
+						activeThirdId: 7,
+						code: (queryData && queryData.urlCode) || ''
 					})
 					.then(
 						(res) => {
@@ -149,7 +151,9 @@ export default class dc_landing_page extends PureComponent {
 								res.msgInfo && Toast.info(res.msgInfo);
 								return;
 							}
-							sa.login(res.data.userId);
+							this.setState({
+								showInput: false
+							});
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
 							// store.setToken(res.data.tokenId);
@@ -160,9 +164,7 @@ export default class dc_landing_page extends PureComponent {
 							} else {
 								store.setTokenSession(res.data.tokenId);
 							}
-							Toast.info('领取成功，请去APP打开使用', 2, () => {
-								this.props.history.replace('/others/download_page');
-							});
+							this.getShareUrl();
 						},
 						(error) => {
 							error.msgInfo && Toast.info(error.msgInfo);
@@ -173,14 +175,65 @@ export default class dc_landing_page extends PureComponent {
 			}
 		});
 	};
-
+	// 获取用户邀请码
+	getShareUrl = () => {
+		if (!this.state.activeId) {
+			Toast.info('活动id不能为空');
+			return;
+		}
+		const osType = getDeviceType();
+		this.props.$fetch
+			.post(API.getShareUrl, {
+				activeId: Number(this.state.activeId),
+				channel: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
+				osType
+			})
+			.then((res) => {
+				if (res.msgCode !== 'PTM0000') {
+					res.msgInfo && Toast.info(res.msgInfo);
+					return;
+				}
+				this.setState(
+					{
+						urlCode: res.data.urlCode,
+						href: `${this.state.href}&urlCode=${res.data.urlCode}`
+					},
+					() => {
+						this.wxshare();
+					}
+				);
+			});
+	};
+	// 用户点击分享连接行为
+	doInvite = () => {
+		if (!this.state.activeId) {
+			Toast.info('活动id不能为空');
+			return;
+		}
+		const osType = getDeviceType();
+		this.props.$fetch
+			.post(API.doInvite, {
+				activeId: Number(this.state.activeId),
+				channel: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
+				osType,
+				url: this.state.href
+			})
+			.then((res) => {
+				if (res.msgCode !== 'PTM0000') {
+					res.msgInfo && Toast.info(res.msgInfo);
+					return;
+				}
+				this.setState({
+					shareUrl: res.url
+				});
+			});
+	};
 	//获得手机验证码
 	getTime(i) {
 		if (!this.getSmsCode(i)) {
 			return;
 		}
 	}
-
 	// 获得手机验证码
 	getSmsCode(i) {
 		const osType = getDeviceType();
@@ -225,41 +278,43 @@ export default class dc_landing_page extends PureComponent {
 		return (
 			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				<div className={styles.content}>
-					<InputItem
-						id="inputPhone"
-						maxLength="11"
-						type="number"
-						className={styles.loginInput}
-						placeholder="请输入您的手机号"
-						{...getFieldProps('phoneValue', {
-							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
-						})}
-					/>
-					<div className={styles.smsBox}>
+				{this.state.showInput ? (
+					<div className={styles.content}>
 						<InputItem
-							id="inputCode"
+							id="inputPhone"
+							maxLength="11"
 							type="number"
-							maxLength="6"
 							className={styles.loginInput}
-							placeholder="请输入短信验证码"
-							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+							placeholder="请输入您的手机号"
+							{...getFieldProps('phoneValue', {
+								rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
 							})}
 						/>
-						<div
-							className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}
-							onClick={() => {
-								this.state.timeflag ? this.getTime(59) : '';
-							}}
-						>
-							{this.state.timers}
+						<div className={styles.smsBox}>
+							<InputItem
+								id="inputCode"
+								type="number"
+								maxLength="6"
+								className={styles.loginInput}
+								placeholder="请输入短信验证码"
+								{...getFieldProps('smsCd', {
+									rules: [ { required: true, message: '请输入正确验证码' } ]
+								})}
+							/>
+							<div
+								className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}
+								onClick={() => {
+									this.state.timeflag ? this.getTime(59) : '';
+								}}
+							>
+								{this.state.timers}
+							</div>
+						</div>
+						<div className={styles.sureBtn} onClick={this.goLogin}>
+							<span>免费借款</span>
 						</div>
 					</div>
-					<div className={styles.sureBtn} onClick={this.goLogin}>
-						<span>免费借款</span>
-					</div>
-				</div>
+				) : null}
 			</div>
 		);
 	}
