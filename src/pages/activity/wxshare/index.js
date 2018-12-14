@@ -12,7 +12,7 @@ import bannerImg from './img/banner.png';
 
 let timmer;
 const API = {
-	smsForLogin: '/signup/smsForLogin',
+	smsForLogin: '/invite/smsForLogin',
 	sendsms: '/cmm/sendsms',
     jscfg: '/wx/jscfg',
     getShareUrl:'/active/invite/getShareUrl',
@@ -25,13 +25,23 @@ export default class dc_landing_page extends PureComponent {
 		super(props);
 		this.state = {
 			timers: '获取验证码',
-			timeflag: true,
+            timeflag: true,
+            activeId:'',
 			flag: true,
 			smsJrnNo: '' // 短信流水号
 		};
 	}
 	componentWillMount() {
-		// document.write("<script src='https://res.wx.qq.com/open/js/jweixin-1.4.0.js'></script>");
+        // document.write("<script src='https://res.wx.qq.com/open/js/jweixin-1.4.0.js'></script>");
+        const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+        if(!queryData.activeId){
+            this.props.toast.info('活动id不能为空')
+            return 
+        }else{
+            this.setState({
+                activeId:queryData.activeId
+            })
+        }        
 		if (wx) {
 			const params = {
 				channelCode: '01',
@@ -115,7 +125,7 @@ export default class dc_landing_page extends PureComponent {
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
-		}
+        }
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
@@ -128,7 +138,10 @@ export default class dc_landing_page extends PureComponent {
 						osType, // 操作系统
 						smsCd: values.smsCd, // IP地址
 						usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
-						location: store.getPosition() // 定位地址 TODO 从session取
+                        location: store.getPosition(), // 定位地址 TODO 从session取
+                        activeId:Number(this.state.activeId),
+                        activeSecId:''|| 0,
+                        activeThirdId:'' || 0
 					})
 					.then(
 						(res) => {
