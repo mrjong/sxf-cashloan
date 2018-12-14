@@ -25,7 +25,7 @@ export default class dc_landing_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			hideInput: fasle,
+			hideInput: false,
 			timers: '获取验证码',
 			timeflag: true,
 			href: location.href,
