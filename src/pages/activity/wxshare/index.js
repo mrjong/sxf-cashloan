@@ -25,7 +25,7 @@ export default class dc_landing_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showInput: true,
+			hideInput: fasle,
 			timers: '获取验证码',
 			timeflag: true,
 			href: location.href,
@@ -44,6 +44,9 @@ export default class dc_landing_page extends PureComponent {
 				activeId: queryData.activeId
 			});
 		}
+		this.setState({
+			hideInput: queryData.hideInput ? true : false
+		});
 		this.wxshare();
 	}
 	wxshare = () => {
@@ -74,24 +77,29 @@ export default class dc_landing_page extends PureComponent {
 							link: _this.state.href,
 							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
 							success: function() {
-								_this.doInvite();
+								// _this.doInvite();
 								Toast.info('分享成功');
 							},
 							cancel: function() {
 								Toast.info('取消成功');
 							}
 						};
-						// wx.updateAppMessageShareData(shareData);
-						// wx.updateTimelineShareData(shareData);
-                        // wx.onMenuShareWeibo(shareData);
-                        
-                        // 老版sdk
-                        wx.onMenuShareTimeline(shareData)
-                        wx.onMenuShareAppMessage(shareData)
-                        wx.onMenuShareQQ(shareData)
-                        wx.onMenuShareWeibo(shareData)
-                        wx.onMenuShareQZone(shareData)
-
+						wx.updateAppMessageShareData(shareData);
+						wx.updateTimelineShareData(shareData);
+						wx.onMenuShareWeibo(shareData);
+						// if(wx.onMenuShareAppMessage){ //微信文档中提到这两个接口即将弃用，故判断
+						//     wx.onMenuShareAppMessage(shareData);//1.0 分享到朋友
+						//     wx.onMenuShareTimeline(shareData);//1.0分享到朋友圈
+						// }else{
+						//     wx.updateAppMessageShareData(shareData);//1.4 分享到朋友
+						//     wx.updateTimelineShareData(shareData);//1.4分享到朋友圈
+						// }
+						// 老版sdk
+						// wx.onMenuShareTimeline(shareData)
+						// wx.onMenuShareAppMessage(shareData)
+						// wx.onMenuShareQQ(shareData)
+						// wx.onMenuShareWeibo(shareData)
+						// wx.onMenuShareQZone(shareData)
 					});
 					wx.error(function(res) {
 						Toast.info('error: ' + res.errMsg);
@@ -141,7 +149,7 @@ export default class dc_landing_page extends PureComponent {
 								return;
 							}
 							this.setState({
-								showInput: false
+								hideInput: true
 							});
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
@@ -182,15 +190,11 @@ export default class dc_landing_page extends PureComponent {
 					res.msgInfo && Toast.info(res.msgInfo);
 					return;
 				}
-				this.setState(
-					{
-						urlCode: res.data.urlCode,
-						href: `${this.state.href}&urlCode=${res.data.urlCode}`
-					},
-					() => {
-						this.wxshare();
-					}
-				);
+				this.setState({
+					urlCode: res.data.urlCode,
+					href: `${this.state.href}&urlCode=${res.data.urlCode}`
+				});
+				location.href = `${this.state.href}&urlCode=${res.data.urlCode}&hideInput=true`;
 			});
 	};
 	// 用户点击分享连接行为
@@ -212,9 +216,7 @@ export default class dc_landing_page extends PureComponent {
 					res.msgInfo && Toast.info(res.msgInfo);
 					return;
 				}
-				this.setState({
-					shareUrl: res.url
-				});
+				Toast.info('分享成功');
 			});
 	};
 	//获得手机验证码
