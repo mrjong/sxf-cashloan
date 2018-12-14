@@ -4,11 +4,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { isBugBrowser } from 'utils/common';
-import Blank from 'components/Blank';
 
-const API = {
-	isAccessLogin: '/gateway/anydoor' // 是否有登录的权限
-};
 @fetch.inject()
 export default class wx_middle_page extends Component {
 	constructor(props) {
@@ -153,6 +149,6 @@ export default class wx_middle_page extends Component {
 		}
 	};
 	render() {
-		return <Blank errorInf={this.state.errorInf} />;
+		return null;
 	}
 }
