@@ -47,6 +47,7 @@ export default class dc_landing_page extends PureComponent {
 		this.wxshare();
 	}
 	wxshare = () => {
+        const _this = this
 		if (wx) {
 			const params = {
 				channelCode: '01',
@@ -70,13 +71,13 @@ export default class dc_landing_page extends PureComponent {
 						let shareData = {
 							title: '邀请有礼',
 							desc: '还到很牛x',
-							link: this.state.href,
+							link: _this.state.href,
 							imgUrl: './black_logo_2x.png'
 						};
 						wx.updateAppMessageShareData({
 							...shareData,
 							success: function(res) {
-								this.doInvite();
+								_this.doInvite();
 								Toast.info('分享成功');
 							},
 							cancel: function(res) {
@@ -86,7 +87,7 @@ export default class dc_landing_page extends PureComponent {
 						wx.updateTimelineShareData({
 							...shareData,
 							success: function(res) {
-								this.doInvite();
+								_this.doInvite();
 								Toast.info('分享成功');
 							},
 							cancel: function(res) {
@@ -96,7 +97,7 @@ export default class dc_landing_page extends PureComponent {
 						wx.onMenuShareWeibo({
 							...shareData,
 							success: function() {
-								this.doInvite();
+								_this.doInvite();
 								Toast.info('分享成功');
 							},
 							cancel: function() {
@@ -105,7 +106,7 @@ export default class dc_landing_page extends PureComponent {
 						});
 					});
 					wx.error(function(res) {
-						console.log('error: ' + res.errMsg);
+						Toast.info('error: ' + res.errMsg);
 					});
 				}
 			});
