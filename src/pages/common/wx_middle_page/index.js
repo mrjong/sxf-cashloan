@@ -96,7 +96,7 @@ export default class wx_middle_page extends Component {
 						console.log(res);
 						console.log(res.url);
 						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
-                         window.location.href = decodeURIComponent(res.url);
+						window.location.href = decodeURIComponent(res.url);
 					} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
 						//已授权未登录 (静默授权为7天，7天后过期）
 						// this.props.history.replace('/home/home')
@@ -134,19 +134,24 @@ export default class wx_middle_page extends Component {
 	jumpRouter = () => {
 		if (isBugBrowser()) {
 			// 登陆的token
-			if (store.getJumpUrl()) {
-				this.props.history.push(store.getJumpUrl());
+			let jumpUrl = store.getJumpUrl();
+			this.removeJumpRouter();
+			if (jumpUrl) {
+				this.props.history.push(jumpUrl);
 			} else {
 				this.props.history.replace('/home/home'); //微信授权成功调到登录页
 			}
 		} else {
-			if (store.getJumpUrlSession()) {
-				this.props.history.push(store.getJumpUrlSession());
+			let jumpUrlSession = store.getJumpUrlSession();
+			this.removeJumpRouter();
+			if (jumpUrlSession) {
+				this.props.history.push(jumpUrlSession);
 			} else {
 				this.props.history.replace('/home/home'); //微信授权成功调到登录页
 			}
 		}
-
+	};
+	removeJumpRouter = () => {
 		if (isBugBrowser()) {
 			// 登陆的token
 			store.removeJumpUrl();
