@@ -20,13 +20,6 @@ export default class wx_middle_page extends Component {
 	componentWillMount() {
 		// 移除cookie中的token
 		Cookie.remove('fin-v-card-token');
-		// 移除session里存储的跳转url
-		if (isBugBrowser()) {
-			// 登陆的token
-			store.removeJumpUrl();
-		} else {
-			store.removeJumpUrlSession();
-		}
 		// 从url截取数据
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const u = navigator.userAgent;
