@@ -72,7 +72,7 @@ export default class dc_landing_page extends PureComponent {
 							title: '邀请有礼',
 							desc: '还到很牛x',
 							link: _this.state.href,
-							imgUrl: './black_logo_2x.png'
+							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png'
 						};
 						wx.updateAppMessageShareData({
 							...shareData,
