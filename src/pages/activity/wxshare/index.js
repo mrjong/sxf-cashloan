@@ -86,20 +86,21 @@ export default class dc_landing_page extends PureComponent {
 						};
 						// wx.updateAppMessageShareData(shareData);
 						// wx.updateTimelineShareData(shareData);
-						// wx.onMenuShareWeibo(shareData);
-						if(wx.onMenuShareAppMessage){ //微信文档中提到这两个接口即将弃用，故判断
-						    wx.onMenuShareAppMessage(shareData);//1.0 分享到朋友
-						    wx.onMenuShareTimeline(shareData);//1.0分享到朋友圈
-						}else{
-						    wx.updateAppMessageShareData(shareData);//1.4 分享到朋友
-						    wx.updateTimelineShareData(shareData);//1.4分享到朋友圈
-						}
+                        // wx.onMenuShareWeibo(shareData);
+                        
+						// if(wx.onMenuShareAppMessage){ //微信文档中提到这两个接口即将弃用，故判断
+						//     wx.onMenuShareAppMessage(shareData);//1.0 分享到朋友
+						//     wx.onMenuShareTimeline(shareData);//1.0分享到朋友圈
+						// }else{
+						//     wx.updateAppMessageShareData(shareData);//1.4 分享到朋友
+						//     wx.updateTimelineShareData(shareData);//1.4分享到朋友圈
+						// }
 						// 老版sdk
-						// wx.onMenuShareTimeline(shareData)
-						// wx.onMenuShareAppMessage(shareData)
-						// wx.onMenuShareQQ(shareData)
-						// wx.onMenuShareWeibo(shareData)
-						// wx.onMenuShareQZone(shareData)
+						wx.onMenuShareTimeline(shareData)
+						wx.onMenuShareAppMessage(shareData)
+						wx.onMenuShareQQ(shareData)
+						wx.onMenuShareWeibo(shareData)
+						wx.onMenuShareQZone(shareData)
 					});
 					wx.error(function(res) {
 						Toast.info('error: ' + res.errMsg);
