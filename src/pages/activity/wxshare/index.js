@@ -18,17 +18,18 @@ const API = {
 	getShareUrl: '/invite/getShareUrl',
 	doInvite: '/invite/doInvite'
 };
+const osType = getDeviceType();
 const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 @fetch.inject()
 @createForm()
-export default class dc_landing_page extends PureComponent {
+export default class wxshare extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
 			hideInput: false,
 			timers: '获取验证码',
 			timeflag: true,
-			href: location.href,
+			href: '',
 			activeId: '',
 			urlCode: '',
 			flag: true,
@@ -53,11 +54,13 @@ export default class dc_landing_page extends PureComponent {
 				}
 			);
 		}
-		this.wxshare();
+	}
+	componentWillUnmount() {
+		clearInterval(timmer);
 	}
 	wxshare = () => {
 		const _this = this;
-		if (wx) {
+		if (isWXOpen() && wx) {
 			const params = {
 				channelCode: '01',
 				redirectUrl: window.location.href,
@@ -96,6 +99,7 @@ export default class dc_landing_page extends PureComponent {
 		}
 	};
 	updateLink = () => {
+		const _this = this;
 		if (!isWXOpen()) {
 			Toast.info('请用微信浏览器打开');
 			return;
@@ -103,14 +107,13 @@ export default class dc_landing_page extends PureComponent {
 		let shareData = {
 			title: '邀请有礼',
 			desc: '还到很牛x',
-			link: this.state.href, // 测试
+			link: this.state.href.replace(/&hideInput=true/g, ''), // 测试
 			imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
 			success: function() {
-				// _this.doInvite();
-				Toast.info('分享成功');
+				_this.doInvite();
 			},
 			cancel: function() {
-				Toast.info('取消成功');
+				Toast.info('取消分享');
 			}
 		};
 		// wx.updateAppMessageShareData(shareData);
@@ -118,7 +121,9 @@ export default class dc_landing_page extends PureComponent {
 		// wx.onMenuShareWeibo(shareData);
 		// 老版sdk
 		wx.onMenuShareTimeline(shareData);
-		wx.onMenuShareAppMessage(shareData);
+		wx.onMenuShareAppMessage({...shareData, success: function() {
+			_this.doInvite(true);
+		}});
 		wx.onMenuShareQQ(shareData);
 		wx.onMenuShareWeibo(shareData);
 		wx.onMenuShareQZone(shareData);
@@ -134,7 +139,6 @@ export default class dc_landing_page extends PureComponent {
 
 	//活动页登陆入口
 	goLogin = () => {
-		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -190,7 +194,6 @@ export default class dc_landing_page extends PureComponent {
 			Toast.info('活动id不能为空');
 			return;
 		}
-		const osType = getDeviceType();
 		this.props.$fetch
 			.post(API.getShareUrl, {
 				activeId: Number(this.state.activeId),
@@ -209,7 +212,8 @@ export default class dc_landing_page extends PureComponent {
 				this.setState(
 					{
 						urlCode: res.data.urlCode,
-						href: `${location.origin}${location.pathname}?${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
+						href: `${location.origin}${location.pathname}?${qs.stringify(queryData)}&urlCode=${res.data
+							.urlCode}`
 					},
 					() => {
 						store.setHideInput(true);
@@ -220,12 +224,11 @@ export default class dc_landing_page extends PureComponent {
 			});
 	};
 	// 用户点击分享连接行为
-	doInvite = () => {
+	doInvite = (noShowMsg) => {
 		if (!this.state.activeId) {
 			Toast.info('活动id不能为空');
 			return;
 		}
-		const osType = getDeviceType();
 		this.props.$fetch
 			.post(API.doInvite, {
 				activeId: Number(this.state.activeId),
@@ -238,7 +241,13 @@ export default class dc_landing_page extends PureComponent {
 					res.msgInfo && Toast.info(res.msgInfo);
 					return;
 				}
-				Toast.info('分享成功');
+				if (noShowMsg) {
+					if (osType !== 'ANDRIOD') {
+						Toast.info('分享成功');
+					}
+				} else {
+					Toast.info('分享成功');
+				}
 			});
 	};
 	//获得手机验证码
@@ -327,8 +336,7 @@ export default class dc_landing_page extends PureComponent {
 							<span>免费借款</span>
 						</div>
 					</div>
-                ) : null}
-                {/* 测试 */}
+				) : null}
 			</div>
 		);
 	}
