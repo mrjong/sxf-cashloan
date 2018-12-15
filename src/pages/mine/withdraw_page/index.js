@@ -8,7 +8,7 @@ import {setBackGround} from 'utils/Background'
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 let totalPage = false;
 const API = {
-  couponList: '/coupon/list',
+  withdrawList: '/redAccount/queryCashOrd',
 };
 @fetch.inject()
 // @setBackGround('#efeff4')
@@ -73,7 +73,7 @@ export default class withdraw_page extends PureComponent {
     };;
     
     let data = await this.props.$fetch
-      .get(API.couponList, sendParams, { loading: true })
+      .get(API.withdrawList, sendParams, { loading: true })
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
@@ -173,20 +173,38 @@ export default class withdraw_page extends PureComponent {
         index = this.state.rData && this.state.rData.length - 1;
       }
       const obj = this.state.rData && this.state.rData[index--];
-      const withdrawBoxClass = [
-        style.withdrawCont,
-        // style.withdrawContFail,
-        // style.withdrawContSucc,
-      ]
+
+      let withdrawBoxClass = [];
+      switch (obj.ordSts) { // 订单状态0：初登记，1：处理中，2：交易成功，3：交易失败，4：撤销
+        case 1: // 处理中
+          withdrawBoxClass = [
+            style.withdrawCont,
+          ]
+          break;
+        case 2: // 交易成功
+          withdrawBoxClass = [
+            style.withdrawCont,
+            style.withdrawContSucc,
+          ]
+          break;
+        case 3: // 交易失败
+          withdrawBoxClass = [
+            style.withdrawCont,
+            style.withdrawContFail,
+          ]
+          break;
+        default:
+          withdrawBoxClass = [];
+      };
       return (
         <div className={style.withdrawBox}>
           <div className={withdrawBoxClass.join(' ')}>
             <div className={style.withdrawMoney}>
-              ¥<span>{10.00}</span>
+              ¥<span>{obj.applyAmt}</span>
             </div>
             <div className={style.withdrawContent}>
               <p>提现金额</p>
-              <p className={style.withdrawTime}>时间：{'xxxx-xx-xx xx:xx'}</p>
+              <p className={style.withdrawTime}>时间：{dayjs(obj.applyTm).format('YYYY-MM-DD HH:mm')}</p>
             </div>
           </div>
         </div>

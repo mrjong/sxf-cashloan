@@ -9,7 +9,7 @@ import redBagIco from 'assets/images/mine/wallet/income_red_bag.png'
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 let totalPage = false;
 const API = {
-  couponList: '/coupon/list',
+  incomeList: '/redAccount/queryRedCoupon',
 };
 @fetch.inject()
 // @setBackGround('#efeff4')
@@ -74,7 +74,7 @@ export default class income_page extends PureComponent {
     };;
     
     let data = await this.props.$fetch
-      .get(API.couponList, sendParams, { loading: true })
+      .get(API.incomeList, sendParams, { loading: true })
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
@@ -176,16 +176,16 @@ export default class income_page extends PureComponent {
       const obj = this.state.rData && this.state.rData[index--];
       return (
         <div className={style.incomeBox}>
-          <h2 className={style.incomeTit}>邀请好友借款</h2>
-          <div className={`${style.incomeCont} ${style.incomeContExpired}`}>
+          <h2 className={style.incomeTit}>{obj.groupNm}</h2>
+          <div className={ obj.sts === '0' ? `${style.incomeCont} ${style.incomeContExpired}` : style.incomeCont }>
             <img
                 className={style.redBag}
                 src={redBagIco}
             />
             <div className={style.incomeContent}>
-              <p className={style.incomeMoney}>¥<span>{10.00}</span></p>
-              <p className={style.incomeTime}>时间：{'xxxx-xx-xx xx:xx'}</p>
-              <p>有效期至：{'2018-12-01'}</p>
+              <p className={style.incomeMoney}>¥<span>{obj.couponAmt}</span></p>
+              <p className={style.incomeTime}>时间：{dayjs(obj.createTime).format('YYYY-MM-DD HH:mm')}</p>
+              <p>有效期至：{dayjs(obj.extDt).format('YYYY-MM-DD')}</p>
             </div>
           </div>
         </div>
