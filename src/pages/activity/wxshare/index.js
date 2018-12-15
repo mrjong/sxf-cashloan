@@ -36,17 +36,23 @@ export default class dc_landing_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
+		let hideInputFlag = store.getHideInput();
+		store.removeHideInput();
 		if (!queryData.activeId) {
 			this.props.toast.info('活动id不能为空');
 			return;
 		} else {
-			this.setState({
-				activeId: queryData.activeId
-			});
+			this.setState(
+				{
+					href: location.href,
+					activeId: queryData.activeId,
+					hideInput: hideInputFlag ? true : false
+				},
+				() => {
+					this.wxshare();
+				}
+			);
 		}
-		this.setState({
-			hideInput: queryData.hideInput ? true : false
-		});
 		this.wxshare();
 	}
 	wxshare = () => {
@@ -54,8 +60,9 @@ export default class dc_landing_page extends PureComponent {
 		if (wx) {
 			const params = {
 				channelCode: '01',
-				redirectUrl: window.location.href
-			};
+				redirectUrl: window.location.href,
+            };
+            console.log(params,'------------')
 			// 获取 微信 sdk
 			this.props.$fetch.post(`/wx/jscfg`, params).then((result) => {
 				console.log('result', result);
@@ -89,6 +96,10 @@ export default class dc_landing_page extends PureComponent {
 		}
 	};
 	updateLink = () => {
+		if (!isWXOpen()) {
+			Toast.info('请用微信浏览器打开');
+			return;
+		}
 		let shareData = {
 			title: '邀请有礼',
 			desc: '还到很牛x',
@@ -152,9 +163,6 @@ export default class dc_landing_page extends PureComponent {
 								res.msgInfo && Toast.info(res.msgInfo);
 								return;
 							}
-							this.setState({
-								hideInput: true
-							});
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
 							// store.setToken(res.data.tokenId);
@@ -204,11 +212,11 @@ export default class dc_landing_page extends PureComponent {
 						href: `${location.origin}${location.pathname}?${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
 					},
 					() => {
-						console.log(this.state.href);
+						store.setHideInput(true);
 						this.updateLink();
 					}
 				);
-				location.href = `${this.state.href}&urlCode=${res.data.urlCode}&hideInput=true`;
+				location.href = `${this.state.href}&urlCode=${res.data.urlCode}`;
 			});
 	};
 	// 用户点击分享连接行为
