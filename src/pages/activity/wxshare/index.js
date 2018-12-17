@@ -191,10 +191,20 @@ export default class dc_landing_page extends PureComponent {
 					res.msgInfo && Toast.info(res.msgInfo);
 					return;
 				}
-				this.setState({
-					urlCode: res.data.urlCode,
-					href: `${this.state.href}&urlCode=${res.data.urlCode}`
-				});
+				if (queryData.urlCode) {
+					delete queryData.urlCode;
+                }
+                console.log(queryData)
+				this.setState(
+					{
+						urlCode: res.data.urlCode,
+						href: `${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
+					},
+					() => {
+                        console.log(this.state.href)
+						this.wxshare();
+					}
+				);
 				location.href = `${this.state.href}&urlCode=${res.data.urlCode}&hideInput=true`;
 			});
 	};
