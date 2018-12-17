@@ -68,7 +68,15 @@ export default class dc_landing_page extends PureComponent {
 						timestamp, // 必填，生成签名的时间戳
 						nonceStr, // 必填，生成签名的随机串
 						signature, // 必填，签名
-						jsApiList: [ 'checkJsApi', 'updateAppMessageShareData', 'updateTimelineShareData' ] // 必填，需要使用的JS接口列表
+						// jsApiList: [ 'checkJsApi', 'updateTimelineShareData', 'onMenuShareWeibo','updateTimelineShareData' ] // 必填，需要使用的JS接口列表
+						jsApiList: [
+							'checkJsApi',
+							'onMenuShareAppMessage',
+							'onMenuShareTimeline',
+							'onMenuShareQQ',
+							'onMenuShareWeibo',
+							'onMenuShareQZone'
+						] // 必填，需要使用的JS接口列表
 					});
 					wx.ready(function() {
 						let shareData = {
@@ -76,6 +84,10 @@ export default class dc_landing_page extends PureComponent {
 							desc: '还到很牛x',
 							link: _this.state.href,
 							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
+							trigger: function(res) {
+								// 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+								alert('用户点击分享到朋友圈');
+							},
 							success: function() {
 								// _this.doInvite();
 								Toast.info('分享成功');
@@ -86,21 +98,13 @@ export default class dc_landing_page extends PureComponent {
 						};
 						// wx.updateAppMessageShareData(shareData);
 						// wx.updateTimelineShareData(shareData);
-                        // wx.onMenuShareWeibo(shareData);
-                        
-						// if(wx.onMenuShareAppMessage){ //微信文档中提到这两个接口即将弃用，故判断
-						//     wx.onMenuShareAppMessage(shareData);//1.0 分享到朋友
-						//     wx.onMenuShareTimeline(shareData);//1.0分享到朋友圈
-						// }else{
-						//     wx.updateAppMessageShareData(shareData);//1.4 分享到朋友
-						//     wx.updateTimelineShareData(shareData);//1.4分享到朋友圈
-						// }
+						// wx.onMenuShareWeibo(shareData);
 						// 老版sdk
-						wx.onMenuShareTimeline(shareData)
-						wx.onMenuShareAppMessage(shareData)
-						wx.onMenuShareQQ(shareData)
-						wx.onMenuShareWeibo(shareData)
-						wx.onMenuShareQZone(shareData)
+						wx.onMenuShareTimeline(shareData);
+						wx.onMenuShareAppMessage(shareData);
+						wx.onMenuShareQQ(shareData);
+						wx.onMenuShareWeibo(shareData);
+						wx.onMenuShareQZone(shareData);
 					});
 					wx.error(function(res) {
 						Toast.info('error: ' + res.errMsg);
