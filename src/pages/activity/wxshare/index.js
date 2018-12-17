@@ -82,7 +82,7 @@ export default class dc_landing_page extends PureComponent {
 						let shareData = {
 							title: '邀请有礼',
 							desc: '还到很牛x',
-							link: _this.state.href,
+							link: _this.state.href, // 测试
 							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
 							success: function() {
 								// _this.doInvite();
