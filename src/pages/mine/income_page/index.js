@@ -67,14 +67,9 @@ export default class income_page extends PureComponent {
     if (pIndex === 1) {
       Toast.loading('数据加载中...', 10000);
     }
-    const sendParams = {
-      type: `0${this.state.msgType}`,
-      pageNo: pIndex,
-      // loading: true,
-    };;
     
     let data = await this.props.$fetch
-      .get(API.incomeList, sendParams, { loading: true })
+      .post(API.incomeList, {}, { loading: true })
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {

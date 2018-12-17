@@ -22,8 +22,8 @@ export default class wallet_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		bankCardInf = store.getBankCardData();
-		store.removeBankCardData();
+		bankCardInf = store.getCardData();
+		store.removeCardData();
 
 		this.state = {
 			accountNum: '', // 账户余额
@@ -83,7 +83,14 @@ export default class wallet_page extends PureComponent {
 		this.props.$fetch.post(API.cardList, params).then(
 			(data) => {
 				if (data.msgCode !== 'PTM0000') {
-					data.msgInfo && this.props.toast.info(data.msgInfo);
+					if(data.msgCode === 'PTM3021' ) {
+						this.props.toast.info('请绑定储蓄卡', 3, () => {
+							store.setBackUrl('/wallet');
+							this.props.history.push('/mine/bind_save_page');
+						});
+					} else {
+						data.msgInfo && this.props.toast.info(data.msgInfo);
+					}
 					return;
 				}
 				if (data && data.cardList.length > 0) {
@@ -107,7 +114,7 @@ export default class wallet_page extends PureComponent {
 				} else {
 					this.props.toast.info('请绑定储蓄卡', 3, () => {
 						store.setBackUrl('/wallet');
-						this.props.history.push('/storageCard');
+						this.props.history.push('/mine/bind_save_page');
 					});
 				}
 			},
@@ -150,7 +157,7 @@ export default class wallet_page extends PureComponent {
 				this.setState({
 					showMoudle: false
 				});
-				this.props.history.push('/withdrawing');
+				this.props.history.push({pathname:'/mine/withdrawing_page', state: { applyNo : res.data }});
 			},
 			(err) => {
 				err.msgInfo && this.props.toast.info(err.msgInfo);

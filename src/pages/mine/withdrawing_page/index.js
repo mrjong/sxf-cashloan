@@ -8,6 +8,7 @@ import Countdown from "./components/countdown"
 
 import { Toast } from 'antd-mobile';
 
+let applyNo = '';
 const API = {
   couponList: '/coupon/list',
 };
@@ -16,10 +17,10 @@ const API = {
 export default class withdrawing_page extends PureComponent {
   constructor(props) {
     super(props);
-    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-
+    if (this.props.history.location.state && this.props.history.location.state.applyNo) {
+      applyNo = this.props.history.location.state.applyNo;
+    }
     this.state = {
-      accountNum: '50'
     };
   }
   componentWillMount() {
