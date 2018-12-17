@@ -11,7 +11,7 @@ const fetchinit = () => {
 	// 拦截请求
 	fetch.axiosInstance.interceptors.request.use(
 		(cfg) => {
-			console.log(cfg);
+			// console.log(cfg);
 			// 非微信去掉 fn-v-card-token-wechat
 			if (!isWXOpen()) {
 				Cookie.remove('fin-v-card-token-wechat');
@@ -71,7 +71,7 @@ const fetchinit = () => {
 			return response;
 		},
 		(error) => {
-			console.log(error);
+      console.log('捕获错误： ', error.response);
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
 				clearTimeout(timerList[i]);
@@ -83,12 +83,12 @@ const fetchinit = () => {
 		}
 	);
 	fetch.init({
-		timeout: 10000, // 默认超时
+		timeout: 100, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
-			console.log('sessionStorage:', sessionStorage);
-			console.log('localStorage', localStorage);
-			console.log('cookie', document.cookie);
+			// console.log('sessionStorage:', sessionStorage);
+			// console.log('localStorage', localStorage);
+			// console.log('cookie', document.cookie);
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {

@@ -71,4 +71,8 @@ const activity_shuang12 = {
 	shuang12_draw_over_click: 'DC_SHUANG12_DRAW_OVER_CLICK', // 抽完拿钱按钮
 };
 
-export { login, home, mine, order, membership, activity, activity_shuang12 };
+const bug_log = {
+	api_log: 'DC_API_LOG'  // 接口异常报错日志
+}
+
+export { login, home, mine, order, membership, activity, activity_shuang12, bug_log };
