@@ -29,6 +29,7 @@ export default class wallet_page extends PureComponent {
 			accountNum: '', // 账户余额
 			showMoudle: false,
 			miniAmount: '', // 最低可提现金额
+			maxAmount: '', // 最高可提现金额
 			bankInf: {} // 银行卡信息
 		};
 	}
@@ -53,7 +54,9 @@ export default class wallet_page extends PureComponent {
 						});
 					}
 					this.setState({
-						accountNum: result.data
+						accountNum: result.data.acAmt,
+						miniAmount: result.data.minAMt,
+						maxAmount: result.data.maxAmt,
 					});
 				}
 			},
@@ -74,7 +77,11 @@ export default class wallet_page extends PureComponent {
 
 	// 获取用户储蓄卡信息
 	getBankInf = () => {
-		let { accountNum, miniAmount } = this.state;
+		let { accountNum, miniAmount, maxAmount } = this.state;
+		if(miniAmount === null || maxAmount === null){
+			this.props.toast.info('暂不能提现');
+			return;
+		}
 		// 参数
 		const params = {
 			type: '2', //储蓄卡卡类型
@@ -95,7 +102,7 @@ export default class wallet_page extends PureComponent {
 				}
 				if (data && data.cardList.length > 0) {
 					// 金额小于最低可提现金额，则toast提示
-					if (accountNum >= miniAmount) {
+					if (accountNum >= miniAmount && accountNum <= maxAmount) {
 						if (bankCardInf) {
 							this.setState({
 								bankInf: bankCardInf
@@ -109,7 +116,12 @@ export default class wallet_page extends PureComponent {
 							showMoudle: true
 						});
 					} else {
-						this.props.toast.info(`最低可提现金额${miniAmount}元`);
+						if(accountNum < miniAmount){
+							this.props.toast.info(`最低可提现金额${miniAmount}元`);
+						}
+						if(accountNum > maxAmount){
+							this.props.toast.info(`最高可提现金额${maxAmount}元`);
+						}
 					}
 				} else {
 					this.props.toast.info('请绑定储蓄卡', 3, () => {
@@ -141,8 +153,7 @@ export default class wallet_page extends PureComponent {
 
 	// 提现申请
 	applyCash = () => {
-		const { bankInf } = this.state;
-		const u = navigator.userAgent;
+		const { accountNum, bankInf } = this.state;
 		const osType = getDeviceType();
 		const params = {
 			cardAgr: bankInf.agrNo,
@@ -157,7 +168,7 @@ export default class wallet_page extends PureComponent {
 				this.setState({
 					showMoudle: false
 				});
-				this.props.history.push({pathname:'/mine/withdrawing_page', state: { applyNo : res.data }});
+				this.props.history.push({pathname:'/mine/withdrawing_page', state: { applyNo : res.data, withdrawMoney: accountNum }});
 			},
 			(err) => {
 				err.msgInfo && this.props.toast.info(err.msgInfo);

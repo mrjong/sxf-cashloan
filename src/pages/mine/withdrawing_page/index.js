@@ -8,7 +8,8 @@ import Countdown from "./components/countdown"
 
 import { Toast } from 'antd-mobile';
 
-let applyNo = '';
+let applyNo = ''; // 订单号
+let accountNum = ''; // 提现金额
 const API = {
   couponList: '/coupon/list',
 };
@@ -19,6 +20,9 @@ export default class withdrawing_page extends PureComponent {
     super(props);
     if (this.props.history.location.state && this.props.history.location.state.applyNo) {
       applyNo = this.props.history.location.state.applyNo;
+    }
+    if (this.props.history.location.state && this.props.history.location.state.withdrawMoney) {
+      accountNum = this.props.history.location.state.withdrawMoney;
     }
     this.state = {
     };
@@ -32,19 +36,12 @@ export default class withdrawing_page extends PureComponent {
   componentWillUnmount() {
     
   }
-
-  // 跳转到路由
-  jumpRouter = () => {
-    // this.props.history.push('/withdraw');
-    console.log('计时结束')
-  }
   
   render() {
-    let { accountNum } = this.state;
     return (
       <div className={style.withdrawing_page}>
         <div className={style.withdrawingCont}>
-          <Countdown timerEnd={this.jumpRouter} />
+          <Countdown accountNum={accountNum} orderSts={orderSts} cb={this} />
           <div className={style.withdrawMoney}>
             {accountNum}元
           </div>
