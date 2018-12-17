@@ -106,7 +106,7 @@ export default class wxshare extends PureComponent {
 		}
 		let shareData = {
 			title: '邀请有礼',
-			desc: '还到很牛x',
+			desc: '随行付旗下金融信贷产品，解决您每月还信用卡账单的资金压力，全方位保护用户的信息安全。',
 			link: this.state.href.replace(/&hideInput=true/g, ''), // 测试
 			imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
 			success: function() {
