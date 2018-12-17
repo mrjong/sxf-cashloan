@@ -79,28 +79,7 @@ export default class dc_landing_page extends PureComponent {
 						] // 必填，需要使用的JS接口列表
 					});
 					wx.ready(function() {
-						let shareData = {
-							title: '邀请有礼',
-							desc: '还到很牛x',
-							link: _this.state.href, // 测试
-							imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
-							success: function() {
-								// _this.doInvite();
-								Toast.info('分享成功');
-							},
-							cancel: function() {
-								Toast.info('取消成功');
-							}
-						};
-						// wx.updateAppMessageShareData(shareData);
-						// wx.updateTimelineShareData(shareData);
-						// wx.onMenuShareWeibo(shareData);
-						// 老版sdk
-						wx.onMenuShareTimeline(shareData);
-						wx.onMenuShareAppMessage(shareData);
-						wx.onMenuShareQQ(shareData);
-						wx.onMenuShareWeibo(shareData);
-						wx.onMenuShareQZone(shareData);
+						_this.updateLink();
 					});
 					wx.error(function(res) {
 						Toast.info('error: ' + res.errMsg);
@@ -108,6 +87,30 @@ export default class dc_landing_page extends PureComponent {
 				}
 			});
 		}
+	};
+	updateLink = () => {
+		let shareData = {
+			title: '邀请有礼',
+			desc: '还到很牛x',
+			link: this.state.href, // 测试
+			imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
+			success: function() {
+				// _this.doInvite();
+				Toast.info('分享成功');
+			},
+			cancel: function() {
+				Toast.info('取消成功');
+			}
+		};
+		// wx.updateAppMessageShareData(shareData);
+		// wx.updateTimelineShareData(shareData);
+		// wx.onMenuShareWeibo(shareData);
+		// 老版sdk
+		wx.onMenuShareTimeline(shareData);
+		wx.onMenuShareAppMessage(shareData);
+		wx.onMenuShareQQ(shareData);
+		wx.onMenuShareWeibo(shareData);
+		wx.onMenuShareQZone(shareData);
 	};
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
@@ -193,16 +196,16 @@ export default class dc_landing_page extends PureComponent {
 				}
 				if (queryData.urlCode) {
 					delete queryData.urlCode;
-                }
-                console.log(queryData)
+				}
+				console.log(queryData);
 				this.setState(
 					{
 						urlCode: res.data.urlCode,
-						href: `${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
+						href: `${location.origin}?${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
 					},
 					() => {
-                        console.log(this.state.href)
-						this.wxshare();
+						console.log(this.state.href);
+						this.updateLink();
 					}
 				);
 				location.href = `${this.state.href}&urlCode=${res.data.urlCode}&hideInput=true`;
@@ -316,7 +319,8 @@ export default class dc_landing_page extends PureComponent {
 							<span>免费借款</span>
 						</div>
 					</div>
-				) : null}
+                ) : null}
+                {/* 测试 */}
 			</div>
 		);
 	}
