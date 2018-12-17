@@ -26,6 +26,8 @@ export default class router_Page extends PureComponent {
 		store.setHistoryRouter(location.pathname);
 	}
 	componentWillMount() {
+        // 为跳转到协议添加loading
+        sessionStorage.setItem('fromPage','wap')
 		if (!store.getHistoryRouter()) {
 			store.setHistoryRouter('first-come-in');
 		}
