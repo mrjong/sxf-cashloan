@@ -52,14 +52,14 @@ export default class dazhuanpan_page extends PureComponent {
 		if (!queryData.activeId) {
 			this.setState({
 				codeInfo: 'PCC-MARKET-0002'
-            });
-            Toast.info('活动id不能为空')
+			});
+			Toast.info('活动id不能为空');
 			return;
-		}else{
-            this.setState({
+		} else {
+			this.setState({
 				codeInfo: ''
-            }); 
-        }
+			});
+		}
 		token = Cookie.get('fin-v-card-token');
 		this.setState({
 			count:
@@ -135,6 +135,9 @@ export default class dazhuanpan_page extends PureComponent {
 					});
 				}
 			} else {
+				if (res.msgCode === 'PTM1000') {
+					Cookie.remove('fin-v-card-token');
+				}
 				Toast.info(res.msgInfo);
 			}
 		});
@@ -275,7 +278,10 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 立即使用
 	goRoute = () => {
-		console.log('立即使用');
+        console.log('立即使用');
+        this.setState({
+            type:''
+        })
 		// this.props.history.replace('/home');
 	};
 	render() {
