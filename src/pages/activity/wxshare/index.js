@@ -201,7 +201,7 @@ export default class dc_landing_page extends PureComponent {
 				this.setState(
 					{
 						urlCode: res.data.urlCode,
-						href: `${location.origin}?${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
+						href: `${location.origin}${location.pathname}?${qs.stringify(queryData)}&urlCode=${res.data.urlCode}`
 					},
 					() => {
 						console.log(this.state.href);
