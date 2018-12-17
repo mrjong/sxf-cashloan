@@ -4,7 +4,7 @@ import { Modal, Toast, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { getParamsFromUrl, isBugBrowser, isWXOpen } from 'utils/common';
+import { getParamsFromUrl, isBugBrowser, isWXOpen, getDeviceType } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
 import { home, mine } from 'utils/AnalytinsType';
 import SButton from 'components/button';
@@ -319,7 +319,11 @@ export default class HomePage extends PureComponent {
         },
       );
     }, 800);
-    this.props.$fetch.post(API.AGENT_REPAY_CHECK, null,
+    const osType = getDeviceType();
+    const params = {
+      osTyp: osType,
+    }
+    this.props.$fetch.post(API.AGENT_REPAY_CHECK, params,
       {
         timeout: 100000,
         hideLoading: true,
