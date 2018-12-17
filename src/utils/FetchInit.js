@@ -68,7 +68,6 @@ const fetchinit = () => {
 			return response;
 		},
 		(error) => {
-			console.log(error);
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
 				clearTimeout(timerList[i]);
@@ -76,7 +75,8 @@ const fetchinit = () => {
 			timer = undefined;
 			timerList = [];
 			SXFToast.hide();
-			return Promise.reject(error);
+			let error2 = new Error('系统开小差，请稍后重试');
+			return Promise.reject(error2);
 		}
 	);
 	fetch.init({
@@ -87,6 +87,7 @@ const fetchinit = () => {
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {
+			console.log(response, '============');
 			switch (response.data.msgCode) {
 				case 'PTM0000':
 					return;
