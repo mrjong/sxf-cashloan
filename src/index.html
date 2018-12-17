@@ -12,32 +12,35 @@
   <script src="/assets/lib/flexible.min.js"></script> 
   <script>document.title = ''</script> 
   <style>
-.sxf_mask_transparent {
-	position: fixed;
-	z-index: 1000;
-	top: 0;
-	right: 0;
-	left: 0;
-	bottom: 0;
-}
-.sxf_toast {
-	position: fixed;
-	z-index: 5000;
-	width: 1.5rem;
-	padding: .1rem;
-	top: 50%;
-	left: 50%;
-	background: #fff;
-	text-align: center;
-	border-radius: .15rem;
-	color: #fff;
-	transform: translate(-50%, -50%);
-}
-.sxf_toast_img {
-		width: 70%;
-		display: block;
-		margin: .15rem auto .15rem;
-	}
+  .sxf_mask_transparent {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+        }
+        .sxf_toast {
+            position: fixed;
+            z-index: 5000;
+            width: 1.1rem;
+            height: 1.1rem;
+            padding: .1rem;
+            top: 50%;
+            left: 50%;
+            background: #fff;
+            text-align: center;
+            border-radius: .15rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            transform: translate(-50%, -50%);
+        }
+        .sxf_toast_img {
+                width: 100%;
+                margin: 0 auto;
+                display: block;
+            }
     </style> 
  </head> 
  <body> 
