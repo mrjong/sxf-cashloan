@@ -4,6 +4,10 @@ import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen } from 'utils/common';
+import handleErrorLog from './handleErrorLog.js'
+import { buriedPointEvent } from 'utils/Analytins';
+import { bug_log } from 'utils/AnalytinsType';
+
 const fetchinit = () => {
 	let timer;
 	let timerList = [];
@@ -71,7 +75,13 @@ const fetchinit = () => {
 			return response;
 		},
 		(error) => {
-      console.log('捕获错误： ', error.response);
+      if (error.message && error.message.includes('timeout')) {
+        // 请求超时异常
+        buriedPointEvent(bug_log.api_error_log, {statusText: error.message})
+      } else {
+        // 其余异常
+        error.response && handleErrorLog(error.response)
+      }
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
 				clearTimeout(timerList[i]);
@@ -83,7 +93,7 @@ const fetchinit = () => {
 		}
 	);
 	fetch.init({
-		timeout: 100, // 默认超时
+		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			// console.log('sessionStorage:', sessionStorage);
