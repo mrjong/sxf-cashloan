@@ -19,7 +19,8 @@ export default class router_Page extends PureComponent {
 		this.state = {
 			route: {},
 			newTitle: '',
-			showPage: false
+			showPage: false,
+			releaseBugs: false
 		};
 	}
 	componentWillReceiveProps(nextProps) {
@@ -42,6 +43,13 @@ export default class router_Page extends PureComponent {
 		if (query.consoleshow) {
 			vconsole('0', query.consoleshow);
 		}
+	}
+	componentDidCatch(error, errorInfo) {
+		// this.setState({
+		// 	error: error,
+		// 	errorInfo: errorInfo
+        // });
+        console.log(error, errorInfo)
 	}
 	componentWillUnmount() {
 		consoleshowStr = '';
@@ -130,7 +138,7 @@ export default class router_Page extends PureComponent {
 		}
 		const leftInstance = e.screenX;
 		const screenWidth = window.innerWidth;
-		if (leftInstance < screenWidth/2) {
+		if (leftInstance < screenWidth / 2) {
 			consoleshowStr += '0';
 			// console.log('靠左边');
 		} else {
@@ -144,15 +152,28 @@ export default class router_Page extends PureComponent {
 		}
 		// console.log(consoleshowStr);
 	};
+	handleClick = () => {
+		this.setState({
+			releaseBugs: true
+		});
+	};
 	render() {
+		if (this.state.releaseBugs) {
+			throw new Error('I crashed!');
+		}
 		const { component, route, newTitle, showPage = false } = this.state;
 		const { headerHide = false, footerHide = true } = route;
 		return showPage ? (
 			<div className="application_view" onClick={this.consoleshow}>
+				
 				<div className="application_page">
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}
-					<div className="application_content">{component}</div>
+                    <div className="application_content">
+                    <button className="btn" onClick={this.handleClick}>
+					{'Scary Button!'}
+				</button>
+                    {component}</div>
 				</div>
 			</div>
 		) : null;
