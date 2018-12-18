@@ -75,13 +75,12 @@ const fetchinit = () => {
 			return response;
 		},
 		(error) => {
-      if (error.message && error.message.includes('timeout')) {
-        // 请求超时异常
-        buriedPointEvent(bug_log.api_error_log, {statusText: error.message})
-      } else {
-        // 其余异常
-        error.response && handleErrorLog(error.response)
-      }
+        console.log('----异常日志----')
+        (error.response && handleErrorLog(error.response)) || (error.config && handleErrorLog({
+          ...error.config,
+          status:error.message,
+          statusText:error.message,
+        }))
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
 				clearTimeout(timerList[i]);
