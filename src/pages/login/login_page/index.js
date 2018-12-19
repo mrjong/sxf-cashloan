@@ -27,7 +27,7 @@ export default class login_page extends PureComponent {
 			timers: '获取验证码',
 			timeflag: true,
 			flag: true,
-			smsJrnNo: '' // 短信流水号
+			smsJrnNo: '', // 短信流水号
 		};
 	}
 
@@ -66,12 +66,21 @@ export default class login_page extends PureComponent {
 		});
 	}
 	componentDidMount() {
+		// 安卓键盘抬起会触发resize事件，ios则不会
+	   window.addEventListener("resize", function() {
+	      if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+	         window.setTimeout(function() {
+	            document.activeElement.scrollIntoViewIfNeeded();
+	         },0);
+	      }
+	   })
 		// 获取地址
 		address();
 		pageView();
 	}
 
 	componentWillUnmount() {
+		window.removeEventListener('resize', () => {})
 		clearInterval(timmer);
 	}
 
@@ -194,12 +203,17 @@ export default class login_page extends PureComponent {
 
 	// 处理键盘挡住输入框
 	handleScrollToView = (id) => {
-		this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-		setTimeout(() => {
-			this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-			document.getElementById(id).focus();
-		}, 100);
+		// this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
+		// setTimeout(() => {
+		// 	this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
+		// 	document.getElementById(id).focus();
+		// }, 100);
 	};
+
+	handleBlur = () => {
+		const scrollTop = document.documentElement.scrollTop  || document.body.scrollTop 
+		window.scrollTo(0, scrollTop)
+	}
 
 	render() {
 		const { getFieldProps } = this.props.form;
@@ -261,7 +275,8 @@ export default class login_page extends PureComponent {
 						id="inputPhone"
 						maxLength="11"
                         type="number"
-                        onFocus={() => { this.handleScrollToView('inputPhone') }}
+                        onBlur={() => {this.handleBlur()}}
+                        // onFocus={() => { this.handleScrollToView('inputPhone') }}
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
 						{...getFieldProps('phoneValue', {
@@ -272,7 +287,8 @@ export default class login_page extends PureComponent {
 						<InputItem
 							id="inputCode"
                             type="number"
-                            onFocus={() => { this.handleScrollToView('inputCode') }}
+                            onBlur={() => {this.handleBlur()}}
+                            // onFocus={() => { this.handleScrollToView('inputCode') }}
 							maxLength="6"
 							className={styles.loginInput}
 							placeholder="请输入短信验证码"

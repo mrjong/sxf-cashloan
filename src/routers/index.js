@@ -3,13 +3,13 @@ import React, {
 } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import errPage from 'pages/common/err_page';
+import ErrPage from 'pages/common/err_page';
 
 const Loading = ({ error, pastDelay }) => {
   if (pastDelay) {
     return <div></div>;
   } else if (error) {
-    return <div>{React.createElement(errPage)}</div>;
+    return <ErrPage />;
   }
   return null;
 };

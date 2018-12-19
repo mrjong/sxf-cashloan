@@ -44,13 +44,6 @@ export default class router_Page extends PureComponent {
 			vconsole('0', query.consoleshow);
 		}
 	}
-	componentDidCatch(error, errorInfo) {
-		// this.setState({
-		// 	error: error,
-		// 	errorInfo: errorInfo
-        // });
-        console.log(error, errorInfo)
-	}
 	componentWillUnmount() {
 		consoleshowStr = '';
 	}
@@ -152,27 +145,15 @@ export default class router_Page extends PureComponent {
 		}
 		// console.log(consoleshowStr);
 	};
-	handleClick = () => {
-		this.setState({
-			releaseBugs: true
-		});
-	};
 	render() {
-		if (this.state.releaseBugs) {
-			throw new Error('I crashed!');
-		}
 		const { component, route, newTitle, showPage = false } = this.state;
 		const { headerHide = false, footerHide = true } = route;
 		return showPage ? (
 			<div className="application_view" onClick={this.consoleshow}>
-				
 				<div className="application_page">
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}
                     <div className="application_content">
-                    <button className="btn" onClick={this.handleClick}>
-					{'Scary Button!'}
-				</button>
                     {component}</div>
 				</div>
 			</div>
