@@ -158,6 +158,8 @@ export default class essential_information extends PureComponent {
 
   //input 失去焦点
   inputOnBlur(val, lab) {
+    const scrollTop = document.documentElement.scrollTop  || document.body.scrollTop 
+    window.scrollTo(0, scrollTop)
     buryingPoints({
       pageKey,
       trigger: 'blur',

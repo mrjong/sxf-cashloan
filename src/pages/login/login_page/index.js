@@ -80,7 +80,13 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', () => {})
+		window.removeEventListener('resize', function() {
+	      if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+	         window.setTimeout(function() {
+	            document.activeElement.scrollIntoViewIfNeeded();
+	         },0);
+	      }
+	   })
 		clearInterval(timmer);
 	}
 
@@ -211,8 +217,9 @@ export default class login_page extends PureComponent {
 	};
 
 	handleBlur = () => {
-		const scrollTop = document.documentElement.scrollTop  || document.body.scrollTop 
-		window.scrollTo(0, scrollTop)
+		alert(11111)
+		// const scrollTop = document.documentElement.scrollTop  || document.body.scrollTop 
+		// window.scrollTo(0, scrollTop)
 	}
 
 	render() {
@@ -275,7 +282,8 @@ export default class login_page extends PureComponent {
 						id="inputPhone"
 						maxLength="11"
                         type="number"
-                        onBlur={() => {this.handleBlur()}}
+                        // onBlur={() => {this.handleBlur()}}
+                        onChange={() => {this.handleBlur()}}
                         // onFocus={() => { this.handleScrollToView('inputPhone') }}
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
@@ -287,7 +295,8 @@ export default class login_page extends PureComponent {
 						<InputItem
 							id="inputCode"
                             type="number"
-                            onBlur={() => {this.handleBlur()}}
+                            // onBlur={() => {this.handleBlur()}}
+                            onChange={() => {this.handleBlur()}}
                             // onFocus={() => { this.handleScrollToView('inputCode') }}
 							maxLength="6"
 							className={styles.loginInput}
