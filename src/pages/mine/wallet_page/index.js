@@ -54,7 +54,7 @@ export default class wallet_page extends PureComponent {
 						});
 					}
 					this.setState({
-						accountNum: result.data.acAmt,
+						accountNum: Number(result.data.acAmt).toFixed(2),
 						miniAmount: result.data.minAMt,
 						maxAmount: result.data.maxAmt,
 					});

@@ -20,7 +20,6 @@ export default class withdraw_fail_page extends PureComponent {
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 
     this.state = {
-      accountNum: '50'
     };
   }
   componentWillMount() {
@@ -42,7 +41,6 @@ export default class withdraw_fail_page extends PureComponent {
   }
   
   render() {
-    let { accountNum } = this.state;
     return (
       <div className={style.withdraw_fail_page}>
         <div className={style.withdrawFailCont}>
