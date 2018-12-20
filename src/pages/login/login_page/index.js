@@ -67,9 +67,6 @@ export default class login_page extends PureComponent {
 		});
 	}
 	componentDidMount() {
-		// 获取地址
-		address();
-		pageView();
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener("resize", function() {
 			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
@@ -78,6 +75,9 @@ export default class login_page extends PureComponent {
 			   },0);
 			}
 		 })
+		// 获取地址
+		address();
+		pageView();
 	}
 
 	componentWillUnmount() {
