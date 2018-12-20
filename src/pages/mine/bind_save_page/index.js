@@ -278,6 +278,7 @@ export default class bind_save_page extends PureComponent {
 						})}
 						type="number"
 						placeholder="请输入储蓄卡卡号"
+						onBlur={() => {handleInputBlur()}}
 					>
 						储蓄卡卡号
 					</InputItem>
@@ -291,6 +292,7 @@ export default class bind_save_page extends PureComponent {
 							]
 						})}
 						placeholder="请输入银行卡预留手机号"
+						onBlur={() => {handleInputBlur()}}
 					>
 						手机号
 					</InputItem>
@@ -301,6 +303,7 @@ export default class bind_save_page extends PureComponent {
 								rules: [ { required: true, message: '请输入正确验证码' } ]
 							})}
 							placeholder="请输入短信验证码"
+							onBlur={() => {handleInputBlur()}}
 						>
 							验证码
 						</InputItem>

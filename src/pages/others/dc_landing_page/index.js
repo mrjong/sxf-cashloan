@@ -156,6 +156,7 @@ export default class dc_landing_page extends PureComponent {
                                 { validator: this.validatePhone },
                             ],
                         })}
+                        onBlur={() => {handleInputBlur()}}
                     />
                     <div className={styles.smsBox}>
                         <InputItem
@@ -169,6 +170,7 @@ export default class dc_landing_page extends PureComponent {
                                     { required: true, message: '请输入正确验证码' },
                                 ],
                             })}
+                            onBlur={() => {handleInputBlur()}}
                         />
                         <div className={this.state.flag ? styles.smsCode : styles.smsCodeNumber} onClick={() => {
                             this.state.timeflag ? this.getTime(59) : '';

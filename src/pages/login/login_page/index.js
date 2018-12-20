@@ -268,6 +268,7 @@ export default class login_page extends PureComponent {
 						{...getFieldProps('phoneValue', {
 							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
 						})}
+						onBlur={() => {handleInputBlur()}}
 					/>
 					<div className={styles.smsBox}>
 						<InputItem
@@ -280,6 +281,7 @@ export default class login_page extends PureComponent {
 							{...getFieldProps('smsCd', {
 								rules: [ { required: true, message: '请输入正确验证码' } ]
 							})}
+							onBlur={() => {handleInputBlur()}}
 						/>
 						<div
 							className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}

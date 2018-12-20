@@ -434,6 +434,7 @@ export default class huodong11_page extends PureComponent {
 								rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
 							})}
 							placeholder="请输入手机号码"
+							onBlur={() => {handleInputBlur()}}
 						/>
 						<div className={style.sms_box}>
 							<input
@@ -444,6 +445,7 @@ export default class huodong11_page extends PureComponent {
 								{...getFieldProps('smsCd', {
 									rules: [ { required: true, message: '请输入正确验证码' } ]
 								})}
+								onBlur={() => {handleInputBlur()}}
 							/>
 							<button
 								onClick={() => {

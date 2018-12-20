@@ -226,6 +226,7 @@ export default class bind_credit_page extends PureComponent {
 						//   alert(getFieldError('account').join('、'));
 						// }}
 						placeholder="请输入信用卡卡号"
+						onBlur={() => {handleInputBlur()}}
 					>
 						信用卡卡号
 					</InputItem>

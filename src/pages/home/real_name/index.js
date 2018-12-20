@@ -327,6 +327,7 @@ export default class real_name_page extends Component {
               placeholder="借款人本人姓名"
               value={this.state.idName}
               onFocus={ () => {buriedPointEvent(home.informationTapNameInp)} }
+							onBlur={() => {handleInputBlur()}}
           >
             姓名
             </InputItem>
@@ -339,6 +340,7 @@ export default class real_name_page extends Component {
               value={this.state.idNo}
               maxLength="18"
               onFocus={ () => {buriedPointEvent(home.informationTapIDInp)} }
+              onBlur={() => {handleInputBlur()}}
             >
               身份证号
             </InputItem>
