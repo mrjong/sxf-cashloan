@@ -31,13 +31,10 @@ export default class withdraw_fail_page extends PureComponent {
   componentWillUnmount() {
     
   }
-  // 跳转到收入
-  goIncome = () => {
-    this.props.history.push('/income');
-  }
-  // 跳转到提现
-  goWithdraw = () => {
-    this.props.history.push('/withdraw');
+  // 重新提现
+  backHome = () => {
+    // this.props.history.replace('/wallet');
+    this.props.history.goBack();
   }
   
   render() {
@@ -55,7 +52,7 @@ export default class withdraw_fail_page extends PureComponent {
           </a>
           </p>
         </div>
-        <ButtonCustom className={style.backBtn}>重新提现</ButtonCustom>
+        <ButtonCustom className={style.backBtn} onClick={this.backHome}>重新提现</ButtonCustom>
       </div>
     );
   }
