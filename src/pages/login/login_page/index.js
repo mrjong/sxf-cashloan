@@ -12,6 +12,7 @@ import { buriedPointEvent, pageView } from 'utils/Analytins';
 import { login } from 'utils/AnalytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
+import { handleInputBlur } from 'utils'
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',

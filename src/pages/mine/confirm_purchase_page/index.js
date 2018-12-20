@@ -10,6 +10,7 @@ import { store } from 'utils/store';
 import { getFirstError } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
 import { membership } from 'utils/AnalytinsType';
+import { handleInputBlur } from 'utils'
 @createForm()
 @fetch.inject()
 export default class confirm_purchase_page extends PureComponent {

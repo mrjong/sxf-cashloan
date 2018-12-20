@@ -28,6 +28,7 @@ import login_bg from './img/login_bg.png';
 import close from './img/20181024_close.png';
 import alert_10 from './img/alert_10.png';
 import alert_15 from './img/alert_15.png';
+import { handleInputBlur } from 'utils'
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',

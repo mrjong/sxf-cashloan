@@ -11,6 +11,7 @@ import { buriedPointEvent } from 'utils/Analytins';
 import { mine } from 'utils/AnalytinsType';
 import styles from './index.scss';
 import qs from 'qs';
+import { handleInputBlur } from 'utils'
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息

@@ -8,6 +8,7 @@ import { validators } from 'utils/validator';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
+import { handleInputBlur } from 'utils'
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',

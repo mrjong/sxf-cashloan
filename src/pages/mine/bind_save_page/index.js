@@ -11,6 +11,7 @@ import { mine } from 'utils/AnalytinsType';
 import { getFirstError } from 'utils/common';
 import qs from 'qs';
 import styles from './index.scss';
+import { handleInputBlur } from 'utils'
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
