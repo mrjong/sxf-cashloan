@@ -5,6 +5,8 @@ import { Carousel } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
 import { store } from 'utils/store';
 import style from './index.scss';
+import { buriedPointEvent } from 'utils/Analytins';
+import { home } from 'utils/AnalytinsType';
 
 @withRouter
 export default class Carousels extends React.Component {
@@ -39,7 +41,11 @@ export default class Carousels extends React.Component {
     children: '',
   };
 
-  handleLinkClick = item => {
+  handleLinkClick = (item, itemIndex)=> {
+    // banner埋点
+    buriedPointEvent(home.bannerClick, {
+      bannerIndex: itemIndex+1,
+    });
     const { url, title } = item;
     const { entryFrom } = this.props;
     store.setOutLinkUrl(url);
@@ -63,10 +69,10 @@ export default class Carousels extends React.Component {
     return (
       <div className={style.carouse_wrap}>
         <Carousel dots={false} {...restProps}>
-          {data.map(item => (
+          {data.map(( item, index ) => (
             <div
               key={item}
-              onClick={item.url ? () => {this.handleLinkClick(item)} : null}
+              onClick={item.url ? () => {this.handleLinkClick(item, index)} : null}
               style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
             >
               <img
