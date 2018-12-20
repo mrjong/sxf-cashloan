@@ -216,12 +216,7 @@ export default class login_page extends PureComponent {
 		// 	document.getElementById(id).focus();
 		// }, 100);
 	};
-
-    handleChange = () => {
-		// window.scrollTo(0, 0)
-    }
     
-
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
@@ -283,7 +278,6 @@ export default class login_page extends PureComponent {
 						maxLength="11"
                         type="number"
                         onBlur={() => {handleInputBlur()}}
-                        onChange={() => {this.handleChange()}}
                         // onFocus={() => { this.handleScrollToView('inputPhone') }}
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
@@ -296,7 +290,6 @@ export default class login_page extends PureComponent {
 							id="inputCode"
                             type="number"
                             onBlur={() => {handleInputBlur()}}
-                            onChange={() => {this.handleChange()}}
                             // onFocus={() => { this.handleScrollToView('inputCode') }}
 							maxLength="6"
 							className={styles.loginInput}

@@ -159,7 +159,7 @@ export default class essential_information extends PureComponent {
 
   //input 失去焦点
   inputOnBlur(val, lab) {
-    handleInputBlur()
+    handleInputBlur();
     buryingPoints({
       pageKey,
       trigger: 'blur',
