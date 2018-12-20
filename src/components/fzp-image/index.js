@@ -97,7 +97,6 @@ export default class FEZIpImage extends Component {
                     disabled={disabledupload === 'false' ? false : true}
                     accept={accept}
                     capture="camera"
-                    onBlur={() => {handleInputBlur()}}
                 />
             </div>
         );
