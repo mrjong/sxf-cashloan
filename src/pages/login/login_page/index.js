@@ -70,9 +70,24 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
+		// 安卓键盘抬起会触发resize事件，ios则不会
+		window.addEventListener("resize", function() {
+			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+			   window.setTimeout(function() {
+				  document.activeElement.scrollIntoViewIfNeeded();
+			   },0);
+			}
+		 })
 	}
 
 	componentWillUnmount() {
+		window.removeEventListener('resize', function() {
+			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+			   window.setTimeout(function() {
+				  document.activeElement.scrollIntoViewIfNeeded();
+			   },0);
+			}
+		 })
 		clearInterval(timmer);
 	}
 
