@@ -12,6 +12,7 @@ import { buriedPointEvent, pageView } from 'utils/Analytins';
 import { login } from 'utils/AnalytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
+import { handleInputBlur } from 'utils';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -216,11 +217,6 @@ export default class login_page extends PureComponent {
 		// }, 100);
 	};
 
-	handleBlur = () => {
-		const scrollTop = document.documentElement.scrollTop  || document.body.scrollTop 
-        window.scrollTo(0, scrollTop)
-        console.log('000000000000')
-    }
     handleChange = () => {
 		// window.scrollTo(0, 0)
     }
@@ -286,7 +282,7 @@ export default class login_page extends PureComponent {
 						id="inputPhone"
 						maxLength="11"
                         type="number"
-                        onBlur={() => {this.handleBlur()}}
+                        onBlur={() => {handleInputBlur()}}
                         onChange={() => {this.handleChange()}}
                         // onFocus={() => { this.handleScrollToView('inputPhone') }}
 						className={styles.loginInput}
@@ -299,7 +295,7 @@ export default class login_page extends PureComponent {
 						<InputItem
 							id="inputCode"
                             type="number"
-                            onBlur={() => {this.handleBlur()}}
+                            onBlur={() => {handleInputBlur()}}
                             onChange={() => {this.handleChange()}}
                             // onFocus={() => { this.handleScrollToView('inputCode') }}
 							maxLength="6"

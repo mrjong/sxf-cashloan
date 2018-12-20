@@ -14,6 +14,7 @@ import { home, mine } from 'utils/AnalytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
 import qs from 'qs';
 import { store } from 'utils/store';
+import { handleInputBlur} from 'utils'
 
 const pageKey = home.basicInfoBury;
 
@@ -158,8 +159,7 @@ export default class essential_information extends PureComponent {
 
   //input 失去焦点
   inputOnBlur(val, lab) {
-    const scrollTop = document.documentElement.scrollTop  || document.body.scrollTop 
-    window.scrollTo(0, scrollTop)
+    handleInputBlur()
     buryingPoints({
       pageKey,
       trigger: 'blur',

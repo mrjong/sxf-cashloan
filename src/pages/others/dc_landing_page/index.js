@@ -9,6 +9,8 @@ import Cookie from 'js-cookie';
 import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils/common';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
+import { handleInputBlur } from 'utils'
+
 
 let timmer;
 const API = {
@@ -145,6 +147,7 @@ export default class dc_landing_page extends PureComponent {
                 <div className={styles.content}>
                     <InputItem
                         id="inputPhone"
+                        onBlur={() => {handleInputBlur()}}
                         maxLength="11"
                         type="number"
                         className={styles.loginInput}
@@ -159,6 +162,7 @@ export default class dc_landing_page extends PureComponent {
                     <div className={styles.smsBox}>
                         <InputItem
                             id="inputCode"
+                            onBlur={() => {handleInputBlur()}}
                             type="number"
                             maxLength="6"
                             className={styles.loginInput}

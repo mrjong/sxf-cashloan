@@ -11,6 +11,8 @@ import { buriedPointEvent } from 'utils/Analytins';
 import { mine } from 'utils/AnalytinsType';
 import styles from './index.scss';
 import qs from 'qs';
+import { handleInputBlur } from 'utils'
+
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -215,7 +217,8 @@ export default class bind_credit_page extends PureComponent {
 					<Item extra={this.state.userName}>持卡人</Item>
 					<InputItem
 						maxLength="24"
-						type="number"
+            type="number"
+            onBlur={() => {handleInputBlur()}}
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
 						})}
