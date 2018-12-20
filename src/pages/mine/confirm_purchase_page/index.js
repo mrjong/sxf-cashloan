@@ -10,6 +10,7 @@ import { store } from 'utils/store';
 import { getFirstError } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
 import { membership } from 'utils/AnalytinsType';
+import { handleInputBlur } from 'utils'
 @createForm()
 @fetch.inject()
 export default class confirm_purchase_page extends PureComponent {
@@ -182,6 +183,7 @@ export default class confirm_purchase_page extends PureComponent {
                   ],
                 })}
                 placeholder="请输入信用卡背后3位数字"
+                onBlur={() => {handleInputBlur()}}
               >
                 安全码
          </InputItem>
@@ -210,6 +212,7 @@ export default class confirm_purchase_page extends PureComponent {
                 ],
               })}
               placeholder="请输入短信验证码"
+              onBlur={() => {handleInputBlur()}}
             >
               验证码
             </InputItem>

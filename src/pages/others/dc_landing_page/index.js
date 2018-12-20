@@ -9,6 +9,7 @@ import Cookie from 'js-cookie';
 import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils/common';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
+import { handleInputBlur } from 'utils'
 
 let timmer;
 const API = {
@@ -155,6 +156,7 @@ export default class dc_landing_page extends PureComponent {
                                 { validator: this.validatePhone },
                             ],
                         })}
+                        onBlur={() => {handleInputBlur()}}
                     />
                     <div className={styles.smsBox}>
                         <InputItem
@@ -168,6 +170,7 @@ export default class dc_landing_page extends PureComponent {
                                     { required: true, message: '请输入正确验证码' },
                                 ],
                             })}
+                            onBlur={() => {handleInputBlur()}}
                         />
                         <div className={this.state.flag ? styles.smsCode : styles.smsCodeNumber} onClick={() => {
                             this.state.timeflag ? this.getTime(59) : '';

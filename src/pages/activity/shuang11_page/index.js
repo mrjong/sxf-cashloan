@@ -29,7 +29,7 @@ import login_bg from './img/login_bg.png';
 import close from './img/20181024_close.png';
 import alert_10 from './img/alert_10.png';
 import alert_15 from './img/alert_15.png';
-
+import { handleInputBlur } from 'utils'
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -377,6 +377,7 @@ export default class shuang11_page extends PureComponent {
 								rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
 							})}
 							placeholder="请输入手机号码"
+							onBlur={() => {handleInputBlur()}}
 						/>
 						<div className={style.sms_box}>
 							<input
@@ -387,6 +388,7 @@ export default class shuang11_page extends PureComponent {
 								{...getFieldProps('smsCd', {
 									rules: [ { required: true, message: '请输入正确验证码' } ]
 								})}
+								onBlur={() => {handleInputBlur()}}
 							/>
 							<button
 								onClick={() => {

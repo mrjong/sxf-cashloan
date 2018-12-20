@@ -11,6 +11,7 @@ import { buriedPointEvent } from 'utils/Analytins';
 import { mine } from 'utils/AnalytinsType';
 import styles from './index.scss';
 import qs from 'qs';
+import { handleInputBlur } from 'utils'
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -225,6 +226,7 @@ export default class bind_credit_page extends PureComponent {
 						//   alert(getFieldError('account').join('、'));
 						// }}
 						placeholder="请输入信用卡卡号"
+						onBlur={() => {handleInputBlur()}}
 					>
 						信用卡卡号
 					</InputItem>

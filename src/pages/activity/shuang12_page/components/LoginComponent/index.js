@@ -10,6 +10,7 @@ import qs from 'qs';
 import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/Analytins';
 import { activity_shuang12 } from 'utils/AnalytinsType';
+import { handleInputBlur } from 'utils'
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -139,7 +140,8 @@ export default class LoginComponent extends Component {
     };
     onBlur = ()=>{
         console.log('222222222');
-        $('body').animate( {scrollTop: 0}, 500);
+		// $('body').animate( {scrollTop: 0}, 500);
+		handleInputBlur()
     }
 	render() {
 		const { getFieldProps } = this.props.form;

@@ -8,6 +8,7 @@ import { validators } from 'utils/validator';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
+import { handleInputBlur } from 'utils'
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -168,6 +169,7 @@ export default class LoginComponent extends Component {
 						})}
 						className={style.form_control}
 						placeholder="请输入手机号码"
+						onBlur={() => {handleInputBlur()}}
 					/>
 				</div>
 				<div className={style.inputCode}>
@@ -187,6 +189,7 @@ export default class LoginComponent extends Component {
 						})}
 						className={style.form_control}
 						placeholder="请输入短信验证码"
+						onBlur={() => {handleInputBlur()}}
 					/>
 					<div className={!this.state.timeflag ? style.getCodeAct : style.getCode}>
 						<Button

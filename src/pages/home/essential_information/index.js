@@ -14,6 +14,7 @@ import { home, mine } from 'utils/AnalytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
 import qs from 'qs';
 import { store } from 'utils/store';
+import { handleInputBlur } from 'utils'
 
 const pageKey = home.basicInfoBury;
 
@@ -50,8 +51,26 @@ export default class essential_information extends PureComponent {
     urlQuery = this.props.history.location.search;
   }
 
+  componentDidMount() {
+		// 安卓键盘抬起会触发resize事件，ios则不会
+	   window.addEventListener("resize", function() {
+	      if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+	         window.setTimeout(function() {
+	            document.activeElement.scrollIntoViewIfNeeded();
+	         },0);
+	      }
+	   })
+	}
+
   componentWillUnmount() {
     buryingPoints();
+    window.removeEventListener('resize', function() {
+      if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+         window.setTimeout(function() {
+            document.activeElement.scrollIntoViewIfNeeded();
+         },0);
+      }
+   })
   }
 
   handleSubmit = () => {
@@ -158,6 +177,7 @@ export default class essential_information extends PureComponent {
 
   //input 失去焦点
   inputOnBlur(val, lab) {
+    handleInputBlur();
     buryingPoints({
       pageKey,
       trigger: 'blur',
