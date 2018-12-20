@@ -12,6 +12,7 @@ import { Toast } from 'antd-mobile';
 const API = {
   couponList: '/coupon/list',
 };
+let accountNum = '';
 @fetch.inject()
 // @setBackGround('#efeff4')
 export default class withdraw_succ_page extends PureComponent {
@@ -19,8 +20,11 @@ export default class withdraw_succ_page extends PureComponent {
     super(props);
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 
+    if (this.props.history.location.state && this.props.history.location.state.withdrawMoney) {
+      accountNum = this.props.history.location.state.withdrawMoney;
+    }
+
     this.state = {
-      accountNum: '50'
     };
   }
   componentWillMount() {
@@ -32,17 +36,13 @@ export default class withdraw_succ_page extends PureComponent {
   componentWillUnmount() {
     
   }
-  // 跳转到收入
-  goIncome = () => {
-    this.props.history.push('/income');
-  }
-  // 跳转到提现
-  goWithdraw = () => {
-    this.props.history.push('/withdraw');
+  // 返回首页
+  backHome = () => {
+    // this.props.history.replace('/wallet');
+    this.props.history.goBack();
   }
   
   render() {
-    let { accountNum } = this.state;
     return (
       <div className={style.withdraw_succ_page}>
         <div className={style.withdrawSuccCont}>
@@ -52,7 +52,7 @@ export default class withdraw_succ_page extends PureComponent {
           </div>
           <p>恭喜您，提现成功</p>
         </div>
-        <ButtonCustom className={style.backBtn}>返回首页</ButtonCustom>
+        <ButtonCustom className={style.backBtn} onClick={this.backHome}>返回首页</ButtonCustom>
       </div>
     );
   }

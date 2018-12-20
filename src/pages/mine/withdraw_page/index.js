@@ -171,18 +171,19 @@ export default class withdraw_page extends PureComponent {
 
       let withdrawBoxClass = [];
       switch (obj.ordSts) { // 订单状态0：初登记，1：处理中，2：交易成功，3：交易失败，4：撤销
-        case 1: // 处理中
+        case '1': // 处理中
+        case '0': // 0 也按1处理
           withdrawBoxClass = [
             style.withdrawCont,
           ]
           break;
-        case 2: // 交易成功
+        case '2': // 交易成功
           withdrawBoxClass = [
             style.withdrawCont,
             style.withdrawContSucc,
           ]
           break;
-        case 3: // 交易失败
+        case '3': // 交易失败
           withdrawBoxClass = [
             style.withdrawCont,
             style.withdrawContFail,

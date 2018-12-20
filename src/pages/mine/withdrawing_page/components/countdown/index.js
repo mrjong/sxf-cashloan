@@ -20,7 +20,23 @@ export default class Countdown extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentWillReceiveProps(nextProps) {
+    const { cb, orderSts, accountNum } = nextProps;
+    setTimeout(()=>{
+      switch (orderSts) { // 订单状态0：初登记，1：处理中，2：交易成功，3：交易失败，4：撤销
+        case '2': // 交易成功
+          cb.props.history.replace({pathname: '/mine/withdraw_succ_page', state: { withdrawMoney: accountNum }});
+          break;
+        case '3': // 交易失败
+          cb.props.history.replace('/mine/withdraw_fail_page');
+          break;
+        default:
+          break;
+      };
+    }, 2000);
+  }
+
+  componentWillMount() { 
     this.countDownAction();
   }
 
@@ -33,6 +49,7 @@ export default class Countdown extends React.Component {
       if (codeTime === -1) {
         /* 倒计时结束*/
         this.interval && clearInterval(this.interval);
+        cb.props.history.replace('/mine/withdraw_page');
         if (this.props.timerEnd) {
           this.props.timerEnd();
         }
