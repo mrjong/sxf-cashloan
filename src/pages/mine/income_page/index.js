@@ -80,15 +80,15 @@ export default class income_page extends PureComponent {
         if (res.msgCode === 'PTM0000') { // msgCode
           let dataArr = [];
           if (pIndex === 1) {
-            totalPage = Math.ceil(res.data.totalSize / 10);
+            totalPage = res.data.totalSize && Math.ceil(res.data.totalSize / 10);
             this.setState({
               hasMore: false,
             });
           }
-          for (let i = res.data.data.length - 1; i >= 0; i--) {
+          for (let i = res.data.length - 1; i >= 0; i--) {
             // res.data.data[i].coupCategory = '02'
             dataArr.push(
-              res.data.data[i],
+              res.data[i],
             );
           }
           return dataArr;
