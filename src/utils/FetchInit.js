@@ -1,8 +1,10 @@
+import React from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
 import { store } from 'utils/store';
+import { SXFToast } from 'utils/SXFLoading';
 import { isBugBrowser, isWXOpen } from 'utils/common';
 const fetchinit = () => {
 	let timer;
@@ -39,7 +41,7 @@ const fetchinit = () => {
 					if (timerList.length > 1) {
 						return;
 					}
-					Toast.loading('数据加载中...', 10);
+					SXFToast.loading('数据加载中...', 10);
 				}, 300);
 				timerList.push(timer);
 			}
@@ -63,23 +65,23 @@ const fetchinit = () => {
 					}
 					timer = undefined;
 					timerList = [];
-					Toast.hide();
+					SXFToast.hide();
 				}
 			} else {
-				Toast.loading('数据加载中...', 10);
+				SXFToast.loading('数据加载中...', 10);
 			}
 			return response;
 		},
 		(error) => {
-			console.log(error);
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
 				clearTimeout(timerList[i]);
 			}
 			timer = undefined;
 			timerList = [];
-			Toast.hide();
-			return Promise.reject(error);
+			SXFToast.hide();
+			let error2 = new Error('系统开小差，请稍后重试');
+			return Promise.reject(error2);
 		}
 	);
 	fetch.init({
@@ -89,9 +91,11 @@ const fetchinit = () => {
 			console.log('sessionStorage:', sessionStorage);
 			console.log('localStorage', localStorage);
 			console.log('cookie', document.cookie);
+			SXFToast.hide();
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {
+			console.log(response, '============');
 			switch (response.data.msgCode) {
 				case 'PTM0000':
 					return;

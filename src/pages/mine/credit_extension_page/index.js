@@ -179,7 +179,7 @@ export default class credit_extension_page extends PureComponent {
               buriedPointEvent(mine.creditExtensionOperator);
               store.setCheckCardRouter('');
               store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
-              this.props.toast.loading('加载中...', 0);
+              this.props.SXFToast.loading('加载中...', 0);
               // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&hideStep=true&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
               window.location.href = result.data.url + `&hideStep=true&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
             } else {
@@ -194,7 +194,7 @@ export default class credit_extension_page extends PureComponent {
               if (result.data.authUrl) {
                 store.setCheckCardRouter('');
                 store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
-                this.props.toast.loading('加载中...', 0);
+                this.props.SXFToast.loading('加载中...', 0);
                 window.location.href = result.data.authUrl;
               } else {
                 this.props.toast.info('授信成功');

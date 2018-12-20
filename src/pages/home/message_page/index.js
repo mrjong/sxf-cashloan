@@ -4,6 +4,7 @@ import React, {
 import ReactDOM from "react-dom"
 import style from "./index.scss"
 import fetch from "sx-fetch"
+import { SXFToast } from 'utils/SXFLoading';
 import STabs from 'components/tabs';
 import { store } from 'utils/store';
 
@@ -180,7 +181,7 @@ export default class message_page extends PureComponent {
       return []
     }
     if (pIndex === 1) {
-      Toast.loading('数据加载中...', 10000);
+        SXFToast.loading('数据加载中...', 10000);
     }
     let data = await this.props.$fetch
       .post(API.msgInfo, {
@@ -191,7 +192,7 @@ export default class message_page extends PureComponent {
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
-            Toast.hide();
+            SXFToast.hide();
           }, 600);
         }
         if (res.msgCode === "PTM0000") {
@@ -215,7 +216,7 @@ export default class message_page extends PureComponent {
       }).catch(err => {
         if (pIndex === 1) {
           setTimeout(() => {
-            Toast.hide();
+            SXFToast.hide();
           }, 600);
         }
       })

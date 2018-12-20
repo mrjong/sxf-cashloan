@@ -1,0 +1,21 @@
+.auth_page {
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	width: 90%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	img {
+		width: 50%;
+		display: block;
+		margin: 0 auto 0;
+	}
+	.text {
+		letter-spacing: 1px;
+		font-size: 32px;
+		color: #999;
+	}
+	a {
+		color: #4ca6ff;
+	}
+}

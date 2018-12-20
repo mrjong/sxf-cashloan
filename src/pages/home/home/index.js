@@ -4,6 +4,7 @@ import { Modal, Toast, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
+import { SXFToast } from 'utils/SXFLoading';
 import { getParamsFromUrl, isBugBrowser, isWXOpen, getDeviceType } from 'utils/common';
 import { buriedPointEvent } from 'utils/Analytins';
 import { home, mine } from 'utils/AnalytinsType';
@@ -270,7 +271,7 @@ export default class HomePage extends PureComponent {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
-        Toast.loading('加载中...', 0);
+        SXFToast.loading('加载中...', 0);
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {

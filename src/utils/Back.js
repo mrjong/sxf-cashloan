@@ -7,7 +7,7 @@ import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'ut
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import PopUp from 'utils/PopUp'
+import PopUp from 'components/PopUp'
 import Dialog from 'utils/Dialog'
 const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
@@ -25,14 +25,6 @@ let initDialog = (errMsg) => {
         if (!res) {
           history.go(-2);
           obj.close();
-          // if (getDeviceType()==='IOS') {
-          //   history.go(-2);
-          //   obj.close();
-          // } else {
-          //   history.back(history.back(setTimeout(() => {
-          //     obj.close()
-          //   }, 100)));
-          // }
         } else {
           obj.close()
         }
