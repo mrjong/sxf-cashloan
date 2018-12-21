@@ -75,12 +75,17 @@ const fetchinit = () => {
 			return response;
 		},
 		(error) => {
-        console.log('----异常日志----')
-        (error.response && handleErrorLog(error.response)) || (error.config && handleErrorLog({
-          ...error.config,
-          status:error.message,
-          statusText:error.message,
-        }))
+			// url路径统一从config中取，有响应则取status,statusText，超时则取error.message
+			console.log('----异常日志----')
+			(error.response && handleErrorLog(
+				error.response.status, 
+				error.response.statusText, 
+				error.config.url)) 
+			|| (error.config && handleErrorLog(
+			error.message,
+			error.message,
+			error.config.url))
+
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
 				clearTimeout(timerList[i]);
@@ -107,10 +112,10 @@ const fetchinit = () => {
 				case 'PTM1000': // 用户登录超时
 					if (pagesIgnore(window.location.pathname)) {
 						return;
-                    }
-                    console.log('sessionStorage:', sessionStorage);
-                    console.log('localStorage', localStorage);
-                    console.log('cookie', document.cookie);
+					}
+					// console.log('sessionStorage:', sessionStorage);
+					// console.log('localStorage', localStorage);
+					// console.log('cookie', document.cookie);
 					Toast.info('登录超时，请重新登陆');
 					setTimeout(() => {
 						window.ReactRouterHistory.replace('/login');
