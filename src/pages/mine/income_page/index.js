@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
@@ -48,11 +49,24 @@ export default class income_page extends PureComponent {
   componentWillMount() {
     // var bodyDom = document.getElementsByTagName("body")[0];
     // bodyDom.style.backgroundColor = "#efeff4";
-    this.getCommonData();
+    this.getCommonData('tabshow');
   }
   componentDidMount() {
+    if (!this.state.useBodyScroll) {
+      this.calcHeight();
+    }
   }
   componentWillUnmount() {
+  }
+
+  calcHeight() {
+    const HeaderHeight = ReactDOM.findDOMNode(this.incomeBox).offsetTop;
+    setTimeout(() => {
+      const hei = document.documentElement.clientHeight - HeaderHeight;
+      this.setState({
+        height: hei,
+      });
+    }, 600);
   }
   
   // 获取每一页数据
@@ -173,10 +187,10 @@ export default class income_page extends PureComponent {
         index = this.state.rData && this.state.rData.length - 1;
       }
       const obj = this.state.rData && this.state.rData[index--];
-      return ( // 状态，0：失效，1：正常，2：提现中，3：已提现,4:冻结
+      return ( // 状态，0：失效，1：正常，2：提现中，3：已提现,4:冻结 5:失效
         <div className={style.incomeBox}>
           <h2 className={style.incomeTit}>{obj.groupNm}</h2>
-          <div className={ obj.sts === '0' ? `${style.incomeCont} ${style.incomeContExpired}` : style.incomeCont }>
+          <div className={ obj.sts === '5' ? `${style.incomeCont} ${style.incomeContExpired}` : style.incomeCont }>
             <img
                 className={style.redBag}
                 src={redBagIco}
@@ -228,8 +242,8 @@ export default class income_page extends PureComponent {
       );
     };
     return (
-      <div className={style.income_page} ref={el => (this.messageBox = el)}>
-        {item()}
+      <div className={style.income_page} ref={el => (this.incomeBox = el)}>
+        {this.state.tabState ? item() : null}
       </div>
     );
   }

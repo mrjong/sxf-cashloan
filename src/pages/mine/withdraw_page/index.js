@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
@@ -47,11 +48,24 @@ export default class withdraw_page extends PureComponent {
   componentWillMount() {
     // var bodyDom = document.getElementsByTagName("body")[0];
     // bodyDom.style.backgroundColor = "#efeff4";
-    this.getCommonData();
+    this.getCommonData('tabshow');
   }
   componentDidMount() {
+    if (!this.state.useBodyScroll) {
+      this.calcHeight();
+    }
   }
   componentWillUnmount() {
+  }
+
+  calcHeight() {
+    const HeaderHeight = ReactDOM.findDOMNode(this.withdrawBox).offsetTop;
+    setTimeout(() => {
+      const hei = document.documentElement.clientHeight - HeaderHeight;
+      this.setState({
+        height: hei,
+      });
+    }, 600);
   }
   
   // 获取每一页数据
@@ -248,8 +262,8 @@ export default class withdraw_page extends PureComponent {
       );
     };
     return (
-      <div className={style.withdraw_page} ref={el => (this.messageBox = el)}>
-        {item()}
+      <div className={style.withdraw_page} ref={el => (this.withdrawBox = el)}>
+        {this.state.tabState ? item() : null}
       </div>
     );
   }

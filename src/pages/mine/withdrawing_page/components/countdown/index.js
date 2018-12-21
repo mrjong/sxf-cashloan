@@ -41,6 +41,7 @@ export default class Countdown extends React.Component {
   }
 
   countDownAction = () => {
+    const { cb } = this.props;
     let codeTime = this.state.timerCount;
     this.interval = setInterval(() => {
       this.setState({

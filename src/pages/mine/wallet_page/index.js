@@ -212,6 +212,7 @@ export default class wallet_page extends PureComponent {
 						this.setState({ showMoudle: false });
 					}}
 					animationType="slide-up"
+					className="walletModal"
 				>
 					<div className={style.modal_box}>
 						<div className={style.modal_title}>
