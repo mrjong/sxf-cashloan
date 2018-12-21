@@ -23,7 +23,8 @@ export default class ErrorBoundary extends React.Component {
 			errorLog: errorInfo.componentStack,
 			errorPage: document.title,
 			errorTime: new Date(),
-			errorUrl: document.URL
+			errorUrl: document.URL,
+			errorInfo: error.toString()
 		})
 	}
 
