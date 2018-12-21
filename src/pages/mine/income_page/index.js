@@ -89,10 +89,10 @@ export default class income_page extends PureComponent {
               hasMore: false,
             });
           }
-          for (let i = res.data.usrRedCouponInfoRspVos.length - 1; i >= 0; i--) {
+          for (let i = res.data.usrRedCoupons.length - 1; i >= 0; i--) {
             // res.data.data[i].coupCategory = '02'
             dataArr.push(
-              res.data.usrRedCouponInfoRspVos[i],
+              res.data.usrRedCoupons[i],
             );
           }
           return dataArr;
@@ -173,7 +173,7 @@ export default class income_page extends PureComponent {
         index = this.state.rData && this.state.rData.length - 1;
       }
       const obj = this.state.rData && this.state.rData[index--];
-      return (
+      return ( // 状态，0：失效，1：正常，2：提现中，3：已提现,4:冻结
         <div className={style.incomeBox}>
           <h2 className={style.incomeTit}>{obj.groupNm}</h2>
           <div className={ obj.sts === '0' ? `${style.incomeCont} ${style.incomeContExpired}` : style.incomeCont }>
