@@ -14,7 +14,7 @@ export default class Countdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      timerCount: this.props.timerCount || 5,
+      timerCount: this.props.timerCount || 10, // 为了配合测试，暂时将5改成10s
       counting: false,
       selfEnable: true,
     };
