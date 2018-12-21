@@ -25,10 +25,11 @@ export default class withdrawing_page extends PureComponent {
       accountNum = this.props.history.location.state.withdrawMoney;
     }
     this.state = {
+      orderSts: ''
     };
   }
   componentWillMount() {
-    
+    this.getOrdSts();
   }
   componentDidMount() {
     
@@ -36,8 +37,29 @@ export default class withdrawing_page extends PureComponent {
   componentWillUnmount() {
     
   }
+
+  // 付款结果查询
+  getOrdSts = () => {
+		this.props.$fetch.post(API.queryOrdSts, {applyNo: orderNo}).then(
+			(result) => {
+				if (result.msgCode !== 'PTM0000') {
+					result.msgInfo && this.props.toast.info(result.msgInfo);
+					return;
+				}
+				if (result && result.data !== null) {
+					this.setState({
+						orderSts: result.data,
+					});
+				}
+			},
+			(err) => {
+				err.msgInfo && this.props.toast.info(err.msgInfo);
+			}
+		);
+	};
   
   render() {
+    let { orderSts } = this.state;
     return (
       <div className={style.withdrawing_page}>
         <div className={style.withdrawingCont}>

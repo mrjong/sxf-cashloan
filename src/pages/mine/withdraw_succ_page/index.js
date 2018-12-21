@@ -9,9 +9,6 @@ import ButtonCustom from 'components/button';
 
 import { Toast } from 'antd-mobile';
 
-const API = {
-  couponList: '/coupon/list',
-};
 let accountNum = '';
 @fetch.inject()
 // @setBackGround('#efeff4')

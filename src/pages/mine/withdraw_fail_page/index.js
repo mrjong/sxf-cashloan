@@ -9,9 +9,6 @@ import ButtonCustom from 'components/button';
 
 import { Toast } from 'antd-mobile';
 
-const API = {
-  couponList: '/coupon/list',
-};
 @fetch.inject()
 // @setBackGround('#efeff4')
 export default class withdraw_fail_page extends PureComponent {
