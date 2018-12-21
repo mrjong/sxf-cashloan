@@ -68,7 +68,10 @@ export default class withdraw_page extends PureComponent {
     }
     
     let data = await this.props.$fetch
-      .post(API.withdrawList, {}, { loading: true })
+      .post(API.withdrawList, {
+        startPage: pIndex,
+        pageRow: 10,
+      }, { loading: true })
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
@@ -79,15 +82,16 @@ export default class withdraw_page extends PureComponent {
         if (res.msgCode === 'PTM0000') { // msgCode
           let dataArr = [];
           if (pIndex === 1) {
-            totalPage = res.data.totalSize && Math.ceil(res.data.totalSize / 10);
+            // totalPage = res.data.totalSize && Math.ceil(res.data.totalSize / 10);
+            totalPage = res.data && res.data.totalPage;
             this.setState({
               hasMore: false,
             });
           }
-          for (let i = res.data.length - 1; i >= 0; i--) {
+          for (let i = res.data.usrCashOrds.length - 1; i >= 0; i--) {
             // res.data.data[i].coupCategory = '02'
             dataArr.push(
-              res.data[i],
+              res.data.usrCashOrds[i],
             );
           }
           return dataArr;
