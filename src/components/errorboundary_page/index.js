@@ -22,7 +22,8 @@ export default class ErrorBoundary extends React.Component {
 		buriedPointEvent(bug_log.api_error_log, {
 			errorLog: errorInfo.componentStack,
 			errorPage: document.title,
-			errorTime: new Date()
+			errorTime: new Date(),
+			errorUrl: document.URL
 		})
 	}
 
