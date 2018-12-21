@@ -202,6 +202,7 @@ export default class withdraw_page extends PureComponent {
           ]
           break;
         case '3': // 交易失败
+        case '4': // 撤销按交易失败显示
           withdrawBoxClass = [
             style.withdrawCont,
             style.withdrawContFail,
