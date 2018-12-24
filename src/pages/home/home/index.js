@@ -438,16 +438,7 @@ export default class HomePage extends PureComponent {
     });
   };
 
-  throwError = () => {
-    this.setState({
-      hasError: true
-    })
-  }
-
   render() {
-    if(this.state.hasError) {
-      throw new Error('错误')
-    }
     const { bannerList, usrIndexInfo, visibleLoading, percent,percentSatus } = this.state;
     const { history } = this.props;
     let componentsDisplay = null;
@@ -502,7 +493,6 @@ export default class HomePage extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-      <button onClick={this.throwError}>错误</button>
         {isWXOpen() && !tokenFromStotage && !token ? (
         // {true && !tokenFromStotage && !token ? (
           <Carousels data={bannerList} entryFrom="banner"></Carousels>

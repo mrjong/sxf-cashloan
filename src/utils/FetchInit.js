@@ -77,14 +77,14 @@ const fetchinit = () => {
 		(error) => {
 			// url路径统一从config中取，有响应则取status,statusText，超时则取error.message
 			console.log('----异常日志----')
-			(error.response && handleErrorLog(
-				error.response.status, 
-				error.response.statusText, 
-				error.config.url)) 
-			|| (error.config && handleErrorLog(
-			error.message,
-			error.message,
-			error.config.url))
+				(error.response && handleErrorLog(
+					error.response.status,
+					error.response.statusText,
+					error.config.url))
+				|| (error.config && handleErrorLog(
+					error.message,
+					error.message,
+					error.config.url))
 
 			num--;
 			for (let i = 0; i < timerList.length; i++) {

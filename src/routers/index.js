@@ -4,6 +4,7 @@ import React, {
 import { Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import ErrPage from 'pages/common/err_page';
+// import console = require('console');
 
 const Loading = ({ error, pastDelay }) => {
   if (pastDelay) {

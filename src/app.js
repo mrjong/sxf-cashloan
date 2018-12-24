@@ -9,7 +9,8 @@ import fetchinit from 'utils/FetchInit';
 import { initAnalytics } from './utils/Analytins';
 import ErrorBoundary from 'components/errorboundary_page';
 import fastClick from 'fastclick';
-fastClick.prototype.focus = function(targetElement) {
+
+fastClick.prototype.focus = function (targetElement) {
 	targetElement.focus();
 };
 fastClick.attach(document.body);
