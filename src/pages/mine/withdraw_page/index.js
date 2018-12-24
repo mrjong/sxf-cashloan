@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import {setBackGround} from 'utils/Background'
 
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
+import { SXFToast } from 'utils/SXFLoading';
 let totalPage = false;
 const API = {
   withdrawList: '/redAccount/queryCashOrd',
@@ -78,7 +79,7 @@ export default class withdraw_page extends PureComponent {
       return [];
     }
     if (pIndex === 1) {
-      Toast.loading('数据加载中...', 10000);
+      SXFToast.loading('数据加载中...', 10000);
     }
     
     let data = await this.props.$fetch
@@ -89,7 +90,7 @@ export default class withdraw_page extends PureComponent {
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
-            Toast.hide();
+            SXFToast.hide();
           }, 600);
         }
         // console.log(res.msgCode)
@@ -115,7 +116,7 @@ export default class withdraw_page extends PureComponent {
       .catch(err => {
         if (pIndex === 1) {
           setTimeout(() => {
-            Toast.hide();
+            SXFToast.hide();
           }, 600);
         }
       });
