@@ -11,7 +11,6 @@ import { Toast } from 'antd-mobile';
 let applyNo = ''; // 订单号
 let accountNum = ''; // 提现金额
 const API = {
-  queryOrdSts: '/redAccount/queryOrdSts', // 付款结果查询接口
 };
 @fetch.inject()
 // @setBackGround('#efeff4')
@@ -29,7 +28,7 @@ export default class withdrawing_page extends PureComponent {
     };
   }
   componentWillMount() {
-    this.getOrdSts();
+    
   }
   componentDidMount() {
     
@@ -37,33 +36,12 @@ export default class withdrawing_page extends PureComponent {
   componentWillUnmount() {
     
   }
-
-  // 付款结果查询
-  getOrdSts = () => {
-		this.props.$fetch.post(API.queryOrdSts, {applyNo: applyNo}).then(
-			(result) => {
-				if (result.msgCode !== 'PTM0000') {
-					result.msgInfo && this.props.toast.info(result.msgInfo);
-					return;
-				}
-				if (result && result.data !== null) {
-					this.setState({
-						orderSts: result.data,
-					});
-				}
-			},
-			(err) => {
-				err.msgInfo && this.props.toast.info(err.msgInfo);
-			}
-		);
-	};
   
   render() {
-    let { orderSts } = this.state;
     return (
       <div className={style.withdrawing_page}>
         <div className={style.withdrawingCont}>
-          <Countdown accountNum={accountNum} orderSts={orderSts} cb={this} />
+          <Countdown accountNum={accountNum} applyNo={applyNo} cb={this} />
           <div className={style.withdrawMoney}>
             {accountNum}元
           </div>
