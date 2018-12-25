@@ -136,9 +136,14 @@ export default class dazhuanpan_page extends PureComponent {
 				}
 			} else {
 				if (res.msgCode === 'PTM1000') {
+                    Cookie.remove('fin-v-card-token');
+                    this.onloadZhuan()
+				} else if (res.msgCode === 'PTM0100') {
+                    this.onloadZhuan()
 					Cookie.remove('fin-v-card-token');
+				} else {
+					Toast.info(res.msgInfo);
 				}
-				Toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -278,10 +283,10 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 立即使用
 	goRoute = () => {
-        console.log('立即使用');
-        this.setState({
-            type:''
-        })
+		console.log('立即使用');
+		this.setState({
+			type: ''
+		});
 		// this.props.history.replace('/home');
 	};
 	render() {

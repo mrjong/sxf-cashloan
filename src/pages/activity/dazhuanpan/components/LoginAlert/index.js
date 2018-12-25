@@ -104,8 +104,14 @@ export default class LoginAlert extends Component {
 									userAwardList.map((item, key) => {
 										return (
 											<Item
+												key={key}
 												extra={
-													<Button type="warning" size="small" inline onClick={this.props.goRoute}>
+													<Button
+														type="warning"
+														size="small"
+														inline
+														onClick={this.props.goRoute}
+													>
 														立即使用
 													</Button>
 												}
