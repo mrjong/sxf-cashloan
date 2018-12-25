@@ -121,7 +121,7 @@ export default class dazhuanpan_page extends PureComponent {
 
 	// 大转盘活动-用户抽奖剩余次数查询
 	getCount = () => {
-		this.props.$fetch.post(API.userCount, { activeId: config.activeId }).then((res) => {
+		this.props.$fetch.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true }).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				if (res.data.data.count && Number(res.data.data.count) > 0) {
 					this.getDraw(res.data.data.count);
@@ -136,9 +136,14 @@ export default class dazhuanpan_page extends PureComponent {
 				}
 			} else {
 				if (res.msgCode === 'PTM1000') {
+                    Cookie.remove('fin-v-card-token');
+                    this.onloadZhuan()
+				} else if (res.msgCode === 'PTM0100') {
+                    this.onloadZhuan()
 					Cookie.remove('fin-v-card-token');
+				} else {
+					Toast.info(res.msgInfo);
 				}
-				Toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -278,11 +283,10 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 立即使用
 	goRoute = () => {
-        console.log('立即使用');
-        this.setState({
-            type:''
-        })
-		// this.props.history.replace('/home');
+		this.setState({
+			type: ''
+		});
+		this.props.history.replace('/home');
 	};
 	render() {
 		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
