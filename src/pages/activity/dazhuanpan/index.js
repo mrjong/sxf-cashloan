@@ -283,11 +283,10 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 立即使用
 	goRoute = () => {
-		console.log('立即使用');
 		this.setState({
 			type: ''
 		});
-		// this.props.history.replace('/home');
+		this.props.history.replace('/home');
 	};
 	render() {
 		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
