@@ -121,7 +121,7 @@ export default class dazhuanpan_page extends PureComponent {
 
 	// 大转盘活动-用户抽奖剩余次数查询
 	getCount = () => {
-		this.props.$fetch.post(API.userCount, { activeId: config.activeId }).then((res) => {
+		this.props.$fetch.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true }).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				if (res.data.data.count && Number(res.data.data.count) > 0) {
 					this.getDraw(res.data.data.count);

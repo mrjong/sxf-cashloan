@@ -96,6 +96,9 @@ const fetchinit = () => {
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
+					if (response.config.noLginRouter) {
+						return;
+					}
 					Toast.info('请先登录');
 					setTimeout(() => {
 						window.ReactRouterHistory.replace('/login');
