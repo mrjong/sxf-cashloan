@@ -174,7 +174,9 @@ export default class credit_extension_page extends PureComponent {
           this.props.history.push({ pathname: '/home/essential_information', search: urlQuery });
           break;
         case 'operator':
-          this.props.$fetch.post(`${API.getOperator}`).then(result => {
+          this.props.$fetch.post(`${API.getOperator}`,{
+            clientCode:'04'
+          }).then(result => {
             if (result.msgCode === 'PTM0000' && result.data.url) {
               buriedPointEvent(mine.creditExtensionOperator);
               store.setCheckCardRouter('');

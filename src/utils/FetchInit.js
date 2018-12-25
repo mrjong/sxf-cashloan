@@ -85,14 +85,16 @@ const fetchinit = () => {
 		}
 	);
 	fetch.init({
-		timeout: 10000, // 默认超时
+		timeout: 10, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			console.log('sessionStorage:', sessionStorage);
 			console.log('localStorage', localStorage);
 			console.log('cookie', document.cookie);
 			SXFToast.hide();
-			if (errorTip) Toast.fail('系统开小差，请稍后重试');
+			setTimeout(() => {
+				if (errorTip) Toast.fail('系统开小差，请稍后重试');
+			}, 0);
 		},
 		onShowSuccessTip: (response, successTip) => {
 			console.log(response, '============');
@@ -102,10 +104,10 @@ const fetchinit = () => {
 				case 'PTM1000': // 用户登录超时
 					if (pagesIgnore(window.location.pathname)) {
 						return;
-                    }
-                    console.log('sessionStorage:', sessionStorage);
-                    console.log('localStorage', localStorage);
-                    console.log('cookie', document.cookie);
+					}
+					console.log('sessionStorage:', sessionStorage);
+					console.log('localStorage', localStorage);
+					console.log('cookie', document.cookie);
 					Toast.info('登录超时，请重新登陆');
 					setTimeout(() => {
 						window.ReactRouterHistory.replace('/login');
