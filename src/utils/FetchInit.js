@@ -75,16 +75,14 @@ const fetchinit = () => {
 			return response;
 		},
 		(error) => {
-			// url路径统一从config中取，有响应则取status,statusText，超时则取error.message
+			// 有响应则取status,statusText，超时则取error.message
 			console.log('----异常日志----')
 				(error.response && handleErrorLog(
 					error.response.status,
-					error.response.statusText,
-					error.config.url))
+					error.response.statusText))
 				|| (error.config && handleErrorLog(
 					error.message,
-					error.message,
-					error.config.url))
+					error.message))
 
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
@@ -97,7 +95,7 @@ const fetchinit = () => {
 		}
 	);
 	fetch.init({
-		timeout: 10000, // 默认超时
+		timeout: 10, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			// console.log('sessionStorage:', sessionStorage);
@@ -110,6 +108,7 @@ const fetchinit = () => {
 				case 'PTM0000':
 					return;
 				case 'PTM1000': // 用户登录超时
+					handleErrorLog('PTM1000', '登录超时，请重新登陆')
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -122,6 +121,7 @@ const fetchinit = () => {
 					}, 3000);
 					return;
 				case 'PTM0100': // 未登录
+					handleErrorLog('PTM0100', '未登录')
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}

@@ -17,9 +17,9 @@ export default class ErrorBoundary extends React.Component {
 			error: error,
 			errorInfo: errorInfo
 		});
-		// 此处埋点上报页面、组件层级发生的错误
+		// 此处埋点上报页面、组件渲染发生的错误
 		// console.log(errorInfo.componentStack)
-		buriedPointEvent(bug_log.api_error_log, {
+		buriedPointEvent(bug_log.page_error_log, {
 			DC_errorComponentStack: errorInfo.componentStack,
 			DC_errorTitle: document.title,
 			DC_errorTime: new Date(),

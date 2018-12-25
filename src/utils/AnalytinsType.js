@@ -72,7 +72,8 @@ const activity_shuang12 = {
 };
 
 const bug_log = {
-	api_error_log: 'DC_API_ERROR_LOG'  // 接口异常报错日志
+	api_error_log: 'DC_API_ERROR_LOG',  // 接口异常报错日志
+	page_error_log: 'DC_PAGE_ERROR_LOG'  // 页面异常报错日志
 }
 
 export { login, home, mine, order, membership, activity, activity_shuang12, bug_log };
