@@ -191,7 +191,7 @@ export default class income_page extends PureComponent {
       return ( // 状态，0：失效，1：正常，2：提现中，3：已提现,4:冻结 5:失效
         <div className={style.incomeBox}>
           <h2 className={style.incomeTit}>{obj.groupNm}</h2>
-          <div className={ obj.sts === '5' ? `${style.incomeCont} ${style.incomeContExpired}` : style.incomeCont }>
+          <div className={ obj.sts === '5' ? `${style.incomeCont} ${style.incomeContExpired}` : obj.sts === '3' ? `${style.incomeCont} ${style.incomeContSucc}` : style.incomeCont }>
             <img
                 className={style.redBag}
                 src={redBagIco}
