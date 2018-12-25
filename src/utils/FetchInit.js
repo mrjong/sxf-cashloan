@@ -95,7 +95,7 @@ const fetchinit = () => {
 		}
 	);
 	fetch.init({
-		timeout: 10, // 默认超时
+		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			// console.log('sessionStorage:', sessionStorage);
