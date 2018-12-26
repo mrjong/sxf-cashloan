@@ -156,7 +156,7 @@ export default class wxshare extends PureComponent {
 						smsCd: values.smsCd, // IP地址
 						usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
 						location: store.getPosition(), // 定位地址 TODO 从session取
-						activeId: Number(this.state.activeId),
+						activeId: this.state.activeId,
 						activeSecId: 6,
 						activeThirdId: 7,
 						code: (queryData && queryData.urlCode) || ''
@@ -196,7 +196,7 @@ export default class wxshare extends PureComponent {
 		}
 		this.props.$fetch
 			.post(API.getShareUrl, {
-				activeId: Number(this.state.activeId),
+				activeId: this.state.activeId,
 				channel: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
 				osType
 			})
@@ -231,7 +231,7 @@ export default class wxshare extends PureComponent {
 		}
 		this.props.$fetch
 			.post(API.doInvite, {
-				activeId: Number(this.state.activeId),
+				activeId: this.state.activeId,
 				channel: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
 				osType,
 				url: this.state.href
