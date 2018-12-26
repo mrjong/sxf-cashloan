@@ -60,12 +60,12 @@ const activity = {
 	use_15: 'DC_USE_15',// 去使用15按钮
 	login_open: 'DC_LOGIN_OPEN', // 打开登录窗口
 	login_click: 'DC_LOGIN_CLICK',// 点击登录领取
-    yhq_click_10: 'DC_YHQ_CLICK_10',// 点击弹窗立即使用10
-    yhq_click_15: 'DC_YHQ_CLICK_15'// 点击弹窗立即使用15
+	yhq_click_10: 'DC_YHQ_CLICK_10',// 点击弹窗立即使用10
+	yhq_click_15: 'DC_YHQ_CLICK_15'// 点击弹窗立即使用15
 };
 
 const activity_shuang12 = {
-    shuang12_go_draw: 'DC_SHUANG12_GO_DRAW', // 立即抽奖
+	shuang12_go_draw: 'DC_SHUANG12_GO_DRAW', // 立即抽奖
 	shuang12_login_open: 'DC_SHUANG12_LOGIN_OPEN', // 打开登录弹窗
 	shuang12_login_click: 'DC_SHUANG12_LOGIN_CLICK', // 登录点击按钮
 	shuang12_draw_over_click: 'DC_SHUANG12_DRAW_OVER_CLICK', // 抽完拿钱按钮

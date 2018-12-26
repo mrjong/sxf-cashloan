@@ -2,7 +2,7 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem } from 'antd-mobile';
+import { Toast, InputItem, Button } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -216,6 +216,10 @@ export default class login_page extends PureComponent {
 		// 	document.getElementById(id).focus();
 		// }, 100);
 	};
+
+	errorClick = () => {
+		throw new Error('crashed!!!!!!!')
+	}
     
 	render() {
 		const { getFieldProps } = this.props.form;
@@ -273,6 +277,7 @@ export default class login_page extends PureComponent {
 			<div ref="loginWrap" className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
 				<div ref="loginContent" className={styles.content}>
+				{/* <button onClick={this.errorClick}>错误</button> */}
 					<InputItem
 						id="inputPhone"
 						maxLength="11"

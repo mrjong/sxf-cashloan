@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchinit from 'utils/FetchInit';
 import { initAnalytics } from './utils/Analytins';
+import {handleWindowError} from 'utils'
 import ErrorBoundary from 'components/errorboundary_page';
 import fastClick from 'fastclick';
 
@@ -18,6 +19,7 @@ var sa = require('sa-sdk-javascript/sensorsdata.min.js');
 if (!window.sa) {
 	window.sa = sa;
 }
+handleWindowError()
 fetchinit();
 initAnalytics();
 const renders = (Component) =>
