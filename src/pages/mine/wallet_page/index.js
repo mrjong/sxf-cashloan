@@ -178,6 +178,7 @@ export default class wallet_page extends PureComponent {
 
 	render() {
 		let { accountNum, showMoudle, bankInf } = this.state;
+		const bankCodeNum = bankInf.bankCode || bankInf.bankCd;
 		return (
 			<div className={style.wallet_page}>
 				<img src={WalletBg} className={style.walletBg} />
@@ -228,7 +229,7 @@ export default class wallet_page extends PureComponent {
 						</div>
 						<div className={style.modal_flex} onClick={this.selectBank}>
 							<div className={style.bank_info}>
-								<span className={`bank_ico bank_ico_${bankInf.bankCode}`} />
+								<span className={`bank_ico bank_ico_${bankCodeNum}`} />
 								<span className={style.bank_name}>{`${bankInf.bankName}(${bankInf.lastCardNo})`}</span>
 							</div>
 							<i />
