@@ -277,7 +277,7 @@ export default class login_page extends PureComponent {
 			<div ref="loginWrap" className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
 				<div ref="loginContent" className={styles.content}>
-				<button onClick={this.errorClick}>错误</button>
+				{/* <button onClick={this.errorClick}>错误</button> */}
 					<InputItem
 						id="inputPhone"
 						maxLength="11"
