@@ -76,13 +76,17 @@ const fetchinit = () => {
 		},
 		(error) => {
 			// 有响应则取status,statusText，超时则取error.message
-			console.log('----异常日志----')
+			try {
+				console.log('----异常日志----')
 				(error.response && handleErrorLog(
 					error.response.status,
 					error.response.statusText))
 				|| (error.config && handleErrorLog(
 					error.message,
 					error.message))
+			} catch (err) {
+				// console.log(err)
+			}
 
 			num--;
 			for (let i = 0; i < timerList.length; i++) {
