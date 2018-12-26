@@ -17,7 +17,7 @@ export default class middle_page extends Component {
 	componentWillMount() {
 		//芝麻信用的回调
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-        const { taskType } = query;
+		const { taskType, mxcode } = query;
 		if (taskType) {
 			this.props.$fetch
 				.get(`/auth/updateCredStsForHandle/${taskType}`)
@@ -29,6 +29,18 @@ export default class middle_page extends Component {
 						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
+		} else if (mxcode && mxcode === -1) {
+			/** mxcode
+             * 当配置了backUrl，自动跳转到该backUrl时，添加该参数到backUrl上 
+                -4 用户输入出错（密码等输错且未继续输入）
+                -3 魔蝎数据服务异常 
+                -2 平台方服务问题（如中国移动维护等）
+                -1 默认状态（用于没有进行操作退出）
+                0 认证失败，异常错误 
+                1 任务进行成功 
+                2 任务进行中
+             */
+			history.back();
 		} else {
 			this.setState({
 				errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
