@@ -41,7 +41,7 @@ const fetchinit = () => {
 					if (timerList.length > 1) {
 						return;
 					}
-					SXFToast.loading('数据加载中...', 10);
+					SXFToast.loading('数据加载中...', (cfg.timeout && cfg.timeout / 1000) || 10);
 				}, 300);
 				timerList.push(timer);
 			}
@@ -57,6 +57,7 @@ const fetchinit = () => {
 	// 响应拦截
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
+            console.log(response)
 			num--;
 			if (num <= 0) {
 				if (timer) {
@@ -85,7 +86,7 @@ const fetchinit = () => {
 		}
 	);
 	fetch.init({
-		timeout: 10, // 默认超时
+		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			console.log('sessionStorage:', sessionStorage);

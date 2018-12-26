@@ -37,6 +37,7 @@ export default class real_name_page extends Component {
     ocrFanData: {},
     selectFlag: false,
     leftValue: updateLeft,
+    updateLeftValue:'',
     rightValue: updateRight,
     footerValue: updateBottom,
     leftUploaded: false,
@@ -113,7 +114,6 @@ export default class real_name_page extends Component {
       this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
     });
   };
-
   // 上传身份证反面
   handleChangeSide = ({ base64Data }) => {
     if (!base64Data) {
