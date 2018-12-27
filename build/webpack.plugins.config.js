@@ -42,9 +42,9 @@ let getProdPlugins = function() {
 	),
 		plugins.push(
 			new WebpackZipPlugin({
-				initialFile: './build', //需要打包的文件夹(一般为dist)
+				initialFile: './dist', //需要打包的文件夹(一般为dist)
 				endPath: './', //打包到对应目录（一般为当前目录'./'）
-				zipName: 'build.zip' //打包生成的文件名
+				zipName: +new Date()+'copy-dist.zip' //打包生成的文件名
 			})
 		);
 	plugins.push(new OptimizeCSSPlugin()); //压缩提取出的css，并解决ExtractTextPlugin分离出的js重复问题(多个文件引入同一css文件)

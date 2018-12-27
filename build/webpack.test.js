@@ -2,7 +2,7 @@ const plugins = require('./webpack.plugins.config.js');
 
 module.exports = [
   require('./webpack.common')({
-    devTool: 'false',
+    devTool: '#source-map',
     mode: 'production',
     dropConsole: true,
     publicPath: '/',

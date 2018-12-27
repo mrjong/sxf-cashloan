@@ -2,7 +2,7 @@ const Plugins = require('./webpack.plugins.config');
 
 module.exports = [
   require('./webpack.common')({
-    devTool: '#eval-source-map',
+    devTool: 'false',
     mode: 'development',
     dropConsole: false,
     publicPath: '/',
