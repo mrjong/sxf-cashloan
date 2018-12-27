@@ -216,7 +216,8 @@ export default class bind_credit_page extends PureComponent {
 					<Item extra={this.state.userName}>持卡人</Item>
 					<InputItem
 						maxLength="24"
-						type="number"
+            type="number"
+            onBlur={() => {handleInputBlur()}}
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
 						})}

@@ -21,7 +21,8 @@ export default class router_Page extends PureComponent {
 		this.state = {
 			route: {},
 			newTitle: '',
-			showPage: false
+			showPage: false,
+			releaseBugs: false
 		};
 	}
 	componentWillReceiveProps(nextProps) {
@@ -137,7 +138,7 @@ export default class router_Page extends PureComponent {
 		}
 		const leftInstance = e.screenX;
 		const screenWidth = window.innerWidth;
-		if (leftInstance < screenWidth/2) {
+		if (leftInstance < screenWidth / 2) {
 			consoleshowStr += '0';
 			// console.log('靠左边');
 		} else {
@@ -159,7 +160,8 @@ export default class router_Page extends PureComponent {
 				<div className="application_page">
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}
-					<div className="application_content">{component}</div>
+                    <div className="application_content">
+                    {component}</div>
 				</div>
 			</div>
 		) : null;

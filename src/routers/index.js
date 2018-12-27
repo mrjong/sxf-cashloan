@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import errPage from 'pages/common/err_page';
+import ErrPage from 'pages/common/err_page';
 import SXFLoading from 'components/SXFLoading';
 
 const Loading = ({ error, pastDelay }) => {
 	if (pastDelay) {
 		return <div>{React.createElement(SXFLoading)}</div>;
 	} else if (error) {
-		return <div>{React.createElement(errPage)}</div>;
+		return <div><ErrPage></ErrPage></div>;
 	}
 	return null;
 };

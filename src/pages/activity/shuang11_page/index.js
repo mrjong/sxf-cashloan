@@ -384,7 +384,8 @@ export default class shuang11_page extends PureComponent {
 								pattern="[0-9]*"
 								maxLength="6"
 								type="text"
-								placeholder="请输入短信验证码"
+                placeholder="请输入短信验证码"
+                onBlur={() => {handleInputBlur()}}
 								{...getFieldProps('smsCd', {
 									rules: [ { required: true, message: '请输入正确验证码' } ]
 								})}

@@ -272,7 +272,8 @@ export default class bind_save_page extends PureComponent {
 				<List>
 					<Item extra={this.state.userName}>持卡人</Item>
 					<InputItem
-						maxLength="24"
+            maxLength="24"
+            onBlur={() => {handleInputBlur()}}
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
 						})}
@@ -283,7 +284,8 @@ export default class bind_save_page extends PureComponent {
 						储蓄卡卡号
 					</InputItem>
 					<InputItem
-						maxLength="11"
+            maxLength="11"
+            onBlur={() => {handleInputBlur()}}
 						type="number"
 						{...getFieldProps('valueInputCarPhone', {
 							rules: [
@@ -298,7 +300,8 @@ export default class bind_save_page extends PureComponent {
 					</InputItem>
 					<div className={styles.time_container}>
 						<InputItem
-							maxLength="6"
+              maxLength="6"
+              onBlur={() => {handleInputBlur()}}
 							{...getFieldProps('valueInputCarSms', {
 								rules: [ { required: true, message: '请输入正确验证码' } ]
 							})}

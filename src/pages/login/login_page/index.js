@@ -2,7 +2,7 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem } from 'antd-mobile';
+import { Toast, InputItem, Button } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -28,7 +28,7 @@ export default class login_page extends PureComponent {
 			timers: '获取验证码',
 			timeflag: true,
 			flag: true,
-			smsJrnNo: '' // 短信流水号
+			smsJrnNo: '', // 短信流水号
 		};
 	}
 
@@ -210,13 +210,17 @@ export default class login_page extends PureComponent {
 
 	// 处理键盘挡住输入框
 	handleScrollToView = (id) => {
-		this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-		setTimeout(() => {
-			this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
-			document.getElementById(id).focus();
-		}, 100);
+		// this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
+		// setTimeout(() => {
+		// 	this.refs.loginWrap.scrollTop = this.refs.loginContent.offsetHeight;
+		// 	document.getElementById(id).focus();
+		// }, 100);
 	};
 
+	errorClick = () => {
+		throw new Error('crashed!!!!!!!')
+	}
+    
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
@@ -273,11 +277,13 @@ export default class login_page extends PureComponent {
 			<div ref="loginWrap" className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
 				<div ref="loginContent" className={styles.content}>
+				{/* <button onClick={this.errorClick}>错误</button> */}
 					<InputItem
 						id="inputPhone"
 						maxLength="11"
                         type="number"
-                        onFocus={() => { this.handleScrollToView('inputPhone') }}
+                        onBlur={() => {handleInputBlur()}}
+                        // onFocus={() => { this.handleScrollToView('inputPhone') }}
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
 						{...getFieldProps('phoneValue', {
@@ -289,7 +295,8 @@ export default class login_page extends PureComponent {
 						<InputItem
 							id="inputCode"
                             type="number"
-                            onFocus={() => { this.handleScrollToView('inputCode') }}
+                            onBlur={() => {handleInputBlur()}}
+                            // onFocus={() => { this.handleScrollToView('inputCode') }}
 							maxLength="6"
 							className={styles.loginInput}
 							placeholder="请输入短信验证码"

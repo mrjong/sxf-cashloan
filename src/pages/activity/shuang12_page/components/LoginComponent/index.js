@@ -139,6 +139,7 @@ export default class LoginComponent extends Component {
 		});
     };
     onBlur = ()=>{
+        handleInputBlur()
         console.log('222222222');
 		// $('body').animate( {scrollTop: 0}, 500);
 		handleInputBlur()
