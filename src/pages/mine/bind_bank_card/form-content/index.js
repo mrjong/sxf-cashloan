@@ -12,7 +12,6 @@ import styles from '../index.scss';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/Analytins';
 import { membership } from 'utils/AnalytinsType';
-import { handleInputBlur } from 'utils'
 
 const { Item } = List;
 import { handleInputBlur } from 'utils'
