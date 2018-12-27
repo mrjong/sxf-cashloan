@@ -57,6 +57,8 @@ export default class withdraw_page extends PureComponent {
     }
   }
   componentWillUnmount() {
+    var bodyDom = document.getElementsByTagName("body")[0];
+    bodyDom.style.backgroundColor = "#f5f5f5";
   }
 
   calcHeight() {
