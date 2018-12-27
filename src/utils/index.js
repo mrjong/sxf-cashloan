@@ -9,6 +9,18 @@ export const handleInputBlur = () => {
   }, 100);
 }
 
+// 处理接口错误上报
+export const handleErrorLog = (status, statusText) => {
+  const logInfo = {
+    DC_errorStatus: status,
+    DC_errorStatusText: statusText,
+    DC_errorUrl: document.URL,
+    DC_errorTime: new Date(),
+    DC_errorTitle: document.title
+  }
+  buriedPointEvent(bug_log.api_error_log, logInfo)
+}
+
 export const handleWindowError = () => {
   window.onerror = function (errorMessage, scriptURI, lineNo, columnNo, error) {
     console.log('errorMessage: ' + errorMessage); // 异常信息

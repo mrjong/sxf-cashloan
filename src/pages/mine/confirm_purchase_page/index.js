@@ -3,7 +3,7 @@ import { List, DatePicker, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import ButtonCustom from 'components/button';
-import CountDownButton from 'components/CountDownButton'
+import CountDownButton from 'components/count-down-button'
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';

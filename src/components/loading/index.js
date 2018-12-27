@@ -1,6 +1,6 @@
 // var _ = require('lodash')
 import React, { PureComponent } from 'react';
-import styles from './Loading.scss';
+import styles from './index.scss';
 
 export default class Home extends PureComponent {
   constructor(props) {

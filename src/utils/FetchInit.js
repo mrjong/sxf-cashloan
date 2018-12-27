@@ -4,9 +4,7 @@ import { Toast } from 'antd-mobile';
 import pagesIgnore from 'utils/pagesIgnore';
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen } from 'utils/common';
-import handleErrorLog from './handleErrorLog.js'
-import { buriedPointEvent } from 'utils/Analytins';
-import { bug_log } from 'utils/AnalytinsType';
+import { handleErrorLog } from 'utils'
 
 const fetchinit = () => {
 	let timer;

@@ -15,7 +15,7 @@ let formHTML = fs.readFileSync(resolve('./form.html'), 'utf-8')
 // });
 
 // form路由
-router.get('/form', function(req, res) {
+router.get('/', function(req, res) {
 	res.send(formHTML);
 });
 

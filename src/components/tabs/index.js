@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Tabs } from 'antd-mobile';
-import styles from './tabs.scss';
+import styles from './index.scss';
 
 export default class Tab extends PureComponent {
   constructor(props) {

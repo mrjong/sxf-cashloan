@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from "react"
-import styles from "./header.scss"
+import styles from "./index.scss"
 import headerIgnore from 'utils/headerIgnore'
-import SetTitle from 'utils/SetTitle'
+import SetTitle from 'utils/setTitle'
 export default class Header extends Component {
   constructor(props) {
     super(props);

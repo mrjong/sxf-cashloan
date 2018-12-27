@@ -7,7 +7,7 @@ import { validators } from 'utils/validator';
 import { store } from 'utils/store';
 import { getFirstError } from 'utils/common';
 import ButtonCustom from 'components/button';
-import CountDownButton from 'components/CountDownButton';
+import CountDownButton from 'components/count-down-button';
 import styles from '../index.scss';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/Analytins';

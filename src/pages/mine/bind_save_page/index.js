@@ -4,7 +4,7 @@ import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import { store } from 'utils/store';
 import ButtonCustom from 'components/button';
-import CountDownButton from 'components/CountDownButton';
+import CountDownButton from 'components/count-down-button';
 import { validators } from 'utils/validator';
 import { buriedPointEvent } from 'utils/Analytins';
 import { mine } from 'utils/AnalytinsType';
