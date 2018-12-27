@@ -6098,6 +6098,13 @@ node-sass@^4.7.2:
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
 
+node-symbols@0.0.4:
+  version "0.0.4"
+  resolved "http://registry.npm.taobao.org/node-symbols/download/node-symbols-0.0.4.tgz#c047e3e6d3b2c4770342646b5dcd9421f5541eff"
+  dependencies:
+    chalk "^2.3.0"
+    figures "^2.0.0"
+
 nomnom@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/nomnom/-/nomnom-1.8.1.tgz#2151f722472ba79e50a76fc125bb8c8f2e4dc2a7"
@@ -9634,6 +9641,12 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
+
+webpack-zip-plugin@^0.1.6:
+  version "0.1.6"
+  resolved "http://registry.npm.taobao.org/webpack-zip-plugin/download/webpack-zip-plugin-0.1.6.tgz#e47648018192421c7f5704d1f7ea552ebf72326e"
+  dependencies:
+    node-symbols "0.0.4"
 
 webpack@^4.9.2:
   version "4.16.5"

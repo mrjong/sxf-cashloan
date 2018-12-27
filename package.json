@@ -15,7 +15,8 @@
     "react-router-dom": "^4.2.2",
     "rimraf": "^2.6.2",
     "sa-sdk-javascript": "^1.10.3",
-    "sx-fetch": "^0.2.4"
+    "sx-fetch": "^0.2.4",
+    "webpack-zip-plugin": "^0.1.6"
   },
   "devDependencies": {
     "babel": "^6.23.0",
