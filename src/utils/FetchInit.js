@@ -112,7 +112,7 @@ const fetchinit = () => {
 				case 'PTM0000':
 					return;
 				case 'PTM1000': // 用户登录超时
-					handleErrorLog('PTM1000', '登录超时，请重新登陆')
+					handleErrorLog('PTM1000', '登录超时，请重新登陆', response.config)
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -122,7 +122,7 @@ const fetchinit = () => {
 					}, 3000);
 					return;
 				case 'PTM0100': // 未登录
-					handleErrorLog('PTM0100', '未登录')
+					handleErrorLog('PTM0100', '未登录', response.config)
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -135,6 +135,7 @@ const fetchinit = () => {
 					}, 3000);
 					return;
 				default:
+				handleErrorLog(response&&response.data&&response.data.msgCode || '其他错误code', response&&response.data&&response.data.msgInfo || '其他错误message', response.config)
 			}
 		}
 	});

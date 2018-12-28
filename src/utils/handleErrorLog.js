@@ -1,6 +1,5 @@
 import { buriedPointEvent } from 'utils/Analytins';
 import { bug_log } from 'utils/AnalytinsType';
-// import console = require('console');
 
 export default function (status, statusText, config) {
   const logInfo = {
