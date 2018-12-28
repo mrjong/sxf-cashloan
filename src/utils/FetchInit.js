@@ -78,12 +78,11 @@ const fetchinit = () => {
 			// 有响应则取status,statusText，超时则取error.message
 			try {
 				console.log('----异常日志----')
-				(error.response && handleErrorLog(
-					error.response.status,
-					error.response.statusText))
-				|| (error.config && handleErrorLog(
-					error.message,
-					error.message))
+				if (error.response) {
+					handleErrorLog(error.response.status,error.response.statusText,error.config)
+				} else if (error.config) {
+					handleErrorLog(error.message,error.message,error.config)
+				}
 			} catch (err) {
 				// console.log(err)
 			}
