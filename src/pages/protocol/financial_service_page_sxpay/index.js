@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.scss';
-import headerIgnore from 'utils/headerIgnore'
+import { headerIgnore } from 'utils'
+
 export default class financial_service_page_sxpay extends PureComponent {
     render() {
         return (

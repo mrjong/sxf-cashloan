@@ -6,7 +6,7 @@ import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils/common';
+import { getDeviceType, getFirstError, isBugBrowser } from 'utils';
 import bg from './img/bg.png';
 import img_5_qiang from './img/img_5_qiang.png';
 import alert_new_user from './img/alert_new_user.png';

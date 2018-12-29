@@ -10,12 +10,10 @@ import ButtonCustom from '../../../components/button';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType } from 'utils/common';
-import { validators } from '../../../utils/validator';
-import { buriedPointEvent } from 'utils/Analytins';
-import { home, mine } from 'utils/AnalytinsType';
+import { getDeviceType, validators, handleInputBlur } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
-import { handleInputBlur } from 'utils'
 
 
 

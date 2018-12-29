@@ -2,17 +2,15 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem, Button } from 'antd-mobile';
+import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser, changeHistoryState, isWXOpen } from 'utils/common';
-import { validators } from 'utils/validator';
-import { buriedPointEvent, pageView } from 'utils/Analytins';
-import { login } from 'utils/AnalytinsType';
+import { getDeviceType, getFirstError, isBugBrowser, isWXOpen, validators, handleInputBlur } from 'utils';
+import { buriedPointEvent, pageView } from 'utils/analytins';
+import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
-import { handleInputBlur } from 'utils';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',

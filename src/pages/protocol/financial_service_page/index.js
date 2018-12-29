@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import styles from '../index.scss';
-import headerIgnore from 'utils/headerIgnore'
+import { headerIgnore } from 'utils'
+
 const API = {
   FUNACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend',
 }

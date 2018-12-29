@@ -1,17 +1,15 @@
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
 import qs from 'qs';
-import vconsole from 'utils/vconsole';
 import errPage from 'pages/common/err_page';
 import Header from 'components/header';
 import Footer from 'components/footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { changeHistoryState, isBugBrowser } from 'utils/common';
-import pagesIgnore from 'utils/pagesIgnore';
+import { changeHistoryState, isBugBrowser, pagesIgnore, vconsole } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
-import { pageView } from 'utils/Analytins';
+import { pageView } from 'utils/analytins';
 let consoleshowStr = '';
 export default class router_Page extends PureComponent {
 	constructor(props) {
@@ -153,8 +151,8 @@ export default class router_Page extends PureComponent {
 				<div className="application_page">
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}
-                    <div className="application_content">
-                    {component}</div>
+					<div className="application_content">
+						{component}</div>
 				</div>
 			</div>
 		) : null;

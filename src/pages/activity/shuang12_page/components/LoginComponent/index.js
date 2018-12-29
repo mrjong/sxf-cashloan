@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Button, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
-import { getDeviceType, getFirstError, isBugBrowser } from 'utils/common';
+import { getDeviceType, getFirstError, isBugBrowser } from 'utils';
 import { store } from 'utils/store';
-import { validators } from 'utils/validator';
+import { validators } from 'utils';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import { buriedPointEvent } from 'utils/Analytins';
-import { activity_shuang12 } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity_shuang12 } from 'utils/analytinsType';
 import { handleInputBlur } from 'utils'
 
 const API = {

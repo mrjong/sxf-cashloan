@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.scss';
-import headerIgnore from 'utils/headerIgnore'
+import { headerIgnore } from 'utils'
+
 export default class privacy_agreement_page extends PureComponent {
     constructor(props) {
         super(props);

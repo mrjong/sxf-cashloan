@@ -1,4 +1,4 @@
-import { guid } from 'utils/common';
+import { guid } from 'utils';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 

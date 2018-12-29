@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrPage from 'pages/common/err_page';
-import { buriedPointEvent } from 'utils/Analytins';
-import { bug_log } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { bug_log } from 'utils/analytinsType';
 
 export default class ErrorBoundary extends React.Component {
 	constructor(props) {

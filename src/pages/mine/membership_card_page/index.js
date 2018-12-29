@@ -6,8 +6,8 @@ import styles from './index.scss';
 import ButtonCustom from 'components/button';
 import { store } from 'utils/store';
 import dayjs from 'dayjs';
-import { buriedPointEvent } from 'utils/Analytins';
-import { membership } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { membership } from 'utils/analytinsType';
 
 const API = {
   queryMemPrdInfo: '/my/quickpay/queryMemPrdInfo',

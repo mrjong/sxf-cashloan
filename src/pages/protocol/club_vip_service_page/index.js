@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from '../index.scss';
-import headerIgnore from 'utils/headerIgnore'
+import { headerIgnore } from 'utils'
+
 
 export default class club_vip_service_page extends PureComponent {
   render() {

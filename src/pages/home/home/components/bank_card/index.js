@@ -4,8 +4,8 @@ import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { Toast } from 'antd-mobile';
-import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 import style from './index.scss';
 
 const _handleClick = (onClick, event) => {

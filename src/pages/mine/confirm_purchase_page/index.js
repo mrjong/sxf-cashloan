@@ -7,9 +7,9 @@ import CountDownButton from 'components/count-down-button'
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getFirstError } from 'utils/common';
-import { buriedPointEvent } from 'utils/Analytins';
-import { membership } from 'utils/AnalytinsType';
+import { getFirstError } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { membership } from 'utils/analytinsType';
 import { handleInputBlur } from 'utils'
 
 const API = {

@@ -5,8 +5,8 @@ import fetch from "sx-fetch";
 import SButton from 'components/button';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
-import { buriedPointEvent } from 'utils/Analytins';
-import { order } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { order } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
 

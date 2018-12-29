@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tag from '../tag';
-import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 import { store } from 'utils/store';
 
 export default class TagList extends React.PureComponent {

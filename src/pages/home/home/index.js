@@ -4,9 +4,10 @@ import { Modal, Toast, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { getParamsFromUrl, isBugBrowser, isWXOpen } from 'utils/common';
-import { buriedPointEvent } from 'utils/Analytins';
-import { home, mine } from 'utils/AnalytinsType';
+import {isBugBrowser, isWXOpen } from 'utils';
+import qs from 'qs'
+import { buriedPointEvent } from 'utils/analytins';
+import { home, mine } from 'utils/analytinsType';
 import SButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
@@ -104,7 +105,7 @@ export default class HomePage extends PureComponent {
   }
   // 从 url 中获取参数，如果有 token 就设置下
   getTokenFromUrl = () => {
-    const urlParams = getParamsFromUrl(window.location.search);
+    const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (urlParams.token) {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
       if (isBugBrowser()) {
@@ -132,34 +133,34 @@ export default class HomePage extends PureComponent {
   };
 
   // 首页进度
-  getPercent = ()=>{
+  getPercent = () => {
     this.props.$fetch.post(API.GETSTSW).then((result) => {
-        if(result && result.data !==null){
-            console.log(result)
-            this.calculatePercent(result.data)
-        }
+      if (result && result.data !== null) {
+        console.log(result)
+        this.calculatePercent(result.data)
+      }
     }, err => {
-        err.msgInfo && this.props.this.props.toast.info(err.msgInfo);
+      err.msgInfo && this.props.this.props.toast.info(err.msgInfo);
     })
   }
 
   // 进度计算
-  calculatePercent = (list)=>{
-    let codes =[]
+  calculatePercent = (list) => {
+    let codes = []
     list.forEach(element => {
       // element.code === 'zmxy'
-        // if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck' || element.code === 'faceDetect'){
-        if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck'){        
-            codes.push(element.stsw.dicDetailCd)
-        }
+      // if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck' || element.code === 'faceDetect'){
+      if (element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck') {
+        codes.push(element.stsw.dicDetailCd)
+      }
     });
     console.log(codes)
     // case '1': // 认证中
     // case '2': // 认证成功
     // case '3': // 认证失败
     // case '4': // 认证过期
-    let newCodes2 = codes.filter((ele,index,array)=>{
-        return ele === '1'|| ele === '2'
+    let newCodes2 = codes.filter((ele, index, array) => {
+      return ele === '1' || ele === '2'
     })
     // 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
     // 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
@@ -346,27 +347,27 @@ export default class HomePage extends PureComponent {
                 this.requestBindCardState();
               }
             } else { // 失败的话刷新首页
-              this.props.toast.info(result.msgInfo, 2 ,() => {
+              this.props.toast.info(result.msgInfo, 2, () => {
                 this.requestGetUsrInfo();
               });
             }
-        })
-    })
-    .catch(err => {
-      console.log(err);
-      clearInterval(timer);
-      clearTimeout(timerOut);
-      this.setState(
-        {
-          percent: 100,
-        },
-        () => {
-          this.setState({
-            visibleLoading: false,
-          });
-        },
-      );
-    })
+          })
+      })
+      .catch(err => {
+        console.log(err);
+        clearInterval(timer);
+        clearTimeout(timerOut);
+        this.setState(
+          {
+            percent: 100,
+          },
+          () => {
+            this.setState({
+              visibleLoading: false,
+            });
+          },
+        );
+      })
   }
 
   // 获取 banner 列表
@@ -434,12 +435,12 @@ export default class HomePage extends PureComponent {
   // 去登陆
   handleNeedLogin = () => {
     this.props.toast.info('请先登录', 2, () => {
-      this.props.history.push({pathname: '/login', state: { isAllowBack: true }});
+      this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
     });
   };
 
   render() {
-    const { bannerList, usrIndexInfo, visibleLoading, percent,percentSatus } = this.state;
+    const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus } = this.state;
     const { history } = this.props;
     let componentsDisplay = null;
     switch (usrIndexInfo.indexSts) {
@@ -494,7 +495,7 @@ export default class HomePage extends PureComponent {
     return (
       <div className={style.home_page}>
         {isWXOpen() && !tokenFromStotage && !token ? (
-        // {true && !tokenFromStotage && !token ? (
+          // {true && !tokenFromStotage && !token ? (
           <Carousels data={bannerList} entryFrom="banner"></Carousels>
         )
           :

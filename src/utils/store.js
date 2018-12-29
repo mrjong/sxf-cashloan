@@ -22,7 +22,7 @@ const storeListLocal = {
   OrderSuccess: 'orderSuccess', // 付款成功信息
   BackData: 'backData', // 订单信息
   BillNo: 'billNo',
-MsgObj: 'MsgObj', // // 消息详情
+  MsgObj: 'MsgObj', // // 消息详情
   MsgBackData: 'MsgBackData', // 消息详情
   Token: 'fin-card-token', // local-token
   HistoryRouter: 'historyRouter', // 历史路由

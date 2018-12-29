@@ -6,8 +6,8 @@ import { Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
-import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 import SButton from 'components/button';
 import TabList from '../tag_list';
 

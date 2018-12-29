@@ -1,18 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { List, InputItem, Picker, DatePicker, Toast } from 'antd-mobile';
+import { List, InputItem, Picker, DatePicker } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import fetch from 'sx-fetch';
-import { validators } from 'utils/validator';
+import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
-import { getFirstError } from 'utils/common';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/count-down-button';
 import styles from '../index.scss';
 import qs from 'qs';
-import { buriedPointEvent } from 'utils/Analytins';
-import { membership } from 'utils/AnalytinsType';
-import { handleInputBlur } from 'utils'
+import { buriedPointEvent } from 'utils/analytins';
+import { membership } from 'utils/analytinsType';
 
 const { Item } = List;
 

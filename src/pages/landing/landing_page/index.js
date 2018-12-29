@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
-import { getParamsFromUrl } from 'utils/common';
-import { Toast } from 'antd-mobile';
+import qs from 'qs'
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { buriedPointEvent } from 'utils/Analytins';
-import { home } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 const { PROJECT_ENV } = process.env;
 console.log(PROJECT_ENV, 'PROJECT_ENV');
@@ -27,7 +26,7 @@ export default class LandingPage extends PureComponent {
 
   // 根据 url 上的参数，获取图片
   getLandingImgByUrl() {
-    const searchParams = getParamsFromUrl(decodeURI(window.location.search));
+    const searchParams = qs.parse(decodeURI(window.location.search), {ignoreQueryPrefix: true})
     const landingId = searchParams.landingId || '';
     this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {

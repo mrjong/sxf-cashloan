@@ -3,7 +3,7 @@ import qs from 'qs';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { isBugBrowser } from 'utils/common';
+import { isBugBrowser } from 'utils';
 
 const API = {
 	wxAuthcb: '/wx/authcb',

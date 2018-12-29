@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import styles from '../index.scss';
-import headerIgnore from 'utils/headerIgnore'
+import { headerIgnore } from 'utils'
+
 export default class delegation_withhold_page extends PureComponent {
     constructor(props) {
         super(props);

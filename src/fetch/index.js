@@ -1,10 +1,8 @@
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
-import pagesIgnore from 'utils/pagesIgnore';
 import { store } from 'utils/store';
-import { isBugBrowser, isWXOpen } from 'utils/common';
-import { handleErrorLog } from 'utils'
+import { isBugBrowser, isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
 
 const fetchInit = () => {
 	let timer;

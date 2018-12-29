@@ -6,7 +6,7 @@ import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/store';
-import { isBugBrowser, isWXOpen } from 'utils/common';
+import { isBugBrowser, isWXOpen } from 'utils';
 import SButton from 'components/button';
 import dayjs from 'dayjs'
 let hasNext = true

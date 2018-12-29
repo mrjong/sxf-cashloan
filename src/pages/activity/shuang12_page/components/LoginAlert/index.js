@@ -7,8 +7,8 @@ import alert_new_user from '../../img/alert_new_user.png';
 import alert_btn_new_user from '../../img/alert_btn_new_user.png';
 import alert_15 from '../../img/alert_15.png';
 import alert_btn from '../../img/alert_btn.png';
-import { buriedPointEvent } from 'utils/Analytins';
-import { activity_shuang12 } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity_shuang12 } from 'utils/analytinsType';
 const Item = List.Item;
 function closest(el, selector) {
     const matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;

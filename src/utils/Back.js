@@ -3,7 +3,7 @@
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 // 3、在 noRouterBack.js 中添加页面的路由。
 import React from 'react'
-import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'utils/common';
+import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'utils';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
@@ -25,20 +25,11 @@ let initDialog = (errMsg) => {
         if (!res) {
           history.go(-2);
           obj.close();
-          // if (getDeviceType()==='IOS') {
-          //   history.go(-2);
-          //   obj.close();
-          // } else {
-          //   history.back(history.back(setTimeout(() => {
-          //     obj.close()
-          //   }, 100)));
-          // }
         } else {
           obj.close()
         }
       }
     }
-  //   actionClassName="rob-alert-button rob-alert-button-color rob-alert-button-45"
   />)
   return obj
 }

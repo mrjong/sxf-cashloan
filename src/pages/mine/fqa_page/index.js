@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import headerIgnore from 'utils/headerIgnore';
-import { buriedPointEvent } from 'utils/Analytins';
-import { mine } from 'utils/AnalytinsType';
+import { headerIgnore } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 
 export default class fqa_page extends PureComponent {

@@ -5,13 +5,11 @@ import { List, InputItem } from 'antd-mobile';
 import { store } from 'utils/store';
 import ButtonCustom from 'components/button';
 import CountDownButton from 'components/count-down-button';
-import { validators } from 'utils/validator';
-import { buriedPointEvent } from 'utils/Analytins';
-import { mine } from 'utils/AnalytinsType';
-import { getFirstError } from 'utils/common';
+import { validators, handleInputBlur, getFirstError } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { mine } from 'utils/analytinsType';
 import qs from 'qs';
 import styles from './index.scss';
-import { handleInputBlur } from 'utils'
 
 
 const API = {

@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from "react"
 import styles from "./index.scss"
-import headerIgnore from 'utils/headerIgnore'
-import SetTitle from 'utils/setTitle'
+import { headerIgnore } from 'utils'
+import { setTitle } from 'utils'
 export default class Header extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +38,7 @@ export default class Header extends Component {
   render() {
     const { headerProps, newTitle } = this.props
     const { hideHederByApp } = this.state;
-    SetTitle(newTitle || headerProps.title || '')
+    setTitle(newTitle || headerProps.title || '')
     return headerIgnore('false') && !headerProps.headerHide && !hideHederByApp ? (
       <div className={[styles.navbar, 'application_navbar'].join(' ')}>
         {!headerProps.arrowHide ? (

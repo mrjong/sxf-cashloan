@@ -7,15 +7,14 @@ import AwardShowMock from './components/AwardShowMock';
 import RuleShow from './components/RuleShow';
 import LoginAlert from './components/LoginAlert';
 import { setBackGround } from 'utils/setBackGround';
-import { isBugBrowser,getNowDate } from 'utils/common';
-import { Toast } from 'antd-mobile';
+import { isBugBrowser,getNowDate } from 'utils';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
 import zp_btn from './img/zp_btn.png';
 import zp_yuan from './img/zp_yuan.png';
 import Cookie from 'js-cookie';
-import { buriedPointEvent } from 'utils/Analytins';
-import { activity_shuang12 } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity_shuang12 } from 'utils/analytinsType';
 const API = {
 	count: '/bigPan/count', // 用户抽奖次数查询
 	userDraw: '/bigPan/draw', // 用户抽奖

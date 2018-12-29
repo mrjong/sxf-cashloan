@@ -5,8 +5,8 @@ import ButtonCustom from 'components/button';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
-import { buriedPointEvent } from 'utils/Analytins';
-import { mine } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 
 

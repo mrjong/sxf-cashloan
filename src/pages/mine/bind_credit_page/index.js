@@ -1,17 +1,14 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/button';
-import { validators } from 'utils/validator';
+import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
-import { getFirstError } from 'utils/common';
-import { buriedPointEvent } from 'utils/Analytins';
-import { mine } from 'utils/AnalytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
-import { handleInputBlur } from 'utils'
 
 
 const API = {
