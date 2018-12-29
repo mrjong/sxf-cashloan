@@ -74,7 +74,7 @@ export default class dazhuanpan_page extends PureComponent {
 					userAwardList: res.data
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -103,7 +103,7 @@ export default class dazhuanpan_page extends PureComponent {
 				});
 				return;
 			} else {
-				Toast.info(res.msgInfo);
+				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -167,7 +167,7 @@ export default class dazhuanpan_page extends PureComponent {
 				});
 				return;
 			} else {
-				Toast.info(res.msgInfo);
+				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};

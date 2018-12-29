@@ -10,10 +10,11 @@ import { store } from 'utils/store';
 import { PullToRefresh, Badge, ListView, Toast } from "antd-mobile"
 let totalPage = false
 const API = {
-  'msgRead': "/my/msgRead",
-  'msgCount': "/my/msgCount",
-  "defTable": '/my/defTable',
-  "msgInfo": '/my/msgInfo'
+  msgRead: "/my/msgRead",
+  msgCount: "/my/msgCount",
+  defTable: '/my/defTable',
+  msgInfo: '/my/msgInfo',
+  msgReadAll: '/my/msgReadAll'
 }
 @fetch.inject()
 export default class message_page extends PureComponent {
@@ -293,7 +294,7 @@ export default class message_page extends PureComponent {
   }
   // 一键读取
   msgReadAll = () => {
-    this.props.$fetch.post("/my/msgReadAll").then(res => {
+    this.props.$fetch.post(API.msgReadAll).then(res => {
       if (res.msgCode === "PTM0000") {
         this.setState(
           {

@@ -103,18 +103,17 @@ export default class credit_extension_page extends PureComponent {
     let isCreditCardStatusVerify = false;
     switch (creditCardStatus) {
       case '1': // 认证中
-        // Toast.info('账单读取中，请稍后再提交');
         isCreditCardStatusVerify = true;
         break;
       case '2': // 认证成功
         isCreditCardStatusVerify = true;
         break;
       case '3': // 认证失败
-        Toast.info('账单读取失败，请返回首页更新账单');
+        this.props.toast.info('账单读取失败，请返回首页更新账单');
         isCreditCardStatusVerify = false;
         break;
       case '4': // 认证过期
-        Toast.info('账单已过期，请返回首页更新账单');
+        this.props.toast.info('账单已过期，请返回首页更新账单');
         isCreditCardStatusVerify = false;
         break;
       default:
@@ -152,13 +151,13 @@ export default class credit_extension_page extends PureComponent {
     const { stswData } = this.state;
     const firstOption = stswData.filter(item => item.code === 'idCheck')[0];
     if (item.dicDetailCd === '2' || item.dicDetailCd === '1') {
-      Toast.info(item.extra.name);
+      this.props.toast.info(item.extra.name);
     } else if (firstOption.stsw.dicDetailCd !== '2') {
       if (item.extra.code === 'idCheck') {
         buriedPointEvent(mine.creditExtensionRealName);
         this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
       } else {
-        this.props.toast.info('请先实名认证');
+        this.props.this.props.this.props.toast.info('请先实名认证');
         setTimeout(() => {
           this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
         }, 3000);

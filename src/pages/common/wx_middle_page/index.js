@@ -5,6 +5,11 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { isBugBrowser } from 'utils/common';
 
+const API = {
+	wxAuthcb: '/wx/authcb',
+	wxAuth: '/wx/auth'
+}
+
 @fetch.inject()
 export default class wx_middle_page extends Component {
 	constructor(props) {
@@ -28,7 +33,7 @@ export default class wx_middle_page extends Component {
 		}
 		if (query && query.code) {
 			this.props.$fetch
-				.post(`/wx/authcb`, {
+				.post(API.wxAuthcb, {
 					state: query.state,
 					code: query.code,
 					channelCode: localStorage.getItem('h5Channel') ? localStorage.getItem('h5Channel') : '',
@@ -66,7 +71,7 @@ export default class wx_middle_page extends Component {
 				});
 		} else {
 			this.props.$fetch
-				.post('/wx/auth', {
+				.post(API.wxAuth, {
 					channelCode: localStorage.getItem('h5Channel') ? localStorage.getItem('h5Channel') : '',
 					redirectUrl: encodeURIComponent(window.location.href),
 					osType: osType

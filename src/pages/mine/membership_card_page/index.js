@@ -9,6 +9,11 @@ import dayjs from 'dayjs';
 import { buriedPointEvent } from 'utils/Analytins';
 import { membership } from 'utils/AnalytinsType';
 
+const API = {
+  queryMemPrdInfo: '/my/quickpay/queryMemPrdInfo',
+  cardList: '/my/quickpay/cardList'
+}
+
 @fetch.inject()
 export default class card_home extends PureComponent {
   constructor(props) {
@@ -35,7 +40,7 @@ export default class card_home extends PureComponent {
 
   // 获取会员卡产品信息
   getProCard = () => {
-    this.props.$fetch.post('/my/quickpay/queryMemPrdInfo').then(res => {
+    this.props.$fetch.post(API.queryMemPrdInfo).then(res => {
       if (res.msgCode === 'PTM0000') {
         this.setState({
           data: res.data,
@@ -63,7 +68,7 @@ export default class card_home extends PureComponent {
   // 校验是否绑卡
   checkoutCard = () => {
     this.props.$fetch
-      .post('/my/quickpay/cardList', {
+      .post(API.cardList, {
         type: '5',
         corpBusTyp: '31',
       })

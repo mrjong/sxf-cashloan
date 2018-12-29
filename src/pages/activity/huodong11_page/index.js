@@ -135,7 +135,6 @@ export default class huodong11_page extends PureComponent {
 		switch (type) {
 			case '5':
 				if (this.state.img5 === img_5_over) {
-					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img5 === img_5_use) {
@@ -145,7 +144,7 @@ export default class huodong11_page extends PureComponent {
 				Toast.loading('数据加载中...');
 				setTimeout(() => {
 					Toast.hide();
-					Toast.info('您来晚了，奖品已抢光');
+					this.props.toast.info('您来晚了，奖品已抢光');
 					this.setState({
 						img5: img_5_over
 					});
@@ -154,7 +153,6 @@ export default class huodong11_page extends PureComponent {
 				break;
 			case '7':
 				if (this.state.img7 === img_7_over) {
-					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img7 === img_7_use) {
@@ -164,7 +162,7 @@ export default class huodong11_page extends PureComponent {
 				Toast.loading('数据加载中...');
 				setTimeout(() => {
 					Toast.hide();
-					Toast.info('您来晚了，奖品已抢光');
+					this.props.toast.info('您来晚了，奖品已抢光');
 					this.setState({
 						img7: img_7_over
 					});
@@ -173,7 +171,6 @@ export default class huodong11_page extends PureComponent {
 				break;
 			case '10':
 				if (this.state.img10 === img_10_over) {
-					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img10 === img_10_use) {
@@ -185,7 +182,6 @@ export default class huodong11_page extends PureComponent {
 				break;
 			case '15':
 				if (this.state.img15 === img_15_over) {
-					// Toast.info('今日您已抢券,请明天再试~');
 					return;
 				}
 				if (this.state.img15 === img_15_use) {
@@ -248,7 +244,7 @@ export default class huodong11_page extends PureComponent {
 					type: ''
 				});
 			} else {
-				Toast.info(res1.msgInfo);
+				this.props.toast.info(res1.msgInfo);
 			}
 		});
 	};
@@ -283,11 +279,11 @@ export default class huodong11_page extends PureComponent {
 					})
 					.then((result) => {
 						if (result.msgCode !== 'PTM0000') {
-							Toast.info(result.msgInfo);
+							this.props.toast.info(result.msgInfo);
 							this.setState({ valueInputImgCode: '' });
 							return false;
 						}
-						Toast.info('发送成功，请注意查收！');
+						this.props.toast.info('发送成功，请注意查收！');
 						this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 						timmer = setInterval(() => {
 							this.setState({ flag: false, timers: i-- + '"' });
@@ -298,7 +294,7 @@ export default class huodong11_page extends PureComponent {
 						}, 1000);
 					});
 			} else {
-				Toast.info(getFirstError(err));
+				this.props.toast.info(getFirstError(err));
 			}
 		});
 	}
@@ -308,7 +304,7 @@ export default class huodong11_page extends PureComponent {
 		buriedPointEvent(activity.login_click);
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
-			Toast.info('请先获取短信验证码');
+			this.props.toast.info('请先获取短信验证码');
 			return;
 		}
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
@@ -330,7 +326,7 @@ export default class huodong11_page extends PureComponent {
 					.then(
 						(res) => {
 							if (res.msgCode !== 'PTM0000') {
-								res.msgInfo && Toast.info(res.msgInfo);
+								res.msgInfo && this.props.toast.info(res.msgInfo);
 								return;
 							}
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
@@ -346,11 +342,11 @@ export default class huodong11_page extends PureComponent {
 							this.closeFunc();
 						},
 						(error) => {
-							error.msgInfo && Toast.info(error.msgInfo);
+							error.msgInfo && this.props.toast.info(error.msgInfo);
 						}
 					);
 			} else {
-				Toast.info(getFirstError(err));
+				this.props.toast.info(getFirstError(err));
 			}
 		});
 	};

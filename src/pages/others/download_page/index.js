@@ -29,10 +29,10 @@ export default class download_page extends PureComponent {
                     downloadUrl: res.data,
                 })
             } else {
-                res.msgInfo && Toast.info(res.msgInfo);
+                res.msgInfo && this.props.toast.info(res.msgInfo);
             }
         }, error => {
-            error.msgInfo && Toast.info(error.msgInfo);
+            error.msgInfo && this.props.toast.info(error.msgInfo);
         })
     }
 
@@ -40,11 +40,11 @@ export default class download_page extends PureComponent {
         const { downloadUrl } = this.state;
         const phoneType = getDeviceType();
         if (phoneType === 'ANDRIOD') {
-            Toast.info('安全下载中')
+            this.props.toast.info('安全下载中')
             window.location.href = downloadUrl;
             // window.location.href = 'http://172.16.138.162:8920/app-release.apk'
         } else {
-            Toast.info('暂不支持ios下载')
+            this.props.toast.info('暂不支持ios下载')
         }
     }
 

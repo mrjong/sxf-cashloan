@@ -4,6 +4,7 @@ import qs from 'qs';
 import fetch from 'sx-fetch';
 const API = {
   getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
+  updateCredStsForHandle: '/auth/updateCredStsForHandle'
 };
 @fetch.inject()
 export default class middle_page extends Component {
@@ -27,7 +28,7 @@ export default class middle_page extends Component {
         }
       });
     } else if (taskType) {
-      this.props.$fetch.get(`/auth/updateCredStsForHandle/${taskType}`)
+      this.props.$fetch.get(`${API.updateCredStsForHandle}/${taskType}`)
         .then(() => {
           this.goRouter();
         })

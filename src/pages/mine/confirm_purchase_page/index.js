@@ -12,6 +12,11 @@ import { buriedPointEvent } from 'utils/Analytins';
 import { membership } from 'utils/AnalytinsType';
 import { handleInputBlur } from 'utils'
 
+const API = {
+  pay: '/my/quickpay/pay',
+  paySms: '/my/quickpay/paySms'
+}
+
 @createForm()
 @fetch.inject()
 export default class confirm_purchase_page extends PureComponent {
@@ -47,7 +52,7 @@ export default class confirm_purchase_page extends PureComponent {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.$fetch
-          .post("/my/quickpay/pay", {
+          .post(API.pay, {
             userId: "",
             mblNo: "",
             agrNo: this.state.agrNo,
@@ -115,7 +120,7 @@ export default class confirm_purchase_page extends PureComponent {
         obj.cvv2 = values.cvv2
       }
       if (!err || JSON.stringify(err) === '{}') {
-        this.props.$fetch.post("/my/quickpay/paySms", obj).then(
+        this.props.$fetch.post(API.paySms, obj).then(
           res => {
             if (res.msgCode === "PTM0000") {
               this.props.toast.info('发送成功');

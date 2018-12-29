@@ -10,7 +10,7 @@ import ZButton from 'components/button/index.js';
 import Panel from 'components/panel/index.js';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
-import style from './style.scss';
+import style from './index.scss';
 let timer;
 let timerOut;
 const API = {
@@ -20,6 +20,7 @@ const API = {
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
   COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
+  qryContractInfo: '/bill/qryContractInfo'
 };
 
 @fetch.inject()
@@ -116,7 +117,7 @@ export default class ConfirmAgencyPage extends PureComponent {
     this.props.$fetch.post(API.SAVE_REPAY_CARD, params).then(result => {
       if (result && result.msgCode === 'PTM0000') {
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -133,7 +134,7 @@ export default class ConfirmAgencyPage extends PureComponent {
         }
         this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -174,7 +175,7 @@ export default class ConfirmAgencyPage extends PureComponent {
           deratePrice: result.data.deratePrice,
         });
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
     // let couponInfo = store.getCouponData();
@@ -240,19 +241,19 @@ export default class ConfirmAgencyPage extends PureComponent {
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/agency');
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         // 有风控没绑信用卡 跳绑信用卡页面
         store.setBackUrl('/home/agency');
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
         }, 3000);
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -326,7 +327,7 @@ export default class ConfirmAgencyPage extends PureComponent {
               store.removeRepaymentModalData();
               store.removeHomeCardIndexData();
             } else if (result && result.msgCode === 'PTM7001') {
-              Toast.info(result.msgInfo);
+              this.props.toast.info(result.msgInfo);
               setTimeout(() => {
                 this.props.history.push('/home/home');
               }, 3000);
@@ -335,7 +336,7 @@ export default class ConfirmAgencyPage extends PureComponent {
                 is_success: false,
                 fail_cause: result.msgInfo,
               });
-              Toast.info(result.msgInfo);
+              this.props.toast.info(result.msgInfo);
             }
           },
         );
@@ -377,7 +378,7 @@ export default class ConfirmAgencyPage extends PureComponent {
   // 获取活动
   requestProtocolData = () => {
     this.props.$fetch
-      .post('/bill/qryContractInfo', {
+      .post(API.qryContractInfo, {
         prdId: this.state.queryData.prdId,
         wtdwTyp: this.state.queryData.wtdwTyp,
         billPrcpAmt: this.state.queryData.billPrcpAmt,

@@ -62,7 +62,7 @@ export default class BankContent extends React.Component {
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -77,11 +77,11 @@ export default class BankContent extends React.Component {
         if (result && result.msgCode === 'PTM0000') {
           this.repayForOtherBank(result.data.count);
         } else {
-          Toast.info(result.msgInfo);
+          this.props.toast.info(result.msgInfo);
         }
       })
       .catch(err => {
-        Toast.info(err.message);
+        this.props.toast.info(err.message);
       });
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from './style.scss';
+import style from './index.scss';
 
 const _handleClick = (onClick, event) => {
   event.preventDefault();

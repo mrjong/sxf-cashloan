@@ -14,7 +14,7 @@ import InfoCard from './components/info_card/index.js';
 import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
 import MsgBadge from './components/msg-badge';
-import style from './style.scss';
+import style from './index.scss';
 
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
@@ -139,7 +139,7 @@ export default class HomePage extends PureComponent {
             this.calculatePercent(result.data)
         }
     }, err => {
-        err.msgInfo && this.props.toast.info(err.msgInfo);
+        err.msgInfo && this.props.this.props.toast.info(err.msgInfo);
     })
   }
 
@@ -218,11 +218,11 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
-        Toast.info('您的代还资格正在审核中，请耐心等待');
+        this.props.toast.info('您的代还资格正在审核中，请耐心等待');
         break;
       case 'LN0005': // 暂无代还资格
         console.log('LN0005');
-        Toast.info(`您暂时没有代还资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`);
+        this.props.toast.info(`您暂时没有代还资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`);
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
@@ -230,7 +230,7 @@ export default class HomePage extends PureComponent {
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
-        Toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
+        this.props.toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
@@ -271,7 +271,7 @@ export default class HomePage extends PureComponent {
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -285,19 +285,19 @@ export default class HomePage extends PureComponent {
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         // 有风控没绑信用卡 跳绑信用卡页面
         store.setBackUrl('/home/home');
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
         }, 3000);
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -339,14 +339,14 @@ export default class HomePage extends PureComponent {
                 this.setState({
                   showToast: false,
                 });
-                Toast.info('资质检测完成，可正常借款', 3, () => {
+                this.props.toast.info('资质检测完成，可正常借款', 3, () => {
                   this.requestBindCardState();
                 });
               } else {
                 this.requestBindCardState();
               }
             } else { // 失败的话刷新首页
-              Toast.info(result.msgInfo, 2 ,() => {
+              this.props.toast.info(result.msgInfo, 2 ,() => {
                 this.requestGetUsrInfo();
               });
             }
@@ -413,7 +413,7 @@ export default class HomePage extends PureComponent {
         // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
         this.cacheBanner();
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -433,7 +433,7 @@ export default class HomePage extends PureComponent {
 
   // 去登陆
   handleNeedLogin = () => {
-    Toast.info('请先登录', 2, () => {
+    this.props.toast.info('请先登录', 2, () => {
       this.props.history.push({pathname: '/login', state: { isAllowBack: true }});
     });
   };

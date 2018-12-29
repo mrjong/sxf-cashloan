@@ -5,7 +5,7 @@ import router from 'routers';
 import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
-import fetchinit from 'utils/FetchInit';
+import fetchInit from './fetch';
 import { initAnalytics } from './utils/Analytins';
 import {handleWindowError} from 'utils'
 import ErrorBoundary from 'components/errorboundary-page';
@@ -20,7 +20,7 @@ if (!window.sa) {
 	window.sa = sa;
 }
 handleWindowError()
-fetchinit();
+fetchInit();
 initAnalytics();
 const renders = (Component) =>
 	render(

@@ -22,6 +22,7 @@ const API = {
   getProv: '/rcm/qryProv',
   getRelat: '/rcm/qryRelat',
   submitData: '/auth/personalData',
+  qryCity: '/rcm/qryCity'
 };
 
 let urlQuery = '';
@@ -227,7 +228,7 @@ export default class essential_information extends PureComponent {
                     const prov = (result && result.data && result.data.length) ? result.data : [];
                     return prov.map(item => ({ value: item.key, label: item.value }));
                   }),
-                (provCd) => this.props.$fetch.get(`/rcm/qryCity/${provCd}`)
+                (provCd) => this.props.$fetch.get(`${API.qryCity}/${provCd}`)
                   .then(result => {
                     const city = (result && result.data && result.data.length) ? result.data : [];
                     return city.map(item => ({ value: item.value, label: item.value }));

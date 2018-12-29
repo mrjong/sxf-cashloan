@@ -11,7 +11,7 @@ import { home } from 'utils/AnalytinsType';
 import SButton from 'components/button';
 import TabList from '../tag_list';
 
-import style from './style.scss';
+import style from './index.scss';
 
 const API = {
   QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
@@ -130,19 +130,19 @@ export default class ModalInfo extends Component {
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         // 有风控没绑信用卡 跳绑信用卡页面
         store.setBackUrl('/home/home');
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
         }, 3000);
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };
@@ -155,7 +155,7 @@ export default class ModalInfo extends Component {
       if (res && res.msgCode === 'PTM0000') {
         this.beforeJump();
       } else {
-        Toast.info(res.msgInfo);
+        this.props.toast.info(res.msgInfo);
       }
     });
   };
@@ -196,7 +196,7 @@ export default class ModalInfo extends Component {
           lendersDateList: lendersDateListFormat,
         });
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };

@@ -61,10 +61,10 @@ export default class LoginComponent extends Component {
 					.then(
 						(result) => {
 							if (result.msgCode !== 'PTM0000') {
-								Toast.info(result.msgInfo);
+								this.props.toast.info(result.msgInfo);
 								return;
 							} else {
-								Toast.info('发送成功，请注意查收！');
+								this.props.toast.info('发送成功，请注意查收！');
 								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 								timmer = setInterval(() => {
 									this.setState({ flag: false, smsText: i-- + '"' });
@@ -76,12 +76,12 @@ export default class LoginComponent extends Component {
 							}
 						},
 						(error) => {
-							error.msgInfo && Toast.info(error.msgInfo);
+							error.msgInfo && this.props.toast.info(error.msgInfo);
 						}
 					);
 				return true;
 			} else {
-				Toast.info(getFirstError(err));
+				this.props.toast.info(getFirstError(err));
 			}
 		});
 	}
@@ -90,7 +90,7 @@ export default class LoginComponent extends Component {
 		const { closeCb, refreshPageFn } = this.props;
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
-			Toast.info('请先获取短信验证码');
+			this.props.toast.info('请先获取短信验证码');
 			return;
 		}
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -111,7 +111,7 @@ export default class LoginComponent extends Component {
 					.then(
 						(res) => {
 							if (res.msgCode !== 'PTM0000') {
-								res.msgInfo && Toast.info(res.msgInfo);
+								res.msgInfo && this.props.toast.info(res.msgInfo);
 								return;
 							}
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
@@ -128,11 +128,11 @@ export default class LoginComponent extends Component {
 							refreshPageFn();
 						},
 						(error) => {
-							error.msgInfo && Toast.info(error.msgInfo);
+							error.msgInfo && this.props.toast.info(error.msgInfo);
 						}
 					);
 			} else {
-				Toast.info(getFirstError(err));
+				this.props.toast.info(getFirstError(err));
 			}
 		});
 	};

@@ -32,7 +32,7 @@ export default class LandingPage extends PureComponent {
     this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
         if (!res.data.landingImage) {
-          Toast.info('活动已过期!');
+          this.props.toast.info('活动已过期!');
           setTimeout(() => {
             this.props.history.push('/home/home');
           }, 3000);
@@ -47,7 +47,7 @@ export default class LandingPage extends PureComponent {
           imgUrl: res.data.landingImage,
         });
       } else {
-        Toast.info(res.msgInfo);
+        this.props.toast.info(res.msgInfo);
       }
     });
   }

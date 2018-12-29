@@ -82,7 +82,7 @@ export default class CreditCard extends PureComponent {
           bankList: formatData,
         });
       } else {
-        Toast.info(res.msgInfo);
+        this.props.toast.info(res.msgInfo);
       }
     });
   };
@@ -127,7 +127,7 @@ export default class CreditCard extends PureComponent {
   verifyValidityDate(value) {
     let isVerify = false;
     if (!value) {
-      Toast.info('请选择有效期');
+      this.props.toast.info('请选择有效期');
       isVerify = false;
     } else {
       isVerify = true;
@@ -167,7 +167,7 @@ export default class CreditCard extends PureComponent {
         if (errorFieldList.length === 1 && errorFieldList[0] === 'verifyCode') {
           this.requestVerifyCode(fn);
         } else {
-          Toast.info(getFirstError(err));
+          this.props.toast.info(getFirstError(err));
         }
       }
     });
@@ -197,7 +197,7 @@ export default class CreditCard extends PureComponent {
         });
         fn(true);
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     })
   };
@@ -212,7 +212,7 @@ export default class CreditCard extends PureComponent {
         this.requestBindBankCard();
       } else {
         isFetching = false;
-        Toast.info(getFirstError(err));
+        this.props.toast.info(getFirstError(err));
       }
     });
   };
@@ -248,7 +248,7 @@ export default class CreditCard extends PureComponent {
             this.props.history.goBack();
           }
         } else {
-          Toast.info(result.msgInfo);
+          this.props.toast.info(result.msgInfo);
         }
       },
       err => {

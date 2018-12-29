@@ -6,10 +6,44 @@ import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen } from 'utils/common';
 import { handleErrorLog } from 'utils'
 
-const fetchinit = () => {
+const fetchInit = () => {
 	let timer;
 	let timerList = [];
-	let num = 0;
+  let num = 0;
+  fetch.init({
+		timeout: 10000, // 默认超时
+		baseURL: '/wap', // baseurl
+		onShowErrorTip: (err, errorTip) => {
+			if (errorTip) Toast.fail('系统开小差，请稍后重试');
+		},
+		onShowSuccessTip: (response, successTip) => {
+			switch (response.data.msgCode) {
+				case 'PTM0000':
+					return;
+				case 'PTM1000': // 用户登录超时
+					handleErrorLog('PTM1000', '登录超时，请重新登陆')
+					if (pagesIgnore(window.location.pathname)) {
+						return;
+					}
+					Toast.info('登录超时，请重新登陆');
+					setTimeout(() => {
+						window.ReactRouterHistory.replace('/login');
+					}, 3000);
+					return;
+				case 'PTM0100': // 未登录
+					handleErrorLog('PTM0100', '未登录')
+					if (pagesIgnore(window.location.pathname)) {
+						return;
+					}
+					Toast.info('请先登录');
+					setTimeout(() => {
+						window.ReactRouterHistory.replace('/login');
+					}, 3000);
+					return;
+				default:
+			}
+		}
+	});
 	// 拦截请求
 	fetch.axiosInstance.interceptors.request.use(
 		(cfg) => {
@@ -54,7 +88,7 @@ const fetchinit = () => {
 			Promise.reject(error);
 		}
 	);
-	// 响应拦截
+	// 拦截响应
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
 			num--;
@@ -96,46 +130,6 @@ const fetchinit = () => {
 			return Promise.reject(error);
 		}
 	);
-	fetch.init({
-		timeout: 10000, // 默认超时
-		baseURL: '/wap', // baseurl
-		onShowErrorTip: (err, errorTip) => {
-			// console.log('sessionStorage:', sessionStorage);
-			// console.log('localStorage', localStorage);
-			// console.log('cookie', document.cookie);
-			if (errorTip) Toast.fail('系统开小差，请稍后重试');
-		},
-		onShowSuccessTip: (response, successTip) => {
-			switch (response.data.msgCode) {
-				case 'PTM0000':
-					return;
-				case 'PTM1000': // 用户登录超时
-					handleErrorLog('PTM1000', '登录超时，请重新登陆')
-					if (pagesIgnore(window.location.pathname)) {
-						return;
-					}
-					// console.log('sessionStorage:', sessionStorage);
-					// console.log('localStorage', localStorage);
-					// console.log('cookie', document.cookie);
-					Toast.info('登录超时，请重新登陆');
-					setTimeout(() => {
-						window.ReactRouterHistory.replace('/login');
-					}, 3000);
-					return;
-				case 'PTM0100': // 未登录
-					handleErrorLog('PTM0100', '未登录')
-					if (pagesIgnore(window.location.pathname)) {
-						return;
-					}
-					Toast.info('请先登录');
-					setTimeout(() => {
-						window.ReactRouterHistory.replace('/login');
-					}, 3000);
-					return;
-				default:
-			}
-		}
-	});
 };
 
-export default fetchinit;
+export default fetchInit;

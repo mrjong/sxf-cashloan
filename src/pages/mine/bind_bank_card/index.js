@@ -46,7 +46,7 @@ export default class BindBankCardPage extends PureComponent {
           userInfo: res.data,
         });
       } else {
-        Toast.info(res.msgInfo);
+        this.props.toast.info(res.msgInfo);
       }
     });
   };

@@ -54,7 +54,7 @@ export default class BankCard extends React.PureComponent {
   handleUpdate = () => {
     const { indexSts } = this.props.contentData;
     if (indexSts && indexSts === 'LN0009') {
-      Toast.info('您有未结清的账单，暂时不能更新');
+      this.props.toast.info('您有未结清的账单，暂时不能更新');
     } else {
       this.applyCardRepay();
     }
@@ -71,7 +71,7 @@ export default class BankCard extends React.PureComponent {
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {
-        Toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo);
       }
     });
   };

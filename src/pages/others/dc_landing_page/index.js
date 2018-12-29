@@ -46,7 +46,7 @@ export default class dc_landing_page extends PureComponent {
     goLogin = () => {
         const osType = getDeviceType();
         if (!this.state.smsJrnNo) {
-            Toast.info('请先获取短信验证码');
+            this.props.toast.info('请先获取短信验证码');
             return;
         }
         const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
@@ -65,7 +65,7 @@ export default class dc_landing_page extends PureComponent {
                 .then(
                     res => {
                         if (res.msgCode !== 'PTM0000') {
-                            res.msgInfo && Toast.info(res.msgInfo);
+                            res.msgInfo && this.props.toast.info(res.msgInfo);
                             return;
                         }
                         sa.login(res.data.userId);
@@ -79,16 +79,16 @@ export default class dc_landing_page extends PureComponent {
                         } else {
                             store.setTokenSession(res.data.tokenId);
                         }
-                        Toast.info('领取成功，请去APP打开使用', 2, () => {
+                        this.props.toast.info('领取成功，请去APP打开使用', 2, () => {
                             this.props.history.replace('/others/download_page');
                         })
                     },
                     error => {
-                        error.msgInfo && Toast.info(error.msgInfo);
+                        error.msgInfo && this.props.toast.info(error.msgInfo);
                     },
                 );
             } else {
-                Toast.info(getFirstError(err));
+                this.props.toast.info(getFirstError(err));
             }
         });
     };
@@ -118,11 +118,11 @@ export default class dc_landing_page extends PureComponent {
                 })
                     .then(result => {
                         if (result.msgCode !== 'PTM0000') {
-                            Toast.info(result.msgInfo);
+                            this.props.toast.info(result.msgInfo);
                             this.setState({ valueInputImgCode: '' });
                             return false;
                         }
-                        Toast.info('发送成功，请注意查收！');
+                        this.props.toast.info('发送成功，请注意查收！');
                         this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
                         timmer = setInterval(() => {
                             this.setState({ flag: false, timers: i-- + '"' });
@@ -133,7 +133,7 @@ export default class dc_landing_page extends PureComponent {
                         }, 1000);
                     });
             } else {
-                Toast.info(getFirstError(err));
+                this.props.toast.info(getFirstError(err));
             }
         });
     }
