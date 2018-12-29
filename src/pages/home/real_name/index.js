@@ -4,7 +4,7 @@ import { createForm } from 'rc-form';
 import updateLeft from '../../../assets/images/real_name/left.png';
 import updateRight from '../../../assets/images/real_name/right.png';
 import updateBottom from '../../../assets/images/real_name/bottom.png';
-import FEZipImage from '../../../components/fzp-image';
+import FEZipImage from '../../../components/fzp_image';
 import { InputItem, List } from 'antd-mobile';
 import ButtonCustom from '../../../components/button';
 import style from './index.scss';

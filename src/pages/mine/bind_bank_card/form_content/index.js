@@ -6,7 +6,7 @@ import fetch from 'sx-fetch';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
 import ButtonCustom from 'components/button';
-import CountDownButton from 'components/count-down-button';
+import CountDownButton from 'components/count_down_button';
 import styles from '../index.scss';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';

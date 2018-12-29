@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import lrz from 'lrz';
 import styles from './index.scss';
-import { handleInputBlur } from 'utils'
 
 
 export default class FEZIpImage extends Component {

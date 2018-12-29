@@ -8,13 +8,13 @@ import {isBugBrowser, isWXOpen } from 'utils';
 import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
-import SButton from 'components/button';
+import SXFButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
 import InfoCard from './components/info_card/index.js';
 import BankContent from './components/bank_content/index.js';
 import ModalContent from './components/modal_info';
-import MsgBadge from './components/msg-badge';
+import MsgBadge from './components/msg_badge';
 import style from './index.scss';
 
 const API = {
@@ -447,9 +447,9 @@ export default class HomePage extends PureComponent {
       case 'LN0001': // 新用户，信用卡未授权
         componentsDisplay = (
           <InfoCard contentData={usrIndexInfo}>
-            <SButton className={style.smart_button_one} onClick={this.handleSmartClick}>
+            <SXFButton className={style.smart_button_one} onClick={this.handleSmartClick}>
               申请信用卡代还
-            </SButton>
+            </SXFButton>
           </InfoCard>
         );
         break;
@@ -473,9 +473,9 @@ export default class HomePage extends PureComponent {
             {usrIndexInfo.indexSts === 'LN0002' ||
               usrIndexInfo.indexSts === 'LN0010' ||
               (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-                <SButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+                <SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
                   {usrIndexInfo.indexMsg}
-                </SButton>
+                </SXFButton>
               )}
           </BankContent>
         );
@@ -485,9 +485,9 @@ export default class HomePage extends PureComponent {
         if (isWXOpen()) {
           componentsDisplay = (
             <InfoCard contentData={usrIndexInfo}>
-              <SButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
+              <SXFButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
                 申请信用卡代还
-              </SButton>
+              </SXFButton>
             </InfoCard>
           );
         }

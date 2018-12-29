@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from "react"
 import styles from "./index.scss"
-import { headerIgnore } from 'utils'
-import { setTitle } from 'utils'
+import { headerIgnore, setTitle} from 'utils'
 export default class Header extends Component {
   constructor(props) {
     super(props);

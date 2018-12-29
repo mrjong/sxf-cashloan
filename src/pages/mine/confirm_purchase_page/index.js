@@ -3,14 +3,13 @@ import { List, DatePicker, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import ButtonCustom from 'components/button';
-import CountDownButton from 'components/count-down-button'
+import CountDownButton from 'components/count_down_button'
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getFirstError } from 'utils';
+import { getFirstError, handleInputBlur } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { membership } from 'utils/analytinsType';
-import { handleInputBlur } from 'utils'
 
 const API = {
   pay: '/my/quickpay/pay',

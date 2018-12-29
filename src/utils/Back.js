@@ -50,11 +50,11 @@ if (window.history && window.history.pushState) {
       // 返回拦截弹窗
       let userInfo = store.getUserInfo();
       let backFlag = store.getBackFlag();
-      if(store.getDisableBack()){
+      if (store.getDisableBack()) {
         return;
       }
       // 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
-      if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam')>0) {
+      if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
         if (queryData.isShowCommit === 'true') {
           window.ReactRouterHistory.push('/home/home');
           return
@@ -63,15 +63,15 @@ if (window.history && window.history.pushState) {
           return
         }
       }
-      if (window.location.pathname === '/mine/credit_list_page' && window.location.search.indexOf('noBackParam')>0) {
+      if (window.location.pathname === '/mine/credit_list_page' && window.location.search.indexOf('noBackParam') > 0) {
         window.ReactRouterHistory.push('/home/home');
       }
-      if (window.location.pathname === '/home/home' && window.location.search.indexOf('noBackParam')>0) {
+      if (window.location.pathname === '/home/home' && window.location.search.indexOf('noBackParam') > 0) {
         logoutAppHandler();
         return
       }
       if (window.location.pathname === '/home/essential_information' || window.location.pathname === '/home/real_name') {
-        if((window.location.pathname === '/home/real_name' && userInfo && userInfo.nameHid) || (window.location.pathname === '/home/real_name' && backFlag) || (window.location.pathname === '/home/essential_information' && backFlag)) {
+        if ((window.location.pathname === '/home/real_name' && userInfo && userInfo.nameHid) || (window.location.pathname === '/home/real_name' && backFlag) || (window.location.pathname === '/home/essential_information' && backFlag)) {
           history.go(-2);
           // history.back();
         } else {
@@ -116,7 +116,7 @@ if (window.history && window.history.pushState) {
         let hash = window.location.hash;
         if (hash === '') {
           // 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
-          console.log('----+',store.getMoxieBackUrl())
+          console.log('----+', store.getMoxieBackUrl())
           if (store.getMoxieBackUrl()) {
             store.removeMoxieBackUrl();
           }
@@ -139,7 +139,7 @@ if (window.history && window.history.pushState) {
               }
               if (tokenFromStotage && token) {
                 logoutAppHandler();
-              }else if(isWXOpen() && !tokenFromStotage && !token){
+              } else if (isWXOpen() && !tokenFromStotage && !token) {
                 window.close();
                 WeixinJSBridge.call('closeWindow');
               }
@@ -147,7 +147,7 @@ if (window.history && window.history.pushState) {
             case '/order/order_page':
               if (tokenFromStotage && token) {
                 logoutAppHandler();
-              }else if(isWXOpen() && !tokenFromStotage && !token){
+              } else if (isWXOpen() && !tokenFromStotage && !token) {
                 window.close();
                 WeixinJSBridge.call('closeWindow');
               }

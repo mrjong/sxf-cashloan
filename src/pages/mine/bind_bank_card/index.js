@@ -3,7 +3,7 @@ import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import STabs from 'components/tabs';
 import { store } from 'utils/store';
-import FormContent from './form-content';
+import FormContent from './form_content';
 import style from './index.scss';
 
 const API = {

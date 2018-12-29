@@ -3,11 +3,10 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
-import { logoutAppHandler } from 'utils';
 import Lists from 'components/lists';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
-import { isBugBrowser, isWXOpen } from 'utils';
+import { isBugBrowser, isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态

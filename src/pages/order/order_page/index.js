@@ -7,7 +7,7 @@ import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen } from 'utils';
-import SButton from 'components/button';
+import SXFButton from 'components/button';
 import dayjs from 'dayjs'
 let hasNext = true
 const Item = List.Item;
@@ -307,9 +307,9 @@ export default class message_page extends PureComponent {
                         <i />暂无账单
                         {isWXOpen() && !tokenFromStotage && !token ?
                         // {true ?
-                            <SButton className={style.noLogin} onClick={this.goLogin}>
+                            <SXFButton className={style.noLogin} onClick={this.goLogin}>
                                 去登录
-                            </SButton>
+                            </SXFButton>
                             :
                             null
                         }

@@ -1,14 +1,12 @@
 import { store } from 'utils/store';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
-
 import React, { Component } from 'react';
-import { Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import SButton from 'components/button';
+import SXFButton from 'components/button';
 import TabList from '../tag_list';
 
 import style from './index.scss';
@@ -269,9 +267,9 @@ export default class ModalInfo extends Component {
             </div>
           </li>
         </ul>
-        <SButton onClick={this.handleClickConfirm} className={style.modal_btn}>
+        <SXFButton onClick={this.handleClickConfirm} className={style.modal_btn}>
           确定
-        </SButton>
+        </SXFButton>
       </div>
     );
   }

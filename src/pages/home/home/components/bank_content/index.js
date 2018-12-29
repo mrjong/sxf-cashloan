@@ -1,4 +1,3 @@
-import SButton from 'components/button';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
 import { Toast } from 'antd-mobile';

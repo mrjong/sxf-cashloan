@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Lists from 'components/lists';
 import Panel from 'components/panel/index.js';
 import fetch from "sx-fetch";
-import SButton from 'components/button';
+import SXFButton from 'components/button';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
@@ -490,9 +490,9 @@ export default class order_detail_page extends PureComponent {
 
                 {
                     billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-                        <SButton onClick={() => { this.setState({ showMoudle: true, isPayAll: false, }); buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' }); }}>
+                        <SXFButton onClick={() => { this.setState({ showMoudle: true, isPayAll: false, }); buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' }); }}>
                             主动还款
-                        </SButton>
+                        </SXFButton>
                         <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
                     </div> : <div className={styles.mb50}></div>
                 }
@@ -528,9 +528,9 @@ export default class order_detail_page extends PureComponent {
                             </div>
                             : null
                         }
-                        <SButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
+                        <SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
                             立即还款
-                        </SButton>
+                        </SXFButton>
                     </div>
                 </Modal>
 

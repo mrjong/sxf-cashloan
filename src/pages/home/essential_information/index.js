@@ -2,18 +2,17 @@ import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { InputItem, List } from 'antd-mobile';
 import informationMore from '../../../assets/images/real_name/more.png';
-import AsyncCascadePicker from '../../../components/async-cascad-picker';
+import AsyncCascadePicker from '../../../components/async_cascad_picker';
 import ButtonCustom from '../../../components/button';
 import fetch from 'sx-fetch';
 import { getLngLat } from '../../../utils/Address.js';
 import style from './index.scss';
-import { getFirstError, validators } from 'utils';
+import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from "utils/buryPointMethods";
 import qs from 'qs';
 import { store } from 'utils/store';
-import { handleInputBlur} from 'utils'
 
 const pageKey = home.basicInfoBury;
 

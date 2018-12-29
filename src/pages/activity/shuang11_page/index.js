@@ -6,7 +6,7 @@ import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser } from 'utils';
+import { getDeviceType, getFirstError, isBugBrowser, handleInputBlur } from 'utils';
 import bg from './img/bg.png';
 import img_5_qiang from './img/img_5_qiang.png';
 import alert_new_user from './img/alert_new_user.png';
@@ -28,7 +28,6 @@ import login_bg from './img/login_bg.png';
 import close from './img/20181024_close.png';
 import alert_10 from './img/alert_10.png';
 import alert_15 from './img/alert_15.png';
-import { handleInputBlur } from 'utils'
 
 let timmer;
 const API = {
