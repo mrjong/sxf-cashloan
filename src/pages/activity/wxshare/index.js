@@ -202,8 +202,9 @@ export default class wxshare extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode !== 'PTM0000') {
-					res.msgInfo && Toast.info(res.msgInfo);
-					return;
+					res.data.urlCode = '';
+					// res.msgInfo && Toast.info(res.msgInfo);
+					// return;
 				}
 				if (queryData.urlCode) {
 					delete queryData.urlCode;
