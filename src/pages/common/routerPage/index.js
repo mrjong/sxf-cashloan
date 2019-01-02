@@ -11,6 +11,8 @@ import { changeHistoryState, isBugBrowser, pagesIgnore, vconsole } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
 import { pageView } from 'utils/analytins';
 let consoleshowStr = '';
+import { SXFToast } from 'utils/SXFLoading';
+
 export default class router_Page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -28,6 +30,8 @@ export default class router_Page extends PureComponent {
 	componentWillMount() {
 		// 出现打印插件
 		vconsole();
+        // 为跳转到协议添加loading
+        sessionStorage.setItem('fromPage','wap')
 		if (!store.getHistoryRouter()) {
 			store.setHistoryRouter('first-come-in');
 		}
@@ -89,6 +93,7 @@ export default class router_Page extends PureComponent {
 						history,
 						params: location.state,
 						toast: Toast,
+						SXFToast,
 						setTitle: (title) => {
 							this.setState({
 								newTitle: title
@@ -98,10 +103,11 @@ export default class router_Page extends PureComponent {
 				});
 			} else {
 				this.setState({
-					newTitle: '重新加载',
+                    newTitle: '重新加载',
+                    showPage:true,
 					component: React.createElement(errPage, {
 						match,
-						history,
+                        history,
 						params: {
 							pageType: '404'
 						}
@@ -112,7 +118,8 @@ export default class router_Page extends PureComponent {
 		} catch (error) {
 			console.log(error);
 			this.setState({
-				newTitle: '重新加载',
+                newTitle: '重新加载',
+                showPage:true,
 				component: React.createElement(errPage, {
 					match,
 					history,

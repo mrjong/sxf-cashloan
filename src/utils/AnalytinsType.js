@@ -24,7 +24,11 @@ const home = {
 	informationConfirm: 'DC_HOME_BASE_INFO_CONFIRM', // 实名认证页-确定按钮
 	basicInfoBury: 'DC_HOME_BASE_INFO_BURY', // 基本信息输入框下拉框埋点
 	basicInfoComplete: 'DC_HOME_BASICINFO_COMPLETE', // 基本信息页-确定按钮
-	landingPage: 'DC_HOME_LANDING_PAGE' // 落地页
+	landingPage: 'DC_HOME_LANDING_PAGE', // 落地页
+	bannerClick: 'DC_HOME_BANNER_CLICK', // 点击banner
+	repaymentBtnClick3: 'DC_HOME_CLICK_REPAYMENT3', // 首页LN0003状态的点击
+	repaymentBtnClick6: 'DC_HOME_CLICK_REPAYMENT6', // 首页LN0006状态的点击
+	repaymentBtnClick8: 'DC_HOME_CLICK_REPAYMENT8', // 首页LN0008状态的点击
 };
 
 const mine = {

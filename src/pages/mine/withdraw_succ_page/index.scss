@@ -1,0 +1,26 @@
+.withdraw_succ_page{
+	text-align: center;
+	.withdrawSuccCont{
+		font-size: 36px;
+		font-weight: 400;
+		color: rgba(150, 150, 150, 1);
+		background: #fff;
+		padding: 81px 0;
+		img{
+			width: 128px;
+			vertical-align: top;
+		}
+	}
+	.withdrawMoney{
+		font-size: 72px;
+		font-weight: 400;
+		color: rgba(61, 61, 61, 1);
+		margin: 50px 0 39px 0;
+	}
+	.backBtn{
+		width: 652px;
+		margin: 159px auto;
+		height: 102px;
+		line-height: 102px;
+	}
+}

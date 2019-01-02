@@ -16,5 +16,11 @@ export default [
 		title: '免息提款机',
 		arrowHide: true,
 		component: () => import('pages/activity/shuang12_page')
+	},
+	{
+		path: '/activity/dazhuanpan',
+		title: '大转盘',
+		arrowHide: true,
+		component: () => import('pages/activity/dazhuanpan')
 	}
 ];

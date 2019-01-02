@@ -139,7 +139,8 @@ export default class LoginComponent extends Component {
     onBlur = ()=>{
         handleInputBlur()
         console.log('222222222');
-        $('body').animate( {scrollTop: 0}, 500);
+		// $('body').animate( {scrollTop: 0}, 500);
+		handleInputBlur()
     }
 	render() {
 		const { getFieldProps } = this.props.form;

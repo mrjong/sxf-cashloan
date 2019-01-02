@@ -166,8 +166,8 @@ export default class LoginComponent extends Component {
 							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
 						})}
 						className={style.form_control}
-            placeholder="请输入手机号码"
-            onBlur={() => {handleInputBlur()}}
+						placeholder="请输入手机号码"
+						onBlur={() => {handleInputBlur()}}
 					/>
 				</div>
 				<div className={style.inputCode}>
@@ -186,8 +186,8 @@ export default class LoginComponent extends Component {
 							rules: [ { required: true, message: '请输入正确验证码' } ]
 						})}
 						className={style.form_control}
-            placeholder="请输入短信验证码"
-            onBlur={() => {handleInputBlur()}}
+						placeholder="请输入短信验证码"
+						onBlur={() => {handleInputBlur()}}
 					/>
 					<div className={!this.state.timeflag ? style.getCodeAct : style.getCode}>
 						<Button
