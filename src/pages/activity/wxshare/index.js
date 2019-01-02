@@ -110,7 +110,10 @@ export default class wxshare extends PureComponent {
 			link: this.state.href.replace(/&hideInput=true/g, ''), // 测试
 			imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png',
 			success: function() {
-				_this.doInvite();
+				// 增加timeout 解决ios报系统开小差问题
+				setTimeout(() => {
+					_this.doInvite();
+				}, 200)
 			},
 			cancel: function() {
 				Toast.info('取消分享');
