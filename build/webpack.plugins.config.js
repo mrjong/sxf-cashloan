@@ -25,7 +25,7 @@ let plugins = [
 		// favicon: path.resolve(__dirname, '../src/favicon.png'),
 		chunksSortMode: 'dependency' //按dependency的顺序引入
 	}),
-	// new webpack.HotModuleReplacementPlugin(), //热更新插件
+	new webpack.HotModuleReplacementPlugin(), //热更新插件
 	new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
 ];
 
@@ -130,7 +130,7 @@ let getDevPlugins = function() {
 			saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
 		})
 	);
-	plugins.push(new webpack.HotModuleReplacementPlugin());
+	// plugins.push(new webpack.HotModuleReplacementPlugin());
 	plugins.push(
 		new HappyPack({
 			id: 'happybabel',
