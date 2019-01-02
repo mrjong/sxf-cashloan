@@ -202,14 +202,16 @@ export default class wxshare extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode !== 'PTM0000') {
-					res.data.urlCode = '';
+					res.data = {
+						...res.data,
+						urlCode: '',
+					}
 					// res.msgInfo && Toast.info(res.msgInfo);
 					// return;
 				}
 				if (queryData.urlCode) {
 					delete queryData.urlCode;
 				}
-				console.log(queryData);
 				this.setState(
 					{
 						urlCode: res.data.urlCode,
@@ -221,7 +223,13 @@ export default class wxshare extends PureComponent {
 						this.updateLink();
 					}
 				);
-				location.href = `${this.state.href}&urlCode=${res.data.urlCode}`;
+				if (this.state.href.indexOf('urlCode') > -1) {
+					let url = this.state.href.split('&urlCode')[0];
+					location.href = `${url}&urlCode=${res.data.urlCode}`;
+				} else {
+					location.href = `${this.state.href}&urlCode=${res.data.urlCode}`;
+				}
+				// location.href = `${this.state.href}&urlCode=${res.data.urlCode}`;
 			});
 	};
 	// 用户点击分享连接行为
