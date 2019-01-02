@@ -4,11 +4,12 @@ import { Modal, Toast, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import {isBugBrowser, isWXOpen } from 'utils';
+import {isBugBrowser, isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/button';
+import { SXFToast } from 'utils/SXFLoading';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
 import InfoCard from './components/InfoCard';
@@ -212,6 +213,7 @@ export default class home_page extends PureComponent {
         break;
       case 'LN0003': // 账单爬取成功 (直接跳数据风控)
         console.log('LN0003 无风控信息 直接跳数据风控');
+        buriedPointEvent(home.repaymentBtnClick3);
         buriedPointEvent(mine.creditExtension, {
           entry: '首页',
         });
@@ -227,6 +229,7 @@ export default class home_page extends PureComponent {
         break;
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
+        buriedPointEvent(home.repaymentBtnClick6);
         this.repayCheck();
         break;
       case 'LN0007': // 放款中
@@ -235,6 +238,7 @@ export default class home_page extends PureComponent {
         break;
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
+        buriedPointEvent(home.repaymentBtnClick8);
         this.repayCheck();
         break;
       case 'LN0009': // 放款成功
@@ -268,7 +272,7 @@ export default class home_page extends PureComponent {
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
-        Toast.loading('加载中...', 0);
+        SXFToast.loading('加载中...', 0);
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {
@@ -320,7 +324,11 @@ export default class home_page extends PureComponent {
         },
       );
     }, 800);
-    this.props.$fetch.post(API.AGENT_REPAY_CHECK, null,
+    const osType = getDeviceType();
+    const params = {
+      osTyp: osType,
+    }
+    this.props.$fetch.post(API.AGENT_REPAY_CHECK, params,
       {
         timeout: 100000,
         hideLoading: true,

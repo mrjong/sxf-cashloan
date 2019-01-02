@@ -10,7 +10,6 @@ import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
 
-
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
 	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
@@ -225,6 +224,7 @@ export default class bind_credit_page extends PureComponent {
 						//   alert(getFieldError('account').join('、'));
 						// }}
 						placeholder="请输入信用卡卡号"
+						onBlur={() => {handleInputBlur()}}
 					>
 						信用卡卡号
 					</InputItem>

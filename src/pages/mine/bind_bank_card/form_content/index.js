@@ -310,6 +310,7 @@ export default class CreditCard extends PureComponent {
             {...getFieldProps('bankCardNo', {
               rules: [{ required: true, message: '请输入正确的银行卡号' }, { validator: this.verifyBankNum }],
             })}
+            onBlur={() => {handleInputBlur()}}
           >
             卡号
           </InputItem>
@@ -327,6 +328,7 @@ export default class CreditCard extends PureComponent {
                   { validator: this.verifySafeCode },
                 ],
               })}
+              onBlur={() => {handleInputBlur()}}
             >
               安全码
             </InputItem>
@@ -357,6 +359,7 @@ export default class CreditCard extends PureComponent {
             {...getFieldProps('phoneNo', {
               rules: [{ required: true, message: '请输入正确的手机号' }, { validator: this.verifyPhoneNum }],
             })}
+            onBlur={() => {handleInputBlur()}}
           >
             手机号
           </InputItem>
@@ -369,6 +372,7 @@ export default class CreditCard extends PureComponent {
               {...getFieldProps('verifyCode', {
                 rules: [{ required: true, message: '请输入正确验证码' }, { validator: this.verifyVerifyCode }],
               })}
+              onBlur={() => {handleInputBlur()}}
             >
               验证码
             </InputItem>

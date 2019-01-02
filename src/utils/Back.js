@@ -7,8 +7,8 @@ import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'ut
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import PopUp from 'utils/PopUp'
-import Dialog from '../components/dialog'
+import PopUp from 'components/PopUp'
+import Dialog from 'components/dialog'
 const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
   let obj = new PopUp(< Dialog open content={

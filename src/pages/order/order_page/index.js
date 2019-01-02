@@ -105,7 +105,7 @@ export default class message_page extends PureComponent {
             return []
         }
         if (pIndex === 0) {
-            this.props.toast.loading('数据加载中...', 10000);
+            this.props.SXFToast.loading('数据加载中...', 10000);
         }
         let data = await this.props.$fetch.post(API.billList, {
             qryType: 0,
@@ -115,7 +115,7 @@ export default class message_page extends PureComponent {
             .then(res => {
                 if (pIndex === 0) {
                     setTimeout(() => {
-                        this.props.toast.hide();
+                        this.props.SXFToast.hide();
                     }, 600);
                 }
                 if (res.msgCode === "PTM0000") {
@@ -149,7 +149,7 @@ export default class message_page extends PureComponent {
                             isLoading: false,
                             refreshing: false
                         })
-                        this.props.toast.hide();
+                        this.props.SXFToast.hide();
                     }, 600);
                 }
             })

@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import style from "./index.scss";
 import { store } from 'utils/store';
-export default class Desc extends PureComponent {
+export default class message_detail_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {

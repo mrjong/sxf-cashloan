@@ -1,8 +1,10 @@
+import React from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
+import { SXFToast } from 'utils/SXFLoading';
 
 const fetchInit = () => {
 	let timer;
@@ -73,7 +75,7 @@ const fetchInit = () => {
 					if (timerList.length > 1) {
 						return;
 					}
-					Toast.loading('数据加载中...', 10);
+					SXFToast.loading('数据加载中...', 10);
 				}, 300);
 				timerList.push(timer);
 			}
@@ -97,10 +99,10 @@ const fetchInit = () => {
 					}
 					timer = undefined;
 					timerList = [];
-					Toast.hide();
+					SXFToast.hide();
 				}
 			} else {
-				Toast.loading('数据加载中...', 10);
+				SXFToast.loading('数据加载中...', 10);
 			}
 			return response;
 		},
@@ -108,12 +110,11 @@ const fetchInit = () => {
 			// 有响应则取status,statusText，超时则取error.message
 			try {
 				console.log('----异常日志----')
-				(error.response && handleErrorLog(
-					error.response.status,
-					error.response.statusText))
-				|| (error.config && handleErrorLog(
-					error.message,
-					error.message))
+				if (error.response) {
+					handleErrorLog(error.response.status,error.response.statusText,error.config)
+				} else if (error.config) {
+					handleErrorLog(error.message,error.message,error.config)
+				}
 			} catch (err) {
 				// console.log(err)
 			}
@@ -124,8 +125,9 @@ const fetchInit = () => {
 			}
 			timer = undefined;
 			timerList = [];
-			Toast.hide();
-			return Promise.reject(error);
+			SXFToast.hide();
+			let error2 = new Error('系统开小差，请稍后重试');
+			return Promise.reject(error2);
 		}
 	);
 };

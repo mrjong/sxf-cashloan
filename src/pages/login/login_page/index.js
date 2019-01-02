@@ -66,13 +66,13 @@ export default class login_page extends PureComponent {
 	}
 	componentDidMount() {
 		// 安卓键盘抬起会触发resize事件，ios则不会
-	   window.addEventListener("resize", function() {
-	      if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
-	         window.setTimeout(function() {
-	            document.activeElement.scrollIntoViewIfNeeded();
-	         },0);
-	      }
-	   })
+		window.addEventListener("resize", function() {
+			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+			   window.setTimeout(function() {
+				  document.activeElement.scrollIntoViewIfNeeded();
+			   },0);
+			}
+		 })
 		// 获取地址
 		address();
 		pageView();
@@ -80,12 +80,12 @@ export default class login_page extends PureComponent {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', function() {
-	      if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
-	         window.setTimeout(function() {
-	            document.activeElement.scrollIntoViewIfNeeded();
-	         },0);
-	      }
-	   })
+			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+			   window.setTimeout(function() {
+				  document.activeElement.scrollIntoViewIfNeeded();
+			   },0);
+			}
+		 })
 		clearInterval(timmer);
 	}
 
@@ -272,6 +272,7 @@ export default class login_page extends PureComponent {
 						{...getFieldProps('phoneValue', {
 							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
 						})}
+						onBlur={() => {handleInputBlur()}}
 					/>
 					<div className={styles.smsBox}>
 						<InputItem
@@ -284,6 +285,7 @@ export default class login_page extends PureComponent {
 							{...getFieldProps('smsCd', {
 								rules: [ { required: true, message: '请输入正确验证码' } ]
 							})}
+							onBlur={() => {handleInputBlur()}}
 						/>
 						<div
 							className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}

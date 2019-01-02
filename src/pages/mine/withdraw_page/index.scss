@@ -1,0 +1,104 @@
+.withdraw_page{
+	margin: 0 19px;
+}
+.withdrawBox{
+	background: #fff;
+	margin-top: 30px;
+	padding: 20px;
+	border-radius: 30px;
+	.withdrawCont{
+		position: relative;
+		background: url(assets/images/mine/wallet/withdrawing.png) no-repeat center;
+		background-size: 100% 100%;
+		padding: 0 20px;
+		display: flex;
+		align-items: center;
+		height: 189px;
+		.withdrawMoney{
+			font-size: 48px;
+			// font-weight: 400;
+			color: #fff;
+			min-width: 200px;
+			span{
+				font-size: 72px;
+				margin-left: 12px;
+			}
+		}
+	}
+	.withdrawContFail{
+		background-image: url(assets/images/mine/wallet/withdraw_fail.png);
+	}
+	.withdrawContSucc{
+		background-image: url(assets/images/mine/wallet/withdraw_success.png);
+	}
+	.withdrawContent{
+		margin-left: 92px;
+		font-size: 36px;
+		font-weight: 400;
+		color: rgba(37, 39, 41, 1);
+		.withdrawTime{
+			margin-top: 24px;
+			font-size: 24px;
+			font-weight: 400;
+			color: rgba(149, 149, 149, 1);
+		}
+	}
+}
+.noMsg {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	color: #999;
+	margin-top: 500px;
+	font-size: 36px;
+	text-align: center;
+	padding-top: 90px;
+	i {
+		width: 735px;
+		height: 358px;
+		left: 50%;
+		margin-left: -367.5px;
+		position: absolute;
+		top: -338px;
+		vertical-align: middle;
+		// @include bg-image('../../../assets/images/coupon/no_data');
+		background-image: url(assets/images/mine/wallet/no_data.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		box-sizing: border-box;
+	}
+}
+.withdraw_page {
+	:global {
+		.am-pull-to-refresh-indicator {
+		  font-size: 26px;
+		}
+		.am-list-body {
+		  background-color: #f5f5f5;
+		  &::before {
+			background-color: transparent !important;
+		  }
+		  &::after {
+			background-color: transparent !important;
+		  }
+		}
+		.am-tabs-content-wrap {
+		  background-color: #f5f5f5;
+		}
+		.am-list-view-scrollview {
+		  border: none !important;
+		}
+	}
+}
+.box {
+	.rightLittleBox{
+		.ellipsis {
+			// @include ellipsis(375px);
+			width: 375px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			word-wrap: normal;
+		}
+	}
+}

@@ -12,22 +12,14 @@ class Dialog extends Component {
     this.state = {
       showCover: false,
       showDialog: false,
-      alertheight: 180,
     }
     this.requestClose = (type) => {
       this.props.onRequestClose(type)
-
       if (this.props.autoClose) clearTimeout(this.autoClose)
     }
   }
   autoClose
   static propTypes = {
-    title: PropTypes.any,
-    titleClassName: PropTypes.string,
-    content: PropTypes.any,
-    contentClassName: PropTypes.string,
-    actions: PropTypes.any,
-    actionClassName: PropTypes.string,
     onRequestClose: PropTypes.func,
     open: PropTypes.bool,
     showCover: PropTypes.bool,
@@ -36,12 +28,6 @@ class Dialog extends Component {
     timeout: PropTypes.number
   }
   static defaultProps = {
-    title: <div />,
-    titleClassName: '',
-    content: null,
-    contentClassName: '',
-    actions: null,
-    actionClassName: '',
     onRequestClose: () => { },
     open: false,
     showCover: false,
@@ -49,48 +35,26 @@ class Dialog extends Component {
     autoClose: false,
     timeout: 3
   }
-  componentWillReceiveProps(props) {
-    if (props.open) {
-      this.setState({ showDialog: true }, () => {
-        // console.log(this.alerthight.offsetHeight)
-        // this.setState({ alertheight: -(this.alerthight.offsetHeight / 2) })
-      })
-      if (props.showCover) {
-        this.setState({ showCover: true })
-      }
-      if (props.autoClose) {
-        this.autoClose = setTimeout(() => {
-          this.setState({ showDialog: false })
-          if (this.state.showCover) {
-            this.setState({ showCover: false })
-          }
-          this.requestClose()
-        }, `${this.props.timeout * 1000}`)
-      }
-    } else {
-      this.setState({ showDialog: false })
-      if (this.state.showCover) {
-        this.setState({ showCover: false })
-      }
-    }
-  }
   componentWillMount() {
     if (this.props.open) {
       this.setState({ showDialog: true }, () => {
-        // console.log(this.alerthight.offsetHeight)
-        // this.setState({ alertheight: -(this.alerthight.offsetHeight / 2) })
       })
       if (this.props.showCover) {
         this.setState({ showCover: true })
       }
-      if (this.props.autoClose) {
-        this.autoClose = setTimeout(() => {
-          this.setState({ showDialog: false })
-          if (this.state.showCover) {
-            this.setState({ showCover: false })
-          }
-          this.requestClose()
-        }, `${this.props.timeout * 1000}`)
+    } else {
+      this.setState({ showDialog: false })
+      if (this.state.showCover) {
+        this.setState({ showCover: false })
+      }
+    }
+  }
+  componentWillReceiveProps(props) {
+    if (props.open) {
+      this.setState({ showDialog: true }, () => {
+      })
+      if (props.showCover) {
+        this.setState({ showCover: true })
       }
     } else {
       this.setState({ showDialog: false })
@@ -99,9 +63,6 @@ class Dialog extends Component {
       }
     }
   }
-  // componentWillUnmount() {
-  //   this.autoClose ? clearTimeout(this.autoClose) : null
-  // }
   render() {
     return (
       <div className={style.dialog_container}>

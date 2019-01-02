@@ -8,6 +8,7 @@ import { home } from 'utils/analytinsType';
 // import fetch from 'sx-fetch';
 import BankCard from '../BankCard';
 import style from './index.scss';
+import { SXFToast } from 'utils/SXFLoading';
 
 const API = {
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -57,7 +58,7 @@ export default class BankContent extends React.Component {
         const { contentData } = this.props;
         store.setBackUrl('/home/home');
         store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`);
-        Toast.loading('加载中...', 0);
+        SXFToast.loading('加载中...', 0);
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`;
       } else {
