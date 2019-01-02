@@ -12,7 +12,7 @@ const API = {
 };
 
 @fetch.inject()
-export default class LandingPage extends PureComponent {
+export default class landing_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
