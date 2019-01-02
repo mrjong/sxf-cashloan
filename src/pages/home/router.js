@@ -4,7 +4,7 @@ export default [
     title: '还卡',
     footerHide: false,
     arrowHide: 'empty',
-    component: () => import('pages/home/home'),
+    component: () => import('pages/home/home_page'),
   },
   {
     path: '/home/message_page',
@@ -19,16 +19,16 @@ export default [
   {
     path: '/home/agency',
     title: '代还确认',
-    component: () => import('pages/home/agency'),
+    component: () => import('pages/home/agency_page'),
   },
   {
     path: '/home/essential_information',
     title: '基本信息认证',
-    component: () => import('pages/home/essential_information'),
+    component: () => import('pages/home/essential_information_page'),
   },
   {
     path: '/home/real_name',
     title: '实名认证',
-    component: () => import('pages/home/real_name'),
+    component: () => import('pages/home/real_name_page'),
   },
 ];

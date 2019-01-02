@@ -1,0 +1,50 @@
+.home_page {
+  .default_banner {
+    height: 3.3rem;
+  }
+  .content_wrap {
+    margin-top: -0.5rem;
+  }
+  .smart_button_one {
+    margin-top: 0.72rem;
+    width: 4.26rem;
+  }
+  .smart_button_two{
+    margin-top: 1.1rem;
+    width: 6.2rem;
+  }
+  .tip_bottom {
+    margin-top: 0.77rem;
+    margin-bottom: .2rem;
+    font-size: 0.3rem;
+    text-align: center;
+    color: #c7c6cc;
+  }
+}
+// modal样式覆盖
+:global{
+  .am-modal-body{
+    .am-modal-alert-content{
+      line-height: 3;
+    }
+  }
+}
+
+.modalLoading {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+// modal样式覆盖
+:global {
+  // .am-modal-body {
+  //   .am-modal-alert-content {
+  //     line-height: 1.5;
+  //   }
+  // }
+
+  .am-progress-bar {
+    border: 0.04rem solid #FFDA58;
+  }
+}
