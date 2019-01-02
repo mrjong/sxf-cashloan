@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import style from './index.scss';
 import iconMsg from 'assets/images/home/icon_msg.png';
