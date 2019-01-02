@@ -237,10 +237,10 @@ export default class wxshare extends PureComponent {
 				url: this.state.href
 			})
 			.then((res) => {
-				if (res.msgCode !== 'PTM0000') {
-					res.msgInfo && Toast.info(res.msgInfo);
-					return;
-				}
+				// if (res.msgCode !== 'PTM0000') { // 暂时注释，活动id错误时不应影响用户注册登录
+				// 	res.msgInfo && Toast.info(res.msgInfo);
+				// 	return;
+				// }
 				if (noShowMsg) {
 					if (osType !== 'ANDRIOD') {
 						Toast.info('分享成功');
