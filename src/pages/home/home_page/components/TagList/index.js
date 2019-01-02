@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tag from '../tag';
+import Tag from '../Tag';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { store } from 'utils/store';
