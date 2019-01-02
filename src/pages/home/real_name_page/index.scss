@@ -1,0 +1,148 @@
+.real_name_page {
+
+  .updateTitle {
+    color: #9d9d9d;
+    margin-top: 20px;
+    font-size: 0.26rem;
+    padding: 10px 25px;
+  }
+  .updateContent {
+    background: #fff;
+    padding: 0.3rem 0.1rem 0.2rem 0.1rem;
+    text-align: center;
+    margin: 20px auto 0 auto;
+  }
+  .updateImgLeft {
+    width: 50%;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    img {
+      width: 326px;
+      height: 2rem;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    p {
+      color: #333;
+      font-size: 0.26rem;
+      margin-top: 10px;
+    }
+  }
+  .hiddenEle {
+    display: none;
+  }
+  .updateTop {
+    width: 50%;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    top: -0.35rem;
+    img {
+      cursor: pointer;
+      width: 326px;
+      height: 2rem;
+    }
+    p {
+      color: #333;
+      font-size: 0.26rem;
+      margin-top: 10px;
+    }
+    .examples {
+      margin-left: 12px;
+      font-size: 0.3rem;
+      text-align: left;
+    }
+    .examplesDes {
+      width: 90%;
+      margin-left: 12px;
+      text-align: left;
+      font-size: 0.28rem;
+      color: #9d9d9d;
+      margin-top: 0.12rem;
+      line-height: 0.37rem;
+    }
+  }
+  .updateImgRight {
+    width: 50%;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    p {
+      color: #333;
+      font-size: 0.26rem;
+      margin-top: 10px;
+    }
+  }
+  .labelDiv {
+    text-align: right;
+    background: #fff;
+    margin-top: 20px;
+  }
+  .nameLabel {
+    display: inline-block;
+    max-width: 100%;
+    font-size: 30px;
+    line-height: 90px;
+    padding-left: 30px;
+  }
+  .nameInput {
+    display: block;
+    width: 60%;
+    padding: 20px 40px;
+    font-size: 30px;
+    height: 42px;
+    line-height: 42px;
+    color: #555;
+    border: none;
+    float: right;
+    text-align: right;
+  }
+  input::placeholder {
+    color: #c7c6cc;
+    font-size: 30px;
+  }
+  .clear {
+    clear: both;
+  }
+  .inline {
+    width: 96%;
+    margin: -3px 0 0 30px;
+    background: #e5e5e5;
+    height: 1.5px;
+  }
+  .des {
+    font-size: 20px;
+    color: #9d9d9d;
+    padding: 20px 30px;
+    letter-spacing: 1.5px;
+    line-height: 17px;
+    .desOne {
+      line-height: 36px;
+      margin-bottom: 15px;
+      font-size: 0.28rem;
+    }
+  }
+  .sureBtn {
+    width: 6.2rem;
+    margin-top: 120px;
+    margin-bottom: 2.35rem;
+  }
+}
+
+:global {
+  .am-list-item .am-input-label {
+    color: #333;
+    font-size: 0.3rem;
+  }
+  .am-list-item.am-input-item {
+    padding-left: 0.3rem !important;
+  }
+  .am-list-item .am-input-control input {
+    text-align: right;
+  }
+}
+.is_true{
+  margin-top: 41px;
+  }
