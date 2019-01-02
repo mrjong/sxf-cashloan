@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 // import fetch from 'sx-fetch';
-import BankCard from '../bank_card';
+import BankCard from '../BankCard';
 import style from './index.scss';
 
 const API = {

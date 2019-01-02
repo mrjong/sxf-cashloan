@@ -11,10 +11,10 @@ import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/button';
 import fetch from 'sx-fetch';
 import Carousels from 'components/carousel';
-import InfoCard from './components/info_card/index.js';
-import BankContent from './components/bank_content/index.js';
-import ModalContent from './components/modal_info';
-import MsgBadge from './components/msg_badge';
+import InfoCard from './components/InfoCard';
+import BankContent from './components/BankContent';
+import ModalContent from './components/ModalInfo';
+import MsgBadge from './components/MsgBadge';
 import style from './index.scss';
 
 const API = {
@@ -33,7 +33,7 @@ let timer;
 let timerOut;
 
 @fetch.inject()
-export default class HomePage extends PureComponent {
+export default class home_page extends PureComponent {
   constructor(props) {
     // 获取token
     token = Cookie.get('fin-v-card-token');

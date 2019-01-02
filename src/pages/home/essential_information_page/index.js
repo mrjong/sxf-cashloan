@@ -27,7 +27,7 @@ let urlQuery = '';
 let isFetching = false;
 @fetch.inject()
 @createForm()
-export default class essential_information extends PureComponent {
+export default class essential_information_page extends PureComponent {
   state = {
     loading: false,
     relatData: [],                // 亲属联系人数据

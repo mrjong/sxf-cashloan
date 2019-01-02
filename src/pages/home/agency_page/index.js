@@ -24,7 +24,7 @@ const API = {
 };
 
 @fetch.inject()
-export default class ConfirmAgencyPage extends PureComponent {
+export default class agency_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
