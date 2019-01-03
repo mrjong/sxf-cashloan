@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
-import dayjs from 'dayjs';
 import WalletBg from 'assets/images/mine/wallet/wallet_bg.png';
 import rightArrow from 'assets/images/mine/wallet/right_arrow.png';
 import ButtonCustom from 'components/ButtonCustom';
@@ -21,7 +19,6 @@ const API = {
 export default class wallet_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		bankCardInf = store.getCardData();
 		store.removeCardData();
 

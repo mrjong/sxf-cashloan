@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
 import successIco from 'assets/images/mine/wallet/success_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 
@@ -10,7 +9,6 @@ let accountNum = '';
 export default class withdraw_succ_page extends PureComponent {
   constructor(props) {
     super(props);
-    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 
     if (this.props.history.location.state && this.props.history.location.state.withdrawMoney) {
       accountNum = this.props.history.location.state.withdrawMoney;

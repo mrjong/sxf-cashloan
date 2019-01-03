@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
 import failIco from 'assets/images/mine/wallet/fail_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 
@@ -9,7 +8,6 @@ import ButtonCustom from 'components/ButtonCustom';
 export default class withdraw_fail_page extends PureComponent {
   constructor(props) {
     super(props);
-    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 
     this.state = {
     };

@@ -11,16 +11,7 @@ export default class support_credit_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      cardList: [
-        // {
-        //   bankNm: '建设银行',
-        //   bankCd: 'CCB',
-        // },
-        // {
-        //   bankNm: '工商银行',
-        //   bankCd: 'ICBC',
-        // },
-      ]
+      cardList: []
     }
   }
   componentWillMount() {

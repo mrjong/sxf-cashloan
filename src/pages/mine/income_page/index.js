@@ -2,23 +2,19 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
 import dayjs from 'dayjs';
-import {setBackGround} from 'utils/Background'
 import redBagIco from 'assets/images/mine/wallet/income_red_bag.png'
 
-import { PullToRefresh, ListView, Toast } from 'antd-mobile';
+import { PullToRefresh, ListView } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFLoading';
 let totalPage = false;
 const API = {
   incomeList: '/redAccount/queryRedCoupon',
 };
 @fetch.inject()
-// @setBackGround('#efeff4')
 export default class income_page extends PureComponent {
   constructor(props) {
     super(props);
-    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });

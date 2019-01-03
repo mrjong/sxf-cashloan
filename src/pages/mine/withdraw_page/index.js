@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
 import dayjs from 'dayjs';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFLoading';
@@ -16,7 +15,6 @@ const API = {
 export default class withdraw_page extends PureComponent {
   constructor(props) {
     super(props);
-    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
