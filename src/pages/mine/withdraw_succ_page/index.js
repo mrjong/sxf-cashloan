@@ -5,7 +5,7 @@ import qs from 'qs';
 import dayjs from 'dayjs';
 import successIco from 'assets/images/mine/wallet/success_ico.png';
 import {setBackGround} from 'utils/Background'
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 
 import { Toast } from 'antd-mobile';
 

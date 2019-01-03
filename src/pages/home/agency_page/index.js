@@ -6,7 +6,7 @@ import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
-import ZButton from 'components/button/index.js';
+import ZButton from 'components/ButtonCustom';
 import Panel from 'components/panel/index.js';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';

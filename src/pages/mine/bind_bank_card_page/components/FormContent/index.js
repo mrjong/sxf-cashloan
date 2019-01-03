@@ -5,7 +5,7 @@ import { createForm } from 'rc-form';
 import fetch from 'sx-fetch';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import CountDownButton from 'components/CountDownButton';
 import styles from '../../index.scss';
 import qs from 'qs';

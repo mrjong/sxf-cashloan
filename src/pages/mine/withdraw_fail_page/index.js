@@ -4,8 +4,7 @@ import fetch from 'sx-fetch';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import failIco from 'assets/images/mine/wallet/fail_ico.png';
-import {setBackGround} from 'utils/Background'
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 
 import { Toast } from 'antd-mobile';
 

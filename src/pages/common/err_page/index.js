@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import styles from './index.scss';
 
 export default class err_page extends PureComponent {

@@ -8,10 +8,10 @@ import {isBugBrowser, isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
-import SXFButton from 'components/button';
+import SXFButton from 'components/ButtonCustom';
 import { SXFToast } from 'utils/SXFLoading';
 import fetch from 'sx-fetch';
-import Carousels from 'components/carousel';
+import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import ModalContent from './components/ModalInfo';

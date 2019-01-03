@@ -7,7 +7,7 @@ import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen } from 'utils';
-import SXFButton from 'components/button';
+import SXFButton from 'components/ButtonCustom';
 import dayjs from 'dayjs'
 let hasNext = true
 const Item = List.Item;

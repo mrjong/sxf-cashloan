@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import SXFButton from 'components/button';
+import SXFButton from 'components/ButtonCustom';
 import TabList from '../TagList';
 
 import style from './index.scss';

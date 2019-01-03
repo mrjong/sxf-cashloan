@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { InputItem, List } from 'antd-mobile';
-import informationMore from '../../../assets/images/real_name/more.png';
-import AsyncCascadePicker from '../../../components/async_cascad_picker';
-import ButtonCustom from '../../../components/button';
+import informationMore from 'assets/images/real_name/more.png';
+import AsyncCascadePicker from 'components/AsyncCascadePicker';
+import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
-import { getLngLat } from '../../../utils/Address.js';
+import { getLngLat } from 'utils/Address.js';
 import style from './index.scss';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';

@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss';
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import dayjs from 'dayjs';
 import { buriedPointEvent } from 'utils/analytins';

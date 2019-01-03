@@ -3,7 +3,7 @@ import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import { store } from 'utils/store';
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import CountDownButton from 'components/CountDownButton';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
