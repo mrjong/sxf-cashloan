@@ -8,7 +8,7 @@ import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
 import { initAnalytics } from './utils/analytins';
 import { handleWindowError } from 'utils'
-import ErrorBoundary from 'components/errorboundary_page';
+import ErrorBoundary from 'components/ErrorBoundary';
 import fastClick from 'fastclick';
 
 fastClick.prototype.focus = function (targetElement) {

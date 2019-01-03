@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import Lists from 'components/lists';
-import Panel from 'components/panel/index.js';
+import Lists from 'components/Lists';
+import Panel from 'components/Panel';
 import fetch from "sx-fetch";
 import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';

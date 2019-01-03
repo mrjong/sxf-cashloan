@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
-import STabs from 'components/tabs';
+import STabs from 'components/Tab';
 import { store } from 'utils/store';
 import FormContent from './components/FormContent';
 import style from './index.scss';

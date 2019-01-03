@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import STabs from 'components/tabs';
+import STabs from 'components/Tab';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';

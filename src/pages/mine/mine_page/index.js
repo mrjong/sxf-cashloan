@@ -3,7 +3,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/avatar.png';
-import Lists from 'components/lists';
+import Lists from 'components/Lists';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import { isBugBrowser, isWXOpen, logoutAppHandler } from 'utils';

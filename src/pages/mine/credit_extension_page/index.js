@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import Lists from 'components/lists';
+import Lists from 'components/Lists';
 import { store } from 'utils/store';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';

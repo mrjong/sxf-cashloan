@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './listDesc.scss';
+import styles from './index.scss';
 
 export default class ButtonCustom extends React.PureComponent {
     static propTypes = {
