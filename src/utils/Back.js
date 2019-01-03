@@ -41,11 +41,11 @@ if (window.history && window.history.pushState) {
     () => {
       // 获取token
       let token = Cookie.get('fin-v-card-token');
-      let tokenFromStotage = '';
+      let tokenFromStorage = '';
       if (isBugBrowser()) {
-        tokenFromStotage = store.getToken();
+        tokenFromStorage = store.getToken();
       } else {
-        tokenFromStotage = store.getTokenSession();
+        tokenFromStorage = store.getTokenSession();
       }
       // 返回拦截弹窗
       let userInfo = store.getUserInfo();
@@ -96,7 +96,7 @@ if (window.history && window.history.pushState) {
           return;
         } else if (isWXOpen()) {
           // 微信中点击登陆按钮也触发这个方法，根据token区分
-          if (tokenFromStotage && token) {
+          if (tokenFromStorage && token) {
             window.ReactRouterHistory.goBack()
           } else {
             window.close();
@@ -128,7 +128,6 @@ if (window.history && window.history.pushState) {
           if (window.location.pathname === '/') {
             return;
           }
-          console.log(historyRouter)
           switch (historyRouter) {
             case '/login':
               return;
@@ -137,17 +136,17 @@ if (window.history && window.history.pushState) {
                 window.handleCloseHomeModal();
                 return;
               }
-              if (tokenFromStotage && token) {
+              if (tokenFromStorage && token) {
                 logoutAppHandler();
-              } else if (isWXOpen() && !tokenFromStotage && !token) {
+              } else if (isWXOpen() && !tokenFromStorage && !token) {
                 window.close();
                 WeixinJSBridge.call('closeWindow');
               }
               break;
             case '/order/order_page':
-              if (tokenFromStotage && token) {
+              if (tokenFromStorage && token) {
                 logoutAppHandler();
-              } else if (isWXOpen() && !tokenFromStotage && !token) {
+              } else if (isWXOpen() && !tokenFromStorage && !token) {
                 window.close();
                 WeixinJSBridge.call('closeWindow');
               }

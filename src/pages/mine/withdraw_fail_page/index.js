@@ -2,12 +2,9 @@ import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
-import dayjs from 'dayjs';
 import failIco from 'assets/images/mine/wallet/fail_ico.png';
-import {setBackGround} from 'utils/Background'
+// import {setBackGround} from 'utils/Background'
 import ButtonCustom from 'components/button';
-
-import { Toast } from 'antd-mobile';
 
 @fetch.inject()
 // @setBackGround('#efeff4')
@@ -18,15 +15,6 @@ export default class withdraw_fail_page extends PureComponent {
 
     this.state = {
     };
-  }
-  componentWillMount() {
-    
-  }
-  componentDidMount() {
-    
-  }
-  componentWillUnmount() {
-    
   }
   // 重新提现
   backHome = () => {

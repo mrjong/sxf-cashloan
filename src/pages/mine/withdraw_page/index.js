@@ -4,9 +4,9 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import dayjs from 'dayjs';
-
-import { PullToRefresh, ListView, Toast } from 'antd-mobile';
+import { PullToRefresh, ListView } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFLoading';
+
 let totalPage = false;
 const API = {
   withdrawList: '/redAccount/queryCashOrd',

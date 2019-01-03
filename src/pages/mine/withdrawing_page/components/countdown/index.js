@@ -1,10 +1,6 @@
 import React from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
-import dayjs from 'dayjs';
-
-import { Toast } from 'antd-mobile';
 
 const API = {
   queryOrdSts: '/redAccount/queryOrdSts', // 付款结果查询接口  

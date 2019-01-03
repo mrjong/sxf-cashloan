@@ -1,17 +1,12 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import qs from 'qs';
-import dayjs from 'dayjs';
-import {setBackGround} from 'utils/Background'
+// import {setBackGround} from 'utils/Background'
 import Countdown from "./components/countdown"
-
-import { Toast } from 'antd-mobile';
 
 let applyNo = ''; // 订单号
 let accountNum = ''; // 提现金额
-const API = {
-};
+
 @fetch.inject()
 // @setBackGround('#efeff4')
 export default class withdrawing_page extends PureComponent {
@@ -26,15 +21,6 @@ export default class withdrawing_page extends PureComponent {
     this.state = {
       orderSts: ''
     };
-  }
-  componentWillMount() {
-    
-  }
-  componentDidMount() {
-    
-  }
-  componentWillUnmount() {
-    
   }
   
   render() {

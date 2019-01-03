@@ -54,14 +54,14 @@ const fetchInit = () => {
 			}
 			// const TOKEN = Cookie.get('fin-v-card-token');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
-			let tokenFromStotage = '';
+			let tokenFromStorage = '';
 			if (isBugBrowser()) {
-				tokenFromStotage = store.getToken();
+				tokenFromStorage = store.getToken();
 			} else {
-				tokenFromStotage = store.getTokenSession();
+				tokenFromStorage = store.getTokenSession();
 			}
-			if (tokenFromStotage && !location.pathname.indexOf('activity') > -1) {
-				cfg.headers['fin-v-card-token'] = tokenFromStotage;
+			if (tokenFromStorage && !location.pathname.indexOf('activity') > -1) {
+				cfg.headers['fin-v-card-token'] = tokenFromStorage;
 			} else if (location.pathname.indexOf('activity') > -1) {
 				cfg.headers['fin-v-card-token'] = Cookie.get('fin-v-card-token');
 			} else {

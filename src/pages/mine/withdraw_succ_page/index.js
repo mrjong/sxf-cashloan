@@ -2,12 +2,9 @@ import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
-import dayjs from 'dayjs';
 import successIco from 'assets/images/mine/wallet/success_ico.png';
-import {setBackGround} from 'utils/Background'
+// import {setBackGround} from 'utils/Background'
 import ButtonCustom from 'components/button';
-
-import { Toast } from 'antd-mobile';
 
 let accountNum = '';
 @fetch.inject()
@@ -21,17 +18,7 @@ export default class withdraw_succ_page extends PureComponent {
       accountNum = this.props.history.location.state.withdrawMoney;
     }
 
-    this.state = {
-    };
-  }
-  componentWillMount() {
-    
-  }
-  componentDidMount() {
-    
-  }
-  componentWillUnmount() {
-    
+    this.state = {}
   }
   // 返回首页
   backHome = () => {

@@ -16,7 +16,7 @@ const API = {
 };
 
 let token = '';
-let tokenFromStotage = '';
+let tokenFromStorage = '';
 
 @fetch.inject()
 export default class mine_page extends PureComponent {
@@ -25,9 +25,9 @@ export default class mine_page extends PureComponent {
     // 获取token
     token = Cookie.get('fin-v-card-token');
     if (isBugBrowser()) {
-      tokenFromStotage = store.getToken();
+      tokenFromStorage = store.getToken();
     } else {
-      tokenFromStotage = store.getTokenSession();
+      tokenFromStorage = store.getTokenSession();
     }
     this.state = {
       // showMoudle: false, // 是否展示确认退出的modal
@@ -48,7 +48,7 @@ export default class mine_page extends PureComponent {
     store.removeBackData()
     // 移除会员卡出入口
     store.removeVipBackUrl();
-    if (tokenFromStotage && token) {
+    if (tokenFromStorage && token) {
       // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
       if (Cookie.get('authFlag')) {
         this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: Cookie.get('authFlag') === '1' ? true : false });
@@ -129,7 +129,7 @@ export default class mine_page extends PureComponent {
 
   // 第一组里的点击事件
   clickhandle = item => {
-    if (!tokenFromStotage && !token) {
+    if (!tokenFromStorage && !token) {
       this.props.toast.info('请先登录', 2, () => {
         this.props.history.push('/login');
       });
@@ -164,7 +164,7 @@ export default class mine_page extends PureComponent {
   };
   // 第二组里的点击事件
   clickhandle2 = item => {
-    if (!tokenFromStotage && !token) {
+    if (!tokenFromStorage && !token) {
       this.props.toast.info('请先登录', 2, () => {
         this.props.history.push('/login');
       });
@@ -203,7 +203,7 @@ export default class mine_page extends PureComponent {
   };
   // 第三组里的点击事件
   clickhandle3 = item => {
-    if (!tokenFromStotage && !token) {
+    if (!tokenFromStorage && !token) {
       this.props.toast.info('请先登录', 2, () => {
         this.props.history.push('/login');
       });
@@ -304,7 +304,7 @@ export default class mine_page extends PureComponent {
       <div className={styles.mine_page}>
         <div className={styles.user_inf}>
           <img src={avatar} alt="用户头像" />
-          {tokenFromStotage && token ?
+          {tokenFromStorage && token ?
             <span>{mblNoHid}</span>
             :
             <span onClick={this.logInHandler}>登录/注册</span>
@@ -313,7 +313,7 @@ export default class mine_page extends PureComponent {
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
         {/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
-        {tokenFromStotage && token ?
+        {tokenFromStorage && token ?
           (<div
             onClick={this.logoutHandler}
             className={styles.logout}

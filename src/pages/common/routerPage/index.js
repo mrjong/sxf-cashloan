@@ -51,13 +51,13 @@ export default class router_Page extends PureComponent {
 	}
 	loadComponent = async (props) => {
 		const token = Cookie.get('fin-v-card-token');
-		let tokenFromStotage = '';
+		let tokenFromStorage = '';
 		if (isBugBrowser()) {
-			tokenFromStotage = store.getToken();
+			tokenFromStorage = store.getToken();
 		} else {
-			tokenFromStotage = store.getTokenSession();
+			tokenFromStorage = store.getTokenSession();
 		}
-		if (!tokenFromStotage && !pagesIgnore(window.location.pathname) && !token) {
+		if (!tokenFromStorage && !pagesIgnore(window.location.pathname) && !token) {
 			// sessionStorage.clear();
 			// localStorage.clear();
 			Toast.info('请先登录');

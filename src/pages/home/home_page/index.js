@@ -28,7 +28,7 @@ const API = {
 };
 
 let token = '';
-let tokenFromStotage = '';
+let tokenFromStorage = '';
 
 let timer;
 let timerOut;
@@ -39,9 +39,9 @@ export default class home_page extends PureComponent {
     // 获取token
     token = Cookie.get('fin-v-card-token');
     if (isBugBrowser()) {
-      tokenFromStotage = store.getToken();
+      tokenFromStorage = store.getToken();
     } else {
-      tokenFromStotage = store.getTokenSession();
+      tokenFromStorage = store.getTokenSession();
     }
     super(props);
     this.state = {
@@ -62,8 +62,8 @@ export default class home_page extends PureComponent {
     store.removeCheckCardRouter();
     this.getTokenFromUrl();
     // 判断是否是微信打通（微信登陆）
-    if (isWXOpen() && !tokenFromStotage && !token) {
-      // if (true && !tokenFromStotage && !token) {
+    if (isWXOpen() && !tokenFromStorage && !token) {
+      // if (true && !tokenFromStorage && !token) {
       this.cacheBanner();
     } else {
       this.requestGetUsrInfo();
@@ -502,8 +502,8 @@ export default class home_page extends PureComponent {
     }
     return (
       <div className={style.home_page}>
-        {isWXOpen() && !tokenFromStotage && !token ? (
-          // {true && !tokenFromStotage && !token ? (
+        {isWXOpen() && !tokenFromStorage && !token ? (
+          // {true && !tokenFromStorage && !token ? (
           <Carousels data={bannerList} entryFrom="banner"></Carousels>
         )
           :

@@ -19,7 +19,7 @@ const API = {
 }
 
 let token = '';
-let tokenFromStotage = '';
+let tokenFromStorage = '';
 
 @fetch.inject()
 export default class message_page extends PureComponent {
@@ -28,9 +28,9 @@ export default class message_page extends PureComponent {
         // 获取token
         token = Cookie.get('fin-v-card-token');
         if (isBugBrowser()) {
-            tokenFromStotage = store.getToken();
+            tokenFromStorage = store.getToken();
         } else {
-            tokenFromStotage = store.getTokenSession();
+            tokenFromStorage = store.getTokenSession();
         }
         const dataSource = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2
@@ -305,7 +305,7 @@ export default class message_page extends PureComponent {
                 return (
                     <div className={style.no_data}>
                         <i />暂无账单
-                        {isWXOpen() && !tokenFromStotage && !token ?
+                        {isWXOpen() && !tokenFromStorage && !token ?
                         // {true ?
                             <SXFButton className={style.noLogin} onClick={this.goLogin}>
                                 去登录
