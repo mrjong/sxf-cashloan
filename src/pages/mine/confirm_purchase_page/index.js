@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { List, DatePicker, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
-import ButtonCustom from 'components/button';
-import CountDownButton from 'components/count_down_button'
+import ButtonCustom from 'components/ButtonCustom';
+import CountDownButton from 'components/CountDownButton'
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';

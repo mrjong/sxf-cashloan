@@ -5,7 +5,7 @@ import qs from 'qs';
 import dayjs from 'dayjs';
 import WalletBg from 'assets/images/mine/wallet/wallet_bg.png';
 import rightArrow from 'assets/images/mine/wallet/right_arrow.png';
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import { getDeviceType } from 'utils';
 import { Modal } from 'antd-mobile';
 import { store } from 'utils/store';

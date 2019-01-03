@@ -7,7 +7,7 @@ import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen } from 'utils';
-import SXFButton from 'components/button';
+import SXFButton from 'components/ButtonCustom';
 import dayjs from 'dayjs'
 let hasNext = true
 const Item = List.Item;
@@ -22,7 +22,7 @@ let token = '';
 let tokenFromStorage = '';
 
 @fetch.inject()
-export default class message_page extends PureComponent {
+export default class order_page extends PureComponent {
     constructor(props) {
         super(props)
         // 获取token

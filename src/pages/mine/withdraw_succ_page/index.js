@@ -3,12 +3,10 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import successIco from 'assets/images/mine/wallet/success_ico.png';
-// import {setBackGround} from 'utils/Background'
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 
 let accountNum = '';
 @fetch.inject()
-// @setBackGround('#efeff4')
 export default class withdraw_succ_page extends PureComponent {
   constructor(props) {
     super(props);

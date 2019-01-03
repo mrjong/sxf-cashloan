@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
-import STabs from 'components/tabs';
+import STabs from 'components/Tab';
 import { store } from 'utils/store';
-import FormContent from './form_content';
+import FormContent from './components/FormContent';
 import style from './index.scss';
 
 const API = {
@@ -22,7 +22,7 @@ const tabBar = [
 ];
 
 @fetch.inject()
-export default class BindBankCardPage extends PureComponent {
+export default class bind_bank_card_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

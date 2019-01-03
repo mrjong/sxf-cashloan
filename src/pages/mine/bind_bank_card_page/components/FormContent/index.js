@@ -5,9 +5,9 @@ import { createForm } from 'rc-form';
 import fetch from 'sx-fetch';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
-import ButtonCustom from 'components/button';
-import CountDownButton from 'components/count_down_button';
-import styles from '../index.scss';
+import ButtonCustom from 'components/ButtonCustom';
+import CountDownButton from 'components/CountDownButton';
+import styles from '../../index.scss';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { membership } from 'utils/analytinsType';
@@ -33,7 +33,7 @@ let isFetching = false;
 
 @fetch.inject()
 @createForm()
-export default class CreditCard extends PureComponent {
+export default class FormContent extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

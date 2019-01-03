@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Toast } from 'antd-mobile';
 import { Carousel } from 'antd-mobile';
 import { withRouter } from 'react-router-dom';
 import { store } from 'utils/store';

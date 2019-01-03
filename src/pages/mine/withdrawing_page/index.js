@@ -1,14 +1,12 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-// import {setBackGround} from 'utils/Background'
-import Countdown from "./components/countdown"
+import Countdown from "./components/Countdown"
 
 let applyNo = ''; // 订单号
 let accountNum = ''; // 提现金额
 
 @fetch.inject()
-// @setBackGround('#efeff4')
 export default class withdrawing_page extends PureComponent {
   constructor(props) {
     super(props);

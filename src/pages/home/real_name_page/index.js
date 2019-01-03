@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
-import updateLeft from '../../../assets/images/real_name/left.png';
-import updateRight from '../../../assets/images/real_name/right.png';
-import updateBottom from '../../../assets/images/real_name/bottom.png';
-import FEZipImage from '../../../components/fzp_image';
+import updateLeft from 'assets/images/real_name/left.png';
+import updateRight from 'assets/images/real_name/right.png';
+import updateBottom from 'assets/images/real_name/bottom.png';
+import FEZipImage from 'components/FEZIpImage';
 import { InputItem, List } from 'antd-mobile';
-import ButtonCustom from '../../../components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';

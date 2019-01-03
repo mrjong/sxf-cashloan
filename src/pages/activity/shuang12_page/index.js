@@ -24,7 +24,7 @@ const API = {
 let token = '';
 @fetch.inject()
 @setBackGround('#260451')
-export default class dazhuanpan_page extends PureComponent {
+export default class shuang12_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';

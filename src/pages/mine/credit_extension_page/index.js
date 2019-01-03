@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-import Lists from 'components/lists';
+import Lists from 'components/Lists';
 import { store } from 'utils/store';
-import ButtonCustom from 'components/button';
-import { Toast } from 'antd-mobile';
+import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';

@@ -3,11 +3,9 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import failIco from 'assets/images/mine/wallet/fail_ico.png';
-// import {setBackGround} from 'utils/Background'
-import ButtonCustom from 'components/button';
+import ButtonCustom from 'components/ButtonCustom';
 
 @fetch.inject()
-// @setBackGround('#efeff4')
 export default class withdraw_fail_page extends PureComponent {
   constructor(props) {
     super(props);

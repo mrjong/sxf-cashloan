@@ -9,7 +9,7 @@ export default [
   {
     path: '/mine/bind_bank_card',
     title: '绑定银行卡',
-    component: () => import('pages/mine/bind_bank_card'),
+    component: () => import('pages/mine/bind_bank_card_page'),
   },
   {
     path: '/mine/bind_credit_page',
