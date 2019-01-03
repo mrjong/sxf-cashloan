@@ -21,6 +21,6 @@ export default [
 		path: '/activity/dazhuanpan',
 		title: '大转盘',
 		arrowHide: true,
-		component: () => import('pages/activity/dazhuanpan')
+		component: () => import('pages/activity/dazhuanpan_page')
 	}
 ];

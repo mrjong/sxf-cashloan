@@ -22,7 +22,7 @@ let token = '';
 let tokenFromStotage = '';
 
 @fetch.inject()
-export default class message_page extends PureComponent {
+export default class order_page extends PureComponent {
     constructor(props) {
         super(props)
         // 获取token
