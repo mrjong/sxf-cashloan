@@ -1,6 +1,6 @@
 import defaultBanner from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
-import { Modal, Toast, Progress } from 'antd-mobile';
+import { Modal, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
@@ -9,7 +9,7 @@ import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';

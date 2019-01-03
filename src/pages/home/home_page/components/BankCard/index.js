@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { Toast } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 
 const _handleClick = (onClick, event) => {
   event.preventDefault();

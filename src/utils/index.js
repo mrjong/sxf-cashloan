@@ -1,5 +1,5 @@
 import { buriedPointEvent } from 'utils/analytins';
-import { bug_log } from 'utils/analytinsType';
+import { bugLog } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
@@ -22,7 +22,7 @@ export const handleErrorLog = (status, statusText) => {
     DC_errorTime: new Date(),
     DC_errorTitle: document.title
   }
-  buriedPointEvent(bug_log.api_error_log, logInfo)
+  buriedPointEvent(bugLog.apiErrorLog, logInfo)
 }
 
 export const handleWindowError = () => {
@@ -42,7 +42,7 @@ export const handleWindowError = () => {
       stack: error && error.stack ? error.stack : null
     };
 
-    buriedPointEvent(bug_log.page_error_log, errorObj)
+    buriedPointEvent(bugLog.pageErrorLog, errorObj)
 
 
     // if (XMLHttpRequest) {
@@ -326,10 +326,10 @@ export const vconsole = (i, consoleshow) => {
     script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
     head.appendChild(script);
     sessionStorage.setItem('consoleshow', true);
-    console.log('localStorage', localStorage);
-    console.log('sessionStorage', sessionStorage);
-    console.log('cookie', document.cookie);
-    console.log('打印完成')
+    // console.log('localStorage', localStorage);
+    // console.log('sessionStorage', sessionStorage);
+    // console.log('cookie', document.cookie);
+    // console.log('打印完成')
   } else if ((i && i.length === 10 && i === '1111000110') || consoleshow || sessionStorage.getItem('consoleshow')) {
     localStorage.clear();
     sessionStorage.clear();
@@ -340,9 +340,9 @@ export const vconsole = (i, consoleshow) => {
     script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
     head.appendChild(script);
     sessionStorage.setItem('consoleshow', true);
-    console.log('localStorage', localStorage);
-    console.log('sessionStorage', sessionStorage);
-    console.log('cookie', document.cookie);
-    console.log('清除完成')
+    // console.log('localStorage', localStorage);
+    // console.log('sessionStorage', sessionStorage);
+    // console.log('cookie', document.cookie);
+    // console.log('清除完成')
   }
 }

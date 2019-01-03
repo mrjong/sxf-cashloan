@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import loadingImg from './img/loading.gif';
-class SXFLoading extends Component {
+export default class SXFLoading extends Component {
 	static propTypes = {
 		mask: PropTypes.bool
 	};
@@ -25,5 +25,3 @@ class SXFLoading extends Component {
 		);
 	}
 }
-
-export default SXFLoading;

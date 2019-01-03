@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrPage from 'pages/common/err_page';
 import { buriedPointEvent } from 'utils/analytins';
-import { bug_log } from 'utils/analytinsType';
+import { bugLog } from 'utils/analytinsType';
 
 export default class ErrorBoundary extends React.Component {
 	constructor(props) {
@@ -19,7 +19,7 @@ export default class ErrorBoundary extends React.Component {
 		});
 		// 此处埋点上报页面、组件渲染发生的错误
 		// console.log(errorInfo.componentStack)
-		buriedPointEvent(bug_log.page_error_log, {
+		buriedPointEvent(bugLog.pageErrorLog, {
 			DC_errorComponentStack: errorInfo.componentStack,
 			DC_errorTitle: document.title,
 			DC_errorTime: new Date(),

@@ -6,9 +6,9 @@ import STabs from 'components/Tab';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 
-import { PullToRefresh, ListView, Toast } from 'antd-mobile';
+import { PullToRefresh, ListView } from 'antd-mobile';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false;

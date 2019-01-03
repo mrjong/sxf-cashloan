@@ -30,7 +30,7 @@ import alert_10 from './img/alert_10.png';
 import alert_15 from './img/alert_15.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 
 let timmer;
 const API = {

@@ -11,7 +11,7 @@ import { changeHistoryState, isBugBrowser, pagesIgnore, vconsole } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
 import { pageView } from 'utils/analytins';
 let consoleshowStr = '';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 
 export default class router_Page extends PureComponent {
 	constructor(props) {

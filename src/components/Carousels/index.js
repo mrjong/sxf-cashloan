@@ -7,7 +7,7 @@ import style from './index.scss';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 @withRouter
 export default class Carousels extends React.Component {
   constructor(props) {

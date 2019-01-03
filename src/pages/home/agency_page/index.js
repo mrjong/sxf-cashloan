@@ -1,6 +1,6 @@
 import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
 import React, { PureComponent } from 'react';
-import { Modal, Toast, Progress } from 'antd-mobile';
+import { Modal, Progress } from 'antd-mobile';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';

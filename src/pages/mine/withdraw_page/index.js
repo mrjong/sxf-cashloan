@@ -4,14 +4,13 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import { PullToRefresh, ListView } from 'antd-mobile';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 
 let totalPage = false;
 const API = {
   withdrawList: '/redAccount/queryCashOrd',
 };
 @fetch.inject()
-// @setBackGround('#efeff4')
 export default class withdraw_page extends PureComponent {
   constructor(props) {
     super(props);

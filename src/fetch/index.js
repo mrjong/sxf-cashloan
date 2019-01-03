@@ -1,16 +1,13 @@
-import React from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
 import { isBugBrowser, isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
-import { SXFToast } from 'utils/SXFLoading';
+import { singleLoading } from './util'
 
 const fetchInit = () => {
-	let timer;
-	let timerList = [];
-  let num = 0;
-  fetch.init({
+	let num = 0;
+	fetch.init({
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
@@ -47,7 +44,6 @@ const fetchInit = () => {
 	// 拦截请求
 	fetch.axiosInstance.interceptors.request.use(
 		(cfg) => {
-			// console.log(cfg);
 			// 非微信去掉 fn-v-card-token-wechat
 			if (!isWXOpen()) {
 				Cookie.remove('fin-v-card-token-wechat');
@@ -69,22 +65,11 @@ const fetchInit = () => {
 			}
 			num++;
 			if (!cfg.hideLoading) {
-				// 防止时间短，出现loading 导致闪烁
-				timer = setTimeout(() => {
-					// 处理多个请求，只要一个loading
-					if (timerList.length > 1) {
-						return;
-					}
-					SXFToast.loading('数据加载中...', 10);
-				}, 300);
-				timerList.push(timer);
+				singleLoading(num)
 			}
 			return cfg;
 		},
 		(error) => {
-			console.log('sessionStorage:', sessionStorage);
-			console.log('localStorage', localStorage);
-			console.log('cookie', document.cookie);
 			Promise.reject(error);
 		}
 	);
@@ -92,18 +77,7 @@ const fetchInit = () => {
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
 			num--;
-			if (num <= 0) {
-				if (timer) {
-					for (let i = 0; i < timerList.length; i++) {
-						clearTimeout(timerList[i]);
-					}
-					timer = undefined;
-					timerList = [];
-					SXFToast.hide();
-				}
-			} else {
-				SXFToast.loading('数据加载中...', 10);
-			}
+			singleLoading(num)
 			return response;
 		},
 		(error) => {
@@ -111,21 +85,16 @@ const fetchInit = () => {
 			try {
 				console.log('----异常日志----')
 				if (error.response) {
-					handleErrorLog(error.response.status,error.response.statusText,error.config)
+					handleErrorLog(error.response.status, error.response.statusText, error.config)
 				} else if (error.config) {
-					handleErrorLog(error.message,error.message,error.config)
+					handleErrorLog(error.message, error.message, error.config)
 				}
 			} catch (err) {
 				// console.log(err)
 			}
 
 			num--;
-			for (let i = 0; i < timerList.length; i++) {
-				clearTimeout(timerList[i]);
-			}
-			timer = undefined;
-			timerList = [];
-			SXFToast.hide();
+			singleLoading(num)
 			let error2 = new Error('系统开小差，请稍后重试');
 			return Promise.reject(error2);
 		}

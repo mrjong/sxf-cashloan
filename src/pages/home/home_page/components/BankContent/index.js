@@ -1,6 +1,5 @@
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
-import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
 import PropTypes from 'prop-types';
 import { buriedPointEvent } from 'utils/analytins';
@@ -8,7 +7,7 @@ import { home } from 'utils/analytinsType';
 // import fetch from 'sx-fetch';
 import BankCard from '../BankCard';
 import style from './index.scss';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
 
 const API = {
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信

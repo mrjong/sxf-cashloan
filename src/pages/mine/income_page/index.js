@@ -4,9 +4,9 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import redBagIco from 'assets/images/mine/wallet/income_red_bag.png'
-
 import { PullToRefresh, ListView } from 'antd-mobile';
-import { SXFToast } from 'utils/SXFLoading';
+import { SXFToast } from 'utils/SXFToast';
+
 let totalPage = false;
 const API = {
   incomeList: '/redAccount/queryRedCoupon',
