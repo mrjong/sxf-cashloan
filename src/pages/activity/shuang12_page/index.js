@@ -7,7 +7,7 @@ import AwardShowMock from './components/AwardShowMock';
 import RuleShow from './components/RuleShow';
 import LoginAlert from './components/LoginAlert';
 import { setBackGround } from 'utils/setBackGround';
-import { isBugBrowser,getNowDate } from 'utils';
+import { getNowDate } from 'utils';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
 import zp_btn from './img/zp_btn.png';
@@ -47,11 +47,7 @@ export default class shuang12_page extends PureComponent {
 		});
 		const token = Cookie.get('fin-v-card-token');
 		if (token) {
-			if (isBugBrowser()) {
-				store.setToken(token);
-			} else {
-				store.setTokenSession(token);
-			}
+			store.setToken(token);
 			this.getcache();
 		} else {
 			this.setState({

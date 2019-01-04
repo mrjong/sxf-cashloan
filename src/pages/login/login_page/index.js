@@ -6,7 +6,7 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser, isWXOpen, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
@@ -133,11 +133,7 @@ export default class login_page extends PureComponent {
 							// store.setToken(res.data.tokenId);
 
 							// TODO: 根据设备类型存储token
-							if (isBugBrowser()) {
-								store.setToken(res.data.tokenId);
-							} else {
-								store.setTokenSession(res.data.tokenId);
-							}
+							store.setToken(res.data.tokenId);
 							if (isWXOpen()) {
 								// this.props.history.goBack();
 								this.props.history.push('/home/home');

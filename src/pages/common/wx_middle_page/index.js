@@ -3,7 +3,6 @@ import qs from 'qs';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { isBugBrowser } from 'utils';
 import Blanks from 'components/Blank';
 
 const API = {
@@ -51,12 +50,7 @@ export default class wx_middle_page extends Component {
 						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
-						if (isBugBrowser()) {
-							// 登陆的token
-							store.setToken(res.loginToken);
-						} else {
-							store.setTokenSession(res.loginToken);
-						}
+						store.setToken(res.loginToken);
 						// localStorage.setItem('authorizedNotLoginStats', 'true')
 						// this.props.history.replace('/home/home')
 						this.jumpRouter();
@@ -79,12 +73,8 @@ export default class wx_middle_page extends Component {
 				})
 				.then((res) => {
 					if (query.jumpUrl) {
-						if (isBugBrowser()) {
-							// 登陆的token
-							store.setJumpUrl(query.jumpUrl);
-						} else {
-							store.setJumpUrlSession(query.jumpUrl);
-						}
+						// 登陆的token
+						store.setJumpUrl(query.jumpUrl);
 					}
 					if (res.msgCode == 'WX0101') {
 						//没有授权
@@ -100,12 +90,7 @@ export default class wx_middle_page extends Component {
 						//已授权已登录
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
-						if (isBugBrowser()) {
-							// 登陆的token
-							store.setToken(res.loginToken);
-						} else {
-							store.setTokenSession(res.loginToken);
-						}
+						store.setToken(res.loginToken);
 						// localStorage.setItem('authorizedNotLoginStats', 'true')
 						if (query.url) {
 							window.location.href = query.url;
@@ -127,32 +112,17 @@ export default class wx_middle_page extends Component {
 	}
 	// 跳转路由判断
 	jumpRouter = () => {
-		if (isBugBrowser()) {
-			// 登陆的token
-			let jumpUrl = store.getJumpUrl();
-			this.removeJumpRouter();
-			if (jumpUrl) {
-				this.props.history.push(jumpUrl);
-			} else {
-				this.props.history.replace('/home/home'); //微信授权成功调到登录页
-			}
+		// 登陆的token
+		let jumpUrl = store.getJumpUrl();
+		this.removeJumpRouter();
+		if (jumpUrl) {
+			this.props.history.push(jumpUrl);
 		} else {
-			let jumpUrlSession = store.getJumpUrlSession();
-			this.removeJumpRouter();
-			if (jumpUrlSession) {
-				this.props.history.push(jumpUrlSession);
-			} else {
-				this.props.history.replace('/home/home'); //微信授权成功调到登录页
-			}
+			this.props.history.replace('/home/home'); //微信授权成功调到登录页
 		}
 	};
 	removeJumpRouter = () => {
-		if (isBugBrowser()) {
-			// 登陆的token
-			store.removeJumpUrl();
-		} else {
-			store.removeJumpUrlSession();
-		}
+		store.removeJumpUrl();
 	};
 	render() {
 		return <Blanks errorInf={this.state.errorInf} />;

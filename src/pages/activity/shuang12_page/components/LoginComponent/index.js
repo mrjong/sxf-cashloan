@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
-import { getDeviceType, getFirstError, isBugBrowser, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
@@ -119,11 +119,7 @@ export default class LoginComponent extends Component {
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
 							// TODO: 根据设备类型存储token
-							if (isBugBrowser()) {
-								store.setToken(res.data.tokenId);
-							} else {
-								store.setTokenSession(res.data.tokenId);
-							}
+							store.setToken(res.data.tokenId);
 							closeCb();
 							refreshPageFn();
 						},

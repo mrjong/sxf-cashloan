@@ -1,9 +1,10 @@
 // 本地存储
-import { localList, sessionList } from './storeTypes';
+import { storeTypes } from './storeTypes';
+import { isBugBrowser } from 'utils';
 
 const { localStorage, sessionStorage } = window;
 
-let STORAGE_METHOD = localStorage
+let STORAGE_METHOD = sessionStorage
 
 const storageUtil = {
   setItem(key, value) {
@@ -32,9 +33,14 @@ const storageUtil = {
 }
 
 let store = {};
+// 需要区别对待的存储字段
+let list = [
+  'Token',
+  'JumpUrl'
+]
 // 本地存储工厂函数，生成 set get remove 方法
-const storeFactory = (funcName, key, storeType = 'local') => {
-  STORAGE_METHOD = storeType === 'local' ? localStorage : sessionStorage
+const storeFactory = (funcName, key) => {
+  STORAGE_METHOD = isBugBrowser() && list.includes(funcName) ? localStorage : sessionStorage
   store[`set${funcName}`] = data => {
     storageUtil.setItem(key, data);
   };
@@ -42,14 +48,9 @@ const storeFactory = (funcName, key, storeType = 'local') => {
   store[`remove${funcName}`] = () => storageUtil.removeItem(key);
 };
 
-// 循环添加 local 存储方法
-for (let funName in localList) {
-  storeFactory(funName, localList[funName], 'local');
-}
-
-// 循环添加 session 存储方法
-for (let funName in sessionList) {
-  storeFactory(funName, sessionList[funName], 'session');
+// 循环添加存储方法(包括local session)
+for (let funName in storeTypes) {
+  storeFactory(funName, storeTypes[funName]);
 }
 
 export { store };

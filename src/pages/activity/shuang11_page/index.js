@@ -6,7 +6,7 @@ import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import { store } from 'utils/store';
 import { SXFToast } from 'utils/SXFToast';
-import { getDeviceType, getFirstError, isBugBrowser, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, handleInputBlur } from 'utils';
 import bg from './img/bg.png';
 import img_5_qiang from './img/img_5_qiang.png';
 import alert_new_user from './img/alert_new_user.png';
@@ -97,7 +97,7 @@ export default class shuang11_page extends PureComponent {
 			});
 			return;
         }
-        store.setTokenSession(token)
+        store.setToken(token)
 		this.typeUp(type);
 	};
 
@@ -298,11 +298,7 @@ export default class shuang11_page extends PureComponent {
 							// store.setToken(res.data.tokenId);
 
 							// TODO: 根据设备类型存储token
-							if (isBugBrowser()) {
-								store.setToken(res.data.tokenId);
-							} else {
-								store.setTokenSession(res.data.tokenId);
-							}
+							store.setToken(res.data.tokenId);
 							this.closeFunc();
 						},
 						(error) => {

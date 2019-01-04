@@ -6,7 +6,7 @@ import avatar from 'assets/images/mine/avatar.png';
 import Lists from 'components/Lists';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
-import { isBugBrowser, isWXOpen, logoutAppHandler } from 'utils';
+import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -24,11 +24,7 @@ export default class mine_page extends PureComponent {
     super(props);
     // 获取token
     token = Cookie.get('fin-v-card-token');
-    if (isBugBrowser()) {
-      tokenFromStorage = store.getToken();
-    } else {
-      tokenFromStorage = store.getTokenSession();
-    }
+    tokenFromStorage = store.getToken();
     this.state = {
       realNmFlg: false, // 用户是否实名
       mblNoHid: '',

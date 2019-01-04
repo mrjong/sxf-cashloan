@@ -4,9 +4,8 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
-import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isBugBrowser, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, handleInputBlur } from 'utils';
 import bg from './img/g11_bg.png';
 import img_5_qiang from './img/img_5_qiang.png';
 import alert_new_user from './img/alert_new_user.png';
@@ -126,7 +125,7 @@ export default class huodong11_page extends PureComponent {
 			return;
 		}
 		this.getcache(type);
-		store.setTokenSession(token);
+		store.setToken(token);
 	};
 
 	typeUp = (id, type) => {
@@ -333,11 +332,7 @@ export default class huodong11_page extends PureComponent {
 							// store.setToken(res.data.tokenId);
 
 							// TODO: 根据设备类型存储token
-							if (isBugBrowser()) {
-								store.setToken(res.data.tokenId);
-							} else {
-								store.setTokenSession(res.data.tokenId);
-							}
+							store.setToken(res.data.tokenId);
 							this.closeFunc();
 						},
 						(error) => {

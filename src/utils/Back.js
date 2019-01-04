@@ -3,7 +3,7 @@
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 // 3、在 noRouterBack.js 中添加页面的路由。
 import React from 'react'
-import { logoutAppHandler, changeHistoryState, isWXOpen, isBugBrowser } from 'utils';
+import { logoutAppHandler, changeHistoryState, isWXOpen } from 'utils';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
@@ -42,11 +42,7 @@ if (window.history && window.history.pushState) {
       // 获取token
       let token = Cookie.get('fin-v-card-token');
       let tokenFromStorage = '';
-      if (isBugBrowser()) {
-        tokenFromStorage = store.getToken();
-      } else {
-        tokenFromStorage = store.getTokenSession();
-      }
+      tokenFromStorage = store.getToken();
       // 返回拦截弹窗
       let userInfo = store.getUserInfo();
       let backFlag = store.getBackFlag();

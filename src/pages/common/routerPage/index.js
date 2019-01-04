@@ -7,7 +7,7 @@ import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { changeHistoryState, isBugBrowser, pagesIgnore, vconsole } from 'utils';
+import { changeHistoryState, pagesIgnore, vconsole } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
 import { pageView } from 'utils/analytins';
 let consoleshowStr = '';
@@ -52,11 +52,7 @@ export default class router_Page extends PureComponent {
 	loadComponent = async (props) => {
 		const token = Cookie.get('fin-v-card-token');
 		let tokenFromStorage = '';
-		if (isBugBrowser()) {
-			tokenFromStorage = store.getToken();
-		} else {
-			tokenFromStorage = store.getTokenSession();
-		}
+		tokenFromStorage = store.getToken();
 		if (!tokenFromStorage && !pagesIgnore(window.location.pathname) && !token) {
 			// sessionStorage.clear();
 			// localStorage.clear();

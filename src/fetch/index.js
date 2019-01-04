@@ -2,7 +2,7 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import { store } from 'utils/store';
-import { isBugBrowser, isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
+import { isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
 import { singleLoading } from './util'
 
 const fetchInit = () => {
@@ -51,11 +51,7 @@ const fetchInit = () => {
 			// const TOKEN = Cookie.get('fin-v-card-token');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStorage = '';
-			if (isBugBrowser()) {
-				tokenFromStorage = store.getToken();
-			} else {
-				tokenFromStorage = store.getTokenSession();
-			}
+			tokenFromStorage = store.getToken();
 			if (tokenFromStorage && !location.pathname.indexOf('activity') > -1) {
 				cfg.headers['fin-v-card-token'] = tokenFromStorage;
 			} else if (location.pathname.indexOf('activity') > -1) {

@@ -3,7 +3,6 @@ import qs from 'qs';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { isBugBrowser } from 'utils';
 import Blank from 'components/Blank';
 
 const API = {
@@ -43,11 +42,7 @@ export default class auth_page extends Component {
 	goRouter = (token) => {
 		Cookie.set('fin-v-card-token', token, { expires: 365 });
 		// TODO: 根据设备类型存储token
-		if (isBugBrowser()) {
-			store.setToken(token);
-		} else {
-			store.setTokenSession(token);
-		}
+		store.setToken(token);
 		this.props.history.replace('/home/home');
 	};
 	render() {

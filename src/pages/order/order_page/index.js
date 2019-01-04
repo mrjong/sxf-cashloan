@@ -6,7 +6,7 @@ import style from "./index.scss"
 import fetch from "sx-fetch"
 import { PullToRefresh, List, ListView } from "antd-mobile"
 import { store } from 'utils/store';
-import { isBugBrowser, isWXOpen } from 'utils';
+import { isWXOpen } from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import dayjs from 'dayjs'
 let hasNext = true
@@ -27,11 +27,7 @@ export default class order_page extends PureComponent {
 		super(props)
 		// 获取token
 		token = Cookie.get('fin-v-card-token');
-		if (isBugBrowser()) {
-			tokenFromStorage = store.getToken();
-		} else {
-			tokenFromStorage = store.getTokenSession();
-		}
+		tokenFromStorage = store.getToken();
 		const dataSource = new ListView.DataSource({
 			rowHasChanged: (row1, row2) => row1 !== row2
 		})

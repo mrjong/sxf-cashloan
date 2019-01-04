@@ -4,7 +4,7 @@ import { Modal, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import {isBugBrowser, isWXOpen, getDeviceType } from 'utils';
+import { isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
@@ -38,11 +38,7 @@ export default class home_page extends PureComponent {
   constructor(props) {
     // 获取token
     token = Cookie.get('fin-v-card-token');
-    if (isBugBrowser()) {
-      tokenFromStorage = store.getToken();
-    } else {
-      tokenFromStorage = store.getTokenSession();
-    }
+    tokenFromStorage = store.getToken();
     super(props);
     this.state = {
       isShowModal: false,
@@ -109,11 +105,7 @@ export default class home_page extends PureComponent {
     const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (urlParams.token) {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
-      if (isBugBrowser()) {
-        store.setToken(urlParams.token);
-      } else {
-        store.setTokenSession(urlParams.token);
-      }
+      store.setToken(urlParams.token);
     }
   };
 
