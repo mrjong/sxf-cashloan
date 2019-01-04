@@ -32,4 +32,5 @@ export const storeTypes = {
   QueryUsrSCOpenId, // 用户标识
   Token, // local-token
   JumpUrl, // 调整的url
+  H5Channel, // 存储h5Channel
 };

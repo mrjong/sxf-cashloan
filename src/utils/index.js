@@ -357,8 +357,6 @@ export const getH5Channel = () => {
     h5Channel = 'MPOS';
   } else if(queryData.h5Channel) {
     h5Channel = queryData.h5Channel;
-  } else if (store.getH5ChannelSession()) {
-    h5Channel = store.getH5ChannelSession();
   } else if (store.getH5Channel()) {
     h5Channel = store.getH5Channel();
   } else {
