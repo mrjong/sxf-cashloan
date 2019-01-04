@@ -45,7 +45,7 @@ const fetchinit = () => {
 					if (timerList.length > 1) {
 						return;
 					}
-					SXFToast.loading('数据加载中...', 10);
+					SXFToast.loading('数据加载中...', (cfg.timeout && cfg.timeout / 1000) || 10);
 				}, 300);
 				timerList.push(timer);
 			}
@@ -61,6 +61,7 @@ const fetchinit = () => {
 	// 响应拦截
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
+            console.log(response)
 			num--;
 			if (num <= 0) {
 				if (timer) {
@@ -104,7 +105,10 @@ const fetchinit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
-			if (errorTip) Toast.fail('系统开小差，请稍后重试');
+			SXFToast.hide();
+			setTimeout(() => {
+				if (errorTip) Toast.fail('系统开小差，请稍后重试');
+			}, 0);
 		},
 		onShowSuccessTip: (response, successTip) => {
 			console.log(response, '============');
