@@ -5,7 +5,7 @@ import { store } from 'utils/store';
 import { InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import Cookie from 'js-cookie';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur, getH5Channel } from 'utils';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
 
@@ -55,7 +55,7 @@ export default class dc_landing_page extends PureComponent {
 						smsJrnNo: this.state.smsJrnNo, // 短信流水号
 						osType, // 操作系统
 						smsCd: values.smsCd, // IP地址
-						usrCnl: queryData && queryData.h5Channel ? queryData.h5Channel : 'other', // 用户渠道
+						usrCnl: getH5Channel(), // 用户渠道
 						location: store.getPosition() // 定位地址 TODO 从session取
 					})
 					.then(

@@ -15,6 +15,7 @@ import zp_btn from './img/zp_btn.png';
 import item1 from './img/item1.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
+import { getH5Channel } from 'utils';
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
 	awardRecords: '/activeConfig/records', // 用户中奖记录展示
@@ -195,10 +196,7 @@ export default class dazhuanpan_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const params = {
 			activeId: config.activeId,
-			channel:
-				queryData && queryData.h5Channel
-					? queryData.h5Channel
-					: sessionStorage.getItem('h5Channel') || localStorage.getItem('h5Channel') || 'h5' // 用户渠道
+			channel: getH5Channel() // 用户渠道
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
