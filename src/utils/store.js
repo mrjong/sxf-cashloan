@@ -40,6 +40,7 @@ const storeListLocal = {
   BankCardData: 'bankCardData', // 银行卡数据
   ApplyNo: 'applyNo', // 订单号 
   WithdrawMoney: 'withdrawMoney', // 提现金额
+  HideInput: 'hideInput', // 分享后是否隐藏input框
 };
 
 // 本地session存储 方法名与key值对应表
