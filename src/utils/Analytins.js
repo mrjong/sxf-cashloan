@@ -1,6 +1,6 @@
 import qs from 'qs';
 import { store } from 'utils/store';
-import { getH5Channel } from 'utils';
+import { getH5Channel, setH5Channel } from 'utils';
 
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
@@ -15,13 +15,14 @@ export const initAnalytics = () => {
     ignoreQueryPrefix: true,
   });
   const ua = window.navigator.userAgent;
-  if (!store.getH5Channel()) {
-    /SuiXingPay-Mpos/i.test(ua)
-      ? query.h5Channel
-        ? store.setH5Channel(query.h5Channel)
-        : store.setH5Channel('MPOS')
-      : store.setH5Channel(query.h5Channel ? query.h5Channel : 'other');
-  }
+  // if (!store.getH5Channel()) {
+  //   /SuiXingPay-Mpos/i.test(ua)
+  //     ? query.h5Channel
+  //       ? store.setH5Channel(query.h5Channel)
+  //       : store.setH5Channel('MPOS')
+  //     : store.setH5Channel(query.h5Channel ? query.h5Channel : 'other');
+  // }
+  setH5Channel();
   if (!localStorage.getItem('version')) {
     localStorage.setItem('version', window.version);
   }

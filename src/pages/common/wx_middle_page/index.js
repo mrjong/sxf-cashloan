@@ -4,7 +4,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
-import { getH5Channel } from 'utils';
+import { setH5Channel, getH5Channel } from 'utils';
 
 const API = {
 	wxAuthcb: '/wx/authcb',
@@ -29,10 +29,11 @@ export default class wx_middle_page extends Component {
 			u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
 				? 'ANDRIOD'
 				: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 'IOS' : 'PC';
-		if (query && query.h5Channel) {
-			// localStorage.setItem('h5Channel', query.h5Channel);
-			store.setH5Channel(query.h5Channel)
-		}
+		// if (query && query.h5Channel) {
+		// 	// localStorage.setItem('h5Channel', query.h5Channel);
+		// 	store.setH5Channel(query.h5Channel)
+		// }
+		setH5Channel();
 		if (query && query.code) {
 			this.props.$fetch
 				.post(API.wxAuthcb, {
