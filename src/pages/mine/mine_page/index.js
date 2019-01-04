@@ -30,7 +30,6 @@ export default class mine_page extends PureComponent {
       tokenFromStorage = store.getTokenSession();
     }
     this.state = {
-      // showMoudle: false, // 是否展示确认退出的modal
       realNmFlg: false, // 用户是否实名
       mblNoHid: '',
       memberInf: { // 会员卡信息
@@ -323,7 +322,6 @@ export default class mine_page extends PureComponent {
           :
           null
         }
-        {/* {mblNoHid && showMoudle && <Moudles cb={this} logOut={this.logout} textCont="确认退出登录？" />} */}
       </div>
     )
   }

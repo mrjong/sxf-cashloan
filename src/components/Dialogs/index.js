@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import style from './index.scss'
-// import config from '../config'
-// if (config.useDefaultStyles) {
-//   require('./styles')
-// }
 
 class Dialog extends Component {
   constructor(props) {

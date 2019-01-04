@@ -8,7 +8,7 @@ import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import PopUp from 'components/PopUp'
-import Dialog from 'components/Dialog'
+import Dialog from 'components/Dialogs'
 const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
   let obj = new PopUp(< Dialog open content={
