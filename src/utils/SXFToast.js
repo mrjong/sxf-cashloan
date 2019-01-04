@@ -8,12 +8,14 @@ export const SXFToast = {
 		popUp.close();
 		Toast.hide();
 		popUp.show();
-		setTimeout(() => {
-			popUp.close();
-			if (typeof callback === 'function') {
-				callback();
-			}
-		}, duration * 1000);
+		if (duration !== 0) {
+			setTimeout(() => {
+				popUp.close();
+				if (typeof callback === 'function') {
+					callback();
+				}
+			}, duration * 1000);
+		}
 	},
 	hide: () => {
 		Toast.hide();
