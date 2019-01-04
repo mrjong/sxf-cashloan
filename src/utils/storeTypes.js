@@ -32,10 +32,12 @@ export const localList = {
   DisableBack: 'disableBack', // 禁止返回的标识
   LoginBack: 'loginBack', // 登录页协议返回
   QueryUsrSCOpenId: 'QueryUsrSCOpenId', // 用户标识
+  H5Channel: 'h5Channel', // 存储h5Channel
 };
 
 // 本地session存储 方法名与key值对应表
 export const sessionList = {
   TokenSession: 'fin-card-token',
   JumpUrlSession: 'jumpUrl',
+  H5ChannelSession: 'h5Channel', // 存储h5Channel
 };
