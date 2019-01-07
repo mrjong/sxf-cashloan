@@ -31,8 +31,8 @@ export default class Routers extends Component {
 	render() {
 		return (
 			<Switch>
-                <Route exact path="/" component={LoginPage} />
-				<Route  path="/login" component={LoginPage} />
+				<Route exact path="/" component={LoginPage} />
+				<Route path="/login" component={LoginPage} />
 				<Route path="/:modules/:page" component={RouterPage} />
 			</Switch>
 		);

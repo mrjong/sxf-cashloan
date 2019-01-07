@@ -3,7 +3,7 @@ import { storeTypes } from './storeTypes';
 import { isBugBrowser } from 'utils';
 
 const { localStorage, sessionStorage } = window;
-
+// 默认使用sessionstorage
 let STORAGE_METHOD = sessionStorage
 
 const storageUtil = {

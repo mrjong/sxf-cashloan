@@ -10,8 +10,8 @@ import { store } from 'utils/store';
 import { changeHistoryState, pagesIgnore, vconsole } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
 import { pageView } from 'utils/analytins';
-let consoleshowStr = '';
 import { SXFToast } from 'utils/SXFToast';
+let consoleshowStr = '';
 
 export default class router_Page extends PureComponent {
 	constructor(props) {
