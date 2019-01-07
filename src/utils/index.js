@@ -327,7 +327,7 @@ export const vconsole = (i, consoleshow) => {
     script.type = 'text/javascript';
     script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
     head.appendChild(script);
-    sessionStorage.setItem('consoleshow', true);
+    store.setConsoleshow(true);
     // console.log('localStorage', localStorage);
     // console.log('sessionStorage', sessionStorage);
     // console.log('cookie', document.cookie);
@@ -341,7 +341,7 @@ export const vconsole = (i, consoleshow) => {
     script.type = 'text/javascript';
     script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
     head.appendChild(script);
-    sessionStorage.setItem('consoleshow', true);
+    store.setConsoleshow(true);
     // console.log('localStorage', localStorage);
     // console.log('sessionStorage', sessionStorage);
     // console.log('cookie', document.cookie);

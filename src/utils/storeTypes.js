@@ -30,6 +30,10 @@ export const storeTypes = {
   DisableBack, // 禁止返回的标识
   LoginBack, // 登录页协议返回
   QueryUsrSCOpenId, // 用户标识
+  FromPage, // 页面来源
+  Consoleshow, // 显示console
+  Version, // 版本号
+  RewardCount, // 抽奖次数
   Token, // local-token
   JumpUrl, // 调整的url
   H5Channel, // 存储h5Channel

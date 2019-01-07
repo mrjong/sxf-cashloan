@@ -39,7 +39,7 @@ let list = [
   'JumpUrl',
   'H5Channel',
 ]
-// 本地存储工厂函数，生成 set get remove 方法
+// 本地存储工厂函数，生成 set get remove 方法(优先使用sessionstorage)
 const storeFactory = (funcName, key) => {
   STORAGE_METHOD = isBugBrowser() && list.includes(funcName) ? localStorage : sessionStorage
   store[`set${funcName}`] = data => {

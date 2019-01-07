@@ -16,6 +16,8 @@ import item1 from './img/item1.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils';
+import {store} from 'utils/store'
+
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
 	awardRecords: '/activeConfig/records', // 用户中奖记录展示
@@ -63,9 +65,9 @@ export default class dazhuanpan_page extends PureComponent {
 		token = Cookie.get('fin-v-card-token');
 		this.setState({
 			count:
-				sessionStorage.getItem('count') && Number(sessionStorage.getItem('count')) > 0
-					? sessionStorage.getItem('count')
-					: !sessionStorage.getItem('count') ? 1 : 0
+				store.getRewardCount() && Number(store.getRewardCount()) > 0
+					? store.getRewardCount()
+					: !store.getRewardCount() ? 1 : 0
 		});
 		this.getConfigList();
 	}
@@ -126,7 +128,7 @@ export default class dazhuanpan_page extends PureComponent {
 				if (res.data.data.count && Number(res.data.data.count) > 0) {
 					this.getDraw(res.data.data.count);
 				} else {
-					sessionStorage.setItem('count', 0);
+					store.setRewardCount(0);
 					this.setState({
 						count: '0'
 					});
@@ -200,7 +202,7 @@ export default class dazhuanpan_page extends PureComponent {
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				sessionStorage.setItem('count', Number(count) > 0 ? Number(count) - 1 : '0');
+				store.setRewardCount(Number(count) > 0 ? Number(count) - 1 : '0');
 				this.setState({
 					count: Number(count) > 0 ? Number(count) - 1 : '0'
 				});
@@ -262,7 +264,7 @@ export default class dazhuanpan_page extends PureComponent {
 			});
 			return;
 		}
-		if (sessionStorage.getItem('count') && Number(sessionStorage.getItem('count')) <= 0) {
+		if (store.getRewardCount() && Number(store.getRewardCount()) <= 0) {
 			this.setState({
 				count: '0',
 				type: 'no_chance'

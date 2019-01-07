@@ -23,11 +23,11 @@ export const initAnalytics = () => {
   //     : store.setH5Channel(query.h5Channel ? query.h5Channel : 'other');
   // }
   setH5Channel();
-  if (!localStorage.getItem('version')) {
-    localStorage.setItem('version', window.version);
+  if(!store.getVersion()){
+    store.setVersion(window.version)
   }
-  if (/MicroMessenger/i.test(window.navigator.userAgent) && localStorage.getItem('version') !== window.version) {
-    localStorage.setItem('version', window.version);
+  if (/MicroMessenger/i.test(window.navigator.userAgent) && store.getVersion() !== window.version) {
+    store.setVersion(window.version)
     window.location.reload();
   }
 };

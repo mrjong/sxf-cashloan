@@ -30,8 +30,8 @@ export default class router_Page extends PureComponent {
 	componentWillMount() {
 		// 出现打印插件
 		vconsole();
-        // 为跳转到协议添加loading
-        sessionStorage.setItem('fromPage','wap')
+		// 为跳转到协议添加loading
+		store.setFromPage('wap')
 		if (!store.getHistoryRouter()) {
 			store.setHistoryRouter('first-come-in');
 		}
@@ -99,11 +99,11 @@ export default class router_Page extends PureComponent {
 				});
 			} else {
 				this.setState({
-                    newTitle: '重新加载',
-                    showPage:true,
+					newTitle: '重新加载',
+					showPage: true,
 					component: React.createElement(errPage, {
 						match,
-                        history,
+						history,
 						params: {
 							pageType: '404'
 						}
@@ -114,8 +114,8 @@ export default class router_Page extends PureComponent {
 		} catch (error) {
 			console.log(error);
 			this.setState({
-                newTitle: '重新加载',
-                showPage:true,
+				newTitle: '重新加载',
+				showPage: true,
 				component: React.createElement(errPage, {
 					match,
 					history,
@@ -127,7 +127,7 @@ export default class router_Page extends PureComponent {
 		}
 	};
 	consoleshow = (e) => {
-		if (sessionStorage.getItem('consoleshow')) {
+		if (store.getConsoleshow()) {
 			return;
 		}
 		const leftInstance = e.screenX;

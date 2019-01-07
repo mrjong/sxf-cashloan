@@ -67,17 +67,17 @@ export default class huodong11_page extends PureComponent {
 		}
 	}
 	getcache = (type) => {
-		if (!sessionStorage.getItem('QueryUsrSCOpenId')) {
+		if (!store.getQueryUsrSCOpenId()) {
 			this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
 				console.log(res);
 				if (res.msgCode === 'PTM0000') {
 					sa.login(res.data);
-					sessionStorage.setItem('QueryUsrSCOpenId', res.data);
+					store.setQueryUsrSCOpenId(res.data);
 					this.getStatus(res.data, type);
 				}
 			});
 		} else {
-			this.getStatus(sessionStorage.getItem('QueryUsrSCOpenId'), type);
+			this.getStatus(store.getQueryUsrSCOpenId(), type);
 		}
 	};
 	// 关闭登录弹窗

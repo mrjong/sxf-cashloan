@@ -75,7 +75,7 @@ export default class shuang12_page extends PureComponent {
 	};
 	// 大转盘活动-用户抽奖剩余次数查询
 	gettotal = () => {
-		let id = sessionStorage.getItem('QueryUsrSCOpenId');
+		let id = store.getQueryUsrSCOpenId();
 		this.props.$fetch.post(API.count).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				if (res.data && Number(res.data.total) > 0) {
@@ -116,20 +116,20 @@ export default class shuang12_page extends PureComponent {
 		this.getAwardList();
 	};
 	getcache = () => {
-		if (!sessionStorage.getItem('QueryUsrSCOpenId')) {
+		if (!store.getQueryUsrSCOpenId()) {
 			this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
 				console.log(res);
 				if (res.msgCode === 'PTM0000') {
 					sa.login(res.data);
-					sessionStorage.setItem('QueryUsrSCOpenId', res.data);
+					store.setQueryUsrSCOpenId(res.data);
 					this.getStatus(res.data);
 				} else {
 					// 错误时处理
-					sessionStorage.setItem('QueryUsrSCOpenId', +new Date());
+					store.setQueryUsrSCOpenId(+new Date());
 				}
 			});
 		} else {
-			this.getStatus(sessionStorage.getItem('QueryUsrSCOpenId'));
+			this.getStatus(store.getQueryUsrSCOpenId());
 		}
 	};
 	getStatus = (id) => {
@@ -214,7 +214,7 @@ export default class shuang12_page extends PureComponent {
 			});
 			return;
 		}
-		let id = sessionStorage.getItem('QueryUsrSCOpenId');
+		let id = store.getQueryUsrSCOpenId();
 		if (id && localStorage.getItem(`${getNowDate()}${id}total`) && Number(localStorage.getItem(`${getNowDate()}${id}total`)) <= 0) {
 			this.setState({
 				total: '0',
