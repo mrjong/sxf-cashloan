@@ -4,13 +4,13 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
-import { setH5Channel, getH5Channel } from 'utils';
+import { setH5Channel, getH5Channel, getDeviceType } from 'utils';
 
 const API = {
 	wxAuthcb: '/wx/authcb',
 	wxAuth: '/wx/auth',
 	isAccessLogin: '/gateway/anydoor' // 是否有登录的权限
-}
+};
 @fetch.inject()
 export default class wx_middle_page extends Component {
 	constructor(props) {
@@ -24,11 +24,7 @@ export default class wx_middle_page extends Component {
 		Cookie.remove('fin-v-card-token');
 		// 从url截取数据
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const u = navigator.userAgent;
-		const osType =
-			u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
-				? 'ANDRIOD'
-				: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 'IOS' : 'PC';
+		const osType = getDeviceType();
 		// if (query && query.h5Channel) {
 		// 	// localStorage.setItem('h5Channel', query.h5Channel);
 		// 	store.setH5Channel(query.h5Channel)

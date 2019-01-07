@@ -1,40 +1,40 @@
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
-  RepaymentModalData, // 保存确认代还信息弹框数据
-  HomeCardIndexData, // 保存首页信用卡信息
-  BackUrl, // 保存跳转的url
-  CardData, // 跳转路由中的银行卡信息
-  MoxieBackUrl, // 跳转魔蝎授权页 授权后返回的url
-  VIPFlag, // 会员卡是否购买的flag
-  AuthFlag, // 是否实名认证的flag
-  UserPhone, // 用户手机号
-  UserInfo, // 用户信息
-  ParamVip, // 会员卡参数
-  VIPInfo, // 会员卡信息
-  VipBackUrl, // 会员卡入口与出口
-  Position, // 定位信息
-  ProtocolFinancialData,
-  OrderSuccess, // 付款成功信息
-  BackData, // 订单信息
-  BillNo,
-  MsgObj, // // 消息详情
-  MsgBackData, // 消息详情
-  HistoryRouter, // 历史路由
-  CheckCardRouter, // 保存四项认证进入绑卡页的标识
-  BannerData, // 保存 banner 信息
-  OutLinkUrl, // 去外链标识
-  CouponData, // 跳转路由中优惠劵的信息
-  LandingPageImgUrl, // 落地页图片
-  HadShowModal, // 是否开过弹框
-  BackFlag, // 是否返回的flag
-  DisableBack, // 禁止返回的标识
-  LoginBack, // 登录页协议返回
-  QueryUsrSCOpenId, // 用户标识
-  FromPage, // 页面来源
-  Consoleshow, // 显示console
-  Version, // 版本号
-  RewardCount, // 抽奖次数
-  Token, // local-token
-  JumpUrl, // 调整的url
-  H5Channel, // 存储h5Channel
+	RepaymentModalData: 'RepaymentModalData', // 保存确认代还信息弹框数据
+	HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
+	BackUrl: 'BackUrl', // 保存跳转的url
+	CardData: 'CardData', // 跳转路由中的银行卡信息
+	MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
+	VIPFlag: 'VIPFlag', // 会员卡是否购买的flag
+	AuthFlag: 'AuthFlag', // 是否实名认证的flag
+	UserPhone: 'UserPhone', // 用户手机号
+	UserInfo: 'UserInfo', // 用户信息
+	ParamVip: 'ParamVip', // 会员卡参数
+	VIPInfo: 'VIPInfo', // 会员卡信息
+	VipBackUrl: 'VipBackUrl', // 会员卡入口与出口
+	Position: 'Position', // 定位信息
+	ProtocolFinancialData: 'ProtocolFinancialData',
+	OrderSuccess: 'OrderSuccess', // 付款成功信息
+	BackData: 'BackData', // 订单信息
+	BillNo: 'BillNo',
+	MsgObj: 'MsgObj', // // 消息详情
+	MsgBackData: 'MsgBackData', // 消息详情
+	HistoryRouter: 'HistoryRouter', // 历史路由
+	CheckCardRouter: 'CheckCardRouter', // 保存四项认证进入绑卡页的标识
+	BannerData: 'BannerData', // 保存 banner 信息
+	OutLinkUrl: 'OutLinkUrl', // 去外链标识
+	CouponData: 'CouponData', // 跳转路由中优惠劵的信息
+	LandingPageImgUrl: 'LandingPageImgUrl', // 落地页图片
+	HadShowModal: 'HadShowModal', // 是否开过弹框
+	BackFlag: 'BackFlag', // 是否返回的flag
+	DisableBack: 'DisableBack', // 禁止返回的标识
+	LoginBack: 'LoginBack', // 登录页协议返回
+	QueryUsrSCOpenId: 'QueryUsrSCOpenId', // 用户标识
+	FromPage: 'FromPage', // 页面来源
+	Consoleshow: 'Consoleshow', // 显示console
+	Version: 'Version', // 版本号
+	RewardCount: 'RewardCount', // 抽奖次数
+	Token: 'Token', // local-token
+	JumpUrl: 'JumpUrl', // 调整的url
+	H5Channel: 'H5Channel' // 存储h5Channel
 };
