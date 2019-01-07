@@ -1,6 +1,5 @@
 // 本地存储
 import { storeTypes } from './storeTypes';
-import { isBugBrowser } from 'utils';
 
 const { localStorage, sessionStorage } = window;
 // 默认使用sessionstorage
@@ -31,9 +30,20 @@ const storageUtil = {
 	}
 };
 
+// 定义需要特殊处理的浏览器
+const bugBrowserArr = [ 'vivobrowser', 'oppobrowser' ];
+
+// 检测是否是某种 bug 浏览器
+const isBugBrowser = () => {
+	const u = navigator.userAgent.toLowerCase();
+	const bugBrowserList = bugBrowserArr.filter((item) => u.indexOf(item) > -1);
+	return bugBrowserList.length > 0 && u.indexOf('micromessenger') <= -1;
+};
+
 let store = {};
 // 需要区别对待的存储字段
 let list = [ 'Token', 'JumpUrl', 'H5Channel' ];
+
 // 本地存储工厂函数，生成 set get remove 方法(优先使用sessionstorage)
 const storeFactory = (funcName, key) => {
 	STORAGE_METHOD = isBugBrowser() && list.includes(funcName) ? localStorage : sessionStorage;

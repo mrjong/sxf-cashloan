@@ -148,16 +148,6 @@ export const getFirstError = error => {
   return '';
 }
 
-// 定义需要特殊处理的浏览器
-const bugBrowserArr = ['vivobrowser', 'oppobrowser'];
-
-// 检测是否是某种 bug 浏览器
-export const isBugBrowser = () => {
-  const u = navigator.userAgent.toLowerCase();
-  const bugBrowserList = bugBrowserArr.filter(item => u.indexOf(item) > -1);
-  return bugBrowserList.length > 0 && u.indexOf('micromessenger') <= -1;
-}
-
 // 检测是否是某种浏览器
 export const isSomeBrowser = type => {
   const u = navigator.userAgent.toLowerCase();
