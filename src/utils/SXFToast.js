@@ -4,11 +4,18 @@ import { Toast } from 'antd-mobile';
 import SXFLoading from 'components/SXFLoading';
 let popUp = new PopUp(<SXFLoading />);
 export const SXFToast = {
-	loading: (content, duration = 10, callback, mask) => {
+	loading: (content, duration = 10, onClose, mask) => {
 		popUp.close();
 		Toast.hide();
 		popUp.show();
-		if (duration !== 0) {
+		if (!duration&& duration !== 0) {
+			setTimeout(() => {
+				popUp.close();
+				if (typeof onClose === 'function') {
+					onClose();
+				}
+			}, duration * 1000);
+		} else if (duration && duration !== 0) {
 			setTimeout(() => {
 				popUp.close();
 				if (typeof callback === 'function') {
