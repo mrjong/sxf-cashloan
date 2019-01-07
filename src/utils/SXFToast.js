@@ -21,6 +21,6 @@ export const SXFToast = {
 		Toast.hide();
 		if (popUp) {
 			popUp.close();
-		}
+        }
 	}
 };
