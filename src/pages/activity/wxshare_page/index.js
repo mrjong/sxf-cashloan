@@ -4,9 +4,9 @@ import qs from 'qs';
 import { store } from 'utils/store';
 import { Toast, InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
-import { validators } from 'utils/validator';
+import { validators } from 'utils';
 import Cookie from 'js-cookie';
-import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils/common';
+import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
 
