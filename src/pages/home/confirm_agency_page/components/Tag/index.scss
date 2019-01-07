@@ -1,0 +1,28 @@
+.sxp_tag {
+  padding: 0.1rem 0.18rem;
+  font-size: 0.26rem;
+  line-height: 1;
+  color: #9d9d9d;
+  border: 1PX  solid #d9d9d9;
+  border-radius: 0.4rem;
+  background-color: #fff;
+  &_active {
+    color: #333;
+    border: 1PX  solid #eadd7b;
+    background-color: #eadd7b;
+  }
+}
+.specail_tag_active{
+  position: relative;
+  padding: 0.1rem 0.38rem;
+  overflow: hidden;
+  i{
+    position: absolute;
+    right: -25px;
+    top: -20px;
+    width: 76px;
+    height: 67px;
+    background-image: url('assets/images/home/tag_ico.png');
+    background-size: 100%;
+  }
+}

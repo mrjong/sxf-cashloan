@@ -31,4 +31,9 @@ export default [
     title: '实名认证',
     component: () => import('pages/home/real_name_page'),
   },
+  {
+    path: '/home/confirm_agency',
+    title: '确认代还信息',
+    component: () => import('pages/home/confirm_agency_page'),
+  }
 ];

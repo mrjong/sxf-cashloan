@@ -6,7 +6,7 @@ import { Toast, InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { validators } from 'utils';
 import Cookie from 'js-cookie';
-import { getDeviceType, getFirstError, isBugBrowser, isWXOpen } from 'utils';
+import { getDeviceType, getFirstError, isWXOpen } from 'utils';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
 
@@ -63,9 +63,9 @@ export default class wxshare_page extends PureComponent {
 		if (isWXOpen() && wx) {
 			const params = {
 				channelCode: '01',
-				redirectUrl: window.location.href,
-            };
-            console.log(params,'------------')
+				redirectUrl: window.location.href
+			};
+			console.log(params, '------------');
 			// 获取 微信 sdk
 			this.props.$fetch.post(`/wx/jscfg`, params).then((result) => {
 				console.log('result', result);
@@ -113,7 +113,7 @@ export default class wxshare_page extends PureComponent {
 				// 增加timeout 解决ios报系统开小差问题
 				setTimeout(() => {
 					_this.doInvite();
-				}, 200)
+				}, 200);
 			},
 			cancel: function() {
 				Toast.info('取消分享');
@@ -124,9 +124,12 @@ export default class wxshare_page extends PureComponent {
 		// wx.onMenuShareWeibo(shareData);
 		// 老版sdk
 		wx.onMenuShareTimeline(shareData);
-		wx.onMenuShareAppMessage({...shareData, success: function() {
-			_this.doInvite(true);
-		}});
+		wx.onMenuShareAppMessage({
+			...shareData,
+			success: function() {
+				_this.doInvite(true);
+			}
+		});
 		wx.onMenuShareQQ(shareData);
 		wx.onMenuShareWeibo(shareData);
 		wx.onMenuShareQZone(shareData);
@@ -175,11 +178,7 @@ export default class wxshare_page extends PureComponent {
 							// store.setToken(res.data.tokenId);
 
 							// TODO: 根据设备类型存储token
-							if (isBugBrowser()) {
-								store.setToken(res.data.tokenId);
-							} else {
-								store.setTokenSession(res.data.tokenId);
-							}
+							store.setToken(res.data.tokenId);
 							this.getShareUrl();
 						},
 						(error) => {
@@ -207,8 +206,8 @@ export default class wxshare_page extends PureComponent {
 				if (res.msgCode !== 'PTM0000') {
 					res.data = {
 						...res.data,
-						urlCode: '',
-					}
+						urlCode: ''
+					};
 					// res.msgInfo && Toast.info(res.msgInfo);
 					// return;
 				}
