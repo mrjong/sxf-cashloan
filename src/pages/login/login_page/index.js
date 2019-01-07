@@ -6,7 +6,7 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur, getH5Channel, setH5Channel } from 'utils';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
@@ -39,7 +39,7 @@ export default class login_page extends PureComponent {
 			ignoreQueryPrefix: true
 		});
 		const ua = window.navigator.userAgent;
-		const sessionH5Channel = localStorage.getItem('h5Channel');
+		// const sessionH5Channel = store.getH5Channel();
 
 		// 移除cookie
 		Cookie.remove('fin-v-card-token');
@@ -47,15 +47,16 @@ export default class login_page extends PureComponent {
 		localStorage.clear();
 
 		// 重新添加h5Channel到session里
-		if (query.h5Channel) {
-			localStorage.setItem('h5Channel', query.h5Channel);
-		} else if (sessionH5Channel) {
-			localStorage.setItem('h5Channel', sessionH5Channel);
-		} else if (/SuiXingPay-Mpos/i.test(ua)) {
-			localStorage.setItem('h5Channel', 'MPOS');
-		} else {
-			localStorage.setItem('h5Channel', 'other');
-		}
+		// if (query.h5Channel) {
+		// 	store.setH5Channel(query.h5Channel);
+		// } else if (sessionH5Channel) {
+		// 	store.setH5Channel(sessionH5Channel);
+		// } else if (/SuiXingPay-Mpos/i.test(ua)) {
+		// 	store.setH5Channel('MPOS');
+		// } else {
+		// 	store.setH5Channel('OTHER');
+		// }
+		setH5Channel();
 
 		store.setHistoryRouter(window.location.pathname);
 
@@ -116,10 +117,7 @@ export default class login_page extends PureComponent {
 						smsJrnNo: this.state.smsJrnNo, // 短信流水号
 						osType, // 操作系统
 						smsCd: values.smsCd, // IP地址
-						usrCnl:
-							queryData && queryData.h5Channel
-								? queryData.h5Channel
-								: localStorage.getItem('h5Channel') || 'h5', // 用户渠道
+						usrCnl: getH5Channel(), // 用户渠道
 						location: store.getPosition() // 定位地址 TODO 从session取
 					})
 					.then(

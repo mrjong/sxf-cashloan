@@ -5,7 +5,7 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, handleInputBlur, getH5Channel } from 'utils';
 import bg from './img/g11_bg.png';
 import img_5_qiang from './img/img_5_qiang.png';
 import alert_new_user from './img/alert_new_user.png';
@@ -315,10 +315,7 @@ export default class huodong11_page extends PureComponent {
 						smsJrnNo: this.state.smsJrnNo, // 短信流水号
 						osType, // 操作系统
 						smsCd: values.smsCd, // IP地址
-						usrCnl:
-							queryData && queryData.h5Channel
-								? queryData.h5Channel
-								: localStorage.getItem('h5Channel') || 'h5', // 用户渠道
+						usrCnl: getH5Channel(), // 用户渠道
 						location: store.getPosition() // 定位地址 TODO 从session取
 					})
 					.then(

@@ -1,3 +1,5 @@
+import { getH5Channel } from 'utils';
+
 // 基本信息页输入框和下拉框的埋点
 let inforArr = [];
 // 将毫秒转化为秒
@@ -45,7 +47,7 @@ function buryingPoints(info) {
 				sa.track(info.pageKey, {
 					'label': info.label,
 					'product_line': '还到-余额代偿',
-					'channelType': localStorage.getItem('h5Channel') ? localStorage.getItem('h5Channel') : 'OTHER'
+					'channelType': getH5Channel()
 				});
 				break;
 			case 'blur':
@@ -61,7 +63,7 @@ function buryingPoints(info) {
 								sa.track(info.pageKey, {
 									...inforArr[i],
 									'product_line': '还到-余额代偿',
-									'channelType': localStorage.getItem('h5Channel') ? localStorage.getItem('h5Channel') : 'OTHER'
+									'channelType': getH5Channel()
 								});
 							}
 							inforArr[i].value = info.value;

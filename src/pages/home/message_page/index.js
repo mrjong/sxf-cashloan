@@ -155,7 +155,7 @@ export default class message_page extends PureComponent {
         this.props.history.push("/home/message_detail_page")
         break
       case "1":
-        if (localStorage.getItem("h5Channel") && localStorage.getItem("h5Channel").indexOf("MPOS") < 0) {
+        if (store.getH5Channel() && store.getH5Channel().indexOf("MPOS") < 0) {
           window.open(obj.detail)
         } else {
           location.href = obj.detail
