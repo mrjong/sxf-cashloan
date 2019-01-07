@@ -36,5 +36,11 @@ export const storeTypes = {
 	RewardCount: 'RewardCount', // 抽奖次数
 	Token: 'Token', // local-token
 	JumpUrl: 'JumpUrl', // 调整的url
-	H5Channel: 'H5Channel' // 存储h5Channel
+	H5Channel: 'H5Channel', // 存储h5Channel
+	Address: 'Address', // 常住地址
+	Linkman: 'Linkman', // 联系人姓名
+	Linkphone: 'Linkphone', // 联系人电话
+	RelationValue: 'RelationValue', // 亲属关系
+	Province: 'Province', // 省份
+	City: 'City' // 城市
 };
