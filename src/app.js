@@ -4,15 +4,15 @@ import { render } from 'react-dom';
 import router from 'routers';
 import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory'
+import createHistory from 'history/createBrowserHistory';
 import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
 import { initAnalytics } from './utils/analytins';
-import { handleWindowError } from 'utils'
+import { handleWindowError, isMPOS } from 'utils';
 import ErrorBoundary from 'components/ErrorBoundary';
 import fastClick from 'fastclick';
 
-fastClick.prototype.focus = function (targetElement) {
+fastClick.prototype.focus = function(targetElement) {
 	targetElement.focus();
 };
 fastClick.attach(document.body);
@@ -22,7 +22,8 @@ if (!window.sa) {
 }
 // const history = createHistory()
 // console.log(history)
-handleWindowError()
+handleWindowError();
+isMPOS();
 fetchInit();
 initAnalytics();
 const renders = (Component) =>

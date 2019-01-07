@@ -1,0 +1,61 @@
+.allstyles {
+	background-color: #fff;
+	width: 750px;
+	text-align: center;
+	.logo {
+		width: 140px;
+		margin-top: 86px;
+	}
+	.p1 {
+		margin-top: 73px;
+		font-size: 36px;
+	}
+	.p2 {
+		margin-top: 13px;
+		font-size: 36px;
+	}
+	.accredit {
+		position: relative;
+		margin-top: 150px;
+		margin-bottom: 30px;
+		font-size: 32px;
+	}
+	.src {
+		width: 30px;
+		position: absolute;
+		left: 51px;
+		margin-top: 8px;
+	}
+	.allSpan {
+		text-align: start;
+		margin: 0 5px 0 100px;
+		span {
+			font-size: 30px;
+			color: #219fdb;
+		}
+	}
+	.icon {
+		width: 650px;
+		height: 88px;
+		left: 50px;
+	}
+	.agreen {
+		margin-top: -82px;
+		font-size: 32px;
+		color: #fff;
+	}
+}
+.noBack {
+	background: #fff;
+	position: relative;
+
+	img {
+		margin-top: 100px;
+	}
+	p {
+		position: absolute;
+		top: 600px;
+		left: 190px;
+		color: #3ca5fc;
+	}
+}
