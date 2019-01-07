@@ -23,6 +23,6 @@ export default [
 		title: '还到',
 		arrowHide: 'empty',
 		headerHide: true,
-		component: () => import('pages/others/ioscontrol_page')
+		component: () => import('pages/mpos/mpos_ioscontrol_page')
 	}
 ];
