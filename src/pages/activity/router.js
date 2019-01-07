@@ -1,33 +1,21 @@
 export default [
 	{
-		path: '/activity/shuang11_page',
-		title: '新用户专享',
-		arrowHide: true,
-		component: () => import('pages/activity/shuang11_page')
-	},
-	{
 		path: '/activity/huodong11_page',
 		title: '全民免息狂欢',
 		arrowHide: true,
 		component: () => import('pages/activity/huodong11_page')
 	},
 	{
-		path: '/activity/shuang12_page',
-		title: '免息提款机',
-		arrowHide: true,
-		component: () => import('pages/activity/shuang12_page')
-	},
-	{
-		path: '/activity/dazhuanpan',
+		path: '/activity/dazhuanpan_page',
 		title: '大转盘',
 		arrowHide: true,
 		component: () => import('pages/activity/dazhuanpan_page')
     },
     {
-		path: '/activity/wxshare',
+		path: '/activity/wxshare_page',
         title: '微信分享',
         arrowHide: 'empty',
         headerHide: true,
-		component: () => import('pages/activity/wxshare')
+		component: () => import('pages/activity/wxshare_page')
 	}
 ];

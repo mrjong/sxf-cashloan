@@ -57,27 +57,9 @@ const membership = {
 	confirmBuy: 'DC_MEMBERSHIP_CONFIRM_BUY' // 会员卡购买-确认购买页-确认购买按钮
 };
 
-const activity = {
-	ling_10: 'DC_LING_10', // 去领取10按钮
-	ling_15: 'DC_LING_15',// 去领取15按钮
-	use_10: 'DC_USE_10',// 去使用10按钮
-	use_15: 'DC_USE_15',// 去使用15按钮
-	login_open: 'DC_LOGIN_OPEN', // 打开登录窗口
-	login_click: 'DC_LOGIN_CLICK',// 点击登录领取
-	yhq_click_10: 'DC_YHQ_CLICK_10',// 点击弹窗立即使用10
-	yhq_click_15: 'DC_YHQ_CLICK_15'// 点击弹窗立即使用15
-};
-
-const activity_shuang12 = {
-	shuang12_go_draw: 'DC_SHUANG12_GO_DRAW', // 立即抽奖
-	shuang12_login_open: 'DC_SHUANG12_LOGIN_OPEN', // 打开登录弹窗
-	shuang12_login_click: 'DC_SHUANG12_LOGIN_CLICK', // 登录点击按钮
-	shuang12_draw_over_click: 'DC_SHUANG12_DRAW_OVER_CLICK', // 抽完拿钱按钮
-};
-
 const bugLog = {
 	apiErrorLog: 'DC_API_ERROR_LOG',  // 接口异常报错日志
 	pageErrorLog: 'DC_PAGE_ERROR_LOG'  // 页面异常报错日志
 }
 
-export { login, home, mine, order, membership, activity, activity_shuang12, bugLog };
+export { login, home, mine, order, membership, bugLog };

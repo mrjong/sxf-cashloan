@@ -22,7 +22,7 @@ const osType = getDeviceType();
 const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 @fetch.inject()
 @createForm()
-export default class wxshare extends PureComponent {
+export default class wxshare_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
