@@ -37,6 +37,12 @@ export default class confirm_agency_page extends PureComponent {
         },
         {
           name: '3个月'
+        },
+        {
+          name: '6个月'
+        },
+        {
+          name: '12个月'
         }
       ],
       lendersDateList: [
