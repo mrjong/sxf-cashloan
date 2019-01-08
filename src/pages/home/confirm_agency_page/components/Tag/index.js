@@ -25,7 +25,7 @@ export default class Tag extends React.PureComponent {
   };
 
   render() {
-    const { className, active, children, onClick, tagType, ...restProps } = this.props;
+    const { className, active, children, onClick, tagType, defaultindex, ...restProps } = this.props;
     return (
       <button
         onClick={event => _handleClick(onClick, event)}
@@ -33,7 +33,7 @@ export default class Tag extends React.PureComponent {
         {...restProps}
       >
         {children}
-        { tagType && tagType==='lenders' && active ? <i /> : ''}
+        { tagType && tagType==='lenders' && defaultindex ? <i /> : ''}
       </button>
     );
   }

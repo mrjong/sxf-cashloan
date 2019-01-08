@@ -27,10 +27,16 @@ export default class login_page extends PureComponent {
 			timeflag: true,
 			flag: true,
 			smsJrnNo: '', // 短信流水号
+			disabledInput: false,
+			queryData: {}
 		};
 	}
 
 	componentWillMount() {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		this.setState({
+			queryData
+		});
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -38,42 +44,34 @@ export default class login_page extends PureComponent {
 		const query = qs.parse(window.location.search, {
 			ignoreQueryPrefix: true
 		});
-		const ua = window.navigator.userAgent;
-		// const sessionH5Channel = store.getH5Channel();
-
 		// 移除cookie
 		Cookie.remove('fin-v-card-token');
 		sessionStorage.clear();
 		localStorage.clear();
-
-		// 重新添加h5Channel到session里
-		// if (query.h5Channel) {
-		// 	store.setH5Channel(query.h5Channel);
-		// } else if (sessionH5Channel) {
-		// 	store.setH5Channel(sessionH5Channel);
-		// } else if (/SuiXingPay-Mpos/i.test(ua)) {
-		// 	store.setH5Channel('MPOS');
-		// } else {
-		// 	store.setH5Channel('OTHER');
-		// }
 		setH5Channel();
 
 		store.setHistoryRouter(window.location.pathname);
 
 		this.props.form.getFieldProps('phoneValue');
+		// mpos 初始化手机号
 		this.props.form.setFieldsValue({
-			phoneValue: ''
+			phoneValue: queryData.mblNoHid
 		});
+		if (queryData.mblNoHid) {
+			this.setState({
+				disabledInput: true
+			});
+		}
 	}
 	componentDidMount() {
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener("resize", function() {
-			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
-			   window.setTimeout(function() {
-				  document.activeElement.scrollIntoViewIfNeeded();
-			   },0);
+		window.addEventListener('resize', function() {
+			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+				window.setTimeout(function() {
+					document.activeElement.scrollIntoViewIfNeeded();
+				}, 0);
 			}
-		 })
+		});
 		// 获取地址
 		address();
 		pageView();
@@ -81,12 +79,12 @@ export default class login_page extends PureComponent {
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', function() {
-			if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
-			   window.setTimeout(function() {
-				  document.activeElement.scrollIntoViewIfNeeded();
-			   },0);
+			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+				window.setTimeout(function() {
+					document.activeElement.scrollIntoViewIfNeeded();
+				}, 0);
 			}
-		 })
+		});
 		clearInterval(timmer);
 	}
 
@@ -106,43 +104,43 @@ export default class login_page extends PureComponent {
 			Toast.info('请先获取短信验证码');
 			return;
 		}
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				// 埋点-注册登录页一键代还
 				buriedPointEvent(login.submit);
-				this.props.$fetch
-					.post(API.smsForLogin, {
-						mblNo: values.phoneValue, // 手机号
-						smsJrnNo: this.state.smsJrnNo, // 短信流水号
-						osType, // 操作系统
-						smsCd: values.smsCd, // IP地址
-						usrCnl: getH5Channel(), // 用户渠道
-						location: store.getPosition() // 定位地址 TODO 从session取
-					})
-					.then(
-						(res) => {
-							if (res.msgCode !== 'PTM0000') {
-								res.msgInfo && Toast.info(res.msgInfo);
-								return;
-							}
-							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-
-							// store.setToken(res.data.tokenId);
-
-							// TODO: 根据设备类型存储token
-							store.setToken(res.data.tokenId);
-							if (isWXOpen()) {
-								// this.props.history.goBack();
-								this.props.history.push('/home/home');
-							} else {
-								this.props.history.push('/home/home');
-							}
-						},
-						(error) => {
-							error.msgInfo && Toast.info(error.msgInfo);
+				let param = {
+					smsJrnNo: this.state.smsJrnNo, // 短信流水号
+					osType, // 操作系统
+					smsCd: values.smsCd,
+					usrCnl: getH5Channel(), // 用户渠道
+					location: store.getPosition() // 定位地址 TODO 从session取
+				};
+				if (!this.state.disabledInput) {
+					param.mblNo = values.phoneValue; // 手机号
+				}
+				this.props.$fetch.post(API.smsForLogin, param).then(
+					(res) => {
+						if (res.msgCode !== 'PTM0000') {
+							res.msgInfo && Toast.info(res.msgInfo);
+							return;
 						}
-					);
+						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+
+						// store.setToken(res.data.tokenId);
+
+						// TODO: 根据设备类型存储token
+						store.setToken(res.data.tokenId);
+						if (isWXOpen()) {
+							// this.props.history.goBack();
+							this.props.history.push('/home/home');
+						} else {
+							this.props.history.push('/home/home');
+						}
+					},
+					(error) => {
+						error.msgInfo && Toast.info(error.msgInfo);
+					}
+				);
 			} else {
 				Toast.info(getFirstError(err));
 			}
@@ -166,29 +164,37 @@ export default class login_page extends PureComponent {
 			if (!err || JSON.stringify(err) === '{}') {
 				// 埋点-登录页获取验证码
 				buriedPointEvent(login.getCode);
-				// 发送验证码
-				this.props.$fetch
-					.post(API.sendsms, {
+				let param = {};
+				if (this.state.disabledInput) {
+					param = {
+						type: '6',
+                        authToken: this.state.queryData.tokenId,
+                        osType
+					};
+				} else {
+					param = {
 						type: '6',
 						mblNo: values.phoneValue,
 						osType
-					})
-					.then((result) => {
-						if (result.msgCode !== 'PTM0000') {
-							Toast.info(result.msgInfo);
-							this.setState({ valueInputImgCode: '' });
-							return false;
+					};
+				}
+				// 发送验证码
+				this.props.$fetch.post(API.sendsms, param).then((result) => {
+					if (result.msgCode !== 'PTM0000') {
+						Toast.info(result.msgInfo);
+						this.setState({ valueInputImgCode: '' });
+						return false;
+					}
+					Toast.info('发送成功，请注意查收！');
+					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+					timmer = setInterval(() => {
+						this.setState({ flag: false, timers: i-- + '"' });
+						if (i === -1) {
+							clearInterval(timmer);
+							this.setState({ timers: '重新获取', timeflag: true, flag: true });
 						}
-						Toast.info('发送成功，请注意查收！');
-						this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-						timmer = setInterval(() => {
-							this.setState({ flag: false, timers: i-- + '"' });
-							if (i === -1) {
-								clearInterval(timmer);
-								this.setState({ timers: '重新获取', timeflag: true, flag: true });
-							}
-						}, 1000);
-					});
+					}, 1000);
+				});
 			} else {
 				Toast.info(getFirstError(err));
 			}
@@ -203,83 +209,39 @@ export default class login_page extends PureComponent {
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
-			//   <div ref="loginWrap" className={style.loginContent}>
-			//     <div ref="loginContent" className={style.loginLog}>
-			//       <div className={style.centent}>
-			//         <InputItem
-			//           id="inputPhone"
-			//           onFocus={() => { this.handleScrollToView('inputPhone') }}
-			//           maxLength="11"
-			//           type="number"
-			//           className={style.loginInput}
-			//           placeholder='请输入您的手机号'
-			//           {...getFieldProps('phoneValue', {
-			//             rules: [
-			//               { required: true, message: '请输入正确手机号' },
-			//               { validator: this.validatePhone },
-			//             ],
-			//           })}
-			//         />
-			//         <InputItem
-			//           id="inputCode"
-			//           onFocus={() => { this.handleScrollToView('inputCode') }}
-			//           type="number"
-			//           maxLength="6"
-			//           className={style.loginInput}
-			//           placeholder="请输入短信验证码"
-			//           {...getFieldProps('smsCd', {
-			//             rules: [
-			//               { required: true, message: '请输入正确验证码' },
-			//             ],
-			//           })}
-			//         />
-			//         <div className={this.state.flag ? style.smsCode : style.smsCodeNumber} onClick={() => {
-			//           this.state.timeflag ? this.getTime(59) : '';
-			//         }}>
-			//           {this.state.timers}
-			//         </div>
-			//         <div style={{ clear: 'both' }} />
-			//         <div className={style.sureBtn} onClick={this.goLogin}>一键代还</div>
-
-			//         <div className={style.agreement}>
-			//           注册即视为同意
-			//           <span onClick={() => { this.go('register_agreement_page') }}>
-			//             《随行付金融用户注册协议》
-			//           </span>
-			//           <span onClick={() => { this.go('privacy_agreement_page') }}>
-			//             《随行付用户隐私权政策》
-			//           </span>
-			//         </div>
-			//       </div>
-			//     </div>
-			//   </div>
 			<div ref="loginWrap" className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
 				<div ref="loginContent" className={styles.content}>
 					<InputItem
+						disabled={this.state.disabledInput}
 						id="inputPhone"
 						maxLength="11"
                         type="number"
-                        onBlur={() => {handleInputBlur()}}
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
 						{...getFieldProps('phoneValue', {
-							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
+							rules: [
+								{ required: true, message: '请输入正确手机号' },
+								{ validator: !this.state.disabledInput && this.validatePhone }
+							]
 						})}
-						onBlur={() => {handleInputBlur()}}
+						onBlur={() => {
+							handleInputBlur();
+						}}
 					/>
 					<div className={styles.smsBox}>
 						<InputItem
 							id="inputCode"
                             type="number"
-                            onBlur={() => {handleInputBlur()}}
 							maxLength="6"
 							className={styles.loginInput}
 							placeholder="请输入短信验证码"
 							{...getFieldProps('smsCd', {
 								rules: [ { required: true, message: '请输入正确验证码' } ]
 							})}
-							onBlur={() => {handleInputBlur()}}
+							onBlur={() => {
+								handleInputBlur();
+							}}
 						/>
 						<div
 							className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}

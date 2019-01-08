@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress } from 'antd-mobile';
+import { Modal, Progress, InputItem } from 'antd-mobile';
+import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
+import { createForm } from 'rc-form';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
 import style from './index.scss';
@@ -18,6 +20,7 @@ const API = {
 };
 
 @fetch.inject()
+@createForm()
 export default class confirm_agency_page extends PureComponent {
   constructor(props) {
     super(props);
@@ -29,12 +32,19 @@ export default class confirm_agency_page extends PureComponent {
       repaymentIndex: 0,
       lendersDate: '',
       lendersIndex: 0,
+      defaultIndex: 0,
       repaymentDateList: [
         {
           name: '30天'
         },
         {
           name: '3个月'
+        },
+        {
+          name: '6个月'
+        },
+        {
+          name: '12个月'
         }
       ],
       lendersDateList: [
@@ -50,6 +60,7 @@ export default class confirm_agency_page extends PureComponent {
           },
         },
       ],
+      isShowTipModal: true,
     };
   }
 
@@ -181,6 +192,7 @@ export default class confirm_agency_page extends PureComponent {
           })),
           dateDiff: diff,
           lendersIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
+          defaultIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
           lendersDateList: lendersDateListFormat,
         });
       } else {
@@ -189,37 +201,78 @@ export default class confirm_agency_page extends PureComponent {
     });
   };
 
+  // 校验代还金额
+  verifyBillAmt = (rule, value, callback) => {
+    const { minAvailableCreditAmt, maxAvailableCreditAmt } = this.state;
+    if (!(/\d/.test(value) && value % 100 == 0 && minAvailableCreditAmt < 3000 && maxAvailableCreditAmt > parseInt(value))) {
+      callback(`可代还金额为3000~${maxAvailableCreditAmt}，且要为100整数倍`);
+    } else {
+      callback();
+    }
+  };
+
+  // 关闭弹框
+  handleCloseTipModal = () => {
+    this.setState({
+      isShowTipModal: false,
+    })
+  }
+
+  // 跳转到会员卡
+  goVIP = () => {
+    this.handleCloseTipModal();
+    this.props.history.push('/mine/membership_card_page');
+  }
+
   render() {
+    const { getFieldProps } = this.props.form;
     const {
       repayInfo,
       repaymentDateList,
       repaymentIndex,
       lendersDateList,
       lendersIndex,
+      defaultIndex,
       dateDiff,
       cardBillAmt,
+      isShowTipModal,
     } = this.state;
 
     let lendersTip = '';
-    if (dateDiff > 2 && lendersIndex === 0) {
-      lendersTip = (
-        <p className={style.item_tip}>
-          选择还款日前一天（{dayjs(repayInfo.cardBillDt)
-            .subtract(1, 'day')
-            .format('YYYY-MM-DD')}）放款，将最大成本节约您代资金
-        </p>
-      );
-    }
+    // if (dateDiff > 2 && lendersIndex === 0) {
+    //   lendersTip = (
+    //     <p className={style.item_tip}>
+    //       选择还款日前一天（{dayjs(repayInfo.cardBillDt)
+    //         .subtract(1, 'day')
+    //         .format('YYYY-MM-DD')}）放款，将最大成本节约您代资金
+    //     </p>
+    //   );
+    // }
 
-    if (dateDiff <= 2 && lendersIndex === 1) {
-      lendersTip = <p className={style.item_tip}>选择立即放款，将最大程度节约您的成本</p>;
-    }
+    // if (dateDiff <= 2 && lendersIndex === 1) {
+    //   lendersTip = <p className={style.item_tip}>选择立即放款，将最大程度节约您的成本</p>;
+    // }
     return (
       <div className={style.confirm_agency_page}>
         <ul className={style.modal_list}>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
+              <div>
+                <div className={style.billInpBox}>
+                  <i className={style.moneyUnit}>¥</i>
+                  <InputItem
+                    className={style.billInput}
+                    placeholder=""
+                    // maxLength="11"
+                    type="number"
+                    {...getFieldProps('cardBillAmt', {
+                      rules: [{ required: true, message: '请输入代还金额' }, { validator: this.verifyBillAmt }],
+                    })}
+                  />
+                </div>
+                <p className={style.billTips}>金额3000-{100000}元，且为100整数倍</p>
+              </div>
               {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
           </li>
@@ -234,13 +287,13 @@ export default class confirm_agency_page extends PureComponent {
                 />
               </div>
             </div>
-            <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
+            {/* <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p> */}
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>放款日期</label>
               <div className={style.tagList}>
-                <TabList burientype="lenders" tagType="lenders" tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
+                <TabList burientype="lenders" tagType="lenders" tagList={lendersDateList} defaultindex={defaultIndex} activeIndex={lendersIndex} onClick={this.handleLendersTagClick} />
               </div>
             </div>
             {lendersTip}
@@ -256,9 +309,44 @@ export default class confirm_agency_page extends PureComponent {
             </div>
           </li>
         </ul>
+        <div className={style.tipsBox}>
+          <p>温馨提示</p>
+          <p>代还期限：我们根据您信用卡账单情况为您推荐最佳代还金额。</p>
+          <div className={style.dateTips}>
+            <p className={style.dateTipsLabel}>放款日期：</p>
+            <div>
+              <p>a.选择代还信用卡账单还款日前一天{dayjs(repayInfo.cardBillDt).subtract(1, 'day').format('YYYY-MM-DD')}放款，将最大程度节约您的成本。</p>
+              <p>b.选择立即放款，代还金额将于当日汇入您的还款账户</p>
+            </div>
+          </div>
+        </div>
         <SXFButton onClick={this.handleClickConfirm} className={style.modal_btn}>
           确定
         </SXFButton>
+        <Modal
+          wrapClassName={style.modal_tip_warp}
+          visible={isShowTipModal}
+          closable
+          transparent
+          onClose={this.handleCloseTipModal}
+          footer={[{ text: '立即开通', onPress: this.goVIP }]}
+        >
+          <h2 className={style.modalTitle}>仅限VIP使用</h2>
+          <ul className={style.modalUl}>
+            <li>
+              <i className={style.vipIco1} />极速放款通道
+            </li>
+            <li>
+              <i className={style.vipIco2} />精彩活动优先通知
+            </li>
+            <li>
+              <i className={style.vipIco3} />30天明星产品专享
+            </li>
+            <li>
+              <i className={style.vipIco4} />刷卡优惠超值套餐
+            </li>
+          </ul>
+        </Modal>
       </div>
     );
   }

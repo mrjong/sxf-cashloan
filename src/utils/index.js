@@ -74,16 +74,17 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 				'/home/home',
 				'/common/wx_middle_page'
 			];
-		} else if (!isMPOS()) {
+		} else if (isMPOS()) {
+			pageList = [ '/protocol/', '/activity/', '/others/', '/mpos/', '/landing/landing_page' ];
+		} else {
 			pageList = [
 				'/protocol/',
 				'/activity/',
-                '/others/',
-                '/mpos/',
+				'/common/auth_page',
 				'/landing/landing_page',
+				'/others/',
+				'/mpos/'
 			];
-		} else {
-			pageList = [ '/protocol/', '/activity/', '/common/auth_page', '/landing/landing_page', '/others/' ];
 		}
 		return pageList.some((item) => item && pathname.indexOf(item) > -1);
 	}
@@ -367,7 +368,7 @@ export const setH5Channel = () => {
 	const ua = navigator.userAgent;
 	const sessionH5Channel = store.getH5Channel();
 	if (queryData.h5Channel) {
-		store.setH5Channel(query.h5Channel);
+		store.setH5Channel(queryData.h5Channel);
 	} else if (/SuiXingPay-Mpos/i.test(ua)) {
 		store.setH5Channel('MPOS');
 	} else if (sessionH5Channel) {

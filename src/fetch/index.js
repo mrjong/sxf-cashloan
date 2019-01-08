@@ -11,6 +11,7 @@ const fetchInit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
+            console.log('------------------',errorTip)
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {

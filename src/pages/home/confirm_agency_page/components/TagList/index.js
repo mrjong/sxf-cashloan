@@ -15,14 +15,14 @@ export default class TagList extends React.PureComponent {
 
   static propTypes = {
     className: PropTypes.string,
-    defaultindex: PropTypes.number,
+    activeIndex: PropTypes.number,
     tagList: PropTypes.array,
     onClick: PropTypes.func,
   };
 
   static defaultProps = {
     className: '',
-    defaultindex: 0,
+    activeIndex: 0,
     tagList: [],
     onClick: () => {},
   };
@@ -30,22 +30,22 @@ export default class TagList extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.burientype && !store.getHadShowModal()) {
       buriedPointEvent(home.lenders, {
-        lenders_type: nextProps.tagList[nextProps.defaultindex].name,
+        lenders_type: nextProps.tagList[nextProps.activeIndex].name,
       });
       store.setHadShowModal(true);
     }
-    if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.defaultindex !== nextProps.defaultindex)) {
+    if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeIndex !== nextProps.activeIndex)) {
       this.passInitData(nextProps);
       if (nextProps.burientype) {
         buriedPointEvent(home.lenders, {
-          lenders_type: nextProps.tagList[nextProps.defaultindex].name,
+          lenders_type: nextProps.tagList[nextProps.activeIndex].name,
         });
       }
     }
   }
 
   componentWillMount() {
-    this.setState({ currentIndex: this.props.defaultindex }, this.passInitData);
+    this.setState({ currentIndex: this.props.activeIndex }, this.passInitData);
   }
 
   // 因为默认选中第一个 所以页面一进来就触发方法，将当前的数据传回去。
@@ -53,7 +53,7 @@ export default class TagList extends React.PureComponent {
     const { currentIndex } = this.state;
     const { onClick, tagList } = this.props;
     if (nextProps) {
-      this._handleClick(onClick, nextProps.defaultindex, nextProps.tagList[nextProps.defaultindex]);
+      this._handleClick(onClick, nextProps.activeIndex, nextProps.tagList[nextProps.activeIndex]);
     } else {
       this._handleClick(onClick, currentIndex, tagList[currentIndex]);
     }
@@ -75,9 +75,10 @@ export default class TagList extends React.PureComponent {
 
   render() {
     const { currentIndex } = this.state;
-    const { className, onClick, tagList, tagType, ...restProps, } = this.props;
+    const { className, onClick, tagList, tagType, defaultindex, ...restProps, } = this.props;
     const tagListDom = tagList.map((item, index) => (
       <Tag
+        defaultindex={defaultindex === index ? true : false}
         key={index}
         tagType={tagType}
         className={className}
