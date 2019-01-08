@@ -260,7 +260,6 @@ export default class login_page extends PureComponent {
 						id="inputPhone"
 						maxLength="11"
                         type="number"
-                        onBlur={() => {handleInputBlur()}}
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
 						{...getFieldProps('phoneValue', {
@@ -272,7 +271,6 @@ export default class login_page extends PureComponent {
 						<InputItem
 							id="inputCode"
                             type="number"
-                            onBlur={() => {handleInputBlur()}}
 							maxLength="6"
 							className={styles.loginInput}
 							placeholder="请输入短信验证码"

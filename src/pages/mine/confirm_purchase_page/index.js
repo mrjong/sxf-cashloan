@@ -180,7 +180,6 @@ export default class confirm_purchase_page extends PureComponent {
             this.state.twice && this.state.cardTyp === "C" ? <div>
               <InputItem
                 type="number"
-                onBlur={() => {handleInputBlur()}}
                 maxLength="3"
                 {...getFieldProps('cvv2', {
                   rules: [
@@ -211,7 +210,6 @@ export default class confirm_purchase_page extends PureComponent {
           <div className={styles.time_container}>
             <InputItem
               type="number"
-              onBlur={() => {handleInputBlur()}}
               maxLength="6"
               {...getFieldProps('yzmCode', {
                 rules: [
