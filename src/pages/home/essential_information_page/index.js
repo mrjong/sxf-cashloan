@@ -5,7 +5,7 @@ import informationMore from 'assets/images/real_name/more.png';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
-import { getLngLat } from 'utils/Address.js';
+import { getLngLat, getAddress } from 'utils/Address.js';
 import style from './index.scss';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -42,7 +42,7 @@ export default class essential_information_page extends PureComponent {
     relatData: [],                // 亲属联系人数据
     relatVisible: false,         // 联系人是否显示
     relatValue: [],              // 选中的联系人
-    provValue: ['220000','2460'],             // 选中的省市区
+    provValue: [],             // 选中的省市区
     provLabel: [],
   };
 
@@ -52,29 +52,8 @@ export default class essential_information_page extends PureComponent {
     }
     buryingPoints();
     urlQuery = this.props.history.location.search;
-
-    // 获取基本信息
-    this.props.$fetch.post(API.queryUsrBasicInfo).then(
-      (res) => {
-        if (res.msgCode === 'PTM0000') {
-          // this.getProCode(res.data.provNm || store.getProvince(), res.data.cityNm || store.getCity());
-          this.props.form.setFieldsValue({
-            address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
-            linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-            linkphone: store.getLinkphone() || ''
-          });
-          this.setState({
-            relatValue:
-              res.data && res.data.cntRelTyp1
-                ? [`${res.data.cntRelTyp1}`]
-                : store.getRelationValue() ? store.getRelationValue() : []
-          });
-        } else {
-          this.props.toast.info(res.msgInfo);
-        }
-      },
-      (error) => { }
-    );
+    // 初始化页面信息（反显）
+    this.initBasicInfo()
   }
 
   componentDidMount() {
@@ -99,9 +78,46 @@ export default class essential_information_page extends PureComponent {
     })
   }
 
+  //获取基本信息
+  queryUsrBasicInfo = (province, city) => {
+    // console.log(province,city)
+    // 获取基本信息
+    this.props.$fetch.post(API.queryUsrBasicInfo).then(
+      (res) => {
+        if (res.msgCode === 'PTM0000') {
+          this.getProCode(res.data.provNm || province || store.getProvince(), res.data.cityNm || city || store.getCity());
+          this.props.form.setFieldsValue({
+            address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
+            linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
+            linkphone: store.getLinkphone() || ''
+          });
+          this.setState({
+            relatValue:
+              res.data && res.data.cntRelTyp1
+                ? [`${res.data.cntRelTyp1}`]
+                : store.getRelationValue() ? store.getRelationValue() : []
+          });
+        } else {
+          this.props.toast.info(res.msgInfo);
+        }
+      },
+      (error) => { }
+    );
+  }
+
+  
+  initBasicInfo = () => {
+    //通过经纬度获取省市
+    getAddress().then(res => {
+      const { province, city } = res
+      this.queryUsrBasicInfo(province, city)
+    }).catch(() => {
+      console.log('经纬度获取省市报错了');
+    })
+  }
+
   // 获取城市标签反显
   getProCode = (pro, city) => {
-    console.log(pro, city)
     let proPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${pro}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
     let cityPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${city}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
     this.props.$fetch.get(`${API.getProv}`).then((result) => {
@@ -119,12 +135,11 @@ export default class essential_information_page extends PureComponent {
               return item2;
             }
           });
-        // console.log(provItem[0].key + '', cityItem[0].key + '')
-          this.setState({
-            provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + '']
-          },()=>{
-            console.log(this.state.provValue)
-          })
+          // console.log(provItem[0].key + '', cityItem[0].key + '')
+          // this.setState({
+          //   provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + '']
+          // }, () => {
+          // })
           // this.props.form.setFieldsValue({
           //   city: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + '']
           // });
@@ -144,7 +159,6 @@ export default class essential_information_page extends PureComponent {
     const prov = this.state.provLabel[1];
     // 调基本信息接口
     this.props.form.validateFields((err, values) => {
-      console.log(values)
       if (!err) {
         const data = `${city}${prov}${values.address}`;
         getLngLat(data).then(lngLat => {
@@ -270,7 +284,6 @@ export default class essential_information_page extends PureComponent {
             initialValue: this.state.provValue,
             rules: [{ required: true, message: '请选择城市' }],
             onChange: (value, label) => {
-              console.log(value, label)
               this.selectSure({
                 value: JSON.stringify(value),
                 label: 'resident_city',
