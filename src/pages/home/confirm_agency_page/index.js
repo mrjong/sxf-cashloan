@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Modal, Progress } from 'antd-mobile';
+import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -29,6 +30,7 @@ export default class confirm_agency_page extends PureComponent {
       repaymentIndex: 0,
       lendersDate: '',
       lendersIndex: 0,
+      defaultIndex: 0,
       repaymentDateList: [
         {
           name: '30天'
@@ -181,6 +183,7 @@ export default class confirm_agency_page extends PureComponent {
           })),
           dateDiff: diff,
           lendersIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
+          defaultIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
           lendersDateList: lendersDateListFormat,
         });
       } else {
@@ -196,24 +199,25 @@ export default class confirm_agency_page extends PureComponent {
       repaymentIndex,
       lendersDateList,
       lendersIndex,
+      defaultIndex,
       dateDiff,
       cardBillAmt,
     } = this.state;
 
     let lendersTip = '';
-    if (dateDiff > 2 && lendersIndex === 0) {
-      lendersTip = (
-        <p className={style.item_tip}>
-          选择还款日前一天（{dayjs(repayInfo.cardBillDt)
-            .subtract(1, 'day')
-            .format('YYYY-MM-DD')}）放款，将最大成本节约您代资金
-        </p>
-      );
-    }
+    // if (dateDiff > 2 && lendersIndex === 0) {
+    //   lendersTip = (
+    //     <p className={style.item_tip}>
+    //       选择还款日前一天（{dayjs(repayInfo.cardBillDt)
+    //         .subtract(1, 'day')
+    //         .format('YYYY-MM-DD')}）放款，将最大成本节约您代资金
+    //     </p>
+    //   );
+    // }
 
-    if (dateDiff <= 2 && lendersIndex === 1) {
-      lendersTip = <p className={style.item_tip}>选择立即放款，将最大程度节约您的成本</p>;
-    }
+    // if (dateDiff <= 2 && lendersIndex === 1) {
+    //   lendersTip = <p className={style.item_tip}>选择立即放款，将最大程度节约您的成本</p>;
+    // }
     return (
       <div className={style.confirm_agency_page}>
         <ul className={style.modal_list}>
@@ -234,13 +238,13 @@ export default class confirm_agency_page extends PureComponent {
                 />
               </div>
             </div>
-            <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
+            {/* <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p> */}
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>放款日期</label>
               <div className={style.tagList}>
-                <TabList burientype="lenders" tagType="lenders" tagList={lendersDateList} defaultindex={lendersIndex} onClick={this.handleLendersTagClick} />
+                <TabList burientype="lenders" tagType="lenders" tagList={lendersDateList} defaultindex={defaultIndex} activeIndex={lendersIndex} onClick={this.handleLendersTagClick} />
               </div>
             </div>
             {lendersTip}
@@ -256,6 +260,17 @@ export default class confirm_agency_page extends PureComponent {
             </div>
           </li>
         </ul>
+        <div className={style.tipsBox}>
+          <p>温馨提示</p>
+          <p>代还期限：我们根据您信用卡账单情况为您推荐最佳代还金额。</p>
+          <div className={style.dateTips}>
+            <p className={style.dateTipsLabel}>放款日期：</p>
+            <div>
+              <p>a.选择代还信用卡账单还款日前一天{dayjs(repayInfo.cardBillDt).subtract(1, 'day').format('YYYY-MM-DD')}放款，将最大程度节约您的成本。</p>
+              <p>b.选择立即放款，代还金额将于当日汇入您的还款账户</p>
+            </div>
+          </div>
+        </div>
         <SXFButton onClick={this.handleClickConfirm} className={style.modal_btn}>
           确定
         </SXFButton>
