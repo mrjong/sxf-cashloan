@@ -60,6 +60,7 @@ export default class confirm_agency_page extends PureComponent {
           },
         },
       ],
+      isShowTipModal: true,
     };
   }
 
@@ -210,6 +211,13 @@ export default class confirm_agency_page extends PureComponent {
     }
   };
 
+  // 关闭弹框
+  handleCloseTipModal = () => {
+    this.setState({
+      isShowTipModal: false,
+    })
+  }
+
   render() {
     const { getFieldProps } = this.props.form;
     const {
@@ -221,6 +229,7 @@ export default class confirm_agency_page extends PureComponent {
       defaultIndex,
       dateDiff,
       cardBillAmt,
+      isShowTipModal,
     } = this.state;
 
     let lendersTip = '';
@@ -308,6 +317,30 @@ export default class confirm_agency_page extends PureComponent {
         <SXFButton onClick={this.handleClickConfirm} className={style.modal_btn}>
           确定
         </SXFButton>
+        <Modal
+          wrapClassName={style.modal_tip_warp}
+          visible={isShowTipModal}
+          closable
+          transparent
+          onClose={this.handleCloseTipModal}
+          footer={[{ text: '立即开通', onPress: this.handleCloseTipModal }]}
+        >
+          <h2 className={style.modalTitle}>仅限VIP使用</h2>
+          <ul className={style.modalUl}>
+            <li>
+              <i className={style.vipIco1} />极速放款通道
+            </li>
+            <li>
+              <i className={style.vipIco2} />精彩活动优先通知
+            </li>
+            <li>
+              <i className={style.vipIco3} />30天明星产品专享
+            </li>
+            <li>
+              <i className={style.vipIco4} />刷卡优惠超值套餐
+            </li>
+          </ul>
+        </Modal>
       </div>
     );
   }
