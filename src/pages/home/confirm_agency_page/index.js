@@ -218,6 +218,12 @@ export default class confirm_agency_page extends PureComponent {
     })
   }
 
+  // 跳转到会员卡
+  goVIP = () => {
+    this.handleCloseTipModal();
+    this.props.history.push('/mine/membership_card_page');
+  }
+
   render() {
     const { getFieldProps } = this.props.form;
     const {
@@ -323,7 +329,7 @@ export default class confirm_agency_page extends PureComponent {
           closable
           transparent
           onClose={this.handleCloseTipModal}
-          footer={[{ text: '立即开通', onPress: this.handleCloseTipModal }]}
+          footer={[{ text: '立即开通', onPress: this.goVIP }]}
         >
           <h2 className={style.modalTitle}>仅限VIP使用</h2>
           <ul className={style.modalUl}>
