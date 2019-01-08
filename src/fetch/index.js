@@ -4,7 +4,6 @@ import { Toast } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
-// import { singleLoading } from './util';
 
 const fetchInit = () => {
 	let num = 0;

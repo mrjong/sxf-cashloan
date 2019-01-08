@@ -82,7 +82,7 @@ export default class essential_information_page extends PureComponent {
     this.props.$fetch.post(API.queryUsrBasicInfo).then(
       (res) => {
         if (res.msgCode === 'PTM0000') {
-          this.getProCode(res.data.provNm || province || store.getProvince(), res.data.cityNm || city || store.getCity());
+          this.getProCode(res.data.provNm || store.getProvince() || province, res.data.cityNm || store.getCity()) || city;
           this.props.form.setFieldsValue({
             address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
             linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
