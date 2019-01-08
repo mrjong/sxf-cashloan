@@ -70,7 +70,7 @@ const bugLog = {
 };
 
 const mpos_service_authorization ={
-    anth_btn:`${prefix}_AUTH_PAGE_AUTH_BTN`
+    auth_btn:`${prefix}_AUTH_PAGE_AUTH_BTN`
 }
 
-export { login, home, mine, order, membership, bugLog };
+export { login, home, mine, order, membership, bugLog,mpos_service_authorization };

@@ -5,7 +5,7 @@ import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType, getH5Channel } from 'utils';
 const API = {
-	validateMposRelSts: '/cmm/validateMposRelSts',
+	validateMposRelSts: '/authorize/validateMposRelSts',
 	chkAuth: '/authorize/chkAuth'
 };
 @fetch.inject()
@@ -22,7 +22,7 @@ export default class mpos_middle_page extends Component {
 	validateMposRelSts = () => {
 		// // 移除notice是否显示的标记
 		// store.removeShowNotice();
-		const query = qs.parse(location.search, { ignoreQueryPrefix: true });
+		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
 			.post(API.validateMposRelSts, {
 				appid: query.appId,
@@ -60,11 +60,11 @@ export default class mpos_middle_page extends Component {
 			.then(
 				(res) => {
 					if (res.authFlag === '0') {
-						this.props.history.replace('/mpos/mpos_service_authorization_page');
+						this.props.history.replace(`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
 					} else if (res.authFlag === '1') {
 						this.props.history.replace('/home/home');
 					} else {
-						this.props.history.replace('/login');
+						this.props.history.replace(`/login?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
 					}
 				},
 				(err) => {

@@ -3,7 +3,7 @@ import styles from './index.scss';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import { getDeviceType } from 'utils';
-
+import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/Background';
 import click from '../mpos_service_authorization_page/img/Button.png';
@@ -18,17 +18,27 @@ export default class mpos_get_sms_page extends PureComponent {
 		this.state = {
 			smsText: '获取验证码',
 			timeflag: true,
-			codeInput: ''
+			codeInput: '',
+			query: {}
 		};
 	}
 	componentWillMount() {
-		this.getSms(60);
+		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+		this.setState(
+			{
+				query
+			},
+			() => {
+				this.getSms(60);
+			}
+		);
 	}
 	//获取验证码
 	getSms(i) {
 		this.props.$fetch
 			.post(API.sendsms, {
-				type: '5'
+				type: '5',
+				authToken: this.state.query.tokenId
 			})
 			.then(
 				(result) => {
@@ -63,7 +73,7 @@ export default class mpos_get_sms_page extends PureComponent {
 		}
 		this.props.$fetch
 			.post('/authorize/doAuth', {
-                location: store.getPosition(), // 定位地址 TODO 从session取,
+				location: store.getPosition(), // 定位地址 TODO 从session取,
 				osType: getDeviceType(),
 				smsCd: codeInput,
 				smsFlg: 'Y'
@@ -88,11 +98,12 @@ export default class mpos_get_sms_page extends PureComponent {
 			);
 	}
 	render() {
-		const { timeflag, smsText } = this.state;
+		const { timeflag, smsText, query } = this.state;
+
 		return (
 			<div className={styles.allContainer}>
 				<div className={styles.title}>请点击获取发送验证短信(免费)到</div>
-				<div className={styles.desc}>{name}</div>
+				<div className={styles.desc}>{query.mblNoHid}</div>
 				<div className={styles.inputItem}>
 					<input
 						placeholder="请输入短信验证码"

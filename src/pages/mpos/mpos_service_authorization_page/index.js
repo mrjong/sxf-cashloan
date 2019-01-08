@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
+import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/Background';
 import { getDeviceType } from 'utils';
@@ -26,16 +27,19 @@ export default class mpos_service_authorization_page extends PureComponent {
 		};
 	}
 	goSubmit = () => {
+		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
 			.post(API.doAuth, {
 				location: store.getPosition(), // 定位地址 TODO 从session取,
-				osType: getDeviceType()
+				osType: getDeviceType(),
+				authToken: query.tokenId
 			})
 			.then(
 				(res) => {
 					buriedPointEvent(mpos_service_authorization.auth_btn);
 					if (res.authSts === '01') {
-						this.props.history.replace('/common/mpos_get_sms_page');
+                        console.log('发验证码')
+						this.props.history.replace(`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`);
 					} else if (res.authSts === '00') {
 						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
@@ -44,7 +48,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 						this.props.history.replace('/home/home');
 					} else {
 						this.props.toast.info('授权失败', 3, () => {
-							this.props.history.replace('/login');
+							this.props.history.replace(`/login?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`);
 						});
 					}
 				},
