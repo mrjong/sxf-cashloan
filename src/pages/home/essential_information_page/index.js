@@ -80,7 +80,7 @@ export default class essential_information_page extends PureComponent {
 
   //获取基本信息
   queryUsrBasicInfo = (province, city) => {
-    // console.log(province,city)
+    console.log(province,city)
     // 获取基本信息
     this.props.$fetch.post(API.queryUsrBasicInfo).then(
       (res) => {
@@ -110,7 +110,7 @@ export default class essential_information_page extends PureComponent {
     //通过经纬度获取省市
     getAddress().then(res => {
       const { province, city } = res
-      this.queryUsrBasicInfo(province, city)
+      this.queryUsrBasicInfo(province, city || province)
     }).catch(() => {
       console.log('经纬度获取省市报错了');
     })
@@ -140,9 +140,9 @@ export default class essential_information_page extends PureComponent {
           //   provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + '']
           // }, () => {
           // })
-          // this.props.form.setFieldsValue({
-          //   city: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + '']
-          // });
+          this.props.form.setFieldsValue({
+            city: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + '']
+          });
         });
       }
     });
