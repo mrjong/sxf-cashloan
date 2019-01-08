@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import qs from 'qs';
+import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
@@ -62,6 +63,10 @@ export default class mpos_middle_page extends Component {
 					if (res.authFlag === '0') {
 						this.props.history.replace(`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
 					} else if (res.authFlag === '1') {
+                        // sa.login(res.userId);
+						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.loginToken);
 						this.props.history.replace('/home/home');
 					} else {
 						this.props.history.replace(`/login?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);

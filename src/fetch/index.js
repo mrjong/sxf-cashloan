@@ -1,25 +1,30 @@
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
+import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
-import { singleLoading } from './util'
+// import { singleLoading } from './util';
 
 const fetchInit = () => {
 	let num = 0;
+	let timer = null;
+	let timerList = [];
 	fetch.init({
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			// Toast.info('系统开小差，请稍后重试');
-			if (errorTip) Toast.fail('系统开小差，请稍后重试');
+			setTimeout(() => {
+				if (errorTip) Toast.fail('系统开小差，请稍后重试');
+			}, 0);
 		},
 		onShowSuccessTip: (response, successTip) => {
 			switch (response.data.msgCode) {
 				case 'PTM0000':
 					return;
 				case 'PTM1000': // 用户登录超时
-					handleErrorLog('PTM1000', '登录超时，请重新登陆')
+					handleErrorLog('PTM1000', '登录超时，请重新登陆');
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -29,7 +34,7 @@ const fetchInit = () => {
 					}, 3000);
 					return;
 				case 'PTM0100': // 未登录
-					handleErrorLog('PTM0100', '未登录')
+					handleErrorLog('PTM0100', '未登录');
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -62,7 +67,15 @@ const fetchInit = () => {
 			}
 			num++;
 			if (!cfg.hideLoading) {
-				singleLoading(num)
+				// 防止时间短，出现loading 导致闪烁
+				timer = setTimeout(() => {
+					// 处理多个请求，只要一个loading
+					if (timerList.length > 1) {
+						return;
+					}
+					SXFToast.loading('数据加载中...', 10);
+				}, 300);
+				timerList.push(timer);
 			}
 			return cfg;
 		},
@@ -74,25 +87,40 @@ const fetchInit = () => {
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
 			num--;
-			singleLoading(num)
+			if (num <= 0) {
+				if (timer) {
+					for (let i = 0; i < timerList.length; i++) {
+						clearTimeout(timerList[i]);
+					}
+					timer = null;
+					timerList = [];
+					SXFToast.hide();
+				}
+			} else {
+				SXFToast.loading('数据加载中...', 10);
+			}
 			return response;
 		},
 		(error) => {
 			// 有响应则取status,statusText，超时则取error.message
 			try {
-				console.log('----异常日志----')
+				console.log('----异常日志----');
 				if (error.response) {
-					handleErrorLog(error.response.status, error.response.statusText, error.config)
+					handleErrorLog(error.response.status, error.response.statusText, error.config);
 				} else if (error.config) {
-					handleErrorLog(error.message, error.message, error.config)
+					handleErrorLog(error.message, error.message, error.config);
 				}
 			} catch (err) {
 				// console.log(err)
 			}
 
 			num--;
-			singleLoading(num)
-			console.log('000000')
+			for (let i = 0; i < timerList.length; i++) {
+				clearTimeout(timerList[i]);
+			}
+			timer = null;
+			timerList = [];
+			SXFToast.hide();
 			let error2 = new Error('系统开小差，请稍后重试');
 			return Promise.reject(error2);
 		}
