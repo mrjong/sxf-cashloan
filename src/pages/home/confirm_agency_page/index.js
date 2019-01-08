@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress } from 'antd-mobile';
+import { Modal, Progress, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils';
@@ -7,6 +7,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
+import { createForm } from 'rc-form';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
 import style from './index.scss';
@@ -19,6 +20,7 @@ const API = {
 };
 
 @fetch.inject()
+@createForm()
 export default class confirm_agency_page extends PureComponent {
   constructor(props) {
     super(props);
@@ -198,7 +200,18 @@ export default class confirm_agency_page extends PureComponent {
     });
   };
 
+  // 校验代还金额
+  verifyBillAmt = (rule, value, callback) => {
+    const { minAvailableCreditAmt, maxAvailableCreditAmt } = this.state;
+    if (!(/\d/.test(value) && value % 100 == 0 && minAvailableCreditAmt < 3000 && maxAvailableCreditAmt > parseInt(value))) {
+      callback(`可代还金额为3000~${maxAvailableCreditAmt}，且要为100整数倍`);
+    } else {
+      callback();
+    }
+  };
+
   render() {
+    const { getFieldProps } = this.props.form;
     const {
       repayInfo,
       repaymentDateList,
@@ -230,6 +243,21 @@ export default class confirm_agency_page extends PureComponent {
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
+              <div>
+                <div className={style.billInpBox}>
+                  <i className={style.moneyUnit}>¥</i>
+                  <InputItem
+                    className={style.billInput}
+                    placeholder=""
+                    // maxLength="11"
+                    type="number"
+                    {...getFieldProps('cardBillAmt', {
+                      rules: [{ required: true, message: '请输入代还金额' }, { validator: this.verifyBillAmt }],
+                    })}
+                  />
+                </div>
+                <p className={style.billTips}>金额3000-{100000}元，且为100整数倍</p>
+              </div>
               {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
           </li>

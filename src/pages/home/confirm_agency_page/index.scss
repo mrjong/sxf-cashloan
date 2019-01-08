@@ -70,6 +70,31 @@
         margin-right: 0;
       }
     }
+    .billInpBox{
+      position: relative;
+      overflow: hidden;
+      color: #484747;
+      .moneyUnit{
+        position: absolute;
+        top: 20px;
+        right: 330px;
+        z-index: 1;
+      }
+    }
+    .billInput{
+      float: right;
+      width: 322px;
+      border-bottom: 3px solid #484747;
+      input{
+        text-align: right;
+        font-size: 50px;
+      }
+    }
+    .billTips{
+      font-size: 22px;
+      color: rgba(157, 157, 157, 1);
+      margin-top: 24px;
+    }
   }
   .tipsBox{
     padding: 40px 30px 0 30px;
