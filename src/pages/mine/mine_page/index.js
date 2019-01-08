@@ -8,6 +8,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
+import { isMPOS } from 'utils';
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
   LOGOUT: '/signup/logout', // 用户退出登陆
@@ -308,7 +309,7 @@ export default class mine_page extends PureComponent {
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
         {/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
-        {tokenFromStorage && token ?
+        {tokenFromStorage && token&&!isMPOS() ?
           (<div
             onClick={this.logoutHandler}
             className={styles.logout}

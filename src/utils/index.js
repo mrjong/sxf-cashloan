@@ -63,28 +63,16 @@ export const isWXOpen = () => {
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
-		let pageList = [];
+		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
 		if (isWXOpen()) {
-			pageList = [
-				'/protocol/',
-				'/activity/',
-				'/others/',
-				'/common/auth_page',
-				'/landing/landing_page',
-				'/home/home',
-				'/common/wx_middle_page'
-			];
+			let pageListWx = [ '/home/home', '/common/wx_middle_page' ];
+			pageList.concat(pageListWx);
 		} else if (isMPOS()) {
-			pageList = [ '/protocol/', '/activity/', '/others/', '/mpos/', '/landing/landing_page' ];
+			let pageListMpos = (pageList = [ '/mpos/' ]);
+			pageList.concat(pageListMpos);
 		} else {
-			pageList = [
-				'/protocol/',
-				'/activity/',
-				'/common/auth_page',
-				'/landing/landing_page',
-				'/others/',
-				'/mpos/'
-			];
+			let pageListCommon = [];
+			pageList.concat(pageListCommon);
 		}
 		return pageList.some((item) => item && pathname.indexOf(item) > -1);
 	}
@@ -158,11 +146,23 @@ export const isSomeBrowser = (type) => {
 	const u = navigator.userAgent.toLowerCase();
 	return u.indexOf(type) > -1 && u.indexOf('micromessenger') <= -1;
 };
-
+//关闭view
+export const closeCurrentWebView = () => {
+	window.setupWebViewJavascriptBridge((bridge) => {
+		bridge.callHandler('closeCurrentWebView', '', function(response) {
+			console.log(response);
+		});
+	});
+};
 // 点击退出
 let state = false;
 
 export const logoutAppHandler = (that) => {
+	console.log('2222222');
+	if (isMPOS()) {
+		closeCurrentWebView();
+		return;
+	}
 	if (!state) {
 		state = true;
 		Modal.alert('', '确认退出登录？', [
@@ -362,6 +362,13 @@ export const getH5Channel = () => {
 	return h5Channel;
 };
 
+// 判断是对内mpos还是对外
+export const isMPOS = () => {
+	const h5Channel = getH5Channel();
+	sessionStorage.setItem('isMPOS', h5Channel.indexOf('MPOS') < 0 ? false : true);
+	return h5Channel.indexOf('MPOS') < 0 ? false : true;
+};
+
 // 设置h5Channel
 export const setH5Channel = () => {
 	const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -376,11 +383,4 @@ export const setH5Channel = () => {
 	} else {
 		store.setH5Channel('OTHER');
 	}
-};
-
-// 判断是对内mpos还是对外
-export const isMPOS = () => {
-	const h5Channel = getH5Channel();
-	sessionStorage.setItem('isMPOS', h5Channel.indexOf('MPOS') < 0 ? false : true);
-	return h5Channel.indexOf('MPOS') < 0 ? false : true;
 };

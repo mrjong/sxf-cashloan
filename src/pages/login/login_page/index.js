@@ -173,8 +173,8 @@ export default class login_page extends PureComponent {
 					};
 				} else {
 					param = {
-						type: '6',
-						mblNo: values.phoneValue,
+                        type: '6',
+                        mblNo: values.phoneValue,
 						osType
 					};
 				}
