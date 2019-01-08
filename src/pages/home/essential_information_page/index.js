@@ -52,7 +52,6 @@ export default class essential_information_page extends PureComponent {
     }
     buryingPoints();
     urlQuery = this.props.history.location.search;
-    // 初始化页面信息（反显）
     this.initBasicInfo()
   }
 
@@ -80,8 +79,6 @@ export default class essential_information_page extends PureComponent {
 
   //获取基本信息
   queryUsrBasicInfo = (province, city) => {
-    console.log(province,city)
-    // 获取基本信息
     this.props.$fetch.post(API.queryUsrBasicInfo).then(
       (res) => {
         if (res.msgCode === 'PTM0000') {
@@ -105,7 +102,7 @@ export default class essential_information_page extends PureComponent {
     );
   }
 
-  
+  // 初始化页面信息（反显）
   initBasicInfo = () => {
     //通过经纬度获取省市
     getAddress().then(res => {

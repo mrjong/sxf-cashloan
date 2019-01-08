@@ -20,7 +20,7 @@ import style from './index.scss';
 
 const API = {
   BANNER: '/my/getBannerList', // 0101-banner
-  USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
+  USR_INDEX_INFO: '/index/usrIndexInfo1', // 0103-首页信息查询接口
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
   GETSTSW: '/my/getStsw', // 获取首页进度

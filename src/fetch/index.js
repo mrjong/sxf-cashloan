@@ -11,8 +11,7 @@ const fetchInit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
-            Toast.info('系统开小差，请稍后重试');
-            console.log('------------------',errorTip)
+			// Toast.info('系统开小差，请稍后重试');
 			if (errorTip) Toast.fail('系统开小差，请稍后重试');
 		},
 		onShowSuccessTip: (response, successTip) => {
@@ -92,8 +91,8 @@ const fetchInit = () => {
 			}
 
 			num--;
-            singleLoading(num)
-            console.log('000000')
+			singleLoading(num)
+			console.log('000000')
 			let error2 = new Error('系统开小差，请稍后重试');
 			return Promise.reject(error2);
 		}
