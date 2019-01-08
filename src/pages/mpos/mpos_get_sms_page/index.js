@@ -19,7 +19,8 @@ export default class mpos_get_sms_page extends PureComponent {
 			smsText: '获取验证码',
 			timeflag: true,
 			codeInput: '',
-			query: {}
+			query: {},
+			smsJrnNo: ''
 		};
 	}
 	componentWillMount() {
@@ -43,6 +44,9 @@ export default class mpos_get_sms_page extends PureComponent {
 			.then(
 				(result) => {
 					if (result.msgCode === 'PTM0000') {
+						this.setState({
+							smsJrnNo: result.data.smsJrnNo
+						});
 						let timmer = setInterval(() => {
 							this.setState({ smsText: i-- + '"', timeflag: false });
 							if (i === -1) {
@@ -73,9 +77,11 @@ export default class mpos_get_sms_page extends PureComponent {
 		}
 		this.props.$fetch
 			.post('/authorize/doAuth', {
+				authToken: this.state.query.tokenId,
 				location: store.getPosition(), // 定位地址 TODO 从session取,
 				osType: getDeviceType(),
 				smsCd: codeInput,
+				smsJrnNo: this.state.smsJrnNo,
 				smsFlg: 'Y'
 			})
 			.then(
@@ -87,8 +93,10 @@ export default class mpos_get_sms_page extends PureComponent {
 						store.setToken(res.loginToken);
 						this.props.history.replace('/home/home');
 					} else {
-						Toast.info('授权失败', 3, () => {
-							this.props.history.replace('/login');
+						this.props.toast.info('授权失败', 3, () => {
+							this.props.history.replace(
+								`/login?tokenId=${this.state.query.tokenId}&mblNoHid=${this.state.query.mblNoHid}`
+							);
 						});
 					}
 				},
@@ -98,7 +106,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			);
 	}
 	render() {
-		const { timeflag, smsText, query } = this.state;
+		const { timeflag, smsText, query, codeInput } = this.state;
 
 		return (
 			<div className={styles.allContainer}>
@@ -122,7 +130,7 @@ export default class mpos_get_sms_page extends PureComponent {
 				<div
 					className={styles.clickSms}
 					onClick={() => {
-						this.goSubmit(code);
+						this.goSubmit(codeInput);
 					}}
 				>
 					<img src={click} className={styles.icon} />
