@@ -56,9 +56,8 @@ export default class essential_information_page extends PureComponent {
     // 获取基本信息
     this.props.$fetch.post(API.queryUsrBasicInfo).then(
       (res) => {
-        console.log(res);
         if (res.msgCode === 'PTM0000') {
-          this.getProCode(res.data.provNm || store.getProvince(), res.data.cityNm || store.getCity());
+          // this.getProCode(res.data.provNm || store.getProvince(), res.data.cityNm || store.getCity());
           this.props.form.setFieldsValue({
             address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
             linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
@@ -108,7 +107,6 @@ export default class essential_information_page extends PureComponent {
     this.props.$fetch.get(`${API.getProv}`).then((result) => {
       if (result && result.data) {
         const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
-          // console.log(item)
           let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
           if (proPattern.test(item.value) || proPattern2.test(pro)) {
             return item;
