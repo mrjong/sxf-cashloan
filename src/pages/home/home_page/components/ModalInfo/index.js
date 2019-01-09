@@ -1,4 +1,5 @@
 import { store } from 'utils/store';
+import { InputItem } from 'antd-mobile';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import React, { Component } from 'react';
 import dayjs from 'dayjs';
@@ -8,6 +9,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import TabList from '../TagList';
+import { createForm } from 'rc-form';
 
 import style from './index.scss';
 
@@ -19,6 +21,7 @@ const API = {
 };
 
 @fetch.inject()
+@createForm()
 export default class ModalInfo extends Component {
   constructor(props) {
     super(props);
@@ -200,6 +203,7 @@ export default class ModalInfo extends Component {
   };
 
   render() {
+    const { getFieldProps } = this.props.form;
     const {
       repayInfo,
       repaymentDateList,
@@ -235,7 +239,22 @@ export default class ModalInfo extends Component {
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
-              <span className={style.item_value}>{cardBillAmt}</span>
+              <div>
+                <div className={style.billInpBox}>
+                  <i className={style.moneyUnit}>¥</i>
+                  <InputItem
+                    className={style.billInput}
+                    placeholder=""
+                    // maxLength="11"
+                    type="number"
+                    {...getFieldProps('cardBillAmt', {
+                      rules: [{ required: true, message: '请输入代还金额' }, { validator: this.verifyBillAmt }],
+                    })}
+                  />
+                </div>
+                <p className={style.billTips}>金额3000-{100000}元，且为100整数倍</p>
+              </div>
+              {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
           </li>
           <li className={style.list_item}>

@@ -79,26 +79,27 @@ export default class credit_extension_page extends PureComponent {
 		if (!this.checkCreditCardStatus()) {
 			return;
 		}
-		const address = store.getPosition();
-		const params = {
-			location: address
-		};
-		this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
-			// 提交代还申请埋点
-			buriedPointEvent(mine.creditExtensionConfirm);
-			if (isMPOS) {
-				getAppsList();
-				getContactsList();
-			}
-			// 提交风控返回成功
-			if (res && res.msgCode === 'PTM0000') {
-				this.props.toast.info(res.msgInfo, 3, () => {
-					this.checkIsBandCard();
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
+		this.props.history.push('/home/confirm_agency');
+		// const address = store.getPosition();
+		// const params = {
+		// 	location: address
+		// };
+		// this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
+		// 	// 提交代还申请埋点
+		// 	buriedPointEvent(mine.creditExtensionConfirm);
+		// 	if (isMPOS) {
+		// 		getAppsList();
+		// 		getContactsList();
+		// 	}
+		// 	// 提交风控返回成功
+		// 	if (res && res.msgCode === 'PTM0000') {
+		// 		this.props.toast.info(res.msgInfo, 3, () => {
+		// 			this.checkIsBandCard();
+		// 		});
+		// 	} else {
+		// 		this.props.toast.info(res.msgInfo);
+		// 	}
+		// });
 	};
 
 	// 判断信用卡状态
