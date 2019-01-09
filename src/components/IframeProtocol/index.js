@@ -23,7 +23,7 @@ export default class IframeProtocol extends React.Component {
         src={`${this.state.prefix}${ID}`}
         name={ID}
         id={ID}
-        onLoad={postData && window.frames['delegation_withhold_page'].setData(postData)}
+        onLoad={() => { postData && window.frames[name].setData(postData) }}
         width="100%"
         height="100%"
         frameBorder="0"
