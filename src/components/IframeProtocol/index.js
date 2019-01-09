@@ -15,7 +15,7 @@ export default class IframeProtocol extends React.Component {
   }
 
   render() {
-    const { title, name, postData } = this.props
+    const { name, postData } = this.props
     const ID = isMPOS() ? `mpos_${name}` : `${name}`
     return (
       <iframe
@@ -23,7 +23,7 @@ export default class IframeProtocol extends React.Component {
         src={`${this.state.prefix}${ID}`}
         name={ID}
         id={ID}
-        onLoad={() => { postData && window.frames[name].setData(postData) }}
+        onLoad={postData && window.frames[ID].setData(postData)}
         width="100%"
         height="100%"
         frameBorder="0"
