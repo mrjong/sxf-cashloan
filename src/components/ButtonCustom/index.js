@@ -13,6 +13,8 @@ export default class ButtonCustom extends React.PureComponent {
     active: PropTypes.bool,
     children: PropTypes.node,
     onClick: PropTypes.func,
+    interval: PropTypes.number,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -22,13 +24,34 @@ export default class ButtonCustom extends React.PureComponent {
     onClick: () => {
       
     },
+    interval: 1600,
+    disabled: false,
   };
+
+  prePressTime = 0;
+
+  handleClick = (event) => {
+    const { disabled, interval, onClick } = this.props;
+    const now = Date.now();
+
+    if (disabled) return;
+
+    if (interval > 0 || this.prePressTime > 0) {
+      if (now - this.prePressTime > interval) {
+        this.prePressTime = now;
+        _handleClick(onClick, event);
+      }
+    } else {
+      _handleClick(onClick, event);
+    }
+    
+  }
 
   render() {
     const { className, active, children, onClick, ...restProps } = this.props;
     return (
       <button
-        onClick={event => _handleClick(onClick, event)}
+        onClick={event => this.handleClick(event)}
         className={`${style.sxp_button} ${active ? style.sxp_button_active : ''} ${className}`}
         {...restProps}
       >
