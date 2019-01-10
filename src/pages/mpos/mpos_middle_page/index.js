@@ -5,6 +5,7 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType, getH5Channel } from 'utils';
+import Alert_mpos from '../mpos_no_realname_alert_page';
 const API = {
 	validateMposRelSts: '/authorize/validateMposRelSts',
 	chkAuth: '/authorize/chkAuth'
@@ -14,7 +15,8 @@ export default class mpos_middle_page extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			errorInf: ''
+			errorInf: '',
+			showBoundle: false
 		};
 	}
 	componentWillMount() {
@@ -61,9 +63,11 @@ export default class mpos_middle_page extends Component {
 			.then(
 				(res) => {
 					if (res.authFlag === '0') {
-						this.props.history.replace(`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
+						this.props.history.replace(
+							`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`
+						);
 					} else if (res.authFlag === '1') {
-                        // sa.login(res.userId);
+						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
@@ -101,6 +105,6 @@ export default class mpos_middle_page extends Component {
 		store.removeJumpUrl();
 	};
 	render() {
-		return <Blanks errorInf={this.state.errorInf} />;
+		return <div>{this.state.showBoundle ? <Alert_mpos /> : <Blanks errorInf={this.state.errorInf} />}</div>;
 	}
 }
