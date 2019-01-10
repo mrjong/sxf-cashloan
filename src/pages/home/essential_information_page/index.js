@@ -159,7 +159,6 @@ export default class essential_information_page extends PureComponent {
 		}
 		const { loading } = this.state;
 		if (loading) return; // 防止重复提交
-		debugger;
 		const city = this.state.provLabel[0];
 		const prov = this.state.provLabel[1];
 		// 调基本信息接口
