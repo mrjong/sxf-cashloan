@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { getDeviceType } from 'utils';
+import { getFirstError } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
@@ -17,6 +17,7 @@ const API = {
   CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
   CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
+  checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡
 };
 
 let indexData = null;  // 首页带过来的信息
@@ -65,7 +66,7 @@ export default class confirm_agency_page extends PureComponent {
           },
         },
       ],
-      isShowTipModal: true,
+      isShowTipModal: false,
     };
   }
 
@@ -74,7 +75,7 @@ export default class confirm_agency_page extends PureComponent {
     if (pageData) {
       this.recoveryPageData();
     } else {
-      // this.requestGetRepaymentDateList();
+      this.requestGetRepaymentDateList();
     }
   }
 
@@ -91,7 +92,7 @@ export default class confirm_agency_page extends PureComponent {
     this.setState({
       repaymentDate: data.value,
       repaymentIndex: data.index,
-      cardBillAmt: data.value.cardBillAmt,
+      // cardBillAmt: data.value.cardBillAmt,
     });
   };
 
@@ -122,7 +123,17 @@ export default class confirm_agency_page extends PureComponent {
 
   // 确认按钮点击事件
   handleClickConfirm = () => {
-    this.requestBindCardState();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.setState({
+          cardBillAmt: values.cardBillAmt,
+        }, () => {
+          this.requestBindCardState();
+        });
+      } else {
+				this.props.toast.info(getFirstError(err));
+			}
+    })
   };
 
   // 请求用户绑卡状态
@@ -157,7 +168,7 @@ export default class confirm_agency_page extends PureComponent {
     const agrNo = repayInfo.withHoldAgrNo;
     this.props.$fetch.get(`${API.CHECK_WITH_HOLD_CARD}/${agrNo}`).then(res => {
       if (res && res.msgCode === 'PTM0000') {
-        this.beforeJump();
+        this.checkMemSts();
       } else {
         this.props.toast.info(res.msgInfo);
       }
@@ -192,7 +203,9 @@ export default class confirm_agency_page extends PureComponent {
           repaymentDateList: result.data.prdList.map(item => ({
             name: item.prdName,
             value: item.prdId,
-            cardBillAmt: item.cardBillAmt,
+            // cardBillAmt: item.cardBillAmt,
+            minAmt: item.minAmt,
+            maxAmt: item.maxAmt,
           })),
           dateDiff: diff,
           lendersIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
@@ -228,6 +241,22 @@ export default class confirm_agency_page extends PureComponent {
     this.props.history.push('/mine/membership_card_page');
   }
 
+  // 校验借款产品是否需要会员卡
+  checkMemSts = () => {
+    const { repaymentDate } = this.state;
+    this.props.$fetch.get(`${API.checkApplyProdMemSts}/${repaymentDate.value}`).then(result => {
+      if (result && result.msgCode === "PTM3014") {
+        this.setState({
+          isShowTipModal: true,
+        })
+      } else if (result && result.msgCode === "PTM0000") {
+        this.beforeJump();
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    })
+  }
+
   render() {
     const { getFieldProps } = this.props.form;
     const {
@@ -237,25 +266,10 @@ export default class confirm_agency_page extends PureComponent {
       lendersDateList,
       lendersIndex,
       defaultIndex,
-      dateDiff,
-      cardBillAmt,
+      repaymentDate,
       isShowTipModal,
     } = this.state;
 
-    let lendersTip = '';
-    // if (dateDiff > 2 && lendersIndex === 0) {
-    //   lendersTip = (
-    //     <p className={style.item_tip}>
-    //       选择还款日前一天（{dayjs(repayInfo.cardBillDt)
-    //         .subtract(1, 'day')
-    //         .format('YYYY-MM-DD')}）放款，将最大成本节约您代资金
-    //     </p>
-    //   );
-    // }
-
-    // if (dateDiff <= 2 && lendersIndex === 1) {
-    //   lendersTip = <p className={style.item_tip}>选择立即放款，将最大程度节约您的成本</p>;
-    // }
     return (
       <div className={style.confirm_agency_page}>
         <ul className={style.modal_list}>
@@ -275,9 +289,8 @@ export default class confirm_agency_page extends PureComponent {
                     })}
                   />
                 </div>
-                <p className={style.billTips}>金额3000-{100000}元，且为100整数倍</p>
+                <p className={style.billTips}>金额{repaymentDate.minAmt}-{repaymentDate.maxAmt}元，且为100整数倍</p>
               </div>
-              {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
           </li>
           <li className={style.list_item}>
@@ -291,7 +304,6 @@ export default class confirm_agency_page extends PureComponent {
                 />
               </div>
             </div>
-            {/* <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p> */}
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
@@ -300,7 +312,6 @@ export default class confirm_agency_page extends PureComponent {
                 <TabList burientype="lenders" tagType="lenders" tagList={lendersDateList} defaultindex={defaultIndex} activeIndex={lendersIndex} onClick={this.handleLendersTagClick} />
               </div>
             </div>
-            {lendersTip}
           </li>
           <li className={style.list_item} onClick={this.handleClickChoiseBank}>
             <div className={style.item_info}>
