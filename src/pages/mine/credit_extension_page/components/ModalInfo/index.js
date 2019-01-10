@@ -4,10 +4,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import TabList from '../TagList';
 import { createForm } from 'rc-form';
+import { isMPOS } from 'utils';
+import { getAppsList, getContactsList } from 'utils/publicApi';
 import style from './index.scss';
 
 const API = {
@@ -29,20 +31,10 @@ export default class ModalInfo extends Component {
       repaymentIndex: 0,
       lendersDate: '',
       lendersIndex: 0,
-      repaymentDateList: [
-        {
-          name: '3期'
-        },
-        {
-          name: '6期'
-        },
-        {
-          name: '12期'
-        },
-      ],
-      applyAmt: '3000', // 选择的可申请金额
-      minAmt: '3000', // 可申请金额的最小值
-      maxAmt: '5000', // 可申请金额的最大值
+      repaymentDateList: [],
+      applyAmt: '', // 选择的可申请金额
+      minAmt: '', // 可申请金额的最小值
+      maxAmt: '', // 可申请金额的最大值
       repaymentAmt: '', // 预计每期约还款
     };
   }
@@ -77,7 +69,9 @@ export default class ModalInfo extends Component {
       // cardBillAmt: data.value.cardBillAmt,
     }, () => {
       this.dealMinMax(data.value);
-      this.calcRepayAmt(data.value);
+      setTimeout(() => {
+        this.calcRepayAmt(data.value);
+      }, 0);
     });
   };
 
@@ -87,18 +81,18 @@ export default class ModalInfo extends Component {
     const cardBillAmt = repayInfo && repayInfo.cardBillAmt;
     if (cardBillAmt<=data.factLmtLow) {
       this.setState({
-        minAmt: data.factLmtLow, // 可申请金额的最小值
-        maxAmt: data.factLmtLow, // 可申请金额的最大值
+        minAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最小值
+        maxAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最大值
       })
     }else if (cardBillAmt>data.factLmtLow && cardBillAmt<data.factAmtHigh) {
       this.setState({
-        minAmt: data.factLmtLow, // 可申请金额的最小值
+        minAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最小值
         maxAmt: Math.ceil(cardBillAmt/100)*100, // 可申请金额的最大值 账单金额向上取整100元
       })
     } else if (cardBillAmt>=data.factAmtHigh) {
       this.setState({
-        minAmt: data.factLmtLow, // 可申请金额的最小值
-        maxAmt: data.factAmtHigh, // 可申请金额的最大值
+        minAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最小值
+        maxAmt: Math.ceil(data.factAmtHigh/100)*100, // 可申请金额的最大值
       })
     }
   }
@@ -107,7 +101,7 @@ export default class ModalInfo extends Component {
   calcRepayAmt = (data) => { // “预计每期约还款”：=借款金额*3%+借款金额/期限
     const { applyAmt } = this.state;
     const perdCnt = data && data.perdCnt; // 期限/期数
-    const repaymentAmt = Number(applyAmt*3%+applyAmt/perdCnt).toFixed(2); // 保留两位小数
+    const repaymentAmt = Number(applyAmt*0.03+applyAmt/perdCnt).toFixed(2); // 保留两位小数
     this.setState({
       repaymentAmt,
     })
@@ -121,15 +115,21 @@ export default class ModalInfo extends Component {
 
   // 确认按钮点击事件 提交到风控
   handleClickConfirm = () => {
+    const { applyAmt, repaymentDate } = this.state;
     const { onClose } = this.props;
 		const address = store.getPosition();
 		const params = {
-			location: address
-		};
+      location: address,
+      prdId: repaymentDate.value,
+      perdLth: repaymentDate.perdLth,
+      perdUnit: repaymentDate.perdUnit,
+      perdCnt: repaymentDate.perdCnt,
+      rpyAmt: applyAmt,
+    };
 		this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
 			// 提交代还申请埋点
 			buriedPointEvent(mine.creditExtensionConfirm);
-			if (isMPOS) {
+			if (isMPOS()) {
 				getAppsList();
 				getContactsList();
 			}
@@ -171,8 +171,7 @@ export default class ModalInfo extends Component {
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    // const { autId } = this.props;
-    const autId = '582e316701464f5092b3db592ae0666d';
+    const { autId } = this.props;
     this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
@@ -183,8 +182,10 @@ export default class ModalInfo extends Component {
             value: item.prdId,
             factLmtLow: item.factLmtLow,
             factAmtHigh: item.factAmtHigh,
+            perdCnt: item.perdCnt,
+            perdUnit: item.perdUnit,
+            perdLth: item.perdLth,
           })),
-          dateDiff: diff,
         });
       } else {
         this.props.toast.info(result.msgInfo);
@@ -197,10 +198,9 @@ export default class ModalInfo extends Component {
       repayInfo,
       repaymentDateList,
       repaymentIndex,
-      dateDiff,
-      cardBillAmt,
       applyAmt,
       repaymentAmt,
+      repaymentDate,
     } = this.state;
     const minAmt = Number(this.state.minAmt);
     const maxAmt = Number(this.state.maxAmt);
@@ -228,8 +228,11 @@ export default class ModalInfo extends Component {
                   max={maxAmt}
                   step={100}
                   // disabled
-                  onChange={(val)=>{ this.setState({ applyAmt: val})}}
-                  onAfterChange={(val)=>{console.log(val,'onAfterChange')}}
+                  onChange={(val)=>{ 
+                    this.setState({ applyAmt: val}, () => {
+                      this.calcRepayAmt(repaymentDate);
+                    })
+                  }}
                   trackStyle={{
                     backgroundColor: '#00BAFF',
                     height: '2px',
@@ -260,7 +263,7 @@ export default class ModalInfo extends Component {
               {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
           </li>
-          <li className={style.list_item}>
+          <li className={`${style.list_item} ${style.list_item_special}`}>
             <div className={style.item_info}>
               <label className={style.item_name}>申请期限</label>
               <div className={style.tagList}>

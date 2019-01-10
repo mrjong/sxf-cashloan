@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { getFirstError } from 'utils';
+import { getFirstError, isMPOS } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
@@ -18,6 +18,7 @@ const API = {
   CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
   checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡
+  queryUsrMemSts: '/my/queryUsrMemSts', // 查询用户会员卡状态
 };
 
 let indexData = null;  // 首页带过来的信息
@@ -39,20 +40,7 @@ export default class confirm_agency_page extends PureComponent {
       lendersDate: '',
       lendersIndex: 0,
       defaultIndex: 0,
-      repaymentDateList: [
-        {
-          name: '30天'
-        },
-        {
-          name: '3个月'
-        },
-        {
-          name: '6个月'
-        },
-        {
-          name: '12个月'
-        }
-      ],
+      repaymentDateList: [],
       lendersDateList: [
         {
           name: '还款日前一天',
@@ -67,6 +55,7 @@ export default class confirm_agency_page extends PureComponent {
         },
       ],
       isShowTipModal: false,
+      isVIP: false, // 是否有会员卡
     };
   }
 
@@ -77,9 +66,25 @@ export default class confirm_agency_page extends PureComponent {
     } else {
       this.requestGetRepaymentDateList();
     }
+    if (isMPOS()) {
+      this.checkUsrMemSts();
+    }
   }
 
   componentDidMount() {}
+
+  // 查询用户会员卡状态
+  checkUsrMemSts = () => {
+    this.props.$fetch.get(API.queryUsrMemSts).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        this.setState({
+          isVIP: result.data.memSts === '1' ? true : false
+        })
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
+  }
 
   // 数据回显
   recoveryPageData = () => {
@@ -114,7 +119,7 @@ export default class confirm_agency_page extends PureComponent {
   handleClickChoiseBank = () => {
     const { repayInfo } = this.state;
     store.setRepaymentModalData(this.state);
-    store.setBackUrl('/home/home?showModal=true');
+    store.setBackUrl('/home/confirm_agency?showModal=true');
     this.props.history.push({
       pathname: '/mine/select_save_page',
       search: `?agrNo=${repayInfo.withHoldAgrNo}`,
@@ -144,14 +149,14 @@ export default class confirm_agency_page extends PureComponent {
         this.requestCheckWithHoldCard();
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
-        store.setBackUrl('/home/home');
+        store.setBackUrl('/home/confirm_agency');
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
         }, 3000);
       } else if (result && result.msgCode === 'PTM2002') {
         // 有风控没绑信用卡 跳绑信用卡页面
-        store.setBackUrl('/home/home');
+        store.setBackUrl('/home/confirm_agency');
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
           this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
@@ -168,7 +173,11 @@ export default class confirm_agency_page extends PureComponent {
     const agrNo = repayInfo.withHoldAgrNo;
     this.props.$fetch.get(`${API.CHECK_WITH_HOLD_CARD}/${agrNo}`).then(res => {
       if (res && res.msgCode === 'PTM0000') {
-        this.checkMemSts();
+        if (isMPOS()) {
+          this.checkMemSts();
+        } else {
+          this.beforeJump();
+        }
       } else {
         this.props.toast.info(res.msgInfo);
       }
@@ -220,9 +229,9 @@ export default class confirm_agency_page extends PureComponent {
 
   // 校验代还金额
   verifyBillAmt = (rule, value, callback) => {
-    const { minAvailableCreditAmt, maxAvailableCreditAmt } = this.state;
-    if (!(/\d/.test(value) && value % 100 == 0 && minAvailableCreditAmt < 3000 && maxAvailableCreditAmt > parseInt(value))) {
-      callback(`可代还金额为3000~${maxAvailableCreditAmt}，且要为100整数倍`);
+    const { repaymentDate } = this.state;
+    if (!(/\d/.test(value) && value % 100 == 0 && parseInt(value) >= repaymentDate.minAmt && repaymentDate.maxAmt >= parseInt(value))) {
+      callback(`可代还金额为${repaymentDate.minAmt}~${repaymentDate.maxAmt}，且要为100整数倍`);
     } else {
       callback();
     }
@@ -268,11 +277,12 @@ export default class confirm_agency_page extends PureComponent {
       defaultIndex,
       repaymentDate,
       isShowTipModal,
+      isVIP,
     } = this.state;
 
     return (
       <div className={style.confirm_agency_page}>
-        <ul className={style.modal_list}>
+        <ul className={`${style.modal_list} ${style.modal_list_special}`}>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
@@ -301,10 +311,13 @@ export default class confirm_agency_page extends PureComponent {
                   tagList={repaymentDateList}
                   defaultindex={repaymentIndex}
                   onClick={this.handleRepaymentTagClick}
+                  isDotted={isVIP}
                 />
               </div>
             </div>
           </li>
+        </ul>
+        <ul className={style.modal_list}>  
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>放款日期</label>

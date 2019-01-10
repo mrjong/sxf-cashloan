@@ -75,7 +75,7 @@ export default class TagList extends React.PureComponent {
 
   render() {
     const { currentIndex } = this.state;
-    const { className, onClick, tagList, ...restProps } = this.props;
+    const { className, onClick, tagList, isDotted, ...restProps } = this.props;
     const tagListDom = tagList.map((item, index) => (
       <Tag
         key={index}

@@ -7,8 +7,6 @@ import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
-import { isMPOS } from 'utils';
-import { getAppsList, getContactsList } from 'utils/publicApi';
 import { Modal } from 'antd-mobile';
 import ModalContent from './components/ModalInfo';
 
@@ -232,7 +230,7 @@ export default class credit_extension_page extends PureComponent {
 					onClose={this.handleCloseModal}
 					wrapClassName="modalInfoBox"
 				>
-					<ModalContent autId={autId} onClose={this.handleCloseModal} history={history} />
+					<ModalContent autId={autId} toast={this.props.toast} onClose={this.handleCloseModal} history={history} />
 				</Modal>
 			</div>
 		);

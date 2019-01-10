@@ -3,7 +3,12 @@
   height: 100%;
   box-sizing: border-box;
   overflow: auto;
-
+  .modal_list_special.modal_list{
+    margin-bottom: 24px;
+    .list_item + .list_item {
+      border-top: none;
+    }
+  }
   .modal_list {
     background: #fff;
     // border-top: 1PX  solid #e5e5e5;
@@ -42,7 +47,7 @@
     }
     .item_value {
       font-size: 0.4rem;
-      font-weight: bold;
+      // font-weight: bold;
       color: #333;
       line-height: 1;
     }
