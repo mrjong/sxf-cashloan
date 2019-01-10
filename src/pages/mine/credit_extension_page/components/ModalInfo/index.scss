@@ -1,34 +1,40 @@
 
 .modal_content {
   position: relative;
-  padding-bottom: 0.53rem;
+  padding-bottom: 0.3rem;
   .modal_cancel_btn {
     position: absolute;
-    top: 0.3rem;
-    right: 0.24rem;
-    border: 0;
-    background-color: transparent;
-    padding: 0.1rem;
-    font-size: 0.36rem;
-    color: #333;
+    top: 50%;
+    right: 0.28rem;
+    width: 50px;
+    height: 50px;
+    margin-top: -25px;
+    background-image: url('assets/images/home/close_ico@2x.png');
+    background-size: 100%;
   }
   .modal_title {
+    position: relative;
     margin: 0;
     padding: 0.33rem 0;
-    color: #333;
     font-size: 0.36rem;
-    font-weight: bold;
+    // font-weight: bold;
+    background: #151515;
+    color: #f6e1a9;
     /* @include setBottomLine(); */
   }
   .modal_list {
-    border-top: 1PX  solid #e5e5e5;
-    border-bottom: 1PX  solid #e5e5e5;
+    // border-top: 1PX  solid #e5e5e5;
+    // border-bottom: 1PX  solid #e5e5e5;
     .list_item {
       display: block;
       padding-top: 0.31rem;
       padding-bottom: 0.31rem;
-      margin-left: 0.6rem;
-      padding-right: 0.45rem;
+      margin-left: 0.3rem;
+      margin-right: 0.3rem;
+      // padding-right: 0.3rem;
+    }
+    .list_item:last-child{
+      padding-bottom: 0;
     }
     .list_item + .list_item {
       border-top: 1PX  solid #e5e5e5;
@@ -50,13 +56,13 @@
     }
     .item_name {
       color: #333;
-      font-size: 0.34rem;
+      font-size: 0.3rem;
       line-height: 1;
     }
     .item_value {
-      font-size: 0.4rem;
-      font-weight: bold;
-      color: #333;
+      font-size: 0.34rem;
+      // font-weight: bold;
+      color: #484747;
       line-height: 1;
     }
     .item_value_bank {
@@ -78,32 +84,53 @@
   }
   .modal_btn {
     margin-top: 0.6rem;
-    width: 6.2rem;
+    width: 5.2rem;
   }
-  .billInpBox{
+  .silderBox{
     position: relative;
-    overflow: hidden;
-    color: #484747;
-    .moneyUnit{
-      position: absolute;
-      top: 20px;
-      right: 330px;
-      z-index: 1;
+    width: 340px;
+    height: 100px;
+    :global {
+      .am-slider-wrapper{
+        margin-top: 50px;
+      }
     }
   }
-  .billInput{
-    float: right;
-    width: 322px;
-    border-bottom: 3px solid #484747;
-    input{
-      text-align: right;
-      font-size: 50px;
+  .minMax,.currentAmt{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .currentAmt{
+    top: -10px;
+    font-size: 42px;
+    font-weight: 500;
+    color: rgba(72, 71, 71, 1);
+    .moneyUnit{
+      font-weight: normal;
+      font-size: 33px;
     }
+  }
+  .minMax{
+    bottom: -10px;
+    font-size: 19px;
+    color: rgba(157, 157, 157, 1);
   }
   .billTips{
     font-size: 22px;
     color: rgba(157, 157, 157, 1);
-    margin-top: 24px;
+    margin-top: 18px;
+    text-align: left;
+  }
+  .tagList{
+    button{
+      margin-right: 20px;
+    }
+    button:last-child{
+      margin-right: 0;
+    }
   }
   @media (device-height: 480px) and (-webkit-min-device-pixel-ratio: 2){/* 兼容iphone4/4s */
     .modal_list{

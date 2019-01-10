@@ -19,11 +19,16 @@ const API = {
   CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 };
 
+let indexData = null;  // 首页带过来的信息
+
 @fetch.inject()
 @createForm()
 export default class confirm_agency_page extends PureComponent {
   constructor(props) {
     super(props);
+    if (this.props.history.location.state && this.props.history.location.state.indexData) {
+      indexData = this.props.history.location.state.indexData
+    }
     this.state = {
       cardBillAmt: 0,
       dateDiff: 0,
@@ -164,7 +169,6 @@ export default class confirm_agency_page extends PureComponent {
     // 埋点-选择借款要素弹框页-点击确认按钮
     buriedPointEvent(home.borrowingPreSubmit);
     const { lendersDate, repayInfo, repaymentDate, cardBillAmt } = this.state;
-    const { indexData } = this.props;
     const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
     // 跳转确认代还页面之前 将当前弹框数据保存下来
     store.setRepaymentModalData(this.state);
@@ -175,7 +179,7 @@ export default class confirm_agency_page extends PureComponent {
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${this.props.indexData.autId}`).then(result => {
+    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData.autId}`).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
         const diff = result.data.overDt;

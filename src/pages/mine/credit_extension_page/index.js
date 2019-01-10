@@ -226,7 +226,12 @@ export default class credit_extension_page extends PureComponent {
 					</ButtonCustom>
 				) : null}
 				{/* 确认代还信息弹框 */}
-				<Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
+				<Modal
+					transparent
+					visible={this.state.isShowModal}
+					onClose={this.handleCloseModal}
+					wrapClassName="modalInfoBox"
+				>
 					<ModalContent autId={autId} onClose={this.handleCloseModal} history={history} />
 				</Modal>
 			</div>
