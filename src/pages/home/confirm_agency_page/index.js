@@ -65,7 +65,7 @@ export default class confirm_agency_page extends PureComponent {
           },
         },
       ],
-      isShowTipModal: true,
+      isShowTipModal: false,
     };
   }
 
@@ -74,7 +74,7 @@ export default class confirm_agency_page extends PureComponent {
     if (pageData) {
       this.recoveryPageData();
     } else {
-      // this.requestGetRepaymentDateList();
+      this.requestGetRepaymentDateList();
     }
   }
 
@@ -193,6 +193,8 @@ export default class confirm_agency_page extends PureComponent {
             name: item.prdName,
             value: item.prdId,
             cardBillAmt: item.cardBillAmt,
+            minAmt: item.minAmt,
+            maxAmt: item.maxAmt,
           })),
           dateDiff: diff,
           lendersIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
@@ -237,6 +239,7 @@ export default class confirm_agency_page extends PureComponent {
       lendersDateList,
       lendersIndex,
       defaultIndex,
+      repaymentDate,
       dateDiff,
       cardBillAmt,
       isShowTipModal,
@@ -275,7 +278,7 @@ export default class confirm_agency_page extends PureComponent {
                     })}
                   />
                 </div>
-                <p className={style.billTips}>金额3000-{100000}元，且为100整数倍</p>
+                <p className={style.billTips}>金额{repaymentDate.minAmt}-{repaymentDate.maxAmt}元，且为100整数倍</p>
               </div>
               {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
