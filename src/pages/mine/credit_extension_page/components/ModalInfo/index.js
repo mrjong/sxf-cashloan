@@ -1,11 +1,6 @@
 import { store } from 'utils/store';
-// import { Slider } from 'antd-mobile';
-import Tooltip from 'rc-tooltip';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
+import { Slider } from 'antd-mobile';
 import React, { Component } from 'react';
-import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import fetch from 'sx-fetch';
 import { buriedPointEvent } from 'utils/analytins';
@@ -13,25 +8,6 @@ import { home } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import TabList from '../TagList';
 import { createForm } from 'rc-form';
-
-const Handle = Slider.Handle;
-
-const handle = (props) => {
-  const { value, dragging, index, ...restProps } = props;
-  return (
-    <Tooltip
-      prefixCls="rc-slider-tooltip"
-      overlay={value}
-      visible={dragging}
-      placement="top"
-      key={index}
-      overlayStyle={{zIndex: 1000}}
-    >
-      <Handle value={value} {...restProps} />
-    </Tooltip>
-  );
-};
-
 import style from './index.scss';
 
 const API = {
@@ -53,10 +29,20 @@ export default class ModalInfo extends Component {
       repaymentIndex: 0,
       lendersDate: '',
       lendersIndex: 0,
-      repaymentDateList: [],
-      applyAmt: '', // 选择的可申请金额
-      minAmt: '', // 可申请金额的最小值
-      maxAmt: '', // 可申请金额的最大值
+      repaymentDateList: [
+        {
+          name: '3期'
+        },
+        {
+          name: '6期'
+        },
+        {
+          name: '12期'
+        },
+      ],
+      applyAmt: '3000', // 选择的可申请金额
+      minAmt: '3000', // 可申请金额的最小值
+      maxAmt: '5000', // 可申请金额的最大值
       repaymentAmt: '', // 预计每期约还款
     };
   }
@@ -87,8 +73,11 @@ export default class ModalInfo extends Component {
   handleRepaymentTagClick = data => {
     this.setState({
       repaymentDate: data.value,
-      repaymentIndex: data.index,
+      // repaymentIndex: data.index,
       // cardBillAmt: data.value.cardBillAmt,
+    }, () => {
+      this.dealMinMax(data.value);
+      this.calcRepayAmt(data.value);
     });
   };
 
@@ -219,10 +208,10 @@ export default class ModalInfo extends Component {
 
     return (
       <div className={style.modal_content}>
-        <button className={style.modal_cancel_btn} onClick={event => this._handleClick(onClose, event)}>
-          取消
-        </button>
-        <h1 className={style.modal_title}>申请金额和期限确认</h1>
+        <h1 className={style.modal_title}>
+          申请金额和期限确认
+          <i className={style.modal_cancel_btn} onClick={event => this._handleClick(onClose, event)} />
+        </h1>
         <ul className={style.modal_list}>
           <li className={style.list_item}>
             <div className={style.item_info}>
@@ -232,7 +221,7 @@ export default class ModalInfo extends Component {
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
-              <label className={style.item_name}>可申请金额</label>
+              <label className={style.item_name}>申请金额</label>
               <div className={`${style.item_value} ${style.silderBox}`}>
                 <Slider
                   min={minAmt}
@@ -241,36 +230,55 @@ export default class ModalInfo extends Component {
                   // disabled
                   onChange={(val)=>{ this.setState({ applyAmt: val})}}
                   onAfterChange={(val)=>{console.log(val,'onAfterChange')}}
-                  // marks={{minAmt: minAmt, maxAmt: maxAmt}}
-                  handle={handle}
+                  trackStyle={{
+                    backgroundColor: '#00BAFF',
+                    height: '2px',
+                  }}
+                  railStyle={{
+                    backgroundColor: '#DCDCDC',
+                    height: '2px',
+                  }}
+                  handleStyle={{
+                    borderColor: '#00BAFF',
+                    height: '14px',
+                    width: '14px',
+                    marginLeft: '-7px',
+                    marginTop: '-7px',
+                    backgroundColor: '#00BAFF',
+                    boxShadow: '0px 1px 0px 0px rgba(0,48,100,0.4)'
+                  }}
                 />
-                {/* <i>{3000}</i>
-                <i>{applyAmt}</i>
-                <i>{5000}</i> */}
-                <p className={style.billTips}>金额3000-{100000}元，且为100整数倍</p>
+                <span className={style.currentAmt}>
+                  <i className={style.moneyUnit}>¥</i>
+                  {applyAmt ? <i>{Number(applyAmt).toFixed(2)}</i> : null}
+                </span>
+                <span className={style.minMax}>
+                  <i>{minAmt}</i>
+                  <i>{maxAmt}</i>
+                </span>
               </div>
               {/* <span className={style.item_value}>{cardBillAmt}</span> */}
             </div>
           </li>
           <li className={style.list_item}>
-            <div className={style.item_info_special}>
-              <label className={style.item_name}>可申请期限</label>
-              <TabList
-                tagList={repaymentDateList}
-                defaultindex={repaymentIndex}
-                onClick={this.handleRepaymentTagClick}
-              />
+            <div className={style.item_info}>
+              <label className={style.item_name}>申请期限</label>
+              <div className={style.tagList}>
+                <TabList
+                  tagList={repaymentDateList}
+                  defaultindex={repaymentIndex}
+                  onClick={this.handleRepaymentTagClick}
+                />
+              </div>
             </div>
-            <p className={style.item_tip} style={{ marginTop: '0' }}>（审核通过后，期限不可修改）</p>
+            <p className={style.billTips}>(审核通过后，期限不可更改)</p>
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>预计每期约还款</label>
-              <div className={style.item_value}>
-                <span>{repaymentAmt}元</span>
-                <p className={style.billTips}> （以最终借款合同为准）</p>
-              </div>
+              <span className={style.item_value}>{repaymentAmt}元</span>
             </div>
+            <p className={style.billTips}>(以最终借款合同为准)</p>
           </li>
         </ul>
         <SXFButton onClick={this.handleClickConfirm} className={style.modal_btn}>

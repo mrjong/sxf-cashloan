@@ -14,7 +14,6 @@ import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
-import ModalContent from './components/ModalInfo';
 import MsgBadge from './components/MsgBadge';
 import style from './index.scss';
 
@@ -41,7 +40,6 @@ export default class home_page extends PureComponent {
     tokenFromStorage = store.getToken();
     super(props);
     this.state = {
-      isShowModal: false,
       bannerList: [],
       usrIndexInfo: '',
       haselescard: 'true',
@@ -79,15 +77,15 @@ export default class home_page extends PureComponent {
         store.setRepaymentModalData(repayInfoData);
       }
       // 如果存在 bankInfo 则弹框 用完就清除
-      this.setState(
-        {
-          isShowModal: true,
-        },
-        () => {
-          window.handleCloseHomeModal = this.handleCloseModal;
-          store.removeCardData();
-        },
-      );
+      // this.setState(
+      //   {
+      //     isShowModal: true,
+      //   },
+      //   () => {
+      //     window.handleCloseHomeModal = this.handleCloseModal;
+      //     store.removeCardData();
+      //   },
+      // );
     }
   }
   componentWillUnmount() {
@@ -107,22 +105,6 @@ export default class home_page extends PureComponent {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
       store.setToken(urlParams.token);
     }
-  };
-
-  // 打开弹框
-  handleShowModal = () => {
-    window.handleCloseHomeModal = this.handleCloseModal;
-    this.setState({
-      isShowModal: true,
-    });
-  };
-
-  // 关闭弹框
-  handleCloseModal = () => {
-    window.handleCloseHomeModal = null;
-    this.setState({
-      isShowModal: false,
-    });
   };
 
   // 首页进度
@@ -276,10 +258,12 @@ export default class home_page extends PureComponent {
 
   // 请求用户绑卡状态
   requestBindCardState = () => {
+    const { usrIndexInfo } = this.state;
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
-        this.handleShowModal();
+        // this.handleShowModal();
+        this.props.history.push({ pathname: '/home/confirm_agency', state: {  indexData: usrIndexInfo && usrIndexInfo.indexData } });
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
@@ -401,7 +385,7 @@ export default class home_page extends PureComponent {
         // let resultData = result.data;
         // const sessionCardData = store.getSomeData();
         // Object.assign(resultData.indexData, sessionCardData);
-        // result.data.indexSts = 'LN0003'
+        // result.data.indexSts = 'LN0001'
         // result.data.indexData = {
         //   autSts : '2'
         // }
@@ -513,10 +497,6 @@ export default class home_page extends PureComponent {
             )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
-        {/* 确认代还信息弹框 */}
-        <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
-          <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
-        </Modal>
         <Modal
           wrapClassName={style.modalLoadingBox}
           visible={visibleLoading}
