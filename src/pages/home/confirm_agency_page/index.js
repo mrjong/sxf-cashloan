@@ -328,7 +328,7 @@ export default class confirm_agency_page extends PureComponent {
           确定
         </SXFButton>
         <Modal
-          wrapClassName={style.modal_tip_warp}
+          wrapClassName="modal_VIPTip_warp"
           visible={isShowTipModal}
           closable
           transparent

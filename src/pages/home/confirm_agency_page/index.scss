@@ -110,3 +110,46 @@
     width: 6.2rem;
   }
 }
+.modalTitle{
+  font-size: 36px;
+  color: rgba(37, 39, 41, 1);
+}
+.modalUl{
+  margin-top: 20px;
+  li{
+    font-size: 30px;
+    color: rgba(134, 145, 157, 1);
+    text-align: left;
+    margin-left: 45px;
+    line-height: 50px;
+    i{
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background-size: 100%;
+      position: relative;
+      top: 8px;
+      margin-right: 20px;
+    }
+    .vipIco1{
+      background-image: url('assets/images/home/vipIco1@2x.png');
+    }
+    .vipIco2{
+      background-image: url('assets/images/home/vipIco2@2x.png');
+    }
+    .vipIco3{
+      background-image: url('assets/images/home/vipIco3@2x.png');
+    }
+    .vipIco4{
+      background-image: url('assets/images/home/vipIco4@2x.png');
+    }
+  }
+}
+:global{
+  .modal_VIPTip_warp{
+    .am-modal-button-group-v .am-modal-button{
+      color: #ebde74;
+    }
+  }
+}
+
