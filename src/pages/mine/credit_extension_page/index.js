@@ -9,16 +9,17 @@ import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import { isMPOS } from 'utils';
 import { getAppsList, getContactsList } from 'utils/publicApi';
+import { Modal } from 'antd-mobile';
+import ModalContent from './components/ModalInfo';
 
 const API = {
 	getStw: '/my/getStsw', // 获取4个认证项的状态
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	getZmxy: '/auth/getZhimaUrl', // 芝麻认证的跳转URL
-	submitState: '/bill/apply', // 提交代还金申请
-	isBankCard: '/my/chkCard', // 是否绑定信用卡和储蓄卡
 	getXMURL: '/auth/zmAuth' // 芝麻认证之后的回调状态
 };
 let urlQuery = '';
+let autId = '';
 // const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator' ];
 
@@ -33,7 +34,8 @@ export default class credit_extension_page extends PureComponent {
 		stswData: [],
 		flag: false,
 		submitFlag: false,
-		isShowBtn: true // 是否展示提交代还金申请按钮
+		isShowBtn: true, // 是否展示提交代还金申请按钮
+		isShowModal: false,
 	};
 
 	componentWillMount() {
@@ -46,6 +48,7 @@ export default class credit_extension_page extends PureComponent {
 		this.requestGetStatus();
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		urlQuery = this.props.history.location.search;
+		autId = query.autId;
 		const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
 		if (!isShowCommit || isShowCommit === 'false') {
 			this.setState({ isShowBtn: false });
@@ -79,27 +82,9 @@ export default class credit_extension_page extends PureComponent {
 		if (!this.checkCreditCardStatus()) {
 			return;
 		}
-		this.props.history.push('/home/confirm_agency');
-		// const address = store.getPosition();
-		// const params = {
-		// 	location: address
-		// };
-		// this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
-		// 	// 提交代还申请埋点
-		// 	buriedPointEvent(mine.creditExtensionConfirm);
-		// 	if (isMPOS) {
-		// 		getAppsList();
-		// 		getContactsList();
-		// 	}
-		// 	// 提交风控返回成功
-		// 	if (res && res.msgCode === 'PTM0000') {
-		// 		this.props.toast.info(res.msgInfo, 3, () => {
-		// 			this.checkIsBandCard();
-		// 		});
-		// 	} else {
-		// 		this.props.toast.info(res.msgInfo);
-		// 	}
-		// });
+		this.setState({
+			isShowModal: true,
+		})
 	};
 
 	// 判断信用卡状态
@@ -126,30 +111,6 @@ export default class credit_extension_page extends PureComponent {
 				isCreditCardStatusVerify = false;
 		}
 		return isCreditCardStatusVerify;
-	};
-
-	// 判断是否绑卡
-	checkIsBandCard = () => {
-		this.props.$fetch.get(`${API.isBankCard}`).then((result) => {
-			// 跳转至储蓄卡
-			if (result && result.msgCode === 'PTM2003') {
-				store.setCheckCardRouter('checkCardRouter');
-				this.props.toast.info(result.msgInfo);
-				store.setBackUrl('/mine/credit_extension_page');
-				setTimeout(() => {
-					this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-				}, 3000);
-			} else if (result && result.msgCode === 'PTM2002') {
-				store.setCheckCardRouter('checkCardRouter');
-				this.props.toast.info(result.msgInfo);
-				store.setBackUrl('/mine/credit_extension_page');
-				setTimeout(() => {
-					this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
-				}, 3000);
-			} else {
-				this.props.history.push('/home/home');
-			}
-		});
 	};
 
 	getStateData = (item) => {
@@ -224,6 +185,13 @@ export default class credit_extension_page extends PureComponent {
 		}
 	};
 
+	// 关闭弹框
+	handleCloseModal = () => {
+		this.setState({
+		  isShowModal: false,
+		});
+	};
+
 	render() {
 		const { submitFlag, stswData, isShowBtn } = this.state;
 		const data = stswData.map((item) => {
@@ -257,6 +225,10 @@ export default class credit_extension_page extends PureComponent {
 						提交代还金申请
 					</ButtonCustom>
 				) : null}
+				{/* 确认代还信息弹框 */}
+				<Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
+					<ModalContent autId={autId} onClose={this.handleCloseModal} history={history} />
+				</Modal>
 			</div>
 		);
 	}

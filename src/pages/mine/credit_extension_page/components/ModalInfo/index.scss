@@ -1,0 +1,114 @@
+
+.modal_content {
+  position: relative;
+  padding-bottom: 0.53rem;
+  .modal_cancel_btn {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.24rem;
+    border: 0;
+    background-color: transparent;
+    padding: 0.1rem;
+    font-size: 0.36rem;
+    color: #333;
+  }
+  .modal_title {
+    margin: 0;
+    padding: 0.33rem 0;
+    color: #333;
+    font-size: 0.36rem;
+    font-weight: bold;
+    /* @include setBottomLine(); */
+  }
+  .modal_list {
+    border-top: 1PX  solid #e5e5e5;
+    border-bottom: 1PX  solid #e5e5e5;
+    .list_item {
+      display: block;
+      padding-top: 0.31rem;
+      padding-bottom: 0.31rem;
+      margin-left: 0.6rem;
+      padding-right: 0.45rem;
+    }
+    .list_item + .list_item {
+      border-top: 1PX  solid #e5e5e5;
+    }
+    .item_info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item_info_special {
+      text-align: left;
+      .item_name {
+        margin-right: .2rem;
+      }
+      button {
+        margin-right: .1rem;
+        margin-bottom: .15rem;
+      }
+    }
+    .item_name {
+      color: #333;
+      font-size: 0.34rem;
+      line-height: 1;
+    }
+    .item_value {
+      font-size: 0.4rem;
+      font-weight: bold;
+      color: #333;
+      line-height: 1;
+    }
+    .item_value_bank {
+      font-size: .34rem;
+      .icon {
+        margin-left: .26rem;
+        width: .16rem;
+        height: .28rem;
+        vertical-align: middle;
+      }
+    }
+    .item_tip {
+      text-align: left;
+      margin-top: 0.15rem;
+      font-size: 0.24rem;
+      color: #f66;
+      line-height: 1.2;
+    }
+  }
+  .modal_btn {
+    margin-top: 0.6rem;
+    width: 6.2rem;
+  }
+  .billInpBox{
+    position: relative;
+    overflow: hidden;
+    color: #484747;
+    .moneyUnit{
+      position: absolute;
+      top: 20px;
+      right: 330px;
+      z-index: 1;
+    }
+  }
+  .billInput{
+    float: right;
+    width: 322px;
+    border-bottom: 3px solid #484747;
+    input{
+      text-align: right;
+      font-size: 50px;
+    }
+  }
+  .billTips{
+    font-size: 22px;
+    color: rgba(157, 157, 157, 1);
+    margin-top: 24px;
+  }
+  @media (device-height: 480px) and (-webkit-min-device-pixel-ratio: 2){/* 兼容iphone4/4s */
+    .modal_list{
+      max-height: 7rem;
+      overflow-y: auto;
+    }
+  }
+}

@@ -209,7 +209,7 @@ export default class home_page extends PureComponent {
         buriedPointEvent(mine.creditExtension, {
           entry: '首页',
         });
-        this.props.history.push({ pathname: '/mine/credit_extension_page', search: '?isShowCommit=true' });
+        this.props.history.push({ pathname: '/mine/credit_extension_page', search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}` });
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
@@ -261,9 +261,10 @@ export default class home_page extends PureComponent {
 
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
+    const { usrIndexInfo } = this.state;
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
+        store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId}`);
         SXFToast.loading('加载中...', 0);
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
