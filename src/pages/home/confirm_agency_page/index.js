@@ -22,6 +22,8 @@ const API = {
 };
 
 let indexData = null;  // 首页带过来的信息
+let pageData = null;
+let isSaveAmt = false;
 
 @fetch.inject()
 @createForm()
@@ -36,7 +38,7 @@ export default class confirm_agency_page extends PureComponent {
       dateDiff: 0,
       repayInfo: {},
       repaymentDate: '',
-      repaymentIndex: 0,
+      repaymentIndex: isMPOS() ? 1 : 0, // mpos取1（最后一个），只限返回两种期限的情况
       lendersDate: '',
       lendersIndex: 0,
       defaultIndex: 0,
@@ -60,8 +62,20 @@ export default class confirm_agency_page extends PureComponent {
   }
 
   componentWillMount() {
-    const pageData = store.getRepaymentModalData();
+    isSaveAmt = store.getSaveAmt();
+    console.log(isSaveAmt,'isSaveAmt')
+    store.removeSaveAmt();
+    let bankInfo = store.getCardData();
+    store.removeCardData();
+    pageData = store.getRepaymentModalData();
+    store.removeRepaymentModalData();
     if (pageData) {
+      if (bankInfo && bankInfo !== {}) {
+        // 如果存在 bankInfo 并且弹框缓存数据崔仔 则更新弹框缓存的数据
+        pageData.repayInfo.bankName = bankInfo.bankName;
+        pageData.repayInfo.cardNoHid = bankInfo.lastCardNo;
+        pageData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
+      }
       this.recoveryPageData();
     } else {
       this.requestGetRepaymentDateList();
@@ -88,12 +102,14 @@ export default class confirm_agency_page extends PureComponent {
 
   // 数据回显
   recoveryPageData = () => {
-    let pageData = store.getRepaymentModalData();
     this.setState({ ...pageData });
   };
 
   // 代扣 Tag 点击事件
   handleRepaymentTagClick = data => {
+    this.props.form.setFieldsValue({
+      cardBillAmt: isSaveAmt ? this.state.cardBillAmt : '',
+    });
     this.setState({
       repaymentDate: data.value,
       repaymentIndex: data.index,
@@ -117,13 +133,18 @@ export default class confirm_agency_page extends PureComponent {
 
   // 选择银行卡
   handleClickChoiseBank = () => {
-    const { repayInfo } = this.state;
-    store.setRepaymentModalData(this.state);
-    store.setBackUrl('/home/confirm_agency?showModal=true');
-    this.props.history.push({
-      pathname: '/mine/select_save_page',
-      search: `?agrNo=${repayInfo.withHoldAgrNo}`,
-    });
+    this.setState({
+      cardBillAmt: this.props.form.getFieldValue('cardBillAmt'),
+    }, () => {
+      const { repayInfo } = this.state;
+      store.setSaveAmt(true);
+      store.setRepaymentModalData(this.state);
+      store.setBackUrl('/home/confirm_agency?showModal=true');
+      this.props.history.push({
+        pathname: '/mine/select_save_page',
+        search: `?agrNo=${repayInfo.withHoldAgrNo}`,
+      });
+    })
   };
 
   // 确认按钮点击事件
@@ -136,7 +157,10 @@ export default class confirm_agency_page extends PureComponent {
           this.requestBindCardState();
         });
       } else {
-				this.props.toast.info(getFirstError(err));
+        this.props.toast.info(getFirstError(err));
+        this.props.form.setFieldsValue({
+          cardBillAmt: ''
+        });
 			}
     })
   };
@@ -173,11 +197,7 @@ export default class confirm_agency_page extends PureComponent {
     const agrNo = repayInfo.withHoldAgrNo;
     this.props.$fetch.get(`${API.CHECK_WITH_HOLD_CARD}/${agrNo}`).then(res => {
       if (res && res.msgCode === 'PTM0000') {
-        if (isMPOS()) {
-          this.checkMemSts();
-        } else {
-          this.beforeJump();
-        }
+        this.checkMemSts();
       } else {
         this.props.toast.info(res.msgInfo);
       }
@@ -194,6 +214,7 @@ export default class confirm_agency_page extends PureComponent {
     store.setRepaymentModalData(this.state);
     // 跳转确认代还页面之前 将当前信用卡信息保存下来
     store.setHomeCardIndexData(indexData);
+    store.setSaveAmt(true);
     this.props.history.push({ pathname: '/home/agency', search });
   }
 
@@ -217,8 +238,8 @@ export default class confirm_agency_page extends PureComponent {
             maxAmt: item.maxAmt,
           })),
           dateDiff: diff,
-          lendersIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
-          defaultIndex: !result.data.cardBillDt || diff <= 2 ? 1 : 0,
+          lendersIndex: 1,
+          defaultIndex: 1,
           lendersDateList: lendersDateListFormat,
         });
       } else {
@@ -246,6 +267,7 @@ export default class confirm_agency_page extends PureComponent {
 
   // 跳转到会员卡
   goVIP = () => {
+    store.setVipBackUrl('/home/confirm_agency')
     this.handleCloseTipModal();
     this.props.history.push('/mine/membership_card_page');
   }
@@ -279,7 +301,6 @@ export default class confirm_agency_page extends PureComponent {
       isShowTipModal,
       isVIP,
     } = this.state;
-
     return (
       <div className={style.confirm_agency_page}>
         <ul className={`${style.modal_list} ${style.modal_list_special}`}>
@@ -310,8 +331,9 @@ export default class confirm_agency_page extends PureComponent {
                 <TabList
                   tagList={repaymentDateList}
                   defaultindex={repaymentIndex}
+                  activeIndex={repaymentIndex}
                   onClick={this.handleRepaymentTagClick}
-                  isDotted={isVIP}
+                  isDotted={isMPOS() && !isVIP}
                 />
               </div>
             </div>

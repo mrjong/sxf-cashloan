@@ -83,16 +83,19 @@ export default class ModalInfo extends Component {
       this.setState({
         minAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最小值
         maxAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最大值
+        applyAmt: Math.ceil(data.factLmtLow/100)*100,
       })
     }else if (cardBillAmt>data.factLmtLow && cardBillAmt<data.factAmtHigh) {
       this.setState({
         minAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最小值
         maxAmt: Math.ceil(cardBillAmt/100)*100, // 可申请金额的最大值 账单金额向上取整100元
+        applyAmt: Math.ceil(cardBillAmt/100)*100,
       })
     } else if (cardBillAmt>=data.factAmtHigh) {
       this.setState({
         minAmt: Math.ceil(data.factLmtLow/100)*100, // 可申请金额的最小值
         maxAmt: Math.ceil(data.factAmtHigh/100)*100, // 可申请金额的最大值
+        applyAmt: Math.ceil(data.factAmtHigh/100)*100,
       })
     }
   }
@@ -177,7 +180,7 @@ export default class ModalInfo extends Component {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
         this.setState({
           repayInfo: result.data,
-          repaymentDateList: result.data.perdRateList && result.data.perdRateList.length && result.data.perdRateList.map(item => ({
+          repaymentDateList: result.data.perdRateList && result.data.perdRateList.length > 0 ? result.data.perdRateList.map(item => ({
             name: item.perdPageNm,
             value: item.prdId,
             factLmtLow: item.factLmtLow,
@@ -185,7 +188,7 @@ export default class ModalInfo extends Component {
             perdCnt: item.perdCnt,
             perdUnit: item.perdUnit,
             perdLth: item.perdLth,
-          })),
+          })) : [],
         });
       } else {
         this.props.toast.info(result.msgInfo);
@@ -215,7 +218,16 @@ export default class ModalInfo extends Component {
         <ul className={style.modal_list}>
           <li className={style.list_item}>
             <div className={style.item_info}>
-              <label className={style.item_name}>本期信用卡账单</label>
+              {
+                repayInfo && repayInfo.cardBillSts === '0' ? 
+                  <label className={style.item_name}>最高可申请</label>
+                : null
+              }
+              {
+                repayInfo && repayInfo.cardBillSts === '1' ?
+                <label className={style.item_name}>本期信用卡账单</label>
+                : null
+              }
               <span className={style.item_value}>{repayInfo && repayInfo.cardBillAmt}元</span>
             </div>
           </li>
@@ -223,10 +235,12 @@ export default class ModalInfo extends Component {
             <div className={style.item_info}>
               <label className={style.item_name}>申请金额</label>
               <div className={`${style.item_value} ${style.silderBox}`}>
-                <Slider
+                { minAmt && maxAmt ? <Slider
                   min={minAmt}
                   max={maxAmt}
                   step={100}
+                  key={repaymentDate.value}
+                  defaultValue={maxAmt}
                   // disabled
                   onChange={(val)=>{ 
                     this.setState({ applyAmt: val}, () => {
@@ -251,6 +265,7 @@ export default class ModalInfo extends Component {
                     boxShadow: '0px 1px 0px 0px rgba(0,48,100,0.4)'
                   }}
                 />
+                : null }
                 <span className={style.currentAmt}>
                   <i className={style.moneyUnit}>¥</i>
                   {applyAmt ? <i>{Number(applyAmt).toFixed(2)}</i> : null}

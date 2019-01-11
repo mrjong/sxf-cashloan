@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import PopUp from 'components/PopUp'
 import Dialog from 'components/Dialogs'
-const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+// const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
   let obj = new PopUp(< Dialog open content={
     errMsg || '连接服务器失败，请稍后重试'
@@ -39,6 +39,7 @@ if (window.history && window.history.pushState) {
   window.addEventListener(
     'popstate',
     () => {
+      const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
       // 获取token
       let token = Cookie.get('fin-v-card-token');
       let tokenFromStorage = '';
@@ -51,7 +52,7 @@ if (window.history && window.history.pushState) {
       }
       // 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
       if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
-        if (queryData.isShowCommit === 'true') {
+        if (queryData.isShowCommit === 'true' || queryData.isShowCommit) {       
           window.ReactRouterHistory.push('/home/home');
           return
         } else {
@@ -157,7 +158,8 @@ if (window.history && window.history.pushState) {
               window.ReactRouterHistory.push('/home/home');
               break;
             case '/mine/credit_extension_page':
-              if (queryData.isShowCommit === 'true') {
+
+              if (queryData.isShowCommit === 'true' || queryData.isShowCommit) {       
                 window.ReactRouterHistory.push('/home/home');
               } else {
                 window.ReactRouterHistory.push('/mine/mine_page');

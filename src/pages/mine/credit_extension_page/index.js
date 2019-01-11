@@ -230,7 +230,7 @@ export default class credit_extension_page extends PureComponent {
 					onClose={this.handleCloseModal}
 					wrapClassName="modalInfoBox"
 				>
-					<ModalContent autId={autId} toast={this.props.toast} onClose={this.handleCloseModal} history={history} />
+					<ModalContent autId={autId} toast={this.props.toast} onClose={this.handleCloseModal} history={this.props.history} />
 				</Modal>
 			</div>
 		);

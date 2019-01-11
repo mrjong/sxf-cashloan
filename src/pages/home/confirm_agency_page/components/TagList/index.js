@@ -81,7 +81,7 @@ export default class TagList extends React.PureComponent {
         defaultindex={defaultindex === index ? true : false}
         key={index}
         tagType={tagType}
-        isDotted={isDotted}
+        isDotted={index === 0 && isDotted}
         className={className}
         active={!item.disable && index === currentIndex}
         onClick={() => {

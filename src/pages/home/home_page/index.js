@@ -66,27 +66,6 @@ export default class home_page extends PureComponent {
     if (isWXOpen()) {
       store.setHistoryRouter(window.location.pathname);
     }
-    let bankInfo = store.getCardData();
-    let repayInfoData = store.getRepaymentModalData();
-    if (bankInfo && bankInfo !== {}) {
-      if (repayInfoData && repayInfoData !== {}) {
-        // 如果存在 bankInfo 并且弹框缓存数据崔仔 则更新弹框缓存的数据
-        repayInfoData.repayInfo.bankName = bankInfo.bankName;
-        repayInfoData.repayInfo.cardNoHid = bankInfo.lastCardNo;
-        repayInfoData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
-        store.setRepaymentModalData(repayInfoData);
-      }
-      // 如果存在 bankInfo 则弹框 用完就清除
-      // this.setState(
-      //   {
-      //     isShowModal: true,
-      //   },
-      //   () => {
-      //     window.handleCloseHomeModal = this.handleCloseModal;
-      //     store.removeCardData();
-      //   },
-      // );
-    }
   }
   componentWillUnmount() {
     // 离开首页的时候 将 是否打开过底部弹框标志恢复

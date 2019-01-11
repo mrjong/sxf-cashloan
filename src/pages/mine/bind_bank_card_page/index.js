@@ -66,8 +66,8 @@ export default class bind_bank_card_page extends PureComponent {
     return (
       <div className={style.bind_bank_card_page}>
         <STabs tabTit={tabBar} onChange={this.handleChangeTabs} swipeable={swipeable}>
-          <FormContent formtype="C" userinfo={userInfo} history={history} handledismiss={this.handleDisMiss} />
-          <FormContent formtype="D" userinfo={userInfo} history={history} handledismiss={this.handleDisMiss} />
+          <FormContent formtype="C" userinfo={userInfo} history={this.props.history} toast={this.props.toast} handledismiss={this.handleDisMiss} />
+          <FormContent formtype="D" userinfo={userInfo} history={this.props.history} toast={this.props.toast} handledismiss={this.handleDisMiss} />
         </STabs>
         <p className="protocol_tip" style={{ width: '6.2rem' }}>
           点击“确认绑定”，表示同意
