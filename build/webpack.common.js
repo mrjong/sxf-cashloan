@@ -26,10 +26,17 @@ module.exports = function (options) {
           test: /\.(jsx|js)?$/,
           loader: options.bundleHash ? 'babel-loader' : 'happypack/loader?id=happybabel',
           exclude: /(node_modules)/,
+          // options: {
+          //   cacheDirectory: true //cacheDirectory用于缓存babel的编译结果,加快重新编译的速度
+          // }
         },
         {
           test: /\.css$/,
           use: ['style-loader', 'postcss-loader'],
+          // use: ExtractTextPlugin.extract({   // 调用分离插件
+          //   fallback: 'style-loader',
+          //   use: ['css-loader']
+          // })
         },
         {
           test: /\.(scss)$/,

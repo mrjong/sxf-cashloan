@@ -16,6 +16,7 @@ import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import ModalContent from './components/ModalInfo';
 import MsgBadge from './components/MsgBadge';
+import ActivityModal from 'components/Modal'
 import style from './index.scss';
 
 const API = {
@@ -49,6 +50,7 @@ export default class home_page extends PureComponent {
       visibleLoading: false,
       percent: 0,
       showToast: false,
+      isShowActivityModal: false // 是否显示活动弹窗
     };
   }
   componentWillMount() {
@@ -88,6 +90,13 @@ export default class home_page extends PureComponent {
           store.removeCardData();
         },
       );
+    }
+    if (!store.getShowActivityModal()) {
+      this.setState({
+        isShowActivityModal: true
+      }, () => {
+        store.setShowActivityModal(true)
+      })
     }
   }
   componentWillUnmount() {
@@ -438,6 +447,12 @@ export default class home_page extends PureComponent {
       this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
     });
   };
+  // 关闭活动弹窗
+  closeActivityModal = () => {
+    this.setState({
+      isShowActivityModal: !this.state.isShowActivityModal
+    })
+  }
 
   render() {
     const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus } = this.state;
@@ -512,6 +527,7 @@ export default class home_page extends PureComponent {
             )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
+        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />

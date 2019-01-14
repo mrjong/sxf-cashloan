@@ -42,5 +42,6 @@ export const storeTypes = {
 	Linkphone: 'Linkphone', // 联系人电话
 	RelationValue: 'RelationValue', // 亲属关系
 	Province: 'Province', // 省份
-	City: 'City' // 城市
+	City: 'City', // 城市
+	ShowActivityModal: 'ShowActivityModal' // 是否显示活动弹窗
 };

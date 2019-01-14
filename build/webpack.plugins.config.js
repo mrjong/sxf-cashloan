@@ -11,7 +11,7 @@ let OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 let plugins = [
 	new HtmlWebpackPlugin({
-		chunks: [ 'main', 'vendor', 'webpack-runtime' ],
+		chunks: ['main', 'vendor', 'webpack-runtime'],
 		filename: 'index.html', //生成的html的文件名
 		template: path.resolve(__dirname, '../src/index.html'), //依据的模板
 		title: 'sx-webpack',
@@ -30,7 +30,7 @@ let plugins = [
 ];
 
 //生产插件
-let getProdPlugins = function() {
+let getProdPlugins = function () {
 	plugins.push(
 		new CompressionPlugin({
 			//压缩gzip
@@ -45,7 +45,7 @@ let getProdPlugins = function() {
 			new WebpackZipPlugin({
 				initialFile: './dist', //需要打包的文件夹(一般为dist)
 				endPath: './', //打包到对应目录（一般为当前目录'./'）
-				zipName: +new Date()+'copy-dist.zip' //打包生成的文件名
+				zipName: +new Date() + 'copy-dist.zip' //打包生成的文件名
 			})
 		);
 	plugins.push(new OptimizeCSSPlugin()); //压缩提取出的css，并解决ExtractTextPlugin分离出的js重复问题(多个文件引入同一css文件)
@@ -78,7 +78,7 @@ let getProdPlugins = function() {
 };
 
 //测试插件
-let getTestPlugins = function() {
+let getTestPlugins = function () {
 	plugins.push(
 		new CompressionPlugin({
 			//压缩gzip
@@ -120,7 +120,7 @@ let getTestPlugins = function() {
 };
 
 //开发插件
-let getDevPlugins = function() {
+let getDevPlugins = function () {
 	plugins.push(
 		new webpack.DefinePlugin({
 			'process.env': {
@@ -134,7 +134,7 @@ let getDevPlugins = function() {
 	plugins.push(
 		new HappyPack({
 			id: 'happybabel',
-			loaders: [ 'babel-loader' ],
+			loaders: ['babel-loader'],
 			threadPool: happyThreadPool,
 			cache: true,
 			verbose: true
