@@ -4,7 +4,6 @@ import { render } from 'react-dom';
 import router from 'routers';
 import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
 import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
 import { initAnalytics } from './utils/analytins';
@@ -20,8 +19,6 @@ var sa = require('sa-sdk-javascript/sensorsdata.min.js');
 if (!window.sa) {
 	window.sa = sa;
 }
-// const history = createHistory()
-// console.log(history)
 handleWindowError();
 isMPOS();
 fetchInit();

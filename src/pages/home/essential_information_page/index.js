@@ -140,14 +140,10 @@ export default class essential_information_page extends PureComponent {
 							return item2;
 						}
 					});
-					// console.log(provItem[0].key + '', cityItem[0].key + '')
 					this.setState({
 						provValue: provItem && cityItem && [ provItem[0].key + '', cityItem[0].key + '' ],
 						provLabel: provItem && cityItem && [ provItem[0].value + '', cityItem[0].value + '' ]
 					});
-					// this.props.form.setFieldsValue({
-					// 	city: provItem && cityItem && [ provItem[0].key + '', cityItem[0].key + '' ]
-					// });
 				});
 			}
 		});
