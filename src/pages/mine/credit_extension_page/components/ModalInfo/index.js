@@ -65,6 +65,8 @@ export default class ModalInfo extends Component {
   handleRepaymentTagClick = data => {
     this.setState({
       repaymentDate: data.value,
+      minAmt: '',
+      max: '',
       // repaymentIndex: data.index,
       // cardBillAmt: data.value.cardBillAmt,
     }, () => {
@@ -262,7 +264,7 @@ export default class ModalInfo extends Component {
                     marginLeft: '-7px',
                     marginTop: '-7px',
                     backgroundColor: '#00BAFF',
-                    boxShadow: '0px 1px 0px 0px rgba(0,48,100,0.4)'
+                    boxShadow: '0px 0px 0px 5px rgba(0,48,100,0.4)'
                   }}
                 />
                 : null }
