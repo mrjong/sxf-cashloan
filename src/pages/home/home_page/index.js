@@ -15,6 +15,7 @@ import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
+import ModalContent from './components/ModalInfo'
 import ActivityModal from 'components/Modal'
 import style from './index.scss';
 
