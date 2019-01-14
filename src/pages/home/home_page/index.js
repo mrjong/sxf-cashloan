@@ -523,17 +523,12 @@ export default class home_page extends PureComponent {
           visible={visibleLoading}
           transparent
           maskClosable={false}
-        //   onClose={this.onClose('modal1')}
-
-        //   footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
-        //   wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
           <div className="show-info">
             <div className={style.modalLoading}>
               资质检测中...
             </div>
             <div className="progress"><Progress percent={percent} position="normal" /></div>
-            {/* <div aria-hidden="true">{percent}</div> */}
           </div>
         </Modal>
       </div>
