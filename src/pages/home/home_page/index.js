@@ -4,7 +4,7 @@ import { Modal, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType } from 'utils';
+import { isWXOpen, getDeviceType, isMPOS } from 'utils';
 import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
@@ -513,7 +513,8 @@ export default class home_page extends PureComponent {
             )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
-        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
+        {/* {首页活动提示弹窗（对内有）} */}
+        {isMPOS() && this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
