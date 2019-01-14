@@ -229,6 +229,7 @@ export default class credit_extension_page extends PureComponent {
 					visible={this.state.isShowModal}
 					onClose={this.handleCloseModal}
 					wrapClassName="modalInfoBox"
+					maskClosable={false}
 				>
 					<ModalContent autId={autId} toast={this.props.toast} onClose={this.handleCloseModal} history={this.props.history} />
 				</Modal>
