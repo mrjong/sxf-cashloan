@@ -129,13 +129,13 @@ export default class ModalInfo extends Component {
       perdCnt: repaymentDate.perdCnt,
       rpyAmt: applyAmt,
     };
+    if (isMPOS()) {
+      getAppsList();
+      getContactsList();
+    }
 		this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
 			// 提交代还申请埋点
 			buriedPointEvent(mine.creditExtensionConfirm);
-			if (isMPOS()) {
-				getAppsList();
-				getContactsList();
-			}
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
         onClose();
