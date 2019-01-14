@@ -165,6 +165,9 @@ if (window.history && window.history.pushState) {
                 window.ReactRouterHistory.push('/mine/mine_page');
               }
               break;
+            case '/home/confirm_agency': // 确认信息页物理返回到首页
+              window.ReactRouterHistory.push('/home/home');
+              break;
             default:
               // window.ReactRouterHistory.goBack()
               break;

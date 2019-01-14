@@ -267,9 +267,16 @@ export default class confirm_agency_page extends PureComponent {
 
   // 跳转到会员卡
   goVIP = () => {
-    store.setVipBackUrl('/home/confirm_agency')
-    this.handleCloseTipModal();
-    this.props.history.push('/mine/membership_card_page');
+    this.setState({
+      cardBillAmt: this.props.form.getFieldValue('cardBillAmt'),
+      isShowTipModal: false,
+    }, () => {
+      store.setSaveAmt(true);
+      store.setVipBackUrl('/home/confirm_agency');
+      store.setRepaymentModalData(this.state);
+      this.handleCloseTipModal();
+      this.props.history.push('/mine/membership_card_page');
+    });
   }
 
   // 校验借款产品是否需要会员卡
@@ -306,6 +313,20 @@ export default class confirm_agency_page extends PureComponent {
         <ul className={`${style.modal_list} ${style.modal_list_special}`}>
           <li className={style.list_item}>
             <div className={style.item_info}>
+              <label className={style.item_name}>代还期限</label>
+              <div className={style.tagList}>
+                <TabList
+                  tagList={repaymentDateList}
+                  defaultindex={repaymentIndex}
+                  activeIndex={repaymentIndex}
+                  onClick={this.handleRepaymentTagClick}
+                  isDotted={isMPOS() && !isVIP}
+                />
+              </div>
+            </div>
+          </li>
+          <li className={style.list_item}>
+            <div className={style.item_info}>
               <label className={style.item_name}>代还金额</label>
               <div>
                 <div className={style.billInpBox}>
@@ -323,21 +344,7 @@ export default class confirm_agency_page extends PureComponent {
                 <p className={style.billTips}>金额{repaymentDate.minAmt}-{repaymentDate.maxAmt}元，且为100整数倍</p>
               </div>
             </div>
-          </li>
-          <li className={style.list_item}>
-            <div className={style.item_info}>
-              <label className={style.item_name}>代还期限</label>
-              <div className={style.tagList}>
-                <TabList
-                  tagList={repaymentDateList}
-                  defaultindex={repaymentIndex}
-                  activeIndex={repaymentIndex}
-                  onClick={this.handleRepaymentTagClick}
-                  isDotted={isMPOS() && !isVIP}
-                />
-              </div>
-            </div>
-          </li>
+          </li> 
         </ul>
         <ul className={style.modal_list}>  
           <li className={style.list_item}>
