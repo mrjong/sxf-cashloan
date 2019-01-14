@@ -192,7 +192,8 @@ export const interceptRouteArr = [
 	'/order/repayment_succ_page',
 	'/mine/credit_list_page',
 	'/home/essential_information',
-	'/home/real_name'
+	'/home/real_name',
+	'/home/confirm_agency'
 ];
 
 // 在需要路由拦截的页面 pushState

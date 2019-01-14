@@ -326,7 +326,7 @@ export default class agency_page extends PureComponent {
               // 清除上个页面中的弹框数据
               store.removeRepaymentModalData();
               store.removeHomeCardIndexData();
-              store.removeSaveAmt(true);
+              store.removeSaveAmt();
             } else if (result && result.msgCode === 'PTM7001') {
               this.props.toast.info(result.msgInfo);
               setTimeout(() => {

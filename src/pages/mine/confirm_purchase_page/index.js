@@ -75,7 +75,7 @@ export default class confirm_purchase_page extends PureComponent {
                   store.setSaveAmt(true);
                 }
                 setTimeout(() => {
-                  if (backUrlData && backUrlData !== '/home/confirm_agency') {
+                  if (backUrlData) {
                     this.props.history.replace(backUrlData)
                   } else {
                     this.props.history.goBack();
