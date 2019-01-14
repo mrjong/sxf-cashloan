@@ -14,7 +14,6 @@ import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
-import ModalContent from './components/ModalInfo';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal'
 import style from './index.scss';
@@ -42,7 +41,6 @@ export default class home_page extends PureComponent {
     tokenFromStorage = store.getToken();
     super(props);
     this.state = {
-      isShowModal: false,
       bannerList: [],
       usrIndexInfo: '',
       haselescard: 'true',
@@ -116,22 +114,6 @@ export default class home_page extends PureComponent {
       Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
       store.setToken(urlParams.token);
     }
-  };
-
-  // 打开弹框
-  handleShowModal = () => {
-    window.handleCloseHomeModal = this.handleCloseModal;
-    this.setState({
-      isShowModal: true,
-    });
-  };
-
-  // 关闭弹框
-  handleCloseModal = () => {
-    window.handleCloseHomeModal = null;
-    this.setState({
-      isShowModal: false,
-    });
   };
 
   // 首页进度
@@ -218,7 +200,7 @@ export default class home_page extends PureComponent {
         buriedPointEvent(mine.creditExtension, {
           entry: '首页',
         });
-        this.props.history.push({ pathname: '/mine/credit_extension_page', search: '?isShowCommit=true' });
+        this.props.history.push({ pathname: '/mine/credit_extension_page', search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}` });
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
@@ -270,9 +252,10 @@ export default class home_page extends PureComponent {
 
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
+    const { usrIndexInfo } = this.state;
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=true');
+        store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId}`);
         SXFToast.loading('加载中...', 0);
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
@@ -284,10 +267,12 @@ export default class home_page extends PureComponent {
 
   // 请求用户绑卡状态
   requestBindCardState = () => {
+    const { usrIndexInfo } = this.state;
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
-        this.handleShowModal();
+        // this.handleShowModal();
+        this.props.history.push({ pathname: '/home/confirm_agency', state: {  indexData: usrIndexInfo && usrIndexInfo.indexData } });
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
@@ -409,7 +394,7 @@ export default class home_page extends PureComponent {
         // let resultData = result.data;
         // const sessionCardData = store.getSomeData();
         // Object.assign(resultData.indexData, sessionCardData);
-        // result.data.indexSts = 'LN0003'
+        // result.data.indexSts = 'LN0001'
         // result.data.indexData = {
         //   autSts : '2'
         // }

@@ -43,5 +43,6 @@ export const storeTypes = {
 	RelationValue: 'RelationValue', // 亲属关系
 	Province: 'Province', // 省份
 	City: 'City', // 城市
-	ShowActivityModal: 'ShowActivityModal' // 是否显示活动弹窗
+	ShowActivityModal: 'ShowActivityModal', // 是否显示活动弹窗
+	SaveAmt: 'SaveAmt', // 回显代还金额的数据
 };

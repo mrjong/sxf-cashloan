@@ -71,8 +71,15 @@ export default class confirm_purchase_page extends PureComponent {
                 res.msgInfo && this.props.toast.info(res.msgInfo)
                 const backUrlData = store.getVipBackUrl();
                 Cookie.remove('VIPFlag');
+                if (backUrlData === '/home/confirm_agency') { // 回显代还金额
+                  store.setSaveAmt(true);
+                }
                 setTimeout(() => {
-                  this.props.history.replace(backUrlData)
+                  if (backUrlData && backUrlData !== '/home/confirm_agency') {
+                    this.props.history.replace(backUrlData)
+                  } else {
+                    this.props.history.goBack();
+                  }
                 }, 3000)
               } else {
                 if (this.state.cardTyp === "C") {

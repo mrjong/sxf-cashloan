@@ -75,12 +75,13 @@ export default class TagList extends React.PureComponent {
 
   render() {
     const { currentIndex } = this.state;
-    const { className, onClick, tagList, tagType, defaultindex, ...restProps, } = this.props;
+    const { className, onClick, tagList, tagType, defaultindex, isDotted, ...restProps, } = this.props;
     const tagListDom = tagList.map((item, index) => (
       <Tag
         defaultindex={defaultindex === index ? true : false}
         key={index}
         tagType={tagType}
+        isDotted={index === 0 && isDotted}
         className={className}
         active={!item.disable && index === currentIndex}
         onClick={() => {

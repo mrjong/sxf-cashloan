@@ -121,7 +121,7 @@ export default class message_page extends PureComponent {
     if (obj.sts === "0") {
       this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then(res => {
         if (res.msgCode === "PTM0000") {
-          this.msgCount(obj)
+        //   this.msgCount(obj)
           this.getDesc(obj)
         } else {
           this.props.toast.info(res.msgInfo)

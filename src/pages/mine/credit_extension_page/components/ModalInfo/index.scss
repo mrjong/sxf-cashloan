@@ -39,6 +39,10 @@
     .list_item + .list_item {
       border-top: 1PX  solid #e5e5e5;
     }
+    .list_item + .list_item_special{
+      border-top: none;
+      padding-top: 10px;
+    }
     .item_info {
       display: flex;
       justify-content: space-between;
@@ -125,11 +129,22 @@
     text-align: left;
   }
   .tagList{
+    margin-top: 18px;
     button{
       margin-right: 20px;
+      margin-bottom: 18px;
     }
     button:last-child{
       margin-right: 0;
+    }
+  }
+  .list_item_special{
+    .tagList{
+      width: 4.5rem;
+      text-align: right;
+    }
+    .billTips{
+      margin-top: 0;
     }
   }
   @media (device-height: 480px) and (-webkit-min-device-pixel-ratio: 2){/* 兼容iphone4/4s */
