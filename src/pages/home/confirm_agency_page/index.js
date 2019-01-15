@@ -10,6 +10,7 @@ import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
+import qs from 'qs';
 import style from './index.scss';
 
 const API = {
@@ -30,6 +31,8 @@ let isSaveAmt = false;
 export default class confirm_agency_page extends PureComponent {
   constructor(props) {
     super(props);
+    // const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    // indexData = queryData && JSON.parse(queryData.indexData);
     if (this.props.history.location.state && this.props.history.location.state.indexData) {
       indexData = this.props.history.location.state.indexData
     }
@@ -209,7 +212,7 @@ export default class confirm_agency_page extends PureComponent {
     // 埋点-选择借款要素弹框页-点击确认按钮
     buriedPointEvent(home.borrowingPreSubmit);
     const { lendersDate, repayInfo, repaymentDate, cardBillAmt } = this.state;
-    const search = `?prdId=${repaymentDate.value}&cardId=${indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
+    const search = `?prdId=${repaymentDate.value}&cardId=${indexData && indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
     // 跳转确认代还页面之前 将当前弹框数据保存下来
     store.setRepaymentModalData(this.state);
     // 跳转确认代还页面之前 将当前信用卡信息保存下来
@@ -220,7 +223,7 @@ export default class confirm_agency_page extends PureComponent {
 
   // 获取代还期限列表 还款日期列表
   requestGetRepaymentDateList = () => {
-    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData.autId}`).then(result => {
+    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
         const diff = result.data.overDt;

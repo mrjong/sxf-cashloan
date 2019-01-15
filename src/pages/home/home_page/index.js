@@ -252,6 +252,7 @@ export default class home_page extends PureComponent {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
         // this.handleShowModal();
+        // this.props.history.push({ pathname: '/home/confirm_agency', search: `?indexData=${usrIndexInfo && JSON.stringify(usrIndexInfo.indexData)}`});
         this.props.history.push({ pathname: '/home/confirm_agency', state: {  indexData: usrIndexInfo && usrIndexInfo.indexData } });
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
