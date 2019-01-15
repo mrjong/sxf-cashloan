@@ -22,6 +22,15 @@
       // margin-left: 0.6rem;
       // padding-right: 0.45rem;
     }
+    .list_item_special{
+      padding-bottom: 0.21rem;
+      .tagList{
+        width: 5.2rem;
+      }
+      button {
+        margin-bottom: .1rem;
+      }
+    }
     .list_item + .list_item {
       border-top: 1PX  solid #e5e5e5;
     }

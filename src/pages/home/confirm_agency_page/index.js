@@ -310,7 +310,7 @@ export default class confirm_agency_page extends PureComponent {
       dateDiff,
     } = this.state;
     let lendersTip = '';
-    if (dateDiff > 2 && lendersIndex === 0) {
+    if (lendersIndex === 0) {
       lendersTip = (
         <p>
           选择代还信用卡账单还款日前一天（{dayjs(repayInfo.cardBillDt)
@@ -320,13 +320,13 @@ export default class confirm_agency_page extends PureComponent {
       );
     }
 
-    if (dateDiff <= 2 && lendersIndex === 1) {
-      lendersTip = <p className={style.item_tip}>选择立即放款，代还金额将于当日汇入您的还款账户</p>;
+    if (lendersIndex === 1) {
+      lendersTip = <p>选择立即放款，代还金额将于当日汇入您的还款账户</p>;
     }
     return (
       <div className={style.confirm_agency_page}>
         <ul className={`${style.modal_list} ${style.modal_list_special}`}>
-          <li className={style.list_item}>
+          <li className={`${style.list_item} ${style.list_item_special}`}>
             <div className={style.item_info}>
               <label className={style.item_name}>代还期限</label>
               <div className={style.tagList}>
