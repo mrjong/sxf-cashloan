@@ -136,6 +136,7 @@ export default class order_detail_page extends PureComponent {
         let couponInfo = store.getCouponData();
         store.removeCouponData();
         let params = {};
+        console.log(couponInfo,'444444')
         // 如果没有coupId直接不调用接口
         if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
             // 不使用优惠劵的情况
@@ -291,6 +292,7 @@ export default class order_detail_page extends PureComponent {
         let couponId = '';
         let sendParams = {}
         if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+            console.log(this.state.couponInfo,'1111');
             if (this.state.couponInfo.usrCoupNo !== 'null') {
                 // // 首末期利息为0时coupId为空
                 // if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
@@ -303,6 +305,7 @@ export default class order_detail_page extends PureComponent {
             }
 
         } else {
+            console.log(this.state.billDesc.data,'22222');
             if (this.state.billDesc.data && this.state.billDesc.data.usrCoupNo) {
                 // // 首末期利息为0时coupId为空
                 // if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
@@ -348,7 +351,8 @@ export default class order_detail_page extends PureComponent {
                 })
                 if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
                     this.props.toast.info('还款完成')
-                    store.removeBackData()
+                    store.removeBackData();
+                    store.removeCouponData();
                     store.setOrderSuccess({
                         perdLth: billDesc.perdLth,
                         perdUnit: billDesc.perdUnit,
@@ -359,7 +363,8 @@ export default class order_detail_page extends PureComponent {
                         this.props.history.replace('/order/repayment_succ_page')
                     }, 2000);
                 } else {
-                    this.props.toast.info('申请还款成功')
+                    this.props.toast.info('申请还款成功');
+                    store.removeCouponData();
                     // 刷新当前list
                     setTimeout(() => {
                         this.getLoanInfo()
@@ -375,12 +380,14 @@ export default class order_detail_page extends PureComponent {
                     showMoudle: false
                 })
                 this.props.toast.info(res.msgInfo);
+                store.removeCouponData();
                 // 刷新当前list
                 setTimeout(() => {
                     this.getLoanInfo();
                 }, 3000);
             }
         }).catch(err => {
+            store.removeCouponData();
             this.setState({
                 showMoudle: false
             })

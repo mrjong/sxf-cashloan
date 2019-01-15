@@ -96,7 +96,15 @@
     height: 100px;
     :global {
       .am-slider-wrapper{
-        margin-top: 50px;
+        position: absolute;
+        top: 60px;
+        width: 100%;
+        z-index: 1;
+        // margin-top: 50px;
+      }
+      .am-slider-step{
+        height: 50px;
+        margin-top: -20px;
       }
     }
   }

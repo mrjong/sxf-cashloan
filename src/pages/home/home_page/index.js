@@ -69,27 +69,6 @@ export default class home_page extends PureComponent {
     if (isWXOpen()) {
       store.setHistoryRouter(window.location.pathname);
     }
-    let bankInfo = store.getCardData();
-    let repayInfoData = store.getRepaymentModalData();
-    if (bankInfo && bankInfo !== {}) {
-      if (repayInfoData && repayInfoData !== {}) {
-        // 如果存在 bankInfo 并且弹框缓存数据崔仔 则更新弹框缓存的数据
-        repayInfoData.repayInfo.bankName = bankInfo.bankName;
-        repayInfoData.repayInfo.cardNoHid = bankInfo.lastCardNo;
-        repayInfoData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
-        store.setRepaymentModalData(repayInfoData);
-      }
-      // 如果存在 bankInfo 则弹框 用完就清除
-      this.setState(
-        {
-          isShowModal: true,
-        },
-        () => {
-          window.handleCloseHomeModal = this.handleCloseModal;
-          store.removeCardData();
-        },
-      );
-    }
     if (!store.getShowActivityModal()) {
       this.setState({
         isShowActivityModal: true
@@ -256,7 +235,7 @@ export default class home_page extends PureComponent {
     const { usrIndexInfo } = this.state;
     this.props.$fetch.post(API.CARD_AUTH).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId}`);
+        store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`);
         SXFToast.loading('加载中...', 0);
         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
