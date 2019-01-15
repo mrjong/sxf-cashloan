@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './index.scss'
+import huodongTootip from '../../assets/images/home/huodongTootip.png'
 
 class ActivityModal extends React.Component {
 
@@ -10,7 +11,7 @@ class ActivityModal extends React.Component {
         <div className={styles.mask}></div>
         <div className={styles.modalWrapper}>
           <div className={styles.content}>
-            <img src="../../assets/images/home/huodongTootip.png" alt="" />
+            <img src={huodongTootip} alt="" />
           </div>
           <div className={styles.closeBtn} onClick={closeActivityModal}></div>
         </div>
