@@ -66,13 +66,13 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
 		if (isWXOpen()) {
 			let pageListWx = [ '/home/home', '/common/wx_middle_page' ];
-			pageList.concat(pageListWx);
+			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
 			let pageListMpos = (pageList = [ '/mpos/' ]);
-			pageList.concat(pageListMpos);
+			pageList = pageList.concat(pageListMpos);
 		} else {
 			let pageListCommon = [];
-			pageList.concat(pageListCommon);
+			pageList = pageList.concat(pageListCommon);
 		}
 		return pageList.some((item) => item && pathname.indexOf(item) > -1);
 	}
