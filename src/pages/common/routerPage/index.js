@@ -7,7 +7,7 @@ import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { changeHistoryState, pagesIgnore, vconsole } from 'utils';
+import { changeHistoryState, pagesIgnore } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
 import { pageView } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
@@ -28,8 +28,6 @@ export default class router_Page extends PureComponent {
 		store.setHistoryRouter(location.pathname);
 	}
 	componentWillMount() {
-		// 出现打印插件
-		vconsole();
 		// 为跳转到协议添加loading
 		store.setFromPage('wap')
 		if (!store.getHistoryRouter()) {
@@ -39,12 +37,6 @@ export default class router_Page extends PureComponent {
 			window.ReactRouterHistory = this.props.history;
 		}
 		this.loadComponent(this.props);
-	}
-	componentDidMount() {
-		const query = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (query.consoleshow) {
-			vconsole('0', query.consoleshow);
-		}
 	}
 	componentWillUnmount() {
 		consoleshowStr = '';
@@ -126,31 +118,11 @@ export default class router_Page extends PureComponent {
 			});
 		}
 	};
-	consoleshow = (e) => {
-		if (store.getConsoleshow()) {
-			return;
-		}
-		const leftInstance = e.screenX;
-		const screenWidth = window.innerWidth;
-		if (leftInstance < screenWidth / 2) {
-			consoleshowStr += '0';
-			// console.log('靠左边');
-		} else {
-			consoleshowStr += '1';
-			// console.log('靠右边');
-		}
-		if (consoleshowStr.indexOf('00001111') > -1) {
-			consoleshowStr = '';
-		} else {
-			vconsole(consoleshowStr);
-		}
-		// console.log(consoleshowStr);
-	};
 	render() {
 		const { component, route, newTitle, showPage = false } = this.state;
 		const { headerHide = false, footerHide = true } = route;
 		return showPage ? (
-			<div className="application_view" onClick={this.consoleshow}>
+			<div className="application_view">
 				<div className="application_page">
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}

@@ -12,5 +12,12 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/others/download_page')
+    },
+    {
+		path: '/others/clear_store_page',
+		title: '测试专用',
+		arrowHide: 'empty',
+		headerHide: true,
+		component: () => import('pages/others/clear_store_page')
 	}
 ];
