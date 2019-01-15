@@ -104,7 +104,7 @@ export default class home_page extends PureComponent {
         this.calculatePercent(result.data)
       }
     }, err => {
-      err.msgInfo && this.props.this.props.toast.info(err.msgInfo);
+      err.msgInfo && this.props.toast.info(err.msgInfo);
     })
   }
 

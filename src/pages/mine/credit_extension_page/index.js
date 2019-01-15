@@ -121,7 +121,7 @@ export default class credit_extension_page extends PureComponent {
 				buriedPointEvent(mine.creditExtensionRealName);
 				this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
 			} else {
-				this.props.this.props.this.props.toast.info('请先实名认证');
+				this.props.toast.info('请先实名认证');
 				setTimeout(() => {
 					this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
 				}, 3000);
