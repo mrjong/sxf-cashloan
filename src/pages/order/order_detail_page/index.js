@@ -313,6 +313,8 @@ export default class order_detail_page extends PureComponent {
                 // } else {
                     couponId = this.state.billDesc.data.usrCoupNo
                 // }
+            } else {
+                couponId = '';
             }
         }
         // 判断是否为一键结清
@@ -347,7 +349,8 @@ export default class order_detail_page extends PureComponent {
                     is_success: true,
                 });
                 this.setState({
-                    showMoudle: false
+                    showMoudle: false,
+                    couponInfo: {},
                 })
                 if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
                     this.props.toast.info('还款完成')
@@ -377,7 +380,8 @@ export default class order_detail_page extends PureComponent {
                     fail_cause: res.msgInfo,
                 });
                 this.setState({
-                    showMoudle: false
+                    showMoudle: false,
+                    couponInfo: {},
                 })
                 this.props.toast.info(res.msgInfo);
                 store.removeCouponData();
@@ -389,7 +393,8 @@ export default class order_detail_page extends PureComponent {
         }).catch(err => {
             store.removeCouponData();
             this.setState({
-                showMoudle: false
+                showMoudle: false,
+                couponInfo: {},
             })
         })
     }

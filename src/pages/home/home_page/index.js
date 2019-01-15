@@ -184,7 +184,8 @@ export default class home_page extends PureComponent {
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
-        this.props.toast.info('您的代还资格正在审核中，请耐心等待');
+        // this.props.toast.info('您的代还资格正在审核中，请耐心等待');
+        this.props.toast.info('正在审批中，请耐心等待');
         break;
       case 'LN0005': // 暂无代还资格
         console.log('LN0005');
