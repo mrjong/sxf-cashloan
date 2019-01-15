@@ -193,7 +193,8 @@ export default class home_page extends PureComponent {
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
         buriedPointEvent(home.repaymentBtnClick6);
-        this.repayCheck();
+        // this.repayCheck();
+        this.requestBindCardState();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
@@ -202,7 +203,8 @@ export default class home_page extends PureComponent {
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
         buriedPointEvent(home.repaymentBtnClick8);
-        this.repayCheck();
+        // this.repayCheck();
+        this.requestBindCardState();
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
