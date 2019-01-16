@@ -69,13 +69,6 @@ export default class home_page extends PureComponent {
     if (isWXOpen()) {
       store.setHistoryRouter(window.location.pathname);
     }
-    if (!store.getShowActivityModal()) {
-      this.setState({
-        isShowActivityModal: true
-      }, () => {
-        store.setShowActivityModal(true)
-      })
-    }
   }
   componentWillUnmount() {
     // 离开首页的时候 将 是否打开过底部弹框标志恢复
@@ -256,7 +249,7 @@ export default class home_page extends PureComponent {
         // 有风控且绑信用卡储蓄卡
         // this.handleShowModal();
         // this.props.history.push({ pathname: '/home/confirm_agency', search: `?indexData=${usrIndexInfo && JSON.stringify(usrIndexInfo.indexData)}`});
-        this.props.history.push({ pathname: '/home/confirm_agency', state: {  indexData: usrIndexInfo && usrIndexInfo.indexData } });
+        this.props.history.push({ pathname: '/home/confirm_agency', state: { indexData: usrIndexInfo && usrIndexInfo.indexData } });
       } else if (result && result.msgCode === 'PTM2003') {
         // 有风控没绑储蓄卡 跳绑储蓄卡页面
         store.setBackUrl('/home/home');
@@ -388,6 +381,13 @@ export default class home_page extends PureComponent {
         this.setState({
           usrIndexInfo: result.data.indexData ? result.data : Object.assign({}, result.data, { indexData: {} }),
         });
+        if (result.data.indexSts === 'LN0001' && !store.getShowActivityModal()) {
+          this.setState({
+            isShowActivityModal: true
+          }, () => {
+            store.setShowActivityModal(true)
+          })
+        }
 
         // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
         this.cacheBanner();
