@@ -55,9 +55,9 @@ export default class login_page extends PureComponent {
 		this.props.form.getFieldProps('phoneValue');
 		// mpos 初始化手机号
 		this.props.form.setFieldsValue({
-			phoneValue: queryData.mblNoHid
+			phoneValue: queryData && queryData.mblNoHid
 		});
-		if (queryData.mblNoHid) {
+		if (queryData && queryData.mblNoHid) {
 			this.setState({
 				disabledInput: true
 			});
@@ -156,6 +156,7 @@ export default class login_page extends PureComponent {
 
 	// 获得手机验证码
 	getSmsCode(i) {
+		const { queryData } = this.state;
 		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
@@ -168,7 +169,7 @@ export default class login_page extends PureComponent {
 				if (this.state.disabledInput) {
 					param = {
 						type: '6',
-                        authToken: this.state.queryData.tokenId,
+                        authToken: queryData && queryData.tokenId,
                         osType
 					};
 				} else {
