@@ -120,7 +120,8 @@ const fetchInit = () => {
 			timer = null;
 			timerList = [];
 			SXFToast.hide();
-			let error2 = new Error('系统开小差，请稍后重试');
+			console.log(error,'error.response')
+			let error2 = error && error.message && error.message.canceled ? error : new Error('系统开小差，请稍后重试');
 			return Promise.reject(error2);
 		}
 	);
