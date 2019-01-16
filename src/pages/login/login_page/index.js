@@ -44,11 +44,11 @@ export default class login_page extends PureComponent {
 		const query = qs.parse(window.location.search, {
 			ignoreQueryPrefix: true
 		});
+		setH5Channel();
 		// 移除cookie
 		Cookie.remove('fin-v-card-token');
 		sessionStorage.clear();
 		localStorage.clear();
-		setH5Channel();
 
 		store.setHistoryRouter(window.location.pathname);
 
