@@ -381,7 +381,7 @@ export default class home_page extends PureComponent {
         this.setState({
           usrIndexInfo: result.data.indexData ? result.data : Object.assign({}, result.data, { indexData: {} }),
         });
-        if (result.data.indexSts === 'LN0001' && !store.getShowActivityModal()) {
+        if (result.data.indexData && result.data.indexSts === 'LN0001' && !store.getShowActivityModal()) {
           this.setState({
             isShowActivityModal: true
           }, () => {
