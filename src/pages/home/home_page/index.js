@@ -380,7 +380,7 @@ export default class home_page extends PureComponent {
         this.setState({
           usrIndexInfo: result.data.indexData ? result.data : Object.assign({}, result.data, { indexData: {} }),
         });
-        if (result.data.indexData && result.data.indexSts === 'LN0001' && !store.getShowActivityModal()) {
+        if (isMPOS && !result.data.indexData && result.data.indexSts === 'LN0001' && !store.getShowActivityModal()) {
           this.setState({
             isShowActivityModal: true
           }, () => {
@@ -496,7 +496,7 @@ export default class home_page extends PureComponent {
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* {首页活动提示弹窗（对内有）} */}
-        {isMPOS() && this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
+        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
         {/* 确认代还信息弹框 */}
         <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
           <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
