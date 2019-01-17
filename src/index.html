@@ -58,6 +58,22 @@
 				</div>
 			</div>
 		</div>
+		<script>
+			/**
+			 * ios 向webView传递值，初始化
+			 */
+			/*这段代码是固定的，必须要放到js中*/
+			function setupWebViewJavascriptBridge(callback) {
+				if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+				if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+				window.WVJBCallbacks = [callback];
+				var WVJBIframe = document.createElement('iframe');
+				WVJBIframe.style.display = 'none';
+				WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+				document.documentElement.appendChild(WVJBIframe);
+				setTimeout(function () { document.documentElement.removeChild(WVJBIframe) }, 0);
+			}
+		</script>
 		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&amp;ak=	aOT66PsCRWhukKfUvUzRHdN3kzCX4DwB"></script>
         <script src="https://webapi.amap.com/maps?v=1.4.3&amp;key=05e5b63baf5b6643c5b38c112274d36e"></script>
         <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>

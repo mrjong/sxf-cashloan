@@ -187,8 +187,7 @@ export default class home_page extends PureComponent {
       case 'LN0006': // 风控审核通过
         console.log('LN0006');
         buriedPointEvent(home.repaymentBtnClick6);
-        // this.repayCheck();
-        this.requestBindCardState();
+        this.repayCheck();
         break;
       case 'LN0007': // 放款中
         console.log('LN0007');
@@ -197,8 +196,7 @@ export default class home_page extends PureComponent {
       case 'LN0008': // 放款失败
         console.log('LN0008 不跳账单页 走弹框流程');
         buriedPointEvent(home.repaymentBtnClick8);
-        // this.repayCheck();
-        this.requestBindCardState();
+        this.repayCheck();
         break;
       case 'LN0009': // 放款成功
         console.log('LN0009');
@@ -272,57 +270,58 @@ export default class home_page extends PureComponent {
 
   // 复借风控校验接口
   repayCheck = () => {
-    timerOut = setTimeout(() => { // 进度条
-      this.setState(
-        {
-          percent: 0,
-          visibleLoading: true,
-          showToast: true,
-        },
-        () => {
-          timer = setInterval(() => {
-            this.setPercent();
-            ++this.state.time;
-          }, 1000);
-        },
-      );
-    }, 800);
+    // timerOut = setTimeout(() => { // 进度条
+    //   this.setState(
+    //     {
+    //       percent: 0,
+    //       visibleLoading: true,
+    //       showToast: true,
+    //     },
+    //     () => {
+    //       timer = setInterval(() => {
+    //         this.setPercent();
+    //         ++this.state.time;
+    //       }, 1000);
+    //     },
+    //   );
+    // }, 800);
     const osType = getDeviceType();
     const params = {
       osTyp: osType,
     }
     this.props.$fetch.post(API.AGENT_REPAY_CHECK, params,
       {
-        timeout: 100000,
-        hideLoading: true,
+        // timeout: 100000,
+        // hideLoading: true,
       }).then(result => {
-        this.setState(
-          {
-            percent: 100,
-          },
-          () => {
-            clearInterval(timer);
-            clearTimeout(timerOut);
-            this.setState({
-              visibleLoading: false,
-            });
+        // this.setState(
+        //   {
+        //     percent: 100,
+        //   },
+        //   () => {
+        //     clearInterval(timer);
+        //     clearTimeout(timerOut);
+        //     this.setState({
+        //       visibleLoading: false,
+        //     });
             if (result && result.msgCode === 'PTM0000') {
-              if (this.state.showToast) {
-                this.setState({
-                  showToast: false,
-                });
-                this.props.toast.info('资质检测完成，可正常借款', 3, () => {
-                  this.requestBindCardState();
-                });
-              } else {
-                this.requestBindCardState();
-              }
+              // if (this.state.showToast) {
+              //   this.setState({
+              //     showToast: false,
+              //   });
+              //   this.props.toast.info('资质检测完成，可正常借款', 3, () => {
+              //     this.requestBindCardState();
+              //   });
+              // } else {
+              //   this.requestBindCardState();
+              // }
+              this.requestBindCardState();
             } else { // 失败的话刷新首页
               this.props.toast.info(result.msgInfo, 2, () => {
                 this.requestGetUsrInfo();
               });
             }
-          })
+          // })
       })
       .catch(err => {
         console.log(err);
