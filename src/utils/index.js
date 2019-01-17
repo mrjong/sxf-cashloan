@@ -370,12 +370,14 @@ export const isMPOS = () => {
 };
 
 // 设置h5Channel
-export const setH5Channel = () => {
+export const setH5Channel = (channel) => {
 	const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 	const ua = navigator.userAgent;
 	const sessionH5Channel = store.getH5Channel();
 	if (queryData.h5Channel) {
 		store.setH5Channel(queryData.h5Channel);
+	} else if (channel) {
+		store.setH5Channel(channel);
 	} else if (/SuiXingPay-Mpos/i.test(ua)) {
 		store.setH5Channel('MPOS');
 	} else if (sessionH5Channel) {
