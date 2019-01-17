@@ -68,7 +68,7 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			let pageListWx = [ '/home/home', '/common/wx_middle_page' ];
 			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
-			let pageListMpos = (pageList = [ '/mpos/' ]);
+			let pageListMpos = [ '/mpos/' ];
 			pageList = pageList.concat(pageListMpos);
 		} else {
 			let pageListCommon = [];
