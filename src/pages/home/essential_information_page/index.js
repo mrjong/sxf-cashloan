@@ -84,10 +84,8 @@ export default class essential_information_page extends PureComponent {
 				if (res.msgCode === 'PTM0000') {
 					this.getProCode(
 						res.data.provNm || store.getProvince() || province || '',
-						res.data.cityNm || store.getCity()
-					) ||
-						city ||
-						'';
+						res.data.cityNm || store.getCity() || city || ''
+					) 
 					this.props.form.setFieldsValue({
 						address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
 						linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
