@@ -5,6 +5,7 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType, getH5Channel } from 'utils';
+import { address } from 'utils/Address';
 import Alert_mpos from '../mpos_no_realname_alert_page';
 const API = {
 	validateMposRelSts: '/authorize/validateMposRelSts',
@@ -20,6 +21,7 @@ export default class mpos_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		address();
 		this.validateMposRelSts();
 	}
 	validateMposRelSts = () => {
