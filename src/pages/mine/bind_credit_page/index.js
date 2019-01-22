@@ -17,7 +17,7 @@ const API = {
 	CHECKCARD: '/my/chkCard' // 是否绑定了一张信用卡一张储蓄卡
 };
 
-let isFetching = false;
+// let isFetching = false;
 let backUrlData = ''; // 从除了我的里面其他页面进去
 
 @fetch.inject()
@@ -34,13 +34,13 @@ export default class bind_credit_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		isFetching = false;
+		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
 	}
 
 	componentWillUnmount() {
-		isFetching = false;
+		// isFetching = false;
 	}
 
 	// 获取信用卡信息
@@ -119,7 +119,7 @@ export default class bind_credit_page extends PureComponent {
 					this.props.history.goBack();
 				}
 			} else {
-				isFetching = false;
+				// isFetching = false;
 				buriedPointEvent(mine.creditConfirm, {
 					entry: backUrlData ? '绑定信用卡' : '信用卡管理',
 					is_success: false,
@@ -148,7 +148,7 @@ export default class bind_credit_page extends PureComponent {
 					};
 					this.bindConfirm(params1);
 				} else {
-					isFetching = false;
+					// isFetching = false;
 					this.props.toast.info('请输入有效银行卡号');
 					buriedPointEvent(mine.creditConfirm, {
 						entry: backUrlData ? '绑定信用卡' : '信用卡管理',
@@ -164,12 +164,12 @@ export default class bind_credit_page extends PureComponent {
 	};
 	// 确认购买
 	confirmBuy = () => {
-		if (isFetching) {
-			return;
-		}
+		// if (isFetching) {
+		// 	return;
+		// }
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				isFetching = true;
+				// isFetching = true;
 				const params = {
 					cardNo: values.valueInputCarNumber
 				};
@@ -183,7 +183,7 @@ export default class bind_credit_page extends PureComponent {
 						fail_cause: getFirstError(err)
 					});
 				}
-				isFetching = false;
+				// isFetching = false;
 				this.props.toast.info(getFirstError(err));
 			}
 		});
