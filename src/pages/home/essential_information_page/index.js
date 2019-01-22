@@ -33,7 +33,7 @@ const reducedFilter = (data, keys, fn) =>
 	);
 
 let urlQuery = '';
-let isFetching = false;
+// let isFetching = false;
 @fetch.inject()
 @createForm()
 export default class essential_information_page extends PureComponent {
@@ -150,9 +150,9 @@ export default class essential_information_page extends PureComponent {
 	};
 
 	handleSubmit = () => {
-		if (isFetching) {
-			return;
-		}
+		// if (isFetching) {
+		// 	return;
+		// }
 		const { loading } = this.state;
 		if (loading) return; // 防止重复提交
 		const city = this.state.provLabel[0];
@@ -174,9 +174,9 @@ export default class essential_information_page extends PureComponent {
 					};
 					if (values.linkphone === values.relativesPhone) {
 						this.props.toast.info('联系人手机号重复，请重新填写');
-						isFetching = false;
+						// isFetching = false;
 					} else {
-						isFetching = true;
+						// isFetching = true;
 						// values中存放的是经过 getFieldDecorator 包装的表单元素的值
 						this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
 							if (result && result.msgCode === 'PTM0000') {
@@ -192,14 +192,14 @@ export default class essential_information_page extends PureComponent {
 								});
 							} else {
 								this.confirmBuryPoint(false, result.msgInfo);
-								isFetching = false;
+								// isFetching = false;
 								this.props.toast.info(result.msgInfo);
 							}
 						});
 					}
 				});
 			} else {
-				isFetching = false;
+				// isFetching = false;
 				this.props.toast.info(getFirstError(err));
 			}
 		});

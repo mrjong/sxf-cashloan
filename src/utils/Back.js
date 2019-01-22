@@ -52,7 +52,7 @@ if (window.history && window.history.pushState) {
       }
       // 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
       if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
-        if (queryData.isShowCommit === 'true' || queryData.isShowCommit) {       
+        if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {       
           window.ReactRouterHistory.push('/home/home');
           return
         } else {
@@ -159,7 +159,7 @@ if (window.history && window.history.pushState) {
               break;
             case '/mine/credit_extension_page':
 
-              if (queryData.isShowCommit === 'true' || queryData.isShowCommit) {       
+              if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {       
                 window.ReactRouterHistory.push('/home/home');
               } else {
                 window.ReactRouterHistory.push('/mine/mine_page');

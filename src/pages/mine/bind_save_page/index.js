@@ -18,7 +18,7 @@ const API = {
 	GETCODE: '/withhold/card/bindApply' // 绑定银行卡短信验证码获取
 };
 
-let isFetching = false;
+// let isFetching = false;
 
 @fetch.inject()
 @createForm()
@@ -32,11 +32,11 @@ export default class bind_save_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		isFetching = false;
+		// isFetching = false;
 		this.queryUserInf();
 	}
 	componentWillUnmount() {
-		isFetching = false;
+		// isFetching = false;
 		store.removeBackUrl(); // 清除session里的backurl的值
 	}
 	// 获取信用卡信息
@@ -90,7 +90,7 @@ export default class bind_save_page extends PureComponent {
 					};
 					this.bindSaveCard(params1);
 				} else {
-					isFetching = false;
+					// isFetching = false;
 					this.props.toast.info('请输入有效银行卡号');
 					buriedPointEvent(mine.saveConfirm, {
 						entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
@@ -158,7 +158,7 @@ export default class bind_save_page extends PureComponent {
 				//   //storageCardSourceLenderAgain 再次借款标识
 				// }
 			} else {
-				isFetching = false;
+				// isFetching = false;
 				buriedPointEvent(mine.saveConfirm, {
 					entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
 					is_success: false,
@@ -171,12 +171,12 @@ export default class bind_save_page extends PureComponent {
 	};
 	// 确认购买
 	confirmBuy = () => {
-		if (isFetching) {
-			return;
-		}
+		// if (isFetching) {
+		// 	return;
+		// }
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				isFetching = true;
+				// isFetching = true;
 				// 参数
 				const params = {
 					cardNo: values.valueInputCarNumber //持卡人储蓄卡号
@@ -197,7 +197,7 @@ export default class bind_save_page extends PureComponent {
 						fail_cause: getFirstError(err)
 					});
 				}
-				isFetching = false;
+				// isFetching = false;
 				// 如果存在错误，获取第一个字段的第一个错误进行提示
 				this.props.toast.info(getFirstError(err));
 			}

@@ -29,7 +29,7 @@ function formatDate(date) {
   return dateStr;
 }
 
-let isFetching = false;
+// let isFetching = false;
 
 @fetch.inject()
 @createForm()
@@ -201,15 +201,15 @@ export default class FormContent extends PureComponent {
   };
 
   handleSubmit = () => {
-    if (isFetching) {
-      return;
-    }
+    // if (isFetching) {
+    //   return;
+    // }
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        isFetching = true;
+        // isFetching = true;
         this.requestBindBankCard();
       } else {
-        isFetching = false;
+        // isFetching = false;
         this.props.toast.info(getFirstError(err));
       }
     });
