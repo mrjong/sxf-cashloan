@@ -87,7 +87,7 @@ export default class order_detail_page extends PureComponent {
                         // 选择银行卡回来
                         let bankInfo = store.getCardData();
                         // let couponInfo = store.getCouponData();
-                        if (bankInfo && bankInfo !== {}) {
+                        if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
                             this.setState({
                                 showMoudle: true
                             }, () => {
@@ -145,7 +145,7 @@ export default class order_detail_page extends PureComponent {
             });
             return;
         }
-        if (couponInfo && couponInfo !== {}) {
+        if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
           params = {
             billNo: this.state.billNo,
             couponId: couponInfo.usrCoupNo, // 优惠劵id

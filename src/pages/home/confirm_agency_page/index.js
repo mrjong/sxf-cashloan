@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress, InputItem } from 'antd-mobile';
+import { Modal, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getFirstError, isMPOS } from 'utils';
@@ -10,14 +10,13 @@ import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
-import qs from 'qs';
 import style from './index.scss';
 
 const API = {
-  QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 0105-确认代还信息查询接口
-  CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
+  QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 确认代还信息查询接口
+  CONFIRM_REPAYMENT: '/bill/agentRepay', // 代还申请接口
   CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
-  CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
+  CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡
   queryUsrMemSts: '/my/queryUsrMemSts', // 查询用户会员卡状态
 };
@@ -31,8 +30,6 @@ let isSaveAmt = false;
 export default class confirm_agency_page extends PureComponent {
   constructor(props) {
     super(props);
-    // const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-    // indexData = queryData && JSON.parse(queryData.indexData);
     if (this.props.history.location.state && this.props.history.location.state.indexData) {
       indexData = this.props.history.location.state.indexData
     }
@@ -59,21 +56,20 @@ export default class confirm_agency_page extends PureComponent {
           },
         },
       ],
-      isShowTipModal: false,
+      isShowVIPModal: false,
       isVIP: false, // 是否有会员卡
     };
   }
 
   componentWillMount() {
     isSaveAmt = store.getSaveAmt();
-    console.log(isSaveAmt,'isSaveAmt')
     store.removeSaveAmt();
     let bankInfo = store.getCardData();
     store.removeCardData();
     pageData = store.getRepaymentModalData();
     store.removeRepaymentModalData();
     if (pageData) {
-      if (bankInfo && bankInfo !== {}) {
+      if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
         // 如果存在 bankInfo 并且弹框缓存数据崔仔 则更新弹框缓存的数据
         pageData.repayInfo.bankName = bankInfo.bankName;
         pageData.repayInfo.cardNoHid = bankInfo.lastCardNo;
@@ -87,8 +83,6 @@ export default class confirm_agency_page extends PureComponent {
       this.checkUsrMemSts();
     }
   }
-
-  componentDidMount() {}
 
   // 查询用户会员卡状态
   checkUsrMemSts = () => {
@@ -164,7 +158,7 @@ export default class confirm_agency_page extends PureComponent {
         this.props.form.setFieldsValue({
           cardBillAmt: ''
         });
-			}
+      }
     })
   };
 
@@ -211,7 +205,7 @@ export default class confirm_agency_page extends PureComponent {
   beforeJump() {
     // 埋点-选择借款要素弹框页-点击确认按钮
     buriedPointEvent(home.borrowingPreSubmit);
-    const { lendersDate, repayInfo, repaymentDate, cardBillAmt } = this.state;
+    const { lendersDate, repaymentDate, cardBillAmt } = this.state;
     const search = `?prdId=${repaymentDate.value}&cardId=${indexData && indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
     // 跳转确认代还页面之前 将当前弹框数据保存下来
     store.setRepaymentModalData(this.state);
@@ -264,7 +258,7 @@ export default class confirm_agency_page extends PureComponent {
   // 关闭弹框
   handleCloseTipModal = () => {
     this.setState({
-      isShowTipModal: false,
+      isShowVIPModal: false,
     })
   }
 
@@ -272,7 +266,7 @@ export default class confirm_agency_page extends PureComponent {
   goVIP = () => {
     this.setState({
       cardBillAmt: this.props.form.getFieldValue('cardBillAmt'),
-      isShowTipModal: false,
+      isShowVIPModal: false,
     }, () => {
       store.setSaveAmt(true);
       store.setVipBackUrl('/home/confirm_agency');
@@ -288,7 +282,7 @@ export default class confirm_agency_page extends PureComponent {
     this.props.$fetch.get(`${API.checkApplyProdMemSts}/${repaymentDate.value}`).then(result => {
       if (result && result.msgCode === "PTM3014") {
         this.setState({
-          isShowTipModal: true,
+          isShowVIPModal: true,
         })
       } else if (result && result.msgCode === "PTM0000") {
         this.beforeJump();
@@ -308,7 +302,7 @@ export default class confirm_agency_page extends PureComponent {
       lendersIndex,
       defaultIndex,
       repaymentDate,
-      isShowTipModal,
+      isShowVIPModal,
       isVIP,
       dateDiff,
     } = this.state;
@@ -336,7 +330,7 @@ export default class confirm_agency_page extends PureComponent {
                 <TabList
                   tagList={repaymentDateList}
                   defaultindex={repaymentIndex}
-                  activeIndex={repaymentIndex}
+                  activeindex={repaymentIndex}
                   onClick={this.handleRepaymentTagClick}
                   isDotted={isMPOS() && !isVIP}
                 />
@@ -352,7 +346,6 @@ export default class confirm_agency_page extends PureComponent {
                   <InputItem
                     className={style.billInput}
                     placeholder=""
-                    // maxLength="11"
                     type="number"
                     {...getFieldProps('cardBillAmt', {
                       rules: [{ required: true, message: '请输入代还金额' }, { validator: this.verifyBillAmt }],
@@ -362,14 +355,20 @@ export default class confirm_agency_page extends PureComponent {
                 <p className={style.billTips}>金额{repaymentDate.minAmt}-{repaymentDate.maxAmt}元，且为100整数倍</p>
               </div>
             </div>
-          </li> 
+          </li>
         </ul>
-        <ul className={style.modal_list}>  
+        <ul className={style.modal_list}>
           <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>放款日期</label>
               <div className={style.tagList}>
-                <TabList burientype="lenders" tagType="lenders" tagList={lendersDateList} defaultindex={defaultIndex} activeIndex={lendersIndex} onClick={this.handleLendersTagClick} />
+                <TabList
+                  burientype="lenders"
+                  tagType="lenders"
+                  tagList={lendersDateList}
+                  defaultindex={defaultIndex}
+                  activeindex={lendersIndex}
+                  onClick={this.handleLendersTagClick} />
               </div>
             </div>
           </li>
@@ -401,7 +400,7 @@ export default class confirm_agency_page extends PureComponent {
         </SXFButton>
         <Modal
           wrapClassName="modal_VIPTip_warp"
-          visible={isShowTipModal}
+          visible={isShowVIPModal}
           closable
           transparent
           onClose={this.handleCloseTipModal}

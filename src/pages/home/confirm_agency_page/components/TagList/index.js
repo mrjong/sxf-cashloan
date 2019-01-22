@@ -15,14 +15,14 @@ export default class TagList extends React.PureComponent {
 
   static propTypes = {
     className: PropTypes.string,
-    activeIndex: PropTypes.number,
+    activeindex: PropTypes.number,
     tagList: PropTypes.array,
     onClick: PropTypes.func,
   };
 
   static defaultProps = {
     className: '',
-    activeIndex: 0,
+    activeindex: 0,
     tagList: [],
     onClick: () => {},
   };
@@ -30,22 +30,22 @@ export default class TagList extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.burientype && !store.getHadShowModal()) {
       buriedPointEvent(home.lenders, {
-        lenders_type: nextProps.tagList[nextProps.activeIndex].name,
+        lenders_type: nextProps.tagList[nextProps.activeindex].name,
       });
       store.setHadShowModal(true);
     }
-    if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeIndex !== nextProps.activeIndex)) {
+    if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeindex !== nextProps.activeindex)) {
       this.passInitData(nextProps);
       if (nextProps.burientype) {
         buriedPointEvent(home.lenders, {
-          lenders_type: nextProps.tagList[nextProps.activeIndex].name,
+          lenders_type: nextProps.tagList[nextProps.activeindex].name,
         });
       }
     }
   }
 
   componentWillMount() {
-    this.setState({ currentIndex: this.props.activeIndex }, this.passInitData);
+    this.setState({ currentIndex: this.props.activeindex }, this.passInitData);
   }
 
   // 因为默认选中第一个 所以页面一进来就触发方法，将当前的数据传回去。
@@ -53,7 +53,7 @@ export default class TagList extends React.PureComponent {
     const { currentIndex } = this.state;
     const { onClick, tagList } = this.props;
     if (nextProps) {
-      this._handleClick(onClick, nextProps.activeIndex, nextProps.tagList[nextProps.activeIndex]);
+      this._handleClick(onClick, nextProps.activeindex, nextProps.tagList[nextProps.activeindex]);
     } else {
       this._handleClick(onClick, currentIndex, tagList[currentIndex]);
     }

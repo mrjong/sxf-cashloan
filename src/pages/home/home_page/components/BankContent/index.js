@@ -1,20 +1,18 @@
-import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import React from 'react';
-import { store } from 'utils/store';
 import PropTypes from 'prop-types';
+import BankCard from '../BankCard';
+import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-// import fetch from 'sx-fetch';
-import BankCard from '../BankCard';
 import style from './index.scss';
 import { SXFToast } from 'utils/SXFToast';
+import iconArrow from 'assets/images/home/icon_arrow_right.png';
 
 const API = {
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 };
 
-// @fetch.inject()
 export default class BankContent extends React.Component {
   constructor(props) {
     super(props);
@@ -58,7 +56,6 @@ export default class BankContent extends React.Component {
         store.setBackUrl('/home/home');
         store.setMoxieBackUrl(`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`);
         SXFToast.loading('加载中...', 0);
-        // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
       } else {
         this.props.toast.info(result.msgInfo);
@@ -66,7 +63,7 @@ export default class BankContent extends React.Component {
     });
   };
 
-  // 请求信信用卡数量
+  // 请求信用卡数量
   requestCredCardCount = () => {
     // 埋点-首页-点击代还其他信用卡
     buriedPointEvent(home.repayOtherCredit);
@@ -86,18 +83,20 @@ export default class BankContent extends React.Component {
 
   render() {
     const { className, children, contentData, progressNum, ...restProps } = this.props;
+    const { indexSts, indexData } = contentData
     const showEntranceArr = ['LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010'];
+    let tipText = null
+    if (indexSts === 'LN0010') {
+      tipText = <p className={style.abnormal_tip}>点击更新账单，获取最新信用卡信息</p>
+    } else if (indexSts === 'LN0003' && progressNum) {
+      tipText = <p className={style.progress_box}>还差<span>{progressNum}</span>步即可完成申请</p>
+    }
     return (
       <div className={style.bank_content_wrap} {...restProps}>
-        <BankCard contentData={contentData} {...contentData.indexData} />
-        {contentData.indexSts === 'LN0010' ? (
-          <p className={style.abnormal_tip}>点击更新账单，获取最新信用卡信息</p>
-        ) : null}
-        {contentData.indexSts === 'LN0003' && progressNum ? (
-            <p className={style.progress_box}>还差<span>{progressNum}</span>步即可完成申请</p>
-        ) : null}
+        <BankCard contentData={contentData} {...indexData} />
+        {tipText}
         {children}
-        {showEntranceArr.includes(contentData.indexSts) ? (
+        {showEntranceArr.includes(indexSts) ? (
           <button className={style.link_tip} onClick={this.requestCredCardCount}>
             代还其它信用卡
             <img className={style.link_arrow_img} src={iconArrow} alt="" />

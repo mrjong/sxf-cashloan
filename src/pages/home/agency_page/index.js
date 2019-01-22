@@ -14,11 +14,11 @@ import style from './index.scss';
 let timer;
 let timerOut;
 const API = {
-  REPAY_INFO: '/bill/prebill', // 0208-代还确认页面
-  CONFIRM_REPAYMENT: '/bill/agentRepay', // 0109-代还申请接口
-  SAVE_REPAY_CARD: '/bill/saveRepayCard', // 0210-代还的银行卡信息校验缓存
+  REPAY_INFO: '/bill/prebill', // 代还确认页面
+  CONFIRM_REPAYMENT: '/bill/agentRepay', // 代还申请接口
+  SAVE_REPAY_CARD: '/bill/saveRepayCard', // 代还的银行卡信息校验缓存
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
-  CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
+  CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
   qryContractInfo: '/bill/qryContractInfo'
 };
@@ -33,7 +33,7 @@ export default class agency_page extends PureComponent {
       repayInfo: {
         perd: [],
       },
-      visibleLoading: false,
+      progressLoading: false,
       couponInfo: {}, // 优惠劵信息
       // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
       // ItrtAmt: 0, // 首/末期利息金额
@@ -95,9 +95,8 @@ export default class agency_page extends PureComponent {
   };
 
   // 设置百分比
-  setPercent = (percent) => {
+  setPercent = () => {
     if (this.state.percent < 90 && this.state.percent >= 0) {
-      console.log(Math.random() * 10 + 1)
       this.setState({
         percent: this.state.percent + parseInt(Math.random() * 10 + 1)
       })
@@ -153,7 +152,7 @@ export default class agency_page extends PureComponent {
       });
       return;
     }
-    if (couponInfo && couponInfo !== {}) {
+    if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
       params = {
         prodId: queryData.prdId,
         couponId: couponInfo.usrCoupNo, // 优惠劵id
@@ -291,7 +290,7 @@ export default class agency_page extends PureComponent {
       this.setState(
         {
           percent: 0,
-          visibleLoading: true,
+          progressLoading: true,
         },
         () => {
           timer = setInterval(() => {
@@ -302,66 +301,58 @@ export default class agency_page extends PureComponent {
       );
     }, 300);
     this.props.$fetch.post(API.CONFIRM_REPAYMENT, params, {
-        timeout: 100000,
-        hideLoading: true,
-      })
-      .then(result => {
-        this.setState(
-          {
-            percent: 100,
-          },
-          () => {
-            clearInterval(timer);
-            clearTimeout(timerOut);
-            this.setState({
-              visibleLoading: false,
+      timeout: 100000,
+      hideLoading: true,
+    }).then(result => {
+      this.setState(
+        {
+          percent: 100,
+        },
+        () => {
+          clearInterval(timer);
+          clearTimeout(timerOut);
+          this.setState({
+            progressLoading: false,
+          });
+          if (result && result.msgCode === 'PTM0000') {
+            this.handleShowTipModal();
+            buriedPointEvent(home.borrowingSubmit, {
+              is_success: true,
             });
-            if (result && result.msgCode === 'PTM0000') {
-              this.handleShowTipModal();
-              buriedPointEvent(home.borrowingSubmit, {
-                is_success: true,
-              });
-              // 清除卡信息
-              store.removeCardData();
-              // 清除上个页面中的弹框数据
-              store.removeRepaymentModalData();
-              store.removeHomeCardIndexData();
-              store.removeSaveAmt();
-            } else if (result && result.msgCode === 'PTM7001') {
-              this.props.toast.info(result.msgInfo);
-              setTimeout(() => {
-                this.props.history.push('/home/home');
-              }, 3000);
-            } else {
-              buriedPointEvent(home.borrowingSubmit, {
-                is_success: false,
-                fail_cause: result.msgInfo,
-              });
-              this.props.toast.info(result.msgInfo);
-            }
-          },
-        );
-      })
-      .catch(err => {
-        console.log(err);
-        clearInterval(timer);
-        clearTimeout(timerOut);
-        this.setState(
-          {
-            percent: 100,
-          },
-          () => {
-            this.setState({
-              visibleLoading: false,
+            // 清除卡信息
+            store.removeCardData();
+            // 清除上个页面中的弹框数据
+            store.removeRepaymentModalData();
+            store.removeHomeCardIndexData();
+            store.removeSaveAmt();
+          } else if (result && result.msgCode === 'PTM7001') {
+            this.props.toast.info(result.msgInfo);
+            setTimeout(() => {
+              this.props.history.push('/home/home');
+            }, 3000);
+          } else {
+            buriedPointEvent(home.borrowingSubmit, {
+              is_success: false,
+              fail_cause: result.msgInfo,
             });
-          },
-        );
-      });
+            this.props.toast.info(result.msgInfo);
+          }
+        },
+      );
+    }).catch(err => {
+      clearInterval(timer);
+      clearTimeout(timerOut);
+      this.setState({ percent: 100 }, () => {
+        this.setState({
+          progressLoading: false,
+        });
+      },
+      );
+    });
   };
-  // 查看合同
-  read = type => {
+  // 查看借款合同
+  readContract = type => {
     switch (type) {
-      // 借款合同
       case 'loan_contract_page':
         this.requestProtocolData();
         break;
@@ -376,7 +367,7 @@ export default class agency_page extends PureComponent {
     }
   };
 
-  // 获取活动
+  // 获取借款合同数据
   requestProtocolData = () => {
     this.props.$fetch
       .post(API.qryContractInfo, {
@@ -394,7 +385,7 @@ export default class agency_page extends PureComponent {
       });
   };
 
-  // 获取金融服务合同请求
+  // 获取金融服务合同
   requestFinacialService = type => {
     const params = {
       prdId: this.state.queryData.prdId,
@@ -441,7 +432,7 @@ export default class agency_page extends PureComponent {
     } else {
       return (<span>不使用</span>)
     }
-    
+
     // if (couponInfo && couponInfo.usrCoupNo) {
     //   if (couponInfo.usrCoupNo !== 'null' && couponInfo.coupVal) {
     //     // 抵扣金额
@@ -469,7 +460,7 @@ export default class agency_page extends PureComponent {
   }
 
   render() {
-    const { isShowModal, repayInfo, isShowTipModal, visibleLoading, percent } = this.state;
+    const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -484,14 +475,14 @@ export default class agency_page extends PureComponent {
                 <span className={style.item_value}>{repayInfo.perdTotAmt}</span>
               </li>
             ) : (
-              <li className={style.list_item} onClick={this.handleShowModal}>
-                <label className={style.item_name}>还款计划</label>
-                <span style={{ color: '#4DA6FF' }} className={style.item_value}>
-                  <span style={{ color: '#aaa', marginRight: '.1rem', display: 'inline-block', fontWeight: 'normal' }}>点击查看</span>
-                  <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
-                </span>
-              </li>
-            )}
+                <li className={style.list_item} onClick={this.handleShowModal}>
+                  <label className={style.item_name}>还款计划</label>
+                  <span style={{ color: '#4DA6FF' }} className={style.item_value}>
+                    <span style={{ color: '#aaa', marginRight: '.1rem', display: 'inline-block', fontWeight: 'normal' }}>点击查看</span>
+                    <img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
+                  </span>
+                </li>
+              )}
             <li className={style.list_item}>
               <label className={style.item_name}>借款期限</label>
               <span className={style.item_value}>
@@ -521,14 +512,12 @@ export default class agency_page extends PureComponent {
             </li>
           </ul>
         </Panel>
-        <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>
-          确定
-        </ZButton>
+        <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确定</ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
           <a
             onClick={() => {
-              this.read('loan_contract_page');
+              this.readContract('loan_contract_page');
             }}
             className={style.protocol_link}
           >
@@ -536,7 +525,7 @@ export default class agency_page extends PureComponent {
           </a>
           <a
             onClick={() => {
-              this.read('delegation_withhold_page');
+              this.readContract('delegation_withhold_page');
             }}
             className={style.protocol_link}
           >
@@ -544,7 +533,7 @@ export default class agency_page extends PureComponent {
           </a>
           <a
             onClick={() => {
-              this.read('financial_service_page');
+              this.readContract('financial_service_page');
             }}
             className={style.protocol_link}
           >
@@ -553,20 +542,13 @@ export default class agency_page extends PureComponent {
         </p>
         <Modal
           wrapClassName={style.modalLoading}
-          visible={visibleLoading}
+          visible={progressLoading}
           transparent
           maskClosable={false}
-        //   onClose={this.onClose('modal1')}
-
-        //   footer={[{ text: 'Ok', onPress: () => { console.log('ok'); this.onClose('modal1')(); } }]}
-        //   wrapProps={{ onTouchStart: this.onWrapTouchStart }}
         >
           <div className="show-info">
-            <div className={style.modalLoading}>
-              借款处理中...
-        </div>
+            <div className={style.modalLoading}>借款处理中...</div>
             <div className="progress"><Progress percent={percent} position="normal" /></div>
-            {/* <div aria-hidden="true">{percent}</div> */}
           </div>
         </Modal>
         <Modal

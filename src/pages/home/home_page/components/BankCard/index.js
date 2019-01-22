@@ -8,13 +8,8 @@ import { home } from 'utils/analytinsType';
 import style from './index.scss';
 import { SXFToast } from 'utils/SXFToast';
 
-const _handleClick = (onClick, event) => {
-  event.preventDefault();
-  !!onClick && onClick();
-};
-
 const API = {
-  CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
+  CARD_AUTH: '/auth/cardAuth', // 信用卡授信
 };
 
 @fetch.inject()
@@ -46,14 +41,12 @@ export default class BankCard extends React.PureComponent {
     billDt: '---',
     cardBillAmt: '---',
     overDt: '---',
-    onClick: () => {
-
-    },
+    onClick: () => { },
   };
 
   handleUpdate = () => {
-    const { indexSts } = this.props.contentData;
-    if (indexSts && indexSts === 'LN0009') {
+    const { indexSts = '' } = this.props.contentData;
+    if (indexSts === 'LN0009') {
       this.props.toast.info('您有未结清的账单，暂时不能更新');
     } else {
       this.applyCardRepay();
@@ -68,7 +61,6 @@ export default class BankCard extends React.PureComponent {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
         SXFToast.loading('加载中...', 0);
-        // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
       } else {
         this.props.toast.info(result.msgInfo);
@@ -78,15 +70,11 @@ export default class BankCard extends React.PureComponent {
 
   render() {
     const {
-      className,
       children,
       contentData,
-      onClick,
-      bankIcon,
       bankName,
       bankNo,
       cardNoHid,
-      cardBillDt,
       billDt,
       cardBillAmt,
       overDt,
@@ -102,15 +90,27 @@ export default class BankCard extends React.PureComponent {
     } else if (overDt < 0) {
       overDtStr = '已到期';
     }
+    const itemList = [
+      {
+        name: '账单日',
+        value: billDt === '---' ? '---' : dayjs(billDt).format('YYYY/MM/DD')
+      },
+      {
+        name: '账单金额',
+        value: cardBillAmt === '---' ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)
+      },
+      {
+        name: '还款日',
+        value: overDtStr
+      }
+    ]
     return (
       <div className={style.bank_card_wrap}>
         {contentData.indexSts === 'LN0002' ? (
           <button className={style.bill_update_btn}>授权中</button>
         ) : (
-          <button className={style.bill_update_btn} onClick={this.handleUpdate}>
-            更新账单
-          </button>
-        )}
+            <button className={style.bill_update_btn} onClick={this.handleUpdate}>更新账单</button>
+          )}
         <div className={style.card_preview}>
           <span className={[style.card_icon, iconClass].join(' ')}></span>
           <div className={style.card_info}>
@@ -119,22 +119,14 @@ export default class BankCard extends React.PureComponent {
           </div>
         </div>
         <div className={style.bill_preview}>
-          <div className={style.bill_item}>
-            <span className={style.bill_value}>
-              {!billDt || billDt === '---' ? '---' : dayjs(billDt).format('YYYY/MM/DD')}
-            </span>
-            <span className={style.bill_name}>账单日</span>
-          </div>
-          <div className={style.bill_item}>
-            <span className={style.bill_value}>
-              {!cardBillAmt || cardBillAmt === '---' ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)}
-            </span>
-            <span className={style.bill_name}>账单金额</span>
-          </div>
-          <div className={style.bill_item}>
-            <span className={style.bill_value}>{overDtStr}</span>
-            <span className={style.bill_name}>还款日</span>
-          </div>
+          {
+            itemList.map(item => (
+              <div className={style.bill_item} key={item.name}>
+                <span className={style.bill_value}>{item.value}</span>
+                <span className={style.bill_name}>{item.name}</span>
+              </div>
+            ))
+          }
         </div>
         {children}
       </div>

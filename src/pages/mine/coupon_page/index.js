@@ -11,7 +11,7 @@ import { SXFToast } from 'utils/SXFToast';
 import { PullToRefresh, ListView } from 'antd-mobile';
 let totalPage = false;
 let receiveData = null;
-let nouseFlag = false;
+let nouseFlag = false;  //是否有可用优惠券的标识
 let saveBankData = null;  // 还款详情页带过来的银行信息
 const API = {
   couponList: '/coupon/list',
@@ -22,6 +22,7 @@ export default class coupon_page extends PureComponent {
     super(props);
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     receiveData = queryData;
+    console.log(this.props.history.location)
     if (this.props.history.location.state && this.props.history.location.state.cardData) {
       saveBankData = this.props.history.location.state.cardData
     }

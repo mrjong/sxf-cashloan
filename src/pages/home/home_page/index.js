@@ -400,7 +400,7 @@ export default class home_page extends PureComponent {
   cacheBanner = () => {
     const bannerAble = Cookie.getJSON('bannerAble');
     const bannerDataFromSession = store.getBannerData();
-    if (bannerAble && bannerDataFromSession && bannerDataFromSession !== {}) {
+    if (bannerAble && bannerDataFromSession && JSON.stringify(bannerDataFromSession) !== '{}') {
       this.setState({
         bannerList: bannerDataFromSession,
       });
