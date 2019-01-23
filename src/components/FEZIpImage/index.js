@@ -33,7 +33,7 @@ export default class FEZIpImage extends Component {
 					onChange({ base64Data, size, fileName });
 				})
 				.catch(console.error)
-				.finally(()=>{
+				.always(()=>{
 					afterCompress()
 				});
 		});
