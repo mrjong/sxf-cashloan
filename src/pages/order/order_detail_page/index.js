@@ -287,35 +287,23 @@ export default class order_detail_page extends PureComponent {
   }
   // 立即还款
   handleClickConfirm = () => {
-    const { billDesc, isPayAll } = this.state;
+    const { billDesc = {}, billNo, isPayAll, couponInfo = {} } = this.state;
     let couponId = '';
     let sendParams = {}
-    if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-      console.log(this.state.couponInfo, '1111');
-      if (this.state.couponInfo.usrCoupNo !== 'null') {
-        // // 首末期利息为0时coupId为空
-        // if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
-        //     couponId = '';
-        // } else {
-        couponId = this.state.couponInfo.usrCoupNo;
-        // }
+    if (couponInfo && couponInfo.usrCoupNo) {
+      if (couponInfo.usrCoupNo !== 'null') {
+        couponId = couponInfo.usrCoupNo;
       } else {
         couponId = '';
       }
-
     } else {
-      console.log(this.state.billDesc.data, '22222');
-      if (this.state.billDesc.data && this.state.billDesc.data.usrCoupNo) {
-        // // 首末期利息为0时coupId为空
-        // if (parseFloat(this.state.perdList[0].perdItrtAmt) === 0 || parseFloat(this.state.perdList[this.state.perdList.length - 1].perdItrtAmt) === 0) {
-        //     couponId = '';
-        // } else {
-        couponId = this.state.billDesc.data.usrCoupNo
-        // }
+      if (billDesc.data && billDesc.data.usrCoupNo) {
+        couponId = billDesc.data.usrCoupNo
       } else {
         couponId = '';
       }
     }
+    //let couponId = couponInfo.usrCoupNo || billDesc.data.usrCoupNo || ''
     // 判断是否为一键结清
     let repayStswStr = '';
     if (isPayAll) {
@@ -325,7 +313,7 @@ export default class order_detail_page extends PureComponent {
         return;
       }
       sendParams = {
-        billNo: this.state.billNo,
+        billNo,
         thisRepTotAmt: billDesc.waitRepAmt,
         cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
         repayStsw: repayStswStr,
@@ -333,7 +321,7 @@ export default class order_detail_page extends PureComponent {
       }
     } else {
       sendParams = {
-        billNo: this.state.billNo,
+        billNo,
         thisRepTotAmt: this.state.sendMoney,
         cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
         repayStsw: billDesc.billPerdStsw,
@@ -399,23 +387,33 @@ export default class order_detail_page extends PureComponent {
   }
   // 选择银行卡
   selectBank = () => {
+    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' } } = this.state
     store.setBackUrl('/order/order_detail_page');
-    this.props.history.push(`/mine/select_save_page?agrNo=${this.state.bankInfo && this.state.bankInfo.agrNo || this.state.billDesc && this.state.billDesc.wthCrdAgrNo}`);
+    this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
   }
   // 选择优惠劵
   selectCoupon = (useFlag) => {
+    const { billNo, billDesc, couponInfo, bankInfo: { bankName } } = this.state
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
-      this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { nouseCoupon: true, cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc }, });
+      this.props.history.push({
+        pathname: '/mine/coupon_page',
+        search: `?billNo=${billNo}`,
+        state: { nouseCoupon: true, cardData: bankName ? bankInfo : billDesc },
+      });
       return;
     }
     store.setBackUrl('/order/order_detail_page');
-    if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-      store.setCouponData(this.state.couponInfo);
+    if (couponInfo && couponInfo.usrCoupNo) {
+      store.setCouponData(couponInfo);
     } else {
-      store.setCouponData(this.state.billDesc.data);
+      store.setCouponData(billDesc.data);
     }
-    this.props.history.push({ pathname: '/mine/coupon_page', search: `?billNo=${this.state.billNo}`, state: { cardData: this.state.bankInfo && this.state.bankInfo.bankName ? this.state.bankInfo : this.state.billDesc }, });
+    this.props.history.push({
+      pathname: '/mine/coupon_page',
+      search: `?billNo=${billNo}`,
+      state: { cardData: bankName ? bankInfo : billDesc }
+    });
   }
   // 判断优惠劵显示
   renderCoupon = () => {
@@ -467,7 +465,7 @@ export default class order_detail_page extends PureComponent {
       wthdCrdCorpOrgNm = '',
       wthdCrdNoLast = '',
       perdNum = '',
-      waitRepAmt=''
+      waitRepAmt = ''
     } = billDesc
     const itemList = [
       {
@@ -524,39 +522,42 @@ export default class order_detail_page extends PureComponent {
               }}>
               主动还款
             </SXFButton>
-            <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{perdNum}/{perdUnit === 'M' ? perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
+            <div className={styles.message}>此次主动还款，将用于还第
+              <span className={styles.red}>{perdNum}/{perdUnit === 'M' ? perdLth : '1'}</span>
+              期账单，请保证卡内余额大于该 期账单金额
+            </div>
           </div> : <div className={styles.mb50}></div>
         }
         <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
-            <div className={styles.modal_title}>付款详情<i onClick={() => { this.setState({ showModal: false }) }}></i></div>
-            <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            <div className={styles.modal_title}>付款详情
+              <i onClick={() => { this.setState({ showModal: false }) }}></i>
             </div>
             <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>还款银行卡</span><span onClick={this.selectBank} className={`${styles.modal_value}`}>
+              <span className={styles.modal_label}>本次还款金额</span>
+              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            </div>
+            <div className={styles.modal_flex}>
+              <span className={styles.modal_label}>还款银行卡</span>
+              <span onClick={this.selectBank} className={`${styles.modal_value}`}>
                 {
-                  this.state.bankInfo && this.state.bankInfo.bankName ? <span>{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})</span> : <span>{wthdCrdCorpOrgNm}({wthdCrdNoLast})</span>
+                  this.state.bankInfo && this.state.bankInfo.bankName ? <span>{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})</span>
+                    : <span>{wthdCrdCorpOrgNm}({wthdCrdNoLast})</span>
                 }
               </span>&nbsp;<i></i>
             </div>
             { // 一键结清不显示优惠劵
-              !isPayAll ?
-                <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
-                  <span className={styles.modal_label}>优惠券</span>
-                  {
-                    this.state.billDesc.data && this.state.billDesc.data.coupVal ?
-                      <span onClick={() => { this.selectCoupon(false) }} className={`${styles.modal_value}`}>
-                        {
-                          this.renderCoupon()
-                        }
-                      </span>
-                      :
-                      <span onClick={() => { this.selectCoupon(true) }} className={`${styles.modal_value}`}>无可用优惠券</span>
-                  }
-                  &nbsp;<i></i>
-                </div>
-                : null
+              !isPayAll && <div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
+                <span className={styles.modal_label}>优惠券</span>
+                {
+                  this.state.billDesc.data && this.state.billDesc.data.coupVal ?
+                    <span onClick={() => { this.selectCoupon(false) }} className={`${styles.modal_value}`}>
+                      {this.renderCoupon()}
+                    </span>
+                    : <span onClick={() => { this.selectCoupon(true) }} className={`${styles.modal_value}`}>无可用优惠券</span>
+                }
+                &nbsp;<i></i>
+              </div>
             }
             <SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>立即还款</SXFButton>
           </div>

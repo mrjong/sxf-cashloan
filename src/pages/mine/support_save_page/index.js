@@ -49,17 +49,14 @@ export default class support_save_page extends PureComponent {
               {
                 this.state.cardList.map((item, index) => {
                   return (
-                    <li
-                      key={index}
-                    >
+                    <li key={index}>
                       <span className={`bank_ico bank_ico_${item.bankCd}`}></span>
                       <span className={styles.bank_name}>{item.bankNm}</span>
                     </li>
                   )
                 })
               }
-            </ul>
-            : null
+            </ul> : null
         }
       </div>
     )

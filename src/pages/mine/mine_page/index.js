@@ -214,11 +214,6 @@ export default class mine_page extends PureComponent {
   // 登陆
   logInHandler = () => {
     this.props.history.push('/login');
-    // sessionStorage.clear();
-    // localStorage.clear();
-    // Cookie.remove('fin-v-card-token');
-    // Cookie.remove('authFlag');
-    // Cookie.remove('VIPFlag');
   }
 
   render() {
@@ -300,25 +295,15 @@ export default class mine_page extends PureComponent {
       <div className={styles.mine_page}>
         <div className={styles.user_inf}>
           <img src={avatar} alt="用户头像" />
-          {tokenFromStorage && token ?
-            <span>{mblNoHid}</span>
-            :
-            <span onClick={this.logInHandler}>登录/注册</span>
+          {
+            tokenFromStorage && token ?
+              <span>{mblNoHid}</span> : <span onClick={this.logInHandler}>登录/注册</span>
           }
         </div>
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
         {/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
-        {tokenFromStorage && token&&!isMPOS() ?
-          (<div
-            onClick={this.logoutHandler}
-            className={styles.logout}
-          >
-            退出登录
-          </div>)
-          :
-          null
-        }
+        {tokenFromStorage && token && !isMPOS() && <div onClick={this.logoutHandler} className={styles.logout}>退出登录</div>}
       </div>
     )
   }

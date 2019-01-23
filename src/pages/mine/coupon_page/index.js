@@ -22,7 +22,6 @@ export default class coupon_page extends PureComponent {
     super(props);
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     receiveData = queryData;
-    console.log(this.props.history.location)
     if (this.props.history.location.state && this.props.history.location.state.cardData) {
       saveBankData = this.props.history.location.state.cardData
     }
@@ -122,7 +121,7 @@ export default class coupon_page extends PureComponent {
       return [];
     }
     if (pIndex === 1) {
-        SXFToast.loading('数据加载中...', 10000);
+      SXFToast.loading('数据加载中...', 10000);
     }
     let sendParams = '';
     if (receiveData && receiveData.billNo) {
@@ -137,7 +136,7 @@ export default class coupon_page extends PureComponent {
         type: `0${this.state.msgType}`,
         pageNo: pIndex,
         price: receiveData.price,
-        perCont:receiveData.perCont
+        perCont: receiveData.perCont
         // loading: true,
       };
     } else {
@@ -147,8 +146,7 @@ export default class coupon_page extends PureComponent {
         // loading: true,
       };
     }
-    let data = await this.props.$fetch
-      .get(API.couponList, sendParams)
+    let data = await this.props.$fetch.get(API.couponList, sendParams)
       .then(res => {
         if (pIndex === 1) {
           setTimeout(() => {
@@ -171,9 +169,11 @@ export default class coupon_page extends PureComponent {
               );
             }
           }
-          // 倒叙插入
+          // 倒叙插入(这段代码有问题)
           if (pIndex === 1) {
-            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') dataArr.push(store.getCouponData());
+            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') {
+              dataArr.push(store.getCouponData())
+            }
           }
           return dataArr;
         }
@@ -285,15 +285,15 @@ export default class coupon_page extends PureComponent {
           <div className={style.leftBox}>
             {
               obj && obj.coupCategory === '00' ?
-              <span>￥<i className={style.money}>{obj && obj.coupVal}</i></span>
-              : obj && obj.coupCategory === '03' ?
-              <span className={style.couponType2}>免息券</span>
-              : obj && obj.coupCategory === '01' ?
-              <span className={style.couponType3}><i>{obj && obj.coupVal}</i>折</span>
-              : obj && obj.coupCategory === '02' ?
-              <span className={style.couponType4}><i>免</i><i className={style.dayNum}>{obj && obj.coupVal}</i><br /><span className={style.littleFont}>天息费</span></span>
-              :
-              null
+                <span>￥<i className={style.money}>{obj && obj.coupVal}</i></span>
+                : obj && obj.coupCategory === '03' ?
+                  <span className={style.couponType2}>免息券</span>
+                  : obj && obj.coupCategory === '01' ?
+                    <span className={style.couponType3}><i>{obj && obj.coupVal}</i>折</span>
+                    : obj && obj.coupCategory === '02' ?
+                      <span className={style.couponType4}><i>免</i><i className={style.dayNum}>{obj && obj.coupVal}</i><br /><span className={style.littleFont}>天息费</span></span>
+                      :
+                      null
             }
           </div>
           <div
