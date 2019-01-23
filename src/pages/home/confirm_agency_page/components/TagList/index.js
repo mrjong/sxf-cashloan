@@ -55,11 +55,11 @@ export default class TagList extends React.PureComponent {
     if (nextProps) {
       this._handleClick(onClick, nextProps.activeindex, nextProps.tagList[nextProps.activeindex]);
     } else {
-      this._handleClick(onClick, currentIndex, tagList[currentIndex]);
+      this._handleClick(onClick, currentIndex, tagList[currentIndex], 'first');
     }
   };
 
-  _handleClick = (onClick, index, value) => {
+  _handleClick = (onClick, index, value, type) => { // 是否是一进页面就执行 first为一进页面执行
     if (!value || value.disable) {
       return false;
     }
@@ -70,7 +70,7 @@ export default class TagList extends React.PureComponent {
       index,
       value,
     };
-    !!onClick && onClick(params);
+    !!onClick && onClick(params, type);
   };
 
   render() {
