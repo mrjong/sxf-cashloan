@@ -103,9 +103,9 @@ export default class confirm_agency_page extends PureComponent {
   };
 
   // 代扣 Tag 点击事件
-  handleRepaymentTagClick = data => {
+  handleRepaymentTagClick = (data, type) => {
     this.props.form.setFieldsValue({
-      cardBillAmt: isSaveAmt ? this.state.cardBillAmt : '',
+      cardBillAmt: isSaveAmt && type && type === 'first' ? this.state.cardBillAmt : '',
     });
     this.setState({
       repaymentDate: data.value,
@@ -115,7 +115,7 @@ export default class confirm_agency_page extends PureComponent {
   };
 
   // 还款 Tag 点击事件
-  handleLendersTagClick = data => {
+  handleLendersTagClick = (data, type) => {
     this.setState({
       lendersDate: data.value,
       lendersIndex: data.index,
