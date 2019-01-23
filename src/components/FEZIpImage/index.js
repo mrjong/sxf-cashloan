@@ -18,11 +18,13 @@ export default class FEZIpImage extends Component {
 			const files = this.files;
 			const file = files[0];
 			const quality = file && file.size > 500000 ? 0.4 : 1;
-			if (file) {
-				beforeCompress();
-			} else {
-				afterCompress();
-			}
+			beforeCompress();
+			// if (file) {
+			// 	beforeCompress();
+			// } 
+			// else {
+			// 	afterCompress();
+			// }
 			lrz(file, { quality })
 				.then((rst) => {
 					const base64Data = rst.base64;
@@ -31,7 +33,9 @@ export default class FEZIpImage extends Component {
 					onChange({ base64Data, size, fileName });
 				})
 				.catch(console.error)
-				.always(afterCompress);
+				.always(()=>{
+					afterCompress()
+				});
 		});
 	}
 
