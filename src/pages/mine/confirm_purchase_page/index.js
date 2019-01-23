@@ -235,7 +235,7 @@ export default class confirm_purchase_page extends PureComponent {
         </List>
         <ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>确认购买</ButtonCustom>
         <p className={styles.tips}>
-          点击“确认绑定”，表示同意<a onClick={() => { this.props.history.push('/protocol/club_vip_service_page') }}>《随行付VIP俱乐部会员服务协议》</a>
+          点击“确认购买”，表示同意<a onClick={() => { this.props.history.push('/protocol/club_vip_service_page') }}>《随行付VIP俱乐部会员服务协议》</a>
         </p>
       </div>
     )
