@@ -23,7 +23,7 @@ export default class order_detail_page extends PureComponent {
     entryFrom = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).entryFrom;
     this.state = {
       billDesc: {},
-      showMoudle: false,
+      showModal: false,
       orderList: [],
       money: '',
       sendMoney: '',
@@ -89,7 +89,7 @@ export default class order_detail_page extends PureComponent {
             // let couponInfo = store.getCouponData();
             if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
               this.setState({
-                showMoudle: true
+                showModal: true
               }, () => {
                 this.setState({
                   bankInfo: bankInfo,
@@ -348,7 +348,7 @@ export default class order_detail_page extends PureComponent {
           is_success: true,
         });
         this.setState({
-          showMoudle: false,
+          showModal: false,
           couponInfo: {},
         })
         if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
@@ -379,7 +379,7 @@ export default class order_detail_page extends PureComponent {
           fail_cause: res.msgInfo,
         });
         this.setState({
-          showMoudle: false,
+          showModal: false,
           couponInfo: {},
         })
         this.props.toast.info(res.msgInfo);
@@ -392,7 +392,7 @@ export default class order_detail_page extends PureComponent {
     }).catch(err => {
       store.removeCouponData();
       this.setState({
-        showMoudle: false,
+        showModal: false,
         couponInfo: {},
       })
     })
@@ -450,7 +450,7 @@ export default class order_detail_page extends PureComponent {
   // 一键结清
   payAllOrder = () => {
     this.setState({
-      showMoudle: true,
+      showModal: true,
       isPayAll: true,
     });
   }
@@ -465,7 +465,9 @@ export default class order_detail_page extends PureComponent {
       payCrdCorpOrgNm = '',
       payCrdNoLast = '',
       wthdCrdCorpOrgNm = '',
-      wthdCrdNoLast = ''
+      wthdCrdNoLast = '',
+      perdNum = '',
+      waitRepAmt=''
     } = billDesc
     const itemList = [
       {
@@ -507,33 +509,35 @@ export default class order_detail_page extends PureComponent {
             }
           </ul>
           {
-            billDesc.perdNum !== 999 && !hideBtn ?
-              <span className={styles.payAll} onClick={this.payAllOrder}>一键结清</span> : null
+            perdNum !== 999 && !hideBtn && <span className={styles.payAll} onClick={this.payAllOrder}>一键结清</span>
           }
         </Panel>
         <Panel title="还款计划" className={styles.mt24}>
           <Lists listsInf={this.state.orderList} clickCb={this.clickCb} className={styles.order_list} />
         </Panel>
         {
-          billDesc.perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
-            <SXFButton onClick={() => { this.setState({ showMoudle: true, isPayAll: false, }); buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' }); }}>
+          perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
+            <SXFButton
+              onClick={() => {
+                this.setState({ showModal: true, isPayAll: false, });
+                buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
+              }}>
               主动还款
             </SXFButton>
-            <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{billDesc && billDesc.perdNum}/{billDesc.perdUnit === 'M' ? billDesc.perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
+            <div className={styles.message}>此次主动还款，将用于还第<span className={styles.red}>{perdNum}/{perdUnit === 'M' ? perdLth : '1'}</span>期账单，请保证卡内余额大于该 期账单金额</div>
           </div> : <div className={styles.mb50}></div>
         }
-        <Modal popup visible={this.state.showMoudle} onClose={() => { this.setState({ showMoudle: false }) }} animationType="slide-up">
+        <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
-            <div className={styles.modal_title}>付款详情<i onClick={() => { this.setState({ showMoudle: false }) }}></i></div>
+            <div className={styles.modal_title}>付款详情<i onClick={() => { this.setState({ showModal: false }) }}></i></div>
             <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{isPayAll ? billDesc && billDesc.waitRepAmt : money}元</span>
+              <span className={styles.modal_label}>本次还款金额</span><span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
             </div>
             <div className={styles.modal_flex}>
               <span className={styles.modal_label}>还款银行卡</span><span onClick={this.selectBank} className={`${styles.modal_value}`}>
                 {
-                  this.state.bankInfo && this.state.bankInfo.bankName ? <span>{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})</span> : <span>{billDesc && billDesc.wthdCrdCorpOrgNm}({billDesc && billDesc.wthdCrdNoLast})</span>
+                  this.state.bankInfo && this.state.bankInfo.bankName ? <span>{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})</span> : <span>{wthdCrdCorpOrgNm}({wthdCrdNoLast})</span>
                 }
-
               </span>&nbsp;<i></i>
             </div>
             { // 一键结清不显示优惠劵
@@ -554,12 +558,9 @@ export default class order_detail_page extends PureComponent {
                 </div>
                 : null
             }
-            <SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
-              立即还款
-                        </SXFButton>
+            <SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>立即还款</SXFButton>
           </div>
         </Modal>
-
       </div>
     )
   }
