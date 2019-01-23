@@ -8,7 +8,7 @@ export const initAnalytics = () => {
   sa.init({
     server_url: saUrl,
     sdk_url: 'https://static.sensorsdata.cn/sdk/1.7.1.1/sensorsdata.min.js',
-    show_log: false,  //是否打印上报日志
+    show_log: true,  //是否打印上报日志
     is_single_page: true,
   });
   const query = qs.parse(window.location.search, {
