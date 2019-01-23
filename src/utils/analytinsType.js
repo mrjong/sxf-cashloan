@@ -1,7 +1,10 @@
 // DC 对外
 // XDC mpos入口=>对内
+import { isMPOS } from 'utils';
 let prefix = `DC`;
-if (JSON.parse(sessionStorage.getItem('isMPOS'))) {
+console.log(isMPOS(),'test22')
+console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
+if (JSON.parse(sessionStorage.getItem('isMPOS')) || isMPOS()) {
 	prefix = 'XDC';
 }
 const login = {
