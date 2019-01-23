@@ -13,9 +13,9 @@ let hasNext = true
 const Item = List.Item;
 const Brief = Item.Brief;
 const API = {
-	'msgRead': "/my/msgRead",
-	'msgCount': "/my/msgCount",
-	"billList": '/bill/list'
+	msgRead: "/my/msgRead",
+	msgCount: "/my/msgCount",
+	billList: '/bill/list'
 }
 
 let token = '';
@@ -249,14 +249,21 @@ export default class order_page extends PureComponent {
 			<div key={`${sectionID}-${rowID}`} />
 		)
 		let index = this.state.rData && this.state.rData.length - 1
+		console.log(this.state.rData)
 		const row = (rowData, sectionID, rowID) => {
 			if (index < 0) {
 				index = this.state.rData && this.state.rData.length - 1
 			}
 			const obj = this.state.rData && this.state.rData[index--]
 			return (
-				<Item className={'iview' + obj.billNo} onClick={() => { this.gotoDesc(obj) }} extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>} style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '-1' || obj.billSts === '-2' ? 'empty' : 'horizontal'} wrap>
-					{obj.billAmt}<Brief>{obj.billDt}</Brief>
+				<Item
+					className={'iview' + obj.billNo}
+					onClick={() => { this.gotoDesc(obj) }}
+					extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>}
+					style={{ color: obj.color }} arrow="empty" arrow={obj.billSts === '-1' || obj.billSts === '-2' ? 'empty' : 'horizontal'} wrap
+				>
+					{obj.billAmt}
+					<Brief>{obj.billDt}</Brief>
 				</Item>
 			)
 		}
@@ -300,8 +307,9 @@ export default class order_page extends PureComponent {
 				return (
 					<div className={style.no_data}>
 						<i />暂无账单
-              {isWXOpen() && !tokenFromStorage && !token ?
-							<SXFButton className={style.noLogin} onClick={this.goLogin}>去登录</SXFButton> : null
+            {
+							isWXOpen() && !tokenFromStorage && !token ?
+								<SXFButton className={style.noLogin} onClick={this.goLogin}>去登录</SXFButton> : null
 						}
 					</div>
 				)
@@ -310,9 +318,7 @@ export default class order_page extends PureComponent {
 		return (
 			<div className={style.orderScroll}>
 				<div className={style.order_page}>
-					{
-						item()
-					}
+					{item()}
 				</div>
 			</div>
 		)
