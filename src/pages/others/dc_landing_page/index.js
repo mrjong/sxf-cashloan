@@ -132,6 +132,12 @@ export default class dc_landing_page extends PureComponent {
 		});
 	}
 
+	// 跳转协议
+	go = (url) => {
+		store.setLoginBack(true);
+		this.props.history.push(`/protocol/${url}`);
+	};
+
 	render() {
 		// const {  } = this.state
 		const { getFieldProps } = this.props.form;
@@ -183,6 +189,23 @@ export default class dc_landing_page extends PureComponent {
 					</div>
 					<div className={styles.sureBtn} onClick={this.goLogin}>
 						<span>免费借款</span>
+					</div>
+					<div className={styles.agreement}>
+						注册即视为同意
+						<span
+							onClick={() => {
+								this.go('register_agreement_page');
+							}}
+						>
+							《用户注册协议》
+						</span>
+						<span
+							onClick={() => {
+								this.go('privacy_agreement_page');
+							}}
+						>
+							《用户隐私权政策》
+						</span>
 					</div>
 				</div>
 			</div>

@@ -85,6 +85,17 @@
 				width: 100%;
 			}
 		}
+		.agreement {
+			color: #333;
+			font-size: 0.24rem;
+			position: relative;
+			top: 0.5rem;
+			text-align: left;
+			margin: 0 0.79rem;
+			span {
+				color: #3d9efc;
+			}
+		}
 	}
 	:global {
 		.am-list-item .am-input-control input {
