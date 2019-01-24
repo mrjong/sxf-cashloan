@@ -1,6 +1,6 @@
 import { store } from 'utils/store';
 import { getLocation } from 'utils/publicApi';
-import { isMPOS } from 'utils';
+import { isMPOS } from 'utils/common';
 export const address = () => {
 	if (store.getPosition()) {
 		return;

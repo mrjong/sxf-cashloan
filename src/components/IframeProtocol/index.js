@@ -1,5 +1,6 @@
 import React from 'react'
-import { headerIgnore, isMPOS } from 'utils'
+import { headerIgnore } from 'utils'
+import { isMPOS } from 'utils/common';
 import styles from './index.scss'
 
 export default class IframeProtocol extends React.Component {

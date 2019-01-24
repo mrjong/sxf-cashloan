@@ -1,4 +1,4 @@
-import { getH5Channel } from 'utils';
+import { getH5Channel } from 'utils/common';
 
 // 基本信息页输入框和下拉框的埋点
 let inforArr = [];

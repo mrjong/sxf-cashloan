@@ -4,7 +4,8 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
-import { getDeviceType, getH5Channel } from 'utils';
+import { getDeviceType } from 'utils';
+import { getH5Channel } from 'utils/common';
 import { address } from 'utils/Address';
 import Alert_mpos from '../mpos_no_realname_alert_page';
 const API = {

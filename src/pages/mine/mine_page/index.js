@@ -8,7 +8,8 @@ import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
-import { isMPOS } from 'utils';
+import { isMPOS } from 'utils/common';
+
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
   LOGOUT: '/signup/logout', // 用户退出登陆

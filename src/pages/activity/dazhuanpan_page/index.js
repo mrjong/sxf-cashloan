@@ -15,7 +15,7 @@ import zp_btn from './img/zp_btn.png';
 import item1 from './img/item1.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
-import { getH5Channel } from 'utils';
+import { getH5Channel } from 'utils/common';
 import {store} from 'utils/store'
 
 const API = {
