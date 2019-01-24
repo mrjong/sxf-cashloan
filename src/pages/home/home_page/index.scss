@@ -28,23 +28,13 @@
       line-height: 3;
     }
   }
+  .am-progress-bar {
+    border: 0.04rem solid #FFDA58;
+  }
 }
 
 .modalLoading {
   color: #666;
   margin-bottom: 15px;
   font-size: 32px;
-}
-
-// modal样式覆盖
-:global {
-  // .am-modal-body {
-  //   .am-modal-alert-content {
-  //     line-height: 1.5;
-  //   }
-  // }
-
-  .am-progress-bar {
-    border: 0.04rem solid #FFDA58;
-  }
 }
