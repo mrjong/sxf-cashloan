@@ -1,6 +1,6 @@
 import qs from 'qs';
 import { store } from 'utils/store';
-import { getH5Channel, setH5Channel } from 'utils';
+import { setH5Channel, getH5Channel } from 'utils/common';
 
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {

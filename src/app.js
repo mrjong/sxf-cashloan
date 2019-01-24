@@ -7,7 +7,8 @@ import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
 import { initAnalytics } from './utils/analytins';
-import { handleWindowError, isMPOS } from 'utils';
+import { handleWindowError } from 'utils';
+import { isMPOS } from 'utils/common';
 import ErrorBoundary from 'components/ErrorBoundary';
 import fastClick from 'fastclick';
 

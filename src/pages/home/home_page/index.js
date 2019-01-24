@@ -4,7 +4,8 @@ import { Modal, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, isMPOS } from 'utils';
+import { isWXOpen, getDeviceType } from 'utils';
+import { isMPOS } from 'utils/common';
 import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';

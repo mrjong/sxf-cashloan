@@ -8,7 +8,7 @@ import { mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import TabList from '../TagList';
 import { createForm } from 'rc-form';
-import { isMPOS } from 'utils';
+import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
 import style from './index.scss';
 

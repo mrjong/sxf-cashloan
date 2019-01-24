@@ -5,7 +5,8 @@ import { store } from 'utils/store';
 import { InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import Cookie from 'js-cookie';
-import { getDeviceType, getFirstError, validators, handleInputBlur, getH5Channel } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import { getH5Channel } from 'utils/common';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
 

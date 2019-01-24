@@ -4,7 +4,8 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
-import { setH5Channel, getH5Channel, getDeviceType } from 'utils';
+import { getDeviceType } from 'utils';
+import { setH5Channel, getH5Channel } from 'utils/common';
 
 const API = {
 	wxAuthcb: '/wx/authcb',

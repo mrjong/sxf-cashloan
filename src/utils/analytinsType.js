@@ -1,11 +1,12 @@
 // DC 对外
 // XDC mpos入口=>对内
+import { isMPOS } from './common'
 let prefix = `DC`;
-console.log(sessionStorage)
-console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
-if (JSON.parse(sessionStorage.getItem('isMPOS'))) {
+
+if (isMPOS() || JSON.parse(sessionStorage.getItem('isMPOS'))) {
 	prefix = 'XDC';
 }
+console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
 const login = {
 	getCode: `${prefix}_LOGIN_GET_CODE`, // 注册登录页-点击获取验证码
 	submit: `${prefix}_LOGIN_SUBMIT` // 注册登录页-一键代还
