@@ -116,11 +116,13 @@ if (window.history && window.history.pushState) {
           console.log('----+', store.getMoxieBackUrl())
           if (store.getMoxieBackUrl()) {
             store.removeMoxieBackUrl();
+            return; // 当时为什么去掉？
           }
 
           // 如果从banner跳到外链 则不处理
           if (store.getOutLinkUrl()) {
             store.removeOutLinkUrl();
+            return; // 当时为什么去掉？
           }
           if (window.location.pathname === '/') {
             return;
