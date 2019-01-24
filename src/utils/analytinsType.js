@@ -6,7 +6,7 @@ let prefix = `DC`;
 if (isMPOS() || JSON.parse(sessionStorage.getItem('isMPOS'))) {
 	prefix = 'XDC';
 }
-console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
+// console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
 const login = {
 	getCode: `${prefix}_LOGIN_GET_CODE`, // 注册登录页-点击获取验证码
 	submit: `${prefix}_LOGIN_SUBMIT` // 注册登录页-一键代还
