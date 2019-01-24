@@ -378,7 +378,7 @@ export default class FormContent extends PureComponent {
           </div>
         </List>
         <ButtonCustom onClick={this.handleSubmit} className={styles.confirm_btn}>
-          确认
+          确认绑定
         </ButtonCustom>
       </div>
     );
