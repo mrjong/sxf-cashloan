@@ -35,7 +35,7 @@ export default class real_name_page extends Component {
     ocrFanData: {},
     selectFlag: false,
     leftValue: updateLeft,
-    updateLeftValue:'',
+    updateLeftValue: '',
     rightValue: updateRight,
     footerValue: updateBottom,
     leftUploaded: false,
@@ -291,85 +291,87 @@ export default class real_name_page extends Component {
     // }
     return (
       <div className={style.real_name_page}>
-        {this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? <div>
-          <div className={style.updateTitle}>上传身份证正 、反面</div>
-          <div className={style.updateContent}>
-            <div className={style.updateImgLeft}>
-              <FEZipImage
-                disabledupload={disabledupload}
-                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-                value={this.state.leftValue}
-                onChange={this.handleChangePositive}
-                beforeCompress={this.handleBeforeCompress}
-                afterCompress={this.handleAfterCompress}
-              />
-              <p>拍摄身份证正面</p>
-            </div>
-            <div className={style.updateImgRight}>
-              <FEZipImage
-                disabledupload={disabledupload}
-                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-                value={this.state.rightValue}
-                onChange={this.handleChangeSide}
-                beforeCompress={this.handleBeforeCompress}
-                afterCompress={this.handleAfterCompress}
-              />
-              <p>拍摄身份证反面</p>
-            </div>
-            <div className={style.clear} />
-          </div>
-          <div className={style.clear} />
-          <div className={style.labelDiv}>
-            <InputItem onChange={this.handleNameChange}
-              placeholder="借款人本人姓名"
-              value={this.state.idName}
-              onFocus={ () => {buriedPointEvent(home.informationTapNameInp)} }
-							onBlur={() => {handleInputBlur()}}
-          >
-            姓名
-            </InputItem>
-        </div>
-          <div className={style.clear} />
-          <div className={style.inline} style={{ height: '0.04rem' }} />
-          <div className={style.labelDiv} style={{ marginTop: 0 }}>
-            <InputItem onChange={this.handleNumberChange}
-              placeholder="借款人身份证号"
-              value={this.state.idNo}
-              maxLength="18"
-              onFocus={ () => {buriedPointEvent(home.informationTapIDInp)} }
-              onBlur={() => {handleInputBlur()}}
-            >
-              身份证号
-            </InputItem>
-          </div>
-          <div className={style.clear} />
-          <div className={style.updateTitle}>上传本人手持身份证照片</div>
-          <div className={style.updateContent}>
-            <div className={style.updateImgLeft}>
-              <FEZipImage
-                disabledupload={disabledupload}
-                style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-                value={this.state.footerValue}
-                onChange={this.handleChangeBottom}
-                beforeCompress={this.handleBeforeCompress}
-                afterCompress={this.handleAfterCompress}
-              />
-              <p>上传手持身份证</p>
-            </div>
-            <div className={style.updateTop}>
-              <div className={style.examples}>参考示例</div>
-              <div className={style.examplesDes}>
-                照片上的身份证信息和持证人脸部须清晰可辨。照片格式支持jpg、png等格式。
+        {
+          this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? <div>
+            <div className={style.updateTitle}>上传身份证正 、反面</div>
+            <div className={style.updateContent}>
+              <div className={style.updateImgLeft}>
+                <FEZipImage
+                  disabledupload={disabledupload}
+                  style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
+                  value={this.state.leftValue}
+                  onChange={this.handleChangePositive}
+                  beforeCompress={this.handleBeforeCompress}
+                  afterCompress={this.handleAfterCompress}
+                />
+                <p>拍摄身份证正面</p>
               </div>
+              <div className={style.updateImgRight}>
+                <FEZipImage
+                  disabledupload={disabledupload}
+                  style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
+                  value={this.state.rightValue}
+                  onChange={this.handleChangeSide}
+                  beforeCompress={this.handleBeforeCompress}
+                  afterCompress={this.handleAfterCompress}
+                />
+                <p>拍摄身份证反面</p>
+              </div>
+              <div className={style.clear} />
             </div>
             <div className={style.clear} />
-          </div>
-          <div className={style.des}>
-            <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行身份认证</p>
-            <p className={style.desOne}>*身份信息一旦认证，不可修改</p>
-          </div>
-          <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>确定</ButtonCustom>
-        </div> : null}
+            <div className={style.labelDiv}>
+              <InputItem onChange={this.handleNameChange}
+                placeholder="借款人本人姓名"
+                value={this.state.idName}
+                onFocus={() => { buriedPointEvent(home.informationTapNameInp) }}
+                onBlur={() => { handleInputBlur() }}
+              >
+                姓名
+            </InputItem>
+            </div>
+            <div className={style.clear} />
+            <div className={style.inline} style={{ height: '0.04rem' }} />
+            <div className={style.labelDiv} style={{ marginTop: 0 }}>
+              <InputItem onChange={this.handleNumberChange}
+                placeholder="借款人身份证号"
+                value={this.state.idNo}
+                maxLength="18"
+                onFocus={() => { buriedPointEvent(home.informationTapIDInp) }}
+                onBlur={() => { handleInputBlur() }}
+              >
+                身份证号
+            </InputItem>
+            </div>
+            <div className={style.clear} />
+            <div className={style.updateTitle}>上传本人手持身份证照片</div>
+            <div className={style.updateContent}>
+              <div className={style.updateImgLeft}>
+                <FEZipImage
+                  disabledupload={disabledupload}
+                  style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
+                  value={this.state.footerValue}
+                  onChange={this.handleChangeBottom}
+                  beforeCompress={this.handleBeforeCompress}
+                  afterCompress={this.handleAfterCompress}
+                />
+                <p>上传手持身份证</p>
+              </div>
+              <div className={style.updateTop}>
+                <div className={style.examples}>参考示例</div>
+                <div className={style.examplesDes}>
+                  照片上的身份证信息和持证人脸部须清晰可辨。照片格式支持jpg、png等格式。
+              </div>
+              </div>
+              <div className={style.clear} />
+            </div>
+            <div className={style.des}>
+              <p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行身份认证</p>
+              <p className={style.desOne}>*身份信息一旦认证，不可修改</p>
+            </div>
+            <ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>确定</ButtonCustom>
+          </div> : null
+        }
         {
           this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? <div>
             <List className={style.is_true}>
