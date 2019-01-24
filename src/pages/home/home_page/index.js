@@ -228,7 +228,9 @@ export default class home_page extends PureComponent {
   // 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
   applyCardRepay = () => {
     const { usrIndexInfo } = this.state;
-    this.props.$fetch.post(API.CARD_AUTH).then(result => {
+    this.props.$fetch.post(API.CARD_AUTH, {
+      clientCode: '04'
+    }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`);
         SXFToast.loading('加载中...', 0);

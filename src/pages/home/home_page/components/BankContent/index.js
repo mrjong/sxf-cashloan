@@ -48,7 +48,9 @@ export default class BankContent extends React.Component {
 
   // 通过接口跳魔蝎
   goToMoXie = () => {
-    this.props.fetch.post(API.CARD_AUTH).then(result => {
+    this.props.fetch.post(API.CARD_AUTH, {
+      clientCode: '04'
+    }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         // TODO 授信页面？
         // TODO: 完成认证后返回信用卡列表页？
