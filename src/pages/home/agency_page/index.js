@@ -512,7 +512,7 @@ export default class agency_page extends PureComponent {
             </li>
           </ul>
         </Panel>
-        <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确定</ZButton>
+        <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确认借款</ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
           <a
