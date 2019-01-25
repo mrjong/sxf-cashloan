@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import icon from './img/Warn.png';
-import { setBackGround } from 'utils/Background';
+import { setBackGround } from 'utils/setBackground';
 
 @setBackGround('#fff')
 export default class mpos_no_realname_alert_page extends PureComponent {

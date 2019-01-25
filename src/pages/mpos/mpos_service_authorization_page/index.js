@@ -4,7 +4,7 @@ import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import qs from 'qs';
 import fetch from 'sx-fetch';
-import { setBackGround } from 'utils/Background';
+import { setBackGround } from 'utils/setBackground';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { mpos_service_authorization } from 'utils/analytinsType';

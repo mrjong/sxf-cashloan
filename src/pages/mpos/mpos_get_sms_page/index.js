@@ -5,7 +5,7 @@ import Cookie from 'js-cookie';
 import { getDeviceType } from 'utils';
 import qs from 'qs';
 import fetch from 'sx-fetch';
-import { setBackGround } from 'utils/Background';
+import { setBackGround } from 'utils/setBackGround';
 import click from '../mpos_service_authorization_page/img/Button.png';
 const API = {
 	sendsms: '/cmm/sendsms'

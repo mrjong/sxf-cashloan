@@ -160,7 +160,6 @@ if (window.history && window.history.pushState) {
               window.ReactRouterHistory.push('/home/home');
               break;
             case '/mine/credit_extension_page':
-
               if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {       
                 window.ReactRouterHistory.push('/home/home');
               } else {

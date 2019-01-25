@@ -22,6 +22,5 @@ module.exports = () => {
 
   if (home.includes(window.location.pathname)) {
     window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
-    // window.history.forward(1);
   }
 };

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
-import qs from 'qs';
 import errPage from 'pages/common/err_page';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
@@ -23,10 +22,6 @@ export default class router_Page extends PureComponent {
 			releaseBugs: false
 		};
 	}
-	componentWillReceiveProps(nextProps) {
-		this.loadComponent(nextProps);
-		store.setHistoryRouter(location.pathname);
-	}
 	componentWillMount() {
 		// 为跳转到协议添加loading
 		store.setFromPage('wap')
@@ -38,6 +33,10 @@ export default class router_Page extends PureComponent {
 		}
 		this.loadComponent(this.props);
 	}
+	componentWillReceiveProps(nextProps) {
+		this.loadComponent(nextProps);
+		store.setHistoryRouter(location.pathname);
+	}
 	componentWillUnmount() {
 		consoleshowStr = '';
 	}
@@ -46,8 +45,6 @@ export default class router_Page extends PureComponent {
 		let tokenFromStorage = '';
 		tokenFromStorage = store.getToken();
 		if (!tokenFromStorage && !pagesIgnore(window.location.pathname) && !token) {
-			// sessionStorage.clear();
-			// localStorage.clear();
 			Toast.info('请先登录');
 			setTimeout(() => {
 				window.ReactRouterHistory.push('/login');
@@ -127,7 +124,8 @@ export default class router_Page extends PureComponent {
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}
 					<div className="application_content">
-						{component}</div>
+						{component}
+					</div>
 				</div>
 			</div>
 		) : null;
