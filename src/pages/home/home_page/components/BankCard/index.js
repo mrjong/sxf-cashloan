@@ -57,7 +57,9 @@ export default class BankCard extends React.PureComponent {
   applyCardRepay = () => {
     // 埋点-首页-点击更新账单
     buriedPointEvent(home.updateBill);
-    this.props.$fetch.post(API.CARD_AUTH).then(result => {
+    this.props.$fetch.post(API.CARD_AUTH, {
+      clientCode: '04'
+    }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl('/home/home');
         SXFToast.loading('加载中...', 0);
