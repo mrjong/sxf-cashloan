@@ -5,7 +5,7 @@ import styles from './index.scss';
 import AwardShow from './components/AwardShow';
 import RuleShow from './components/RuleShow';
 import LoginAlert from './components/LoginAlert';
-import { setBackGround } from 'utils/setBackGround';
+import { setBackGround } from 'utils/background';
 import { Toast } from 'antd-mobile';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
