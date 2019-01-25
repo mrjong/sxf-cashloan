@@ -16,7 +16,6 @@ import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
-import ModalContent from './components/ModalInfo'
 import ActivityModal from 'components/Modal'
 import style from './index.scss';
 
@@ -455,6 +454,7 @@ export default class home_page extends PureComponent {
             history={history}
             haselescard={this.state.haselescard}
             progressNum={percentSatus}
+            toast={this.props.toast}
           >
             {usrIndexInfo.indexSts === 'LN0002' ||
               usrIndexInfo.indexSts === 'LN0010' ||
@@ -488,7 +488,7 @@ export default class home_page extends PureComponent {
           usrIndexInfo ? (
             bannerList && bannerList.length > 0 ? (
               <Carousels data={bannerList} entryFrom="banner">
-                <MsgBadge />
+                <MsgBadge toast={this.props.toast} />
               </Carousels>
             ) : (
                 <img className={style.default_banner} src={defaultBanner} alt="banner" />
@@ -500,10 +500,6 @@ export default class home_page extends PureComponent {
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* {首页活动提示弹窗（对内有）} */}
         {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
-        {/* 确认代还信息弹框 */}
-        <Modal popup visible={this.state.isShowModal} onClose={this.handleCloseModal} animationType="slide-up">
-          <ModalContent indexData={usrIndexInfo.indexData} onClose={this.handleCloseModal} history={history} />
-        </Modal>
         <Modal
           wrapClassName={style.modalLoadingBox}
           visible={visibleLoading}

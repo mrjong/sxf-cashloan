@@ -84,7 +84,7 @@ export default class BankContent extends React.Component {
   };
 
   render() {
-    const { className, children, contentData, progressNum, ...restProps } = this.props;
+    const { className, children, contentData, progressNum, toast, ...restProps } = this.props;
     const { indexSts, indexData } = contentData
     const showEntranceArr = ['LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010'];
     let tipText = null
@@ -95,7 +95,7 @@ export default class BankContent extends React.Component {
     }
     return (
       <div className={style.bank_content_wrap} {...restProps}>
-        <BankCard contentData={contentData} {...indexData} />
+        <BankCard contentData={contentData} toast={toast} {...indexData} />
         {tipText}
         {children}
         {showEntranceArr.includes(indexSts) ? (
