@@ -95,11 +95,11 @@ export default class BankCard extends React.PureComponent {
     const itemList = [
       {
         name: '账单日',
-        value: billDt === '---' ? '---' : dayjs(billDt).format('YYYY/MM/DD')
+        value: billDt === '---' || billDt === null ? '---' : dayjs(billDt).format('YYYY/MM/DD')
       },
       {
         name: '账单金额',
-        value: cardBillAmt === '---' ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)
+        value: cardBillAmt === '---' || cardBillAmt === null ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)
       },
       {
         name: '还款日',
