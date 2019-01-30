@@ -333,7 +333,15 @@ export default class order_detail_page extends PureComponent {
   }
   // 协议绑卡校验接口
   checkProtocolBindCard = () => {
-    this.props.$fetch.post(API.protocolSms, this.state.bindParams).then((res) => {
+    const params = {
+      cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+      bankCd: this.state.billDesc.wthdCrdCorpOrg,
+      // bnkMblNo: store.getUserPhone(),
+      usrSignCnl: getH5Channel(),
+      cardTyp: 'D',
+      isEntry: '01'
+    }
+    this.props.$fetch.post(API.protocolSms, params).then((res) => {
       switch (res.msgCode) {
         case 'PTM0000':
           //协议绑卡校验成功提示（走协议绑卡逻辑）
@@ -345,10 +353,6 @@ export default class order_detail_page extends PureComponent {
         //   this.props.toast.info(res.data);
         //   break;
         default:
-          //鉴权失败直接走代扣
-          this.setState({
-            isShowSmsModal: true
-          })
           this.repay()
           break;
       }
@@ -399,18 +403,9 @@ export default class order_detail_page extends PureComponent {
         usrBusCnl: 'WEB'
       }
     }
-    const bindParams = {
-      cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
-      bankCd: billDesc.wthdCrdCorpOrg,
-      // bnkMblNo: store.getUserPhone(),
-      usrSignCnl: getH5Channel(),
-      cardTyp: 'D',
-      isEntry: '01'
-    }
     //全局设置还款传递后台的参数
     this.setState({
-      repayParams: sendParams,
-      bindParams
+      repayParams: sendParams
     }, () => {
       //调用协议绑卡接口
       this.checkProtocolBindCard()
