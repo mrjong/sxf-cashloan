@@ -102,7 +102,9 @@ export default class credit_list_page extends PureComponent {
   };
   // 新增授权卡
   addCard = () => {
-    this.props.$fetch.post(API.CARDAUTH).then(result => {
+    this.props.$fetch.post(API.CARDAUTH, {
+      clientCode: '04'
+    }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
         if (queryData.autId) {
