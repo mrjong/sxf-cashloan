@@ -115,7 +115,7 @@ export default class bind_save_page extends PureComponent {
 						this.props.toast.info(result.msgInfo);
 					} else {
 						this.props.toast.info('发送成功，请注意查收！');
-						fn(true);
+						fn && fn(true);
 					}
 				},
 				(error) => {
@@ -163,7 +163,7 @@ export default class bind_save_page extends PureComponent {
 			} else {
 				this.props.toast.info('请重新输入验证码');//？？？？？？？
 				this.setState({ valueInputCarSms: '' });
-				//静默重新获取老的验证码(走老的代扣逻辑)
+				//静默重新获取老的验证码(走老的代扣逻辑,此时不需要验证码倒计时)
 				this.getOldBindCardCode(params)
 			}
 		})
@@ -293,9 +293,6 @@ export default class bind_save_page extends PureComponent {
 			this.props.toast.info('请输入银行卡绑定的有效手机号');
 			return;
 		}
-		const params = {
-			cardNo: formData.valueInputCarNumber //持卡人储蓄卡号
-		};
 		//获取卡号对应的银行代号
 		this.props.$fetch.post(API.GECARDINF, { cardNo: formData.valueInputCarNumber }).then((result) => {
 			if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
