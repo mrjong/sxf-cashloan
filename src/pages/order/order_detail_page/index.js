@@ -8,7 +8,7 @@ import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
-import{getH5Channel}from 'utils/common'
+import { getH5Channel } from 'utils/common'
 import qs from 'qs';
 import SmsModal from './components/SmsModal'
 
