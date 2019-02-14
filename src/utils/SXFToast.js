@@ -8,7 +8,7 @@ export const SXFToast = {
 		popUp.close();
 		Toast.hide();
 		popUp.show();
-		if (!duration&& duration !== 0) {
+		if (!duration && duration !== 0) {
 			setTimeout(() => {
 				popUp.close();
 				if (typeof onClose === 'function') {
@@ -28,6 +28,6 @@ export const SXFToast = {
 		Toast.hide();
 		if (popUp) {
 			popUp.close();
-        }
+		}
 	}
 };

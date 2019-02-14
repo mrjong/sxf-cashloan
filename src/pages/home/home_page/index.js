@@ -93,7 +93,6 @@ export default class home_page extends PureComponent {
   getPercent = () => {
     this.props.$fetch.post(API.GETSTSW).then((result) => {
       if (result && result.data !== null) {
-        console.log(result)
         this.calculatePercent(result.data)
       }
     }, err => {
@@ -111,7 +110,6 @@ export default class home_page extends PureComponent {
         codes.push(element.stsw.dicDetailCd)
       }
     });
-    console.log(codes)
     // case '1': // 认证中
     // case '2': // 认证成功
     // case '3': // 认证失败
@@ -139,7 +137,6 @@ export default class home_page extends PureComponent {
       //   });
       //   break;
       default:
-        console.log('default');
         this.setState({
           percentSatus: '',
         });
@@ -215,7 +212,6 @@ export default class home_page extends PureComponent {
   // 设置百分比
   setPercent = (percent) => {
     if (this.state.percent < 90 && this.state.percent >= 0) {
-      console.log(Math.random() * 10 + 1)
       this.setState({
         percent: this.state.percent + parseInt(Math.random() * 10 + 1)
       })
@@ -233,7 +229,6 @@ export default class home_page extends PureComponent {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`);
         SXFToast.loading('加载中...', 0);
-        // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
       } else {
         this.props.toast.info(result.msgInfo);
@@ -326,7 +321,6 @@ export default class home_page extends PureComponent {
           // })
       })
       .catch(err => {
-        console.log(err);
         clearInterval(timer);
         clearTimeout(timerOut);
         this.setState(
@@ -467,7 +461,6 @@ export default class home_page extends PureComponent {
         );
         break;
       default:
-        console.log('default');
         if (isWXOpen()) {
           componentsDisplay = (
             <InfoCard contentData={usrIndexInfo}>
