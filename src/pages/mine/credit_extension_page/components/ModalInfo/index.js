@@ -66,7 +66,7 @@ export default class ModalInfo extends Component {
     this.setState({
       repaymentDate: data.value,
       minAmt: '',
-      max: '',
+      maxAmt: '',
       // repaymentIndex: data.index,
       // cardBillAmt: data.value.cardBillAmt,
     }, () => {
