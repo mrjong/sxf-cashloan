@@ -23,7 +23,7 @@ export default class support_credit_page extends PureComponent {
     this.props.$fetch
       .post(API.SUPPORTBANKLIST, {
         cardTyp: 'C',
-        corpBusTyp: '01',
+        corpBusTyp: '41',
       }).then(
         res => {
           if (res.msgCode === 'PTM0000') {

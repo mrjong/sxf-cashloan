@@ -82,7 +82,7 @@ export default class wallet_page extends PureComponent {
 		// 参数
 		const params = {
 			type: '2', //储蓄卡卡类型
-			corpBusTyp: '01' //01：银行卡鉴权
+			corpBusTyp: '41' //01：银行卡鉴权
 		};
 		this.props.$fetch.post(API.cardList, params).then(
 			(data) => {

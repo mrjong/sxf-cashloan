@@ -103,7 +103,7 @@ export default class select_credit_page extends PureComponent {
       .post(API.BANKLIST, {
         // agrNo:query.agrNo,
         type: '4', //所有信用卡列表
-        corpBusTyp: '01', //01：银行卡鉴权
+        corpBusTyp: '41', //01：银行卡鉴权
       }).then(
         res => {
           if (res.msgCode === 'PTM0000') {

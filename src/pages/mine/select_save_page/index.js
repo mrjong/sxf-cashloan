@@ -107,7 +107,7 @@ export default class select_save_page extends PureComponent {
       .post(API.BANKLIST, {
         // agrNo:query.agrNo,
         type: '2', //所有储蓄卡列表
-        corpBusTyp: '01', //01：银行卡鉴权
+        corpBusTyp: '41', //01：银行卡鉴权
       }).then(
         res => {
           if (res.msgCode === "PTM0000") {
