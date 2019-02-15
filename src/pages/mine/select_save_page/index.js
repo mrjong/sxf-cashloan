@@ -98,7 +98,9 @@ export default class select_save_page extends PureComponent {
       } else {
         cardDatas = cardData[0];
       }
-      store.setCardData(cardDatas);
+      if (cardDatas) {
+        store.setCardData(cardDatas);
+      }
     }
   };
   // 获取储蓄卡银行卡列表
