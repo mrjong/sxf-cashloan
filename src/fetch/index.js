@@ -10,7 +10,7 @@ const fetchInit = () => {
 	let timer = null;
 	let timerList = [];
 	fetch.init({
-		timeout: 10000, // 默认超时
+		timeout: 15000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			// Toast.info('系统开小差，请稍后重试');

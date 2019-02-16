@@ -38,7 +38,8 @@ export default class order_detail_page extends PureComponent {
       // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
       // ItrtAmt: 0, // 每期利息金额
       deratePrice: '',
-      isShowSmsModal: false //是否显示短信验证码弹窗
+      isShowSmsModal: false, //是否显示短信验证码弹窗
+      smsCode: ''
     }
   }
   componentWillMount() {
@@ -84,8 +85,8 @@ export default class order_detail_page extends PureComponent {
           //     }
           // }
           this.setState({
-            billDesc: res.data,
-            perdList: res.data.perdList
+            billDesc: res.data, //账单全部详情
+            perdList: res.data.perdList //账单期数列表
           }, () => {
             // 选择银行卡回来
             let bankInfo = store.getCardData();
@@ -304,15 +305,15 @@ export default class order_detail_page extends PureComponent {
   }
   // 确认协议绑卡
   confirmProtocolBindCard = () => {
-    if (!this.state.smsCode) {
+    if (this.state.smsCode.length !== 6) {
       this.props.toast.info('请输入正确的验证码')
       return
     }
     this.props.$fetch.post(API.protocolBind, {
-      cardNo: this.state.wthCrdAgrNo,
-      smsCd: this.state.smsCode
+      cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+      smsCd: this.state.smsCode,
+      isEntry: "01"
     }).then((res) => {
-      isFetching = false;
       if (res.msgCode === 'PTM0000') {
         this.setState({
           isShowSmsModal: false,
@@ -336,7 +337,6 @@ export default class order_detail_page extends PureComponent {
     const params = {
       cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
       bankCd: this.state.billDesc.wthdCrdCorpOrg,
-      // bnkMblNo: store.getUserPhone(),
       usrSignCnl: getH5Channel(),
       cardTyp: 'D',
       isEntry: '01'
@@ -361,23 +361,10 @@ export default class order_detail_page extends PureComponent {
 
   // 立即还款
   handleClickConfirm = () => {
-    const { billDesc = {}, billNo, isPayAll, couponInfo = {} } = this.state;
-    let couponId = '';
-    let sendParams = {}
-    if (couponInfo && couponInfo.usrCoupNo) {
-      if (couponInfo.usrCoupNo !== 'null') {
-        couponId = couponInfo.usrCoupNo;
-      } else {
-        couponId = '';
-      }
-    } else {
-      if (billDesc.data && billDesc.data.usrCoupNo) {
-        couponId = billDesc.data.usrCoupNo
-      } else {
-        couponId = '';
-      }
-    }
-    //let couponId = couponInfo.usrCoupNo || billDesc.data.usrCoupNo || ''
+    const { billDesc = {}, billNo, isPayAll, couponInfo } = this.state;
+    const cardAgrNo = this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo
+    let sendParams = null
+    let couponId = couponInfo && couponInfo.usrCoupNo || billDesc.data.usrCoupNo || ''
     // 判断是否为一键结清
     let repayStswStr = '';
     if (isPayAll) {
@@ -388,16 +375,16 @@ export default class order_detail_page extends PureComponent {
       }
       sendParams = {
         billNo,
+        cardAgrNo,
         thisRepTotAmt: billDesc.waitRepAmt,
-        cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
         repayStsw: repayStswStr,
         usrBusCnl: 'WEB'
       }
     } else {
       sendParams = {
         billNo,
+        cardAgrNo,
         thisRepTotAmt: this.state.sendMoney,
-        cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
         repayStsw: billDesc.billPerdStsw,
         coupId: couponId,
         usrBusCnl: 'WEB'

@@ -18,7 +18,8 @@ const API = {
 	BINDCARD: '/withhold/card/bindConfirm', // 绑定银行卡
 	GETCODE: '/withhold/card/bindApply', // 绑定银行卡短信验证码获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink'//协议绑卡接口
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
 };
 
 @fetch.inject()
@@ -93,6 +94,9 @@ export default class bind_save_page extends PureComponent {
 				case 'PTM9901':
 					this.props.toast.info(res.data);
 					break;
+				case 'PBM1010':
+					this.props.toast.info(res.msgInfo);
+					break;
 				default:
 					this.getOldBindCardCode(params, fn)
 					break;
@@ -134,19 +138,14 @@ export default class bind_save_page extends PureComponent {
 				//协议绑卡成功
 				const backUrlData = store.getBackUrl();
 				if (backUrlData) {
-					// 如果是首页则多存一个参数为showModal的字段，以便首页弹框
-					if (backUrlData === '/home/home') {
-						cardDatas = { agrNo: data.data.agrNo, showModal: true, ...this.state.cardData };
-					} else {
-						cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
-					}
+					// cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
 					// 首页不需要存储银行卡的情况，防止弹窗出现
-					const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-					if (queryData && queryData.noBankInfo) {
-						store.removeCardData();
-					} else {
-						store.setCardData(cardDatas);
-					}
+					// const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+					// if (queryData && queryData.noBankInfo) {
+					// 	store.removeCardData();
+					// } else {
+					// 	store.setCardData(cardDatas);
+					// }
 					store.removeBackUrl();
 					// 如果是从四项认证进入，绑卡成功则回到首页
 					if (store.getCheckCardRouter() === 'checkCardRouter') {
@@ -216,22 +215,22 @@ export default class bind_save_page extends PureComponent {
 					entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
 					is_success: true
 				});
-				let cardDatas = {};
+				// let cardDatas = {};
 				const backUrlData = store.getBackUrl();
 				if (backUrlData) {
 					// 如果是首页则多存一个参数为showModal的字段，以便首页弹框
-					if (backUrlData === '/home/home') {
-						cardDatas = { agrNo: data.data.agrNo, showModal: true, ...this.state.cardData };
-					} else {
-						cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
-					}
+					// if (backUrlData === '/home/home') {
+					// 	cardDatas = { agrNo: data.data.agrNo, showModal: true, ...this.state.cardData };
+					// } else {
+					// 	cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
+					// }
 					// 首页不需要存储银行卡的情况，防止弹窗出现
-					const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-					if (queryData && queryData.noBankInfo) {
-						store.removeCardData();
-					} else {
-						store.setCardData(cardDatas);
-					}
+					// const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+					// if (queryData && queryData.noBankInfo) {
+					// 	store.removeCardData();
+					// } else {
+					// 	store.setCardData(cardDatas);
+					// }
 					store.removeBackUrl();
 					// this.props.history.replace(backUrlData);
 					// 如果是从四项认证进入，绑卡成功则回到首页
@@ -309,6 +308,22 @@ export default class bind_save_page extends PureComponent {
 		this.props.history.push('/mine/support_save_page');
 	};
 
+	// 跳转委托扣款协议
+	readContract = () => {
+		const formData = this.props.form.getFieldsValue();
+		const params = {
+			cardNo: formData.valueInputCarNumber
+		}
+		this.props.$fetch.post(API.contractInfo, params).then(result => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				store.setProtocolFinancialData(result.data);
+				this.props.history.push('/protocol/delegation_withhold_page');
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		});
+	}
+
 	render() {
 		const Item = List.Item;
 		const { getFieldProps } = this.props.form;
@@ -365,6 +380,14 @@ export default class bind_save_page extends PureComponent {
 				<ButtonCustom onClick={this.confirmBindCard} className={styles.confirm_btn}>
 					确认
 				</ButtonCustom>
+				<p className={styles.linkTip}>点击确定，即代表你同意签署
+					<a onClick={() => {
+						this.readContract('delegation_withhold_page');
+					}} className={styles.link}
+					>
+						《用户授权扣款委托书》
+					</a>
+				</p>
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持银行卡类型
 				</span>

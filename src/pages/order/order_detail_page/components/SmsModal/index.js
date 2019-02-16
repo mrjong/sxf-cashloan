@@ -8,7 +8,7 @@ export default class SmsModal extends React.PureComponent {
     super(props)
     this.state = {
       isAgain: false, // 是否重新获取验证码
-      times: 5,
+      times: 90,
     }
   }
 
@@ -23,7 +23,7 @@ export default class SmsModal extends React.PureComponent {
   smsCodeAgain = () => {
     if (this.state.times > 0) return
     this.setState({
-      times: 5
+      times: 90
     }, () => {
       //重新获取
       this.startCountDown()
@@ -32,7 +32,11 @@ export default class SmsModal extends React.PureComponent {
   }
 
   handleChange = (e) => {
+    if (e.target.value.length > 6) {
+      e.target.value = e.target.value.slice(0, 6)
+    }
     this.props.onSmsCodeChange(e.target.value)
+
   }
 
   //倒计时
@@ -65,7 +69,12 @@ export default class SmsModal extends React.PureComponent {
           <div className={styles.body}>
             <div className={styles.desc}>请输入短信验证码，短信已发送到您的手机：{store.getUserPhone()}</div>
             <div className={styles.smsCode}>
-              <input type="number" placeholder='请输入短信验证码' value={smsCode} onChange={this.handleChange}/>
+              <input
+                type="number"
+                placeholder="请输入短信验证码"
+                value={smsCode}
+                onChange={this.handleChange}
+              />
               {
                 times ? <span>{times + 's'}</span> : <button onClick={this.smsCodeAgain}>重新获取验证码</button>
               }
