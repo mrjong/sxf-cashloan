@@ -295,6 +295,13 @@ export default class order_detail_page extends PureComponent {
       smsCode,
     })
   }
+
+  onAgainBtnClicked = (flag)=> {
+    this.setState({
+      againBtnClicked: flag
+    })
+  }
+
   // 跳过验证直接执行代扣逻辑
   skipProtocolBindCard = () => {
     this.setState({
@@ -305,29 +312,28 @@ export default class order_detail_page extends PureComponent {
   }
   // 确认协议绑卡
   confirmProtocolBindCard = () => {
+    if (!this.state.smsCode) {
+      this.props.toast.info('请输入验证码');
+      return;
+    }
     if (this.state.smsCode.length !== 6) {
-      this.props.toast.info('请输入正确的验证码')
-      return
+      this.props.toast.info('请输入正确的验证码');
+      return;
     }
     this.props.$fetch.post(API.protocolBind, {
       cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
       smsCd: this.state.smsCode,
       isEntry: "01"
     }).then((res) => {
-      if (res.msgCode === 'PTM0000') {
-        this.setState({
-          isShowSmsModal: false,
-          smsCode: ''
-        })
-        this.repay()
-      } else if (res.msgCode === 'PTM9901') {
+      //如果不是第二次发短信
+      if (!this.state.againBtnClicked && res.msgCode === 'PTM9901') {
         this.props.toast.info(res.data);
         this.setState({ smsCode: '' });
       } else {
         this.setState({
           isShowSmsModal: false,
-          smsCode: ''
-        })
+          smsCode: '',
+        });
         this.repay()
       }
     })
@@ -637,6 +643,7 @@ export default class order_detail_page extends PureComponent {
             onCancel={this.skipProtocolBindCard}
             onConfirm={this.confirmProtocolBindCard}
             onSmsCodeChange={this.handleSmsCodeChange}
+            onAgainBtnClicked={this.onAgainBtnClicked}
             smsCodeAgain={this.checkProtocolBindCard}
             smsCode={smsCode}
           />}

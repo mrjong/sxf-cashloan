@@ -8,7 +8,7 @@ export default class SmsModal extends React.PureComponent {
     super(props)
     this.state = {
       isAgain: false, // 是否重新获取验证码
-      times: 90,
+      times: 60,
     }
   }
 
@@ -23,12 +23,13 @@ export default class SmsModal extends React.PureComponent {
   smsCodeAgain = () => {
     if (this.state.times > 0) return
     this.setState({
-      times: 90
+      times: 60
     }, () => {
       //重新获取
       this.startCountDown()
       this.props.smsCodeAgain()
     })
+    this.props.onAgainBtnClicked(true)
   }
 
   handleChange = (e) => {
@@ -36,7 +37,6 @@ export default class SmsModal extends React.PureComponent {
       e.target.value = e.target.value.slice(0, 6)
     }
     this.props.onSmsCodeChange(e.target.value)
-
   }
 
   //倒计时

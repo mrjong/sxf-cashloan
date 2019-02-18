@@ -23,7 +23,7 @@ export default class support_save_page extends PureComponent {
     this.props.$fetch
       .post(API.SUPPORTBANKLIST, {
         cardTyp: 'D',
-        corpBusTyp: '41',
+        corpBusTyp: '',
       }).then(
         res => {
           if (res.msgCode === 'PTM0000') {

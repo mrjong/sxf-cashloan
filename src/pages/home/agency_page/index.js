@@ -20,7 +20,8 @@ const API = {
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
   CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-  qryContractInfo: '/bill/qryContractInfo'
+  qryContractInfo: '/bill/qryContractInfo',
+	contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
 };
 
 @fetch.inject()
@@ -385,25 +386,34 @@ export default class agency_page extends PureComponent {
       });
   };
 
-  // 获取金融服务合同
+  // 获取金融服务合同/委托扣款合同数据
   requestFinacialService = type => {
     const params = {
       prdId: this.state.queryData.prdId,
       wtdwTyp: this.state.queryData.wtdwTyp,
       billPrcpAmt: this.state.queryData.billPrcpAmt,
     };
-    this.props.$fetch.post(API.FINACIAL_SERVIE_PROTOCOL, params).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        store.setProtocolFinancialData(result.data);
-        if (type === 'financial') {
+    if(type==='financial') {
+      this.props.$fetch.post(API.FINACIAL_SERVIE_PROTOCOL, params).then(result => {
+        if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+          store.setProtocolFinancialData(result.data);
           this.props.history.push('/protocol/financial_service_page');
         } else {
-          this.props.history.push('/protocol/delegation_withhold_page');
+          this.props.toast.info(result.msgInfo);
         }
-      } else {
-        this.props.toast.info(result.msgInfo);
-      }
-    });
+      });
+    } else {
+      this.props.$fetch.post(API.contractInfo, {
+        cardNo: ''
+      }).then(result => {
+        if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+          store.setProtocolFinancialData(result.data);
+          this.props.history.push('/protocol/delegation_withhold_page');
+        } else {
+          this.props.toast.info(result.msgInfo);
+        }
+      });
+    }
   };
 
   // 选择优惠劵

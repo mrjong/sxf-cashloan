@@ -80,7 +80,6 @@ export default class bind_save_page extends PureComponent {
 			cardTyp,
 			bankCd,
 			bankName
-			// testFlag: '01'
 		}).then((res) => {
 			switch (res.msgCode) {
 				case 'PTM0000':
