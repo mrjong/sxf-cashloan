@@ -367,6 +367,9 @@ export default class order_detail_page extends PureComponent {
 
   // 立即还款
   handleClickConfirm = () => {
+    this.setState({
+      againBtnClicked: false // 重置重新获取验证码按钮
+    })
     const { billDesc = {}, billNo, isPayAll, couponInfo } = this.state;
     const cardAgrNo = this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo
     let sendParams = null
