@@ -499,7 +499,7 @@ export default class home_page extends PureComponent {
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* {首页活动提示弹窗（对内有）} */}
-        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal}></ActivityModal>}
+        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal} history={history}></ActivityModal>}
         <Modal
           wrapClassName={style.modalLoadingBox}
           visible={visibleLoading}
