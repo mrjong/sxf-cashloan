@@ -18,9 +18,17 @@
     z-index: 1000;
     text-align: center;
     .content {
+      position: relative;
       width: 100%;
       img {
         width: 70%;
+      }
+      .huodongTootipBtn {
+        width: 50%;
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
     .closeBtn {
