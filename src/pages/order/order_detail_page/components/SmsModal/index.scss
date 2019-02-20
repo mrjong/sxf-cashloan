@@ -1,23 +1,23 @@
 .smsModal {
-  position: fixed;
-  margin: 0;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, .3);
+  // position: fixed;
+  // margin: 0;
+  // left: 0;
+  // top: 0;
+  // right: 0;
+  // bottom: 0;
+  // background-color: rgba(0, 0, 0, .3);
   .main {
-    position: fixed;
-    margin: 0;
-    left: 50%;
-    top: 50%;
-    width: 5rem;
-    min-height: 4.7rem;
-    transform: translate(-50%, -50%);
-    border-radius: .1rem;
-    background-color: #fff;
-    box-sizing: border-box;
-    overflow: hidden;
+    // position: fixed;
+    // margin: 0;
+    // left: 50%;
+    // top: 50%;
+    // width: 5rem;
+    // min-height: 4.7rem;
+    // transform: translate(-50%, -50%);
+    // border-radius: .1rem;
+    // background-color: #fff;
+    // box-sizing: border-box;
+    // overflow: hidden;
     button {
       background-color: #ebde74;
       outline: none;
@@ -96,4 +96,13 @@
 }
 :-ms-input-placeholder {
   color: #dcdcdc;
+}
+
+:global {
+  .am-modal.am-modal-transparent .am-modal-content {
+    padding-top: 0;
+    .am-modal-body {
+      padding: 0;
+    }
+  }
 }

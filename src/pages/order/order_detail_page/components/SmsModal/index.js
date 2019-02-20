@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './index.scss'
 import { store } from 'utils/store';
+import { Modal } from 'antd-mobile'
 
 let timer = null
 export default class SmsModal extends React.PureComponent {
@@ -63,34 +64,40 @@ export default class SmsModal extends React.PureComponent {
     const { times, isAgain } = this.state
     const { onCancel, onConfirm, smsCode } = this.props
     return (
-      <div className={styles.smsModal}>
-        <div className={styles.main}>
-          <div className={styles.head}>验证码</div>
-          <div className={styles.body}>
-            <div className={styles.desc}>请输入短信验证码，短信已发送到您的手机：{store.getUserPhone()}</div>
-            <div className={styles.smsCode}>
-              <input
-                type="number"
-                placeholder="请输入短信验证码"
-                value={smsCode}
-                onChange={this.handleChange}
-              />
-              {
-                times ? <span>{times + 's'}</span> : <button onClick={this.smsCodeAgain}>重新获取验证码</button>
-              }
-            </div>
-            <p className={styles.tip}>温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意《用户授权扣款委托书》约定扣款</p>
-            <div className={styles.bottom}>
-              {
-                isAgain ? (
-                  [<button onClick={onCancel} key='1' className={styles.skipButton}>跳过,直接还款</button>,
-                  <button onClick={onConfirm} key='2' className={styles.smallButton}>确定</button>]
-                ) : <button onClick={onConfirm} className={styles.largeButton}>确定</button>
-              }
+      <Modal
+        visible={true}
+        transparent
+        maskClosable={false}
+      >
+        <div className={styles.smsModal}>
+          <div className={styles.main}>
+            <div className={styles.head}>验证码</div>
+            <div className={styles.body}>
+              <div className={styles.desc}>请输入短信验证码，短信已发送到您的手机：{store.getUserPhone()}</div>
+              <div className={styles.smsCode}>
+                <input
+                  type="number"
+                  placeholder="请输入短信验证码"
+                  value={smsCode}
+                  onChange={this.handleChange}
+                />
+                {
+                  times ? <span>{times + 's'}</span> : <button onClick={this.smsCodeAgain}>重新获取验证码</button>
+                }
+              </div>
+              <p className={styles.tip}>温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意《用户授权扣款委托书》约定扣款</p>
+              <div className={styles.bottom}>
+                {
+                  isAgain ? (
+                    [<button onClick={onCancel} key='1' className={styles.skipButton}>跳过,直接还款</button>,
+                    <button onClick={onConfirm} key='2' className={styles.smallButton}>确定</button>]
+                  ) : <button onClick={onConfirm} className={styles.largeButton}>确定</button>
+                }
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Modal>
     )
   }
 }

@@ -576,6 +576,16 @@ export default class order_detail_page extends PureComponent {
     ]
     return (
       <div className={styles.order_detail_page}>
+        {
+          isShowSmsModal && <SmsModal
+            onCancel={this.skipProtocolBindCard}
+            onConfirm={this.confirmProtocolBindCard}
+            onSmsCodeChange={this.handleSmsCodeChange}
+            onAgainBtnClicked={this.onAgainBtnClicked}
+            smsCodeAgain={this.checkProtocolBindCard}
+            smsCode={smsCode}
+          />
+        }
         <Panel title="借款信息" className={styles.loadInfBox}>
           <ul className={styles.panel_conten}>
             {
@@ -642,14 +652,6 @@ export default class order_detail_page extends PureComponent {
             }
             <SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>立即还款</SXFButton>
           </div>
-          {isShowSmsModal && <SmsModal
-            onCancel={this.skipProtocolBindCard}
-            onConfirm={this.confirmProtocolBindCard}
-            onSmsCodeChange={this.handleSmsCodeChange}
-            onAgainBtnClicked={this.onAgainBtnClicked}
-            smsCodeAgain={this.checkProtocolBindCard}
-            smsCode={smsCode}
-          />}
         </Modal>
       </div>
     )
