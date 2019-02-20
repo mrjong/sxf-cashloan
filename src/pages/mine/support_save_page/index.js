@@ -3,7 +3,7 @@ import fetch from 'sx-fetch';
 import styles from './index.scss';
 
 const API = {
-  SUPPORTBANKLIST: '/rcm/qrySurportBank', // 银行卡列表
+  SUPPORTBANKLIST: '/withhold/binkLists', // 银行卡列表
 }
 
 @fetch.inject()
@@ -23,7 +23,7 @@ export default class support_save_page extends PureComponent {
     this.props.$fetch
       .post(API.SUPPORTBANKLIST, {
         cardTyp: 'D',
-        corpBusTyp: '01',
+        corpBusTyp: '',
       }).then(
         res => {
           if (res.msgCode === 'PTM0000') {
@@ -50,8 +50,8 @@ export default class support_save_page extends PureComponent {
                 this.state.cardList.map((item, index) => {
                   return (
                     <li key={index}>
-                      <span className={`bank_ico bank_ico_${item.bankCd}`}></span>
-                      <span className={styles.bank_name}>{item.bankNm}</span>
+                      <span className={`bank_ico bank_ico_${item.corpOrgId}`}></span>
+                      <span className={styles.bank_name}>{item.corpOrgSnm}</span>
                     </li>
                   )
                 })
@@ -62,4 +62,3 @@ export default class support_save_page extends PureComponent {
     )
   }
 }
-
