@@ -1,23 +1,5 @@
 .smsModal {
-  // position: fixed;
-  // margin: 0;
-  // left: 0;
-  // top: 0;
-  // right: 0;
-  // bottom: 0;
-  // background-color: rgba(0, 0, 0, .3);
   .main {
-    // position: fixed;
-    // margin: 0;
-    // left: 50%;
-    // top: 50%;
-    // width: 5rem;
-    // min-height: 4.7rem;
-    // transform: translate(-50%, -50%);
-    // border-radius: .1rem;
-    // background-color: #fff;
-    // box-sizing: border-box;
-    // overflow: hidden;
     button {
       background-color: #ebde74;
       outline: none;
@@ -36,7 +18,7 @@
       padding: .35rem .25rem .5rem;
       color: #666;
       .desc {
-        font-size: 24px;
+        font-size: .24rem;
         text-align: left;
       }
       .smsCode {
@@ -49,7 +31,7 @@
           height: .34rem;
           line-height: .34rem;
           padding: 0 .1rem;
-          font-size: .14rem;
+          font-size: .16rem;
           float: right;
         }
         span {
@@ -57,7 +39,7 @@
         }
       }
       .tip {
-        font-size: .16rem;
+        font-size: .20rem;
         margin: .3rem 0 .66rem;
         text-align: left;
       }
