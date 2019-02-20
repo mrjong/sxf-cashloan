@@ -104,11 +104,11 @@ export default class bind_save_page extends PureComponent {
 	}
 	//老的绑卡获取验证码
 	getOldBindCardCode = (params, fn) => {
-		const { cardNo, mblNo, cardTyp, bankCd } = params
+		const { valueInputCarNumber, valueInputCarPhone, cardTyp, bankCd } = params
 		this.props.$fetch
 			.post(API.GETCODE, {
-				cardNo, //持卡人卡号
-				mblNo,
+				cardNo: valueInputCarNumber, //持卡人卡号
+				mblNo: valueInputCarPhone,
 				cardTyp, //卡类型
 				bankCd,
 			})
