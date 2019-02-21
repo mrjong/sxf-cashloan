@@ -8,7 +8,6 @@ export default class SmsModal extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      isAgain: false, // 是否重新获取验证码
       times: 60,
     }
   }
@@ -30,7 +29,6 @@ export default class SmsModal extends React.PureComponent {
       this.startCountDown()
       this.props.smsCodeAgain()
     })
-    this.props.onAgainBtnClicked(true)
   }
 
   handleChange = (e) => {
@@ -49,9 +47,6 @@ export default class SmsModal extends React.PureComponent {
       })
       if (times < 0) {
         this.clearCountDown()
-        this.setState({
-          isAgain: true
-        })
       }
     }, 1000)
   }
@@ -61,8 +56,8 @@ export default class SmsModal extends React.PureComponent {
   }
 
   render() {
-    const { times, isAgain } = this.state
-    const { onCancel, onConfirm, smsCode } = this.props
+    const { times } = this.state
+    const { onCancel, onConfirm, smsCode, toggleBtn } = this.props
     return (
       <Modal
         visible={true}
@@ -88,7 +83,7 @@ export default class SmsModal extends React.PureComponent {
               <p className={styles.tip}>温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意《用户授权扣款委托书》约定扣款</p>
               <div className={styles.bottom}>
                 {
-                  isAgain ? (
+                  toggleBtn ? (
                     [<button onClick={onCancel} key='1' className={styles.skipButton}>跳过,直接还款</button>,
                     <button onClick={onConfirm} key='2' className={styles.smallButton}>确定</button>]
                   ) : <button onClick={onConfirm} className={styles.largeButton}>确定</button>

@@ -9,7 +9,6 @@ import { validators, handleInputBlur, getFirstError } from 'utils';
 import { getH5Channel } from 'utils/common'
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
-import qs from 'qs';
 import styles from './index.scss';
 
 const API = {
@@ -36,6 +35,10 @@ export default class bind_save_page extends PureComponent {
 	}
 	componentWillMount() {
 		this.queryUserInf();
+		this.setState({
+			bindCardNo: store.getBindCardNo(),
+			bindCardPhone: store.getBindCardPhone(),
+		})
 	}
 	componentWillUnmount() {
 		store.removeBackUrl(); // 清除session里的backurl的值
@@ -333,7 +336,14 @@ export default class bind_save_page extends PureComponent {
 					<InputItem
 						maxLength="24"
 						{...getFieldProps('valueInputCarNumber', {
-							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }]
+							initialValue: this.state.bindCardNo,
+							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }],
+							onChange: (value) => {
+								store.setBindCardNo(value)
+								this.setState({
+									bindCardNo: value
+								})
+							}
 						})}
 						type="number"
 						placeholder="请输入储蓄卡卡号"
@@ -345,10 +355,17 @@ export default class bind_save_page extends PureComponent {
 						maxLength="11"
 						type="number"
 						{...getFieldProps('valueInputCarPhone', {
+							initialValue: this.state.bindCardPhone,
 							rules: [
 								{ required: true, message: '请输入银行卡绑定的有效手机号' },
 								{ validator: this.validateCarPhone }
-							]
+							],
+							onChange: (value) => {
+								store.setBindCardPhone(value)
+								this.setState({
+									bindCardPhone: value
+								})						
+							}
 						})}
 						placeholder="请输入银行卡预留手机号"
 						onBlur={() => { handleInputBlur() }}

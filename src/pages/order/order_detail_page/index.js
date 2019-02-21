@@ -39,7 +39,9 @@ export default class order_detail_page extends PureComponent {
       // ItrtAmt: 0, // 每期利息金额
       deratePrice: '',
       isShowSmsModal: false, //是否显示短信验证码弹窗
-      smsCode: ''
+      smsCode: '',
+      protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
+      toggleBtn: false // 是否切换短信验证码弹窗底部按钮
     }
   }
   componentWillMount() {
@@ -296,22 +298,27 @@ export default class order_detail_page extends PureComponent {
     })
   }
 
-  onAgainBtnClicked = (flag)=> {
-    this.setState({
-      againBtnClicked: flag
-    })
-  }
-
   // 跳过验证直接执行代扣逻辑
   skipProtocolBindCard = () => {
+    this.closeSmsModal()
+  }
+
+  // 关闭短信弹窗并还款
+  closeSmsModal = () => {
     this.setState({
       isShowSmsModal: false,
-      smsCode: ''
+      smsCode: '',
+      protocolBindCardCount: 0,
+      toggleBtn: false
     })
     this.repay()
   }
+
   // 确认协议绑卡
   confirmProtocolBindCard = () => {
+    this.setState({
+      protocolBindCardCount: this.state.protocolBindCardCount + 1
+    })
     if (!this.state.smsCode) {
       this.props.toast.info('请输入验证码');
       return;
@@ -325,16 +332,17 @@ export default class order_detail_page extends PureComponent {
       smsCd: this.state.smsCode,
       isEntry: "01"
     }).then((res) => {
-      //如果不是第二次发短信
-      if (!this.state.againBtnClicked && res.msgCode === 'PTM9901') {
-        this.props.toast.info(res.data);
-        this.setState({ smsCode: '' });
+      if (res.msgCode === 'PTM0000') {
+        this.closeSmsModal()
+      } else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
+        this.closeSmsModal()
       } else {
+        // 切换短信弹窗底部按钮
         this.setState({
-          isShowSmsModal: false,
-          smsCode: '',
-        });
-        this.repay()
+          toggleBtn: true,
+          smsCode: ''
+        })
+        this.props.toast.info(res.data);
       }
     })
   }
@@ -355,9 +363,6 @@ export default class order_detail_page extends PureComponent {
             isShowSmsModal: true
           })
           break;
-        // case 'PTM9901':
-        //   this.props.toast.info(res.data);
-        //   break;
         default:
           this.repay()
           break;
@@ -367,13 +372,21 @@ export default class order_detail_page extends PureComponent {
 
   // 立即还款
   handleClickConfirm = () => {
-    this.setState({
-      againBtnClicked: false // 重置重新获取验证码按钮
-    })
-    const { billDesc = {}, billNo, isPayAll, couponInfo } = this.state;
+    const { billDesc = {}, billNo, isPayAll } = this.state;
     const cardAgrNo = this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo
     let sendParams = null
-    let couponId = couponInfo && couponInfo.usrCoupNo || billDesc.data.usrCoupNo || ''
+    let couponId = ''
+    if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+      if (this.state.couponInfo.usrCoupNo !== 'null') {
+        couponId = this.state.couponInfo.usrCoupNo;
+      } else {
+        couponId = '';
+      }
+    } else {
+      if (this.state.billDesc.data && this.state.billDesc.data.usrCoupNo) {
+        couponId = this.state.billDesc.data.usrCoupNo
+      }
+    }
     // 判断是否为一键结清
     let repayStswStr = '';
     if (isPayAll) {
@@ -534,7 +547,7 @@ export default class order_detail_page extends PureComponent {
     });
   }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -581,9 +594,9 @@ export default class order_detail_page extends PureComponent {
             onCancel={this.skipProtocolBindCard}
             onConfirm={this.confirmProtocolBindCard}
             onSmsCodeChange={this.handleSmsCodeChange}
-            onAgainBtnClicked={this.onAgainBtnClicked}
             smsCodeAgain={this.checkProtocolBindCard}
             smsCode={smsCode}
+            toggleBtn={toggleBtn}
           />
         }
         <Panel title="借款信息" className={styles.loadInfBox}>
