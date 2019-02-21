@@ -63,7 +63,7 @@ export default class SmsModal extends React.PureComponent {
         visible={true}
         transparent
         maskClosable={false}
-        wrapClassName='smsModal'
+        className='smsModal'
       >
         <div className={styles.smsModal}>
           <div className={styles.main}>
