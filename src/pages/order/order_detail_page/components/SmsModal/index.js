@@ -63,6 +63,7 @@ export default class SmsModal extends React.PureComponent {
         visible={true}
         transparent
         maskClosable={false}
+        wrapClassName='smsModal'
       >
         <div className={styles.smsModal}>
           <div className={styles.main}>
@@ -75,6 +76,7 @@ export default class SmsModal extends React.PureComponent {
                   placeholder="请输入短信验证码"
                   value={smsCode}
                   onChange={this.handleChange}
+                  pattern="[0-9]*"
                 />
                 {
                   times ? <span>{times + 's'}</span> : <button onClick={this.smsCodeAgain}>重新获取验证码</button>

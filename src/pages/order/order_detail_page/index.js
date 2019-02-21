@@ -316,9 +316,6 @@ export default class order_detail_page extends PureComponent {
 
   // 确认协议绑卡
   confirmProtocolBindCard = () => {
-    this.setState({
-      protocolBindCardCount: this.state.protocolBindCardCount + 1
-    })
     if (!this.state.smsCode) {
       this.props.toast.info('请输入验证码');
       return;
@@ -327,6 +324,9 @@ export default class order_detail_page extends PureComponent {
       this.props.toast.info('请输入正确的验证码');
       return;
     }
+    this.setState({
+      protocolBindCardCount: this.state.protocolBindCardCount + 1
+    })
     this.props.$fetch.post(API.protocolBind, {
       cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
       smsCd: this.state.smsCode,
