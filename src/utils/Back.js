@@ -39,13 +39,11 @@ if (window.history && window.history.pushState) {
   window.addEventListener(
     'popstate',
     () => {
-      alert('ddddd')
       const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
       // 获取token
       let token = Cookie.get('fin-v-card-token');
       let tokenFromStorage = '';
       tokenFromStorage = store.getToken();
-      alert(tokenFromStorage+'   ssss')
       // 返回拦截弹窗
       let userInfo = store.getUserInfo();
       let backFlag = store.getBackFlag();
@@ -66,7 +64,6 @@ if (window.history && window.history.pushState) {
         window.ReactRouterHistory.push('/home/home');
       }
       if (window.location.pathname === '/home/home' && window.location.search.indexOf('noBackParam') > 0) {
-        alert(222222)
         logoutAppHandler();
         return
       }
@@ -139,8 +136,6 @@ if (window.history && window.history.pushState) {
                 return;
               }
               if (tokenFromStorage && token) {
-                alert(tokenFromStorage);
-                alert(token)
                 logoutAppHandler();
               } else if (isWXOpen() && !tokenFromStorage && !token) {
                 window.close();
