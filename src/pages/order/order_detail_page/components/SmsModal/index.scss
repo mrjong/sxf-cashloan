@@ -81,12 +81,10 @@
 }
 
 :global {
-  .smsModal {
-    .am-modal.am-modal-transparent .am-modal-content {
-      padding-top: 0;
-      .am-modal-body {
-        padding: 0;
-      }
+  .smsModal.am-modal-transparent .am-modal-content {
+    padding-top: 0;
+    .am-modal-body {
+      padding: 0;
     }
   }
 }
