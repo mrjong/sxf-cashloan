@@ -158,6 +158,7 @@ export const closeCurrentWebView = () => {
 let state = false;
 
 export const logoutAppHandler = (that) => {
+	alert(isMPOS())
 	if (isMPOS()) {
 		closeCurrentWebView();
 		return;
