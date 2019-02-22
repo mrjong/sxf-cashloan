@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/ButtonCustom';
+import { Modal } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
@@ -14,7 +15,8 @@ export default class repayment_succ_page extends PureComponent {
         billPrcpAmt: '--',
         perdUnit: '--',
         billRegDt: '--',
-      }
+      },
+      isShowTipsModal: true
     }
   }
   componentWillMount() {
@@ -32,8 +34,15 @@ export default class repayment_succ_page extends PureComponent {
     buriedPointEvent(order.returnHome);
     this.props.history.push('/home/home')
   }
+  // 关闭弹窗
+  closeModal = () => {
+    this.setState({
+      isShowTipsModal: false
+    })
+  }
 
   render() {
+    const { isShowTipsModal } = this.state;
     return (
       <div className={styles.repayment_succ_page}>
         <div className={styles.tips}>
@@ -46,6 +55,16 @@ export default class repayment_succ_page extends PureComponent {
           <p>申请借款日期：{this.state.orderSuccess.billRegDt}</p>
         </div>
         <ButtonCustom onClick={this.backHome} className={styles.back_btn}>返回首页</ButtonCustom>
+        <Modal
+          wrapClassName={styles.success_modal_warp}
+          visible={isShowTipsModal}
+          transparent
+        >
+          <div className={styles.modal_tip_content}>
+            <ButtonCustom onClick={this.backHome} className={styles.modal_btn}>立即开启</ButtonCustom>
+          </div>
+          <i className={styles.close_btn} onClick={this.closeModal} />
+        </Modal>
       </div>
     )
   }
