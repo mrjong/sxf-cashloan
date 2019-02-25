@@ -68,6 +68,7 @@ export default class confirm_agency_page extends PureComponent {
     let bankInfo = store.getCardData();
     store.removeCardData();
     pageData = store.getRepaymentModalData();
+    console.log(pageData,'pageData')
     store.removeRepaymentModalData();
     if (pageData) {
       if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
