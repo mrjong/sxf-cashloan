@@ -56,7 +56,9 @@ const mine = {
 const order = {
 	repayment: `${prefix}_ORDER_DETAILS_REPAYMENT`, // 账单详情页-主动还款按钮
 	repaymentFirst: `${prefix}_ORDER_DETAILS_REPAYMENT_FIRST`, // 账单详情页-付款详情-立即还款按钮
-	returnHome: `${prefix}_ORDER_BACK_HOME` // 还款完成页-返回首页按钮
+	returnHome: `${prefix}_ORDER_BACK_HOME`, // 还款完成页-返回首页按钮
+	openNow: `${prefix}_ORDER_OPEN_NOW`, // 还款完成页-弹框里立即开启按钮
+	closeModal: `${prefix}_ORDER_CLOSE_MODAL`, // 还款完成页-弹框里关闭按钮
 };
 
 const membership = {
