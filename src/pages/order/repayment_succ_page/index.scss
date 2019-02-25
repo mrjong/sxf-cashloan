@@ -38,3 +38,44 @@
     margin-top: 108px;
   }
 }
+.success_modal_warp {
+  :global {
+    .am-modal{
+      width: 750px;
+      .am-modal-content{
+        padding-top: 0;
+        background-color: transparent;
+        .am-modal-body{
+          padding: 0;
+          padding-bottom: 50px;
+        }
+      }
+    }
+  }
+  .modal_tip_content {
+    @include bg-image('../../../assets/images/order/modal_bg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 750px;
+    height: 750px;
+    .modal_btn{
+      position: relative;
+      top: 548px;
+      background: #50A6FD;
+      color: #fff;
+      width: 380px;
+    }
+  }
+  .close_btn {
+    position: absolute;
+    left: 50%;
+    top: 730px;
+    background-image: url('../../../assets/images/order/close_ico@2x.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 68px;
+    height: 68px;
+    margin-left: -34px;
+    z-index: 1;
+  }
+}
