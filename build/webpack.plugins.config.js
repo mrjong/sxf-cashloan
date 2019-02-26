@@ -26,8 +26,8 @@ let plugins = [
 		// favicon: path.resolve(__dirname, '../src/favicon.png'),
 		chunksSortMode: 'dependency' //按dependency的顺序引入
 	}),
-	new webpack.HotModuleReplacementPlugin(), //热更新插件
-	new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
+	new webpack.HotModuleReplacementPlugin() //热更新插件
+	// new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
 ];
 
 //生产插件
@@ -41,14 +41,14 @@ let getProdPlugins = function() {
 			threshold: 10240,
 			minRatio: 0.8
 		})
-	),
-		plugins.push(
-			new WebpackZipPlugin({
-				initialFile: './dist', //需要打包的文件夹(一般为dist)
-				endPath: './', //打包到对应目录（一般为当前目录'./'）
-				zipName: +new Date() + 'copy-dist.zip' //打包生成的文件名
-			})
-		);
+	);
+	plugins.push(
+		new WebpackZipPlugin({
+			initialFile: './dist', //需要打包的文件夹(一般为dist)
+			endPath: './', //打包到对应目录（一般为当前目录'./'）
+			zipName: +new Date() + 'copy-dist.zip' //打包生成的文件名
+		})
+	);
 	plugins.push(new OptimizeCSSPlugin()); //压缩提取出的css，并解决ExtractTextPlugin分离出的js重复问题(多个文件引入同一css文件)
 	plugins.push(new webpack.HashedModuleIdsPlugin());
 	console.log(process.env.npm_config_report, 'npm run build --report');

@@ -1,6 +1,5 @@
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
-
 module.exports = function (options) {
   return {
     mode: options.mode,
