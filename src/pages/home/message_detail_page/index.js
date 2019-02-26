@@ -27,10 +27,10 @@ export default class message_detail_page extends PureComponent {
         <div className={style.time}>
           {this.state.msgObj && this.state.msgObj.sendTm}
         </div>
-        <p className={style.p}>
+        <pre className={style.p}>
           {(this.state.msgObj && this.state.msgObj.detail) ||
             (this.state.msgObj && this.state.msgObj.dec)}
-        </p>
+        </pre>
       </div>
     )
   }
