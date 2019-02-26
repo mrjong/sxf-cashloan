@@ -10,7 +10,7 @@ const fetchInit = () => {
 	let timer = null;
 	let timerList = [];
 	fetch.init({
-		timeout: 20000, // 默认超时
+		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			setTimeout(() => {
