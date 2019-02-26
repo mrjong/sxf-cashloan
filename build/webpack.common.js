@@ -9,9 +9,9 @@ module.exports = function (options) {
       extensions: ['.js', '.jsx', '.png', '.scss'],
     },
     output: {
-      filename: options.bundleHash ? 'bundle-[hash].js' : 'bundle.js',
+      filename: options.bundleHash ? 'bundle-[chunkhash:8].js' : 'bundle.js',
       path: path.join(__dirname, '../dist'),
-      chunkFilename: 'chunk-[id]-[hash].js',
+      chunkFilename: 'chunk-[name]-[chunkhash:8].js',
       publicPath: options.publicPath,
     },
     module: {

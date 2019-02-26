@@ -25,8 +25,7 @@ let plugins = [
 		},
 		// favicon: path.resolve(__dirname, '../src/favicon.png'),
 		chunksSortMode: 'dependency' //按dependency的顺序引入
-	}),
-	new webpack.HotModuleReplacementPlugin() //热更新插件
+	})
 	// new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
 ];
 
@@ -157,6 +156,9 @@ let getTestPlugins = function() {
 
 //开发插件
 let getDevPlugins = function() {
+	plugins.push(
+		new webpack.HotModuleReplacementPlugin() //热更新插件
+	);
 	plugins.push(
 		new webpack.DefinePlugin({
 			'process.env': {
