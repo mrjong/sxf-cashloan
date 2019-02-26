@@ -158,14 +158,14 @@ export default class bind_save_page extends PureComponent {
 				//协议绑卡成功
 				const backUrlData = store.getBackUrl();
 				if (backUrlData) {
-					// cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
-					// // 首页不需要存储银行卡的情况，防止弹窗出现
-					// const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-					// if (queryData && queryData.noBankInfo) {
-					// 	store.removeCardData();
-					// } else {
-					// 	store.setCardData(cardDatas);
-					// }
+					let cardDatas = { agrNo: res.data.agrNo, ...this.state.cardData };
+					// 首页不需要存储银行卡的情况，防止弹窗出现
+					const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+					if (queryData && queryData.noBankInfo) {
+						store.removeCardData();
+					} else {
+						store.setCardData(cardDatas);
+					}
 					store.removeBackUrl();
 					// 如果是从四项认证进入，绑卡成功则回到首页
 					if (store.getCheckCardRouter() === 'checkCardRouter') {
@@ -178,10 +178,10 @@ export default class bind_save_page extends PureComponent {
 				}
 			} else if (res.msgCode === 'PTM9901') {
 				this.props.toast.info(res.data);
-				this.setState({ valueInputCarSms: '' });
+				this.setState({ valueInputCarSms: '' })
 			} else {
-				this.props.toast.info('请重新输入验证码');//？？？？？？？
-				this.setState({ valueInputCarSms: '' });
+				this.props.toast.info('请重新输入验证码')
+				this.setState({ valueInputCarSms: '' })
 				//静默重新获取老的验证码(走老的代扣逻辑,此时不需要验证码倒计时)
 				this.getOldBindCardCode(params)
 			}
@@ -326,7 +326,8 @@ export default class bind_save_page extends PureComponent {
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
 		const params = {
-			cardNo: formData.valueInputCarNumber
+			cardNo: formData.valueInputCarNumber,
+			isEntry: '01'
 		}
 		this.props.$fetch.post(API.contractInfo, params).then(result => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
