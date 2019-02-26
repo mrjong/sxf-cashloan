@@ -52,6 +52,7 @@ export default class home_page extends PureComponent {
       isShowActivityModal: false // 是否显示活动弹窗
     };
   }
+
   componentWillMount() {
     // 清除订单缓存
     store.removeBackData();
@@ -60,7 +61,6 @@ export default class home_page extends PureComponent {
     this.getTokenFromUrl();
     // 判断是否是微信打通（微信登陆）
     if (isWXOpen() && !tokenFromStorage && !token) {
-      // if (true && !tokenFromStorage && !token) {
       this.cacheBanner();
     } else {
       this.requestGetUsrInfo();
@@ -70,6 +70,7 @@ export default class home_page extends PureComponent {
       store.setHistoryRouter(window.location.pathname);
     }
   }
+
   componentWillUnmount() {
     // 离开首页的时候 将 是否打开过底部弹框标志恢复
     store.removeHadShowModal();
@@ -80,6 +81,7 @@ export default class home_page extends PureComponent {
       clearTimeout(timerOut);
     }
   }
+  
   // 从 url 中获取参数，如果有 token 就设置下
   getTokenFromUrl = () => {
     const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -93,7 +95,6 @@ export default class home_page extends PureComponent {
   getPercent = () => {
     this.props.$fetch.post(API.GETSTSW).then((result) => {
       if (result && result.data !== null) {
-        console.log(result)
         this.calculatePercent(result.data)
       }
     }, err => {
@@ -105,13 +106,10 @@ export default class home_page extends PureComponent {
   calculatePercent = (list) => {
     let codes = []
     list.forEach(element => {
-      // element.code === 'zmxy'
-      // if(element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck' || element.code === 'faceDetect'){
       if (element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck') {
         codes.push(element.stsw.dicDetailCd)
       }
     });
-    console.log(codes)
     // case '1': // 认证中
     // case '2': // 认证成功
     // case '3': // 认证失败
@@ -133,13 +131,7 @@ export default class home_page extends PureComponent {
           percentSatus: '1'
         });
         break;
-      // case 3: // 新用户，信用卡未授权
-      //   this.setState({
-      //     percentSatus: '1'
-      //   });
-      //   break;
       default:
-        console.log('default');
         this.setState({
           percentSatus: '',
         });
@@ -177,7 +169,6 @@ export default class home_page extends PureComponent {
         break;
       case 'LN0004': // 代还资格审核中
         console.log('LN0004');
-        // this.props.toast.info('您的代还资格正在审核中，请耐心等待');
         this.props.toast.info('正在审批中，请耐心等待');
         break;
       case 'LN0005': // 暂无代还资格
@@ -215,7 +206,6 @@ export default class home_page extends PureComponent {
   // 设置百分比
   setPercent = (percent) => {
     if (this.state.percent < 90 && this.state.percent >= 0) {
-      console.log(Math.random() * 10 + 1)
       this.setState({
         percent: this.state.percent + parseInt(Math.random() * 10 + 1)
       })
@@ -233,7 +223,6 @@ export default class home_page extends PureComponent {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`);
         SXFToast.loading('加载中...', 0);
-        // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
       } else {
         this.props.toast.info(result.msgInfo);
@@ -247,7 +236,6 @@ export default class home_page extends PureComponent {
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
-        // this.handleShowModal();
         // this.props.history.push({ pathname: '/home/confirm_agency', search: `?indexData=${usrIndexInfo && JSON.stringify(usrIndexInfo.indexData)}`});
         this.props.history.push({ pathname: '/home/confirm_agency', state: { indexData: usrIndexInfo && usrIndexInfo.indexData } });
       } else if (result && result.msgCode === 'PTM2003') {
@@ -306,27 +294,26 @@ export default class home_page extends PureComponent {
         //     this.setState({
         //       visibleLoading: false,
         //     });
-            if (result && result.msgCode === 'PTM0000') {
-              // if (this.state.showToast) {
-              //   this.setState({
-              //     showToast: false,
-              //   });
-              //   this.props.toast.info('资质检测完成，可正常借款', 3, () => {
-              //     this.requestBindCardState();
-              //   });
-              // } else {
-              //   this.requestBindCardState();
-              // }
-              this.requestBindCardState();
-            } else { // 失败的话刷新首页
-              this.props.toast.info(result.msgInfo, 2, () => {
-                this.requestGetUsrInfo();
-              });
-            }
-          // })
+        if (result && result.msgCode === 'PTM0000') {
+          // if (this.state.showToast) {
+          //   this.setState({
+          //     showToast: false,
+          //   });
+          //   this.props.toast.info('资质检测完成，可正常借款', 3, () => {
+          //     this.requestBindCardState();
+          //   });
+          // } else {
+          //   this.requestBindCardState();
+          // }
+          this.requestBindCardState();
+        } else { // 失败的话刷新首页
+          this.props.toast.info(result.msgInfo, 2, () => {
+            this.requestGetUsrInfo();
+          });
+        }
+        // })
       })
       .catch(err => {
-        console.log(err);
         clearInterval(timer);
         clearTimeout(timerOut);
         this.setState(
@@ -417,6 +404,7 @@ export default class home_page extends PureComponent {
       this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
     });
   };
+
   // 关闭活动弹窗
   closeActivityModal = () => {
     this.setState({
@@ -467,7 +455,6 @@ export default class home_page extends PureComponent {
         );
         break;
       default:
-        console.log('default');
         if (isWXOpen()) {
           componentsDisplay = (
             <InfoCard contentData={usrIndexInfo}>
@@ -481,7 +468,6 @@ export default class home_page extends PureComponent {
     return (
       <div className={style.home_page}>
         {isWXOpen() && !tokenFromStorage && !token ? (
-          // {true && !tokenFromStorage && !token ? (
           <Carousels data={bannerList} entryFrom="banner"></Carousels>
         )
           :

@@ -122,12 +122,7 @@ module.exports = function (options) {
           target: 'https://lns-wap-test.vbillbank.com/disting/#/',
           pathRewrite: { '^/disting': '' },
           changeOrigin: true
-        },
-        //  '/fqa': {
-        //   target: 'http://172.18.40.173:8080/disting', //目标接口域名
-        //   changeOrigin: true, //是否跨域
-        //   // demo=>  'http://localhost:8080/api' ===> 'http://www.abc.com/api'
-        // }
+        }
       },
     },
     optimization: options.optimization,

@@ -336,7 +336,7 @@ export default class essential_information_page extends PureComponent {
 						}
 					})(
 						<InputItem
-							placeholder="xx市xx区县xx街道xx门牌号"
+							placeholder="xx区县xx街道xx门牌号"
 							type="text"
 							onBlur={(v) => {
 								this.inputOnBlur(v, 'resident_address');

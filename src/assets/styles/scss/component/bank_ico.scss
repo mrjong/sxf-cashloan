@@ -191,6 +191,28 @@
   :global(.bank_golden_ico_GZB) {
     @include bg-image('../../../assets/images/home/bank_golden23');
   }
+  // 江苏银行
+  :global(.bank_ico_JSB) {
+    @include bg-image('../../../assets/images/mine/selectCard/bank24');
+  }
+  :global(.bank_golden_ico_JSB) {
+    @include bg-image('../../../assets/images/home/bank_golden24');
+  }
+   // 南京银行
+  :global(.bank_ico_NJB) {
+    @include bg-image('../../../assets/images/mine/selectCard/bank25');
+  }
+  :global(.bank_golden_ico_NJB) {
+    @include bg-image('../../../assets/images/home/bank_golden25');
+  }
+   // 宁波银行
+  :global(.bank_ico_NBB) {
+    @include bg-image('../../../assets/images/mine/selectCard/bank26');
+  }
+  :global(.bank_golden_ico_NBB) {
+    @include bg-image('../../../assets/images/home/bank_golden26');
+  }
+
   // //嘉兴银行
   // :global(.bank_ico_JXBANK){
   //   background-Image: url('../image/10@2x.png');

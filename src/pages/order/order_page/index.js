@@ -249,7 +249,6 @@ export default class order_page extends PureComponent {
 			<div key={`${sectionID}-${rowID}`} />
 		)
 		let index = this.state.rData && this.state.rData.length - 1
-		console.log(this.state.rData)
 		const row = (rowData, sectionID, rowID) => {
 			if (index < 0) {
 				index = this.state.rData && this.state.rData.length - 1

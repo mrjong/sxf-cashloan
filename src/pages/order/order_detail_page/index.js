@@ -8,12 +8,16 @@ import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
+import { getH5Channel } from 'utils/common'
 import qs from 'qs';
+import SmsModal from './components/SmsModal'
 
 const API = {
   qryDtl: "/bill/qryDtl",
   payback: '/bill/payback',
   couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
+  protocolSms: '/withhold/protocolSms', // 校验协议绑卡
+  protocolBind: '/withhold/protocolBink'//协议绑卡接口
 }
 let entryFrom = '';
 @fetch.inject()
@@ -34,6 +38,10 @@ export default class order_detail_page extends PureComponent {
       // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
       // ItrtAmt: 0, // 每期利息金额
       deratePrice: '',
+      isShowSmsModal: false, //是否显示短信验证码弹窗
+      smsCode: '',
+      protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
+      toggleBtn: false // 是否切换短信验证码弹窗底部按钮
     }
   }
   componentWillMount() {
@@ -49,8 +57,6 @@ export default class order_detail_page extends PureComponent {
     }, () => {
       this.getLoanInfo()
     })
-
-
   }
 
   componentWillUnmount() {
@@ -81,8 +87,8 @@ export default class order_detail_page extends PureComponent {
           //     }
           // }
           this.setState({
-            billDesc: res.data,
-            perdList: res.data.perdList
+            billDesc: res.data, //账单全部详情
+            perdList: res.data.perdList //账单期数列表
           }, () => {
             // 选择银行卡回来
             let bankInfo = store.getCardData();
@@ -285,25 +291,102 @@ export default class order_detail_page extends PureComponent {
     })
 
   }
+  // 处理输入的验证码
+  handleSmsCodeChange = (smsCode) => {
+    this.setState({
+      smsCode,
+    })
+  }
+
+  // 跳过验证直接执行代扣逻辑
+  skipProtocolBindCard = () => {
+    this.closeSmsModal()
+  }
+
+  // 关闭短信弹窗并还款
+  closeSmsModal = () => {
+    this.setState({
+      isShowSmsModal: false,
+      smsCode: '',
+      protocolBindCardCount: 0,
+      toggleBtn: false
+    })
+    this.repay()
+  }
+
+  // 确认协议绑卡
+  confirmProtocolBindCard = () => {
+    if (!this.state.smsCode) {
+      this.props.toast.info('请输入验证码');
+      return;
+    }
+    if (this.state.smsCode.length !== 6) {
+      this.props.toast.info('请输入正确的验证码');
+      return;
+    }
+    this.setState({
+      protocolBindCardCount: this.state.protocolBindCardCount + 1
+    })
+    this.props.$fetch.post(API.protocolBind, {
+      cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+      smsCd: this.state.smsCode,
+      isEntry: "01"
+    }).then((res) => {
+      if (res.msgCode === 'PTM0000') {
+        this.closeSmsModal()
+      } else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
+        this.closeSmsModal()
+      } else {
+        // 切换短信弹窗底部按钮
+        this.setState({
+          toggleBtn: true,
+          smsCode: ''
+        })
+        this.props.toast.info(res.data);
+      }
+    })
+  }
+  // 协议绑卡校验接口
+  checkProtocolBindCard = () => {
+    const params = {
+      cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+      bankCd: this.state.billDesc.wthdCrdCorpOrg,
+      usrSignCnl: getH5Channel(),
+      cardTyp: 'D',
+      isEntry: '01'
+    }
+    this.props.$fetch.post(API.protocolSms, params).then((res) => {
+      switch (res.msgCode) {
+        case 'PTM0000':
+          //协议绑卡校验成功提示（走协议绑卡逻辑）
+          this.setState({
+            isShowSmsModal: true
+          })
+          break;
+        default:
+          this.repay()
+          break;
+      }
+    })
+  }
+
   // 立即还款
   handleClickConfirm = () => {
-    const { billDesc = {}, billNo, isPayAll, couponInfo = {} } = this.state;
-    let couponId = '';
-    let sendParams = {}
-    if (couponInfo && couponInfo.usrCoupNo) {
-      if (couponInfo.usrCoupNo !== 'null') {
-        couponId = couponInfo.usrCoupNo;
+    const { billDesc = {}, billNo, isPayAll } = this.state;
+    const cardAgrNo = this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo
+    let sendParams = null
+    let couponId = ''
+    if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
+      if (this.state.couponInfo.usrCoupNo !== 'null') {
+        couponId = this.state.couponInfo.usrCoupNo;
       } else {
         couponId = '';
       }
     } else {
-      if (billDesc.data && billDesc.data.usrCoupNo) {
-        couponId = billDesc.data.usrCoupNo
-      } else {
-        couponId = '';
+      if (this.state.billDesc.data && this.state.billDesc.data.usrCoupNo) {
+        couponId = this.state.billDesc.data.usrCoupNo
       }
     }
-    //let couponId = couponInfo.usrCoupNo || billDesc.data.usrCoupNo || ''
     // 判断是否为一键结清
     let repayStswStr = '';
     if (isPayAll) {
@@ -314,22 +397,33 @@ export default class order_detail_page extends PureComponent {
       }
       sendParams = {
         billNo,
+        cardAgrNo,
         thisRepTotAmt: billDesc.waitRepAmt,
-        cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
         repayStsw: repayStswStr,
         usrBusCnl: 'WEB'
       }
     } else {
       sendParams = {
         billNo,
+        cardAgrNo,
         thisRepTotAmt: this.state.sendMoney,
-        cardAgrNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo,
         repayStsw: billDesc.billPerdStsw,
         coupId: couponId,
         usrBusCnl: 'WEB'
       }
     }
-    this.props.$fetch.post(API.payback, sendParams).then(res => {
+    //全局设置还款传递后台的参数
+    this.setState({
+      repayParams: sendParams
+    }, () => {
+      //调用协议绑卡接口
+      this.checkProtocolBindCard()
+    })
+  }
+  //调用还款接口逻辑
+  repay = () => {
+    const { billDesc, isPayAll } = this.state;
+    this.props.$fetch.post(API.payback, this.state.repayParams).then(res => {
       if (res.msgCode === 'PTM0000') {
         buriedPointEvent(order.repaymentFirst, {
           entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
@@ -453,7 +547,7 @@ export default class order_detail_page extends PureComponent {
     });
   }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -495,6 +589,16 @@ export default class order_detail_page extends PureComponent {
     ]
     return (
       <div className={styles.order_detail_page}>
+        {
+          isShowSmsModal && <SmsModal
+            onCancel={this.skipProtocolBindCard}
+            onConfirm={this.confirmProtocolBindCard}
+            onSmsCodeChange={this.handleSmsCodeChange}
+            smsCodeAgain={this.checkProtocolBindCard}
+            smsCode={smsCode}
+            toggleBtn={toggleBtn}
+          />
+        }
         <Panel title="借款信息" className={styles.loadInfBox}>
           <ul className={styles.panel_conten}>
             {

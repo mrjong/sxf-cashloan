@@ -19,7 +19,7 @@ const API = {
 let urlQuery = '';
 let autId = '';
 // const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator' ];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator'];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {
@@ -147,7 +147,6 @@ export default class credit_extension_page extends PureComponent {
 								store.setCheckCardRouter('');
 								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
 								this.props.SXFToast.loading('加载中...', 0);
-								// window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&hideStep=true&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
@@ -186,7 +185,7 @@ export default class credit_extension_page extends PureComponent {
 	// 关闭弹框
 	handleCloseModal = () => {
 		this.setState({
-		  isShowModal: false,
+			isShowModal: false,
 		});
 	};
 
@@ -206,10 +205,8 @@ export default class credit_extension_page extends PureComponent {
 			};
 		});
 		if (isShowBtn) {
-			// document.title = '风控授信项';
 			this.props.setTitle('信用认证');
 		} else {
-			// document.title = '信用加分';
 			this.props.setTitle('信用加分');
 		}
 		return (

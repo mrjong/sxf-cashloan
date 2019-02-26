@@ -1,0 +1,90 @@
+.smsModal {
+  .main {
+    button {
+      background-color: #ebde74;
+      outline: none;
+      border: none;
+      color: #333;
+      border-radius: .35rem;
+    }
+    .head {
+      height: .7rem;
+      line-height: .7rem;
+      font-size: 30px;
+      background-color: #333;
+      color: #fff;
+    }
+    .body {
+      padding: .35rem .25rem .5rem;
+      color: #666;
+      .desc {
+        font-size: .24rem;
+        text-align: left;
+      }
+      .smsCode {
+        font-size: .22rem;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 10px;
+        margin-top: .5rem;
+        text-align: left;
+        button {
+          height: .34rem;
+          line-height: .34rem;
+          padding: 0 .1rem;
+          font-size: .16rem;
+          float: right;
+        }
+        span {
+          float: right;
+        }
+      }
+      .tip {
+        font-size: .20rem;
+        margin: .3rem 0 .66rem;
+        text-align: left;
+      }
+      .bottom {
+        display: flex;
+        justify-content: space-around;
+        .skipButton {
+          height: .5rem;
+          font-size: .24rem;
+          padding: 0 .17rem;
+          box-sizing: border-box;
+          background-color: transparent;
+          border: 1px solid #ccc;
+          float: left;
+        }
+        .smallButton {
+          width: 1.4rem;
+          height: .5rem;
+        }
+        .largeButton {
+          width: 3rem;
+          height: .45rem;
+        }
+      }
+    }
+  }
+}
+::-webkit-input-placeholder {
+  color: #dcdcdc;
+}
+:-moz-placeholder {
+  color: #dcdcdc;
+}
+::-moz-placeholder {
+  color: #dcdcdc;
+}
+:-ms-input-placeholder {
+  color: #dcdcdc;
+}
+
+:global {
+  .smsModal.am-modal-transparent .am-modal-content {
+    padding-top: 0;
+    .am-modal-body {
+      padding: 0;
+    }
+  }
+}
