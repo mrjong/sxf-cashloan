@@ -3,6 +3,9 @@ import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 import Blank from 'components/Blank';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
+
 const API = {
 	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
   updateCredStsForHandle: '/auth/updateCredStsForHandle'
@@ -22,10 +25,16 @@ export default class middle_page extends Component {
 		if (taskType) {
 			this.props.$fetch
 				.get(`${API.updateCredStsForHandle}/${taskType}`)
-				.then(() => {
+				.then(res => {
+					if(res.msgCode !== 'PTM0000'){
+                        this.buryPointsType(taskType, false, res.msgInfo);
+                        return
+					}
+					this.buryPointsType(taskType, true);
 					this.goRouter();
 				})
 				.catch((err) => {
+					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
 					this.setState({
 						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
@@ -57,6 +66,16 @@ export default class middle_page extends Component {
 			this.props.history.replace('/home/home');
 		}
 	};
+
+	// 判断是首页还是信用加分的提交返回结果埋点 taskType 区分信用卡和运营商 isSucc 结果是否成功 reason 失败原因
+    buryPointsType = (taskType, isSucc, reason) => {
+        if(taskType === 'carrier'){
+			buriedPointEvent(home.operatorResult, {'is_success': isSucc, 'fail_cause': reason, });
+		} else if(taskType === 'bank') {
+			buriedPointEvent(home.cardResult, {'is_success': isSucc, 'fail_cause': reason, });
+		}
+    }
+
 	render() {
 		return <Blank errorInf={this.state.errorInf} />;
 	}
