@@ -8,6 +8,7 @@ import { getDeviceType } from 'utils';
 import { getH5Channel } from 'utils/common';
 import { address } from 'utils/Address';
 import Alert_mpos from '../mpos_no_realname_alert_page';
+import linkConf from 'config/link.conf';
 const API = {
 	validateMposRelSts: '/authorize/validateMposRelSts',
 	chkAuth: '/authorize/chkAuth'
@@ -36,7 +37,12 @@ export default class mpos_middle_page extends Component {
 			})
 			.then((res) => {
 				if (res.msgCode === 'URM0000') {
-					this.transition();
+					// entryType为入口类型，DC为贷款超市进入
+					if (query && query.entryType === 'DC') {
+						window.location.href = `${linkConf.DC_URL}&appId=${query.appId}&token=${query.token}`
+					} else {
+						this.transition();
+					}
 				} else if (res.msgCode === 'URM9999') {
 					this.props.toast.info(res.msgInfo);
 				} else if (res.msgCode === 'PTM9000') {
