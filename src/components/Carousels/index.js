@@ -48,6 +48,9 @@ export default class Carousels extends React.Component {
     });
     const { url, title } = item;
     const { entryFrom } = this.props;
+    if (!url) {
+      return
+    }
     store.setOutLinkUrl(url);
     SXFToast.loading('加载中...', 0);
     let jumpUrl = '';
@@ -72,7 +75,7 @@ export default class Carousels extends React.Component {
           {data.map(( item, index ) => (
             <div
               key={item}
-              onClick={item.url ? () => {this.handleLinkClick(item, index)} : null}
+              onClick={ () => {this.handleLinkClick(item, index)} }
               style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
             >
               <img
