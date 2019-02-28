@@ -1,86 +1,90 @@
 .smsModal {
   .main {
+    width: 600px;
+    overflow: hidden;
     button {
-      background-color: #ebde74;
+      background-color: #EBDE74;
       outline: none;
       border: none;
       color: #333;
-      border-radius: .35rem;
+      border-radius: 40px;
+      height: 80px;
+      line-height: 80px;
+      font-size: 36px;
     }
     .head {
-      height: .7rem;
-      line-height: .7rem;
-      font-size: 30px;
+      height: 90px;
+      line-height: 90px;
+      font-size: 36px;
       background-color: #333;
       color: #fff;
     }
     .body {
-      padding: .35rem .25rem .5rem;
+      padding: 30px 25px 45px;
       color: #666;
       .desc {
-        font-size: .24rem;
+        font-size: 30px;
         text-align: left;
       }
       .smsCode {
-        font-size: .22rem;
-        border-bottom: 1px dashed #ccc;
-        padding-bottom: 10px;
-        margin-top: .5rem;
+        font-size: 30px;
+        border-bottom: 1px dashed #000;
+        padding-bottom: 15px;
+        margin-top: 70px;
         text-align: left;
-        button {
-          height: .34rem;
-          line-height: .34rem;
-          padding: 0 .1rem;
-          font-size: .16rem;
-          float: right;
+        .button {
+          color: #EBDE74;
         }
         span {
+          color: #D2D2D6;
           float: right;
         }
       }
       .tip {
-        font-size: .20rem;
-        margin: .3rem 0 .66rem;
+        font-size: 20px;
+        color: #86919D;
+        line-height: 30px;
         text-align: left;
       }
       .bottom {
         display: flex;
         justify-content: space-around;
+        margin: 60px 0 30px;
         .skipButton {
-          height: .5rem;
-          font-size: .24rem;
-          padding: 0 .17rem;
+          width: 300px;
           box-sizing: border-box;
           background-color: transparent;
-          border: 1px solid #ccc;
+          border: 1px solid #9D9D9D;
+          color: #9D9D9D;
           float: left;
         }
         .smallButton {
-          width: 1.4rem;
-          height: .5rem;
+          width: 180px;
         }
         .largeButton {
-          width: 3rem;
-          height: .45rem;
+          width: 520px;
         }
       }
     }
   }
 }
 ::-webkit-input-placeholder {
-  color: #dcdcdc;
+  color: #D2D2D6;
 }
 :-moz-placeholder {
-  color: #dcdcdc;
+  color: #D2D2D6;
 }
 ::-moz-placeholder {
-  color: #dcdcdc;
+  color: #D2D2D6;
 }
 :-ms-input-placeholder {
-  color: #dcdcdc;
+  color: #D2D2D6;
 }
 
 :global {
+  .smsModal.am-modal.am-modal-transparent {
+    width: auto;
+  }
   .smsModal.am-modal-transparent .am-modal-content {
     padding-top: 0;
     .am-modal-body {
