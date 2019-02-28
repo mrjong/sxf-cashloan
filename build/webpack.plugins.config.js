@@ -12,7 +12,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 let plugins = [
 	new HtmlWebpackPlugin({
-		chunks: [ 'main', 'vendor', 'webpack-runtime' ],
 		filename: 'index.html', //生成的html的文件名
 		template: path.resolve(__dirname, '../src/index.html'), //依据的模板
 		title: 'sx-webpack',
