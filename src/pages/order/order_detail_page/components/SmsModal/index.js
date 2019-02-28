@@ -79,10 +79,9 @@ export default class SmsModal extends React.PureComponent {
                   pattern="[0-9]*"
                 />
                 {
-                  times ? <span>{times + 's'}</span> : <button onClick={this.smsCodeAgain}>重新获取验证码</button>
+                  times ? <span>{times + 's'}</span> : <span onClick={this.smsCodeAgain} className={styles.button}>重新获取验证码</span>
                 }
               </div>
-              <p className={styles.tip}>温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意《用户授权扣款委托书》约定扣款</p>
               <div className={styles.bottom}>
                 {
                   toggleBtn ? (
@@ -91,6 +90,7 @@ export default class SmsModal extends React.PureComponent {
                   ) : <button onClick={onConfirm} className={styles.largeButton}>确定</button>
                 }
               </div>
+              <p className={styles.tip}>温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意《用户授权扣款委托书》约定扣款</p>
             </div>
           </div>
         </div>
