@@ -416,10 +416,15 @@ export default class order_detail_page extends PureComponent {
     this.setState({
       repayParams: sendParams
     }, () => {
-      //调用协议绑卡接口
-      this.checkProtocolBindCard()
+      if (isPayAll) {
+        this.repay()
+      } else {
+        //调用协议绑卡接口
+        this.checkProtocolBindCard()
+      }
     })
   }
+
   //调用还款接口逻辑
   repay = () => {
     const { billDesc, isPayAll } = this.state;
@@ -479,12 +484,14 @@ export default class order_detail_page extends PureComponent {
       })
     })
   }
+
   // 选择银行卡
   selectBank = () => {
     const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' } } = this.state
     store.setBackUrl('/order/order_detail_page');
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
   }
+  
   // 选择优惠劵
   selectCoupon = (useFlag) => {
     const { billNo, billDesc, couponInfo, bankInfo: { bankName } } = this.state
