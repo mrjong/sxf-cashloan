@@ -15,7 +15,7 @@ class ActivityModal extends React.Component {
           <div className={styles.content}>
             <img src={huodongTootip} alt="" />
             <img className={styles.huodongTootipBtn} src={huodongTootipBtn} 
-            onClick={()=>{history.push('/mine/credit_extension_page?isShowCommit=false')}} />
+            onClick={()=>{history.push('/mine/credit_extension_page?isShowCommit=true')}} />
           </div>
           <div className={styles.closeBtn} onClick={closeActivityModal}></div>
         </div>
