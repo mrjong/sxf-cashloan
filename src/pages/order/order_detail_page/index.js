@@ -92,10 +92,13 @@ export default class order_detail_page extends PureComponent {
           }, () => {
             // 选择银行卡回来
             let bankInfo = store.getCardData();
+            let orderDtlData = store.getOrderDetailData();
+            store.removeOrderDetailData();
             // let couponInfo = store.getCouponData();
             if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
               this.setState({
-                showModal: true
+                showModal: true,
+                isPayAll: orderDtlData && orderDtlData.isPayAll,
               }, () => {
                 this.setState({
                   bankInfo: bankInfo,
@@ -487,8 +490,10 @@ export default class order_detail_page extends PureComponent {
 
   // 选择银行卡
   selectBank = () => {
-    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' } } = this.state
+    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll } = this.state;
+    let orderDtData = {isPayAll,}
     store.setBackUrl('/order/order_detail_page');
+    store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
   }
   
