@@ -499,13 +499,13 @@ export default class order_detail_page extends PureComponent {
   
   // 选择优惠劵
   selectCoupon = (useFlag) => {
-    const { billNo, billDesc, couponInfo, bankInfo: { bankName } } = this.state
+    const { billNo, billDesc, couponInfo, bankInfo } = this.state
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
       this.props.history.push({
         pathname: '/mine/coupon_page',
         search: `?billNo=${billNo}`,
-        state: { nouseCoupon: true, cardData: bankName ? bankInfo : billDesc },
+        state: { nouseCoupon: true, cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc },
       });
       return;
     }
@@ -518,7 +518,7 @@ export default class order_detail_page extends PureComponent {
     this.props.history.push({
       pathname: '/mine/coupon_page',
       search: `?billNo=${billNo}`,
-      state: { cardData: bankName ? bankInfo : billDesc }
+      state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
     });
   }
   // 判断优惠劵显示
