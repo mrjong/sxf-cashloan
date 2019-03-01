@@ -92,10 +92,13 @@ export default class order_detail_page extends PureComponent {
           }, () => {
             // 选择银行卡回来
             let bankInfo = store.getCardData();
+            let orderDtlData = store.getOrderDetailData();
+            store.removeOrderDetailData();
             // let couponInfo = store.getCouponData();
             if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
               this.setState({
-                showModal: true
+                showModal: true,
+                isPayAll: orderDtlData && orderDtlData.isPayAll,
               }, () => {
                 this.setState({
                   bankInfo: bankInfo,
@@ -487,20 +490,22 @@ export default class order_detail_page extends PureComponent {
 
   // 选择银行卡
   selectBank = () => {
-    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' } } = this.state
+    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll } = this.state;
+    let orderDtData = {isPayAll,}
     store.setBackUrl('/order/order_detail_page');
+    store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
   }
   
   // 选择优惠劵
   selectCoupon = (useFlag) => {
-    const { billNo, billDesc, couponInfo, bankInfo: { bankName } } = this.state
+    const { billNo, billDesc, couponInfo, bankInfo } = this.state
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
       this.props.history.push({
         pathname: '/mine/coupon_page',
         search: `?billNo=${billNo}`,
-        state: { nouseCoupon: true, cardData: bankName ? bankInfo : billDesc },
+        state: { nouseCoupon: true, cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc },
       });
       return;
     }
@@ -513,7 +518,7 @@ export default class order_detail_page extends PureComponent {
     this.props.history.push({
       pathname: '/mine/coupon_page',
       search: `?billNo=${billNo}`,
-      state: { cardData: bankName ? bankInfo : billDesc }
+      state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
     });
   }
   // 判断优惠劵显示
