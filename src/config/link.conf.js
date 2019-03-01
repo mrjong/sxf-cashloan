@@ -12,7 +12,7 @@ const envMap = {
     DC_URL: 'https://ffp-test.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP',  // 测试环境 MPOS_APP与MPOS_CM渠道不同
   },
   pro: {
-    DC_URL: 'https://ffp.vbillbank.com/lender/common/ServiceAuthorization?MPOS_CM',  // 生产地址
+    DC_URL: 'https://ffp.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP',  // 生产地址
   },
 };
 
