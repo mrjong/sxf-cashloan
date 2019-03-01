@@ -24,7 +24,7 @@ export default class TagList extends React.PureComponent {
     className: '',
     activeindex: 0,
     tagList: [],
-    onClick: () => {},
+    onClick: () => { },
   };
 
   componentWillReceiveProps(nextProps) {
@@ -85,9 +85,22 @@ export default class TagList extends React.PureComponent {
         className={className}
         active={!item.disable && index === currentIndex}
         onClick={() => {
-            if(item.disable || index === currentIndex){
-                return;
-               }
+          // 确认代还信息-期限选择-立即还款
+          if (item.disable) {
+            buriedPointEvent(home.lenders, {
+              lenders_type: item.name,
+              disable: true
+            })
+          } else {
+            // 确认代还信息-期限选择-预约还款
+            buriedPointEvent(home.lendersOrder, {
+              lenders_type: item.name,
+              disable: false
+            })
+          }
+          if (item.disable || index === currentIndex) {
+            return;
+          }
           if (index !== currentIndex) {
             this.setState({
               currentIndex: index,

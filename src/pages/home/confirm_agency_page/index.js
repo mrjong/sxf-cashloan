@@ -68,7 +68,7 @@ export default class confirm_agency_page extends PureComponent {
     let bankInfo = store.getCardData();
     store.removeCardData();
     pageData = store.getRepaymentModalData();
-    console.log(pageData,'pageData')
+    console.log(pageData, 'pageData')
     store.removeRepaymentModalData();
     if (pageData) {
       if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
@@ -148,6 +148,8 @@ export default class confirm_agency_page extends PureComponent {
 
   // 确认按钮点击事件
   handleClickConfirm = () => {
+    // 确认代还信息按钮点击埋点
+    buriedPointEvent(home.borrowingPreSubmit);
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.setState({
@@ -167,6 +169,13 @@ export default class confirm_agency_page extends PureComponent {
   // 请求用户绑卡状态
   requestBindCardState = () => {
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
+      // 确认代换信息返回结果失败埋点
+      if (result && result.msgCode !== 'PTM0000') {
+        buriedPointEvent(home.borrowingPreSubmitResult, {
+          is_success: false,
+          fail_cause: result.msgInfo
+        })
+      }
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
         this.requestCheckWithHoldCard();
@@ -198,6 +207,11 @@ export default class confirm_agency_page extends PureComponent {
       if (res && res.msgCode === 'PTM0000') {
         this.checkMemSts();
       } else {
+        // 确认代换信息返回结果失败埋点
+        buriedPointEvent(home.borrowingPreSubmitResult, {
+          is_success: false,
+          fail_cause: res.msgInfo
+        })
         this.props.toast.info(res.msgInfo);
       }
     });
@@ -205,8 +219,10 @@ export default class confirm_agency_page extends PureComponent {
 
   // 如果当前还款卡支持代扣 则跳转确认页面
   beforeJump() {
-    // 埋点-选择借款要素弹框页-点击确认按钮
-    buriedPointEvent(home.borrowingPreSubmit);
+    // 确认代换信息返回结果成功埋点
+    buriedPointEvent(home.borrowingPreSubmitResult, {
+      is_success: true
+    })
     const { lendersDate, repaymentDate, cardBillAmt } = this.state;
     const search = `?prdId=${repaymentDate.value}&cardId=${indexData && indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
     // 跳转确认代还页面之前 将当前弹框数据保存下来
@@ -289,6 +305,11 @@ export default class confirm_agency_page extends PureComponent {
       } else if (result && result.msgCode === "PTM0000") {
         this.beforeJump();
       } else {
+        // 确认代换信息返回结果失败埋点
+        buriedPointEvent(home.borrowingPreSubmitResult, {
+          is_success: false,
+          fail_cause: result.msgInfo
+        }) 
         this.props.toast.info(result.msgInfo);
       }
     })
