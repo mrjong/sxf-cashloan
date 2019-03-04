@@ -100,26 +100,37 @@ export default class credit_list_page extends PureComponent {
       },
     );
   };
-  // 新增授权卡
-  addCard = () => {
-    this.props.$fetch.post(API.CARDAUTH, {
-      clientCode: '04'
-    }).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+    // 新增授权卡
+	goToNewMoXie = () => {
         const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
         if (queryData.autId) {
           store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
         } else {
           store.setMoxieBackUrl('/mine/credit_list_page');
         }
-        this.props.SXFToast.loading('加载中...', 0);
-        // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`        
-        window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
-      } else {
-        this.props.toast.info(result.msgInfo);
-      }
-    });
-  };
+      
+		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+	};
+  // 新增授权卡
+//   addCard = () => {
+//     this.props.$fetch.post(API.CARDAUTH, {
+//       clientCode: '04'
+//     }).then(result => {
+//       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+//         const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+//         if (queryData.autId) {
+//           store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
+//         } else {
+//           store.setMoxieBackUrl('/mine/credit_list_page');
+//         }
+//         this.props.SXFToast.loading('加载中...', 0);
+//         // window.location.href = result.data.url.replace('https://lns-front-test.vbillbank.com/craw/index.html#/','http://172.18.40.77:9000#/')+ `&project=xdc&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}`        
+//         window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
+//       } else {
+//         this.props.toast.info(result.msgInfo);
+//       }
+//     });
+//   };
 
   render() {
     return (
@@ -168,7 +179,7 @@ export default class credit_list_page extends PureComponent {
             </div>
             : null
         }
-        <p onClick={this.addCard} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
+        <p onClick={this.goToNewMoXie} className={styles.add_card}><i className={styles.add_ico}></i>新增授权卡</p>
       </div>
     )
   }

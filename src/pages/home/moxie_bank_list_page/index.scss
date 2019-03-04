@@ -1,33 +1,55 @@
 .moxie_bank_list_page {
+	height: 100%;
+	padding: 50px;
 	.title {
-		font-size: 28px;
+		font-size: 48px;
 		font-weight: 700;
 	}
 	.subTitle {
-		background: #333;
 		color: #fff;
-		font-size: 12px;
+		font-size: 24px;
+		background: #f66;
 		border-radius: 20px;
-		padding: 5px 15px;
+		padding: 5px 20px;
+		font-weight: 200;
+		margin-left: 30px;
+		letter-spacing: 1PX;
+		vertical-align: middle;
+	}
+	.bankDesc {
+		font-size: 26px;
+		color: #666;
+		margin-top: 30px;
+		span {
+			margin-right: 40px;
+		}
 	}
 	.dot {
 		width: 10px;
 		display: inline-block;
 		height: 10px;
-		border: 1px solid #333;
-		border-radius: 10px;
-		background-color: #333;
+		position: relative;
+		top: -3px;
+		border-radius: 50%;
+		background-color: #666;
+		margin-right: 10px;
 	}
 	.bankList {
-        text-align: center;
-        margin-top: 20px;
+		text-align: center;
+		margin-top: 70px;
 		.bankitem {
-            img{
-                width: 80px;
-            }
-            margin-bottom: 20px;
-            float: left;
-            width: 33.33%;
+			img {
+				width: 120px;
+			}
+			.name {
+				font-size: 30px;
+			}
+			margin-bottom: 60px;
+			float: left;
+			width: 33.33%;
+			&:active {
+				background: #f8f8f8;
+			}
 		}
 	}
 }

@@ -221,7 +221,13 @@ export default class home_page extends PureComponent {
 			clearInterval(timer);
 		}
 	};
-
+	// 跳新版魔蝎
+	goToNewMoXie = () => {
+		store.setMoxieBackUrl(
+			`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
+		);
+		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+	};
 	// 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
 	applyCardRepay = () => {
 		const { usrIndexInfo } = this.state;
@@ -234,11 +240,12 @@ export default class home_page extends PureComponent {
 					store.setMoxieBackUrl(
 						`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
 					);
-					SXFToast.loading('加载中...', 0);
-					window.location.href =
-						result.data.url +
-						`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
-							.search}&showTitleBar=NO`;
+					this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+					// SXFToast.loading('加载中...', 0);
+					// window.location.href =
+					// 	result.data.url +
+					// 	`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
+					// 		.search}&showTitleBar=NO`;
 				} else {
 					this.props.toast.info(result.msgInfo);
 				}
@@ -450,31 +457,32 @@ export default class home_page extends PureComponent {
 		const { history } = this.props;
 		let componentsDisplay = null;
 		switch (usrIndexInfo.indexSts) {
+			// case 'LN0001': // 新用户，信用卡未授权
+			// 	componentsDisplay = (
+			// 		//   <InfoCard contentData={usrIndexInfo}>
+			// 		//     <SXFButton className={style.smart_button_one} onClick={this.handleSmartClick}>
+			// 		//       申请信用卡代还
+			// 		//     </SXFButton>
+			// 		//   </InfoCard>
+			// 		<BankContent
+			// 			fetch={this.props.$fetch}
+			// 			contentData={usrIndexInfo}
+			// 			history={history}
+			// 			haselescard={this.state.haselescard}
+			// 			progressNum={percentSatus}
+			// 			toast={this.props.toast}
+			// 		>
+			// 			{usrIndexInfo.indexSts === 'LN0002' ||
+			// 			usrIndexInfo.indexSts === 'LN0010' ||
+			// 			(usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+			// 				<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+			// 					{usrIndexInfo.indexMsg}
+			// 				</SXFButton>
+			// 			)}
+			// 		</BankContent>
+			// 	);
+			//     break;
 			case 'LN0001': // 新用户，信用卡未授权
-				componentsDisplay = (
-					//   <InfoCard contentData={usrIndexInfo}>
-					//     <SXFButton className={style.smart_button_one} onClick={this.handleSmartClick}>
-					//       申请信用卡代还
-					//     </SXFButton>
-					//   </InfoCard>
-					<BankContent
-						fetch={this.props.$fetch}
-						contentData={usrIndexInfo}
-						history={history}
-						haselescard={this.state.haselescard}
-						progressNum={percentSatus}
-						toast={this.props.toast}
-					>
-						{usrIndexInfo.indexSts === 'LN0002' ||
-						usrIndexInfo.indexSts === 'LN0010' ||
-						(usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-								{usrIndexInfo.indexMsg}
-							</SXFButton>
-						)}
-					</BankContent>
-				);
-				break;
 			case 'LN0002': // 账单爬取中
 			case 'LN0003': // 账单爬取成功
 			case 'LN0004': // 代还资格审核中
@@ -495,7 +503,9 @@ export default class home_page extends PureComponent {
 					>
 						{usrIndexInfo.indexSts === 'LN0002' ||
 						usrIndexInfo.indexSts === 'LN0010' ||
-						(usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
+						(usrIndexInfo.indexData &&
+							usrIndexInfo.indexData.autSts &&
+							usrIndexInfo.indexData.autSts !== '2') ? null : (
 							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
 								{usrIndexInfo.indexMsg}
 							</SXFButton>
@@ -506,11 +516,24 @@ export default class home_page extends PureComponent {
 			default:
 				if (isWXOpen()) {
 					componentsDisplay = (
-						<InfoCard contentData={usrIndexInfo}>
-							<SXFButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
-								申请信用卡代还
+						<BankContent
+							fetch={this.props.$fetch}
+							contentData={usrIndexInfo}
+							history={history}
+							haselescard={this.state.haselescard}
+							progressNum={percentSatus}
+							toast={this.props.toast}
+						>
+							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+								查看我的账单，帮我还
 							</SXFButton>
-						</InfoCard>
+							<div className={style.subDesc}>安全绑卡，放心还卡</div>
+						</BankContent>
+						// <InfoCard contentData={usrIndexInfo}>
+						// 	<SXFButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
+						// 		申请信用卡代还
+						// 	</SXFButton>
+						// </InfoCard>
 					);
 				}
 		}

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BankCard from '../BankCard';
 import { store } from 'utils/store';
+import { Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
@@ -51,36 +52,41 @@ export default class BankContent extends React.Component {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
-		this.props.history.push({ pathname: '/home/moxie_bank_list_page'});
+		const { contentData } = this.props;
+		store.setBackUrl('/home/home');
+		store.setMoxieBackUrl(
+			`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`
+		);
+		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 
 	// 通过接口跳魔蝎
-	goToMoXie = () => {
-		this.props.fetch
-			.post(API.CARD_AUTH, {
-				clientCode: '04'
-			})
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					// TODO 授信页面？
-					// TODO: 完成认证后返回信用卡列表页？
-					const { contentData } = this.props;
-					store.setBackUrl('/home/home');
-					store.setMoxieBackUrl(
-						`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010'
-							? ''
-							: contentData.indexData.autId}`
-					);
-					SXFToast.loading('加载中...', 0);
-					window.location.href =
-						result.data.url +
-						`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
-							.search}&showTitleBar=NO`;
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			});
-	};
+	// goToMoXie = () => {
+	// 	this.props.fetch
+	// 		.post(API.CARD_AUTH, {
+	// 			clientCode: '04'
+	// 		})
+	// 		.then((result) => {
+	// 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+	// 				// TODO 授信页面？
+	// 				// TODO: 完成认证后返回信用卡列表页？
+	// 				const { contentData } = this.props;
+	// 				store.setBackUrl('/home/home');
+	// 				store.setMoxieBackUrl(
+	// 					`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010'
+	// 						? ''
+	// 						: contentData.indexData.autId}`
+	// 				);
+	// 				SXFToast.loading('加载中...', 0);
+	// 				window.location.href =
+	// 					result.data.url +
+	// 					`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
+	// 						.search}&showTitleBar=NO`;
+	// 			} else {
+	// 				this.props.toast.info(result.msgInfo);
+	// 			}
+	// 		});
+	// };
 
 	// 请求信用卡数量
 	requestCredCardCount = () => {
@@ -101,30 +107,57 @@ export default class BankContent extends React.Component {
 	};
 
 	render() {
-		const { className, children, contentData, progressNum, toast, ...restProps } = this.props;
+		const { className, children, contentData, progressNum, toast, history, ...restProps } = this.props;
 		const { indexSts, indexData } = contentData;
 		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010' ];
-		let tipText = null;
+		let tipText =
+			indexSts === 'LN0001' ? (
+				<div className={style.abnormal_tip_box}>
+					<p className={style.abnormal_tip}>
+						最高代还金额 ￥50000
+                        <Icon size="sm" style={{width:".3rem",height:'.3rem'}} className={style.closeIcon} type="cross"></Icon>
+						<div className={style.triangle_border_down}>
+							<span />
+						</div>
+					</p>
+				</div>
+			) : null;
 		if (indexSts === 'LN0010') {
-			tipText = <p className={style.abnormal_tip}>点击更新账单，获取最新信用卡信息</p>;
+			tipText = (
+				<div className={style.abnormal_tip_box}>
+					<p className={style.abnormal_tip}>
+						点击更新账单，获取最新信用卡信息
+						<div className={style.triangle_border_down}>
+							<span />
+						</div>
+					</p>
+				</div>
+			);
 		} else if (indexSts === 'LN0003' && progressNum) {
 			tipText = (
-				<p className={style.progress_box}>
-					还差<span>{progressNum}</span>步即可完成申请
-				</p>
+				<div className={style.abnormal_tip_box}>
+					<p className={style.progress_box}>
+						还差<span>{progressNum}</span>步即可完成申请
+						<div className={style.triangle_border_down}>
+							<span />
+						</div>
+					</p>
+				</div>
 			);
 		}
 		return (
 			<div className={style.bank_content_wrap} {...restProps}>
-				<BankCard contentData={contentData} toast={toast} {...indexData} />
-				{tipText}
-				{children}
-				{showEntranceArr.includes(indexSts) ? (
-					<button className={style.link_tip} onClick={this.requestCredCardCount}>
-						代还其它信用卡
-						<img className={style.link_arrow_img} src={iconArrow} alt="" />
-					</button>
-				) : null}
+				<BankCard contentData={contentData} history={history} toast={toast} {...indexData}>
+					{tipText}
+					{children}
+					{showEntranceArr.includes(indexSts) ? (
+						<button className={style.link_tip} onClick={this.requestCredCardCount}>
+							帮我还，其他信用卡账单
+							<img className={style.link_arrow_img} src={iconArrow} alt="" />
+						</button>
+					) : null}
+					{indexSts === 'LN0001' ? <div className={style.subDesc}>安全绑卡，放心还卡</div> : null}
+				</BankCard>
 			</div>
 		);
 	}

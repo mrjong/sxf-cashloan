@@ -1,103 +1,38 @@
 @import '../../../../../assets/styles/scss/base/fn';
-.bank_card_wrap {
-	position: relative;
-	margin: 0 auto;
-	z-index: 100;
-	width: 6.8rem;
-	height: 3.62rem;
-	border-radius: 0.16rem;
-	overflow: hidden;
-	text-align: center;
-	background-color: #272727;
-	background-image: url('assets/images/home/bank_card_bg.png');
-	background-size: cover;
-	.bill_update_btn {
-		position: absolute;
-		top: 0.3rem;
-		right: 0.4rem;
-		display: block;
-		height: 0.4rem;
-		line-height: 0.4rem;
-		width: 1.38rem;
-		text-align: center;
-		font-size: 0.24rem;
-		color: #150e07;
-		border: 0;
-		background-color: transparent;
-		background-image: url('assets/images/home/bill_update_bg.png');
-		background-size: cover;
-	}
-	.card_preview {
-		margin-top: 0.68rem;
-		padding: 0 0.34rem;
-		display: flex;
-		.card_icon {
-			margin-right: 0.23rem;
-			height: 0.9rem;
-			width: 0.9rem;
-			background-size: contain;
-		}
-		.card_info {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			align-items: flex-start;
-			color: #ebde74;
-		}
-		.card_info_name {
-			font-size: 0.36rem;
-		}
-		.card_info_num {
-			font-size: 0.3rem;
-		}
-	}
-
-	.bill_preview {
-		margin-top: 0.7rem;
-		display: flex;
-		padding: 0 0.5rem;
-		.bill_item {
-			display: flex;
-			flex: 1;
-			flex-direction: column;
-		}
-		.bill_value {
-			line-height: 1;
-			font-size: 0.3rem;
-			color: #ebde74;
-		}
-		.bill_name {
-			margin-top: 0.14rem;
-			line-height: 1;
-			font-size: 0.28rem;
-			color: #827c6c;
-		}
-	}
+.billBox2 {
+	padding: 20px 60px;
 }
 .billBox {
 	position: relative;
-	padding: 25px 20px;
-	border-radius: 6px;
+	margin: 0 auto;
+	width: 705px;
+	height: 782px;
 	@include bg-image('./img/home_card');
-	background-size: 560px 407px;
+	background-size: 705px 782px;
 	background-repeat: no-repeat;
+	top: -30px;
+	text-align: left;
 	.title {
 		font-size: 44px;
 		font-weight: 700;
 		letter-spacing: 2px;
 		margin-bottom: 10px;
+		margin-top: 30px;
 	}
 	.money {
-		font-size: 30px;
-		font-weight: 700;
+		font-size: 70px;
+		font-weight: 600;
 	}
 	.subTitle {
-		font-size: 12px;
+		font-size: 24px;
+		letter-spacing: 1px;
+		color: #c7c6cc;
 		margin-bottom: 20px;
 	}
 	.moneyLine {
-		margin-top: 18px;
+		margin-top: 25px;
 		position: relative;
+		line-height: 1.3;
 		span {
 			width: 30px;
 			margin-right: 5px;
@@ -108,15 +43,14 @@
 		}
 	}
 	.greencircle {
-		width: 12px;
+		width: 8px;
 		display: inline-block;
-		height: 12px;
+		height: 8px;
 		border: 1px solid #333;
-		border-radius: 12px;
 		background-color: #333;
 		margin: 6px;
 		position: relative;
-		top: 25px;
+		top: 20px;
 	}
 
 	.greencircle:after {
@@ -125,47 +59,49 @@
 		width: 4PX;
 		height: 4PX;
 		background: #333;
-		border-radius: 50%;
-	}
-	.topline {
-		width: 100%;
-		height: 1PX;
-		background-image: linear-gradient(to right, #ccc 0%, #ccc 50%, transparent 50%);
-		background-size: 25px 2px;
-		background-repeat: repeat-x;
 	}
 	.timeBox {
+		display: inline-block;
+		width: 100%;
+		margin-top: 40px;
 		padding: 20px 0;
-		color: #666;
-		font-size: 12px;
-
+		color: #333;
+		font-size: 28px;
+		position: relative;
+		&::after {
+			@include setBottomLine();
+		}
 		.time {
 			float: left;
-			margin-right: 45px;
 		}
 		.desc {
-			float: left;
+			float: right;
 		}
 	}
 	.bankBox {
-		padding: 20px 0 20px 60px;
-		font-size: 14px;
+		padding: 30px 0 30px 0;
+		font-size: 28px;
 		position: relative;
 		color: #333;
+		width: 100%;
 		display: inline-block;
+		&::after {
+			@include setBottomLine();
+		}
 		.bankName {
 			float: left;
+			padding-left: 60px;
+			margin-left: 20px;
 		}
 		.bankIcon {
 			position: absolute;
-			width: 40px;
+			width: 50px;
 			left: 0;
-			height: 40px;
-			margin-right: 10px;
-			float: left;
+			top: 25px;
+			height: 50px;
 		}
 		.bankNum {
-			float: left;
+			float: right;
 		}
 	}
 	.btnBox {
@@ -176,12 +112,20 @@
 			font-size: 12px;
 		}
 	}
+	.fr {
+		float: right;
+	}
 	.bill_update_btn {
-		border: 1PX solid red;
+		border: 1PX solid #ffa000;
 		border-radius: 20px;
+		background: #ffa000;
 		padding: 5px 10px;
-		font-size: 12px;
-		background: #fff;
-		margin-left: 25px;
+		font-size: 24px;
+		color: #fff;
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.noStyle {
+		color: #cdcdd1;
 	}
 }
