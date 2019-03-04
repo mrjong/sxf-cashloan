@@ -205,7 +205,7 @@ export default class select_save_page extends PureComponent {
               <ul className={styles.card_list}>
                 {
                   this.state.cardList.map((item, index) => {
-                    const isSelected = this.state.agrNo === item.agrNo;
+                    const isSelected = item.agrNoList.includes(this.state.agrNo);
                     if (backUrlData) {
                       return (
                         <li
