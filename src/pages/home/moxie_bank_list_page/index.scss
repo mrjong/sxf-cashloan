@@ -1,0 +1,33 @@
+.moxie_bank_list_page {
+	.title {
+		font-size: 28px;
+		font-weight: 700;
+	}
+	.subTitle {
+		background: #333;
+		color: #fff;
+		font-size: 12px;
+		border-radius: 20px;
+		padding: 5px 15px;
+	}
+	.dot {
+		width: 10px;
+		display: inline-block;
+		height: 10px;
+		border: 1px solid #333;
+		border-radius: 10px;
+		background-color: #333;
+	}
+	.bankList {
+        text-align: center;
+        margin-top: 20px;
+		.bankitem {
+            img{
+                width: 80px;
+            }
+            margin-bottom: 20px;
+            float: left;
+            width: 33.33%;
+		}
+	}
+}

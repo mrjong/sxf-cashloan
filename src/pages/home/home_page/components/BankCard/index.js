@@ -7,131 +7,174 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
 import { SXFToast } from 'utils/SXFToast';
-
+import SXFButton from 'components/ButtonCustom';
 const API = {
-  CARD_AUTH: '/auth/cardAuth', // 信用卡授信
+	CARD_AUTH: '/auth/cardAuth' // 信用卡授信
 };
 
 @fetch.inject()
 export default class BankCard extends React.PureComponent {
-  static propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.node,
-    contentData: PropTypes.object,
-    bankIcon: PropTypes.string,
-    bankName: PropTypes.string,
-    bankNo: PropTypes.string,
-    cardNoHid: PropTypes.string,
-    cardBillDt: PropTypes.string,
-    billDt: PropTypes.string,
-    cardBillAmt: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    overDt: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    onClick: PropTypes.func,
-  };
+	static propTypes = {
+		className: PropTypes.string,
+		children: PropTypes.node,
+		contentData: PropTypes.object,
+		bankIcon: PropTypes.string,
+		bankName: PropTypes.string,
+		bankNo: PropTypes.string,
+		cardNoHid: PropTypes.string,
+		cardBillDt: PropTypes.string,
+		billDt: PropTypes.string,
+		cardBillAmt: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
+		overDt: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]),
+		onClick: PropTypes.func
+	};
 
-  static defaultProps = {
-    className: '',
-    children: '',
-    contentData: {},
-    bankIcon: '',
-    bankName: '****',
-    bankNo: '',
-    cardNoHid: '**** **** **** ****',
-    cardBillDt: '---',
-    billDt: '---',
-    cardBillAmt: '---',
-    overDt: '---',
-    onClick: () => { },
-  };
+	static defaultProps = {
+		className: '',
+		children: '',
+		contentData: {},
+		bankIcon: '',
+		bankName: '随行付·还到',
+		bankNo: '',
+		cardNoHid: '**** **** **** ****',
+		cardBillDt: '---',
+		billDt: '---',
+		cardBillAmt: '---',
+		overDt: '---',
+		onClick: () => {}
+	};
 
-  handleUpdate = () => {
-    const { indexSts = '' } = this.props.contentData;
-    if (indexSts === 'LN0009') {
-      this.props.toast.info('您有未结清的账单，暂时不能更新');
-    } else {
-      this.applyCardRepay();
-    }
-  };
+	handleUpdate = () => {
+		const { indexSts = '' } = this.props.contentData;
+		if (indexSts === 'LN0009') {
+			this.props.toast.info('您有未结清的账单，暂时不能更新');
+		} else {
+			// this.applyCardRepay();
+			this.goToNewMoXie();
+		}
+	};
+	// 跳新版魔蝎
+	goToNewMoXie = () => {
+		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+	};
+	// 跳魔蝎
+	applyCardRepay = () => {
+		// 埋点-首页-点击更新账单
+		buriedPointEvent(home.updateBill);
+		this.props.$fetch
+			.post(API.CARD_AUTH, {
+				clientCode: '04'
+			})
+			.then((result) => {
+				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					store.setMoxieBackUrl('/home/home');
+					SXFToast.loading('加载中...', 0);
+					window.location.href =
+						result.data.url +
+						`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
+							.search}&showTitleBar=NO`;
+				} else {
+					this.props.toast.info(result.msgInfo);
+				}
+			});
+	};
 
-  // 跳魔蝎
-  applyCardRepay = () => {
-    // 埋点-首页-点击更新账单
-    buriedPointEvent(home.updateBill);
-    this.props.$fetch.post(API.CARD_AUTH, {
-      clientCode: '04'
-    }).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        store.setMoxieBackUrl('/home/home');
-        SXFToast.loading('加载中...', 0);
-        window.location.href = result.data.url + `&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location.search}&showTitleBar=NO`;
-      } else {
-        this.props.toast.info(result.msgInfo);
-      }
-    });
-  };
-
-  render() {
-    const {
-      children,
-      contentData,
-      bankName,
-      bankNo,
-      cardNoHid,
-      billDt,
-      cardBillAmt,
-      overDt,
-    } = this.props;
-    const iconClass = bankNo ? `bank_golden_ico_${bankNo}` : 'logo_ico';
-    let overDtStr = '---';
-    if (overDt === '---') {
-      overDtStr = overDt;
-    } else if (overDt > 0) {
-      overDtStr = `${overDt}天后到期`;
-    } else if (parseInt(overDt, 10) === 0) {
-      overDtStr = '今天到期';
-    } else if (overDt < 0) {
-      overDtStr = '已到期';
-    }
-    const itemList = [
-      {
-        name: '账单日',
-        value: billDt === '---' || billDt === null ? '---' : dayjs(billDt).format('YYYY/MM/DD')
-      },
-      {
-        name: '账单金额',
-        value: cardBillAmt === '---' || cardBillAmt === null ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)
-      },
-      {
-        name: '还款日',
-        value: overDtStr
-      }
-    ]
-    return (
-      <div className={style.bank_card_wrap}>
-        {contentData.indexSts === 'LN0002' ? (
-          <button className={style.bill_update_btn}>授权中</button>
-        ) : (
-            <button className={style.bill_update_btn} onClick={this.handleUpdate}>更新账单</button>
-          )}
-        <div className={style.card_preview}>
-          <span className={[style.card_icon, iconClass].join(' ')}></span>
-          <div className={style.card_info}>
-            <span className={style.card_info_name}>{bankName}</span>
-            <span className={style.card_info_num}>{cardNoHid}</span>
-          </div>
-        </div>
-        <div className={style.bill_preview}>
-          {
-            itemList.map(item => (
-              <div className={style.bill_item} key={item.name}>
-                <span className={style.bill_value}>{item.value}</span>
-                <span className={style.bill_name}>{item.name}</span>
-              </div>
-            ))
-          }
-        </div>
-        {children}
-      </div>
-    );
-  }
+	render() {
+		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt } = this.props;
+		const iconClass = bankNo ? `bank_golden_ico_${bankNo}` : 'logo_ico';
+		let overDtStr = '---';
+		if (overDt === '---') {
+			overDtStr = overDt;
+		} else if (overDt > 0) {
+			overDtStr = `${overDt}天后到期`;
+		} else if (parseInt(overDt, 10) === 0) {
+			overDtStr = '今天到期';
+		} else if (overDt < 0) {
+			overDtStr = '已到期';
+		}
+		const itemList = [
+			{
+				name: '账单日',
+				value: billDt === '---' || billDt === null ? '---' : dayjs(billDt).format('YYYY/MM/DD')
+			},
+			{
+				name: '账单金额',
+				value: cardBillAmt === '---' || cardBillAmt === null ? '---' : parseFloat(cardBillAmt, 10).toFixed(2)
+			},
+			{
+				name: '还款日',
+				value: overDtStr
+			}
+		];
+		return (
+			//   <div className={style.bank_card_wrap}>
+			//     {contentData.indexSts === 'LN0002' ? (
+			//       <button className={style.bill_update_btn}>授权中</button>
+			//     ) : (
+			//         <button className={style.bill_update_btn} onClick={this.handleUpdate}>更新账单</button>
+			//       )}
+			//     <div className={style.card_preview}>
+			//       <span className={[style.card_icon, iconClass].join(' ')}></span>
+			//       <div className={style.card_info}>
+			//         <span className={style.card_info_name}>{bankName}</span>
+			//         <span className={style.card_info_num}>{cardNoHid}</span>
+			//       </div>
+			//     </div>
+			//     <div className={style.bill_preview}>
+			//       {
+			//         itemList.map(item => (
+			//           <div className={style.bill_item} key={item.name}>
+			//             <span className={style.bill_value}>{item.value}</span>
+			//             <span className={style.bill_name}>{item.name}</span>
+			//           </div>
+			//         ))
+			//       }
+			//     </div>
+			//     {children}
+			//   </div>
+			<div className={style.billBox}>
+				<div className={style.title}>
+					我的信用卡账单
+					{contentData.indexSts === 'LN0002' ? (
+						<button className={style.bill_update_btn}>授权中</button>
+					) : (
+						<button className={style.bill_update_btn} onClick={this.handleUpdate}>
+							更新账单
+						</button>
+					)}
+				</div>
+				<div className={style.money}>
+					<p className={style.moneyLine}>
+						<span />
+						<span />
+						<span />
+						<span />
+						<span />
+						<div className={style.greencircle} />
+						<span />
+						<span />
+					</p>
+				</div>
+				<div className={style.subTitle}>账单金额(元)</div>
+				<div className={style.topline} />
+				<div className={style.timeBox}>
+					<div className={style.time}>账单日 ----/--/--</div>
+					<div className={style.timeDesc}>
+						还款日 <span>--</span>天 后到期
+					</div>
+				</div>
+				<div className={style.topline} />
+				<div className={style.bankBox}>
+					<span className={`bank_ico bank_ico_CMB ${style.bankIcon}`} />
+					<div className={style.bankName}>{bankName}</div>
+					<div className={style.bankNum}>{cardNoHid}</div>
+				</div>
+				<div className={style.topline} />
+				<div className={style.btnBox}>
+					<SXFButton onClick={this.handleUpdate}>一键还账单</SXFButton>
+					<div className={style.btnDesc}>帮我还，其他信用卡账单 ></div>
+				</div>
+			</div>
+		);
+	}
 }
