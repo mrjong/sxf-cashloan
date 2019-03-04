@@ -37,9 +37,9 @@ export default class TagList extends React.PureComponent {
     if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeindex !== nextProps.activeindex)) {
       this.passInitData(nextProps);
       if (nextProps.burientype) {
-        buriedPointEvent(home.lenders, {
-          lenders_type: nextProps.tagList[nextProps.activeindex].name,
-        });
+        // buriedPointEvent(home.lenders, {
+        //   lenders_type: nextProps.tagList[nextProps.activeindex].name,
+        // })
       }
     }
   }
@@ -85,17 +85,17 @@ export default class TagList extends React.PureComponent {
         className={className}
         active={!item.disable && index === currentIndex}
         onClick={() => {
-          if (item.disable) {
+          if (item.value === '1') {
             // 确认代还信息-期限选择-预约还款
             buriedPointEvent(home.lendersOrder, {
               lenders_type: item.name,
-              disable: true
+              disable: item.disable || ''
             })
           } else {
             // 确认代还信息-期限选择-立即还款
             buriedPointEvent(home.lenders, {
               lenders_type: item.name,
-              disable: false
+              disable: item.disable || ''
             })
           }
           if (item.disable || index === currentIndex) {
