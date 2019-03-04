@@ -88,7 +88,7 @@ export default class select_save_page extends PureComponent {
     if (backUrlData) {
       let cardData = [];
       if (this.state.cardList.length) {
-        cardData = this.state.cardList.filter(item => item.agrNo === this.state.agrNo);
+        cardData = this.state.cardList.filter(item => item.agrNoList.includes(this.state.agrNo));
       }
       let cardDatas = {};
       // 如果是首页则多存一个参数为showModal的字段，以便首页弹框
