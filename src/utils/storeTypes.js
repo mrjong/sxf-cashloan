@@ -47,4 +47,5 @@ export const storeTypes = {
 	SaveAmt: 'SaveAmt', // 回显代还金额的数据
 	BindCardNo: 'BindCardNo',	// 回显绑卡卡号
 	BindCardPhone: 'BindCardPhone',	// 回显绑卡手机号
+	NewUserActivityFlag: 'NewUserActivityFlag' //拉新运营活动标志
 };

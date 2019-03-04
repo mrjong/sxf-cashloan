@@ -49,11 +49,18 @@ export default class home_page extends PureComponent {
       visibleLoading: false,
       percent: 0,
       showToast: false,
-      isShowActivityModal: false // 是否显示活动弹窗
+      isShowActivityModal: false, // 是否显示活动弹窗
+      newuserActivityFlag: ''
     };
   }
 
   componentWillMount() {
+    // 拉新运营活动标志
+    const newuserActivityFlag = store.getNewUserActivityFlag()
+    store.removeNewUserActivityFlag()
+    this.setState({
+      newuserActivityFlag
+    })
     // 清除订单缓存
     store.removeBackData();
     // 清除四项认证进入绑卡页的标识
@@ -485,7 +492,7 @@ export default class home_page extends PureComponent {
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* {首页活动提示弹窗（对内有）} */}
-        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal} history={history}></ActivityModal>}
+        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal} history={history} activity={this.state.newuserActivityFlag}></ActivityModal>}
         <Modal
           wrapClassName={style.modalLoadingBox}
           visible={visibleLoading}
