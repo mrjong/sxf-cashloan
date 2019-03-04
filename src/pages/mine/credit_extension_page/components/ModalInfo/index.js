@@ -63,6 +63,13 @@ export default class ModalInfo extends Component {
 
   // 代扣 Tag 点击事件
   handleRepaymentTagClick = data => {
+    // 代还申请期限埋点事件
+    const { value: { perdUnit = '', perdLth = '' } } = data
+    if (perdUnit === 'M') {
+      buriedPointEvent(mine[`durationMonth${perdLth}`]);
+    } else if (perdUnit === 'D') {
+      buriedPointEvent(mine[`durationDay${perdLth}`]);
+    }
     this.setState({
       repaymentDate: data.value,
       minAmt: '',
@@ -116,6 +123,8 @@ export default class ModalInfo extends Component {
   _handleClick = (callback, e) => {
     e && e.preventDefault && e.preventDefault();
     callback && callback();
+    // 关闭代还申请弹窗埋点
+    buriedPointEvent(mine.creditExtensionClose);
   };
 
   // 确认按钮点击事件 提交到风控
@@ -137,7 +146,10 @@ export default class ModalInfo extends Component {
     }
     this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
       // 提交代还申请埋点
-      buriedPointEvent(mine.creditExtensionConfirm);
+      buriedPointEvent(mine.creditExtensionConfirm, {
+        is_success: true,
+        deadline: repaymentDate.perdLth,
+      })
       // 提交风控返回成功
       if (res && res.msgCode === 'PTM0000') {
         onClose();
@@ -145,6 +157,11 @@ export default class ModalInfo extends Component {
           this.checkIsBandCard();
         });
       } else {
+        // 提交风控返回失败埋点
+        buriedPointEvent(mine.creditExtensionConfirm, {
+          is_success: false,
+          fail_cause: result.msgInfo
+        })
         this.props.toast.info(res.msgInfo);
       }
     });
