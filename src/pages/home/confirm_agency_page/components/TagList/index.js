@@ -29,8 +29,6 @@ export default class TagList extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.burientype && !store.getHadShowModal()) {
-      // const item = nextProps.tagList[nextProps.activeindex]
-      
       store.setHadShowModal(true)
     }
     if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeindex !== nextProps.activeindex)) {
@@ -49,6 +47,8 @@ export default class TagList extends React.PureComponent {
 
   // 因为默认选中第一个 所以页面一进来就触发方法，将当前的数据传回去。
   passInitData = nextProps => {
+    console.log(123, nextProps)
+
     const { currentIndex } = this.state;
     const { onClick, tagList } = this.props;
     if (nextProps) {
