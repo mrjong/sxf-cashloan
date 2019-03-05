@@ -10,6 +10,8 @@ import submit_btn1 from './img/btn_bg1.png'
 import submit_btn2 from './img/btn_bg2.png'
 import activity_bg from './img/activity_bg.png'
 import { buriedPointEvent } from 'utils/analytins'
+import { activity } from 'utils/analytinsType';
+
 
 @withRouter
 export default class newUser_page extends PureComponent {
@@ -22,10 +24,11 @@ export default class newUser_page extends PureComponent {
 
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-		if (queryData.entry) {
+		if (queryData.entry && queryData.h5Channel) {
       // 根据不同入口来源埋点
       buriedPointEvent(activity.newUserEntry, {
-        entry: queryData.entry
+        entry: queryData.entry,
+        h5Channel: queryData.h5Channel
       })
 		}
   }
