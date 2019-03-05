@@ -42,7 +42,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 						this.props.history.replace(`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${res.mblNoHid}`);
 					} else if (res.authSts === '00') {
 						// 弹拉新活动新弹窗的标识
-						store.setNewUserActivityModal('true')
+						store.setNewUserActivityModal(true)
 						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
