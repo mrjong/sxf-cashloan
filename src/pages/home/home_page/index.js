@@ -398,7 +398,7 @@ export default class home_page extends PureComponent {
 					this.getPercent();
 				}
 				this.setState({
-					usrIndexInfo: result.data.indexData
+					usrIndexInfo: result.data.indexData 
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
 				});

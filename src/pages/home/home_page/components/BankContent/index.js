@@ -8,7 +8,7 @@ import { home } from 'utils/analytinsType';
 import style from './index.scss';
 import { SXFToast } from 'utils/SXFToast';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
-
+import SXFButton from 'components/ButtonCustom';
 const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
@@ -132,7 +132,8 @@ export default class BankContent extends React.Component {
 		const { messageTag } = this.state;
 		const { className, children, contentData, progressNum, toast, history, ...restProps } = this.props;
 		const { indexSts, indexData } = contentData;
-		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010' ];
+		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008' ];
+		const showEntranceArr2 = [ 'LN0001', 'LN0004', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
 		if (indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) {
 			tipText = (
@@ -217,15 +218,18 @@ export default class BankContent extends React.Component {
 				<BankCard contentData={contentData} history={history} toast={toast} {...indexData}>
 					{tipText}
 					{children}
+					{indexSts === 'LN0010' ? (
+						<SXFButton className={style.smart_button_two} onClick={this.requestCredCardCount}>
+							帮我还，其他信用卡账单
+						</SXFButton>
+					) : null}
 					{showEntranceArr.includes(indexSts) ? (
 						<button className={style.link_tip} onClick={this.requestCredCardCount}>
 							帮我还，其他信用卡账单
 							<img className={style.link_arrow_img} src={iconArrow} alt="" />
 						</button>
 					) : null}
-					{indexSts === 'LN0001' || indexSts === 'LN0009' || indexSts === 'LN0004' ||indexSts === 'LN0007' ? (
-						<div className={style.subDesc}>安全绑卡，放心还卡</div>
-					) : null}
+					{showEntranceArr2.includes(indexSts) ? <div className={style.subDesc}>安全绑卡，放心还卡</div> : null}
 				</BankCard>
 			</div>
 		);
