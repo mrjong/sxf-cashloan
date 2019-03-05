@@ -35,5 +35,10 @@ export default [
     path: '/home/confirm_agency',
     title: '确认代还信息',
     component: () => import('pages/home/confirm_agency_page'),
+  },
+  {
+    path: '/home/moxie_bank_list_page',
+    title: '添加账单',
+    component: () => import('pages/home/moxie_bank_list_page'),
   }
 ];

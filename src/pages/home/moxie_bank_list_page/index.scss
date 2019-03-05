@@ -1,0 +1,82 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.moxie_bank_list_page {
+	height: 100%;
+	padding: 50px;
+	.title {
+		font-size: 48px;
+		font-weight: 700;
+	}
+	.subTitle {
+		color: #fff;
+		font-size: 24px;
+		background: #cfcfcf;
+		border-radius: 20px;
+		padding: 5px 20px;
+		font-weight: 200;
+		margin-left: 30px;
+		letter-spacing: 1PX;
+		vertical-align: middle;
+	}
+	.bankDesc {
+		font-size: 26px;
+		color: #666;
+		margin-top: 30px;
+		span {
+			margin-right: 40px;
+		}
+	}
+	.dot {
+		width: 10px;
+		display: inline-block;
+		height: 10px;
+		position: relative;
+		top: -3px;
+		border-radius: 50%;
+		background-color: #666;
+		margin-right: 10px;
+	}
+	.bankList {
+		text-align: center;
+		margin-top: 70px;
+		.bankitem {
+			img {
+				width: 80px;
+			}
+			.name {
+				font-size: 22px;
+			}
+			margin-bottom: 60px;
+			float: left;
+			width: 33.33%;
+			&:active {
+				background: #f8f8f8;
+			}
+		}
+	}
+}
+
+.err_page {
+	margin-top: 150px;
+	text-align: center;
+	.err_img {
+		display: inline-block;
+		width: 369px;
+		height: 346px;
+		@include bg-image('./img/nodata');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+	}
+	.err_cont {
+		font-size: 30px;
+		color: rgba(153, 153, 153, 1);
+		line-height: 42px;
+		margin: 60px 0 140px 0;
+	}
+	.reload_btn {
+		margin-top: 60px;
+		width: 480px;
+		font-size: 36px;
+		color: rgba(51, 51, 51, 1);
+	}
+}
