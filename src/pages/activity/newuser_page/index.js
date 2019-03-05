@@ -42,7 +42,7 @@ export default class newUser_page extends PureComponent {
   goTo = () => {
     // 设置拉新活动标志
     store.setNewUserActivityFlag('NewUserActivityFlag')
-    this.props.history.push('/mpos/mpos_middle_page')
+    this.props.history.push(`/mpos/mpos_middle_page${window.location.search}`)
     // this.props.history.push('/mpos/mpos_middle_page?h5Channel=MPOS-RCsy&appId=APP20170000000271&token=6167a1a23aba482d8908afde9ec91be7&telNo=0b1bbc78ec51d093ab5031a3c9f648db&site=oldweb')
   }
 
