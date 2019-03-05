@@ -111,6 +111,13 @@
       z-index: 0;
     }
   }
+  .tipText {
+    text-align: center;
+  }
+  .tipWrapper {
+    width: 5rem;
+    height: 2rem;
+  }
 }
 
 @keyframes slide{
