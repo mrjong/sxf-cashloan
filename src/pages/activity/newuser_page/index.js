@@ -24,13 +24,13 @@ export default class newUser_page extends PureComponent {
 
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-		if (queryData.entry && queryData.h5Channel) {
+    if (queryData.entry && queryData.h5Channel) {
       // 根据不同入口来源埋点
       buriedPointEvent(activity.newUserEntry, {
         entry: queryData.entry,
         h5Channel: queryData.h5Channel
       })
-		}
+    }
   }
 
   closeModal = () => {
@@ -38,12 +38,25 @@ export default class newUser_page extends PureComponent {
       showModal: false
     })
   }
+  closeTip = () => {
+    this.setState({
+      showLoginTip: false
+    })
+  }
 
   goTo = () => {
-    // 设置拉新活动标志
-    store.setNewUserActivityFlag('NewUserActivityFlag')
-    this.props.history.push(`/mpos/mpos_middle_page${window.location.search}`)
-    // this.props.history.push('/mpos/mpos_middle_page?h5Channel=MPOS-RCsy&appId=APP20170000000271&token=6167a1a23aba482d8908afde9ec91be7&telNo=0b1bbc78ec51d093ab5031a3c9f648db&site=oldweb')
+    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+    if (queryData.appId && queryData.token) {
+      // 设置拉新活动标志
+      store.setNewUserActivityFlag('NewUserActivityFlag')
+      this.props.history.push(`/mpos/mpos_middle_page${window.location.search}`)
+    } else {
+      this.setState({
+        noLogin: true,
+        showLoginTip: true
+      })
+    }
+
   }
 
   render() {
@@ -65,17 +78,32 @@ export default class newUser_page extends PureComponent {
           <img src={submit_btn2} className={[styles.btn, styles.btn2].join(' ')} />
         </div>
         {
+          this.state.showLoginTip &&
+          <div className={styles.modal}>
+            <div className={styles.mask}></div>
+            <div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
+              <div className={styles.tipText}>
+                <span>小主～</span><br/>
+                <span>先去登录才能参与活动哦～</span>
+              </div>
+              <div className={styles.closeBtn} onClick={this.closeTip}></div>
+            </div>
+          </div>
+        }
+        {
           this.state.showModal ?
             <div className={styles.modal}>
               <div className={styles.mask}></div>
               <div className={styles.modalWrapper}>
-                <h2>活动规则</h2>
-                <ol>
-                  <li>1.活动时间：2019年3月6日-2019年3月8日；</li>
-                  <li>2.活动对象：还到新注册用户；</li>
-                  <li>3.活动内容：活动期间在此活动页注册的新用户可获得188元新手红包；</li>
-                  <li>4.奖励发放：注册成功后红包以减息券形式发送至个人账户中，用于借款时使用，有效期3天；</li>
-                </ol>
+                <div>
+                  <h2>活动规则</h2>
+                  <ol>
+                    <li>1.活动时间：2019年3月6日-2019年3月8日；</li>
+                    <li>2.活动对象：还到新注册用户；</li>
+                    <li>3.活动内容：活动期间在此活动页注册的新用户可获得188元新手红包；</li>
+                    <li>4.奖励发放：注册成功后红包以减息券形式发送至个人账户中，用于借款时使用，有效期3天；</li>
+                  </ol>
+                </div>
                 <div className={styles.closeBtn} onClick={this.closeModal}></div>
               </div>
             </div> : null
