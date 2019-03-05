@@ -22,7 +22,10 @@ export default class mpos_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		address();
+		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+		if (query.entry !== 'qidong') {
+			address()
+		}
 		this.validateMposRelSts();
 	}
 	validateMposRelSts = () => {
