@@ -53,7 +53,7 @@ export default class login_page extends PureComponent {
 		sessionStorage.clear();
         localStorage.clear();
         // 首页弹窗要用的
-        store.store.setNotShowTip(messageTag);
+        store.setNotShowTip(messageTag);
 
 		setH5Channel(storeH5Channel);
 
