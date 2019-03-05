@@ -38,11 +38,15 @@ export default class mpos_service_authorization_page extends PureComponent {
 				(res) => {
 					buriedPointEvent(mpos_service_authorization.auth_btn);
 					if (res.authSts === '01') {
-                        console.log('发验证码')
+						console.log('发验证码')
 						this.props.history.replace(`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${res.mblNoHid}`);
 					} else if (res.authSts === '00') {
-						// 弹拉新活动新弹窗的标识
-						store.setNewUserActivityModal(true)
+						const NewUserActivityFlag = store.getNewUserActivityFlag()
+						// 通过落地页进入的才设置弹窗
+						if (NewUserActivityFlag) {
+							// 弹拉新活动新弹窗的标识
+							store.setNewUserActivityModal(true)
+						}
 						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
