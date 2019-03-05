@@ -22,35 +22,40 @@ export default class mpos_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		address();
+		address()
 		this.validateMposRelSts();
 	}
 	validateMposRelSts = () => {
 		// // 移除notice是否显示的标记
 		// store.removeShowNotice();
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-		this.props.$fetch
-			.post(API.validateMposRelSts, {
-				appid: query.appId,
-				token: query.token
-			})
-			.then((res) => {
-				if (res.msgCode === 'URM0000') {
-					this.transition();
-				} else if (res.msgCode === 'URM9999') {
-					this.props.toast.info(res.msgInfo);
-				} else if (res.msgCode === 'PTM9000') {
-					this.props.history.replace('/mpos/mpos_ioscontrol_page');
-				} else {
-					this.setState({ showBoundle: true });
-				}
-			})
-			.catch((err) => {
-				this.setState({
-					errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+		if (query.appId && query.token) {
+			this.props.$fetch
+				.post(API.validateMposRelSts, {
+					appid: query.appId,
+					token: query.token
+				})
+				.then((res) => {
+					if (res.msgCode === 'URM0000') {
+						this.transition();
+					} else if (res.msgCode === 'URM9999') {
+						this.props.toast.info(res.msgInfo);
+					} else if (res.msgCode === 'PTM9000') {
+						this.props.history.replace('/mpos/mpos_ioscontrol_page');
+					} else {
+						this.setState({ showBoundle: true });
+					}
+				})
+				.catch((err) => {
+					this.setState({
+						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+					});
 				});
-			});
-	};
+		} else {
+			this.setState({ showBoundle: true });
+		}
+
+	}
 	transition = () => {
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch

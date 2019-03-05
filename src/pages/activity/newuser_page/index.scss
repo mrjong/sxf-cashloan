@@ -1,0 +1,139 @@
+.modal {
+  .mask {
+    position: fixed;
+    background-color: rgba(0, 0, 0, .3);
+    margin: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+  }
+  .modalWrapper {
+    position: fixed;
+    width: 620px;
+    height: 568px;
+    border-radius: 10px;
+    padding: 26px 30px 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    box-sizing: border-box;
+
+    h2 {
+      text-align: center;
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 36px;
+    }
+
+    li {
+      font-size: 30px;
+      color: #6c6c6c;
+    }
+
+    .closeBtn {
+      width: 50px;
+      height: 50px;
+      background-image: url(../../../assets/images/home/close_ico@2x.png);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      position: absolute;
+      bottom: -80px;
+      left: 50%;
+      transform: translate(-50%, 0%);
+    }
+  }
+}
+.main {
+  position: relative;
+  .activity_bg {
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+  }
+  .rule {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    color: #fff;
+    font-size: 28px;
+    width: 145px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .3);
+    border-radius: 24px 0 0 24px;
+  }
+  .wallet {
+    position: absolute;
+    top: 380px;
+    width: 100%;
+    img {
+      position: absolute;
+      width: 100%;
+    }
+    .img1 {
+      z-index: 3;
+    }
+    .img2 {
+      width: 510px;
+      height: 320px;
+      left: 50%;
+      top: 250px;
+      margin-left: -255px;
+      z-index: 2;
+      animation: slide 1.5s forwards;
+    }
+    .img3 {
+      z-index: 1;
+    }
+  }
+  .submitBtn {
+    position: relative;
+    top: 1200px;
+    width: 650px;
+    height: 110px;
+    margin: 0 auto;
+    .btn {
+      position: absolute;
+      width: 650px;
+      background-repeat: no-repeat;
+    }
+    .btn1 {
+      z-index: 2;
+      animation: shake 1s infinite;
+    }
+    .btn2 {
+      top: 20px;
+      z-index: 0;
+    }
+  }
+  .tipText {
+    text-align: center;
+  }
+  .tipWrapper {
+    width: 5rem;
+    height: 2rem;
+  }
+}
+
+@keyframes slide{
+  0% {
+    top: 280px;
+  }
+  100% {
+    top: 50px;
+  }
+}
+
+@keyframes shake{
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 15px;
+  }
+}
