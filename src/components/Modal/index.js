@@ -10,13 +10,13 @@ class ActivityModal extends React.Component {
   }
 
   render() {
-    const { closeActivityModal, history, activity } = this.props
+    const { closeActivityModal, history, isNewModal } = this.props
     return (
       <div className={styles.modal}>
         <div className={styles.mask}></div>
         <div className={styles.modalWrapper}>
           <div className={styles.content}>
-            <img src={activity ? huodongTootip1 : huodongTootip} />
+            <img src={isNewModal ? huodongTootip1 : huodongTootip} />
             <img className={styles.huodongTootipBtn} src={huodongTootipBtn}
               onClick={() => { history.push('/mine/credit_extension_page?isShowCommit=true') }} />
           </div>
