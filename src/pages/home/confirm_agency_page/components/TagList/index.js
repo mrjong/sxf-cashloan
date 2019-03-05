@@ -29,9 +29,10 @@ export default class TagList extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.burientype && !store.getHadShowModal()) {
-      buriedPointEvent(home.lenders, {
-        lenders_type: nextProps.tagList[nextProps.activeindex].name,
-      });
+      const item = nextProps.tagList[nextProps.activeindex]
+      // buriedPointEvent(home.lenders, {
+      //   lenders_type: nextProps.tagList[nextProps.activeindex].name,
+      // });
       store.setHadShowModal(true);
     }
     if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeindex !== nextProps.activeindex)) {
