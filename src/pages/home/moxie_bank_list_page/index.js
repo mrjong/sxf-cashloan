@@ -78,7 +78,7 @@ export default class moxie_bank_list_page extends Component {
 		console.log(backUrlData, '------------');
 		store.setBackUrl(backUrlData);
 		store.removeBackUrl2();
-		location.href = url;
+		location.href = url+'&showTitleBar=NO';
 	};
 	render() {
 		return (
