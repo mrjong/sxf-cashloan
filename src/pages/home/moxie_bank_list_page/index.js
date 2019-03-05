@@ -4,6 +4,7 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
 import allicon from './img/all@2x.png';
+import ButtonCustom from 'components/ButtonCustom';
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C'
 };
@@ -14,7 +15,8 @@ export default class moxie_bank_list_page extends Component {
 	state = {
 		showAll: false,
 		lengthNum: 7,
-		bankList: []
+		bankList: [],
+		isnoData: false
 	};
 	componentWillMount() {
 		this.mxoieCardList();
@@ -33,15 +35,26 @@ export default class moxie_bank_list_page extends Component {
 		}
 	};
 	mxoieCardList = () => {
-		this.props.$fetch.get(API.mxoieCardList).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+		this.props.$fetch
+			.get(API.mxoieCardList)
+			.then((res) => {
+				if (res && res.msgCode === 'PTM0000') {
+					this.setState({
+                        bankList: res.data || [],
+                        isnoData: false
+					});
+				} else {
+					this.setState({
+						isnoData: true
+					});
+					this.props.toast.info(res.msgInfo);
+				}
+			})
+			.catch(() => {
 				this.setState({
-					bankList: res.data || []
+					isnoData: true
 				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
+			});
 	};
 	showAllFunc = () => {
 		this.setState(
@@ -88,34 +101,50 @@ export default class moxie_bank_list_page extends Component {
 						多重加密
 					</span>
 				</div>
-				<div className={style.bankList}>
-					{this.state.bankList.map((item, index) => {
-						if (index <= this.state.lengthNum) {
-							return (
-								<div
-									onClick={() => {
-										this.gotoMoxie(item.href);
-									}}
-									key={item.name}
-									className={style.bankitem}
-								>
-									{/* <img src={item.logo} /> */}
-									<span className={`bank_moxie_ico bank_moxie_${item.code}`} />
-									<div className={style.name}>{item.name}</div>
+				{this.state.bankList && this.state.bankList.length > 0 ? (
+					<div>
+						<div className={style.bankList}>
+							{this.state.bankList.map((item, index) => {
+								if (index <= this.state.lengthNum) {
+									return (
+										<div
+											onClick={() => {
+												this.gotoMoxie(item.href);
+											}}
+											key={item.name}
+											className={style.bankitem}
+										>
+											<span
+												className={`bank_moxie_ico bank_moxie_${item.code}`}
+												style={{ backgroundImage: `url(${item.logo})` }}
+											/>
+											<div className={style.name}>{item.name}</div>
+										</div>
+									);
+								} else {
+									return null;
+								}
+							})}
+							{this.state.bankList.length >= 8 ? (
+								<div onClick={this.showAllFunc} className={style.bankitem}>
+									<span className={`bank_moxie_ico bank_moxie_ALL`} />
+									<div className={style.name}>{this.state.showAll ? '收起' : '查看全部'}</div>
 								</div>
-							);
-						} else {
-							return null;
-						}
-					})}
-					{this.state.bankList.length >= 8 ? (
-						<div onClick={this.showAllFunc} className={style.bankitem}>
-							{/* <img src={allicon} /> */}
-							<span className={`bank_moxie_ico bank_moxie_ALL`} />
-							<div className={style.name}>{this.state.showAll ? '收起' : '查看全部'}</div>
+							) : null}
 						</div>
-					) : null}
-				</div>
+					</div>
+				) : null}
+				{this.state.isnoData ? (
+					<div>
+						<div className={style.err_page}>
+							<i className={style.err_img} />
+							{/* <p className={style.err_cont}>对不起，您找的页面走丢了～</p> */}
+							<ButtonCustom onClick={this.reloadHandler} className={style.reload_btn}>
+								刷新
+							</ButtonCustom>
+						</div>
+					</div>
+				) : null}
 			</div>
 		);
 	}
