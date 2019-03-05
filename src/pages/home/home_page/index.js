@@ -49,11 +49,19 @@ export default class home_page extends PureComponent {
       visibleLoading: false,
       percent: 0,
       showToast: false,
-      isShowActivityModal: false // 是否显示活动弹窗
-    };
+      isShowActivityModal: false, // 是否显示活动弹窗
+      NewUserActivityModal: '',
+      isNewModal: false
+    }
   }
 
   componentWillMount() {
+    // 弹新弹窗的标识
+    const NewUserActivityModal = store.getNewUserActivityModal()
+    store.removeNewUserActivityModal()
+    this.setState({
+      NewUserActivityModal
+    })
     // 清除订单缓存
     store.removeBackData();
     // 清除四项认证进入绑卡页的标识
@@ -81,7 +89,7 @@ export default class home_page extends PureComponent {
       clearTimeout(timerOut);
     }
   }
-  
+
   // 从 url 中获取参数，如果有 token 就设置下
   getTokenFromUrl = () => {
     const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -368,19 +376,30 @@ export default class home_page extends PureComponent {
         }
         this.setState({
           usrIndexInfo: result.data.indexData ? result.data : Object.assign({}, result.data, { indexData: {} }),
-        });
-        if (isMPOS() && (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') && !store.getShowActivityModal()) {
+        })
+        if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+          // 新弹窗（188元）
           this.setState({
-            isShowActivityModal: true
+            isShowActivityModal: true,
+            isNewModal: true
+          }, () => {
+            store.setShowActivityModal(true)
+          })
+        } else if (isMPOS() && (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') && !store.getShowActivityModal()) {
+          // 老弹窗（3000元）
+          this.setState({
+            isShowActivityModal: true,
+            isNewModal: false
           }, () => {
             store.setShowActivityModal(true)
           })
         }
 
+
         // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
-        this.cacheBanner();
+        this.cacheBanner()
       } else {
-        this.props.toast.info(result.msgInfo);
+        this.props.toast.info(result.msgInfo)
       }
     });
   };
@@ -485,7 +504,14 @@ export default class home_page extends PureComponent {
         <div className={style.content_wrap}>{componentsDisplay}</div>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* {首页活动提示弹窗（对内有）} */}
-        {this.state.isShowActivityModal && <ActivityModal closeActivityModal={this.closeActivityModal} history={history}></ActivityModal>}
+        {this.state.isShowActivityModal &&
+          <ActivityModal
+            closeActivityModal={this.closeActivityModal}
+            history={history}
+            isNewModal={this.state.isNewModal}
+          />
+        }
+
         <Modal
           wrapClassName={style.modalLoadingBox}
           visible={visibleLoading}

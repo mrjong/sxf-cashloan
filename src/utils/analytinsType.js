@@ -1,10 +1,10 @@
 // DC 对外
 // XDC mpos入口=>对内
 import { isMPOS } from './common'
-let prefix = `DC`;
+let prefix = `DC`
 
 if (isMPOS() || JSON.parse(sessionStorage.getItem('isMPOS'))) {
-	prefix = 'XDC';
+	prefix = 'XDC'
 }
 // console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
 const login = {
@@ -44,7 +44,7 @@ const home = {
 	repaymentBtnClick8: `${prefix}_HOME_CLICK_REPAYMENT8`, // 首页LN0008状态的点击
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
-};
+}
 
 const mine = {
 	durationDay30: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_DAY_30`, // 申请期限-30天
@@ -63,7 +63,7 @@ const mine = {
 	creditExtensionBaseInfo: `${prefix}_MINE_CREDIT_EXTENSION_BASE_INFO`, // 风控授信项页 点击基本信息认证
 	creditExtensionOperator: `${prefix}_MINE_CREDIT_EXTENSION_OPERATOR`, // 风控授信项页 点击运营商认证
 	creditExtensionZM: `${prefix}_MINE_CREDIT_EXTENSION_ZM` // 风控授信项页 点击芝麻分认证
-};
+}
 
 const order = {
 	repayment: `${prefix}_ORDER_DETAILS_REPAYMENT`, // 账单详情页-主动还款按钮
@@ -71,22 +71,26 @@ const order = {
 	returnHome: `${prefix}_ORDER_BACK_HOME`, // 还款完成页-返回首页按钮
 	openNow: `${prefix}_ORDER_OPEN_NOW`, // 还款完成页-弹框里立即开启按钮
 	closeModal: `${prefix}_ORDER_CLOSE_MODAL`, // 还款完成页-弹框里关闭按钮
-};
+}
 
 const membership = {
 	confirmBuyPre: `${prefix}_MEMBERSHIP_CONFIRM_BUY_PRE`, // 会员卡购买页-确认购买按钮
 	bindCardCredit: `${prefix}_MEMBERSHIP_BIND_CARD_CREDIT`, // 会员卡购买页-绑定银行卡-信用卡页-确认绑定按钮
 	bindCardSave: `${prefix}_MEMBERSHIP_BIND_CARD_SAVE`, // 会员卡购买页-绑定银行卡-储蓄卡页-确认绑定按钮
 	confirmBuy: `${prefix}_MEMBERSHIP_CONFIRM_BUY` // 会员卡购买-确认购买页-确认购买按钮
-};
+}
 
 const bugLog = {
 	apiErrorLog: `${prefix}_API_ERROR_LOG`, // 接口异常报错日志
 	pageErrorLog: `${prefix}_PAGE_ERROR_LOG` // 页面异常报错日志
-};
-
-const mpos_service_authorization ={
-    auth_btn:`${prefix}_AUTH_PAGE_AUTH_BTN`
 }
 
-export { login, home, mine, order, membership, bugLog,mpos_service_authorization };
+const mpos_service_authorization = {
+	auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`
+}
+
+const activity = {
+	newUserEntry: `${prefix}_NEW_USER_ACTIVITY_ENTRY` // 拉新活动运营入口来源埋点
+}
+
+export { login, home, mine, order, membership, bugLog, mpos_service_authorization, activity }
