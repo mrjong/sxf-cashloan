@@ -17,7 +17,9 @@ const API = {
 export default class BankContent extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			messageTag: ''
+		};
 	}
 
 	static propTypes = {
@@ -35,6 +37,13 @@ export default class BankContent extends React.Component {
 		contentData: {},
 		fetch: {}
 	};
+
+	componentWillMount() {
+		const messageTag = store.getNotShowTip();
+		this.setState({
+			messageTag
+		});
+	}
 
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count) => {
@@ -105,39 +114,97 @@ export default class BankContent extends React.Component {
 				this.props.toast.info(err.message);
 			});
 	};
-
+	closeTip = (key) => {
+		this.setState({
+			messageTag: key
+		});
+		switch (key) {
+			case '50000':
+				store.setNotShowTip('50000');
+				break;
+			case 'step':
+				store.setNotShowTip('step');
+			default:
+				break;
+		}
+	};
 	render() {
+		const { messageTag } = this.state;
 		const { className, children, contentData, progressNum, toast, history, ...restProps } = this.props;
 		const { indexSts, indexData } = contentData;
 		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008', 'LN0010' ];
-		let tipText =
-			indexSts === 'LN0001' ? (
-				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
-						最高代还金额 ￥50000
-                        <Icon size="sm" style={{width:".3rem",height:'.3rem'}} className={style.closeIcon} type="cross"></Icon>
-						<div className={style.triangle_border_down}>
-							<span />
-						</div>
-					</p>
-				</div>
-			) : null;
-		if (indexSts === 'LN0010') {
+		let tipText = '';
+		if (indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
-						点击更新账单，获取最新信用卡信息
+						最高代还金额 ￥50000
+						<Icon
+							onClick={() => {
+								this.closeTip('50000');
+							}}
+							size="sm"
+							style={{ width: '.3rem', height: '.3rem' }}
+							className={style.closeIcon}
+							type="cross"
+						/>
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
 					</p>
 				</div>
 			);
-		} else if (indexSts === 'LN0003' && progressNum) {
+		} else if (indexSts === 'LN0010' && (!messageTag || messageTag !== '50000')) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.progress_box}>
-						还差<span>{progressNum}</span>步即可完成申请
+					<p className={style.abnormal_tip}>
+						点击更新账单，获取最新信用卡信息
+						<Icon
+							onClick={() => {
+								this.closeTip('50000');
+							}}
+							size="sm"
+							style={{ width: '.3rem', height: '.3rem' }}
+							className={style.closeIcon}
+							type="cross"
+						/>
+						<div className={style.triangle_border_down}>
+							<span />
+						</div>
+					</p>
+				</div>
+			);
+		} else if (indexSts === 'LN0003' && progressNum && (!messageTag || messageTag !== 'step')) {
+			let html = '';
+			switch (Number(progressNum)) {
+				case 3:
+					html = `帮我还卡，只需<span>${progressNum}</span>步`;
+					break;
+				case 2:
+					html = `还差<span>${progressNum}</span>步，就可以帮我还卡了`;
+					break;
+				case 1:
+					html = `只差最后<span>${progressNum}</span>步，就可以帮我还卡了`;
+					break;
+
+				default:
+					break;
+			}
+
+			console.log(html);
+			tipText = (
+				<div className={style.abnormal_tip_box}>
+					<p className={style.abnormal_tip}>
+						<div dangerouslySetInnerHTML={{ __html: html }} />
+						<Icon
+							onClick={() => {
+								this.closeTip('step');
+							}}
+							size="sm"
+							style={{ width: '.3rem', height: '.3rem' }}
+							className={style.closeIcon}
+							type="cross"
+						/>
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
@@ -156,7 +223,9 @@ export default class BankContent extends React.Component {
 							<img className={style.link_arrow_img} src={iconArrow} alt="" />
 						</button>
 					) : null}
-					{indexSts === 'LN0001' ? <div className={style.subDesc}>安全绑卡，放心还卡</div> : null}
+					{indexSts === 'LN0001' || indexSts === 'LN0009' || indexSts === 'LN0004' ||indexSts === 'LN0007' ? (
+						<div className={style.subDesc}>安全绑卡，放心还卡</div>
+					) : null}
 				</BankCard>
 			</div>
 		);

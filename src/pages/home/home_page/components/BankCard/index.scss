@@ -10,7 +10,7 @@
 	@include bg-image('./img/home_card');
 	background-size: 705px 782px;
 	background-repeat: no-repeat;
-	top: -30px;
+	top: -45px;
 	text-align: left;
 	.title {
 		font-size: 44px;
@@ -63,8 +63,8 @@
 	.timeBox {
 		display: inline-block;
 		width: 100%;
-		margin-top: 40px;
-		padding: 20px 0;
+		margin-top: 22px;
+		padding: 30px 0;
 		color: #333;
 		font-size: 28px;
 		position: relative;
@@ -79,6 +79,8 @@
 		}
 	}
 	.bankBox {
+		clear: both;
+		margin-top: -0.12rem;
 		padding: 30px 0 30px 0;
 		font-size: 28px;
 		position: relative;
@@ -97,7 +99,7 @@
 			position: absolute;
 			width: 50px;
 			left: 0;
-			top: 25px;
+			top: 26px;
 			height: 50px;
 		}
 		.bankNum {
@@ -116,11 +118,13 @@
 		float: right;
 	}
 	.bill_update_btn {
+		margin-top: -10px;
 		border: 1PX solid #ffa000;
 		border-radius: 20px;
 		background: #ffa000;
 		padding: 5px 10px;
 		font-size: 24px;
+		line-height: 1;
 		color: #fff;
 		display: table-cell;
 		vertical-align: middle;

@@ -6,16 +6,20 @@
 	}
 	.abnormal_tip {
 		background: #878787;
-		font-size: .14rem;
+		font-size: 24px;
+		border-radius: 4px;
 		color: #fff;
 		text-align: center;
-		left: 50%;
-		transform: translate(-50%, 0%);
 		position: absolute;
 		padding: 2px 10px;
-		padding-right: 40px;
+		padding-right: 50px;
+		left: 50%;
+		transform: translate(-50%, 0);
 		top: -60px;
-		display: inline-block;
+		white-space: nowrap;
+		span {
+			margin: 0 5px;
+		}
 	}
 	.triangle_border_down {
 		transform: translate(-50%, 0%);
@@ -64,8 +68,8 @@
 
 	.closeIcon {
 		position: absolute;
-		top: 5px;
-		right: 0;
+		top: 7px;
+		right: 5px;
 	}
 	.subDesc {
 		font-size: 24px;

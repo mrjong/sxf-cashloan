@@ -22,7 +22,7 @@
 }
 // 黑色logo的ico
 :global(.logo_ico) {
-	background: url('../../../assets/images/home/logo.png');
+    @include bg-image('../../../assets/images/mine/selectCard/black_logo');
 }
 // 中国银行
 :global(.bank_ico_BOC) {

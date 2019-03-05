@@ -34,7 +34,7 @@ export default class BankCard extends React.PureComponent {
 		children: '',
 		contentData: {},
 		bankIcon: '',
-		bankName: '随行付·还到',
+		bankName: '随行付_还到',
 		bankNo: '',
 		cardNoHid: '**** **** **** ****',
 		cardBillDt: '----/--/--',
@@ -85,13 +85,13 @@ export default class BankCard extends React.PureComponent {
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let overDtStr = '----/--/--';
 		if (overDt === '----/--/--') {
-			overDtStr = overDt;
+			overDtStr = `<span class="blod">${overDt}</span>`;
 		} else if (overDt > 0) {
 			overDtStr = `<span class="blod">${overDt}</span>天 后到期`;
 		} else if (parseInt(overDt, 10) === 0) {
 			overDtStr = '<span class="blod">今天到期</span>';
 		} else if (overDt < 0) {
-			overDtStr = '<span class="blod">已到期</span>';
+			overDtStr = `<span class="blod">已到期</span>`;
 		}
 		const billDtData =
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
@@ -101,11 +101,11 @@ export default class BankCard extends React.PureComponent {
 			<div className={style.billBox}>
 				<div className={style.billBox2}>
 					<div className={style.title}>
-						{contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
+						{contentData.indexSts&&contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
 						<div className={style.fr}>
 							{contentData.indexSts === 'LN0002' ? (
 								<button className={style.bill_update_btn}>授权中</button>
-							) : contentData.indexSts !== 'LN0001' ? (
+							) : contentData.indexSts&&contentData.indexSts !== 'LN0001' ? (
 								<button className={style.bill_update_btn} onClick={this.handleUpdate}>
 									更新账单
 								</button>
@@ -134,15 +134,23 @@ export default class BankCard extends React.PureComponent {
 					</div>
 					<div className={style.subTitle}>账单金额(元)</div>
 					<div className={style.timeBox}>
-						<div className={style.time}> <span className={style.noStyle}>账单日</span> <span className="blod">{billDtData}</span></div>
+						<div className={style.time}>
+							{' '}
+							<span className={style.noStyle}>账单日</span> <span className="blod">{billDtData}</span>
+						</div>
 						<div className={style.desc}>
-							<span className={style.noStyle}>还款日</span> <span dangerouslySetInnerHTML={{ __html: overDtStr }} />
+							<span className={style.noStyle}>还款日</span>{' '}
+							<span dangerouslySetInnerHTML={{ __html: overDtStr }} />
 						</div>
 					</div>
 					<div className={style.bankBox}>
 						<span className={[ 'bank_ico', iconClass, `${style.bankIcon}` ].join(' ')} />
-						<span className={style.bankName}><span className={style.noStyle}>{bankName}</span></span>
-						<span className={style.bankNum}><span className={style.noStyle}>{cardNoHid}</span></span>
+						<span className={style.bankName}>
+							<span className={style.noStyle}>{bankName}</span>
+						</span>
+						<span className={style.bankNum}>
+							<span className={style.noStyle}>{cardNoHid}</span>
+						</span>
 					</div>
 					<div>{children}</div>
 					{/* <div className={style.btnBox}>

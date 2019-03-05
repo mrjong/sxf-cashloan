@@ -38,7 +38,7 @@ export default [
   },
   {
     path: '/home/moxie_bank_list_page',
-    title: '银行卡选择',
+    title: '添加账单',
     component: () => import('pages/home/moxie_bank_list_page'),
   }
 ];

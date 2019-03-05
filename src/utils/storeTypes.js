@@ -45,6 +45,7 @@ export const storeTypes = {
 	City: 'City', // 城市
 	ShowActivityModal: 'ShowActivityModal', // 是否显示活动弹窗
 	SaveAmt: 'SaveAmt', // 回显代还金额的数据
-	BindCardNo: 'BindCardNo',	// 回显绑卡卡号
-	BindCardPhone: 'BindCardPhone',	// 回显绑卡手机号
+	BindCardNo: 'BindCardNo', // 回显绑卡卡号
+	BindCardPhone: 'BindCardPhone', // 回显绑卡手机号
+	NotShowTip: 'NotShowTip', // 50000 步骤 提示不显示
 };

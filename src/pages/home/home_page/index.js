@@ -377,7 +377,7 @@ export default class home_page extends PureComponent {
 				Cookie.set('bannerAble', true, { expires: inFifteenMinutes });
 				store.setBannerData(bannerData);
 				this.setState({
-					bannerList: bannerData
+					bannerList: bannerData 
 				});
 			}
 		});
@@ -507,7 +507,13 @@ export default class home_page extends PureComponent {
 							usrIndexInfo.indexData.autSts &&
 							usrIndexInfo.indexData.autSts !== '2') ? null : (
 							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-								{usrIndexInfo.indexMsg}
+								{usrIndexInfo.indexSts === 'LN0003' ||
+								usrIndexInfo.indexSts === 'LN0006' ||
+								usrIndexInfo.indexSts === 'LN0008' ? (
+									'一键还账单'
+								) : (
+									usrIndexInfo.indexMsg
+								)}
 							</SXFButton>
 						)}
 					</BankContent>
@@ -524,7 +530,7 @@ export default class home_page extends PureComponent {
 							progressNum={percentSatus}
 							toast={this.props.toast}
 						>
-							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+							<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
 								查看我的账单，帮我还
 							</SXFButton>
 							<div className={style.subDesc}>安全绑卡，放心还卡</div>
