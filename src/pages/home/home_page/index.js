@@ -50,7 +50,7 @@ export default class home_page extends PureComponent {
       percent: 0,
       showToast: false,
       isShowActivityModal: false, // 是否显示活动弹窗
-      NewUserActivityModal: '',
+      NewUserActivityModal: false,
       isNewModal: false
     }
   }
@@ -58,6 +58,7 @@ export default class home_page extends PureComponent {
   componentWillMount() {
     // 弹新弹窗的标识
     const NewUserActivityModal = store.getNewUserActivityModal()
+    alert(NewUserActivityModal)
     store.removeNewUserActivityModal()
     this.setState({
       NewUserActivityModal
