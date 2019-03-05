@@ -2,7 +2,8 @@
 
 .moxie_bank_list_page {
 	height: 100%;
-	padding: 50px;
+    padding: 50px;
+    user-select: none;
 	.title {
 		font-size: 48px;
 		font-weight: 700;
@@ -40,13 +41,14 @@
 		text-align: center;
 		margin-top: 70px;
 		.bankitem {
+            padding: 20px 0;
 			img {
 				width: 80px;
 			}
 			.name {
 				font-size: 22px;
 			}
-			margin-bottom: 60px;
+			margin-bottom: 40px;
 			float: left;
 			width: 33.33%;
 			&:active {
