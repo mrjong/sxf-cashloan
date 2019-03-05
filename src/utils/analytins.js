@@ -33,7 +33,7 @@ export const initAnalytics = () => {
 };
 
 // 获取渠道 此处特殊处理，先在session里获取，
-// 然后取url上的，防止跳转的时候不带h5Channel会直接取ua的，导致都是mpos
+// 然后取url上的，防止跳转的时候不带h5Channel会直接取ua的，导致都是mpos渠道
 function getH5Channel() {
   let channelType = '';
   const ua = window.navigator.userAgent;
