@@ -1,6 +1,6 @@
 import qs from 'qs';
 import { store } from 'utils/store';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { setH5Channel } from 'utils/common';
 
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
@@ -32,24 +32,25 @@ export const initAnalytics = () => {
   }
 };
 
-// 获取渠道
-// function getH5Chanel() {
-//   let channelType = '';
-//   const ua = window.navigator.userAgent;
-//   const query = qs.parse(window.location.search, {
-//     ignoreQueryPrefix: true,
-//   });
-//   if (/SuiXingPay-Mpos/i.test(ua)) {
-//     channelType = 'MPOS';
-//   } else if (query.h5Channel) {
-//     channelType = query.h5Channel;
-//   } else if (store.getH5Channel()) {
-//     channelType = store.getH5Channel();
-//   } else {
-//     channelType = 'OTHER';
-//   }
-//   return channelType;
-// }
+// 获取渠道 此处特殊处理，先在session里获取，
+// 然后取url上的，防止跳转的时候不带h5Channel会直接取ua的，导致都是mpos
+function getH5Channel() {
+  let channelType = '';
+  const ua = window.navigator.userAgent;
+  const query = qs.parse(window.location.search, {
+    ignoreQueryPrefix: true,
+  });
+  if (store.getH5Channel()) {
+    channelType = store.getH5Channel();
+  } else if (query.h5Channel) {
+    channelType = query.h5Channel;
+  } else if (/SuiXingPay-Mpos/i.test(ua)) {
+    channelType = 'MPOS';
+  } else {
+    channelType = 'OTHER';
+  }
+  return channelType;
+}
 
 // 定义固定参数
 function getStaticParams() {
