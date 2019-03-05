@@ -50,18 +50,17 @@ export default class home_page extends PureComponent {
       percent: 0,
       showToast: false,
       isShowActivityModal: false, // 是否显示活动弹窗
-      NewUserActivityModal: false,
+      newUserActivityModal: false,
       isNewModal: false
     }
   }
 
   componentWillMount() {
     // 弹新弹窗的标识
-    const NewUserActivityModal = store.getNewUserActivityModal()
-    alert(NewUserActivityModal)
+    const newUserActivityModal = store.getNewUserActivityModal()
     store.removeNewUserActivityModal()
     this.setState({
-      NewUserActivityModal
+      newUserActivityModal
     })
     // 清除订单缓存
     store.removeBackData();
