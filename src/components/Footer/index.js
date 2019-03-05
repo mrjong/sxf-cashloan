@@ -57,7 +57,7 @@ export default class Footer extends PureComponent {
     },
     data: [
       {
-        title: '还到',
+        title: '还卡',
         url: '/home/home',
         icon: iconBankActive,
         icon_not: iconBank,

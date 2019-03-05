@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
+import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
 import allicon from './img/all@2x.png';
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C'
 };
+let backUrlData = {};
 @fetch.inject()
 @setBackGround('#fff')
 export default class moxie_bank_list_page extends Component {
@@ -16,7 +18,20 @@ export default class moxie_bank_list_page extends Component {
 	};
 	componentWillMount() {
 		this.mxoieCardList();
+		this.getBackUrl();
 	}
+	componentWillUnmount() {
+		store.removeBackUrl2();
+	}
+	getBackUrl = () => {
+		backUrlData = store.getBackUrl();
+		if (backUrlData && JSON.stringify(backUrlData) !== '{}') {
+			store.setBackUrl2(store.getBackUrl());
+			store.removeBackUrl();
+		} else {
+			backUrlData = store.getBackUrl2();
+		}
+	};
 	mxoieCardList = () => {
 		this.props.$fetch.get(API.mxoieCardList).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
@@ -47,6 +62,9 @@ export default class moxie_bank_list_page extends Component {
 		);
 	};
 	gotoMoxie = (url) => {
+		console.log(backUrlData, '------------');
+		store.setBackUrl(backUrlData);
+		store.removeBackUrl2();
 		location.href = url;
 	};
 	render() {
@@ -81,7 +99,8 @@ export default class moxie_bank_list_page extends Component {
 									key={item.name}
 									className={style.bankitem}
 								>
-									<img src={item.logo} />
+									{/* <img src={item.logo} /> */}
+									<span className={`bank_moxie_ico bank_moxie_${item.code}`} />
 									<div className={style.name}>{item.name}</div>
 								</div>
 							);
@@ -91,7 +110,8 @@ export default class moxie_bank_list_page extends Component {
 					})}
 					{this.state.bankList.length >= 8 ? (
 						<div onClick={this.showAllFunc} className={style.bankitem}>
-							<img src={allicon} />
+							{/* <img src={allicon} /> */}
+							<span className={`bank_moxie_ico bank_moxie_ALL`} />
 							<div className={style.name}>{this.state.showAll ? '收起' : '查看全部'}</div>
 						</div>
 					) : null}

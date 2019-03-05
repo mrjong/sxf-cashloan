@@ -135,7 +135,7 @@ export default class BankContent extends React.Component {
 		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008' ];
 		const showEntranceArr2 = [ 'LN0001', 'LN0004', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
-		if (indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) {
+		if (indexSts === 'LN0001' && (!messageTag || messageTag !== '50000') || (!indexSts && (!messageTag || messageTag !== '50000'))) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
@@ -155,14 +155,14 @@ export default class BankContent extends React.Component {
 					</p>
 				</div>
 			);
-		} else if (indexSts === 'LN0010' && (!messageTag || messageTag !== '50000')) {
+		} else if (indexSts === 'LN0010' && (!messageTag || messageTag !== 'error')) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
 						点击更新账单，获取最新信用卡信息
 						<Icon
 							onClick={() => {
-								this.closeTip('50000');
+								this.closeTip('error');
 							}}
 							size="sm"
 							style={{ width: '.3rem', height: '.3rem' }}
@@ -192,7 +192,6 @@ export default class BankContent extends React.Component {
 					break;
 			}
 
-			console.log(html);
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>

@@ -1,7 +1,7 @@
 export default [
   {
     path: '/home/home',
-    title: '还到',
+    title: '还卡',
     footerHide: false,
     arrowHide: 'empty',
     component: () => import('pages/home/home_page'),
