@@ -16,7 +16,7 @@ class ActivityModal extends React.Component {
         <div className={styles.mask}></div>
         <div className={styles.modalWrapper}>
           <div className={styles.content}>
-            <img src={isNewModal ? huodongTootip1 : huodongTootip} />
+            <img onClick={closeActivityModal} src={isNewModal ? huodongTootip1 : huodongTootip} />
             {/* <img className={styles.huodongTootipBtn} src={huodongTootipBtn}
               onClick={() => { history.push('/mine/credit_extension_page?isShowCommit=true') }} /> */}
           </div>
