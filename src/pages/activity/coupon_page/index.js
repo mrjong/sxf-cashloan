@@ -15,7 +15,7 @@ import stepImg from './img/step_bg.png'
 import { isMPOS } from 'utils/common'
 import submit_btn1 from './img/btn_bg1.png'
 import submit_btn2 from './img/btn_bg2.png'
-
+import AwardShowMock from './components/AwardShowMock';
 
 @withRouter
 export default class coupon_activity_page extends PureComponent {
@@ -98,7 +98,7 @@ export default class coupon_activity_page extends PureComponent {
           })
         }}>活动规则</div>
         {
-          !isMPOS() ? <div className={styles.buttonWrap}>
+          isMPOS() ? <div className={styles.buttonWrap}>
             <img src={stepImg} className={styles.stepImg} />
             <div className={styles.submitBtn} onClick={this.goTo}>
               <img src={submit_btn1} className={[styles.btn, styles.btn1].join(' ')} />
@@ -107,7 +107,7 @@ export default class coupon_activity_page extends PureComponent {
           </div> :
             <div>
               <div className={styles.phoneWrap}>
-                <ul className={styles.slideWrap}>
+                {/* <ul className={styles.slideWrap}>
                   <li className={styles.phoneText}>恭喜139****8763 获得30元红包</li>
                   <li className={styles.phoneText}>恭喜158****1951 获得5元红包</li>
                   <li className={styles.phoneText}>恭喜186****7327 获得50元红包</li>
@@ -115,7 +115,9 @@ export default class coupon_activity_page extends PureComponent {
                   <li className={styles.phoneText}>恭喜158****6357 获得88元红包</li>
                   <li className={styles.phoneText}>恭喜139****8763 获得30元红包</li>
 
-                </ul>
+                </ul> */}
+                <AwardShowMock ></AwardShowMock>
+                
               </div>
               <div className={styles.couponWrap}>
                 {
