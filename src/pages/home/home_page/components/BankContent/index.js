@@ -96,8 +96,8 @@ export default class BankContent extends React.Component {
 		const { messageTag } = this.state;
 		const { className, children, contentData, progressNum, toast, history, ...restProps } = this.props;
 		const { indexSts, indexData } = contentData;
-		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008' ];
-		const showEntranceArr2 = [ 'LN0001', 'LN0004', 'LN0007', 'LN0009', 'LN0010' ];
+		const showEntranceArr = [ 'LN0003', 'LN0006', 'LN0008' ];
+		const showEntranceArr2 = [ 'LN0001', 'LN0002','LN0004', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
 		if (
 			(indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) ||
