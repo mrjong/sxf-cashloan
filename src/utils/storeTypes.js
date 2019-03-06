@@ -5,7 +5,8 @@ export const storeTypes = {
     BackUrl: 'BackUrl', // 保存跳转的url
     BackUrl2: 'BackUrl2', // 临时缓存
 	CardData: 'CardData', // 跳转路由中的银行卡信息
-	MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
+    MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
+    MoxieBackUrl2: 'MoxieBackUrl2', // 跳转魔蝎授权页 授权后返回的url
 	VIPFlag: 'VIPFlag', // 会员卡是否购买的flag
 	AuthFlag: 'AuthFlag', // 是否实名认证的flag
 	UserPhone: 'UserPhone', // 用户手机号

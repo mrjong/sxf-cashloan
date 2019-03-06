@@ -6,12 +6,6 @@ import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import { SXFToast } from 'utils/SXFToast';
-import SXFButton from 'components/ButtonCustom';
-const API = {
-	CARD_AUTH: '/auth/cardAuth' // 信用卡授信
-};
-
 @fetch.inject()
 export default class BankCard extends React.PureComponent {
 	static propTypes = {
@@ -55,30 +49,10 @@ export default class BankCard extends React.PureComponent {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
+        buriedPointEvent(home.updateBill);
 		store.setMoxieBackUrl('/home/home');
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
-	// 跳魔蝎
-	// applyCardRepay = () => {
-	// 	// 埋点-首页-点击更新账单
-	// 	buriedPointEvent(home.updateBill);
-	// 	this.props.$fetch
-	// 		.post(API.CARD_AUTH, {
-	// 			clientCode: '04'
-	// 		})
-	// 		.then((result) => {
-	// 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-	// 				store.setMoxieBackUrl('/home/home');
-	// 				SXFToast.loading('加载中...', 0);
-	// 				window.location.href =
-	// 					result.data.url +
-	// 					`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
-	// 						.search}&showTitleBar=NO`;
-	// 			} else {
-	// 				this.props.toast.info(result.msgInfo);
-	// 			}
-	// 		});
-	// };
 
 	render() {
 		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt } = this.props;
