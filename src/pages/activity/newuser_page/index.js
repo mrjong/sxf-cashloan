@@ -56,7 +56,6 @@ export default class newUser_page extends PureComponent {
         showLoginTip: true
       })
     }
-
   }
 
   render() {

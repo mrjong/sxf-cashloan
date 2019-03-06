@@ -18,5 +18,11 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/activity/newuser_page')
+	},
+	{
+		path: '/activity/coupon_page',
+		title: '百万红包天天抢',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/coupon_page')
 	}
 ];
