@@ -40,8 +40,8 @@ export default class moxie_bank_list_page extends Component {
 			.then((res) => {
 				if (res && res.msgCode === 'PTM0000') {
 					this.setState({
-                        bankList: res.data || [],
-                        isnoData: false
+						bankList: res.data || [],
+						isnoData: false
 					});
 				} else {
 					this.setState({
@@ -78,7 +78,11 @@ export default class moxie_bank_list_page extends Component {
 		console.log(backUrlData, '------------');
 		store.setBackUrl(backUrlData);
 		store.removeBackUrl2();
-		location.href = url+'&showTitleBar=NO';
+		location.href = url + '&showTitleBar=NO';
+	};
+	// 重新加载
+	reloadHandler = () => {
+		window.location.reload();
 	};
 	render() {
 		return (
