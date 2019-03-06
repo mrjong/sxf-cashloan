@@ -160,7 +160,7 @@ export default class ModalInfo extends Component {
         // 提交风控返回失败埋点
         buriedPointEvent(mine.creditExtensionConfirm, {
           is_success: false,
-          fail_cause: result.msgInfo
+          fail_cause: res.msgInfo
         })
         this.props.toast.info(res.msgInfo);
       }
