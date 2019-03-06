@@ -168,7 +168,7 @@ export default class home_page extends PureComponent {
 		}
 		switch (usrIndexInfo.indexSts) {
 			case 'LN0001': // 新用户，信用卡未授权
-				this.applyCardRepay();
+				this.goToNewMoXie();
 				break;
 			case 'LN0002': // 账单爬取中
 				break;
@@ -233,33 +233,11 @@ export default class home_page extends PureComponent {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
+        // /mine/credit_extension_page?
 		store.setMoxieBackUrl(
-			`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
+			`/mine/credit_extension_page?noAuthid=true`
 		);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-	};
-	// 申请信用卡代还点击事件 通过接口判断用户是否授权 然后跳页面
-	applyCardRepay = () => {
-		const { usrIndexInfo } = this.state;
-		this.props.$fetch
-			.post(API.CARD_AUTH, {
-				clientCode: '04'
-			})
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					store.setMoxieBackUrl(
-						`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
-					);
-					this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-					// SXFToast.loading('加载中...', 0);
-					// window.location.href =
-					// 	result.data.url +
-					// 	`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
-					// 		.search}&showTitleBar=NO`;
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			});
 	};
 
 	// 请求用户绑卡状态

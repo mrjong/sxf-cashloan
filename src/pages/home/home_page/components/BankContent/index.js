@@ -6,7 +6,6 @@ import { Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import { SXFToast } from 'utils/SXFToast';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import SXFButton from 'components/ButtonCustom';
 const API = {
@@ -68,34 +67,6 @@ export default class BankContent extends React.Component {
 		);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
-
-	// 通过接口跳魔蝎
-	// goToMoXie = () => {
-	// 	this.props.fetch
-	// 		.post(API.CARD_AUTH, {
-	// 			clientCode: '04'
-	// 		})
-	// 		.then((result) => {
-	// 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-	// 				// TODO 授信页面？
-	// 				// TODO: 完成认证后返回信用卡列表页？
-	// 				const { contentData } = this.props;
-	// 				store.setBackUrl('/home/home');
-	// 				store.setMoxieBackUrl(
-	// 					`/mine/credit_list_page?autId=${contentData.indexSts === 'LN0010'
-	// 						? ''
-	// 						: contentData.indexData.autId}`
-	// 				);
-	// 				SXFToast.loading('加载中...', 0);
-	// 				window.location.href =
-	// 					result.data.url +
-	// 					`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window.location
-	// 						.search}&showTitleBar=NO`;
-	// 			} else {
-	// 				this.props.toast.info(result.msgInfo);
-	// 			}
-	// 		});
-	// };
 
 	// 请求信用卡数量
 	requestCredCardCount = () => {

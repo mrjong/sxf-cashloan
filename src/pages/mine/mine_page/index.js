@@ -45,9 +45,11 @@ export default class mine_page extends PureComponent {
     store.removeBackData()
     // 移除会员卡出入口
     store.removeVipBackUrl();
+    console.log('---------',tokenFromStorage , token)
     if (tokenFromStorage && token) {
       // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
       if (Cookie.get('authFlag')) {
+          console.log('9999')
         this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: Cookie.get('authFlag') === '1' ? true : false });
       } else {
         this.getUsrInfo();
@@ -74,6 +76,7 @@ export default class mine_page extends PureComponent {
   }
   // 获取用户信息
   getUsrInfo = () => {
+      console.log('+++')
     this.props.$fetch.get(API.USERSTATUS).then(res => {
       if (res.msgCode !== 'PTM0000') {
         res.msgInfo && this.props.toast.info(res.msgInfo);
