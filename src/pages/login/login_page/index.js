@@ -45,6 +45,7 @@ export default class login_page extends PureComponent {
 		const query = qs.parse(window.location.search, {
 			ignoreQueryPrefix: true
 		});
+		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
 		Cookie.remove('fin-v-card-token');
