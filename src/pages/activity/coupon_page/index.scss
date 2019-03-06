@@ -6,6 +6,10 @@
   overflow: hidden;
 }
 
+.mpos_bg {
+  background-image: url('./img/activity_mpos_bg.png');
+}
+
 .rule {
   position: absolute;
   right: 0;
@@ -67,13 +71,13 @@
 
 .submitBtn {
   position: relative;
-  top: 1200px;
   width: 520px;
   height: 90px;
-  margin: 0 auto;
+  margin: 1116px auto 0;
   .btn {
     position: absolute;
-    width: 650px;
+    left: 0%;
+    width: 100%;
     background-repeat: no-repeat;
   }
   .btn1 {
@@ -96,11 +100,17 @@
   bottom: 0;
   z-index: 999;
 }
+
+.tipWrapper {
+  width: 560px !important;
+  text-align: center;
+}
+
 .modalWrapper {
   position: fixed;
   width: 620px;
   border-radius: 10px;
-  padding: 26px 30px 70px;
+  padding: 60px 30px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -130,6 +140,16 @@
     top: 24px;
     right: 24px;
     color: #000;
+  }
+
+  .bottomBtn {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    .button {
+      display: inline-block;
+      width: 50%;
+    }
   }
 }
 

@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom'
 import qs from 'qs'
 import { store } from 'utils/store'
 import styles from './index.scss'
-import activity_bg from './img/activity_bg.png'
 import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType'
 import coupon5 from './img/coupon_bg5.png'
@@ -16,13 +15,43 @@ import { isMPOS } from 'utils/common'
 import submit_btn1 from './img/btn_bg1.png'
 import submit_btn2 from './img/btn_bg2.png'
 
+const TipModal = (props) => {
+  const { type, visible, tipInfo, handleClose, goHome } = props
+  return (
+    <div>
+      {
+        visible ?
+          <div className={styles.modal}>
+            <div className={styles.mask}></div>
+            <div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
+              <div className={styles.tipText}>
+                <span>小主～</span><br />
+                <span>{tipInfo}</span>
+              </div>
+              {
+                type !== 'button' && <div className={styles.closeBtn} onClick={handleClose}></div>
+              }
+              {
+                type === 'button' && <div className={styles.bottomBtn}>
+                  <span className={styles.button} onClick={handleClose}>取消</span>
+                  <span className={styles.button} onClick={goHome}>去授权</span>
+                </div>
+              }
+            </div>
+          </div> : null
+      }
+    </div>
+  )
+}
+
 
 @withRouter
 export default class coupon_activity_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      showModal: false
+      showModal: false,
+      tipInfo: '先去登录才能参与活动哦～'
     }
   }
 
@@ -30,7 +59,7 @@ export default class coupon_activity_page extends PureComponent {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.entry && queryData.h5Channel) {
       // 根据不同入口来源埋点
-      buriedPointEvent(activity.newUserEntry, {
+      buriedPointEvent(activity.couponEntry, {
         entry: queryData.entry,
         h5Channel: queryData.h5Channel
       })
@@ -42,9 +71,10 @@ export default class coupon_activity_page extends PureComponent {
       showModal: false
     })
   }
+
   closeTip = () => {
     this.setState({
-      showLoginTip: false
+      showTipInfo: false
     })
   }
 
@@ -57,9 +87,13 @@ export default class coupon_activity_page extends PureComponent {
     } else {
       this.setState({
         noLogin: true,
-        showLoginTip: true
+        showTipInfo: true
       })
     }
+  }
+
+  goHome = () => {
+    this.props.history.push('/home/home')
   }
 
   selectCoupon = (value) => {
@@ -90,8 +124,7 @@ export default class coupon_activity_page extends PureComponent {
       }
     ]
     return (
-      <div className={styles.main}>
-        {/* <img src={activity_bg} className={styles.activity_bg} /> */}
+      <div className={[styles.main, !isMPOS() ? styles.mpos_bg : ''].join(' ')}>
         <div className={styles.rule} onClick={() => {
           this.setState({
             showModal: true
@@ -99,7 +132,7 @@ export default class coupon_activity_page extends PureComponent {
         }}>活动规则</div>
         {
           !isMPOS() ? <div className={styles.buttonWrap}>
-            <img src={stepImg} className={styles.stepImg} />
+            {/* <img src={stepImg} className={styles.stepImg} /> */}
             <div className={styles.submitBtn} onClick={this.goTo}>
               <img src={submit_btn1} className={[styles.btn, styles.btn1].join(' ')} />
               <img src={submit_btn2} className={[styles.btn, styles.btn2].join(' ')} />
@@ -128,21 +161,13 @@ export default class coupon_activity_page extends PureComponent {
               </div>
             </div>
         }
-
-
-        {
-          this.state.showLoginTip &&
-          <div className={styles.modal}>
-            <div className={styles.mask}></div>
-            <div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
-              <div className={styles.tipText}>
-                <span>小主～</span><br />
-                <span>先去登录才能参与活动哦～</span>
-              </div>
-              <div className={styles.closeBtn} onClick={this.closeTip}></div>
-            </div>
-          </div>
-        }
+          <TipModal
+            visible={this.state.showTipInfo}
+            type='button'
+            tipInfo={this.state.tipInfo}
+            handleClose={this.closeTip}
+            goHome={this.goHome}
+          />
         {
           this.state.showModal ?
             <div className={styles.modal}>
