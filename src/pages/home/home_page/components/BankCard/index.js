@@ -78,7 +78,7 @@ export default class BankCard extends React.PureComponent {
 						{contentData.indexSts&&contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
 						<div className={style.fr}>
 							{contentData.indexSts === 'LN0002' ? (
-								<button className={style.bill_update_btn}>授权中</button>
+								<button className={style.bill_update_btn}>更新中</button>
 							) : contentData.indexSts&&contentData.indexSts !== 'LN0001' ? (
 								<button className={style.bill_update_btn} onClick={this.handleUpdate}>
 									更新账单

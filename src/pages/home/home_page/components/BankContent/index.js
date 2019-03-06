@@ -184,7 +184,7 @@ export default class BankContent extends React.Component {
 				<BankCard contentData={contentData} history={history} toast={toast} {...indexData}>
 					{tipText}
 					{children}
-					{indexSts === 'LN0010' ? (
+					{indexSts === 'LN0010' || indexSts === 'LN0002' ? (
 						<SXFButton className={style.smart_button_two} onClick={this.requestCredCardCount}>
 							帮我还，其他信用卡账单
 						</SXFButton>
