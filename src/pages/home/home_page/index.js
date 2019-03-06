@@ -126,7 +126,11 @@ export default class home_page extends PureComponent {
 	calculatePercent = (list) => {
 		let codes = [];
 		list.forEach((element) => {
-			if (element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck') {
+			if (
+				element.code === 'basicInf' ||
+				element.code === 'operator' ||
+				element.code === 'idCheck'
+			) {
 				codes.push(element.stsw.dicDetailCd);
 			}
 		});
@@ -136,7 +140,8 @@ export default class home_page extends PureComponent {
 		// case '4': // 认证过期
 		let newCodes2 = codes.filter((ele, index, array) => {
 			return ele === '1' || ele === '2';
-		});
+        });
+        console.log(newCodes2)
 		// 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
 		// 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
 		// 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
@@ -149,6 +154,11 @@ export default class home_page extends PureComponent {
 			case 2: // 新用户，信用卡未授权
 				this.setState({
 					percentSatus: '1'
+				});
+				break;
+			case 0: // 新用户，信用卡未授权
+				this.setState({
+					percentSatus: '3'
 				});
 				break;
 			default:
@@ -541,6 +551,8 @@ export default class home_page extends PureComponent {
 								usrIndexInfo.indexSts === 'LN0006' ||
 								usrIndexInfo.indexSts === 'LN0008' ? (
 									'一键还账单'
+								) : usrIndexInfo.indexSts === 'LN0001' ? (
+									'查看我的账单，帮我还'
 								) : (
 									usrIndexInfo.indexMsg
 								)}

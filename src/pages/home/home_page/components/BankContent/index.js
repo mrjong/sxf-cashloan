@@ -115,18 +115,11 @@ export default class BankContent extends React.Component {
 			});
 	};
 	closeTip = (key) => {
+        console.log(key)
 		this.setState({
 			messageTag: key
-		});
-		switch (key) {
-			case '50000':
-				store.setNotShowTip('50000');
-				break;
-			case 'step':
-				store.setNotShowTip('step');
-			default:
-				break;
-		}
+        });
+        store.setNotShowTip(key);
 	};
 	render() {
 		const { messageTag } = this.state;
@@ -135,7 +128,10 @@ export default class BankContent extends React.Component {
 		const showEntranceArr = [ 'LN0002', 'LN0003', 'LN0006', 'LN0008' ];
 		const showEntranceArr2 = [ 'LN0001', 'LN0004', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
-		if (indexSts === 'LN0001' && (!messageTag || messageTag !== '50000') || (!indexSts && (!messageTag || messageTag !== '50000'))) {
+		if (
+			(indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) ||
+			(!indexSts && (!messageTag || messageTag !== '50000'))
+		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>

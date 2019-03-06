@@ -28,6 +28,10 @@ export default class middle_page extends Component {
 				.then(res => {
 					if(res.msgCode !== 'PTM0000'){
                         this.buryPointsType(taskType, false, res.msgInfo);
+                        this.props.toast.info(res.msgInfo)
+                        this.setState({
+                            errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+                        });
                         return
 					}
 					this.buryPointsType(taskType, true);
