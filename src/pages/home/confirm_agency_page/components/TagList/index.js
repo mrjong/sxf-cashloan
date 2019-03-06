@@ -47,8 +47,6 @@ export default class TagList extends React.PureComponent {
 
   // 因为默认选中第一个 所以页面一进来就触发方法，将当前的数据传回去。
   passInitData = nextProps => {
-    console.log(123, nextProps)
-
     const { currentIndex } = this.state;
     const { onClick, tagList } = this.props;
     if (nextProps) {

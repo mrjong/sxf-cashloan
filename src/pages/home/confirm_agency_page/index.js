@@ -118,7 +118,6 @@ export default class confirm_agency_page extends PureComponent {
 
   // 还款 Tag 点击事件
   handleLendersTagClick = (data, type) => {
-    console.log('data', data)
     this.setState({
       lendersDate: data.value,
       lendersIndex: data.index,
