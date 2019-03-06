@@ -56,6 +56,11 @@ export default class moxie_bank_list_page extends Component {
 						bankList: res.data || [],
 						isnoData: false
 					});
+					if (!res.data) {
+						this.setState({
+							isnoData: true
+						});
+					}
 				} else {
 					this.setState({
 						isnoData: true
