@@ -145,13 +145,13 @@ export default class ModalInfo extends Component {
       getContactsList();
     }
     this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
-      // 提交代还申请埋点
-      buriedPointEvent(mine.creditExtensionConfirm, {
-        is_success: true,
-        deadline: repaymentDate.perdLth,
-      })
       // 提交风控返回成功
       if (res && res.msgCode === 'PTM0000') {
+        // 提交代还申请埋点
+        buriedPointEvent(mine.creditExtensionConfirm, {
+          is_success: true,
+          deadline: repaymentDate.perdLth,
+        })
         onClose();
         this.props.toast.info(res.msgInfo, 3, () => {
           this.checkIsBandCard();

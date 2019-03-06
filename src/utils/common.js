@@ -10,10 +10,10 @@ export const getH5Channel = () => {
 	let h5Channel = '';
 	if (queryData.h5Channel) {
 		h5Channel = queryData.h5Channel;
-	} else if (/SuiXingPay-Mpos/i.test(ua)) {
-		h5Channel = 'MPOS';
 	} else if (store.getH5Channel()) {
 		h5Channel = store.getH5Channel();
+	} else if (/SuiXingPay-Mpos/i.test(ua)) {
+		h5Channel = 'MPOS';
 	} else {
 		h5Channel = 'OTHER';
 	}
