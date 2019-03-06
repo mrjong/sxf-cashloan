@@ -4,6 +4,8 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
 import allicon from './img/all@2x.png';
+import { SXFToast } from 'utils/SXFToast';
+
 import ButtonCustom from 'components/ButtonCustom';
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
