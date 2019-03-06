@@ -29,10 +29,7 @@ export default class TagList extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.burientype && !store.getHadShowModal()) {
-      buriedPointEvent(home.lenders, {
-        lenders_type: nextProps.tagList[nextProps.activeindex].name,
-      });
-      store.setHadShowModal(true);
+      store.setHadShowModal(true)
     }
     if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeindex !== nextProps.activeindex)) {
       this.passInitData(nextProps);
@@ -86,13 +83,13 @@ export default class TagList extends React.PureComponent {
         active={!item.disable && index === currentIndex}
         onClick={() => {
           if (item.value === '1') {
-            // 确认代还信息-期限选择-预约还款
+            // 预约还款埋点
             buriedPointEvent(home.lendersOrder, {
               lenders_type: item.name,
               disable: item.disable || ''
             })
           } else {
-            // 确认代还信息-期限选择-立即还款
+            // 立即还款埋点
             buriedPointEvent(home.lenders, {
               lenders_type: item.name,
               disable: item.disable || ''
