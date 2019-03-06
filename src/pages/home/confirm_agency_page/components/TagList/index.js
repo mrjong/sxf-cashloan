@@ -86,13 +86,13 @@ export default class TagList extends React.PureComponent {
             // 预约还款埋点
             buriedPointEvent(home.lendersOrder, {
               lenders_type: item.name,
-              disable: item.disable || ''
+              disable: item.disable || false
             })
-          } else {
+          } else if (item.value === '0') {
             // 立即还款埋点
             buriedPointEvent(home.lenders, {
               lenders_type: item.name,
-              disable: item.disable || ''
+              disable: item.disable || false
             })
           }
           if (item.disable || index === currentIndex) {
