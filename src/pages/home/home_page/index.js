@@ -383,92 +383,76 @@ export default class home_page extends PureComponent {
 		});
 	};
 
-	// 获取首页信息
-	requestGetUsrInfo = () => {
-		this.props.$fetch
-			.post(API.USR_INDEX_INFO)
-			.then((result) => {
-				// let result = {
-				// 	data: {},
-				// 	msgCode: 'PTM0000',
-				// 	msgMsg: 'PTM0000'
-				// };
-				this.setState({
-					showDefaultTip: true
-				});
-<<<<<<< HEAD
-				if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-					// 新弹窗（188元）
-					this.setState(
-						{
-							isShowActivityModal: true,
-							isNewModal: true
-						},
-						() => {
-							store.setShowActivityModal(true);
-						}
-					);
-				} else if (
-					isMPOS() &&
-					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-					!store.getShowActivityModal()
-				) {
-					// 老弹窗（3000元）
-					this.setState(
-						{
-							isShowActivityModal: true,
-							isNewModal: false
-=======
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					// let resultData = result.data;
-					// const sessionCardData = store.getSomeData();
-					// Object.assign(resultData.indexData, sessionCardData);
-					// result.data.indexSts = 'LN0001'
-					// result.data.indexData = {
-					//   autSts : '2'
-					// }
-					if (result.data.indexSts === 'LN0003') {
-						this.getPercent();
-					}
-					this.setState(
-						{
-							usrIndexInfo:
-								result.data && result.data.indexData
-									? result.data
-									: Object.assign({}, result.data, { indexData: {} })
->>>>>>> origin/BR_20190304_HOMEYOUHUA_OPERATION-60839
-						},
-						() => {
-							console.log(this.state.usrIndexInfo);
-						}
-					);
-					if (
-						isMPOS() &&
-						(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-						!store.getShowActivityModal()
-					) {
-						this.setState(
-							{
-								isShowActivityModal: true
-							},
-							() => {
-								store.setShowActivityModal(true);
-							}
-						);
-					}
-
-					// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
-					this.cacheBanner();
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			})
-			.catch(() => {
-				this.setState({
-					showDefaultTip: true
-				});
-			});
-	};
+		// 获取首页信息
+        requestGetUsrInfo = () => {
+            this.props.$fetch
+                .post(API.USR_INDEX_INFO)
+                .then((result) => {
+                    // let result = {
+                    // 	data: {},
+                    // 	msgCode: 'PTM0000',
+                    // 	msgMsg: 'PTM0000'
+                    // };
+                    this.setState({
+                        showDefaultTip: true
+                    });
+                    if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+                        // let resultData = result.data;
+                        // const sessionCardData = store.getSomeData();
+                        // Object.assign(resultData.indexData, sessionCardData);
+                        // result.data.indexSts = 'LN0001'
+                        // result.data.indexData = {
+                        //   autSts : '2'
+                        // }
+                        if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+                            // 新弹窗（188元）
+                            this.setState(
+                                {
+                                    isShowActivityModal: true,
+                                    isNewModal: true
+                                },
+                                () => {
+                                    store.setShowActivityModal(true);
+                                }
+                            );
+                        } else if (
+                            isMPOS() &&
+                            (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+                            !store.getShowActivityModal()
+                        ) {
+                            // 老弹窗（3000元）
+                            this.setState({
+                                isShowActivityModal: true,
+                                isNewModal: false
+                            });
+                        }
+                        if (result.data.indexSts === 'LN0003') {
+                            this.getPercent();
+                        }
+                        this.setState(
+                            {
+                                usrIndexInfo:
+                                    result.data && result.data.indexData
+                                        ? result.data
+                                        : Object.assign({}, result.data, { indexData: {} })
+                            },
+                            () => {
+                                console.log(this.state.usrIndexInfo);
+                            }
+                        );
+    
+                        // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
+                        this.cacheBanner();
+                    } else {
+                        this.props.toast.info(result.msgInfo);
+                    }
+                })
+                .catch(() => {
+                    this.setState({
+                        showDefaultTip: true
+                    });
+                });
+        };
 
 	// 缓存banner
 	cacheBanner = () => {
