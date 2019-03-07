@@ -18,7 +18,7 @@ import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
 import style from './index.scss';
-
+import mockData from './mockData'
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -391,6 +391,11 @@ export default class home_page extends PureComponent {
 	// 获取首页信息
 	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
+            // let result = {
+            //     data:mockData.LN0003,
+            //     msgCode:'PTM0000',
+            //     msgMsg:'PTM0000',
+            // }
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				// let resultData = result.data;
 				// const sessionCardData = store.getSomeData();
