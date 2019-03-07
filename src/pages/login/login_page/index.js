@@ -47,9 +47,13 @@ export default class login_page extends PureComponent {
 		});
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
-		Cookie.remove('fin-v-card-token');
+        Cookie.remove('fin-v-card-token');
+
+        let messageTag = store.getNotShowTip();
 		sessionStorage.clear();
-		localStorage.clear();
+        localStorage.clear();
+        // 首页弹窗要用的
+        store.setNotShowTip(messageTag);
 
 		setH5Channel(storeH5Channel);
 

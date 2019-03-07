@@ -19,7 +19,7 @@ const API = {
 let urlQuery = '';
 let autId = '';
 // const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
-const needDisplayOptions = ['idCheck', 'basicInf', 'operator'];
+const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator' ];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {
@@ -33,7 +33,7 @@ export default class credit_extension_page extends PureComponent {
 		flag: false,
 		submitFlag: false,
 		isShowBtn: true, // 是否展示提交代还金申请按钮
-		isShowModal: false,
+		isShowModal: false
 	};
 
 	componentWillMount() {
@@ -81,8 +81,8 @@ export default class credit_extension_page extends PureComponent {
 			return;
 		}
 		this.setState({
-			isShowModal: true,
-		})
+			isShowModal: true
+		});
 	};
 
 	// 判断信用卡状态
@@ -110,7 +110,6 @@ export default class credit_extension_page extends PureComponent {
 		}
 		return isCreditCardStatusVerify;
 	};
-
 	getStateData = (item) => {
 		const { stswData } = this.state;
 		const firstOption = stswData.filter((item) => item.code === 'idCheck')[0];
@@ -185,7 +184,7 @@ export default class credit_extension_page extends PureComponent {
 	// 关闭弹框
 	handleCloseModal = () => {
 		this.setState({
-			isShowModal: false,
+			isShowModal: false
 		});
 	};
 
@@ -228,7 +227,12 @@ export default class credit_extension_page extends PureComponent {
 					wrapClassName="modalInfoBox"
 					maskClosable={false}
 				>
-					<ModalContent autId={autId} toast={this.props.toast} onClose={this.handleCloseModal} history={this.props.history} />
+					<ModalContent
+						autId={autId}
+						toast={this.props.toast}
+						onClose={this.handleCloseModal}
+						history={this.props.history}
+					/>
 				</Modal>
 			</div>
 		);

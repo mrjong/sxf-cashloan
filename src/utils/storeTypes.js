@@ -2,9 +2,11 @@
 export const storeTypes = {
 	RepaymentModalData: 'RepaymentModalData', // 保存确认代还信息弹框数据
 	HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
-	BackUrl: 'BackUrl', // 保存跳转的url
+    BackUrl: 'BackUrl', // 保存跳转的url
+    BackUrl2: 'BackUrl2', // 临时缓存
 	CardData: 'CardData', // 跳转路由中的银行卡信息
-	MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
+    MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
+    MoxieBackUrl2: 'MoxieBackUrl2', // 跳转魔蝎授权页 授权后返回的url
 	VIPFlag: 'VIPFlag', // 会员卡是否购买的flag
 	AuthFlag: 'AuthFlag', // 是否实名认证的flag
 	UserPhone: 'UserPhone', // 用户手机号
@@ -49,5 +51,6 @@ export const storeTypes = {
 	BindCardPhone: 'BindCardPhone',	// 回显绑卡手机号
 	OrderDetailData: 'OrderDetailData', // 账单详情页数据
 	NewUserActivityFlag: 'NewUserActivityFlag', //拉新运营活动标志
-	NewUserActivityModal: 'NewUserActivityModal' // 是否弹出拉新活动弹窗标识
+    NewUserActivityModal: 'NewUserActivityModal', // 是否弹出拉新活动弹窗标识
+    NotShowTip: 'NotShowTip', // 50000 步骤 提示不显示
 }
