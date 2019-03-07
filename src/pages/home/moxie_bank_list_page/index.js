@@ -94,30 +94,36 @@ export default class moxie_bank_list_page extends Component {
 			}
 		);
 	};
-	gotoMoxie = (url) => {
+	gotoMoxie = (item) => {
 		let setMoxieData = store.getMoxieBackUrl2();
 		store.setBackUrl(backUrlData);
 		store.setMoxieBackUrl(moxieBackUrlData);
 		store.removeBackUrl2();
 		store.removeMoxieBackUrl2();
+		if (setMoxieData&&setMoxieData.indexOf('noAuthId') > -1) {
+			store.getMoxieBackUrl(
+				`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`
+			);
+		}
+		location.href = item.href + '&showTitleBar=NO';
 		// 跳魔蝎
-		this.props.$fetch
-			.post(API.CARD_AUTH, {
-				clientCode: '04'
-			})
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					if (setMoxieData.indexOf('noAuthId') > -1) {
-						store.getMoxieBackUrl(
-							`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
-						);
-					}
-					SXFToast.loading('加载中...', 0);
-					location.href = url + '&showTitleBar=NO';
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			});
+		// this.props.$fetch
+		// 	.post(API.CARD_AUTH, {
+		// 		clientCode: '04'
+		// 	})
+		// 	.then((result) => {
+		// 		if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+		// 			if (setMoxieData.indexOf('noAuthId') > -1) {
+		// 				store.getMoxieBackUrl(
+		// 					`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
+		// 				);
+		// 			}
+		// 			SXFToast.loading('加载中...', 0);
+		// 			location.href = url + '&showTitleBar=NO';
+		// 		} else {
+		// 			this.props.toast.info(result.msgInfo);
+		// 		}
+		// 	});
 	};
 	// 重新加载
 	reloadHandler = () => {
@@ -152,7 +158,7 @@ export default class moxie_bank_list_page extends Component {
 									return (
 										<div
 											onClick={() => {
-												this.gotoMoxie(item.href);
+												this.gotoMoxie(item);
 											}}
 											key={item.name}
 											className={style.bankitem}
