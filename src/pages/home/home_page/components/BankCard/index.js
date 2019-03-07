@@ -127,10 +127,6 @@ export default class BankCard extends React.PureComponent {
 						</span>
 					</div>
 					<div>{children}</div>
-					{/* <div className={style.btnBox}>
-						<SXFButton onClick={this.handleUpdate}>一键还账单</SXFButton>
-						<div className={style.btnDesc}>帮我还，其他信用卡账单 ></div>
-					</div> */}
 				</div>
 			</div>
 		);
