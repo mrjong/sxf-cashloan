@@ -1,7 +1,31 @@
 .home_page {
 	.default_banner {
-        height: auto;
-        width: 100%;
+		// height: auto;
+		// width: 100%;
+		position: relative;
+		min-height: 3.3rem;
+		display: inline-block;
+
+		list-style-type: none;
+		vertical-align: top;
+		height: auto;
+		box-sizing: border-box;
+		overflow: hidden;
+		-webkit-animation-name: fadeOut;
+		-webkit-animation-duration: .1s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-delay: 0s;
+	}
+	@-webkit-keyframes fadeOut {
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.5;
+		}
+		0% {
+			opacity: 0;
+		}
 	}
 	.content_wrap {
 		margin-top: -0.5rem;
