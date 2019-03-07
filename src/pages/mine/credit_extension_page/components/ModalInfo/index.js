@@ -144,6 +144,7 @@ export default class ModalInfo extends Component {
       getAppsList();
       getContactsList();
     }
+    return;
     this.props.$fetch.post(`${API.submitState}`, params).then((res) => {
       // 提交风控返回成功
       if (res && res.msgCode === 'PTM0000') {
