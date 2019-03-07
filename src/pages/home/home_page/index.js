@@ -63,6 +63,9 @@ export default class home_page extends PureComponent {
 		// 判断是否是微信打通（微信登陆）
 		if (isWXOpen() && !tokenFromStorage && !token) {
 			this.cacheBanner();
+			this.setState({
+				showDefaultTip: true
+			});
 		} else {
 			this.requestGetUsrInfo();
 		}
@@ -503,23 +506,23 @@ export default class home_page extends PureComponent {
 				break;
 			default:
 				// if (isWXOpen()) {
-					componentsDisplay = (
-						<BankContent
-							showDefaultTip={this.state.showDefaultTip}
-							fetch={this.props.$fetch}
-							contentData={usrIndexInfo}
-							history={history}
-							haselescard={this.state.haselescard}
-							progressNum={percentSatus}
-							toast={this.props.toast}
-						>
-							<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
-								查看我的账单，帮我还
-							</SXFButton>
-							<div className={style.subDesc}>安全绑卡，放心还卡</div>
-						</BankContent>
-					);
-				// }
+				componentsDisplay = (
+					<BankContent
+						showDefaultTip={this.state.showDefaultTip}
+						fetch={this.props.$fetch}
+						contentData={usrIndexInfo}
+						history={history}
+						haselescard={this.state.haselescard}
+						progressNum={percentSatus}
+						toast={this.props.toast}
+					>
+						<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
+							查看我的账单，帮我还
+						</SXFButton>
+						<div className={style.subDesc}>安全绑卡，放心还卡</div>
+					</BankContent>
+				);
+			// }
 		}
 		return (
 			<div className={style.home_page}>
