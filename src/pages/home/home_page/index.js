@@ -234,7 +234,7 @@ export default class home_page extends PureComponent {
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
 		// /mine/credit_extension_page?
-		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthid=true`);
+		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 
