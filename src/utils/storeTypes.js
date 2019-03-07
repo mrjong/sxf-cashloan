@@ -49,5 +49,6 @@ export const storeTypes = {
 	BindCardPhone: 'BindCardPhone',	// 回显绑卡手机号
 	OrderDetailData: 'OrderDetailData', // 账单详情页数据
 	NewUserActivityFlag: 'NewUserActivityFlag', //拉新运营活动标志
-	NewUserActivityModal: 'NewUserActivityModal' // 是否弹出拉新活动弹窗标识
+	NewUserActivityModal: 'NewUserActivityModal', // 是否弹出拉新活动弹窗标识
+	CouponActivityFlag: 'CouponActivityFlag',	// 呈现不同机具页面的标识
 }

@@ -60,7 +60,7 @@ export default class home_page extends PureComponent {
     const newUserActivityModal = store.getNewUserActivityModal()
     store.removeNewUserActivityModal()
     this.setState({
-      newUserActivityModal
+      newUserActivityModal,
     })
     // 清除订单缓存
     store.removeBackData();

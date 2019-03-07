@@ -24,9 +24,12 @@
   border-radius: 24px 0 0 24px;
 }
 
+.ruleWrap {
+  padding: 30px 30px 70px;
+}
+
 .slideWrap {
   position: absolute;
-  // animation: rowup 8s linear infinite;
 }
 
 .phoneWrap {
@@ -57,6 +60,7 @@
   margin: 0 12px 30px;
   width: 224px;
   height: 150px;
+  // animation: bounce-up 1.4s linear infinite;
 }
 
 .buttonWrap {
@@ -74,49 +78,61 @@
   width: 520px;
   height: 90px;
   margin: 1116px auto 0;
+
   .btn {
     position: absolute;
-    left: 0%;
+    left: 0;
     width: 100%;
     background-repeat: no-repeat;
   }
   .btn1 {
     z-index: 2;
-    animation: shake 1s infinite;
+    animation: shake 1.5s linear infinite;
   }
   .btn2 {
-    top: 20px;
+    top: 10px;
     z-index: 0;
   }
 }
 
-.mask {
-  position: fixed;
-  background-color: rgba(0, 0, 0, .3);
-  margin: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
-}
+// .mask {
+//   position: fixed;
+//   background-color: rgba(0, 0, 0, .3);
+//   margin: 0;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   z-index: 999;
+// }
 
 .tipWrapper {
   width: 560px !important;
-  text-align: center;
+  text-align: center !important;
+  color: #333;
+}
+
+.tipText {
+  height: 160px;
+}
+
+.buttonModal {
+  height: 324px !important;
 }
 
 .modalWrapper {
   position: fixed;
   width: 620px;
   border-radius: 10px;
-  padding: 60px 30px;
+  padding-top: 60px;
+  padding-bottom: 0;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
   background-color: #fff;
   box-sizing: border-box;
+  text-align: left;
 
   h2 {
     text-align: center;
@@ -133,7 +149,7 @@
   .closeBtn {
     width: 26px;
     height: 26px;
-    background-image: url('./img//close_icon.png');
+    background-image: url('./img/close_icon.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     position: absolute;
@@ -146,27 +162,58 @@
     position: absolute;
     bottom: 0;
     width: 100%;
+    height: 100px;
+    line-height: 100px;
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+      width: 100%;
+      border-top: 1px solid #9D9D9D;
+      transform: scaleY(0.5);
+    }
     .button {
       display: inline-block;
       width: 50%;
     }
+    .color {
+      color: #0B8463;
+      &::after {
+        position: relative;
+        left: -200px;
+        top: 18px;
+        content: "";
+        transform: scaleX(0.5);
+        display: inline-block;
+        height: 58px;
+        width: 1px;
+        background: #9d9d9d;
+      }
+    }
   }
 }
 
-@keyframes rowup {
-  0% {
-      transform: translate3d(0, 0, 0);
+@keyframes shake {
+  25% {
+    transform: translateY(3px);
   }
-  100% {
-      transform: translate3d(0, -240px, 0);
+  50%, 100% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-8px);
   }
 }
 
-@keyframes shake{
-  0% {
-    top: 0;
+ @keyframes bounce-up {
+  25% {
+    transform: translateY(10px);
   }
-  100% {
-    top: 15px;
+  50%, 100% {
+    transform: translateY(0);
   }
-}
+  75% {
+    transform: translateY(-10px);
+  }
+ }
