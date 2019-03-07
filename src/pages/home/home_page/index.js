@@ -36,81 +36,72 @@ let timerOut;
 
 @fetch.inject()
 export default class home_page extends PureComponent {
-	constructor(props) {
-		// 获取token
-		token = Cookie.get('fin-v-card-token');
-		tokenFromStorage = store.getToken();
-		super(props);
-		this.state = {
-			showDefaultTip: false,
-			bannerList: [],
-			usrIndexInfo: '',
-			haselescard: 'true',
-			percentSatus: '',
-			visibleLoading: false,
-			percent: 0,
-			showToast: false,
-			isShowActivityModal: false, // 是否显示活动弹窗
-			newUserActivityModal: false,
-			isNewModal: false
-		};
-	}
+  onstructor(props) {
+    // 获取token
+    token = Cookie.get('fin-v-card-token');
+    tokenFromStorage = store.getToken();
+    super(props);
+    this.state = {
+	showDefaultTip: false,
+      bannerList: [],
+      usrIndexInfo: '',
+      haselescard: 'true',
+      percentSatus: '',
+      visibleLoading: false,
+      percent: 0,
+      showToast: false,
+      isShowActivityModal: false, // 是否显示活动弹窗
+      newUserActivityModal: false,
+      isNewModal: false
+    }
+  }
 
-	componentWillMount() {
-		// 弹新弹窗的标识
-		const newUserActivityModal = store.getNewUserActivityModal();
-		store.removeNewUserActivityModal();
-		this.setState({
-			newUserActivityModal
-		});
-		// 清除订单缓存
-		store.removeBackData();
-		// 清除四项认证进入绑卡页的标识
-		store.removeCheckCardRouter();
-		this.getTokenFromUrl();
-		// 判断是否是微信打通（微信登陆）
-		if (isWXOpen() && !tokenFromStorage && !token) {
-			this.cacheBanner();
-			this.setState({
+  componentWillMount() {
+    // 弹新弹窗的标识
+    const newUserActivityModal = store.getNewUserActivityModal()
+    store.removeNewUserActivityModal()
+    this.setState({
+      newUserActivityModal,
+    })
+    // 清除订单缓存
+    store.removeBackData();
+    // 清除四项认证进入绑卡页的标识
+    store.removeCheckCardRouter();
+    this.getTokenFromUrl();
+    // 判断是否是微信打通（微信登陆）
+    if (isWXOpen() && !tokenFromStorage && !token) {
+      this.cacheBanner();
+	this.setState({
 				showDefaultTip: true
 			});
-		} else {
-			this.requestGetUsrInfo();
-		}
-		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
-		if (isWXOpen()) {
-			store.setHistoryRouter(window.location.pathname);
-		}
-	}
+    } else {
+      this.requestGetUsrInfo();
+    }
+    // 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
+    if (isWXOpen()) {
+      store.setHistoryRouter(window.location.pathname);
+    }
+  }
 
-	componentWillUnmount() {
-		// 离开首页的时候 将 是否打开过底部弹框标志恢复
-		store.removeHadShowModal();
-		if (timer) {
-			clearInterval(timer);
-		}
-		if (timerOut) {
-			clearTimeout(timerOut);
-		}
-	}
+  componentWillUnmount() {
+    // 离开首页的时候 将 是否打开过底部弹框标志恢复
+    store.removeHadShowModal();
+    if (timer) {
+      clearInterval(timer);
+    }
+    if (timerOut) {
+      clearTimeout(timerOut);
+    }
+  }
 
-	// 从 url 中获取参数，如果有 token 就设置下
-	getTokenFromUrl = () => {
-		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (urlParams.token) {
-			Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
-			store.setToken(urlParams.token);
-		}
-	};
-
-	// 从 url 中获取参数，如果有 token 就设置下
-	getTokenFromUrl = () => {
-		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (urlParams.token) {
-			Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
-			store.setToken(urlParams.token);
-		}
-	};
+  // 从 url 中获取参数，如果有 token 就设置下
+  getTokenFromUrl = () => {
+    const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true })
+    if (urlParams.token) {
+      Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
+      store.setToken(urlParams.token);
+    }
+  };
 
 	// 首页进度
 	getPercent = () => {

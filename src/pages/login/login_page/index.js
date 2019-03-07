@@ -133,13 +133,9 @@ export default class login_page extends PureComponent {
 							return;
 						}
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-
-						// store.setToken(res.data.tokenId);
-
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
 						if (isWXOpen()) {
-							// this.props.history.goBack();
 							this.props.history.push('/home/home');
 						} else {
 							this.props.history.push('/home/home');

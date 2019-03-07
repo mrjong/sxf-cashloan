@@ -53,17 +53,19 @@
     }
   }
   .modal_tip_content {
-    @include bg-image('../../../assets/images/order/modal_bg');
+    @include bg-image('../../../assets/images/order/modal_bg_new');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 750px;
     height: 750px;
     .modal_btn{
       position: relative;
-      top: 548px;
-      background: #50A6FD;
-      color: #fff;
-      width: 380px;
+      top: 580px;
+      margin: 0 auto;
+      width: 410px;
+      height: 88px;
+      @include bg-image('../../../assets/images/order/modal_btn');
+      background-size: 100% 100%;
     }
   }
   .close_btn {

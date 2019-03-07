@@ -90,7 +90,8 @@ const mpos_service_authorization = {
 }
 
 const activity = {
-	newUserEntry: `${prefix}_NEW_USER_ACTIVITY_ENTRY` // 拉新活动运营入口来源埋点
+	newUserEntry: `${prefix}_NEW_USER_ACTIVITY_ENTRY`, // 拉新活动运营入口来源埋点
+	couponEntry: `${prefix}_COUPON_ACTIVITY_ENTRY` // 领取优惠券活动运营
 }
 
 export { login, home, mine, order, membership, bugLog, mpos_service_authorization, activity }
