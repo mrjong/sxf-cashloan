@@ -424,6 +424,8 @@ export default class home_page extends PureComponent {
                             this.setState({
                                 isShowActivityModal: true,
                                 isNewModal: false
+                            },()=>{
+                                store.setShowActivityModal(true);
                             });
                         }
                         if (result.data.indexSts === 'LN0003') {
