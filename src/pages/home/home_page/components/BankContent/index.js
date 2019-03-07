@@ -86,22 +86,31 @@ export default class BankContent extends React.Component {
 			});
 	};
 	closeTip = (key) => {
-        console.log(key)
+		console.log(key);
 		this.setState({
 			messageTag: key
-        });
-        store.setNotShowTip(key);
+		});
+		store.setNotShowTip(key);
 	};
 	render() {
 		const { messageTag } = this.state;
-		const { className, children, contentData, progressNum, toast, history, ...restProps } = this.props;
-		const { indexSts = '00', indexData } = contentData;
+		const {
+			className,
+			children,
+			contentData,
+			showDefaultTip,
+			progressNum,
+			toast,
+			history,
+			...restProps
+		} = this.props;
+		const { indexSts, indexData } = contentData;
 		const showEntranceArr = [ 'LN0003', 'LN0006', 'LN0008' ];
-		const showEntranceArr2 = [ 'LN0001', 'LN0002','LN0004','LN0005', 'LN0007', 'LN0009', 'LN0010' ];
+		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
 		if (
 			(indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) ||
-			(!indexSts && (!messageTag || messageTag !== '50000'))
+			(!indexSts&&showDefaultTip && (!messageTag || messageTag !== '50000'))
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>

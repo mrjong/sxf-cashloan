@@ -18,7 +18,7 @@ import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
 import style from './index.scss';
-import mockData from './mockData'
+import mockData from './mockData';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -42,6 +42,7 @@ export default class home_page extends PureComponent {
 		tokenFromStorage = store.getToken();
 		super(props);
 		this.state = {
+			showDefaultTip: false,
 			bannerList: [],
 			usrIndexInfo: '',
 			haselescard: 'true',
@@ -109,11 +110,7 @@ export default class home_page extends PureComponent {
 	calculatePercent = (list) => {
 		let codes = [];
 		list.forEach((element) => {
-			if (
-				element.code === 'basicInf' ||
-				element.code === 'operator' ||
-				element.code === 'idCheck'
-			) {
+			if (element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck') {
 				codes.push(element.stsw.dicDetailCd);
 			}
 		});
@@ -123,8 +120,8 @@ export default class home_page extends PureComponent {
 		// case '4': // 认证过期
 		let newCodes2 = codes.filter((ele, index, array) => {
 			return ele === '1' || ele === '2';
-        });
-        console.log(newCodes2)
+		});
+		console.log(newCodes2);
 		// 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
 		// 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
 		// 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
@@ -233,10 +230,8 @@ export default class home_page extends PureComponent {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
-        // /mine/credit_extension_page?
-		store.setMoxieBackUrl(
-			`/mine/credit_extension_page?noAuthid=true`
-		);
+		// /mine/credit_extension_page?
+		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthid=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 
@@ -373,49 +368,65 @@ export default class home_page extends PureComponent {
 
 	// 获取首页信息
 	requestGetUsrInfo = () => {
-		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
-            // let result = {
-            //     data:mockData.LN0003,
-            //     msgCode:'PTM0000',
-            //     msgMsg:'PTM0000',
-            // }
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				// let resultData = result.data;
-				// const sessionCardData = store.getSomeData();
-				// Object.assign(resultData.indexData, sessionCardData);
-				// result.data.indexSts = 'LN0001'
-				// result.data.indexData = {
-				//   autSts : '2'
-				// }
-				if (result.data.indexSts === 'LN0003') {
-					this.getPercent();
-				}
+		this.props.$fetch
+			.post(API.USR_INDEX_INFO)
+			.then((result) => {
+				// let result = {
+				// 	data: {},
+				// 	msgCode: 'PTM0000',
+				// 	msgMsg: 'PTM0000'
+				// };
 				this.setState({
-					usrIndexInfo: result.data.indexData
-						? result.data
-						: Object.assign({}, result.data, { indexData: {} })
+					showDefaultTip: true
 				});
-				if (
-					isMPOS() &&
-					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-					!store.getShowActivityModal()
-				) {
+				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					// let resultData = result.data;
+					// const sessionCardData = store.getSomeData();
+					// Object.assign(resultData.indexData, sessionCardData);
+					// result.data.indexSts = 'LN0001'
+					// result.data.indexData = {
+					//   autSts : '2'
+					// }
+					if (result.data.indexSts === 'LN0003') {
+						this.getPercent();
+					}
 					this.setState(
 						{
-							isShowActivityModal: true
+							usrIndexInfo:
+								result.data && result.data.indexData
+									? result.data
+									: Object.assign({}, result.data, { indexData: {} })
 						},
 						() => {
-							store.setShowActivityModal(true);
+							console.log(this.state.usrIndexInfo);
 						}
 					);
-				}
+					if (
+						isMPOS() &&
+						(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+						!store.getShowActivityModal()
+					) {
+						this.setState(
+							{
+								isShowActivityModal: true
+							},
+							() => {
+								store.setShowActivityModal(true);
+							}
+						);
+					}
 
-				// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
-				this.cacheBanner();
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
+					// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
+					this.cacheBanner();
+				} else {
+					this.props.toast.info(result.msgInfo);
+				}
+			})
+			.catch(() => {
+				this.setState({
+					showDefaultTip: true
+				});
+			});
 	};
 
 	// 缓存banner
@@ -450,31 +461,6 @@ export default class home_page extends PureComponent {
 		const { history } = this.props;
 		let componentsDisplay = null;
 		switch (usrIndexInfo.indexSts) {
-			// case 'LN0001': // 新用户，信用卡未授权
-			// 	componentsDisplay = (
-			// 		//   <InfoCard contentData={usrIndexInfo}>
-			// 		//     <SXFButton className={style.smart_button_one} onClick={this.handleSmartClick}>
-			// 		//       申请信用卡代还
-			// 		//     </SXFButton>
-			// 		//   </InfoCard>
-			// 		<BankContent
-			// 			fetch={this.props.$fetch}
-			// 			contentData={usrIndexInfo}
-			// 			history={history}
-			// 			haselescard={this.state.haselescard}
-			// 			progressNum={percentSatus}
-			// 			toast={this.props.toast}
-			// 		>
-			// 			{usrIndexInfo.indexSts === 'LN0002' ||
-			// 			usrIndexInfo.indexSts === 'LN0010' ||
-			// 			(usrIndexInfo.indexData && usrIndexInfo.indexData.autSts !== '2') ? null : (
-			// 				<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-			// 					{usrIndexInfo.indexMsg}
-			// 				</SXFButton>
-			// 			)}
-			// 		</BankContent>
-			// 	);
-			//     break;
 			case 'LN0001': // 新用户，信用卡未授权
 			case 'LN0002': // 账单爬取中
 			case 'LN0003': // 账单爬取成功
@@ -487,6 +473,7 @@ export default class home_page extends PureComponent {
 			case 'LN0010': // 账单爬取失败/老用户
 				componentsDisplay = (
 					<BankContent
+						showDefaultTip={this.state.showDefaultTip}
 						fetch={this.props.$fetch}
 						contentData={usrIndexInfo}
 						history={history}
@@ -518,6 +505,7 @@ export default class home_page extends PureComponent {
 				if (isWXOpen()) {
 					componentsDisplay = (
 						<BankContent
+							showDefaultTip={this.state.showDefaultTip}
 							fetch={this.props.$fetch}
 							contentData={usrIndexInfo}
 							history={history}
@@ -530,11 +518,6 @@ export default class home_page extends PureComponent {
 							</SXFButton>
 							<div className={style.subDesc}>安全绑卡，放心还卡</div>
 						</BankContent>
-						// <InfoCard contentData={usrIndexInfo}>
-						// 	<SXFButton onClick={this.handleNeedLogin} className={style.smart_button_one}>
-						// 		申请信用卡代还
-						// 	</SXFButton>
-						// </InfoCard>
 					);
 				}
 		}
