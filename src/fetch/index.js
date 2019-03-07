@@ -104,9 +104,11 @@ const fetchInit = () => {
 			try {
 				console.log('----异常日志----');
 				if (error.response) {
-					handleErrorLog(error.response.status, error.response.statusText, error.config);
+					Raven.captureException(error, { extra: error.response });
+					// handleErrorLog(error.response.status, error.response.statusText, error.config);
 				} else if (error.config) {
-					handleErrorLog(error.message, error.message, error.config);
+					Raven.captureException(error, { extra: error.config });
+					// handleErrorLog(error.message, error.message, error.config);
 				}
 			} catch (err) {
 				// console.log(err)
