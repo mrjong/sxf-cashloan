@@ -101,7 +101,7 @@ export default class moxie_bank_list_page extends Component {
 		store.removeBackUrl2();
 		store.removeMoxieBackUrl2();
 		if (setMoxieData&&setMoxieData.indexOf('noAuthId') > -1) {
-			store.getMoxieBackUrl(
+			store.setMoxieBackUrl(
 				`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`
 			);
 		}
