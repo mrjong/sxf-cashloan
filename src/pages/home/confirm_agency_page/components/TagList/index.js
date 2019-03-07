@@ -24,22 +24,19 @@ export default class TagList extends React.PureComponent {
     className: '',
     activeindex: 0,
     tagList: [],
-    onClick: () => {},
+    onClick: () => { },
   };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.burientype && !store.getHadShowModal()) {
-      buriedPointEvent(home.lenders, {
-        lenders_type: nextProps.tagList[nextProps.activeindex].name,
-      });
-      store.setHadShowModal(true);
+      store.setHadShowModal(true)
     }
     if ((this.props.tagList.length !== nextProps.tagList.length) || (this.props.activeindex !== nextProps.activeindex)) {
       this.passInitData(nextProps);
       if (nextProps.burientype) {
-        buriedPointEvent(home.lenders, {
-          lenders_type: nextProps.tagList[nextProps.activeindex].name,
-        });
+        // buriedPointEvent(home.lenders, {
+        //   lenders_type: nextProps.tagList[nextProps.activeindex].name,
+        // })
       }
     }
   }
@@ -85,9 +82,22 @@ export default class TagList extends React.PureComponent {
         className={className}
         active={!item.disable && index === currentIndex}
         onClick={() => {
-            if(item.disable || index === currentIndex){
-                return;
-               }
+          if (item.value === '1') {
+            // 预约还款埋点
+            buriedPointEvent(home.lendersOrder, {
+              lenders_type: item.name,
+              disable: item.disable || false
+            })
+          } else if (item.value === '0') {
+            // 立即还款埋点
+            buriedPointEvent(home.lenders, {
+              lenders_type: item.name,
+              disable: item.disable || false
+            })
+          }
+          if (item.disable || index === currentIndex) {
+            return;
+          }
           if (index !== currentIndex) {
             this.setState({
               currentIndex: index,

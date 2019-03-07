@@ -23,7 +23,11 @@ const home = {
 	durationMonth6: `${prefix}_HOME_DURATION_MONTH_6`, // 代还期限-6个月
 	durationMonth12: `${prefix}_HOME_DURATION_MONTH_12`, // 代还期限-12个月
 	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
-	borrowingPreSubmit: `${prefix}_HOME_BORROWING_PRE_SUBMIT`, // 选择借款要素弹框页-点击确认按钮
+	lendersOrder: `${prefix}_HOME_LENDERS_ORDER`, // 放款日期-预约放款
+
+	borrowingPreSubmit: `${prefix}_HOME_BORROWING_PRE_SUBMIT`, // 代还信息确认页-点击确认按钮
+	borrowingPreSubmitResult: `${prefix}_HOME_BORROWING_PRE_SUBMIT_RESULT`, // 代还信息确认页-点击确认按钮-结果事件
+
 	borrowingSubmit: `${prefix}_HOME_BORROWING_SUBMIT`, // 代还确认页-点击确认借款按钮
 	informationMyselfFrontCard: `${prefix}_HOME_BASE_INFO_FRONT_CARD`, // 实名认证页-点击拍摄身份证正面
 	informationMyselfBackCard: `${prefix}_HOME_BASE_INFO_BACK_CARD`, // 实名认证页-点击拍摄身份证反面
@@ -43,11 +47,17 @@ const home = {
 }
 
 const mine = {
+	durationDay30: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_DAY_30`, // 申请期限-30天
+	durationMonth3: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_3`, // 申请期限-3个月
+	durationMonth6: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_6`, // 申请期限-6个月
+	durationMonth9: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_9`, // 申请期限-9个月
+	durationMonth12: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_12`, // 申请期限-12个月
 	faq: `${prefix}_MINE_FAQ`, // 常见问题页
 	saveConfirm: `${prefix}_MINE_SAVE_CONFIRM`, // 绑定储蓄卡页-确定按钮
 	creditConfirm: `${prefix}_MINE_CREDIT_CONFIRM`, // 绑定信用卡页-确定按钮
 	creditExtension: `${prefix}_MINE_CREDIT_EXTENSION`, // 风控授信项页 从哪进入（首页、我的）
 	creditExtensionConfirm: `${prefix}_MINE_CREDIT_EXTENSION_CONFIRM`, // 风控授信项页-点击提交代还金申请按钮
+	creditExtensionClose: `${prefix}_MINE_CREDIT_EXTENSION_CLOSE`, // 风控授信项页-代还金申请关闭按钮
 	creditExtensionBack: `${prefix}_MINE_CREDIT_EXTENSION_BACK`, // 风控授信项页
 	creditExtensionRealName: `${prefix}_MINE_CREDIT_EXTENSION_REAL_NAME`, // 风控授信项页 点击实名认证
 	creditExtensionBaseInfo: `${prefix}_MINE_CREDIT_EXTENSION_BASE_INFO`, // 风控授信项页 点击基本信息认证
