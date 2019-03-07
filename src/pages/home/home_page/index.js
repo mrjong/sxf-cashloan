@@ -502,7 +502,7 @@ export default class home_page extends PureComponent {
 				);
 				break;
 			default:
-				if (isWXOpen()) {
+				// if (isWXOpen()) {
 					componentsDisplay = (
 						<BankContent
 							showDefaultTip={this.state.showDefaultTip}
@@ -519,7 +519,7 @@ export default class home_page extends PureComponent {
 							<div className={style.subDesc}>安全绑卡，放心还卡</div>
 						</BankContent>
 					);
-				}
+				// }
 		}
 		return (
 			<div className={style.home_page}>
