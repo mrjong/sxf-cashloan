@@ -128,7 +128,7 @@ export default class coupon_activity_page extends PureComponent {
       if (res.msgCode === 'PTM0000') {
         this.setState({
           tipOne: '领取成功',
-          tipTwo: res.msgInfo,
+          tipTwo: '请到优惠券中查看',
           showTipInfo: true
         })
       } else if (res.msgCode === 'PTM20001') {

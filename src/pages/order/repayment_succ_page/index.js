@@ -62,7 +62,7 @@ export default class repayment_succ_page extends PureComponent {
           transparent
         >
           <div className={styles.modal_tip_content}>
-            <ButtonCustom onClick={() => {this.backHome(order.openNow)}}  className={styles.modal_btn}>立即开启</ButtonCustom>
+            <div onClick={() => {this.backHome(order.openNow)}}  className={styles.modal_btn}></div>
           </div>
           <i className={styles.close_btn} onClick={this.closeModal} />
         </Modal>
