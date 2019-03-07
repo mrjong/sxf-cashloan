@@ -8,7 +8,8 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import click from '../mpos_service_authorization_page/img/Button.png';
 const API = {
-	sendsms: '/cmm/sendsms'
+	sendsms: '/cmm/sendsms',
+	doAuth: '/authorize/doAuth'
 };
 @setBackGround('#fff')
 @fetch.inject()
@@ -76,7 +77,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			return;
 		}
 		this.props.$fetch
-			.post('/authorize/doAuth', {
+			.post(API.doAuth, {
 				authToken: this.state.query.tokenId,
 				location: store.getPosition(), // 定位地址 TODO 从session取,
 				osType: getDeviceType(),
