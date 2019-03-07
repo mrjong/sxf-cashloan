@@ -6,8 +6,8 @@ import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import AnimationCount from 'react-count-animation';
-import 'react-count-animation/dist/count.min.css';
+// import AnimationCount from 'react-count-animation';
+// import 'react-count-animation/dist/count.min.css';
 @fetch.inject()
 export default class BankCard extends React.PureComponent {
 	static propTypes = {
@@ -100,8 +100,9 @@ export default class BankCard extends React.PureComponent {
 					</div>
 					<div className={style.money}>
 						<div className={style.moneyLine}>
-							{cardBillAmt !== '---' ? (
-								<AnimationCount {...settings} />
+							{cardBillAmtData !== '---' ? (
+                                // <AnimationCount {...settings} />
+                                cardBillAmtData
 							) : (
 								<div className={style.noneMoney}>
 									<span />
