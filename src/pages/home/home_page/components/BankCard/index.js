@@ -6,6 +6,8 @@ import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
+import AnimationCount from 'react-count-animation';
+import 'react-count-animation/dist/count.min.css';
 @fetch.inject()
 export default class BankCard extends React.PureComponent {
 	static propTypes = {
@@ -49,7 +51,7 @@ export default class BankCard extends React.PureComponent {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
-        buriedPointEvent(home.updateBill);
+		buriedPointEvent(home.updateBill);
 		store.setMoxieBackUrl('/home/home');
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
@@ -71,15 +73,23 @@ export default class BankCard extends React.PureComponent {
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
 		const cardBillAmtData =
 			cardBillAmt === '---' || cardBillAmt === null ? '---' : parseFloat(cardBillAmt, 10).toFixed(2);
+		const settings = {
+			start: 0,
+			count: cardBillAmtData,
+			duration: 3000,
+			decimals: 2,
+			useGroup: true,
+			animation: 'up'
+		};
 		return (
 			<div className={style.billBox}>
 				<div className={style.billBox2}>
 					<div className={style.title}>
-						{contentData.indexSts&&contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
+						{contentData.indexSts && contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
 						<div className={style.fr}>
 							{contentData.indexSts === 'LN0002' ? (
 								<button className={style.bill_update_btn}>更新中</button>
-							) : contentData.indexSts&&contentData.indexSts !== 'LN0001' ? (
+							) : contentData.indexSts && contentData.indexSts !== 'LN0001' ? (
 								<button className={style.bill_update_btn} onClick={this.handleUpdate}>
 									更新账单
 								</button>
@@ -91,7 +101,7 @@ export default class BankCard extends React.PureComponent {
 					<div className={style.money}>
 						<div className={style.moneyLine}>
 							{cardBillAmt !== '---' ? (
-								<div>{cardBillAmtData}</div>
+								<AnimationCount {...settings} />
 							) : (
 								<div className={style.noneMoney}>
 									<span />
