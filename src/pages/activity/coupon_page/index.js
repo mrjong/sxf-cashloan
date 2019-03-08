@@ -25,30 +25,29 @@ const API = {
 const TipModal = (props) => {
   const { type, visible, tipOne, tipTwo, handleClose, goHome } = props
   return (
-    <Modal
-      visible={visible}
-      transparent
-      maskClosable={false}
-    >
-      <div className={styles.modal}>
-        {/* <div className={styles.mask}></div> */}
-        <div className={[styles.modalWrapper, styles.tipWrapper, type === 'button' && styles.buttonModal].join(' ')}>
-          <div className={styles.tipText}>
-            <span>{tipOne}</span><br />
-            <span>{tipTwo}</span>
-          </div>
-          {
-            type !== 'button' && <div className={styles.closeBtn} onClick={handleClose}></div>
-          }
-          {
-            type === 'button' && <div className={styles.bottomBtn}>
-              <span className={styles.button} onClick={handleClose}>取消</span>
-              <span className={[styles.button, styles.color].join(' ')} onClick={goHome}>立即授信</span>
+    <div>
+      {
+        visible ?
+          <div className={styles.modal}>
+            <div className={styles.mask}></div>
+            <div className={[styles.modalWrapper, styles.tipWrapper, type === 'button' && styles.buttonModal].join(' ')}>
+              <div className={styles.tipText}>
+                <span>{tipOne}</span><br />
+                <span>{tipTwo}</span>
+              </div>
+              {
+                type !== 'button' && <div className={styles.closeBtn} onClick={handleClose}></div>
+              }
+              {
+                type === 'button' && <div className={styles.bottomBtn}>
+                  <span className={styles.button} onClick={handleClose}>取消</span>
+                  <span className={[styles.button, styles.color].join(' ')} onClick={goHome}>立即授信</span>
+                </div>
+              }
             </div>
-          }
-        </div>
-      </div>
-    </Modal>
+          </div> : null
+      }
+    </div>
   )
 }
 
@@ -68,11 +67,17 @@ export default class coupon_activity_page extends PureComponent {
       tipOne: '',
       tipTwo: '',
       tipModalType: 'default',
+      huandao_banner: false
     }
   }
 
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+    if(queryData.huandaoBanner) {
+      this.setState({
+        huandao_banner: true
+      })
+    }
     if (queryData.entry) {
       // 根据不同入口来源埋点
       buriedPointEvent(activity.couponEntry, {
@@ -172,14 +177,14 @@ export default class coupon_activity_page extends PureComponent {
       }
     ]
     return (
-      <div className={[styles.main, isMPOS() ? styles.mpos_bg : ''].join(' ')}>
+      <div className={[styles.main, !this.state.huandao_banner ? styles.mpos_bg : ''].join(' ')}>
         <div className={styles.rule} onClick={() => {
           this.setState({
             showRuleModal: true
           })
         }}>活动规则</div>
         {
-          isMPOS() ? <div className={styles.buttonWrap}>
+          !this.state.huandao_banner ? <div className={styles.buttonWrap}>
             <div className={styles.submitBtn} onClick={this.goTo}>
               <img src={submit_btn1} className={[styles.btn, styles.btn1].join(' ')} />
               <img src={submit_btn2} className={[styles.btn, styles.btn2].join(' ')} />
@@ -187,15 +192,6 @@ export default class coupon_activity_page extends PureComponent {
           </div> :
             <div>
               <div className={styles.phoneWrap}>
-                {/* <ul className={styles.slideWrap}>
-                  <li className={styles.phoneText}>恭喜139****8763 获得30元红包</li>
-                  <li className={styles.phoneText}>恭喜158****1951 获得5元红包</li>
-                  <li className={styles.phoneText}>恭喜186****7327 获得50元红包</li>
-                  <li className={styles.phoneText}>恭喜150****6713 获得15元红包</li>
-                  <li className={styles.phoneText}>恭喜158****6357 获得88元红包</li>
-                  <li className={styles.phoneText}>恭喜139****8763 获得30元红包</li>
-
-                </ul> */}
                 <AwardShowMock ></AwardShowMock>
               </div>
               <div className={styles.couponWrap}>
@@ -217,13 +213,10 @@ export default class coupon_activity_page extends PureComponent {
           handleClose={this.closeTip}
           goHome={this.goHome}
         />
-        <Modal
-          visible={this.state.showRuleModal}
-          transparent
-          maskClosable={false}
-        >
+        {
+          this.state.showRuleModal &&
           <div className={styles.modal}>
-            {/* <div className={styles.mask}></div> */}
+            <div className={styles.mask}></div>
             <div className={styles.modalWrapper}>
               <div>
                 <h2>活动规则</h2>
@@ -238,7 +231,7 @@ export default class coupon_activity_page extends PureComponent {
               <div className={styles.closeBtn} onClick={this.closeModal}></div>
             </div>
           </div>
-        </Modal>
+        }
       </div>
     )
   }

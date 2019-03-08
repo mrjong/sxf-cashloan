@@ -82,6 +82,8 @@ export default class credit_extension_page extends PureComponent {
 		}
 		this.setState({
 			isShowModal: true,
+		}, () => {
+			buriedPointEvent(mine.creditExtensionModalShow)
 		})
 	};
 
