@@ -22,7 +22,8 @@ const fetchInit = () => {
 				case 'PTM0000':
 					return;
 				case 'PTM1000': // 用户登录超时
-					handleErrorLog('PTM1000', '登录超时，请重新登陆');
+					// handleErrorLog('PTM1000', '登录超时，请重新登陆');
+					Raven.captureException('PTM1000', { extra: '登录超时，请重新登陆' });
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -32,7 +33,8 @@ const fetchInit = () => {
 					}, 3000);
 					return;
 				case 'PTM0100': // 未登录
-					handleErrorLog('PTM0100', '未登录');
+					// handleErrorLog('PTM0100', '未登录');
+					Raven.captureException('PTM0100', { extra: '未登录' });
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
