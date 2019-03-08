@@ -102,8 +102,6 @@ export default class coupon_activity_page extends PureComponent {
   goTo = () => {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.appId && queryData.token) {
-      // 设置拉新活动标志
-      store.setNewUserActivityFlag('NewUserActivityFlag')
       store.setCouponActivityFlag('CouponActivityFlag')
       this.props.history.push(`/mpos/mpos_middle_page${window.location.search}`)
       // this.props.history.push('/mpos/mpos_middle_page?h5Channel=MPOS_XYKHK&entry=banner&appId=APP20170000000271&token=6761b35fcc30436b84d04d3c4c5c3be3&telNo=cbc443ea4cbf7d2f84ace615690492e3&site=oldweb&scene=finance')
