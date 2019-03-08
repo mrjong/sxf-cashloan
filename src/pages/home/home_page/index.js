@@ -502,7 +502,6 @@ export default class home_page extends PureComponent {
               <img className={style.default_banner} src={defaultBanner} alt="banner" />
             )}
         <div className={style.content_wrap}>{componentsDisplay}</div>
-        <button onClick={()=>{this.props.history.push('/activity/coupon_page')}}>go</button>
         <div className={style.tip_bottom}>怕逾期，用还到</div>
         {/* {首页活动提示弹窗（对内有）} */}
         {this.state.isShowActivityModal &&
