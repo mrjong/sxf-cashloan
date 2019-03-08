@@ -42,7 +42,7 @@ module.exports = function(options) {
 					exclude: /(node_modules)/,
 					loader: [
 						'style-loader', // creates style nodes from JS strings,
-						'css-loader?modules&localIdentName=[name]-[local][hash]',
+						'css-loader?modules&localIdentName=[local][hash:8]',
 						'postcss-loader',
 						'sass-loader' // compiles Sass to CSS
 					]
