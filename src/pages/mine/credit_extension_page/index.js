@@ -81,8 +81,10 @@ export default class credit_extension_page extends PureComponent {
 			return;
 		}
 		this.setState({
-			isShowModal: true
-		});
+			isShowModal: true,
+		}, () => {
+			buriedPointEvent(mine.creditExtensionModalShow)
+		})
 	};
 
 	// 判断信用卡状态
