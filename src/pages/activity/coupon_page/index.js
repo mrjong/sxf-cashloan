@@ -16,7 +16,7 @@ import submit_btn2 from './img/btn_bg2.png'
 import AwardShowMock from './components/AwardShowMock'
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
-import { Modal } from 'antd-mobile'
+import closeBtn from './img/close_icon.png'
 
 const API = {
   couponActivity: '/temp/repeatUsrActivation'
@@ -36,7 +36,7 @@ const TipModal = (props) => {
                 <span>{tipTwo}</span>
               </div>
               {
-                type !== 'button' && <div className={styles.closeBtn} onClick={handleClose}></div>
+                type !== 'button' && <img src={closeBtn} className={styles.closeBtn} onClick={handleClose}/>
               }
               {
                 type === 'button' && <div className={styles.bottomBtn}>
@@ -73,7 +73,7 @@ export default class coupon_activity_page extends PureComponent {
 
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if(queryData.huandaoBanner) {
+    if (queryData.huandaoBanner) {
       this.setState({
         huandao_banner: true
       })
@@ -226,7 +226,7 @@ export default class coupon_activity_page extends PureComponent {
                   <li>5.本活动最终解释权归还到所有，如有疑问，请拨打客服热线：400-088-7626</li>
                 </ol>
               </div>
-              <div className={styles.closeBtn} onClick={this.closeModal}></div>
+              <img src={closeBtn} className={styles.closeBtn} onClick={this.closeModal}/>
             </div>
           </div>
         }
