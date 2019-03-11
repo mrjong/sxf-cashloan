@@ -10,6 +10,15 @@ import { initAnalytics } from './utils/analytins';
 import { isMPOS } from 'utils/common';
 import ErrorBoundary from 'components/ErrorBoundary';
 import fastClick from 'fastclick';
+import Raven from 'raven-js'
+
+const { PROJECT_ENV } = process.env;
+
+if (PROJECT_ENV === 'pro') { // 生产环境配置
+	Raven.config('http://e287773905124b9bab6bfaa7e9716d8e@47.98.151.46:9000/4').install()
+} else {
+	Raven.config('http://e287773905124b9bab6bfaa7e9716d8e@47.98.151.46:9000/4').install()
+}
 
 fastClick.prototype.focus = function(targetElement) {
 	targetElement.focus();

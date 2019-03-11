@@ -2,6 +2,7 @@ import React from 'react';
 import ErrPage from 'pages/common/err_page';
 import { buriedPointEvent } from 'utils/analytins';
 import { bugLog } from 'utils/analytinsType';
+import Raven from 'raven-js'
 
 export default class ErrorBoundary extends React.Component {
 	// constructor(props) {
