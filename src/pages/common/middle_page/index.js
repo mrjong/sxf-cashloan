@@ -4,7 +4,7 @@ import qs from 'qs';
 import fetch from 'sx-fetch';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, moxie_bank_list } from 'utils/analytinsType';
+import { home } from 'utils/analytinsType';
 
 const API = {
 	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
@@ -77,9 +77,6 @@ export default class middle_page extends Component {
 		if (taskType === 'carrier') {
 			buriedPointEvent(home.operatorResult, { is_success: isSucc, fail_cause: reason });
 		} else if (taskType === 'bank') {
-            // 从魔蝎点击了哪家银行埋点
-			buriedPointEvent(moxie_bank_list.bankChooes, { bankName: store.getMoxieBankName() });
-			store.removeMoxieBankName();
 			buriedPointEvent(home.cardResult, { is_success: isSucc, fail_cause: reason });
 		}
 	};

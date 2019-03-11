@@ -54,5 +54,4 @@ export const storeTypes = {
 	NewUserActivityModal: 'NewUserActivityModal', // 是否弹出拉新活动弹窗标识
 	NotShowTip: 'NotShowTip', // 50000 步骤 提示不显示
 	CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
-	MoxieBankName: 'MoxieBankName' // 记录去魔蝎成功之后的银行名
 };

@@ -106,7 +106,7 @@ export default class moxie_bank_list_page extends Component {
 				`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`
 			);
         }
-        store.setMoxieBankName(item.name)
+        buriedPointEvent(moxie_bank_list.bankChooes)
 		location.href = item.href + '&showTitleBar=NO';
 		// 跳魔蝎
 		// this.props.$fetch
