@@ -30,9 +30,9 @@ export default class BankCard extends React.PureComponent {
 		children: '',
 		contentData: {},
 		bankIcon: '',
-		bankName: '随行付_还到',
+		bankName: '',
 		bankNo: '',
-		cardNoHid: '**** **** **** ****',
+		cardNoHid: '',
 		cardBillDt: '----/--/--',
 		billDt: '----/--/--',
 		cardBillAmt: '---',
@@ -87,7 +87,13 @@ export default class BankCard extends React.PureComponent {
 					<div className={style.title}>
 						{contentData.indexSts && contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
 						<div className={style.fr}>
-							{contentData.indexSts === 'LN0002' ? (
+							{contentData.indexSts === 'LN0002' ||
+							((contentData.indexSts === 'LN0003' ||
+								contentData.indexSts === 'LN0006' ||
+								contentData.indexSts === 'LN0008') &&
+								(contentData.indexData &&
+									contentData.indexData.autSts &&
+									contentData.indexData.autSts === '1')) ? (
 								<button className={style.bill_update_btn}>更新中</button>
 							) : contentData.indexSts && contentData.indexSts !== 'LN0001' ? (
 								<button className={style.bill_update_btn} onClick={this.handleUpdate}>
@@ -101,8 +107,8 @@ export default class BankCard extends React.PureComponent {
 					<div className={style.money}>
 						<div className={style.moneyLine}>
 							{cardBillAmtData !== '---' ? (
-                                // <AnimationCount {...settings} />
-                                cardBillAmtData
+								// <AnimationCount {...settings} />
+								cardBillAmtData
 							) : (
 								<div className={style.noneMoney}>
 									<span />
@@ -131,10 +137,10 @@ export default class BankCard extends React.PureComponent {
 					<div className={style.bankBox}>
 						<span className={[ 'bank_ico', iconClass, `${style.bankIcon}` ].join(' ')} />
 						<span className={style.bankName}>
-							<span className={style.noStyle}>{bankName}</span>
+							<span className={style.noStyle}>{bankName ? bankName : '随行付_还到'}</span>
 						</span>
 						<span className={style.bankNum}>
-							<span className={style.noStyle}>{cardNoHid}</span>
+							<span className={style.noStyle}>{cardNoHid ? cardNoHid : '**** **** **** ****'}</span>
 						</span>
 					</div>
 					<div>{children}</div>
