@@ -101,12 +101,12 @@ export default class moxie_bank_list_page extends Component {
 		store.setMoxieBackUrl(moxieBackUrlData);
 		store.removeBackUrl2();
 		store.removeMoxieBackUrl2();
-		if (setMoxieData&&setMoxieData.indexOf('noAuthId') > -1) {
-			store.setMoxieBackUrl(
-				`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`
-			);
-        }
-        buriedPointEvent(moxie_bank_list.bankChooes)
+		if (setMoxieData && setMoxieData.indexOf('noAuthId') > -1) {
+			store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`);
+		}
+		buriedPointEvent(moxie_bank_list.bankChooes, {
+			bankName: item.name
+		});
 		location.href = item.href + '&showTitleBar=NO';
 		// 跳魔蝎
 		// this.props.$fetch
@@ -129,7 +129,7 @@ export default class moxie_bank_list_page extends Component {
 	};
 	// 重新加载
 	reloadHandler = () => {
-        buriedPointEvent(moxie_bank_list.bankRefresh)
+		buriedPointEvent(moxie_bank_list.bankRefresh);
 		window.location.reload();
 	};
 	render() {
@@ -158,21 +158,21 @@ export default class moxie_bank_list_page extends Component {
 						<div className={style.bankList}>
 							{this.state.bankList.map((item, index) => {
 								// if (index <= this.state.lengthNum) {
-									return (
-										<div
-											onClick={() => {
-												this.gotoMoxie(item);
-											}}
-											key={item.name}
-											className={style.bankitem}
-										>
-											<span
-												className={`bank_moxie_ico bank_moxie_${item.code}`}
-												style={{ backgroundImage: `url(${item.logo})` }}
-											/>
-											<div className={style.name}>{item.name}</div>
-										</div>
-									);
+								return (
+									<div
+										onClick={() => {
+											this.gotoMoxie(item);
+										}}
+										key={item.name}
+										className={style.bankitem}
+									>
+										<span
+											className={`bank_moxie_ico bank_moxie_${item.code}`}
+											style={{ backgroundImage: `url(${item.logo})` }}
+										/>
+										<div className={style.name}>{item.name}</div>
+									</div>
+								);
 								// } else {
 								// 	return null;
 								// }
