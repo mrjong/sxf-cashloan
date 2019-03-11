@@ -5,7 +5,8 @@ import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
 import allicon from './img/all@2x.png';
 import { SXFToast } from 'utils/SXFToast';
-
+import { buriedPointEvent } from 'utils/analytins';
+import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
@@ -17,7 +18,7 @@ let moxieBackUrlData = {};
 @setBackGround('#fff')
 export default class moxie_bank_list_page extends Component {
 	state = {
-		showAll: false,
+		showAll: true,
 		lengthNum: 7,
 		bankList: [],
 		isnoData: false
@@ -104,7 +105,8 @@ export default class moxie_bank_list_page extends Component {
 			store.setMoxieBackUrl(
 				`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`
 			);
-		}
+        }
+        store.setMoxieBankName(item.name)
 		location.href = item.href + '&showTitleBar=NO';
 		// 跳魔蝎
 		// this.props.$fetch
@@ -127,6 +129,7 @@ export default class moxie_bank_list_page extends Component {
 	};
 	// 重新加载
 	reloadHandler = () => {
+        buriedPointEvent(moxie_bank_list.bankRefresh)
 		window.location.reload();
 	};
 	render() {
@@ -154,7 +157,7 @@ export default class moxie_bank_list_page extends Component {
 					<div>
 						<div className={style.bankList}>
 							{this.state.bankList.map((item, index) => {
-								if (index <= this.state.lengthNum) {
+								// if (index <= this.state.lengthNum) {
 									return (
 										<div
 											onClick={() => {
@@ -170,16 +173,16 @@ export default class moxie_bank_list_page extends Component {
 											<div className={style.name}>{item.name}</div>
 										</div>
 									);
-								} else {
-									return null;
-								}
+								// } else {
+								// 	return null;
+								// }
 							})}
-							{this.state.bankList.length >= 8 ? (
+							{/* {this.state.bankList.length >= 8 ? (
 								<div onClick={this.showAllFunc} className={style.bankitem}>
 									<span className={`bank_moxie_ico bank_moxie_ALL`} />
 									<div className={style.name}>{this.state.showAll ? '收起' : '查看全部'}</div>
 								</div>
-							) : null}
+							) : null} */}
 						</div>
 					</div>
 				) : null}
