@@ -381,12 +381,12 @@ export default class home_page extends PureComponent {
 	requestGetUsrInfo = () => {
 		this.props.$fetch
 			.post(API.USR_INDEX_INFO)
-			.then((result) => {
-				// let result = {
-				// 	data: mockData.LN0003,
-				// 	msgCode: 'PTM0000',
-				// 	msgMsg: 'PTM0000'
-				// };
+			.then((result1) => {
+				let result = {
+					data: mockData.LN0009,
+					msgCode: 'PTM0000',
+					msgMsg: 'PTM0000'
+				};
 				this.setState({
 					showDefaultTip: true
 				});

@@ -128,7 +128,14 @@ export default class BankContent extends React.Component {
 					</p>
 				</div>
 			);
-		} else if (indexSts === 'LN0010' && (!messageTag || messageTag !== 'error')) {
+		} else if (
+			(indexSts === 'LN0010' ||
+				((indexSts === 'LN0003' || indexSts === 'LN0006' || indexSts === 'LN0008') &&
+					(!contentData.indexData ||
+						!contentData.indexData.autSts ||
+						contentData.indexData.autSts === '3'))) &&
+			(!messageTag || messageTag !== 'error')
+		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
