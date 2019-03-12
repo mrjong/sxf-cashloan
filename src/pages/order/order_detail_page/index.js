@@ -650,7 +650,27 @@ export default class order_detail_page extends PureComponent {
               <i onClick={() => { this.setState({ showModal: false }) }}></i>
             </div>
             <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次还款金额</span>
+              <span className={styles.modal_label}>本次应还本金</span>
+              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            </div>
+            <div className={styles.modal_flex}>
+              <span className={styles.modal_label}>本次应还利息</span>
+              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            </div>
+            <div className={styles.modal_flex}>
+              <span className={styles.modal_label}>本次应还补偿金</span>
+              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            </div>
+            <div className={styles.modal_flex}>
+              <span className={styles.modal_label}>本次应还罚息</span>
+              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            </div>
+            <div className={styles.modal_flex}>
+              <span className={styles.modal_label}>本次应还逾期管理费</span>
+              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+            </div>
+            <div className={styles.modal_flex}>
+              <span className={styles.modal_label}>本次应还总金额</span>
               <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
             </div>
             <div className={styles.modal_flex}>
