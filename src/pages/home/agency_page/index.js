@@ -39,6 +39,20 @@ export default class agency_page extends PureComponent {
       // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
       // ItrtAmt: 0, // 首/末期利息金额
       deratePrice: '', // 后台计算的优惠劵减免金额
+      contractList: [ // 合同列表
+        {
+          name: '借款合同',
+          id: '11'
+        },
+        {
+          name: '委托扣款协议',
+          id: '12'
+        },
+        {
+          name: '金融服务协议',
+          id: '13'
+        },
+      ]
     };
   }
 
@@ -352,20 +366,34 @@ export default class agency_page extends PureComponent {
     });
   };
   // 查看借款合同
-  readContract = type => {
-    switch (type) {
-      case 'loan_contract_page':
-        this.requestProtocolData();
-        break;
-      case 'delegation_withhold_page':
-        this.requestFinacialService('withhold');
-        break;
-      case 'financial_service_page':
-        this.requestFinacialService('financial');
-        break;
-      default:
-        break;
-    }
+  readContract = item => {
+    this.props.$fetch.get(API.COUPON_COUNT, {}).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        this.props.history.push({
+          pathname: '/protocol/pdf_page',
+          state: {
+            url: result.data.url,
+            name: item.name,
+          }
+        })
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
+    
+    // switch (type) {
+    //   case 'loan_contract_page':
+    //     this.requestProtocolData();
+    //     break;
+    //   case 'delegation_withhold_page':
+    //     this.requestFinacialService('withhold');
+    //     break;
+    //   case 'financial_service_page':
+    //     this.requestFinacialService('financial');
+    //     break;
+    //   default:
+    //     break;
+    // }
   };
 
   // 获取借款合同数据
@@ -470,7 +498,7 @@ export default class agency_page extends PureComponent {
   }
 
   render() {
-    const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent } = this.state;
+    const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent, contractList } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代还签约信息">
@@ -525,7 +553,19 @@ export default class agency_page extends PureComponent {
         <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确认借款</ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          <a
+          {
+            contractList.map(( item, index ) => (
+              <a
+                onClick={() => {
+                  this.readContract(item);
+                }}
+                className={style.protocol_link}
+              >
+                《{item.name}》
+              </a>
+            ))
+          }
+          {/* <a
             onClick={() => {
               this.readContract('loan_contract_page');
             }}
@@ -548,7 +588,7 @@ export default class agency_page extends PureComponent {
             className={style.protocol_link}
           >
             《金融服务协议》
-          </a>
+          </a> */}
         </p>
         <Modal
           wrapClassName={style.modalLoading}

@@ -13,7 +13,9 @@ export default class IframeProtocol extends React.Component {
 
   render() {
     const { name, postData } = this.props
-    const ID = isMPOS() ? `mpos_${name}` : `${name}`
+    // const ID = isMPOS() ? `mpos_${name}` : `${name}`
+    const ID = name;
+    
     return (
       <iframe
         className={headerIgnore() ? styles.container2 : styles.container}
