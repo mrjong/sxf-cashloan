@@ -16,7 +16,7 @@ class ActivityModal extends React.Component {
 				<div className={styles.mask} />
 				<div className={styles.modalWrapper}>
 					<div className={styles.content}>
-						<img onClick={closeActivityModal} src={isNewModal ? huodongTootip1 : huodongTootip3} />
+						<img src={isNewModal ? huodongTootip1 : huodongTootip3} />
 						{!isNewModal ? (
 							<img
 								className={styles.huodongTootipBtn}
