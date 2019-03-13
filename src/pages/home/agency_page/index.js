@@ -473,7 +473,7 @@ export default class agency_page extends PureComponent {
     const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent } = this.state;
     return (
       <div className={style.confirm_agency_page}>
-        <Panel title="代还签约信息">
+        <Panel title="代偿签约信息">
           <ul className={style.panel_conten}>
             <li className={style.list_item}>
               <label className={style.item_name}>签约金额(元)</label>

@@ -434,7 +434,7 @@ export default class order_detail_page extends PureComponent {
     this.props.$fetch.post(API.payback, this.state.repayParams).then(res => {
       if (res.msgCode === 'PTM0000') {
         buriedPointEvent(order.repaymentFirst, {
-          entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
+          entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
           is_success: true,
         });
         this.setState({
@@ -464,7 +464,7 @@ export default class order_detail_page extends PureComponent {
         }
       } else {
         buriedPointEvent(order.repaymentFirst, {
-          entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
+          entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
           is_success: false,
           fail_cause: res.msgInfo,
         });
@@ -634,7 +634,7 @@ export default class order_detail_page extends PureComponent {
             <SXFButton
               onClick={() => {
                 this.setState({ showModal: true, isPayAll: false, });
-                buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
+                buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单' });
               }}>
               主动还款
             </SXFButton>

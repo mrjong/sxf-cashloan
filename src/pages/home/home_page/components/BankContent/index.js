@@ -115,7 +115,7 @@ export default class BankContent extends React.Component {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
-						最高代还金额 ￥50000
+						最高代偿金额 ￥50000
 						<Icon
 							onClick={() => {
 								this.closeTip('50000');
