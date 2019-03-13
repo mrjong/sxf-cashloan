@@ -47,11 +47,13 @@ export const storeTypes = {
 	City: 'City', // 城市
 	ShowActivityModal: 'ShowActivityModal', // 是否显示活动弹窗
 	SaveAmt: 'SaveAmt', // 回显代还金额的数据
-	BindCardNo: 'BindCardNo',	// 回显绑卡卡号
-	BindCardPhone: 'BindCardPhone',	// 回显绑卡手机号
+	BindCardNo: 'BindCardNo', // 回显绑卡卡号
+	BindCardPhone: 'BindCardPhone', // 回显绑卡手机号
 	OrderDetailData: 'OrderDetailData', // 账单详情页数据
 	NewUserActivityFlag: 'NewUserActivityFlag', //拉新运营活动标志
 	NewUserActivityModal: 'NewUserActivityModal', // 是否弹出拉新活动弹窗标识
-	NotShowTip: 'NotShowTip', // 50000 步骤 提示不显示
-	CouponActivityFlag: 'CouponActivityFlag',	// 呈现不同机具页面的标识
-}
+	MessageTag50000: 'MessageTag50000', // 50000
+	MessageTagError: 'MessageTagError', // 错误不显示
+	MessageTagStep: 'MessageTagStep', // 步骤
+	CouponActivityFlag: 'CouponActivityFlag' // 呈现不同机具页面的标识
+};

@@ -13,7 +13,6 @@ export default class BankCard extends React.PureComponent {
 	static propTypes = {
 		className: PropTypes.string,
 		children: PropTypes.node,
-		contentData: PropTypes.object,
 		bankIcon: PropTypes.string,
 		bankName: PropTypes.string,
 		bankNo: PropTypes.string,
@@ -28,7 +27,6 @@ export default class BankCard extends React.PureComponent {
 	static defaultProps = {
 		className: '',
 		children: '',
-		contentData: {},
 		bankIcon: '',
 		bankName: '',
 		bankNo: '',
