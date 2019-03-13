@@ -155,7 +155,13 @@ export default class BankContent extends React.Component {
 					</p>
 				</div>
 			);
-		} else if (indexSts === 'LN0003' && progressNum && (!messageTag || messageTag !== 'step')) {
+		} else if (
+			indexSts === 'LN0003' &&
+			progressNum &&
+			((indexSts === 'LN0003' || indexSts === 'LN0006' || indexSts === 'LN0008') &&
+				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
+			(!messageTag || messageTag !== 'step')
+		) {
 			let html = '';
 			switch (Number(progressNum)) {
 				case 3:

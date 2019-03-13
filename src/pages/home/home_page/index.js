@@ -383,7 +383,7 @@ export default class home_page extends PureComponent {
 			.post(API.USR_INDEX_INFO)
 			.then((result) => {
 				// let result = {
-				// 	data: mockData.LN0009,
+				// 	data: mockData.LN0003,
 				// 	msgCode: 'PTM0000',
 				// 	msgMsg: 'PTM0000'
 				// };
