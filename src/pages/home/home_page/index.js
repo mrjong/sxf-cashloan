@@ -52,7 +52,8 @@ export default class home_page extends PureComponent {
 			showToast: false,
 			isShowActivityModal: false, // 是否显示活动弹窗
 			newUserActivityModal: false,
-			isNewModal: false
+            isNewModal: false,
+            handleMoxie: false // 触发跳转魔蝎方法
 		};
 	}
 
@@ -474,6 +475,27 @@ export default class home_page extends PureComponent {
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
 	};
+	// 弹窗 按钮事件
+	activityModalBtn = () => {
+		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
+		const { usrIndexInfo } = this.state;
+		switch (usrIndexInfo.indexSts) {
+			case 'LN0001': // 新用户，信用卡未授权
+				this.goToNewMoXie();
+				break;
+			case 'LN0003': // 账单爬取成功
+				if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+					this.handleSmartClick();
+				} else {
+					this.setState({
+						handleMoxie: true
+					});
+				}
+				break;
+			default:
+				console.log('关闭弹窗');
+		}
+	};
 
 	render() {
 		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus } = this.state;
@@ -492,6 +514,7 @@ export default class home_page extends PureComponent {
 			case 'LN0010': // 账单爬取失败/老用户
 				componentsDisplay = (
 					<BankContent
+                        handleMoxie = {this.state.handleMoxie}
 						showDefaultTip={this.state.showDefaultTip}
 						fetch={this.props.$fetch}
 						contentData={usrIndexInfo}
@@ -558,6 +581,7 @@ export default class home_page extends PureComponent {
 				{/* {首页活动提示弹窗（对内有）} */}
 				{this.state.isShowActivityModal && (
 					<ActivityModal
+						activityModalBtn={this.activityModalBtn}
 						closeActivityModal={this.closeActivityModal}
 						history={history}
 						isNewModal={this.state.isNewModal}
