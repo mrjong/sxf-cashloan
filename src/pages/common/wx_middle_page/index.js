@@ -116,7 +116,7 @@ export default class wx_middle_page extends Component {
 		let jumpUrl = store.getJumpUrl();
 		this.removeJumpRouter();
 		if (jumpUrl) {
-			this.props.history.push(jumpUrl);
+			this.props.history.replace(jumpUrl);
 		} else {
 			this.props.history.replace('/home/home'); //微信授权成功调到登录页
 		}
