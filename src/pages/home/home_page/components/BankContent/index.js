@@ -106,6 +106,7 @@ export default class BankContent extends React.Component {
 			showDefaultTip,
 			progressNum,
 			toast,
+			handleMoxie,
 			history,
 			...restProps
 		} = this.props;
@@ -113,6 +114,9 @@ export default class BankContent extends React.Component {
 		const showEntranceArr = [ 'LN0003', 'LN0006', 'LN0008' ];
 		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
+		if (handleMoxie) {
+			this.requestCredCardCount();
+		}
 		if (
 			(indexSts === 'LN0001' || (!indexSts && showDefaultTip)) &&
 			(!MessageTag50000 || MessageTag50000 !== 'MessageTag50000')
