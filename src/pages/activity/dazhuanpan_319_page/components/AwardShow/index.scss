@@ -2,18 +2,18 @@
     width: 80%;
     margin: 0 auto;
     .awardCarousel {
-        background: #fff;
+        background: #27857D;
         font-size: 0.24rem;
         text-align: center;
-        border-radius: 0.6rem;
+        border-radius: 6px;
         overflow: hidden;
-        color: #333;
+        color: #fff;
         .carouselItem{
             letter-spacing: 1px;
             height: 60px;
             line-height: 60px;
             span {
-                color: #FE0000;
+                color: #fff;
             }
         }
     }
