@@ -267,7 +267,7 @@ export default class confirm_agency_page extends PureComponent {
   verifyBillAmt = (rule, value, callback) => {
     const { repaymentDate } = this.state;
     if (!(/\d/.test(value) && value % 100 == 0 && parseInt(value) >= repaymentDate.minAmt && repaymentDate.maxAmt >= parseInt(value))) {
-      callback(`可代还金额为${repaymentDate.minAmt}~${repaymentDate.maxAmt}，且要为100整数倍`);
+      callback(`可代偿金额为${repaymentDate.minAmt}~${repaymentDate.maxAmt}，且要为100整数倍`);
     } else {
       callback();
     }
@@ -333,7 +333,7 @@ export default class confirm_agency_page extends PureComponent {
     if (lendersIndex === 0) {
       lendersTip = (
         <p>
-          选择代还信用卡账单还款日前一天（{dayjs(repayInfo.cardBillDt)
+          选择代偿信用卡账单还款日前一天（{dayjs(repayInfo.cardBillDt)
             .subtract(1, 'day')
             .format('YYYY-MM-DD')}）放款，将最大程度节约您的成本。
         </p>
@@ -341,14 +341,14 @@ export default class confirm_agency_page extends PureComponent {
     }
 
     if (lendersIndex === 1) {
-      lendersTip = <p>选择立即放款，代还金额将于当日汇入您的还款账户</p>;
+      lendersTip = <p>选择立即放款，代偿金额将于当日汇入您的还款账户</p>;
     }
     return (
       <div className={style.confirm_agency_page}>
         <ul className={`${style.modal_list} ${style.modal_list_special}`}>
           <li className={`${style.list_item} ${style.list_item_special}`}>
             <div className={style.item_info}>
-              <label className={style.item_name}>代还期限</label>
+              <label className={style.item_name}>代偿期限</label>
               <div className={style.tagList}>
                 <TabList
                   tagList={repaymentDateList}
@@ -362,7 +362,7 @@ export default class confirm_agency_page extends PureComponent {
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
-              <label className={style.item_name}>代还金额</label>
+              <label className={style.item_name}>代偿金额</label>
               <div>
                 <div className={style.billInpBox}>
                   <i className={style.moneyUnit}>¥</i>
@@ -371,7 +371,7 @@ export default class confirm_agency_page extends PureComponent {
                     placeholder=""
                     type="number"
                     {...getFieldProps('cardBillAmt', {
-                      rules: [{ required: true, message: '请输入代还金额' }, { validator: this.verifyBillAmt }],
+                      rules: [{ required: true, message: '请输入代偿金额' }, { validator: this.verifyBillAmt }],
                     })}
                   />
                 </div>
@@ -408,13 +408,13 @@ export default class confirm_agency_page extends PureComponent {
         </ul>
         <div className={style.tipsBox}>
           <p>温馨提示</p>
-          <p>代还期限：我们根据您信用卡账单情况为您推荐最佳代还金额。</p>
+          <p>代偿期限：我们根据您信用卡账单情况为您推荐最佳代偿金额。</p>
           <div className={style.dateTips}>
             <p className={style.dateTipsLabel}>放款日期：</p>
             <div>
               {lendersTip}
-              {/* <p>a.选择代还信用卡账单还款日前一天{dayjs(repayInfo.cardBillDt).subtract(1, 'day').format('YYYY-MM-DD')}放款，将最大程度节约您的成本。</p>
-              <p>b.选择立即放款，代还金额将于当日汇入您的还款账户</p> */}
+              {/* <p>a.选择代偿信用卡账单还款日前一天{dayjs(repayInfo.cardBillDt).subtract(1, 'day').format('YYYY-MM-DD')}放款，将最大程度节约您的成本。</p>
+              <p>b.选择立即放款，代偿金额将于当日汇入您的还款账户</p> */}
             </div>
           </div>
         </div>

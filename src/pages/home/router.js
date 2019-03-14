@@ -18,7 +18,7 @@ export default [
   },
   {
     path: '/home/agency',
-    title: '代还确认',
+    title: '代偿确认',
     component: () => import('pages/home/agency_page'),
   },
   {
@@ -33,7 +33,7 @@ export default [
   },
   {
     path: '/home/confirm_agency',
-    title: '确认代还信息',
+    title: '确认代偿信息',
     component: () => import('pages/home/confirm_agency_page'),
   },
   {

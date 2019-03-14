@@ -198,7 +198,7 @@ export default class home_page extends PureComponent {
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
 				this.props.toast.info(
-					`您暂时没有代还资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
+					`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
 				);
 				break;
 			case 'LN0006': // 风控审核通过
@@ -208,7 +208,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				this.props.toast.info(`您的代还资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
+				this.props.toast.info(`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
@@ -519,7 +519,7 @@ export default class home_page extends PureComponent {
 								) : usrIndexInfo.indexSts === 'LN0001' ? (
 									'查看我的账单，帮我还'
 								) : (
-									usrIndexInfo.indexMsg
+									usrIndexInfo.indexMsg.replace('代还', '代偿')
 								)}
 							</SXFButton>
 						)}
@@ -555,10 +555,10 @@ export default class home_page extends PureComponent {
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-					<img className={style.default_banner} src={defaultBanner} alt="banner" />
-				) : (
-					<img className={style.default_banner} src={defaultBanner} alt="banner" />
-				)}
+						<img className={style.default_banner} src={defaultBanner} alt="banner" />
+					) : (
+							<img className={style.default_banner} src={defaultBanner} alt="banner" />
+						)}
 				<div className={style.content_wrap}>{componentsDisplay}</div>
 				<div className={style.tip_bottom}>怕逾期，用还到</div>
 				{/* {首页活动提示弹窗（对内有）} */}

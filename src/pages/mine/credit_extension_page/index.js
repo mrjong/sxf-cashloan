@@ -218,7 +218,7 @@ export default class credit_extension_page extends PureComponent {
 						onClick={submitFlag ? this.commitApply : null}
 						className={submitFlag ? styles.commit_btn : styles.not_commit_btn}
 					>
-						提交代还金申请
+						提交代偿金申请
 					</ButtonCustom>
 				) : null}
 				{/* 确认代还信息弹框 */}

@@ -230,24 +230,24 @@ export default class ModalInfo extends Component {
         <button className={style.modal_cancel_btn} onClick={event => this._handleClick(onClose, event)}>
           取消
         </button>
-        <h1 className={style.modal_title}>确认代还信息</h1>
+        <h1 className={style.modal_title}>确认代偿信息</h1>
         <ul className={style.modal_list}>
           <li className={style.list_item}>
             <div className={style.item_info}>
-              <label className={style.item_name}>代还金额</label>
+              <label className={style.item_name}>代偿金额</label>
               <span className={style.item_value}>{cardBillAmt}</span>
             </div>
           </li>
           <li className={style.list_item}>
             <div className={style.item_info_special}>
-              <label className={style.item_name}>代还期限</label>
+              <label className={style.item_name}>代偿期限</label>
               <TabList
                 tagList={repaymentDateList}
                 defaultindex={repaymentIndex}
                 onClick={this.handleRepaymentTagClick}
               />
             </div>
-            <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代还金额和代还期限</p>
+            <p className={style.item_tip} style={{ marginTop: '0' }}>我们根据您信用卡账单情况为您推荐最佳代偿金额和代偿期限</p>
           </li>
           <li className={style.list_item}>
             <div className={style.item_info}>
