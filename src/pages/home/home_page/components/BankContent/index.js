@@ -17,7 +17,9 @@ export default class BankContent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			messageTag: ''
+			MessageTag50000: '',
+			MessageTagError: '',
+			MessageTagStep: ''
 		};
 	}
 
@@ -25,7 +27,6 @@ export default class BankContent extends React.Component {
 		className: PropTypes.string,
 		children: PropTypes.node,
 		history: PropTypes.object,
-		contentData: PropTypes.object,
 		fetch: PropTypes.object
 	};
 
@@ -33,14 +34,17 @@ export default class BankContent extends React.Component {
 		className: '',
 		children: '',
 		history: {},
-		contentData: {},
 		fetch: {}
 	};
 
 	componentWillMount() {
-		const messageTag = store.getNotShowTip();
+		const MessageTag50000 = store.getMessageTag50000();
+		const MessageTagError = store.getMessageTagError();
+		const MessageTagStep = store.getMessageTagStep();
 		this.setState({
-			messageTag
+			MessageTag50000,
+			MessageTagError,
+			MessageTagStep
 		});
 	}
 
@@ -88,12 +92,13 @@ export default class BankContent extends React.Component {
 	closeTip = (key) => {
 		console.log(key);
 		this.setState({
-			messageTag: key
+			[key]: key
 		});
-		store.setNotShowTip(key);
+		let key2 = 'set' + key;
+		store[key2](key);
 	};
 	render() {
-		const { messageTag } = this.state;
+		const { MessageTag50000, MessageTagError, MessageTagStep } = this.state;
 		const {
 			className,
 			children,
@@ -109,16 +114,16 @@ export default class BankContent extends React.Component {
 		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0007', 'LN0009', 'LN0010' ];
 		let tipText = '';
 		if (
-			(indexSts === 'LN0001' && (!messageTag || messageTag !== '50000')) ||
-			(!indexSts&&showDefaultTip && (!messageTag || messageTag !== '50000'))
+			(indexSts === 'LN0001' || (!indexSts && showDefaultTip)) &&
+			(!MessageTag50000 || MessageTag50000 !== 'MessageTag50000')
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
-						最高代还金额 ￥50000
+						最高代偿金额 ￥50000
 						<Icon
 							onClick={() => {
-								this.closeTip('50000');
+								this.closeTip('MessageTag50000');
 							}}
 							size="sm"
 							style={{ width: '.3rem', height: '.3rem' }}
@@ -131,14 +136,21 @@ export default class BankContent extends React.Component {
 					</p>
 				</div>
 			);
-		} else if (indexSts === 'LN0010' && (!messageTag || messageTag !== 'error')) {
+		} else if (
+			(indexSts === 'LN0010' ||
+				((indexSts === 'LN0003' || indexSts === 'LN0006' || indexSts === 'LN0008') &&
+					(!contentData.indexData ||
+						!contentData.indexData.autSts ||
+						contentData.indexData.autSts === '3'))) &&
+			(!MessageTagError || MessageTagError !== 'MessageTagError')
+		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
 					<p className={style.abnormal_tip}>
 						点击更新账单，获取最新信用卡信息
 						<Icon
 							onClick={() => {
-								this.closeTip('error');
+								this.closeTip('MessageTagError');
 							}}
 							size="sm"
 							style={{ width: '.3rem', height: '.3rem' }}
@@ -151,7 +163,13 @@ export default class BankContent extends React.Component {
 					</p>
 				</div>
 			);
-		} else if (indexSts === 'LN0003' && progressNum && (!messageTag || messageTag !== 'step')) {
+		} else if (
+			indexSts === 'LN0003' &&
+			progressNum &&
+			((indexSts === 'LN0003' || indexSts === 'LN0006' || indexSts === 'LN0008') &&
+				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
+			(!MessageTagStep || MessageTagStep !== 'MessageTagStep')
+		) {
 			let html = '';
 			switch (Number(progressNum)) {
 				case 3:
@@ -174,7 +192,7 @@ export default class BankContent extends React.Component {
 						<div dangerouslySetInnerHTML={{ __html: html }} />
 						<Icon
 							onClick={() => {
-								this.closeTip('step');
+								this.closeTip('MessageTagStep');
 							}}
 							size="sm"
 							style={{ width: '.3rem', height: '.3rem' }}
@@ -193,18 +211,23 @@ export default class BankContent extends React.Component {
 				<BankCard contentData={contentData} history={history} toast={toast} {...indexData}>
 					{tipText}
 					{children}
-					{indexSts === 'LN0010' || indexSts === 'LN0002' ? (
+					{indexSts === 'LN0010' ||
+					indexSts === 'LN0002' ||
+					((indexSts === 'LN0003' || indexSts === 'LN0006' || indexSts === 'LN0008') &&
+						(indexData && indexData.autSts !== '2')) ? (
 						<SXFButton className={style.smart_button_two} onClick={this.requestCredCardCount}>
 							帮我还，其他信用卡账单
 						</SXFButton>
 					) : null}
-					{showEntranceArr.includes(indexSts) ? (
+					{showEntranceArr.includes(indexSts) && indexData && indexData.autSts === '2' ? (
 						<button className={style.link_tip} onClick={this.requestCredCardCount}>
 							帮我还，其他信用卡账单
 							<img className={style.link_arrow_img} src={iconArrow} alt="" />
 						</button>
 					) : null}
-					{showEntranceArr2.includes(indexSts) ? <div className={style.subDesc}>安全绑卡，放心还卡</div> : null}
+					{showEntranceArr2.includes(indexSts) || (indexData && indexData.autSts !== '2') ? (
+						<div className={style.subDesc}>安全绑卡，放心还卡</div>
+					) : null}
 				</BankCard>
 			</div>
 		);

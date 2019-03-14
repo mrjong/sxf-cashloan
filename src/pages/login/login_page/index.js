@@ -50,11 +50,15 @@ export default class login_page extends PureComponent {
 		// 移除cookie
         Cookie.remove('fin-v-card-token');
 
-        let messageTag = store.getNotShowTip();
+        let MessageTag50000 = store.getMessageTag50000();
+        let MessageTagError = store.getMessageTagError();
+        let MessageTagStep = store.getMessageTagStep();
 		sessionStorage.clear();
         localStorage.clear();
         // 首页弹窗要用的
-        store.setNotShowTip(messageTag);
+        store.setMessageTag50000(MessageTag50000);
+        store.setMessageTagError(MessageTagError);
+        store.setMessageTagStep(MessageTagStep);
 
 		setH5Channel(storeH5Channel);
 

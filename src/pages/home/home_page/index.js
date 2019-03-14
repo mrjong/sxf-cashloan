@@ -504,7 +504,13 @@ export default class home_page extends PureComponent {
 						usrIndexInfo.indexSts === 'LN0010' ||
 						(usrIndexInfo.indexData &&
 							usrIndexInfo.indexData.autSts &&
-							usrIndexInfo.indexData.autSts !== '2') ? null : (
+							usrIndexInfo.indexData.autSts !== '2') ||
+						((usrIndexInfo.indexSts === 'LN0003' ||
+							usrIndexInfo.indexSts === 'LN0006' ||
+							usrIndexInfo.indexSts === 'LN0008') &&
+							(!usrIndexInfo.indexData ||
+								!usrIndexInfo.indexData.autSts ||
+								usrIndexInfo.indexData.autSts !== '2')) ? null : (
 							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
 								{usrIndexInfo.indexSts === 'LN0003' ||
 								usrIndexInfo.indexSts === 'LN0006' ||
