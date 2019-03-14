@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, List, InputItem,Toast, Icon } from 'antd-mobile';
+import { Button, List, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
 import logo from './img/logo.png';
@@ -26,7 +26,11 @@ export default class LoginComponent extends Component {
 			smsJrnNo: '' // 短信流水号
 		};
 	}
-	componentDidMount() {}
+	componentWillMount() {
+		this.props.form.setFieldsValue({
+			phoneValue: this.props.mblNoHid
+		});
+	}
 	componentWillUnmount() {
 		clearInterval(timmer);
 	}
@@ -45,7 +49,6 @@ export default class LoginComponent extends Component {
 		}
 	}
 	getSmsCode(i) {
-		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
@@ -54,9 +57,8 @@ export default class LoginComponent extends Component {
 				// 发送验证码
 				this.props.$fetch
 					.post(API.sendsms, {
-						type: '6',
-						mblNo: values.phoneValue,
-						osType
+						type: '5',
+						authToken: this.props.smsTokenId
 					})
 					.then(
 						(result) => {
@@ -85,6 +87,46 @@ export default class LoginComponent extends Component {
 			}
 		});
 	}
+	//登录判断
+	goSubmit(code) {
+		let { codeInput } = this.state;
+		if (!codeInput) {
+			this.props.toast.info('请输入验证码');
+			return;
+		}
+		if (!/^\d{6}$/.test(codeInput)) {
+			this.props.toast.info('验证码输入不正确');
+			return;
+		}
+		this.props.$fetch
+			.post(API.doAuth, {
+				authToken: this.props.smsTokenId,
+				location: store.getPosition(), // 定位地址 TODO 从session取,
+				osType: getDeviceType(),
+				smsCd: codeInput,
+				smsJrnNo: this.state.smsJrnNo,
+				smsFlg: 'Y'
+			})
+			.then(
+				(res) => {
+					if (res.authSts === '00') {
+						// sa.login(res.userId);
+						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.loginToken);
+						closeCb();
+						refreshPageFn();
+					} else {
+						Toast.info('暂无活动资格');
+						closeCb();
+					}
+				},
+				(err) => {
+					Toast.info(err.msgInfo);
+				}
+			);
+	}
+
 	// 确定去登陆按钮
 	goLogin = () => {
 		const { closeCb, refreshPageFn } = this.props;
@@ -97,27 +139,28 @@ export default class LoginComponent extends Component {
 			if (!err) {
 				this.props.$fetch
 					.post(API.smsForLogin, {
-						mblNo: values.phoneValue, // 手机号
-						smsJrnNo: this.state.smsJrnNo, // 短信流水号
-						osType, // 操作系统
-						smsCd: values.smsCd, // IP地址
-						usrCnl: getH5Channel(), // 用户渠道
-						location: store.getPosition() // 定位地址 TODO 从session取
+						location: store.getPosition(), // 定位地址 TODO 从session取,
+						osType: getDeviceType(),
+						smsCd: values.smsCd,
+						smsJrnNo: this.state.smsJrnNo,
+						smsFlg: 'Y'
 					})
 					.then(
 						(res) => {
-							if (res.msgCode !== 'PTM0000') {
-								res.msgInfo && Toast.info(res.msgInfo);
-								return;
+							if (res.authSts === '00') {
+								// sa.login(res.userId);
+								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+								// TODO: 根据设备类型存储token
+								store.setToken(res.loginToken);
+								closeCb();
+								refreshPageFn();
+							} else {
+								Toast.info('暂无活动资格');
+								closeCb();
 							}
-							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-							// TODO: 根据设备类型存储token
-							store.setToken(res.data.tokenId);
-							closeCb();
-							refreshPageFn();
 						},
-						(error) => {
-							error.msgInfo && Toast.info(error.msgInfo);
+						(err) => {
+							Toast.info(err.msgInfo);
 						}
 					);
 			} else {
@@ -130,17 +173,18 @@ export default class LoginComponent extends Component {
 		return (
 			<div className={style.login_alert}>
 				<div className={style.logo_box}>
-                <Icon type="cross"  onClick={this.props.closeCb} className={style.close_icon}></Icon>
+					<Icon type="cross" onClick={this.props.closeCb} className={style.close_icon} />
 					<img className={style.logo} src={logo} />
 					<div className={style.text}>怕逾期，用还到</div>
 				</div>
 				<div>
 					<InputItem
 						maxLength={11}
-						type="text"
+                        type="text"
+                        disabled
 						pattern="[0-9]*"
 						{...getFieldProps('phoneValue', {
-							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
+							rules: [ { required: true, message: '请输入正确手机号' } ]
 						})}
 						className={style.form_control}
 						placeholder="请输入手机号码"

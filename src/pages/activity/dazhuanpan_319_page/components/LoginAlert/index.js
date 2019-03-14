@@ -55,7 +55,7 @@ export default class LoginAlert extends Component {
 		switch (alertType) {
 			case 'alert_tel': // 登录
 				loginModal = [ 'login_tel' ];
-				componentsDisplay = <LoginComponent refreshPageFn={refreshPageFn} closeCb={this.closeModal} />;
+				componentsDisplay = <LoginComponent smsTokenId={this.props.smsTokenId} refreshPageFn={refreshPageFn} closeCb={this.closeModal} />;
 				break;
 			case 'login_tip': //
 				loginModal = [ 'login_modal', 'big_modal' ];

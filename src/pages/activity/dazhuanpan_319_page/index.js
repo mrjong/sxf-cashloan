@@ -47,12 +47,14 @@ export default class dazhuanpan_page extends PureComponent {
 			type: '', // 弹框类型
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
-			showLoginTip: false
+			showLoginTip: false,
+			smsTokenId: '',
+			mblNoHid: ''
 		};
 	}
 	isTurn = false;
 	componentWillMount() {
-		this.init();
+        this.init();
 	}
 	init = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -88,7 +90,7 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 刷新大转盘数据
 	refreshPage = () => {
-		// this.getCount();
+		this.getCount();
 	};
 
 	// 获取活动配置list
@@ -196,9 +198,6 @@ export default class dazhuanpan_page extends PureComponent {
 					} else {
 						Toast.info('暂无活动资格');
 					}
-				})
-				.catch((err) => {
-					Toast.info('暂无活动资格');
 				});
 		} else {
 			this.setState({ type: 'login_tip' });
@@ -217,21 +216,21 @@ export default class dazhuanpan_page extends PureComponent {
 				province: '',
 				usrCnl: getH5Channel()
 			})
-			.then(
-				(res) => {
-					if (res.authFlag === '0') {
-						this.props.history.replace(
-							`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`
-						);
-					} else if (res.authFlag === '1') {
-						// 已授权
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-						store.setToken(res.loginToken);
-					} else {
-						Toast.info(res.msgInfo)
-					}
+			.then((res) => {
+				if (res.authFlag === '0') {
+					this.setState({
+						smsTokenId: res.tokenId,
+						mblNoHid: res.mblNoHid,
+                    });
+                    this.doAuth()
+				} else if (res.authFlag === '1') {
+					// 已授权
+					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+					store.setToken(res.loginToken);
+				} else {
+					Toast.info(res.msgInfo);
 				}
-			)
+			});
 	};
 	// 去授权
 	doAuth = () => {
@@ -246,6 +245,9 @@ export default class dazhuanpan_page extends PureComponent {
 				(res) => {
 					if (res.authSts === '01') {
 						console.log('发验证码');
+						this.setState({
+							type: 'alert_tel'
+						});
 					} else if (res.authSts === '00') {
 						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
@@ -410,29 +412,11 @@ export default class dazhuanpan_page extends PureComponent {
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}
 					</div>
 				) : null}
-				{this.state.showLoginTip && (
-					<div className={styles.modal}>
-						<div className={styles.mask} />
-						<div className={[ styles.modalWrapper, styles.tipWrapper ].join(' ')}>
-							<div className={styles.tipText}>
-								<span>小主～</span>
-								<br />
-								<span>先去登录才能参与活动哦～</span>
-							</div>
-							<div
-								className={styles.closeBtn}
-								onClick={() => {
-									this.setState({
-										showLoginTip: false
-									});
-								}}
-							/>
-						</div>
-					</div>
-				)}
 				{!this.state.codeInfo ? (
 					<div>
 						<LoginAlert
+							mblNoHid={this.state.mblNoHid}
+							smsTokenId={this.state.smsTokenId}
 							alert_img={alert_img}
 							refreshPageFn={this.refreshPage}
 							setalertType={this.setalertType}
@@ -478,9 +462,9 @@ export default class dazhuanpan_page extends PureComponent {
 							<img className={styles.img} src={bg} />
 							<div className={styles.hd_box}>
 								{/* {allUsersAward && allUsersAward.length ? ( */}
-									<div className={styles.get_award_list}>
-										<AwardShow allUsersAward={allUsersAward} />
-									</div>
+								<div className={styles.get_award_list}>
+									<AwardShow allUsersAward={allUsersAward} />
+								</div>
 								{/* ) : null} */}
 								<div className={styles.message_bottom}>
 									今日剩余<span>{count}</span>次抽奖机会
