@@ -11,7 +11,7 @@ var child_div = '';
 var child_div2 = '';
 var child_div3 = '';
 var chars = [ '3', '5', '7', '8' ];
-var jiangpinList = [ '已领取18.8元赔付金', '已领取58.8元赔付金', '已领取88.8元赔付金', '已领取188元赔付金', '已领取18.8元赔付金' ];
+var jiangpinList = [ '已领取5.8元赔付金', '已领取58.8元赔付金', '已领取8.8元赔付金', '已领取188元赔付金', '已领取18.8元赔付金' ];
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');
