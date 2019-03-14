@@ -1,7 +1,20 @@
 .dazhuanpan {
 	overflow: scroll;
+
 	.bg {
 		position: relative;
+		.rule_btn {
+			position: absolute;
+			top: 15px;
+			right: 0;
+			font-size: 24px;
+			background: rgba(0, 0, 0, .5);
+			color: #fff;
+			line-height: 1.4;
+			padding: 10px 10px 10px 20px;
+			border-top-left-radius: 0.3rem;
+			border-bottom-left-radius: 0.3rem;
+		}
 		.img {
 			display: block;
 			width: 100%;
@@ -56,16 +69,67 @@
 			top: 820px;
 			span {
 				width: 237px;
-				font-size: 30px;
+				font-size: 36px;
+				letter-spacing: 2px;
 				color: #fff;
-				background-color: #f52650;
-				padding: 10px 30px;
+				background-color: #f49c33;
+				padding: 10px 20px;
 				border-radius: 6px;
 				font-weight: 600;
 				display: inline-block;
 				margin-top: 30px;
 			}
 		}
+		.xieyi_box {
+			font-size: 24px;
+			color: #2a847c;
+			position: absolute;
+			transform: translate(-50%, 0);
+			left: 50%;
+			top: 990px;
+			.xieyi {
+				color: #f48733;
+			}
+		}
+		.submitBtn {
+			position: absolute;
+			top: 1750px;
+			width: 500px;
+			height: 110px;
+			color: #2a847c;
+			font-size: 30px;
+			font-weight: normal;
+			left: 50%;
+			margin: 0 auto;
+			transform: translate(-50%, 0);
+			.btn {
+				position: absolute;
+				color: #fff;
+				text-align: center;
+				line-height: 90px;
+				letter-spacing: 4px;
+				font-size: 36px;
+				width: 650px;
+				background-repeat: no-repeat;
+			}
+			.btn1 {
+				z-index: 2;
+				animation: shake 1.2s infinite;
+				background: #f48733;
+				height: 90px;
+				border-radius: 6px;
+				width: 100%;
+			}
+			.btn2 {
+				top: 20px;
+				background: #ce661d;
+				border-radius: 6px;
+				height: 90px;
+				width: 100%;
+				z-index: 0;
+			}
+		}
+
 		.message_bottom {
 			font-size: .26rem;
 			position: absolute;
@@ -153,5 +217,25 @@
 		text-align: center;
 		width: 5rem;
 		height: 2rem;
+	}
+}
+@keyframes slide {
+	0% {
+		top: 280px;
+	}
+	100% {
+		top: 50px;
+	}
+}
+
+@keyframes shake {
+	0% {
+		top: 0;
+	}
+	50% {
+		top: 10px;
+	}
+	100% {
+		top: 0;
 	}
 }

@@ -14,7 +14,7 @@ export default class LoginAlert extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			modal1: false
+			modal1: true
 		};
 	}
 	componentDidMount() {}
@@ -169,13 +169,7 @@ export default class LoginAlert extends Component {
 					transparent
 					onClose={this.onClose('modal1')}
 				>
-					<div className="login_content">
-						<div className={titleBoxArr.join(' ')}>
-							{titText}
-							<img className={closeArr.join(' ')} src={closeImg} onClick={this.closeModal} />
-						</div>
-						<div className={style.login_box}>{componentsDisplay}</div>
-					</div>
+					{componentsDisplay}
 				</Modal>
 			</div>
 		);

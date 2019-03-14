@@ -27,7 +27,7 @@ export default [
     },
     {
 		path: '/activity/dazhuanpan_319_page',
-		title: '319活动',
+		title: '幸运大转盘',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/dazhuanpan_319_page')
     },

@@ -12,6 +12,8 @@ import bg from './img/bg.jpg';
 import zp_bg from './img/zp_bg.png';
 import over from './img/over.png';
 import notstart from './img/notstart.png';
+import submit_btn1 from './img/btn_bg1.png';
+import submit_btn2 from './img/btn_bg2.png';
 import zp_btn from './img/zp_btn.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
@@ -39,12 +41,13 @@ export default class dazhuanpan_page extends PureComponent {
 			time: 0,
 			transformType: 'cubic-bezier(.3,.25,.0001,1)',
 			awardList: [],
+			showRuleModal: false,
 			ruleDesc: '',
 			alert_img: '',
 			codeInfo: '',
 			count: '1',
 			allUsersAward: [],
-			type: '', // 弹框类型
+			type: 'alert_tel', // 弹框类型
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false
@@ -311,10 +314,7 @@ export default class dazhuanpan_page extends PureComponent {
 		this.props.$fetch.post(API.awardRecords, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				this.setState({
-					allUsersAward: (res.data && res.data.data) || [{
-                        mblHid:'185****4323',
-                        valDes:'5元优惠券'
-                    }]
+					allUsersAward: (res.data && res.data.data) || []
 				});
 			} else {
 				Toast.info(res.msgInfo);
@@ -410,6 +410,10 @@ export default class dazhuanpan_page extends PureComponent {
 		});
 		this.props.history.replace('/home');
 	};
+	// 跳转协议
+	go = (url) => {
+		this.props.history.push(`/protocol/${url}`);
+	};
 	render() {
 		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
 		return (
@@ -449,7 +453,42 @@ export default class dazhuanpan_page extends PureComponent {
 							goRoute={this.goRoute}
 							userAwardList={userAwardList}
 						/>
+
 						<div className={styles.bg}>
+							<div
+								className={styles.rule_btn}
+								onClick={() => {
+									this.setState({
+										showRuleModal: true
+									});
+								}}
+							>
+								活动规则
+							</div>
+							{this.state.showRuleModal ? (
+								<div className={styles.modal}>
+									<div className={styles.mask} />
+									<div className={styles.modalWrapper}>
+										<div>
+											<h2>活动规则</h2>
+											<ol>
+												<li>1.活动时间：2019年3月6日-2019年3月8日；</li>
+												<li>2.活动对象：还到新注册用户；</li>
+												<li>3.活动内容：活动期间在此活动页注册的新用户可获得188元新手红包；</li>
+												<li>4.奖励发放：注册成功后红包以减息券形式发送至个人账户中，用于借款时使用，有效期3天；</li>
+											</ol>
+										</div>
+										<div
+											className={styles.closeBtn}
+											onClick={() => {
+												this.setState({
+													showRuleModal: false
+												});
+											}}
+										/>
+									</div>
+								</div>
+							) : null}
 							<img className={styles.img} src={bg} />
 							<div className={styles.hd_box}>
 								{allUsersAward && allUsersAward.length ? (
@@ -470,7 +509,7 @@ export default class dazhuanpan_page extends PureComponent {
 										className={styles.zp_box}
 										style={{
 											overflow: 'hidden',
-											transform: `scale(0.85) rotate(${this.state.numdeg}deg)`,
+											transform: `scale(0.83) rotate(${this.state.numdeg}deg)`,
 											WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
 											transition: `-webkit-transform ${time}s ${transformType}`,
 											transition: `transform ${time}s ${transformType}`,
@@ -497,11 +536,32 @@ export default class dazhuanpan_page extends PureComponent {
 								<div className={styles.myAward} onClick={this.getMyAward}>
 									<span>我的奖品</span>
 								</div>
-								{this.state.ruleDesc ? (
-									<div className={styles.get_rule_desc}>
-										<RuleShow ruleDesc={this.state.ruleDesc} />
-									</div>
-								) : null}
+								<div className={styles.xieyi_box}>
+									<span>参与即同意</span>
+									<span
+										className={styles.xieyi}
+										onClick={() => {
+											this.go('register_agreement_page');
+										}}
+									>
+										《随行付金融用户注册协议》
+									</span>
+									<span
+										className={styles.xieyi}
+										onClick={() => {
+											this.go('privacy_agreement_page');
+										}}
+									>
+										《随行付用户隐私权政策》
+									</span>
+								</div>
+								{/* <div className={styles.submitBtn} onClick={this.goTo}>
+                                    <div className={[ styles.btn, styles.btn1 ].join(' ')}>立赚500元现金</div>
+                                    <div className={[ styles.btn, styles.btn2 ].join(' ')}></div>
+                                </div> */}
+                                <div  className={styles.submitBtn}>
+                                活动期间完成首次提现，可享受返现奖励，提现额度越高，返现奖励越大，最高500元，快前往随行付--还到参与吧！
+                                </div>
 							</div>
 						</div>
 					</div>
