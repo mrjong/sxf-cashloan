@@ -3,7 +3,7 @@ import style from './index.scss'
 var picH = 35; //移动高度
 var scrollstep = 3; //移动步幅,越大越快
 var scrolltime = 50; //移动频度(毫秒)越大越慢
-var stoptime = 3000; //间断时间(毫秒)
+var stoptime = 1500; //间断时间(毫秒)
 var tmpH = 0;
 var Mar = '';
 var Mar2 = '';
@@ -11,7 +11,7 @@ var child_div = '';
 var child_div2 = '';
 var child_div3 = '';
 var chars = [ '3', '5', '7', '8' ];
-var jiangpinList = [ '20元减息券', '杜蕾斯1盒', '100元减息券', '3期免息券', '首期免息券', '50元减息券', '12期免息券' ];
+var jiangpinList = [ '8元现金券', '20元现金券', '50元现金券', '88元现金券', '100元现金券', '0.5元现金券', '1元现金券' ];
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');
@@ -75,7 +75,7 @@ export default class AwardShow extends Component {
 							lineHeight: '.6rem'
 						}}
 					>
-						恭喜136****7912获得<span>10元减息券</span>
+						恭喜136****7912获得<span>1元现金券</span>
 					</div>
 				</div>
 				<div ref="Mar" id="Marquee" className={style.message}>

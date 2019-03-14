@@ -2,8 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
-import AwardShow from './components/AwardShow';
-import RuleShow from './components/RuleShow';
+import AwardShow from './components/AwardShowMock';
 import { getDeviceType } from 'utils';
 import LoginAlert from './components/LoginAlert';
 import { setBackGround } from 'utils/background';
@@ -12,8 +11,6 @@ import bg from './img/bg.jpg';
 import zp_bg from './img/zp_bg.png';
 import over from './img/over.png';
 import notstart from './img/notstart.png';
-import submit_btn1 from './img/btn_bg1.png';
-import submit_btn2 from './img/btn_bg2.png';
 import zp_btn from './img/zp_btn.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
@@ -47,7 +44,7 @@ export default class dazhuanpan_page extends PureComponent {
 			codeInfo: '',
 			count: '1',
 			allUsersAward: [],
-			type: 'alert_1000', // 弹框类型
+			type: '', // 弹框类型
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false
@@ -116,7 +113,7 @@ export default class dazhuanpan_page extends PureComponent {
 							// 是否展示其他用户抽奖记录  01是 00 否
 							if (res.data && res.data.data && res.data.data.recordShow !== '00') {
 								// 展示中奖记录
-								this.getAwardList('00');
+								// this.getAwardList('00');
 							}
 							this.setState({
 								codeInfo: '',
@@ -149,9 +146,7 @@ export default class dazhuanpan_page extends PureComponent {
 				} else {
 					store.setRewardCount(0);
 					this.setState({
-						count: '0'
-					});
-					this.setState({
+						count: '0',
 						type: 'no_chance'
 					});
 				}
@@ -206,7 +201,7 @@ export default class dazhuanpan_page extends PureComponent {
 					Toast.info('暂无活动资格');
 				});
 		} else {
-			this.setState({ showLoginTip: true });
+			this.setState({ type: 'login_tip' });
 		}
 	};
 
@@ -233,24 +228,10 @@ export default class dazhuanpan_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 					} else {
-						this.setState({
-							showLoginTip: true
-						});
+						Toast.info(res.msgInfo)
 					}
-				},
-				(err) => {
-					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-					});
-					console.log(err);
 				}
 			)
-			.catch((err) => {
-				this.setState({
-					errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-				});
-				console.log(err);
-			});
 	};
 	// 去授权
 	doAuth = () => {
@@ -271,9 +252,7 @@ export default class dazhuanpan_page extends PureComponent {
 						store.setToken(res.loginToken);
 					} else {
 						// 暂无抽奖资格
-						this.setState({
-							showLoginTip: true
-						});
+						Toast.info('暂无活动资格');
 					}
 				},
 				(err) => {
@@ -298,7 +277,7 @@ export default class dazhuanpan_page extends PureComponent {
 			if (res.msgCode === 'PTM0000') {
 				this.setState({
 					userAwardList: res.data.data,
-					type: 'jiangpin'
+					type: 'award_list'
 				});
 			} else {
 				Toast.info(res.msgInfo);
@@ -374,10 +353,18 @@ export default class dazhuanpan_page extends PureComponent {
 			setTimeout(() => {
 				// 00 优惠券  01 积分  02 红包 03 实物   04 谢谢惠顾
 				// console.log(this.state.context[index]);
-				this.setState({
-					type: 'alert_img',
-					alert_img: `data:image/png;base64,${obj.imgUrl}`
-				});
+				if (obj.type === '04') {
+					this.setState({
+						type: 'no_award',
+						alert_img: ''
+					});
+				} else {
+					this.setState({
+						type: 'alert_congratulation',
+						alert_img: `data:image/png;base64,${obj.imgUrl}`
+					});
+				}
+
 				this.isRotated = false; //旋转改为false说明没有旋转
 			}, 7000);
 		}, 0);
@@ -472,10 +459,9 @@ export default class dazhuanpan_page extends PureComponent {
 										<div>
 											<h2>活动规则</h2>
 											<ol>
-												<li>1.活动时间：2019年3月6日-2019年3月8日；</li>
-												<li>2.活动对象：还到新注册用户；</li>
-												<li>3.活动内容：活动期间在此活动页注册的新用户可获得188元新手红包；</li>
-												<li>4.奖励发放：注册成功后红包以减息券形式发送至个人账户中，用于借款时使用，有效期3天；</li>
+												<li>1.活动时间：2019年3月16日-3月22日;</li>
+												<li>2.活动对象：注册[还到]没有发生借款行为的新用户</li>
+												<li>3.活动描述：所有符合条件的用户均有1次抽奖机会，抽中的现金奖品实时下发，您可到随行付还到—我的—我的钱包中查看。</li>
 											</ol>
 										</div>
 										<div
@@ -491,11 +477,11 @@ export default class dazhuanpan_page extends PureComponent {
 							) : null}
 							<img className={styles.img} src={bg} />
 							<div className={styles.hd_box}>
-								{allUsersAward && allUsersAward.length ? (
+								{/* {allUsersAward && allUsersAward.length ? ( */}
 									<div className={styles.get_award_list}>
 										<AwardShow allUsersAward={allUsersAward} />
 									</div>
-								) : null}
+								{/* ) : null} */}
 								<div className={styles.message_bottom}>
 									今日剩余<span>{count}</span>次抽奖机会
 								</div>
@@ -559,9 +545,9 @@ export default class dazhuanpan_page extends PureComponent {
                                     <div className={[ styles.btn, styles.btn1 ].join(' ')}>立赚500元现金</div>
                                     <div className={[ styles.btn, styles.btn2 ].join(' ')}></div>
                                 </div> */}
-                                <div  className={styles.submitBtn}>
-                                活动期间完成首次提现，可享受返现奖励，提现额度越高，返现奖励越大，最高500元，快前往随行付--还到参与吧！
-                                </div>
+								<div className={styles.submitBtn}>
+									活动期间完成首次提现，可享受返现奖励，提现额度越高，返现奖励越大，最高500元，快前往随行付--还到参与吧！
+								</div>
 							</div>
 						</div>
 					</div>
