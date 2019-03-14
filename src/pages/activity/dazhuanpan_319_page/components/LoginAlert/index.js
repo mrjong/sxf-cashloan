@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Modal, Button, Toast, Flex, List } from 'antd-mobile';
+import { Modal, Button, Toast, Flex, List, Icon } from 'antd-mobile';
 import LoginComponent from '../LoginComponent';
 import style from './index.scss';
 import closeImg from '../../img/20181024_close.png';
 import alert_10 from '../../img/20181024_alert_10.png';
 import alert_btn from '../../img/20181024_alert_btn.png';
-import alert_1000 from '../../img/20181024_alert_1000.png';
+import congratulation from '../../img/congratulation.png';
 import alert_dls from '../../img/20181024_alert_dls.png';
 
 const Item = List.Item;
@@ -14,7 +14,7 @@ export default class LoginAlert extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			modal1: true
+			modal1: false
 		};
 	}
 	componentDidMount() {}
@@ -83,14 +83,11 @@ export default class LoginAlert extends Component {
 				);
 				break;
 			case 'alert_1000': //
-				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
 				componentsDisplay = (
-					<div>
-						<img src={alert_1000} className={style.alert_10} />
-						<div>
-							<img src={alert_btn} onClick={this.props.goRoute} className={style.alert_btn} />
-						</div>
+					<div className={style.img_box}>
+						<Icon type="cross" onClick={this.props.closeCb} className={style.close_icon} />
+						<img src={congratulation} className={style.alert_congratulation} />
+						<Button className={style.btn_loan} type="primary">立即借款</Button>
 					</div>
 				);
 				break;
@@ -162,15 +159,17 @@ export default class LoginAlert extends Component {
 				break;
 		}
 		return (
-			<div className={style.login_alert}>
-				<Modal
-					className={loginModal.join(' ')}
-					visible={this.state.modal1}
-					transparent
-					onClose={this.onClose('modal1')}
-				>
-					{componentsDisplay}
-				</Modal>
+			<div>
+				{this.state.modal1 && (
+					<Modal
+						className={loginModal.join(' ')}
+						visible={this.state.modal1}
+						transparent
+						onClose={this.onClose('modal1')}
+					>
+						{componentsDisplay}
+					</Modal>
+				)}
 			</div>
 		);
 	}

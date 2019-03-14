@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, List, InputItem } from 'antd-mobile';
+import { Button, List, InputItem,Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
 import logo from './img/logo.png';
@@ -61,10 +61,10 @@ export default class LoginComponent extends Component {
 					.then(
 						(result) => {
 							if (result.msgCode !== 'PTM0000') {
-								this.props.toast.info(result.msgInfo);
+								Toast.info(result.msgInfo);
 								return;
 							} else {
-								this.props.toast.info('发送成功，请注意查收！');
+								Toast.info('发送成功，请注意查收！');
 								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 								timmer = setInterval(() => {
 									this.setState({ flag: false, smsText: i-- + '"' });
@@ -76,12 +76,12 @@ export default class LoginComponent extends Component {
 							}
 						},
 						(error) => {
-							error.msgInfo && this.props.toast.info(error.msgInfo);
+							error.msgInfo && Toast.info(error.msgInfo);
 						}
 					);
 				return true;
 			} else {
-				this.props.toast.info(getFirstError(err));
+				Toast.info(getFirstError(err));
 			}
 		});
 	}
@@ -90,10 +90,9 @@ export default class LoginComponent extends Component {
 		const { closeCb, refreshPageFn } = this.props;
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
-			this.props.toast.info('请先获取短信验证码');
+			Toast.info('请先获取短信验证码');
 			return;
 		}
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.props.$fetch
@@ -108,24 +107,21 @@ export default class LoginComponent extends Component {
 					.then(
 						(res) => {
 							if (res.msgCode !== 'PTM0000') {
-								res.msgInfo && this.props.toast.info(res.msgInfo);
+								res.msgInfo && Toast.info(res.msgInfo);
 								return;
 							}
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-
-							// store.setToken(res.data.tokenId);
-
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
 							closeCb();
 							refreshPageFn();
 						},
 						(error) => {
-							error.msgInfo && this.props.toast.info(error.msgInfo);
+							error.msgInfo && Toast.info(error.msgInfo);
 						}
 					);
 			} else {
-				this.props.toast.info(getFirstError(err));
+				Toast.info(getFirstError(err));
 			}
 		});
 	};
@@ -134,6 +130,7 @@ export default class LoginComponent extends Component {
 		return (
 			<div className={style.login_alert}>
 				<div className={style.logo_box}>
+                <Icon type="cross"  onClick={this.props.closeCb} className={style.close_icon}></Icon>
 					<img className={style.logo} src={logo} />
 					<div className={style.text}>怕逾期，用还到</div>
 				</div>

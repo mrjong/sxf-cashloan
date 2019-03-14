@@ -47,7 +47,7 @@ export default class dazhuanpan_page extends PureComponent {
 			codeInfo: '',
 			count: '1',
 			allUsersAward: [],
-			type: 'alert_tel', // 弹框类型
+			type: 'alert_1000', // 弹框类型
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false
@@ -180,7 +180,7 @@ export default class dazhuanpan_page extends PureComponent {
 				this.validateMposRelSts();
 			} else {
 				// 新代偿
-				this.props.toast.info('请先登录', 2, () => {
+				Toast.info('请先登录', 2, () => {
 					this.props.history.push('/login');
 				});
 			}
@@ -199,11 +199,11 @@ export default class dazhuanpan_page extends PureComponent {
 					if (res.msgCode === 'URM0000') {
 						this.chkAuth();
 					} else {
-						this.props.toast.info('暂无活动资格');
+						Toast.info('暂无活动资格');
 					}
 				})
 				.catch((err) => {
-					this.props.toast.info('暂无活动资格');
+					Toast.info('暂无活动资格');
 				});
 		} else {
 			this.setState({ showLoginTip: true });
@@ -277,7 +277,7 @@ export default class dazhuanpan_page extends PureComponent {
 					}
 				},
 				(err) => {
-					this.props.toast.info(err.msgInfo);
+					Toast.info(err.msgInfo);
 				}
 			);
 	};
