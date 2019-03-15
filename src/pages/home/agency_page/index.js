@@ -20,8 +20,9 @@ const API = {
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
   CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-  qryContractInfo: '/bill/qryContractInfo',
-	contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
+  // qryContractInfo: '/bill/qryContractInfo',
+  // contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
+  qryContractInfo: '/fund/qryContractInfo'  // 合同数据流获取
 };
 
 @fetch.inject()
@@ -295,7 +296,7 @@ export default class agency_page extends PureComponent {
     const params = {
       withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
       withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
-      prdId: repaymentDate.value, // 产品ID
+      prdId: this.state.queryData.prdId, // 产品ID
       autId: homeCardIndexData.autId, // 信用卡账单ID
       repayType: lendersDate.value, // 还款方式
       usrBusCnl: '', // 操作渠道
@@ -369,19 +370,31 @@ export default class agency_page extends PureComponent {
   };
   // 查看借款合同
   readContract = item => {
-    this.props.$fetch.get(API.COUPON_COUNT, {}).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        this.props.history.push({
-          pathname: '/protocol/pdf_page',
-          state: {
-            url: result.data.url,
-            name: item.name,
-          }
-        })
-      } else {
-        this.props.toast.info(result.msgInfo);
-      }
-    });
+    const modalData = store.getRepaymentModalData();
+    const { repayInfo } = modalData;
+    this.props.$fetch
+      .get(API.qryContractInfo, {
+        contractTyep: item,
+        ContractNo: item,
+        loanAmount: this.state.queryData.billPrcpAmt,
+        productId: this.state.queryData.prdId,
+        agreementNo: repayInfo.withDrawAgrNo,
+        withholdAgrNo: repayInfo.withHoldAgrNo,
+        loanContractNo: item,
+      })
+      .then(result => {
+        if (result && result.msgCode === 'PTM0000') {
+          this.props.history.push({
+            pathname: '/protocol/pdf_page',
+            state: {
+              url: result.data.url,
+              name: item.name,
+            }
+          })
+        } else {
+          this.props.toast.info(result.msgInfo);
+        }
+      });
     
     // switch (type) {
     //   case 'loan_contract_page':

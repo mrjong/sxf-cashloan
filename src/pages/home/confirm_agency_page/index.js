@@ -3,7 +3,7 @@ import { Modal, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getFirstError } from 'utils';
-import { isMPOS } from 'utils/common';
+import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
@@ -20,6 +20,7 @@ const API = {
   CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡
   queryUsrMemSts: '/my/queryUsrMemSts', // 查询用户会员卡状态
+  queryFundInfo: '/fund/info' // 获取资金code,合同code
 };
 
 let indexData = null;  // 首页带过来的信息
@@ -218,7 +219,7 @@ export default class confirm_agency_page extends PureComponent {
   };
 
   // 如果当前还款卡支持代扣 则跳转确认页面
-  beforeJump() {
+  beforeJump(info) {
     // 确认代换信息返回结果成功埋点
     buriedPointEvent(home.borrowingPreSubmitResult, {
       is_success: true
@@ -231,8 +232,28 @@ export default class confirm_agency_page extends PureComponent {
     store.setHomeCardIndexData(indexData);
     store.setSaveAmt(true);
     this.props.history.push({ pathname: '/home/agency', search, state: {
-      contractList: [1,2,3]
+      // contractList: info.contractList
     } });
+  }
+
+  // 获取合同列表和产品id
+  getFundInfo = () => {
+    const { lendersDate, repaymentDate, cardBillAmt, repayInfo } = this.state;
+    console.log(repaymentDate)
+    this.props.$fetch.post(`${API.queryFundInfo}`, {
+      loanAmount: cardBillAmt,
+      // periodCount: ,
+      // periodUnit: ,
+      agrNo: repayInfo.withDrawAgrNo,
+      sysChannel: getH5Channel(),
+      wtdwTyp: lendersDate.value,
+    }).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        this.beforeJump(result.data);
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
   }
 
   // 获取代还期限列表 还款日期列表
@@ -305,7 +326,7 @@ export default class confirm_agency_page extends PureComponent {
           isShowVIPModal: true,
         })
       } else if (result && result.msgCode === "PTM0000") {
-        this.beforeJump();
+        this.getFundInfo();
       } else {
         // 确认代换信息返回结果失败埋点
         buriedPointEvent(home.borrowingPreSubmitResult, {
