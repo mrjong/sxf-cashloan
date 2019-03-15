@@ -3,7 +3,7 @@ import { Modal, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { getFirstError } from 'utils';
-import { isMPOS, getH5Channel } from 'utils/common';
+import { isMPOS } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
@@ -242,10 +242,9 @@ export default class confirm_agency_page extends PureComponent {
     console.log(repaymentDate)
     this.props.$fetch.post(`${API.queryFundInfo}`, {
       loanAmount: cardBillAmt,
-      // periodCount: ,
-      // periodUnit: ,
+      periodCount: repaymentDate.periodCount,
+      periodUnit: repaymentDate.periodUnit,
       agrNo: repayInfo.withDrawAgrNo,
-      sysChannel: getH5Channel(),
       wtdwTyp: lendersDate.value,
     }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
@@ -274,6 +273,8 @@ export default class confirm_agency_page extends PureComponent {
             // cardBillAmt: item.cardBillAmt,
             minAmt: item.minAmt,
             maxAmt: item.maxAmt,
+            periodUnit: item.periodUnit,
+            periodCount: item.periodCount
           })),
           dateDiff: diff,
           lendersIndex: 1,
