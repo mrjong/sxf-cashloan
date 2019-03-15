@@ -91,7 +91,7 @@ export default class SmsAlert extends Component {
 		});
 	}
 	//登录判断
-	goSubmit=()=> {
+	goSubmit = () => {
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -129,7 +129,7 @@ export default class SmsAlert extends Component {
 				Toast.info(getFirstError(err));
 			}
 		});
-	}
+	};
 	closeCb = () => {
 		this.setState({
 			modalShow: false
@@ -147,8 +147,10 @@ export default class SmsAlert extends Component {
 				.then((res) => {
 					if (res.msgCode === 'URM0000') {
 						this.chkAuth();
-					} else {
+					} else if (res.msgCode === 'PTM9000') {
 						Toast.info('暂无活动资格');
+					} else {
+						Toast.info(res.msgInfo);
 					}
 				});
 		} else {
