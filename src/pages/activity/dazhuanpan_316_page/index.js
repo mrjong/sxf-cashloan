@@ -184,6 +184,12 @@ export default class dazhuanpan_page extends PureComponent {
 			// 根据type 随便去干
 		} else {
 			if (query.entry && query.entry.indexOf('ismpos') > -1) {
+				if (!query.appId || !query.token) {
+					this.setState({
+                        type:'login_tip'
+                    });
+					return;
+				}
 				// 去实名
 				this.setState({
 					callBackType: type

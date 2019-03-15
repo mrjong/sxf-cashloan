@@ -154,27 +154,23 @@ export default class SmsAlert extends Component {
 			disabled: type
 		});
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-		if (query.appId && query.token) {
-			this.props.$fetch
-				.post(API.validateMposRelSts, {
-					appid: query.appId,
-					token: query.token
-				})
-				.then((res) => {
-					if (res.msgCode === 'URM0000') {
-						this.chkAuth();
-					} else if (res.msgCode === 'PTM9000' || res.msgCode === 'URM0001') {
-						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-							draw_result: '暂无资格'
-						});
-						Toast.info('暂无活动资格');
-					} else {
-						Toast.info(res.msgInfo);
-					}
-				});
-		} else {
-			this.setState({ type: 'login_tip' });
-		}
+		this.props.$fetch
+			.post(API.validateMposRelSts, {
+				appid: query.appId,
+				token: query.token
+			})
+			.then((res) => {
+				if (res.msgCode === 'URM0000') {
+					this.chkAuth();
+				} else if (res.msgCode === 'PTM9000' || res.msgCode === 'URM0001') {
+					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '暂无资格'
+					});
+					Toast.info('暂无活动资格');
+				} else {
+					Toast.info(res.msgInfo);
+				}
+			});
 	};
 
 	chkAuth = () => {
@@ -202,6 +198,11 @@ export default class SmsAlert extends Component {
 					this.props.smsSuccess();
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 					store.setToken(res.loginToken);
+				} else if (res.authFlag === '2') {
+					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '暂无资格'
+					});
+					Toast.info('暂无活动资格');
 				} else {
 					Toast.info(res.msgInfo);
 				}
