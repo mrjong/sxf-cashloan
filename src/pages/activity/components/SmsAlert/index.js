@@ -190,7 +190,8 @@ export default class SmsAlert extends Component {
 					});
 					this.doAuth(res.tokenId);
 				} else if (res.authFlag === '1') {
-					// 已授权
+                    // 已授权
+                    store.setMposToken(true)
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 					store.setToken(res.loginToken);
 				} else {
@@ -220,7 +221,8 @@ export default class SmsAlert extends Component {
 							phoneValue: res.mblNoHid
 						});
 					} else if (res.authSts === '00') {
-						// sa.login(res.userId);
+                        // sa.login(res.userId);
+                        store.setMposToken(true)
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 					} else {
@@ -255,7 +257,8 @@ export default class SmsAlert extends Component {
 					.then(
 						(res) => {
 							if (res.authSts === '00') {
-								// sa.login(res.userId);
+                                // sa.login(res.userId);
+                                store.setMposToken(true)
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setToken(res.loginToken);
