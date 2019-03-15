@@ -24,7 +24,7 @@ const API = {
 	awardRecords: '/activeConfig/records', // 用户中奖记录展示
 	recordForUser: '/activeConfig/recordForUser', // 用户中奖记录展示
 	userCount: '/activeConfig/count', // 用户抽奖次数查询
-	userDraw: '/activeConfig/draw', // 用户抽奖
+	userDraw: '/activeConfig/draw' // 用户抽奖
 };
 @fetch.inject()
 @setBackGround('#260451')
@@ -41,6 +41,7 @@ export default class dazhuanpan_page extends PureComponent {
 			alert_img: '',
 			codeInfo: '',
 			count: '1',
+			callBackType: '',
 			allUsersAward: [],
 			type: '', // 弹框类型
 			userAwardList: [], // 用户中奖列表
@@ -150,8 +151,8 @@ export default class dazhuanpan_page extends PureComponent {
 				if (res.data.data.count && Number(res.data.data.count) > 0) {
 					this.getDraw(res.data.data.count);
 				} else {
-                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '已中奖',
+					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '已中奖'
 					});
 					store.setRewardCount(0);
 					this.setState({
@@ -172,15 +173,21 @@ export default class dazhuanpan_page extends PureComponent {
 			}
 		});
 	};
-	isAuthFunc = (callBack) => {
+	isAuthFunc = (callBack, type) => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		let token = Cookie.get('fin-v-card-token');
-		if (token && store.getMposToken()) {
+		if (
+			(token && query.entry && query.entry.indexOf('ismpos') > -1 && store.getMposToken()) ||
+			(token && query.entry && query.entry.indexOf('isxdc') > -1)
+		) {
 			callBack();
 			// 根据type 随便去干
 		} else {
 			if (query.entry && query.entry.indexOf('ismpos') > -1) {
 				// 去实名
+				this.setState({
+					callBackType: type
+				});
 				Cookie.remove('fin-v-card-token');
 				this.child.validateMposRelSts(true);
 			} else {
@@ -196,7 +203,7 @@ export default class dazhuanpan_page extends PureComponent {
 	getMyAward = () => {
 		this.isAuthFunc(() => {
 			this.getrecordForUser('01');
-		});
+		}, 'award_list');
 	};
 	// 用户中奖列表
 	getrecordForUser = (type) => {
@@ -287,15 +294,15 @@ export default class dazhuanpan_page extends PureComponent {
 				// 根据不同入口来源埋点
 				if (obj.type === '04') {
 					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '未中奖',
+						draw_result: '未中奖'
 					});
 					this.setState({
 						type: 'no_award',
 						alert_img: ''
 					});
 				} else {
-                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '中奖',
+					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '中奖'
 					});
 					this.setState({
 						type: 'alert_congratulation',
@@ -320,12 +327,28 @@ export default class dazhuanpan_page extends PureComponent {
 		if (this.isRotated) return; //如果正在旋转退出程序
 		this.isAuthFunc(() => {
 			this.getCount();
-		});
+		}, 'zp_btn');
 	};
 
 	setalertType = (type) => {
 		this.setState({
 			type
+		});
+	};
+	smsSuccess = () => {
+		let type = this.state.callBackType;
+		switch (type) {
+			case 'zp_btn':
+				this.onloadZhuan();
+				break;
+			case 'award_list':
+				this.getMyAward();
+				break;
+			default:
+				break;
+		}
+		this.setState({
+			callBackType: ''
 		});
 	};
 	// 立即使用
@@ -346,7 +369,7 @@ export default class dazhuanpan_page extends PureComponent {
 		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
-				<SmsAlert onRef={this.onRef} />
+				<SmsAlert onRef={this.onRef} smsSuccess={this.smsSuccess} />
 				{this.state.codeInfo ? (
 					<div className={styles.active_img_box}>
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}
@@ -406,9 +429,9 @@ export default class dazhuanpan_page extends PureComponent {
 									<AwardShow allUsersAward={allUsersAward} />
 								</div>
 								{/* ) : null} */}
-								<div className={styles.message_bottom}>
+								{/* <div className={styles.message_bottom}>
 									今日剩余<span>{count}</span>次抽奖机会
-								</div>
+								</div> */}
 								<div className={styles.zp_bg_box}>
 									{/* 转盘灯 */}
 									<img className={styles.zp_bg} src={zp_bg} />

@@ -114,15 +114,22 @@ export default class SmsAlert extends Component {
 							if (res.msgCode === 'PTM0000') {
 								// sa.login(res.userId);
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-                                // TODO: 根据设备类型存储token
-                                store.setMposToken(true)
+								// TODO: 根据设备类型存储token
+								store.setMposToken(true);
+								this.props.smsSuccess();
 								store.setToken(res.loginToken);
 								this.closeCb();
 								// refreshPageFn();
+							}
+							if (res.msgCode === 'URM0008') {
+								Toast.info(res.msgInfo);
+								this.props.form.setFieldsValue({
+									smsCd: ''
+								});
 							} else {
-                                buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-                                    draw_result: '暂无资格',
-                                });
+								buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+									draw_result: '暂无资格'
+								});
 								Toast.info('暂无活动资格');
 								this.closeCb();
 							}
@@ -157,9 +164,9 @@ export default class SmsAlert extends Component {
 					if (res.msgCode === 'URM0000') {
 						this.chkAuth();
 					} else if (res.msgCode === 'PTM9000' || res.msgCode === 'URM0001') {
-                        buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-                            draw_result: '暂无资格',
-                        });
+						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+							draw_result: '暂无资格'
+						});
 						Toast.info('暂无活动资格');
 					} else {
 						Toast.info(res.msgInfo);
@@ -190,8 +197,9 @@ export default class SmsAlert extends Component {
 					});
 					this.doAuth(res.tokenId);
 				} else if (res.authFlag === '1') {
-                    // 已授权
-                    store.setMposToken(true)
+					// 已授权
+					store.setMposToken(true);
+					this.props.smsSuccess();
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 					store.setToken(res.loginToken);
 				} else {
@@ -210,25 +218,27 @@ export default class SmsAlert extends Component {
 			.then(
 				(res) => {
 					if (res.authSts === '01') {
-                        console.log('发验证码');
-                        buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-                            draw_result: '短验',
-                        });
+						console.log('发验证码');
+						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+							draw_result: '短验'
+						});
 						this.setState({
 							modalShow: true
 						});
 						this.props.form.setFieldsValue({
-							phoneValue: res.mblNoHid
+							phoneValue: res.mblNoHid,
+							smsCd: ''
 						});
 					} else if (res.authSts === '00') {
-                        // sa.login(res.userId);
-                        store.setMposToken(true)
+						// sa.login(res.userId);
+						store.setMposToken(true);
+						this.props.smsSuccess();
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 					} else {
-                        buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-                            draw_result: '暂无资格',
-                        });
+						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+							draw_result: '暂无资格'
+						});
 						// 暂无抽奖资格
 						Toast.info('暂无活动资格');
 					}
@@ -257,8 +267,9 @@ export default class SmsAlert extends Component {
 					.then(
 						(res) => {
 							if (res.authSts === '00') {
-                                // sa.login(res.userId);
-                                store.setMposToken(true)
+								// sa.login(res.userId);
+								store.setMposToken(true);
+								this.props.smsSuccess();
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setToken(res.loginToken);
