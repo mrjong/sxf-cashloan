@@ -230,7 +230,9 @@ export default class confirm_agency_page extends PureComponent {
     // 跳转确认代还页面之前 将当前信用卡信息保存下来
     store.setHomeCardIndexData(indexData);
     store.setSaveAmt(true);
-    this.props.history.push({ pathname: '/home/agency', search });
+    this.props.history.push({ pathname: '/home/agency', search, state: {
+      contractList: [1,2,3]
+    } });
   }
 
   // 获取代还期限列表 还款日期列表

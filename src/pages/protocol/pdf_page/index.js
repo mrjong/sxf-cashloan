@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import IframeProtocol from 'components/IframeProtocol'
-import { getDeviceType } from 'utils';
 
 export default class pdf_page extends PureComponent {
     constructor(props) {
@@ -10,11 +9,6 @@ export default class pdf_page extends PureComponent {
         };
     }
     componentWillMount(){
-        if (getDeviceType() === 'IOS') {
-            window.location.replace(params.url)
-            // window.location.href='https://www.baidu.com/'
-            // window.open('https://www.baidu.com/')
-        }
         const params = this.props.history.location.state
         if (params) {
             this.props.setTitle(params.name);

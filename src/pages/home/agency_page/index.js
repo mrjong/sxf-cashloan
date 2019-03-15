@@ -61,6 +61,8 @@ export default class agency_page extends PureComponent {
     // 获取参数
     // eslint-disable-next-line
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    const contractList = this.props.history.location.state && this.props.history.location.state.contractList;
+    console.log(contractList,'contractList')
     this.setState(
       {
         queryData,
