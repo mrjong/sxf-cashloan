@@ -78,9 +78,9 @@ export default class ModalInfo extends Component {
       // cardBillAmt: data.value.cardBillAmt,
     }, () => {
       this.dealMinMax(data.value);
-      setTimeout(() => {
-        this.calcRepayAmt(data.value);
-      }, 0);
+      // setTimeout(() => {
+      //   this.calcRepayAmt(data.value);
+      // }, 0);
     });
   };
 
@@ -263,7 +263,7 @@ export default class ModalInfo extends Component {
                   // disabled
                   onChange={(val) => {
                     this.setState({ applyAmt: val }, () => {
-                      this.calcRepayAmt(repaymentDate);
+                      // this.calcRepayAmt(repaymentDate);
                     })
                   }}
                   trackStyle={{
@@ -310,13 +310,13 @@ export default class ModalInfo extends Component {
             </div>
             <p className={style.billTips}>(审核通过后，期限不可更改)</p>
           </li>
-          <li className={style.list_item}>
+          {/* <li className={style.list_item}>
             <div className={style.item_info}>
               <label className={style.item_name}>预计每期约还款</label>
               <span className={style.item_value}>{repaymentAmt}元</span>
             </div>
             <p className={style.billTips}>(以最终借款合同为准)</p>
-          </li>
+          </li> */}
         </ul>
         <SXFButton onClick={this.handleClickConfirm} className={style.modal_btn}>
           确定
