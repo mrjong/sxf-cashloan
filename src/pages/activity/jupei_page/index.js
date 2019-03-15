@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Modal, Icon } from 'antd-mobile'
 import qs from 'qs'
-import { setBackGround } from 'utils/backGround'
+import { setBackGround } from 'utils/background'
 import styles from './index.scss'
 import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType';
