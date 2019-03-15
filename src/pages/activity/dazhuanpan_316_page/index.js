@@ -7,7 +7,7 @@ import LoginAlert from './components/LoginAlert';
 import SmsAlert from '../components/SmsAlert';
 
 import { setBackGround } from 'utils/background';
-import { Toast } from 'antd-mobile';
+import { Toast, Modal } from 'antd-mobile';
 import bg from './img/bg.jpg';
 import zp_bg from './img/zp_bg.png';
 import over from './img/over.png';
@@ -152,7 +152,7 @@ export default class dazhuanpan_page extends PureComponent {
 					this.getDraw(res.data.data.count);
 				} else {
 					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '已中奖'
+						draw_result: '已用尽'
 					});
 					store.setRewardCount(0);
 					this.setState({
@@ -186,8 +186,11 @@ export default class dazhuanpan_page extends PureComponent {
 			if (query.entry && query.entry.indexOf('ismpos') > -1) {
 				if (!query.appId || !query.token) {
 					this.setState({
-                        type:'login_tip'
+						type: 'login_tip'
                     });
+                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '请先登录'
+					});
 					return;
 				}
 				// 去实名
@@ -383,6 +386,34 @@ export default class dazhuanpan_page extends PureComponent {
 				) : null}
 				{!this.state.codeInfo ? (
 					<div>
+						<Modal
+							title="活动规则"
+							closable
+							visible={this.state.showRuleModal}
+							transparent
+							onClose={() => {
+								this.setState({
+									showRuleModal: false
+								});
+							}}
+							className="modal_rule"
+						>
+							<div>
+								<ol>
+									<li>1.活动时间：2019年3月16日-3月24日;</li>
+									<li>2.活动对象：活动期间注册[还到]的用户</li>
+									<li>3.活动描述：所有符合条件的用户均有1次抽奖机会，抽中的现金奖品实时下发，您可到随行付还到—我的—我的钱包中查看。</li>
+								</ol>
+							</div>
+							<div
+								className={styles.closeBtn}
+								onClick={() => {
+									this.setState({
+										showRuleModal: false
+									});
+								}}
+							/>
+						</Modal>
 						<LoginAlert
 							mblNoHid={this.state.mblNoHid}
 							smsTokenId={this.state.smsTokenId}
@@ -405,29 +436,6 @@ export default class dazhuanpan_page extends PureComponent {
 							>
 								活动规则
 							</div>
-							{this.state.showRuleModal ? (
-								<div className={styles.modal}>
-									<div className={styles.mask} />
-									<div className={styles.modalWrapper}>
-										<div>
-											<h2>活动规则</h2>
-											<ol>
-												<li>1.活动时间：2019年3月16日-3月24日;</li>
-												<li>2.活动对象：活动期间注册[还到]的用户</li>
-												<li>3.活动描述：所有符合条件的用户均有1次抽奖机会，抽中的现金奖品实时下发，您可到随行付还到—我的—我的钱包中查看。</li>
-											</ol>
-										</div>
-										<div
-											className={styles.closeBtn}
-											onClick={() => {
-												this.setState({
-													showRuleModal: false
-												});
-											}}
-										/>
-									</div>
-								</div>
-							) : null}
 							<img className={styles.img} src={bg} />
 							<div className={styles.hd_box}>
 								{/* {allUsersAward && allUsersAward.length ? ( */}

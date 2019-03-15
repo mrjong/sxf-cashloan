@@ -72,8 +72,8 @@
 				width: 237px;
 				font-size: 36px;
 				letter-spacing: 3px;
-                color: #fff;
-                /* styleli*/
+				color: #fff;
+				/* styleli*/
 				background: rgba(255, 175, 75, 1);
 				background: -moz-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
 				background: -webkit-gradient(
@@ -151,80 +151,32 @@
 }
 
 .modal {
-	.mask {
-		position: fixed;
-		background-color: rgba(0, 0, 0, .3);
-		margin: 0;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 999;
-	}
-	.modalWrapper {
-		position: fixed;
-		width: 620px;
-		height: 568px;
-		border-radius: 10px;
-		padding: 26px 30px 0;
+	.closeBtn {
+		width: 50px;
+		height: 50px;
+		background-image: url(../../../assets/images/home/close_ico@2x.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		position: absolute;
+		bottom: -80px;
 		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 1000;
-		background-color: #fff;
-		box-sizing: border-box;
-
-		h2 {
-			text-align: center;
-			font-size: 36px;
-			color: #333;
-			margin-bottom: 36px;
-		}
-
-		li {
-			font-size: 30px;
-			color: #6c6c6c;
-		}
-
-		.closeBtn {
-			width: 50px;
-			height: 50px;
-			background-image: url(../../../assets/images/home/close_ico@2x.png);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			position: absolute;
-			bottom: -80px;
-			left: 50%;
-			transform: translate(-50%, 0%);
-		}
-	}
-	.tipText {
-		padding: 30px 10px;
-		position: relative;
-	}
-	.tipWrapper {
-		text-align: center;
-		width: 5rem;
-		height: 2rem;
-	}
-}
-@keyframes slide {
-	0% {
-		top: 280px;
-	}
-	100% {
-		top: 50px;
+		transform: translate(-50%, 0%);
 	}
 }
 
-@keyframes shake {
-	0% {
-		top: 0;
-	}
-	50% {
-		top: 10px;
-	}
-	100% {
-		top: 0;
-	}
+:global {
+	.modal_rule{
+        li{
+            margin-top: 15px;
+        }
+        &.am-modal.am-modal-transparent {
+            width: 90%;
+        }
+        .am-modal-content{
+            text-align: left;
+        }
+        .am-modal-body{
+            line-height: 1.7;
+        }
+    }
 }
