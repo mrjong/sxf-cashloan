@@ -110,7 +110,13 @@ export const headerIgnore = (type) => {
 
 export const setTitle = (getTitle) => {
 	var i = document.createElement('iframe');
-	i.src = 'https://lns-wap.vbillbank.com/favicon.ico';
+	const { PROJECT_ENV } = process.env;
+	if (PROJECT_ENV === 'pro') {
+		// 生产环境配置
+		i.src = 'https://lns-wap.vbillbank.com/favicon.ico';
+	} else if (PROJECT_ENV === 'test') {
+		i.src = 'https://lns-wap-test.vbillbank.com/favicon.ico';
+	}
 	i.style.display = 'none';
 	i.onload = function() {
 		setTimeout(function() {

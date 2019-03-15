@@ -24,5 +24,12 @@ export default [
 		title: '百万红包天天抢',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/coupon_page')
-	}
+    },
+    {
+		path: '/activity/dazhuanpan_316_page',
+		title: '幸运大转盘',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/dazhuanpan_316_page')
+    },
+    
 ];
