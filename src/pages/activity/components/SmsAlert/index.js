@@ -226,11 +226,6 @@ export default class SmsAlert extends Component {
 						this.setState({
 							modalShow: true
 						});
-                        var shield=document.getElementById("shield");
-                        shield.addEventListener("touchstart",function(e){
-                            e.stopPropagation();
-                            e.preventDefault();
-                        },false);
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
 							smsCd: ''
