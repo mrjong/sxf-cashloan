@@ -13,18 +13,18 @@ export default class LoginAlert extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			modal1: false
+			showModal: false
 		};
 	}
 	componentDidMount() {}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.alertType) {
 			this.setState({
-				modal1: true
+				showModal: true
 			});
 		} else {
 			this.setState({
-				modal1: false
+				showModal: false
 			});
 		}
 	}
@@ -32,7 +32,7 @@ export default class LoginAlert extends Component {
 	closeModal = () => {
 		this.setState(
 			{
-				modal1: false
+				showModal: false
 			},
 			() => {
 				this.props.setalertType();
@@ -41,20 +41,15 @@ export default class LoginAlert extends Component {
 	};
 	showModal = () => {
 		this.setState({
-			modal1: true
+			showModal: true
 		});
 	};
 	render() {
-		const { alertType, userAwardList, refreshPageFn, alert_img } = this.props;
+		const { alertType, userAwardList, alert_img } = this.props;
 		let componentsDisplay = null;
-		let closeArr = [ 'closeImg' ];
-		let titleBoxArr = [ 'titleBox' ];
 		let loginModal = [ 'login_modal' ];
-		let titText = '';
 		switch (alertType) {
 			case 'login_tip': //
-				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
 				componentsDisplay = (
 					<div className={style.img_box}>
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
@@ -120,8 +115,6 @@ export default class LoginAlert extends Component {
 				);
 				break;
 			case 'no_award': // 没有中奖
-				titText = '抱歉，未抽中奖品';
-				loginModal = [ 'login_modal' ];
 				componentsDisplay = (
 					<div className={style.img_box}>
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
@@ -136,7 +129,6 @@ export default class LoginAlert extends Component {
 				);
 				break;
 			case 'no_chance': // 没有抽奖机会
-				loginModal = [ 'login_modal' ];
 				componentsDisplay = (
 					<div className={style.img_box}>
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
@@ -156,12 +148,12 @@ export default class LoginAlert extends Component {
 		}
 		return (
 			<div>
-				{this.state.modal1 && (
+				{this.state.showModal && (
 					<Modal
 						className={loginModal.join(' ')}
-						visible={this.state.modal1}
+						visible={this.state.showModal}
 						transparent
-						onClose={this.onClose('modal1')}
+						onClose={this.onClose('showModal')}
 					>
 						{componentsDisplay}
 					</Modal>
