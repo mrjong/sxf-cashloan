@@ -1,6 +1,7 @@
+/* stylelint-disable */
 .dazhuanpan {
 	overflow: scroll;
-
+	user-select: none;
 	.bg {
 		position: relative;
 		.rule_btn {
@@ -35,7 +36,7 @@
 			}
 			.zp_btn {
 				position: absolute;
-				width: 150px;
+				width: 200px;
 				top: 50%;
 				left: 50%;
 				z-index: 10;
@@ -70,12 +71,29 @@
 			span {
 				width: 237px;
 				font-size: 36px;
-				letter-spacing: 2px;
-				color: #fff;
-				background-color: #f49c33;
+				letter-spacing: 3px;
+                color: #fff;
+                /* styleli*/
+				background: rgba(255, 175, 75, 1);
+				background: -moz-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: -webkit-gradient(
+					left top,
+					left bottom,
+					color-stop(0%, rgba(255, 175, 75, 1)),
+					color-stop(100%, rgba(244, 128, 51, 1))
+				);
+				background: -webkit-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: -o-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: -ms-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: linear-gradient(to bottom, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient(
+						startColorstr='#ffaf4b',
+						endColorstr='#f48033',
+						GradientType=0
+					);
 				padding: 10px 20px;
 				border-radius: 6px;
-				font-weight: 600;
+				font-weight: 500;
 				display: inline-block;
 				margin-top: 30px;
 			}
@@ -102,32 +120,6 @@
 			left: 50%;
 			margin: 0 auto;
 			transform: translate(-50%, 0);
-			.btn {
-				position: absolute;
-				color: #fff;
-				text-align: center;
-				line-height: 90px;
-				letter-spacing: 4px;
-				font-size: 36px;
-				width: 650px;
-				background-repeat: no-repeat;
-			}
-			.btn1 {
-				z-index: 2;
-				animation: shake 1.2s infinite;
-				background: #f48733;
-				height: 90px;
-				border-radius: 6px;
-				width: 100%;
-			}
-			.btn2 {
-				top: 20px;
-				background: #ce661d;
-				border-radius: 6px;
-				height: 90px;
-				width: 100%;
-				z-index: 0;
-			}
 		}
 
 		.message_bottom {
@@ -146,9 +138,6 @@
 			}
 		}
 	}
-}
-.get_award_list {
-	// margin: 65px 0 15px;
 }
 .get_rule_desc {
 	margin: 50px 25px;

@@ -224,50 +224,6 @@ export default class LoginComponent extends Component {
 					</div>
 				</div>
 			</div>
-			// <div className={style.inputContent}>
-			// 	<div>
-			// 		<input
-			// 			maxLength={11}
-			// 			type="text"
-			// 			pattern="[0-9]*"
-			// 			{...getFieldProps('phoneValue', {
-			// 				rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
-			// 			})}
-			// 			className={style.form_control}
-			// 			placeholder="请输入手机号码"
-			// 			onBlur={() => {handleInputBlur()}}
-			// 		/>
-			// 	</div>
-			// 	<div className={style.inputCode}>
-			// 		<input
-			// 			maxLength={6}
-			// 			type="text"
-			// 			pattern="[0-9]*"
-			// 			{...getFieldProps('smsCd', {
-			// 				rules: [ { required: true, message: '请输入正确验证码' } ]
-			// 			})}
-			// 			className={style.form_control}
-			// 			placeholder="请输入短信验证码"
-			// 			onBlur={() => {handleInputBlur()}}
-			// 		/>
-			// 		<div className={!this.state.timeflag ? style.getCodeAct : style.getCode}>
-			// 			<Button
-			// 				size="small"
-			// 				onClick={() => {
-			// 					this.state.timeflag ? this.getSms(60) : '';
-			// 				}}
-			// 				type="primary"
-			// 			>
-			// 				{this.state.smsText}
-			// 			</Button>
-			// 		</div>
-			// 	</div>
-			// 	<div className={style.a_btn}>
-			// 		<Button size="small" onClick={this.goLogin} type="primary">
-			// 			确定
-			// 		</Button>
-			// 	</div>
-			// </div>
 		);
 	}
 }

@@ -55,7 +55,7 @@ export default class LoginAlert extends Component {
 		switch (alertType) {
 			case 'alert_tel': // 登录
 				loginModal = [ 'login_tel' ];
-				componentsDisplay = <LoginComponent smsTokenId={this.props.smsTokenId} refreshPageFn={refreshPageFn} closeCb={this.closeModal} />;
+				componentsDisplay = <LoginComponent smsTokenId={this.props.smsTokenId} refreshPageFn={refreshPageFn} mblNoHid={this.props.mblNoHid} closeCb={this.closeModal} />;
 				break;
 			case 'login_tip': //
 				loginModal = [ 'login_modal', 'big_modal' ];
@@ -87,8 +87,9 @@ export default class LoginAlert extends Component {
 					<div className={style.img_box}>
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
 						<img src={award_list} className={style.alert_congratulation} />
-						<div className={style.alert_list}>
+						
 							{userAwardList && userAwardList.length !== 0 ? (
+                                <div className={style.alert_list}>
 								<div className={style.alert_list_c}>
 									<List>
 										{userAwardList &&
@@ -114,12 +115,13 @@ export default class LoginAlert extends Component {
 											})}
 									</List>
 								</div>
+                                </div>
 							) : (
 								<div className={style.tip_text}>
 									还没有抽中奖品，<br /> 快去试试手气吧～
 								</div>
 							)}
-						</div>
+						
 					</div>
 				);
 				break;

@@ -3,8 +3,10 @@ import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import AwardShow from './components/AwardShowMock';
-import { getDeviceType } from 'utils';
+import { getDeviceType, setTitle } from 'utils';
 import LoginAlert from './components/LoginAlert';
+import SmsAlert from '../components/SmsAlert';
+
 import { setBackGround } from 'utils/background';
 import { Toast, Modal, Icon } from 'antd-mobile';
 import bg from './img/bg.jpg';
@@ -49,12 +51,13 @@ export default class dazhuanpan_page extends PureComponent {
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
 			smsTokenId: '',
-			mblNoHid: ''
+			mblNoHid: '',
+			// 组件参数
+			validateMposRelSts: false
 		};
 	}
-	isTurn = false;
 	componentWillMount() {
-        this.init();
+		this.init();
 	}
 	init = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -174,7 +177,7 @@ export default class dazhuanpan_page extends PureComponent {
 		} else {
 			if (query.entry && query.entry.indexOf('ismpos') > -1) {
 				// 去实名
-				this.validateMposRelSts();
+                this.child.validateMposRelSts()
 			} else {
 				// 新代偿
 				Toast.info('请先登录', 2, () => {
@@ -182,85 +185,6 @@ export default class dazhuanpan_page extends PureComponent {
 				});
 			}
 		}
-	};
-	// 实名
-	validateMposRelSts = () => {
-		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-		if (query.appId && query.token) {
-			this.props.$fetch
-				.post(API.validateMposRelSts, {
-					appid: query.appId,
-					token: query.token
-				})
-				.then((res) => {
-					if (res.msgCode === 'URM0000') {
-						this.chkAuth();
-					} else {
-						Toast.info('暂无活动资格');
-					}
-				});
-		} else {
-			this.setState({ type: 'login_tip' });
-		}
-	};
-
-	chkAuth = () => {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		this.props.$fetch
-			.post(API.chkAuth, {
-				mblNo: query.telNo,
-				appId: query.appId,
-				token: query.token,
-				location: store.getPosition(), // 定位地址 TODO 从session取,
-				osType: getDeviceType(),
-				province: '',
-				usrCnl: getH5Channel()
-			})
-			.then((res) => {
-				if (res.authFlag === '0') {
-					this.setState({
-						smsTokenId: res.tokenId,
-						mblNoHid: res.mblNoHid,
-                    });
-                    this.doAuth()
-				} else if (res.authFlag === '1') {
-					// 已授权
-					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-					store.setToken(res.loginToken);
-				} else {
-					Toast.info(res.msgInfo);
-				}
-			});
-	};
-	// 去授权
-	doAuth = () => {
-		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-		this.props.$fetch
-			.post(API.doAuth, {
-				location: store.getPosition(), // 定位地址 TODO 从session取,
-				osType: getDeviceType(),
-				authToken: query.tokenId
-			})
-			.then(
-				(res) => {
-					if (res.authSts === '01') {
-						console.log('发验证码');
-						this.setState({
-							type: 'alert_tel'
-						});
-					} else if (res.authSts === '00') {
-						// sa.login(res.userId);
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-						store.setToken(res.loginToken);
-					} else {
-						// 暂无抽奖资格
-						Toast.info('暂无活动资格');
-					}
-				},
-				(err) => {
-					Toast.info(err.msgInfo);
-				}
-			);
 	};
 
 	// 获取我的奖品
@@ -397,16 +321,30 @@ export default class dazhuanpan_page extends PureComponent {
 		this.setState({
 			type: ''
 		});
-		this.props.history.replace('/home');
+		this.props.history.replace('/home/home');
 	};
 	// 跳转协议
 	go = (url) => {
 		this.props.history.push(`/protocol/${url}`);
-	};
+    };
+    onRef = (ref) => {
+        this.child = ref
+    }
 	render() {
-		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
+		const {
+			awardList,
+			time,
+			validateMposRelSts,
+			transformType,
+			type,
+			userAwardList,
+			allUsersAward,
+			count,
+			alert_img
+		} = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
+				<SmsAlert onRef={this.onRef} validateMposRelSts={validateMposRelSts} />
 				{this.state.codeInfo ? (
 					<div className={styles.active_img_box}>
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}
