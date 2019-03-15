@@ -26,10 +26,10 @@ export default [
 		component: () => import('pages/activity/coupon_page')
     },
     {
-		path: '/activity/dazhuanpan_316_page',
+		path: '/activity/dazhuanpan_319_page',
 		title: '幸运大转盘',
 		arrowHide: 'empty',
-		component: () => import('pages/activity/dazhuanpan_316_page')
+		component: () => import('pages/activity/dazhuanpan_319_page')
     },
     
 ];
