@@ -27,6 +27,7 @@ export default class SmsAlert extends Component {
 			smsText: '获取验证码',
 			timeflag: true,
 			modalShow: false,
+			disabled: false,
 			mblNoHid: '',
 			smsJrnNo: '' // 短信流水号
 		};
@@ -136,7 +137,10 @@ export default class SmsAlert extends Component {
 		});
 	};
 	// 实名
-	validateMposRelSts = () => {
+	validateMposRelSts = (type) => {
+		this.setState({
+			disabled: type
+		});
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		if (query.appId && query.token) {
 			this.props.$fetch
@@ -279,7 +283,7 @@ export default class SmsAlert extends Component {
 						<InputItem
 							maxLength={11}
 							type="text"
-							disabled
+							disabled={this.state.disabled}
 							pattern="[0-9]*"
 							{...getFieldProps('phoneValue', {
 								rules: [ { required: true, message: '请输入正确手机号' } ]

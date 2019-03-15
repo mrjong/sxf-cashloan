@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Modal, Button, Toast, Flex, List, Icon } from 'antd-mobile';
-import LoginComponent from '../LoginComponent';
 import style from './index.scss';
 import award_list from '../../img/award_list.png';
 import thanks from '../../img/thanks.png';
@@ -53,10 +52,6 @@ export default class LoginAlert extends Component {
 		let loginModal = [ 'login_modal' ];
 		let titText = '';
 		switch (alertType) {
-			case 'alert_tel': // 登录
-				loginModal = [ 'login_tel' ];
-				componentsDisplay = <LoginComponent smsTokenId={this.props.smsTokenId} refreshPageFn={refreshPageFn} mblNoHid={this.props.mblNoHid} closeCb={this.closeModal} />;
-				break;
 			case 'login_tip': //
 				loginModal = [ 'login_modal', 'big_modal' ];
 				titleBoxArr = [ 'titleBox', 'noTitleBox' ];

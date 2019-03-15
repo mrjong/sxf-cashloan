@@ -52,8 +52,6 @@ export default class dazhuanpan_page extends PureComponent {
 			showLoginTip: false,
 			smsTokenId: '',
 			mblNoHid: '',
-			// 组件参数
-			validateMposRelSts: false
 		};
 	}
 	componentWillMount() {
@@ -177,7 +175,7 @@ export default class dazhuanpan_page extends PureComponent {
 		} else {
 			if (query.entry && query.entry.indexOf('ismpos') > -1) {
 				// 去实名
-                this.child.validateMposRelSts()
+                this.child.validateMposRelSts(true)
 			} else {
 				// 新代偿
 				Toast.info('请先登录', 2, () => {
@@ -334,7 +332,6 @@ export default class dazhuanpan_page extends PureComponent {
 		const {
 			awardList,
 			time,
-			validateMposRelSts,
 			transformType,
 			type,
 			userAwardList,
@@ -344,7 +341,7 @@ export default class dazhuanpan_page extends PureComponent {
 		} = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
-				<SmsAlert onRef={this.onRef} validateMposRelSts={validateMposRelSts} />
+				<SmsAlert onRef={this.onRef} />
 				{this.state.codeInfo ? (
 					<div className={styles.active_img_box}>
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}
