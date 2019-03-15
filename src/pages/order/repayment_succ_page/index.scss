@@ -45,15 +45,15 @@
       .am-modal-content{
         padding-top: 0;
         background-color: transparent;
+        height: 850px;
         .am-modal-body{
           padding: 0;
-          padding-bottom: 50px;
         }
       }
     }
   }
   .modal_tip_content {
-    @include bg-image('../../../assets/images/order/modal_bg_new');
+    background-image: url('../../../assets/images/order/modal_bg_new1.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 750px;
@@ -62,16 +62,16 @@
       position: relative;
       top: 580px;
       margin: 0 auto;
-      width: 410px;
-      height: 88px;
-      @include bg-image('../../../assets/images/order/modal_btn');
+      width: 375px;
+      height: 96px;
+      background-image: url('../../../assets/images/order/modal_btn1.png');
       background-size: 100% 100%;
     }
   }
   .close_btn {
     position: absolute;
     left: 50%;
-    top: 730px;
+    top: 780px;
     background-image: url('../../../assets/images/order/close_ico@2x.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;

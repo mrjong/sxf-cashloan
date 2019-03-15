@@ -92,9 +92,10 @@ const mpos_service_authorization = {
 
 const activity = {
 	newUserEntry: `${prefix}_NEW_USER_ACTIVITY_ENTRY`, // 拉新活动运营入口来源埋点
-    couponEntry: `${prefix}_COUPON_ACTIVITY_ENTRY`, // 领取优惠券活动运营
-    dazhuanpan_316_entry: `${prefix}_DAZHUANPAN_316_ACTIVITY_ENTRY`, // 316大转盘入口区分
-    dazhuanpan_316_draw_result: `${prefix}_DAZHUANPAN_316_DRAW_RESULT`, // 316大转盘中奖情况
+	couponEntry: `${prefix}_COUPON_ACTIVITY_ENTRY`, // 领取优惠券活动运营
+	dazhuanpan_316_entry: `${prefix}_DAZHUANPAN_316_ACTIVITY_ENTRY`, // 316大转盘入口区分
+	dazhuanpan_316_draw_result: `${prefix}_DAZHUANPAN_316_DRAW_RESULT`, // 316大转盘中奖情况
+	jupeiEntry: `${prefix}_JUPEI_ACTIVITY_ENTRY`	//拒就赔活动
 };
 
 const moxie_bank_list = {
