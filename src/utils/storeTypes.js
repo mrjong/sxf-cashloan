@@ -53,5 +53,6 @@ export const storeTypes = {
 	NewUserActivityFlag: 'NewUserActivityFlag', //拉新运营活动标志
 	NewUserActivityModal: 'NewUserActivityModal', // 是否弹出拉新活动弹窗标识
 	NotShowTip: 'NotShowTip', // 50000 步骤 提示不显示
-	CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
+    CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
+    MposToken:'MposToken' // mpos token 关闭无效问题
 };

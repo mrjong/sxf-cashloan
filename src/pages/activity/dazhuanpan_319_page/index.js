@@ -3,12 +3,11 @@ import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import AwardShow from './components/AwardShowMock';
-import { getDeviceType, setTitle } from 'utils';
 import LoginAlert from './components/LoginAlert';
 import SmsAlert from '../components/SmsAlert';
 
 import { setBackGround } from 'utils/background';
-import { Toast, Modal, Icon } from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import bg from './img/bg.jpg';
 import zp_bg from './img/zp_bg.png';
 import over from './img/over.png';
@@ -18,18 +17,15 @@ import config from './config.js';
 import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
-
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
 	awardRecords: '/activeConfig/records', // 用户中奖记录展示
 	recordForUser: '/activeConfig/recordForUser', // 用户中奖记录展示
 	userCount: '/activeConfig/count', // 用户抽奖次数查询
 	userDraw: '/activeConfig/draw', // 用户抽奖
-	validateMposRelSts: '/authorize/validateMposRelSts',
-	chkAuth: '/authorize/chkAuth',
-	doAuth: '/authorize/doAuth'
 };
-let token = '';
 @fetch.inject()
 @setBackGround('#260451')
 export default class dazhuanpan_page extends PureComponent {
@@ -51,11 +47,18 @@ export default class dazhuanpan_page extends PureComponent {
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
 			smsTokenId: '',
-			mblNoHid: '',
+			mblNoHid: ''
 		};
 	}
 	componentWillMount() {
 		this.init();
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.entry) {
+			// 根据不同入口来源埋点
+			buriedPointEvent(activity.dazhuanpan_316_entry, {
+				entry: queryData.entry
+			});
+		}
 	}
 	init = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -147,6 +150,9 @@ export default class dazhuanpan_page extends PureComponent {
 				if (res.data.data.count && Number(res.data.data.count) > 0) {
 					this.getDraw(res.data.data.count);
 				} else {
+                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '已中奖',
+					});
 					store.setRewardCount(0);
 					this.setState({
 						count: '0',
@@ -169,13 +175,14 @@ export default class dazhuanpan_page extends PureComponent {
 	isAuthFunc = (callBack) => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		let token = Cookie.get('fin-v-card-token');
-		if (token) {
+		if (token && store.getMposToken()) {
 			callBack();
 			// 根据type 随便去干
 		} else {
 			if (query.entry && query.entry.indexOf('ismpos') > -1) {
 				// 去实名
-                this.child.validateMposRelSts(true)
+				Cookie.remove('fin-v-card-token');
+				this.child.validateMposRelSts(true);
 			} else {
 				// 新代偿
 				Toast.info('请先登录', 2, () => {
@@ -277,12 +284,19 @@ export default class dazhuanpan_page extends PureComponent {
 			setTimeout(() => {
 				// 00 优惠券  01 积分  02 红包 03 实物   04 谢谢惠顾
 				// console.log(this.state.context[index]);
+				// 根据不同入口来源埋点
 				if (obj.type === '04') {
+					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '未中奖',
+					});
 					this.setState({
 						type: 'no_award',
 						alert_img: ''
 					});
 				} else {
+                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						draw_result: '中奖',
+					});
 					this.setState({
 						type: 'alert_congratulation',
 						alert_img: `data:image/png;base64,${obj.imgUrl}`
@@ -324,21 +338,12 @@ export default class dazhuanpan_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		this.props.history.push(`/protocol/${url}`);
-    };
-    onRef = (ref) => {
-        this.child = ref
-    }
+	};
+	onRef = (ref) => {
+		this.child = ref;
+	};
 	render() {
-		const {
-			awardList,
-			time,
-			transformType,
-			type,
-			userAwardList,
-			allUsersAward,
-			count,
-			alert_img
-		} = this.state;
+		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
 				<SmsAlert onRef={this.onRef} />
@@ -378,8 +383,8 @@ export default class dazhuanpan_page extends PureComponent {
 										<div>
 											<h2>活动规则</h2>
 											<ol>
-												<li>1.活动时间：2019年3月16日-3月22日;</li>
-												<li>2.活动对象：注册[还到]没有发生借款行为的新用户</li>
+												<li>1.活动时间：2019年3月16日-3月24日;</li>
+												<li>2.活动对象：活动期间注册[还到]的用户</li>
 												<li>3.活动描述：所有符合条件的用户均有1次抽奖机会，抽中的现金奖品实时下发，您可到随行付还到—我的—我的钱包中查看。</li>
 											</ol>
 										</div>

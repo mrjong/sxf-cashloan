@@ -9,7 +9,8 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
@@ -113,11 +114,15 @@ export default class SmsAlert extends Component {
 							if (res.msgCode === 'PTM0000') {
 								// sa.login(res.userId);
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-								// TODO: 根据设备类型存储token
+                                // TODO: 根据设备类型存储token
+                                store.setMposToken(true)
 								store.setToken(res.loginToken);
 								this.closeCb();
 								// refreshPageFn();
 							} else {
+                                buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+                                    draw_result: '暂无资格',
+                                });
 								Toast.info('暂无活动资格');
 								this.closeCb();
 							}
@@ -151,7 +156,10 @@ export default class SmsAlert extends Component {
 				.then((res) => {
 					if (res.msgCode === 'URM0000') {
 						this.chkAuth();
-					} else if (res.msgCode === 'PTM9000') {
+					} else if (res.msgCode === 'PTM9000' || res.msgCode === 'URM0001') {
+                        buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+                            draw_result: '暂无资格',
+                        });
 						Toast.info('暂无活动资格');
 					} else {
 						Toast.info(res.msgInfo);
@@ -175,8 +183,6 @@ export default class SmsAlert extends Component {
 				usrCnl: getH5Channel()
 			})
 			.then((res) => {
-				// 移除cookie
-				Cookie.remove('fin-v-card-token');
 				if (res.authFlag === '0') {
 					this.setState({
 						authToken: res.tokenId,
@@ -203,7 +209,10 @@ export default class SmsAlert extends Component {
 			.then(
 				(res) => {
 					if (res.authSts === '01') {
-						console.log('发验证码');
+                        console.log('发验证码');
+                        buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+                            draw_result: '短验',
+                        });
 						this.setState({
 							modalShow: true
 						});
@@ -215,6 +224,9 @@ export default class SmsAlert extends Component {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 					} else {
+                        buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+                            draw_result: '暂无资格',
+                        });
 						// 暂无抽奖资格
 						Toast.info('暂无活动资格');
 					}

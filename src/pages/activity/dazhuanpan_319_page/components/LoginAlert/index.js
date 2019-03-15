@@ -82,9 +82,9 @@ export default class LoginAlert extends Component {
 					<div className={style.img_box}>
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
 						<img src={award_list} className={style.alert_congratulation} />
-						
-							{userAwardList && userAwardList.length !== 0 ? (
-                                <div className={style.alert_list}>
+
+						{userAwardList && userAwardList.length !== 0 ? (
+							<div className={style.alert_list}>
 								<div className={style.alert_list_c}>
 									<List>
 										{userAwardList &&
@@ -110,13 +110,12 @@ export default class LoginAlert extends Component {
 											})}
 									</List>
 								</div>
-                                </div>
-							) : (
-								<div className={style.tip_text}>
-									还没有抽中奖品，<br /> 快去试试手气吧～
-								</div>
-							)}
-						
+							</div>
+						) : (
+							<div className={style.tip_text}>
+								还没有抽中奖品，<br /> 快去试试手气吧～
+							</div>
+						)}
 					</div>
 				);
 				break;
@@ -128,7 +127,7 @@ export default class LoginAlert extends Component {
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
 						<img src={thanks} className={style.alert_congratulation} />
 						<div className={style.tip_text}>
-							没关系，完成首借款，<br /> 可返最高500元现金
+							没关系，完成首借款<br /> 可返最高500元现金
 						</div>
 						<Button className={style.btn_loan} onClick={this.props.goRoute} type="primary">
 							立即参与
@@ -143,7 +142,7 @@ export default class LoginAlert extends Component {
 						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
 						<img src={tip} className={style.alert_congratulation} />
 						<div className={style.tip_text}>
-							您的抽奖次数已用尽，<br /> 不要贪心哦～
+							您的抽奖次数已用尽<br />完成首借立返最高500元现金
 						</div>
 						<Button className={style.btn_loan} onClick={this.props.goRoute} type="primary">
 							立即参与
