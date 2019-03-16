@@ -10,6 +10,7 @@ import ZButton from 'components/ButtonCustom';
 import Panel from 'components/Panel';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
+import linkUrl from 'config/link.config';
 import style from './index.scss';
 let timer;
 let timerOut;
@@ -360,7 +361,7 @@ export default class agency_page extends PureComponent {
     const modalData = store.getRepaymentModalData();
     const { repayInfo } = modalData;
     const { queryData } = this.state;
-    `${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}`
+    `${linkUrl.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}`
     this.props.$fetch
       .post(API.qryContractInfo, {
         contractTyep: item.contractTyep,
