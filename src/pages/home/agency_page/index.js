@@ -40,20 +40,7 @@ export default class agency_page extends PureComponent {
       // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
       // ItrtAmt: 0, // 首/末期利息金额
       deratePrice: '', // 后台计算的优惠劵减免金额
-      contractList: [ // 合同列表
-        {
-          name: '借款合同',
-          id: '11'
-        },
-        {
-          name: '委托扣款协议',
-          id: '12'
-        },
-        {
-          name: '金融服务协议',
-          id: '13'
-        },
-      ]
+      contractList: [] // 合同列表
     };
   }
 
@@ -63,10 +50,10 @@ export default class agency_page extends PureComponent {
     // eslint-disable-next-line
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     const contractList = this.props.history.location.state && this.props.history.location.state.contractList;
-    console.log(contractList,'contractList')
     this.setState(
       {
         queryData,
+        contractList,
       },
       () => {
         this.requestGetRepayInfo();
@@ -373,14 +360,13 @@ export default class agency_page extends PureComponent {
     const modalData = store.getRepaymentModalData();
     const { repayInfo } = modalData;
     this.props.$fetch
-      .get(API.qryContractInfo, {
-        contractTyep: item,
-        ContractNo: item,
+      .post(API.qryContractInfo, {
+        contractTyep: item.contractTyep,
+        contractNo: item.contractNo,
         loanAmount: this.state.queryData.billPrcpAmt,
         productId: this.state.queryData.prdId,
         agreementNo: repayInfo.withDrawAgrNo,
         withholdAgrNo: repayInfo.withHoldAgrNo,
-        loanContractNo: item,
       })
       .then(result => {
         if (result && result.msgCode === 'PTM0000') {
@@ -574,9 +560,10 @@ export default class agency_page extends PureComponent {
                 onClick={() => {
                   this.readContract(item);
                 }}
+                key={index}
                 className={style.protocol_link}
               >
-                《{item.name}》
+                《{item.contractMdlName}》
               </a>
             ))
           }

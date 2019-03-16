@@ -60,6 +60,7 @@ export default class confirm_agency_page extends PureComponent {
       ],
       isShowVIPModal: false,
       isVIP: false, // 是否有会员卡
+      contractData: [], // 合同和产品id数据
     };
   }
 
@@ -156,7 +157,7 @@ export default class confirm_agency_page extends PureComponent {
         this.setState({
           cardBillAmt: values.cardBillAmt,
         }, () => {
-          this.requestBindCardState();
+          this.getFundInfo();
         });
       } else {
         this.props.toast.info(getFirstError(err));
@@ -219,27 +220,27 @@ export default class confirm_agency_page extends PureComponent {
   };
 
   // 如果当前还款卡支持代扣 则跳转确认页面
-  beforeJump(info) {
+  beforeJump() {
     // 确认代换信息返回结果成功埋点
     buriedPointEvent(home.borrowingPreSubmitResult, {
       is_success: true
     })
-    const { lendersDate, repaymentDate, cardBillAmt } = this.state;
-    const search = `?prdId=${repaymentDate.value}&cardId=${indexData && indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
+    const { lendersDate, contractData, cardBillAmt } = this.state;
+    // 由于info中的prdId都一致，所以取第一个中的prdId
+    const search = `?prdId=${contractData[0] && contractData[0].productId}&cardId=${indexData && indexData.autId}&wtdwTyp=${lendersDate.value}&billPrcpAmt=${cardBillAmt}`;
     // 跳转确认代还页面之前 将当前弹框数据保存下来
     store.setRepaymentModalData(this.state);
     // 跳转确认代还页面之前 将当前信用卡信息保存下来
     store.setHomeCardIndexData(indexData);
     store.setSaveAmt(true);
     this.props.history.push({ pathname: '/home/agency', search, state: {
-      // contractList: info.contractList
+      contractList: contractData
     } });
   }
 
   // 获取合同列表和产品id
   getFundInfo = () => {
     const { lendersDate, repaymentDate, cardBillAmt, repayInfo } = this.state;
-    console.log(repaymentDate)
     this.props.$fetch.post(`${API.queryFundInfo}`, {
       loanAmount: cardBillAmt,
       periodCount: repaymentDate.periodCount,
@@ -248,7 +249,11 @@ export default class confirm_agency_page extends PureComponent {
       wtdwTyp: lendersDate.value,
     }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        this.beforeJump(result.data);
+        this.setState({
+          contractData: result.data
+        }, ()=>{
+          this.requestBindCardState();
+        })
       } else {
         this.props.toast.info(result.msgInfo);
       }
@@ -320,14 +325,14 @@ export default class confirm_agency_page extends PureComponent {
 
   // 校验借款产品是否需要会员卡
   checkMemSts = () => {
-    const { repaymentDate } = this.state;
-    this.props.$fetch.get(`${API.checkApplyProdMemSts}/${repaymentDate.value}`).then(result => {
+    const { contractData } = this.state;
+    this.props.$fetch.get(`${API.checkApplyProdMemSts}/${contractData[0] && contractData[0].productId}`).then(result => {
       if (result && result.msgCode === "PTM3014") {
         this.setState({
           isShowVIPModal: true,
         })
       } else if (result && result.msgCode === "PTM0000") {
-        this.getFundInfo();
+        this.beforeJump()
       } else {
         // 确认代换信息返回结果失败埋点
         buriedPointEvent(home.borrowingPreSubmitResult, {
