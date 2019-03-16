@@ -359,6 +359,8 @@ export default class agency_page extends PureComponent {
   readContract = item => {
     const modalData = store.getRepaymentModalData();
     const { repayInfo } = modalData;
+    const { queryData } = this.state;
+    `${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}`
     this.props.$fetch
       .post(API.qryContractInfo, {
         contractTyep: item.contractTyep,
