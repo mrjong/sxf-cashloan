@@ -41,7 +41,32 @@ export default class order_detail_page extends PureComponent {
       isShowSmsModal: false, //是否显示短信验证码弹窗
       smsCode: '',
       protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
-      toggleBtn: false // 是否切换短信验证码弹窗底部按钮
+      toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
+      payDetailInfo: { // 还款详情数据
+        sumTotal: 1500,
+        detailArr: [
+          {
+            name: '本金',
+            fee: 300
+          },
+          {
+            name: '利息',
+            fee: 300
+          },
+          {
+            name: '服务费',
+            fee: 300
+          },
+          {
+            name: '罚息',
+            fee: 300
+          },
+          {
+            name: '逾期管理费',
+            fee: 300
+          },
+        ]
+      }, 
     }
   }
   componentWillMount() {
@@ -559,7 +584,7 @@ export default class order_detail_page extends PureComponent {
     });
   }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, payDetailInfo } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -646,13 +671,16 @@ export default class order_detail_page extends PureComponent {
         }
         <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
-            <div className={styles.modal_title}>付款详情
+            <div className={styles.modal_title}>还款详情
               <i onClick={() => { this.setState({ showModal: false }) }}></i>
             </div>
             <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次应还本金</span>
+              <span className={styles.modal_label}>本次还款金额</span>
               <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
             </div>
+            {/* {
+              payDetailInfo.
+            } */}
             <div className={styles.modal_flex}>
               <span className={styles.modal_label}>本次应还利息</span>
               <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
