@@ -678,29 +678,20 @@ export default class order_detail_page extends PureComponent {
               <span className={styles.modal_label}>本次还款金额</span>
               <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
             </div>
-            {/* {
-              payDetailInfo.
-            } */}
-            <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次应还利息</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
-            </div>
-            <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次应还补偿金</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
-            </div>
-            <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次应还罚息</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
-            </div>
-            <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次应还逾期管理费</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
-            </div>
-            <div className={styles.modal_flex}>
-              <span className={styles.modal_label}>本次应还总金额</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
-            </div>
+            {
+              <div>
+                payDetailInfo.detailArr.map(((item, index) => (
+                  <div className={styles.modal_flex} key={index}>
+                    <span className={styles.modal_label}>{item.name}</span>
+                    <span className={styles.modal_value}>{item.fee}元</span>
+                  </div>
+                ))
+                <div className={styles.modal_flex}>
+                  <span className={styles.modal_label}>本次应还总金额</span>
+                  <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+                </div>
+              </div>
+            }
             <div className={styles.modal_flex}>
               <span className={styles.modal_label}>还款银行卡</span>
               <span onClick={this.selectBank} className={`${styles.modal_value}`}>
