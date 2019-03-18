@@ -135,6 +135,7 @@ module.exports = function (options) {
         routers: path.resolve(__dirname, '../src/routers'),
         assets: path.resolve(__dirname, '../src/assets'),
         example: path.resolve(__dirname, '../src/example'),
+        config: path.resolve(__dirname, '../src/config'),
       },
     },
   };
