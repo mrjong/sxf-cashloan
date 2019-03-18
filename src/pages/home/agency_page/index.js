@@ -377,7 +377,7 @@ export default class agency_page extends PureComponent {
           this.props.history.push({
             pathname: '/protocol/pdf_page',
             state: {
-              url: result.data.url,
+              url: result.data.contractByte,
               name: item.name,
             }
           })
