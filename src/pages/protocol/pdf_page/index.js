@@ -30,7 +30,7 @@ export default class pdf_page extends PureComponent {
         return (
             <IframeProtocol
                 name='pdf_page'
-                postData={`${this.state.contractUrl}&.pdf`}
+                postData={this.state.contractUrl}
             />
         )
     }
