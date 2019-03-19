@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { getDeviceType, isWXOpen } from 'utils';
 
 export default class pdf_page extends PureComponent {
     constructor(props) {
@@ -8,12 +9,16 @@ export default class pdf_page extends PureComponent {
         };
     }
     componentWillMount(){
-        const params = this.props.history.location.state
+        const params = this.props.history.location.state;
+        const osType = getDeviceType();
         if (params) {
             // console.log(params)
             this.props.setTitle(params.name);
-            this.setState({ contractUrl: params.url});
-            console.log(this.state.contractUrl)
+            if (osType === 'IOS' && isWXOpen()) {
+                window.location.replace(params.url)
+            } else {
+                this.setState({ contractUrl: params.url});
+            }
 
             // this.props.setTitle(params.name);
             // var rawLength = params.url.length;  
