@@ -55,7 +55,8 @@ let getProdPlugins = function () {
 			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
-			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
 		])
 	),
 		plugins.push(
@@ -97,7 +98,8 @@ let getTestPlugins = function () {
 			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
-			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
 		])
 	),
 		plugins.push(
@@ -121,6 +123,15 @@ let getTestPlugins = function () {
 
 //开发插件
 let getDevPlugins = function () {
+	plugins.push(
+		new CopyWebpackPlugin([
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
+            { from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
+		])
+	),
 	plugins.push(
 		new webpack.DefinePlugin({
 			'process.env': {
