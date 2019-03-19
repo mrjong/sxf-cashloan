@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import IframeProtocol from 'components/IframeProtocol'
 
 export default class pdf_page extends PureComponent {
     constructor(props) {
@@ -28,10 +27,13 @@ export default class pdf_page extends PureComponent {
     }
     render() {
         return (
-            <IframeProtocol
-                name='pdf_page'
-                postData={this.state.contractUrl}
-            />
+            <iframe
+                frameBorder="0"
+                src={`/static/pdf/web/viewer.html?file=${encodeURIComponent(this.state.contractUrl)}`}
+                width="100%"
+                height="100%"
+                style={{display: 'block'}}
+            ></iframe>
         )
     }
 }
