@@ -12,6 +12,7 @@ import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
 import linkConf from 'config/link.conf';
 import style from './index.scss';
+import Cookie from 'js-cookie';
 let timer;
 let timerOut;
 const API = {
@@ -364,7 +365,7 @@ export default class agency_page extends PureComponent {
     this.props.history.push({
       pathname: '/protocol/pdf_page',
       state: {
-        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}`,
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token')}`,
         name: item.contractMdlName,
       }
     })
