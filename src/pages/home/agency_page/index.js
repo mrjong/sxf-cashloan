@@ -361,30 +361,43 @@ export default class agency_page extends PureComponent {
     const modalData = store.getRepaymentModalData();
     const { repayInfo } = modalData;
     const { queryData } = this.state;
-    console.log(`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}`)
-    
-    this.props.$fetch
-      .post(API.qryContractInfo, {
-        contractTyep: item.contractTyep,
-        contractNo: item.contractNo,
-        loanAmount: this.state.queryData.billPrcpAmt,
-        productId: this.state.queryData.prdId,
-        agreementNo: repayInfo.withDrawAgrNo,
-        withholdAgrNo: repayInfo.withHoldAgrNo,
-      })
-      .then(result => {
-        if (result && result.msgCode === 'PTM0000') {
-          this.props.history.push({
-            pathname: '/protocol/pdf_page',
-            state: {
-              url: result.data.contractByte,
-              name: item.name,
-            }
-          })
-        } else {
-          this.props.toast.info(result.msgInfo);
-        }
-      });
+    this.props.history.push({
+      pathname: '/protocol/pdf_page',
+      state: {
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}`,
+        name: item.contractMdlName,
+      }
+    })
+   
+    // this.props.$fetch
+    //   .post(API.qryContractInfo, {
+    //     contractTyep: item.contractTyep,
+    //     contractNo: item.contractNo,
+    //     loanAmount: this.state.queryData.billPrcpAmt,
+    //     productId: this.state.queryData.prdId,
+    //     agreementNo: repayInfo.withDrawAgrNo,
+    //     withholdAgrNo: repayInfo.withHoldAgrNo,
+    //   })
+    //   .then(result => {
+    //     this.props.history.push({
+    //       pathname: '/protocol/pdf_page',
+    //       state: {
+    //         url: result,
+    //         name: item.contractMdlName,
+    //       }
+    //     })
+    //     // if (result && result.msgCode === 'PTM0000') {
+    //     //   this.props.history.push({
+    //     //     pathname: '/protocol/pdf_page',
+    //     //     state: {
+    //     //       url: result.data.contractByte,
+    //     //       name: item.name,
+    //     //     }
+    //     //   })
+    //     // } else {
+    //     //   this.props.toast.info(result.msgInfo);
+    //     // }
+    //   });
     
     // switch (type) {
     //   case 'loan_contract_page':
