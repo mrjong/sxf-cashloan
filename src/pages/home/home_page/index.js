@@ -18,6 +18,7 @@ import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
 import style from './index.scss';
+import Circle from './components/Circle';
 import mockData from './mockData';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -52,8 +53,8 @@ export default class home_page extends PureComponent {
 			showToast: false,
 			isShowActivityModal: false, // 是否显示活动弹窗
 			newUserActivityModal: false,
-            isNewModal: false,
-            handleMoxie: false // 触发跳转魔蝎方法
+			isNewModal: false,
+			handleMoxie: false // 触发跳转魔蝎方法
 		};
 	}
 
@@ -514,7 +515,7 @@ export default class home_page extends PureComponent {
 			case 'LN0010': // 账单爬取失败/老用户
 				componentsDisplay = (
 					<BankContent
-                        handleMoxie = {this.state.handleMoxie}
+						handleMoxie={this.state.handleMoxie}
 						showDefaultTip={this.state.showDefaultTip}
 						fetch={this.props.$fetch}
 						contentData={usrIndexInfo}
@@ -571,6 +572,7 @@ export default class home_page extends PureComponent {
 		}
 		return (
 			<div className={style.home_page}>
+				{/* <Circle /> */}
 				{isWXOpen() && !tokenFromStorage && !token ? (
 					<Carousels data={bannerList} entryFrom="banner" />
 				) : usrIndexInfo ? bannerList && bannerList.length > 0 ? (
@@ -578,10 +580,10 @@ export default class home_page extends PureComponent {
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-						<img className={style.default_banner} src={defaultBanner} alt="banner" />
-					) : (
-							<img className={style.default_banner} src={defaultBanner} alt="banner" />
-						)}
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				) : (
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				)}
 				<div className={style.content_wrap}>{componentsDisplay}</div>
 				<div className={style.tip_bottom}>怕逾期，用还到</div>
 				{/* {首页活动提示弹窗（对内有）} */}

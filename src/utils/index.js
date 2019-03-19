@@ -189,7 +189,7 @@ export const logoutAppHandler = (that) => {
 };
 
 // 定义需要拦截的路由
-export const interceptRouteArr = [
+ const interceptRouteArr = [
 	'/login',
 	'/home/home',
 	'/order/order_page',
