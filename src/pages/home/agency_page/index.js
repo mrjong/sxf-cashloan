@@ -362,57 +362,14 @@ export default class agency_page extends PureComponent {
     const modalData = store.getRepaymentModalData();
     const { repayInfo } = modalData;
     const { queryData } = this.state;
+    console.log(`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`)
     this.props.history.push({
       pathname: '/protocol/pdf_page',
       state: {
-        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token')}`,
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
         name: item.contractMdlName,
       }
     })
-   
-    // this.props.$fetch
-    //   .post(API.qryContractInfo, {
-    //     contractTyep: item.contractTyep,
-    //     contractNo: item.contractNo,
-    //     loanAmount: this.state.queryData.billPrcpAmt,
-    //     productId: this.state.queryData.prdId,
-    //     agreementNo: repayInfo.withDrawAgrNo,
-    //     withholdAgrNo: repayInfo.withHoldAgrNo,
-    //   })
-    //   .then(result => {
-    //     this.props.history.push({
-    //       pathname: '/protocol/pdf_page',
-    //       state: {
-    //         url: result,
-    //         name: item.contractMdlName,
-    //       }
-    //     })
-    //     // if (result && result.msgCode === 'PTM0000') {
-    //     //   this.props.history.push({
-    //     //     pathname: '/protocol/pdf_page',
-    //     //     state: {
-    //     //       url: result.data.contractByte,
-    //     //       name: item.name,
-    //     //     }
-    //     //   })
-    //     // } else {
-    //     //   this.props.toast.info(result.msgInfo);
-    //     // }
-    //   });
-    
-    // switch (type) {
-    //   case 'loan_contract_page':
-    //     this.requestProtocolData();
-    //     break;
-    //   case 'delegation_withhold_page':
-    //     this.requestFinacialService('withhold');
-    //     break;
-    //   case 'financial_service_page':
-    //     this.requestFinacialService('financial');
-    //     break;
-    //   default:
-    //     break;
-    // }
   };
 
   // 获取借款合同数据
@@ -573,7 +530,7 @@ export default class agency_page extends PureComponent {
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
           {
-            contractList.map(( item, index ) => (
+            contractList && contractList.length && contractList.map(( item, index ) => (
               <a
                 onClick={() => {
                   this.readContract(item);
@@ -585,30 +542,6 @@ export default class agency_page extends PureComponent {
               </a>
             ))
           }
-          {/* <a
-            onClick={() => {
-              this.readContract('loan_contract_page');
-            }}
-            className={style.protocol_link}
-          >
-            《借款合同》
-          </a>
-          <a
-            onClick={() => {
-              this.readContract('delegation_withhold_page');
-            }}
-            className={style.protocol_link}
-          >
-            《委托扣款协议》
-          </a>
-          <a
-            onClick={() => {
-              this.readContract('financial_service_page');
-            }}
-            className={style.protocol_link}
-          >
-            《金融服务协议》
-          </a> */}
         </p>
         <Modal
           wrapClassName={style.modalLoading}

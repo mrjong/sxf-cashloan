@@ -13,6 +13,7 @@ export default class pdf_page extends PureComponent {
             // console.log(params)
             this.props.setTitle(params.name);
             this.setState({ contractUrl: params.url});
+            console.log(this.state.contractUrl)
 
             // this.props.setTitle(params.name);
             // var rawLength = params.url.length;  
