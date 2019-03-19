@@ -4,7 +4,7 @@ import { Modal, Progress } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -25,7 +25,6 @@ const API = {
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
-	GETSTSW: '/my/getStsw', // 获取首页进度
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck' // 复借风控校验接口
 };
 
@@ -65,6 +64,7 @@ export default class home_page extends PureComponent {
 		this.setState({
 			newUserActivityModal
 		});
+		getNextStr(this.props.$fetch);
 		// 清除订单缓存
 		store.removeBackData();
 		// 清除四项认证进入绑卡页的标识
@@ -77,7 +77,7 @@ export default class home_page extends PureComponent {
 				showDefaultTip: true
 			});
 		} else {
-			this.requestGetUsrInfo();
+			// this.requestGetUsrInfo();
 		}
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
@@ -107,16 +107,7 @@ export default class home_page extends PureComponent {
 
 	// 首页进度
 	getPercent = () => {
-		this.props.$fetch.post(API.GETSTSW).then(
-			(result) => {
-				if (result && result.data !== null) {
-					this.calculatePercent(result.data);
-				}
-			},
-			(err) => {
-				err.msgInfo && this.props.toast.info(err.msgInfo);
-			}
-		);
+		this.calculatePercent(getNextStr(this.props.$fetch).data);
 	};
 
 	// 进度计算
@@ -502,6 +493,43 @@ export default class home_page extends PureComponent {
 		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus } = this.state;
 		const { history } = this.props;
 		let componentsDisplay = null;
+		// 未登录也能进入到首页的时候看到的样子
+		if (!token) {
+			componentsDisplay = (
+				<BankContent
+					showDefaultTip={this.state.showDefaultTip}
+					fetch={this.props.$fetch}
+					contentData={usrIndexInfo}
+					history={history}
+					haselescard={this.state.haselescard}
+					progressNum={percentSatus}
+					toast={this.props.toast}
+				>
+					<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
+						查看我的账单，帮我还
+					</SXFButton>
+					<div className={style.subDesc}>安全绑卡，放心还卡</div>
+				</BankContent>
+			);
+		}
+		let firstUserDisplay = null;
+		firstUserDisplay = (
+			<BankContent
+				showDefaultTip={this.state.showDefaultTip}
+				fetch={this.props.$fetch}
+				contentData={usrIndexInfo}
+				history={history}
+				haselescard={this.state.haselescard}
+				progressNum={percentSatus}
+				toast={this.props.toast}
+			>
+				<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
+					查看我的账单，帮我还
+				</SXFButton>
+				<div className={style.subDesc}>安全绑卡，放心还卡</div>
+			</BankContent>
+		);
+
 		switch (usrIndexInfo.indexSts) {
 			case 'LN0001': // 新用户，信用卡未授权
 			case 'LN0002': // 账单爬取中
@@ -551,24 +579,6 @@ export default class home_page extends PureComponent {
 				);
 				break;
 			default:
-				//   if (isWXOpen()) {
-				componentsDisplay = (
-					<BankContent
-						showDefaultTip={this.state.showDefaultTip}
-						fetch={this.props.$fetch}
-						contentData={usrIndexInfo}
-						history={history}
-						haselescard={this.state.haselescard}
-						progressNum={percentSatus}
-						toast={this.props.toast}
-					>
-						<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
-							查看我的账单，帮我还
-						</SXFButton>
-						<div className={style.subDesc}>安全绑卡，放心还卡</div>
-					</BankContent>
-				);
-			// }
 		}
 		return (
 			<div className={style.home_page}>
@@ -584,8 +594,16 @@ export default class home_page extends PureComponent {
 				) : (
 					<img className={style.default_banner} src={defaultBanner} alt="banner" />
 				)}
-				<div className={style.content_wrap}>{componentsDisplay}</div>
-				<div className={style.tip_bottom}>怕逾期，用还到</div>
+				{/* 未提交授信用户 */}
+				{firstUserDisplay ? <div>{firstUserDisplay}</div> : null}
+				{/* 历史授信用户 */}
+				{componentsDisplay ? (
+					<div>
+						<div className={style.content_wrap}>{componentsDisplay}</div>
+						<div className={style.tip_bottom}>怕逾期，用还到</div>
+					</div>
+				) : null}
+
 				{/* {首页活动提示弹窗（对内有）} */}
 				{this.state.isShowActivityModal && (
 					<ActivityModal

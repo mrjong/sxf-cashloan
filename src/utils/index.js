@@ -189,7 +189,7 @@ export const logoutAppHandler = (that) => {
 };
 
 // 定义需要拦截的路由
- const interceptRouteArr = [
+const interceptRouteArr = [
 	'/login',
 	'/home/home',
 	'/order/order_page',
@@ -230,9 +230,27 @@ export const closePage = () => {
 
 // 退出的api
 const API = {
-	LOGOUT: '/signup/logout' // 用户退出登陆
+	LOGOUT: '/signup/logout', // 用户退出登陆
+	GETSTSW: '/my/getStsw' // 获取首页进度
 };
-
+export const getNextStr = async ($fetch) => {
+	let codes = '';
+	let res = await $fetch.post(API.GETSTSW);
+	if (res && res.msgCode === 'PTM0000') {
+		res.data.forEach((item) => {
+			if (item.code === 'card' || item.code === 'basicInf' || item.code === 'operator' || item.code === 'idCheck') {
+				codes += item.stsw.dicDetailCd;
+			}
+		});
+	} else {
+		Toast.info(res.msgInfo);
+    }
+    console.log(codes)
+	return {
+		data: res.data,
+		codes
+	};
+};
 // 退出功能
 export const logoutApp = (that) => {
 	fetch.get(API.LOGOUT).then(
