@@ -48,18 +48,19 @@
   }
 }
 .modal_box{
-  padding: 30px 30px 60px;
+  padding: 25px 30px 56px;
 }
 .modal_flex{
   display: flex;
-  margin-top: 35px;
   position: relative;
+  border-bottom: 1PX solid #E0E0E0;
+  padding: 25px 0;
   span{
     flex: 1;
   }
   i{
-    @include setArrow(right,15px,#A9AEB6,1PX);
-    top: 20px;
+    @include setArrow(right,15px,#A9AEB6,2PX);
+    top: 16px;
   }
 }
 .modal_flex2{
@@ -70,14 +71,39 @@
     flex: 1;
   }
 }
+i.arrow_down{
+  @include setArrow(down,15px,#A9AEB6,2PX);
+  top: 16px;
+}
+i.arrow_up{
+  @include setArrow(top,15px,#A9AEB6,2PX);
+  top: 20px;
+}
+.feeDetail{
+  padding-top: 14px;
+  .modal_flex{
+    margin-top: 10px;
+    border-bottom: none;
+    padding: 0;
+  }
+  .modal_label,.modal_value{
+    font-size: 28px;
+    color: rgba(159, 159, 159, 1);
+  }
+  .sum_total{
+    border-top: 1PX solid #E0E0E0;
+    padding: 24px 0 10px 0;
+    margin-top: 24px;
+  }
+}
 
 .modal_title{
   font-size: 36px;
-  color: #282828;
+  color: #333;
   font-weight: 700;
   text-align: center;
   position: relative;
-  margin-bottom: 55px;
+  margin-bottom: 25px;
   i{
     width: 34px;
     height: 34px;
@@ -91,13 +117,13 @@
   }
 }
 .modal_label{
-  font-size: 34px;
+  font-size: 36px;
   color: #333;
   text-align: left;
 }
 .modal_value{
   text-align: right;
-  font-size: 34px;
+  font-size: 36px;
   color: #333;
   font-weight: 500;
 }

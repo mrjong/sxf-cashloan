@@ -67,6 +67,7 @@ export default class order_detail_page extends PureComponent {
           },
         ]
       }, 
+      isShowDetail: false, // 是否展示弹框中的明细详情
     }
   }
   componentWillMount() {
@@ -583,8 +584,14 @@ export default class order_detail_page extends PureComponent {
       isPayAll: true,
     });
   }
+  // 展示详情
+  showDetail = () => {
+    this.setState({
+      isShowDetail: !this.state.isShowDetail
+    })
+  }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, payDetailInfo } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, payDetailInfo, isShowDetail } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -674,23 +681,29 @@ export default class order_detail_page extends PureComponent {
             <div className={styles.modal_title}>还款详情
               <i onClick={() => { this.setState({ showModal: false }) }}></i>
             </div>
-            <div className={styles.modal_flex}>
+            <div className={styles.modal_flex} onClick={this.showDetail}>
               <span className={styles.modal_label}>本次还款金额</span>
               <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+              &nbsp;<i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
             </div>
+            {/* 账单明细展示 */}
             {
-              <div>
-                payDetailInfo.detailArr.map(((item, index) => (
-                  <div className={styles.modal_flex} key={index}>
-                    <span className={styles.modal_label}>{item.name}</span>
-                    <span className={styles.modal_value}>{item.fee}元</span>
-                  </div>
-                ))
-                <div className={styles.modal_flex}>
+              isShowDetail ?
+              <div className={styles.feeDetail}>
+                {
+                  payDetailInfo.detailArr.map((item, index) => (
+                    <div className={styles.modal_flex} key={index}>
+                      <span className={styles.modal_label}>{item.name}</span>
+                      <span className={styles.modal_value}>{item.fee}元</span>
+                    </div>
+                  ))
+                }
+                <div className={`${styles.modal_flex} ${styles.sum_total}`}>
                   <span className={styles.modal_label}>本次应还总金额</span>
                   <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
                 </div>
               </div>
+              : null
             }
             <div className={styles.modal_flex}>
               <span className={styles.modal_label}>还款银行卡</span>
