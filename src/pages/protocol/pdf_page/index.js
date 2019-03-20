@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { getDeviceType, isWXOpen } from 'utils';
+import { isMPOS } from 'utils/common';
 
 export default class pdf_page extends PureComponent {
     constructor(props) {
@@ -14,7 +15,8 @@ export default class pdf_page extends PureComponent {
         if (params) {
             // console.log(params)
             this.props.setTitle(params.name);
-            if (osType === 'IOS' && isWXOpen()) {
+            // ios暂定mpos和微信打开是直接打开pdf
+            if (osType === 'IOS' && (isWXOpen() || isMPOS())) {
                 window.location.replace(params.url)
             } else {
                 this.setState({ contractUrl: params.url});
