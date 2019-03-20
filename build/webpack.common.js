@@ -90,7 +90,7 @@ module.exports = function(options) {
 					test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
 					loader: 'url-loader',
 					options: {
-						limit: 8000,
+						limit: 0,
 						name: 'fonts/[name].[hash:7].[ext]'
 					}
 				}

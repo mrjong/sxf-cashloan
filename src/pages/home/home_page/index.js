@@ -110,6 +110,7 @@ export default class home_page extends PureComponent {
 	credit_extension_not = async () => {
 		let data = await getNextStr({ $props: this.props, needReturn: true });
 		this.calculatePercent(data);
+		this.cacheBanner();
 	};
 	// 从 url 中获取参数，如果有 token 就设置下
 	getTokenFromUrl = () => {
@@ -163,7 +164,6 @@ export default class home_page extends PureComponent {
 				showDiv: 'circle',
 				percentData: 40
 			});
-			this.child.startAdd(40);
 		}
 		switch (newCodes2.length) {
 			case 0: // 新用户，信用卡未授权
@@ -177,7 +177,6 @@ export default class home_page extends PureComponent {
 					percentData: 60,
 					showDiv: 'circle'
 				});
-				this.child.startAdd(60);
 				break;
 
 			case 2: // 新用户，信用卡未授权
@@ -186,7 +185,6 @@ export default class home_page extends PureComponent {
 					percentData: 80,
 					showDiv: 'circle'
 				});
-				this.child.startAdd(80);
 				break;
 
 			case 3: // 新用户，信用卡未授权
@@ -194,7 +192,6 @@ export default class home_page extends PureComponent {
 					percentData: 98,
 					showDiv: 'circle'
 				});
-				this.child.startAdd(98);
 				break;
 
 			default:
@@ -417,6 +414,7 @@ export default class home_page extends PureComponent {
 				const inFifteenMinutes = new Date(new Date().getTime() + 1000 * 60 * 2);
 				Cookie.set('bannerAble', true, { expires: inFifteenMinutes });
 				store.setBannerData(bannerData);
+				console.log();
 				this.setState({
 					bannerList: bannerData
 				});
@@ -548,7 +546,15 @@ export default class home_page extends PureComponent {
 	};
 
 	render() {
-		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus, percentData, showDiv } = this.state;
+		const {
+			bannerList,
+			usrIndexInfo,
+			visibleLoading,
+			percent,
+			percentSatus,
+			percentData,
+			showDiv
+		} = this.state;
 		const { history } = this.props;
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
@@ -575,11 +581,7 @@ export default class home_page extends PureComponent {
 			<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
 				{showDiv === 'circle' ? (
 					<div className={style.circle_box}>
-						<Circle
-							onRef={(ref) => {
-								this.child = ref;
-							}}
-						/>
+						<Circle percentSatus={percentSatus} percentData={percentData} />
 					</div>
 				) : null}
 				{showDiv === '50000' ? (
@@ -647,7 +649,7 @@ export default class home_page extends PureComponent {
 					onRef={(ref) => {
 						this.child = ref;
 					}}
-				/> */}
+                /> */}
 				{isWXOpen() && !tokenFromStorage && !token ? (
 					<Carousels data={bannerList} entryFrom="banner" />
 				) : usrIndexInfo ? bannerList && bannerList.length > 0 ? (
