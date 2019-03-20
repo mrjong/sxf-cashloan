@@ -76,7 +76,7 @@ export default class BankContent extends React.Component {
 	requestCredCardCount = () => {
 		// 埋点-首页-点击代还其他信用卡
 		buriedPointEvent(home.repayOtherCredit);
-		this.props.fetch
+		this.props.$fetch
 			.post(API.CRED_CARD_COUNT)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000') {

@@ -40,5 +40,10 @@ export default [
     path: '/home/moxie_bank_list_page',
     title: '添加账单',
     component: () => import('pages/home/moxie_bank_list_page'),
+  },
+  {
+    path: '/home/loan_repay_confirm_page',
+    title: '借钱还信用卡',
+    component: () => import('pages/home/loan_repay_confirm_page'),
   }
 ];

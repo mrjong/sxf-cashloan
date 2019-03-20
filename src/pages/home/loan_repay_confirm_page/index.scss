@@ -1,0 +1,182 @@
+
+.pageWrapper {
+  padding: 20px 30px 0;
+}
+
+.bankCard {
+  width: 690px;
+  min-height: 477px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
+  border-radius: 16px;
+  box-sizing: border-box;
+  padding: 0 30px;
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1PX solid #E5E5E5;
+    height: 110px;
+
+    .name {
+      font-size: 30px;
+      color: #333;
+      vertical-align: middle;
+    }
+
+    .lastNo {
+      font-size: 24px;
+      color: #999;
+      margin-left: 15px;
+      vertical-align: middle;
+    }
+  }
+
+  .billTitle {
+    font-size: 24px;
+    color: #999;
+    margin: 30px 0 20px;
+    line-height: 1;
+  }
+
+  .billMoney {
+    display: inline-block;
+    font-size: 80px;
+    color: #333;
+    font-weight: normal;
+    margin-bottom: 70px;
+    line-height: 1;
+  }
+
+  .billInfo {
+    display: flex;
+    justify-content: space-between;
+    line-height: 1;
+    border-bottom: 1PX solid #E5E5E5;
+    padding-bottom: 30px;
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+
+      .value {
+        font-size: 30px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .name {
+        font-size: 20px;
+        color: #999;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .bottom {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    justify-content: space-between;
+    font-size: 30px;
+    color: #333;
+
+    .rightArrow {
+      width: 40px;
+    }
+  }
+
+  .bankLogo {
+    width: 50px;
+    height: 50px;
+    margin-right: 17px;
+  }
+
+  .updateButton {
+    display: inline-block;
+    width: 128px;
+    height: 50px;
+    line-height: 50px;
+    background: #F66;
+    border-radius: 25px;
+    font-size: 24px;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+  }
+}
+
+.tagList {
+  display: flex;
+  justify-content: space-between;
+  margin: 86px 0 80px;
+  .tagButton {
+    display: inline-block;
+    width: 180px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 25px;
+    font-size: 30px;
+    background: #fff;
+    color: #F66;
+    border: 1px solid #F66;
+    box-sizing: border-box;
+  }
+  .activeTag {
+    color: #fff;
+    background: #F66;
+  }
+}
+
+.label {
+  font-size: 50px;
+}
+
+.confirmApplyBtn {
+  width: 620px;
+  margin-top: 80px;
+}
+
+.progressWrap {
+  width: 200px;
+  overflow: hidden;
+  font-size: 24px;
+  color: #333;
+
+  .percentNum {
+    color: #F66;
+    margin-left: 1px;
+  }
+}
+
+.bottomTip {
+  margin-top: 85px;
+  font-size: 0.3rem;
+  text-align: center;
+  color: #c7c6cc;
+}
+
+.stepIcon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  font-size: 30px;
+  text-align: center;
+}
+
+.stepActive {
+  border: 2px solid #108ee9;
+}
+
+:global {
+  .am-progress-bar {
+    border: 2px solid #F66;
+  }
+}
