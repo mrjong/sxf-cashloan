@@ -4,7 +4,7 @@ import { Modal } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
-import 'utils/noRouterBack'
+// import 'utils/noRouterBack'
 import styles from './index.scss';
 
 export default class repayment_succ_page extends PureComponent {

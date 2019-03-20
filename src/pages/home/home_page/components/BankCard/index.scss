@@ -7,7 +7,7 @@
 	margin: 0 auto;
 	width: 705px;
 	height: 782px;
-	@include bg-image('./img/home_card');
+	@include bg-image('../img/home_card');
 	background-size: 705px 782px;
 	background-repeat: no-repeat;
 	top: -45px;
