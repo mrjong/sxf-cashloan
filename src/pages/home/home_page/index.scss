@@ -45,6 +45,37 @@
 		text-align: center;
 		color: #c7c6cc;
 	}
+	.circle_box {
+		text-align: center;
+		vertical-align: middle;
+		position: absolute;
+		top: 232px;
+		left: 50%;
+		transform: translate(-50%, 0);
+		-webkit-animation-name: fadeOut;
+		-webkit-animation-duration: .1s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-delay: 0s;
+	}
+	.font50000_box {
+		position: absolute;
+		top: 232px;
+		left: 50%;
+		text-align: center;
+		transform: translate(-50%, 0);
+		-webkit-animation-name: fadeOut;
+		-webkit-animation-duration: .1s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-delay: 0s;
+		.font50000 {
+			width: 386px;
+			height: 118px;
+		}
+		.font50000_desc {
+			color: #333;
+			font-size: 24px;
+		}
+	}
 }
 // modal样式覆盖
 :global {

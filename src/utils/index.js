@@ -3,6 +3,8 @@ import { bugLog } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
+import { SXFToast } from 'utils/SXFToast';
+
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 
@@ -231,24 +233,82 @@ export const closePage = () => {
 // 退出的api
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
-	GETSTSW: '/my/getStsw' // 获取首页进度
+	GETSTSW: '/my/getStsw', // 获取首页进度
+	getOperator: '/auth/operatorAuth' // 运营商的跳转URL
 };
-export const getNextStr = async ($fetch) => {
+const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+export const getNextStr = async ({ $props, needReturn = false }) => {
 	let codes = '';
-	let res = await $fetch.post(API.GETSTSW);
+	let codesArray = [];
+	let res = await $props.$fetch.post(API.GETSTSW);
 	if (res && res.msgCode === 'PTM0000') {
 		res.data.forEach((item) => {
-			if (item.code === 'card' || item.code === 'basicInf' || item.code === 'operator' || item.code === 'idCheck') {
+			if (needDisplayOptions.includes(item.code)) {
 				codes += item.stsw.dicDetailCd;
+				codesArray.push(item.stsw.dicDetailCd);
 			}
 		});
+		console.log(codes, '==========');
+		if (!needReturn) {
+			store.setNeedNextUrl(true);
+			// 实名
+			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
+				$props.toast.info('请先实名认证');
+				setTimeout(() => {
+					$props.history.push({
+						pathname: '/home/real_name'
+						// search: urlQuery
+					});
+				}, 3000);
+				return;
+			}
+			// 基本信息
+			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
+				$props.history.replace({
+					pathname: '/home/essential_information'
+					// search: urlQuery
+				});
+				return;
+			}
+
+			// 运营商前一步是成功或者审核中,可直接返回url链接
+			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
+				$props.$fetch
+					.post(`${API.getOperator}`, {
+						clientCode: '04'
+					})
+					.then((result) => {
+						if (result.msgCode === 'PTM0000' && result.data.url) {
+							// store.setCheckCardRouter('');
+							// store.setMoxieBackUrl(`/home/home`);
+							SXFToast.loading('加载中...', 0);
+							window.location.replace(
+								result.data.url +
+									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
+										.location.search}&showTitleBar=NO`
+							);
+							// window.location.href =
+							// 	result.data.url +
+							// 	`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
+							// 		.location.search}&showTitleBar=NO`;
+						}
+					});
+				return;
+			}
+
+			// 信用卡
+			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+				$props.history.replace({ pathname: '/home/moxie_bank_list_page' });
+			}
+		}
 	} else {
 		Toast.info(res.msgInfo);
-    }
-    console.log(codes)
+	}
+	console.log(codes);
 	return {
 		data: res.data,
-		codes
+		codes,
+		codesArray
 	};
 };
 // 退出功能

@@ -56,5 +56,6 @@ export const storeTypes = {
 	MessageTagError: 'MessageTagError', // 错误不显示
 	MessageTagStep: 'MessageTagStep', // 步骤
     CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
-    MposToken:'MposToken' // mpos token 关闭无效问题
+    MposToken:'MposToken', // mpos token 关闭无效问题
+    NeedNextUrl:'NeedNextUrl', // 需要调用获取下一步url方法
 };

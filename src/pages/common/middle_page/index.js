@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
+import { getNextStr } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -35,8 +36,14 @@ export default class middle_page extends Component {
 						});
 						return;
 					}
-					this.buryPointsType(taskType, true);
-					this.goRouter();
+					if (store.getNeedNextUrl()) {
+						getNextStr({
+							$props: this.props
+						});
+					} else {
+						this.buryPointsType(taskType, true);
+						this.goRouter();
+					}
 				})
 				.catch((err) => {
 					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);

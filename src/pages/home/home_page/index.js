@@ -12,11 +12,13 @@ import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
+import Card50000 from './components/Card50000';
 import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
+import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
 import Circle from './components/Circle';
 import mockData from './mockData';
@@ -53,7 +55,9 @@ export default class home_page extends PureComponent {
 			isShowActivityModal: false, // 是否显示活动弹窗
 			newUserActivityModal: false,
 			isNewModal: false,
-			handleMoxie: false // 触发跳转魔蝎方法
+			handleMoxie: false, // 触发跳转魔蝎方法
+			percentData: 0,
+			showDiv: ''
 		};
 	}
 
@@ -64,7 +68,8 @@ export default class home_page extends PureComponent {
 		this.setState({
 			newUserActivityModal
 		});
-		getNextStr(this.props.$fetch);
+		// 去除需要调用获取下一步url方法
+		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
 		// 清除四项认证进入绑卡页的标识
@@ -77,14 +82,13 @@ export default class home_page extends PureComponent {
 				showDefaultTip: true
 			});
 		} else {
-			// this.requestGetUsrInfo();
+			this.credit_extension();
 		}
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
 	}
-
 	componentWillUnmount() {
 		// 离开首页的时候 将 是否打开过底部弹框标志恢复
 		store.removeHadShowModal();
@@ -95,7 +99,18 @@ export default class home_page extends PureComponent {
 			clearTimeout(timerOut);
 		}
 	}
-
+	// 判断是否授信
+	credit_extension = () => {
+		setTimeout(() => {
+			this.credit_extension_not();
+			// this.requestGetUsrInfo();
+		}, 1000);
+	};
+	// 未提交授信
+	credit_extension_not = async () => {
+		let data = await getNextStr({ $props: this.props, needReturn: true });
+		this.calculatePercent(data);
+	};
 	// 从 url 中获取参数，如果有 token 就设置下
 	getTokenFromUrl = () => {
 		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -106,48 +121,87 @@ export default class home_page extends PureComponent {
 	};
 
 	// 首页进度
-	getPercent = () => {
-		this.calculatePercent(getNextStr(this.props.$fetch).data);
+	getPercent = async () => {
+		let data = await getNextStr({ $props: this.props, needReturn: true });
+		this.calculatePercent(data);
 	};
 
 	// 进度计算
-	calculatePercent = (list) => {
+	calculatePercent = (data) => {
 		let codes = [];
-		list.forEach((element) => {
-			if (element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck') {
-				codes.push(element.stsw.dicDetailCd);
-			}
-		});
+		let demo = data.codes;
+		let codesCopy = demo.slice(0, 3);
+		codes = codesCopy.split('');
+		// case '0': // 未认证
 		// case '1': // 认证中
 		// case '2': // 认证成功
 		// case '3': // 认证失败
 		// case '4': // 认证过期
+		let newCodes = codes.filter((ele, index, array) => {
+			return ele === '0';
+		});
 		let newCodes2 = codes.filter((ele, index, array) => {
 			return ele === '1' || ele === '2';
 		});
-		console.log(newCodes2);
+		let newCodes3 = codes.filter((ele, index, array) => {
+			return ele === '0';
+		});
+		console.log(newCodes, newCodes2);
 		// 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
 		// 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
 		// 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
+		if (newCodes.length === 3) {
+			this.setState({
+				percentSatus: '3',
+				showDiv: '50000'
+			});
+			// this.child.startAdd(40);
+			return;
+		}
+		if (newCodes2.length === 0 && newCodes3.length !== 3) {
+			this.setState({
+				showDiv: 'circle',
+				percentData: 40
+			});
+			this.child.startAdd(40);
+		}
 		switch (newCodes2.length) {
-			case 1: // 新用户，信用卡未授权
-				this.setState({
-					percentSatus: '2'
-				});
-				break;
-			case 2: // 新用户，信用卡未授权
-				this.setState({
-					percentSatus: '1'
-				});
-				break;
 			case 0: // 新用户，信用卡未授权
 				this.setState({
 					percentSatus: '3'
 				});
 				break;
+			case 1: // 新用户，信用卡未授权
+				this.setState({
+					percentSatus: '2',
+					percentData: 60,
+					showDiv: 'circle'
+				});
+				this.child.startAdd(60);
+				break;
+
+			case 2: // 新用户，信用卡未授权
+				this.setState({
+					percentSatus: '1',
+					percentData: 80,
+					showDiv: 'circle'
+				});
+				this.child.startAdd(80);
+				break;
+
+			case 3: // 新用户，信用卡未授权
+				this.setState({
+					percentData: 98,
+					showDiv: 'circle'
+				});
+				this.child.startAdd(98);
+				break;
+
 			default:
 				this.setState({
-					percentSatus: ''
+					percentSatus: '',
+					percentData: 0,
+					showDiv: ''
 				});
 		}
 	};
@@ -370,6 +424,10 @@ export default class home_page extends PureComponent {
 		});
 	};
 
+	handleApply = () => {
+		getNextStr({ $props: this.props });
+	};
+
 	// 获取首页信息
 	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
@@ -490,7 +548,7 @@ export default class home_page extends PureComponent {
 	};
 
 	render() {
-		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus } = this.state;
+		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus, percentData, showDiv } = this.state;
 		const { history } = this.props;
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
@@ -514,20 +572,23 @@ export default class home_page extends PureComponent {
 		}
 		let firstUserDisplay = null;
 		firstUserDisplay = (
-			<BankContent
-				showDefaultTip={this.state.showDefaultTip}
-				fetch={this.props.$fetch}
-				contentData={usrIndexInfo}
-				history={history}
-				haselescard={this.state.haselescard}
-				progressNum={percentSatus}
-				toast={this.props.toast}
-			>
-				<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
-					查看我的账单，帮我还
-				</SXFButton>
-				<div className={style.subDesc}>安全绑卡，放心还卡</div>
-			</BankContent>
+			<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
+				{showDiv === 'circle' ? (
+					<div className={style.circle_box}>
+						<Circle
+							onRef={(ref) => {
+								this.child = ref;
+							}}
+						/>
+					</div>
+				) : null}
+				{showDiv === '50000' ? (
+					<div className={style.font50000_box}>
+						<img className={style.font50000} src={font50000} />
+						<div className={style.font50000_desc}>最高金额(元）</div>
+					</div>
+				) : null}
+			</Card50000>
 		);
 
 		switch (usrIndexInfo.indexSts) {
@@ -582,7 +643,11 @@ export default class home_page extends PureComponent {
 		}
 		return (
 			<div className={style.home_page}>
-				{/* <Circle /> */}
+				{/* <Circle
+					onRef={(ref) => {
+						this.child = ref;
+					}}
+				/> */}
 				{isWXOpen() && !tokenFromStorage && !token ? (
 					<Carousels data={bannerList} entryFrom="banner" />
 				) : usrIndexInfo ? bannerList && bannerList.length > 0 ? (

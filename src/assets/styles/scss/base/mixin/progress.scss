@@ -13,7 +13,6 @@ $bdiam: ($size/4)-10;
 :global {
 	.progress_radial {
 		display: inline-block;
-		margin: 15px;
 		position: relative;
 		width: $size;
 		height: $size;
@@ -21,8 +20,7 @@ $bdiam: ($size/4)-10;
 		border: 10px solid $bg; // remove gradient color
 		background-color: $barColor; // default 100%
 		box-shadow: 0 2px 15px rgba(0, 0, 0, .3);
-		&:after,
-		&:before {
+		&:after {
 			content: '';
 			width: $bdiam;
 			height: $bdiam;
