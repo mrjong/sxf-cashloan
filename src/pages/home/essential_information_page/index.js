@@ -12,8 +12,9 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
 import qs from 'qs';
+import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import StepBar from 'components/StepBar'
+import StepBar from 'components/StepBar';
 
 const pageKey = home.basicInfoBury;
 
@@ -37,6 +38,7 @@ let urlQuery = '';
 // let isFetching = false;
 @fetch.inject()
 @createForm()
+@setBackGround('#fff')
 export default class essential_information_page extends PureComponent {
 	state = {
 		loading: false,
@@ -50,11 +52,11 @@ export default class essential_information_page extends PureComponent {
 	componentWillMount() {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
-        }
-        if(store.getMoxieBackUrl()){
-            store.removeMoxieBackUrl()
-            this.props.history.push(`/home/home`)
-        }
+		}
+		if (store.getMoxieBackUrl()) {
+			store.removeMoxieBackUrl();
+			this.props.history.push(`/home/home`);
+		}
 		buryingPoints();
 		urlQuery = this.props.history.location.search;
 		this.initBasicInfo();
@@ -62,9 +64,9 @@ export default class essential_information_page extends PureComponent {
 
 	componentDidMount() {
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function () {
+		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function () {
+				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -73,9 +75,9 @@ export default class essential_information_page extends PureComponent {
 
 	componentWillUnmount() {
 		buryingPoints();
-		window.removeEventListener('resize', function () {
+		window.removeEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function () {
+				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -99,14 +101,14 @@ export default class essential_information_page extends PureComponent {
 					this.setState({
 						relatValue:
 							res.data && res.data.cntRelTyp1
-								? [`${res.data.cntRelTyp1}`]
+								? [ `${res.data.cntRelTyp1}` ]
 								: store.getRelationValue() ? store.getRelationValue() : []
 					});
 				} else {
 					this.props.toast.info(res.msgInfo);
 				}
 			},
-			(error) => { }
+			(error) => {}
 		);
 	};
 
@@ -130,22 +132,22 @@ export default class essential_information_page extends PureComponent {
 		let cityPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${city}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 		this.props.$fetch.get(`${API.getProv}`).then((result) => {
 			if (result && result.data) {
-				const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
+				const provItem = reducedFilter(result.data, [ 'key', 'value' ], (item) => {
 					let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (proPattern.test(item.value) || proPattern2.test(pro)) {
 						return item;
 					}
 				});
 				this.props.$fetch.get(`${API.qryCity}/${provItem[0].key}`).then((result2) => {
-					const cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
+					const cityItem = reducedFilter(result2.data, [ 'key', 'value' ], (item2) => {
 						let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 						if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
 							return item2;
 						}
 					});
 					this.setState({
-						provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + ''],
-						provLabel: provItem && cityItem && [provItem[0].value + '', cityItem[0].value + '']
+						provValue: provItem && cityItem && [ provItem[0].key + '', cityItem[0].key + '' ],
+						provLabel: provItem && cityItem && [ provItem[0].value + '', cityItem[0].value + '' ]
 					});
 					console.log(this.state.provValue, this.state.provLabel);
 				});
@@ -193,8 +195,8 @@ export default class essential_information_page extends PureComponent {
 								if (store.getNeedNextUrl()) {
 									getNextStr({
 										$props: this.props
-                                    });
-                                    store.setMoxieBackUrl('/home/home');
+									});
+									store.setMoxieBackUrl('/home/home');
 								} else {
 									this.props.history.replace({
 										pathname: '/mine/credit_extension_page',
@@ -290,17 +292,21 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const needNextUrl = store.getNeedNextUrl()
+		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.nameDiv}>
-				{
-					needNextUrl && <StepBar current={1} />
-				}
-				<div className={style.infromationTitle}>个人信息</div>
+				{needNextUrl && (
+					<div className={style.step_box}>
+						<StepBar current={1} />
+					</div>
+				)}
+				<div className={style.infromationTitle}>
+					<span>个人信息</span>
+				</div>
 				<div className={style.labelDiv}>
 					{getFieldDecorator('city', {
 						initialValue: this.state.provValue,
-						rules: [{ required: true, message: '请选择城市' }],
+						rules: [ { required: true, message: '请选择城市' } ],
 						onChange: (value, label) => {
 							this.selectSure({
 								value: JSON.stringify(value),
@@ -342,9 +348,9 @@ export default class essential_information_page extends PureComponent {
 					)}
 					<img className={style.informationMore} src={informationMore} />
 				</div>
-				<div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
+				<div className={`${style.inputDiv}`} style={{ marginTop: 0 }}>
 					{getFieldDecorator('address', {
-						rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
+						rules: [ { required: true, message: '请输入常住地址' }, { validator: this.validateAddress } ],
 						onChange: (value) => {
 							// 本地缓存常住地址
 							store.setAddress(value);
@@ -365,11 +371,14 @@ export default class essential_information_page extends PureComponent {
 						</InputItem>
 					)}
 				</div>
-				<div className={style.infromationTitle}>亲属联系人信息</div>
+                <div className={style.mt50}></div>
+				<div className={style.infromationTitle}>
+					<span>亲属联系人信息</span>
+				</div>
 				<div className={style.labelDiv}>
 					{getFieldDecorator('cntRelTyp1', {
 						initialValue: this.state.relatValue,
-						rules: [{ required: true, message: '请选择联系人关系' }],
+						rules: [ { required: true, message: '请选择联系人关系' } ],
 						onChange: (value, label) => {
 							store.setRelationValue(value);
 							this.selectSure({
@@ -404,7 +413,7 @@ export default class essential_information_page extends PureComponent {
 				</div>
 				<div className={style.labelDiv} style={{ marginTop: 0 }}>
 					{getFieldDecorator('linkman', {
-						rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+						rules: [ { required: true, message: '请输入联系人姓名' }, { validator: this.validateName } ],
 						onChange: (value) => {
 							store.setLinkman(value);
 							this.setState({ linkman: value });
@@ -424,9 +433,9 @@ export default class essential_information_page extends PureComponent {
 						</InputItem>
 					)}
 				</div>
-				<div className={`${style.labelDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
+				<div className={`${style.labelDiv}`} style={{ marginTop: 0 }}>
 					{getFieldDecorator('linkphone', {
-						rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+						rules: [ { required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone } ],
 						onChange: (value) => {
 							store.setLinkphone(value);
 							this.setState({ linkphone: value });
