@@ -83,7 +83,31 @@
 :global {
 	.modal_l_r {
 		.am-modal-body {
-				overflow: hidden;
+			overflow: hidden;
+		}
+
+		.blackColor {
+			.am-input-control input, .am-list-extra {
+				color: #333 !important;
+			}
+		}
+
+		.am-list-item .am-list-line {
+			.am-input-label {
+				width: 210px;
+			}
+			.am-list-content, .am-input-label {
+				font-size: 0.3rem;
+				color: #333;
+			}
+			.am-input-control input, .am-list-extra {
+				font-size: 0.3rem;
+				color: #C5C5C5;
+			}
+		}
+
+		.am-list-item .am-input-control input {
+			text-align: right;
 		}
 	}
 	.am-modal-body {
@@ -108,29 +132,6 @@
 		&.am-modal-popup-slide-up {
 			left: 100%;
 		}
-	}
-	.blackColor {
-		.am-input-control input, .am-list-extra {
-			color: #333 !important;
-		}
-	}
-
-	.am-list-item .am-list-line {
-		.am-input-label {
-			width: 210px;
-		}
-		.am-list-content, .am-input-label {
-			font-size: 0.3rem;
-			color: #333;
-		}
-		.am-input-control input, .am-list-extra {
-			font-size: 0.3rem;
-			color: #C5C5C5;
-		}
-	}
-
-	.am-list-item .am-input-control input {
-		text-align: right;
 	}
 }
 .subDesc {
