@@ -59,31 +59,13 @@ if (window.history && window.history.pushState) {
 			}
 			/* 实名上传图片时 不允许返回 */
 
-			// 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
-			//   if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
-			//     if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {
-			//       window.ReactRouterHistory.push('/home/home');
-			//       return
-			//     } else {
-			//       window.ReactRouterHistory.push('/mine/mine_page');
-			//       return
-			//     }
-			//   }
-			//   if (window.location.pathname === '/mine/credit_list_page' && window.location.search.indexOf('noBackParam') > 0) {
-			//     window.ReactRouterHistory.push('/home/home');
-			//   }
-			//   if (window.location.pathname === '/home/home' && window.location.search.indexOf('noBackParam') > 0) {
-			//     logoutAppHandler();
-			//     return
-			//   }
-
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (
 				window.location.pathname === '/home/essential_information' ||
 				window.location.pathname === '/home/real_name' ||
 				window.location.pathname === '/home/moxie_bank_list_page'
 			) {
-				if (userInfo && userInfo.nameHid && backFlag) {
+				if ((userInfo && userInfo.nameHid) || backFlag) {
 					history.go(-2);
 				} else {
 					document.activeElement.blur();
@@ -182,10 +164,11 @@ if (window.history && window.history.pushState) {
 							break;
 						case '/order/repayment_succ_page':
 						case '/mine/credit_list_page':
-						case '/mine/credit_extension_page':
 						case '/home/confirm_agency': // 确认信息页物理返回到首页
 							window.ReactRouterHistory.push('/home/home');
 							break;
+						case '/mine/credit_extension_page':
+							window.ReactRouterHistory.push('/mine/mine_page');
 						default:
 							// window.ReactRouterHistory.goBack()
 							break;
