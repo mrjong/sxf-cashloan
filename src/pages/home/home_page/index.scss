@@ -86,6 +86,14 @@
 			overflow: hidden;
 		}
 
+		.am-list-item {
+      padding-left: 0;
+      height: 108px;
+      .am-list-line {
+        padding-right: 0;
+      }
+    }
+
 		.blackColor {
 			.am-input-control input, .am-list-extra {
 				color: #333 !important;
@@ -109,7 +117,14 @@
 		.am-list-item .am-input-control input {
 			text-align: right;
 		}
+
+		.am-list-item.am-list-item-middle .am-list-line {
+      &:after{
+        @include setBottomLine();
+      }
+    }
 	}
+
 	.am-modal-body {
 		.am-modal-alert-content {
 			line-height: 3;
@@ -192,6 +207,9 @@
 		padding: 10px;
 		top: 0;
 	}
+}
+.modal_content {
+	padding: 0 30px;
 }
 .listitem {
 	position: relative;

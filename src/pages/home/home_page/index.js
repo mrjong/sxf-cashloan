@@ -610,6 +610,9 @@ export default class home_page extends PureComponent {
 				this.calcLoanMoney(1000, selectedLoanDate)
 			} else {
 				this.inputRef.focus()
+				this.props.form.setFieldsValue({
+					loanMoney: ''
+				})
 			}
 		})
 	}
@@ -632,8 +635,10 @@ export default class home_page extends PureComponent {
 		}
 	}
 
+	//查询还款期限
 	qryPerdRate = () => {
-		this.props.$fetch.get(`${API.qryPerdRate}/${this.state.usrIndexInfo.indexData.autId}`).then((res) => {
+		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : ''
+		this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
 			const date =
 				res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
 			this.setState({
@@ -805,7 +810,7 @@ export default class home_page extends PureComponent {
 					) : (
 							<img className={style.default_banner} src={defaultBanner} alt="banner" />
 						)}
-				<button onClick={() => { this.props.history.push('/home/loan_repay_confirm_page') }}>go</button>
+				<button onClick={() => { this.props.history.push('/home/essential_information?isShowCommit=false') }}>go</button>
 				{/* 未提交授信用户 */}
 				{firstUserDisplay ? <div>{firstUserDisplay}</div> : null}
 				{/* 历史授信用户 */}
@@ -844,7 +849,7 @@ export default class home_page extends PureComponent {
 									type="cross"
 								/>
 							</div>
-							<div>
+							<div className={style.modal_content}>
 								<div className={style.tagList}>
 									{tagList.map((item, idx) => (
 										<span
@@ -886,7 +891,7 @@ export default class home_page extends PureComponent {
 										arrow="horizontal"
 									>
 										借多久
-								</List.Item>
+									</List.Item>
 								</div>
 								<SXFButton className={style.modal_btn_box} onClick={this.submitCredit}>确定</SXFButton>
 							</div>

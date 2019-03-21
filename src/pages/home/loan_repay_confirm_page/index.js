@@ -288,6 +288,9 @@ export default class loan_repay_confirm_page extends PureComponent {
         this.calcLoanMoney(1000, selectedLoanDate)
       } else {
         this.inputRef.focus()
+        this.props.form.setFieldsValue({
+					loanMoney: ''
+				})
       }
     })
   }
