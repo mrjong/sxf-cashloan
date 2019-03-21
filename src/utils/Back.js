@@ -53,7 +53,6 @@ if (window.history && window.history.pushState) {
 			// 返回拦截弹窗
 			let userInfo = store.getUserInfo();
 			let backFlag = store.getBackFlag();
-			console.log('------------------');
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
 				return;
@@ -160,6 +159,10 @@ if (window.history && window.history.pushState) {
 							return;
 						case '/home/home':
 							if (tokenFromStorage && token) {
+								if (window.handleCloseHomeModal) {
+									window.handleCloseHomeModal();
+									return;
+								}
 								logoutAppHandler();
 							} else if (isWXOpen() && !tokenFromStorage && !token) {
 								window.close();
