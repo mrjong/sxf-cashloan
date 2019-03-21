@@ -60,7 +60,7 @@ if (window.history && window.history.pushState) {
 			}
 			/* 实名上传图片时 不允许返回 */
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard) {
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
 				return;
             }
