@@ -193,6 +193,12 @@
       }
     }
 
+    .blackColor {
+      .am-input-control input, .am-list-extra {
+        color: #333 !important;
+      }
+    }
+
     .am-list-item .am-list-line {
       .am-input-label {
         width: 210px;

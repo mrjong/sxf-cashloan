@@ -356,9 +356,10 @@ export default class loan_repay_confirm_page extends PureComponent {
           })(
             <InputItem
               placeholder={'申请金额3000-25000元'}
-              type="number"
+              type="text"
               disabled={activeTag !== 2}
               ref={(input) => { input.focus() }}
+              className={activeTag === 2 ? 'blackColor' : ''}
             >
               帮你还多少(元)
 						</InputItem>

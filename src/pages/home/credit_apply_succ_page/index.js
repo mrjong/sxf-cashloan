@@ -9,14 +9,25 @@ import { store } from 'utils/store'
 const API = {
   isBankCard: '/my/chkCard', // 是否绑定了银行卡
 }
+let timer = null
 @fetch.inject()
 @setBackGround('#fff')
 export default class credit_apply_succ_page extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {}
   }
+
+  componentDidMount() {
+    timer = setTimeout(() => {
+      this.checkIsBandCard()
+    }, 3000)
+  }
+
+  componentWillUnmount() {
+    clearTimeout(timer)
+  }
+
   // 返回首页
   backHome = () => {
     this.props.history.replace('/home');
