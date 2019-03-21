@@ -27,9 +27,10 @@ export default class loan_repay_confirm_page extends PureComponent {
     super(props)
     this.state = {
       usrIndexInfo: {},
-      activeTag: 0,
+      activeTag: 0, //激活的tag
       isShowProgress: false,
       percent: 0,
+      // loanMoney: 0,  //展示还款多少元
       time: 0,
       retryCount: 3,
       showAgainUpdateBtn: false, // 重新获取账单按钮是否显示
@@ -42,6 +43,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   componentDidMount() {
     this.queryUsrInfo()
     // this.queryBillStatus()
+
   }
 
   componentWillUnmount() {
@@ -67,14 +69,6 @@ export default class loan_repay_confirm_page extends PureComponent {
     }, 1000)
   }
 
-  // queryPerdRate = () => {
-  //   this.props.$fetch.get(`${API.qryPerdRate}/${this.state.usrIndexInfo.indexData.autId}`).then(res => {
-  //     console.log(res)
-  //   }).catch(err => {
-
-  //   })
-  // }
-
   //查询用户相关信息
   queryUsrInfo = () => {
     this.props.$fetch.post(API.USR_INDEX_INFO).then(res => {
@@ -82,6 +76,9 @@ export default class loan_repay_confirm_page extends PureComponent {
         usrIndexInfo: res.data.indexData
           ? res.data
           : Object.assign({}, res.data, { indexData: {} })
+      }, () => {
+        // 设置默认选中的还款金额
+        this.toggleTag(0)
       })
     }).catch(err => {
       console.log(err)
@@ -157,13 +154,6 @@ export default class loan_repay_confirm_page extends PureComponent {
     this.props.history.push('/home/moxie_bank_list_page')
   }
 
-  //切换tag标签
-  toggleTag = (idx) => {
-    this.setState({
-      activeTag: idx
-    })
-  }
-
   // 代还其他信用卡点击事件
   repayForOtherBank = (count) => {
     if (count > 1) {
@@ -198,9 +188,13 @@ export default class loan_repay_confirm_page extends PureComponent {
     this.props.form.validateFields((err, values) => {
       console.log(values)
       if (!err) {
+        if (/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
+          this.props.toast.info('至多可输入2位小数')
+          return
+        }
         const params = {
           loanDate: values.loanDate[0],
-          loadMoney: values.loadMoney
+          loanMoney: values.loanMoney
         }
         // this.props.$fetch.post(`${API.submitData}`, params).then((res) => {
         //   if (res && res.msgCode === 'PTM0000') {
@@ -215,20 +209,56 @@ export default class loan_repay_confirm_page extends PureComponent {
     });
   }
 
-  //计算全额还款金额
-  calcLoanMoney = (value) => {
-    const { perdRateList, cardBillAmt } = this.state
-    let selectedItem = perdRateList.filter((item, idx) => {
+  //过滤选中的还款期限
+  filterLoanDate = (value) => {
+    const { perdRateList, cardBillAmt, activeTag } = this.state
+    let selectedLoanDate = perdRateList.filter((item, idx) => {
       return item.perdCnt === value[0]
     })
+    this.setState({
+      selectedLoanDate // 设置选中的期数
+    })
+    //全额还款
+    if (activeTag === 0) {
+      this.calcLoanMoney(8000, selectedLoanDate)
+    } else if (activeTag === 1) {
+      //最低还款
+      this.calcLoanMoney(1000, selectedLoanDate)
+    }
+  }
 
-    if (cardBillAmt > selectedItem.factAmtHigh) {
-      this.setState({
-        displayLoanMoney: selectedItem.factAmtHigh
+  //计算该显示的还款金额
+  calcLoanMoney = (money, obj) => {
+    console.log(money, obj)
+    if (money > obj.factAmtHigh) {
+      this.props.form.setFieldsValue({
+        loanMoney: obj.factAmtHigh
+      })
+    } else if (money < obj.factLmtLow) {
+      this.props.form.setFieldsValue({
+        loanMoney: obj.factLmtLow
+      })
+    } else {
+      this.props.form.setFieldsValue({
+        loanMoney: money
       })
     }
-    console.log(selectedItem)
+  }
 
+  //切换tag标签
+  toggleTag = (idx) => {
+    const { selectedLoanDate = {}, cardBillAmt } = this.state
+    this.setState({
+      activeTag: idx
+    }, () => {
+      //全额还款
+      if (idx === 0) {
+        this.calcLoanMoney(8000, selectedLoanDate)
+      } else if (idx === 1) {
+        //最低还款
+        this.calcLoanMoney(1000, selectedLoanDate)
+      }
+    })
   }
 
   render() {
@@ -260,7 +290,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       value: 3
     }]
     return (
-      <div className={style.pageWrapper}>
+      <div className={[style.pageWrapper, 'loan_repay_confirm_page'].join(' ')}>
         <div className={style.bankCard}>
           <div className={style.top}>
             <div>
@@ -310,16 +340,17 @@ export default class loan_repay_confirm_page extends PureComponent {
         </div>
         <div className={style.labelDiv}>
           {getFieldDecorator('loanMoney', {
-            rules: [{ required: true, message: '请输入还款金额' }, { validator: this.validateName }],
+            initialValue: this.state.loanMoney,
+            rules: [{ required: true, message: '请输入还款金额' }],
             onChange: (value) => {
-              this.setState({ loanMoney: value })
+              // this.setState({ loanMoney: value })
             }
           })(
             <InputItem
-              placeholder="申请金额3000-25000元"
+              placeholder={'申请金额3000-25000元'}
               type="number"
               disabled={activeTag !== 2}
-              value={1234}
+              ref={(input) => { input.focus() }}
             >
               帮你还多少(元)
 						</InputItem>
@@ -328,20 +359,20 @@ export default class loan_repay_confirm_page extends PureComponent {
         {
           autId && <div className={style.labelDiv}>
             {getFieldDecorator('loanDate', {
-              initialValue: this.state.relatValue,
+              initialValue: this.state.selectedLoanDate && [this.state.selectedLoanDate.perdCnt, this.state.selectedLoanDate.perdPageNm],
               rules: [{ required: true, message: '请选择借款期限' }],
               onChange: (value, label) => {
-                this.calcLoanMoney(value)
+                this.filterLoanDate(value)
               }
-
             })(
               <AsyncCascadePicker
                 loadData={[
                   () =>
                     this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then(res => {
-                      const date = res && res.data && res.data.perdRateList.length ? res.data.perdRateList : []
+                      const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : []
                       this.setState({
-                        perdRateList: date
+                        perdRateList: date,
+                        selectedLoanDate: date[0] // 默认选中3期
                       })
                       return date.map((item) => ({ value: item.perdCnt, label: item.perdPageNm }))
                     })

@@ -171,48 +171,50 @@
 }
 
 :global {
-  .am-progress-bar {
-    border: 2px solid #F66;
-  }
-
-  .am-list-item {
-    padding-left: 0 !important;
-    height: 108px !important;
-    .am-list-line {
-      padding-right: 0;
+  .loan_repay_confirm_page {
+    .am-progress-bar {
+      border: 2px solid #F66;
     }
-  }
 
-  .am-list-item .am-list-line .am-list-extra {
-    padding-right: 10px;
-    &::after {
-      content: '';
-      margin-left: 15px;
-      @include setArrow(right,15px,#A9AEB6,1PX);
+    .am-list-item {
+      padding-left: 0 !important;
+      height: 108px !important;
+      .am-list-line {
+        padding-right: 0;
+      }
     }
-  }
 
-  .am-list-item .am-list-line {
-    .am-input-label {
-      width: 210px;
+    .am-list-item .am-list-line .am-list-extra {
+      padding-right: 10px;
+      &::after {
+        content: '';
+        margin-left: 15px;
+        @include setArrow(right,15px,#A9AEB6,1PX);
+      }
     }
-    .am-list-content, .am-input-label {
-      font-size: 0.3rem;
-      color: #333;
-    }
-    .am-input-control input, .am-list-extra {
-      font-size: 0.3rem;
-      color: #C5C5C5;
-    }
-  }
 
-  .am-list-item .am-input-control input {
-    text-align: right;
-  }
+    .am-list-item .am-list-line {
+      .am-input-label {
+        width: 210px;
+      }
+      .am-list-content, .am-input-label {
+        font-size: 0.3rem;
+        color: #333;
+      }
+      .am-input-control input, .am-list-extra {
+        font-size: 0.3rem;
+        color: #C5C5C5;
+      }
+    }
 
-  .am-list-item.am-list-item-middle .am-list-line {
-    &:after{
-      @include setBottomLine();
+    .am-list-item .am-input-control input {
+      text-align: right;
+    }
+
+    .am-list-item.am-list-item-middle .am-list-line {
+      &:after{
+        @include setBottomLine();
+      }
     }
   }
 }
