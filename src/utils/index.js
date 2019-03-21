@@ -7,7 +7,16 @@ import { SXFToast } from 'utils/SXFToast';
 
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
+import { getAppsList, getContactsList } from 'utils/publicApi';
 
+// 退出的api
+const API = {
+	LOGOUT: '/signup/logout', // 用户退出登陆
+	GETSTSW: '/my/getStsw', // 获取首页进度
+	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
+	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+	submitState: '/bill/apply' // 提交代还金申请
+};
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
 	setTimeout(() => {
@@ -229,14 +238,39 @@ export const closePage = () => {
 		return window.passValue();
 	}
 };
-
-// 退出的api
-const API = {
-	LOGOUT: '/signup/logout', // 用户退出登陆
-	GETSTSW: '/my/getStsw', // 获取首页进度
-    getOperator: '/auth/operatorAuth', // 运营商的跳转URL
-    qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+// 确认按钮点击事件 提交到风控
+const handleClickConfirm = ($props) => {
+	const { applyAmt, repaymentDate } = this.state;
+	const address = store.getPosition();
+	const params = {
+		location: address,
+		prdId: repaymentDate.value,
+		perdLth: repaymentDate.perdLth,
+		perdUnit: repaymentDate.perdUnit,
+		perdCnt: repaymentDate.perdCnt,
+		rpyAmt: applyAmt
+	};
+	if (isMPOS()) {
+		getAppsList();
+		getContactsList();
+	}
+	$props.$fetch
+		.post(`${API.submitState}`, params)
+		.then((res) => {
+			// 提交风控返回成功
+			if (res && res.msgCode === 'PTM0000') {
+				$props.toast.info(res.msgInfo, 3, () => {
+					this.checkIsBandCard();
+				});
+			} else {
+				$props.toast.info(res.msgInfo);
+			}
+		})
+		.catch((err) => {
+			$props.history.push('/home/home');
+		});
 };
+
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false }) => {
 	let codes = '';
@@ -265,6 +299,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			}
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
+                $props.toast.info('请基本信息认证');
 				$props.history.replace({
 					pathname: '/home/essential_information'
 					// search: urlQuery
@@ -300,6 +335,13 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.history.replace({ pathname: '/home/moxie_bank_list_page' });
+				return;
+			}
+			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
+			if (!store.getCreditExtensionNot()) {
+				handleClickConfirm($props);
+			} else {
+				$props.history.push('');
 			}
 		}
 	} else {
@@ -312,6 +354,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 		codesArray
 	};
 };
+
 // 退出功能
 export const logoutApp = (that) => {
 	fetch.get(API.LOGOUT).then(
