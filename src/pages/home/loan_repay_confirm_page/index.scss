@@ -1,4 +1,4 @@
-
+@import '../../../assets/styles/scss/base/fn.scss';
 .pageWrapper {
   padding: 20px 30px 0;
 }
@@ -13,11 +13,14 @@
   padding: 0 30px;
 
   .top {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1PX solid #E5E5E5;
     height: 110px;
+    &::after {
+      @include setBottomLine(#E5E5E5);
+    }
 
     .name {
       font-size: 30px;
@@ -29,7 +32,7 @@
       font-size: 24px;
       color: #999;
       margin-left: 15px;
-      vertical-align: middle;
+      // vertical-align: middle;
     }
   }
 
@@ -50,17 +53,19 @@
   }
 
   .billInfo {
+    position: relative;
     display: flex;
     justify-content: space-between;
     line-height: 1;
-    border-bottom: 1PX solid #E5E5E5;
     padding-bottom: 30px;
+    &::after {
+      @include setBottomLine(#E5E5E5);
+    }
 
     .item {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      text-align: center;
 
       .value {
         font-size: 30px;
@@ -117,7 +122,7 @@
     display: inline-block;
     width: 180px;
     height: 50px;
-    line-height: 50px;
+    line-height: 48px;
     text-align: center;
     border-radius: 25px;
     font-size: 30px;
@@ -132,8 +137,13 @@
   }
 }
 
-.label {
+.labelDiv {
+  position: relative;
   font-size: 50px;
+  color: red;
+  &::after {
+    @include setBottomLine(#E5E5E5);
+  }
 }
 
 .confirmApplyBtn {
@@ -149,34 +159,60 @@
 
   .percentNum {
     color: #F66;
-    margin-left: 1px;
+    margin-left: 5px;
   }
 }
 
 .bottomTip {
-  margin-top: 85px;
+  margin-top: 40px;
   font-size: 0.3rem;
   text-align: center;
   color: #c7c6cc;
 }
 
-.stepIcon {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  font-size: 30px;
-  text-align: center;
-}
-
-.stepActive {
-  border: 2px solid #108ee9;
-}
-
 :global {
   .am-progress-bar {
     border: 2px solid #F66;
+  }
+
+  .am-list-item {
+    padding-left: 0 !important;
+    height: 108px !important;
+    .am-list-line {
+      padding-right: 0;
+    }
+  }
+
+  .am-list-item .am-list-line .am-list-extra {
+    padding-right: 10px;
+    &::after {
+      content: '';
+      margin-left: 15px;
+      @include setArrow(right,15px,#A9AEB6,1PX);
+    }
+  }
+
+  .am-list-item .am-list-line {
+    .am-input-label {
+      width: 210px;
+    }
+    .am-list-content, .am-input-label {
+      font-size: 0.3rem;
+      color: #333;
+    }
+    .am-input-control input, .am-list-extra {
+      font-size: 0.3rem;
+      color: #C5C5C5;
+    }
+  }
+
+  .am-list-item .am-input-control input {
+    text-align: right;
+  }
+
+  .am-list-item.am-list-item-middle .am-list-line {
+    &:after{
+      @include setBottomLine();
+    }
   }
 }

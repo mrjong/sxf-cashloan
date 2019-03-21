@@ -1,0 +1,35 @@
+.stepWrapper {
+  margin-top: 60px;
+  margin-bottom: 80px;
+}
+
+.stepIcon {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  border-radius: 50%;
+  font-size: 24px;
+  text-align: center;
+  background: #DFDEE2;
+  box-sizing: border-box;
+}
+
+.stepActive {
+  background: #24D1C3;
+}
+
+:global {
+  .am-steps-item-title {
+    font-size: 24px !important;
+    color: #24D1C3 !important;
+  }
+
+  .am-steps-icon {
+    color: #fff !important;
+  }
+
+  .am-steps-item-finish .am-steps-item-tail:after {
+    background-color: #24D1C3;
+  }
+}

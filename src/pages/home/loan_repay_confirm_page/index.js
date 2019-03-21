@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Progress, Steps, Icon, InputItem, List } from 'antd-mobile';
+import { Progress, Icon, InputItem, List } from 'antd-mobile';
 import style from './index.scss'
 import fetch from 'sx-fetch';
 import ZButton from 'components/ButtonCustom';
@@ -8,9 +8,11 @@ import { createForm } from 'rc-form';
 import AsyncCascadePicker from 'components/AsyncCascadePicker'
 import { setBackGround } from 'utils/background'
 import { store } from 'utils/store'
+import { getFirstError, getNextStr } from 'utils';
 
 const API = {
   queryBillStatus: '/wap/queryBillStatus', //
+  qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
   USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -33,13 +35,13 @@ export default class loan_repay_confirm_page extends PureComponent {
       showAgainUpdateBtn: false, // 重新获取账单按钮是否显示
       overDt: '', //还款日
       billDt: '', //账单日
-      cardBillAmt: '' //最低还款
+      cardBillAmt: ''  //账单金额
     }
   }
 
   componentDidMount() {
-    this.queryBillStatus()
     this.queryUsrInfo()
+    // this.queryBillStatus()
   }
 
   componentWillUnmount() {
@@ -53,34 +55,37 @@ export default class loan_repay_confirm_page extends PureComponent {
         time: this.state.time + 1
       }, () => {
         if (this.state.time === 5) {
-          console.log(this.state.time)
           clearInterval(timer)
           this.queryBillStatus()
         }
         if (this.state.time > 8) {
           this.state.retryCount--
-
-
           clearInterval(timer)
-          console.log(this.state.time)
           this.queryBillStatus(true)
         }
       })
     }, 1000)
   }
 
+  // queryPerdRate = () => {
+  //   this.props.$fetch.get(`${API.qryPerdRate}/${this.state.usrIndexInfo.indexData.autId}`).then(res => {
+  //     console.log(res)
+  //   }).catch(err => {
+
+  //   })
+  // }
+
+  //查询用户相关信息
   queryUsrInfo = () => {
     this.props.$fetch.post(API.USR_INDEX_INFO).then(res => {
-      console.log(res)
       this.setState({
         usrIndexInfo: res.data.indexData
           ? res.data
           : Object.assign({}, res.data, { indexData: {} })
-      });
+      })
     }).catch(err => {
       console.log(err)
     })
-
   }
 
   queryBillStatus = (hide) => {
@@ -120,6 +125,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     })
   }
 
+  //隐藏进度条
   hideProgress = () => {
     this.setState({
       percent: 100
@@ -142,6 +148,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     })
   }
 
+  //更新账单
   updateBill = () => {
     this.showProgress()
   }
@@ -150,6 +157,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     this.props.history.push('/home/moxie_bank_list_page')
   }
 
+  //切换tag标签
   toggleTag = (idx) => {
     this.setState({
       activeTag: idx
@@ -160,10 +168,10 @@ export default class loan_repay_confirm_page extends PureComponent {
   repayForOtherBank = (count) => {
     if (count > 1) {
       store.setBackUrl('/home/loan_repay_confirm_page');
-      // const { contentData } = this.props;
+      const { usrIndexInfo } = this.state;
       this.props.history.push({
         pathname: '/mine/credit_list_page',
-        // search: `?autId=${contentData.indexSts === 'LN0010' ? '' : contentData.indexData.autId}`
+        search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
       });
     } else {
       this.goMoxieBankList()
@@ -187,12 +195,46 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   handleSubmit = () => {
+    this.props.form.validateFields((err, values) => {
+      console.log(values)
+      if (!err) {
+        const params = {
+          loanDate: values.loanDate[0],
+          loadMoney: values.loadMoney
+        }
+        // this.props.$fetch.post(`${API.submitData}`, params).then((res) => {
+        //   if (res && res.msgCode === 'PTM0000') {
+
+        //   } else {
+        //     this.props.toast.info(res.msgInfo)
+        //   }
+        // })
+      } else {
+        this.props.toast.info(getFirstError(err))
+      }
+    });
+  }
+
+  //计算全额还款金额
+  calcLoanMoney = (value) => {
+    const { perdRateList, cardBillAmt } = this.state
+    let selectedItem = perdRateList.filter((item, idx) => {
+      return item.perdCnt === value[0]
+    })
+
+    if (cardBillAmt > selectedItem.factAmtHigh) {
+      this.setState({
+        displayLoanMoney: selectedItem.factAmtHigh
+      })
+    }
+    console.log(selectedItem)
 
   }
 
   render() {
     const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag } = this.state
-    const { overDt, billDt, cardBillAmt, cardNoHid, bankNo, bankName } = usrIndexInfo
+    const { indexData = {} } = usrIndexInfo
+    const { overDt, billDt, cardBillAmt, cardNoHid, bankNo, bankName, autId } = indexData
     const { getFieldDecorator } = this.props.form
     const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico'
     let overDtStr = ''
@@ -207,14 +249,6 @@ export default class loan_repay_confirm_page extends PureComponent {
     }
     const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
     const cardBillAmtData = !cardBillAmt ? '----.--' : parseFloat(cardBillAmt, 10).toFixed(2);
-    // const Step = Steps.Step
-    // const steps = [{
-    //   title: '111',
-    // }, {
-    //   title: '222',
-    // }, {
-    //   title: '333',
-    // }].map((s, i) => <Step key={i} title={s.title} icon={<i className={[style.stepIcon, i < 2 ? style.stepActive : ''].join(' ')}>{i + 1}</i>} />);
     const tagList = [{
       name: '全额还款',
       value: 1
@@ -244,7 +278,7 @@ export default class loan_repay_confirm_page extends PureComponent {
           </div>
           <div className={style.center}>
             <p className={style.billTitle}>账单金额(元)</p>
-            <strong className={style.billMoney}>13200.55</strong>
+            <strong className={style.billMoney}>{cardBillAmtData}</strong>
             <div className={style.billInfo}>
               <div className={style.item}>
                 <span className={style.value}></span>
@@ -274,58 +308,53 @@ export default class loan_repay_confirm_page extends PureComponent {
             ))
           }
         </div>
-        <div>
-          {getFieldDecorator('address', {
-            rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
+        <div className={style.labelDiv}>
+          {getFieldDecorator('loanMoney', {
+            rules: [{ required: true, message: '请输入还款金额' }, { validator: this.validateName }],
             onChange: (value) => {
-              // 本地缓存常住地址
-              store.setAddress(value);
-              this.setState({ address: value });
+              this.setState({ loanMoney: value })
             }
           })(
             <InputItem
-              placeholder="1234.09"
+              placeholder="申请金额3000-25000元"
               type="number"
-              // onBlur={(v) => {
-              //   this.inputOnBlur(v, 'resident_address');
-              // }}
-              // onFocus={(v) => {
-              //   this.inputOnFocus(v, 'resident_address');
-              // }}
-              className={style.label}
+              disabled={activeTag !== 2}
+              value={1234}
             >
               帮你还多少(元)
 						</InputItem>
           )}
         </div>
-        <div>
-          {getFieldDecorator('loanDate', {
-            initialValue: this.state.relatValue,
-            rules: [{ required: true, message: '请选择借款期限' }],
-            onChange: (value, label) => {
+        {
+          autId && <div className={style.labelDiv}>
+            {getFieldDecorator('loanDate', {
+              initialValue: this.state.relatValue,
+              rules: [{ required: true, message: '请选择借款期限' }],
+              onChange: (value, label) => {
+                this.calcLoanMoney(value)
+              }
 
-            }
-          })(
-            <AsyncCascadePicker
-              loadData={[
-                // () =>
-                //   this.props.$fetch.get(`${API.getRelat}/2`).then((result) => {
-                //     const prov = result && result.data && result.data.length ? result.data : [];
-                //     return prov.map((item) => ({ value: item.key, label: item.value }));
-                //   })
-              ]}
-              cols={1}
-              onVisibleChange={(bool) => {
-
-              }}
-            >
-              <List.Item className={style.label}>借多久</List.Item>
-            </AsyncCascadePicker>
-          )}
-        </div>
+            })(
+              <AsyncCascadePicker
+                loadData={[
+                  () =>
+                    this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then(res => {
+                      const date = res && res.data && res.data.perdRateList.length ? res.data.perdRateList : []
+                      this.setState({
+                        perdRateList: date
+                      })
+                      return date.map((item) => ({ value: item.perdCnt, label: item.perdPageNm }))
+                    })
+                ]}
+                cols={1}
+              >
+                <List.Item>借多久</List.Item>
+              </AsyncCascadePicker>
+            )}
+          </div>
+        }
         <ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>提交申请</ZButton>
 
-        {/* <Steps direction="horizontal" current={1}>{steps}</Steps> */}
         <div className={style.bottomTip}>怕逾期，用还到</div>
       </div>
     )

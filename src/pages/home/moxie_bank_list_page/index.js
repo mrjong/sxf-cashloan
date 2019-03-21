@@ -3,11 +3,11 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
-import allicon from './img/all@2x.png';
-import { SXFToast } from 'utils/SXFToast';
 import { buriedPointEvent } from 'utils/analytins';
 import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
+import StepBar from 'components/StepBar'
+
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
 	CARD_AUTH: '/auth/cardAuth' // 信用卡授信
@@ -133,26 +133,33 @@ export default class moxie_bank_list_page extends Component {
 		window.location.reload();
 	};
 	render() {
+		const needNextUrl = store.getNeedNextUrl()
 		return (
 			<div className={style.moxie_bank_list_page}>
-				<div className={style.title}>
-					选择发卡银行
-					<span className={style.subTitle}>获3项优质服务</span>
+			{
+				needNextUrl ? <StepBar current={3} />:
+				<div>
+					<div className={style.title}>
+						选择发卡银行
+						<span className={style.subTitle}>获3项优质服务</span>
+					</div>
+					<div className={style.bankDesc}>
+						<span>
+							<i className={style.dot} />
+							高效管理信用卡
+						</span>
+						<span>
+							<i className={style.dot} />
+							一键同步账单
+						</span>
+						<span>
+							<i className={style.dot} />
+							多重加密
+						</span>
+					</div>
 				</div>
-				<div className={style.bankDesc}>
-					<span>
-						<i className={style.dot} />
-						高效管理信用卡
-					</span>
-					<span>
-						<i className={style.dot} />
-						一键同步账单
-					</span>
-					<span>
-						<i className={style.dot} />
-						多重加密
-					</span>
-				</div>
+			}
+				
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
 						<div className={style.bankList}>
