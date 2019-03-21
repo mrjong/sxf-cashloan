@@ -260,7 +260,7 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
 				$props.toast.info(res.msgInfo, 3, () => {
-                    // 移除首页弹窗返回的值
+					// 移除首页弹窗返回的值
 					store.removeLoanAspirationHome();
 					$props.history.push('/home/credit_apply_succ_page');
 				});
@@ -322,12 +322,13 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
 							$props.toast.info('请运营商认证');
 							setTimeout(() => {
+								// 运营商直接返回的问题
+								store.setCarrierMoxie(true);
 								SXFToast.loading('加载中...', 0);
-								window.location.replace(
+								window.location.href =
 									result.data.url +
-										`&localUrl=${window.location.origin}&routeType=${window.location
-											.pathname}${window.location.search}&showTitleBar=NO`
-								);
+									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
+										.location.search}&showTitleBar=NO`;
 							}, 3000);
 						}
 					});
