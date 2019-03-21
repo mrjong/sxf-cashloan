@@ -59,7 +59,12 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard) {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+            }
+            /* 新版流程物理返回  借钱还信用卡 切换卡*/
 			// 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
 			//   if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
 			//     if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {
