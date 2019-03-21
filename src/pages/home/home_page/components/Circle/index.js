@@ -5,8 +5,7 @@ let timer = '';
 export default class Circle extends Component {
 	constructor(props) {
 		super(props);
-	}
-
+    }
 	render() {
 		const { percentData, percentSatus } = this.props;
 

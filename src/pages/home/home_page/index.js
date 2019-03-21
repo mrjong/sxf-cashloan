@@ -4,7 +4,7 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -27,6 +27,7 @@ import { createForm } from 'rc-form';
 
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
+	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
@@ -62,7 +63,7 @@ export default class home_page extends PureComponent {
 		this.state = {
 			showDefaultTip: false,
 			bannerList: [],
-			modal2: true,
+			isShowCreditModal: false,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -77,11 +78,17 @@ export default class home_page extends PureComponent {
 			showDiv: '',
 			modal_left: false,
 			activeTag: 0,
-			perdRateList: []
+			perdRateList: [],
+			firstUserInfo: {}
 		};
 	}
 
 	componentWillMount() {
+		setTimeout(() => {
+			this.showCreditModal()
+		}, 3000)
+		// 删除授信弹窗信息
+		store.removeLoanAspirationHome()
 		// 弹新弹窗的标识
 		const newUserActivityModal = store.getNewUserActivityModal();
 		store.removeNewUserActivityModal();
@@ -104,6 +111,7 @@ export default class home_page extends PureComponent {
 				showDefaultTip: true
 			});
 		} else {
+			// 判断是否提交过授信
 			this.credit_extension();
 		}
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
@@ -124,8 +132,16 @@ export default class home_page extends PureComponent {
 	// 判断是否授信
 	credit_extension = () => {
 		setTimeout(() => {
-			this.credit_extension_not();
-			// this.requestGetUsrInfo();
+			if (1 === 1) {
+				this.requestGetUsrInfo();
+			} else {
+				this.setState({
+					firstUserInfo: {
+						x: 1
+					}
+				});
+				this.credit_extension_not();
+			}
 		}, 1000);
 	};
 	// 未提交授信
@@ -154,7 +170,8 @@ export default class home_page extends PureComponent {
 	calculatePercent = (data) => {
 		let codes = [];
 		let demo = data.codes;
-		let codesCopy = demo.slice(1, 3);
+		let codesCopy = demo.slice(1, 4);
+		console.log(data.codes, '-----');
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中
@@ -188,6 +205,7 @@ export default class home_page extends PureComponent {
 				percentData: 40
 			});
 		}
+		console.log(newCodes2);
 		switch (newCodes2.length) {
 			case 0: // 新用户，信用卡未授权
 				this.setState({
@@ -253,11 +271,12 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(home.repaymentBtnClick3);
 				buriedPointEvent(mine.creditExtension, {
 					entry: '首页'
-				});
-				this.props.history.push({
-					pathname: '/mine/credit_extension_page',
-					search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}`
-				});
+				})
+				this.showCreditModal()
+				// this.props.history.push({
+				// 	pathname: '/mine/credit_extension_page',
+				// 	search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}`
+				// });
 				break;
 			case 'LN0004': // 代还资格审核中
 				console.log('LN0004');
@@ -306,14 +325,14 @@ export default class home_page extends PureComponent {
 		} else {
 			clearInterval(timer);
 		}
-	}
+	};
 
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
 		// /mine/credit_extension_page?
 		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-	}
+	};
 
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
@@ -624,6 +643,44 @@ export default class home_page extends PureComponent {
 		})
 	}
 
+	showCreditModal = () => {
+		this.setState({
+			isShowCreditModal: true
+		}, () => {
+			this.qryPerdRate()
+			this.toggleTag(0)
+			window.handleCloseHomeModal = this.closeCreditModal
+		})
+	}
+
+	closeCreditModal = () => {
+		this.setState({
+			isShowCreditModal: false
+		})
+		store.removeLoanAspirationHome()
+		window.handleCloseHomeModal = null
+	}
+
+	submitCredit = () => {
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
+					this.props.toast.info('请输入数字或两位小数');
+					return
+				}
+				const params = {
+					...this.state.selectedLoanDate,
+					rpyAmt: Number(values.loanMoney)
+				}
+				store.setLoanAspirationHome(params)
+				//调用授信接口
+				handleClickConfirm(this.props, params)
+			} else {
+				this.props.toast.info(getFirstError(err));
+			}
+		})
+	}
+
 	render() {
 		const {
 			bannerList,
@@ -634,7 +691,9 @@ export default class home_page extends PureComponent {
 			percentData,
 			showDiv,
 			activeTag,
-			perdRateList
+			perdRateList,
+			selectedLoanDate,
+			firstUserInfo,
 		} = this.state;
 		// const { autId } = usrIndexInfo.indexData
 		const { history } = this.props;
@@ -660,21 +719,23 @@ export default class home_page extends PureComponent {
 			);
 		}
 		let firstUserDisplay = null;
-		firstUserDisplay = (
-			<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
-				{showDiv === 'circle' ? (
-					<div className={style.circle_box}>
-						<Circle percentSatus={percentSatus} percentData={percentData} />
-					</div>
-				) : null}
-				{showDiv === '50000' ? (
-					<div className={style.font50000_box}>
-						<img className={style.font50000} src={font50000} />
-						<div className={style.font50000_desc}>最高金额(元）</div>
-					</div>
-				) : null}
-			</Card50000>
-		);
+		if (JSON.stringify(firstUserInfo) != '{}') {
+			firstUserDisplay = (
+				<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
+					{showDiv === 'circle' ? (
+						<div className={style.circle_box}>
+							<Circle percentSatus={percentSatus} percentData={percentData} />
+						</div>
+					) : null}
+					{showDiv === '50000' ? (
+						<div className={style.font50000_box}>
+							<img className={style.font50000} src={font50000} />
+							<div className={style.font50000_desc}>最高金额(元）</div>
+						</div>
+					) : null}
+				</Card50000>
+			);
+		}
 
 		switch (usrIndexInfo.indexSts) {
 			case 'LN0001': // 新用户，信用卡未授权
@@ -764,14 +825,20 @@ export default class home_page extends PureComponent {
 						isNewModal={this.state.isNewModal}
 					/>
 				)}
-				<Modal popup className="modal_l_r" visible={this.state.modal2} animationType="slide-up" maskClosable={false}>
+				<Modal
+					popup
+					className="modal_l_r"
+					visible={this.state.isShowCreditModal}
+					animationType="slide-up"
+					maskClosable={false}
+				>
 					<div className={style.modal_box}>
 						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
 							<div className={style.modal_header}>
 								确认代还信息
 							<Icon
 									onClick={() => {
-										this.onClose('modal2');
+										this.closeCreditModal()
 									}}
 									className={style.close}
 									type="cross"
@@ -814,52 +881,14 @@ export default class home_page extends PureComponent {
 											this.setState({
 												modal_left: true
 											});
-											this.qryPerdRate()
 										}}
-										extra="请选择"
+										extra={this.state.selectedLoanDate ? this.state.selectedLoanDate.perdPageNm : '请选择'}
 										arrow="horizontal"
 									>
 										借多久
 								</List.Item>
 								</div>
-								{/* {autId && (
-									<div className={style.labelDiv}>
-										{getFieldDecorator('loanDate', {
-											initialValue: this.state.selectedLoanDate && [
-												this.state.selectedLoanDate.perdCnt,
-												this.state.selectedLoanDate.perdPageNm
-											],
-											rules: [{ required: true, message: '请选择借款期限' }],
-											onChange: (value, label) => {
-												this.filterLoanDate(value);
-											}
-										})(
-											<AsyncCascadePicker
-												loadData={[
-													() =>
-														this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
-															const date =
-																res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-															this.setState({
-																perdRateList: date,
-																selectedLoanDate: date[0] // 默认选中3期
-															});
-															return date.map((item) => ({
-																value: item.perdCnt,
-																label: item.perdPageNm
-															}));
-														})
-												]}
-												cols={1}
-											>
-												<List.Item>借多久</List.Item>
-											</AsyncCascadePicker>
-										)}
-									</div>
-								)} */}
-
-
-								<SXFButton className={style.modal_btn_box}>确定</SXFButton>
+								<SXFButton className={style.modal_btn_box} onClick={this.submitCredit}>确定</SXFButton>
 							</div>
 						</div>
 						<div
@@ -877,9 +906,15 @@ export default class home_page extends PureComponent {
 							<div>
 								{
 									perdRateList.map((item, idx) => (
-										<div className={style.listitem}>
-											<span>3个月</span>
-											<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+										<div key={idx} className={style.listitem} onClick={() => {
+											this.setState({
+												selectedLoanDate: item
+											})
+										}}>
+											<span>{item.perdPageNm}</span>
+											{
+												selectedLoanDate.perdCnt === item.perdCnt && <Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+											}
 										</div>
 									))
 								}

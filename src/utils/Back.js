@@ -23,7 +23,7 @@ let initDialog = (errMsg) => {
 				]}
 				onRequestClose={(res) => {
 					if (!res) {
-						if (store.getNeedNextUrl()&& !store.getToggleMoxieCard()) {
+						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
@@ -178,18 +178,8 @@ if (window.history && window.history.pushState) {
 							logoutAppHandler();
 							break;
 						case '/order/repayment_succ_page':
-							window.ReactRouterHistory.push('/home/home');
-							break;
 						case '/mine/credit_list_page':
-							window.ReactRouterHistory.push('/home/home');
-							break;
 						case '/mine/credit_extension_page':
-							if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {
-								window.ReactRouterHistory.push('/home/home');
-							} else {
-								window.ReactRouterHistory.push('/mine/mine_page');
-							}
-							break;
 						case '/home/confirm_agency': // 确认信息页物理返回到首页
 							window.ReactRouterHistory.push('/home/home');
 							break;
