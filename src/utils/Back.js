@@ -23,8 +23,13 @@ let initDialog = (errMsg) => {
 				]}
 				onRequestClose={(res) => {
 					if (!res) {
-						history.go(-2);
-						obj.close();
+						if (store.getNeedNextUrl()) {
+                            obj.close();
+							window.ReactRouterHistory.push('/home/home');
+						} else {
+							history.go(-2);
+							obj.close();
+						}
 					} else {
 						obj.close();
 					}
@@ -78,7 +83,7 @@ if (window.history && window.history.pushState) {
 				window.location.pathname === '/home/essential_information' ||
 				window.location.pathname === '/home/real_name'
 			) {
-				if ((userInfo && userInfo.nameHid) || backFlag) {
+				if (userInfo && userInfo.nameHid && backFlag) {
 					history.go(-2);
 				} else {
 					document.activeElement.blur();

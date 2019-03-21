@@ -234,7 +234,8 @@ export const closePage = () => {
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
 	GETSTSW: '/my/getStsw', // 获取首页进度
-	getOperator: '/auth/operatorAuth' // 运营商的跳转URL
+    getOperator: '/auth/operatorAuth', // 运营商的跳转URL
+    qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 };
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false }) => {

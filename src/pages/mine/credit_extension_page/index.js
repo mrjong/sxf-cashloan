@@ -213,14 +213,14 @@ export default class credit_extension_page extends PureComponent {
 		return (
 			<div className={styles.credit_extension_page}>
 				<Lists listsInf={data} clickCb={this.getStateData} />
-				{isShowBtn ? (
+				{/* {isShowBtn ? (
 					<ButtonCustom
 						onClick={submitFlag ? this.commitApply : null}
 						className={submitFlag ? styles.commit_btn : styles.not_commit_btn}
 					>
 						提交代偿金申请
 					</ButtonCustom>
-				) : null}
+				) : null} */}
 				{/* 确认代还信息弹框 */}
 				<Modal
 					transparent

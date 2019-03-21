@@ -86,6 +86,7 @@ let getProdPlugins = function() {
 	}
 	plugins.push(
 		new CopyWebpackPlugin([
+            { from: path.resolve(__dirname, '../src/assets/fonts'), to: 'assets/fonts' },
 			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
             { from: path.resolve(__dirname, '../*.html'), to: './' },
@@ -128,6 +129,7 @@ let getTestPlugins = function() {
 	plugins.push(new webpack.HashedModuleIdsPlugin());
 	plugins.push(
 		new CopyWebpackPlugin([
+            { from: path.resolve(__dirname, '../src/assets/fonts'), to: 'assets/fonts' },
 			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
             { from: path.resolve(__dirname, '../*.html'), to: './' },

@@ -50,7 +50,11 @@ export default class essential_information_page extends PureComponent {
 	componentWillMount() {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
-		}
+        }
+        if(store.getMoxieBackUrl()){
+            store.removeMoxieBackUrl()
+            this.props.history.push(`/home/home`)
+        }
 		buryingPoints();
 		urlQuery = this.props.history.location.search;
 		this.initBasicInfo();
@@ -189,7 +193,8 @@ export default class essential_information_page extends PureComponent {
 								if (store.getNeedNextUrl()) {
 									getNextStr({
 										$props: this.props
-									});
+                                    });
+                                    store.setMoxieBackUrl('/home/home');
 								} else {
 									this.props.history.replace({
 										pathname: '/mine/credit_extension_page',
