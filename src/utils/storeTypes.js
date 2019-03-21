@@ -58,5 +58,6 @@ export const storeTypes = {
 	CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
 	MposToken: 'MposToken', // mpos token 关闭无效问题
 	NeedNextUrl: 'NeedNextUrl', // 需要调用获取下一步url方法
-	CreditExtensionNot: 'CreditExtensionNot' // 未提交授信用户
+	CreditExtensionNot: 'CreditExtensionNot', // 未提交授信用户
+	ToggleMoxieCard: 'ToggleMoxieCard' // 新版流程物理返回  借钱还信用卡 切换卡
 };

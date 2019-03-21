@@ -1,6 +1,6 @@
 import defaultBanner from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
-import { Modal, Progress } from 'antd-mobile';
+import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
@@ -18,6 +18,7 @@ import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
+
 import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
 import Circle from './components/Circle';
@@ -29,7 +30,20 @@ const API = {
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck' // 复借风控校验接口
 };
-
+const tagList = [
+	{
+		name: '全额还款',
+		value: 1
+	},
+	{
+		name: '最低还款',
+		value: 2
+	},
+	{
+		name: '部分还款',
+		value: 3
+	}
+];
 let token = '';
 let tokenFromStorage = '';
 
@@ -46,6 +60,7 @@ export default class home_page extends PureComponent {
 		this.state = {
 			showDefaultTip: false,
 			bannerList: [],
+			modal2: false,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -57,7 +72,9 @@ export default class home_page extends PureComponent {
 			isNewModal: false,
 			handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
-			showDiv: ''
+			showDiv: '',
+			modal_left: false,
+			activeTag: 0
 		};
 	}
 
@@ -110,8 +127,8 @@ export default class home_page extends PureComponent {
 	};
 	// 未提交授信
 	credit_extension_not = async () => {
-        let data = await getNextStr({ $props: this.props, needReturn: true });
-        store.setCreditExtensionNot(true)
+		let data = await getNextStr({ $props: this.props, needReturn: true });
+		store.setCreditExtensionNot(true);
 		this.calculatePercent(data);
 		this.cacheBanner();
 	};
@@ -192,8 +209,8 @@ export default class home_page extends PureComponent {
 
 			case 3: // 新用户，信用卡未授权
 				this.setState({
-                    percentData: 98,
-                    percentSatus: '1',
+					percentData: 98,
+					percentSatus: '1',
 					showDiv: 'circle'
 				});
 				break;
@@ -427,7 +444,10 @@ export default class home_page extends PureComponent {
 	};
 
 	handleApply = () => {
-		getNextStr({ $props: this.props });
+		this.setState({
+			modal2: true
+		});
+		// getNextStr({ $props: this.props });
 	};
 
 	// 获取首页信息
@@ -549,8 +569,24 @@ export default class home_page extends PureComponent {
 		}
 	};
 
+	onClose = (type) => {
+		console.log(type);
+		this.setState({
+			[type]: false
+		});
+	};
+
 	render() {
-		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus, percentData, showDiv } = this.state;
+		const {
+			bannerList,
+			usrIndexInfo,
+			visibleLoading,
+			percent,
+			percentSatus,
+			percentData,
+			showDiv,
+			activeTag
+		} = this.state;
 		const { history } = this.props;
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
@@ -677,6 +713,81 @@ export default class home_page extends PureComponent {
 						isNewModal={this.state.isNewModal}
 					/>
 				)}
+				<Modal popup className="modal_l_r" visible={this.state.modal2} animationType="slide-up" maskClosable={false}>
+					<div className={style.modal_box}>
+                    <div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
+						<div className={style.modal_header}>
+							确认代还信息
+							<Icon
+								onClick={() => {
+									this.onClose('modal2');
+								}}
+								className={style.close}
+								type="cross"
+							/>
+						</div>
+						<div>
+							<div className={style.tagList}>
+								{tagList.map((item, idx) => (
+									<span
+										key={idx}
+										className={[ style.tagButton, activeTag === idx && style.activeTag ].join(' ')}
+										onClick={() => {
+											this.toggleTag(idx);
+										}}
+									>
+										{item.name}
+									</span>
+								))}
+							</div>
+							<List>
+								<InputItem clear placeholder="auto focus">
+									帮你还多少(元）
+								</InputItem>
+								<List.Item
+									onClick={() => {
+										this.setState({
+											modal_left: true
+										});
+									}}
+									extra="请选择"
+									arrow="horizontal"
+								>
+									借多久
+								</List.Item>
+							</List>
+							<SXFButton className={style.modal_btn_box}>确定</SXFButton>
+						</div>
+					</div>
+					<div
+						className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
+						onClick={() => {
+							this.setState({
+								modal_left: false
+							});
+						}}
+					>
+						<div className={style.modal_header}>
+							选择期限
+							<Icon className={style.modal_leftIcon} type="left" />
+						</div>
+						<div>
+							<div className={style.listitem}>
+								<span>3个月</span>
+								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+							</div>
+                            <div className={style.listitem}>
+								<span>3个月</span>
+								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+							</div>
+                            <div className={style.listitem}>
+								<span>3个月</span>
+								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+							</div>
+						</div>
+					</div>
+                    </div>
+				</Modal>
 
 				<Modal wrapClassName={style.modalLoadingBox} visible={visibleLoading} transparent maskClosable={false}>
 					<div className="show-info">

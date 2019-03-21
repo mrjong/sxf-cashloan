@@ -1,157 +1,169 @@
 @import '../../../assets/styles/scss/base/fn';
+.step_box {
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+.mt50{
+    margin-top: 50px;
+}
 .nameDiv {
-  width: 100%;
-  padding-bottom: .5rem;
-  .infromationTitle {
-    height: 80px;
-    line-height: 80px;
-    padding-left: 28px;
-    font-size: 0.26rem;
-    color: #a9aeb6;
-  }
-  .informationList {
-    font-size: 32px;
-    height: 140px;
-    background: #fff;
-    padding: 15px 20px 0 20px;
-    text-align: center;
-    img {
-      width: 45px;
-      margin-top: 30px;
-    }
-    table {
-      width: 100%;
-    }
-    td {
-      text-align: center;
-    }
-    .selectLine {
-      display: inline-block;
-      height: 2px;
-      width: 200px;
-      background: #99262a;
-      position: relative;
-      top: -17px;
-    }
-    .Line {
-      display: inline-block;
-      height: 2px;
-      width: 200px;
-      background: #e3e4e6;
-      position: relative;
-      top: -17px;
-    }
-    .imgList {
-      width: 100%;
-    }
-  }
-  .informationMore {
-    position: relative;
-    width: 0.13rem;
-    float: right;
-    right: 0.35rem;
-    margin-top: -0.5rem;
-  }
-  .labelDiv {
-    background: #fff;
-  }
-  .inputDiv {
-    text-align: right;
-    background: #fff;
-    margin-top: 20px;
-  }
-  .nameLabel {
-    display: inline-block;
-    max-width: 100%;
-    font-size: 30px;
-    line-height: 90px;
-    padding-left: 30px;
-  }
-  .nameInput {
-    display: block;
-    width: 55%;
-    padding: 0.2rem 0.4rem;
-    font-size: 0.3rem;
-    height: 0.42rem;
-    line-height: 0.42rem;
-    color: #555;
-    border: none;
-    float: right;
-    text-align: right;
-    margin-top: 0.1rem;
-    margin-right: 22px;
-  }
-  input::placeholder {
-    color: #c7c6cc;
-    font-size: 30px;
-  }
-  .clear {
-    clear: both;
-  }
-  .inline {
-    width: 96%;
-    margin: -3px 0 0 30px;
-    background: #d8d7dc;
-    height: 1.5px;
-  }
-  .des {
-    font-size: 20px;
-    color: #9d9d9d;
-    padding: 20px 30px;
-    letter-spacing: 1.5px;
-    line-height: 17px;
-    .desOne {
-      line-height: 36px;
-      margin-bottom: 15px;
-      font-size: 0.29rem;
-    }
-  }
-  .sureBtn {
-    width: 6.2rem;
-    margin-top: 29px;
-  }
+	width: 100%;
+	padding-bottom: .5rem;
+	.infromationTitle {
+		height: 80px;
+		line-height: 80px;
+		padding-left: 28px;
+		font-size: 30px;
+		span {
+			border-left: 8px solid #EBDE74;
+			padding-left: 16px;
+			font-weight: 600;
+		}
+	}
+	.informationList {
+		font-size: 32px;
+		height: 140px;
+		background: #fff;
+		padding: 15px 20px 0 20px;
+		text-align: center;
+		img {
+			width: 45px;
+			margin-top: 30px;
+		}
+		table {
+			width: 100%;
+		}
+		td {
+			text-align: center;
+		}
+		.selectLine {
+			display: inline-block;
+			height: 2px;
+			width: 200px;
+			background: #99262a;
+			position: relative;
+			top: -17px;
+		}
+		.Line {
+			display: inline-block;
+			height: 2px;
+			width: 200px;
+			background: #e3e4e6;
+			position: relative;
+			top: -17px;
+		}
+		.imgList {
+			width: 100%;
+		}
+	}
+	.informationMore {
+		position: relative;
+		width: 0.13rem;
+		float: right;
+		right: 0.35rem;
+		margin-top: -0.5rem;
+	}
+	.labelDiv {
+		background: #fff;
+	}
+	.inputDiv {
+		text-align: right;
+		background: #fff;
+		margin-top: 20px;
+	}
+	.nameLabel {
+		display: inline-block;
+		max-width: 100%;
+		font-size: 30px;
+		line-height: 90px;
+		padding-left: 30px;
+	}
+	.nameInput {
+		display: block;
+		width: 55%;
+		padding: 0.2rem 0.4rem;
+		font-size: 0.3rem;
+		height: 0.42rem;
+		line-height: 0.42rem;
+		color: #555;
+		border: none;
+		float: right;
+		text-align: right;
+		margin-top: 0.1rem;
+		margin-right: 22px;
+	}
+	input::placeholder {
+		color: #c7c6cc;
+		font-size: 30px;
+	}
+	.clear {
+		clear: both;
+	}
+	.inline {
+		width: 96%;
+		margin: -3px 0 0 30px;
+		background: #d8d7dc;
+		height: 1.5px;
+	}
+	.des {
+		font-size: 20px;
+		color: #9d9d9d;
+		padding: 20px 30px;
+		letter-spacing: 1.5px;
+        line-height: 17px;
+        margin-top: 15px;
+		.desOne {
+			line-height: 36px;
+			margin-bottom: 15px;
+			font-size: 0.29rem;
+		}
+	}
+	.sureBtn {
+		width: 6.2rem;
+		margin-top: 29px;
+	}
 }
 
 .noBorder {
-  :global {
-    .am-list-item.am-list-item-middle .am-list-line {
-      // border-bottom: none;
-      &:after{
-        @include setBottomLine(transparent);
-      }
-    }
-  }
+	:global {
+		.am-list-item.am-list-item-middle .am-list-line {
+			// border-bottom: none;
+			&:after {
+				@include setBottomLine(transparent);
+			}
+		}
+	}
 }
 
 :global {
-  .am-list-item .am-list-line .am-list-extra {
-    padding-top: 0.25rem;
-    color: #333;
-    margin-right: 0.35rem;
-    font-size: 0.3rem;
-  }
-  .am-list-item.am-list-item-active {
-    background-color: #fff;
-  }
-  .am-list-item .am-list-line .am-list-content {
-    font-size: 0.3rem;
-    color: #252729;
-  }
+	.am-list-item .am-list-line .am-list-extra {
+		padding-top: 0.25rem;
+		color: #333;
+		margin-right: 0.35rem;
+		font-size: 0.3rem;
+	}
+	.am-list-item.am-list-item-active {
+		background-color: #fff;
+	}
+	.am-list-item .am-list-line .am-list-content {
+		font-size: 0.3rem;
+		color: #252729;
+	}
 
-  .am-list-item .am-input-control input {
-    text-align: right;
-    padding-right: 0.05rem;
-    font-size: 0.3rem;
-    color: #333;
-  }
-  .am-list-item .am-input-label {
-    color: #282828;
-    font-size: 0.3rem;
-  }
-  .am-list-item.am-list-item-middle .am-list-line {
-    // border-bottom: 1PX  solid #e5e5e5;rrr
-    &:after{
-      @include setBottomLine();
-    }
-  }
+	.am-list-item .am-input-control input {
+		text-align: right;
+		padding-right: 0.05rem;
+		font-size: 0.3rem;
+		color: #333;
+	}
+	.am-list-item .am-input-label {
+		color: #282828;
+		font-size: 0.3rem;
+	}
+	.am-list-item.am-list-item-middle .am-list-line {
+		// border-bottom: 1PX  solid #e5e5e5;rrr
+		&:after {
+			@include setBottomLine();
+		}
+	}
 }

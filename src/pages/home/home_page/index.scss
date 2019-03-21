@@ -1,3 +1,5 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .home_page {
 	.default_banner {
 		// height: auto;
@@ -79,6 +81,11 @@
 }
 // modal样式覆盖
 :global {
+    .modal_l_r {
+        .am-modal-body {
+            overflow: hidden;
+        }
+    }
 	.am-modal-body {
 		.am-modal-alert-content {
 			line-height: 3;
@@ -86,6 +93,21 @@
 	}
 	.am-progress-bar {
 		border: 0.04rem solid #ffda58;
+	}
+	.popup_box {
+		&.am-modal-popup-slide-up {
+			left: -100%;
+		}
+	}
+	.popup_box2 {
+		&.am-modal-popup-slide-up {
+			left: 0%;
+		}
+	}
+	.popup_box3 {
+		&.am-modal-popup-slide-up {
+			left: 100%;
+		}
 	}
 }
 .subDesc {
@@ -98,4 +120,98 @@
 	color: #666;
 	margin-bottom: 15px;
 	font-size: 32px;
+}
+.modal_left {
+	float: left;
+	min-height: 760px;
+	background: #fff;
+	width: 50%;
+	transition: all .3s;
+}
+.modal_left1 {
+	margin-left: -50%;
+}
+.modal_box {
+	width: 200%;
+	overflow: hidden;
+}
+.modal_right {
+	float: left;
+	min-height: 760px;
+	background: #fff;
+	width: 50%;
+	transition: all .3s;
+}
+.modal_left2 {
+	margin-left: 0%;
+}
+
+.modal_header {
+	position: relative;
+	font-size: 36px;
+	color: #333;
+	font-weight: 600;
+	padding: 15px 0;
+	&::after {
+		@include setBottomLine();
+	}
+
+	.modal_leftIcon {
+		position: absolute;
+		left: 0;
+		padding: 10px;
+		top: 0;
+	}
+	.close {
+		position: absolute;
+		right: 0;
+		padding: 10px;
+		top: 0;
+	}
+}
+.listitem {
+	position: relative;
+	margin-top: 10px;
+	font-size: 34px;
+	color: #333;
+	padding: 15px;
+	&::after {
+		@include setBottomLine();
+		left: 30px;
+	}
+	.checkIcon {
+		width: 45px;
+		height: 45px;
+		position: absolute;
+		right: 10px;
+		padding: 10px;
+		top: 0;
+		color: #ebde74;
+	}
+}
+.tagList {
+	display: flex;
+	justify-content: space-between;
+	margin: 76px 30px 100px;
+	.tagButton {
+		display: inline-block;
+		width: 180px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #f66;
+		border: 1px solid #f66;
+		box-sizing: border-box;
+	}
+	.activeTag {
+		color: #fff;
+		background: #f66;
+	}
+}
+.modal_btn_box {
+	margin: 80px auto;
+	width: 80%;
 }

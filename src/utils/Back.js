@@ -24,7 +24,7 @@ let initDialog = (errMsg) => {
 				onRequestClose={(res) => {
 					if (!res) {
 						if (store.getNeedNextUrl()) {
-                            obj.close();
+							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
 							history.go(-2);
@@ -52,14 +52,19 @@ if (window.history && window.history.pushState) {
 			tokenFromStorage = store.getToken();
 			// 返回拦截弹窗
 			let userInfo = store.getUserInfo();
-            let backFlag = store.getBackFlag();
-            console.log('------------------')
+			let backFlag = store.getBackFlag();
+			console.log('------------------');
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard) {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+            }
+            /* 新版流程物理返回  借钱还信用卡 切换卡*/
 			// 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
 			//   if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
 			//     if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {
@@ -81,7 +86,8 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (
 				window.location.pathname === '/home/essential_information' ||
-				window.location.pathname === '/home/real_name'
+				window.location.pathname === '/home/real_name' ||
+				window.location.pathname === '/home/moxie_bank_list_page'
 			) {
 				if (userInfo && userInfo.nameHid && backFlag) {
 					history.go(-2);
