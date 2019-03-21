@@ -36,12 +36,12 @@ export default class middle_page extends Component {
 						});
 						return;
 					}
-					if (store.getNeedNextUrl()&&!store.getToggleMoxieCard()) {
+					this.buryPointsType(taskType, true);
+					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 						getNextStr({
 							$props: this.props
 						});
 					} else {
-						this.buryPointsType(taskType, true);
 						this.goRouter();
 					}
 				})
@@ -62,7 +62,11 @@ export default class middle_page extends Component {
                 1 任务进行成功 
                 2 任务进行中
              */
-			this.props.history.back();
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
+			} else {
+				this.props.history.back();
+			}
 		} else {
 			this.setState({
 				errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
