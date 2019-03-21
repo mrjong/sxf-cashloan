@@ -156,6 +156,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   // 代还其他信用卡点击事件
   repayForOtherBank = (count) => {
+    store.setToggle()
     if (count > 1) {
       store.setBackUrl('/home/loan_repay_confirm_page');
       const { usrIndexInfo } = this.state;
@@ -332,9 +333,13 @@ export default class loan_repay_confirm_page extends PureComponent {
         <div className={style.tagList}>
           {
             tagList.map((item, idx) => (
-              <span key={idx} className={[style.tagButton, activeTag === idx && style.activeTag].join(' ')} onClick={() => {
-                this.toggleTag(idx)
-              }}>{item.name}</span>
+              <span
+                key={idx}
+                className={[style.tagButton, activeTag === idx && style.activeTag].join(' ')}
+                onClick={() => {
+                  this.toggleTag(idx)
+                }}
+              >{item.name}</span>
             ))
           }
         </div>
