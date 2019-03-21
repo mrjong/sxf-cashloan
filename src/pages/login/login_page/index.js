@@ -48,17 +48,17 @@ export default class login_page extends PureComponent {
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
-        Cookie.remove('fin-v-card-token');
+		Cookie.remove('fin-v-card-token');
 
-        let MessageTag50000 = store.getMessageTag50000();
-        let MessageTagError = store.getMessageTagError();
-        let MessageTagStep = store.getMessageTagStep();
+		let MessageTag50000 = store.getMessageTag50000();
+		let MessageTagError = store.getMessageTagError();
+		let MessageTagStep = store.getMessageTagStep();
 		sessionStorage.clear();
-        localStorage.clear();
-        // 首页弹窗要用的
-        store.setMessageTag50000(MessageTag50000);
-        store.setMessageTagError(MessageTagError);
-        store.setMessageTagStep(MessageTagStep);
+		localStorage.clear();
+		// 首页弹窗要用的
+		MessageTag50000 && store.setMessageTag50000(MessageTag50000);
+		MessageTagError && store.setMessageTagError(MessageTagError);
+		MessageTagStep && store.setMessageTagStep(MessageTagStep);
 
 		setH5Channel(storeH5Channel);
 
@@ -177,13 +177,13 @@ export default class login_page extends PureComponent {
 				if (this.state.disabledInput) {
 					param = {
 						type: '6',
-                        authToken: queryData && queryData.tokenId,
-                        osType
+						authToken: queryData && queryData.tokenId,
+						osType
 					};
 				} else {
 					param = {
-                        type: '6',
-                        mblNo: values.phoneValue,
+						type: '6',
+						mblNo: values.phoneValue,
 						osType
 					};
 				}
@@ -225,7 +225,7 @@ export default class login_page extends PureComponent {
 						disabled={this.state.disabledInput}
 						id="inputPhone"
 						maxLength="11"
-                        type="number"
+						type="number"
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
 						{...getFieldProps('phoneValue', {
@@ -241,7 +241,7 @@ export default class login_page extends PureComponent {
 					<div className={styles.smsBox}>
 						<InputItem
 							id="inputCode"
-                            type="number"
+							type="number"
 							maxLength="6"
 							className={styles.loginInput}
 							placeholder="请输入短信验证码"
