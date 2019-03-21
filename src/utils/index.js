@@ -241,7 +241,6 @@ export const closePage = () => {
 };
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = ($props, repaymentDate) => {
-	console.log(repaymentDate,'==============');
 	const address = store.getPosition();
 	const params = {
 		location: address,
@@ -249,7 +248,7 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		perdLth: repaymentDate.perdLth,
 		perdUnit: repaymentDate.perdUnit,
 		perdCnt: repaymentDate.perdCnt,
-		rpyAmt: repaymentDate.rpyAmt
+		rpyAmt: Number(repaymentDate.rpyAmt)
 	};
 	if (isMPOS()) {
 		getAppsList();
@@ -343,6 +342,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			}
 			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
 			if (!store.getCreditExtensionNot()) {
+                store.
 				handleClickConfirm($props);
 			} else {
 				$props.history.push('/home/loan_repay_confirm_page');

@@ -74,7 +74,8 @@ export default class home_page extends PureComponent {
 			percentData: 0,
 			showDiv: '',
 			modal_left: false,
-			activeTag: 0
+			activeTag: 0,
+			firstUserInfo: {}
 		};
 	}
 
@@ -101,6 +102,7 @@ export default class home_page extends PureComponent {
 				showDefaultTip: true
 			});
 		} else {
+			// 判断是否提交过授信
 			this.credit_extension();
 		}
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
@@ -121,9 +123,17 @@ export default class home_page extends PureComponent {
 	// 判断是否授信
 	credit_extension = () => {
 		setTimeout(() => {
-			this.credit_extension_not();
-			// this.requestGetUsrInfo();
-		}, 1000);
+			if (1 === 1) {
+				this.requestGetUsrInfo();
+			} else {
+				this.setState({
+					firstUserInfo: {
+						x: 1
+					}
+				});
+				this.credit_extension_not();
+			}
+		},1000);
 	};
 	// 未提交授信
 	credit_extension_not = async () => {
@@ -151,7 +161,8 @@ export default class home_page extends PureComponent {
 	calculatePercent = (data) => {
 		let codes = [];
 		let demo = data.codes;
-		let codesCopy = demo.slice(1, 3);
+		let codesCopy = demo.slice(1, 4);
+		console.log(data.codes, '-----');
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中
@@ -185,6 +196,7 @@ export default class home_page extends PureComponent {
 				percentData: 40
 			});
 		}
+		console.log(newCodes2);
 		switch (newCodes2.length) {
 			case 0: // 新用户，信用卡未授权
 				this.setState({
@@ -303,14 +315,14 @@ export default class home_page extends PureComponent {
 		} else {
 			clearInterval(timer);
 		}
-	}
+	};
 
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
 		// /mine/credit_extension_page?
 		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-	}
+	};
 
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
@@ -583,6 +595,7 @@ export default class home_page extends PureComponent {
 			percentSatus,
 			percentData,
 			showDiv,
+			firstUserInfo,
 			activeTag
 		} = this.state;
 		const { history } = this.props;
@@ -607,21 +620,23 @@ export default class home_page extends PureComponent {
 			);
 		}
 		let firstUserDisplay = null;
-		firstUserDisplay = (
-			<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
-				{showDiv === 'circle' ? (
-					<div className={style.circle_box}>
-						<Circle percentSatus={percentSatus} percentData={percentData} />
-					</div>
-				) : null}
-				{showDiv === '50000' ? (
-					<div className={style.font50000_box}>
-						<img className={style.font50000} src={font50000} />
-						<div className={style.font50000_desc}>最高金额(元）</div>
-					</div>
-				) : null}
-			</Card50000>
-		);
+		if (JSON.stringify(firstUserInfo) != '{}') {
+			firstUserDisplay = (
+				<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
+					{showDiv === 'circle' ? (
+						<div className={style.circle_box}>
+							<Circle percentSatus={percentSatus} percentData={percentData} />
+						</div>
+					) : null}
+					{showDiv === '50000' ? (
+						<div className={style.font50000_box}>
+							<img className={style.font50000} src={font50000} />
+							<div className={style.font50000_desc}>最高金额(元）</div>
+						</div>
+					) : null}
+				</Card50000>
+			);
+		}
 
 		switch (usrIndexInfo.indexSts) {
 			case 'LN0001': // 新用户，信用卡未授权
@@ -691,7 +706,13 @@ export default class home_page extends PureComponent {
 				) : (
 					<img className={style.default_banner} src={defaultBanner} alt="banner" />
 				)}
-				<button onClick={()=>{this.props.history.push('/home/loan_repay_confirm_page')}}>go</button>
+				<button
+					onClick={() => {
+						this.props.history.push('/home/loan_repay_confirm_page');
+					}}
+				>
+					go
+				</button>
 				{/* 未提交授信用户 */}
 				{firstUserDisplay ? <div>{firstUserDisplay}</div> : null}
 				{/* 历史授信用户 */}
@@ -711,80 +732,88 @@ export default class home_page extends PureComponent {
 						isNewModal={this.state.isNewModal}
 					/>
 				)}
-				<Modal popup className="modal_l_r" visible={this.state.modal2} animationType="slide-up" maskClosable={false}>
+				<Modal
+					popup
+					className="modal_l_r"
+					visible={this.state.modal2}
+					animationType="slide-up"
+					maskClosable={false}
+				>
 					<div className={style.modal_box}>
-                    <div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
-						<div className={style.modal_header}>
-							确认代还信息
-							<Icon
-								onClick={() => {
-									this.onClose('modal2');
-								}}
-								className={style.close}
-								type="cross"
-							/>
-						</div>
-						<div>
-							<div className={style.tagList}>
-								{tagList.map((item, idx) => (
-									<span
-										key={idx}
-										className={[ style.tagButton, activeTag === idx && style.activeTag ].join(' ')}
-										onClick={() => {
-											this.toggleTag(idx);
-										}}
-									>
-										{item.name}
-									</span>
-								))}
-							</div>
-							<List>
-								<InputItem clear placeholder="auto focus">
-									帮你还多少(元）
-								</InputItem>
-								<List.Item
+						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
+							<div className={style.modal_header}>
+								确认代还信息
+								<Icon
 									onClick={() => {
-										this.setState({
-											modal_left: true
-										});
+										this.onClose('modal2');
 									}}
-									extra="请选择"
-									arrow="horizontal"
-								>
-									借多久
-								</List.Item>
-							</List>
-							<SXFButton className={style.modal_btn_box}>确定</SXFButton>
+									className={style.close}
+									type="cross"
+								/>
+							</div>
+							<div>
+								<div className={style.tagList}>
+									{tagList.map((item, idx) => (
+										<span
+											key={idx}
+											className={[ style.tagButton, activeTag === idx && style.activeTag ].join(
+												' '
+											)}
+											onClick={() => {
+												this.toggleTag(idx);
+											}}
+										>
+											{item.name}
+										</span>
+									))}
+								</div>
+								<List>
+									<InputItem clear placeholder="auto focus">
+										帮你还多少(元）
+									</InputItem>
+									<List.Item
+										onClick={() => {
+											this.setState({
+												modal_left: true
+											});
+										}}
+										extra="请选择"
+										arrow="horizontal"
+									>
+										借多久
+									</List.Item>
+								</List>
+								<SXFButton className={style.modal_btn_box}>确定</SXFButton>
+							</div>
+						</div>
+						<div
+							className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
+							onClick={() => {
+								this.setState({
+									modal_left: false
+								});
+							}}
+						>
+							<div className={style.modal_header}>
+								选择期限
+								<Icon className={style.modal_leftIcon} type="left" />
+							</div>
+							<div>
+								<div className={style.listitem}>
+									<span>3个月</span>
+									<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+								</div>
+								<div className={style.listitem}>
+									<span>3个月</span>
+									<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+								</div>
+								<div className={style.listitem}>
+									<span>3个月</span>
+									<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+								</div>
+							</div>
 						</div>
 					</div>
-					<div
-						className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
-						onClick={() => {
-							this.setState({
-								modal_left: false
-							});
-						}}
-					>
-						<div className={style.modal_header}>
-							选择期限
-							<Icon className={style.modal_leftIcon} type="left" />
-						</div>
-						<div>
-							<div className={style.listitem}>
-								<span>3个月</span>
-								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
-							</div>
-                            <div className={style.listitem}>
-								<span>3个月</span>
-								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
-							</div>
-                            <div className={style.listitem}>
-								<span>3个月</span>
-								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
-							</div>
-						</div>
-					</div>
-                    </div>
 				</Modal>
 
 				<Modal wrapClassName={style.modalLoadingBox} visible={visibleLoading} transparent maskClosable={false}>
