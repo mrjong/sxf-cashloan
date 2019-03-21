@@ -247,6 +247,7 @@ export default class confirm_agency_page extends PureComponent {
       periodUnit: repaymentDate.periodUnit,
       agrNo: repayInfo.withDrawAgrNo,
       wtdwTyp: lendersDate.value,
+      autId: indexData && indexData.autId,
     }).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
         this.setState({

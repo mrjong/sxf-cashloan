@@ -148,4 +148,46 @@
   .am-progress-bar {
     border: 0.04rem solid #FFDA58;
   }
+
+  .protocolsBox{
+    padding: 20px;
+    box-sizing: border-box;
+    background: transparent;
+    .am-action-sheet-button-list{
+      color: #4CA6FF;
+    }
+    .am-action-sheet-button-list:last-child{
+      color: #333;
+    }
+    .am-action-sheet-button-list .am-action-sheet-cancel-button-mask{
+      background-color: transparent;
+      height: 20px;
+      top: -20px;
+    }
+    .am-action-sheet-button-list .am-action-sheet-cancel-button{
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    .am-action-sheet-button-list-item{
+      background: #fff;
+    }
+    .am-action-sheet-button-list-item:first-child{
+      border-radius: 10px 10px 0 0;
+    }
+    .am-action-sheet-button-list-item:nth-last-child(2){
+      border-radius: 0 0 10px 10px;
+    }
+  }
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    html:not([data-scale]) .protocolsBox .am-action-sheet-button-list-item {
+      border-top: none;
+    }
+    html:not([data-scale]) .protocolsBox .am-action-sheet-button-list-item:first-child:before,
+    html:not([data-scale]) .protocolsBox .am-action-sheet-button-list-item:last-child:before,
+    html:not([data-scale]) .am-action-sheet-button-list .am-action-sheet-cancel-button-mask::before,
+    html:not([data-scale]) .am-action-sheet-button-list .am-action-sheet-cancel-button-mask::after,
+    {
+      display: none;
+    }
+  }
 }

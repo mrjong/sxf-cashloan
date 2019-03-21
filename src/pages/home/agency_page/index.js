@@ -1,6 +1,6 @@
 import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
 import React, { PureComponent } from 'react';
-import { Modal, Progress } from 'antd-mobile';
+import { Modal, Progress, ActionSheet } from 'antd-mobile';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -26,6 +26,13 @@ const API = {
   // contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
   qryContractInfo: '/fund/qryContractInfo'  // 合同数据流获取
 };
+const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+let wrapProps;
+if (isIPhone) {
+  wrapProps = {
+    onTouchStart: e => e.preventDefault(),
+  };
+}
 
 @fetch.inject()
 export default class agency_page extends PureComponent {
@@ -473,6 +480,28 @@ export default class agency_page extends PureComponent {
     // }
   }
 
+  showAllProtocol = () => {
+    const { contractList } = this.state;
+    let arrList = [];
+    contractList && contractList.length && contractList.map((item,index)=>{
+      arrList.push(item.contractMdlName)
+    });
+    arrList.push('关闭');
+    ActionSheet.showActionSheetWithOptions({
+      options: arrList,
+      cancelButtonIndex: arrList.length - 1,
+      maskClosable: true,
+      'data-seed': 'logId',
+      wrapProps,
+      className: 'protocolsBox'
+    },
+    (buttonIndex) => {
+      if (!(buttonIndex === arrList.length - 1)) {
+        this.readContract(contractList[buttonIndex]);
+      }
+    });
+  }
+
   render() {
     const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent, contractList } = this.state;
     return (
@@ -529,7 +558,8 @@ export default class agency_page extends PureComponent {
         <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确认借款</ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          {
+          <span className={style.protocol_link} onClick={this.showAllProtocol}>《相关协议条件》</span>
+          {/* {
             contractList && contractList.length && contractList.map(( item, index ) => (
               <a
                 onClick={() => {
@@ -541,7 +571,7 @@ export default class agency_page extends PureComponent {
                 《{item.contractMdlName}》
               </a>
             ))
-          }
+          } */}
         </p>
         <Modal
           wrapClassName={style.modalLoading}
