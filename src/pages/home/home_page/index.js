@@ -23,6 +23,8 @@ import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
 import Circle from './components/Circle';
 import mockData from './mockData';
+import { createForm } from 'rc-form';
+
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -49,7 +51,7 @@ let tokenFromStorage = '';
 
 let timer;
 let timerOut;
-
+@createForm()
 @fetch.inject()
 export default class home_page extends PureComponent {
 	constructor(props) {
@@ -60,7 +62,7 @@ export default class home_page extends PureComponent {
 		this.state = {
 			showDefaultTip: false,
 			bannerList: [],
-			modal2: false,
+			modal2: true,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -74,7 +76,8 @@ export default class home_page extends PureComponent {
 			percentData: 0,
 			showDiv: '',
 			modal_left: false,
-			activeTag: 0
+			activeTag: 0,
+			perdRateList: []
 		};
 	}
 
@@ -572,7 +575,54 @@ export default class home_page extends PureComponent {
 		this.setState({
 			[type]: false
 		});
-	};
+	}
+
+	//切换tag标签
+	toggleTag = (idx) => {
+		const { selectedLoanDate = {}, cardBillAmt } = this.state
+		this.setState({
+			activeTag: idx
+		}, () => {
+			//全额还款
+			if (idx === 0) {
+				this.calcLoanMoney(8000, selectedLoanDate)
+			} else if (idx === 1) {
+				//最低还款
+				this.calcLoanMoney(1000, selectedLoanDate)
+			} else {
+				this.inputRef.focus()
+			}
+		})
+	}
+
+	//计算该显示的还款金额
+	calcLoanMoney = (money, obj) => {
+		console.log(money, obj);
+		if (money > obj.factAmtHigh) {
+			this.props.form.setFieldsValue({
+				loanMoney: obj.factAmtHigh
+			});
+		} else if (money < obj.factLmtLow) {
+			this.props.form.setFieldsValue({
+				loanMoney: obj.factLmtLow
+			});
+		} else {
+			this.props.form.setFieldsValue({
+				loanMoney: money
+			});
+		}
+	}
+
+	qryPerdRate = () => {
+		this.props.$fetch.get(`${API.qryPerdRate}/${this.state.usrIndexInfo.indexData.autId}`).then((res) => {
+			const date =
+				res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+			this.setState({
+				perdRateList: date,
+				selectedLoanDate: date[0] // 默认选中3期
+			})
+		})
+	}
 
 	render() {
 		const {
@@ -583,9 +633,12 @@ export default class home_page extends PureComponent {
 			percentSatus,
 			percentData,
 			showDiv,
-			activeTag
+			activeTag,
+			perdRateList
 		} = this.state;
+		// const { autId } = usrIndexInfo.indexData
 		const { history } = this.props;
+		const { getFieldDecorator } = this.props.form
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
 		if (!token) {
@@ -646,28 +699,28 @@ export default class home_page extends PureComponent {
 						toast={this.props.toast}
 					>
 						{usrIndexInfo.indexSts === 'LN0002' ||
-						usrIndexInfo.indexSts === 'LN0010' ||
-						(usrIndexInfo.indexData &&
-							usrIndexInfo.indexData.autSts &&
-							usrIndexInfo.indexData.autSts !== '2') ||
-						((usrIndexInfo.indexSts === 'LN0003' ||
-							usrIndexInfo.indexSts === 'LN0006' ||
-							usrIndexInfo.indexSts === 'LN0008') &&
-							(!usrIndexInfo.indexData ||
-								!usrIndexInfo.indexData.autSts ||
-								usrIndexInfo.indexData.autSts !== '2')) ? null : (
-							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-								{usrIndexInfo.indexSts === 'LN0003' ||
+							usrIndexInfo.indexSts === 'LN0010' ||
+							(usrIndexInfo.indexData &&
+								usrIndexInfo.indexData.autSts &&
+								usrIndexInfo.indexData.autSts !== '2') ||
+							((usrIndexInfo.indexSts === 'LN0003' ||
 								usrIndexInfo.indexSts === 'LN0006' ||
-								usrIndexInfo.indexSts === 'LN0008' ? (
-									'一键还账单'
-								) : usrIndexInfo.indexSts === 'LN0001' ? (
-									'查看我的账单，帮我还'
-								) : (
-									usrIndexInfo.indexMsg.replace('代还', '代偿')
-								)}
-							</SXFButton>
-						)}
+								usrIndexInfo.indexSts === 'LN0008') &&
+								(!usrIndexInfo.indexData ||
+									!usrIndexInfo.indexData.autSts ||
+									usrIndexInfo.indexData.autSts !== '2')) ? null : (
+								<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+									{usrIndexInfo.indexSts === 'LN0003' ||
+										usrIndexInfo.indexSts === 'LN0006' ||
+										usrIndexInfo.indexSts === 'LN0008' ? (
+											'一键还账单'
+										) : usrIndexInfo.indexSts === 'LN0001' ? (
+											'查看我的账单，帮我还'
+										) : (
+												usrIndexInfo.indexMsg.replace('代还', '代偿')
+											)}
+								</SXFButton>
+							)}
 					</BankContent>
 				);
 				break;
@@ -687,11 +740,11 @@ export default class home_page extends PureComponent {
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-					<img className={style.default_banner} src={defaultBanner} alt="banner" />
-				) : (
-					<img className={style.default_banner} src={defaultBanner} alt="banner" />
-				)}
-				<button onClick={()=>{this.props.history.push('/home/loan_repay_confirm_page')}}>go</button>
+						<img className={style.default_banner} src={defaultBanner} alt="banner" />
+					) : (
+							<img className={style.default_banner} src={defaultBanner} alt="banner" />
+						)}
+				<button onClick={() => { this.props.history.push('/home/loan_repay_confirm_page') }}>go</button>
 				{/* 未提交授信用户 */}
 				{firstUserDisplay ? <div>{firstUserDisplay}</div> : null}
 				{/* 历史授信用户 */}
@@ -713,78 +766,126 @@ export default class home_page extends PureComponent {
 				)}
 				<Modal popup className="modal_l_r" visible={this.state.modal2} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
-                    <div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
-						<div className={style.modal_header}>
-							确认代还信息
+						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
+							<div className={style.modal_header}>
+								确认代还信息
 							<Icon
-								onClick={() => {
-									this.onClose('modal2');
-								}}
-								className={style.close}
-								type="cross"
-							/>
-						</div>
-						<div>
-							<div className={style.tagList}>
-								{tagList.map((item, idx) => (
-									<span
-										key={idx}
-										className={[ style.tagButton, activeTag === idx && style.activeTag ].join(' ')}
-										onClick={() => {
-											this.toggleTag(idx);
-										}}
-									>
-										{item.name}
-									</span>
-								))}
-							</div>
-							<List>
-								<InputItem clear placeholder="auto focus">
-									帮你还多少(元）
-								</InputItem>
-								<List.Item
 									onClick={() => {
-										this.setState({
-											modal_left: true
-										});
+										this.onClose('modal2');
 									}}
-									extra="请选择"
-									arrow="horizontal"
-								>
-									借多久
+									className={style.close}
+									type="cross"
+								/>
+							</div>
+							<div>
+								<div className={style.tagList}>
+									{tagList.map((item, idx) => (
+										<span
+											key={idx}
+											className={[style.tagButton, activeTag === idx && style.activeTag].join(' ')}
+											onClick={() => {
+												this.toggleTag(idx);
+											}}
+										>
+											{item.name}
+										</span>
+									))}
+								</div>
+
+								<div className={style.labelDiv}>
+									{getFieldDecorator('loanMoney', {
+										initialValue: this.state.loanMoney,
+										rules: [{ required: true, message: '请输入还款金额' }],
+										onChange: (value) => {
+										}
+									})(
+										<InputItem
+											placeholder={'申请金额3000-25000元'}
+											type="text"
+											disabled={activeTag !== 2}
+											ref={el => this.inputRef = el}
+											className={activeTag === 2 ? 'blackColor' : ''}
+										>
+											帮你还多少(元)
+										</InputItem>
+									)}
+									<List.Item
+										onClick={() => {
+											this.setState({
+												modal_left: true
+											});
+											this.qryPerdRate()
+										}}
+										extra="请选择"
+										arrow="horizontal"
+									>
+										借多久
 								</List.Item>
-							</List>
-							<SXFButton className={style.modal_btn_box}>确定</SXFButton>
+								</div>
+								{/* {autId && (
+									<div className={style.labelDiv}>
+										{getFieldDecorator('loanDate', {
+											initialValue: this.state.selectedLoanDate && [
+												this.state.selectedLoanDate.perdCnt,
+												this.state.selectedLoanDate.perdPageNm
+											],
+											rules: [{ required: true, message: '请选择借款期限' }],
+											onChange: (value, label) => {
+												this.filterLoanDate(value);
+											}
+										})(
+											<AsyncCascadePicker
+												loadData={[
+													() =>
+														this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
+															const date =
+																res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+															this.setState({
+																perdRateList: date,
+																selectedLoanDate: date[0] // 默认选中3期
+															});
+															return date.map((item) => ({
+																value: item.perdCnt,
+																label: item.perdPageNm
+															}));
+														})
+												]}
+												cols={1}
+											>
+												<List.Item>借多久</List.Item>
+											</AsyncCascadePicker>
+										)}
+									</div>
+								)} */}
+
+
+								<SXFButton className={style.modal_btn_box}>确定</SXFButton>
+							</div>
 						</div>
-					</div>
-					<div
-						className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
-						onClick={() => {
-							this.setState({
-								modal_left: false
-							});
-						}}
-					>
-						<div className={style.modal_header}>
-							选择期限
+						<div
+							className={[style.modal_right, this.state.modal_left ? style.modal_left2 : ''].join(' ')}
+							onClick={() => {
+								this.setState({
+									modal_left: false
+								});
+							}}
+						>
+							<div className={style.modal_header}>
+								选择期限
 							<Icon className={style.modal_leftIcon} type="left" />
-						</div>
-						<div>
-							<div className={style.listitem}>
-								<span>3个月</span>
-								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
 							</div>
-                            <div className={style.listitem}>
-								<span>3个月</span>
-								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
-							</div>
-                            <div className={style.listitem}>
-								<span>3个月</span>
-								<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+							<div>
+								{
+									perdRateList.map((item, idx) => (
+										<div className={style.listitem}>
+											<span>3个月</span>
+											<Icon className={style.checkIcon} size="xs" type="check-circle-o" />
+										</div>
+									))
+								}
 							</div>
 						</div>
 					</div>
-                    </div>
 				</Modal>
 
 				<Modal wrapClassName={style.modalLoadingBox} visible={visibleLoading} transparent maskClosable={false}>
