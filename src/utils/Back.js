@@ -52,8 +52,8 @@ if (window.history && window.history.pushState) {
 			tokenFromStorage = store.getToken();
 			// 返回拦截弹窗
 			let userInfo = store.getUserInfo();
-			let backFlag = store.getBackFlag();
-
+            let backFlag = store.getBackFlag();
+            console.log('------------------')
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
 				return;

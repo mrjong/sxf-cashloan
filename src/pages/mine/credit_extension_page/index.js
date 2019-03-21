@@ -19,7 +19,7 @@ const API = {
 let urlQuery = '';
 let autId = '';
 // const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator' ];
+const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {
@@ -80,11 +80,14 @@ export default class credit_extension_page extends PureComponent {
 		if (!this.checkCreditCardStatus()) {
 			return;
 		}
-		this.setState({
-			isShowModal: true,
-		}, () => {
-			buriedPointEvent(mine.creditExtensionModalShow)
-		})
+		this.setState(
+			{
+				isShowModal: true
+			},
+			() => {
+				buriedPointEvent(mine.creditExtensionModalShow);
+			}
+		);
 	};
 
 	// 判断信用卡状态
@@ -157,25 +160,9 @@ export default class credit_extension_page extends PureComponent {
 							}
 						});
 					break;
-				case 'zmxy':
-					this.props.$fetch.get(`${API.getZmxy}`).then((result) => {
-						if (result.msgCode === 'PTM0000') {
-							buriedPointEvent(mine.creditExtensionZM);
-							if (result.data.authUrl) {
-								store.setCheckCardRouter('');
-								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
-								this.props.SXFToast.loading('加载中...', 0);
-								window.location.href = result.data.authUrl;
-							} else {
-								this.props.toast.info('授信成功');
-								setTimeout(() => {
-									this.requestGetStatus();
-								}, 3000);
-							}
-						} else {
-							this.props.toast.info(result.msgInfo);
-						}
-					});
+				case 'card':
+					store.setMoxieBackUrl('/mine/credit_extension_page?isShowCommit=false');
+					this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					break;
 				default:
 					break;

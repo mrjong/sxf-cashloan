@@ -68,6 +68,8 @@ export default class home_page extends PureComponent {
 		this.setState({
 			newUserActivityModal
 		});
+		// 未提交授信用户
+		store.removeCreditExtensionNot();
 		// 去除需要调用获取下一步url方法
 		store.removeNeedNextUrl();
 		// 清除订单缓存
@@ -108,7 +110,8 @@ export default class home_page extends PureComponent {
 	};
 	// 未提交授信
 	credit_extension_not = async () => {
-		let data = await getNextStr({ $props: this.props, needReturn: true });
+        let data = await getNextStr({ $props: this.props, needReturn: true });
+        store.setCreditExtensionNot(true)
 		this.calculatePercent(data);
 		this.cacheBanner();
 	};
@@ -131,7 +134,7 @@ export default class home_page extends PureComponent {
 	calculatePercent = (data) => {
 		let codes = [];
 		let demo = data.codes;
-		let codesCopy = demo.slice(0, 3);
+		let codesCopy = demo.slice(1, 3);
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中
@@ -189,7 +192,8 @@ export default class home_page extends PureComponent {
 
 			case 3: // 新用户，信用卡未授权
 				this.setState({
-					percentData: 98,
+                    percentData: 98,
+                    percentSatus: '1',
 					showDiv: 'circle'
 				});
 				break;
@@ -546,15 +550,7 @@ export default class home_page extends PureComponent {
 	};
 
 	render() {
-		const {
-			bannerList,
-			usrIndexInfo,
-			visibleLoading,
-			percent,
-			percentSatus,
-			percentData,
-			showDiv
-		} = this.state;
+		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus, percentData, showDiv } = this.state;
 		const { history } = this.props;
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
