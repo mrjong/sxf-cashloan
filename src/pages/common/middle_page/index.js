@@ -36,7 +36,7 @@ export default class middle_page extends Component {
 						});
 						return;
 					}
-					if (store.getNeedNextUrl()) {
+					if (store.getNeedNextUrl()&&!store.getToggleMoxieCard()) {
 						getNextStr({
 							$props: this.props
 						});

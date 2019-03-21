@@ -445,10 +445,7 @@ export default class home_page extends PureComponent {
 	};
 
 	handleApply = () => {
-		this.setState({
-			modal2: true
-		});
-		// getNextStr({ $props: this.props });
+		getNextStr({ $props: this.props });
 	};
 
 	// 获取首页信息

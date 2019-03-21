@@ -23,7 +23,7 @@ let initDialog = (errMsg) => {
 				]}
 				onRequestClose={(res) => {
 					if (!res) {
-						if (store.getNeedNextUrl()) {
+						if (store.getNeedNextUrl()&& !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
@@ -59,12 +59,7 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard) {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-            }
-            /* 新版流程物理返回  借钱还信用卡 切换卡*/
+
 			// 从魔蝎里点击残忍拒绝跳回来，解决信用加分点击两次才能退出
 			//   if (window.location.pathname === '/mine/credit_extension_page' && window.location.search.indexOf('noBackParam') > 0) {
 			//     if (queryData.isShowCommit === 'true' || queryData.isShowCommit === true) {
@@ -98,7 +93,12 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
-
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			/**首页拦截 */
 			if (window.location.pathname === '/') {
 				window.history.pushState(null, null, document.URL);

@@ -210,8 +210,8 @@ const interceptRouteArr = [
 	'/mine/credit_list_page',
 	'/home/essential_information',
 	'/home/real_name',
-    '/home/confirm_agency',
-    '/home/moxie_bank_list_page'
+	'/home/confirm_agency',
+	'/home/moxie_bank_list_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -240,16 +240,16 @@ export const closePage = () => {
 	}
 };
 // 确认按钮点击事件 提交到风控
-const handleClickConfirm = ($props) => {
-	const { applyAmt, repaymentDate } = this.state;
+export const handleClickConfirm = ($props, repaymentDate) => {
+	console.log(repaymentDate,'==============');
 	const address = store.getPosition();
 	const params = {
 		location: address,
-		prdId: repaymentDate.value,
+		prdId: repaymentDate.prdId,
 		perdLth: repaymentDate.perdLth,
 		perdUnit: repaymentDate.perdUnit,
 		perdCnt: repaymentDate.perdCnt,
-		rpyAmt: applyAmt
+		rpyAmt: repaymentDate.rpyAmt
 	};
 	if (isMPOS()) {
 		getAppsList();
@@ -261,7 +261,7 @@ const handleClickConfirm = ($props) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
 				$props.toast.info(res.msgInfo, 3, () => {
-					this.checkIsBandCard();
+					$props.history.push('/home/credit_apply_succ_page')
 				});
 			} else {
 				$props.toast.info(res.msgInfo);
@@ -300,11 +300,14 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			}
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
-                $props.toast.info('请基本信息认证');
-				$props.history.replace({
-					pathname: '/home/essential_information'
-					// search: urlQuery
-				});
+				$props.toast.info('请基本信息认证');
+				setTimeout(() => {
+					$props.history.replace({
+						pathname: '/home/essential_information'
+						// search: urlQuery
+					});
+				}, 3000);
+
 				return;
 			}
 
@@ -316,18 +319,15 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 					})
 					.then((result) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
-							// store.setCheckCardRouter('');
-							// store.setMoxieBackUrl(`/home/home`);
-							SXFToast.loading('加载中...', 0);
-							window.location.replace(
-								result.data.url +
-									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO`
-							);
-							// window.location.href =
-							// 	result.data.url +
-							// 	`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-							// 		.location.search}&showTitleBar=NO`;
+							$props.toast.info('请运营商认证');
+							setTimeout(() => {
+								SXFToast.loading('加载中...', 0);
+								window.location.replace(
+									result.data.url +
+										`&localUrl=${window.location.origin}&routeType=${window.location
+											.pathname}${window.location.search}&showTitleBar=NO`
+								);
+							}, 3000);
 						}
 					});
 				return;
@@ -335,14 +335,17 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
-				$props.history.replace({ pathname: '/home/moxie_bank_list_page' });
+				$props.toast.info('请信用卡认证');
+				setTimeout(() => {
+					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
+				}, 3000);
 				return;
 			}
 			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
 			if (!store.getCreditExtensionNot()) {
 				handleClickConfirm($props);
 			} else {
-				$props.history.push('');
+				$props.history.push('/home/loan_repay_confirm_page');
 			}
 		}
 	} else {
