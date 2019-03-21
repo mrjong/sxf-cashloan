@@ -153,12 +153,6 @@
     padding: 20px;
     box-sizing: border-box;
     background: transparent;
-    .am-action-sheet-button-list{
-      color: #4CA6FF;
-    }
-    .am-action-sheet-button-list:last-child{
-      color: #333;
-    }
     .am-action-sheet-button-list .am-action-sheet-cancel-button-mask{
       background-color: transparent;
       height: 20px;
@@ -167,9 +161,11 @@
     .am-action-sheet-button-list .am-action-sheet-cancel-button{
       margin-top: 20px;
       border-radius: 10px;
+      color: #333;
     }
     .am-action-sheet-button-list-item{
       background: #fff;
+      color: #4CA6FF;
     }
     .am-action-sheet-button-list-item:first-child{
       border-radius: 10px 10px 0 0;

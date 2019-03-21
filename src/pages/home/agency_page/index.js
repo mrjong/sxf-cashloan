@@ -483,8 +483,8 @@ export default class agency_page extends PureComponent {
   showAllProtocol = () => {
     const { contractList } = this.state;
     let arrList = [];
-    contractList && contractList.length && contractList.map((item,index)=>{
-      arrList.push(item.contractMdlName)
+    contractList && contractList.length && contractList.map((item)=>{
+      arrList.push(`《${item.contractMdlName}》`)
     });
     arrList.push('关闭');
     ActionSheet.showActionSheetWithOptions({
@@ -559,19 +559,6 @@ export default class agency_page extends PureComponent {
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
           <span className={style.protocol_link} onClick={this.showAllProtocol}>《相关协议条件》</span>
-          {/* {
-            contractList && contractList.length && contractList.map(( item, index ) => (
-              <a
-                onClick={() => {
-                  this.readContract(item);
-                }}
-                key={index}
-                className={style.protocol_link}
-              >
-                《{item.contractMdlName}》
-              </a>
-            ))
-          } */}
         </p>
         <Modal
           wrapClassName={style.modalLoading}
