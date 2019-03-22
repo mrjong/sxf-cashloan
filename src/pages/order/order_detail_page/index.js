@@ -19,6 +19,7 @@ const API = {
   protocolSms: '/withhold/protocolSms', // 校验协议绑卡
   protocolBind: '/withhold/protocolBink', //协议绑卡接口
   fundPlain: '/fund/plain', // 费率接口
+  payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 }
 let entryFrom = '';
 @fetch.inject()
@@ -46,6 +47,8 @@ export default class order_detail_page extends PureComponent {
       detailArr: [], // 还款详情数据
       isShowDetail: false, // 是否展示弹框中的明细详情
       isAdvance: false, // 是否提前还款
+      isNewsContract: false, // 是否签署的是新合同
+      isSettle: '0', // 是否结清
     }
   }
   componentWillMount() {
@@ -74,12 +77,48 @@ export default class order_detail_page extends PureComponent {
       ordNo: billNo
     })
       .then(res => {
-        if (res.msgCode === 'PTM0000') {
-          console.log(cb, isPayAll)
-          if (res.data) {
+        if (res.msgCode === 'PTM0000') { 
+          if (res.data) { // 如果data不为空则为签署的是新合同,否则为旧合同，则收银台不展示详情，还款也为/bill/payback老接口
+            const currentStg = res.data[0].currentLenth;
+            const perdData = res.data[0].perdList[currentStg - 1];
+            let isAdvance = false;
+            let isSettleStu = '';
+            if (isPayAll) {
+              if (currentStg === res.data[0].perdList.length) {
+                isAdvance = false;
+              } else {
+                isAdvance = true;
+              }
+              // 筛选出所有补偿金的数组
+              const buChangJinList = res.data[0].perdList.map(item2=>item2.feeInfos.find(item=>item.feeNm==='补偿金'));
+              if (buChangJinList.find(item=>item.feeAmt!==0)) { // 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
+                isSettleStu = '1';
+              } else {
+                isSettleStu = '0';
+              }
+            } else { // perdSts 0为未到期 1为已逾期 2为处理中 3为已撤销 4为已还清
+              // 如果该期补偿金不为0，那么是提前还款，否则不是
+              if (perdData.feeInfos.find(item=>item.feeNm==='补偿金').feeAmt) {
+                isAdvance = true;
+                isSettleStu = '1';
+              } else {
+                isAdvance = false;
+                isSettleStu = '0';
+              }
+            }
             this.setState({
-              detailArr: isPayAll ? res.data[0].totalList : res.data[0].perdList[res.data[0].perdNum].feeInfos,
-              isAdvance: true,
+              detailArr: isPayAll ? res.data[0].totalList : perdData.feeInfos,
+              isAdvance,
+              isNewsContract: true,
+              isSettle: isSettleStu,
+              totalAmt: res.data[0].totalAmt,
+            }, ()=>{
+              cb && cb(isPayAll)
+            })
+          } else {
+            this.setState({
+              isAdvance: false,
+              isNewsContract: false,
             }, ()=>{
               cb && cb(isPayAll)
             })
@@ -458,9 +497,13 @@ export default class order_detail_page extends PureComponent {
   }
 
   //调用还款接口逻辑
+  // isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
   repay = () => {
-    const { billDesc, isPayAll } = this.state;
-    this.props.$fetch.post(API.payback, this.state.repayParams).then(res => {
+    const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt } = this.state;
+    const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+    const sendParams = isNewsContract ? {...repayParams, isSettle, thisRepTotAmt: totalAmt} : repayParams;
+    console.log(sendParams,paybackAPI);
+    this.props.$fetch.post(paybackAPI, sendParams).then(res => {
       if (res.msgCode === 'PTM0000') {
         buriedPointEvent(order.repaymentFirst, {
           entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
@@ -604,7 +647,7 @@ export default class order_detail_page extends PureComponent {
     })
   }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -691,9 +734,9 @@ export default class order_detail_page extends PureComponent {
             <div className={styles.modal_title}>还款详情
               <i onClick={() => { this.setState({ showModal: false }) }}></i>
             </div>
-            <div className={styles.modal_flex} onClick={this.showDetail}>
+            <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
               <span className={styles.modal_label}>本次还款金额</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+              <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt : waitRepAmt : money}元</span>
               {
                 isAdvance && 
                 <i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
@@ -715,7 +758,7 @@ export default class order_detail_page extends PureComponent {
                 }
                 <div className={`${styles.modal_flex} ${styles.sum_total}`}>
                   <span className={styles.modal_label}>本次应还总金额</span>
-                  <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+                  <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt : waitRepAmt : money}元</span>
                 </div>
               </div>
               : null
