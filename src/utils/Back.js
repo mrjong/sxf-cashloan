@@ -79,6 +79,11 @@ if (window.history && window.history.pushState) {
 				window.location.pathname === '/home/moxie_bank_list_page' ||
 				window.location.pathname === '/home/loan_repay_confirm_page'
 			) {
+                if (store.getBankMoxie()) {
+                    // 银行卡直接返回的问题
+                    store.removeBankMoxie();
+                    return;
+                }
 				document.activeElement.blur();
 				obj.show();
 				return;

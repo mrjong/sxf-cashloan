@@ -24,6 +24,8 @@ export default class moxie_bank_list_page extends Component {
 		isnoData: false
 	};
 	componentWillMount() {
+        // 信用卡直接返回的问题
+		store.removeCarrierMoxie();
 		this.mxoieCardList();
 		this.getBackUrl();
 		this.getMoxieBackUrl();
@@ -112,26 +114,10 @@ export default class moxie_bank_list_page extends Component {
 		}
 		buriedPointEvent(moxie_bank_list.bankChooes, {
 			bankName: item.name
-		});
+        });
+        // 信用卡直接返回的问题
+        store.setBankMoxie(true);
 		location.href = item.href + '&showTitleBar=NO';
-		// 跳魔蝎
-		// this.props.$fetch
-		// 	.post(API.CARD_AUTH, {
-		// 		clientCode: '04'
-		// 	})
-		// 	.then((result) => {
-		// 		if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-		// 			if (setMoxieData.indexOf('noAuthId') > -1) {
-		// 				store.getMoxieBackUrl(
-		// 					`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
-		// 				);
-		// 			}
-		// 			SXFToast.loading('加载中...', 0);
-		// 			location.href = url + '&showTitleBar=NO';
-		// 		} else {
-		// 			this.props.toast.info(result.msgInfo);
-		// 		}
-		// 	});
 	};
 	// 重新加载
 	reloadHandler = () => {
