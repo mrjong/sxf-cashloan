@@ -112,12 +112,12 @@ export default class loan_repay_confirm_page extends PureComponent {
             } else if (indexSts === 'LN0003' && indexData.autSts === '2') {
               //更新成功
               this.hideProgress()
-              setTimeout(()=>{
+              setTimeout(() => {
                 this.setState({
                   fetchBillSucc: true
                 })
-              },3000)
-              
+              }, 3000)
+
             }
           }
         );
@@ -292,8 +292,8 @@ export default class loan_repay_confirm_page extends PureComponent {
       this.props.toast.info('账单更新成功方可选择，请耐心等待哦')
       return
     }
-    const { selectedLoanDate = {}, cardBillAmt, minPayment } = this.state
-    console.log(111, selectedLoanDate, cardBillAmt)
+    const { selectedLoanDate = {}, usrIndexInfo } = this.state
+    const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
     this.setState({
       activeTag: idx
     }, () => {
