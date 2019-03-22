@@ -43,32 +43,9 @@ export default class order_detail_page extends PureComponent {
       smsCode: '',
       protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
       toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
-      payDetailInfo: { // 还款详情数据
-        sumTotal: 1500,
-        detailArr: [
-          {
-            name: '本金',
-            fee: 300
-          },
-          {
-            name: '利息',
-            fee: 300
-          },
-          {
-            name: '服务费',
-            fee: 300
-          },
-          {
-            name: '罚息',
-            fee: 300
-          },
-          {
-            name: '逾期管理费',
-            fee: 300
-          },
-        ]
-      }, 
+      detailArr: [], // 还款详情数据
       isShowDetail: false, // 是否展示弹框中的明细详情
+      isAdvance: false, // 是否提前还款
     }
   }
   componentWillMount() {
@@ -82,7 +59,7 @@ export default class order_detail_page extends PureComponent {
     this.setState({
       billNo: store.getBillNo()
     }, () => {
-      this.getLoanInfo()
+      this.getLoanInfo();
     })
   }
 
@@ -90,9 +67,34 @@ export default class order_detail_page extends PureComponent {
     store.removeCardData()
   }
 
+  // 获取弹框明细信息
+  getModalDtlInfo = (cb, isPayAll) => {
+    const { billNo } = this.state;
+    this.props.$fetch.post(API.fundPlain, {
+      ordNo: billNo
+    })
+      .then(res => {
+        if (res.msgCode === 'PTM0000') {
+          console.log(cb, isPayAll)
+          if (res.data) {
+            this.setState({
+              detailArr: isPayAll ? res.data[0].totalList : res.data[0].perdList[res.data[0].perdNum].feeInfos,
+              isAdvance: true,
+            }, ()=>{
+              cb && cb(isPayAll)
+            })
+          }
+        } else {
+          this.props.toast.info(res.msgInfo)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+  }
+
   // 获取还款信息
   getLoanInfo = () => {
-    this.props.$fetch.post(API.fundPlain, {
+    this.props.$fetch.post(API.qryDtl, {
       billNo: this.state.billNo
     })
       .then(res => {
@@ -166,83 +168,6 @@ export default class order_detail_page extends PureComponent {
         console.log(err)
       })
   }
-
-  // // 获取还款信息
-  // getLoanInfo = () => {
-  //   this.props.$fetch.post(API.qryDtl, {
-  //     billNo: this.state.billNo
-  //   })
-  //     .then(res => {
-  //       if (res.msgCode === 'PTM0000') {
-  //         // const calcMoney = res.data.perdNum !== 999 && ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt*100 - res.data.perdList[res.data.perdNum - 1].deductionAmt*100)/100).toFixed(2);
-  //         res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-  //         // res.data.perdNum !== 999 && this.setState({ money: calcMoney });                    
-  //         res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-  //         // res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
-  //         // if (res.data.data && res.data.data.coupVal && res.data.perdNum !== 999) {
-  //         //     // 优惠劵最大不超过每期利息
-  //         //     if (parseFloat(res.data.data.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
-  //         //         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) });
-  //         //         res.data.perdNum !== 999 && this.setState({ showItrtAmt: true });
-
-  //         //     } else {
-  //         //         res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
-  //         //         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
-  //         //     }
-  //         // }
-  //         this.setState({
-  //           billDesc: res.data, //账单全部详情
-  //           perdList: res.data.perdList //账单期数列表
-  //         }, () => {
-  //           // 选择银行卡回来
-  //           let bankInfo = store.getCardData();
-  //           let orderDtlData = store.getOrderDetailData();
-  //           store.removeOrderDetailData();
-  //           // let couponInfo = store.getCouponData();
-  //           if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
-  //             this.setState({
-  //               showModal: true,
-  //               isPayAll: orderDtlData && orderDtlData.isPayAll,
-  //             }, () => {
-  //               this.setState({
-  //                 bankInfo: bankInfo,
-  //                 // couponInfo: couponInfo,
-  //               })
-  //               store.removeCardData();
-  //               if (res.data && res.data.data && res.data.perdNum !== 999) {
-  //                 this.dealMoney(res.data);
-  //               }
-  //               // // 前端计算优惠劵减免金额
-  //               // if (couponInfo && couponInfo !== {}) {
-  //               //     this.setState({
-  //               //         money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-  //               //             ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
-  //               //             couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-  //               //                 ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - couponInfo.coupVal * 100) / 100).toFixed(2) :
-  //               //                 res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
-  //               //     })
-  //               //     if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
-  //               //         this.setState({ showItrtAmt: true });
-  //               //     } else {
-  //               //         this.setState({ showItrtAmt: false });
-  //               //     }
-  //               // }
-  //             })
-  //           } else {
-  //             if (res.data && res.data.data && res.data.perdNum !== 999) {
-  //               this.dealMoney(res.data);
-  //             }
-  //             // this.setState({ couponInfo: null });
-  //           }
-  //           this.showPerdList(res.data.perdNum)
-  //         })
-  //       } else {
-  //         this.props.toast.info(res.msgInfo)
-  //       }
-  //     }).catch(err => {
-  //       console.log(err)
-  //     })
-  // }
 
   // 后台计算优惠券减免金额以及本次还款金额
   dealMoney = (result) => {
@@ -657,11 +582,21 @@ export default class order_detail_page extends PureComponent {
   }
   // 一键结清
   payAllOrder = () => {
-    this.setState({
+    this.getModalDtlInfo(this.showPayModal, true);
+  }
+  // 主动还款
+  activePay = () => {
+    buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
+    this.getModalDtlInfo(this.showPayModal, false);
+  }
+  
+  showPayModal = (boolen) => {
+    this.setState({ 
       showModal: true,
-      isPayAll: true,
+      isPayAll: boolen,
     });
   }
+
   // 展示详情
   showDetail = () => {
     this.setState({
@@ -669,7 +604,7 @@ export default class order_detail_page extends PureComponent {
     })
   }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, payDetailInfo, isShowDetail } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -742,10 +677,7 @@ export default class order_detail_page extends PureComponent {
         {
           perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
             <SXFButton
-              onClick={() => {
-                this.setState({ showModal: true, isPayAll: false, });
-                buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
-              }}>
+              onClick={this.activePay}>
               主动还款
             </SXFButton>
             <div className={styles.message}>此次主动还款，将用于还第
@@ -762,18 +694,23 @@ export default class order_detail_page extends PureComponent {
             <div className={styles.modal_flex} onClick={this.showDetail}>
               <span className={styles.modal_label}>本次还款金额</span>
               <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
-              &nbsp;<i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
+              {
+                isAdvance && 
+                <i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
+              }
             </div>
             {/* 账单明细展示 */}
             {
               isShowDetail ?
               <div className={styles.feeDetail}>
                 {
-                  payDetailInfo.detailArr.map((item, index) => (
+                  detailArr.map((item, index) => (
+                    item.feeAmt ?
                     <div className={styles.modal_flex} key={index}>
-                      <span className={styles.modal_label}>{item.name}</span>
-                      <span className={styles.modal_value}>{item.fee}元</span>
+                      <span className={styles.modal_label}>{item.feeNm}</span>
+                      <span className={styles.modal_value}>{item.feeAmt}元</span>
                     </div>
+                    : null
                   ))
                 }
                 <div className={`${styles.modal_flex} ${styles.sum_total}`}>

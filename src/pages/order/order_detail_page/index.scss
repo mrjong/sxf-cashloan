@@ -74,10 +74,12 @@
 i.arrow_down{
   @include setArrow(down,15px,#A9AEB6,2PX);
   top: 16px;
+  margin-left: 10px;
 }
 i.arrow_up{
   @include setArrow(top,15px,#A9AEB6,2PX);
   top: 20px;
+  margin-left: 10px;
 }
 .feeDetail{
   padding-top: 14px;
