@@ -24,7 +24,7 @@ export default class Lists extends PureComponent {
     const Item = List.Item;
     const Brief = Item.Brief;
     return (
-      <div className={`${styles.listsContainer} ${className}`}>
+      <div className={`${styles.listsContainer} ${className} list_box`}>
         <List
         >
           {

@@ -72,7 +72,7 @@ export default class credit_apply_succ_page extends PureComponent {
           </div>
         </div>
         <ButtonCustom className={style.backBtn} onClick={this.backHome}>返回首页</ButtonCustom>
-        <p className={style.bottomTip}>怕逾期，用还到</p>
+        <p className='bottomTip'>怕逾期，用还到</p>
       </div>
     );
   }

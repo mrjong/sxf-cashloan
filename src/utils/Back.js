@@ -75,7 +75,10 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			/* 魔蝎银行卡列表 */
-			if (window.location.pathname === '/home/moxie_bank_list_page') {
+			if (
+				window.location.pathname === '/home/moxie_bank_list_page' ||
+				window.location.pathname === '/home/loan_repay_confirm_page'
+			) {
 				document.activeElement.blur();
 				obj.show();
 				return;

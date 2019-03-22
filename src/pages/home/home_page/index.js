@@ -31,7 +31,8 @@ const API = {
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
-	AGENT_REPAY_CHECK: '/bill/agentRepayCheck' // 复借风控校验接口
+	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
+	procedure_user_sts: '/procedure/user/sts'
 };
 const tagList = [
 	{
@@ -79,7 +80,7 @@ export default class home_page extends PureComponent {
 			modal_left: false,
 			activeTag: 0,
 			perdRateList: [],
-			firstUserInfo: {}
+			firstUserInfo: ''
 		};
 	}
 
@@ -97,6 +98,8 @@ export default class home_page extends PureComponent {
 		});
 		// 清除返回的flag
 		store.removeBackFlag();
+		// 运营商直接返回的问题
+		store.removeCarrierMoxie();
 		// 未提交授信用户
 		store.removeCreditExtensionNot();
 		// 去除需要调用获取下一步url方法
@@ -133,16 +136,25 @@ export default class home_page extends PureComponent {
 	}
 	// 判断是否授信
 	credit_extension = () => {
-		if (1 === 2) {
-			this.requestGetUsrInfo();
-		} else {
-			this.setState({
-				firstUserInfo: {
-					x: 1
+        this.setState({
+            firstUserInfo: '01'
+        });
+        this.credit_extension_not();
+        return 
+		this.props.$fetch.post(API.procedure_user_sts).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					firstUserInfo: res.data.flag
+				});
+				if (res.data.flag === '01') {
+					this.credit_extension_not();
+				} else {
+					this.requestGetUsrInfo();
 				}
-			});
-			this.credit_extension_not();
-		}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 	// 未提交授信
 	credit_extension_not = async () => {
@@ -595,23 +607,25 @@ export default class home_page extends PureComponent {
 
 	//切换tag标签
 	toggleTag = (idx) => {
-		const { selectedLoanDate = {}, cardBillAmt } = this.state
-		this.setState({
-			activeTag: idx
-		}, () => {
-			//全额还款
-			if (idx === 0) {
-				this.calcLoanMoney(8000, selectedLoanDate)
-			} else if (idx === 1) {
-				//最低还款
-				this.calcLoanMoney(1000, selectedLoanDate)
-			} else {
-				this.inputRef.focus()
-				this.props.form.setFieldsValue({
-					loanMoney: ''
-				})
-            }
-        }
+		const { selectedLoanDate = {}, cardBillAmt } = this.state;
+		this.setState(
+			{
+				activeTag: idx
+			},
+			() => {
+				//全额还款
+				if (idx === 0) {
+					this.calcLoanMoney(8000, selectedLoanDate);
+				} else if (idx === 1) {
+					//最低还款
+					this.calcLoanMoney(1000, selectedLoanDate);
+				} else {
+					this.inputRef.focus();
+					this.props.form.setFieldsValue({
+						loanMoney: ''
+					});
+				}
+			}
 		);
 	};
 
@@ -635,10 +649,9 @@ export default class home_page extends PureComponent {
 
 	//查询还款期限
 	qryPerdRate = () => {
-		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : ''
+		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '';
 		this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
-			const date =
-				res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
 			this.setState({
 				perdRateList: date,
 				selectedLoanDate: date[0] // 默认选中3期
@@ -790,13 +803,19 @@ export default class home_page extends PureComponent {
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-						<img className={style.default_banner} src={defaultBanner} alt="banner" />
-					) : (
-							<img className={style.default_banner} src={defaultBanner} alt="banner" />
-						)}
-				<button onClick={() => { this.props.history.push('/home/essential_information?isShowCommit=false') }}>go</button>
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				) : (
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				)}
+				<button
+					onClick={() => {
+						this.props.history.push('/home/essential_information?isShowCommit=false');
+					}}
+				>
+					go
+				</button>
 				{/* 未提交授信用户 */}
-				{firstUserInfo ? (
+				{firstUserInfo === '01' ? (
 					<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
 						{showDiv === 'circle' ? (
 							<div className={style.circle_box}>
@@ -812,12 +831,12 @@ export default class home_page extends PureComponent {
 					</Card50000>
 				) : null}
 				{/* 历史授信用户 */}
-				{componentsDisplay ? (
+				{firstUserInfo === '00' && componentsDisplay ? (
 					<div>
 						<div className={style.content_wrap}>{componentsDisplay}</div>
 					</div>
 				) : null}
-				<div className={style.tip_bottom}>怕逾期，用还到</div>
+                <p className='bottomTip'>怕逾期，用还到</p>
 
 				{/* {首页活动提示弹窗（对内有）} */}
 				{this.state.isShowActivityModal && (
