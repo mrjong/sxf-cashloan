@@ -635,7 +635,7 @@ export default class home_page extends PureComponent {
 			});
 		} else {
 			this.props.form.setFieldsValue({
-				loanMoney: money
+        loanMoney: money.toFixed(2)
 			});
 		}
 	};
@@ -799,6 +799,9 @@ export default class home_page extends PureComponent {
 		}
 		return (
 			<div className={style.home_page}>
+			<button onClick={()=>{
+				this.props.history.push('/home/loan_repay_confirm_page')
+			}}>go</button>
 				{/* <Circle
 					onRef={(ref) => {
 						this.child = ref;
@@ -871,7 +874,7 @@ export default class home_page extends PureComponent {
 								<p className={style.billMoneyTop}>
 									<span>信用卡账单金额(元)</span>
 									{
-										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt}</span>
+										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt.toFixed(2)}</span>
 									}
 								</p>
 								{
@@ -896,7 +899,6 @@ export default class home_page extends PureComponent {
 									{getFieldDecorator('loanMoney', {
 										initialValue: this.state.loanMoney,
 										rules: [{ required: true, message: '请输入还款金额' }],
-										onChange: (value) => { }
 									})(
 										<InputItem
 											placeholder={`申请金额${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`}

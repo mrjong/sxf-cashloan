@@ -8,7 +8,7 @@ import { createForm } from 'rc-form';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { getFirstError, getNextStr, handleClickConfirm } from 'utils';
+import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
 
 const API = {
   queryBillStatus: '/wap/queryBillStatus', //
@@ -93,6 +93,7 @@ export default class loan_repay_confirm_page extends PureComponent {
                 overDt: '7'
               }
             };
+            // const { indexSts, indexData } = this.state.usrIndexInfo
             if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
               //更新中
               if (hideFlag) {
@@ -111,12 +112,10 @@ export default class loan_repay_confirm_page extends PureComponent {
               });
             } else if (indexSts === 'LN0003' && indexData.autSts === '2') {
               //更新成功
-              this.hideProgress();
-              setTimeout(() => {
-                this.setState({
-                  fetchBillSucc: true
-                });
-              }, 3000);
+              this.hideProgress()
+              this.setState({
+                fetchBillSucc: true
+              })
             }
           }
         );
@@ -251,7 +250,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //计算该显示的还款金额
   calcLoanMoney = (money, obj) => {
-    console.log(money, obj)
     if (money > obj.factAmtHigh) {
       this.props.form.setFieldsValue({
         loanMoney: obj.factAmtHigh
@@ -262,7 +260,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       });
     } else {
       this.props.form.setFieldsValue({
-        loanMoney: money
+        loanMoney: money.toFixed(2)
       });
     }
   };
@@ -282,7 +280,6 @@ export default class loan_repay_confirm_page extends PureComponent {
       if (idx === 0) {
         this.calcLoanMoney(cardBillAmt, selectedLoanDate)
       } else if (idx === 1) {
-        console.log(minPayment, selectedLoanDate)
         //最低还款
         this.calcLoanMoney(minPayment, selectedLoanDate)
       } else {
@@ -387,6 +384,7 @@ export default class loan_repay_confirm_page extends PureComponent {
               disabled={activeTag !== 2}
               ref={el => this.inputRef = el}
               className={activeTag === 2 ? 'blackColor' : ''}
+              onBlur={() => { handleInputBlur() }}
             >
               帮你还多少(元)
 						</InputItem>
