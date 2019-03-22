@@ -49,6 +49,7 @@ export default class order_detail_page extends PureComponent {
       isAdvance: false, // 是否提前还款
       isNewsContract: false, // 是否签署的是新合同
       isSettle: '0', // 是否结清
+      totalAmt: '', // 一键结清传给后台的总金额
     }
   }
   componentWillMount() {
@@ -167,6 +168,12 @@ export default class order_detail_page extends PureComponent {
               this.setState({
                 showModal: true,
                 isPayAll: orderDtlData && orderDtlData.isPayAll,
+                detailArr: orderDtlData && orderDtlData.detailArr, 
+                isShowDetail: orderDtlData && orderDtlData.isShowDetail, 
+                isAdvance: orderDtlData && orderDtlData.isAdvance, 
+                isNewsContract: orderDtlData && orderDtlData.isNewsContract, 
+                totalAmt: orderDtlData && orderDtlData.totalAmt,
+                isSettle: orderDtlData && orderDtlData.isSettle,
               }, () => {
                 this.setState({
                   bankInfo: bankInfo,
@@ -562,8 +569,8 @@ export default class order_detail_page extends PureComponent {
 
   // 选择银行卡
   selectBank = () => {
-    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll } = this.state;
-    let orderDtData = {isPayAll,}
+    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state;
+    let orderDtData = {isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle}
     store.setBackUrl('/order/order_detail_page');
     store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
@@ -571,7 +578,9 @@ export default class order_detail_page extends PureComponent {
   
   // 选择优惠劵
   selectCoupon = (useFlag) => {
-    const { billNo, billDesc, couponInfo, bankInfo } = this.state
+    const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state
+    let orderDtData = {detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle}
+    store.setOrderDetailData(orderDtData);
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
       this.props.history.push({
