@@ -29,7 +29,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       activeTag: 0, //激活的tag
       isShowProgress: false,
       percent: 0,
-      // loanMoney: 0,  //展示还款多少元
+      loanMoney: 0,
       time: 0,
       retryCount: 3,
       showAgainUpdateBtn: false, // 重新获取账单按钮是否显示
@@ -80,8 +80,6 @@ export default class loan_repay_confirm_page extends PureComponent {
             usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
           },
           () => {
-            // 设置默认选中的还款金额
-            this.toggleTag(0)
             const { indexSts, indexData } = {
               indexSts: 'LN0003',
               indexMsg: '一键还卡',
@@ -114,6 +112,12 @@ export default class loan_repay_confirm_page extends PureComponent {
             } else if (indexSts === 'LN0003' && indexData.autSts === '2') {
               //更新成功
               this.hideProgress()
+              setTimeout(()=>{
+                this.setState({
+                  fetchBillSucc: true
+                })
+              },3000)
+              
             }
           }
         );
@@ -195,18 +199,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   // 代还其他信用卡点击事件
   repayForOtherBank = (count) => {
-    store.setToggleMoxieCard(true);
+    store.setToggleMoxieCard(true)
     if (count > 1) {
       store.setBackUrl('/home/loan_repay_confirm_page');
-      const { usrIndexInfo } = this.state;
+      const { usrIndexInfo } = this.state
       this.props.history.push({
         pathname: '/mine/credit_list_page',
         search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
       });
     } else {
-      this.goMoxieBankList();
+      this.goMoxieBankList()
     }
-  };
+  }
 
   // 请求信用卡数量
   requestCredCardCount = () => {
@@ -221,16 +225,19 @@ export default class loan_repay_confirm_page extends PureComponent {
       })
       .catch((err) => {
         this.props.toast.info(err.message);
-      });
-  };
+      })
+  }
 
   handleSubmit = () => {
+    if (!this.state.fetchBillSucc) {
+      this.props.toast.info('账单正在更新中，请耐心等待哦')
+      return
+    }
     this.props.form.validateFields((err, values) => {
-      console.log(values)
       if (!err) {
         if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
-          this.props.toast.info('请输入数字或两位小数');
-          return;
+          this.props.toast.info('请输入数字或两位小数')
+          return
         }
         //调用授信接口
         handleClickConfirm(this.props, {
@@ -238,52 +245,32 @@ export default class loan_repay_confirm_page extends PureComponent {
           rpyAmt: Number(values.loanMoney)
         })
       } else {
-        this.props.toast.info(getFirstError(err));
+        this.props.toast.info(getFirstError(err))
       }
-    });
-  };
+    })
+  }
 
   //过滤选中的还款期限
   filterLoanDate = (value) => {
-    const { perdRateList, cardBillAmt, activeTag } = this.state;
+    const { perdRateList, cardBillAmt, minPayment, activeTag } = this.state;
     let selectedLoanDate = perdRateList.filter((item, idx) => {
       return item.perdCnt === value[0];
     });
     this.setState({
       selectedLoanDate // 设置选中的期数
-    });
+    })
     //全额还款
     if (activeTag === 0) {
-      this.calcLoanMoney(8000, selectedLoanDate);
+      this.calcLoanMoney(cardBillAmt, selectedLoanDate);
     } else if (activeTag === 1) {
       //最低还款
-      this.calcLoanMoney(1000, selectedLoanDate);
+      this.calcLoanMoney(minPayment, selectedLoanDate);
     }
   }
 
-  //查询产品期限
-  // queryPerdRate = () => {
-  //   this.props.$fetch.get(`${API.qryPerdRate}/${this.state.usrIndexInfo.indexData.autId}`)
-  //     .then((res) => {
-  //       const date =
-  //         res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-  //       this.setState({
-  //         perdRateList: date,
-  //         selectedLoanDate: date[0] // 默认选中3期
-  //       })
-  //       let arr = date.map((item) => ({
-  //         value: item.perdCnt,
-  //         label: item.perdPageNm
-  //       }))
-  //       this.setState({
-  //         pickerList: arr
-  //       })
-  //     })
-  // }
-
   //计算该显示的还款金额
   calcLoanMoney = (money, obj) => {
-    console.log(money, obj);
+    console.log(money, obj)
     if (money > obj.factAmtHigh) {
       this.props.form.setFieldsValue({
         loanMoney: obj.factAmtHigh
@@ -301,17 +288,21 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //切换tag标签
   toggleTag = (idx) => {
-
-    const { selectedLoanDate = {}, cardBillAmt } = this.state
+    if (!this.state.fetchBillSucc) {
+      this.props.toast.info('账单更新成功方可选择，请耐心等待哦')
+      return
+    }
+    const { selectedLoanDate = {}, cardBillAmt, minPayment } = this.state
+    console.log(111, selectedLoanDate, cardBillAmt)
     this.setState({
       activeTag: idx
     }, () => {
       //全额还款
       if (idx === 0) {
-        this.calcLoanMoney(8000, selectedLoanDate)
+        this.calcLoanMoney(cardBillAmt, selectedLoanDate)
       } else if (idx === 1) {
         //最低还款
-        this.calcLoanMoney(1000, selectedLoanDate)
+        this.calcLoanMoney(minPayment, selectedLoanDate)
       } else {
         this.inputRef.focus()
         this.props.form.setFieldsValue({
@@ -322,7 +313,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   render() {
-    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate } = this.state
+    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate, fetchBillSucc } = this.state
     const { indexData = {} } = usrIndexInfo
     const { overDt, billDt, cardBillAmt, cardNoHid, bankNo, bankName, autId } = indexData
     const { getFieldDecorator } = this.props.form
@@ -406,9 +397,6 @@ export default class loan_repay_confirm_page extends PureComponent {
           {getFieldDecorator('loanMoney', {
             initialValue: this.state.loanMoney,
             rules: [{ required: true, message: '请输入还款金额' }],
-            onChange: (value) => {
-              // this.setState({ loanMoney: value })
-            }
           })(
             <InputItem
               placeholder={`申请金额${selectedLoanDate && selectedLoanDate.factLmtLow}-${selectedLoanDate && selectedLoanDate.factAmtHigh}元`}
@@ -435,20 +423,27 @@ export default class loan_repay_confirm_page extends PureComponent {
             })(
               <AsyncCascadePicker
                 loadData={[
-                  // this.state.pickerList
-                  () =>
-                    this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
-                      const date =
-                        res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-                      this.setState({
-                        perdRateList: date,
-                        selectedLoanDate: date[0] // 默认选中3期
-                      });
-                      return date.map((item) => ({
-                        value: item.perdCnt,
-                        label: item.perdPageNm
-                      }));
-                    })
+                  () => {
+                    //如果账单爬取成功，请求期限接口
+                    if (fetchBillSucc) {
+                      return this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
+                        const date =
+                          res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+                        this.setState({
+                          perdRateList: date,
+                          selectedLoanDate: date[0] // 默认选中3期
+                        })
+                        // 设置默认选中的还款金额
+                        this.toggleTag(0)
+                        return date.map((item) => ({
+                          value: item.perdCnt,
+                          label: item.perdPageNm
+                        }))
+                      })
+                    } else {
+                      return new Promise((resolve, reject) => { })
+                    }
+                  }
                 ]}
                 cols={1}
               >
