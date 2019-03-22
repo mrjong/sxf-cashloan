@@ -72,22 +72,33 @@ if (window.history && window.history.pushState) {
 				}
 				return;
 			}
+
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			/* 魔蝎银行卡列表 */
-			if (
-				window.location.pathname === '/home/moxie_bank_list_page' ||
-				window.location.pathname === '/home/loan_repay_confirm_page'
-			) {
-                if (store.getBankMoxie()) {
-                    // 银行卡直接返回的问题
-                    store.removeBankMoxie();
-                    return;
-                }
+			if (window.location.pathname === '/home/moxie_bank_list_page') {
+				if (store.getBankMoxie()) {
+					// 银行卡直接返回的问题
+					store.removeBankMoxie();
+					return;
+				}
+
 				document.activeElement.blur();
 				obj.show();
 				return;
 			}
+			if (window.location.pathname === '/home/loan_repay_confirm_page') {
+				if (store.getToggleMoxieCard()) {
+					// 提交授信切换信用卡问题
+					store.removeToggleMoxieCard();
+					return;
+				}
+
+				document.activeElement.blur();
+				obj.show();
+				return;
+			}
+
 			/* 魔蝎银行卡列表 */
 
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
@@ -184,12 +195,20 @@ if (window.history && window.history.pushState) {
 							logoutAppHandler();
 							break;
 						case '/order/repayment_succ_page':
-						case '/mine/credit_list_page':
 						case '/home/confirm_agency': // 确认信息页物理返回到首页
 							window.ReactRouterHistory.push('/home/home');
 							break;
 						case '/mine/credit_extension_page':
 							window.ReactRouterHistory.push('/mine/mine_page');
+						case '/mine/credit_list_page':
+							if (store.getToggleMoxieCard()) {
+								store.removeToggleMoxieCard();
+                                window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
+								return;
+							} else {
+								window.ReactRouterHistory.push('/home/home');
+							}
+							break;
 						default:
 							// window.ReactRouterHistory.goBack()
 							break;
