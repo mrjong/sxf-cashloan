@@ -508,7 +508,16 @@ export default class order_detail_page extends PureComponent {
   repay = () => {
     const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt } = this.state;
     const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
-    const sendParams = isNewsContract ? {...repayParams, isSettle, thisRepTotAmt: totalAmt} : repayParams;
+    let sendParams = {}
+    if (isNewsContract) {
+      if (isPayAll) {
+        sendParams = {...repayParams, isSettle, thisRepTotAmt: totalAmt}
+      } else {
+        sendParams = {...repayParams, isSettle}
+      }
+    } else {
+      sendParams = repayParams;
+    }
     console.log(sendParams,paybackAPI);
     this.props.$fetch.post(paybackAPI, sendParams).then(res => {
       if (res.msgCode === 'PTM0000') {
@@ -519,6 +528,7 @@ export default class order_detail_page extends PureComponent {
         this.setState({
           showModal: false,
           couponInfo: {},
+          isShowDetail: false
         })
         if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
           this.props.toast.info('还款完成')
@@ -550,6 +560,7 @@ export default class order_detail_page extends PureComponent {
         this.setState({
           showModal: false,
           couponInfo: {},
+          isShowDetail: false
         })
         this.props.toast.info(res.msgInfo);
         store.removeCouponData();
@@ -563,6 +574,7 @@ export default class order_detail_page extends PureComponent {
       this.setState({
         showModal: false,
         couponInfo: {},
+        isShowDetail: false
       })
     })
   }
@@ -738,10 +750,10 @@ export default class order_detail_page extends PureComponent {
             </div>
           </div> : <div className={styles.mb50}></div>
         }
-        <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false }) }} animationType="slide-up">
+        <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false, isShowDetail: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
             <div className={styles.modal_title}>还款详情
-              <i onClick={() => { this.setState({ showModal: false }) }}></i>
+              <i onClick={() => { this.setState({ showModal: false, isShowDetail: false }) }}></i>
             </div>
             <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
               <span className={styles.modal_label}>本次还款金额</span>
