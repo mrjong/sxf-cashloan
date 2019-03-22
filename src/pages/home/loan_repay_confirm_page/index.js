@@ -461,7 +461,7 @@ export default class loan_repay_confirm_page extends PureComponent {
           提交申请
 				</ZButton>
 
-        <div className={style.bottomTip}>怕逾期，用还到</div>
+        <p className='bottomTip'>怕逾期，用还到</p>
       </div>
     );
   }

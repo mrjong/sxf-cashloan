@@ -6,6 +6,7 @@ import updateRight from 'assets/images/real_name/right.png';
 import updateBottom from 'assets/images/real_name/bottom.png';
 import FEZipImage from 'components/FEZIpImage';
 import { InputItem, List } from 'antd-mobile';
+import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
@@ -28,6 +29,7 @@ let urlQuery = '';
 // let isFetching = false;
 @fetch.inject()
 @createForm()
+@setBackGround('#fff')
 export default class real_name_page extends Component {
 	state = {
 		idName: '',
@@ -312,7 +314,9 @@ export default class real_name_page extends Component {
 			<div className={style.real_name_page}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? (
 					<div>
-						<div className={style.updateTitle}>上传身份证正 、反面</div>
+						<div className={style.updateTitle}>
+							<span>上传身份证正 、反面</span>
+						</div>
 						<div className={style.updateContent}>
 							<div className={style.updateImgLeft}>
 								<FEZipImage
@@ -336,44 +340,37 @@ export default class real_name_page extends Component {
 								/>
 								<p>拍摄身份证反面</p>
 							</div>
-							<div className={style.clear} />
 						</div>
-						<div className={style.clear} />
-						<div className={style.labelDiv}>
-							<InputItem
-								onChange={this.handleNameChange}
-								placeholder="借款人本人姓名"
-								value={this.state.idName}
-								onFocus={() => {
-									buriedPointEvent(home.informationTapNameInp);
-								}}
-								onBlur={() => {
-									handleInputBlur();
-								}}
-							>
-								姓名
-							</InputItem>
+						<InputItem
+							onChange={this.handleNameChange}
+							placeholder="借款人本人姓名"
+							value={this.state.idName}
+							onFocus={() => {
+								buriedPointEvent(home.informationTapNameInp);
+							}}
+							onBlur={() => {
+								handleInputBlur();
+							}}
+						>
+							姓名
+						</InputItem>
+						<InputItem
+							onChange={this.handleNumberChange}
+							placeholder="借款人身份证号"
+							value={this.state.idNo}
+							maxLength="18"
+							onFocus={() => {
+								buriedPointEvent(home.informationTapIDInp);
+							}}
+							onBlur={() => {
+								handleInputBlur();
+							}}
+						>
+							身份证号
+						</InputItem>
+						<div className={`${style.updateTitle} ${style.mt30}`}>
+							<span>上传本人手持身份证照片</span>
 						</div>
-						<div className={style.clear} />
-						<div className={style.inline} style={{ height: '0.04rem' }} />
-						<div className={style.labelDiv} style={{ marginTop: 0 }}>
-							<InputItem
-								onChange={this.handleNumberChange}
-								placeholder="借款人身份证号"
-								value={this.state.idNo}
-								maxLength="18"
-								onFocus={() => {
-									buriedPointEvent(home.informationTapIDInp);
-								}}
-								onBlur={() => {
-									handleInputBlur();
-								}}
-							>
-								身份证号
-							</InputItem>
-						</div>
-						<div className={style.clear} />
-						<div className={style.updateTitle}>上传本人手持身份证照片</div>
 						<div className={style.updateContent}>
 							<div className={style.updateImgLeft}>
 								<FEZipImage
@@ -399,6 +396,7 @@ export default class real_name_page extends Component {
 						<ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>
 							确定
 						</ButtonCustom>
+						<p className="bottomTip">怕逾期，用还到</p>
 					</div>
 				) : null}
 				{this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? (

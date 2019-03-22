@@ -38,7 +38,7 @@ export default [
   },
   {
     path: '/home/moxie_bank_list_page',
-    title: '添加账单',
+    title: '提交申请',
     component: () => import('pages/home/moxie_bank_list_page'),
   },
   {

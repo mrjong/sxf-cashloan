@@ -62,8 +62,7 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (
 				window.location.pathname === '/home/essential_information' ||
-				window.location.pathname === '/home/real_name' ||
-				window.location.pathname === '/home/moxie_bank_list_page'
+				window.location.pathname === '/home/real_name'
 			) {
 				if ((userInfo && userInfo.nameHid) || backFlag) {
 					history.go(-2);
@@ -74,6 +73,18 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
+
+			/* 魔蝎银行卡列表 */
+			if (
+				window.location.pathname === '/home/moxie_bank_list_page' ||
+				window.location.pathname === '/home/loan_repay_confirm_page'
+			) {
+				document.activeElement.blur();
+				obj.show();
+				return;
+			}
+			/* 魔蝎银行卡列表 */
+
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
@@ -143,6 +154,11 @@ if (window.history && window.history.pushState) {
 							if (tokenFromStorage && token) {
 								if (window.handleCloseHomeModal) {
 									window.handleCloseHomeModal();
+									return;
+								}
+								if (store.getCarrierMoxie()) {
+									// 运营商直接返回的问题
+									store.removeCarrierMoxie();
 									return;
 								}
 								logoutAppHandler();

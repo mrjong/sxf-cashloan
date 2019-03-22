@@ -101,7 +101,7 @@ export default class SvgCirPro extends Component {
 					style={{
 						width: width,
 						height: height,
-						lineHeight: height+'px'
+						lineHeight: height + 'px'
 					}}
 					className="circle_text"
 				>
@@ -171,34 +171,19 @@ export default class SvgCirPro extends Component {
 						/>
 					) : null}
 				</svg>
-				{/* <div
-					className="svgcirproContent"
-					style={{
-						width: width,
-						height: height,
-						marginTop: -(height + this.props.offset)
-					}}
-				>
-					{this.props.children ? (
-						this.props.children
-					) : (
-						<div style={this.props.textStyle} className="bg_circle">
-							{this.props.openAnimation ? this.state.percent : this.props.percent}%
-						</div>
-					)}
-				</div> */}
 			</div>
 		);
 	}
 	componentWillReceiveProps(newprops) {
-		if (this.props.openAnimation) {
-			this.setState({ percent: 0 });
-			this.time = setTimeout(() => {
-				this.componentDidMount();
-			}, 1);
-		} else {
-			this.setState({ percent: newprops.percent });
-		}
+		// console.log('22222222222222newprops',newprops)
+		// if (this.props.openAnimation) {
+		// 	this.setState({ percent: 0 });
+		// 	this.time = setTimeout(() => {
+		// 		this.componentDidMount();
+		// 	}, 1);
+		// } else {
+		// 	this.setState({ percent: newprops.percent });
+		// }
 	}
 	componentDidMount() {
 		if (this.props.openAnimation) {
@@ -215,7 +200,10 @@ export default class SvgCirPro extends Component {
 		} else {
 			this.setState({ percent: this.props.percent });
 		}
-	}
+    }
+    componentWillUnmount(){
+        clearTimeout(this.time)
+    }
 
 	onDraw(svgcirpro) {
 		if (svgcirpro) {

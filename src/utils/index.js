@@ -211,7 +211,8 @@ const interceptRouteArr = [
 	'/home/essential_information',
 	'/home/real_name',
 	'/home/confirm_agency',
-	'/home/moxie_bank_list_page'
+	'/home/moxie_bank_list_page',
+	'/home/loan_repay_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -260,7 +261,7 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
 				$props.toast.info(res.msgInfo, 3, () => {
-                    // 移除首页弹窗返回的值
+					// 移除首页弹窗返回的值
 					store.removeLoanAspirationHome();
 					$props.history.push('/home/credit_apply_succ_page');
 				});
@@ -301,7 +302,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			}
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
-				$props.toast.info('请基本信息认证');
+				$props.toast.info('请进行基本信息认证');
 				setTimeout(() => {
 					$props.history.replace({
 						pathname: '/home/essential_information'
@@ -320,14 +321,15 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 					})
 					.then((result) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
-							$props.toast.info('请运营商认证');
+							$props.toast.info('请进行运营商认证');
 							setTimeout(() => {
+								// 运营商直接返回的问题
+								store.setCarrierMoxie(true);
 								SXFToast.loading('加载中...', 0);
-								window.location.replace(
+								window.location.href =
 									result.data.url +
-										`&localUrl=${window.location.origin}&routeType=${window.location
-											.pathname}${window.location.search}&showTitleBar=NO`
-								);
+									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
+										.location.search}&showTitleBar=NO`;
 							}, 3000);
 						}
 					});
@@ -336,7 +338,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
-				$props.toast.info('请信用卡认证');
+				$props.toast.info('请进行信用卡认证');
 				setTimeout(() => {
 					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
 				}, 3000);

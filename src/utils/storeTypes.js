@@ -60,5 +60,6 @@ export const storeTypes = {
 	NeedNextUrl: 'NeedNextUrl', // 需要调用获取下一步url方法
 	CreditExtensionNot: 'CreditExtensionNot', // 未提交授信用户
 	ToggleMoxieCard: 'ToggleMoxieCard', // 新版流程物理返回  借钱还信用卡 切换卡
-	LoanAspirationHome: 'LoanAspirationHome' // 首页弹窗 填写意愿
+	LoanAspirationHome: 'LoanAspirationHome', // 首页弹窗 填写意愿
+	CarrierMoxie: 'CarrierMoxie' // 运营商直接返回的问题
 };
