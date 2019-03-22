@@ -810,7 +810,6 @@ export default class home_page extends PureComponent {
 					) : (
 							<img className={style.default_banner} src={defaultBanner} alt="banner" />
 						)}
-				<button onClick={() => { this.props.history.push('/home/essential_information?isShowCommit=false') }}>go</button>
 				{/* 未提交授信用户 */}
 				{firstUserDisplay ? <div>{firstUserDisplay}</div> : null}
 				{/* 历史授信用户 */}
@@ -885,7 +884,7 @@ export default class home_page extends PureComponent {
 										onClick={() => {
 											this.setState({
 												modal_left: true
-											});
+											})
 										}}
 										extra={this.state.selectedLoanDate ? this.state.selectedLoanDate.perdPageNm : '请选择'}
 										arrow="horizontal"

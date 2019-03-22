@@ -40,9 +40,8 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   componentDidMount() {
-    store.removeToggleMoxieCard();
-    this.queryUsrInfo();
-    // this.queryBillStatus()
+    store.removeToggleMoxieCard()
+    this.queryUsrInfo()
   }
 
   componentWillUnmount() {
@@ -58,13 +57,13 @@ export default class loan_repay_confirm_page extends PureComponent {
         },
         () => {
           if (this.state.time === 5) {
-            clearInterval(timer);
-            this.queryBillStatus();
+            clearInterval(timer)
+            this.queryUsrInfo()
           }
           if (this.state.time > 8) {
-            this.state.retryCount--;
-            clearInterval(timer);
-            this.queryBillStatus(true);
+            this.state.retryCount--
+            clearInterval(timer)
+            this.queryUsrInfo(true)
           }
         }
       );
@@ -72,7 +71,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   };
 
   //查询用户相关信息
-  queryUsrInfo = () => {
+  queryUsrInfo = (hideFlag) => {
     this.props.$fetch
       .post(API.USR_INDEX_INFO)
       .then((res) => {
@@ -82,43 +81,69 @@ export default class loan_repay_confirm_page extends PureComponent {
           },
           () => {
             // 设置默认选中的还款金额
-            this.toggleTag(0);
+            this.toggleTag(0)
+            const { indexSts, indexData } = {
+              indexSts: 'LN0003',
+              indexMsg: '一键还卡',
+              indexData: {
+                autSts: '2', // 1 中, 2,成功  3失败  1更新中
+                bankName: '招商银行',
+                bankNo: 'ICBC',
+                cardNoHid: '6785 **** **** 6654',
+                cardBillDt: '2018-07-17',
+                cardBillAmt: '786.45',
+                overDt: '7',
+              },
+            }
+            if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
+              //更新中
+              if (hideFlag) {
+                this.hideProgress()
+                this.setState({
+                  showAgainUpdateBtn: true // 显示 重新更新按钮
+                })
+              } else {
+                this.showProgress()
+              }
+            } else if (indexSts === 'LN0010' || (indexSts === 'LN0003' && indexData.autSts === '3')) {
+              //更新失败
+              this.hideProgress()
+              this.setState({
+                showAgainUpdateBtn: false
+              })
+            } else if (indexSts === 'LN0003' && indexData.autSts === '2') {
+              //更新成功
+              this.hideProgress()
+            }
           }
         );
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
-  queryBillStatus = (hide) => {
-    let apiTimeOut1 = setTimeout(() => {
-      if (hide) {
-        this.hideProgress();
-        this.setState({
-          showAgainUpdateBtn: true
-        });
-      } else {
-        this.showProgress();
-      }
-      clearInterval(apiTimeOut1);
-    }, 1000);
+  //账单爬取中或失败
+  // queryBillStatus = (hide) => {
+  //   if (hide) {
+  //     this.hideProgress();
+  //     this.setState({
+  //       showAgainUpdateBtn: true
+  //     });
+  //   } else {
+  //     this.showProgress();
+  //   }
+  // }
 
-    // this.props.$fetch.post(API.queryBillStatus,{}).then(res=>{
-    //   if(res.code==='PTM0000'){
-    //     this.hideProgress()
-    //   }
-    // }).catch(err=>{
-    //   console.log(err)
-    // })
-  };
 
-  queryBillStatus1 = () => {
-    let apiTimeOut = setTimeout(() => {
-      this.hideProgress();
-      clearInterval(apiTimeOut);
-    }, 5000);
-  };
+  // //账单爬取成功状态
+  // queryBillStatus1 = () => {
+  //   let apiTimeOut = setTimeout(() => {
+  //     this.hideProgress();
+  //     clearInterval(apiTimeOut);
+  //   }, 5000);
+  // };
+
 
   showProgress = () => {
     this.setState(
@@ -276,6 +301,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //切换tag标签
   toggleTag = (idx) => {
+
     const { selectedLoanDate = {}, cardBillAmt } = this.state
     this.setState({
       activeTag: idx
@@ -289,14 +315,14 @@ export default class loan_repay_confirm_page extends PureComponent {
       } else {
         this.inputRef.focus()
         this.props.form.setFieldsValue({
-					loanMoney: ''
-				})
+          loanMoney: ''
+        })
       }
     })
   }
 
   render() {
-    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag } = this.state
+    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate } = this.state
     const { indexData = {} } = usrIndexInfo
     const { overDt, billDt, cardBillAmt, cardNoHid, bankNo, bankName, autId } = indexData
     const { getFieldDecorator } = this.props.form
@@ -337,7 +363,7 @@ export default class loan_repay_confirm_page extends PureComponent {
                 <span className={style.percentTitle}>账单导入中 <em className={style.percentNum}>{percent}%</em></span>
                 <Progress percent={percent} position="normal" />
               </div> : showAgainUpdateBtn ? <span onClick={this.updateBill} className={style.updateButton}>重新更新</span>
-                  : <span onClick={this.goMoxieBankList} className={style.updateButton}>更新账单</span>
+                  : <span onClick={this.goMoxieBankList} className={style.updateButton}>{this.state.retryCount === 0 ? '重新更新' : '更新账单'}</span>
             }
           </div>
           <div className={style.center}>
@@ -376,7 +402,7 @@ export default class loan_repay_confirm_page extends PureComponent {
             ))
           }
         </div>
-        <div className={style.labelDiv}>
+        <div>
           {getFieldDecorator('loanMoney', {
             initialValue: this.state.loanMoney,
             rules: [{ required: true, message: '请输入还款金额' }],
@@ -385,7 +411,7 @@ export default class loan_repay_confirm_page extends PureComponent {
             }
           })(
             <InputItem
-              placeholder={'申请金额3000-25000元'}
+              placeholder={`申请金额${selectedLoanDate && selectedLoanDate.factLmtLow}-${selectedLoanDate && selectedLoanDate.factAmtHigh}元`}
               type="text"
               disabled={activeTag !== 2}
               ref={el => this.inputRef = el}
@@ -396,7 +422,7 @@ export default class loan_repay_confirm_page extends PureComponent {
           )}
         </div>
         {autId && (
-          <div className={style.labelDiv}>
+          <div>
             {getFieldDecorator('loanDate', {
               initialValue: this.state.selectedLoanDate && [
                 this.state.selectedLoanDate.perdCnt,

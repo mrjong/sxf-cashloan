@@ -137,15 +137,6 @@
   }
 }
 
-.labelDiv {
-  position: relative;
-  font-size: 50px;
-  color: red;
-  &::after {
-    @include setBottomLine(#E5E5E5);
-  }
-}
-
 .confirmApplyBtn {
   width: 620px;
   margin-top: 80px;
