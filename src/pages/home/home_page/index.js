@@ -85,9 +85,9 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		setTimeout(() => {
-			this.showCreditModal()
-		}, 3000)
+		// setTimeout(() => {
+		// 	this.showCreditModal()
+		// }, 3000)
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 弹新弹窗的标识
@@ -137,9 +137,9 @@ export default class home_page extends PureComponent {
 	// 判断是否授信
 	credit_extension = () => {
 		this.setState({
-			firstUserInfo: '00'
+			firstUserInfo: '01'
 		});
-		this.requestGetUsrInfo();
+		this.credit_extension_not();
 		return
 		this.props.$fetch.post(API.procedure_user_sts).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
