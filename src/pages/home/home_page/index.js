@@ -596,14 +596,7 @@ export default class home_page extends PureComponent {
 			default:
 				console.log('关闭弹窗');
 		}
-	};
-
-	onClose = (type) => {
-		console.log(type);
-		this.setState({
-			[type]: false
-		});
-	};
+	}
 
 	//切换tag标签
 	toggleTag = (idx) => {
@@ -646,6 +639,22 @@ export default class home_page extends PureComponent {
 			});
 		}
 	};
+
+	//过滤选中的还款期限
+	filterLoanDate = (item) => {
+		const { usrIndexInfo, activeTag } = this.state
+		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData		
+		this.setState({
+			selectedLoanDate: item // 设置选中的期数
+		})
+		//全额还款
+		if (activeTag === 0) {
+			this.calcLoanMoney(cardBillAmt, item)
+		} else if (activeTag === 1) {
+			//最低还款
+			this.calcLoanMoney(minPayment, item)
+		}
+	}
 
 	//查询还款期限
 	qryPerdRate = () => {
@@ -937,9 +946,7 @@ export default class home_page extends PureComponent {
 										className={style.listitem}
 										onClick={() => {
 											//设置选中的期限
-											this.setState({
-												selectedLoanDate: item
-											});
+											this.filterLoanDate(item)
 										}}
 									>
 										<span>{item.perdPageNm}</span>
