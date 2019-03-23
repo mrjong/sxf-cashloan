@@ -117,7 +117,7 @@ export default class moxie_bank_list_page extends Component {
         });
         // 信用卡直接返回的问题
         store.setBankMoxie(true);
-        sessionStorage.setGoMoxie(true)
+        store.setGoMoxie(true)
 
         window.location.href = item.href + '&showTitleBar=NO'
         // window.history.pushState(null, null, item.href + '&showTitleBar=NO');
