@@ -65,7 +65,7 @@ if (window.history && window.history.pushState) {
 				window.location.pathname === '/home/real_name'
 			) {
 				if ((userInfo && userInfo.nameHid) || backFlag) {
-					history.go(-2);
+					history.back(history.back());
 				} else {
 					document.activeElement.blur();
 					obj.show();
@@ -75,22 +75,7 @@ if (window.history && window.history.pushState) {
 
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
-			/* 魔蝎银行卡列表 */
-			if (window.location.pathname === '/home/moxie_bank_list_page') {
-                alert(store.getBankMoxie())
-				if (store.getBankMoxie()) {
-                    history.go(-2);
-					// 银行卡直接返回的问题
-					store.removeBankMoxie();
-					return;
-				}
-
-				document.activeElement.blur();
-				obj.show();
-				return;
-			}
 			if (window.location.pathname === '/home/loan_repay_confirm_page') {
-                alert(store.getToggleMoxieCard())
 				if (store.getToggleMoxieCard()) {
 					// 提交授信切换信用卡问题
 					store.removeToggleMoxieCard();
@@ -103,6 +88,20 @@ if (window.history && window.history.pushState) {
 			}
 
 			/* 魔蝎银行卡列表 */
+
+			/* 魔蝎银行卡列表 */
+			// if (window.location.pathname === '/home/moxie_bank_list_page') {
+			// 	if (store.getBankMoxie()) {
+			// 		// 银行卡直接返回的问题
+			// 		store.removeBankMoxie();
+			// 		return;
+			// 	}
+			// 	alert(JSON.stringify(history));
+
+			// 	document.activeElement.blur();
+			// 	obj.show();
+			// 	return;
+			// }
 
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
@@ -203,6 +202,7 @@ if (window.history && window.history.pushState) {
 							break;
 						case '/mine/credit_extension_page':
 							window.ReactRouterHistory.push('/mine/mine_page');
+							break;
 						case '/mine/credit_list_page':
 							if (store.getToggleMoxieCard()) {
 								window.ReactRouterHistory.push('/home/loan_repay_confirm_page');

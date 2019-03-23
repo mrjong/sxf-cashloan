@@ -211,7 +211,7 @@ const interceptRouteArr = [
 	'/home/essential_information',
 	'/home/real_name',
 	'/home/confirm_agency',
-	'/home/moxie_bank_list_page',
+	// '/home/moxie_bank_list_page',
 	'/home/loan_repay_confirm_page'
 ];
 
