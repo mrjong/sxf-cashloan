@@ -23,7 +23,7 @@ export default class credit_list_page extends PureComponent {
     backUrlData = store.getBackUrl();
   }
   componentWillMount() {
-    store.setHistoryRouter(window.location.pathname);
+    // store.setHistoryRouter(window.location.pathname);
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId) {

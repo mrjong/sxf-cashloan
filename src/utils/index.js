@@ -211,14 +211,19 @@ const interceptRouteArr = [
 	'/home/essential_information',
 	'/home/real_name',
 	'/home/confirm_agency',
-	// '/home/moxie_bank_list_page',
+	'/home/moxie_bank_list_page',
 	'/home/loan_repay_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+		if (sessionStorage.getGoMoxie()) {
+            history.go(-1)
+			sessionStorage.removeGoMoxie();
+		} else {
+			window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+		}
 	}
 };
 

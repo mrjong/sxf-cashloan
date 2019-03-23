@@ -148,13 +148,14 @@ export default class credit_extension_page extends PureComponent {
 						.then((result) => {
 							if (result.msgCode === 'PTM0000' && result.data.url) {
 								buriedPointEvent(mine.creditExtensionOperator);
-								store.setCheckCardRouter('');
+                                store.setCheckCardRouter('');
 								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
 								this.props.SXFToast.loading('加载中...', 0);
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO`;
+                                        .location.search}&showTitleBar=NO`;
+                                        
 							} else {
 								this.props.toast.info(result.msgInfo);
 							}

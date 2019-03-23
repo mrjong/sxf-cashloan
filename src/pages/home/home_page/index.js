@@ -137,9 +137,9 @@ export default class home_page extends PureComponent {
 	// 判断是否授信
 	credit_extension = () => {
 		this.setState({
-			firstUserInfo: '01'
+			firstUserInfo: '00'
 		});
-		this.credit_extension_not();
+		this.requestGetUsrInfo();
 		return
 		this.props.$fetch.post(API.procedure_user_sts).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
