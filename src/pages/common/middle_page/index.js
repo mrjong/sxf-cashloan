@@ -20,6 +20,7 @@ export default class middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		store.removeGoMoxie();
 		//芝麻信用的回调
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const { taskType, mxcode } = query;

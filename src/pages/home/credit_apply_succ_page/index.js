@@ -30,7 +30,7 @@ export default class credit_apply_succ_page extends PureComponent {
 
   // 返回首页
   backHome = () => {
-    this.props.history.replace('/home');
+    this.props.history.replace('/home/home');
   }
 
   // 判断是否绑卡

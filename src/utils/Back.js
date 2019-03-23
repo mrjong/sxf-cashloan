@@ -58,7 +58,12 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
 				if ((userInfo && userInfo.nameHid) || backFlag) {
@@ -104,12 +109,6 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-			}
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			/**首页拦截 */
 			if (window.location.pathname === '/') {
 				window.history.pushState(null, null, document.URL);
@@ -144,9 +143,8 @@ if (window.history && window.history.pushState) {
 			}
 			/**登录页拦截 */
 
-			// changeHistoryState('11111111111');
+			// changeHistoryState();
 			let historyRouter = store.getHistoryRouter();
-			console.log('99999999999999999');
 			// 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
 			if (store.getMoxieBackUrl()) {
 				store.removeMoxieBackUrl();
@@ -169,8 +167,8 @@ if (window.history && window.history.pushState) {
 						if (window.handleCloseHomeModal) {
 							window.handleCloseHomeModal();
 							return;
-                        }
-                        // alert(store.getCarrierMoxie())
+						}
+						// alert(store.getCarrierMoxie())
 						if (store.getCarrierMoxie()) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
