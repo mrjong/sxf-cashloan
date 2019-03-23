@@ -218,9 +218,9 @@ const interceptRouteArr = [
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (sessionStorage.getGoMoxie()) {
+		if (store.getGoMoxie()) {
             history.go(-1)
-			sessionStorage.removeGoMoxie();
+			store.removeGoMoxie();
 		} else {
 			window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
 		}
