@@ -4,7 +4,7 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError, handleInputBlur } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -799,9 +799,6 @@ export default class home_page extends PureComponent {
 		}
 		return (
 			<div className={style.home_page}>
-			<button onClick={()=>{
-				this.props.history.push('/home/loan_repay_confirm_page')
-			}}>go</button>
 				{/* <Circle
 					onRef={(ref) => {
 						this.child = ref;
@@ -906,6 +903,7 @@ export default class home_page extends PureComponent {
 											disabled={activeTag !== 2}
 											ref={(el) => (this.inputRef = el)}
 											className={activeTag === 2 ? 'blackColor' : ''}
+											onBlur={() => { handleInputBlur() }}
 										>
 											帮你还多少(元)
 										</InputItem>
