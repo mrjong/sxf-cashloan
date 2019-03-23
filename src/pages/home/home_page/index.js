@@ -137,9 +137,9 @@ export default class home_page extends PureComponent {
 	// 判断是否授信
 	credit_extension = () => {
 		this.setState({
-			firstUserInfo: '00'
+			firstUserInfo: '01'
 		});
-		this.requestGetUsrInfo();
+		this.credit_extension_not();
 		return
 		this.props.$fetch.post(API.procedure_user_sts).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
@@ -871,11 +871,11 @@ export default class home_page extends PureComponent {
 								<p className={style.billMoneyTop}>
 									<span>信用卡账单金额(元)</span>
 									{
-										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt.toFixed(2)}</span>
+										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt&&usrIndexInfo.indexData.cardBillAmt.toFixed(2)}</span>
 									}
 								</p>
 								{
-									usrIndexInfo && usrIndexInfo.indexData && <p className={style.billMoneyBtm}>最低还款金额{usrIndexInfo.indexData.minPayment}元</p>
+									usrIndexInfo && usrIndexInfo.indexData && <p className={style.billMoneyBtm}>最低还款金额{usrIndexInfo.indexData&&usrIndexInfo.indexData.minPayment}元</p>
 								}
 								<div className={style.tagList}>
 									{tagList.map((item, idx) => (
