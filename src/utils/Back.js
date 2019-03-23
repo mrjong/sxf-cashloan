@@ -77,7 +77,9 @@ if (window.history && window.history.pushState) {
 
 			/* 魔蝎银行卡列表 */
 			if (window.location.pathname === '/home/moxie_bank_list_page') {
+                alert(store.getBankMoxie())
 				if (store.getBankMoxie()) {
+                    history.go(-2);
 					// 银行卡直接返回的问题
 					store.removeBankMoxie();
 					return;
@@ -88,6 +90,7 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			if (window.location.pathname === '/home/loan_repay_confirm_page') {
+                alert(store.getToggleMoxieCard())
 				if (store.getToggleMoxieCard()) {
 					// 提交授信切换信用卡问题
 					store.removeToggleMoxieCard();
@@ -202,8 +205,7 @@ if (window.history && window.history.pushState) {
 							window.ReactRouterHistory.push('/mine/mine_page');
 						case '/mine/credit_list_page':
 							if (store.getToggleMoxieCard()) {
-								store.removeToggleMoxieCard();
-                                window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
+								window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
 								return;
 							} else {
 								window.ReactRouterHistory.push('/home/home');

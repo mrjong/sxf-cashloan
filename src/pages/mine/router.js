@@ -23,7 +23,7 @@ export default [
   },
   {
     path: '/mine/credit_extension_page',
-    title: '风控授信项',
+    title: '信用加分',
     component: () => import('pages/mine/credit_extension_page'),
   },
   {

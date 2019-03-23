@@ -25,7 +25,7 @@ export default class moxie_bank_list_page extends Component {
 	};
 	componentWillMount() {
         // 信用卡直接返回的问题
-		store.removeCarrierMoxie();
+		// store.removeBankMoxie();
 		this.mxoieCardList();
 		this.getBackUrl();
 		this.getMoxieBackUrl();
