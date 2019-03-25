@@ -281,7 +281,11 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(mine.creditExtension, {
 					entry: '首页'
 				});
-				this.showCreditModal();
+				if (usrIndexInfo.indexData && usrIndexInfo.indexData.overDt < 0) {
+					this.props.toast.info('账单已到期，请及时更新')
+				} else {
+					this.showCreditModal()
+				}
 				// this.props.history.push({
 				// 	pathname: '/mine/credit_extension_page',
 				// 	search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}`
@@ -635,7 +639,7 @@ export default class home_page extends PureComponent {
 			});
 		} else {
 			this.props.form.setFieldsValue({
-        loanMoney: money.toFixed(2)
+				loanMoney: money.toFixed(2)
 			});
 		}
 	};
@@ -643,7 +647,7 @@ export default class home_page extends PureComponent {
 	//过滤选中的还款期限
 	filterLoanDate = (item) => {
 		const { usrIndexInfo, activeTag } = this.state
-		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData		
+		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
 		this.setState({
 			selectedLoanDate: item // 设置选中的期数
 		})
@@ -871,11 +875,11 @@ export default class home_page extends PureComponent {
 								<p className={style.billMoneyTop}>
 									<span>信用卡账单金额(元)</span>
 									{
-										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt&&usrIndexInfo.indexData.cardBillAmt.toFixed(2)}</span>
+										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt && usrIndexInfo.indexData.cardBillAmt.toFixed(2)}</span>
 									}
 								</p>
 								{
-									usrIndexInfo && usrIndexInfo.indexData && <p className={style.billMoneyBtm}>最低还款金额{usrIndexInfo.indexData&&usrIndexInfo.indexData.minPayment}元</p>
+									usrIndexInfo && usrIndexInfo.indexData && <p className={style.billMoneyBtm}>最低还款金额{usrIndexInfo.indexData && usrIndexInfo.indexData.minPayment}元</p>
 								}
 								<div className={style.tagList}>
 									{tagList.map((item, idx) => (
