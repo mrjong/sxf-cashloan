@@ -38,10 +38,10 @@
         display: flex;
         padding: 20px 80px;
     }
-    .btn_two{
+    .btn_one{
         flex: 1;
-        border: 1PX solid #ebde74;
-        color: #fff;
+        border: 1PX solid #4DA6FF;
+        color: #4DA6FF;
         margin-right: 30px;
         border-radius: 30px;
         cursor: pointer;
@@ -53,11 +53,11 @@
         color: #ebde74;
         border-color: #ebde74;
     }
-    .btn_one{
+    .btn_two{
         flex: 1;
-        color: #ebde74;
-        background-color: #fff;
-        border: 1PX solid #ebde74;
+        color: #fff;
+        background-color: #4DA6FF;
+        border: 1PX solid #4DA6FF;
         margin-left: 30px;
         border-radius: 30px;
         cursor: pointer;
