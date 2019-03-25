@@ -2,8 +2,11 @@
 
 .moxie_bank_list_page {
 	height: 100%;
-    padding: 50px;
-    user-select: none;
+	padding: 50px;
+	user-select: none;
+	.moxie_bank_top {
+		margin-bottom: 70px;
+	}
 	.title {
 		font-size: 48px;
 		font-weight: 700;
@@ -37,9 +40,20 @@
 		background-color: #666;
 		margin-right: 10px;
 	}
+	.infromationTitle {
+		height: 80px;
+		line-height: 80px;
+		padding-left: 28px;
+		font-size: 30px;
+		margin: 80px 0 30px;
+		span {
+			border-left: 8px solid #EBDE74;
+			padding-left: 16px;
+			font-weight: 600;
+		}
+	}
 	.bankList {
 		text-align: center;
-		margin-top: 70px;
 		.bankitem {
             padding: 20px 0;
 			img {
