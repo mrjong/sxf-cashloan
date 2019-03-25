@@ -235,7 +235,7 @@ export default class order_detail_page extends PureComponent {
         type: '01', // 00为借款 01为还款
         currentStage: result.perdNum,
         price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-        totalStage: result.perdLth,
+        totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
       };
     } else {
       params = {
@@ -244,7 +244,7 @@ export default class order_detail_page extends PureComponent {
         type: '01', // 00为借款 01为还款
         currentStage: result.perdNum,
         price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-        totalStage: result.perdLth,
+        totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
       };
     }
     this.props.$fetch.get(API.couponCount, params).then(result => {
