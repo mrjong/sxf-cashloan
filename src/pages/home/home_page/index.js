@@ -140,7 +140,7 @@ export default class home_page extends PureComponent {
 			firstUserInfo: '01'
 		});
 		this.credit_extension_not();
-		return
+		return;
 		this.props.$fetch.post(API.procedure_user_sts).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
@@ -282,9 +282,9 @@ export default class home_page extends PureComponent {
 					entry: '首页'
 				});
 				if (usrIndexInfo.indexData && usrIndexInfo.indexData.overDt < 0) {
-					this.props.toast.info('账单已到期，请及时更新')
+					this.props.toast.info('账单已到期，请及时更新');
 				} else {
-					this.showCreditModal()
+					this.showCreditModal();
 				}
 				// this.props.history.push({
 				// 	pathname: '/mine/credit_extension_page',
@@ -600,12 +600,12 @@ export default class home_page extends PureComponent {
 			default:
 				console.log('关闭弹窗');
 		}
-	}
+	};
 
 	//切换tag标签
 	toggleTag = (idx) => {
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
-		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData;
 		this.setState(
 			{
 				activeTag: idx
@@ -646,19 +646,19 @@ export default class home_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item) => {
-		const { usrIndexInfo, activeTag } = this.state
-		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+		const { usrIndexInfo, activeTag } = this.state;
+		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData;
 		this.setState({
 			selectedLoanDate: item // 设置选中的期数
-		})
+		});
 		//全额还款
 		if (activeTag === 0) {
-			this.calcLoanMoney(cardBillAmt, item)
+			this.calcLoanMoney(cardBillAmt, item);
 		} else if (activeTag === 1) {
 			//最低还款
-			this.calcLoanMoney(minPayment, item)
+			this.calcLoanMoney(minPayment, item);
 		}
-	}
+	};
 
 	//查询还款期限
 	qryPerdRate = () => {
@@ -748,32 +748,30 @@ export default class home_page extends PureComponent {
 					<div className={style.subDesc}>安全绑卡，放心还卡</div>
 				</BankContent>
 			);
-			return;
-		}
-
-		switch (usrIndexInfo.indexSts) {
-			case 'LN0001': // 新用户，信用卡未授权
-			case 'LN0002': // 账单爬取中
-			case 'LN0003': // 账单爬取成功
-			case 'LN0004': // 代还资格审核中
-			case 'LN0005': // 暂无代还资格
-			case 'LN0006': // 风控审核通过
-			case 'LN0007': // 放款中
-			case 'LN0008': // 放款失败
-			case 'LN0009': // 放款成功
-			case 'LN0010': // 账单爬取失败/老用户
-				componentsDisplay = (
-					<BankContent
-						handleMoxie={this.state.handleMoxie}
-						showDefaultTip={this.state.showDefaultTip}
-						fetch={this.props.$fetch}
-						contentData={usrIndexInfo}
-						history={history}
-						haselescard={this.state.haselescard}
-						progressNum={percentSatus}
-						toast={this.props.toast}
-					>
-						{usrIndexInfo.indexSts === 'LN0002' ||
+		} else {
+			switch (usrIndexInfo.indexSts) {
+				case 'LN0001': // 新用户，信用卡未授权
+				case 'LN0002': // 账单爬取中
+				case 'LN0003': // 账单爬取成功
+				case 'LN0004': // 代还资格审核中
+				case 'LN0005': // 暂无代还资格
+				case 'LN0006': // 风控审核通过
+				case 'LN0007': // 放款中
+				case 'LN0008': // 放款失败
+				case 'LN0009': // 放款成功
+				case 'LN0010': // 账单爬取失败/老用户
+					componentsDisplay = (
+						<BankContent
+							handleMoxie={this.state.handleMoxie}
+							showDefaultTip={this.state.showDefaultTip}
+							fetch={this.props.$fetch}
+							contentData={usrIndexInfo}
+							history={history}
+							haselescard={this.state.haselescard}
+							progressNum={percentSatus}
+							toast={this.props.toast}
+						>
+							{usrIndexInfo.indexSts === 'LN0002' ||
 							usrIndexInfo.indexSts === 'LN0010' ||
 							(usrIndexInfo.indexData &&
 								usrIndexInfo.indexData.autSts &&
@@ -786,20 +784,21 @@ export default class home_page extends PureComponent {
 									usrIndexInfo.indexData.autSts !== '2')) ? null : (
 								<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
 									{usrIndexInfo.indexSts === 'LN0003' ||
-										usrIndexInfo.indexSts === 'LN0006' ||
-										usrIndexInfo.indexSts === 'LN0008' ? (
-											'一键还账单'
-										) : usrIndexInfo.indexSts === 'LN0001' ? (
-											'查看我的账单，帮我还'
-										) : (
-												usrIndexInfo.indexMsg.replace('代还', '代偿')
-											)}
+									usrIndexInfo.indexSts === 'LN0006' ||
+									usrIndexInfo.indexSts === 'LN0008' ? (
+										'一键还账单'
+									) : usrIndexInfo.indexSts === 'LN0001' ? (
+										'查看我的账单，帮我还'
+									) : (
+										usrIndexInfo.indexMsg.replace('代还', '代偿')
+									)}
 								</SXFButton>
 							)}
-					</BankContent>
-				);
-				break;
-			default:
+						</BankContent>
+					);
+					break;
+				default:
+			}
 		}
 		return (
 			<div className={style.home_page}>
@@ -815,10 +814,10 @@ export default class home_page extends PureComponent {
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-						<img className={style.default_banner} src={defaultBanner} alt="banner" />
-					) : (
-							<img className={style.default_banner} src={defaultBanner} alt="banner" />
-						)}
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				) : (
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				)}
 				{/* 未提交授信用户 */}
 				{firstUserInfo === '01' ? (
 					<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
@@ -841,7 +840,7 @@ export default class home_page extends PureComponent {
 						<div className={style.content_wrap}>{componentsDisplay}</div>
 					</div>
 				) : null}
-				<p className='bottomTip'>怕逾期，用还到</p>
+				<p className="bottomTip">怕逾期，用还到</p>
 
 				{/* {首页活动提示弹窗（对内有）} */}
 				{this.state.isShowActivityModal && (
@@ -860,7 +859,7 @@ export default class home_page extends PureComponent {
 					maskClosable={false}
 				>
 					<div className={style.modal_box}>
-						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
+						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
 							<div className={style.modal_header}>
 								确认代还信息
 								<Icon
@@ -874,18 +873,25 @@ export default class home_page extends PureComponent {
 							<div className={style.modal_content}>
 								<p className={style.billMoneyTop}>
 									<span>信用卡账单金额(元)</span>
-									{
-										usrIndexInfo && usrIndexInfo.indexData && <span>{usrIndexInfo.indexData.cardBillAmt && usrIndexInfo.indexData.cardBillAmt.toFixed(2)}</span>
-									}
+									{usrIndexInfo &&
+									usrIndexInfo.indexData && (
+										<span>
+											{usrIndexInfo.indexData.cardBillAmt &&
+												usrIndexInfo.indexData.cardBillAmt.toFixed(2)}
+										</span>
+									)}
 								</p>
-								{
-									usrIndexInfo && usrIndexInfo.indexData && <p className={style.billMoneyBtm}>最低还款金额{usrIndexInfo.indexData && usrIndexInfo.indexData.minPayment}元</p>
-								}
+								{usrIndexInfo &&
+								usrIndexInfo.indexData && (
+									<p className={style.billMoneyBtm}>
+										最低还款金额{usrIndexInfo.indexData && usrIndexInfo.indexData.minPayment}元
+									</p>
+								)}
 								<div className={style.tagList}>
 									{tagList.map((item, idx) => (
 										<span
 											key={idx}
-											className={[style.tagButton, activeTag === idx && style.activeTag].join(
+											className={[ style.tagButton, activeTag === idx && style.activeTag ].join(
 												' '
 											)}
 											onClick={() => {
@@ -899,15 +905,18 @@ export default class home_page extends PureComponent {
 								<div className={style.labelDiv}>
 									{getFieldDecorator('loanMoney', {
 										initialValue: this.state.loanMoney,
-										rules: [{ required: true, message: '请输入还款金额' }],
+										rules: [ { required: true, message: '请输入还款金额' } ]
 									})(
 										<InputItem
-											placeholder={`申请金额${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`}
+											placeholder={`申请金额${selectedLoanDate.factLmtLow ||
+												''}-${selectedLoanDate.factAmtHigh || ''}元`}
 											type="text"
 											disabled={activeTag !== 2}
 											ref={(el) => (this.inputRef = el)}
 											className={activeTag === 2 ? 'blackColor' : ''}
-											onBlur={() => { handleInputBlur() }}
+											onBlur={() => {
+												handleInputBlur();
+											}}
 										>
 											帮你还多少(元)
 										</InputItem>
@@ -916,11 +925,9 @@ export default class home_page extends PureComponent {
 										onClick={() => {
 											this.setState({
 												modal_left: true
-											})
+											});
 										}}
-										extra={
-											selectedLoanDate.perdPageNm || '请选择'
-										}
+										extra={selectedLoanDate.perdPageNm || '请选择'}
 										arrow="horizontal"
 									>
 										借多久
@@ -932,7 +939,7 @@ export default class home_page extends PureComponent {
 							</div>
 						</div>
 						<div
-							className={[style.modal_right, this.state.modal_left ? style.modal_left2 : ''].join(' ')}
+							className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
 							onClick={() => {
 								this.setState({
 									modal_left: false
@@ -950,7 +957,7 @@ export default class home_page extends PureComponent {
 										className={style.listitem}
 										onClick={() => {
 											//设置选中的期限
-											this.filterLoanDate(item)
+											this.filterLoanDate(item);
 										}}
 									>
 										<span>{item.perdPageNm}</span>
