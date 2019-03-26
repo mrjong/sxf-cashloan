@@ -605,7 +605,7 @@ export default class home_page extends PureComponent {
 	//切换tag标签
 	toggleTag = (idx) => {
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
-		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+		const { cardBillAmt, minPayment } = usrIndexInfo.indexData
 		this.setState(
 			{
 				activeTag: idx
@@ -628,7 +628,7 @@ export default class home_page extends PureComponent {
 	};
 
 	//计算该显示的还款金额
-	calcLoanMoney = (money, obj) => {
+	calcLoanMoney = (money = 0, obj) => {
 		if (money > obj.factAmtHigh) {
 			this.props.form.setFieldsValue({
 				loanMoney: obj.factAmtHigh
@@ -647,7 +647,7 @@ export default class home_page extends PureComponent {
 	//过滤选中的还款期限
 	filterLoanDate = (item) => {
 		const { usrIndexInfo, activeTag } = this.state
-		const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+		const { cardBillAmt, minPayment } = usrIndexInfo.indexData
 		this.setState({
 			selectedLoanDate: item // 设置选中的期数
 		})

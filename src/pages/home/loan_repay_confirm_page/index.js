@@ -232,9 +232,9 @@ export default class loan_repay_confirm_page extends PureComponent {
   //过滤选中的还款期限
   filterLoanDate = (value) => {
     const { perdRateList, usrIndexInfo, activeTag } = this.state;
-    const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+    const { cardBillAmt, minPayment } = usrIndexInfo.indexData
     let selectedLoanDate = perdRateList.filter((item, idx) => {
-      return item.perdCnt === value[0];
+      return item.perdLth === value[0];
     });
     this.setState({
       selectedLoanDate // 设置选中的期数
@@ -249,7 +249,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   };
 
   //计算该显示的还款金额
-  calcLoanMoney = (money, obj) => {
+  calcLoanMoney = (money = 0, obj) => {
     if (money > obj.factAmtHigh) {
       this.props.form.setFieldsValue({
         loanMoney: obj.factAmtHigh
@@ -272,7 +272,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       return
     }
     const { selectedLoanDate = {}, usrIndexInfo } = this.state
-    const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+    const { cardBillAmt, minPayment } = usrIndexInfo.indexData
     this.setState({
       activeTag: idx
     }, () => {
@@ -415,7 +415,7 @@ export default class loan_repay_confirm_page extends PureComponent {
                     // 设置默认选中的还款金额
                     this.toggleTag(0);
                     return date.map((item) => ({
-                      value: item.perdCnt,
+                      value: item.perdLth,
                       label: item.perdPageNm
                     }));
                   });
