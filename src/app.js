@@ -15,9 +15,9 @@ import Raven from 'raven-js'
 const { PROJECT_ENV } = process.env;
 
 if (PROJECT_ENV === 'pro') { // 生产环境配置
-	Raven.config('http://e287773905124b9bab6bfaa7e9716d8e@47.98.151.46:9000/4').install()
+	Raven.config('https://bdac99feaf3e4e6390fd8f81c5cdebd0@sentry.vbillbank.com/2').install()
 } else {
-	Raven.config('http://2bd9584d60104f3096c53d8ff54e8939@172.16.155.63:9000/3').install()
+	Raven.config('https://2bd9584d60104f3096c53d8ff54e8939@sentry-test.vbillbank.com/3').install()
 }
 
 fastClick.prototype.focus = function(targetElement) {
