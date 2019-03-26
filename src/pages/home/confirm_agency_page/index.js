@@ -244,6 +244,7 @@ export default class confirm_agency_page extends PureComponent {
     this.props.$fetch.post(`${API.queryFundInfo}`, {
       loanAmount: cardBillAmt,
       periodCount: repaymentDate.periodCount,
+      periodLth: repaymentDate.periodLth && parseInt(repaymentDate.periodLth),
       periodUnit: repaymentDate.periodUnit,
       agrNo: repayInfo.withDrawAgrNo,
       wtdwTyp: lendersDate.value,
