@@ -757,7 +757,7 @@ export default class order_detail_page extends PureComponent {
             </div>
             <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
               <span className={styles.modal_label}>本次还款金额</span>
-              <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt : waitRepAmt : money}元</span>
+              <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
               {
                 isAdvance && 
                 <i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
@@ -772,14 +772,14 @@ export default class order_detail_page extends PureComponent {
                     item.feeAmt ?
                     <div className={styles.modal_flex} key={index}>
                       <span className={styles.modal_label}>{item.feeNm}</span>
-                      <span className={styles.modal_value}>{item.feeAmt}元</span>
+                      <span className={styles.modal_value}>{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元</span>
                     </div>
                     : null
                   ))
                 }
                 <div className={`${styles.modal_flex} ${styles.sum_total}`}>
                   <span className={styles.modal_label}>本次应还总金额</span>
-                  <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt : waitRepAmt : money}元</span>
+                  <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
                 </div>
               </div>
               : null
