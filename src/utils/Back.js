@@ -58,12 +58,7 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-			}
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
+
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
 				if ((userInfo && userInfo.nameHid) || backFlag) {
@@ -89,11 +84,13 @@ if (window.history && window.history.pushState) {
 					store.removeToggleMoxieCard();
 					return;
 				}
-
 				document.activeElement.blur();
 				obj.show();
 				return;
 			}
+
+		
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 
 			/* 魔蝎银行卡列表 */
 
@@ -106,6 +103,11 @@ if (window.history && window.history.pushState) {
 				}
 				document.activeElement.blur();
 				obj.show();
+				return;
+            }
+            	/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
 
