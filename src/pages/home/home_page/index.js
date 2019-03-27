@@ -480,7 +480,6 @@ export default class home_page extends PureComponent {
 				const inFifteenMinutes = new Date(new Date().getTime() + 1000 * 60 * 2);
 				Cookie.set('bannerAble', true, { expires: inFifteenMinutes });
 				store.setBannerData(bannerData);
-				console.log();
 				this.setState({
 					bannerList: bannerData
 				});
@@ -685,9 +684,11 @@ export default class home_page extends PureComponent {
 			this.setState({
 				perdRateList: date,
 				selectedLoanDate: date[0] // 默认选中3期
-			});
-		});
-	};
+			}, () => {
+				this.toggleTag(0)
+			})
+		})
+	}
 
 	showCreditModal = () => {
 		this.setState(
@@ -696,7 +697,6 @@ export default class home_page extends PureComponent {
 			},
 			() => {
 				this.qryPerdRate();
-				this.toggleTag(0);
 				window.handleCloseHomeModal = this.closeCreditModal;
 			}
 		);

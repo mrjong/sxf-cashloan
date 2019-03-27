@@ -61,7 +61,6 @@ export default class loan_repay_confirm_page extends PureComponent {
             this.queryUsrInfo();
           }
           if (this.state.time > 8) {
-            this.state.retryCount--;
             clearInterval(timer);
             this.queryUsrInfo(true);
           }
@@ -115,8 +114,6 @@ export default class loan_repay_confirm_page extends PureComponent {
               this.hideProgress()
               this.setState({
                 fetchBillSucc: true
-              }, () => {
-                this.toggleTag(0)
               })
             }
           }
@@ -143,6 +140,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //隐藏进度条
   hideProgress = () => {
+    this.state.retryCount--
     this.setState(
       {
         percent: 100
@@ -151,6 +149,7 @@ export default class loan_repay_confirm_page extends PureComponent {
         clearInterval(timer);
         let timer2 = setTimeout(() => {
           if (this.state.retryCount === 0) {
+            console.log(this.state.retryCount)
             this.props.toast.info('账单更新失败');
             this.setState({
               showAgainUpdateBtn: false
@@ -234,24 +233,25 @@ export default class loan_repay_confirm_page extends PureComponent {
   //过滤选中的还款期限
   filterLoanDate = (value) => {
     const { perdRateList, usrIndexInfo, activeTag } = this.state;
-    const { cardBillAmt, minPayment } = usrIndexInfo.indexData
-    let selectedLoanDate = perdRateList.filter((item, idx) => {
+    const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+    let selectedLoanDateArr = perdRateList.filter((item, idx) => {
       return item.perdLth === value[0];
     });
     this.setState({
-      selectedLoanDate // 设置选中的期数
-    });
-    //全额还款
-    if (activeTag === 0) {
-      this.calcLoanMoney(cardBillAmt, selectedLoanDate);
-    } else if (activeTag === 1) {
-      //最低还款
-      this.calcLoanMoney(minPayment, selectedLoanDate);
-    }
-  };
+      selectedLoanDate: selectedLoanDateArr[0] // 设置选中的期数
+    }, () => {
+      //全额还款
+      if (activeTag === 0) {
+        this.calcLoanMoney(cardBillAmt, selectedLoanDateArr[0]);
+      } else if (activeTag === 1) {
+        //最低还款
+        this.calcLoanMoney(minPayment, selectedLoanDateArr[0]);
+      }
+    })
+  }
 
   //计算该显示的还款金额
-  calcLoanMoney = (money = 0, obj) => {
+  calcLoanMoney = (money, obj) => {
     if (money > obj.factAmtHigh) {
       this.props.form.setFieldsValue({
         loanMoney: obj.factAmtHigh
@@ -271,7 +271,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   toggleTag = (idx) => {
     const { selectedLoanDate = {}, usrIndexInfo } = this.state
     const { indexData = {} } = usrIndexInfo
-    const { cardBillAmt, minPayment } = indexData
+    const { cardBillAmt = '', minPayment = '' } = indexData
     this.setState({
       activeTag: idx
     }, () => {
@@ -312,7 +312,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   render() {
-    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate = {}, fetchBillSucc } = this.state
+    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate = {} } = this.state
     const { indexData = {} } = usrIndexInfo
     const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName, autId } = indexData
     const { getFieldDecorator } = this.props.form
@@ -328,8 +328,8 @@ export default class loan_repay_confirm_page extends PureComponent {
       overDtStr = `<span class="blod">--</span>天`
     }
     const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-    const cardBillAmtData = !cardBillAmt ? '----.--' : parseFloat(cardBillAmt, 10).toFixed(2);
-    const minPaymentData = !minPayment ? '----.--' : parseFloat(minPayment, 10).toFixed(2);
+    const cardBillAmtData = !cardBillAmt && cardBillAmt !== 0 ? '----.--' : parseFloat(cardBillAmt, 10).toFixed(2);
+    const minPaymentData = !minPayment && minPayment !== 0 ? '----.--' : parseFloat(minPayment, 10).toFixed(2);
     const tagList = [{
       name: '全额还款',
       value: 1
@@ -412,11 +412,11 @@ export default class loan_repay_confirm_page extends PureComponent {
           )}
         </div>
         {
-          autId && <div>
+          autId ? (<div>
             {getFieldDecorator('loanDate', {
-              initialValue: this.state.selectedLoanDate && [
-                this.state.selectedLoanDate.perdCnt,
-                this.state.selectedLoanDate.perdPageNm
+              initialValue: selectedLoanDate && [
+                selectedLoanDate.perdCnt,
+                selectedLoanDate.perdPageNm
               ],
               rules: [{ required: true, message: '请选择借款期限' }],
               onChange: (value, label) => {
@@ -433,7 +433,9 @@ export default class loan_repay_confirm_page extends PureComponent {
                       this.setState({
                         perdRateList: date,
                         selectedLoanDate: date[0] // 默认选中3期
-                      });
+                      }, () => {
+                        this.toggleTag(0)
+                      })
                       // 设置默认选中的还款金额
                       return date.map((item) => ({
                         value: item.perdLth,
@@ -447,8 +449,19 @@ export default class loan_repay_confirm_page extends PureComponent {
                 <List.Item>借多久</List.Item>
               </AsyncCascadePicker>
             )}
-          </div>
-        }
+          </div>) : (
+              <AsyncCascadePicker
+                disabled
+                loadData={[
+                  () => {
+                    return new Promise((resolve, reject) => { });
+                  },
+                ]}
+                cols={1}
+              >
+                <List.Item>借多久</List.Item>
+              </AsyncCascadePicker>
+            )}
         <ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
           提交申请
 				</ZButton>
