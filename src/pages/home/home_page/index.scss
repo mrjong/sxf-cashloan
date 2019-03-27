@@ -234,13 +234,14 @@
 		left: 30px;
 	}
 	.checkIcon {
-		width: 45px;
-		height: 45px;
+		width: 30px;
+		height: 26px;
 		position: absolute;
 		right: 10px;
 		padding: 10px;
-		top: 0;
-		color: #ebde74;
+		top: 10px;
+		background: url('../../../assets/images/home/check_icon.png') no-repeat;
+		background-size: cover;
 	}
 }
 .tagList {
