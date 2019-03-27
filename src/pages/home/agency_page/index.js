@@ -558,7 +558,7 @@ export default class agency_page extends PureComponent {
         <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确认借款</ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          <span className={style.protocol_link} onClick={this.showAllProtocol}>《相关协议条件》</span>
+          <span className={style.protocol_link} onClick={this.showAllProtocol}>《相关协议套件》</span>
         </p>
         <Modal
           wrapClassName={style.modalLoading}
