@@ -89,11 +89,7 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-			}
+		
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 
 			/* 魔蝎银行卡列表 */
@@ -107,6 +103,11 @@ if (window.history && window.history.pushState) {
 				}
 				document.activeElement.blur();
 				obj.show();
+				return;
+            }
+            	/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
 
