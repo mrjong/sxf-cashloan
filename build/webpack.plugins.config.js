@@ -88,8 +88,9 @@ let getProdPlugins = function() {
 		new CopyWebpackPlugin([
 			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
-            { from: path.resolve(__dirname, '../*.html'), to: './' },
-			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
+			{ from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
 		])
 	);
 	plugins.push(
@@ -130,8 +131,9 @@ let getTestPlugins = function() {
 		new CopyWebpackPlugin([
 			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
-            { from: path.resolve(__dirname, '../*.html'), to: './' },
-			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
+			{ from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
 		])
 	),
 		plugins.push(
@@ -158,6 +160,15 @@ let getDevPlugins = function() {
 	plugins.push(
 		new webpack.HotModuleReplacementPlugin() //热更新插件
 	);
+	plugins.push(
+		new CopyWebpackPlugin([
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
+            { from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
+		])
+	),
 	plugins.push(
 		new webpack.DefinePlugin({
 			'process.env': {

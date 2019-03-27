@@ -38,5 +38,10 @@ export default [
     path: '/protocol/club_vip_service_page',
     title: '随行付VIP俱乐部会员服务协议',
     component: () => import('pages/protocol/club_vip_service_page'),
-  }
+  },
+  {
+    path: '/protocol/pdf_page',
+    title: '',
+    component: () => import('pages/protocol/pdf_page'),
+  },
 ];

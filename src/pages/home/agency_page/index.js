@@ -1,6 +1,6 @@
 import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
 import React, { PureComponent } from 'react';
-import { Modal, Progress } from 'antd-mobile';
+import { Modal, Progress, ActionSheet } from 'antd-mobile';
 import { store } from 'utils/store';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -10,7 +10,9 @@ import ZButton from 'components/ButtonCustom';
 import Panel from 'components/Panel';
 import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
+import linkConf from 'config/link.conf';
 import style from './index.scss';
+import Cookie from 'js-cookie';
 let timer;
 let timerOut;
 const API = {
@@ -20,9 +22,17 @@ const API = {
   FINACIAL_SERVIE_PROTOCOL: '/bill/qryContractInfoExtend', // 金融服务协议
   CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-  qryContractInfo: '/bill/qryContractInfo',
-	contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
+  // qryContractInfo: '/bill/qryContractInfo',
+  // contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
+  qryContractInfo: '/fund/qryContractInfo'  // 合同数据流获取
 };
+const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+let wrapProps;
+if (isIPhone) {
+  wrapProps = {
+    onTouchStart: e => e.preventDefault(),
+  };
+}
 
 @fetch.inject()
 export default class agency_page extends PureComponent {
@@ -39,6 +49,7 @@ export default class agency_page extends PureComponent {
       // showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
       // ItrtAmt: 0, // 首/末期利息金额
       deratePrice: '', // 后台计算的优惠劵减免金额
+      contractList: [] // 合同列表
     };
   }
 
@@ -47,9 +58,11 @@ export default class agency_page extends PureComponent {
     // 获取参数
     // eslint-disable-next-line
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    const contractList = this.props.history.location.state && this.props.history.location.state.contractList;
     this.setState(
       {
         queryData,
+        contractList,
       },
       () => {
         this.requestGetRepayInfo();
@@ -279,7 +292,7 @@ export default class agency_page extends PureComponent {
     const params = {
       withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
       withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
-      prdId: repaymentDate.value, // 产品ID
+      prdId: this.state.queryData.prdId, // 产品ID
       autId: homeCardIndexData.autId, // 信用卡账单ID
       repayType: lendersDate.value, // 还款方式
       usrBusCnl: '', // 操作渠道
@@ -352,20 +365,18 @@ export default class agency_page extends PureComponent {
     });
   };
   // 查看借款合同
-  readContract = type => {
-    switch (type) {
-      case 'loan_contract_page':
-        this.requestProtocolData();
-        break;
-      case 'delegation_withhold_page':
-        this.requestFinacialService('withhold');
-        break;
-      case 'financial_service_page':
-        this.requestFinacialService('financial');
-        break;
-      default:
-        break;
-    }
+  readContract = item => {
+    const modalData = store.getRepaymentModalData();
+    const { repayInfo } = modalData;
+    const { queryData } = this.state;
+    console.log(`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`)
+    this.props.history.push({
+      pathname: '/protocol/pdf_page',
+      state: {
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${queryData.billPrcpAmt}&productId=${queryData.prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
+        name: item.contractMdlName,
+      }
+    })
   };
 
   // 获取借款合同数据
@@ -469,8 +480,30 @@ export default class agency_page extends PureComponent {
     // }
   }
 
+  showAllProtocol = () => {
+    const { contractList } = this.state;
+    let arrList = [];
+    contractList && contractList.length && contractList.map((item)=>{
+      arrList.push(`《${item.contractMdlName}》`)
+    });
+    arrList.push('关闭');
+    ActionSheet.showActionSheetWithOptions({
+      options: arrList,
+      cancelButtonIndex: arrList.length - 1,
+      maskClosable: true,
+      'data-seed': 'logId',
+      wrapProps,
+      className: 'protocolsBox'
+    },
+    (buttonIndex) => {
+      if (!(buttonIndex === arrList.length - 1)) {
+        this.readContract(contractList[buttonIndex]);
+      }
+    });
+  }
+
   render() {
-    const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent } = this.state;
+    const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent, contractList } = this.state;
     return (
       <div className={style.confirm_agency_page}>
         <Panel title="代偿签约信息">
@@ -525,30 +558,7 @@ export default class agency_page extends PureComponent {
         <ZButton onClick={this.handleButtonClick} className={style.confirm_btn}>确认借款</ZButton>
         <p className={style.tip_bottom}>
           点击“确认借款”，表示同意
-          <a
-            onClick={() => {
-              this.readContract('loan_contract_page');
-            }}
-            className={style.protocol_link}
-          >
-            《借款合同》
-          </a>
-          <a
-            onClick={() => {
-              this.readContract('delegation_withhold_page');
-            }}
-            className={style.protocol_link}
-          >
-            《委托扣款协议》
-          </a>
-          <a
-            onClick={() => {
-              this.readContract('financial_service_page');
-            }}
-            className={style.protocol_link}
-          >
-            《金融服务协议》
-          </a>
+          <span className={style.protocol_link} onClick={this.showAllProtocol}>《相关协议条件》</span>
         </p>
         <Modal
           wrapClassName={style.modalLoading}
