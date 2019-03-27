@@ -85,9 +85,9 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		setTimeout(() => {
-			this.showCreditModal()
-		}, 3000)
+		// setTimeout(() => {
+		// 	this.showCreditModal()
+		// }, 3000)
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 弹新弹窗的标识
@@ -146,9 +146,7 @@ export default class home_page extends PureComponent {
 						firstUserInfo: res.data.flag
 					});
 					if (res.data.flag === '01') {
-						// this.credit_extension_not();
-						this.requestGetUsrInfo();
-
+						this.credit_extension_not();
 					} else {
 						this.requestGetUsrInfo();
 					}
@@ -979,11 +977,8 @@ export default class home_page extends PureComponent {
 										}}
 									>
 										<span>{item.perdPageNm}</span>
-										<i className={style.checkIcon}></i>
-
 										{selectedLoanDate.perdCnt === item.perdCnt && (
 											<i className={style.checkIcon}></i>
-											// <Icon className={style.checkIcon} size="xs" type="check-circle-o" />
 										)}
 									</div>
 								))}
