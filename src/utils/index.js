@@ -65,7 +65,8 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
 		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
 		if (isWXOpen()) {
-			let pageListWx = [ '/home/home', '/common/wx_middle_page' ];
+			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
+			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
 			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
 			let pageListMpos = [ '/mpos/' ];
