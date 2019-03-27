@@ -37,7 +37,7 @@ export default class ioscontrol_page extends PureComponent {
 				<img src={ioscontrol} className={styles.img} />
 				<CopyToClipboard
 					text={this.state.copyText}
-          			onCopy={() => this.props.toast.info('复制成功！快打开微信关注“还到”，抢免息机会')}
+          			onCopy={() => this.props.toast.info('复制成功！马上打开微信关注“还到”，抢免息吧！')}
 				>
 				<img src={btnBg} className={styles.copyBtn} />
 				</CopyToClipboard>
