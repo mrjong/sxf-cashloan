@@ -212,14 +212,14 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-    '/home/loan_repay_confirm_page'
+	'/home/loan_repay_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
 		if (store.getGoMoxie()) {
-            history.go(-1)
+			history.go(-1);
 			store.removeGoMoxie();
 		} else {
 			window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
@@ -344,6 +344,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.toast.info('请进行信用卡认证');
+				store.setCreditSuccessBack(true);
 				setTimeout(() => {
 					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
 				}, 3000);
@@ -353,11 +354,18 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			if (!store.getCreditExtensionNot() && store.getLoanAspirationHome()) {
 				handleClickConfirm($props, {
 					...store.getLoanAspirationHome()
-                });
-                return
+				});
+				return;
 			} else if (store.getCreditExtensionNot()) {
-                $props.history.push('/home/loan_repay_confirm_page');
-                return
+				if (store.getCreditSuccessBack()) {
+					$props.toast.info('恭喜您距离您获取额度就差最后一步了，赶紧申请吧');
+					setTimeout(() => {
+						$props.history.push('/home/loan_repay_confirm_page');
+					}, 2000);
+				} else {
+					$props.history.push('/home/loan_repay_confirm_page');
+				}
+				return;
 			}
 		}
 	} else {

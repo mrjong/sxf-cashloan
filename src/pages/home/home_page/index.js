@@ -100,6 +100,8 @@ export default class home_page extends PureComponent {
 		store.removeBackFlag();
 		// 运营商直接返回的问题
 		store.removeCarrierMoxie();
+		// 信用卡绑卡之后立即去提交页需要提示
+		store.removeCreditSuccessBack();
 		// 未提交授信用户
 		store.removeCreditExtensionNot();
 		// 去除需要调用获取下一步url方法
@@ -284,14 +286,14 @@ export default class home_page extends PureComponent {
 					entry: '首页'
 				});
 				if (usrIndexInfo.indexData && usrIndexInfo.indexData.overDt < 0) {
-					this.props.toast.info('当前信用卡已过期，请重新导入')
+					this.props.toast.info('当前信用卡已过期，请重新导入');
 					setTimeout(() => {
 						// 跳新版魔蝎
-						store.setMoxieBackUrl('/home/home')
+						store.setMoxieBackUrl('/home/home');
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-					}, 2000)
+					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
-					this.showCreditModal()
+					this.showCreditModal();
 				}
 				// this.props.history.push({
 				// 	pathname: '/mine/credit_extension_page',
@@ -786,28 +788,28 @@ export default class home_page extends PureComponent {
 							toast={this.props.toast}
 						>
 							{usrIndexInfo.indexSts === 'LN0002' ||
-								usrIndexInfo.indexSts === 'LN0010' ||
-								(usrIndexInfo.indexData &&
-									usrIndexInfo.indexData.autSts &&
-									usrIndexInfo.indexData.autSts !== '2') ||
-								((usrIndexInfo.indexSts === 'LN0003' ||
+							usrIndexInfo.indexSts === 'LN0010' ||
+							(usrIndexInfo.indexData &&
+								usrIndexInfo.indexData.autSts &&
+								usrIndexInfo.indexData.autSts !== '2') ||
+							((usrIndexInfo.indexSts === 'LN0003' ||
+								usrIndexInfo.indexSts === 'LN0006' ||
+								usrIndexInfo.indexSts === 'LN0008') &&
+								(!usrIndexInfo.indexData ||
+									!usrIndexInfo.indexData.autSts ||
+									usrIndexInfo.indexData.autSts !== '2')) ? null : (
+								<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+									{usrIndexInfo.indexSts === 'LN0003' ||
 									usrIndexInfo.indexSts === 'LN0006' ||
-									usrIndexInfo.indexSts === 'LN0008') &&
-									(!usrIndexInfo.indexData ||
-										!usrIndexInfo.indexData.autSts ||
-										usrIndexInfo.indexData.autSts !== '2')) ? null : (
-									<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-										{usrIndexInfo.indexSts === 'LN0003' ||
-											usrIndexInfo.indexSts === 'LN0006' ||
-											usrIndexInfo.indexSts === 'LN0008' ? (
-												'一键还账单'
-											) : usrIndexInfo.indexSts === 'LN0001' ? (
-												'查看我的账单，帮我还'
-											) : (
-													usrIndexInfo.indexMsg.replace('代还', '代偿')
-												)}
-									</SXFButton>
-								)}
+									usrIndexInfo.indexSts === 'LN0008' ? (
+										'一键还账单'
+									) : usrIndexInfo.indexSts === 'LN0001' ? (
+										'查看我的账单，帮我还'
+									) : (
+										usrIndexInfo.indexMsg.replace('代还', '代偿')
+									)}
+								</SXFButton>
+							)}
 						</BankContent>
 					);
 					break;
@@ -828,8 +830,8 @@ export default class home_page extends PureComponent {
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-							<img className={style.default_banner} src={defaultBanner} alt="banner" />
-						)}
+					<img className={style.default_banner} src={defaultBanner} alt="banner" />
+				)}
 				{/* 未提交授信用户 */}
 				{firstUserInfo === '01' ? (
 					<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
@@ -871,7 +873,7 @@ export default class home_page extends PureComponent {
 					maskClosable={false}
 				>
 					<div className={style.modal_box}>
-						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
+						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
 							<div className={style.modal_header}>
 								确认代还信息
 								<Icon
@@ -886,24 +888,25 @@ export default class home_page extends PureComponent {
 								<p className={style.billMoneyTop}>
 									<span>信用卡账单金额(元)</span>
 									{usrIndexInfo &&
-										usrIndexInfo.indexData && (
-											<span>
-												{usrIndexInfo.indexData.cardBillAmt &&
-													usrIndexInfo.indexData.cardBillAmt.toFixed(2)}
-											</span>
-										)}
+									usrIndexInfo.indexData && (
+										<span>
+											{usrIndexInfo.indexData.cardBillAmt &&
+												usrIndexInfo.indexData.cardBillAmt.toFixed(2)}
+										</span>
+									)}
 								</p>
 								{usrIndexInfo &&
-									usrIndexInfo.indexData && (
-										<p className={style.billMoneyBtm}>
-											最低还款金额{usrIndexInfo.indexData.minPayment && usrIndexInfo.indexData.minPayment.toFixed(2)}元
+								usrIndexInfo.indexData && (
+									<p className={style.billMoneyBtm}>
+										最低还款金额{usrIndexInfo.indexData.minPayment &&
+											usrIndexInfo.indexData.minPayment.toFixed(2)}元
 									</p>
-									)}
+								)}
 								<div className={style.tagList}>
 									{tagList.map((item, idx) => (
 										<span
 											key={idx}
-											className={[style.tagButton, activeTag === idx && style.activeTag].join(
+											className={[ style.tagButton, activeTag === idx && style.activeTag ].join(
 												' '
 											)}
 											onClick={() => {
@@ -917,7 +920,7 @@ export default class home_page extends PureComponent {
 								<div className={style.labelDiv}>
 									{getFieldDecorator('loanMoney', {
 										initialValue: this.state.loanMoney,
-										rules: [{ required: true, message: '请输入还款金额' }]
+										rules: [ { required: true, message: '请输入还款金额' } ]
 									})(
 										<InputItem
 											placeholder={`申请金额${selectedLoanDate.factLmtLow ||
@@ -951,7 +954,7 @@ export default class home_page extends PureComponent {
 							</div>
 						</div>
 						<div
-							className={[style.modal_right, this.state.modal_left ? style.modal_left2 : ''].join(' ')}
+							className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
 							onClick={() => {
 								this.setState({
 									modal_left: false
