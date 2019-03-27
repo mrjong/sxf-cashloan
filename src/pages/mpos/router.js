@@ -20,9 +20,9 @@ export default [
 	},
 	{
 		path: '/mpos/mpos_ioscontrol_page',
-		title: '还到',
+		title: '关注微信抽免息礼包', // mpos用户导流公众号落地页
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/mpos/mpos_ioscontrol_page')
-	}
+	},
 ];
