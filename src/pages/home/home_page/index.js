@@ -32,7 +32,7 @@ const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
-	procedure_user_sts: '/procedure/user/sts'
+	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
 };
 const tagList = [
 	{
@@ -136,25 +136,27 @@ export default class home_page extends PureComponent {
 	}
 	// 判断是否授信
 	credit_extension = () => {
-		this.setState({
-			firstUserInfo: '01'
-		});
-		this.credit_extension_not();
-		return;
-		this.props.$fetch.post(API.procedure_user_sts).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					firstUserInfo: res.data.flag
-				});
-				if (res.data.flag === '01') {
-					this.credit_extension_not();
+		this.props.$fetch
+			.post(API.procedure_user_sts)
+			.then((res) => {
+				if (res && res.msgCode === 'PTM0000') {
+					this.setState({
+						firstUserInfo: res.data.flag
+					});
+					if (res.data.flag === '01') {
+						this.credit_extension_not();
+					} else {
+						this.requestGetUsrInfo();
+					}
 				} else {
-					this.requestGetUsrInfo();
+					this.props.toast.info(res.msgInfo);
 				}
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
+			})
+			.catch((err) => {
+				this.setState({
+					firstUserInfo: 'error'
+				});
+			});
 	};
 	// 未提交授信
 	credit_extension_not = async () => {
@@ -731,7 +733,7 @@ export default class home_page extends PureComponent {
 		const { getFieldDecorator } = this.props.form;
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
-		if (!token) {
+		if (!token || firstUserInfo === 'error') {
 			componentsDisplay = (
 				<BankContent
 					showDefaultTip={this.state.showDefaultTip}
@@ -835,7 +837,7 @@ export default class home_page extends PureComponent {
 					</Card50000>
 				) : null}
 				{/* 历史授信用户 */}
-				{firstUserInfo === '00' && componentsDisplay ? (
+				{(firstUserInfo === '00' && token) || firstUserInfo === 'error' || (!token && componentsDisplay) ? (
 					<div>
 						<div className={style.content_wrap}>{componentsDisplay}</div>
 					</div>
