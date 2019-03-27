@@ -80,20 +80,20 @@ export default class loan_repay_confirm_page extends PureComponent {
             usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
           },
           () => {
-            const { indexSts, indexData } = {
-              indexSts: 'LN0003',
-              indexMsg: '一键还卡',
-              indexData: {
-                autSts: '1', // 1 中, 2,成功  3失败  1更新中
-                bankName: '招商银行',
-                bankNo: 'ICBC',
-                cardNoHid: '6785 **** **** 6654',
-                cardBillDt: '2018-07-17',
-                cardBillAmt: '786.45',
-                overDt: '7'
-              }
-            };
-            // const { indexSts, indexData } = this.state.usrIndexInfo
+            // const { indexSts, indexData } = {
+            //   indexSts: 'LN0003',
+            //   indexMsg: '一键还卡',
+            //   indexData: {
+            //     autSts: '2', // 1 中, 2,成功  3失败  1更新中
+            //     bankName: '招商银行',
+            //     bankNo: 'ICBC',
+            //     cardNoHid: '6785 **** **** 6654',
+            //     cardBillDt: '2018-07-17',
+            //     cardBillAmt: '786.45',
+            //     overDt: '7'
+            //   }
+            // };
+            const { indexSts, indexData } = this.state.usrIndexInfo
             if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
               //更新中
               if (hideFlag) {
