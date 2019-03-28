@@ -212,13 +212,13 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-    '/home/loan_repay_confirm_page',
+	'/home/loan_repay_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (store.getGoMoxie()) {
+		if (store.getGoMoxie() && getDeviceType() !== 'ANDRIOD') {
 			history.go(-1);
 			store.removeGoMoxie();
 		} else {
