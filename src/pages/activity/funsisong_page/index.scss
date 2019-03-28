@@ -1,0 +1,120 @@
+.modal {
+  .mask {
+    position: fixed;
+    background-color: rgba(0, 0, 0, .3);
+    margin: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+  }
+  .modalWrapper {
+    position: fixed;
+    width: 620px;
+    height: 568px;
+    border-radius: 10px;
+    padding: 26px 30px 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    box-sizing: border-box;
+
+    h2 {
+      text-align: center;
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 36px;
+    }
+
+    li {
+      font-size: 30px;
+      color: #6c6c6c;
+    }
+
+    .closeBtn {
+      width: 50px;
+      height: 50px;
+      background-image: url(../../../assets/images/home/close_ico@2x.png);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      position: absolute;
+      bottom: -80px;
+      left: 50%;
+      transform: translate(-50%, 0%);
+    }
+  }
+}
+.main {
+  position: relative;
+  .activity_bg {
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+  }
+  .rule {
+    position: absolute;
+    right: 0;
+    top: 16px;
+    color: #fff;
+    font-size: 30px;
+    width: 166px;
+    height: 51px;
+    background: rgba(247, 145, 117, 1);
+    // border-radius: 26px 0px 0px 26px;
+    line-height: 51px;
+    text-align: center;
+  }
+  .couponContainer{
+    padding-top: 650px;
+    .couponBox{
+      padding: 42px 48px 30px;
+      background: #fff;
+      border-radius: 20px;
+      margin: 0 40px;
+      .couponTit{
+        font-size: 26px;
+        color: rgba(230, 41, 99, 1);
+        span{
+          font-size: 30px;
+          font-weight: 600;
+        }
+      }
+      .couponBg{
+        width: 100%;
+        margin-top: 48px;
+      }
+      .getBtn{
+        position: absolute;
+        width: 104px;
+      }
+    }
+  }
+  .tipText {
+    text-align: center;
+  }
+  .tipWrapper {
+    width: 5rem;
+    height: 2rem;
+  }
+}
+
+@keyframes slide{
+  0% {
+    top: 280px;
+  }
+  100% {
+    top: 50px;
+  }
+}
+
+@keyframes shake{
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 15px;
+  }
+}
