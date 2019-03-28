@@ -683,7 +683,7 @@ export default class home_page extends PureComponent {
 
 	//查询还款期限
 	qryPerdRate = () => {
-		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '';
+		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
 		this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
 			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
 			this.setState(

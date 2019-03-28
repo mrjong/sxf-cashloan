@@ -329,7 +329,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   render() {
     const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate = {}, fetchBillSucc } = this.state
     const { indexData = {} } = usrIndexInfo
-    const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName, autId } = indexData
+    const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName, autId = '111' } = indexData
     const { getFieldDecorator } = this.props.form
     const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico'
     let overDtStr = ''
@@ -431,57 +431,44 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</InputItem>
           )}
         </div>
-        {
-          autId ? (<div>
-            {getFieldDecorator('loanDate', {
-              initialValue: selectedLoanDate && [
-                selectedLoanDate.perdCnt,
-                selectedLoanDate.perdPageNm
-              ],
-              rules: [{ required: true, message: '请选择借款期限' }],
-              onChange: (value, label) => {
-                this.filterLoanDate(value);
-              }
-            })(
-              <AsyncCascadePicker
-                loadData={[
-                  () => {
-                    //如果账单爬取成功，请求期限接口
-                    return this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
-                      const date =
-                        res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-                      this.setState({
-                        perdRateList: date,
-                        selectedLoanDate: date[0] // 默认选中3期
-                      }, () => {
-                        fetchBillSucc && this.toggleTag(0)
-                      })
-                      // 设置默认选中的还款金额
-                      return date.map((item) => ({
-                        value: item.perdLth,
-                        label: item.perdPageNm
-                      }));
-                    });
-                  }
-                ]}
-                cols={1}
-              >
-                <List.Item>借多久</List.Item>
-              </AsyncCascadePicker>
-            )}
-          </div>) : (
-              <AsyncCascadePicker
-                disabled
-                loadData={[
-                  () => {
-                    return new Promise((resolve, reject) => { });
-                  },
-                ]}
-                cols={1}
-              >
-                <List.Item>借多久</List.Item>
-              </AsyncCascadePicker>
-            )}
+        <div>
+          {getFieldDecorator('loanDate', {
+            initialValue: selectedLoanDate && [
+              selectedLoanDate.perdCnt,
+              selectedLoanDate.perdPageNm
+            ],
+            rules: [{ required: true, message: '请选择借款期限' }],
+            onChange: (value, label) => {
+              this.filterLoanDate(value);
+            }
+          })(
+            <AsyncCascadePicker
+              loadData={[
+                () => {
+                  //如果账单爬取成功，请求期限接口
+                  return this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
+                    const date =
+                      res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+                    this.setState({
+                      perdRateList: date,
+                      selectedLoanDate: date[0] // 默认选中3期
+                    }, () => {
+                      fetchBillSucc && this.toggleTag(0)
+                    })
+                    // 设置默认选中的还款金额
+                    return date.map((item) => ({
+                      value: item.perdLth,
+                      label: item.perdPageNm
+                    }));
+                  });
+                }
+              ]}
+              cols={1}
+            >
+              <List.Item>借多久</List.Item>
+            </AsyncCascadePicker>
+          )}
+        </div>
         <ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
           提交申请
 				</ZButton>
