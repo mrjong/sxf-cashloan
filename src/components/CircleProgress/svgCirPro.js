@@ -20,9 +20,9 @@ export default class SvgCirPro extends Component {
 		radius: 45,
 		percent: 15,
 		borderWidth: 6,
-		startcolor: '#FE5658',
-		centercolor: '#FE5658',
-		endColor: '#FE5658',
+		startcolor: '#6ccbfc',
+		centercolor: '#6ccbfc',
+		endColor: '#6ccbfc',
 		textStyle: { fontSize: 20, color: '#fa9a22', textAlign: 'center' },
 		openAnimation: true
 	};
