@@ -4,7 +4,15 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError, handleInputBlur } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	handleClickConfirm,
+	getFirstError,
+	handleInputBlur,
+	getNextStr
+} from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -739,7 +747,9 @@ export default class home_page extends PureComponent {
 				};
 				store.setLoanAspirationHome(params);
 				//调用授信接口
-				handleClickConfirm(this.props, params);
+				getNextStr({
+					$props: this.props
+				});
 			} else {
 				this.props.toast.info(getFirstError(err));
 			}
