@@ -11,7 +11,6 @@ import {
 	handleClickConfirm,
 	getFirstError,
 	handleInputBlur,
-	getNextStr
 } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
