@@ -355,7 +355,10 @@ export default class loan_repay_confirm_page extends PureComponent {
             </div>
             {
               isShowProgress ? <div className={style.progressWrap}>
-                <span className={style.percentTitle}>账单导入中 <em className={style.percentNum}>{percent}%</em></span>
+                <div className={style.percentTitleWrap}>
+                  <span className={style.percentTitle}>账单导入中</span>
+                  <em className={style.percentNum}>{percent}%</em>
+                </div>
                 <Progress percent={percent} position="normal" />
               </div> : showAgainUpdateBtn ? <span onClick={this.updateBill} className={style.updateButton}>重新更新</span>
                   : <span onClick={this.goMoxieBankList} className={style.updateButton}>更新账单</span>

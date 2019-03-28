@@ -143,10 +143,15 @@
 }
 
 .progressWrap {
-  width: 200px;
+  width: 190px;
   overflow: hidden;
   font-size: 24px;
   color: #333;
+
+  .percentTitleWrap {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .percentNum {
     color: #F66;
