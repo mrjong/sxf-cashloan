@@ -83,7 +83,7 @@ export default class loan_repay_confirm_page extends PureComponent {
             //   indexSts: 'LN0003',
             //   indexMsg: '一键还卡',
             //   indexData: {
-            //     autSts: '1', // 1 中, 2,成功  3失败  1更新中
+            //     autSts: '2', // 1 中, 2,成功  3失败  1更新中
             //     bankName: '招商银行',
             //     bankNo: 'ICBC',
             //     cardNoHid: '6785 **** **** 6654',
@@ -209,6 +209,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   };
 
   handleSubmit = () => {
+    const { selectedLoanDate = {} } = this.state
     if (!this.state.fetchBillSucc) {
       this.props.toast.info('账单正在更新中，请耐心等待哦');
       return;
@@ -218,6 +219,13 @@ export default class loan_repay_confirm_page extends PureComponent {
         if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
           this.props.toast.info('请输入数字或两位小数');
           return;
+        }
+        if (values.loanMoney < selectedLoanDate.factLmtLow || values.loanMoney > selectedLoanDate.factAmtHigh) {
+          this.props.toast.info(`申请金额区间应为${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`)
+          this.props.form.setFieldsValue({
+            loanMoney: ''
+          })
+          return
         }
         //调用授信接口
         handleClickConfirm(this.props, {
@@ -249,6 +257,10 @@ export default class loan_repay_confirm_page extends PureComponent {
       } else if (activeTag === 1) {
         //最低还款
         this.calcLoanMoney(minPayment, selectedLoanDateArr[0]);
+      } else {
+        this.props.form.setFieldsValue({
+          loanMoney: ''
+        })
       }
     })
   }
@@ -411,7 +423,9 @@ export default class loan_repay_confirm_page extends PureComponent {
               disabled={this.inputDisabled()}
               ref={el => this.inputRef = el}
               className={this.inputDisabled() ? '' : 'blackColor'}
-              onBlur={() => { handleInputBlur() }}
+              onBlur={() => {
+                handleInputBlur()
+              }}
             >
               帮你还多少(元)
 						</InputItem>
