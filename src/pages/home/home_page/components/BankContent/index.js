@@ -124,7 +124,7 @@ export default class BankContent extends React.Component {
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
+					<div className={style.abnormal_tip}>
 						最高代偿金额 ￥50000
 						<Icon
 							onClick={() => {
@@ -138,7 +138,7 @@ export default class BankContent extends React.Component {
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
-					</p>
+					</div>
 				</div>
 			);
 		} else if (
@@ -151,7 +151,7 @@ export default class BankContent extends React.Component {
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
+					<div className={style.abnormal_tip}>
 						点击更新账单，获取最新信用卡信息
 						<Icon
 							onClick={() => {
@@ -165,7 +165,7 @@ export default class BankContent extends React.Component {
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
-					</p>
+					</div>
 				</div>
 			);
 		} else if (
@@ -174,7 +174,8 @@ export default class BankContent extends React.Component {
 				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
 			(!MessageTagStep || MessageTagStep !== 'MessageTagStep')
 		) {
-			let html = '';
+            let html = '';
+            console.log(progressNum,'-----------')
 			switch (Number(progressNum)) {
 				case 3:
 					html = `帮我还卡，只需<span>${progressNum}</span>步`;
@@ -192,7 +193,7 @@ export default class BankContent extends React.Component {
 
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
+					<div className={style.abnormal_tip}>
 						<div dangerouslySetInnerHTML={{ __html: html }} />
 						<Icon
 							onClick={() => {
@@ -206,7 +207,7 @@ export default class BankContent extends React.Component {
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
-					</p>
+					</div>
 				</div>
 			);
 		}
