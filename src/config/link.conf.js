@@ -17,6 +17,10 @@ const envMap = {
     DC_URL: 'https://ffp.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP',  // 生产地址
     PDF_URL: 'https://lns-wap.vbillbank.com/wap', // pdf预览的接口url
   },
+  rc: {
+    DC_URL: 'https://ffp.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP',  // 生产地址
+    PDF_URL: 'https://lns-wap-rc.vbillbank.com/wap', // pdf预览的接口url
+  },
 };
 
 export default envMap[PROJECT_ENV];

@@ -78,6 +78,55 @@ let getProdPlugins = function () {
 	return plugins;
 };
 
+// rc插件 神策暂时连在测试环境
+let getRcPlugins = function () {
+	plugins.push(
+		new CompressionPlugin({
+			//压缩gzip
+			asset: '[path].gz[query]',
+			algorithm: 'gzip',
+			test: /\.(js|html)$/,
+			threshold: 10240,
+			minRatio: 0.8
+		})
+	),
+		plugins.push(
+			new WebpackZipPlugin({
+				initialFile: './dist', //需要打包的文件夹(一般为dist)
+				endPath: './', //打包到对应目录（一般为当前目录'./'）
+				zipName: +new Date() + 'copy-dist.zip' //打包生成的文件名
+			})
+		);
+	plugins.push(new OptimizeCSSPlugin()); //压缩提取出的css，并解决ExtractTextPlugin分离出的js重复问题(多个文件引入同一css文件)
+	plugins.push(new webpack.HashedModuleIdsPlugin());
+	plugins.push(
+		new CopyWebpackPlugin([
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
+			{ from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
+		])
+	),
+		plugins.push(
+			new webpack.DefinePlugin({
+				'process.env': {
+					NODE_ENV: JSON.stringify('rc'),
+					PROJECT_ENV: JSON.stringify('rc')
+				},
+				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+			})
+		);
+	plugins.push(
+		new CleanWebpackPlugin('dist', {
+			root: path.resolve(__dirname, '..'),
+			verbose: true,
+			dry: false
+		})
+	);
+	return plugins;
+};
+
 //测试插件
 let getTestPlugins = function () {
 	plugins.push(
@@ -158,5 +207,6 @@ let getDevPlugins = function () {
 module.exports = {
 	getProdPlugins,
 	getDevPlugins,
-	getTestPlugins
+	getTestPlugins,
+	getRcPlugins
 };
