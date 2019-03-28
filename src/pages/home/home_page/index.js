@@ -811,6 +811,8 @@ export default class home_page extends PureComponent {
 									usrIndexInfo.indexSts === 'LN0006' ||
 									usrIndexInfo.indexSts === 'LN0008' ? (
 										'一键还账单'
+									) : usrIndexInfo.indexSts === 'LN0004' ? (
+										'快速审批中'
 									) : usrIndexInfo.indexSts === 'LN0001' ? (
 										'查看我的账单，帮我还'
 									) : (
