@@ -34,7 +34,8 @@ import { createForm } from 'rc-form';
 
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
-	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+	qryPerdRate: '/bill/prod',
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
@@ -690,8 +691,8 @@ export default class home_page extends PureComponent {
 
 	//查询还款期限
 	qryPerdRate = () => {
-		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
-		this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
+		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
+		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
 			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
 			this.setState(
 				{

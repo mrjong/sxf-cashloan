@@ -12,7 +12,8 @@ import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
 
 const API = {
   queryBillStatus: '/wap/queryBillStatus', //
-  qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+  // qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+  qryPerdRate: '/bill/prod',
   CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
   CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
   USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
@@ -446,7 +447,7 @@ export default class loan_repay_confirm_page extends PureComponent {
               loadData={[
                 () => {
                   //如果账单爬取成功，请求期限接口
-                  return this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
+                  return this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
                     const date =
                       res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
                     this.setState({
