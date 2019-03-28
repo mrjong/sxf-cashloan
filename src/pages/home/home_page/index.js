@@ -138,11 +138,11 @@ export default class home_page extends PureComponent {
 	}
 	// 判断是否授信
 	credit_extension = () => {
-		this.setState({
-		    firstUserInfo:'00'
-		})
-		this.requestGetUsrInfo();
-		return
+		// this.setState({
+		//     firstUserInfo:'00'
+		// })
+		// this.requestGetUsrInfo();
+		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
 			.then((res) => {
