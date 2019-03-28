@@ -84,7 +84,7 @@ export default class loan_repay_confirm_page extends PureComponent {
             //   indexSts: 'LN0003',
             //   indexMsg: '一键还卡',
             //   indexData: {
-            //     autSts: '2', // 1 中, 2,成功  3失败  1更新中
+            //     autSts: '1', // 1 中, 2,成功  3失败  1更新中
             //     bankName: '招商银行',
             //     bankNo: 'ICBC',
             //     cardNoHid: '6785 **** **** 6654',
@@ -115,6 +115,8 @@ export default class loan_repay_confirm_page extends PureComponent {
               this.hideProgress()
               this.setState({
                 fetchBillSucc: true
+              }, () => {
+                this.toggleTag(0)
               })
             }
           }
@@ -328,9 +330,9 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   render() {
-    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate = {}, fetchBillSucc } = this.state
+    const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate = {} } = this.state
     const { indexData = {} } = usrIndexInfo
-    const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName, autId = '111' } = indexData
+    const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName } = indexData
     const { getFieldDecorator } = this.props.form
     const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico'
     let overDtStr = ''
@@ -453,8 +455,6 @@ export default class loan_repay_confirm_page extends PureComponent {
                     this.setState({
                       perdRateList: date,
                       selectedLoanDate: date[0] // 默认选中3期
-                    }, () => {
-                      fetchBillSucc && this.toggleTag(0)
                     })
                     // 设置默认选中的还款金额
                     return date.map((item) => ({
