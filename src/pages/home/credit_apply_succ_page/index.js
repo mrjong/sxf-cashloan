@@ -51,8 +51,6 @@ export default class credit_apply_succ_page extends PureComponent {
         setTimeout(() => {
           this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
         }, 3000);
-      } else {
-        this.props.history.push('/home/home');
       }
     });
   }
