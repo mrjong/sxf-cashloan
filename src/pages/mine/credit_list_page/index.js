@@ -89,6 +89,10 @@ export default class credit_list_page extends PureComponent {
       res => {
         if (res.msgCode === "PTM0000") {
           if (jumpFlag) {
+            if (store.getToggleMoxieCard()) {
+                this.props.history.replace('/home/loan_repay_confirm_page');
+                return;
+            }
             this.props.history.replace(backUrlData);
           }
         } else {
