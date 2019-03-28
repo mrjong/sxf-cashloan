@@ -149,7 +149,6 @@ export default class loan_repay_confirm_page extends PureComponent {
         clearInterval(timer);
         let timer2 = setTimeout(() => {
           if (this.state.retryCount === 0) {
-            console.log(this.state.retryCount)
             this.props.toast.info('账单更新失败');
             this.setState({
               showAgainUpdateBtn: false
