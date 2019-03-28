@@ -85,9 +85,6 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		// setTimeout(() => {
-		// 	this.showCreditModal()
-		// }, 3000)
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 弹新弹窗的标识

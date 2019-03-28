@@ -275,13 +275,13 @@ export default class loan_repay_confirm_page extends PureComponent {
     const { selectedLoanDate = {}, usrIndexInfo, fetchBillSucc } = this.state
     const { indexData = {} } = usrIndexInfo
     const { cardBillAmt = '', minPayment = '' } = indexData
+    if (!fetchBillSucc) {
+      this.props.toast.info('账单更新成功方可选择，请耐心等待哦')
+      return
+    }
     this.setState({
       activeTag: idx
     }, () => {
-      if (!fetchBillSucc) {
-        this.props.toast.info('账单更新成功方可选择，请耐心等待哦')
-        return
-      }
       //全额还款
       if (idx === 0) {
         this.calcLoanMoney(cardBillAmt, selectedLoanDate)
@@ -306,8 +306,8 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   placeholderText = () => {
-    const { fetchBillSucc, selectedLoanDate = {} } = this.state
-    if (fetchBillSucc) {
+    const { fetchBillSucc, selectedLoanDate = {}, activeTag } = this.state
+    if (fetchBillSucc && activeTag === 2) {
       return `申请金额${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`
     } else {
       return `请输入账单金额`
