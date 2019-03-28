@@ -253,10 +253,10 @@ export default class loan_repay_confirm_page extends PureComponent {
       }
       //全额还款
       if (activeTag === 0) {
-        this.calcLoanMoney(cardBillAmt, selectedLoanDateArr[0]);
+        this.calcLoanMoney(cardBillAmt);
       } else if (activeTag === 1) {
         //最低还款
-        this.calcLoanMoney(minPayment, selectedLoanDateArr[0]);
+        this.calcLoanMoney(minPayment);
       } else {
         this.props.form.setFieldsValue({
           loanMoney: ''
@@ -266,7 +266,8 @@ export default class loan_repay_confirm_page extends PureComponent {
   }
 
   //计算该显示的还款金额
-  calcLoanMoney = (money, obj) => {
+  calcLoanMoney = (money) => {
+    const { selectedLoanDate: obj = {} } = this.state
     if (money > obj.factAmtHigh) {
       this.props.form.setFieldsValue({
         loanMoney: obj.factAmtHigh
@@ -284,7 +285,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //切换tag标签
   toggleTag = (idx) => {
-    const { selectedLoanDate = {}, usrIndexInfo, fetchBillSucc } = this.state
+    const { usrIndexInfo, fetchBillSucc } = this.state
     const { indexData = {} } = usrIndexInfo
     const { cardBillAmt = '', minPayment = '' } = indexData
     if (!fetchBillSucc) {
@@ -296,10 +297,10 @@ export default class loan_repay_confirm_page extends PureComponent {
     }, () => {
       //全额还款
       if (idx === 0) {
-        this.calcLoanMoney(cardBillAmt, selectedLoanDate)
+        this.calcLoanMoney(cardBillAmt)
       } else if (idx === 1) {
         //最低还款
-        this.calcLoanMoney(minPayment, selectedLoanDate)
+        this.calcLoanMoney(minPayment)
       } else {
         this.inputRef.focus()
         this.props.form.setFieldsValue({

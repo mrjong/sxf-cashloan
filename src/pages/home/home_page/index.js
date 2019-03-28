@@ -718,14 +718,22 @@ export default class home_page extends PureComponent {
 	};
 
 	submitCredit = () => {
+    const { selectedLoanDate = {} } = this.state
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
 					this.props.toast.info('请输入数字或两位小数');
 					return;
 				}
+				if (values.loanMoney < selectedLoanDate.factLmtLow || values.loanMoney > selectedLoanDate.factAmtHigh) {
+          this.props.toast.info(`申请金额区间应为${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`)
+          this.props.form.setFieldsValue({
+            loanMoney: ''
+          })
+          return
+        }
 				const params = {
-					...this.state.selectedLoanDate,
+					...selectedLoanDate,
 					rpyAmt: Number(values.loanMoney)
 				};
 				store.setLoanAspirationHome(params);
