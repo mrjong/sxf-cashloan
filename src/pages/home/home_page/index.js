@@ -166,7 +166,7 @@ export default class home_page extends PureComponent {
 	credit_extension_not = async () => {
 		let data = await getNextStr({ $props: this.props, needReturn: true });
 		store.setCreditExtensionNot(true);
-		this.calculatePercent(data);
+		this.calculatePercent(data, true);
 		this.cacheBanner();
 	};
 	// 从 url 中获取参数，如果有 token 就设置下
@@ -185,7 +185,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 进度计算
-	calculatePercent = (data) => {
+	calculatePercent = (data, isshow) => {
 		let codes = [];
 		let demo = data.codes;
 		let codesCopy = demo.slice(1, 4);
@@ -253,7 +253,7 @@ export default class home_page extends PureComponent {
 			case 3: // 新用户，信用卡未授权
 				this.setState({
 					percentData: 98,
-					percentSatus: '1',
+					percentSatus: isshow ? '1' : '',
 					showDiv: 'circle'
 				});
 				break;
@@ -270,7 +270,7 @@ export default class home_page extends PureComponent {
 			buriedPointEvent(home.applyCreditRepayment);
 		} else if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
-        buriedPointEvent(home.viewBill);
+			buriedPointEvent(home.viewBill);
 		} else {
 			// 埋点-首页-点击一键还卡（代还）
 			buriedPointEvent(home.easyRepay, {
@@ -685,14 +685,17 @@ export default class home_page extends PureComponent {
 		const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '';
 		this.props.$fetch.get(`${API.qryPerdRate}/${autId}`).then((res) => {
 			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-			this.setState({
-				perdRateList: date,
-				selectedLoanDate: date[0] // 默认选中3期
-			}, () => {
-				this.toggleTag(0)
-			})
-		})
-	}
+			this.setState(
+				{
+					perdRateList: date,
+					selectedLoanDate: date[0] // 默认选中3期
+				},
+				() => {
+					this.toggleTag(0);
+				}
+			);
+		});
+	};
 
 	showCreditModal = () => {
 		this.setState(
