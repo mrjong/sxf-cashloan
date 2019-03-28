@@ -17,7 +17,9 @@ const API = {
   payback: '/bill/payback',
   couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
   protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-  protocolBind: '/withhold/protocolBink'//协议绑卡接口
+  protocolBind: '/withhold/protocolBink', //协议绑卡接口
+  fundPlain: '/fund/plain', // 费率接口
+  payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 }
 let entryFrom = '';
 @fetch.inject()
@@ -41,7 +43,13 @@ export default class order_detail_page extends PureComponent {
       isShowSmsModal: false, //是否显示短信验证码弹窗
       smsCode: '',
       protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
-      toggleBtn: false // 是否切换短信验证码弹窗底部按钮
+      toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
+      detailArr: [], // 还款详情数据
+      isShowDetail: false, // 是否展示弹框中的明细详情
+      isAdvance: false, // 是否提前还款
+      isNewsContract: false, // 是否签署的是新合同
+      isSettle: '0', // 是否结清
+      totalAmt: '', // 一键结清传给后台的总金额
     }
   }
   componentWillMount() {
@@ -55,12 +63,73 @@ export default class order_detail_page extends PureComponent {
     this.setState({
       billNo: store.getBillNo()
     }, () => {
-      this.getLoanInfo()
+      this.getLoanInfo();
     })
   }
 
   componentWillUnmount() {
     store.removeCardData()
+  }
+
+  // 获取弹框明细信息
+  getModalDtlInfo = (cb, isPayAll) => {
+    const { billNo } = this.state;
+    this.props.$fetch.post(API.fundPlain, {
+      ordNo: billNo
+    })
+      .then(res => {
+        if (res.msgCode === 'PTM0000') { 
+          if (res.data) { // 如果data不为空则为签署的是新合同,否则为旧合同，则收银台不展示详情，还款也为/bill/payback老接口
+            const currentStg = res.data[0].currentLenth;
+            const perdData = res.data[0].perdList[currentStg - 1];
+            let isAdvance = false;
+            let isSettleStu = '';
+            if (isPayAll) {
+              if (currentStg === res.data[0].perdList.length) {
+                isAdvance = false;
+              } else {
+                isAdvance = true;
+              }
+              // 筛选出所有补偿金的数组
+              const buChangJinList = res.data[0].perdList.map(item2=>item2.feeInfos.find(item=>item.feeNm==='补偿金'));
+              if (buChangJinList.find(item=>item.feeAmt!==0)) { // 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
+                isSettleStu = '1';
+              } else {
+                isSettleStu = '0';
+              }
+            } else { // perdSts 0为未到期 1为已逾期 2为处理中 3为已撤销 4为已还清
+              // 如果该期补偿金不为0，那么是提前还款，否则不是
+              if (perdData.feeInfos.find(item=>item.feeNm==='补偿金').feeAmt) {
+                isAdvance = true;
+                isSettleStu = '1';
+              } else {
+                isAdvance = false;
+                isSettleStu = '0';
+              }
+            }
+            this.setState({
+              detailArr: isPayAll ? res.data[0].totalList : perdData.feeInfos,
+              isAdvance,
+              isNewsContract: true,
+              isSettle: isSettleStu,
+              totalAmt: res.data[0].totalAmt,
+            }, ()=>{
+              cb && cb(isPayAll)
+            })
+          } else {
+            this.setState({
+              isAdvance: false,
+              isNewsContract: false,
+            }, ()=>{
+              cb && cb(isPayAll)
+            })
+          }
+        } else {
+          this.props.toast.info(res.msgInfo)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
   }
 
   // 获取还款信息
@@ -99,6 +168,12 @@ export default class order_detail_page extends PureComponent {
               this.setState({
                 showModal: true,
                 isPayAll: orderDtlData && orderDtlData.isPayAll,
+                detailArr: orderDtlData && orderDtlData.detailArr, 
+                isShowDetail: orderDtlData && orderDtlData.isShowDetail, 
+                isAdvance: orderDtlData && orderDtlData.isAdvance, 
+                isNewsContract: orderDtlData && orderDtlData.isNewsContract, 
+                totalAmt: orderDtlData && orderDtlData.totalAmt,
+                isSettle: orderDtlData && orderDtlData.isSettle,
               }, () => {
                 this.setState({
                   bankInfo: bankInfo,
@@ -160,7 +235,7 @@ export default class order_detail_page extends PureComponent {
         type: '01', // 00为借款 01为还款
         currentStage: result.perdNum,
         price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-        totalStage: result.perdLth,
+        totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
       };
     } else {
       params = {
@@ -169,7 +244,7 @@ export default class order_detail_page extends PureComponent {
         type: '01', // 00为借款 01为还款
         currentStage: result.perdNum,
         price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-        totalStage: result.perdLth,
+        totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
       };
     }
     this.props.$fetch.get(API.couponCount, params).then(result => {
@@ -429,9 +504,22 @@ export default class order_detail_page extends PureComponent {
   }
 
   //调用还款接口逻辑
+  // isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
   repay = () => {
-    const { billDesc, isPayAll } = this.state;
-    this.props.$fetch.post(API.payback, this.state.repayParams).then(res => {
+    const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt } = this.state;
+    const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+    let sendParams = {}
+    if (isNewsContract) {
+      if (isPayAll) {
+        sendParams = {...repayParams, isSettle, thisRepTotAmt: totalAmt}
+      } else {
+        sendParams = {...repayParams, isSettle}
+      }
+    } else {
+      sendParams = repayParams;
+    }
+    console.log(sendParams,paybackAPI);
+    this.props.$fetch.post(paybackAPI, sendParams).then(res => {
       if (res.msgCode === 'PTM0000') {
         buriedPointEvent(order.repaymentFirst, {
           entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
@@ -440,6 +528,7 @@ export default class order_detail_page extends PureComponent {
         this.setState({
           showModal: false,
           couponInfo: {},
+          isShowDetail: false
         })
         if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
           this.props.toast.info('还款完成')
@@ -471,6 +560,7 @@ export default class order_detail_page extends PureComponent {
         this.setState({
           showModal: false,
           couponInfo: {},
+          isShowDetail: false
         })
         this.props.toast.info(res.msgInfo);
         store.removeCouponData();
@@ -484,14 +574,15 @@ export default class order_detail_page extends PureComponent {
       this.setState({
         showModal: false,
         couponInfo: {},
+        isShowDetail: false
       })
     })
   }
 
   // 选择银行卡
   selectBank = () => {
-    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll } = this.state;
-    let orderDtData = {isPayAll,}
+    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state;
+    let orderDtData = {isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle}
     store.setBackUrl('/order/order_detail_page');
     store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
@@ -499,7 +590,9 @@ export default class order_detail_page extends PureComponent {
   
   // 选择优惠劵
   selectCoupon = (useFlag) => {
-    const { billNo, billDesc, couponInfo, bankInfo } = this.state
+    const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state
+    let orderDtData = {detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle}
+    store.setOrderDetailData(orderDtData);
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
       this.props.history.push({
@@ -553,13 +646,29 @@ export default class order_detail_page extends PureComponent {
   }
   // 一键结清
   payAllOrder = () => {
-    this.setState({
+    this.getModalDtlInfo(this.showPayModal, true);
+  }
+  // 主动还款
+  activePay = () => {
+    buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
+    this.getModalDtlInfo(this.showPayModal, false);
+  }
+  
+  showPayModal = (boolen) => {
+    this.setState({ 
       showModal: true,
-      isPayAll: true,
+      isPayAll: boolen,
     });
   }
+
+  // 展示详情
+  showDetail = () => {
+    this.setState({
+      isShowDetail: !this.state.isShowDetail
+    })
+  }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -632,10 +741,7 @@ export default class order_detail_page extends PureComponent {
         {
           perdNum !== 999 && !hideBtn ? <div className={styles.submit_btn}>
             <SXFButton
-              onClick={() => {
-                this.setState({ showModal: true, isPayAll: false, });
-                buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单' });
-              }}>
+              onClick={this.activePay}>
               主动还款
             </SXFButton>
             <div className={styles.message}>此次主动还款，将用于还第
@@ -644,15 +750,40 @@ export default class order_detail_page extends PureComponent {
             </div>
           </div> : <div className={styles.mb50}></div>
         }
-        <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false }) }} animationType="slide-up">
+        <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false, isShowDetail: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
-            <div className={styles.modal_title}>付款详情
-              <i onClick={() => { this.setState({ showModal: false }) }}></i>
+            <div className={styles.modal_title}>还款详情
+              <i onClick={() => { this.setState({ showModal: false, isShowDetail: false }) }}></i>
             </div>
-            <div className={styles.modal_flex}>
+            <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
               <span className={styles.modal_label}>本次还款金额</span>
-              <span className={styles.modal_value}>{isPayAll ? waitRepAmt : money}元</span>
+              <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
+              {
+                isAdvance && 
+                <i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
+              }
             </div>
+            {/* 账单明细展示 */}
+            {
+              isShowDetail ?
+              <div className={styles.feeDetail}>
+                {
+                  detailArr.map((item, index) => (
+                    item.feeAmt ?
+                    <div className={styles.modal_flex} key={index}>
+                      <span className={styles.modal_label}>{item.feeNm}</span>
+                      <span className={styles.modal_value}>{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元</span>
+                    </div>
+                    : null
+                  ))
+                }
+                <div className={`${styles.modal_flex} ${styles.sum_total}`}>
+                  <span className={styles.modal_label}>本次应还总金额</span>
+                  <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
+                </div>
+              </div>
+              : null
+            }
             <div className={styles.modal_flex}>
               <span className={styles.modal_label}>还款银行卡</span>
               <span onClick={this.selectBank} className={`${styles.modal_value}`}>
