@@ -181,7 +181,7 @@
     .price{
       font-size: 30px;
       color: rgba(255, 26, 0, 1);
-      padding-top: 78px;
+      padding-top: 68px;
       img{
         width: 210px;
         margin-right: 13px;
@@ -190,13 +190,21 @@
       }
     }
     .tipText{
-      margin: 44px 0 69px;
+      margin: 34px 0 69px;
       font-size: 30px;
       color: rgba(52, 58, 66, 1);
     }
+    .awardListCarousel{
+      height: 190px !important;
+      :global {
+        .slider-frame{
+          height: 190px !important;
+        }
+      }
+    }
     .awardList{
       width: 464px;
-      margin: 94px 0 44px;
+      margin: 84px 0 24px;
     }
     .carouselItem{
       width: 380px;
@@ -205,6 +213,7 @@
       justify-content: space-between;
       font-size: 26px;
       color: rgba(52, 58, 66, 1);
+      margin-bottom: 8px;
     }
     .jumpBtn{
       background: linear-gradient(90deg, rgba(254, 175, 110, 1), rgba(236, 83, 58, 1));
@@ -216,7 +225,8 @@
       font-size: 24px;
       color: rgba(52, 58, 66, 1);
       text-align: left;
-      margin-top: 115px;
+      margin-top: 85px;
+      line-height: 1.4;
     }
   }
   .tipText {

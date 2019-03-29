@@ -19,6 +19,7 @@ import { activity } from 'utils/analytinsType'
 import ButtonCustom from 'components/ButtonCustom'
 import { Carousel } from 'antd-mobile'
 import SmsAlert from '../components/SmsAlert'
+import awardListData from './components/awardListData'
 
 
 @withRouter
@@ -27,24 +28,7 @@ export default class funsisong_page extends PureComponent {
     super(props)
     this.state = {
       showModal: false,
-      awardList: [ // 获奖名单
-        {
-          mobile: '183****7898',
-          award: '20元现金'
-        },
-        {
-          mobile: '183****1234',
-          award: '2元现金'
-        },
-        {
-          mobile: '183****5678',
-          award: '15元现金'
-        },
-        {
-          mobile: '183****3456',
-          award: '10元现金'
-        },
-      ],
+      awardList: awardListData,
       showLoginTip: false, // 是否登陆弹框
       showAwardModal: false, // 获奖弹框
       showNoAwardModal: false, // 无领取资格弹框
@@ -56,7 +40,7 @@ export default class funsisong_page extends PureComponent {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.entry && queryData.h5Channel) {
       // 根据不同入口来源埋点
-      buriedPointEvent(activity.newUserEntry, {
+      buriedPointEvent(activity.funsisongEntry, {
         entry: queryData.entry,
         h5Channel: queryData.h5Channel
       })
@@ -74,12 +58,19 @@ export default class funsisong_page extends PureComponent {
     })
   }
 
-  goTo = () => {
+  goTo = (goType) => {
+    if (goType === 'coupon') {
+      buriedPointEvent(activity.couponBtnClick);
+    } else if (goType === 'redBag') {
+      buriedPointEvent(activity.redBagBtnClick);
+    }
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.appId && queryData.token) {
-      // 设置拉新活动标志
-      store.setNewUserActivityFlag('NewUserActivityFlag')
-      this.props.history.push(`/mpos/mpos_middle_page${window.location.search}`)
+      if (goType === 'coupon') {
+        this.getCoupon();
+      } else if (goType === 'redBag') {
+        this.getRedBag();
+      }
     } else {
       this.setState({
         noLogin: true,
@@ -133,6 +124,18 @@ export default class funsisong_page extends PureComponent {
     this.setState({
       showNoAwardModal: true,
     })
+  }
+
+  // 立即参与
+  joinNow = () => {
+    buriedPointEvent(activity.joinNowClick);
+    this.goHomePage();
+  }
+
+  // 查看优惠劵
+  checkCoupon = () => {
+    buriedPointEvent(activity.checkCouponClick);
+    this.goHomePage();
   }
 
   // 判断相应操作
@@ -218,7 +221,7 @@ export default class funsisong_page extends PureComponent {
             </h3>
             <div className={styles.imgContainer}>
               <img src={coupon_bg} className={styles.couponBg} alt="coupon_bg" />
-              <img src={get_coupon_btn} onClick={this.getCoupon} className={styles.getBtn} alt="get_coupong_btn" />
+              <img src={get_coupon_btn} onClick={() => { this.goTo('coupon') }} className={styles.getBtn} alt="get_coupong_btn" />
             </div>
           </div>
         </div>
@@ -228,16 +231,15 @@ export default class funsisong_page extends PureComponent {
             <img src={coupon_price} alt="coupon_price" />元
           </p>
           <p className={styles.tipText}>支持提现，借得多得的多</p>
-          <ButtonCustom className={styles.jumpBtn} onClick={this.getRedBag}>还信用卡赚现金</ButtonCustom>
+          <ButtonCustom className={styles.jumpBtn} onClick={() => { this.goTo('redBag') }}>还信用卡赚现金</ButtonCustom>
           <img src={award_list} alt="award_list" className={styles.awardList} />
-          <Carousel className={styles.awardCarousel}
+          <Carousel className={styles.awardListCarousel}
             vertical
             dots={false}
             dragging={false}
             swiping={false}
             autoplay
             infinite
-            // frameOverflow='auto'
           >
             {awardList.map((item, index) => {
               return (
@@ -313,7 +315,7 @@ export default class funsisong_page extends PureComponent {
               <div className={`${styles.modalWrapper} ${styles.modalWrapper2}`}>
                 <div className={styles.awardModalCont}>
                   <img src={modal_bg} className={styles.modalBg} alt="modal_bg" />
-                  <img src={check_btn} className={styles.checkBtn} onClick={this.goHomePage} alt="check_btn" />
+                  <img src={check_btn} className={styles.checkBtn} onClick={this.checkCoupon} alt="check_btn" />
                 </div>
                 <div className={styles.closeBtn} onClick={this.closeAwardModal}></div>
               </div>
@@ -327,7 +329,7 @@ export default class funsisong_page extends PureComponent {
                 <div className={styles.noAwardModalCont}>
                   <h3 className={styles.title}>您已注册，暂无领取资格</h3>
                   <p className={styles.contText}>完成借款，最高送888元现金，快去参与！</p>
-                  <ButtonCustom className={styles.joinBtn} onClick={this.goHomePage}>立即参与</ButtonCustom>
+                  <ButtonCustom className={styles.joinBtn} onClick={this.joinNow}>立即参与</ButtonCustom>
                 </div>
                 <div className={styles.closeIcon} onClick={this.closeNoAwardModal}></div>
               </div>

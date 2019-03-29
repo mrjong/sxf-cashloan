@@ -2,7 +2,9 @@ import React from 'react';
 import styles from './index.scss';
 import huodongTootip3 from '../../assets/images/home/huodongTootip3.png';
 import huodongTootip1 from '../../assets/images/home/huodongTootip1.png';
+import huodongTootip4 from '../../pages/activity/funsisong_page/img/home_modal_bg.png';
 import huodongTootipBtn3 from '../../assets/images/home/huodongTootip_btn3.png';
+import huodongTootipBtn4 from '../../pages/activity/funsisong_page/img/home_modal_btn.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -16,7 +18,7 @@ class ActivityModal extends React.Component {
 				<div className={styles.mask} />
 				<div className={styles.modalWrapper}>
 					<div className={styles.content}>
-						<img src={isNewModal ? huodongTootip1 : huodongTootip3} />
+						{/* <img src={isNewModal ? huodongTootip1 : huodongTootip3} />
 						{!isNewModal ? (
 							<img
 								className={styles.huodongTootipBtn}
@@ -25,7 +27,16 @@ class ActivityModal extends React.Component {
 									activityModalBtn();
 								}}
 							/>
-						) : null}
+						) : null} */}
+						{/* fun肆送活动 */}
+						<img src={huodongTootip4} />
+						<img
+							className={styles.huodongTootipBtn2}
+							src={huodongTootipBtn4}
+							onClick={() => {
+								activityModalBtn();
+							}}
+						/>
 					</div>
 					<div className={styles.closeBtn} onClick={closeActivityModal} />
 				</div>

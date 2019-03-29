@@ -8,7 +8,7 @@ import { isWXOpen, getDeviceType } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine } from 'utils/analytinsType';
+import { home, mine, activity } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
@@ -477,6 +477,8 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = () => {
+		// 放肆送活动埋点，活动下线的时候去掉
+		buriedPointEvent(activity.homeModalBtnClick);
 		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
 		const { usrIndexInfo } = this.state;
 		switch (usrIndexInfo.indexSts) {
