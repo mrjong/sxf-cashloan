@@ -378,7 +378,48 @@ export default class dazhuanpan_page extends PureComponent {
 		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
-				<SmsAlert onRef={this.onRef} smsSuccess={this.smsSuccess} />
+				<SmsAlert
+					onRef={this.onRef}
+					smsSuccess={this.smsSuccess}
+					goSubmitCb={{
+						others: () => {
+							buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+								draw_result: '暂无资格'
+							});
+							Toast.info('暂无活动资格');
+						},
+					}}
+					validateMposCb={{
+						PTM9000: () => {
+							buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+								draw_result: '暂无资格'
+							});
+							Toast.info('暂无活动资格');
+						}
+					}}
+					chkAuthCb={{
+						authFlag2: () => {
+							buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+								draw_result: '暂无资格'
+							});
+							Toast.info('暂无活动资格');
+						}
+					}}
+					doAuthCb={{
+						authSts01: () => {
+							buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+								draw_result: '短验'
+							});
+						},
+						others: () => {
+							buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+								draw_result: '暂无资格'
+							});
+							// 暂无抽奖资格
+							Toast.info('暂无活动资格');
+						}
+					}}
+				/>
 				{this.state.codeInfo ? (
 					<div className={styles.active_img_box}>
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}

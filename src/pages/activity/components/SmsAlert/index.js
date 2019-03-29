@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Button, Modal, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
@@ -9,8 +10,7 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import { buriedPointEvent } from 'utils/analytins';
-import { activity } from 'utils/analytinsType';
+
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
@@ -22,6 +22,43 @@ let timmer;
 @fetch.inject()
 @createForm()
 export default class SmsAlert extends Component {
+	// static propTypes = {
+	// 	goSubmitCb: PropTypes.object,
+	// 	validateMposCb: PropTypes.object,
+	// 	chkAuthCb: PropTypes.object,
+	// 	doAuthCb: PropTypes.object,
+	// 	goLoginCb: PropTypes.object,
+	// 	smsSuccess: PropTypes.func,
+	// };
+	
+	static defaultProps = {
+		goSubmitCb: {
+			PTM0000: () => {},
+			URM0008: () => {},
+			others: () => {},
+		},
+		validateMposCb: {
+			URM0000: () => {},
+			PTM9000: () => {},
+			others: () => {},
+		},
+		chkAuthCb: {
+			authFlag0: () => {},
+			authFlag1: () => {},
+			authFlag2: () => {},
+			others: () => {},
+		},
+		doAuthCb: {
+			authSts01: () => {},
+			authSts00: () => {},
+			others: () => {},
+		},
+		goLoginCb: {
+			authSts00: () => {},
+			others: () => {},
+		},
+		smsSuccess: () => {},
+	};
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -30,7 +67,8 @@ export default class SmsAlert extends Component {
 			modalShow: false,
 			disabled: false,
 			mblNoHid: '',
-			smsJrnNo: '' // 短信流水号
+			smsJrnNo: '', // 短信流水号
+			passType: '', // 传递过来的参数
 		};
 	}
 	componentDidMount() {
@@ -94,6 +132,8 @@ export default class SmsAlert extends Component {
 	}
 	//登录判断
 	goSubmit = () => {
+		const { goSubmitCb, smsSuccess } = this.props;
+		const { passType } = this.state;
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -112,25 +152,23 @@ export default class SmsAlert extends Component {
 					.then(
 						(res) => {
 							if (res.msgCode === 'PTM0000') {
+								goSubmitCb.PTM0000 && goSubmitCb.PTM0000(res, passType);
 								// sa.login(res.userId);
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setMposToken(true);
-								this.props.smsSuccess();
+								smsSuccess && smsSuccess();
 								store.setToken(res.loginToken);
 								this.closeCb();
 								// refreshPageFn();
-							}
-							if (res.msgCode === 'URM0008') {
+							} else if (res.msgCode === 'URM0008') {
+								goSubmitCb.URM0008 && goSubmitCb.URM0008(res, passType);
 								Toast.info(res.msgInfo);
 								this.props.form.setFieldsValue({
 									smsCd: ''
 								});
 							} else {
-								buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-									draw_result: '暂无资格'
-								});
-								Toast.info('暂无活动资格');
+								goSubmitCb.others && goSubmitCb.others(res, passType);
 								this.closeCb();
 							}
 						},
@@ -149,7 +187,8 @@ export default class SmsAlert extends Component {
 		});
 	};
 	// 实名
-	validateMposRelSts = (type) => {
+	validateMposRelSts = (type, passType) => {
+		const { validateMposCb } = this.props;
 		this.setState({
 			disabled: type
 		});
@@ -161,19 +200,19 @@ export default class SmsAlert extends Component {
 			})
 			.then((res) => {
 				if (res.msgCode === 'URM0000') {
-					this.chkAuth();
+					validateMposCb.URM0000 && validateMposCb.URM0000(res, passType);
+					this.chkAuth(passType);
 				} else if (res.msgCode === 'PTM9000' || res.msgCode === 'URM0001') {
-					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '暂无资格'
-					});
-					Toast.info('暂无活动资格');
+					validateMposCb.PTM9000 && validateMposCb.PTM9000(res, passType);
 				} else {
+					validateMposCb.others && validateMposCb.others(res, passType)
 					Toast.info(res.msgInfo);
 				}
 			});
 	};
 
-	chkAuth = () => {
+	chkAuth = (passType) => {
+		const { chkAuthCb, smsSuccess } = this.props;
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
 			.post(API.chkAuth, {
@@ -187,29 +226,30 @@ export default class SmsAlert extends Component {
 			})
 			.then((res) => {
 				if (res.authFlag === '0') {
+					chkAuthCb.authFlag0 && chkAuthCb.authFlag0(res, passType);
 					this.setState({
 						authToken: res.tokenId,
 						mblNoHid: res.mblNoHid
 					});
-					this.doAuth(res.tokenId);
+					this.doAuth(res.tokenId, passType);
 				} else if (res.authFlag === '1') {
+					chkAuthCb.authFlag1 && chkAuthCb.authFlag1(res, passType);
 					// 已授权
 					store.setMposToken(true);
-					this.props.smsSuccess();
+					smsSuccess && smsSuccess();
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 					store.setToken(res.loginToken);
 				} else if (res.authFlag === '2') {
-					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '暂无资格'
-					});
-					Toast.info('暂无活动资格');
+					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, passType);
 				} else {
+					chkAuthCb.others && chkAuthCb.others(res, passType);
 					Toast.info(res.msgInfo);
 				}
 			});
 	};
 	// 去授权
-	doAuth = (token) => {
+	doAuth = (token, passType) => {
+		const { doAuthCb, smsSuccess } = this.props;
 		this.props.$fetch
 			.post(API.doAuth, {
 				location: store.getPosition(), // 定位地址 TODO 从session取,
@@ -218,30 +258,25 @@ export default class SmsAlert extends Component {
 			})
 			.then(
 				(res) => {
-					if (res.authSts === '01') {
-						console.log('发验证码');
-						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-							draw_result: '短验'
-						});
+					if (res.authSts === '01') { // 短验
+						doAuthCb.authSts01 && doAuthCb.authSts01(res, passType);
 						this.setState({
-							modalShow: true
+							modalShow: true,
+							passType,
 						});
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
 							smsCd: ''
 						});
-					} else if (res.authSts === '00') {
+					} else if (res.authSts === '00') { // 授权成功
+						doAuthCb.authSts00 && doAuthCb.authSts00(res, passType);
 						// sa.login(res.userId);
 						store.setMposToken(true);
-						this.props.smsSuccess();
+						smsSuccess && smsSuccess();
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 					} else {
-						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-							draw_result: '暂无资格'
-						});
-						// 暂无抽奖资格
-						Toast.info('暂无活动资格');
+						doAuthCb.others && doAuthCb.others(res, passType);
 					}
 				},
 				(err) => {
@@ -251,6 +286,8 @@ export default class SmsAlert extends Component {
 	};
 	// 确定去登陆按钮
 	goLogin = () => {
+		const { goLoginCb, smsSuccess } = this.props;
+		const { passType } = this.state;
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -268,16 +305,18 @@ export default class SmsAlert extends Component {
 					.then(
 						(res) => {
 							if (res.authSts === '00') {
+								goLoginCb.authSts00 && goLoginCb.authSts00(res, passType);
 								// sa.login(res.userId);
 								store.setMposToken(true);
-								this.props.smsSuccess();
+								smsSuccess && smsSuccess();
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setToken(res.loginToken);
 								this.closeCb();
 								// refreshPageFn();
 							} else {
-								Toast.info('暂无活动资格');
+								goLoginCb.others && goLoginCb.others(res, passType);
+								// Toast.info('暂无活动资格');
 								this.closeCb();
 							}
 						},

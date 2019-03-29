@@ -18,6 +18,7 @@ import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType'
 import ButtonCustom from 'components/ButtonCustom'
 import { Carousel } from 'antd-mobile'
+import SmsAlert from '../components/SmsAlert'
 
 
 @withRouter
@@ -47,6 +48,7 @@ export default class funsisong_page extends PureComponent {
       showLoginTip: false, // 是否登陆弹框
       showAwardModal: false, // 获奖弹框
       showNoAwardModal: false, // 无领取资格弹框
+      showModalType: '', // 展示弹框类型
     }
   }
 
@@ -87,7 +89,7 @@ export default class funsisong_page extends PureComponent {
   }
 
   getRedBag = () => {
-    
+    this.child.validateMposRelSts(true, 'home');
   }
 
   // 跳转协议
@@ -116,15 +118,92 @@ export default class funsisong_page extends PureComponent {
 
   // 领取优惠劵
   getCoupon = () => {
+    this.child.validateMposRelSts(true, 'modal');
+  }
+
+  // 展示奖品弹框还是
+  awardModalShow = () => {
     this.setState({
       showAwardModal: true,
     })
   }
 
+  // 展示无领取资格弹框
+  noAwardModalshow = () => {
+    this.setState({
+      showNoAwardModal: true,
+    })
+  }
+
+  // 判断相应操作
+  judgeOper = (getType) => {
+    const { showModalType } = this.state;
+    if(showModalType === 'noAward') {
+      this.noAwardModalshow();
+    } else if (showModalType === 'award') {
+      this.awardModalShow();
+    } else if (getType === 'home') {
+      this.goHomePage();
+    }
+  }
+
+  onRef = (ref) => {
+		this.child = ref;
+	};
+
   render() {
     const { awardList, showModal, showAwardModal, showLoginTip, showNoAwardModal } = this.state;
     return (
       <div className={styles.main}>
+        <SmsAlert
+          onRef={this.onRef}
+          goSubmitCb={{
+            PTM0000: (res, getType) => {
+							this.judgeOper(getType)
+						},
+						others: (res, getType) => {
+							this.props.toast.info('暂无活动资格');
+						},
+					}}
+					validateMposCb={{
+						PTM9000: (res, getType) => {
+							this.props.toast.info('暂无活动资格');
+						}
+					}}
+					chkAuthCb={{
+            authFlag0: (res, getType) => {
+              console.log(getType);
+              if(getType === 'modal') {
+                this.setState({
+                  showModalType: 'award'
+                })
+              }
+            },
+            authFlag1: (res, getType) => {
+              console.log(getType);
+              if(getType === 'modal') {
+                this.noAwardModalshow();
+                this.setState({
+                  showModalType: 'noAward'
+                })
+              } else if (getType === 'home') {
+                this.goHomePage();
+              }
+            },
+						authFlag2: (res, getType) => {
+							this.props.toast.info('暂无活动资格');
+						}
+					}}
+					doAuthCb={{
+            authSts00: (res, getType) => {
+              this.judgeOper(getType)
+            },
+						others: (res, getType) => {
+							// 暂无抽奖资格
+							this.props.toast.info('暂无活动资格');
+						}
+					}}
+        />
         <img src={activity_bg} className={styles.activity_bg} />
         <div className={styles.rule} onClick={() => {
           this.setState({
