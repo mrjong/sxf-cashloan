@@ -97,6 +97,7 @@ export default class loan_repay_confirm_page extends PureComponent {
               //更新中
               if (hideFlag) {
                 this.hideProgress();
+                this.state.retryCount--
                 this.setState({
                   showAgainUpdateBtn: true // 显示 重新更新按钮
                 });
@@ -106,6 +107,7 @@ export default class loan_repay_confirm_page extends PureComponent {
             } else if (indexSts === 'LN0010' || (indexSts === 'LN0003' && indexData.autSts === '3')) {
               //更新失败
               this.hideProgress();
+              this.state.retryCount--
               this.setState({
                 showAgainUpdateBtn: false
               });
@@ -124,6 +126,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       })
       .catch((err) => {
         this.hideProgress()
+        this.state.retryCount--
         this.setState({
           showAgainUpdateBtn: true
         })
@@ -143,7 +146,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //隐藏进度条
   hideProgress = () => {
-    this.state.retryCount--
     this.setState(
       {
         percent: 100
