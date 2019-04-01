@@ -218,7 +218,7 @@ const interceptRouteArr = [
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (store.getGoMoxie() && getDeviceType() !== 'ANDRIOD') {
+		if (store.getGoMoxie()) {
 			history.go(-1);
 			store.removeGoMoxie();
 		} else {
@@ -265,11 +265,11 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		.then((res) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
-				$props.toast.info(res.msgInfo, 3, () => {
-					// 移除首页弹窗返回的值
-					store.removeLoanAspirationHome();
+				$props.toast.info(res.msgInfo);
+				store.removeLoanAspirationHome();
+				setTimeout(() => {
 					$props.history.push('/home/credit_apply_succ_page');
-				});
+				}, 3000);
 			} else {
 				$props.toast.info(res.msgInfo);
 			}

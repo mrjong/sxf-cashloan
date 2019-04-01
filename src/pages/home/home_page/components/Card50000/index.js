@@ -9,7 +9,7 @@ export default class BankCard extends React.PureComponent {
 		return (
 			<div className={style.billBox}>
 				<div className={style.billBox2}>
-					<div className={style.title}>还信用卡</div>
+					<div className={style.title}>借钱还信用卡</div>
 					<div className={style.box_height}>{children}</div>
 					<SXFButton className={style.smart_button_two} onClick={handleApply}>
 						{showDiv === 'circle' ? '继续申请' : '免费申请'}
