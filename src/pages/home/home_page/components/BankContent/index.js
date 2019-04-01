@@ -6,13 +6,14 @@ import { Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
+import fetch from 'sx-fetch';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import SXFButton from 'components/ButtonCustom';
 const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
 };
-
+@fetch.inject()
 export default class BankContent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -76,7 +77,7 @@ export default class BankContent extends React.Component {
 	requestCredCardCount = () => {
 		// 埋点-首页-点击代还其他信用卡
 		buriedPointEvent(home.repayOtherCredit);
-		this.props.fetch
+		this.props.$fetch
 			.post(API.CRED_CARD_COUNT)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000') {
@@ -123,7 +124,7 @@ export default class BankContent extends React.Component {
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
+					<div className={style.abnormal_tip}>
 						最高代偿金额 ￥50000
 						<Icon
 							onClick={() => {
@@ -137,7 +138,7 @@ export default class BankContent extends React.Component {
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
-					</p>
+					</div>
 				</div>
 			);
 		} else if (
@@ -150,7 +151,7 @@ export default class BankContent extends React.Component {
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
+					<div className={style.abnormal_tip}>
 						点击更新账单，获取最新信用卡信息
 						<Icon
 							onClick={() => {
@@ -164,17 +165,17 @@ export default class BankContent extends React.Component {
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
-					</p>
+					</div>
 				</div>
 			);
 		} else if (
-			indexSts === 'LN0003' &&
 			progressNum &&
 			((indexSts === 'LN0003' || indexSts === 'LN0006' || indexSts === 'LN0008') &&
 				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
 			(!MessageTagStep || MessageTagStep !== 'MessageTagStep')
 		) {
-			let html = '';
+            let html = '';
+            console.log(progressNum,'-----------')
 			switch (Number(progressNum)) {
 				case 3:
 					html = `帮我还卡，只需<span>${progressNum}</span>步`;
@@ -192,7 +193,7 @@ export default class BankContent extends React.Component {
 
 			tipText = (
 				<div className={style.abnormal_tip_box}>
-					<p className={style.abnormal_tip}>
+					<div className={style.abnormal_tip}>
 						<div dangerouslySetInnerHTML={{ __html: html }} />
 						<Icon
 							onClick={() => {
@@ -206,7 +207,7 @@ export default class BankContent extends React.Component {
 						<div className={style.triangle_border_down}>
 							<span />
 						</div>
-					</p>
+					</div>
 				</div>
 			);
 		}

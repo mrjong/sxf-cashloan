@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
+import { getNextStr } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -19,6 +20,7 @@ export default class middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		store.removeGoMoxie();
 		//芝麻信用的回调
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const { taskType, mxcode } = query;
@@ -36,7 +38,13 @@ export default class middle_page extends Component {
 						return;
 					}
 					this.buryPointsType(taskType, true);
-					this.goRouter();
+					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+						getNextStr({
+							$props: this.props
+						});
+					} else {
+						this.goRouter();
+					}
 				})
 				.catch((err) => {
 					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
@@ -55,7 +63,11 @@ export default class middle_page extends Component {
                 1 任务进行成功 
                 2 任务进行中
              */
-			this.props.history.back();
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
+			} else {
+				this.props.history.back();
+			}
 		} else {
 			this.setState({
 				errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'

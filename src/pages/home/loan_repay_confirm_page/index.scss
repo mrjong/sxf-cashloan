@@ -1,0 +1,224 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.pageWrapper {
+	padding: 20px 30px 0;
+}
+
+.bankCard {
+	width: 690px;
+	min-height: 477px;
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
+	border-radius: 16px;
+	box-sizing: border-box;
+	padding: 0 30px;
+
+	.top {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 110px;
+		&::after {
+			@include setBottomLine(#E5E5E5);
+		}
+
+		.name {
+			font-size: 30px;
+			color: #333;
+			vertical-align: middle;
+		}
+
+		.lastNo {
+			font-size: 24px;
+			color: #999;
+			margin-left: 15px;
+		}
+	}
+
+	.billTitle {
+		font-size: 24px;
+		color: #999;
+		margin: 30px 0 20px;
+		line-height: 1;
+	}
+
+	.billMoney {
+		display: inline-block;
+		font-size: 80px;
+		color: #333;
+		font-weight: normal;
+		margin-bottom: 70px;
+		line-height: 1;
+	}
+
+	.billInfo {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		line-height: 1;
+		padding-bottom: 30px;
+		&::after {
+			@include setBottomLine(#E5E5E5);
+		}
+
+		.item {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+
+			.value {
+				font-size: 30px;
+				color: #333;
+				font-weight: bold;
+			}
+
+			.name {
+				font-size: 20px;
+				color: #999;
+				margin-top: 10px;
+			}
+		}
+	}
+
+	.bottom {
+		display: flex;
+		align-items: center;
+		height: 80px;
+		justify-content: space-between;
+		font-size: 30px;
+		color: #333;
+
+		.rightArrow {
+			width: 40px;
+		}
+	}
+
+	.bankLogo {
+		width: 50px;
+		height: 50px;
+		margin-right: 17px;
+	}
+
+	.updateButton {
+		display: inline-block;
+		width: 128px;
+		height: 50px;
+		line-height: 50px;
+		background: #3e8cec;
+		border-radius: 25px;
+		font-size: 24px;
+		font-weight: 400;
+		color: #fff;
+		text-align: center;
+	}
+}
+
+.tagList {
+	display: flex;
+	justify-content: space-between;
+	margin: 86px 0 80px;
+	.tagButton {
+		display: inline-block;
+		width: 180px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #f66;
+		border: 1PX solid #f66;
+		box-sizing: border-box;
+	}
+	.activeTag {
+		color: #fff;
+		background: #f66;
+	}
+}
+
+.confirmApplyBtn {
+	width: 620px;
+	margin-top: 80px;
+}
+
+.progressWrap {
+	width: 210px;
+	overflow: hidden;
+	font-size: 24px;
+	color: #333;
+
+	.percentTitleWrap {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.percentNum {
+		color: #3e8cec;
+		margin-left: 5px;
+	}
+}
+
+:global {
+	.loan_repay_confirm_page {
+		.am-progress-bar {
+			border: 2px solid #3e8cec;
+		}
+
+		.am-list-item {
+			padding-left: 0;
+			height: 108px;
+			.am-list-line {
+				padding-right: 0;
+			}
+		}
+
+		.am-list-item .am-list-line .am-list-extra {
+			padding-right: 10px;
+			&::after {
+				content: '';
+				margin-left: 15px;
+                @include setArrow(right,15px,#A9AEB6,1PX);
+                border-color: #333;
+			}
+		}
+
+		.blackColor {
+			.am-input-control input,
+			.am-list-extra {
+				color: #333;
+			}
+		}
+
+		.am-list-item .am-list-line {
+			.am-input-label {
+				width: 210px;
+			}
+			.am-list-content,
+			.am-input-label {
+				font-size: 0.3rem;
+				color: #333;
+			}
+		}
+
+		.am-list-item .am-input-control input {
+            text-align: right;
+            color: #000;
+            opacity: 1;
+        }
+        .am-list-item .am-input-control input:disabled {
+            text-align: right;
+            color: #000;
+            opacity: 1;
+		}
+
+		.am-list-item.am-list-item-middle .am-list-line {
+			&:after {
+				@include setBottomLine();
+            }
+        }
+        .am-list-item .am-list-line .am-list-extra{
+            color: #333;
+            opacity: 1;
+        }
+	}
+}

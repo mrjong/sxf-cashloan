@@ -86,7 +86,7 @@ export default class order_page extends PureComponent {
 	componentDidMount() {
 		// 返回展示数据
 		let backData = store.getBackData()
-		if (store.getBackData()) {
+		if (backData&&backData.scrollTop) {
 			setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
 		}
 	}

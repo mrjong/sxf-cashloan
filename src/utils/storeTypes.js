@@ -55,6 +55,14 @@ export const storeTypes = {
 	MessageTag50000: 'MessageTag50000', // 50000
 	MessageTagError: 'MessageTagError', // 错误不显示
 	MessageTagStep: 'MessageTagStep', // 步骤
-    CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
-    MposToken:'MposToken' // mpos token 关闭无效问题
+	CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
+	MposToken: 'MposToken', // mpos token 关闭无效问题
+	NeedNextUrl: 'NeedNextUrl', // 需要调用获取下一步url方法
+	CreditExtensionNot: 'CreditExtensionNot', // 未提交授信用户
+	ToggleMoxieCard: 'ToggleMoxieCard', // 新版流程物理返回  借钱还信用卡 切换卡
+	LoanAspirationHome: 'LoanAspirationHome', // 首页弹窗 填写意愿
+	CarrierMoxie: 'CarrierMoxie', // 运营商直接返回的问题
+	BankMoxie: 'BankMoxie', // 信用卡直接返回的问题
+	GoMoxie: 'GoMoxie', // 魔蝎银行列表去魔蝎再返回的两次退出才退出的问题
+	CreditSuccessBack: 'CreditSuccessBack' // 信用卡绑卡之后立即去提交页需要提示
 };

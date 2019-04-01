@@ -1,0 +1,48 @@
+.stepWrapper {
+	//   margin-top: 60px;
+	//   margin-bottom: 80px;
+}
+
+.stepIcon {
+	display: inline-block;
+	width: 34px;
+	height: 34px;
+	line-height: 34px;
+	border-radius: 50%;
+	font-size: 24px;
+	text-align: center;
+	background: #dfdee2;
+	box-sizing: border-box;
+}
+
+.stepActive {
+	background: #24d1c3;
+	color: #fff;
+}
+.stepTextActive {
+	color: #24d1c3;
+	font-size: 24px;
+}
+
+:global {
+	.credit_step {
+		.am-steps-item-wait .am-steps-item-title {
+			font-size: 24px;
+			color: #dfdee2;
+		}
+		.am-steps-label-vertical .am-steps-item-tail {
+			padding: 0;
+		}
+		.am-steps-item-tail {
+			top: 0.3rem;
+			padding: 0;
+		}
+
+		.am-steps-item-wait .am-steps-item-icon > .am-steps-icon {
+			color: #fff;
+		}
+		.am-steps-item-finish .am-steps-item-tail:after {
+			background-color: #24d1c3;
+		}
+	}
+}

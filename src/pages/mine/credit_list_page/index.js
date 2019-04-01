@@ -23,7 +23,7 @@ export default class credit_list_page extends PureComponent {
     backUrlData = store.getBackUrl();
   }
   componentWillMount() {
-    store.setHistoryRouter(window.location.pathname);
+    // store.setHistoryRouter(window.location.pathname);
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId) {
@@ -89,6 +89,10 @@ export default class credit_list_page extends PureComponent {
       res => {
         if (res.msgCode === "PTM0000") {
           if (jumpFlag) {
+            if (store.getToggleMoxieCard()) {
+                this.props.history.replace('/home/loan_repay_confirm_page');
+                return;
+            }
             this.props.history.replace(backUrlData);
           }
         } else {

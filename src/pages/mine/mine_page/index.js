@@ -13,7 +13,6 @@ import { isMPOS } from 'utils/common';
 const API = {
   VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
   LOGOUT: '/signup/logout', // 用户退出登陆
-  GETSTSW: '/my/getStsw', // 获取用户授信信息列表
   USERSTATUS: '/signup/getUsrSts', // 用户状态获取
 };
 

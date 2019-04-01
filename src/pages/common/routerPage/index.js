@@ -68,7 +68,7 @@ export default class router_Page extends PureComponent {
 				}
 			}
 			if (route) {
-				changeHistoryState();
+				changeHistoryState('22222222222');
 				let component = await route.component();
 				this.setState({
 					showPage: true,

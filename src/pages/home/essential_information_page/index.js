@@ -7,12 +7,14 @@ import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import { getLngLat, getAddress } from 'utils/Address.js';
 import style from './index.scss';
-import { getFirstError, validators, handleInputBlur } from 'utils';
+import { getFirstError, validators, handleInputBlur, getNextStr } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
 import qs from 'qs';
+import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
+import StepBar from 'components/StepBar';
 
 const pageKey = home.basicInfoBury;
 
@@ -36,6 +38,7 @@ let urlQuery = '';
 // let isFetching = false;
 @fetch.inject()
 @createForm()
+@setBackGround('#fff')
 export default class essential_information_page extends PureComponent {
 	state = {
 		loading: false,
@@ -49,6 +52,10 @@ export default class essential_information_page extends PureComponent {
 	componentWillMount() {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
+		}
+		if (store.getMoxieBackUrl()) {
+			store.removeMoxieBackUrl();
+			this.props.history.push(`/home/home`);
 		}
 		buryingPoints();
 		urlQuery = this.props.history.location.search;
@@ -85,7 +92,7 @@ export default class essential_information_page extends PureComponent {
 					this.getProCode(
 						res.data.provNm || store.getProvince() || province || '',
 						res.data.cityNm || store.getCity() || city || ''
-					)
+					);
 					this.props.form.setFieldsValue({
 						address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
 						linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
@@ -142,7 +149,7 @@ export default class essential_information_page extends PureComponent {
 						provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + ''],
 						provLabel: provItem && cityItem && [provItem[0].value + '', cityItem[0].value + '']
 					});
-					console.log(this.state.provValue, this.state.provLabel)
+					console.log(this.state.provValue, this.state.provLabel);
 				});
 			}
 		});
@@ -185,10 +192,17 @@ export default class essential_information_page extends PureComponent {
 								buriedPointEvent(mine.creditExtensionBack, {
 									current_step: '基本信息认证'
 								});
-								this.props.history.replace({
-									pathname: '/mine/credit_extension_page',
-									search: urlQuery
-								});
+								if (store.getNeedNextUrl()) {
+									getNextStr({
+										$props: this.props
+									});
+									store.setMoxieBackUrl('/home/home');
+								} else {
+									this.props.history.replace({
+										pathname: '/mine/credit_extension_page',
+										search: urlQuery
+									});
+								}
 							} else {
 								this.confirmBuryPoint(false, result.msgInfo);
 								// isFetching = false;
@@ -278,9 +292,17 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
+		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.nameDiv}>
-				<div className={style.infromationTitle}>个人信息</div>
+				{needNextUrl && (
+					<div className={style.step_box}>
+						<StepBar current={1} />
+					</div>
+				)}
+				<div className={style.infromationTitle}>
+					<span>个人信息</span>
+				</div>
 				<div className={style.labelDiv}>
 					{getFieldDecorator('city', {
 						initialValue: this.state.provValue,
@@ -326,7 +348,7 @@ export default class essential_information_page extends PureComponent {
 					)}
 					<img className={style.informationMore} src={informationMore} />
 				</div>
-				<div className={`${style.inputDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
+				<div className={`${style.inputDiv}`} style={{ marginTop: 0 }}>
 					{getFieldDecorator('address', {
 						rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
 						onChange: (value) => {
@@ -349,7 +371,10 @@ export default class essential_information_page extends PureComponent {
 						</InputItem>
 					)}
 				</div>
-				<div className={style.infromationTitle}>亲属联系人信息</div>
+				<div className={style.mt50}></div>
+				<div className={style.infromationTitle}>
+					<span>亲属联系人信息</span>
+				</div>
 				<div className={style.labelDiv}>
 					{getFieldDecorator('cntRelTyp1', {
 						initialValue: this.state.relatValue,
@@ -408,7 +433,7 @@ export default class essential_information_page extends PureComponent {
 						</InputItem>
 					)}
 				</div>
-				<div className={`${style.labelDiv} ${style.noBorder}`} style={{ marginTop: 0 }}>
+				<div className={`${style.labelDiv}`} style={{ marginTop: 0 }}>
 					{getFieldDecorator('linkphone', {
 						rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
 						onChange: (value) => {
@@ -436,8 +461,9 @@ export default class essential_information_page extends PureComponent {
 					<p className={style.desOne}>*输入有效的紧急联系人信息，有利于提升您的审批额度，我们将对您提供的信息严格保密</p>
 				</div>
 				<ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>
-					完成
+					{needNextUrl ? '下一步' : '完成'}
 				</ButtonCustom>
+        <p className="bottomTip">怕逾期，用还到</p>
 			</div>
 		);
 	}

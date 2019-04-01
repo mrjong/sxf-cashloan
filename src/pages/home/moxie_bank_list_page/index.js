@@ -3,11 +3,11 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
-import allicon from './img/all@2x.png';
-import { SXFToast } from 'utils/SXFToast';
 import { buriedPointEvent } from 'utils/analytins';
 import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
+import StepBar from 'components/StepBar';
+
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
 	CARD_AUTH: '/auth/cardAuth' // 信用卡授信
@@ -24,9 +24,17 @@ export default class moxie_bank_list_page extends Component {
 		isnoData: false
 	};
 	componentWillMount() {
+		// 信用卡直接返回的问题
+		// store.removeBankMoxie();
 		this.mxoieCardList();
 		this.getBackUrl();
 		this.getMoxieBackUrl();
+		const needNextUrl = store.getNeedNextUrl();
+		if (!needNextUrl) {
+			this.props.setTitle('添加账单');
+		} else {
+			this.props.setTitle('提交申请');
+		}
 	}
 	componentWillUnmount() {
 		store.removeBackUrl2();
@@ -107,25 +115,13 @@ export default class moxie_bank_list_page extends Component {
 		buriedPointEvent(moxie_bank_list.bankChooes, {
 			bankName: item.name
 		});
-		location.href = item.href + '&showTitleBar=NO';
-		// 跳魔蝎
-		// this.props.$fetch
-		// 	.post(API.CARD_AUTH, {
-		// 		clientCode: '04'
-		// 	})
-		// 	.then((result) => {
-		// 		if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-		// 			if (setMoxieData.indexOf('noAuthId') > -1) {
-		// 				store.getMoxieBackUrl(
-		// 					`/mine/credit_extension_page?isShowCommit=true&autId=${result.data && result.data.autId}`
-		// 				);
-		// 			}
-		// 			SXFToast.loading('加载中...', 0);
-		// 			location.href = url + '&showTitleBar=NO';
-		// 		} else {
-		// 			this.props.toast.info(result.msgInfo);
-		// 		}
-		// 	});
+		// 信用卡直接返回的问题
+		store.setBankMoxie(true);
+		store.setGoMoxie(true);
+
+		window.location.href = item.href + '&showTitleBar=NO';
+		// window.history.pushState(null, null, item.href + '&showTitleBar=NO');
+		// location.href = item.href + '&showTitleBar=NO';
 	};
 	// 重新加载
 	reloadHandler = () => {
@@ -133,28 +129,40 @@ export default class moxie_bank_list_page extends Component {
 		window.location.reload();
 	};
 	render() {
+		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.moxie_bank_list_page}>
-				<div className={style.title}>
-					选择发卡银行
-					<span className={style.subTitle}>获3项优质服务</span>
-				</div>
-				<div className={style.bankDesc}>
-					<span>
-						<i className={style.dot} />
-						高效管理信用卡
-					</span>
-					<span>
-						<i className={style.dot} />
-						一键同步账单
-					</span>
-					<span>
-						<i className={style.dot} />
-						多重加密
-					</span>
-				</div>
+				{needNextUrl ? (
+					<StepBar current={3} />
+				) : (
+					<div className={style.moxie_bank_top}>
+						<div className={style.title}>
+							选择发卡银行
+							<span className={style.subTitle}>获3项优质服务</span>
+						</div>
+						<div className={style.bankDesc}>
+							<span>
+								<i className={style.dot} />
+								高效管理信用卡
+							</span>
+							<span>
+								<i className={style.dot} />
+								一键同步账单
+							</span>
+							<span>
+								<i className={style.dot} />
+								多重加密
+							</span>
+						</div>
+					</div>
+				)}
+
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
+						<div className={style.infromationTitle}>
+							<span>请选择您要收款的信用卡</span>
+							<div className={style.subTitle_info}>通过网银添加</div>
+						</div>
 						<div className={style.bankList}>
 							{this.state.bankList.map((item, index) => {
 								// if (index <= this.state.lengthNum) {

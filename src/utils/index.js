@@ -3,9 +3,20 @@ import { bugLog } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
+import { SXFToast } from 'utils/SXFToast';
+
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
+import { getAppsList, getContactsList } from 'utils/publicApi';
 
+// 退出的api
+const API = {
+	LOGOUT: '/signup/logout', // 用户退出登陆
+	GETSTSW: '/my/getStsw', // 获取首页进度
+	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
+	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+	submitState: '/bill/apply' // 提交代还金申请
+};
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
 	setTimeout(() => {
@@ -189,7 +200,7 @@ export const logoutAppHandler = (that) => {
 };
 
 // 定义需要拦截的路由
-export const interceptRouteArr = [
+const interceptRouteArr = [
 	'/login',
 	'/home/home',
 	'/order/order_page',
@@ -199,13 +210,20 @@ export const interceptRouteArr = [
 	'/mine/credit_list_page',
 	'/home/essential_information',
 	'/home/real_name',
-	'/home/confirm_agency'
+	'/home/confirm_agency',
+	'/home/moxie_bank_list_page',
+	'/home/loan_repay_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+		if (store.getGoMoxie()) {
+			history.go(-1);
+			store.removeGoMoxie();
+		} else {
+			window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+		}
 	}
 };
 
@@ -227,10 +245,138 @@ export const closePage = () => {
 		return window.passValue();
 	}
 };
+// 确认按钮点击事件 提交到风控
+export const handleClickConfirm = ($props, repaymentDate) => {
+	const address = store.getPosition();
+	const params = {
+		location: address,
+		prdId: repaymentDate.prdId,
+		perdLth: repaymentDate.perdLth,
+		perdUnit: repaymentDate.perdUnit,
+		perdCnt: repaymentDate.perdCnt,
+		rpyAmt: Number(repaymentDate.rpyAmt)
+	};
+	if (isMPOS()) {
+		getAppsList();
+		getContactsList();
+	}
+	$props.$fetch
+		.post(`${API.submitState}`, params)
+		.then((res) => {
+			// 提交风控返回成功
+			if (res && res.msgCode === 'PTM0000') {
+				$props.toast.info(res.msgInfo);
+				store.removeLoanAspirationHome();
+				setTimeout(() => {
+					$props.history.push('/home/credit_apply_succ_page');
+				}, 3000);
+			} else {
+				$props.toast.info(res.msgInfo);
+			}
+		})
+		.catch((err) => {
+			$props.history.push('/home/home');
+		});
+};
 
-// 退出的api
-const API = {
-	LOGOUT: '/signup/logout' // 用户退出登陆
+const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+export const getNextStr = async ({ $props, needReturn = false }) => {
+	let codes = '';
+	let codesArray = [];
+	let res = await $props.$fetch.post(API.GETSTSW);
+	if (res && res.msgCode === 'PTM0000') {
+		res.data.forEach((item) => {
+			if (needDisplayOptions.includes(item.code)) {
+				codes += item.stsw.dicDetailCd;
+				codesArray.push(item.stsw.dicDetailCd);
+			}
+		});
+		console.log(codes, '==========');
+		if (!needReturn) {
+			store.setNeedNextUrl(true);
+			// 实名
+			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
+				$props.toast.info('请先实名认证');
+				setTimeout(() => {
+					$props.history.push({
+						pathname: '/home/real_name'
+						// search: urlQuery
+					});
+				}, 3000);
+				return;
+			}
+			// 基本信息
+			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
+				$props.toast.info('请进行基本信息认证');
+				setTimeout(() => {
+					$props.history.replace({
+						pathname: '/home/essential_information'
+						// search: urlQuery
+					});
+				}, 3000);
+
+				return;
+			}
+
+			// 运营商前一步是成功或者审核中,可直接返回url链接
+			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
+				$props.$fetch
+					.post(`${API.getOperator}`, {
+						clientCode: '04'
+					})
+					.then((result) => {
+						if (result.msgCode === 'PTM0000' && result.data.url) {
+							$props.toast.info('请进行运营商认证');
+							setTimeout(() => {
+								// 运营商直接返回的问题
+								store.setCarrierMoxie(true);
+								SXFToast.loading('加载中...', 0);
+								window.location.href =
+									result.data.url +
+									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
+										.location.search}&showTitleBar=NO`;
+							}, 3000);
+						}
+					});
+				return;
+			}
+
+			// 信用卡
+			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+				$props.toast.info('请进行信用卡认证');
+				store.setCreditSuccessBack(true);
+				setTimeout(() => {
+					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
+				}, 3000);
+				return;
+			}
+			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
+			if (!store.getCreditExtensionNot() && store.getLoanAspirationHome()) {
+				handleClickConfirm($props, {
+					...store.getLoanAspirationHome()
+				});
+				return;
+			} else if (store.getCreditExtensionNot()) {
+				if (store.getCreditSuccessBack()) {
+					$props.toast.info('恭喜您距离您获取额度就差最后一步了，赶紧申请吧');
+					setTimeout(() => {
+						$props.history.push('/home/loan_repay_confirm_page');
+					}, 2000);
+				} else {
+					$props.history.push('/home/loan_repay_confirm_page');
+				}
+				return;
+			}
+		}
+	} else {
+		Toast.info(res.msgInfo);
+	}
+	console.log(codes);
+	return {
+		data: res.data,
+		codes,
+		codesArray
+	};
 };
 
 // 退出功能

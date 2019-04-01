@@ -1,10 +1,10 @@
 import defaultBanner from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
-import { Modal, Progress } from 'antd-mobile';
+import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError, handleInputBlur } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -12,28 +12,49 @@ import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
+import Card50000 from './components/Card50000';
 import Carousels from 'components/Carousels';
 import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
+
+import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
+import Circle from './components/Circle';
 import mockData from './mockData';
+import { createForm } from 'rc-form';
+
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
+	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+	qryPerdRate: '/bill/prod',
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
-	GETSTSW: '/my/getStsw', // 获取首页进度
-	AGENT_REPAY_CHECK: '/bill/agentRepayCheck' // 复借风控校验接口
+	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
+	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
 };
-
+const tagList = [
+	{
+		name: '全额还款',
+		value: 1
+	},
+	{
+		name: '最低还款',
+		value: 2
+	},
+	{
+		name: '部分还款',
+		value: 3
+	}
+];
 let token = '';
 let tokenFromStorage = '';
 
 let timer;
 let timerOut;
-
+@createForm()
 @fetch.inject()
 export default class home_page extends PureComponent {
 	constructor(props) {
@@ -44,6 +65,7 @@ export default class home_page extends PureComponent {
 		this.state = {
 			showDefaultTip: false,
 			bannerList: [],
+			isShowCreditModal: false,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -52,18 +74,37 @@ export default class home_page extends PureComponent {
 			showToast: false,
 			isShowActivityModal: false, // 是否显示活动弹窗
 			newUserActivityModal: false,
-            isNewModal: false,
-            handleMoxie: false // 触发跳转魔蝎方法
+			isNewModal: false,
+			handleMoxie: false, // 触发跳转魔蝎方法
+			percentData: 0,
+			showDiv: '',
+			modal_left: false,
+			activeTag: 0,
+			perdRateList: [],
+			firstUserInfo: '',
+			CardOverDate: false
 		};
 	}
 
 	componentWillMount() {
+		// 删除授信弹窗信息
+		store.removeLoanAspirationHome();
 		// 弹新弹窗的标识
 		const newUserActivityModal = store.getNewUserActivityModal();
 		store.removeNewUserActivityModal();
 		this.setState({
 			newUserActivityModal
 		});
+		// 清除返回的flag
+		store.removeBackFlag();
+		// 运营商直接返回的问题
+		store.removeCarrierMoxie();
+		// 信用卡绑卡之后立即去提交页需要提示
+		store.removeCreditSuccessBack();
+		// 未提交授信用户
+		store.removeCreditExtensionNot();
+		// 去除需要调用获取下一步url方法
+		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
 		// 清除四项认证进入绑卡页的标识
@@ -76,14 +117,14 @@ export default class home_page extends PureComponent {
 				showDefaultTip: true
 			});
 		} else {
-			this.requestGetUsrInfo();
+			// 判断是否提交过授信
+			this.credit_extension();
 		}
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
 	}
-
 	componentWillUnmount() {
 		// 离开首页的时候 将 是否打开过底部弹框标志恢复
 		store.removeHadShowModal();
@@ -94,7 +135,42 @@ export default class home_page extends PureComponent {
 			clearTimeout(timerOut);
 		}
 	}
-
+	// 判断是否授信
+	credit_extension = () => {
+		// this.setState({
+		//     firstUserInfo:'00'
+		// })
+		// this.requestGetUsrInfo();
+		// return
+		this.props.$fetch
+			.post(API.procedure_user_sts)
+			.then((res) => {
+				if (res && res.msgCode === 'PTM0000') {
+					this.setState({
+						firstUserInfo: res.data.flag
+					});
+					if (res.data.flag === '01') {
+						this.credit_extension_not();
+					} else {
+						this.requestGetUsrInfo();
+					}
+				} else {
+					this.props.toast.info(res.msgInfo);
+				}
+			})
+			.catch((err) => {
+				this.setState({
+					firstUserInfo: 'error'
+				});
+			});
+	};
+	// 未提交授信
+	credit_extension_not = async () => {
+		let data = await getNextStr({ $props: this.props, needReturn: true });
+		store.setCreditExtensionNot(true);
+		this.calculatePercent(data, true);
+		this.cacheBanner();
+	};
 	// 从 url 中获取参数，如果有 token 就设置下
 	getTokenFromUrl = () => {
 		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -105,58 +181,91 @@ export default class home_page extends PureComponent {
 	};
 
 	// 首页进度
-	getPercent = () => {
-		this.props.$fetch.post(API.GETSTSW).then(
-			(result) => {
-				if (result && result.data !== null) {
-					this.calculatePercent(result.data);
-				}
-			},
-			(err) => {
-				err.msgInfo && this.props.toast.info(err.msgInfo);
-			}
-		);
+	getPercent = async () => {
+		let data = await getNextStr({ $props: this.props, needReturn: true });
+		this.calculatePercent(data);
 	};
 
 	// 进度计算
-	calculatePercent = (list) => {
+	calculatePercent = (data, isshow) => {
 		let codes = [];
-		list.forEach((element) => {
-			if (element.code === 'basicInf' || element.code === 'operator' || element.code === 'idCheck') {
-				codes.push(element.stsw.dicDetailCd);
-			}
-		});
+		let demo = data.codes;
+		let codesCopy = demo.slice(1, 4);
+		console.log(codesCopy, 'codesCopy');
+		console.log(data.codes, '-----');
+		codes = codesCopy.split('');
+		// case '0': // 未认证
 		// case '1': // 认证中
 		// case '2': // 认证成功
 		// case '3': // 认证失败
 		// case '4': // 认证过期
+		let newCodes = codes.filter((ele, index, array) => {
+			return ele === '0';
+		});
 		let newCodes2 = codes.filter((ele, index, array) => {
 			return ele === '1' || ele === '2';
 		});
-		console.log(newCodes2);
+		let newCodes3 = codes.filter((ele, index, array) => {
+			return ele === '4';
+		});
+		if (codes[codes.length - 1] === '4') {
+			this.setState({
+				CardOverDate: true
+			});
+		}
+		console.log(newCodes, newCodes2, newCodes3);
 		// 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
 		// 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
 		// 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
+		if (newCodes.length === 3) {
+			this.setState({
+				percentSatus: '3',
+				showDiv: '50000'
+			});
+			// this.child.startAdd(40);
+			return;
+		}
+		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length != 0) {
+			this.setState({
+				showDiv: 'circle',
+				percentSatus: '3',
+				percentData: 40
+			});
+			return;
+		}
+		console.log(newCodes2);
 		switch (newCodes2.length) {
-			case 1: // 新用户，信用卡未授权
-				this.setState({
-					percentSatus: '2'
-				});
-				break;
-			case 2: // 新用户，信用卡未授权
-				this.setState({
-					percentSatus: '1'
-				});
-				break;
 			case 0: // 新用户，信用卡未授权
 				this.setState({
-					percentSatus: '3'
+					percentSatus: '3',
+					showDiv: '50000'
 				});
 				break;
-			default:
+			case 1: // 新用户，信用卡未授权
 				this.setState({
-					percentSatus: ''
+					percentSatus: '2',
+					percentData: 60,
+					showDiv: 'circle'
 				});
+				break;
+
+			case 2: // 新用户，信用卡未授权
+				this.setState({
+					percentSatus: '1',
+					percentData: 80,
+					showDiv: 'circle'
+				});
+				break;
+
+			case 3: // 新用户，信用卡未授权
+				this.setState({
+					percentData: 98,
+					percentSatus: isshow ? '1' : '',
+					showDiv: 'circle'
+				});
+				break;
+
+			default:
 		}
 	};
 
@@ -187,10 +296,20 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(mine.creditExtension, {
 					entry: '首页'
 				});
-				this.props.history.push({
-					pathname: '/mine/credit_extension_page',
-					search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}`
-				});
+				if (this.state.CardOverDate) {
+					this.props.toast.info('当前信用卡已过期，请重新导入');
+					setTimeout(() => {
+						// 跳新版魔蝎
+						store.setMoxieBackUrl('/home/home');
+						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+					}, 2000);
+				} else if (usrIndexInfo.indexData.autSts === '2') {
+					this.showCreditModal();
+				}
+				// this.props.history.push({
+				// 	pathname: '/mine/credit_extension_page',
+				// 	search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}`
+				// });
 				break;
 			case 'LN0004': // 代还资格审核中
 				console.log('LN0004');
@@ -240,6 +359,7 @@ export default class home_page extends PureComponent {
 			clearInterval(timer);
 		}
 	};
+
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
 		// /mine/credit_extension_page?
@@ -378,11 +498,15 @@ export default class home_page extends PureComponent {
 		});
 	};
 
+	handleApply = () => {
+		getNextStr({ $props: this.props });
+	};
+
 	// 获取首页信息
 	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
-			// 	data: {},
+			// 	data: mockData.LN0003,
 			// 	msgCode: 'PTM0000',
 			// 	msgMsg: 'PTM0000'
 			// };
@@ -464,6 +588,13 @@ export default class home_page extends PureComponent {
 
 	// 去登陆
 	handleNeedLogin = () => {
+		if (this.state.firstUserInfo === 'error') {
+			this.props.toast.info('系统开小差，请稍后重试');
+			setTimeout(() => {
+				location.reload();
+			}, 2000);
+			return;
+		}
 		this.props.toast.info('请先登录', 2, () => {
 			this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
 		});
@@ -497,93 +628,268 @@ export default class home_page extends PureComponent {
 		}
 	};
 
+	//切换tag标签
+	toggleTag = (idx) => {
+		const { usrIndexInfo } = this.state;
+		const { indexData = {} } = usrIndexInfo;
+		const { cardBillAmt, minPayment } = indexData;
+		this.setState(
+			{
+				activeTag: idx
+			},
+			() => {
+				//全额还款
+				if (idx === 0) {
+					this.calcLoanMoney(cardBillAmt);
+				} else if (idx === 1) {
+					//最低还款
+					this.calcLoanMoney(minPayment);
+				} else {
+					this.inputRef.focus();
+					this.props.form.setFieldsValue({
+						loanMoney: ''
+					});
+				}
+			}
+		);
+	};
+
+	//计算该显示的还款金额
+	calcLoanMoney = (money) => {
+		const { selectedLoanDate: obj = {} } = this.state;
+		if (money > obj.factAmtHigh) {
+			this.props.form.setFieldsValue({
+				loanMoney: obj.factAmtHigh
+			});
+		} else if (money < obj.factLmtLow) {
+			this.props.form.setFieldsValue({
+				loanMoney: obj.factLmtLow
+			});
+		} else {
+			this.props.form.setFieldsValue({
+				loanMoney: money
+			});
+		}
+	};
+
+	//过滤选中的还款期限
+	filterLoanDate = (item) => {
+		const { usrIndexInfo, activeTag } = this.state;
+		const { cardBillAmt, minPayment } = usrIndexInfo.indexData;
+		this.setState({
+			selectedLoanDate: item // 设置选中的期数
+		}, () => {
+			//全额还款
+			if (activeTag === 0) {
+				this.calcLoanMoney(cardBillAmt);
+			} else if (activeTag === 1) {
+				//最低还款
+				this.calcLoanMoney(minPayment);
+			}
+		})
+	}
+
+	//查询还款期限
+	qryPerdRate = () => {
+		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
+		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
+			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+			this.setState(
+				{
+					perdRateList: date,
+					selectedLoanDate: date[0] // 默认选中3期
+				},
+				() => {
+					this.toggleTag(0);
+				}
+			);
+		});
+	};
+
+	showCreditModal = () => {
+		this.setState(
+			{
+				isShowCreditModal: true
+			},
+			() => {
+				this.qryPerdRate();
+				window.handleCloseHomeModal = this.closeCreditModal;
+			}
+		);
+	};
+
+	closeCreditModal = () => {
+		this.setState({
+			isShowCreditModal: false
+		});
+		store.removeLoanAspirationHome();
+		window.handleCloseHomeModal = null;
+	};
+
+	submitCredit = () => {
+		const { selectedLoanDate = {} } = this.state;
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
+          this.props.toast.info('请输入数字或两位小数');
+          this.props.form.setFieldsValue({
+            loanMoney: ''
+          })
+					return;
+				}
+				if (values.loanMoney < selectedLoanDate.factLmtLow || values.loanMoney > selectedLoanDate.factAmtHigh) {
+					this.props.toast.info(
+						`申请金额区间应为${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`
+					);
+					this.props.form.setFieldsValue({
+						loanMoney: ''
+					});
+					return;
+				}
+				const params = {
+					...selectedLoanDate,
+					rpyAmt: Number(values.loanMoney)
+				};
+				store.setLoanAspirationHome(params);
+				//调用授信接口
+				getNextStr({
+					$props: this.props
+				});
+			} else {
+				this.props.toast.info(getFirstError(err));
+			}
+		});
+	};
+
 	render() {
-		const { bannerList, usrIndexInfo, visibleLoading, percent, percentSatus } = this.state;
+		const {
+			bannerList,
+			usrIndexInfo,
+			visibleLoading,
+			percent,
+			percentSatus,
+			percentData,
+			showDiv,
+			activeTag,
+			perdRateList,
+			selectedLoanDate = {},
+			firstUserInfo
+		} = this.state;
 		const { history } = this.props;
+		const { getFieldDecorator } = this.props.form;
 		let componentsDisplay = null;
-		switch (usrIndexInfo.indexSts) {
-			case 'LN0001': // 新用户，信用卡未授权
-			case 'LN0002': // 账单爬取中
-			case 'LN0003': // 账单爬取成功
-			case 'LN0004': // 代还资格审核中
-			case 'LN0005': // 暂无代还资格
-			case 'LN0006': // 风控审核通过
-			case 'LN0007': // 放款中
-			case 'LN0008': // 放款失败
-			case 'LN0009': // 放款成功
-			case 'LN0010': // 账单爬取失败/老用户
-				componentsDisplay = (
-					<BankContent
-                        handleMoxie = {this.state.handleMoxie}
-						showDefaultTip={this.state.showDefaultTip}
-						fetch={this.props.$fetch}
-						contentData={usrIndexInfo}
-						history={history}
-						haselescard={this.state.haselescard}
-						progressNum={percentSatus}
-						toast={this.props.toast}
-					>
-						{usrIndexInfo.indexSts === 'LN0002' ||
-						usrIndexInfo.indexSts === 'LN0010' ||
-						(usrIndexInfo.indexData &&
-							usrIndexInfo.indexData.autSts &&
-							usrIndexInfo.indexData.autSts !== '2') ||
-						((usrIndexInfo.indexSts === 'LN0003' ||
-							usrIndexInfo.indexSts === 'LN0006' ||
-							usrIndexInfo.indexSts === 'LN0008') &&
-							(!usrIndexInfo.indexData ||
-								!usrIndexInfo.indexData.autSts ||
-								usrIndexInfo.indexData.autSts !== '2')) ? null : (
-							<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-								{usrIndexInfo.indexSts === 'LN0003' ||
-								usrIndexInfo.indexSts === 'LN0006' ||
-								usrIndexInfo.indexSts === 'LN0008' ? (
-									'一键还账单'
-								) : usrIndexInfo.indexSts === 'LN0001' ? (
-									'查看我的账单，帮我还'
-								) : (
-									usrIndexInfo.indexMsg.replace('代还', '代偿')
+		// 未登录也能进入到首页的时候看到的样子
+		if (!token || firstUserInfo === 'error') {
+			componentsDisplay = (
+				<BankContent
+					showDefaultTip={this.state.showDefaultTip}
+					fetch={this.props.$fetch}
+					contentData={usrIndexInfo}
+					history={history}
+					haselescard={this.state.haselescard}
+					progressNum={percentSatus}
+					toast={this.props.toast}
+				>
+					<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
+						查看我的账单，帮我还
+					</SXFButton>
+					<div className={style.subDesc}>安全绑卡，放心还卡</div>
+				</BankContent>
+			);
+		} else {
+			switch (usrIndexInfo.indexSts) {
+				case 'LN0001': // 新用户，信用卡未授权
+				case 'LN0002': // 账单爬取中
+				case 'LN0003': // 账单爬取成功
+				case 'LN0004': // 代还资格审核中
+				case 'LN0005': // 暂无代还资格
+				case 'LN0006': // 风控审核通过
+				case 'LN0007': // 放款中
+				case 'LN0008': // 放款失败
+				case 'LN0009': // 放款成功
+				case 'LN0010': // 账单爬取失败/老用户
+					componentsDisplay = (
+						<BankContent
+							handleMoxie={this.state.handleMoxie}
+							showDefaultTip={this.state.showDefaultTip}
+							fetch={this.props.$fetch}
+							contentData={usrIndexInfo}
+							history={history}
+							haselescard={this.state.haselescard}
+							progressNum={percentSatus}
+							toast={this.props.toast}
+						>
+							{usrIndexInfo.indexSts === 'LN0002' ||
+								usrIndexInfo.indexSts === 'LN0010' ||
+								(usrIndexInfo.indexData &&
+									usrIndexInfo.indexData.autSts &&
+									usrIndexInfo.indexData.autSts !== '2') ||
+								((usrIndexInfo.indexSts === 'LN0003' ||
+									usrIndexInfo.indexSts === 'LN0006' ||
+									usrIndexInfo.indexSts === 'LN0008') &&
+									(!usrIndexInfo.indexData ||
+										!usrIndexInfo.indexData.autSts ||
+										usrIndexInfo.indexData.autSts !== '2')) ? null : (
+									<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
+										{usrIndexInfo.indexSts === 'LN0003' ||
+											usrIndexInfo.indexSts === 'LN0006' ||
+											usrIndexInfo.indexSts === 'LN0008' ? (
+												'一键还账单'
+											) : usrIndexInfo.indexSts === 'LN0004' ? (
+												'快速审批中'
+											) : usrIndexInfo.indexSts === 'LN0001' ? (
+												'查看我的账单，帮我还'
+											) : (
+														usrIndexInfo.indexMsg.replace('代还', '代偿')
+													)}
+									</SXFButton>
 								)}
-							</SXFButton>
-						)}
-					</BankContent>
-				);
-				break;
-			default:
-				//   if (isWXOpen()) {
-				componentsDisplay = (
-					<BankContent
-						showDefaultTip={this.state.showDefaultTip}
-						fetch={this.props.$fetch}
-						contentData={usrIndexInfo}
-						history={history}
-						haselescard={this.state.haselescard}
-						progressNum={percentSatus}
-						toast={this.props.toast}
-					>
-						<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
-							查看我的账单，帮我还
-						</SXFButton>
-						<div className={style.subDesc}>安全绑卡，放心还卡</div>
-					</BankContent>
-				);
-			// }
+						</BankContent>
+					);
+					break;
+				default:
+			}
 		}
 		return (
 			<div className={style.home_page}>
+				{/* <Circle
+					onRef={(ref) => {
+						this.child = ref;
+					}}
+                /> */}
 				{isWXOpen() && !tokenFromStorage && !token ? (
 					<Carousels data={bannerList} entryFrom="banner" />
-				) : usrIndexInfo ? bannerList && bannerList.length > 0 ? (
+				) : bannerList && bannerList.length > 0 ? (
 					<Carousels data={bannerList} entryFrom="banner">
 						<MsgBadge toast={this.props.toast} />
 					</Carousels>
 				) : (
-						<img className={style.default_banner} src={defaultBanner} alt="banner" />
-					) : (
 							<img className={style.default_banner} src={defaultBanner} alt="banner" />
 						)}
-				<div className={style.content_wrap}>{componentsDisplay}</div>
-				<div className={style.tip_bottom}>怕逾期，用还到</div>
+				{/* 未提交授信用户 */}
+				{firstUserInfo === '01' ? (
+					<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
+						{showDiv === 'circle' ? (
+							<div className={style.circle_box}>
+								<Circle percentSatus={percentSatus} percentData={percentData} />
+							</div>
+						) : null}
+						{showDiv === '50000' ? (
+							<div className={style.font50000_box}>
+								<img className={style.font50000} src={font50000} />
+								<div className={style.font50000_desc}>最高金额(元）</div>
+							</div>
+						) : null}
+					</Card50000>
+				) : null}
+				{/* 历史授信用户 */}
+				{(firstUserInfo === '00' && token) || firstUserInfo === 'error' || (!token && componentsDisplay) ? (
+					<div>
+						<div className={style.content_wrap}>{componentsDisplay}</div>
+					</div>
+				) : null}
+				<p className="bottomTip">怕逾期，用还到</p>
+
 				{/* {首页活动提示弹窗（对内有）} */}
 				{this.state.isShowActivityModal && (
 					<ActivityModal
@@ -593,6 +899,122 @@ export default class home_page extends PureComponent {
 						isNewModal={this.state.isNewModal}
 					/>
 				)}
+				<Modal
+					popup
+					className="modal_l_r"
+					visible={this.state.isShowCreditModal}
+					animationType="slide-up"
+					maskClosable={false}
+				>
+					<div className={style.modal_box}>
+						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
+							<div className={style.modal_header}>
+								确认代还信息
+								<Icon
+									onClick={() => {
+										this.closeCreditModal();
+									}}
+									className={style.close}
+									type="cross"
+								/>
+							</div>
+							<div className={style.modal_content}>
+								<p className={style.billMoneyTop}>
+									<span>信用卡账单金额(元)</span>
+									{usrIndexInfo &&
+										usrIndexInfo.indexData && (
+											<span>
+												{usrIndexInfo.indexData.cardBillAmt && usrIndexInfo.indexData.cardBillAmt}
+											</span>
+										)}
+								</p>
+								{usrIndexInfo &&
+									usrIndexInfo.indexData && (
+										<p className={style.billMoneyBtm}>
+											最低还款金额{usrIndexInfo.indexData.minPayment && usrIndexInfo.indexData.minPayment}元
+									</p>
+									)}
+								<div className={style.tagList}>
+									{tagList.map((item, idx) => (
+										<span
+											key={idx}
+											className={[style.tagButton, activeTag === idx && style.activeTag].join(
+												' '
+											)}
+											onClick={() => {
+												this.toggleTag(idx);
+											}}
+										>
+											{item.name}
+										</span>
+									))}
+								</div>
+								<div className={style.labelDiv}>
+									{getFieldDecorator('loanMoney', {
+										initialValue: this.state.loanMoney,
+										rules: [{ required: true, message: '请输入还款金额' }]
+									})(
+										<InputItem
+											placeholder={`申请金额${selectedLoanDate.factLmtLow ||
+												''}-${selectedLoanDate.factAmtHigh || ''}元`}
+											type="text"
+											disabled={activeTag !== 2}
+											ref={(el) => (this.inputRef = el)}
+											className={activeTag === 2 ? 'blackColor' : ''}
+											onBlur={() => {
+												handleInputBlur();
+											}}
+										>
+											帮你还多少(元)
+										</InputItem>
+									)}
+									<List.Item
+										onClick={() => {
+											this.setState({
+												modal_left: true
+											});
+										}}
+										extra={selectedLoanDate.perdPageNm || '请选择'}
+										arrow="horizontal"
+									>
+										借多久
+									</List.Item>
+								</div>
+								<SXFButton className={style.modal_btn_box} onClick={this.submitCredit}>
+									确定
+								</SXFButton>
+							</div>
+						</div>
+						<div
+							className={[style.modal_right, this.state.modal_left ? style.modal_left2 : ''].join(' ')}
+							onClick={() => {
+								this.setState({
+									modal_left: false
+								});
+							}}
+						>
+							<div className={style.modal_header}>
+								选择期限
+								<Icon className={style.modal_leftIcon} type="left" />
+							</div>
+							<div>
+								{perdRateList.map((item, idx) => (
+									<div
+										key={idx}
+										className={style.listitem}
+										onClick={() => {
+											//设置选中的期限
+											this.filterLoanDate(item);
+										}}
+									>
+										<span>{item.perdPageNm}</span>
+										{selectedLoanDate.perdCnt === item.perdCnt && <i className={style.checkIcon} />}
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+				</Modal>
 
 				<Modal wrapClassName={style.modalLoadingBox} visible={visibleLoading} transparent maskClosable={false}>
 					<div className="show-info">

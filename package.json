@@ -11,6 +11,7 @@
 		"mini-css-extract-plugin": "^0.5.0",
 		"prop-types": "^15.6.1",
 		"react": "^16.4.0",
+		"react-circle-progress": "^1.0.6",
 		"react-dom": "^16.4.0",
 		"react-loadable": "^5.4.0",
 		"react-router": "^4.2.0",
@@ -91,11 +92,11 @@
 		"start": "npm run dev",
 		"dev": "npm run clear && cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --watch --progress --colors",
 		"test": "cross-env  NODE_ENV=production  webpack --config build/webpack.test.js",
-    "build": "cross-env NODE_ENV=production webpack --config build/webpack.pro.js && npm run clearMap",
-    "rc": "cross-env NODE_ENV=production webpack --config build/webpack.rc.js && npm run clearMap",
-        "clear": "rimraf ./dist",
-        "push-rc": "npm run rc && cp -rf ./upload-rc.sh ./dist && cd dist && sh upload-rc.sh",
-        "push-test": "npm run test && cp -rf ./upload.sh ./dist && cd dist && sh upload.sh",
+		"build": "cross-env NODE_ENV=production webpack --config build/webpack.pro.js && npm run clearMap",
+		"rc": "cross-env NODE_ENV=production webpack --config build/webpack.rc.js && npm run clearMap",
+		"clear": "rimraf ./dist",
+		"push-rc": "npm run rc && cp -rf ./upload-rc.sh ./dist && cd dist && sh upload-rc.sh",
+		"push-test": "npm run test && cp -rf ./upload.sh ./dist && cd dist && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"precommit": "lint-staged",
 		"prettify": "prettier --fix --write 'src/**/*.js'"
@@ -106,12 +107,5 @@
 	},
 	"author": "suixingpay",
 	"license": "ISC",
-	"browserslist": [
-		"defaults",
-		"not ie < 11",
-		"last 2 versions",
-		"> 1%",
-		"iOS 7",
-		"last 3 iOS versions"
-	]
+	"browserslist": [ "defaults", "not ie < 11", "last 2 versions", "> 1%", "iOS 7", "last 3 iOS versions" ]
 }

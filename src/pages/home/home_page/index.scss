@@ -1,14 +1,14 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .home_page {
 	.default_banner {
-		// height: auto;
-		// width: 100%;
+		width: 100%;
 		position: relative;
-		min-height: 3.3rem;
+        min-height: 2.65rem;
+        height: 2.65rem;
 		display: inline-block;
-
 		list-style-type: none;
 		vertical-align: top;
-		height: auto;
 		box-sizing: border-box;
 		overflow: hidden;
 		-webkit-animation-name: fadeOut;
@@ -39,15 +39,89 @@
 		width: 5.8rem;
 	}
 	.tip_bottom {
-		// margin-top: 0.77rem;
 		margin-bottom: .2rem;
 		font-size: 0.3rem;
 		text-align: center;
 		color: #c7c6cc;
 	}
+	.circle_box {
+		text-align: center;
+		vertical-align: middle;
+		position: absolute;
+		top: 130px;
+		left: 50%;
+		transform: translate(-50%, 0);
+		-webkit-animation-name: fadeOut;
+		-webkit-animation-duration: .1s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-delay: 0s;
+	}
+	.font50000_box {
+		position: absolute;
+		top: 232px;
+		left: 50%;
+		text-align: center;
+		transform: translate(-50%, 0);
+		-webkit-animation-name: fadeOut;
+		-webkit-animation-duration: .1s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-delay: 0s;
+		.font50000 {
+			width: 386px;
+			height: 118px;
+		}
+		.font50000_desc {
+			color: #333;
+			font-size: 24px;
+		}
+	}
 }
 // modal样式覆盖
 :global {
+	.modal_l_r {
+		.am-modal-body {
+			overflow: hidden;
+		}
+
+		.am-list-item {
+      padding-left: 0;
+      height: 108px;
+      .am-list-line {
+        padding-right: 0;
+      }
+    }
+
+		.blackColor {
+			.am-input-control input, .am-list-extra {
+				color: #333 !important;
+			}
+		}
+
+		.am-list-item .am-list-line {
+			.am-input-label {
+				width: 210px;
+			}
+			.am-list-content, .am-input-label {
+				font-size: 0.3rem;
+				color: #333;
+			}
+			.am-input-control input, .am-list-extra {
+				font-size: 0.3rem;
+				color: #333;
+			}
+		}
+
+		.am-list-item .am-input-control input {
+			text-align: right;
+		}
+
+		.am-list-item.am-list-item-middle .am-list-line {
+      &:after{
+        @include setBottomLine();
+      }
+    }
+	}
+
 	.am-modal-body {
 		.am-modal-alert-content {
 			line-height: 3;
@@ -55,6 +129,21 @@
 	}
 	.am-progress-bar {
 		border: 0.04rem solid #ffda58;
+	}
+	.popup_box {
+		&.am-modal-popup-slide-up {
+			left: -100%;
+		}
+	}
+	.popup_box2 {
+		&.am-modal-popup-slide-up {
+			left: 0%;
+		}
+	}
+	.popup_box3 {
+		&.am-modal-popup-slide-up {
+			left: 100%;
+		}
 	}
 }
 .subDesc {
@@ -67,4 +156,116 @@
 	color: #666;
 	margin-bottom: 15px;
 	font-size: 32px;
+}
+.modal_left {
+	float: left;
+	min-height: 760px;
+	background: #fff;
+	width: 50%;
+	transition: all .3s;
+}
+.modal_left1 {
+	margin-left: -50%;
+}
+.modal_box {
+	width: 200%;
+	overflow: hidden;
+}
+.modal_right {
+	float: left;
+	min-height: 760px;
+	background: #fff;
+	width: 50%;
+	transition: all .3s;
+}
+.modal_left2 {
+	margin-left: 0%;
+}
+
+.modal_header {
+	position: relative;
+	font-size: 36px;
+	color: #333;
+	font-weight: 600;
+	padding: 15px 0;
+	&::after {
+		@include setBottomLine();
+	}
+
+	.modal_leftIcon {
+		position: absolute;
+		left: 0;
+		padding: 10px;
+		top: 0;
+	}
+	.close {
+		position: absolute;
+		right: 0;
+		padding: 10px;
+		top: 0;
+	}
+}
+.modal_content {
+	padding: 0 30px;
+	.billMoneyTop {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 38px;
+		color: #333;
+	}
+	.billMoneyBtm {
+		position: relative;
+		text-align: right;
+		color: #C5C5C5;
+		font-size: 22px;
+		&::after {
+			@include setBottomLine();
+		}
+	}
+}
+.listitem {
+	position: relative;
+	margin-top: 10px;
+	font-size: 34px;
+	color: #333;
+	padding: 15px;
+	&::after {
+		@include setBottomLine();
+		left: 30px;
+	}
+	.checkIcon {
+		width: 30px;
+		height: 26px;
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		background: url('../../../assets/images/home/check_icon.png') no-repeat;
+		background-size: cover;
+	}
+}
+.tagList {
+	display: flex;
+	justify-content: space-between;
+	margin: 76px 30px 100px;
+	.tagButton {
+		display: inline-block;
+		width: 180px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #f66;
+		border: 1PX solid #f66;
+		box-sizing: border-box;
+	}
+	.activeTag {
+		color: #fff;
+		background: #f66;
+	}
+}
+.modal_btn_box {
+	margin: 60px auto 36px;
+	width: 620px;
 }

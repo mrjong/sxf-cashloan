@@ -1,0 +1,48 @@
+@import '../../../../../assets/styles/scss/base/fn';
+.billBox2 {
+	padding: 20px 60px;
+}
+.billBox {
+	position: relative;
+	margin: 0 auto;
+	width: 705px;
+	height: 782px;
+	@include bg-image('../img/home_card_50000');
+	background-size: 705px 782px;
+	background-repeat: no-repeat;
+	top: -45px;
+	text-align: left;
+	.title {
+		font-size: 44px;
+		font-weight: 700;
+		letter-spacing: 2px;
+		margin-bottom: 10px;
+		margin-top: 30px;
+	}
+	.smart_button_two {
+		width: 100%;
+	}
+	.bankDesc {
+		font-size: 26px;
+		color: #4da6ff;
+		text-align: center;
+		margin-top: 18px;
+		font-weight: 400;
+		span {
+			margin-right: 40px;
+		}
+	}
+	.dot {
+		width: 10px;
+		display: inline-block;
+		height: 10px;
+		position: relative;
+		top: -3px;
+		border-radius: 50%;
+		background-color: #4da6ff;
+		margin-right: 10px;
+	}
+}
+.box_height{
+    min-height: 470px;
+}
