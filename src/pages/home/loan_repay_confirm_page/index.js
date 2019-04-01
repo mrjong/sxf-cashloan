@@ -19,6 +19,7 @@ const API = {
   USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
 };
 let timer = null;
+let globalFetchCancel = null
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -32,7 +33,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       percent: 0,
       loanMoney: '',
       time: 0,
-      retryCount: 3,
+      retryCount: 2,
       showAgainUpdateBtn: false, // 重新获取账单按钮是否显示
       overDt: '', //还款日
       billDt: '', //账单日
@@ -53,17 +54,18 @@ export default class loan_repay_confirm_page extends PureComponent {
     timer = setInterval(() => {
       this.setState(
         {
-          percent: this.state.percent + parseInt(Math.random() * 10 + 1),
+          percent: this.state.percent + parseInt(Math.random() * (100 / 30) + 1),
           time: this.state.time + 1
         },
         () => {
-          if (this.state.time === 5) {
-            clearInterval(timer);
-            this.queryUsrInfo();
-          }
-          if (this.state.time > 8) {
-            clearInterval(timer);
-            this.queryUsrInfo(true);
+          if (this.state.time % 5 === 0) {
+            clearInterval(timer)
+            this.queryUsrInfo()
+            console.log(this.state.time)
+            if (this.state.time > 28) {
+              clearInterval(timer)
+              this.queryUsrInfo(true)
+            }
           }
         }
       );
@@ -73,7 +75,12 @@ export default class loan_repay_confirm_page extends PureComponent {
   //查询用户相关信息
   queryUsrInfo = (hideFlag) => {
     this.props.$fetch
-      .post(API.USR_INDEX_INFO)
+      .post(API.USR_INDEX_INFO, {
+        // cancelToken: new CancelToken(function executor(c) {
+        //   globalFetchCancel = c
+        //   console.log(globalFetchCancel)
+        // })
+      })
       .then((res) => {
         this.setState(
           {
@@ -114,7 +121,8 @@ export default class loan_repay_confirm_page extends PureComponent {
               //更新成功
               this.hideProgress()
               this.setState({
-                fetchBillSucc: true
+                fetchBillSucc: true,
+                showAgainUpdateBtn: false
               }, () => {
                 this.toggleTag(0)
               })
