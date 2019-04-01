@@ -349,8 +349,33 @@ export default class loan_repay_confirm_page extends PureComponent {
       overDtStr = `<span class="blod">--</span>天`
     }
     const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-    const cardBillAmtData = !cardBillAmt && cardBillAmt !== 0 ? '----.--' : parseFloat(cardBillAmt, 10).toFixed(2);
-    const minPaymentData = !minPayment && minPayment !== 0 ? '----.--' : parseFloat(minPayment, 10).toFixed(2);
+
+    let cardBillAmtData = '';
+    if (!cardBillAmt && cardBillAmt !== 0) {
+      cardBillAmtData = '----.--';
+    } else {
+      if (1) {
+        cardBillAmtData = '未出账'
+      } else if (2) {
+        cardBillAmtData = '待更新'
+      } else {
+        cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+      }
+    }
+
+    let minPaymentData = '';
+    if (!minPayment && minPayment !== 0) {
+      minPaymentData = '----.--';
+    } else {
+      if (1) {
+        minPaymentData = '未出账'
+      } else if (2) {
+        minPaymentData = '待更新'
+      } else {
+        minPaymentData = parseFloat(minPayment, 10).toFixed(2);
+      }
+    }
+
     const tagList = [{
       name: '全额还款',
       value: 1
