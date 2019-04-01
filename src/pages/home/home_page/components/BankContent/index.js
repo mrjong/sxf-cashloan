@@ -20,7 +20,8 @@ export default class BankContent extends React.Component {
 		this.state = {
 			MessageTag50000: '',
 			MessageTagError: '',
-			MessageTagStep: ''
+			MessageTagStep: '',
+			MessageTagLimitDate: ''
 		};
 	}
 
@@ -42,10 +43,12 @@ export default class BankContent extends React.Component {
 		const MessageTag50000 = store.getMessageTag50000();
 		const MessageTagError = store.getMessageTagError();
 		const MessageTagStep = store.getMessageTagStep();
+		const MessageTagLimitDate = store.getMessageTagLimitDate();
 		this.setState({
 			MessageTag50000,
 			MessageTagError,
-			MessageTagStep
+			MessageTagStep,
+			MessageTagLimitDate,
 		});
 	}
 
@@ -99,7 +102,7 @@ export default class BankContent extends React.Component {
 		store[key2](key);
 	};
 	render() {
-		const { MessageTag50000, MessageTagError, MessageTagStep } = this.state;
+		const { MessageTag50000, MessageTagError, MessageTagStep, MessageTagLimitDate } = this.state;
 		const {
 			className,
 			children,
@@ -198,6 +201,30 @@ export default class BankContent extends React.Component {
 						<Icon
 							onClick={() => {
 								this.closeTip('MessageTagStep');
+							}}
+							size="sm"
+							style={{ width: '.3rem', height: '.3rem' }}
+							className={style.closeIcon}
+							type="cross"
+						/>
+						<div className={style.triangle_border_down}>
+							<span />
+						</div>
+					</div>
+				</div>
+			);
+		} else if (
+			((indexSts === 'LN0006' || indexSts === 'LN0008') &&
+				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
+			(!MessageTagLimitDate || MessageTagLimitDate !== 'MessageTagLimitDate')
+		) {
+			tipText = (
+				<div className={style.abnormal_tip_box}>
+					<div className={style.abnormal_tip}>
+						额度有效期至3月30日
+						<Icon
+							onClick={() => {
+								this.closeTip('MessageTagLimitDate');
 							}}
 							size="sm"
 							style={{ width: '.3rem', height: '.3rem' }}
