@@ -19,7 +19,6 @@ const API = {
   USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
 };
 let timer = null;
-let globalFetchCancel = null
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -58,14 +57,12 @@ export default class loan_repay_confirm_page extends PureComponent {
           time: this.state.time + 1
         },
         () => {
-          if (this.state.time % 5 === 0) {
+          if (this.state.time > 29) {
+            clearInterval(timer)
+            this.queryUsrInfo(true)
+          } else if (this.state.time % 5 === 0) {
             clearInterval(timer)
             this.queryUsrInfo()
-            console.log(this.state.time)
-            if (this.state.time > 28) {
-              clearInterval(timer)
-              this.queryUsrInfo(true)
-            }
           }
         }
       );
@@ -75,12 +72,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   //查询用户相关信息
   queryUsrInfo = (hideFlag) => {
     this.props.$fetch
-      .post(API.USR_INDEX_INFO, {
-        // cancelToken: new CancelToken(function executor(c) {
-        //   globalFetchCancel = c
-        //   console.log(globalFetchCancel)
-        // })
-      })
+      .post(API.USR_INDEX_INFO)
       .then((res) => {
         this.setState(
           {
@@ -178,7 +170,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   //更新账单
   updateBill = () => {
-    this.showProgress()
+    this.queryUsrInfo()
   }
 
   goMoxieBankList = () => {
