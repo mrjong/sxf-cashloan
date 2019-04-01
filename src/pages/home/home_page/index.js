@@ -731,7 +731,10 @@ export default class home_page extends PureComponent {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
-					this.props.toast.info('请输入数字或两位小数');
+          this.props.toast.info('请输入数字或两位小数');
+          this.props.form.setFieldsValue({
+            loanMoney: ''
+          })
 					return;
 				}
 				if (values.loanMoney < selectedLoanDate.factLmtLow || values.loanMoney > selectedLoanDate.factAmtHigh) {

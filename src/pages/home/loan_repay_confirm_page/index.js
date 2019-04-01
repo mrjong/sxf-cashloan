@@ -220,6 +220,9 @@ export default class loan_repay_confirm_page extends PureComponent {
       if (!err) {
         if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
           this.props.toast.info('请输入数字或两位小数');
+          this.props.form.setFieldsValue({
+            loanMoney: ''
+          })
           return;
         }
         if (values.loanMoney < selectedLoanDate.factLmtLow || values.loanMoney > selectedLoanDate.factAmtHigh) {
