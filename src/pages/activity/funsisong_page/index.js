@@ -1,11 +1,6 @@
 import React, { PureComponent } from 'react'
-import { withRouter } from 'react-router-dom'
 import qs from 'qs'
-import { store } from 'utils/store'
 import styles from './index.scss'
-// import wallet_img1 from './img/wallet_img1.png'
-// import wallet_img2 from './img/wallet_img2.png'
-// import wallet_img3 from './img/wallet_img3.png'
 import activity_bg from './img/activity_bg.png'
 import coupon_bg from './img/coupon_bg.png'
 import get_coupon_btn from './img/get_coupon_btn.png'
@@ -21,8 +16,6 @@ import { Carousel } from 'antd-mobile'
 import SmsAlert from '../components/SmsAlert'
 import awardListData from './components/awardListData'
 
-
-@withRouter
 export default class funsisong_page extends PureComponent {
   constructor(props) {
     super(props)
@@ -271,8 +264,9 @@ export default class funsisong_page extends PureComponent {
               )
             })}
           </Carousel>
-          <p className={styles.protocolBox}>
-            参与即同意<span 
+          <div className={styles.protocolBox}>
+            <span>参与即同意</span>
+            <span 
               onClick={() => {
                 this.go('register_agreement_page');
               }}>
@@ -283,17 +277,8 @@ export default class funsisong_page extends PureComponent {
             }}>
             《随行付用户隐私权政策》
             </span>
-          </p>
+          </div>
         </div>
-        {/* <div className={styles.wallet}>
-          <img src={wallet_img1} className={[styles.img, styles.img1].join(' ')} />
-          <img src={wallet_img2} className={[styles.img, styles.img2].join(' ')} />
-          <img src={wallet_img3} className={[styles.img, styles.img3].join(' ')} />
-        </div>
-        <div className={styles.submitBtn} onClick={this.goTo}>
-          <img src={submit_btn1} className={[styles.btn, styles.btn1].join(' ')} />
-          <img src={submit_btn2} className={[styles.btn, styles.btn2].join(' ')} />
-        </div> */}
         {
           showLoginTip &&
           <div className={styles.modal}>

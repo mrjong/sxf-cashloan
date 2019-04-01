@@ -120,7 +120,7 @@
   .activity_bg {
     width: 100%;
     position: absolute;
-    z-index: -1;
+    // z-index: -1;
   }
   .rule {
     position: absolute;
@@ -136,7 +136,9 @@
     text-align: center;
   }
   .couponContainer{
+    position: relative;
     padding-top: 650px;
+    z-index: 1;
     .couponBox{
       padding: 42px 48px 30px;
       background: #fff;
@@ -172,6 +174,7 @@
     padding: 114px 60px 44px;
     margin: 30px 40px 0;
     text-align: center;
+    z-index: 1;
     .titBg{
       position: absolute;
       top: 0;
