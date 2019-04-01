@@ -265,11 +265,11 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		.then((res) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
-				$props.toast.info(res.msgInfo, 3, () => {
-					// 移除首页弹窗返回的值
-					store.removeLoanAspirationHome();
+				$props.toast.info(res.msgInfo);
+				store.removeLoanAspirationHome();
+				setTimeout(() => {
 					$props.history.push('/home/credit_apply_succ_page');
-				});
+				}, 3000);
 			} else {
 				$props.toast.info(res.msgInfo);
 			}
