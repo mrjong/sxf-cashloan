@@ -33,16 +33,24 @@ export default class funsisong_page extends PureComponent {
       showAwardModal: false, // 获奖弹框
       showNoAwardModal: false, // 无领取资格弹框
       showModalType: '', // 展示弹框类型
+      urlData: {}, // url上的参数
     }
   }
 
+  componentWillMount() {
+    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+    this.setState({
+      urlData: queryData
+    })
+  }
+
   componentDidMount() {
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.entry && queryData.h5Channel) {
+    const { urlData } = this.state;
+    if (urlData.entry && urlData.h5Channel) {
       // 根据不同入口来源埋点
       buriedPointEvent(activity.funsisongEntry, {
-        entry: queryData.entry,
-        h5Channel: queryData.h5Channel
+        entry: urlData.entry,
+        h5Channel: urlData.h5Channel
       })
     }
   }
@@ -59,23 +67,27 @@ export default class funsisong_page extends PureComponent {
   }
 
   goTo = (goType) => {
+    const { urlData } = this.state;
     if (goType === 'coupon') {
       buriedPointEvent(activity.couponBtnClick);
     } else if (goType === 'redBag') {
       buriedPointEvent(activity.redBagBtnClick);
     }
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.appId && queryData.token) {
-      if (goType === 'coupon') {
-        this.getCoupon();
-      } else if (goType === 'redBag') {
-        this.getRedBag();
+    if(urlData && urlData.mposEntry) {
+      if (urlData.appId && urlData.token) {
+        if (goType === 'coupon') {
+          this.getCoupon();
+        } else if (goType === 'redBag') {
+          this.getRedBag();
+        }
+      } else {
+        this.setState({
+          noLogin: true,
+          showLoginTip: true
+        })
       }
     } else {
-      this.setState({
-        noLogin: true,
-        showLoginTip: true
-      })
+      this.props.history.push('/home/home');
     }
   }
 
@@ -155,7 +167,7 @@ export default class funsisong_page extends PureComponent {
 	};
 
   render() {
-    const { awardList, showModal, showAwardModal, showLoginTip, showNoAwardModal } = this.state;
+    const { awardList, showModal, showAwardModal, showLoginTip, showNoAwardModal, urlData } = this.state;
     return (
       <div className={styles.main}>
         <SmsAlert
@@ -213,18 +225,28 @@ export default class funsisong_page extends PureComponent {
             showModal: true
           })
         }}>活动规则</div>
-        <div className={styles.couponContainer}>
-          <div className={styles.couponBox}>
-            <h3 className={styles.couponTit}>
-              <span>【新用户专享】</span>
-              先领券再借款，更省费用
-            </h3>
-            <div className={styles.imgContainer}>
-              <img src={coupon_bg} className={styles.couponBg} alt="coupon_bg" />
-              <img src={get_coupon_btn} onClick={() => { this.goTo('coupon') }} className={styles.getBtn} alt="get_coupong_btn" />
+        {
+          urlData && urlData.mposEntry ?
+          <div className={styles.couponContainer}>
+            <div className={styles.couponBox}>
+              <h3 className={styles.couponTit}>
+                <span>【新用户专享】</span>
+                先领券再借款，更省费用
+              </h3>
+              <div className={styles.imgContainer}>
+                <img src={coupon_bg} className={styles.couponBg} alt="coupon_bg" />
+                <img src={get_coupon_btn} onClick={() => { this.goTo('coupon') }} className={styles.getBtn} alt="get_coupong_btn" />
+              </div>
             </div>
           </div>
-        </div>
+          : null
+        }
+        {
+          !(urlData && urlData.mposEntry) ?
+          <div className={styles.spaceBlock}></div>
+          :
+          null
+        }
         <div className={styles.redBagCont}>
           <img src={tit_bg} alt="tit_bg" className={styles.titBg} />
           <p className={styles.price}>
@@ -249,7 +271,7 @@ export default class funsisong_page extends PureComponent {
               )
             })}
           </Carousel>
-          <p class={styles.protocolBox}>
+          <p className={styles.protocolBox}>
             参与即同意<span 
               onClick={() => {
                 this.go('register_agreement_page');
