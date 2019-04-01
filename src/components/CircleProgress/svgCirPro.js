@@ -80,13 +80,15 @@ export default class SvgCirPro extends Component {
 				className="svgcirproOut"
 				style={{
 					width: width,
-					height: height
+                    height: height,
+                    margin: 'auto'
 				}}
 			>
 				<div
 					style={{
 						width: width,
-						height: height
+						height: height,
+					
 					}}
 					className="circle_border"
 				/>
@@ -200,10 +202,10 @@ export default class SvgCirPro extends Component {
 		} else {
 			this.setState({ percent: this.props.percent });
 		}
-    }
-    componentWillUnmount(){
-        clearTimeout(this.time)
-    }
+	}
+	componentWillUnmount() {
+		clearTimeout(this.time);
+	}
 
 	onDraw(svgcirpro) {
 		if (svgcirpro) {

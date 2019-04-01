@@ -2,7 +2,7 @@
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 import React from 'react';
-import { logoutAppHandler, changeHistoryState, isWXOpen } from 'utils';
+import { logoutAppHandler, changeHistoryState, isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
@@ -89,7 +89,6 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
-		
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 
 			/* 魔蝎银行卡列表 */
@@ -104,8 +103,8 @@ if (window.history && window.history.pushState) {
 				document.activeElement.blur();
 				obj.show();
 				return;
-            }
-            	/* 新版流程物理返回  借钱还信用卡 切换卡*/
+			}
+			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
 				return;
@@ -145,7 +144,7 @@ if (window.history && window.history.pushState) {
 			}
 			/**登录页拦截 */
 
-			// changeHistoryState();
+			changeHistoryState();
 			let historyRouter = store.getHistoryRouter();
 			// 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
 			if (store.getMoxieBackUrl()) {
