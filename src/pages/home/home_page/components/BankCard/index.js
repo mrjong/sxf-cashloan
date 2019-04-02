@@ -55,7 +55,7 @@ export default class BankCard extends React.PureComponent {
 	};
 
 	render() {
-		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt } = this.props;
+		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt, billRemainAmt, cardBillSts } = this.props;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let overDtStr = '----/--/--';
 		if (overDt === '----/--/--') {
@@ -69,8 +69,19 @@ export default class BankCard extends React.PureComponent {
 		}
 		const billDtData =
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-		const cardBillAmtData =
-			cardBillAmt === '---' || cardBillAmt === null ? '---' : parseFloat(cardBillAmt, 10).toFixed(2);
+		let cardBillAmtData = '';
+		if (cardBillSts === '02') {
+			cardBillAmtData = '待更新'
+		} else {
+			if (billRemainAmt) {
+				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
+			} else if(cardBillAmt === '---' || cardBillAmt === null) {
+				cardBillAmtData = '---';
+			} else {
+				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2)
+			}
+		}
+		
 		const settings = {
 			start: 0,
 			count: cardBillAmtData,

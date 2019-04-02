@@ -354,9 +354,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     if (!cardBillAmt && cardBillAmt !== 0) {
       cardBillAmtData = '----.--';
     } else {
-      if (1) {
-        cardBillAmtData = '未出账'
-      } else if (2) {
+      if (2) {
         cardBillAmtData = '待更新'
       } else {
         cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);

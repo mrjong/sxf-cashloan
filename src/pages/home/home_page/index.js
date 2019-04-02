@@ -632,7 +632,7 @@ export default class home_page extends PureComponent {
 	toggleTag = (idx) => {
 		const { usrIndexInfo } = this.state;
 		const { indexData = {} } = usrIndexInfo;
-		const { cardBillAmt, minPayment } = indexData;
+		const { cardBillAmt, minPayment, billRemainAmt } = indexData;
 		this.setState(
 			{
 				activeTag: idx
@@ -640,7 +640,7 @@ export default class home_page extends PureComponent {
 			() => {
 				//全额还款
 				if (idx === 0) {
-					this.calcLoanMoney(cardBillAmt);
+					this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
 				} else if (idx === 1) {
 					//最低还款
 					this.calcLoanMoney(minPayment);
@@ -924,7 +924,7 @@ export default class home_page extends PureComponent {
 									{usrIndexInfo &&
 										usrIndexInfo.indexData && (
 											<span>
-												{usrIndexInfo.indexData.cardBillAmt && usrIndexInfo.indexData.cardBillAmt}
+												{usrIndexInfo.indexData.billRemainAmt ? usrIndexInfo.indexData.billRemainAmt : usrIndexInfo.indexData.cardBillAmt}
 											</span>
 										)}
 								</p>
