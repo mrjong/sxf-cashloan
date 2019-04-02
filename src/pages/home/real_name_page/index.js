@@ -311,7 +311,7 @@ export default class real_name_page extends Component {
 		//   selectFlag = false;
 		// }
 		return (
-			<div className={style.real_name_page}>
+			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? (
 					<div>
 						<div className={style.updateTitle}>

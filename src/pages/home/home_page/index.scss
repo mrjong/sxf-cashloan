@@ -4,8 +4,8 @@
 	.default_banner {
 		width: 100%;
 		position: relative;
-        min-height: 2.65rem;
-        height: 2.65rem;
+		min-height: 2.65rem;
+		height: 2.65rem;
 		display: inline-block;
 		list-style-type: none;
 		vertical-align: top;
@@ -45,6 +45,7 @@
 		color: #c7c6cc;
 	}
 	.circle_box {
+		min-height: 470px;
 		text-align: center;
 		vertical-align: middle;
 		position: absolute;
@@ -57,6 +58,7 @@
 		-webkit-animation-delay: 0s;
 	}
 	.font50000_box {
+		min-height: 470px;
 		position: absolute;
 		top: 232px;
 		left: 50%;
@@ -84,16 +86,17 @@
 		}
 
 		.am-list-item {
-      padding-left: 0;
-      height: 108px;
-      .am-list-line {
-        padding-right: 0;
-      }
-    }
+			padding-left: 0;
+			height: 108px;
+			.am-list-line {
+				padding-right: 0;
+			}
+		}
 
 		.blackColor {
-			.am-input-control input, .am-list-extra {
-				color: #333 !important;
+			.am-input-control input,
+			.am-list-extra {
+				color: #333;
 			}
 		}
 
@@ -101,13 +104,17 @@
 			.am-input-label {
 				width: 210px;
 			}
-			.am-list-content, .am-input-label {
+			.am-list-content,
+			.am-input-label {
 				font-size: 0.3rem;
 				color: #333;
+				opacity: 1;
 			}
-			.am-input-control input, .am-list-extra {
+			.am-input-control input,
+			.am-list-extra {
 				font-size: 0.3rem;
-				color: #333;
+				color: #000;
+				opacity: 1;
 			}
 		}
 
@@ -116,10 +123,10 @@
 		}
 
 		.am-list-item.am-list-item-middle .am-list-line {
-      &:after{
-        @include setBottomLine();
-      }
-    }
+			&:after {
+				@include setBottomLine();
+			}
+		}
 	}
 
 	.am-modal-body {
@@ -213,10 +220,17 @@
 		margin-top: 38px;
 		color: #333;
 	}
+	.billMoneyTwoTop {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 18px;
+		font-size: 26px;
+		color: #666;
+	}
 	.billMoneyBtm {
 		position: relative;
 		text-align: right;
-		color: #C5C5C5;
+		color: #c5c5c5;
 		font-size: 22px;
 		&::after {
 			@include setBottomLine();

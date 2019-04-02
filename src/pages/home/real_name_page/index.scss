@@ -16,10 +16,10 @@
 		padding: 0.1rem 0.1rem 0.2rem 0.1rem;
 		text-align: center;
 		margin: 20px auto 0 auto;
-    }
-    .mt30{
-        margin-top: 50px;
-    }
+	}
+	.mt30 {
+		margin-top: 50px;
+	}
 	.updateImgLeft {
 		width: 50%;
 		cursor: pointer;
@@ -138,16 +138,17 @@
 		margin-bottom: .35rem;
 	}
 }
-
-:global {
-	.am-list-item .am-input-label {
-		color: #333;
-		font-size: 0.3rem;
-	}
-	.am-list-item.am-input-item {
-		padding-left: 0.3rem;
-	}
-	.am-list-item .am-input-control input {
-		text-align: right;
+.real_name_page_list {
+	:global {
+		.am-list-item .am-input-label {
+			color: #333;
+			font-size: 0.3rem;
+		}
+		.am-list-item.am-input-item {
+			padding-left: 0.3rem;
+		}
+		.am-list-item .am-input-control input {
+			text-align: right;
+		}
 	}
 }
