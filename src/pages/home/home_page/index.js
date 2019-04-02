@@ -1029,8 +1029,8 @@ export default class home_page extends PureComponent {
         <Modal className='overDueModal' visible={billOverDue === '1'} transparent maskClosable={false}>
           <div>
             <img src={overDueImg} />
-            <h3 className={style.modalTitle}>逾期通知</h3>
-            <p>您的预期账单即将上报<em className={style.strong}>百信征信</em>， 请尽快处理！</p>
+            <h3 className={style.modalTitle}>信用风险提醒</h3>
+            <p>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
             <SXFButton onClick={this.handleOverDueClick}>我知道了，前去还款</SXFButton>
           </div>
         </Modal>
