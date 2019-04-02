@@ -8,7 +8,7 @@ import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError,
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine } from 'utils/analytinsType';
+import { home, mine, activity } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
@@ -151,6 +151,35 @@ export default class home_page extends PureComponent {
             firstUserInfo: res.data.flag,
             billOverDue: res.data.popupFlag
           });
+          if (res.data.popupFlag !== '1') {
+            if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+              // 新弹窗（188元）
+              this.setState(
+                {
+                  isShowActivityModal: true,
+                  isNewModal: true
+                },
+                () => {
+                  store.setShowActivityModal(true);
+                }
+              );
+            } else if (
+              isMPOS() &&
+              // (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') && 暂时注释掉
+              !store.getShowActivityModal()
+            ) {
+              // 老弹窗（3000元）
+              this.setState(
+                {
+                  isShowActivityModal: true,
+                  isNewModal: false
+                },
+                () => {
+                  store.setShowActivityModal(true);
+                }
+              );
+            }
+          }
           if (res.data.flag === '01') {
             this.credit_extension_not();
           } else {
@@ -531,33 +560,33 @@ export default class home_page extends PureComponent {
             ? result.data
             : Object.assign({}, result.data, { indexData: {} })
         });
-        if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-          // 新弹窗（188元）
-          this.setState(
-            {
-              isShowActivityModal: true,
-              isNewModal: true
-            },
-            () => {
-              store.setShowActivityModal(true);
-            }
-          );
-        } else if (
-          isMPOS() &&
-          (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-          !store.getShowActivityModal()
-        ) {
-          // 老弹窗（3000元）
-          this.setState(
-            {
-              isShowActivityModal: true,
-              isNewModal: false
-            },
-            () => {
-              store.setShowActivityModal(true);
-            }
-          );
-        }
+        // if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+        //   // 新弹窗（188元）
+        //   this.setState(
+        //     {
+        //       isShowActivityModal: true,
+        //       isNewModal: true
+        //     },
+        //     () => {
+        //       store.setShowActivityModal(true);
+        //     }
+        //   );
+        // } else if (
+        //   isMPOS() &&
+        //   (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+        //   !store.getShowActivityModal()
+        // ) {
+        //   // 老弹窗（3000元）
+        //   this.setState(
+        //     {
+        //       isShowActivityModal: true,
+        //       isNewModal: false
+        //     },
+        //     () => {
+        //       store.setShowActivityModal(true);
+        //     }
+        //   );
+        // }
 
         // TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
         this.cacheBanner();
@@ -610,24 +639,27 @@ export default class home_page extends PureComponent {
   };
   // 弹窗 按钮事件
   activityModalBtn = () => {
+    // 放肆送活动埋点，活动下线的时候去掉
+		buriedPointEvent(activity.homeModalBtnClick);
+		this.closeActivityModal();
     // 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
-    const { usrIndexInfo } = this.state;
-    switch (usrIndexInfo.indexSts) {
-      case 'LN0001': // 新用户，信用卡未授权
-        this.goToNewMoXie();
-        break;
-      case 'LN0003': // 账单爬取成功
-        if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-          this.handleSmartClick();
-        } else {
-          this.setState({
-            handleMoxie: true
-          });
-        }
-        break;
-      default:
-        console.log('关闭弹窗');
-    }
+    // const { usrIndexInfo } = this.state;
+    // switch (usrIndexInfo.indexSts) {
+    //   case 'LN0001': // 新用户，信用卡未授权
+    //     this.goToNewMoXie();
+    //     break;
+    //   case 'LN0003': // 账单爬取成功
+    //     if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+    //       this.handleSmartClick();
+    //     } else {
+    //       this.setState({
+    //         handleMoxie: true
+    //       });
+    //     }
+    //     break;
+    //   default:
+    //     console.log('关闭弹窗');
+    // }
   };
 
   //切换tag标签
