@@ -4,18 +4,25 @@ import fetch from 'sx-fetch';
 import successIco from 'assets/images/mine/wallet/success_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 import { setBackGround } from 'utils/background'
-import { store } from 'utils/store'
+import { store } from 'utils/store';
+import qs from 'qs';
 
 const API = {
   isBankCard: '/my/chkCard', // 是否绑定了银行卡
 }
-let timer = null
+let timer = null;
+let autId = '';
 @fetch.inject()
 @setBackGround('#fff')
 export default class credit_apply_succ_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {}
+  }
+
+  componentWillMount() {
+    const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    autId = query && query.autId;
   }
 
   componentDidMount() {
@@ -49,7 +56,7 @@ export default class credit_apply_succ_page extends PureComponent {
         this.props.toast.info(result.msgInfo);
         store.setBackUrl('/home/home');
         setTimeout(() => {
-          this.props.history.replace({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+          this.props.history.replace({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${autId}` });
         }, 3000);
       }
     });

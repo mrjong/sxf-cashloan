@@ -247,6 +247,7 @@ export default class agency_page extends PureComponent {
 
   // 请求用户绑卡状态
   requestBindCardState = () => {
+    const homeCardIndexData = store.getHomeCardIndexData();
     this.props.$fetch.get(API.CHECK_CARD).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
@@ -263,7 +264,7 @@ export default class agency_page extends PureComponent {
         store.setBackUrl('/home/agency');
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
-          this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+          this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${homeCardIndexData.autId}` });
         }, 3000);
       } else {
         this.props.toast.info(result.msgInfo);

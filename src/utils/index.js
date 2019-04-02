@@ -254,7 +254,8 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		perdLth: repaymentDate.perdLth,
 		perdUnit: repaymentDate.perdUnit,
 		perdCnt: repaymentDate.perdCnt,
-		rpyAmt: Number(repaymentDate.rpyAmt)
+		rpyAmt: Number(repaymentDate.rpyAmt),
+		autId: repaymentDate && repaymentDate.autId,
 	};
 	if (isMPOS()) {
 		getAppsList();
@@ -268,7 +269,7 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 				$props.toast.info(res.msgInfo);
 				store.removeLoanAspirationHome();
 				setTimeout(() => {
-					$props.history.push('/home/credit_apply_succ_page');
+					$props.history.push({ pathname: '/home/credit_apply_succ_page', search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`});
 				}, 3000);
 			} else {
 				$props.toast.info(res.msgInfo);

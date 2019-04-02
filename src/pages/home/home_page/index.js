@@ -390,7 +390,7 @@ export default class home_page extends PureComponent {
 				store.setBackUrl('/home/home');
 				this.props.toast.info(result.msgInfo);
 				setTimeout(() => {
-					this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId}` });
 				}, 3000);
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -740,7 +740,7 @@ export default class home_page extends PureComponent {
 	};
 
 	submitCredit = () => {
-		const { selectedLoanDate = {} } = this.state;
+		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
@@ -761,7 +761,8 @@ export default class home_page extends PureComponent {
 				}
 				const params = {
 					...selectedLoanDate,
-					rpyAmt: Number(values.loanMoney)
+          rpyAmt: Number(values.loanMoney),
+          autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
 				};
 				store.setLoanAspirationHome(params);
 				//调用授信接口

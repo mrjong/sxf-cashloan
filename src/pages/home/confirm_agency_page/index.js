@@ -193,7 +193,7 @@ export default class confirm_agency_page extends PureComponent {
         store.setBackUrl('/home/confirm_agency');
         this.props.toast.info(result.msgInfo);
         setTimeout(() => {
-          this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+          this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${indexData && indexData.autId}` });
         }, 3000);
       } else {
         this.props.toast.info(result.msgInfo);
