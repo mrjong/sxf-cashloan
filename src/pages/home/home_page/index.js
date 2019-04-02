@@ -640,8 +640,8 @@ export default class home_page extends PureComponent {
   // 弹窗 按钮事件
   activityModalBtn = () => {
     // 放肆送活动埋点，活动下线的时候去掉
-		buriedPointEvent(activity.homeModalBtnClick);
-		this.closeActivityModal();
+    buriedPointEvent(activity.homeModalBtnClick);
+    this.closeActivityModal();
     // 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
     // const { usrIndexInfo } = this.state;
     // switch (usrIndexInfo.indexSts) {
@@ -788,6 +788,10 @@ export default class home_page extends PureComponent {
         //调用授信接口
         getNextStr({
           $props: this.props
+        });
+        // 关闭授信弹窗
+        this.setState({
+          isShowCreditModal: false,
         });
       } else {
         this.props.toast.info(getFirstError(err));
