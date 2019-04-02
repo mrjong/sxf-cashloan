@@ -146,6 +146,49 @@
 		}
 	}
 }
+
+:global {
+	.overDueModal.am-modal-transparent {
+		width: 580px;
+	}
+	.overDueModal.am-modal-transparent .am-modal-content {
+		position: relative;
+		height: 630px;
+		box-sizing: border-box;
+		overflow: visible;
+		.am-modal-body {
+			position: relative;
+			top: -100px;
+			padding: 0;
+			overflow: visible;
+		}
+		img {
+			width: 100%;
+		}
+		h3 {
+			font-size: 36px;
+			font-weight: 400;
+			margin-bottom: 50px;
+			margin-top: 17px;
+			color: #333;
+		}
+		p {
+			font-size: 32px;
+			text-align: left;
+			color: #333;
+			margin-bottom: 56px;
+			padding: 0 30px 0 60px;
+		}
+		button {
+			width: 80%;
+			margin: 0 auto;
+		}
+		em {
+			color: #F66;
+		}
+  }
+}
+
 .subDesc {
 	font-size: 24px;
 	color: #c7c6cc;
