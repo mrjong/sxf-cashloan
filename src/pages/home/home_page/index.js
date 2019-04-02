@@ -675,13 +675,13 @@ export default class home_page extends PureComponent {
 	//过滤选中的还款期限
 	filterLoanDate = (item) => {
 		const { usrIndexInfo, activeTag } = this.state;
-		const { cardBillAmt, minPayment } = usrIndexInfo.indexData;
+		const { cardBillAmt, minPayment, billRemainAmt } = usrIndexInfo.indexData;
 		this.setState({
 			selectedLoanDate: item // 设置选中的期数
 		}, () => {
 			//全额还款
 			if (activeTag === 0) {
-				this.calcLoanMoney(cardBillAmt);
+				this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
 			} else if (activeTag === 1) {
 				//最低还款
 				this.calcLoanMoney(minPayment);
@@ -707,6 +707,19 @@ export default class home_page extends PureComponent {
 	};
 
 	showCreditModal = () => {
+    const { usrIndexInfo } = this.state;
+		const { cardBillSts } = usrIndexInfo.indexData;
+    if (cardBillSts === '00') {
+      this.props.toast.info('还款日已到期，请更新账单获取最新账单信息')
+      return;
+    } else if (cardBillSts === '02') {
+      this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 3, () => {
+        // 跳新版魔蝎
+        store.setMoxieBackUrl('/home/home');
+        this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+      });
+      return;
+    }
 		this.setState(
 			{
 				isShowCreditModal: true
