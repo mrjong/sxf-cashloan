@@ -103,4 +103,9 @@ const moxie_bank_list = {
 	bankRefresh: `${prefix}_CREDIT_BANK_REFRESH` // 领取优惠券活动运营
 };
 
-export { login, home, mine, order, membership, bugLog, mpos_service_authorization, activity, moxie_bank_list };
+const mpos_ioscontrol_page = {
+	iosControlPageView: `${prefix}_MPOS_HD_WECHAT`, // mpos 管控页页面/mpos引流微信页面加载完成
+	copySuccess: `${prefix}_COPY_SUCCESS`, // mpos 管控页页面/mpos引流微信页面复制成功
+};
+
+export { login, home, mine, order, membership, bugLog, mpos_service_authorization, activity, moxie_bank_list, mpos_ioscontrol_page };
