@@ -138,8 +138,9 @@
 		margin-bottom: .35rem;
 	}
 }
+:global {
+
 .real_name_page_list {
-	:global {
 		.am-list-item .am-input-label {
 			color: #333;
 			font-size: 0.3rem;

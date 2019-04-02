@@ -499,6 +499,7 @@ export default class home_page extends PureComponent {
 	};
 
 	handleApply = () => {
+        console.log('555555')
 		getNextStr({ $props: this.props });
 	};
 

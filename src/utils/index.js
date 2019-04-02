@@ -247,6 +247,7 @@ export const closePage = () => {
 };
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = ($props, repaymentDate) => {
+    $props.SXFToast.loading('数据加载中...', 0);
 	const address = store.getPosition();
 	const params = {
 		location: address,
@@ -261,7 +262,7 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		getContactsList();
 	}
 	$props.$fetch
-		.post(`${API.submitState}`, params)
+		.post(`${API.submitState}`, params, { hideLoading: true })
 		.then((res) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
@@ -275,12 +276,14 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 			}
 		})
 		.catch((err) => {
+            $props.SXFToast.hide();
 			$props.history.push('/home/home');
 		});
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false }) => {
+    console.log('2222222222')
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
@@ -296,6 +299,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			store.setNeedNextUrl(true);
 			// 实名
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
+				$props.SXFToast.hide();
 				$props.toast.info('请先实名认证');
 				setTimeout(() => {
 					$props.history.push({
@@ -307,6 +311,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			}
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
+				$props.SXFToast.hide();
 				$props.toast.info('请进行基本信息认证');
 				setTimeout(() => {
 					$props.history.replace({
@@ -326,6 +331,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 					})
 					.then((result) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
+							$props.SXFToast.hide();
 							$props.toast.info('请进行运营商认证');
 							setTimeout(() => {
 								// 运营商直接返回的问题
@@ -343,6 +349,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+				$props.SXFToast.hide();
 				$props.toast.info('请进行信用卡认证');
 				store.setCreditSuccessBack(true);
 				setTimeout(() => {
@@ -352,12 +359,14 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			}
 			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
 			if (!store.getCreditExtensionNot() && store.getLoanAspirationHome()) {
+				$props.SXFToast.hide();
 				handleClickConfirm($props, {
 					...store.getLoanAspirationHome()
 				});
 				return;
 			} else if (store.getCreditExtensionNot()) {
 				if (store.getCreditSuccessBack()) {
+					$props.SXFToast.hide();
 					$props.toast.info('恭喜您距离您获取额度就差最后一步了，赶紧申请吧');
 					setTimeout(() => {
 						$props.history.push('/home/loan_repay_confirm_page');
