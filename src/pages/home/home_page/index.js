@@ -418,7 +418,7 @@ export default class home_page extends PureComponent {
 					);
 				} else if (
 					isMPOS() &&
-					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+					// (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') && 暂时注释掉
 					!store.getShowActivityModal()
 				) {
 					// 老弹窗（3000元）
@@ -479,24 +479,25 @@ export default class home_page extends PureComponent {
 	activityModalBtn = () => {
 		// 放肆送活动埋点，活动下线的时候去掉
 		buriedPointEvent(activity.homeModalBtnClick);
+		this.closeActivityModal();
 		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
 		const { usrIndexInfo } = this.state;
-		switch (usrIndexInfo.indexSts) {
-			case 'LN0001': // 新用户，信用卡未授权
-				this.goToNewMoXie();
-				break;
-			case 'LN0003': // 账单爬取成功
-				if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-					this.handleSmartClick();
-				} else {
-					this.setState({
-						handleMoxie: true
-					});
-				}
-				break;
-			default:
-				console.log('关闭弹窗');
-		}
+		// switch (usrIndexInfo.indexSts) {
+		// 	case 'LN0001': // 新用户，信用卡未授权
+		// 		this.goToNewMoXie();
+		// 		break;
+		// 	case 'LN0003': // 账单爬取成功
+		// 		if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+		// 			this.handleSmartClick();
+		// 		} else {
+		// 			this.setState({
+		// 				handleMoxie: true
+		// 			});
+		// 		}
+		// 		break;
+		// 	default:
+		// 		console.log('关闭弹窗');
+		// }
 	};
 
 	render() {
