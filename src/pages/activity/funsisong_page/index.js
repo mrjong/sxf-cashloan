@@ -300,7 +300,7 @@ export default class funsisong_page extends PureComponent {
                 <div>
                   <h2>活动规则</h2>
                   <ol>
-                    <li>1.活动时间：2019年3月27日—2019年4月3日；</li>
+                    <li>1.活动开始时间：2019年4月2日；</li>
                     <li>2.活动对象：本活动仅限还到用户参与；</li>
                     <li>3.奖励规则：</li>
                     <li>1）活动期间通过活动成功注册还到的用户可获得668元减息券，有效期7天；</li>
