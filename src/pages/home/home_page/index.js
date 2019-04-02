@@ -763,7 +763,11 @@ export default class home_page extends PureComponent {
 				//调用授信接口
 				getNextStr({
 					$props: this.props
-				});
+        });
+        // 关闭授信弹窗
+        this.setState({
+          isShowCreditModal: false,
+        });
 			} else {
 				this.props.toast.info(getFirstError(err));
 			}
