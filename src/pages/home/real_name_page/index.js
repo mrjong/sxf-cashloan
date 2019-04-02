@@ -5,7 +5,7 @@ import updateLeft from 'assets/images/real_name/left.png';
 import updateRight from 'assets/images/real_name/right.png';
 import updateBottom from 'assets/images/real_name/bottom.png';
 import FEZipImage from 'components/FEZIpImage';
-import { InputItem, List } from 'antd-mobile';
+import { InputItem, List, Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
@@ -264,6 +264,7 @@ export default class real_name_page extends Component {
 				// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
 				// 是否需要下一步
 				if (store.getNeedNextUrl()) {
+					this.props.SXFToast.loading('数据加载中...', 0);
 					getNextStr({
 						$props: this.props
 					});
@@ -271,6 +272,13 @@ export default class real_name_page extends Component {
 					this.props.history.goBack();
 				}
 				// this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
+			} else if (result.msgCode === 'URM5016') {
+				if (store.getNeedNextUrl()) {
+					this.props.SXFToast.loading('数据加载中...', 0);
+					getNextStr({
+						$props: this.props
+					});
+				}
 			} else {
 				this.confirmBuryPoint(false, result.msgInfo);
 				// isFetching = false;
@@ -311,7 +319,7 @@ export default class real_name_page extends Component {
 		//   selectFlag = false;
 		// }
 		return (
-			<div className={style.real_name_page}>
+			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? (
 					<div>
 						<div className={style.updateTitle}>
