@@ -36,5 +36,11 @@ export default [
 		title: '还到拒就赔',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/jupei_page')
+	},
+	{
+		path: '/activity/funsisong_page',
+		title: '全民FUN肆送',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/funsisong_page')
 	}
 ];

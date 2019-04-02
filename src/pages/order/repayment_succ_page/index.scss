@@ -53,18 +53,23 @@
     }
   }
   .modal_tip_content {
-    background-image: url('../../../assets/images/order/modal_bg_new1.png');
+    // background-image: url('../../../assets/images/order/modal_bg_new1.png');
+    background-image: url('../../../pages/activity/funsisong_page/img/payback_bg.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 750px;
     height: 750px;
     .modal_btn{
       position: relative;
-      top: 580px;
       margin: 0 auto;
-      width: 375px;
-      height: 96px;
-      background-image: url('../../../assets/images/order/modal_btn1.png');
+      // top: 580px;
+      // width: 375px;
+      // height: 96px;
+      // background-image: url('../../../assets/images/order/modal_btn1.png');
+      top: 526px;
+      width: 294px;
+      height: 89px;
+      background-image: url('../../../pages/activity/funsisong_page/img/payback_btn.png');
       background-size: 100% 100%;
     }
   }
