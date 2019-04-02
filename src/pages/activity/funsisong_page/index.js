@@ -41,11 +41,10 @@ export default class funsisong_page extends PureComponent {
 
   componentDidMount() {
     const { urlData } = this.state;
-    if (urlData.entry && urlData.h5Channel) {
+    if (urlData.entry) {
       // 根据不同入口来源埋点
       buriedPointEvent(activity.funsisongEntry, {
-        entry: urlData.entry,
-        h5Channel: urlData.h5Channel
+        entry: urlData.entry
       })
     }
   }
