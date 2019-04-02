@@ -54,7 +54,7 @@ export default class SmsAlert extends Component {
 			others: () => {},
 		},
 		goLoginCb: {
-			authSts00: () => {},
+			PTM0000: () => {},
 			others: () => {},
 		},
 		smsSuccess: () => {},
@@ -69,6 +69,7 @@ export default class SmsAlert extends Component {
 			mblNoHid: '',
 			smsJrnNo: '', // 短信流水号
 			passType: '', // 传递过来的参数
+			isGoLogin: false, // 是登陆不是短验
 		};
 	}
 	componentDidMount() {
@@ -241,9 +242,23 @@ export default class SmsAlert extends Component {
 					store.setToken(res.loginToken);
 				} else if (res.authFlag === '2') {
 					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, passType);
-				} else {
+				} else { 
 					chkAuthCb.others && chkAuthCb.others(res, passType);
-					Toast.info(res.msgInfo);
+					// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
+					// if (res.mblNoHid && res.tokenId) {
+					// 	this.setState({
+					// 		authToken: res.tokenId,
+					// 		modalShow: true,
+					// 		isGoLogin: true, // 跳转登陆而非短验
+					// 		passType,
+					// 	});
+					// 	this.props.form.setFieldsValue({
+					// 		phoneValue: res.mblNoHid,
+					// 		smsCd: ''
+					// 	});
+					// } else {
+					// 	Toast.info(res.msgInfo);
+					// }
 				}
 			});
 	};
@@ -304,14 +319,14 @@ export default class SmsAlert extends Component {
 					})
 					.then(
 						(res) => {
-							if (res.authSts === '00') {
-								goLoginCb.authSts00 && goLoginCb.authSts00(res, passType);
+							if (res.msgCode === 'PTM0000') {
+								goLoginCb.PTM0000 && goLoginCb.PTM0000(res, passType);
 								// sa.login(res.userId);
 								store.setMposToken(true);
 								smsSuccess && smsSuccess();
-								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+								Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 								// TODO: 根据设备类型存储token
-								store.setToken(res.loginToken);
+								store.setToken(res.data.tokenId);
 								this.closeCb();
 								// refreshPageFn();
 							} else {
@@ -331,7 +346,7 @@ export default class SmsAlert extends Component {
 	};
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag } = this.state;
+		const { smsText, timeflag, isGoLogin } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
@@ -387,7 +402,7 @@ export default class SmsAlert extends Component {
 						</div>
 
 						<div className={style.btn_box}>
-							<Button onClick={this.goSubmit} className={style.btn_primary} type="primary">
+							<Button onClick={isGoLogin ? this.goLogin : this.goSubmit} className={style.btn_primary} type="primary">
 								确定
 							</Button>
 						</div>

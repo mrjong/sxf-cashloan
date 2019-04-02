@@ -207,7 +207,10 @@ export default class funsisong_page extends PureComponent {
             },
 						authFlag2: (res, getType) => {
 							this.props.toast.info('暂无活动资格');
-						}
+            },
+            others: (res, getType) => {
+              this.props.toast.info('暂无活动资格');
+            }
 					}}
 					doAuthCb={{
             authSts00: (res, getType) => {
@@ -217,7 +220,7 @@ export default class funsisong_page extends PureComponent {
 							// 暂无抽奖资格
 							this.props.toast.info('暂无活动资格');
 						}
-					}}
+          }}
         />
         <img src={activity_bg} className={styles.activity_bg} />
         <div className={styles.rule} onClick={() => {
