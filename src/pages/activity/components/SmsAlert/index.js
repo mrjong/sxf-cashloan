@@ -206,7 +206,7 @@ export default class SmsAlert extends Component {
 					validateMposCb.PTM9000 && validateMposCb.PTM9000(res, passType);
 				} else {
 					validateMposCb.others && validateMposCb.others(res, passType)
-					Toast.info(res.msgInfo);
+					// Toast.info(res.msgInfo);
 				}
 			});
 	};

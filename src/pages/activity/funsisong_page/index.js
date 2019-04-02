@@ -15,6 +15,7 @@ import ButtonCustom from 'components/ButtonCustom'
 import { Carousel } from 'antd-mobile'
 import SmsAlert from '../components/SmsAlert'
 import awardListData from './components/awardListData'
+import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 
 export default class funsisong_page extends PureComponent {
   constructor(props) {
@@ -27,6 +28,7 @@ export default class funsisong_page extends PureComponent {
       showNoAwardModal: false, // 无领取资格弹框
       showModalType: '', // 展示弹框类型
       urlData: {}, // url上的参数
+      showBoundle: false, // 是否展示未实名的弹框
     }
   }
 
@@ -160,7 +162,7 @@ export default class funsisong_page extends PureComponent {
 	};
 
   render() {
-    const { awardList, showModal, showAwardModal, showLoginTip, showNoAwardModal, urlData } = this.state;
+    const { awardList, showModal, showAwardModal, showLoginTip, showNoAwardModal, urlData, showBoundle } = this.state;
     return (
       <div className={styles.main}>
         <SmsAlert
@@ -175,8 +177,13 @@ export default class funsisong_page extends PureComponent {
 					}}
 					validateMposCb={{
 						PTM9000: (res, getType) => {
-							this.props.toast.info('暂无活动资格');
-						}
+              this.props.history.replace('/mpos/mpos_ioscontrol_page');
+            },
+            others: (res, getType) => {
+							this.setState({
+                showBoundle: true
+              });
+            },
 					}}
 					chkAuthCb={{
             authFlag0: (res, getType) => {
@@ -341,6 +348,9 @@ export default class funsisong_page extends PureComponent {
                 <div className={styles.closeIcon} onClick={this.closeNoAwardModal}></div>
               </div>
             </div> : null
+        }
+        {
+          showBoundle ? <Alert_mpos /> : null
         }
       </div>
     )
