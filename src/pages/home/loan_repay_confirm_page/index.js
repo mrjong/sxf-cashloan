@@ -251,7 +251,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   //过滤选中的还款期限
   filterLoanDate = (value) => {
     const { perdRateList, usrIndexInfo, activeTag, fetchBillSucc } = this.state;
-    const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+    const { cardBillAmt = '', minPayment = '', billRemainAmt } = usrIndexInfo.indexData
     let selectedLoanDateArr = perdRateList.filter((item, idx) => {
       return item.perdLth === value[0];
     });
@@ -263,7 +263,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       }
       //全额还款
       if (activeTag === 0) {
-        this.calcLoanMoney(cardBillAmt);
+        this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
       } else if (activeTag === 1) {
         //最低还款
         this.calcLoanMoney(minPayment);
@@ -297,7 +297,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   toggleTag = (idx, type) => { // type为是自动执行该方法，还是点击执行该方法
     const { usrIndexInfo, fetchBillSucc } = this.state
     const { indexData = {} } = usrIndexInfo
-    const { cardBillAmt = '', minPayment = '' } = indexData
+    const { cardBillAmt = '', minPayment = '', billRemainAmt } = indexData
     if (!fetchBillSucc) {
       this.props.toast.info('账单更新成功方可选择，请耐心等待哦')
       return
@@ -312,7 +312,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     }, () => {
       //全额还款
       if (idx === 0) {
-        this.calcLoanMoney(cardBillAmt)
+        this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt)
       } else if (idx === 1) {
         //最低还款
         this.calcLoanMoney(minPayment)
