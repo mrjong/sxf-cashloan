@@ -117,7 +117,7 @@ export default class BankContent extends React.Component {
 		} = this.props;
 		const { indexSts, indexData } = contentData;
 		const showEntranceArr = [ 'LN0003' ]; // 暂时去掉LN0006 和 LN0008两个状态下的代还其他信用卡入口
-		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0007', 'LN0009', 'LN0010' ];
+		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0006', 'LN0007', 'LN0008', 'LN0009', 'LN0010' ];
 		const isShowTips = parseFloat(dayjs(new Date()).format('YYYYMMDD')) - parseFloat(indexData.acOverDt) <= 0; // 比较额度有效期是否早于当前时间，如果早于则不显示气泡
 		let tipText = '';
 		if (handleMoxie) {
