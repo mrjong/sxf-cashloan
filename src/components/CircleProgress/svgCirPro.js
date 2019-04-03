@@ -103,9 +103,9 @@ export default class SvgCirPro extends Component {
 					style={{
 						width: width,
 						height: height,
-						lineHeight: height + 'px'
+						lineHeight: height + 20 + 'px'
 					}}
-					className="circle_text"
+					className="circle_text homePrecent"
 				>
 					{this.props.openAnimation ? this.state.percent : this.props.percent}%
 				</div>
