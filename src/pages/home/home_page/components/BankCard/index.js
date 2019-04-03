@@ -56,6 +56,7 @@ export default class BankCard extends React.PureComponent {
 
 	render() {
 		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt, billRemainAmt, cardBillSts } = this.props;
+		const noNeedUpdateArr = [ 'LN0006', 'LN0007', 'LN0008', 'LN0009', 'LN0010' ]; // 不需要更新账单的状态
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let overDtStr = '----/--/--';
 		if (overDt === '----/--/--') {
@@ -70,7 +71,7 @@ export default class BankCard extends React.PureComponent {
 		const billDtData =
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
 		let cardBillAmtData = '';
-		if (cardBillSts === '02') {
+		if (cardBillSts === '02' && !noNeedUpdateArr.includes(contentData.indexSts)) {
 			cardBillAmtData = '待更新'
 		} else {
 			if (billRemainAmt) {
