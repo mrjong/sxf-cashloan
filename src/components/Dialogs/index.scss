@@ -7,11 +7,11 @@
     bottom: 0;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    z-index: 99999;
+    z-index: 1199;
 }
 .weui_dialog{
     position: fixed;
-    z-index: 100000;
+    z-index: 1200;
     width: 560px;
     height: 407px;
     top: 40%;
