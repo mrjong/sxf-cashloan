@@ -393,7 +393,7 @@ export default class home_page extends PureComponent {
 				store.setBackUrl('/home/home');
 				this.props.toast.info(result.msgInfo);
 				setTimeout(() => {
-					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${api}` });
+					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${autId}` });
 				}, 3000);
 			} else {
 				this.props.toast.info(result.msgInfo);
