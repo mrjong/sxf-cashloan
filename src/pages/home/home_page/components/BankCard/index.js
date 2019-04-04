@@ -135,7 +135,7 @@ export default class BankCard extends React.PureComponent {
 							)}
 						</div>
 					</div>
-					<div className={style.subTitle}>账单金额(元)</div>
+					<div className={style.subTitle}>剩余应还金额(元)</div>
 					<div className={style.timeBox}>
 						<div className={style.time}>
 							{' '}

@@ -937,7 +937,7 @@ export default class home_page extends PureComponent {
 							</div>
 							<div className={style.modal_content}>
 								<p className={style.billMoneyTop}>
-									<span>信用卡账单金额(元)</span>
+									<span>信用卡剩余应还(元)</span>
 									{usrIndexInfo &&
 										usrIndexInfo.indexData && (
 											<span>
