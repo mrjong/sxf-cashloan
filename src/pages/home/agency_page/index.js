@@ -24,7 +24,8 @@ const API = {
   COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
   // qryContractInfo: '/bill/qryContractInfo',
   // contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
-  qryContractInfo: '/fund/qryContractInfo'  // 合同数据流获取
+  qryContractInfo: '/fund/qryContractInfo',  // 合同数据流获取
+  chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
 };
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let wrapProps;
