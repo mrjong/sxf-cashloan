@@ -58,14 +58,14 @@ export default class order_page extends PureComponent {
 		let backDatastr = store.getBackData()
 		if (backDatastr && JSON.stringify(backDatastr) !== "{}") {
 			let backData = store.getBackData()
-			hasNext = backData.hasNext
+			hasNext = backData && backData.hasNext
 			this.setState(
 				{
-					msgType: backData.msgType,
-					rData: backData.rData,
-					pageIndex: backData.pageIndex,
+					msgType: backData && backData.msgType,
+					rData: backData && backData.rData,
+					pageIndex: backData && backData.pageIndex,
 					hasMore: true,
-					Listlength: backData.rData.length
+					Listlength: backData && backData.rData && backData.rData.length
 				},
 				() => {
 					this.setState(
