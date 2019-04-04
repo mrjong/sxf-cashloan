@@ -249,7 +249,8 @@ export default class agency_page extends PureComponent {
   // 请求用户绑卡状态
   requestBindCardState = () => {
     const homeCardIndexData = store.getHomeCardIndexData();
-    this.props.$fetch.get(API.CHECK_CARD).then(result => {
+    const api = homeCardIndexData.autId ? `${API.chkCredCard}/${homeCardIndexData.autId}` : API.CHECK_CARD;
+    this.props.$fetch.get(api).then(result => {
       if (result && result.msgCode === 'PTM0000') {
         // 有风控且绑信用卡储蓄卡
         this.requestConfirmRepaymentInfo();

@@ -9,6 +9,7 @@ import qs from 'qs';
 
 const API = {
   isBankCard: '/my/chkCard', // 是否绑定了银行卡
+  chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
 }
 let timer = null;
 let autId = '';
@@ -42,7 +43,8 @@ export default class credit_apply_succ_page extends PureComponent {
 
   // 判断是否绑卡
   checkIsBandCard = () => {
-    this.props.$fetch.get(`${API.isBankCard}`).then((result) => {
+    const api = autId ? `${API.chkCredCard}/${autId}` : API.isBankCard;
+    this.props.$fetch.get(api).then((result) => {
       // 跳转至储蓄卡
       if (result && result.msgCode === 'PTM2003') {
         store.setCheckCardRouter('checkCardRouter');

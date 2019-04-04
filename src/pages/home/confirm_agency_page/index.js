@@ -20,7 +20,8 @@ const API = {
   CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡
   queryUsrMemSts: '/my/queryUsrMemSts', // 查询用户会员卡状态
-  queryFundInfo: '/fund/info' // 获取资金code,合同code
+  queryFundInfo: '/fund/info', // 获取资金code,合同code
+  chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
 };
 
 let indexData = null;  // 首页带过来的信息
@@ -170,7 +171,8 @@ export default class confirm_agency_page extends PureComponent {
 
   // 请求用户绑卡状态
   requestBindCardState = () => {
-    this.props.$fetch.get(API.CHECK_CARD).then(result => {
+    const api = indexData && indexData.autId ? `${API.chkCredCard}/${indexData && indexData.autId}` : API.CHECK_CARD;
+    this.props.$fetch.get(api).then(result => {
       // 确认代换信息返回结果失败埋点
       if (result && result.msgCode !== 'PTM0000') {
         buriedPointEvent(home.borrowingPreSubmitResult, {

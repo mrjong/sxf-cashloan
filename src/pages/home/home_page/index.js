@@ -33,7 +33,8 @@ const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
-	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
+	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
+	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
 };
 const tagList = [
 	{
@@ -370,7 +371,9 @@ export default class home_page extends PureComponent {
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
 		const { usrIndexInfo } = this.state;
-		this.props.$fetch.get(API.CHECK_CARD).then((result) => {
+		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+		const api = autId ? `${API.chkCredCard}/${autId}` : API.CHECK_CARD;
+		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				// 有风控且绑信用卡储蓄卡
 				// this.props.history.push({ pathname: '/home/confirm_agency', search: `?indexData=${usrIndexInfo && JSON.stringify(usrIndexInfo.indexData)}`});
@@ -390,7 +393,7 @@ export default class home_page extends PureComponent {
 				store.setBackUrl('/home/home');
 				this.props.toast.info(result.msgInfo);
 				setTimeout(() => {
-					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId}` });
+					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${api}` });
 				}, 3000);
 			} else {
 				this.props.toast.info(result.msgInfo);
