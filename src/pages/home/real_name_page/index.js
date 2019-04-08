@@ -11,7 +11,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, validators, handleInputBlur, getNextStr } from 'utils';
+import { getDeviceType, validators, handleInputBlur, getNextStr, handleClickConfirm } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
@@ -52,10 +52,11 @@ export default class real_name_page extends Component {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
 		}
-        const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-        let userInfo = store.getUserInfo();
-        if (queryData.newTitle) {
-			this.props.setTitle(queryData.newTitle);
+		urlQuery = qs.parse(location.search, { ignoreQueryPrefix: true });
+		let userInfo = store.getUserInfo();
+		if (urlQuery.newTitle) {
+			// 判断是不是授信来的
+			this.props.setTitle(urlQuery.newTitle);
 		}
 		if (userInfo && JSON.stringify(userInfo) !== '{}') {
 			this.setState({
@@ -266,7 +267,9 @@ export default class real_name_page extends Component {
 				Cookie.remove('authFlag');
 				// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
 				// 是否需要下一步
-				if (store.getNeedNextUrl()) {
+				if (urlQuery.newTitle) {
+					this.nextFunc();
+				} else if (store.getNeedNextUrl()) {
 					this.props.SXFToast.loading('数据加载中...', 0);
 					getNextStr({
 						$props: this.props
@@ -275,19 +278,49 @@ export default class real_name_page extends Component {
 					this.props.history.goBack();
 				}
 				// this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
-			} else if (result.msgCode === 'URM5016') {
+			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
 				if (store.getNeedNextUrl()) {
 					this.props.SXFToast.loading('数据加载中...', 0);
 					getNextStr({
 						$props: this.props
 					});
 				}
+			} else if (result.msgCode === 'URM5016' && urlQuery.newTitle) {
+                store.setBackFlag(true);
+				this.nextFunc();
 			} else {
 				this.confirmBuryPoint(false, result.msgInfo);
 				// isFetching = false;
 				this.props.toast.info(result.msgInfo);
 			}
 		});
+	};
+	nextFunc = () => {
+		// 新用户
+		switch (urlQuery.type) {
+			// 新用户授信来的
+			case 'creditExtension':
+				//调用授信接口
+				handleClickConfirm(this.props, {
+					...store.getLoanAspirationHome()
+				});
+				break;
+			case 'historyCreditExtension':
+				getNextStr({
+					$props: this.props
+				});
+				break;
+			case 'agency_page':
+				this.props.toast.info('实名照片补充成功，请继续借款操作');
+
+				setTimeout(() => {
+					this.props.history.goBack();
+				}, 3000);
+				break;
+
+			default:
+				break;
+		}
 	};
 	handleBeforeCompress = (type) => {
 		store.setDisableBack(true);
@@ -323,7 +356,7 @@ export default class real_name_page extends Component {
 		// }
 		return (
 			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
-				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid) ? (
+				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
 						<div className={style.updateTitle}>
 							<span>上传身份证正 、反面</span>
@@ -410,7 +443,7 @@ export default class real_name_page extends Component {
 						<p className="bottomTip">怕逾期，用还到</p>
 					</div>
 				) : null}
-				{this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid) ? (
+				{this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid && !urlQuery.newTitle) ? (
 					<div>
 						<List className={style.is_true}>
 							<InputItem value={this.state.userInfo && this.state.userInfo.name} editable={false}>

@@ -4,7 +4,15 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError, handleInputBlur } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	handleClickConfirm,
+	getFirstError,
+	handleInputBlur,
+	idChkPhoto
+} from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -792,10 +800,22 @@ export default class home_page extends PureComponent {
 					rpyAmt: Number(values.loanMoney)
 				};
 				store.setLoanAspirationHome(params);
-				//调用授信接口
-				getNextStr({
-					$props: this.props
+				idChkPhoto({
+					$props: this.props,
+					type: 'historyCreditExtension'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							//调用授信接口
+							getNextStr({
+								$props: this.props
+							});
+							break;
+						default:
+							break;
+					}
 				});
+
 				// 关闭授信弹窗
 				this.setState({
 					isShowCreditModal: false
@@ -1081,7 +1101,13 @@ export default class home_page extends PureComponent {
 					</div>
 				</Modal>
 
-				<Modal wrapClassName={style.modalLoadingBox} visible={visibleLoading} transparent maskClosable={false}>
+				<Modal
+					className="zijian"
+					wrapClassName={style.modalLoadingBox}
+					visible={visibleLoading}
+					transparent
+					maskClosable={false}
+				>
 					<div className="show-info">
 						<div className={style.modalLoading}>资质检测中...</div>
 						<div className="progress">

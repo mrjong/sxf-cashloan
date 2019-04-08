@@ -63,7 +63,7 @@ if (window.history && window.history.pushState) {
 
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
-				if ((userInfo && userInfo.nameHid) || backFlag) {
+				if (!store.getToggleMoxieCard()&&((userInfo && userInfo.nameHid) || backFlag)) {
 					history.go(-2);
 				} else {
 					document.activeElement.blur();

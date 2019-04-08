@@ -264,7 +264,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 							};
 							store.setLoanAspirationHome(params);
 							break;
-							store.set;
 						default:
 							break;
 					}
