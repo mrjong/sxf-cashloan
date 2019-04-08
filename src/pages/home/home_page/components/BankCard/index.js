@@ -74,7 +74,7 @@ export default class BankCard extends React.PureComponent {
 		if (cardBillSts === '02' && !noNeedUpdateArr.includes(contentData.indexSts)) {
 			cardBillAmtData = '待更新'
 		} else {
-			if (billRemainAmt) {
+			if (billRemainAmt === 0 || billRemainAmt) {
 				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
 			} else if(cardBillAmt === '---' || cardBillAmt === null) {
 				cardBillAmtData = '---';
