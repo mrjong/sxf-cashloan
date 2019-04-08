@@ -349,7 +349,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
       return true;
     } else if (cardBillSts === '02') {
-      this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 3, () => {
+      this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
         // 跳新版魔蝎
         store.setMoxieBackUrl('/home/home');
         this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
