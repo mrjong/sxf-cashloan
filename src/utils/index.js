@@ -1,3 +1,4 @@
+import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { bugLog } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
@@ -181,8 +182,9 @@ export const logoutAppHandler = (that) => {
 		return;
 	}
 	if (!state) {
-		state = true;
-		Modal.alert('', '确认退出登录？', [
+        state = true;
+        const ele = (<div style={{lineHeight:3}}>确认退出登录？</div>)
+		Modal.alert('', ele, [
 			{
 				text: '取消',
 				onPress: () => {
@@ -246,9 +248,99 @@ export const closePage = () => {
 		return window.passValue();
 	}
 };
+export const idChkPhoto = ({ $props }) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			let res = {
+				msgCode: 'PTM0009',
+				msgInfo: '用户已实名，未上传身份证照片',
+				data: {}
+			};
+
+			switch (res.msgCode) {
+				case 'PTM0000':
+					resolve('1');
+					break;
+				case 'PTM0006':
+					store.setToggleMoxieCard(true);
+					$props.history.push({
+						pathname: '/home/real_name'
+					});
+					resolve('2');
+					break;
+				case 'PTM0008':
+					if (!state) {
+						state = true;
+						const ele = (
+							<div>
+								身份证照片找不到了!<br />补充照片极速审核!
+							</div>
+						);
+						Modal.alert('', ele, [
+							{
+								text: '关闭',
+								onPress: () => {
+									state = false;
+								}
+							},
+							{
+								text: '前往添加',
+								onPress: () => {
+									store.setToggleMoxieCard(true);
+									state = false;
+									$props.history.push({
+										pathname: '/home/real_name',
+										search: '?newTitle=实名照片补充'
+									});
+								}
+							}
+						]);
+					}
+					resolve('2');
+					break;
+
+				case 'PTM0009':
+					if (!state) {
+						state = true;
+						const ele = (
+							<div>
+								身份证有效期不足30天或已过期!<br />重新补充极速审核!
+							</div>
+						);
+						Modal.alert('', ele, [
+							{
+								text: '关闭',
+								onPress: () => {
+									state = false;
+								}
+							},
+							{
+								text: '前往添加',
+								onPress: () => {
+									state = false;
+									store.setToggleMoxieCard(true);
+									$props.history.push({
+										pathname: '/home/real_name',
+										search: '?newTitle=实名照片补充'
+									});
+								}
+							}
+						]);
+					}
+					resolve('2');
+					break;
+
+				default:
+					$props.toast.info(res.msgInfo);
+					reject();
+					break;
+			}
+		}, 1000);
+	});
+};
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = ($props, repaymentDate) => {
-    $props.SXFToast.loading('数据加载中...', 0);
+	$props.SXFToast.loading('数据加载中...', 0);
 	const address = store.getPosition();
 	const params = {
 		location: address,
@@ -277,14 +369,14 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 			}
 		})
 		.catch((err) => {
-            $props.SXFToast.hide();
+			$props.SXFToast.hide();
 			$props.history.push('/home/home');
 		});
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false }) => {
-    console.log('2222222222')
+	console.log('2222222222');
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);

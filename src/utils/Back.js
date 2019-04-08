@@ -23,6 +23,8 @@ let initDialog = (errMsg) => {
 				]}
 				onRequestClose={(res) => {
 					if (!res) {
+						const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');

@@ -295,7 +295,7 @@ export default class mine_page extends PureComponent {
       },
     ];
     return (
-      <div className={styles.mine_page}>
+      <div className={[styles.mine_page,'mine_page_global'].join(' ')}>
         <div className={styles.user_inf}>
           <img src={avatar} alt="用户头像" />
           {

@@ -52,8 +52,11 @@ export default class real_name_page extends Component {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
 		}
-		urlQuery = this.props.history.location.search;
-		let userInfo = store.getUserInfo();
+        const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+        let userInfo = store.getUserInfo();
+        if (queryData.newTitle) {
+			this.props.setTitle(queryData.newTitle);
+		}
 		if (userInfo && JSON.stringify(userInfo) !== '{}') {
 			this.setState({
 				userInfo,
