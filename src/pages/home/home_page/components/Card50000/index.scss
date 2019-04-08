@@ -10,7 +10,7 @@
 	@include bg-image('../img/home_card_50000');
 	background-size: 705px 782px;
 	background-repeat: no-repeat;
-	top: -45px;
+	top: -25px;
 	text-align: left;
 	.title {
 		font-size: 44px;
@@ -24,7 +24,7 @@
 	}
 	.bankDesc {
 		font-size: 26px;
-		color: #4da6ff;
+		color: #C7C6CC;
 		text-align: center;
 		margin-top: 18px;
 		font-weight: 400;
@@ -32,17 +32,10 @@
 			margin-right: 40px;
 		}
 	}
-	.dot {
-		width: 10px;
-		display: inline-block;
-		height: 10px;
-		position: relative;
-		top: -3px;
-		border-radius: 50%;
-		background-color: #4da6ff;
-		margin-right: 10px;
-	}
 }
 .box_height{
     min-height: 470px;
+}
+.box_50000_height{
+    min-height: 400px;
 }

@@ -12,6 +12,7 @@
 		"prop-types": "^15.6.1",
 		"react": "^16.4.0",
 		"react-circle-progress": "^1.0.6",
+		"react-copy-to-clipboard": "^5.0.1",
 		"react-dom": "^16.4.0",
 		"react-loadable": "^5.4.0",
 		"react-router": "^4.2.0",

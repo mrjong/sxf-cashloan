@@ -22,7 +22,9 @@ export const initAnalytics = () => {
   //       : store.setH5Channel('MPOS')
   //     : store.setH5Channel(query.h5Channel ? query.h5Channel : 'other');
   // }
-  setH5Channel();
+  // 解决banner等通过location href在mpos中跳转返回后h5Channel丢失的问题
+  const storeH5Channel = getH5Channel();
+  setH5Channel(storeH5Channel);
   if(!store.getVersion()){
     store.setVersion(window.version)
   }
