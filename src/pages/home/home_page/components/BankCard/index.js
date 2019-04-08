@@ -55,7 +55,8 @@ export default class BankCard extends React.PureComponent {
 	};
 
 	render() {
-		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt } = this.props;
+		const { children, contentData, bankName, bankNo, cardNoHid, billDt, cardBillAmt, overDt, billRemainAmt, cardBillSts } = this.props;
+		const noNeedUpdateArr = [ 'LN0006', 'LN0007', 'LN0008', 'LN0009', 'LN0010' ]; // 不需要更新账单的状态
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let overDtStr = '----/--/--';
 		if (overDt === '----/--/--') {
@@ -69,8 +70,19 @@ export default class BankCard extends React.PureComponent {
 		}
 		const billDtData =
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-		const cardBillAmtData =
-			cardBillAmt === '---' || cardBillAmt === null ? '---' : parseFloat(cardBillAmt, 10).toFixed(2);
+		let cardBillAmtData = '';
+		if (cardBillSts === '02' && !noNeedUpdateArr.includes(contentData.indexSts)) {
+			cardBillAmtData = '待更新'
+		} else {
+			if (billRemainAmt) {
+				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
+			} else if(cardBillAmt === '---' || cardBillAmt === null) {
+				cardBillAmtData = '---';
+			} else {
+				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2)
+			}
+		}
+		
 		const settings = {
 			start: 0,
 			count: cardBillAmtData,
@@ -86,14 +98,16 @@ export default class BankCard extends React.PureComponent {
 						{contentData.indexSts && contentData.indexSts !== 'LN0001' ? '我的信用卡账单' : '信用卡账单'}
 						<div className={style.fr}>
 							{contentData.indexSts === 'LN0002' ||
-							((contentData.indexSts === 'LN0003' ||
-								contentData.indexSts === 'LN0006' ||
-								contentData.indexSts === 'LN0008') &&
+							((contentData.indexSts === 'LN0003') &&
 								(contentData.indexData &&
 									contentData.indexData.autSts &&
 									contentData.indexData.autSts === '1')) ? (
 								<button className={style.bill_update_btn}>更新中</button>
-							) : contentData.indexSts && contentData.indexSts !== 'LN0001' ? (
+							) : contentData.indexSts 
+							&& (contentData.indexSts === 'LN0003'
+							|| contentData.indexSts === 'LN0005'
+							|| contentData.indexSts === 'LN0010')
+							 ? (
 								<button className={style.bill_update_btn} onClick={this.handleUpdate}>
 									更新账单
 								</button>
@@ -121,7 +135,7 @@ export default class BankCard extends React.PureComponent {
 							)}
 						</div>
 					</div>
-					<div className={style.subTitle}>账单金额(元)</div>
+					<div className={style.subTitle}>剩余应还金额(元)</div>
 					<div className={style.timeBox}>
 						<div className={style.time}>
 							{' '}

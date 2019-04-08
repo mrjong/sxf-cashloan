@@ -9,6 +9,7 @@ import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
+import mockData from './mockData';
 
 const API = {
   queryBillStatus: '/wap/queryBillStatus', //
@@ -36,7 +37,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       showAgainUpdateBtn: false, // 重新获取账单按钮是否显示
       overDt: '', //还款日
       billDt: '', //账单日
-      cardBillAmt: '' //账单金额
+      cardBillAmt: '', //账单金额
     };
   }
 
@@ -213,9 +214,12 @@ export default class loan_repay_confirm_page extends PureComponent {
   };
 
   handleSubmit = () => {
-    const { selectedLoanDate = {} } = this.state
+    const { selectedLoanDate = {}, usrIndexInfo } = this.state
     if (!this.state.fetchBillSucc) {
       this.props.toast.info('账单正在更新中，请耐心等待哦');
+      return;
+    }
+    if (this.updateBillInf()) {
       return;
     }
     this.props.form.validateFields((err, values) => {
@@ -237,7 +241,8 @@ export default class loan_repay_confirm_page extends PureComponent {
         //调用授信接口
         handleClickConfirm(this.props, {
           ...this.state.selectedLoanDate,
-          rpyAmt: Number(values.loanMoney)
+          rpyAmt: Number(values.loanMoney),
+          autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId
         });
       } else {
         this.props.toast.info(getFirstError(err));
@@ -248,7 +253,7 @@ export default class loan_repay_confirm_page extends PureComponent {
   //过滤选中的还款期限
   filterLoanDate = (value) => {
     const { perdRateList, usrIndexInfo, activeTag, fetchBillSucc } = this.state;
-    const { cardBillAmt = '', minPayment = '' } = usrIndexInfo.indexData
+    const { cardBillAmt = '', minPayment = '', billRemainAmt } = usrIndexInfo.indexData
     let selectedLoanDateArr = perdRateList.filter((item, idx) => {
       return item.perdLth === value[0];
     });
@@ -260,7 +265,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       }
       //全额还款
       if (activeTag === 0) {
-        this.calcLoanMoney(cardBillAmt);
+        this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
       } else if (activeTag === 1) {
         //最低还款
         this.calcLoanMoney(minPayment);
@@ -291,20 +296,25 @@ export default class loan_repay_confirm_page extends PureComponent {
   };
 
   //切换tag标签
-  toggleTag = (idx) => {
+  toggleTag = (idx, type) => { // type为是自动执行该方法，还是点击执行该方法
     const { usrIndexInfo, fetchBillSucc } = this.state
     const { indexData = {} } = usrIndexInfo
-    const { cardBillAmt = '', minPayment = '' } = indexData
+    const { cardBillAmt = '', minPayment = '', billRemainAmt } = indexData
     if (!fetchBillSucc) {
       this.props.toast.info('账单更新成功方可选择，请耐心等待哦')
       return
+    }
+    if (type && type === 'click') {
+      if (this.updateBillInf()) {
+        return;
+      }
     }
     this.setState({
       activeTag: idx
     }, () => {
       //全额还款
       if (idx === 0) {
-        this.calcLoanMoney(cardBillAmt)
+        this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt)
       } else if (idx === 1) {
         //最低还款
         this.calcLoanMoney(minPayment)
@@ -334,10 +344,27 @@ export default class loan_repay_confirm_page extends PureComponent {
     }
   }
 
+  updateBillInf = () => {
+    const { usrIndexInfo } = this.state;
+    const { cardBillSts } = usrIndexInfo.indexData;
+    if (cardBillSts === '00') {
+      this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+      return true;
+    } else if (cardBillSts === '02') {
+      this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
+        // 跳新版魔蝎
+        store.setMoxieBackUrl('/home/home');
+        this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+      });
+      return true;
+    }
+    return false;
+  }
+
   render() {
     const { isShowProgress, percent, showAgainUpdateBtn, usrIndexInfo, activeTag, selectedLoanDate = {} } = this.state
     const { indexData = {} } = usrIndexInfo
-    const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName } = indexData
+    const { overDt, billDt, cardBillAmt, minPayment, cardNoHid, bankNo, bankName, cardBillSts, billRemainAmt } = indexData
     const { getFieldDecorator } = this.props.form
     const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico'
     let overDtStr = ''
@@ -351,8 +378,30 @@ export default class loan_repay_confirm_page extends PureComponent {
       overDtStr = `<span class="blod">--</span>天`
     }
     const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-    const cardBillAmtData = !cardBillAmt && cardBillAmt !== 0 ? '----.--' : parseFloat(cardBillAmt, 10).toFixed(2);
-    const minPaymentData = !minPayment && minPayment !== 0 ? '----.--' : parseFloat(minPayment, 10).toFixed(2);
+
+    let cardBillAmtData = '';
+    if (cardBillSts === '02') {
+			cardBillAmtData = '待更新'
+		} else {
+			if (billRemainAmt) {
+				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
+			} else if (!cardBillAmt && cardBillAmt !== 0) {
+        cardBillAmtData = '----.--';
+      } else {
+				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+			}
+		}
+
+    let minPaymentData = '';
+    if (cardBillSts === '02') {
+      minPaymentData = '待更新'
+    } else {
+      if (!minPayment && minPayment !== 0) {
+        minPaymentData = '----.--';
+      } else {
+          minPaymentData = parseFloat(minPayment, 10).toFixed(2);
+      }
+    }
     const tagList = [{
       name: '全额还款',
       value: 1
@@ -385,7 +434,7 @@ export default class loan_repay_confirm_page extends PureComponent {
             }
           </div>
           <div className={style.center}>
-            <p className={style.billTitle}>账单金额(元)</p>
+            <p className={style.billTitle}>剩余应还金额(元)</p>
             <strong className={style.billMoney}>{cardBillAmtData}</strong>
             <div className={style.billInfo}>
               <div className={style.item}>
@@ -414,7 +463,7 @@ export default class loan_repay_confirm_page extends PureComponent {
                 key={idx}
                 className={[style.tagButton, activeTag === idx && style.activeTag].join(' ')}
                 onClick={() => {
-                  this.toggleTag(idx)
+                  this.toggleTag(idx, 'click')
                 }}
               >{item.name}</span>
             ))
@@ -434,6 +483,9 @@ export default class loan_repay_confirm_page extends PureComponent {
               onBlur={() => {
                 handleInputBlur()
               }}
+              onFocus={(v) => {
+								this.updateBillInf();
+							}}
             >
               帮你还多少(元)
 						</InputItem>
@@ -470,6 +522,11 @@ export default class loan_repay_confirm_page extends PureComponent {
                 }
               ]}
               cols={1}
+              onVisibleChange={(bool) => {
+								if (bool) {
+									this.updateBillInf();
+								}
+              }}
             >
               <List.Item>借多久</List.Item>
             </AsyncCascadePicker>

@@ -19,6 +19,7 @@ const API = {
 
 // let isFetching = false;
 let backUrlData = ''; // 从除了我的里面其他页面进去
+let autId = '';
 
 @fetch.inject()
 @createForm()
@@ -34,6 +35,8 @@ export default class bind_credit_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    	autId = query && query.autId;
 		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
@@ -144,7 +147,8 @@ export default class bind_credit_page extends PureComponent {
 					const params1 = {
 						bankCd: result.data.bankCd,
 						cardTyp: 'C', //卡类型。
-						cardNo: values.valueInputCarNumber //持卡人卡号
+						cardNo: values.valueInputCarNumber, //持卡人卡号
+						autId: autId ? autId : '', // autId
 					};
 					this.bindConfirm(params1);
 				} else {

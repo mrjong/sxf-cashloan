@@ -21,7 +21,7 @@ export default {
       cardBillAmt: '786.45',
       billRemainAmt: '2000',
       overDt: '7',
-      cardBillSts: '02'
+      cardBillSts: '00'
     },
   },
   LN0004: {

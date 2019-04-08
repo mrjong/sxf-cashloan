@@ -33,7 +33,8 @@ const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
-	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
+	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
+	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
 };
 const tagList = [
 	{
@@ -401,7 +402,9 @@ export default class home_page extends PureComponent {
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
 		const { usrIndexInfo } = this.state;
-		this.props.$fetch.get(API.CHECK_CARD).then((result) => {
+		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+		const api = autId ? `${API.chkCredCard}/${autId}` : API.CHECK_CARD;
+		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				// 有风控且绑信用卡储蓄卡
 				// this.props.history.push({ pathname: '/home/confirm_agency', search: `?indexData=${usrIndexInfo && JSON.stringify(usrIndexInfo.indexData)}`});
@@ -421,7 +424,7 @@ export default class home_page extends PureComponent {
 				store.setBackUrl('/home/home');
 				this.props.toast.info(result.msgInfo);
 				setTimeout(() => {
-					this.props.history.push({ pathname: '/mine/bind_credit_page', search: '?noBankInfo=true' });
+					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${autId}` });
 				}, 3000);
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -666,7 +669,7 @@ export default class home_page extends PureComponent {
 	toggleTag = (idx) => {
 		const { usrIndexInfo } = this.state;
 		const { indexData = {} } = usrIndexInfo;
-		const { cardBillAmt, minPayment } = indexData;
+		const { cardBillAmt, minPayment, billRemainAmt } = indexData;
 		this.setState(
 			{
 				activeTag: idx
@@ -674,7 +677,7 @@ export default class home_page extends PureComponent {
 			() => {
 				//全额还款
 				if (idx === 0) {
-					this.calcLoanMoney(cardBillAmt);
+					this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
 				} else if (idx === 1) {
 					//最低还款
 					this.calcLoanMoney(minPayment);
@@ -709,21 +712,18 @@ export default class home_page extends PureComponent {
 	//过滤选中的还款期限
 	filterLoanDate = (item) => {
 		const { usrIndexInfo, activeTag } = this.state;
-		const { cardBillAmt, minPayment } = usrIndexInfo.indexData;
-		this.setState(
-			{
-				selectedLoanDate: item // 设置选中的期数
-			},
-			() => {
-				//全额还款
-				if (activeTag === 0) {
-					this.calcLoanMoney(cardBillAmt);
-				} else if (activeTag === 1) {
-					//最低还款
-					this.calcLoanMoney(minPayment);
-				}
+		const { cardBillAmt, minPayment, billRemainAmt } = usrIndexInfo.indexData;
+		this.setState({
+			selectedLoanDate: item // 设置选中的期数
+		}, () => {
+			//全额还款
+			if (activeTag === 0) {
+				this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
+			} else if (activeTag === 1) {
+				//最低还款
+				this.calcLoanMoney(minPayment);
 			}
-		);
+        });
 	};
 
 	//查询还款期限
@@ -744,6 +744,19 @@ export default class home_page extends PureComponent {
 	};
 
 	showCreditModal = () => {
+    	const { usrIndexInfo } = this.state;
+		const { cardBillSts } = usrIndexInfo.indexData;
+		if (cardBillSts === '00') {
+			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息')
+			return;
+		} else if (cardBillSts === '02') {
+			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
+				// 跳新版魔蝎
+				store.setMoxieBackUrl('/home/home');
+				this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+			});
+			return;
+		}
 		this.setState(
 			{
 				isShowCreditModal: true
@@ -764,7 +777,7 @@ export default class home_page extends PureComponent {
 	};
 
 	submitCredit = () => {
-		const { selectedLoanDate = {} } = this.state;
+		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
@@ -789,7 +802,8 @@ export default class home_page extends PureComponent {
 				}
 				const params = {
 					...selectedLoanDate,
-					rpyAmt: Number(values.loanMoney)
+          rpyAmt: Number(values.loanMoney),
+          autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
 				};
 				store.setLoanAspirationHome(params);
 				//调用授信接口
@@ -972,13 +986,13 @@ export default class home_page extends PureComponent {
 							</div>
 							<div className={style.modal_content}>
 								<p className={style.billMoneyTop}>
-									<span>信用卡账单金额(元)</span>
+									<span>信用卡剩余应还(元)</span>
 									{usrIndexInfo &&
-									usrIndexInfo.indexData && (
-										<span>
-											{usrIndexInfo.indexData.cardBillAmt && usrIndexInfo.indexData.cardBillAmt}
-										</span>
-									)}
+										usrIndexInfo.indexData && (
+											<span>
+												{usrIndexInfo.indexData.billRemainAmt ? usrIndexInfo.indexData.billRemainAmt : usrIndexInfo.indexData.cardBillAmt}
+											</span>
+										)}
 								</p>
 								<p className={style.billMoneyTwoTop}>
 									<span>最低还款金额(元)</span>
