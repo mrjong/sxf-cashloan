@@ -525,9 +525,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 									this.updateBillInf();
 								}
               }}
-              onClick={
-                this.updateBillInf
-              }
             >
               <List.Item>借多久</List.Item>
             </AsyncCascadePicker>
