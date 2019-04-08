@@ -677,7 +677,7 @@ export default class home_page extends PureComponent {
 			() => {
 				//全额还款
 				if (idx === 0) {
-					this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
+					this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
 				} else if (idx === 1) {
 					//最低还款
 					this.calcLoanMoney(minPayment);
@@ -718,7 +718,7 @@ export default class home_page extends PureComponent {
 		}, () => {
 			//全额还款
 			if (activeTag === 0) {
-				this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
+				this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
 			} else if (activeTag === 1) {
 				//最低还款
 				this.calcLoanMoney(minPayment);
@@ -990,7 +990,7 @@ export default class home_page extends PureComponent {
 									{usrIndexInfo &&
 										usrIndexInfo.indexData && (
 											<span>
-												{usrIndexInfo.indexData.billRemainAmt ? usrIndexInfo.indexData.billRemainAmt : usrIndexInfo.indexData.cardBillAmt}
+												{usrIndexInfo.indexData.billRemainAmt === 0 || usrIndexInfo.indexData.billRemainAmt ? usrIndexInfo.indexData.billRemainAmt : usrIndexInfo.indexData.cardBillAmt}
 											</span>
 										)}
 								</p>

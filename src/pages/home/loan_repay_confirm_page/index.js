@@ -265,7 +265,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       }
       //全额还款
       if (activeTag === 0) {
-        this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt);
+        this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
       } else if (activeTag === 1) {
         //最低还款
         this.calcLoanMoney(minPayment);
@@ -314,7 +314,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     }, () => {
       //全额还款
       if (idx === 0) {
-        this.calcLoanMoney(billRemainAmt ? billRemainAmt : cardBillAmt)
+        this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt)
       } else if (idx === 1) {
         //最低还款
         this.calcLoanMoney(minPayment)
@@ -383,7 +383,7 @@ export default class loan_repay_confirm_page extends PureComponent {
     if (cardBillSts === '02') {
 			cardBillAmtData = '待更新'
 		} else {
-			if (billRemainAmt) {
+			if (billRemainAmt === 0 || billRemainAmt) {
 				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
 			} else if (!cardBillAmt && cardBillAmt !== 0) {
         cardBillAmtData = '----.--';
