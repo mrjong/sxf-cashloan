@@ -238,6 +238,10 @@ export default class loan_repay_confirm_page extends PureComponent {
           })
           return
         }
+        if (!selectedLoanDate.perdCnt) {
+					this.props.toast.info('请选择借款期限');
+					return;
+				}
         //调用授信接口
         handleClickConfirm(this.props, {
           ...this.state.selectedLoanDate,
@@ -526,6 +530,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 								if (bool) {
 									this.updateBillInf();
 								}
+              }}
+              onDismiss={()=>{
+                this.setState({
+                  selectedLoanDate: ''
+                })
               }}
             >
               <List.Item>借多久</List.Item>
