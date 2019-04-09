@@ -286,7 +286,7 @@ export default class real_name_page extends Component {
 					});
 				}
 			} else if (result.msgCode === 'URM5016' && urlQuery.newTitle) {
-                store.setBackFlag(true);
+				store.setBackFlag(true);
 				this.nextFunc();
 			} else {
 				this.confirmBuryPoint(false, result.msgInfo);
@@ -301,18 +301,23 @@ export default class real_name_page extends Component {
 			// 新用户授信来的
 			case 'creditExtension':
 				//调用授信接口
-				handleClickConfirm(this.props, {
-					...store.getLoanAspirationHome()
-				});
+				handleClickConfirm(
+					this.props,
+					{
+						...store.getLoanAspirationHome()
+					},
+					'back'
+				);
 				break;
 			case 'historyCreditExtension':
+				store.removeToggleMoxieCard();
 				getNextStr({
 					$props: this.props
 				});
 				break;
 			case 'agency_page':
-				this.props.toast.info('实名照片补充成功，请继续借款操作');
-
+				this.props.toast.info('实名照片补充成功!');
+				store.removeToggleMoxieCard();
 				setTimeout(() => {
 					this.props.history.goBack();
 				}, 3000);
