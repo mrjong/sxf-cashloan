@@ -16,8 +16,8 @@ const API = {
 	GETSTSW: '/my/getStsw', // 获取首页进度
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
-    submitState: '/bill/apply', // 提交代还金申请
-    idChkPhoto: '/auth/idChkPhoto'
+	submitState: '/bill/apply', // 提交代还金申请
+	idChkPhoto: '/auth/idChkPhoto'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -251,12 +251,12 @@ export const closePage = () => {
 };
 export const idChkPhoto = ({ $props, type }) => {
 	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			let res = {
-				msgCode: 'PTM0008',
-				msgInfo: '用户已实名，未上传身份证照片',
-				data: {}
-			};
+		$props.$fetch.get(API.idChkPhoto).then((res) => {
+			// let res = {
+			// 	msgCode: 'PTM0008',
+			// 	msgInfo: '用户已实名，未上传身份证照片',
+			// 	data: {}
+			// };
 
 			switch (res.msgCode) {
 				case 'PTM0000':
@@ -336,7 +336,7 @@ export const idChkPhoto = ({ $props, type }) => {
 					reject();
 					break;
 			}
-		}, 1000);
+		});
 	});
 };
 // 确认按钮点击事件 提交到风控
