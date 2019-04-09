@@ -53,14 +53,12 @@ export default class login_page extends PureComponent {
 		let MessageTag50000 = store.getMessageTag50000();
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
-		let MessageTagLimitDate = store.getMessageTagLimitDate();
 		sessionStorage.clear();
 		localStorage.clear();
 		// 首页弹窗要用的
 		MessageTag50000 && store.setMessageTag50000(MessageTag50000);
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);
-		MessageTagLimitDate && store.setMessageTagLimitDate(MessageTagLimitDate);
 
 		setH5Channel(storeH5Channel);
 
