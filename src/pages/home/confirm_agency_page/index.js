@@ -271,7 +271,7 @@ export default class confirm_agency_page extends PureComponent {
         // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
         const diff = result.data.overDt;
         let lendersDateListFormat = this.state.lendersDateList;
-        if (!result.data.cardBillDt || diff <= 2) {
+        if (!result.data.cardBillDt || diff <= 4) {
           lendersDateListFormat[0].disable = true;
         }
         this.setState({
