@@ -215,10 +215,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 
   handleSubmit = () => {
     const { selectedLoanDate = {}, usrIndexInfo } = this.state
-    if (!this.state.fetchBillSucc) {
-      this.props.toast.info('账单正在更新中，请耐心等待哦');
-      return;
-    }
+    // if (!this.state.fetchBillSucc) {
+    //   this.props.toast.info('账单正在更新中，请耐心等待哦');
+    //   return;
+    // }
     if (this.updateBillInf()) {
       return;
     }
@@ -237,6 +237,10 @@ export default class loan_repay_confirm_page extends PureComponent {
             loanMoney: ''
           })
           return
+        }
+        if (!selectedLoanDate.perdCnt) {
+          this.props.toast.info('请选择借款期限');
+          return;
         }
         //调用授信接口
         handleClickConfirm(this.props, {
@@ -381,16 +385,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 
     let cardBillAmtData = '';
     if (cardBillSts === '02') {
-			cardBillAmtData = '待更新'
-		} else {
-			if (billRemainAmt === 0 || billRemainAmt) {
-				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
-			} else if (!cardBillAmt && cardBillAmt !== 0) {
+      cardBillAmtData = '待更新'
+    } else {
+      if (billRemainAmt === 0 || billRemainAmt) {
+        cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2)
+      } else if (!cardBillAmt && cardBillAmt !== 0) {
         cardBillAmtData = '----.--';
       } else {
-				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
-			}
-		}
+        cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+      }
+    }
 
     let minPaymentData = '';
     if (cardBillSts === '02') {
@@ -399,7 +403,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       if (!minPayment && minPayment !== 0) {
         minPaymentData = '----.--';
       } else {
-          minPaymentData = parseFloat(minPayment, 10).toFixed(2);
+        minPaymentData = parseFloat(minPayment, 10).toFixed(2);
       }
     }
     const tagList = [{
@@ -484,8 +488,8 @@ export default class loan_repay_confirm_page extends PureComponent {
                 handleInputBlur()
               }}
               onFocus={(v) => {
-								this.updateBillInf();
-							}}
+                this.updateBillInf();
+              }}
             >
               帮你还多少(元)
 						</InputItem>
@@ -493,10 +497,7 @@ export default class loan_repay_confirm_page extends PureComponent {
         </div>
         <div>
           {getFieldDecorator('loanDate', {
-            initialValue: selectedLoanDate && [
-              selectedLoanDate.perdCnt,
-              selectedLoanDate.perdPageNm
-            ],
+            initialValue: selectedLoanDate && [selectedLoanDate.perdLth],
             rules: [{ required: true, message: '请选择借款期限' }],
             onChange: (value, label) => {
               this.filterLoanDate(value);
@@ -523,9 +524,9 @@ export default class loan_repay_confirm_page extends PureComponent {
               ]}
               cols={1}
               onVisibleChange={(bool) => {
-								if (bool) {
-									this.updateBillInf();
-								}
+                if (bool) {
+                  this.updateBillInf();
+                }
               }}
             >
               <List.Item>借多久</List.Item>
