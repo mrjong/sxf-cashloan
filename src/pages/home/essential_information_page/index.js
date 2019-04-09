@@ -193,10 +193,12 @@ export default class essential_information_page extends PureComponent {
 									current_step: '基本信息认证'
 								});
 								if (store.getNeedNextUrl()) {
-									this.props.SXFToast.loading('数据加载中...', 0);
-									getNextStr({
-										$props: this.props
-									});
+									this.props.toast.info('提交成功', 2);
+									setTimeout(() => {
+										getNextStr({
+											$props: this.props
+										});
+									}, 2000);
 									store.setMoxieBackUrl('/home/home');
 								} else {
 									this.props.history.replace({
@@ -206,10 +208,12 @@ export default class essential_information_page extends PureComponent {
 								}
 							} else if (result.msgCode === 'PCC-PRC-9994') {
 								if (store.getNeedNextUrl()) {
-									this.props.SXFToast.loading('数据加载中...', 0);
-									getNextStr({
-										$props: this.props
-									});
+									this.props.toast.info('提交成功', 2);
+									setTimeout(() => {
+										getNextStr({
+											$props: this.props
+										});
+									}, 2000);
 									store.setMoxieBackUrl('/home/home');
 								}
 							} else {
