@@ -89,7 +89,11 @@ export default class agency_page extends PureComponent {
     this.setState({
       isShowTipModal: false,
     });
-    this.jumpToHome();
+    if (true) {
+      this.props.history.push('/home/loan_apply_succ_page');
+    } else {
+      this.jumpToHome();
+    }
   };
 
   handleShowModal = () => {
