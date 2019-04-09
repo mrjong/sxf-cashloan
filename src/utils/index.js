@@ -213,7 +213,8 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-	'/home/loan_repay_confirm_page'
+	'/home/loan_repay_confirm_page',
+	'/home/loan_apply_succ_page',
 ];
 
 // 在需要路由拦截的页面 pushState

@@ -360,7 +360,11 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				this.props.toast.info(`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
+				if (true) {
+					this.props.history.push('/home/loan_apply_succ_page');
+				} else {
+					this.props.toast.info(`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
+				}
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
