@@ -252,7 +252,8 @@ export default class agency_page extends PureComponent {
 				// 有风控且绑信用卡储蓄卡
 				idChkPhoto({
 					$props: this.props,
-					type: 'agency_page'
+                    type: 'agency_page',
+                    msg:'放款'
 				}).then((res) => {
 					if (res === '1') {
 						this.requestConfirmRepaymentInfo();

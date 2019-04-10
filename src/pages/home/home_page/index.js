@@ -802,7 +802,8 @@ export default class home_page extends PureComponent {
 				store.setLoanAspirationHome(params);
 				idChkPhoto({
 					$props: this.props,
-					type: 'historyCreditExtension'
+                    type: 'historyCreditExtension',
+                    msg:'认证'
 				}).then((res) => {
 					switch (res) {
 						case '1':

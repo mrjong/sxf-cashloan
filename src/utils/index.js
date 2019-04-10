@@ -216,7 +216,7 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-    '/home/loan_repay_confirm_page'
+	'/home/loan_repay_confirm_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -249,7 +249,7 @@ export const closePage = () => {
 		return window.passValue();
 	}
 };
-export const idChkPhoto = ({ $props, type }) => {
+export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 	return new Promise((resolve, reject) => {
 		$props.$fetch.get(API.idChkPhoto).then((res) => {
 			// let res = {
@@ -274,7 +274,7 @@ export const idChkPhoto = ({ $props, type }) => {
 						state = true;
 						const ele = (
 							<div>
-								身份证照片找不到了!<br />补充照片极速审核!
+								身份证照片找不到了!<br />补充照片极速{msg}!
 							</div>
 						);
 						Modal.alert('', ele, [
@@ -358,7 +358,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 	$props.$fetch
 		.post(`${API.submitState}`, params, { hideLoading: true })
 		.then((res) => {
-            $props.SXFToast.hide();
+			$props.SXFToast.hide();
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
 				$props.toast.info(res.msgInfo);

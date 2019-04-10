@@ -245,7 +245,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 				// }
 				idChkPhoto({
 					$props: this.props,
-					type: 'creditExtension'
+                    type: 'creditExtension',
+                    msg:'审核'
 				}).then((res) => {
 					switch (res) {
 						case '1':
