@@ -8,16 +8,3 @@
     background: #e5e5e5;
   }
 }
-:global {
-  .modalInfoBox{
-    .am-modal.am-modal-transparent{
-      width: 85%;
-      .am-modal-content{
-        padding-top: 0;
-        .am-modal-body{
-          padding: 0;
-        }
-      }
-    }
-  }
-}

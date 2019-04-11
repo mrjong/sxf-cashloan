@@ -147,7 +147,8 @@ export default class select_credit_page extends PureComponent {
 
   // 点击解绑按钮
   unbindHandler = params => {
-    Modal.alert('', '确认解绑该卡？', [
+      const ele = (<div style={{lineHeight: 3}}>确认解绑该卡？</div>)
+    Modal.alert('', ele, [
       { text: '取消', onPress: () => { } },
       { text: '确定', onPress: () => { this.unbindCard(params) } },
     ]);

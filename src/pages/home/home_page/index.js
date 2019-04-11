@@ -4,11 +4,19 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, handleClickConfirm, getFirstError, handleInputBlur } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	handleClickConfirm,
+	getFirstError,
+	handleInputBlur,
+	idChkPhoto
+} from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity } from 'utils/analytinsType';
+import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
@@ -152,9 +160,10 @@ export default class home_page extends PureComponent {
 						firstUserInfo: res.data.flag,
 						billOverDue: res.data.popupFlag
 					});
-					if (res.data.popupFlag !== '1') {
+					if (res.data.flag === '01') {
+						// 历史未提交过授信的用户才弹
 						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-							// 新弹窗（188元）
+							// 新弹窗（188元）4月11号改为688元
 							this.setState(
 								{
 									isShowActivityModal: true,
@@ -164,24 +173,7 @@ export default class home_page extends PureComponent {
 									store.setShowActivityModal(true);
 								}
 							);
-						} else if (
-							isMPOS() &&
-							// (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') && 暂时注释掉
-							!store.getShowActivityModal()
-						) {
-							// 老弹窗（3000元）
-							this.setState(
-								{
-									isShowActivityModal: true,
-									isNewModal: false
-								},
-								() => {
-									store.setShowActivityModal(true);
-								}
-							);
 						}
-					}
-					if (res.data.flag === '01') {
 						this.credit_extension_not();
 					} else {
 						this.requestGetUsrInfo();
@@ -576,8 +568,9 @@ export default class home_page extends PureComponent {
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
 				});
+				// 对于历史提交过授信的用户不弹框
 				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-				//   // 新弹窗（188元）
+				//   // 新弹窗（188元）4月11号改为688元
 				//   this.setState(
 				//     {
 				//       isShowActivityModal: true,
@@ -587,22 +580,23 @@ export default class home_page extends PureComponent {
 				//       store.setShowActivityModal(true);
 				//     }
 				//   );
-				// } else if (
-				//   isMPOS() &&
-				//   (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-				//   !store.getShowActivityModal()
-				// ) {
-				//   // 老弹窗（3000元）
-				//   this.setState(
-				//     {
-				//       isShowActivityModal: true,
-				//       isNewModal: false
-				//     },
-				//     () => {
-				//       store.setShowActivityModal(true);
-				//     }
-				//   );
-				// }
+				// } else 
+				if (
+				  isMPOS() &&
+				  (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+				  !store.getShowActivityModal()
+				) {
+				  // 老弹窗（3000元）
+				  this.setState(
+				    {
+				      isShowActivityModal: true,
+				      isNewModal: false
+				    },
+				    () => {
+				      store.setShowActivityModal(true);
+				    }
+				  );
+				}
 
 				// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
 				this.cacheBanner();
@@ -655,27 +649,24 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = () => {
-		// 放肆送活动埋点，活动下线的时候去掉
-		buriedPointEvent(activity.homeModalBtnClick);
-		this.closeActivityModal();
 		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
-		// const { usrIndexInfo } = this.state;
-		// switch (usrIndexInfo.indexSts) {
-		//   case 'LN0001': // 新用户，信用卡未授权
-		//     this.goToNewMoXie();
-		//     break;
-		//   case 'LN0003': // 账单爬取成功
-		//     if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-		//       this.handleSmartClick();
-		//     } else {
-		//       this.setState({
-		//         handleMoxie: true
-		//       });
-		//     }
-		//     break;
-		//   default:
-		//     console.log('关闭弹窗');
-		// }
+		const { usrIndexInfo } = this.state;
+		switch (usrIndexInfo.indexSts) {
+		  case 'LN0001': // 新用户，信用卡未授权
+		    this.goToNewMoXie();
+		    break;
+		  case 'LN0003': // 账单爬取成功
+		    if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+		      this.handleSmartClick();
+		    } else {
+		      this.setState({
+		        handleMoxie: true
+		      });
+		    }
+		    break;
+		  default:
+		    console.log('关闭弹窗');
+		}
 	};
 
 	//切换tag标签
@@ -876,10 +867,23 @@ export default class home_page extends PureComponent {
 					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
 				};
 				store.setLoanAspirationHome(params);
-				//调用授信接口
-				getNextStr({
-					$props: this.props
+				idChkPhoto({
+					$props: this.props,
+                    type: 'historyCreditExtension',
+                    msg:'认证'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							//调用授信接口
+							getNextStr({
+								$props: this.props
+							});
+							break;
+						default:
+							break;
+					}
 				});
+
 				// 关闭授信弹窗
 				this.setState({
 					isShowCreditModal: false
@@ -1170,7 +1174,13 @@ export default class home_page extends PureComponent {
 					</div>
 				</Modal>
 
-				<Modal wrapClassName={style.modalLoadingBox} visible={visibleLoading} transparent maskClosable={false}>
+				<Modal
+					className="zijian"
+					wrapClassName={style.modalLoadingBox}
+					visible={visibleLoading}
+					transparent
+					maskClosable={false}
+				>
 					<div className="show-info">
 						<div className={style.modalLoading}>资质检测中...</div>
 						<div className="progress">

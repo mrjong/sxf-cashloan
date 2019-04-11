@@ -8,7 +8,7 @@ import { createForm } from 'rc-form';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
+import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto } from 'utils';
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -34,6 +34,7 @@ const tagList = [
 		value: 3
 	}
 ];
+
 let timer = null;
 @fetch.inject()
 @createForm()
@@ -236,10 +237,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 	handleSubmit = () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
-		// if (!this.state.fetchBillSucc) {
-		//   this.props.toast.info('账单正在更新中，请耐心等待哦');
-		//   return;
-		// }
+		if (!this.state.fetchBillSucc) {
+			this.props.toast.info('账单正在更新中，请耐心等待哦');
+			return;
+		}
 		if (this.updateBillInf()) {
 			return;
 		}
@@ -265,12 +266,33 @@ export default class loan_repay_confirm_page extends PureComponent {
 					this.props.toast.info('请选择借款期限');
 					return;
 				}
-				//调用授信接口
-				handleClickConfirm(this.props, {
-					...this.state.selectedLoanDate,
-					rpyAmt: Number(values.loanMoney),
-					activeName: tagList[this.state.activeTag].name,
-					autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId
+				idChkPhoto({
+					$props: this.props,
+					type: 'creditExtension',
+					msg: '审核'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							// 成功
+							//调用授信接口
+							handleClickConfirm(this.props, {
+								...this.state.selectedLoanDate,
+								activeName: tagList[this.state.activeTag].name,
+								autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
+								rpyAmt: Number(values.loanMoney)
+							});
+							break;
+						case '2':
+							// 失败
+							const params = {
+								...selectedLoanDate,
+								rpyAmt: Number(values.loanMoney)
+							};
+							store.setLoanAspirationHome(params);
+							break;
+						default:
+							break;
+					}
 				});
 			} else {
 				this.props.toast.info(getFirstError(err));
@@ -409,8 +431,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
 				// 跳新版魔蝎
-				store.setMoxieBackUrl('/home/home');
-				this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+				this.goMoxieBankList();
 			});
 			return true;
 		}
@@ -475,7 +496,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 				minPaymentData = parseFloat(minPayment, 10).toFixed(2);
 			}
 		}
-
 		return (
 			<div className={[ style.pageWrapper, 'loan_repay_confirm_page' ].join(' ')}>
 				<div className={style.bankCard}>
@@ -566,8 +586,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 						initialValue: selectedLoanDate && [ selectedLoanDate.perdLth ],
 						rules: [ { required: true, message: '请选择借款期限' } ],
 						onChange: (value, label) => {
-							console.log(value);
-
 							this.filterLoanDate(value);
 							// 埋点
 							switch (value[0]) {
