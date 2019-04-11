@@ -535,7 +535,7 @@ export default class home_page extends PureComponent {
 						: Object.assign({}, result.data, { indexData: {} })
 				});
 				if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-				  // 新弹窗（188元）
+				  // 新弹窗（188元）4月11号改为688元
 				  this.setState(
 				    {
 				      isShowActivityModal: true,
