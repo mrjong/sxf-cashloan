@@ -1,0 +1,36 @@
+.modal_outer_wrap {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  .button {
+    background-color: #fff;
+    text-align: center;
+    height: 90px;
+    line-height: 90px;
+  }
+}
+
+.mask {
+  position: fixed;
+  background-color: rgba(0, 0, 0, .5);
+  margin: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.modal_inner_wrap {
+  position: relative;
+  width: 600px;
+  height: 700px;
+  margin: 30px 10px 0;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}

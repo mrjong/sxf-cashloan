@@ -134,8 +134,10 @@ if (window.history && window.history.pushState) {
 					if (tokenFromStorage && token) {
 						window.ReactRouterHistory.goBack();
 					} else {
-						window.close();
-						WeixinJSBridge.call('closeWindow');
+						if(!store.getLoginDownloanBtn()) {
+							window.close();
+							WeixinJSBridge.call('closeWindow');
+						}
 					}
 				} else {
 					window.history.pushState(null, null, document.URL);

@@ -12,6 +12,10 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
+import bannerImg1 from './img/login_bg1.png';
+import bannerImg2 from './img/login_bg2.png';
+import backTopBtn from './img/backtop_btn.png'
+import logoImg from './img/logo.png'
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -29,7 +33,8 @@ export default class login_page extends PureComponent {
 			flag: true,
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
-			queryData: {}
+			queryData: {},
+			isChecked: true // 是否勾选协议
 		};
 	}
 
@@ -77,9 +82,9 @@ export default class login_page extends PureComponent {
 	}
 	componentDidMount() {
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function() {
+		window.addEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -90,9 +95,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', function() {
+		window.removeEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -114,6 +119,10 @@ export default class login_page extends PureComponent {
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
+			return;
+		}
+		if (!this.state.isChecked) {
+			Toast.info('请先勾选协议');
 			return;
 		}
 		this.props.form.validateFields((err, values) => {
@@ -215,6 +224,16 @@ export default class login_page extends PureComponent {
 		this.props.history.push(`/protocol/${url}`);
 	};
 
+	backTop = () => {
+		this.refs.loginWrap.scrollTop = 0
+	}
+
+	checkAgreement = () => {
+		this.setState({
+			isChecked: !this.state.isChecked
+		})
+	}
+
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
@@ -243,17 +262,17 @@ export default class login_page extends PureComponent {
 							id="inputCode"
 							type="number"
 							maxLength="6"
-							className={styles.loginInput}
+							className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 							placeholder="请输入短信验证码"
 							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+								rules: [{ required: true, message: '请输入正确验证码' }]
 							})}
 							onBlur={() => {
 								handleInputBlur();
 							}}
 						/>
 						<div
-							className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}
+							className={styles.smsCode}
 							onClick={() => {
 								this.state.timeflag ? this.getTime(59) : '';
 							}}
@@ -265,6 +284,7 @@ export default class login_page extends PureComponent {
 						<span>免费借款</span>
 					</div>
 					<div className={styles.agreement}>
+						<i className={this.state.isChecked ? styles.checked : styles.nochecked} onClick={this.checkAgreement}></i>
 						注册即视为同意
 						<span
 							onClick={() => {
@@ -281,6 +301,21 @@ export default class login_page extends PureComponent {
 							《用户隐私权政策》
 						</span>
 					</div>
+				</div>
+				<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
+				<div className={styles.imgWrap}>
+					<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
+					<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
+				</div>
+				<div className={styles.fix_bottom_box}>
+					<div className={styles.f_left}>
+						<img src={logoImg} className={styles.img} />
+						<span>直接下载，放款更快！</span>
+					</div>
+					<div className={styles.f_right} onClick={() => {
+						this.props.history.replace('/others/download_page')
+						store.setLoginDownloanBtn(true)
+					}}>立即下载</div>
 				</div>
 			</div>
 		);

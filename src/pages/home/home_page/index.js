@@ -24,6 +24,7 @@ import style from './index.scss';
 import Circle from './components/Circle';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
+import AgreementModal from 'components/AgreementModal'
 
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -826,6 +827,12 @@ export default class home_page extends PureComponent {
 		this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
 	};
 
+	readAgreementCb = () => {
+		this.setState({
+			isReadAgreement: true
+		})
+	}
+
 	render() {
 		const {
 			bannerList,
@@ -955,6 +962,8 @@ export default class home_page extends PureComponent {
 					</div>
 				) : null}
 				<p className="bottomTip">怕逾期，用还到</p>
+
+				<AgreementModal isRead={this.state.isReadAgreement} readAgreementCb={this.readAgreementCb} />
 
 				{/* {首页活动提示弹窗（对内有）} */}
 				{this.state.isShowActivityModal && (
