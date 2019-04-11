@@ -305,7 +305,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 						state = true;
 						const ele = (
 							<div>
-								身份证有效期不足30天或已过期!<br />重新补充极速${msg}!
+								身份证有效期不足30天或已过期!<br />重新补充极速{msg}!
 							</div>
 						);
 						Modal.alert('', ele, [
