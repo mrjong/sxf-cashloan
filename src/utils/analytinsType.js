@@ -13,19 +13,24 @@ const login = {
 };
 
 const home = {
-    applyCreditRepayment: `${prefix}_HOME_APPLY_CREDIT_REPAYMENT`, // 首页-点击申请信用卡代还按钮
-    homeContinueApply: `${prefix}_HOME_CONTINUE_APPLY`, // 还卡-继续申请  增加属性，继续页面：基本信息认证，银行列表，运营商认证
-    HomeKeyBills:`${prefix}_HOME_KEY_BILLS`, // 一键还账单(历史提交过的用户)
-    HomeCardRenew:`${prefix}_HOME_CARD_RENEW`, // 借钱换信用卡  重新更新
+	applyCreditRepayment: `${prefix}_HOME_APPLY_CREDIT_REPAYMENT`, // 首页-点击申请信用卡代还按钮
+	homeContinueApply: `${prefix}_HOME_CONTINUE_APPLY`, // 还卡-继续申请  增加属性，继续页面：基本信息认证，银行列表，运营商认证
+	HomeKeyBills: `${prefix}_HOME_KEY_BILLS`, // 一键还账单(历史提交过的用户)
+	HomeCardRenew: `${prefix}_HOME_CARD_RENEW`, // 借钱换信用卡  重新更新
 	updateBill: `${prefix}_HOME_UPDATE_BILL`, // 首页-点击更新账单
 	easyRepay: `${prefix}_HOME_EASY_REPAYMENT`, // 首页-点击一键还卡（代还）
 	repayOtherCredit: `${prefix}_HOME_REPAY_OTHER_CREDIT`, // 首页-点击代还其他信用卡
 	viewBill: `${prefix}_HOME_VIEW_BILL`, // 首页-点击查看代还账单
-    durationDay30: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_DAY_30`, // 申请期限-30天
+	durationDay30: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_DAY_30`, // 申请期限-30天
 	durationMonth3: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_3`, // 申请期限-3个月
 	durationMonth6: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_6`, // 申请期限-6个月
 	durationMonth9: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_9`, // 申请期限-9个月
 	durationMonth12: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_12`, // 申请期限-12个月
+    moneyCreditCardConfirm: `${prefix}_MONEY_CREDIT_CARD_CONFIRM`, // 借钱还信用卡-提交申请成功
+    moneyCreditCardConfirmBtn: `${prefix}_MONEY_CREDIT_CARD_CONFIRM_BTN`, // 借钱还信用卡-提交申请按钮
+	repaymentIntentionAll: `${prefix}_REPAYMENT_INTENTION_ALL`, // 还款意愿-全额还款
+	repaymentIntentionLowest: `${prefix}_REPAYMENT_INTENTION_LOWEST`, // 还款意愿-最低还款
+	repaymentIntentionPart: `${prefix}_REPAYMENT_INTENTION_PART`, // 还款意愿-部分还款
 	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
 	lendersOrder: `${prefix}_HOME_LENDERS_ORDER`, // 放款日期-预约放款
 
@@ -51,7 +56,6 @@ const home = {
 };
 
 const mine = {
-
 	faq: `${prefix}_MINE_FAQ`, // 常见问题页
 	saveConfirm: `${prefix}_MINE_SAVE_CONFIRM`, // 绑定储蓄卡页-确定按钮
 	creditConfirm: `${prefix}_MINE_CREDIT_CONFIRM`, // 绑定信用卡页-确定按钮
@@ -95,13 +99,13 @@ const activity = {
 	couponEntry: `${prefix}_COUPON_ACTIVITY_ENTRY`, // 领取优惠券活动运营
 	dazhuanpan_316_entry: `${prefix}_DAZHUANPAN_316_ACTIVITY_ENTRY`, // 316大转盘入口区分
 	dazhuanpan_316_draw_result: `${prefix}_DAZHUANPAN_316_DRAW_RESULT`, // 316大转盘中奖情况
-	jupeiEntry: `${prefix}_JUPEI_ACTIVITY_ENTRY`,	//拒就赔活动
+	jupeiEntry: `${prefix}_JUPEI_ACTIVITY_ENTRY`, //拒就赔活动
 	funsisongEntry: `${prefix}_ACTIVITY_FUNSISONG_ENTRY`, // 放肆送活动入口
 	couponBtnClick: `${prefix}_ACTIVITY_COUPON_GET`, // 放肆送活动领取按钮点击
 	redBagBtnClick: `${prefix}_ACTIVITY_REDBAG_GET`, // 放肆送活动还信用卡赚钱按钮点击
 	joinNowClick: `${prefix}_ACTIVITY_CHECK_COUPON`, // 放肆送活动弹框立即参与按钮点击
 	checkCouponClick: `${prefix}_ACTIVITY_JOIN_NOW`, // 放肆送活动弹框查看优惠劵按钮点击
-	homeModalBtnClick: `${prefix}_ACTIVITY_HOME_MODAL_CLICK`, // 放肆送活动中mpos 还到弹窗 点击
+	homeModalBtnClick: `${prefix}_ACTIVITY_HOME_MODAL_CLICK` // 放肆送活动中mpos 还到弹窗 点击
 };
 
 const moxie_bank_list = {
@@ -111,7 +115,18 @@ const moxie_bank_list = {
 
 const mpos_ioscontrol_page = {
 	iosControlPageView: `${prefix}_MPOS_HD_WECHAT`, // mpos 管控页页面/mpos引流微信页面加载完成
-	copySuccess: `${prefix}_COPY_SUCCESS`, // mpos 管控页页面/mpos引流微信页面复制成功
+	copySuccess: `${prefix}_COPY_SUCCESS` // mpos 管控页页面/mpos引流微信页面复制成功
 };
 
-export { login, home, mine, order, membership, bugLog, mpos_service_authorization, activity, moxie_bank_list, mpos_ioscontrol_page };
+export {
+	login,
+	home,
+	mine,
+	order,
+	membership,
+	bugLog,
+	mpos_service_authorization,
+	activity,
+	moxie_bank_list,
+	mpos_ioscontrol_page
+};

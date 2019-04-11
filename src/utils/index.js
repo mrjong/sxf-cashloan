@@ -1,5 +1,5 @@
 import { buriedPointEvent } from 'utils/analytins';
-import { bugLog } from 'utils/analytinsType';
+import { bugLog, home } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
@@ -268,6 +268,13 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		.then((res) => {
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
+				buriedPointEvent(home.moneyCreditCardConfirm, {
+					is_success: true,
+					fail_cause: '提交成功',
+					perdLth: repaymentDate.perdLth,
+					rpyAmt: Number(repaymentDate.rpyAmt),
+					activeName: repaymentDate.activeName
+				});
 				$props.toast.info(res.msgInfo);
 				store.removeLoanAspirationHome();
 				setTimeout(() => {
@@ -277,10 +284,24 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 					});
 				}, 3000);
 			} else {
+				buriedPointEvent(home.moneyCreditCardConfirm, {
+					is_success: false,
+					fail_cause: res.msgInfo,
+					perdLth: repaymentDate.perdLth,
+					rpyAmt: Number(repaymentDate.rpyAmt),
+					activeName: repaymentDate.activeName
+				});
 				$props.toast.info(res.msgInfo);
 			}
 		})
 		.catch((err) => {
+			buriedPointEvent(home.moneyCreditCardConfirm, {
+				is_success: false,
+				fail_cause: '未知错误',
+				perdLth: repaymentDate.perdLth,
+				rpyAmt: Number(repaymentDate.rpyAmt),
+				activeName: repaymentDate.activeName
+			});
 			$props.SXFToast.hide();
 			$props.history.push('/home/home');
 		});
@@ -369,7 +390,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				$props.SXFToast.hide();
 				let msg = '请进行信用卡认证';
 				$props.toast.info(msg);
-                resBackMsg = '银行列表';
+				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
 				setTimeout(() => {
 					$props.history.push({ pathname: '/home/moxie_bank_list_page' });

@@ -20,6 +20,20 @@ const API = {
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
 };
+const tagList = [
+	{
+		name: '全额还款',
+		value: 1
+	},
+	{
+		name: '最低还款',
+		value: 2
+	},
+	{
+		name: '部分还款',
+		value: 3
+	}
+];
 let timer = null;
 @fetch.inject()
 @createForm()
@@ -220,6 +234,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	handleSubmit = () => {
+		buriedPointEvent(home.moneyCreditCardConfirmBtn);
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
 		// if (!this.state.fetchBillSucc) {
 		//   this.props.toast.info('账单正在更新中，请耐心等待哦');
@@ -254,6 +269,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				handleClickConfirm(this.props, {
 					...this.state.selectedLoanDate,
 					rpyAmt: Number(values.loanMoney),
+					activeName: tagList[this.state.activeTag].name,
 					autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId
 				});
 			} else {
@@ -324,6 +340,27 @@ export default class loan_repay_confirm_page extends PureComponent {
 			if (this.updateBillInf()) {
 				return;
 			}
+		}
+		// 埋点
+		switch (idx) {
+			case 0:
+				buriedPointEvent(home.repaymentIntentionAll, {
+					userType: 'newUser'
+				});
+				break;
+			case 1:
+				buriedPointEvent(home.repaymentIntentionLowest, {
+					userType: 'newUser'
+				});
+				break;
+			case 2:
+				buriedPointEvent(home.repaymentIntentionPart, {
+					userType: 'newUser'
+				});
+				break;
+
+			default:
+				break;
 		}
 		this.setState(
 			{
@@ -438,20 +475,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 				minPaymentData = parseFloat(minPayment, 10).toFixed(2);
 			}
 		}
-		const tagList = [
-			{
-				name: '全额还款',
-				value: 1
-			},
-			{
-				name: '最低还款',
-				value: 2
-			},
-			{
-				name: '部分还款',
-				value: 3
-			}
-		];
 
 		return (
 			<div className={[ style.pageWrapper, 'loan_repay_confirm_page' ].join(' ')}>
@@ -543,7 +566,39 @@ export default class loan_repay_confirm_page extends PureComponent {
 						initialValue: selectedLoanDate && [ selectedLoanDate.perdLth ],
 						rules: [ { required: true, message: '请选择借款期限' } ],
 						onChange: (value, label) => {
+							console.log(value);
+
 							this.filterLoanDate(value);
+							// 埋点
+							switch (value[0]) {
+								case '30':
+									buriedPointEvent(home.durationDay30, {
+										userType: 'newUser'
+									});
+									break;
+								case '3':
+									buriedPointEvent(home.durationMonth3, {
+										userType: 'newUser'
+									});
+									break;
+								case '6':
+									buriedPointEvent(home.durationMonth6, {
+										userType: 'newUser'
+									});
+									break;
+								case '9':
+									buriedPointEvent(home.durationMonth9, {
+										userType: 'newUser'
+									});
+									break;
+								case '12':
+									buriedPointEvent(home.durationMonth12, {
+										userType: 'newUser'
+									});
+									break;
+								default:
+									break;
+							}
 						}
 					})(
 						<AsyncCascadePicker
@@ -556,6 +611,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.setState({
 											perdRateList: date,
 											selectedLoanDate: date[0] // 默认选中3期
+										});
+										buriedPointEvent(home.durationDay30, {
+											userType: 'newUser'
 										});
 										// 设置默认选中的还款金额
 										return date.map((item) => ({

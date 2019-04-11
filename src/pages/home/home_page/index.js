@@ -683,6 +683,27 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { cardBillAmt, minPayment, billRemainAmt } = indexData;
+		// 埋点
+		switch (idx) {
+			case 0:
+				buriedPointEvent(home.repaymentIntentionAll, {
+					userType: 'oldUser'
+				});
+				break;
+			case 1:
+				buriedPointEvent(home.repaymentIntentionLowest, {
+					userType: 'oldUser'
+				});
+				break;
+			case 2:
+				buriedPointEvent(home.repaymentIntentionPart, {
+					userType: 'oldUser'
+				});
+				break;
+
+			default:
+				break;
+		}
 		this.setState(
 			{
 				activeTag: idx
@@ -740,6 +761,35 @@ export default class home_page extends PureComponent {
 				}
 			}
 		);
+		switch (item.perdLth) {
+			case '30':
+				buriedPointEvent(home.durationDay30, {
+					userType: 'oldUser'
+				});
+				break;
+			case '3':
+				buriedPointEvent(home.durationMonth3, {
+					userType: 'oldUser'
+				});
+				break;
+			case '6':
+				buriedPointEvent(home.durationMonth6, {
+					userType: 'oldUser'
+				});
+				break;
+			case '9':
+				buriedPointEvent(home.durationMonth9, {
+					userType: 'oldUser'
+				});
+				break;
+			case '12':
+				buriedPointEvent(home.durationMonth12, {
+					userType: 'oldUser'
+				});
+				break;
+			default:
+				break;
+		}
 	};
 
 	//查询还款期限
@@ -747,6 +797,9 @@ export default class home_page extends PureComponent {
 		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
 		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
 			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+			buriedPointEvent(home.durationDay30, {
+				userType: 'oldUser'
+			});
 			this.setState(
 				{
 					perdRateList: date,
@@ -819,6 +872,7 @@ export default class home_page extends PureComponent {
 				const params = {
 					...selectedLoanDate,
 					rpyAmt: Number(values.loanMoney),
+					activeName: tagList[this.state.activeTag].name,
 					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
 				};
 				store.setLoanAspirationHome(params);
