@@ -92,7 +92,8 @@ export default class home_page extends PureComponent {
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
-			billOverDue: '' //逾期弹窗标志
+			billOverDue: '', //逾期弹窗标志
+			pageCode: ''
 		};
 	}
 
@@ -214,6 +215,9 @@ export default class home_page extends PureComponent {
 	calculatePercent = (data, isshow) => {
 		let codes = [];
 		let demo = data.codes;
+		this.setState({
+			pageCode: demo
+		});
 		let codesCopy = demo.slice(1, 4);
 		console.log(codesCopy, 'codesCopy');
 		console.log(data.codes, '-----');
@@ -580,22 +584,22 @@ export default class home_page extends PureComponent {
 				//       store.setShowActivityModal(true);
 				//     }
 				//   );
-				// } else 
+				// } else
 				if (
-				  isMPOS() &&
-				  (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-				  !store.getShowActivityModal()
+					isMPOS() &&
+					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+					!store.getShowActivityModal()
 				) {
-				  // 老弹窗（3000元）
-				  this.setState(
-				    {
-				      isShowActivityModal: true,
-				      isNewModal: false
-				    },
-				    () => {
-				      store.setShowActivityModal(true);
-				    }
-				  );
+					// 老弹窗（3000元）
+					this.setState(
+						{
+							isShowActivityModal: true,
+							isNewModal: false
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
 				}
 
 				// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
@@ -652,20 +656,20 @@ export default class home_page extends PureComponent {
 		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
 		const { usrIndexInfo } = this.state;
 		switch (usrIndexInfo.indexSts) {
-		  case 'LN0001': // 新用户，信用卡未授权
-		    this.goToNewMoXie();
-		    break;
-		  case 'LN0003': // 账单爬取成功
-		    if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-		      this.handleSmartClick();
-		    } else {
-		      this.setState({
-		        handleMoxie: true
-		      });
-		    }
-		    break;
-		  default:
-		    console.log('关闭弹窗');
+			case 'LN0001': // 新用户，信用卡未授权
+				this.goToNewMoXie();
+				break;
+			case 'LN0003': // 账单爬取成功
+				if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+					this.handleSmartClick();
+				} else {
+					this.setState({
+						handleMoxie: true
+					});
+				}
+				break;
+			default:
+				console.log('关闭弹窗');
 		}
 	};
 
@@ -866,17 +870,26 @@ export default class home_page extends PureComponent {
 					activeName: tagList[this.state.activeTag].name,
 					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
 				};
+
 				store.setLoanAspirationHome(params);
 				idChkPhoto({
 					$props: this.props,
-                    type: 'historyCreditExtension',
-                    msg:'认证'
+					type: 'historyCreditExtension',
+					msg: '认证'
 				}).then((res) => {
 					switch (res) {
 						case '1':
+							buriedPointEvent(home.compensationCreditCardConfirm, {
+								pageCode: this.state.pageCode
+							});
 							//调用授信接口
 							getNextStr({
 								$props: this.props
+							});
+							break;
+						case '2':
+							buriedPointEvent(home.compensationCreditCardConfirm, {
+								pageCode: '补充身份证照片'
 							});
 							break;
 						default:
