@@ -30,6 +30,8 @@ const home = {
     moneyCreditCardConfirmBtn: `${prefix}_MONEY_CREDIT_CARD_CONFIRM_BTN`, // 借钱还信用卡-提交申请按钮
     mineCreditSubmitSuccessTie:`${prefix}_MINE_CREDIT_SUBMIT_SUCCESS_TIE`, // -信用认证-提交成功-立即绑卡
     compensationCreditCardConfirm:`${prefix}_COMPENSATION_CREDIT_CARD_CONFIRM`, // 代偿信用卡-确认
+    userRetrieveContinue:`${prefix}_USER_RETRIEVE_CONTINUE`,// 用户挽回-再等等
+    userRetrieveQuit:`${prefix}_USER_RETRIEVE_QUIT`,// 用户挽回-放弃
 	repaymentIntentionAll: `${prefix}_REPAYMENT_INTENTION_ALL`, // 还款意愿-全额还款
 	repaymentIntentionLowest: `${prefix}_REPAYMENT_INTENTION_LOWEST`, // 还款意愿-最低还款
 	repaymentIntentionPart: `${prefix}_REPAYMENT_INTENTION_PART`, // 还款意愿-部分还款
