@@ -153,6 +153,19 @@ export default class home_page extends PureComponent {
 						billOverDue: res.data.popupFlag
 					});
 					if (res.data.flag === '01') {
+						// 历史未提交过授信的用户才弹
+						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+							// 新弹窗（188元）4月11号改为688元
+							this.setState(
+								{
+									isShowActivityModal: true,
+									isNewModal: true
+								},
+								() => {
+									store.setShowActivityModal(true);
+								}
+							);
+						}
 						this.credit_extension_not();
 					} else {
 						this.requestGetUsrInfo();
@@ -534,18 +547,20 @@ export default class home_page extends PureComponent {
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
 				});
-				if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-				  // 新弹窗（188元）4月11号改为688元
-				  this.setState(
-				    {
-				      isShowActivityModal: true,
-				      isNewModal: true
-				    },
-				    () => {
-				      store.setShowActivityModal(true);
-				    }
-				  );
-				} else if (
+				// 对于历史提交过授信的用户不弹框
+				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+				//   // 新弹窗（188元）4月11号改为688元
+				//   this.setState(
+				//     {
+				//       isShowActivityModal: true,
+				//       isNewModal: true
+				//     },
+				//     () => {
+				//       store.setShowActivityModal(true);
+				//     }
+				//   );
+				// } else 
+				if (
 				  isMPOS() &&
 				  (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
 				  !store.getShowActivityModal()
