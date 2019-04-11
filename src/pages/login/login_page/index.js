@@ -113,7 +113,7 @@ export default class login_page extends PureComponent {
 	goLogin = () => {
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
-			Toast.info('请先获取短信验证码',100);
+			Toast.info('请先获取短信验证码');
 			return;
 		}
 		this.props.form.validateFields((err, values) => {
