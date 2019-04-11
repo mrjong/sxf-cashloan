@@ -41,7 +41,8 @@ export default class confirm_agency_page extends PureComponent {
       dateDiff: 0,
       repayInfo: {},
       repaymentDate: '',
-      repaymentIndex: isMPOS() ? 1 : 0, // mpos取1（最后一个），只限返回两种期限的情况
+      // repaymentIndex: isMPOS() ? 1 : 0, // mpos取1（最后一个），只限返回两种期限的情况
+      repaymentIndex: 0, // mpos 去掉30天产品
       lendersDate: '',
       lendersIndex: 0,
       defaultIndex: 0,
@@ -84,9 +85,9 @@ export default class confirm_agency_page extends PureComponent {
     } else {
       this.requestGetRepaymentDateList();
     }
-    if (isMPOS()) {
-      this.checkUsrMemSts();
-    }
+    // if (isMPOS()) {
+    //   this.checkUsrMemSts();
+    // }
   }
 
   // 查询用户会员卡状态
@@ -389,7 +390,7 @@ export default class confirm_agency_page extends PureComponent {
                   defaultindex={repaymentIndex}
                   activeindex={repaymentIndex}
                   onClick={this.handleRepaymentTagClick}
-                  isDotted={isMPOS() && !isVIP}
+                  // isDotted={isMPOS() && !isVIP}
                 />
               </div>
             </div>
