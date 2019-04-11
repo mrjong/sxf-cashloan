@@ -1,3 +1,4 @@
+import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { bugLog } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
@@ -15,7 +16,8 @@ const API = {
 	GETSTSW: '/my/getStsw', // 获取首页进度
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
-	submitState: '/bill/apply' // 提交代还金申请
+	submitState: '/bill/apply', // 提交代还金申请
+	idChkPhoto: '/auth/idChkPhoto'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -182,7 +184,8 @@ export const logoutAppHandler = (that) => {
 	}
 	if (!state) {
 		state = true;
-		Modal.alert('', '确认退出登录？', [
+		const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
+		Modal.alert('', ele, [
 			{
 				text: '取消',
 				onPress: () => {
@@ -247,9 +250,99 @@ export const closePage = () => {
 		return window.passValue();
 	}
 };
+export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
+	return new Promise((resolve, reject) => {
+		$props.$fetch.get(API.idChkPhoto).then((res) => {
+			// let res = {
+			// 	msgCode: 'PTM0008',
+			// 	msgInfo: '用户已实名，未上传身份证照片',
+			// 	data: {}
+			// };
+
+			switch (res.msgCode) {
+				case 'PTM0000':
+					resolve('1');
+					break;
+				case 'PTM0006':
+					store.setToggleMoxieCard(true);
+					$props.history.push({
+						pathname: '/home/real_name'
+					});
+					resolve('2');
+					break;
+				case 'PTM0008':
+					if (!state) {
+						state = true;
+						const ele = (
+							<div>
+								身份证照片找不到了!<br />补充照片极速{msg}!
+							</div>
+						);
+						Modal.alert('', ele, [
+							{
+								text: '关闭',
+								onPress: () => {
+									state = false;
+								}
+							},
+							{
+								text: '前往添加',
+								onPress: () => {
+									store.setToggleMoxieCard(true);
+									state = false;
+									$props.history.push({
+										pathname: '/home/real_name',
+										search: `?newTitle=实名照片补充&type=${type}`
+									});
+								}
+							}
+						]);
+					}
+					resolve('2');
+					break;
+
+				case 'PTM0009':
+					if (!state) {
+						state = true;
+						const ele = (
+							<div>
+								身份证有效期不足30天或已过期!<br />重新补充极速{msg}!
+							</div>
+						);
+						Modal.alert('', ele, [
+							{
+								text: '关闭',
+								onPress: () => {
+									state = false;
+								}
+							},
+							{
+								text: '前往添加',
+								onPress: () => {
+									state = false;
+									store.setToggleMoxieCard(true);
+									$props.history.push({
+										pathname: '/home/real_name',
+										search: `?newTitle=实名照片补充&type=${type}`
+									});
+								}
+							}
+						]);
+					}
+					resolve('2');
+					break;
+
+				default:
+					$props.toast.info(res.msgInfo);
+					reject();
+					break;
+			}
+		});
+	});
+};
 // 确认按钮点击事件 提交到风控
-export const handleClickConfirm = ($props, repaymentDate) => {
-    $props.SXFToast.loading('数据加载中...', 0);
+export const handleClickConfirm = ($props, repaymentDate, type) => {
+	$props.SXFToast.loading('数据加载中...', 0);
 	const address = store.getPosition();
 	const params = {
 		location: address,
@@ -267,10 +360,12 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 	$props.$fetch
 		.post(`${API.submitState}`, params, { hideLoading: true })
 		.then((res) => {
+			$props.SXFToast.hide();
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
 				$props.toast.info(res.msgInfo);
 				store.removeLoanAspirationHome();
+				store.removeToggleMoxieCard();
 				setTimeout(() => {
 					$props.history.push({ pathname: '/home/credit_apply_succ_page', search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`});
 				}, 3000);
@@ -279,14 +374,18 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 			}
 		})
 		.catch((err) => {
-            $props.SXFToast.hide();
-			$props.history.push('/home/home');
+			$props.SXFToast.hide();
+			if (type) {
+				$props.history.goBack();
+			} else {
+				$props.history.push('/home/home');
+			}
 		});
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false }) => {
-    console.log('2222222222')
+	console.log('2222222222');
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);

@@ -1,14 +1,11 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import { store } from 'utils/store';
-import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
-import { Modal } from 'antd-mobile';
-import ModalContent from './components/ModalInfo';
 
 const API = {
 	getStw: '/my/getStsw', // 获取4个认证项的状态
@@ -33,7 +30,6 @@ export default class credit_extension_page extends PureComponent {
 		flag: false,
 		submitFlag: false,
 		isShowBtn: true, // 是否展示提交代还金申请按钮
-		isShowModal: false
 	};
 
 	componentWillMount() {
@@ -148,7 +144,6 @@ export default class credit_extension_page extends PureComponent {
 						.then((result) => {
 							if (result.msgCode === 'PTM0000' && result.data.url) {
 								buriedPointEvent(mine.creditExtensionOperator);
-                                store.setCheckCardRouter('');
 								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
 								this.props.SXFToast.loading('加载中...', 0);
 								window.location.href =
@@ -170,14 +165,6 @@ export default class credit_extension_page extends PureComponent {
 			}
 		}
 	};
-
-	// 关闭弹框
-	handleCloseModal = () => {
-		this.setState({
-			isShowModal: false
-		});
-	};
-
 	render() {
 		const { submitFlag, stswData, isShowBtn } = this.state;
 		const data = stswData.map((item) => {
@@ -209,21 +196,6 @@ export default class credit_extension_page extends PureComponent {
 						提交代偿金申请
 					</ButtonCustom>
 				) : null} */}
-				{/* 确认代还信息弹框 */}
-				<Modal
-					transparent
-					visible={this.state.isShowModal}
-					onClose={this.handleCloseModal}
-					wrapClassName="modalInfoBox"
-					maskClosable={false}
-				>
-					<ModalContent
-						autId={autId}
-						toast={this.props.toast}
-						onClose={this.handleCloseModal}
-						history={this.props.history}
-					/>
-				</Modal>
 			</div>
 		);
 	}

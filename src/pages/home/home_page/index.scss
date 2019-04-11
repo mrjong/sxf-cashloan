@@ -127,28 +127,9 @@
 			}
 		}
 	}
-
-	.am-modal-body {
-		.am-modal-alert-content {
-			line-height: 3;
-		}
-	}
-	.am-progress-bar {
-		border: 0.04rem solid #ffda58;
-	}
-	.popup_box {
-		&.am-modal-popup-slide-up {
-			left: -100%;
-		}
-	}
-	.popup_box2 {
-		&.am-modal-popup-slide-up {
-			left: 0%;
-		}
-	}
-	.popup_box3 {
-		&.am-modal-popup-slide-up {
-			left: 100%;
+	.zijian {
+		.am-progress-bar {
+			border: 0.04rem solid #ffda58;
 		}
 	}
 }
@@ -189,9 +170,9 @@
 			margin: 0 auto;
 		}
 		em {
-			color: #F66;
+			color: #f66;
 		}
-  }
+	}
 }
 
 .subDesc {

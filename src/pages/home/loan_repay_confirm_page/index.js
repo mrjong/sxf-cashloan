@@ -8,16 +8,16 @@ import { createForm } from 'rc-form';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
+import { getFirstError, handleClickConfirm, handleInputBlur,idChkPhoto } from 'utils';
 import mockData from './mockData';
 
 const API = {
-  queryBillStatus: '/wap/queryBillStatus', //
-  // qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
-  qryPerdRate: '/bill/prod',
-  CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
-  CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-  USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
+	queryBillStatus: '/wap/queryBillStatus', //
+	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
+	qryPerdRate: '/bill/prod',
+	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
+	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
+	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
 };
 let timer = null;
 @fetch.inject()
@@ -41,184 +41,187 @@ export default class loan_repay_confirm_page extends PureComponent {
     };
   }
 
-  componentDidMount() {
-    store.removeToggleMoxieCard();
-    this.queryUsrInfo();
-  }
+	componentDidMount() {
+		store.removeToggleMoxieCard();
+		this.queryUsrInfo();
+	}
 
-  componentWillUnmount() {
-    clearInterval(timer);
-  }
+	componentWillUnmount() {
+		clearInterval(timer);
+	}
 
-  startInterval = () => {
-    timer = setInterval(() => {
-      this.setState(
-        {
-          percent: this.state.percent + parseInt(Math.random() * (100 / 30) + 1),
-          time: this.state.time + 1
-        },
-        () => {
-          if (this.state.time > 29) {
-            clearInterval(timer)
-            this.queryUsrInfo(true)
-          } else if (this.state.time % 5 === 0) {
-            clearInterval(timer)
-            this.queryUsrInfo()
-          }
-        }
-      );
-    }, 1000);
-  };
+	startInterval = () => {
+		timer = setInterval(() => {
+			this.setState(
+				{
+					percent: this.state.percent + parseInt(Math.random() * (100 / 30) + 1),
+					time: this.state.time + 1
+				},
+				() => {
+					if (this.state.time > 29) {
+						clearInterval(timer);
+						this.queryUsrInfo(true);
+					} else if (this.state.time % 5 === 0) {
+						clearInterval(timer);
+						this.queryUsrInfo();
+					}
+				}
+			);
+		}, 1000);
+	};
 
-  //查询用户相关信息
-  queryUsrInfo = (hideFlag) => {
-    this.props.$fetch
-      .post(API.USR_INDEX_INFO)
-      .then((res) => {
-        this.setState(
-          {
-            usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
-          },
-          () => {
-            // const { indexSts, indexData } = {
-            //   indexSts: 'LN0003',
-            //   indexMsg: '一键还卡',
-            //   indexData: {
-            //     autSts: '1', // 1 中, 2,成功  3失败  1更新中
-            //     bankName: '招商银行',
-            //     bankNo: 'ICBC',
-            //     cardNoHid: '6785 **** **** 6654',
-            //     cardBillDt: '2018-07-17',
-            //     cardBillAmt: '786.45',
-            //     overDt: '7'
-            //   }
-            // };
-            const { indexSts, indexData } = this.state.usrIndexInfo
-            if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
-              //更新中
-              if (hideFlag) {
-                this.hideProgress();
-                this.state.retryCount--
-                this.setState({
-                  showAgainUpdateBtn: true // 显示 重新更新按钮
-                });
-              } else {
-                this.showProgress();
-              }
-            } else if (indexSts === 'LN0010' || (indexSts === 'LN0003' && indexData.autSts === '3')) {
-              //更新失败
-              this.hideProgress();
-              this.state.retryCount--
-              this.setState({
-                showAgainUpdateBtn: false
-              });
-            } else if (indexSts === 'LN0003' && indexData.autSts === '2') {
-              //更新成功
-              this.hideProgress()
-              this.setState({
-                fetchBillSucc: true,
-                showAgainUpdateBtn: false
-              }, () => {
-                this.toggleTag(0)
-              })
-            }
-          }
-        );
-      })
-      .catch((err) => {
-        this.hideProgress()
-        this.state.retryCount--
-        this.setState({
-          showAgainUpdateBtn: true
-        })
-      });
-  };
+	//查询用户相关信息
+	queryUsrInfo = (hideFlag) => {
+		this.props.$fetch
+			.post(API.USR_INDEX_INFO)
+			.then((res) => {
+				this.setState(
+					{
+						usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
+					},
+					() => {
+						// const { indexSts, indexData } = {
+						//   indexSts: 'LN0003',
+						//   indexMsg: '一键还卡',
+						//   indexData: {
+						//     autSts: '1', // 1 中, 2,成功  3失败  1更新中
+						//     bankName: '招商银行',
+						//     bankNo: 'ICBC',
+						//     cardNoHid: '6785 **** **** 6654',
+						//     cardBillDt: '2018-07-17',
+						//     cardBillAmt: '786.45',
+						//     overDt: '7'
+						//   }
+						// };
+						const { indexSts, indexData } = this.state.usrIndexInfo;
+						if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
+							//更新中
+							if (hideFlag) {
+								this.hideProgress();
+								this.state.retryCount--;
+								this.setState({
+									showAgainUpdateBtn: true // 显示 重新更新按钮
+								});
+							} else {
+								this.showProgress();
+							}
+						} else if (indexSts === 'LN0010' || (indexSts === 'LN0003' && indexData.autSts === '3')) {
+							//更新失败
+							this.hideProgress();
+							this.state.retryCount--;
+							this.setState({
+								showAgainUpdateBtn: false
+							});
+						} else if (indexSts === 'LN0003' && indexData.autSts === '2') {
+							//更新成功
+							this.hideProgress();
+							this.setState(
+								{
+									fetchBillSucc: true,
+									showAgainUpdateBtn: false
+								},
+								() => {
+									this.toggleTag(0);
+								}
+							);
+						}
+					}
+				);
+			})
+			.catch((err) => {
+				this.hideProgress();
+				this.state.retryCount--;
+				this.setState({
+					showAgainUpdateBtn: true
+				});
+			});
+	};
 
-  showProgress = () => {
-    this.setState(
-      {
-        isShowProgress: true
-      },
-      () => {
-        this.startInterval()
-      }
-    )
-  }
+	showProgress = () => {
+		this.setState(
+			{
+				isShowProgress: true
+			},
+			() => {
+				this.startInterval();
+			}
+		);
+	};
 
-  //隐藏进度条
-  hideProgress = () => {
-    this.setState(
-      {
-        percent: 100
-      },
-      () => {
-        clearInterval(timer);
-        let timer2 = setTimeout(() => {
-          if (this.state.retryCount === 0) {
-            this.props.toast.info('账单更新失败');
-            this.setState({
-              showAgainUpdateBtn: false
-            });
-          }
-          this.setState({
-            isShowProgress: false,
-            percent: 0,
-            time: 0
-          });
-          clearTimeout(timer2);
-        }, 1000);
-      }
-    )
-  }
+	//隐藏进度条
+	hideProgress = () => {
+		this.setState(
+			{
+				percent: 100
+			},
+			() => {
+				clearInterval(timer);
+				let timer2 = setTimeout(() => {
+					if (this.state.retryCount === 0) {
+						this.props.toast.info('账单更新失败');
+						this.setState({
+							showAgainUpdateBtn: false
+						});
+					}
+					this.setState({
+						isShowProgress: false,
+						percent: 0,
+						time: 0
+					});
+					clearTimeout(timer2);
+				}, 1000);
+			}
+		);
+	};
 
-  //更新账单
-  updateBill = () => {
-    this.queryUsrInfo()
-  }
+	//更新账单
+	updateBill = () => {
+		this.queryUsrInfo();
+	};
 
-  goMoxieBankList = () => {
-    store.setToggleMoxieCard(true)
-    store.setMoxieBackUrl(`/home/loan_repay_confirm_page`)
-    this.props.history.push('/home/moxie_bank_list_page')
-  }
+	goMoxieBankList = () => {
+		store.setToggleMoxieCard(true);
+		store.setMoxieBackUrl(`/home/loan_repay_confirm_page`);
+		this.props.history.push('/home/moxie_bank_list_page');
+	};
 
-  // 代还其他信用卡点击事件
-  repayForOtherBank = (count) => {
-    store.setToggleMoxieCard(true);
-    if (count > 1) {
-      store.setBackUrl('/home/loan_repay_confirm_page');
-      const { usrIndexInfo } = this.state;
-      this.props.history.push({
-        pathname: '/mine/credit_list_page',
-        search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
-      });
-    } else {
-      this.goMoxieBankList();
-    }
-  };
+	// 代还其他信用卡点击事件
+	repayForOtherBank = (count) => {
+		store.setToggleMoxieCard(true);
+		if (count > 1) {
+			store.setBackUrl('/home/loan_repay_confirm_page');
+			const { usrIndexInfo } = this.state;
+			this.props.history.push({
+				pathname: '/mine/credit_list_page',
+				search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
+			});
+		} else {
+			this.goMoxieBankList();
+		}
+	};
 
-  // 请求信用卡数量
-  requestCredCardCount = () => {
-    this.props.$fetch
-      .post(API.CRED_CARD_COUNT)
-      .then((result) => {
-        if (result && result.msgCode === 'PTM0000') {
-          this.repayForOtherBank(result.data.count);
-        } else {
-          this.props.toast.info(result.msgInfo);
-        }
-      })
-      .catch((err) => {
-        this.props.toast.info(err.message);
-      });
-  };
+	// 请求信用卡数量
+	requestCredCardCount = () => {
+		this.props.$fetch
+			.post(API.CRED_CARD_COUNT)
+			.then((result) => {
+				if (result && result.msgCode === 'PTM0000') {
+					this.repayForOtherBank(result.data.count);
+				} else {
+					this.props.toast.info(result.msgInfo);
+				}
+			})
+			.catch((err) => {
+				this.props.toast.info(err.message);
+			});
+	};
 
   handleSubmit = () => {
     const { selectedLoanDate = {}, usrIndexInfo } = this.state
-    // if (!this.state.fetchBillSucc) {
-    //   this.props.toast.info('账单正在更新中，请耐心等待哦');
-    //   return;
-    // }
+    if (!this.state.fetchBillSucc) {
+      this.props.toast.info('账单正在更新中，请耐心等待哦');
+      return;
+    }
     if (this.updateBillInf()) {
       return;
     }
@@ -242,11 +245,32 @@ export default class loan_repay_confirm_page extends PureComponent {
           this.props.toast.info('请选择借款期限');
           return;
         }
-        //调用授信接口
-        handleClickConfirm(this.props, {
-          ...this.state.selectedLoanDate,
-          rpyAmt: Number(values.loanMoney),
-          autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId
+        idChkPhoto({
+            $props: this.props,
+            type: 'creditExtension',
+            msg:'审核'
+        }).then((res) => {
+            switch (res) {
+                case '1':
+                    // 成功
+                    //调用授信接口
+                    handleClickConfirm(this.props, {
+                        ...this.state.selectedLoanDate,
+          autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
+                        rpyAmt: Number(values.loanMoney)
+                    });
+                    break;
+                case '2':
+                    // 失败
+                    const params = {
+                        ...selectedLoanDate,
+                        rpyAmt: Number(values.loanMoney)
+                    };
+                    store.setLoanAspirationHome(params);
+                    break;
+                default:
+                    break;
+            }
         });
       } else {
         this.props.toast.info(getFirstError(err));
@@ -281,23 +305,23 @@ export default class loan_repay_confirm_page extends PureComponent {
     })
   }
 
-  //计算该显示的还款金额
-  calcLoanMoney = (money) => {
-    const { selectedLoanDate: obj = {} } = this.state
-    if (money > obj.factAmtHigh) {
-      this.props.form.setFieldsValue({
-        loanMoney: obj.factAmtHigh
-      });
-    } else if (money < obj.factLmtLow) {
-      this.props.form.setFieldsValue({
-        loanMoney: obj.factLmtLow
-      });
-    } else {
-      this.props.form.setFieldsValue({
-        loanMoney: money
-      });
-    }
-  };
+	//计算该显示的还款金额
+	calcLoanMoney = (money) => {
+		const { selectedLoanDate: obj = {} } = this.state;
+		if (money > obj.factAmtHigh) {
+			this.props.form.setFieldsValue({
+				loanMoney: obj.factAmtHigh
+			});
+		} else if (money < obj.factLmtLow) {
+			this.props.form.setFieldsValue({
+				loanMoney: obj.factLmtLow
+			});
+		} else {
+			this.props.form.setFieldsValue({
+				loanMoney: money
+			});
+		}
+	};
 
   //切换tag标签
   toggleTag = (idx, type) => { // type为是自动执行该方法，还是点击执行该方法
@@ -331,22 +355,22 @@ export default class loan_repay_confirm_page extends PureComponent {
     })
   }
 
-  inputDisabled = () => {
-    const { fetchBillSucc, activeTag } = this.state
-    if (fetchBillSucc && (activeTag === 0 || activeTag === 1)) {
-      return true
-    }
-    return false
-  }
+	inputDisabled = () => {
+		const { fetchBillSucc, activeTag } = this.state;
+		if (fetchBillSucc && (activeTag === 0 || activeTag === 1)) {
+			return true;
+		}
+		return false;
+	};
 
-  placeholderText = () => {
-    const { fetchBillSucc, selectedLoanDate = {}, activeTag } = this.state
-    if (fetchBillSucc && activeTag === 2) {
-      return `申请金额${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`
-    } else {
-      return `请输入账单金额`
-    }
-  }
+	placeholderText = () => {
+		const { fetchBillSucc, selectedLoanDate = {}, activeTag } = this.state;
+		if (fetchBillSucc && activeTag === 2) {
+			return `申请金额${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`;
+		} else {
+			return `请输入账单金额`;
+		}
+	};
 
   updateBillInf = () => {
     const { usrIndexInfo } = this.state;
@@ -536,8 +560,8 @@ export default class loan_repay_confirm_page extends PureComponent {
         <ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
           提交申请
 				</ZButton>
-        <p className="bottomTip">怕逾期，用还到</p>
-      </div>
-    );
-  }
+				<p className="bottomTip">怕逾期，用还到</p>
+			</div>
+		);
+	}
 }
