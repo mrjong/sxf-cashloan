@@ -80,15 +80,14 @@ export default class SvgCirPro extends Component {
 				className="svgcirproOut"
 				style={{
 					width: width,
-                    height: height,
-                    margin: 'auto'
+					height: height,
+					margin: 'auto'
 				}}
 			>
 				<div
 					style={{
 						width: width,
-						height: height,
-					
+						height: height
 					}}
 					className="circle_border"
 				/>
@@ -103,7 +102,10 @@ export default class SvgCirPro extends Component {
 					style={{
 						width: width,
 						height: height,
-						lineHeight: height + 20 + 'px'
+						lineHeight: height + 20 + 'px',
+						fontFamily: 'DIN Condensed',
+						fontWeight: 'bold',
+						fontStyle: 'normal'
 					}}
 					className="circle_text homePrecent"
 				>
