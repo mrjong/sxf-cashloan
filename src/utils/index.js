@@ -248,7 +248,7 @@ export const closePage = () => {
 };
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = ($props, repaymentDate) => {
-    $props.SXFToast.loading('数据加载中...', 0);
+	$props.SXFToast.loading('数据加载中...', 0);
 	const address = store.getPosition();
 	const params = {
 		location: address,
@@ -257,7 +257,7 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 		perdUnit: repaymentDate.perdUnit,
 		perdCnt: repaymentDate.perdCnt,
 		rpyAmt: Number(repaymentDate.rpyAmt),
-		autId: repaymentDate && repaymentDate.autId,
+		autId: repaymentDate && repaymentDate.autId
 	};
 	if (isMPOS()) {
 		getAppsList();
@@ -271,24 +271,28 @@ export const handleClickConfirm = ($props, repaymentDate) => {
 				$props.toast.info(res.msgInfo);
 				store.removeLoanAspirationHome();
 				setTimeout(() => {
-					$props.history.push({ pathname: '/home/credit_apply_succ_page', search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`});
+					$props.history.push({
+						pathname: '/home/credit_apply_succ_page',
+						search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`
+					});
 				}, 3000);
 			} else {
 				$props.toast.info(res.msgInfo);
 			}
 		})
 		.catch((err) => {
-            $props.SXFToast.hide();
+			$props.SXFToast.hide();
 			$props.history.push('/home/home');
 		});
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
-export const getNextStr = async ({ $props, needReturn = false }) => {
-    console.log('2222222222')
+export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
+	console.log('2222222222');
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
+	let resBackMsg = '';
 	if (res && res.msgCode === 'PTM0000') {
 		res.data.forEach((item) => {
 			if (needDisplayOptions.includes(item.code)) {
@@ -302,7 +306,8 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			// 实名
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
 				$props.SXFToast.hide();
-				$props.toast.info('请先实名认证');
+				let msg = '请先实名认证';
+				$props.toast.info(msg);
 				setTimeout(() => {
 					$props.history.push({
 						pathname: '/home/real_name'
@@ -314,14 +319,18 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.SXFToast.hide();
-				$props.toast.info('请进行基本信息认证');
+				let msg = '请进行基本信息认证';
+				$props.toast.info(msg);
+				resBackMsg = '基本信息认证';
 				setTimeout(() => {
 					$props.history.replace({
 						pathname: '/home/essential_information'
 						// search: urlQuery
 					});
 				}, 3000);
-
+				if (callBack) {
+					callBack(resBackMsg);
+				}
 				return;
 			}
 
@@ -334,7 +343,9 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 					.then((result) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
 							$props.SXFToast.hide();
-							$props.toast.info('请进行运营商认证');
+							let msg = '请进行运营商认证';
+							$props.toast.info(msg);
+							resBackMsg = '运营商认证';
 							setTimeout(() => {
 								// 运营商直接返回的问题
 								store.setCarrierMoxie(true);
@@ -344,19 +355,28 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
 										.location.search}&showTitleBar=NO`;
 							}, 3000);
+							if (callBack) {
+								callBack(resBackMsg);
+							}
 						}
 					});
+
 				return;
 			}
 
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.SXFToast.hide();
-				$props.toast.info('请进行信用卡认证');
+				let msg = '请进行信用卡认证';
+				$props.toast.info(msg);
+                resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
 				setTimeout(() => {
 					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
 				}, 3000);
+				if (callBack) {
+					callBack(resBackMsg);
+				}
 				return;
 			}
 			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
@@ -382,11 +402,11 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 	} else {
 		Toast.info(res.msgInfo);
 	}
-	console.log(codes);
 	return {
 		data: res.data,
 		codes,
-		codesArray
+		codesArray,
+		resBackMsg
 	};
 };
 

@@ -13,15 +13,19 @@ const login = {
 };
 
 const home = {
-	applyCreditRepayment: `${prefix}_HOME_APPLY_CREDIT_REPAYMENT`, // 首页-点击申请信用卡代还按钮
+    applyCreditRepayment: `${prefix}_HOME_APPLY_CREDIT_REPAYMENT`, // 首页-点击申请信用卡代还按钮
+    homeContinueApply: `${prefix}_HOME_CONTINUE_APPLY`, // 还卡-继续申请  增加属性，继续页面：基本信息认证，银行列表，运营商认证
+    HomeKeyBills:`${prefix}_HOME_KEY_BILLS`, // 一键还账单(历史提交过的用户)
+    HomeCardRenew:`${prefix}_HOME_CARD_RENEW`, // 借钱换信用卡  重新更新
 	updateBill: `${prefix}_HOME_UPDATE_BILL`, // 首页-点击更新账单
 	easyRepay: `${prefix}_HOME_EASY_REPAYMENT`, // 首页-点击一键还卡（代还）
 	repayOtherCredit: `${prefix}_HOME_REPAY_OTHER_CREDIT`, // 首页-点击代还其他信用卡
 	viewBill: `${prefix}_HOME_VIEW_BILL`, // 首页-点击查看代还账单
-	durationDay30: `${prefix}_HOME_DURATION_DAY_30`, // 代还期限-30天
-	durationMonth3: `${prefix}_HOME_DURATION_MONTH_3`, // 代还期限-3个月
-	durationMonth6: `${prefix}_HOME_DURATION_MONTH_6`, // 代还期限-6个月
-	durationMonth12: `${prefix}_HOME_DURATION_MONTH_12`, // 代还期限-12个月
+    durationDay30: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_DAY_30`, // 申请期限-30天
+	durationMonth3: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_3`, // 申请期限-3个月
+	durationMonth6: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_6`, // 申请期限-6个月
+	durationMonth9: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_9`, // 申请期限-9个月
+	durationMonth12: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_12`, // 申请期限-12个月
 	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
 	lendersOrder: `${prefix}_HOME_LENDERS_ORDER`, // 放款日期-预约放款
 
@@ -47,11 +51,7 @@ const home = {
 };
 
 const mine = {
-	durationDay30: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_DAY_30`, // 申请期限-30天
-	durationMonth3: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_3`, // 申请期限-3个月
-	durationMonth6: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_6`, // 申请期限-6个月
-	durationMonth9: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_9`, // 申请期限-9个月
-	durationMonth12: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_12`, // 申请期限-12个月
+
 	faq: `${prefix}_MINE_FAQ`, // 常见问题页
 	saveConfirm: `${prefix}_MINE_SAVE_CONFIRM`, // 绑定储蓄卡页-确定按钮
 	creditConfirm: `${prefix}_MINE_CREDIT_CONFIRM`, // 绑定信用卡页-确定按钮
