@@ -36,6 +36,7 @@ const tagList = [
 ];
 
 let timer = null;
+let selectedLoanDateCopy = {}
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -614,7 +615,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<div>
 					{getFieldDecorator('loanDate', {
-						initialValue: selectedLoanDate && [ selectedLoanDate.perdLth ],
+						initialValue: selectedLoanDateCopy && [ selectedLoanDateCopy.perdLth ],
 						rules: [ { required: true, message: '请选择借款期限' } ],
 						onChange: (value, label) => {
 							this.filterLoanDate(value);
@@ -631,7 +632,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.setState({
 											perdRateList: date,
 											selectedLoanDate: date[0] // 默认选中3期
-										});
+                                        });
+                                        selectedLoanDateCopy = date[0]
 										this.dateType(date[0].perdLth);
 										// 设置默认选中的还款金额
 										return date.map((item) => ({
