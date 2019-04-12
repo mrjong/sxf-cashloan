@@ -437,7 +437,38 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}
 		return false;
 	};
-
+	dateType = (value) => {
+		// 埋点
+		switch (value) {
+			case '30':
+				buriedPointEvent(home.durationDay30, {
+					userType: 'newUser'
+				});
+				break;
+			case '3':
+				buriedPointEvent(home.durationMonth3, {
+					userType: 'newUser'
+				});
+				break;
+			case '6':
+				buriedPointEvent(home.durationMonth6, {
+					userType: 'newUser'
+				});
+				break;
+			case '9':
+				buriedPointEvent(home.durationMonth9, {
+					userType: 'newUser'
+				});
+				break;
+			case '12':
+				buriedPointEvent(home.durationMonth12, {
+					userType: 'newUser'
+				});
+				break;
+			default:
+				break;
+		}
+	};
 	render() {
 		const {
 			isShowProgress,
@@ -587,36 +618,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						rules: [ { required: true, message: '请选择借款期限' } ],
 						onChange: (value, label) => {
 							this.filterLoanDate(value);
-							// 埋点
-							switch (value[0]) {
-								case '30':
-									buriedPointEvent(home.durationDay30, {
-										userType: 'newUser'
-									});
-									break;
-								case '3':
-									buriedPointEvent(home.durationMonth3, {
-										userType: 'newUser'
-									});
-									break;
-								case '6':
-									buriedPointEvent(home.durationMonth6, {
-										userType: 'newUser'
-									});
-									break;
-								case '9':
-									buriedPointEvent(home.durationMonth9, {
-										userType: 'newUser'
-									});
-									break;
-								case '12':
-									buriedPointEvent(home.durationMonth12, {
-										userType: 'newUser'
-									});
-									break;
-								default:
-									break;
-							}
+							this.dateType(value[0]);
 						}
 					})(
 						<AsyncCascadePicker
@@ -630,9 +632,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 											perdRateList: date,
 											selectedLoanDate: date[0] // 默认选中3期
 										});
-										buriedPointEvent(home.durationDay30, {
-											userType: 'newUser'
-										});
+										this.dateType(date[0].perdLth);
 										// 设置默认选中的还款金额
 										return date.map((item) => ({
 											value: item.perdLth,

@@ -755,8 +755,31 @@ export default class home_page extends PureComponent {
 					this.calcLoanMoney(minPayment);
 				}
 			}
-		);
-		switch (item.perdLth) {
+        );
+        this.dateType(item.perdLth)
+	};
+
+	//查询还款期限
+	qryPerdRate = () => {
+		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
+		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
+			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+			this.dateType(date[0].perdLth);
+			this.setState(
+				{
+					perdRateList: date,
+					selectedLoanDate: date[0] // 默认选中3期
+				},
+				() => {
+					this.toggleTag(0);
+				}
+			);
+		});
+    };
+    
+    dateType = (value) => {
+		// 埋点
+		switch (value) {
 			case '30':
 				buriedPointEvent(home.durationDay30, {
 					userType: 'oldUser'
@@ -785,26 +808,6 @@ export default class home_page extends PureComponent {
 			default:
 				break;
 		}
-	};
-
-	//查询还款期限
-	qryPerdRate = () => {
-		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
-		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
-			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-			buriedPointEvent(home.durationDay30, {
-				userType: 'oldUser'
-			});
-			this.setState(
-				{
-					perdRateList: date,
-					selectedLoanDate: date[0] // 默认选中3期
-				},
-				() => {
-					this.toggleTag(0);
-				}
-			);
-		});
 	};
 
 	showCreditModal = () => {
