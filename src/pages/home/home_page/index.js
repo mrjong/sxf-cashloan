@@ -34,7 +34,8 @@ const API = {
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
+	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
+	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 };
 const tagList = [
 	{
@@ -84,7 +85,8 @@ export default class home_page extends PureComponent {
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
-			billOverDue: '' //逾期弹窗标志
+			billOverDue: '', //逾期弹窗标志
+			isNeedExamine: false, // 是否需要人审
 		};
 	}
 
@@ -303,7 +305,7 @@ export default class home_page extends PureComponent {
 
 	// 智能按钮点击事件
 	handleSmartClick = () => {
-		const { usrIndexInfo } = this.state;
+		const { usrIndexInfo, isNeedExamine } = this.state;
 		if (usrIndexInfo.indexSts === 'LN0001') {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
@@ -360,7 +362,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				if (true) {
+				if (isNeedExamine) {
 					this.props.history.push('/home/loan_apply_succ_page');
 				} else {
 					this.props.toast.info(`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
@@ -561,6 +563,10 @@ export default class home_page extends PureComponent {
 				// }
 				if (result.data.indexSts === 'LN0003') {
 					this.getPercent();
+				}
+				if (result.data.indexSts === 'LN0007') {
+					// 获取是否需要人审
+					this.getExamineSts();
 				}
 				this.setState({
 					usrIndexInfo: result.data.indexData
@@ -829,6 +835,18 @@ export default class home_page extends PureComponent {
 		store.setBillNo(usrIndexInfo.indexData.billNo);
 		this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
 	};
+
+	getExamineSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					isNeedExamine: res.data && res.data.falg === '01',
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}			
+		});
+	}
 
 	render() {
 		const {
