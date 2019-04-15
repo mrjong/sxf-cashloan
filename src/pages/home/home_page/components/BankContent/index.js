@@ -22,7 +22,7 @@ export default class BankContent extends React.Component {
 			MessageTag50000: '',
 			MessageTagError: '',
 			MessageTagStep: '',
-			MessageTagLimitDate: ''
+			MessageTagLimitDate: '', // 额度有效期标识
 		};
 	}
 
@@ -44,12 +44,12 @@ export default class BankContent extends React.Component {
 		const MessageTag50000 = store.getMessageTag50000();
 		const MessageTagError = store.getMessageTagError();
 		const MessageTagStep = store.getMessageTagStep();
-		const MessageTagLimitDate = store.getMessageTagLimitDate();
+		const MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
 		this.setState({
 			MessageTag50000,
 			MessageTagError,
 			MessageTagStep,
-			MessageTagLimitDate,
+			MessageTagLimitDate, // 额度有效期标识
 		});
 	}
 
@@ -103,7 +103,7 @@ export default class BankContent extends React.Component {
 		store[key2](key);
 	};
 	render() {
-		const { MessageTag50000, MessageTagError, MessageTagStep, MessageTagLimitDate } = this.state;
+		const { MessageTag50000, MessageTagError, MessageTagStep, MessageTagLimitDate, } = this.state;
 		const {
 			className,
 			children,
@@ -218,8 +218,7 @@ export default class BankContent extends React.Component {
 		} else if (
 			((indexSts === 'LN0006' || indexSts === 'LN0008') &&
 				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
-			(!MessageTagLimitDate || MessageTagLimitDate !== 'MessageTagLimitDate')
-			&& isShowTips
+			(!MessageTagLimitDate || MessageTagLimitDate !== 'MessageTagLimitDate') && isShowTips
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
