@@ -10,6 +10,7 @@ import fetch from 'sx-fetch';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import SXFButton from 'components/ButtonCustom';
 import dayjs from 'dayjs';
+
 const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
