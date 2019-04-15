@@ -499,7 +499,12 @@ export const logoutApp = (that) => {
 				result.msgInfo && Toast.info(result.msgInfo);
 				return;
 			}
-			window.ReactRouterHistory.push('/login');
+			//如果是第三方app登陆页
+			if (store.getOuterLogin()) {
+				window.ReactRouterHistory.push('/outer_login');
+			} else {
+				window.ReactRouterHistory.push('/login');
+			}
 			// sessionStorage.clear();
 			// localStorage.clear();
 			// Cookie.remove('fin-v-card-token');
