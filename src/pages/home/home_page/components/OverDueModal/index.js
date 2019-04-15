@@ -24,11 +24,11 @@ export default class OverDueModal extends React.PureComponent {
   render() {
     const { count } = this.props;
     return (
-      <Modal className="overDueModal" visible={true} transparent maskClosable={false}>
+      <Modal className="overDueModalBox" visible={true} transparent maskClosable={false}>
         <div>
-          <img src={overDueImg} />
+          <img className={style.warningImg} src={overDueImg} />
           <h3 className={style.overDueTit}>信用风险提醒</h3>
-          <p>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
+          <p className={style.overDueDesc}>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
           <SXFButton onClick={this.handleOverDueClick}>我知道了，前去还款</SXFButton>
         </div>
       </Modal>
