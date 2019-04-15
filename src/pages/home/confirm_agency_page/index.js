@@ -15,7 +15,6 @@ import style from './index.scss';
 
 const API = {
   QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 确认代还信息查询接口
-  CONFIRM_REPAYMENT: '/bill/agentRepay', // 代还申请接口
   CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
   CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
   checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡

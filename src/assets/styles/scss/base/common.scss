@@ -2,38 +2,41 @@
 
 /* ==== 协议提示文字 和 链接颜色 ==== */
 :global {
-  .protocol_tip {
-    margin-top: 0.3rem;
-    color: #282828;
-    font-size: 0.24rem;
-    margin-right: auto;
-    margin-left: auto;
-    .protocol_link {
-      color: #4DA6FF;
-    }
-  }
-  .blod{
-      font-weight: 700;
-  }
-  .bottomTip {
-      text-align: center;
-    color: #C7C6CC;
-    font-size: 30px;
-    margin-top: 80px;
-    margin-bottom: 20px;
-  }
+	.protocol_tip {
+		margin-top: 0.3rem;
+		color: #282828;
+		font-size: 0.24rem;
+		margin-right: auto;
+		margin-left: auto;
+		.protocol_link {
+			color: #4da6ff;
+		}
+	}
+	.blod {
+		font-weight: 700;
+	}
+	.bottomTip {
+		text-align: center;
+		color: #c7c6cc;
+		font-size: 30px;
+		margin-top: 80px;
+		margin-bottom: 20px;
+	}
 }
 
 // 覆盖 antd mobile picke和modal样式
 :global {
-  .am-picker-popup-header .am-picker-popup-header-right.am-picker-popup-item,.am-modal-button-group-h a.am-modal-button{
-    color: #ffc601;
-  }
-  .am-picker-popup-header .am-picker-popup-item,.am-modal-button-group-h a.am-modal-button:first-child{
-    color: #666;
-  }
-  .am-icon-loading,.am-icon{
-    width: 30PX;
-    height: 30PX;
-  }
+	.am-picker-popup-header .am-picker-popup-header-right.am-picker-popup-item,
+	.am-modal-button-group-h a.am-modal-button {
+		color: #ffc601;
+	}
+	.am-picker-popup-header .am-picker-popup-item,
+	.am-modal-button-group-h a.am-modal-button:first-child {
+		color: #666;
+	}
+	.am-icon-loading,
+	.am-icon {
+		width: 30PX;
+		height: 30PX;
+	}
 }

@@ -23,6 +23,8 @@ let initDialog = (errMsg) => {
 				]}
 				onRequestClose={(res) => {
 					if (!res) {
+						const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
@@ -57,11 +59,16 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-			/* 实名上传图片时 不允许返回 */
 
+			/* 实名上传图片时 不允许返回 */
+			// 如果当前是从首页到绑卡页面，返回直接回到首页
+			if (store.getCheckCardRouter()) {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
-				if ((userInfo && userInfo.nameHid) || backFlag) {
+				if (!store.getToggleMoxieCard() && ((userInfo && userInfo.nameHid) || backFlag)) {
 					history.go(-2);
 				} else {
 					document.activeElement.blur();
@@ -104,6 +111,7 @@ if (window.history && window.history.pushState) {
 				obj.show();
 				return;
 			}
+
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
