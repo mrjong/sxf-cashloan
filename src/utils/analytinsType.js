@@ -101,7 +101,8 @@ const activity = {
 	redBagBtnClick: `${prefix}_ACTIVITY_REDBAG_GET`, // 放肆送活动还信用卡赚钱按钮点击
 	joinNowClick: `${prefix}_ACTIVITY_CHECK_COUPON`, // 放肆送活动弹框立即参与按钮点击
 	checkCouponClick: `${prefix}_ACTIVITY_JOIN_NOW`, // 放肆送活动弹框查看优惠劵按钮点击
-	homeModalBtnClick: `${prefix}_ACTIVITY_HOME_MODAL_CLICK`, // 放肆送活动中mpos 还到弹窗 点击
+    homeModalBtnClick: `${prefix}_ACTIVITY_HOME_MODAL_CLICK`, // 放肆送活动中mpos 还到弹窗 点击
+    mianxi418Entry: `${prefix}_ACTIVITY_MIANXI_418_ENTRY`, // 最高免息30天 活动入口
 };
 
 const moxie_bank_list = {
