@@ -30,6 +30,7 @@ import overDueImg from 'assets/images/home/overDue_icon.png';
 import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
 import Circle from './components/Circle';
+import OverDueModal from './components/OverDueModal';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 
@@ -1113,6 +1114,8 @@ export default class home_page extends PureComponent {
 						</div>
 					</div>
 				</Modal>
+				
+				<OverDueModal />
 			</div>
 		);
 	}
