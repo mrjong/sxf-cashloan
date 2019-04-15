@@ -93,7 +93,10 @@ export default class home_page extends PureComponent {
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
-			billOverDue: '' //逾期弹窗标志
+			billOverDue: '', //逾期弹窗标志
+			overDueInf: { // 逾期弹框中的数据
+				
+			},
 		};
 	}
 
@@ -844,7 +847,8 @@ export default class home_page extends PureComponent {
 			perdRateList,
 			selectedLoanDate = {},
 			firstUserInfo,
-			billOverDue
+			billOverDue,
+			overDueInf,
 		} = this.state;
 		const { history } = this.props;
 		const { getFieldDecorator } = this.props.form;
@@ -1115,7 +1119,7 @@ export default class home_page extends PureComponent {
 					</div>
 				</Modal>
 				
-				<OverDueModal />
+				{/* <OverDueModal overDueInf={overDueInf} handleClick={this.handleOverDueClick} /> */}
 			</div>
 		);
 	}
