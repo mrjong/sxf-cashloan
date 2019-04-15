@@ -77,6 +77,11 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
+			if (window.location.pathname === '/others/download_page' && store.getOuterLogin()) {
+				logoutAppHandler();
+				return
+			}
+
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {

@@ -44,7 +44,7 @@ const API = {
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
-	readAgreement: '/wap/index/saveAgreementViewRecord' // 上报我已阅读协议
+	readAgreement: '/index/saveAgreementViewRecord' // 上报我已阅读协议
 };
 const tagList = [
 	{
@@ -80,10 +80,8 @@ export default class home_page extends PureComponent {
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
-
 			percent: 0,
 			showToast: false,
-
 			newUserActivityModal: false,
 			isNewModal: false,
 			handleMoxie: false, // 触发跳转魔蝎方法
@@ -98,7 +96,6 @@ export default class home_page extends PureComponent {
 			billOverDue: false, //逾期弹窗标志
 			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
-			modalIndex: 0 // 弹窗显示的索引
 		};
 	}
 
@@ -562,7 +559,7 @@ export default class home_page extends PureComponent {
 						: Object.assign({}, result.data, { indexData: {} })
 				});
 				this.setState({
-					// showAgreement: result.data && result.data.popupFlag === '1'
+					showAgreement: result.data && result.data.popupFlag === '1'
 				})
 				// 对于历史提交过授信的用户不弹框
 				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
@@ -836,7 +833,7 @@ export default class home_page extends PureComponent {
 
 	readAgreementCb = () => {
 		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
-			if (result && result.msgCode === 'PTM0000') {
+			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
 					showAgreement: false
 				})
@@ -844,23 +841,10 @@ export default class home_page extends PureComponent {
 		})
 	}
 
-	// 处理首页弹窗顺序
-	handleModalSequence = () => {
-		const { showAgreement, billOverDue, isShowActivityModal, visibleLoading } = this.state
-		const arr = [showAgreement, billOverDue, isShowActivityModal, visibleLoading]
-		const modalIndex = arr.findIndex(item => {
-			return item === true
-		})
-		this.setState({
-			modalIndex
-		})
-	}
-
 	render() {
 		const {
 			bannerList,
 			usrIndexInfo,
-			visibleLoading,
 			percent,
 			percentSatus,
 			percentData,
@@ -869,9 +853,10 @@ export default class home_page extends PureComponent {
 			perdRateList,
 			selectedLoanDate = {},
 			firstUserInfo,
-			billOverDue,
 			showAgreement,
-			modalIndex
+			billOverDue,
+			isShowActivityModal,
+			visibleLoading
 		} = this.state;
 		const { history } = this.props;
 		const { getFieldDecorator } = this.props.form;
@@ -950,9 +935,9 @@ export default class home_page extends PureComponent {
 		}
 
 		let homeModal = null
-		if (modalIndex === 0) {
+		if (showAgreement) {
 			homeModal = <AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
-		} else if (modalIndex === 1) {
+		} else if (billOverDue) {
 			homeModal =
 				<Modal className="overDueModal" visible={billOverDue} transparent maskClosable={false}>
 					<div>
@@ -962,15 +947,14 @@ export default class home_page extends PureComponent {
 						<SXFButton onClick={this.handleOverDueClick}>我知道了，前去还款</SXFButton>
 					</div>
 				</Modal>
-		} else if (modalIndex === 2) {
+		} else if (isShowActivityModal) {
 			homeModal = <ActivityModal
 				activityModalBtn={this.activityModalBtn}
 				closeActivityModal={this.closeActivityModal}
 				history={history}
 				isNewModal={this.state.isNewModal}
 			/>
-		} else if (modalIndex === 3) {
-
+		} else if (visibleLoading) {
 			homeModal = <Modal
 				className="zijian"
 				wrapClassName={style.modalLoadingBox}
@@ -1147,18 +1131,6 @@ export default class home_page extends PureComponent {
 				</Modal>
 
 				{homeModal}
-
-
-				{/* {this.state.isShowActivityModal && (
-					<ActivityModal
-						activityModalBtn={this.activityModalBtn}
-						closeActivityModal={this.closeActivityModal}
-						history={history}
-						isNewModal={this.state.isNewModal}
-					/>
-				)} */}
-
-
 			</div>
 		);
 	}

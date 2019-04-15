@@ -40,7 +40,7 @@ export const handleErrorLog = (status, statusText) => {
 };
 
 export const handleWindowError = () => {
-	window.onerror = function(errorMessage, scriptURI, lineNo, columnNo, error) {
+	window.onerror = function (errorMessage, scriptURI, lineNo, columnNo, error) {
 		console.log('errorMessage: ' + errorMessage); // 异常信息
 		console.log('scriptURI: ' + scriptURI); // 异常文件路径
 		console.log('lineNo: ' + lineNo); // 异常行号
@@ -76,13 +76,13 @@ export const isWXOpen = () => {
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
-		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
+		let pageList = ['/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page'];
 		if (isWXOpen()) {
-			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
+			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
 			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
-			let pageListMpos = [ '/mpos/' ];
+			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		} else {
 			let pageListCommon = [];
@@ -132,8 +132,8 @@ export const setTitle = (getTitle) => {
 		i.src = 'https://lns-wap-test.vbillbank.com/favicon.ico';
 	}
 	i.style.display = 'none';
-	i.onload = function() {
-		setTimeout(function() {
+	i.onload = function () {
+		setTimeout(function () {
 			i.remove();
 		}, 9);
 	};
@@ -169,7 +169,7 @@ export const isSomeBrowser = (type) => {
 //关闭view
 export const closeCurrentWebView = () => {
 	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
+		bridge.callHandler('closeCurrentWebView', '', function (response) {
 			console.log(response);
 		});
 	});
@@ -216,8 +216,9 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-    '/home/loan_repay_confirm_page',
-    '/home/credit_apply_succ_page'
+	'/home/loan_repay_confirm_page',
+	'/home/credit_apply_succ_page',
+	'/others/download_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -367,7 +368,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 				store.removeLoanAspirationHome();
 				store.removeToggleMoxieCard();
 				setTimeout(() => {
-					$props.history.push({ pathname: '/home/credit_apply_succ_page', search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`});
+					$props.history.push({ pathname: '/home/credit_apply_succ_page', search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}` });
 				}, 3000);
 			} else {
 				$props.toast.info(res.msgInfo);
@@ -383,7 +384,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 		});
 };
 
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 export const getNextStr = async ({ $props, needReturn = false }) => {
 	console.log('2222222222');
 	let codes = '';
@@ -576,7 +577,7 @@ export const validators = {
 function clearAllCookie() {
 	var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
 	if (keys) {
-		for (var i = keys.length; i--; ) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
+		for (var i = keys.length; i--;) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
 	}
 }
 export const vconsole = (i, consoleshow) => {
