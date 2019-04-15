@@ -92,7 +92,7 @@ export default class home_page extends PureComponent {
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
-			showAgreement: false, // 显示协议弹窗
+			showAgreement: true, // 显示协议弹窗
 			billOverDue: false, //逾期弹窗标志
 			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
