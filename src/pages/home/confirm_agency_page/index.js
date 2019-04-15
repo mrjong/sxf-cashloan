@@ -389,7 +389,7 @@ export default class confirm_agency_page extends PureComponent {
                   defaultindex={repaymentIndex}
                   activeindex={repaymentIndex}
                   onClick={this.handleRepaymentTagClick}
-                  // isDotted={isMPOS() && !isVIP}
+                  isDotted={isMPOS() && !isVIP}
                 />
               </div>
             </div>
