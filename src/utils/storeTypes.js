@@ -64,6 +64,7 @@ export const storeTypes = {
 	CarrierMoxie: 'CarrierMoxie', // 运营商直接返回的问题
 	BankMoxie: 'BankMoxie', // 信用卡直接返回的问题
 	GoMoxie: 'GoMoxie', // 魔蝎银行列表去魔蝎再返回的两次退出才退出的问题
-    CreditSuccessBack: 'CreditSuccessBack', // 信用卡绑卡之后立即去提交页需要提示
-    
+	CreditSuccessBack: 'CreditSuccessBack', // 信用卡绑卡之后立即去提交页需要提示
+	LoginDownloanBtn: 'LoginDownloanBtn', // 登陆页点击立即下载按钮标识
+	OuterLogin: 'OuterLogin' // 在嵌入第三方APP登陆成功的标记
 };

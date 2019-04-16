@@ -39,6 +39,7 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		store.removeOuterLogin()
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.setState({
 			queryData
@@ -148,10 +149,11 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						store.setOuterLogin(true)
 						if (isWXOpen()) {
-							this.props.history.push('/home/home');
+							this.props.history.replace('/others/download_page');
 						} else {
-							this.props.history.push('/home/home');
+							this.props.history.replace('/others/download_page');
 						}
 					},
 					(error) => {
