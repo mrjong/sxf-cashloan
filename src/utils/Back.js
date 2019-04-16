@@ -77,13 +77,6 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
-			if (window.location.pathname === '/others/download_page' && store.getOuterLogin()) {
-				logoutAppHandler();
-				return
-			} else if (window.location.pathname === '/others/download_page') {
-				window.ReactRouterHistory.goBack();
-			}
-
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
@@ -149,10 +142,8 @@ if (window.history && window.history.pushState) {
 					if (tokenFromStorage && token) {
 						window.ReactRouterHistory.goBack();
 					} else {
-						if(!store.getLoginDownloanBtn()) {
-							window.close();
-							WeixinJSBridge.call('closeWindow');
-						}
+						window.close();
+						WeixinJSBridge.call('closeWindow');
 					}
 				} else {
 					window.history.pushState(null, null, document.URL);
