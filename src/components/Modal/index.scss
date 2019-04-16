@@ -47,19 +47,26 @@
 			background-image: url(../../assets/images/home/close_ico@2x.png);
 			background-repeat: no-repeat;
 			background-size: 100% 100%;
-			margin: 0 auto;
+			margin: 40px auto;
 		}
 	}
+}
+.mianxi30 {
+	position: relative;
+	top: 80px;
 }
 .btn_mianxi {
 	display: inline-block;
 	color: #fff;
-	padding: 20px 50px;
+	padding: 16px 80px;
 	background: linear-gradient(178deg, rgba(255, 211, 50, 1) 0%, rgba(243, 157, 35, 1) 100%);
 	box-shadow: 0 5px 11px 0 rgba(90, 0, 0, 0.6);
 	border-radius: 45px;
 	position: relative;
-	top: -150px;
+	letter-spacing: 2px;
+	font-weight: 500;
+	font-family: 'PingFangSC-Regular';
+	top: -60px;
 }
 :global {
 	.home_modal_warp {

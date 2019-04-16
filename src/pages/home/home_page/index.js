@@ -45,7 +45,8 @@ const API = {
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001' // 用户是否参与过免息
+	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 参与418活动
 };
 const tagList = [
 	{
@@ -157,10 +158,16 @@ export default class home_page extends PureComponent {
 				.then((res) => {
 					// 0:不弹出  1:弹出
 					if (res.data && res.data === '1') {
-						resolve(res.data);
-					}else{
-                        resolve('0');
-                    }
+						// 如果是活动来的，
+						if (store.getInvoking418()) {
+							this.props.$fetch.get(API.saveUserInfoEngaged);
+							resolve('0');
+						} else {
+							resolve(res.data);
+						}
+					} else {
+						resolve('0');
+					}
 				})
 				.catch((err) => {
 					reject();
@@ -200,7 +207,6 @@ export default class home_page extends PureComponent {
 
 						this.credit_extension_not();
 					} else {
-						console.log(isInvoking_mianxi);
 						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
 							this.setState(
 								{
@@ -695,7 +701,9 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'mianxi30': // 账单爬取成功
-				this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
+				// this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
+				this.props.history.push('/order/repayment_succ_page');
+
 				break;
 			default:
 				break;

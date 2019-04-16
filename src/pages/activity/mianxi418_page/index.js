@@ -10,6 +10,7 @@ import SmsAlert from '../components/SmsAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
+import { store } from 'utils/store';
 
 const API = {
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 用户是否参与过免息
@@ -67,6 +68,7 @@ export default class mianxi418_page extends PureComponent {
 		} else if (Cookie.get('fin-v-card-token')) {
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
+            store.setInvoking418(true)
 			this.props.history.replace('/common/wx_middle_page');
 		}
 	};
