@@ -397,7 +397,6 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 				codesArray.push(item.stsw.dicDetailCd);
 			}
 		});
-		console.log(codes, '==========');
 		if (!needReturn) {
 			store.setNeedNextUrl(true);
 			// 实名
