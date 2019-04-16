@@ -3,6 +3,7 @@ import styles from './index.scss';
 import huodongTootip3 from '../../assets/images/home/huodongTootip3.png';
 import huodongTootip1 from '../../assets/images/home/huodongTootip1.png';
 import huodongTootipBtn3 from '../../assets/images/home/huodongTootip_btn3.png';
+import mianxi30 from './img/mianxi30.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -25,7 +26,17 @@ class ActivityModal extends React.Component {
 									activityModalBtn();
 								}}
 							/>
-						) : null}
+                        ) : null}
+
+                            <img src={mianxi30} />
+                            <div className={styles.btn_mianxi}
+                            onClick={() => {
+                                activityModalBtn();
+                            }}
+                            >
+                            立即参与
+                            </div>
+                       
 					</div>
 					<div className={styles.closeBtn} onClick={closeActivityModal} />
 				</div>

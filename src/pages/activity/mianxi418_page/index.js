@@ -191,7 +191,7 @@ export default class mianxi418_page extends PureComponent {
 							<div className={styles.tipText}>
 								<span>小主～</span>
 								<br />
-								<span>先去登录才能参与活动哦～</span>
+								<span>活动火热进行中，快前往「还到」参与！</span>
 							</div>
 							<div className={styles.closeBtn} onClick={this.closeTip} />
 						</div>

@@ -81,7 +81,7 @@ export default class home_page extends PureComponent {
 			visibleLoading: false,
 			percent: 0,
 			showToast: false,
-			isShowActivityModal: false, // 是否显示活动弹窗
+			isShowActivityModal: true, // 是否显示活动弹窗
 			newUserActivityModal: false,
 			isNewModal: false,
 			handleMoxie: false, // 触发跳转魔蝎方法
