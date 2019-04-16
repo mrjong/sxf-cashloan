@@ -840,7 +840,7 @@ export default class home_page extends PureComponent {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
-					isNeedExamine: res.data && res.data.flag === '01',
+					isNeedExamine: res.data && res.data.flag === '01' && res.data.ptMark === '01',
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
