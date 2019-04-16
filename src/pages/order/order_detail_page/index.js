@@ -54,10 +54,10 @@ export default class order_detail_page extends PureComponent {
   }
   componentWillMount() {
     if (!store.getBillNo()) {
-      // this.props.toast.info('订单号不能为空')
-      // setTimeout(() => {
-      //   this.props.history.goBack()
-      // }, 3000);
+      this.props.toast.info('订单号不能为空')
+      setTimeout(() => {
+        this.props.history.goBack()
+      }, 3000);
       return
     }
     this.setState({
