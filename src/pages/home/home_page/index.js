@@ -701,9 +701,7 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'mianxi30': // 账单爬取成功
-				// this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
-				this.props.history.push('/order/repayment_succ_page');
-
+				this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
 				break;
 			default:
 				break;

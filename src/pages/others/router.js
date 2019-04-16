@@ -22,7 +22,7 @@ export default [
 	},
 	{
 		path: '/others/outer_login_page',
-		title: '登录',
+		title: '登录和注册',
 		arrowHide: true,
 		component: () => import('pages/others/outer_login_page')
 	}

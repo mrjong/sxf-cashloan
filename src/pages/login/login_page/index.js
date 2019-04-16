@@ -43,6 +43,7 @@ export default class login_page extends PureComponent {
 		this.setState({
 			queryData
 		});
+		store.removeLoginDownloadBtn()
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -315,6 +316,7 @@ export default class login_page extends PureComponent {
 						className={styles.f_right}
 						onClick={() => {
 							this.props.history.push('/others/download_page');
+							store.setLoginDownloadBtn(true)
 						}}
 					>
 						立即下载
