@@ -9,6 +9,12 @@ import { activity } from 'utils/analytinsType';
 import SmsAlert from '../components/SmsAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import Cookie from 'js-cookie';
+import fetch from 'sx-fetch';
+
+const API = {
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 用户是否参与过免息
+};
+@fetch.inject()
 export default class mianxi418_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -82,7 +88,14 @@ export default class mianxi418_page extends PureComponent {
 
 	// 进入首页
 	goHomePage = () => {
-		this.props.history.push('/home/home');
+		this.props.$fetch
+			.get(API.saveUserInfoEngaged)
+			.then((res) => {
+				this.props.history.push('/home/home');
+			})
+			.catch((err) => {
+				this.props.history.push('/home/home');
+			});
 	};
 
 	onRef = (ref) => {
@@ -100,18 +113,14 @@ export default class mianxi418_page extends PureComponent {
 							this.goHomePage();
 						},
 						URM0008: (res, getType) => {},
-						others: (res, getType) => {
-							
-						}
+						others: (res, getType) => {}
 					}}
 					goLoginCb={{
 						PTM0000: (res, getType) => {
 							this.goHomePage();
 						},
 						URM0008: (res, getType) => {},
-						others: (res, getType) => {
-							
-						}
+						others: (res, getType) => {}
 					}}
 					validateMposCb={{
 						PTM9000: (res, getType) => {

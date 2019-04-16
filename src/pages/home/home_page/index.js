@@ -158,7 +158,9 @@ export default class home_page extends PureComponent {
 					// 0:不弹出  1:弹出
 					if (res.data && res.data === '1') {
 						resolve(res.data);
-					}
+					}else{
+                        resolve('0');
+                    }
 				})
 				.catch((err) => {
 					reject();
@@ -199,7 +201,7 @@ export default class home_page extends PureComponent {
 						this.credit_extension_not();
 					} else {
 						console.log(isInvoking_mianxi);
-						if (isInvoking_mianxi === '1') {
+						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
