@@ -10,13 +10,13 @@
 		z-index: 999;
 	}
 	.modalWrapper {
-		position: fixed;
-		width: 100%;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 1000;
-		text-align: center;
+		// position: fixed;
+		// width: 100%;
+		// left: 50%;
+		// top: 50%;
+		// transform: translate(-50%, -50%);
+		// z-index: 1000;
+		// text-align: center;
 		.content {
 			position: relative;
 			width: 100%;
@@ -47,11 +47,7 @@
 			background-image: url(../../assets/images/home/close_ico@2x.png);
 			background-repeat: no-repeat;
 			background-size: 100% 100%;
-			box-sizing: border-box;
-			position: absolute;
-			bottom: -80px;
-			left: 50%;
-			transform: translate(-50%, 0%);
+			margin: 0 auto;
 		}
 	}
 }
@@ -64,4 +60,20 @@
 	border-radius: 45px;
 	position: relative;
 	top: -150px;
+}
+:global {
+	.home_modal_warp {
+		.am-modal.am-modal-transparent {
+			width: 100%;
+		}
+		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		.am-modal.am-modal-transparent .am-modal-content {
+			padding: 0;
+		}
+		.am-modal-content {
+			background: transparent;
+		}
+	}
 }
