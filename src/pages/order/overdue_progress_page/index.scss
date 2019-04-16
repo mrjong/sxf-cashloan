@@ -1,83 +1,87 @@
 @import '../../../assets/styles/scss/base/fn';
 
-.repayment_succ_page {
-  .tips {
-    text-align: center;
-    padding: 61px 0 71px 0;
-    background: #fff;
-    margin-bottom: 20px;
-    .success_ico {
-      display: inline-block;
-      @include bg-image('../../../assets/images/order/success_ico');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      width: 128px;
-      height: 128px;
-    }
-    p {
+.overdue_progress_page {
+  padding-bottom: 60px;
+  .progress_list{
+    padding-top: 46px;
+    margin-left: 119px;
+    li{
+      position: relative;
+      width: 518px;
+      border: 2px solid #C7C6CC;
+      border-radius: 8px;
+      color: #C7C6CC;
       font-size: 30px;
-      color: rgba(51, 51, 51, 1);
-      margin-top: 25px;
-      font-weight: 600;
+      padding: 0 24px;
+      margin-bottom: 46px;
+      .dateTimeBox{
+        position: relative;
+        font-size: 24px;
+        padding: 20px 0;
+        .dateBox{
+          margin-right: 20px;
+        }
+        &::after{
+          @include setBottomLine(#C7C6CC);
+        }
+      }
+      .desc{
+        padding: 20px 0;
+      }
+      .arrow{
+        position: absolute;
+        left: -24px;
+        top: 25px;
+        width: 24px;
+        height: 30px;
+        @include bg-image('../../../assets/images/order/unactive_arrow');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      .stepItem {
+        position: absolute;
+        left: -81px;
+        top: 25px;
+        width: 34px;
+        height: 34px;
+        @include bg-image('../../../assets/images/order/unactive_ico');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        z-index: 1;
+      }
+      .lineItem{
+        position: absolute;
+        left: -65.5px;
+        top: -185px;
+        width: 2px;
+        height: 240px;
+        background: #C7C6CC;
+      }
     }
-  }
-  .details {
-    padding: 45px 30px;
-    background: #fff;
-    p {
-      margin-bottom: 39px;
-      font-size: 30px;
-      color: rgba(51, 51, 51, 1);
+    li.active{
+      border-color: #F66;
+      color: #F66;
+      .dateTimeBox{
+        &::after{
+          @include setBottomLine(#F66);
+        }
+      }
+      .arrow{
+        @include bg-image('../../../assets/images/order/active_arrow');
+      }
+      .stepItem {
+        @include bg-image('../../../assets/images/order/active_ico');
+      }
+      .lineItem{
+        background: #F66;
+      }
     }
-    p:last-child {
+    li:last-child{
       margin-bottom: 0;
     }
   }
   .back_btn {
     width: 620px;
-    margin-top: 108px;
-  }
-}
-.success_modal_warp {
-  :global {
-    .am-modal{
-      width: 750px;
-      .am-modal-content{
-        padding-top: 0;
-        background-color: transparent;
-        height: 850px;
-        .am-modal-body{
-          padding: 0;
-        }
-      }
-    }
-  }
-  .modal_tip_content {
-    background-image: url('../../../assets/images/order/modal_bg_new1.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    width: 750px;
-    height: 750px;
-    .modal_btn{
-      position: relative;
-      margin: 0 auto;
-      top: 580px;
-      width: 375px;
-      height: 96px;
-      background-image: url('../../../assets/images/order/modal_btn1.png');
-      background-size: 100% 100%;
-    }
-  }
-  .close_btn {
-    position: absolute;
-    left: 50%;
-    top: 780px;
-    background-image: url('../../../assets/images/order/close_ico@2x.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    width: 68px;
-    height: 68px;
-    margin-left: -34px;
-    z-index: 1;
+    margin-top: 100px;
   }
 }
