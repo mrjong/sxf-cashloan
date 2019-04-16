@@ -1,22 +1,5 @@
 .modal {
-	.mask {
-		position: fixed;
-		background-color: rgba(0, 0, 0, .5);
-		margin: 0;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 999;
-	}
 	.modalWrapper {
-		// position: fixed;
-		// width: 100%;
-		// left: 50%;
-		// top: 50%;
-		// transform: translate(-50%, -50%);
-		// z-index: 1000;
-		// text-align: center;
 		.content {
 			position: relative;
 			width: 100%;
