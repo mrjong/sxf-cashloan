@@ -8,6 +8,8 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 // const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
 	let obj = new PopUp(
@@ -22,9 +24,30 @@ let initDialog = (errMsg) => {
 					}
 				]}
 				onRequestClose={(res) => {
+					console.log(res);
+					switch (location.pathname) {
+						case '/home/loan_repay_confirm_page':
+							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
+								pageTitle: '借钱还信用卡'
+							});
+							break;
+						case '/home/essential_information':
+							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
+								pageTitle: '基本信息认证'
+							});
+							break;
+						case '/home/moxie_bank_list_page':
+							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
+								pageTitle: '银行列表'
+							});
+							break;
+
+						default:
+							break;
+					}
+					console.log(location.pathname, '---------');
 					if (!res) {
 						const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');

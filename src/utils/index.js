@@ -1,6 +1,6 @@
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
-import { bugLog } from 'utils/analytinsType';
+import { bugLog, home } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
@@ -351,7 +351,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 		perdUnit: repaymentDate.perdUnit,
 		perdCnt: repaymentDate.perdCnt,
 		rpyAmt: Number(repaymentDate.rpyAmt),
-		autId: repaymentDate && repaymentDate.autId,
+		autId: repaymentDate && repaymentDate.autId
 	};
 	if (isMPOS()) {
 		getAppsList();
@@ -363,17 +363,41 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 			$props.SXFToast.hide();
 			// 提交风控返回成功
 			if (res && res.msgCode === 'PTM0000') {
+				buriedPointEvent(home.moneyCreditCardConfirm, {
+					is_success: true,
+					fail_cause: '提交成功',
+					perdLth: repaymentDate.perdLth,
+					rpyAmt: Number(repaymentDate.rpyAmt),
+					activeName: repaymentDate.activeName
+				});
 				$props.toast.info(res.msgInfo);
 				store.removeLoanAspirationHome();
 				store.removeToggleMoxieCard();
 				setTimeout(() => {
-					$props.history.push({ pathname: '/home/credit_apply_succ_page', search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`});
+					$props.history.push({
+						pathname: '/home/credit_apply_succ_page',
+						search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`
+					});
 				}, 3000);
 			} else {
+				buriedPointEvent(home.moneyCreditCardConfirm, {
+					is_success: false,
+					fail_cause: res.msgInfo,
+					perdLth: repaymentDate.perdLth,
+					rpyAmt: Number(repaymentDate.rpyAmt),
+					activeName: repaymentDate.activeName
+				});
 				$props.toast.info(res.msgInfo);
 			}
 		})
 		.catch((err) => {
+			buriedPointEvent(home.moneyCreditCardConfirm, {
+				is_success: false,
+				fail_cause: '未知错误',
+				perdLth: repaymentDate.perdLth,
+				rpyAmt: Number(repaymentDate.rpyAmt),
+				activeName: repaymentDate.activeName
+			});
 			$props.SXFToast.hide();
 			if (type) {
 				$props.history.goBack();
@@ -384,11 +408,12 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
-export const getNextStr = async ({ $props, needReturn = false }) => {
+export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	console.log('2222222222');
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
+	let resBackMsg = '';
 	if (res && res.msgCode === 'PTM0000') {
 		res.data.forEach((item) => {
 			if (needDisplayOptions.includes(item.code)) {
@@ -402,7 +427,8 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			// 实名
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
 				$props.SXFToast.hide();
-				$props.toast.info('请先实名认证');
+				let msg = '请先实名认证';
+				$props.toast.info(msg);
 				setTimeout(() => {
 					$props.history.push({
 						pathname: '/home/real_name'
@@ -414,14 +440,18 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.SXFToast.hide();
-				$props.toast.info('请进行基本信息认证');
+				let msg = '请进行基本信息认证';
+				$props.toast.info(msg);
+				resBackMsg = '基本信息认证';
 				setTimeout(() => {
 					$props.history.replace({
 						pathname: '/home/essential_information'
 						// search: urlQuery
 					});
 				}, 3000);
-
+				if (callBack) {
+					callBack(resBackMsg);
+				}
 				return;
 			}
 
@@ -434,7 +464,9 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 					.then((result) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
 							$props.SXFToast.hide();
-							$props.toast.info('请进行运营商认证');
+							let msg = '请进行运营商认证';
+							$props.toast.info(msg);
+							resBackMsg = '运营商认证';
 							setTimeout(() => {
 								// 运营商直接返回的问题
 								store.setCarrierMoxie(true);
@@ -444,19 +476,28 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
 										.location.search}&showTitleBar=NO`;
 							}, 3000);
+							if (callBack) {
+								callBack(resBackMsg);
+							}
 						}
 					});
+
 				return;
 			}
 
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.SXFToast.hide();
-				$props.toast.info('请进行信用卡认证');
+				let msg = '请进行信用卡认证';
+				$props.toast.info(msg);
+				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
 				setTimeout(() => {
 					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
 				}, 3000);
+				if (callBack) {
+					callBack(resBackMsg);
+				}
 				return;
 			}
 			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
@@ -482,11 +523,11 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 	} else {
 		Toast.info(res.msgInfo);
 	}
-	console.log(codes);
 	return {
 		data: res.data,
 		codes,
-		codesArray
+		codesArray,
+		resBackMsg
 	};
 };
 

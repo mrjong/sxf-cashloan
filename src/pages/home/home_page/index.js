@@ -92,7 +92,8 @@ export default class home_page extends PureComponent {
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
-			billOverDue: '' //逾期弹窗标志
+			billOverDue: '', //逾期弹窗标志
+			pageCode: ''
 		};
 	}
 
@@ -214,6 +215,9 @@ export default class home_page extends PureComponent {
 	calculatePercent = (data, isshow) => {
 		let codes = [];
 		let demo = data.codes;
+		this.setState({
+			pageCode: demo
+		});
 		let codesCopy = demo.slice(1, 4);
 		console.log(codesCopy, 'codesCopy');
 		console.log(data.codes, '-----');
@@ -296,10 +300,7 @@ export default class home_page extends PureComponent {
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { usrIndexInfo } = this.state;
-		if (usrIndexInfo.indexSts === 'LN0001') {
-			// 埋点-首页-点击申请信用卡代还按钮
-			buriedPointEvent(home.applyCreditRepayment);
-		} else if (usrIndexInfo.indexSts === 'LN0009') {
+		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
 			buriedPointEvent(home.viewBill);
 		} else {
@@ -416,7 +417,10 @@ export default class home_page extends PureComponent {
 				store.setBackUrl('/home/home');
 				this.props.toast.info(result.msgInfo);
 				setTimeout(() => {
-					this.props.history.push({ pathname: '/mine/bind_credit_page', search: `?noBankInfo=true&autId=${autId}` });
+					this.props.history.push({
+						pathname: '/mine/bind_credit_page',
+						search: `?noBankInfo=true&autId=${autId}`
+					});
 				}, 3000);
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -525,7 +529,20 @@ export default class home_page extends PureComponent {
 	};
 
 	handleApply = () => {
-		getNextStr({ $props: this.props });
+		if (this.state.showDiv === '50000') {
+			// 埋点-首页-点击申请信用卡代还按钮
+			buriedPointEvent(home.applyCreditRepayment);
+		}
+		getNextStr({
+			$props: this.props,
+			callBack: (resBackMsg) => {
+				if (this.state.showDiv === 'circle') {
+					buriedPointEvent(home.homeContinueApply, {
+						next_step: resBackMsg
+					});
+				}
+			}
+		});
 	};
 
 	// 获取首页信息
@@ -567,22 +584,22 @@ export default class home_page extends PureComponent {
 				//       store.setShowActivityModal(true);
 				//     }
 				//   );
-				// } else 
+				// } else
 				if (
-				  isMPOS() &&
-				  (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-				  !store.getShowActivityModal()
+					isMPOS() &&
+					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
+					!store.getShowActivityModal()
 				) {
-				  // 老弹窗（3000元）
-				  this.setState(
-				    {
-				      isShowActivityModal: true,
-				      isNewModal: false
-				    },
-				    () => {
-				      store.setShowActivityModal(true);
-				    }
-				  );
+					// 老弹窗（3000元）
+					this.setState(
+						{
+							isShowActivityModal: true,
+							isNewModal: false
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
 				}
 
 				// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
@@ -639,20 +656,20 @@ export default class home_page extends PureComponent {
 		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
 		const { usrIndexInfo } = this.state;
 		switch (usrIndexInfo.indexSts) {
-		  case 'LN0001': // 新用户，信用卡未授权
-		    this.goToNewMoXie();
-		    break;
-		  case 'LN0003': // 账单爬取成功
-		    if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-		      this.handleSmartClick();
-		    } else {
-		      this.setState({
-		        handleMoxie: true
-		      });
-		    }
-		    break;
-		  default:
-		    console.log('关闭弹窗');
+			case 'LN0001': // 新用户，信用卡未授权
+				this.goToNewMoXie();
+				break;
+			case 'LN0003': // 账单爬取成功
+				if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+					this.handleSmartClick();
+				} else {
+					this.setState({
+						handleMoxie: true
+					});
+				}
+				break;
+			default:
+				console.log('关闭弹窗');
 		}
 	};
 
@@ -661,6 +678,27 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { cardBillAmt, minPayment, billRemainAmt } = indexData;
+		// 埋点
+		switch (idx) {
+			case 0:
+				buriedPointEvent(home.repaymentIntentionAll, {
+					userType: 'oldUser'
+				});
+				break;
+			case 1:
+				buriedPointEvent(home.repaymentIntentionLowest, {
+					userType: 'oldUser'
+				});
+				break;
+			case 2:
+				buriedPointEvent(home.repaymentIntentionPart, {
+					userType: 'oldUser'
+				});
+				break;
+
+			default:
+				break;
+		}
 		this.setState(
 			{
 				activeTag: idx
@@ -704,17 +742,21 @@ export default class home_page extends PureComponent {
 	filterLoanDate = (item) => {
 		const { usrIndexInfo, activeTag } = this.state;
 		const { cardBillAmt, minPayment, billRemainAmt } = usrIndexInfo.indexData;
-		this.setState({
-			selectedLoanDate: item // 设置选中的期数
-		}, () => {
-			//全额还款
-			if (activeTag === 0) {
-				this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
-			} else if (activeTag === 1) {
-				//最低还款
-				this.calcLoanMoney(minPayment);
+		this.setState(
+			{
+				selectedLoanDate: item // 设置选中的期数
+			},
+			() => {
+				//全额还款
+				if (activeTag === 0) {
+					this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
+				} else if (activeTag === 1) {
+					//最低还款
+					this.calcLoanMoney(minPayment);
+				}
 			}
-        });
+        );
+        this.dateType(item.perdLth)
 	};
 
 	//查询还款期限
@@ -722,6 +764,7 @@ export default class home_page extends PureComponent {
 		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
 		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
 			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+			this.dateType(date[0].perdLth);
 			this.setState(
 				{
 					perdRateList: date,
@@ -732,13 +775,46 @@ export default class home_page extends PureComponent {
 				}
 			);
 		});
+    };
+    
+    dateType = (value) => {
+		// 埋点
+		switch (value) {
+			case '30':
+				buriedPointEvent(home.durationDay30, {
+					userType: 'oldUser'
+				});
+				break;
+			case '3':
+				buriedPointEvent(home.durationMonth3, {
+					userType: 'oldUser'
+				});
+				break;
+			case '6':
+				buriedPointEvent(home.durationMonth6, {
+					userType: 'oldUser'
+				});
+				break;
+			case '9':
+				buriedPointEvent(home.durationMonth9, {
+					userType: 'oldUser'
+				});
+				break;
+			case '12':
+				buriedPointEvent(home.durationMonth12, {
+					userType: 'oldUser'
+				});
+				break;
+			default:
+				break;
+		}
 	};
 
 	showCreditModal = () => {
-    	const { usrIndexInfo } = this.state;
+		const { usrIndexInfo } = this.state;
 		const { cardBillSts } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
-			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息')
+			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
 			return;
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
@@ -793,20 +869,30 @@ export default class home_page extends PureComponent {
 				}
 				const params = {
 					...selectedLoanDate,
-          rpyAmt: Number(values.loanMoney),
-          autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
+					rpyAmt: Number(values.loanMoney),
+					activeName: tagList[this.state.activeTag].name,
+					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
 				};
+
 				store.setLoanAspirationHome(params);
 				idChkPhoto({
 					$props: this.props,
-                    type: 'historyCreditExtension',
-                    msg:'认证'
+					type: 'historyCreditExtension',
+					msg: '认证'
 				}).then((res) => {
 					switch (res) {
 						case '1':
+							buriedPointEvent(home.compensationCreditCardConfirm, {
+								pageCode: this.state.pageCode
+							});
 							//调用授信接口
 							getNextStr({
 								$props: this.props
+							});
+							break;
+						case '2':
+							buriedPointEvent(home.compensationCreditCardConfirm, {
+								pageCode: '补充身份证照片'
 							});
 							break;
 						default:
@@ -992,11 +1078,16 @@ export default class home_page extends PureComponent {
 								<p className={style.billMoneyTop}>
 									<span>信用卡剩余应还(元)</span>
 									{usrIndexInfo &&
-										usrIndexInfo.indexData && (
-											<span>
-												{usrIndexInfo.indexData.billRemainAmt === 0 || usrIndexInfo.indexData.billRemainAmt ? usrIndexInfo.indexData.billRemainAmt : usrIndexInfo.indexData.cardBillAmt}
-											</span>
-										)}
+									usrIndexInfo.indexData && (
+										<span>
+											{usrIndexInfo.indexData.billRemainAmt === 0 ||
+											usrIndexInfo.indexData.billRemainAmt ? (
+												usrIndexInfo.indexData.billRemainAmt
+											) : (
+												usrIndexInfo.indexData.cardBillAmt
+											)}
+										</span>
+									)}
 								</p>
 								<p className={style.billMoneyTwoTop}>
 									<span>最低还款金额(元)</span>
