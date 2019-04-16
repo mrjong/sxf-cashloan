@@ -54,10 +54,10 @@ export default class order_detail_page extends PureComponent {
   }
   componentWillMount() {
     if (!store.getBillNo()) {
-      this.props.toast.info('订单号不能为空')
-      setTimeout(() => {
-        this.props.history.goBack()
-      }, 3000);
+      // this.props.toast.info('订单号不能为空')
+      // setTimeout(() => {
+      //   this.props.history.goBack()
+      // }, 3000);
       return
     }
     this.setState({
@@ -710,6 +710,17 @@ export default class order_detail_page extends PureComponent {
     ]
     return (
       <div className={styles.order_detail_page}>
+        <div className={styles.overDueEntry}>
+          <span className={styles.overDueItem}>
+            <i className={styles.warningIco} />
+            您的账单已逾期!
+          </span>
+          <span className={styles.overDueItem}>
+            查看逾期信用进度
+            <i className={styles.entryIco} />
+          </span>
+        </div>
+        <div className={styles.topBlock}></div>
         {
           isShowSmsModal && <SmsModal
             onCancel={this.skipProtocolBindCard}
