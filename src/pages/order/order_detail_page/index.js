@@ -667,6 +667,12 @@ export default class order_detail_page extends PureComponent {
       isShowDetail: !this.state.isShowDetail
     })
   }
+  // 查看逾期进度
+  goOverdue = () => {
+    this.props.history.push({
+      pathname: '/order/overdue_progress_page',
+    });
+  }
   render() {
     const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt } = this.state
     const {
@@ -710,12 +716,12 @@ export default class order_detail_page extends PureComponent {
     ]
     return (
       <div className={styles.order_detail_page}>
-        <div className={styles.overDueEntry}>
-          <span className={styles.overDueItem}>
+        <div className={styles.overdueEntry}>
+          <span className={styles.overdueItem}>
             <i className={styles.warningIco} />
             您的账单已逾期!
           </span>
-          <span className={styles.overDueItem}>
+          <span className={styles.overdueItem} onClick={this.goOverdue}>
             查看逾期信用进度
             <i className={styles.entryIco} />
           </span>
