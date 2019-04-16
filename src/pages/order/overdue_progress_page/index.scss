@@ -8,12 +8,12 @@
     li{
       position: relative;
       width: 518px;
-      border: 2px solid #C7C6CC;
       border-radius: 8px;
       color: #C7C6CC;
       font-size: 30px;
       padding: 0 24px;
       margin-bottom: 46px;
+      background: #fff;
       .dateTimeBox{
         position: relative;
         font-size: 24px;
@@ -22,7 +22,7 @@
           margin-right: 20px;
         }
         &::after{
-          @include setBottomLine(#C7C6CC);
+          @include setBottomLine(#e5e5e5);
         }
       }
       .desc{
@@ -34,7 +34,7 @@
         top: 25px;
         width: 24px;
         height: 30px;
-        @include bg-image('../../../assets/images/order/unactive_arrow');
+        @include bg-image('../../../assets/images/order/active_arrow');
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
@@ -59,16 +59,7 @@
       }
     }
     li.active{
-      border-color: #F66;
-      color: #F66;
-      .dateTimeBox{
-        &::after{
-          @include setBottomLine(#F66);
-        }
-      }
-      .arrow{
-        @include bg-image('../../../assets/images/order/active_arrow');
-      }
+      color: #333;
       .stepItem {
         @include bg-image('../../../assets/images/order/active_ico');
       }

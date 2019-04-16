@@ -15,7 +15,6 @@ const API = {
   payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 }
 @fetch.inject()
-@setBackGround('#FFF')
 
 export default class overdue_progress_page extends PureComponent {
   constructor(props) {

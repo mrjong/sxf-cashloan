@@ -716,17 +716,22 @@ export default class order_detail_page extends PureComponent {
     ]
     return (
       <div className={styles.order_detail_page}>
-        <div className={styles.overdueEntry}>
-          <span className={styles.overdueItem}>
-            <i className={styles.warningIco} />
-            您的账单已逾期!
-          </span>
-          <span className={styles.overdueItem} onClick={this.goOverdue}>
-            查看逾期信用进度
-            <i className={styles.entryIco} />
-          </span>
-        </div>
-        <div className={styles.topBlock}></div>
+        {
+          true &&
+          <div className={styles.overdueEntry}>
+            <span className={styles.overdueItem}>
+              <i className={styles.warningIco} />
+              您的账单已逾期!
+            </span>
+            <span className={styles.overdueItem} onClick={this.goOverdue}>
+              查看逾期信用进度
+              <i className={styles.entryIco} />
+            </span>
+          </div>
+        }
+        {
+          false && <div className={styles.topBlock} />
+        }
         {
           isShowSmsModal && <SmsModal
             onCancel={this.skipProtocolBindCard}
