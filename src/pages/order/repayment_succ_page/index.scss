@@ -1,83 +1,114 @@
 @import '../../../assets/styles/scss/base/fn';
 
 .repayment_succ_page {
-  .tips {
-    text-align: center;
-    padding: 61px 0 71px 0;
-    background: #fff;
-    margin-bottom: 20px;
-    .success_ico {
-      display: inline-block;
-      @include bg-image('../../../assets/images/order/success_ico');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      width: 128px;
-      height: 128px;
-    }
-    p {
-      font-size: 30px;
-      color: rgba(51, 51, 51, 1);
-      margin-top: 25px;
-      font-weight: 600;
-    }
-  }
-  .details {
-    padding: 45px 30px;
-    background: #fff;
-    p {
-      margin-bottom: 39px;
-      font-size: 30px;
-      color: rgba(51, 51, 51, 1);
-    }
-    p:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .back_btn {
-    width: 620px;
-    margin-top: 108px;
-  }
+	.tips {
+		text-align: center;
+		padding: 61px 0 71px 0;
+		background: #fff;
+		margin-bottom: 20px;
+		.success_ico {
+			display: inline-block;
+			@include bg-image('../../../assets/images/order/success_ico');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			width: 128px;
+			height: 128px;
+		}
+		p {
+			font-size: 30px;
+			color: rgba(51, 51, 51, 1);
+			margin-top: 25px;
+			font-weight: 600;
+		}
+	}
+	.details {
+		padding: 45px 30px;
+		background: #fff;
+		p {
+			margin-bottom: 39px;
+			font-size: 30px;
+			color: rgba(51, 51, 51, 1);
+		}
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+	.back_btn {
+		width: 620px;
+		margin-top: 108px;
+	}
 }
 .success_modal_warp {
-  :global {
-    .am-modal{
-      width: 750px;
-      .am-modal-content{
-        padding-top: 0;
-        background-color: transparent;
-        height: 850px;
-        .am-modal-body{
-          padding: 0;
-        }
-      }
-    }
-  }
-  .modal_tip_content {
-    background-image: url('../../../assets/images/order/modal_bg_new1.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    width: 750px;
-    height: 750px;
-    .modal_btn{
-      position: relative;
-      margin: 0 auto;
-      top: 580px;
-      width: 375px;
-      height: 96px;
-      background-image: url('../../../assets/images/order/modal_btn1.png');
-      background-size: 100% 100%;
-    }
-  }
-  .close_btn {
-    position: absolute;
-    left: 50%;
-    top: 780px;
-    background-image: url('../../../assets/images/order/close_ico@2x.png');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    width: 68px;
-    height: 68px;
-    margin-left: -34px;
-    z-index: 1;
-  }
+	:global {
+		.am-modal {
+			width: 750px;
+			.am-modal-content {
+				padding-top: 0;
+				background-color: transparent;
+				height: 850px;
+				.am-modal-body {
+					padding: 0;
+				}
+			}
+		}
+	}
+	.modal_tip_content {
+		background-image: url('../../../assets/images/order/modal_bg_new1.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		width: 580px;
+		height: 563px;
+		margin: 100px auto 0;
+		.modal_content {
+			position: relative;
+			font-size: 40px;
+			top: 280px;
+			font-family: 'PingFangSC-Medium';
+			.title {
+				font-weight: 500;
+				color: rgba(0, 0, 0, 1);
+				line-height: 56px;
+			}
+			.subtitle {
+				margin-top: 20px;
+				font-size: 32px;
+				font-weight: 400;
+				color: rgba(108, 108, 108, 1);
+				span {
+					color: #f92f12;
+				}
+			}
+			.btn_mianxi {
+				display: inline-block;
+				color: #fff;
+				padding: 15px 80px;
+				font-size: 36px;
+				margin-top: 50px;
+				background: linear-gradient(178deg, rgba(255, 211, 50, 1) 0%, rgba(243, 157, 35, 1) 100%);
+				box-shadow: 0 5px 11px 0 rgba(90, 0, 0, 0.6);
+				border-radius: 45px;
+			}
+		}
+		.modal_btn {
+			position: relative;
+			margin: 0 auto;
+			top: 580px;
+			width: 375px;
+			height: 96px;
+			background-image: url('../../../assets/images/order/modal_btn1.png');
+			background-size: 100% 100%;
+		}
+	}
+	.close_btn {
+		position: absolute;
+		left: 50%;
+		top: 750px;
+		background-image: url('../../../assets/images/order/close_ico@2x.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		width: 68px;
+		height: 68px;
+		margin-left: -34px;
+		z-index: 1;
+	}
 }

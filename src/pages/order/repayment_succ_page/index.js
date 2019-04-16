@@ -30,9 +30,8 @@ export default class repayment_succ_page extends PureComponent {
   }
 
   // 返回首页
-  backHome = (type) => {
-    buriedPointEvent(type);
-    this.props.history.push('/home/home')
+  backHome = () => {
+    this.props.history.push('/activity/mianxi418_page?entry=isxdc_order_alert');
   }
   // 关闭弹窗
   closeModal = () => {
@@ -62,7 +61,16 @@ export default class repayment_succ_page extends PureComponent {
           transparent
         >
           <div className={styles.modal_tip_content}>
-            <div onClick={() => {this.backHome(order.openNow)}}  className={styles.modal_btn}></div>
+          <div className={styles.modal_content}>
+              <div className={styles.title}>恭喜您</div>
+              <div className={styles.subtitle}>获得<span>免息30天</span>参与资格</div>
+              <div
+								className={styles.btn_mianxi}
+								onClick={this.backHome}
+							>
+								立即参与
+							</div>
+          </div>
           </div>
           <i className={styles.close_btn} onClick={this.closeModal} />
         </Modal>

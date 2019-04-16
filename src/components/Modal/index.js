@@ -9,35 +9,40 @@ class ActivityModal extends React.Component {
 	constructor(props) {
 		super(props);
 	}
-
+	// 优先弹688  再弹出免息  再弹iphone
 	render() {
-		const { closeActivityModal, history, isNewModal, activityModalBtn } = this.props;
+		const { closeActivityModal, history, modalType, activityModalBtn } = this.props;
 		return (
 			<div className={styles.modal}>
 				<div className={styles.mask} />
 				<div className={styles.modalWrapper}>
 					<div className={styles.content}>
-						<img src={isNewModal ? huodongTootip1 : huodongTootip3} />
-						{!isNewModal ? (
+						{/* 大图 */}
+						{modalType === 'huodongTootip1' ? <img src={huodongTootip1} /> : null}
+						{modalType === 'huodongTootip3' ? <img src={huodongTootip3} /> : null}
+						{modalType === 'mianxi30' ? <img src={mianxi30} className={styles.mianxi30} /> : null}
+						{/* 按钮 */}
+						{modalType === 'huodongTootip3' ? (
 							<img
 								className={styles.huodongTootipBtn}
 								src={huodongTootipBtn3}
 								onClick={() => {
-									activityModalBtn();
+									activityModalBtn('huodongTootip3');
 								}}
 							/>
-                        ) : null}
-
-                            <img src={mianxi30} />
-                            <div className={styles.btn_mianxi}
-                            onClick={() => {
-                                activityModalBtn();
-                            }}
-                            >
-                            立即参与
-                            </div>
-                       
+						) : null}
+						{modalType === 'mianxi30' ? (
+							<div
+								className={styles.btn_mianxi}
+								onClick={() => {
+									activityModalBtn('mianxi30');
+								}}
+							>
+								立即参与
+							</div>
+						) : null}
 					</div>
+					{/* 关闭按钮 */}
 					<div className={styles.closeBtn} onClick={closeActivityModal} />
 				</div>
 			</div>
