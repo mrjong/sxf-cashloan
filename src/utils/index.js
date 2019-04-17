@@ -388,7 +388,6 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false }) => {
-	console.log('2222222222');
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
@@ -484,7 +483,6 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 	} else {
 		Toast.info(res.msgInfo);
 	}
-	console.log(codes);
 	return {
 		data: res.data,
 		codes,
