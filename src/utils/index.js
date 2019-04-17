@@ -442,7 +442,7 @@ export const getNextStr = async ({ $props, needReturn = false }) => {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO&agreementEntryText=个人信息授权书&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
+										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
 							}, 3000);
 						}
 					});

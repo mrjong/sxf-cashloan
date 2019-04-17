@@ -119,7 +119,7 @@ export default class moxie_bank_list_page extends Component {
 		store.setBankMoxie(true);
 		store.setGoMoxie(true);
 
-		window.location.href = item.href + `&showTitleBar=NO&agreementEntryText=个人信息授权书&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/internet_bank_auth_page')}`;
+		window.location.href = item.href + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/internet_bank_auth_page')}`;
 		// window.history.pushState(null, null, item.href + '&showTitleBar=NO');
 		// location.href = item.href + '&showTitleBar=NO';
 	};
