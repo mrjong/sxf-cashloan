@@ -207,18 +207,7 @@ export default class home_page extends PureComponent {
 
 						this.credit_extension_not();
 					} else {
-						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
-							this.setState(
-								{
-									isShowActivityModal: true,
-									modalType: 'mianxi30'
-								},
-								() => {
-									store.setShowActivityModal(true);
-								}
-							);
-						}
-						this.requestGetUsrInfo();
+						this.requestGetUsrInfo(isInvoking_mianxi);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -574,7 +563,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = () => {
+	requestGetUsrInfo = (isInvoking_mianxi) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -616,7 +605,17 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (
+				if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'mianxi30'
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
+				} else if (
 					isMPOS() &&
 					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
 					!store.getShowActivityModal()
