@@ -66,6 +66,7 @@ export default class mianxi418_page extends PureComponent {
 				});
 			}
 		} else if (Cookie.get('fin-v-card-token')) {
+            store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
             store.setInvoking418(true)
