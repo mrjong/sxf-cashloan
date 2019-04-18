@@ -36,7 +36,7 @@ const tagList = [
 ];
 
 let timer = null;
-let selectedLoanDateCopy = {}
+let selectedLoanDateCopy = {};
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -472,7 +472,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 				break;
 		}
 	};
+
 	render() {
+		const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+		let moneyKeyboardWrapProps;
+		if (isIPhone) {
+			moneyKeyboardWrapProps = {
+				onTouchStart: (e) => e.preventDefault()
+			};
+		}
 		const {
 			isShowProgress,
 			percent,
@@ -596,22 +604,52 @@ export default class loan_repay_confirm_page extends PureComponent {
 				<div>
 					{getFieldDecorator('loanMoney', {
 						initialValue: this.state.loanMoney,
-						rules: [ { required: true, message: '请输入还款金额' } ]
+						rules: [ { required: true, message: '请输入还款金额' } ],
+						normalize: (v, prev) => {
+							if (v && !/^(([1-9]\d*)|0)(\.\d{0,0}?)?$/.test(v)) {
+								if (v === '.') {
+									return '';
+								}
+								return prev;
+							}
+							return v;
+						}
 					})(
+						// <InputItem
+						// 	placeholder={this.placeholderText()}
+						// 	type="text"
+						// 	disabled={this.inputDisabled()}
+						// 	ref={(el) => (this.inputRef = el)}
+						// 	className={this.inputDisabled() ? '' : 'blackColor'}
+						// 	onBlur={() => {
+						// 		handleInputBlur();
+						// 	}}
+						// 	onFocus={(v) => {
+						// 		this.updateBillInf();
+						// 	}}
+						// >
+						// 	帮你还多少(元)
+						// </InputItem>
 						<InputItem
-							placeholder={this.placeholderText()}
-							type="text"
-							disabled={this.inputDisabled()}
+							// {...getFieldProps('money2', {
+							//   normalize: (v, prev) => {
+							//     if (v && !/^(([1-9]\d*)|0)(\.\d{0,2}?)?$/.test(v)) {
+							//       if (v === '.') {
+							//         return '0.';
+							//       }
+							//       return prev;
+							//     }
+							//     return v;
+							//   },
+							// })}
+							type="money"
+							placeholder="money format"
 							ref={(el) => (this.inputRef = el)}
-							className={this.inputDisabled() ? '' : 'blackColor'}
-							onBlur={() => {
-								handleInputBlur();
-							}}
-							onFocus={(v) => {
-								this.updateBillInf();
-							}}
+							onVirtualKeyboardConfirm={(v) => console.log('onVirtualKeyboardConfirm:', v)}
+							clear
+							moneyKeyboardWrapProps={moneyKeyboardWrapProps}
 						>
-							帮你还多少(元)
+							数字键盘
 						</InputItem>
 					)}
 				</div>
@@ -634,8 +672,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.setState({
 											perdRateList: date,
 											selectedLoanDate: date[0] // 默认选中3期
-                                        });
-                                        selectedLoanDateCopy = date[0]
+										});
+										selectedLoanDateCopy = date[0];
 										this.dateType(date[0].perdLth);
 										// 设置默认选中的还款金额
 										return date.map((item) => ({
