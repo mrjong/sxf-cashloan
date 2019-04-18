@@ -185,7 +185,7 @@ export default class home_page extends PureComponent {
 				if (res && res.msgCode === 'PTM0000') {
 					this.setState({
 						firstUserInfo: res.data.flag,
-						showAgreement: result.data && result.data.popupFlag === '1',
+						showAgreement: res.data.agreementPopupFlag === '1',
 						billOverDue: res.data.popupFlag === '1'
 					});
 					let isInvoking_mianxi = await this.isInvoking_mianxi();
