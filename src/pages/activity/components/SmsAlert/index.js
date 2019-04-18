@@ -415,7 +415,7 @@ export default class SmsAlert extends Component {
 	};
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag, loginProps_needLogin } = this.state;
+		const { smsText, timeflag, loginProps_needLogin,loginProps_needLogin_copy } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
