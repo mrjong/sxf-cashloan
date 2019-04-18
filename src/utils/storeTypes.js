@@ -68,5 +68,7 @@ export const storeTypes = {
 	Invoking418: 'Invoking418', // 418 活动
 	SuccessPay: 'SuccessPay', // 418 活动返回
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
-	LoginDownloadBtn: 'LoginDownloadBtn' // 登陆页点击立即下载按钮标识
+	LoginDownloadBtn: 'LoginDownloadBtn', // 登陆页点击立即下载按钮标识
+	SuccessPay: 'SuccessPay', // 418 活动返回
+	NoLoginUrl: 'NoLoginUrl' // 微信授权失败跳转到那个页面
 };

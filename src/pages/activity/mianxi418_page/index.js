@@ -222,7 +222,7 @@ export default class mianxi418_page extends PureComponent {
 							<div>
 								<h2>活动规则</h2>
 								<ol>
-									<li>1.活动开始时间：2019年4月18日；</li>
+									<li>1.活动开始时间：2019年4月19日；</li>
 									<li>2.活动对象：还到注册用户；</li>
 									<li>3.活动参与：仅在随行付Plus和还到公众号内进行；</li>
 									<li>
