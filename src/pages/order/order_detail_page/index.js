@@ -727,12 +727,12 @@ export default class order_detail_page extends PureComponent {
       <div className={styles.order_detail_page}>
         {
           isEntryShow &&
-          <div className={styles.overdueEntry}>
+          <div className={styles.overdueEntry} onClick={this.goOverdue}>
             <span className={styles.overdueItem}>
               <i className={styles.warningIco} />
               您的账单已逾期!
             </span>
-            <span className={styles.overdueItem} onClick={this.goOverdue}>
+            <span className={styles.overdueItem}>
               查看逾期信用进度
               <i className={styles.entryIco} />
             </span>
