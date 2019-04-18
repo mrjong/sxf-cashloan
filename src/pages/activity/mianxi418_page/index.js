@@ -72,7 +72,7 @@ export default class mianxi418_page extends PureComponent {
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
             store.setInvoking418(true)
-			this.props.history.replace('/common/wx_middle_page');
+			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
 	closeModal = () => {
