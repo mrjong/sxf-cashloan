@@ -121,8 +121,8 @@ export default class home_page extends PureComponent {
 		// 去除需要调用获取下一步url方法
 		store.removeNeedNextUrl();
 		// 清除订单缓存
-        store.removeBackData();
-        // 结清页去活动页
+		store.removeBackData();
+		// 结清页去活动页
 		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
@@ -195,11 +195,21 @@ export default class home_page extends PureComponent {
 					let isInvoking_mianxi = await this.isInvoking_mianxi();
 					if (res.data.flag === '01') {
 						// 历史未提交过授信的用户才弹
-						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
-									modalType: isInvoking_mianxi === '1' ? 'mianxi30' : 'huodongTootip1'
+									modalType: 'mianxi30'
+								},
+								() => {
+									store.setShowActivityModal(true);
+								}
+							);
+						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+							this.setState(
+								{
+									isShowActivityModal: true,
+									modalType: 'huodongTootip1'
 								},
 								() => {
 									store.setShowActivityModal(true);
