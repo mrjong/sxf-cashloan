@@ -185,6 +185,7 @@ export default class home_page extends PureComponent {
 				if (res && res.msgCode === 'PTM0000') {
 					this.setState({
 						firstUserInfo: res.data.flag,
+						showAgreement: result.data && result.data.popupFlag === '1',
 						billOverDue: res.data.popupFlag === '1'
 					});
 					let isInvoking_mianxi = await this.isInvoking_mianxi();
@@ -595,9 +596,6 @@ export default class home_page extends PureComponent {
 					usrIndexInfo: result.data.indexData
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
-				});
-				this.setState({
-					showAgreement: result.data && result.data.popupFlag === '1'
 				});
 				// 对于历史提交过授信的用户不弹框
 				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
