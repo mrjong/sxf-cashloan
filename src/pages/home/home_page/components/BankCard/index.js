@@ -70,8 +70,11 @@ export default class BankCard extends React.PureComponent {
 		}
 		const billDtData =
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-		let cardBillAmtData = '';
-		if (cardBillSts === '02' && !noNeedUpdateArr.includes(contentData.indexSts)) {
+        let cardBillAmtData = '';
+        console.log(overDt,'-----------')
+        if (cardBillSts === '01' && Number(cardBillAmt)<=0) {
+			cardBillAmtData = '已结清'
+		}else if (cardBillSts === '02' && !noNeedUpdateArr.includes(contentData.indexSts)) {
 			cardBillAmtData = '待更新'
 		} else {
 			if (billRemainAmt === 0 || billRemainAmt) {

@@ -328,6 +328,18 @@ export default class home_page extends PureComponent {
 						store.setMoxieBackUrl('/home/home');
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					}, 2000);
+				} else if (
+					usrIndexInfo.indexData &&
+					usrIndexInfo.indexData.autSts === '2' &&
+					usrIndexInfo.indexData.cardBillSts === '01' &&
+					Number(usrIndexInfo.indexData.cardBillAmt) <= 0
+				) {
+					this.props.toast.info('账单已结清，请代偿其他信用卡');
+					setTimeout(() => {
+						// 跳新版魔蝎
+						store.setMoxieBackUrl('/home/home');
+						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
 					this.showCreditModal();
 				}
@@ -755,8 +767,8 @@ export default class home_page extends PureComponent {
 					this.calcLoanMoney(minPayment);
 				}
 			}
-        );
-        this.dateType(item.perdLth)
+		);
+		this.dateType(item.perdLth);
 	};
 
 	//查询还款期限
@@ -775,9 +787,9 @@ export default class home_page extends PureComponent {
 				}
 			);
 		});
-    };
-    
-    dateType = (value) => {
+	};
+
+	dateType = (value) => {
 		// 埋点
 		switch (value) {
 			case '30':
