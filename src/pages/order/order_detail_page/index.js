@@ -22,11 +22,14 @@ const API = {
   payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 }
 let entryFrom = '';
+let isShowEntry = null;
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
   constructor(props) {
     super(props);
     entryFrom = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).entryFrom;
+    // 是否首页出现信用施压弹框
+    isShowEntry = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).isShowEntry;
     this.state = {
       billDesc: {},
       showModal: false,
@@ -686,7 +689,8 @@ export default class order_detail_page extends PureComponent {
       wthdCrdCorpOrgNm = '',
       wthdCrdNoLast = '',
       perdNum = '',
-      waitRepAmt = ''
+      waitRepAmt = '',
+      perdList
     } = billDesc
     const itemList = [
       {
@@ -714,10 +718,15 @@ export default class order_detail_page extends PureComponent {
         value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
       }
     ]
+    const isOverdue = perdList && perdList.filter((item, index) => {
+			return item.perdSts === '1';
+    });
+    const isEntryShow = isShowEntry && isOverdue && isOverdue.length > 0;
+    console.log(isEntryShow)
     return (
       <div className={styles.order_detail_page}>
         {
-          true &&
+          isEntryShow &&
           <div className={styles.overdueEntry}>
             <span className={styles.overdueItem}>
               <i className={styles.warningIco} />
@@ -730,7 +739,7 @@ export default class order_detail_page extends PureComponent {
           </div>
         }
         {
-          false && <div className={styles.topBlock} />
+          !isEntryShow && <div className={styles.topBlock} />
         }
         {
           isShowSmsModal && <SmsModal

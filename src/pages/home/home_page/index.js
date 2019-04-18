@@ -97,6 +97,7 @@ export default class home_page extends PureComponent {
 			overDueInf: { // 逾期弹框中的数据
 				
 			},
+			overDueModalFlag: '', // 信用施压弹框标识
 		};
 	}
 
@@ -160,10 +161,22 @@ export default class home_page extends PureComponent {
 			.post(API.procedure_user_sts)
 			.then((res) => {
 				if (res && res.msgCode === 'PTM0000') {
+					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
+					// popupFlag信用施压弹框，1为显示，0为隐藏
 					this.setState({
 						firstUserInfo: res.data.flag,
-						billOverDue: res.data.popupFlag
+						billOverDue: res.data.popupFlag,
+						overDueModalFlag: res.data.overduePopupFlag,
 					});
+					const currProgress =
+						res.data && res.data.processInfo && res.data.processInfo.length > 0 && 
+						res.data.processInfo.filter((item, index) => {
+							return item.hasProgress;
+						});
+					this.setState({
+						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length-1]
+					})
+					res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
 					if (res.data.flag === '01') {
 						// 历史未提交过授信的用户才弹
 						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
@@ -828,10 +841,13 @@ export default class home_page extends PureComponent {
 		});
 	};
 
-	handleOverDueClick = () => {
-		const { usrIndexInfo } = this.state;
+	handleOverDueClick = (type) => {
+		const { usrIndexInfo, billOverDue, overDueModalFlag, } = this.state;
 		store.setBillNo(usrIndexInfo.indexData.billNo);
-		this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
+		this.props.history.push({
+			pathname: '/order/order_detail_page',
+			search: type && type === 'overdueProgress' ? `?entryFrom=home&isShowEntry=${billOverDue === '0' && overDueModalFlag === '1'}` : '?entryFrom=home'
+		});
 	};
 
 	render() {
@@ -849,6 +865,7 @@ export default class home_page extends PureComponent {
 			firstUserInfo,
 			billOverDue,
 			overDueInf,
+			overDueModalFlag,
 		} = this.state;
 		const { history } = this.props;
 		const { getFieldDecorator } = this.props.form;
@@ -1119,7 +1136,9 @@ export default class home_page extends PureComponent {
 					</div>
 				</Modal>
 				
-				{/* <OverDueModal overDueInf={overDueInf} handleClick={this.handleOverDueClick} /> */}
+				{
+					billOverDue === '0' && overDueModalFlag === '1' && <OverDueModal overDueInf={overDueInf} handleClick={() => {this.handleOverDueClick('overdueProgress')}} />
+				}
 			</div>
 		);
 	}

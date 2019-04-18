@@ -182,6 +182,10 @@ if (window.history && window.history.pushState) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
 							return;
+						} else if (store.getIOSPreviewBack()) {
+							// ios预览协议直接返回的问题
+							store.removeIOSPreviewBack();
+							return;
 						} else {
 							logoutAppHandler();
 						}

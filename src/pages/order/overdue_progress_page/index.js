@@ -1,91 +1,26 @@
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/ButtonCustom';
-import fetch from "sx-fetch";
 import { store } from 'utils/store';
-import { setBackGround } from 'utils/background';
 import styles from './index.scss';
-
-const API = {
-  qryDtl: "/bill/qryDtl",
-  payback: '/bill/payback',
-  couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-  protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-  protocolBind: '/withhold/protocolBink', //协议绑卡接口
-  fundPlain: '/fund/plain', // 费率接口
-  payFrontBack: '/bill/payFrontBack', // 用户还款新接口
-}
-@fetch.inject()
 
 export default class overdue_progress_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      progressList: [
-        {
-          date: '2019-04-05',
-          time: '11:43:12',
-          content: '账单已逾期',
-          isActive: true,
-        },
-        {
-          date: '2019-04-05',
-          time: '11:43:12',
-          content: '逾期记录即将上报百行征信',
-          isActive: true,
-        },
-        {
-          date: '2019-04-05',
-          time: '11:43:12',
-          content: '逾期记录已经上报百行征信',
-          isActive: true,
-        },
-        {
-          date: '2019-04-05',
-          time: '11:43:12',
-          content: '逾期记录申请上报人行征信',
-          isActive: true,
-        },
-        {
-          date: '2019-04-05',
-          time: '',
-          content: '即将向仲裁委申请仲裁',
-          isActive: false,
-        },
-        {
-          date: '2019-04-05',
-          time: '',
-          content: '已申请仲裁处理',
-          isActive: false,
-        },
-        {
-          date: '2019-04-05',
-          time: '',
-          content: '仲裁申请受理中',
-          isActive: false,
-        },
-        {
-          date: '2019-04-05',
-          time: '',
-          content: '裁决书已下发，请尽快下载',
-          isActive: false,
-        },
-        {
-          date: '2019-04-05',
-          time: '',
-          content: '仲裁执行中',
-          isActive: false,
-        },
-      ]
+      progressList: []
     }
   }
   componentWillMount() {
-    let test = store.getOrderSuccess()
-    if (test) {
-      let orderSuccess = test
+    let progressList = store.getOverdueInf();
+    if (progressList) {
       this.setState({
-        orderSuccess
+        progressList,
       })
     }
+  }
+
+  componentWillUnmount() {
+
   }
 
   // 返回账单详情
@@ -103,12 +38,14 @@ export default class overdue_progress_page extends PureComponent {
             {
               progressList.map((item, index) => {
                 return (
-                  <li key={index} className={item.isActive ? styles.active : null}>
+                  <li key={index} className={item.hasProgress ? styles.active : null}>
                     <p className={styles.dateTimeBox}>
-                      <span className={styles.dateBox}>{item.date}</span>
-                      <span>{item.time}</span>
+                      <span className={styles.dateBox}>{item.hasProgress ? item.showTime && item.showTime.split(' ')[0] : item.preShowTime}</span>
+                      { item.showTime && item.showTime.split(' ')[1] &&
+                        <span>{item.showTime.split(' ')[1]}</span>
+                      }
                     </p>
-                    <p className={styles.desc}>{item.content}</p>
+                    <p className={styles.desc}>{item.hasProgress ? item.progressTitle : item.preProgressTitle}</p>
                     <i className={styles.arrow} />
                     <i className={styles.stepItem} />
                     {
