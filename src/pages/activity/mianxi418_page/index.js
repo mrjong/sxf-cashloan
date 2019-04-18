@@ -55,8 +55,12 @@ export default class mianxi418_page extends PureComponent {
 		});
 	};
 	goTo = () => {
-        // 根据不同入口来源埋点
-			buriedPointEvent(activity.mianxi418Btn);
+		const { urlData } = this.state;
+
+		// 根据不同入口来源埋点
+		buriedPointEvent(activity.mianxi418Btn, {
+			entry: urlData.entry
+		});
 		const { urlData } = this.state;
 		if (urlData && urlData.entry && urlData.entry.indexOf('ismpos_') > -1) {
 			if (urlData.appId && urlData.token) {
@@ -68,10 +72,10 @@ export default class mianxi418_page extends PureComponent {
 				});
 			}
 		} else if (Cookie.get('fin-v-card-token')) {
-            store.setToken(Cookie.get('fin-v-card-token'));
+			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
-            store.setInvoking418(true)
+			store.setInvoking418(true);
 			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
