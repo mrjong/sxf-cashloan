@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import qs from 'qs';
+import { Checkbox } from 'antd-mobile';
 import styles from './index.scss';
-import activity_bg from './img/activity_bg.png';
 import wenjuan_01 from './img/wenjuan_01.jpg';
+import title_img from './img/title.png';
+import card_img from './img/card.png';
 import wenjuan_02 from './img/wenjuan_02.jpg';
 import wenjuan_03 from './img/wenjuan_03.jpg';
 import wenjuan_04 from './img/wenjuan_04.png';
-import liyou from './img/liyou.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import SmsAlert from '../components/SmsAlert';
@@ -14,7 +15,7 @@ import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-
+const CheckboxItem = Checkbox.CheckboxItem;
 const API = {
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 用户是否参与过免息
 };
@@ -159,7 +160,43 @@ export default class mianxi418_page extends PureComponent {
 						others: (res, getType) => {}
 					}}
 				/>
-				<img src={activity_bg} className={styles.activity_bg} />
+				<div className={styles.imgBox}>
+					<img src={wenjuan_01} className={styles.activity_bg} />
+					<img src={wenjuan_02} className={styles.activity_bg} />
+					<img src={wenjuan_03} className={styles.activity_bg} />
+					<img src={wenjuan_04} className={styles.activity_bg} />
+					<div className={styles.img_box}>
+						<img src={title_img} className={styles.img_title} />
+						<img src={card_img} className={styles.img_card} />
+					</div>
+					<div className={styles.img_box_white}>
+						<ul className={[styles.text_box,'wenjuan'].join(' ')}>
+							<li className={styles.text_title}>
+								1.信用卡代偿平台是什么？
+								<ul className={styles.text_list}>
+									<li>
+										<CheckboxItem onChange={() => this.onChange('22')}>222</CheckboxItem>
+									</li>
+								</ul>
+							</li>
+							<li className={styles.text_title}>
+								1.信用卡代偿平台是什么？
+								<ul className={styles.text_list}>
+									<li>
+										<CheckboxItem onChange={() => this.onChange('22')}>222</CheckboxItem>
+									</li>
+									<li>
+										<CheckboxItem onChange={() => this.onChange('22')}>222</CheckboxItem>
+									</li>
+									<li>
+										<CheckboxItem onChange={() => this.onChange('22')}>222</CheckboxItem>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+
 				{/* <div
 					className={styles.rule}
 					onClick={() => {
@@ -171,16 +208,7 @@ export default class mianxi418_page extends PureComponent {
 					活动规则
 				</div> */}
 				<div className={styles.mt_500}>
-					<div className={styles.card_box}>
-						<img src={card_50000} />
-					</div>
-					<div className={styles.btn_box}>
-						<a onClick={this.goTo}>免费申请</a>
-					</div>
-					<div className={styles.btn_bottom_text}>每人1次参与机会，限前1000名</div>
-					<div className={styles.card_box}>
-						<img src={liyou} />
-					</div>
+					{/* 					
 					<div className={styles.footer_text}>
 						<span style={{ color: '#fff' }}>参与即同意</span>
 						<span
@@ -197,13 +225,7 @@ export default class mianxi418_page extends PureComponent {
 						>
 							《随行付用户隐私权政策》
 						</span>
-					</div>
-					<div className={styles.footer_b_text}>
-						关注还到公众号 后台回复【红包】<br />领100元现金抽奖资格
-					</div>
-					<div className={styles.footer_h_text}>
-						<div className={styles.text}>本活动最终解释权归随行付-还到所有</div>
-					</div>
+					</div> */}
 				</div>
 				{showLoginTip && (
 					<div className={styles.modal}>

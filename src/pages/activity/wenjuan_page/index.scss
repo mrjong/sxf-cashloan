@@ -70,64 +70,50 @@
 			background-image: url(./img/close_btn.png);
 			bottom: -116px;
 		}
-		.awardModalCont {
-			position: relative;
-			text-align: center;
-			.modalBg {
-				width: 750px;
-			}
-			.checkBtn {
-				position: absolute;
-				width: 410px;
-				bottom: 88px;
-				left: 50%;
-				transform: translate(-50%, 0%);
-			}
-		}
-	}
-	.modalWrapper3 {
-		width: 560px;
-		height: 466px;
-		border-radius: 8px;
-		padding: 110px 56px 40px;
-		.noAwardModalCont {
-			font-size: 34px;
-			color: rgba(51, 51, 51, 1);
-			text-align: center;
-			line-height: 48px;
-			.title {
-				font-weight: 500;
-			}
-			.contText {
-				margin: 20px 0 62px;
-			}
-			.joinBtn {
-				background: linear-gradient(90deg, rgba(254, 175, 110, 1), rgba(236, 83, 58, 1));
-				border-radius: 45px;
-				font-size: 32px;
-				color: #fff;
-				width: 400px;
-			}
-		}
-		.closeIcon {
-			position: absolute;
-			right: 4px;
-			top: 4px;
-			width: 26px;
-			height: 26px;
-			margin: 20px;
-			background-image: url(../../../assets/images/confirm_agency/icon_close.png);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-		}
 	}
 }
 .main {
 	position: relative;
-	background: linear-gradient(180deg, rgba(250, 97, 72, 1) 0%, rgba(250, 50, 19, 1) 100%);
 	.activity_bg {
 		width: 100%;
+		display: block;
 		// z-index: -1;
+	}
+	.imgBox {
+		position: relative;
+		.img_box {
+			text-align: center;
+		}
+		.img_box_white {
+			padding-top: 600px;
+			background: #fff;
+			width: 612px;
+			margin: -550px auto 0;
+		}
+		.img_title {
+			width: 679px;
+		}
+		.img_card {
+			width: 536px;
+		}
+	}
+	.text_box {
+		font-family: 'PingFangSC-Regular';
+		padding: 0 56px;
+	}
+	.text_title {
+		font-size: 32px;
+		font-weight: bold;
+		color: #692614;
+		margin-bottom: 35px;
+	}
+	.text_list {
+		font-size: 28px;
+		color: #ae948c;
+		margin-top: 20px;
+		li {
+			margin-bottom: 20px;
+		}
 	}
 	.rule {
 		position: absolute;
@@ -174,18 +160,7 @@
 			}
 		}
 	}
-	.mt_500 {
-		margin-top: -450px;
-	}
-	.card_box {
-		margin: 0 auto;
-		text-align: center;
-		img {
-			position: relative;
-			width: 95%;
-			display: inline-block;
-		}
-	}
+
 	.btn_box {
 		margin-top: -10px;
 		text-align: center;
@@ -214,37 +189,7 @@
 			-webkit-animation-iteration-count: infinite; /* 播放次数：无限 */
 		}
 	}
-	@keyframes breath {
-		from {
-			transform: scale(0.95);
-		} /* 动画开始时 */
-		50% {
-			transform: scale(1.05);
-		} /* 动画50% 时 */
-		to {
-			transform: scale(0.95);
-		} /* 动画结束时 */
-	}
 
-	@-webkit-keyframes breath {
-		from {
-			transform: scale(0.95);
-		} /* 动画开始时 */
-		50% {
-			transform: scale(1.05);
-		} /* 动画50% 时 */
-		to {
-			transform: scale(0.95);
-		} /* 动画结束时的 */
-	}
-	.btn_bottom_text {
-		text-align: center;
-		font-size: 30px;
-		font-family: 'PingFangSC-Semibold';
-		font-weight: 400;
-		color: rgba(255, 255, 255, 1);
-		margin: 20px 0 60px;
-	}
 	.footer_text {
 		line-height: 37px;
 		padding: 0 30px;
@@ -255,8 +200,8 @@
 		}
 	}
 	.footer_b_text {
-        font-size: 34px;
-        text-align: center;
+		font-size: 34px;
+		text-align: center;
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		color: rgba(255, 255, 255, 1);
@@ -290,21 +235,13 @@
 		height: 2rem;
 	}
 }
-
-@keyframes slide {
-	0% {
-		top: 280px;
-	}
-	100% {
-		top: 50px;
-	}
-}
-
-@keyframes shake {
-	0% {
-		top: 0;
-	}
-	100% {
-		top: 15px;
+:global {
+	.wenjuan {
+		.am-list-item {
+			padding-left: 0;
+		}
+		.am-list-item .am-list-thumb:first-child {
+			margin-right: 10px;
+		}
 	}
 }
