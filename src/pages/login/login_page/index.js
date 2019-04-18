@@ -34,7 +34,8 @@ export default class login_page extends PureComponent {
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
-			isChecked: true // 是否勾选协议
+			isChecked: true, // 是否勾选协议
+			inputFocus: false
 		};
 	}
 
@@ -43,6 +44,7 @@ export default class login_page extends PureComponent {
 		this.setState({
 			queryData
 		});
+		store.removeLoginDownloadBtn()
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -81,9 +83,15 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
+		let _this = this
+		let originClientHeight = document.documentElement.clientHeight
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+				let clientHeight = document.documentElement.clientHeight
+				_this.setState({
+					inputFocus: originClientHeight > clientHeight
+				})
 				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
@@ -250,6 +258,9 @@ export default class login_page extends PureComponent {
 							]
 						})}
 						onBlur={() => {
+							this.setState({
+								inputFocus: false
+							})
 							handleInputBlur();
 						}}
 					/>
@@ -264,6 +275,9 @@ export default class login_page extends PureComponent {
 								rules: [ { required: true, message: '请输入正确验证码' } ]
 							})}
 							onBlur={() => {
+								this.setState({
+									inputFocus: false
+								})
 								handleInputBlur();
 							}}
 						/>
@@ -306,7 +320,7 @@ export default class login_page extends PureComponent {
 					<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
 					<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
 				</div>
-				<div className={styles.fix_bottom_box}>
+				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>
 						<img src={logoImg} className={styles.img} />
 						<span>直接下载，放款更快！</span>
@@ -315,6 +329,7 @@ export default class login_page extends PureComponent {
 						className={styles.f_right}
 						onClick={() => {
 							this.props.history.push('/others/download_page');
+							store.setLoginDownloadBtn(true)
 						}}
 					>
 						立即下载

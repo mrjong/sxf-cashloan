@@ -6,14 +6,12 @@ import { Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import fetch from 'sx-fetch';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import SXFButton from 'components/ButtonCustom';
 const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
 };
-@fetch.inject()
 export default class BankContent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -77,7 +75,7 @@ export default class BankContent extends React.Component {
 	requestCredCardCount = () => {
 		// 埋点-首页-点击代还其他信用卡
 		buriedPointEvent(home.repayOtherCredit);
-		this.props.$fetch
+		this.props.fetch
 			.post(API.CRED_CARD_COUNT)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000') {

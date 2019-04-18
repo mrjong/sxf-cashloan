@@ -8,7 +8,6 @@ import {
 	isWXOpen,
 	getDeviceType,
 	getNextStr,
-	handleClickConfirm,
 	getFirstError,
 	handleInputBlur,
 	idChkPhoto
@@ -18,11 +17,9 @@ import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
-import { SXFToast } from 'utils/SXFToast';
 import fetch from 'sx-fetch';
 import Card50000 from './components/Card50000';
 import Carousels from 'components/Carousels';
-import InfoCard from './components/InfoCard';
 import BankContent from './components/BankContent';
 import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
@@ -191,6 +188,7 @@ export default class home_page extends PureComponent {
 				if (res && res.msgCode === 'PTM0000') {
 					this.setState({
 						firstUserInfo: res.data.flag,
+						showAgreement: res.data.agreementPopupFlag === '1',
 						billOverDue: res.data.popupFlag === '1'
 					});
 					let isInvoking_mianxi = await this.isInvoking_mianxi();
@@ -262,8 +260,8 @@ export default class home_page extends PureComponent {
 			pageCode: demo
 		});
 		let codesCopy = demo.slice(1, 4);
-		console.log(codesCopy, 'codesCopy');
-		console.log(data.codes, '-----');
+		// console.log(codesCopy, 'codesCopy');
+		// console.log(data.codes, '-----');
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中
@@ -284,7 +282,7 @@ export default class home_page extends PureComponent {
 				CardOverDate: true
 			});
 		}
-		console.log(newCodes, newCodes2, newCodes3);
+		// console.log(newCodes, newCodes2, newCodes3);
 		// 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
 		// 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
 		// 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
@@ -304,7 +302,7 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		console.log(newCodes2);
+		// console.log(newCodes2);
 		switch (newCodes2.length) {
 			case 0: // 新用户，信用卡未授权
 				this.setState({
@@ -430,7 +428,6 @@ export default class home_page extends PureComponent {
 
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
-		// /mine/credit_extension_page?
 		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
@@ -615,9 +612,6 @@ export default class home_page extends PureComponent {
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
 				});
-				this.setState({
-					showAgreement: result.data && result.data.popupFlag === '1'
-				});
 				// 对于历史提交过授信的用户不弹框
 				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
 				//   // 新弹窗（188元）4月11号改为688元
@@ -726,9 +720,7 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'mianxi30': // 账单爬取成功
-				// this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
-				this.props.history.push('/order/repayment_succ_page');
-
+				this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
 				break;
 			default:
 				break;
@@ -1125,11 +1117,6 @@ export default class home_page extends PureComponent {
 
 		return (
 			<div className={style.home_page}>
-				{/* <Circle
-					onRef={(ref) => {
-						this.child = ref;
-					}}
-                /> */}
 				{isWXOpen() && !tokenFromStorage && !token ? (
 					<Carousels data={bannerList} entryFrom="banner" />
 				) : bannerList && bannerList.length > 0 ? (
