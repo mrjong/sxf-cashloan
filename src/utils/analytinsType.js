@@ -56,7 +56,8 @@ const home = {
 	repaymentBtnClick6: `${prefix}_HOME_CLICK_REPAYMENT6`, // 首页LN0006状态的点击
 	repaymentBtnClick8: `${prefix}_HOME_CLICK_REPAYMENT8`, // 首页LN0008状态的点击
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
-	operatorResult: `${prefix}_HOME_OPERATOR_RESULT` // 运营商提交结果埋点
+	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
+	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`	// 下载页点击按钮事件
 };
 
 const mine = {
@@ -109,7 +110,8 @@ const activity = {
 	redBagBtnClick: `${prefix}_ACTIVITY_REDBAG_GET`, // 放肆送活动还信用卡赚钱按钮点击
 	joinNowClick: `${prefix}_ACTIVITY_CHECK_COUPON`, // 放肆送活动弹框立即参与按钮点击
 	checkCouponClick: `${prefix}_ACTIVITY_JOIN_NOW`, // 放肆送活动弹框查看优惠劵按钮点击
-	homeModalBtnClick: `${prefix}_ACTIVITY_HOME_MODAL_CLICK` // 放肆送活动中mpos 还到弹窗 点击
+    homeModalBtnClick: `${prefix}_ACTIVITY_HOME_MODAL_CLICK`, // 放肆送活动中mpos 还到弹窗 点击
+    mianxi418Entry: `${prefix}_ACTIVITY_MIANXI_418_ENTRY`, // 最高免息30天 活动入口
 };
 
 const moxie_bank_list = {

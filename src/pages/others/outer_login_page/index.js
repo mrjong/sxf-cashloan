@@ -156,7 +156,7 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
-						this.props.history.push('/home/home');
+						this.props.history.replace('/others/download_page');
 					},
 					(error) => {
 						error.msgInfo && Toast.info(error.msgInfo);
@@ -328,7 +328,7 @@ export default class login_page extends PureComponent {
 					<div
 						className={styles.f_right}
 						onClick={() => {
-							this.props.history.push('/others/download_page');
+							this.props.history.replace('/others/download_page');
 							store.setLoginDownloadBtn(true)
 						}}
 					>

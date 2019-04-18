@@ -30,34 +30,35 @@ export default class SmsAlert extends Component {
 	// 	goLoginCb: PropTypes.object,
 	// 	smsSuccess: PropTypes.func,
 	// };
-	
+
 	static defaultProps = {
 		goSubmitCb: {
 			PTM0000: () => {},
 			URM0008: () => {},
-			others: () => {},
+			others: () => {}
 		},
 		validateMposCb: {
 			URM0000: () => {},
 			PTM9000: () => {},
-			others: () => {},
+			others: () => {}
 		},
 		chkAuthCb: {
 			authFlag0: () => {},
 			authFlag1: () => {},
 			authFlag2: () => {},
-			others: () => {},
+			others: () => {}
 		},
 		doAuthCb: {
 			authSts01: () => {},
 			authSts00: () => {},
-			others: () => {},
+			others: () => {}
 		},
 		goLoginCb: {
 			PTM0000: () => {},
 			others: () => {},
+			URM0008: () => {}
 		},
-		smsSuccess: () => {},
+		smsSuccess: () => {}
 	};
 	constructor(props) {
 		super(props);
@@ -67,9 +68,11 @@ export default class SmsAlert extends Component {
 			modalShow: false,
 			disabled: false,
 			mblNoHid: '',
+			smsProps_disabled: false,
+			loginProps_disabled: false,
 			smsJrnNo: '', // 短信流水号
-			passType: '', // 传递过来的参数
-			isGoLogin: false, // 是登陆不是短验
+			otherProps_type: '', // 传递过来的参数
+			loginProps_needLogin: false // 是登陆不是短验
 		};
 	}
 	componentDidMount() {
@@ -134,7 +137,7 @@ export default class SmsAlert extends Component {
 	//登录判断
 	goSubmit = () => {
 		const { goSubmitCb, smsSuccess } = this.props;
-		const { passType } = this.state;
+		const { otherProps_type } = this.state;
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -153,7 +156,7 @@ export default class SmsAlert extends Component {
 					.then(
 						(res) => {
 							if (res.msgCode === 'PTM0000') {
-								goSubmitCb.PTM0000 && goSubmitCb.PTM0000(res, passType);
+								goSubmitCb.PTM0000 && goSubmitCb.PTM0000(res, otherProps_type);
 								// sa.login(res.userId);
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
@@ -162,14 +165,18 @@ export default class SmsAlert extends Component {
 								store.setToken(res.loginToken);
 								this.closeCb();
 								// refreshPageFn();
-							} else if (res.msgCode === 'URM0008') {
-								goSubmitCb.URM0008 && goSubmitCb.URM0008(res, passType);
+							} else if (
+								res.msgCode === 'URM0008' ||
+								res.msgCode === 'PCC-UMS-0013' ||
+								res.msgCode === 'PTM3011'
+							) {
+								goSubmitCb.URM0008 && goSubmitCb.URM0008(res, otherProps_type);
 								Toast.info(res.msgInfo);
 								this.props.form.setFieldsValue({
 									smsCd: ''
 								});
 							} else {
-								goSubmitCb.others && goSubmitCb.others(res, passType);
+								goSubmitCb.others && goSubmitCb.others(res, otherProps_type);
 								this.closeCb();
 							}
 						},
@@ -188,10 +195,17 @@ export default class SmsAlert extends Component {
 		});
 	};
 	// 实名
-	validateMposRelSts = (type, passType) => {
+	validateMposRelSts = ({
+		smsProps_disabled = true,
+		loginProps_disabled = true,
+		loginProps_needLogin = false,
+		otherProps_type = 'home'
+	}) => {
 		const { validateMposCb } = this.props;
 		this.setState({
-			disabled: type
+			smsProps_disabled,
+			loginProps_needLogin,
+			loginProps_disabled
 		});
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
@@ -201,18 +215,18 @@ export default class SmsAlert extends Component {
 			})
 			.then((res) => {
 				if (res.msgCode === 'URM0000') {
-					validateMposCb.URM0000 && validateMposCb.URM0000(res, passType);
-					this.chkAuth(passType);
+					validateMposCb.URM0000 && validateMposCb.URM0000(res, otherProps_type);
+					this.chkAuth(otherProps_type);
 				} else if (res.msgCode === 'PTM9000' || res.msgCode === 'URM0001') {
-					validateMposCb.PTM9000 && validateMposCb.PTM9000(res, passType);
+					validateMposCb.PTM9000 && validateMposCb.PTM9000(res, otherProps_type);
 				} else {
-					validateMposCb.others && validateMposCb.others(res, passType)
+					validateMposCb.others && validateMposCb.others(res, otherProps_type);
 					// Toast.info(res.msgInfo);
 				}
 			});
 	};
 
-	chkAuth = (passType) => {
+	chkAuth = (otherProps_type) => {
 		const { chkAuthCb, smsSuccess } = this.props;
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
@@ -227,43 +241,46 @@ export default class SmsAlert extends Component {
 			})
 			.then((res) => {
 				if (res.authFlag === '0') {
-					chkAuthCb.authFlag0 && chkAuthCb.authFlag0(res, passType);
+					chkAuthCb.authFlag0 && chkAuthCb.authFlag0(res, otherProps_type);
 					this.setState({
 						authToken: res.tokenId,
 						mblNoHid: res.mblNoHid
 					});
-					this.doAuth(res.tokenId, passType);
+					this.doAuth(res.tokenId, otherProps_type);
 				} else if (res.authFlag === '1') {
-					chkAuthCb.authFlag1 && chkAuthCb.authFlag1(res, passType);
 					// 已授权
 					store.setMposToken(true);
 					smsSuccess && smsSuccess();
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-					store.setToken(res.loginToken);
+                    store.setToken(res.loginToken);
+					chkAuthCb.authFlag1 && chkAuthCb.authFlag1(res, otherProps_type);                    
 				} else if (res.authFlag === '2') {
-					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, passType);
-				} else { 
-					chkAuthCb.others && chkAuthCb.others(res, passType);
-					// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
-					// if (res.mblNoHid && res.tokenId) {
-					// 	this.setState({
-					// 		authToken: res.tokenId,
-					// 		modalShow: true,
-					// 		isGoLogin: true, // 跳转登陆而非短验
-					// 		passType,
-					// 	});
-					// 	this.props.form.setFieldsValue({
-					// 		phoneValue: res.mblNoHid,
-					// 		smsCd: ''
-					// 	});
-					// } else {
-					// 	Toast.info(res.msgInfo);
-					// }
+					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, otherProps_type);
+				} else {
+					if (this.state.loginProps_needLogin) {
+						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
+						if (res.mblNoHid && res.tokenId) {
+							this.setState({
+								authToken: res.tokenId,
+								modalShow: true,
+								disabled: this.state.loginProps_disabled,
+								loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
+								otherProps_type
+							});
+							this.props.form.setFieldsValue({
+								phoneValue: res.mblNoHid,
+								smsCd: ''
+							});
+						} else {
+							Toast.info(res.msgInfo);
+						}
+					}
+					chkAuthCb.others && chkAuthCb.others(res, otherProps_type);
 				}
 			});
 	};
 	// 去授权
-	doAuth = (token, passType) => {
+	doAuth = (token, otherProps_type) => {
 		const { doAuthCb, smsSuccess } = this.props;
 		this.props.$fetch
 			.post(API.doAuth, {
@@ -273,25 +290,45 @@ export default class SmsAlert extends Component {
 			})
 			.then(
 				(res) => {
-					if (res.authSts === '01') { // 短验
-						doAuthCb.authSts01 && doAuthCb.authSts01(res, passType);
+					if (res.authSts === '01') {
+						// 短验
+						doAuthCb.authSts01 && doAuthCb.authSts01(res, otherProps_type);
 						this.setState({
 							modalShow: true,
-							passType,
+							otherProps_type
 						});
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
 							smsCd: ''
 						});
-					} else if (res.authSts === '00') { // 授权成功
-						doAuthCb.authSts00 && doAuthCb.authSts00(res, passType);
+					} else if (res.authSts === '00') {
+						// 授权成功
+						doAuthCb.authSts00 && doAuthCb.authSts00(res, otherProps_type);
 						// sa.login(res.userId);
 						store.setMposToken(true);
 						smsSuccess && smsSuccess();
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 					} else {
-						doAuthCb.others && doAuthCb.others(res, passType);
+						if (this.state.loginProps_needLogin) {
+							// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
+							if (res.mblNoHid && res.tokenId) {
+								this.setState({
+									authToken: res.tokenId,
+									modalShow: true,
+									disabled: this.state.loginProps_disabled,
+									loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
+									otherProps_type
+								});
+								this.props.form.setFieldsValue({
+									phoneValue: res.mblNoHid,
+									smsCd: ''
+								});
+							} else {
+								Toast.info(res.msgInfo);
+							}
+						}
+						doAuthCb.others && doAuthCb.others(res, otherProps_type);
 					}
 				},
 				(err) => {
@@ -302,7 +339,7 @@ export default class SmsAlert extends Component {
 	// 确定去登陆按钮
 	goLogin = () => {
 		const { goLoginCb, smsSuccess } = this.props;
-		const { passType } = this.state;
+		const { otherProps_type } = this.state;
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -320,7 +357,7 @@ export default class SmsAlert extends Component {
 					.then(
 						(res) => {
 							if (res.msgCode === 'PTM0000') {
-								goLoginCb.PTM0000 && goLoginCb.PTM0000(res, passType);
+								goLoginCb.PTM0000 && goLoginCb.PTM0000(res, otherProps_type);
 								// sa.login(res.userId);
 								store.setMposToken(true);
 								smsSuccess && smsSuccess();
@@ -329,8 +366,18 @@ export default class SmsAlert extends Component {
 								store.setToken(res.data.tokenId);
 								this.closeCb();
 								// refreshPageFn();
+							} else if (
+								res.msgCode === 'URM0008' ||
+								res.msgCode === 'PCC-UMS-0013' ||
+								res.msgCode === 'PTM3011'
+							) {
+								goLoginCb.URM0008 && goLoginCb.URM0008(res, otherProps_type);
+								Toast.info(res.msgInfo);
+								this.props.form.setFieldsValue({
+									smsCd: ''
+								});
 							} else {
-								goLoginCb.others && goLoginCb.others(res, passType);
+								goLoginCb.others && goLoginCb.others(res, otherProps_type);
 								// Toast.info('暂无活动资格');
 								this.closeCb();
 							}
@@ -344,9 +391,17 @@ export default class SmsAlert extends Component {
 			}
 		});
 	};
+	// 验证验证码
+	verifyVerifyCode = (rule, value, callback) => {
+		if (value && value.length !== 6) {
+			callback('请输入正确验证码');
+		} else {
+			callback();
+		}
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag, isGoLogin } = this.state;
+		const { smsText, timeflag, loginProps_needLogin } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
@@ -379,9 +434,12 @@ export default class SmsAlert extends Component {
 							<InputItem
 								maxLength={6}
 								type="text"
-								pattern="[0-9]*"
+								pattern="[0-9]*{6,6}"
 								{...getFieldProps('smsCd', {
-									rules: [ { required: true, message: '请输入正确验证码' } ]
+									rules: [
+										{ required: true, message: '请输入正确验证码' },
+										{ validator: this.verifyVerifyCode }
+									]
 								})}
 								className={style.form_control}
 								placeholder="请输入验证码"
@@ -402,7 +460,11 @@ export default class SmsAlert extends Component {
 						</div>
 
 						<div className={style.btn_box}>
-							<Button onClick={isGoLogin ? this.goLogin : this.goSubmit} className={style.btn_primary} type="primary">
+							<Button
+								onClick={loginProps_needLogin ? this.goLogin : this.goSubmit}
+								className={style.btn_primary}
+								type="primary"
+							>
 								确定
 							</Button>
 						</div>

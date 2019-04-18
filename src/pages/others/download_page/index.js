@@ -3,6 +3,8 @@ import fetch from "sx-fetch";
 import { getDeviceType } from 'utils';
 import styles from './index.scss';
 import downloadBtn from './img/download_btn.jpg';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 const API = {
     DOWNLOADURL: 'download/getDownloadUrl',
@@ -21,28 +23,30 @@ export default class download_page extends PureComponent {
 
     getDownloadUrl = () => {
         this.props.$fetch.get(API.DOWNLOADURL, {})
-        .then(res => {
-            if (res.msgCode === 'PTM0000') {
-                this.setState({
-                    downloadUrl: res.data,
-                })
-            } else {
-                res.msgInfo && this.props.toast.info(res.msgInfo);
-            }
-        }, error => {
-            error.msgInfo && this.props.toast.info(error.msgInfo);
-        })
+            .then(res => {
+                if (res.msgCode === 'PTM0000') {
+                    this.setState({
+                        downloadUrl: res.data,
+                    })
+                } else {
+                    res.msgInfo && this.props.toast.info(res.msgInfo);
+                }
+            }, error => {
+                error.msgInfo && this.props.toast.info(error.msgInfo);
+            })
     }
 
     downloadClick = () => {
         const { downloadUrl } = this.state;
         const phoneType = getDeviceType();
-        if (phoneType === 'ANDRIOD') {
+        buriedPointEvent(home.downloadBtnClick)
+        if (phoneType === 'IOS') {
+            window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8'
+            // this.props.toast.info('暂不支持ios下载')
+        } else {
             this.props.toast.info('安全下载中')
             window.location.href = downloadUrl;
             // window.location.href = 'http://172.16.138.162:8920/app-release.apk'
-        } else {
-            this.props.toast.info('暂不支持ios下载')
         }
     }
 
