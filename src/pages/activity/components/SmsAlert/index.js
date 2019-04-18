@@ -72,7 +72,8 @@ export default class SmsAlert extends Component {
 			loginProps_disabled: false,
 			smsJrnNo: '', // 短信流水号
 			otherProps_type: '', // 传递过来的参数
-			loginProps_needLogin: false // 是登陆不是短验
+			loginProps_needLogin: false, // 是登陆不是短验
+			loginProps_needLogin_copy: false
 		};
 	}
 	componentDidMount() {
@@ -205,6 +206,7 @@ export default class SmsAlert extends Component {
 		this.setState({
 			smsProps_disabled,
 			loginProps_needLogin,
+			loginProps_needLogin_copy: loginProps_needLogin,
 			loginProps_disabled
 		});
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
@@ -252,10 +254,16 @@ export default class SmsAlert extends Component {
 					store.setMposToken(true);
 					smsSuccess && smsSuccess();
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-                    store.setToken(res.loginToken);
-					chkAuthCb.authFlag1 && chkAuthCb.authFlag1(res, otherProps_type);                    
+					store.setToken(res.loginToken);
+					chkAuthCb.authFlag1 && chkAuthCb.authFlag1(res, otherProps_type);
+					this.setState({
+						loginProps_needLogin_copy: false
+					});
 				} else if (res.authFlag === '2') {
 					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, otherProps_type);
+					this.setState({
+						loginProps_needLogin_copy: false
+					});
 				} else {
 					if (this.state.loginProps_needLogin) {
 						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
@@ -264,6 +272,7 @@ export default class SmsAlert extends Component {
 								authToken: res.tokenId,
 								modalShow: true,
 								disabled: this.state.loginProps_disabled,
+								loginProps_needLogin_copy: true,
 								loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
 								otherProps_type
 							});
@@ -295,7 +304,8 @@ export default class SmsAlert extends Component {
 						doAuthCb.authSts01 && doAuthCb.authSts01(res, otherProps_type);
 						this.setState({
 							modalShow: true,
-							otherProps_type
+							otherProps_type,
+							loginProps_needLogin_copy: false
 						});
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
@@ -309,6 +319,9 @@ export default class SmsAlert extends Component {
 						smsSuccess && smsSuccess();
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
+						this.setState({
+							loginProps_needLogin_copy: false
+						});
 					} else {
 						if (this.state.loginProps_needLogin) {
 							// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
@@ -317,6 +330,7 @@ export default class SmsAlert extends Component {
 									authToken: res.tokenId,
 									modalShow: true,
 									disabled: this.state.loginProps_disabled,
+									loginProps_needLogin_copy: true,
 									loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
 									otherProps_type
 								});
@@ -401,7 +415,7 @@ export default class SmsAlert extends Component {
 	};
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag, loginProps_needLogin } = this.state;
+		const { smsText, timeflag, loginProps_needLogin,loginProps_needLogin_copy } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
@@ -461,7 +475,9 @@ export default class SmsAlert extends Component {
 
 						<div className={style.btn_box}>
 							<Button
-								onClick={loginProps_needLogin ? this.goLogin : this.goSubmit}
+								onClick={
+									loginProps_needLogin_copy && loginProps_needLogin ? this.goLogin : this.goSubmit
+								}
 								className={style.btn_primary}
 								type="primary"
 							>

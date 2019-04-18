@@ -56,6 +56,10 @@ export default class mianxi418_page extends PureComponent {
 	};
 	goTo = () => {
 		const { urlData } = this.state;
+		// 根据不同入口来源埋点
+		buriedPointEvent(activity.mianxi418Btn, {
+			entry: urlData.entry
+		});
 		if (urlData && urlData.entry && urlData.entry.indexOf('ismpos_') > -1) {
 			if (urlData.appId && urlData.token) {
 				this.getStatus();
@@ -66,10 +70,11 @@ export default class mianxi418_page extends PureComponent {
 				});
 			}
 		} else if (Cookie.get('fin-v-card-token')) {
+			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
-            store.setInvoking418(true)
-			this.props.history.replace('/common/wx_middle_page');
+			store.setInvoking418(true);
+			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
 	closeModal = () => {
@@ -190,7 +195,9 @@ export default class mianxi418_page extends PureComponent {
 							《随行付用户隐私权政策》
 						</span>
 					</div>
-					<div className={styles.footer_b_text}>关注还到公众号 后台回复【红包】 领100元现金抽奖资格</div>
+					<div className={styles.footer_b_text}>
+						关注还到公众号 后台回复【红包】<br />领100元现金抽奖资格
+					</div>
 					<div className={styles.footer_h_text}>
 						<div className={styles.text}>本活动最终解释权归随行付-还到所有</div>
 					</div>
@@ -215,14 +222,14 @@ export default class mianxi418_page extends PureComponent {
 							<div>
 								<h2>活动规则</h2>
 								<ol>
-									<li>1.活动开始时间：2019年4月18日；</li>
+									<li>1.活动开始时间：2019年4月19日；</li>
 									<li>2.活动对象：还到注册用户；</li>
 									<li>3.活动参与：仅在随行付Plus和还到公众号内进行；</li>
 									<li>
-										3.活动内容：活动期间，每天通过活动页面的前1000名借款用户，借款金额3000元及以上，则可享最高5万元，最高30天的免息（实际奖励以审批金额为准），每人仅限1次免息奖励；
+										4.活动内容：活动期间，每天通过活动页面的前1000名借款用户，借款金额3000元及以上，则可享最高5万元，最高30天的免息（实际奖励以审批金额为准），每人仅限1次免息奖励；
 									</li>
-									<li>4.奖励形式：借款金额满足条件后，免息奖励以免息券形式发放，届时可前往“我的-优惠券”中查看使用；</li>
-									<li>5.免息券自发放之日起35天内有效，请在还款时使用，未在有效期使用，则视为放弃；</li>
+									<li>5.奖励形式：借款金额满足条件后，免息奖励以免息券形式发放，届时可前往“我的-优惠券”中查看使用；</li>
+									<li>6.免息券自发放之日起35天内有效，请在还款时使用，未在有效期使用，则视为放弃；</li>
 									<li className={styles.redText}>Tips:已在还到借款并还清用户，再次借款，免息力度更大哦！</li>
 								</ol>
 							</div>

@@ -120,6 +120,8 @@ export default class home_page extends PureComponent {
 		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
+		// 结清页去活动页
+		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
 		this.getTokenFromUrl();
@@ -192,20 +194,6 @@ export default class home_page extends PureComponent {
 					let isInvoking_mianxi = await this.isInvoking_mianxi();
 					if (res.data.flag === '01') {
 						// 历史未提交过授信的用户才弹
-						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-							this.setState(
-								{
-									isShowActivityModal: true,
-									modalType: isInvoking_mianxi === '1' ? 'mianxi30' : 'huodongTootip1'
-								},
-								() => {
-									store.setShowActivityModal(true);
-								}
-							);
-						}
-
-						this.credit_extension_not();
-					} else {
 						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
 							this.setState(
 								{
@@ -216,8 +204,21 @@ export default class home_page extends PureComponent {
 									store.setShowActivityModal(true);
 								}
 							);
+						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+							this.setState(
+								{
+									isShowActivityModal: true,
+									modalType: 'huodongTootip1'
+								},
+								() => {
+									store.setShowActivityModal(true);
+								}
+							);
 						}
-						this.requestGetUsrInfo();
+
+						this.credit_extension_not();
+					} else {
+						this.requestGetUsrInfo(isInvoking_mianxi);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -585,7 +586,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = () => {
+	requestGetUsrInfo = (isInvoking_mianxi) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -624,7 +625,17 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (
+				if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'mianxi30'
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
+				} else if (
 					isMPOS() &&
 					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
 					!store.getShowActivityModal()

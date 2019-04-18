@@ -33,7 +33,7 @@ export default class repayment_succ_page extends PureComponent {
 	backHome = (type, canyu) => {
 		buriedPointEvent(type);
 		if (canyu) {
-			store.setCheckCardRouter(true);
+			store.setSuccessPay(true);
 			this.props.history.replace('/activity/mianxi418_page?entry=isxdc_order_alert');
 		} else {
 			this.props.history.push('/home/home');
