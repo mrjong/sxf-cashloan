@@ -56,12 +56,10 @@ export default class mianxi418_page extends PureComponent {
 	};
 	goTo = () => {
 		const { urlData } = this.state;
-
 		// 根据不同入口来源埋点
 		buriedPointEvent(activity.mianxi418Btn, {
 			entry: urlData.entry
 		});
-		const { urlData } = this.state;
 		if (urlData && urlData.entry && urlData.entry.indexOf('ismpos_') > -1) {
 			if (urlData.appId && urlData.token) {
 				this.getStatus();
