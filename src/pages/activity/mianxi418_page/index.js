@@ -195,7 +195,9 @@ export default class mianxi418_page extends PureComponent {
 							《随行付用户隐私权政策》
 						</span>
 					</div>
-					<div className={styles.footer_b_text}>关注还到公众号 后台回复【红包】 领100元现金抽奖资格</div>
+					<div className={styles.footer_b_text}>
+						关注还到公众号 后台回复【红包】<br />领100元现金抽奖资格
+					</div>
 					<div className={styles.footer_h_text}>
 						<div className={styles.text}>本活动最终解释权归随行付-还到所有</div>
 					</div>
