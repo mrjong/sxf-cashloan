@@ -12,6 +12,13 @@ import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto } from '
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+let moneyKeyboardWrapProps;
+if (isIPhone) {
+	moneyKeyboardWrapProps = {
+		onTouchStart: (e) => e.preventDefault()
+	};
+}
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
 	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
@@ -474,13 +481,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	render() {
-		const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
-		let moneyKeyboardWrapProps;
-		if (isIPhone) {
-			moneyKeyboardWrapProps = {
-				onTouchStart: (e) => e.preventDefault()
-			};
-		}
 		const {
 			isShowProgress,
 			percent,
@@ -501,7 +501,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			cardBillSts,
 			billRemainAmt
 		} = indexData;
-		const { getFieldDecorator } = this.props.form;
+		const { getFieldDecorator, getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let overDtStr = '';
 		if (overDt > 0) {
@@ -601,12 +601,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</span>
 					))}
 				</div>
-				<div>
-					{getFieldDecorator('loanMoney', {
-						initialValue: this.state.loanMoney,
-						rules: [ { required: true, message: '请输入还款金额' } ],
+				<InputItem
+					{...getFieldProps('loanMoney', {
 						normalize: (v, prev) => {
-							if (v && !/^(([1-9]\d*)|0)(\.\d{0,0}?)?$/.test(v)) {
+                            console.log(v)
+							if (v && !/^(([1-9]\d*)|0)(\.\d{0,2}?)?$/.test(v)) {
 								if (v === '.') {
 									return '';
 								}
@@ -614,45 +613,23 @@ export default class loan_repay_confirm_page extends PureComponent {
 							}
 							return v;
 						}
-					})(
-						// <InputItem
-						// 	placeholder={this.placeholderText()}
-						// 	type="text"
-						// 	disabled={this.inputDisabled()}
-						// 	ref={(el) => (this.inputRef = el)}
-						// 	className={this.inputDisabled() ? '' : 'blackColor'}
-						// 	onBlur={() => {
-						// 		handleInputBlur();
-						// 	}}
-						// 	onFocus={(v) => {
-						// 		this.updateBillInf();
-						// 	}}
-						// >
-						// 	帮你还多少(元)
-						// </InputItem>
-						<InputItem
-							// {...getFieldProps('money2', {
-							//   normalize: (v, prev) => {
-							//     if (v && !/^(([1-9]\d*)|0)(\.\d{0,2}?)?$/.test(v)) {
-							//       if (v === '.') {
-							//         return '0.';
-							//       }
-							//       return prev;
-							//     }
-							//     return v;
-							//   },
-							// })}
-							type="money"
-							placeholder="money format"
-							ref={(el) => (this.inputRef = el)}
-							onVirtualKeyboardConfirm={(v) => console.log('onVirtualKeyboardConfirm:', v)}
-							clear
-							moneyKeyboardWrapProps={moneyKeyboardWrapProps}
-						>
-							数字键盘
-						</InputItem>
-					)}
-				</div>
+					})}
+					type="money"
+					placeholder={this.placeholderText()}
+					disabled={this.inputDisabled()}
+					ref={(el) => (this.inputRef = el)}
+					className={this.inputDisabled() ? '' : 'blackColor'}
+					onBlur={() => {
+						handleInputBlur();
+					}}
+					onFocus={(v) => {
+						this.updateBillInf();
+					}}
+					// onVirtualKeyboardConfirm={(v) => console.log('onVirtualKeyboardConfirm:', v)}
+					moneykeyboardwrapprops={moneyKeyboardWrapProps}
+				>
+					帮你还多少(元)
+				</InputItem>
 				<div>
 					{getFieldDecorator('loanDate', {
 						initialValue: selectedLoanDateCopy && [ selectedLoanDateCopy.perdLth ],
