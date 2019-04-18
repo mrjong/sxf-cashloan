@@ -186,7 +186,10 @@
 			.am-input-control input,
 			.am-list-extra {
 				color: #333;
-			}
+            }
+             .am-input-control .fake-input-container .fake-input.fake-input-disabled{
+                 color: #333;
+             }
 		}
 
 		.am-list-item .am-list-line {
@@ -221,4 +224,209 @@
             opacity: 1;
         }
 	}
+}
+.money_input{
+    position: relative;
+    .desc{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #999;
+        font-size: 24px;
+    }
+}
+// modal样式覆盖
+:global {
+    .money_input_loan {
+		.am-list-item .am-list-line {
+			padding-right: 5px;
+		}
+		.am-list-item .am-input-control .fake-input-container .fake-input.focus:after {
+			border-right: 0.03rem solid #484747;
+		}
+	}
+	.modal_l_r {
+		.am-modal-body {
+			overflow: hidden;
+		}
+
+		.am-list-item {
+			padding-left: 0;
+			height: 108px;
+			.am-list-line {
+				padding-right: 0;
+			}
+		}
+
+		.blackColor {
+			.am-input-control input,
+			.am-list-extra {
+				color: #333;
+			}
+		}
+
+		.am-list-item .am-list-line {
+			.am-input-label {
+				width: 210px;
+			}
+			.am-list-content,
+			.am-input-label {
+				font-size: 0.3rem;
+				color: #333;
+				opacity: 1;
+			}
+			.am-input-control input,
+			.am-list-extra {
+				font-size: 0.3rem;
+				color: #000;
+				opacity: 1;
+			}
+		}
+
+		.am-list-item .am-input-control input {
+			text-align: right;
+		}
+
+		.am-list-item.am-list-item-middle .am-list-line {
+			&:after {
+				@include setBottomLine();
+			}
+		}
+	}
+	.zijian {
+		.am-progress-bar {
+			border: 0.04rem solid #ffda58;
+		}
+	}
+}
+
+.subDesc {
+	font-size: 24px;
+	color: #c7c6cc;
+	text-align: center;
+	margin-top: 30px;
+}
+.modalLoading {
+	color: #666;
+	margin-bottom: 15px;
+	font-size: 32px;
+}
+.modal_left {
+	float: left;
+	min-height: 760px;
+	background: #fff;
+	width: 50%;
+	transition: all .3s;
+}
+.modal_left1 {
+	margin-left: -50%;
+}
+.modal_box {
+	width: 200%;
+	overflow: hidden;
+}
+.modal_right {
+	float: left;
+	min-height: 760px;
+	background: #fff;
+	width: 50%;
+	transition: all .3s;
+}
+.modal_left2 {
+	margin-left: 0%;
+}
+
+.modal_header {
+	position: relative;
+	font-size: 36px;
+	color: #333;
+	font-weight: 600;
+	padding: 15px 0;
+	&::after {
+		@include setBottomLine();
+	}
+
+	.modal_leftIcon {
+		position: absolute;
+		left: 0;
+		padding: 10px;
+		top: 0;
+	}
+	.close {
+		position: absolute;
+		right: 0;
+		padding: 10px;
+		top: 0;
+	}
+}
+.modal_content {
+	padding: 0 30px;
+	.billMoneyTop {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 38px;
+		color: #333;
+	}
+	.billMoneyTwoTop {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 18px;
+		font-size: 26px;
+		color: #666;
+	}
+	.billMoneyBtm {
+		position: relative;
+		text-align: right;
+		color: #c5c5c5;
+		font-size: 22px;
+		&::after {
+			@include setBottomLine();
+		}
+	}
+}
+.listitem {
+	position: relative;
+	margin-top: 10px;
+	font-size: 34px;
+	color: #333;
+	padding: 15px;
+	&::after {
+		@include setBottomLine();
+		left: 30px;
+	}
+	.checkIcon {
+		width: 30px;
+		height: 26px;
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		background: url('../../../assets/images/home/check_icon.png') no-repeat;
+		background-size: cover;
+	}
+}
+.tagList {
+	display: flex;
+	justify-content: space-between;
+	margin: 76px 30px 100px;
+	.tagButton {
+		display: inline-block;
+		width: 180px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #f66;
+		border: 1PX solid #f66;
+		box-sizing: border-box;
+	}
+	.activeTag {
+		color: #fff;
+		background: #f66;
+	}
+}
+.modal_btn_box {
+	margin: 60px auto 36px;
+	width: 620px;
 }
