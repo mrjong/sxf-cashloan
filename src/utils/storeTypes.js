@@ -66,5 +66,6 @@ export const storeTypes = {
 	GoMoxie: 'GoMoxie', // 魔蝎银行列表去魔蝎再返回的两次退出才退出的问题
 	CreditSuccessBack: 'CreditSuccessBack', // 信用卡绑卡之后立即去提交页需要提示
 	Invoking418: 'Invoking418', // 418 活动
-	SuccessPay: 'SuccessPay' // 418 活动返回
+	SuccessPay: 'SuccessPay', // 418 活动返回
+	NoLoginUrl: 'NoLoginUrl' // 微信授权失败跳转到那个页面
 };

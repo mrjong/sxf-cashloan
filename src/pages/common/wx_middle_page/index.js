@@ -44,7 +44,8 @@ export default class wx_middle_page extends Component {
 						//请求成功,跳到登录页(前提是不存在已登录未注册的情况)
 						console.log(res);
 						// this.props.history.replace('/login')
-						this.jumpRouter();
+						let NoLoginUrl = store.getNoLoginUrl();
+						this.jumpRouter(NoLoginUrl);
 					} else if (res.msgCode == 'WX0100') {
 						// 已授权不需要登陆
 						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
@@ -76,6 +77,10 @@ export default class wx_middle_page extends Component {
 						// 登陆的token
 						store.setJumpUrl(query.jumpUrl);
 					}
+					if (query.NoLoginUrl) {
+						// 登陆的token
+						store.setNoLoginUrl(query.NoLoginUrl);
+					}
 					if (res.msgCode == 'WX0101') {
 						//没有授权
 						console.log(res);
@@ -85,7 +90,9 @@ export default class wx_middle_page extends Component {
 					} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
 						//已授权未登录 (静默授权为7天，7天后过期）
 						// this.props.history.replace('/home/home')
-						this.jumpRouter();
+						// this.props.history.replace('/login')
+						let NoLoginUrl = store.getNoLoginUrl();
+						this.jumpRouter(NoLoginUrl);
 					} else if (res.msgCode == 'WX0100') {
 						//已授权已登录
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
@@ -111,18 +118,18 @@ export default class wx_middle_page extends Component {
 		}
 	}
 	// 跳转路由判断
-	jumpRouter = () => {
+	jumpRouter = (NoLoginUrl) => {
 		// 登陆的token
 		let jumpUrl = store.getJumpUrl();
-		this.removeJumpRouter();
-		if (jumpUrl) {
+		store.removeJumpUrl();
+		store.removeNoLoginUrl();
+		if (NoLoginUrl) {
+			this.props.history.replace(NoLoginUrl);
+		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
 		} else {
 			this.props.history.replace('/home/home'); //微信授权成功调到登录页
 		}
-	};
-	removeJumpRouter = () => {
-		store.removeJumpUrl();
 	};
 	render() {
 		return <Blanks errorInf={this.state.errorInf} />;
