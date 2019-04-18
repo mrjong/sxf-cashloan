@@ -1,57 +1,69 @@
 .modal {
-  .mask {
-    position: fixed;
-    background-color: rgba(0, 0, 0, .5);
-    margin: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999;
-  }
-  .modalWrapper {
-    position: fixed;
-    width: 100%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    text-align: center;
-    .content {
-      position: relative;
-      width: 100%;
-      img {
-        width: 100%;
-      }
-      .huodongTootipBtn {
-        width: 50%;
-        position: absolute;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      // fun肆送弹框
-      .huodongTootipBtn2{
-        width: 254px;
-        position: absolute;
-        bottom: 82px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-    }
-    .closeBtn {
-      text-align: center;
-      width: 50px;
-      height: 50px;
-      vertical-align: middle;
-      background-image: url(../../assets/images/home/close_ico@2x.png);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      box-sizing: border-box;
-      position: absolute;
-      bottom: -80px;
-      left: 50%;
-      transform: translate(-50%, 0%);
-    }
-  }
+	.modalWrapper {
+		.content {
+			position: relative;
+			width: 100%;
+			img {
+				width: 100%;
+			}
+			.huodongTootipBtn {
+				width: 50%;
+				position: absolute;
+				bottom: 16px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			// fun肆送弹框
+			.huodongTootipBtn2 {
+				width: 254px;
+				position: absolute;
+				bottom: 82px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+		}
+		.closeBtn {
+			text-align: center;
+			width: 50px;
+			height: 50px;
+			vertical-align: middle;
+			background-image: url(../../assets/images/home/close_ico@2x.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			margin: 40px auto;
+		}
+	}
+}
+.mianxi30 {
+	position: relative;
+	top: 80px;
+}
+.btn_mianxi {
+	display: inline-block;
+	color: #fff;
+	padding: 16px 80px;
+	background: linear-gradient(178deg, rgba(255, 211, 50, 1) 0%, rgba(243, 157, 35, 1) 100%);
+	box-shadow: 0 5px 11px 0 rgba(90, 0, 0, 0.6);
+	border-radius: 45px;
+	position: relative;
+	letter-spacing: 2px;
+	font-weight: 500;
+	font-family: 'PingFangSC-Regular';
+	top: -60px;
+}
+:global {
+	.home_modal_warp {
+		.am-modal.am-modal-transparent {
+			width: 100%;
+		}
+		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		.am-modal.am-modal-transparent .am-modal-content {
+			padding: 0;
+		}
+		.am-modal-content {
+			background: transparent;
+		}
+	}
 }

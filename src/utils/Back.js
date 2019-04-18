@@ -82,7 +82,11 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-
+			// 活动页
+			if (store.getSuccessPay() && window.location.pathname === '/order/repayment_succ_page') {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
 			/* 实名上传图片时 不允许返回 */
 			// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (store.getCheckCardRouter()) {

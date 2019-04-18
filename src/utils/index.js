@@ -216,8 +216,8 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-    '/home/loan_repay_confirm_page',
-    '/home/credit_apply_succ_page'
+	'/home/loan_repay_confirm_page',
+	'/home/credit_apply_succ_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -421,7 +421,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				codesArray.push(item.stsw.dicDetailCd);
 			}
 		});
-		console.log(codes, '==========');
 		if (!needReturn) {
 			store.setNeedNextUrl(true);
 			// 实名

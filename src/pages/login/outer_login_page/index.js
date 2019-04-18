@@ -14,8 +14,8 @@ import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import bannerImg1 from './img/login_bg1.png';
 import bannerImg2 from './img/login_bg2.png';
-import backTopBtn from './img/backtop_btn.png';
-import logoImg from './img/logo.png';
+import backTopBtn from './img/backtop_btn.png'
+import logoImg from './img/logo.png'
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -39,6 +39,7 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		store.removeOuterLogin()
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.setState({
 			queryData
@@ -82,9 +83,9 @@ export default class login_page extends PureComponent {
 	}
 	componentDidMount() {
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function() {
+		window.addEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -95,9 +96,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', function() {
+		window.removeEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -148,7 +149,12 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
-						this.props.history.push('/home/home');
+						store.setOuterLogin(true)
+						if (isWXOpen()) {
+							this.props.history.replace('/others/download_page');
+						} else {
+							this.props.history.replace('/others/download_page');
+						}
 					},
 					(error) => {
 						error.msgInfo && Toast.info(error.msgInfo);
@@ -221,14 +227,14 @@ export default class login_page extends PureComponent {
 	};
 
 	backTop = () => {
-		this.refs.loginWrap.scrollTop = 0;
-	};
+		this.refs.loginWrap.scrollTop = 0
+	}
 
 	checkAgreement = () => {
 		this.setState({
 			isChecked: !this.state.isChecked
-		});
-	};
+		})
+	}
 
 	render() {
 		const { getFieldProps } = this.props.form;
@@ -258,10 +264,10 @@ export default class login_page extends PureComponent {
 							id="inputCode"
 							type="number"
 							maxLength="6"
-							className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
+							className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 							placeholder="请输入短信验证码"
 							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+								rules: [{ required: true, message: '请输入正确验证码' }]
 							})}
 							onBlur={() => {
 								handleInputBlur();
@@ -280,10 +286,7 @@ export default class login_page extends PureComponent {
 						<span>免费借款</span>
 					</div>
 					<div className={styles.agreement}>
-						<i
-							className={this.state.isChecked ? styles.checked : styles.nochecked}
-							onClick={this.checkAgreement}
-						/>
+						<i className={this.state.isChecked ? styles.checked : styles.nochecked} onClick={this.checkAgreement}></i>
 						注册即视为同意
 						<span
 							onClick={() => {
@@ -311,14 +314,10 @@ export default class login_page extends PureComponent {
 						<img src={logoImg} className={styles.img} />
 						<span>直接下载，放款更快！</span>
 					</div>
-					<div
-						className={styles.f_right}
-						onClick={() => {
-							this.props.history.push('/others/download_page');
-						}}
-					>
-						立即下载
-					</div>
+					<div className={styles.f_right} onClick={() => {
+						this.props.history.replace('/others/download_page')
+						store.setLoginDownloanBtn(true)
+					}}>立即下载</div>
 				</div>
 			</div>
 		);

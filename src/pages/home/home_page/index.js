@@ -32,6 +32,7 @@ import style from './index.scss';
 import Circle from './components/Circle';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
+import AgreementModal from 'components/AgreementModal';
 
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -42,7 +43,10 @@ const API = {
 	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
 	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
+	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
+	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
+	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 参与418活动
 };
 const tagList = [
 	{
@@ -78,12 +82,10 @@ export default class home_page extends PureComponent {
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
-			visibleLoading: false,
 			percent: 0,
 			showToast: false,
-			isShowActivityModal: false, // 是否显示活动弹窗
 			newUserActivityModal: false,
-			isNewModal: false,
+			modalType: 'huodongTootip3',
 			handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
 			showDiv: '',
@@ -92,8 +94,11 @@ export default class home_page extends PureComponent {
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
-			billOverDue: '', //逾期弹窗标志
-			pageCode: ''
+			pageCode: '',
+			showAgreement: false, // 显示协议弹窗
+			billOverDue: false, //逾期弹窗标志
+			isShowActivityModal: false, // 是否显示活动弹窗
+			visibleLoading: false //认证弹窗
 		};
 	}
 
@@ -118,6 +123,8 @@ export default class home_page extends PureComponent {
 		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
+		// 结清页去活动页
+		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
 		this.getTokenFromUrl();
@@ -146,6 +153,31 @@ export default class home_page extends PureComponent {
 			clearTimeout(timerOut);
 		}
 	}
+	// 判断是否参与免息活动
+	isInvoking_mianxi = () => {
+		return new Promise((resolve, reject) => {
+			this.props.$fetch
+				.get(API.checkIsEngagedUser)
+				.then((res) => {
+					// 0:不弹出  1:弹出
+					if (res.data && res.data === '1') {
+						// 如果是活动来的，
+						if (store.getInvoking418()) {
+							this.props.$fetch.get(API.saveUserInfoEngaged);
+							resolve('0');
+						} else {
+							resolve(res.data);
+						}
+					} else {
+						resolve('0');
+					}
+				})
+				.catch((err) => {
+					reject();
+				});
+		});
+	};
+
 	// 判断是否授信
 	credit_extension = () => {
 		// this.setState({
@@ -155,29 +187,40 @@ export default class home_page extends PureComponent {
 		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
-			.then((res) => {
+			.then(async (res) => {
 				if (res && res.msgCode === 'PTM0000') {
 					this.setState({
 						firstUserInfo: res.data.flag,
-						billOverDue: res.data.popupFlag
+						billOverDue: res.data.popupFlag === '1'
 					});
+					let isInvoking_mianxi = await this.isInvoking_mianxi();
 					if (res.data.flag === '01') {
 						// 历史未提交过授信的用户才弹
-						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-							// 新弹窗（188元）4月11号改为688元
+						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
-									isNewModal: true
+									modalType: 'mianxi30'
+								},
+								() => {
+									store.setShowActivityModal(true);
+								}
+							);
+						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+							this.setState(
+								{
+									isShowActivityModal: true,
+									modalType: 'huodongTootip1'
 								},
 								() => {
 									store.setShowActivityModal(true);
 								}
 							);
 						}
+
 						this.credit_extension_not();
 					} else {
-						this.requestGetUsrInfo();
+						this.requestGetUsrInfo(isInvoking_mianxi);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -546,7 +589,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = () => {
+	requestGetUsrInfo = (isInvoking_mianxi) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -572,20 +615,33 @@ export default class home_page extends PureComponent {
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
 				});
+				this.setState({
+					showAgreement: result.data && result.data.popupFlag === '1'
+				});
 				// 对于历史提交过授信的用户不弹框
 				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
 				//   // 新弹窗（188元）4月11号改为688元
 				//   this.setState(
 				//     {
 				//       isShowActivityModal: true,
-				//       isNewModal: true
+				//       modalType: true
 				//     },
 				//     () => {
 				//       store.setShowActivityModal(true);
 				//     }
 				//   );
 				// } else
-				if (
+				if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'mianxi30'
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
+				} else if (
 					isMPOS() &&
 					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
 					!store.getShowActivityModal()
@@ -594,7 +650,7 @@ export default class home_page extends PureComponent {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							isNewModal: false
+							modalType: 'huodongTootip3'
 						},
 						() => {
 							store.setShowActivityModal(true);
@@ -608,11 +664,6 @@ export default class home_page extends PureComponent {
 				this.props.toast.info(result.msgInfo);
 			}
 		});
-		// let result = {
-		// 	data: {},
-		// 	msgCode: 'PTM0000',
-		// 	msgMsg: 'PTM0000'
-		// };
 		this.setState({
 			showDefaultTip: true
 		});
@@ -652,24 +703,35 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 弹窗 按钮事件
-	activityModalBtn = () => {
-		// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
-		const { usrIndexInfo } = this.state;
-		switch (usrIndexInfo.indexSts) {
-			case 'LN0001': // 新用户，信用卡未授权
-				this.goToNewMoXie();
-				break;
-			case 'LN0003': // 账单爬取成功
-				if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-					this.handleSmartClick();
-				} else {
-					this.setState({
-						handleMoxie: true
-					});
+	activityModalBtn = (type) => {
+		switch (type) {
+			case 'huodongTootip3':
+				// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
+				const { usrIndexInfo } = this.state;
+				switch (usrIndexInfo.indexSts) {
+					case 'LN0001': // 新用户，信用卡未授权
+						this.goToNewMoXie();
+						break;
+					case 'LN0003': // 账单爬取成功
+						if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
+							this.handleSmartClick();
+						} else {
+							this.setState({
+								handleMoxie: true
+							});
+						}
+						break;
+					default:
+						console.log('关闭弹窗');
 				}
 				break;
+			case 'mianxi30': // 账单爬取成功
+				// this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
+				this.props.history.push('/order/repayment_succ_page');
+
+				break;
 			default:
-				console.log('关闭弹窗');
+				break;
 		}
 	};
 
@@ -916,11 +978,20 @@ export default class home_page extends PureComponent {
 		this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
 	};
 
+	readAgreementCb = () => {
+		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					showAgreement: false
+				});
+			}
+		});
+	};
+
 	render() {
 		const {
 			bannerList,
 			usrIndexInfo,
-			visibleLoading,
 			percent,
 			percentSatus,
 			percentData,
@@ -929,7 +1000,10 @@ export default class home_page extends PureComponent {
 			perdRateList,
 			selectedLoanDate = {},
 			firstUserInfo,
-			billOverDue
+			showAgreement,
+			billOverDue,
+			isShowActivityModal,
+			visibleLoading
 		} = this.state;
 		const { history } = this.props;
 		const { getFieldDecorator } = this.props.form;
@@ -1006,6 +1080,49 @@ export default class home_page extends PureComponent {
 				default:
 			}
 		}
+
+		let homeModal = null;
+		if (showAgreement) {
+			homeModal = <AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />;
+		} else if (billOverDue) {
+			homeModal = (
+				<Modal className="overDueModal" visible={billOverDue} transparent maskClosable={false}>
+					<div>
+						<img src={overDueImg} />
+						<h3 className={style.modalTitle}>信用风险提醒</h3>
+						<p>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
+						<SXFButton onClick={this.handleOverDueClick}>我知道了，前去还款</SXFButton>
+					</div>
+				</Modal>
+			);
+		} else if (isShowActivityModal) {
+			homeModal = (
+				<ActivityModal
+					activityModalBtn={this.activityModalBtn}
+					closeActivityModal={this.closeActivityModal}
+					history={history}
+					modalType={this.state.modalType}
+				/>
+			);
+		} else if (visibleLoading) {
+			homeModal = (
+				<Modal
+					className="zijian"
+					wrapClassName={style.modalLoadingBox}
+					visible={visibleLoading}
+					transparent
+					maskClosable={false}
+				>
+					<div className="show-info">
+						<div className={style.modalLoading}>资质检测中...</div>
+						<div className="progress">
+							<Progress percent={percent} position="normal" />
+						</div>
+					</div>
+				</Modal>
+			);
+		}
+
 		return (
 			<div className={style.home_page}>
 				{/* <Circle
@@ -1045,16 +1162,6 @@ export default class home_page extends PureComponent {
 					</div>
 				) : null}
 				<p className="bottomTip">怕逾期，用还到</p>
-
-				{/* {首页活动提示弹窗（对内有）} */}
-				{this.state.isShowActivityModal && (
-					<ActivityModal
-						activityModalBtn={this.activityModalBtn}
-						closeActivityModal={this.closeActivityModal}
-						history={history}
-						isNewModal={this.state.isNewModal}
-					/>
-				)}
 				<Modal
 					popup
 					className="modal_l_r"
@@ -1180,30 +1287,7 @@ export default class home_page extends PureComponent {
 					</div>
 				</Modal>
 
-				{/* {逾期弹窗} */}
-				<Modal className="overDueModal" visible={billOverDue === '1'} transparent maskClosable={false}>
-					<div>
-						<img src={overDueImg} />
-						<h3 className={style.modalTitle}>信用风险提醒</h3>
-						<p>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
-						<SXFButton onClick={this.handleOverDueClick}>我知道了，前去还款</SXFButton>
-					</div>
-				</Modal>
-
-				<Modal
-					className="zijian"
-					wrapClassName={style.modalLoadingBox}
-					visible={visibleLoading}
-					transparent
-					maskClosable={false}
-				>
-					<div className="show-info">
-						<div className={style.modalLoading}>资质检测中...</div>
-						<div className="progress">
-							<Progress percent={percent} position="normal" />
-						</div>
-					</div>
-				</Modal>
+				{homeModal}
 			</div>
 		);
 	}

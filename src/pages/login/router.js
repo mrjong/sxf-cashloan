@@ -4,5 +4,5 @@ export default [
     title: '登录',
     arrowHide: true,
     component: () => import('pages/login/login_page'),
-  },
+  }
 ];
