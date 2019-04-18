@@ -47,5 +47,10 @@ export default [
 		path: '/activity/mianxi418_page',
 		title: '最高免息30天',
 		component: () => import('pages/activity/mianxi418_page')
+    },
+    {
+		path: '/activity/wenjuan_page',
+		title: '问卷调查',
+		component: () => import('pages/activity/wenjuan_page')
 	}
 ];
