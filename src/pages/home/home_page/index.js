@@ -177,11 +177,6 @@ export default class home_page extends PureComponent {
 
 	// 判断是否授信
 	credit_extension = () => {
-		// this.setState({
-		//     firstUserInfo:'00'
-		// })
-		// this.requestGetUsrInfo();
-		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
 			.then(async (res) => {
@@ -260,8 +255,6 @@ export default class home_page extends PureComponent {
 			pageCode: demo
 		});
 		let codesCopy = demo.slice(1, 4);
-		// console.log(codesCopy, 'codesCopy');
-		// console.log(data.codes, '-----');
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中
@@ -291,7 +284,6 @@ export default class home_page extends PureComponent {
 				percentSatus: '3',
 				showDiv: '50000'
 			});
-			// this.child.startAdd(40);
 			return;
 		}
 		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length != 0) {
@@ -302,7 +294,6 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		// console.log(newCodes2);
 		switch (newCodes2.length) {
 			case 0: // 新用户，信用卡未授权
 				this.setState({
@@ -372,10 +363,6 @@ export default class home_page extends PureComponent {
 				} else if (usrIndexInfo.indexData.autSts === '2') {
 					this.showCreditModal();
 				}
-				// this.props.history.push({
-				// 	pathname: '/mine/credit_extension_page',
-				// 	search: `?isShowCommit=true&autId=${usrIndexInfo.indexData.autId}`
-				// });
 				break;
 			case 'LN0004': // 代还资格审核中
 				console.log('LN0004');
@@ -440,7 +427,6 @@ export default class home_page extends PureComponent {
 		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				// 有风控且绑信用卡储蓄卡
-				// this.props.history.push({ pathname: '/home/confirm_agency', search: `?indexData=${usrIndexInfo && JSON.stringify(usrIndexInfo.indexData)}`});
 				this.props.history.push({
 					pathname: '/home/confirm_agency',
 					state: { indexData: usrIndexInfo && usrIndexInfo.indexData }
@@ -815,7 +801,6 @@ export default class home_page extends PureComponent {
 
 	//查询还款期限
 	qryPerdRate = () => {
-		// const autId = this.state.usrIndexInfo ? this.state.usrIndexInfo.indexData.autId : '111';
 		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
 			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
 			this.dateType(date[0].perdLth);
