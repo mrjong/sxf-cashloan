@@ -2,6 +2,8 @@
 // XDC mpos入口=>对内
 import { isMPOS } from './common';
 let prefix = `DC`;
+// dc 多 
+// xdc少
 
 if (isMPOS() || JSON.parse(sessionStorage.getItem('isMPOS'))) {
 	prefix = 'XDC';

@@ -1,8 +1,6 @@
 import qs from 'qs';
 import { store } from 'utils/store';
 
-
-
 // 获取h5Channel
 export const getH5Channel = () => {
 	const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -22,9 +20,9 @@ export const getH5Channel = () => {
 
 // 判断是对内mpos还是对外
 export const isMPOS = () => {
-	const h5Channel = getH5Channel();
-	sessionStorage.setItem('isMPOS', h5Channel.indexOf('MPOS') < 0 ? false : true);
-	return h5Channel.indexOf('MPOS') < 0 ? false : true;
+	const ua = navigator.userAgent;
+	sessionStorage.setItem('isMPOS', /SuiXingPay-Mpos/i.test(ua) ? true : false);
+	return /SuiXingPay-Mpos/i.test(ua) ? true : false;
 };
 
 // 设置h5Channel
