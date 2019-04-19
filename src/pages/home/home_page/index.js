@@ -175,8 +175,7 @@ export default class home_page extends PureComponent {
 						});
 					this.setState({
 						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length-1]
-					})
-					res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
+					});
 					if (res.data.flag === '01') {
 						// 历史未提交过授信的用户才弹
 						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
@@ -841,12 +840,12 @@ export default class home_page extends PureComponent {
 		});
 	};
 
-	handleOverDueClick = (type) => {
-		const { usrIndexInfo, billOverDue, overDueModalFlag, } = this.state;
+	handleOverDueClick = () => {
+		const { usrIndexInfo } = this.state;
 		store.setBillNo(usrIndexInfo.indexData.billNo);
 		this.props.history.push({
 			pathname: '/order/order_detail_page',
-			search: type && type === 'overdueProgress' ? `?entryFrom=home&isShowEntry=${billOverDue === '0' && overDueModalFlag === '1'}` : '?entryFrom=home'
+			search: '?entryFrom=home'
 		});
 	};
 
@@ -1137,7 +1136,7 @@ export default class home_page extends PureComponent {
 				</Modal>
 				
 				{
-					billOverDue === '0' && overDueModalFlag === '1' && <OverDueModal overDueInf={overDueInf} handleClick={() => {this.handleOverDueClick('overdueProgress')}} />
+					billOverDue === '0' && overDueModalFlag === '1' && <OverDueModal overDueInf={overDueInf} handleClick={this.handleOverDueClick} />
 				}
 			</div>
 		);
