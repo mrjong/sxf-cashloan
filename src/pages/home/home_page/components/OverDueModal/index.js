@@ -6,7 +6,13 @@ import SXFButton from 'components/ButtonCustom';
 import { store } from '../../../../../utils/store';
 import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
-const API = {};
+import CryptoJS from 'crypto-js';
+import linkConf from 'config/link.conf';
+import Cookie from 'js-cookie';
+
+const API = {
+  downLoadContract: '/procedure/docDownLoad'
+};
 
 @fetch.inject()
 export default class OverDueModal extends React.PureComponent {
@@ -18,7 +24,13 @@ export default class OverDueModal extends React.PureComponent {
   }
 
   componentWillMount() {
-    
+    console.log()  
+  }
+
+  // 字符串转base64
+  base64_encode = source => {
+    const str=CryptoJS.enc.Utf8.parse(source);
+    return CryptoJS.enc.Base64.stringify(str);
   }
 
   downloadFile = (downloadUrl) => {
@@ -27,17 +39,17 @@ export default class OverDueModal extends React.PureComponent {
     }
     const osType = getDeviceType();
     if (osType === 'IOS') {
-      store.setIOSPreviewBack(true);
-      window.location.href = downloadUrl;
+      // store.setIOSPreviewBack(true);
+      // window.location.href = downloadUrl; // 安卓也可以用这种方式
     } else {
-      var downloadElement = document.createElement('a');
-      var href = downloadUrl; // 创建下载的链接
-      console.log(href, '--------------');
-      downloadElement.href = href;
-      downloadElement.download = '裁决书.pdf'; // 下载后文件名
-      document.body.appendChild(downloadElement);
-      downloadElement.click(); // 点击下载
-      document.body.removeChild(downloadElement); // 下载完成移除元素
+      const fileParams = this.base64_encode(downloadUrl);
+      // const fileParams = this.base64_encode('/20190419/裁决书.pdf');
+      console.log(fileParams)
+      const href = `${linkConf.PDF_URL}${API.downLoadContract}/${fileParams}?fin-v-card-token=${Cookie.get(
+        'fin-v-card-token'
+      ) || store.getToken()}`; // 创建下载的链接
+      // window.location.href = 'http://172.18.30.184:8888/wap/procedure/docDownLoad/LzIwMTkwNDE5L+ijgeWGs+S5pi5wZGY=?fin-v-card-token=a6d11943acb04d09af5ebfe0231346e0'  
+      window.location.href = href;
     }
   }
 
@@ -54,7 +66,8 @@ export default class OverDueModal extends React.PureComponent {
             overDueInf && (overDueInf.progressOrder === 8 || overDueInf.progressOrder === 9) &&
             <p className={style.download} onClick={() => { this.downloadFile(overDueInf.docDownloadUrl) }}>立即下载裁决书</p>
           }
-          {/* <a href="https://file.qzzcwyh.com/150217103521/award/1538011833348/裁决书.pdf" target="_parent" download="裁决书.pdf">立即下载裁决书</a> */}
+          
+          {/* <a href="http://172.18.30.184:8888/wap/procedure/docDownLoad/LzIwMTkwNDE5L+ijgeWGs+S5pi5wZGY=?fin-v-card-token=a6d11943acb04d09af5ebfe0231346e0" target="_parent" download="裁决书.pdf">立即下载裁决书</a> */}
         </div>
       </Modal>
     );
