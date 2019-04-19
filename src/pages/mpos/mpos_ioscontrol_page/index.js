@@ -5,9 +5,10 @@ import ioscontrol_activity from './img/ioscontrol_activity.png';
 import ioscontrol_coupon_activity from './img/ioscontrol_coupon_activity.png';
 import btnBg from './img/copy_btn.png';
 import { store } from 'utils/store';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { buriedPointEvent } from 'utils/analytins';
 import { mpos_ioscontrol_page } from 'utils/analytinsType';
+import qs from 'qs'
 
 export default class ioscontrol_page extends PureComponent {
 	constructor(props) {
@@ -19,7 +20,10 @@ export default class ioscontrol_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
-		buriedPointEvent(mpos_ioscontrol_page.iosControlPageView);
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+		buriedPointEvent(mpos_ioscontrol_page.iosControlPageView, {
+			entryType: queryData.entryType
+		});
 		const newuser_activity = store.getNewUserActivityFlag()
 		const coupon_activity = store.getCouponActivityFlag()
 		store.removeNewUserActivityFlag()
@@ -32,6 +36,7 @@ export default class ioscontrol_page extends PureComponent {
 
 	copyOperation = () => {
 		buriedPointEvent(mpos_ioscontrol_page.copySuccess);
+		window.postMessage('复制成功');
 		this.props.toast.info('复制成功！马上打开微信关注“还到”，抢免息吧！');
 	}
 
@@ -46,9 +51,9 @@ export default class ioscontrol_page extends PureComponent {
 				<img src={ioscontrol} className={styles.img} />
 				<CopyToClipboard
 					text={this.state.copyText}
-          			onCopy={() => this.copyOperation()}
+					onCopy={() => this.copyOperation()}
 				>
-				<img src={btnBg} className={styles.copyBtn} />
+					<img src={btnBg} className={styles.copyBtn} />
 				</CopyToClipboard>
 			</div>
 		)

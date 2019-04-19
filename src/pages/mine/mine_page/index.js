@@ -219,6 +219,10 @@ export default class mine_page extends PureComponent {
     this.props.history.push('/login');
   }
 
+  goPage = () => {
+    this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine')
+  }
+
   render() {
     const { mblNoHid, realNmFlg } = this.state;
     // 定义list所需的数据
@@ -302,6 +306,7 @@ export default class mine_page extends PureComponent {
             tokenFromStorage && token ?
               <span>{mblNoHid}</span> : <span onClick={this.logInHandler}>登录/注册</span>
           }
+          <div className={styles.follow_btn} onClick={this.goPage}>关注得免息</div>
         </div>
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />

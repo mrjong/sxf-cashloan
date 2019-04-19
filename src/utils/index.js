@@ -76,7 +76,7 @@ export const isWXOpen = () => {
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
-		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
+		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page', '/mpos/mpos_ioscontrol_page' ];
 		if (isWXOpen()) {
 			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开

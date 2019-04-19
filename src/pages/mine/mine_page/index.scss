@@ -19,6 +19,17 @@
 			font-size: 36px;
 			color: #fff;
 		}
+		.follow_btn {
+			width: 183px;
+			height: 60px;
+			line-height: 60px;
+			border-radius: 30px;
+			background-color: #fff;
+			color: #FFBD18;
+			font-size: 30px;
+			text-align: center;
+			margin-left: 160px;
+		}
 	}
 	.common_margin {
 		margin-top: 24px;
@@ -33,11 +44,3 @@
 		margin: 42px 0;
 	}
 }
-// modal样式覆盖
-// :global {
-// 	.am-modal-body {
-// 		.am-modal-alert-content {
-// 			line-height: 3;
-// 		}
-// 	}
-// }
