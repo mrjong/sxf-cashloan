@@ -131,7 +131,7 @@ export default class mianxi418_page extends PureComponent {
 					}}
 					validateMposCb={{
 						PTM9000: (res, getType) => {
-							this.props.history.replace('/mpos/mpos_ioscontrol_page');
+							this.props.history.replace('/mpos/mpos_ioscontrol_page?entryType=ioscontrol');
 						},
 						others: (res, getType) => {
 							this.setState({
