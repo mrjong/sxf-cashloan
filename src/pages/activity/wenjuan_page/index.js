@@ -34,7 +34,7 @@ export default class wenjuan_page extends PureComponent {
 		super(props);
 		this.state = {
 			showModal: false,
-			showShareTip: true,
+			showShareTip: false,
 			showLoginTip: false, // 是否登陆弹框
 			showAwardModal: false, // 获奖弹框
 			showNoAwardModal: false, // 无领取资格弹框
@@ -44,7 +44,7 @@ export default class wenjuan_page extends PureComponent {
 			showBoundle: false, // 是否展示未实名的弹框
 			btnStatus: false,
 			shareData: {
-				title: '参与答题，畅游全球FUN肆嗨', // 分享标题
+				title: '参与答题畅游全球FUN肆嗨', // 分享标题
 				desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
 				link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
 				imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
