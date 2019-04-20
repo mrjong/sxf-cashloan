@@ -71,7 +71,7 @@ const mposShare = ({ $props, shareData }) => {
 	window.setupWebViewJavascriptBridge((bridge) => {
 		bridge.callHandler(
 			'mposShare',
-			{ title: shareData.title, description: shareData.desc, url: shareData.url, iconUrl: shareData.imgUrl },
+			{ title: shareData.title, description: shareData.desc, url: shareData.link, iconUrl: shareData.imgUrl },
 			function(response) {
 				$props.toast.info('分享成功');
 			}
