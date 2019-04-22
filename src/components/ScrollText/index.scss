@@ -10,15 +10,14 @@
 	color: #F66;
 	font-size: 22px;
 	white-space: nowrap;
-	margin-left: 50px;
 	animation: slide-left 10s linear infinite;
 }
 
 @keyframes slide-left {
 	0% {
-    transform: translateX(0);
+    transform: translateX(100px);
   }
 	100% {
-    transform: translateX(-110%);
+    transform: translateX(-100%);
   }
 }
