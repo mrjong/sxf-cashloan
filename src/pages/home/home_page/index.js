@@ -1136,7 +1136,7 @@ export default class home_page extends PureComponent {
 				</Modal>
 				
 				{
-					billOverDue === '0' && overDueModalFlag === '1' && <OverDueModal overDueInf={overDueInf} handleClick={this.handleOverDueClick} />
+					billOverDue === '0' && overDueModalFlag === '1' && <OverDueModal toast={this.props.toast} overDueInf={overDueInf} handleClick={this.handleOverDueClick} />
 				}
 			</div>
 		);
