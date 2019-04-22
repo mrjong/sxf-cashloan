@@ -11,6 +11,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import RuleShow from './components/RuleShow';
+import { rules } from './rulesData'
 
 @setBackGround('#9235D4')
 export default class wuyue_new_page extends PureComponent {
@@ -46,7 +47,7 @@ export default class wuyue_new_page extends PureComponent {
           <img src={btn_img} onClick={this.getNow} className={styles.btn_style} />
         </div>
         <img src={reason_img} className={styles.reason_block} />
-        <RuleShow ruleTit="新用户活动规则" ruleDesc={} />
+        <RuleShow ruleTit="新用户活动规则" ruleDesc={rules} />
       </div>
     )
   }
