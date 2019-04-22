@@ -22,7 +22,7 @@ export default class ioscontrol_page extends PureComponent {
 	}
 	componentDidMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-		Toast.info('aaaa',queryData.entryType)
+		Toast.info(queryData.entryType+'111')
 		buriedPointEvent(mpos_ioscontrol_page.iosControlPageView, {
 			entryType: queryData.entryType
 		});
