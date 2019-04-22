@@ -4,14 +4,7 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import {
-	isWXOpen,
-	getDeviceType,
-	getNextStr,
-	getFirstError,
-	handleInputBlur,
-	idChkPhoto
-} from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, idChkPhoto } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -43,7 +36,8 @@ const API = {
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
-	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 参与418活动
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001', // 参与418活动
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire' // 问卷调查
 };
 const tagList = [
 	{
@@ -174,9 +168,36 @@ export default class home_page extends PureComponent {
 				});
 		});
 	};
-
+	getParam = () => {
+		let obj = {};
+		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
+		for (let i = 0; i < wenjuan.length; i++) {
+			let str = '';
+			for (let j = 0; j < wenjuan[i].list.length; j++) {
+				if (wenjuan[i].list[j].checked) {
+					str = str + wenjuan[i].list[j].selected;
+					obj[`answer${i + 1}`] = str;
+				}
+			}
+		}
+		return obj;
+	};
 	// 判断是否授信
 	credit_extension = () => {
+        // 问卷调查  以后可以去掉
+		let wenjuan = localStorage.getItem('wenjuan') ? JSON.parse(localStorage.getItem('wenjuan')) : '';
+		if (wenjuan) {
+			this.props.$fetch
+				.post(API.saveQuestionnaire, {
+					actId: 'QA001',
+					...this.getParam()
+				})
+				.then((res) => {
+					if (res.msgCode === 'PTM0000') {
+						localStorage.removeItem('wenjuan');
+					}
+				});
+		}
 		// this.setState({
 		//     firstUserInfo:'00'
 		// })
@@ -809,8 +830,8 @@ export default class home_page extends PureComponent {
 					this.calcLoanMoney(minPayment);
 				}
 			}
-        );
-        this.dateType(item.perdLth)
+		);
+		this.dateType(item.perdLth);
 	};
 
 	//查询还款期限
@@ -829,9 +850,9 @@ export default class home_page extends PureComponent {
 				}
 			);
 		});
-    };
-    
-    dateType = (value) => {
+	};
+
+	dateType = (value) => {
 		// 埋点
 		switch (value) {
 			case '30':

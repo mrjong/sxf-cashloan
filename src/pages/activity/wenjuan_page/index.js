@@ -45,18 +45,7 @@ export default class wenjuan_page extends PureComponent {
 			btnStatus: false,
 			isNewUser: true,
 			submitParam: {},
-			shareData: {
-				title: '参与答题畅游全球FUN肆嗨', // 分享标题
-				desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
-				link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-				imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
-				success: function(res) {
-					console.log('已分享', res);
-				},
-				cancel: function(res) {
-					console.log('取消分享', res);
-				}
-			},
+			shareData: {},
 			data: [
 				{
 					title: '信用卡代偿平台是什么?',
@@ -128,8 +117,31 @@ export default class wenjuan_page extends PureComponent {
 
 	componentWillMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		let queryData2 = qs.parse(location.search, { ignoreQueryPrefix: true });
+		delete queryData2.token;
+		delete queryData2.telNo;
+		delete queryData2.appId;
+		delete queryData2.scene;
+		delete queryData2.site;
+		delete queryData2.SXFSharePlatform;
+		queryData2.entry = 'isxdc_share';
+		const href = qs.stringify(queryData2);
+		console.log(href);
+
 		this.setState({
-			urlData: queryData
+			urlData: queryData,
+			shareData: {
+				title: '参与答题畅游全球FUN肆嗨', // 分享标题
+				desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
+				link: location.origin + '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+				imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
+				success: function(res) {
+					console.log('已分享', res);
+				},
+				cancel: function(res) {
+					console.log('取消分享', res);
+				}
+			}
 		});
 		if (queryData.entry) {
 			// 根据不同入口来源埋点
@@ -234,14 +246,14 @@ export default class wenjuan_page extends PureComponent {
 	// 进入首页
 	goHomePage = () => {
 		if (localStorage.getItem('wenjuan')) {
-			const wenjuan = this.getParam();
 			this.props.$fetch
 				.post(API.saveQuestionnaire, {
 					actId: 'QA001',
-					...wenjuan
+					...this.getParam()
 				})
 				.then((res) => {
 					if (res.msgCode === 'PTM0000') {
+						location.removeItem('wenjuan');
 						this.setState({
 							showModal: true
 						});
