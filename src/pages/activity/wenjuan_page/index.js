@@ -241,7 +241,7 @@ export default class wenjuan_page extends PureComponent {
 					...wenjuan
 				})
 				.then((res) => {
-					if (res.msgCode === 'PTM1000') {
+					if (res.msgCode === 'PTM0000') {
 						this.setState({
 							showModal: true
 						});
@@ -390,6 +390,13 @@ export default class wenjuan_page extends PureComponent {
 					}}
 				/>
 				<div className={styles.imgBox}>
+					<button
+						onClick={() => {
+							localStorage.removeItem('wenjuan');
+						}}
+					>
+						清除缓存
+					</button>
 					<img src={wenjuan_01} className={styles.activity_bg} />
 					<img src={wenjuan_02} className={styles.activity_bg} />
 					<img src={wenjuan_03} className={styles.activity_bg} />
