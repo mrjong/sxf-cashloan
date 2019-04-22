@@ -49,7 +49,7 @@ export default class OverDueModal extends React.PureComponent {
   }
 
   copyOperation = () => {
-		this.props.toast.info('已帮您复制了仲裁委网址，打开浏览器粘贴网址，输入仲裁委短信发送的案件号查看并下载您的仲裁书');
+		this.props.toast.info('已帮您复制了仲裁委网址，打开浏览器粘贴网址，输入仲裁委短信发送的案件号查看并下载您的仲裁书', 5);
 	}
 
   render() {
