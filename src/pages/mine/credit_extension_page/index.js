@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import { store } from 'utils/store';
+import { getDeviceType } from 'utils'
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -11,12 +12,12 @@ const API = {
 	getStw: '/my/getStsw', // 获取4个认证项的状态
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	getZmxy: '/auth/getZhimaUrl', // 芝麻认证的跳转URL
-	getXMURL: '/auth/zmAuth' // 芝麻认证之后的回调状态
+	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
+	getFace: '/auth/faceDetect' // 人脸识别认证跳转URL
 };
 let urlQuery = '';
 let autId = '';
-// const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = ['idCheck', 'faceDetect', 'basicInf', 'operator', 'card'];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {
@@ -132,6 +133,23 @@ export default class credit_extension_page extends PureComponent {
 					buriedPointEvent(mine.creditExtensionRealName);
 					this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
 					break;
+				case 'faceDetect':
+					const osType = getDeviceType();
+					this.props.$fetch
+						.post(`${API.getFace}`, {
+							osType
+						})
+						.then((result) => {
+							if (result.msgCode === 'PTM0000' && result.data.url) {
+								// buriedPointEvent(mine.creditExtensionOperator);
+								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+								this.props.SXFToast.loading('加载中...', 0);
+								window.location.href = result.data.url
+							} else {
+								this.props.toast.info(result.msgInfo);
+							}
+						});
+					break;
 				case 'basicInf':
 					buriedPointEvent(mine.creditExtensionBaseInfo);
 					this.props.history.push({ pathname: '/home/essential_information', search: urlQuery });
@@ -149,8 +167,8 @@ export default class credit_extension_page extends PureComponent {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-                                        .location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
-                                        
+										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
+
 							} else {
 								this.props.toast.info(result.msgInfo);
 							}
