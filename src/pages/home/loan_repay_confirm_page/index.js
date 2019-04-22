@@ -728,7 +728,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 						});
 					}}
 					extra={selectedLoanDate.perdPageNm || '请选择'}
-					arrow="horizontal"
 				>
 					借多久
 				</List.Item>
