@@ -3,10 +3,9 @@ import qs from 'qs';
 import { store } from 'utils/store';
 import styles from './index.scss';
 import activity_bg from './img/activity_bg.png';
-import new_bg from './img/new_entry.png';
-import new_btn from './img/new_btn.png';
-import old_bg from './img/old_entry.png';
-import old_btn from './img/old_btn.png';
+import btn_img from './img/btn_img.png';
+import main_bg from './img/main_bg.png';
+import reason_img from './img/reason_img.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 
@@ -40,16 +39,13 @@ export default class wuyue_new_page extends PureComponent {
 
   render() {
     return (
-      <div className={styles.wuyuekh_page}>
+      <div className={styles.wuyue_new_page}>
         <img src={activity_bg} className={styles.activity_bg} />
-        <div className={styles.new_entry_box}>
-          <img src={new_bg} className={styles.entry_bg} />
-          <img src={new_btn} onClick={this.goNew} className={styles.btn_style} />
+        <div className={styles.main_cont}>
+          <img src={main_bg} className={styles.main_bg} />
+          <img src={btn_img} onClick={this.goNew} className={styles.btn_style} />
         </div>
-        <div className={styles.old_entry_box}>
-          <img src={old_bg} className={styles.entry_bg} />
-          <img src={old_btn} onClick={this.goOld} className={styles.btn_style} />
-        </div>
+        <img src={reason_img} className={styles.reason_block} />
       </div>
     )
   }

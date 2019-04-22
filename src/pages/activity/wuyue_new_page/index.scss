@@ -1,27 +1,26 @@
-.wuyuekh_page{
+.wuyue_new_page{
   position: relative;
   height: 100%;
   .activity_bg {
     width: 100%;
     position: absolute;
   }
-  .new_entry_box,.old_entry_box{
+  .main_cont{
     position: absolute;
-    bottom: 308px;
-    left: 60px;
-    width: 630px;
-  }
-  .old_entry_box{
-    bottom: 48px;
-  }
-  .entry_bg{
     width: 100%;
+    top: 80px;
+    .main_bg{
+      width: 100%;
+      vertical-align: top;
+    }
+    .btn_style{
+      position: absolute;
+      width: 500px;
+      bottom: 72px;
+      left: 126px;
+    }
   }
-  .btn_style{
-    position: absolute;
-    right: 25px;
-    top: 53px;
-    width: 134px;
-    height: 134px;
+  .reason_block{
+    width: 680px;
   }
 }
