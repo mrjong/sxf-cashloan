@@ -128,32 +128,38 @@ export default class wenjuan_page extends PureComponent {
 		const href = qs.stringify(queryData2);
 		console.log(href);
 
-		this.setState({
-			urlData: queryData,
-			shareData: {
-				title: '参与答题畅游全球FUN肆嗨', // 分享标题
-				desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
-				link: location.origin + '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-				imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
-				success: function(res) {
-					console.log('已分享', res);
-				},
-				cancel: function(res) {
-					console.log('取消分享', res);
+		this.setState(
+			{
+				urlData: queryData,
+				shareData: {
+					title: '参与答题畅游全球FUN肆嗨', // 分享标题
+					desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
+					link: location.origin + '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
+					success: function(res) {
+						console.log('已分享', res);
+					},
+					cancel: function(res) {
+						console.log('取消分享', res);
+					}
 				}
-			}
-		});
+			},
+			() => {
+				// 注入微信分享
+				wxshare({
+					$props: this.props,
+					shareData: this.state.shareData
+				});
+            }
+    
+		);
 		if (queryData.entry) {
 			// 根据不同入口来源埋点
 			buriedPointEvent(activity.wenjuanEntry, {
 				entry: queryData.entry
 			});
-		}
-		// 注入微信分享
-		wxshare({
-			$props: this.props,
-			shareData: this.state.shareData
-		});
+        }
+
 		this.queryQuestionnaire();
 	}
 	localData = () => {
@@ -182,7 +188,29 @@ export default class wenjuan_page extends PureComponent {
 			}
 		});
 	};
-	backData = (data) => {};
+	backData = (data) => {
+        let dataCopy = JSON.parse(JSON.stringify(this.state.data));
+		let dataKeys = Object.keys(data).filter((item) => item.indexOf('answer') > -1);
+		for (let i = 0; i < dataCopy.length; i++) {
+			for (let j = 0; j < dataCopy[i].list.length; j++) {
+				for (let k = 0; k < dataKeys.length; k++) {
+                    let x = data[dataKeys[k]].split('');
+                    console.log(x)
+					for (let l = 0; l < x.length; l++) {
+                        console.log(x[l])
+						if (dataCopy[i].list[j].selected === x[l]&&k===i) {
+							dataCopy[i].list[j].checked = true;
+						}
+					}
+				}
+			}
+        }
+		this.setState({
+			data: dataCopy
+		},()=>{
+            this.setShowResult()
+        });
+	};
 	getStatus = () => {
 		this.child.validateMposRelSts({
 			smsProps_disabled: true,
@@ -253,7 +281,7 @@ export default class wenjuan_page extends PureComponent {
 				})
 				.then((res) => {
 					if (res.msgCode === 'PTM0000') {
-						location.removeItem('wenjuan');
+						localStorage.removeItem('wenjuan');
 						this.setState({
 							showModal: true
 						});
