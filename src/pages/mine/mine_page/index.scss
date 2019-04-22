@@ -9,11 +9,13 @@
 		background: linear-gradient(to right, #ffd958, #ffda58); /* 标准的语法 */
 		padding: 50px 40px;
 		display: flex;
+		justify-content: space-between;
 		align-items: center;
 		img {
 			width: 100px;
 			height: 100px;
 			margin-right: 31px;
+			vertical-align: middle;
 		}
 		span {
 			font-size: 36px;
@@ -28,7 +30,6 @@
 			color: #FFBD18;
 			font-size: 30px;
 			text-align: center;
-			margin-left: 160px;
 		}
 	}
 	.common_margin {
