@@ -47,5 +47,10 @@ export default [
 		path: '/activity/mianxi418_page',
 		title: '最高免息30天',
 		component: () => import('pages/activity/mianxi418_page')
-	}
+	},
+	{
+		path: '/activity/wuyuekh_page',
+		title: '畅享双重豪礼',
+		component: () => import('pages/activity/wuyuekh_page')
+	},
 ];
