@@ -9,6 +9,7 @@
 		bottom: 0;
 		z-index: 999;
 	}
+
 	.modalWrapper {
 		position: fixed;
 		width: 590px;
@@ -219,6 +220,9 @@
 	&.disabled {
 		color: #fff;
 		background: rgba(244, 231, 206, 1);
+	}
+	&:hover {
+		text-decoration: none;
 	}
 	&:active {
 		opacity: .8;

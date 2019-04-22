@@ -23,10 +23,10 @@ import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-const CheckboxItem = Checkbox.CheckboxItem;
 const AgreeItem = Checkbox.AgreeItem;
 const API = {
-	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 用户是否参与过免息
+	queryQuestionnaire: '/activeConfig/queryQuestionnaire/QA001', // 用户是否参与过免息
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire'
 };
 @fetch.inject()
 export default class wenjuan_page extends PureComponent {
@@ -43,6 +43,8 @@ export default class wenjuan_page extends PureComponent {
 			showResult: false,
 			showBoundle: false, // 是否展示未实名的弹框
 			btnStatus: false,
+			isNewUser: true,
+			submitParam: {},
 			shareData: {
 				title: '参与答题畅游全球FUN肆嗨', // 分享标题
 				desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
@@ -129,27 +131,46 @@ export default class wenjuan_page extends PureComponent {
 		this.setState({
 			urlData: queryData
 		});
+		if (queryData.entry) {
+			// 根据不同入口来源埋点
+			buriedPointEvent(activity.wenjuanEntry, {
+				entry: queryData.entry
+			});
+		}
+		// 注入微信分享
 		wxshare({
 			$props: this.props,
 			shareData: this.state.shareData
 		});
+		this.queryQuestionnaire();
+	}
+	localData = () => {
 		if (localStorage.getItem('wenjuan')) {
 			this.getBtnStatus(JSON.parse(localStorage.getItem('wenjuan')));
 			this.setState({
 				data: JSON.parse(localStorage.getItem('wenjuan'))
 			});
 		}
-	}
-
-	componentDidMount() {
-		const { urlData } = this.state;
-		if (urlData.entry) {
-			// 根据不同入口来源埋点
-			buriedPointEvent(activity.mianxi418Entry, {
-				entry: urlData.entry
-			});
-		}
-	}
+	};
+	queryQuestionnaire = () => {
+		this.props.$fetch.get(API.queryQuestionnaire).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				if (res.data) {
+					this.setState({
+						isNewUser: false,
+						showModal: true
+					});
+					localStorage.removeItem('wenjuan');
+					this.backData(res.data);
+				} else {
+					this.localData();
+				}
+			} else {
+				this.localData();
+			}
+		});
+	};
+	backData = (data) => {};
 	getStatus = () => {
 		this.child.validateMposRelSts({
 			smsProps_disabled: true,
@@ -161,7 +182,7 @@ export default class wenjuan_page extends PureComponent {
 	goTo = () => {
 		const { urlData } = this.state;
 		// 根据不同入口来源埋点
-		buriedPointEvent(activity.mianxi418Btn, {
+		buriedPointEvent(activity.wenjuanBtn, {
 			entry: urlData.entry
 		});
 		if (urlData && urlData.entry && urlData.entry.indexOf('ismpos_') > -1) {
@@ -177,7 +198,7 @@ export default class wenjuan_page extends PureComponent {
 			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
-			store.setInvoking418(true);
+			store.setWenJuan(true);
 			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
@@ -196,17 +217,41 @@ export default class wenjuan_page extends PureComponent {
 	go = (url) => {
 		this.props.history.push(`/protocol/${url}`);
 	};
-
+	getParam = () => {
+		let obj = {};
+		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
+		for (let i = 0; i < wenjuan.length; i++) {
+			let str = '';
+			for (let j = 0; j < wenjuan[i].list.length; j++) {
+				if (wenjuan[i].list[j].checked) {
+					str = str + wenjuan[i].list[j].selected;
+					obj[`answer${i + 1}`] = str;
+				}
+			}
+		}
+		return obj;
+	};
 	// 进入首页
 	goHomePage = () => {
-		this.props.$fetch
-			.get(API.saveUserInfoEngaged)
-			.then((res) => {
-				this.props.history.push('/home/home');
-			})
-			.catch((err) => {
-				this.props.history.push('/home/home');
-			});
+		if (localStorage.getItem('wenjuan')) {
+			const wenjuan = this.getParam();
+			this.props.$fetch
+				.post(API.saveQuestionnaire, {
+					actId: 'QA001',
+					...wenjuan
+				})
+				.then((res) => {
+					if (res.msgCode === 'PTM1000') {
+						this.setState({
+							showModal: true
+						});
+					} else {
+						this.props.toast.info(res.msgInfo);
+					}
+				});
+		} else {
+			this.props.toast.info('请选择选项后再提交');
+		}
 	};
 
 	onRef = (ref) => {
@@ -247,7 +292,7 @@ export default class wenjuan_page extends PureComponent {
 			btnStatus: data.length === list.length ? true : false
 		});
 	};
-	setShowResult = () => {
+	setShowResult = (type) => {
 		this.setState({
 			showResult: true
 		});
@@ -259,9 +304,16 @@ export default class wenjuan_page extends PureComponent {
 			return item;
 		});
 		localStorage.setItem('wenjuan', JSON.stringify(data));
-		this.setState({
-			data: [ ...data ]
-		});
+		this.setState(
+			{
+				data: [ ...data ]
+			},
+			() => {
+				if (type === 'submit') {
+					this.goTo();
+				}
+			}
+		);
 	};
 	shareFunc = () => {
 		if (isMPOS()) {
@@ -280,10 +332,15 @@ export default class wenjuan_page extends PureComponent {
 		}
 	};
 	submitData = () => {
+		const { urlData } = this.state;
+		// 根据不同入口来源埋点
+		buriedPointEvent(activity.wenjuanBtn, {
+			entry: urlData.entry
+		});
 		if (!this.state.btnStatus) {
 			return;
 		}
-		console.log('jjj');
+		this.setShowResult('submit');
 	};
 	render() {
 		const { showModal, showLoginTip, showBoundle, data, showResult, btnStatus, showShareTip } = this.state;
@@ -462,11 +519,23 @@ export default class wenjuan_page extends PureComponent {
 					<div>
 						<img src={gift} className={styles.img_gift} />
 
-						<h3 className={styles.modalTitle}>提交成功</h3>
-						<h3 className={styles.modalTitle}>继续任务可增加中奖概率哦</h3>
+						{this.state.isNewUser ? (
+							<div>
+								<h3 className={styles.modalTitle}>提交成功</h3>
+								<h3 className={styles.modalTitle}>继续任务可增加中奖概率哦</h3>
+							</div>
+						) : null}
+						{!this.state.isNewUser ? (
+							<div>
+								<h3 className={styles.modalTitle}>您已参与抽奖</h3>
+								<h3 className={styles.modalTitle}>请等待开奖结果</h3>
+							</div>
+						) : null}
 						<div className={styles.btn_submit_box}>
 							<a
-								onClick={this.goHomePage}
+								onClick={() => {
+									this.props.history.push('/home/home');
+								}}
 								className={[ styles.btn_submit, styles.btn_submit_alert ].join(' ')}
 							>
 								进入还到
