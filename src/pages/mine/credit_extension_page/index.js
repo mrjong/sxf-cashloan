@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import { store } from 'utils/store';
-import { getDeviceType } from 'utils'
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -13,7 +12,7 @@ const API = {
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	getZmxy: '/auth/getZhimaUrl', // 芝麻认证的跳转URL
 	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
-	getFace: '/auth/faceDetect' // 人脸识别认证跳转URL
+	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
 let urlQuery = '';
 let autId = '';
@@ -134,17 +133,13 @@ export default class credit_extension_page extends PureComponent {
 					this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
 					break;
 				case 'faceDetect':
-					const osType = getDeviceType();
 					this.props.$fetch
-						.post(`${API.getFace}`, {
-							osType
-						})
+						.post(`${API.getFace}`, {})
 						.then((result) => {
-							if (result.msgCode === 'PTM0000' && result.data.url) {
-								// buriedPointEvent(mine.creditExtensionOperator);
+							if (result.msgCode === 'PTM0000' && result.data) {
 								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
 								this.props.SXFToast.loading('加载中...', 0);
-								window.location.href = result.data.url
+								window.location.href = result.data
 							} else {
 								this.props.toast.info(result.msgInfo);
 							}
