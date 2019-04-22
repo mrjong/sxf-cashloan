@@ -13,7 +13,7 @@ import { setBackGround } from 'utils/background';
 
 
 @setBackGround('#FF9C42')
-export default class wuyuekh_page extends PureComponent {
+export default class wuyue_old_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -33,11 +33,11 @@ export default class wuyuekh_page extends PureComponent {
   }
 
   goNew = () => {
-    this.props.history.push('/activity/wuyue_new_page');
+    this.props.history.push('/activity/wuyuekh_page');
   }
 
   goOld = () => {
-    this.props.history.push('/activity/wuyue_old_page');
+    this.props.history.push('/activity/wuyuekh_page');
   }
 
   render() {
