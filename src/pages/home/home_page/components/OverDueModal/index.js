@@ -6,7 +6,6 @@ import SXFButton from 'components/ButtonCustom';
 import { store } from '../../../../../utils/store';
 import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
-import CryptoJS from 'crypto-js';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -28,23 +27,15 @@ export default class OverDueModal extends React.PureComponent {
     console.log()  
   }
 
-  // 字符串转base64
-  base64_encode = source => {
-    const str=CryptoJS.enc.Utf8.parse(source);
-    return CryptoJS.enc.Base64.stringify(str);
-  }
-
   downloadFile = (downloadUrl) => {
     if (!downloadUrl) {
       return;
     }
-    const fileParams = this.base64_encode(downloadUrl);
-    // const fileParams = this.base64_encode('/20190419/裁决书.pdf');
-    console.log(fileParams)
-    const href = `${linkConf.PDF_URL}${API.downLoadContract}/${fileParams}?fin-v-card-token=${Cookie.get(
+    const href = `${linkConf.PDF_URL}${API.downLoadContract}?relativePath=${downloadUrl}&fin-v-card-token=${Cookie.get(
       'fin-v-card-token'
     ) || store.getToken()}`; // 创建下载的链接
-    // window.location.href = 'http://172.18.30.184:8888/wap/procedure/docDownLoad/LzIwMTkwNDE5L+ijgeWGs+S5pi5wZGY=?fin-v-card-token=a6d11943acb04d09af5ebfe0231346e0'  
+    // const href = `http://172.18.30.184:8888/wap/procedure/docDownLoad?relativePath=\\20190419113804123745\\2018）衢仲网字第1117号_孙建坤_裁决书.pdf&fin-v-card-token=4bc51edd8b6949989686dd2aff48dd45`
+    
     window.location.href = href;
   }
 
