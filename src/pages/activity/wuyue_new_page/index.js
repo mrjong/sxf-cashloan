@@ -6,10 +6,12 @@ import activity_bg from './img/activity_bg.png';
 import btn_img from './img/btn_img.png';
 import main_bg from './img/main_bg.png';
 import reason_img from './img/reason_img.png';
+import rule_bg from './img/rule_bg.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
+import { setBackGround } from 'utils/background';
 
-
+@setBackGround('#9235D4')
 export default class wuyue_new_page extends PureComponent {
   constructor(props) {
     super(props)
@@ -29,21 +31,18 @@ export default class wuyue_new_page extends PureComponent {
     }
   }
 
-  goNew = () => {
-    this.props.history.push('/activity/wuyuekh_page');
-  }
+  getNow = () => {
 
-  goOld = () => {
-    this.props.history.push('/activity/wuyuekh_page');
   }
 
   render() {
     return (
       <div className={styles.wuyue_new_page}>
         <img src={activity_bg} className={styles.activity_bg} />
+        <img src={rule_bg} className={styles.rule_bg} />
         <div className={styles.main_cont}>
           <img src={main_bg} className={styles.main_bg} />
-          <img src={btn_img} onClick={this.goNew} className={styles.btn_style} />
+          <img src={btn_img} onClick={this.getNow} className={styles.btn_style} />
         </div>
         <img src={reason_img} className={styles.reason_block} />
       </div>
