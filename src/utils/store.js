@@ -42,7 +42,7 @@ const isBugBrowser = () => {
 
 let store = {};
 // 需要区别对待的存储字段
-let list = [ 'Token', 'JumpUrl', 'H5Channel', 'IOSPreviewBack' ];
+let list = [ 'Token', 'JumpUrl', 'H5Channel' ];
 
 // 本地存储工厂函数，生成 set get remove 方法(优先使用sessionstorage)
 const storeFactory = (funcName, key) => {
