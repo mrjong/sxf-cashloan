@@ -97,7 +97,7 @@ export default class home_page extends PureComponent {
 			overDueInf: { // 逾期弹框中的数据
 				
 			},
-			overDueModalFlag: '', // 信用施压弹框标识
+			overDueModalFlag: false, // 信用施压弹框标识
 		};
 	}
 
@@ -166,7 +166,7 @@ export default class home_page extends PureComponent {
 					this.setState({
 						firstUserInfo: res.data.flag,
 						billOverDue: res.data.popupFlag,
-						overDueModalFlag: res.data.overduePopupFlag,
+						overDueModalFlag:  res.data.popupFlag === '0' && res.data.overduePopupFlag === '1',
 					});
 					const currProgress =
 						res.data && res.data.processInfo && res.data.processInfo.length > 0 && 
@@ -1136,7 +1136,7 @@ export default class home_page extends PureComponent {
 				</Modal>
 				
 				{
-					billOverDue === '0' && overDueModalFlag === '1' && <OverDueModal toast={this.props.toast} overDueInf={overDueInf} handleClick={this.handleOverDueClick} />
+					overDueModalFlag && <OverDueModal toast={this.props.toast} overDueInf={overDueInf} handleClick={this.handleOverDueClick} />
 				}
 			</div>
 		);
