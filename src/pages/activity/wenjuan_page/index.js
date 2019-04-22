@@ -134,7 +134,7 @@ export default class wenjuan_page extends PureComponent {
 				shareData: {
 					title: '参与答题畅游全球FUN肆嗨', // 分享标题
 					desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
-					link: location.origin + '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					link: location.origin +location.pathname+ '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
 					imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
 					success: function(res) {
 						console.log('已分享', res);
@@ -206,7 +206,8 @@ export default class wenjuan_page extends PureComponent {
 			}
         }
 		this.setState({
-			data: dataCopy
+            data: dataCopy,
+            btnStatus:true
 		},()=>{
             this.setShowResult()
         });
