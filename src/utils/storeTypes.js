@@ -71,5 +71,5 @@ export const storeTypes = {
 	LoginDownloadBtn: 'LoginDownloadBtn', // 登陆页点击立即下载按钮标识
 	SuccessPay: 'SuccessPay', // 418 活动返回
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
-	WenJuan: 'WenJuan' // 问卷调查
+	OverdueInf: 'OverdueInf', // 逾期进度数据
 };

@@ -251,8 +251,7 @@ export default class wenjuan_page extends PureComponent {
 		} else if (Cookie.get('fin-v-card-token')) {
 			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
-		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
-			store.setWenJuan(true);
+		} else if (urlData.entry.indexOf('isxdc_menu') > -1 || urlData.entry.indexOf('isxdc_share') > -1) {
 			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
