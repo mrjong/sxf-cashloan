@@ -9,7 +9,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { buriedPointEvent } from 'utils/analytins';
 import { mpos_ioscontrol_page } from 'utils/analytinsType';
 import qs from 'qs'
-import { Toast } from 'antd-mobile';
 
 export default class ioscontrol_page extends PureComponent {
 	constructor(props) {
@@ -22,7 +21,6 @@ export default class ioscontrol_page extends PureComponent {
 	}
 	componentDidMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-		Toast.info(queryData.entryType+'111')
 		buriedPointEvent(mpos_ioscontrol_page.iosControlPageView, {
 			entryType: queryData.entryType
 		});
