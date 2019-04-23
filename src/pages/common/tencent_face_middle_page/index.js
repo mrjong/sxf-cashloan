@@ -20,7 +20,6 @@ export default class tencent_face_middle_page extends Component {
   }
   componentWillMount() {
     const osType = getDeviceType()
-    store.removeGoMoxie();
     //人脸识别的回调
     // const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     this.props.$fetch
@@ -36,7 +35,7 @@ export default class tencent_face_middle_page extends Component {
           });
           return;
         }
-        if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+        if (store.getNeedNextUrl()) {
           getNextStr({
             $props: this.props
           });
@@ -50,6 +49,7 @@ export default class tencent_face_middle_page extends Component {
         });
       });
   }
+
   goRouter = () => {
     const moxieBackUrl = store.getMoxieBackUrl();
     if (moxieBackUrl) {

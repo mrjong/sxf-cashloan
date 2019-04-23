@@ -260,9 +260,6 @@ export default class home_page extends PureComponent {
 			pageCode: demo
 		});
 		let codesCopy = demo.slice(2, 5);
-		console.log(data)
-		// console.log(codesCopy, 'codesCopy');
-		// console.log(data.codes, '-----');
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中
@@ -295,6 +292,7 @@ export default class home_page extends PureComponent {
 			return;
 		}
 		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length != 0) {
+			//认证过期
 			this.setState({
 				showDiv: 'circle',
 				percentSatus: '3',
@@ -302,7 +300,6 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		// console.log(newCodes2);
 		switch (newCodes2.length) {
 			case 0: // 新用户，信用卡未授权
 				this.setState({
@@ -333,7 +330,6 @@ export default class home_page extends PureComponent {
 					showDiv: 'circle'
 				});
 				break;
-
 			default:
 		}
 	};

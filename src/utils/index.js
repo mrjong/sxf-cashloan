@@ -437,7 +437,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				return;
 			}
 			// 人脸识别认证
-			console.log(codesArray)
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.$fetch
 					.post(`${API.getFace}`, {})
