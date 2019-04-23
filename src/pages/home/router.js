@@ -51,4 +51,9 @@ export default [
     title: '提交申请成功',
     component: () => import('pages/home/credit_apply_succ_page'),
   },
+  {
+    path: '/home/loan_apply_succ_page',
+    title: '申请成功',
+    component: () => import('pages/home/loan_apply_succ_page'),
+  },
 ];

@@ -9,15 +9,27 @@
 		background: linear-gradient(to right, #ffd958, #ffda58); /* 标准的语法 */
 		padding: 50px 40px;
 		display: flex;
+		justify-content: space-between;
 		align-items: center;
 		img {
 			width: 100px;
 			height: 100px;
 			margin-right: 31px;
+			vertical-align: middle;
 		}
 		span {
 			font-size: 36px;
 			color: #fff;
+		}
+		.follow_btn {
+			width: 183px;
+			height: 60px;
+			line-height: 60px;
+			border-radius: 30px;
+			background-color: #fff;
+			color: #FFBD18;
+			font-size: 30px;
+			text-align: center;
 		}
 	}
 	.common_margin {
@@ -33,11 +45,3 @@
 		margin: 42px 0;
 	}
 }
-// modal样式覆盖
-// :global {
-// 	.am-modal-body {
-// 		.am-modal-alert-content {
-// 			line-height: 3;
-// 		}
-// 	}
-// }

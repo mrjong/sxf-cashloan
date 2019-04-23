@@ -82,7 +82,11 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-
+			// 活动页
+			if (store.getSuccessPay() && window.location.pathname === '/order/repayment_succ_page') {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
 			/* 实名上传图片时 不允许返回 */
 			// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (store.getCheckCardRouter()) {
@@ -165,8 +169,10 @@ if (window.history && window.history.pushState) {
 					if (tokenFromStorage && token) {
 						window.ReactRouterHistory.goBack();
 					} else {
-						window.close();
-						WeixinJSBridge.call('closeWindow');
+						if(!store.getLoginDownloadBtn()) {
+							window.close();
+							WeixinJSBridge.call('closeWindow');
+						}
 					}
 				} else {
 					window.history.pushState(null, null, document.URL);
@@ -226,6 +232,7 @@ if (window.history && window.history.pushState) {
 					break;
 				case '/order/repayment_succ_page':
 				case '/home/confirm_agency': // 确认信息页物理返回到首页
+				case '/home/loan_apply_succ_page': // 借款申请提交成功页物理返回到首页
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				case '/mine/credit_extension_page':

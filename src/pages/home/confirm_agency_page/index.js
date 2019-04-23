@@ -289,38 +289,38 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 
-	// 获取代还期限列表 还款日期列表
-	requestGetRepaymentDateList = () => {
-		this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				// const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
-				const diff = result.data.overDt;
-				let lendersDateListFormat = this.state.lendersDateList;
-				if (!result.data.cardBillDt || diff <= 2) {
-					lendersDateListFormat[0].disable = true;
-				}
-				this.setState({
-					repayInfo: result.data,
-					repaymentDateList: result.data.prdList.map((item) => ({
-						name: item.prdName,
-						value: item.prdId,
-						// cardBillAmt: item.cardBillAmt,
-						minAmt: item.minAmt,
-						maxAmt: item.maxAmt,
-						periodUnit: item.periodUnit,
-						periodCount: item.periodCount,
-						periodLth: item.periodLth
-					})),
-					dateDiff: diff,
-					lendersIndex: 1,
-					defaultIndex: 1,
-					lendersDateList: lendersDateListFormat
-				});
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
-	};
+  // 获取代还期限列表 还款日期列表
+  requestGetRepaymentDateList = () => {
+    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then(result => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
+        const diff = result.data.overDt;
+        let lendersDateListFormat = this.state.lendersDateList;
+        if (!result.data.cardBillDt || diff <= 4) {
+          lendersDateListFormat[0].disable = true;
+        }
+        this.setState({
+          repayInfo: result.data,
+          repaymentDateList: result.data.prdList.map(item => ({
+            name: item.prdName,
+            value: item.prdId,
+            // cardBillAmt: item.cardBillAmt,
+            minAmt: item.minAmt,
+            maxAmt: item.maxAmt,
+            periodUnit: item.periodUnit,
+            periodCount: item.periodCount,
+            periodLth: item.periodLth
+          })),
+          dateDiff: diff,
+          lendersIndex: 1,
+          defaultIndex: 1,
+          lendersDateList: lendersDateListFormat,
+        });
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
+  };
 
 	// 校验代还金额
 	verifyBillAmt = (rule, value, callback) => {

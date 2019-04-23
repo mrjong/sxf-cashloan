@@ -12,6 +12,10 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
+import bannerImg1 from './img/login_bg1.png';
+import bannerImg2 from './img/login_bg2.png';
+import backTopBtn from './img/backtop_btn.png';
+import logoImg from './img/logo.png';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -29,7 +33,9 @@ export default class login_page extends PureComponent {
 			flag: true,
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
-			queryData: {}
+			queryData: {},
+			isChecked: true, // 是否勾选协议
+			inputFocus: false
 		};
 	}
 
@@ -38,6 +44,7 @@ export default class login_page extends PureComponent {
 		this.setState({
 			queryData
 		});
+		store.removeLoginDownloadBtn()
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -53,12 +60,14 @@ export default class login_page extends PureComponent {
 		let MessageTag50000 = store.getMessageTag50000();
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
+		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
 		sessionStorage.clear();
 		localStorage.clear();
 		// 首页弹窗要用的
 		MessageTag50000 && store.setMessageTag50000(MessageTag50000);
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);
+		MessageTagLimitDate && store.setMessageTagLimitDate(MessageTagLimitDate); // 额度有效期标识
 
 		setH5Channel(storeH5Channel);
 
@@ -76,10 +85,16 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
+		let _this = this
+		let originClientHeight = document.documentElement.clientHeight
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function() {
+		window.addEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				let clientHeight = document.documentElement.clientHeight
+				_this.setState({
+					inputFocus: originClientHeight > clientHeight
+				})
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -90,9 +105,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', function() {
+		window.removeEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -114,6 +129,10 @@ export default class login_page extends PureComponent {
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
+			return;
+		}
+		if (!this.state.isChecked) {
+			Toast.info('请先勾选协议');
 			return;
 		}
 		this.props.form.validateFields((err, values) => {
@@ -139,11 +158,7 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
-						if (isWXOpen()) {
-							this.props.history.push('/home/home');
-						} else {
-							this.props.history.push('/home/home');
-						}
+						this.props.history.push('/home/home');
 					},
 					(error) => {
 						error.msgInfo && Toast.info(error.msgInfo);
@@ -215,71 +230,114 @@ export default class login_page extends PureComponent {
 		this.props.history.push(`/protocol/${url}`);
 	};
 
+	backTop = () => {
+		this.refs.loginWrap.scrollTop = 0;
+	};
+
+	checkAgreement = () => {
+		this.setState({
+			isChecked: !this.state.isChecked
+		});
+	};
+
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
-			<div ref="loginWrap" className={styles.dc_landing_page}>
-				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				<div ref="loginContent" className={styles.content}>
-					<InputItem
-						disabled={this.state.disabledInput}
-						id="inputPhone"
-						maxLength="11"
-						type="number"
-						className={styles.loginInput}
-						placeholder="请输入您的手机号"
-						{...getFieldProps('phoneValue', {
-							rules: [
-								{ required: true, message: '请输入正确手机号' },
-								{ validator: !this.state.disabledInput && this.validatePhone }
-							]
-						})}
-						onBlur={() => {
-							handleInputBlur();
-						}}
-					/>
-					<div className={styles.smsBox}>
+			<div className={styles.dc_landing_page_wrap}>
+				<div ref="loginWrap" className={styles.dc_landing_page}>
+					<img className={styles.banner} src={bannerImg} alt="落地页banner" />
+					<div ref="loginContent" className={styles.content}>
 						<InputItem
-							id="inputCode"
+							disabled={this.state.disabledInput}
+							id="inputPhone"
+							maxLength="11"
 							type="number"
-							maxLength="6"
 							className={styles.loginInput}
-							placeholder="请输入短信验证码"
-							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+							placeholder="请输入您的手机号"
+							{...getFieldProps('phoneValue', {
+								rules: [
+									{ required: true, message: '请输入正确手机号' },
+									{ validator: !this.state.disabledInput && this.validatePhone }
+								]
 							})}
 							onBlur={() => {
+								this.setState({
+									inputFocus: false
+								})
 								handleInputBlur();
 							}}
 						/>
-						<div
-							className={this.state.flag ? styles.smsCode : styles.smsCodeNumber}
-							onClick={() => {
-								this.state.timeflag ? this.getTime(59) : '';
-							}}
-						>
-							{this.state.timers}
+						<div className={styles.smsBox}>
+							<InputItem
+								id="inputCode"
+								type="number"
+								maxLength="6"
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+								placeholder="请输入短信验证码"
+								{...getFieldProps('smsCd', {
+									rules: [{ required: true, message: '请输入正确验证码' }]
+								})}
+								onBlur={() => {
+									this.setState({
+										inputFocus: false
+									})
+									handleInputBlur();
+								}}
+							/>
+							<div
+								className={styles.smsCode}
+								onClick={() => {
+									this.state.timeflag ? this.getTime(59) : '';
+								}}
+							>
+								{this.state.timers}
+							</div>
+						</div>
+						<div className={styles.sureBtn} onClick={this.goLogin}>
+							<span>免费借款</span>
+						</div>
+						<div className={styles.agreement}>
+							<i
+								className={this.state.isChecked ? styles.checked : styles.nochecked}
+								onClick={this.checkAgreement}
+							/>
+							注册即视为同意
+						<span
+								onClick={() => {
+									this.go('register_agreement_page');
+								}}
+							>
+								《用户注册协议》
+						</span>
+							<span
+								onClick={() => {
+									this.go('privacy_agreement_page');
+								}}
+							>
+								《用户隐私权政策》
+						</span>
 						</div>
 					</div>
-					<div className={styles.sureBtn} onClick={this.goLogin}>
-						<span>免费借款</span>
+					<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
+					<div className={styles.imgWrap}>
+						<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
+						<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
 					</div>
-					<div className={styles.agreement}>
-						注册即视为同意
-						<span
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
-						>
-							《用户注册协议》
-						</span>
-						<span
-							onClick={() => {
-								this.go('privacy_agreement_page');
-							}}
-						>
-							《用户隐私权政策》
-						</span>
+
+				</div>
+				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
+					<div className={styles.f_left}>
+						<img src={logoImg} className={styles.img} />
+						<span>直接下载，放款更快！</span>
+					</div>
+					<div
+						className={styles.f_right}
+						onClick={() => {
+							this.props.history.push('/others/download_page');
+							store.setLoginDownloadBtn(true)
+						}}
+					>
+						立即下载
 					</div>
 				</div>
 			</div>

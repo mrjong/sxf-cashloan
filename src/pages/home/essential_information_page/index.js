@@ -457,7 +457,7 @@ export default class essential_information_page extends PureComponent {
 						<InputItem
 							type="number"
 							maxLength="11"
-							placeholder="联系人电话须与借款人有通话行为"
+							placeholder="请填写有效联系人的手机号码"
 							onBlur={(v) => {
 								this.inputOnBlur(v, 'contact_tel_one');
 							}}

@@ -9,6 +9,7 @@ import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
+import linkConf from 'config/link.conf';
 
 // 退出的api
 const API = {
@@ -76,7 +77,7 @@ export const isWXOpen = () => {
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
-		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
+		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page', '/mpos/mpos_ioscontrol_page' ];
 		if (isWXOpen()) {
 			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
@@ -216,8 +217,9 @@ const interceptRouteArr = [
 	'/home/real_name',
 	'/home/confirm_agency',
 	'/home/moxie_bank_list_page',
-    '/home/loan_repay_confirm_page',
-    '/home/credit_apply_succ_page'
+	'/home/loan_repay_confirm_page',
+	'/home/credit_apply_succ_page',
+	'/home/loan_apply_succ_page',
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -409,7 +411,6 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
-	console.log('2222222222');
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
@@ -421,7 +422,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				codesArray.push(item.stsw.dicDetailCd);
 			}
 		});
-		console.log(codes, '==========');
 		if (!needReturn) {
 			store.setNeedNextUrl(true);
 			// 实名
@@ -474,7 +474,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO`;
+										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
 							}, 3000);
 							if (callBack) {
 								callBack(resBackMsg);

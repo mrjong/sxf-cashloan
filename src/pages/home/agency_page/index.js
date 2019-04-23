@@ -25,7 +25,8 @@ const API = {
 	// qryContractInfo: '/bill/qryContractInfo',
 	// contractInfo: '/withhold/protocolInfo', // 委托扣款协议数据查询
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
-	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
+	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
+	creditSts: '/bill/credit/sts' // 用户是否过人审接口
 };
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let wrapProps;
@@ -50,7 +51,8 @@ export default class agency_page extends PureComponent {
 			// showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
 			// ItrtAmt: 0, // 首/末期利息金额
 			deratePrice: '', // 后台计算的优惠劵减免金额
-			contractList: [] // 合同列表
+			contractList: [], // 合同列表
+			isNeedExamine: false // 是否需要人审
 		};
 	}
 
@@ -69,6 +71,7 @@ export default class agency_page extends PureComponent {
 				this.requestGetRepayInfo();
 			}
 		);
+		this.getExamineSts(); // 检查是否需要人审
 	}
 	componentWillUnmount() {
 		if (timer) {
@@ -86,10 +89,15 @@ export default class agency_page extends PureComponent {
 	};
 
 	handleCloseTipModal = () => {
+		const { isNeedExamine } = this.state;
 		this.setState({
 			isShowTipModal: false
 		});
-		this.jumpToHome();
+		if (isNeedExamine) {
+			this.props.history.push('/home/loan_apply_succ_page');
+		} else {
+			this.jumpToHome();
+		}
 	};
 
 	handleShowModal = () => {
@@ -540,7 +548,18 @@ export default class agency_page extends PureComponent {
 			}
 		);
 	};
-
+	// 检查是否需要人审
+	getExamineSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					isNeedExamine: res.data && res.data.flag === '01'
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
 	render() {
 		const { isShowModal, repayInfo, isShowTipModal, progressLoading, percent, contractList } = this.state;
 		return (

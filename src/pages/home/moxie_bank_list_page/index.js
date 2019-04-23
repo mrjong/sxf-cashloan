@@ -7,6 +7,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
 import StepBar from 'components/StepBar';
+import linkConf from 'config/link.conf';
 
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
@@ -119,9 +120,7 @@ export default class moxie_bank_list_page extends Component {
 		store.setBankMoxie(true);
 		store.setGoMoxie(true);
 
-		window.location.href = item.href + '&showTitleBar=NO';
-		// window.history.pushState(null, null, item.href + '&showTitleBar=NO');
-		// location.href = item.href + '&showTitleBar=NO';
+		window.location.href = item.href + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
 	};
 	// 重新加载
 	reloadHandler = () => {
@@ -165,7 +164,6 @@ export default class moxie_bank_list_page extends Component {
 						</div>
 						<div className={style.bankList}>
 							{this.state.bankList.map((item, index) => {
-								// if (index <= this.state.lengthNum) {
 								return (
 									<div
 										onClick={() => {
@@ -181,16 +179,7 @@ export default class moxie_bank_list_page extends Component {
 										<div className={style.name}>{item.name}</div>
 									</div>
 								);
-								// } else {
-								// 	return null;
-								// }
 							})}
-							{/* {this.state.bankList.length >= 8 ? (
-								<div onClick={this.showAllFunc} className={style.bankitem}>
-									<span className={`bank_moxie_ico bank_moxie_ALL`} />
-									<div className={style.name}>{this.state.showAll ? '收起' : '查看全部'}</div>
-								</div>
-							) : null} */}
 						</div>
 					</div>
 				) : null}
@@ -198,7 +187,6 @@ export default class moxie_bank_list_page extends Component {
 					<div>
 						<div className={style.err_page}>
 							<i className={style.err_img} />
-							{/* <p className={style.err_cont}>对不起，您找的页面走丢了～</p> */}
 							<ButtonCustom onClick={this.reloadHandler} className={style.reload_btn}>
 								刷新
 							</ButtonCustom>

@@ -6,14 +6,14 @@ import { Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import fetch from 'sx-fetch';
 import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import SXFButton from 'components/ButtonCustom';
+import dayjs from 'dayjs';
+
 const API = {
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
 };
-@fetch.inject()
 export default class BankContent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -21,6 +21,7 @@ export default class BankContent extends React.Component {
 			MessageTag50000: '',
 			MessageTagError: '',
 			MessageTagStep: '',
+			MessageTagLimitDate: '', // 额度有效期标识
 		};
 	}
 
@@ -42,10 +43,12 @@ export default class BankContent extends React.Component {
 		const MessageTag50000 = store.getMessageTag50000();
 		const MessageTagError = store.getMessageTagError();
 		const MessageTagStep = store.getMessageTagStep();
+		const MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
 		this.setState({
 			MessageTag50000,
 			MessageTagError,
 			MessageTagStep,
+			MessageTagLimitDate, // 额度有效期标识
 		});
 	}
 
@@ -77,7 +80,7 @@ export default class BankContent extends React.Component {
 	requestCredCardCount = () => {
 		// 埋点-首页-点击代还其他信用卡
 		buriedPointEvent(home.repayOtherCredit);
-		this.props.$fetch
+		this.props.fetch
 			.post(API.CRED_CARD_COUNT)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000') {
@@ -99,7 +102,7 @@ export default class BankContent extends React.Component {
 		store[key2](key);
 	};
 	render() {
-		const { MessageTag50000, MessageTagError, MessageTagStep } = this.state;
+		const { MessageTag50000, MessageTagError, MessageTagStep, MessageTagLimitDate, } = this.state;
 		const {
 			className,
 			children,
@@ -114,6 +117,8 @@ export default class BankContent extends React.Component {
 		const { indexSts, indexData } = contentData;
 		const showEntranceArr = [ 'LN0003' ]; // 暂时去掉LN0006 和 LN0008两个状态下的代还其他信用卡入口
 		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0006', 'LN0007', 'LN0008', 'LN0009', 'LN0010' ];
+		// 比较额度有效期是否早于当前时间，如果早于则不显示气泡
+		const isShowTips = parseFloat(dayjs(new Date()).format('YYYYMMDD')) - parseFloat(indexData && indexData.acOverDt) <= 0;
 		let tipText = '';
 		if (handleMoxie) {
 			this.requestCredCardCount();
@@ -198,6 +203,30 @@ export default class BankContent extends React.Component {
 						<Icon
 							onClick={() => {
 								this.closeTip('MessageTagStep');
+							}}
+							size="sm"
+							style={{ width: '.3rem', height: '.3rem' }}
+							className={style.closeIcon}
+							type="cross"
+						/>
+						<div className={style.triangle_border_down}>
+							<span />
+						</div>
+					</div>
+				</div>
+			);
+		} else if (
+			((indexSts === 'LN0006' || indexSts === 'LN0008') &&
+				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
+			(!MessageTagLimitDate || MessageTagLimitDate !== 'MessageTagLimitDate') && isShowTips
+		) {
+			tipText = (
+				<div className={style.abnormal_tip_box}>
+					<div className={style.abnormal_tip}>
+						额度有效期至{dayjs(indexData && indexData.acOverDt).format('YYYY年MM月DD日')}
+						<Icon
+							onClick={() => {
+								this.closeTip('MessageTagLimitDate');
 							}}
 							size="sm"
 							style={{ width: '.3rem', height: '.3rem' }}

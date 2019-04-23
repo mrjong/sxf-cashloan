@@ -44,11 +44,11 @@ export default class mine_page extends PureComponent {
     store.removeBackData()
     // 移除会员卡出入口
     store.removeVipBackUrl();
-    console.log('---------',tokenFromStorage , token)
+    console.log('---------', tokenFromStorage, token)
     if (tokenFromStorage && token) {
       // 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
       if (Cookie.get('authFlag')) {
-          console.log('9999')
+        console.log('9999')
         this.setState({ mblNoHid: store.getUserPhone(), realNmFlg: Cookie.get('authFlag') === '1' ? true : false });
       } else {
         this.getUsrInfo();
@@ -75,7 +75,7 @@ export default class mine_page extends PureComponent {
   }
   // 获取用户信息
   getUsrInfo = () => {
-      console.log('+++')
+    console.log('+++')
     this.props.$fetch.get(API.USERSTATUS).then(res => {
       if (res.msgCode !== 'PTM0000') {
         res.msgInfo && this.props.toast.info(res.msgInfo);
@@ -219,6 +219,10 @@ export default class mine_page extends PureComponent {
     this.props.history.push('/login');
   }
 
+  goPage = () => {
+    this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine')
+  }
+
   render() {
     const { mblNoHid, realNmFlg } = this.state;
     // 定义list所需的数据
@@ -295,13 +299,16 @@ export default class mine_page extends PureComponent {
       },
     ];
     return (
-      <div className={[styles.mine_page,'mine_page_global'].join(' ')}>
+      <div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
         <div className={styles.user_inf}>
-          <img src={avatar} alt="用户头像" />
-          {
-            tokenFromStorage && token ?
-              <span>{mblNoHid}</span> : <span onClick={this.logInHandler}>登录/注册</span>
-          }
+          <div>
+            <img src={avatar} alt="用户头像" />
+            {
+              tokenFromStorage && token ?
+                <span>{mblNoHid}</span> : <span onClick={this.logInHandler}>登录/注册</span>
+            }
+          </div>
+          <div className={styles.follow_btn} onClick={this.goPage}>关注得免息</div>
         </div>
         <Lists clickCb={this.clickhandle} listsInf={listsArr} />
         <Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
