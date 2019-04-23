@@ -19,7 +19,11 @@ export default class wuyue_new_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      showModal: false
+      // contType: '',
+      // mayModalShow: false,
+      contType: 'no_qualified_tips',
+      mayModalShow: true,
+      rulesShow: false,
     }
   }
 
@@ -38,18 +42,33 @@ export default class wuyue_new_page extends PureComponent {
 
   }
 
+  // 展示活动规则
+  showRules = () => {
+    this.setState({
+      rulesShow: true
+    })
+  }
+
+  // 关闭活动规则
+  closeRules = () => {
+    this.setState({
+      rulesShow: false
+    })
+  }
+
   render() {
+    const { contType, mayModalShow, rulesShow } = this.state;
     return (
       <div className={styles.wuyue_new_page}>
         <img src={activity_bg} className={styles.activity_bg} />
-        <img src={rule_bg} className={styles.rule_bg} />
+        <img src={rule_bg} className={styles.rule_bg} onClick={this.showRules} />
         <div className={styles.main_cont}>
           <img src={main_bg} className={styles.main_bg} />
           <img src={btn_img} onClick={this.getNow} className={styles.btn_style} />
         </div>
         <img src={reason_img} className={styles.reason_block} />
-        {/* <RuleShow ruleTit="新用户活动规则" ruleDesc={rules} /> */}
-        <ModalWrap history={this.props.history}  />
+        { rulesShow && <RuleShow ruleTit="新用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
+        { mayModalShow && <ModalWrap history={this.props.history} contType={contType} /> }
       </div>
     )
   }

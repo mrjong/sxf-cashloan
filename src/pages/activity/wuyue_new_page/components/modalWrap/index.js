@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Modal } from 'antd-mobile';
 import style from './index.scss';
-import SXFButton from 'components/ButtonCustom';
 import LoginAlert from '../LoginAlert';
+import TipsComponent from '../TipsComponent';
 
 export default class ModalWrap extends Component {
 
@@ -24,107 +24,89 @@ export default class ModalWrap extends Component {
 		const { modalShow } = this.state;
 		const { history, contType } = this.props;
 		switch (contType) {
-			case 'login_tip': //
+			case 'login_alert': // 登陆弹框
 				componentsDisplay = (
-					
+					<LoginAlert history={history} />
 				);
 				break;
-			case 'alert_congratulation': //
+			case 'new_sorry_tips': // 老用户参加新用户活动提示弹框
 				componentsDisplay = (
-					<div className={style.img_box}>
-						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
-						<img src={congratulation} className={style.alert_congratulation} />
-						{alert_img ? <img className={style.award_img} src={alert_img} /> : null}
-						<Button onClick={this.props.goRoute} className={style.btn_loan} type="primary">
-							立即借款
-						</Button>
-					</div>
+					<TipsComponent
+						history={history}
+						tipsTit="抱歉"
+						tipsCont="本活动仅针对新用户哦～"
+						btnText="马上抽50000元老用户专属大奖"
+						clickCb={() => {
+							console.log(222)
+						}}
+					/>
 				);
 				break;
-			case 'award_list': //
+			case 'old_sorry_tips': // 新用户参加老用户活动提示弹框
 				componentsDisplay = (
-					<div className={style.img_box}>
-						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
-						<img src={award_list} className={style.alert_congratulation} />
-
-						{userAwardList && userAwardList.length !== 0 ? (
-							<div className={style.alert_list}>
-								<div className={style.alert_list_c}>
-									<List>
-										{userAwardList &&
-											userAwardList.map((item, key) => {
-												return (
-													<Item
-														key={key}
-														extra={
-															<Button
-																className={style.btn_loan2}
-																type="primary"
-																size="small"
-																inline
-																onClick={this.props.goRoute}
-															>
-																立即领取
-															</Button>
-														}
-													>
-														{item.valDes}
-													</Item>
-												);
-											})}
-									</List>
-								</div>
-							</div>
-						) : (
-							<div className={style.tip_text}>
-								还没有抽中奖品，<br /> 快去试试手气吧～
-							</div>
-						)}
-					</div>
+					<TipsComponent
+						history={history}
+						tipsTit="抱歉"
+						tipsCont="本活动仅针对已注册用户哦～"
+						btnText="注册并马上领取新用户专享奖励"
+						clickCb={() => {
+							console.log(333)
+						}}
+					/>
 				);
 				break;
-			case 'no_award': // 没有中奖
+			case 'no_chance_tips': // 抽奖机会已用完提示弹框
 				componentsDisplay = (
-					<div className={style.img_box}>
-						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
-						<img src={thanks} className={style.alert_congratulation} />
-						<div className={style.tip_text}>
-							没关系，完成首借款<br /> 可返最高500元现金
-						</div>
-						<Button className={style.btn_loan} onClick={this.props.goRoute} type="primary">
-							立即参与
-						</Button>
-					</div>
+					<TipsComponent
+						history={history}
+						tipsTit="温馨提示"
+						tipsCont="您的抽奖机会已用完，不要贪心哦～"
+						btnText="知道了"
+						clickCb={() => {
+							console.log(44)
+						}}
+					/>
 				);
 				break;
-			case 'no_chance': // 没有抽奖机会
+			case 'no_award_tips': // 奖励发放完毕提示弹框
 				componentsDisplay = (
-					<div className={style.img_box}>
-						<Icon type="cross" onClick={this.closeModal} className={style.close_icon} />
-						<img src={tip} className={style.alert_congratulation} />
-						<div className={style.tip_text}>
-							您的抽奖次数已用尽<br />完成首借立返最高500元现金
-						</div>
-						<Button className={style.btn_loan} onClick={this.props.goRoute} type="primary">
-							立即参与
-						</Button>
-					</div>
+					<TipsComponent
+						history={history}
+						tipsTit="温馨提示"
+						tipsCont="今日活动奖励已经发放完毕，<br />奖品有限，先到先得，请明日再来"
+						btnText="知道了"
+						clickCb={() => {
+							console.log(55)
+						}}
+					/>
 				);
-
 				break;
+			case 'no_qualified_tips': // 需要填写认证资料提示弹框
+				componentsDisplay = (
+					<TipsComponent
+						history={history}
+						tipsTit="温馨提示"
+						tipsCont="您需要先认证并授信成功后，<br />才能参加活动哦～"
+						btnText="填写认证资料"
+						clickCb={() => {
+							console.log(666)
+						}}
+					/>
+				);
+				break;	
 			default:
 				break;
 		}
 		return (
 			<Modal
-				className="login_alert_modal"
+				className="alert_wrap_modal"
 				visible={modalShow}
 				transparent
 				// onClose={this.onClose('modalShow')}
 			>
 				<div className={style.modal_wrap_style}>
 					<i onClick={this.closeCb} className={style.close_icon} />
-					<LoginAlert history={history} />
+					{ componentsDisplay }
 				</div>
 			</Modal>
 		);

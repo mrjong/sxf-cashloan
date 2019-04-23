@@ -8,11 +8,12 @@
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	position: absolute;
-	right: 24px;
-	top: 24px;
+	right: 0;
+	top: 0;
+	margin: 24px 24px 0 0;
 }
 :global {
-	.login_alert_modal.am-modal {
+	.alert_wrap_modal.am-modal {
 		&.am-modal-transparent {
 			width: 620px;
 		}

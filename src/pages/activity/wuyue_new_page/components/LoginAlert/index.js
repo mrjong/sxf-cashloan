@@ -26,15 +26,8 @@ export default class LoginAlert extends Component {
 		this.state = {
 			smsText: '获取验证码',
 			timeflag: true,
-			modalShow: true,
 			disabled: false,
-			mblNoHid: '',
-			smsProps_disabled: false,
-			loginProps_disabled: false,
 			smsJrnNo: '', // 短信流水号
-			otherProps_type: '', // 传递过来的参数
-			loginProps_needLogin: false, // 是登陆不是短验
-			loginProps_needLogin_copy: false
 		};
 	}
 	componentDidMount() {
@@ -98,12 +91,6 @@ export default class LoginAlert extends Component {
 			}
 		});
 	}
-
-	closeCb = () => {
-		this.setState({
-			modalShow: false
-		});
-	};
 
 	// 确定去登陆按钮
 	goLogin = () => {
