@@ -230,7 +230,7 @@
     .desc{
         position: absolute;
         bottom: 0;
-        right: 0;
+        left: 0;
         color: #999;
         font-size: 24px;
     }
@@ -407,7 +407,7 @@
 .tagList {
 	display: flex;
 	justify-content: space-between;
-	margin: 76px 30px 100px;
+	margin: 56px 30px 40px;
 	.tagButton {
 		display: inline-block;
 		width: 180px;
