@@ -1,7 +1,11 @@
 .login_alert{
-	margin: 0 20px;
 	.form_control {
 		padding-left: 0;
+		:global {
+			.am-input-control input{
+				font-size: 30px;
+			}
+		}
 	}
 	.agreement{
 		text-align: left;
