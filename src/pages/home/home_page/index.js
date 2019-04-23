@@ -44,7 +44,8 @@ const API = {
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
-	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001' // 参与418活动
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001', // 参与418活动
+	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 };
 const tagList = [
 	{
@@ -96,7 +97,8 @@ export default class home_page extends PureComponent {
 			showAgreement: false, // 显示协议弹窗
 			billOverDue: false, //逾期弹窗标志
 			isShowActivityModal: false, // 是否显示活动弹窗
-			visibleLoading: false //认证弹窗
+			visibleLoading: false, //认证弹窗
+			isNeedExamine: false, // 是否需要人审
 		};
 	}
 
@@ -332,7 +334,7 @@ export default class home_page extends PureComponent {
 
 	// 智能按钮点击事件
 	handleSmartClick = () => {
-		const { usrIndexInfo } = this.state;
+		const { usrIndexInfo,isNeedExamine } = this.state;
 		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
 			buriedPointEvent(home.viewBill);
@@ -382,7 +384,11 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				this.props.toast.info(`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
+				if (isNeedExamine) {
+					this.props.history.push('/home/loan_apply_succ_page');
+				} else {
+					this.props.toast.info(`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`);
+				}
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
@@ -593,6 +599,10 @@ export default class home_page extends PureComponent {
 				// }
 				if (result.data.indexSts === 'LN0003') {
 					this.getPercent();
+				}
+				if (result.data.indexSts === 'LN0007') {
+					// 获取是否需要人审
+					this.getExamineSts();
 				}
 				this.setState({
 					usrIndexInfo: result.data.indexData
@@ -965,6 +975,17 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
+	getExamineSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					isNeedExamine: res.data && res.data.flag === '01' && res.data.ptMark === '01',
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}			
+		});
+	}
 
 	render() {
 		const {

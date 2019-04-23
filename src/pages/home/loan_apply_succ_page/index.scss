@@ -1,0 +1,33 @@
+.credit_apply_succ_page{
+  text-align: center;
+	.content{
+		padding: 60px 30px 0;
+		img{
+      width: 128px;
+      margin-bottom: 40px;
+			vertical-align: top;
+    }
+    .desc {
+      font-size: 36px;
+      font-weight: 600;
+      color: rgba(51, 51, 51, 1);
+    }
+    .tip {
+      font-size: 28px;
+      color: #86919D;
+      margin-top: 180px;
+      text-align: left;
+    }
+  }
+  .btnTip{
+    font-size: 28px;
+    color: #86919D;
+    margin-top: 290px;
+  }
+	.backBtn{
+		width: 620px;
+		margin: 24px auto 0;
+		height: 90px;
+		line-height: 90px;
+	}
+}
