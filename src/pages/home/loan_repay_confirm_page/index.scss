@@ -177,8 +177,8 @@
 			&::after {
 				content: '';
 				margin-left: 15px;
-                @include setArrow(right,15px,#A9AEB6,1PX);
-                border-color: #333;
+				@include setArrow(right,15px,#A9AEB6,1PX);
+				border-color: #333;
 			}
 		}
 
@@ -186,10 +186,10 @@
 			.am-input-control input,
 			.am-list-extra {
 				color: #333;
-            }
-             .am-input-control .fake-input-container .fake-input.fake-input-disabled{
-                 color: #333;
-             }
+			}
+			.am-input-control .fake-input-container .fake-input.fake-input-disabled {
+				color: #333;
+			}
 		}
 
 		.am-list-item .am-list-line {
@@ -204,40 +204,78 @@
 		}
 
 		.am-list-item .am-input-control input {
-            text-align: right;
-            color: #000;
-            opacity: 1;
-        }
-        .am-list-item .am-input-control input:disabled {
-            text-align: right;
-            color: #000;
-            opacity: 1;
+			text-align: right;
+			color: #000;
+			opacity: 1;
+		}
+		.am-list-item .am-input-control input:disabled {
+			text-align: right;
+			color: #000;
+			opacity: 1;
 		}
 
 		.am-list-item.am-list-item-middle .am-list-line {
 			&:after {
 				@include setBottomLine();
-            }
-        }
-        .am-list-item .am-list-line .am-list-extra{
-            color: #333;
-            opacity: 1;
-        }
+			}
+		}
+		.am-list-item .am-list-line .am-list-extra {
+			color: #333;
+			opacity: 1;
+		}
 	}
 }
-.money_input{
-    position: relative;
-    .desc{
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        color: #999;
-        font-size: 24px;
-    }
+.money_input {
+	position: relative;
+	.desc {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		color: #999;
+		font-size: 24px;
+	}
+}
+.dayProd {
+	.title {
+		color: #333;
+
+		position: relative;
+		top: -13px;
+	}
+	&.dis {
+		.subtitle,.title {
+			color: #e5e5e5;
+		}
+		i {
+			background-image: url('/assets/images/home/viplogo-dis.png');
+		}
+	}
+
+	i {
+		position: absolute;
+		top: -10px;
+		margin-left: 15px;
+		width: 103px;
+		height: 35px;
+		display: inline-block;
+		background-size: 100%;
+		background-image: url('/assets/images/home/viplogo.png');
+		background-color: #fff;
+		background-repeat: no-repeat;
+		background-origin: content-box;
+	}
+	.subtitle {
+		font-size: 0.22rem;
+		color: #999;
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%);
+	}
 }
 // modal样式覆盖
 :global {
-    .money_input_loan {
+	.money_input_loan {
 		.am-list-item .am-list-line {
 			padding-right: 5px;
 		}
