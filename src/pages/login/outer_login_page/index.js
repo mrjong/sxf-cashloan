@@ -320,7 +320,7 @@ export default class login_page extends PureComponent {
 					<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
 					<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
 				</div>
-				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
+				{/* <div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>
 						<img src={logoImg} className={styles.img} />
 						<span>直接下载，放款更快！</span>
@@ -334,7 +334,7 @@ export default class login_page extends PureComponent {
 					>
 						立即下载
 					</div>
-				</div>
+				</div> */}
 			</div>
 		);
 	}

@@ -9,6 +9,7 @@ import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
+import linkConf from 'config/link.conf';
 
 // 退出的api
 const API = {
@@ -472,7 +473,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
+										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
 							}, 3000);
 							if (callBack) {
 								callBack(resBackMsg);

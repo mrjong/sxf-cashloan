@@ -6,6 +6,7 @@ import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
+import linkConf from 'config/link.conf';
 
 const API = {
 	getStw: '/my/getStsw', // 获取4个认证项的状态
@@ -149,7 +150,7 @@ export default class credit_extension_page extends PureComponent {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-                                        .location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
+                                        .location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
                                         
 							} else {
 								this.props.toast.info(result.msgInfo);

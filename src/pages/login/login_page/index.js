@@ -86,13 +86,13 @@ export default class login_page extends PureComponent {
 		let _this = this
 		let originClientHeight = document.documentElement.clientHeight
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function() {
+		window.addEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
 				let clientHeight = document.documentElement.clientHeight
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
 				})
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -103,9 +103,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', function() {
+		window.removeEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -241,38 +241,22 @@ export default class login_page extends PureComponent {
 	render() {
 		const { getFieldProps } = this.props.form;
 		return (
-			<div ref="loginWrap" className={styles.dc_landing_page}>
-				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				<div ref="loginContent" className={styles.content}>
-					<InputItem
-						disabled={this.state.disabledInput}
-						id="inputPhone"
-						maxLength="11"
-						type="number"
-						className={styles.loginInput}
-						placeholder="请输入您的手机号"
-						{...getFieldProps('phoneValue', {
-							rules: [
-								{ required: true, message: '请输入正确手机号' },
-								{ validator: !this.state.disabledInput && this.validatePhone }
-							]
-						})}
-						onBlur={() => {
-							this.setState({
-								inputFocus: false
-							})
-							handleInputBlur();
-						}}
-					/>
-					<div className={styles.smsBox}>
+			<div className={styles.dc_landing_page_wrap}>
+				<div ref="loginWrap" className={styles.dc_landing_page}>
+					<img className={styles.banner} src={bannerImg} alt="落地页banner" />
+					<div ref="loginContent" className={styles.content}>
 						<InputItem
-							id="inputCode"
+							disabled={this.state.disabledInput}
+							id="inputPhone"
+							maxLength="11"
 							type="number"
-							maxLength="6"
-							className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
-							placeholder="请输入短信验证码"
-							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+							className={styles.loginInput}
+							placeholder="请输入您的手机号"
+							{...getFieldProps('phoneValue', {
+								rules: [
+									{ required: true, message: '请输入正确手机号' },
+									{ validator: !this.state.disabledInput && this.validatePhone }
+								]
 							})}
 							onBlur={() => {
 								this.setState({
@@ -281,44 +265,63 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						<div
-							className={styles.smsCode}
-							onClick={() => {
-								this.state.timeflag ? this.getTime(59) : '';
-							}}
-						>
-							{this.state.timers}
+						<div className={styles.smsBox}>
+							<InputItem
+								id="inputCode"
+								type="number"
+								maxLength="6"
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+								placeholder="请输入短信验证码"
+								{...getFieldProps('smsCd', {
+									rules: [{ required: true, message: '请输入正确验证码' }]
+								})}
+								onBlur={() => {
+									this.setState({
+										inputFocus: false
+									})
+									handleInputBlur();
+								}}
+							/>
+							<div
+								className={styles.smsCode}
+								onClick={() => {
+									this.state.timeflag ? this.getTime(59) : '';
+								}}
+							>
+								{this.state.timers}
+							</div>
+						</div>
+						<div className={styles.sureBtn} onClick={this.goLogin}>
+							<span>免费借款</span>
+						</div>
+						<div className={styles.agreement}>
+							<i
+								className={this.state.isChecked ? styles.checked : styles.nochecked}
+								onClick={this.checkAgreement}
+							/>
+							注册即视为同意
+						<span
+								onClick={() => {
+									this.go('register_agreement_page');
+								}}
+							>
+								《用户注册协议》
+						</span>
+							<span
+								onClick={() => {
+									this.go('privacy_agreement_page');
+								}}
+							>
+								《用户隐私权政策》
+						</span>
 						</div>
 					</div>
-					<div className={styles.sureBtn} onClick={this.goLogin}>
-						<span>免费借款</span>
+					<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
+					<div className={styles.imgWrap}>
+						<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
+						<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
 					</div>
-					<div className={styles.agreement}>
-						<i
-							className={this.state.isChecked ? styles.checked : styles.nochecked}
-							onClick={this.checkAgreement}
-						/>
-						注册即视为同意
-						<span
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
-						>
-							《用户注册协议》
-						</span>
-						<span
-							onClick={() => {
-								this.go('privacy_agreement_page');
-							}}
-						>
-							《用户隐私权政策》
-						</span>
-					</div>
-				</div>
-				<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
-				<div className={styles.imgWrap}>
-					<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
-					<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
+
 				</div>
 				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>
