@@ -111,7 +111,7 @@ export default class home_page extends PureComponent {
 		// 清除返回的flag
 		store.removeBackFlag();
 		// 运营商直接返回的问题
-		store.removeCarrierMoxie();
+		// store.removeCarrierMoxie();
 		// 信用卡绑卡之后立即去提交页需要提示
 		store.removeCreditSuccessBack();
 		// 未提交授信用户

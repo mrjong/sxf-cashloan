@@ -447,8 +447,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 							$props.toast.info(msg);
 							resBackMsg = '人脸识别认证';
 							setTimeout(() => {
-								// // 运营商直接返回的问题
-								// store.setCarrierMoxie(true);
+								// 运营商直接返回的问题
+								store.setCarrierMoxie(true);
 								SXFToast.loading('加载中...', 0);
 								window.location.href = result.data
 							}, 3000);

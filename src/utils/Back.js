@@ -206,7 +206,6 @@ if (window.history && window.history.pushState) {
 							window.handleCloseHomeModal();
 							return;
 						}
-						// alert(store.getCarrierMoxie())
 						if (store.getCarrierMoxie()) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
