@@ -190,7 +190,7 @@ export default class loan_repay_confirm_page extends PureComponent {
       const { usrIndexInfo } = this.state;
       this.props.history.push({
         pathname: '/mine/credit_list_page',
-        search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
+        search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId || ''}`
       });
     } else {
       this.goMoxieBankList();
