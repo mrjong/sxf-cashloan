@@ -178,8 +178,7 @@ export default class wenjuan_page extends PureComponent {
 				if (res.data) {
 					this.setState({
 						isNewUser: false,
-						showModal: true,
-						isOldUser: true
+						showModal: true
 					});
 					localStorage.removeItem('wenjuan');
 					this.backData(res.data);
@@ -232,6 +231,13 @@ export default class wenjuan_page extends PureComponent {
 		buriedPointEvent(activity.wenjuanBtn, {
 			entry: urlData.entry
 		});
+		if (this.state.isOldUser) {
+			this.setState({
+				showModal: true,
+				isNewUser: false
+			});
+			return;
+		}
 		if (urlData && urlData.entry && urlData.entry.indexOf('ismpos_') > -1) {
 			if (urlData.appId && urlData.token) {
 				this.getStatus();
@@ -280,12 +286,6 @@ export default class wenjuan_page extends PureComponent {
 	};
 	// 进入首页
 	goHomePage = () => {
-		if (this.state.isOldUser) {
-			this.setState({
-				showModal: true
-			});
-			return;
-		}
 		if (localStorage.getItem('wenjuan')) {
 			this.props.$fetch
 				.post(API.saveQuestionnaire, {
