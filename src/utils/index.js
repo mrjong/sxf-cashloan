@@ -17,7 +17,8 @@ const API = {
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 	submitState: '/bill/apply', // 提交代还金申请
-	idChkPhoto: '/auth/idChkPhoto'
+	idChkPhoto: '/auth/idChkPhoto',
+	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -407,7 +408,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 		});
 };
 
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = [ 'idCheck', 'faceDetect', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
@@ -435,8 +436,33 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				}, 3000);
 				return;
 			}
-			// 基本信息
+			// 人脸识别认证
+			console.log(codesArray)
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
+				$props.$fetch
+					.post(`${API.getFace}`, {})
+					.then((result) => {
+						if (result.msgCode === 'PTM0000' && result.data) {
+							$props.SXFToast.hide();
+							let msg = '请进行人脸识别认证';
+							$props.toast.info(msg);
+							resBackMsg = '人脸识别认证';
+							setTimeout(() => {
+								// // 运营商直接返回的问题
+								// store.setCarrierMoxie(true);
+								SXFToast.loading('加载中...', 0);
+								window.location.href = result.data
+							}, 3000);
+							if (callBack) {
+								callBack(resBackMsg);
+							}
+						}
+					});
+				return;
+			}
+
+			// 基本信息
+			if (codesArray[2] !== '2' && codesArray[2] !== '1') {
 				$props.SXFToast.hide();
 				let msg = '请进行基本信息认证';
 				$props.toast.info(msg);
@@ -454,7 +480,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			}
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
-			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
+			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.$fetch
 					.post(`${API.getOperator}`, {
 						clientCode: '04'
@@ -479,12 +505,11 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 							}
 						}
 					});
-
 				return;
 			}
 
 			// 信用卡
-			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+			if (codesArray[4] !== '1' && codesArray[4] !== '2') {
 				$props.SXFToast.hide();
 				let msg = '请进行信用卡认证';
 				$props.toast.info(msg);

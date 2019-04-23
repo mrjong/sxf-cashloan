@@ -259,7 +259,8 @@ export default class home_page extends PureComponent {
 		this.setState({
 			pageCode: demo
 		});
-		let codesCopy = demo.slice(1, 4);
+		let codesCopy = demo.slice(2, 5);
+		console.log(data)
 		// console.log(codesCopy, 'codesCopy');
 		// console.log(data.codes, '-----');
 		codes = codesCopy.split('');
@@ -291,7 +292,6 @@ export default class home_page extends PureComponent {
 				percentSatus: '3',
 				showDiv: '50000'
 			});
-			// this.child.startAdd(40);
 			return;
 		}
 		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length != 0) {
