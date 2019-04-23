@@ -178,7 +178,8 @@ export default class wenjuan_page extends PureComponent {
 				if (res.data) {
 					this.setState({
 						isNewUser: false,
-						showModal: true
+						showModal: true,
+						isOldUser: true
 					});
 					localStorage.removeItem('wenjuan');
 					this.backData(res.data);
