@@ -137,6 +137,7 @@ export default class credit_extension_page extends PureComponent {
 						.post(`${API.getFace}`, {})
 						.then((result) => {
 							if (result.msgCode === 'PTM0000' && result.data) {
+								buriedPointEvent(mine.creditExtensionFaceAuth);
 								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
 								this.props.SXFToast.loading('加载中...', 0);
 								window.location.href = result.data
