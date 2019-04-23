@@ -12,6 +12,7 @@ import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto } from '
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import ScrollText from 'components/ScrollText'
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
 	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
@@ -97,19 +98,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 						usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
 					},
 					() => {
-						// const { indexSts, indexData } = {
-						//   indexSts: 'LN0003',
-						//   indexMsg: '一键还卡',
-						//   indexData: {
-						//     autSts: '1', // 1 中, 2,成功  3失败  1更新中
-						//     bankName: '招商银行',
-						//     bankNo: 'ICBC',
-						//     cardNoHid: '6785 **** **** 6654',
-						//     cardBillDt: '2018-07-17',
-						//     cardBillAmt: '786.45',
-						//     overDt: '7'
-						//   }
-						// };
 						const { indexSts, indexData } = this.state.usrIndexInfo;
 						if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
 							//更新中
@@ -383,7 +371,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 					userType: 'newUser'
 				});
 				break;
-
 			default:
 				break;
 		}
@@ -479,7 +466,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			showAgainUpdateBtn,
 			usrIndexInfo,
 			activeTag,
-			selectedLoanDate = {}
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -531,135 +517,138 @@ export default class loan_repay_confirm_page extends PureComponent {
 			}
 		}
 		return (
-			<div className={[ style.pageWrapper, 'loan_repay_confirm_page' ].join(' ')}>
-				<div className={style.bankCard}>
-					<div className={style.top}>
-						<div>
-							<span className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
-							<span className={style.name}>{!bankName ? '****' : bankName}</span>
-							<span className={style.lastNo}>{!cardNoHid ? '****' : cardNoHid.slice(-4)}</span>
-						</div>
-						{isShowProgress ? (
-							<div className={style.progressWrap}>
-								<div className={style.percentTitleWrap}>
-									<span className={style.percentTitle}>账单导入中</span>
-									<em className={style.percentNum}>{percent}%</em>
-								</div>
-								<Progress percent={percent} position="normal" />
+			<div className={[style.pageWrapper, 'loan_repay_confirm_page'].join(' ')}>
+				<ScrollText />
+				<div className={style.page_inner_wrap}>
+					<div className={style.bankCard}>
+						<div className={style.top}>
+							<div>
+								<span className={['bank_ico', iconClass, `${style.bankLogo}`].join(' ')} />
+								<span className={style.name}>{!bankName ? '****' : bankName}</span>
+								<span className={style.lastNo}>{!cardNoHid ? '****' : cardNoHid.slice(-4)}</span>
 							</div>
-						) : showAgainUpdateBtn ? (
-							<span onClick={this.updateBill} className={style.updateButton}>
-								重新更新
+							{isShowProgress ? (
+								<div className={style.progressWrap}>
+									<div className={style.percentTitleWrap}>
+										<span className={style.percentTitle}>账单导入中</span>
+										<em className={style.percentNum}>{percent}%</em>
+									</div>
+									<Progress percent={percent} position="normal" />
+								</div>
+							) : showAgainUpdateBtn ? (
+								<span onClick={this.updateBill} className={style.updateButton}>
+									重新更新
 							</span>
-						) : (
-							<span onClick={this.goMoxieBankList} className={style.updateButton}>
-								更新账单
+							) : (
+										<span onClick={this.goMoxieBankList} className={style.updateButton}>
+											更新账单
 							</span>
+									)}
+						</div>
+						<div className={style.center}>
+							<p className={style.billTitle}>剩余应还金额(元)</p>
+							<strong className={style.billMoney}>{cardBillAmtData}</strong>
+							<div className={style.billInfo}>
+								<div className={style.item}>
+									<span className={style.value}>{minPaymentData}</span>
+									<span className={style.name}>最低还款</span>
+								</div>
+								<div className={style.item}>
+									<span className={style.value}>{billDtData}</span>
+									<span className={style.name}>账单日</span>
+								</div>
+								<div className={style.item}>
+									<span className={style.value} dangerouslySetInnerHTML={{ __html: overDtStr }} />
+									<span className={style.name}>还款日</span>
+								</div>
+							</div>
+						</div>
+						<div className={style.bottom} onClick={this.requestCredCardCount}>
+							<span>代还其他信用卡</span>
+							<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
+						</div>
+					</div>
+					<div className={style.tagList}>
+						{tagList.map((item, idx) => (
+							<span
+								key={idx}
+								className={[style.tagButton, activeTag === idx && style.activeTag].join(' ')}
+								onClick={() => {
+									this.toggleTag(idx, 'click');
+								}}
+							>
+								{item.name}
+							</span>
+						))}
+					</div>
+					<div>
+						{getFieldDecorator('loanMoney', {
+							initialValue: this.state.loanMoney,
+							rules: [{ required: true, message: '请输入还款金额' }]
+						})(
+							<InputItem
+								placeholder={this.placeholderText()}
+								type="text"
+								disabled={this.inputDisabled()}
+								ref={(el) => (this.inputRef = el)}
+								className={this.inputDisabled() ? '' : 'blackColor'}
+								onBlur={() => {
+									handleInputBlur();
+								}}
+								onFocus={(v) => {
+									this.updateBillInf();
+								}}
+							>
+								帮你还多少(元)
+						</InputItem>
 						)}
 					</div>
-					<div className={style.center}>
-						<p className={style.billTitle}>剩余应还金额(元)</p>
-						<strong className={style.billMoney}>{cardBillAmtData}</strong>
-						<div className={style.billInfo}>
-							<div className={style.item}>
-								<span className={style.value}>{minPaymentData}</span>
-								<span className={style.name}>最低还款</span>
-							</div>
-							<div className={style.item}>
-								<span className={style.value}>{billDtData}</span>
-								<span className={style.name}>账单日</span>
-							</div>
-							<div className={style.item}>
-								<span className={style.value} dangerouslySetInnerHTML={{ __html: overDtStr }} />
-								<span className={style.name}>还款日</span>
-							</div>
-						</div>
+					<div>
+						{getFieldDecorator('loanDate', {
+							initialValue: selectedLoanDateCopy && [selectedLoanDateCopy.perdLth],
+							rules: [{ required: true, message: '请选择借款期限' }],
+							onChange: (value, label) => {
+								this.filterLoanDate(value);
+								this.dateType(value[0]);
+							}
+						})(
+							<AsyncCascadePicker
+								loadData={[
+									() => {
+										//如果账单爬取成功，请求期限接口
+										return this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
+											const date =
+												res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+											this.setState({
+												perdRateList: date,
+												selectedLoanDate: date[0] // 默认选中3期
+											});
+											selectedLoanDateCopy = date[0]
+											this.dateType(date[0].perdLth);
+											// 设置默认选中的还款金额
+											return date.map((item) => ({
+												value: item.perdLth,
+												label: item.perdPageNm
+											}));
+										});
+									}
+								]}
+								cols={1}
+								onVisibleChange={(bool) => {
+									if (bool) {
+										this.updateBillInf();
+									}
+								}}
+							>
+								<List.Item>借多久</List.Item>
+							</AsyncCascadePicker>
+						)}
 					</div>
-					<div className={style.bottom} onClick={this.requestCredCardCount}>
-						<span>代还其他信用卡</span>
-						<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
-					</div>
-				</div>
-				<div className={style.tagList}>
-					{tagList.map((item, idx) => (
-						<span
-							key={idx}
-							className={[ style.tagButton, activeTag === idx && style.activeTag ].join(' ')}
-							onClick={() => {
-								this.toggleTag(idx, 'click');
-							}}
-						>
-							{item.name}
-						</span>
-					))}
-				</div>
-				<div>
-					{getFieldDecorator('loanMoney', {
-						initialValue: this.state.loanMoney,
-						rules: [ { required: true, message: '请输入还款金额' } ]
-					})(
-						<InputItem
-							placeholder={this.placeholderText()}
-							type="text"
-							disabled={this.inputDisabled()}
-							ref={(el) => (this.inputRef = el)}
-							className={this.inputDisabled() ? '' : 'blackColor'}
-							onBlur={() => {
-								handleInputBlur();
-							}}
-							onFocus={(v) => {
-								this.updateBillInf();
-							}}
-						>
-							帮你还多少(元)
-						</InputItem>
-					)}
-				</div>
-				<div>
-					{getFieldDecorator('loanDate', {
-						initialValue: selectedLoanDateCopy && [ selectedLoanDateCopy.perdLth ],
-						rules: [ { required: true, message: '请选择借款期限' } ],
-						onChange: (value, label) => {
-							this.filterLoanDate(value);
-							this.dateType(value[0]);
-						}
-					})(
-						<AsyncCascadePicker
-							loadData={[
-								() => {
-									//如果账单爬取成功，请求期限接口
-									return this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
-										const date =
-											res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-										this.setState({
-											perdRateList: date,
-											selectedLoanDate: date[0] // 默认选中3期
-                                        });
-                                        selectedLoanDateCopy = date[0]
-										this.dateType(date[0].perdLth);
-										// 设置默认选中的还款金额
-										return date.map((item) => ({
-											value: item.perdLth,
-											label: item.perdPageNm
-										}));
-									});
-								}
-							]}
-							cols={1}
-							onVisibleChange={(bool) => {
-								if (bool) {
-									this.updateBillInf();
-								}
-							}}
-						>
-							<List.Item>借多久</List.Item>
-						</AsyncCascadePicker>
-					)}
-				</div>
-				<ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
-					提交申请
+					<ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
+						提交申请
 				</ZButton>
-				<p className="bottomTip">怕逾期，用还到</p>
+					<p className="bottomTip">怕逾期，用还到</p>
+				</div>
 			</div>
 		);
 	}

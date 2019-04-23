@@ -164,7 +164,6 @@ export default class moxie_bank_list_page extends Component {
 						</div>
 						<div className={style.bankList}>
 							{this.state.bankList.map((item, index) => {
-								// if (index <= this.state.lengthNum) {
 								return (
 									<div
 										onClick={() => {
@@ -180,16 +179,7 @@ export default class moxie_bank_list_page extends Component {
 										<div className={style.name}>{item.name}</div>
 									</div>
 								);
-								// } else {
-								// 	return null;
-								// }
 							})}
-							{/* {this.state.bankList.length >= 8 ? (
-								<div onClick={this.showAllFunc} className={style.bankitem}>
-									<span className={`bank_moxie_ico bank_moxie_ALL`} />
-									<div className={style.name}>{this.state.showAll ? '收起' : '查看全部'}</div>
-								</div>
-							) : null} */}
 						</div>
 					</div>
 				) : null}
@@ -197,7 +187,6 @@ export default class moxie_bank_list_page extends Component {
 					<div>
 						<div className={style.err_page}>
 							<i className={style.err_img} />
-							{/* <p className={style.err_cont}>对不起，您找的页面走丢了～</p> */}
 							<ButtonCustom onClick={this.reloadHandler} className={style.reload_btn}>
 								刷新
 							</ButtonCustom>

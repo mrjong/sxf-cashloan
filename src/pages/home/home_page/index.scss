@@ -236,29 +236,68 @@
 }
 .modal_content {
 	padding: 0 30px;
-	.billMoneyTop {
-		display: flex;
-		justify-content: space-between;
-		margin-top: 38px;
-		color: #333;
+
+	.modal_card_wrap {
+		width: 690px;
+		height: 257px;
+		border-radius: 16px;
+		box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
+		box-sizing: border-box;
+		margin-top: 14px;
+		padding: 30px 0 0 30px;
+		overflow: hidden;
 	}
-	.billMoneyTwoTop {
+
+	.card_top {
 		display: flex;
-		justify-content: space-between;
-		margin-top: 18px;
-		font-size: 26px;
-		color: #666;
+		align-items: center;
+		width: 50%;
+
+		.bankLogo {
+			width: 50px;
+			height: 50px;
+			top: 0;
+		}
+		.name {
+			margin: 0 15px;
+			font-size: 30px;
+			color: #333;
+		}
+
+		.lastNo {
+			font-size: 24px;
+			color: #999;
+			font-family: 'DIN Condensed';
+			margin-top: 10px;
+		}
 	}
-	.billMoneyBtm {
-		position: relative;
-		text-align: right;
-		color: #c5c5c5;
-		font-size: 22px;
-		&::after {
-			@include setBottomLine();
+
+	.card_bottom {
+		display: flex;
+		margin-top: 45px;
+		.item {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			text-align: left;
+			&:last-child {
+				margin-left: 165px;
+			}
+
+			.value {
+				font-size: 60px;
+				color: #333;
+				font-family: 'DIN Condensed';
+				line-height: 1;
+			}
+			.name {
+				font-size: 24px;
+				color: #999;
+			}
 		}
 	}
 }
+
 .listitem {
 	position: relative;
 	margin-top: 10px;
@@ -282,7 +321,7 @@
 .tagList {
 	display: flex;
 	justify-content: space-between;
-	margin: 76px 30px 100px;
+	margin: 46px 30px 36px;
 	.tagButton {
 		display: inline-block;
 		width: 180px;
