@@ -1,0 +1,20 @@
+.login_alert{
+	margin: 0 20px;
+}
+.close_icon {
+	width: 26px;
+	height: 26px;
+	background-image: url(../RuleShow/img/close_icon.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	position: absolute;
+	right: 24px;
+	top: 24px;
+}
+:global {
+	.login_alert_modal.am-modal {
+		&.am-modal-transparent {
+			width: 620px;
+		}
+	}
+}

@@ -1,23 +1,42 @@
+.login_alert{
+	margin: 0 20px;
+	.form_control {
+		padding-left: 0;
+	}
+	.agreement{
+		text-align: left;
+		font-size: 26px;
+		color: #6C6C6C;
+		span{
+			color: #FD4073;
+		}
+	}
+}
+.close_icon {
+	width: 26px;
+	height: 26px;
+	background-image: url(../RuleShow/img/close_icon.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	position: absolute;
+	right: 24px;
+	top: 24px;
+}
 .logo_box {
-	margin: 35px 10px 40px;
+	margin: 6px 10px 25px;
 	.logo {
 		width: 100px;
 		height: 100px;
 	}
 	.text {
-		letter-spacing: 10px;
-		color: #333;
-	}
-	.close_icon {
-		position: absolute;
-		right: 0;
-		top: 0;
-		padding: 10px;
+		letter-spacing: 18px;
+		color: #424244;
+		margin-top: 8px;
 	}
 }
 .get_sms_box {
 	position: relative;
-	color: #4da6ff;
+	color: #FF3B5D;
 	cursor: pointer;
 	input {
 		padding-right: 180px !important;
@@ -37,15 +56,17 @@
 }
 
 .btn_box {
-	margin: 72px 50px 10px;
+	margin: 50px 0 12px;
 	.btn_primary {
-		background-color: #4da6ff;
+		color: #fff;
+		background: linear-gradient(180deg, rgba(252, 69, 135, 1) 0%, rgba(255, 57, 86, 1) 100%);
+		border-radius: 8px;
 	}
 }
 :global {
-	.alert_sms.am-modal {
+	.login_alert_modal.am-modal {
 		&.am-modal-transparent {
-			width: 90%;
+			width: 620px;
 		}
 	}
 }
