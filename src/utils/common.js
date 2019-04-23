@@ -21,7 +21,8 @@ export const getH5Channel = () => {
 // 判断是对内mpos还是对外
 export const isMPOS = () => {
 	const ua = navigator.userAgent;
-	sessionStorage.setItem('isMPOS', /SuiXingPay-Mpos/i.test(ua) ? true : false);
+    sessionStorage.setItem('isMPOS', /SuiXingPay-Mpos/i.test(ua) ? true : false);
+    alert(/SuiXingPay-Mpos/i.test(ua) ? true : false)
 	return /SuiXingPay-Mpos/i.test(ua) ? true : false;
 };
 

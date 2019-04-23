@@ -46,6 +46,7 @@ export default class wenjuan_page extends PureComponent {
 			isNewUser: true,
 			submitParam: {},
 			shareData: {},
+			isOldUser: false,
 			data: [
 				{
 					title: '信用卡代偿平台是什么?',
@@ -134,7 +135,7 @@ export default class wenjuan_page extends PureComponent {
 				shareData: {
 					title: '参与答题畅游全球FUN肆嗨', // 分享标题
 					desc: '4月25日始，参与答题系列任务，【还到】免费送你价值3668元的双人旅游卡，圆你环球梦', // 分享描述
-					link: location.origin +location.pathname+ '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					link: location.origin + location.pathname + '?' + href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
 					imgUrl: 'https://lns-static-resource.vbillbank.com/cashloan/wxapp_static/black_logo_2x.png', // 分享图标
 					success: function(res) {
 						console.log('已分享', res);
@@ -150,17 +151,18 @@ export default class wenjuan_page extends PureComponent {
 					$props: this.props,
 					shareData: this.state.shareData
 				});
-            }
-    
+			}
 		);
 		if (queryData.entry) {
 			// 根据不同入口来源埋点
 			buriedPointEvent(activity.wenjuanEntry, {
 				entry: queryData.entry
 			});
-        }
-
-		this.queryQuestionnaire();
+		}
+		if (Cookie.get('fin-v-card-token')) {
+			store.setToken(Cookie.get('fin-v-card-token'));
+			this.queryQuestionnaire();
+		}
 	}
 	localData = () => {
 		if (localStorage.getItem('wenjuan')) {
@@ -176,7 +178,8 @@ export default class wenjuan_page extends PureComponent {
 				if (res.data) {
 					this.setState({
 						isNewUser: false,
-						showModal: true
+						showModal: true,
+						isOldUser: true
 					});
 					localStorage.removeItem('wenjuan');
 					this.backData(res.data);
@@ -189,28 +192,31 @@ export default class wenjuan_page extends PureComponent {
 		});
 	};
 	backData = (data) => {
-        let dataCopy = JSON.parse(JSON.stringify(this.state.data));
+		let dataCopy = JSON.parse(JSON.stringify(this.state.data));
 		let dataKeys = Object.keys(data).filter((item) => item.indexOf('answer') > -1);
 		for (let i = 0; i < dataCopy.length; i++) {
 			for (let j = 0; j < dataCopy[i].list.length; j++) {
 				for (let k = 0; k < dataKeys.length; k++) {
-                    let x = data[dataKeys[k]].split('');
-                    console.log(x)
+					let x = data[dataKeys[k]].split('');
+					console.log(x);
 					for (let l = 0; l < x.length; l++) {
-                        console.log(x[l])
-						if (dataCopy[i].list[j].selected === x[l]&&k===i) {
+						console.log(x[l]);
+						if (dataCopy[i].list[j].selected === x[l] && k === i) {
 							dataCopy[i].list[j].checked = true;
 						}
 					}
 				}
 			}
-        }
-		this.setState({
-            data: dataCopy,
-            btnStatus:true
-		},()=>{
-            this.setShowResult()
-        });
+		}
+		this.setState(
+			{
+				data: dataCopy,
+				btnStatus: true
+			},
+			() => {
+				this.setShowResult();
+			}
+		);
 	};
 	getStatus = () => {
 		this.child.validateMposRelSts({
@@ -274,6 +280,12 @@ export default class wenjuan_page extends PureComponent {
 	};
 	// 进入首页
 	goHomePage = () => {
+		if (this.state.isOldUser) {
+			this.setState({
+				showModal: true
+			});
+			return;
+		}
 		if (localStorage.getItem('wenjuan')) {
 			this.props.$fetch
 				.post(API.saveQuestionnaire, {
