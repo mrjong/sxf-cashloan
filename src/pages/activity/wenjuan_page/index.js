@@ -369,6 +369,10 @@ export default class wenjuan_page extends PureComponent {
 		);
 	};
 	shareFunc = () => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		buriedPointEvent(activity.wenjuanShare, {
+			entry: queryData.entry
+		});
 		if (isMPOS()) {
 			// mpos
 			mposShare({

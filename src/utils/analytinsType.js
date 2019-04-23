@@ -116,7 +116,8 @@ const activity = {
 	mianxi418Entry: `${prefix}_ACTIVITY_MIANXI_418_ENTRY`, // 最高免息30天 活动入口
 	mianxi418Btn: `${prefix}_ACTIVITY_MIANXI_418_BTN`, // 最高免息30天 按钮
 	wenjuanEntry: `${prefix}_ACTIVITY_WENJUAN_ENTRY`, // 问卷入口
-	wenjuanBtn: `${prefix}_ACTIVITY_WENJUAN_BTN` // 问卷提交按钮
+	wenjuanBtn: `${prefix}_ACTIVITY_WENJUAN_BTN`, // 问卷提交按钮
+	wenjuanShare: `${prefix}_ACTIVITY_WENJUAN_SHARE` // 问卷提交分享
 };
 
 const moxie_bank_list = {
