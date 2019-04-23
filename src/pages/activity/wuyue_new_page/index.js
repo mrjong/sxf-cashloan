@@ -12,6 +12,7 @@ import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import RuleShow from './components/RuleShow';
 import ModalWrap from './components/ModalWrap';
+import WinPrize from './components/WinPrize';
 import { rules } from './rulesData'
 
 @setBackGround('#9235D4')
@@ -19,10 +20,11 @@ export default class wuyue_new_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      // contType: '',
-      // mayModalShow: false,
-      contType: 'no_qualified_tips',
-      mayModalShow: true,
+      contType: '',
+      mayModalShow: false,
+      // contType: 'no_qualified_tips',
+      // mayModalShow: true,
+      prizeShow: true,
       rulesShow: false,
     }
   }
@@ -57,7 +59,7 @@ export default class wuyue_new_page extends PureComponent {
   }
 
   render() {
-    const { contType, mayModalShow, rulesShow } = this.state;
+    const { contType, mayModalShow, rulesShow, prizeShow } = this.state;
     return (
       <div className={styles.wuyue_new_page}>
         <img src={activity_bg} className={styles.activity_bg} />
@@ -69,6 +71,7 @@ export default class wuyue_new_page extends PureComponent {
         <img src={reason_img} className={styles.reason_block} />
         { rulesShow && <RuleShow ruleTit="新用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
         { mayModalShow && <ModalWrap history={this.props.history} contType={contType} /> }
+        { prizeShow && <WinPrize history={this.props.history} title="已成功领取5万元免息券" subTit="（7日内借款即可以使用）" />}
       </div>
     )
   }
