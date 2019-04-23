@@ -127,7 +127,6 @@ export default class wenjuan_page extends PureComponent {
 		delete queryData2.SXFSharePlatform;
 		queryData2.entry = 'isxdc_share';
 		const href = qs.stringify(queryData2);
-		console.log(href);
 
 		this.setState(
 			{
@@ -198,9 +197,7 @@ export default class wenjuan_page extends PureComponent {
 			for (let j = 0; j < dataCopy[i].list.length; j++) {
 				for (let k = 0; k < dataKeys.length; k++) {
 					let x = data[dataKeys[k]].split('');
-					console.log(x);
 					for (let l = 0; l < x.length; l++) {
-						console.log(x[l]);
 						if (dataCopy[i].list[j].selected === x[l] && k === i) {
 							dataCopy[i].list[j].checked = true;
 						}
@@ -311,9 +308,7 @@ export default class wenjuan_page extends PureComponent {
 		this.child = ref;
 	};
 	selectedFunc = (e, index, index2, item) => {
-		console.log(e);
 		const data = this.state.data;
-		console.log(item);
 		if (item.type === 'radio') {
 			for (let index = 0; index < item.list.length; index++) {
 				const element = item.list[index];
@@ -340,7 +335,6 @@ export default class wenjuan_page extends PureComponent {
 				}
 			}
 		}
-		console.log(list);
 		this.setState({
 			btnStatus: data.length === list.length ? true : false
 		});
