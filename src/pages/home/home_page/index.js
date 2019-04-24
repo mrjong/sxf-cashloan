@@ -4,14 +4,7 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import {
-	isWXOpen,
-	getDeviceType,
-	getNextStr,
-	getFirstError,
-	handleInputBlur,
-	idChkPhoto
-} from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, idChkPhoto } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -46,6 +39,7 @@ const API = {
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001', // 参与418活动
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire' // 问卷调查
 };
 const tagList = [
 	{
@@ -177,9 +171,41 @@ export default class home_page extends PureComponent {
 				});
 		});
 	};
-
+	getParam = () => {
+		let obj = {};
+		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
+		for (let i = 0; i < wenjuan.length; i++) {
+			let str = '';
+			for (let j = 0; j < wenjuan[i].list.length; j++) {
+				if (wenjuan[i].list[j].checked) {
+					str = str + wenjuan[i].list[j].selected;
+					obj[`answer${i + 1}`] = str;
+				}
+			}
+		}
+		return obj;
+	};
 	// 判断是否授信
 	credit_extension = () => {
+        // 问卷调查  以后可以去掉
+		let wenjuan = localStorage.getItem('wenjuan') ? JSON.parse(localStorage.getItem('wenjuan')) : '';
+		if (wenjuan) {
+			this.props.$fetch
+				.post(API.saveQuestionnaire, {
+					actId: 'QA001',
+					...this.getParam()
+				})
+				.then((res) => {
+					if (res.msgCode === 'PTM0000') {
+						localStorage.removeItem('wenjuan');
+					}
+				});
+		}
+		// this.setState({
+		//     firstUserInfo:'00'
+		// })
+		// this.requestGetUsrInfo();
+		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
 			.then(async (res) => {
