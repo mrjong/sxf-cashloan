@@ -267,7 +267,7 @@ export default class SmsAlert extends Component {
 				} else {
 					if (this.state.loginProps_needLogin) {
 						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
-						if (res.mblNoHid) {
+						if (res.mblNoHid && res.tokenId) {
 							this.setState({
 								authToken: res.tokenId,
 								modalShow: true,
@@ -325,7 +325,7 @@ export default class SmsAlert extends Component {
 					} else {
 						if (this.state.loginProps_needLogin) {
 							// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
-							if (res.mblNoHid && res.tokenId) {
+							if (res.mblNoHid) {
 								this.setState({
 									authToken: res.tokenId,
 									modalShow: true,
