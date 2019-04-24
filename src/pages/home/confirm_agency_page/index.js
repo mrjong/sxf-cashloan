@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react';
 import { Modal, InputItem } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { getFirstError } from 'utils';
 import { isMPOS } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
+import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto } from 'utils';
+
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
 import style from './index.scss';
@@ -46,7 +47,7 @@ export default class confirm_agency_page extends PureComponent {
 			dateDiff: 0,
 			repayInfo: {},
 			repaymentDate: '',
-			repaymentIndex: isMPOS() ? 1 : 0, // mpos取1（最后一个），只限返回两种期限的情况
+			repaymentIndex: 0, // mpos取1（最后一个），只限返回两种期限的情况
 			lendersDate: '',
 			lendersIndex: 0,
 			defaultIndex: 0,
@@ -115,7 +116,7 @@ export default class confirm_agency_page extends PureComponent {
 	// 代扣 Tag 点击事件
 	handleRepaymentTagClick = (data, type) => {
 		this.props.form.setFieldsValue({
-			cardBillAmt: isSaveAmt && type && type === 'first' ? this.state.cardBillAmt : ''
+			cardBillAmt: isSaveAmt && type && type === 'first' ? this.state.cardBillAmt : data.value.maxAmt + ''
 		});
 		this.setState({
 			repaymentDate: data.value,
@@ -289,38 +290,38 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 
-  // 获取代还期限列表 还款日期列表
-  requestGetRepaymentDateList = () => {
-    this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then(result => {
-      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        // const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
-        const diff = result.data.overDt;
-        let lendersDateListFormat = this.state.lendersDateList;
-        if (!result.data.cardBillDt || diff <= 4) {
-          lendersDateListFormat[0].disable = true;
-        }
-        this.setState({
-          repayInfo: result.data,
-          repaymentDateList: result.data.prdList.map(item => ({
-            name: item.prdName,
-            value: item.prdId,
-            // cardBillAmt: item.cardBillAmt,
-            minAmt: item.minAmt,
-            maxAmt: item.maxAmt,
-            periodUnit: item.periodUnit,
-            periodCount: item.periodCount,
-            periodLth: item.periodLth
-          })),
-          dateDiff: diff,
-          lendersIndex: 1,
-          defaultIndex: 1,
-          lendersDateList: lendersDateListFormat,
-        });
-      } else {
-        this.props.toast.info(result.msgInfo);
-      }
-    });
-  };
+	// 获取代还期限列表 还款日期列表
+	requestGetRepaymentDateList = () => {
+		this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				// const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
+				const diff = result.data.overDt;
+				let lendersDateListFormat = this.state.lendersDateList;
+				if (!result.data.cardBillDt || diff <= 4) {
+					lendersDateListFormat[0].disable = true;
+				}
+				this.setState({
+					repayInfo: result.data,
+					repaymentDateList: result.data.prdList.map((item) => ({
+						name: item.prdName,
+						value: item.prdId,
+						// cardBillAmt: item.cardBillAmt,
+						minAmt: item.minAmt,
+						maxAmt: item.maxAmt,
+						periodUnit: item.periodUnit,
+						periodCount: item.periodCount,
+						periodLth: item.periodLth
+					})),
+					dateDiff: diff,
+					lendersIndex: 1,
+					defaultIndex: 1,
+					lendersDateList: lendersDateListFormat
+				});
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		});
+	};
 
 	// 校验代还金额
 	verifyBillAmt = (rule, value, callback) => {
@@ -385,7 +386,29 @@ export default class confirm_agency_page extends PureComponent {
 				}
 			});
 	};
-
+	//计算该显示的还款金额
+	calcLoanMoney = (money) => {
+		const { repaymentDate } = this.state;
+		if (repaymentDate && repaymentDate.maxAmt && money >= repaymentDate.maxAmt) {
+			this.props.form.setFieldsValue({
+				cardBillAmt: repaymentDate.maxAmt + ''
+			});
+		} else if (repaymentDate && repaymentDate.minAmt && money <= repaymentDate.minAmt) {
+			this.props.form.setFieldsValue({
+				cardBillAmt: repaymentDate.minAmt + ''
+			});
+		} else {
+			if (money) {
+				this.props.form.setFieldsValue({
+					cardBillAmt: Math.ceil(money / 100) * 100 + ''
+				});
+			} else {
+				this.props.form.setFieldsValue({
+					cardBillAmt: repaymentDate.minAmt + ''
+				});
+			}
+		}
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -426,7 +449,6 @@ export default class confirm_agency_page extends PureComponent {
 									defaultindex={repaymentIndex}
 									activeindex={repaymentIndex}
 									onClick={this.handleRepaymentTagClick}
-									isDotted={isMPOS() && !isVIP}
 								/>
 							</div>
 						</div>
@@ -440,25 +462,27 @@ export default class confirm_agency_page extends PureComponent {
 									<InputItem
 										className={style.billInput}
 										placeholder=""
+										disabled={false}
 										type="money"
+										ref={(el) => (this.inputRef = el)}
 										{...getFieldProps('cardBillAmt', {
 											rules: [
-												{ required: true, message: '请输入代偿金额' },
-												{ validator: this.verifyBillAmt }
+												{ required: true, message: '请输入代偿金额' }
+												// { validator: this.verifyBillAmt }
 											]
-                                        })}
-                                        
-                                        onVirtualKeyboardConfirm={(v) => {
-                                            console.log(v, '-----');
-                                        }}
-                                        onBlur={() => {
-                                            console.log('--------');
-                                        }}
-                                        // onFocus={(v) => {
-                                        //     this.updateBillInf();
-                                        // }}
-                                        // onVirtualKeyboardConfirm={(v) => console.log('onVirtualKeyboardConfirm:', v)}
-                                        moneykeyboardwrapprops={moneyKeyboardWrapProps}
+										})}
+										onBlur={(v) => {
+											handleInputBlur();
+											this.calcLoanMoney(v);
+										}}
+										onFocus={(v) => {
+											// this.updateBillInf();
+										}}
+										// onFocus={(v) => {
+										//     this.updateBillInf();
+										// }}
+										// onVirtualKeyboardConfirm={(v) => console.log('onVirtualKeyboardConfirm:', v)}
+										moneykeyboardwrapprops={moneyKeyboardWrapProps}
 									/>
 								</div>
 								<p className={style.billTips}>

@@ -361,6 +361,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item, type) => {
+		let itemCopy = type === '30' ? this.state.dayPro : item;
+		if (
+			itemCopy.factLmtLow > Number(this.props.form.getFieldValue('loanMoney')) ||
+			Number(this.props.form.getFieldValue('loanMoney')) > itemCopy.factAmtHigh
+		) {
+			return;
+		}
 		const { perdRateList, usrIndexInfo, activeTag, fetchBillSucc } = this.state;
 		const { cardBillAmt = '', minPayment = '', billRemainAmt } = usrIndexInfo.indexData;
 		if (item && item.perdLth == 30) {
@@ -378,7 +385,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}
 		this.setState(
 			{
-				selectedLoanDate: type === '30' ? this.state.dayPro : item, // 设置选中的期数
+				selectedLoanDate: itemCopy, // 设置选中的期数
 				isShowCreditModal: false
 			},
 			() => {
@@ -809,8 +816,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 														className={[
 															style.dayProd,
 															item.factLmtLow <=
+																Number(this.props.form.getFieldValue('loanMoney')) &&
 															Number(this.props.form.getFieldValue('loanMoney')) <=
-															item.factAmtHigh
+																item.factAmtHigh
 																? ''
 																: style.dis
 														].join(' ')}
