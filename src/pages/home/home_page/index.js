@@ -789,19 +789,26 @@ export default class home_page extends PureComponent {
 
 	//计算该显示的还款金额
 	calcLoanMoney = (money) => {
-		const { selectedLoanDate: obj = {} } = this.state;
-		if (money > obj.factAmtHigh) {
+		const { usrIndexInfo } = this.state;
+		const { indexData } = usrIndexInfo;
+		if (indexData && indexData.maxApplAmt && money >= indexData.maxApplAmt) {
 			this.props.form.setFieldsValue({
-				loanMoney: obj.factAmtHigh
+				loanMoney: indexData.maxApplAmt + ''
 			});
-		} else if (money < obj.factLmtLow) {
+		} else if (indexData && indexData.minApplAmt && money <= indexData.minApplAmt) {
 			this.props.form.setFieldsValue({
-				loanMoney: obj.factLmtLow
+				loanMoney: indexData.minApplAmt + ''
 			});
 		} else {
-			this.props.form.setFieldsValue({
-				loanMoney: money
-			});
+			if (money) {
+				this.props.form.setFieldsValue({
+					loanMoney: Math.ceil(money / 100) * 100 + ''
+				});
+			} else {
+				this.props.form.setFieldsValue({
+					loanMoney: indexData.minApplAmt + ''
+				});
+			}
 		}
 	};
 
