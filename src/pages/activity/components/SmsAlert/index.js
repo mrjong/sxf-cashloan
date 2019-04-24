@@ -242,6 +242,7 @@ export default class SmsAlert extends Component {
 				usrCnl: getH5Channel()
 			})
 			.then((res) => {
+                //  未授权
 				if (res.authFlag === '0') {
 					chkAuthCb.authFlag0 && chkAuthCb.authFlag0(res, otherProps_type);
 					this.setState({
@@ -269,7 +270,7 @@ export default class SmsAlert extends Component {
 						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
 						if (res.mblNoHid) {
 							this.setState({
-								authToken:'',
+								authToken:res.tokenId,
 								modalShow: true,
 								disabled: this.state.loginProps_disabled,
 								loginProps_needLogin_copy: true,
@@ -325,9 +326,8 @@ export default class SmsAlert extends Component {
 					} else {
 						if (this.state.loginProps_needLogin) {
 							// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
-							if (res.mblNoHid) {
+							if (res.mblNo) {
 								this.setState({
-									authToken: '',
 									modalShow: true,
 									disabled: this.state.loginProps_disabled,
 									loginProps_needLogin_copy: true,
@@ -335,7 +335,7 @@ export default class SmsAlert extends Component {
 									otherProps_type
 								});
 								this.props.form.setFieldsValue({
-									phoneValue: res.mblNoHid,
+									phoneValue: res.mblNo,
 									smsCd: ''
 								});
 							} else {
