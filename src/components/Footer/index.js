@@ -1,12 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import iconBank from 'assets/images/footer/icon_bank.png';
-import iconBankActive from 'assets/images/footer/icon_bank_active.png';
-import iconBill from 'assets/images/footer/icon_bill.png';
-import iconBillActive from 'assets/images/footer/icon_bill_active.png';
-import iconMine from 'assets/images/footer/icon_mine.png';
-import iconMineActive from 'assets/images/footer/icon_mine_active.png';
 import styles from './index.scss';
 /*
 * 接收一个配置文件数组

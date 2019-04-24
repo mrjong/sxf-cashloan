@@ -1,6 +1,5 @@
-import iconArrowRight from 'assets/images/home/icon_arrow_right_default@3x.png';
 import React, { PureComponent } from 'react';
-import { Modal, Progress, ActionSheet } from 'antd-mobile';
+import { Modal, Progress, ActionSheet, Icon } from 'antd-mobile';
 import { store } from 'utils/store';
 import { getDeviceType, idChkPhoto } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -8,7 +7,6 @@ import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import ZButton from 'components/ButtonCustom';
 import Panel from 'components/Panel';
-import iconClose from 'assets/images/confirm_agency/icon_close.png';
 import qs from 'qs';
 import linkConf from 'config/link.conf';
 import style from './index.scss';
@@ -589,7 +587,7 @@ export default class agency_page extends PureComponent {
 									>
 										点击查看
 									</span>
-									<img className={style.list_item_arrow} src={iconArrowRight} alt="立即查看" />
+									<i className={style.list_item_arrow}></i>
 								</span>
 							</li>
 						)}
@@ -613,11 +611,7 @@ export default class agency_page extends PureComponent {
 									className={style.item_value}
 								>
 									{this.renderCoupon()}
-									<img
-										style={{ marginLeft: '.1rem' }}
-										className={style.list_item_arrow}
-										src={iconArrowRight}
-									/>
+									<i className={style.list_item_arrow} style={{ marginLeft: '.1rem', }}></i>							
 								</span>
 							) : (
 								<span
@@ -627,11 +621,7 @@ export default class agency_page extends PureComponent {
 									className={style.item_value}
 								>
 									无可用优惠券
-									<img
-										style={{ marginLeft: '.1rem' }}
-										className={style.list_item_arrow}
-										src={iconArrowRight}
-									/>
+									<i className={style.list_item_arrow} style={{ marginLeft: '.1rem', }}></i>
 								</span>
 							)}
 						</li>
@@ -671,7 +661,7 @@ export default class agency_page extends PureComponent {
 
 				<Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
 					<div className={style.modal_content}>
-						<img className={style.modal_close_btn} onClick={this.handleCloseModal} src={iconClose} alt="" />
+						<Icon type="cross" className={style.modal_close_btn} onClick={this.handleCloseModal} color='#333' />
 						<h2 className={style.modal_title}>还款计划</h2>
 						<ul className={style.bill_list}>
 							{repayInfo.perd.map((item) => (

@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .confirm_agency_page {
   padding: 0.24rem 0 0;
   height: 100%;
@@ -11,16 +12,10 @@
   }
   .modal_list {
     background: #fff;
-    // border-top: 1PX  solid #e5e5e5;
-    // border-bottom: 1PX  solid #e5e5e5;
     .list_item {
       display: block;
-      // padding-top: 0.31rem;
-      // padding-bottom: 0.31rem;
       padding: 0.31rem 0;
       margin: 0 0.3rem;
-      // margin-left: 0.6rem;
-      // padding-right: 0.45rem;
     }
     .list_item_special{
       padding-bottom: 0.21rem;
@@ -57,7 +52,6 @@
     }
     .item_value {
       font-size: 0.4rem;
-      // font-weight: bold;
       color: #333;
       line-height: 1;
     }
@@ -68,6 +62,7 @@
         width: .16rem;
         height: .28rem;
         vertical-align: middle;
+        @include setArrow(right, 16px, #C5C5C5, 2PX);
       }
     }
     .item_tip {
@@ -141,22 +136,21 @@
       display: inline-block;
       width: 40px;
       height: 40px;
-      background-size: 100%;
       position: relative;
       top: 8px;
       margin-right: 20px;
     }
     .vipIco1{
-      background-image: url('assets/images/home/vipIco1@2x.png');
+      @include spriteIcon(-320px, -296px);
     }
     .vipIco2{
-      background-image: url('assets/images/home/vipIco2@2x.png');
+      @include spriteIcon(-320px, -246px);
     }
     .vipIco3{
-      background-image: url('assets/images/home/vipIco3@2x.png');
+      @include spriteIcon(-320px, -346px);
     }
     .vipIco4{
-      background-image: url('assets/images/home/vipIco4@2x.png');
+      @include spriteIcon(-320px, -396px);
     }
   }
 }

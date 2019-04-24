@@ -37,7 +37,7 @@ export default class message_page extends PureComponent {
 			msgReadAllState: false,
 			msgType: 0,
 			hasMore: true,
-			tabs: [ { title: <Badge>活动通知</Badge> }, { title: <Badge>系统通知</Badge> }, { title: <Badge>公告通知</Badge> } ]
+			tabs: [{ title: <Badge>活动通知</Badge> }, { title: <Badge>系统通知</Badge> }, { title: <Badge>公告通知</Badge> }]
 		};
 	}
 	scrollTop = 0;
@@ -262,8 +262,8 @@ export default class message_page extends PureComponent {
 			return;
 		}
 		this.setState({
-			rData: [ ...this.state.rData, ...list ],
-			dataSource: this.state.dataSource.cloneWithRows([ ...this.state.rData, ...list ]),
+			rData: [...this.state.rData, ...list],
+			dataSource: this.state.dataSource.cloneWithRows([...this.state.rData, ...list]),
 			isLoading: false
 		});
 	};
@@ -390,10 +390,10 @@ export default class message_page extends PureComponent {
 							this.state.useBodyScroll ? (
 								{}
 							) : (
-								{
-									height: this.state.height
-								}
-							)
+									{
+										height: this.state.height
+									}
+								)
 						}
 						pullToRefresh={<PullToRefresh refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
 						onEndReached={this.onEndReached}
@@ -410,7 +410,11 @@ export default class message_page extends PureComponent {
 		};
 		return (
 			<div className={style.message_page} ref={(el) => (this.messageBox = el)}>
-				{this.state.msgReadAllState ? <div onClick={this.msgReadAll} className={style.allRead} /> : null}
+				{this.state.msgReadAllState ? (
+					<div onClick={this.msgReadAll} className={style.allRead}>
+						<i className={style.allReadIcon}></i>一键读取
+          </div>
+				) : null}
 				{this.state.tabState ? (
 					<STabs
 						tabTit={this.state.tabs}

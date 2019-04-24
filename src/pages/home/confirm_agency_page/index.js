@@ -9,7 +9,6 @@ import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
 import style from './index.scss';
 
@@ -434,7 +433,7 @@ export default class confirm_agency_page extends PureComponent {
               <span className={[style.item_value, style.item_value_bank].join(' ')}>
                 {repayInfo.bankName}
                 ({repayInfo.cardNoHid})
-                <img className={style.icon} src={icon_arrow_right_default} alt="" />
+                <i className={style.icon}></i>
               </span>
             </div>
           </li>

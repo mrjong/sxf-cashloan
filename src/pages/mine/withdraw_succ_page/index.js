@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import successIco from 'assets/images/mine/wallet/success_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 
 let accountNum = '';
@@ -26,7 +25,7 @@ export default class withdraw_succ_page extends PureComponent {
     return (
       <div className={style.withdraw_succ_page}>
         <div className={style.withdrawSuccCont}>
-          <img src={successIco} className={style.successIco}/>
+          <i className={style.successIco}></i>
           <div className={style.withdrawMoney}>
             {accountNum}元
           </div>

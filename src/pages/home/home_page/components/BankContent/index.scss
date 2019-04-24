@@ -1,3 +1,4 @@
+@import '../../../../../assets/styles/scss/base/fn.scss';
 .bank_content_wrap {
 	position: relative;
 	text-align: center;
@@ -48,11 +49,9 @@
 		background-color: transparent;
 	}
 	.link_arrow_img {
-		width: 0.13rem;
-		height: 0.22rem;
-		// vertical-align: middle;
-		margin-left: .1rem;
-		line-height: 100%;
+		margin-left: 10px;
+		margin-bottom: 3px;
+		@include setArrow(right, 12px, #4da6ff, 1PX);
 	}
 	.progress_box {
 		position: absolute;

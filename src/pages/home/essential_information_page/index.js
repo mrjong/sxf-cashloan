@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { InputItem, List } from 'antd-mobile';
-import informationMore from 'assets/images/real_name/more.png';
+import { InputItem, List, Icon } from 'antd-mobile';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
@@ -359,7 +358,7 @@ export default class essential_information_page extends PureComponent {
 							<List.Item>居住城市</List.Item>
 						</AsyncCascadePicker>
 					)}
-					<img className={style.informationMore} src={informationMore} />
+					<Icon type="right" className={style.informationMore} color='#ccc' />
 				</div>
 				<div className={`${style.inputDiv}`} style={{ marginTop: 0 }}>
 					{getFieldDecorator('address', {
@@ -422,7 +421,7 @@ export default class essential_information_page extends PureComponent {
 							<List.Item>关系</List.Item>
 						</AsyncCascadePicker>
 					)}
-					<img className={style.informationMore} src={informationMore} />
+					<Icon type="right" className={style.informationMore} color='#ccc' />
 				</div>
 				<div className={style.labelDiv} style={{ marginTop: 0 }}>
 					{getFieldDecorator('linkman', {

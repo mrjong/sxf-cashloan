@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import successIco from 'assets/images/mine/wallet/success_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
@@ -75,7 +74,7 @@ export default class credit_apply_succ_page extends PureComponent {
 		return (
 			<div className={style.credit_apply_succ_page}>
 				<div className={style.content}>
-					<img src={successIco} className={style.successIco} />
+					<i className={style.success_ico} />
 					<div className={style.desc}>
 						<p>申请成功</p>
 						<p>你已进入快速审核通道，最快3分钟完成审核</p>

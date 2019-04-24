@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import failIco from 'assets/images/mine/wallet/fail_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 
 @fetch.inject()
@@ -22,7 +21,7 @@ export default class withdraw_fail_page extends PureComponent {
     return (
       <div className={style.withdraw_fail_page}>
         <div className={style.withdrawFailCont}>
-          <img src={failIco} className={style.failIco}/>
+          <i className={style.failIco}></i>
           <div className={style.failTip}>
             提现失败
           </div>

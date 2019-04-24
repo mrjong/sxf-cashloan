@@ -7,12 +7,10 @@
 		background: #fff;
 		margin-bottom: 20px;
 		.success_ico {
-			display: inline-block;
-			@include bg-image('../../../assets/images/order/success_ico');
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			width: 128px;
-			height: 128px;
+			@include spriteIcon(0, -88px);
+      display: inline-block;
+      width: 128px;
+      height: 128px;
 		}
 		p {
 			font-size: 30px;
@@ -106,9 +104,7 @@
 		position: absolute;
 		left: 50%;
 		top: 750px;
-		background-image: url('../../../assets/images/order/close_ico@2x.png');
-		background-repeat: no-repeat;
-		background-size: 100% 100%;
+		@include spriteIcon(0, 0);
 		width: 68px;
 		height: 68px;
 		margin-left: -34px;

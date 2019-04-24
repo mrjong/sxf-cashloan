@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .withdraw_page{
 	margin: 0 19px;
 }
@@ -16,7 +17,6 @@
 		height: 189px;
 		.withdrawMoney{
 			font-size: 48px;
-			// font-weight: 400;
 			color: #fff;
 			min-width: 200px;
 			span{
@@ -24,12 +24,40 @@
 				margin-left: 12px;
 			}
 		}
+		&::after {
+			display: block;
+			position: absolute;
+			content: '';
+			right: 0;
+			top: 8px;
+			width: 133px;
+			height: 76px;
+			@include spriteIcon(0, -246px);
+		}
 	}
 	.withdrawContFail{
-		background-image: url(assets/images/mine/wallet/withdraw_fail.png);
+		&::after {
+			display: block;
+			position: absolute;
+			content: '';
+			right: 0;
+			top: 8px;
+			width: 133px;
+			height: 76px;
+			@include spriteIcon(0, -342px);
+		}
 	}
 	.withdrawContSucc{
-		background-image: url(assets/images/mine/wallet/withdraw_success.png);
+		&::after {
+			display: block;
+			position: absolute;
+			content: '';
+			right: 0;
+			top: 8px;
+			width: 133px;
+			height: 76px;
+			@include spriteIcon(-171px, -246px);
+		}
 	}
 	.withdrawContent{
 		margin-left: 92px;
@@ -61,7 +89,6 @@
 		position: absolute;
 		top: -338px;
 		vertical-align: middle;
-		// @include bg-image('../../../assets/images/coupon/no_data');
 		background-image: url(assets/images/mine/wallet/no_data.png);
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
@@ -93,7 +120,6 @@
 .box {
 	.rightLittleBox{
 		.ellipsis {
-			// @include ellipsis(375px);
 			width: 375px;
 			overflow: hidden;
 			text-overflow: ellipsis;

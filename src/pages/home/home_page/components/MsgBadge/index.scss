@@ -1,3 +1,4 @@
+@import '../../../../../assets/styles/scss/base/fn.scss';
 .msg_badge_wrap {
   position: absolute;
   top: 0;
@@ -11,8 +12,11 @@
   }
   .msg_badge_icon {
     display: inline-block;
-    height: .5rem;
-    width: .5rem;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, .2);
+    @include spriteIcon(-237px, -26px);
   }
   .msg_badge_text {
     position: relative;

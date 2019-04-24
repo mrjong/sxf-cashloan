@@ -6,7 +6,6 @@ import { Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import iconArrow from 'assets/images/home/icon_arrow_right.png';
 import SXFButton from 'components/ButtonCustom';
 import dayjs from 'dayjs';
 
@@ -256,7 +255,7 @@ export default class BankContent extends React.Component {
 					{showEntranceArr.includes(indexSts) && indexData && indexData.autSts === '2' ? (
 						<button className={style.link_tip} onClick={this.requestCredCardCount}>
 							帮我还，其他信用卡账单
-							<img className={style.link_arrow_img} src={iconArrow} alt="" />
+							<i className={style.link_arrow_img}></i>
 						</button>
 					) : null}
 					{showEntranceArr2.includes(indexSts) || (indexData && indexData.autSts !== '2') ? (
