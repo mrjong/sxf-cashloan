@@ -8,6 +8,7 @@ let path = require('path');
 var HappyPack = require('happypack');
 var happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 let OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+let SentryPlugin = require('@sentry/webpack-plugin')
 
 let plugins = [
 	new HtmlWebpackPlugin({
@@ -28,6 +29,9 @@ let plugins = [
 	new webpack.HotModuleReplacementPlugin(), //热更新插件
 	new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
 ];
+
+var sentryTestVersion = 'sentry_test_'+new Date().getTime();
+var sentryVersion = 'sentry_'+new Date().getTime();
 
 //生产插件
 let getProdPlugins = function () {
@@ -62,7 +66,8 @@ let getProdPlugins = function () {
 			new webpack.DefinePlugin({
 				'process.env': {
 					NODE_ENV: JSON.stringify('production'),
-					PROJECT_ENV: JSON.stringify('pro')
+					PROJECT_ENV: JSON.stringify('pro'),
+					RELEASE_VERSION: JSON.stringify(sentryVersion),
 				},
 				saUrl: JSON.stringify('https://www.vbillbank.com/shence/sa?project=production')
 			})
@@ -72,6 +77,14 @@ let getProdPlugins = function () {
 			root: path.resolve(__dirname, '..'),
 			verbose: true,
 			dry: false
+		})
+	);
+	plugins.push(
+		new SentryPlugin({
+			include: './dist',
+			release: sentryVersion,
+			configFile: 'sentry.properties',
+			urlPrefix: '~/'
 		})
 	);
 	return plugins;
@@ -104,7 +117,8 @@ let getTestPlugins = function () {
 			new webpack.DefinePlugin({
 				'process.env': {
 					NODE_ENV: JSON.stringify('development'),
-					PROJECT_ENV: JSON.stringify('test')
+					PROJECT_ENV: JSON.stringify('test'),
+					RELEASE_VERSION: JSON.stringify(sentryTestVersion),
 				},
 				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
 			})
@@ -116,6 +130,15 @@ let getTestPlugins = function () {
 	// 		dry: false
 	// 	})
 	// );
+	
+	plugins.push(
+		new SentryPlugin({
+			include: './dist',
+			release: sentryTestVersion,
+			configFile: 'sentry.properties',
+			urlPrefix: '~/'
+		})
+	);
 	return plugins;
 };
 
@@ -125,9 +148,10 @@ let getDevPlugins = function () {
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify('development'),
-				PROJECT_ENV: JSON.stringify('dev')
+				PROJECT_ENV: JSON.stringify('dev'),
+				RELEASE_VERSION: JSON.stringify(sentryTestVersion),
 			},
-			saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+			saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
 		})
 	);
 	// plugins.push(new webpack.HotModuleReplacementPlugin());
