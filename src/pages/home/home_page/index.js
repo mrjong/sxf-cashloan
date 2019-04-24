@@ -1002,7 +1002,15 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-
+	placeholderText = () => {
+		const { activeTag, usrIndexInfo } = this.state;
+		const { indexData } = usrIndexInfo;
+		if (activeTag === 2) {
+			return `申请金额${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
+		} else {
+			return `请输入账单金额`;
+		}
+	};
 	render() {
 		const {
 			bannerList,
@@ -1023,7 +1031,7 @@ export default class home_page extends PureComponent {
 		const { indexData = {} } = usrIndexInfo;
 		const { cardNoHid, bankNo, bankName } = indexData;
 		const { history } = this.props;
-		const { getFieldDecorator } = this.props.form;
+		const { getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
@@ -1140,7 +1148,6 @@ export default class home_page extends PureComponent {
 				</Modal>
 			);
 		}
-
 		return (
 			<div className={style.home_page}>
 				{isWXOpen() && !tokenFromStorage && !token ? (
@@ -1248,24 +1255,54 @@ export default class home_page extends PureComponent {
 									))}
 								</div>
 								<div className={style.labelDiv}>
-									{getFieldDecorator('loanMoney', {
+									{/* {getFieldDecorator('loanMoney', {
 										initialValue: this.state.loanMoney,
 										rules: [ { required: true, message: '请输入还款金额' } ]
 									})(
+										<div className={style.money_input}>
+											<InputItem
+												placeholder={`申请金额${selectedLoanDate.factLmtLow ||
+													''}-${selectedLoanDate.factAmtHigh || ''}元`}
+												type="number"
+												disabled={activeTag !== 2}
+												ref={(el) => (this.inputRef = el)}
+												className={activeTag === 2 ? 'blackColor' : ''}
+												onBlur={() => {
+													handleInputBlur();
+												}}
+											>
+												帮你还多少(元)
+											</InputItem>
+											{!this.inputDisabled() ? (
+												<div className={style.desc}>{this.placeholderText()}</div>
+											) : null}
+										</div>
+									)} */}
+									<div className={style.money_input}>
 										<InputItem
+											{...getFieldProps('loanMoney', {
+												rules: [ { required: true, message: '请输入还款金额' } ]
+											})}
+											type="number"
 											placeholder={`申请金额${selectedLoanDate.factLmtLow ||
 												''}-${selectedLoanDate.factAmtHigh || ''}元`}
-											type="number"
 											disabled={activeTag !== 2}
 											ref={(el) => (this.inputRef = el)}
 											className={activeTag === 2 ? 'blackColor' : ''}
-											onBlur={() => {
+											onBlur={(v) => {
 												handleInputBlur();
+												this.calcLoanMoney(v);
+											}}
+											onFocus={(v) => {
+												// this.updateBillInf();
 											}}
 										>
 											帮你还多少(元)
 										</InputItem>
-									)}
+										{activeTag === 2 ? (
+											<div className={style.desc}>{this.placeholderText()}</div>
+										) : null}
+									</div>
 									<List.Item
 										onClick={() => {
 											this.setState({

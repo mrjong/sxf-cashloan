@@ -14,13 +14,6 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import ScrollText from 'components/ScrollText';
-const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
-let moneyKeyboardWrapProps;
-if (isIPhone) {
-	moneyKeyboardWrapProps = {
-		onTouchStart: (e) => e.preventDefault()
-	};
-}
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
 	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
@@ -694,10 +687,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							{...getFieldProps('loanMoney', {
 								rules: [ { required: true, message: '请输入还款金额' } ]
 							})}
-							type="money"
-							onVirtualKeyboardConfirm={(v) => {
-								console.log(v, '-----');
-							}}
+							type="number"
 							placeholder={this.inputDisabled() ? this.placeholderText() : ''}
 							disabled={this.inputDisabled()}
 							ref={(el) => (this.inputRef = el)}
@@ -709,8 +699,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 							onFocus={(v) => {
 								this.updateBillInf();
 							}}
-							// onVirtualKeyboardConfirm={(v) => console.log('onVirtualKeyboardConfirm:', v)}
-							moneykeyboardwrapprops={moneyKeyboardWrapProps}
 						>
 							帮你还多少(元)
 						</InputItem>
