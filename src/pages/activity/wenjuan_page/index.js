@@ -295,8 +295,10 @@ export default class wenjuan_page extends PureComponent {
 						this.setState({
 							showModal: true
 						});
-					} else {
-						this.props.toast.info(res.msgInfo);
+					} else if(res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000'){
+						this.props.toast.info(res.msgInfo,2,()=>{
+                            this.props.history.replace('/login')
+                        });
 					}
 				});
 		} else {
