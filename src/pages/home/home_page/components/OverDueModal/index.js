@@ -24,7 +24,7 @@ export default class OverDueModal extends React.PureComponent {
   }
 
   componentWillMount() {
-    console.log()  
+     
   }
 
   downloadFile = (downloadUrl) => {
