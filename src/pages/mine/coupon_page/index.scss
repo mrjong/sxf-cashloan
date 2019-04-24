@@ -54,12 +54,10 @@
   }
 }
 .box {
+  position: relative;
   margin: 20px 30px;
   height: 200px;
-  position: relative;
-  vertical-align: middle;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-color: #fff;
   &:first-child {
     margin-top: 30px;
   }
@@ -137,15 +135,15 @@
     }
     &::after {
       display: block;
-      content: "";
-      height: 30px;
-      width: 30px;
-      border-radius: 50%;
-      background-color: #f5f5f5;
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translate(-60%, -50%);
+			content: '';
+			height: 30px;
+			width: 30px;
+			border-radius: 50%;
+			background-color: #f5f5f5;
+			position: absolute;
+			right: 0;
+			top: 50%;
+			transform: translate(60%, -50%);
     }
   }
   .icon_status {
@@ -189,13 +187,11 @@
   }
 }
 .box_default {
-  // @include bg-image('../../../assets/images/coupon/coupon_bj');
   .leftBox {
     background: #ddd;
   }
 }
 .box_active {
-  // @include bg-image('../../../assets/images/coupon/coupon_bj_active');
   .leftBox {
     background: linear-gradient(135deg, #ffc601, #ff7b31);
   }

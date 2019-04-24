@@ -245,14 +245,14 @@ export default class mine_page extends PureComponent {
         // },
         label: {
           name: '优惠劵',
-          icon: require('assets/images/mine/menu_ico8.png'),
+          className: styles.coupon_page
         },
         jumpToUrl: '/mine/coupon_page',
       },
       {
         label: {
           name: '我的钱包',
-          icon: require('assets/images/mine/menu_ico9.png'),
+          className: styles.wallet_page
         },
         jumpToUrl: '/mine/wallet_page',
       },
@@ -265,35 +265,35 @@ export default class mine_page extends PureComponent {
         },
         label: {
           name: '实名认证',
-          icon: require('assets/images/mine/menu_ico.png')
+          className: styles.real_name
         },
         jumpToUrl: '/home/real_name',
       },
       {
         label: {
           name: '信用加分',
-          icon: require('assets/images/mine/menu_ico2.png')
+          className: styles.credit_extension_page
         },
         jumpToUrl: '/mine/credit_extension_page?isShowCommit=false',
       },
       {
         label: {
           name: '信用卡管理',
-          icon: require('assets/images/mine/menu_ico3.png'),
+          className: styles.select_credit_page
         },
         jumpToUrl: '/mine/select_credit_page',
       },
       {
         label: {
           name: '储蓄卡管理',
-          icon: require('assets/images/mine/menu_ico4.png'),
+          className: styles.select_save_page
         },
         jumpToUrl: '/mine/select_save_page',
       },
       {
         label: {
           name: '常见问题',
-          icon: require('assets/images/mine/menu_ico5.png')
+          className: styles.fqa_page
         },
         jumpToUrl: '/mine/fqa_page',
       },

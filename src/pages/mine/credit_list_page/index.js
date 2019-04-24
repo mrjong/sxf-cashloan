@@ -3,6 +3,7 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
+import { Icon } from 'antd-mobile';
 
 const API = {
   CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -152,7 +153,7 @@ export default class credit_list_page extends PureComponent {
                         }
                         {
                           isSelected ? (
-                            <i className={styles.selected_ico}></i>
+                            <Icon type="check-circle-o" color='#5CE492' className={styles.selected_ico}/>
                           ) : null
                         }
                       </li>
