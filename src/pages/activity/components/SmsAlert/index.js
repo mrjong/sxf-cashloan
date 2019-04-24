@@ -260,12 +260,7 @@ export default class SmsAlert extends Component {
 					this.setState({
 						loginProps_needLogin_copy: false
 					});
-				} else if (res.authFlag === '2') {
-					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, otherProps_type);
-					this.setState({
-						loginProps_needLogin_copy: false
-					});
-				} else {
+				}  else {
 					if (this.state.loginProps_needLogin) {
 						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
 						if (res.mblNoHid) {
