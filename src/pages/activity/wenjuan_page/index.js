@@ -362,6 +362,13 @@ export default class wenjuan_page extends PureComponent {
 			}
 		);
 	};
+	goHome = () => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		buriedPointEvent(activity.wenjuanHome, {
+			entry: queryData.entry
+		});
+		this.props.history.push('/home/home');
+	};
 	shareFunc = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(activity.wenjuanShare, {
@@ -591,9 +598,7 @@ export default class wenjuan_page extends PureComponent {
 						) : null}
 						<div className={styles.btn_submit_box}>
 							<a
-								onClick={() => {
-									this.props.history.push('/home/home');
-								}}
+								onClick={this.goHome}
 								className={[ styles.btn_submit, styles.btn_submit_alert ].join(' ')}
 							>
 								进入还到
