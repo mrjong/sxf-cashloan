@@ -70,7 +70,7 @@ export default class home_page extends PureComponent {
 		this.state = {
 			showDefaultTip: false,
 			bannerList: [],
-			isShowCreditModal: false,
+			isShowCreditModal: true,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -1255,7 +1255,7 @@ export default class home_page extends PureComponent {
 										<InputItem
 											placeholder={`申请金额${selectedLoanDate.factLmtLow ||
 												''}-${selectedLoanDate.factAmtHigh || ''}元`}
-											type="text"
+											type="number"
 											disabled={activeTag !== 2}
 											ref={(el) => (this.inputRef = el)}
 											className={activeTag === 2 ? 'blackColor' : ''}

@@ -463,7 +463,7 @@ export default class confirm_agency_page extends PureComponent {
 										className={style.billInput}
 										placeholder=""
 										disabled={false}
-										type="money"
+										type="number"
 										ref={(el) => (this.inputRef = el)}
 										{...getFieldProps('cardBillAmt', {
 											rules: [
