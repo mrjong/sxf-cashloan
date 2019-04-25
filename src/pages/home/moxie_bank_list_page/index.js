@@ -173,7 +173,7 @@ export default class moxie_bank_list_page extends Component {
 										className={style.bankitem}
 									>
 										<span
-											className={`bank_moxie_ico bank_moxie_${item.code}`}
+											className={`bank_moxie_ico bank_ico_${item.code}`}
 											style={{ backgroundImage: `url(${item.logo})` }}
 										/>
 										<div className={style.name}>{item.name}</div>
