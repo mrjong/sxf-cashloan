@@ -136,8 +136,8 @@ let getTestPlugins = function () {
 
 // sentry 上传sourceMap
 let getSentryPlugins = function () {
-	const { NODE_ENV } = process.env;
-	const isPro = NODE_ENV === 'production';
+	const { SENTRY_ENV } = process.env;
+	const isPro = SENTRY_ENV === 'production';
 	plugins.push(
 		new CompressionPlugin({
 			//压缩gzip
