@@ -314,8 +314,7 @@
 		position: absolute;
 		right: 20px;
 		top: 20px;
-		background: url('../../../assets/images/home/check_icon.png') no-repeat;
-		background-size: cover;
+		@include spriteIcon(-295px, -474px);
 	}
 }
 .tagList {

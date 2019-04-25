@@ -12,7 +12,7 @@ import modal_bg from './img/modal_bg.png'
 import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType'
 import ButtonCustom from 'components/ButtonCustom'
-import { Carousel } from 'antd-mobile'
+import { Carousel, Icon } from 'antd-mobile'
 import SmsAlert from '../components/SmsAlert'
 import awardListData from './components/awardListData'
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
@@ -347,7 +347,7 @@ export default class funsisong_page extends PureComponent {
                   <p className={styles.contText}>完成借款，最高送888元现金，快去参与！</p>
                   <ButtonCustom className={styles.joinBtn} onClick={this.joinNow}>立即参与</ButtonCustom>
                 </div>
-                <div className={styles.closeIcon} onClick={this.closeNoAwardModal}></div>
+                <Icon type='cross' className={styles.closeIcon} onClick={this.closeNoAwardModal}/>
               </div>
             </div> : null
         }

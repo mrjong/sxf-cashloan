@@ -22,9 +22,19 @@ $iconWidth: 80;	// 单个icon的宽度（正方形）
 	background-image: url('../../../assets/images/common/bank_icon@80.png');
 }
 
+:global(.important_bank_moxie_ico) {
+	position: relative;
+	display: inline-block;
+	width: 80px;
+	height: 80px;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-image: url('../../../assets/images/common/bank_icon@80.png') !important;
+}
+
 // 黑色logo的ico
 :global(.logo_ico) {
-  @include bg-image('../../../assets/images/mine/selectCard/black_logo');
+	background-image: url('../../../assets/images/common/round_black_logo.png');
 }
 
 // 雪碧图icon位置不能换，只能从后追加

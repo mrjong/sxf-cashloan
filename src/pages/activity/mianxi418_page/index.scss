@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .modal {
 	.mask {
 		position: fixed;
@@ -47,78 +48,13 @@
 			}
 		}
 		.closeBtn {
-			width: 50px;
-			height: 50px;
-			background-image: url(../../../assets/images/home/close_ico@2x.png);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
+			width: 68px;
+			height: 68px;
 			position: absolute;
-			bottom: -80px;
+			bottom: -100px;
 			left: 50%;
 			transform: translate(-50%, 0%);
-		}
-	}
-
-	.modalWrapper2 {
-		width: 750px;
-		height: auto;
-		background: transparent;
-		padding: 0;
-		.closeBtn {
-			width: 71px;
-			height: 71px;
-			background-image: url(./img/close_btn.png);
-			bottom: -116px;
-		}
-		.awardModalCont {
-			position: relative;
-			text-align: center;
-			.modalBg {
-				width: 750px;
-			}
-			.checkBtn {
-				position: absolute;
-				width: 410px;
-				bottom: 88px;
-				left: 50%;
-				transform: translate(-50%, 0%);
-			}
-		}
-	}
-	.modalWrapper3 {
-		width: 560px;
-		height: 466px;
-		border-radius: 8px;
-		padding: 110px 56px 40px;
-		.noAwardModalCont {
-			font-size: 34px;
-			color: rgba(51, 51, 51, 1);
-			text-align: center;
-			line-height: 48px;
-			.title {
-				font-weight: 500;
-			}
-			.contText {
-				margin: 20px 0 62px;
-			}
-			.joinBtn {
-				background: linear-gradient(90deg, rgba(254, 175, 110, 1), rgba(236, 83, 58, 1));
-				border-radius: 45px;
-				font-size: 32px;
-				color: #fff;
-				width: 400px;
-			}
-		}
-		.closeIcon {
-			position: absolute;
-			right: 4px;
-			top: 4px;
-			width: 26px;
-			height: 26px;
-			margin: 20px;
-			background-image: url(../../../assets/images/confirm_agency/icon_close.png);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
+			@include spriteIcon(0, 0);
 		}
 	}
 }

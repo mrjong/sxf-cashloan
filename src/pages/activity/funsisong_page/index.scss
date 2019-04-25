@@ -1,7 +1,8 @@
+@import "../../../assets//styles/scss/base/fn.scss";
 .modal {
   .mask {
     position: fixed;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(0, 0, 0, 0.5);
     margin: 0;
     top: 0;
     left: 0;
@@ -29,7 +30,7 @@
       margin-bottom: 36px;
     }
 
-    ol{
+    ol {
       height: 444px;
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
@@ -40,19 +41,17 @@
       color: #6c6c6c;
     }
     .closeBtn {
-      width: 50px;
-      height: 50px;
-      background-image: url(../../../assets/images/home/close_ico@2x.png);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      width: 68px;
+      height: 68px;
       position: absolute;
-      bottom: -80px;
+      bottom: -100px;
       left: 50%;
       transform: translate(-50%, 0%);
+      @include spriteIcon(0, 0);
     }
   }
 
-  .modalWrapper2{
+  .modalWrapper2 {
     width: 750px;
     height: auto;
     background: transparent;
@@ -63,13 +62,13 @@
       background-image: url(./img/close_btn.png);
       bottom: -116px;
     }
-    .awardModalCont{
+    .awardModalCont {
       position: relative;
       text-align: center;
-      .modalBg{
+      .modalBg {
         width: 750px;
       }
-      .checkBtn{
+      .checkBtn {
         position: absolute;
         width: 410px;
         bottom: 88px;
@@ -78,23 +77,23 @@
       }
     }
   }
-  .modalWrapper3{
+  .modalWrapper3 {
     width: 560px;
     height: 466px;
     border-radius: 8px;
     padding: 110px 56px 40px;
-    .noAwardModalCont{
+    .noAwardModalCont {
       font-size: 34px;
       color: rgba(51, 51, 51, 1);
       text-align: center;
       line-height: 48px;
-      .title{
+      .title {
         font-weight: 500;
       }
-      .contText{
+      .contText {
         margin: 20px 0 62px;
       }
-      .joinBtn{
+      .joinBtn {
         background: linear-gradient(90deg, rgba(254, 175, 110, 1), rgba(236, 83, 58, 1));
         border-radius: 45px;
         font-size: 32px;
@@ -102,16 +101,13 @@
         width: 400px;
       }
     }
-    .closeIcon{
+    .closeIcon {
       position: absolute;
-      right: 4px;
-      top: 4px;
-      width: 26px;
-      height: 26px;
-      margin: 20px;
-      background-image: url(../../../assets/images/confirm_agency/icon_close.png);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      right: 0;
+      top: 0;
+      width: 50px;
+      height: 50px;
+      margin: 10px;
     }
   }
 }
@@ -136,31 +132,31 @@
     text-align: center;
     z-index: 2;
   }
-  .couponContainer{
+  .couponContainer {
     position: relative;
     padding-top: 650px;
     z-index: 1;
-    .couponBox{
+    .couponBox {
       padding: 42px 48px 30px;
       background: #fff;
       border-radius: 20px;
       margin: 0 40px;
-      .couponTit{
+      .couponTit {
         font-size: 26px;
         color: rgba(230, 41, 99, 1);
-        span{
+        span {
           font-size: 30px;
           font-weight: 600;
         }
       }
-      .imgContainer{
+      .imgContainer {
         position: relative;
         margin-top: 44px;
       }
-      .couponBg{
+      .couponBg {
         width: 100%;
       }
-      .getBtn{
+      .getBtn {
         position: absolute;
         width: 104px;
         right: 18px;
@@ -168,7 +164,7 @@
       }
     }
   }
-  .redBagCont{
+  .redBagCont {
     position: relative;
     background: #fff;
     border-radius: 20px;
@@ -176,41 +172,41 @@
     margin: 30px 40px 0;
     text-align: center;
     z-index: 1;
-    .titBg{
+    .titBg {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
     }
-    .price{
+    .price {
       font-size: 30px;
       color: rgba(255, 26, 0, 1);
       padding-top: 68px;
-      img{
+      img {
         width: 210px;
         margin-right: 13px;
         position: relative;
         top: 5px;
       }
     }
-    .tipText{
+    .tipText {
       margin: 34px 0 69px;
       font-size: 30px;
       color: rgba(52, 58, 66, 1);
     }
-    .awardListCarousel{
+    .awardListCarousel {
       height: 190px !important;
       :global {
-        .slider-frame{
+        .slider-frame {
           height: 190px !important;
         }
       }
     }
-    .awardList{
+    .awardList {
       width: 464px;
       margin: 84px 0 24px;
     }
-    .carouselItem{
+    .carouselItem {
       width: 380px;
       margin: 0 auto;
       display: flex;
@@ -219,13 +215,13 @@
       color: rgba(52, 58, 66, 1);
       margin-bottom: 8px;
     }
-    .jumpBtn{
+    .jumpBtn {
       background: linear-gradient(90deg, rgba(254, 175, 110, 1), rgba(236, 83, 58, 1));
       border-radius: 45px;
       font-size: 34px;
       color: #fff;
     }
-    .protocolBox{
+    .protocolBox {
       font-size: 24px;
       color: rgba(52, 58, 66, 1);
       text-align: left;
@@ -233,7 +229,7 @@
       line-height: 1.4;
     }
   }
-  .spaceBlock{
+  .spaceBlock {
     height: 650px;
   }
   .tipText {
@@ -245,7 +241,7 @@
   }
 }
 
-@keyframes slide{
+@keyframes slide {
   0% {
     top: 280px;
   }
@@ -254,7 +250,7 @@
   }
 }
 
-@keyframes shake{
+@keyframes shake {
   0% {
     top: 0;
   }

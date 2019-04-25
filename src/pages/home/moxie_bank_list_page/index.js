@@ -8,6 +8,7 @@ import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
 import StepBar from 'components/StepBar';
 import linkConf from 'config/link.conf';
+import bankCode from 'config/bankCode'
 
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
@@ -173,7 +174,7 @@ export default class moxie_bank_list_page extends Component {
 										className={style.bankitem}
 									>
 										<span
-											className={`bank_moxie_ico bank_ico_${item.code}`}
+											className={`${bankCode.includes(item.code) ? 'important_bank_moxie_ico' : 'bank_moxie_ico'} bank_ico_${item.code}`}
 											style={{ backgroundImage: `url(${item.logo})` }}
 										/>
 										<div className={style.name}>{item.name}</div>
