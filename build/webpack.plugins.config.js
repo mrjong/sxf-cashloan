@@ -30,7 +30,8 @@ let plugins = [
 	new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
 ];
 
-var sentryTestVersion = 'sentry_test_'+new Date().getTime();
+// var sentryTestVersion = 'sentry_test_'+new Date().getTime();
+var sentryTestVersion = 'sentry_test_20120425';
 var sentryVersion = 'sentry_'+new Date().getTime();
 
 //生产插件
