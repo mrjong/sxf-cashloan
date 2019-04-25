@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { store } from 'utils/store';
-import qs from 'qs';
 import fetch from 'sx-fetch';
 import { getNextStr, getDeviceType } from 'utils';
 import Blank from 'components/Blank';
-import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
 
 const API = {
   getFaceDetect: '/auth/faceDetect', // 人脸认证之后的回调状态
@@ -21,7 +18,6 @@ export default class tencent_face_middle_page extends Component {
   componentWillMount() {
     const osType = getDeviceType()
     //人脸识别的回调
-    // const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     this.props.$fetch
       .post(`${API.getFaceDetect}`, {
         osType
