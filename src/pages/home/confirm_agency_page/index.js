@@ -293,7 +293,11 @@ export default class confirm_agency_page extends PureComponent {
 	// 获取代还期限列表 还款日期列表
 	requestGetRepaymentDateList = () => {
 		this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+			if (result && result.msgCode === 'PTM0000') {
+				if (result.data && result.data.prdList && result.data.prdList.length === 0) {
+					this.props.toast.info('当前渠道暂不支持提现申请，请进入MPOS代偿');
+					return;
+				}
 				// const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
 				const diff = result.data.overDt;
 				let lendersDateListFormat = this.state.lendersDateList;

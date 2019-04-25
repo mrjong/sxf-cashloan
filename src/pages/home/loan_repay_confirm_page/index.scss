@@ -243,7 +243,8 @@
 		top: -13px;
 	}
 	&.dis {
-		.subtitle,.title {
+		.subtitle,
+		.title {
 			color: #e5e5e5;
 		}
 		i {
@@ -467,4 +468,33 @@
 .modal_btn_box {
 	margin: 60px auto 36px;
 	width: 620px;
+}
+
+.modal_Vip {
+	text-align: left;
+	padding: 80px 30px;
+	.title {
+		font-size: 34px;
+		font-family: 'PingFangSC-Regular';
+		color: #333;
+		margin-bottom: 24px;
+	}
+	.desc {
+		font-size: 32px;
+		line-height: 60px;
+		color: #6c6c6c;
+	}
+	.btn_box {
+		display: flex;
+		margin-top: 250px;
+		.btn_item {
+			&:first-child {
+				background-color: #fff;
+				color: #333;
+				border: 1PX solid #ebde74;
+			}
+			margin: 0 40px;
+			flex: 1;
+		}
+	}
 }

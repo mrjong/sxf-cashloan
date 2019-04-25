@@ -24,7 +24,7 @@ import mockData from './mockData';
 import { createForm } from 'rc-form';
 import AgreementModal from 'components/AgreementModal';
 import ScrollText from 'components/ScrollText';
-
+let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
@@ -70,7 +70,7 @@ export default class home_page extends PureComponent {
 		this.state = {
 			showDefaultTip: false,
 			bannerList: [],
-			isShowCreditModal: true,
+			isShowCreditModal: false,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -91,7 +91,9 @@ export default class home_page extends PureComponent {
 			billOverDue: false, //逾期弹窗标志
 			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
-			isNeedExamine: false // 是否需要人审
+			isNeedExamine: false, // 是否需要人审
+			modal_left2: false,
+			dayPro: {}
 		};
 	}
 
@@ -356,19 +358,7 @@ export default class home_page extends PureComponent {
 						store.setMoxieBackUrl('/home/home');
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					}, 2000);
-				} else if (
-					usrIndexInfo.indexData &&
-					usrIndexInfo.indexData.autSts === '2' &&
-					usrIndexInfo.indexData.cardBillSts === '01' &&
-					Number(usrIndexInfo.indexData.cardBillAmt) <= 0
-				) {
-					this.props.toast.info('账单已结清，请代偿其他信用卡');
-					setTimeout(() => {
-						// 跳新版魔蝎
-						store.setMoxieBackUrl('/home/home');
-						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-					}, 2000);
-				} else if (usrIndexInfo.indexData.autSts === '2') {
+				}  else if (usrIndexInfo.indexData.autSts === '2') {
 					if (
 						usrIndexInfo &&
 						usrIndexInfo.indexData &&
@@ -378,8 +368,11 @@ export default class home_page extends PureComponent {
 						this.props.toast.info('暂不支持当前信用卡，请代偿其他信用卡');
 						return;
 					}
+					if (!this.isCanLoan()) {
+						return;
+					}
 					this.showCreditModal();
-					this.qryPerdRate(usrIndexInfo.indexData.maxApplAmt);
+					this.toggleTag(0);
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
@@ -743,9 +736,13 @@ export default class home_page extends PureComponent {
 
 	//切换tag标签
 	toggleTag = (idx) => {
+		isinputBlur = true;
+		setTimeout(() => {
+			isinputBlur = false;
+		}, 100);
 		const { usrIndexInfo } = this.state;
 		const { indexData = {} } = usrIndexInfo;
-		const { cardBillAmt, minPayment, billRemainAmt } = indexData;
+		const { minApplAmt, maxApplAmt } = indexData;
 		// 埋点
 		switch (idx) {
 			case 0:
@@ -767,6 +764,9 @@ export default class home_page extends PureComponent {
 			default:
 				break;
 		}
+		if (!this.isCanLoan()) {
+			return;
+		}
 		this.setState(
 			{
 				activeTag: idx
@@ -774,13 +774,13 @@ export default class home_page extends PureComponent {
 			() => {
 				//全额还款
 				if (idx === 0) {
-					this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
+					this.calcLoanMoney(maxApplAmt);
 				} else if (idx === 1) {
 					//最低还款
-					this.calcLoanMoney(minPayment);
+					this.calcLoanMoney(minApplAmt);
 				} else {
 					this.inputRef.focus();
-					this.calcLoanMoney(minPayment);
+					this.calcLoanMoney(maxApplAmt);
 				}
 			}
 		);
@@ -790,46 +790,51 @@ export default class home_page extends PureComponent {
 	calcLoanMoney = (money) => {
 		const { usrIndexInfo } = this.state;
 		const { indexData } = usrIndexInfo;
+		console.log(money);
 		if (indexData && indexData.maxApplAmt && money >= indexData.maxApplAmt) {
 			this.props.form.setFieldsValue({
 				loanMoney: indexData.maxApplAmt
 			});
+			this.qryPerdRate(indexData.maxApplAmt);
 		} else if (indexData && indexData.minApplAmt && money <= indexData.minApplAmt) {
 			this.props.form.setFieldsValue({
 				loanMoney: indexData.minApplAmt
 			});
+			this.qryPerdRate(indexData.minApplAmt);
 		} else {
 			if (money) {
 				this.props.form.setFieldsValue({
 					loanMoney: Math.ceil(money / 100) * 100
-				});
+                });
+                this.qryPerdRate(money);
 			} else {
 				this.props.form.setFieldsValue({
 					loanMoney: indexData.minApplAmt
-				});
+                });
+                this.qryPerdRate(indexData.minApplAmt);
 			}
 		}
 	};
 
 	//过滤选中的还款期限
-	filterLoanDate = (item) => {
+	filterLoanDate = (item, type) => {
 		const { usrIndexInfo, activeTag } = this.state;
-		const { cardBillAmt, minPayment, billRemainAmt } = usrIndexInfo.indexData;
-		this.setState(
-			{
-				selectedLoanDate: item // 设置选中的期数
-			},
-			() => {
-				//全额还款
-				if (activeTag === 0) {
-					this.calcLoanMoney(billRemainAmt === 0 || billRemainAmt ? billRemainAmt : cardBillAmt);
-				} else if (activeTag === 1) {
-					//最低还款
-					this.calcLoanMoney(minPayment);
-				}
-			}
-		);
-		this.dateType(item.perdLth);
+		const { minApplAmt, maxApplAmt } = usrIndexInfo.indexData;
+		let itemCopy = type === '30' ? this.state.dayPro : item;
+		console.log(itemCopy);
+		this.dateType(itemCopy.perdLth);
+		if (item && item.perdLth == 30) {
+			this.setState({
+				modal_left2: true,
+				dayPro: item
+			});
+			return;
+		}
+		this.setState({
+			modal_left: false,
+			modal_left2: false,
+			selectedLoanDate: itemCopy // 设置选中的期数
+		});
 	};
 
 	//查询还款期限
@@ -841,15 +846,10 @@ export default class home_page extends PureComponent {
 			.then((res) => {
 				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
 				this.dateType(date[0].perdLth);
-				this.setState(
-					{
-						perdRateList: date,
-						selectedLoanDate: date[0] // 默认选中3期
-					},
-					() => {
-						this.toggleTag(0);
-					}
-				);
+				this.setState({
+					perdRateList: date,
+					selectedLoanDate: date[0].perdLth == 30 ? date[1] : date[0] // 默认选中3期
+				});
 			});
 	};
 
@@ -919,23 +919,14 @@ export default class home_page extends PureComponent {
 	};
 
 	submitCredit = () => {
+		if (!this.isCanLoan()) {
+			return;
+		}
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				if (!/^\d+(\.\d{0,2})?$/.test(values.loanMoney)) {
-					this.props.toast.info('请输入数字或两位小数');
-					this.props.form.setFieldsValue({
-						loanMoney: ''
-					});
-					return;
-				}
-				if (values.loanMoney < selectedLoanDate.factLmtLow || values.loanMoney > selectedLoanDate.factAmtHigh) {
-					this.props.toast.info(
-						`申请金额区间应为${selectedLoanDate.factLmtLow || ''}-${selectedLoanDate.factAmtHigh || ''}元`
-					);
-					this.props.form.setFieldsValue({
-						loanMoney: ''
-					});
+				if (values.loanMoney === 0 || !values.loanMoney) {
+					this.props.toast.info('请输入借款金额');
 					return;
 				}
 				if (!selectedLoanDate.perdCnt) {
@@ -1017,8 +1008,43 @@ export default class home_page extends PureComponent {
 		if (activeTag === 2) {
 			return `申请金额${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
 		} else {
-			return `请输入账单金额`;
+			return ``;
 		}
+	};
+	goMoxieBankList = () => {
+		this.props.history.push('/home/moxie_bank_list_page');
+	};
+	// 是否可以借款
+	isCanLoan = () => {
+		let state = true;
+
+		const loanMoney = this.props.form.getFieldValue('loanMoney');
+		const { indexData = {} } = this.state.usrIndexInfo;
+		const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
+		if (indexData && indexData.buidSts && indexData.buidSts === '02') {
+			this.props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			return;
+		} else if (indexData && indexData.minApplAmt > billRemainAmt) {
+			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			state = false;
+		} else if (
+			indexData &&
+			cardBillSts === '01' &&
+			(cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
+		) {
+			this.props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			state = false;
+		}
+		return state;
 	};
 	render() {
 		const {
@@ -1199,7 +1225,14 @@ export default class home_page extends PureComponent {
 					maskClosable={false}
 				>
 					<div className={style.modal_box}>
-						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
+						<div
+							className={[
+								style.modal_left,
+								this.state.modal_left && !this.state.modal_left2
+									? style.modal_left1
+									: this.state.modal_left && this.state.modal_left2 ? style.modal_left11 : ''
+							].join(' ')}
+						>
 							<div className={style.modal_header}>
 								确认代偿信息
 								<Icon
@@ -1264,43 +1297,24 @@ export default class home_page extends PureComponent {
 									))}
 								</div>
 								<div className={style.labelDiv}>
-									{/* {getFieldDecorator('loanMoney', {
-										initialValue: this.state.loanMoney,
-										rules: [ { required: true, message: '请输入还款金额' } ]
-									})(
-										<div className={style.money_input}>
-											<InputItem
-												placeholder={`申请金额${selectedLoanDate.factLmtLow ||
-													''}-${selectedLoanDate.factAmtHigh || ''}元`}
-												type="number"
-												disabled={activeTag !== 2}
-												ref={(el) => (this.inputRef = el)}
-												className={activeTag === 2 ? 'blackColor' : ''}
-												onBlur={() => {
-													handleInputBlur();
-												}}
-											>
-												帮你还多少(元)
-											</InputItem>
-											{!this.inputDisabled() ? (
-												<div className={style.desc}>{this.placeholderText()}</div>
-											) : null}
-										</div>
-									)} */}
 									<div className={style.money_input}>
 										<InputItem
 											{...getFieldProps('loanMoney', {
 												rules: [ { required: true, message: '请输入还款金额' } ]
 											})}
 											type="number"
-											placeholder={`申请金额${selectedLoanDate.factLmtLow ||
-												''}-${selectedLoanDate.factAmtHigh || ''}元`}
+											placeholder={this.placeholderText()}
 											disabled={activeTag !== 2}
 											ref={(el) => (this.inputRef = el)}
 											className={activeTag === 2 ? 'blackColor' : ''}
 											onBlur={(v) => {
 												handleInputBlur();
-												this.calcLoanMoney(v);
+												setTimeout(() => {
+													if (isinputBlur) {
+														return;
+													}
+													this.calcLoanMoney(v);
+												});
 											}}
 											onFocus={(v) => {
 												// this.updateBillInf();
@@ -1314,6 +1328,9 @@ export default class home_page extends PureComponent {
 									</div>
 									<List.Item
 										onClick={() => {
+											if (!this.isCanLoan()) {
+												return;
+											}
 											this.setState({
 												modal_left: true
 											});
@@ -1330,16 +1347,25 @@ export default class home_page extends PureComponent {
 							</div>
 						</div>
 						<div
-							className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
-							onClick={() => {
-								this.setState({
-									modal_left: false
-								});
-							}}
+							className={[
+								style.modal_left,
+								this.state.modal_left && !this.state.modal_left2
+									? style.modal_left21
+									: this.state.modal_left && this.state.modal_left2 ? style.modal_left22 : ''
+							].join(' ')}
 						>
 							<div className={style.modal_header}>
 								选择期限
-								<Icon className={style.modal_leftIcon} type="left" />
+								<Icon
+									className={style.modal_leftIcon}
+									type="left"
+									onClick={() => {
+										this.setState({
+											modal_left: false,
+											modal_left2: false
+										});
+									}}
+								/>
 							</div>
 							<div>
 								{perdRateList.map((item, idx) => (
@@ -1351,15 +1377,85 @@ export default class home_page extends PureComponent {
 											this.filterLoanDate(item);
 										}}
 									>
-										<span>{item.perdPageNm}</span>
+										{item.perdLth == 30 ? (
+											<div
+												className={[
+													style.dayProd,
+													item.factLmtLow <=
+														Number(this.props.form.getFieldValue('loanMoney')) &&
+													Number(this.props.form.getFieldValue('loanMoney')) <=
+														item.factAmtHigh
+														? ''
+														: style.dis
+												].join(' ')}
+											>
+												<div className={style.title}>
+													{item.perdPageNm}
+													<i />
+												</div>
+												<div className={style.subtitle}>
+													代偿区间{item.factLmtLow}-{item.factAmtHigh}元
+												</div>
+											</div>
+										) : (
+											<span>{item.perdPageNm}</span>
+										)}
 										{selectedLoanDate.perdCnt === item.perdCnt && <i className={style.checkIcon} />}
 									</div>
 								))}
 							</div>
 						</div>
+
+						<div
+							className={[
+								style.modal_left,
+								this.state.modal_left && !this.state.modal_left2
+									? style.modal_left31
+									: this.state.modal_left && this.state.modal_left2 ? style.modal_left33 : ''
+							].join(' ')}
+						>
+							<div className={style.modal_header}>
+								会员产品介绍
+								<Icon
+									className={style.modal_leftIcon}
+									type="left"
+									onClick={() => {
+										this.setState({
+											modal_left2: false
+										});
+									}}
+								/>
+							</div>
+							<div className={style.modal_Vip}>
+								<div>
+									<div className={style.title}>30天产品为会员专属产品</div>
+									<div className={style.desc}>1.使用前，需购买会员卡仅限于当次使用；</div>
+									<div className={style.desc}>2.购买后，获得68元等价MPOS刷卡优惠权益；</div>
+									<div className={style.desc}>3.申请后，当期借款期限不可修改；</div>
+									<div className={style.btn_box}>
+										<SXFButton
+											onClick={() => {
+												this.setState({
+													modal_left2: false
+												});
+											}}
+											type="line"
+											className={style.btn_item}
+										>
+											选择其他期限
+										</SXFButton>
+										<SXFButton
+											onClick={() => this.filterLoanDate(null, '30')}
+											className={style.btn_item}
+										>
+											确认申请
+										</SXFButton>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</Modal>
-
 				{homeModal}
 			</div>
 		);
