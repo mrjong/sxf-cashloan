@@ -10,6 +10,18 @@ var happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 let OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 let SentryPlugin = require('@sentry/webpack-plugin')
 
+// 获取git版本
+var fs = require("fs")
+var gitHEAD = fs.readFileSync('.git/HEAD', 'utf-8').trim() // ref: refs/heads/develop
+var ref = gitHEAD.split(': ')[1] // refs/heads/develop
+var develop = gitHEAD.split('/')[2] // 环境：develop
+var gitVersion = fs.readFileSync('.git/' + ref, 'utf-8').trim() // git版本号，例如：6ceb0ab5059d01fd444cf4e78467cc2dd1184a66
+// var gitCommitVersion = '"' + develop + '_' + gitVersion + '"' // 例如dev环境: "develop: 6ceb0ab5059d01fd444cf4e78467cc2dd1184a66"
+var gitCommitVersion = develop + '_' + gitVersion
+
+var sentryTestVersion = 'sentry_test_' + gitCommitVersion;
+var sentryVersion = 'sentry_' + gitCommitVersion;
+
 let plugins = [
 	new HtmlWebpackPlugin({
 		chunks: ['main', 'vendor', 'webpack-runtime'],
@@ -29,10 +41,6 @@ let plugins = [
 	new webpack.HotModuleReplacementPlugin(), //热更新插件
 	new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
 ];
-
-// var sentryTestVersion = 'sentry_test_'+new Date().getTime();
-var sentryTestVersion = 'sentry_test_20120425_v1';
-var sentryVersion = 'sentry_'+new Date().getTime();
 
 //生产插件
 let getProdPlugins = function () {
@@ -80,14 +88,6 @@ let getProdPlugins = function () {
 			dry: false
 		})
 	);
-	plugins.push(
-		new SentryPlugin({
-			include: './dist',
-			release: sentryVersion,
-			configFile: 'sentry.properties',
-			urlPrefix: '~/'
-		})
-	);
 	return plugins;
 };
 
@@ -131,15 +131,75 @@ let getTestPlugins = function () {
 	// 		dry: false
 	// 	})
 	// );
-	
+	return plugins;
+};
+
+// sentry 上传sourceMap
+let getSentryPlugins = function () {
+	const { NODE_ENV } = process.env;
+	const isPro = NODE_ENV === 'production';
 	plugins.push(
-		new SentryPlugin({
-			include: './dist',
-			release: sentryTestVersion,
-			configFile: 'sentry.properties',
-			urlPrefix: '~/'
+		new CompressionPlugin({
+			//压缩gzip
+			asset: '[path].gz[query]',
+			algorithm: 'gzip',
+			test: /\.(js|html)$/,
+			threshold: 10240,
+			minRatio: 0.8
 		})
-	);
+	),
+		plugins.push(new OptimizeCSSPlugin());
+	//压缩提取出的css，并解决ExtractTextPlugin分离出的js重复问题(多个文件引入同一css文件)
+	plugins.push(new webpack.HashedModuleIdsPlugin());
+	plugins.push(
+		new CopyWebpackPlugin([
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
+			{ from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
+		])
+	),
+		plugins.push(
+			new webpack.DefinePlugin({
+				'process.env': {
+					NODE_ENV: isPro ? JSON.stringify('production') : JSON.stringify('development'),
+					PROJECT_ENV: isPro ? JSON.stringify('pro') : JSON.stringify('test'),
+					RELEASE_VERSION: isPro ? JSON.stringify(sentryVersion) : JSON.stringify(sentryTestVersion),
+				},
+				saUrl: isPro ? JSON.stringify('https://www.vbillbank.com/shence/sa?project=production') : JSON.stringify('http://10.1.1.81:8106/sa')
+			})
+		);
+		// 生产
+		if (isPro) {
+			plugins.push(
+				new WebpackZipPlugin({
+					initialFile: './dist', //需要打包的文件夹(一般为dist)
+					endPath: './', //打包到对应目录（一般为当前目录'./'）
+					zipName: +new Date() + 'copy-dist.zip' //打包生成的文件名
+				})
+			);
+		}
+
+		plugins.push(
+			new SentryPlugin({
+				include: './dist',
+				release: isPro ? sentryVersion : sentryTestVersion,
+				configFile: 'sentry.properties',
+				urlPrefix: '~/'
+			})
+		);
+		
+		if (isPro) {
+			plugins.push(
+				new CleanWebpackPlugin('dist', {
+					root: path.resolve(__dirname, '..'),
+					verbose: true,
+					dry: false
+				})
+			);
+		}
+	
+	
 	return plugins;
 };
 
@@ -172,5 +232,6 @@ let getDevPlugins = function () {
 module.exports = {
 	getProdPlugins,
 	getDevPlugins,
-	getTestPlugins
+	getTestPlugins,
+	getSentryPlugins,
 };
