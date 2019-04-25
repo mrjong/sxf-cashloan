@@ -20,6 +20,7 @@ import overDueImg from 'assets/images/home/overDue_icon.png';
 import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
 import Circle from './components/Circle';
+import OverDueModal from './components/OverDueModal';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import AgreementModal from 'components/AgreementModal';
@@ -38,7 +39,8 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001', // 参与418活动
-	creditSts: '/bill/credit/sts' // 用户是否过人审接口
+	creditSts: '/bill/credit/sts', // 用户是否过人审接口
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire' // 问卷调查
 };
 const tagList = [
 	{
@@ -93,7 +95,11 @@ export default class home_page extends PureComponent {
 			visibleLoading: false, //认证弹窗
 			isNeedExamine: false, // 是否需要人审
 			modal_left2: false,
-			dayPro: {}
+			dayPro: {},
+			overDueInf: {
+				// 逾期弹框中的数据
+			},
+			overDueModalFlag: false // 信用施压弹框标识
 		};
 	}
 
@@ -172,17 +178,62 @@ export default class home_page extends PureComponent {
 				});
 		});
 	};
-
+	getParam = () => {
+		let obj = {};
+		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
+		for (let i = 0; i < wenjuan.length; i++) {
+			let str = '';
+			for (let j = 0; j < wenjuan[i].list.length; j++) {
+				if (wenjuan[i].list[j].checked) {
+					str = str + wenjuan[i].list[j].selected;
+					obj[`answer${i + 1}`] = str;
+				}
+			}
+		}
+		return obj;
+	};
 	// 判断是否授信
 	credit_extension = () => {
+		// 问卷调查  以后可以去掉
+		let wenjuan = localStorage.getItem('wenjuan') ? JSON.parse(localStorage.getItem('wenjuan')) : '';
+		if (wenjuan) {
+			this.props.$fetch
+				.post(API.saveQuestionnaire, {
+					actId: 'QA001',
+					...this.getParam()
+				})
+				.then((res) => {
+					if (res.msgCode === 'PTM0000') {
+						localStorage.removeItem('wenjuan');
+					}
+				});
+		}
+		// this.setState({
+		//     firstUserInfo:'00'
+		// })
+		// this.requestGetUsrInfo();
+		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
 			.then(async (res) => {
 				if (res && res.msgCode === 'PTM0000') {
+					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
+					// popupFlag信用施压弹框，1为显示，0为隐藏
 					this.setState({
 						firstUserInfo: res.data.flag,
 						showAgreement: res.data.agreementPopupFlag === '1',
-						billOverDue: res.data.popupFlag === '1'
+						billOverDue: res.data.popupFlag === '1',
+						overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
+					});
+					const currProgress =
+						res.data &&
+						res.data.processInfo &&
+						res.data.processInfo.length > 0 &&
+						res.data.processInfo.filter((item, index) => {
+							return item.hasProgress;
+						});
+					this.setState({
+						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 					});
 					let isInvoking_mianxi = await this.isInvoking_mianxi();
 					if (res.data.flag === '01') {
@@ -358,7 +409,7 @@ export default class home_page extends PureComponent {
 						store.setMoxieBackUrl('/home/home');
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					}, 2000);
-				}  else if (usrIndexInfo.indexData.autSts === '2') {
+				} else if (usrIndexInfo.indexData.autSts === '2') {
 					if (
 						usrIndexInfo &&
 						usrIndexInfo.indexData &&
@@ -805,13 +856,13 @@ export default class home_page extends PureComponent {
 			if (money) {
 				this.props.form.setFieldsValue({
 					loanMoney: Math.ceil(money / 100) * 100
-                });
-                this.qryPerdRate(money);
+				});
+				this.qryPerdRate(money);
 			} else {
 				this.props.form.setFieldsValue({
 					loanMoney: indexData.minApplAmt
-                });
-                this.qryPerdRate(indexData.minApplAmt);
+				});
+				this.qryPerdRate(indexData.minApplAmt);
 			}
 		}
 	};
@@ -979,7 +1030,10 @@ export default class home_page extends PureComponent {
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
 		store.setBillNo(usrIndexInfo.indexData.billNo);
-		this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
+		this.props.history.push({
+			pathname: '/order/order_detail_page',
+			search: '?entryFrom=home'
+		});
 	};
 
 	readAgreementCb = () => {
@@ -1061,7 +1115,9 @@ export default class home_page extends PureComponent {
 			showAgreement,
 			billOverDue,
 			isShowActivityModal,
-			visibleLoading
+			visibleLoading,
+			overDueInf,
+			overDueModalFlag
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { cardNoHid, bankNo, bankName } = indexData;
@@ -1155,6 +1211,10 @@ export default class home_page extends PureComponent {
 						<SXFButton onClick={this.handleOverDueClick}>我知道了，前去还款</SXFButton>
 					</div>
 				</Modal>
+			);
+		} else if (overDueModalFlag) {
+			homeModal = (
+				<OverDueModal toast={this.props.toast} overDueInf={overDueInf} handleClick={this.handleOverDueClick} />
 			);
 		} else if (isShowActivityModal) {
 			homeModal = (
