@@ -31,7 +31,7 @@ let plugins = [
 ];
 
 // var sentryTestVersion = 'sentry_test_'+new Date().getTime();
-var sentryTestVersion = 'sentry_test_20120425';
+var sentryTestVersion = 'sentry_test_20120425_v1';
 var sentryVersion = 'sentry_'+new Date().getTime();
 
 //生产插件
