@@ -20,6 +20,7 @@ const API = {
   protocolBind: '/withhold/protocolBink', //协议绑卡接口
   fundPlain: '/fund/plain', // 费率接口
   payFrontBack: '/bill/payFrontBack', // 用户还款新接口
+  procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 }
 let entryFrom = '';
 @fetch.inject()
@@ -50,6 +51,8 @@ export default class order_detail_page extends PureComponent {
       isNewsContract: false, // 是否签署的是新合同
       isSettle: '0', // 是否结清
       totalAmt: '', // 一键结清传给后台的总金额
+      billOverDue: '', //逾期弹窗标志
+			overDueModalFlag: '', // 信用施压弹框标识
     }
   }
   componentWillMount() {
@@ -64,6 +67,8 @@ export default class order_detail_page extends PureComponent {
       billNo: store.getBillNo()
     }, () => {
       this.getLoanInfo();
+      // 因为会有直接进到账单的公众号入口，所以在此在调一遍接口
+      this.getOverdueInfo();
     })
   }
 
@@ -130,6 +135,29 @@ export default class order_detail_page extends PureComponent {
       }).catch(err => {
         console.log(err)
       })
+  }
+
+  getOverdueInfo = () => {
+    this.props.$fetch
+			.post(API.procedure_user_sts)
+			.then((res) => {
+				if (res && res.msgCode === 'PTM0000') {
+					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
+					// popupFlag信用施压弹框，1为显示，0为隐藏
+					this.setState({
+						billOverDue: res.data.popupFlag,
+						overDueModalFlag: res.data.overduePopupFlag,
+					});
+					res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
+				} else {
+					this.props.toast.info(res.msgInfo);
+				}
+			})
+			.catch((err) => {
+				this.setState({
+					firstUserInfo: 'error'
+				});
+			});
   }
 
   // 获取还款信息
@@ -667,8 +695,14 @@ export default class order_detail_page extends PureComponent {
       isShowDetail: !this.state.isShowDetail
     })
   }
+  // 查看逾期进度
+  goOverdue = () => {
+    this.props.history.push({
+      pathname: '/order/overdue_progress_page',
+    });
+  }
   render() {
-    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt } = this.state
+    const { billDesc = {}, money, hideBtn, isPayAll, isShowSmsModal, smsCode, toggleBtn, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, billOverDue, overDueModalFlag } = this.state
     const {
       billPrcpAmt = '',
       perdLth = '',
@@ -680,7 +714,8 @@ export default class order_detail_page extends PureComponent {
       wthdCrdCorpOrgNm = '',
       wthdCrdNoLast = '',
       perdNum = '',
-      waitRepAmt = ''
+      waitRepAmt = '',
+      perdList
     } = billDesc
     const itemList = [
       {
@@ -708,8 +743,29 @@ export default class order_detail_page extends PureComponent {
         value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
       }
     ]
+    const isOverdue = perdList && perdList.filter((item, index) => {
+			return item.perdSts === '1';
+    });
+    const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
+    console.log(isEntryShow)
     return (
       <div className={styles.order_detail_page}>
+        {
+          isEntryShow &&
+          <div className={styles.overdueEntry} onClick={this.goOverdue}>
+            <span className={styles.overdueItem}>
+              <i className={styles.warningIco} />
+              您的账单已逾期!
+            </span>
+            <span className={styles.overdueItem}>
+              查看逾期信用进度
+              <i className={styles.entryIco} />
+            </span>
+          </div>
+        }
+        {
+          !isEntryShow && <div className={styles.topBlock} />
+        }
         {
           isShowSmsModal && <SmsModal
             onCancel={this.skipProtocolBindCard}

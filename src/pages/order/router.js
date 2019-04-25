@@ -17,4 +17,9 @@ export default [
     title: '订单详情',
     component: () => import('pages/order/order_detail_page'),
   },
+  {
+    path: '/order/overdue_progress_page',
+    title: '逾期信用进度',
+    component: () => import('pages/order/overdue_progress_page'),
+  },
 ];
