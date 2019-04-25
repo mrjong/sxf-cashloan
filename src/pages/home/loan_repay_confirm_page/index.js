@@ -67,7 +67,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 	componentDidMount() {
 		store.removeToggleMoxieCard();
 		this.queryUsrInfo();
-		this.getQryPerdRate(200);
 	}
 
 	componentWillUnmount() {
@@ -162,7 +161,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 							});
 						} else if (indexSts === 'LN0003' && indexData.autSts === '2') {
 							//更新成功
-							this.hideProgress();
+                            this.hideProgress();
+                            // this.getQryPerdRate()
 							this.setState(
 								{
 									fetchBillSucc: true,

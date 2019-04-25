@@ -379,6 +379,7 @@ export default class home_page extends PureComponent {
 						return;
 					}
 					this.showCreditModal();
+					this.qryPerdRate(usrIndexInfo.indexData.maxApplAmt);
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
@@ -779,9 +780,7 @@ export default class home_page extends PureComponent {
 					this.calcLoanMoney(minPayment);
 				} else {
 					this.inputRef.focus();
-					this.props.form.setFieldsValue({
-						loanMoney: ''
-					});
+					this.calcLoanMoney(minPayment);
 				}
 			}
 		);
@@ -793,20 +792,20 @@ export default class home_page extends PureComponent {
 		const { indexData } = usrIndexInfo;
 		if (indexData && indexData.maxApplAmt && money >= indexData.maxApplAmt) {
 			this.props.form.setFieldsValue({
-				loanMoney: indexData.maxApplAmt + ''
+				loanMoney: indexData.maxApplAmt
 			});
 		} else if (indexData && indexData.minApplAmt && money <= indexData.minApplAmt) {
 			this.props.form.setFieldsValue({
-				loanMoney: indexData.minApplAmt + ''
+				loanMoney: indexData.minApplAmt
 			});
 		} else {
 			if (money) {
 				this.props.form.setFieldsValue({
-					loanMoney: Math.ceil(money / 100) * 100 + ''
+					loanMoney: Math.ceil(money / 100) * 100
 				});
 			} else {
 				this.props.form.setFieldsValue({
-					loanMoney: indexData.minApplAmt + ''
+					loanMoney: indexData.minApplAmt
 				});
 			}
 		}
@@ -834,20 +833,24 @@ export default class home_page extends PureComponent {
 	};
 
 	//查询还款期限
-	qryPerdRate = () => {
-		this.props.$fetch.get(`${API.qryPerdRate}`).then((res) => {
-			const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-			this.dateType(date[0].perdLth);
-			this.setState(
-				{
-					perdRateList: date,
-					selectedLoanDate: date[0] // 默认选中3期
-				},
-				() => {
-					this.toggleTag(0);
-				}
-			);
-		});
+	qryPerdRate = (money) => {
+		this.props.$fetch
+			.get(`${API.qryPerdRate}`, {
+				applAmt: money
+			})
+			.then((res) => {
+				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+				this.dateType(date[0].perdLth);
+				this.setState(
+					{
+						perdRateList: date,
+						selectedLoanDate: date[0] // 默认选中3期
+					},
+					() => {
+						this.toggleTag(0);
+					}
+				);
+			});
 	};
 
 	dateType = (value) => {
@@ -902,7 +905,6 @@ export default class home_page extends PureComponent {
 				isShowCreditModal: true
 			},
 			() => {
-				this.qryPerdRate();
 				window.handleCloseHomeModal = this.closeCreditModal;
 			}
 		);
