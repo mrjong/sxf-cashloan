@@ -1085,8 +1085,6 @@ export default class home_page extends PureComponent {
 	// 是否可以借款
 	isCanLoan = () => {
 		let state = true;
-
-		const loanMoney = this.props.form.getFieldValue('loanMoney');
 		const { indexData = {} } = this.state.usrIndexInfo;
 		const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
 		if (indexData && indexData.buidSts && indexData.buidSts === '02') {
@@ -1095,8 +1093,34 @@ export default class home_page extends PureComponent {
 				this.goMoxieBankList();
 			});
 			return;
-		} else if (indexData && indexData.minApplAmt > billRemainAmt) {
+		} else if (
+			cardBillSts === '01' &&
+			indexData &&
+			billRemainAmt &&
+			Number(indexData.minApplAmt) > Number(billRemainAmt)
+		) {
 			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			state = false;
+		} else if (
+			cardBillSts === '01' &&
+			indexData &&
+			cardBillAmt &&
+			Number(indexData.minApplAmt) > Number(cardBillAmt)
+		) {
+			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			state = false;
+		} else if (
+			indexData &&
+			cardBillSts === '01' &&
+			(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+		) {
+			this.props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
 				// 跳新版魔蝎
 				this.goMoxieBankList();
 			});

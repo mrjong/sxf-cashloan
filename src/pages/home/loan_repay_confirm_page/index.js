@@ -103,7 +103,23 @@ export default class loan_repay_confirm_page extends PureComponent {
 				this.goMoxieBankList();
 			});
 			return;
-		} else if (indexData && indexData.minApplAmt > billRemainAmt) {
+		} else if (
+			cardBillSts === '01' &&
+			indexData &&
+			billRemainAmt &&
+			Number(indexData.minApplAmt) > Number(billRemainAmt)
+		) {
+			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			state = false;
+		} else if (
+			cardBillSts === '01' &&
+			indexData &&
+			cardBillAmt &&
+			Number(indexData.minApplAmt) > Number(cardBillAmt)
+		) {
 			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
 				// 跳新版魔蝎
 				this.goMoxieBankList();
@@ -112,6 +128,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} else if (
 			indexData &&
 			cardBillSts === '01' &&
+			billRemainAmt &&
+			(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+		) {
+			this.props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
+				// 跳新版魔蝎
+				this.goMoxieBankList();
+			});
+			state = false;
+		} else if (
+			indexData &&
+			cardBillSts === '01' &&
+			cardBillAmt &&
 			(cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
 		) {
 			this.props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
@@ -590,10 +618,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (cardBillSts === '02') {
 			cardBillAmtData = '待更新';
 		} else {
-			if (billRemainAmt === 0 || billRemainAmt) {
+			// 优先取剩余应还，否则去账单金额
+			if (billRemainAmt && Number(billRemainAmt) > 0) {
 				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2);
 			} else if (!cardBillAmt && cardBillAmt !== 0) {
 				cardBillAmtData = '----.--';
+			} else if (cardBillSts === '01' && (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))) {
+				cardBillAmtData = '已结清';
 			} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
 				cardBillAmtData = '已结清';
 			} else {
