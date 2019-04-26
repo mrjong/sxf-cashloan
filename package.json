@@ -91,8 +91,8 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "npm run clear && cross-env webpack-dev-server --config build/webpack.dev.js --watch --progress --colors",
-    "test": "npm run clear cross-env  TEST_ENV=YES  webpack --config build/webpack.test.js && npm run clearMap",
-    "build": "npm run clear cross-env TEST_ENV=NO webpack --config build/webpack.pro.js && npm run clearMap",
+    "test": "npm run clear && cross-env  TEST_ENV=YES  webpack --config build/webpack.test.js && npm run clearMap",
+    "build": "npm run clear && cross-env TEST_ENV=NO webpack --config build/webpack.pro.js && npm run clearMap",
     "clear": "rimraf ./dist",
     "clearMap": "rimraf ./dist/*.map",
     "precommit": "lint-staged",
