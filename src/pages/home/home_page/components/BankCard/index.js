@@ -82,9 +82,17 @@ export default class BankCard extends React.PureComponent {
 		const billDtData =
 			billDt === '----/--/--' || billDt === null ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
 		let cardBillAmtData = '';
-		if (cardBillSts === '01' && (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) < 0))) {
+		if (
+			cardBillSts === '01' &&
+			!cardBillAmt &&
+			(billRemainAmt === 0 || billRemainAmt === '0' || (billRemainAmt && Number(billRemainAmt) < 0))
+		) {
 			cardBillAmtData = '已结清';
-		} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) < 0))) {
+		} else if (
+			cardBillSts === '01' &&
+			!billRemainAmt &&
+			(cardBillAmt === 0 || cardBillAmt === '0' || (cardBillAmt && Number(cardBillAmt) < 0))
+		) {
 			cardBillAmtData = '已结清';
 		} else if (cardBillSts === '02' && !noNeedUpdateArr.includes(contentData.indexSts)) {
 			cardBillAmtData = '待更新';
@@ -94,7 +102,7 @@ export default class BankCard extends React.PureComponent {
 			} else if (cardBillAmt === '---' || cardBillAmt === null) {
 				cardBillAmtData = '---';
 			} else {
-				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+				cardBillAmtData = (cardBillAmt && parseFloat(cardBillAmt, 10).toFixed(2)) || '---';
 			}
 		}
 

@@ -18,10 +18,13 @@ export default {
 			bankNo: 'ICBC',
 			cardNoHid: '6785 **** **** 6654',
 			cardBillDt: '2018-07-17',
-			cardBillAmt: '786.45',
-			billRemainAmt: '2000',
-			overDt: '7',
-			cardBillSts: '02'
+			cardBillAmt: '',
+			billRemainAmt: null,
+            overDt: '7',
+            minApplAmt:'',
+            maxApplAmt:'10',
+			cardBillSts: '01',
+			buidSts: '00'
 		}
 	},
 	LN0004: {

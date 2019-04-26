@@ -410,15 +410,6 @@ export default class home_page extends PureComponent {
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
-					if (
-						usrIndexInfo &&
-						usrIndexInfo.indexData &&
-						usrIndexInfo.indexData.buidSts &&
-						usrIndexInfo.indexData.buidSts === '02'
-					) {
-						this.props.toast.info('暂不支持当前信用卡，请代偿其他信用卡');
-						return;
-					}
 					if (!this.isCanLoan()) {
 						return;
 					}
@@ -641,12 +632,12 @@ export default class home_page extends PureComponent {
 
 	// 获取首页信息
 	requestGetUsrInfo = (isInvoking_mianxi) => {
-		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
-			// let result = {
-			// 	data: mockData.LN0003,
-			// 	msgCode: 'PTM0000',
-			// 	msgMsg: 'PTM0000'
-			// };
+		this.props.$fetch.post(API.USR_INDEX_INFO).then((result1) => {
+			let result = {
+				data: mockData.LN0003,
+				msgCode: 'PTM0000',
+				msgMsg: 'PTM0000'
+			};
 			this.setState({
 				showDefaultTip: true
 			});
@@ -1360,7 +1351,7 @@ export default class home_page extends PureComponent {
 													usrIndexInfo.indexData.billRemainAmt ? (
 														usrIndexInfo.indexData.billRemainAmt
 													) : (
-														usrIndexInfo.indexData.cardBillAmt
+														usrIndexInfo.indexData.cardBillAmt || '0.00'
 													)}
 												</span>
 											)}
@@ -1370,8 +1361,9 @@ export default class home_page extends PureComponent {
 											{usrIndexInfo &&
 											usrIndexInfo.indexData && (
 												<span className={style.value}>
-													{usrIndexInfo.indexData.minPayment &&
-														usrIndexInfo.indexData.minPayment}
+													{(usrIndexInfo.indexData.minPayment &&
+														usrIndexInfo.indexData.minPayment) ||
+														'0.00'}
 												</span>
 											)}
 											<span className={style.name}>最低还款金额(元)</span>
@@ -1429,9 +1421,13 @@ export default class home_page extends PureComponent {
 											if (!this.isCanLoan()) {
 												return;
 											}
-											this.setState({
-												modal_left: true
-											});
+											if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
+												this.setState({
+													modal_left: true
+												});
+											} else {
+												this.props.toast.info('暂无可借产品');
+											}
 										}}
 										extra={selectedLoanDate.perdPageNm || '请选择'}
 										arrow="horizontal"
