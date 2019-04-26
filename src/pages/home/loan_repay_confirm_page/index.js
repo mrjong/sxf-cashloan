@@ -193,6 +193,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 		});
 	};
 	getQryPerdRate = (money) => {
+        if(!money){
+            return
+        }
 		this.props.$fetch
 			.get(`${API.qryPerdRate}`, {
 				applAmt: money

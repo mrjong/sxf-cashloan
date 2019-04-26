@@ -869,8 +869,6 @@ export default class home_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item, type) => {
-		const { usrIndexInfo, activeTag } = this.state;
-		const { minApplAmt, maxApplAmt } = usrIndexInfo.indexData;
 		let itemCopy = type === '30' ? this.state.dayPro : item;
 		console.log(itemCopy);
 		this.dateType(itemCopy.perdLth);
@@ -890,6 +888,9 @@ export default class home_page extends PureComponent {
 
 	//查询还款期限
 	qryPerdRate = (money) => {
+        if(!money){
+            return
+        }
 		this.props.$fetch
 			.get(`${API.qryPerdRate}`, {
 				applAmt: money
