@@ -73,6 +73,9 @@ export default class confirm_purchase_page extends PureComponent {
                 Cookie.remove('VIPFlag');
                 if (backUrlData === '/home/confirm_agency') { // 回显代还金额
                   store.setSaveAmt(true);
+                  // 由于componentWillUnmount执行晚了，
+                  // 没有及时清掉缓存，把卡的数据带回到confirm_agency_page页面
+                  store.removeCardData(); 
                 }
                 setTimeout(() => {
                   if (backUrlData) {
