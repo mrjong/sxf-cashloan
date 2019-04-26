@@ -299,7 +299,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 	handleSubmit = () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
-
+		const { indexData = {} } = usrIndexInfo;
+		const { minApplAmt, maxApplAmt } = indexData;
 		if (!this.state.fetchBillSucc) {
 			this.props.toast.info('账单正在更新中，请耐心等待哦');
 			return;
@@ -314,6 +315,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 			if (!err) {
 				if (values.loanMoney === 0 || !values.loanMoney) {
 					this.props.toast.info('请输入借款金额');
+					return;
+				}
+				if (Number(values.loanMoney) > Number(maxApplAmt) || Number(values.loanMoney) < Number(minApplAmt)) {
+					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元`);
 					return;
 				}
 				if (!selectedLoanDate.perdCnt) {
@@ -715,15 +720,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							借多久
 						</List.Item>
 					</div>
-					<ZButton
-						onClick={() => {
-							setTimeout(() => {
-								this.handleSubmit();
-								console.log(this.props.form.getFieldValue('loanMoney'));
-							});
-						}}
-						className={style.confirmApplyBtn}
-					>
+					<ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
 						提交申请
 					</ZButton>
 					<p className="bottomTip">怕逾期，用还到</p>

@@ -982,10 +982,16 @@ export default class home_page extends PureComponent {
 			return;
 		}
 		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
+		const { indexData = {} } = usrIndexInfo;
+		const { minApplAmt, maxApplAmt } = indexData;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				if (values.loanMoney === 0 || !values.loanMoney) {
 					this.props.toast.info('请输入借款金额');
+					return;
+				}
+				if (Number(values.loanMoney) > Number(maxApplAmt) || Number(values.loanMoney) < Number(minApplAmt)) {
+					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元`);
 					return;
 				}
 				if (!selectedLoanDate.perdCnt) {
@@ -1409,14 +1415,7 @@ export default class home_page extends PureComponent {
 										借多久
 									</List.Item>
 								</div>
-								<SXFButton
-									className={style.modal_btn_box}
-									onClick={() => {
-										setTimeout(() => {
-											this.submitCredit();
-										});
-									}}
-								>
+								<SXFButton className={style.modal_btn_box} onClick={this.submitCredit}>
 									确定
 								</SXFButton>
 							</div>
