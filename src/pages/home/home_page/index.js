@@ -1409,7 +1409,14 @@ export default class home_page extends PureComponent {
 										借多久
 									</List.Item>
 								</div>
-								<SXFButton className={style.modal_btn_box} onClick={this.submitCredit}>
+								<SXFButton
+									className={style.modal_btn_box}
+									onClick={() => {
+										setTimeout(() => {
+											this.submitCredit();
+										});
+									}}
+								>
 									确定
 								</SXFButton>
 							</div>
@@ -1441,8 +1448,13 @@ export default class home_page extends PureComponent {
 										key={idx}
 										className={style.listitem}
 										onClick={() => {
-											//设置选中的期限
-											this.filterLoanDate(item);
+											if (
+												item.factLmtLow <= Number(this.props.form.getFieldValue('loanMoney')) &&
+												Number(this.props.form.getFieldValue('loanMoney')) <= item.factAmtHigh
+											) {
+												//设置选中的期限
+												this.filterLoanDate(item);
+											}
 										}}
 									>
 										{item.perdLth == 30 ? (

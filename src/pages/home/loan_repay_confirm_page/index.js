@@ -715,7 +715,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 							借多久
 						</List.Item>
 					</div>
-					<ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
+					<ZButton
+						onClick={() => {
+							setTimeout(() => {
+								this.handleSubmit();
+								console.log(this.props.form.getFieldValue('loanMoney'));
+							});
+						}}
+						className={style.confirmApplyBtn}
+					>
 						提交申请
 					</ZButton>
 					<p className="bottomTip">怕逾期，用还到</p>
@@ -747,8 +755,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 												key={idx}
 												className={style.listitem}
 												onClick={() => {
+													if (
+														item.factLmtLow <=
+															Number(this.props.form.getFieldValue('loanMoney')) &&
+														Number(this.props.form.getFieldValue('loanMoney')) <=
+															item.factAmtHigh
+													) {
+														this.filterLoanDate(item);
+													}
 													//设置选中的期限
-													this.filterLoanDate(item);
 												}}
 											>
 												{item.perdLth == 30 ? (
