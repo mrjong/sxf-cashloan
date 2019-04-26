@@ -91,10 +91,8 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "npm run clear && cross-env webpack-dev-server --config build/webpack.dev.js --watch --progress --colors",
-    "test": "cross-env  TEST_ENV=YES  webpack --config build/webpack.test.js",
+    "test": "cross-env  TEST_ENV=YES  webpack --config build/webpack.test.js && npm run clearMap",
     "build": "cross-env TEST_ENV=NO webpack --config build/webpack.pro.js && npm run clearMap",
-    "sentryTest": "npm run clear && cross-env  NODE_ENV=production SENTRY_ENV=development webpack --config build/webpack.sentry.js",
-    "sentry": "npm run clear && cross-env  NODE_ENV=production SENTRY_ENV=production webpack --config build/webpack.sentry.js",
     "clear": "rimraf ./dist",
     "clearMap": "rimraf ./dist/*.map",
     "precommit": "lint-staged",

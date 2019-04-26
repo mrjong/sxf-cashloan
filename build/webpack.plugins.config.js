@@ -71,6 +71,14 @@ let getProdPlugins = function () {
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
 		])
 	),
+	plugins.push(
+		new SentryPlugin({
+			include: './dist',
+			release: sentryVersion,
+			configFile: 'sentry.properties',
+			urlPrefix: '~/'
+		})
+	);
 		plugins.push(
 			new webpack.DefinePlugin({
 				'process.env': {
@@ -114,6 +122,14 @@ let getTestPlugins = function () {
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
 		])
 	),
+	plugins.push(
+		new SentryPlugin({
+			include: './dist',
+			release: sentryTestVersion,
+			configFile: 'sentry.properties',
+			urlPrefix: '~/'
+		})
+	);
 		plugins.push(
 			new webpack.DefinePlugin({
 				'process.env': {
@@ -131,75 +147,6 @@ let getTestPlugins = function () {
 	// 		dry: false
 	// 	})
 	// );
-	return plugins;
-};
-
-// sentry 上传sourceMap
-let getSentryPlugins = function () {
-	const { SENTRY_ENV } = process.env;
-	const isPro = SENTRY_ENV === 'production';
-	plugins.push(
-		new CompressionPlugin({
-			//压缩gzip
-			asset: '[path].gz[query]',
-			algorithm: 'gzip',
-			test: /\.(js|html)$/,
-			threshold: 10240,
-			minRatio: 0.8
-		})
-	),
-		plugins.push(new OptimizeCSSPlugin());
-	//压缩提取出的css，并解决ExtractTextPlugin分离出的js重复问题(多个文件引入同一css文件)
-	plugins.push(new webpack.HashedModuleIdsPlugin());
-	plugins.push(
-		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
-			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
-			{ from: path.resolve(__dirname, '../*.html'), to: './' },
-			{ from: path.resolve(__dirname, '../*.apk'), to: './' }
-		])
-	),
-		plugins.push(
-			new webpack.DefinePlugin({
-				'process.env': {
-					NODE_ENV: isPro ? JSON.stringify('production') : JSON.stringify('development'),
-					PROJECT_ENV: isPro ? JSON.stringify('pro') : JSON.stringify('test'),
-					RELEASE_VERSION: isPro ? JSON.stringify(sentryVersion) : JSON.stringify(sentryTestVersion),
-				},
-				saUrl: isPro ? JSON.stringify('https://www.vbillbank.com/shence/sa?project=production') : JSON.stringify('http://10.1.1.81:8106/sa')
-			})
-		);
-		// 生产
-		if (isPro) {
-			plugins.push(
-				new WebpackZipPlugin({
-					initialFile: './dist', //需要打包的文件夹(一般为dist)
-					endPath: './', //打包到对应目录（一般为当前目录'./'）
-					zipName: +new Date() + 'copy-dist.zip' //打包生成的文件名
-				})
-			);
-		}
-
-		plugins.push(
-			new SentryPlugin({
-				include: './dist',
-				release: isPro ? sentryVersion : sentryTestVersion,
-				configFile: 'sentry.properties',
-				urlPrefix: '~/'
-			})
-		);
-		
-		if (isPro) {
-			plugins.push(
-				new CleanWebpackPlugin('dist', {
-					root: path.resolve(__dirname, '..'),
-					verbose: true,
-					dry: false
-				})
-			);
-		}
-	
-	
 	return plugins;
 };
 
@@ -233,5 +180,4 @@ module.exports = {
 	getProdPlugins,
 	getDevPlugins,
 	getTestPlugins,
-	getSentryPlugins,
 };
