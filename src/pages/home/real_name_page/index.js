@@ -26,7 +26,6 @@ const API = {
 };
 
 let urlQuery = '';
-// let isFetching = false;
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -36,11 +35,9 @@ export default class real_name_page extends Component {
 		idNo: '',
 		ocrZhengData: {},
 		ocrFanData: {},
-		selectFlag: false,
 		leftValue: updateLeft,
 		updateLeftValue: '',
 		rightValue: updateRight,
-		// footerValue: updateBottom,
 		leftUploaded: false,
 		rightUploaded: false,
 		footerUploaded: false,
@@ -166,57 +163,7 @@ export default class real_name_page extends Component {
 			});
 	};
 
-
-
-	// 手持身份证照片
-	// handleChangeBottom = ({ base64Data }) => {
-	// 	if (!base64Data) {
-	// 		this.props.SXFToast.hide();
-	// 		this.setState({
-	// 			disabledupload: 'false'
-	// 		});
-	// 	}
-	// 	if (!isEquipment) {
-	// 		this.props.toast.info('请使用手机设备');
-	// 		return;
-	// 	}
-	// 	this.setState({ showFloat: true });
-	// 	buriedPointEvent(home.informationTapHoldIdCard);
-	// 	this.setState({ footerValue: base64Data });
-	// 	const params1 = {
-	// 		imageBase64: this.state.footerValue, //手持身份证照片
-	// 		ocrType: '1'
-	// 	};
-	// 	this.props.$fetch
-	// 		.post(`${API.getImgUrl}`, params1, { timeout: 30000 })
-	// 		.then((res) => {
-	// 			this.props.SXFToast.hide();
-	// 			this.setState({
-	// 				disabledupload: 'false'
-	// 			});
-	// 			if (res.msgCode === 'PTM0000') {
-	// 				this.setState({ ocrData: res.data });
-	// 				this.setState({ footerUploaded: true });
-	// 				this.setState({ showFloat: false });
-	// 			} else {
-	// 				this.props.toast.info(res.msgInfo);
-	// 				this.setState({ footerUploaded: false, footerValue: updateBottom });
-	// 			}
-	// 		})
-	// 		.catch(() => {
-	// 			this.props.SXFToast.hide();
-	// 			this.setState({
-	// 				disabledupload: 'false'
-	// 			});
-	// 			this.setState({ showFloat: false, footerValue: updateBottom });
-	// 		});
-	// };
-
 	handleSubmit = () => {
-		// if (isFetching) {
-		//   console.log('不可点击');
-		//   return;
-		// }
 		if (!this.state.leftUploaded) {
 			this.props.toast.info('请上传身份证正面');
 			return false;
@@ -233,11 +180,6 @@ export default class real_name_page extends Component {
 			this.props.toast.info('请输入正确的身份证号');
 			return false;
 		}
-		// if (!this.state.footerUploaded) {
-		// 	this.props.toast.info('请上传手持身份证');
-		// 	return false;
-		// }
-		// isFetching = true;
 		const { ocrZhengData = {}, ocrFanData = {}, idName, idNo } = this.state;
 		const osType = getDeviceType();
 		const params = {
@@ -280,7 +222,6 @@ export default class real_name_page extends Component {
 				} else {
 					this.props.history.goBack();
 				}
-				// this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
 			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
 				if (store.getNeedNextUrl()) {
 					this.props.SXFToast.loading('数据加载中...', 0);
@@ -293,7 +234,6 @@ export default class real_name_page extends Component {
 				this.nextFunc();
 			} else {
 				this.confirmBuryPoint(false, result.msgInfo);
-				// isFetching = false;
 				this.props.toast.info(result.msgInfo);
 			}
 		});
@@ -354,14 +294,9 @@ export default class real_name_page extends Component {
 	};
 	handleAfterCompress = () => {
 		store.removeDisableBack();
-		// this.props.toast.hide();
 	};
 	render() {
 		const { disabledupload } = this.state;
-		// let selectFlag = true;
-		// if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
-		//   selectFlag = false;
-		// }
 		return (
 			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
@@ -395,7 +330,6 @@ export default class real_name_page extends Component {
 							<img src={updateBottomTip} style={{ width: '100%', marginTop: '.3rem'}} />
 						</div>
 
-
 						<InputItem
 							onChange={this.handleNameChange}
 							placeholder="借款人本人姓名"
@@ -424,32 +358,6 @@ export default class real_name_page extends Component {
 							身份证号
 						</InputItem>
 
-
-
-						{/* <div className={`${style.updateTitle} ${style.mt30}`}>
-							<span>上传本人手持身份证照片</span>
-						</div>
-						<div className={style.updateContent}>
-							<div className={style.updateImgLeft}>
-								<FEZipImage
-									disabledupload={disabledupload}
-									style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-									value={this.state.footerValue}
-									onChange={this.handleChangeBottom}
-									beforeCompress={this.handleBeforeCompress}
-									afterCompress={this.handleAfterCompress}
-								/>
-								<p>上传手持身份证</p>
-							</div>
-							<div className={style.updateTop}>
-								<div className={style.examples}>参考示例</div>
-								<div className={style.examplesDes}>照片上的身份证信息和持证人脸部须清晰可辨。照片格式支持jpg、png等格式。</div>
-							</div>
-							<div className={style.clear} />
-						</div> */}
-
-
-						
 						<div className={style.des}>
 							<p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行身份认证</p>
 							<p className={style.desOne}>*身份信息一旦认证，不可修改</p>
