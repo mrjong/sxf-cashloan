@@ -1,7 +1,0 @@
-[auth]
-token=21f25df3191d4603b118687277749924f0dfcae27ea046efbc50c28ed4d9c44f
-
-[defaults]
-org=suixingpay
-project=cashloan-h5
-url=https://sentry-test.vbillbank.com

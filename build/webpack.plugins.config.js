@@ -44,6 +44,30 @@ let plugins = [
 
 //生产插件
 let getProdPlugins = function () {
+	fs.unlink(path.resolve(__dirname, '../.sentryclirc'), function(err){
+		if(err) {
+			console.error(err);
+		} else {
+			console.log('删除成功');
+		}
+	})
+	var w_data = '[auth]\r\ntoken=a917cae3fb3046818a2b513ba53deb05323fdd8508ea4939b9fe13d41e6d1c71\r\n[defaults]\r\norg=sentry\r\nproject=cashloan-h5\r\nurl=https://sentry.vbillbank.com';
+	var w_data = new Buffer(w_data);
+
+	/**
+	 * filename, 必选参数，文件名
+	 * data, 写入的数据，可以字符或一个Buffer对象
+	 * [options],flag,mode(权限),encoding
+	 * callback 读取文件后的回调函数，参数默认第一个err,第二个data 数据
+	 */
+
+	fs.writeFile(path.resolve(__dirname, '../.sentryclirc'), w_data, {flag: 'a'}, function (err) {
+		if(err) {
+			console.error(err);
+		} else {
+			console.log('写入成功');
+		}
+	});
 	plugins.push(
 		new CompressionPlugin({
 			//压缩gzip
@@ -101,6 +125,30 @@ let getProdPlugins = function () {
 
 //测试插件
 let getTestPlugins = function () {
+	fs.unlink(path.resolve(__dirname, '../.sentryclirc'), function(err){
+		if(err) {
+			console.error(err);
+		} else {
+			console.log('删除成功');
+		}
+	})
+	var w_data = '[auth]\r\ntoken=21f25df3191d4603b118687277749924f0dfcae27ea046efbc50c28ed4d9c44f\r\n[defaults]\r\norg=suixingpay\r\nproject=cashloan-h5\r\nurl=https://sentry-test.vbillbank.com';
+	var w_data = new Buffer(w_data);
+
+	/**
+	 * filename, 必选参数，文件名
+	 * data, 写入的数据，可以字符或一个Buffer对象
+	 * [options],flag,mode(权限),encoding
+	 * callback 读取文件后的回调函数，参数默认第一个err,第二个data 数据
+	 */
+
+	fs.writeFile(path.resolve(__dirname, '../.sentryclirc'), w_data, {flag: 'a'}, function (err) {
+		if(err) {
+			console.error(err);
+		} else {
+			console.log('写入成功');
+		}
+	});
 	plugins.push(
 		new CompressionPlugin({
 			//压缩gzip
