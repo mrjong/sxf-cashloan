@@ -84,7 +84,7 @@ export default class home_page extends PureComponent {
 			percentData: 0,
 			showDiv: '',
 			modal_left: false,
-			activeTag: 0,
+			activeTag: '',
 			perdRateList: [],
 			firstUserInfo: '',
 			CardOverDate: false,
@@ -787,6 +787,9 @@ export default class home_page extends PureComponent {
 
 	//切换tag标签
 	toggleTag = (idx) => {
+		if (idx === this.state.activeTag) {
+			return;
+		}
 		isinputBlur = true;
 		setTimeout(() => {
 			isinputBlur = false;
@@ -858,11 +861,15 @@ export default class home_page extends PureComponent {
 					loanMoney: Math.ceil(money / 100) * 100
 				});
 				this.qryPerdRate(money);
-			} else {
+			} else if (indexData.minApplAmt) {
 				this.props.form.setFieldsValue({
 					loanMoney: indexData.minApplAmt
 				});
 				this.qryPerdRate(indexData.minApplAmt);
+			} else {
+				this.props.form.setFieldsValue({
+					loanMoney: ''
+				});
 			}
 		}
 	};
@@ -888,9 +895,9 @@ export default class home_page extends PureComponent {
 
 	//查询还款期限
 	qryPerdRate = (money) => {
-        if(!money){
-            return
-        }
+		if (!money) {
+			return;
+		}
 		this.props.$fetch
 			.get(`${API.qryPerdRate}`, {
 				applAmt: money

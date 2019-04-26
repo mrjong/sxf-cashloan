@@ -406,9 +406,13 @@ export default class confirm_agency_page extends PureComponent {
 				this.props.form.setFieldsValue({
 					cardBillAmt: Math.ceil(money / 100) * 100 + ''
 				});
-			} else {
+			} else if (repaymentDate.minAmt) {
 				this.props.form.setFieldsValue({
 					cardBillAmt: repaymentDate.minAmt + ''
+				});
+			} else {
+				this.props.form.setFieldsValue({
+					cardBillAmt: ''
 				});
 			}
 		}
@@ -466,7 +470,11 @@ export default class confirm_agency_page extends PureComponent {
 									<InputItem
 										className={style.billInput}
 										placeholder=""
-										disabled={false}
+										disabled={
+											repaymentDate.minAmt &&
+											repaymentDate.maxAmt &&
+											Number(repaymentDate.minAmt) == Number(repaymentDate.maxAmt)
+										}
 										type="number"
 										ref={(el) => (this.inputRef = el)}
 										{...getFieldProps('cardBillAmt', {

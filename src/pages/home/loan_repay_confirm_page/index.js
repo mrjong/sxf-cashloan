@@ -14,6 +14,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import ScrollText from 'components/ScrollText';
+let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
 	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
@@ -46,7 +47,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		super(props);
 		this.state = {
 			usrIndexInfo: {},
-			activeTag: 0, //激活的tag
+			activeTag: '', //激活的tag
 			isShowProgress: false,
 			percent: 0,
 			loanMoney: '',
@@ -193,9 +194,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 		});
 	};
 	getQryPerdRate = (money) => {
-        if(!money){
-            return
-        }
+		if (!money) {
+			return;
+		}
 		this.props.$fetch
 			.get(`${API.qryPerdRate}`, {
 				applAmt: money
@@ -247,20 +248,22 @@ export default class loan_repay_confirm_page extends PureComponent {
 		store.setMoxieBackUrl(`/home/loan_repay_confirm_page`);
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
-  // 代还其他信用卡点击事件
-  repayForOtherBank = (count) => {
-    store.setToggleMoxieCard(true);
-    if (count > 1) {
-      store.setBackUrl('/home/loan_repay_confirm_page');
-      const { usrIndexInfo } = this.state;
-      this.props.history.push({
-        pathname: '/mine/credit_list_page',
-        search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId || ''}`
-      });
-    } else {
-      this.goMoxieBankList();
-    }
-  };
+	// 代还其他信用卡点击事件
+	repayForOtherBank = (count) => {
+		store.setToggleMoxieCard(true);
+		if (count > 1) {
+			store.setBackUrl('/home/loan_repay_confirm_page');
+			const { usrIndexInfo } = this.state;
+			this.props.history.push({
+				pathname: '/mine/credit_list_page',
+				search: `?autId=${usrIndexInfo.indexSts === 'LN0010'
+					? ''
+					: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''}`
+			});
+		} else {
+			this.goMoxieBankList();
+		}
+	};
 
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count) => {
@@ -367,10 +370,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (this.updateBillInf()) {
 			return;
 		}
-		this.setState({
-			selectedLoanDate: itemCopy, // 设置选中的期数
-			isShowCreditModal: false
-		});
+		this.setState(
+			{
+				selectedLoanDate: itemCopy, // 设置选中的期数
+				isShowCreditModal: false
+			},
+			() => {
+				this.setState({
+					modal_left: false
+				});
+			}
+		);
 	};
 
 	//计算该显示的还款金额
@@ -393,17 +403,28 @@ export default class loan_repay_confirm_page extends PureComponent {
 					loanMoney: Math.ceil(money / 100) * 100
 				});
 				this.getQryPerdRate(Math.ceil(money / 100) * 100);
-			} else {
+			} else if (indexData.minApplAmt) {
 				this.props.form.setFieldsValue({
 					loanMoney: indexData.minApplAmt
 				});
 				this.getQryPerdRate(indexData.minApplAmt);
+			} else {
+				this.props.form.setFieldsValue({
+					loanMoney: ''
+				});
 			}
 		}
 	};
 
 	//切换tag标签
 	toggleTag = (idx, type) => {
+		if (this.state.activeTag === idx) {
+			return;
+		}
+		isinputBlur = true;
+		setTimeout(() => {
+			isinputBlur = false;
+		}, 100);
 		// type为是自动执行该方法，还是点击执行该方法
 		const { usrIndexInfo, fetchBillSucc } = this.state;
 		const { indexData = {} } = usrIndexInfo;
@@ -658,13 +679,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 								rules: [ { required: true, message: '请输入还款金额' } ]
 							})}
 							type="number"
-							placeholder={this.inputDisabled() ? this.placeholderText() : ''}
+							placeholder={this.placeholderText()}
 							disabled={this.inputDisabled()}
 							ref={(el) => (this.inputRef = el)}
 							className={this.inputDisabled() ? 'blackColor' : 'blackColor'}
 							onBlur={(v) => {
+								setTimeout(() => {
+									if (isinputBlur) {
+										return;
+									}
+									this.calcLoanMoney(v);
+								});
 								handleInputBlur();
-								this.calcLoanMoney(v);
 							}}
 							onFocus={(v) => {
 								this.updateBillInf();
