@@ -274,6 +274,9 @@
 		transform: translate(-50%);
 	}
 }
+.disabledBtn {
+	opacity: .6;
+}
 // modal样式覆盖
 :global {
 	.money_input_loan {

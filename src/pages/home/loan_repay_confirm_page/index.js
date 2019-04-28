@@ -2,13 +2,12 @@ import React, { PureComponent } from 'react';
 import { Progress, Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import ZButton from 'components/ButtonCustom';
 import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto } from 'utils';
+import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto, isCanLoan } from 'utils';
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -47,6 +46,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		super(props);
 		this.state = {
 			usrIndexInfo: {},
+			btnDisabled: true,
 			activeTag: '', //激活的tag
 			isShowProgress: false,
 			percent: 0,
@@ -92,69 +92,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 			);
 		}, 1000);
 	};
-	// 是否可以借款
-	isCanLoan = () => {
-		let state = true;
-		const { indexData = {} } = this.state.usrIndexInfo;
-		const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
-		if (indexData && indexData.buidSts && indexData.buidSts === '02') {
-			this.props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
-				// 跳新版魔蝎
-				this.goMoxieBankList();
-			});
-			return;
-		} else if (
-			cardBillSts === '01' &&
-			indexData &&
-			billRemainAmt &&
-			Number(indexData.minApplAmt) > Number(billRemainAmt)
-		) {
-			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
-				// 跳新版魔蝎
-				this.goMoxieBankList();
-			});
-			state = false;
-		} else if (
-			cardBillSts === '01' &&
-			indexData &&
-			cardBillAmt &&
-			Number(indexData.minApplAmt) > Number(cardBillAmt)
-		) {
-			this.props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
-				// 跳新版魔蝎
-				this.goMoxieBankList();
-			});
-			state = false;
-		} else if (
-			indexData &&
-			cardBillSts === '01' &&
-			billRemainAmt &&
-			(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
-		) {
-			this.props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
-				// 跳新版魔蝎
-				this.goMoxieBankList();
-			});
-			state = false;
-		} else if (
-			indexData &&
-			cardBillSts === '01' &&
-			cardBillAmt &&
-			(cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
-		) {
-			this.props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
-				// 跳新版魔蝎
-				this.goMoxieBankList();
-			});
-			state = false;
-		}
-		return state;
-	};
+
 	//查询用户相关信息
 	queryUsrInfo = (hideFlag) => {
 		this.props.$fetch
 			.post(API.USR_INDEX_INFO)
 			.then((res) => {
+				// let res = {
+				// 	data: mockData.LN0003,
+				// 	msgCode: 'PTM0000',
+				// 	msgMsg: 'PTM0000'
+				// };
 				this.setState(
 					{
 						usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
@@ -221,7 +169,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			isShowCreditModal: false
 		});
 	};
-	getQryPerdRate = (money) => {
+	getQryPerdRate = (money, tag3) => {
 		if (!money) {
 			return;
 		}
@@ -230,12 +178,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 				applAmt: money
 			})
 			.then((res) => {
+				console.log(tag3, 'tag3');
+				console.log(!dateCopy && tag3 === 'tag3');
 				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
+				const dateCopy = date[0] && date[0].perdLth == 30 ? date[1] : date[0];
 				this.setState({
 					perdRateList: date,
-					selectedLoanDate: date[0].perdLth == 30 ? date[1] : date[0] // 默认选中3期
+					btnDisabled:
+						(tag3 === 'tag3' && this.state.activeTag == 2) || this.state.activeTag !== 2 ? false : true,
+					selectedLoanDate: dateCopy
 				});
-				this.dateType(date[0].perdLth);
+				dateCopy && this.dateType(dateCopy.perdLth);
 			});
 	};
 	//隐藏进度条
@@ -336,7 +289,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (this.updateBillInf()) {
 			return;
 		}
-		if (!this.isCanLoan()) {
+		if (
+			!isCanLoan({
+				$props: this.props,
+				goMoxieBankList: this.goMoxieBankList,
+				usrIndexInfo: this.state.usrIndexInfo
+			})
+		) {
 			return;
 		}
 		this.props.form.validateFields((err, values) => {
@@ -345,10 +304,29 @@ export default class loan_repay_confirm_page extends PureComponent {
 					this.props.toast.info('请输入借款金额');
 					return;
 				}
-				if (Number(values.loanMoney) > Number(maxApplAmt) || Number(values.loanMoney) < Number(minApplAmt)) {
-					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元`);
+				isinputBlur = true;
+				setTimeout(() => {
+					isinputBlur = false;
+				}, 100);
+
+				if (
+					Number(values.loanMoney) > Number(maxApplAmt) ||
+					Number(values.loanMoney) < Number(minApplAmt) ||
+					Number(values.loanMoney) % 100 !== 0
+				) {
+					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元`, 2, () => {
+						this.calcLoanMoney(values.loanMoney, 'tag3');
+					});
 					return;
 				}
+				this.setState({
+					btnDisabled: false
+				});
+				setTimeout(() => {
+					if (!this.state.btnDisabled) {
+						return;
+					}
+				});
 				if (!selectedLoanDate.perdCnt) {
 					this.props.toast.info('请选择借款期限');
 					return;
@@ -417,30 +395,30 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	//计算该显示的还款金额
-	calcLoanMoney = (money) => {
+	calcLoanMoney = (money, tag3) => {
 		const { usrIndexInfo } = this.state;
 		const { indexData } = usrIndexInfo;
-		if (indexData && indexData.maxApplAmt && money >= indexData.maxApplAmt) {
+		if (indexData && indexData.maxApplAmt && Number(money) >= Number(indexData.maxApplAmt)) {
 			this.props.form.setFieldsValue({
 				loanMoney: indexData.maxApplAmt
 			});
-			this.getQryPerdRate(indexData.maxApplAmt);
-		} else if (indexData && indexData.minApplAmt && money <= indexData.minApplAmt) {
+			this.getQryPerdRate(indexData.maxApplAmt, tag3);
+		} else if (indexData && indexData.minApplAmt && Number(money) <= Number(indexData.minApplAmt)) {
 			this.props.form.setFieldsValue({
 				loanMoney: indexData.minApplAmt
 			});
-			this.getQryPerdRate(indexData.minApplAmt);
+			this.getQryPerdRate(indexData.minApplAmt, tag3);
 		} else {
 			if (money) {
 				this.props.form.setFieldsValue({
 					loanMoney: Math.ceil(money / 100) * 100
 				});
-				this.getQryPerdRate(Math.ceil(money / 100) * 100);
+				this.getQryPerdRate(Math.ceil(money / 100) * 100, tag3);
 			} else if (indexData.minApplAmt) {
 				this.props.form.setFieldsValue({
 					loanMoney: indexData.minApplAmt
 				});
-				this.getQryPerdRate(indexData.minApplAmt);
+				this.getQryPerdRate(indexData.minApplAmt, tag3);
 			} else {
 				this.props.form.setFieldsValue({
 					loanMoney: ''
@@ -491,7 +469,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 			default:
 				break;
 		}
-		if (type && type === 'click' && !this.isCanLoan()) {
+		if (
+			type &&
+			type === 'click' &&
+			!isCanLoan({
+				$props: this.props,
+				goMoxieBankList: this.goMoxieBankList,
+				usrIndexInfo: this.state.usrIndexInfo
+			})
+		) {
 			return;
 		}
 		this.setState(
@@ -586,7 +572,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			usrIndexInfo,
 			activeTag,
 			selectedLoanDate,
-			perdRateList
+			perdRateList,
+			btnDisabled
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -724,11 +711,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 									if (isinputBlur) {
 										return;
 									}
-									this.calcLoanMoney(v);
+									this.calcLoanMoney(v, 'tag3');
 								});
+
 								handleInputBlur();
 							}}
 							onFocus={(v) => {
+								this.setState({
+									btnDisabled: true
+								});
 								this.updateBillInf();
 							}}
 						>
@@ -739,21 +730,34 @@ export default class loan_repay_confirm_page extends PureComponent {
 					<div>
 						<List.Item
 							onClick={() => {
-								if (!this.isCanLoan()) {
+								if (
+									!isCanLoan({
+										$props: this.props,
+										goMoxieBankList: this.goMoxieBankList,
+										usrIndexInfo: this.state.usrIndexInfo
+									})
+								) {
 									return;
 								}
-								this.setState({
-									isShowCreditModal: true
-								});
+								if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
+									this.setState({
+										isShowCreditModal: true
+									});
+								} else {
+									this.props.toast.info('暂无可借产品');
+								}
 							}}
 							extra={(selectedLoanDate && selectedLoanDate.perdPageNm) || '请选择'}
 						>
 							借多久
 						</List.Item>
 					</div>
-					<ZButton onClick={this.handleSubmit} className={style.confirmApplyBtn}>
+					<SXFButton
+						onClick={this.handleSubmit}
+						className={[ style.confirmApplyBtn, btnDisabled ? style.disabledBtn : '' ].join(' ')}
+					>
 						提交申请
-					</ZButton>
+					</SXFButton>
 					<p className="bottomTip">怕逾期，用还到</p>
 				</div>
 				<Modal

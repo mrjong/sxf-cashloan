@@ -84,7 +84,6 @@ export default class BankCard extends React.PureComponent {
 		let cardBillAmtData = '';
 		if (
 			cardBillSts === '01' &&
-			!cardBillAmt &&
 			(billRemainAmt === 0 || billRemainAmt === '0' || (billRemainAmt && Number(billRemainAmt) < 0))
 		) {
 			cardBillAmtData = '已结清';
