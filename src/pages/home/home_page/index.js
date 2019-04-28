@@ -1031,7 +1031,6 @@ export default class home_page extends PureComponent {
 					this.props.toast.info('请选择借款期限');
 					return;
                 }
-                return
 				const params = {
 					...selectedLoanDate,
 					rpyAmt: Number(values.loanMoney),
