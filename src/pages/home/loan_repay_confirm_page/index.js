@@ -178,15 +178,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 				applAmt: money
 			})
 			.then((res) => {
-				console.log(tag3, 'tag3');
-				console.log(!dateCopy && tag3 === 'tag3');
 				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-				const dateCopy = date[0] && date[0].perdLth == 30 ? date[1] : date[0];
+				const dateCopy =
+					date[0] && date[0].perdLth == 30
+						? date[1]
+						: date[0] && date[0].perdLth == 30 && date.length !== 1 && date[0];
 				this.setState({
 					perdRateList: date,
 					btnDisabled:
 						(tag3 === 'tag3' && this.state.activeTag == 2) || this.state.activeTag !== 2 ? false : true,
-					selectedLoanDate: dateCopy
+					selectedLoanDate: dateCopy || {}
 				});
 				dateCopy && this.dateType(dateCopy.perdLth);
 			});
@@ -625,7 +626,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} else {
 			if (!minPayment && minPayment !== 0) {
 				minPaymentData = '----.--';
-			} else if (cardBillSts === '01' && (minPayment === 0 || (minPayment && Number(minPayment) <= 0))) {
+			} else if (cardBillSts === '01' && cardBillAmtData === '已结清') {
 				minPaymentData = '已结清';
 			} else {
 				minPaymentData = parseFloat(minPayment, 10).toFixed(2);
