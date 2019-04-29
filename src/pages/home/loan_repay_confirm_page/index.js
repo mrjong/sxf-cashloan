@@ -97,12 +97,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 	queryUsrInfo = (hideFlag) => {
 		this.props.$fetch
 			.post(API.USR_INDEX_INFO)
-			.then((res1) => {
-				let res = {
-					data: mockData.LN0003,
-					msgCode: 'PTM0000',
-					msgMsg: 'PTM0000'
-				};
+			.then((res) => {
+				// let res = {
+				// 	data: mockData.LN0003,
+				// 	msgCode: 'PTM0000',
+				// 	msgMsg: 'PTM0000'
+				// };
 				this.setState(
 					{
 						usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
