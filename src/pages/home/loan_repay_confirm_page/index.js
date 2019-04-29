@@ -10,7 +10,7 @@ import { store } from 'utils/store';
 import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto, isCanLoan } from 'utils';
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { home, loan_repay_confirm } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import ScrollText from 'components/ScrollText';
 let isinputBlur = false;
@@ -227,14 +227,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	goMoxieBankList = () => {
 		store.setToggleMoxieCard(true);
-		store.setMoxieBackUrl(`/home/loan_repay_confirm_page`);
+		store.setMoxieBackUrl(`/home/loan_repay_confirm`);
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count) => {
 		store.setToggleMoxieCard(true);
 		if (count > 1) {
-			store.setBackUrl('/home/loan_repay_confirm_page');
+			store.setBackUrl('/home/loan_repay_confirm');
 			const { usrIndexInfo } = this.state;
 			this.props.history.push({
 				pathname: '/mine/credit_list_page',
@@ -251,7 +251,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	repayForOtherBank = (count) => {
 		store.setToggleMoxieCard(true);
 		if (count > 1) {
-			store.setBackUrl('/home/loan_repay_confirm_page');
+			store.setBackUrl('/home/loan_repay_confirm');
 			const { usrIndexInfo } = this.state;
 			this.props.history.push({
 				pathname: '/mine/credit_list_page',
@@ -633,7 +633,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			}
 		}
 		return (
-			<div className={[ style.pageWrapper, 'loan_repay_confirm_page' ].join(' ')}>
+			<div className={[ style.pageWrapper, 'loan_repay_confirm' ].join(' ')}>
 				<ScrollText />
 				<div className={style.page_inner_wrap}>
 					<div className={style.bankCard}>
@@ -795,6 +795,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 															item.factAmtHigh
 													) {
 														this.filterLoanDate(item);
+													} else {
+                                                        buriedPointEvent(loan_repay_confirm.select30);
 													}
 													//设置选中的期限
 												}}
@@ -839,6 +841,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<Icon
 									className={style.modal_leftIcon}
 									onClick={() => {
+										buriedPointEvent(loan_repay_confirm.back30);
 										this.setState({
 											modal_left: false
 										});
@@ -855,6 +858,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<div className={style.btn_box}>
 										<SXFButton
 											onClick={() => {
+												buriedPointEvent(loan_repay_confirm.cancle30);
 												this.setState({
 													modal_left: false
 												});
@@ -865,7 +869,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 											选择其他期限
 										</SXFButton>
 										<SXFButton
-											onClick={() => this.filterLoanDate(null, '30')}
+											onClick={() => {
+												buriedPointEvent(loan_repay_confirm.sure30);
+												this.filterLoanDate(null, '30');
+											}}
 											className={style.btn_item}
 										>
 											确认申请
