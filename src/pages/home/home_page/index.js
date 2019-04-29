@@ -1428,7 +1428,7 @@ export default class home_page extends PureComponent {
 													this.props.toast.info('暂无可借产品');
 												} else {
 													this.setState({
-														isShowCreditModal: true
+														modal_left: true
 													});
 												}
 											} else {
