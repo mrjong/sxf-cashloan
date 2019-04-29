@@ -3,6 +3,9 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import { getNextStr, getDeviceType } from 'utils';
 import Blank from 'components/Blank';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
+
 
 const API = {
   getFaceDetect: '/auth/faceDetect', // 人脸认证之后的回调状态
@@ -25,12 +28,20 @@ export default class tencent_face_middle_page extends Component {
       .then((res) => {
         if (res.msgCode !== 'PTM0000') {
           this.props.toast.info(res.msgInfo);
+          buriedPointEvent(home.faceAuthResult, {
+            is_success: false,
+            fail_cause: res.msgInfo
+          });
           this.setState({
             errorInf:
               '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
           });
           return;
         }
+        buriedPointEvent(home.faceAuthResult, {
+          is_success: true,
+          fail_cause: ''
+        });
         if (store.getNeedNextUrl()) {
           getNextStr({
             $props: this.props

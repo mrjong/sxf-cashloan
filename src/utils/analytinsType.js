@@ -57,6 +57,7 @@ const home = {
 	repaymentBtnClick8: `${prefix}_HOME_CLICK_REPAYMENT8`, // 首页LN0008状态的点击
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
+	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
 	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`	// 下载页点击按钮事件
 };
 
