@@ -97,12 +97,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 	queryUsrInfo = (hideFlag) => {
 		this.props.$fetch
 			.post(API.USR_INDEX_INFO)
-			.then((res) => {
-				// let res = {
-				// 	data: mockData.LN0003,
-				// 	msgCode: 'PTM0000',
-				// 	msgMsg: 'PTM0000'
-				// };
+			.then((res1) => {
+				let res = {
+					data: mockData.LN0003,
+					msgCode: 'PTM0000',
+					msgMsg: 'PTM0000'
+				};
 				this.setState(
 					{
 						usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
@@ -369,8 +369,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item, type) => {
-		let itemCopy = item;
-		this.dateType(itemCopy.perdCnt);
+        let itemCopy = item;
+        console.log(item)
+		this.dateType(itemCopy.perdLth);
 		// if (item && item.perdLth == 30) {
 		// 	this.setState({
 		// 		modal_left: true,
@@ -533,6 +534,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return false;
 	};
 	dateType = (value) => {
+        console.log(value,'---------')
 		// 埋点
 		switch (value) {
 			case '30':
@@ -634,7 +636,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return (
 			<div className={[ style.pageWrapper, 'loan_repay_confirm' ].join(' ')}>
 				<ScrollText />
-				<div className={style.page_inner_wrap}>
+				<div className={[style.page_inner_wrap,'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.top}>
 							<div>
@@ -755,7 +757,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 								} else {
 									this.props.toast.info('暂无可借产品');
 								}
-							}}
+                            }}
+                            arrow="horizontal"
 							extra={(selectedLoanDate && selectedLoanDate.perdPageNm) || '请选择'}
 						>
 							借多久
@@ -771,7 +774,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<Modal
 					popup
-					className="modal_l_r"
 					visible={this.state.isShowCreditModal}
 					animationType="slide-up"
 					maskClosable={false}
