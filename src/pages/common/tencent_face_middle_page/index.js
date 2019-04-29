@@ -2,20 +2,23 @@ import React, { Component } from 'react';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import { getNextStr, getDeviceType } from 'utils';
-import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import style from './index.scss'
+import faceImg from './face.png'
+import { SXFToast } from 'utils/SXFToast';
 
 
 const API = {
   getFaceDetect: '/auth/faceDetect', // 人脸认证之后的回调状态
+  getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
 @fetch.inject()
 export default class tencent_face_middle_page extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorInf: ''
+      authStatus: true
     };
   }
   componentWillMount() {
@@ -33,11 +36,13 @@ export default class tencent_face_middle_page extends Component {
             fail_cause: res.msgInfo
           });
           this.setState({
-            errorInf:
-              '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-          });
+            authStatus: false
+          })
           return;
         }
+        this.setState({
+          authStatus: true
+        })
         buriedPointEvent(home.faceAuthResult, {
           is_success: true,
           fail_cause: ''
@@ -52,9 +57,29 @@ export default class tencent_face_middle_page extends Component {
       })
       .catch((err) => {
         this.setState({
-          errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+          authStatus: false
         });
       });
+  }
+
+  goFaceAuth = () => {
+    SXFToast.loading('加载中...', 0);
+    this.props.$fetch
+      .post(`${API.getFace}`, {})
+      .then((result) => {
+        if (result.msgCode === 'PTM0000' && result.data) {
+          setTimeout(() => {
+            // 人脸识别第三方直接返回的问题
+            store.setCarrierMoxie(true);
+            SXFToast.hide()
+            window.location.href = result.data
+          }, 3000);
+        }
+      })
+  }
+
+  goBack = () => {
+    this.goRouter()
   }
 
   goRouter = () => {
@@ -68,6 +93,20 @@ export default class tencent_face_middle_page extends Component {
   };
 
   render() {
-    return <Blank errorInf={this.state.errorInf} />;
+    return (
+      <div>
+        {
+          !this.state.authStatus && <div className={style.face_wrap}>
+            <h2>验证失败</h2>
+            <p>视频中人脸检测不到</p>
+            <p>录制时，确保人脸清晰完整</p>
+            <div className={style.tip_title}>请保持脸部完整</div>
+            <img src={faceImg} alt="" className={style.face_img} />
+            <button onClick={this.goBack} className={style.button}>退出验证</button>
+            <button onClick={this.goFaceAuth} className={[style.button, style.active_btn].join(' ')}>重新验证</button>
+          </div>
+        }
+      </div>
+    )
   }
 }
