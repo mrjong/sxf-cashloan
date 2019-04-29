@@ -8,7 +8,7 @@ import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto } from 'utils';
+import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
 
 import icon_arrow_right_default from 'assets/images/home/icon_arrow_right_default@2x.png';
 import TabList from './components/TagList';
