@@ -179,17 +179,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 			})
 			.then((res) => {
 				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-				const dateCopy =
-					date[0] && date[0].perdLth == 30
-						? date[1]
-						: date[0] && date[0].perdLth == 30 && date.length !== 1 && date[0];
+				// const dateCopy =
+				// 	date[0] && date[0].perdLth == 30
+				// 		? date[1]
+				// 		: date[0] && date[0].perdLth == 30 && date.length !== 1 && date[0];
 				this.setState({
 					perdRateList: date,
 					btnDisabled:
 						(tag3 === 'tag3' && this.state.activeTag == 2) || this.state.activeTag !== 2 ? false : true,
-					selectedLoanDate: dateCopy || {}
+					selectedLoanDate: {}
 				});
-				dateCopy && this.dateType(dateCopy.perdLth);
 			});
 	};
 	//隐藏进度条
@@ -370,15 +369,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item, type) => {
-		let itemCopy = type === '30' ? this.state.dayPro : item;
+		let itemCopy = item;
 		this.dateType(itemCopy.perdCnt);
-		if (item && item.perdLth == 30) {
-			this.setState({
-				modal_left: true,
-				dayPro: item
-			});
-			return;
-		}
+		// if (item && item.perdLth == 30) {
+		// 	this.setState({
+		// 		modal_left: true,
+		// 		dayPro: item
+		// 	});
+		// 	return;
+		// }
 		if (this.updateBillInf()) {
 			return;
 		}
@@ -741,9 +740,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 									return;
 								}
 								if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
-									this.setState({
-										isShowCreditModal: true
-									});
+									if (
+										this.state.perdRateList.length === 1 &&
+										item.perdLth == 30 &&
+										(item.factLmtLow > Number(this.props.form.getFieldValue('loanMoney')) ||
+											Number(this.props.form.getFieldValue('loanMoney')) > item.factAmtHigh)
+									) {
+										this.props.toast.info('暂无可借产品');
+									} else {
+										this.setState({
+											isShowCreditModal: true
+										});
+									}
 								} else {
 									this.props.toast.info('暂无可借产品');
 								}
@@ -783,36 +791,30 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<div className={style.modal_content}>
 								<div className={style.labelDiv}>
 									<div>
-										{perdRateList.map((item, idx) => (
-											<div
-												key={idx}
-												className={style.listitem}
-												onClick={() => {
-													if (
+										{perdRateList.map((item, idx) => {
+											return (
+												<div key={idx}>
+													{(item.perdLth == 30 &&
 														item.factLmtLow <=
 															Number(this.props.form.getFieldValue('loanMoney')) &&
 														Number(this.props.form.getFieldValue('loanMoney')) <=
-															item.factAmtHigh
-													) {
-														this.filterLoanDate(item);
-													} else {
-                                                        buriedPointEvent(loan_repay_confirm.select30);
-													}
-													//设置选中的期限
-												}}
-											>
-												{item.perdLth == 30 ? (
-													<div
-														className={[
-															style.dayProd,
-															item.factLmtLow <=
-																Number(this.props.form.getFieldValue('loanMoney')) &&
-															Number(this.props.form.getFieldValue('loanMoney')) <=
-																item.factAmtHigh
-																? ''
-																: style.dis
-														].join(' ')}
-													>
+															item.factAmtHigh) ||
+													item.perdLth != 30 ? (
+														<div
+															className={style.listitem}
+															onClick={() => {
+																// if (
+																// 	item.factLmtLow <=
+																// 		Number(this.props.form.getFieldValue('loanMoney')) &&
+																// 	Number(this.props.form.getFieldValue('loanMoney')) <=
+																// 		item.factAmtHigh
+																// ) {
+																// }
+																this.filterLoanDate(item);
+															}}
+														>
+															{/* {item.perdLth == 30 ? (
+													<div className={[ style.dayProd ].join(' ')}>
 														<div className={style.title}>
 															{item.perdPageNm}
 															<i />
@@ -821,14 +823,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 															代偿区间{item.factLmtLow}-{item.factAmtHigh}元
 														</div>
 													</div>
-												) : (
-													<span>{item.perdPageNm}</span>
-												)}
-												{selectedLoanDate.perdCnt === item.perdCnt && (
-													<i className={style.checkIcon} />
-												)}
-											</div>
-										))}
+												) : ()} */}
+															<span>{item.perdPageNm}</span>
+
+															{selectedLoanDate.perdCnt === item.perdCnt && (
+																<i className={style.checkIcon} />
+															)}
+														</div>
+													) : null}
+												</div>
+											);
+										})}
 									</div>
 								</div>
 							</div>

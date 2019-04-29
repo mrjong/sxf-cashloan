@@ -23,7 +23,7 @@ export default {
 			overDt: '7',
 			minApplAmt: '100',
 			minPayment: '100',
-			maxApplAmt: '200',
+			maxApplAmt: '20000',
 			cardBillSts: '01',
 			buidSts: '00'
 		}

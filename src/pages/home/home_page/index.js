@@ -864,7 +864,7 @@ export default class home_page extends PureComponent {
 				this.props.form.setFieldsValue({
 					loanMoney: Math.ceil(money / 100) * 100
 				});
-				this.qryPerdRate(Math.ceil(money / 100) * 100,tag3);
+				this.qryPerdRate(Math.ceil(money / 100) * 100, tag3);
 			} else if (indexData.minApplAmt) {
 				this.props.form.setFieldsValue({
 					loanMoney: indexData.minApplAmt
@@ -880,16 +880,15 @@ export default class home_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item, type) => {
-		let itemCopy = type === '30' ? this.state.dayPro : item;
-		console.log(itemCopy);
+		let itemCopy = item;
 		this.dateType(itemCopy.perdLth);
-		if (item && item.perdLth == 30) {
-			this.setState({
-				modal_left2: true,
-				dayPro: item
-			});
-			return;
-		}
+		// if (item && item.perdLth == 30) {
+		// 	this.setState({
+		// 		modal_left2: true,
+		// 		dayPro: item
+		// 	});
+		// 	return;
+		// }
 		this.setState({
 			modal_left: false,
 			modal_left2: false,
@@ -908,13 +907,13 @@ export default class home_page extends PureComponent {
 			})
 			.then((res) => {
 				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-				const dateCopy = date[0].perdLth == 30 ? date[1] : date[0];
-				dateCopy && this.dateType(dateCopy.perdLth);
+				// const dateCopy = date[0].perdLth == 30 ? date[1] : date[0];
+				// dateCopy && this.dateType(dateCopy.perdLth);
 				this.setState({
 					perdRateList: date,
 					btnDisabled:
 						(tag3 === 'tag3' && this.state.activeTag == 2) || this.state.activeTag !== 2 ? false : true,
-					selectedLoanDate: dateCopy // 默认选中3期
+					selectedLoanDate: {} // 默认选中3期
 				});
 			});
 	};
@@ -1030,7 +1029,7 @@ export default class home_page extends PureComponent {
 				if (!selectedLoanDate.perdCnt) {
 					this.props.toast.info('请选择借款期限');
 					return;
-                }
+				}
 				const params = {
 					...selectedLoanDate,
 					rpyAmt: Number(values.loanMoney),
@@ -1418,9 +1417,20 @@ export default class home_page extends PureComponent {
 												return;
 											}
 											if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
-												this.setState({
-													modal_left: true
-												});
+												if (
+													this.state.perdRateList.length === 1 &&
+													item.perdLth == 30 &&
+													(item.factLmtLow >
+														Number(this.props.form.getFieldValue('loanMoney')) ||
+														Number(this.props.form.getFieldValue('loanMoney')) >
+															item.factAmtHigh)
+												) {
+													this.props.toast.info('暂无可借产品');
+												} else {
+													this.setState({
+														isShowCreditModal: true
+													});
+												}
 											} else {
 												this.props.toast.info('暂无可借产品');
 											}
@@ -1432,7 +1442,7 @@ export default class home_page extends PureComponent {
 									</List.Item>
 								</div>
 								<SXFButton
-                                onClick={this.submitCredit}
+									onClick={this.submitCredit}
 									className={[ style.modal_btn_box, btnDisabled ? style.disabledBtn : '' ].join(' ')}
 								>
 									确定
@@ -1461,46 +1471,48 @@ export default class home_page extends PureComponent {
 								/>
 							</div>
 							<div>
-								{perdRateList.map((item, idx) => (
-									<div
-										key={idx}
-										className={style.listitem}
-										onClick={() => {
-											if (
+								{perdRateList.map((item, idx) => {
+									return (
+										<div key={idx}>
+											{(item.perdLth == 30 &&
 												item.factLmtLow <= Number(this.props.form.getFieldValue('loanMoney')) &&
-												Number(this.props.form.getFieldValue('loanMoney')) <= item.factAmtHigh
-											) {
-												//设置选中的期限
-												this.filterLoanDate(item);
-											}
-										}}
-									>
-										{item.perdLth == 30 ? (
-											<div
-												className={[
-													style.dayProd,
-													item.factLmtLow <=
-														Number(this.props.form.getFieldValue('loanMoney')) &&
-													Number(this.props.form.getFieldValue('loanMoney')) <=
-														item.factAmtHigh
-														? ''
-														: style.dis
-												].join(' ')}
-											>
-												<div className={style.title}>
-													{item.perdPageNm}
-													<i />
+												Number(this.props.form.getFieldValue('loanMoney')) <=
+													item.factAmtHigh) ||
+											item.perdLth != 30 ? (
+												<div
+													className={style.listitem}
+													onClick={() => {
+														// if (
+														// 	item.factLmtLow <=
+														// 		Number(this.props.form.getFieldValue('loanMoney')) &&
+														// 	Number(this.props.form.getFieldValue('loanMoney')) <=
+														// 		item.factAmtHigh
+														// ) {
+														// }
+														this.filterLoanDate(item);
+													}}
+												>
+													{/* {item.perdLth == 30 ? (
+													<div className={[ style.dayProd ].join(' ')}>
+														<div className={style.title}>
+															{item.perdPageNm}
+															<i />
+														</div>
+														<div className={style.subtitle}>
+															代偿区间{item.factLmtLow}-{item.factAmtHigh}元
+														</div>
+													</div>
+												) : ()} */}
+													<span>{item.perdPageNm}</span>
+
+													{selectedLoanDate.perdCnt === item.perdCnt && (
+														<i className={style.checkIcon} />
+													)}
 												</div>
-												<div className={style.subtitle}>
-													代偿区间{item.factLmtLow}-{item.factAmtHigh}元
-												</div>
-											</div>
-										) : (
-											<span>{item.perdPageNm}</span>
-										)}
-										{selectedLoanDate.perdCnt === item.perdCnt && <i className={style.checkIcon} />}
-									</div>
-								))}
+											) : null}
+										</div>
+									);
+								})}
 							</div>
 						</div>
 
