@@ -37,8 +37,6 @@ const API = {
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
-	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001', // 参与418活动
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	saveQuestionnaire: '/activeConfig/saveQuestionnaire' // 问卷调查
 };
@@ -122,8 +120,6 @@ export default class home_page extends PureComponent {
 		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
-		// 结清页去活动页
-		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
 		this.getTokenFromUrl();
@@ -152,30 +148,6 @@ export default class home_page extends PureComponent {
 			clearTimeout(timerOut);
 		}
 	}
-	// 判断是否参与免息活动
-	isInvoking_mianxi = () => {
-		return new Promise((resolve, reject) => {
-			this.props.$fetch
-				.get(API.checkIsEngagedUser)
-				.then((res) => {
-					// 0:不弹出  1:弹出
-					if (res.data && res.data === '1') {
-						// 如果是活动来的，
-						if (store.getInvoking418()) {
-							this.props.$fetch.get(API.saveUserInfoEngaged);
-							resolve('0');
-						} else {
-							resolve(res.data);
-						}
-					} else {
-						resolve('0');
-					}
-				})
-				.catch((err) => {
-					reject();
-				});
-		});
-	};
 	getParam = () => {
 		let obj = {};
 		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
@@ -213,7 +185,7 @@ export default class home_page extends PureComponent {
 		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
-			.then(async (res) => {
+			.then((res) => {
 				if (res && res.msgCode === 'PTM0000') {
 					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
 					// popupFlag信用施压弹框，1为显示，0为隐藏
@@ -233,20 +205,8 @@ export default class home_page extends PureComponent {
 					this.setState({
 						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 					});
-					let isInvoking_mianxi = await this.isInvoking_mianxi();
 					if (res.data.flag === '01') {
-						// 历史未提交过授信的用户才弹
-						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
-							this.setState(
-								{
-									isShowActivityModal: true,
-									modalType: 'mianxi30'
-								},
-								() => {
-									store.setShowActivityModal(true);
-								}
-							);
-						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
@@ -260,7 +220,7 @@ export default class home_page extends PureComponent {
 
 						this.credit_extension_not();
 					} else {
-						this.requestGetUsrInfo(isInvoking_mianxi);
+						this.requestGetUsrInfo();
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -625,7 +585,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = (isInvoking_mianxi) => {
+	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -668,17 +628,7 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType: 'mianxi30'
-						},
-						() => {
-							store.setShowActivityModal(true);
-						}
-					);
-				} else if (
+				if (
 					isMPOS() &&
 					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
 					!store.getShowActivityModal()
@@ -761,9 +711,6 @@ export default class home_page extends PureComponent {
 					default:
 						console.log('关闭弹窗');
 				}
-				break;
-			case 'mianxi30': // 账单爬取成功
-				this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
 				break;
 			default:
 				break;

@@ -58,40 +58,6 @@
 		background-size: 100% 100%;
 		width: 750px;
 		height: 750px;
-		margin: 50px auto 0;
-		.modal_content {
-			position: relative;
-			font-size: 40px;
-			top: 280px;
-			font-family: 'PingFangSC-Medium';
-			.title {
-				font-weight: 500;
-				color: rgba(0, 0, 0, 1);
-				line-height: 56px;
-			}
-			.subtitle {
-				font-family: 'Microsoft YaHei', 'SF Pro Display', Roboto, Noto, Arial, 'PingFang SC', sans-serif;
-				margin-top: 20px;
-				font-size: 32px;
-				font-weight: 400;
-				color: rgba(108, 108, 108, 1);
-				span {
-					font-size: 36px;
-					color: #f92f12;
-					font-weight: 900;
-				}
-			}
-			.btn_mianxi {
-				display: inline-block;
-				color: #fff;
-				padding: 15px 80px;
-				font-size: 36px;
-				margin-top: 250px;
-				background: linear-gradient(178deg, rgba(255, 211, 50, 1) 0%, rgba(243, 157, 35, 1) 100%);
-				box-shadow: 0 5px 11px 0 rgba(90, 0, 0, 0.6);
-				border-radius: 45px;
-			}
-		}
 		.modal_btn {
 			position: relative;
 			margin: 0 auto;
@@ -105,7 +71,7 @@
 	.close_btn {
 		position: absolute;
 		left: 50%;
-		top: 750px;
+		top: 780px;
 		background-image: url('../../../assets/images/order/close_ico@2x.png');
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
