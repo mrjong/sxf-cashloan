@@ -34,17 +34,17 @@ export default class newUser_page extends PureComponent {
   }
 
   goTo = () => {
-    Modal.alert('', '您需要完成认证才能参加活动哦', [
-      {
-        text: '取消',
-      },
-      {
-        text: '去认证',
-        onPress: () => {
-          this.props.history.push('/home/home')
-        }
-      }
-    ]);
+    // Modal.alert('', '您需要完成认证才能参加活动哦', [
+    //   {
+    //     text: '取消',
+    //   },
+    //   {
+    //     text: '去认证',
+    //     onPress: () => {
+    //       this.props.history.push('/home/home')
+    //     }
+    //   }
+    // ]);
   }
 
   render() {
