@@ -48,21 +48,21 @@
     height: 44px;
   }
   .home {
-    @include spriteSkinIcon(0, -118px);
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',0, -118px);
   }
   .home_active {
-    @include spriteSkinIcon(-192px, -118px);
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-192px, -118px);
   }
   .order {
-    @include spriteSkinIcon(-64px, -116px);
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-64px, -116px);
   }
   .order_active {
-    @include spriteSkinIcon(-256px, -116px);
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-256px, -116px);
   }
   .mine {
-    @include spriteSkinIcon(-128px, -118px);
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-128px, -118px);
   }
   .mine_active {
-    @include spriteSkinIcon(-320px, -118px);
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-320px, -118px);
   }
 }

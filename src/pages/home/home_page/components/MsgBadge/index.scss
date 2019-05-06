@@ -16,7 +16,7 @@
     width: 50px;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, .2);
-    @include spriteIcon(-237px, -26px);
+    @include spriteIcon('../../../../../assets/images/common/sprite_icon.png',-237px, -26px);
   }
   .msg_badge_text {
     position: relative;

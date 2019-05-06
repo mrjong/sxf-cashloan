@@ -442,7 +442,7 @@
     position: absolute;
     right: 20px;
     top: 20px;
-    @include spriteIcon(-295px, -474px);
+    @include spriteIcon('../../../assets/images/common/sprite_icon.png',-295px, -474px);
   }
 }
 .tagList {

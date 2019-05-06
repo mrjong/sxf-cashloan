@@ -46,10 +46,10 @@
       background-size: 100% 100%;
     }
     .icon_select {
-      @include spriteIcon(-223px, -468px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-223px, -468px);
     }
     .icon_select_not {
-      @include spriteIcon(-150px, -468px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-150px, -468px);
     }
   }
 }
@@ -177,10 +177,10 @@
     vertical-align: middle;
   }
   .icon_select {
-    @include spriteIcon(-223px, -468px);
+    @include spriteIcon('../../../assets/images/common/sprite_icon.png',-223px, -468px);
   }
   .icon_select_not {
-    @include spriteIcon(-150px, -468px);
+    @include spriteIcon('../../../assets/images/common/sprite_icon.png',-150px, -468px);
   }
   .ellipsis {
     @include ellipsis(420px);

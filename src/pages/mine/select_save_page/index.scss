@@ -59,7 +59,7 @@
       margin-right: 10px;
       top: 5px;
       display: inline-block;
-      @include spriteIcon(-312px, -36px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
     }
   }
 }

@@ -8,7 +8,7 @@
 		background: #fff;
 		padding: 81px 0;
 		.successIco {
-      @include spriteIcon(0, -88px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',0, -88px);
       display: inline-block;
       width: 128px;
       height: 128px;

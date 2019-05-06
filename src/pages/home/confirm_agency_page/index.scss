@@ -141,16 +141,16 @@
       margin-right: 20px;
     }
     .vipIco1{
-      @include spriteIcon(-320px, -296px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -296px);
     }
     .vipIco2{
-      @include spriteIcon(-320px, -246px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -246px);
     }
     .vipIco3{
-      @include spriteIcon(-320px, -346px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -346px);
     }
     .vipIco4{
-      @include spriteIcon(-320px, -396px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -396px);
     }
   }
 }

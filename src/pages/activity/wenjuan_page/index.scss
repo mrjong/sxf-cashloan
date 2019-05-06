@@ -57,7 +57,7 @@
       bottom: -100px;
       left: 50%;
       transform: translate(-50%, 0%);
-      @include spriteIcon(0, 0);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',0, 0);
     }
   }
 

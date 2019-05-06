@@ -62,7 +62,7 @@
       height: 40px;
       margin-right: 10px;
       vertical-align: middle;
-      @include spriteIcon(-178px, -28px);
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-178px, -28px);
     }
   }
 

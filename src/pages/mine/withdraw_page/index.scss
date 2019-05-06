@@ -32,7 +32,7 @@
 			top: 8px;
 			width: 133px;
 			height: 76px;
-			@include spriteIcon(0, -246px);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, -246px);
 		}
 	}
 	.withdrawContFail{
@@ -44,7 +44,7 @@
 			top: 8px;
 			width: 133px;
 			height: 76px;
-			@include spriteIcon(0, -342px);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, -342px);
 		}
 	}
 	.withdrawContSucc{
@@ -56,7 +56,7 @@
 			top: 8px;
 			width: 133px;
 			height: 76px;
-			@include spriteIcon(-171px, -246px);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-171px, -246px);
 		}
 	}
 	.withdrawContent{

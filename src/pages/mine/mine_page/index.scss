@@ -57,24 +57,24 @@
 
 // 菜单列表icon的类名
 .coupon_page {
-  @include spriteSkinIcon(0, -58px);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',0, -58px);
 }
 .wallet_page {
-  @include spriteSkinIcon(-53px, -58px);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-53px, -58px);
 }
 .real_name {
-  @include spriteSkinIcon(-53px, 0);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-53px, 0);
 }
 .credit_extension_page {
-  @include spriteSkinIcon(-106px, 0);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-106px, 0);
 }
 .select_credit_page {
-  @include spriteSkinIcon(-159px, 0);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-159px, 0);
 }
 .select_save_page {
-  @include spriteSkinIcon(-212px, 0);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-212px, 0);
 }
 .fqa_page {
-  @include spriteSkinIcon(-265px, 0);
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-265px, 0);
 }
 

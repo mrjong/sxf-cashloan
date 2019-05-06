@@ -18,16 +18,16 @@
 }
 
 //通用的雪碧图icon
-@mixin spriteIcon($posX, $posY){
-  background-image: url('/assets/images/common/sprite_icon.png');
+@mixin spriteIcon($url, $posX, $posY){
+  background-image: url($url);
   background-repeat: no-repeat;
   background-size: 375px 667px;
   background-position: $posX $posY;
 }
 
 //菜单项、底部icon雪碧图（换肤）
-@mixin spriteSkinIcon($posX, $posY){
-  background-image: url('/assets/images/common/skin_icon.png');
+@mixin spriteSkinIcon($url, $posX, $posY){
+  background-image: url($url);
   background-repeat: no-repeat;
   background-size: 375px 667px;
   background-position: $posX $posY;
