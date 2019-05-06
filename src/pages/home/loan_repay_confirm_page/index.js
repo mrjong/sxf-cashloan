@@ -314,7 +314,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					Number(values.loanMoney) < Number(minApplAmt) ||
 					Number(values.loanMoney) % 100 !== 0
 				) {
-					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元`, 2, () => {
+					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元且为100整数倍`, 2, () => {
 						this.calcLoanMoney(values.loanMoney, 'tag3');
 					});
 					return;
