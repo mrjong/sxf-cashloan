@@ -44,7 +44,7 @@ export default class login_page extends PureComponent {
 		this.setState({
 			queryData
 		});
-		store.removeLoginDownloadBtn()
+		store.removeLoginDownloadBtn();
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -61,14 +61,19 @@ export default class login_page extends PureComponent {
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
+		let Invoking418 = store.getInvoking418();
+		let wenjuan = localStorage.getItem('wenjuan');
 		sessionStorage.clear();
 		localStorage.clear();
+
 		// 首页弹窗要用的
+		Invoking418 && store.setInvoking418(Invoking418);
 		MessageTag50000 && store.setMessageTag50000(MessageTag50000);
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);
 		MessageTagLimitDate && store.setMessageTagLimitDate(MessageTagLimitDate); // 额度有效期标识
 
+		wenjuan && localStorage.setItem('wenjuan', wenjuan);
 		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
@@ -85,12 +90,12 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
-		let _this = this
-		let originClientHeight = document.documentElement.clientHeight
+		let _this = this;
+		let originClientHeight = document.documentElement.clientHeight;
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function () {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let clientHeight = document.documentElement.clientHeight
+				let clientHeight = document.documentElement.clientHeight;
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
 				})
@@ -263,7 +268,7 @@ export default class login_page extends PureComponent {
 							onBlur={() => {
 								this.setState({
 									inputFocus: false
-								})
+								});
 								handleInputBlur();
 							}}
 						/>
@@ -334,7 +339,7 @@ export default class login_page extends PureComponent {
 						className={styles.f_right}
 						onClick={() => {
 							this.props.history.push('/others/download_page');
-							store.setLoginDownloadBtn(true)
+							store.setLoginDownloadBtn(true);
 						}}
 					>
 						立即下载

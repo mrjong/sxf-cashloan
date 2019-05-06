@@ -120,9 +120,9 @@
     width: 6.2rem;
   }
 }
-.modalTitle{
-  font-size: 36px;
-  color: rgba(37, 39, 41, 1);
+.modalTitle {
+	font-size: 36px;
+	color: rgba(37, 39, 41, 1);
 }
 .modalUl{
   margin-top: 20px;
@@ -154,11 +154,23 @@
     }
   }
 }
-:global{
-  .modal_VIPTip_warp{
-    .am-modal-button-group-v .am-modal-button{
-      color: #ebde74;
-    }
-  }
+:global {
+	.modal_VIPTip_warp {
+		.am-modal-button-group-v .am-modal-button {
+			color: #ebde74;
+		}
+	}
+	.money_input {
+		.am-list-item .am-list-line {
+			padding-right: 5px;
+		}
+		.am-list-item .am-input-control .fake-input-container .fake-input {
+			font-size: 50px;
+		}
+		.am-list-item .am-input-control .fake-input-container .fake-input.focus:after {
+			border-right: 0.03rem solid #484747;
+			top: 0%;
+			height: 100%;
+		}
+	}
 }
-

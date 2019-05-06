@@ -1,0 +1,78 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.overdue_progress_page {
+  padding-bottom: 60px;
+  .progress_list{
+    padding-top: 46px;
+    margin-left: 119px;
+    li{
+      position: relative;
+      width: 518px;
+      border-radius: 8px;
+      color: #C7C6CC;
+      font-size: 30px;
+      padding: 0 24px;
+      margin-bottom: 46px;
+      background: #fff;
+      .dateTimeBox{
+        position: relative;
+        font-size: 24px;
+        padding: 20px 0;
+        .dateBox{
+          margin-right: 20px;
+        }
+        &::after{
+          @include setBottomLine(#e5e5e5);
+        }
+      }
+      .desc{
+        padding: 20px 0;
+      }
+      .arrow{
+        position: absolute;
+        left: -24px;
+        top: 25px;
+        width: 24px;
+        height: 30px;
+        @include bg-image('../../../assets/images/order/active_arrow');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      .stepItem {
+        position: absolute;
+        left: -81px;
+        top: 25px;
+        width: 34px;
+        height: 34px;
+        @include bg-image('../../../assets/images/order/unactive_ico');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        z-index: 1;
+      }
+      .lineItem{
+        position: absolute;
+        left: -65.5px;
+        top: -185px;
+        width: 2px;
+        height: 240px;
+        background: #C7C6CC;
+      }
+    }
+    li.active{
+      color: #333;
+      .stepItem {
+        @include bg-image('../../../assets/images/order/active_ico');
+      }
+      .lineItem{
+        background: #F66;
+      }
+    }
+    li:last-child{
+      margin-bottom: 0;
+    }
+  }
+  .back_btn {
+    width: 620px;
+    margin-top: 100px;
+  }
+}

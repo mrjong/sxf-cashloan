@@ -242,6 +242,7 @@ export default class SmsAlert extends Component {
 				usrCnl: getH5Channel()
 			})
 			.then((res) => {
+                //  未授权
 				if (res.authFlag === '0') {
 					chkAuthCb.authFlag0 && chkAuthCb.authFlag0(res, otherProps_type);
 					this.setState({
@@ -259,17 +260,13 @@ export default class SmsAlert extends Component {
 					this.setState({
 						loginProps_needLogin_copy: false
 					});
-				} else if (res.authFlag === '2') {
-					chkAuthCb.authFlag2 && chkAuthCb.authFlag2(res, otherProps_type);
-					this.setState({
-						loginProps_needLogin_copy: false
-					});
-				} else {
+				}  else {
 					if (this.state.loginProps_needLogin) {
 						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
 						if (res.mblNoHid && res.tokenId) {
 							this.setState({
-								authToken: res.tokenId,
+                                authToken:res.tokenId,
+                                mblNoHid:res.mblNoHid,
 								modalShow: true,
 								disabled: this.state.loginProps_disabled,
 								loginProps_needLogin_copy: true,
@@ -325,9 +322,8 @@ export default class SmsAlert extends Component {
 					} else {
 						if (this.state.loginProps_needLogin) {
 							// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
-							if (res.mblNoHid && res.tokenId) {
+							if (res.mblNo) {
 								this.setState({
-									authToken: res.tokenId,
 									modalShow: true,
 									disabled: this.state.loginProps_disabled,
 									loginProps_needLogin_copy: true,
@@ -335,7 +331,7 @@ export default class SmsAlert extends Component {
 									otherProps_type
 								});
 								this.props.form.setFieldsValue({
-									phoneValue: res.mblNoHid,
+									phoneValue: this.state.mblNoHid,
 									smsCd: ''
 								});
 							} else {

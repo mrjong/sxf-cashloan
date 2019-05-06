@@ -2,8 +2,42 @@
 
 .order_detail_page{
     flex: 1;
-    padding: 0.24rem 0 0;
+    // padding: 0.24rem 0 0;
     background-color: #f1f1f1;
+    .topBlock{
+      background-color: #f1f1f1;
+      height: 0.24rem;
+    }
+    .overdueEntry{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFDFDF;
+      height: 80px;
+      padding: 0 30px;
+      color: #F66;
+      font-size: 30px;
+      .overdueItem{
+        display: flex;
+        align-items: center;
+      }
+      .warningIco{
+        width: 40px;
+        height: 40px;
+        @include bg-image('../../../assets/images/order/warn_ico');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        margin-right: 19px;
+      }
+      .entryIco{
+        width: 16px;
+        height: 28px;
+        @include bg-image('../../../assets/images/order/entry_ico');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        margin-left: 19px;
+      }
+    }
     .loadInfBox{
       position: relative;
     }

@@ -640,3 +640,67 @@ export const vconsole = (i, consoleshow) => {
 		store.setConsoleshow(true);
 	}
 };
+
+// 是否可以借款
+export const isCanLoan = ({
+    $props,
+    usrIndexInfo,
+    goMoxieBankList
+}) => {
+    let state = true;
+    const { indexData = {} } = usrIndexInfo;
+    const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
+    if (indexData && indexData.buidSts && indexData.buidSts === '02') {
+         $props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
+            // 跳新版魔蝎
+            goMoxieBankList()
+        });
+        return;
+    } else if (
+        indexData &&
+        cardBillSts === '01' &&
+        (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+    ) {
+         $props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
+            // 跳新版魔蝎
+            goMoxieBankList()
+        });
+        state = false;
+    } else if (
+        indexData &&
+        cardBillSts === '01' &&
+        (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
+    ) {
+         $props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
+            // 跳新版魔蝎
+            goMoxieBankList()
+        });
+        state = false;
+    } else if (
+        cardBillSts === '01' &&
+        indexData &&
+        (billRemainAmt !== 0 && billRemainAmt !== '0') &&
+        billRemainAmt &&
+        Number(indexData.minApplAmt) > Number(billRemainAmt)
+    ) {
+         $props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+            // 跳新版魔蝎
+            goMoxieBankList()
+        });
+        state = false;
+    } else if (
+        cardBillSts === '01' &&
+        indexData &&
+        !billRemainAmt &&
+        cardBillAmt &&
+        cardBillAmt !== 0 &&
+        Number(indexData.minApplAmt) > Number(cardBillAmt)
+    ) {
+         $props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+            // 跳新版魔蝎
+            goMoxieBankList()
+        });
+        state = false;
+    }
+    return state;
+};
