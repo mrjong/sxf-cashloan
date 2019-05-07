@@ -4,7 +4,7 @@ import styles from './index.scss';
 import huodongTootip3 from '../../assets/images/home/huodongTootip3.png';
 import huodongTootip1 from '../../assets/images/home/huodongTootip1.png';
 import huodongTootipBtn3 from '../../assets/images/home/huodongTootip_btn3.png';
-import mianxi30 from './img/mianxi30.png';
+import jujiupei from './img/mianxi30.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -31,6 +31,7 @@ class ActivityModal extends React.Component {
 							{/* 大图 */}
 							{modalType === 'huodongTootip1' ? <img src={huodongTootip1} /> : null}
 							{modalType === 'huodongTootip3' ? <img src={huodongTootip3} /> : null}
+							{modalType === 'jujiupei' ? <img src={jujiupei} /> : null}
 							{/* 按钮 */}
 							{modalType === 'huodongTootip3' ? (
 								<img
@@ -41,6 +42,17 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
+							{modalType === 'jujiupei' ? (
+								<div
+									className={styles.btn_mianxi}
+									onClick={() => {
+										activityModalBtn('jjp');
+									}}
+								>
+									立即参与
+								</div>
+							) : null}
+
 						</div>
 						{/* 关闭按钮 */}
 						<div className={styles.closeBtn} onClick={closeActivityModal} />

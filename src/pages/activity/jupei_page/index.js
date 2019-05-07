@@ -15,7 +15,6 @@ import LoginAlert from './components/LoginAlert';
 import { store } from 'utils/store';
 
 const API = {
-	queryQuestionnaire: '/activeConfig/queryQuestionnaire/QA001', // 用户是否参与过免息
 	saveQuestionnaire: '/activeConfig/saveQuestionnaire'
 };
 
@@ -81,12 +80,19 @@ export default class newUser_page extends PureComponent {
     })
     .then((res) => {
       if (res.msgCode === 'PTM0000') {
-        this.props.history.push('/home/home');
+        this.props.toast.info('参与成功', 2 ,() => {
+          this.props.history.push('/home/home');
+        });
+        // 暂无参与资格
+        // this.props.toast.info('暂无参与资格', 2 ,() => {
+        //   this.props.history.push('/home/home');
+        // });
       } else if(res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000'){
-        this.props.toast.info(res.msgInfo,2,()=>{
+        this.props.toast.info(res.msgInfo, 2 ,()=>{
           Cookie.remove('fin-v-card-token');
           sessionStorage.clear();
           localStorage.clear();
+          this.goTo();
         });
       }
     });
@@ -178,11 +184,11 @@ export default class newUser_page extends PureComponent {
                 <Icon type='cross' color='#333' className={styles.closeBtn} onClick={this.closeRuleModal} />
                 <h2>活动规则</h2>
                 <div className={styles.rulesCont}>
-                  <h3>活动时间：</h3>
+                  {/* <h3>活动时间：</h3>
                   <p>3.15日-3.31日</p>
                   <h3>活动对象：</h3>
                   <p>首次申请还信用卡用户</p>
-                  <h3>活动规则：</h3>
+                  <h3>活动规则：</h3> */}
                   <p>1.用户在活动期间通过活动渠道申请还到授信额度，且所提交材料合法真实有效正规，但借款审批未通过的，则获得一个现金红包最高188元；</p>
                   <p>2.每日最多发放10000个拒就赔现金红包，先到先得，以当天审批时间为准；</p>
                   <p>3.任何恶意刷奖行为，一经查实，所有奖励不予兑现；</p>

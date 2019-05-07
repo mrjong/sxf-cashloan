@@ -123,6 +123,7 @@ const activity = {
 	jjpGetBtn: `${prefix}_ACTIVITY_JUJIUPEI_GET_BTN`, //拒就赔领取按钮点击
 	jjpMposConfirmBtn: `${prefix}_ACTIVITY_JUJIUPEI_MPOS_CONFIRM`, //拒就赔mpos中弹框确定按钮点击
 	jjpWxConfirmBtn: `${prefix}_ACTIVITY_JUJIUPEI_WX_CONFIRM`, //拒就赔微信中弹框确定按钮点击
+	jjpHomeModalClick: `${prefix}_ACTIVITY_JUJIUPEI_HOME_MODAL_CLICK`, //拒就赔首页弹框按钮点击
 };
 
 const moxie_bank_list = {
