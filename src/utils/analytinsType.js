@@ -131,6 +131,13 @@ const mpos_ioscontrol_page = {
 	copySuccess: `${prefix}_COPY_SUCCESS` // mpos 管控页页面/mpos引流微信页面复制成功
 };
 
+const loan_repay_confirm = {
+	back30: `${prefix}_PRODUCT_BACK_30`,
+	sure30: `${prefix}_PRODUCT_SURE_30`,
+	cancle30: `${prefix}_PRODUCT_CANCLE_30`,
+	select30: `${prefix}_PRODUCT_SELECT_30`
+};
+
 export {
 	login,
 	home,
@@ -141,5 +148,6 @@ export {
 	mpos_service_authorization,
 	activity,
 	moxie_bank_list,
-	mpos_ioscontrol_page
+    mpos_ioscontrol_page,
+    loan_repay_confirm
 };
