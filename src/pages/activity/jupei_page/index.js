@@ -7,14 +7,27 @@ import styles from './index.scss'
 import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType';
 import AwardShowMock from './components/AwardShowMock'
+import { isMPOS } from 'utils/common';
+import fetch from 'sx-fetch';
+import SmsAlert from '../components/SmsAlert';
+import Cookie from 'js-cookie';
+import LoginAlert from './components/LoginAlert';
+import { store } from 'utils/store';
+
+const API = {
+	queryQuestionnaire: '/activeConfig/queryQuestionnaire/QA001', // 用户是否参与过免息
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire'
+};
 
 @withRouter
 @setBackGround('#FFC45E')
+@fetch.inject()
 export default class newUser_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      showRuleModal: false
+      showRuleModal: false,
+      isShowLogin: false, // 公众号显示登陆弹框
     }
   }
 
@@ -34,6 +47,16 @@ export default class newUser_page extends PureComponent {
   }
 
   goTo = () => {
+    if (isMPOS() && !Cookie.get('fin-v-card-token')) {
+      this.getStatus();
+    } else if (Cookie.get('fin-v-card-token')) {
+			store.setToken(Cookie.get('fin-v-card-token'));
+			this.goHomePage();
+		} else {
+      this.setState({
+        isShowLogin: true
+      })
+    }
     // Modal.alert('', '您需要完成认证才能参加活动哦', [
     //   {
     //     text: '取消',
@@ -47,9 +70,88 @@ export default class newUser_page extends PureComponent {
     // ]);
   }
 
+  getStatus = () => {
+		this.child.validateMposRelSts({
+			smsProps_disabled: true,
+			loginProps_disabled: true,
+			loginProps_needLogin: true,
+			otherProps_type: 'home'
+		});
+  };
+
+  goHomePage = () => {
+    this.props.$fetch
+    .post(API.saveQuestionnaire, {
+      actId: 'QA001',
+    })
+    .then((res) => {
+      if (res.msgCode === 'PTM0000') {
+        this.props.history.push('/home/home');
+      } else if(res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000'){
+        this.props.toast.info(res.msgInfo,2,()=>{
+          Cookie.remove('fin-v-card-token');
+          sessionStorage.clear();
+          localStorage.clear();
+        });
+      }
+    });
+  }
+  
+  onRef = (ref) => {
+		this.child = ref;
+	};
+
   render() {
+    const { isShowLogin } = this.state;
     return (
       <div className={styles.main}>
+        <SmsAlert
+          onRef={this.onRef}
+          isShowMobModal={true}
+					goSubmitCb={{
+						PTM0000: (res, getType) => {
+							this.goHomePage();
+						},
+						URM0008: (res, getType) => {},
+						others: (res, getType) => {}
+					}}
+					goLoginCb={{
+						PTM0000: (res, getType) => {
+							this.goHomePage();
+						},
+						URM0008: (res, getType) => {},
+						others: (res, getType) => {}
+					}}
+					validateMposCb={{
+						PTM9000: (res, getType) => {
+							this.props.history.replace('/mpos/mpos_ioscontrol_page');
+						},
+						others: (res, getType) => {
+							this.setState({
+								showBoundle: true
+							});
+						}
+					}}
+					chkAuthCb={{
+						authFlag0: (res, getType) => {},
+						authFlag1: (res, getType) => {
+							this.goHomePage();
+						},
+						authFlag2: (res, getType) => {
+							// this.props.toast.info('暂无活动资格');
+						},
+						others: (res, getType) => {}
+					}}
+					doAuthCb={{
+						authSts00: (res, getType) => {
+							this.goHomePage();
+						},
+						others: (res, getType) => {}
+					}}
+				/>
+        {
+          isShowLogin && <LoginAlert smsSuccess={this.goHomePage} />
+        }
         <div className={styles.rule} onClick={() => {
           this.setState({
             showRuleModal: true

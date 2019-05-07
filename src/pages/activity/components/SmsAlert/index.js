@@ -73,7 +73,8 @@ export default class SmsAlert extends Component {
 			smsJrnNo: '', // 短信流水号
 			otherProps_type: '', // 传递过来的参数
 			loginProps_needLogin: false, // 是登陆不是短验
-			loginProps_needLogin_copy: false
+			loginProps_needLogin_copy: false,
+			isShowMobile: false, // 是否需要展示
 		};
 	}
 	componentDidMount() {
@@ -229,7 +230,7 @@ export default class SmsAlert extends Component {
 	};
 
 	chkAuth = (otherProps_type) => {
-		const { chkAuthCb, smsSuccess } = this.props;
+		const { chkAuthCb, smsSuccess, isShowMobModal } = this.props;
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
 			.post(API.chkAuth, {
@@ -249,7 +250,15 @@ export default class SmsAlert extends Component {
 						authToken: res.tokenId,
 						mblNoHid: res.mblNoHid
 					});
-					this.doAuth(res.tokenId, otherProps_type);
+					if (isShowMobModal) {
+						this.setState({
+							modalShow: true,
+							isShowMobile: true,
+							otherProps_type,
+						});
+					} else {
+						this.doAuth(res.tokenId, otherProps_type);
+					}
 				} else if (res.authFlag === '1') {
 					// 已授权
 					store.setMposToken(true);
@@ -271,7 +280,8 @@ export default class SmsAlert extends Component {
 								disabled: this.state.loginProps_disabled,
 								loginProps_needLogin_copy: true,
 								loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
-								otherProps_type
+								otherProps_type,
+								isShowMobile: false,
 							});
 							this.props.form.setFieldsValue({
 								phoneValue: res.mblNoHid,
@@ -302,7 +312,8 @@ export default class SmsAlert extends Component {
 						this.setState({
 							modalShow: true,
 							otherProps_type,
-							loginProps_needLogin_copy: false
+							loginProps_needLogin_copy: false,
+							isShowMobile: false,
 						});
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
@@ -328,7 +339,8 @@ export default class SmsAlert extends Component {
 									disabled: this.state.loginProps_disabled,
 									loginProps_needLogin_copy: true,
 									loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
-									otherProps_type
+									otherProps_type,
+									isShowMobile: false,
 								});
 								this.props.form.setFieldsValue({
 									phoneValue: this.state.mblNoHid,
@@ -409,9 +421,27 @@ export default class SmsAlert extends Component {
 			callback();
 		}
 	};
+	// 点击按钮进行授权
+	btnHandler = () => {
+		const { authToken, otherProps_type } = this.state;
+		this.props.form.validateFields((err, values) => {
+			if (err && err.smsCd) {
+				delete err.smsCd;
+			}
+			if (err && err.phoneValue) {
+				delete err.phoneValue;
+			}
+			if (!err || JSON.stringify(err) === '{}') {
+				this.doAuth(authToken, otherProps_type)
+				this.closeCb();
+			} else {
+				Toast.info(getFirstError(err));
+			}
+		});
+	}
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag, loginProps_needLogin,loginProps_needLogin_copy } = this.state;
+		const { smsText, timeflag, loginProps_needLogin,loginProps_needLogin_copy, isShowMobile } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
@@ -425,62 +455,96 @@ export default class SmsAlert extends Component {
 						<img className={style.logo} src={logo} />
 						<div className={style.text}>怕逾期，用还到</div>
 					</div>
-					<div>
-						<InputItem
-							maxLength={11}
-							type="text"
-							disabled={this.state.disabled}
-							pattern="[0-9]*"
-							{...getFieldProps('phoneValue', {
-								rules: [ { required: true, message: '请输入正确手机号' } ]
-							})}
-							className={style.form_control}
-							placeholder="请输入手机号码"
-							onBlur={() => {
-								handleInputBlur();
-							}}
-						/>
-						<div className={style.get_sms_box}>
+					{
+						isShowMobile ?
+						<div>
 							<InputItem
-								maxLength={6}
-								type="text"
-								pattern="[0-9]*{6,6}"
-								{...getFieldProps('smsCd', {
+								maxLength={11}
+								type="number"
+								{...getFieldProps('userPhone', {
 									rules: [
-										{ required: true, message: '请输入正确验证码' },
-										{ validator: this.verifyVerifyCode }
+										{ required: true, message: '请输入正确手机号' },
+										{ validator: this.validatePhone }
 									]
 								})}
 								className={style.form_control}
-								placeholder="请输入验证码"
+								placeholder="请输入注册随行付PLUS的手机号"
 								onBlur={() => {
 									handleInputBlur();
 								}}
 							/>
-							<div className={style.sms_text}>
-								<span
-									className={!timeflag ? style.sms_text_dis : ''}
-									onClick={() => {
-										timeflag ? this.getSms(60) : '';
-									}}
+
+							<div className={style.btn_box}>
+								<Button
+									onClick={
+										this.btnHandler
+									}
+									className={style.btn_primary}
+									type="primary"
 								>
-									{smsText}
-								</span>
+									确定
+								</Button>
 							</div>
 						</div>
+						:
+						<div>
+							<InputItem
+								maxLength={11}
+								type="number"
+								disabled={this.state.disabled}
+								{...getFieldProps('phoneValue', {
+									rules: [
+										{ required: true, message: '请输入正确手机号' },
+										{ validator: !this.state.disabled && this.validatePhone }
+									]
+								})}
+								className={style.form_control}
+								placeholder="请输入手机号码"
+								onBlur={() => {
+									handleInputBlur();
+								}}
+							/>
+							<div className={style.get_sms_box}>
+								<InputItem
+									maxLength={6}
+									type="number"
+									{...getFieldProps('smsCd', {
+										rules: [
+											{ required: true, message: '请输入正确验证码' },
+											{ validator: this.verifyVerifyCode }
+										]
+									})}
+									className={style.form_control}
+									placeholder="请输入验证码"
+									onBlur={() => {
+										handleInputBlur();
+									}}
+								/>
+								<div className={style.sms_text}>
+									<span
+										className={!timeflag ? style.sms_text_dis : ''}
+										onClick={() => {
+											timeflag ? this.getSms(60) : '';
+										}}
+									>
+										{smsText}
+									</span>
+								</div>
+							</div>
 
-						<div className={style.btn_box}>
-							<Button
-								onClick={
-									loginProps_needLogin_copy && loginProps_needLogin ? this.goLogin : this.goSubmit
-								}
-								className={style.btn_primary}
-								type="primary"
-							>
-								确定
-							</Button>
+							<div className={style.btn_box}>
+								<Button
+									onClick={
+										loginProps_needLogin_copy && loginProps_needLogin ? this.goLogin : this.goSubmit
+									}
+									className={style.btn_primary}
+									type="primary"
+								>
+									确定
+								</Button>
+							</div>
 						</div>
-					</div>
+					}
 				</div>
 			</Modal>
 		);
