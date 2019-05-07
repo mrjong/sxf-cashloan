@@ -226,14 +226,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	goMoxieBankList = () => {
 		store.setToggleMoxieCard(true);
-		store.setMoxieBackUrl(`/home/loan_repay_confirm`);
+		store.setMoxieBackUrl(`/home/loan_repay_confirm_page`);
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count) => {
 		store.setToggleMoxieCard(true);
 		if (count > 1) {
-			store.setBackUrl('/home/loan_repay_confirm');
+			store.setBackUrl('/home/loan_repay_confirm_page');
 			const { usrIndexInfo } = this.state;
 			this.props.history.push({
 				pathname: '/mine/credit_list_page',
@@ -250,7 +250,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	repayForOtherBank = (count) => {
 		store.setToggleMoxieCard(true);
 		if (count > 1) {
-			store.setBackUrl('/home/loan_repay_confirm');
+			store.setBackUrl('/home/loan_repay_confirm_page');
 			const { usrIndexInfo } = this.state;
 			this.props.history.push({
 				pathname: '/mine/credit_list_page',
