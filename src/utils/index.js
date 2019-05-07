@@ -41,7 +41,7 @@ export const handleErrorLog = (status, statusText) => {
 };
 
 export const handleWindowError = () => {
-	window.onerror = function(errorMessage, scriptURI, lineNo, columnNo, error) {
+	window.onerror = function (errorMessage, scriptURI, lineNo, columnNo, error) {
 		console.log('errorMessage: ' + errorMessage); // 异常信息
 		console.log('scriptURI: ' + scriptURI); // 异常文件路径
 		console.log('lineNo: ' + lineNo); // 异常行号
@@ -77,13 +77,13 @@ export const isWXOpen = () => {
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
-		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page' ];
+		let pageList = ['/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page'];
 		if (isWXOpen()) {
-			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
+			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
 			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
-			let pageListMpos = [ '/mpos/' ];
+			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		} else {
 			let pageListCommon = [];
@@ -133,8 +133,8 @@ export const setTitle = (getTitle) => {
 		i.src = 'https://lns-wap-test.vbillbank.com/favicon.ico';
 	}
 	i.style.display = 'none';
-	i.onload = function() {
-		setTimeout(function() {
+	i.onload = function () {
+		setTimeout(function () {
 			i.remove();
 		}, 9);
 	};
@@ -170,7 +170,7 @@ export const isSomeBrowser = (type) => {
 //关闭view
 export const closeCurrentWebView = () => {
 	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
+		bridge.callHandler('closeCurrentWebView', '', function (response) {
 			console.log(response);
 		});
 	});
@@ -224,7 +224,10 @@ const interceptRouteArr = [
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (store.getGoMoxie()) {
+		if (store.getAgencyIdChkPhoto()) {
+			history.go(-3);
+			store.removeAgencyIdChkPhoto()
+		} else if (store.getGoMoxie()) {
 			history.go(-1);
 			store.removeGoMoxie();
 		} else {
@@ -255,7 +258,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 	return new Promise((resolve, reject) => {
 		$props.$fetch.get(API.idChkPhoto).then((res) => {
 			// let res = {
-			// 	msgCode: 'PTM0008',
+			// 	msgCode: 'PTM0000',
 			// 	msgInfo: '用户已实名，未上传身份证照片',
 			// 	data: {}
 			// };
@@ -263,6 +266,22 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 			switch (res.msgCode) {
 				case 'PTM0000':
 					resolve('1');
+					break;
+				case 'PTM0001':
+					resolve('3');
+					$props.toast.info('请先人脸识别认证');
+					setTimeout(() => {
+						$props.$fetch
+							.post(`${API.getFace}`, {})
+							.then((result) => {
+								if (result.msgCode === 'PTM0000' && result.data) {
+									$props.SXFToast.loading('加载中...', 0);
+									window.location.href = result.data
+								} else {
+									$props.toast.info(result.msgInfo);
+								}
+							});
+					}, 2000)
 					break;
 				case 'PTM0006':
 					store.setToggleMoxieCard(true);
@@ -408,7 +427,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 		});
 };
 
-const needDisplayOptions = [ 'idCheck', 'faceDetect', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = ['idCheck', 'faceDetect', 'basicInf', 'operator', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
@@ -639,7 +658,7 @@ export const validators = {
 function clearAllCookie() {
 	var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
 	if (keys) {
-		for (var i = keys.length; i--; ) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
+		for (var i = keys.length; i--;) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
 	}
 }
 export const vconsole = (i, consoleshow) => {

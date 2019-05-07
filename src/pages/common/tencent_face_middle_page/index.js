@@ -22,6 +22,8 @@ export default class tencent_face_middle_page extends Component {
     };
   }
   componentWillMount() {
+
+
     const osType = getDeviceType()
     //人脸识别的回调
     this.props.$fetch
@@ -47,7 +49,10 @@ export default class tencent_face_middle_page extends Component {
           is_success: true,
           fail_cause: ''
         });
-        if (store.getNeedNextUrl()) {
+        if (store.getAgencyIdChkPhoto()) {
+          history.go(-2);
+          store.removeAgencyIdChkPhoto()
+        } else if (store.getNeedNextUrl()) {
           getNextStr({
             $props: this.props
           });
@@ -60,6 +65,10 @@ export default class tencent_face_middle_page extends Component {
           authStatus: false
         });
       });
+  }
+
+  componentWillUnmount() {
+    store.removeAgencyIdChkPhoto()
   }
 
   goFaceAuth = () => {
@@ -84,6 +93,10 @@ export default class tencent_face_middle_page extends Component {
 
   goRouter = () => {
     const moxieBackUrl = store.getMoxieBackUrl();
+    if (store.getAgencyIdChkPhoto()) {
+      history.go(-2);
+      store.removeAgencyIdChkPhoto()
+    }
     if (moxieBackUrl) {
       store.removeMoxieBackUrl();
       this.props.history.replace(moxieBackUrl);

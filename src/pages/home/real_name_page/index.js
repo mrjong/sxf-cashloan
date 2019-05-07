@@ -11,7 +11,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, validators, handleInputBlur, getNextStr, handleClickConfirm } from 'utils';
+import { getDeviceType, validators, handleInputBlur, getNextStr, handleClickConfirm, idChkPhoto } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
@@ -49,6 +49,7 @@ export default class real_name_page extends Component {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
 		}
+
 		urlQuery = qs.parse(location.search, { ignoreQueryPrefix: true });
 		let userInfo = store.getUserInfo();
 		if (urlQuery.newTitle) {
@@ -259,13 +260,27 @@ export default class real_name_page extends Component {
 				});
 				break;
 			case 'agency_page':
-				this.props.toast.info('实名照片补充成功!');
-				store.removeToggleMoxieCard();
-				setTimeout(() => {
-					history.go(-2);
-				}, 3000);
+				idChkPhoto({
+					$props: this.props,
+					type: 'agency_page',
+					msg: '放款'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							this.props.toast.info('实名照片补充成功!');
+							store.removeToggleMoxieCard();
+							setTimeout(() => {
+								history.go(-1);
+							}, 3000);
+							break;
+						case '3':
+							store.setAgencyIdChkPhoto(true);
+							break;
+						default:
+							break;
+					}
+				});
 				break;
-
 			default:
 				break;
 		}
@@ -298,7 +313,7 @@ export default class real_name_page extends Component {
 	render() {
 		const { disabledupload } = this.state;
 		return (
-			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
+			<div className={[style.real_name_page, 'real_name_page_list'].join(' ')}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
 						<div className={style.updateTitle}>
@@ -327,7 +342,7 @@ export default class real_name_page extends Component {
 								/>
 								<p>拍摄身份证反面</p>
 							</div>
-							<img src={updateBottomTip} style={{ width: '100%', marginTop: '.3rem'}} />
+							<img src={updateBottomTip} style={{ width: '100%', marginTop: '.3rem' }} />
 						</div>
 
 						<InputItem
