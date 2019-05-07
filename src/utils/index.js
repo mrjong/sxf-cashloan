@@ -267,7 +267,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 				case 'PTM0000':
 					resolve('1');
 					break;
-				case 'PTM0001':
+				case 'PTM0011':
 					resolve('3');
 					$props.toast.info('请先人脸识别认证');
 					setTimeout(() => {
