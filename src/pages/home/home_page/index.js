@@ -1419,11 +1419,11 @@ export default class home_page extends PureComponent {
 											if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
 												if (
 													this.state.perdRateList.length === 1 &&
-													item.perdLth == 30 &&
-													(item.factLmtLow >
+													this.state.perdRateList[0].perdLth == 30 &&
+													(this.state.perdRateList[0].factLmtLow >
 														Number(this.props.form.getFieldValue('loanMoney')) ||
 														Number(this.props.form.getFieldValue('loanMoney')) >
-															item.factAmtHigh)
+															this.state.perdRateList[0].factAmtHigh)
 												) {
 													this.props.toast.info('暂无可借产品');
 												} else {

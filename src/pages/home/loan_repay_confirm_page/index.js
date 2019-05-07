@@ -369,8 +369,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	//过滤选中的还款期限
 	filterLoanDate = (item, type) => {
-        let itemCopy = item;
-        console.log(item)
+		let itemCopy = item;
+		console.log(item);
 		this.dateType(itemCopy.perdLth);
 		// if (item && item.perdLth == 30) {
 		// 	this.setState({
@@ -534,7 +534,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return false;
 	};
 	dateType = (value) => {
-        console.log(value,'---------')
+		console.log(value, '---------');
 		// 埋点
 		switch (value) {
 			case '30':
@@ -636,7 +636,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return (
 			<div className={[ style.pageWrapper, 'loan_repay_confirm' ].join(' ')}>
 				<ScrollText />
-				<div className={[style.page_inner_wrap,'modal_l_r2'].join(' ')}>
+				<div className={[ style.page_inner_wrap, 'modal_l_r2' ].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.top}>
 							<div>
@@ -744,9 +744,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 								if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
 									if (
 										this.state.perdRateList.length === 1 &&
-										item.perdLth == 30 &&
-										(item.factLmtLow > Number(this.props.form.getFieldValue('loanMoney')) ||
-											Number(this.props.form.getFieldValue('loanMoney')) > item.factAmtHigh)
+										this.state.perdRateList[0].perdLth == 30 &&
+										(this.state.perdRateList[0].factLmtLow >
+											Number(this.props.form.getFieldValue('loanMoney')) ||
+											Number(this.props.form.getFieldValue('loanMoney')) >
+												this.state.perdRateList[0].factAmtHigh)
 									) {
 										this.props.toast.info('暂无可借产品');
 									} else {
@@ -757,8 +759,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 								} else {
 									this.props.toast.info('暂无可借产品');
 								}
-                            }}
-                            arrow="horizontal"
+							}}
+							arrow="horizontal"
 							extra={(selectedLoanDate && selectedLoanDate.perdPageNm) || '请选择'}
 						>
 							借多久
@@ -772,12 +774,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</SXFButton>
 					<p className="bottomTip">怕逾期，用还到</p>
 				</div>
-				<Modal
-					popup
-					visible={this.state.isShowCreditModal}
-					animationType="slide-up"
-					maskClosable={false}
-				>
+				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
 						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
 							<div className={style.modal_header}>
