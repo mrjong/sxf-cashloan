@@ -7,12 +7,10 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
+import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
-import titlephoto from './img/Logo.png';
-import notSelect from './img/SelectNot.png';
-import select from './img/Select.png';
-import click from './img/Button.png';
-import notClick from './img/ButtonNot.png';
+import { Checkbox } from 'antd-mobile';
+const AgreeItem = Checkbox.AgreeItem;
 const API = {
 	doAuth: '/authorize/doAuth'
 };
@@ -22,9 +20,11 @@ export default class mpos_service_authorization_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectFlag: true,
-			clickFlag: true
+			selectFlag: true
 		};
+	}
+	componentWillMount() {
+		buriedPointEvent(mpos_service_authorization.auth_page);
 	}
 	goSubmit = () => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
@@ -38,14 +38,16 @@ export default class mpos_service_authorization_page extends PureComponent {
 				(res) => {
 					buriedPointEvent(mpos_service_authorization.auth_btn);
 					if (res.authSts === '01') {
-						console.log('发验证码')
-						this.props.history.replace(`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${res.mblNoHid}`);
+						console.log('发验证码');
+						this.props.history.replace(
+							`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${res.mblNoHid}`
+						);
 					} else if (res.authSts === '00') {
-						const NewUserActivityFlag = store.getNewUserActivityFlag()
+						const NewUserActivityFlag = store.getNewUserActivityFlag();
 						// 通过落地页进入的才设置弹窗
 						if (NewUserActivityFlag) {
 							// 弹拉新活动新弹窗的标识
-							store.setNewUserActivityModal(true)
+							store.setNewUserActivityModal(true);
 						}
 						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
@@ -53,7 +55,8 @@ export default class mpos_service_authorization_page extends PureComponent {
 						store.setToken(res.loginToken);
 						this.props.history.replace('/home/home');
 					} else {
-						this.props.toast.info('授权失败', 3, () => { // token和手机号取chkAuth的
+						this.props.toast.info('授权失败', 3, () => {
+							// token和手机号取chkAuth的
 							this.props.history.replace(`/login?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`);
 						});
 					}
@@ -68,41 +71,46 @@ export default class mpos_service_authorization_page extends PureComponent {
 		this.props.history.push(`/protocol/${url}`);
 	};
 	render() {
-		const { selectFlag, clickFlag } = this.state;
+		const { selectFlag } = this.state;
 		return (
-			<div className={styles.allstyles}>
+			<div>
+				<div className={styles.padding_bottom}>
+					<div className={styles.bg_top} />
+					<div className={styles.bg_list} />
+				</div>
 				<div>
-					<img src={titlephoto} className={styles.logo} />
-				</div>
-				<p className={styles.p1}>该服务由随行付提供</p>
-				<p className={styles.p2}>向其提供以下授权即可继续操作</p>
-				<div className={styles.accredit}>
-					<img
-						src={selectFlag || clickFlag ? select : notSelect}
-						className={styles.src}
-						onClick={() => this.setState({ selectFlag: !selectFlag, clickFlag: !clickFlag })}
-					/>
-					<div className={styles.allSpan}>
-						已阅读并同意签署
-						<span
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
+					<div className={styles.btn_fixed}>
+						<SXFButton
+							className={selectFlag ? styles.smart_button : [ styles.smart_button, styles.dis ].join(' ')}
+							onClick={selectFlag ? () => this.goSubmit() : null}
 						>
-							《随行付金融用户注册协议》
-						</span>
-						<span
-							onClick={() => {
-								this.go('privacy_agreement_page');
-							}}
-						>
-							《随行付用户隐私权政策》
-						</span>
+							确定
+						</SXFButton>
+						<div>
+							<AgreeItem
+								className="mpos_middle_checkbox"
+								checked={selectFlag}
+								data-seed="logId"
+								onChange={(e) => this.setState({ selectFlag: e.target.checked })}
+							>
+								阅读并接受
+								<a
+									onClick={() => {
+										this.go('register_agreement_page');
+									}}
+								>
+									《随行付金融用户注册协议》
+								</a>
+								<a
+									onClick={() => {
+										this.go('privacy_agreement_page');
+									}}
+								>
+									《随行付用户隐私权政策》
+								</a>
+							</AgreeItem>
+						</div>
 					</div>
-				</div>
-				<div onClick={selectFlag ? () => this.goSubmit() : null}>
-					<img src={selectFlag ? click : notClick} className={styles.icon} />
-					<div className={styles.agreen}>确定</div>
 				</div>
 			</div>
 		);
