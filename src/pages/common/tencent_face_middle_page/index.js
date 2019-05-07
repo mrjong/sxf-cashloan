@@ -50,16 +50,16 @@ export default class tencent_face_middle_page extends Component {
           fail_cause: ''
         });
         console.log('66666',store.getAgencyIdChkPhoto())
-        // if (store.getAgencyIdChkPhoto()) {
-        //   history.go(-2);
-        //   store.removeAgencyIdChkPhoto()
-        // } else if (store.getNeedNextUrl()) {
-        //   getNextStr({
-        //     $props: this.props
-        //   });
-        // } else {
-        //   this.goRouter();
-        // }
+        if (store.getAgencyIdChkPhoto()) {
+          history.go(-3);
+          store.removeAgencyIdChkPhoto()
+        } else if (store.getNeedNextUrl()) {
+          getNextStr({
+            $props: this.props
+          });
+        } else {
+          this.goRouter();
+        }
       })
       .catch((err) => {
         this.setState({
