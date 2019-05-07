@@ -274,7 +274,7 @@ export default class real_name_page extends Component {
 							}, 3000);
 							break;
 						case '3':
-							store.setAgencyIdChkPhoto(true);
+							store.setAgencyIdChkPhoto(-3); //从人脸中间页回退3层到此页面
 							break;
 						default:
 							break;

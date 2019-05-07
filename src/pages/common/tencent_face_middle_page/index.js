@@ -49,9 +49,8 @@ export default class tencent_face_middle_page extends Component {
           is_success: true,
           fail_cause: ''
         });
-        console.log('66666',store.getAgencyIdChkPhoto())
         if (store.getAgencyIdChkPhoto()) {
-          history.go(-3);
+          history.go(store.getAgencyIdChkPhoto());
           store.removeAgencyIdChkPhoto()
         } else if (store.getNeedNextUrl()) {
           getNextStr({
@@ -95,7 +94,7 @@ export default class tencent_face_middle_page extends Component {
   goRouter = () => {
     const moxieBackUrl = store.getMoxieBackUrl();
     if (store.getAgencyIdChkPhoto()) {
-      history.go(-2);
+      history.go(store.getAgencyIdChkPhoto());
       store.removeAgencyIdChkPhoto()
     }
     if (moxieBackUrl) {

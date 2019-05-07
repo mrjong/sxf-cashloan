@@ -262,7 +262,7 @@ export default class agency_page extends PureComponent {
 					if (res === '1') {
 						this.requestConfirmRepaymentInfo();
 					} else if (res === '3') {
-						store.setAgencyIdChkPhoto(true);
+						store.setAgencyIdChkPhoto(-2);	//从人脸中间页回退2层到此页面
 					}
 				});
 			} else if (result && result.msgCode === 'PTM2003') {
