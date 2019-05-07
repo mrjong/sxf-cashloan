@@ -53,7 +53,8 @@
 		}
 	}
 	.modal_tip_content {
-		background-image: url('../../../assets/images/order/modal_bg_new1.png');
+		// background-image: url('../../../assets/images/order/modal_bg_new1.png');
+		background-image: url('../../../assets/images/order/modal_bg_new4.png');
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		width: 750px;
@@ -61,10 +62,14 @@
 		.modal_btn {
 			position: relative;
 			margin: 0 auto;
-			top: 580px;
-			width: 375px;
-			height: 96px;
-			background-image: url('../../../assets/images/order/modal_btn1.png');
+			// top: 580px;
+			// width: 375px;
+			// height: 96px;
+			top: 557px;
+			width: 320px;
+			height: 94px;
+			// background-image: url('../../../assets/images/order/modal_btn1.png');
+			background-image: url('../../../assets/images/order/modal_btn4.png');
 			background-size: 100% 100%;
 		}
 	}

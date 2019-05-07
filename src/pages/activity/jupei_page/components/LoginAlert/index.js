@@ -90,10 +90,9 @@ export default class LoginAlert extends Component {
 		});
 	}
 	closeCb = () => {
-		this.setState({
-			modalShow: false
-		});
-	};
+		const { closeModal } = this.props;
+		closeModal && closeModal();
+	}
 	// 确定去登陆按钮
 	goLogin = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -147,10 +146,6 @@ export default class LoginAlert extends Component {
 			callback();
 		}
 	};
-	// 点击按钮进行授权
-	btnHandler = () => {
-		
-	}
 	render() {
 		const { getFieldProps } = this.props.form;
 		const { smsText, timeflag } = this.state;
