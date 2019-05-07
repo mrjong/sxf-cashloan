@@ -118,7 +118,11 @@ const activity = {
 	wenjuanEntry: `${prefix}_ACTIVITY_WENJUAN_ENTRY`, // 问卷入口
 	wenjuanBtn: `${prefix}_ACTIVITY_WENJUAN_BTN`, // 问卷提交按钮
 	wenjuanShare: `${prefix}_ACTIVITY_WENJUAN_SHARE`, // 问卷提交分享
-	wenjuanHome: `${prefix}_ACTIVITY_WENJUAN_Home` // 问卷去首页
+	wenjuanHome: `${prefix}_ACTIVITY_WENJUAN_Home`, // 问卷去首页
+	jjpEntry: `${prefix}_ACTIVITY_JUJIUPEI_ENTRY`, //拒就赔活动入口
+	jjpGetBtn: `${prefix}_ACTIVITY_JUJIUPEI_GET_BTN`, //拒就赔领取按钮点击
+	jjpMposConfirmBtn: `${prefix}_ACTIVITY_JUJIUPEI_MPOS_CONFIRM`, //拒就赔mpos中弹框确定按钮点击
+	jjpWxConfirmBtn: `${prefix}_ACTIVITY_JUJIUPEI_WX_CONFIRM`, //拒就赔微信中弹框确定按钮点击
 };
 
 const moxie_bank_list = {

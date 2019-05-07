@@ -10,6 +10,9 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
+import { buriedPointEvent } from 'utils/analytins'
+import { activity } from 'utils/analytinsType';
+
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -93,6 +96,12 @@ export default class LoginAlert extends Component {
 	};
 	// 确定去登陆按钮
 	goLogin = () => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+		if (queryData.entry) {
+			buriedPointEvent(activity.jjpWxConfirmBtn, {
+				entry: queryData.entry
+			})
+		}
 		const { smsSuccess } = this.props;
 		const { otherProps_type } = this.state;
 		if (!this.state.smsJrnNo) {

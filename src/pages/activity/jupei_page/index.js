@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Modal, Icon } from 'antd-mobile'
+import { Icon } from 'antd-mobile'
 import qs from 'qs'
 import { setBackGround } from 'utils/background'
 import styles from './index.scss'
@@ -33,9 +33,9 @@ export default class newUser_page extends PureComponent {
 
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.h5Channel) {
-      buriedPointEvent(activity.jupeiEntry, {
-        h5Channel: queryData.h5Channel
+    if (queryData.entry) {
+      buriedPointEvent(activity.jjpEntry, {
+        entry: queryData.entry
       })
     }
   }
@@ -47,6 +47,12 @@ export default class newUser_page extends PureComponent {
   }
 
   goTo = () => {
+    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+    if (queryData.entry) {
+      buriedPointEvent(activity.jjpGetBtn, {
+        entry: queryData.entry
+      })
+    }
     if (isMPOS() && !Cookie.get('fin-v-card-token')) {
       this.getStatus();
     } else if (Cookie.get('fin-v-card-token')) {
@@ -57,17 +63,6 @@ export default class newUser_page extends PureComponent {
         isShowLogin: true
       })
     }
-    // Modal.alert('', '您需要完成认证才能参加活动哦', [
-    //   {
-    //     text: '取消',
-    //   },
-    //   {
-    //     text: '去认证',
-    //     onPress: () => {
-    //       this.props.history.push('/home/home')
-    //     }
-    //   }
-    // ]);
   }
 
   getStatus = () => {
@@ -99,7 +94,17 @@ export default class newUser_page extends PureComponent {
   
   onRef = (ref) => {
 		this.child = ref;
-	};
+  };
+  
+  // mpos中输入手机号弹框，点击确定按钮
+  confirmHandler = () => {
+    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+		if (queryData.entry) {
+			buriedPointEvent(activity.jjpMposConfirmBtn, {
+				entry: queryData.entry
+			})
+		}
+  }
 
   render() {
     const { isShowLogin } = this.state;
@@ -147,7 +152,8 @@ export default class newUser_page extends PureComponent {
 							this.goHomePage();
 						},
 						others: (res, getType) => {}
-					}}
+          }}
+          modalBtnBuryPoint={this.confirmHandler}
 				/>
         {
           isShowLogin && <LoginAlert smsSuccess={this.goHomePage} />
