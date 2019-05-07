@@ -261,6 +261,8 @@ export default class agency_page extends PureComponent {
 				}).then((res) => {
 					if (res === '1') {
 						this.requestConfirmRepaymentInfo();
+					} else if (res === '3') {
+						store.setAgencyIdChkPhoto(true);
 					}
 				});
 			} else if (result && result.msgCode === 'PTM2003') {
