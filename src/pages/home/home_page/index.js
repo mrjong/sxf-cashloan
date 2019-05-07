@@ -120,6 +120,8 @@ export default class home_page extends PureComponent {
 		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
+		// 结清页去活动页
+		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
 		this.getTokenFromUrl();
