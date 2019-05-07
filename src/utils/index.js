@@ -225,7 +225,7 @@ const interceptRouteArr = [
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
 		if (store.getAgencyIdChkPhoto()) {
-			history.go(-3);
+			history.go(-2);
 			store.removeAgencyIdChkPhoto()
 		} else if (store.getGoMoxie()) {
 			history.go(-1);
@@ -258,7 +258,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 	return new Promise((resolve, reject) => {
 		$props.$fetch.get(API.idChkPhoto).then((res) => {
 			// let res = {
-			// 	msgCode: 'PTM0000',
+			// 	msgCode: 'PTM0008',
 			// 	msgInfo: '用户已实名，未上传身份证照片',
 			// 	data: {}
 			// };
@@ -268,7 +268,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 					resolve('1');
 					break;
 				case 'PTM0011':
-					resolve('3');
+					resolve('3')
 					$props.toast.info('请先人脸识别认证');
 					setTimeout(() => {
 						$props.$fetch

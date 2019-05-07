@@ -270,7 +270,7 @@ export default class real_name_page extends Component {
 							this.props.toast.info('实名照片补充成功!');
 							store.removeToggleMoxieCard();
 							setTimeout(() => {
-								history.go(-1);
+								history.go(-2);
 							}, 3000);
 							break;
 						case '3':
