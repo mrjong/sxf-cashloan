@@ -20,6 +20,11 @@
     z-index: 1000;
     background-color: #fff;
     box-sizing: border-box;
+    .rulesCont{
+      height: 760px;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
 
     h2 {
       text-align: center;
