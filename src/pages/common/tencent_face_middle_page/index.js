@@ -13,6 +13,7 @@ const API = {
   getFaceDetect: '/auth/faceDetect', // 人脸认证之后的回调状态
   getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
+let isFetching = false
 @fetch.inject()
 export default class tencent_face_middle_page extends Component {
   constructor(props) {
@@ -72,6 +73,8 @@ export default class tencent_face_middle_page extends Component {
   }
 
   goFaceAuth = () => {
+    if(isFetching) return
+    isFetching = true
     SXFToast.loading('加载中...', 0);
     this.props.$fetch
       .post(`${API.getFace}`, {})
@@ -81,6 +84,7 @@ export default class tencent_face_middle_page extends Component {
             // 人脸识别第三方直接返回的问题
             store.setCarrierMoxie(true);
             SXFToast.hide()
+            isFetching = false
             window.location.href = result.data
           }, 3000);
         }
