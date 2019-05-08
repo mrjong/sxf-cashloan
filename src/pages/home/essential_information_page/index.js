@@ -307,7 +307,7 @@ export default class essential_information_page extends PureComponent {
 		const { getFieldDecorator } = this.props.form;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
-			<div className={style.nameDiv}>
+			<div className={[style.nameDiv,'credit_extension_page'].join(' ')}>
 				{needNextUrl && (
 					<div className={style.step_box}>
 						<StepBar current={1} />

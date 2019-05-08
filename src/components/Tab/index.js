@@ -18,6 +18,8 @@ export default class Tab extends PureComponent {
       <div className={styles.tabContainer}>
         <Tabs
           tabs={tabTit}
+          // swipeable={false}
+          useOnPan={false}
           renderTab={tab => <span>{tab.title}</span>}
           renderTabBar={(props) => <Tabs.DefaultTabBar
             {...props}

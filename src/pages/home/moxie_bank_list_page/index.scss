@@ -56,7 +56,9 @@
         }
 	}
 	.bankList {
-		text-align: center;
+    text-align: center;
+    clear: both;
+    overflow: hidden;
 		.bankitem {
             padding: 20px 0;
 			img {

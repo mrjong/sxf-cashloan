@@ -36,7 +36,7 @@ export default class order_page extends PureComponent {
 			dataSource,
 			refreshing: true,
 			isLoading: true,
-			height: '100%',
+			height: document.documentElement.clientHeight,
 			useBodyScroll: false,
 			pageIndex: 0,
 			Listlength: 0,
