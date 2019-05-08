@@ -486,29 +486,32 @@ export default class essential_information_page extends PureComponent {
 			// 	</ButtonCustom>
 			// 	<p className="bottomTip">怕逾期，用还到</p>
 			// </div>
-			// <div className={style.step_box}>
-			// 	<div className={[ style.step_item, style.active ].join(' ')}>
-			// 		<div className={style.line} />
-			//     <div className={style.line} />
-			// 		<div className={style.title}>请先完善个人信息</div>
-			//     <div className={style.content}>2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br />2222<br /></div>
-			// 	</div>
-			// 	<div className={style.step_item}>
-			// 		<div className={style.line} />
-			//     <div className={style.line} />
-			// 		<div className={style.title}>继续添加要还款的信用卡</div>
-			// 	</div>
-			// 	<div className={style.step_item}>
-			// 		<div className={style.line} />
-			//     <div className={style.line} />
-			// 		<div className={style.title}>获得还款金</div>
-			// 	</div>
-			// </div>
-			<Steps className="step_info">
-				<Step status="process" title="请先完善个人信息" icon={customIcon(true)} />
-				<Step status="process" title="Step 2" icon={customIcon(false)} />
-				<Step status="process" title="Step 3" icon={customIcon(false)} />
-			</Steps>
+			<div className={style.step_box}>
+				<div className={[ style.step_item, style.active ].join(' ')}>
+					<div className={style.line} />
+					<div className={style.title}>
+						<div className={style.step_circle} />
+						请先完善个人信息
+					</div>
+					<div className={style.content}>
+						<div />
+					</div>
+				</div>
+				<div className={[ style.step_item ].join(' ')}>
+					<div className={style.line} />
+					<div className={style.title}>
+						<div className={style.step_circle} />
+						继续添加要还款的信用卡
+					</div>
+				</div>
+				<div className={[ style.step_item ].join(' ')}>
+					<div className={style.line} />
+					<div className={style.title}>
+						<div className={style.step_circle} />
+						获得还款金
+					</div>
+				</div>
+			</div>
 		);
 	}
 }
