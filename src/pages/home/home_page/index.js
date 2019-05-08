@@ -702,6 +702,7 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
+		this.closeActivityModal();
 		switch (type) {
 			case 'huodongTootip3':
 				// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
