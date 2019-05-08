@@ -23,7 +23,7 @@ export default [
   },
   {
     path: '/home/essential_information',
-    title: '基本信息认证',
+    title: '完善信息',
     component: () => import('pages/home/essential_information_page'),
   },
   {
