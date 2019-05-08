@@ -78,7 +78,7 @@ export default class home_page extends PureComponent {
 			showToast: false,
 			newUserActivityModal: false,
 			modalType: 'huodongTootip3',
-			handleMoxie: false, // 触发跳转魔蝎方法
+			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
 			showDiv: '',
 			modal_left: false,
@@ -338,7 +338,6 @@ export default class home_page extends PureComponent {
 			default:
 		}
 	};
-
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { usrIndexInfo, isNeedExamine } = this.state;
@@ -375,7 +374,7 @@ export default class home_page extends PureComponent {
 						!isCanLoan({
 							$props: this.props,
 							usrIndexInfo: this.state.usrIndexInfo,
-							goMoxieBankList: this.goMoxieBankList
+							goMoxieBankList: this.child.requestCredCardCount
 						})
 					) {
 						return;
@@ -714,11 +713,12 @@ export default class home_page extends PureComponent {
 						break;
 					case 'LN0003': // 账单爬取成功
 						if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-							this.handleSmartClick();
+              this.handleSmartClick();
 						} else {
-							this.setState({
-								handleMoxie: true
-							});
+              this.child.requestCredCardCount()
+							// this.setState({
+							// 	handleMoxie: true
+							// });
 						}
 						break;
 					default:
@@ -767,7 +767,7 @@ export default class home_page extends PureComponent {
 			!isCanLoan({
 				$props: this.props,
 				usrIndexInfo: this.state.usrIndexInfo,
-				goMoxieBankList: this.goMoxieBankList
+				goMoxieBankList: this.child.requestCredCardCount
 			})
 		) {
 			return;
@@ -935,7 +935,7 @@ export default class home_page extends PureComponent {
 			!isCanLoan({
 				$props: this.props,
 				usrIndexInfo: this.state.usrIndexInfo,
-				goMoxieBankList: this.goMoxieBankList
+				goMoxieBankList: this.child.requestCredCardCount
 			})
 		) {
 			return;
@@ -1061,6 +1061,9 @@ export default class home_page extends PureComponent {
 	goMoxieBankList = () => {
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
+	onRef = (ref) => {
+		this.child = ref;
+	};
 	render() {
 		const {
 			bannerList,
@@ -1091,6 +1094,7 @@ export default class home_page extends PureComponent {
 		if (!token || firstUserInfo === 'error') {
 			componentsDisplay = (
 				<BankContent
+					onRef={this.onRef}
 					showDefaultTip={this.state.showDefaultTip}
 					fetch={this.props.$fetch}
 					contentData={usrIndexInfo}
@@ -1119,7 +1123,8 @@ export default class home_page extends PureComponent {
 				case 'LN0010': // 账单爬取失败/老用户
 					componentsDisplay = (
 						<BankContent
-							handleMoxie={this.state.handleMoxie}
+							onRef={this.onRef && this.onRef}
+							// handleMoxie={this.state.handleMoxie}
 							showDefaultTip={this.state.showDefaultTip}
 							fetch={this.props.$fetch}
 							contentData={usrIndexInfo}
@@ -1358,7 +1363,7 @@ export default class home_page extends PureComponent {
 												!isCanLoan({
 													$props: this.props,
 													usrIndexInfo: this.state.usrIndexInfo,
-													goMoxieBankList: this.goMoxieBankList
+													goMoxieBankList: this.child.requestCredCardCount
 												})
 											) {
 												return;

@@ -21,7 +21,7 @@ export default class BankContent extends React.Component {
 			MessageTag50000: '',
 			MessageTagError: '',
 			MessageTagStep: '',
-			MessageTagLimitDate: '', // 额度有效期标识
+			MessageTagLimitDate: '' // 额度有效期标识
 		};
 	}
 
@@ -48,8 +48,11 @@ export default class BankContent extends React.Component {
 			MessageTag50000,
 			MessageTagError,
 			MessageTagStep,
-			MessageTagLimitDate, // 额度有效期标识
+			MessageTagLimitDate // 额度有效期标识
 		});
+	}
+	componentDidMount() {
+		this.props.onRef && this.props.onRef(this);
 	}
 
 	// 代还其他信用卡点击事件
@@ -102,7 +105,7 @@ export default class BankContent extends React.Component {
 		store[key2](key);
 	};
 	render() {
-		const { MessageTag50000, MessageTagError, MessageTagStep, MessageTagLimitDate, } = this.state;
+		const { MessageTag50000, MessageTagError, MessageTagStep, MessageTagLimitDate } = this.state;
 		const {
 			className,
 			children,
@@ -110,19 +113,31 @@ export default class BankContent extends React.Component {
 			showDefaultTip,
 			progressNum,
 			toast,
-			handleMoxie,
+			// handleMoxie,
 			history,
 			...restProps
 		} = this.props;
 		const { indexSts, indexData } = contentData;
 		const showEntranceArr = [ 'LN0003' ]; // 暂时去掉LN0006 和 LN0008两个状态下的代还其他信用卡入口
-		const showEntranceArr2 = [ 'LN0001', 'LN0002', 'LN0004', 'LN0005', 'LN0006', 'LN0007', 'LN0008', 'LN0009', 'LN0010' ];
+		const showEntranceArr2 = [
+			'LN0001',
+			'LN0002',
+			'LN0004',
+			'LN0005',
+			'LN0006',
+			'LN0007',
+			'LN0008',
+			'LN0009',
+			'LN0010'
+		];
 		// 比较额度有效期是否早于当前时间，如果早于则不显示气泡
-		const isShowTips = parseFloat(dayjs(new Date()).format('YYYYMMDD')) - parseFloat(indexData && indexData.acOverDt) <= 0;
+		const isShowTips =
+			parseFloat(dayjs(new Date()).format('YYYYMMDD')) - parseFloat(indexData && indexData.acOverDt) <= 0;
 		let tipText = '';
-		if (handleMoxie) {
-			this.requestCredCardCount();
-		}
+		// if (handleMoxie) {
+		// 	console.log('222222');
+		// 	this.requestCredCardCount();
+		// }
 		if (
 			(indexSts === 'LN0001' || (!indexSts && showDefaultTip)) &&
 			(!MessageTag50000 || MessageTag50000 !== 'MessageTag50000')
@@ -179,8 +194,8 @@ export default class BankContent extends React.Component {
 				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
 			(!MessageTagStep || MessageTagStep !== 'MessageTagStep')
 		) {
-            let html = '';
-            console.log(progressNum,'-----------')
+			let html = '';
+			console.log(progressNum, '-----------');
 			switch (Number(progressNum)) {
 				case 3:
 					html = `帮我还卡，只需<span>${progressNum}</span>步`;
@@ -216,9 +231,10 @@ export default class BankContent extends React.Component {
 				</div>
 			);
 		} else if (
-			((indexSts === 'LN0006' || indexSts === 'LN0008') &&
-				(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2')) &&
-			(!MessageTagLimitDate || MessageTagLimitDate !== 'MessageTagLimitDate') && isShowTips
+			(indexSts === 'LN0006' || indexSts === 'LN0008') &&
+			(contentData.indexData && contentData.indexData.autSts && contentData.indexData.autSts === '2') &&
+			(!MessageTagLimitDate || MessageTagLimitDate !== 'MessageTagLimitDate') &&
+			isShowTips
 		) {
 			tipText = (
 				<div className={style.abnormal_tip_box}>
