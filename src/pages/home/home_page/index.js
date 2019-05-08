@@ -380,7 +380,6 @@ export default class home_page extends PureComponent {
 						return;
 					}
 					this.showCreditModal();
-					this.toggleTag(0);
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
@@ -713,9 +712,9 @@ export default class home_page extends PureComponent {
 						break;
 					case 'LN0003': // 账单爬取成功
 						if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-              this.handleSmartClick();
+							this.handleSmartClick();
 						} else {
-              this.child.requestCredCardCount()
+							this.child.requestCredCardCount();
 							// this.setState({
 							// 	handleMoxie: true
 							// });
@@ -917,6 +916,7 @@ export default class home_page extends PureComponent {
 				isShowCreditModal: true
 			},
 			() => {
+				this.toggleTag(0);
 				window.handleCloseHomeModal = this.closeCreditModal;
 			}
 		);
