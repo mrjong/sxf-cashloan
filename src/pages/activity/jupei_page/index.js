@@ -21,7 +21,7 @@ const API = {
 @withRouter
 @setBackGround('#FFC45E')
 @fetch.inject()
-export default class newUser_page extends PureComponent {
+export default class juPei_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
