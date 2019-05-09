@@ -11,13 +11,13 @@ let OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 let SentryPlugin = require('@sentry/webpack-plugin')
 
 // 获取git版本
-var fs = require("fs")
-var gitHEAD = fs.readFileSync('.git/HEAD', 'utf-8').trim() // ref: refs/heads/develop
-var ref = gitHEAD.split(': ')[1] // refs/heads/develop
-var develop = gitHEAD.split('/')[2] // 环境：develop
-var gitVersion = fs.readFileSync('.git/' + ref, 'utf-8').trim() // git版本号，例如：6ceb0ab5059d01fd444cf4e78467cc2dd1184a66
+var fs = require("fs");
+var gitHEAD = fs.readFileSync('.git/HEAD', 'utf-8').trim(); // ref: refs/heads/develop
+var ref = gitHEAD.split(': ')[1]; // refs/heads/develop
+var develop = gitHEAD.split('/')[2]; // 环境：develop
+var gitVersion = fs.readFileSync('.git/' + ref, 'utf-8').trim(); // git版本号，例如：6ceb0ab5059d01fd444cf4e78467cc2dd1184a66
 // var gitCommitVersion = '"' + develop + '_' + gitVersion + '"' // 例如dev环境: "develop: 6ceb0ab5059d01fd444cf4e78467cc2dd1184a66"
-var gitCommitVersion = develop + '_' + gitVersion
+var gitCommitVersion = develop + '_' + gitVersion;
 
 var sentryTestVersion = 'sentry_test_' + gitCommitVersion;
 var sentryVersion = 'sentry_' + gitCommitVersion;
