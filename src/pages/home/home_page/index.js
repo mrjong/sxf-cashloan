@@ -172,13 +172,9 @@ export default class home_page extends PureComponent {
 				.get(API.checkJoin)
 				.then((res) => {
 					// 0:不弹出  1:弹出
-					if (res.data && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
+					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
 						// 如果是活动来的，
-						if (store.getInvoking418()) {
-							resolve('0');
-						} else {
-							resolve('1');
-						}
+						resolve('1');
 					} else {
 						resolve('0');
 					}
