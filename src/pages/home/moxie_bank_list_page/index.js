@@ -131,7 +131,7 @@ export default class moxie_bank_list_page extends Component {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.moxie_bank_list_page}>
-				{needNextUrl ? (
+				{/* {needNextUrl ? (
 					<StepBar current={3} />
 				) : (
 					<div className={style.moxie_bank_top}>
@@ -154,13 +154,13 @@ export default class moxie_bank_list_page extends Component {
 							</span>
 						</div>
 					</div>
-				)}
+				)} */}
 
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
 						<div className={style.infromationTitle}>
-							<span>请选择您要收款的信用卡</span>
-							<div className={style.subTitle_info}>通过网银添加</div>
+							<span>选择还款信用卡所在银行</span>
+							{/* <div className={style.subTitle_info}>通过网银添加</div> */}
 						</div>
 						<div className={style.bankList}>
 							{this.state.bankList.map((item, index) => {
