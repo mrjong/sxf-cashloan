@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
-import LoginAlert from './components/LoginAlert';
+// import LoginAlert from './components/LoginAlert';
+import ModalWrap from '../wuyue_new_page/components/ModalWrap';
 import RuleShow from '../wuyue_new_page/components/RuleShow';
 import WinPrize from '../wuyue_new_page/components/WinPrize';
 
@@ -47,7 +48,8 @@ export default class wuyue_old_page extends PureComponent {
 			count: '1',
 			callBackType: '',
 			allUsersAward: [],
-			type: '', // 弹框类型
+			// type: '', // 弹框类型
+			type: 'no_chance_tips',
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
@@ -155,13 +157,13 @@ export default class wuyue_old_page extends PureComponent {
 				if (res.data.data.count && Number(res.data.data.count) > 0) {
 					this.getDraw(res.data.data.count);
 				} else {
-					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '已用尽'
-					});
+					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+					// 	draw_result: '已用尽'
+					// });
 					store.setRewardCount(0);
 					this.setState({
 						count: '0',
-						type: 'no_chance'
+						type: 'no_chance_tips'
 					});
 				}
 			} else {
@@ -178,36 +180,15 @@ export default class wuyue_old_page extends PureComponent {
 		});
 	};
 	isAuthFunc = (callBack, type) => {
-		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		let token = Cookie.get('fin-v-card-token');
-		if (
-			(token && query.entry && query.entry.indexOf('ismpos') > -1 && store.getMposToken()) ||
-			(token && query.entry && query.entry.indexOf('isxdc') > -1)
-		) {
+		if (token) {
 			callBack();
 			// 根据type 随便去干
 		} else {
-			if (query.entry && query.entry.indexOf('ismpos') > -1) {
-				if (!query.appId || !query.token) {
-					this.setState({
-						type: 'login_tip'
-                    });
-                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '请先登录'
-					});
-					return;
-				}
-				// 去实名
-				this.setState({
-					callBackType: type
-				});
-				Cookie.remove('fin-v-card-token');
-			} else {
-				// 新代偿
-				Toast.info('请先登录', 2, () => {
-					this.props.history.push('/login');
-				});
-			}
+			// 新代偿
+			Toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
 		}
 	};
 
@@ -305,17 +286,17 @@ export default class wuyue_old_page extends PureComponent {
 				// console.log(this.state.context[index]);
 				// 根据不同入口来源埋点
 				if (obj.type === '04') {
-					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '未中奖'
-					});
+					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+					// 	draw_result: '未中奖'
+					// });
 					this.setState({
 						type: 'no_award',
 						alert_img: ''
 					});
 				} else {
-					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '中奖'
-					});
+					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+					// 	draw_result: '中奖'
+					// });
 					this.setState({
 						type: 'alert_congratulation',
 						alert_img: `data:image/png;base64,${obj.imgUrl}`
@@ -332,7 +313,7 @@ export default class wuyue_old_page extends PureComponent {
 		if (store.getRewardCount() && Number(store.getRewardCount()) <= 0) {
 			this.setState({
 				count: '0',
-				type: 'no_chance'
+				type: 'no_chance_tips'
 			});
 			return;
 		}
@@ -345,22 +326,6 @@ export default class wuyue_old_page extends PureComponent {
 	setalertType = (type) => {
 		this.setState({
 			type
-		});
-	};
-	smsSuccess = () => {
-		let type = this.state.callBackType;
-		switch (type) {
-			case 'zp_btn':
-				this.onloadZhuan();
-				break;
-			case 'award_list':
-				this.getMyAward();
-				break;
-			default:
-				break;
-		}
-		this.setState({
-			callBackType: ''
 		});
 	};
 	// 立即使用
@@ -388,19 +353,16 @@ export default class wuyue_old_page extends PureComponent {
 				) : null}
 				{!this.state.codeInfo ? (
 					<div>
-						<LoginAlert
-							mblNoHid={this.state.mblNoHid}
-							smsTokenId={this.state.smsTokenId}
-							alert_img={alert_img}
-							refreshPageFn={this.refreshPage}
-							setalertType={this.setalertType}
-							alertType={type}
-							goRoute={this.goRoute}
-							userAwardList={userAwardList}
-						/>
+						{
+							type && type !== 'award_list' && type !== 'alert_congratulation' &&
+							<ModalWrap
+								contType={type}
+								goRoute={this.goRoute}
+							/>
+						}
 						{ showRuleModal && <RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
-						{/* { true && <WinPrize title="15元免息券" subTit="（借款满3000元可用）" /> } */}
-						{ true && <WinPrize type="myAward" /> }
+						{ type && type === 'award_list' && <WinPrize type="myAward" setalertType={this.setalertType} /> }
+						{ type && type === 'alert_congratulation' && <WinPrize clickCb={this.goRoute} title="15元免息券" subTit="（借款满3000元可用）" setalertType={this.setalertType} />}
 						<div className={styles.bg}>
 							<div
 								className={styles.rule_btn}

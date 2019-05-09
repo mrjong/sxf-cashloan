@@ -18,9 +18,11 @@ export default class WinPrize extends Component {
 	}
 
 	closeModal = () => {
+		const { setalertType } = this.props;
 		this.setState({
 			isPrizeModal: false
 		});
+		setalertType && setalertType();
 	};
 
 	// 点击按钮
@@ -29,7 +31,7 @@ export default class WinPrize extends Component {
 		clickCb();
   	};
 	render() {
-		const { title, subTit, type } = this.props;
+		const { title, subTit, type, clickCb } = this.props;
 		const { isPrizeModal } = this.state;
 		return (
 			<Modal className="win_prize_modal" visible={isPrizeModal} transparent>
@@ -48,7 +50,7 @@ export default class WinPrize extends Component {
 											<p className={style.award_desc}>（借款满3000元可用）</p>
 										</div>
 									</div>
-									<span className={style.award_use}>立即使用</span>
+									<span onClick={()=>{ clickCb() }} className={style.award_use}>立即使用</span>
 								</li>
 							</ul>
 						</div>
@@ -62,7 +64,7 @@ export default class WinPrize extends Component {
 								<p className={style.win_prize_tit}>{title}</p>
 								<p>{subTit}</p>
 							</div>
-							<img src={use_btn} className={style.win_prize_btn} alt="button" />
+							<img src={use_btn} onClick={()=>{ clickCb() }} className={style.win_prize_btn} alt="button" />
 						</div>
 					}
 				<i className={type && type === 'myAward' ? `${style.closeBtn} ${style.closeBtn2}` : style.closeBtn} onClick={this.closeModal} />
