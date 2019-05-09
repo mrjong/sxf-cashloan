@@ -720,7 +720,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								if (
 									!isCanLoan({
 										$props: this.props,
-										goMoxieBankList: this.goMoxieBankList,
+										goMoxieBankList: this.requestCredCardCount,
 										usrIndexInfo: this.state.usrIndexInfo
 									})
 								) {
