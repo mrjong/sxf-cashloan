@@ -41,15 +41,15 @@
 	}
 }
 //  去掉数字键盘的点
-:global{
-    #am-number-keyboard-container{
-        tr:last-child{
-            td:first-child{
-                display: none;
-            }
-        }
-        .am-number-keyboard-wrapper table tr .am-number-keyboard-item.keyboard-confirm{
-            background-color: #ebdd74;
-        }
-    }
+:global {
+	#am-number-keyboard-container {
+		tr:last-child {
+			td:first-child {
+				display: none;
+			}
+		}
+		.am-number-keyboard-wrapper table tr .am-number-keyboard-item.keyboard-confirm {
+			background-color: #ebdd74;
+		}
+	}
 }
