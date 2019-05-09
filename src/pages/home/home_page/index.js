@@ -39,7 +39,7 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	saveQuestionnaire: '/activeConfig/saveQuestionnaire', // 问卷调查
-	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过拒就赔
+	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
 };
 const tagList = [
 	{
@@ -169,16 +169,15 @@ export default class home_page extends PureComponent {
 	isInvoking_jjp = () => {
 		return new Promise((resolve, reject) => {
 			this.props.$fetch
-				.get(API.checkIsEngagedUser)
+				.get(API.checkJoin)
 				.then((res) => {
 					// 0:不弹出  1:弹出
-					if (res.data && res.data === '1') {
+					if (res.data && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
 						// 如果是活动来的，
 						if (store.getInvoking418()) {
-							this.props.$fetch.get(API.saveUserInfoEngaged);
 							resolve('0');
 						} else {
-							resolve(res.data);
+							resolve('1');
 						}
 					} else {
 						resolve('0');

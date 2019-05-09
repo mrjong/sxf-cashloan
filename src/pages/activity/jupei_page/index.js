@@ -15,7 +15,7 @@ import LoginAlert from './components/LoginAlert';
 import { store } from 'utils/store';
 
 const API = {
-	saveQuestionnaire: '/activeConfig/saveQuestionnaire'
+  joinActivity: '/jjp/join', // 参加活动 里面会判断用户有没有资格
 };
 
 @withRouter
@@ -82,19 +82,23 @@ export default class juPei_page extends PureComponent {
 
   goHomePage = () => {
     this.props.$fetch
-    .post(API.saveQuestionnaire, {
-      actId: 'QA001',
-    })
+    .get(API.joinActivity)
     .then((res) => {
-      if (res.msgCode === 'PTM0000') {
+      if (res && res.msgCode === 'PTM0000') {
         this.props.toast.info('参与成功', 2 ,() => {
           this.props.history.push('/home/home');
         });
+        
+      } else if (res && res.msgCode === 'JJP0001') { // 用户参加过拒就赔活动
+        this.props.toast.info('参与成功', 2 ,() => {
+          this.props.history.push('/home/home');
+        });
+      }  else if (res && res.msgCode === 'JJP0004') { // 用户没有资格参加拒就赔活动
         // 暂无参与资格
-        // this.props.toast.info('暂无参与资格', 2 ,() => {
-        //   this.props.history.push('/home/home');
-        // });
-      } else if(res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000'){
+        this.props.toast.info('暂无参与资格', 2 ,() => {
+          this.props.history.push('/home/home');
+        });
+      } else if(res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
         this.props.toast.info(res.msgInfo, 2 ,()=>{
           Cookie.remove('fin-v-card-token');
           sessionStorage.clear();
