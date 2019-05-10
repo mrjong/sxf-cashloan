@@ -244,19 +244,60 @@ export default class real_name_page extends Component {
 		switch (urlQuery.type) {
 			// 新用户授信来的
 			case 'creditExtension':
-				//调用授信接口
-				handleClickConfirm(
-					this.props,
-					{
-						...store.getLoanAspirationHome()
-					},
-					'back'
-				);
+				idChkPhoto({
+					$props: this.props,
+					type: 'creditExtension',
+					msg: '审核'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							this.props.toast.info('实名照片补充成功!');
+							store.removeToggleMoxieCard();
+							setTimeout(() => {
+								handleClickConfirm(
+									this.props,
+									{
+										...store.getLoanAspirationHome()
+									},
+									2000
+								);
+							});
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
+				});
 				break;
 			case 'historyCreditExtension':
 				store.removeToggleMoxieCard();
-				getNextStr({
-					$props: this.props
+
+				// 实名之后
+				idChkPhoto({
+					$props: this.props,
+					type: 'historyCreditExtension',
+					msg: '认证'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							this.props.toast.info('实名照片补充成功!');
+							store.removeToggleMoxieCard();
+							setTimeout(() => {
+								getNextStr({
+									$props: this.props
+								});
+							}, 2000);
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
 				});
 				break;
 			case 'agency_page':
@@ -274,7 +315,8 @@ export default class real_name_page extends Component {
 							}, 3000);
 							break;
 						case '3':
-							store.setAgencyIdChkPhoto(-3); //从人脸中间页回退3层到此页面
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
 						default:
 							break;
@@ -313,7 +355,7 @@ export default class real_name_page extends Component {
 	render() {
 		const { disabledupload } = this.state;
 		return (
-			<div className={[style.real_name_page, 'real_name_page_list'].join(' ')}>
+			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
 						<div className={style.updateTitle}>

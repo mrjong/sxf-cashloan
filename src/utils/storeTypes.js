@@ -69,5 +69,6 @@ export const storeTypes = {
 	LoginDownloadBtn: 'LoginDownloadBtn', // 登陆页点击立即下载按钮标识
 	SuccessPay: 'SuccessPay', // 418 活动返回
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
-	AgencyIdChkPhoto: 'AgencyIdChkPhoto' // 签约页是否需要补充活体识别标示
+	IdChkPhotoBack: 'IdChkPhotoBack', // 签约页是否需要补充活体识别标示
+	ChkPhotoBackNew: 'ChkPhotoBackNew' // 活体直接返回
 };

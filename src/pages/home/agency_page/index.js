@@ -259,10 +259,15 @@ export default class agency_page extends PureComponent {
 					type: 'agency_page',
 					msg: '放款'
 				}).then((res) => {
-					if (res === '1') {
-						this.requestConfirmRepaymentInfo();
-					} else if (res === '3') {
-						store.setAgencyIdChkPhoto(-2);	//从人脸中间页回退2层到此页面
+					switch (res) {
+						case '1':
+							this.requestConfirmRepaymentInfo();
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
+							break;
+						default:
+							break;
 					}
 				});
 			} else if (result && result.msgCode === 'PTM2003') {

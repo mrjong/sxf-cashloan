@@ -35,7 +35,7 @@ const tagList = [
 ];
 
 let timer = null;
-let selectedLoanDateCopy = {}
+let selectedLoanDateCopy = {};
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -253,6 +253,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 					this.props.toast.info('请选择借款期限');
 					return;
 				}
+				const params = {
+					...this.state.selectedLoanDate,
+					activeName: tagList[this.state.activeTag].name,
+					autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
+					rpyAmt: Number(values.loanMoney)
+				};
 				idChkPhoto({
 					$props: this.props,
 					type: 'creditExtension',
@@ -262,21 +268,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 						case '1':
 							// 成功
 							//调用授信接口
-							handleClickConfirm(this.props, {
-								...this.state.selectedLoanDate,
-								activeName: tagList[this.state.activeTag].name,
-								autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
-								rpyAmt: Number(values.loanMoney)
-							});
+							handleClickConfirm(this.props, params);
 							break;
 						case '2':
-							// 失败
-							const params = {
-								...this.state.selectedLoanDate,
-								activeName: tagList[this.state.activeTag].name,
-								autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
-								rpyAmt: Number(values.loanMoney)
-							};
+							store.setLoanAspirationHome(params);
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 							store.setLoanAspirationHome(params);
 							break;
 						default:
@@ -620,8 +618,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.setState({
 											perdRateList: date,
 											selectedLoanDate: date[0] // 默认选中3期
-                                        });
-                                        selectedLoanDateCopy = date[0]
+										});
+										selectedLoanDateCopy = date[0];
 										this.dateType(date[0].perdLth);
 										// 设置默认选中的还款金额
 										return date.map((item) => ({

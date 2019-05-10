@@ -4,14 +4,7 @@ import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import {
-	isWXOpen,
-	getDeviceType,
-	getNextStr,
-	getFirstError,
-	handleInputBlur,
-	idChkPhoto
-} from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, idChkPhoto } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -117,7 +110,9 @@ export default class home_page extends PureComponent {
 		// 未提交授信用户
 		store.removeCreditExtensionNot();
 		// 去除需要调用获取下一步url方法
-		store.removeNeedNextUrl();
+    store.removeNeedNextUrl();
+    // 活体直接返回
+		store.removeChkPhotoBackNew();
 		// 清除订单缓存
 		store.removeBackData();
 		// 结清页去活动页
@@ -805,8 +800,8 @@ export default class home_page extends PureComponent {
 					this.calcLoanMoney(minPayment);
 				}
 			}
-        );
-        this.dateType(item.perdLth)
+		);
+		this.dateType(item.perdLth);
 	};
 
 	//查询还款期限
@@ -825,9 +820,9 @@ export default class home_page extends PureComponent {
 				}
 			);
 		});
-    };
-    
-    dateType = (value) => {
+	};
+
+	dateType = (value) => {
 		// 埋点
 		switch (value) {
 			case '30':
@@ -944,6 +939,12 @@ export default class home_page extends PureComponent {
 							buriedPointEvent(home.compensationCreditCardConfirm, {
 								pageCode: '补充身份证照片'
 							});
+							break;
+						case '3':
+							buriedPointEvent(home.compensationCreditCardConfirm, {
+								pageCode: '补充人脸识别'
+              });
+              store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 							break;
 						default:
 							break;
