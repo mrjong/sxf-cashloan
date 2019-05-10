@@ -53,7 +53,7 @@ export default class juPei_page extends PureComponent {
         entry: queryData.entry
       })
     }
-    if (isMPOS() && !Cookie.get('fin-v-card-token')) {
+    if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
       if (queryData.appId && queryData.token) {
 				this.getStatus();
 			} else {
