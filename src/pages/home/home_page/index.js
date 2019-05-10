@@ -254,7 +254,7 @@ export default class home_page extends PureComponent {
 		this.setState({
 			pageCode: demo
 		});
-		let codesCopy = demo.slice(2, 5);
+		let codesCopy = demo.slice(1, 4);
 		codes = codesCopy.split('');
 		// case '0': // 未认证
 		// case '1': // 认证中

@@ -16,7 +16,7 @@ const API = {
 };
 let urlQuery = '';
 let autId = '';
-const needDisplayOptions = ['idCheck', 'faceDetect', 'basicInf', 'operator', 'card'];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {

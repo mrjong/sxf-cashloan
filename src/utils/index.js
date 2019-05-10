@@ -426,7 +426,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 		});
 };
 
-const needDisplayOptions = [ 'idCheck', 'faceDetect', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
@@ -454,30 +454,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				}, 3000);
 				return;
 			}
-			// 人脸识别认证
-			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
-				$props.$fetch.post(`${API.getFace}`, {}).then((result) => {
-					if (result.msgCode === 'PTM0000' && result.data) {
-						$props.SXFToast.hide();
-						let msg = '请进行人脸识别认证';
-						$props.toast.info(msg);
-						resBackMsg = '人脸识别认证';
-						setTimeout(() => {
-							// 人脸识别第三方直接返回的问题
-							store.setCarrierMoxie(true);
-							SXFToast.loading('加载中...', 0);
-							window.location.href = result.data;
-						}, 3000);
-						if (callBack) {
-							callBack(resBackMsg);
-						}
-					}
-				});
-				return;
-			}
-
 			// 基本信息
-			if (codesArray[2] !== '2' && codesArray[2] !== '1') {
+			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.SXFToast.hide();
 				let msg = '请进行基本信息认证';
 				$props.toast.info(msg);
@@ -495,7 +473,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			}
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
-			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
 				$props.$fetch
 					.post(`${API.getOperator}`, {
 						clientCode: '04'
@@ -513,21 +491,19 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location
-										.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-										'https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page'
-									)}`;
+										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
 							}, 3000);
 							if (callBack) {
 								callBack(resBackMsg);
 							}
 						}
 					});
+
 				return;
 			}
 
 			// 信用卡
-			if (codesArray[4] !== '1' && codesArray[4] !== '2') {
+			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.SXFToast.hide();
 				let msg = '请进行信用卡认证';
 				$props.toast.info(msg);
@@ -571,6 +547,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 		resBackMsg
 	};
 };
+
 
 // 退出功能
 export const logoutApp = (that) => {
