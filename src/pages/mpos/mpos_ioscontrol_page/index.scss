@@ -22,8 +22,7 @@
     }
   }
 .bgBox{
-  height: 100%;
-  background: linear-gradient(139deg, rgba(255, 55, 73, 1) 0%, rgba(254, 186, 85, 1) 84%);
+  // height: 100vh;
   .copyBtn{
     position: fixed;
     bottom: 0;
@@ -31,4 +30,3 @@
     width: 100%;
   }
 }
-  
