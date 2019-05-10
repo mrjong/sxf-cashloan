@@ -36,7 +36,6 @@ export default class order_page extends PureComponent {
 			dataSource,
 			refreshing: true,
 			isLoading: true,
-			height: document.documentElement.clientHeight,
 			useBodyScroll: false,
 			pageIndex: 0,
 			Listlength: 0,
@@ -283,14 +282,8 @@ export default class order_page extends PureComponent {
 						renderRow={row}
 						direction="down"
 						renderSeparator={separator}
-						useBodyScroll={this.state.useBodyScroll}
-						style={
-							this.state.useBodyScroll
-								? {}
-								: {
-									height: this.state.height
-								}
-						}
+            useBodyScroll={this.state.useBodyScroll}
+            className={!this.state.useBodyScroll?style.heightBody:''}
 						pullToRefresh={
 							<PullToRefresh
 								damping={60}
