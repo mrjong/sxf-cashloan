@@ -224,9 +224,10 @@ const interceptRouteArr = [
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (store.getIdChkPhotoBackNew()) {
-			history.go(Number(store.getIdChkPhotoBackNew()));
+		if (store.getChkPhotoBackNew()) {
+			history.go(Number(store.getChkPhotoBackNew()));
 			store.removeIdChkPhotoBack();
+			store.removeChkPhotoBackNew()
 		} else if (store.getGoMoxie()) {
 			history.go(-1);
 			store.removeGoMoxie();
