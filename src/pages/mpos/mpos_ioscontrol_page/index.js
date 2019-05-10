@@ -8,8 +8,9 @@ import { store } from 'utils/store';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { buriedPointEvent } from 'utils/analytins';
 import { mpos_ioscontrol_page } from 'utils/analytinsType';
+import { setBackGround } from 'utils/background';
 import qs from 'qs'
-
+// @setBackGround('red')
 export default class ioscontrol_page extends PureComponent {
 	constructor(props) {
 		super(props)

@@ -20,7 +20,6 @@ const API = {
 
 let token = '';
 let tokenFromStorage = '';
-
 @fetch.inject()
 export default class order_page extends PureComponent {
 	constructor(props) {
