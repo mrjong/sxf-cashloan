@@ -52,8 +52,6 @@ export default class juPei_page extends PureComponent {
       buriedPointEvent(activity.jjpGetBtn, {
         entry: queryData.entry
       })
-    } else {
-      buriedPointEvent(activity.jjpGetBtn)
     }
     if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
       if (queryData.appId && queryData.token) {
