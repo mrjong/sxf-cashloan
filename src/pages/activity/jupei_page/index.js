@@ -227,7 +227,7 @@ export default class juPei_page extends PureComponent {
                 <h2>活动规则</h2>
                 <div className={styles.rulesCont}>
                   <h3>活动时间：</h3>
-                  <p>2019年5月15日-2019年5月19</p>
+                  <p>2019年5月15日-2019年5月19日</p>
                   <h3>活动对象：</h3>
                   <p>未提交授信且无逾期行为用户</p>
                   <h3>活动规则：</h3>
