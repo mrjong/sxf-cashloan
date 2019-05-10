@@ -246,21 +246,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}
 	};
 
-	// 代还其他信用卡点击事件
-	repayForOtherBank = (count) => {
-		store.setToggleMoxieCard(true);
-		if (count > 1) {
-			store.setBackUrl('/home/loan_repay_confirm_page');
-			const { usrIndexInfo } = this.state;
-			this.props.history.push({
-				pathname: '/mine/credit_list_page',
-				search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
-			});
-		} else {
-			this.goMoxieBankList();
-		}
-	};
-
 	// 请求信用卡数量
 	requestCredCardCount = () => {
 		this.props.$fetch
@@ -292,7 +277,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (
 			!isCanLoan({
 				$props: this.props,
-				goMoxieBankList: this.goMoxieBankList,
+				goMoxieBankList: this.requestCredCardCount,
 				usrIndexInfo: this.state.usrIndexInfo
 			})
 		) {
@@ -475,7 +460,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			type === 'click' &&
 			!isCanLoan({
 				$props: this.props,
-				goMoxieBankList: this.goMoxieBankList,
+				goMoxieBankList: this.requestCredCardCount,
 				usrIndexInfo: this.state.usrIndexInfo
 			})
 		) {
@@ -735,7 +720,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								if (
 									!isCanLoan({
 										$props: this.props,
-										goMoxieBankList: this.goMoxieBankList,
+										goMoxieBankList: this.requestCredCardCount,
 										usrIndexInfo: this.state.usrIndexInfo
 									})
 								) {

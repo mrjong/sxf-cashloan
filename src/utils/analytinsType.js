@@ -98,7 +98,8 @@ const bugLog = {
 };
 
 const mpos_service_authorization = {
-	auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`
+  auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
+  auth_page: `${prefix}_MPOS_AUTH_PAGE`,
 };
 
 const activity = {
