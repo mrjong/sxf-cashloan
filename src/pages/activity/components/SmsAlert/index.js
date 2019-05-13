@@ -314,6 +314,7 @@ export default class SmsAlert extends Component {
 							otherProps_type,
 							loginProps_needLogin_copy: false,
 							isShowMobile: false,
+							disabled: true,
 						});
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
