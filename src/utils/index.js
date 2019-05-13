@@ -227,7 +227,7 @@ export const changeHistoryState = () => {
 		if (store.getChkPhotoBackNew()) {
 			history.go(Number(store.getChkPhotoBackNew()));
 			store.removeIdChkPhotoBack();
-			store.removeChkPhotoBackNew()
+			store.removeChkPhotoBackNew();
 		} else if (store.getGoMoxie()) {
 			history.go(-1);
 			store.removeGoMoxie();
@@ -448,8 +448,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				$props.toast.info(msg);
 				setTimeout(() => {
 					$props.history.push({
-						pathname: '/home/real_name'
-						// search: urlQuery
+						pathname: '/home/real_name',
+						search: '?type=noRealName'
 					});
 				}, 3000);
 				return;
@@ -491,7 +491,10 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
+										.location
+										.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+									)}`;
 							}, 3000);
 							if (callBack) {
 								callBack(resBackMsg);
@@ -547,7 +550,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 		resBackMsg
 	};
 };
-
 
 // 退出功能
 export const logoutApp = (that) => {

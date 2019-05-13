@@ -16,7 +16,7 @@ const API = {
 };
 let urlQuery = '';
 let autId = '';
-const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
+const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {
@@ -29,7 +29,7 @@ export default class credit_extension_page extends PureComponent {
 		stswData: [],
 		flag: false,
 		submitFlag: false,
-		isShowBtn: true, // 是否展示提交代还金申请按钮
+		isShowBtn: true // 是否展示提交代还金申请按钮
 	};
 
 	componentWillMount() {
@@ -42,6 +42,7 @@ export default class credit_extension_page extends PureComponent {
 		this.requestGetStatus();
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		urlQuery = this.props.history.location.search;
+		urlQuery = urlQuery ? urlQuery + '&type=noRealName' : '?type=noRealName';
 		autId = query.autId;
 		const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
 		if (!isShowCommit || isShowCommit === 'false') {
@@ -133,18 +134,16 @@ export default class credit_extension_page extends PureComponent {
 					this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
 					break;
 				case 'faceDetect':
-					this.props.$fetch
-						.post(`${API.getFace}`, {})
-						.then((result) => {
-							if (result.msgCode === 'PTM0000' && result.data) {
-								buriedPointEvent(mine.creditExtensionFaceAuth);
-								store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
-								this.props.SXFToast.loading('加载中...', 0);
-								window.location.href = result.data
-							} else {
-								this.props.toast.info(result.msgInfo);
-							}
-						});
+					this.props.$fetch.post(`${API.getFace}`, {}).then((result) => {
+						if (result.msgCode === 'PTM0000' && result.data) {
+							buriedPointEvent(mine.creditExtensionFaceAuth);
+							store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+							this.props.SXFToast.loading('加载中...', 0);
+							window.location.href = result.data;
+						} else {
+							this.props.toast.info(result.msgInfo);
+						}
+					});
 					break;
 				case 'basicInf':
 					buriedPointEvent(mine.creditExtensionBaseInfo);
@@ -163,8 +162,10 @@ export default class credit_extension_page extends PureComponent {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent('https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page')}`;
-
+										.location
+										.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+										'https://lns-wap-test.vbillbank.com/disting/#/carrier_auth_page'
+									)}`;
 							} else {
 								this.props.toast.info(result.msgInfo);
 							}

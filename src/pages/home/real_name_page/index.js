@@ -217,19 +217,26 @@ export default class real_name_page extends Component {
 					this.nextFunc();
 				} else if (store.getNeedNextUrl()) {
 					this.props.SXFToast.loading('数据加载中...', 0);
-					getNextStr({
-						$props: this.props
+					this.nextFunc(() => {
+						getNextStr({
+							$props: this.props
+						});
 					});
 				} else {
-					this.props.history.goBack();
+					this.nextFunc(() => {
+						this.props.history.goBack();
+					});
+					// this.props.history.goBack();
 				}
 			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
-				if (store.getNeedNextUrl()) {
-					this.props.SXFToast.loading('数据加载中...', 0);
-					getNextStr({
-						$props: this.props
-					});
-				}
+        this.nextFunc(()=>{
+          if (store.getNeedNextUrl()) {
+            this.props.SXFToast.loading('数据加载中...', 0);
+            getNextStr({
+              $props: this.props
+            });
+          }
+        })
 			} else if (result.msgCode === 'URM5016' && urlQuery.newTitle) {
 				store.setBackFlag(true);
 				this.nextFunc();
@@ -239,9 +246,29 @@ export default class real_name_page extends Component {
 			}
 		});
 	};
-	nextFunc = () => {
+	nextFunc = (callBack) => {
 		// 新用户
 		switch (urlQuery.type) {
+			// 新用户授信来的
+			case 'noRealName':
+				idChkPhoto({
+					$props: this.props,
+					type: 'noRealName',
+					msg: '审核'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							callBack && callBack();
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
+				});
+				break;
 			// 新用户授信来的
 			case 'creditExtension':
 				idChkPhoto({
