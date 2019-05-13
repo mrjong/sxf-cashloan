@@ -55,7 +55,7 @@ export default class tencent_face_middle_page extends Component {
           });
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
-				} else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()) {
+				} else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()==='home') {
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
 					getNextStr({

@@ -262,7 +262,9 @@ export default class real_name_page extends Component {
 							break;
 						case '3':
 							if (urlQuery.fromRouter === 'home') {
-								store.setRealNameNextStep(true);
+								store.setRealNameNextStep('home');
+							} else {
+								store.setRealNameNextStep('other');
 							}
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
 							store.setChkPhotoBackNew(-2); //活体直接返回
