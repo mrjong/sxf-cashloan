@@ -52,16 +52,19 @@ export default class tencent_face_middle_page extends Component {
 				if (store.getCreditExtensionNot() && !store.getRealNameNextStep()) {
 					handleClickConfirm(this.props, {
 						...store.getLoanAspirationHome()
-					});
+          });
+					store.removeRealNameNextStep();
+					store.removeIdChkPhotoBack();
 				} else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()) {
-          store.removeRealNameNextStep();
-          store.removeIdChkPhotoBack();
+					store.removeRealNameNextStep();
+					store.removeIdChkPhotoBack();
 					getNextStr({
 						$props: this.props
 					});
 				} else if (store.getIdChkPhotoBack()) {
 					history.go(Number(store.getIdChkPhotoBack()));
-					store.removeIdChkPhotoBack();
+          store.removeIdChkPhotoBack();
+					store.removeRealNameNextStep();
 				} else {
 					this.props.history.push('/home/home');
 				}
@@ -94,11 +97,15 @@ export default class tencent_face_middle_page extends Component {
 	};
 
 	goRouter = () => {
-		if (store.getIdChkPhotoBack()) {
+		if (store.getRealNameNextStep()) {
       store.removeRealNameNextStep();
+      store.removeIdChkPhotoBack();
+      this.props.history.push('/home/home');
+		} else if (store.getIdChkPhotoBack()) {
 			window.tencent_face_middle_page = true;
 			history.go(Number(store.getIdChkPhotoBack()));
-			store.removeIdChkPhotoBack();
+      store.removeIdChkPhotoBack();
+      store.removeRealNameNextStep();
 		}
 	};
 
