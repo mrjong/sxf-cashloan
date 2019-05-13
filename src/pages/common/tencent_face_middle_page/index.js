@@ -54,7 +54,8 @@ export default class tencent_face_middle_page extends Component {
 						...store.getLoanAspirationHome()
 					});
 				} else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()) {
-					store.removeRealNameNextStep();
+          store.removeRealNameNextStep();
+          store.removeIdChkPhotoBack();
 					getNextStr({
 						$props: this.props
 					});
