@@ -246,7 +246,7 @@ export default class real_name_page extends Component {
 			}
 		});
 	};
-	nextFunc = (callBack, router) => {
+	nextFunc = (callBack) => {
 		// 新用户
 		switch (urlQuery.type) {
 			// 新用户授信来的
@@ -261,7 +261,7 @@ export default class real_name_page extends Component {
 							callBack && callBack();
 							break;
 						case '3':
-							if (router) {
+							if (store.getCreditExtensionNot()) {
 								store.setRealNameNextStep(true);
 							}
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
