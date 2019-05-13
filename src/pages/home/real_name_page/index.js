@@ -261,7 +261,7 @@ export default class real_name_page extends Component {
 							callBack && callBack();
 							break;
 						case '3':
-							if (store.getCreditExtensionNot()) {
+							if (urlQuery.fromRouter === 'home') {
 								store.setRealNameNextStep(true);
 							}
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面

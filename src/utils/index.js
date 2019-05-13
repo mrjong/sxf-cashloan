@@ -449,7 +449,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				setTimeout(() => {
 					$props.history.push({
 						pathname: '/home/real_name',
-						search: '?type=noRealName'
+						search: '?type=noRealName&fromRouter=home'
 					});
 				}, 3000);
 				return;
