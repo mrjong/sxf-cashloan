@@ -23,11 +23,10 @@ export default class wuyuekh_page extends PureComponent {
 
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.entry && queryData.h5Channel) {
+    if (queryData.entry) {
       // 根据不同入口来源埋点
       buriedPointEvent(activity.newUserEntry, {
-        entry: queryData.entry,
-        h5Channel: queryData.h5Channel
+        entry: queryData.entry
       })
     }
   }
