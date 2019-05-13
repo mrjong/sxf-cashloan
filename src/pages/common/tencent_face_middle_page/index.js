@@ -49,11 +49,12 @@ export default class tencent_face_middle_page extends Component {
 					fail_cause: ''
 				});
 				// 新用户直接提交
-				if (store.getCreditExtensionNot()) {
+				if (store.getCreditExtensionNot() && !store.getRealNameNextStep()) {
 					handleClickConfirm(this.props, {
 						...store.getLoanAspirationHome()
 					});
-				} else if (store.getNeedNextUrl() && !store.getCreditExtensionNot()) {
+				} else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()) {
+					store.removeRealNameNextStep();
 					getNextStr({
 						$props: this.props
 					});
@@ -93,7 +94,8 @@ export default class tencent_face_middle_page extends Component {
 
 	goRouter = () => {
 		if (store.getIdChkPhotoBack()) {
-      window.tencent_face_middle_page = true
+      store.removeRealNameNextStep();
+			window.tencent_face_middle_page = true;
 			history.go(Number(store.getIdChkPhotoBack()));
 			store.removeIdChkPhotoBack();
 		}

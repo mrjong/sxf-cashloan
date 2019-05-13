@@ -70,5 +70,6 @@ export const storeTypes = {
 	SuccessPay: 'SuccessPay', // 418 活动返回
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
 	IdChkPhotoBack: 'IdChkPhotoBack', // 签约页是否需要补充活体识别标示
-	ChkPhotoBackNew: 'ChkPhotoBackNew' // 活体直接返回
+	ChkPhotoBackNew: 'ChkPhotoBackNew', // 活体直接返回
+	RealNameNextStep: 'RealNameNextStep' // 需要下一步
 };

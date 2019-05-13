@@ -229,14 +229,14 @@ export default class real_name_page extends Component {
 					// this.props.history.goBack();
 				}
 			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
-        this.nextFunc(()=>{
-          if (store.getNeedNextUrl()) {
-            this.props.SXFToast.loading('数据加载中...', 0);
-            getNextStr({
-              $props: this.props
-            });
-          }
-        })
+				this.nextFunc(() => {
+					if (store.getNeedNextUrl()) {
+						this.props.SXFToast.loading('数据加载中...', 0);
+						getNextStr({
+							$props: this.props
+						});
+					}
+				});
 			} else if (result.msgCode === 'URM5016' && urlQuery.newTitle) {
 				store.setBackFlag(true);
 				this.nextFunc();
@@ -246,7 +246,7 @@ export default class real_name_page extends Component {
 			}
 		});
 	};
-	nextFunc = (callBack) => {
+	nextFunc = (callBack, router) => {
 		// 新用户
 		switch (urlQuery.type) {
 			// 新用户授信来的
@@ -261,6 +261,9 @@ export default class real_name_page extends Component {
 							callBack && callBack();
 							break;
 						case '3':
+							if (router) {
+								store.setRealNameNextStep(true);
+							}
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
 							store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
