@@ -68,6 +68,7 @@ export default class ModalWrap extends Component {
 						btnText="知道了"
 						clickCb={() => {
 							buriedPointEvent(activity.mayOldNoChanceBtn);
+							this.props.history.push('/home/home');
 						}}
 					/>
 				);
@@ -81,6 +82,7 @@ export default class ModalWrap extends Component {
 						btnText="知道了"
 						clickCb={() => {
 							buriedPointEvent(activity.mayOldNoPrizeBtn);
+							this.props.history.push('/home/home');
 						}}
 					/>
 				);
@@ -94,6 +96,7 @@ export default class ModalWrap extends Component {
 						btnText="填写认证资料"
 						clickCb={() => {
 							buriedPointEvent(activity.mayOldAuthTipsBtn);
+							this.props.history.push('/home/home');
 						}}
 					/>
 				);

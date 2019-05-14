@@ -122,7 +122,6 @@ const activity = {
 	mayOldDrawBtn: `${prefix}_ACTIVITY_OLD_STARTRAFFLE`, // 五月狂欢活动 老用户专享-开始抽奖 按钮
 	mayOldToNewBtn: `${prefix}_ACTIVITY_OLD_SORRY_JUMP`, // 五月狂欢活动 老用户专享-跳转新用户专享 按钮
 	mayOldAuthTipsBtn: `${prefix}_ACTIVITY_OLD_TIPS_AUTHENTICATION`, // 五月狂欢活动 老用户专享-提示 填写认证资料 按钮
-	mayOldLoanTipsBtn: `${prefix}_ACTIVITY_OLD_TIPS_LOAN`, // 五月狂欢活动 老用户专享-提示 马上借款 按钮
 	mayOldNoPrizeBtn: `${prefix}_ACTIVITY_OLD_FRIENDSHIPTIPS_NOPRIZE`, // 五月狂欢活动 老用户专享-友情提示-奖品数量-知道了 按钮
 	mayOldNoChanceBtn: `${prefix}_ACTIVITY_OLD_FRIENDSHIPTIPS_NOCHANCE`, // 五月狂欢活动 老用户专享-友情提示-抽奖机会-知道了 按钮
 	mayOldUseNowBtn: `${prefix}_ACTIVITY_OLD_CONGRATULATIONS`, // 五月狂欢活动 老用户专享-恭喜你 立即使用 按钮

@@ -47,8 +47,8 @@ export default class wuyue_old_page extends PureComponent {
 			count: '1',
 			callBackType: '',
 			allUsersAward: [],
-			// type: '', // 弹框类型
-			type: 'no_chance_tips',
+			type: '', // 弹框类型
+			// type: 'alert_congratulation',
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
@@ -186,6 +186,7 @@ export default class wuyue_old_page extends PureComponent {
 
 	// 获取我的奖品
 	getMyAward = () => {
+		buriedPointEvent(activity.mayOldMyPrizeBtn);
 		this.isAuthFunc(() => {
 			this.getrecordForUser('01');
 		}, 'award_list');
@@ -321,7 +322,8 @@ export default class wuyue_old_page extends PureComponent {
 		});
 	};
 	// 立即使用
-	goRoute = () => {
+	goRoute = (buryEv) => {
+		buryEv && buriedPointEvent(activity[buryEv]);
 		this.setState({
 			type: ''
 		});
@@ -339,6 +341,14 @@ export default class wuyue_old_page extends PureComponent {
 		buriedPointEvent(activity.mayOldDrawBtn);
 		this.onloadZhuan();
 	}
+
+	// 关闭活动弹框
+	closePrizeModal = () => {
+		this.setState({
+			type: ''
+		});
+	}
+
 	render() {
 		const { awardList, time, transformType, type, userAwardList, showRuleModal, count, alert_img, rulesShow } = this.state;
 		return (
@@ -359,8 +369,8 @@ export default class wuyue_old_page extends PureComponent {
 							/>
 						}
 						{ showRuleModal && <RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
-						{ type && type === 'award_list' && <WinPrize type="myAward" setalertType={this.setalertType} /> }
-						{ type && type === 'alert_congratulation' && <WinPrize clickCb={this.goRoute} title="15元免息券" subTit="（借款满3000元可用）" setalertType={this.setalertType} />}
+						{ type && type === 'award_list' && <WinPrize type="myAward" clickCb={() => {this.goRoute('mayOldMyPrizeUseBtn')}} closeCb={this.closePrizeModal} setalertType={this.setalertType} /> }
+						{ type && type === 'alert_congratulation' && <WinPrize clickCb={() => {this.goRoute('mayOldUseNowBtn')}} closeCb={this.closePrizeModal} title="15元免息券" subTit="（借款满3000元可用）" setalertType={this.setalertType} />}
 						<div className={styles.bg}>
 							<div
 								className={styles.rule_btn}
