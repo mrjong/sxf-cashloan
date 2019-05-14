@@ -332,7 +332,7 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length != 0) {
+		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length !== 3) {
 			//认证过期
 			this.setState({
 				showDiv: 'circle',
