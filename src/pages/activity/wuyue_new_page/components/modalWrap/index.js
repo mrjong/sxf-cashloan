@@ -15,16 +15,10 @@ export default class ModalWrap extends Component {
 		};
 	}
 
-	closeCb = () => {
-		this.setState({
-			modalShow: false
-		});
-	};
-
 	render() {
 		let componentsDisplay = null;
 		const { modalShow } = this.state;
-		const { history, contType, loginCb } = this.props;
+		const { history, contType, loginCb, closeCb } = this.props;
 		switch (contType) {
 			case 'login_alert': // 登陆弹框
 				componentsDisplay = (
@@ -112,7 +106,7 @@ export default class ModalWrap extends Component {
 				// onClose={this.onClose('modalShow')}
 			>
 				<div className={style.modal_wrap_style}>
-					<i onClick={this.closeCb} className={style.close_icon} />
+					<i onClick={()=>{ closeCb() }} className={style.close_icon} />
 					{ componentsDisplay }
 				</div>
 			</Modal>
