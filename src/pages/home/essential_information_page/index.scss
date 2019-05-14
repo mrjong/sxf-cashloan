@@ -3,8 +3,8 @@
 	margin-top: 40px;
 	margin-bottom: 40px;
 }
-.mt50{
-    margin-top: 50px;
+.mt50 {
+	margin-top: 50px;
 }
 .nameDiv {
 	width: 100%;
@@ -15,7 +15,7 @@
 		padding-left: 28px;
 		font-size: 30px;
 		span {
-			border-left: 8px solid #EBDE74;
+			border-left: 8px solid #ebde74;
 			padding-left: 16px;
 			font-weight: 600;
 		}
@@ -110,8 +110,8 @@
 		color: #9d9d9d;
 		padding: 20px 30px;
 		letter-spacing: 1.5px;
-        line-height: 17px;
-        margin-top: 15px;
+		line-height: 17px;
+		margin-top: 15px;
 		.desOne {
 			line-height: 36px;
 			margin-bottom: 15px;
@@ -136,34 +136,36 @@
 }
 
 :global {
-	.am-list-item .am-list-line .am-list-extra {
-		padding-top: 0.25rem;
-		color: #333;
-		margin-right: 0.35rem;
-		font-size: 0.3rem;
-	}
-	.am-list-item.am-list-item-active {
-		background-color: #fff;
-	}
-	.am-list-item .am-list-line .am-list-content {
-		font-size: 0.3rem;
-		color: #252729;
-	}
+	.credit_extension_page {
+		.am-list-item .am-list-line .am-list-extra {
+			padding-top: 0.25rem;
+			color: #333;
+			margin-right: 0.35rem;
+			font-size: 0.3rem;
+		}
+		.am-list-item.am-list-item-active {
+			background-color: #fff;
+		}
+		.am-list-item .am-list-line .am-list-content {
+			font-size: 0.3rem;
+			color: #252729;
+		}
 
-	.am-list-item .am-input-control input {
-		text-align: right;
-		padding-right: 0.05rem;
-		font-size: 0.3rem;
-		color: #333;
-	}
-	.am-list-item .am-input-label {
-		color: #282828;
-		font-size: 0.3rem;
-	}
-	.am-list-item.am-list-item-middle .am-list-line {
-		// border-bottom: 1PX  solid #e5e5e5;rrr
-		&:after {
-			@include setBottomLine();
+		.am-list-item .am-input-control input {
+			text-align: right;
+			padding-right: 0.05rem;
+			font-size: 0.3rem;
+			color: #333;
+		}
+		.am-list-item .am-input-label {
+			color: #282828;
+			font-size: 0.3rem;
+		}
+		.am-list-item.am-list-item-middle .am-list-line {
+			// border-bottom: 1PX  solid #e5e5e5;rrr
+			&:after {
+				@include setBottomLine();
+			}
 		}
 	}
 }

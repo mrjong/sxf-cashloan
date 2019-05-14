@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import ioscontrol from './img/leadwx_bg.png';
-import ioscontrol_activity from './img/ioscontrol_activity.png';
-import ioscontrol_coupon_activity from './img/ioscontrol_coupon_activity.png';
 import btnBg from './img/copy_btn.png';
 import { store } from 'utils/store';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { buriedPointEvent } from 'utils/analytins';
 import { mpos_ioscontrol_page } from 'utils/analytinsType';
+import { setBackGround } from 'utils/background';
 import qs from 'qs'
-
+@setBackGround('linear-gradient(139deg, #ff3749 0%, #feba55 84%)')
 export default class ioscontrol_page extends PureComponent {
 	constructor(props) {
 		super(props)
