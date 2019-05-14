@@ -53,7 +53,8 @@ export default class ModalWrap extends Component {
 						tipsCont="本活动仅针对已注册用户哦～"
 						btnText="注册并马上领取新用户专享奖励"
 						clickCb={() => {
-							console.log(333)
+							buriedPointEvent(activity.mayOldToNewBtn);
+							this.props.history.replace('/activity/wuyue_new_page');
 						}}
 					/>
 				);
@@ -66,7 +67,7 @@ export default class ModalWrap extends Component {
 						tipsCont="您的抽奖机会已用完，不要贪心哦～"
 						btnText="知道了"
 						clickCb={() => {
-							console.log(44)
+							buriedPointEvent(activity.mayOldNoChanceBtn);
 						}}
 					/>
 				);
@@ -79,7 +80,7 @@ export default class ModalWrap extends Component {
 						tipsCont="今日活动奖励已经发放完毕，<br />奖品有限，先到先得，请明日再来"
 						btnText="知道了"
 						clickCb={() => {
-							console.log(55)
+							buriedPointEvent(activity.mayOldNoPrizeBtn);
 						}}
 					/>
 				);
@@ -92,7 +93,7 @@ export default class ModalWrap extends Component {
 						tipsCont="您需要先认证并授信成功后，<br />才能参加活动哦～"
 						btnText="填写认证资料"
 						clickCb={() => {
-							console.log(666)
+							buriedPointEvent(activity.mayOldAuthTipsBtn);
 						}}
 					/>
 				);

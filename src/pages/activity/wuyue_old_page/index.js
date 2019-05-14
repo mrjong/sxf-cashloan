@@ -48,7 +48,7 @@ export default class wuyue_old_page extends PureComponent {
 			callBackType: '',
 			allUsersAward: [],
 			// type: '', // 弹框类型
-			type: 'old_sorry_tips',
+			type: 'no_chance_tips',
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
@@ -355,6 +355,7 @@ export default class wuyue_old_page extends PureComponent {
 							<ModalWrap
 								contType={type}
 								goRoute={this.goRoute}
+								history={this.props.history}
 							/>
 						}
 						{ showRuleModal && <RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
