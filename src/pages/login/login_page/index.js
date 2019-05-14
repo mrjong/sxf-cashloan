@@ -15,7 +15,7 @@ import bannerImg from './img/login_bg.png';
 import bannerImg1 from './img/login_bg1.png';
 import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
-import logoImg from './img/logo.png';
+import logoImg from 'assets/images/common/black_logo.png';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',

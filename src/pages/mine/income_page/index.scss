@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .income_page{
 	margin: 0 19px;
 }
@@ -15,9 +16,8 @@
 	.incomeCont{
 		position: relative;
 		margin-top: 23px;
-		background: url(assets/images/mine/wallet/income_bg.png) no-repeat center;
-		background-size: 100% 100%;
-		// border-radius: 30px;
+		background-color: #fff6f1;
+		border-radius: 30px;
 		padding: 0 13px;
 		display: flex;
 		align-items: center;
@@ -39,10 +39,28 @@
 		}
 	}
 	.incomeContExpired{
-		background-image: url(assets/images/mine/wallet/income_bg2.png);
+		&::after {
+			display: block;
+			position: absolute;
+			content: '';
+			right: 0;
+			top: 0;
+			width: 113px;
+			height: 65px;
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-171px, -353px);
+		}
 	}
 	.incomeContSucc{
-		background-image: url(assets/images/mine/wallet/income_bg3.png);
+		&::after {
+			display: block;
+			position: absolute;
+			content: '';
+			right: 0;
+			top: 0;
+			width: 113px;
+			height: 65px;
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, -438px);
+		}
 	}
 	.incomeContent{
 		margin-left: 30px;
@@ -68,11 +86,9 @@
 		position: absolute;
 		top: -338px;
 		vertical-align: middle;
-		// @include bg-image('../../../assets/images/coupon/no_data');
 		background-image: url(assets/images/mine/wallet/no_data.png);
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
-		//  background: black;
 		box-sizing: border-box;
 	}
 }
@@ -101,7 +117,6 @@
 .box {
 	.rightLittleBox{
 		.ellipsis {
-			// @include ellipsis(375px);
 			width: 375px;
 			overflow: hidden;
 			text-overflow: ellipsis;

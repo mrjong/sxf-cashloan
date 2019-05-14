@@ -1,12 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import iconBank from 'assets/images/footer/icon_bank.png';
-import iconBankActive from 'assets/images/footer/icon_bank_active.png';
-import iconBill from 'assets/images/footer/icon_bill.png';
-import iconBillActive from 'assets/images/footer/icon_bill_active.png';
-import iconMine from 'assets/images/footer/icon_mine.png';
-import iconMineActive from 'assets/images/footer/icon_mine_active.png';
 import styles from './index.scss';
 /*
 * 接收一个配置文件数组
@@ -24,10 +18,10 @@ function TabItem(props) {
   const { data } = props;
   return (
     <NavLink replace to={data.url} key={data.url} className={styles.item}>
-      <img src={window.location.pathname === data.url ? data.icon : data.icon_not} alt="" />
+      <i className={window.location.pathname === data.url ? data.icon : data.icon_not}></i>
       <div
         className={styles.title}
-        style={{ color: window.location.pathname === data.url ? data.color : data.color_not }}
+        style={{ color: window.location.pathname === data.url ? '#6A6D70' : '#CECFD3' }}
       >
         {data.title}
       </div>
@@ -59,27 +53,21 @@ export default class Footer extends PureComponent {
       {
         title: '还卡',
         url: '/home/home',
-        icon: iconBankActive,
-        icon_not: iconBank,
-        color: '#6A6D70',
-        color_not: '#CECFD3',
+        icon: styles.home_active,
+        icon_not: styles.home
       },
       {
         title: '还款',
         url: '/order/order_page',
-        icon: iconBillActive,
-        icon_not: iconBill,
-        color: '#6A6D70',
-        color_not: '#CECFD3',
+        icon: styles.order_active,
+        icon_not: styles.order
       },
       {
         title: '我的',
         url: '/mine/mine_page',
-        icon: iconMineActive,
-        icon_not: iconMine,
-        color: '#6A6D70',
-        color_not: '#CECFD3',
-      },
+        icon: styles.mine_active,
+        icon_not: styles.mine
+      }
     ],
   };
 

@@ -4,7 +4,7 @@ import Panel from 'components/Panel';
 import fetch from "sx-fetch";
 import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';
-import { Modal } from 'antd-mobile';
+import { Modal, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
@@ -809,7 +809,7 @@ export default class order_detail_page extends PureComponent {
         <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false, isShowDetail: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
             <div className={styles.modal_title}>还款详情
-              <i onClick={() => { this.setState({ showModal: false, isShowDetail: false }) }}></i>
+            <Icon type='cross' className={styles.modal_close_btn} onClick={() => { this.setState({ showModal: false, isShowDetail: false }) }}/>
             </div>
             <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
               <span className={styles.modal_label}>本次还款金额</span>

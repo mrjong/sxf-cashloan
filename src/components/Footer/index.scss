@@ -1,3 +1,4 @@
+@import "../../assets/styles/scss/base/fn.scss";
 .footer {
   position: fixed;
   bottom: 0;
@@ -28,17 +29,40 @@
     }
   }
   .item:before {
-    content: ' ';
+    content: " ";
     position: absolute;
     left: 0;
     top: 0;
     right: 0;
-    height: 1PX;
-    border-top: 1PX solid #e3e4e6;
+    height: 1px;
+    border-top: 1px solid #e3e4e6;
     color: #c0bfc4;
     -webkit-transform-origin: 0 0;
     transform-origin: 0 0;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
+  }
+  i {
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+  }
+  .home {
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',0, -118px);
+  }
+  .home_active {
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-192px, -118px);
+  }
+  .order {
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-64px, -116px);
+  }
+  .order_active {
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-256px, -116px);
+  }
+  .mine {
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-128px, -118px);
+  }
+  .mine_active {
+    @include spriteSkinIcon('../../assets/images/common/skin_icon.png',-320px, -118px);
   }
 }

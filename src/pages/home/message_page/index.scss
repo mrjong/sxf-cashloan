@@ -29,9 +29,6 @@
         background-color: transparent;
       }
     }
-    // .am-tabs-content-wrap {
-    //   background-color: #efeff4;
-    // }
     .am-list-view-scrollview {
       border: none !important;
     }
@@ -53,10 +50,22 @@
     z-index: 10;
     width: 2.1rem;
     height: .68rem;
-    background-size: contain;
-    background-repeat: no-repeat;
-    @include bg-image('../../../assets/images/message/read_all');
+    line-height: .68rem;
+    border-radius: 34px;
+    background-color: rgba(0, 0, 0, .5);
+    color: #fff;
+    font-size: 28px;
+    text-align: center;
+    .allReadIcon {
+      display: inline-block;
+      width: 32px;
+      height: 40px;
+      margin-right: 10px;
+      vertical-align: middle;
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-178px, -28px);
+    }
   }
+
   .msgItem {
     padding-top: 40px;
     .time {

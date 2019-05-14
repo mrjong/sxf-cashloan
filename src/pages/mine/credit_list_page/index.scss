@@ -12,7 +12,6 @@
       position: relative;
       width: 660px;
       margin: 30px auto 0;
-      // box-sizing: border-box;
       background: #fff;
       transition: all 100ms;
       border: 1PX  solid #e5e5e5;
@@ -21,7 +20,6 @@
       line-height: 140px;
       font-size: 32px;
       color: rgba(51, 51, 51, 1);
-      // padding: 0 30px;
       padding-left: 30px;
       .bank_name {
         margin: 0 24px 0 42px;
@@ -39,9 +37,6 @@
         width: 50px;
         height: 50px;
         margin-top: -25px;
-        @include bg-image('../../../assets/images/mine/selectCard/selected_ico');
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
       }
       :global {
         .am-swipe-btn,.am-swipe-actions-right,.am-swipe-content{
@@ -71,9 +66,7 @@
       margin-right: 10px;
       top: 5px;
       display: inline-block;
-      @include bg-image('../../../assets/images/mine/selectCard/add_icon');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
     }
   }
 }

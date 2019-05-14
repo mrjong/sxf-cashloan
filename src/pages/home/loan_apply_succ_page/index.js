@@ -1,15 +1,10 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import successIco from 'assets/images/mine/wallet/success_ico.png';
 import ButtonCustom from 'components/ButtonCustom';
 import { setBackGround } from 'utils/background'
-import { store } from 'utils/store';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-const API = {
-  
-}
 @fetch.inject()
 @setBackGround('#fff')
 export default class loan_apply_succ_page extends PureComponent {
@@ -18,18 +13,6 @@ export default class loan_apply_succ_page extends PureComponent {
     this.state = {
       copyText: '还到'
     }
-  }
-
-  componentWillMount() {
-    
-  }
-
-  componentDidMount() {
-    
-  }
-
-  componentWillUnmount() {
-    
   }
 
   copyOperation = () => {
@@ -41,7 +24,7 @@ export default class loan_apply_succ_page extends PureComponent {
     return (
       <div className={style.credit_apply_succ_page}>
         <div className={style.content}>
-          <img src={successIco} className={style.successIco} />
+          <i className={style.success_ico} />
           <div className={style.desc}>
             <p>借款申请提交成功</p>
           </div>

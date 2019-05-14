@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .confirm_agency_page {
   padding: 0.24rem 0 0;
   height: 100%;
@@ -14,7 +15,7 @@
     }
 
     .item_name {
-      margin-left: .3rem;
+      margin-left: 0.3rem;
       font-size: 0.3rem;
       color: #252729;
       display: flex;
@@ -22,7 +23,7 @@
     }
 
     .item_value {
-      padding-right: .3rem;
+      padding-right: 0.3rem;
       font-size: 0.3rem;
       color: #333;
       font-weight: bold;
@@ -32,6 +33,7 @@
       width: .18rem;
       height: .3rem;
       vertical-align: middle;
+      @include setArrow(right, 16px, #C5C5C5, 2PX);
     }
 
     .item_action {
@@ -60,26 +62,22 @@
   }
 
   .protocol_link {
-    color: #4DA6FF;
+    color: #4da6ff;
   }
 }
 
 .modal_content {
   position: relative;
-
   .modal_close_btn {
     position: absolute;
-    top: 0;
+    top: -5px;
     right: 0;
-    padding: 0.1rem;
-    height: 0.29rem;
-    width: 0.28rem;
   }
 
   .modal_title {
     font-size: 0.36rem;
     color: #333;
-    border-bottom: 1PX solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
     padding-bottom: 0.3rem;
   }
 
@@ -109,7 +107,7 @@
 .modal_tip_warp {
   :global {
     .am-modal-button-group-v .am-modal-button {
-      color: #EBDE74;
+      color: #ebde74;
     }
   }
 }
@@ -119,13 +117,13 @@
   text-align: left;
 
   .modl_tip_title {
-    font-size: .36rem;
+    font-size: 0.36rem;
     color: #333;
   }
 
   .modl_tip_text {
-    margin-top: .2rem;
-    font-size: .28rem;
+    margin-top: 0.2rem;
+    font-size: 0.28rem;
     line-height: 1.4;
     color: #666;
   }
@@ -146,31 +144,31 @@
   }
 
   .am-progress-bar {
-    border: 0.04rem solid #FFDA58;
+    border: 0.04rem solid #ffda58;
   }
 
-  .protocolsBox{
+  .protocolsBox {
     padding: 20px;
     box-sizing: border-box;
     background: transparent;
-    .am-action-sheet-button-list .am-action-sheet-cancel-button-mask{
+    .am-action-sheet-button-list .am-action-sheet-cancel-button-mask {
       background-color: transparent;
       height: 20px;
       top: -20px;
     }
-    .am-action-sheet-button-list .am-action-sheet-cancel-button{
+    .am-action-sheet-button-list .am-action-sheet-cancel-button {
       margin-top: 20px;
       border-radius: 10px;
       color: #333;
     }
-    .am-action-sheet-button-list-item{
+    .am-action-sheet-button-list-item {
       background: #fff;
-      color: #4CA6FF;
+      color: #4ca6ff;
     }
-    .am-action-sheet-button-list-item:first-child{
+    .am-action-sheet-button-list-item:first-child {
       border-radius: 10px 10px 0 0;
     }
-    .am-action-sheet-button-list-item:nth-last-child(2){
+    .am-action-sheet-button-list-item:nth-last-child(2) {
       border-radius: 0 0 10px 10px;
     }
   }
@@ -181,8 +179,7 @@
     html:not([data-scale]) .protocolsBox .am-action-sheet-button-list-item:first-child:before,
     html:not([data-scale]) .protocolsBox .am-action-sheet-button-list-item:last-child:before,
     html:not([data-scale]) .am-action-sheet-button-list .am-action-sheet-cancel-button-mask::before,
-    html:not([data-scale]) .am-action-sheet-button-list .am-action-sheet-cancel-button-mask::after,
-    {
+    html:not([data-scale]) .am-action-sheet-button-list .am-action-sheet-cancel-button-mask::after {
       display: none;
     }
   }

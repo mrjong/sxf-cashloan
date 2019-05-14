@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/store';
-import { Modal } from 'antd-mobile';
+import { Modal, Icon } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
@@ -226,7 +226,7 @@ export default class select_save_page extends PureComponent {
                           <span>···· {item.lastCardNo}</span>
                           {
                             isSelected ? (
-                              <i className={styles.selected_ico}></i>
+                              <Icon type="check-circle-o" color='#5CE492' className={styles.selected_ico}/>
                             ) : null
                           }
                         </li>

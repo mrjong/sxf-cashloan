@@ -8,7 +8,6 @@
 			padding-right: 34px;
 		}
 		.am-list-item .am-list-line .am-list-content {
-			// font-size: 30px;
 			font-size: 14PX;
 			line-height: 1;
 			color: #333;
@@ -21,13 +20,11 @@
 			transform: translate(0, -50%);
 		}
 		.am-list-item .am-list-line .am-list-extra {
-			// background: red;
 			padding: 0;
 			line-height: 1;
 			margin-right: 0;
 		}
 		.am-list-extra span {
-			// font-size: 30px;
 			font-size: 14PX;
 			display: block;
 			& + span {

@@ -1,3 +1,4 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .mine_page {
 	overflow-y: auto;
 	.user_inf {
@@ -44,4 +45,36 @@
 		text-align: center;
 		margin: 42px 0;
 	}
+	i {
+    position: absolute;
+    top: 51%;
+    transform: translate(0, -50%);
+    display: inline-block;
+    width: 42px;
+    height: 42px;
+  }
 }
+
+// 菜单列表icon的类名
+.coupon_page {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',0, -58px);
+}
+.wallet_page {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-53px, -58px);
+}
+.real_name {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-53px, 0);
+}
+.credit_extension_page {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-106px, 0);
+}
+.select_credit_page {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-159px, 0);
+}
+.select_save_page {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-212px, 0);
+}
+.fqa_page {
+  @include spriteSkinIcon('../../../assets/images/common/skin_icon.png',-265px, 0);
+}
+

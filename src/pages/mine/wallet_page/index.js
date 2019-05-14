@@ -2,10 +2,9 @@ import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import WalletBg from 'assets/images/mine/wallet/wallet_bg.png';
-import rightArrow from 'assets/images/mine/wallet/right_arrow.png';
 import ButtonCustom from 'components/ButtonCustom';
 import { getDeviceType } from 'utils';
-import { Modal } from 'antd-mobile';
+import { Modal, Icon } from 'antd-mobile';
 import { store } from 'utils/store';
 
 let bankCardInf = null;
@@ -196,11 +195,13 @@ export default class wallet_page extends PureComponent {
 				</ButtonCustom>
 				<div className={style.entryBox}>
 					<span className={style.income} onClick={this.goIncome}>
-						收入<img src={rightArrow} className={style.rightArrow} />
+						收入
+						<Icon type='right' className={style.rightArrow} />
 					</span>
 					<span className={style.divideLine} />
 					<span className={style.withdraw} onClick={this.goWithdraw}>
-						提现<img src={rightArrow} className={style.rightArrow} />
+						提现
+						<Icon type='right' className={style.rightArrow} />						
 					</span>
 				</div>
 				<Modal
@@ -214,11 +215,8 @@ export default class wallet_page extends PureComponent {
 				>
 					<div className={style.modal_box}>
 						<div className={style.modal_title}>
-							提现到银行卡<i
-								onClick={() => {
-									this.setState({ showMoudle: false });
-								}}
-							/>
+							提现到银行卡
+							<Icon type='cross' className={style.modal_close_btn} onClick={() => {this.setState({ showModel: false })}} color='#333'/>
 						</div>
 						<div className={`${style.modal_flex} ${style.with_border}`}>
 							<span className={style.modal_label}>提现金额</span>
