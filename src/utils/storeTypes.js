@@ -67,8 +67,10 @@ export const storeTypes = {
 	CreditSuccessBack: 'CreditSuccessBack', // 信用卡绑卡之后立即去提交页需要提示
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
 	LoginDownloadBtn: 'LoginDownloadBtn', // 登陆页点击立即下载按钮标识
-	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
 	MessageTagLimitDate: 'MessageTagLimitDate', // 首页的额度有效期显示标识
 	OverdueInf: 'OverdueInf', // 逾期进度数据
-	SuccessPay: 'SuccessPay', // 结清弹框拒就赔 活动返回
+	SuccessPay: 'SuccessPay', // 418 活动返回
+	IdChkPhotoBack: 'IdChkPhotoBack', // 签约页是否需要补充活体识别标示
+	ChkPhotoBackNew: 'ChkPhotoBackNew', // 活体直接返回
+	RealNameNextStep: 'RealNameNextStep' // 需要下一步
 };

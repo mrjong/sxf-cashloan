@@ -11,9 +11,9 @@ import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 
 const API = {
-  VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
-  LOGOUT: '/signup/logout', // 用户退出登陆
-  USERSTATUS: '/signup/getUsrSts', // 用户状态获取
+	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
+	LOGOUT: '/signup/logout', // 用户退出登陆
+	USERSTATUS: '/signup/getUsrSts' // 用户状态获取
 };
 
 let token = '';
@@ -124,100 +124,104 @@ export default class mine_page extends PureComponent {
     });
   };
 
-  // 退出
+	// 退出
 
-  // 第一组里的点击事件
-  clickhandle = item => {
-    if (!tokenFromStorage && !token) {
-      this.props.toast.info('请先登录', 2, () => {
-        this.props.history.push('/login');
-      });
-      return;
-    }
-    if (item.jumpToUrl === '/mine/coupon_page') {
-      this.props.history.push(item.jumpToUrl);
-    } else {
-      const { mblNoHid, realNmFlg } = this.state;
-      if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
-        // this.props.history.push(item.jumpToUrl);
-        this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
-      }
-      // if (!mblNoHid) {
-      //   this.props.toast.info('用户未登录', 2, () => {
-      //     this.props.history.push('/login');
-      //   })
-      // }
-      if (!realNmFlg) {
-        this.props.toast.info('请先进行实名认证', 2, () => {
-          // let isWx=this.is_weixn()
-          // if (isWx) {
-          //     //在微信中打开
-          //     this.props.history.replace('/wxName')
-          // }
-          //else{
-          this.props.history.push('/home/real_name')
-          //}
-        })
-      }
-    }
-  };
-  // 第二组里的点击事件
-  clickhandle2 = item => {
-    if (!tokenFromStorage && !token) {
-      this.props.toast.info('请先登录', 2, () => {
-        this.props.history.push('/login');
-      });
-      return;
-    }
-    if (item.jumpToUrl === '/home/real_name' || item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' || item.jumpToUrl === '/mine/fqa_page') {
-      if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
-        buriedPointEvent(mine.creditExtension, {
-          entry: '我的',
-        });
-      }
-      this.props.history.push(item.jumpToUrl);
-    } else {
-      const { mblNoHid, realNmFlg } = this.state;
-      if (mblNoHid && realNmFlg) {
-        this.props.history.push(item.jumpToUrl);
-      }
-      // if (!mblNoHid) {
-      //   this.props.toast.info('用户未登录', 2, () => {
-      //     this.props.history.push('/login');
-      //   })
-      // }
-      if (!realNmFlg) {
-        this.props.toast.info('请先进行实名认证', 2, () => {
-          // let isWx=this.is_weixn()
-          // if (isWx) {
-          //     //在微信中打开
-          //     this.props.history.replace('/wxName')
-          // }
-          //else{
-          this.props.history.push('/home/real_name')
-          //}
-        })
-      }
-    }
-  };
-  // 第三组里的点击事件
-  clickhandle3 = item => {
-    if (!tokenFromStorage && !token) {
-      this.props.toast.info('请先登录', 2, () => {
-        this.props.history.push('/login');
-      });
-      return;
-    }
-    this.props.history.push(item.jumpToUrl);
-  };
-  // 点击退出登录后弹框
-  logoutHandler = () => {
-    logoutAppHandler();
-  };
-  // 登陆
-  logInHandler = () => {
-    this.props.history.push('/login');
-  }
+	// 第一组里的点击事件
+	clickhandle = (item) => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		if (item.jumpToUrl === '/mine/coupon_page') {
+			this.props.history.push(item.jumpToUrl);
+		} else {
+			const { mblNoHid, realNmFlg } = this.state;
+			if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
+				// this.props.history.push(item.jumpToUrl);
+				this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
+			}
+			// if (!mblNoHid) {
+			//   this.props.toast.info('用户未登录', 2, () => {
+			//     this.props.history.push('/login');
+			//   })
+			// }
+			if (!realNmFlg) {
+				this.props.toast.info('请先进行实名认证', 2, () => {
+					// let isWx=this.is_weixn()
+					// if (isWx) {
+					//     //在微信中打开
+					//     this.props.history.replace('/wxName')
+					// }
+					//else{
+					this.props.history.push('/home/real_name?type=noRealName');
+					//}
+				});
+			}
+		}
+	};
+	// 第二组里的点击事件
+	clickhandle2 = (item) => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		if (
+			item.jumpToUrl === '/home/real_name?type=noRealName' ||
+			item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
+			item.jumpToUrl === '/mine/fqa_page'
+		) {
+			if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
+				buriedPointEvent(mine.creditExtension, {
+					entry: '我的'
+				});
+			}
+			this.props.history.push(item.jumpToUrl);
+		} else {
+			const { mblNoHid, realNmFlg } = this.state;
+			if (mblNoHid && realNmFlg) {
+				this.props.history.push(item.jumpToUrl);
+			}
+			// if (!mblNoHid) {
+			//   this.props.toast.info('用户未登录', 2, () => {
+			//     this.props.history.push('/login');
+			//   })
+			// }
+			if (!realNmFlg) {
+				this.props.toast.info('请先进行实名认证', 2, () => {
+					// let isWx=this.is_weixn()
+					// if (isWx) {
+					//     //在微信中打开
+					//     this.props.history.replace('/wxName')
+					// }
+					//else{
+					this.props.history.push('/home/real_name?type=noRealName');
+					//}
+				});
+			}
+		}
+	};
+	// 第三组里的点击事件
+	clickhandle3 = (item) => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		this.props.history.push(item.jumpToUrl);
+	};
+	// 点击退出登录后弹框
+	logoutHandler = () => {
+		logoutAppHandler();
+	};
+	// 登陆
+	logInHandler = () => {
+		this.props.history.push('/login');
+	};
 
   goPage = () => {
     this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine')
@@ -267,7 +271,7 @@ export default class mine_page extends PureComponent {
           name: '实名认证',
           className: styles.real_name
         },
-        jumpToUrl: '/home/real_name',
+        jumpToUrl: '/home/real_name?type=noRealName',
       },
       {
         label: {
@@ -318,4 +322,3 @@ export default class mine_page extends PureComponent {
     )
   }
 }
-

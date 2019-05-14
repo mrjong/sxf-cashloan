@@ -3,7 +3,7 @@ import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 import updateLeft from 'assets/images/real_name/left.png';
 import updateRight from 'assets/images/real_name/right.png';
-import updateBottom from 'assets/images/real_name/bottom.png';
+import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
 import FEZipImage from 'components/FEZIpImage';
 import { InputItem, List, Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
@@ -11,7 +11,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, validators, handleInputBlur, getNextStr, handleClickConfirm } from 'utils';
+import { getDeviceType, validators, handleInputBlur, getNextStr, handleClickConfirm, idChkPhoto } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
@@ -26,7 +26,6 @@ const API = {
 };
 
 let urlQuery = '';
-// let isFetching = false;
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
@@ -36,11 +35,9 @@ export default class real_name_page extends Component {
 		idNo: '',
 		ocrZhengData: {},
 		ocrFanData: {},
-		selectFlag: false,
 		leftValue: updateLeft,
 		updateLeftValue: '',
 		rightValue: updateRight,
-		footerValue: updateBottom,
 		leftUploaded: false,
 		rightUploaded: false,
 		footerUploaded: false,
@@ -52,6 +49,7 @@ export default class real_name_page extends Component {
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
 		}
+
 		urlQuery = qs.parse(location.search, { ignoreQueryPrefix: true });
 		let userInfo = store.getUserInfo();
 		if (urlQuery.newTitle) {
@@ -165,55 +163,8 @@ export default class real_name_page extends Component {
 				this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
 			});
 	};
-	// 手持身份证照片
-	handleChangeBottom = ({ base64Data }) => {
-		if (!base64Data) {
-			this.props.SXFToast.hide();
-			this.setState({
-				disabledupload: 'false'
-			});
-		}
-		if (!isEquipment) {
-			this.props.toast.info('请使用手机设备');
-			return;
-		}
-		this.setState({ showFloat: true });
-		buriedPointEvent(home.informationTapHoldIdCard);
-		this.setState({ footerValue: base64Data });
-		const params1 = {
-			imageBase64: this.state.footerValue, //手持身份证照片
-			ocrType: '1'
-		};
-		this.props.$fetch
-			.post(`${API.getImgUrl}`, params1, { timeout: 30000 })
-			.then((res) => {
-				this.props.SXFToast.hide();
-				this.setState({
-					disabledupload: 'false'
-				});
-				if (res.msgCode === 'PTM0000') {
-					this.setState({ ocrData: res.data });
-					this.setState({ footerUploaded: true });
-					this.setState({ showFloat: false });
-				} else {
-					this.props.toast.info(res.msgInfo);
-					this.setState({ footerUploaded: false, footerValue: updateBottom });
-				}
-			})
-			.catch(() => {
-				this.props.SXFToast.hide();
-				this.setState({
-					disabledupload: 'false'
-				});
-				this.setState({ showFloat: false, footerValue: updateBottom });
-			});
-	};
 
 	handleSubmit = () => {
-		// if (isFetching) {
-		//   console.log('不可点击');
-		//   return;
-		// }
 		if (!this.state.leftUploaded) {
 			this.props.toast.info('请上传身份证正面');
 			return false;
@@ -230,17 +181,12 @@ export default class real_name_page extends Component {
 			this.props.toast.info('请输入正确的身份证号');
 			return false;
 		}
-		if (!this.state.footerUploaded) {
-			this.props.toast.info('请上传手持身份证');
-			return false;
-		}
-		// isFetching = true;
-		const { ocrZhengData = {}, ocrFanData = {}, ocrData = {}, idName, idNo } = this.state;
+		const { ocrZhengData = {}, ocrFanData = {}, idName, idNo } = this.state;
 		const osType = getDeviceType();
 		const params = {
 			idCardFrontUrl: ocrZhengData.imgUrl, //正面URL
 			idCardBackUrl: ocrFanData.imgUrl, //反面URL
-			handCardImgUrl: ocrData, //手持正面URL
+			// handCardImgUrl: ocrData, //手持正面URL
 			idNo: idNo.toLocaleUpperCase(), // 证件号码
 			idNoOld: ocrZhengData.idNo && ocrZhengData.idNo.toLocaleUpperCase(), // 修改前证件号码
 			usrNm: idName, //证件姓名
@@ -271,58 +217,144 @@ export default class real_name_page extends Component {
 					this.nextFunc();
 				} else if (store.getNeedNextUrl()) {
 					this.props.SXFToast.loading('数据加载中...', 0);
-					getNextStr({
-						$props: this.props
+					this.nextFunc(() => {
+						getNextStr({
+							$props: this.props
+						});
 					});
 				} else {
-					this.props.history.goBack();
-				}
-				// this.props.history.replace({ pathname: '/mine/credit_extension_page', search: urlQuery });
-			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
-				if (store.getNeedNextUrl()) {
-					this.props.SXFToast.loading('数据加载中...', 0);
-					getNextStr({
-						$props: this.props
+					this.nextFunc(() => {
+						this.props.history.goBack();
 					});
+					// this.props.history.goBack();
 				}
+			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
+				this.nextFunc(() => {
+					if (store.getNeedNextUrl()) {
+						this.props.SXFToast.loading('数据加载中...', 0);
+						getNextStr({
+							$props: this.props
+						});
+					}
+				});
 			} else if (result.msgCode === 'URM5016' && urlQuery.newTitle) {
 				store.setBackFlag(true);
 				this.nextFunc();
 			} else {
 				this.confirmBuryPoint(false, result.msgInfo);
-				// isFetching = false;
 				this.props.toast.info(result.msgInfo);
 			}
 		});
 	};
-	nextFunc = () => {
+	nextFunc = (callBack) => {
 		// 新用户
 		switch (urlQuery.type) {
 			// 新用户授信来的
+			case 'noRealName':
+				idChkPhoto({
+					$props: this.props,
+					type: 'noRealName',
+					msg: '审核'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							callBack && callBack();
+							break;
+						case '3':
+							if (urlQuery.fromRouter === 'home') {
+								store.setRealNameNextStep('home');
+							} else {
+								store.setRealNameNextStep('other');
+							}
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
+				});
+				break;
+			// 新用户授信来的
 			case 'creditExtension':
-				//调用授信接口
-				handleClickConfirm(
-					this.props,
-					{
-						...store.getLoanAspirationHome()
-					},
-					'back'
-				);
+				idChkPhoto({
+					$props: this.props,
+					type: 'creditExtension',
+					msg: '审核'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							this.props.toast.info('实名照片补充成功!');
+							store.removeToggleMoxieCard();
+							setTimeout(() => {
+								handleClickConfirm(
+									this.props,
+									{
+										...store.getLoanAspirationHome()
+									},
+									2000
+								);
+							});
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
+				});
 				break;
 			case 'historyCreditExtension':
 				store.removeToggleMoxieCard();
-				getNextStr({
-					$props: this.props
+
+				// 实名之后
+				idChkPhoto({
+					$props: this.props,
+					type: 'historyCreditExtension',
+					msg: '认证'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							this.props.toast.info('实名照片补充成功!');
+							store.removeToggleMoxieCard();
+							setTimeout(() => {
+								getNextStr({
+									$props: this.props
+								});
+							}, 2000);
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
 				});
 				break;
 			case 'agency_page':
-				this.props.toast.info('实名照片补充成功!');
-				store.removeToggleMoxieCard();
-				setTimeout(() => {
-					history.go(-2);
-				}, 3000);
+				idChkPhoto({
+					$props: this.props,
+					type: 'agency_page',
+					msg: '放款'
+				}).then((res) => {
+					switch (res) {
+						case '1':
+							this.props.toast.info('实名照片补充成功!');
+							store.removeToggleMoxieCard();
+							setTimeout(() => {
+								history.go(-2);
+							}, 3000);
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							store.setChkPhotoBackNew(-2); //活体直接返回
+							break;
+						default:
+							break;
+					}
+				});
 				break;
-
 			default:
 				break;
 		}
@@ -351,14 +383,9 @@ export default class real_name_page extends Component {
 	};
 	handleAfterCompress = () => {
 		store.removeDisableBack();
-		// this.props.toast.hide();
 	};
 	render() {
 		const { disabledupload } = this.state;
-		// let selectFlag = true;
-		// if (this.state.leftUploaded && this.state.rightUploaded && this.state.footerUploaded) {
-		//   selectFlag = false;
-		// }
 		return (
 			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
 				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
@@ -389,7 +416,9 @@ export default class real_name_page extends Component {
 								/>
 								<p>拍摄身份证反面</p>
 							</div>
+							<img src={updateBottomTip} style={{ width: '100%', marginTop: '.3rem' }} />
 						</div>
+
 						<InputItem
 							onChange={this.handleNameChange}
 							placeholder="借款人本人姓名"
@@ -417,27 +446,7 @@ export default class real_name_page extends Component {
 						>
 							身份证号
 						</InputItem>
-						<div className={`${style.updateTitle} ${style.mt30}`}>
-							<span>上传本人手持身份证照片</span>
-						</div>
-						<div className={style.updateContent}>
-							<div className={style.updateImgLeft}>
-								<FEZipImage
-									disabledupload={disabledupload}
-									style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-									value={this.state.footerValue}
-									onChange={this.handleChangeBottom}
-									beforeCompress={this.handleBeforeCompress}
-									afterCompress={this.handleAfterCompress}
-								/>
-								<p>上传手持身份证</p>
-							</div>
-							<div className={style.updateTop}>
-								<div className={style.examples}>参考示例</div>
-								<div className={style.examplesDes}>照片上的身份证信息和持证人脸部须清晰可辨。照片格式支持jpg、png等格式。</div>
-							</div>
-							<div className={style.clear} />
-						</div>
+
 						<div className={style.des}>
 							<p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行身份认证</p>
 							<p className={style.desOne}>*身份信息一旦认证，不可修改</p>

@@ -115,13 +115,15 @@ export default class home_page extends PureComponent {
 		// 清除返回的flag
 		store.removeBackFlag();
 		// 运营商直接返回的问题
-		store.removeCarrierMoxie();
+		// store.removeCarrierMoxie();
 		// 信用卡绑卡之后立即去提交页需要提示
 		store.removeCreditSuccessBack();
 		// 未提交授信用户
 		store.removeCreditExtensionNot();
 		// 去除需要调用获取下一步url方法
-		store.removeNeedNextUrl();
+    store.removeNeedNextUrl();
+    // 活体直接返回
+		store.removeChkPhotoBackNew();
 		// 清除订单缓存
 		store.removeBackData();
 		// 结清页去活动页
@@ -331,6 +333,7 @@ export default class home_page extends PureComponent {
 			return;
 		}
 		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length != 0) {
+			//认证过期
 			this.setState({
 				showDiv: 'circle',
 				percentSatus: '3',
@@ -368,7 +371,6 @@ export default class home_page extends PureComponent {
 					showDiv: 'circle'
 				});
 				break;
-
 			default:
 		}
 	};
@@ -1053,6 +1055,12 @@ export default class home_page extends PureComponent {
 							buriedPointEvent(home.compensationCreditCardConfirm, {
 								pageCode: '补充身份证照片'
 							});
+							break;
+						case '3':
+							buriedPointEvent(home.compensationCreditCardConfirm, {
+								pageCode: '补充人脸识别'
+              });
+              store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 							break;
 						default:
 							break;

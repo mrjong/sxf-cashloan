@@ -93,6 +93,12 @@ if (window.history && window.history.pushState) {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
+			// 人脸中间页物理返回
+			if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
+				history.go(Number(store.getIdChkPhotoBack()));
+				store.removeIdChkPhotoBack();
+				return;
+			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
 				if (!store.getToggleMoxieCard() && ((userInfo && userInfo.nameHid) || backFlag)) {
@@ -169,7 +175,7 @@ if (window.history && window.history.pushState) {
 					if (tokenFromStorage && token) {
 						window.ReactRouterHistory.goBack();
 					} else {
-						if(!store.getLoginDownloadBtn()) {
+						if (!store.getLoginDownloadBtn()) {
 							window.close();
 							WeixinJSBridge.call('closeWindow');
 						}
@@ -206,7 +212,6 @@ if (window.history && window.history.pushState) {
 							window.handleCloseHomeModal();
 							return;
 						}
-						// alert(store.getCarrierMoxie())
 						if (store.getCarrierMoxie()) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();

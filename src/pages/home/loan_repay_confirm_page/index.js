@@ -71,6 +71,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	componentWillUnmount() {
 		clearInterval(timer);
+		store.removeRealNameNextStep();
 	}
 
 	startInterval = () => {
@@ -316,6 +317,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 					this.props.toast.info('请选择借款期限');
 					return;
 				}
+				const params = {
+					...this.state.selectedLoanDate,
+					activeName: tagList[this.state.activeTag].name,
+					autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
+					rpyAmt: Number(values.loanMoney)
+				};
 				idChkPhoto({
 					$props: this.props,
 					type: 'creditExtension',
@@ -325,21 +332,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 						case '1':
 							// 成功
 							//调用授信接口
-							handleClickConfirm(this.props, {
-								...this.state.selectedLoanDate,
-								activeName: tagList[this.state.activeTag].name,
-								autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
-								rpyAmt: Number(values.loanMoney)
-							});
+							handleClickConfirm(this.props, params);
 							break;
 						case '2':
-							// 失败
-							const params = {
-								...this.state.selectedLoanDate,
-								activeName: tagList[this.state.activeTag].name,
-								autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
-								rpyAmt: Number(values.loanMoney)
-							};
+							store.setLoanAspirationHome(params);
+							break;
+						case '3':
+							store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 							store.setLoanAspirationHome(params);
 							break;
 						default:

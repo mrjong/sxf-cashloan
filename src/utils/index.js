@@ -18,7 +18,8 @@ const API = {
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 	submitState: '/bill/apply', // 提交代还金申请
-	idChkPhoto: '/auth/idChkPhoto'
+	idChkPhoto: '/auth/idChkPhoto',
+	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -184,7 +185,11 @@ const interceptRouteArr = [
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (store.getGoMoxie()) {
+		if (store.getChkPhotoBackNew()) {
+			history.go(Number(store.getChkPhotoBackNew()));
+			store.removeIdChkPhotoBack();
+			store.removeChkPhotoBackNew();
+		} else if (store.getGoMoxie()) {
 			history.go(-1);
 			store.removeGoMoxie();
 		} else {
@@ -223,6 +228,20 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 			switch (res.msgCode) {
 				case 'PTM0000':
 					resolve('1');
+					break;
+				case 'PTM0011':
+					resolve('3');
+					$props.toast.info('请先人脸识别认证');
+					setTimeout(() => {
+						$props.$fetch.post(`${API.getFace}`, {}).then((result) => {
+							if (result.msgCode === 'PTM0000' && result.data) {
+								$props.SXFToast.loading('加载中...', 0);
+								window.location.href = result.data;
+							} else {
+								$props.toast.info(result.msgInfo);
+							}
+						});
+					}, 2000);
 					break;
 				case 'PTM0006':
 					store.setToggleMoxieCard(true);
@@ -390,8 +409,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				$props.toast.info(msg);
 				setTimeout(() => {
 					$props.history.push({
-						pathname: '/home/real_name'
-						// search: urlQuery
+						pathname: '/home/real_name',
+						search: '?type=noRealName&fromRouter=home'
 					});
 				}, 3000);
 				return;

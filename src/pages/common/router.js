@@ -19,5 +19,12 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/common/wx_middle_page')
+	},
+	{
+		path: '/common/tencent_face_middle_page',
+		title: '活体检测',
+		arrowHide: 'empty',
+		headerHide: true,
+		component: () => import('pages/common/tencent_face_middle_page')
 	}
 ];

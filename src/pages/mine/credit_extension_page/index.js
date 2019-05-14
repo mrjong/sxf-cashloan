@@ -12,11 +12,11 @@ const API = {
 	getStw: '/my/getStsw', // 获取4个认证项的状态
 	getOperator: '/auth/operatorAuth', // 运营商的跳转URL
 	getZmxy: '/auth/getZhimaUrl', // 芝麻认证的跳转URL
-	getXMURL: '/auth/zmAuth' // 芝麻认证之后的回调状态
+	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
+	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
 let urlQuery = '';
 let autId = '';
-// const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'zmxy'];
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 
 @fetch.inject()
@@ -30,7 +30,7 @@ export default class credit_extension_page extends PureComponent {
 		stswData: [],
 		flag: false,
 		submitFlag: false,
-		isShowBtn: true, // 是否展示提交代还金申请按钮
+		isShowBtn: true // 是否展示提交代还金申请按钮
 	};
 
 	componentWillMount() {
@@ -43,6 +43,7 @@ export default class credit_extension_page extends PureComponent {
 		this.requestGetStatus();
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		urlQuery = this.props.history.location.search;
+		urlQuery = urlQuery ? urlQuery + '&type=noRealName' : '?type=noRealName';
 		autId = query.autId;
 		const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
 		if (!isShowCommit || isShowCommit === 'false') {
@@ -133,6 +134,18 @@ export default class credit_extension_page extends PureComponent {
 					buriedPointEvent(mine.creditExtensionRealName);
 					this.props.history.push({ pathname: '/home/real_name', search: urlQuery });
 					break;
+				case 'faceDetect':
+					this.props.$fetch.post(`${API.getFace}`, {}).then((result) => {
+						if (result.msgCode === 'PTM0000' && result.data) {
+							buriedPointEvent(mine.creditExtensionFaceAuth);
+							store.setMoxieBackUrl(`/mine/credit_extension_page${urlQuery}`);
+							this.props.SXFToast.loading('加载中...', 0);
+							window.location.href = result.data;
+						} else {
+							this.props.toast.info(result.msgInfo);
+						}
+					});
+					break;
 				case 'basicInf':
 					buriedPointEvent(mine.creditExtensionBaseInfo);
 					this.props.history.push({ pathname: '/home/essential_information', search: urlQuery });
@@ -151,7 +164,7 @@ export default class credit_extension_page extends PureComponent {
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
                                         .location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
-                                        
+
 							} else {
 								this.props.toast.info(result.msgInfo);
 							}
