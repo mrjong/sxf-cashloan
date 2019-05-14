@@ -13,6 +13,7 @@ import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
 import LoginAlert from './components/LoginAlert';
 import { store } from 'utils/store';
+import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 
 const API = {
   joinActivity: '/jjp/join', // 参加活动 里面会判断用户有没有资格
@@ -28,6 +29,7 @@ export default class juPei_page extends PureComponent {
       showRuleModal: false,
       isShowLogin: false, // 公众号显示登陆弹框
       showLoginTip: false, // mpos开屏进入时是否登陆弹框
+      showBoundle: false, // 是否展示未实名的弹框
     }
   }
 
@@ -141,7 +143,7 @@ export default class juPei_page extends PureComponent {
   };
 
   render() {
-    const { isShowLogin, showLoginTip  } = this.state;
+    const { isShowLogin, showLoginTip, showBoundle } = this.state;
     return (
       <div className={styles.main}>
         <SmsAlert
@@ -152,14 +154,18 @@ export default class juPei_page extends PureComponent {
 							this.goHomePage();
 						},
 						URM0008: (res, getType) => {},
-						others: (res, getType) => {}
+						others: (res, getType) => {
+              this.props.toast.info(res.msgInfo);
+            }
 					}}
 					goLoginCb={{
 						PTM0000: (res, getType) => {
 							this.goHomePage();
 						},
 						URM0008: (res, getType) => {},
-						others: (res, getType) => {}
+						others: (res, getType) => {
+              this.props.toast.info(res.msgInfo);
+            }
 					}}
 					validateMposCb={{
 						PTM9000: (res, getType) => {
@@ -254,7 +260,8 @@ export default class juPei_page extends PureComponent {
 							<div className={styles.closeBtnStyle} onClick={this.closeTip} />
 						</div>
 					</div>
-				)}
+        )}
+        {showBoundle ? <Alert_mpos /> : null}
       </div>
     )
   }
