@@ -90,7 +90,7 @@ export default class juPei_page extends PureComponent {
         });
         
       } else if (res && res.msgCode === 'JJP0001') { // 用户参加过拒就赔活动
-        this.props.toast.info('参与成功', 2 ,() => {
+        this.props.toast.info('您已参与该活动', 2 ,() => {
           this.props.history.push('/home/home');
         });
       }  else if (res && res.msgCode === 'JJP0004') { // 用户没有资格参加拒就赔活动
