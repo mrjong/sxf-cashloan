@@ -64,6 +64,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	componentWillUnmount() {
 		clearInterval(timer);
+		store.removeRealNameNextStep();
 	}
 
 	startInterval = () => {
