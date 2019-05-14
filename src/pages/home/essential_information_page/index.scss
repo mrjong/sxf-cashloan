@@ -2,10 +2,11 @@
 
 .nameDiv {
 	.informationMore {
-		position: absolute;
-    right: 8px;
-    top: 20px;
-    width: 50px;
+		position: relative;
+		width: 0.13rem;
+		float: right;
+		right: 0.35rem;
+		margin-top: -0.5rem;
 	}
 	/* stylelint-disable */
 	::-webkit-input-placeholder {
@@ -28,6 +29,7 @@
 	.clear {
 		clear: both;
 	}
+
 	.sureBtn {
 		width: 6.2rem;
 		margin-top: 89px;
