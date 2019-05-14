@@ -368,7 +368,7 @@ export default class coupon_page extends PureComponent {
       );
     };
     return (
-      <div className={style.message_page} ref={el => (this.messageBox = el)}>
+      <div className="coupon_page" ref={el => (this.messageBox = el)}>
         {this.state.tabState ? (
           <STabs
             tabTit={this.state.tabs}

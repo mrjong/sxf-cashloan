@@ -1,31 +1,40 @@
 @import '../../../assets/styles/scss/base/fn';
-:global {
-	.am-list-body {
-		background-color: #f5f5f5;
-		&::before,
-		&::after {
-			background-color: transparent !important;
-		}
+.heightBody {
+	height: calc(100vh - 1.88rem);
+}
+.application_navbar ~ .application_content {
+	.heightBody {
+		height: calc(100vh - .88rem);
 	}
 }
-.no_header{
+.no_header {
 	:global {
+    .am-list-body {
+			background-color: #f5f5f5;
+			&::before,
+			&::after {
+				background-color: transparent !important;
+			}
+		}
+    .am-pull-to-refresh-content-wrapper {
+			overflow: visible;
+		}
 		.am-list-header {
 			padding: 0;
 		}
 	}
-	.reach_bottom{
+	.reach_bottom {
 		width: 340px;
 		margin: 15px auto 0;
 		border-top: 1PX dotted rgba(157, 157, 157, 1);
-		span{
+		span {
 			position: relative;
 			top: -0.9em;
 			background: #f5f5f5;
 			padding: 0 10px;
 		}
 	}
-	.no_use_coupon{
+	.no_use_coupon {
 		position: relative;
 		height: 90px;
 		line-height: 90px;
@@ -34,7 +43,7 @@
 		padding: 0 40px 0 20px;
 		font-size: 30px;
 		color: rgba(108, 108, 108, 1);
-		i{
+		i {
 			position: absolute;
 			width: 34px;
 			right: 50px;
@@ -79,23 +88,23 @@
 		text-align: center;
 		line-height: 200px;
 		height: 200px;
-		.couponType2{
+		.couponType2 {
 			font-size: 48px;
 		}
-		.couponType3{
+		.couponType3 {
 			font-size: 44px;
-			i{
+			i {
 				font-size: 108px;
 			}
 		}
-		.couponType4{
+		.couponType4 {
 			display: inline-block;
 			font-size: 28px;
 			line-height: 1.3;
-			i{
+			i {
 				font-size: 48px;
 			}
-			.dayNum{
+			.dayNum {
 				font-size: 108px;
 			}
 		}
@@ -119,8 +128,8 @@
 			color: #333;
 			font-weight: bold;
 		}
-		.textGray{
-			color: #DDD;
+		.textGray {
+			color: #ddd;
 		}
 	}
 	.icon_status {
@@ -197,7 +206,7 @@
 	}
 }
 .box {
-	.rightLittleBox{
+	.rightLittleBox {
 		.ellipsis {
 			@include ellipsis(375px);
 		}

@@ -1,18 +1,26 @@
-.income_page{
+.income_page {
 	margin: 0 19px;
 }
-.incomeBox{
+.heightBody {
+	height: calc(100vh - 1.88rem);
+}
+.application_navbar ~ .application_content {
+	.heightBody {
+		height: calc(100vh - .88rem);
+	}
+}
+.incomeBox {
 	background: #fff;
 	margin-top: 30px;
 	padding: 20px;
 	border-radius: 30px;
-	.incomeTit{
+	.incomeTit {
 		font-size: 30px;
 		font-weight: 400;
 		color: rgba(37, 39, 41, 1);
 		margin-left: 16px;
 	}
-	.incomeCont{
+	.incomeCont {
 		position: relative;
 		margin-top: 23px;
 		background: url(assets/images/mine/wallet/income_bg.png) no-repeat center;
@@ -22,29 +30,29 @@
 		display: flex;
 		align-items: center;
 		height: 192px;
-		.redBag{
+		.redBag {
 			width: 110px;
 		}
-		.incomeMoney{
+		.incomeMoney {
 			font-size: 30px;
 			font-weight: 400;
 			color: rgba(240, 91, 25, 1);
-			span{
+			span {
 				font-size: 50px;
 				margin-left: 14px;
 			}
 		}
-		.incomeTime{
-			margin: 18px 0;
+		.incomeTime {
+			margin: 5px 0;
 		}
 	}
-	.incomeContExpired{
+	.incomeContExpired {
 		background-image: url(assets/images/mine/wallet/income_bg2.png);
 	}
-	.incomeContSucc{
+	.incomeContSucc {
 		background-image: url(assets/images/mine/wallet/income_bg3.png);
 	}
-	.incomeContent{
+	.incomeContent {
 		margin-left: 30px;
 		font-size: 24px;
 		font-weight: 400;
@@ -78,28 +86,31 @@
 }
 .income_page {
 	:global {
+		.am-pull-to-refresh-content-wrapper {
+			overflow: visible;
+		}
 		.am-pull-to-refresh-indicator {
-		  font-size: 26px;
+			font-size: 26px;
 		}
 		.am-list-body {
-		  background-color: #f5f5f5;
-		  &::before {
-			background-color: transparent !important;
-		  }
-		  &::after {
-			background-color: transparent !important;
-		  }
+			background-color: #f5f5f5;
+			&::before {
+				background-color: transparent !important;
+			}
+			&::after {
+				background-color: transparent !important;
+			}
 		}
 		.am-tabs-content-wrap {
-		  background-color: #f5f5f5;
+			background-color: #f5f5f5;
 		}
 		.am-list-view-scrollview {
-		  border: none !important;
+			border: none !important;
 		}
 	}
 }
 .box {
-	.rightLittleBox{
+	.rightLittleBox {
 		.ellipsis {
 			// @include ellipsis(375px);
 			width: 375px;
