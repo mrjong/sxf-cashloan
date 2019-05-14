@@ -3,6 +3,8 @@ import { Modal } from 'antd-mobile';
 import style from './index.scss';
 import LoginAlert from '../LoginAlert';
 import TipsComponent from '../TipsComponent';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
 
 export default class ModalWrap extends Component {
 
@@ -22,11 +24,11 @@ export default class ModalWrap extends Component {
 	render() {
 		let componentsDisplay = null;
 		const { modalShow } = this.state;
-		const { history, contType } = this.props;
+		const { history, contType, loginCb } = this.props;
 		switch (contType) {
 			case 'login_alert': // 登陆弹框
 				componentsDisplay = (
-					<LoginAlert history={history} />
+					<LoginAlert history={history} loginCb={loginCb} />
 				);
 				break;
 			case 'new_sorry_tips': // 老用户参加新用户活动提示弹框
@@ -37,7 +39,8 @@ export default class ModalWrap extends Component {
 						tipsCont="本活动仅针对新用户哦～"
 						btnText="马上抽50000元老用户专属大奖"
 						clickCb={() => {
-							console.log(222)
+							buriedPointEvent(activity.mayNewToOldBtn);
+							this.props.history.replace('/activity/wuyue_old_page');
 						}}
 					/>
 				);

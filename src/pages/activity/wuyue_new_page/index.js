@@ -22,30 +22,33 @@ export default class wuyue_new_page extends PureComponent {
     this.state = {
       contType: '',
       mayModalShow: false,
-      // contType: 'no_qualified_tips',
-      // mayModalShow: true,
-      prizeShow: true,
+      prizeShow: false,
       rulesShow: false,
     }
   }
 
   componentDidMount() {
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.entry && queryData.h5Channel) {
-      // 根据不同入口来源埋点
-      buriedPointEvent(activity.newUserEntry, {
-        entry: queryData.entry,
-        h5Channel: queryData.h5Channel
+  }
+
+  // 一键领取按钮点击
+  getNow = () => {
+    buriedPointEvent(activity.mayNewRecBtn);
+    if (true) {
+      this.setState({
+        contType: 'login_alert',
+        mayModalShow: true,
+      })
+    } else {
+      this.setState({
+        contType: 'new_sorry_tips',
+        mayModalShow: true,
       })
     }
   }
 
-  getNow = () => {
-
-  }
-
   // 展示活动规则
   showRules = () => {
+    buriedPointEvent(activity.mayNewRulesBtn);
     this.setState({
       rulesShow: true
     })
@@ -55,6 +58,27 @@ export default class wuyue_new_page extends PureComponent {
   closeRules = () => {
     this.setState({
       rulesShow: false
+    })
+  }
+
+  // 获奖后立即使用按钮点击
+  useHandler = () => {
+    buriedPointEvent(activity.mayNewUseNowBtn);
+    this.props.history.push('/home/home');
+  }
+
+  // 关闭中奖弹框
+  closePrizeModal = () => {
+    this.setState({
+      prizeShow: false,
+    })
+  }
+
+  // 新用户登陆领取奖励
+  loginCallback = () => {
+    this.setState({
+      mayModalShow: false,
+      prizeShow: true,
     })
   }
 
@@ -70,8 +94,8 @@ export default class wuyue_new_page extends PureComponent {
         </div>
         <img src={reason_img} className={styles.reason_block} />
         { rulesShow && <RuleShow ruleTit="新用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
-        { mayModalShow && <ModalWrap history={this.props.history} contType={contType} /> }
-        { prizeShow && <WinPrize history={this.props.history} title="已成功领取5万元免息券" subTit="（7日内借款即可以使用）" />}
+        { mayModalShow && <ModalWrap history={this.props.history} loginCb={this.loginCallback} contType={contType} /> }
+        { prizeShow && <WinPrize history={this.props.history} title="已成功领取5万元免息券" clickCb={this.useHandler} closeCb={this.closePrizeModal} subTit="（7日内借款即可以使用）" />}
       </div>
     )
   }

@@ -18,10 +18,8 @@ export default class WinPrize extends Component {
 	}
 
 	closeModal = () => {
-		const { setalertType } = this.props;
-		this.setState({
-			isPrizeModal: false
-		});
+		const { setalertType, closeCb } = this.props;
+		closeCb && closeCb();
 		setalertType && setalertType();
 	};
 

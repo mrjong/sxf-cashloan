@@ -22,20 +22,15 @@ export default class wuyuekh_page extends PureComponent {
   }
 
   componentDidMount() {
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.entry) {
-      // 根据不同入口来源埋点
-      buriedPointEvent(activity.newUserEntry, {
-        entry: queryData.entry
-      })
-    }
   }
 
   goNew = () => {
+    buriedPointEvent(activity.mayReceiveBtn);
     this.props.history.push('/activity/wuyue_new_page');
   }
 
   goOld = () => {
+    buriedPointEvent(activity.mayExtractBtn);
     this.props.history.push('/activity/wuyue_old_page');
   }
 

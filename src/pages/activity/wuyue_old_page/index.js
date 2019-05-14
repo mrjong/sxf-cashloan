@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
-// import LoginAlert from './components/LoginAlert';
 import ModalWrap from '../wuyue_new_page/components/ModalWrap';
 import RuleShow from '../wuyue_new_page/components/RuleShow';
 import WinPrize from '../wuyue_new_page/components/WinPrize';
@@ -49,7 +48,7 @@ export default class wuyue_old_page extends PureComponent {
 			callBackType: '',
 			allUsersAward: [],
 			// type: '', // 弹框类型
-			type: 'no_chance_tips',
+			type: 'old_sorry_tips',
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
@@ -59,13 +58,6 @@ export default class wuyue_old_page extends PureComponent {
 	}
 	componentWillMount() {
 		this.init();
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (queryData.entry) {
-			// 根据不同入口来源埋点
-			buriedPointEvent(activity.dazhuanpan_316_entry, {
-				entry: queryData.entry
-			});
-		}
 	}
 	init = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -342,6 +334,11 @@ export default class wuyue_old_page extends PureComponent {
 			showRuleModal: false
 		})
 	}
+	// 开始抽奖
+	beginDraw = () => {
+		buriedPointEvent(activity.mayOldDrawBtn);
+		this.onloadZhuan();
+	}
 	render() {
 		const { awardList, time, transformType, type, userAwardList, showRuleModal, count, alert_img, rulesShow } = this.state;
 		return (
@@ -367,6 +364,7 @@ export default class wuyue_old_page extends PureComponent {
 							<div
 								className={styles.rule_btn}
 								onClick={() => {
+									buriedPointEvent(activity.mayOldRulesBtn);
 									this.setState({
 										showRuleModal: true
 									});
@@ -383,7 +381,7 @@ export default class wuyue_old_page extends PureComponent {
 									{/* 转盘灯 */}
 									<img className={styles.zp_bg} src={zp_bg} />
 									{/* 按钮 */}
-									<img className={styles.zp_btn} src={zp_btn} onClick={this.onloadZhuan} />
+									<img className={styles.zp_btn} src={zp_btn} onClick={this.beginDraw} />
 									{/* 转盘 */}
 									<div
 										className={styles.zp_box}

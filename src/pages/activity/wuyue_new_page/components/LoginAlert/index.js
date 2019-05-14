@@ -9,6 +9,8 @@ import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -94,6 +96,8 @@ export default class LoginAlert extends Component {
 
 	// 确定去登陆按钮
 	goLogin = () => {
+		const { loginCb } = this.props;
+		buriedPointEvent(activity.mayNewConfirmRecBtn);
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -116,6 +120,7 @@ export default class LoginAlert extends Component {
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
+							loginCb && loginCb();
 							// this.props.history.push('/home/home');
 						},
 						(err) => {
