@@ -2,7 +2,7 @@ const plugins = require('./webpack.plugins.config.js');
 
 module.exports = [
   require('./webpack.common')({
-    devTool: '#source-map',
+    devTool: '#source-map', // 增加map文件
     mode: 'production',
     dropConsole: true,
     publicPath: '/',
