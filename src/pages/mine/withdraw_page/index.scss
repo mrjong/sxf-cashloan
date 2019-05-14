@@ -2,6 +2,14 @@
 .withdraw_page{
 	margin: 0 19px;
 }
+.heightBody {
+	height: calc(100vh - 1.88rem);
+}
+.application_navbar ~ .application_content {
+	.heightBody {
+		height: calc(100vh - .88rem);
+	}
+}
 .withdrawBox{
 	background: #fff;
 	margin-top: 30px;
@@ -97,6 +105,9 @@
 }
 .withdraw_page {
 	:global {
+    .am-pull-to-refresh-content-wrapper{
+      overflow: visible;
+    }
 		.am-pull-to-refresh-indicator {
 		  font-size: 26px;
 		}

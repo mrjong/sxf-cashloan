@@ -66,7 +66,7 @@ export default class withdraw_page extends PureComponent {
       });
     }, 600);
   }
-  
+
   // 获取每一页数据
   genData = async (pIndex = 1) => {
     if (totalPage && totalPage < pIndex) {
@@ -79,7 +79,7 @@ export default class withdraw_page extends PureComponent {
     if (pIndex === 1) {
       SXFToast.loading('数据加载中...', 10000);
     }
-    
+
     let data = await this.props.$fetch
       .post(API.withdrawList, {
         startPage: pIndex,
@@ -91,6 +91,27 @@ export default class withdraw_page extends PureComponent {
             SXFToast.hide();
           }, 600);
         }
+        // let res = {
+        //   "msgCode": "PTM0000",
+        //   "msgInfo": "SUCCESS",
+        //   "data": {
+        //     "curPage": 1,
+        //     "totalPage": 1,
+        //     "pageRow": 10,
+        //     "totalRow": 1,
+        //     "usrCashOrds": [{
+        //       "aplOrdNo": "AMS00209420190514192824472297186",
+        //       "tranAmt": 0.80,
+        //       "secAmt": 0.20,
+        //       "applyTm": 1557833304000,
+        //       "tranSuccTm": null,
+        //       "ordSts": "1",
+        //       "cardNoHid": "621700*********6576",
+        //       "bankNo": "CCB",
+        //       "applyAmt": 1.00
+        //     }]
+        //   }
+        // }
         // console.log(res.msgCode)
         if (res.msgCode === 'PTM0000') { // msgCode
           let dataArr = [];
@@ -241,13 +262,7 @@ export default class withdraw_page extends PureComponent {
             renderRow={row}
             renderSeparator={separator}
             useBodyScroll={this.state.useBodyScroll}
-            style={
-              this.state.useBodyScroll
-                ? {}
-                : {
-                  height: this.state.height,
-                }
-            }
+            className={!this.state.useBodyScroll?style.heightBody:''}
             pullToRefresh={<PullToRefresh refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
             onEndReached={this.onEndReached}
             pageSize={1}

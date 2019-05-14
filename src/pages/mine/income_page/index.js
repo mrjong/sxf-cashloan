@@ -67,7 +67,7 @@ export default class income_page extends PureComponent {
       });
     }, 600);
   }
-  
+
   // 获取每一页数据
   genData = async (pIndex = 1) => {
     if (totalPage && totalPage < pIndex) {
@@ -80,7 +80,7 @@ export default class income_page extends PureComponent {
     if (pIndex === 1) {
       SXFToast.loading('数据加载中...', 10000);
     }
-    
+
     let data = await this.props.$fetch
       .post(API.incomeList, {
         startPage: pIndex,
@@ -92,6 +92,25 @@ export default class income_page extends PureComponent {
             SXFToast.hide();
           }, 600);
         }
+      //  let res = {
+      //     "msgCode": "PTM0000",
+      //     "msgInfo": "SUCCESS",
+      //     "data": {
+      //       "curPage": 1,
+      //       "totalPage": 1,
+      //       "pageRow": 10,
+      //       "totalRow": 1,
+      //       "usrRedCoupons": [{
+      //         "bizId": "MMS00710120190514191835147575896",
+      //         "couponAmt": 1.00,
+      //         "extDt": 1560441599000,
+      //         "groupNm": "1元-拒就赔",
+      //         "sts": "2",
+      //         "cashTm": 1557833305000,
+      //         "createTime": 1557832715000
+      //       }]
+      //     }
+      //   }
         // console.log(res.msgCode)
         if (res.msgCode === 'PTM0000') { // msgCode
           let dataArr = [];
@@ -219,14 +238,8 @@ export default class income_page extends PureComponent {
             )}
             renderRow={row}
             renderSeparator={separator}
+            className={!this.state.useBodyScroll?style.heightBody:''}
             useBodyScroll={this.state.useBodyScroll}
-            style={
-              this.state.useBodyScroll
-                ? {}
-                : {
-                  height: this.state.height,
-                }
-            }
             pullToRefresh={<PullToRefresh refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
             onEndReached={this.onEndReached}
             pageSize={1}

@@ -1,15 +1,24 @@
 @import "../../../assets/styles/scss/base/fn";
-:global {
-  .am-list-body {
-    background-color: #f5f5f5;
-    &::before,
-    &::after {
-      background-color: transparent !important;
-    }
+.heightBody {
+  height: calc(100vh - 1.88rem);
+}
+.application_navbar ~ .application_content {
+  .heightBody {
+    height: calc(100vh - .88rem);
   }
 }
 .no_header {
   :global {
+    .am-list-body {
+      background-color: #f5f5f5;
+      &::before,
+      &::after {
+        background-color: transparent !important;
+      }
+    }
+    .am-pull-to-refresh-content-wrapper {
+      overflow: visible;
+    }
     .am-list-header {
       padding: 0;
     }
