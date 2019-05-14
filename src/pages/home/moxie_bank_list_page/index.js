@@ -32,9 +32,9 @@ export default class moxie_bank_list_page extends Component {
 		this.getMoxieBackUrl();
 		const needNextUrl = store.getNeedNextUrl();
 		if (!needNextUrl) {
-			this.props.setTitle('添加账单');
+			this.props.setTitle('添加信用卡');
 		} else {
-			this.props.setTitle('提交申请');
+			this.props.setTitle('添加信用卡');
 		}
 	}
 	componentWillUnmount() {

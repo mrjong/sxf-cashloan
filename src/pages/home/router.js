@@ -38,7 +38,7 @@ export default [
   },
   {
     path: '/home/moxie_bank_list_page',
-    title: '提交申请',
+    title: '添加信用卡',
     component: () => import('pages/home/moxie_bank_list_page'),
   },
   {
