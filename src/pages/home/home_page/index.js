@@ -8,7 +8,7 @@ import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, id
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine } from 'utils/analytinsType';
+import { home, mine, activity } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import Card50000 from './components/Card50000';
@@ -38,7 +38,8 @@ const API = {
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	saveQuestionnaire: '/activeConfig/saveQuestionnaire' // 问卷调查
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire', // 问卷调查
+	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
 };
 const tagList = [
 	{
@@ -123,6 +124,8 @@ export default class home_page extends PureComponent {
 		store.removeNeedNextUrl();
 		// 清除订单缓存
 		store.removeBackData();
+		// 结清页去活动页
+		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
 		this.getTokenFromUrl();
@@ -165,6 +168,25 @@ export default class home_page extends PureComponent {
 		}
 		return obj;
 	};
+	// 判断是否参与拒就赔活动
+	isInvoking_jjp = () => {
+		return new Promise((resolve, reject) => {
+			this.props.$fetch
+				.get(API.checkJoin)
+				.then((res) => {
+					// 0:不弹出  1:弹出
+					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
+						// 如果是活动来的，
+						resolve('1');
+					} else {
+						resolve('0');
+					}
+				})
+				.catch((err) => {
+					reject();
+				});
+		});
+	};
 	// 判断是否授信
 	credit_extension = () => {
 		// 问卷调查  以后可以去掉
@@ -188,7 +210,7 @@ export default class home_page extends PureComponent {
 		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
-			.then((res) => {
+			.then(async (res) => {
 				if (res && res.msgCode === 'PTM0000') {
 					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
 					// popupFlag信用施压弹框，1为显示，0为隐藏
@@ -208,8 +230,20 @@ export default class home_page extends PureComponent {
 					this.setState({
 						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 					});
+					let isInvoking_jjp = await this.isInvoking_jjp();
 					if (res.data.flag === '01') {
-						if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
+						// 拒就赔活动弹框
+						if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+							this.setState(
+								{
+									isShowActivityModal: true,
+									modalType: 'jujiupei'
+								},
+								() => {
+									store.setShowActivityModal(true);
+								}
+							);
+						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
@@ -223,7 +257,7 @@ export default class home_page extends PureComponent {
 
 						this.credit_extension_not();
 					} else {
-						this.requestGetUsrInfo();
+						this.requestGetUsrInfo(isInvoking_jjp);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -596,7 +630,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = () => {
+	requestGetUsrInfo = (isInvoking_jjp) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -639,7 +673,17 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (
+				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'jujiupei'
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
+				} else if (
 					isMPOS() &&
 					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
 					!store.getShowActivityModal()
@@ -725,6 +769,10 @@ export default class home_page extends PureComponent {
 						console.log('关闭弹窗');
 				}
 				break;
+			case 'jjp': // 拒就赔弹框按钮
+				buriedPointEvent(activity.jjpHomeModalClick)
+				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
+			break;
 			default:
 				break;
 		}

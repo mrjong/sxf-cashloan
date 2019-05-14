@@ -70,4 +70,5 @@ export const storeTypes = {
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
 	MessageTagLimitDate: 'MessageTagLimitDate', // 首页的额度有效期显示标识
 	OverdueInf: 'OverdueInf', // 逾期进度数据
+	SuccessPay: 'SuccessPay', // 结清弹框拒就赔 活动返回
 };
