@@ -61,13 +61,11 @@ export default class login_page extends PureComponent {
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
-		let Invoking418 = store.getInvoking418();
 		let wenjuan = localStorage.getItem('wenjuan');
 		sessionStorage.clear();
 		localStorage.clear();
 
 		// 首页弹窗要用的
-		Invoking418 && store.setInvoking418(Invoking418);
 		MessageTag50000 && store.setMessageTag50000(MessageTag50000);
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);

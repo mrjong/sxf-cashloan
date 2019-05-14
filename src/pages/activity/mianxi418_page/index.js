@@ -73,7 +73,7 @@ export default class mianxi418_page extends PureComponent {
 			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1) {
-			store.setInvoking418(true);
+			// store.setInvoking418(true); // 登录页下线了 首页下了
 			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};

@@ -4,7 +4,9 @@ import styles from './index.scss';
 import huodongTootip3 from '../../assets/images/home/huodongTootip3.png';
 import huodongTootip1 from '../../assets/images/home/huodongTootip1.png';
 import huodongTootipBtn3 from '../../assets/images/home/huodongTootip_btn3.png';
-import mianxi30 from './img/mianxi30.png';
+import jujiupei from '../../assets/images/home/huodongTootip4.png';
+import huodongTootipBtn4 from '../../assets/images/home/huodongTootip_btn4.png';
+
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -12,26 +14,26 @@ class ActivityModal extends React.Component {
 		this.state = {
 			isShowActivityModal: false
 		};
-    }
-    componentWillMount() {
-        setTimeout(() => {
-          this.setState({
-            isShowActivityModal: true
-          });
-        }, 300);
-      }
+	}
+	componentWillMount() {
+		setTimeout(() => {
+			this.setState({
+				isShowActivityModal: true
+			});
+		}, 300);
+	}
 	// 优先弹688  再弹出免息  再弹iphone
 	render() {
-		const { closeActivityModal, history, modalType, activityModalBtn } = this.props;
+		const { closeActivityModal, modalType, activityModalBtn } = this.props;
 		return (
-			<Modal  wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
+			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
 				<div className={styles.modal}>
 					<div className={styles.modalWrapper}>
 						<div className={styles.content}>
 							{/* 大图 */}
 							{modalType === 'huodongTootip1' ? <img src={huodongTootip1} /> : null}
 							{modalType === 'huodongTootip3' ? <img src={huodongTootip3} /> : null}
-							{modalType === 'mianxi30' ? <img src={mianxi30} className={styles.mianxi30} /> : null}
+							{modalType === 'jujiupei' ? <img src={jujiupei} /> : null}
 							{/* 按钮 */}
 							{modalType === 'huodongTootip3' ? (
 								<img
@@ -42,16 +44,16 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
-							{modalType === 'mianxi30' ? (
-								<div
-									className={styles.btn_mianxi}
+							{modalType === 'jujiupei' ? (
+								<img
+									className={styles.huodongTootipBtn4}
+									src={huodongTootipBtn4}
 									onClick={() => {
-										activityModalBtn('mianxi30');
+										activityModalBtn('jjp');
 									}}
-								>
-									立即参与
-								</div>
+								/>
 							) : null}
+
 						</div>
 						{/* 关闭按钮 */}
 						<div className={styles.closeBtn} onClick={closeActivityModal} />

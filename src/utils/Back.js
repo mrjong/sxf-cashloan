@@ -82,7 +82,7 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-			// 活动页
+			// 拒就赔活动落地页返回到首页
 			if (store.getSuccessPay() && window.location.pathname === '/order/repayment_succ_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;

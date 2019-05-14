@@ -34,7 +34,7 @@ export default class repayment_succ_page extends PureComponent {
 		buriedPointEvent(type);
 		if (canyu) {
 			store.setSuccessPay(true);
-			this.props.history.replace('/activity/mianxi418_page?entry=isxdc_order_alert');
+			this.props.history.replace('/activity/jupei_page?entry=isxdc_order_alert');
 		} else {
 			this.props.history.push('/home/home');
 		}
@@ -74,11 +74,12 @@ export default class repayment_succ_page extends PureComponent {
 				</ButtonCustom>
 				<Modal wrapClassName={styles.success_modal_warp} visible={isShowTipsModal} transparent>
 					<div className={styles.modal_tip_content}>
-						<div className={styles.modal_content}>
-							<div className={styles.btn_mianxi} onClick={() => this.backHome(order.openNow, true)}>
-								立即参与
-							</div>
-						</div>
+						<div
+							onClick={() => {
+								this.backHome(order.openNow, true);
+							}}
+							className={styles.modal_btn}
+						/>
 					</div>
 					<i className={styles.close_btn} onClick={this.closeModal} />
 				</Modal>

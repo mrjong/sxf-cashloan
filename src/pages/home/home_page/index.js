@@ -8,7 +8,7 @@ import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, id
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine } from 'utils/analytinsType';
+import { home, mine, activity } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import Card50000 from './components/Card50000';
@@ -37,10 +37,9 @@ const API = {
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser/AC001', // 用户是否参与过免息
-	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged/AC001', // 参与418活动
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	saveQuestionnaire: '/activeConfig/saveQuestionnaire' // 问卷调查
+	saveQuestionnaire: '/activeConfig/saveQuestionnaire', // 问卷调查
+	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
 };
 const tagList = [
 	{
@@ -80,7 +79,7 @@ export default class home_page extends PureComponent {
 			showToast: false,
 			newUserActivityModal: false,
 			modalType: 'huodongTootip3',
-			handleMoxie: false, // 触发跳转魔蝎方法
+			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
 			showDiv: '',
 			modal_left: false,
@@ -155,30 +154,6 @@ export default class home_page extends PureComponent {
 			clearTimeout(timerOut);
 		}
 	}
-	// 判断是否参与免息活动
-	isInvoking_mianxi = () => {
-		return new Promise((resolve, reject) => {
-			this.props.$fetch
-				.get(API.checkIsEngagedUser)
-				.then((res) => {
-					// 0:不弹出  1:弹出
-					if (res.data && res.data === '1') {
-						// 如果是活动来的，
-						if (store.getInvoking418()) {
-							this.props.$fetch.get(API.saveUserInfoEngaged);
-							resolve('0');
-						} else {
-							resolve(res.data);
-						}
-					} else {
-						resolve('0');
-					}
-				})
-				.catch((err) => {
-					reject();
-				});
-		});
-	};
 	getParam = () => {
 		let obj = {};
 		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
@@ -192,6 +167,25 @@ export default class home_page extends PureComponent {
 			}
 		}
 		return obj;
+	};
+	// 判断是否参与拒就赔活动
+	isInvoking_jjp = () => {
+		return new Promise((resolve, reject) => {
+			this.props.$fetch
+				.get(API.checkJoin)
+				.then((res) => {
+					// 0:不弹出  1:弹出
+					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
+						// 如果是活动来的，
+						resolve('1');
+					} else {
+						resolve('0');
+					}
+				})
+				.catch((err) => {
+					reject();
+				});
+		});
 	};
 	// 判断是否授信
 	credit_extension = () => {
@@ -236,14 +230,14 @@ export default class home_page extends PureComponent {
 					this.setState({
 						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 					});
-					let isInvoking_mianxi = await this.isInvoking_mianxi();
+					let isInvoking_jjp = await this.isInvoking_jjp();
 					if (res.data.flag === '01') {
-						// 历史未提交过授信的用户才弹
-						if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
+						// 拒就赔活动弹框
+						if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
-									modalType: 'mianxi30'
+									modalType: 'jujiupei'
 								},
 								() => {
 									store.setShowActivityModal(true);
@@ -263,7 +257,7 @@ export default class home_page extends PureComponent {
 
 						this.credit_extension_not();
 					} else {
-						this.requestGetUsrInfo(isInvoking_mianxi);
+						this.requestGetUsrInfo(isInvoking_jjp);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -378,7 +372,6 @@ export default class home_page extends PureComponent {
 			default:
 		}
 	};
-
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { usrIndexInfo, isNeedExamine } = this.state;
@@ -415,13 +408,12 @@ export default class home_page extends PureComponent {
 						!isCanLoan({
 							$props: this.props,
 							usrIndexInfo: this.state.usrIndexInfo,
-							goMoxieBankList: this.goMoxieBankList
+							goMoxieBankList: this.child.requestCredCardCount
 						})
 					) {
 						return;
 					}
 					this.showCreditModal();
-					this.toggleTag(0);
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
@@ -638,7 +630,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = (isInvoking_mianxi) => {
+	requestGetUsrInfo = (isInvoking_jjp) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -681,11 +673,11 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (isInvoking_mianxi === '1' && !store.getShowActivityModal()) {
+				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							modalType: 'mianxi30'
+							modalType: 'jujiupei'
 						},
 						() => {
 							store.setShowActivityModal(true);
@@ -754,6 +746,7 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
+		this.closeActivityModal();
 		switch (type) {
 			case 'huodongTootip3':
 				// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
@@ -766,18 +759,20 @@ export default class home_page extends PureComponent {
 						if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
 							this.handleSmartClick();
 						} else {
-							this.setState({
-								handleMoxie: true
-							});
+							this.child.requestCredCardCount();
+							// this.setState({
+							// 	handleMoxie: true
+							// });
 						}
 						break;
 					default:
 						console.log('关闭弹窗');
 				}
 				break;
-			case 'mianxi30': // 账单爬取成功
-				this.props.history.push('/activity/mianxi418_page?entry=isxdc_home_alert');
-				break;
+			case 'jjp': // 拒就赔弹框按钮
+				buriedPointEvent(activity.jjpHomeModalClick)
+				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
+			break;
 			default:
 				break;
 		}
@@ -820,7 +815,7 @@ export default class home_page extends PureComponent {
 			!isCanLoan({
 				$props: this.props,
 				usrIndexInfo: this.state.usrIndexInfo,
-				goMoxieBankList: this.goMoxieBankList
+				goMoxieBankList: this.child.requestCredCardCount
 			})
 		) {
 			return;
@@ -970,6 +965,7 @@ export default class home_page extends PureComponent {
 				isShowCreditModal: true
 			},
 			() => {
+				this.toggleTag(0);
 				window.handleCloseHomeModal = this.closeCreditModal;
 			}
 		);
@@ -988,7 +984,7 @@ export default class home_page extends PureComponent {
 			!isCanLoan({
 				$props: this.props,
 				usrIndexInfo: this.state.usrIndexInfo,
-				goMoxieBankList: this.goMoxieBankList
+				goMoxieBankList: this.child.requestCredCardCount
 			})
 		) {
 			return;
@@ -1114,6 +1110,9 @@ export default class home_page extends PureComponent {
 	goMoxieBankList = () => {
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
+	onRef = (ref) => {
+		this.child = ref;
+	};
 	render() {
 		const {
 			bannerList,
@@ -1144,6 +1143,7 @@ export default class home_page extends PureComponent {
 		if (!token || firstUserInfo === 'error') {
 			componentsDisplay = (
 				<BankContent
+					onRef={this.onRef}
 					showDefaultTip={this.state.showDefaultTip}
 					fetch={this.props.$fetch}
 					contentData={usrIndexInfo}
@@ -1172,7 +1172,8 @@ export default class home_page extends PureComponent {
 				case 'LN0010': // 账单爬取失败/老用户
 					componentsDisplay = (
 						<BankContent
-							handleMoxie={this.state.handleMoxie}
+							onRef={this.onRef && this.onRef}
+							// handleMoxie={this.state.handleMoxie}
 							showDefaultTip={this.state.showDefaultTip}
 							fetch={this.props.$fetch}
 							contentData={usrIndexInfo}
@@ -1411,7 +1412,7 @@ export default class home_page extends PureComponent {
 												!isCanLoan({
 													$props: this.props,
 													usrIndexInfo: this.state.usrIndexInfo,
-													goMoxieBankList: this.goMoxieBankList
+													goMoxieBankList: this.child.requestCredCardCount
 												})
 											) {
 												return;
@@ -1419,11 +1420,11 @@ export default class home_page extends PureComponent {
 											if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
 												if (
 													this.state.perdRateList.length === 1 &&
-													item.perdLth == 30 &&
-													(item.factLmtLow >
+													this.state.perdRateList[0].perdLth == 30 &&
+													(this.state.perdRateList[0].factLmtLow >
 														Number(this.props.form.getFieldValue('loanMoney')) ||
 														Number(this.props.form.getFieldValue('loanMoney')) >
-															item.factAmtHigh)
+															this.state.perdRateList[0].factAmtHigh)
 												) {
 													this.props.toast.info('暂无可借产品');
 												} else {

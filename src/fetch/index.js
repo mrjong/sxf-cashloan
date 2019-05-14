@@ -3,7 +3,8 @@ import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
-import { isWXOpen, handleErrorLog, pagesIgnore } from 'utils';
+import { isWXOpen, pagesIgnore } from 'utils';
+import Raven from 'raven-js'
 
 const fetchInit = () => {
 	let num = 0;
@@ -22,7 +23,7 @@ const fetchInit = () => {
 				case 'PTM0000':
 					return;
 				case 'PTM1000': // 用户登录超时
-					handleErrorLog('PTM1000', '登录超时，请重新登陆');
+					Raven.captureException(response.config.url, { extra: {code: 'PTM1000',msgInfo:'登录超时，请重新登陆'}, level: 'info' });
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -32,7 +33,7 @@ const fetchInit = () => {
 					}, 3000);
 					return;
 				case 'PTM0100': // 未登录
-					handleErrorLog('PTM0100', '未登录');
+					Raven.captureException(response.config.url, { extra: {code: 'PTM0100',msgInfo:'未登录'}, level: 'info' });
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -104,9 +105,9 @@ const fetchInit = () => {
 			try {
 				console.log('----异常日志----');
 				if (error.response) {
-					handleErrorLog(error.response.status, error.response.statusText, error.config);
+					Raven.captureException(error, { extra: error.response });
 				} else if (error.config) {
-					handleErrorLog(error.message, error.message, error.config);
+					Raven.captureException(error, { extra: error.config });
 				}
 			} catch (err) {
 				// console.log(err)

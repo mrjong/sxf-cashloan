@@ -43,11 +43,11 @@ export default [
 		arrowHide: 'empty',
 		component: () => import('pages/activity/funsisong_page')
 	},
-	{
-		path: '/activity/mianxi418_page',
-		title: '最高免息30天',
-		component: () => import('pages/activity/mianxi418_page')
-	},
+	// {
+	// 	path: '/activity/mianxi418_page',
+	// 	title: '最高免息30天',
+	// 	component: () => import('pages/activity/mianxi418_page')
+	// },
 	{
 		path: '/activity/wenjuan_page',
 		title: '答题抽奖',

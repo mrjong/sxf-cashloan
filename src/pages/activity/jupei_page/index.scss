@@ -20,6 +20,11 @@
     z-index: 1000;
     background-color: #fff;
     box-sizing: border-box;
+    .rulesCont{
+      height: 760px;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
 
     h2 {
       text-align: center;
@@ -102,6 +107,31 @@
     margin: 0 auto;
     overflow: hidden;
     text-align: center;
+  }
+  .protocolBox{
+    position: absolute;
+    left: 70px;
+    top: 220px;
+    font-size: 26px;
+    color: #87490F;
+    span{
+      color: #FE4D2A;
+    }
+  }
+  .tipText {
+    text-align: center;
+    margin: 20px 20px 0;
+  }
+  .closeBtnStyle{
+    width: 50px;
+    height: 50px;
+    background-image: url(./img/close_btn.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translate(-50%, 0%);
   }
 }
 
