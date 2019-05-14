@@ -4,7 +4,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = [
 	require('./webpack.common')({
-		devTool: false,
+    devTool: '#source-map', // 增加map文件
 		mode: 'production',
 		dropConsole: true,
 		publicPath: '/',
