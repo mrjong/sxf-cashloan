@@ -221,10 +221,10 @@ export default class essential_information_page extends PureComponent {
 									}, 2000);
 									store.setMoxieBackUrl('/home/home');
 								} else {
-									this.props.history.replace({
-										pathname: '/mine/credit_extension_page',
-										search: urlQuery
-									});
+									// this.props.history.replace({
+									// 	pathname: '/mine/credit_extension_page',
+									// 	search: urlQuery
+									// });
 								}
 							} else if (result.msgCode === 'PCC-PRC-9994') {
 								if (store.getNeedNextUrl()) {

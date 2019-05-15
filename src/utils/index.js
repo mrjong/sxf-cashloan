@@ -170,7 +170,7 @@ const interceptRouteArr = [
 	'/home/home',
 	'/order/order_page',
 	'/mine/mine_page',
-	'/mine/credit_extension_page',
+	// '/mine/credit_extension_page',
 	'/order/repayment_succ_page',
 	'/mine/credit_list_page',
 	'/home/essential_information',
