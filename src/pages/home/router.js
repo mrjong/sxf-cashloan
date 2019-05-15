@@ -56,4 +56,9 @@ export default [
     title: '申请成功',
     component: () => import('pages/home/loan_apply_succ_page'),
   },
+  {
+    path: '/home/loan_fenqi',
+    title: '借款信息确认',
+    component: () => import('pages/home/loan_fenqi_page'),
+  },
 ];

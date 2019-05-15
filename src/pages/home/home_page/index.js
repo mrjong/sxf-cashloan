@@ -1301,6 +1301,9 @@ export default class home_page extends PureComponent {
 					</div>
 				) : null}
 				<p className="bottomTip">怕逾期，用还到</p>
+				<p onClick={()=>{
+					this.props.history.push('/home/loan_fenqi')
+				}}>666</p>
 				<Modal
 					popup
 					className="modal_l_r"
