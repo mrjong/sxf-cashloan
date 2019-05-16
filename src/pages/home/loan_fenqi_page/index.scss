@@ -3,7 +3,6 @@
   padding: 70px 60px 0;
 
   .scrollWrap {
-    overflow-y: scroll;
     padding-bottom: 160px;
   }
 
@@ -29,6 +28,7 @@
       text-align: left;
       font-size: 56px;
       font-family: "DIN Condensed";
+      padding-top: 15px;
     }
   }
   .inputTip {
@@ -79,6 +79,10 @@
     color: #868e9e;
   }
 
+  .redText {
+    color: #fe6666;
+  }
+
   .addIcon {
     position: relative;
     top: -2px;
@@ -126,7 +130,7 @@
       width: 634px;
     }
 
-    .submitBtnActive {
+    .submitBtnDisabled {
       width: 634px;
       background-color: #d8d8d8;
       color: #fff;

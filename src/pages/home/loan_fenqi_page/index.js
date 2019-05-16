@@ -1,18 +1,15 @@
 import React, { PureComponent } from 'react';
 import { Modal, InputItem, Icon } from 'antd-mobile';
-import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isMPOS } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background'
-import { createForm } from 'rc-form';
-import { getFirstError, handleClickConfirm, handleInputBlur } from 'utils';
+import { } from 'utils';
 import SXFButton from 'components/ButtonCustom';
-
-// import TabList from './components/TagList';
 import style from './index.scss';
+
+
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -21,8 +18,11 @@ if (isIPhone) {
   };
 }
 const API = {
+  prodListInfo: '/cash/prodList', //产品列表基本信息查询
   loanUsage: '/cash/loanUsage',  //借款用途
-
+  couponSupport: '/cash/couponSupport', //最佳优惠券获取
+  contractList: '/cash/qryContractList', //合同列表
+  repayPlan: '/bill/prebill' //还款计划查询
 }
 const purposeList = [
   {
@@ -64,7 +64,6 @@ const tagList = [
 ];
 
 @fetch.inject()
-@createForm()
 @setBackGround('#fff')
 export default class loan_fenqi_page extends PureComponent {
   constructor(props) {
@@ -72,12 +71,20 @@ export default class loan_fenqi_page extends PureComponent {
     this.state = {
       purposeModal: false,
       planModal: false,
-      tipModal: true,
-      hasPlan: false,
+      tipModal: false,
       cardData: false,
-      btnDisabled: false,
       loanDate: '',
-      loanMoney: ''
+      loanMoney: '',
+      resaveBankCard: 1,
+      payBankCard: 1,
+      prodListData: {},
+      submitData: {
+        loanMoney: '',
+        loanDate: '',
+        usage: '',
+        resaveBankCard: '',
+        payBankCard: ''
+      }
     }
   }
 
@@ -85,27 +92,137 @@ export default class loan_fenqi_page extends PureComponent {
     this.setState({
       purpose: purposeList[0].label
     })
+    let submitData = store.getCashFenQiSubmitData() // 代提交的借款信息
+    let cashFenQiCardArr = store.getCashFenQiCardArr() // 收、还款卡信息
+    // Object.assign(submitData, {})
+    this.setState({submitData})
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { loanMoney, loanDate } = this.state
+    if (loanMoney !== prevState.loanMoney) {
+    }
+    if (loanMoney && loanDate) {
+      console.log('请求还款计划')
+    }
+
+  }
+
+  //查询产品列表基本信息
+  queryProdListInfo = () => {
+    this.props.$fetch.post(API.prodListInfo, {
+      channelType: 'h5'
+    }).then(res => {
+      if (res.msgCode === 'PTM0000' && res.data !== null) {
+        this.setState({
+          prodListData: res.data
+        })
+      } else {
+        this.props.toast.info(res.msgInfo);
+      }
+    })
   }
 
   //查询借款用途列表
-  queryLoanUsageList=()=>{
-    this.props.$fetch.get(API.loanUsage).then(res =>{
-      if(res && res.msgCode === 'PTM0000' && res.data !== null) {
+  queryLoanUsageList = () => {
+    this.props.$fetch.get(API.loanUsage).then(res => {
+      if (res.msgCode === 'PTM0000' && res.data !== null) {
         this.setState({
           usageList: res.data
         })
+      } else {
+        this.props.toast.info(res.msgInfo);
       }
     })
   }
 
-  queryCoupon=()=>{
-    this.props.$fetch.get(API.loanUsage).then(res =>{
-      if(res.msgCode === 'PTM0000') {
+  //查询合同列表
+  queryContractList = () => {
+    this.props.$fetch.post(API.contractList, {
+      loanAmount: '',
+      periodLth: '',
+      periodCount: '',
+      periodUnit: '',
+      agrNo: ''
+    }).then(res => {
+      if (res.msgCode === 'PTM0000' && res.data !== null) {
         this.setState({
-          usageList: res.data
+          contractList: res.data
         })
+      } else {
+        this.props.toast.info(res.msgInfo);
       }
     })
+  }
+
+  //查询优惠券
+  queryCouponInfo = () => {
+    this.props.$fetch.post(API.couponSupport, {
+      price: '',
+      type: 'LOAN',
+      prodType: '11',
+      periodCount: ''
+    }).then(res => {
+      if (res.msgCode === 'PTM0000') {
+        this.setState({
+          couponInfo: res.data
+        })
+      } else {
+        this.props.toast.info(res.msgInfo);
+      }
+    })
+  }
+
+  //查询还款计划
+  queryRepayPlan = () => {
+    this.props.$fetch.post(API.repayPlan, {
+      billPrcpAmt: "20000",
+      cardId: "PRC00609120190514135632947441938",
+      prdId: "1284",
+      wtdwTyp: "0"
+    }).then((res) => {
+      if (res.msgCode === 'PTM0000' && res.data !== null) {
+        this.setState({
+          repayPlanList: res.data.perd
+        });
+      } else {
+        this.props.toast.info(res.msgInfo);
+      }
+    })
+  }
+
+  // 选择优惠劵
+  selectCoupon = () => {
+    if (!this.state.coupId) return
+    this.props.history.push({
+      pathname: '/mine/coupon_page',
+      search: ``,
+      // state: { nouseCoupon: true }
+    });
+  }
+  // 选择银行卡
+  selectBankCard = (agrNo, cardType) => {
+    const { prodListData } = this.state;
+    store.setBackUrl('/home/loan_fenqi');
+    this.storeData()
+    this.props.history.push({
+      pathname: '/mine/select_save_page',
+      search: `?agrNo=${agrNo}&cardType=${cardType}`
+    });
+  };
+
+  //绑定银行卡
+  bindBankCard = (cardType) => {
+    this.storeData()
+    this.props.history.push({
+      pathname: '/mine/bind_save_page',
+      search: `?cardType=${cardType}`
+    });
+  }
+
+  storeData = () => {
+    let data= {}
+    store.setCashFenQiSubmitData(data)
   }
 
   selectPurpose = (item) => {
@@ -134,14 +251,45 @@ export default class loan_fenqi_page extends PureComponent {
     })
   }
 
-  //确认金额与期限之后
-  confirmLoanAndDate = () => {
+  //验证信息是否填写完整
+  validateFn = () => {
+    const { loanMoney, loanDate, resaveBankCard, payBankCard } = this.state
+    if (loanMoney && loanDate && resaveBankCard && payBankCard) {
+      return true
+    }
+    return false
+  }
 
+  placeholderText = () => {
+    // const { fetchBillSucc, activeTag, usrIndexInfo } = this.state;
+    return `可借金额3000～50000`;
+  };
+
+  handleSubmit = () => {
+    if (this.validateFn()) {
+      console.log('提交借款')
+    }
   }
 
   render() {
-    const { getFieldProps } = this.props.form;
-    const { purposeModal, purpose, tipModal, hasPlan, cardData, btnDisabled, loanDate, loanMoney, planModal } = this.state
+    const {
+      purposeModal,
+      purpose,
+      tipModal,
+      cardData,
+      loanDate,
+      loanMoney,
+      planModal,
+      prodListData
+    } = this.state
+    const {
+      resaveBankCardAgrNo,
+      resaveBankCardLastNo,
+      resaveBankCardName,
+      payBankCardAgrNo,
+      payBankCardLastNo,
+      payBankCardName
+    } = prodListData
     return (
       <div className={style.fenqi_page}>
         <div className={style.scrollWrap}>
@@ -150,24 +298,24 @@ export default class loan_fenqi_page extends PureComponent {
               <i className={style.moneyUnit}>¥</i>
               <InputItem
                 className={style.billInput}
-                placeholder="可借金额3000～50000"
+                placeholder={this.placeholderText()}
                 disabled={false}
                 clear={true}
                 type="number"
                 ref={(el) => (this.inputRef = el)}
                 value={loanMoney}
-                // {...getFieldProps('cardBillAmt', {
-                //   rules: [
-                //     { required: true, message: '请输入代偿金额' }
-                //   ]
-                // })}
-                onChange={(v) => { this.setState({ loanMoney: v }) }}
+                onChange={(v) => {
+                  this.setState({
+                    loanMoney: v,
+                    loanDate: ''
+                  }, () => {
+
+                  })
+                }}
                 onBlur={(v) => {
+                  loanMoney && console.log('请求期限')
                   // handleInputBlur();
                   // this.calcLoanMoney(v);
-                }}
-                onFocus={(v) => {
-                  // this.updateBillInf();
                 }}
                 moneykeyboardwrapprops={moneyKeyboardWrapProps}
               />
@@ -177,7 +325,7 @@ export default class loan_fenqi_page extends PureComponent {
 
           <div className={style.pannel}>
             <ul>
-              <li className={style.listItem} style={{alignItems: 'flex-start'}}>
+              <li className={style.listItem} style={{ alignItems: 'flex-start' }}>
                 <label>借多久</label>
                 <span className={style.tagListWrap}>
                   {tagList.map(item => (
@@ -204,9 +352,9 @@ export default class loan_fenqi_page extends PureComponent {
                 <label>还款计划</label>
                 <span>
                   {
-                    loanMoney && loanDate ? <span className={style.listValue} onClick={()=>{this.openModal('plan')}}>
+                    loanMoney && loanDate ? <span className={style.listValue} onClick={() => { this.openModal('plan') }}>
                       点击查看
-                <Icon type="right" className={style.icon} />
+                    <Icon type="right" className={style.icon} />
                     </span> : <span className={style.greyText}>暂无</span>
                   }
                 </span>
@@ -215,42 +363,38 @@ export default class loan_fenqi_page extends PureComponent {
               {
                 loanMoney && loanDate && <li className={style.listItem}>
                   <label>优惠券</label>
-                  <span className={style.listValue}>
+                  <span className={style.listValue} onClick={this.selectCoupon}>
+                    <span className={style.redText}>{this.state.coupId ? `${true ? '-10元' : '请选择'}` : `无可用优惠券`}</span>
                     <Icon type="right" className={style.icon} />
-
                   </span>
                 </li>
               }
               <li className={style.listItem}>
                 <label>收款银行卡</label>
                 {
-                  !cardData ? <span className={style.listValue}>
+                  !cardData ? <span className={style.listValue} onClick={() => { this.selectBankCard(resaveBankCardAgrNo, 'resave') }}>
                     招商银行(1234)
                   <Icon type="right" className={style.icon} />
-                  </span> : <span className={style.greyText}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
+                  </span> : <span className={style.greyText} onClick={() => { this.bindBankCard('resave') }}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
                 }
               </li>
               <li className={style.listItem}>
                 <label>还款银行卡</label>
                 {
-                  !cardData ? <span className={style.listValue}>
+                  !cardData ? <span className={style.listValue} onClick={() => { this.selectBankCard(payBankCardAgrNo, 'pay') }}>
                     招商银行(1234)
                   <Icon type="right" className={style.icon} />
-                  </span> : <span className={style.greyText}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
+                  </span> : <span className={style.greyText} onClick={() => { this.bindBankCard('pay') }}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
                 }
-
               </li>
-
             </ul>
             <p className={style.protocolLink}>
               点击“签约借款”，表示同意 <em>《借款协议》《金融服务协议》 《补充协议》《代扣协议》《借款确认书》《个人信息授权书》《担保协议》</em>
             </p>
           </div>
-
         </div>
-
         <div className={style.buttonWrap}>
-          <SXFButton onClick={this.handleClickConfirm} className={btnDisabled ? style.submitBtn : style.submitBtnActive}>签约借款</SXFButton>
+          <SXFButton onClick={this.handleSubmit} className={this.validateFn() ? style.submitBtn : style.submitBtnDisabled}>签约借款</SXFButton>
         </div>
         <Modal
           popup
@@ -258,7 +402,7 @@ export default class loan_fenqi_page extends PureComponent {
           visible={purposeModal}
           animationType="slide-up"
           transparent
-          maskClosable={true}
+          onClose={() => { this.closeModal('purpose') }}
         >
           <h3 className={style.modalTitle}>借款用途</h3>
           <p className={style.modalDesc}>借款资金不得用于购买房产、证券投资等投机经营及其他违法交易</p>
@@ -283,21 +427,20 @@ export default class loan_fenqi_page extends PureComponent {
           <Icon type="cross" className={style.tipCloseIcon} color='#333' onClick={() => { this.closeModal('tip') }} />
         </Modal>
 
-        <Modal visible={planModal} transparent onClose={()=>{this.closeModal('plan')}}>
-					<div className={style.modal_content}>
-						<Icon type="cross" className={style.modal_close_btn} onClick={()=>{this.closeModal('plan')}} color='#333' />
-						<h2 className={style.modal_title}>还款计划</h2>
-						<ul className={style.bill_list}>
-							{[{perdNum: 1, perdCnt:12, perdTotAmt:1234},{perdNum: 2, perdCnt:12, perdTotAmt:1234},{perdNum: 3, perdCnt:12, perdTotAmt:1234},{perdNum: 4, perdCnt:12, perdTotAmt:1234},{perdNum: 5, perdCnt:12, perdTotAmt:1234},{perdNum: 6, perdCnt:12, perdTotAmt:1234},{perdNum: 7, perdCnt:12, perdTotAmt:1234},{perdNum: 7, perdCnt:12, perdTotAmt:1234},{perdNum: 7, perdCnt:12, perdTotAmt:1234},{perdNum: 7, perdCnt:12, perdTotAmt:1234}].map((item) => (
-								<li className={style.list_item} key={item.perdNum}>
-									<label className={style.item_name}>{`${item.perdNum}/${item.perdCnt}期`}</label>
-									<span className={style.item_value}>{item.perdTotAmt}</span>
-								</li>
-							))}
-						</ul>
-					</div>
-				</Modal>
-
+        <Modal visible={planModal} transparent onClose={() => { this.closeModal('plan') }}>
+          <div className={style.modal_content}>
+            <Icon type="cross" className={style.modal_close_btn} onClick={() => { this.closeModal('plan') }} color='#333' />
+            <h2 className={style.modal_title}>还款计划</h2>
+            <ul className={style.bill_list}>
+              {[{ perdNum: 1, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 2, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 3, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 4, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 5, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 6, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 7, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 7, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 7, perdCnt: 12, perdTotAmt: 1234 }, { perdNum: 7, perdCnt: 12, perdTotAmt: 1234 }].map((item) => (
+                <li className={style.list_item} key={item.perdNum}>
+                  <label className={style.item_name}>{`${item.perdNum}/${item.perdCnt}期`}</label>
+                  <span className={style.item_value}>{item.perdTotAmt}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Modal>
       </div>
     )
   }

@@ -72,5 +72,7 @@ export const storeTypes = {
 	SuccessPay: 'SuccessPay', // 418 活动返回
 	IdChkPhotoBack: 'IdChkPhotoBack', // 签约页是否需要补充活体识别标示
 	ChkPhotoBackNew: 'ChkPhotoBackNew', // 活体直接返回
-	RealNameNextStep: 'RealNameNextStep' // 需要下一步
+	RealNameNextStep: 'RealNameNextStep', // 需要下一步
+	CashFenQiSubmitData: 'CashFenQiSubmitData', //现金分期待提交数据
+	CashFenQiCardArr: 'CashFenQiCardArr' //现金分期待提交数据
 };

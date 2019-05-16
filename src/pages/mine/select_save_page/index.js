@@ -134,7 +134,7 @@ export default class select_save_page extends PureComponent {
 
   // 点击解绑按钮
   unbindHandler = params => {
-    const ele = (<div style={{lineHeight: 3}}>确认解绑该卡？</div>)
+    const ele = (<div style={{ lineHeight: 3 }}>确认解绑该卡？</div>)
     Modal.alert('', ele, [
       { text: '取消', onPress: () => { } },
       { text: '确定', onPress: () => { this.unbindCard(params) } },
@@ -158,6 +158,19 @@ export default class select_save_page extends PureComponent {
       )
   };
 
+  //存储现金分期卡信息
+	storeCashFenQiCardData = (cardDatas) => {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const cashFenQiCardArr = []
+		//现金分期收、还款银行卡信息
+		if (queryData.cardType === 'resave') {
+			cashFenQiCardArr[0] = cardDatas
+		} else if (queryData.cardType === 'pay') {
+			cashFenQiCardArr[1] = cardDatas
+		}
+		store.setCashFenQiCardArr(cashFenQiCardArr)
+	}
+
   // 选择银行卡
   selectCard = obj => {
     // if (backUrlData) {
@@ -175,24 +188,27 @@ export default class select_save_page extends PureComponent {
     } else {
       cardDatas = obj;
     }
+    this.storeCashFenQiCardData(cardDatas)
     store.setCardData(cardDatas);
     let paramVip = store.getParamVip() || {};
     Object.assign(paramVip, obj);
     store.setParamVip(paramVip);
     // }
   };
+
   // 新增授权卡
   addCard = () => {
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (backUrlData) {
       this.setState({ isClickAdd: true });
       if (backUrlData === '/mine/confirm_purchase_page') {
         this.props.history.replace('/mine/bind_bank_card')
       } else {
-        this.props.history.replace('/mine/bind_save_page')
+        this.props.history.replace(`/mine/bind_save_page${queryData.cardType ? `?cardType=${queryData.cardType}` : ''}`)
       }
     } else {
       this.setState({ isClickAdd: true });
-      this.props.history.push('/mine/bind_save_page')
+      this.props.history.push(`/mine/bind_save_page${queryData.cardType ? `?cardType=${queryData.cardType}` : ''}`)
     }
   };
 
@@ -226,7 +242,7 @@ export default class select_save_page extends PureComponent {
                           <span>···· {item.lastCardNo}</span>
                           {
                             isSelected ? (
-                              <Icon type="check-circle-o" color='#5CE492' className={styles.selected_ico}/>
+                              <Icon type="check-circle-o" color='#5CE492' className={styles.selected_ico} />
                             ) : null
                           }
                         </li>

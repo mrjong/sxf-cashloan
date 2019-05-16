@@ -112,7 +112,7 @@ export default class bind_save_page extends PureComponent {
 					break;
 				default:
 					// 修改数据解构
-					const { valueInputCarNumber: cardNo, valueInputCarPhone: mblNo, cardTyp, bankCd} = params
+					const { valueInputCarNumber: cardNo, valueInputCarPhone: mblNo, cardTyp, bankCd } = params
 					this.getOldBindCardCode({
 						cardNo,
 						mblNo,
@@ -148,6 +148,19 @@ export default class bind_save_page extends PureComponent {
 			)
 	}
 
+	//存储现金分期卡信息
+	storeCashFenQiCardData = (cardDatas) => {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const cashFenQiCardArr = []
+		//现金分期收、还款银行卡信息
+		if (queryData.cardType === 'resave') {
+			cashFenQiCardArr[0] = cardDatas
+		} else if (queryData.cardType === 'pay') {
+			cashFenQiCardArr[1] = cardDatas
+		}
+		store.setCashFenQiCardArr(cashFenQiCardArr)
+	}
+
 	// 协议绑卡(新的绑卡流程)
 	doProtocolBindCard = (params) => {
 		this.props.$fetch.post(API.protocolBind, {
@@ -164,6 +177,7 @@ export default class bind_save_page extends PureComponent {
 					if (queryData && queryData.noBankInfo) {
 						store.removeCardData();
 					} else {
+						this.storeCashFenQiCardData(cardDatas)
 						store.setCardData(cardDatas);
 					}
 					store.removeBackUrl();
@@ -243,6 +257,7 @@ export default class bind_save_page extends PureComponent {
 					if (queryData && queryData.noBankInfo) {
 						store.removeCardData();
 					} else {
+						this.storeCashFenQiCardData(cardDatas)
 						store.setCardData(cardDatas);
 					}
 					store.removeBackUrl();

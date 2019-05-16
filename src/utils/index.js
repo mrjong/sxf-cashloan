@@ -682,3 +682,15 @@ export const isCanLoan = ({
     }
     return state;
 };
+
+//函数防抖
+export const debounce = (method,delay) => {
+	let timer=null;
+	 return function(){
+				var context=this, args=arguments;
+				clearTimeout(timer);
+				timer=setTimeout(function(){
+						method.apply(context,args);
+				},delay);
+		}
+}
