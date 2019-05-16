@@ -275,6 +275,7 @@ export default class home_page extends PureComponent {
 	// 首页进度
 	getPercent = async () => {
 		let data = await getNextStr({ $props: this.props, needReturn: true });
+		console.log(data.btnText);
 		this.calculatePercent(data);
 	};
 
