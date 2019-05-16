@@ -1,281 +1,98 @@
-@import '../../../assets/styles/scss/base/fn';
-
-// .loginContent {
-//   height: 100%;
-//   overflow: auto;
-//   -webkit-overflow-scrolling: touch;
-//   .loginLog {
-//     @include bg-image('../../../assets/images/login/loginBg');
-//     background-repeat: no-repeat;
-//     background-size: 100%;
-//     background-origin: content-box;
-//     width: 750px;
-//     height: 1334px;
-//     text-align: center;
-//   }
-
-//   .centent {
-//     position: relative;
-//     top: 7.5rem;
-//     .loginInput {
-//       width: 5.59rem;
-//       height: 0.85rem;
-//       line-height: 0.85rem;
-//       float: left;
-//       margin: 0.25rem 0.79rem;
-//       border-radius: 0.07rem;
-//       border: none;
-//     }
-//     input::placeholder {
-//       color: #999;
-//       font-size: 0.27rem;
-//     }
-//     .smsCode {
-//       color: #fff;
-//       background: #FFC601;
-//       font-size: 0.27rem;
-//       display: inline;
-//       left: 4.8rem;
-//       top: 1.82rem;
-//       position: absolute;
-//       width: 1.64rem;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//     }
-//     .smsCodeNumber {
-//       color: #fff;
-//       background: #B9B9B9;
-//       font-size: 0.27rem;
-//       display: inline;
-//       left: 4.8rem;
-//       top: 1.82rem;
-//       position: absolute;
-//       width: 1.64rem;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//     }
-//     .sureBtn {
-//       display: inline;
-//       background: #FFE401;
-//       color: #333;
-//       font-size: 0.48rem;
-//       padding: 0.15rem 2rem;
-//       position: relative;
-//       top: 0.3rem;
-//       border-radius: 0.07rem;
-//       border: none;
-//     }
-//   }
-//   :global {
-//     .am-list-item .am-input-control input {
-//       font-size: 0.27rem;
-//       width: 100%;
-//       display: inline-block;
-//       text-align: left;
-//       -moz-box-sizing: border-box;
-//       box-sizing: border-box;
-//       font-family: PingFang-SC-Regular;
-//       padding: 0.16rem 0;
-//     }
-//   }
-// }
-.dc_landing_page {
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
-	height: 100%;
-	background: #fff;
-	.banner {
-		width: 100%;
-		display: block;
-	}
-	.content {
-		text-align: center;
-		background: #fff;
-		padding: 70px 40px 30px;
-		.loginInput {
-			height: 100px;
-			line-height: 100px;
-			margin-bottom: 30px;
-			border-radius: 12px;
-			border: 1PX solid #E3E3E3;
-			background-color: #F6F6F6;
-			:global {
-				.am-list-line::after {
-					background-color: transparent !important;
-				}
-			}
-		}
-		input::placeholder {
-			color: #999;
-			font-size: 32px;
-		}
-		.smsCodeInput {
-			flex: 1;
-			margin-right: 20px;
-		}
-		.smsBox {
-			display: flex;
-			justify-content: space-between;
-		}
-		.smsCode {
-			color: #fff;
-			font-size: 32px;
-			width: 270px;
-			height: 100px;
-			line-height: 100px;
-			text-align: center;
-			background-color: #FE4D2A;
-			border-radius: 12px;
-		}
-		// .smsCodeNumber {
-		// 	color: #fff;
-		// 	font-size: 32px;
-		// 	width: 270px;
-		// 	height: 100px;
-		// 	line-height: 100px;
-		// 	text-align: center;
-		// 	background-color: #FE4D2A;
-		// 	border-radius: 12px;
-		// }
-		.sureBtn {
-			display: block;
-			box-sizing: border-box;
-			background-color: #FE4D2A;
-			color: #fff;
-			font-size: 36px;
-			font-weight: 400;
-			margin-top: 50px;
-			height: 100px;
-			line-height: 100px;
-			border-radius: 12px;
-			border: none;
-			span {
-				display: inline-block;
-				width: 100%;
-			}
-			&:hover,
-			&:active {
-				background-color: #FE4D2A;
-			}
-		}
-	}
-	.fix_bottom_box {
-		position: fixed;
-		bottom: 0;
+.bg {
+	background-image: url(./img/bg.png);
+	background-repeat: no-repeat;
+	background-size: 750px 451px;
+	width: 100%;
+	height: 451px;
+}
+.logo {
+	margin: 20px;
+	width: 272px;
+	height: 59px;
+}
+.top_title {
+	color: #121c32;
+	font-size: 76px;
+	text-align: center;
+	font-family: 'PingFangSC-Semibold';
+	font-weight: 600;
+}
+.sub_title {
+	text-align: center;
+	font-size: 62px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	color: rgba(18, 28, 50, 1);
+	line-height: 87px;
+}
+.joinBtn {
+	margin-top: 80px;
+	background-color: #ffe105;
+	height: 100px;
+	line-height: 100px;
+	width: 634px;
+	color: #121c32;
+}
+.boxs {
+	padding: 80px 160px 10px;
+}
+.item {
+	padding-left: 150px;
+	margin-bottom: 50px;
+	position: relative;
+	.icon {
+		width: 98px;
+		height: 98px;
 		left: 0;
-		display: flex;
-		.img {
-			width: 80px;
-			height: 80px;
-			vertical-align: middle;
-			margin-right: 30px;
-		}
-		.f_left {
-			width: 560px;
-			height: 112px;
-			line-height: 112px;
-			background-color: #fff;
-			color: #777;
-			padding-left: 40px;
-			box-sizing: border-box;
-			font-size: 32px;
-			border-top: 1PX solid #E5E5E5;
-		}
-		.f_right {
-			width: 190px;
-			height: 112px;
-			line-height: 112px;
-			background-color: #FE4D2A;
-			color: #fff;
-			text-align: center;
-			border-top: 1PX solid #FE4D2A;
-			box-sizing: border-box;
-		}
-	}
-	.relative_bottom_box {
-		position: relative;
-	}
-	.imgWrap {
-		position: relative;
-	}
-	.backTopBtn {
+		top: -5px;
+		background-size: 98px 98px;
+		background-repeat: no-repeat;
+		display: inline-block;
 		position: absolute;
-		margin-left: -300px;
-		left: 50%;
-		bottom: 200px;
-		width: 600px;
-		height: 90px;
-		display: block;
 	}
-	.agreement {
-		color: #333;
-		font-size: 26px;
-		margin: 16px auto 0;
-		text-align: left;
+	.item1 {
+		background-image: url(./img/3.png);
+	}
+	.item2 {
+		background-image: url(./img/2.png);
+	}
+	.item3 {
+		background-image: url(./img/1.png);
+	}
+
+	.title {
+		font-size: 30px;
+		display: inline-block;
+		font-family: 'PingFangSC-Semibold';
+		font-weight: 600;
+		color: rgba(18, 28, 50, 1);
+		line-height: 42px;
+		position: relative;
+		i {
+			width: 102px;
+			height: 32px;
+			display: inline-block;
+			left: 0;
+			top: -20px;
+			background-size: 102px 32px;
+			background-repeat: no-repeat;
+			position: relative;
+			background-image: url(./img/xszq.png);
+		}
+	}
+	.subtitle {
+		color: #868e9e;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 300;
 		span {
-			color: #FE4D2A;
+			color: #ff7373;
+			font-size: 26px;
+			font-weight: normal;
 		}
-
-		.checked {
-			vertical-align: middle;
-			display: inline-block;
-			width: 28px;
-			height: 28px;
-			line-height: 28px;
-			background-color: #FE4D2A;
-			color: #fff;
-			box-sizing: border-box;
-			border-radius: 5px;
-			margin-right: 10px;
-			&::after {
-				vertical-align: middle;
-				display: inline-block;
-				content: '';
-				width: 20px;
-				height: 8px;
-				border-style: solid;
-				border-width: 0 0 3px 3px;
-				border-color: #fff;
-				transform: translate(3px, -2px) rotateZ(-45deg);
-			}
-		}
-		.nochecked {
-			vertical-align: middle;
-			display: inline-block;
-			width: 28px;
-			height: 28px;
-			line-height: 28px;
-			border: 1PX solid #FE4D2A;
-			box-sizing: border-box;
-			border-radius: 5px;
-			margin-right: 10px;
+		.midLine {
+			color: #868e9e;
+			font-size: 20px;
+			text-decoration: line-through;
 		}
 	}
-
-		:global {
-			.am-list-item .am-input-control input {
-				font-size: 0.27rem;
-				width: 100%;
-				display: inline-block;
-				text-align: left;
-				-moz-box-sizing: border-box;
-				box-sizing: border-box;
-				font-family: PingFang-SC-Regular;
-				padding: 0.16rem 0;
-			}
-
-			// .am-list-item .am-checkbox .am-checkbox-inner {
-			// 	width: 28px;
-			// 	height: 28px;
-			// 	border-radius: 5px;
-			// 	border: 1PX solid #FE4D2A;
-			// }
-
-			// .am-list-item .am-checkbox-checked .am-checkbox-inner {
-			// 	background: #FE4D2A;
-			// 	font-size: 26px;
-			// }
-		}
-	}
+}
