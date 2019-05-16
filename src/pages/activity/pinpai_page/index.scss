@@ -78,47 +78,28 @@
     margin: 0 auto 116px;
   }
   .protocolBox{
+    position: relative;
     color: #414A53;
     font-size: 24px;
     line-height: 36px;
     padding: 0 56px 36px;
     .specailColor{
       color: #8E8D7B;
+      margin-left: 34px;
     }
     .checked {
-      vertical-align: middle;
-      display: inline-block;
+      position: absolute;
+      top: 5px;
       width: 28px;
       height: 28px;
-      line-height: 28px;
-      background-color: #2A2B2C;
-      color: #fff;
-      box-sizing: border-box;
-      border-radius: 50%;
-      margin-right: 6px;
-      &::after {
-        vertical-align: middle;
-        display: inline-block;
-        content: "";
-        width: 12px;
-        height: 5px;
-        border-style: solid;
-        border-width: 0 0 3px 3px;
-        border-color: #fff;
-        transform: translate(7px, 0) rotateZ(-45deg);
-      }
+      background: url(./img/checked_ico.png) no-repeat;
+      background-size: 100%;
     }
 
     .nochecked {
-      vertical-align: middle;
-      display: inline-block;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-      border: 2px solid #2A2B2C;
-      box-sizing: border-box;
-      border-radius: 50%;
-      margin-right: 6px;
+      width: 26px;
+      height: 26px;
+      background-image: url(./img/unChecked_ico.png);
     }
   }
 }

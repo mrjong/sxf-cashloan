@@ -139,7 +139,7 @@ export default class funsisong_page extends PureComponent {
         <img src={intro_box} className={styles.proDesc} alt="产品介绍" />
         <div className={styles.protocolBox}>
           <i
-            className={isSelProtocal ? styles.checked : styles.nochecked}
+            className={isSelProtocal ? styles.checked : `${styles.checked} ${styles.nochecked}`}
             onClick={this.checkAgreement}
           />
           <span className={styles.specailColor}>阅读并接受</span>
