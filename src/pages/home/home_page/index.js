@@ -191,9 +191,9 @@ export default class home_page extends PureComponent {
 	// 判断是否授信
 	credit_extension = () => {
 		// this.setState({
-		//     firstUserInfo:'00'
+		//     firstUserInfo:'01'
 		// })
-		// this.requestGetUsrInfo();
+		// this.credit_extension_not();
 		// return
 		this.props.$fetch
 			.post(API.procedure_user_sts)
@@ -282,6 +282,7 @@ export default class home_page extends PureComponent {
 	calculatePercent = (data, isshow) => {
 		let codes = [];
 		let demo = data.codes;
+		// let demo = '2224'
 		this.setState({
 			pageCode: demo
 		});
@@ -317,12 +318,12 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		if (codes.length !== 0 && newCodes2.length === 0 && newCodes3.length !== 3) {
+		if (codes.length !== 0 && newCodes2.length === 0 && (newCodes3.length === 3 || newCodes3.length === 2 || newCodes3.length === 1)) {
 			//认证过期
 			this.setState({
 				showDiv: 'circle',
 				percentSatus: '3',
-				percentData: 40
+				percentData: 60
 			});
 			return;
 		}
@@ -333,27 +334,27 @@ export default class home_page extends PureComponent {
 					showDiv: '50000'
 				});
 				break;
-			case 1: // 新用户，信用卡未授权
+
+			case 1: // 新用户，运营商未授权/基本信息未认证
 				this.setState({
 					percentSatus: '2',
-					percentData: 60,
+					percentData: 80,
 					showDiv: 'circle'
 				});
 				break;
 
 			case 2: // 新用户，信用卡未授权
 				this.setState({
-					percentSatus: '1',
-					percentData: 80,
-					showDiv: 'circle'
-				});
-				break;
-
-			case 3: // 新用户，信用卡未授权
-				this.setState({
 					percentData: 98,
 					percentSatus: isshow ? '1' : '',
 					showDiv: 'circle'
+				});
+				break;
+			case 3: // 新用户，信用卡未授权
+				this.setState({
+					percentData: '',
+					percentSatus: '',
+					showDiv: ''
 				});
 				break;
 			default:
@@ -635,6 +636,7 @@ export default class home_page extends PureComponent {
 				// result.data.indexData = {
 				//   autSts : '2'
 				// }
+				this.getPercent();
 				if (result.data.indexSts === 'LN0003') {
 					this.getPercent();
 				}
