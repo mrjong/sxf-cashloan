@@ -286,14 +286,10 @@ export default class real_name_page extends Component {
 							this.props.toast.info('实名照片补充成功!');
 							store.removeToggleMoxieCard();
 							setTimeout(() => {
-								handleClickConfirm(
-									this.props,
-									{
-										...store.getLoanAspirationHome()
-									},
-									2000
-								);
-							});
+								handleClickConfirm(this.props, {
+									...store.getLoanAspirationHome()
+								});
+							}, 2000);
 							break;
 						case '3':
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
