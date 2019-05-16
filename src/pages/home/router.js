@@ -61,4 +61,9 @@ export default [
     title: '借款信息确认',
     component: () => import('pages/home/loan_fenqi_page'),
   },
+  {
+    path: '/home/deposit_tip',
+    title: '提现提醒',
+    component: () => import('pages/home/deposit_tip_page'),
+  },
 ];

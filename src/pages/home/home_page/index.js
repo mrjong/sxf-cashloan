@@ -1304,6 +1304,9 @@ export default class home_page extends PureComponent {
 				<p onClick={()=>{
 					this.props.history.push('/home/loan_fenqi')
 				}}>666</p>
+        <p onClick={()=>{
+					this.props.history.push('/home/deposit_tip')
+				}}>下载页</p>
 				<Modal
 					popup
 					className="modal_l_r"
