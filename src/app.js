@@ -8,12 +8,11 @@ import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
 import { initAnalytics } from './utils/analytins';
 import { isMPOS } from 'utils/common';
-import ErrorBoundary from 'components/ErrorBoundary';
 import fastClick from 'fastclick';
 import Raven from 'raven-js'
 
 const { PROJECT_ENV, RELEASE_VERSION } = process.env;
-console.log(RELEASE_VERSION,'RELEASE_VERSION')
+console.log(RELEASE_VERSION, 'RELEASE_VERSION')
 
 if (PROJECT_ENV === 'pro') { // 生产环境配置
 	// Raven.config('https://bdac99feaf3e4e6390fd8f81c5cdebd0@sentry.vbillbank.com/2',{
@@ -31,7 +30,7 @@ if (PROJECT_ENV === 'pro') { // 生产环境配置
 	}).install()
 }
 
-fastClick.prototype.focus = function(targetElement) {
+fastClick.prototype.focus = function (targetElement) {
 	targetElement.focus();
 };
 fastClick.attach(document.body);
@@ -45,9 +44,7 @@ initAnalytics();
 const renders = (Component) =>
 	render(
 		<BrowserRouter>
-			<ErrorBoundary>
-				<Component />
-			</ErrorBoundary>
+			<Component />
 		</BrowserRouter>,
 		document.getElementById('root')
 	);
