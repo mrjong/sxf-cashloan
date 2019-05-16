@@ -24,20 +24,24 @@ export default class login_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
-			(res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.setState({
-						downloadUrl: res.data
-					});
-				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+		this.props.$fetch
+			.get(API.DOWNLOADURL, {
+				type: '01'
+			})
+			.then(
+				(res) => {
+					if (res.msgCode === 'PTM0000') {
+						this.setState({
+							downloadUrl: res.data
+						});
+					} else {
+						res.msgInfo && this.props.toast.info(res.msgInfo);
+					}
+				},
+				(error) => {
+					error.msgInfo && this.props.toast.info(error.msgInfo);
 				}
-			},
-			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
-			}
-		);
+			);
 	};
 
 	downloadClick = () => {
