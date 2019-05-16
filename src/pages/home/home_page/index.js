@@ -654,7 +654,7 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (true && !store.getShowActivityModal()) {
+				if (isMPOS() && !store.getShowActivityModal()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
