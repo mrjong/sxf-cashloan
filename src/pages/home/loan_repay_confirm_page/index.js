@@ -773,55 +773,61 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</div>
 							<div className={style.modal_content}>
 								<div className={style.labelDiv}>
-									<div>
+									<div className={style.trendBox}>
+										<i/>
+										<div className={style.trendDesc}>
+											<span>月还款压力大，费用低</span>
+											<span>月还款压力小，费用高</span>
+										</div>
+									</div>
+									<div className={style.limitBox}>
 										{perdRateList.map((item, idx) => {
 											return (
-												<div key={idx}>
-													{(item.perdLth == 30 &&
-														item.factLmtLow <=
-															Number(this.props.form.getFieldValue('loanMoney')) &&
-														Number(this.props.form.getFieldValue('loanMoney')) <=
-															item.factAmtHigh) ||
-													item.perdLth != 30 ? (
-														<div
-															className={style.listitem}
-															onClick={() => {
-																// if (
-																// 	item.factLmtLow <=
-																// 		Number(this.props.form.getFieldValue('loanMoney')) &&
-																// 	Number(this.props.form.getFieldValue('loanMoney')) <=
-																// 		item.factAmtHigh
-																// ) {
-																// }
-																this.filterLoanDate(item);
-															}}
-														>
-															{/* {item.perdLth == 30 ? (
-													<div className={[ style.dayProd ].join(' ')}>
-														<div className={style.title}>
-															{item.perdPageNm}
-															<i />
-														</div>
-														<div className={style.subtitle}>
-															代偿区间{item.factLmtLow}-{item.factAmtHigh}元
-														</div>
+												(item.perdLth == 30 &&
+													item.factLmtLow <=
+														Number(this.props.form.getFieldValue('loanMoney')) &&
+													Number(this.props.form.getFieldValue('loanMoney')) <=
+														item.factAmtHigh) ||
+												item.perdLth != 30 ? (
+													<div
+														className={style.listitem}
+														className={selectedLoanDate.perdCnt === item.perdCnt ? `${style.listitem} ${style.listActiveItem}` : style.listitem}
+														onClick={() => {
+															// if (
+															// 	item.factLmtLow <=
+															// 		Number(this.props.form.getFieldValue('loanMoney')) &&
+															// 	Number(this.props.form.getFieldValue('loanMoney')) <=
+															// 		item.factAmtHigh
+															// ) {
+															// }
+															this.filterLoanDate(item);
+														}}
+													>
+														{/* {item.perdLth == 30 ? (
+												<div className={[ style.dayProd ].join(' ')}>
+													<div className={style.title}>
+														{item.perdPageNm}
+														<i />
 													</div>
-												) : ()} */}
-															<span>{item.perdPageNm}</span>
-
-															{selectedLoanDate.perdCnt === item.perdCnt && (
-																<i className={style.checkIcon} />
-															)}
-														</div>
-													) : null}
+													<div className={style.subtitle}>
+														代偿区间{item.factLmtLow}-{item.factAmtHigh}元
+													</div>
 												</div>
+											) : ()} */}
+														<span>{item.perdPageNm}</span>
+
+														{/* {selectedLoanDate.perdCnt === item.perdCnt && (
+															<i className={style.checkIcon} />
+														)} */}
+													</div>
+												) : null
 											);
 										})}
 									</div>
 								</div>
 							</div>
 						</div>
-						<div
+						{/* <div
 							className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
 						>
 							<div className={style.modal_header}>
@@ -868,7 +874,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</Modal>
 			</div>
