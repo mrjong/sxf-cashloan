@@ -208,10 +208,10 @@ if (window.history && window.history.pushState) {
 					return;
 				case '/home/home':
 					if (tokenFromStorage && token) {
-						if (window.handleCloseHomeModal) {
-							window.handleCloseHomeModal();
-							return;
-						}
+						// if (window.handleCloseHomeModal) {
+						// 	window.handleCloseHomeModal();
+						// 	return;
+						// }
 						if (store.getCarrierMoxie()) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
