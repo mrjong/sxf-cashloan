@@ -11,6 +11,7 @@
   border-radius: 12px;
   box-sizing: border-box;
   padding: 0 30px;
+  margin-bottom: 60px;
 
   .top {
     position: relative;
@@ -233,7 +234,8 @@
     }
 
     .am-list-item .am-input-control input {
-      text-align: right;
+      width: 100%;
+      // text-align: right;
       color: #000;
       opacity: 1;
     }
@@ -262,6 +264,35 @@
     left: 0;
     color: #999;
     font-size: 24px;
+  }
+}
+.repayTypeBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 110px;
+  justify-content: space-between;
+  font-size: 30px;
+  font-weight: 400;
+  color: #121C32;
+  .value{
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    .unChecked{
+      display: block;
+      width: 34px;
+      height: 34px;
+      background: url('../../../assets/images/home/unChecked_ico.png') no-repeat center;
+      background-size: 100%;
+      margin-left: 16px;
+    }
+    .checked{
+      background-image: url('../../../assets/images/home/checked_ico.png');
+    }
+  }
+  &:after {
+    @include setBottomLine();
   }
 }
 .dayProd {
@@ -330,6 +361,7 @@
     }
 
     .blackColor {
+      width: 100%;
       .am-input-control input,
       .am-list-extra {
         color: #333;
@@ -355,7 +387,7 @@
     }
 
     .am-list-item .am-input-control input {
-      text-align: right;
+      // text-align: right;
     }
 
     .am-list-item.am-list-item-middle .am-list-line {
