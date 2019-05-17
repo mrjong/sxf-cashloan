@@ -60,13 +60,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 			modal_left: false,
 			isShowCreditModal: false,
 			perdRateList: [],
-			dayPro: {}
+			dayPro: {},
+			cardCount: '', // 卡的数量
 		};
 	}
 
 	componentDidMount() {
 		store.removeToggleMoxieCard();
 		this.queryUsrInfo();
+		this.requestCredCardCount();
 	}
 
 	componentWillUnmount() {
@@ -253,7 +255,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 			.post(API.CRED_CARD_COUNT)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000') {
-					this.repayForOtherBank(result.data.count);
+					this.setState({
+						cardCount: result.data.count
+					})
 				} else {
 					this.props.toast.info(result.msgInfo);
 				}
@@ -265,7 +269,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	handleSubmit = () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
+		const { selectedLoanDate = {}, usrIndexInfo, cardCount } = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { minApplAmt, maxApplAmt } = indexData;
 		if (!this.state.fetchBillSucc) {
@@ -278,7 +282,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (
 			!isCanLoan({
 				$props: this.props,
-				goMoxieBankList: this.requestCredCardCount,
+				goMoxieBankList: this.repayForOtherBank(cardCount),
 				usrIndexInfo: this.state.usrIndexInfo
 			})
 		) {
@@ -422,7 +426,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			isinputBlur = false;
 		}, 100);
 		// type为是自动执行该方法，还是点击执行该方法
-		const { usrIndexInfo, fetchBillSucc } = this.state;
+		const { usrIndexInfo, fetchBillSucc, cardCount } = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { minApplAmt, maxApplAmt } = indexData;
 		if (!fetchBillSucc) {
@@ -459,7 +463,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			type === 'click' &&
 			!isCanLoan({
 				$props: this.props,
-				goMoxieBankList: this.requestCredCardCount,
+				goMoxieBankList: this.repayForOtherBank(cardCount),
 				usrIndexInfo: this.state.usrIndexInfo
 			})
 		) {
@@ -559,7 +563,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			activeTag,
 			selectedLoanDate,
 			perdRateList,
-			btnDisabled
+			btnDisabled,
+			cardCount,
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -628,10 +633,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<span className={style.name}>{!bankName ? '****' : bankName}</span>
 								<span className={style.lastNo}>（{!cardNoHid ? '****' : cardNoHid.slice(-4)}）</span>
 							</div>
-							<div className={style.cardNumBox}>
-								<span>3张可更换</span>
-								<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
-							</div>
+							{
+								cardCount && 
+								<div className={style.cardNumBox}>
+									<span>{cardCount}张可更换</span>
+									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
+								</div>
+							}
 							{/* {isShowProgress ? (
 								<div className={style.progressWrap}>
 									<div className={style.percentTitleWrap}>
@@ -723,13 +731,44 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</InputItem>
 						{!this.inputDisabled() ? <div className={style.desc}>{this.placeholderText()}</div> : null}
 					</div>
+					<div className={style.money_input}>
+						<InputItem
+							{...getFieldProps('loanMoney', {
+								rules: [ { required: true, message: '请输入还款金额' } ]
+							})}
+							type="number"
+							placeholder={this.placeholderText()}
+							disabled={this.inputDisabled()}
+							ref={(el) => (this.inputRef = el)}
+							className={this.inputDisabled() ? 'blackColor' : 'blackColor'}
+							onBlur={(v) => {
+								setTimeout(() => {
+									if (isinputBlur) {
+										return;
+									}
+									this.calcLoanMoney(v, 'tag3');
+								});
+
+								handleInputBlur();
+							}}
+							onFocus={(v) => {
+								this.setState({
+									btnDisabled: true
+								});
+								this.updateBillInf();
+							}}
+						>
+							最低还卡
+						</InputItem>
+						{!this.inputDisabled() ? <div className={style.desc}>{this.placeholderText()}</div> : null}
+					</div>
 					<div>
 						<List.Item
 							onClick={() => {
 								if (
 									!isCanLoan({
 										$props: this.props,
-										goMoxieBankList: this.requestCredCardCount,
+										goMoxieBankList: this.repayForOtherBank(cardCount),
 										usrIndexInfo: this.state.usrIndexInfo
 									})
 								) {
@@ -764,7 +803,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						onClick={this.handleSubmit}
 						className={[ style.confirmApplyBtn, btnDisabled ? style.disabledBtn : '' ].join(' ')}
 					>
-						提交申请
+						签约借款
 					</SXFButton>
 					<p className="bottomTip">怕逾期，用还到</p>
 				</div>
