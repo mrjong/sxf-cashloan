@@ -5,26 +5,27 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background'
-import { } from 'utils';
+import { getDeviceType} from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import style from './index.scss';
 
 
-const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
-let moneyKeyboardWrapProps;
-if (isIPhone) {
-  moneyKeyboardWrapProps = {
-    onTouchStart: (e) => e.preventDefault()
-  };
-}
+// const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
+// let moneyKeyboardWrapProps;
+// if (isIPhone) {
+//   moneyKeyboardWrapProps = {
+//     onTouchStart: (e) => e.preventDefault()
+//   };
+// }
 const API = {
   prodListInfo: '/cash/prodList', //产品列表基本信息查询
   loanUsage: '/cash/loanUsage',  //借款用途
   couponSupport: '/cash/couponSupport', //最佳优惠券获取
   contractList: '/cash/qryContractList', //合同列表
-  repayPlan: '/bill/prebill' //还款计划查询
+  repayPlan: '/bill/prebill', //还款计划查询
+  agentRepay: '/bill/agentRepay', // 借款申请接口
 }
-const purposeList = [
+const usageList = [
   {
     label: '个人日常消费',
     value: 1
@@ -69,7 +70,7 @@ export default class loan_fenqi_page extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      purposeModal: false,
+      usageModal: false,
       planModal: false,
       tipModal: false,
       cardData: false,
@@ -81,7 +82,7 @@ export default class loan_fenqi_page extends PureComponent {
       submitData: {
         loanMoney: '',
         loanDate: '',
-        usage: '',
+        loanUsage: '',
         resaveBankCard: '',
         payBankCard: ''
       }
@@ -90,12 +91,18 @@ export default class loan_fenqi_page extends PureComponent {
 
   componentWillMount() {
     this.setState({
-      purpose: purposeList[0].label
+      purpose: usageList[0].label
     })
-    let submitData = store.getCashFenQiSubmitData() // 代提交的借款信息
+    let storeData = store.getCashFenQiStoreData() // 代提交的借款信息
     let cashFenQiCardArr = store.getCashFenQiCardArr() // 收、还款卡信息
     // Object.assign(submitData, {})
-    this.setState({submitData})
+    this.setState({
+      loanMoney: '',
+      loanDate: '',
+      loanUsage: '',
+      resaveBankCard: '',
+      payBankCard: ''
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -221,8 +228,10 @@ export default class loan_fenqi_page extends PureComponent {
   }
 
   storeData = () => {
-    let data= {}
-    store.setCashFenQiSubmitData(data)
+    let data = {
+
+    }
+    store.setCashFenQiStoreData(data)
   }
 
   selectPurpose = (item) => {
@@ -265,15 +274,38 @@ export default class loan_fenqi_page extends PureComponent {
     return `可借金额3000～50000`;
   };
 
-  handleSubmit = () => {
+  //借款申请提交
+  loanApplySubmit = () => {
     if (this.validateFn()) {
+      this.props.$fetch.post(API.agentRepay, {
+        withDrawAgrNo: '', // 代还信用卡主键
+        withHoldAgrNo: '', // 还款卡号主键
+        prdId: '', // 产品ID
+        autId: '', // 信用卡账单ID
+        repayType: '', // 还款方式
+        usrBusCnl: '', // 操作渠道
+        coupId: '', // 优惠劵id
+        price: '', // 签约金额
+        osType: getDeviceType(), // 操作系统
+        prodType: '11',
+        channelType:  'h5',
+        loanUsage: ''
+      }).then(res => {
+        if (res.msgCode === 'PTM0000') {
+
+        } else {
+          this.props.toast.info(res.msgInfo);
+        }
+      }).catch(err => {
+        console.log(err)
+      })
       console.log('提交借款')
     }
   }
 
   render() {
     const {
-      purposeModal,
+      usageModal,
       purpose,
       tipModal,
       cardData,
@@ -299,25 +331,22 @@ export default class loan_fenqi_page extends PureComponent {
               <InputItem
                 className={style.billInput}
                 placeholder={this.placeholderText()}
-                disabled={false}
+                // disabled={false}
                 clear={true}
                 type="number"
-                ref={(el) => (this.inputRef = el)}
+                // ref={(el) => (this.inputRef = el)}
                 value={loanMoney}
                 onChange={(v) => {
                   this.setState({
                     loanMoney: v,
                     loanDate: ''
-                  }, () => {
-
                   })
                 }}
                 onBlur={(v) => {
                   loanMoney && console.log('请求期限')
                   // handleInputBlur();
-                  // this.calcLoanMoney(v);
                 }}
-                moneykeyboardwrapprops={moneyKeyboardWrapProps}
+              // moneykeyboardwrapprops={moneyKeyboardWrapProps}
               />
             </div>
             <p className={style.inputTip}>建议全部借出，借款后剩余额度将不可用</p>
@@ -343,7 +372,7 @@ export default class loan_fenqi_page extends PureComponent {
               </li>
               <li className={style.listItem}>
                 <label>借款用途</label>
-                <span onClick={() => { this.openModal('purpose') }} className={style.listValue}>
+                <span onClick={() => { this.openModal('usage') }} className={style.listValue}>
                   {purpose}
                   <Icon type="right" className={style.icon} />
                 </span>
@@ -394,21 +423,21 @@ export default class loan_fenqi_page extends PureComponent {
           </div>
         </div>
         <div className={style.buttonWrap}>
-          <SXFButton onClick={this.handleSubmit} className={this.validateFn() ? style.submitBtn : style.submitBtnDisabled}>签约借款</SXFButton>
+          <SXFButton onClick={this.loanApplySubmit} className={this.validateFn() ? style.submitBtn : style.submitBtnDisabled}>签约借款</SXFButton>
         </div>
         <Modal
           popup
           className="purpose_modal"
-          visible={purposeModal}
+          visible={usageModal}
           animationType="slide-up"
           transparent
-          onClose={() => { this.closeModal('purpose') }}
+          onClose={() => { this.closeModal('usage') }}
         >
           <h3 className={style.modalTitle}>借款用途</h3>
           <p className={style.modalDesc}>借款资金不得用于购买房产、证券投资等投机经营及其他违法交易</p>
           <ul>
             {
-              purposeList.map(item => (
+              usageList.map(item => (
                 <li className={style.modalItem} key={item.value} onClick={() => {
                   this.selectPurpose(item)
                 }}>{item.label}</li>

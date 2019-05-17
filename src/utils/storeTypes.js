@@ -73,6 +73,6 @@ export const storeTypes = {
 	IdChkPhotoBack: 'IdChkPhotoBack', // 签约页是否需要补充活体识别标示
 	ChkPhotoBackNew: 'ChkPhotoBackNew', // 活体直接返回
 	RealNameNextStep: 'RealNameNextStep', // 需要下一步
-	CashFenQiSubmitData: 'CashFenQiSubmitData', //现金分期待提交数据
-	CashFenQiCardArr: 'CashFenQiCardArr' //现金分期待提交数据
+	CashFenQiStoreData: 'CashFenQiStoreData', //现金分期反显的数据
+	CashFenQiCardArr: 'CashFenQiCardArr' //现金分期收、还卡数组
 };
