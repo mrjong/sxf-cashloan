@@ -37,7 +37,7 @@ export default class ioscontrol_page extends PureComponent {
 		buriedPointEvent(mpos_ioscontrol_page.copySuccess);
 		this.props.toast.info('复制成功！马上打开微信关注“还到”，抢免息吧！');
 		setTimeout(() => {
-			window.postMessage('复制成功');
+			window.postMessage('复制成功', ' ');
 		}, 0)
 	}
 

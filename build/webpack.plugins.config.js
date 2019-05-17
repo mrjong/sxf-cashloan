@@ -129,7 +129,7 @@ let getProdPlugins = function() {
       { from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
     ])
   );
-  //   plugins.push(
+  // plugins.push(
   //   new SentryPlugin({
   //     include: './dist',
   //     release: sentryVersion,

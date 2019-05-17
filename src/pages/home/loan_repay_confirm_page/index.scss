@@ -354,24 +354,26 @@
   font-size: 32px;
 }
 .modal_left {
-  float: left;
-  min-height: 760px;
+  // float: left;
+  // min-height: 760px;
   background: #fff;
-  width: 50%;
+  // width: 50%;
   transition: all 0.3s;
 }
 .modal_left1 {
   margin-left: -50%;
 }
 .modal_box {
-  width: 200%;
+  // width: 200%;
+  width: 100%;
   overflow: hidden;
+  height: 585px;
 }
 .modal_right {
-  float: left;
+  // float: left;
   min-height: 760px;
   background: #fff;
-  width: 50%;
+  // width: 50%;
   transition: all 0.3s;
 }
 .modal_left2 {
@@ -425,25 +427,60 @@
       @include setBottomLine();
     }
   }
+  .trendBox {
+    position: relative;
+    margin: 81px 0 100px;
+    i {
+      display: block;
+      width: 606px;
+      height: 21px;
+      margin: 0 auto;
+      background-image: url(assets/images/home/trend_img.png);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+    .trendDesc{
+      margin-top: 10px;
+      display: flex;
+      font-size: 22px;
+      color: #333;
+      justify-content: space-between;
+    }
+  }
+  .limitBox{
+    display: flex;
+    justify-content: space-around;
+  }
 }
 .listitem {
   position: relative;
-  margin-top: 10px;
-  font-size: 34px;
-  color: #333;
-  padding: 15px;
-  &::after {
-    @include setBottomLine();
-    left: 30px;
-  }
-  .checkIcon {
-    width: 30px;
-    height: 26px;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    @include spriteIcon('../../../assets/images/common/sprite_icon.png',-295px, -474px);
-  }
+  // margin-top: 10px;
+  // color: #333;
+  // padding: 15px 35px;
+  width: 120px;
+  height: 70px;
+  line-height: 70px;
+  border: 2px solid #f66;
+  border-radius: 35px;
+  font-size: 30px;
+  font-weight: 600;
+  color: #f66;
+  // &::after {
+  //   @include setBottomLine();
+  //   left: 30px;
+  // }
+  // .checkIcon {
+  //   width: 30px;
+  //   height: 26px;
+  //   position: absolute;
+  //   right: 20px;
+  //   top: 20px;
+  //   @include spriteIcon('../../../assets/images/common/sprite_icon.png',-295px, -474px);
+  // }
+}
+.listActiveItem{
+	color: #fff;
+  background: #f66;
 }
 .tagList {
   display: flex;
