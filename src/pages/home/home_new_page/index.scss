@@ -1,6 +1,6 @@
 .home_new_page {
 	.home_header {
-		padding: 30px 40px 40px;
+		padding: 30px 40px 0;
 		.title {
 			position: relative;
 			font-size: 46px;
@@ -41,98 +41,6 @@
 				width: 16px;
 				height: 16px;
 				background: #fe6666;
-			}
-		}
-	}
-
-	// 现金
-	.home_xj_black {
-		margin: 0 40px;
-		min-width: 670px;
-		box-sizing: border-box;
-		min-height: 235px;
-		padding: 30px 38px 0;
-		display: inline-block;
-		background-size: 670px 235px;
-		background-repeat: no-repeat;
-		background-image: url(./img/fqbg.png);
-		.title {
-			position: relative;
-			font-size: 40px;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
-			line-height: 1.4;
-			color: rgba(238, 194, 143, 1);
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-			i {
-				width: 23px;
-				right: 0;
-				top: 10px;
-				bottom: 0;
-				display: inline-block;
-				position: absolute;
-				height: 31px;
-				background-size: 23px 31px;
-				background-repeat: no-repeat;
-				background-image: url(./img/locked.png);
-			}
-		}
-		.subtitle_90 {
-			font-size: 34px;
-			line-height: 1.4;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
-			color: rgba(238, 194, 143, 1);
-			opacity: 0.6;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-		}
-		.subtitle {
-			font-size: 34px;
-			line-height: 1.4;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
-			color: rgba(238, 194, 143, 1);
-			opacity: 0.6;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-		}
-		.desc {
-			margin-top: 48px;
-			display: flex;
-			justify-content: space-between;
-			font-size: 22px;
-			font-family: 'PingFangSC-Regular';
-			font-weight: 400;
-			color: rgba(238, 194, 143, 1);
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-			.item_l {
-				flex: 1;
-				text-align: left;
-				i {
-					width: 23px;
-					height: 31px;
-					position: relative;
-					display: inline-block;
-					left: 16px;
-					top: 5px;
-					background-size: 23px 31px;
-					background-repeat: no-repeat;
-					background-image: url(./img/locked.png);
-				}
-			}
-			.item_r {
-				flex: 1;
-				text-align: right;
-				i {
-					width: 8px;
-					height: 11px;
-					position: relative;
-					display: inline-block;
-					left: 6px;
-					top: -3px;
-					background-size: 8px 11px;
-					background-repeat: no-repeat;
-					background-image: url(./img/arrow.png);
-				}
 			}
 		}
 	}

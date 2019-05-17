@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import { getDeviceType } from 'utils';
-import logo from './img/logo.png';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
@@ -11,6 +10,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import Carousels from 'components/Carousels';
 import CarouselHome from './components/carousel_home';
+import FQCard from './components/fqCard';
 const API = {
 	BANNER: '/my/getBannerList' // 0101-banner
 };
@@ -63,46 +63,12 @@ export default class login_page extends PureComponent {
 						</span>
 					</div>
 				</section>
-				{/* 头部end */}
-				{/* 现金_locked_start */}
-				<section className={styles.home_xj_black}>
-					<div className={styles.title}>还到Plus</div>
-					<div className={styles.subtitle}>超多权益任你拿</div>
-					<div className={styles.desc}>
-						<div className={styles.item_l}>
-							按时还款可解锁<i />
-						</div>
-						<div className={styles.item_r}>
-							了解更多权益<i />
-						</div>
-					</div>
-				</section>
-				{/* 现金_locked_end */}
-				{/* 现金_locked_ing_start */}
-				<section className={styles.home_xj_black}>
-					<div className={styles.title}>
-						还到Plus<i />
-					</div>
-					<div className={styles.subtitle_90}>90秒</div>
-					<div className={styles.desc}>
-						<div className={styles.item_l}>按时还款可解锁</div>
-						<div className={styles.item_r}>
-							了解更多权益<i />
-						</div>
-					</div>
-				</section>
-				{/* 现金_locked_ing_end */}
+				<FQCard />
+				<CarouselHome />
 
-				{/* 代偿50000start */}
-				<section className={styles.home_dc_50000}>
-					<CarouselHome />
-				</section>
-				{/* 代偿50000end */}
-				{/* banner_start */}
 				<section className={styles.home_banner}>
 					<Carousels data={bannerList} entryFrom="banner" />
 				</section>
-				{/* banner_end */}
 			</div>
 		);
 	}

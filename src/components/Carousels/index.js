@@ -37,7 +37,8 @@ export default class Carousels extends React.Component {
 			width: '0.2rem',
 			height: '0.04rem',
 			borderRadius: '0',
-			backgroundColor: '#000000'
+			backgroundColor: '#000000',
+			opacity: 0.6
 		},
 		swipeSpeed: 100,
 		dotActiveStyle: {
@@ -86,7 +87,7 @@ export default class Carousels extends React.Component {
 							onClick={() => {
 								this.handleLinkClick(item, index);
 							}}
-							style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
+							style={{ width: '100%', height: this.state.imgHeight }}
 						>
 							<img
 								src={item.src}
