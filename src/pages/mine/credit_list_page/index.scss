@@ -1,11 +1,15 @@
 @import '../../../assets/styles/scss/base/fn';
 
 .credit_list_page {
+  .bank_item{
+    position: relative;
+  }
   .card_tit {
     margin-top: 59px;
-    font-size: 28px;
-    color: rgba(157, 157, 157, 1);
-    text-align: center;
+    font-size: 46px;
+    color: #121C32;
+    padding-left: 60px;
+    font-weight: 500;
   }
   .card_list {
     li {
@@ -16,19 +20,63 @@
       transition: all 100ms;
       border: 1PX  solid #e5e5e5;
       border-radius: 10px;
-      height: 140px;
-      line-height: 140px;
+      height: 330px;
+      //line-height: 140px;
       font-size: 32px;
       color: rgba(51, 51, 51, 1);
       padding-left: 30px;
       .bank_name {
         margin: 0 24px 0 42px;
+        color: #121C32;
+        position: absolute;
+        top: 20px;
+        left: 60px;
+        z-index: 1;
       }
       .bank_name.pending{
         color: #34A6FF;
       }
       .bank_name.failed{
         color: #F44258;
+      }
+      .surplus_desc{
+        position: absolute;
+        top: 101px;
+        font-size: 24px;
+        color: #868E9E;
+      }
+      .bill_remain_amt{
+        position: absolute;
+        bottom: 80px;
+        font-size: 80px;
+        color: #121C32;
+        height: 100px;
+        line-height: 100px;
+      }
+      .bank_number{
+        position: absolute;
+        bottom: 10px;
+        font-size: 40px;
+        color: #121C32;
+        text-shadow: 1px 1px 2px #f5f5f5;
+        height: 44px;
+        line-height: 44px;
+        z-index: 1;
+      }
+      .bank_date{
+        position: absolute;
+        bottom: 10px;
+        font-size: 24px;
+        color: #121C32;
+        right: 30px;
+        height: 33px;
+        line-height: 33px;
+      }
+      .select_icon{
+        width: 100%;
+        position: absolute;
+        right: -2px;
+        top: -5px;
       }
       .selected_ico {
         position: absolute;
@@ -38,6 +86,16 @@
         height: 50px;
         margin-top: -25px;
       }
+      .bank_icon {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        margin-right: 16px;
+        z-index: 1;
+      }
+
       :global {
         .am-swipe-btn,.am-swipe-actions-right,.am-swipe-content{
           border-top-right-radius: 10px;
@@ -56,9 +114,9 @@
   }
   .add_card {
     font-size: 32px;
-    color: rgba(235, 222, 116, 1);
+    color: #414A53;
     text-align: center;
-    margin: 60px 0 30px 0;
+    margin: 30px 0 30px 0;
     .add_ico {
       position: relative;
       width: 32px;
@@ -68,5 +126,17 @@
       display: inline-block;
       @include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
     }
+  }
+  .button {
+    width: 634px;
+    height: 100px;
+    background: #EBDE74;
+    border-radius: 50px;
+    margin: 160px auto 0;
+    text-align: center;
+    line-height: 100px;
+    vertical-align: middle;
+    color: #121C32;
+    font-size: 34px;
   }
 }
