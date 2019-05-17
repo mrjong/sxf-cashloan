@@ -23,7 +23,7 @@ const fetchInit = () => {
 				case 'PTM0000':
 					return;
 				case 'PTM1000': // 用户登录超时
-					Raven.captureException(response.config.url, { extra: {code: 'PTM1000',msgInfo:'登录超时，请重新登陆'}, level: 'info' });
+					// Raven.captureException(response.config.url, { extra: {code: 'PTM1000',msgInfo:'登录超时，请重新登陆'}, level: 'info' });
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}

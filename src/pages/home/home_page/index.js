@@ -1489,17 +1489,24 @@ export default class home_page extends PureComponent {
 									}}
 								/>
 							</div>
-							<div>
-								{perdRateList.map((item, idx) => {
-									return (
-										<div key={idx}>
-											{(item.perdLth == 30 &&
+							<div className={style.limitContent}>
+								<div className={style.trendBox}>
+									<i/>
+									<div className={style.trendDesc}>
+										<span>月还款压力大，费用低</span>
+										<span>月还款压力小，费用高</span>
+									</div>
+								</div>
+								<div className={style.limitBox}>
+									{perdRateList.map((item, idx) => {
+										return (
+											(item.perdLth == 30 &&
 												item.factLmtLow <= Number(this.props.form.getFieldValue('loanMoney')) &&
 												Number(this.props.form.getFieldValue('loanMoney')) <=
 													item.factAmtHigh) ||
 											item.perdLth != 30 ? (
 												<div
-													className={style.listitem}
+													className={selectedLoanDate.perdCnt === item.perdCnt ? `${style.listitem} ${style.listActiveItem}` : style.listitem}
 													onClick={() => {
 														// if (
 														// 	item.factLmtLow <=
@@ -1524,14 +1531,14 @@ export default class home_page extends PureComponent {
 												) : ()} */}
 													<span>{item.perdPageNm}</span>
 
-													{selectedLoanDate.perdCnt === item.perdCnt && (
+													{/* {selectedLoanDate.perdCnt === item.perdCnt && (
 														<i className={style.checkIcon} />
-													)}
+													)} */}
 												</div>
-											) : null}
-										</div>
-									);
-								})}
+											) : null
+										);
+									})}
+								</div>
 							</div>
 						</div>
 
