@@ -81,7 +81,6 @@ export default class SvgCirPro extends Component {
 				style={{
 					width: width,
 					height: height,
-					margin: 'auto'
 				}}
 			>
 				<div
