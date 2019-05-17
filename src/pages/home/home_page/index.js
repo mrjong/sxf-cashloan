@@ -25,6 +25,7 @@ import mockData from './mockData';
 import { createForm } from 'rc-form';
 import AgreementModal from 'components/AgreementModal';
 import ScrollText from 'components/ScrollText';
+import ProgressBlock from './components/ProgressBlock';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
