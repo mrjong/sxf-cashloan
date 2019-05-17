@@ -1,10 +1,17 @@
 export default [
+  // {
+  //   path: '/home/home',
+  //   title: '还卡',
+  //   footerHide: false,
+  //   arrowHide: 'empty',
+  //   component: () => import('pages/home/home_page'),
+  // },
   {
     path: '/home/home',
     title: '还卡',
     footerHide: false,
     arrowHide: 'empty',
-    component: () => import('pages/home/home_page'),
+    component: () => import('pages/home/home_new_page'),
   },
   {
     path: '/home/message_page',
