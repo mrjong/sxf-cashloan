@@ -130,6 +130,10 @@ export default class home_page extends PureComponent {
 		store.removeSuccessPay();
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
+		//删除现金分期相关数据
+		store.removeCashFenQiStoreData() 
+		store.removeCashFenQiCardArr()
+
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
 		if (isWXOpen() && !tokenFromStorage && !token) {
