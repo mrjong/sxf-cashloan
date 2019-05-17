@@ -576,7 +576,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			bankNo,
 			bankName,
 			cardBillSts,
-			billRemainAmt
+			billRemainAmt,
+			cardBillDt,
 		} = indexData;
 		const { getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
@@ -591,6 +592,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			overDtStr = `<span class="blod">--</span>天`;
 		}
 		const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
+
+		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 
 		let cardBillAmtData = '';
 		if (cardBillSts === '02') {
@@ -634,7 +637,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<span className={style.lastNo}>（{!cardNoHid ? '****' : cardNoHid.slice(-4)}）</span>
 							</div>
 							{
-								cardCount && 
+								cardCount && cardCount > 1 &&
 								<div className={style.cardNumBox}>
 									<span>{cardCount}张可更换</span>
 									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
@@ -676,8 +679,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<span className={style.name}>账单日</span>
 								</div> */}
 								<div className={style.item}>
-									<span className={style.name}>还款日</span>
-									<span className={style.value} dangerouslySetInnerHTML={{ __html: overDtStr }} />
+									<span className={style.name}>还款日：{cardBillDtData}</span>
+									{/* <span className={style.value} dangerouslySetInnerHTML={{ __html: overDtStr }} /> */}
 									{/* <span className={style.name}>还款日</span> */}
 								</div>
 							</div>

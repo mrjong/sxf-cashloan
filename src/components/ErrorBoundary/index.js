@@ -46,6 +46,9 @@ export default class ErrorBoundary extends React.Component {
     }
 
     render() {
+		if (this.state.error) {
+			return <ErrPage />
+		}
         // if (this.state.error) {
         //     //render fallback UI
         //     return (
