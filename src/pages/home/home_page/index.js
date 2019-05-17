@@ -26,6 +26,9 @@ import { createForm } from 'rc-form';
 import AgreementModal from 'components/AgreementModal';
 import ScrollText from 'components/ScrollText';
 import ProgressBlock from './components/ProgressBlock';
+import CarouselHome from './components/carousel_home';
+import FQCard from './components/fqCard';
+import { setBackGround } from 'utils/background';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -62,6 +65,7 @@ let timer;
 let timerOut;
 @createForm()
 @fetch.inject()
+@setBackGround('#fff')
 export default class home_page extends PureComponent {
 	constructor(props) {
 		// 获取token
@@ -1221,6 +1225,24 @@ export default class home_page extends PureComponent {
 					</div>
 				) : null}
 				<p className="bottomTip">怕逾期，用还到</p>
+        <div className={style.home_new_page}>
+				{/* 头部start */}
+				<section className={style.home_header}>
+					<div className={style.title}>
+						借钱还信用卡
+						<span className={style.subtitle}>200万人都在用</span>
+						<span className={style.messageIcon}>
+							<i className={style.active} />
+						</span>
+					</div>
+				</section>
+				<FQCard />
+				<CarouselHome />
+
+				<section className={style.home_banner}>
+					<Carousels data={bannerList} entryFrom="banner" />
+				</section>
+			</div>
 				{homeModal}
 			</div>
 		);
