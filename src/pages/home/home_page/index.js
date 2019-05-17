@@ -214,7 +214,7 @@ export default class home_page extends PureComponent {
 					});
 					if (res.data.flag === '01') {
 						// 品牌活动弹框
-						if (isMPOS() && !store.getShowActivityModal()) {
+						if (isMPOS() && !store.getShowActivityModal() && Cookie.get('currentTime') !== new Date().getDate().toString()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
@@ -222,6 +222,7 @@ export default class home_page extends PureComponent {
 								},
 								() => {
 									store.setShowActivityModal(true);
+									Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 								}
 							);
 						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
@@ -654,7 +655,7 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (isMPOS() && !store.getShowActivityModal()) {
+				if (isMPOS() && !store.getShowActivityModal() && Cookie.get('currentTime') !== new Date().getDate().toString()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
@@ -662,6 +663,7 @@ export default class home_page extends PureComponent {
 						},
 						() => {
 							store.setShowActivityModal(true);
+							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
 				} else if (
