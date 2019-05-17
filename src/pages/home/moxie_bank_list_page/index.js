@@ -111,9 +111,9 @@ export default class moxie_bank_list_page extends Component {
 		store.setMoxieBackUrl(moxieBackUrlData);
 		store.removeBackUrl2();
 		store.removeMoxieBackUrl2();
-		if (setMoxieData && setMoxieData.indexOf('noAuthId') > -1) {
-			store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`);
-		}
+		// if (setMoxieData && setMoxieData.indexOf('noAuthId') > -1) {
+		// 	store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`);
+		// }
 		buriedPointEvent(moxie_bank_list.bankChooes, {
 			bankName: item.name
 		});

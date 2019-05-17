@@ -37,7 +37,14 @@ export const isWXOpen = () => {
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
-		let pageList = [ '/protocol/', '/activity/', '/others/', '/landing/landing_page', '/common/auth_page', '/mpos/mpos_ioscontrol_page' ];
+		let pageList = [
+			'/protocol/',
+			'/activity/',
+			'/others/',
+			'/landing/landing_page',
+			'/common/auth_page',
+			'/mpos/mpos_ioscontrol_page'
+		];
 		if (isWXOpen()) {
 			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
@@ -170,7 +177,7 @@ const interceptRouteArr = [
 	'/home/home',
 	'/order/order_page',
 	'/mine/mine_page',
-	'/mine/credit_extension_page',
+	// '/mine/credit_extension_page',
 	'/order/repayment_succ_page',
 	'/mine/credit_list_page',
 	'/home/essential_information',
@@ -179,7 +186,7 @@ const interceptRouteArr = [
 	'/home/moxie_bank_list_page',
 	'/home/loan_repay_confirm_page',
 	'/home/credit_apply_succ_page',
-	'/home/loan_apply_succ_page',
+	'/home/loan_apply_succ_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -393,8 +400,14 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
 	let resBackMsg = '';
+	let btnText = '';
+	let btnArry = [ '继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单' ];
 	if (res && res.msgCode === 'PTM0000') {
-		res.data.forEach((item) => {
+		res.data.forEach((item, index) => {
+			if ((item.stsw.dicDetailCd !== '2' || item.stsw.dicDetailCd !== '1') && !btnText) {
+				console.log(item)
+				btnText = btnArry[index + 1];
+			}
 			if (needDisplayOptions.includes(item.code)) {
 				codes += item.stsw.dicDetailCd;
 				codesArray.push(item.stsw.dicDetailCd);
@@ -452,7 +465,10 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								window.location.href =
 									result.data.url +
 									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
+										.location
+										.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+									)}`;
 							}, 3000);
 							if (callBack) {
 								callBack(resBackMsg);
@@ -505,7 +521,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 		data: res.data,
 		codes,
 		codesArray,
-		resBackMsg
+		resBackMsg,
+		btnText
 	};
 };
 
@@ -620,67 +637,59 @@ export const vconsole = (i, consoleshow) => {
 };
 
 // 是否可以借款
-export const isCanLoan = ({
-    $props,
-    usrIndexInfo,
-    goMoxieBankList
-}) => {
-    let state = true;
-    const { indexData = {} } = usrIndexInfo;
-    const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
-    if (indexData && indexData.buidSts && indexData.buidSts === '02') {
-         $props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
-            // 跳新版魔蝎
-            goMoxieBankList()
-        });
-        return;
-    } else if (
-        indexData &&
-        cardBillSts === '01' &&
-        (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
-    ) {
-         $props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
-            // 跳新版魔蝎
-            goMoxieBankList()
-        });
-        state = false;
-    } else if (
-        indexData &&
-        cardBillSts === '01' &&
-        (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
-    ) {
-         $props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
-            // 跳新版魔蝎
-            goMoxieBankList()
-        });
-        state = false;
-    } else if (
-        cardBillSts === '01' &&
-        indexData &&
-        (billRemainAmt !== 0 && billRemainAmt !== '0') &&
-        billRemainAmt &&
-        Number(indexData.minApplAmt) > Number(billRemainAmt)
-    ) {
-         $props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
-            // 跳新版魔蝎
-            goMoxieBankList()
-        });
-        state = false;
-    } else if (
-        cardBillSts === '01' &&
-        indexData &&
-        !billRemainAmt &&
-        cardBillAmt &&
-        cardBillAmt !== 0 &&
-        Number(indexData.minApplAmt) > Number(cardBillAmt)
-    ) {
-         $props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
-            // 跳新版魔蝎
-            goMoxieBankList()
-        });
-        state = false;
-    }
-    return state;
+export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
+	let state = true;
+	const { indexData = {} } = usrIndexInfo;
+	const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
+	if (indexData && indexData.buidSts && indexData.buidSts === '02') {
+		$props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		return;
+	} else if (
+		indexData &&
+		cardBillSts === '01' &&
+		(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+	) {
+		$props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		state = false;
+	} else if (indexData && cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
+		$props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		state = false;
+	} else if (
+		cardBillSts === '01' &&
+		indexData &&
+		(billRemainAmt !== 0 && billRemainAmt !== '0') &&
+		billRemainAmt &&
+		Number(indexData.minApplAmt) > Number(billRemainAmt)
+	) {
+		$props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		state = false;
+	} else if (
+		cardBillSts === '01' &&
+		indexData &&
+		!billRemainAmt &&
+		cardBillAmt &&
+		cardBillAmt !== 0 &&
+		Number(indexData.minApplAmt) > Number(cardBillAmt)
+	) {
+		$props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		state = false;
+	}
+	return state;
 };
 
 //函数防抖

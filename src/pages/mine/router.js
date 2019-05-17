@@ -21,11 +21,11 @@ export default [
     title: '绑定储蓄卡',
     component: () => import('pages/mine/bind_save_page'),
   },
-  {
-    path: '/mine/credit_extension_page',
-    title: '信用加分',
-    component: () => import('pages/mine/credit_extension_page'),
-  },
+  // {
+  //   path: '/mine/credit_extension_page',
+  //   title: '信用加分',
+  //   component: () => import('pages/mine/credit_extension_page'),
+  // },
   {
     path: '/mine/select_credit_page',
     title: '选择信用卡',

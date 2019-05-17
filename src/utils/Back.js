@@ -208,10 +208,10 @@ if (window.history && window.history.pushState) {
 					return;
 				case '/home/home':
 					if (tokenFromStorage && token) {
-						if (window.handleCloseHomeModal) {
-							window.handleCloseHomeModal();
-							return;
-						}
+						// if (window.handleCloseHomeModal) {
+						// 	window.handleCloseHomeModal();
+						// 	return;
+						// }
 						if (store.getCarrierMoxie()) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
@@ -240,9 +240,9 @@ if (window.history && window.history.pushState) {
 				case '/home/loan_apply_succ_page': // 借款申请提交成功页物理返回到首页
 					window.ReactRouterHistory.push('/home/home');
 					break;
-				case '/mine/credit_extension_page':
-					window.ReactRouterHistory.push('/mine/mine_page');
-					break;
+				// case '/mine/credit_extension_page':
+				// 	window.ReactRouterHistory.push('/mine/mine_page');
+				// 	break;
 				case '/mine/credit_list_page':
 					if (store.getToggleMoxieCard()) {
 						window.ReactRouterHistory.push('/home/loan_repay_confirm_page');

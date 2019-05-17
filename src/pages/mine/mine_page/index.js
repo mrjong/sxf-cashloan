@@ -171,14 +171,14 @@ export default class mine_page extends PureComponent {
 		}
 		if (
 			item.jumpToUrl === '/home/real_name?type=noRealName' ||
-			item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
+			// item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
 			item.jumpToUrl === '/mine/fqa_page'
 		) {
-			if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
-				buriedPointEvent(mine.creditExtension, {
-					entry: '我的'
-				});
-			}
+			// if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
+			// 	buriedPointEvent(mine.creditExtension, {
+			// 		entry: '我的'
+			// 	});
+			// }
 			this.props.history.push(item.jumpToUrl);
 		} else {
 			const { mblNoHid, realNmFlg } = this.state;
@@ -272,20 +272,6 @@ export default class mine_page extends PureComponent {
           className: styles.real_name
         },
         jumpToUrl: '/home/real_name?type=noRealName',
-      },
-      {
-        label: {
-          name: '信用加分',
-          className: styles.credit_extension_page
-        },
-        jumpToUrl: '/mine/credit_extension_page?isShowCommit=false',
-      },
-      {
-        label: {
-          name: '信用卡管理',
-          className: styles.select_credit_page
-        },
-        jumpToUrl: '/mine/select_credit_page',
       },
       {
         label: {
