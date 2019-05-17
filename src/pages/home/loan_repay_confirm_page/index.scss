@@ -5,10 +5,10 @@
 
 .bankCard {
   width: 690px;
-  min-height: 477px;
+  min-height: 289px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
-  border-radius: 16px;
+  border-radius: 12px;
   box-sizing: border-box;
   padding: 0 30px;
 
@@ -17,44 +17,49 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 110px;
+    height: 90px;
     &::after {
       @include setBottomLine(#e5e5e5);
     }
 
-    .name {
-      font-size: 30px;
-      color: #333;
-      vertical-align: middle;
-    }
+    // .name {
+    //   font-size: 30px;
+    //   color: #333;
+    //   vertical-align: middle;
+    // }
 
-    .lastNo {
-      font-size: 24px;
-      color: #999;
-      margin-left: 15px;
-    }
+    // .lastNo {
+    //   font-size: 24px;
+    //   color: #999;
+    //   margin-left: 15px;
+    // }
   }
 
   .billTitle {
     font-size: 24px;
     color: #999;
-    margin: 30px 0 20px;
+    // margin: 30px 0 20px;
     line-height: 1;
   }
 
   .billMoney {
-    display: inline-block;
+    // display: inline-block;
+    // font-size: 80px;
+    // color: #333;
+    // font-weight: normal;
+    // margin-bottom: 70px;
+    // line-height: 1;
+    display: block;
     font-size: 80px;
-    color: #333;
-    font-weight: normal;
-    margin-bottom: 70px;
-    line-height: 1;
+    color: #121C32;
+    margin-top: 20px;
   }
 
   .billInfo {
     position: relative;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     line-height: 1;
     padding-bottom: 30px;
     &::after {
@@ -62,9 +67,9 @@
     }
 
     .item {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      // display: flex;
+      // flex-direction: column;
+      // justify-content: space-between;
 
       .value {
         font-size: 30px;
@@ -74,8 +79,13 @@
 
       .name {
         font-size: 20px;
-        color: #999;
-        margin-top: 10px;
+        color: #121C32;
+        // margin-top: 10px;
+      }
+      .moneyTit{
+        color: #868E9E;
+        font-size: 24px;
+        font-weight: 400;
       }
     }
   }
@@ -92,11 +102,30 @@
       width: 40px;
     }
   }
+  .bankBox{
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 400;
+    color: #121C32;
+  }
+  .cardNumBox{
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #121C32;
+    .rightArrow {
+      width: 40px;
+      color: #121C32;
+    }
+  }
 
   .bankLogo {
     width: 50px;
     height: 50px;
     margin-right: 17px;
+    top: 0;
   }
 
   .updateButton {

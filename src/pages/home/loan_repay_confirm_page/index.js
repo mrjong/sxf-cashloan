@@ -623,12 +623,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 				<div className={[ style.page_inner_wrap, 'modal_l_r2' ].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.top}>
-							<div>
+							<div className={style.bankBox}>
 								<span className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
 								<span className={style.name}>{!bankName ? '****' : bankName}</span>
-								<span className={style.lastNo}>{!cardNoHid ? '****' : cardNoHid.slice(-4)}</span>
+								<span className={style.lastNo}>（{!cardNoHid ? '****' : cardNoHid.slice(-4)}）</span>
 							</div>
-							{isShowProgress ? (
+							<div className={style.cardNumBox}>
+								<span>3张可更换</span>
+								<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
+							</div>
+							{/* {isShowProgress ? (
 								<div className={style.progressWrap}>
 									<div className={style.percentTitleWrap}>
 										<span className={style.percentTitle}>账单导入中</span>
@@ -644,30 +648,36 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<span onClick={this.goMoxieBankList} className={style.updateButton}>
 									更新账单
 								</span>
-							)}
+							)} */}
 						</div>
 						<div className={style.center}>
-							<p className={style.billTitle}>剩余应还金额(元)</p>
+							{/* <p className={style.billTitle}>剩余应还金额(元)</p> */}
 							<strong className={style.billMoney}>{cardBillAmtData}</strong>
 							<div className={style.billInfo}>
-								<div className={style.item}>
+								{/* <div className={style.item}>
 									<span className={style.value}>{minPaymentData}</span>
 									<span className={style.name}>最低还款</span>
-								</div>
+								</div> */}
 								<div className={style.item}>
+									{/* <strong className={style.billMoney}>{cardBillAmtData}</strong> */}
+									<p className={`${style.name} ${style.moneyTit}`}>你的信用卡剩余应还金额(元)</p>
+							
+								</div>
+								{/* <div className={style.item}>
 									<span className={style.value}>{billDtData}</span>
 									<span className={style.name}>账单日</span>
-								</div>
+								</div> */}
 								<div className={style.item}>
-									<span className={style.value} dangerouslySetInnerHTML={{ __html: overDtStr }} />
 									<span className={style.name}>还款日</span>
+									<span className={style.value} dangerouslySetInnerHTML={{ __html: overDtStr }} />
+									{/* <span className={style.name}>还款日</span> */}
 								</div>
 							</div>
 						</div>
-						<div className={style.bottom} onClick={this.requestCredCardCount}>
+						{/* <div className={style.bottom} onClick={this.requestCredCardCount}>
 							<span>代还其他信用卡</span>
 							<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
-						</div>
+						</div> */}
 					</div>
 					<div className={style.tagList}>
 						{tagList.map((item, idx) => (
