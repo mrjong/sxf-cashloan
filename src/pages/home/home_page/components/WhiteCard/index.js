@@ -8,7 +8,7 @@ export default class DCCard extends React.Component {
 	}
 	componentWillMount() {}
 	render() {
-		const { showData, children } = this.props;
+		const { showData, children, handleClick } = this.props;
 		const iconClass = showData && showData.bankNo ? `bank_ico_${showData.bankNo}` : 'logo_ico';
 		return (
 			<div className={style.box_container}>
@@ -18,7 +18,9 @@ export default class DCCard extends React.Component {
 						{showData.title}
 					</div>
 					{children}
-					<ZButton className={style.submitBtn}>{showData.btnText}</ZButton>
+					<ZButton onClick={handleClick} className={style.submitBtn}>
+						{showData.btnText}
+					</ZButton>
 				</div>
 			</div>
 		);

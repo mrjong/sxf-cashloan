@@ -1,4 +1,40 @@
 export default {
+	CN0003: {
+		indexSts: 'CN0003',
+		indexMsg: '去借款',
+		indexData: {
+			credAmt: 3000.0,
+			curAmt: 3000.0,
+			acOverDt: 10,
+			dcBillFlg: '00',
+			downloadFlg: '01'
+		}
+	},
+	CN0004: {
+		indexSts: 'CN0004',
+		indexMsg: '放款中',
+		indexData: {
+      credAmt: 3000.0,
+      orderAmt:4000,
+			curAmt: 1000.0,
+			acOverDt: 10,
+			dcBillFlg: '00',
+			downloadFlg: '01'
+		}
+	},
+	CN0005: {
+		indexSts: 'CN0005',
+		indexMsg: '去还款',
+		indexData: {
+			credAmt: 3000.0,
+			curAmt: 1500.0,
+      acOverDt: 10,
+      orderAmt:4000,
+			dcBillFlg: '00',
+      downloadFlg: '01',
+      billNo:'5674567895678'
+		}
+	},
 	LN0001: {
 		indexSts: 'LN0001',
 		indexMsg: '信用卡未授权',
@@ -20,10 +56,10 @@ export default {
 			cardBillDt: '2018-07-17',
 			cardBillAmt: '100',
 			billRemainAmt: '0',
-            overDt: '7',
-            minApplAmt:'100',
-            minPayment:'200',
-            maxApplAmt:'10900',
+			overDt: '7',
+			minApplAmt: '100',
+			minPayment: '200',
+			maxApplAmt: '10900',
 			cardBillSts: '01',
 			buidSts: '01'
 		}

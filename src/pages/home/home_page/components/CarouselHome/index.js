@@ -5,6 +5,7 @@ import { Carousel } from 'antd-mobile';
 import ZButton from 'components/ButtonCustom';
 import plus from './img/plus.png';
 import bank from './img/bank.png';
+import MoneyCard from '../MoneyCard';
 import WhiteCard from '../WhiteCard';
 const showData = {
 	title: '还到-基础版',
@@ -12,7 +13,8 @@ const showData = {
 	subtitle: '最高可申请还款金(元)',
 	money: '50000.00',
 	desc: '还款日：8888/88/88',
-	btnText: '添加需要还款信用卡'
+	btnText: '添加需要还款信用卡',
+	color: 'rgba(248, 164, 65, 1)'
 };
 export default class carouselHome extends React.Component {
 	constructor(props) {
@@ -20,7 +22,6 @@ export default class carouselHome extends React.Component {
 	}
 	static propTypes = {
 		entryFrom: PropTypes.string,
-		data: PropTypes.array,
 		autoplay: PropTypes.bool,
 		infinite: PropTypes.bool,
 		dotStyle: PropTypes.object,
@@ -32,7 +33,6 @@ export default class carouselHome extends React.Component {
 
 	static defaultProps = {
 		entryFrom: 'banner',
-		data: [],
 		autoplay: false,
 		infinite: true,
 		cellSpacing: 1,
@@ -52,37 +52,17 @@ export default class carouselHome extends React.Component {
 		children: ''
 	};
 
-	state = {
-		data: [ '1', '2', '3' ],
-		imgHeight: 176
-	};
-	componentDidMount() {
-		// simulate img loading
-		setTimeout(() => {
-			this.setState({
-				data: [ 'AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI' ]
-			});
-		}, 100);
-	}
-
 	render() {
-		const { data, children, ...restProps } = this.props;
+		const { children, handleClick, ...restProps } = this.props;
 		return (
 			<div className="carouselHome">
 				<Carousel {...restProps}>
-					<WhiteCard showData={showData}>
-						<div className={style.subtitle}>
-							<i />
-							{showData.subtitle}
-						</div>
-						<div className={style.money}>{showData.money}</div>
-						<div className={style.desc}>{showData.desc}</div>
-					</WhiteCard>
-					<WhiteCard showData={showData}>
+					<MoneyCard showData={showData} handleClick={handleClick} />
+					<WhiteCard showData={showData} handleClick={handleClick}>
 						<img src={bank} className={style.bank} />
 						<div className={style.desc_b}>支持绑定100+信用卡</div>
 					</WhiteCard>
-					<WhiteCard showData={showData}>
+					<WhiteCard showData={showData} handleClick={handleClick}>
 						<img src={plus} className={style.plus} />
 						<div className={style.desc_b}>2步操作，极速到账</div>
 					</WhiteCard>

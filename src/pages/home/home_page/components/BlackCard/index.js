@@ -37,30 +37,23 @@ export default class BlackCard extends React.PureComponent {
 		this.state = {};
 	}
 
-	getData = (blackData) => {
+	render() {
+		let { blackData } = this.props;
 		const showdata = demo.filter((item) => {
 			return item.cashAcBalSts === blackData.cashAcBalSts;
 		});
 		if (blackData.credAmt) {
-			showdata[0].credAmt = blackData.credAmt;
+			showdata[0].credAmt = Number(blackData.credAmt).toFixed(2);
 		}
-		console.log(showdata);
-		this.setState({
-			showdata: showdata[0]
-		});
-		return showdata[0];
-	};
-	render() {
-		const showdata = this.getData(this.props.blackData);
 		return (
 			<div>
-				{(showdata && showdata.cashAcBalSts === '2') || (showdata && showdata.cashAcBalSts === '3') ? (
+				{(showdata && showdata[0].cashAcBalSts === '2') || (showdata && showdata[0].cashAcBalSts === '3') ? (
 					<section className={styles.home_xj_black}>
-						<div className={styles.title}>{showdata && showdata.title}</div>
-						<div className={styles.subtitle}>{showdata && showdata.credAmt}</div>
+						<div className={styles.title}>{showdata && showdata[0].title}</div>
+						<div className={styles.subtitle}>{showdata && showdata[0].credAmt}</div>
 						<div className={styles.desc}>
 							<div className={styles.item_l}>
-								{showdata && showdata.desc}
+								{showdata && showdata[0].desc}
 								<i />
 							</div>
 							<div className={styles.item_r}>
@@ -69,19 +62,19 @@ export default class BlackCard extends React.PureComponent {
 						</div>
 					</section>
 				) : null}
-				{(showdata && showdata.cashAcBalSts === '0') || (showdata && showdata.cashAcBalSts === '1') ? (
+				{(showdata && showdata[0].cashAcBalSts === '0') || (showdata && showdata[0].cashAcBalSts === '1') ? (
 					<section className={styles.home_xj_black}>
 						<div className={styles.title}>
-							{showdata && showdata.title}
-							<i className={styles[showdata && showdata.icon]} />
+							{showdata && showdata[0].title}
+							<i className={styles[showdata && showdata[0].icon]} />
 						</div>
 						<div className={styles.subtitle_90}>
-							{showdata && showdata.credAmt}
-							{showdata && showdata.time === 90 ? <span>秒</span> : null}
+							{showdata && showdata[0].credAmt}
+							{showdata && showdata[0].time === 90 ? <span>秒</span> : null}
 						</div>
 						<div className={styles.desc} style={{ marginTop: '-0.15rem' }}>
 							<div className={styles.item_l} style={{ opacity: 0.6, fontSize: '.22rem' }}>
-								{showdata && showdata.desc}
+								{showdata && showdata[0].desc}
 							</div>
 							<div className={styles.item_r}>
 								了解更多<i />
