@@ -1,5 +1,9 @@
 // 现金
 .home_xj_black {
+  -webkit-animation-name: fadeIn;
+	-webkit-animation-duration: .1s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: 0s;
 	margin: 30px 40px 0;
 	min-width: 670px;
 	box-sizing: border-box;
@@ -108,5 +112,16 @@
 				background-image: url(./img/arrow.png);
 			}
 		}
+	}
+}
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
 	}
 }

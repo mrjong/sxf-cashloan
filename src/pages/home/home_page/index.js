@@ -150,10 +150,12 @@ export default class home_page extends PureComponent {
 	indexshowType = () => {
 		this.props.$fetch.post(API.indexshowType).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        console.log(result)
 				this.setState({
 					blackData: result.data
 				});
+				if (result.data.cashAcBalSts === '1') {
+					this.usrCashIndexInfo();
+				}
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
@@ -202,7 +204,8 @@ export default class home_page extends PureComponent {
 				this.props.toast.info(result.msgInfo);
 			}
 		});
-	};
+  };
+  // 去消息页面
 	jumpToMsg = () => {
 		window.ReactRouterHistory.push('/home/message_page');
 	};
@@ -809,82 +812,30 @@ export default class home_page extends PureComponent {
 			count,
 			blackData
 		} = this.state;
-		const { indexData = {} } = usrIndexInfo;
-		const { history } = this.props;
-		let componentsDisplay = null;
+		let componentsDisplay = <CarouselHome />;
+		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
+		if (JSON.stringify(blackData) !== '{}') {
+			componentsBlackCard = <BlackCard blackData={blackData} />;
+		}
 		// 未登录也能进入到首页的时候看到的样子
-		if (!token || firstUserInfo === 'error') {
-			componentsDisplay = (
-				<BankContent
-					onRef={this.onRef}
-					showDefaultTip={this.state.showDefaultTip}
-					fetch={this.props.$fetch}
-					contentData={usrIndexInfo}
-					history={history}
-					haselescard={this.state.haselescard}
-					progressNum={percentSatus}
-					toast={this.props.toast}
-				>
-					<SXFButton className={style.smart_button_two} onClick={this.handleNeedLogin}>
-						查看我的账单，帮我还
-					</SXFButton>
-					<div className={style.subDesc}>安全绑卡，放心还卡</div>
-				</BankContent>
-			);
-		} else {
-			switch (usrIndexInfo.indexSts) {
-				case 'LN0001': // 新用户，信用卡未授权
-				case 'LN0002': // 账单爬取中
-				case 'LN0003': // 账单爬取成功
-				case 'LN0004': // 代还资格审核中
-				case 'LN0005': // 暂无代还资格
-				case 'LN0006': // 风控审核通过
-				case 'LN0007': // 放款中
-				case 'LN0008': // 放款失败
-				case 'LN0009': // 放款成功
-				case 'LN0010': // 账单爬取失败/老用户
-					componentsDisplay = (
-						<BankContent
-							onRef={this.onRef && this.onRef}
-							// handleMoxie={this.state.handleMoxie}
-							showDefaultTip={this.state.showDefaultTip}
-							fetch={this.props.$fetch}
-							contentData={usrIndexInfo}
-							history={history}
-							haselescard={this.state.haselescard}
-							progressNum={percentSatus}
-							toast={this.props.toast}
-						>
-							{usrIndexInfo.indexSts === 'LN0002' ||
-							usrIndexInfo.indexSts === 'LN0010' ||
-							(usrIndexInfo.indexData &&
-								usrIndexInfo.indexData.autSts &&
-								usrIndexInfo.indexData.autSts !== '2') ||
-							((usrIndexInfo.indexSts === 'LN0003' ||
-								usrIndexInfo.indexSts === 'LN0006' ||
-								usrIndexInfo.indexSts === 'LN0008') &&
-								(!usrIndexInfo.indexData ||
-									!usrIndexInfo.indexData.autSts ||
-									usrIndexInfo.indexData.autSts !== '2')) ? null : (
-								<SXFButton className={style.smart_button_two} onClick={this.handleSmartClick}>
-									{usrIndexInfo.indexSts === 'LN0003' ||
-									usrIndexInfo.indexSts === 'LN0006' ||
-									usrIndexInfo.indexSts === 'LN0008' ? (
-										'一键还账单'
-									) : usrIndexInfo.indexSts === 'LN0004' ? (
-										'快速审批中'
-									) : usrIndexInfo.indexSts === 'LN0001' ? (
-										'查看我的账单，帮我还'
-									) : (
-										usrIndexInfo.indexMsg.replace('代还', '代偿')
-									)}
-								</SXFButton>
-							)}
-						</BankContent>
-					);
-					break;
-				default:
-			}
+
+		switch (usrIndexInfo.indexSts) {
+			case 'LN0001': // 新用户，信用卡未授权
+				<ProgressBlock percentSatus={percentSatus} percentData={percentData} />;
+			case 'LN0002': // 账单爬取中
+			case 'LN0003': // 账单爬取成功
+			case 'LN0004': // 代还资格审核中
+			case 'LN0005': // 暂无代还资格
+			case 'LN0006': // 风控审核通过
+			case 'LN0007': // 放款中
+			case 'LN0008': // 放款失败
+			case 'LN0009': // 放款成功
+			case 'LN0010': // 账单爬取失败/老用户
+				<CarouselHome />;
+				break;
+			default:
+				<CarouselHome />;
+				break;
 		}
 
 		let homeModal = null;
@@ -946,15 +897,10 @@ export default class home_page extends PureComponent {
 				</section>
 				{/* 头部start */}
 				{/* 黑卡片 */}
-				{blackData && <BlackCard blackData={blackData} />}
-				{/* 黑卡片 */}
+				{componentsBlackCard}
+				{componentsDisplay}
 
-				<CarouselHome />
-				<ProgressBlock percentSatus={percentSatus} percentData={percentData} />
-
-				<section className={style.home_banner}>
-					<Carousels data={bannerList} entryFrom="banner" />
-				</section>
+				<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				{homeModal}
 			</div>
 		);

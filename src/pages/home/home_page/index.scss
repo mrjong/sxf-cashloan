@@ -47,9 +47,23 @@
 	}
 	// 代偿
 	.home_banner {
-		margin: 30px 40px 50px;
+		-webkit-animation-duration: .1s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-delay: 0s;
+		margin-bottom: 30px;
 		img {
 			border-radius: 16px;
 		}
+	}
+}
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
 	}
 }

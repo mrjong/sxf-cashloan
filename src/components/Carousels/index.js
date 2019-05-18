@@ -89,15 +89,17 @@ export default class Carousels extends React.Component {
 							}}
 							style={{ width: '100%', height: this.state.imgHeight }}
 						>
-							<img
-								src={item.src}
-								alt=""
-								style={{ width: '100%', verticalAlign: 'top' }}
-								onLoad={() => {
-									window.dispatchEvent(new Event('resize'));
-									this.setState({ imgHeight: 'auto' });
-								}}
-							/>
+							<div className={style.bannerBox}>
+								<img
+									src={item.src}
+									alt=""
+									style={{ width: '100%', verticalAlign: 'top' }}
+									onLoad={() => {
+										window.dispatchEvent(new Event('resize'));
+										this.setState({ imgHeight: 'auto' });
+									}}
+								/>
+							</div>
 						</div>
 					))}
 				</Carousel>
