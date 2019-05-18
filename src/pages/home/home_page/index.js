@@ -889,7 +889,7 @@ export default class home_page extends PureComponent {
 				<section className={style.home_header}>
 					<div className={style.title}>
 						借钱还信用卡
-						<span className={style.subtitle}>200万人都在用</span>
+						<span className={style.subtitle} onClick={()=>{this.props.history.push('/home_loan_fenqi')}}>200万人都在用</span>
 						<span onClick={this.jumpToMsg} className={style.messageIcon}>
 							{count ? <i className={style.active} /> : null}
 						</span>
