@@ -3,19 +3,15 @@ import style from './index.scss';
 import ZButton from 'components/ButtonCustom';
 import SvgCirPro from 'components/CircleProgress/svgCirPro';
 import WhiteCard from '../WhiteCard';
-const showData = {
-	title: '还到-基础版',
-	btxText: '888'
-};
 export default class ProgressBlock extends React.Component {
 	constructor(props) {
 		super(props);
 	}
 	render() {
-    const { percentData } = this.props;
-    console.log(percentData)
+		const { percentData, showData, handleClick } = this.props;
+		console.log(percentData);
 		return (
-			<WhiteCard showData={showData}>
+			<WhiteCard showData={showData} handleClick={handleClick}>
 				<div className={style.circle_box}>
 					<SvgCirPro
 						percent={Number(percentData)}

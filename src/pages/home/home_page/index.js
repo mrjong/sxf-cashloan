@@ -13,14 +13,7 @@ import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
-import {
-	CarouselHome,
-	BlackCard,
-	MsgTip,
-	MoneyCard,
-	// ProgressBlock,
-	HomeModal
-} from './components';
+import { CarouselHome, BlackCard, MsgTip, MoneyCard, ProgressBlock, HomeModal } from './components';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -65,7 +58,6 @@ export default class home_page extends PureComponent {
 			modal_left: false,
 			activeTag: '',
 			perdRateList: [],
-			firstUserInfo: '',
 			CardOverDate: false,
 			pageCode: '',
 			showAgreement: false, // 显示协议弹窗
@@ -77,6 +69,7 @@ export default class home_page extends PureComponent {
 			dayPro: {},
 			btnDisabled: true,
 			usrCashIndexInfo: {},
+			percentBtnText: '',
 			overDueInf: {
 				// 逾期弹框中的数据
 			},
@@ -193,61 +186,48 @@ export default class home_page extends PureComponent {
 
 	// 判断是否授信
 	credit_extension = () => {
-		// this.setState({
-		//     firstUserInfo:'01'
-		// })
-		// this.credit_extension_not();
-		// return
-		this.props.$fetch
-			.post(API.procedure_user_sts)
-			.then(async (res) => {
-				if (res && res.msgCode === 'PTM0000') {
-					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-					// popupFlag信用施压弹框，1为显示，0为隐藏
-					this.setState({
-						firstUserInfo: res.data.flag,
-						showAgreement: res.data.agreementPopupFlag === '1',
-						billOverDue: res.data.popupFlag === '1',
-						overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
-					});
-					const currProgress =
-						res.data &&
-						res.data.processInfo &&
-						res.data.processInfo.length > 0 &&
-						res.data.processInfo.filter((item, index) => {
-							return item.hasProgress;
-						});
-					this.setState({
-						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
-					});
-					let isInvoking_jjp = await this.isInvoking_jjp();
-					if (res.data.flag === '01') {
-						// 拒就赔活动弹框
-						if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
-							this.setState(
-								{
-									isShowActivityModal: true,
-									modalType: 'jujiupei'
-								},
-								() => {
-									store.setShowActivityModal(true);
-								}
-							);
-						}
-
-						this.credit_extension_not();
-					} else {
-						this.requestGetUsrInfo(isInvoking_jjp);
-					}
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			})
-			.catch((err) => {
+		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
+				// popupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
-					firstUserInfo: 'error'
+					showAgreement: res.data.agreementPopupFlag === '1',
+					billOverDue: res.data.popupFlag === '1',
+					overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
 				});
-			});
+				const currProgress =
+					res.data &&
+					res.data.processInfo &&
+					res.data.processInfo.length > 0 &&
+					res.data.processInfo.filter((item, index) => {
+						return item.hasProgress;
+					});
+				this.setState({
+					overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
+				});
+				let isInvoking_jjp = await this.isInvoking_jjp();
+				if (res.data.flag === '01') {
+					// 拒就赔活动弹框
+					if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+						this.setState(
+							{
+								isShowActivityModal: true,
+								modalType: 'jujiupei'
+							},
+							() => {
+								store.setShowActivityModal(true);
+							}
+						);
+					}
+
+					this.credit_extension_not();
+				} else {
+					this.requestGetUsrInfo(isInvoking_jjp);
+				}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 	// 从 url 中获取参数，如果有 token 就设置下
 	getTokenFromUrl = () => {
@@ -267,6 +247,7 @@ export default class home_page extends PureComponent {
 
 	// 进度计算
 	calculatePercent = (data, isshow) => {
+		console.log(data, '0000000000');
 		let codes = [];
 		let demo = data.codes;
 		// let demo = '2224'
@@ -314,7 +295,8 @@ export default class home_page extends PureComponent {
 			this.setState({
 				showDiv: 'circle',
 				percentSatus: '3',
-				percentData: 60
+				percentData: 60,
+				percentBtnText: data.btnText
 			});
 			return;
 		}
@@ -322,7 +304,8 @@ export default class home_page extends PureComponent {
 			case 0: // 新用户，信用卡未授权
 				this.setState({
 					percentSatus: '3',
-					showDiv: '50000'
+					showDiv: '50000',
+					percentBtnText: data.btnText
 				});
 				break;
 
@@ -330,7 +313,8 @@ export default class home_page extends PureComponent {
 				this.setState({
 					percentSatus: '2',
 					percentData: 80,
-					showDiv: 'circle'
+					showDiv: 'circle',
+					percentBtnText: data.btnText
 				});
 				break;
 
@@ -338,7 +322,8 @@ export default class home_page extends PureComponent {
 				this.setState({
 					percentData: 98,
 					percentSatus: isshow ? '1' : '',
-					showDiv: 'circle'
+					showDiv: 'circle',
+					percentBtnText: data.btnText
 				});
 				break;
 			case 3: // 新用户，信用卡未授权
@@ -553,7 +538,8 @@ export default class home_page extends PureComponent {
 		if (this.state.showDiv === '50000') {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
-		}
+    }
+    console.log('2222222222')
 		getNextStr({
 			$props: this.props,
 			callBack: (resBackMsg) => {
@@ -634,16 +620,11 @@ export default class home_page extends PureComponent {
 
 	// 去登陆
 	handleNeedLogin = () => {
-		if (this.state.firstUserInfo === 'error') {
-			this.props.toast.info('系统开小差，请稍后重试');
-			setTimeout(() => {
-				location.reload();
-			}, 2000);
-			return;
+		if (!token || !tokenFromStorage) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
+			});
 		}
-		this.props.toast.info('请先登录', 2, () => {
-			this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
-		});
 	};
 
 	showCreditModal = () => {
@@ -688,8 +669,8 @@ export default class home_page extends PureComponent {
 				this.props.toast.info(res.msgInfo);
 			}
 		});
-  };
-  // 现金分期点击事件
+	};
+	// 现金分期点击事件
 	handleCN = (code) => {
 		switch (code) {
 			case 'CN0003':
@@ -833,24 +814,50 @@ export default class home_page extends PureComponent {
 	// *****************************代偿****************************** //
 
 	getDCDisPlay = () => {
-		const { usrIndexInfo } = this.state;
+		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText } = this.state;
 		let componentsDisplay = null;
-		switch (usrIndexInfo.indexSts) {
-			case 'LN0001': // 新用户，信用卡未授权
-				componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
-			case 'LN0002': // 账单爬取中
-			case 'LN0003': // 账单爬取成功
-			case 'LN0004': // 代还资格审核中
-			case 'LN0005': // 暂无代还资格
-			case 'LN0006': // 风控审核通过
-			case 'LN0007': // 放款中
-			case 'LN0008': // 放款失败
-			case 'LN0009': // 放款成功
-			case 'LN0010': // 账单爬取失败/老用户
-				<CarouselHome />;
-				break;
-			default:
+		console.log(showDiv);
+		if (showDiv) {
+			switch (showDiv) {
+        case '50000':
+					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
+					break;
+				case 'circle':
+					componentsDisplay = (
+						<ProgressBlock
+							showData={{
+								title: '还到-基础版',
+								btnText: percentBtnText
+							}}
+							handleClick={this.handleApply}
+							percentSatus={percentSatus}
+							percentData={percentData}
+						/>
+					);
+					break;
+
+				default:
+					break;
+			}
+		} else {
+			switch (usrIndexInfo.indexSts) {
+				case 'LN0001': // 新用户，信用卡未授权
+					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
+				case 'LN0002': // 账单爬取中
+				case 'LN0003': // 账单爬取成功
+				case 'LN0004': // 代还资格审核中
+				case 'LN0005': // 暂无代还资格
+				case 'LN0006': // 风控审核通过
+				case 'LN0007': // 放款中
+				case 'LN0008': // 放款失败
+				case 'LN0009': // 放款成功
+				case 'LN0010': // 账单爬取失败/老用户
+					<CarouselHome />;
+					break;
+				default:
+			}
 		}
+
 		return componentsDisplay;
 	};
 

@@ -401,14 +401,15 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let res = await $props.$fetch.post(API.GETSTSW);
 	let resBackMsg = '';
 	let btnText = '';
+	let orderText = 0;
 	let btnArry = [ '继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单' ];
 	if (res && res.msgCode === 'PTM0000') {
 		res.data.forEach((item, index) => {
-			if ((item.stsw.dicDetailCd !== '2' || item.stsw.dicDetailCd !== '1') && !btnText) {
-				console.log(item)
-				btnText = btnArry[index + 1];
-			}
 			if (needDisplayOptions.includes(item.code)) {
+				orderText = orderText + 1;
+				if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
+					btnText = btnArry[orderText - 2];
+				}
 				codes += item.stsw.dicDetailCd;
 				codesArray.push(item.stsw.dicDetailCd);
 			}
@@ -419,27 +420,27 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
 				$props.SXFToast.hide();
 				let msg = '请先实名认证';
-				$props.toast.info(msg);
-				setTimeout(() => {
+				// $props.toast.info(msg);
+				// setTimeout(() => {
 					$props.history.push({
 						pathname: '/home/real_name',
 						search: '?type=noRealName&fromRouter=home'
 					});
-				}, 3000);
+				// }, 3000);
 				return;
 			}
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.SXFToast.hide();
 				let msg = '请进行基本信息认证';
-				$props.toast.info(msg);
+				// $props.toast.info(msg);
 				resBackMsg = '基本信息认证';
-				setTimeout(() => {
+				// setTimeout(() => {
 					$props.history.replace({
 						pathname: '/home/essential_information'
 						// search: urlQuery
 					});
-				}, 3000);
+				// }, 3000);
 				if (callBack) {
 					callBack(resBackMsg);
 				}
@@ -456,9 +457,9 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 						if (result.msgCode === 'PTM0000' && result.data.url) {
 							$props.SXFToast.hide();
 							let msg = '请进行运营商认证';
-							$props.toast.info(msg);
+							// $props.toast.info(msg);
 							resBackMsg = '运营商认证';
-							setTimeout(() => {
+							// setTimeout(() => {
 								// 运营商直接返回的问题
 								store.setCarrierMoxie(true);
 								SXFToast.loading('加载中...', 0);
@@ -469,7 +470,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 										.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
 										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
 									)}`;
-							}, 3000);
+							// }, 3000);
 							if (callBack) {
 								callBack(resBackMsg);
 							}
@@ -483,12 +484,12 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.SXFToast.hide();
 				let msg = '请进行信用卡认证';
-				$props.toast.info(msg);
+				// $props.toast.info(msg);
 				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
-				setTimeout(() => {
+				// setTimeout(() => {
 					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
-				}, 3000);
+				// }, 3000);
 				if (callBack) {
 					callBack(resBackMsg);
 				}
@@ -693,13 +694,14 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 };
 
 //函数防抖
-export const debounce = (method,delay) => {
-	let timer=null;
-	 return function(){
-				var context=this, args=arguments;
-				clearTimeout(timer);
-				timer=setTimeout(function(){
-						method.apply(context,args);
-				},delay);
-		}
-}
+export const debounce = (method, delay) => {
+	let timer = null;
+	return function() {
+		var context = this,
+			args = arguments;
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			method.apply(context, args);
+		}, delay);
+	};
+};

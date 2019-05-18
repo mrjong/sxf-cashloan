@@ -22,7 +22,6 @@ export default class carouselHome extends React.Component {
 	}
 	static propTypes = {
 		entryFrom: PropTypes.string,
-		data: PropTypes.array,
 		autoplay: PropTypes.bool,
 		infinite: PropTypes.bool,
 		dotStyle: PropTypes.object,
@@ -34,7 +33,6 @@ export default class carouselHome extends React.Component {
 
 	static defaultProps = {
 		entryFrom: 'banner',
-		data: [],
 		autoplay: false,
 		infinite: true,
 		cellSpacing: 1,
@@ -54,30 +52,17 @@ export default class carouselHome extends React.Component {
 		children: ''
 	};
 
-	state = {
-		data: [ '1', '2', '3' ],
-		imgHeight: 176
-	};
-	componentDidMount() {
-		// simulate img loading
-		setTimeout(() => {
-			this.setState({
-				data: [ 'AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI' ]
-			});
-		}, 100);
-	}
-
 	render() {
-		const { data, children, ...restProps } = this.props;
+		const { children, handleClick, ...restProps } = this.props;
 		return (
 			<div className="carouselHome">
 				<Carousel {...restProps}>
-					<MoneyCard showData={showData} />
-					<WhiteCard showData={showData}>
+					<MoneyCard showData={showData} handleClick={handleClick} />
+					<WhiteCard showData={showData} handleClick={handleClick}>
 						<img src={bank} className={style.bank} />
 						<div className={style.desc_b}>支持绑定100+信用卡</div>
 					</WhiteCard>
-					<WhiteCard showData={showData}>
+					<WhiteCard showData={showData} handleClick={handleClick}>
 						<img src={plus} className={style.plus} />
 						<div className={style.desc_b}>2步操作，极速到账</div>
 					</WhiteCard>
