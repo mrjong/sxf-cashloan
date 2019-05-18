@@ -1,11 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './index.scss';
-
-const _handleClick = (onClick, event) => {
-	event.preventDefault();
-	!!onClick && onClick();
-};
 const demo = [
 	{
 		cashAcBalSts: '0',
@@ -40,64 +34,57 @@ const demo = [
 export default class BlackCard extends React.PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {
-			showdata: {}
-		};
+		this.state = {};
 	}
-	componentWillMount() {
-		this.getData();
-	}
-	getData = () => {
-		let demoData = {
-			cashAcBalSts: '0',
-			credAmt: ''
-		};
+
+	getData = (blackData) => {
 		const showdata = demo.filter((item) => {
-			return item.cashAcBalSts === demoData.cashAcBalSts;
+			return item.cashAcBalSts === blackData.cashAcBalSts;
 		});
-		if (demoData.credAmt) {
-			showdata[0].credAmt = demoData.credAmt;
+		if (blackData.credAmt) {
+			showdata[0].credAmt = blackData.credAmt;
 		}
+		console.log(showdata);
 		this.setState({
 			showdata: showdata[0]
 		});
+		return showdata[0];
 	};
 	render() {
-		const { showdata } = this.state;
-		console.log(showdata);
+		const showdata = this.getData(this.props.blackData);
 		return (
 			<div>
-				{showdata.cashAcBalSts === '2' || showdata.cashAcBalSts === '3' ? (
+				{(showdata && showdata.cashAcBalSts === '2') || (showdata && showdata.cashAcBalSts === '3') ? (
 					<section className={styles.home_xj_black}>
-						<div className={styles.title}>{showdata.title}</div>
-						<div className={styles.subtitle}>{showdata.credAmt}</div>
+						<div className={styles.title}>{showdata && showdata.title}</div>
+						<div className={styles.subtitle}>{showdata && showdata.credAmt}</div>
 						<div className={styles.desc}>
 							<div className={styles.item_l}>
-								{showdata.desc}
+								{showdata && showdata.desc}
 								<i />
 							</div>
 							<div className={styles.item_r}>
-								了解更多权益<i />
+								了解更多<i />
 							</div>
 						</div>
 					</section>
 				) : null}
-				{showdata.cashAcBalSts === '0' || showdata.cashAcBalSts === '1' ? (
+				{(showdata && showdata.cashAcBalSts === '0') || (showdata && showdata.cashAcBalSts === '1') ? (
 					<section className={styles.home_xj_black}>
 						<div className={styles.title}>
-							{showdata.title}
-							<i className={styles[showdata.icon]} />
+							{showdata && showdata.title}
+							<i className={styles[showdata && showdata.icon]} />
 						</div>
 						<div className={styles.subtitle_90}>
-							{showdata.credAmt}
-							{showdata.time === 90 ? <span>秒</span> : null}
+							{showdata && showdata.credAmt}
+							{showdata && showdata.time === 90 ? <span>秒</span> : null}
 						</div>
 						<div className={styles.desc} style={{ marginTop: '-0.15rem' }}>
 							<div className={styles.item_l} style={{ opacity: 0.6, fontSize: '.22rem' }}>
-								{showdata.desc}
+								{showdata && showdata.desc}
 							</div>
 							<div className={styles.item_r}>
-								了解更多权益<i />
+								了解更多<i />
 							</div>
 						</div>
 					</section>

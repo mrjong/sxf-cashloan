@@ -13,7 +13,6 @@ export default class ioscontrol_page extends PureComponent {
 	constructor(props) {
 		super(props)
 		this.state = {
-			newuser_activity: '',
 			coupon_activity: '',
 			copyText: '还到'
 		}
@@ -23,12 +22,9 @@ export default class ioscontrol_page extends PureComponent {
 		buriedPointEvent(mpos_ioscontrol_page.iosControlPageView, {
 			entryType: queryData.entryType
 		});
-		const newuser_activity = store.getNewUserActivityFlag()
 		const coupon_activity = store.getCouponActivityFlag()
-		store.removeNewUserActivityFlag()
 		store.removeCouponActivityFlag()
 		this.setState({
-			newuser_activity,
 			coupon_activity
 		})
 	}
@@ -42,11 +38,6 @@ export default class ioscontrol_page extends PureComponent {
 	}
 
 	render() {
-		// if (this.state.newuser_activity) {
-		// 	return <img src={ioscontrol_activity} className={styles.img} />
-		// } else if (this.state.coupon_activity) {
-		// 	return <img src={ioscontrol_coupon_activity} className={styles.img} />
-		// } else {
 		return (
 			<div className={styles.bgBox}>
 				<img src={ioscontrol} className={styles.img} />

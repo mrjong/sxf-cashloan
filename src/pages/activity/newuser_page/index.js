@@ -48,7 +48,6 @@ export default class newUser_page extends PureComponent {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.appId && queryData.token) {
       // 设置拉新活动标志
-      store.setNewUserActivityFlag('NewUserActivityFlag')
       this.props.history.push(`/mpos/mpos_middle_page${window.location.search}`)
     } else {
       this.setState({
