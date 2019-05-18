@@ -570,16 +570,15 @@ export default class home_page extends PureComponent {
 		let data = await getNextStr({ $props: this.props, needReturn: true });
 		store.setCreditExtensionNot(true);
 		this.calculatePercent(data, true);
-		this.cacheBanner();
 	};
 	// 获取首页信息
 	requestGetUsrInfo = (isInvoking_jjp) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				this.getPercent();
-				if (result.data.indexSts === 'LN0003') {
-					this.getPercent();
-				}
+				// if (result.data.indexSts === 'LN0003') {
+				// 	this.getPercent();
+				// }
 				if (result.data.indexSts === 'LN0007') {
 					// 获取是否需要人审
 					this.getExamineSts();
@@ -615,21 +614,8 @@ export default class home_page extends PureComponent {
 						}
 					);
 				}
-
-				// TODO: 这里优化了一下，等卡片信息成功后，去请求 banner 图的接口
-				this.cacheBanner();
 			} else {
 				this.props.toast.info(result.msgInfo);
-			}
-		});
-	};
-	// 关闭注册协议弹窗
-	readAgreementCb = () => {
-		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					showAgreement: false
-				});
 			}
 		});
 	};
@@ -660,6 +646,82 @@ export default class home_page extends PureComponent {
 		});
 	};
 
+	showCreditModal = () => {
+		const { usrIndexInfo } = this.state;
+		const { cardBillSts } = usrIndexInfo.indexData;
+		if (cardBillSts === '00') {
+			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+			return;
+		} else if (cardBillSts === '02') {
+			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
+				// 跳新版魔蝎
+				store.setMoxieBackUrl('/home/home');
+				this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+			});
+			return;
+		}
+		this.setState({
+			isShowCreditModal: true
+		});
+	};
+
+	// 神策用户绑定
+	queryUsrSCOpenId = () => {
+		if (!store.getQueryUsrSCOpenId()) {
+			this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
+				console.log(res);
+				if (res.msgCode === 'PTM0000') {
+					sa.login(res.data);
+					store.setQueryUsrSCOpenId(res.data);
+				}
+			});
+		}
+	};
+	// 获取是否需要人审
+	getExamineSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					isNeedExamine: res.data && res.data.flag === '01' && res.data.ptMark === '01'
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+  };
+  // 现金分期点击事件
+	handleCN = (code) => {
+		switch (code) {
+			case 'CN0003':
+				this.props.history.push('/home/loan_fenqi');
+				break;
+			case 'CN0004':
+				this.props.toast.info('正在放款中，马上到账');
+				break;
+			case 'CN0005':
+				const { usrCashIndexInfo } = this.state;
+				store.setBillNo(usrCashIndexInfo.indexData.billNo);
+				this.props.history.push({
+					pathname: '/order/order_detail_page',
+					search: '?entryFrom=home'
+				});
+				break;
+
+			default:
+				break;
+		}
+	};
+	// *********************************************************** //
+	// 关闭注册协议弹窗
+	readAgreementCb = () => {
+		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					showAgreement: false
+				});
+			}
+		});
+	};
 	// 关闭活动弹窗
 	closeActivityModal = () => {
 		this.setState({
@@ -696,26 +758,7 @@ export default class home_page extends PureComponent {
 				break;
 		}
 	};
-
-	showCreditModal = () => {
-		const { usrIndexInfo } = this.state;
-		const { cardBillSts } = usrIndexInfo.indexData;
-		if (cardBillSts === '00') {
-			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
-			return;
-		} else if (cardBillSts === '02') {
-			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-				// 跳新版魔蝎
-				store.setMoxieBackUrl('/home/home');
-				this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-			});
-			return;
-		}
-		this.setState({
-			isShowCreditModal: true
-		});
-	};
-
+	// 逾期弹窗
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
 		store.setBillNo(usrIndexInfo.indexData.billNo);
@@ -724,77 +767,10 @@ export default class home_page extends PureComponent {
 			search: '?entryFrom=home'
 		});
 	};
-
-	// 用户标识
-	queryUsrSCOpenId = () => {
-		if (!store.getQueryUsrSCOpenId()) {
-			this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-				console.log(res);
-				if (res.msgCode === 'PTM0000') {
-					sa.login(res.data);
-					store.setQueryUsrSCOpenId(res.data);
-				}
-			});
-		}
-	};
-	getExamineSts = () => {
-		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					isNeedExamine: res.data && res.data.flag === '01' && res.data.ptMark === '01'
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
-	goMoxieBankList = () => {
-		this.props.history.push('/home/moxie_bank_list_page');
-	};
-	onRef = (ref) => {
-		this.child = ref;
-	};
-	handleCN = (code) => {
-		switch (code) {
-			case 'CN0003':
-				this.props.history.push('/home/loan_fenqi');
-				break;
-			case 'CN0004':
-				this.props.toast.info('正在放款中，马上到账');
-				break;
-			case 'CN0005':
-				const { usrCashIndexInfo } = this.state;
-				store.setBillNo(usrCashIndexInfo.indexData.billNo);
-				this.props.history.push({
-					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home'
-				});
-				break;
-
-			default:
-				break;
-		}
-	};
-	render() {
-		const {
-			bannerList,
-			usrIndexInfo,
-			percent,
-			showAgreement,
-			billOverDue,
-			isShowActivityModal,
-			visibleLoading,
-			overDueInf,
-			overDueModalFlag,
-			modalType,
-			blackData,
-			usrCashIndexInfo
-		} = this.state;
-		let componentsDisplay = <CarouselHome handleClick={this.handleNeedLogin} />;
-		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
-		if (JSON.stringify(blackData) !== '{}') {
-			componentsBlackCard = <BlackCard blackData={blackData} />;
-		}
+	// *****************************分期****************************** //
+	getFQDisPlay = () => {
+		let componentsDisplay = null;
+		const { usrCashIndexInfo } = this.state;
 		switch (usrCashIndexInfo.indexSts) {
 			case 'CN0001': // 现金分期额度评估中,不可能出现
 				break;
@@ -852,6 +828,13 @@ export default class home_page extends PureComponent {
 				break;
 			default:
 		}
+		return componentsDisplay;
+	};
+	// *****************************代偿****************************** //
+
+	getDCDisPlay = () => {
+		const { usrIndexInfo } = this.state;
+		let componentsDisplay = null;
 		switch (usrIndexInfo.indexSts) {
 			case 'LN0001': // 新用户，信用卡未授权
 				componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
@@ -868,6 +851,32 @@ export default class home_page extends PureComponent {
 				break;
 			default:
 		}
+		return componentsDisplay;
+	};
+
+	render() {
+		const {
+			bannerList,
+			usrIndexInfo,
+			percent,
+			showAgreement,
+			billOverDue,
+			isShowActivityModal,
+			visibleLoading,
+			overDueInf,
+			overDueModalFlag,
+			modalType,
+			blackData,
+			usrCashIndexInfo
+		} = this.state;
+		let componentsDisplay = null;
+		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
+		if (JSON.stringify(blackData) !== '{}') {
+			componentsBlackCard = <BlackCard blackData={blackData} />;
+		}
+		componentsDisplay = this.getFQDisPlay() ||
+		this.getDCDisPlay() || <CarouselHome handleClick={this.handleNeedLogin} />;
+
 		return (
 			<div className={style.home_new_page}>
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
