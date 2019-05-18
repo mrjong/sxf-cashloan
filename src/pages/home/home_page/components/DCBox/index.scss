@@ -1,11 +1,12 @@
 .box {
-	padding: 50px 40px 30px;
-	min-height: 350px;
+	padding: 40px 40px 30px;
+	min-height: 380px;
 }
 .box_container {
 	position: relative;
-	margin: 50px;
-	background: #fff;
+	margin: 30px 40px;
+  background: #fff;
+  box-sizing: border-box;
 	border-radius: 16px;
 	box-shadow: 0 8px 32px 0 rgba(9, 36, 96, 0.18);
 }
@@ -17,12 +18,6 @@
 }
 .subtitle {
 	margin-top: 30px;
-	font-size: 24px;
-	font-family: 'PingFangSC-Regular';
-	font-weight: 400;
-	color: #868e9e;
-}
-.desc {
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;

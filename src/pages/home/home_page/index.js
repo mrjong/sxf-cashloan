@@ -42,7 +42,7 @@ const API = {
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
+	checkJoin: '/jjp/checkJoin' // 用户是否参与过拒就赔
 };
 const tagList = [
 	{
@@ -125,8 +125,8 @@ export default class home_page extends PureComponent {
 		// 未提交授信用户
 		store.removeCreditExtensionNot();
 		// 去除需要调用获取下一步url方法
-    store.removeNeedNextUrl();
-    // 活体直接返回
+		store.removeNeedNextUrl();
+		// 活体直接返回
 		store.removeChkPhotoBackNew();
 		// 清除订单缓存
 		store.removeBackData();
@@ -135,8 +135,8 @@ export default class home_page extends PureComponent {
 		// 清除四项认证进入绑卡页的标识
 		store.removeCheckCardRouter();
 		//删除现金分期相关数据
-		store.removeCashFenQiStoreData()
-		store.removeCashFenQiCardArr()
+		store.removeCashFenQiStoreData();
+		store.removeCashFenQiCardArr();
 
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
@@ -185,7 +185,8 @@ export default class home_page extends PureComponent {
 				.get(API.checkJoin)
 				.then((res) => {
 					// 0:不弹出  1:弹出
-					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
+					if (res && res.msgCode === 'JJP0002') {
+						// 用户没参加过拒就赔活动
 						// 如果是活动来的，
 						resolve('1');
 					} else {
@@ -328,7 +329,11 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		if (codes.length !== 0 && newCodes2.length === 0 && (newCodes3.length === 3 || newCodes3.length === 2 || newCodes3.length === 1)) {
+		if (
+			codes.length !== 0 &&
+			newCodes2.length === 0 &&
+			(newCodes3.length === 3 || newCodes3.length === 2 || newCodes3.length === 1)
+		) {
 			//认证过期
 			this.setState({
 				showDiv: 'circle',
@@ -769,9 +774,9 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'jjp': // 拒就赔弹框按钮
-				buriedPointEvent(activity.jjpHomeModalClick)
+				buriedPointEvent(activity.jjpHomeModalClick);
 				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
-			break;
+				break;
 			default:
 				break;
 		}
@@ -898,11 +903,9 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		this.setState(
-			{
-				isShowCreditModal: true
-			}
-		);
+		this.setState({
+			isShowCreditModal: true
+		});
 	};
 
 	submitCredit = () => {
@@ -983,8 +986,8 @@ export default class home_page extends PureComponent {
 						case '3':
 							buriedPointEvent(home.compensationCreditCardConfirm, {
 								pageCode: '补充人脸识别'
-              });
-              store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
+							});
+							store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 							break;
 						default:
 							break;
@@ -1193,48 +1196,25 @@ export default class home_page extends PureComponent {
 		}
 		return (
 			<div className={style.home_page}>
-				{/* 未提交授信用户 */}
-				{/* {firstUserInfo === '01' ? (
-					<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
-						{showDiv === 'circle' ? (
-							<div className={style.circle_box}>
-								<Circle percentSatus={percentSatus} percentData={percentData} />
-							</div>
-						) : null}
-						{showDiv === '50000' ? (
-							<div className={style.font50000_box}>
-								<img className={style.font50000} src={font50000} />
-								<div className={style.font50000_desc}>最高金额(元）</div>
-							</div>
-						) : null}
-					</Card50000>
-				) : null} */}
-				<ProgressBlock percentSatus={percentSatus} percentData={percentData} />
-				{/* 历史授信用户 */}
-				{(firstUserInfo === '00' && token) || firstUserInfo === 'error' || (!token && componentsDisplay) ? (
-					<div>
-						<div className={style.content_wrap}>{componentsDisplay}</div>
-					</div>
-				) : null}
-				<p className="bottomTip">怕逾期，用还到</p>
-        <div className={style.home_new_page}>
-				{/* 头部start */}
-				<section className={style.home_header}>
-					<div className={style.title}>
-						借钱还信用卡
-						<span className={style.subtitle}>200万人都在用</span>
-						<span className={style.messageIcon}>
-							<i className={style.active} />
-						</span>
-					</div>
-				</section>
-				<FQCard />
-				<CarouselHome />
+				<div className={style.home_new_page}>
+					{/* 头部start */}
+					<section className={style.home_header}>
+						<div className={style.title}>
+							借钱还信用卡
+							<span className={style.subtitle}>200万人都在用</span>
+							<span className={style.messageIcon}>
+								<i className={style.active} />
+							</span>
+						</div>
+					</section>
+					<FQCard />
+					<CarouselHome />
+					<ProgressBlock percentSatus={percentSatus} percentData={percentData} />
 
-				<section className={style.home_banner}>
-					<Carousels data={bannerList} entryFrom="banner" />
-				</section>
-			</div>
+					<section className={style.home_banner}>
+						<Carousels data={bannerList} entryFrom="banner" />
+					</section>
+				</div>
 				{homeModal}
 			</div>
 		);

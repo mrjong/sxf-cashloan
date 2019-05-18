@@ -5,10 +5,10 @@ import { Carousel } from 'antd-mobile';
 import ZButton from 'components/ButtonCustom';
 import plus from './img/plus.png';
 import bank from './img/bank.png';
-import DCCard from '../dcCard';
+import DCBox from '../DCBox';
 const showData = {
 	title: '还到-基础版',
-	bankNo: 'CMB',
+	bankNo: '',
 	subtitle: '最高可申请还款金(元)',
 	money: '50000.00',
 	desc: '还款日：8888/88/88',
@@ -33,7 +33,7 @@ export default class carouselHome extends React.Component {
 	static defaultProps = {
 		entryFrom: 'banner',
 		data: [],
-		autoplay: true,
+		autoplay: false,
 		infinite: true,
 		cellSpacing: 1,
 		dotStyle: {
@@ -69,27 +69,24 @@ export default class carouselHome extends React.Component {
 		const { data, children, ...restProps } = this.props;
 		return (
 			<div className="carouselHome">
-				<div className={style.box_container}>
-					<Carousel {...restProps}>
-						<DCCard showData={showData} />
-						<div className={style.box}>
-							<div className={style.title}>
-								<i className={[ 'bank_ico logo_ico', `${style.bankLogo}` ].join(' ')} />还到-基础版
-							</div>
-							<img src={bank} className={style.bank} />
-							<div className={style.desc_b}>支持绑定100+信用卡</div>
-							<ZButton className={style.submitBtn}>添加需要还款信用卡</ZButton>
+				<Carousel {...restProps}>
+					<DCBox showData={showData}>
+						<div className={style.subtitle}>
+							<i />
+							{showData.subtitle}
 						</div>
-						<div className={style.box}>
-							<div className={style.title}>
-								<i className={[ 'bank_ico logo_ico', `${style.bankLogo}` ].join(' ')} />还到-基础版
-							</div>
-							<img src={plus} className={style.plus} />
-							<div className={style.desc_b}>2步操作，极速到账</div>
-							<ZButton className={style.submitBtn}>添加需要还款信用卡</ZButton>
-						</div>
-					</Carousel>
-				</div>
+						<div className={style.money}>{showData.money}</div>
+						<div className={style.desc}>{showData.desc}</div>
+					</DCBox>
+					<DCBox showData={showData}>
+						<img src={bank} className={style.bank} />
+						<div className={style.desc_b}>支持绑定100+信用卡</div>
+					</DCBox>
+					<DCBox showData={showData}>
+						<img src={plus} className={style.plus} />
+						<div className={style.desc_b}>2步操作，极速到账</div>
+					</DCBox>
+				</Carousel>
 			</div>
 		);
 	}
