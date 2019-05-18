@@ -1193,17 +1193,8 @@ export default class home_page extends PureComponent {
 		}
 		return (
 			<div className={style.home_page}>
-				{isWXOpen() && !tokenFromStorage && !token ? (
-					<Carousels data={bannerList} entryFrom="banner" />
-				) : bannerList && bannerList.length > 0 ? (
-					<Carousels data={bannerList} entryFrom="banner">
-						<MsgBadge toast={this.props.toast} />
-					</Carousels>
-				) : (
-					<img className={style.default_banner} src={defaultBanner} alt="banner" />
-				)}
 				{/* 未提交授信用户 */}
-				{firstUserInfo === '01' ? (
+				{/* {firstUserInfo === '01' ? (
 					<Card50000 showDiv={showDiv} handleApply={this.handleApply}>
 						{showDiv === 'circle' ? (
 							<div className={style.circle_box}>
@@ -1217,7 +1208,8 @@ export default class home_page extends PureComponent {
 							</div>
 						) : null}
 					</Card50000>
-				) : null}
+				) : null} */}
+				<ProgressBlock percentSatus={percentSatus} percentData={percentData} />
 				{/* 历史授信用户 */}
 				{(firstUserInfo === '00' && token) || firstUserInfo === 'error' || (!token && componentsDisplay) ? (
 					<div>

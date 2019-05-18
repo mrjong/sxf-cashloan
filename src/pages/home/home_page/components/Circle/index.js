@@ -14,7 +14,7 @@ export default class Circle extends Component {
 				{/*  */}
 				<div className={style.title}>当前申请进度</div>
 				<SvgCirPro
-					percent={percentData}
+					percent={90}
 					radius={70}
 					borderWidth={10}
 					smallradius

@@ -1,0 +1,64 @@
+.crawl_fail_page {
+  .progress_icon{
+    width: 603px;
+    margin: 46px 0 10px;
+    display: block;
+    padding-left: 65px;
+  }
+  .popover_inner{
+    padding-left: 65px;
+    color: #121C32;
+    font-size: 46px;
+    text-align: left;
+    height: 120px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .progress_desc{
+    padding-left: 65px;
+    color: #414A53;
+    font-size: 22px;
+    transform: scale(0.9);
+    margin-left: -38px;
+    margin-bottom: 60px;
+    span{
+      color: #327AE2;
+    }
+    .apply_success{
+      position: absolute;
+      right: 20px;
+    }
+  }
+  .button{
+    width: 634px;
+    height: 100px;
+    background: #EBDE74;
+    border-radius: 50px;
+    margin: 312px auto 30px;
+    text-align: center;
+    line-height: 100px;
+    vertical-align: middle;
+    color: #121C32;
+    font-size: 34px;
+  }
+}
+:global {
+  .am-popover-inner{
+    border-radius: 33px;
+  }
+  .am-popover-inner-wrapper {
+    background: #397BE6;
+  }
+  .am-popover-arrow {
+    background: #397BE6;
+    width: 48px;
+    height: 48px;
+  }
+  .am-popover .am-popover-item-container{
+    height: 65px;
+  }
+  .am-popover-placement-bottom .am-popover-arrow {
+    left: 50%;
+  }
+}
+

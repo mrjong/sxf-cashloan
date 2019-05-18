@@ -73,4 +73,14 @@ export default [
     title: '提现提醒',
     component: () => import('pages/home/deposit_tip_page'),
   },
+  {
+    path: '/home/crawl_progress_page',
+    title: '添加进度',
+    component: () => import('pages/home/crawl_progress_page'),
+  },
+  {
+    path: '/home/crawl_fail_page',
+    title: '添加进度',
+    component: () => import('pages/home/crawl_fail_page'),
+  },
 ];
