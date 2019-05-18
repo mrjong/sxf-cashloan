@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
@@ -10,18 +9,18 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
-import BankContent from './components/BankContent';
 import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
-import MsgTip from './components/MsgTip';
-import ProgressBlock from './components/ProgressBlock';
-import CarouselHome from './components/carousel_home';
-import BlackCard from './components/BlackCard';
-import HomeModal from './components/HomeModal';
 import { setBackGround } from 'utils/background';
-import WhiteCard from './components/WhiteCard';
-import MoneyCard from './components/MoneyCard';
+import {
+	CarouselHome,
+	BlackCard,
+	MsgTip,
+	MoneyCard,
+	// ProgressBlock,
+	HomeModal
+} from './components';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -874,7 +873,9 @@ export default class home_page extends PureComponent {
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
 				{componentsBlackCard}
 				{componentsDisplay}
-				<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
+				{bannerList.length > 0 && (
+					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
+				)}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
@@ -886,6 +887,10 @@ export default class home_page extends PureComponent {
 					overDueModalFlag={overDueModalFlag}
 					overDueInf={overDueInf}
 					visibleLoading={visibleLoading}
+					readAgreementCb={this.readAgreementCb}
+					handleOverDueClick={this.handleOverDueClick}
+					activityModalBtn={this.activityModalBtn}
+					closeActivityModal={this.closeActivityModal}
 				/>
 			</div>
 		);

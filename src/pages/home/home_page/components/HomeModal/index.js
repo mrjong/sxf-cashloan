@@ -35,16 +35,21 @@ export default class BlackCard extends React.PureComponent {
 			billOverDue,
 			overDueModalFlag,
 			isShowActivityModal,
-      visibleLoading,
-      overDueInf,
-      modalType,
-      history,
-      percent
+			visibleLoading,
+			overDueInf,
+			modalType,
+			history,
+			percent,
+			readAgreementCb,
+			handleOverDueClick,
+			activityModalBtn,
+      closeActivityModal,
+      toast
 		} = this.props;
 
 		let homeModal = null;
 		if (showAgreement) {
-			homeModal = <AgreementModal visible={showAgreement} readAgreementCb={this.props.readAgreementCb} />;
+			homeModal = <AgreementModal visible={showAgreement} readAgreementCb={readAgreementCb} />;
 		} else if (billOverDue) {
 			homeModal = (
 				<Modal className="overDueModal" visible={billOverDue} transparent maskClosable={false}>
@@ -52,23 +57,23 @@ export default class BlackCard extends React.PureComponent {
 						<img src={overDueImg} />
 						<h3 className={style.modalTitle}>信用风险提醒</h3>
 						<p>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
-						<SXFButton onClick={this.props.handleOverDueClick}>我知道了，前去还款</SXFButton>
+						<SXFButton onClick={handleOverDueClick}>我知道了，前去还款</SXFButton>
 					</div>
 				</Modal>
 			);
 		} else if (overDueModalFlag) {
 			homeModal = (
 				<OverDueModal
-					toast={this.props.toast}
+					toast={toast}
 					overDueInf={overDueInf}
-					handleClick={this.props.handleOverDueClick}
+					handleClick={handleOverDueClick}
 				/>
 			);
 		} else if (isShowActivityModal) {
 			homeModal = (
 				<ActivityModal
-					activityModalBtn={this.props.activityModalBtn}
-					closeActivityModal={this.props.closeActivityModal}
+					activityModalBtn={activityModalBtn}
+					closeActivityModal={closeActivityModal}
 					history={history}
 					modalType={modalType}
 				/>
