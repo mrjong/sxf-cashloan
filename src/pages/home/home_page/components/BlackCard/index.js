@@ -37,7 +37,7 @@ const demo = [
 		credAmt: '超多权益任你拿'
 	}
 ];
-export default class FQCard extends React.PureComponent {
+export default class BlackCard extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

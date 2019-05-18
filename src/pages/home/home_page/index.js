@@ -1,4 +1,3 @@
-import defaultBanner from 'assets/images/carousel/placeholder.png';
 import React, { PureComponent } from 'react';
 import { Modal, Progress, Icon, List, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
@@ -11,23 +10,18 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
-import Card50000 from './components/Card50000';
 import Carousels from 'components/Carousels';
 import BankContent from './components/BankContent';
-import MsgBadge from './components/MsgBadge';
 import ActivityModal from 'components/Modal';
 import overDueImg from 'assets/images/home/overDue_icon.png';
-import font50000 from './components/img/50000@2x.png';
 import style from './index.scss';
-import Circle from './components/Circle';
 import OverDueModal from './components/OverDueModal';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import AgreementModal from 'components/AgreementModal';
-import ScrollText from 'components/ScrollText';
 import ProgressBlock from './components/ProgressBlock';
 import CarouselHome from './components/carousel_home';
-import FQCard from './components/fqCard';
+import BlackCard from './components/BlackCard';
 import { setBackGround } from 'utils/background';
 let isinputBlur = false;
 const API = {
@@ -44,20 +38,6 @@ const API = {
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	checkJoin: '/jjp/checkJoin' // 用户是否参与过拒就赔
 };
-const tagList = [
-	{
-		name: '全额还款',
-		value: 1
-	},
-	{
-		name: '最低还款',
-		value: 2
-	},
-	{
-		name: '部分还款',
-		value: 3
-	}
-];
 let token = '';
 let tokenFromStorage = '';
 
@@ -164,20 +144,6 @@ export default class home_page extends PureComponent {
 			clearTimeout(timerOut);
 		}
 	}
-	getParam = () => {
-		let obj = {};
-		let wenjuan = JSON.parse(localStorage.getItem('wenjuan'));
-		for (let i = 0; i < wenjuan.length; i++) {
-			let str = '';
-			for (let j = 0; j < wenjuan[i].list.length; j++) {
-				if (wenjuan[i].list[j].checked) {
-					str = str + wenjuan[i].list[j].selected;
-					obj[`answer${i + 1}`] = str;
-				}
-			}
-		}
-		return obj;
-	};
 	// 判断是否参与拒就赔活动
 	isInvoking_jjp = () => {
 		return new Promise((resolve, reject) => {
@@ -537,36 +503,9 @@ export default class home_page extends PureComponent {
 			osTyp: osType
 		};
 		this.props.$fetch
-			.post(
-				API.AGENT_REPAY_CHECK,
-				params,
-				{
-					// timeout: 100000,
-					// hideLoading: true,
-				}
-			)
+			.post(API.AGENT_REPAY_CHECK, params)
 			.then((result) => {
-				// this.setState(
-				//   {
-				//     percent: 100,
-				//   },
-				//   () => {
-				//     clearInterval(timer);
-				//     clearTimeout(timerOut);
-				//     this.setState({
-				//       visibleLoading: false,
-				//     });
 				if (result && result.msgCode === 'PTM0000') {
-					// if (this.state.showToast) {
-					//   this.setState({
-					//     showToast: false,
-					//   });
-					//   this.props.toast.info('资质检测完成，可正常借款', 3, () => {
-					//     this.requestBindCardState();
-					//   });
-					// } else {
-					//   this.requestBindCardState();
-					// }
 					this.requestBindCardState();
 				} else {
 					// 失败的话刷新首页
@@ -635,22 +574,10 @@ export default class home_page extends PureComponent {
 	// 获取首页信息
 	requestGetUsrInfo = (isInvoking_jjp) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
-			// let result = {
-			// 	data: mockData.LN0003,
-			// 	msgCode: 'PTM0000',
-			// 	msgMsg: 'PTM0000'
-			// };
 			this.setState({
 				showDefaultTip: true
 			});
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				// let resultData = result.data;
-				// const sessionCardData = store.getSomeData();
-				// Object.assign(resultData.indexData, sessionCardData);
-				// result.data.indexSts = 'LN0001'
-				// result.data.indexData = {
-				//   autSts : '2'
-				// }
 				this.getPercent();
 				if (result.data.indexSts === 'LN0003') {
 					this.getPercent();
@@ -664,19 +591,6 @@ export default class home_page extends PureComponent {
 						? result.data
 						: Object.assign({}, result.data, { indexData: {} })
 				});
-				// 对于历史提交过授信的用户不弹框
-				// if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
-				//   // 新弹窗（188元）4月11号改为688元
-				//   this.setState(
-				//     {
-				//       isShowActivityModal: true,
-				//       modalType: true
-				//     },
-				//     () => {
-				//       store.setShowActivityModal(true);
-				//     }
-				//   );
-				// } else
 				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
 					this.setState(
 						{
@@ -764,9 +678,6 @@ export default class home_page extends PureComponent {
 							this.handleSmartClick();
 						} else {
 							this.child.requestCredCardCount();
-							// this.setState({
-							// 	handleMoxie: true
-							// });
 						}
 						break;
 					default:
@@ -776,113 +687,6 @@ export default class home_page extends PureComponent {
 			case 'jjp': // 拒就赔弹框按钮
 				buriedPointEvent(activity.jjpHomeModalClick);
 				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
-				break;
-			default:
-				break;
-		}
-	};
-
-	//计算该显示的还款金额
-	calcLoanMoney = (money, tag3) => {
-		const { usrIndexInfo } = this.state;
-		const { indexData } = usrIndexInfo;
-		console.log(money);
-		if (indexData && indexData.maxApplAmt && money >= indexData.maxApplAmt) {
-			this.props.form.setFieldsValue({
-				loanMoney: indexData.maxApplAmt
-			});
-			this.qryPerdRate(indexData.maxApplAmt, tag3);
-		} else if (indexData && indexData.minApplAmt && money <= indexData.minApplAmt) {
-			this.props.form.setFieldsValue({
-				loanMoney: indexData.minApplAmt
-			});
-			this.qryPerdRate(indexData.minApplAmt, tag3);
-		} else {
-			if (money) {
-				this.props.form.setFieldsValue({
-					loanMoney: Math.ceil(money / 100) * 100
-				});
-				this.qryPerdRate(Math.ceil(money / 100) * 100, tag3);
-			} else if (indexData.minApplAmt) {
-				this.props.form.setFieldsValue({
-					loanMoney: indexData.minApplAmt
-				});
-				this.qryPerdRate(indexData.minApplAmt, tag3);
-			} else {
-				this.props.form.setFieldsValue({
-					loanMoney: ''
-				});
-			}
-		}
-	};
-
-	//过滤选中的还款期限
-	filterLoanDate = (item, type) => {
-		let itemCopy = item;
-		this.dateType(itemCopy.perdLth);
-		// if (item && item.perdLth == 30) {
-		// 	this.setState({
-		// 		modal_left2: true,
-		// 		dayPro: item
-		// 	});
-		// 	return;
-		// }
-		this.setState({
-			modal_left: false,
-			modal_left2: false,
-			selectedLoanDate: itemCopy // 设置选中的期数
-		});
-	};
-
-	//查询还款期限
-	qryPerdRate = (money, tag3) => {
-		if (!money) {
-			return;
-		}
-		this.props.$fetch
-			.get(`${API.qryPerdRate}`, {
-				applAmt: money
-			})
-			.then((res) => {
-				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-				// const dateCopy = date[0].perdLth == 30 ? date[1] : date[0];
-				// dateCopy && this.dateType(dateCopy.perdLth);
-				this.setState({
-					perdRateList: date,
-					btnDisabled:
-						(tag3 === 'tag3' && this.state.activeTag == 2) || this.state.activeTag !== 2 ? false : true,
-					selectedLoanDate: {} // 默认选中3期
-				});
-			});
-	};
-
-	dateType = (value) => {
-		// 埋点
-		switch (value) {
-			case '30':
-				buriedPointEvent(home.durationDay30, {
-					userType: 'oldUser'
-				});
-				break;
-			case '3':
-				buriedPointEvent(home.durationMonth3, {
-					userType: 'oldUser'
-				});
-				break;
-			case '6':
-				buriedPointEvent(home.durationMonth6, {
-					userType: 'oldUser'
-				});
-				break;
-			case '9':
-				buriedPointEvent(home.durationMonth9, {
-					userType: 'oldUser'
-				});
-				break;
-			case '12':
-				buriedPointEvent(home.durationMonth12, {
-					userType: 'oldUser'
-				});
 				break;
 			default:
 				break;
@@ -905,102 +709,6 @@ export default class home_page extends PureComponent {
 		}
 		this.setState({
 			isShowCreditModal: true
-		});
-	};
-
-	submitCredit = () => {
-		if (
-			!isCanLoan({
-				$props: this.props,
-				usrIndexInfo: this.state.usrIndexInfo,
-				goMoxieBankList: this.child.requestCredCardCount
-			})
-		) {
-			return;
-		}
-		const { selectedLoanDate = {}, usrIndexInfo } = this.state;
-		const { indexData = {} } = usrIndexInfo;
-		const { minApplAmt, maxApplAmt } = indexData;
-		this.props.form.validateFields((err, values) => {
-			if (!err) {
-				if (values.loanMoney === 0 || !values.loanMoney) {
-					this.props.toast.info('请输入借款金额');
-					return;
-				}
-
-				isinputBlur = true;
-				setTimeout(() => {
-					isinputBlur = false;
-				}, 100);
-
-				if (
-					Number(values.loanMoney) > Number(maxApplAmt) ||
-					Number(values.loanMoney) < Number(minApplAmt) ||
-					Number(values.loanMoney) % 100 !== 0
-				) {
-					this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元且为100整数倍`, 2, () => {
-						this.calcLoanMoney(values.loanMoney, 'tag3');
-					});
-					return;
-				}
-				this.setState({
-					btnDisabled: false
-				});
-				setTimeout(() => {
-					if (!this.state.btnDisabled) {
-						return;
-					}
-				});
-				if (!selectedLoanDate.perdCnt) {
-					this.props.toast.info('请选择借款期限');
-					return;
-				}
-				const params = {
-					...selectedLoanDate,
-					rpyAmt: Number(values.loanMoney),
-					activeName: tagList[this.state.activeTag].name,
-					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId
-				};
-
-				store.setLoanAspirationHome(params);
-				idChkPhoto({
-					$props: this.props,
-					type: 'historyCreditExtension',
-					msg: '认证'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							buriedPointEvent(home.compensationCreditCardConfirm, {
-								pageCode: this.state.pageCode
-							});
-							//调用授信接口
-							getNextStr({
-								$props: this.props
-							});
-							break;
-						case '2':
-							buriedPointEvent(home.compensationCreditCardConfirm, {
-								pageCode: '补充身份证照片'
-							});
-							break;
-						case '3':
-							buriedPointEvent(home.compensationCreditCardConfirm, {
-								pageCode: '补充人脸识别'
-							});
-							store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
-							break;
-						default:
-							break;
-					}
-				});
-
-				// 关闭授信弹窗
-				this.setState({
-					isShowCreditModal: false
-				});
-			} else {
-				this.props.toast.info(getFirstError(err));
-			}
 		});
 	};
 
@@ -1033,15 +741,6 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	placeholderText = () => {
-		const { activeTag, usrIndexInfo } = this.state;
-		const { indexData } = usrIndexInfo;
-		if (activeTag === 2) {
-			return `申请金额${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
-		} else {
-			return ``;
-		}
-	};
 	goMoxieBankList = () => {
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
@@ -1055,24 +754,16 @@ export default class home_page extends PureComponent {
 			percent,
 			percentSatus,
 			percentData,
-			showDiv,
-			activeTag,
-			perdRateList,
-			selectedLoanDate = {},
 			firstUserInfo,
 			showAgreement,
 			billOverDue,
 			isShowActivityModal,
 			visibleLoading,
 			overDueInf,
-			overDueModalFlag,
-			btnDisabled
+			overDueModalFlag
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
-		const { cardNoHid, bankNo, bankName } = indexData;
 		const { history } = this.props;
-		const { getFieldProps } = this.props.form;
-		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
 		let componentsDisplay = null;
 		// 未登录也能进入到首页的时候看到的样子
 		if (!token || firstUserInfo === 'error') {
@@ -1195,26 +886,25 @@ export default class home_page extends PureComponent {
 			);
 		}
 		return (
-			<div className={style.home_page}>
-				<div className={style.home_new_page}>
-					{/* 头部start */}
-					<section className={style.home_header}>
-						<div className={style.title}>
-							借钱还信用卡
-							<span className={style.subtitle}>200万人都在用</span>
-							<span className={style.messageIcon}>
-								<i className={style.active} />
-							</span>
-						</div>
-					</section>
-					<FQCard />
-					<CarouselHome />
-					<ProgressBlock percentSatus={percentSatus} percentData={percentData} />
+			<div className={style.home_new_page}>
+				{/* 头部start */}
+				<section className={style.home_header}>
+					<div className={style.title}>
+						借钱还信用卡
+						<span className={style.subtitle}>200万人都在用</span>
+						<span className={style.messageIcon}>
+							<i className={style.active} />
+						</span>
+					</div>
+				</section>
+				<BlackCard />
+				<CarouselHome />
+				<ProgressBlock percentSatus={percentSatus} percentData={percentData} />
 
-					<section className={style.home_banner}>
-						<Carousels data={bannerList} entryFrom="banner" />
-					</section>
-				</div>
+				<section className={style.home_banner}>
+					<Carousels data={bannerList} entryFrom="banner" />
+				</section>
+				{/* <HomeModal showAgreement={showAgreement} /> */}
 				{homeModal}
 			</div>
 		);

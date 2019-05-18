@@ -5,7 +5,7 @@ import { Carousel } from 'antd-mobile';
 import ZButton from 'components/ButtonCustom';
 import plus from './img/plus.png';
 import bank from './img/bank.png';
-import DCBox from '../DCBox';
+import WhiteCard from '../WhiteCard';
 const showData = {
 	title: '还到-基础版',
 	bankNo: '',
@@ -70,22 +70,22 @@ export default class carouselHome extends React.Component {
 		return (
 			<div className="carouselHome">
 				<Carousel {...restProps}>
-					<DCBox showData={showData}>
+					<WhiteCard showData={showData}>
 						<div className={style.subtitle}>
 							<i />
 							{showData.subtitle}
 						</div>
 						<div className={style.money}>{showData.money}</div>
 						<div className={style.desc}>{showData.desc}</div>
-					</DCBox>
-					<DCBox showData={showData}>
+					</WhiteCard>
+					<WhiteCard showData={showData}>
 						<img src={bank} className={style.bank} />
 						<div className={style.desc_b}>支持绑定100+信用卡</div>
-					</DCBox>
-					<DCBox showData={showData}>
+					</WhiteCard>
+					<WhiteCard showData={showData}>
 						<img src={plus} className={style.plus} />
 						<div className={style.desc_b}>2步操作，极速到账</div>
-					</DCBox>
+					</WhiteCard>
 				</Carousel>
 			</div>
 		);
