@@ -11,13 +11,14 @@ export default class ProgressBlock extends React.Component {
 	constructor(props) {
 		super(props);
 	}
-	componentWillMount() {}
 	render() {
+    const { percentData } = this.props;
+    console.log(percentData)
 		return (
 			<WhiteCard showData={showData}>
 				<div className={style.circle_box}>
 					<SvgCirPro
-						percent={90}
+						percent={Number(percentData)}
 						radius={50}
 						borderWidth={5}
 						smallradius

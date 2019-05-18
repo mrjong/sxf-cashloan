@@ -42,7 +42,7 @@ export default class BlackCard extends React.PureComponent {
 			return item.cashAcBalSts === blackData.cashAcBalSts;
 		});
 		if (blackData.credAmt) {
-			showdata[0].credAmt = blackData.credAmt;
+			showdata[0].credAmt = Number(blackData.credAmt).toFixed(2);
 		}
 		console.log(showdata);
 		this.setState({

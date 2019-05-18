@@ -5,6 +5,7 @@ import { Carousel } from 'antd-mobile';
 import ZButton from 'components/ButtonCustom';
 import plus from './img/plus.png';
 import bank from './img/bank.png';
+import MoneyCard from '../MoneyCard';
 import WhiteCard from '../WhiteCard';
 const showData = {
 	title: '还到-基础版',
@@ -12,7 +13,8 @@ const showData = {
 	subtitle: '最高可申请还款金(元)',
 	money: '50000.00',
 	desc: '还款日：8888/88/88',
-	btnText: '添加需要还款信用卡'
+	btnText: '添加需要还款信用卡',
+	color: 'rgba(248, 164, 65, 1)'
 };
 export default class carouselHome extends React.Component {
 	constructor(props) {
@@ -70,14 +72,7 @@ export default class carouselHome extends React.Component {
 		return (
 			<div className="carouselHome">
 				<Carousel {...restProps}>
-					<WhiteCard showData={showData}>
-						<div className={style.subtitle}>
-							<i />
-							{showData.subtitle}
-						</div>
-						<div className={style.money}>{showData.money}</div>
-						<div className={style.desc}>{showData.desc}</div>
-					</WhiteCard>
+					<MoneyCard showData={showData} />
 					<WhiteCard showData={showData}>
 						<img src={bank} className={style.bank} />
 						<div className={style.desc_b}>支持绑定100+信用卡</div>
