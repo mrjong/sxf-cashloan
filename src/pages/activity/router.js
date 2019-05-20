@@ -31,12 +31,12 @@ export default [
 	// 	arrowHide: 'empty',
 	// 	component: () => import('pages/activity/dazhuanpan_316_page')
 	// },
-	{
-		path: '/activity/jupei_page',
-		title: '还到拒就赔',
-		arrowHide: 'empty',
-		component: () => import('pages/activity/jupei_page')
-	},
+	// {
+	// 	path: '/activity/jupei_page',
+	// 	title: '还到拒就赔',
+	// 	arrowHide: 'empty',
+	// 	component: () => import('pages/activity/jupei_page')
+	// },
 	// {
 	// 	path: '/activity/funsisong_page',
 	// 	title: '全民FUN肆送',
@@ -53,4 +53,10 @@ export default [
 	// 	title: '答题抽奖',
 	// 	component: () => import('pages/activity/wenjuan_page')
 	// }
+	{
+		path: '/activity/pinpai_page',
+		title: '新手指南',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/pinpai_page')
+	},
 ];

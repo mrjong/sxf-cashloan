@@ -22,9 +22,9 @@
 				left: 50%;
 				transform: translateX(-50%);
 			}
-			// 拒就赔活动
+			// 品牌活动
 			.huodongTootipBtn4 {
-				width: 397px;
+				width: 471px;
 				position: absolute;
 				bottom: 80px;
 				left: 50%;
@@ -33,10 +33,10 @@
 		}
 		.closeBtn {
 			text-align: center;
-			width: 68px;
-			height: 68px;
+			width: 70px;
+			height: 70px;
 			vertical-align: middle;
-			margin: 40px auto;
+			margin: 0 auto;
 			@include spriteIcon('../../assets/images/common/sprite_icon.png',0, 0);
 		}
 	}

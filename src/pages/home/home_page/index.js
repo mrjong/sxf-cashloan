@@ -39,7 +39,6 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	saveQuestionnaire: '/activeConfig/saveQuestionnaire', // 问卷调查
-	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
 };
 const tagList = [
 	{
@@ -170,25 +169,6 @@ export default class home_page extends PureComponent {
 		}
 		return obj;
 	};
-	// 判断是否参与拒就赔活动
-	isInvoking_jjp = () => {
-		return new Promise((resolve, reject) => {
-			this.props.$fetch
-				.get(API.checkJoin)
-				.then((res) => {
-					// 0:不弹出  1:弹出
-					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
-						// 如果是活动来的，
-						resolve('1');
-					} else {
-						resolve('0');
-					}
-				})
-				.catch((err) => {
-					reject();
-				});
-		});
-	};
 	// 判断是否授信
 	credit_extension = () => {
 		// 问卷调查  以后可以去掉
@@ -232,17 +212,17 @@ export default class home_page extends PureComponent {
 					this.setState({
 						overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 					});
-					let isInvoking_jjp = await this.isInvoking_jjp();
 					if (res.data.flag === '01') {
-						// 拒就赔活动弹框
-						if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+						// 品牌活动弹框
+						if (isMPOS() && !store.getShowActivityModal() && Cookie.get('currentTime') !== new Date().getDate().toString()) {
 							this.setState(
 								{
 									isShowActivityModal: true,
-									modalType: 'jujiupei'
+									modalType: 'brand'
 								},
 								() => {
 									store.setShowActivityModal(true);
+									Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 								}
 							);
 						} else if (isMPOS() && this.state.newUserActivityModal && !store.getShowActivityModal()) {
@@ -259,7 +239,7 @@ export default class home_page extends PureComponent {
 
 						this.credit_extension_not();
 					} else {
-						this.requestGetUsrInfo(isInvoking_jjp);
+						this.requestGetUsrInfo();
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -632,7 +612,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 获取首页信息
-	requestGetUsrInfo = (isInvoking_jjp) => {
+	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// let result = {
 			// 	data: mockData.LN0003,
@@ -675,14 +655,15 @@ export default class home_page extends PureComponent {
 				//     }
 				//   );
 				// } else
-				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+				if (isMPOS() && !store.getShowActivityModal() && Cookie.get('currentTime') !== new Date().getDate().toString()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							modalType: 'jujiupei'
+							modalType: 'brand'
 						},
 						() => {
 							store.setShowActivityModal(true);
+							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
 				} else if (
@@ -771,10 +752,10 @@ export default class home_page extends PureComponent {
 						console.log('关闭弹窗');
 				}
 				break;
-			case 'jjp': // 拒就赔弹框按钮
-				buriedPointEvent(activity.jjpHomeModalClick)
-				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
+			case 'brand': // 品牌活动弹框按钮
+				buriedPointEvent(activity.brandHomeModalClick)
 			break;
+			
 			default:
 				break;
 		}
