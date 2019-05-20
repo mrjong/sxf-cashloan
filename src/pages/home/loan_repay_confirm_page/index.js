@@ -665,7 +665,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</div>
 							{
 								cardCount && cardCount > 1 &&
-								<div className={style.cardNumBox}>
+								<div className={style.cardNumBox} onClick={() => {this.repayForOtherBank(cardCount)}}>
 									<span>{cardCount}张可更换</span>
 									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
 								</div>
@@ -739,14 +739,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 							}}
 						/>
 					</div>
-					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(1)}}>
+					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(1, 'click')}}>
 						<span className={style.name}>最低还卡</span>
 						<div className={style.value}>
 							<span>{minApplAmt}元</span>
 							<i className={ repayType===tagList[1] ? `${style.unChecked} ${style.checked}` : style.unChecked } />
 						</div>
 					</div>
-					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(2)}}>
+					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(2, 'click')}}>
 						<span className={style.name}>全额还卡</span>
 						<div className={style.value}>
 							<span>{maxApplAmt}元</span>

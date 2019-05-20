@@ -18,7 +18,7 @@ export default class MoneyCard extends React.PureComponent {
 							{showData.subtitle}
 						</div>
 						<div className={style.money} style={{ color: showData.color && showData.color }}>
-							{showData.money ? Number(showData.money).toFixed(2) : '0.00'}
+							{showData.money ? showData.money : '----.--'}
 						</div>
 					</div>
 					{showData.money2 ? (
@@ -31,7 +31,7 @@ export default class MoneyCard extends React.PureComponent {
 								className={[ style.money, style.small ].join(' ')}
 								style={{ color: showData.color && showData.color }}
 							>
-								{showData.money2 ? Number(showData.money2).toFixed(2) : '0.00'}
+								{showData.money2}
 							</div>
 						</div>
 					) : null}

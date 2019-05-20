@@ -33,7 +33,7 @@ export default class crawl_progress_page extends PureComponent {
   }
 
   componentWillUnmount() {
-
+    store.removeAutId2();
   }
   render() {
     let {  } = this.state

@@ -187,7 +187,9 @@ const interceptRouteArr = [
 	'/home/moxie_bank_list_page',
 	'/home/loan_repay_confirm_page',
 	'/home/credit_apply_succ_page',
-	'/home/loan_apply_succ_page'
+	'/home/loan_apply_succ_page',
+	'/home/crawl_progress_page',
+	'/home/crawl_fail_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -502,7 +504,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack, autId }
 				.then((result) => {
 					if (result && result.msgCode === 'PTM0000') {
 						if (result.data.count > 1) {
-							$props.history.push(`/home/credit_list_page?autId=${autId}`);
+							store.setToggleMoxieCard(true);
+							$props.history.push(`/mine/credit_list_page?autId=${autId ? autId : store.getHomeAutId()}`);
 						} else {
 							$props.history.push('/home/loan_repay_confirm_page');
 						}

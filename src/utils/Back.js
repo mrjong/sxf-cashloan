@@ -146,6 +146,14 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
+			// 进度页面物理返回
+			if (window.location.pathname === '/home/crawl_progress_page') {
+				let mainAutId = store.getAutId();
+				store.setAutId2(mainAutId);
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+
 			/**首页拦截 */
 			if (window.location.pathname === '/') {
 				window.history.pushState(null, null, document.URL);
