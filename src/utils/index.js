@@ -19,7 +19,8 @@ const API = {
 	qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 	submitState: '/bill/apply', // 提交代还金申请
 	idChkPhoto: '/auth/idChkPhoto',
-	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
+	getFace: '/auth/getTencentFaceidData', // 人脸识别认证跳转URL
+	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -395,7 +396,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
-export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
+export const getNextStr = async ({ $props, needReturn = false, callBack, autId }) => {
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
@@ -422,10 +423,10 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				let msg = '请先实名认证';
 				// $props.toast.info(msg);
 				// setTimeout(() => {
-					$props.history.push({
-						pathname: '/home/real_name',
-						search: '?type=noRealName&fromRouter=home'
-					});
+				$props.history.push({
+					pathname: '/home/real_name',
+					search: '?type=noRealName&fromRouter=home'
+				});
 				// }, 3000);
 				return;
 			}
@@ -436,10 +437,10 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				// $props.toast.info(msg);
 				resBackMsg = '基本信息认证';
 				// setTimeout(() => {
-					$props.history.replace({
-						pathname: '/home/essential_information'
-						// search: urlQuery
-					});
+				$props.history.replace({
+					pathname: '/home/essential_information'
+					// search: urlQuery
+				});
 				// }, 3000);
 				if (callBack) {
 					callBack(resBackMsg);
@@ -460,16 +461,16 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 							// $props.toast.info(msg);
 							resBackMsg = '运营商认证';
 							// setTimeout(() => {
-								// 运营商直接返回的问题
-								store.setCarrierMoxie(true);
-								SXFToast.loading('加载中...', 0);
-								window.location.href =
-									result.data.url +
-									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-										.location
-										.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-									)}`;
+							// 运营商直接返回的问题
+							store.setCarrierMoxie(true);
+							SXFToast.loading('加载中...', 0);
+							window.location.href =
+								result.data.url +
+								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
+									.location
+									.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+									`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+								)}`;
 							// }, 3000);
 							if (callBack) {
 								callBack(resBackMsg);
@@ -488,32 +489,30 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
 				// setTimeout(() => {
-					$props.history.push({ pathname: '/home/moxie_bank_list_page' });
+				$props.history.push({ pathname: '/home/moxie_bank_list_page' });
 				// }, 3000);
 				if (callBack) {
 					callBack(resBackMsg);
 				}
 				return;
 			}
-			// 如果是历史用户 直接提交风控  或者跳转到 账单确认页
-			if (!store.getCreditExtensionNot() && store.getLoanAspirationHome()) {
-				$props.SXFToast.hide();
-				handleClickConfirm($props, {
-					...store.getLoanAspirationHome()
-				});
-				return;
-			} else if (store.getCreditExtensionNot()) {
-				if (store.getCreditSuccessBack()) {
-					$props.SXFToast.hide();
-					$props.toast.info('恭喜您距离您获取额度就差最后一步了，赶紧申请吧');
-					setTimeout(() => {
+			// 请求信用卡数量
+			$props.$fetch
+				.post(API.CRED_CARD_COUNT)
+				.then((result) => {
+					if (result && result.msgCode === 'PTM0000') {
+						if (result.data.count > 1) {
+							$props.history.push(`/home/credit_list_page?autId=${autId}`);
+						} else {
+							$props.history.push('/home/loan_repay_confirm_page');
+						}
+					} else {
 						$props.history.push('/home/loan_repay_confirm_page');
-					}, 2000);
-				} else {
+					}
+				})
+				.catch((err) => {
 					$props.history.push('/home/loan_repay_confirm_page');
-				}
-				return;
-			}
+				});
 		}
 	} else {
 		Toast.info(res.msgInfo);

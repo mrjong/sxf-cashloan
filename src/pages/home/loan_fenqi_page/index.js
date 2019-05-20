@@ -21,48 +21,10 @@ const API = {
   prodInfo: '/cash/prodList', //产品列表基本信息查询
   loanUsage: '/cash/loanUsage',  //借款用途
   couponSupport: '/cash/couponSupport', //最佳优惠券获取
-  contractList: '/cash/qryContractList', //合同列表
+  contractList: '/fund/info', //合同列表
   repayPlan: '/bill/prebill', //还款计划查询
   agentRepay: '/bill/agentRepay', // 借款申请接口
 }
-const usageList = [
-  {
-    label: '个人日常消费',
-    value: 1
-  },
-  {
-    label: '旅游',
-    value: 2
-  }, {
-    label: '租房',
-    value: 3
-  }, {
-    label: '教育',
-    value: 4
-  }, {
-    label: '装修',
-    value: 5
-  },
-]
-
-const tagList = [
-  {
-    name: '3期',
-    value: 3
-  },
-  {
-    name: '6期',
-    value: 6
-  },
-  {
-    name: '9期',
-    value: 9
-  },
-  {
-    name: '12期',
-    value: 12
-  }
-];
 
 @fetch.inject()
 @setBackGround('#fff')
@@ -75,45 +37,39 @@ export default class loan_fenqi_page extends PureComponent {
       tipModal: false,
       loanDate: '',
       loanMoney: '',
-      resaveBankCardAgrNo: '1',
-      resaveBankCardLastNo: '1234',
-      resaveBankCardName: '招商银行',
-      payBankCardAgrNo: '2',
-      payBankCardLastNo: '1234',
-      payBankCardName: '招商银行',
+      usageList: [],
+      resaveBankCardAgrNo: '',
+      resaveBankCardLastNo: '',
+      resaveBankCardName: '',
+      payBankCardAgrNo: '',
+      payBankCardLastNo: '',
+      payBankCardName: '',
       perdRateList: [],
-      // submitData: {
-      //   loanMoney: '',
-      //   loanDate: '',
-      //   loanUsage: '',
-      //   resaveBankCard: '',
-      //   payBankCard: ''
-      // }
+      contractList: []
     }
   }
 
   componentWillMount() {
-    this.setState({
-      loanUsage: usageList[0].label
-    })
     let storeData = store.getCashFenQiStoreData() // 代提交的借款信息
     let cashFenQiCardArr = store.getCashFenQiCardArr() // 收、还款卡信息
-    console.log(storeData)
-    console.log(cashFenQiCardArr)
+    // console.log(storeData)
+    // console.log(cashFenQiCardArr)
 
     if (storeData && cashFenQiCardArr) {
       this.handleDataDisplay(storeData, cashFenQiCardArr)
     }
+    this.queryProdInfo()
+    this.queryLoanUsageList()
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { loanMoney, loanDate } = this.state
     if (loanMoney !== prevState.loanMoney) {
     }
-    if (loanMoney && loanDate) {
+    if (loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt) {
       console.log('请求还款计划')
+      this.queryContractList()
     }
-
   }
 
   //处理数据反显
@@ -124,8 +80,8 @@ export default class loan_fenqi_page extends PureComponent {
     payBankCardAgrNo = agrNo
     payBankCardName = bankName
     payBankCardLastNo = lastCardNo
-    //如果没有切换还款银行卡
     if (!agrNo) {
+      //如果没有切换还款银行卡
       payBankCardAgrNo = this.state.payBankCardAgrNo
       payBankCardName = this.state.payBankCardName
       payBankCardLastNo = this.state.payBankCardLastNo
@@ -144,7 +100,7 @@ export default class loan_fenqi_page extends PureComponent {
 
   //查询产品基本信息
   queryProdInfo = () => {
-    this.props.$fetch.post(API.prodInfo, {
+    this.props.$fetch.get(API.prodInfo, {
       channelType: 'h5'
     }).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
@@ -167,7 +123,7 @@ export default class loan_fenqi_page extends PureComponent {
           perdRateList
         })
       } else {
-        this.props.toast.info(res.msgInfo);
+        this.props.toast.info('暂无数据');
       }
     })
   }
@@ -178,6 +134,8 @@ export default class loan_fenqi_page extends PureComponent {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
         this.setState({
           usageList: res.data
+        }, () => {
+          this.selectLoanUsage(this.state.usageList[0])
         })
       } else {
         this.props.toast.info(res.msgInfo);
@@ -187,12 +145,15 @@ export default class loan_fenqi_page extends PureComponent {
 
   //查询合同列表
   queryContractList = () => {
+    const { loanMoney, resaveBankCardAgrNo, loanDate } = this.state
+    const { perdCnt, perdLth, perdUnit } = loanDate
     this.props.$fetch.post(API.contractList, {
-      loanAmount: '',
-      periodLth: '',
-      periodCount: '',
-      periodUnit: '',
-      agrNo: ''
+      loanAmount: loanMoney,
+      periodLth: perdLth,
+      periodCount: perdCnt,
+      periodUnit: perdUnit,
+      prodType: '11',
+      wtdwTyp: "0"
     }).then(res => {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
         this.setState({
@@ -225,14 +186,16 @@ export default class loan_fenqi_page extends PureComponent {
   //查询还款计划
   queryRepayPlan = () => {
     this.props.$fetch.post(API.repayPlan, {
-      billPrcpAmt: "20000",
-      cardId: "PRC00609120190514135632947441938",
-      prdId: "1284",
+      billPrcpAmt: this.state.loanMoney,
+      prdId: "",
       wtdwTyp: "0"
     }).then((res) => {
+      console.log(res)
       if (res.msgCode === 'PTM0000' && res.data !== null) {
         this.setState({
           repayPlanList: res.data.perd
+        }, () => {
+          this.openModal('plan')
         });
       } else {
         this.props.toast.info(res.msgInfo);
@@ -249,6 +212,7 @@ export default class loan_fenqi_page extends PureComponent {
       // state: { nouseCoupon: true }
     });
   }
+
   // 选择银行卡
   selectBankCard = (agrNo, cardType) => {
     const { prodData } = this.state;
@@ -267,6 +231,31 @@ export default class loan_fenqi_page extends PureComponent {
       pathname: '/mine/bind_save_page',
       search: `?cardType=${cardType}`
     });
+  }
+
+  //选择用途
+  selectLoanUsage = (item) => {
+    this.setState({
+      loanUsage: item.loanUsage
+    }, () => {
+      this.closeModal('usage')
+    })
+  }
+
+  openModal = (type) => {
+    this.setState({
+      [type + 'Modal']: true
+    })
+  }
+
+  closeModal = (type) => {
+    this.setState({
+      [type + 'Modal']: false
+    })
+  }
+
+  readContract = (idx) => {
+    // console.log('id',idx)
   }
 
   //暂存页面反显的数据
@@ -294,33 +283,6 @@ export default class loan_fenqi_page extends PureComponent {
     }
     store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage })
     store.setCashFenQiCardArr([resaveCard, payCard])
-  }
-
-  //选择用途
-  selectLoanUsage = (item) => {
-    this.setState({
-      loanUsage: item.label
-    }, () => {
-      this.closeModal('usage')
-    })
-  }
-
-  toggleTag = (item) => {
-    this.setState({
-      loanDate: item.value
-    })
-  }
-
-  openModal = (type) => {
-    this.setState({
-      [type + 'Modal']: true
-    })
-  }
-
-  closeModal = (type) => {
-    this.setState({
-      [type + 'Modal']: false
-    })
   }
 
   //验证信息是否填写完整
@@ -375,6 +337,7 @@ export default class loan_fenqi_page extends PureComponent {
     const {
       usageModal,
       loanUsage,
+      usageList,
       tipModal,
       loanDate,
       loanMoney,
@@ -385,7 +348,8 @@ export default class loan_fenqi_page extends PureComponent {
       payBankCardAgrNo,
       payBankCardLastNo,
       payBankCardName,
-      perdRateList
+      perdRateList,
+      contractList
     } = this.state
     return (
       <div className={style.fenqi_page}>
@@ -396,10 +360,8 @@ export default class loan_fenqi_page extends PureComponent {
               <InputItem
                 className={style.billInput}
                 placeholder={this.placeholderText()}
-                // disabled={false}
                 clear={true}
                 type="number"
-                // ref={(el) => (this.inputRef = el)}
                 value={loanMoney}
                 onChange={(v) => {
                   this.setState({
@@ -408,7 +370,9 @@ export default class loan_fenqi_page extends PureComponent {
                   })
                 }}
                 onBlur={(v) => {
-                  loanMoney && console.log('请求期限')
+                  if (loanMoney) {
+                    this.queryProdInfo()
+                  }
                   // handleInputBlur();
                 }}
               // moneykeyboardwrapprops={moneyKeyboardWrapProps}
@@ -422,15 +386,18 @@ export default class loan_fenqi_page extends PureComponent {
               <li className={style.listItem} style={{ alignItems: 'flex-start' }}>
                 <label>借多久</label>
                 <span className={style.tagListWrap}>
-                  {tagList.map(item => (
+                  {perdRateList.map(item => (
                     <span
-                      key={item.value}
-                      className={[style.tagButton, loanDate === item.value && style.tagButtonActive].join(' ')}
+                      key={item.perdCnt}
+                      className={[style.tagButton, loanDate.perdCnt === item.perdCnt && style.tagButtonActive].join(' ')}
                       onClick={() => {
-                        this.toggleTag(item);
+                        this.setState({
+                          loanDate: item
+                        })
+                        
                       }}
                     >
-                      {item.name}
+                      {item.perdPageNm}
                     </span>
                   ))}
                 </span>
@@ -446,13 +413,12 @@ export default class loan_fenqi_page extends PureComponent {
                 <label>还款计划</label>
                 <span>
                   {
-                    loanMoney && loanDate ? <span className={style.listValue} onClick={() => { this.openModal('plan') }}>
+                    loanMoney && loanDate ? <span className={style.listValue} onClick={this.queryRepayPlan}>
                       点击查看
                     <Icon type="right" className={style.icon} />
                     </span> : <span className={style.greyText}>暂无</span>
                   }
                 </span>
-
               </li>
               {
                 loanMoney && loanDate && <li className={style.listItem}>
@@ -482,9 +448,13 @@ export default class loan_fenqi_page extends PureComponent {
                 }
               </li>
             </ul>
-            <p className={style.protocolLink}>
-              点击“签约借款”，表示同意 <em>《借款协议》《金融服务协议》 《补充协议》《代扣协议》《借款确认书》《个人信息授权书》《担保协议》</em>
-            </p>
+            {
+              contractList.length > 0 && <p className={style.protocolLink}>
+                点击“签约借款”，表示同意 {
+                  contractList.map((item, idx) => <em onClick={() => { this.readContract(idx) }}>《{item.contractMdlName}》</em>)
+                }
+              </p>
+            }
           </div>
         </div>
         <div className={style.buttonWrap}>
@@ -505,7 +475,7 @@ export default class loan_fenqi_page extends PureComponent {
               usageList.map(item => (
                 <li className={style.modalItem} key={item.value} onClick={() => {
                   this.selectLoanUsage(item)
-                }}>{item.label}</li>
+                }}>{item.loanUsage}</li>
               ))
             }
           </ul>
