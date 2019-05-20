@@ -114,9 +114,10 @@ export default class credit_list_page extends PureComponent {
 	goToNewMoXie = () => {
         const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
         if (queryData.autId) {
-          store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
+          // store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
+          store.setMoxieBackUrl(`/home/crawl_progress_page`);
         } else {
-          store.setMoxieBackUrl('/mine/credit_list_page');
+          store.setMoxieBackUrl('/home/crawl_progress_page');
         }
 
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });

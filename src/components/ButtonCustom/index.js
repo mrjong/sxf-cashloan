@@ -20,7 +20,8 @@ export default class ButtonCustom extends React.PureComponent {
   static defaultProps = {
     className: '',
     active: false,
-    children: '按钮',
+    // children: '按钮',
+    children: '添加需要还款信用卡',
     onClick: () => {
       
     },

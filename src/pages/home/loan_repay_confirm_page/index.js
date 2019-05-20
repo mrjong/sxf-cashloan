@@ -232,7 +232,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	goMoxieBankList = () => {
 		store.setToggleMoxieCard(true);
-		store.setMoxieBackUrl(`/home/loan_repay_confirm_page`);
+		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
 	// 代还其他信用卡点击事件

@@ -284,7 +284,8 @@ export default class home_page extends PureComponent {
 		if (newCodes.length === 3) {
 			this.setState({
 				percentSatus: '3',
-				showDiv: '50000'
+				showDiv: '50000',
+				percentBtnText: data.btnText
 			});
 			return;
 		}
@@ -328,7 +329,7 @@ export default class home_page extends PureComponent {
 					percentBtnText: data.btnText
 				});
 				break;
-			case 3: // 新用户，信用卡未授权
+			case 3: // 显示信用卡爬取进度
 				this.setState({
 					percentData: '',
 					percentSatus: '',
@@ -366,7 +367,7 @@ export default class home_page extends PureComponent {
 					this.props.toast.info('当前信用卡已过期，请重新导入');
 					setTimeout(() => {
 						// 跳新版魔蝎
-						store.setMoxieBackUrl('/home/home');
+						store.setMoxieBackUrl('/home/crawl_progress_page');
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
@@ -439,7 +440,8 @@ export default class home_page extends PureComponent {
 
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
-		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
+		store.setMoxieBackUrl(`/home/crawl_progress_page`);
+		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 
@@ -647,7 +649,7 @@ export default class home_page extends PureComponent {
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
 				// 跳新版魔蝎
-				store.setMoxieBackUrl('/home/home');
+				store.setMoxieBackUrl('/home/crawl_progress_page');
 				this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 			});
 			return;
@@ -827,7 +829,6 @@ export default class home_page extends PureComponent {
 	getDCDisPlay = () => {
 		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText } = this.state;
 		let componentsDisplay = null;
-		console.log(showDiv);
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
@@ -837,6 +838,7 @@ export default class home_page extends PureComponent {
 								demoTip: true
 							}}
 							handleClick={this.handleApply}
+							btnText={percentBtnText}
 						/>
 					);
 					break;
