@@ -7,15 +7,8 @@ import plus from './img/plus.png';
 import bank from './img/bank.png';
 import MoneyCard from '../MoneyCard';
 import WhiteCard from '../WhiteCard';
-const showData = {
-	title: '还到-基础版',
-	bankNo: '',
-	subtitle: '最高可申请还款金(元)',
-	money: '50000.00',
-	desc: '还款日：8888/88/88',
-	btnText: '添加需要还款信用卡',
-	color: 'rgba(248, 164, 65, 1)'
-};
+import { isMPOS } from 'utils/common';
+
 export default class carouselHome extends React.Component {
 	constructor(props) {
 		super(props);
@@ -53,7 +46,16 @@ export default class carouselHome extends React.Component {
 	};
 
 	render() {
-		const { children, handleClick, ...restProps } = this.props;
+		const { children, handleClick, btnText, ...restProps } = this.props;
+		const showData = {
+			title: '还到-基础版',
+			bankNo: '',
+			subtitle: '最高可申请还款金(元)',
+			money: '50000.00',
+			desc: '还款日：8888/88/88',
+			btnText: !isMPOS() && btnText ? btnText : '添加需要还款信用卡' , // mpos中展示文案不同
+			color: 'rgba(248, 164, 65, 1)'
+		};
 		return (
 			<div className="carouselHome">
 				<Carousel {...restProps}>

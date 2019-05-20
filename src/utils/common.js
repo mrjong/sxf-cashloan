@@ -42,3 +42,5 @@ export const setH5Channel = (channel) => {
 		store.setH5Channel('OTHER');
 	}
 };
+
+

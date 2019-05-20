@@ -3,8 +3,9 @@
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
-	color: #868e9e;
+  color: #868e9e;
 }
+
 .desc {
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
@@ -17,5 +18,17 @@
 	line-height: 1.4;
 	font-family: "DIN Condensed";
 	font-weight: normal;
-	color: #121c32;
+  color: #121c32;
+  &.small{
+    font-size: 60px;
+  }
+}
+.box{
+  display: flex;
+  .flex2{
+    flex: 2;
+  }
+  .flex1{
+    flex: 1;
+  }
 }

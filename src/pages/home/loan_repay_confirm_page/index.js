@@ -20,7 +20,8 @@ const API = {
 	qryPerdRate: '/bill/prod',
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
+	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
+	mxoieCardList: '/moxie/mxoieCardList/C',
 };
 const tagList = [
 	{
@@ -232,7 +233,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	goMoxieBankList = () => {
 		store.setToggleMoxieCard(true);
-		store.setMoxieBackUrl(`/home/loan_repay_confirm_page`);
+		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
 	// 代还其他信用卡点击事件
@@ -665,7 +666,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</div>
 							{
 								cardCount && cardCount > 1 &&
-								<div className={style.cardNumBox}>
+								<div className={style.cardNumBox} onClick={() => {this.repayForOtherBank(cardCount)}}>
 									<span>{cardCount}张可更换</span>
 									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
 								</div>
@@ -739,14 +740,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 							}}
 						/>
 					</div>
-					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(1)}}>
+					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(1, 'click')}}>
 						<span className={style.name}>最低还卡</span>
 						<div className={style.value}>
 							<span>{minApplAmt}元</span>
 							<i className={ repayType===tagList[1] ? `${style.unChecked} ${style.checked}` : style.unChecked } />
 						</div>
 					</div>
-					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(2)}}>
+					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(2, 'click')}}>
 						<span className={style.name}>全额还卡</span>
 						<div className={style.value}>
 							<span>{maxApplAmt}元</span>

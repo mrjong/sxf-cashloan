@@ -3,22 +3,57 @@
 	min-height: 380px;
 }
 .box_container {
-  -webkit-animation-name: fadeIn;
-  -webkit-animation-duration: .3s;
-  -webkit-animation-iteration-count: 1;
-  -webkit-animation-delay: .3s;
+	-webkit-animation-name: fadeIn;
+	-webkit-animation-duration: .3s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-delay: .3s;
 	position: relative;
 	margin: 30px 40px;
-  background: #fff;
-  box-sizing: border-box;
+	background: #fff;
+	box-sizing: border-box;
 	border-radius: 16px;
 	box-shadow: 0 8px 32px 0 rgba(9, 36, 96, 0.18);
+}
+.demoTip {
+	width: 112px;
+	right: 50px;
+	top: 0;
+	word-wrap: break-word;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	height: 97px;
+	background-size: 112px 97px;
+	background-repeat: no-repeat;
+	background-image: url(./img/demoTip.png);
+}
+.topTip {
+	width: 350px;
+	right: 0;
+	top: 0;
+	word-wrap: break-word;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	height: 42px;
+	background-size: 350px 42px;
+	background-repeat: no-repeat;
+	background-image: url(./img/topTip.png);
+	color: #fff;
+	font-weight: 400;
+	font-family: 'PingFangSC-Regular';
+	font-size: 22px;
 }
 .title {
 	font-size: 32px;
 	font-family: 'PingFangSC-Semibold';
 	font-weight: 600;
 	color: rgba(18, 28, 50, 1);
+	span {
+		color: #868e9e;
+		font-size: 22px;
+		font-weight: 600;
+	}
 }
 .subtitle {
 	margin-top: 30px;

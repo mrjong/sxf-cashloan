@@ -33,7 +33,7 @@ export default class crawl_progress_page extends PureComponent {
   }
 
   componentWillUnmount() {
-
+    store.removeAutId2();
   }
   render() {
     let {  } = this.state
@@ -63,7 +63,10 @@ export default class crawl_progress_page extends PureComponent {
         >
           <div className={style.popover_inner}>信用卡账单导入失败</div>
         </Popover>
-        <div className={style.button}>选择导入其他银行卡</div>
+        <div className={style.button} onClick={()=>{
+          store.setMoxieBackUrl('/home/home');
+          this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+        }}>选择导入其他银行卡</div>
         <div style={{textAlign: 'center'}} onClick={()=>{
           this.props.history.replace('/home/crawl_progress_page')
         }}>尝试再次导入</div>

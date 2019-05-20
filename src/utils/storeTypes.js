@@ -72,5 +72,8 @@ export const storeTypes = {
 	ChkPhotoBackNew: 'ChkPhotoBackNew', // 活体直接返回
 	RealNameNextStep: 'RealNameNextStep', // 需要下一步
 	CashFenQiStoreData: 'CashFenQiStoreData', //现金分期反显的数据
-	CashFenQiCardArr: 'CashFenQiCardArr' //现金分期收、还卡数组
+	CashFenQiCardArr: 'CashFenQiCardArr', //现金分期收、还卡数组
+	HomeAutId: 'HomeAutId', // 首页的autId
+	AutId: 'AutId', // 接口调用需要的AutId
+	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
 };

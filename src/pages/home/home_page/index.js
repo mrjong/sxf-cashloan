@@ -13,7 +13,7 @@ import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
-import { CarouselHome, BlackCard, MsgTip, MoneyCard, ProgressBlock, HomeModal } from './components';
+import { CarouselHome, BlackCard, MsgTip, MoneyCard, ProgressBlock, HomeModal, CardProgress } from './components';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -30,13 +30,21 @@ const API = {
 	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
-	indexshowType: '/index/showType' // 首页现金分期基本信息查询接口
+	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
+	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
+  CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 };
 let token = '';
 let tokenFromStorage = '';
 
 let timer;
 let timerOut;
+
+//隔5秒调取接口相关变量
+let timerPercent ;  //计时器
+let timers = 0;   //时间秒级
+
+
 @createForm()
 @fetch.inject()
 @setBackGround('#fff')
@@ -74,7 +82,9 @@ export default class home_page extends PureComponent {
 				// 逾期弹框中的数据
 			},
 			overDueModalFlag: false, // 信用施压弹框标识
-			blackData: {}
+			blackData: {},
+			cardStatus: '',
+      		statusSecond: '' //每隔5秒状态
 		};
 	}
 
@@ -95,6 +105,14 @@ export default class home_page extends PureComponent {
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
+		// 从进度页面返回不删除AutId
+		if (!store.getAutId2()) {
+			store.removeAutId()
+		}
+
+		// 隔5秒调取相关变量
+    timers = 0;
+    timerPercent = null;
 	}
 	componentWillUnmount() {
 		// 离开首页的时候 将 是否打开过底部弹框标志恢复
@@ -104,6 +122,9 @@ export default class home_page extends PureComponent {
 		}
 		if (timerOut) {
 			clearTimeout(timerOut);
+		}
+		if (timerPercent) {
+			clearInterval(timerPercent)
 		}
 	}
 	// 移除store
@@ -163,27 +184,6 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 判断是否参与拒就赔活动
-	isInvoking_jjp = () => {
-		return new Promise((resolve, reject) => {
-			this.props.$fetch
-				.get(API.checkJoin)
-				.then((res) => {
-					// 0:不弹出  1:弹出
-					if (res && res.msgCode === 'JJP0002') {
-						// 用户没参加过拒就赔活动
-						// 如果是活动来的，
-						resolve('1');
-					} else {
-						resolve('0');
-					}
-				})
-				.catch((err) => {
-					reject();
-				});
-		});
-	};
-
 	// 判断是否授信
 	credit_extension = () => {
 		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
@@ -205,25 +205,7 @@ export default class home_page extends PureComponent {
 				this.setState({
 					overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 				});
-				let isInvoking_jjp = await this.isInvoking_jjp();
-				if (res.data.flag === '01') {
-					// 拒就赔活动弹框
-					if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
-						this.setState(
-							{
-								isShowActivityModal: true,
-								modalType: 'jujiupei'
-							},
-							() => {
-								store.setShowActivityModal(true);
-							}
-						);
-					}
-
-					this.credit_extension_not();
-				} else {
-					this.requestGetUsrInfo(isInvoking_jjp);
-				}
+				this.requestGetUsrInfo();
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -240,6 +222,7 @@ export default class home_page extends PureComponent {
 
 	// 首页进度
 	getPercent = async () => {
+		const { usrIndexInfo } = this.state;
 		let data = await getNextStr({ $props: this.props, needReturn: true });
 		console.log(data.btnText);
 		this.calculatePercent(data);
@@ -282,7 +265,8 @@ export default class home_page extends PureComponent {
 		if (newCodes.length === 3) {
 			this.setState({
 				percentSatus: '3',
-				showDiv: '50000'
+				showDiv: '50000',
+				percentBtnText: demo[0]=== '0' || demo[0]=== '4' ? '' : data.btnText
 			});
 			return;
 		}
@@ -326,16 +310,65 @@ export default class home_page extends PureComponent {
 					percentBtnText: data.btnText
 				});
 				break;
-			case 3: // 新用户，信用卡未授权
-				this.setState({
-					percentData: '',
-					percentSatus: '',
-					showDiv: ''
-				});
+			case 3: // 显示信用卡爬取进度
+				// 获取爬取卡的进度
+				if (store.getAutId()) {
+					this.goProgress();
+				} else {
+					this.setState({
+						showDiv: 'applyCredict'
+					});
+				}
 				break;
 			default:
 		}
 	};
+
+	// 请求信用卡数量
+	requestCredCardCount = (type) => { // 爬取卡进度页特殊处理
+		const { usrIndexInfo } = this.state;
+		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+		// 埋点-首页-点击代还其他信用卡
+		// buriedPointEvent(home.repayOtherCredit);
+		this.props.$fetch
+		.post(API.CRED_CARD_COUNT)
+		.then((result) => {
+			if (result && result.msgCode === 'PTM0000') {
+				if (type && type === 'progress') {
+					if(result.data.count > 1){
+						this.props.history.replace(`/mine/credit_list_page?autId=${autId}`)
+					} else {
+						this.props.history.replace('/home/loan_repay_confirm_page')
+					}
+				} else {
+					this.repayForOtherBank(result.data.count);
+				}
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		})
+		.catch((err) => {
+			this.props.toast.info(err.message);
+		});
+	};
+
+	// 代还其他信用卡点击事件
+	repayForOtherBank = (count) => {
+		if (count > 1) {
+			store.setToggleMoxieCard(true);
+			const { usrIndexInfo } = this.state;
+			this.props.history.push({
+				pathname: '/mine/credit_list_page',
+				search: `?autId=${usrIndexInfo.indexSts=== 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
+			});
+		} else {
+			//   this.goToMoXie();
+			this.goToNewMoXie();
+		}
+	};
+
+
+
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { usrIndexInfo, isNeedExamine } = this.state;
@@ -364,7 +397,7 @@ export default class home_page extends PureComponent {
 					this.props.toast.info('当前信用卡已过期，请重新导入');
 					setTimeout(() => {
 						// 跳新版魔蝎
-						store.setMoxieBackUrl('/home/home');
+						store.setMoxieBackUrl('/home/crawl_progress_page');
 						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
@@ -372,7 +405,7 @@ export default class home_page extends PureComponent {
 						!isCanLoan({
 							$props: this.props,
 							usrIndexInfo: this.state.usrIndexInfo,
-							goMoxieBankList: this.child.requestCredCardCount
+							goMoxieBankList: this.requestCredCardCount
 						})
 					) {
 						return;
@@ -437,7 +470,8 @@ export default class home_page extends PureComponent {
 
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
-		store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
+		store.setMoxieBackUrl(`/home/crawl_progress_page`);
+		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 
@@ -538,8 +572,7 @@ export default class home_page extends PureComponent {
 		if (this.state.showDiv === '50000') {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
-    }
-    console.log('2222222222')
+		}
 		getNextStr({
 			$props: this.props,
 			callBack: (resBackMsg) => {
@@ -551,17 +584,10 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 未提交授信
-	credit_extension_not = async () => {
-		let data = await getNextStr({ $props: this.props, needReturn: true });
-		store.setCreditExtensionNot(true);
-		this.calculatePercent(data, true);
-	};
 	// 获取首页信息
-	requestGetUsrInfo = (isInvoking_jjp) => {
+	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.getPercent();
 				// if (result.data.indexSts === 'LN0003') {
 				// 	this.getPercent();
 				// }
@@ -569,19 +595,29 @@ export default class home_page extends PureComponent {
 					// 获取是否需要人审
 					this.getExamineSts();
 				}
-				this.setState({
-					usrIndexInfo: result.data.indexData
-						? result.data
-						: Object.assign({}, result.data, { indexData: {} })
-				});
-				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+				this.setState(
+					{
+						usrIndexInfo: result.data.indexData
+							? result.data
+							: Object.assign({}, result.data, { indexData: {} })
+					},
+					() => {
+						this.getPercent();
+					}
+				);
+				if (
+					isMPOS() &&
+					!store.getShowActivityModal() &&
+					Cookie.get('currentTime') !== new Date().getDate().toString()
+				) {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							modalType: 'jujiupei'
+							modalType: 'brand'
 						},
 						() => {
 							store.setShowActivityModal(true);
+							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
 				} else if (
@@ -625,25 +661,6 @@ export default class home_page extends PureComponent {
 				this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
 			});
 		}
-	};
-
-	showCreditModal = () => {
-		const { usrIndexInfo } = this.state;
-		const { cardBillSts } = usrIndexInfo.indexData;
-		if (cardBillSts === '00') {
-			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
-			return;
-		} else if (cardBillSts === '02') {
-			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-				// 跳新版魔蝎
-				store.setMoxieBackUrl('/home/home');
-				this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-			});
-			return;
-		}
-		this.setState({
-			isShowCreditModal: true
-		});
 	};
 
 	// 神策用户绑定
@@ -724,16 +741,15 @@ export default class home_page extends PureComponent {
 						if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
 							this.handleSmartClick();
 						} else {
-							this.child.requestCredCardCount();
+							this.requestCredCardCount();
 						}
 						break;
 					default:
 						console.log('关闭弹窗');
 				}
 				break;
-			case 'jjp': // 拒就赔弹框按钮
-				buriedPointEvent(activity.jjpHomeModalClick);
-				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
+			case 'brand': // 品牌活动弹框按钮
+				buriedPointEvent(activity.brandHomeModalClick);
 				break;
 			default:
 				break;
@@ -814,13 +830,52 @@ export default class home_page extends PureComponent {
 	// *****************************代偿****************************** //
 
 	getDCDisPlay = () => {
-		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText } = this.state;
+		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText, cardStatus } = this.state;
 		let componentsDisplay = null;
-		console.log(showDiv);
+		const { indexData = {} } = usrIndexInfo;
+		const {
+			cardBillAmt,
+			cardBillSts,
+			billRemainAmt,
+			cardBillDt,
+			indexSts,
+			bankName,
+			bankNo,
+			cardNoHid
+		} = indexData;
+		const bankNm = !bankName ? '****' : bankName;
+		const cardCode = !cardNoHid ? '****' : cardNoHid.slice(-4);
+		const bankCode = !bankNo ? '' : bankNo;
+		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
+		let cardBillAmtData = '';
+		if (cardBillSts === '02') {
+			cardBillAmtData = '待更新';
+		} else {
+			// 优先取剩余应还，否则去账单金额
+			if (billRemainAmt && Number(billRemainAmt) > 0) {
+				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2);
+			} else if (!cardBillAmt && cardBillAmt !== 0) {
+				cardBillAmtData = '----.--';
+			} else if (cardBillSts === '01' && (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))) {
+				cardBillAmtData = '已结清';
+			} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
+				cardBillAmtData = '已结清';
+			} else {
+				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+			}
+		}
 		if (showDiv) {
 			switch (showDiv) {
-        case '50000':
-					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
+				case '50000':
+					componentsDisplay = (
+						<CarouselHome
+							showData={{
+								demoTip: true
+							}}
+							handleClick={this.handleApply}
+							btnText={percentBtnText}
+						/>
+					);
 					break;
 				case 'circle':
 					componentsDisplay = (
@@ -835,16 +890,52 @@ export default class home_page extends PureComponent {
 						/>
 					);
 					break;
-
+				case 'progress':
+					componentsDisplay = (
+						<CardProgress
+							showData={{
+								title: '还到-基础版',
+								btnText: '查看进度'
+							}}
+							handleClick={() => { this.handleProgressApply(cardStatus) }}
+							cardStatus={cardStatus}
+						/>
+					);
+					break;
+				case 'applyCredict':
+					componentsDisplay = (
+						<MoneyCard
+							handleClick={() => {
+								this.handleSmartClick()
+							}}
+							showData={{
+								btnText: '申请借钱还信用卡',
+								title: bankNm,
+								subtitle: '信用卡剩余应还金额(元)',
+								money: cardBillAmtData,
+								desc: `还款日：${cardBillDtData}`,
+								cardNoHid: cardCode,
+								bankNo: bankCode,
+							}}
+						/>
+					);
+					break;
 				default:
 					break;
 			}
 		} else {
-			switch (usrIndexInfo.indexSts) {
+			switch (indexSts) {
 				case 'LN0001': // 新用户，信用卡未授权
-					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
+					componentsDisplay = (
+						<CarouselHome
+							showData={{
+								demoTip: true
+							}}
+							handleClick={this.handleApply}
+						/>
+					);
 				case 'LN0002': // 账单爬取中
-				case 'LN0003': // 账单爬取成功
+				// case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
 				case 'LN0005': // 暂无代还资格
 				case 'LN0006': // 风控审核通过
@@ -861,10 +952,62 @@ export default class home_page extends PureComponent {
 		return componentsDisplay;
 	};
 
+	// 点击不同进度状态，跳转页面
+	handleProgressApply = (sts) => { // ，01：爬取中，02：爬取成功，03：爬取失败
+		switch (sts) {
+			case '01':
+				this.props.history.push('/home/crawl_progress_page');
+			break;
+			case '02':
+				store.removeAutId();
+				this.requestCredCardCount('progress');
+			break;
+			case '03':
+				store.removeAutId();
+				this.props.history.push('/home/crawl_fail_page');
+			break;
+			default:
+			break;
+		}
+	}
+
+  // 每隔5秒调取接口
+  goProgress() {
+    timerPercent = setInterval(()=>{
+      timers = timers + 5
+      if(timers > 29){
+        clearInterval(timerPercent)
+        return
+      }
+      this.queryUsrInfo()
+    }, 5000)
+  }
+
+  	//查询用户相关信息
+  	queryUsrInfo = () => {
+		const autId = store.getAutId();
+		this.props.$fetch
+		.get(API.CHECK_CARD_AUTH+autId)
+		.then((res) => {
+			if (res.msgCode === "PTM0000") {
+				if (res.data === '02' || res.data === '03') {
+					clearInterval(timerPercent);
+				}
+				this.setState({
+					cardStatus: res.data,
+					showDiv: 'progress'
+				});
+			} else {
+				res.msgInfo && this.props.toast.info(res.msgInfo)
+			}
+		}).catch((err) => {
+			err.msgInfo && this.props.toast.info(err.msgInfo)
+		});
+	};
+
 	render() {
 		const {
 			bannerList,
-			usrIndexInfo,
 			percent,
 			showAgreement,
 			billOverDue,
@@ -873,8 +1016,7 @@ export default class home_page extends PureComponent {
 			overDueInf,
 			overDueModalFlag,
 			modalType,
-			blackData,
-			usrCashIndexInfo
+			blackData
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
@@ -882,7 +1024,14 @@ export default class home_page extends PureComponent {
 			componentsBlackCard = <BlackCard blackData={blackData} />;
 		}
 		componentsDisplay = this.getFQDisPlay() ||
-		this.getDCDisPlay() || <CarouselHome handleClick={this.handleNeedLogin} />;
+		this.getDCDisPlay() || (
+			<CarouselHome
+				showData={{
+					demoTip: true
+				}}
+				handleClick={this.handleNeedLogin}
+			/>
+		);
 
 		return (
 			<div className={style.home_new_page}>

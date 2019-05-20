@@ -52,8 +52,13 @@ let initDialog = (errMsg) => {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
-							history.go(-2);
-							obj.close();
+							if (location.pathname === '/home/loan_repay_confirm_page') { // 借钱还信用卡页面物理返回到首页
+								obj.close();
+								window.ReactRouterHistory.push('/home/home'); 
+							} else {
+								history.go(-2);
+								obj.close();
+							}
 						}
 					} else {
 						obj.close();
@@ -80,11 +85,6 @@ if (window.history && window.history.pushState) {
 			let backFlag = store.getBackFlag();
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
-				return;
-			}
-			// 拒就赔活动落地页返回到首页
-			if (store.getSuccessPay() && window.location.pathname === '/order/repayment_succ_page') {
-				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
@@ -147,6 +147,20 @@ if (window.history && window.history.pushState) {
 
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+
+			// 进度页面物理返回
+			if (window.location.pathname === '/home/crawl_progress_page') {
+				let mainAutId = store.getAutId();
+				store.setAutId2(mainAutId);
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+
+			// 进度失败页面物理返回
+			if (window.location.pathname === '/home/crawl_fail_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}

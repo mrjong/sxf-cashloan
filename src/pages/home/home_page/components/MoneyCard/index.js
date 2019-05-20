@@ -11,12 +11,30 @@ export default class MoneyCard extends React.PureComponent {
 		const { showData, handleClick } = this.props;
 		return (
 			<WhiteCard showData={showData} handleClick={handleClick}>
-				<div className={style.subtitle}>
-					<i />
-					{showData.subtitle}
-				</div>
-				<div className={style.money} style={{ color: showData.color && showData.color }}>
-					{showData.money ? Number(showData.money).toFixed(2) : '0.00'}
+				<div className={style.box}>
+					<div className={style.flex1}>
+						<div className={style.subtitle}>
+							<i />
+							{showData.subtitle}
+						</div>
+						<div className={style.money} style={{ color: showData.color && showData.color }}>
+							{showData.money ? showData.money : '----.--'}
+						</div>
+					</div>
+					{showData.money2 ? (
+						<div className={style.flex1}>
+							<div className={style.subtitle}>
+								<i />
+								{showData.subtitle2}
+							</div>
+							<div
+								className={[ style.money, style.small ].join(' ')}
+								style={{ color: showData.color && showData.color }}
+							>
+								{showData.money2}
+							</div>
+						</div>
+					) : null}
 				</div>
 				<div className={style.desc}>{showData.desc}</div>
 			</WhiteCard>
