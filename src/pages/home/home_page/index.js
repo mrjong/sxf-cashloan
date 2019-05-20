@@ -32,12 +32,19 @@ const API = {
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
+  CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 };
 let token = '';
 let tokenFromStorage = '';
 
 let timer;
 let timerOut;
+
+//隔5秒调取接口相关变量
+let timerPercent ;  //计时器
+let timers = 0;   //时间秒级
+
+
 @createForm()
 @fetch.inject()
 @setBackGround('#fff')
@@ -77,6 +84,7 @@ export default class home_page extends PureComponent {
 			overDueModalFlag: false, // 信用施压弹框标识
 			blackData: {},
 			cardStatus: '',
+      statusSecond: '' //每隔5秒状态
 		};
 	}
 
@@ -101,6 +109,10 @@ export default class home_page extends PureComponent {
 		if (!store.getAutId2()) {
 			store.removeAutId()
 		}
+
+		// 隔5秒调取相关变量
+    timers = 0;
+    timerPercent = null;
 	}
 	componentWillUnmount() {
 		// 离开首页的时候 将 是否打开过底部弹框标志恢复
@@ -358,7 +370,7 @@ export default class home_page extends PureComponent {
 	};
 
 
-	
+
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { usrIndexInfo, isNeedExamine } = this.state;
@@ -984,6 +996,42 @@ export default class home_page extends PureComponent {
 			break;
 		}
 	}
+
+  // 每隔5秒调取接口
+  goProgress() {
+    timerPercent = setInterval(()=>{
+      timers = timers + 5
+      if(timers > 29){
+        clearInterval(timerPercent)
+        this.setState({ statusSecond: '失败' })
+        return
+      }
+      this.queryUsrInfo()
+    }, 5000)
+  }
+
+  //查询用户相关信息
+  queryUsrInfo = () => {
+    const { usrIndexInfo } = this.state;
+    const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+    this.props.$fetch
+      .get(API.CHECK_CARD_AUTH+ autId)
+      .then((res) => {
+          if (res.msgCode === "PTM0000") {
+            if (res.data === '02') {
+              clearInterval(timerPercent)
+              this.setState({ statusSecond: '成功' })
+            } else if(res.data === '03'){
+              this.setState({ statusSecond: '失败' })
+            }
+          } else {
+            res.msgInfo && this.props.toast.info(res.msgInfo)
+          }
+        }
+      ).catch((err) => {
+      err.msgInfo && this.props.toast.info(err.msgInfo)
+    });
+  };
 
 	render() {
 		const {

@@ -13,7 +13,8 @@ const API = {
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 };
 let timerPercent ;
-let timer ;
+let timers = 0;
+let arr = [];
 let data ;
 @fetch.inject()
 @setBackGround('#fff')
@@ -22,15 +23,15 @@ export default class crawl_progress_page extends PureComponent {
     super(props);
     this.state = {
       percent: 0,   //百分比
-      time: 0,    //时间分秒
       isFail: false,   //失败显露标志
       autId : store.getAutId ? store.getAutId() : ''
     };
   }
 
   componentWillMount() {
+    timers = 0;
+    arr = [];
     timerPercent = null;
-    timer = null;
     data =  [
       { desc: '正在建立安全链接', status: '连接中', percent: 24, speed: 200},
       { desc: '正在登陆银行', status: '登录中', percent: 49, speed: 400 },
@@ -41,28 +42,24 @@ export default class crawl_progress_page extends PureComponent {
 
   componentDidMount() {
     this.goProgress(20)
-    this.goTime()
     this.queryUsrInfo()
   }
-  goTime(){
-    timer = setInterval(()=>{
-      this.setState({
-        time: this.state.time + 1
-      },()=>{
-        if(this.state.time> 29){
-          clearInterval(timerPercent)
-          clearInterval(timer)
-          this.setState({ isFail: true })
-          data[3].status = '失败'
-        } else if (this.state.time % 5 === 0) {
-          this.queryUsrInfo()
-        }
-      })
-    }, 1000)
-  }
   goProgress(number, cb) {
+    let temp = true
     timerPercent = setInterval(()=>{
       let { percent } = this.state
+      if(!temp){
+        timers = number + timers
+      }
+      if(timers > 30000){
+        clearInterval(timerPercent)
+        this.setState({ isFail: true })
+        data[3].status = '失败'
+      } else if (parseInt(timers / 5000) >= 1 && arr.indexOf(parseInt(timers / 5000)) === -1) {
+        this.queryUsrInfo()
+        arr.push(parseInt(timers / 5000))
+      }
+      temp = false
       this.setState({
         percent: percent ===100 ? percent : percent + 1,
       },()=>{
@@ -93,22 +90,22 @@ export default class crawl_progress_page extends PureComponent {
         if (res.msgCode === "PTM0000") {
           if (res.data === '02') {
             clearInterval(timerPercent)
-            clearInterval(timer)
             this.goProgress(10,()=>{
               this.requestCredCardCount()
             })
-          } else if(res.jumpFlag === '03'){
+          } else if(res.data === '03'){
             this.props.history.replace('/home/crawl_fail_page')
           }
         } else {
+          clearInterval(timerPercent)
+          this.goProgress(15)
           res.msgInfo && this.props.toast.info(res.msgInfo)
         }
       }
     ).catch((err) => {
-      this.state.retryCount--;
-      this.setState({
-        showAgainUpdateBtn: true
-      });
+      clearInterval(timerPercent)
+      this.goProgress(15)
+      err.msgInfo && this.props.toast.info(err.msgInfo)
     });
   };
 
@@ -146,7 +143,6 @@ export default class crawl_progress_page extends PureComponent {
   }
 
   componentWillUnmount() {
-    clearInterval(timer);
     clearInterval(timerPercent);
   }
   render() {
