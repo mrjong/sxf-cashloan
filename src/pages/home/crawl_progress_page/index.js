@@ -69,7 +69,7 @@ export default class crawl_progress_page extends PureComponent {
           })
           if(percent > 99) {
             clearInterval(timerPercent)
-            setTimeout(()=>{ cb() }, 300)
+            cb()
           }
           return
         }
@@ -98,13 +98,19 @@ export default class crawl_progress_page extends PureComponent {
           }
         } else {
           clearInterval(timerPercent)
-          this.goProgress(15)
+          this.goProgress(10, ()=>{
+            data[3].status = '失败'
+            this.setState({ isFail: true })
+          })
           res.msgInfo && this.props.toast.info(res.msgInfo)
         }
       }
     ).catch((err) => {
       clearInterval(timerPercent)
-      this.goProgress(15)
+      this.goProgress(10, ()=>{
+        data[3].status = '失败'
+        this.setState({ isFail: true })
+      })
       err.msgInfo && this.props.toast.info(err.msgInfo)
     });
   };
