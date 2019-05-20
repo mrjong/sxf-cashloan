@@ -64,14 +64,15 @@ class Dialog extends Component {
       <div className={style.dialog_container}>
         <div className={style.weui_dialog}>
           <div className={style.content_box}>
-            <div>即将获得<span className={style.money}> 50000 </span>元，确定放弃吗？</div>
-            <div className={style.btn_container}>
+            {/* <div>即将获得<span className={style.money}> 50000 </span>元，确定放弃吗？</div> */}
+            <div>即将获得50000元，确定放弃吗？</div>
+          </div>
+          <div className={style.btn_container}>
             <div onClick={() => { this.requestClose(false) }} className={`${style.btn_one} ${style.btn_one_new}`}>
                 放弃
-                    </div>
-              <div onClick={() => { this.requestClose(true) }} className={`${style.btn_two} ${style.btn_two_new}`}>
-                再等等
-                    </div>
+            </div>
+            <div onClick={() => { this.requestClose(true) }} className={`${style.btn_two} ${style.btn_two_new}`}>
+              再等等
             </div>
           </div>
         </div>
