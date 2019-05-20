@@ -34,10 +34,12 @@
         font-weight: 500;
         height: 100px;
         align-items: center;
+        color: #121C32;
     }
     .btn_one{
         position: relative;
         flex: 1;
+        color: #868E9E;
         // border: 1PX solid #4DA6FF;
         // color: #4DA6FF;
         // margin-right: 30px;
@@ -47,8 +49,11 @@
             opacity: 0.5;
         }
         &::after {
-            @include setRightLine(#F0F1F5);
-            left: 0;
+            @include setLeftLine(#F0F1F5);
+            left: auto;
+            height: 80px;
+            right: 0;
+            top: -10px;
         }
     }
     // .btn_one_new{
