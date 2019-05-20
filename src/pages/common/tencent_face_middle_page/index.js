@@ -49,19 +49,21 @@ export default class tencent_face_middle_page extends Component {
 					fail_cause: ''
 				});
 				// 新用户直接提交
-				if (store.getCreditExtensionNot() && !store.getRealNameNextStep()) {
+				if (!store.getRealNameNextStep()) {
 					handleClickConfirm(this.props, {
 						...store.getLoanAspirationHome()
           });
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
-				} else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()==='home') {
-					store.removeRealNameNextStep();
-					store.removeIdChkPhotoBack();
-					getNextStr({
-						$props: this.props
-					});
-				} else if (store.getIdChkPhotoBack()) {
+        }
+        //  else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()==='home') {
+				// 	store.removeRealNameNextStep();
+				// 	store.removeIdChkPhotoBack();
+				// 	getNextStr({
+				// 		$props: this.props
+				// 	});
+        // }
+        else if (store.getIdChkPhotoBack()) {
 					history.go(Number(store.getIdChkPhotoBack()));
           store.removeIdChkPhotoBack();
 					store.removeRealNameNextStep();
