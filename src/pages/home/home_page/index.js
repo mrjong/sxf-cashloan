@@ -13,7 +13,7 @@ import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
-import { CarouselHome, BlackCard, MsgTip, MoneyCard, ProgressBlock, HomeModal, CardProgress } from './components';
+import { CarouselHome, BlackCard, MsgTip, MoneyCard, ProgressBlock, HomeModal, CardProgress, AddCards } from './components';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -231,7 +231,6 @@ export default class home_page extends PureComponent {
 	// 进度计算
 	calculatePercent = (data, isshow) => {
 		const { usrIndexInfo } = this.state;
-		const indexData = usrIndexInfo && usrIndexInfo.indexData;
 		let codes = [];
 		let demo = data.codes;
 		// let demo = '2224'
@@ -315,7 +314,7 @@ export default class home_page extends PureComponent {
 				// 获取爬取卡的进度
 				if (store.getAutId()) {
 					this.goProgress();
-				} else if (indexData && indexData.indexSts && indexData.indexSts === 'LN0003') {
+				} else if (usrIndexInfo && usrIndexInfo.indexSts && usrIndexInfo.indexSts === 'LN0003') {
 					this.setState({
 						showDiv: 'applyCredict'
 					});
@@ -335,8 +334,6 @@ export default class home_page extends PureComponent {
 	requestCredCardCount = (type) => { // 爬取卡进度页特殊处理
 		const { usrIndexInfo } = this.state;
 		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
-		// 埋点-首页-点击代还其他信用卡
-		// buriedPointEvent(home.repayOtherCredit);
 		this.props.$fetch
 		.post(API.CRED_CARD_COUNT)
 		.then((result) => {
@@ -1099,6 +1096,30 @@ export default class home_page extends PureComponent {
 		});
 	};
 
+	componentsAddCards = () => {
+		const { usrIndexInfo } = this.state;
+		let componentsAddCards = null;
+		const { indexSts } = usrIndexInfo;
+		switch (indexSts) {
+			case 'LN0003': // 新用户，信用卡未授权
+			componentsAddCards = (
+					<AddCards
+						handleClick={
+							() => { 
+								// 埋点-首页-点击代还其他信用卡
+								buriedPointEvent(home.repayOtherCredit);
+								this.goToNewMoXie();
+							}
+						}
+					/>
+				);
+			break;
+			default:
+			break;
+		}
+		return componentsAddCards;
+	}
+
 	render() {
 		const {
 			bannerList,
@@ -1135,6 +1156,7 @@ export default class home_page extends PureComponent {
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				)}
+				{this.componentsAddCards()}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
