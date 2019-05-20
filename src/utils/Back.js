@@ -52,8 +52,13 @@ let initDialog = (errMsg) => {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
-							history.go(-2);
-							obj.close();
+							if (location.pathname === '/home/loan_repay_confirm_page') { // 借钱还信用卡页面物理返回到首页
+								obj.close();
+								window.ReactRouterHistory.push('/home/home'); 
+							} else {
+								history.go(-2);
+								obj.close();
+							}
 						}
 					} else {
 						obj.close();
@@ -150,6 +155,12 @@ if (window.history && window.history.pushState) {
 			if (window.location.pathname === '/home/crawl_progress_page') {
 				let mainAutId = store.getAutId();
 				store.setAutId2(mainAutId);
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+
+			// 进度失败页面物理返回
+			if (window.location.pathname === '/home/crawl_fail_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}

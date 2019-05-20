@@ -498,24 +498,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack, autId }
 				}
 				return;
 			}
-			// 请求信用卡数量
-			$props.$fetch
-				.post(API.CRED_CARD_COUNT)
-				.then((result) => {
-					if (result && result.msgCode === 'PTM0000') {
-						if (result.data.count > 1) {
-							store.setToggleMoxieCard(true);
-							$props.history.push(`/mine/credit_list_page?autId=${autId ? autId : store.getHomeAutId()}`);
-						} else {
-							$props.history.push('/home/loan_repay_confirm_page');
-						}
-					} else {
-						$props.history.push('/home/loan_repay_confirm_page');
-					}
-				})
-				.catch((err) => {
-					$props.history.push('/home/loan_repay_confirm_page');
-				});
+			// 信用卡返回跳转到进度页
+			$props.history.push('/home/crawl_progress_page');
 		}
 	} else {
 		Toast.info(res.msgInfo);

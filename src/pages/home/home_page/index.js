@@ -220,9 +220,7 @@ export default class home_page extends PureComponent {
 	// 首页进度
 	getPercent = async () => {
 		const { usrIndexInfo } = this.state;
-		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
-		store.setHomeAutId(autId);
-		let data = await getNextStr({ $props: this.props, needReturn: true, autId });
+		let data = await getNextStr({ $props: this.props, needReturn: true });
 		console.log(data.btnText);
 		this.calculatePercent(data);
 	};
@@ -265,7 +263,7 @@ export default class home_page extends PureComponent {
 			this.setState({
 				percentSatus: '3',
 				showDiv: '50000',
-				percentBtnText: data.btnText
+				percentBtnText: demo[0]=== '0' || demo[0]=== '4' ? '' : data.btnText
 			});
 			return;
 		}
@@ -575,13 +573,8 @@ export default class home_page extends PureComponent {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
 		}
-		console.log('2222222222');
-		const { usrIndexInfo } = this.state;
-		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
-		store.setHomeAutId(autId);
 		getNextStr({
 			$props: this.props,
-			autId,
 			callBack: (resBackMsg) => {
 				if (this.state.showDiv === 'circle') {
 					buriedPointEvent(home.homeContinueApply, {

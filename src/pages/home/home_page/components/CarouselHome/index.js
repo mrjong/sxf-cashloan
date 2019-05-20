@@ -53,7 +53,7 @@ export default class carouselHome extends React.Component {
 			subtitle: '最高可申请还款金(元)',
 			money: '50000.00',
 			desc: '还款日：8888/88/88',
-			btnText: isMPOS() ? '添加需要还款信用卡' : btnText, // mpos中展示文案不同
+			btnText: !isMPOS() && btnText ? btnText : '添加需要还款信用卡' , // mpos中展示文案不同
 			color: 'rgba(248, 164, 65, 1)'
 		};
 		return (
