@@ -831,7 +831,14 @@ export default class home_page extends PureComponent {
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
-					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
+					componentsDisplay = (
+						<CarouselHome
+							showData={{
+								demoTip: true
+							}}
+							handleClick={this.handleApply}
+						/>
+					);
 					break;
 				case 'circle':
 					componentsDisplay = (
@@ -853,7 +860,14 @@ export default class home_page extends PureComponent {
 		} else {
 			switch (usrIndexInfo.indexSts) {
 				case 'LN0001': // 新用户，信用卡未授权
-					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
+					componentsDisplay = (
+						<CarouselHome
+							showData={{
+								demoTip: true
+							}}
+							handleClick={this.handleApply}
+						/>
+					);
 				case 'LN0002': // 账单爬取中
 				case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
@@ -891,7 +905,14 @@ export default class home_page extends PureComponent {
 			componentsBlackCard = <BlackCard blackData={blackData} />;
 		}
 		componentsDisplay = this.getFQDisPlay() ||
-		this.getDCDisPlay() || <CarouselHome handleClick={this.handleNeedLogin} />;
+		this.getDCDisPlay() || (
+			<CarouselHome
+				showData={{
+					demoTip: true
+				}}
+				handleClick={this.handleNeedLogin}
+			/>
+		);
 
 		return (
 			<div className={style.home_new_page}>
