@@ -240,7 +240,9 @@ export default class home_page extends PureComponent {
 
 	// 首页进度
 	getPercent = async () => {
-		let data = await getNextStr({ $props: this.props, needReturn: true });
+		const { usrIndexInfo } = this.state;
+		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+		let data = await getNextStr({ $props: this.props, needReturn: true, autId });
 		console.log(data.btnText);
 		this.calculatePercent(data);
 	};
@@ -538,10 +540,13 @@ export default class home_page extends PureComponent {
 		if (this.state.showDiv === '50000') {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
-    }
-    console.log('2222222222')
+		}
+		console.log('2222222222');
+		const { usrIndexInfo } = this.state;
+		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
 		getNextStr({
 			$props: this.props,
+			autId,
 			callBack: (resBackMsg) => {
 				if (this.state.showDiv === 'circle') {
 					buriedPointEvent(home.homeContinueApply, {
@@ -553,7 +558,9 @@ export default class home_page extends PureComponent {
 	};
 	// 未提交授信
 	credit_extension_not = async () => {
-		let data = await getNextStr({ $props: this.props, needReturn: true });
+		const { usrIndexInfo } = this.state;
+		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+		let data = await getNextStr({ $props: this.props, needReturn: true, autId });
 		store.setCreditExtensionNot(true);
 		this.calculatePercent(data, true);
 	};
@@ -561,7 +568,6 @@ export default class home_page extends PureComponent {
 	requestGetUsrInfo = (isInvoking_jjp) => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.getPercent();
 				// if (result.data.indexSts === 'LN0003') {
 				// 	this.getPercent();
 				// }
@@ -569,11 +575,16 @@ export default class home_page extends PureComponent {
 					// 获取是否需要人审
 					this.getExamineSts();
 				}
-				this.setState({
-					usrIndexInfo: result.data.indexData
-						? result.data
-						: Object.assign({}, result.data, { indexData: {} })
-				});
+				this.setState(
+					{
+						usrIndexInfo: result.data.indexData
+							? result.data
+							: Object.assign({}, result.data, { indexData: {} })
+					},
+					() => {
+						this.getPercent();
+					}
+				);
 				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
 					this.setState(
 						{
@@ -819,7 +830,7 @@ export default class home_page extends PureComponent {
 		console.log(showDiv);
 		if (showDiv) {
 			switch (showDiv) {
-        case '50000':
+				case '50000':
 					componentsDisplay = <CarouselHome handleClick={this.handleApply} />;
 					break;
 				case 'circle':
@@ -864,7 +875,6 @@ export default class home_page extends PureComponent {
 	render() {
 		const {
 			bannerList,
-			usrIndexInfo,
 			percent,
 			showAgreement,
 			billOverDue,
@@ -873,8 +883,7 @@ export default class home_page extends PureComponent {
 			overDueInf,
 			overDueModalFlag,
 			modalType,
-			blackData,
-			usrCashIndexInfo
+			blackData
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
