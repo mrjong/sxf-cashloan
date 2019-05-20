@@ -230,7 +230,8 @@ export default class home_page extends PureComponent {
 
 	// 进度计算
 	calculatePercent = (data, isshow) => {
-		console.log(data, '0000000000');
+		const { usrIndexInfo } = this.state;
+		const indexData = usrIndexInfo && usrIndexInfo.indexData;
 		let codes = [];
 		let demo = data.codes;
 		// let demo = '2224'
@@ -314,9 +315,15 @@ export default class home_page extends PureComponent {
 				// 获取爬取卡的进度
 				if (store.getAutId()) {
 					this.goProgress();
-				} else {
+				} else if (indexData && indexData.indexSts && indexData.indexSts === 'LN0003') {
 					this.setState({
 						showDiv: 'applyCredict'
+					});
+				} else {
+					this.setState({
+						showDiv: '',
+						percentData: '',
+						percentSatus: '',
 					});
 				}
 				break;
@@ -832,13 +839,12 @@ export default class home_page extends PureComponent {
 	getDCDisPlay = () => {
 		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText, cardStatus } = this.state;
 		let componentsDisplay = null;
-		const { indexData = {} } = usrIndexInfo;
+		const { indexData = {}, indexSts } = usrIndexInfo;
 		const {
 			cardBillAmt,
 			cardBillSts,
 			billRemainAmt,
 			cardBillDt,
-			indexSts,
 			bankName,
 			bankNo,
 			cardNoHid
@@ -934,14 +940,102 @@ export default class home_page extends PureComponent {
 							handleClick={this.handleApply}
 						/>
 					);
-				case 'LN0002': // 账单爬取中
+				break;
+				// case 'LN0002': // 账单爬取中
 				// case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
+					componentsDisplay = (
+						<MoneyCard
+							handleClick={() => {
+								this.handleSmartClick()
+							}}
+							showData={{
+								btnText: '代偿资格审核中',
+								title: bankNm,
+								subtitle: '信用卡剩余应还金额(元)',
+								money: cardBillAmtData,
+								desc: `还款日：${cardBillDtData}`,
+								cardNoHid: cardCode,
+								bankNo: bankCode,
+							}}
+						/>
+					);
+				break;
 				case 'LN0005': // 暂无代还资格
+					componentsDisplay = (
+						<MoneyCard
+							handleClick={() => {
+								// this.handleSmartClick()
+							}}
+							showData={{
+								btnText: '暂无借款资格',
+								title: bankNm,
+								subtitle: '信用卡剩余应还金额(元)',
+								money: cardBillAmtData,
+								desc: `还款日：${cardBillDtData}`,
+								cardNoHid: cardCode,
+								bankNo: bankCode,
+								topTip: `${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+							}}
+						/>
+					)
+				break;
 				case 'LN0006': // 风控审核通过
-				case 'LN0007': // 放款中
 				case 'LN0008': // 放款失败
+					componentsDisplay = (
+						<MoneyCard
+							handleClick={() => {
+								this.handleSmartClick()
+							}}
+							showData={{
+								btnText: '立即签约借款',
+								title: bankNm,
+								subtitle: '信用卡剩余应还金额(元)',
+								money: cardBillAmtData,
+								desc: `还款日：${cardBillDtData}`,
+								cardNoHid: cardCode,
+								bankNo: bankCode,
+								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`
+							}}
+						/>
+					);
+				break;
+				case 'LN0007': // 放款中
+					componentsDisplay = (
+						<MoneyCard
+							handleClick={() => {
+								this.handleSmartClick()
+							}}
+							showData={{
+								btnText: '放款准备中',
+								title: bankNm,
+								subtitle: '信用卡剩余应还金额(元)',
+								money: cardBillAmtData,
+								desc: `还款日：${cardBillDtData}`,
+								cardNoHid: cardCode,
+								bankNo: bankCode,
+							}}
+						/>
+					);
+				break;
 				case 'LN0009': // 放款成功
+					componentsDisplay = (
+						<MoneyCard
+							handleClick={() => {
+								this.handleSmartClick()
+							}}
+							showData={{
+								btnText: '查看代偿账单',
+								title: bankNm,
+								subtitle: '信用卡剩余应还金额(元)',
+								money: cardBillAmtData,
+								desc: `还款日：${cardBillDtData}`,
+								cardNoHid: cardCode,
+								bankNo: bankCode,
+							}}
+						/>
+					);
+				break;
 				case 'LN0010': // 账单爬取失败/老用户
 					<CarouselHome />;
 					break;
