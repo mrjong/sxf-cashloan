@@ -23,11 +23,14 @@ const API = {
   procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 }
 let entryFrom = '';
+let repayType = ''
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
   constructor(props) {
     super(props);
-    entryFrom = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).entryFrom;
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true })
+    entryFrom = queryData.entryFrom;
+    repayType = queryData.repayType
     this.state = {
       billDesc: {},
       showModal: false,
@@ -506,7 +509,8 @@ export default class order_detail_page extends PureComponent {
         cardAgrNo,
         thisRepTotAmt: billDesc.waitRepAmt,
         repayStsw: repayStswStr,
-        usrBusCnl: 'WEB'
+        usrBusCnl: 'WEB',
+        prodType: repayType==='fenqi'?'11':'01'
       }
     } else {
       sendParams = {
@@ -515,7 +519,8 @@ export default class order_detail_page extends PureComponent {
         thisRepTotAmt: this.state.sendMoney,
         repayStsw: billDesc.billPerdStsw,
         coupId: couponId,
-        usrBusCnl: 'WEB'
+        usrBusCnl: 'WEB',
+        prodType: repayType==='fenqi'?'11':'01'
       }
     }
     //全局设置还款传递后台的参数

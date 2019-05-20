@@ -684,7 +684,7 @@ export default class home_page extends PureComponent {
 				store.setBillNo(usrCashIndexInfo.indexData.billNo);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home'
+					search: '?entryFrom=home&repayType=fenqi'
 				});
 				break;
 

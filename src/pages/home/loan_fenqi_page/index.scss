@@ -91,7 +91,6 @@
 
   .tagListWrap {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     width: 490px;
   }
@@ -109,6 +108,10 @@
     border: 1px solid #868e9e;
     box-sizing: border-box;
     margin-bottom: 20px;
+    margin-right: 35px;
+    &:nth-child(3n+3) {
+      margin-right: 0;
+    }
   }
 
   .tagButtonActive {
