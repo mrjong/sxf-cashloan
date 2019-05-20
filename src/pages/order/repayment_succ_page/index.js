@@ -76,7 +76,7 @@ export default class repayment_succ_page extends PureComponent {
 					<div className={styles.modal_tip_content}>
 						<div
 							onClick={() => {
-								this.backHome(order.openNow, true);
+								this.backHome(order.openNow);
 							}}
 							className={styles.modal_btn}
 						/>

@@ -127,6 +127,9 @@ const activity = {
 	jjpMposConfirmBtn: `${prefix}_ACTIVITY_JUJIUPEI_MPOS_CONFIRM`, //拒就赔mpos中弹框确定按钮点击
 	jjpWxConfirmBtn: `${prefix}_ACTIVITY_JUJIUPEI_WX_CONFIRM`, //拒就赔微信中弹框确定按钮点击
 	jjpHomeModalClick: `${prefix}_ACTIVITY_JUJIUPEI_HOME_MODAL_CLICK`, //拒就赔首页弹框按钮点击
+	brandEntry: `${prefix}_ACTIVITY_BRAND_ENTRY`, // 品牌活动入口
+	brandBtnClick: `${prefix}_ACTIVITY_BRAND_TIYAN_BTN`, // 品牌活动还到体验按钮点击
+	brandHomeModalClick: `${prefix}_ACTIVITY_BRAND_HOME_MODAL_CLICK`, // 品牌活动首页弹框开启生涯模式按钮点击
 };
 
 const moxie_bank_list = {

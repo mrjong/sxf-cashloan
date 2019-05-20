@@ -3,7 +3,7 @@ import { Modal } from 'antd-mobile';
 import styles from './index.scss';
 import huodongTootip3 from '../../assets/images/home/huodongTootip3.png';
 import huodongTootipBtn3 from '../../assets/images/home/huodongTootip_btn3.png';
-import jujiupei from '../../assets/images/home/huodongTootip4.png';
+import brand from '../../assets/images/home/huodongTootip4.png';
 import huodongTootipBtn4 from '../../assets/images/home/huodongTootip_btn4.png';
 
 
@@ -31,7 +31,7 @@ class ActivityModal extends React.Component {
 						<div className={styles.content}>
 							{/* 大图 */}
 							{modalType === 'huodongTootip3' ? <img src={huodongTootip3} /> : null}
-							{modalType === 'jujiupei' ? <img src={jujiupei} /> : null}
+							{modalType === 'brand' ? <img src={brand} /> : null}
 							{/* 按钮 */}
 							{modalType === 'huodongTootip3' ? (
 								<img
@@ -42,12 +42,12 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
-							{modalType === 'jujiupei' ? (
+							{modalType === 'brand' ? (
 								<img
 									className={styles.huodongTootipBtn4}
 									src={huodongTootipBtn4}
 									onClick={() => {
-										activityModalBtn('jjp');
+										activityModalBtn('brand');
 									}}
 								/>
 							) : null}
