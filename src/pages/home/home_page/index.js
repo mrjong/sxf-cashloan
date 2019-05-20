@@ -84,7 +84,7 @@ export default class home_page extends PureComponent {
 			overDueModalFlag: false, // 信用施压弹框标识
 			blackData: {},
 			cardStatus: '',
-      statusSecond: '' //每隔5秒状态
+      		statusSecond: '' //每隔5秒状态
 		};
 	}
 
@@ -122,6 +122,9 @@ export default class home_page extends PureComponent {
 		}
 		if (timerOut) {
 			clearTimeout(timerOut);
+		}
+		if (timerPercent) {
+			clearInterval(timerPercent)
 		}
 	}
 	// 移除store
@@ -310,10 +313,7 @@ export default class home_page extends PureComponent {
 			case 3: // 显示信用卡爬取进度
 				// 获取爬取卡的进度
 				if (store.getAutId()) {
-					this.setState({
-						cardStatus: '01',
-						showDiv: 'progress'
-					});
+					this.goProgress();
 				} else {
 					this.setState({
 						showDiv: 'applyCredict'
@@ -977,35 +977,33 @@ export default class home_page extends PureComponent {
       timers = timers + 5
       if(timers > 29){
         clearInterval(timerPercent)
-        this.setState({ statusSecond: '失败' })
         return
       }
       this.queryUsrInfo()
     }, 5000)
   }
 
-  //查询用户相关信息
-  queryUsrInfo = () => {
-    const { usrIndexInfo } = this.state;
-    const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
-    this.props.$fetch
-      .get(API.CHECK_CARD_AUTH+ autId)
-      .then((res) => {
-          if (res.msgCode === "PTM0000") {
-            if (res.data === '02') {
-              clearInterval(timerPercent)
-              this.setState({ statusSecond: '成功' })
-            } else if(res.data === '03'){
-              this.setState({ statusSecond: '失败' })
-            }
-          } else {
-            res.msgInfo && this.props.toast.info(res.msgInfo)
-          }
-        }
-      ).catch((err) => {
-      err.msgInfo && this.props.toast.info(err.msgInfo)
-    });
-  };
+  	//查询用户相关信息
+  	queryUsrInfo = () => {
+		const autId = store.getAutId();
+		this.props.$fetch
+		.get(API.CHECK_CARD_AUTH+autId)
+		.then((res) => {
+			if (res.msgCode === "PTM0000") {
+				if (res.data === '02' || res.data === '03') {
+					clearInterval(timerPercent);
+				}
+				this.setState({
+					cardStatus: res.data,
+					showDiv: 'progress'
+				});
+			} else {
+				res.msgInfo && this.props.toast.info(res.msgInfo)
+			}
+		}).catch((err) => {
+			err.msgInfo && this.props.toast.info(err.msgInfo)
+		});
+	};
 
 	render() {
 		const {

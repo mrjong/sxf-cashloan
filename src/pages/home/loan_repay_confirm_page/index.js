@@ -20,7 +20,8 @@ const API = {
 	qryPerdRate: '/bill/prod',
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
+	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
+	mxoieCardList: '/moxie/mxoieCardList/C',
 };
 const tagList = [
 	{
