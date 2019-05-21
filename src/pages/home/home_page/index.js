@@ -34,7 +34,8 @@ const API = {
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
-	mxoieCardList: '/moxie/mxoieCardList/C',
+	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
+	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 };
 let token = '';
 let tokenFromStorage = '';
@@ -92,7 +93,6 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		// this.queryUsrInfo();
 		// 获取token
 		token = Cookie.get('fin-v-card-token');
 		tokenFromStorage = store.getToken();
@@ -104,7 +104,7 @@ export default class home_page extends PureComponent {
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
-		this.indexshowType();
+		this.isRenderCash();
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -153,6 +153,24 @@ export default class home_page extends PureComponent {
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
 	};
+	// 是否渲染现金分期模块
+	isRenderCash = () => {
+		this.props.$fetch.get(API.cashShowSwitch).then((result) => { // result.data.value 0关闭 1开启
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				if (result.data.value === '1') {
+					this.indexshowType();
+				} else {
+					// 代偿流程
+					this.credit_extension();
+				}
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		}).catch((err) => {
+			// 代偿流程
+			this.credit_extension();
+		});
+	}
 	// 首页现金分期基本信息查询接口
 	indexshowType = () => {
 		this.props.$fetch.post(API.indexshowType).then((result) => {
@@ -1232,7 +1250,7 @@ export default class home_page extends PureComponent {
 			blackData
 		} = this.state;
 		let componentsDisplay = null;
-		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
+		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} />;
 		}
@@ -1245,7 +1263,6 @@ export default class home_page extends PureComponent {
 				handleClick={this.handleNeedLogin}
 			/>
 		);
-
 		return (
 			<div className={style.home_new_page}>
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
