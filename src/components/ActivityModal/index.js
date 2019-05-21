@@ -37,7 +37,7 @@ class ActivityModal extends React.Component {
                   style={{width:'3.5rem'}}
 									src={xianjinBtn}
 									onClick={() => {
-										activityModalBtn('xianjin');
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}
@@ -46,13 +46,13 @@ class ActivityModal extends React.Component {
 									className={styles.huodongTootipBtn4}
 									src={huodongTootipBtn4}
 									onClick={() => {
-										activityModalBtn('brand');
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}
 						</div>
 						{/* 关闭按钮 */}
-						<div className={styles.closeBtn} onClick={closeActivityModal} />
+						<div className={styles.closeBtn} onClick={()=>{closeActivityModal(modalType)}} />
 					</div>
 				</div>
 			</Modal>

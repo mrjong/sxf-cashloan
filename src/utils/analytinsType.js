@@ -130,6 +130,8 @@ const activity = {
 	brandEntry: `${prefix}_ACTIVITY_BRAND_ENTRY`, // 品牌活动入口
 	brandBtnClick: `${prefix}_ACTIVITY_BRAND_TIYAN_BTN`, // 品牌活动还到体验按钮点击
 	brandHomeModalClick: `${prefix}_ACTIVITY_BRAND_HOME_MODAL_CLICK`, // 品牌活动首页弹框开启生涯模式按钮点击
+	fenqiHomeModalGoBtn: `${prefix}_FENQI_HOME_MODAL_GO_BTN`,	//现金分期活动弹窗按钮点击
+	fenqiHomeModalClose: `${prefix}_FENQI_HOME_MODAL_CLOSE`, //现金分期活动弹窗关闭
 };
 
 const moxie_bank_list = {
@@ -163,7 +165,8 @@ const loan_fenqi = {
 	clickSubmit: `${prefix}_FENQI_CLICK_SUBMIT`,
 	submitResult: `${prefix}_FENQI_SUBMIT_RESULT`,
 	fenqiGoBack: `${prefix}_FENQI_GO_BACK`,
-	fenqiDownload: `${prefix}_FENQI_DOWNLOAD_CLICK`
+	fenqiDownload: `${prefix}_FENQI_DOWNLOAD_CLICK`,
+	fenqiHomeApplyBtn: `${prefix}_FENQI_HOME_APPLY_BTN`,
 }
 
 export {

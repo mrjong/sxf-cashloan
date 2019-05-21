@@ -23,6 +23,7 @@ import {
 	CardProgress,
 	AddCards
 } from './components';
+import { loan_fenqi } from '../../../utils/analytinsType';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -191,7 +192,7 @@ export default class home_page extends PureComponent {
 					},
 					() => {
 						if (code === '1' && !sessionStorage.getItem(`activity_key_xianjin_${code}`)) {
-							sessionStorage.setItem(`activity_key_xianjin_${code}`);
+							sessionStorage.setItem(`activity_key_xianjin_${code}`,true);
 							this.setState({
 								modalType: 'xianjin',
 								isShowActivityModal: true
@@ -699,6 +700,7 @@ export default class home_page extends PureComponent {
 	handleCN = (code) => {
 		switch (code) {
 			case 'CN0003':
+				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn)
 				this.props.history.push('/home/loan_fenqi');
 				break;
 			case 'CN0004':
@@ -712,7 +714,6 @@ export default class home_page extends PureComponent {
 					search: '?entryFrom=home&transactionType=fenqi'
 				});
 				break;
-
 			default:
 				break;
 		}
@@ -729,10 +730,19 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 关闭活动弹窗
-	closeActivityModal = () => {
+	closeActivityModal = (type) => {
 		this.setState({
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
+		switch (type) {
+			case 'brand': // 品牌活动弹框按钮
+				break;
+			case 'xianjin': // 品牌活动弹框按钮
+				buriedPointEvent(activity.fenqiHomeModalClose);
+				break;
+			default:
+				break;
+		}
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
@@ -742,6 +752,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(activity.brandHomeModalClick);
 				break;
 			case 'xianjin': // 品牌活动弹框按钮
+				buriedPointEvent(activity.fenqiHomeModalGoBtn);
 				this.handleCN(this.state.usrCashIndexInfo.indexSts);
 				break;
 			default:
