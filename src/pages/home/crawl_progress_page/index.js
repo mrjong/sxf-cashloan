@@ -83,7 +83,10 @@ export default class crawl_progress_page extends PureComponent {
   }
   //查询用户相关信息
   queryUsrInfo = () => {
-    let {autId} = this.state
+    let {autId} = this.state;
+    if (!autId) {
+      return;
+    }
     this.props.$fetch
       .get(API.CHECK_CARD_AUTH+ autId)
       .then((res) => {
