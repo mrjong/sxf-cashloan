@@ -8,9 +8,9 @@ export default class MoneyCard extends React.PureComponent {
 		this.state = {};
 	}
 	render() {
-		const { showData, handleClick } = this.props;
+		const { showData, handleClick, noLogoBtn } = this.props;
 		return (
-			<WhiteCard showData={showData} handleClick={handleClick}>
+			<WhiteCard showData={showData} noLogoBtn={noLogoBtn} handleClick={handleClick}>
 				<div className={style.box}>
 					<div className={style.flex1}>
 						<div className={style.subtitle}>

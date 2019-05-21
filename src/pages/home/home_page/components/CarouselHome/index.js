@@ -58,17 +58,24 @@ export default class carouselHome extends React.Component {
 		};
 		return (
 			<div className="carouselHome">
+				{/* <div className={style.title}>
+					<i className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
+					{showData.title}
+				</div> */}
 				<Carousel {...restProps}>
-					<MoneyCard showData={showData} handleClick={handleClick} />
-					<WhiteCard showData={showData} handleClick={handleClick}>
+					<MoneyCard showData={showData} noLogoBtn={false} handleClick={handleClick} />
+					<WhiteCard showData={showData} noLogoBtn={false} handleClick={handleClick}>
 						<img src={bank} className={style.bank} />
 						<div className={style.desc_b}>支持绑定100+信用卡</div>
 					</WhiteCard>
-					<WhiteCard showData={showData} handleClick={handleClick}>
+					<WhiteCard showData={showData} noLogoBtn={false} handleClick={handleClick}>
 						<img src={plus} className={style.plus} />
 						<div className={style.desc_b}>2步操作，极速到账</div>
 					</WhiteCard>
 				</Carousel>
+				{/* <ZButton onClick={handleClick} className={style.submitBtn}>
+					{showData.btnText}
+				</ZButton> */}
 			</div>
 		);
 	}
