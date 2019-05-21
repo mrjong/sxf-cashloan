@@ -9,10 +9,10 @@ export default class DCCard extends React.Component {
 	componentWillMount() {}
 	render() {
 		const { showData, children, handleClick, noLogoBtn } = this.props;
+		console.log(showData,'showData')
 		const iconClass = showData && showData.bankNo ? `bank_ico_${showData.bankNo}` : 'logo_ico';
 		return (
-			<div className={style.box_container}>
-				{showData.demoTip ? <div className={style.demoTip} /> : null}
+			<div className={noLogoBtn ? `${style.box_container} ${style.box_container_spe}`: style.box_container}>
 				{showData.topTip ? <div className={style.topTip}>{showData.topTip}</div> : null}
 				<div className={style.box}>
 					{!noLogoBtn &&
