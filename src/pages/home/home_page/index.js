@@ -787,7 +787,7 @@ export default class home_page extends PureComponent {
 							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
 							title: '还到-Plus',
 							subtitle: '可提现金额(元)',
-							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.curAmt,
+							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.curAmt.toFixed(2),
 							desc: '你信用等级良好'
 						}}
 					/>
@@ -1130,11 +1130,11 @@ export default class home_page extends PureComponent {
 			blackData
 		} = this.state;
 		let componentsDisplay = null;
-		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
+		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} />;
 		}
-		componentsDisplay = this.getDCDisPlay() || (
+		componentsDisplay = this.getDCDisPlay() || this.getFQDisPlay() || (
 			<CarouselHome
 				showData={{
 					demoTip: true

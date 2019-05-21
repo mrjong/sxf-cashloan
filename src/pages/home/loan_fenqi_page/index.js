@@ -218,6 +218,9 @@ export default class loan_fenqi_page extends PureComponent {
     const { couponInfo, loanMoney, loanDate } = this.state
     if (!couponInfo.coupId) return
     this.storeTempData()
+    if (couponInfo && couponInfo.usrCoupNo) {
+			store.setCouponData(couponInfo);
+		} 
     this.props.history.push({
       pathname: '/mine/coupon_page',
       search: `?transactionType=fenqi&price=${loanMoney}&perCont=${loanDate.perdUnit === 'M' ? loanDate.perdLth : 1}`,
