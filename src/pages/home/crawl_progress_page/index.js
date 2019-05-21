@@ -88,12 +88,13 @@ export default class crawl_progress_page extends PureComponent {
       .get(API.CHECK_CARD_AUTH+ autId)
       .then((res) => {
         if (res.msgCode === "PTM0000") {
-          if (res.data === '02') {
+          if (res.data.autSts === '02') {
             clearInterval(timerPercent)
+            // data[3].status = '完成'
             this.goProgress(10,()=>{
-              this.requestCredCardCount()
+              this.requestCredCardCount(res.data && res.data.bizId)
             })
-          } else if(res.data === '03'){
+          } else if(res.data.autSts === '03'){
             this.props.history.replace('/home/crawl_fail_page')
           }
         } else {
@@ -115,8 +116,7 @@ export default class crawl_progress_page extends PureComponent {
     });
   };
 
-  requestCredCardCount = () => {
-    let {autId} = this.state
+  requestCredCardCount = (autId) => {
     this.props.$fetch
       .post(API.CRED_CARD_COUNT)
       .then((result) => {
