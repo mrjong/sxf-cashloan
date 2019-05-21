@@ -100,8 +100,8 @@ const bugLog = {
 };
 
 const mpos_service_authorization = {
-  auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
-  auth_page: `${prefix}_MPOS_AUTH_PAGE`,
+	auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
+	auth_page: `${prefix}_MPOS_AUTH_PAGE`,
 };
 
 const activity = {
@@ -149,6 +149,23 @@ const loan_repay_confirm = {
 	select30: `${prefix}_PRODUCT_SELECT_30`
 };
 
+const loan_fenqi = {
+	day30: `${prefix}_FENQI_DATE_DAY_30`,
+	month3: `${prefix}_FENQI_DATE_MONTH_3`,
+	month6: `${prefix}_FENQI_DATE_MONTH_6`,
+	month9: `${prefix}_FENQI_DATE_MONTH_9`,
+	month12: `${prefix}_FENQI_DATE_MONTH_12`,
+	moneyBlur: `${prefix}_FENQI_MONEY_BLUR`,
+	repayPlan: `${prefix}_FENQI_REPAY_PLAN`,
+	resaveCard: `${prefix}_FENQI_RESAVECARD`,
+	payCard: `${prefix}_FENQI_PAYCARD`,
+	contract: `${prefix}_FENQI_CONTRACT`,
+	clickSubmit: `${prefix}_FENQI_CLICK_SUBMIT`,
+	submitResult: `${prefix}_FENQI_SUBMIT_RESULT`,
+	fenqiGoBack: `${prefix}_FENQI_GO_BACK`,
+	fenqiDownload: `${prefix}_FENQI_DOWNLOAD_CLICK`
+}
+
 export {
 	login,
 	home,
@@ -159,6 +176,7 @@ export {
 	mpos_service_authorization,
 	activity,
 	moxie_bank_list,
-    mpos_ioscontrol_page,
-    loan_repay_confirm
+	mpos_ioscontrol_page,
+	loan_repay_confirm,
+	loan_fenqi
 };

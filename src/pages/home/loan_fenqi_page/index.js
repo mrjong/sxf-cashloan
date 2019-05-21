@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Modal, InputItem, Icon } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background'
 import { getDeviceType } from 'utils';
@@ -57,7 +57,7 @@ export default class loan_fenqi_page extends PureComponent {
   componentWillMount() {
     let storeData = store.getCashFenQiStoreData() // 代提交的借款信息
     let cashFenQiCardArr = store.getCashFenQiCardArr() // 收、还款卡信息
-    
+
     if (storeData && cashFenQiCardArr) {
       this.handleDataDisplay(storeData, cashFenQiCardArr)
     } else {
@@ -204,6 +204,7 @@ export default class loan_fenqi_page extends PureComponent {
         this.setState({
           repayPlanInfo: res.data
         }, () => {
+          buriedPointEvent(loan_fenqi.repayPlan)
           this.openModal('plan')
         });
       } else {
@@ -231,6 +232,11 @@ export default class loan_fenqi_page extends PureComponent {
       pathname: '/mine/select_save_page',
       search: `?agrNo=${agrNo}&cardType=${cardType}`
     });
+    if (cardType === 'resave') {
+      buriedPointEvent(loan_fenqi.resaveCard)
+    } else {
+      buriedPointEvent(loan_fenqi.payCard)
+    }
   };
 
   //绑定银行卡
@@ -240,6 +246,32 @@ export default class loan_fenqi_page extends PureComponent {
       pathname: '/mine/bind_save_page',
       search: `?cardType=${cardType}`
     });
+  }
+
+  selectLoanDate = (item) => {
+    if (isFetching) return
+    this.setState({
+      loanDate: item
+    })
+    switch (item.perdCnt) {
+      case 30:
+        buriedPointEvent(loan_fenqi.day30)
+        break;
+      case 3:
+        buriedPointEvent(loan_fenqi.month3)
+        break;
+      case 6:
+        buriedPointEvent(loan_fenqi.month6)
+        break;
+      case 9:
+        buriedPointEvent(loan_fenqi.month9)
+        break;
+      case 12:
+        buriedPointEvent(loan_fenqi.month12)
+        break;
+      default:
+        break;
+    }
   }
 
   //选择用途
@@ -278,6 +310,7 @@ export default class loan_fenqi_page extends PureComponent {
         name: item.contractMdlName
       }
     });
+    buriedPointEvent(loan_fenqi.contract, { contractName: item.contractMdlName })
   }
 
   //暂存页面反显的临时数据
@@ -357,6 +390,7 @@ export default class loan_fenqi_page extends PureComponent {
   //计算待提交的金额
   calcLoanMoney = (m) => {
     if (!m || this.state.loanMoney === m) return
+    buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney: m })
     const { priceMax, priceMin } = this.state
     let loanMoney;
     if (m < priceMin) {
@@ -390,6 +424,10 @@ export default class loan_fenqi_page extends PureComponent {
     //   prdId,
     //   couponInfo)
     if (this.validateFn()) {
+      buriedPointEvent(loan_fenqi.clickSubmit, {
+        loanMoney,
+        loanDate
+      })
       this.props.$fetch.post(API.agentRepay, {
         withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
         withHoldAgrNo: payBankCardAgrNo, // 还款卡号主键
@@ -404,10 +442,21 @@ export default class loan_fenqi_page extends PureComponent {
       }).then(res => {
         if (res.msgCode === 'PTM0000') {
           this.props.history.push('/home/home')
+          buriedPointEvent(loan_fenqi.submitResult, {
+            is_success: true
+          })
         } else {
           this.props.toast.info(res.msgInfo);
+          buriedPointEvent(loan_fenqi.submitResult, {
+            is_success: false,
+            fail_cause: res.msgInfo
+          })
         }
       }).catch(err => {
+        buriedPointEvent(loan_fenqi.submitResult, {
+          is_success: false,
+          fail_cause: err
+        })
         console.log(err)
       })
     }
@@ -478,12 +527,7 @@ export default class loan_fenqi_page extends PureComponent {
                     <span
                       key={item.perdCnt}
                       className={[style.tagButton, loanDate.perdCnt === item.perdCnt && style.tagButtonActive].join(' ')}
-                      onClick={() => {
-                        if (isFetching) return
-                        this.setState({
-                          loanDate: item
-                        })
-                      }}
+                      onClick={() => { this.selectLoanDate(item) }}
                     >
                       {item.perdPageNm}
                     </span>
