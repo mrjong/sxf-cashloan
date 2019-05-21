@@ -748,14 +748,16 @@ export default class home_page extends PureComponent {
 
 	// 神策用户绑定
 	queryUsrSCOpenId = () => {
-		if (!store.getQueryUsrSCOpenId()) {
-			this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-				console.log(res);
-				if (res.msgCode === 'PTM0000') {
-					sa.login(res.data);
-					store.setQueryUsrSCOpenId(res.data);
-				}
-			});
+		if (token && tokenFromStorage) {
+			if (!store.getQueryUsrSCOpenId()) {
+				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
+					console.log(res);
+					if (res.msgCode === 'PTM0000') {
+						sa.login(res.data);
+						store.setQueyUsrSCOpenId(res.data);
+					}
+				});
+			}
 		}
 	};
 	// 获取是否需要人审
