@@ -169,7 +169,7 @@ export default class home_page extends PureComponent {
 				this.setState({
 					blackData: result.data
 				});
-				if (result.data.cashAcBalSts === '1') {
+				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
 					this.usrCashIndexInfo(result.data.cashAcBalSts);
 				} else {
