@@ -45,7 +45,7 @@ const API = {
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
-	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
+	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag' // 是否渲染现金分期
 };
 let token = '';
 let tokenFromStorage = '';
@@ -168,22 +168,26 @@ export default class home_page extends PureComponent {
 	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
-		this.props.$fetch.get(API.cashShowSwitch).then((result) => { // result.data.value 0关闭 1开启
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				if (result.data.value === '1') {
-					this.indexshowType();
+		this.props.$fetch
+			.get(API.cashShowSwitch)
+			.then((result) => {
+				// result.data.value 0关闭 1开启
+				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					if (result.data.value === '1') {
+						this.indexshowType();
+					} else {
+						// 代偿流程
+						this.credit_extension();
+					}
 				} else {
-					// 代偿流程
-					this.credit_extension();
+					this.props.toast.info(result.msgInfo);
 				}
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		}).catch((err) => {
-			// 代偿流程
-			this.credit_extension();
-		});
-	}
+			})
+			.catch((err) => {
+				// 代偿流程
+				this.credit_extension();
+			});
+	};
 	// 首页现金分期基本信息查询接口
 	indexshowType = () => {
 		this.props.$fetch.post(API.indexshowType).then((result) => {
@@ -212,8 +216,8 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						if (code === '1' && !sessionStorage.getItem(`activity_key_xianjin_${code}`)) {
-							sessionStorage.setItem(`activity_key_xianjin_${code}`,true);
+						if (code === '1' && !store.getFQActivity()) {
+							store.setFQActivity(true);
 							this.setState({
 								modalType: 'xianjin',
 								isShowActivityModal: true
@@ -274,7 +278,7 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		let codes = [];
 		let demo = data.codes;
-		console.log(demo,'demo')
+		console.log(demo, 'demo');
 		// let demo = '2224'
 		this.setState({
 			pageCode: demo
@@ -504,27 +508,31 @@ export default class home_page extends PureComponent {
 
 	getMoxieData = (bankCode) => {
 		this.props.$fetch
-		.get(API.mxoieCardList)
-		.then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				if (res.data) {
-					const seleBank = res.data.filter((ele, index, array) => {
-						return ele.code === bankCode;
-					});
-					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-					window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+			.get(API.mxoieCardList)
+			.then((res) => {
+				if (res && res.msgCode === 'PTM0000') {
+					if (res.data) {
+						const seleBank = res.data.filter((ele, index, array) => {
+							return ele.code === bankCode;
+						});
+						const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
+						window.location.href =
+							jumpUrl +
+							`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+								`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
+							)}`;
+					} else {
+						this.props.toast.info('系统开小差，请稍后重试');
+					}
 				} else {
-					this.props.toast.info('系统开小差，请稍后重试');
+					this.props.toast.info(res.msgInfo);
 				}
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		})
-		.catch((err) => {
-			console.log(err);
-			this.props.toast.info('系统开小差，请稍后重试');
-		});
-	}
+			})
+			.catch((err) => {
+				console.log(err);
+				this.props.toast.info('系统开小差，请稍后重试');
+			});
+	};
 
 	jumpToUrl = () => {
 		const { usrIndexInfo, pageCode } = this.state;
@@ -554,7 +562,7 @@ export default class home_page extends PureComponent {
 						$props: this.props,
 						callBack: (resBackMsg) => {},
 						jumpCb: () => {
-							this.props.history.push('/home/loan_repay_confirm_page')
+							this.props.history.push('/home/loan_repay_confirm_page');
 						}
 					});
 					break;
@@ -714,7 +722,7 @@ export default class home_page extends PureComponent {
 				}
 				// 从进度页面返回或者卡是爬取中不删除AutId
 				if (!store.getAutId2() || result.data.indexSts !== 'LN0002') {
-					store.removeAutId()
+					store.removeAutId();
 				}
 				if (result.data.indexSts === 'LN0007') {
 					// 获取是否需要人审
@@ -803,7 +811,7 @@ export default class home_page extends PureComponent {
 	handleCN = (code) => {
 		switch (code) {
 			case 'CN0003':
-				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn)
+				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				this.props.history.push('/home/loan_fenqi');
 				break;
 			case 'CN0004':
@@ -1035,7 +1043,7 @@ export default class home_page extends PureComponent {
 							handleClick={this.handleApply}
 						/>
 					);
-				break;
+					break;
 				case 'LN0002': // 账单爬取中
 					componentsDisplay = (
 						<CardProgress
@@ -1043,11 +1051,13 @@ export default class home_page extends PureComponent {
 								title: '还到-基础版',
 								btnText: '查看进度'
 							}}
-							handleClick={() => { this.handleProgressApply('01') }}
+							handleClick={() => {
+								this.handleProgressApply('01');
+							}}
 							cardStatus={'01'}
 						/>
 					);
-				break;
+					break;
 				// case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
 					componentsDisplay = (
@@ -1153,7 +1163,8 @@ export default class home_page extends PureComponent {
 	};
 
 	// 点击不同进度状态，跳转页面
-	handleProgressApply = (sts) => { // ，01：爬取中，02：爬取成功，03：爬取失败
+	handleProgressApply = (sts) => {
+		// ，01：爬取中，02：爬取成功，03：爬取失败
 		const mainAutId = store.getAutId() ? store.getAutId() : '';
 		switch (sts) {
 			case '00':
@@ -1187,8 +1198,8 @@ export default class home_page extends PureComponent {
 		}, 5000);
 	}
 
-  	//查询用户相关信息
-  	queryUsrInfo = () => {
+	//查询用户相关信息
+	queryUsrInfo = () => {
 		const autId = store.getAutId() ? store.getAutId() : '';
 		this.props.$fetch
 			.get(API.CHECK_CARD_AUTH + autId)
