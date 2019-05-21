@@ -225,7 +225,6 @@ export default class home_page extends PureComponent {
 	getPercent = async () => {
 		const { usrIndexInfo } = this.state;
 		let data = await getNextStr({ $props: this.props, needReturn: true });
-		console.log(data.btnText);
 		this.calculatePercent(data);
 	};
 
@@ -868,6 +867,7 @@ export default class home_page extends PureComponent {
 				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
 			}
 		}
+		// console.log(showDiv, 'showDiv')
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
