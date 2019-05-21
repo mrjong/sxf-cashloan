@@ -414,7 +414,8 @@ export default class home_page extends PureComponent {
 					) {
 						return;
 					}
-					this.showCreditModal();
+					this.props.history.push('/home/loan_repay_confirm_page')
+					// this.showCreditModal();
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
