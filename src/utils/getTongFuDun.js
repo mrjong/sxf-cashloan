@@ -2,7 +2,16 @@ import { guid } from 'utils';
 import { Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 
-const appId = '1479905';
+const { PROJECT_ENV } = process.env;
+console.log(PROJECT_ENV, 'PROJECT_ENV')
+
+let appId = '';
+if (PROJECT_ENV === 'pro' || PROJECT_ENV === 'rc') {
+	appId = '1479905';
+} else {
+	appId = '7811333';
+}
+console.log(appId, 'appId')
 const sessionId = guid();
 const ts = new Date().getTime();
 const TONFUDUN_BAOBEI = '/signup/getUsrRqpInf';

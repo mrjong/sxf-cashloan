@@ -24,6 +24,7 @@ import {
 	AddCards
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
+import linkConf from 'config/link.conf';
 let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -42,7 +43,9 @@ const API = {
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	CHECK_CARD_AUTH: '/auth/checkCardAuth/' // 查询爬取进度
+	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
+	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
+	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 };
 let token = '';
 let tokenFromStorage = '';
@@ -110,7 +113,7 @@ export default class home_page extends PureComponent {
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
-		this.indexshowType();
+		this.isRenderCash();
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -163,6 +166,24 @@ export default class home_page extends PureComponent {
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
 	};
+	// 是否渲染现金分期模块
+	isRenderCash = () => {
+		this.props.$fetch.get(API.cashShowSwitch).then((result) => { // result.data.value 0关闭 1开启
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				if (result.data.value === '1') {
+					this.indexshowType();
+				} else {
+					// 代偿流程
+					this.credit_extension();
+				}
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		}).catch((err) => {
+			// 代偿流程
+			this.credit_extension();
+		});
+	}
 	// 首页现金分期基本信息查询接口
 	indexshowType = () => {
 		this.props.$fetch.post(API.indexshowType).then((result) => {
@@ -253,6 +274,7 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		let codes = [];
 		let demo = data.codes;
+		console.log(demo,'demo')
 		// let demo = '2224'
 		this.setState({
 			pageCode: demo
@@ -430,8 +452,7 @@ export default class home_page extends PureComponent {
 					) {
 						return;
 					}
-					this.props.history.push('/home/loan_repay_confirm_page');
-					// this.showCreditModal();
+					this.jumpToUrl();
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
@@ -479,6 +500,79 @@ export default class home_page extends PureComponent {
 			default:
 				console.log('default');
 		}
+	};
+
+	getMoxieData = (bankCode) => {
+		this.props.$fetch
+		.get(API.mxoieCardList)
+		.then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				if (res.data) {
+					const seleBank = res.data.filter((ele, index, array) => {
+						return ele.code === bankCode;
+					});
+					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
+					window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+				} else {
+					this.props.toast.info('系统开小差，请稍后重试');
+				}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			this.props.toast.info('系统开小差，请稍后重试');
+		});
+	}
+
+	jumpToUrl = () => {
+		const { usrIndexInfo, pageCode } = this.state;
+		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
+		if (cardBillSts === '00') {
+			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+			return;
+		} else if (cardBillSts === '02') {
+			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
+				// 跳银行登录页面
+				this.getMoxieData(bankNo);
+			});
+			return;
+		}
+		idChkPhoto({
+			$props: this.props,
+			type: 'historyCreditExtension',
+			msg: '认证'
+		}).then((res) => {
+			switch (res) {
+				case '1':
+					buriedPointEvent(home.compensationCreditCardConfirm, {
+						pageCode: pageCode
+					});
+					//调用授信接口
+					getNextStr({
+						$props: this.props,
+						callBack: (resBackMsg) => {},
+						jumpCb: () => {
+							this.props.history.push('/home/loan_repay_confirm_page')
+						}
+					});
+					break;
+				case '2':
+					buriedPointEvent(home.compensationCreditCardConfirm, {
+						pageCode: '补充身份证照片'
+					});
+					break;
+				case '3':
+					buriedPointEvent(home.compensationCreditCardConfirm, {
+						pageCode: '补充人脸识别'
+					});
+					store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
+					break;
+				default:
+					break;
+			}
+		});
 	};
 
 	// 设置百分比
@@ -615,6 +709,13 @@ export default class home_page extends PureComponent {
 				// if (result.data.indexSts === 'LN0003') {
 				// 	this.getPercent();
 				// }
+				if (result.data.indexSts === 'LN0002') {
+					store.getAutId() && store.setAutId2(store.getAutId());
+				}
+				// 从进度页面返回或者卡是爬取中不删除AutId
+				if (!store.getAutId2() || result.data.indexSts !== 'LN0002') {
+					store.removeAutId()
+				}
 				if (result.data.indexSts === 'LN0007') {
 					// 获取是否需要人审
 					this.getExamineSts();
@@ -674,14 +775,16 @@ export default class home_page extends PureComponent {
 
 	// 神策用户绑定
 	queryUsrSCOpenId = () => {
-		if (!store.getQueryUsrSCOpenId()) {
-			this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-				console.log(res);
-				if (res.msgCode === 'PTM0000') {
-					sa.login(res.data);
-					store.setQueryUsrSCOpenId(res.data);
-				}
-			});
+		if (token && tokenFromStorage) {
+			if (!store.getQueryUsrSCOpenId()) {
+				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
+					console.log(res);
+					if (res.msgCode === 'PTM0000') {
+						sa.login(res.data);
+						store.setQueyUsrSCOpenId(res.data);
+					}
+				});
+			}
 		}
 	};
 	// 获取是否需要人审
@@ -932,8 +1035,19 @@ export default class home_page extends PureComponent {
 							handleClick={this.handleApply}
 						/>
 					);
-					break;
-				// case 'LN0002': // 账单爬取中
+				break;
+				case 'LN0002': // 账单爬取中
+					componentsDisplay = (
+						<CardProgress
+							showData={{
+								title: '还到-基础版',
+								btnText: '查看进度'
+							}}
+							handleClick={() => { this.handleProgressApply('01') }}
+							cardStatus={'01'}
+						/>
+					);
+				break;
 				// case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
 					componentsDisplay = (
@@ -1039,10 +1153,13 @@ export default class home_page extends PureComponent {
 	};
 
 	// 点击不同进度状态，跳转页面
-	handleProgressApply = (sts) => {
-		// ，01：爬取中，02：爬取成功，03：爬取失败
+	handleProgressApply = (sts) => { // ，01：爬取中，02：爬取成功，03：爬取失败
+		const mainAutId = store.getAutId() ? store.getAutId() : '';
 		switch (sts) {
+			case '00':
 			case '01':
+				const mainAutId = store.getAutId() ? store.getAutId() : '';
+				store.setAutId(mainAutId);
 				this.props.history.push('/home/crawl_progress_page');
 				break;
 			case '02':
@@ -1070,9 +1187,9 @@ export default class home_page extends PureComponent {
 		}, 5000);
 	}
 
-	//查询用户相关信息
-	queryUsrInfo = () => {
-		const autId = store.getAutId();
+  	//查询用户相关信息
+  	queryUsrInfo = () => {
+		const autId = store.getAutId() ? store.getAutId() : '';
 		this.props.$fetch
 			.get(API.CHECK_CARD_AUTH + autId)
 			.then((res) => {
@@ -1130,7 +1247,7 @@ export default class home_page extends PureComponent {
 			blackData
 		} = this.state;
 		let componentsDisplay = null;
-		let componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '3' }} />;
+		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} />;
 		}
@@ -1142,7 +1259,6 @@ export default class home_page extends PureComponent {
 				handleClick={this.handleNeedLogin}
 			/>
 		);
-
 		return (
 			<div className={style.home_new_page}>
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
