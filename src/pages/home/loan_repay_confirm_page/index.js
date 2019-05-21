@@ -13,6 +13,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import ScrollText from 'components/ScrollText';
+import linkConf from 'config/link.conf';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -78,6 +79,30 @@ export default class loan_repay_confirm_page extends PureComponent {
 	componentWillUnmount() {
 		clearInterval(timer);
 		store.removeRealNameNextStep();
+	}
+
+	getMoxieData = (bankCode) => {
+		this.props.$fetch
+		.get(API.mxoieCardList)
+		.then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				if (res.data) {
+					const seleBank = res.data.filter((ele, index, array) => {
+						return ele.code === bankCode;
+					});
+					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
+					window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+				} else {
+					this.props.toast.info('系统开小差，请稍后重试');
+				}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			this.props.toast.info('系统开小差，请稍后重试');
+		});
 	}
 
 	startInterval = () => {
@@ -453,7 +478,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		// 埋点
 		switch (idx) {
 			case 0:
-				buriedPointEvent(home.repaymentIntentionAll, {
+				buriedPointEvent(home.repaymentIntentionPart, {
 					userType: 'newUser'
 				});
 				break;
@@ -463,7 +488,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				});
 				break;
 			case 2:
-				buriedPointEvent(home.repaymentIntentionPart, {
+				buriedPointEvent(home.repaymentIntentionAll, {
 					userType: 'newUser'
 				});
 				break;
@@ -527,14 +552,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	updateBillInf = () => {
 		const { usrIndexInfo } = this.state;
-		const { cardBillSts } = usrIndexInfo.indexData;
+		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
 			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
 			return true;
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-				// 跳新版魔蝎
-				this.goMoxieBankList();
+				// 跳银行登录页面
+				this.getMoxieData(bankNo);
 			});
 			return true;
 		}
