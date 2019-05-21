@@ -57,7 +57,6 @@ export default class login_page extends PureComponent {
 		// 移除cookie
 		Cookie.remove('fin-v-card-token');
 
-		let MessageTag50000 = store.getMessageTag50000();
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
@@ -66,7 +65,6 @@ export default class login_page extends PureComponent {
 		localStorage.clear();
 
 		// 首页弹窗要用的
-		MessageTag50000 && store.setMessageTag50000(MessageTag50000);
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);
 		MessageTagLimitDate && store.setMessageTagLimitDate(MessageTagLimitDate); // 额度有效期标识

@@ -171,7 +171,7 @@ export default class home_page extends PureComponent {
 				});
 				if (result.data.cashAcBalSts === '1') {
 					// 分期流程
-					this.usrCashIndexInfo();
+					this.usrCashIndexInfo(result.data.cashAcBalSts);
 				} else {
 					// 代偿流程
 					this.credit_extension();
@@ -182,12 +182,23 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 现金分期首页接口
-	usrCashIndexInfo = () => {
+	usrCashIndexInfo = (code) => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					usrCashIndexInfo: result.data
-				});
+				this.setState(
+					{
+						usrCashIndexInfo: result.data
+					},
+					() => {
+						if (code === '1' && !sessionStorage.getItem(`activity_key_xianjin_${code}`)) {
+							sessionStorage.setItem(`activity_key_xianjin_${code}`);
+							this.setState({
+								modalType: 'xianjin',
+								isShowActivityModal: true
+							});
+						}
+					}
+				);
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
@@ -729,6 +740,9 @@ export default class home_page extends PureComponent {
 		switch (type) {
 			case 'brand': // 品牌活动弹框按钮
 				buriedPointEvent(activity.brandHomeModalClick);
+				break;
+			case 'xianjin': // 品牌活动弹框按钮
+				this.handleCN(this.state.usrCashIndexInfo.indexSts);
 				break;
 			default:
 				break;
