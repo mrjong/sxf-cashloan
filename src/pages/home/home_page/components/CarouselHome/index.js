@@ -26,7 +26,7 @@ export default class carouselHome extends React.Component {
 
 	static defaultProps = {
 		entryFrom: 'banner',
-		autoplay: false,
+		autoplay: true,
 		infinite: true,
 		cellSpacing: 1,
 		dotStyle: {

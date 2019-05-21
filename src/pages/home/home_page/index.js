@@ -84,7 +84,8 @@ export default class home_page extends PureComponent {
 			overDueModalFlag: false, // 信用施压弹框标识
 			blackData: {},
 			cardStatus: '',
-      		statusSecond: '' //每隔5秒状态
+			statusSecond: '', //每隔5秒状态
+			bizId: '', // 跳转到银行列表的autId
 		};
 	}
 
@@ -332,15 +333,14 @@ export default class home_page extends PureComponent {
 
 	// 请求信用卡数量
 	requestCredCardCount = (type) => { // 爬取卡进度页特殊处理
-		const { usrIndexInfo } = this.state;
-		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
+		const { bizId } = this.state;
 		this.props.$fetch
 		.post(API.CRED_CARD_COUNT)
 		.then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				if (type && type === 'progress') {
 					if(result.data.count > 1){
-						this.props.history.replace(`/mine/credit_list_page?autId=${autId}`)
+						this.props.history.replace(`/mine/credit_list_page?autId=${bizId}`)
 					} else {
 						this.props.history.replace('/home/loan_repay_confirm_page')
 					}
@@ -1085,7 +1085,8 @@ export default class home_page extends PureComponent {
 					clearInterval(timerPercent);
 				}
 				this.setState({
-					cardStatus: res.data,
+					cardStatus: res.data && res.data.autSts,
+					bizId: res.data && res.data.bizId,
 					showDiv: 'progress'
 				});
 			} else {
