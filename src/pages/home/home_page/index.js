@@ -703,7 +703,9 @@ export default class home_page extends PureComponent {
 							: Object.assign({}, result.data, { indexData: {} })
 					},
 					() => {
-						this.getPercent();
+						if (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') {
+							this.getPercent();
+						}
 					}
 				);
 				if (
@@ -1145,7 +1147,11 @@ export default class home_page extends PureComponent {
 					);
 				break;
 				case 'LN0010': // 账单爬取失败/老用户
-					<CarouselHome />;
+					componentsDisplay = (
+						<CarouselHome
+							handleClick={this.handleApply}
+						/>
+					);
 					break;
 				default:
 			}
