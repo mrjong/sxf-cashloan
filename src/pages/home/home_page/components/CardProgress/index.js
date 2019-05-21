@@ -12,6 +12,7 @@ export default class MoneyCard extends React.PureComponent {
 		let statusText = null;
 		let colorStyle = null;
 		switch (cardStatus) {// ，01：爬取中，02：爬取成功，03：爬取失败
+			case '00':
 			case '01':
 				statusText = '导入中...';
 				colorStyle={
