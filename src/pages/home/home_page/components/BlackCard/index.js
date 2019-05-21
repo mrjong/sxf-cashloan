@@ -11,7 +11,7 @@ const demo = [
 	},
 	{
 		cashAcBalSts: '1',
-		title: '可题现金额(元)',
+		title: '可提现金额(元)',
 		desc: '不用操作，更高额度，直接提现至储蓄卡',
 		icon: 'opened',
 		credAmt: '0'

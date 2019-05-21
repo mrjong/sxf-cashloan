@@ -447,7 +447,7 @@ export default class home_page extends PureComponent {
 				console.log('LN0009');
 				store.setBillNo(usrIndexInfo.indexData.billNo);
 				// entryFrom 给打点使用，区分从哪个页面进入订单页的
-				this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
+				this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home&transactionType=DC' });
 				break;
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
 				console.log('LN0010');
@@ -701,7 +701,7 @@ export default class home_page extends PureComponent {
 				store.setBillNo(usrCashIndexInfo.indexData.billNo);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home&repayType=fenqi'
+					search: '?entryFrom=home&transactionType=fenqi'
 				});
 				break;
 
@@ -761,7 +761,7 @@ export default class home_page extends PureComponent {
 		store.setBillNo(usrIndexInfo.indexData.billNo);
 		this.props.history.push({
 			pathname: '/order/order_detail_page',
-			search: '?entryFrom=home'
+			search: '?entryFrom=home&transactionType=DC'
 		});
 	};
 	// *****************************分期****************************** //

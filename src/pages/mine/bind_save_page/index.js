@@ -151,7 +151,7 @@ export default class bind_save_page extends PureComponent {
 	//存储现金分期卡信息
 	storeCashFenQiCardData = (cardDatas) => {
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const cashFenQiCardArr = []
+		const cashFenQiCardArr = store.getCashFenQiCardArr()
 		//现金分期收、还款银行卡信息
 		if (queryData.cardType === 'resave') {
 			cashFenQiCardArr[0] = cardDatas

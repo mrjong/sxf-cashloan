@@ -23,14 +23,14 @@ const API = {
   procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 }
 let entryFrom = '';
-let repayType = ''
+let transactionType = ''
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
   constructor(props) {
     super(props);
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true })
     entryFrom = queryData.entryFrom;
-    repayType = queryData.repayType
+    transactionType = queryData.transactionType
     this.state = {
       billDesc: {},
       showModal: false,
@@ -510,7 +510,7 @@ export default class order_detail_page extends PureComponent {
         thisRepTotAmt: billDesc.waitRepAmt,
         repayStsw: repayStswStr,
         usrBusCnl: 'WEB',
-        prodType: repayType==='fenqi'?'11':'01'
+        prodType: transactionType==='fenqi'?'11':'01'
       }
     } else {
       sendParams = {
@@ -520,7 +520,7 @@ export default class order_detail_page extends PureComponent {
         repayStsw: billDesc.billPerdStsw,
         coupId: couponId,
         usrBusCnl: 'WEB',
-        prodType: repayType==='fenqi'?'11':'01'
+        prodType: transactionType==='fenqi'?'11':'01'
       }
     }
     //全局设置还款传递后台的参数
@@ -630,7 +630,7 @@ export default class order_detail_page extends PureComponent {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
       this.props.history.push({
         pathname: '/mine/coupon_page',
-        search: `?billNo=${billNo}`,
+        search: `?transactionType=${transactionType}&billNo=${billNo}`,
         state: { nouseCoupon: true, cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc },
       });
       return;
@@ -643,7 +643,7 @@ export default class order_detail_page extends PureComponent {
     }
     this.props.history.push({
       pathname: '/mine/coupon_page',
-      search: `?billNo=${billNo}`,
+      search: `?transactionType=${transactionType}&billNo=${billNo}`,
       state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
     });
   }
