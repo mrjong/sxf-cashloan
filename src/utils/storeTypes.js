@@ -7,7 +7,6 @@ export const storeTypes = {
 	CardData: 'CardData', // 跳转路由中的银行卡信息
 	MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
 	MoxieBackUrl2: 'MoxieBackUrl2', // 跳转魔蝎授权页 授权后返回的url
-	VIPFlag: 'VIPFlag', // 会员卡是否购买的flag
 	AuthFlag: 'AuthFlag', // 是否实名认证的flag
 	UserPhone: 'UserPhone', // 用户手机号
 	UserInfo: 'UserInfo', // 用户信息
@@ -50,7 +49,6 @@ export const storeTypes = {
 	BindCardNo: 'BindCardNo', // 回显绑卡卡号
 	BindCardPhone: 'BindCardPhone', // 回显绑卡手机号
 	OrderDetailData: 'OrderDetailData', // 账单详情页数据
-	MessageTag50000: 'MessageTag50000', // 50000
 	MessageTagError: 'MessageTagError', // 错误不显示
 	MessageTagStep: 'MessageTagStep', // 步骤
 	CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识

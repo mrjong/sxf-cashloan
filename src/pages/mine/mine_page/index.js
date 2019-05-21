@@ -98,7 +98,6 @@ export default class mine_page extends PureComponent {
   queryVipCard = () => {
     this.props.$fetch.get(API.VIPCARD).then(result => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-        // store.setVIPFlag(result.data.memSts);
         let inOnwMinute = new Date(new Date().getTime() + 1 * 15 * 1000);
         Cookie.set('VIPFlag', result.data.memSts, {
           expires: inOnwMinute,
