@@ -182,7 +182,7 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 现金分期首页接口
+	// 现金分期首页接口p
 	usrCashIndexInfo = (code) => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
