@@ -30,5 +30,10 @@
   }
   .flex1{
     flex: 1;
-  }
+	}
+	.rightPart{
+		.subtitle, .money {
+			margin-left: 60px;
+		}
+	}
 }

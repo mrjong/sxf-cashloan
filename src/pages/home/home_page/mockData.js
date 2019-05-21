@@ -111,6 +111,7 @@ export default {
 			billPaidAmt: 13256.41,
 			sxfPaidAmt: null,
 			cardBillSts: '01',
+			maxApplAmt: '10900',
 			acOverDt: '20190416'
 		}
 	},

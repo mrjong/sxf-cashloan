@@ -703,7 +703,7 @@ export default class home_page extends PureComponent {
 							: Object.assign({}, result.data, { indexData: {} })
 					},
 					() => {
-						if (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') {
+						if (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003' || result.data.indexSts === 'LN0010') {
 							this.getPercent();
 						}
 					}
@@ -945,7 +945,8 @@ export default class home_page extends PureComponent {
 			cardBillDt,
 			bankName,
 			bankNo,
-			cardNoHid
+			cardNoHid,
+			maxApplAmt
 		} = indexData;
 		const bankNm = !bankName ? '****' : bankName;
 		const cardCode = !cardNoHid ? '****' : cardNoHid.slice(-4);
@@ -1105,7 +1106,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`
+								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
+								subtitle2:'最高可申请还款金(元)',
+                				money2: maxApplAmt ? parseFloat(maxApplAmt, 10).toFixed(2) : '',
 							}}
 						/>
 					);
@@ -1162,7 +1165,6 @@ export default class home_page extends PureComponent {
 
 	// 点击不同进度状态，跳转页面
 	handleProgressApply = (sts) => { // ，01：爬取中，02：爬取成功，03：爬取失败
-		const mainAutId = store.getAutId() ? store.getAutId() : '';
 		switch (sts) {
 			case '00':
 			case '01':
