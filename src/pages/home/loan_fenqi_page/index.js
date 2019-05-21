@@ -57,18 +57,13 @@ export default class loan_fenqi_page extends PureComponent {
   componentWillMount() {
     let storeData = store.getCashFenQiStoreData() // 代提交的借款信息
     let cashFenQiCardArr = store.getCashFenQiCardArr() // 收、还款卡信息
-    let couponInfo = store.getCouponData() //优惠券数据
-    // console.log(storeData)
-    // console.log(cashFenQiCardArr)
-    if (storeData && couponInfo) {
-      Object.assign(storeData.couponInfo, couponInfo)
-    }
-
+    
     if (storeData && cashFenQiCardArr) {
       this.handleDataDisplay(storeData, cashFenQiCardArr)
+    } else {
+      this.queryProdInfo()
+      this.queryLoanUsageList()
     }
-    this.queryProdInfo()
-    this.queryLoanUsageList()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -81,11 +76,6 @@ export default class loan_fenqi_page extends PureComponent {
 
   //查询产品基本信息
   queryProdInfo = () => {
-    let storeData = store.getCashFenQiStoreData() || {}
-    let cashFenQiCardArr = store.getCashFenQiCardArr() || [] // 收、还款卡信息    
-    let tempResaveCard = cashFenQiCardArr[0] || {}
-    let tempPayCard = cashFenQiCardArr[1] || {}
-    let list = []
     this.props.$fetch.get(API.prodInfo, {
       channelType: 'h5'
     }).then(res => {
@@ -101,19 +91,14 @@ export default class loan_fenqi_page extends PureComponent {
           priceMax,
           priceMin
         } = res.data
-        if (this.state.inputClear || !storeData.perdRateList) {
-          list = perdRateList
-        } else {
-          list = storeData.perdRateList
-        }
         this.setState({
-          resaveBankCardAgrNo: tempResaveCard.agrNo || resaveBankCardAgrNo,
-          resaveBankCardLastNo: tempResaveCard.lastCardNo || resaveBankCardLastNo,
-          resaveBankCardName: tempResaveCard.bankName || resaveBankCardName,
-          payBankCardAgrNo: tempPayCard.agrNo || payBankCardAgrNo,
-          payBankCardLastNo: tempPayCard.lastCardNo || payBankCardLastNo,
-          payBankCardName: tempPayCard.bankName || payBankCardName,
-          perdRateList: list,
+          resaveBankCardAgrNo,
+          resaveBankCardLastNo,
+          resaveBankCardName,
+          payBankCardAgrNo,
+          payBankCardLastNo,
+          payBankCardName,
+          perdRateList,
           priceMax,
           priceMin
         })
@@ -137,7 +122,6 @@ export default class loan_fenqi_page extends PureComponent {
         })
       } else {
         this.props.toast.info(res.msgInfo);
-
       }
     })
   }
@@ -302,6 +286,9 @@ export default class loan_fenqi_page extends PureComponent {
       loanMoney,
       loanDate,
       loanUsage,
+      prdId,
+      priceMax,
+      priceMin,
       couponInfo,
       resaveBankCardAgrNo,
       resaveBankCardLastNo,
@@ -309,7 +296,9 @@ export default class loan_fenqi_page extends PureComponent {
       payBankCardAgrNo,
       payBankCardLastNo,
       payBankCardName,
-      perdRateList
+      perdRateList,
+      contractList,
+      usageList
     } = this.state
     const resaveCard = {
       agrNo: resaveBankCardAgrNo,
@@ -321,35 +310,39 @@ export default class loan_fenqi_page extends PureComponent {
       lastCardNo: payBankCardLastNo,
       bankName: payBankCardName
     }
-    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, couponInfo, perdRateList })
+    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, couponInfo, perdRateList, contractList, usageList })
     store.setCashFenQiCardArr([resaveCard, payCard])
   }
 
   //处理数据反显
-  handleDataDisplay = (storeData, cardArr) => {
-    // let payBankCardAgrNo, payBankCardName, payBankCardLastNo
-    // const { agrNo: resaveBankCardAgrNo, bankName: resaveBankCardName, lastCardNo: resaveBankCardLastNo } = cardArr[0] || {}
-    // const { agrNo: payBankCardAgrNo, bankName: payBankCardName, lastCardNo: payBankCardLastNo } = cardArr[1] || {}
-    // const { agrNo, bankName, lastCardNo } = cardArr[1] || {}
-    // payBankCardAgrNo = agrNo
-    // payBankCardName = bankName
-    // payBankCardLastNo = lastCardNo
-    // if (!agrNo) {
-    //   //如果没有切换还款银行卡
-    //   payBankCardAgrNo = this.state.payBankCardAgrNo
-    //   payBankCardName = this.state.payBankCardName
-    //   payBankCardLastNo = this.state.payBankCardLastNo
-    // }
-
-    // let data = Object.assign(storeData, {
-    //   resaveBankCardAgrNo,
-    //   resaveBankCardName,
-    //   resaveBankCardLastNo,
-    //   payBankCardAgrNo,
-    //   payBankCardName,
-    //   payBankCardLastNo,
-    // })
-    this.setState({ ...storeData })
+  handleDataDisplay = (storeData = {}, cardArr = []) => {
+    let couponInfo = store.getCouponData() || {} //优惠券数据
+    let tempResaveCard = cardArr[0] || {}
+    let tempPayCard = cardArr[1] || {}
+    let perdRateList = []
+    let usageList = []
+    const { agrNo: resaveBankCardAgrNo, bankName: resaveBankCardName, lastCardNo: resaveBankCardLastNo } = tempResaveCard
+    const { agrNo: payBankCardAgrNo, bankName: payBankCardName, lastCardNo: payBankCardLastNo } = tempPayCard
+    if (this.state.inputClear || !storeData.perdRateList || !storeData.usageList) {
+      perdRateList = this.state.perdRateList
+      usageList = this.state.usageList
+    } else {
+      perdRateList = storeData.perdRateList
+      usageList = storeData.usageList
+    }
+    let data = Object.assign(storeData, {
+      resaveBankCardAgrNo,
+      resaveBankCardName,
+      resaveBankCardLastNo,
+      payBankCardAgrNo,
+      payBankCardName,
+      payBankCardLastNo,
+      perdRateList,
+      usageList,
+      couponInfo
+    })
+    // console.log(data)
+    this.setState({ ...data })
   }
 
   //验证信息是否填写完整
@@ -438,8 +431,8 @@ export default class loan_fenqi_page extends PureComponent {
       payBankCardName,
       perdRateList,
       couponInfo,
-      priceMax='',
-      priceMin='',
+      priceMax = '',
+      priceMin = '',
       contractList,
       repayPlanInfo
     } = this.state
