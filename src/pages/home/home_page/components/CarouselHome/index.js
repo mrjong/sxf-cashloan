@@ -83,7 +83,7 @@ export default class carouselHome extends React.Component {
 						</div>
 						<div className={style.contentBox}>
 							<img src={bank} className={style.bank} />
-							<div className={style.desc_b}>支持绑定100+信用卡</div>
+							<div className={style.desc_b}>支持100+信用卡</div>
 						</div>
 						<div className={style.contentBox}>
 							<img src={plus} className={style.plus} />

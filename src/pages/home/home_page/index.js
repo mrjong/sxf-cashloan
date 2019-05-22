@@ -740,7 +740,7 @@ export default class home_page extends PureComponent {
 					console.log(res);
 					if (res.msgCode === 'PTM0000') {
 						sa.login(res.data);
-						store.setQueyUsrSCOpenId(res.data);
+						store.setQueryUsrSCOpenId(res.data);
 					}
 				});
 			}
