@@ -169,7 +169,14 @@ export default class crawl_progress_page extends PureComponent {
   };
 
   reImport() {
-    location.reload()
+    this.props.$fetch
+      .get(API.USER_IMPORT)
+      .then((res) => {
+        if (res && res.msgCode === 'PTM0000') {
+          location.reload()
+        }
+      }).catch(err=>{
+    })
   }
 
   componentWillUnmount() {

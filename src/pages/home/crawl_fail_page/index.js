@@ -9,7 +9,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import progressIcon from  './img/crawl.png'
 const API = {
-
+  USER_IMPORT: '/auth/cardAuth',
 };
 
 const Item = Popover.Item;
@@ -25,7 +25,11 @@ export default class crawl_progress_page extends PureComponent {
   }
 
   componentWillMount() {
-
+    this.props.$fetch
+      .get(API.USER_IMPORT)
+      .then((res) => {
+      }).catch(err=>{
+    })
   }
 
   componentDidMount() {
