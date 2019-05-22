@@ -1060,11 +1060,17 @@ export default class home_page extends PureComponent {
 
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
-		store.setBillNo(usrIndexInfo.indexData.billNo);
-		this.props.history.push({
-			pathname: '/order/order_detail_page',
-			search: '?entryFrom=home'
-		});
+		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.billNo) {
+			store.setBillNo(usrIndexInfo.indexData.billNo);
+			this.props.history.push({
+				pathname: '/order/order_detail_page',
+				search: '?entryFrom=home'
+			});
+		} else {
+			this.props.history.push({
+				pathname: '/order/order_page'
+			});
+		}
 	};
 
 	readAgreementCb = () => {
