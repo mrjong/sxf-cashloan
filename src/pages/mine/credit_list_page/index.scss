@@ -127,6 +127,11 @@
       @include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
     }
   }
+  .handle_authority {
+    position: fixed;
+    bottom: 58px;
+    width: 100%;
+  }
   .button {
     width: 634px;
     height: 100px;

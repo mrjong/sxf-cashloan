@@ -43,11 +43,17 @@
   }
 }
 :global {
+  .am-popover{
+    top: 365px !important;
+  }
   .am-popover-inner{
     border-radius: 33px;
   }
   .am-popover-inner-wrapper {
     background: #397BE6;
+  }
+  .am-popover-hidden {
+    display: inline-block;
   }
   .am-popover-arrow {
     background: #397BE6;

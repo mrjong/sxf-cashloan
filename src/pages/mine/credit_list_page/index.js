@@ -130,7 +130,7 @@ export default class credit_list_page extends PureComponent {
         {
           this.state.cardList.length ?
             <div>
-              <p className={styles.card_tit}>选择你想还款信用卡</p>
+              <p className={styles.card_tit}>选择你需要还款信用卡</p>
               <ul className={styles.card_list}>
                 {
                   this.state.cardList.map((item, index) => {
@@ -181,8 +181,10 @@ export default class credit_list_page extends PureComponent {
             </div>
             : null
         }
-        <div className={styles.button} onClick={()=>{this.sendSelectedCard(autId, true)}}>确认</div>
-        <p onClick={this.goToNewMoXie} className={styles.add_card}>新增需要导入账单的信用卡</p>
+        <div className={styles.handle_authority}>
+          <div className={styles.button} onClick={()=>{this.sendSelectedCard(autId, true)}}>确认</div>
+          <p onClick={this.goToNewMoXie} className={styles.add_card}>新增需要还款信用卡</p>
+        </div>
       </div>
     )
   }

@@ -31,7 +31,6 @@ export default class crawl_progress_page extends PureComponent {
   componentDidMount() {
 
   }
-
   componentWillUnmount() {
     store.removeAutId2();
   }
@@ -48,18 +47,17 @@ export default class crawl_progress_page extends PureComponent {
         <Popover
            visible='true'
            placement='bottom'
-           className={style.aa}
+           disabled= 'true'
            overlay={[
              (<Item
                key="4"
                value="scan"
                data-seed="logId"
-               disabled='true'
+               disabled= 'true'
                style={{color: '#fff', fontSize: '0.28rem', opacity: 0.9}}>
                多次失败建议换张信用卡，已送您一张免息券
              </Item>),
            ]}
-           onSelect={this.onSelect}
         >
           <div className={style.popover_inner}>信用卡账单导入失败</div>
         </Popover>
