@@ -125,6 +125,7 @@ export default class credit_list_page extends PureComponent {
 
   render() {
     let {autId} = this.state
+    console.log(autId,'autId')
     return (
       <div className={styles.credit_list_page}>
         {

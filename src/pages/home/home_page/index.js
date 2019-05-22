@@ -351,7 +351,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 请求信用卡数量
-	requestCredCardCount = (type) => { // 爬取卡进度页特殊处理
+	requestCredCardCount = (type, callback) => { // 爬取卡进度页特殊处理
 		const { bizId } = this.state;
 		this.props.$fetch
 		.post(API.CRED_CARD_COUNT)
@@ -359,9 +359,17 @@ export default class home_page extends PureComponent {
 			if (result && result.msgCode === 'PTM0000') {
 				if (type && type === 'progress') {
 					if(result.data.count > 1){
+						store.setToggleMoxieCard(true);
 						this.props.history.replace(`/mine/credit_list_page?autId=${bizId}`)
 					} else {
 						this.props.history.replace('/home/loan_repay_confirm_page')
+					}
+				} else if (type && type === 'cbFn') {
+					if(result.data.count > 1){
+						store.setToggleMoxieCard(true);
+						this.props.history.replace(`/mine/credit_list_page?autId=${bizId}`)
+					} else {
+						callback && callback();
 					}
 				} else {
 					this.repayForOtherBank(result.data.count);
@@ -508,13 +516,19 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo, pageCode } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
-			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+			this.requestCredCardCount(
+				'cbFn',
+				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息')
+			);
 			return;
 		} else if (cardBillSts === '02') {
-			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-				// 跳银行登录页面
-				this.getMoxieData(bankNo);
-			});
+			this.requestCredCardCount(
+				'cbFn',
+				this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
+					// 跳银行登录页面
+					this.getMoxieData(bankNo);
+				})
+			);
 			return;
 		}
 		this.props.history.push('/home/loan_repay_confirm_page');
