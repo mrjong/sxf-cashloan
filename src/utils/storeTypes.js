@@ -76,4 +76,5 @@ export const storeTypes = {
 	HomeAutId: 'HomeAutId', // 首页的autId
 	AutId: 'AutId', // 接口调用需要的AutId
 	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
+	QueyUsrSCOpenId: 'QueyUsrSCOpenId', // 神策id
 };
