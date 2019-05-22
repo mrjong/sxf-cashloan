@@ -131,7 +131,7 @@ export default class credit_list_page extends PureComponent {
           this.state.cardList.length ?
             <div>
               <p className={styles.card_tit}>选择你需要还款信用卡</p>
-              <ul className={styles.card_list}>
+              <ul className={styles.card_list} style={this.state.cardList.length>2 ? {marginBottom: '2.5rem'}:{}}>
                 {
                   this.state.cardList.map((item, index) => {
                     const isSelected = this.state.autId === item.autId;
