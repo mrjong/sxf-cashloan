@@ -64,7 +64,7 @@ export default class crawl_progress_page extends PureComponent {
           this.setState({ isFail: true })
         })
       } else if (parseInt(timers / 5000) >= 1 && arr.indexOf(parseInt(timers / 5000)) === -1) {
-        this.queryUsrInfo(timers)
+        this.queryUsrInfo()
         arr.push(parseInt(timers / 5000))
       }
       temp = false
@@ -113,8 +113,11 @@ export default class crawl_progress_page extends PureComponent {
     }, number)
   }
   //查询用户相关信息
-  queryUsrInfo = (times) => {
-    let {autId} = this.state
+  queryUsrInfo = () => {
+    let {autId} = this.state;
+    if (!autId) {
+      return;
+    }
     this.props.$fetch
       .get(API.CHECK_CARD_AUTH+ autId)
       .then((res) => {

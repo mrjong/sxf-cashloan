@@ -26,7 +26,7 @@ export default class carouselHome extends React.Component {
 
 	static defaultProps = {
 		entryFrom: 'banner',
-		autoplay: false,
+		autoplay: true,
 		infinite: true,
 		cellSpacing: 1,
 		dotStyle: {
@@ -54,21 +54,46 @@ export default class carouselHome extends React.Component {
 			money: '50000.00',
 			desc: '还款日：8888/88/88',
 			btnText: !isMPOS() && btnText ? btnText : '添加需要还款信用卡' , // mpos中展示文案不同
-			color: 'rgba(248, 164, 65, 1)'
+			color: 'rgba(248, 164, 65, 1)',
 		};
+		const iconClass = 'logo_ico';
 		return (
 			<div className="carouselHome">
-				<Carousel {...restProps}>
-					<MoneyCard showData={showData} handleClick={handleClick} />
-					<WhiteCard showData={showData} handleClick={handleClick}>
-						<img src={bank} className={style.bank} />
-						<div className={style.desc_b}>支持绑定100+信用卡</div>
-					</WhiteCard>
-					<WhiteCard showData={showData} handleClick={handleClick}>
-						<img src={plus} className={style.plus} />
-						<div className={style.desc_b}>2步操作，极速到账</div>
-					</WhiteCard>
-				</Carousel>
+				<div className={style.title}>
+					<i className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
+					{showData.title}
+				</div>
+				<WhiteCard showData={showData} noLogoBtn={true} handleClick={handleClick}>
+					<Carousel {...restProps}>
+						<div className={style.contentBox}>
+							{showData.demoTip ? <div className={style.demoTip} /> : null}
+							<div className={style.demoTip} />
+							<div className={style.box}>
+								<div className={style.flex1}>
+									<div className={style.subtitle}>
+										<i />
+										{showData.subtitle}
+									</div>
+									<div className={style.money} style={{ color: showData.color && showData.color }}>
+										{showData.money ? showData.money : '----.--'}
+									</div>
+								</div>
+							</div>
+							<div className={style.desc}>{showData.desc}</div>
+						</div>
+						<div className={style.contentBox}>
+							<img src={bank} className={style.bank} />
+							<div className={style.desc_b}>支持100+信用卡</div>
+						</div>
+						<div className={style.contentBox}>
+							<img src={plus} className={style.plus} />
+							<div className={style.desc_b}>2步操作，极速到账</div>
+						</div>
+					</Carousel>
+				</WhiteCard>
+				<ZButton onClick={handleClick} className={style.submitBtn}>
+					{showData.btnText}
+				</ZButton>
 			</div>
 		);
 	}
