@@ -515,6 +515,7 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
+		this.props.history.push('/home/loan_repay_confirm_page');
 	};
 
 	// 设置百分比
