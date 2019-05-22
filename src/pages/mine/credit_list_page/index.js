@@ -29,10 +29,10 @@ export default class credit_list_page extends PureComponent {
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId) {
-      this.setState({
-        autId: queryData.autId,
-      });
-      this.sendSelectedCard(queryData.autId, false);
+      // this.setState({
+      //   autId: queryData.autId,
+      // });
+      // this.sendSelectedCard(queryData.autId, false);
     }
   }
   componentWillUnmount() {
@@ -88,7 +88,7 @@ export default class credit_list_page extends PureComponent {
   // 告诉后台选中的是哪张卡
   sendSelectedCard = (autId, jumpFlag) => {
     if(!autId){
-      this.props.toast.info('请选择银行卡')
+      this.props.toast.info('请选择一张你需要还款的信用卡')
       return
     }
     this.props.$fetch.get(`${API.CACHECREDCARD}/${autId}`).then(
