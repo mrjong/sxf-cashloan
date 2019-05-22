@@ -36,6 +36,7 @@ const API = {
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
+	QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 确认代还信息查询接口
 };
 let token = '';
 let tokenFromStorage = '';
@@ -89,6 +90,7 @@ export default class home_page extends PureComponent {
 			cardStatus: '',
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
+			userMaxAmt: '', // 最高可申请还款金(元)
 		};
 	}
 
@@ -673,6 +675,9 @@ export default class home_page extends PureComponent {
 						if (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003' || result.data.indexSts === 'LN0010') {
 							this.getPercent();
 						}
+						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
+							this.queryProInfo();
+						}
 					}
 				);
 				if (
@@ -902,7 +907,7 @@ export default class home_page extends PureComponent {
 	// *****************************代偿****************************** //
 
 	getDCDisPlay = () => {
-		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText, cardStatus } = this.state;
+		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText, cardStatus, userMaxAmt } = this.state;
 		let componentsDisplay = null;
 		const { indexData = {}, indexSts } = usrIndexInfo;
 		const {
@@ -913,7 +918,6 @@ export default class home_page extends PureComponent {
 			bankName,
 			bankNo,
 			cardNoHid,
-			maxApplAmt
 		} = indexData;
 		const bankNm = !bankName ? '****' : bankName;
 		const cardCode = !cardNoHid ? '****' : cardNoHid.slice(-4);
@@ -1075,7 +1079,7 @@ export default class home_page extends PureComponent {
 								bankNo: bankCode,
 								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
 								subtitle2:'最高可申请还款金(元)',
-                				money2: maxApplAmt ? parseFloat(maxApplAmt, 10).toFixed(2) : '',
+                				money2: userMaxAmt ? parseFloat(userMaxAmt, 10).toFixed(2) : '',
 							}}
 						/>
 					);
@@ -1152,17 +1156,17 @@ export default class home_page extends PureComponent {
 		}
 	}
 
-  // 每隔5秒调取接口
-  goProgress() {
-    timerPercent = setInterval(()=>{
-      timers = timers + 5
-      if(timers > 29){
-        clearInterval(timerPercent)
-        return
-      }
-      this.queryUsrInfo()
-    }, 5000)
-  }
+  	// 每隔5秒调取接口
+	goProgress() {
+		timerPercent = setInterval(()=>{
+		timers = timers + 5
+		if(timers > 29){
+			clearInterval(timerPercent)
+			return
+		}
+		this.queryUsrInfo()
+		}, 5000)
+	}
 
   	//查询用户相关信息
   	queryUsrInfo = () => {
@@ -1210,6 +1214,28 @@ export default class home_page extends PureComponent {
 		}
 		return componentsAddCards;
 	}
+
+	// 获取代还期限列表 还款日期列表
+	queryProInfo = () => {
+		let maxAmtArr = [];
+		const { usrIndexInfo } = this.state;
+		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) {
+			this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${usrIndexInfo.indexData.autId}`).then((result) => {
+				if (result && result.msgCode === 'PTM0000') {
+					if (result.data && result.data.prdList && result.data.prdList.length) {
+						maxAmtArr = result.data.prdList.map((item, index) => {
+							return item.maxAmt;
+						});
+						this.setState({
+							userMaxAmt: Math.max(...maxAmtArr)
+						})
+					}
+				} else {
+					this.props.toast.info(result.msgInfo);
+				}
+			});
+		}
+	};
 
 	render() {
 		const {
