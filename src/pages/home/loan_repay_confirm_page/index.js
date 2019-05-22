@@ -262,9 +262,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 		this.props.history.push('/home/moxie_bank_list_page');
 	};
 	// 代还其他信用卡点击事件
-	repayForOtherBank = (count) => {
+	repayForOtherBank = (count, type) => { // type针对一张卡也可以跳到银行列表页的情况
 		store.setToggleMoxieCard(true);
-		if (count > 1) {
+		if (type && type==='switch') {
 			store.setBackUrl('/home/loan_repay_confirm_page');
 			const { usrIndexInfo } = this.state;
 			this.props.history.push({
@@ -274,8 +274,20 @@ export default class loan_repay_confirm_page extends PureComponent {
 					: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''}`
 			});
 		} else {
-			this.goMoxieBankList();
+			if (count > 1) {
+				store.setBackUrl('/home/loan_repay_confirm_page');
+				const { usrIndexInfo } = this.state;
+				this.props.history.push({
+					pathname: '/mine/credit_list_page',
+					search: `?autId=${usrIndexInfo.indexSts === 'LN0010'
+						? ''
+						: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''}`
+				});
+			} else {
+				this.goMoxieBankList();
+			}
 		}
+		
 	};
 
 	// 请求信用卡数量
@@ -690,8 +702,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<span className={style.lastNo}>（{!cardNoHid ? '****' : cardNoHid.slice(-4)}）</span>
 							</div>
 							{
-								cardCount && cardCount > 1 &&
-								<div className={style.cardNumBox} onClick={() => {this.repayForOtherBank(cardCount)}}>
+								cardCount && cardCount > 0 &&
+								<div className={style.cardNumBox} onClick={() => {this.repayForOtherBank(cardCount, 'switch')}}>
 									<span>{cardCount}张可更换</span>
 									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
 								</div>
@@ -820,7 +832,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						onClick={this.handleSubmit}
 						className={[ style.confirmApplyBtn, btnDisabled ? style.disabledBtn : '' ].join(' ')}
 					>
-						签约借款
+						提交申请
 					</SXFButton>
 					<p className="bottomTip">怕逾期，用还到</p>
 				</div>

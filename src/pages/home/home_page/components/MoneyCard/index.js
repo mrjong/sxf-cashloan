@@ -22,7 +22,7 @@ export default class MoneyCard extends React.PureComponent {
 						</div>
 					</div>
 					{showData.money2 ? (
-						<div className={style.flex1}>
+						<div className={`${style.flex1} ${style.rightPart}`}>
 							<div className={style.subtitle}>
 								<i />
 								{showData.subtitle2}

@@ -735,7 +735,9 @@ export default class home_page extends PureComponent {
 							: Object.assign({}, result.data, { indexData: {} })
 					},
 					() => {
-						this.getPercent();
+						if (result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003' || result.data.indexSts === 'LN0010') {
+							this.getPercent();
+						}
 					}
 				);
 				if (
@@ -948,7 +950,16 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText, cardStatus } = this.state;
 		let componentsDisplay = null;
 		const { indexData = {}, indexSts } = usrIndexInfo;
-		const { cardBillAmt, cardBillSts, billRemainAmt, cardBillDt, bankName, bankNo, cardNoHid } = indexData;
+		const {
+			cardBillAmt,
+			cardBillSts,
+			billRemainAmt,
+			cardBillDt,
+			bankName,
+			bankNo,
+			cardNoHid,
+			maxApplAmt
+		} = indexData;
 		const bankNm = !bankName ? '****' : bankName;
 		const cardCode = !cardNoHid ? '****' : cardNoHid.slice(-4);
 		const bankCode = !bankNo ? '' : bankNo;
@@ -1111,7 +1122,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`
+								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
+								subtitle2:'最高可申请还款金(元)',
+                				money2: maxApplAmt ? parseFloat(maxApplAmt, 10).toFixed(2) : '',
 							}}
 						/>
 					);
@@ -1153,7 +1166,11 @@ export default class home_page extends PureComponent {
 					);
 					break;
 				case 'LN0010': // 账单爬取失败/老用户
-					<CarouselHome />;
+					componentsDisplay = (
+						<CarouselHome
+							handleClick={this.handleApply}
+						/>
+					);
 					break;
 				default:
 			}
@@ -1163,9 +1180,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 点击不同进度状态，跳转页面
-	handleProgressApply = (sts) => {
-		// ，01：爬取中，02：爬取成功，03：爬取失败
-		const mainAutId = store.getAutId() ? store.getAutId() : '';
+	handleProgressApply = (sts) => { // ，01：爬取中，02：爬取成功，03：爬取失败
 		switch (sts) {
 			case '00':
 			case '01':

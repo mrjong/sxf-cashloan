@@ -73,6 +73,7 @@ export const storeTypes = {
 	CashFenQiCardArr: 'CashFenQiCardArr', //现金分期收、还卡数组
 	HomeAutId: 'HomeAutId', // 首页的autId
 	AutId: 'AutId', // 接口调用需要的AutId
-  AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
-  FQActivity: 'FQActivity' // 参与现金分期活动
+  FQActivity: 'FQActivity', // 参与现金分期活动
+	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
+	QueyUsrSCOpenId: 'QueyUsrSCOpenId', // 神策id
 };
