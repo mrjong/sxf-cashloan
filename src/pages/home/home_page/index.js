@@ -175,9 +175,9 @@ export default class home_page extends PureComponent {
 	indexshowType = () => {
 		this.props.$fetch.post(API.indexshowType).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					blackData: result.data
-				});
+				// this.setState({
+				// 	blackData: result.data
+				// });
 				if (result.data.cashAcBalSts === '1') {
 					// 分期流程
 					this.usrCashIndexInfo();
