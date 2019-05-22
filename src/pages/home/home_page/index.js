@@ -515,40 +515,6 @@ export default class home_page extends PureComponent {
 			});
 			return;
 		}
-		idChkPhoto({
-			$props: this.props,
-			type: 'historyCreditExtension',
-			msg: '认证'
-		}).then((res) => {
-			switch (res) {
-				case '1':
-					buriedPointEvent(home.compensationCreditCardConfirm, {
-						pageCode: pageCode
-					});
-					//调用授信接口
-					getNextStr({
-						$props: this.props,
-						callBack: (resBackMsg) => {},
-						jumpCb: () => {
-							this.props.history.push('/home/loan_repay_confirm_page')
-						}
-					});
-					break;
-				case '2':
-					buriedPointEvent(home.compensationCreditCardConfirm, {
-						pageCode: '补充身份证照片'
-					});
-					break;
-				case '3':
-					buriedPointEvent(home.compensationCreditCardConfirm, {
-						pageCode: '补充人脸识别'
-					});
-					store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
-					break;
-				default:
-					break;
-			}
-		});
 	};
 
 	// 设置百分比
@@ -1152,7 +1118,7 @@ export default class home_page extends PureComponent {
 				case 'LN0010': // 账单爬取失败/老用户
 					componentsDisplay = (
 						<CarouselHome
-							handleClick={this.handleApply}
+							handleClick={this.goToNewMoXie}
 						/>
 					);
 					break;
