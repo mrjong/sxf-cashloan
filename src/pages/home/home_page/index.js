@@ -518,20 +518,29 @@ export default class home_page extends PureComponent {
 		if (cardBillSts === '00') {
 			this.requestCredCardCount(
 				'cbFn',
-				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息')
+				() => {
+					this.props.toast.info('还款日已到期，请更新账单获取最新账单信息')
+				}
 			);
 			return;
 		} else if (cardBillSts === '02') {
 			this.requestCredCardCount(
 				'cbFn',
-				this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-					// 跳银行登录页面
-					this.getMoxieData(bankNo);
-				})
+				() => {
+					this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
+						// 跳银行登录页面
+						this.getMoxieData(bankNo);
+					})
+				}
 			);
 			return;
 		}
-		this.props.history.push('/home/loan_repay_confirm_page');
+		this.requestCredCardCount(
+			'cbFn',
+			() => {
+				this.props.history.push('/home/loan_repay_confirm_page');
+			}
+		);
 	};
 
 	// 设置百分比
