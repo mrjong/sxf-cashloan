@@ -75,5 +75,5 @@ export const storeTypes = {
 	AutId: 'AutId', // 接口调用需要的AutId
   FQActivity: 'FQActivity', // 参与现金分期活动
 	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
-	QueyUsrSCOpenId: 'QueyUsrSCOpenId', // 神策id
+  PercentCount: 'PercentCount' //百分比次数
 };

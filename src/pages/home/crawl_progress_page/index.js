@@ -3,7 +3,6 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import qs from 'qs';
 
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -33,10 +32,10 @@ export default class crawl_progress_page extends PureComponent {
     arr = [];
     timerPercent = null;
     data =  [
-      { desc: '正在建立安全链接', status: '连接中', percent: 24, speed: 200},
-      { desc: '正在登陆银行', status: '登录中', percent: 49, speed: 400 },
-      { desc: '正在获取银行卡信息', status: '获取中', percent: 74, speed: 800},
-      { desc: '正在分析账单流水', status: '处理中', percent: 98, speed: 0},
+      { desc: '正在建立安全链接', status: '连接中', percent: 24, speed: 200, statusInit: '连接中'},
+      { desc: '正在登陆银行', status: '登录中', percent: 49, speed: 400, statusInit: '登录中' },
+      { desc: '正在获取银行卡信息', status: '获取中', percent: 74, speed: 800 , statusInit: '获取中'},
+      { desc: '正在分析账单流水', status: '处理中', percent: 98, speed: 0, statusInit: '处理中'},
     ]
   }
 
@@ -48,13 +47,22 @@ export default class crawl_progress_page extends PureComponent {
     let temp = true
     timerPercent = setInterval(()=>{
       let { percent } = this.state
+      if(percent > 99) {
+        let percentCount = store.getPercentCount() ? store.getPercentCount() : 0
+        store.setPercentCount(1+ percentCount);
+        if(store.getPercentCount()>2){
+          this.props.history.replace('/home/crawl_fail_page')
+        }
+      }
       if(!temp){
         timers = number + timers
       }
       if(timers > 30000){
         clearInterval(timerPercent)
-        this.setState({ isFail: true })
-        data[3].status = '失败'
+        this.goProgress(10, ()=>{
+          data[3].status = '失败'
+          this.setState({ isFail: true })
+        })
       } else if (parseInt(timers / 5000) >= 1 && arr.indexOf(parseInt(timers / 5000)) === -1) {
         this.queryUsrInfo()
         arr.push(parseInt(timers / 5000))
@@ -64,20 +72,43 @@ export default class crawl_progress_page extends PureComponent {
         percent: percent ===100 ? percent : percent + 1,
       },()=>{
         if(number===10){
-          data.forEach(item=>{
-            if(percent === item.percent) item.status = '完成'
+          let tem = false ;
+          data.forEach((item)=>{
+            if( item.percent <= percent ){
+              item.status = '完成' ;
+            } else if(item.percent > percent){
+              if(!tem){
+                item.status = item.statusInit ;
+              } else {
+                item.status = '等待' ;
+              }
+              tem= true
+            }
           })
-          if(percent > 99) {
-            clearInterval(timerPercent)
+          tem = 0
+          if(percent > 99) {clearInterval(timerPercent)
             cb()
           }
-          return
+        } else {
+          let tem = false ;
+          data.forEach((item)=>{
+            if( item.percent < percent ){
+              item.status = '完成' ;
+            }else if(percent === item.percent){
+              item.status = '完成' ;
+              clearInterval(timerPercent)
+              item.speed !== 0 && this.goProgress(item.speed)
+            } else if(item.percent > percent){
+              if(!tem){
+                item.status = item.statusInit ;
+              } else {
+                item.status = '等待' ;
+              }
+              tem= true
+            }
+          })
+          tem = 0
         }
-        data.forEach(item=>{
-          if(percent=== item.percent){ clearInterval(timerPercent)
-            item.status = '完成' ; item.speed !== 0 && this.goProgress(item.speed)
-          }
-        })
       })
     }, number)
   }
@@ -93,7 +124,6 @@ export default class crawl_progress_page extends PureComponent {
         if (res.msgCode === "PTM0000") {
           if (res.data.autSts === '02') {
             clearInterval(timerPercent)
-            // data[3].status = '完成'
             this.goProgress(10,()=>{
               this.requestCredCardCount(res.data && res.data.bizId)
             })
@@ -142,9 +172,7 @@ export default class crawl_progress_page extends PureComponent {
     this.props.$fetch
       .get(API.USER_IMPORT)
       .then((res) => {
-        if(res.data > 2){
-          this.props.history.replace('/home/crawl_fail_page')
-        } else {
+        if (res && res.msgCode === 'PTM0000') {
           location.reload()
         }
       }).catch(err=>{
@@ -153,6 +181,7 @@ export default class crawl_progress_page extends PureComponent {
 
   componentWillUnmount() {
     clearInterval(timerPercent);
+    store.setPercentCount(null)
   }
   render() {
     let { percent, isFail } = this.state

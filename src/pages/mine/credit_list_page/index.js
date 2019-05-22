@@ -29,10 +29,10 @@ export default class credit_list_page extends PureComponent {
     this.queryBankList();
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
     if (queryData.autId) {
-      this.setState({
-        autId: queryData.autId,
-      });
-      this.sendSelectedCard(queryData.autId, false);
+      // this.setState({
+      //   autId: queryData.autId,
+      // });
+      // this.sendSelectedCard(queryData.autId, false);
     }
   }
   componentWillUnmount() {
@@ -88,7 +88,7 @@ export default class credit_list_page extends PureComponent {
   // 告诉后台选中的是哪张卡
   sendSelectedCard = (autId, jumpFlag) => {
     if(!autId){
-      this.props.toast.info('请选择银行卡')
+      this.props.toast.info('请选择一张你需要还款的信用卡')
       return
     }
     this.props.$fetch.get(`${API.CACHECREDCARD}/${autId}`).then(
@@ -125,13 +125,14 @@ export default class credit_list_page extends PureComponent {
 
   render() {
     let {autId} = this.state
+    console.log(autId,'autId')
     return (
       <div className={styles.credit_list_page}>
         {
           this.state.cardList.length ?
             <div>
-              <p className={styles.card_tit}>选择你想还款信用卡</p>
-              <ul className={styles.card_list}>
+              <p className={styles.card_tit}>选择你需要还款信用卡</p>
+              <ul className={styles.card_list} style={this.state.cardList.length>2 ? {marginBottom: '2.5rem'}:{}}>
                 {
                   this.state.cardList.map((item, index) => {
                     const isSelected = this.state.autId === item.autId;
@@ -154,7 +155,13 @@ export default class credit_list_page extends PureComponent {
                               <span className={styles.bank_name}>{item.bankName}</span>
                         }
                         <div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
-                        <div className={styles.bill_remain_amt}>{item.billRemainAmt || item.cardBillAmt}</div>
+                        <div className={styles.bill_remain_amt}>
+                          {
+                            item.billRemainAmt ?
+                              item.billRemainAmt : item.billRemainAmt === 0
+                              ? '0' : item.cardBillAmt
+                          }
+                          </div>
                         {
                           item.autSts === '2' ?
                             <span>
@@ -181,8 +188,10 @@ export default class credit_list_page extends PureComponent {
             </div>
             : null
         }
-        <div className={styles.button} onClick={()=>{this.sendSelectedCard(autId, true)}}>确认</div>
-        <p onClick={this.goToNewMoXie} className={styles.add_card}>新增需要导入账单的信用卡</p>
+        <div className={styles.handle_authority}>
+          <div className={styles.button} onClick={()=>{this.sendSelectedCard(autId, true)}}>确认</div>
+          <p onClick={this.goToNewMoXie} className={styles.add_card}>新增需要还款信用卡</p>
+        </div>
       </div>
     )
   }

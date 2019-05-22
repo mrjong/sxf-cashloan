@@ -235,7 +235,7 @@
 
     .am-list-item .am-input-control input {
       width: 100%;
-      // text-align: right;
+      text-align: right;
       color: #000;
       opacity: 1;
     }
@@ -290,6 +290,12 @@
     .checked{
       background-image: url('../../../assets/images/home/checked_ico.png');
     }
+  }
+  .special_val{
+    width: 450px;
+  }
+  .unit{
+    margin-left: 10px;
   }
   &:after {
     @include setBottomLine();
@@ -387,12 +393,13 @@
     }
 
     .am-list-item .am-input-control input {
-      // text-align: right;
+      text-align: right;
     }
 
-    .am-list-item.am-list-item-middle .am-list-line {
+    .am-list-item.am-list-item-middle.blackColor .am-list-line {
       &:after {
         @include setBottomLine();
+        background-color: transparent;
       }
     }
   }
@@ -400,6 +407,13 @@
     .am-progress-bar {
       border: 0.04rem solid #ffda58;
     }
+  }
+}
+
+.border_bottom{
+  position: relative;
+  &::after {
+    @include setBottomLine();
   }
 }
 

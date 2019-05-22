@@ -3,16 +3,14 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import qs from 'qs';
-import { Popover} from 'antd-mobile';
+
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import progressIcon from  './img/crawl.png'
 const API = {
-
+  USER_IMPORT: '/auth/cardAuth',
 };
 
-const Item = Popover.Item;
 
 @fetch.inject()
 @setBackGround('#fff')
@@ -25,13 +23,16 @@ export default class crawl_progress_page extends PureComponent {
   }
 
   componentWillMount() {
-
+    this.props.$fetch
+      .get(API.USER_IMPORT)
+      .then((res) => {
+      }).catch(err=>{
+    })
   }
 
   componentDidMount() {
 
   }
-
   componentWillUnmount() {
     store.removeAutId2();
   }
@@ -45,24 +46,11 @@ export default class crawl_progress_page extends PureComponent {
           <span>已完成98% </span>
           <span className={style.apply_success}> 申请成功</span>
         </div>
-        <Popover
-           visible='true'
-           placement='bottom'
-           className={style.aa}
-           overlay={[
-             (<Item
-               key="4"
-               value="scan"
-               data-seed="logId"
-               disabled='true'
-               style={{color: '#fff', fontSize: '0.28rem', opacity: 0.9}}>
-               多次失败建议换张信用卡，已送您一张免息券
-             </Item>),
-           ]}
-           onSelect={this.onSelect}
-        >
-          <div className={style.popover_inner}>信用卡账单导入失败</div>
-        </Popover>
+        <div className={style.popover_inner}>信用卡账单导入失败</div>
+        <div className={style.popover}>
+          <div className={style.arrow}></div>
+          <div className={style.inner}>多次失败建议换张信用卡，已送您一张免息券</div>
+        </div>
         <div className={style.button} onClick={()=>{
           store.setMoxieBackUrl('/home/home');
           this.props.history.push({ pathname: '/home/moxie_bank_list_page' });

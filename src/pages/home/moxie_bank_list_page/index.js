@@ -161,7 +161,7 @@ export default class moxie_bank_list_page extends Component {
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
 						<div className={style.infromationTitle}>
-							<span>选择还款信用卡所在银行</span>
+							<span>选择需要还款信用卡所在银行</span>
 							{/* <div className={style.subTitle_info}>通过网银添加</div> */}
 						</div>
 						<div className={style.bankList}>
