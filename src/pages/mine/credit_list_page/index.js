@@ -154,7 +154,13 @@ export default class credit_list_page extends PureComponent {
                               <span className={styles.bank_name}>{item.bankName}</span>
                         }
                         <div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
-                        <div className={styles.bill_remain_amt}>{item.billRemainAmt || item.cardBillAmt}</div>
+                        <div className={styles.bill_remain_amt}>
+                          {
+                            item.billRemainAmt ?
+                              item.billRemainAmt : item.billRemainAmt === 0
+                              ? '0' : item.cardBillAmt
+                          }
+                          </div>
                         {
                           item.autSts === '2' ?
                             <span>
