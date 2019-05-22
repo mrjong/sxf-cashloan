@@ -357,7 +357,6 @@ export default class loan_fenqi_page extends PureComponent {
     let tempPayCard = cardArr[1] || {}
     let perdRateList = []
     let usageList = []
-    console.log(couponInfo)
     const { agrNo: resaveBankCardAgrNo, bankName: resaveBankCardName, lastCardNo: resaveBankCardLastNo } = tempResaveCard
     const { agrNo: payBankCardAgrNo, bankName: payBankCardName, lastCardNo: payBankCardLastNo } = tempPayCard
     if (this.state.inputClear || !storeData.perdRateList || !storeData.usageList) {
@@ -378,7 +377,6 @@ export default class loan_fenqi_page extends PureComponent {
       usageList,
       couponInfo
     })
-    // console.log(data)
     this.setState({ ...data })
   }
 
@@ -420,13 +418,6 @@ export default class loan_fenqi_page extends PureComponent {
       prdId,
       couponInfo,
     } = this.state
-    // console.log(loanMoney,
-    //   loanDate,
-    //   loanUsage,
-    //   resaveBankCardAgrNo,
-    //   payBankCardAgrNo,
-    //   prdId,
-    //   couponInfo)
     if (this.validateFn()) {
       buriedPointEvent(loan_fenqi.clickSubmit, {
         loanMoney,
@@ -461,7 +452,6 @@ export default class loan_fenqi_page extends PureComponent {
           is_success: false,
           fail_cause: err
         })
-        console.log(err)
       })
     }
   }

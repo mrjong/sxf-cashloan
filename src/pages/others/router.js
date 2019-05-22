@@ -23,8 +23,7 @@ export default [
 	{
 		path: '/others/fenqi_landing',
 		title: '还到Plus',
-		arrowHide: 'empty',
-		headerHide: true,
+		arrowHide: '',
 		component: () => import('pages/others/fenqi_landing_page')
 	},
 ];

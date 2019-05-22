@@ -1275,7 +1275,7 @@ export default class home_page extends PureComponent {
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
-			componentsBlackCard = <BlackCard blackData={blackData} />;
+			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
 		}
 		componentsDisplay = this.getDCDisPlay() || this.getFQDisPlay() || (
 			<CarouselHome
