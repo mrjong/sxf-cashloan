@@ -1,5 +1,5 @@
-@import '../../../../../assets/styles/scss/base/fn';
 .addBtn {
+	display: flex;
 	width: 634px;
 	height: 100px;
 	border: 2px dashed #868E9E;
@@ -8,6 +8,8 @@
 	color: #121C32;
 	font-size: 30px;
 	margin: 20px auto 50px;
+	align-items: center;
+	justify-content: center;
 	i{
 		width: 26px;
 		height: 26px;
