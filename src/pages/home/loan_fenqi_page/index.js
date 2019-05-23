@@ -184,7 +184,6 @@ export default class loan_fenqi_page extends PureComponent {
 
   //查询优惠券
   queryCouponInfo = () => {
-    let couponInfo = store.getCouponData()
     const { loanMoney, loanDate, prdId } = this.state
     this.props.$fetch.post(API.couponSupport, {
       price: loanMoney,
