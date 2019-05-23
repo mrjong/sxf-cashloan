@@ -287,6 +287,9 @@
       background-size: 100%;
       margin-left: 16px;
     }
+    .unChecked2{
+      margin-top: 10px;
+    }
     .checked{
       background-image: url('../../../assets/images/home/checked_ico.png');
     }
@@ -398,8 +401,9 @@
 
     .am-list-item.am-list-item-middle.blackColor .am-list-line {
       &:after {
-        @include setBottomLine();
-        background-color: transparent;
+        display: none;
+        // @include setBottomLine();
+        // background-color: transparent;
       }
     }
   }
