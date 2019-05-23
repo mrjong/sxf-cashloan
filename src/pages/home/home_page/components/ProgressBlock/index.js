@@ -15,7 +15,7 @@ export default class ProgressBlock extends React.Component {
 				<div className={style.circle_box}>
 					<SvgCirPro
 						percent={Number(percentData)}
-						radius={50}
+						radius={45}
 						borderWidth={5}
 						smallradius
 						textStyle={{ fontSize: 12, color: '#fa9a22', textAlign: 'center' }}
