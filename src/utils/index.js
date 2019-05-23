@@ -190,6 +190,7 @@ const interceptRouteArr = [
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
 	'/home/crawl_fail_page',
+	'/common/tencent_face_middle_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -398,7 +399,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
-export const getNextStr = async ({ $props, needReturn = false, callBack, jumpCb }) => {
+export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
@@ -496,10 +497,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack, jumpCb 
 				if (callBack) {
 					callBack(resBackMsg);
 				}
-				return;
-			}
-			if (jumpCb) {
-				jumpCb();
 				return;
 			}
 			// 信用卡返回跳转到进度页

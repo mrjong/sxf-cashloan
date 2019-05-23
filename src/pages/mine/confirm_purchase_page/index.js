@@ -168,7 +168,7 @@ export default class confirm_purchase_page extends PureComponent {
       return n < 10 ? `0${n}` : n;
     };
     const yearStr = `${date.getFullYear()}`.substring(2);
-    const dateStr = `${yearStr}／${pad(date.getMonth() + 1)}`;
+    const dateStr = `${pad(date.getMonth() + 1)}／${yearStr}`;
     return dateStr;
   }
 

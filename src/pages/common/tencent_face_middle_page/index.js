@@ -22,6 +22,7 @@ export default class tencent_face_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		// window.tencent_face_middle_page = null;
 		store.removeChkPhotoBackNew();
 		const osType = getDeviceType();
 		//人脸识别的回调
@@ -48,24 +49,24 @@ export default class tencent_face_middle_page extends Component {
 					is_success: true,
 					fail_cause: ''
 				});
-				// 新用户直接提交
+				// 借钱还信用卡页进入
 				if (!store.getRealNameNextStep()) {
 					handleClickConfirm(this.props, {
 						...store.getLoanAspirationHome()
-          });
+					});
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
-        }
-        //  else if ((store.getNeedNextUrl() && !store.getCreditExtensionNot()) || store.getRealNameNextStep()==='home') {
-				// 	store.removeRealNameNextStep();
-				// 	store.removeIdChkPhotoBack();
-				// 	getNextStr({
-				// 		$props: this.props
-				// 	});
-        // }
-        else if (store.getIdChkPhotoBack()) {
+				} else if (store.getNeedNextUrl() && store.getRealNameNextStep() === 'home') {
+					// 首页下一步进入
+					store.removeRealNameNextStep();
+					store.removeIdChkPhotoBack();
+					getNextStr({
+						$props: this.props
+					});
+				} else if (store.getIdChkPhotoBack()) {
+					// 我的  借款确认页
 					history.go(Number(store.getIdChkPhotoBack()));
-          store.removeIdChkPhotoBack();
+					store.removeIdChkPhotoBack();
 					store.removeRealNameNextStep();
 				} else {
 					this.props.history.push('/home/home');
@@ -99,15 +100,21 @@ export default class tencent_face_middle_page extends Component {
 	};
 
 	goRouter = () => {
-		if (store.getRealNameNextStep()) {
-      store.removeRealNameNextStep();
-      store.removeIdChkPhotoBack();
-      this.props.history.push('/home/home');
+		// 首页进入然后返回
+		if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'home') {
+			store.removeRealNameNextStep();
+			store.removeIdChkPhotoBack();
+			this.props.history.push('/home/home');
+		} else if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'other') {
+			// 我的页面进入然后返回
+			store.removeRealNameNextStep();
+			store.removeIdChkPhotoBack();
+			this.props.history.push('/mine/mine_page');
 		} else if (store.getIdChkPhotoBack()) {
 			window.tencent_face_middle_page = true;
 			history.go(Number(store.getIdChkPhotoBack()));
-      store.removeIdChkPhotoBack();
-      store.removeRealNameNextStep();
+			store.removeIdChkPhotoBack();
+			store.removeRealNameNextStep();
 		}
 	};
 
