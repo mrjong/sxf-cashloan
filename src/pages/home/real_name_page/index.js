@@ -300,34 +300,34 @@ export default class real_name_page extends Component {
 					}
 				});
 				break;
-			case 'historyCreditExtension':
-				store.removeToggleMoxieCard();
+			// case 'historyCreditExtension':
+			// 	store.removeToggleMoxieCard();
 
-				// 实名之后
-				idChkPhoto({
-					$props: this.props,
-					type: 'historyCreditExtension',
-					msg: '认证'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							this.props.toast.info('实名照片补充成功!');
-							store.removeToggleMoxieCard();
-							setTimeout(() => {
-								getNextStr({
-									$props: this.props
-								});
-							}, 2000);
-							break;
-						case '3':
-							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							store.setChkPhotoBackNew(-2); //活体直接返回
-							break;
-						default:
-							break;
-					}
-				});
-				break;
+			// 	// 实名之后
+			// 	idChkPhoto({
+			// 		$props: this.props,
+			// 		type: 'historyCreditExtension',
+			// 		msg: '认证'
+			// 	}).then((res) => {
+			// 		switch (res) {
+			// 			case '1':
+			// 				this.props.toast.info('实名照片补充成功!');
+			// 				store.removeToggleMoxieCard();
+			// 				setTimeout(() => {
+			// 					getNextStr({
+			// 						$props: this.props
+			// 					});
+			// 				}, 2000);
+			// 				break;
+			// 			case '3':
+			// 				store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+			// 				store.setChkPhotoBackNew(-2); //活体直接返回
+			// 				break;
+			// 			default:
+			// 				break;
+			// 		}
+			// 	});
+			// 	break;
 			case 'agency_page':
 				idChkPhoto({
 					$props: this.props,
