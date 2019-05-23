@@ -166,6 +166,7 @@ export default class home_page extends PureComponent {
 		//删除现金分期相关数据
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
+    store.removeCouponData()
 	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
