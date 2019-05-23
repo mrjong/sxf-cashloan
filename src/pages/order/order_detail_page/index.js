@@ -23,14 +23,12 @@ const API = {
   procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 }
 let entryFrom = '';
-let transactionType = ''
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
   constructor(props) {
     super(props);
     const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true })
     entryFrom = queryData.entryFrom;
-    transactionType = queryData.transactionType
     this.state = {
       billDesc: {},
       showModal: false,
@@ -55,7 +53,7 @@ export default class order_detail_page extends PureComponent {
       isSettle: '0', // 是否结清
       totalAmt: '', // 一键结清传给后台的总金额
       billOverDue: '', //逾期弹窗标志
-			overDueModalFlag: '', // 信用施压弹框标识
+      overDueModalFlag: '', // 信用施压弹框标识
     }
   }
   componentWillMount() {
@@ -86,7 +84,7 @@ export default class order_detail_page extends PureComponent {
       ordNo: billNo
     })
       .then(res => {
-        if (res.msgCode === 'PTM0000') { 
+        if (res.msgCode === 'PTM0000') {
           if (res.data) { // 如果data不为空则为签署的是新合同,否则为旧合同，则收银台不展示详情，还款也为/bill/payback老接口
             const currentStg = res.data[0].currentLenth;
             const perdData = res.data[0].perdList[currentStg - 1];
@@ -99,15 +97,15 @@ export default class order_detail_page extends PureComponent {
                 isAdvance = true;
               }
               // 筛选出所有补偿金的数组
-              const buChangJinList = res.data[0].perdList.map(item2=>item2.feeInfos.find(item=>item.feeNm==='补偿金'));
-              if (buChangJinList.find(item=>item.feeAmt!==0)) { // 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
+              const buChangJinList = res.data[0].perdList.map(item2 => item2.feeInfos.find(item => item.feeNm === '补偿金'));
+              if (buChangJinList.find(item => item.feeAmt !== 0)) { // 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
                 isSettleStu = '1';
               } else {
                 isSettleStu = '0';
               }
             } else { // perdSts 0为未到期 1为已逾期 2为处理中 3为已撤销 4为已还清
               // 如果该期补偿金不为0，那么是提前还款，否则不是
-              if (perdData.feeInfos.find(item=>item.feeNm==='补偿金').feeAmt) {
+              if (perdData.feeInfos.find(item => item.feeNm === '补偿金').feeAmt) {
                 isAdvance = true;
                 isSettleStu = '1';
               } else {
@@ -121,14 +119,14 @@ export default class order_detail_page extends PureComponent {
               isNewsContract: true,
               isSettle: isSettleStu,
               totalAmt: res.data[0].totalAmt,
-            }, ()=>{
+            }, () => {
               cb && cb(isPayAll)
             })
           } else {
             this.setState({
               isAdvance: false,
               isNewsContract: false,
-            }, ()=>{
+            }, () => {
               cb && cb(isPayAll)
             })
           }
@@ -142,25 +140,25 @@ export default class order_detail_page extends PureComponent {
 
   getOverdueInfo = () => {
     this.props.$fetch
-			.post(API.procedure_user_sts)
-			.then((res) => {
-				if (res && res.msgCode === 'PTM0000') {
-					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-					// popupFlag信用施压弹框，1为显示，0为隐藏
-					this.setState({
-						billOverDue: res.data.popupFlag,
-						overDueModalFlag: res.data.overduePopupFlag,
-					});
-					res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			})
-			.catch((err) => {
-				this.setState({
-					firstUserInfo: 'error'
-				});
-			});
+      .post(API.procedure_user_sts)
+      .then((res) => {
+        if (res && res.msgCode === 'PTM0000') {
+          // overduePopupFlag信用施压弹框，1为显示，0为隐藏
+          // popupFlag信用施压弹框，1为显示，0为隐藏
+          this.setState({
+            billOverDue: res.data.popupFlag,
+            overDueModalFlag: res.data.overduePopupFlag,
+          });
+          res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
+        } else {
+          this.props.toast.info(res.msgInfo);
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          firstUserInfo: 'error'
+        });
+      });
   }
 
   // 获取还款信息
@@ -199,10 +197,10 @@ export default class order_detail_page extends PureComponent {
               this.setState({
                 showModal: true,
                 isPayAll: orderDtlData && orderDtlData.isPayAll,
-                detailArr: orderDtlData && orderDtlData.detailArr, 
-                isShowDetail: orderDtlData && orderDtlData.isShowDetail, 
-                isAdvance: orderDtlData && orderDtlData.isAdvance, 
-                isNewsContract: orderDtlData && orderDtlData.isNewsContract, 
+                detailArr: orderDtlData && orderDtlData.detailArr,
+                isShowDetail: orderDtlData && orderDtlData.isShowDetail,
+                isAdvance: orderDtlData && orderDtlData.isAdvance,
+                isNewsContract: orderDtlData && orderDtlData.isNewsContract,
                 totalAmt: orderDtlData && orderDtlData.totalAmt,
                 isSettle: orderDtlData && orderDtlData.isSettle,
               }, () => {
@@ -267,6 +265,7 @@ export default class order_detail_page extends PureComponent {
         currentStage: result.perdNum,
         price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
         totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
+        prodType: this.state.billDesc.prodType
       };
     } else {
       params = {
@@ -276,6 +275,7 @@ export default class order_detail_page extends PureComponent {
         currentStage: result.perdNum,
         price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
         totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
+        prodType: this.state.billDesc.prodType
       };
     }
     this.props.$fetch.get(API.couponCount, params).then(result => {
@@ -510,7 +510,7 @@ export default class order_detail_page extends PureComponent {
         thisRepTotAmt: billDesc.waitRepAmt,
         repayStsw: repayStswStr,
         usrBusCnl: 'WEB',
-        prodType: transactionType==='fenqi'?'11':'01'
+        prodType: billDesc.prodType
       }
     } else {
       sendParams = {
@@ -520,7 +520,7 @@ export default class order_detail_page extends PureComponent {
         repayStsw: billDesc.billPerdStsw,
         coupId: couponId,
         usrBusCnl: 'WEB',
-        prodType: transactionType==='fenqi'?'11':'01'
+        prodType: billDesc.prodType
       }
     }
     //全局设置还款传递后台的参数
@@ -544,14 +544,14 @@ export default class order_detail_page extends PureComponent {
     let sendParams = {}
     if (isNewsContract) {
       if (isPayAll) {
-        sendParams = {...repayParams, isSettle, thisRepTotAmt: totalAmt}
+        sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt }
       } else {
-        sendParams = {...repayParams, isSettle}
+        sendParams = { ...repayParams, isSettle }
       }
     } else {
       sendParams = repayParams;
     }
-    console.log(sendParams,paybackAPI);
+    console.log(sendParams, paybackAPI);
     this.props.$fetch.post(paybackAPI, sendParams).then(res => {
       if (res.msgCode === 'PTM0000') {
         buriedPointEvent(order.repaymentFirst, {
@@ -574,7 +574,7 @@ export default class order_detail_page extends PureComponent {
             billRegDt: billDesc.billRegDt
           })
           setTimeout(() => {
-            this.props.history.replace('/order/repayment_succ_page')
+            this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`)
           }, 2000);
         } else {
           this.props.toast.info('申请还款成功');
@@ -615,22 +615,22 @@ export default class order_detail_page extends PureComponent {
   // 选择银行卡
   selectBank = () => {
     const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state;
-    let orderDtData = {isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle}
+    let orderDtData = { isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle }
     store.setBackUrl('/order/order_detail_page');
     store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
   }
-  
+
   // 选择优惠劵
   selectCoupon = (useFlag) => {
     const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state
-    let orderDtData = {detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle}
+    let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle }
     store.setOrderDetailData(orderDtData);
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
       this.props.history.push({
         pathname: '/mine/coupon_page',
-        search: `?transactionType=${transactionType}&billNo=${billNo}`,
+        search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
         state: { nouseCoupon: true, cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc },
       });
       return;
@@ -643,7 +643,7 @@ export default class order_detail_page extends PureComponent {
     }
     this.props.history.push({
       pathname: '/mine/coupon_page',
-      search: `?transactionType=${transactionType}&billNo=${billNo}`,
+      search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
       state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
     });
   }
@@ -686,9 +686,9 @@ export default class order_detail_page extends PureComponent {
     buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
     this.getModalDtlInfo(this.showPayModal, false);
   }
-  
+
   showPayModal = (boolen) => {
-    this.setState({ 
+    this.setState({
       showModal: true,
       isPayAll: boolen,
     });
@@ -749,7 +749,7 @@ export default class order_detail_page extends PureComponent {
       }
     ]
     const isOverdue = perdList && perdList.filter((item, index) => {
-			return item.perdSts === '1';
+      return item.perdSts === '1';
     });
     const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
     console.log(isEntryShow)
@@ -814,36 +814,36 @@ export default class order_detail_page extends PureComponent {
         <Modal popup visible={this.state.showModal} onClose={() => { this.setState({ showModal: false, isShowDetail: false }) }} animationType="slide-up">
           <div className={styles.modal_box}>
             <div className={styles.modal_title}>还款详情
-            <Icon type='cross' className={styles.modal_close_btn} onClick={() => { this.setState({ showModal: false, isShowDetail: false }) }}/>
+            <Icon type='cross' className={styles.modal_close_btn} onClick={() => { this.setState({ showModal: false, isShowDetail: false }) }} />
             </div>
-            <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
+            <div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => { }}>
               <span className={styles.modal_label}>本次还款金额</span>
               <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
               {
-                isAdvance && 
+                isAdvance &&
                 <i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
               }
             </div>
             {/* 账单明细展示 */}
             {
               isShowDetail ?
-              <div className={styles.feeDetail}>
-                {
-                  detailArr.map((item, index) => (
-                    item.feeAmt ?
-                    <div className={styles.modal_flex} key={index}>
-                      <span className={styles.modal_label}>{item.feeNm}</span>
-                      <span className={styles.modal_value}>{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元</span>
-                    </div>
-                    : null
-                  ))
-                }
-                <div className={`${styles.modal_flex} ${styles.sum_total}`}>
-                  <span className={styles.modal_label}>本次应还总金额</span>
-                  <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
+                <div className={styles.feeDetail}>
+                  {
+                    detailArr.map((item, index) => (
+                      item.feeAmt ?
+                        <div className={styles.modal_flex} key={index}>
+                          <span className={styles.modal_label}>{item.feeNm}</span>
+                          <span className={styles.modal_value}>{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元</span>
+                        </div>
+                        : null
+                    ))
+                  }
+                  <div className={`${styles.modal_flex} ${styles.sum_total}`}>
+                    <span className={styles.modal_label}>本次应还总金额</span>
+                    <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
+                  </div>
                 </div>
-              </div>
-              : null
+                : null
             }
             <div className={styles.modal_flex}>
               <span className={styles.modal_label}>还款银行卡</span>

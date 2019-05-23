@@ -11,7 +11,6 @@ import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
 
-
 const API = {
   prodInfo: '/cash/prodList', //产品列表基本信息查询
   prodInfoByMoney: '/cash/prodInfo', //根据用户金额获取产品信息 
@@ -21,6 +20,7 @@ const API = {
   repayPlan: '/bill/prebill', //还款计划查询
   agentRepay: '/bill/agentRepay', // 借款申请接口
   qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
+  doCouponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 }
 
 let isFetching = false
@@ -57,6 +57,7 @@ export default class loan_fenqi_page extends PureComponent {
   componentWillMount() {
     let storeData = store.getCashFenQiStoreData() // 代提交的借款信息
     let cashFenQiCardArr = store.getCashFenQiCardArr() // 收、还款卡信息
+    let couponInfo = store.getCouponData() //优惠券数据
 
     if (storeData && cashFenQiCardArr) {
       this.handleDataDisplay(storeData, cashFenQiCardArr)
@@ -64,13 +65,23 @@ export default class loan_fenqi_page extends PureComponent {
       this.queryProdInfo()
       this.queryLoanUsageList()
     }
+
+    if (couponInfo && couponInfo.coupVal === -1) {
+      this.setState({
+        couponInfo,
+        deratePrice: ''
+      })
+    }
+
+    if (couponInfo && storeData && couponInfo.coupVal !== -1) {
+      this.dealMoney(couponInfo, storeData.prdId)
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { loanMoney, loanDate } = this.state
     if (loanMoney && loanDate && (loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt)) {
       this.queryContractList()
-      this.queryCouponInfo()
     }
   }
 
@@ -158,6 +169,8 @@ export default class loan_fenqi_page extends PureComponent {
         this.setState({
           contractList: res.data,
           prdId: res.data[0].productId  //产品ID
+        }, () => {
+          this.queryCouponInfo()
         })
       } else {
         this.setState({
@@ -171,7 +184,8 @@ export default class loan_fenqi_page extends PureComponent {
 
   //查询优惠券
   queryCouponInfo = () => {
-    const { loanMoney, loanDate } = this.state
+    let couponInfo = store.getCouponData()
+    const { loanMoney, loanDate, prdId } = this.state
     this.props.$fetch.post(API.couponSupport, {
       price: loanMoney,
       type: 'LOAN',
@@ -181,6 +195,8 @@ export default class loan_fenqi_page extends PureComponent {
       if (res.msgCode === 'PTM0000' && res.data !== null) {
         this.setState({
           couponInfo: res.data
+        }, () => {
+          this.dealMoney(res.data, prdId)
         })
       } else {
         this.setState({
@@ -218,6 +234,7 @@ export default class loan_fenqi_page extends PureComponent {
     const { couponInfo, loanMoney, loanDate } = this.state
     if (!couponInfo.coupVal) return
     this.storeTempData()
+    console.log(couponInfo)
     if (couponInfo && couponInfo.coupId) {
       store.setCouponData(couponInfo);
     }
@@ -334,7 +351,8 @@ export default class loan_fenqi_page extends PureComponent {
       payBankCardName,
       perdRateList,
       contractList,
-      usageList
+      usageList,
+      deratePrice
     } = this.state
     const resaveCard = {
       agrNo: resaveBankCardAgrNo,
@@ -346,13 +364,12 @@ export default class loan_fenqi_page extends PureComponent {
       lastCardNo: payBankCardLastNo,
       bankName: payBankCardName
     }
-    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, couponInfo, perdRateList, contractList, usageList })
+    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, perdRateList, contractList, usageList, couponInfo, deratePrice })
     store.setCashFenQiCardArr([resaveCard, payCard])
   }
 
   //处理数据反显
   handleDataDisplay = (storeData = {}, cardArr = []) => {
-    let couponInfo = store.getCouponData() || {} //优惠券数据
     let tempResaveCard = cardArr[0] || {}
     let tempPayCard = cardArr[1] || {}
     let perdRateList = []
@@ -375,27 +392,47 @@ export default class loan_fenqi_page extends PureComponent {
       payBankCardLastNo,
       perdRateList,
       usageList,
-      couponInfo
     })
     this.setState({ ...data })
   }
 
   //验证信息是否填写完整
   validateFn = () => {
-    const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo } = this.state
-    if (loanMoney && loanDate && resaveBankCardAgrNo && payBankCardAgrNo) {
+    const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo, prdId } = this.state
+    if (loanMoney && loanDate && resaveBankCardAgrNo && payBankCardAgrNo && prdId) {
       return true
     }
     return false
   }
 
+  // 处理优惠券金额显示
+  dealMoney = (couponInfo, prdId) => {
+    let storeData = store.getCashFenQiStoreData() || {} // 代提交的借款信息
+    this.props.$fetch.get(API.doCouponCount, {
+      prodId: prdId,
+      couponId: couponInfo.usrCoupNo,
+      type: '00', // 00为借款 01为还款
+      price: storeData.loanMoney || this.state.loanMoney,
+      prodType: '11'
+    }).then((result) => {
+      if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+        this.setState({
+          couponInfo, // 计算之后更新state的优惠券信息
+          deratePrice: result.data.deratePrice
+        })
+      } else {
+        this.props.toast.info(result.msgInfo);
+      }
+    });
+  }
+
   //计算待提交的金额
   calcLoanMoney = (m) => {
-    if (!m || this.state.loanMoney === m) return
-    buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney: m })
+    if (this.state.loanMoney === m) return
     const { priceMax, priceMin } = this.state
     let loanMoney;
-    if (m < priceMin) {
+    buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney: m })
+    if (m === 0 || m < priceMin) {
       loanMoney = priceMin
     } else if (m > priceMax) {
       loanMoney = priceMax
@@ -477,7 +514,8 @@ export default class loan_fenqi_page extends PureComponent {
       priceMax = '',
       priceMin = '',
       contractList,
-      repayPlanInfo
+      repayPlanInfo,
+      deratePrice
     } = this.state
     return (
       <div className={style.fenqi_page}>
@@ -496,6 +534,7 @@ export default class loan_fenqi_page extends PureComponent {
                     this.setState({
                       inputClear: true
                     }, () => {
+                      store.removeCashFenQiStoreData()
                       this.queryProdInfo()
                     })
                   }
@@ -505,7 +544,7 @@ export default class loan_fenqi_page extends PureComponent {
                   })
                 }}
                 onBlur={(v) => {
-                  this.calcLoanMoney(Number(v))
+                  v && this.calcLoanMoney(Number(v))
                 }}
               />
             </div>
@@ -550,7 +589,7 @@ export default class loan_fenqi_page extends PureComponent {
                 loanMoney && loanDate && <li className={style.listItem}>
                   <label>优惠券</label>
                   <span className={style.listValue} onClick={this.selectCoupon}>
-                    <span className={style.redText}>{couponInfo.coupVal ? `${couponInfo.coupVal !== -1 ? `-${couponInfo.coupVal}元` : '请选择'}` : `无可用优惠券`}</span>
+                    <span className={style.redText}>{couponInfo.coupVal ? `${deratePrice ? `${deratePrice}` : '请选择'}` : '无可用优惠券'}</span>
                     <Icon type="right" className={style.icon} />
                   </span>
                 </li>

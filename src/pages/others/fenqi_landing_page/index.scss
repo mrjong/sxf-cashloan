@@ -69,43 +69,10 @@
   color: #414a53;
 }
 
-.list {
-  display: flex;
-  margin: 60px 23px 120px 60px;
-  overflow: hidden;
-  .listItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    &:nth-child(1) {
-      width: 33%;
-    }
-    &:nth-child(2) {
-      width: 40%;
-    }
-    &:nth-child(3) {
-      width: 40%;
-    }
-  }
-
-  span {
-    font-size: 28px;
-    font-weight: 400;
-    color: #121c32;
-  }
-
-  p {
-    font-size: 24px;
-    color: #414a53;
-    em {
-      color: #fe6666;
-    }
-  }
-
-  img {
-    width: 72px;
-    height: 72px;
-  }
+.img {
+  display: block;
+  margin: 60px 0 120px 60px;
+  width: 670px;
 }
 
 .ruleImg {

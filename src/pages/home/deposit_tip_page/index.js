@@ -20,6 +20,7 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer'
 		this.getDownloadUrl();
 	}
 

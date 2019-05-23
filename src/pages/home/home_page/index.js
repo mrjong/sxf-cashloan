@@ -13,6 +13,8 @@ import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
+import TFDInit from 'utils/getTongFuDun';
+
 import {
 	CarouselHome,
 	BlackCard,
@@ -216,7 +218,7 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						if (code === '1' && !store.getFQActivity()) {
+						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
 							store.setFQActivity(true);
 							this.setState({
 								modalType: 'xianjin',
@@ -495,7 +497,7 @@ export default class home_page extends PureComponent {
 				// entryFrom 给打点使用，区分从哪个页面进入订单页的
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home&transactionType=DC'
+					search: '?entryFrom=home'
 				});
 				break;
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
@@ -777,20 +779,27 @@ export default class home_page extends PureComponent {
 	};
 	// 现金分期点击事件
 	handleCN = (code) => {
+		const { usrCashIndexInfo } = this.state
 		switch (code) {
 			case 'CN0003':
+				// 通付盾 获取设备指纹
+				TFDInit();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
-				this.props.history.push('/home/loan_fenqi');
+				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
+					//需要引导下载app
+					this.props.history.push('/home/deposit_tip')
+				} else {
+					this.props.history.push('/home/loan_fenqi');
+				}
 				break;
 			case 'CN0004':
 				this.props.toast.info('正在放款中，马上到账');
 				break;
 			case 'CN0005':
-				const { usrCashIndexInfo } = this.state;
 				store.setBillNo(usrCashIndexInfo.indexData.billNo);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home&transactionType=fenqi'
+					search: '?entryFrom=home'
 				});
 				break;
 			default:
@@ -838,15 +847,28 @@ export default class home_page extends PureComponent {
 				break;
 		}
 	};
+
 	// 逾期弹窗
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
 		store.setBillNo(usrIndexInfo.indexData.billNo);
 		this.props.history.push({
 			pathname: '/order/order_detail_page',
-			search: '?entryFrom=home&transactionType=DC'
+			search: '?entryFrom=home'
 		});
 	};
+
+	//处理现金分期额度有效期显示
+	handleAcOverDtShow = () => {
+		const { indexData } = this.state.usrCashIndexInfo
+		const overDt = Number(indexData.acOverDt)
+		if (overDt > 10) return false
+		if (overDt === 0 || overDt <= 0) {
+			return '1天后失去资格'
+		} else {
+			return `${overDt}天后失去资格`
+		}
+	}
 	// *****************************分期****************************** //
 	getFQDisPlay = () => {
 		let componentsDisplay = null;
@@ -865,6 +887,7 @@ export default class home_page extends PureComponent {
 						showData={{
 							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
 							title: '还到-Plus',
+							topTip: this.handleAcOverDtShow(),
 							subtitle: '可提现金额(元)',
 							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.curAmt.toFixed(2),
 							desc: '你信用等级良好'
@@ -1089,8 +1112,8 @@ export default class home_page extends PureComponent {
 								cardNoHid: cardCode,
 								bankNo: bankCode,
 								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
-								subtitle2:'最高可申请还款金(元)',
-                				money2: maxApplAmt ? parseFloat(maxApplAmt, 10).toFixed(2) : '',
+								subtitle2: '最高可申请还款金(元)',
+								money2: maxApplAmt ? parseFloat(maxApplAmt, 10).toFixed(2) : '',
 							}}
 						/>
 					);
