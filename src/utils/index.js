@@ -398,7 +398,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 };
 
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
-export const getNextStr = async ({ $props, needReturn = false, callBack, jumpCb }) => {
+export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
 	let res = await $props.$fetch.post(API.GETSTSW);
@@ -496,10 +496,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack, jumpCb 
 				if (callBack) {
 					callBack(resBackMsg);
 				}
-				return;
-			}
-			if (jumpCb) {
-				jumpCb();
 				return;
 			}
 			// 信用卡返回跳转到进度页
