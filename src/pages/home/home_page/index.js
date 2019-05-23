@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, idChkPhoto, isCanLoan } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, isCanLoan } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -27,10 +27,8 @@ import {
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
-let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
-	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 	qryPerdRate: '/bill/prod',
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -174,7 +172,6 @@ export default class home_page extends PureComponent {
 		this.props.$fetch
 			.get(API.cashShowSwitch)
 			.then((result) => {
-				// result.data.value 0关闭 1开启
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 					if (result.data.value === '1') {
 						this.indexshowType();
@@ -210,7 +207,7 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 现金分期首页接口p
+	// 现金分期首页接口
 	usrCashIndexInfo = (code) => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
@@ -281,7 +278,7 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		let codes = [];
 		let demo = data.codes;
-		console.log(demo, 'demo');
+		// console.log(demo, 'demo');
 		// let demo = '2224'
 		this.setState({
 			pageCode: demo
