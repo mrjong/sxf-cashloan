@@ -320,12 +320,7 @@ export default class loan_fenqi_page extends PureComponent {
     this.props.history.push({
       pathname: '/protocol/pdf_page',
       state: {
-        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}
-        &contractNo=${item.contractNo}
-        &loanAmount=${loanMoney}
-        &productId=${item.productId}
-        &withholdAgrNo=${payBankCardAgrNo}
-        &fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${item.productId}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
         name: item.contractMdlName
       }
     });
@@ -528,6 +523,7 @@ export default class loan_fenqi_page extends PureComponent {
                 clear={true}
                 type="number"
                 value={loanMoney}
+                maxLength={7}
                 onChange={(v) => {
                   if (!v) {
                     this.setState({
