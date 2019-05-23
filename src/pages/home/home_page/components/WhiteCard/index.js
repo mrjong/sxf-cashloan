@@ -18,7 +18,7 @@ export default class DCCard extends React.Component {
 						<div className={style.title}>
 							<i className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
 							{showData.title}
-							{showData.cardNoHid ? <span> ({showData.cardNoHid})</span> : null}
+							{showData.cardNoHid ? <span class={style.lastCode}> ({showData.cardNoHid})</span> : null}
 						</div>
 					}
 					{children}

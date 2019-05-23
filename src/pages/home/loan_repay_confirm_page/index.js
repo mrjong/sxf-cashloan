@@ -552,15 +552,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return false;
 	};
 
-	placeholderText = () => {
-		const { fetchBillSucc, activeTag, usrIndexInfo } = this.state;
-		const { indexData } = usrIndexInfo;
-		if (fetchBillSucc && activeTag === 2) {
-			return `申请金额${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
-		} else {
-			return ``;
-		}
-	};
+	// placeholderText = () => {
+	// 	const { fetchBillSucc, activeTag, usrIndexInfo } = this.state;
+	// 	const { indexData } = usrIndexInfo;
+	// 	if (fetchBillSucc && activeTag === 2) {
+	// 		return `申请金额${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
+	// 	} else {
+	// 		return ``;
+	// 	}
+	// };
 
 	updateBillInf = () => {
 		const { usrIndexInfo } = this.state;
@@ -685,7 +685,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 		let placeholderText = '';
 		if (fetchBillSucc) {
-			placeholderText = `输入还卡金额 ${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
+			placeholderText = `输入还卡金额 ${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}`;
 		} else {
 			placeholderText = ``;
 		}
@@ -744,38 +744,44 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div> */}
 					</div>
 					<div className={style.repayTypeBox}>
-						<InputItem
-							{...getFieldProps('loanMoney', {
-								rules: [ { required: true, message: '请输入还款金额' } ]
-							})}
-							type="number"
-							placeholder={placeholderText}
-							ref={(el) => (this.inputRef = el)}
-							className={this.inputDisabled() ? 'blackColor' : 'blackColor'}
-							onBlur={(v) => {
-								setTimeout(() => {
-									if (isinputBlur) {
+						<span className={style.name}>部分还卡</span>
+						<div className={`${style.value} ${style.special_val}`}>
+							<InputItem
+								{...getFieldProps('loanMoney', {
+									rules: [ { required: true, message: '请输入还款金额' } ]
+								})}
+								type="number"
+								placeholder={placeholderText}
+								ref={(el) => (this.inputRef = el)}
+								className={this.inputDisabled() ? 'blackColor' : 'blackColor'}
+								onBlur={(v) => {
+									setTimeout(() => {
+										if (isinputBlur) {
+											return;
+										}
+										this.calcLoanMoney(v, 'tag3');
+									});
+
+									handleInputBlur();
+								}}
+								onFocus={(v) => {
+									this.setState({
+										repayType: tagList[0],
+										activeTag: 0,
+										fullMinAmt: '',
+									})
+									if (this.updateBillInf()) {
 										return;
 									}
-									this.calcLoanMoney(v, 'tag3');
-								});
-
-								handleInputBlur();
-							}}
-							onFocus={(v) => {
-								this.setState({
-									repayType: tagList[0],
-									activeTag: 0,
-									fullMinAmt: '',
-								})
-								if (this.updateBillInf()) {
-									return;
-								}
-								this.props.form.setFieldsValue({
-									loanMoney: v ? v : maxApplAmt ? maxApplAmt : ''
-								});
-							}}
-						/>
+									this.props.form.setFieldsValue({
+										loanMoney: v ? v : maxApplAmt ? maxApplAmt : ''
+									});
+								}}
+							/>
+							<div className={style.unit}>
+								元
+							</div>
+						</div>
 					</div>
 					<div className={style.repayTypeBox} onClick={() => {this.toggleTag(1, 'click')}}>
 						<span className={style.name}>最低还卡</span>
@@ -791,7 +797,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<i className={ repayType===tagList[2] ? `${style.unChecked} ${style.checked}` : style.unChecked } />
 						</div>
 					</div>
-					<div>
+					<div className={style.border_bottom}>
 						<List.Item
 							onClick={() => {
 								if (

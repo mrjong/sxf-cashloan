@@ -59,7 +59,7 @@ export default [
   },
   {
     path: '/mine/credit_list_page',
-    title: '选择授权卡',
+    title: '选择信用卡',
     component: () => import('pages/mine/credit_list_page'),
   },
   {

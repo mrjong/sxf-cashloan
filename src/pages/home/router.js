@@ -50,7 +50,7 @@ export default [
   },
   {
     path: '/home/loan_repay_confirm_page',
-    title: '借钱还信用卡',
+    title: '申请借钱还卡',
     component: () => import('pages/home/loan_repay_confirm_page'),
   },
   {

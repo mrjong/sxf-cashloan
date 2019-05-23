@@ -1,6 +1,8 @@
 .box {
 	padding: 40px 40px 30px;
-	min-height: 380px;
+	height: 390px;
+	box-sizing: border-box;
+	// min-height: 380px;
 }
 .box_container {
 	// -webkit-animation-name: fadeIn;
@@ -38,10 +40,13 @@
 	font-size: 22px;
 }
 .title {
+	display: flex;
 	font-size: 32px;
 	font-family: 'PingFangSC-Semibold';
 	font-weight: 600;
 	color: rgba(18, 28, 50, 1);
+	height: 50px;
+	align-items: center;
 	span {
 		color: #868e9e;
 		font-size: 22px;
@@ -59,10 +64,11 @@
 	width: 50px;
 	height: 50px;
 	margin-right: 17px;
+	top: 0;
 }
 .submitBtn {
 	position: absolute;
-	bottom: 20px;
+	bottom: 32px;
 	right: 30px;
 	background-color: #f8a441;
 	color: #fff;
@@ -73,6 +79,9 @@
 	font-size: 30px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
+}
+.lastCode{
+	margin-left: 5px;
 }
 .money {
 	padding-top: 20px;
