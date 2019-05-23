@@ -22,6 +22,7 @@ export default class tencent_face_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		// window.tencent_face_middle_page = null;
 		store.removeChkPhotoBackNew();
 		const osType = getDeviceType();
 		//人脸识别的回调
