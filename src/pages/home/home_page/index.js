@@ -36,7 +36,6 @@ const API = {
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
-	QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 确认代还信息查询接口
 };
 let token = '';
 let tokenFromStorage = '';
@@ -498,7 +497,11 @@ export default class home_page extends PureComponent {
 						return ele.code === bankCode;
 					});
 					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-					window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+					if (jumpUrl) { // 如果银行code一致跳登录页，否则跳列表页
+						window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+					} else {
+						this.goToNewMoXie();
+					}
 				} else {
 					this.props.toast.info('系统开小差，请稍后重试');
 				}
@@ -699,7 +702,14 @@ export default class home_page extends PureComponent {
 							this.getPercent();
 						}
 						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
-							this.queryProInfo();
+							let maxAmtArr = []
+							maxAmtArr = result.data && result.data.indexData && result.data.indexData.prodList && result.data.indexData.prodList.length &&
+							result.data.indexData.prodList.map((item, index) => {
+								return item.maxAmt;
+							});
+							this.setState({
+								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
+							})
 						}
 					}
 				);
@@ -1237,28 +1247,6 @@ export default class home_page extends PureComponent {
 		}
 		return componentsAddCards;
 	}
-
-	// 获取代还期限列表 还款日期列表
-	queryProInfo = () => {
-		let maxAmtArr = [];
-		const { usrIndexInfo } = this.state;
-		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) {
-			this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${usrIndexInfo.indexData.autId}`).then((result) => {
-				if (result && result.msgCode === 'PTM0000') {
-					if (result.data && result.data.prdList && result.data.prdList.length) {
-						maxAmtArr = result.data.prdList.map((item, index) => {
-							return item.maxAmt;
-						});
-						this.setState({
-							userMaxAmt: Math.max(...maxAmtArr)
-						})
-					}
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			});
-		}
-	};
 
 	render() {
 		const {
