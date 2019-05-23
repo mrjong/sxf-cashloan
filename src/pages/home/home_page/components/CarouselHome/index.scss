@@ -2,29 +2,35 @@
 	font-size: 24px;
 	font-family: 'PingFangSC-Semibold';
 	font-weight: 600;
+	color: #121C32;
 }
 .plus {
-	width: 437px;
+	width: 459px;
 	height: 140px;
-	padding: 45px 90px;
+	margin: 36px auto 30px;
+	// padding: 45px 90px;
 	display: block;
 }
 .bank {
 	width: 476px;
 	height: 139px;
-	padding: 45px 60px;
+	margin: 30px auto 40px;
+	// padding: 45px 60px;
 	display: block;
 }
 
 .title {
+	display: flex;
 	position: absolute;
 	left: 80px;
-	top: 40px;
+	top: 32px;
 	font-size: 32px;
 	font-family: 'PingFangSC-Semibold';
 	font-weight: 600;
 	color: rgba(18, 28, 50, 1);
 	z-index: 1;
+	height: 50px;
+	align-items: center;
 	span {
 		color: #868e9e;
 		font-size: 22px;
@@ -42,10 +48,11 @@
 	width: 50px;
 	height: 50px;
 	margin-right: 17px;
+	top: 0;
 }
 .submitBtn {
 	position: absolute;
-	bottom: 20px;
+	bottom: 32px;
 	right: 70px;
 	background-color: #f8a441;
 	color: #fff;
@@ -71,11 +78,12 @@
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
 	color: #868e9e;
+	margin-top: 31px;
 }
 .money {
 	padding-top: 20px;
 	font-size: 80px;
-	line-height: 1.4;
+	line-height: 1;
 	font-family: "DIN Condensed";
 	font-weight: normal;
   color: #121c32;
@@ -84,8 +92,9 @@
   }
 }
 .contentBox{
-	padding-top: 90px;
-	min-height: 330px;
+	padding-top: 82px;
+	height: 300px;
+	// min-height: 300px;
 }
 .box{
 	display: flex;
@@ -98,7 +107,7 @@
 }
 .demoTip {
 	width: 112px;
-	right: 10px;
+	right: 4px;
 	top: 0;
 	word-wrap: break-word;
 	text-align: center;
@@ -116,7 +125,7 @@
 			left: 0;
 			width: auto;
 			display: inline-block;
-			bottom: 0;
+			bottom: 15px;
 			text-align: left;
 		}
 	}

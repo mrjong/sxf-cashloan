@@ -5,7 +5,6 @@ import { Carousel } from 'antd-mobile';
 import ZButton from 'components/ButtonCustom';
 import plus from './img/plus.png';
 import bank from './img/bank.png';
-import MoneyCard from '../MoneyCard';
 import WhiteCard from '../WhiteCard';
 import { isMPOS } from 'utils/common';
 
@@ -26,7 +25,7 @@ export default class carouselHome extends React.Component {
 
 	static defaultProps = {
 		entryFrom: 'banner',
-		autoplay: true,
+		// autoplay: true,
 		infinite: true,
 		cellSpacing: 1,
 		dotStyle: {
@@ -61,7 +60,7 @@ export default class carouselHome extends React.Component {
 			<div className="carouselHome">
 				<div className={style.title}>
 					<i className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
-					{showData.title}
+					<i>{showData.title}</i>
 				</div>
 				<WhiteCard showData={showData} noLogoBtn={true} handleClick={handleClick}>
 					<Carousel {...restProps}>
