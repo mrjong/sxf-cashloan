@@ -91,7 +91,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 						return ele.code === bankCode;
 					});
 					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-					window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+					if (jumpUrl) { // 如果银行code一致跳登录页，否则跳列表页
+						window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+					} else {
+						this.goMoxieBankList();
+					}
 				} else {
 					this.props.toast.info('系统开小差，请稍后重试');
 				}
