@@ -190,7 +190,6 @@ const interceptRouteArr = [
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
 	'/home/crawl_fail_page',
-	'/common/tencent_face_middle_page'
 ];
 
 // 在需要路由拦截的页面 pushState
