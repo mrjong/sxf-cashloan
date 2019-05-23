@@ -1,5 +1,5 @@
 .bgBox {
-	transform: scale(.7);
+	transform: scale(.6);
 	position: relative;
 	.bg {
 		width: 100%;
@@ -12,7 +12,7 @@
 		left: 300px;
 		opacity: .8;
 		z-index: 1;
-		animation: move_paper1 1s ease-out infinite;
+		animation: move_paper1 1.5s ease-in-out infinite;
 	}
 	.paper2 {
 		position: absolute;
@@ -32,13 +32,13 @@
 		top: 315px;
 		left: 330px;
 		z-index: 2;
-		animation: move_handle 1s ease-out infinite;
+		animation: move_handle 1.5s ease-out infinite;
 	}
 	.jing {
 		position: absolute;
-		top: 255px;
+		top: 240px;
 		z-index: 4;
-		left: 280px;
+		left: 300px;
 		transform-origin: -50% 50%;
 		animation: move_jing 1.5s ease infinite;
 	}
@@ -82,8 +82,8 @@
 		top: 185px;
 		opacity: 1;
 	}
-	99% {
-		opacity: 0.8;
+	60% {
+		opacity: .8;
 	}
 	100% {
 		top: 0;
@@ -106,18 +106,18 @@
 }
 @keyframes move_jing {
 	0% {
-		transform: rotate(-20deg);
+		transform: rotate(10deg);
 
-		left: 300px;
+		left: 330px;
 	}
 	50% {
-		transform: rotate(0deg);
+		transform: rotate(-10deg);
 
-		left: 320px;
+		left: 295px;
 	}
 	100% {
-		transform: rotate(-20deg);
+		transform: rotate(10deg);
 
-		left: 300px;
+		left: 330px;
 	}
 }
