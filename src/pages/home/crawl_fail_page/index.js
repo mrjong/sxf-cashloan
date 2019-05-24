@@ -3,7 +3,7 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-
+import qs from 'qs'
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import progressIcon from  './img/crawl.png'
@@ -18,16 +18,26 @@ export default class crawl_progress_page extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-
+      showPopover: '0'
     };
   }
 
   componentWillMount() {
-    this.props.$fetch
-      .get(API.USER_IMPORT)
-      .then((res) => {
-      }).catch(err=>{
-    })
+    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+    if(queryData.showPopover && queryData.showPopover !== '0'){
+      this.setState({
+        showPopover: queryData.showPopover
+      })
+    }
+    if(store.getPercentCount()){
+      this.props.$fetch
+        .get(API.USER_IMPORT)
+        .then((res) => {
+          store.setPercentCount(null)
+        }).catch(err=>{
+      })
+    }
+
   }
 
   componentDidMount() {
@@ -36,8 +46,13 @@ export default class crawl_progress_page extends PureComponent {
   componentWillUnmount() {
     store.removeAutId2();
   }
+
+  goMoxieBankList = () => {
+    store.setMoxieBackUrl('/home/home');
+    this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+  };
   render() {
-    let {  } = this.state
+    let { showPopover } = this.state
     return (
       <div className={style.crawl_fail_page}>
         <img src={progressIcon} className={style.progress_icon}/>
@@ -47,16 +62,18 @@ export default class crawl_progress_page extends PureComponent {
           <span className={style.apply_success}> 申请成功</span>
         </div>
         <div className={style.popover_inner}>信用卡账单导入失败</div>
-        <div className={style.popover}>
-          <div className={style.arrow}></div>
-          <div className={style.inner}>多次失败建议换张信用卡，已送您一张免息券</div>
-        </div>
+        {
+          showPopover !== '0' ?
+          <div className={style.popover}>
+            <div className={style.arrow}/>
+            <div className={style.inner}>多次失败建议换张信用卡，已送您一张免息券</div>
+          </div> : null
+        }
         <div className={style.button} onClick={()=>{
-          store.setMoxieBackUrl('/home/home');
-          this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+          this.goMoxieBankList()
         }}>选择导入其他银行卡</div>
         <div style={{textAlign: 'center'}} onClick={()=>{
-          this.props.history.replace('/home/crawl_progress_page')
+          showPopover !== '2' ? this.goMoxieBankList() : this.props.history.replace('/home/crawl_progress_page')
         }}>尝试再次导入</div>
       </div>
     );
