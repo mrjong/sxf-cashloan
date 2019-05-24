@@ -1,5 +1,5 @@
 .topBox {
-  margin-top: -60px;
+	margin-top: -60px;
 	.title {
 		font-size: 46px;
 		font-family: 'PingFangSC-Medium';
@@ -14,14 +14,15 @@
 		color: #868e9e;
 		a {
 			color: #397be6;
+			font-weight: bold;
 		}
 	}
 }
 
 .topImg {
-  min-height: 1px;
-  // position: absolute;
-  margin-top: -80px;
+	min-height: 1px;
+	// position: absolute;
+	margin-top: -80px;
 	top: 0;
 }
 .step_box_new {

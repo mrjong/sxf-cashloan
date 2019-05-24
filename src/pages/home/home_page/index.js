@@ -687,12 +687,12 @@ export default class home_page extends PureComponent {
 	};
 	// 获取首页信息
 	requestGetUsrInfo = () => {
-		this.props.$fetch.post(API.USR_INDEX_INFO).then((result1) => {
-			const result = {
-				msgCode: 'PTM0000',
-				msgInfo: '',
-				data: mockData.LN0007
-			};
+		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
+			// const result = {
+			// 	msgCode: 'PTM0000',
+			// 	msgInfo: '',
+			// 	data: mockData.LN0011
+			// };
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				// if (result.data.indexSts === 'LN0003') {
 				// 	this.getPercent();
