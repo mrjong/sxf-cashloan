@@ -316,11 +316,11 @@ export default class loan_fenqi_page extends PureComponent {
 
   //阅读合同详情
   readContract = (item) => {
-    const { loanMoney, payBankCardAgrNo } = this.state
+    const { loanMoney, payBankCardAgrNo, resaveBankCardAgrNo } = this.state
     this.props.history.push({
       pathname: '/protocol/pdf_page',
       state: {
-        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${item.productId}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${item.productId}&agreementNo=${resaveBankCardAgrNo}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
         name: item.contractMdlName
       }
     });
