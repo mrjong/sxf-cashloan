@@ -1,0 +1,58 @@
+.title {
+	font-size: 40px;
+
+	font-family: 'PingFangSC-Semibold';
+	font-weight: 600;
+	color: #121c32;
+}
+.titleBox {
+	margin-top: 5px;
+}
+.titleBox2 {
+	margin-top: 50px;
+}
+.tel {
+	color: #f66;
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	line-height: .9;
+	margin-bottom: 20px;
+}
+.desc {
+	color: #868e9e;
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	line-height: .9;
+	margin-bottom: 20px;
+}
+.bg {
+	background-color: #f7f9fc;
+	color: #c3c8d0;
+	padding: 10px 30px;
+	border-radius: 16px;
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	align-items: center;
+}
+.line {
+	position: absolute;
+	height: 25px;
+	left: 50%;
+	border-right: 1PX solid #c3c8d0;
+}
+
+.money {
+	font-family: "DIN Condensed";
+	font-size: 40px;
+	line-height: .9;
+	span {
+		font-size: 24px;
+	}
+}
+.dw {
+	line-height: 1;
+	font-size: 20px;
+}

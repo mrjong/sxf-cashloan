@@ -55,12 +55,12 @@ export default [
 	},
 	{
 		path: '/home/credit_apply_succ_page',
-		title: '提交申请成功',
+		title: '快速评估中',
 		component: () => import('pages/home/credit_apply_succ_page')
 	},
 	{
 		path: '/home/loan_apply_succ_page',
-		title: '申请成功',
+		title: '快速打款中',
 		component: () => import('pages/home/loan_apply_succ_page')
 	},
 	{
@@ -87,5 +87,10 @@ export default [
 		path: '/home/remit_ing_page',
 		title: '快速打款中',
 		component: () => import('pages/home/remit_ing_page')
+  },
+  {
+		path: '/home/loan_person_succ_page',
+		title: '等待人工审核',
+		component: () => import('pages/home/loan_person_succ_page')
 	}
 ];

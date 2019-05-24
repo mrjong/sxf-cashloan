@@ -1,0 +1,123 @@
+.bgBox {
+	transform: scale(.6);
+	position: relative;
+	.bg {
+		width: 100%;
+		display: block;
+	}
+	.paper1 {
+		position: absolute;
+		top: 0;
+		top: 185px;
+		left: 300px;
+		opacity: .8;
+		z-index: 1;
+		animation: move_paper1 1.5s ease-in-out infinite;
+	}
+	.paper2 {
+		position: absolute;
+		top: 0;
+		top: 185px;
+		left: 300px;
+	}
+	.person {
+		position: absolute;
+		z-index: 5;
+		top: 285px;
+		left: 300px;
+	}
+	.handle {
+		position: absolute;
+		top: 0;
+		top: 315px;
+		left: 330px;
+		z-index: 2;
+		animation: move_handle 1.5s ease-out infinite;
+	}
+	.jing {
+		position: absolute;
+		top: 240px;
+		z-index: 4;
+		left: 300px;
+		transform-origin: -50% 50%;
+		animation: move_jing 1.5s ease infinite;
+	}
+	.zfx {
+		position: absolute;
+		top: 0;
+		right: 50px;
+		animation: move_zfx 2.5s infinite;
+	}
+	.zfx2 {
+		position: absolute;
+		top: 80px;
+		left: 60px;
+		animation: move_zfx2 2.5s infinite;
+	}
+}
+@keyframes move_zfx2 {
+	0% {
+		top: 80px;
+	}
+	50% {
+		top: 0;
+	}
+	100% {
+		top: 80px;
+	}
+}
+@keyframes move_zfx {
+	0% {
+		top: 0;
+	}
+	50% {
+		top: 80px;
+	}
+	100% {
+		top: 0;
+	}
+}
+@keyframes move_paper1 {
+	0% {
+		top: 185px;
+		opacity: 1;
+	}
+	60% {
+		opacity: .8;
+	}
+	100% {
+		top: 0;
+		opacity: 0;
+	}
+}
+@keyframes move_handle {
+	0% {
+		transform: rotate(-10deg);
+		transform-origin: 50% 50%;
+	}
+	50% {
+		transform: rotate(-40deg);
+		transform-origin: 0% 0%;
+	}
+	100% {
+		transform: rotate(-10deg);
+		transform-origin: 50% 50%;
+	}
+}
+@keyframes move_jing {
+	0% {
+		transform: rotate(10deg);
+
+		left: 330px;
+	}
+	50% {
+		transform: rotate(-10deg);
+
+		left: 295px;
+	}
+	100% {
+		transform: rotate(10deg);
+
+		left: 330px;
+	}
+}

@@ -52,9 +52,10 @@ let initDialog = (errMsg) => {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
-							if (location.pathname === '/home/loan_repay_confirm_page') { // 借钱还信用卡页面物理返回到首页
+							if (location.pathname === '/home/loan_repay_confirm_page') {
+								// 借钱还信用卡页面物理返回到首页
 								obj.close();
-								window.ReactRouterHistory.push('/home/home'); 
+								window.ReactRouterHistory.push('/home/home');
 							} else {
 								history.go(-2);
 								obj.close();
@@ -264,6 +265,9 @@ if (window.history && window.history.pushState) {
 					} else {
 						window.ReactRouterHistory.push('/home/home');
 					}
+					break;
+				case '/home/credit_apply_succ_page':
+					window.ReactRouterHistory.push('/home/home');
 					break;
 				default:
 					// window.ReactRouterHistory.goBack()
