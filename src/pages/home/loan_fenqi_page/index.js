@@ -230,16 +230,15 @@ export default class loan_fenqi_page extends PureComponent {
 
   // 选择优惠劵
   selectCoupon = () => {
-    const { couponInfo, loanMoney, loanDate } = this.state
-    if (!couponInfo.coupVal) return
     this.storeTempData()
-    console.log(couponInfo)
+    const { couponInfo, loanMoney, loanDate } = this.state
     if (couponInfo && couponInfo.coupId) {
       store.setCouponData(couponInfo);
     }
     this.props.history.push({
       pathname: '/mine/coupon_page',
       search: `?transactionType=fenqi&price=${loanMoney}&perCont=${loanDate.perdUnit === 'M' ? loanDate.perdLth : 1}`,
+      state: { nouseCoupon: !couponInfo.coupVal }
     });
   }
 
@@ -585,7 +584,11 @@ export default class loan_fenqi_page extends PureComponent {
                 loanMoney && loanDate && <li className={style.listItem}>
                   <label>优惠券</label>
                   <span className={style.listValue} onClick={this.selectCoupon}>
-                    <span className={style.redText}>{couponInfo.coupVal ? `${deratePrice ? `${deratePrice}` : '请选择'}` : '无可用优惠券'}</span>
+                    {
+                      couponInfo.coupVal ? <span className={style.redText}>{deratePrice ? `${deratePrice}` : '请选择'}</span> :
+                        <span className={style.greyText}>无可用优惠券</span>
+                    }
+                    {/* <span className={style.redText}>{couponInfo.coupVal ? `${deratePrice ? `${deratePrice}` : '请选择'}` : '无可用优惠券'}</span> */}
                     <Icon type="right" className={style.icon} />
                   </span>
                 </li>
