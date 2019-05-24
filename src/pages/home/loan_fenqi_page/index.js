@@ -317,6 +317,7 @@ export default class loan_fenqi_page extends PureComponent {
   //阅读合同详情
   readContract = (item) => {
     const { loanMoney, payBankCardAgrNo, resaveBankCardAgrNo } = this.state
+    this.storeTempData()
     this.props.history.push({
       pathname: '/protocol/pdf_page',
       state: {
