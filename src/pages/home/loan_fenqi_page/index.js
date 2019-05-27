@@ -79,8 +79,8 @@ export default class loan_fenqi_page extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { loanMoney, loanDate } = this.state
-    if (loanMoney && loanDate && (loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt)) {
+    const { loanMoney, loanDate, resaveBankCardAgrNo } = this.state
+    if (loanMoney && loanDate && resaveBankCardAgrNo && (loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt)) {
       this.queryContractList()
     }
   }
