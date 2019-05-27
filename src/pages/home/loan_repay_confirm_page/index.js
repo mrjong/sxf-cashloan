@@ -366,7 +366,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (!getOperatorData) {
 			return;
 		}
-		return;
 		this.setState({
 			btnDisabled: false
 		});
