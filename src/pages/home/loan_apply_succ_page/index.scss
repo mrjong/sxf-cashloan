@@ -17,7 +17,9 @@
 		}
 	}
 }
-
+.submitBtn {
+	width: 634px;
+}
 .topImg {
 	min-height: 1px;
 	// position: absolute;
@@ -26,7 +28,7 @@
 }
 .step_box_new {
 	position: relative;
-	margin: 80px 100px;
+	margin: 80px 100px 120px;
 	.content {
 		padding: 45px 0;
 		.item_box {

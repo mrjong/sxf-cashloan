@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import style from './index.scss';
 import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
+import ZButton from 'components/ButtonCustom';
 
 @setBackGround('#fff')
 export default class remit_ing_page extends PureComponent {
@@ -39,6 +40,9 @@ export default class remit_ing_page extends PureComponent {
 						<div className={style.line} />
 					</div>
 				</div>
+					<ZButton onClick={()=>{
+            this.props.history.push('/home/home')
+          }} className={style.submitBtn}>我知道了</ZButton>
 			</div>
 		);
 	}
