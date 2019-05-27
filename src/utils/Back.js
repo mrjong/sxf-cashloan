@@ -269,6 +269,9 @@ if (window.history && window.history.pushState) {
 				case '/home/credit_apply_succ_page':
 					window.ReactRouterHistory.push('/home/home');
 					break;
+				case '/home/loan_person_succ_page':
+					window.ReactRouterHistory.push('/home/home');
+					break;
 				default:
 					// window.ReactRouterHistory.goBack()
 					break;
