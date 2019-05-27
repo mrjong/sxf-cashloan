@@ -190,7 +190,6 @@ const interceptRouteArr = [
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
 	'/home/crawl_fail_page',
-	'/common/tencent_face_middle_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -499,8 +498,14 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				}
 				return;
 			}
-			// 信用卡返回跳转到进度页
-			$props.history.push('/home/crawl_progress_page');
+			// 如果是银行卡则跳转到进度否则是确认借款页
+			if (store.getCreditSuccessBack()) {
+				// 信用卡返回跳转到进度页
+				$props.history.push('/home/crawl_progress_page');
+			} else {
+				$props.history.replace('/home/loan_repay_confirm_page');
+			}
+			
 		}
 	} else {
 		Toast.info(res.msgInfo);

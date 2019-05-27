@@ -162,7 +162,8 @@ export default class agency_page extends PureComponent {
 	// 处理优惠券金额显示
 	dealMoney = (result) => {
 		const { queryData, repayInfo } = this.state;
-		let couponInfo = store.getCouponData();
+    let couponInfo = store.getCouponData();
+
 		store.removeCouponData();
 		let params = {};
 		// 如果没有coupId直接不调用接口
@@ -618,7 +619,7 @@ export default class agency_page extends PureComponent {
 									className={style.item_value}
 								>
 									{this.renderCoupon()}
-									<i className={style.list_item_arrow} style={{ marginLeft: '.1rem', }}></i>							
+									<i className={style.list_item_arrow} style={{ marginLeft: '.1rem', }}></i>
 								</span>
 							) : (
 								<span

@@ -8,4 +8,17 @@ import ProgressBlock from './ProgressBlock';
 import WhiteCard from './WhiteCard';
 import CardProgress from './CardProgress';
 import AddCards from './AddCards';
-export { CarouselHome, BlackCard, MsgTip, OverDueModal, MoneyCard, ProgressBlock, WhiteCard, HomeModal, CardProgress, AddCards };
+import ExamineCard from './ExamineCard';
+export {
+	CarouselHome,
+	BlackCard,
+	MsgTip,
+	OverDueModal,
+	MoneyCard,
+	ProgressBlock,
+	WhiteCard,
+	HomeModal,
+	CardProgress,
+	AddCards,
+	ExamineCard
+};

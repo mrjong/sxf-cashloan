@@ -14,8 +14,8 @@ export default {
 		indexSts: 'CN0004',
 		indexMsg: '放款中',
 		indexData: {
-      credAmt: 3000.0,
-      orderAmt:4000,
+			credAmt: 3000.0,
+			orderAmt: 4000,
 			curAmt: 1000.0,
 			acOverDt: 10,
 			dcBillFlg: '00',
@@ -28,11 +28,11 @@ export default {
 		indexData: {
 			credAmt: 3000.0,
 			curAmt: 1500.0,
-      acOverDt: 10,
-      orderAmt:4000,
+			acOverDt: 10,
+			orderAmt: 4000,
 			dcBillFlg: '00',
-      downloadFlg: '01',
-      billNo:'5674567895678'
+			downloadFlg: '01',
+			billNo: '5674567895678'
 		}
 	},
 	LN0001: {
@@ -67,6 +67,18 @@ export default {
 	LN0004: {
 		indexSts: 'LN0004',
 		indexMsg: '代还资格审核中',
+		indexData: {
+			bankName: '招商银行',
+			bankNo: 'ICBC',
+			cardNoHid: '6785 **** **** 6654',
+			cardBillDt: '2018-07-17',
+			cardBillAmt: '786.45',
+			overDt: '7'
+		}
+	},
+	LN0011: {
+		indexSts: 'LN0011', // 人审核
+		indexMsg: '放款准备中',
 		indexData: {
 			bankName: '招商银行',
 			bankNo: 'ICBC',
@@ -116,7 +128,7 @@ export default {
 		}
 	},
 	LN0007: {
-		indexSts: 'LN0007',
+		indexSts: 'LN0007', // 机审核
 		indexMsg: '放款准备中',
 		indexData: {
 			bankName: '招商银行',

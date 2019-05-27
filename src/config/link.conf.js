@@ -7,7 +7,7 @@ const { PROJECT_ENV } = process.env;
 const envMap = {
   dev: {
     DC_URL: 'https://ffp-test.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP', // 开发环境 MPOS_APP与MPOS_CM渠道不同
-    PDF_URL: 'http://172.16.154.47:8080/wap', // pdf预览的接口url
+    PDF_URL: 'https://ffp-test.vbillbank.com/wap', // pdf预览的接口url
     BASE_URL: 'https://lns-wap-test.vbillbank.com'
   },
   test: {

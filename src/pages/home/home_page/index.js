@@ -23,7 +23,8 @@ import {
 	ProgressBlock,
 	HomeModal,
 	CardProgress,
-	AddCards
+  AddCards,
+	ExamineCard
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
@@ -45,7 +46,7 @@ const API = {
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
-	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
+	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag' // 是否渲染现金分期
 };
 let token = '';
 let tokenFromStorage = '';
@@ -390,7 +391,7 @@ export default class home_page extends PureComponent {
 							store.setToggleMoxieCard(true);
 							this.props.history.replace(`/mine/credit_list_page?autId=${bizId}`);
 						} else {
-							this.props.toast.info(result.msgInfo);
+							this.props.history.replace('/home/loan_repay_confirm_page');
 						}
 					} else if (type && type === 'cbFn') {
 						if (result.data.count > 1) {
@@ -402,6 +403,8 @@ export default class home_page extends PureComponent {
 					} else {
 						this.repayForOtherBank(result.data.count);
 					}
+				} else {
+					this.props.toast.info(result.msgInfo);
 				}
 			})
 			.catch((err) => {
@@ -469,8 +472,7 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
-				console.log('LN0004');
-				this.props.toast.info('正在审批中，请耐心等待');
+				this.props.history.push('/home/credit_apply_succ_page');
 				break;
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
@@ -485,13 +487,15 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				if (isNeedExamine) {
-					this.props.history.push('/home/loan_apply_succ_page');
-				} else {
-					this.props.toast.info(
-						`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`
-					);
-				}
+				this.props.history.push('/home/loan_apply_succ_page');
+
+				// if (isNeedExamine) {
+				// 	this.props.history.push('/home/loan_apply_succ_page');
+				// } else {
+				// 	this.props.toast.info(
+				// 		`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`
+				// 	);
+				// }
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
@@ -510,6 +514,9 @@ export default class home_page extends PureComponent {
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
 				console.log('LN0010');
 				break;
+			case 'LN0011': // 账单爬取失败/老用户 无按钮不做处理
+				this.props.history.push('/home/loan_person_succ_page');
+				break;
 			default:
 				console.log('default');
 		}
@@ -525,11 +532,16 @@ export default class home_page extends PureComponent {
 							return ele.code === bankCode;
 						});
 						const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-						window.location.href =
-							jumpUrl +
-							`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-								`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
-							)}`;
+						if (jumpUrl) {
+							// 如果银行code一致跳登录页，否则跳列表页
+							window.location.href =
+								jumpUrl +
+								`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+									`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
+								)}`;
+						} else {
+							this.goToNewMoXie();
+						}
 					} else {
 						this.props.toast.info('系统开小差，请稍后重试');
 					}
@@ -585,7 +597,8 @@ export default class home_page extends PureComponent {
 
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
-		const { usrIndexInfo } = this.state;
+		const { usrIndexInfo = {} } = this.state;
+		const { indexData = {} } = usrIndexInfo;
 		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
 		const api = autId ? `${API.chkCredCard}/${autId}` : API.CHECK_CARD;
 		this.props.$fetch.get(api).then((result) => {
@@ -593,7 +606,10 @@ export default class home_page extends PureComponent {
 				// 有风控且绑信用卡储蓄卡
 				this.props.history.push({
 					pathname: '/home/confirm_agency',
-					state: { indexData: usrIndexInfo && usrIndexInfo.indexData }
+					//
+					search: `?autId=${usrIndexInfo &&
+						usrIndexInfo.indexData &&
+						usrIndexInfo.indexData.autId}&bankName=${indexData.bankName}&cardNoHid=${indexData.cardNoHid}`
 				});
 			} else if (result && result.msgCode === 'PTM2003') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
@@ -695,6 +711,11 @@ export default class home_page extends PureComponent {
 	// 获取首页信息
 	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
+			// const result = {
+			// 	msgCode: 'PTM0000',
+			// 	msgInfo: '',
+			// 	data: mockData.LN0011
+			// };
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				// if (result.data.indexSts === 'LN0003') {
 				// 	this.getPercent();
@@ -725,14 +746,18 @@ export default class home_page extends PureComponent {
 							this.getPercent();
 						}
 						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
-							let maxAmtArr = []
-							maxAmtArr = result.data && result.data.indexData && result.data.indexData.prodList && result.data.indexData.prodList.length &&
-							result.data.indexData.prodList.map((item, index) => {
-								return item.maxAmt;
-							});
+							let maxAmtArr = [];
+							maxAmtArr =
+								result.data &&
+								result.data.indexData &&
+								result.data.indexData.prodList &&
+								result.data.indexData.prodList.length &&
+								result.data.indexData.prodList.map((item, index) => {
+									return item.maxAmt;
+								});
 							this.setState({
 								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
-							})
+							});
 						}
 					}
 				);
@@ -1083,16 +1108,17 @@ export default class home_page extends PureComponent {
 				// case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
 					componentsDisplay = (
-						<MoneyCard
+						<ExamineCard
 							handleClick={() => {
 								this.handleSmartClick();
 							}}
 							showData={{
-								btnText: '代偿资格审核中',
+                type:'LN0004',
+								btnText: '查看进度',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '预计最快90秒完成审核',
 								money: cardBillAmtData,
-								desc: `还款日：${cardBillDtData}`,
+								desc: `高峰期可能5分钟左右`,
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}
@@ -1103,7 +1129,7 @@ export default class home_page extends PureComponent {
 					componentsDisplay = (
 						<MoneyCard
 							handleClick={() => {
-								// this.handleSmartClick()
+								this.handleSmartClick();
 							}}
 							showData={{
 								btnText: '暂无借款资格',
@@ -1142,16 +1168,18 @@ export default class home_page extends PureComponent {
 					break;
 				case 'LN0007': // 放款中
 					componentsDisplay = (
-						<MoneyCard
+						<ExamineCard
 							handleClick={() => {
 								this.handleSmartClick();
 							}}
 							showData={{
-								btnText: '放款准备中',
+								type: 'LN0007',
+								btnText: '查看进度',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
-								money: cardBillAmtData,
-								desc: `还款日：${cardBillDtData}`,
+								subtitle: '预计60秒完成放款',
+								money: indexData.billAmt || '-.--',
+								date: indexData.perdCnt || '-',
+								desc: `最长不超过2个工作日`,
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}
@@ -1178,6 +1206,24 @@ export default class home_page extends PureComponent {
 					break;
 				case 'LN0010': // 账单爬取失败/老用户
 					componentsDisplay = <CarouselHome handleClick={this.goToNewMoXie} />;
+					break;
+				case 'LN0011': // 账单爬取失败/老用户
+					componentsDisplay = (
+						<ExamineCard
+							showData={{
+								type: 'LN0011',
+								btnText: '查看进度',
+								title: '还到-基础版',
+								subtitle: '需要人工审核，耐心等待',
+								money: indexData.billAmt || '-.--',
+								date: indexData.perdCnt || '-',
+								dw: '申请借款金额(元) ',
+								dw2: '申请期限 ',
+								tel: `010-86355XXX的审核电话`
+							}}
+							handleClick={this.handleSmartClick}
+						/>
+					);
 					break;
 				default:
 			}
