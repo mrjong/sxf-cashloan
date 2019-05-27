@@ -1153,10 +1153,10 @@ export default class home_page extends PureComponent {
 							showData={{
 								type: 'LN0007',
 								btnText: '查看进度',
-								date: indexData.perdCnt,
 								title: bankNm,
 								subtitle: '预计60秒完成放款',
-								money: cardBillAmtData,
+								money: indexData.billAmt || '-.--',
+								date: indexData.perdCnt || '-',
 								desc: `最长不超过2个工作日`,
 								cardNoHid: cardCode,
 								bankNo: bankCode
@@ -1193,8 +1193,8 @@ export default class home_page extends PureComponent {
 								btnText: '查看进度',
 								title: '还到-基础版',
 								subtitle: '需要人工审核，耐心等待',
-								money: cardBillAmtData,
-								date: indexData.perdCnt,
+								money: indexData.billAmt || '-.--',
+								date: indexData.perdCnt || '-',
 								dw: '申请借款金额(元) ',
 								dw2: '申请期限 ',
 								tel: `010-86355XXX的审核电话`
