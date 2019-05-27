@@ -64,7 +64,13 @@
 				z-index: 100;
 				top: 20px;
 				height: 14px;
-			}
+      }
+      a{
+        color: #397be6;
+        font-size: 30px;
+        margin-left: 15px;
+        text-decoration: underline;
+      }
 			&.blue {
 				color: #397be6;
 			}

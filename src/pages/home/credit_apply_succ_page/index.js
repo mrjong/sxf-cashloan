@@ -19,15 +19,20 @@ export default class credit_apply_succ_page extends PureComponent {
 				</div>
 				<div className={style.topBox}>
 					<div className={style.title}>预计最快90秒完成审核</div>
-					<div className={style.subtitle}>
-						高峰期可能5分钟左右
-					</div>
+					<div className={style.subtitle}>高峰期可能5分钟左右</div>
 				</div>
 				<div className={style.step_box_new}>
 					<div className={[ style.step_item, style.active ].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							快速评估中
+						</div>
+						<div className={style.line} />
+					</div>
+					<div className={[ style.step_item ].join(' ')}>
+						<div className={style.title}>
+							<div className={style.step_circle} />
+							绑定还款储蓄卡<a >先去绑卡</a>
 						</div>
 						<div className={style.line} />
 					</div>
