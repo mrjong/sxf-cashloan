@@ -20,7 +20,7 @@ export default class credit_apply_succ_page extends PureComponent {
 				<div className={style.topBox}>
 					<div className={style.title}>预计最快90秒完成审核</div>
 					<div className={style.subtitle}>
-						<a>010-86355 XXX</a>高峰期可能5分钟左右
+						高峰期可能5分钟左右
 					</div>
 				</div>
 				<div className={style.step_box_new}>

@@ -388,47 +388,45 @@ export default class bind_save_page extends PureComponent {
 					>
 						储蓄卡卡号
 					</InputItem>
-					<div className={styles.top20}>
+					<InputItem
+						maxLength="11"
+						type="number"
+						{...getFieldProps('valueInputCarPhone', {
+							initialValue: this.state.bindCardPhone,
+							rules: [
+								{ required: true, message: '请输入银行卡绑定的有效手机号' },
+								{ validator: this.validateCarPhone }
+							],
+							onChange: (value) => {
+								store.setBindCardPhone(value);
+							}
+						})}
+						placeholder="银行卡预留手机号"
+						onBlur={() => {
+							handleInputBlur();
+						}}
+					>
+						手机号
+					</InputItem>
+					<div className={[ styles.time_container, 'sms' ].join(' ')}>
 						<InputItem
-							maxLength="11"
-							type="number"
-							{...getFieldProps('valueInputCarPhone', {
-								initialValue: this.state.bindCardPhone,
-								rules: [
-									{ required: true, message: '请输入银行卡绑定的有效手机号' },
-									{ validator: this.validateCarPhone }
-								],
-								onChange: (value) => {
-									store.setBindCardPhone(value);
-								}
+							maxLength="6"
+							{...getFieldProps('valueInputCarSms', {
+								rules: [ { required: true, message: '请输入验证码' } ]
 							})}
-							placeholder="银行卡预留手机号"
 							onBlur={() => {
 								handleInputBlur();
 							}}
 						>
-							手机号
+							验证码
 						</InputItem>
-						<div className={[ styles.time_container, 'sms' ].join(' ')}>
-							<InputItem
-								maxLength="6"
-								{...getFieldProps('valueInputCarSms', {
-									rules: [ { required: true, message: '请输入验证码' } ]
-								})}
-								onBlur={() => {
-									handleInputBlur();
-								}}
-							>
-								验证码
-							</InputItem>
-							<div className={styles.count_btn}>
-								<CountDownButton
-									className={styles.CountDownButton}
-									enable={this.state.enable}
-									onClick={this.countDownHandler}
-									timerActiveTitle={[ '', '"' ]}
-								/>
-							</div>
+						<div className={styles.count_btn}>
+							<CountDownButton
+								className={styles.CountDownButton}
+								enable={this.state.enable}
+								onClick={this.countDownHandler}
+								timerActiveTitle={[ '', '"' ]}
+							/>
 						</div>
 					</div>
 				</div>
