@@ -85,6 +85,10 @@ export default class loan_fenqi_page extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    window.OnngFuDunCallBack = null;
+  }
+
   //查询产品基本信息
   queryProdInfo = () => {
     this.props.$fetch.get(API.prodInfo, {
@@ -114,7 +118,7 @@ export default class loan_fenqi_page extends PureComponent {
           priceMin
         })
       } else {
-        this.props.toast.info('暂无数据');
+        this.props.toast.info(res.msgInfo);
       }
     })
   }
@@ -259,6 +263,7 @@ export default class loan_fenqi_page extends PureComponent {
 
   //绑定银行卡
   bindBankCard = (cardType) => {
+    store.setBackUrl('/home/loan_fenqi');
     this.storeTempData()
     this.props.history.push({
       pathname: '/mine/bind_save_page',
@@ -368,8 +373,18 @@ export default class loan_fenqi_page extends PureComponent {
     let tempPayCard = cardArr[1] || {}
     let perdRateList = []
     let usageList = []
-    const { agrNo: resaveBankCardAgrNo, bankName: resaveBankCardName, lastCardNo: resaveBankCardLastNo } = tempResaveCard
-    const { agrNo: payBankCardAgrNo, bankName: payBankCardName, lastCardNo: payBankCardLastNo } = tempPayCard
+    let { agrNo: resaveBankCardAgrNo, bankName: resaveBankCardName, lastCardNo: resaveBankCardLastNo } = tempResaveCard
+    let { agrNo: payBankCardAgrNo, bankName: payBankCardName, lastCardNo: payBankCardLastNo } = tempPayCard
+    if (!resaveBankCardAgrNo) {
+      //处理用户无卡,去绑定的反显问题
+      resaveBankCardAgrNo = payBankCardAgrNo
+      resaveBankCardName = payBankCardName
+      resaveBankCardLastNo = payBankCardLastNo
+    } else if (!payBankCardAgrNo) {
+      payBankCardAgrNo = resaveBankCardAgrNo
+      payBankCardName = resaveBankCardName
+      payBankCardLastNo = resaveBankCardLastNo
+    }
     if (this.state.inputClear || !storeData.perdRateList || !storeData.usageList) {
       perdRateList = this.state.perdRateList
       usageList = this.state.usageList
@@ -529,8 +544,10 @@ export default class loan_fenqi_page extends PureComponent {
                     this.setState({
                       inputClear: true
                     }, () => {
-                      store.removeCashFenQiStoreData()
-                      this.queryProdInfo()
+                      // store.removeCashFenQiStoreData()
+                      // this.setState({
+                      //   perdRateList: this.state.perdRateList
+                      // })
                     })
                   }
                   this.setState({
@@ -548,7 +565,7 @@ export default class loan_fenqi_page extends PureComponent {
 
           <div className={style.pannel}>
             <ul>
-              <li className={style.listItem} style={{ alignItems: 'flex-start' }}>
+              <li className={style.listItem}>
                 <label>借多久</label>
                 <span className={style.tagListWrap}>
                   {perdRateList.map(item => (

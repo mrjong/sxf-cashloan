@@ -811,7 +811,7 @@ export default class home_page extends PureComponent {
 		switch (code) {
 			case 'CN0003':
 				// 通付盾 获取设备指纹
-				TFDInit();
+				TFDInit('fq');
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
 					//需要引导下载app
@@ -869,7 +869,6 @@ export default class home_page extends PureComponent {
 				break;
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
-				this.handleCN(this.state.usrCashIndexInfo.indexSts);
 				break;
 			default:
 				break;
