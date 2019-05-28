@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
+import { Modal, Progress, InputItem, Icon, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import qs from 'qs';
 import { store } from 'utils/store';
@@ -22,6 +22,7 @@ if (isIPhone) {
 		onTouchStart: (e) => e.preventDefault()
 	};
 }
+let inputRef = '';
 const API = {
 	REPAY_INFO: '/bill/prebill', // 代还确认页面
 	CONFIRM_REPAYMENT: '/bill/agentRepay', // 代还申请接口
@@ -128,6 +129,23 @@ export default class confirm_agency_page extends PureComponent {
 			this.checkUsrMemSts();
 		}
 		this.getExamineSts(); // 检查是否需要人审
+	}
+	componentDidMount() {
+		const that = this;
+		if (/Android/gi.test(navigator.userAgent)) {
+			const innerHeight = window.innerHeight;
+			window.addEventListener('resize', () => {
+				const newInnerHeight = window.innerHeight;
+				if (innerHeight > newInnerHeight) {
+					// 键盘弹出事件处理
+				} else {
+					// 键盘收起事件处理
+					Toast.info(that.props.form.getFieldProps('cardBillAmt'));
+
+					that.calcLoanMoney(that.props.form.getFieldProps('cardBillAmt'));
+				}
+			});
+		}
 	}
 
 	// 查询用户会员卡状态
@@ -251,7 +269,6 @@ export default class confirm_agency_page extends PureComponent {
 	// 获取合同列表和产品id
 	getFundInfo = () => {
 		const { lendersDate, repaymentDate, cardBillAmt, repayInfo } = this.state;
-		console.log('------------', cardBillAmt);
 
 		this.props.$fetch
 			.post(`${API.queryFundInfo}`, {
@@ -405,25 +422,30 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	//计算该显示的还款金额
 	calcLoanMoney = (money) => {
-		const { repaymentDate } = this.state;
+    const { repaymentDate } = this.state;
 		if (repaymentDate && repaymentDate.maxAmt && money >= repaymentDate.maxAmt) {
 			this.props.form.setFieldsValue({
 				cardBillAmt: repaymentDate.maxAmt + ''
 			});
 		} else if (repaymentDate && repaymentDate.minAmt && money <= repaymentDate.minAmt) {
+
 			this.props.form.setFieldsValue({
 				cardBillAmt: repaymentDate.minAmt + ''
 			});
 		} else {
 			if (money) {
+    console.log(repaymentDate)
+
 				this.props.form.setFieldsValue({
 					cardBillAmt: Math.ceil(money / 100) * 100 + ''
 				});
 			} else if (repaymentDate.minAmt) {
+        console.log('555555555555')
 				this.props.form.setFieldsValue({
 					cardBillAmt: repaymentDate.minAmt + ''
 				});
 			} else {
+        console.log('555555555555')
 				this.props.form.setFieldsValue({
 					cardBillAmt: ''
 				});
@@ -546,19 +568,21 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 查看借款合同
 	readContract = (item) => {
-		const { repayInfo, prdId } = this.state;
+		const { repayInfo, contractData } = this.state;
 		const billPrcpAmt = this.props.form.getFieldValue('cardBillAmt');
 		store.setSaveAmt(true);
 		store.setRepaymentModalData(this.state);
 		console.log(
-			`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&productId=${prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get(
+			`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&productId=${contractData[0]
+				.productId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get(
 				'fin-v-card-token'
 			) || store.getToken()}`
 		);
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&productId=${prdId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get(
+				url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&productId=${contractData[0]
+					.productId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get(
 					'fin-v-card-token'
 				) || store.getToken()}`,
 				name: item.contractMdlName
@@ -677,6 +701,8 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
+		console.log('提交');
+		return;
 		this.requestBindCardState();
 	};
 	// 请求用户绑卡状态
@@ -748,13 +774,14 @@ export default class confirm_agency_page extends PureComponent {
 								<InputItem
 									className={style.billInput}
 									placeholder=""
+									clear
 									disabled={
 										repaymentDate.minAmt &&
 										repaymentDate.maxAmt &&
 										Number(repaymentDate.minAmt) == Number(repaymentDate.maxAmt)
 									}
 									type="number"
-									ref={(el) => (this.inputRef = el)}
+									ref={(el) => (inputRef = el)}
 									{...getFieldProps('cardBillAmt', {
 										rules: [
 											{ required: true, message: '请输入代偿金额' }
@@ -762,9 +789,10 @@ export default class confirm_agency_page extends PureComponent {
 										]
 									})}
 									placeholder={
-										repaymentDate.maxAmt ? `${repaymentDate.minAmt}～${repaymentDate.maxAmt}` : ''
-									}
+										repaymentDate.maxAmt ? `${repaymentDate.minAmt}～${repaymentDate.maxAmt}可借` : ''
+                  }
 									onBlur={(v) => {
+                    console.log(v,'0000000')
 										handleInputBlur();
 										if (v !== this.state.cardBillAmt) {
 											store.removeCouponData();
@@ -886,7 +914,13 @@ export default class confirm_agency_page extends PureComponent {
 					</div>
 					<div className={style.buttonWrap}>
 						<SXFButton
-							onClick={this.handleButtonClick}
+							onClick={
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? (
+									this.handleButtonClick
+								) : (
+									() => {}
+								)
+							}
 							className={
 								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? (
 									style.submitBtn
