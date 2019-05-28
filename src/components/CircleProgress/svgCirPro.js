@@ -1,6 +1,6 @@
 /*
- * @Author: cyy 
- * @Date: 2018-04-16 17:42:26 
+ * @Author: cyy
+ * @Date: 2018-04-16 17:42:26
  * @Last Modified by: zl
  * @Last Modified time: 2018-04-17 09:22:42
  */
@@ -102,7 +102,7 @@ export default class SvgCirPro extends Component {
 						width: width,
 						height: height,
 						lineHeight: height + 20 + 'px',
-						fontFamily: 'DIN Condensed',
+						fontFamily: 'DINMitAlt',
 						fontWeight: 'bold',
 						fontStyle: 'normal'
 					}}
@@ -220,7 +220,7 @@ export default class SvgCirPro extends Component {
  * flag1只有两个值 1大角度 0小角度 是否大于180
  * flag2只有两个值 1为顺时针 0为逆时针
  * x y 为终点坐标
- * 
- * 
+ *
+ *
  * 100：per1=per2：100
  */

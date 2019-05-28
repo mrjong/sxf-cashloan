@@ -91,7 +91,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 						return ele.code === bankCode;
 					});
 					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-					window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+					if (jumpUrl) { // 如果银行code一致跳登录页，否则跳列表页
+						window.location.href = jumpUrl + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
+					} else {
+						this.goMoxieBankList();
+					}
 				} else {
 					this.props.toast.info('系统开小差，请稍后重试');
 				}
@@ -287,7 +291,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				this.goMoxieBankList();
 			}
 		}
-		
+
 	};
 
 	// 请求信用卡数量
@@ -731,7 +735,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<div className={style.billInfo}>
 								<div className={style.item}>
 									<p className={`${style.name} ${style.moneyTit}`}>你的信用卡剩余应还金额(元)</p>
-							
+
 								</div>
 								<div className={style.item}>
 									<span className={style.name}>还款日：{cardBillDtData}</span>
@@ -794,7 +798,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						<span className={style.name}>全额还卡</span>
 						<div className={style.value}>
 							<span>{maxApplAmt}元</span>
-							<i className={ repayType===tagList[2] ? `${style.unChecked} ${style.checked}` : style.unChecked } />
+							<i className={ repayType===tagList[2] ? `${style.unChecked} ${style.unChecked2} ${style.checked}` : `${style.unChecked} ${style.unChecked2}` } />
 						</div>
 					</div>
 					<div className={style.border_bottom}>
@@ -840,7 +844,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					>
 						提交申请
 					</SXFButton>
-					<p className="bottomTip">怕逾期，用还到</p>
+					{/* <p className="bottomTip">怕逾期，用还到</p> */}
 				</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>

@@ -210,7 +210,7 @@ export default class confirm_purchase_page extends PureComponent {
                     { required: true, message: '请选择有效期' }
                   ],
                 })}
-                extra={<span style={{ color: '#C7C6CC' }}>年／月</span>}
+                extra={<span style={{ color: '#C7C6CC' }}>月／年</span>}
                 format={val => this.formatDate(val)}
               >
                 <Item arrow="horizontal">有效期</Item>

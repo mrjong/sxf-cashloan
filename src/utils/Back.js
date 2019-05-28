@@ -52,9 +52,10 @@ let initDialog = (errMsg) => {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
-							if (location.pathname === '/home/loan_repay_confirm_page') { // 借钱还信用卡页面物理返回到首页
+							if (location.pathname === '/home/loan_repay_confirm_page') {
+								// 借钱还信用卡页面物理返回到首页
 								obj.close();
-								window.ReactRouterHistory.push('/home/home'); 
+								window.ReactRouterHistory.push('/home/home');
 							} else {
 								history.go(-2);
 								obj.close();
@@ -94,28 +95,9 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			// 人脸中间页物理返回
-			// if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
-			// 	history.go(Number(store.getIdChkPhotoBack()));
-			// 	store.removeIdChkPhotoBack();
-			// 	return;
-			// }
-			if (window.location.pathname === '/common/tencent_face_middle_page') {
-				// 首页进入然后返回
-				if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'home') {
-					store.removeRealNameNextStep();
-					store.removeIdChkPhotoBack();
-					window.ReactRouterHistory.push('/home/home');
-				} else if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'other') {
-					// 我的页面进入然后返回
-					store.removeRealNameNextStep();
-					store.removeIdChkPhotoBack();
-					window.ReactRouterHistory.push('/mine/mine_page');
-				} else if (store.getIdChkPhotoBack()) {
-					window.tencent_face_middle_page = true;
-					history.go(Number(store.getIdChkPhotoBack()));
-					store.removeIdChkPhotoBack();
-					store.removeRealNameNextStep();
-				}
+			if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
+				history.go(Number(store.getIdChkPhotoBack()));
+				store.removeIdChkPhotoBack();
 				return;
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
@@ -283,6 +265,12 @@ if (window.history && window.history.pushState) {
 					} else {
 						window.ReactRouterHistory.push('/home/home');
 					}
+					break;
+				case '/home/credit_apply_succ_page':
+					window.ReactRouterHistory.push('/home/home');
+					break;
+				case '/home/loan_person_succ_page':
+					window.ReactRouterHistory.push('/home/home');
 					break;
 				default:
 					// window.ReactRouterHistory.goBack()

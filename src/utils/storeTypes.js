@@ -1,7 +1,7 @@
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
 	RepaymentModalData: 'RepaymentModalData', // 保存确认代还信息弹框数据
-	HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
+	// HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
 	BackUrl: 'BackUrl', // 保存跳转的url
 	BackUrl2: 'BackUrl2', // 临时缓存
 	CardData: 'CardData', // 跳转路由中的银行卡信息
