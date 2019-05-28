@@ -26,14 +26,14 @@
 .box{
   display: flex;
   .flex2{
-    flex: 2;
+    flex: 1.5;
   }
   .flex1{
     flex: 1;
 	}
 	.rightPart{
-		.subtitle, .money {
-			margin-left: 60px;
-		}
+		// .subtitle, .money {
+		// 	margin-left: 60px;
+		// }
 	}
 }
