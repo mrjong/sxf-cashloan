@@ -540,10 +540,10 @@ export default class loan_fenqi_page extends PureComponent {
                     this.setState({
                       inputClear: true
                     }, () => {
-                      // store.removeCashFenQiStoreData()
-                      // this.setState({
-                      //   perdRateList: this.state.perdRateList
-                      // })
+                      store.removeCashFenQiStoreData()
+                      this.setState({
+                        perdRateList: this.state.perdRateList
+                      })
                     })
                   }
                   this.setState({
