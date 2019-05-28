@@ -701,8 +701,7 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		console.log('提交');
-		return;
+
 		this.requestBindCardState();
 	};
 	// 请求用户绑卡状态
