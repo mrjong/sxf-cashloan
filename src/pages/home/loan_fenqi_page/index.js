@@ -417,7 +417,7 @@ export default class loan_fenqi_page extends PureComponent {
       prodId: prdId,
       couponId: couponInfo.usrCoupNo,
       type: '00', // 00为借款 01为还款
-      price: storeData.loanMoney || this.state.loanMoney,
+      price: this.state.loanMoney || storeData.loanMoney,
       prodType: '11'
     }).then((result) => {
       if (result && result.msgCode === 'PTM0000' && result.data !== null) {
