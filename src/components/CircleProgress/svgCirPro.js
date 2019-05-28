@@ -101,10 +101,7 @@ export default class SvgCirPro extends Component {
 					style={{
 						width: width,
 						height: height,
-						lineHeight: height + 20 + 'px',
-						fontFamily: 'DINMitAlt',
-						fontWeight: 'bold',
-						fontStyle: 'normal'
+						lineHeight: height + 10 + 'px',
 					}}
 					className="circle_text homePrecent"
 				>

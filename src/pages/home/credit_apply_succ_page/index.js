@@ -4,6 +4,8 @@ import fetch from 'sx-fetch';
 import ExamineComponents from 'components/ExamineComponents';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
+import { store } from 'utils/store';
+
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 let autId = '';
