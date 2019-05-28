@@ -238,6 +238,9 @@ export default class wuyue_old_page extends PureComponent {
 			}
 		});
 		if (!index) {
+			this.setState({
+				type: 'no_qualified_tips'
+			});
 			return;
 		}
 		setTimeout(() => {
