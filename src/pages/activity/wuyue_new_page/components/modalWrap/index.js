@@ -18,11 +18,11 @@ export default class ModalWrap extends Component {
 	render() {
 		let componentsDisplay = null;
 		const { modalShow } = this.state;
-		const { history, contType, loginCb, closeCb } = this.props;
+		const { history, contType, loginCb, closeCb, hasLoginCb } = this.props;
 		switch (contType) {
 			case 'login_alert': // 登陆弹框
 				componentsDisplay = (
-					<LoginAlert history={history} loginCb={loginCb} />
+					<LoginAlert history={history} hasLoginCb={hasLoginCb} loginCb={loginCb} />
 				);
 				break;
 			case 'new_sorry_tips': // 老用户参加新用户活动提示弹框

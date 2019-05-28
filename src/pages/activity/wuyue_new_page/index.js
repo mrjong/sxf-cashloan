@@ -15,7 +15,6 @@ import ModalWrap from './components/ModalWrap';
 import WinPrize from './components/WinPrize';
 import { rules } from './rulesData';
 import Cookie from 'js-cookie';
-import { isWXOpen } from 'utils';
 
 @setBackGround('#9235D4')
 export default class wuyue_new_page extends PureComponent {
@@ -37,7 +36,7 @@ export default class wuyue_new_page extends PureComponent {
     buriedPointEvent(activity.mayNewRecBtn);
     const token = Cookie.get('fin-v-card-token');
 		const tokenFromStorage = store.getToken();
-    if (isWXOpen() && !tokenFromStorage && !token) {
+    if (!tokenFromStorage && !token) {
       this.setState({
         contType: 'login_alert',
         mayModalShow: true,
@@ -86,6 +85,14 @@ export default class wuyue_new_page extends PureComponent {
     })
   }
 
+  // 针对登录后registerFlg为1的，授权失败，但是登录过的
+  hasLoginCb = () => {
+    this.setState({
+      contType: 'new_sorry_tips',
+      mayModalShow: true,
+    })
+  }
+
   // 关闭弹框
   closeModal = () => {
     this.setState({
@@ -105,7 +112,7 @@ export default class wuyue_new_page extends PureComponent {
         </div>
         <img src={reason_img} className={styles.reason_block} />
         { rulesShow && <RuleShow ruleTit="新用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
-        { mayModalShow && <ModalWrap history={this.props.history} loginCb={this.loginCallback} closeCb={this.closeModal} contType={contType} /> }
+        { mayModalShow && <ModalWrap history={this.props.history} loginCb={this.loginCallback} closeCb={this.closeModal} contType={contType} hasLoginCb={this.hasLoginCb} /> }
         { prizeShow && <WinPrize history={this.props.history} title="已成功领取5万元免息券" clickCb={this.useHandler} closeCb={this.closePrizeModal} subTit="（7日内借款即可以使用）" />}
       </div>
     )

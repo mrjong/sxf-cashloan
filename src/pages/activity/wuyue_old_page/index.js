@@ -61,10 +61,11 @@ export default class wuyue_old_page extends PureComponent {
 	}
 	init = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (queryData.activeId) {
-			config.activeId = queryData.activeId;
-		}
-		if (!queryData.activeId) {
+		// if (queryData.activeId) {
+		// 	config.activeId = queryData.activeId;
+		// }
+		// if (!queryData.activeId) {
+		if (!config.activeId) {
 			this.setState({
 				codeInfo: 'PCC-MARKET-0002'
 			});
@@ -116,10 +117,6 @@ export default class wuyue_old_page extends PureComponent {
 							break;
 						case '大转盘':
 							// 是否展示其他用户抽奖记录  01是 00 否
-							if (res.data && res.data.data && res.data.data.recordShow !== '00') {
-								// 展示中奖记录
-								// this.getAwardList('00');
-							}
 							this.setState({
 								codeInfo: '',
 								awardList: res.data.data.prizeList,
@@ -172,14 +169,18 @@ export default class wuyue_old_page extends PureComponent {
 		});
 	};
 	isAuthFunc = (callBack, type) => {
-		let token = Cookie.get('fin-v-card-token');
-		if (token) {
+		const token = Cookie.get('fin-v-card-token');
+		const tokenFromStorage = store.getToken();
+    	if (tokenFromStorage && token) {
 			callBack();
 			// 根据type 随便去干
 		} else {
 			// 新代偿
-			Toast.info('请先登录', 2, () => {
-				this.props.history.push('/login');
+			// Toast.info('请先登录', 2, () => {
+			// 	this.props.history.push('/login');
+			// });
+			this.setState({
+				type: 'old_sorry_tips'
 			});
 		}
 	};
@@ -202,22 +203,6 @@ export default class wuyue_old_page extends PureComponent {
 				this.setState({
 					userAwardList: res.data.data,
 					type: 'award_list'
-				});
-			} else {
-				Toast.info(res.msgInfo);
-			}
-		});
-	};
-	// 用户中奖列表
-	getAwardList = (type) => {
-		const params = {
-			activeId: config.activeId,
-			type // 01 当前用户 00 所有用户
-		};
-		this.props.$fetch.post(API.awardRecords, params).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				this.setState({
-					allUsersAward: (res.data && res.data.data) || []
 				});
 			} else {
 				Toast.info(res.msgInfo);

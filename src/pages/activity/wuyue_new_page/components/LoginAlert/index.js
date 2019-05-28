@@ -96,7 +96,7 @@ export default class LoginAlert extends Component {
 
 	// 确定去登陆按钮
 	goLogin = () => {
-		const { loginCb } = this.props;
+		const { loginCb, hasLoginCb } = this.props;
 		buriedPointEvent(activity.mayNewConfirmRecBtn);
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
@@ -120,7 +120,11 @@ export default class LoginAlert extends Component {
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
-							loginCb && loginCb();
+							if (res.data && res.data.registerFlg === '0') { // 1为已注册直接弹出针对于新用户弹框 0为发券
+								loginCb && loginCb();
+							} else {
+								hasLoginCb && hasLoginCb();
+							}
 							// this.props.history.push('/home/home');
 						},
 						(err) => {
