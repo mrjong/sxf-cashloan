@@ -85,10 +85,6 @@ export default class loan_fenqi_page extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-    window.OnngFuDunCallBack = null;
-  }
-
   //查询产品基本信息
   queryProdInfo = () => {
     this.props.$fetch.get(API.prodInfo, {
@@ -320,12 +316,12 @@ export default class loan_fenqi_page extends PureComponent {
 
   //阅读合同详情
   readContract = (item) => {
-    const { loanMoney, payBankCardAgrNo, resaveBankCardAgrNo } = this.state
+    const { loanMoney, payBankCardAgrNo, resaveBankCardAgrNo, loanUsage } = this.state
     this.storeTempData()
     this.props.history.push({
       pathname: '/protocol/pdf_page',
       state: {
-        url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${item.productId}&agreementNo=${resaveBankCardAgrNo}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
+        url: `${linkConf.PDF_URL}${API.qryContractInfo}?loanUsage=${loanUsage.value}&contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${item.productId}&agreementNo=${resaveBankCardAgrNo}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`,
         name: item.contractMdlName
       }
     });
