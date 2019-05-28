@@ -376,7 +376,22 @@ export default class confirm_agency_page extends PureComponent {
 						isShowVIPModal: true
 					});
 				} else if (result && result.msgCode === 'PTM0000') {
-					// this.beforeJump();
+					idChkPhoto({
+						$props: this.props,
+						type: 'agency_page',
+						msg: '放款'
+					}).then((res) => {
+						switch (res) {
+							case '1':
+								this.requestConfirmRepaymentInfo();
+								break;
+							case '3':
+								store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
+								break;
+							default:
+								break;
+						}
+					});
 				} else {
 					// 确认代换信息返回结果失败埋点
 					buriedPointEvent(home.borrowingPreSubmitResult, {
@@ -670,23 +685,7 @@ export default class confirm_agency_page extends PureComponent {
 		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				// 有风控且绑信用卡储蓄卡
-				// 有风控且绑信用卡储蓄卡
-				idChkPhoto({
-					$props: this.props,
-					type: 'agency_page',
-					msg: '放款'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							this.requestConfirmRepaymentInfo();
-							break;
-						case '3':
-							store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
-							break;
-						default:
-							break;
-					}
-				});
+				this.requestCheckWithHoldCard();
 			} else if (result && result.msgCode === 'PTM2003') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
 				store.setBackUrl('/home/agency');
@@ -724,8 +723,8 @@ export default class confirm_agency_page extends PureComponent {
 		const {
 			contractData,
 			repayInfo,
-      progressLoading,
-      isShowVIPModal,
+			progressLoading,
+			isShowVIPModal,
 			disabledBtn,
 			isShowTipModal,
 			repayInfo2,
