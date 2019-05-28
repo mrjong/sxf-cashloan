@@ -74,6 +74,11 @@ i.closeBtn2{
 			background: #fff;
 			padding: 25px 20px;
 			border-radius: 8px;
+			.awardBox{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
 			.award_cont{
 				display: flex;
 				align-items: center;
@@ -98,6 +103,12 @@ i.closeBtn2{
 				font-size: 32px;
 				font-weight: 500;
 				color: #DC1029;
+			}
+			.noAwardText{
+				font-size: 30px;
+				text-align: center;
+				margin: 0 auto;
+				color: #333;
 			}
 		}
 	}

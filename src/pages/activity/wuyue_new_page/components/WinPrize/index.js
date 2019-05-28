@@ -29,7 +29,7 @@ export default class WinPrize extends Component {
 		clickCb();
   	};
 	render() {
-		const { title, subTit, type, clickCb } = this.props;
+		const { title, subTit, type, clickCb, noAward } = this.props;
 		const { isPrizeModal } = this.state;
 		return (
 			<Modal className="win_prize_modal" visible={isPrizeModal} transparent>
@@ -41,14 +41,24 @@ export default class WinPrize extends Component {
 							<h3 className={style.my_prize_tit}>我的奖品</h3>
 							<ul className={style.award_list}>
 								<li>
-									<div className={style.award_cont}>
-										<img src={coupon_img} alt="" />
-										<div className={style.award_txt}>
-											<p>15元免息券</p>
-											<p className={style.award_desc}>（借款满3000元可用）</p>
+									{
+									noAward && <div className={style.awardBox}>
+										<div className={style.award_cont}>
+											<img src={coupon_img} alt="" />
+											<div className={style.award_txt}>
+												<p>15元免息券</p>
+												<p className={style.award_desc}>（借款满3000元可用）</p>
+											</div>
 										</div>
+										<span onClick={()=>{ clickCb() }} className={style.award_use}>立即使用</span>
 									</div>
-									<span onClick={()=>{ clickCb() }} className={style.award_use}>立即使用</span>
+									}
+									{
+									!noAward && 
+										<div className={style.noAwardText}>
+											还没有抽中奖品，<br /> 快去试试手气吧～
+										</div>
+									}
 								</li>
 							</ul>
 						</div>

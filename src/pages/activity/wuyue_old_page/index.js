@@ -54,6 +54,7 @@ export default class wuyue_old_page extends PureComponent {
 			showLoginTip: false,
 			smsTokenId: '',
 			mblNoHid: '',
+			isAwardFlag: false,
 		};
 	}
 	componentWillMount() {
@@ -203,10 +204,18 @@ export default class wuyue_old_page extends PureComponent {
 		};
 		this.props.$fetch.post(API.recordForUser, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				this.setState({
-					userAwardList: res.data.data,
-					type: 'award_list'
-				});
+				if (res.data.data) {
+					this.setState({
+						isAwardFlag: true,
+						type: 'award_list'
+					});
+				} else {
+					this.setState({
+						isAwardFlag: false,
+						type: 'award_list'
+					});
+				}
+				
 			} else {
 				Toast.info(res.msgInfo);
 			}
@@ -342,12 +351,13 @@ export default class wuyue_old_page extends PureComponent {
 	// 关闭活动弹框
 	closePrizeModal = () => {
 		this.setState({
-			type: ''
+			type: '',
+			isAwardFlag: false
 		});
 	}
 
 	render() {
-		const { awardList, time, transformType, type, userAwardList, showRuleModal, count, alert_img, rulesShow } = this.state;
+		const { awardList, time, transformType, type, isAwardFlag, showRuleModal, count, } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
 				{this.state.codeInfo ? (
@@ -367,7 +377,7 @@ export default class wuyue_old_page extends PureComponent {
 							/>
 						}
 						{ showRuleModal && <RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
-						{ type && type === 'award_list' && <WinPrize type="myAward" clickCb={() => {this.goRoute('mayOldMyPrizeUseBtn')}} closeCb={this.closePrizeModal} setalertType={this.setalertType} /> }
+						{ type && type === 'award_list' && <WinPrize type="myAward" clickCb={() => {this.goRoute('mayOldMyPrizeUseBtn')}} closeCb={this.closePrizeModal} setalertType={this.setalertType} noAward={isAwardFlag} /> }
 						{ type && type === 'alert_congratulation' && <WinPrize clickCb={() => {this.goRoute('mayOldUseNowBtn')}} closeCb={this.closePrizeModal} title="15元免息券" subTit="（借款满3000元可用）" setalertType={this.setalertType} />}
 						<div className={styles.bg}>
 							<div
