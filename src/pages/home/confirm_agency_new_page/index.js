@@ -724,7 +724,8 @@ export default class confirm_agency_page extends PureComponent {
 		const {
 			contractData,
 			repayInfo,
-			progressLoading,
+      progressLoading,
+      isShowVIPModal,
 			disabledBtn,
 			isShowTipModal,
 			repayInfo2,
@@ -932,6 +933,32 @@ export default class confirm_agency_page extends PureComponent {
 								若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。 这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
 							</p>
 						</div>
+					</Modal>
+					<Modal
+						wrapClassName="modal_VIPTip_warp"
+						visible={isShowVIPModal}
+						closable
+						transparent
+						onClose={() => {
+							this.handleCloseTipModal('isShowVIPModal');
+						}}
+						footer={[ { text: '立即开通', onPress: this.goVIP } ]}
+					>
+						<h2 className={style.modalTitle}>仅限VIP使用</h2>
+						<ul className={style.modalUl}>
+							<li>
+								<i className={style.vipIco1} />极速放款通道
+							</li>
+							<li>
+								<i className={style.vipIco2} />精彩活动优先通知
+							</li>
+							<li>
+								<i className={style.vipIco3} />30天明星产品专享
+							</li>
+							<li>
+								<i className={style.vipIco4} />刷卡优惠超值套餐
+							</li>
+						</ul>
 					</Modal>
 					<Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
 						<div className={style.modal_content}>

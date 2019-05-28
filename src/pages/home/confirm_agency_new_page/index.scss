@@ -147,13 +147,18 @@
 }
 
 :global {
-  .confirm_agency_warp {
-    :global {
-      .am-modal-button-group-v .am-modal-button {
-        color: #ebde74;
-      }
-    }
-  }
+	.modal_VIPTip_warp {
+		.am-modal-button-group-v .am-modal-button {
+			color: #ebde74;
+		}
+	}
+	.confirm_agency_warp {
+		:global {
+			.am-modal-button-group-v .am-modal-button {
+				color: #ebde74;
+			}
+		}
+	}
 	.confirm_agency_progress {
 		.am-progress-bar {
 			border: 0.04rem solid #ffda58;
@@ -181,12 +186,6 @@
 			}
 		}
 	}
-}
-
-.modalTitle {
-	font-size: 50px;
-	color: #121c32;
-	text-align: left;
 }
 
 .modalDesc {
@@ -281,4 +280,38 @@
 }
 .tagList {
 	margin-right: 0;
+}
+.modalTitle {
+	font-size: 36px;
+	color: #121c32;
+}
+.modalUl {
+	margin-top: 20px;
+	li {
+		font-size: 30px;
+		color: rgba(134, 145, 157, 1);
+		text-align: left;
+		margin-left: 45px;
+		line-height: 50px;
+		i {
+			display: inline-block;
+			width: 40px;
+			height: 40px;
+			position: relative;
+			top: 8px;
+			margin-right: 20px;
+		}
+		.vipIco1 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -296px);
+		}
+		.vipIco2 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -246px);
+		}
+		.vipIco3 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -346px);
+		}
+		.vipIco4 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-320px, -396px);
+		}
+	}
 }
