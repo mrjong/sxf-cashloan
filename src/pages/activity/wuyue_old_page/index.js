@@ -85,9 +85,12 @@ export default class wuyue_old_page extends PureComponent {
 		// 默认中奖次数显示
 		this.setState({
 			count:
-				store.getRewardCount() && Number(store.getRewardCount()) > 0
-					? store.getRewardCount()
-					: !store.getRewardCount() ? 1 : 0
+				store.getRewardCount() !== null
+				? store.getRewardCount()
+				: store.getRewardCount()===null ? 1 : 0
+				// store.getRewardCount() && Number(store.getRewardCount()) > 0
+				// 	? store.getRewardCount()
+				// 	: !store.getRewardCount() ? 1 : 0
 		});
 		// 初始化大转盘活动
 		this.getConfigList();
@@ -218,6 +221,10 @@ export default class wuyue_old_page extends PureComponent {
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
+				store.setRewardCount(Number(count) > 0 ? Number(count) - 1 : '0');
+				this.setState({
+					count: Number(count) > 0 ? Number(count) - 1 : '0'
+				});
 				if (res.data && res.data.type === '04') {
 					this.setState({
 						type: 'no_award_tips',
@@ -225,10 +232,6 @@ export default class wuyue_old_page extends PureComponent {
 					});
 					return;
 				}
-				store.setRewardCount(Number(count) > 0 ? Number(count) - 1 : '0');
-				this.setState({
-					count: Number(count) > 0 ? Number(count) - 1 : '0'
-				});
 				this.zhuanpan(res.data);
 			} else {
 				Toast.info(res.msgInfo);
