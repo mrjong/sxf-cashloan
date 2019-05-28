@@ -33,7 +33,8 @@ const API = {
 	queryFundInfo: '/fund/info', // 获取资金code,合同code
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-	creditSts: '/bill/credit/sts' // 用户是否过人审接口
+	creditSts: '/bill/credit/sts', // 用户是否过人审接口
+	qryContractInfo: '/fund/qryContractInfo' // 合同数据流获取
 };
 
 let indexData = null; // 首页带过来的信息
@@ -854,7 +855,7 @@ export default class confirm_agency_page extends PureComponent {
 									)}
 								</li>
 								<li className={style.listItem} onClick={this.handleShowModal}>
-									<label>还款计划</label>
+									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
 									<span>
 										{repayInfo2 && repayInfo2.perdUnit === 'D' ? (
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
