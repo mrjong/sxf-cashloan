@@ -13,7 +13,9 @@ import { setBackGround } from 'utils/background';
 import RuleShow from './components/RuleShow';
 import ModalWrap from './components/ModalWrap';
 import WinPrize from './components/WinPrize';
-import { rules } from './rulesData'
+import { rules } from './rulesData';
+import Cookie from 'js-cookie';
+import { isWXOpen } from 'utils';
 
 @setBackGround('#9235D4')
 export default class wuyue_new_page extends PureComponent {
@@ -33,7 +35,9 @@ export default class wuyue_new_page extends PureComponent {
   // 一键领取按钮点击
   getNow = () => {
     buriedPointEvent(activity.mayNewRecBtn);
-    if (false) {
+    const token = Cookie.get('fin-v-card-token');
+		const tokenFromStorage = store.getToken();
+    if (isWXOpen() && !tokenFromStorage && !token) {
       this.setState({
         contType: 'login_alert',
         mayModalShow: true,
