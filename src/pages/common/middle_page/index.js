@@ -54,13 +54,13 @@ export default class middle_page extends Component {
 				});
 		} else if (mxcode && mxcode === -1) {
 			/** mxcode
-             * 当配置了backUrl，自动跳转到该backUrl时，添加该参数到backUrl上 
+             * 当配置了backUrl，自动跳转到该backUrl时，添加该参数到backUrl上
                 -4 用户输入出错（密码等输错且未继续输入）
-                -3 魔蝎数据服务异常 
+                -3 魔蝎数据服务异常
                 -2 平台方服务问题（如中国移动维护等）
                 -1 默认状态（用于没有进行操作退出）
-                0 认证失败，异常错误 
-                1 任务进行成功 
+                0 认证失败，异常错误
+                1 任务进行成功
                 2 任务进行中
              */
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
