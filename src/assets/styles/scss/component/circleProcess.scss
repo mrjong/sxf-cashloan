@@ -60,6 +60,7 @@
 	// 	font-family: 'DINCondensed-Bold';
 	// }
 	.circle_text {
+    color: #121C32;
 		background-color: #fff;
 		position: absolute;
 		border-radius: 50%;
@@ -97,12 +98,3 @@
 // 	font-style: normal;
 // }
 /* stylelint-disable */
-
-@font-face {
-	font-family: "DINMitAlt";
-	src: url("/assets/fonts/DINMitAlt.woff2") format("woff2"), url("/assets/fonts/DINMitAlt.woff") format("woff"),
-		url("/assets/fonts/DINMitAlt.ttf") format("truetype"),
-		url("/assets/fonts/DINMitAlt.eot") format("embedded-opentype"), url("/assets/fonts/DINMitAlt.svg") format("svg");
-	font-weight: normal;
-	font-style: normal;
-}

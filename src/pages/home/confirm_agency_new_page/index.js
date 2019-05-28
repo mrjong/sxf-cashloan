@@ -33,7 +33,8 @@ const API = {
 	queryFundInfo: '/fund/info', // 获取资金code,合同code
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-	creditSts: '/bill/credit/sts' // 用户是否过人审接口
+	creditSts: '/bill/credit/sts', // 用户是否过人审接口
+	qryContractInfo: '/fund/qryContractInfo' // 合同数据流获取
 };
 
 let indexData = null; // 首页带过来的信息
@@ -376,7 +377,22 @@ export default class confirm_agency_page extends PureComponent {
 						isShowVIPModal: true
 					});
 				} else if (result && result.msgCode === 'PTM0000') {
-					// this.beforeJump();
+					idChkPhoto({
+						$props: this.props,
+						type: 'agency_page',
+						msg: '放款'
+					}).then((res) => {
+						switch (res) {
+							case '1':
+								this.requestConfirmRepaymentInfo();
+								break;
+							case '3':
+								store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
+								break;
+							default:
+								break;
+						}
+					});
 				} else {
 					// 确认代换信息返回结果失败埋点
 					buriedPointEvent(home.borrowingPreSubmitResult, {
@@ -670,23 +686,7 @@ export default class confirm_agency_page extends PureComponent {
 		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				// 有风控且绑信用卡储蓄卡
-				// 有风控且绑信用卡储蓄卡
-				idChkPhoto({
-					$props: this.props,
-					type: 'agency_page',
-					msg: '放款'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							this.requestConfirmRepaymentInfo();
-							break;
-						case '3':
-							store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
-							break;
-						default:
-							break;
-					}
-				});
+				this.requestCheckWithHoldCard();
 			} else if (result && result.msgCode === 'PTM2003') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
 				store.setBackUrl('/home/agency');
@@ -725,6 +725,7 @@ export default class confirm_agency_page extends PureComponent {
 			contractData,
 			repayInfo,
 			progressLoading,
+			isShowVIPModal,
 			disabledBtn,
 			isShowTipModal,
 			repayInfo2,
@@ -854,7 +855,7 @@ export default class confirm_agency_page extends PureComponent {
 									)}
 								</li>
 								<li className={style.listItem} onClick={this.handleShowModal}>
-									<label>还款计划</label>
+									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
 									<span>
 										{repayInfo2 && repayInfo2.perdUnit === 'D' ? (
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
@@ -932,6 +933,32 @@ export default class confirm_agency_page extends PureComponent {
 								若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。 这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
 							</p>
 						</div>
+					</Modal>
+					<Modal
+						wrapClassName="modal_VIPTip_warp"
+						visible={isShowVIPModal}
+						closable
+						transparent
+						onClose={() => {
+							this.handleCloseTipModal('isShowVIPModal');
+						}}
+						footer={[ { text: '立即开通', onPress: this.goVIP } ]}
+					>
+						<h2 className={style.modalTitle}>仅限VIP使用</h2>
+						<ul className={style.modalUl}>
+							<li>
+								<i className={style.vipIco1} />极速放款通道
+							</li>
+							<li>
+								<i className={style.vipIco2} />精彩活动优先通知
+							</li>
+							<li>
+								<i className={style.vipIco3} />30天明星产品专享
+							</li>
+							<li>
+								<i className={style.vipIco4} />刷卡优惠超值套餐
+							</li>
+						</ul>
 					</Modal>
 					<Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
 						<div className={style.modal_content}>
