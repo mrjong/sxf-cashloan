@@ -736,7 +736,7 @@ export default class home_page extends PureComponent {
 								result.data.indexData.prodList.length &&
 								result.data.indexData.prodList.map((item, index) => {
 									return item.maxAmt;
-								});
+								}) || [];
 							this.setState({
 								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
 							});
