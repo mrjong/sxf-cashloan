@@ -23,7 +23,8 @@ export default class crawl_progress_page extends PureComponent {
     this.state = {
       percent: 0,   //百分比
       isFail: false,   //失败显露标志
-      autId : store.getAutId ? store.getAutId() : ''
+      autId : store.getAutId ? store.getAutId() : '',
+      isSuccess: false
     };
   }
 
@@ -33,7 +34,7 @@ export default class crawl_progress_page extends PureComponent {
     timerPercent = null;
     data =  [
       { desc: '正在建立安全链接', status: '连接中', percent: 24, speed: 200, statusInit: '连接中'},
-      { desc: '正在登陆银行', status: '登录中', percent: 49, speed: 400, statusInit: '登录中' },
+      { desc: '正在登陆银行', status: '登陆中', percent: 49, speed: 400, statusInit: '登陆中' },
       { desc: '正在获取银行卡信息', status: '获取中', percent: 74, speed: 800 , statusInit: '获取中'},
       { desc: '正在分析账单流水', status: '处理中', percent: 98, speed: 0, statusInit: '处理中'},
     ]
@@ -46,12 +47,10 @@ export default class crawl_progress_page extends PureComponent {
   goProgress(number, cb) {
     let temp = true
     timerPercent = setInterval(()=>{
-      let { percent } = this.state
-      if(percent > 99) {
-        let percentCount = store.getPercentCount() ? store.getPercentCount() : 0
-        store.setPercentCount(1+ percentCount);
-        if(store.getPercentCount()>2){
-          this.props.history.replace('/home/crawl_fail_page')
+      let { percent, isSuccess } = this.state
+      if(percent > 99 && !isSuccess) {
+        if(store.getPercentCount()>1){
+          this.props.history.replace('/home/crawl_fail_page?showPopover=2')
         }
       }
       if(!temp){
@@ -114,8 +113,11 @@ export default class crawl_progress_page extends PureComponent {
   }
   //查询用户相关信息
   queryUsrInfo = () => {
-    let {autId} = this.state;
+    let {autId, isSuccess} = this.state;
     if (!autId) {
+      return;
+    }
+    if(isSuccess){
       return;
     }
     this.props.$fetch
@@ -125,10 +127,20 @@ export default class crawl_progress_page extends PureComponent {
           if (res.data.autSts === '02') {
             clearInterval(timerPercent)
             this.goProgress(10,()=>{
+              this.setState({isSuccess: true})
               this.requestCredCardCount(res.data && res.data.bizId)
             })
           } else if(res.data.autSts === '03'){
-            this.props.history.replace('/home/crawl_fail_page')
+            clearInterval(timerPercent)
+            this.goProgress(10,()=>{
+              data[3].status = '失败'
+              this.setState({ isFail: true })
+              if(store.getPercentCount()>1){
+                this.props.history.replace('/home/crawl_fail_page?showPopover=1')
+              } else {
+                this.props.history.replace('/home/crawl_fail_page?showPopover=0')
+              }
+            })
           }
         } else {
           clearInterval(timerPercent)
@@ -154,6 +166,7 @@ export default class crawl_progress_page extends PureComponent {
       .post(API.CRED_CARD_COUNT)
       .then((result) => {
         if (result && result.msgCode === 'PTM0000') {
+          store.setPercentCount(null)
           if(result.data.count> 1){
             this.props.history.replace(`/mine/credit_list_page?autId=${autId}`)
           } else {
@@ -173,6 +186,7 @@ export default class crawl_progress_page extends PureComponent {
       .get(API.USER_IMPORT)
       .then((res) => {
         if (res && res.msgCode === 'PTM0000') {
+          store.setPercentCount(res.data+1);
           location.reload()
         }
       }).catch(err=>{
@@ -181,7 +195,6 @@ export default class crawl_progress_page extends PureComponent {
 
   componentWillUnmount() {
     clearInterval(timerPercent);
-    store.setPercentCount(null)
   }
   render() {
     let { percent, isFail } = this.state
