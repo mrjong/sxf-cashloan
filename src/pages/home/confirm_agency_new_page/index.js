@@ -23,6 +23,7 @@ if (isIPhone) {
 	};
 }
 let inputRef = '';
+let closeBtn = true;
 const API = {
 	REPAY_INFO: '/bill/prebill', // 代还确认页面
 	CONFIRM_REPAYMENT: '/bill/agentRepay', // 代还申请接口
@@ -49,7 +50,8 @@ let timerOut;
 export default class confirm_agency_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const queryData = store.getHomeConfirmAgency();
+		// qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		indexData = queryData;
 		this.state = {
 			inputClear: false,
@@ -231,6 +233,7 @@ export default class confirm_agency_page extends PureComponent {
 		buriedPointEvent(home.borrowingPreSubmit);
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
+				console.log(values);
 				this.setState(
 					{
 						cardBillAmt: values.cardBillAmt
@@ -422,32 +425,21 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	//计算该显示的还款金额
 	calcLoanMoney = (money) => {
-    const { repaymentDate } = this.state;
+		const { repaymentDate } = this.state;
 		if (repaymentDate && repaymentDate.maxAmt && money >= repaymentDate.maxAmt) {
 			this.props.form.setFieldsValue({
 				cardBillAmt: repaymentDate.maxAmt + ''
 			});
 		} else if (repaymentDate && repaymentDate.minAmt && money <= repaymentDate.minAmt) {
-
 			this.props.form.setFieldsValue({
 				cardBillAmt: repaymentDate.minAmt + ''
 			});
 		} else {
 			if (money) {
-    console.log(repaymentDate)
+				console.log(repaymentDate);
 
 				this.props.form.setFieldsValue({
 					cardBillAmt: Math.ceil(money / 100) * 100 + ''
-				});
-			} else if (repaymentDate.minAmt) {
-        console.log('555555555555')
-				this.props.form.setFieldsValue({
-					cardBillAmt: repaymentDate.minAmt + ''
-				});
-			} else {
-        console.log('555555555555')
-				this.props.form.setFieldsValue({
-					cardBillAmt: ''
 				});
 			}
 		}
@@ -466,7 +458,6 @@ export default class confirm_agency_page extends PureComponent {
 	dealMoney = (result) => {
 		const { contractData, repayInfo, cardBillAmt } = this.state;
 		let couponInfo = store.getCouponData();
-		console.log(couponInfo, '----------------------');
 		// store.removeCouponData();
 		let params = {};
 		// 如果没有coupId直接不调用接口
@@ -539,7 +530,10 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
-		console.log(useFlag, '=-----');
+		if (!this.state.repayInfo2 || !this.state.repayInfo2.perdLth) {
+			this.props.toast.info('请输入借款金额');
+			return;
+		}
 		store.setSaveAmt(true);
 		store.setRepaymentModalData(this.state);
 		if (useFlag) {
@@ -590,6 +584,10 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 	handleShowModal = () => {
+		if (!this.state.repayInfo2 || !this.state.repayInfo2.perdLth) {
+			this.props.toast.info('请输入借款金额');
+			return;
+		}
 		const { repayInfo2 } = this.state;
 		if (repayInfo2 && repayInfo2.perdUnit === 'D') {
 			return;
@@ -701,7 +699,6 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-
 		this.requestBindCardState();
 	};
 	// 请求用户绑卡状态
@@ -770,10 +767,13 @@ export default class confirm_agency_page extends PureComponent {
 						<div className={style.inputWrap}>
 							<div className={style.billInpBox}>
 								<i className={style.moneyUnit}>¥</i>
+
 								<InputItem
 									className={style.billInput}
 									placeholder=""
-									clear
+									clear={() => {
+										console.log('cl99999999');
+									}}
 									disabled={
 										repaymentDate.minAmt &&
 										repaymentDate.maxAmt &&
@@ -782,21 +782,41 @@ export default class confirm_agency_page extends PureComponent {
 									type="number"
 									ref={(el) => (inputRef = el)}
 									{...getFieldProps('cardBillAmt', {
+										onChange: (v) => {
+											if (!v) {
+												closeBtn = false;
+												this.setState({
+													cardBillAmt: '',
+													repayInfo2: '',
+													contractData: ''
+												});
+												this.props.form.setFieldsValue({
+													cardBillAmt: ''
+												});
+											} else {
+												closeBtn = true;
+											}
+											console.log(v, '------');
+										},
 										rules: [
 											{ required: true, message: '请输入代偿金额' }
 											// { validator: this.verifyBillAmt }
 										]
 									})}
 									placeholder={
-										repaymentDate.maxAmt ? `${repaymentDate.minAmt}～${repaymentDate.maxAmt}可借` : ''
-                  }
+										repaymentDate.maxAmt ? `${repaymentDate.minAmt}-${repaymentDate.maxAmt}可借` : ''
+									}
 									onBlur={(v) => {
-                    console.log(v,'0000000')
-										handleInputBlur();
-										if (v !== this.state.cardBillAmt) {
-											store.removeCouponData();
-										}
-										this.calcLoanMoney(v);
+										setTimeout(() => {
+											if (!closeBtn) {
+												return;
+											}
+											handleInputBlur();
+											if (v !== this.state.cardBillAmt) {
+												store.removeCouponData();
+											}
+											this.calcLoanMoney(v);
+										}, 10);
 									}}
 									onFocus={() => {
 										this.setState({
@@ -874,11 +894,19 @@ export default class confirm_agency_page extends PureComponent {
 											{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 										</span>
 									) : (
-										<span className={style.redText}>
-											无可用优惠券
-											<Icon type="right" className={style.icon} />
-											<i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} />
-										</span>
+										(repayInfo2 && (
+											<span className={style.redText}>
+												无可用优惠券
+												<Icon type="right" className={style.icon} />
+												<i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} />
+											</span>
+										)) || (
+											<span className={style.redText}>
+												请选择
+												<Icon type="right" className={style.icon} />
+												<i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} />
+											</span>
+										)
 									)}
 								</li>
 								<li className={style.listItem} onClick={this.handleShowModal}>
@@ -887,9 +915,12 @@ export default class confirm_agency_page extends PureComponent {
 										{repayInfo2 && repayInfo2.perdUnit === 'D' ? (
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
 										) : (
-											<span className={style.listValue}>
-												<Icon type="right" className={style.icon} />
-											</span>
+											(repayInfo2 && (
+												<span className={style.listValue}>
+													点击查看
+													<Icon type="right" className={style.icon} />
+												</span>
+											)) || <span className={style.listValue2}>暂无</span>
 										)}
 									</span>
 								</li>

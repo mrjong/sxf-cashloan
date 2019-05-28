@@ -88,7 +88,7 @@ export default class credit_apply_succ_page extends PureComponent {
 					<div className={[ style.step_item ].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							获得额度签约借
+							获得额度签约借款
 						</div>
 						<div className={style.line} />
 					</div>

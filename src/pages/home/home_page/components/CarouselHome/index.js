@@ -52,7 +52,7 @@ export default class carouselHome extends React.Component {
 			subtitle: '最高可申请还款金(元)',
 			money: '50000.00',
 			desc: '还款日：8888/88/88',
-			btnText: !isMPOS() && btnText ? btnText : '添加需要还款信用卡' , // mpos中展示文案不同
+			btnText: !isMPOS() && btnText ? btnText : '申请借款' , // mpos中展示文案不同
 			color: 'rgba(248, 164, 65, 1)',
 		};
 		const iconClass = 'logo_ico';
@@ -63,10 +63,10 @@ export default class carouselHome extends React.Component {
 					<i>{showData.title}</i>
 				</div>
 				<WhiteCard showData={showData} noLogoBtn={true} handleClick={handleClick}>
-					<Carousel {...restProps}>
+					{/* <Carousel {...restProps}> */}
 						<div className={style.contentBox}>
 							{showData.demoTip ? <div className={style.demoTip} /> : null}
-							<div className={style.demoTip} />
+							{/* <div className={style.demoTip} /> */}
 							<div className={style.box}>
 								<div className={style.flex1}>
 									<div className={style.subtitle}>
@@ -78,17 +78,17 @@ export default class carouselHome extends React.Component {
 									</div>
 								</div>
 							</div>
-							<div className={style.desc}>{showData.desc}</div>
+							{/* <div className={style.desc}>{showData.desc}</div> */}
 						</div>
-						<div className={style.contentBox}>
+						{/* <div className={style.contentBox}>
 							<img src={bank} className={style.bank} />
 							<div className={style.desc_b}>支持100+信用卡</div>
 						</div>
 						<div className={style.contentBox}>
 							<img src={plus} className={style.plus} />
 							<div className={style.desc_b}>2步操作，极速到账</div>
-						</div>
-					</Carousel>
+						</div> */}
+					{/* </Carousel> */}
 				</WhiteCard>
 				<ZButton onClick={handleClick} className={style.submitBtn}>
 					{showData.btnText}

@@ -139,6 +139,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
+    // 去除借款页面参数
+    store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
@@ -161,8 +163,8 @@ export default class home_page extends PureComponent {
 		store.removeCheckCardRouter();
 		//删除现金分期相关数据
 		store.removeCashFenQiStoreData();
-    store.removeCashFenQiCardArr();
-    store.removeCouponData();
+		store.removeCashFenQiCardArr();
+		store.removeCouponData();
 	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
@@ -585,13 +587,14 @@ export default class home_page extends PureComponent {
 		const api = autId ? `${API.chkCredCard}/${autId}` : API.CHECK_CARD;
 		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
+				store.setHomeConfirmAgency({
+					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId,
+					bankName: indexData.bankName,
+					cardNoHid: indexData.cardNoHid
+				});
 				// 有风控且绑信用卡储蓄卡
 				this.props.history.push({
-					pathname: '/home/confirm_agency',
-					//
-					search: `?autId=${usrIndexInfo &&
-						usrIndexInfo.indexData &&
-						usrIndexInfo.indexData.autId}&bankName=${indexData.bankName}&cardNoHid=${indexData.cardNoHid}`
+					pathname: '/home/confirm_agency'
 				});
 			} else if (result && result.msgCode === 'PTM2003') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
@@ -730,13 +733,14 @@ export default class home_page extends PureComponent {
 						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
 							let maxAmtArr = [];
 							maxAmtArr =
-								result.data &&
-								result.data.indexData &&
-								result.data.indexData.prodList &&
-								result.data.indexData.prodList.length &&
-								result.data.indexData.prodList.map((item, index) => {
-									return item.maxAmt;
-								}) || [];
+								(result.data &&
+									result.data.indexData &&
+									result.data.indexData.prodList &&
+									result.data.indexData.prodList.length &&
+									result.data.indexData.prodList.map((item, index) => {
+										return item.maxAmt;
+									})) ||
+								[];
 							this.setState({
 								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
 							});
@@ -1091,7 +1095,7 @@ export default class home_page extends PureComponent {
 								this.handleSmartClick();
 							}}
 							showData={{
-                type:'LN0004',
+								type: 'LN0004',
 								btnText: '查看进度',
 								title: bankNm,
 								subtitle: '预计最快90秒完成审核',
@@ -1117,7 +1121,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: usrIndexInfo.indexData.netAppyDate && `${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+								topTip:
+									usrIndexInfo.indexData.netAppyDate &&
+									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
 							}}
 						/>
 					);
@@ -1137,7 +1143,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: usrIndexInfo.indexData.acOverDt && `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
+								topTip:
+									usrIndexInfo.indexData.acOverDt &&
+									`额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
 								subtitle2: '最高可申请还款金(元)',
 								money2: userMaxAmt ? parseFloat(userMaxAmt, 10).toFixed(2) : ''
 							}}

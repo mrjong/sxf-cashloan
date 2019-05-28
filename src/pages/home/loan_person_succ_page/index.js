@@ -35,12 +35,12 @@ export default class remit_ing_page extends PureComponent {
 					<div className={[ style.step_item, style.active ].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							借款申请提交成功
+							放款审核中
 						</div>
 						<div className={style.line} />
 					</div>
 					<div className={[ style.step_item ].join(' ')}>
-						<div className={[ style.title].join(' ')}>
+						<div className={[ style.title ].join(' ')}>
 							<div className={style.step_circle} />
 							请注意接听010-86355XXX的审核电话
 						</div>
@@ -58,7 +58,7 @@ export default class remit_ing_page extends PureComponent {
 				<CopyToClipboard text={this.state.copyText} onCopy={() => this.copyOperation()}>
 					<ZButton className={style.submitBtn}>关注“还到”公众号</ZButton>
 				</CopyToClipboard>
-        <div className={style.desctext}>关注还到公众号  实时查看审核进度</div>
+				<div className={style.desctext}>关注还到公众号 实时查看审核进度</div>
 			</div>
 		);
 	}

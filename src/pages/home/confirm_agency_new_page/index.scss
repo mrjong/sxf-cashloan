@@ -64,6 +64,13 @@
 			font-size: 30px;
 			font-family: 'PingFangSC-Medium';
 			line-height: 2;
+    }
+    .listValue2 {
+			font-weight: 500;
+			font-size: 30px;
+			font-family: 'PingFangSC-Medium';
+      line-height: 2;
+      color: #868E9E;
 		}
 
 		.icon {
@@ -145,7 +152,14 @@
 		}
 	}
 }
-
+.closeIcon{
+  position: absolute;
+  right: 0;
+  top: 5px;
+  width: 40px;
+  color: #C9CDD5;
+  z-index: 10;
+}
 :global {
 	.modal_VIPTip_warp {
 		.am-modal-button-group-v .am-modal-button {
