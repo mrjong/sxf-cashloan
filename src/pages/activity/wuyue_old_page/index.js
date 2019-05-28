@@ -93,9 +93,9 @@ export default class wuyue_old_page extends PureComponent {
 		this.getConfigList();
 	};
 	// 刷新大转盘数据
-	refreshPage = () => {
-		this.getCount();
-	};
+	// refreshPage = () => {
+	// 	this.getCount();
+	// };
 
 	// 获取活动配置list
 	getConfigList = () => {
@@ -218,6 +218,13 @@ export default class wuyue_old_page extends PureComponent {
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
 			if (res.msgCode === 'PTM0000') {
+				if (res.data && res.data.type === '04') {
+					this.setState({
+						type: 'no_award_tips',
+						alert_img: ''
+					});
+					return;
+				}
 				store.setRewardCount(Number(count) > 0 ? Number(count) - 1 : '0');
 				this.setState({
 					count: Number(count) > 0 ? Number(count) - 1 : '0'
@@ -266,23 +273,22 @@ export default class wuyue_old_page extends PureComponent {
 				// 00 优惠券  01 积分  02 红包 03 实物   04 谢谢惠顾
 				// console.log(this.state.context[index]);
 				// 根据不同入口来源埋点
-				if (obj.type === '04') {
-					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-					// 	draw_result: '未中奖'
-					// });
-					this.setState({
-						type: 'no_award',
-						alert_img: ''
-					});
-				} else {
+				// if (obj.type === '04') {
+				// 	// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+				// 	// 	draw_result: '未中奖'
+				// 	// });
+				// 	this.setState({
+				// 		type: 'no_award_tips',
+				// 		alert_img: ''
+				// 	});
+				// } else {
 					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
 					// 	draw_result: '中奖'
 					// });
 					this.setState({
-						type: 'alert_congratulation',
-						alert_img: `data:image/png;base64,${obj.imgUrl}`
+						type: 'alert_congratulation'
 					});
-				}
+				// }
 
 				this.isRotated = false; //旋转改为false说明没有旋转
 			}, 7000);
