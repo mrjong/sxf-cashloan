@@ -8,12 +8,14 @@
   }
   .new_entry_box,.old_entry_box{
     position: absolute;
-    bottom: 308px;
+    top: 672px;
+    // bottom: 308px;
     left: 60px;
     width: 630px;
   }
   .old_entry_box{
-    bottom: 48px;
+    top: 932px;
+    // bottom: 48px;
   }
   .entry_bg{
     width: 100%;

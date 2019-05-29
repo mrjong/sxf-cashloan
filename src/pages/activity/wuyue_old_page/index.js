@@ -450,7 +450,7 @@ export default class wuyue_old_page extends PureComponent {
 														className={styles.img1}
 														src={`data:image/png;base64,${item.imgUrl}`}
 														style={{
-															transform: `rotate(${index * (360 / awardList.length)}deg)`
+															transform: `scale(0.98) rotate(${index * (360 / awardList.length)}deg)`
 														}}
 													/>
 												);

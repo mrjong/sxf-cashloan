@@ -1,6 +1,8 @@
 /* stylelint-disable */
 .dazhuanpan {
-	overflow: scroll;
+	// overflow: scroll;
+	height: calc(100vh - .88rem);
+	overflow: hidden;
 	user-select: none;
 	.bg {
 		position: relative;
