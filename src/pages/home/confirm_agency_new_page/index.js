@@ -183,6 +183,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 代扣 Tag 点击事件
 	handleRepaymentTagClick = (data, type) => {
+    console.log(data)
 		this.props.form.setFieldsValue({
 			cardBillAmt: isSaveAmt && type && type === 'first' ? this.state.cardBillAmt : data.value.maxAmt + ''
 		});
@@ -363,7 +364,12 @@ export default class confirm_agency_page extends PureComponent {
 				if (type === 'isShowTipModal' && isNeedExamine) {
 					this.props.history.push('/home/loan_person_succ_page');
 				} else if (type === 'isShowTipModal') {
-					this.props.history.push('/home/loan_apply_succ_page');
+          let title = !indexData.repayDt ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+          let desc = !indexData.repayDt ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+					this.props.history.push({
+            pathname:'/home/loan_apply_succ_page',
+          	search: `?title=${title}&desc=${desc}`
+          });
 				}
 			}
 		);

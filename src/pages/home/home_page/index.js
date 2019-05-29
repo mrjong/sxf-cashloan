@@ -139,8 +139,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
-    // 去除借款页面参数
-    store.removeHomeConfirmAgency();
+		// 去除借款页面参数
+		store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
@@ -416,7 +416,8 @@ export default class home_page extends PureComponent {
 
 	// 智能按钮点击事件
 	handleSmartClick = () => {
-		const { usrIndexInfo, isNeedExamine } = this.state;
+		const { usrIndexInfo = {}, isNeedExamine } = this.state;
+		const { indexData } = usrIndexInfo;
 		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
 			buriedPointEvent(home.viewBill);
@@ -474,7 +475,12 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				this.props.history.push('/home/loan_apply_succ_page');
+				let title = !indexData.repayDt ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				let desc = !indexData.repayDt ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+				this.props.history.push({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?title=${title}&desc=${desc}`
+				});
 
 				// if (isNeedExamine) {
 				// 	this.props.history.push('/home/loan_apply_succ_page');
@@ -1162,10 +1168,12 @@ export default class home_page extends PureComponent {
 								type: 'LN0007',
 								btnText: '查看进度',
 								title: bankNm,
-								subtitle: '预计60秒完成放款',
+								subtitle: !indexData.repayDt
+									? `预计60秒完成放款`
+									: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
 								money: indexData.billAmt || '-.--',
 								date: indexData.perdCnt || '-',
-								desc: `最长不超过2个工作日`,
+								desc: !indexData.repayDt ? `最长不超过2个工作日` : '请耐心等待...',
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}

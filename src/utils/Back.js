@@ -7,7 +7,7 @@ import qs from 'qs';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { closeCurrentWebView } from 'util';
+import { closeCurrentWebView } from 'utils';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
