@@ -475,8 +475,9 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				let title = !indexData.repayDt ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
-				let desc = !indexData.repayDt ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+				let title =
+					indexData.repayType === '0' ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				let desc = indexData.repayType === '0' ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
 					search: `?title=${title}&desc=${desc}`

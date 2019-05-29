@@ -366,10 +366,11 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.history.push('/home/loan_person_succ_page');
 				} else if (type === 'isShowTipModal') {
 					const { goData } = this.state;
-					let title = !goData.reserveDate
-						? `预计60秒完成放款`
-						: `${dayjs(goData.reserveDate).format('YYYY年MM月DD日')}完成放款`;
-					let desc = !goData.reserveDate ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+					let title =
+						goData.withdrawType === '3'
+							? `${dayjs(goData.reserveDate).format('YYYY年MM月DD日')}完成放款`
+							: `预计60秒完成放款`;
+					let desc = goData.withdrawType === '3' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 					this.props.history.push({
 						pathname: '/home/loan_apply_succ_page',
 						search: `?title=${title}&desc=${desc}`
