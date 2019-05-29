@@ -6,6 +6,7 @@ import styles from './index.scss';
 import { Icon } from 'antd-mobile';
 import select from './img/select.png'
 import not_select from './img/not_select.png'
+import { setBackGround } from 'utils/background'
 const API = {
   CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
   CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -13,7 +14,7 @@ const API = {
 }
 
 let backUrlData = ''; // 从除了我的里面其他页面进去
-
+@setBackGround('#F7F8FA')
 @fetch.inject()
 export default class credit_list_page extends PureComponent {
   constructor(props) {
@@ -132,7 +133,7 @@ export default class credit_list_page extends PureComponent {
           this.state.cardList.length ?
             <div>
               <p className={styles.card_tit}>选择你需要还款信用卡</p>
-              <ul className={styles.card_list} style={this.state.cardList.length>2 ? {marginBottom: '2.5rem'}:{}}>
+              <ul className={styles.card_list} style={this.state.cardList.length>2 ? {paddingBottom: '2.5rem'}:{}}>
                 {
                   this.state.cardList.map((item, index) => {
                     const isSelected = this.state.autId === item.autId;
