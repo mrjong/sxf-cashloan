@@ -1,177 +1,187 @@
 @import '../../../assets/styles/scss/base/fn';
 
-.order_detail_page{
-    flex: 1;
-    // padding: 0.24rem 0 0;
-    background-color: #f1f1f1;
-    .topBlock{
-      background-color: #f1f1f1;
-      height: 0.24rem;
-    }
-    .overdueEntry{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #FFDFDF;
-      height: 80px;
-      padding: 0 30px;
-      color: #F66;
-      font-size: 30px;
-      .overdueItem{
-        display: flex;
-        align-items: center;
-      }
-      .warningIco{
-        width: 40px;
-        height: 40px;
-        @include bg-image('../../../assets/images/order/warn_ico');
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        margin-right: 19px;
-      }
-      .entryIco{
-        width: 16px;
-        height: 28px;
-        @include bg-image('../../../assets/images/order/entry_ico');
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        margin-left: 19px;
-      }
-    }
-    .loadInfBox{
-      position: relative;
-    }
-    .payAll{
-      position: absolute;
-      top: 38px;
-      right: 41px;
-      font-size: 30px;
-      color: rgba(254, 143, 0, 1);
-    }
-    .panel_conten {
-      padding: 0.3rem;
-      .list_item {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.25rem 0;
-      }
-      .item_name {
-        font-size: 0.3rem;
-        color: #252729;
-        display: flex;
-        align-items: center;
-      }
-      .item_value {
-        font-size: 0.3rem;
-        color: #333;
-        font-weight: bold;
-      }
-    }
-    .mt24{
-        margin-top: 22px;
-    }
-  .order_list {
-    :global {
-      .am-list-content {
-        font-weight: bold;
-      }
-      .am-list-brief {
-        font-weight: normal;
-      }
-    }
-  }
+.order_detail_page {
+	flex: 1;
+	// padding: 0.24rem 0 0;
+	background-color: #f1f1f1;
+	.topBlock {
+		background-color: #f1f1f1;
+		height: 0.24rem;
+	}
+	.overdueEntryTip {
+		text-align: center;
+		font-size: 30px;
+		padding: 10px;
+		background-color: #f9d45e;
+		span {
+			color: #f06432;
+		}
+	}
+	.overdueEntry {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: #ffdfdf;
+		height: 80px;
+		padding: 0 30px;
+		color: #f66;
+		font-size: 30px;
+		.overdueItem {
+			display: flex;
+			align-items: center;
+		}
+		.warningIco {
+			width: 40px;
+			height: 40px;
+			@include bg-image('../../../assets/images/order/warn_ico');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			margin-right: 19px;
+		}
+		.entryIco {
+			width: 16px;
+			height: 28px;
+			@include bg-image('../../../assets/images/order/entry_ico');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			margin-left: 19px;
+		}
+	}
+	.loadInfBox {
+		position: relative;
+	}
+	.payAll {
+		position: absolute;
+		top: 38px;
+		right: 41px;
+		font-size: 30px;
+		color: rgba(254, 143, 0, 1);
+	}
+	.panel_conten {
+		padding: 0.3rem;
+		.list_item {
+			display: flex;
+			justify-content: space-between;
+			padding: 0.25rem 0;
+		}
+		.item_name {
+			font-size: 0.3rem;
+			color: #252729;
+			display: flex;
+			align-items: center;
+		}
+		.item_value {
+			font-size: 0.3rem;
+			color: #333;
+			font-weight: bold;
+		}
+	}
+	.mt24 {
+		margin-top: 22px;
+	}
+	.order_list {
+		:global {
+			.am-list-content {
+				font-weight: bold;
+			}
+			.am-list-brief {
+				font-weight: normal;
+			}
+		}
+	}
 }
-.modal_box{
-  padding: 25px 30px 56px;
+.modal_box {
+	padding: 25px 30px 56px;
 }
-.modal_flex{
-  display: flex;
-  position: relative;
-  border-bottom: 1PX solid #E0E0E0;
-  padding: 25px 0;
-  span{
-    flex: 1;
-  }
-  i{
-    @include setArrow(right,15px,#A9AEB6,2PX);
-    top: 16px;
-  }
+.modal_flex {
+	display: flex;
+	position: relative;
+	padding: 25px 0;
+	span {
+		flex: 1;
+	}
+	i {
+		@include setArrow(right,15px,#A9AEB6,2PX);
+		top: 16px;
+	}
 }
-.modal_flex2{
-  span{
-    flex: 5;
-  }
-  span:first-child{
-    flex: 1;
-  }
+.modal_flex2 {
+	span {
+		flex: 5;
+	}
+	span:first-child {
+		flex: 1;
+	}
 }
-i.arrow_down{
-  @include setArrow(down,15px,#A9AEB6,2PX);
-  top: 16px;
-  margin-left: 10px;
+i.arrow_down {
+	@include setArrow(down,15px,#A9AEB6,2PX);
+	top: 16px;
+	margin-left: 10px;
 }
-i.arrow_up{
-  @include setArrow(top,15px,#A9AEB6,2PX);
-  top: 20px;
-  margin-left: 10px;
+i.arrow_up {
+	@include setArrow(top,15px,#A9AEB6,2PX);
+	top: 20px;
+	margin-left: 10px;
 }
-.feeDetail{
-  padding-top: 14px;
-  .modal_flex{
-    margin-top: 10px;
-    border-bottom: none;
-    padding: 0;
-  }
-  .modal_label,.modal_value{
-    font-size: 28px;
-    color: rgba(159, 159, 159, 1);
-  }
-  .sum_total{
-    border-top: 1PX solid #E0E0E0;
-    padding: 24px 0 10px 0;
-    margin-top: 24px;
-  }
-}
-
-.modal_title{
-  font-size: 36px;
-  color: #333;
-  font-weight: 700;
-  text-align: center;
-  position: relative;
-  margin-bottom: 25px;
-  .modal_close_btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-}
-.modal_label{
-  font-size: 36px;
-  color: #333;
-  text-align: left;
-}
-.modal_value{
-  text-align: right;
-  font-size: 36px;
-  color: #333;
-  font-weight: 500;
+.feeDetail {
+	padding-top: 14px;
+	.modal_flex {
+		margin-top: 10px;
+		border-bottom: none;
+		padding: 0;
+	}
+	.modal_label,
+	.modal_value {
+		font-size: 28px;
+		color: rgba(159, 159, 159, 1);
+	}
+	.sum_total {
+		border-top: 1PX solid #e0e0e0;
+		padding: 24px 0 10px 0;
+		margin-top: 24px;
+	}
 }
 
-.modal_btn{
-  margin-top: 72px;
+.modal_title {
+	font-size: 36px;
+	color: #333;
+	font-weight: 700;
+	text-align: center;
+	position: relative;
+	margin-bottom: 25px;
+	.modal_close_btn {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
 }
-.submit_btn{
-  margin: 45px 65px;
+.modal_label {
+	font-size: 34px;
+	color: #121c32;
+	text-align: left;
 }
-.message{
-  font-size: 24px;
-  color: #86919D;
-  margin-top: 30px;
-  .red{
-    color: #F44258;
-  }
+.modal_value {
+	text-align: right;
+	font-size: 34px;
+	font-weight: bold;
+	font-family: 'PingFangSC-Semibold';
+	color: #121c32;
 }
-.mb50{
-  margin-bottom: 50px;
+
+.modal_btn {
+	margin-top: 72px;
+}
+.submit_btn {
+	margin: 45px 65px;
+}
+.message {
+	font-size: 24px;
+	color: #86919d;
+	margin-top: 30px;
+	.red {
+		color: #f44258;
+	}
+}
+.mb50 {
+	margin-bottom: 50px;
 }
