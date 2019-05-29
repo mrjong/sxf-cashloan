@@ -995,10 +995,21 @@ export default class order_detail_page extends PureComponent {
 								)}
 								&nbsp;<i />
 							</div>
-            )}
-            <div>
-              222
-            </div>
+						)}
+						<div className={styles.modal_flex}>
+							<span className={styles.modal_label}>还款银行卡</span>
+							<span onClick={this.selectBank} className={`${styles.modal_value}`}>
+								{this.state.bankInfo && this.state.bankInfo.bankName ? (
+									<span>
+										{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
+									</span>
+								) : (
+									<span>
+										{wthdCrdCorpOrgNm}({wthdCrdNoLast})
+									</span>
+								)}
+							</span>&nbsp;<i />
+						</div>
 						<SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
 							立即还款
 						</SXFButton>
