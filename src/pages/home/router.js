@@ -24,11 +24,6 @@ export default [
 		component: () => import('pages/home/message_detail_page')
 	},
 	{
-		path: '/home/agency',
-		title: '代偿确认',
-		component: () => import('pages/home/agency_page')
-	},
-	{
 		path: '/home/essential_information',
 		title: '完善信息',
 		component: () => import('pages/home/essential_information_page')
