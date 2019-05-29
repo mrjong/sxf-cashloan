@@ -41,7 +41,7 @@ export default [
 	{
 		path: '/home/confirm_agency',
 		title: '签约借款',
-		component: () => import('pages/home/confirm_agency_new_page')
+		component: () => import('pages/home/confirm_agency_page')
 	},
 	{
 		path: '/home/moxie_bank_list_page',
