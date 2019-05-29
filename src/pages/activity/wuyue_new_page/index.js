@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import qs from 'qs';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import styles from './index.scss';
 import activity_bg from './img/activity_bg.png';
@@ -15,7 +16,12 @@ import ModalWrap from './components/ModalWrap';
 import WinPrize from './components/WinPrize';
 import { rules } from './rulesData';
 import Cookie from 'js-cookie';
+import config from '../wuyue_old_page/config';
 
+const API = {
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged', // 记录用户参与
+};
+@fetch.inject()
 @setBackGround('#9235D4')
 export default class wuyue_new_page extends PureComponent {
   constructor(props) {
@@ -82,8 +88,15 @@ export default class wuyue_new_page extends PureComponent {
     this.setState({
       mayModalShow: false,
       prizeShow: true,
+    }, () => {
+      this.recordUserAct();
     })
   }
+
+  // 记录用户中奖行为
+	recordUserAct = () => {
+		this.props.$fetch.get(`${API.saveUserInfoEngaged}/${config.activeId}`);
+	};
 
   // 针对登录后registerFlg为1的，授权失败，但是登录过的
   hasLoginCb = () => {

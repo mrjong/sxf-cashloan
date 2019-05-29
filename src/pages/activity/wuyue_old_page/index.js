@@ -28,7 +28,9 @@ const API = {
 	awardRecords: '/activeConfig/records', // 用户中奖记录展示
 	recordForUser: '/activeConfig/recordForUser', // 用户中奖记录展示
 	userCount: '/activeConfig/count', // 用户抽奖次数查询
-	userDraw: '/activeConfig/draw' // 用户抽奖
+	userDraw: '/activeConfig/draw', // 用户抽奖
+	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged', // 记录用户参与
 };
 @fetch.inject()
 @setBackGround('#9235D4')
@@ -247,6 +249,24 @@ export default class wuyue_old_page extends PureComponent {
 			}
 		});
 	};
+	// 查询用户是否有额度
+	getUserSts = () => {
+		this.props.$fetch.get(API.USERSTATUS).then(res => {
+			if (res.msgCode !== 'PTM0000') {
+				res.msgInfo && this.props.toast.info(res.msgInfo);
+				return
+			}
+			if (res.totBal && res.totBal > 0) {
+				this.getCount();
+			} else {
+				this.setState({
+					type: 'no_qualified_tips'
+				});
+			}
+		}, err => {
+		err.msgInfo && this.props.toast.info(err.msgInfo);
+		})
+	}
 	// 转盘开始转
 	zhuanpan = (obj) => {
 		this.isRotated = true;
@@ -299,12 +319,19 @@ export default class wuyue_old_page extends PureComponent {
 					// });
 					this.setState({
 						type: 'alert_congratulation'
+					}, () => {
+						this.recordUserAct();
 					});
 				// }
 
 				this.isRotated = false; //旋转改为false说明没有旋转
 			}, 7000);
 		}, 0);
+	};
+
+	// 记录用户中奖行为
+	recordUserAct = () => {
+		this.props.$fetch.get(`${API.saveUserInfoEngaged}/${config.activeId}`);
 	};
 
 	// 转盘按钮
@@ -318,7 +345,7 @@ export default class wuyue_old_page extends PureComponent {
 		}
 		if (this.isRotated) return; //如果正在旋转退出程序
 		this.isAuthFunc(() => {
-			this.getCount();
+			this.getUserSts();
 		}, 'zp_btn');
 	};
 
@@ -374,6 +401,7 @@ export default class wuyue_old_page extends PureComponent {
 								// goRoute={this.goRoute}
 								history={this.props.history}
 								closeCb={this.closePrizeModal}
+								recordActCb={this.recordUserAct}
 							/>
 						}
 						{ showRuleModal && <RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }

@@ -18,7 +18,7 @@ export default class ModalWrap extends Component {
 	render() {
 		let componentsDisplay = null;
 		const { modalShow } = this.state;
-		const { history, contType, loginCb, closeCb, hasLoginCb } = this.props;
+		const { history, contType, loginCb, closeCb, hasLoginCb, recordActCb } = this.props;
 		switch (contType) {
 			case 'login_alert': // 登陆弹框
 				componentsDisplay = (
@@ -89,6 +89,7 @@ export default class ModalWrap extends Component {
 						tipsCont="您需要先认证并授信成功后，<br />才能参加活动哦～"
 						btnText="填写认证资料"
 						clickCb={() => {
+							recordActCb && recordActCb();
 							buriedPointEvent(activity.mayOldAuthTipsBtn);
 							this.props.history.push('/home/home');
 						}}
