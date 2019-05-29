@@ -83,7 +83,7 @@ export default class order_detail_page extends PureComponent {
       ordNo: billNo
     })
       .then(res => {
-        if (res.msgCode === 'PTM0000') { 
+        if (res.msgCode === 'PTM0000') {
           if (res.data) { // 如果data不为空则为签署的是新合同,否则为旧合同，则收银台不展示详情，还款也为/bill/payback老接口
             const currentStg = res.data[0].currentLenth;
             const perdData = res.data[0].perdList[currentStg - 1];
@@ -169,7 +169,7 @@ export default class order_detail_page extends PureComponent {
         if (res.msgCode === 'PTM0000') {
           // const calcMoney = res.data.perdNum !== 999 && ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt*100 - res.data.perdList[res.data.perdNum - 1].deductionAmt*100)/100).toFixed(2);
           res.data.perdNum !== 999 && this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-          // res.data.perdNum !== 999 && this.setState({ money: calcMoney });                    
+          // res.data.perdNum !== 999 && this.setState({ money: calcMoney });
           res.data.perdNum !== 999 && this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
           // res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
           // if (res.data.data && res.data.data.coupVal && res.data.perdNum !== 999) {
@@ -196,10 +196,10 @@ export default class order_detail_page extends PureComponent {
               this.setState({
                 showModal: true,
                 isPayAll: orderDtlData && orderDtlData.isPayAll,
-                detailArr: orderDtlData && orderDtlData.detailArr, 
-                isShowDetail: orderDtlData && orderDtlData.isShowDetail, 
-                isAdvance: orderDtlData && orderDtlData.isAdvance, 
-                isNewsContract: orderDtlData && orderDtlData.isNewsContract, 
+                detailArr: orderDtlData && orderDtlData.detailArr,
+                isShowDetail: orderDtlData && orderDtlData.isShowDetail,
+                isAdvance: orderDtlData && orderDtlData.isAdvance,
+                isNewsContract: orderDtlData && orderDtlData.isNewsContract,
                 totalAmt: orderDtlData && orderDtlData.totalAmt,
                 isSettle: orderDtlData && orderDtlData.isSettle,
               }, () => {
@@ -615,7 +615,7 @@ export default class order_detail_page extends PureComponent {
     store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
   }
-  
+
   // 选择优惠劵
   selectCoupon = (useFlag) => {
     const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state
@@ -681,9 +681,9 @@ export default class order_detail_page extends PureComponent {
     buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
     this.getModalDtlInfo(this.showPayModal, false);
   }
-  
+
   showPayModal = (boolen) => {
-    this.setState({ 
+    this.setState({
       showModal: true,
       isPayAll: boolen,
     });
@@ -815,7 +815,7 @@ export default class order_detail_page extends PureComponent {
               <span className={styles.modal_label}>本次还款金额</span>
               <span className={styles.modal_value}>{isPayAll ? isNewsContract ? totalAmt && parseFloat(totalAmt).toFixed(2) : waitRepAmt && parseFloat(waitRepAmt).toFixed(2) : money && parseFloat(money).toFixed(2)}元</span>
               {
-                isAdvance && 
+                isAdvance &&
                 <i className={isShowDetail ? styles.arrow_up : styles.arrow_down}></i>
               }
             </div>
