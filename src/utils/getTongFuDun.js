@@ -11,7 +11,7 @@ if (PROJECT_ENV === 'pro' || PROJECT_ENV === 'rc') {
 } else {
 	appId = '7811333';
 }
-
+let hasReport = false //是否上报后台标识
 function getTongFuDun() {
 	const element = document.createElement('script');
 	const ts = new Date().getTime();
@@ -24,6 +24,7 @@ function getTongFuDun() {
 
 // 通付盾验证成功后向后端报备下
 function requestBackReport() {
+	hasReport = true
 	fetch
 		.get(`${TONFUDUN_BAOBEI}/${sessionId}`, null, {
 			hideLoading: true
@@ -35,17 +36,18 @@ function requestBackReport() {
 			// console.log(err);
 		})
 		.finally(() => {
+			hasReport = false
 			// console.log('请求完成'); // 无论请求成功或失败都会执行。
 		});
 }
 
 // 请求通付盾接口 执行的回调
 function jspCallBack(res) {
-	// console.log(document.getElementById('tonfudunScript').src);
-	// console.log('res', res)
 	window.showTongLoading = true;
 	if (res.success) {
-		requestBackReport();
+		if (!hasReport) {
+			requestBackReport();
+		}
 	} else {
 		Toast.info(res.message);
 	}
