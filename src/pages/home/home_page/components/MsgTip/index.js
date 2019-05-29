@@ -5,6 +5,8 @@ import Cookie from 'js-cookie';
 const API = {
 	MSG_COUNT: '/my/msgCount' // h5-查询未读消息总数
 };
+let token = '';
+let tokenFromStorage = '';
 export default class MsgTip extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -13,8 +15,8 @@ export default class MsgTip extends React.PureComponent {
 		};
 	}
 	componentWillMount() {
-		let token = Cookie.get('fin-v-card-token');
-		let tokenFromStorage = store.getToken();
+		token = Cookie.get('fin-v-card-token');
+		tokenFromStorage = store.getToken();
 		if (token && tokenFromStorage) {
 			this.requestMsgCount();
 		}
@@ -42,9 +44,12 @@ export default class MsgTip extends React.PureComponent {
 				<div className={style.title}>
 					借钱还信用卡
 					<span className={style.subtitle}>200万人都在用</span>
-					<span onClick={this.jumpToMsg} className={style.messageIcon}>
-						{count ? <i className={style.active} /> : null}
-					</span>
+					{token &&
+					tokenFromStorage && (
+						<span onClick={this.jumpToMsg} className={style.messageIcon}>
+							{count ? <i className={style.active} /> : null}
+						</span>
+					)}
 				</div>
 			</section>
 		);
