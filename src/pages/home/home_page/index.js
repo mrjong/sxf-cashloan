@@ -23,7 +23,7 @@ import {
 	ProgressBlock,
 	HomeModal,
 	CardProgress,
-  AddCards,
+	AddCards,
 	ExamineCard
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
@@ -167,7 +167,7 @@ export default class home_page extends PureComponent {
 		//删除现金分期相关数据
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
-    store.removeCouponData()
+		store.removeCouponData();
 	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
@@ -218,7 +218,11 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
+						if (
+							code === '1' &&
+							!store.getFQActivity() &&
+							this.state.usrCashIndexInfo.indexSts === 'CN0003'
+						) {
 							store.setFQActivity(true);
 							this.setState({
 								modalType: 'xianjin',
@@ -748,13 +752,14 @@ export default class home_page extends PureComponent {
 						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
 							let maxAmtArr = [];
 							maxAmtArr =
-								result.data &&
-								result.data.indexData &&
-								result.data.indexData.prodList &&
-								result.data.indexData.prodList.length &&
-								result.data.indexData.prodList.map((item, index) => {
-									return item.maxAmt;
-								}) || [];
+								(result.data &&
+									result.data.indexData &&
+									result.data.indexData.prodList &&
+									result.data.indexData.prodList.length &&
+									result.data.indexData.prodList.map((item, index) => {
+										return item.maxAmt;
+									})) ||
+								[];
 							this.setState({
 								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
 							});
@@ -832,7 +837,7 @@ export default class home_page extends PureComponent {
 	};
 	// 现金分期点击事件
 	handleCN = (code) => {
-		const { usrCashIndexInfo } = this.state
+		const { usrCashIndexInfo } = this.state;
 		switch (code) {
 			case 'CN0003':
 				// 通付盾 获取设备指纹
@@ -840,7 +845,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
 					//需要引导下载app
-					this.props.history.push('/home/deposit_tip')
+					this.props.history.push('/home/deposit_tip');
 				} else {
 					this.props.history.push('/home/loan_fenqi');
 				}
@@ -912,15 +917,15 @@ export default class home_page extends PureComponent {
 
 	//处理现金分期额度有效期显示
 	handleAcOverDtShow = () => {
-		const { indexData } = this.state.usrCashIndexInfo
-		const overDt = Number(indexData.acOverDt)
-		if (overDt > 10) return false
+		const { indexData } = this.state.usrCashIndexInfo;
+		const overDt = Number(indexData.acOverDt);
+		if (overDt > 10) return false;
 		if (overDt === 0 || overDt <= 0) {
-			return '1天后失去资格'
+			return '1天后失去资格';
 		} else {
-			return `${overDt}天后失去资格`
+			return `${overDt}天后失去资格`;
 		}
-	}
+	};
 	// *****************************分期****************************** //
 	getFQDisPlay = () => {
 		let componentsDisplay = null;
@@ -1112,7 +1117,7 @@ export default class home_page extends PureComponent {
 								this.handleSmartClick();
 							}}
 							showData={{
-                type:'LN0004',
+								type: 'LN0004',
 								btnText: '查看进度',
 								title: bankNm,
 								subtitle: '预计最快90秒完成审核',
@@ -1138,7 +1143,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: usrIndexInfo.indexData.netAppyDate && `${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+								topTip:
+									usrIndexInfo.indexData.netAppyDate &&
+									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
 							}}
 						/>
 					);
@@ -1158,7 +1165,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: usrIndexInfo.indexData.acOverDt && `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
+								topTip:
+									usrIndexInfo.indexData.acOverDt &&
+									`额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
 								subtitle2: '最高可申请还款金(元)',
 								money2: userMaxAmt ? parseFloat(userMaxAmt, 10).toFixed(2) : ''
 							}}
@@ -1329,6 +1338,8 @@ export default class home_page extends PureComponent {
 		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
+		} else if (!token || !tokenFromStorage) {
+			componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '4' }} history={this.props.history} />;
 		}
 		componentsDisplay = this.getDCDisPlay() ||
 		this.getFQDisPlay() || (
