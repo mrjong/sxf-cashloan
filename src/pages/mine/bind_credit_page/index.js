@@ -37,8 +37,8 @@ export default class bind_credit_page extends PureComponent {
 
 	componentWillMount() {
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-    autId = query && query.autId;
-    console.log(autId,'------------')
+		autId = query && query.autId;
+		console.log(autId, '------------');
 		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
