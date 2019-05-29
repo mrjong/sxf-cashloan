@@ -31,7 +31,7 @@ export default class ModalWrap extends Component {
 						history={history}
 						tipsTit="抱歉"
 						tipsCont="本活动仅针对新用户哦～"
-						btnText="马上抽50000元老用户专属大奖"
+						btnText="马上抽50000元老用户专享大奖"
 						clickCb={() => {
 							buriedPointEvent(activity.mayNewToOldBtn);
 							this.props.history.replace('/activity/wuyue_old_page');
