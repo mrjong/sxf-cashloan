@@ -54,6 +54,7 @@ export default class order_detail_page extends PureComponent {
       totalAmt: '', // 一键结清传给后台的总金额
       billOverDue: '', //逾期弹窗标志
       overDueModalFlag: '', // 信用施压弹框标识
+      perTotAmt: '', // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
     }
   }
   componentWillMount() {
@@ -119,6 +120,7 @@ export default class order_detail_page extends PureComponent {
               isNewsContract: true,
               isSettle: isSettleStu,
               totalAmt: res.data[0].totalAmt,
+              perTotAmt: perdData.totAmt,
             }, () => {
               cb && cb(isPayAll)
             })
@@ -203,6 +205,7 @@ export default class order_detail_page extends PureComponent {
                 isNewsContract: orderDtlData && orderDtlData.isNewsContract,
                 totalAmt: orderDtlData && orderDtlData.totalAmt,
                 isSettle: orderDtlData && orderDtlData.isSettle,
+                perTotAmt: orderDtlData && orderDtlData.perTotAmt,
               }, () => {
                 this.setState({
                   bankInfo: bankInfo,
@@ -539,14 +542,15 @@ export default class order_detail_page extends PureComponent {
   //调用还款接口逻辑
   // isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
   repay = () => {
-    const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt } = this.state;
+    const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, perTotAmt } = this.state;
     const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
     let sendParams = {}
     if (isNewsContract) {
       if (isPayAll) {
         sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt }
       } else {
-        sendParams = { ...repayParams, isSettle }
+        // 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
+        sendParams = perTotAmt ? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt } : { ...repayParams, isSettle }
       }
     } else {
       sendParams = repayParams;
@@ -614,8 +618,8 @@ export default class order_detail_page extends PureComponent {
 
   // 选择银行卡
   selectBank = () => {
-    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state;
-    let orderDtData = { isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle }
+    const { bankInfo: { agrNo = '' }, billDesc: { wthCrdAgrNo = '' }, isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt } = this.state;
+    let orderDtData = { isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt }
     store.setBackUrl('/order/order_detail_page');
     store.setOrderDetailData(orderDtData);
     this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
@@ -623,8 +627,8 @@ export default class order_detail_page extends PureComponent {
 
   // 选择优惠劵
   selectCoupon = (useFlag) => {
-    const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle } = this.state
-    let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle }
+    const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt } = this.state
+    let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt }
     store.setOrderDetailData(orderDtData);
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
