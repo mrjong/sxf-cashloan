@@ -128,6 +128,7 @@ const activity = {
 	mayOldRulesBtn: `${prefix}_ACTIVITY_OLD_ACTIVITYRULES`, // 五月狂欢活动 老用户专享 活动规则 按钮
 	mayOldMyPrizeBtn: `${prefix}_ACTIVITY_OLD_MYPRIZE`, // 五月狂欢活动 老用户专享 我的奖品 按钮
 	mayOldMyPrizeUseBtn: `${prefix}_ACTIVITY_OLD_MYPRIZE_IMMEDIATEUSE`, // 五月狂欢活动 老用户专享-我的奖品 立即使用 按钮
+	mayJoinSuccess: `${prefix}_ACTIVITY_JOIN_SUCCESS`, // 五月狂欢活动 成功参与埋点（调用后台接口）
 };
 
 const moxie_bank_list = {

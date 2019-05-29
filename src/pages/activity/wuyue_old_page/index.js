@@ -332,6 +332,7 @@ export default class wuyue_old_page extends PureComponent {
 	// 记录用户中奖行为
 	recordUserAct = () => {
 		this.props.$fetch.get(`${API.saveUserInfoEngaged}/${config.activeId}`);
+		buriedPointEvent(activity.mayJoinSuccess);
 	};
 
 	// 转盘按钮

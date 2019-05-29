@@ -95,7 +95,8 @@ export default class wuyue_new_page extends PureComponent {
 
   // 记录用户中奖行为
 	recordUserAct = () => {
-		this.props.$fetch.get(`${API.saveUserInfoEngaged}/${config.activeId}`);
+    this.props.$fetch.get(`${API.saveUserInfoEngaged}/${config.activeId}`);
+    buriedPointEvent(activity.mayJoinSuccess);
 	};
 
   // 针对登录后registerFlg为1的，授权失败，但是登录过的
