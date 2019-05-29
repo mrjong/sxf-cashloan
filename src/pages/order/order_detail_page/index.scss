@@ -14,7 +14,7 @@
 		padding: 10px;
 		background-color: #f9d45e;
 		span {
-			color: #f06432;
+			color: #f66;
 		}
 	}
 	.overdueEntry {
@@ -93,6 +93,64 @@
 .modal_box {
 	padding: 25px 30px 56px;
 }
+.modal_weixin {
+	.flex_div {
+		display: flex;
+		margin-top: 45px;
+		.bank {
+			left: 20px;
+			top: 18px;
+			width: 31px;
+			opacity: .5;
+			height: 25px;
+			background-size: 31px 25px;
+			background-image: url(./img/bankpay.png);
+		}
+		.wx {
+			left: 30px;
+			top: 18px;
+			width: 30px;
+			height: 27px;
+			opacity: .5;
+			background-size: 30px 27px;
+			background-image: url(./img/wxpay.png);
+		}
+		.jian {
+			position: absolute;
+			right: -20px;
+			top: -30px;
+			width: 34px;
+			height: 28px;
+			z-index: 100;
+			background-image: url('./img/jian.png');
+			background-size: 100% 100%;
+		}
+		.item {
+			margin-right: 60px;
+			padding: 5px 20px 10px 65px;
+			border-radius: 30px;
+			border: 1PX solid #868e9e;
+			font-size: 26px;
+			width: 80px;
+			height: 45px;
+			line-height: 50px;
+			color: #868e9e;
+			position: relative;
+			&.active {
+				border: 1PX solid #f66;
+				color: #121c32;
+				i {
+					opacity: 1;
+				}
+			}
+			i {
+				position: absolute;
+				display: inline-block;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+}
 .modal_flex {
 	display: flex;
 	position: relative;
@@ -101,7 +159,7 @@
 		flex: 1;
 	}
 	i {
-		@include setArrow(right,15px,#A9AEB6,2PX);
+		@include setArrow(right,15px,#A9AEB6,1PX);
 		top: 16px;
 	}
 }
@@ -114,12 +172,12 @@
 	}
 }
 i.arrow_down {
-	@include setArrow(down,15px,#A9AEB6,2PX);
+	@include setArrow(down,15px,#A9AEB6,1PX);
 	top: 16px;
 	margin-left: 10px;
 }
 i.arrow_up {
-	@include setArrow(top,15px,#A9AEB6,2PX);
+	@include setArrow(top,15px,#A9AEB6,1PX);
 	top: 20px;
 	margin-left: 10px;
 }

@@ -8,6 +8,8 @@ import { Modal, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
+import { isWXOpen } from 'utils';
+
 import { getH5Channel } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
@@ -20,8 +22,10 @@ const API = {
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
 	payFrontBack: '/bill/payFrontBack', // 用户还款新接口
-	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
+	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
+	queryExtendedPayType: '/bill/queryExtendedPayType' //其他支付方式查询
 };
+const payTypeList = [ 'WXPay' ];
 let entryFrom = '';
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
@@ -52,7 +56,9 @@ export default class order_detail_page extends PureComponent {
 			isSettle: '0', // 是否结清
 			totalAmt: '', // 一键结清传给后台的总金额
 			billOverDue: '', //逾期弹窗标志
-			overDueModalFlag: '' // 信用施压弹框标识
+			overDueModalFlag: '', // 信用施压弹框标识
+			payType: '',
+			payTypes: []
 		};
 	}
 	componentWillMount() {
@@ -73,12 +79,39 @@ export default class order_detail_page extends PureComponent {
 				this.getOverdueInfo();
 			}
 		);
+		this.queryExtendedPayType();
 	}
 
 	componentWillUnmount() {
 		store.removeCardData();
 	}
-
+	queryExtendedPayType = () => {
+		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				if (res.data && res.data.includes('WXPay')) {
+					if (!store.getPayType()) {
+						this.setState({
+							payType: 'WXPay',
+							payTypes: [ ...res.data, 'BankPay' ]
+						});
+						store.setPayType('WXPay');
+					} else {
+						this.setState({
+							payType: store.getPayType(),
+							payTypes: [ ...res.data, 'BankPay' ]
+						});
+					}
+				} else {
+					this.setState({
+						payType: 'BankPay',
+						payTypes: [ 'BankPay' ]
+					});
+				}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
 		const { billNo } = this.state;
@@ -576,7 +609,7 @@ export default class order_detail_page extends PureComponent {
 	//调用还款接口逻辑
 	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt } = this.state;
+		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, payType } = this.state;
 		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		let sendParams = {};
 		if (isNewsContract) {
@@ -587,6 +620,24 @@ export default class order_detail_page extends PureComponent {
 			}
 		} else {
 			sendParams = repayParams;
+		}
+		// 添加微信新增参数
+		switch (payType) {
+			case 'WXPay':
+				// 微信外 02  微信内  03
+				sendParams = {
+					...sendParams,
+					routeCode: payType,
+					tradeType: isWXOpen() ? '03' : '02',
+					osNm: '11',
+					callbackUrl: '22',
+					wapUrl: '33',
+					wapNm: '44'
+				};
+				break;
+			case 'BankPay':
+			default:
+				break;
 		}
 		console.log(sendParams, paybackAPI);
 		this.props.$fetch
@@ -771,6 +822,12 @@ export default class order_detail_page extends PureComponent {
 			pathname: '/order/overdue_progress_page'
 		});
 	};
+	selectPayType = (type) => {
+		this.setState({
+			payType: type
+		});
+		store.setPayType(type);
+	};
 	render() {
 		const {
 			billDesc = {},
@@ -786,7 +843,9 @@ export default class order_detail_page extends PureComponent {
 			isNewsContract,
 			totalAmt,
 			billOverDue,
-			overDueModalFlag
+			overDueModalFlag,
+			payType,
+			payTypes
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -924,7 +983,7 @@ export default class order_detail_page extends PureComponent {
 									waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
 								) : (
 									money && parseFloat(money).toFixed(2)
-								)}元
+								)}元&nbsp;
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
@@ -956,20 +1015,23 @@ export default class order_detail_page extends PureComponent {
 								</div>
 							</div>
 						) : null}
-						<div className={styles.modal_flex}>
-							<span className={styles.modal_label}>还款银行卡</span>
-							<span onClick={this.selectBank} className={`${styles.modal_value}`}>
-								{this.state.bankInfo && this.state.bankInfo.bankName ? (
-									<span>
-										{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
-									</span>
-								) : (
-									<span>
-										{wthdCrdCorpOrgNm}({wthdCrdNoLast})
-									</span>
-								)}
-							</span>&nbsp;<i />
-						</div>
+
+						{!payType || payType === 'BankPay' ? (
+							<div className={styles.modal_flex}>
+								<span className={styles.modal_label}>还款银行卡</span>
+								<span onClick={this.selectBank} className={`${styles.modal_value}`}>
+									{this.state.bankInfo && this.state.bankInfo.bankName ? (
+										<span>
+											{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
+										</span>
+									) : (
+										<span>
+											{wthdCrdCorpOrgNm}({wthdCrdNoLast})
+										</span>
+									)}
+								</span>&nbsp;<i />
+							</div>
+						) : null}
 						{// 一键结清不显示优惠劵
 						!isPayAll && (
 							<div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
@@ -996,19 +1058,39 @@ export default class order_detail_page extends PureComponent {
 								&nbsp;<i />
 							</div>
 						)}
-						<div className={styles.modal_flex}>
-							<span className={styles.modal_label}>还款银行卡</span>
-							<span onClick={this.selectBank} className={`${styles.modal_value}`}>
-								{this.state.bankInfo && this.state.bankInfo.bankName ? (
-									<span>
-										{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
-									</span>
-								) : (
-									<span>
-										{wthdCrdCorpOrgNm}({wthdCrdNoLast})
-									</span>
-								)}
-							</span>&nbsp;<i />
+						<div className={styles.modal_weixin}>
+							<div className={styles.modal_label}>还款方式</div>
+							<div className={styles.flex_div}>
+								{payTypes.includes('WXPay') ? (
+									<div
+										className={
+											payType === 'WXPay' ? [ styles.item, styles.active ].join(' ') : styles.item
+										}
+										onClick={() => {
+											this.selectPayType('WXPay');
+										}}
+									>
+										<span className={styles.jian} />
+										<i className={styles.wx} />微 信
+									</div>
+								) : null}
+								{payTypes.includes('BankPay') ? (
+									<div
+										onClick={() => {
+											this.selectPayType('BankPay');
+										}}
+										className={
+											payType === 'BankPay' ? (
+												[ styles.item, styles.active ].join(' ')
+											) : (
+												styles.item
+											)
+										}
+									>
+										<i className={styles.bank} />银行卡
+									</div>
+								) : null}
+							</div>
 						</div>
 						<SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
 							立即还款
