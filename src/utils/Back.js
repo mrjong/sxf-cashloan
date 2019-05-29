@@ -4,8 +4,10 @@
 import React from 'react';
 import { logoutAppHandler, changeHistoryState, isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs';
+import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
+import { closeCurrentWebView } from 'util';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -195,6 +197,8 @@ if (window.history && window.history.pushState) {
 							WeixinJSBridge.call('closeWindow');
 						}
 					}
+				} else if (isMPOS()) {
+					closeCurrentWebView();
 				} else {
 					window.history.pushState(null, null, document.URL);
 				}
