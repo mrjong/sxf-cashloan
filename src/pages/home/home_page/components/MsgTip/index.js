@@ -1,5 +1,7 @@
 import React from 'react';
 import style from './index.scss';
+import { store } from 'utils/store';
+import Cookie from 'js-cookie';
 const API = {
 	MSG_COUNT: '/my/msgCount' // h5-查询未读消息总数
 };
@@ -11,7 +13,11 @@ export default class MsgTip extends React.PureComponent {
 		};
 	}
 	componentWillMount() {
-		this.requestMsgCount();
+		let token = Cookie.get('fin-v-card-token');
+		let tokenFromStorage = store.getToken();
+		if (token && tokenFromStorage) {
+			this.requestMsgCount();
+		}
 	}
 	// 去消息页面
 	jumpToMsg = () => {

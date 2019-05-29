@@ -176,9 +176,14 @@ export default class home_page extends PureComponent {
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 					if (result.data.value === '1') {
-						this.indexshowType();
+						if (token && tokenFromStorage) {
+							this.indexshowType();
+						} else {
+							this.setState({
+								blackData: { cashAcBalSts: '4' }
+							});
+						}
 					} else {
-						// 代偿流程
 						this.credit_extension();
 					}
 				} else {
@@ -1338,8 +1343,6 @@ export default class home_page extends PureComponent {
 		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
-		} else if (!token || !tokenFromStorage) {
-			componentsBlackCard = <BlackCard blackData={{ cashAcBalSts: '4' }} history={this.props.history} />;
 		}
 		componentsDisplay = this.getDCDisPlay() ||
 		this.getFQDisPlay() || (
