@@ -50,7 +50,9 @@ export default class crawl_progress_page extends PureComponent {
       let { percent, isSuccess } = this.state
       if(percent > 99 && !isSuccess) {
         if(store.getPercentCount()>1){
+          store.setPercentCount(null)
           this.props.history.replace('/home/crawl_fail_page?showPopover=2')
+          return
         }
       }
       if(!temp){
@@ -136,6 +138,7 @@ export default class crawl_progress_page extends PureComponent {
               data[3].status = '失败'
               this.setState({ isFail: true })
               if(store.getPercentCount()>1){
+                store.setPercentCount(null)
                 this.props.history.replace('/home/crawl_fail_page?showPopover=1')
               } else {
                 this.props.history.replace('/home/crawl_fail_page?showPopover=0')
@@ -186,7 +189,11 @@ export default class crawl_progress_page extends PureComponent {
       .get(API.USER_IMPORT)
       .then((res) => {
         if (res && res.msgCode === 'PTM0000') {
-          store.setPercentCount(res.data+1);
+          if(store.getPercentCount()>1 || store.getPercentCount() === null){
+            store.setPercentCount(1);
+          } else {
+            store.setPercentCount(res.data);
+          }
           location.reload()
         }
       }).catch(err=>{

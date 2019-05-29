@@ -107,56 +107,55 @@
 				z-index: 1;
 			}
 
-			:global {
-				.am-swipe-btn,
-				.am-swipe-actions-right,
-				.am-swipe-content {
-					border-top-right-radius: 10px;
-					border-bottom-right-radius: 10px;
-				}
-				.am-swipe-btn-text {
-					padding: 0 32px;
-					font-size: 36px;
-				}
-			}
-		}
-		li.active {
-			box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
-			border-color: transparent;
-		}
-	}
-	.add_card {
-		font-size: 32px;
-		color: #414a53;
-		text-align: center;
-		margin: 30px 0 30px 0;
-		.add_ico {
-			position: relative;
-			width: 32px;
-			height: 32px;
-			margin-right: 10px;
-			top: 5px;
-			display: inline-block;
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
-		}
-	}
-	.handle_authority {
-		position: fixed;
-		bottom: 0;
-		width: 100%;
-		background: #f5f5f5;
-		z-index: 2;
-	}
-	.button {
-		width: 634px;
-		height: 100px;
-		background: #ebde74;
-		border-radius: 50px;
-		margin: 0 auto;
-		text-align: center;
-		line-height: 100px;
-		vertical-align: middle;
-		color: #121c32;
-		font-size: 34px;
-	}
+      :global {
+        .am-swipe-btn,.am-swipe-actions-right,.am-swipe-content{
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 10px;
+        }
+        .am-swipe-btn-text{
+          padding: 0 32px;
+          font-size: 36px;
+        }
+      }
+    }
+    li.active {
+      box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
+      border-color: transparent;
+    }
+  }
+  .add_card {
+    font-size: 32px;
+    color: #414A53;
+    text-align: center;
+    margin: 30px 0 30px 0;
+    .add_ico {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+      top: 5px;
+      display: inline-block;
+      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
+    }
+  }
+  .handle_authority {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #F7F8FA;
+    z-index: 2;
+    padding-top: 30px;
+  }
+  .button {
+    width: 634px;
+    height: 100px;
+    background: #EBDE74;
+    border-radius: 50px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 100px;
+    vertical-align: middle;
+    color: #121C32;
+    font-size: 34px;
+  }
 }

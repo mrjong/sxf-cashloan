@@ -4,8 +4,14 @@ import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import { Icon } from 'antd-mobile';
+<<<<<<< HEAD
 import select from './img/select.png';
 import not_select from './img/not_select.png';
+=======
+import select from './img/select.png'
+import not_select from './img/not_select.png'
+import { setBackGround } from 'utils/background'
+>>>>>>> origin/BR_20190515_YOUHUA132_JKJS-415
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
 	CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -13,7 +19,7 @@ const API = {
 };
 
 let backUrlData = ''; // 从除了我的里面其他页面进去
-
+@setBackGround('#F7F8FA')
 @fetch.inject()
 export default class credit_list_page extends PureComponent {
 	constructor(props) {
