@@ -7,6 +7,7 @@ import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
+import { setBackGround } from 'utils/background';
 import styles from './index.scss';
 import qs from 'qs';
 
@@ -20,7 +21,7 @@ const API = {
 // let isFetching = false;
 let backUrlData = ''; // 从除了我的里面其他页面进去
 let autId = '';
-
+@setBackGround('#fff')
 @fetch.inject()
 @createForm()
 export default class bind_credit_page extends PureComponent {
@@ -36,7 +37,8 @@ export default class bind_credit_page extends PureComponent {
 
 	componentWillMount() {
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-    	autId = query && query.autId;
+		autId = query && query.autId;
+		console.log(autId, '------------');
 		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
@@ -148,7 +150,7 @@ export default class bind_credit_page extends PureComponent {
 						bankCd: result.data.bankCd,
 						cardTyp: 'C', //卡类型。
 						cardNo: values.valueInputCarNumber, //持卡人卡号
-						autId: autId ? autId : '', // autId
+						autId: autId ? autId : '' // autId
 					};
 					this.bindConfirm(params1);
 				} else {
@@ -212,33 +214,31 @@ export default class bind_credit_page extends PureComponent {
 		const Item = List.Item;
 		const { getFieldProps } = this.props.form;
 		return (
-			<div className={styles.bind_credit_page}>
-				<List>
+			<div>
+				<div className={styles.header}>请确认需要还款的信用卡信息</div>
+				<div className="bind_credit_page_listBox">
 					<Item extra={this.state.userName}>持卡人</Item>
 					<InputItem
 						maxLength="24"
-            			type="number"
+						type="number"
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
 						})}
-						// clear
-						// error={!!getFieldError('account')}
-						// onErrorClick={() => {
-						//   alert(getFieldError('account').join('、'));
-						// }}
 						placeholder="请输入信用卡卡号"
-						onBlur={() => {handleInputBlur()}}
+						onBlur={() => {
+							handleInputBlur();
+						}}
 					>
 						信用卡卡号
 					</InputItem>
-				</List>
-				<p className={styles.tips}>借款资金将转入您绑定的信用卡中，请注意查收</p>
+					<div className={[ styles.time_container, 'sms' ].join(' ')} />
+				</div>
+				<span className={styles.support_type} onClick={this.supporBank}>
+					支持绑定卡的银行
+				</span>
 				<ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>
 					确认
 				</ButtonCustom>
-				<span className={styles.support_type} onClick={this.supporBank}>
-					支持银行卡类型
-				</span>
 			</div>
 		);
 	}

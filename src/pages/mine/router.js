@@ -13,7 +13,7 @@ export default [
   },
   {
     path: '/mine/bind_credit_page',
-    title: '绑定信用卡',
+    title: '确认卡信息',
     component: () => import('pages/mine/bind_credit_page'),
   },
   {

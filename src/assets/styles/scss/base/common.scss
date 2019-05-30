@@ -58,4 +58,14 @@
 	.am-pull-to-refresh-indicator {
 		height: 0.8rem !important;
 	}
+	@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+		html:not([data-scale]) .am-number-keyboard-wrapper table tr .am-number-keyboard-item.keyboard-confirm {
+			border-bottom: none;
+		}
+		html:not([data-scale]) .am-list-body::after,
+		html:not([data-scale]) .am-list-item:not(:last-child) .am-list-line::after,html:not([data-scale]) .am-list-body::before,
+		html:not([data-scale]) .am-list-body div:not(:last-child) .am-list-line::after {
+			background-color: #f0f1f5 !important;
+		}
+	}
 }

@@ -21,7 +21,8 @@ import {
 	ProgressBlock,
 	HomeModal,
 	CardProgress,
-	AddCards
+	AddCards,
+	ExamineCard
 } from './components';
 import linkConf from 'config/link.conf';
 let isinputBlur = false;
@@ -138,6 +139,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
+		// 去除借款页面参数
+		store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
@@ -161,6 +164,7 @@ export default class home_page extends PureComponent {
 		//删除现金分期相关数据
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
+		store.removeCouponData();
 	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
@@ -412,7 +416,8 @@ export default class home_page extends PureComponent {
 
 	// 智能按钮点击事件
 	handleSmartClick = () => {
-		const { usrIndexInfo, isNeedExamine } = this.state;
+		const { usrIndexInfo = {}, isNeedExamine } = this.state;
+		const { indexData } = usrIndexInfo;
 		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
 			buriedPointEvent(home.viewBill);
@@ -455,8 +460,10 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
-				console.log('LN0004');
-				this.props.toast.info('正在审批中，请耐心等待');
+				this.props.history.push({
+					pathname: '/home/credit_apply_succ_page',
+					search: `?autId=${indexData.autId}`
+				});
 				break;
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
@@ -471,13 +478,21 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				if (isNeedExamine) {
-					this.props.history.push('/home/loan_apply_succ_page');
-				} else {
-					this.props.toast.info(
-						`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`
-					);
-				}
+				let title =
+					indexData.repayType === '0' ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				let desc = indexData.repayType === '0' ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+				this.props.history.push({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
+				});
+
+				// if (isNeedExamine) {
+				// 	this.props.history.push('/home/loan_apply_succ_page');
+				// } else {
+				// 	this.props.toast.info(
+				// 		`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`
+				// 	);
+				// }
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
@@ -492,6 +507,9 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
 				console.log('LN0010');
+				break;
+			case 'LN0011': // 账单爬取失败/老用户 无按钮不做处理
+				this.props.history.push('/home/loan_person_succ_page');
 				break;
 			default:
 				console.log('default');
@@ -571,15 +589,20 @@ export default class home_page extends PureComponent {
 
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
-		const { usrIndexInfo } = this.state;
+		const { usrIndexInfo = {} } = this.state;
+		const { indexData = {} } = usrIndexInfo;
 		const autId = usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId;
 		const api = autId ? `${API.chkCredCard}/${autId}` : API.CHECK_CARD;
 		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
+				store.setHomeConfirmAgency({
+					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId,
+					bankName: indexData.bankName,
+					cardNoHid: indexData.cardNoHid
+				});
 				// 有风控且绑信用卡储蓄卡
 				this.props.history.push({
-					pathname: '/home/confirm_agency',
-					state: { indexData: usrIndexInfo && usrIndexInfo.indexData }
+					pathname: '/home/confirm_agency'
 				});
 			} else if (result && result.msgCode === 'PTM2003') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
@@ -681,6 +704,11 @@ export default class home_page extends PureComponent {
 	// 获取首页信息
 	requestGetUsrInfo = () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
+			// const result = {
+			// 	msgCode: 'PTM0000',
+			// 	msgInfo: '',
+			// 	data: mockData.LN0011
+			// };
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				// if (result.data.indexSts === 'LN0003') {
 				// 	this.getPercent();
@@ -713,13 +741,14 @@ export default class home_page extends PureComponent {
 						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
 							let maxAmtArr = [];
 							maxAmtArr =
-								result.data &&
-								result.data.indexData &&
-								result.data.indexData.prodList &&
-								result.data.indexData.prodList.length &&
-								result.data.indexData.prodList.map((item, index) => {
-									return item.maxAmt;
-								});
+								(result.data &&
+									result.data.indexData &&
+									result.data.indexData.prodList &&
+									result.data.indexData.prodList.length &&
+									result.data.indexData.prodList.map((item, index) => {
+										return item.maxAmt;
+									})) ||
+								[];
 							this.setState({
 								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
 							});
@@ -1075,16 +1104,17 @@ export default class home_page extends PureComponent {
 				// case 'LN0003': // 账单爬取成功
 				case 'LN0004': // 代还资格审核中
 					componentsDisplay = (
-						<MoneyCard
+						<ExamineCard
 							handleClick={() => {
 								this.handleSmartClick();
 							}}
 							showData={{
-								btnText: '代偿资格审核中',
+								type: 'LN0004',
+								btnText: '查看进度',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '预计最快90秒完成审核',
 								money: cardBillAmtData,
-								desc: `还款日：${cardBillDtData}`,
+								desc: `高峰期可能5分钟左右`,
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}
@@ -1095,7 +1125,7 @@ export default class home_page extends PureComponent {
 					componentsDisplay = (
 						<MoneyCard
 							handleClick={() => {
-								// this.handleSmartClick()
+								this.handleSmartClick();
 							}}
 							showData={{
 								btnText: '暂无借款资格',
@@ -1105,7 +1135,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: `${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+								topTip:
+									usrIndexInfo.indexData.netAppyDate &&
+									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
 							}}
 						/>
 					);
@@ -1125,7 +1157,9 @@ export default class home_page extends PureComponent {
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
 								bankNo: bankCode,
-								topTip: `额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
+								topTip:
+									usrIndexInfo.indexData.acOverDt &&
+									`额度有效期至${dayjs(usrIndexInfo.indexData.acOverDt).format('YYYY/MM/DD')}`,
 								subtitle2: '最高可申请还款金(元)',
 								money2: userMaxAmt ? parseFloat(userMaxAmt, 10).toFixed(2) : ''
 							}}
@@ -1134,16 +1168,21 @@ export default class home_page extends PureComponent {
 					break;
 				case 'LN0007': // 放款中
 					componentsDisplay = (
-						<MoneyCard
+						<ExamineCard
 							handleClick={() => {
 								this.handleSmartClick();
 							}}
 							showData={{
-								btnText: '放款准备中',
+								type: 'LN0007',
+								btnText: '查看进度',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
-								money: cardBillAmtData,
-								desc: `还款日：${cardBillDtData}`,
+								subtitle:
+									indexData.repayType === '0'
+										? `预计60秒完成放款`
+										: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
+								money: indexData.billAmt || '-.--',
+								date: indexData.perdCnt || '-',
+								desc: indexData.repayType === '0' ? `最长不超过2个工作日` : '请耐心等待...',
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}
@@ -1170,6 +1209,24 @@ export default class home_page extends PureComponent {
 					break;
 				case 'LN0010': // 账单爬取失败/老用户
 					componentsDisplay = <CarouselHome handleClick={this.goToNewMoXie} />;
+					break;
+				case 'LN0011': // 账单爬取失败/老用户
+					componentsDisplay = (
+						<ExamineCard
+							showData={{
+								type: 'LN0011',
+								btnText: '查看进度',
+								title: '还到-基础版',
+								subtitle: '需要人工审核，耐心等待',
+								money: indexData.billAmt || '-.--',
+								date: indexData.perdCnt || '-',
+								dw: '申请借款金额(元) ',
+								dw2: '申请期限 ',
+								tel: `010-86355XXX的审核电话`
+							}}
+							handleClick={this.handleSmartClick}
+						/>
+					);
 					break;
 				default:
 			}

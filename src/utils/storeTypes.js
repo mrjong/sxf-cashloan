@@ -1,7 +1,7 @@
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
 	RepaymentModalData: 'RepaymentModalData', // 保存确认代还信息弹框数据
-	HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
+	// HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
 	BackUrl: 'BackUrl', // 保存跳转的url
 	BackUrl2: 'BackUrl2', // 临时缓存
 	CardData: 'CardData', // 跳转路由中的银行卡信息
@@ -76,5 +76,6 @@ export const storeTypes = {
 	HomeAutId: 'HomeAutId', // 首页的autId
 	AutId: 'AutId', // 接口调用需要的AutId
 	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
-  PercentCount: 'PercentCount' //百分比次数
+	PercentCount: 'PercentCount', //百分比次数
+	HomeConfirmAgency: 'HomeConfirmAgency' // 首页进入到签约借款页面参数
 };

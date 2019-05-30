@@ -189,7 +189,7 @@ const interceptRouteArr = [
 	'/home/credit_apply_succ_page',
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
-	'/home/crawl_fail_page',
+	'/home/crawl_fail_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -396,7 +396,68 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 			}
 		});
 };
+const needDisplayOptions2 = [ 'operator' ];
+export const getOperatorStatus = ({ $props }) => {
+	return new Promise(async (resolve, reject) => {
+		let res = await $props.$fetch.post(API.GETSTSW);
+		if (res && res.msgCode === 'PTM0000') {
+			res.data.forEach((item, index) => {
+				if (needDisplayOptions2.includes(item.code)) {
+					// case '0': // 未认证
+					// case '1': // 认证中
+					// case '2': // 认证成功
+					// case '3': // 认证失败
+					// case '4': // 认证过期
+					switch (item.stsw.dicDetailCd) {
+						case '0':
+						case '3':
+						case '4':
+							resolve(false);
+							$props.toast.info('身份信息确认失败，请重新确认');
+							setTimeout(() => {
+								SXFToast.loading('加载中...', 0);
+								$props.$fetch
+									.post(`${API.getOperator}`, {
+										clientCode: '04'
+									})
+									.then((result) => {
+										if (result.msgCode === 'PTM0000' && result.data.url) {
+											$props.SXFToast.hide();
+											store.setMoxieBackUrl('/home/loan_repay_confirm_page');
+											store.getToggleMoxieCard(true);
+											// setTimeout(() => {
+											// 运营商直接返回的问题
+											SXFToast.loading('加载中...', 0);
+											window.location.href =
+												result.data.url +
+												`&localUrl=${window.location.origin}&routeType=${window.location
+													.pathname}${window.location
+													.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+													`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+												)}`;
+										}
+									});
+							}, 2000);
+							break;
+						case '1':
+							resolve(false);
+							$props.toast.info('请耐心等待信息确认结果');
+							break;
+						case '2':
+							resolve(true);
+							break;
 
+						default:
+							break;
+					}
+				}
+			});
+		} else {
+			$props.toast.info(res.msgInfo);
+			resolve(false);
+		}
+	});
+};
 const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
@@ -501,11 +562,11 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			// 如果是银行卡则跳转到进度否则是确认借款页
 			if (store.getCreditSuccessBack()) {
 				// 信用卡返回跳转到进度页
+				store.setToggleMoxieCard(true);
 				$props.history.push('/home/crawl_progress_page');
 			} else {
 				$props.history.replace('/home/loan_repay_confirm_page');
 			}
-			
 		}
 	} else {
 		Toast.info(res.msgInfo);
