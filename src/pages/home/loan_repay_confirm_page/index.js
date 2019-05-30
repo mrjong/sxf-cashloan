@@ -904,8 +904,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<div className={style.trendBox}>
 										<i />
 										<div className={style.trendDesc}>
-											<span>月还款压力大，费用低</span>
-											<span>月还款压力小，费用高</span>
+											<span>月还款金额大，费用低</span>
+											<span>月还款金额小，费用高</span>
 										</div>
 									</div>
 									<div className={style.limitBox}>

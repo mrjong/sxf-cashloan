@@ -460,7 +460,10 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
-				this.props.history.push('/home/credit_apply_succ_page');
+				this.props.history.push({
+					pathname: '/home/credit_apply_succ_page',
+					search: `?autId=${indexData.autId}`
+				});
 				break;
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
@@ -475,11 +478,12 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				let title = !indexData.repayDt ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
-				let desc = !indexData.repayDt ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+				let title =
+					indexData.repayType === '0' ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				let desc = indexData.repayType === '0' ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
-					search: `?title=${title}&desc=${desc}`
+					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
 				});
 
 				// if (isNeedExamine) {
@@ -533,10 +537,8 @@ export default class home_page extends PureComponent {
 							this.goToNewMoXie();
 						}
 					} else {
-						this.props.toast.info('系统开小差，请稍后重试');
+						this.props.toast.info(res.msgInfo);
 					}
-				} else {
-					this.props.toast.info(res.msgInfo);
 				}
 			})
 			.catch((err) => {
@@ -908,11 +910,17 @@ export default class home_page extends PureComponent {
 	// 逾期弹窗
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
-		store.setBillNo(usrIndexInfo.indexData.billNo);
-		this.props.history.push({
-			pathname: '/order/order_detail_page',
-			search: '?entryFrom=home'
-		});
+		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.billNo) {
+			store.setBillNo(usrIndexInfo.indexData.billNo);
+			this.props.history.push({
+				pathname: '/order/order_detail_page',
+				search: '?entryFrom=home'
+			});
+		} else {
+			this.props.history.push({
+				pathname: '/order/order_page'
+			});
+		}
 	};
 	// *****************************分期****************************** //
 	getFQDisPlay = () => {
@@ -1168,12 +1176,13 @@ export default class home_page extends PureComponent {
 								type: 'LN0007',
 								btnText: '查看进度',
 								title: bankNm,
-								subtitle: !indexData.repayDt
-									? `预计60秒完成放款`
-									: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
+								subtitle:
+									indexData.repayType === '0'
+										? `预计60秒完成放款`
+										: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
 								money: indexData.billAmt || '-.--',
 								date: indexData.perdCnt || '-',
-								desc: !indexData.repayDt ? `最长不超过2个工作日` : '请耐心等待...',
+								desc: indexData.repayType === '0' ? `最长不超过2个工作日` : '请耐心等待...',
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}
