@@ -165,7 +165,7 @@ export default class moxie_bank_list_page extends Component {
 							银行专属链接，保护用户数据安全
 						</div>
 						<div className={style.infromationTitle}>
-							<p>选择还款信用卡所在银行</p>
+							<p>选择信用卡所在银行</p>
 							<span className={style.desc}>登录网上银行，自动查询并添加信用卡</span>
 							{/* <div className={style.subTitle_info}>通过网银添加</div> */}
 						</div>
