@@ -58,7 +58,7 @@ export default class order_detail_page extends PureComponent {
 			billOverDue: '', //逾期弹窗标志
 			overDueModalFlag: '', // 信用施压弹框标识
 			payType: '',
-			payTypes: []
+			payTypes: ['BankPay']
 		};
 	}
 	componentWillMount() {
@@ -92,19 +92,18 @@ export default class order_detail_page extends PureComponent {
 					if (!store.getPayType()) {
 						this.setState({
 							payType: 'WXPay',
-							payTypes: [ ...res.data, 'BankPay' ]
+							payTypes: [...this.state.payTypes,...res.data]
 						});
 						store.setPayType('WXPay');
 					} else {
 						this.setState({
 							payType: store.getPayType(),
-							payTypes: [ ...res.data, 'BankPay' ]
+							payTypes: [...this.state.payTypes,...res.data]
 						});
 					}
 				} else {
 					this.setState({
 						payType: 'BankPay',
-						payTypes: [ 'BankPay' ]
 					});
 				}
 			} else {
