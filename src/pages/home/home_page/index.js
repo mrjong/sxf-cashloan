@@ -461,9 +461,9 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0004': // 代还资格审核中
 				this.props.history.push({
-          pathname:'/home/credit_apply_succ_page',
-          search:`?autId=${indexData.autId}`
-        });
+					pathname: '/home/credit_apply_succ_page',
+					search: `?autId=${indexData.autId}`
+				});
 				break;
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
