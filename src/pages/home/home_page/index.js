@@ -585,6 +585,13 @@ export default class home_page extends PureComponent {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+  };
+  	// 跳新版魔蝎
+	goToNewMoXie2 = () => {
+    store.setMoxieBackUrl(`/home/crawl_progress_page`);
+		store.setBackUrl('/home/loan_repay_confirm_page');
+		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
+		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 
 	// 请求用户绑卡状态
@@ -1305,7 +1312,7 @@ export default class home_page extends PureComponent {
 						handleClick={() => {
 							// 埋点-首页-点击代还其他信用卡
 							buriedPointEvent(home.repayOtherCredit);
-							this.goToNewMoXie();
+							this.goToNewMoXie2();
 						}}
 					/>
 				);
