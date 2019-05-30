@@ -17,6 +17,8 @@ import { store } from 'utils/store';
 import StepBar from 'components/StepBar';
 import circle from './img/circle.png';
 import circle_not from './img/circle_not.png';
+import adsBg from './img/base_top_img.png';
+import AgreementModal from 'components/AgreementModal';
 const Step = Steps.Step;
 const pageKey = home.basicInfoBury;
 const customIcon = (type) => {
@@ -32,7 +34,9 @@ const API = {
 	getRelat: '/rcm/qryRelat',
 	submitData: '/auth/personalData',
 	qryCity: '/rcm/qryCity',
-	queryUsrBasicInfo: '/auth/queryUsrBasicInfo'
+	queryUsrBasicInfo: '/auth/queryUsrBasicInfo',
+	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
+	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 };
 
 const reducedFilter = (data, keys, fn) =>
@@ -49,16 +53,23 @@ let urlQuery = '';
 @createForm()
 @setBackGround('#F7F8FA')
 export default class essential_information_page extends PureComponent {
-	state = {
-		loading: false,
-		relatData: [], // 亲属联系人数据
-		relatVisible: false, // 联系人是否显示
-		relatValue: [], // 选中的联系人
-		provValue: [], // 选中的省市区
-		provLabel: []
-	};
+	constructor(props) {
+		super(props);
+		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		this.state = {
+			loading: false,
+			relatData: [], // 亲属联系人数据
+			relatVisible: false, // 联系人是否显示
+			relatValue: [], // 选中的联系人
+			provValue: [], // 选中的省市区
+			provLabel: [],
+			showAgreement: false, // 显示协议弹窗
+		};
+	}
 
 	componentWillMount() {
+		// mpos中从授权页进入基本信息
+		urlQuery && urlQuery.jumpToBase && store.setNeedNextUrl(true);
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
 		}
@@ -67,8 +78,9 @@ export default class essential_information_page extends PureComponent {
 			this.props.history.push(`/home/home`);
 		}
 		buryingPoints();
-		urlQuery = this.props.history.location.search;
 		this.initBasicInfo();
+		// mpos中从授权页进入基本信息，判断是否显示协议
+		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
 	}
 
 	componentDidMount() {
@@ -259,7 +271,8 @@ export default class essential_information_page extends PureComponent {
 		buriedPointEvent(home.basicInfoComplete, {
 			entry: !isFromMine || isFromMine === 'false' ? '我的' : '风控授信项',
 			is_success: isSucc,
-			fail_cause: failInf
+			fail_cause: failInf,
+			comeFrom: query.entry, // 是从确认授权页面、获取验证码页面，还是首页进入
 		});
 	};
 
@@ -323,13 +336,48 @@ export default class essential_information_page extends PureComponent {
 			...obj
 		});
 	}
+	// 放弃本次机会
+	quitSubmit = () => {
+		this.props.history.goBack();
+	}
+
+	// 关闭注册协议弹窗
+	readAgreementCb = () => {
+		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					showAgreement: false
+				});
+			}
+		});
+	};
+
+	judgeShowAgree = () => {
+		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
+				this.setState({
+					showAgreement: res.data.agreementPopupFlag === '1'
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	}
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
+		const { showAgreement } = this.state;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[ style.nameDiv, 'info_gb' ].join(' ')}>
-				<div className={style.step_box_new}>
+				{
+					urlQuery.jumpToBase && 
+					<div className={style.adsImg}>
+						<img src={adsBg} alt="ad" />
+					</div>
+				}
+				<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
 					<div className={[ style.step_item, style.active ].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
@@ -532,12 +580,28 @@ export default class essential_information_page extends PureComponent {
 						<div className={style.line} />
 					</div>
 				</div>
-				<ButtonCustom
-					onClick={this.handleSubmit}
-					className={[ style.sureBtn, !btn_dis ? style.dis : '' ].join(' ')}
-				>
-					{needNextUrl ? '下一步' : '完成'}
-				</ButtonCustom>
+				{
+					urlQuery.jumpToBase && 
+					<div className={style.operatorCont}>
+						<ButtonCustom
+							onClick={this.handleSubmit}
+							className={[ style.nextBtn, !btn_dis ? style.dis : '' ].join(' ')}
+						>
+							下一步
+						</ButtonCustom>
+						<div className={style.quitText} onClick={this.quitSubmit}>放弃本次机会</div>
+					</div>
+				}
+				{
+					!urlQuery.jumpToBase && 
+					<ButtonCustom
+						onClick={this.handleSubmit}
+						className={[ style.sureBtn, !btn_dis ? style.dis : '' ].join(' ')}
+					>
+						{needNextUrl ? '下一步' : '完成'}
+					</ButtonCustom>
+				}
+				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />;
 			</div>
 		);
 	}
