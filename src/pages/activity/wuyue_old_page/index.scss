@@ -1,9 +1,11 @@
 /* stylelint-disable */
 .dazhuanpan {
 	// overflow: scroll;
-	height: calc(100vh - .88rem);
+	// height: calc(100vh - .88rem);
+	height: 100vh;
 	overflow: hidden;
 	user-select: none;
+	background: linear-gradient(1deg, #9235D4 0%, #F87783 100%);
 	.bg {
 		position: relative;
 		.rule_btn {
@@ -30,6 +32,7 @@
 			overflow: hidden;
 			position: absolute;
 			top: 55px;
+			z-index: 1;
 			.zp_bg {
 				width: 100%;
 				display: block;
@@ -68,9 +71,15 @@
 			transform: translate(-50%, 0);
 			left: 50%;
 			top: 770px;
+			z-index: 1;
 			img{
 				width: 217px;
 			}
+		}
+		.platform{
+			width: 674px;
+			position: absolute;
+			top: 595px
 		}
 
 		.message_bottom {

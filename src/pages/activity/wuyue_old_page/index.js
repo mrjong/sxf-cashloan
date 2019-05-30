@@ -14,6 +14,7 @@ import over from './img/over.png';
 import notstart from './img/notstart.png';
 import zp_btn from './img/zp_btn.png';
 import myAward from './img/prize_btn.png';
+import platformBg from './img/platform_bg.png';
 import rule_bg from '../wuyue_new_page/img/rule_bg.png';
 import config from './config';
 import Cookie from 'js-cookie';
@@ -459,8 +460,11 @@ export default class wuyue_old_page extends PureComponent {
 										</div>
 									</div>
 								</div>
-								<div className={styles.myAward} onClick={this.getMyAward}>
-									<img src={myAward} alt="prize_button" />
+								<div>
+									<div className={styles.myAward} onClick={this.getMyAward}>
+										<img src={myAward} alt="prize_button" />
+									</div>
+									<img src={platformBg} className={styles.platform} alt="platform" />
 								</div>
 							</div>
 						</div>
