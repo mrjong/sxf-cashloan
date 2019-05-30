@@ -1169,12 +1169,13 @@ export default class home_page extends PureComponent {
 								type: 'LN0007',
 								btnText: '查看进度',
 								title: bankNm,
-								subtitle: !indexData.repayDt
-									? `预计60秒完成放款`
-									: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
+								subtitle:
+									indexData.repayType === '0'
+										? `预计60秒完成放款`
+										: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
 								money: indexData.billAmt || '-.--',
 								date: indexData.perdCnt || '-',
-								desc: !indexData.repayDt ? `最长不超过2个工作日` : '请耐心等待...',
+								desc: indexData.repayType === '0' ? `最长不超过2个工作日` : '请耐心等待...',
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}
