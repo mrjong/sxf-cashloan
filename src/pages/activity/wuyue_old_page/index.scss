@@ -1,7 +1,6 @@
 /* stylelint-disable */
 .dazhuanpan {
 	// overflow: scroll;
-	// height: calc(100vh - .88rem);
 	height: 100vh;
 	overflow: hidden;
 	user-select: none;
@@ -100,6 +99,9 @@
 			}
 		}
 	}
+}
+.dazhuanpan2{
+	height: calc(100vh - .88rem);
 }
 .get_rule_desc {
 	margin: 50px 25px;

@@ -1,7 +1,7 @@
 .wuyuekh_page{
   position: relative;
   // height: 100%;
-  height: calc(100vh - .88rem);
+  height: 100vh;
   .activity_bg {
     width: 100%;
     position: absolute;
@@ -27,4 +27,7 @@
     width: 134px;
     height: 134px;
   }
+}
+.wuyuekh_page2{
+  height: calc(100vh - .88rem);
 }
