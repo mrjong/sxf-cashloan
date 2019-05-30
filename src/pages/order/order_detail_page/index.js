@@ -10,7 +10,7 @@ import { order } from 'utils/analytinsType';
 import styles from './index.scss';
 import { isWXOpen } from 'utils';
 
-import { getH5Channel } from 'utils/common';
+import { getH5Channel, isMPOS } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
 
@@ -628,11 +628,13 @@ export default class order_detail_page extends PureComponent {
 				sendParams = {
 					...sendParams,
 					routeCode: payType,
-					tradeType: isWXOpen() ? '03' : '02',
-					osNm: '11',
-					callbackUrl: '22',
-					wapUrl: '33',
-					wapNm: '44'
+					wxPayReqVo: {
+						tradeType: isWXOpen() ? '03' : '02',
+						osNm: '11',
+						callbackUrl: '22',
+						wapUrl: '33',
+						wapNm: '44'
+					}
 				};
 				break;
 			case 'BankPay':
@@ -653,30 +655,55 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
-					if (
-						billDesc.perdUnit === 'D' ||
-						Number(billDesc.perdNum) === Number(billDesc.perdLth) ||
-						isPayAll
-					) {
-						this.props.toast.info('还款完成');
-						store.removeBackData();
-						store.removeCouponData();
-						store.setOrderSuccess({
-							perdLth: billDesc.perdLth,
-							perdUnit: billDesc.perdUnit,
-							billPrcpAmt: billDesc.billPrcpAmt,
-							billRegDt: billDesc.billRegDt
-						});
-						setTimeout(() => {
-							this.props.history.replace('/order/repayment_succ_page');
-						}, 2000);
-					} else {
-						this.props.toast.info('申请还款成功');
-						store.removeCouponData();
-						// 刷新当前list
-						setTimeout(() => {
-							this.getLoanInfo();
-						}, 3000);
+					switch (payType) {
+						case 'WXPay':
+							WeixinJSBridge.invoke(
+								'getBrandWCPayRequest',
+								{
+									appId: res.data.appId,
+									timeStamp: res.data.timeStamp,
+									nonceStr: res.data.nonceStr,
+									package: res.data.package,
+									signType: res.data.signType,
+									paySign: res.data.paySign
+								},
+								(result) => {
+									console.log(result, '--------------------');
+									if (result.err_msg == 'get_brand_wcpay_request:ok') {
+										this.$toast('支付成功');
+									}
+								}
+							);
+							break;
+						case 'BankPay':
+							if (
+								billDesc.perdUnit === 'D' ||
+								Number(billDesc.perdNum) === Number(billDesc.perdLth) ||
+								isPayAll
+							) {
+								this.props.toast.info('还款完成');
+								store.removeBackData();
+								store.removeCouponData();
+								store.setOrderSuccess({
+									perdLth: billDesc.perdLth,
+									perdUnit: billDesc.perdUnit,
+									billPrcpAmt: billDesc.billPrcpAmt,
+									billRegDt: billDesc.billRegDt
+								});
+								setTimeout(() => {
+									this.props.history.replace('/order/repayment_succ_page');
+								}, 2000);
+							} else {
+								this.props.toast.info('申请还款成功');
+								store.removeCouponData();
+								// 刷新当前list
+								setTimeout(() => {
+									this.getLoanInfo();
+								}, 3000);
+							}
+							break;
+						default:
+							break;
 					}
 				} else {
 					buriedPointEvent(order.repaymentFirst, {
@@ -896,9 +923,14 @@ export default class order_detail_page extends PureComponent {
 		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
-				<div className={styles.overdueEntryTip}>
-					关注“还到”公众号，使用<span>微信支付</span>还款
-				</div>
+				{isOverdue &&
+				isOverdue.length > 0 &&
+				isMPOS() && (
+					<div className={styles.overdueEntryTip}>
+						关注“还到”公众号，使用<span>微信支付</span>还款
+					</div>
+				)}
+
 				{isEntryShow && (
 					<div className={styles.overdueEntry} onClick={this.goOverdue}>
 						<span className={styles.overdueItem}>
