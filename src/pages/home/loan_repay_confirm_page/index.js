@@ -225,8 +225,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 				// 		: date[0] && date[0].perdLth == 30 && date.length !== 1 && date[0];
 				this.setState({
 					perdRateList: date,
-					btnDisabled:
-						(tag3 === 'tag3' && this.state.activeTag == 0) || this.state.activeTag !== 0 ? false : true,
 					selectedLoanDate: {}
 				});
 			});
@@ -318,7 +316,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	handleSubmit = async () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const { selectedLoanDate = {}, usrIndexInfo, cardCount, fullMinAmt } = this.state;
+		const { selectedLoanDate = {}, usrIndexInfo, cardCount, btnDisabled, fullMinAmt } = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { minApplAmt, maxApplAmt } = indexData;
 		if (!this.state.fetchBillSucc) {
@@ -361,21 +359,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 			});
 			return;
 		}
-    let getOperatorData = await getOperatorStatus({ $props: this.props });
-    console.log(getOperatorData)
+		let getOperatorData = await getOperatorStatus({ $props: this.props });
+		console.log(getOperatorData);
 		if (!getOperatorData) {
 			return;
 		}
-		this.setState({
-			btnDisabled: false
-		});
-		setTimeout(() => {
-			if (!this.state.btnDisabled) {
-				return;
-			}
-		});
+
 		if (!selectedLoanDate.perdCnt) {
 			this.props.toast.info('请选择借款期限');
+			return;
+		}
+		if (btnDisabled) {
 			return;
 		}
 		const params = {
@@ -430,6 +424,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			},
 			() => {
 				this.setState({
+					btnDisabled: false,
 					modal_left: false
 				});
 			}
@@ -542,6 +537,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		this.setState(
 			{
 				activeTag: idx,
+				btnDisabled: true,
 				repayType: tagList[idx]
 			},
 			() => {
@@ -795,6 +791,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									this.setState({
 										repayType: tagList[0],
 										activeTag: 0,
+										btnDisabled: true,
 										fullMinAmt: ''
 									});
 									if (this.updateBillInf()) {
@@ -907,8 +904,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<div className={style.trendBox}>
 										<i />
 										<div className={style.trendDesc}>
-											<span>月还款压力大，费用低</span>
-											<span>月还款压力小，费用高</span>
+											<span>月还款金额大，费用低</span>
+											<span>月还款金额小，费用高</span>
 										</div>
 									</div>
 									<div className={style.limitBox}>

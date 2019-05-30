@@ -144,6 +144,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
+		// 去除借款页面参数
+		store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
@@ -438,7 +440,8 @@ export default class home_page extends PureComponent {
 
 	// 智能按钮点击事件
 	handleSmartClick = () => {
-		const { usrIndexInfo, isNeedExamine } = this.state;
+		const { usrIndexInfo = {}, isNeedExamine } = this.state;
+		const { indexData } = usrIndexInfo;
 		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
 			buriedPointEvent(home.viewBill);
@@ -481,7 +484,10 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
-				this.props.history.push('/home/credit_apply_succ_page');
+				this.props.history.push({
+					pathname: '/home/credit_apply_succ_page',
+					search: `?autId=${indexData.autId}`
+				});
 				break;
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
@@ -496,7 +502,13 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0007': // 放款中
 				console.log('LN0007');
-				this.props.history.push('/home/loan_apply_succ_page');
+				let title =
+					indexData.repayType === '0' ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				let desc = indexData.repayType === '0' ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
+				this.props.history.push({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
+				});
 
 				// if (isNeedExamine) {
 				// 	this.props.history.push('/home/loan_apply_succ_page');
@@ -552,10 +564,8 @@ export default class home_page extends PureComponent {
 							this.goToNewMoXie();
 						}
 					} else {
-						this.props.toast.info('系统开小差，请稍后重试');
+						this.props.toast.info(res.msgInfo);
 					}
-				} else {
-					this.props.toast.info(res.msgInfo);
 				}
 			})
 			.catch((err) => {
@@ -612,13 +622,14 @@ export default class home_page extends PureComponent {
 		const api = autId ? `${API.chkCredCard}/${autId}` : API.CHECK_CARD;
 		this.props.$fetch.get(api).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
+				store.setHomeConfirmAgency({
+					autId: usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId,
+					bankName: indexData.bankName,
+					cardNoHid: indexData.cardNoHid
+				});
 				// 有风控且绑信用卡储蓄卡
 				this.props.history.push({
-					pathname: '/home/confirm_agency',
-					//
-					search: `?autId=${usrIndexInfo &&
-						usrIndexInfo.indexData &&
-						usrIndexInfo.indexData.autId}&bankName=${indexData.bankName}&cardNoHid=${indexData.cardNoHid}`
+					pathname: '/home/confirm_agency'
 				});
 			} else if (result && result.msgCode === 'PTM2003') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
@@ -913,11 +924,17 @@ export default class home_page extends PureComponent {
 	// 逾期弹窗
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
-		store.setBillNo(usrIndexInfo.indexData.billNo);
-		this.props.history.push({
-			pathname: '/order/order_detail_page',
-			search: '?entryFrom=home'
-		});
+		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.billNo) {
+			store.setBillNo(usrIndexInfo.indexData.billNo);
+			this.props.history.push({
+				pathname: '/order/order_detail_page',
+				search: '?entryFrom=home'
+			});
+		} else {
+			this.props.history.push({
+				pathname: '/order/order_page'
+			});
+		}
 	};
 
 	//处理现金分期额度有效期显示
@@ -1189,10 +1206,13 @@ export default class home_page extends PureComponent {
 								type: 'LN0007',
 								btnText: '查看进度',
 								title: bankNm,
-								subtitle: '预计60秒完成放款',
+								subtitle:
+									indexData.repayType === '0'
+										? `预计60秒完成放款`
+										: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`,
 								money: indexData.billAmt || '-.--',
 								date: indexData.perdCnt || '-',
-								desc: `最长不超过2个工作日`,
+								desc: indexData.repayType === '0' ? `最长不超过2个工作日` : '请耐心等待...',
 								cardNoHid: cardCode,
 								bankNo: bankCode
 							}}

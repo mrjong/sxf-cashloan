@@ -24,11 +24,6 @@ export default [
 		component: () => import('pages/home/message_detail_page')
 	},
 	{
-		path: '/home/agency',
-		title: '代偿确认',
-		component: () => import('pages/home/agency_page')
-	},
-	{
 		path: '/home/essential_information',
 		title: '完善信息',
 		component: () => import('pages/home/essential_information_page')
@@ -41,7 +36,7 @@ export default [
 	{
 		path: '/home/confirm_agency',
 		title: '签约借款',
-		component: () => import('pages/home/confirm_agency_new_page')
+		component: () => import('pages/home/confirm_agency_page')
 	},
 	{
 		path: '/home/moxie_bank_list_page',

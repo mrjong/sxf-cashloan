@@ -4,8 +4,10 @@
 import React from 'react';
 import { logoutAppHandler, changeHistoryState, isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs';
+import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
+import { closeCurrentWebView } from 'utils';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -89,8 +91,12 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-			// 如果当前是从首页到绑卡页面，返回直接回到首页
-			if (store.getCheckCardRouter()) {
+      // 如果当前是从首页到绑卡页面，返回直接回到首页
+			if (
+				store.getCheckCardRouter() &&
+				(store.getHistoryRouter() === '/mine/bind_credit_page' ||
+					store.getHistoryRouter() === '/mine/bind_save_page')
+			) {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
@@ -195,6 +201,8 @@ if (window.history && window.history.pushState) {
 							WeixinJSBridge.call('closeWindow');
 						}
 					}
+				} else if (isMPOS()) {
+					closeCurrentWebView();
 				} else {
 					window.history.pushState(null, null, document.URL);
 				}

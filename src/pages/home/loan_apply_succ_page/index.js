@@ -3,25 +3,34 @@ import style from './index.scss';
 import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
+import qs from 'qs';
 
 @setBackGround('#fff')
 export default class remit_ing_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			copyText: ''
+			queryData: {}
 		};
 	}
+	componentWillMount() {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		this.setState({
+			queryData
+		});
+	}
 	render() {
+		const { queryData } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
 					<ExamineComponents />
 				</div>
 				<div className={style.topBox}>
-					<div className={style.title}>预计60秒完成放款</div>
+					<div className={style.title}>{queryData.title}</div>
 					<div className={style.subtitle}>
-						超过2个工作日没有放款成功，可<a href="tel:400-088-7626">联系客服</a>
+						{queryData.desc}
+						<a href="tel:400-088-7626">联系客服</a>
 					</div>
 				</div>
 				<div className={style.step_box_new}>
@@ -40,9 +49,14 @@ export default class remit_ing_page extends PureComponent {
 						<div className={style.line} />
 					</div>
 				</div>
-					<ZButton onClick={()=>{
-            this.props.history.push('/home/home')
-          }} className={style.submitBtn}>我知道了</ZButton>
+				<ZButton
+					onClick={() => {
+						this.props.history.push('/home/home');
+					}}
+					className={style.submitBtn}
+				>
+					我知道了
+				</ZButton>
 			</div>
 		);
 	}

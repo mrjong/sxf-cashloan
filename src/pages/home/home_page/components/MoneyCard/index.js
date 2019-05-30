@@ -12,7 +12,7 @@ export default class MoneyCard extends React.PureComponent {
 		return (
 			<WhiteCard showData={showData} noLogoBtn={noLogoBtn} handleClick={handleClick} {...restProps}>
 				<div className={style.box}>
-					<div className={style.flex1}>
+					<div className={style.flex2}>
 						<div className={style.subtitle}>
 							<i />
 							{showData.subtitle}
