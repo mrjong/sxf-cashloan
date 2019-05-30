@@ -460,7 +460,10 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
-				this.props.history.push('/home/credit_apply_succ_page');
+				this.props.history.push({
+          pathname:'/home/credit_apply_succ_page',
+          search:`?autId=${indexData.autId}`
+        });
 				break;
 			case 'LN0005': // 暂无代还资格
 				console.log('LN0005');
@@ -480,7 +483,7 @@ export default class home_page extends PureComponent {
 				let desc = indexData.repayType === '0' ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
-					search: `?title=${title}&desc=${desc}`
+					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
 				});
 
 				// if (isNeedExamine) {
