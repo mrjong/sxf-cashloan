@@ -8,9 +8,7 @@ import { Modal, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
-import { isWXOpen } from 'utils';
-
-import { getH5Channel, isMPOS } from 'utils/common';
+import { getH5Channel } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
 
@@ -22,16 +20,15 @@ const API = {
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
 	payFrontBack: '/bill/payFrontBack', // 用户还款新接口
-	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	queryExtendedPayType: '/bill/queryExtendedPayType' //其他支付方式查询
+	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
 };
-const payTypeList = [ 'WXPay' ];
 let entryFrom = '';
 @fetch.inject()
 export default class order_detail_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		entryFrom = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true }).entryFrom;
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		entryFrom = queryData.entryFrom;
 		this.state = {
 			billDesc: {},
 			showModal: false,
@@ -57,8 +54,7 @@ export default class order_detail_page extends PureComponent {
 			totalAmt: '', // 一键结清传给后台的总金额
 			billOverDue: '', //逾期弹窗标志
 			overDueModalFlag: '', // 信用施压弹框标识
-			payType: '',
-			payTypes: [ 'BankPay' ]
+			perTotAmt: '' // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
 		};
 	}
 	componentWillMount() {
@@ -79,38 +75,12 @@ export default class order_detail_page extends PureComponent {
 				this.getOverdueInfo();
 			}
 		);
-		this.queryExtendedPayType();
 	}
 
 	componentWillUnmount() {
 		store.removeCardData();
 	}
-	queryExtendedPayType = () => {
-		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				if (res.data && res.data.includes('WXPay')) {
-					if (!store.getPayType()) {
-						this.setState({
-							payType: 'WXPay',
-							payTypes: [ ...this.state.payTypes, ...res.data ]
-						});
-						store.setPayType('WXPay');
-					} else {
-						this.setState({
-							payType: store.getPayType(),
-							payTypes: [ ...this.state.payTypes, ...res.data ]
-						});
-					}
-				} else {
-					this.setState({
-						payType: 'BankPay'
-					});
-				}
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
+
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
 		const { billNo } = this.state;
@@ -159,7 +129,8 @@ export default class order_detail_page extends PureComponent {
 								isAdvance,
 								isNewsContract: true,
 								isSettle: isSettleStu,
-								totalAmt: res.data[0].totalAmt
+								totalAmt: res.data[0].totalAmt,
+								perTotAmt: perdData.totAmt
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -255,7 +226,8 @@ export default class order_detail_page extends PureComponent {
 										isAdvance: orderDtlData && orderDtlData.isAdvance,
 										isNewsContract: orderDtlData && orderDtlData.isNewsContract,
 										totalAmt: orderDtlData && orderDtlData.totalAmt,
-										isSettle: orderDtlData && orderDtlData.isSettle
+										isSettle: orderDtlData && orderDtlData.isSettle,
+										perTotAmt: orderDtlData && orderDtlData.perTotAmt
 									},
 									() => {
 										this.setState({
@@ -321,7 +293,8 @@ export default class order_detail_page extends PureComponent {
 				type: '01', // 00为借款 01为还款
 				currentStage: result.perdNum,
 				price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-				totalStage: result.perdUnit === 'M' ? result.perdLth : '1'
+				totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
+				prodType: this.state.billDesc.prodType
 			};
 		} else {
 			params = {
@@ -330,7 +303,8 @@ export default class order_detail_page extends PureComponent {
 				type: '01', // 00为借款 01为还款
 				currentStage: result.perdNum,
 				price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-				totalStage: result.perdUnit === 'M' ? result.perdLth : '1'
+				totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
+				prodType: this.state.billDesc.prodType
 			};
 		}
 		this.props.$fetch.get(API.couponCount, params).then((result) => {
@@ -577,7 +551,8 @@ export default class order_detail_page extends PureComponent {
 				cardAgrNo,
 				thisRepTotAmt: billDesc.waitRepAmt,
 				repayStsw: repayStswStr,
-				usrBusCnl: 'WEB'
+				usrBusCnl: 'WEB',
+				prodType: billDesc.prodType
 			};
 		} else {
 			sendParams = {
@@ -586,7 +561,8 @@ export default class order_detail_page extends PureComponent {
 				thisRepTotAmt: this.state.sendMoney,
 				repayStsw: billDesc.billPerdStsw,
 				coupId: couponId,
-				usrBusCnl: 'WEB'
+				usrBusCnl: 'WEB',
+				prodType: billDesc.prodType
 			};
 		}
 		//全局设置还款传递后台的参数
@@ -608,37 +584,20 @@ export default class order_detail_page extends PureComponent {
 	//调用还款接口逻辑
 	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, payType } = this.state;
+		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, perTotAmt } = this.state;
 		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		let sendParams = {};
 		if (isNewsContract) {
 			if (isPayAll) {
 				sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
 			} else {
-				sendParams = { ...repayParams, isSettle };
+				// 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
+				sendParams = perTotAmt
+					? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
+					: { ...repayParams, isSettle };
 			}
 		} else {
 			sendParams = repayParams;
-		}
-		// 添加微信新增参数
-		switch (payType) {
-			case 'WXPay':
-				// 微信外 02  微信内  03
-				sendParams = {
-					...sendParams,
-					routeCode: payType,
-					wxPayReqVo: {
-						tradeType: isWXOpen() ? '03' : '02',
-						osNm: '还到',
-						callbackUrl: location.href,
-						wapUrl: '33',
-						wapNm: '44'
-					}
-				};
-				break;
-			case 'BankPay':
-			default:
-				break;
 		}
 		console.log(sendParams, paybackAPI);
 		this.props.$fetch
@@ -654,69 +613,30 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
-					switch (payType) {
-						case 'WXPay':
-							let wxData = res.data && res.data.phonePayStr && JSON.parse(res.data.phonePayStr);
-
-							if (isWXOpen()) {
-								WeixinJSBridge.invoke(
-									'getBrandWCPayRequest',
-									{
-										appId: wxData.appId,
-										timeStamp: wxData.timeStamp,
-										nonceStr: wxData.nonceStr,
-										package: wxData.package,
-										signType: wxData.signType,
-										paySign: wxData.paySign
-									},
-									(result) => {
-										console.log(result, '--------------------');
-										if (result.err_msg == 'get_brand_wcpay_request:ok') {
-											this.props.toast.info('支付成功');
-											setTimeout(() => {
-												this.getLoanInfo();
-											}, 2000);
-										} else {
-											this.getLoanInfo();
-										}
-									}
-								);
-								// h5 支付方式
-							} else {
-								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
-								location.href = url;
-							}
-
-							break;
-						case 'BankPay':
-							if (
-								billDesc.perdUnit === 'D' ||
-								Number(billDesc.perdNum) === Number(billDesc.perdLth) ||
-								isPayAll
-							) {
-								this.props.toast.info('还款完成');
-								store.removeBackData();
-								store.removeCouponData();
-								store.setOrderSuccess({
-									perdLth: billDesc.perdLth,
-									perdUnit: billDesc.perdUnit,
-									billPrcpAmt: billDesc.billPrcpAmt,
-									billRegDt: billDesc.billRegDt
-								});
-								setTimeout(() => {
-									this.props.history.replace('/order/repayment_succ_page');
-								}, 2000);
-							} else {
-								this.props.toast.info('申请还款成功');
-								store.removeCouponData();
-								// 刷新当前list
-								setTimeout(() => {
-									this.getLoanInfo();
-								}, 3000);
-							}
-							break;
-						default:
-							break;
+					if (
+						billDesc.perdUnit === 'D' ||
+						Number(billDesc.perdNum) === Number(billDesc.perdLth) ||
+						isPayAll
+					) {
+						this.props.toast.info('还款完成');
+						store.removeBackData();
+						store.removeCouponData();
+						store.setOrderSuccess({
+							perdLth: billDesc.perdLth,
+							perdUnit: billDesc.perdUnit,
+							billPrcpAmt: billDesc.billPrcpAmt,
+							billRegDt: billDesc.billRegDt
+						});
+						setTimeout(() => {
+							this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
+						}, 2000);
+					} else {
+						this.props.toast.info('申请还款成功');
+						store.removeCouponData();
+						// 刷新当前list
+						setTimeout(() => {
+							this.getLoanInfo();
+						}, 3000);
 					}
 				} else {
 					buriedPointEvent(order.repaymentFirst, {
@@ -758,9 +678,19 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-			isSettle
+			isSettle,
+			perTotAmt
 		} = this.state;
-		let orderDtData = { isPayAll, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle };
+		let orderDtData = {
+			isPayAll,
+			detailArr,
+			isShowDetail,
+			isAdvance,
+			isNewsContract,
+			totalAmt,
+			isSettle,
+			perTotAmt
+		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
 		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
@@ -778,15 +708,16 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-			isSettle
+			isSettle,
+			perTotAmt
 		} = this.state;
-		let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle };
+		let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt };
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
 			store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
-				search: `?billNo=${billNo}`,
+				search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
 				state: { nouseCoupon: true, cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
 			});
 			return;
@@ -799,7 +730,7 @@ export default class order_detail_page extends PureComponent {
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?billNo=${billNo}`,
+			search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
 			state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
 		});
 	};
@@ -862,12 +793,6 @@ export default class order_detail_page extends PureComponent {
 			pathname: '/order/overdue_progress_page'
 		});
 	};
-	selectPayType = (type) => {
-		this.setState({
-			payType: type
-		});
-		store.setPayType(type);
-	};
 	render() {
 		const {
 			billDesc = {},
@@ -883,9 +808,7 @@ export default class order_detail_page extends PureComponent {
 			isNewsContract,
 			totalAmt,
 			billOverDue,
-			overDueModalFlag,
-			payType,
-			payTypes
+			overDueModalFlag
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -936,14 +859,6 @@ export default class order_detail_page extends PureComponent {
 		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
-				{isOverdue &&
-				isOverdue.length > 0 &&
-				isMPOS() && (
-					<div className={styles.overdueEntryTip}>
-						关注“还到”公众号，使用<span>微信支付</span>还款
-					</div>
-				)}
-
 				{isEntryShow && (
 					<div className={styles.overdueEntry} onClick={this.goOverdue}>
 						<span className={styles.overdueItem}>
@@ -1028,7 +943,7 @@ export default class order_detail_page extends PureComponent {
 									waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
 								) : (
 									money && parseFloat(money).toFixed(2)
-								)}元&nbsp;
+								)}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
@@ -1060,23 +975,20 @@ export default class order_detail_page extends PureComponent {
 								</div>
 							</div>
 						) : null}
-
-						{!payType || payType === 'BankPay' ? (
-							<div className={styles.modal_flex}>
-								<span className={styles.modal_label}>还款银行卡</span>
-								<span onClick={this.selectBank} className={`${styles.modal_value}`}>
-									{this.state.bankInfo && this.state.bankInfo.bankName ? (
-										<span>
-											{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
-										</span>
-									) : (
-										<span>
-											{wthdCrdCorpOrgNm}({wthdCrdNoLast})
-										</span>
-									)}
-								</span>&nbsp;<i />
-							</div>
-						) : null}
+						<div className={styles.modal_flex}>
+							<span className={styles.modal_label}>还款银行卡</span>
+							<span onClick={this.selectBank} className={`${styles.modal_value}`}>
+								{this.state.bankInfo && this.state.bankInfo.bankName ? (
+									<span>
+										{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
+									</span>
+								) : (
+									<span>
+										{wthdCrdCorpOrgNm}({wthdCrdNoLast})
+									</span>
+								)}
+							</span>&nbsp;<i />
+						</div>
 						{// 一键结清不显示优惠劵
 						!isPayAll && (
 							<div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
@@ -1103,40 +1015,6 @@ export default class order_detail_page extends PureComponent {
 								&nbsp;<i />
 							</div>
 						)}
-						<div className={styles.modal_weixin}>
-							<div className={styles.modal_label}>还款方式</div>
-							<div className={styles.flex_div}>
-								{payTypes.includes('WXPay') ? (
-									<div
-										className={
-											payType === 'WXPay' ? [ styles.item, styles.active ].join(' ') : styles.item
-										}
-										onClick={() => {
-											this.selectPayType('WXPay');
-										}}
-									>
-										<span className={styles.jian} />
-										<i className={styles.wx} />微 信
-									</div>
-								) : null}
-								{payTypes.includes('BankPay') && payTypes[0].length !== 1 ? (
-									<div
-										onClick={() => {
-											this.selectPayType('BankPay');
-										}}
-										className={
-											payType === 'BankPay' ? (
-												[ styles.item, styles.active ].join(' ')
-											) : (
-												styles.item
-											)
-										}
-									>
-										<i className={styles.bank} />银行卡
-									</div>
-								) : null}
-							</div>
-						</div>
 						<SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
 							立即还款
 						</SXFButton>
