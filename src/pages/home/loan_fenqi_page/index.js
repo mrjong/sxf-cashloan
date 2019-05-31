@@ -79,16 +79,14 @@ export default class loan_fenqi_page extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.state.perdRateList)
     this.shouldQueryContractList(prevState, this.state)
   }
 
   //是否需要重新请求合同产品
   shouldQueryContractList = (prevState, curState) => {
-    const { loanMoney, loanDate, resaveBankCardAgrNo } = curState
-    // console.log(resaveBankCardAgrNo, prevState.resaveBankCardAgrNo)
+    const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo } = curState
     if (loanMoney && loanDate && resaveBankCardAgrNo && (
-      loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt || resaveBankCardAgrNo !== prevState.resaveBankCardAgrNo
+      loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt || payBankCardAgrNo !== prevState.payBankCardAgrNo || resaveBankCardAgrNo !== prevState.resaveBankCardAgrNo
     )) {
       this.queryContractList()
     }
@@ -213,6 +211,8 @@ export default class loan_fenqi_page extends PureComponent {
           couponInfo: {}
         })
       }
+    }).catch(err => {
+      this.removeTempData()
     })
   }
 
@@ -370,16 +370,17 @@ export default class loan_fenqi_page extends PureComponent {
       lastCardNo: payBankCardLastNo,
       bankName: payBankCardName
     }
-    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, perdRateList, contractList, usageList, couponInfo, deratePrice, resaveBankCardAgrNo })
+    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, perdRateList, contractList, usageList, couponInfo, deratePrice, resaveBankCardAgrNo, payBankCardAgrNo })
     store.setCashFenQiCardArr([resaveCard, payCard])
   }
 
   // 清空暂存数据,但不清除选择的银行卡
   removeTempData = () => {
     store.removeCashFenQiStoreData()
-    // this.setState({
-    //   perdRateList: this.state.perdRateList
-    // })
+    console.log(this.state.perdRateList)
+    this.setState({
+      perdRateList: this.state.perdRateList
+    })
   }
 
   //处理数据反显
@@ -449,6 +450,8 @@ export default class loan_fenqi_page extends PureComponent {
       } else {
         this.props.toast.info(result.msgInfo);
       }
+    }).catch(err => {
+      this.removeTempData()
     });
   }
 
