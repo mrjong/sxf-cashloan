@@ -55,17 +55,21 @@
 		color: #868E9E;
 	}
 	.tipsBox{
+		position: fixed;
+		top: 88px;
 		height: 50px;
-		background: #FFF7E7;
+		width: 100%;
+		background: rgba(222, 172, 64, 0.14);
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		font-size: 26px;
-		color: #F77F4F;
+		color: #121C32;
+		z-index: 1;
 		i{
 			display: block;
-			width: 21px;
-			height: 25px;
+			width: 24px;
+			height: 28px;
 			background-size: 100%;
 			background-repeat: no-repeat;
 			background-image: url(../../../assets/images/home/safe_ico.png);
