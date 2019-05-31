@@ -629,8 +629,8 @@ export default class order_detail_page extends PureComponent {
 					routeCode: payType,
 					wxPayReqVo: {
 						tradeType: isWXOpen() ? '03' : '02',
-						osNm: '11',
-						callbackUrl: '22',
+						osNm: '还到',
+						callbackUrl: location.href,
 						wapUrl: '33',
 						wapNm: '44'
 					}
@@ -641,8 +641,6 @@ export default class order_detail_page extends PureComponent {
 				break;
 		}
 		console.log(sendParams, paybackAPI);
-
-		return;
 		this.props.$fetch
 			.post(paybackAPI, sendParams)
 			.then((res) => {
@@ -658,23 +656,37 @@ export default class order_detail_page extends PureComponent {
 					});
 					switch (payType) {
 						case 'WXPay':
-							WeixinJSBridge.invoke(
-								'getBrandWCPayRequest',
-								{
-									appId: res.data.appId,
-									timeStamp: res.data.timeStamp,
-									nonceStr: res.data.nonceStr,
-									package: res.data.package,
-									signType: res.data.signType,
-									paySign: res.data.paySign
-								},
-								(result) => {
-									console.log(result, '--------------------');
-									if (result.err_msg == 'get_brand_wcpay_request:ok') {
-										this.$toast('支付成功');
+							let wxData = res.data && res.data.phonePayStr && JSON.parse(res.data.phonePayStr);
+
+							if (isWXOpen()) {
+								WeixinJSBridge.invoke(
+									'getBrandWCPayRequest',
+									{
+										appId: wxData.appId,
+										timeStamp: wxData.timeStamp,
+										nonceStr: wxData.nonceStr,
+										package: wxData.package,
+										signType: wxData.signType,
+										paySign: wxData.paySign
+									},
+									(result) => {
+										console.log(result, '--------------------');
+										if (result.err_msg == 'get_brand_wcpay_request:ok') {
+											this.props.toast.info('支付成功');
+											setTimeout(() => {
+												this.getLoanInfo();
+											}, 2000);
+										} else {
+											this.getLoanInfo();
+										}
 									}
-								}
-							);
+								);
+								// h5 支付方式
+							} else {
+								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
+								location.href = url;
+							}
+
 							break;
 						case 'BankPay':
 							if (
@@ -1107,7 +1119,7 @@ export default class order_detail_page extends PureComponent {
 										<i className={styles.wx} />微 信
 									</div>
 								) : null}
-								{payTypes.includes('BankPay') ? (
+								{payTypes.includes('BankPay') && payTypes[0].length !== 1 ? (
 									<div
 										onClick={() => {
 											this.selectPayType('BankPay');
