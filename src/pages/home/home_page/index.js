@@ -435,7 +435,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0003': // 账单爬取成功 (直接跳数据风控)
 				console.log('LN0003 无风控信息 直接跳数据风控');
-				buriedPointEvent(home.repaymentBtnClick3);
+				// buriedPointEvent(home.repaymentBtnClick3);
 				buriedPointEvent(mine.creditExtension, {
 					entry: '首页'
 				});
@@ -473,7 +473,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
-				buriedPointEvent(home.repaymentBtnClick6);
+				// buriedPointEvent(home.repaymentBtnClick6);
 				this.repayCheck();
 				break;
 			case 'LN0007': // 放款中
@@ -496,7 +496,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
-				buriedPointEvent(home.repaymentBtnClick8);
+				// buriedPointEvent(home.repaymentBtnClick8);
 				this.repayCheck();
 				break;
 			case 'LN0009': // 放款成功
