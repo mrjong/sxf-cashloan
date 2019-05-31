@@ -9,6 +9,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import StepBar from 'components/StepBar';
 import linkConf from 'config/link.conf';
 import bankCode from 'config/bankCode'
+import { headerIgnore } from 'utils'
 
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
@@ -160,7 +161,7 @@ export default class moxie_bank_list_page extends Component {
 
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
-						<div className={style.tipsBox}>
+						<div className={!headerIgnore() ? style.tipsBox : `${style.tipsBox} ${style.tipsBox2}`}>
 							<i />
 							银行专属链接，保护用户数据安全
 						</div>
