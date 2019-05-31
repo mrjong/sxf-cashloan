@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, getFirstError, handleInputBlur, idChkPhoto, isCanLoan } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, isCanLoan } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -13,6 +13,8 @@ import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
+import TFDInit from 'utils/getTongFuDun';
+
 import {
 	CarouselHome,
 	BlackCard,
@@ -24,11 +26,10 @@ import {
 	AddCards,
 	ExamineCard
 } from './components';
+import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
-let isinputBlur = false;
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
-	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
 	qryPerdRate: '/bill/prod',
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -71,7 +72,7 @@ export default class home_page extends PureComponent {
 			percentSatus: '',
 			percent: 0,
 			showToast: false,
-			modalType: 'huodongTootip3',
+			modalType: '',
 			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
 			showDiv: '',
@@ -118,6 +119,10 @@ export default class home_page extends PureComponent {
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
+		}
+		// 从进度页面返回不删除AutId
+		if (!store.getAutId2()) {
+			store.removeAutId();
 		}
 
 		// 隔5秒调取相关变量
@@ -171,12 +176,16 @@ export default class home_page extends PureComponent {
 		this.props.$fetch
 			.get(API.cashShowSwitch)
 			.then((result) => {
-				// result.data.value 0关闭 1开启
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 					if (result.data.value === '1') {
-						this.indexshowType();
+						if (token && tokenFromStorage) {
+							this.indexshowType();
+						} else {
+							this.setState({
+								blackData: { cashAcBalSts: '4' }
+							});
+						}
 					} else {
-						// 代偿流程
 						this.credit_extension();
 					}
 				} else {
@@ -192,12 +201,12 @@ export default class home_page extends PureComponent {
 	indexshowType = () => {
 		this.props.$fetch.post(API.indexshowType).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				// this.setState({
-				// 	blackData: result.data
-				// });
-				if (result.data.cashAcBalSts === '1') {
+				this.setState({
+					blackData: result.data
+				});
+				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
-					this.usrCashIndexInfo();
+					this.usrCashIndexInfo(result.data.cashAcBalSts);
 				} else {
 					// 代偿流程
 					this.credit_extension();
@@ -208,12 +217,27 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 现金分期首页接口
-	usrCashIndexInfo = () => {
+	usrCashIndexInfo = (code) => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					usrCashIndexInfo: result.data
-				});
+				this.setState(
+					{
+						usrCashIndexInfo: result.data
+					},
+					() => {
+						if (
+							code === '1' &&
+							!store.getFQActivity() &&
+							this.state.usrCashIndexInfo.indexSts === 'CN0003'
+						) {
+							store.setFQActivity(true);
+							this.setState({
+								modalType: 'xianjin',
+								isShowActivityModal: true
+							});
+						}
+					}
+				);
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
@@ -267,7 +291,7 @@ export default class home_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		let codes = [];
 		let demo = data.codes;
-		console.log(demo, 'demo');
+		// console.log(demo, 'demo');
 		// let demo = '2224'
 		this.setState({
 			pageCode: demo
@@ -503,7 +527,10 @@ export default class home_page extends PureComponent {
 				console.log('LN0009');
 				store.setBillNo(usrIndexInfo.indexData.billNo);
 				// entryFrom 给打点使用，区分从哪个页面进入订单页的
-				this.props.history.push({ pathname: '/order/order_detail_page', search: '?entryFrom=home' });
+				this.props.history.push({
+					pathname: '/order/order_detail_page',
+					search: '?entryFrom=home'
+				});
 				break;
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
 				console.log('LN0010');
@@ -770,21 +797,6 @@ export default class home_page extends PureComponent {
 							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
-				} else if (
-					isMPOS() &&
-					(result.data.indexSts === 'LN0001' || result.data.indexSts === 'LN0003') &&
-					!store.getShowActivityModal()
-				) {
-					// 老弹窗（3000元）
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType: 'huodongTootip3'
-						},
-						() => {
-							store.setShowActivityModal(true);
-						}
-					);
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -841,22 +853,29 @@ export default class home_page extends PureComponent {
 	};
 	// 现金分期点击事件
 	handleCN = (code) => {
+		const { usrCashIndexInfo } = this.state;
 		switch (code) {
 			case 'CN0003':
-				this.props.history.push('/home/loan_fenqi');
+				// 通付盾 获取设备指纹
+				TFDInit('fq');
+				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
+				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
+					//需要引导下载app
+					this.props.history.push('/home/deposit_tip');
+				} else {
+					this.props.history.push('/home/loan_fenqi');
+				}
 				break;
 			case 'CN0004':
 				this.props.toast.info('正在放款中，马上到账');
 				break;
 			case 'CN0005':
-				const { usrCashIndexInfo } = this.state;
 				store.setBillNo(usrCashIndexInfo.indexData.billNo);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
 					search: '?entryFrom=home'
 				});
 				break;
-
 			default:
 				break;
 		}
@@ -873,40 +892,35 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 关闭活动弹窗
-	closeActivityModal = () => {
+	closeActivityModal = (type) => {
 		this.setState({
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
-	};
-	// 弹窗 按钮事件
-	activityModalBtn = (type) => {
-		this.closeActivityModal();
 		switch (type) {
-			case 'huodongTootip3':
-				// 有一键代还 就触发  或者绑定其他卡  跳魔蝎 或者不动  目前只考虑 00001  00003 1 ,2,3情况
-				const { usrIndexInfo } = this.state;
-				switch (usrIndexInfo.indexSts) {
-					case 'LN0001': // 新用户，信用卡未授权
-						this.goToNewMoXie();
-						break;
-					case 'LN0003': // 账单爬取成功
-						if (usrIndexInfo.indexData && usrIndexInfo.indexData.autSts === '2') {
-							this.handleSmartClick();
-						} else {
-							this.requestCredCardCount();
-						}
-						break;
-					default:
-						console.log('关闭弹窗');
-				}
-				break;
 			case 'brand': // 品牌活动弹框按钮
-				buriedPointEvent(activity.brandHomeModalClick);
+				break;
+			case 'xianjin': // 品牌活动弹框按钮
+				buriedPointEvent(activity.fenqiHomeModalClose);
 				break;
 			default:
 				break;
 		}
 	};
+	// 弹窗 按钮事件
+	activityModalBtn = (type) => {
+		this.closeActivityModal();
+		switch (type) {
+			case 'brand': // 品牌活动弹框按钮
+				buriedPointEvent(activity.brandHomeModalClick);
+				break;
+			case 'xianjin': // 品牌活动弹框按钮
+				buriedPointEvent(activity.fenqiHomeModalGoBtn);
+				break;
+			default:
+				break;
+		}
+	};
+
 	// 逾期弹窗
 	handleOverDueClick = () => {
 		const { usrIndexInfo } = this.state;
@@ -920,6 +934,18 @@ export default class home_page extends PureComponent {
 			this.props.history.push({
 				pathname: '/order/order_page'
 			});
+		}
+	};
+
+	//处理现金分期额度有效期显示
+	handleAcOverDtShow = () => {
+		const { indexData } = this.state.usrCashIndexInfo;
+		const overDt = Number(indexData.acOverDt);
+		if (overDt > 10) return false;
+		if (overDt === 0 || overDt <= 0) {
+			return '1天后失去资格';
+		} else {
+			return `${overDt}天后失去资格`;
 		}
 	};
 	// *****************************分期****************************** //
@@ -940,8 +966,12 @@ export default class home_page extends PureComponent {
 						showData={{
 							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
 							title: '还到-Plus',
+							topTip: this.handleAcOverDtShow(),
 							subtitle: '可提现金额(元)',
-							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.curAmt,
+							money:
+								usrCashIndexInfo &&
+								usrCashIndexInfo.indexData &&
+								usrCashIndexInfo.indexData.curAmt.toFixed(2),
 							desc: '你信用等级良好'
 						}}
 					/>
@@ -1332,10 +1362,10 @@ export default class home_page extends PureComponent {
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
-			componentsBlackCard = <BlackCard blackData={blackData} />;
+			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
 		}
-		componentsDisplay = this.getFQDisPlay() ||
-		this.getDCDisPlay() || (
+		componentsDisplay = this.getDCDisPlay() ||
+		this.getFQDisPlay() || (
 			<CarouselHome
 				showData={{
 					demoTip: true

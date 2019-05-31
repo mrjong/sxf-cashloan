@@ -7,7 +7,6 @@ export const storeTypes = {
 	CardData: 'CardData', // 跳转路由中的银行卡信息
 	MoxieBackUrl: 'MoxieBackUrl', // 跳转魔蝎授权页 授权后返回的url
 	MoxieBackUrl2: 'MoxieBackUrl2', // 跳转魔蝎授权页 授权后返回的url
-	VIPFlag: 'VIPFlag', // 会员卡是否购买的flag
 	AuthFlag: 'AuthFlag', // 是否实名认证的flag
 	UserPhone: 'UserPhone', // 用户手机号
 	UserInfo: 'UserInfo', // 用户信息
@@ -50,7 +49,6 @@ export const storeTypes = {
 	BindCardNo: 'BindCardNo', // 回显绑卡卡号
 	BindCardPhone: 'BindCardPhone', // 回显绑卡手机号
 	OrderDetailData: 'OrderDetailData', // 账单详情页数据
-	MessageTag50000: 'MessageTag50000', // 50000
 	MessageTagError: 'MessageTagError', // 错误不显示
 	MessageTagStep: 'MessageTagStep', // 步骤
 	CouponActivityFlag: 'CouponActivityFlag', // 呈现不同机具页面的标识
@@ -75,6 +73,7 @@ export const storeTypes = {
 	CashFenQiCardArr: 'CashFenQiCardArr', //现金分期收、还卡数组
 	HomeAutId: 'HomeAutId', // 首页的autId
 	AutId: 'AutId', // 接口调用需要的AutId
+  FQActivity: 'FQActivity', // 参与现金分期活动
 	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
 	PercentCount: 'PercentCount', //百分比次数
 	HomeConfirmAgency: 'HomeConfirmAgency', // 首页进入到签约借款页面参数

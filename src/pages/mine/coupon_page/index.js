@@ -146,6 +146,9 @@ export default class coupon_page extends PureComponent {
         // loading: true,
       };
     }
+    if (receiveData.transactionType) {
+      Object.assign(sendParams, { prodType: receiveData.transactionType === 'fenqi' ? '11' : '01' })
+    }
     let data = await this.props.$fetch.get(API.couponList, sendParams)
       .then(res => {
         if (pIndex === 1) {

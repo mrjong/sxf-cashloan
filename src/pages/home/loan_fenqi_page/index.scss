@@ -55,7 +55,7 @@
     }
 
     .listValue {
-      font-weight: 400;
+      font-weight: 700;
     }
 
     .icon {
@@ -77,10 +77,12 @@
 
   .greyText {
     color: #868e9e;
+    font-weight: 700;
   }
 
   .redText {
     color: #fe6666;
+    font-weight: 700;
   }
 
   .addIcon {
@@ -91,8 +93,8 @@
 
   .tagListWrap {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: flex-end;
     width: 490px;
   }
 
@@ -106,14 +108,18 @@
     font-size: 30px;
     background: #fff;
     color: #868e9e;
-    border: 1px solid #868e9e;
+    border: 1PX solid #868e9e;
     box-sizing: border-box;
     margin-bottom: 20px;
+    margin-left: 35px;
+    &:nth-child(3n + 1) {
+      margin-left: 0;
+    }
   }
 
   .tagButtonActive {
     color: #fe6666;
-    border: 1px solid #fe6666;
+    border: 1PX solid #fe6666;
   }
 
   .buttonWrap {
