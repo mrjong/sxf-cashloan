@@ -17,9 +17,11 @@ import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
 import logoImg from 'assets/images/common/black_logo.png';
 let timmer;
+const needDisplayOptions = [ 'basicInf' ];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms'
+	sendsms: '/cmm/sendsms',
+	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
 };
 
 @fetch.inject()
@@ -161,7 +163,11 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
-						this.props.history.push('/home/home');
+						if (this.state.disabledInput) {
+							this.requestGetStatus();
+						} else {
+							this.props.history.push('/home/home');
+						}
 					},
 					(error) => {
 						error.msgInfo && Toast.info(error.msgInfo);
@@ -240,6 +246,37 @@ export default class login_page extends PureComponent {
 	checkAgreement = () => {
 		this.setState({
 			isChecked: !this.state.isChecked
+		});
+	};
+
+	// 获取授信列表状态
+	requestGetStatus = () => {
+		this.props.$fetch.get(`${API.getStw}`).then((result) => {
+			if (result && result.data !== null && result.msgCode === 'PTM0000') {
+				const stswData = result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
+				if (stswData && stswData.length){
+					// case '0': // 未认证
+					// case '1': // 认证中
+					// case '2': // 认证成功
+					// case '3': // 认证失败
+					// case '4': // 认证过期
+					if (stswData[0].stsw.dicDetailCd === '0') {
+						this.props.history.replace({
+							pathname: '/home/essential_information',
+							search: '?jumpToBase=true&entry=fail'
+						});
+					} else {
+						this.props.history.replace('/home/home');
+					}
+				}
+			} else {
+				this.props.toast.info(result.msgInfo, 2, () => {
+					this.props.history.replace('/home/home');
+				});
+			}
+		})
+		.catch((err) => {
+			this.props.history.replace('/home/home');
 		});
 	};
 
