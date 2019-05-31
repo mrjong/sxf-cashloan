@@ -27,7 +27,6 @@ export default class mpos_service_authorization_page extends PureComponent {
 	}
 	componentWillMount() {
 		buriedPointEvent(mpos_service_authorization.auth_page);
-		this.requestGetStatus();
 	}
 	goSubmit = () => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });

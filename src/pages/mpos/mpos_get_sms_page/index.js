@@ -7,6 +7,7 @@ import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import click from '../mpos_service_authorization_page/img/Button.png';
+const needDisplayOptions = [ 'basicInf' ];
 const API = {
 	sendsms: '/cmm/sendsms',
 	doAuth: '/authorize/doAuth',

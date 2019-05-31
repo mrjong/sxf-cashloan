@@ -601,7 +601,7 @@ export default class essential_information_page extends PureComponent {
 						{needNextUrl ? '下一步' : '完成'}
 					</ButtonCustom>
 				}
-				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />;
+				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
 			</div>
 		);
 	}
