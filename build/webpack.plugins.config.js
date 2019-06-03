@@ -255,14 +255,14 @@ let getTestPlugins = function () {
       { from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
     ])
   ),
-  plugins.push(
-    new SentryPlugin({
-      include: './dist',
-      release: sentryTestVersion,
-      configFile: 'sentry.properties',
-      urlPrefix: '~/'
-    })
-  );
+  // plugins.push(
+  //   new SentryPlugin({
+  //     include: './dist',
+  //     release: sentryTestVersion,
+  //     configFile: 'sentry.properties',
+  //     urlPrefix: '~/'
+  //   })
+  // );
     plugins.push(
       new webpack.DefinePlugin({
         'process.env': {
