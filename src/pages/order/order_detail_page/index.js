@@ -695,8 +695,7 @@ export default class order_detail_page extends PureComponent {
 								);
 								// h5 支付方式
 							} else {
-                console.log('wxurl:',wxData.mweb_url)
-                window.open(wxData.mweb_url)
+                window.location.href=decodeURIComponent(wxData.mweb_url)
 							}
 
 							break;
