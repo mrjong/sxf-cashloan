@@ -9,9 +9,9 @@ export default class AgreementModal extends PureComponent {
   }
 
   componentDidMount() {
-    document.body.addEventListener('touchmove', (e) => {
-      e.preventDefault()
-    }, { passive: false })
+    // document.body.addEventListener('touchmove', (e) => {
+    //   e.preventDefault()
+    // }, { passive: false })
   }
 
   render() {
