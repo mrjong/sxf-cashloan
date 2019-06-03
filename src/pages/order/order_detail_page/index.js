@@ -668,7 +668,7 @@ export default class order_detail_page extends PureComponent {
 					});
 					switch (payType) {
 						case 'WXPay':
-							let wxData = res.data && res.data.phonePayStr && JSON.parse(res.data.phonePayStr);
+							let wxData = res.data && JSON.parse(res.data);
 
 							if (isWXOpen()) {
 								WeixinJSBridge.invoke(
