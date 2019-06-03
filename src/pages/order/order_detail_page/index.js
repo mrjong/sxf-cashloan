@@ -8,7 +8,7 @@ import { Modal, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
-import { getH5Channel,isMPOS } from 'utils/common';
+import { getH5Channel, isMPOS } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen } from 'utils';
@@ -57,7 +57,8 @@ export default class order_detail_page extends PureComponent {
 			overDueModalFlag: '', // 信用施压弹框标识
 			perTotAmt: '', // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
 			payType: '',
-			payTypes: [ 'BankPay' ]
+			payTypes: [ 'BankPay' ],
+			openIdFlag: ''
 		};
 	}
 	componentWillMount() {
@@ -87,24 +88,27 @@ export default class order_detail_page extends PureComponent {
 	queryExtendedPayType = () => {
 		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
 			if (res.msgCode === 'PTM0000') {
-				if (res.data && res.data.includes('WXPay')) {
-					if (!store.getPayType()) {
-						this.setState({
-							payType: 'WXPay',
-							payTypes: [ ...this.state.payTypes, ...res.data ]
-						});
-						store.setPayType('WXPay');
-					} else {
-						this.setState({
-							payType: store.getPayType(),
-							payTypes: [ ...this.state.payTypes, ...res.data ]
-						});
+				let params = {
+					openIdFlag: res.data.openIdFlag
+				};
+				if (isWXOpen()) {
+					if (res.data.openIdFlag === '0') {
+						params.payType = 'BankPay';
+					} else if (res.data.openIdFlag === '1') {
+						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
+							params.payType = store.getPayType() || 'WXPay';
+							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+						}
 					}
 				} else {
-					this.setState({
-						payType: 'BankPay'
-					});
+					if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
+						params.payType = store.getPayType() || 'WXPay';
+						params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+					} else {
+						params.payType = 'BankPay';
+					}
 				}
+				this.setState(params);
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -613,7 +617,7 @@ export default class order_detail_page extends PureComponent {
 	//调用还款接口逻辑
 	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, perTotAmt,payType } = this.state;
+		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, perTotAmt, payType } = this.state;
 		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		let sendParams = {};
 		if (isNewsContract) {
@@ -906,7 +910,8 @@ export default class order_detail_page extends PureComponent {
 			billOverDue,
 			overDueModalFlag,
 			payType,
-			payTypes
+			payTypes,
+			openIdFlag
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -957,13 +962,13 @@ export default class order_detail_page extends PureComponent {
 		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
-				{isOverdue &&
-				isOverdue.length > 0 &&
-				isMPOS() && (
-					<div className={styles.overdueEntryTip}>
-						关注“还到”公众号，使用<span>微信支付</span>还款
-					</div>
-				)}
+				{(isOverdue && isOverdue.length > 0 && isMPOS()) ||
+					(isWXOpen() &&
+					openIdFlag === '0' && (
+						<div className={styles.overdueEntryTip}>
+							关注“还到”公众号，使用<span>微信支付</span>还款
+						</div>
+					))}
 				{isEntryShow && (
 					<div className={styles.overdueEntry} onClick={this.goOverdue}>
 						<span className={styles.overdueItem}>
