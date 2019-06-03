@@ -144,6 +144,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
+    // 去除支付方式默认选中
+    store.removePayType();
 		// 去除借款页面参数
 		store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息

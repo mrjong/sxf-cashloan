@@ -962,13 +962,13 @@ export default class order_detail_page extends PureComponent {
 		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
-				{(isOverdue && isOverdue.length > 0 && isMPOS()) ||
-					(isWXOpen() &&
-					openIdFlag === '0' && (
-						<div className={styles.overdueEntryTip}>
-							关注“还到”公众号，使用<span>微信支付</span>还款
-						</div>
-					))}
+				{isOverdue &&
+				isOverdue.length > 0 &&
+				(isMPOS() || (isWXOpen() && openIdFlag === '0')) && (
+					<div className={styles.overdueEntryTip}>
+						关注“还到”公众号，使用<span>微信支付</span>还款
+					</div>
+				)}
 				{isEntryShow && (
 					<div className={styles.overdueEntry} onClick={this.goOverdue}>
 						<span className={styles.overdueItem}>
@@ -1128,40 +1128,47 @@ export default class order_detail_page extends PureComponent {
 								&nbsp;<i />
 							</div>
 						)}
-						<div className={styles.modal_weixin}>
-							<div className={styles.modal_label}>还款方式</div>
-							<div className={styles.flex_div}>
-								{payTypes.includes('WXPay') ? (
-									<div
-										className={
-											payType === 'WXPay' ? [ styles.item, styles.active ].join(' ') : styles.item
-										}
-										onClick={() => {
-											this.selectPayType('WXPay');
-										}}
-									>
-										<span className={styles.jian} />
-										<i className={styles.wx} />微 信
-									</div>
-								) : null}
-								{payTypes.includes('BankPay') && payTypes[0].length !== 1 ? (
-									<div
-										onClick={() => {
-											this.selectPayType('BankPay');
-										}}
-										className={
-											payType === 'BankPay' ? (
-												[ styles.item, styles.active ].join(' ')
-											) : (
-												styles.item
-											)
-										}
-									>
-										<i className={styles.bank} />银行卡
-									</div>
-								) : null}
+						{payTypes.length !== 1 ? (
+							<div className={styles.modal_weixin}>
+								<div className={styles.modal_label}>还款方式</div>
+								<div className={styles.flex_div}>
+									{payTypes.includes('WXPay') ? (
+										<div
+											className={
+												payType === 'WXPay' ? (
+													[ styles.item, styles.active ].join(' ')
+												) : (
+													styles.item
+												)
+											}
+											onClick={() => {
+												this.selectPayType('WXPay');
+											}}
+										>
+											<span className={styles.jian} />
+											<i className={styles.wx} />微 信
+										</div>
+									) : null}
+									{payTypes.includes('BankPay') ? (
+										<div
+											onClick={() => {
+												this.selectPayType('BankPay');
+											}}
+											className={
+												payType === 'BankPay' ? (
+													[ styles.item, styles.active ].join(' ')
+												) : (
+													styles.item
+												)
+											}
+										>
+											<i className={styles.bank} />银行卡
+										</div>
+									) : null}
+								</div>
 							</div>
-						</div>
+						) : null}
+
 						<SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
 							立即还款
 						</SXFButton>
