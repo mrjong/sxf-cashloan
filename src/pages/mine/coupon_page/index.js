@@ -172,9 +172,9 @@ export default class coupon_page extends PureComponent {
               );
             }
           }
-          // 倒叙插入(这段代码有问题)
+          // 倒叙插入
           if (pIndex === 1) {
-            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') {
+            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData() && store.getCouponData().usrCoupNo !== 'null') {
               dataArr.push(store.getCouponData())
             }
           }
