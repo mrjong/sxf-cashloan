@@ -671,31 +671,52 @@ export default class order_detail_page extends PureComponent {
 							let wxData = res.data && JSON.parse(res.data);
 
 							if (isWXOpen()) {
-								WeixinJSBridge.invoke(
-									'getBrandWCPayRequest',
-									{
-										appId: wxData.appId,
-										timeStamp: wxData.timeStamp,
-										nonceStr: wxData.nonceStr,
-										package: wxData.package,
-										signType: wxData.signType,
-										paySign: wxData.paySign
-									},
-									(result) => {
-										console.log(result, '--------------------');
-										if (result.err_msg == 'get_brand_wcpay_request:ok') {
-											this.props.toast.info('支付成功');
-											setTimeout(() => {
-												this.getLoanInfo();
-											}, 2000);
-										} else {
-											this.getLoanInfo();
+								// WeixinJSBridge.invoke(
+								// 	'getBrandWCPayRequest',
+								// 	{
+								// 		appId: wxData.appId,
+								// 		timeStamp: wxData.timeStamp,
+								// 		nonceStr: wxData.nonceStr,
+								// 		package: wxData.package,
+								// 		signType: wxData.signType,
+								// 		paySign: wxData.paySign
+								// 	},
+								// 	(result) => {
+								// 		console.log(result, '--------------------');
+								// 		if (result.err_msg == 'get_brand_wcpay_request:ok') {
+								// 			this.props.toast.info('支付成功');
+								// 			setTimeout(() => {
+								// 				this.getLoanInfo();
+								// 			}, 2000);
+								// 		} else {
+								// 			this.getLoanInfo();
+								// 		}
+								// 	}
+								// );
+								wx.config({
+									debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+									appId: wxData.appId, // 必填，公众号的唯一标识
+									timestamp: wxData.timeStamp, // 必填，生成签名的时间戳
+									nonceStr: wxData.nonceStr, // 必填，生成签名的随机串
+									signature: wxData.configSign, // 必填，签名，见附录1
+									jsApiList: [ 'chooseWXPay' ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+								});
+								wx.ready(function() {
+									wx.chooseWXPay({
+										timestamp: wxData.timeStamp,
+										nonceStr: wxData.nonceStr, // 支付签名随机串，不长于 32 位
+										package: wxData.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+										signType: wxData.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+										paySign: wxData.paySign, // 支付签名
+										success: function(res) {
+											console.log('微信支付',res)
 										}
-									}
-								);
+									});
+								});
 								// h5 支付方式
 							} else {
-                window.location.href=decodeURIComponent(wxData.mweb_url)
+								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
+								location.href = url;
 							}
 
 							break;
