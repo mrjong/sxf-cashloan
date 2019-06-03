@@ -11,7 +11,14 @@ const demo = [
 	},
 	{
 		cashAcBalSts: '1',
-		title: '可题现金额(元)',
+		title: '可提现金额(元)',
+		desc: '不用操作，更高额度，直接提现至储蓄卡',
+		icon: 'opened',
+		credAmt: '0'
+	},
+	{
+		cashAcBalSts: '3',
+		title: '可提现金额(元)',
 		desc: '不用操作，更高额度，直接提现至储蓄卡',
 		icon: 'opened',
 		credAmt: '0'
@@ -24,7 +31,7 @@ const demo = [
 		credAmt: '请继续累计信用 解锁'
 	},
 	{
-		cashAcBalSts: '3',
+		cashAcBalSts: '4',
 		title: '还到Plus',
 		desc: '按时还款可解锁',
 		icon: 'locked',
@@ -38,7 +45,7 @@ export default class BlackCard extends React.PureComponent {
 	}
 
 	render() {
-		let { blackData } = this.props;
+		let { blackData, history } = this.props;
 		const showdata = demo.filter((item) => {
 			return item.cashAcBalSts === blackData.cashAcBalSts;
 		});
@@ -47,7 +54,7 @@ export default class BlackCard extends React.PureComponent {
 		}
 		return (
 			<div>
-				{(showdata && showdata[0].cashAcBalSts === '2') || (showdata && showdata[0].cashAcBalSts === '3') ? (
+				{(showdata && showdata[0].cashAcBalSts === '2') || (showdata && showdata[0].cashAcBalSts === '4') ? (
 					<section className={styles.home_xj_black}>
 						<div className={styles.title}>{showdata && showdata[0].title}</div>
 						<div className={styles.subtitle}>{showdata && showdata[0].credAmt}</div>
@@ -56,13 +63,13 @@ export default class BlackCard extends React.PureComponent {
 								{showdata && showdata[0].desc}
 								<i />
 							</div>
-							<div className={styles.item_r}>
+							<div className={styles.item_r} onClick={() => { history.push('/others/fenqi_landing') }} >
 								了解更多<i />
 							</div>
 						</div>
 					</section>
 				) : null}
-				{(showdata && showdata[0].cashAcBalSts === '0') || (showdata && showdata[0].cashAcBalSts === '1') ? (
+				{(showdata && showdata[0].cashAcBalSts === '0') || (showdata && showdata[0].cashAcBalSts === '1') || (showdata && showdata[0].cashAcBalSts === '3') ? (
 					<section className={styles.home_xj_black}>
 						<div className={styles.title}>
 							{showdata && showdata[0].title}
@@ -76,7 +83,7 @@ export default class BlackCard extends React.PureComponent {
 							<div className={styles.item_l} style={{ opacity: 0.6, fontSize: '.22rem' }}>
 								{showdata && showdata[0].desc}
 							</div>
-							<div className={styles.item_r}>
+							<div className={styles.item_r} onClick={() => { history.push('/others/fenqi_landing') }} >
 								了解更多<i />
 							</div>
 						</div>

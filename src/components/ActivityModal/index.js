@@ -1,11 +1,10 @@
 import React from 'react';
 import { Modal } from 'antd-mobile';
 import styles from './index.scss';
-import huodongTootip3 from '../../assets/images/home/huodongTootip3.png';
-import huodongTootipBtn3 from '../../assets/images/home/huodongTootip_btn3.png';
 import brand from '../../assets/images/home/huodongTootip4.png';
 import huodongTootipBtn4 from '../../assets/images/home/huodongTootip_btn4.png';
-
+import xianjin from './img/xianjin.png';
+import xianjinBtn from './img/xianjinBtn.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -30,15 +29,15 @@ class ActivityModal extends React.Component {
 					<div className={styles.modalWrapper}>
 						<div className={styles.content}>
 							{/* 大图 */}
-							{modalType === 'huodongTootip3' ? <img src={huodongTootip3} /> : null}
+							{modalType === 'xianjin' ? <img src={xianjin} /> : null}
 							{modalType === 'brand' ? <img src={brand} /> : null}
-							{/* 按钮 */}
-							{modalType === 'huodongTootip3' ? (
+							{modalType === 'xianjin' ? (
 								<img
-									className={styles.huodongTootipBtn}
-									src={huodongTootipBtn3}
+                  className={styles.huodongTootipBtn4}
+                  style={{width:'3.5rem'}}
+									src={xianjinBtn}
 									onClick={() => {
-										activityModalBtn('huodongTootip3');
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}
@@ -47,14 +46,13 @@ class ActivityModal extends React.Component {
 									className={styles.huodongTootipBtn4}
 									src={huodongTootipBtn4}
 									onClick={() => {
-										activityModalBtn('brand');
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}
-
 						</div>
 						{/* 关闭按钮 */}
-						<div className={styles.closeBtn} onClick={closeActivityModal} />
+						<div className={styles.closeBtn} onClick={()=>{closeActivityModal(modalType)}} />
 					</div>
 				</div>
 			</Modal>

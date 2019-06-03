@@ -533,7 +533,7 @@ export default class confirm_agency_page extends PureComponent {
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
-				search: `?price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit === 'M'
+				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit === 'M'
 					? this.state.repayInfo2.perdLth
 					: 1}`,
 				state: { nouseCoupon: true }
@@ -549,7 +549,7 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit === 'M'
+			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit === 'M'
 				? this.state.repayInfo2.perdLth
 				: 1}`
 		});
