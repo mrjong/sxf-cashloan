@@ -23,7 +23,7 @@ const API = {
 	sendsms: '/cmm/sendsms',
 	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
 };
-
+let wxurl = ''
 @fetch.inject()
 @createForm()
 export default class login_page extends PureComponent {
@@ -62,9 +62,11 @@ export default class login_page extends PureComponent {
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
-		let wenjuan = localStorage.getItem('wenjuan');
+    let wenjuan = localStorage.getItem('wenjuan');
+    wxurl = sessionStorage.getItem('wxurl')
 		sessionStorage.clear();
-		localStorage.clear();
+    localStorage.clear();
+    sessionStorage.setItem('wxurl',wxurl)
 
 		// 首页弹窗要用的
 		MessageTagError && store.setMessageTagError(MessageTagError);
@@ -91,13 +93,13 @@ export default class login_page extends PureComponent {
 		let _this = this;
 		let originClientHeight = document.documentElement.clientHeight;
 		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function () {
+		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
 				let clientHeight = document.documentElement.clientHeight;
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
-				})
-				window.setTimeout(function () {
+				});
+				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -108,9 +110,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', function () {
+		window.removeEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				window.setTimeout(function () {
+				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
 			}
@@ -183,7 +185,10 @@ export default class login_page extends PureComponent {
 			return;
 		}
 	}
-
+	wxpay = () => {
+    let b = JSON.parse(JSON.parse(wxurl))
+			location.href = b.mweb_url;
+	};
 	// 获得手机验证码
 	getSmsCode(i) {
 		const { queryData } = this.state;
@@ -310,15 +315,15 @@ export default class login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
-								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+								className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									rules: [{ required: true, message: '请输入正确验证码' }]
+									rules: [ { required: true, message: '请输入正确验证码' } ]
 								})}
 								onBlur={() => {
 									this.setState({
 										inputFocus: false
-									})
+									});
 									handleInputBlur();
 								}}
 							/>
@@ -340,20 +345,20 @@ export default class login_page extends PureComponent {
 								onClick={this.checkAgreement}
 							/>
 							注册即视为同意
-						<span
+							<span
 								onClick={() => {
 									this.go('register_agreement_page');
 								}}
 							>
 								《用户注册协议》
-						</span>
+							</span>
 							<span
 								onClick={() => {
 									this.go('privacy_agreement_page');
 								}}
 							>
 								《用户隐私权政策》
-						</span>
+							</span>
 						</div>
 					</div>
 					<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
@@ -361,7 +366,7 @@ export default class login_page extends PureComponent {
 						<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
 						<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
 					</div>
-
+						<div onClick={this.wxpay}>微信支付<br/><br/></div>
 				</div>
 				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>
