@@ -25,10 +25,8 @@ export default class credit_apply_succ_page extends PureComponent {
 		autId = query && query.autId;
 	}
 	// 判断是否绑卡
-	checkIsBandCard = (type) => {
-		if (type) {
-			buriedPointEvent(home.mineCreditSubmitSuccessTie);
-		}
+	checkIsBandCard = () => {
+		buriedPointEvent(home.assessingBindCard);
 		const api = autId ? `${API.chkCredCard}/${autId}` : API.isBankCard;
 		this.props.$fetch.get(api).then((result) => {
 			// 跳转至储蓄卡
@@ -77,7 +75,7 @@ export default class credit_apply_succ_page extends PureComponent {
 							<div className={style.step_circle} />
 							绑定还款储蓄卡<a
 								onClick={() => {
-									this.checkIsBandCard(true);
+									this.checkIsBandCard();
 								}}
 							>
 								先去绑卡

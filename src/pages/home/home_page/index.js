@@ -409,7 +409,6 @@ export default class home_page extends PureComponent {
 				search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
 			});
 		} else {
-			//   this.goToMoXie();
 			this.goToNewMoXie();
 		}
 	};
@@ -434,8 +433,8 @@ export default class home_page extends PureComponent {
 			case 'LN0002': // 账单爬取中
 				break;
 			case 'LN0003': // 账单爬取成功 (直接跳数据风控)
-				console.log('LN0003 无风控信息 直接跳数据风控');
-				// buriedPointEvent(home.repaymentBtnClick3);
+				// console.log('LN0003 无风控信息 直接跳数据风控');
+				buriedPointEvent(home.applyLoan);
 				buriedPointEvent(mine.creditExtension, {
 					entry: '首页'
 				});
@@ -460,6 +459,7 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
+				buriedPointEvent(home.machineAudit)
 				this.props.history.push({
 					pathname: '/home/credit_apply_succ_page',
 					search: `?autId=${indexData.autId}`
@@ -473,7 +473,6 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
-				// buriedPointEvent(home.repaymentBtnClick6);
 				this.repayCheck();
 				break;
 			case 'LN0007': // 放款中
@@ -496,7 +495,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
-				// buriedPointEvent(home.repaymentBtnClick8);
+				buriedPointEvent(home.signedLoan);
 				this.repayCheck();
 				break;
 			case 'LN0009': // 放款成功
@@ -1020,7 +1019,6 @@ export default class home_page extends PureComponent {
 				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
 			}
 		}
-		// console.log(showDiv, 'showDiv')
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
@@ -1244,6 +1242,7 @@ export default class home_page extends PureComponent {
 
 	// 点击不同进度状态，跳转页面
 	handleProgressApply = (sts) => {
+		buriedPointEvent(home.billImport)
 		// ，01：爬取中，02：爬取成功，03：爬取失败
 		switch (sts) {
 			case '00':

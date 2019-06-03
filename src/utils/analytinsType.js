@@ -17,9 +17,7 @@ const login = {
 const home = {
 	applyCreditRepayment: `${prefix}_HOME_APPLY_CREDIT_REPAYMENT`, // 首页-点击申请信用卡代还按钮
 	homeContinueApply: `${prefix}_HOME_CONTINUE_APPLY`, // 还卡-继续申请  增加属性，继续页面：基本信息认证，银行列表，运营商认证
-	HomeKeyBills: `${prefix}_HOME_KEY_BILLS`, // 一键还账单(历史提交过的用户)
 	HomeCardRenew: `${prefix}_HOME_CARD_RENEW`, // 借钱换信用卡  重新更新
-	// updateBill: `${prefix}_HOME_UPDATE_BILL`, // 首页-点击更新账单
 	easyRepay: `${prefix}_HOME_EASY_REPAYMENT`, // 首页-点击一键还卡（代还）
 	repayOtherCredit: `${prefix}_HOME_REPAY_OTHER_CREDIT`, // 首页-点击代还其他信用卡
 	viewBill: `${prefix}_HOME_VIEW_BILL`, // 首页-点击查看代还账单
@@ -30,8 +28,7 @@ const home = {
 	durationMonth12: `${prefix}_MINE_CREDIT_EXTENSION_DURATION_MONTH_12`, // 申请期限-12个月
 	moneyCreditCardConfirm: `${prefix}_MONEY_CREDIT_CARD_CONFIRM`, // 借钱还信用卡-提交申请成功
 	moneyCreditCardConfirmBtn: `${prefix}_MONEY_CREDIT_CARD_CONFIRM_BTN`, // 借钱还信用卡-提交申请按钮
-	mineCreditSubmitSuccessTie: `${prefix}_MINE_CREDIT_SUBMIT_SUCCESS_TIE`, // -信用认证-提交成功-立即绑卡
-	compensationCreditCardConfirm: `${prefix}_COMPENSATION_CREDIT_CARD_CONFIRM`, // 代偿信用卡-确认
+	// compensationCreditCardConfirm: `${prefix}_COMPENSATION_CREDIT_CARD_CONFIRM`, // 代偿信用卡-确认
 	userRetrieveContinue: `${prefix}_USER_RETRIEVE_CONTINUE`, // 用户挽回-再等等
 	userRetrieveQuit: `${prefix}_USER_RETRIEVE_QUIT`, // 用户挽回-放弃
 	repaymentIntentionAll: `${prefix}_REPAYMENT_INTENTION_ALL`, // 还款意愿-全额还款
@@ -39,30 +36,23 @@ const home = {
 	repaymentIntentionPart: `${prefix}_REPAYMENT_INTENTION_PART`, // 还款意愿-部分还款
 	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
 	lendersOrder: `${prefix}_HOME_LENDERS_ORDER`, // 放款日期-预约放款
-	borrowingPreSubmit: `${prefix}_HOME_BORROWING_PRE_SUBMIT`, // 代还信息确认页-点击确认按钮
-	borrowingPreSubmitResult: `${prefix}_HOME_BORROWING_PRE_SUBMIT_RESULT`, // 代还信息确认页-点击确认按钮-结果事件
-	borrowingSubmit: `${prefix}_HOME_BORROWING_SUBMIT`, // 代还确认页-点击确认借款按钮
+	borrowingSubmit: `${prefix}_HOME_BORROWING_PRE_SUBMIT`, // 代还信息确认页-点击确认按钮
+	borrowingSubmitResult: `${prefix}_HOME_BORROWING_PRE_SUBMIT_RESULT`, // 代还信息确认页-点击确认按钮-结果事件
 	informationMyselfFrontCard: `${prefix}_HOME_BASE_INFO_FRONT_CARD`, // 实名认证页-点击拍摄身份证正面
 	informationMyselfBackCard: `${prefix}_HOME_BASE_INFO_BACK_CARD`, // 实名认证页-点击拍摄身份证反面
 	informationTapNameInp: `${prefix}_HOME_BASE_INFO_USERNAME`, // 实名认证页-点击姓名输入框
 	informationTapIDInp: `${prefix}_HOME_BASE_INFO_IDCARD`, // 实名认证页-点击身份证号输入框
-	// informationTapHoldIdCard: `${prefix}_HOME_BASE_INFO_HOLD_IDCARD`, // 实名认证页-点击手持身份证
 	informationConfirm: `${prefix}_HOME_BASE_INFO_CONFIRM`, // 实名认证页-确定按钮
 	basicInfoBury: `${prefix}_HOME_BASE_INFO_BURY`, // 基本信息输入框下拉框埋点
 	basicInfoComplete: `${prefix}_HOME_BASICINFO_COMPLETE`, // 基本信息页-确定按钮
 	landingPage: `${prefix}_HOME_LANDING_PAGE`, // 落地页
 	bannerClick: `${prefix}_HOME_BANNER_CLICK`, // 点击banner
-	// repaymentBtnClick3: `${prefix}_HOME_CLICK_REPAYMENT3`, // 首页LN0003状态的点击
-	// repaymentBtnClick6: `${prefix}_HOME_CLICK_REPAYMENT6`, // 首页LN0006状态的点击
-	// repaymentBtnClick8: `${prefix}_HOME_CLICK_REPAYMENT8`, // 首页LN0008状态的点击
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
 	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`,	// 下载页点击按钮事件
-
-
-	manualReview: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`,	//人工审核
-	machineReview: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MACHINE`,	//机器审核
+	manualAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`,	//人工审核
+	machineAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MACHINE`,	//机器审核
 	quickLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_LOAN`,	//快速放款
 	signedLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_BORROWING`, //立即签约借款
 	applyLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_APPLY`, //申请借钱还信用卡
@@ -72,11 +62,10 @@ const home = {
 	selectCreditCardResult: `${prefix}_CARD_SELECTION_CARDSELECTION`, //选择信用卡_选卡结果
 	addCreditCard: `${prefix}_CARD_SELECTION_NEWCARD`, //新增需要还款信用卡
 	importOtherCreditCard: `${prefix}_ADD_SCHEDULE_CREDIT_CARDS`, //选择导入其他信用卡
-	changeCard: `${prefix}_APPLY_LOAN_CARD_REPLACEMENT`, //申请借钱还-更换卡
+	replaceCard: `${prefix}_APPLY_LOAN_CARD_REPLACEMENT`, //申请借钱还-更换卡
 	gotIt: `${prefix}_QUICK_PAY_GOTIT`, //快速打款中-我知道了
-	auditFollow: `${prefix}_AWAITING_AUDIT_FOLLOW`, //等待人工审核-关注
+	manualAuditFollow: `${prefix}_AWAITING_AUDIT_FOLLOW`, //等待人工审核-关注
 	assessingBindCard: `${prefix}_RAPID_ASSESSMENT_BINDING_CARD`, //快速评估中-绑卡
-
 };
 
 const mine = {
@@ -157,10 +146,10 @@ const mpos_ioscontrol_page = {
 };
 
 const loan_repay_confirm = {
-	back30: `${prefix}_PRODUCT_BACK_30`,
-	sure30: `${prefix}_PRODUCT_SURE_30`,
-	cancle30: `${prefix}_PRODUCT_CANCLE_30`,
-	select30: `${prefix}_PRODUCT_SELECT_30`
+	// back30: `${prefix}_PRODUCT_BACK_30`,
+	// sure30: `${prefix}_PRODUCT_SURE_30`,
+	// cancle30: `${prefix}_PRODUCT_CANCLE_30`,
+	// select30: `${prefix}_PRODUCT_SELECT_30`
 };
 
 export {
