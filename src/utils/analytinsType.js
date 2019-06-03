@@ -58,7 +58,25 @@ const home = {
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
-	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`	// 下载页点击按钮事件
+	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`,	// 下载页点击按钮事件
+
+
+	manualReview: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`,	//人工审核
+	machineReview: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MACHINE`,	//机器审核
+	quickLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_LOAN`,	//快速放款
+	signedLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_BORROWING`, //立即签约借款
+	applyLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_APPLY`, //申请借钱还信用卡
+	billImport: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_IMPORT`, //账单导入
+	billContinueImport: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_CONTINUEIMPORT`, //继续导入信用卡账单
+	continueRealInfo: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_OPERATOR`, //继续确认身份信息
+	selectCreditCardResult: `${prefix}_CARD_SELECTION_CARDSELECTION`, //选择信用卡_选卡结果
+	addCreditCard: `${prefix}_CARD_SELECTION_NEWCARD`, //新增需要还款信用卡
+	importOtherCreditCard: `${prefix}_ADD_SCHEDULE_CREDIT_CARDS`, //选择导入其他信用卡
+	changeCard: `${prefix}_APPLY_LOAN_CARD_REPLACEMENT`, //申请借钱还-更换卡
+	gotIt: `${prefix}_QUICK_PAY_GOTIT`, //快速打款中-我知道了
+	auditFollow: `${prefix}_AWAITING_AUDIT_FOLLOW`, //等待人工审核-关注
+	assessingBindCard: `${prefix}_RAPID_ASSESSMENT_BINDING_CARD`, //快速评估中-绑卡
+
 };
 
 const mine = {
