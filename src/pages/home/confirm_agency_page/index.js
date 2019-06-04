@@ -789,7 +789,8 @@ export default class confirm_agency_page extends PureComponent {
 		  } else {
 			this.props.toast.info(res.data || res.msgInfo);
 			this.setState({
-			  smsCode: ''
+			  smsCode: '',
+			//   isShowSmsModal: false,
 			})
 			this.smsModal.stopCountDown();
 		  }
