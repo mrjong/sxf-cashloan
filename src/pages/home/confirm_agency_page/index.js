@@ -766,7 +766,6 @@ export default class confirm_agency_page extends PureComponent {
 		  isShowSmsModal: false,
 		  smsCode: '',
 		  protocolBindCardCount: 0,
-		  toggleBtn: false
 		});
 		this.requestBindCardState();
 	}
@@ -796,7 +795,6 @@ export default class confirm_agency_page extends PureComponent {
 		  } else {
 			// 切换短信弹窗底部按钮
 			this.setState({
-			  toggleBtn: true,
 			  smsCode: ''
 			})
 			this.props.toast.info(res.data);
@@ -1147,7 +1145,7 @@ export default class confirm_agency_page extends PureComponent {
 							onSmsCodeChange={this.handleSmsCodeChange}
 							smsCodeAgain={this.checkProtocolBindCard}
 							smsCode={smsCode}
-							toggleBtn={toggleBtn}
+							toggleBtn={false}
 						/>
 					}
 				</div>
