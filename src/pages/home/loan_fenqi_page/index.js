@@ -487,7 +487,7 @@ export default class loan_fenqi_page extends PureComponent {
     if (this.validateFn()) {
       buriedPointEvent(loan_fenqi.clickSubmit, {
         loanMoney,
-        loanDate
+        loanDate: loanDate.perdCnt
       })
       this.props.$fetch.post(API.agentRepay, {
         withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
