@@ -494,6 +494,11 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			}
 		});
 		if (!needReturn) {
+			if(btnText === '继续确认身份信息') {
+				buriedPointEvent(home.continueRealInfo)
+			} else if (btnText === '继续导入信用卡账单') {
+				buriedPointEvent(home.billContinueImport)
+			}
 			store.setNeedNextUrl(true);
 			// 实名
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
