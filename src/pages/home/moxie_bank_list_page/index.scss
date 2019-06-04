@@ -41,11 +41,43 @@
 		margin-right: 10px;
 	}
 	.infromationTitle {
-    font-size: 50px;
-    color: #121C32;
+		font-size: 50px;
+		color: #121C32;
 		font-family: 'PingFangSC-Semibold';
-    font-weight: 600;
-    padding: 40px 40px 60px;
+		font-weight: 600;
+		padding: 110px 40px 40px;
+		line-height: 1;
+	}
+	.desc{
+		font-size: 26px;
+		font-weight: 400;
+		font-family: 'PingFangSC-Regular';
+		color: #868E9E;
+	}
+	.tipsBox{
+		position: fixed;
+		top: 88px;
+		height: 50px;
+		width: 100%;
+		background: #FAF3E4;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 26px;
+		color: #121C32;
+		z-index: 1;
+		i{
+			display: block;
+			width: 24px;
+			height: 28px;
+			background-size: 100%;
+			background-repeat: no-repeat;
+			background-image: url(../../../assets/images/home/safe_ico.png);
+			margin-right: 12px;
+		}
+	}
+	.tipsBox2{
+		top: 0;
 	}
 	.bankList {
     text-align: center;
@@ -57,7 +89,10 @@
 				width: 80px;
 			}
 			.name {
-				font-size: 22px;
+				font-size: 26px;
+				font-family: 'PingFangSC-Semibold';
+				font-weight: 600;
+				color: #121C32;
 			}
 			margin-bottom: 20px;
 			float: left;
