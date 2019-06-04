@@ -3,7 +3,7 @@ import { Modal, Progress, InputItem, Icon, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import qs from 'qs';
 import { store } from 'utils/store';
-import { isMPOS } from 'utils/common';
+import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
@@ -112,6 +112,7 @@ export default class confirm_agency_page extends PureComponent {
 			isVIP: false, // 是否有会员卡
 			contractData: [], // 合同和产品id数据
 			isShowSmsModal: false, //是否显示短信验证码弹窗
+			smsCode: '',
 		};
 	}
 
@@ -127,6 +128,7 @@ export default class confirm_agency_page extends PureComponent {
 				pageData.repayInfo.bankName = bankInfo.bankName;
 				pageData.repayInfo.cardNoHid = bankInfo.lastCardNo;
 				pageData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
+				pageData.repayInfo.bankCode = bankInfo.bankCode;
 			}
 			this.recoveryPageData();
 		} else {
@@ -715,10 +717,7 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		// this.requestBindCardState();
-		this.setState({
-			isShowSmsModal: true,
-		});
+		this.checkProtocolBindCard();
 	};
 	// 请求用户绑卡状态
 	// 请求用户绑卡状态
@@ -765,13 +764,13 @@ export default class confirm_agency_page extends PureComponent {
 		this.setState({
 		  isShowSmsModal: false,
 		  smsCode: '',
-		  protocolBindCardCount: 0,
 		});
-		this.requestBindCardState();
+		// this.requestBindCardState();
 	}
 	
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
+		const { repayInfo } = this.state;
 		if (!this.state.smsCode) {
 		  this.props.toast.info('请输入验证码');
 		  return;
@@ -780,46 +779,45 @@ export default class confirm_agency_page extends PureComponent {
 		  this.props.toast.info('请输入正确的验证码');
 		  return;
 		}
-		this.setState({
-		  protocolBindCardCount: this.state.protocolBindCardCount + 1
-		})
 		this.props.$fetch.post(API.protocolBind, {
-		  cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+		  cardNo: repayInfo && repayInfo.withHoldAgrNo,
 		  smsCd: this.state.smsCode,
 		  isEntry: "01"
 		}).then((res) => {
 		  if (res.msgCode === 'PTM0000') {
 			this.closeSmsModal()
-		  } else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
-			this.closeSmsModal()
 		  } else {
-			// 切换短信弹窗底部按钮
+			this.props.toast.info(res.data || res.msgInfo);
 			this.setState({
 			  smsCode: ''
 			})
-			this.props.toast.info(res.data);
+			this.smsModal.stopCountDown();
 		  }
 		})
 	}
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
+		const { repayInfo } = this.state;
 		const params = {
-		  cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
-		  bankCd: this.state.billDesc.wthdCrdCorpOrg,
-		  usrSignCnl: getH5Channel(),
-		  cardTyp: 'D',
-		  isEntry: '01'
+		  	cardNo: repayInfo && repayInfo.withHoldAgrNo,
+		  	bankCd: repayInfo && repayInfo.bankCode,
+		  	usrSignCnl: getH5Channel(),
+		  	cardTyp: 'D',
+		  	isEntry: '01'
 		}
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 		  switch (res.msgCode) {
 			case 'PTM0000':
-			  //协议绑卡校验成功提示（走协议绑卡逻辑）
-			  this.setState({
-				isShowSmsModal: true
-			  })
+			  	//协议绑卡校验成功提示（走协议绑卡逻辑）
+				this.setState({
+					isShowSmsModal: true
+				})
 			  break;
 			default:
-			  this.repay()
+				this.setState({
+					isShowSmsModal: true
+				})
+				// this.requestBindCardState();
 			  break;
 		  }
 		})
@@ -1146,6 +1144,7 @@ export default class confirm_agency_page extends PureComponent {
 							smsCodeAgain={this.checkProtocolBindCard}
 							smsCode={smsCode}
 							toggleBtn={false}
+							ref={(ele) => { this.smsModal = ele; }}
 						/>
 					}
 				</div>
