@@ -19,11 +19,10 @@ export default class wx_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-		this.getLoanInfo(queryData);
+		this.getLoanInfo();
 	}
 	// 获取还款信息
-	getLoanInfo = (queryData) => {
+	getLoanInfo = () => {
 		this.props.$fetch
 			.post(API.qryDtl, {
 				billNo: store.getBillNo()
@@ -32,12 +31,18 @@ export default class wx_middle_page extends Component {
 				if (res.msgCode === 'PTM0000') {
 					for (let index = 0; index < res.data.perdList.length; index++) {
 						const element = res.data.perdList[index];
-						if (queryData.perdNum == element.perdNum) {
+						if (res.data.perdNum == element.perdNum) {
 							this.setState({
 								orderData: element
 							});
+
 							break;
 						}
+					}
+					if (res.data.perdList[res.data.perdList.length - 1].perdSts === '4') {
+						store.setWxPayEnd(true);
+					} else {
+						store.setWxPayEnd(false);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);

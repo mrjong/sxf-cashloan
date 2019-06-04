@@ -643,8 +643,8 @@ export default class order_detail_page extends PureComponent {
 						tradeType: isWXOpen() ? '03' : '02',
 						osNm: '还到',
 						callbackUrl: location.search
-							? `${location.href}&backType=wxPay`
-							: `${location.href}?backType=wxPay`,
+							? `${location.origin}/common/wx_pay_success_page&backType=wxPay`
+							: `${location.origin}/common/wx_pay_success_page?backType=wxPay`,
 						wapUrl: '33',
 						wapNm: '44'
 					}
@@ -668,6 +668,12 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
+					store.setOrderSuccess({
+						perdLth: billDesc.perdLth,
+						perdUnit: billDesc.perdUnit,
+						billPrcpAmt: billDesc.billPrcpAmt,
+						billRegDt: billDesc.billRegDt
+					});
 					switch (payType) {
 						case 'WXPay':
 							let wxData = res.data && JSON.parse(res.data);
@@ -684,7 +690,6 @@ export default class order_detail_page extends PureComponent {
 										paySign: wxData.paySign
 									},
 									(result) => {
-										console.log(result, '--------------------');
 										if (result.err_msg == 'get_brand_wcpay_request:ok') {
 											setTimeout(() => {
 												this.getpayResult(billDesc, isPayAll, '支付成功');
@@ -696,7 +701,6 @@ export default class order_detail_page extends PureComponent {
 								);
 								// h5 支付方式
 							} else {
-								store.setWxPayReload(location.href);
 								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
 								location.href = url;
 							}
@@ -741,12 +745,6 @@ export default class order_detail_page extends PureComponent {
 			this.props.toast.info('还款完成');
 			store.removeBackData();
 			store.removeCouponData();
-			store.setOrderSuccess({
-				perdLth: billDesc.perdLth,
-				perdUnit: billDesc.perdUnit,
-				billPrcpAmt: billDesc.billPrcpAmt,
-				billRegDt: billDesc.billRegDt
-			});
 			setTimeout(() => {
 				this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
 			}, 2000);

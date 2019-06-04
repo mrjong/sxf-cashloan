@@ -89,9 +89,14 @@ if (window.history && window.history.pushState) {
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
 				return;
-      }
+			}
 			if (window.location.pathname === '/common/wx_pay_success_page') {
-        window.ReactRouterHistory.replace('/order/order_detail_page');
+        let WxPayEnd = store.getWxPayEnd();
+        if(WxPayEnd){
+          window.ReactRouterHistory.replace('/order/repayment_succ_page');
+        }else{
+          window.ReactRouterHistory.replace('/order/order_detail_page');
+        }
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
