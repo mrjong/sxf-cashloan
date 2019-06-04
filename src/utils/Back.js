@@ -90,10 +90,6 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 			/* 实名上传图片时 不允许返回 */
 			// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (
