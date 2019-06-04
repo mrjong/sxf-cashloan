@@ -698,18 +698,13 @@ export default class home_page extends PureComponent {
 		}
 		getNextStr({
 			$props: this.props,
-			callBack: (resBackMsg) => {
-				if (this.state.showDiv === 'circle') {
-					if(resBackMsg === '继续确认身份信息') {
-						buriedPointEvent(home.continueRealInfo)
-					} else if (resBackMsg === '继续导入信用卡账单') {
-						buriedPointEvent(home.billContinueImport)
-					}
-					// buriedPointEvent(home.homeContinueApply, {
-					// 	next_step: resBackMsg
-					// });
-				}
-			}
+			// callBack: (resBackMsg) => {
+			// 	if (this.state.showDiv === 'circle') {
+			// 		buriedPointEvent(home.homeContinueApply, {
+			// 			next_step: resBackMsg
+			// 		});
+			// 	}
+			// }
 		});
 	};
 	// 获取首页信息
