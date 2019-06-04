@@ -90,15 +90,10 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-			if (window.location.pathname === '/order/wx_pay_success_page') {
-        let WxPayEnd = store.getWxPayEnd();
-        if(WxPayEnd){
-          window.ReactRouterHistory.replace('/order/repayment_succ_page');
-        }else{
-          window.ReactRouterHistory.replace('/order/order_detail_page');
-        }
-				return;
-			}
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
 			/* 实名上传图片时 不允许返回 */
 			// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (
@@ -227,6 +222,10 @@ if (window.history && window.history.pushState) {
 
 			changeHistoryState();
 			let historyRouter = store.getHistoryRouter();
+			if (historyRouter === '/order/wx_pay_success_page') {
+				window.ReactRouterHistory.replace('/order/order_page');
+				return;
+			}
 			// 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
 			if (store.getMoxieBackUrl()) {
 				store.removeMoxieBackUrl();

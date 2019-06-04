@@ -11,7 +11,7 @@ import styles from './index.scss';
 import { getH5Channel, isMPOS } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
-import { isWXOpen } from 'utils';
+import { isWXOpen, isPhone } from 'utils';
 const API = {
 	qryDtl: '/bill/qryDtl',
 	payback: '/bill/payback',
@@ -101,7 +101,7 @@ export default class order_detail_page extends PureComponent {
 						}
 					}
 				} else {
-					if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
+					if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
 						params.payType = store.getPayType() || 'WXPay';
 						params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
 					} else {
@@ -632,7 +632,7 @@ export default class order_detail_page extends PureComponent {
 		} else {
 			sendParams = repayParams;
 		}
-    // 添加微信新增参数
+		// 添加微信新增参数
 		switch (payType) {
 			case 'WXPay':
 				// 微信外 02  微信内  03
@@ -658,7 +658,6 @@ export default class order_detail_page extends PureComponent {
 		this.props.$fetch
 			.post(paybackAPI, sendParams)
 			.then((res) => {
-
 				if (res.msgCode === 'PTM0000') {
 					buriedPointEvent(order.repaymentFirst, {
 						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
@@ -670,7 +669,7 @@ export default class order_detail_page extends PureComponent {
 						isShowDetail: false
 					});
 					store.setOrderSuccess({
-            thisRepTotAmt:res.thisRepTotAmt,
+						thisRepTotAmt: sendParams.thisRepTotAmt,
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
@@ -951,7 +950,7 @@ export default class order_detail_page extends PureComponent {
 				name: '还款银行卡',
 				value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
 			}
-		];
+    ];
 		const isOverdue =
 			perdList &&
 			perdList.filter((item, index) => {
@@ -961,9 +960,10 @@ export default class order_detail_page extends PureComponent {
 		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
-				{isOverdue &&
-				isOverdue.length > 0 &&
-				(isMPOS() || (isWXOpen() && openIdFlag === '0')) && (
+      {/* isOverdue &&
+        isOverdue.length > 0 && */}
+				{
+				(isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
 					<div className={styles.overdueEntryTip}>
 						关注“还到”公众号，使用<span>微信支付</span>还款
 					</div>
