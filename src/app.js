@@ -17,9 +17,6 @@ const { PROJECT_ENV, RELEASE_VERSION } = process.env;
 console.log(RELEASE_VERSION, 'RELEASE_VERSION');
 if (!isWXOpen() && location.pathname === '/order/order_detail_page' && location.search.indexOf('backType=wxPay') > -1) {
 	history.go(-2);
-	setTimeout(() => {
-		location.reload();
-	}, 500);
 }
 if (PROJECT_ENV === 'pro') {
 	// 生产环境配置
