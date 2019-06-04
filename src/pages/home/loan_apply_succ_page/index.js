@@ -4,6 +4,8 @@ import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 @setBackGround('#fff')
 export default class remit_ing_page extends PureComponent {
@@ -18,6 +20,7 @@ export default class remit_ing_page extends PureComponent {
 		this.setState({
 			queryData
 		});
+		buriedPointEvent(home.quickLoan)
 	}
 	render() {
 		const { queryData } = this.state;
@@ -51,6 +54,7 @@ export default class remit_ing_page extends PureComponent {
 				</div>
 				<ZButton
 					onClick={() => {
+						buriedPointEvent(home.gotIt)
 						this.props.history.push('/home/home');
 					}}
 					className={style.submitBtn}

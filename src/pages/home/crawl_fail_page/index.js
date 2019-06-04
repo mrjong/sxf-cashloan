@@ -40,16 +40,23 @@ export default class crawl_progress_page extends PureComponent {
 
   }
 
-  componentDidMount() {
-
-  }
   componentWillUnmount() {
     store.removeAutId2();
+  }
+
+  tryAgain = () => {
+    if(this.state.showPopover !== '2') {
+      this.goMoxieBankList()
+    } else {
+      buriedPointEvent(home.HomeCardRenew)
+      this.props.history.replace('/home/crawl_progress_page')
+    }
   }
 
   goMoxieBankList = () => {
     store.setMoxieBackUrl('/home/home');
     this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+    buriedPointEvent(home.importOtherCreditCard)
   };
   render() {
     let { showPopover } = this.state
@@ -72,9 +79,7 @@ export default class crawl_progress_page extends PureComponent {
         <div className={style.button} onClick={()=>{
           this.goMoxieBankList()
         }}>选择导入其他银行卡</div>
-        <div style={{textAlign: 'center'}} onClick={()=>{
-          showPopover !== '2' ? this.goMoxieBankList() : this.props.history.replace('/home/crawl_progress_page')
-        }}>尝试再次导入</div>
+        <div style={{textAlign: 'center'}} onClick={this.tryAgain}>尝试再次导入</div>
       </div>
     );
   }
