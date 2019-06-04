@@ -58,7 +58,7 @@ const home = {
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
-	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`	// 下载页点击按钮事件
+	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK` // 下载页点击按钮事件
 };
 
 const mine = {
@@ -132,7 +132,7 @@ const activity = {
 	fenqiHomeModalClose: `${prefix}_FENQI_HOME_MODAL_CLOSE`, //现金分期活动弹窗关闭
 	mayReceiveBtn: `${prefix}_ACTIVITY_TWO_RECEIVE`, // 五月狂欢活动 畅想双重豪礼 领取 按钮
 	mayExtractBtn: `${prefix}_ACTIVITY_TWO_EXTRACT`, // 五月狂欢活动 畅想双重豪礼 抽奖 按钮
-    mayNewRecBtn: `${prefix}_ACTIVITY_NEW_ONEKEYCOLLECTION`, // 五月狂欢活动 新用户专享 一键领取 按钮
+	mayNewRecBtn: `${prefix}_ACTIVITY_NEW_ONEKEYCOLLECTION`, // 五月狂欢活动 新用户专享 一键领取 按钮
 	mayNewRulesBtn: `${prefix}_ACTIVITY_NEW_ACTIVITYRULES`, // 五月狂欢活动 新用户专享 活动规则 按钮
 	mayNewConfirmRecBtn: `${prefix}_ACTIVITY_NEW_RECEIVEIMMEDIATELY_CONFIRMRECEIPT`, // 五月狂欢活动 新用户专享-马上领取 确认领取 按钮
 	mayNewUseNowBtn: `${prefix}_ACTIVITY_NEW_CONGRATULATIONS_USEIMMEDIATELY`, // 五月狂欢活动 新用户专享-恭喜您 马上使用 按钮
