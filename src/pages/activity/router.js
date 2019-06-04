@@ -59,4 +59,19 @@ export default [
 		arrowHide: 'empty',
 		component: () => import('pages/activity/pinpai_page')
 	},
+	{
+		path: '/activity/wuyuekh_page',
+		title: '畅享双重豪礼',
+		component: () => import('pages/activity/wuyuekh_page')
+	},
+	{
+		path: '/activity/wuyue_new_page',
+		title: '新用户专享',
+		component: () => import('pages/activity/wuyue_new_page')
+	},
+	{
+		path: '/activity/wuyue_old_page',
+		title: '老用户专享',
+		component: () => import('pages/activity/wuyue_old_page')
+	},
 ];

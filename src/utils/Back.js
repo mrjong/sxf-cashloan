@@ -120,6 +120,12 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
+				if (store.getBankMoxie()) { // 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
+					// 银行卡直接返回的问题
+					store.removeBankMoxie();
+					window.ReactRouterHistory.push('/home/home');
+					return;
+				}
 				document.activeElement.blur();
 				obj.show();
 				return;

@@ -642,7 +642,9 @@ export default class order_detail_page extends PureComponent {
 					wxPayReqVo: {
 						tradeType: isWXOpen() ? '03' : '02',
 						osNm: '还到',
-						callbackUrl: location.href,
+						callbackUrl: location.search
+							? `${location.href}&backType=wxPay`
+							: `${location.href}?backType=wxPay`,
 						wapUrl: '33',
 						wapNm: '44'
 					}
@@ -695,8 +697,8 @@ export default class order_detail_page extends PureComponent {
 								);
 								// h5 支付方式
 							} else {
-                console.log('wxurl:',wxData.mweb_url)
-                window.open(wxData.mweb_url)
+								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
+								location.href = url;
 							}
 
 							break;
