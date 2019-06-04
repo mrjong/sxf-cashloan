@@ -15,6 +15,7 @@ import { createForm } from 'rc-form';
 import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
+import SmsModal from '../../order/order_detail_page/components/SmsModal';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -36,7 +37,9 @@ const API = {
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	qryContractInfo: '/fund/qryContractInfo' // 合同数据流获取
+	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
+	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 };
 
 let indexData = null; // 首页带过来的信息
@@ -107,7 +110,8 @@ export default class confirm_agency_page extends PureComponent {
 			],
 			isShowVIPModal: false,
 			isVIP: false, // 是否有会员卡
-			contractData: [] // 合同和产品id数据
+			contractData: [], // 合同和产品id数据
+			isShowSmsModal: false, //是否显示短信验证码弹窗
 		};
 	}
 
@@ -711,7 +715,10 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		this.requestBindCardState();
+		// this.requestBindCardState();
+		this.setState({
+			isShowSmsModal: true,
+		});
 	};
 	// 请求用户绑卡状态
 	// 请求用户绑卡状态
@@ -753,6 +760,78 @@ export default class confirm_agency_page extends PureComponent {
 			clearInterval(timer);
 		}
 	};
+	// 关闭短信弹窗并还款
+	closeSmsModal = () => {
+		this.setState({
+		  isShowSmsModal: false,
+		  smsCode: '',
+		  protocolBindCardCount: 0,
+		  toggleBtn: false
+		});
+		this.requestBindCardState();
+	}
+	
+	// 确认协议绑卡
+	confirmProtocolBindCard = () => {
+		if (!this.state.smsCode) {
+		  this.props.toast.info('请输入验证码');
+		  return;
+		}
+		if (this.state.smsCode.length !== 6) {
+		  this.props.toast.info('请输入正确的验证码');
+		  return;
+		}
+		this.setState({
+		  protocolBindCardCount: this.state.protocolBindCardCount + 1
+		})
+		this.props.$fetch.post(API.protocolBind, {
+		  cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+		  smsCd: this.state.smsCode,
+		  isEntry: "01"
+		}).then((res) => {
+		  if (res.msgCode === 'PTM0000') {
+			this.closeSmsModal()
+		  } else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
+			this.closeSmsModal()
+		  } else {
+			// 切换短信弹窗底部按钮
+			this.setState({
+			  toggleBtn: true,
+			  smsCode: ''
+			})
+			this.props.toast.info(res.data);
+		  }
+		})
+	}
+	// 协议绑卡校验接口
+	checkProtocolBindCard = () => {
+		const params = {
+		  cardNo: this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : this.state.billDesc.wthCrdAgrNo,
+		  bankCd: this.state.billDesc.wthdCrdCorpOrg,
+		  usrSignCnl: getH5Channel(),
+		  cardTyp: 'D',
+		  isEntry: '01'
+		}
+		this.props.$fetch.post(API.protocolSms, params).then((res) => {
+		  switch (res.msgCode) {
+			case 'PTM0000':
+			  //协议绑卡校验成功提示（走协议绑卡逻辑）
+			  this.setState({
+				isShowSmsModal: true
+			  })
+			  break;
+			default:
+			  this.repay()
+			  break;
+		  }
+		})
+	}
+	// 处理输入的验证码
+	handleSmsCodeChange = (smsCode) => {
+		this.setState({
+		  smsCode,
+		})
+	}
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -770,7 +849,9 @@ export default class confirm_agency_page extends PureComponent {
 			defaultIndex,
 			lendersIndex,
 			percent,
-			isShowModal
+			isShowModal,
+			isShowSmsModal,
+			smsCode,
 		} = this.state;
 		return (
 			<div>
@@ -1059,6 +1140,16 @@ export default class confirm_agency_page extends PureComponent {
 							</ul>
 						</div>
 					</Modal>
+					{
+						isShowSmsModal && <SmsModal
+							onCancel={this.skipProtocolBindCard}
+							onConfirm={this.confirmProtocolBindCard}
+							onSmsCodeChange={this.handleSmsCodeChange}
+							smsCodeAgain={this.checkProtocolBindCard}
+							smsCode={smsCode}
+							toggleBtn={toggleBtn}
+						/>
+					}
 				</div>
 			</div>
 		);
