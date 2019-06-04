@@ -1,0 +1,146 @@
+/* stylelint-disable */
+.dazhuanpan {
+	// overflow: scroll;
+	height: 100vh;
+	overflow: hidden;
+	user-select: none;
+	background: linear-gradient(1deg, #9235D4 0%, #F87783 100%);
+	.bg {
+		position: relative;
+		.rule_btn {
+			position: absolute;
+			right: 0;
+			top: 14px;
+			width: 149px;
+			img{
+				width: 100%;
+			}
+		}
+		.img {
+			display: block;
+			width: 100%;
+		}
+		.hd_box {
+			position: absolute;
+			top: 288px;
+			width: 660px;
+			left: 45px;
+		}
+		.zp_bg_box {
+			// transform: scale(0.95);
+			overflow: hidden;
+			position: absolute;
+			top: 55px;
+			z-index: 1;
+			.zp_bg {
+				width: 100%;
+				display: block;
+			}
+			.zp_btn {
+				position: absolute;
+				width: 230px;
+				top: 50%;
+				left: 50%;
+				z-index: 10;
+				display: block;
+				margin-top: -20px;
+				transform: translate(-50%, -50%);
+			}
+			.zp_box {
+				position: absolute;
+				top: 0;
+				will-change: transform;
+				width: 100%;
+				height: 100%;
+				opacity: .8;
+				border-radius: 50%;
+				.img1 {
+					position: absolute;
+					top: 0%;
+					left: 50%;
+					height: 50%;
+					transform-origin: 0 100%;
+					z-index: 10;
+				}
+			}
+		}
+		.myAward {
+			text-align: center;
+			position: absolute;
+			transform: translate(-50%, 0);
+			left: 50%;
+			top: 770px;
+			z-index: 1;
+			img{
+				width: 217px;
+			}
+		}
+		.platform{
+			width: 674px;
+			position: absolute;
+			top: 595px
+		}
+
+		.message_bottom {
+			position: absolute;
+			letter-spacing: 0.04rem;
+			width: 80%;
+			left: 50%;
+			top: 0;
+			transform: translate(-50%, 0);
+			margin: 0 auto;
+			text-align: center;
+			color: #fff;
+			font-size: 32px;
+			line-height: 50px;
+			span {
+				color: #9235D4;
+				font-size: 36px;
+			}
+		}
+	}
+}
+.dazhuanpan2{
+	height: calc(100vh - .88rem);
+}
+.get_rule_desc {
+	margin: 50px 25px;
+}
+.active_img_box {
+	img {
+		display: block;
+		width: 80%;
+		margin: 200px auto;
+	}
+}
+
+.modal {
+	// .closeBtn {
+	// 	width: 50px;
+	// 	height: 50px;
+	// 	background-image: url(../../../assets/images/home/close_ico@2x.png);
+	// 	background-repeat: no-repeat;
+	// 	background-size: 100% 100%;
+	// 	position: absolute;
+	// 	bottom: -80px;
+	// 	left: 50%;
+	// 	transform: translate(-50%, 0%);
+	// }
+}
+
+:global {
+	.modal_rule{
+        li{
+            margin-top: 15px;
+        }
+        &.am-modal.am-modal-transparent {
+            width: 90%;
+        }
+        .am-modal-content{
+            text-align: left;
+        }
+        .am-modal-body{
+            line-height: 1.7;
+        }
+    }
+}
