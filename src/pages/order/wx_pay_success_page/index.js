@@ -52,12 +52,7 @@ export default class wx_middle_page extends Component {
 			});
 	};
 	backHome = () => {
-		let WxPayEnd = store.getWxPayEnd();
-		if (WxPayEnd) {
-			window.ReactRouterHistory.replace('/order/repayment_succ_page');
-		} else {
-			window.ReactRouterHistory.replace('/order/order_detail_page');
-		}
+		this.props.history.replace('/order/order_page');
 	};
 	render() {
 		const { orderData, thisRepTotAmt } = this.state;
@@ -75,7 +70,7 @@ export default class wx_middle_page extends Component {
 					<div className={styles.box}>
 						<div className={styles.item}>
 							<span className={styles.title}>还款金额</span>
-							<span className={styles.money}>{thisRepTotAmt || '--'}</span>
+							<span className={styles.money}>{(thisRepTotAmt && thisRepTotAmt.toFixed(2)) || '--'}</span>
 						</div>
 						<div className={styles.item}>
 							<span className={styles.title}>支付方式</span>
