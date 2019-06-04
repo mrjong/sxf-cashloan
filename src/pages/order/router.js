@@ -22,4 +22,9 @@ export default [
     title: '逾期信用进度',
     component: () => import('pages/order/overdue_progress_page'),
   },
+  {
+    path: '/order/wx_pay_success_page',
+    title: '支付结果',
+    component: () => import('pages/order/wx_pay_success_page'),
+  },
 ];

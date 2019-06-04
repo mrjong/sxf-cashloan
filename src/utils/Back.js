@@ -90,8 +90,17 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
+			if (window.location.pathname === '/order/wx_pay_success_page') {
+        let WxPayEnd = store.getWxPayEnd();
+        if(WxPayEnd){
+          window.ReactRouterHistory.replace('/order/repayment_succ_page');
+        }else{
+          window.ReactRouterHistory.replace('/order/order_detail_page');
+        }
+				return;
+			}
 			/* 实名上传图片时 不允许返回 */
-      // 如果当前是从首页到绑卡页面，返回直接回到首页
+			// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (
 				store.getCheckCardRouter() &&
 				(store.getHistoryRouter() === '/mine/bind_credit_page' ||

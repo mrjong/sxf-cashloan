@@ -14,10 +14,6 @@ import Raven from 'raven-js';
 import { store } from 'utils/store';
 const { PROJECT_ENV, RELEASE_VERSION } = process.env;
 console.log(RELEASE_VERSION, 'RELEASE_VERSION');
-if (!isWXOpen() && location.pathname === '/order/order_detail_page' && location.search.indexOf('backType=wxPay') > -1) {
-  history.back(history.back(location.replace(store.getWxPayReload())));
-  // store.removeWxPayReload()
-}
 if (PROJECT_ENV === 'pro') {
 	// 生产环境配置
 	// Raven.config('https://bdac99feaf3e4e6390fd8f81c5cdebd0@sentry.vbillbank.com/2',{
