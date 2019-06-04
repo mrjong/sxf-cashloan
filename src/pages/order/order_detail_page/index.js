@@ -869,4 +869,3 @@ export default class order_detail_page extends PureComponent {
     )
   }
 }
-
