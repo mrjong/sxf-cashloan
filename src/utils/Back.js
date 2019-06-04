@@ -90,7 +90,7 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-			if (window.location.pathname === '/common/wx_pay_success_page') {
+			if (window.location.pathname === '/order/wx_pay_success_page') {
         let WxPayEnd = store.getWxPayEnd();
         if(WxPayEnd){
           window.ReactRouterHistory.replace('/order/repayment_succ_page');

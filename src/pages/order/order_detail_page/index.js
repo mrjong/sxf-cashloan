@@ -643,8 +643,8 @@ export default class order_detail_page extends PureComponent {
 						tradeType: isWXOpen() ? '03' : '02',
 						osNm: '还到',
 						callbackUrl: location.search
-							? `${location.origin}/common/wx_pay_success_page&backType=wxPay`
-							: `${location.origin}/common/wx_pay_success_page?backType=wxPay`,
+							? `${location.origin}/order/wx_pay_success_page&backType=wxPay`
+							: `${location.origin}/order/wx_pay_success_page?backType=wxPay`,
 						wapUrl: '33',
 						wapNm: '44'
 					}

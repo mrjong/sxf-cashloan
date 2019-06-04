@@ -1,0 +1,39 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.repayment_succ_page {
+	.tips {
+		text-align: center;
+		padding: 61px 0 71px 0;
+		background: #fff;
+		margin-bottom: 20px;
+		.success_ico {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, -88px);
+			display: inline-block;
+			width: 128px;
+			height: 128px;
+		}
+		p {
+			font-size: 30px;
+			color: rgba(51, 51, 51, 1);
+			margin-top: 25px;
+			font-weight: 600;
+		}
+	}
+	.back_btn {
+		width: 620px;
+		margin-top: 108px;
+	}
+}
+.box {
+	border-radius: 6px;
+	background: red;
+	margin: 30px;
+	padding: 30px;
+	.item {
+		display: flex;
+		width: 100%;
+		flex-direction: row;
+		justify-content: space-between;
+		@include setBottomLine();
+	}
+}
