@@ -632,7 +632,7 @@ export default class order_detail_page extends PureComponent {
 		} else {
 			sendParams = repayParams;
 		}
-		// 添加微信新增参数
+    // 添加微信新增参数
 		switch (payType) {
 			case 'WXPay':
 				// 微信外 02  微信内  03
@@ -658,6 +658,7 @@ export default class order_detail_page extends PureComponent {
 		this.props.$fetch
 			.post(paybackAPI, sendParams)
 			.then((res) => {
+
 				if (res.msgCode === 'PTM0000') {
 					buriedPointEvent(order.repaymentFirst, {
 						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
@@ -669,6 +670,7 @@ export default class order_detail_page extends PureComponent {
 						isShowDetail: false
 					});
 					store.setOrderSuccess({
+            thisRepTotAmt:res.thisRepTotAmt,
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
