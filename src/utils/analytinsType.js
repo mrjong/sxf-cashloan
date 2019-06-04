@@ -60,7 +60,7 @@ const home = {
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
-	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`	// 下载页点击按钮事件
+	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK` // 下载页点击按钮事件
 };
 
 const mine = {
@@ -100,8 +100,8 @@ const bugLog = {
 };
 
 const mpos_service_authorization = {
-  auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
-  auth_page: `${prefix}_MPOS_AUTH_PAGE`,
+	auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
+	auth_page: `${prefix}_MPOS_AUTH_PAGE`
 };
 
 const activity = {
@@ -130,6 +130,23 @@ const activity = {
 	brandEntry: `${prefix}_ACTIVITY_BRAND_ENTRY`, // 品牌活动入口
 	brandBtnClick: `${prefix}_ACTIVITY_BRAND_TIYAN_BTN`, // 品牌活动还到体验按钮点击
 	brandHomeModalClick: `${prefix}_ACTIVITY_BRAND_HOME_MODAL_CLICK`, // 品牌活动首页弹框开启生涯模式按钮点击
+	mayReceiveBtn: `${prefix}_ACTIVITY_TWO_RECEIVE`, // 五月狂欢活动 畅想双重豪礼 领取 按钮
+	mayExtractBtn: `${prefix}_ACTIVITY_TWO_EXTRACT`, // 五月狂欢活动 畅想双重豪礼 抽奖 按钮
+	mayNewRecBtn: `${prefix}_ACTIVITY_NEW_ONEKEYCOLLECTION`, // 五月狂欢活动 新用户专享 一键领取 按钮
+	mayNewRulesBtn: `${prefix}_ACTIVITY_NEW_ACTIVITYRULES`, // 五月狂欢活动 新用户专享 活动规则 按钮
+	mayNewConfirmRecBtn: `${prefix}_ACTIVITY_NEW_RECEIVEIMMEDIATELY_CONFIRMRECEIPT`, // 五月狂欢活动 新用户专享-马上领取 确认领取 按钮
+	mayNewUseNowBtn: `${prefix}_ACTIVITY_NEW_CONGRATULATIONS_USEIMMEDIATELY`, // 五月狂欢活动 新用户专享-恭喜您 马上使用 按钮
+	mayNewToOldBtn: `${prefix}_ACTIVITY_NEW_SORRY_JUMP`, // 五月狂欢活动 新用户专享-抱歉 跳转老用户专享 按钮
+	mayOldDrawBtn: `${prefix}_ACTIVITY_OLD_STARTRAFFLE`, // 五月狂欢活动 老用户专享-开始抽奖 按钮
+	mayOldToNewBtn: `${prefix}_ACTIVITY_OLD_SORRY_JUMP`, // 五月狂欢活动 老用户专享-跳转新用户专享 按钮
+	mayOldAuthTipsBtn: `${prefix}_ACTIVITY_OLD_TIPS_AUTHENTICATION`, // 五月狂欢活动 老用户专享-提示 填写认证资料 按钮
+	mayOldNoPrizeBtn: `${prefix}_ACTIVITY_OLD_FRIENDSHIPTIPS_NOPRIZE`, // 五月狂欢活动 老用户专享-友情提示-奖品数量-知道了 按钮
+	mayOldNoChanceBtn: `${prefix}_ACTIVITY_OLD_FRIENDSHIPTIPS_NOCHANCE`, // 五月狂欢活动 老用户专享-友情提示-抽奖机会-知道了 按钮
+	mayOldUseNowBtn: `${prefix}_ACTIVITY_OLD_CONGRATULATIONS`, // 五月狂欢活动 老用户专享-恭喜你 立即使用 按钮
+	mayOldRulesBtn: `${prefix}_ACTIVITY_OLD_ACTIVITYRULES`, // 五月狂欢活动 老用户专享 活动规则 按钮
+	mayOldMyPrizeBtn: `${prefix}_ACTIVITY_OLD_MYPRIZE`, // 五月狂欢活动 老用户专享 我的奖品 按钮
+	mayOldMyPrizeUseBtn: `${prefix}_ACTIVITY_OLD_MYPRIZE_IMMEDIATEUSE`, // 五月狂欢活动 老用户专享-我的奖品 立即使用 按钮
+	mayJoinSuccess: `${prefix}_ACTIVITY_JOIN_SUCCESS` // 五月狂欢活动 成功参与埋点（调用后台接口）
 };
 
 const moxie_bank_list = {
@@ -159,6 +176,6 @@ export {
 	mpos_service_authorization,
 	activity,
 	moxie_bank_list,
-    mpos_ioscontrol_page,
-    loan_repay_confirm
+	mpos_ioscontrol_page,
+	loan_repay_confirm
 };
