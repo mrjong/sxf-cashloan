@@ -26,5 +26,12 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/common/tencent_face_middle_page')
+  },
+  {
+		path: '/common/wx_pay_success_page',
+		title: '支付结果',
+		arrowHide: 'empty',
+		headerHide: true,
+		component: () => import('pages/common/tencent_face_middle_page')
 	}
 ];
