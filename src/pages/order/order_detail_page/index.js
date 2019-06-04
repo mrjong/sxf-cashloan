@@ -643,8 +643,8 @@ export default class order_detail_page extends PureComponent {
 						tradeType: isWXOpen() ? '03' : '02',
 						osNm: '还到',
 						callbackUrl: location.search
-							? `${location.origin}/common/wx_pay_success_page&backType=wxPay`
-							: `${location.origin}/common/wx_pay_success_page?backType=wxPay`,
+							? `${location.href}&backType=wxPay`
+							: `${location.href}?backType=wxPay`,
 						wapUrl: '33',
 						wapNm: '44'
 					}
@@ -686,9 +686,8 @@ export default class order_detail_page extends PureComponent {
 									(result) => {
 										console.log(result, '--------------------');
 										if (result.err_msg == 'get_brand_wcpay_request:ok') {
-											this.props.toast.info('支付成功');
 											setTimeout(() => {
-												this.getLoanInfo();
+												this.getpayResult(billDesc, isPayAll, '支付成功');
 											}, 2000);
 										} else {
 											this.getLoanInfo();
@@ -704,33 +703,7 @@ export default class order_detail_page extends PureComponent {
 
 							break;
 						case 'BankPay':
-							if (
-								billDesc.perdUnit === 'D' ||
-								Number(billDesc.perdNum) === Number(billDesc.perdLth) ||
-								isPayAll
-							) {
-								this.props.toast.info('还款完成');
-								store.removeBackData();
-								store.removeCouponData();
-								store.setOrderSuccess({
-									perdLth: billDesc.perdLth,
-									perdUnit: billDesc.perdUnit,
-									billPrcpAmt: billDesc.billPrcpAmt,
-									billRegDt: billDesc.billRegDt
-								});
-								setTimeout(() => {
-									this.props.history.replace(
-										`/order/repayment_succ_page?prodType=${billDesc.prodType}`
-									);
-								}, 2000);
-							} else {
-								this.props.toast.info('申请还款成功');
-								store.removeCouponData();
-								// 刷新当前list
-								setTimeout(() => {
-									this.getLoanInfo();
-								}, 3000);
-							}
+							this.getpayResult(billDesc, isPayAll, '申请还款成功');
 							break;
 						default:
 							break;
@@ -762,6 +735,29 @@ export default class order_detail_page extends PureComponent {
 					isShowDetail: false
 				});
 			});
+	};
+	getpayResult = (billDesc, isPayAll, message) => {
+		if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
+			this.props.toast.info('还款完成');
+			store.removeBackData();
+			store.removeCouponData();
+			store.setOrderSuccess({
+				perdLth: billDesc.perdLth,
+				perdUnit: billDesc.perdUnit,
+				billPrcpAmt: billDesc.billPrcpAmt,
+				billRegDt: billDesc.billRegDt
+			});
+			setTimeout(() => {
+				this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
+			}, 2000);
+		} else {
+			this.props.toast.info(message);
+			store.removeCouponData();
+			// 刷新当前list
+			setTimeout(() => {
+				this.getLoanInfo();
+			}, 3000);
+		}
 	};
 
 	// 选择银行卡
