@@ -32,6 +32,6 @@ export default [
 		title: '支付结果',
 		arrowHide: 'empty',
 		headerHide: true,
-		component: () => import('pages/common/tencent_face_middle_page')
+		component: () => import('pages/common/wx_pay_success_page')
 	}
 ];
