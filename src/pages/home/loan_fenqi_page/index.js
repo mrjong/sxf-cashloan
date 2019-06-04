@@ -284,19 +284,19 @@ export default class loan_fenqi_page extends PureComponent {
       loanDate: item
     })
     switch (item.perdCnt) {
-      case 30:
+      case '30':
         buriedPointEvent(loan_fenqi.day30)
         break;
-      case 3:
+      case '3':
         buriedPointEvent(loan_fenqi.month3)
         break;
-      case 6:
+      case '6':
         buriedPointEvent(loan_fenqi.month6)
         break;
-      case 9:
+      case '9':
         buriedPointEvent(loan_fenqi.month9)
         break;
-      case 12:
+      case '12':
         buriedPointEvent(loan_fenqi.month12)
         break;
       default:
@@ -460,7 +460,6 @@ export default class loan_fenqi_page extends PureComponent {
     if (this.state.loanMoney === m) return
     const { priceMax, priceMin } = this.state
     let loanMoney;
-    buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney: m })
     if (m === 0 || m < priceMin) {
       loanMoney = priceMin
     } else if (m > priceMax) {
@@ -470,6 +469,7 @@ export default class loan_fenqi_page extends PureComponent {
     }
     this.setState({ loanMoney }, () => {
       this.queryProdInfoByMoney()
+      buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney })
     })
   }
 
