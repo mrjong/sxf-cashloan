@@ -23,7 +23,6 @@ const API = {
 	sendsms: '/cmm/sendsms',
 	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
 };
-let wxurl = ''
 @fetch.inject()
 @createForm()
 export default class login_page extends PureComponent {
@@ -63,10 +62,8 @@ export default class login_page extends PureComponent {
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
     let wenjuan = localStorage.getItem('wenjuan');
-    wxurl = sessionStorage.getItem('wxurl')
 		sessionStorage.clear();
     localStorage.clear();
-    sessionStorage.setItem('wxurl',wxurl)
 
 		// 首页弹窗要用的
 		MessageTagError && store.setMessageTagError(MessageTagError);
@@ -185,10 +182,6 @@ export default class login_page extends PureComponent {
 			return;
 		}
 	}
-	wxpay = () => {
-    let b = JSON.parse(JSON.parse(wxurl))
-			location.href = b.mweb_url;
-	};
 	// 获得手机验证码
 	getSmsCode(i) {
 		const { queryData } = this.state;
@@ -366,7 +359,6 @@ export default class login_page extends PureComponent {
 						<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
 						<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
 					</div>
-						<div onClick={this.wxpay}>微信支付<br/><br/></div>
 				</div>
 				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>
