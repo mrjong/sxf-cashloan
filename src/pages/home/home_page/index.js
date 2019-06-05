@@ -765,11 +765,11 @@ export default class home_page extends PureComponent {
 					}
 				);
 				//口碑活动弹窗
-				if (isMPOS() && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
+				if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							modalType: koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
+							modalType: koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
 							modalBtnFlag: true
 						},
 						() => {
