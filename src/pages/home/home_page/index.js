@@ -178,16 +178,18 @@ export default class home_page extends PureComponent {
 					if (result.data.value === '1') {
 						this.indexshowType();
 					} else {
-						// 代偿流程
-						this.credit_extension();
+						if (token && tokenFromStorage) {
+							this.credit_extension();
+						}
 					}
 				} else {
 					this.props.toast.info(result.msgInfo);
 				}
 			})
 			.catch((err) => {
-				// 代偿流程
-				this.credit_extension();
+				if (token && tokenFromStorage) {
+					this.credit_extension();
+				}
 			});
 	};
 	// 首页现金分期基本信息查询接口
