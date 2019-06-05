@@ -133,23 +133,6 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		this.getExamineSts(); // 检查是否需要人审
 	}
-	componentDidMount() {
-		const that = this;
-		if (/Android/gi.test(navigator.userAgent)) {
-			const innerHeight = window.innerHeight;
-			window.addEventListener('resize', () => {
-				const newInnerHeight = window.innerHeight;
-				if (innerHeight > newInnerHeight) {
-					// 键盘弹出事件处理
-				} else {
-					// 键盘收起事件处理
-					Toast.info(that.props.form.getFieldProps('cardBillAmt'));
-
-					that.calcLoanMoney(that.props.form.getFieldProps('cardBillAmt'));
-				}
-			});
-		}
-	}
 
 	// 查询用户会员卡状态
 	checkUsrMemSts = () => {

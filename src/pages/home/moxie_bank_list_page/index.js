@@ -9,6 +9,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import StepBar from 'components/StepBar';
 import linkConf from 'config/link.conf';
 import bankCode from 'config/bankCode'
+import { headerIgnore } from 'utils'
 
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
@@ -160,8 +161,13 @@ export default class moxie_bank_list_page extends Component {
 
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
+						<div className={!headerIgnore() ? style.tipsBox : `${style.tipsBox} ${style.tipsBox2}`}>
+							<i />
+							银行专属链接，保护用户数据安全
+						</div>
 						<div className={style.infromationTitle}>
-							<span>选择需要还款信用卡所在银行</span>
+							<p>选择信用卡所在银行</p>
+							<span className={style.desc}>登录网上银行，自动查询并添加信用卡</span>
 							{/* <div className={style.subTitle_info}>通过网银添加</div> */}
 						</div>
 						<div className={style.bankList}>

@@ -79,8 +79,15 @@ export default class loan_fenqi_page extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { loanMoney, loanDate, resaveBankCardAgrNo } = this.state
-    if (loanMoney && loanDate && resaveBankCardAgrNo && (loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt)) {
+    this.shouldQueryContractList(prevState, this.state)
+  }
+
+  //是否需要重新请求合同产品
+  shouldQueryContractList = (prevState, curState) => {
+    const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo } = curState
+    if (loanMoney && loanDate && resaveBankCardAgrNo && (
+      loanMoney !== prevState.loanMoney || loanDate.perdCnt !== prevState.loanDate.perdCnt || payBankCardAgrNo !== prevState.payBankCardAgrNo || resaveBankCardAgrNo !== prevState.resaveBankCardAgrNo
+    )) {
       this.queryContractList()
     }
   }
@@ -179,6 +186,8 @@ export default class loan_fenqi_page extends PureComponent {
         })
         this.props.toast.info(res.msgInfo);
       }
+    }).catch(err => {
+      this.removeTempData()
     })
   }
 
@@ -202,6 +211,8 @@ export default class loan_fenqi_page extends PureComponent {
           couponInfo: {}
         })
       }
+    }).catch(err => {
+      this.removeTempData()
     })
   }
 
@@ -273,19 +284,19 @@ export default class loan_fenqi_page extends PureComponent {
       loanDate: item
     })
     switch (item.perdCnt) {
-      case 30:
+      case '30':
         buriedPointEvent(loan_fenqi.day30)
         break;
-      case 3:
+      case '3':
         buriedPointEvent(loan_fenqi.month3)
         break;
-      case 6:
+      case '6':
         buriedPointEvent(loan_fenqi.month6)
         break;
-      case 9:
+      case '9':
         buriedPointEvent(loan_fenqi.month9)
         break;
-      case 12:
+      case '12':
         buriedPointEvent(loan_fenqi.month12)
         break;
       default:
@@ -359,8 +370,17 @@ export default class loan_fenqi_page extends PureComponent {
       lastCardNo: payBankCardLastNo,
       bankName: payBankCardName
     }
-    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, perdRateList, contractList, usageList, couponInfo, deratePrice })
+    store.setCashFenQiStoreData({ loanMoney, loanDate, loanUsage, prdId, priceMax, priceMin, perdRateList, contractList, usageList, couponInfo, deratePrice, resaveBankCardAgrNo, payBankCardAgrNo })
     store.setCashFenQiCardArr([resaveCard, payCard])
+  }
+
+  // 清空暂存数据,但不清除选择的银行卡
+  removeTempData = () => {
+    store.removeCashFenQiStoreData()
+    console.log(this.state.perdRateList)
+    this.setState({
+      perdRateList: this.state.perdRateList
+    })
   }
 
   //处理数据反显
@@ -388,7 +408,7 @@ export default class loan_fenqi_page extends PureComponent {
       perdRateList = storeData.perdRateList
       usageList = storeData.usageList
     }
-    let data = Object.assign(storeData, {
+    let data = Object.assign({}, storeData, {
       resaveBankCardAgrNo,
       resaveBankCardName,
       resaveBankCardLastNo,
@@ -398,7 +418,9 @@ export default class loan_fenqi_page extends PureComponent {
       perdRateList,
       usageList,
     })
-    this.setState({ ...data })
+    this.setState({ ...data }, () => {
+      this.shouldQueryContractList(storeData, this.state)
+    })
   }
 
   //验证信息是否填写完整
@@ -428,6 +450,8 @@ export default class loan_fenqi_page extends PureComponent {
       } else {
         this.props.toast.info(result.msgInfo);
       }
+    }).catch(err => {
+      this.removeTempData()
     });
   }
 
@@ -436,7 +460,6 @@ export default class loan_fenqi_page extends PureComponent {
     if (this.state.loanMoney === m) return
     const { priceMax, priceMin } = this.state
     let loanMoney;
-    buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney: m })
     if (m === 0 || m < priceMin) {
       loanMoney = priceMin
     } else if (m > priceMax) {
@@ -446,6 +469,7 @@ export default class loan_fenqi_page extends PureComponent {
     }
     this.setState({ loanMoney }, () => {
       this.queryProdInfoByMoney()
+      buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney })
     })
   }
 
@@ -463,7 +487,7 @@ export default class loan_fenqi_page extends PureComponent {
     if (this.validateFn()) {
       buriedPointEvent(loan_fenqi.clickSubmit, {
         loanMoney,
-        loanDate
+        loanDate: loanDate.perdCnt
       })
       this.props.$fetch.post(API.agentRepay, {
         withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
@@ -540,10 +564,7 @@ export default class loan_fenqi_page extends PureComponent {
                     this.setState({
                       inputClear: true
                     }, () => {
-                      store.removeCashFenQiStoreData()
-                      this.setState({
-                        perdRateList: this.state.perdRateList
-                      })
+                      this.removeTempData()
                     })
                   }
                   this.setState({
@@ -594,14 +615,13 @@ export default class loan_fenqi_page extends PureComponent {
                 </span>
               </li>
               {
-                loanMoney && loanDate && <li className={style.listItem}>
+                loanMoney && loanDate && prdId && <li className={style.listItem}>
                   <label>优惠券</label>
                   <span className={style.listValue} onClick={this.selectCoupon}>
                     {
                       couponInfo.coupVal ? <span className={style.redText}>{deratePrice ? `${deratePrice}` : '请选择'}</span> :
                         <span className={style.greyText}>无可用优惠券</span>
                     }
-                    {/* <span className={style.redText}>{couponInfo.coupVal ? `${deratePrice ? `${deratePrice}` : '请选择'}` : '无可用优惠券'}</span> */}
                     <Icon type="right" className={style.icon} />
                   </span>
                 </li>
@@ -612,7 +632,7 @@ export default class loan_fenqi_page extends PureComponent {
                   resaveBankCardAgrNo ? <span className={style.listValue} onClick={() => { this.selectBankCard(resaveBankCardAgrNo, 'resave') }}>
                     {resaveBankCardName}({resaveBankCardLastNo})
                   <Icon type="right" className={style.icon} />
-                  </span> : <span className={style.greyText} onClick={() => { this.bindBankCard('resave') }}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
+                  </span> : <span className={style.highlightText} onClick={() => { this.bindBankCard('resave') }}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
                 }
               </li>
               <li className={style.listItem}>
@@ -621,7 +641,7 @@ export default class loan_fenqi_page extends PureComponent {
                   payBankCardAgrNo ? <span className={style.listValue} onClick={() => { this.selectBankCard(payBankCardAgrNo, 'pay') }}>
                     {payBankCardName}({payBankCardLastNo})
                   <Icon type="right" className={style.icon} />
-                  </span> : <span className={style.greyText} onClick={() => { this.bindBankCard('pay') }}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
+                  </span> : <span className={style.highlightText} onClick={() => { this.bindBankCard('pay') }}>绑定储蓄卡 <i className={style.addIcon}>+</i></span>
                 }
               </li>
             </ul>
