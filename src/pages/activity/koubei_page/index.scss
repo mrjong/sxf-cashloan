@@ -43,6 +43,11 @@
 .pinpai {
   background: url(./img/activity_bg.png) no-repeat;
   background-size: 100%;
+  background-color: #fff;
+  .banner_bg {
+    width: 100%;
+    margin-bottom: 110px;
+  }
   .entryBtn{
     display: block;
     width: 635px;

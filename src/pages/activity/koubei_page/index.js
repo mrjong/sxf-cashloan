@@ -4,11 +4,20 @@ import styles from './index.scss'
 import btn_bg from './img/btn_bg.png'
 import intro_box from './img/intro_box.png'
 import intro_img from './img/intro_img.png'
+import banner1 from './img/banner1.png'
+import banner2 from './img/banner2.png'
+import banner3 from './img/banner3.png'
 import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType'
 import SmsAlert from '../components/SmsAlert'
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
+import fetch from 'sx-fetch';
 
+const API = {
+  joinActivity: '/activeConfig/partake'
+}
+
+@fetch.inject()
 export default class koubei_page extends PureComponent {
   constructor(props) {
     super(props)
@@ -27,22 +36,28 @@ export default class koubei_page extends PureComponent {
   }
 
   // 跳转协议
-	go = (url) => {
-		this.props.history.push(`/protocol/${url}`);
+  go = (url) => {
+    this.props.history.push(`/protocol/${url}`);
   };
 
   // 进入首页
   goHomePage = () => {
-    this.props.history.push('/home/home');
+    this.props.$fetch.post(API.joinActivity, {
+      activeId: 'AC002'
+    }).then(res => {
+      this.props.history.push('/home/home');
+    }).catch(err => {
+      this.props.history.push('/home/home');
+    })
   }
 
   // 还到体验
   joinNow = () => {
     buriedPointEvent(activity.koubeiBtnClick);
     if (!this.state.isSelProtocal) {
-			this.props.toast.info('请先勾选协议');
-			return;
-		}
+      this.props.toast.info('请先勾选协议');
+      return;
+    }
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
     if (queryData.appId && queryData.token) {
       this.child.validateMposRelSts({
@@ -55,19 +70,19 @@ export default class koubei_page extends PureComponent {
       this.setState({
         showLoginTip: true
       });
-    } 
+    }
   }
 
   onRef = (ref) => {
-		this.child = ref;
+    this.child = ref;
   };
-  
+
   checkAgreement = () => {
-		this.setState({
-			isSelProtocal: !this.state.isSelProtocal
-		});
+    this.setState({
+      isSelProtocal: !this.state.isSelProtocal
+    });
   };
-  
+
   closeTip = () => {
     this.setState({
       showLoginTip: false
@@ -80,58 +95,55 @@ export default class koubei_page extends PureComponent {
       <div className={styles.pinpai}>
         <SmsAlert
           onRef={this.onRef}
-					goSubmitCb={{
-						PTM0000: (res, getType) => {
-							this.goHomePage();
-						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
+          goSubmitCb={{
+            PTM0000: (res, getType) => {
+              this.goHomePage();
+            },
+            URM0008: (res, getType) => { },
+            others: (res, getType) => {
               this.props.toast.info(res.msgInfo);
             }
-					}}
-					goLoginCb={{
-						PTM0000: (res, getType) => {
-							this.goHomePage();
-						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
-              this.props.toast.info(res.msgInfo);
-            }
-					}}
-					validateMposCb={{
-						PTM9000: (res, getType) => {
-							this.props.history.replace('/mpos/mpos_ioscontrol_page');
-						},
-						others: (res, getType) => {
-							this.setState({
-								showBoundle: true
-							});
-						}
-					}}
-					chkAuthCb={{
-						authFlag0: (res, getType) => {},
-						authFlag1: (res, getType) => {
-							this.goHomePage();
-						},
-						authFlag2: (res, getType) => {
-							// this.props.toast.info('暂无活动资格');
-						},
-						others: (res, getType) => {}
-					}}
-					doAuthCb={{
-						authSts00: (res, getType) => {
-							this.goHomePage();
-						},
-						others: (res, getType) => {}
           }}
-				/>
+          goLoginCb={{
+            PTM0000: (res, getType) => {
+              this.goHomePage();
+            },
+            URM0008: (res, getType) => { },
+            others: (res, getType) => {
+              this.props.toast.info(res.msgInfo);
+            }
+          }}
+          validateMposCb={{
+            PTM9000: (res, getType) => {
+              this.props.history.replace('/mpos/mpos_ioscontrol_page');
+            },
+            others: (res, getType) => {
+              this.setState({
+                showBoundle: true
+              });
+            }
+          }}
+          chkAuthCb={{
+            authFlag0: (res, getType) => { },
+            authFlag1: (res, getType) => {
+              this.goHomePage();
+            },
+            authFlag2: (res, getType) => {
+              // this.props.toast.info('暂无活动资格');
+            },
+            others: (res, getType) => { }
+          }}
+          doAuthCb={{
+            authSts00: (res, getType) => {
+              this.goHomePage();
+            },
+            others: (res, getType) => { }
+          }}
+        />
         <img src={btn_bg} onClick={this.joinNow} className={styles.entryBtn} alt="按钮" />
-        <div className={styles.descBox}>
-          <h3>还到</h3>
-          <p>随行付金融旗下的移动互联网金融产品，提供信用卡余额代偿服务。</p>
-          <p>由随行付金融开发和运营，为有需求的信用卡用户提供匹配账单的智能还信用卡服务，高效便捷、准时到账。</p>
-          <p>持卡人可以通过本平台在线完成授信审批，贷款汇入持卡人指定的信用卡中，直接完成信用卡还款。</p>
-        </div>
+        <img src={banner1} className={styles.banner_bg}/>
+        <img src={banner2} className={styles.banner_bg}/>
+        <img src={banner3} className={styles.banner_bg}/>
         <img src={intro_img} className={styles.proIntro} alt="产品介绍" />
         <img src={intro_box} className={styles.proDesc} alt="产品介绍" />
         <div className={styles.protocolBox}>
@@ -140,7 +152,7 @@ export default class koubei_page extends PureComponent {
             onClick={this.checkAgreement}
           />
           <span className={styles.specailColor}>阅读并接受</span>
-          <span 
+          <span
             onClick={() => {
               this.go('register_agreement_page');
             }}>
@@ -158,7 +170,7 @@ export default class koubei_page extends PureComponent {
             <div className={styles.mask}></div>
             <div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
               <div className={styles.tipText}>
-                <span>小主～</span><br/>
+                <span>小主～</span><br />
                 <span>先去登录才能参与活动哦～</span>
               </div>
               <div className={styles.closeBtn} onClick={this.closeTip}></div>

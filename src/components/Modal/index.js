@@ -26,7 +26,6 @@ class ActivityModal extends React.Component {
 	// 优先弹688  再弹出免息  再弹iphone
 	render() {
 		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag } = this.props;
-		console.log(modalBtnFlag)
 		return (
 			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
 				<div className={styles.modal}>
