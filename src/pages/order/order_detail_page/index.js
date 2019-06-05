@@ -58,7 +58,8 @@ export default class order_detail_page extends PureComponent {
 			perTotAmt: '', // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
 			payType: '',
 			payTypes: [ 'BankPay' ],
-			openIdFlag: ''
+      openIdFlag: '',
+      thisPerdNum:''
 		};
 	}
 	componentWillMount() {
@@ -240,6 +241,7 @@ export default class order_detail_page extends PureComponent {
 					// }
 					this.setState(
 						{
+              thisPerdNum:res.data.perdNum,
 							billDesc: res.data, //账单全部详情
 							perdList: res.data.perdList //账单期数列表
 						},
@@ -617,7 +619,18 @@ export default class order_detail_page extends PureComponent {
 	//调用还款接口逻辑
 	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const { billDesc, isPayAll, isNewsContract, repayParams, isSettle, totalAmt, perTotAmt, payType } = this.state;
+		const {
+			billDesc,
+			isPayAll,
+			isNewsContract,
+			repayParams,
+			isSettle,
+			totalAmt,
+			perTotAmt,
+			payType,
+      money,
+      thisPerdNum
+		} = this.state;
 		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		let sendParams = {};
 		if (isNewsContract) {
@@ -668,13 +681,20 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
+
 					store.setOrderSuccess({
-						thisRepTotAmt: sendParams.thisRepTotAmt,
+            isPayAll,
+            thisPerdNum,
+						thisRepTotAmt: isPayAll
+							? isNewsContract
+								? totalAmt && parseFloat(totalAmt).toFixed(2)
+								: billDesc.waitRepAmt && parseFloat(billDesc.waitRepAmt).toFixed(2)
+							: money && parseFloat(money).toFixed(2),
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
 						billRegDt: billDesc.billRegDt
-					});
+          });
 					switch (payType) {
 						case 'WXPay':
 							let wxData = res.data && JSON.parse(res.data);
