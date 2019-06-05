@@ -787,7 +787,7 @@ export default class confirm_agency_page extends PureComponent {
 		  if (res.msgCode === 'PTM0000') {
 			this.closeSmsModal()
 		  } else {
-			this.props.toast.info(res.data || res.msgInfo);
+			this.props.toast.info('绑卡失败，请换卡或重试');
 			this.setState({
 			  smsCode: '',
 			  isShowSmsModal: false,
@@ -820,7 +820,7 @@ export default class confirm_agency_page extends PureComponent {
 			  	this.props.toast.info(res.msgInfo);	
 			break;
 			default:
-				this.props.toast.info('暂不支持该银行，请更换其他银行卡');
+				this.props.toast.info('暂不支持该银行卡，请换卡重试');
 			break;
 		  }
 		})
