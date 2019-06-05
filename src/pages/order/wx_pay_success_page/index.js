@@ -15,7 +15,7 @@ export default class wx_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-    store.setHistoryRouter(location.pathname);
+		store.setHistoryRouter(location.pathname);
 		this.getLoanInfo();
 	}
 	// 获取还款信息
@@ -27,16 +27,22 @@ export default class wx_middle_page extends Component {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					for (let index = 0; index < res.data.perdList.length; index++) {
-						const element = res.data.perdList[index];
-						if (res.data.perdNum == element.perdNum) {
-							this.setState({
-								orderData: element,
-								thisRepTotAmt: (test && test.thisRepTotAmt) || ''
-							});
-
-							break;
+					if (!test || !test.isPayAll) {
+						for (let index = 0; index < res.data.perdList.length; index++) {
+							const element = res.data.perdList[index];
+							if (test.thisPerdNum == element.perdNum) {
+								this.setState({
+									orderData: element,
+									thisRepTotAmt: (test && test.thisRepTotAmt) || ''
+								});
+								break;
+							}
 						}
+					} else {
+						this.setState({
+							orderData: res.data.perdList[res.data.perdList.length - 1],
+							thisRepTotAmt: (test && test.thisRepTotAmt) || ''
+						});
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
