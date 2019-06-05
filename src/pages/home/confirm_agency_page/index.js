@@ -790,9 +790,8 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.toast.info(res.data || res.msgInfo);
 			this.setState({
 			  smsCode: '',
-			//   isShowSmsModal: false,
+			  isShowSmsModal: false,
 			})
-			this.smsModal.stopCountDown();
 		  }
 		})
 	}
@@ -813,13 +812,16 @@ export default class confirm_agency_page extends PureComponent {
 				this.setState({
 					isShowSmsModal: true
 				})
-			  break;
+			break;
+			case 'PTM9901':
+				this.props.toast.info(res.data);
+		  	break;
+		  	case 'PBM1010':
+			  	this.props.toast.info(res.msgInfo);	
+			break;
 			default:
-				this.setState({
-					isShowSmsModal: true
-				})
-				// this.requestBindCardState();
-			  break;
+				this.props.toast.info('暂不支持该银行，请更换其他银行卡');
+			break;
 		  }
 		})
 	}

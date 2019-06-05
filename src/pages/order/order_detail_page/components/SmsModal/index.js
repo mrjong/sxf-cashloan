@@ -55,13 +55,6 @@ export default class SmsModal extends React.PureComponent {
     clearInterval(timer)
   }
 
-  stopCountDown = () => {
-    this.clearCountDown();
-    this.setState({
-      times: 0
-    })
-  }
-
   render() {
     const { times } = this.state
     const { onCancel, onConfirm, smsCode, toggleBtn } = this.props
