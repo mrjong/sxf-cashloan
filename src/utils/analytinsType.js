@@ -60,7 +60,9 @@ const home = {
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
-	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`	// 下载页点击按钮事件
+	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`,	// 下载页点击按钮事件
+	protocolSmsFail: `${prefix}_HOME_PROTOCOL_SMS_FAIL`, // 签约借款页协议绑卡校验失败埋点
+	protocolBindFail: `${prefix}_HOME_PROTOCOL_BIND_FAIL`, // 签约借款页协议绑卡绑定失败埋点
 };
 
 const mine = {
@@ -76,7 +78,9 @@ const mine = {
 	creditExtensionBaseInfo: `${prefix}_MINE_CREDIT_EXTENSION_BASE_INFO`, // 风控授信项页 点击基本信息认证
 	creditExtensionOperator: `${prefix}_MINE_CREDIT_EXTENSION_OPERATOR`, // 风控授信项页 点击运营商认证
 	creditExtensionFaceAuth: `${prefix}_MINE_CREDIT_EXTENSION_FACEAUTH`, // 风控授信项页 点击人脸识别认证
-	creditExtensionZM: `${prefix}_MINE_CREDIT_EXTENSION_ZM` // 风控授信项页 点击芝麻分认证
+	creditExtensionZM: `${prefix}_MINE_CREDIT_EXTENSION_ZM`, // 风控授信项页 点击芝麻分认证
+	protocolSmsFail: `${prefix}_MINE_PROTOCOL_SMS_FAIL`, // 绑定储蓄卡页协议绑卡校验失败埋点
+	protocolBindFail: `${prefix}_MINE_PROTOCOL_BIND_FAIL`, // 绑定储蓄卡页协议绑卡绑定失败埋点
 };
 
 const order = {

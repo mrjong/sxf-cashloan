@@ -765,7 +765,7 @@ export default class confirm_agency_page extends PureComponent {
 		  isShowSmsModal: false,
 		  smsCode: '',
 		});
-		// this.requestBindCardState();
+		this.requestBindCardState();
 	}
 	
 	// 确认协议绑卡
@@ -786,12 +786,17 @@ export default class confirm_agency_page extends PureComponent {
 		}).then((res) => {
 		  if (res.msgCode === 'PTM0000') {
 			this.closeSmsModal()
+		  } else if (res.msgCode === 'PTM9901') {
+			this.props.toast.info(res.data);
+			this.setState({ smsCode: '' });
+			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 		  } else {
 			this.props.toast.info('绑卡失败，请换卡或重试');
 			this.setState({
 			  smsCode: '',
 			  isShowSmsModal: false,
 			})
+			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 		  }
 		})
 	}
@@ -815,12 +820,15 @@ export default class confirm_agency_page extends PureComponent {
 			break;
 			case 'PTM9901':
 				this.props.toast.info(res.data);
+				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 		  	break;
 		  	case 'PBM1010':
-			  	this.props.toast.info(res.msgInfo);	
+				  this.props.toast.info(res.msgInfo);	
+				  buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
 			default:
 				this.props.toast.info('暂不支持该银行卡，请换卡重试');
+				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
 		  }
 		})

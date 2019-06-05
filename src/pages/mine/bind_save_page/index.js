@@ -108,12 +108,15 @@ export default class bind_save_page extends PureComponent {
 						break;
 					case 'PTM9901':
 						this.props.toast.info(res.data);
+						buriedPointEvent(mine.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 						break;
 					case 'PBM1010':
 						this.props.toast.info(res.msgInfo);
+						buriedPointEvent(mine.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 						break;
 					default:
-						this.props.toast.info('暂不支持该银行，请更换其他银行卡');
+						this.props.toast.info('暂不支持该银行卡，请换卡重试');
+						buriedPointEvent(mine.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 						break;
 				}
 			});
@@ -165,9 +168,14 @@ export default class bind_save_page extends PureComponent {
 					}
 				} else if (res.msgCode === 'PTM9901') {
 					this.props.toast.info(res.data);
-					this.setState({ valueInputCarSms: '' });
+					// this.setState({ valueInputCarSms: '' });
+					this.props.form.setFieldsValue({
+						valueInputCarSms: ''
+					});
+					buriedPointEvent(mine.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 				} else {
-					this.props.toast.info('暂不支持该银行，请更换其他银行卡');
+					this.props.toast.info('绑卡失败，请换卡或重试');
+					buriedPointEvent(mine.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 				}
 			});
 	};
