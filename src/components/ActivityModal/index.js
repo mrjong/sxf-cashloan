@@ -8,7 +8,6 @@ import xianjinBtn from './img/xianjinBtn.png';
 import koubei_new_bg from '../../assets/images/home/new_user.png';
 import koubei_old_bg from '../../assets/images/home/old_user.png';
 
-
 class ActivityModal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -37,10 +36,10 @@ class ActivityModal extends React.Component {
 							{modalType === 'koubei_new_user' ? <img src={koubei_new_bg} /> : null}
 							{modalType === 'koubei_old_user' ? <img src={koubei_old_bg} /> : null}
 							{/* 按钮 */}
-							{modalType === 'huodongTootip3' ? (
+							{modalType === 'xianjin' ? (
 								<img
-                  className={styles.huodongTootipBtn4}
-                  style={{width:'3.5rem'}}
+									className={styles.huodongTootipBtn4}
+									style={{ width: '3.5rem' }}
 									src={xianjinBtn}
 									onClick={() => {
 										activityModalBtn(modalType);
@@ -74,13 +73,16 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
-
 						</div>
 						{/* 关闭按钮 */}
-						{
-							!modalBtnFlag ? <div className={styles.closeBtn} onClick={closeActivityModal} /> : null
-						}
-						
+						{!modalBtnFlag ? (
+							<div
+								className={styles.closeBtn}
+								onClick={() => {
+									closeActivityModal(modalType);
+								}}
+							/>
+						) : null}
 					</div>
 				</div>
 			</Modal>
