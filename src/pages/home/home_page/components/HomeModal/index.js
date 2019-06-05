@@ -38,6 +38,7 @@ export default class BlackCard extends React.PureComponent {
 			visibleLoading,
 			overDueInf,
 			modalType,
+			modalBtnFlag,
 			history,
 			percent,
 			readAgreementCb,
@@ -76,6 +77,7 @@ export default class BlackCard extends React.PureComponent {
 					closeActivityModal={closeActivityModal}
 					history={history}
 					modalType={modalType}
+					modalBtnFlag={modalBtnFlag}
 				/>
 			);
 		} else if (visibleLoading) {

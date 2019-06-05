@@ -72,6 +72,7 @@ export default class home_page extends PureComponent {
 			percent: 0,
 			showToast: false,
 			modalType: 'huodongTootip3',
+			modalBtnFlag: false,
 			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
 			showDiv: '',
@@ -902,6 +903,12 @@ export default class home_page extends PureComponent {
 			case 'brand': // 品牌活动弹框按钮
 				buriedPointEvent(activity.brandHomeModalClick);
 				break;
+			case 'koubei_new_user':
+				// buriedPointEvent(activity.brandHomeModalClick);
+				break;
+			case 'koubei_old_user':
+				// buriedPointEvent(activity.brandHomeModalClick);
+				break
 			default:
 				break;
 		}
@@ -1326,6 +1333,7 @@ export default class home_page extends PureComponent {
 			overDueInf,
 			overDueModalFlag,
 			modalType,
+			modalBtnFlag,
 			blackData
 		} = this.state;
 		let componentsDisplay = null;
@@ -1354,6 +1362,7 @@ export default class home_page extends PureComponent {
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
+					modalBtnFlag={modalBtnFlag}
 					percent={percent}
 					history={this.props.history}
 					toast={this.props.toast}
