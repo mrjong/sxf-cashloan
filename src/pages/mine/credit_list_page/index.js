@@ -4,9 +4,9 @@ import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import { Icon } from 'antd-mobile';
-import select from './img/select.png'
-import not_select from './img/not_select.png'
-import { setBackGround } from 'utils/background'
+import select from './img/select.png';
+import not_select from './img/not_select.png';
+import { setBackGround } from 'utils/background';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
 	CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -26,15 +26,7 @@ export default class credit_list_page extends PureComponent {
 		backUrlData = store.getBackUrl();
 	}
 	componentWillMount() {
-		// store.setHistoryRouter(window.location.pathname);
 		this.queryBankList();
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (queryData.autId) {
-			// this.setState({
-			//   autId: queryData.autId,
-			// });
-			// this.sendSelectedCard(queryData.autId, false);
-		}
 	}
 	componentWillUnmount() {
 		store.removeBackUrl();
@@ -68,15 +60,8 @@ export default class credit_list_page extends PureComponent {
 	selectCard = (obj) => {
 		// if (backUrlData) {
 		this.setState({
-			// bankName: obj.bankName,
-			// lastCardNo: obj.lastCardNo,
-			// bankCode: obj.bankCode,
 			autId: obj.autId
 		});
-		// this.sendSelectedCard(obj.autId, true);
-		// this.props.$fetch.get(`/index/cacheCredCard/${obj.autId}`).then(() => {
-		//   this.props.history.replace(backUrlData);
-		// })
 		// 如果选择的是同一张卡则不清除session里的RepaymentModalData
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		if (queryData.autId && queryData.autId !== obj.autId) {
@@ -86,7 +71,7 @@ export default class credit_list_page extends PureComponent {
 		// }
 	};
 	// 告诉后台选中的是哪张卡
-	sendSelectedCard = (autId, jumpFlag) => {
+	sendSelectedCard = (autId) => {
 		if (!autId) {
 			this.props.toast.info('请选择一张你需要还款的信用卡');
 			return;
@@ -94,13 +79,7 @@ export default class credit_list_page extends PureComponent {
 		this.props.$fetch.get(`${API.CACHECREDCARD}/${autId}`).then(
 			(res) => {
 				if (res.msgCode === 'PTM0000') {
-					if (jumpFlag) {
-						if (store.getToggleMoxieCard()) {
-							this.props.history.replace('/home/loan_repay_confirm_page');
-							return;
-						}
-						this.props.history.replace(backUrlData);
-					}
+					this.props.history.replace('/home/loan_repay_confirm_page');
 				} else {
 					res.msgInfo && this.props.toast.info(res.msgInfo);
 				}
@@ -112,14 +91,7 @@ export default class credit_list_page extends PureComponent {
 	};
 	// 新增授权卡
 	goToNewMoXie = () => {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (queryData.autId) {
-			// store.setMoxieBackUrl(`/mine/credit_list_page?autId=${queryData.autId}`);
-			store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		} else {
-			store.setMoxieBackUrl('/home/crawl_progress_page');
-		}
-
+		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 

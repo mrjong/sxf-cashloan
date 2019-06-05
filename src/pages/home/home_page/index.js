@@ -467,8 +467,7 @@ export default class home_page extends PureComponent {
 					this.props.toast.info('当前信用卡已过期，请重新导入');
 					setTimeout(() => {
 						// 跳新版魔蝎
-						store.setMoxieBackUrl('/home/crawl_progress_page');
-						this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+						this.goToNewMoXie();
 					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
 					if (
@@ -610,10 +609,10 @@ export default class home_page extends PureComponent {
 	// 跳新版魔蝎
 	goToNewMoXie = () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
+		store.setBackUrl('/home/loan_repay_confirm_page');
 		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
-
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
 		const { usrIndexInfo = {} } = this.state;
