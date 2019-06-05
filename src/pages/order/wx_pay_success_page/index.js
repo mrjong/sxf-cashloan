@@ -15,6 +15,7 @@ export default class wx_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+    store.setHistoryRouter(location.pathname);
 		this.getLoanInfo();
 	}
 	// 获取还款信息
@@ -37,22 +38,13 @@ export default class wx_middle_page extends Component {
 							break;
 						}
 					}
-					if (
-						res.data &&
-						res.data.perdList &&
-						res.data.perdList[res.data.perdList.length - 1].perdSts === '4'
-					) {
-						store.setWxPayEnd(true);
-					} else {
-						store.setWxPayEnd(false);
-					}
 				} else {
 					this.props.toast.info(res.msgInfo);
 				}
 			});
 	};
 	backHome = () => {
-		this.props.history.replace('/order/order_page');
+		this.props.history.push('/order/order_page');
 	};
 	render() {
 		const { orderData, thisRepTotAmt } = this.state;
@@ -70,7 +62,7 @@ export default class wx_middle_page extends Component {
 					<div className={styles.box}>
 						<div className={styles.item}>
 							<span className={styles.title}>还款金额</span>
-							<span className={styles.money}>{(thisRepTotAmt && thisRepTotAmt.toFixed(2)) || '--'}</span>
+							<span className={styles.money}>{thisRepTotAmt || '--'}</span>
 						</div>
 						<div className={styles.item}>
 							<span className={styles.title}>支付方式</span>
