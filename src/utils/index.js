@@ -438,8 +438,9 @@ export const getOperatorStatus = ({ $props }) => {
 									.then((result) => {
 										if (result.msgCode === 'PTM0000' && result.data.url) {
 											$props.SXFToast.hide();
-											store.setMoxieBackUrl('/home/loan_repay_confirm_page');
-											store.getToggleMoxieCard(true);
+                      store.setMoxieBackUrl('/home/loan_repay_confirm_page');
+                      // TODO
+											// store.getToggleMoxieCard(true);
 											// setTimeout(() => {
 											// 运营商直接返回的问题
 											SXFToast.loading('加载中...', 0);
