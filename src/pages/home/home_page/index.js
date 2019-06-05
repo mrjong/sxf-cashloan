@@ -737,7 +737,7 @@ export default class home_page extends PureComponent {
 	requestGetUsrInfo = async () => {
 		let koubeiRes
 		try {
-			koubeiRes = await this.props.$fetch.post(API.checkKoubei)
+			koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
 		} catch (error) {
 			console.log(error)
 		}
