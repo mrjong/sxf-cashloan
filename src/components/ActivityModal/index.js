@@ -57,7 +57,7 @@ class ActivityModal extends React.Component {
 							) : null}
 							{modalType === 'koubei_new_user' ? (
 								<img
-									className={styles.huodongTootipBtn4}
+									className={styles.koubeiBtn}
 									src={huodongTootipBtn4}
 									onClick={() => {
 										activityModalBtn('koubei_new_user');
@@ -66,7 +66,7 @@ class ActivityModal extends React.Component {
 							) : null}
 							{modalType === 'koubei_old_user' ? (
 								<img
-									className={styles.huodongTootipBtn4}
+									className={styles.koubeiBtn}
 									src={huodongTootipBtn4}
 									onClick={() => {
 										activityModalBtn('koubei_old_user');
