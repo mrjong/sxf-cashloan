@@ -950,7 +950,7 @@ export default class order_detail_page extends PureComponent {
 				name: '还款银行卡',
 				value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
 			}
-    ];
+		];
 		const isOverdue =
 			perdList &&
 			perdList.filter((item, index) => {
@@ -960,9 +960,8 @@ export default class order_detail_page extends PureComponent {
 		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
-      {/* isOverdue &&
-        isOverdue.length > 0 && */}
-				{
+				{isOverdue &&
+				isOverdue.length > 0 &&
 				(isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
 					<div className={styles.overdueEntryTip}>
 						关注“还到”公众号，使用<span>微信支付</span>还款
