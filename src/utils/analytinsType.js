@@ -152,6 +152,10 @@ const activity = {
 	mayOldMyPrizeBtn: `${prefix}_ACTIVITY_OLD_MYPRIZE`, // 五月狂欢活动 老用户专享 我的奖品 按钮
 	mayOldMyPrizeUseBtn: `${prefix}_ACTIVITY_OLD_MYPRIZE_IMMEDIATEUSE`, // 五月狂欢活动 老用户专享-我的奖品 立即使用 按钮
 	mayJoinSuccess: `${prefix}_ACTIVITY_JOIN_SUCCESS`, // 五月狂欢活动 成功参与埋点（调用后台接口）
+	koubeiEntry: `${prefix}_ACTIVITY_KOUBEI_ENTRY`, // 口碑活动入口来源
+	koubeiBtnClick: `${prefix}_ACTIVITY_KOUBEI_TIYAN_BTN`, // 口碑活动还到体验按钮点击
+	koubeiHomeOldModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_OLDMODAL_CLICK`, // 口碑活动首页老用户弹框
+	koubeiHomeNewModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_NEWMODAL_CLICK`, // 口碑活动首页新用户弹框
 };
 
 const moxie_bank_list = {

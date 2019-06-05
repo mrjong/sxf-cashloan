@@ -6,6 +6,12 @@ export default [
 		component: () => import('pages/activity/pinpai_page')
 	},
 	{
+		path: '/activity/koubei_page',
+		title: '新手指南',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/koubei_page')
+  },
+  {
 		path: '/activity/wuyuekh_page',
 		title: '畅享双重豪礼',
 		component: () => import('pages/activity/wuyuekh_page')
