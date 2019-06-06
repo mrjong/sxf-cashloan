@@ -583,7 +583,10 @@ export default class home_page extends PureComponent {
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
 			this.requestCredCardCount('cbFn', () => {
-				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
+					// 跳银行登录页面
+					this.getMoxieData(bankNo);
+				});
 			});
 			return;
 		} else if (cardBillSts === '02') {
