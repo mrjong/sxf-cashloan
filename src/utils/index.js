@@ -552,7 +552,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								result.data.url +
 								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
 									.location
-									.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&quitOnFail=YES&agreementUrl=${encodeURIComponent(
+									.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
 									`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
 								)}`;
 							// }, 3000);
