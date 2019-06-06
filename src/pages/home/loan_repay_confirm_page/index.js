@@ -577,7 +577,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 		const { usrIndexInfo } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
-			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
+				// 跳银行登录页面
+				this.getMoxieData(bankNo);
+			});
 			return true;
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
