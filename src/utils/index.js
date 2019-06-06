@@ -47,11 +47,11 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/mpos/mpos_ioscontrol_page'
 		];
 		if (isWXOpen()) {
-			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
+			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
 			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
-			let pageListMpos = [ '/mpos/' ];
+			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		} else {
 			let pageListCommon = [];
@@ -101,8 +101,8 @@ export const setTitle = (getTitle) => {
 		i.src = 'https://lns-wap-test.vbillbank.com/favicon.ico';
 	}
 	i.style.display = 'none';
-	i.onload = function() {
-		setTimeout(function() {
+	i.onload = function () {
+		setTimeout(function () {
 			i.remove();
 		}, 9);
 	};
@@ -138,7 +138,7 @@ export const isSomeBrowser = (type) => {
 //关闭view
 export const closeCurrentWebView = () => {
 	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
+		bridge.callHandler('closeCurrentWebView', '', function (response) {
 			console.log(response);
 		});
 	});
@@ -396,7 +396,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 			}
 		});
 };
-const needDisplayOptions2 = [ 'operator' ];
+const needDisplayOptions2 = ['operator'];
 export const getOperatorStatus = ({ $props }) => {
 	return new Promise(async (resolve, reject) => {
 		let res = await $props.$fetch.post(API.GETSTSW);
@@ -433,9 +433,9 @@ export const getOperatorStatus = ({ $props }) => {
 												result.data.url +
 												`&localUrl=${window.location.origin}&routeType=${window.location
 													.pathname}${window.location
-													.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-													`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-												)}`;
+														.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+															`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+														)}`;
 										}
 									});
 							}, 2000);
@@ -459,7 +459,7 @@ export const getOperatorStatus = ({ $props }) => {
 		}
 	});
 };
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
@@ -467,7 +467,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let resBackMsg = '';
 	let btnText = '';
 	let orderText = 0;
-	let btnArry = [ '继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单' ];
+	let btnArry = ['继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单'];
 	if (res && res.msgCode === 'PTM0000') {
 		res.data.forEach((item, index) => {
 			if (needDisplayOptions.includes(item.code)) {
@@ -533,8 +533,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
 									.location
 									.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-									`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-								)}`;
+										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+									)}`;
 							// }, 3000);
 							if (callBack) {
 								callBack(resBackMsg);
@@ -595,6 +595,9 @@ export const logoutApp = (that) => {
 			// Cookie.remove('fin-v-card-token');
 			Cookie.remove('authFlag');
 			Cookie.remove('VIPFlag');
+			//退出时,删除通付盾script
+			document.getElementById('tonfudunScript') && document.body.removeChild(document.getElementById('tonfudunScript'));
+			document.getElementById('payegisIfm') && document.body.removeChild(document.getElementById('payegisIfm'));
 		},
 		(err) => {
 			err.msgInfo && Toast.info(err.msgInfo);
@@ -667,7 +670,7 @@ export const validators = {
 function clearAllCookie() {
 	var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
 	if (keys) {
-		for (var i = keys.length; i--; ) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
+		for (var i = keys.length; i--;) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
 	}
 }
 export const vconsole = (i, consoleshow) => {
@@ -750,11 +753,11 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 //函数防抖
 export const debounce = (method, delay) => {
 	let timer = null;
-	return function() {
+	return function () {
 		var context = this,
 			args = arguments;
 		clearTimeout(timer);
-		timer = setTimeout(function() {
+		timer = setTimeout(function () {
 			method.apply(context, args);
 		}, delay);
 	};

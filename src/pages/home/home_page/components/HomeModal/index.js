@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal, Progress } from 'antd-mobile';
 import overDueImg from 'assets/images/home/overDue_icon.png';
 import OverDueModal from '../OverDueModal';
-import ActivityModal from 'components/Modal';
+import ActivityModal from 'components/ActivityModal';
 import AgreementModal from 'components/AgreementModal';
 import SXFButton from 'components/ButtonCustom';
 

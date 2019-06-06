@@ -19,5 +19,11 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/others/clear_store_page')
-	}
+	},
+	{
+		path: '/others/fenqi_landing',
+		title: '还到Plus',
+		arrowHide: '',
+		component: () => import('pages/others/fenqi_landing_page')
+	},
 ];

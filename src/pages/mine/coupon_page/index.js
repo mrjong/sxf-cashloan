@@ -146,6 +146,9 @@ export default class coupon_page extends PureComponent {
         // loading: true,
       };
     }
+    if (receiveData.transactionType) {
+      Object.assign(sendParams, { prodType: receiveData.transactionType === 'fenqi' ? '11' : '01' })
+    }
     let data = await this.props.$fetch.get(API.couponList, sendParams)
       .then(res => {
         if (pIndex === 1) {
@@ -169,9 +172,9 @@ export default class coupon_page extends PureComponent {
               );
             }
           }
-          // 倒叙插入(这段代码有问题)
+          // 倒叙插入
           if (pIndex === 1) {
-            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData().usrCoupNo !== 'null') {
+            if (receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 && store.getCouponData() && store.getCouponData().usrCoupNo !== 'null') {
               dataArr.push(store.getCouponData())
             }
           }

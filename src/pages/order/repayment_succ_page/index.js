@@ -4,8 +4,8 @@ import { Modal } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
-// import 'utils/noRouterBack'
 import styles from './index.scss';
+import qs from 'qs'
 
 export default class repayment_succ_page extends PureComponent {
 	constructor(props) {
@@ -50,6 +50,7 @@ export default class repayment_succ_page extends PureComponent {
 
 	render() {
 		const { isShowTipsModal } = this.state;
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true })
 		return (
 			<div className={styles.repayment_succ_page}>
 				<div className={styles.tips}>
@@ -72,7 +73,9 @@ export default class repayment_succ_page extends PureComponent {
 				>
 					返回首页
 				</ButtonCustom>
-				<Modal wrapClassName={styles.success_modal_warp} visible={isShowTipsModal} transparent>
+				{/* {
+					//非现金分期才弹窗
+					queryData.prodType !== '11' && <Modal wrapClassName={styles.success_modal_warp} visible={isShowTipsModal} transparent>
 					<div className={styles.modal_tip_content}>
 						<div
 							onClick={() => {
@@ -83,6 +86,8 @@ export default class repayment_succ_page extends PureComponent {
 					</div>
 					<i className={styles.close_btn} onClick={this.closeModal} />
 				</Modal>
+				} */}
+				
 			</div>
 		);
 	}

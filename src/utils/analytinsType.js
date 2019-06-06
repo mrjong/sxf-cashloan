@@ -17,9 +17,9 @@ const login = {
 const home = {
 	applyCreditRepayment: `${prefix}_HOME_APPLY_CREDIT_REPAYMENT`, // 首页-点击申请信用卡代还按钮
 	homeContinueApply: `${prefix}_HOME_CONTINUE_APPLY`, // 还卡-继续申请  增加属性，继续页面：基本信息认证，银行列表，运营商认证
-	HomeKeyBills: `${prefix}_HOME_KEY_BILLS`, // 一键还账单(历史提交过的用户)
+	// HomeKeyBills: `${prefix}_HOME_KEY_BILLS`, // 一键还账单(历史提交过的用户)
 	HomeCardRenew: `${prefix}_HOME_CARD_RENEW`, // 借钱换信用卡  重新更新
-	updateBill: `${prefix}_HOME_UPDATE_BILL`, // 首页-点击更新账单
+	// updateBill: `${prefix}_HOME_UPDATE_BILL`, // 首页-点击更新账单
 	easyRepay: `${prefix}_HOME_EASY_REPAYMENT`, // 首页-点击一键还卡（代还）
 	repayOtherCredit: `${prefix}_HOME_REPAY_OTHER_CREDIT`, // 首页-点击代还其他信用卡
 	viewBill: `${prefix}_HOME_VIEW_BILL`, // 首页-点击查看代还账单
@@ -31,7 +31,7 @@ const home = {
 	moneyCreditCardConfirm: `${prefix}_MONEY_CREDIT_CARD_CONFIRM`, // 借钱还信用卡-提交申请成功
 	moneyCreditCardConfirmBtn: `${prefix}_MONEY_CREDIT_CARD_CONFIRM_BTN`, // 借钱还信用卡-提交申请按钮
 	mineCreditSubmitSuccessTie: `${prefix}_MINE_CREDIT_SUBMIT_SUCCESS_TIE`, // -信用认证-提交成功-立即绑卡
-	compensationCreditCardConfirm: `${prefix}_COMPENSATION_CREDIT_CARD_CONFIRM`, // 代偿信用卡-确认
+	// compensationCreditCardConfirm: `${prefix}_COMPENSATION_CREDIT_CARD_CONFIRM`, // 代偿信用卡-确认
 	userRetrieveContinue: `${prefix}_USER_RETRIEVE_CONTINUE`, // 用户挽回-再等等
 	userRetrieveQuit: `${prefix}_USER_RETRIEVE_QUIT`, // 用户挽回-放弃
 	repaymentIntentionAll: `${prefix}_REPAYMENT_INTENTION_ALL`, // 还款意愿-全额还款
@@ -39,16 +39,14 @@ const home = {
 	repaymentIntentionPart: `${prefix}_REPAYMENT_INTENTION_PART`, // 还款意愿-部分还款
 	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
 	lendersOrder: `${prefix}_HOME_LENDERS_ORDER`, // 放款日期-预约放款
-
 	borrowingPreSubmit: `${prefix}_HOME_BORROWING_PRE_SUBMIT`, // 代还信息确认页-点击确认按钮
 	borrowingPreSubmitResult: `${prefix}_HOME_BORROWING_PRE_SUBMIT_RESULT`, // 代还信息确认页-点击确认按钮-结果事件
-
 	borrowingSubmit: `${prefix}_HOME_BORROWING_SUBMIT`, // 代还确认页-点击确认借款按钮
 	informationMyselfFrontCard: `${prefix}_HOME_BASE_INFO_FRONT_CARD`, // 实名认证页-点击拍摄身份证正面
 	informationMyselfBackCard: `${prefix}_HOME_BASE_INFO_BACK_CARD`, // 实名认证页-点击拍摄身份证反面
 	informationTapNameInp: `${prefix}_HOME_BASE_INFO_USERNAME`, // 实名认证页-点击姓名输入框
 	informationTapIDInp: `${prefix}_HOME_BASE_INFO_IDCARD`, // 实名认证页-点击身份证号输入框
-	informationTapHoldIdCard: `${prefix}_HOME_BASE_INFO_HOLD_IDCARD`, // 实名认证页-点击手持身份证
+	// informationTapHoldIdCard: `${prefix}_HOME_BASE_INFO_HOLD_IDCARD`, // 实名认证页-点击手持身份证
 	informationConfirm: `${prefix}_HOME_BASE_INFO_CONFIRM`, // 实名认证页-确定按钮
 	basicInfoBury: `${prefix}_HOME_BASE_INFO_BURY`, // 基本信息输入框下拉框埋点
 	basicInfoComplete: `${prefix}_HOME_BASICINFO_COMPLETE`, // 基本信息页-确定按钮
@@ -101,7 +99,7 @@ const bugLog = {
 
 const mpos_service_authorization = {
 	auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
-	auth_page: `${prefix}_MPOS_AUTH_PAGE`
+	auth_page: `${prefix}_MPOS_AUTH_PAGE`,
 };
 
 const activity = {
@@ -130,6 +128,8 @@ const activity = {
 	brandEntry: `${prefix}_ACTIVITY_BRAND_ENTRY`, // 品牌活动入口
 	brandBtnClick: `${prefix}_ACTIVITY_BRAND_TIYAN_BTN`, // 品牌活动还到体验按钮点击
 	brandHomeModalClick: `${prefix}_ACTIVITY_BRAND_HOME_MODAL_CLICK`, // 品牌活动首页弹框开启生涯模式按钮点击
+	fenqiHomeModalGoBtn: `${prefix}_FENQI_HOME_MODAL_GO_BTN`,	//现金分期活动弹窗按钮点击
+	fenqiHomeModalClose: `${prefix}_FENQI_HOME_MODAL_CLOSE`, //现金分期活动弹窗关闭
 	mayReceiveBtn: `${prefix}_ACTIVITY_TWO_RECEIVE`, // 五月狂欢活动 畅想双重豪礼 领取 按钮
 	mayExtractBtn: `${prefix}_ACTIVITY_TWO_EXTRACT`, // 五月狂欢活动 畅想双重豪礼 抽奖 按钮
 	mayNewRecBtn: `${prefix}_ACTIVITY_NEW_ONEKEYCOLLECTION`, // 五月狂欢活动 新用户专享 一键领取 按钮
@@ -164,11 +164,29 @@ const mpos_ioscontrol_page = {
 };
 
 const loan_repay_confirm = {
-	back30: `${prefix}_PRODUCT_BACK_30`,
-	sure30: `${prefix}_PRODUCT_SURE_30`,
-	cancle30: `${prefix}_PRODUCT_CANCLE_30`,
-	select30: `${prefix}_PRODUCT_SELECT_30`
+	// back30: `${prefix}_PRODUCT_BACK_30`,
+	// sure30: `${prefix}_PRODUCT_SURE_30`,
+	// cancle30: `${prefix}_PRODUCT_CANCLE_30`,
+	// select30: `${prefix}_PRODUCT_SELECT_30`
 };
+
+const loan_fenqi = {
+	day30: `${prefix}_FENQI_DATE_DAY_30`,
+	month3: `${prefix}_FENQI_DATE_MONTH_3`,
+	month6: `${prefix}_FENQI_DATE_MONTH_6`,
+	month9: `${prefix}_FENQI_DATE_MONTH_9`,
+	month12: `${prefix}_FENQI_DATE_MONTH_12`,
+	moneyBlur: `${prefix}_FENQI_MONEY_BLUR`,
+	repayPlan: `${prefix}_FENQI_REPAY_PLAN`,
+	resaveCard: `${prefix}_FENQI_RESAVECARD`,
+	payCard: `${prefix}_FENQI_PAYCARD`,
+	contract: `${prefix}_FENQI_CONTRACT`,
+	clickSubmit: `${prefix}_FENQI_CLICK_SUBMIT`,
+	submitResult: `${prefix}_FENQI_SUBMIT_RESULT`,
+	fenqiGoBack: `${prefix}_FENQI_GO_BACK`,
+	fenqiDownload: `${prefix}_FENQI_DOWNLOAD_CLICK`,
+	fenqiHomeApplyBtn: `${prefix}_FENQI_HOME_APPLY_BTN`,
+}
 
 export {
 	login,
@@ -181,5 +199,6 @@ export {
 	activity,
 	moxie_bank_list,
 	mpos_ioscontrol_page,
-	loan_repay_confirm
+	loan_repay_confirm,
+	loan_fenqi
 };

@@ -6,7 +6,7 @@ import logo from './img/logo.png';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { loan_fenqi } from 'utils/analytinsType';
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
@@ -20,6 +20,7 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer'
 		this.getDownloadUrl();
 	}
 
@@ -47,7 +48,7 @@ export default class login_page extends PureComponent {
 	downloadClick = () => {
 		const { downloadUrl } = this.state;
 		const phoneType = getDeviceType();
-		buriedPointEvent(home.downloadBtnClick);
+		buriedPointEvent(loan_fenqi.fenqiDownload);
 		if (phoneType === 'IOS') {
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
 			// this.props.toast.info('暂不支持ios下载')
