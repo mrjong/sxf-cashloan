@@ -658,7 +658,7 @@ export default class confirm_agency_page extends PureComponent {
 		}, 300);
 		// 代还确认-确认借款
 		buriedPointEvent(home.borrowingSubmit, {
-			lenders_date: lendersDate.value
+			lenders_date: this.state.repayInfo2.perdCnt
 		});
 		this.props.$fetch
 			.post(API.CONFIRM_REPAYMENT, params, {

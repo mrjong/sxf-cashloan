@@ -473,6 +473,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
+				buriedPointEvent(home.signedLoan);
 				this.repayCheck();
 				break;
 			case 'LN0007': // 放款中
