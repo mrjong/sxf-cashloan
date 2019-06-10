@@ -63,7 +63,7 @@ export default class credit_list_page extends PureComponent {
 	selectCard = (obj) => {
 		// if (backUrlData) {
 		this.setState({
-			bankName: obj.bankName,
+			// bankName: obj.bankName,
 			// lastCardNo: obj.lastCardNo,
 			// bankCode: obj.bankCode,
 			autId: obj.autId
@@ -86,16 +86,8 @@ export default class credit_list_page extends PureComponent {
 			(res) => {
 				if (res.msgCode === 'PTM0000') {
 					this.props.history.replace('/home/loan_repay_confirm_page');
-					buriedPointEvent(home.selectCreditCardResult, {
-						is_success: true,
-						bank_name: this.state.bankName
-					})
 				} else {
 					res.msgInfo && this.props.toast.info(res.msgInfo);
-					buriedPointEvent(home.selectCreditCardResult, {
-						is_success: false,
-						bank_name: this.state.bankName
-					})
 				}
 			},
 			(error) => {
