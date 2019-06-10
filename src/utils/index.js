@@ -748,6 +748,19 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 		});
 		state = false;
 	}
+	if(state) {
+		//卡可以提交埋点
+		buriedPointEvent(home.selectCreditCardResult, {
+			is_success: true,
+			bank_name: indexData.bankName
+		})
+	} else {
+		//卡不可以提交埋点
+		buriedPointEvent(home.selectCreditCardResult, {
+			is_success: false,
+			bank_name: indexData.bankName
+		})
+	}
 	return state;
 };
 
