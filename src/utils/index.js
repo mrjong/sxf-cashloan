@@ -38,18 +38,6 @@ export const isWXOpen = () => {
 
 // 判断是否是手机打开
 export const isPhone = () => {
-	// var system = {};
-  // var p = navigator.platform;
-  // console.log(p)
-	// system.win = p.indexOf('Win') == 0;
-	// system.mac = p.indexOf('Mac') == 0;
-	// system.xll = p == 'X11' || p.indexOf('Linux') == 0;
-	// if (system.win || system.mac || system.xll) {
-	// 	return false;
-	// } else {
-	// 	return true;
-  // }
-
   var userAgentInfo = navigator.userAgent;
     var Agents = ["Android", "iPhone",
                 "SymbianOS", "Windows Phone",
