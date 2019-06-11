@@ -7,7 +7,7 @@ const API = {
 	qryDtl: '/bill/qryDtl'
 };
 @fetch.inject()
-export default class wx_middle_page extends Component {
+export default class wx_pay_success_page extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,7 +15,7 @@ export default class wx_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		store.setHistoryRouter(location.pathname);
+		store.setHistoryRouter(window.location.pathname);
 		this.getLoanInfo();
 	}
 	// 获取还款信息
@@ -40,7 +40,7 @@ export default class wx_middle_page extends Component {
 						}
 					} else {
 						this.setState({
-							orderData: res.data.perdList[res.data.perdList.length - 1],
+							orderData: res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1] || {},
 							thisRepTotAmt: (test && test.thisRepTotAmt) || ''
 						});
 					}
@@ -54,7 +54,6 @@ export default class wx_middle_page extends Component {
 	};
 	render() {
 		const { orderData, thisRepTotAmt } = this.state;
-		console.log(orderData);
 		return (
 			<div className={styles.repayment_succ_page}>
 				<div className={styles.tips}>
