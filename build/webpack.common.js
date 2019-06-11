@@ -118,7 +118,7 @@ module.exports = function(options) {
 					pathRewrite: { '^/wap': '' }, //重写接口
 					changeOrigin: true //是否跨域
         },
-        '/sa': {
+        '/shence': {
 					target: '/sa', //目标接口域名
 					target: 'http://10.1.1.81:8106/sa',
 					changeOrigin: true //是否跨域
