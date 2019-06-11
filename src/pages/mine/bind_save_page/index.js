@@ -33,7 +33,7 @@ export default class bind_save_page extends PureComponent {
 			userName: '', // 持卡人姓名
 			enable: true, // 计时器是否可用
 			cardData: {}, // 绑定的卡的数据
-			isProtocolBindCard: false //是否走协议绑卡逻辑
+			isProtocolBindCard: false, //是否走协议绑卡逻辑
 		};
 	}
 
@@ -42,10 +42,14 @@ export default class bind_save_page extends PureComponent {
 	}
 
 	componentDidMount() {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.form.setFieldsValue({
 			valueInputCarNumber: store.getBindCardNo(),
 			valueInputCarPhone: store.getBindCardPhone()
 		});
+		this.setState({
+			bankType: queryData.bankType || ''
+		})
 	}
 
 	componentWillUnmount() {
@@ -72,6 +76,8 @@ export default class bind_save_page extends PureComponent {
 
 	// 校验储蓄卡卡号
 	validateCarNumber = (rule, value, callback) => {
+		console.log(value.valueInputCarNumber)
+		// value.valueInputCarNumber = value.valueInputCarNumber.replace(/\s*/g,'')
 		if (!validators.bankCardNumber(value)) {
 			callback('请输入有效银行卡号');
 		} else {
@@ -212,20 +218,21 @@ export default class bind_save_page extends PureComponent {
 	};
 	// 绑卡之前进行校验
 	checkCard = (values) => {
-		this.props.$fetch.post(API.GECARDINF, { cardNo: values.valueInputCarNumber }).then(
+		const formatCardNo = values.valueInputCarNumber.replace(/\s*/g,'') // 去掉卡号的所有空格
+		this.props.$fetch.post(API.GECARDINF, { cardNo: formatCardNo }).then(
 			(result) => {
 				if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
 					this.setState({
 						cardData: {
-							cardNo: values.valueInputCarNumber,
-							lastCardNo: values.valueInputCarNumber.slice(-4),
+							cardNo: formatCardNo,
+							lastCardNo: formatCardNo.slice(-4),
 							...result.data
 						}
 					});
 					const params = {
 						bankCd: result.data.bankCd, //银行代号
 						cardTyp: 'D', //卡类型(借记卡)
-						cardNo: values.valueInputCarNumber, //持卡人卡号
+						cardNo: formatCardNo, //持卡人卡号
 						mblNo: values.valueInputCarPhone, //预留手机号
 						smsCd: values.valueInputCarSms //短信验证码
 					};
@@ -294,6 +301,7 @@ export default class bind_save_page extends PureComponent {
 
 	// 确认绑卡
 	confirmBindCard = () => {
+		if(!this.validateFn()) return
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.checkCard(values);
@@ -310,6 +318,17 @@ export default class bind_save_page extends PureComponent {
 			}
 		});
 	};
+
+	//	校验必填项
+	validateFn = () => {
+		const { userName, bankType } = this.state
+		const formData = this.props.form.getFieldsValue();
+		if(userName && bankType && formData.valueInputCarNumber && formData.valueInputCarPhone && formData.valueInputCarSms) {
+			return true
+		}
+		return false
+	}
+
 	// 判断json里的每一项是否为空
 	jsonIsNull = (values) => {
 		for (let val in values) {
@@ -322,6 +341,7 @@ export default class bind_save_page extends PureComponent {
 	// 点击开始倒计时
 	countDownHandler = (fn) => {
 		const formData = this.props.form.getFieldsValue();
+		formData.valueInputCarNumber = formData.valueInputCarNumber.replace(/\s*/g,'')
 		if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
 			this.props.toast.info('请输入有效银行卡号');
 			return;
@@ -349,6 +369,7 @@ export default class bind_save_page extends PureComponent {
 	// 跳转委托扣款协议
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
+		formData.valueInputCarNumber = formData.valueInputCarNumber.replace(/\s*/g,'')
 		const params = {
 			cardNo: formData.valueInputCarNumber,
 			isEntry: '01'
@@ -371,16 +392,18 @@ export default class bind_save_page extends PureComponent {
 				<div className={styles.header}>请先绑定还款储蓄卡,再签约借款</div>
 				<div className="bind_save_page_listBox">
 					<Item extra={this.state.userName}>持卡人</Item>
+					<Item extra={this.state.bankType ? this.state.bankType : '请选择发卡银行'} arrow='horizontal' onClick={()=>{this.props.history.push('/mine/support_save_page?isClick=0')}}>发卡行</Item>
 					<InputItem
 						maxLength="24"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ],
 							onChange: (value) => {
+								// console.log(value)
 								store.setBindCardNo(value);
 							}
 						})}
-						type="number"
+						type="bankCard"
 						placeholder="请输入储蓄卡卡号"
 						onBlur={() => {
 							handleInputBlur();
@@ -433,7 +456,7 @@ export default class bind_save_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<ButtonCustom onClick={this.confirmBindCard} className={styles.confirm_btn}>
+				<ButtonCustom onClick={this.confirmBindCard} className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}>
 					确认
 				</ButtonCustom>
 				<div className={styles.xieyi}>

@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
+import qs from 'qs';
 
 const API = {
   SUPPORTBANKLIST: '/withhold/binkLists', // 银行卡列表
 }
+let queryData = ''
 
 @fetch.inject()
 export default class support_save_page extends PureComponent {
@@ -16,6 +18,7 @@ export default class support_save_page extends PureComponent {
   }
   componentWillMount() {
     this.queryBankList();
+		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
   }
 
   // 获取银行卡列表
@@ -40,6 +43,14 @@ export default class support_save_page extends PureComponent {
       )
   };
 
+  handleItemSelect = (name) => {
+    if(queryData.isClick !== '0') return
+    let searchUrl = window.location.search + `&bankType=${name}`
+    this.props.history.push(`/mine/bind_save_page${searchUrl}`)
+    // console.log(`/mine/bind_save_page${searchUrl}`)
+
+  }
+
   render() {
     return (
       <div className={styles.support_save_page}>
@@ -49,7 +60,7 @@ export default class support_save_page extends PureComponent {
               {
                 this.state.cardList.map((item, index) => {
                   return (
-                    <li key={index}>
+                    <li key={index} onClick={()=>{this.handleItemSelect(item.corpOrgSnm)}}>
                       <span className={`bank_ico bank_ico_${item.corpOrgId}`}></span>
                       <span className={styles.bank_name}>{item.corpOrgSnm}</span>
                     </li>
