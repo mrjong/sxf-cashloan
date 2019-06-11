@@ -97,13 +97,13 @@ export default class order_detail_page extends PureComponent {
 						params.payType = 'BankPay';
 					} else if (res.data.openIdFlag === '1') {
 						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
-							params.payType = store.getPayType() || 'WXPay';
+							params.payType = store.getPayType() || 'BankPay';
 							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
 						}
 					}
 				} else {
 					if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
-						params.payType = store.getPayType() || 'WXPay';
+						params.payType = store.getPayType() || 'BankPay';
 						params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
 					} else {
 						params.payType = 'BankPay';
