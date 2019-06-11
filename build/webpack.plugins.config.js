@@ -194,7 +194,7 @@ let getRcPlugins = function () {
           PROJECT_ENV: JSON.stringify('rc'),
           RELEASE_VERSION: JSON.stringify('rc'),
         },
-        saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+        saUrl: JSON.stringify('/shence/sa')
       })
     );
   plugins.push(
@@ -270,7 +270,7 @@ let getTestPlugins = function () {
           PROJECT_ENV: JSON.stringify('test'),
           RELEASE_VERSION: JSON.stringify(sentryTestVersion),
         },
-        saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+        saUrl: JSON.stringify('/shence/sa')
       })
     );
   // plugins.push(
@@ -304,7 +304,7 @@ let getDevPlugins = function() {
         PROJECT_ENV: JSON.stringify('dev'),
         RELEASE_VERSION: JSON.stringify('dev'),
       },
-      saUrl: JSON.stringify('/sa')
+      saUrl: JSON.stringify('/shence/sa')
       // saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
     })
   );
