@@ -58,8 +58,8 @@ export default class order_detail_page extends PureComponent {
 			perTotAmt: '', // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
 			payType: '',
 			payTypes: [ 'BankPay' ],
-      openIdFlag: '',
-      thisPerdNum:''
+			openIdFlag: '',
+			thisPerdNum: ''
 		};
 	}
 	componentWillMount() {
@@ -241,7 +241,7 @@ export default class order_detail_page extends PureComponent {
 					// }
 					this.setState(
 						{
-              thisPerdNum:res.data.perdNum,
+							thisPerdNum: res.data.perdNum,
 							billDesc: res.data, //账单全部详情
 							perdList: res.data.perdList //账单期数列表
 						},
@@ -628,8 +628,8 @@ export default class order_detail_page extends PureComponent {
 			totalAmt,
 			perTotAmt,
 			payType,
-      money,
-      thisPerdNum
+			money,
+			thisPerdNum
 		} = this.state;
 		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		let sendParams = {};
@@ -655,9 +655,10 @@ export default class order_detail_page extends PureComponent {
 					wxPayReqVo: {
 						tradeType: isWXOpen() ? '03' : '02',
 						osNm: '还到',
-						callbackUrl: location.search
-							? `${location.origin}/order/wx_pay_success_page&backType=wxPay`
-							: `${location.origin}/order/wx_pay_success_page?backType=wxPay`,
+						callbackUrl:
+							location.href.indexOf('?') > -1
+								? `${location.origin}/order/wx_pay_success_page&backType=wxPay`
+								: `${location.origin}/order/wx_pay_success_page?backType=wxPay`,
 						wapUrl: '33',
 						wapNm: '44'
 					}
@@ -683,8 +684,8 @@ export default class order_detail_page extends PureComponent {
 					});
 
 					store.setOrderSuccess({
-            isPayAll,
-            thisPerdNum,
+						isPayAll,
+						thisPerdNum,
 						thisRepTotAmt: isPayAll
 							? isNewsContract
 								? totalAmt && parseFloat(totalAmt).toFixed(2)
@@ -694,7 +695,7 @@ export default class order_detail_page extends PureComponent {
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
 						billRegDt: billDesc.billRegDt
-          });
+					});
 					switch (payType) {
 						case 'WXPay':
 							let wxData = res.data && JSON.parse(res.data);
