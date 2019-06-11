@@ -7,6 +7,8 @@ import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi } from 'utils/analytinsType';
+import qs from 'qs'
+
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
@@ -59,12 +61,13 @@ export default class login_page extends PureComponent {
 		}
 	};
 	render() {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		return (
 			<div className={styles.deposit_tip_page}>
 				<div className={styles.bg}>
 					<img className={styles.logo} src={logo} />
 					<div className={styles.top_title}>还到Plus用户专享</div>
-					<div className={styles.sub_title}>12000元已到账</div>
+					<div className={styles.sub_title}>{queryData.cashMoney}元已到账</div>
 				</div>
 				<ButtonCustom className={styles.joinBtn} onClick={this.downloadClick}>
 					下载APP提现
