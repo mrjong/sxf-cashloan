@@ -737,9 +737,11 @@ export default class home_page extends PureComponent {
 	};
 	// 获取首页信息
 	requestGetUsrInfo = async () => {
-		let koubeiRes
+		// let koubeiRes
+		let isInvoking_jjp;
 		try {
-			koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
+			isInvoking_jjp = await this.isInvoking_jjp();
+			// koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
 		} catch (error) {
 			console.log(error)
 		}
@@ -796,30 +798,27 @@ export default class home_page extends PureComponent {
 					}
 				);
 				//口碑活动弹窗
-				if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
+				// if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
+				// 	this.setState(
+				// 		{
+				// 			isShowActivityModal: true,
+				// 			modalType: koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
+				// 			modalBtnFlag: true
+				// 		},
+				// 		() => {
+				// 			store.setShowActivityModal(true);
+				// 		}
+				// 	);
+				// } else 
+				// 拒就赔活动
+				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							modalType: koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
-							modalBtnFlag: true
+							modalType: 'jujiupei'
 						},
 						() => {
 							store.setShowActivityModal(true);
-						}
-					);
-				} else if (
-					isMPOS() &&
-					!store.getShowActivityModal() &&
-					Cookie.get('currentTime') !== new Date().getDate().toString()
-				) {
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType: 'brand'
-						},
-						() => {
-							store.setShowActivityModal(true);
-							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
 				}
@@ -947,6 +946,10 @@ export default class home_page extends PureComponent {
 			case 'koubei_old_user':
 				buriedPointEvent(activity.koubeiHomeOldModalClick);
 				break
+			case 'jjp': // 拒就赔弹框按钮
+				buriedPointEvent(activity.jjpHomeModalClick)
+				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
+			break;
 			default:
 				break;
 		}
@@ -1375,6 +1378,26 @@ export default class home_page extends PureComponent {
 				break;
 		}
 		return componentsAddCards;
+	};
+
+	// 判断是否参与拒就赔活动
+	isInvoking_jjp = () => {
+		return new Promise((resolve, reject) => {
+			this.props.$fetch
+				.get(API.checkJoin)
+				.then((res) => {
+					// 0:不弹出  1:弹出
+					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
+						// 如果是活动来的，
+						resolve('1');
+					} else {
+						resolve('0');
+					}
+				})
+				.catch((err) => {
+					reject();
+				});
+		});
 	};
 
 	render() {

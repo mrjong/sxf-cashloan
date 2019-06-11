@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'antd-mobile';
 import styles from './index.scss';
-import brand from '../../assets/images/home/huodongTootip4.png';
+import jujiupei from '../../assets/images/home/huodongTootip4.png';
 import huodongTootipBtn4 from '../../assets/images/home/huodongTootip_btn4.png';
 import xianjin from './img/xianjin.png';
 import xianjinBtn from './img/xianjinBtn.png';
@@ -32,9 +32,10 @@ class ActivityModal extends React.Component {
 						<div className={styles.content}>
 							{/* 大图 */}
 							{modalType === 'xianjin' ? <img src={xianjin} /> : null}
-							{modalType === 'brand' ? <img src={brand} /> : null}
+							{modalType === 'jujiupei' ? <img src={jujiupei} /> : null}
+							{/* {modalType === 'brand' ? <img src={brand} /> : null}
 							{modalType === 'koubei_new_user' ? <img src={koubei_new_bg} /> : null}
-							{modalType === 'koubei_old_user' ? <img src={koubei_old_bg} /> : null}
+							{modalType === 'koubei_old_user' ? <img src={koubei_old_bg} /> : null} */}
 							{/* 按钮 */}
 							{modalType === 'xianjin' ? (
 								<img
@@ -46,16 +47,16 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
-							{modalType === 'brand' ? (
+							{modalType === 'jujiupei' ? (
 								<img
 									className={styles.huodongTootipBtn4}
 									src={huodongTootipBtn4}
 									onClick={() => {
-										activityModalBtn(modalType);
+										activityModalBtn('jjp');
 									}}
 								/>
 							) : null}
-							{modalType === 'koubei_new_user' ? (
+							{/* {modalType === 'koubei_new_user' ? (
 								<img
 									className={styles.koubeiBtn}
 									src={huodongTootipBtn4}
@@ -72,7 +73,7 @@ class ActivityModal extends React.Component {
 										activityModalBtn('koubei_old_user');
 									}}
 								/>
-							) : null}
+							) : null} */}
 						</div>
 						{/* 关闭按钮 */}
 						{!modalBtnFlag ? (
