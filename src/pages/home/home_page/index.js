@@ -886,7 +886,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
 					//需要引导下载app
-					this.props.history.push('/home/deposit_tip');
+					this.props.history.push(`/home/deposit_tip?cashMoney=${usrCashIndexInfo.indexData.curAmt}`);
 				} else {
 					this.props.history.push('/home/loan_fenqi');
 				}
