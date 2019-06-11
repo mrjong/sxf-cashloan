@@ -931,7 +931,8 @@ export default class order_detail_page extends PureComponent {
 			overDueModalFlag,
 			payType,
 			payTypes,
-			openIdFlag
+      openIdFlag,
+      perTotAmt
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1072,7 +1073,7 @@ export default class order_detail_page extends PureComponent {
 								) : (
 									waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
 								) : (
-									money && parseFloat(money).toFixed(2)
+									perTotAmt && parseFloat(perTotAmt).toFixed(2) || money && parseFloat(money).toFixed(2)
 								)}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
@@ -1099,7 +1100,7 @@ export default class order_detail_page extends PureComponent {
 										) : (
 											waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
 										) : (
-											money && parseFloat(money).toFixed(2)
+											perTotAmt && parseFloat(perTotAmt).toFixed(2) || money && parseFloat(money).toFixed(2)
 										)}元
 									</span>
 								</div>
