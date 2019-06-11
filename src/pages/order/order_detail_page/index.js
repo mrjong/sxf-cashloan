@@ -775,6 +775,7 @@ export default class order_detail_page extends PureComponent {
 			store.removeCouponData();
 			// 刷新当前list
 			setTimeout(() => {
+        this.queryExtendedPayType();
 				this.getLoanInfo();
 			}, 3000);
 		}
