@@ -66,6 +66,8 @@ const home = {
 	gotIt: `${prefix}_QUICK_PAY_GOTIT`, //快速打款中-我知道了
 	manualAuditFollow: `${prefix}_AWAITING_AUDIT_FOLLOW`, //等待人工审核-关注
 	assessingBindCard: `${prefix}_RAPID_ASSESSMENT_BINDING_CARD`, //快速评估中-绑卡
+	protocolSmsFail: `${prefix}_HOME_PROTOCOL_SMS_FAIL`, // 签约借款页协议绑卡校验失败埋点
+	protocolBindFail: `${prefix}_HOME_PROTOCOL_BIND_FAIL`, // 签约借款页协议绑卡绑定失败埋点
 };
 
 const mine = {
@@ -79,7 +81,9 @@ const mine = {
 	creditExtensionBaseInfo: `${prefix}_MINE_CREDIT_EXTENSION_BASE_INFO`, // 风控授信项页 点击基本信息认证
 	creditExtensionOperator: `${prefix}_MINE_CREDIT_EXTENSION_OPERATOR`, // 风控授信项页 点击运营商认证
 	creditExtensionFaceAuth: `${prefix}_MINE_CREDIT_EXTENSION_FACEAUTH`, // 风控授信项页 点击人脸识别认证
-	creditExtensionZM: `${prefix}_MINE_CREDIT_EXTENSION_ZM` // 风控授信项页 点击芝麻分认证
+	creditExtensionZM: `${prefix}_MINE_CREDIT_EXTENSION_ZM`, // 风控授信项页 点击芝麻分认证
+	protocolSmsFail: `${prefix}_MINE_PROTOCOL_SMS_FAIL`, // 绑定储蓄卡页协议绑卡校验失败埋点
+	protocolBindFail: `${prefix}_MINE_PROTOCOL_BIND_FAIL`, // 绑定储蓄卡页协议绑卡绑定失败埋点
 };
 
 const order = {
