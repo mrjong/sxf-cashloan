@@ -304,7 +304,8 @@ let getDevPlugins = function() {
         PROJECT_ENV: JSON.stringify('dev'),
         RELEASE_VERSION: JSON.stringify('dev'),
       },
-      saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
+      saUrl: JSON.stringify('/sa')
+      // saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
     })
   );
   // plugins.push(new webpack.HotModuleReplacementPlugin());
