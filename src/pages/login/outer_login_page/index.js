@@ -12,16 +12,15 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
-import bannerImg1 from './img/login_bg1.png';
-import bannerImg2 from './img/login_bg2.png';
-import backTopBtn from './img/backtop_btn.png';
 import logoImg from 'assets/images/common/black_logo.png';
+import { setBackGround } from 'utils/background';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms'
 };
 
+@setBackGround('#fff')
 @fetch.inject()
 @createForm()
 export default class login_page extends PureComponent {
@@ -208,7 +207,7 @@ export default class login_page extends PureComponent {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: i-- + '"' });
+						this.setState({ flag: false, timers: i-- + 's' });
 						if (i === -1) {
 							clearInterval(timmer);
 							this.setState({ timers: '重新获取', timeflag: true, flag: true });
@@ -242,35 +241,21 @@ export default class login_page extends PureComponent {
 			<div ref="loginWrap" className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
 				<div ref="loginContent" className={styles.content}>
-					<InputItem
-						disabled={this.state.disabledInput}
-						id="inputPhone"
-						maxLength="11"
-						type="number"
-						className={styles.loginInput}
-						placeholder="请输入您的手机号"
-						{...getFieldProps('phoneValue', {
-							rules: [
-								{ required: true, message: '请输入正确手机号' },
-								{ validator: !this.state.disabledInput && this.validatePhone }
-							]
-						})}
-						onBlur={() => {
-							this.setState({
-								inputFocus: false
-							})
-							handleInputBlur();
-						}}
-					/>
-					<div className={styles.smsBox}>
+					<div className={styles.loginContentBox}>
+						<p className={styles.title}>最高可借额度(元)</p>
+						<p className={styles.moneyText}>50000</p>
 						<InputItem
-							id="inputCode"
+							disabled={this.state.disabledInput}
+							id="inputPhone"
+							maxLength="11"
 							type="number"
-							maxLength="6"
-							className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
-							placeholder="请输入短信验证码"
-							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+							className={styles.loginInput}
+							placeholder="请输入您的手机号"
+							{...getFieldProps('phoneValue', {
+								rules: [
+									{ required: true, message: '请输入正确手机号' },
+									{ validator: !this.state.disabledInput && this.validatePhone }
+								]
 							})}
 							onBlur={() => {
 								this.setState({
@@ -279,60 +264,65 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						<div
-							className={styles.smsCode}
-							onClick={() => {
-								this.state.timeflag ? this.getTime(59) : '';
-							}}
-						>
-							{this.state.timers}
+						<div className={styles.smsBox}>
+							<InputItem
+								id="inputCode"
+								type="number"
+								maxLength="6"
+								className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
+								placeholder="请输入短信验证码"
+								{...getFieldProps('smsCd', {
+									rules: [ { required: true, message: '请输入正确验证码' } ]
+								})}
+								onBlur={() => {
+									this.setState({
+										inputFocus: false
+									})
+									handleInputBlur();
+								}}
+							/>
+							<div
+								className={this.state.timers.indexOf('s') === -1 ? styles.smsCode : [styles.smsCode, styles.smsCode2].join(' ')}
+								onClick={() => {
+									this.state.timeflag ? this.getTime(59) : '';
+								}}
+							>
+								{this.state.timers}
+								<i className={styles.leftBorder} />
+							</div>
 						</div>
+						<div className={styles.sureBtn} onClick={this.goLogin}>
+							<span>查看额度</span>
+						</div>
+						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />		
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />		
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />				
 					</div>
-					<div className={styles.sureBtn} onClick={this.goLogin}>
-						<span>免费借款</span>
-					</div>
-					<div className={styles.agreement}>
-						<i
-							className={this.state.isChecked ? styles.checked : styles.nochecked}
-							onClick={this.checkAgreement}
-						/>
-						注册即视为同意
+				</div>
+				<div className={styles.agreement}>
+					<i
+						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
+						onClick={this.checkAgreement}
+					/>
+					<div className={styles.agreementCont}>
+						阅读并接受
 						<span
 							onClick={() => {
 								this.go('register_agreement_page');
 							}}
 						>
-							《用户注册协议》
+							《随行付金融用户注册协议》
 						</span>
 						<span
 							onClick={() => {
 								this.go('privacy_agreement_page');
 							}}
 						>
-							《用户隐私权政策》
+							《随行付用户隐私权政策》
 						</span>
 					</div>
 				</div>
-				<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
-				<div className={styles.imgWrap}>
-					<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
-					<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
-				</div>
-				{/* <div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
-					<div className={styles.f_left}>
-						<img src={logoImg} className={styles.img} />
-						<span>直接下载，放款更快！</span>
-					</div>
-					<div
-						className={styles.f_right}
-						onClick={() => {
-							this.props.history.replace('/others/download_page');
-							store.setLoginDownloadBtn(true)
-						}}
-					>
-						立即下载
-					</div>
-				</div> */}
 			</div>
 		);
 	}

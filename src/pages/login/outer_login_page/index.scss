@@ -1,86 +1,5 @@
 @import '../../../assets/styles/scss/base/fn';
 
-// .loginContent {
-//   height: 100%;
-//   overflow: auto;
-//   -webkit-overflow-scrolling: touch;
-//   .loginLog {
-//     @include bg-image('../../../assets/images/login/loginBg');
-//     background-repeat: no-repeat;
-//     background-size: 100%;
-//     background-origin: content-box;
-//     width: 750px;
-//     height: 1334px;
-//     text-align: center;
-//   }
-
-//   .centent {
-//     position: relative;
-//     top: 7.5rem;
-//     .loginInput {
-//       width: 5.59rem;
-//       height: 0.85rem;
-//       line-height: 0.85rem;
-//       float: left;
-//       margin: 0.25rem 0.79rem;
-//       border-radius: 0.07rem;
-//       border: none;
-//     }
-//     input::placeholder {
-//       color: #999;
-//       font-size: 0.27rem;
-//     }
-//     .smsCode {
-//       color: #fff;
-//       background: #FFC601;
-//       font-size: 0.27rem;
-//       display: inline;
-//       left: 4.8rem;
-//       top: 1.82rem;
-//       position: absolute;
-//       width: 1.64rem;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//     }
-//     .smsCodeNumber {
-//       color: #fff;
-//       background: #B9B9B9;
-//       font-size: 0.27rem;
-//       display: inline;
-//       left: 4.8rem;
-//       top: 1.82rem;
-//       position: absolute;
-//       width: 1.64rem;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//     }
-//     .sureBtn {
-//       display: inline;
-//       background: #FFE401;
-//       color: #333;
-//       font-size: 0.48rem;
-//       padding: 0.15rem 2rem;
-//       position: relative;
-//       top: 0.3rem;
-//       border-radius: 0.07rem;
-//       border: none;
-//     }
-//   }
-//   :global {
-//     .am-list-item .am-input-control input {
-//       font-size: 0.27rem;
-//       width: 100%;
-//       display: inline-block;
-//       text-align: left;
-//       -moz-box-sizing: border-box;
-//       box-sizing: border-box;
-//       font-family: PingFang-SC-Regular;
-//       padding: 0.16rem 0;
-//     }
-//   }
-// }
 .dc_landing_page {
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
@@ -91,16 +10,80 @@
 		display: block;
 	}
 	.content {
+		position: relative;
+		top: -86px;
 		text-align: center;
+		// background: #fff;
+		// padding: 70px 40px 30px;
+		width: 666px;
+		height: 679px;
 		background: #fff;
-		padding: 70px 40px 30px;
+		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
+		border-radius: 10px;
+		margin: 0 auto;
+		padding: 23px;
+		box-sizing: border-box;
+		.loginContentBox{
+			position: relative;
+			border: 1PX solid #BD9755;
+			padding: 29px;
+		}
+		.title{
+			position: relative;
+			font-size: 26px;
+			font-family: PingFangSC-Regular;
+			font-weight: bold;
+			color: #121C32;
+			top: -10px;
+		}
+		.moneyText{
+			position: relative;
+			top: -55px;
+			font-size: 120px;
+			font-family: "DINMitAlt";
+			font-weight: bold;
+			color: #121C32;
+			height: 91px;
+			margin-top: 32px;
+			margin-bottom: 34px;
+		}
+		.commonLine{
+			position: absolute;
+			display: inline-block;
+			height: 18px;
+			width: 18px;
+			border-color: #BD9755;
+			border-style: solid;
+			box-sizing: border-box;
+		}
+		.leftTopLine{
+			top: -1PX;
+			left: -1PX;
+			border-width: 4px 0 0 4px;
+		}
+		.rightTopLine{
+			top: -1PX;
+			right: -1PX;
+			border-width: 4px 4px 0 0;
+		}
+		.leftBottomLine{
+			bottom: -1PX;
+			left: -1PX;
+			border-width: 0 0 4px 4px;
+		}
+		.rightBottomLine{
+			bottom: -1PX;
+			right: -1PX;
+			border-width: 0 4px 4px 0;
+		}
 		.loginInput {
-			height: 100px;
-			line-height: 100px;
-			margin-bottom: 30px;
-			border-radius: 12px;
-			border: 1PX solid #E3E3E3;
-			background-color: #F6F6F6;
+			height: 91px;
+			line-height: 91px;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+			border: 2px solid #C9CDD5;
+			border-radius: 8px;
+			background-color: rgba(38, 28, 117, 0);
 			:global {
 				.am-list-line::after {
 					background-color: transparent !important;
@@ -108,26 +91,43 @@
 			}
 		}
 		input::placeholder {
-			color: #999;
-			font-size: 32px;
+			color: #C9CDD5;
+			font-size: 30px;
+			font-weight: normal;
 		}
-		.smsCodeInput {
-			flex: 1;
-			margin-right: 20px;
+		input:-webkit-autofill{
+			box-shadow: 0 0 0 1000px white inset !important;
 		}
+		// .smsCodeInput {
+		// 	// flex: 1;
+		// 	// margin-right: 20px;
+		// }
 		.smsBox {
-			display: flex;
-			justify-content: space-between;
+			position: relative;
+			// display: flex;
+			// justify-content: space-between;
 		}
 		.smsCode {
-			color: #fff;
-			font-size: 32px;
-			width: 270px;
-			height: 100px;
-			line-height: 100px;
+			position: absolute;
+			right: 0;
+			top: 1PX;
+			font-size: 30px;
+			width: 235px;
+			height: 91px;
+			line-height: 91px;
 			text-align: center;
-			background-color: #FE4D2A;
-			border-radius: 12px;
+			color: #FEC933;
+			.leftBorder {
+				position: absolute;
+				left: 0;
+				top: 18px;
+				width: 2px;
+				height: 52px;
+				background: #C9CDD5;
+			}
+		}
+		.smsCode2 {
+			color: #C9CDD5;
 		}
 		// .smsCodeNumber {
 		// 	color: #fff;
@@ -141,122 +141,57 @@
 		// }
 		.sureBtn {
 			display: block;
-			box-sizing: border-box;
-			background-color: #FE4D2A;
+			width: 444px;
+			height: 87px;
+			line-height: 87px;
+			background: #FEC933;
+			border-radius: 44px;
+			font-size: 30px;
+			// font-weight: bold;
 			color: #fff;
-			font-size: 36px;
-			font-weight: 400;
-			margin-top: 50px;
-			height: 100px;
-			line-height: 100px;
-			border-radius: 12px;
-			border: none;
+			margin: 53px auto 30px;
 			span {
 				display: inline-block;
 				width: 100%;
 			}
-			&:hover,
-			&:active {
-				background-color: #FE4D2A;
-			}
+			// &:hover,
+			// &:active {
+			// 	background-color: #FE4D2A;
+			// }
 		}
-	}
-	.fix_bottom_box {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		display: flex;
-		.img {
-			width: 80px;
-			height: 80px;
-			vertical-align: middle;
-			margin-right: 30px;
-		}
-		.f_left {
-			width: 560px;
-			height: 112px;
-			line-height: 112px;
-			background-color: #fff;
-			color: #777;
-			padding-left: 40px;
-			box-sizing: border-box;
-			font-size: 32px;
-			border-top: 1PX solid #E5E5E5;
-		}
-		.f_right {
-			width: 190px;
-			height: 112px;
-			line-height: 112px;
-			background-color: #FE4D2A;
-			color: #fff;
-			text-align: center;
-			border-top: 1PX solid #FE4D2A;
-			box-sizing: border-box;
-		}
-	}
-	.relative_bottom_box {
-		position: relative;
-	}
-	.imgWrap {
-		position: relative;
-	}
-	.backTopBtn {
-		position: absolute;
-		margin-left: -300px;
-		left: 50%;
-		bottom: 200px;
-		width: 600px;
-		height: 90px;
-		display: block;
 	}
 	.agreement {
-		color: #333;
-		font-size: 26px;
-		margin: 16px auto 0;
+		display: flex;
+		position: relative;
+		top: -57px;
+		color: #8E8D7B;
+		font-size: 24px;
+		margin: 0 58px;
 		text-align: left;
 		span {
-			color: #FE4D2A;
+			color: #414A53;
 		}
 
 		.checked {
+			position: relative;
+			top: 5px;
 			vertical-align: middle;
 			display: inline-block;
-			width: 28px;
-			height: 28px;
-			line-height: 28px;
-			background-color: #FE4D2A;
-			color: #fff;
-			box-sizing: border-box;
-			border-radius: 5px;
-			margin-right: 10px;
-			&::after {
-				vertical-align: middle;
-				display: inline-block;
-				content: '';
-				width: 20px;
-				height: 8px;
-				border-style: solid;
-				border-width: 0 0 3px 3px;
-				border-color: #fff;
-				transform: translate(3px, -2px) rotateZ(-45deg);
-			}
+			width: 38px;
+			height: 38px;
+			line-height: 38px;
+			margin-right: 6px;
+			background: url(./img/checked_ico.png) no-repeat;
+			background-size: 100%;
 		}
 		.nochecked {
-			vertical-align: middle;
-			display: inline-block;
-			width: 28px;
-			height: 28px;
-			line-height: 28px;
-			border: 1PX solid #FE4D2A;
-			box-sizing: border-box;
-			border-radius: 5px;
-			margin-right: 10px;
+			background-image: url(./img/unChecked_ico.png);
 		}
 	}
 
 		:global {
 			.am-list-item .am-input-control input {
-				font-size: 0.27rem;
+				font-size: 30px;
 				width: 100%;
 				display: inline-block;
 				text-align: left;
@@ -264,6 +199,8 @@
 				box-sizing: border-box;
 				font-family: PingFang-SC-Regular;
 				padding: 0.16rem 0;
+				color: #121C32;
+				font-weight: bold;
 			}
 
 			// .am-list-item .am-checkbox .am-checkbox-inner {
