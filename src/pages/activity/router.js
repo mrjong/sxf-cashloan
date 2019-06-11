@@ -26,4 +26,10 @@ export default [
 		title: '老用户专享',
 		component: () => import('pages/activity/wuyue_old_page')
 	},
+	{
+		path: '/activity/jupei_page',
+		title: '还到拒就赔',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/jupei_page')
+	},
 ];
