@@ -7,23 +7,23 @@ let STORAGE_METHOD = sessionStorage;
 const storageUtil = {
 	// && list.includes(funcName) bug机 全部存入到
 	setItem(key, value, funcName) {
-		STORAGE_METHOD = !isBugBrowser() ? localStorage : sessionStorage;
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		STORAGE_METHOD.setItem(key, JSON.stringify(value));
 	},
 	getItem(key, funcName) {
-		STORAGE_METHOD = !isBugBrowser() ? localStorage : sessionStorage;
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		const value = STORAGE_METHOD.getItem(key);
 		return JSON.parse(value);
 	},
 	clear(funcName) {
-		STORAGE_METHOD = !isBugBrowser() ? localStorage : sessionStorage;
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		STORAGE_METHOD.clear();
 	},
 	removeItem(key, funcName) {
-		STORAGE_METHOD = !isBugBrowser() ? localStorage : sessionStorage;
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		STORAGE_METHOD.removeItem(key);
 	},
