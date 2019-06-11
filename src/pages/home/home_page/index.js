@@ -84,7 +84,6 @@ export default class home_page extends PureComponent {
 			CardOverDate: false,
 			pageCode: '',
 			showAgreement: false, // 显示协议弹窗
-			billOverDue: false, //逾期弹窗标志
 			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
 			isNeedExamine: false, // 是否需要人审
@@ -258,7 +257,6 @@ export default class home_page extends PureComponent {
 				// popupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1',
-					billOverDue: res.data.popupFlag === '1',
 					overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
 				});
 				const currProgress =
@@ -1384,7 +1382,6 @@ export default class home_page extends PureComponent {
 			bannerList,
 			percent,
 			showAgreement,
-			billOverDue,
 			isShowActivityModal,
 			visibleLoading,
 			overDueInf,
@@ -1424,7 +1421,6 @@ export default class home_page extends PureComponent {
 					history={this.props.history}
 					toast={this.props.toast}
 					isShowActivityModal={isShowActivityModal}
-					billOverDue={billOverDue}
 					overDueModalFlag={overDueModalFlag}
 					overDueInf={overDueInf}
 					visibleLoading={visibleLoading}
