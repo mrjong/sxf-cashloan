@@ -50,6 +50,7 @@ export default class bind_save_page extends PureComponent {
 		this.setState({
 			bankType: queryData.bankType || ''
 		})
+		window.addEventListener('keyup', this.handleKeyUp)
 	}
 
 	componentWillUnmount() {
@@ -60,6 +61,65 @@ export default class bind_save_page extends PureComponent {
 			store.removeBindCardPhone();
 		}
 	}
+
+	getCursorPosition = textDom => {
+		let cursorPos = 0
+		if (textDom.setSelectionRange) {
+				// webkit support
+			textDom.focus()
+			cursorPos = textDom.selectionStart
+		}
+		return cursorPos
+	}
+	
+	setCursorPosition = (textDom, pos) => {
+		if (textDom.setSelectionRange) {
+			textDom.focus()
+			textDom.setSelectionRange(pos, pos)
+		}
+	}
+
+	handleKeyUp = e => {
+		const { target } = e
+		const elem = target
+		// for some andriod system keyboard can not input (eg: vivo)
+		console.log(elem)
+		setTimeout(() => {
+			const str = elem.value
+			const currentPos = this.getCursorPosition(elem)
+			let posAfterText = ''
+			let posPreText = ''
+			let isNextBlank = false// the next is blank or not
+			let isPreBlank = false
+			let isLastPos = true
+			if (currentPos !== str.length) { // not the last one
+				posAfterText = str.substr(currentPos, 1)
+				posPreText = str.substr(currentPos - 1, 1)
+				isNextBlank = /^\s+$/.test(posAfterText)
+				isPreBlank = /^\s+$/.test(posPreText)
+				isLastPos = false
+			}
+			if (elem.value.length <= 50) { // maxlength
+				elem.value = elem.value.replace(/\s/g, '').replace(/(\w{4})(?=\w)/g, '$1 ')
+			}
+			if (e.keyCode === 8) { // delete key
+				if (isPreBlank) {
+					this.setCursorPosition(elem, currentPos - 1)
+				} else {
+					this.setCursorPosition(elem, currentPos)
+				}
+			} else if (!isLastPos) {
+				if (isNextBlank) {
+					this.setCursorPosition(elem, currentPos + 1)
+				} else {
+					this.setCursorPosition(elem, currentPos)
+				}
+			} else {
+				this.setCursorPosition(elem, elem.value.length)
+			}
+		}, 0)
+	}
+
 	// 获取信用卡信息
 	queryUserInf = () => {
 		this.props.$fetch.get(API.GETUSERINF).then(
@@ -399,7 +459,6 @@ export default class bind_save_page extends PureComponent {
 							initialValue: this.state.bindCardNo,
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ],
 							onChange: (value) => {
-								// console.log(value)
 								store.setBindCardNo(value);
 							}
 						})}
@@ -408,6 +467,7 @@ export default class bind_save_page extends PureComponent {
 						onBlur={() => {
 							handleInputBlur();
 						}}
+						ref={(el) => (this.inputRef = el)}			
 					>
 						储蓄卡卡号
 					</InputItem>

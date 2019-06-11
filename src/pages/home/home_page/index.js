@@ -1414,6 +1414,7 @@ export default class home_page extends PureComponent {
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				)}
 				{this.componentsAddCards()}
+				<button onClick={()=>{this.props.history.push('/mine/bind_save_page?cardType=resave')}}>go</button>
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}

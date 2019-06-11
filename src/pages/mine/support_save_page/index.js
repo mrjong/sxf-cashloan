@@ -46,9 +46,7 @@ export default class support_save_page extends PureComponent {
   handleItemSelect = (name) => {
     if(queryData.isClick !== '0') return
     let searchUrl = window.location.search + `&bankType=${name}`
-    this.props.history.push(`/mine/bind_save_page${searchUrl}`)
-    // console.log(`/mine/bind_save_page${searchUrl}`)
-
+    this.props.history.replace(`/mine/bind_save_page${searchUrl}`)
   }
 
   render() {
