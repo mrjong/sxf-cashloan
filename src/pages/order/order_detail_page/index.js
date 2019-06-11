@@ -649,16 +649,16 @@ export default class order_detail_page extends PureComponent {
 		switch (payType) {
 			case 'WXPay':
 				// 微信外 02  微信内  03
+				const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+				queryData.backType = 'wxPay';
+				const callbackUrl = location.origin + '?' + qs.stringify(queryData);
 				sendParams = {
 					...sendParams,
 					routeCode: payType,
 					wxPayReqVo: {
 						tradeType: isWXOpen() ? '03' : '02',
 						osNm: '还到',
-						callbackUrl:
-							location.href.indexOf('?') > -1
-								? `${location.origin}/order/wx_pay_success_page&backType=wxPay`
-								: `${location.origin}/order/wx_pay_success_page?backType=wxPay`,
+						callbackUrl,
 						wapUrl: '33',
 						wapNm: '44'
 					}
@@ -775,7 +775,7 @@ export default class order_detail_page extends PureComponent {
 			store.removeCouponData();
 			// 刷新当前list
 			setTimeout(() => {
-        this.queryExtendedPayType();
+				this.queryExtendedPayType();
 				this.getLoanInfo();
 			}, 3000);
 		}
