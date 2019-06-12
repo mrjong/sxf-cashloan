@@ -1,8 +1,9 @@
 import React from 'react';
 import style from './index.scss';
-import ZButton from 'components/ButtonCustom';
-import SvgCirPro from 'components/CircleProgress/svgCirPro';
+import { Progress } from 'antd-mobile';
 import WhiteCard from '../WhiteCard';
+import finished_img from './img/finished_ico.png';
+import unfinished_img from './img/unfinished_ico.png';
 export default class ProgressBlock extends React.Component {
 	constructor(props) {
 		super(props);
@@ -13,15 +14,9 @@ export default class ProgressBlock extends React.Component {
 		return (
 			<WhiteCard showData={showData} handleClick={handleClick}>
 				<div className={style.circle_box}>
-					<SvgCirPro
-						percent={Number(percentData)}
-						radius={45}
-						borderWidth={5}
-						smallradius
-						textStyle={{ fontSize: 12, color: '#fa9a22', textAlign: 'center' }}
-						color="#61ebff"
-					/>
-					<div className={style.desc}>当前借款进度</div>
+					<img src={finished_img} className={style.left_ico} alt="finished_img" />
+					<Progress percent={Number(percentData)} position="normal" barStyle={{borderColor: '#397BE6',borderWidth: '0.02rem'}}  style={{backgroundColor: '#C9CDD5',}} />
+					<img src={unfinished_img} className={style.right_ico} alt="unfinished_img" />
 				</div>
 			</WhiteCard>
 		);

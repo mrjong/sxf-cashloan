@@ -11,13 +11,28 @@
 	box-shadow: 0 8px 32px 0 rgba(9, 36, 96, 0.18);
 }
 .circle_box {
-	min-height: 470px;
+	// min-height: 470px;
 	text-align: center;
 	vertical-align: middle;
 	position: absolute;
 	top: 100px;
-	left: 50px;
+	left: 58px;
 	transform: translate(0, 0);
+	right: 58px;
+}
+.left_ico{
+	position: absolute;
+	width: 18px;
+	left: -10px;
+	top: -7px;
+	z-index: 1;
+}
+.right_ico{
+	position: absolute;
+	width: 18px;
+	right: -18px;
+	top: -7px;
+	z-index: 1;
 }
 .title {
 	font-size: 32px;
