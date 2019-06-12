@@ -99,7 +99,11 @@ export default class order_detail_page extends PureComponent {
 						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
 							params.payType = store.getPayType() || 'BankPay';
 							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+						} else {
+							params.payType = 'BankPay';
 						}
+					} else {
+						params.payType = 'BankPay';
 					}
 				} else {
 					if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
