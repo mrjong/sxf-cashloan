@@ -101,11 +101,11 @@ export default class order_detail_page extends PureComponent {
 							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
 						} else {
               params.payType = 'BankPay';
-              params.payTypes = []
+              params.payTypes = ['BankPay']
 						}
 					} else {
             params.payType = 'BankPay';
-            params.payTypes = []
+            params.payTypes = ['BankPay']
 					}
 				} else {
 					if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
@@ -113,7 +113,7 @@ export default class order_detail_page extends PureComponent {
 						params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
 					} else {
             params.payType = 'BankPay';
-            params.payTypes = []
+            params.payTypes = ['BankPay']
 					}
 				}
 				this.setState(params);
