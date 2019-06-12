@@ -77,8 +77,8 @@ export default class order_detail_page extends PureComponent {
 			() => {
 				this.getLoanInfo();
 				// 因为会有直接进到账单的公众号入口，所以在此在调一遍接口
-        this.getOverdueInfo();
-        this.queryExtendedPayType();
+				this.getOverdueInfo();
+				this.queryExtendedPayType();
 			}
 		);
 	}
@@ -86,42 +86,48 @@ export default class order_detail_page extends PureComponent {
 	componentWillUnmount() {
 		store.removeCardData();
 	}
-  queryExtendedPayType = () => {
-    this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
-      if (res.msgCode === 'PTM0000') {
-        let params = {
-          openIdFlag: res.data.openIdFlag
-        };
-        if (isWXOpen()) {
-          if (res.data.openIdFlag === '0') {
-            params.payType = 'BankPay';
-          } else if (res.data.openIdFlag === '1') {
-            if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
-              params.payType = store.getPayType() || 'BankPay';
-              params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
-            } else {
-              params.payType = 'BankPay';
-              params.payTypes = ['BankPay']
-            }
-          } else {
-            params.payType = 'BankPay';
-            params.payTypes = ['BankPay']
-          }
-        } else {
-          if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay') && !isMPOS()) {
-            params.payType = store.getPayType() || 'BankPay';
-            params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
-          } else {
-            params.payType = 'BankPay';
-            params.payTypes = ['BankPay']
-          }
-        }
-        this.setState(params);
-      } else {
-        this.props.toast.info(res.msgInfo);
-      }
-    });
-  };
+	queryExtendedPayType = () => {
+		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				let params = {
+					openIdFlag: res.data.openIdFlag
+				};
+				if (isWXOpen()) {
+					if (res.data.openIdFlag === '0') {
+						params.payType = 'BankPay';
+					} else if (res.data.openIdFlag === '1') {
+						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
+							params.payType = store.getPayType() || 'BankPay';
+							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+						} else {
+							params.payType = 'BankPay';
+							params.payTypes = [ 'BankPay' ];
+						}
+					} else {
+						params.payType = 'BankPay';
+						params.payTypes = [ 'BankPay' ];
+					}
+				} else {
+					if (
+						isPhone() &&
+						res.data &&
+						res.data.routeCodes &&
+						res.data.routeCodes.includes('WXPay') &&
+						!isMPOS()
+					) {
+						params.payType = store.getPayType() || 'BankPay';
+						params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+					} else {
+						params.payType = 'BankPay';
+						params.payTypes = [ 'BankPay' ];
+					}
+				}
+				this.setState(params);
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
 		const { billNo } = this.state;
@@ -228,7 +234,6 @@ export default class order_detail_page extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					console.log(res, '==============');
 					// const calcMoney = res.data.perdNum !== 999 && ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt*100 - res.data.perdList[res.data.perdNum - 1].deductionAmt*100)/100).toFixed(2);
 					res.data.perdNum !== 999 &&
 						this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
@@ -249,7 +254,7 @@ export default class order_detail_page extends PureComponent {
 					// }
 					this.setState(
 						{
-              thisPerdNum: res.data.perdNum,
+							thisPerdNum: res.data.perdNum,
 							billDesc: res.data, //账单全部详情
 							perdList: res.data.perdList //账单期数列表
 						},
@@ -563,7 +568,7 @@ export default class order_detail_page extends PureComponent {
 
 	// 立即还款
 	handleClickConfirm = () => {
-		const { billDesc = {}, billNo, isPayAll } = this.state;
+		const { billDesc = {}, billNo, isPayAll, payType } = this.state;
 		const cardAgrNo =
 			this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo;
 		let sendParams = null;
@@ -652,8 +657,30 @@ export default class order_detail_page extends PureComponent {
 			}
 		} else {
 			sendParams = repayParams;
-		}
-		console.log(sendParams, paybackAPI);
+    }
+      // 添加微信新增参数
+      switch (payType) {
+        case 'WXPay':
+          // 微信外 02  微信内  03
+          const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+          queryData.backType = 'wxPay';
+          const callbackUrl = location.origin + '/order/wx_pay_success_page?' + qs.stringify(queryData);
+          sendParams = {
+            ...sendParams,
+            routeCode: payType,
+            wxPayReqVo: {
+              tradeType: isWXOpen() ? '03' : '02',
+              osNm: '还到',
+              callbackUrl,
+              wapUrl: '33',
+              wapNm: '44'
+            }
+          };
+          break;
+        case 'BankPay':
+        default:
+          break;
+      }
 		this.props.$fetch
 			.post(paybackAPI, sendParams)
 			.then((res) => {
@@ -675,7 +702,8 @@ export default class order_detail_page extends PureComponent {
 							? isNewsContract
 								? totalAmt && parseFloat(totalAmt).toFixed(2)
 								: billDesc.waitRepAmt && parseFloat(billDesc.waitRepAmt).toFixed(2)
-							: (perTotAmt && parseFloat(perTotAmt).toFixed(2)) || money && parseFloat(money).toFixed(2) ,
+							: (perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
+								(money && parseFloat(money).toFixed(2)),
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
@@ -704,11 +732,13 @@ export default class order_detail_page extends PureComponent {
 											}, 2000);
 										} else {
 											this.getLoanInfo();
+											this.queryExtendedPayType();
 										}
 									}
 								);
 								// h5 支付方式
 							} else {
+                console.log('(;-----------)')
 								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
 								location.href = url;
 							}
@@ -735,7 +765,7 @@ export default class order_detail_page extends PureComponent {
 					store.removeCouponData();
 					// 刷新当前list
 					setTimeout(() => {
-            this.queryExtendedPayType();
+						this.queryExtendedPayType();
 						this.getLoanInfo();
 					}, 3000);
 				}
@@ -976,7 +1006,6 @@ export default class order_detail_page extends PureComponent {
 				return item.perdSts === '1';
 			});
 		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
-		console.log(isEntryShow);
 		return (
 			<div className={styles.order_detail_page}>
 				{isOverdue &&
