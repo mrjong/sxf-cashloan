@@ -77,7 +77,7 @@ export default class bind_save_page extends PureComponent {
 
 	// 校验储蓄卡卡号
 	validateCarNumber = (rule, value, callback) => {
-		if (!validators.bankCardNumber(value)) {
+		if (!validators.bankCardNumber(value.replace(/\s*/g, ''))) {
 			callback('请输入有效银行卡号');
 		} else {
 			callback();
@@ -217,20 +217,21 @@ export default class bind_save_page extends PureComponent {
 	};
 	// 绑卡之前进行校验
 	checkCard = (values) => {
-		this.props.$fetch.post(API.GECARDINF, { cardNo: values.valueInputCarNumber }).then(
+		const factCardNo = values.valueInputCarNumber.replace(/\s*/g, '')
+		this.props.$fetch.post(API.GECARDINF, { cardNo: factCardNo }).then(
 			(result) => {
 				if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
 					this.setState({
 						cardData: {
-							cardNo: values.valueInputCarNumber,
-							lastCardNo: values.valueInputCarNumber.slice(-4),
+							cardNo: factCardNo,
+							lastCardNo: factCardNo.slice(-4),
 							...result.data
 						}
 					});
 					const params = {
 						bankCd: result.data.bankCd, //银行代号
 						cardTyp: 'D', //卡类型(借记卡)
-						cardNo: values.valueInputCarNumber, //持卡人卡号
+						cardNo: factCardNo, //持卡人卡号
 						mblNo: values.valueInputCarPhone, //预留手机号
 						smsCd: values.valueInputCarSms //短信验证码
 					};
@@ -339,12 +340,17 @@ export default class bind_save_page extends PureComponent {
 	// 点击开始倒计时
 	countDownHandler = (fn) => {
 		const formData = this.props.form.getFieldsValue();
+		formData.valueInputCarNumber = formData.valueInputCarNumber.replace(/\s*/g, '')
 		if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
 			this.props.toast.info('请输入有效银行卡号');
 			return;
 		}
 		if (!validators.phone(formData.valueInputCarPhone)) {
 			this.props.toast.info('请输入银行卡绑定的有效手机号');
+			return;
+		}
+		if (!this.state.bankType) {
+			this.props.toast.info('请选择发卡行');
 			return;
 		}
 		//获取卡号对应的银行代号
@@ -367,7 +373,7 @@ export default class bind_save_page extends PureComponent {
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
 		const params = {
-			cardNo: formData.valueInputCarNumber,
+			cardNo: formData.valueInputCarNumber.replace(/\s*/g, ''),
 			isEntry: '01'
 		};
 		this.props.$fetch.post(API.contractInfo, params).then((result) => {
@@ -390,7 +396,7 @@ export default class bind_save_page extends PureComponent {
 					<Item extra={this.state.userName}>持卡人</Item>
 					<Item extra={this.state.bankType ? this.state.bankType : '请选择发卡银行'} arrow='horizontal' onClick={() => { this.props.history.push('/mine/support_save_page?isClick=0') }}>发卡行</Item>
 					<InputItem
-						maxLength="20"
+						maxLength="24"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
 							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }],
@@ -398,7 +404,7 @@ export default class bind_save_page extends PureComponent {
 								store.setBindCardNo(value);
 							}
 						})}
-						type="number"
+						type="bankCard"
 						placeholder="请输入储蓄卡卡号"
 						onBlur={() => {
 							handleInputBlur();

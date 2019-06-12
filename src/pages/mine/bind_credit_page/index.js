@@ -64,7 +64,7 @@ export default class bind_credit_page extends PureComponent {
 
 	// 校验信用卡卡号
 	validateCarNumber = (rule, value, callback) => {
-		if (!validators.bankCardNumber(value)) {
+		if (!validators.bankCardNumber(value.replace(/\s*/g, ''))) {
 			callback('请输入有效银行卡号');
 		} else {
 			callback();
@@ -135,8 +135,9 @@ export default class bind_credit_page extends PureComponent {
 		});
 	};
 	// 通过输入的银行卡号 查出查到卡banCd
-	checkCard = (params, values) => {
-		this.props.$fetch.post(API.GECARDINF, params).then(
+	checkCard = (values) => {
+		values.valueInputCarNumber = values.valueInputCarNumber.replace(/\s*/g, '');
+		this.props.$fetch.post(API.GECARDINF, {cardNo: values.valueInputCarNumber}).then(
 			(result) => {
 				this.setState({
 					cardData: {
@@ -170,17 +171,10 @@ export default class bind_credit_page extends PureComponent {
 	};
 	// 确认购买
 	confirmBuy = () => {
-		// if (isFetching) {
-		// 	return;
-		// }
 		if (!this.validateFn()) return
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				// isFetching = true;
-				const params = {
-					cardNo: values.valueInputCarNumber
-				};
-				this.checkCard(params, values);
+				this.checkCard(values);
 				// TODO 发送请求等操作
 			} else {
 				if (!this.jsonIsNull(values)) {
@@ -190,7 +184,6 @@ export default class bind_credit_page extends PureComponent {
 						fail_cause: getFirstError(err)
 					});
 				}
-				// isFetching = false;
 				this.props.toast.info(getFirstError(err));
 			}
 		});
@@ -231,8 +224,8 @@ export default class bind_credit_page extends PureComponent {
 				<div className="bind_credit_page_listBox">
 					<Item extra={this.state.userName}>持卡人</Item>
 					<InputItem
-						maxLength="20"
-						type="number"
+						maxLength="24"
+						type="bankCard"
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
 						})}
