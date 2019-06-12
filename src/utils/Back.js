@@ -91,10 +91,10 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			// 拒就赔活动落地页返回到首页
-			if (store.getSuccessPay() && window.location.pathname === '/order/repayment_succ_page') {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-			}
+			// if (store.getSuccessPay() && window.location.pathname === '/order/repayment_succ_page') {
+			// 	window.ReactRouterHistory.push('/home/home');
+			// 	return;
+			// }
       		// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (
 				store.getCheckCardRouter() &&
