@@ -27,10 +27,10 @@ export default class ProgressBlock extends React.Component {
 						<span>完善信息</span>
 						<span className={style.unfinished_text}>申请成功</span>
 					</div>
-					<div className={style.percent_text}>
-						<span>{Number(percentData)}<i>%</i></span>
-						已完成
-					</div>
+				</div>
+				<div className={style.percent_text}>
+					<span>{Number(percentData)}<i>%</i></span>
+					已完成
 				</div>
 			</WhiteCard>
 		);
