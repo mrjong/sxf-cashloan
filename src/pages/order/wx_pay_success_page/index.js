@@ -27,7 +27,7 @@ export default class wx_pay_success_page extends Component {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					if (!test || !test.isPayAll) {
+					if (test && !test.isPayAll) {
 						for (let index = 0; index < res.data.perdList.length; index++) {
 							const element = res.data.perdList[index];
 							if (test.thisPerdNum == element.perdNum) {
@@ -40,7 +40,9 @@ export default class wx_pay_success_page extends Component {
 						}
 					} else {
 						this.setState({
-							orderData: res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1] || {},
+							orderData:
+								(res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1]) ||
+								{},
 							thisRepTotAmt: (test && test.thisRepTotAmt) || ''
 						});
 					}
