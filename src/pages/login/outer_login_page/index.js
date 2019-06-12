@@ -46,7 +46,7 @@ export default class login_page extends PureComponent {
 		store.removeLoginDownloadBtn()
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
-		document.title = '登录和注册';
+		document.title = '还到';
 		// 保存h5Channel变量
 		const query = qs.parse(window.location.search, {
 			ignoreQueryPrefix: true
