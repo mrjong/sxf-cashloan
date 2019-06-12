@@ -823,7 +823,8 @@ export default class confirm_agency_page extends PureComponent {
 				this.props.toast.info(res.data);
 				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 		  	break;
-		  	case 'PBM1010':
+			case '1010':
+			  	// this.requestBindCardState();
 				  this.props.toast.info(res.msgInfo);	
 				  buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
