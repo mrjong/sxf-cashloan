@@ -173,6 +173,7 @@ export default class bind_credit_page extends PureComponent {
 		// if (isFetching) {
 		// 	return;
 		// }
+		if (!this.validateFn()) return
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				// isFetching = true;
@@ -194,6 +195,17 @@ export default class bind_credit_page extends PureComponent {
 			}
 		});
 	};
+
+		//	校验必填项
+		validateFn = () => {
+			const { userName } = this.state
+			const formData = this.props.form.getFieldsValue();
+			if (userName && formData.valueInputCarNumber) {
+				return true
+			}
+			return false
+		}
+	
 
 	// 判断json里的每一项是否为空
 	jsonIsNull = (values) => {
@@ -219,7 +231,7 @@ export default class bind_credit_page extends PureComponent {
 				<div className="bind_credit_page_listBox">
 					<Item extra={this.state.userName}>持卡人</Item>
 					<InputItem
-						maxLength="24"
+						maxLength="20"
 						type="number"
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
@@ -236,7 +248,7 @@ export default class bind_credit_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>
+				<ButtonCustom onClick={this.confirmBuy} className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}>
 					确认
 				</ButtonCustom>
 			</div>

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import qs from 'qs';
+import { store } from '../../../utils/store';
 
 const API = {
   SUPPORTBANKLIST: '/withhold/binkLists', // 银行卡列表
@@ -45,8 +46,8 @@ export default class support_save_page extends PureComponent {
 
   handleItemSelect = (name) => {
     if(queryData.isClick !== '0') return
-    let searchUrl = window.location.search + `&bankType=${name}`
-    this.props.history.replace(`/mine/bind_save_page${searchUrl}`)
+    store.setDepositBankName(name)
+    this.props.history.goBack()
   }
 
   render() {
