@@ -108,7 +108,7 @@ export default class order_detail_page extends PureComponent {
             params.payTypes = ['BankPay']
           }
         } else {
-          if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
+          if (isPhone() && res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay') && !isMPOS()) {
             params.payType = store.getPayType() || 'BankPay';
             params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
           } else {
@@ -674,7 +674,7 @@ export default class order_detail_page extends PureComponent {
 							? isNewsContract
 								? totalAmt && parseFloat(totalAmt).toFixed(2)
 								: billDesc.waitRepAmt && parseFloat(billDesc.waitRepAmt).toFixed(2)
-							: money && parseFloat(money).toFixed(2),
+							: (perTotAmt && parseFloat(perTotAmt).toFixed(2)) || money && parseFloat(money).toFixed(2) ,
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
