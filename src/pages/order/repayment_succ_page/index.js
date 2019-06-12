@@ -73,20 +73,19 @@ export default class repayment_succ_page extends PureComponent {
 				>
 					返回首页
 				</ButtonCustom>
-				{/* {
-					//非现金分期才弹窗
-					queryData.prodType !== '11' && <Modal wrapClassName={styles.success_modal_warp} visible={isShowTipsModal} transparent>
-					<div className={styles.modal_tip_content}>
-						<div
-							onClick={() => {
-								this.backHome(order.openNow);
-							}}
-							className={styles.modal_btn}
-						/>
-					</div>
-					<i className={styles.close_btn} onClick={this.closeModal} />
-				</Modal>
-				} */}
+				{
+					<Modal wrapClassName={styles.success_modal_warp} visible={isShowTipsModal} transparent>
+						<div className={styles.modal_tip_content}>
+							<div
+								onClick={() => {
+									this.backHome(order.openNow, true);
+								}}
+								className={styles.modal_btn}
+							/>
+						</div>
+						<i className={styles.close_btn} onClick={this.closeModal} />
+					</Modal>
+				}
 				
 			</div>
 		);
