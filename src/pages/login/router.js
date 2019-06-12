@@ -7,7 +7,7 @@ export default [
   },
   {
     path: '/outer_login',
-    title: '登录',
+    title: '还到',
     arrowHide: true,
     component: () => import('pages/login/outer_login_page'),
   }
