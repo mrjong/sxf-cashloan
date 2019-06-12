@@ -717,7 +717,8 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		this.checkProtocolBindCard();
+		// this.checkProtocolBindCard();
+		this.requestBindCardState();
 	};
 	// 请求用户绑卡状态
 	// 请求用户绑卡状态
