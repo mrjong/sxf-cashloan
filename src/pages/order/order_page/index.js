@@ -282,7 +282,7 @@ export default class order_page extends PureComponent {
 						direction="down"
 						renderSeparator={separator}
             useBodyScroll={this.state.useBodyScroll}
-            className={!this.state.useBodyScroll?style.heightBody:''}
+            className={!this.state.useBodyScroll?'heightBody1':''}
 						pullToRefresh={
 							<PullToRefresh
 								damping={60}

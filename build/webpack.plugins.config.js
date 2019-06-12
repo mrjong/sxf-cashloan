@@ -49,7 +49,7 @@ let getProdPlugins = function() {
       console.log('删除成功');
     }
   })
-  var w_data = '[auth]\r\ntoken=a917cae3fb3046818a2b513ba53deb05323fdd8508ea4939b9fe13d41e6d1c71\r\n[defaults]\r\norg=sentry\r\nproject=cashloan-h5\r\nurl=https://sentry.vbillbank.com';
+  var w_data = '[auth]\r\ntoken=a917cae3fb3046818a2b513ba53deb05323fdd8508ea4939b9fe13d41e6d1c71\r\n[defaults]\r\norg=suixingpay\r\nproject=cashloan-h5\r\nurl=https://sentry.vbillbank.com';
   var w_data = new Buffer(w_data);
 
   /**

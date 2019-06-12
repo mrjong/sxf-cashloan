@@ -46,7 +46,8 @@ const API = {
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
-	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag' // 是否渲染现金分期
+	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
+	checkKoubei: '/activeConfig/userCheck'	//是否参与口碑活动,及新老用户区分
 };
 let token = '';
 let tokenFromStorage = '';
@@ -73,6 +74,7 @@ export default class home_page extends PureComponent {
 			percent: 0,
 			showToast: false,
 			modalType: '',
+			modalBtnFlag: false,
 			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
 			showDiv: '',
@@ -188,15 +190,18 @@ export default class home_page extends PureComponent {
 							});
 						}
 					} else {
-						this.credit_extension();
+						if (token && tokenFromStorage) {
+							this.credit_extension();
+						}
 					}
 				} else {
 					this.props.toast.info(result.msgInfo);
 				}
 			})
 			.catch((err) => {
-				// 代偿流程
-				this.credit_extension();
+				if (token && tokenFromStorage) {
+					this.credit_extension();
+				}
 			});
 	};
 	// 首页现金分期基本信息查询接口
@@ -580,7 +585,10 @@ export default class home_page extends PureComponent {
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
 			this.requestCredCardCount('cbFn', () => {
-				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息');
+				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
+					// 跳银行登录页面
+					this.getMoxieData(bankNo);
+				});
 			});
 			return;
 		} else if (cardBillSts === '02') {
@@ -730,7 +738,13 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 获取首页信息
-	requestGetUsrInfo = () => {
+	requestGetUsrInfo = async () => {
+		let koubeiRes
+		try {
+			koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
+		} catch (error) {
+			console.log(error)
+		}
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// const result = {
 			// 	msgCode: 'PTM0000',
@@ -783,7 +797,19 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				if (
+				//口碑活动弹窗
+				if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
+							modalBtnFlag: true
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
+				} else if (
 					isMPOS() &&
 					!store.getShowActivityModal() &&
 					Cookie.get('currentTime') !== new Date().getDate().toString()
@@ -862,7 +888,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
 					//需要引导下载app
-					this.props.history.push('/home/deposit_tip');
+					this.props.history.push(`/home/deposit_tip?cashMoney=${usrCashIndexInfo.indexData.curAmt}`);
 				} else {
 					this.props.history.push('/home/loan_fenqi');
 				}
@@ -917,6 +943,12 @@ export default class home_page extends PureComponent {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
 				break;
+			case 'koubei_new_user':
+				buriedPointEvent(activity.koubeiHomeNewModalClick);
+				break;
+			case 'koubei_old_user':
+				buriedPointEvent(activity.koubeiHomeOldModalClick);
+				break
 			default:
 				break;
 		}
@@ -1358,6 +1390,7 @@ export default class home_page extends PureComponent {
 			overDueInf,
 			overDueModalFlag,
 			modalType,
+			modalBtnFlag,
 			blackData
 		} = this.state;
 		let componentsDisplay = null;
@@ -1386,6 +1419,7 @@ export default class home_page extends PureComponent {
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
+					modalBtnFlag={modalBtnFlag}
 					percent={percent}
 					history={this.props.history}
 					toast={this.props.toast}

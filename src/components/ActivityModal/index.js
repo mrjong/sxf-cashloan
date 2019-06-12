@@ -5,6 +5,8 @@ import brand from '../../assets/images/home/huodongTootip4.png';
 import huodongTootipBtn4 from '../../assets/images/home/huodongTootip_btn4.png';
 import xianjin from './img/xianjin.png';
 import xianjinBtn from './img/xianjinBtn.png';
+import koubei_new_bg from '../../assets/images/home/new_user.png';
+import koubei_old_bg from '../../assets/images/home/old_user.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -22,7 +24,7 @@ class ActivityModal extends React.Component {
 	}
 	// 优先弹688  再弹出免息  再弹iphone
 	render() {
-		const { closeActivityModal, modalType, activityModalBtn } = this.props;
+		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag } = this.props;
 		return (
 			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
 				<div className={styles.modal}>
@@ -31,10 +33,13 @@ class ActivityModal extends React.Component {
 							{/* 大图 */}
 							{modalType === 'xianjin' ? <img src={xianjin} /> : null}
 							{modalType === 'brand' ? <img src={brand} /> : null}
+							{modalType === 'koubei_new_user' ? <img src={koubei_new_bg} /> : null}
+							{modalType === 'koubei_old_user' ? <img src={koubei_old_bg} /> : null}
+							{/* 按钮 */}
 							{modalType === 'xianjin' ? (
 								<img
-                  className={styles.huodongTootipBtn4}
-                  style={{width:'3.5rem'}}
+									className={styles.huodongTootipBtn4}
+									style={{ width: '3.5rem' }}
 									src={xianjinBtn}
 									onClick={() => {
 										activityModalBtn(modalType);
@@ -50,9 +55,34 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
+							{modalType === 'koubei_new_user' ? (
+								<img
+									className={styles.koubeiBtn}
+									src={huodongTootipBtn4}
+									onClick={() => {
+										activityModalBtn('koubei_new_user');
+									}}
+								/>
+							) : null}
+							{modalType === 'koubei_old_user' ? (
+								<img
+									className={styles.koubeiBtn}
+									src={huodongTootipBtn4}
+									onClick={() => {
+										activityModalBtn('koubei_old_user');
+									}}
+								/>
+							) : null}
 						</div>
 						{/* 关闭按钮 */}
-						<div className={styles.closeBtn} onClick={()=>{closeActivityModal(modalType)}} />
+						{!modalBtnFlag ? (
+							<div
+								className={styles.closeBtn}
+								onClick={() => {
+									closeActivityModal(modalType);
+								}}
+							/>
+						) : null}
 					</div>
 				</div>
 			</Modal>
