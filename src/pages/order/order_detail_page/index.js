@@ -555,7 +555,7 @@ export default class order_detail_page extends PureComponent {
 
 	// 立即还款
 	handleClickConfirm = () => {
-		const { billDesc = {}, billNo, isPayAll } = this.state;
+		const { billDesc = {}, billNo, isPayAll, payType } = this.state;
 		const cardAgrNo =
 			this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo;
 		let sendParams = null;
@@ -606,7 +606,7 @@ export default class order_detail_page extends PureComponent {
 				repayParams: sendParams
 			},
 			() => {
-				if (isPayAll) {
+				if (isPayAll || payType === 'WXPay') {
 					this.repay();
 				} else {
 					//调用协议绑卡接口
