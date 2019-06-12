@@ -823,10 +823,12 @@ export default class confirm_agency_page extends PureComponent {
 				this.props.toast.info(res.data);
 				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 		  	break;
-			case '1010':
-			  	// this.requestBindCardState();
-				  this.props.toast.info(res.msgInfo);	
-				  buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
+			case '1010': // 银行卡已经绑定 直接继续往下走
+			  	this.requestBindCardState();
+			break;
+			case 'PBM1010':
+				this.props.toast.info(res.msgInfo);	
+				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
 			default:
 				this.props.toast.info('暂不支持该银行卡，请换卡重试');
