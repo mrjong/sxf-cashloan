@@ -1,13 +1,18 @@
 import React, { PureComponent } from 'react'
 import qs from 'qs'
 import styles from './index.scss'
+import main_logo from './img/main.png'
+import countdown_bg from './img/countdown.png'
+import hd_logo from '../../../assets/images/common/black_logo.png'
 import btn_bg from './img/btn_bg.png'
-import intro_box from './img/intro_box.png'
-import intro_img from './img/intro_img.png'
+import coin_bg from './img/coin_bg.png'
+import rule_bg from './img/rule_bg.png'
 import { buriedPointEvent } from 'utils/analytins'
 import { activity } from 'utils/analytinsType'
 import SmsAlert from '../components/SmsAlert'
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
+import AwardShowMock from './AwardShowMock'
+import RuleModal from '../components/RuleModal'
 
 export default class funsisong_page extends PureComponent {
   constructor(props) {
@@ -17,21 +22,18 @@ export default class funsisong_page extends PureComponent {
     }
   }
 
-  componentWillMount() {
-  }
-
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.entry) {
-      buriedPointEvent(activity.brandEntry, {
+      buriedPointEvent(activity.jd618Entry, {
         entry: queryData.entry
       })
     }
   }
 
   // 跳转协议
-	go = (url) => {
-		this.props.history.push(`/protocol/${url}`);
+  go = (url) => {
+    this.props.history.push(`/protocol/${url}`);
   };
 
   // 进入首页
@@ -39,13 +41,12 @@ export default class funsisong_page extends PureComponent {
     this.props.history.push('/home/home');
   }
 
-  // 还到体验
   joinNow = () => {
-    buriedPointEvent(activity.brandBtnClick);
+    buriedPointEvent(activity.jd618BtnClick);
     if (!this.state.isSelProtocal) {
-			this.props.toast.info('请先勾选协议');
-			return;
-		}
+      this.props.toast.info('请先勾选协议');
+      return;
+    }
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
     if (queryData.appId && queryData.token) {
       this.child.validateMposRelSts({
@@ -58,22 +59,28 @@ export default class funsisong_page extends PureComponent {
       this.setState({
         showLoginTip: true
       });
-    } 
+    }
   }
 
   onRef = (ref) => {
-		this.child = ref;
+    this.child = ref;
   };
-  
+
   checkAgreement = () => {
-		this.setState({
-			isSelProtocal: !this.state.isSelProtocal
-		});
+    this.setState({
+      isSelProtocal: !this.state.isSelProtocal
+    });
   };
-  
+
   closeTip = () => {
     this.setState({
       showLoginTip: false
+    })
+  }
+
+  closeModal = () => {
+    this.setState({
+      showModal: false
     })
   }
 
@@ -83,67 +90,77 @@ export default class funsisong_page extends PureComponent {
       <div className={styles.pinpai}>
         <SmsAlert
           onRef={this.onRef}
-					goSubmitCb={{
-						PTM0000: (res, getType) => {
-							this.goHomePage();
-						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
+          goSubmitCb={{
+            PTM0000: (res, getType) => {
+              this.goHomePage();
+            },
+            URM0008: (res, getType) => { },
+            others: (res, getType) => {
               this.props.toast.info(res.msgInfo);
             }
-					}}
-					goLoginCb={{
-						PTM0000: (res, getType) => {
-							this.goHomePage();
-						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
-              this.props.toast.info(res.msgInfo);
-            }
-					}}
-					validateMposCb={{
-						PTM9000: (res, getType) => {
-							this.props.history.replace('/mpos/mpos_ioscontrol_page');
-						},
-						others: (res, getType) => {
-							this.setState({
-								showBoundle: true
-							});
-						}
-					}}
-					chkAuthCb={{
-						authFlag0: (res, getType) => {},
-						authFlag1: (res, getType) => {
-							this.goHomePage();
-						},
-						authFlag2: (res, getType) => {
-							// this.props.toast.info('暂无活动资格');
-						},
-						others: (res, getType) => {}
-					}}
-					doAuthCb={{
-						authSts00: (res, getType) => {
-							this.goHomePage();
-						},
-						others: (res, getType) => {}
           }}
-				/>
-        <img src={btn_bg} onClick={this.joinNow} className={styles.entryBtn} alt="按钮" />
-        <div className={styles.descBox}>
-          <h3>还到</h3>
-          <p>随行付金融旗下的移动互联网金融产品，提供信用卡余额代偿服务。</p>
-          <p>由随行付金融开发和运营，为有需求的信用卡用户提供匹配账单的智能还信用卡服务，高效便捷、准时到账。</p>
-          <p>持卡人可以通过本平台在线完成授信审批，贷款汇入持卡人指定的信用卡中，直接完成信用卡还款。</p>
+          goLoginCb={{
+            PTM0000: (res, getType) => {
+              this.goHomePage();
+            },
+            URM0008: (res, getType) => { },
+            others: (res, getType) => {
+              this.props.toast.info(res.msgInfo);
+            }
+          }}
+          validateMposCb={{
+            PTM9000: (res, getType) => {
+              this.props.history.replace('/mpos/mpos_ioscontrol_page');
+            },
+            others: (res, getType) => {
+              this.setState({
+                showBoundle: true
+              });
+            }
+          }}
+          chkAuthCb={{
+            authFlag0: (res, getType) => { },
+            authFlag1: (res, getType) => {
+              this.goHomePage();
+            },
+            authFlag2: (res, getType) => {
+              // this.props.toast.info('暂无活动资格');
+            },
+            others: (res, getType) => { }
+          }}
+          doAuthCb={{
+            authSts00: (res, getType) => {
+              this.goHomePage();
+            },
+            others: (res, getType) => { }
+          }}
+        />
+        <div className={styles.hd_logo_wrap}>
+          <img src={hd_logo} alt="" className={styles.hd_logo} />
+          <span>还到 | 怕预期用还到</span>
         </div>
-        <img src={intro_img} className={styles.proIntro} alt="产品介绍" />
-        <img src={intro_box} className={styles.proDesc} alt="产品介绍" />
+        <div className={styles.ruleBtn} onClick={() => {
+          this.setState({
+            showModal: true
+          })
+        }}>活动规则</div>
+        <img src={main_logo} className={styles.main_logo} />
+        <div className={styles.scrollWrap}>
+          <h3>过关勇士名单</h3>
+          <AwardShowMock />
+          <img src={coin_bg} alt="" className={styles.coin_bg} />
+        </div>
+
+        <img src={countdown_bg} className={styles.countdown_bg} />
+        <img src={btn_bg} onClick={this.joinNow} className={styles.entryBtn} alt="按钮" />
+        <img src={rule_bg} className={styles.rule_bg} />
         <div className={styles.protocolBox}>
           <i
             className={isSelProtocal ? styles.checked : `${styles.checked} ${styles.nochecked}`}
             onClick={this.checkAgreement}
           />
           <span className={styles.specailColor}>阅读并接受</span>
-          <span 
+          <span
             onClick={() => {
               this.go('register_agreement_page');
             }}>
@@ -161,13 +178,22 @@ export default class funsisong_page extends PureComponent {
             <div className={styles.mask}></div>
             <div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
               <div className={styles.tipText}>
-                <span>小主～</span><br/>
+                <span>小主～</span><br />
                 <span>先去登录才能参与活动哦～</span>
               </div>
               <div className={styles.closeBtn} onClick={this.closeTip}></div>
             </div>
           </div>
         }
+        <RuleModal
+          visible={this.state.showModal}
+          actTime={'2019年6月18日-6月20日'}
+          actObject={'所有未获得额度的还到用户'}
+          actRules={[
+            '活动期间，用户通过活动页面在规定时间内成功完成借款（借款金额≧3000元， 且借款期限≧3个月），可获得100元现金奖励，每位用户仅可参与一次',
+          ]}
+          handleClose={this.closeModal}
+        />
         {
           showBoundle ? <Alert_mpos /> : null
         }

@@ -928,6 +928,9 @@ export default class home_page extends PureComponent {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalClose);
 				break;
+			case 'jd618': // 618活动弹框按钮
+				buriedPointEvent(activity.jd618ModalBtnClick);
+				break;
 			default:
 				break;
 		}
