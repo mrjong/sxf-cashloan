@@ -1,5 +1,8 @@
 import React from 'react';
 import style from './index.scss';
+
+import Clock from './Clock';
+import Controls from './Controls';
 export default class TimeDown extends React.Component {
 	constructor() {
 		super();
@@ -7,14 +10,6 @@ export default class TimeDown extends React.Component {
 			count: 0,
 			status: 'stopped'
 		};
-		this.handleStateChange = this.handleStateChange.bind(this);
-		this.handleStart = this.handleStart.bind(this);
-	}
-
-	handleStateChange(nextStatus) {
-		this.setState({
-			status: nextStatus
-		});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -37,18 +32,21 @@ export default class TimeDown extends React.Component {
 		clearInterval(this.timer);
 		this.timer = null;
 	}
+	handleStateChange = (nextStatus) => {
+		this.setState({
+			status: nextStatus
+		});
+	};
 
-	handleStart() {
+	handleStart = () => {
 		this.timer = setInterval(() => {
 			const newCount = this.state.count + 1;
 			this.setState({
 				count: newCount
 			});
 		}, 1000);
-	}
+	};
 	render() {
-		const { percentData, showData, handleClick } = this.props;
-		console.log(percentData);
 		return (
 			<div className="container">
 				<div className="row">
