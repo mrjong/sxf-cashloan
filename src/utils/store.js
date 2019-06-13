@@ -40,11 +40,11 @@ const storageUtil = {
 };
 
 // 定义需要特殊处理的浏览器
-const bugBrowserArr = [ 'vivobrowser', 'oppobrowser' ];
+const bugBrowserArr = [ 'vivobrowser', 'oppobrowser', 'safari' ];
 
 // 检测是否是某种 bug 浏览器
 const isBugBrowser = () => {
-  const u = navigator.userAgent.toLowerCase();
+	const u = navigator.userAgent.toLowerCase();
 	const bugBrowserList = bugBrowserArr.filter((item) => u.indexOf(item) > -1);
 	return bugBrowserList.length > 0 && u.indexOf('micromessenger') <= -1;
 };
