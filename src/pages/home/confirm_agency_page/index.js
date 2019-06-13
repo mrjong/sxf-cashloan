@@ -16,6 +16,7 @@ import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_detail_page/components/SmsModal';
+import InsuranceModal from './components/InsuranceModal';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -113,6 +114,7 @@ export default class confirm_agency_page extends PureComponent {
 			contractData: [], // 合同和产品id数据
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
+			isShowInsureModal: false, // 是否显示保险说明弹框
 		};
 	}
 
@@ -830,6 +832,12 @@ export default class confirm_agency_page extends PureComponent {
 		  smsCode,
 		})
 	}
+	// 关闭保险说明弹框
+	closeInsureModal = () => {
+		this.setState({
+			isShowInsureModal: false,
+		})
+	}
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -850,6 +858,7 @@ export default class confirm_agency_page extends PureComponent {
 			isShowModal,
 			isShowSmsModal,
 			smsCode,
+			isShowInsureModal,
 		} = this.state;
 		return (
 			<div>
@@ -1148,6 +1157,10 @@ export default class confirm_agency_page extends PureComponent {
 							toggleBtn={false}
 							ref={(ele) => { this.smsModal = ele; }}
 						/>
+					}
+					{
+						// 保险弹框
+						isShowInsureModal && <InsuranceModal onConfirmCb={ this.closeInsureModal } />
 					}
 				</div>
 			</div>
