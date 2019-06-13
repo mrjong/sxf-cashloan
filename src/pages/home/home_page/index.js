@@ -24,7 +24,8 @@ import {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard
+  ExamineCard,
+  TimeDown
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
@@ -1412,7 +1413,8 @@ export default class home_page extends PureComponent {
 				{componentsDisplay}
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
-				)}
+        )}
+        <TimeDown></TimeDown>
 				{this.componentsAddCards()}
 				<HomeModal
 					showAgreement={showAgreement}

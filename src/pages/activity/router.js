@@ -25,5 +25,10 @@ export default [
 		path: '/activity/wuyue_old_page',
 		title: '老用户专享',
 		component: () => import('pages/activity/wuyue_old_page')
+  },
+  {
+		path: '/activity/jd618_page',
+		title: '618',
+		component: () => import('pages/activity/jd618_page')
 	},
 ];
