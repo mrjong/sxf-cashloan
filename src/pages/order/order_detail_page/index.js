@@ -535,7 +535,7 @@ export default class order_detail_page extends PureComponent {
 						toggleBtn: true,
 						smsCode: ''
 					});
-					this.props.toast.info(res.data);
+					this.props.toast.info(res.data || res.msgInfo);
 				}
 			});
 	};
