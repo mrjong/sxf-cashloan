@@ -19,10 +19,13 @@ class CountDownBox extends Component {
 				this.setState({
 					item: item - 1
 				});
-			}, 1400);
+			}, 1000);
 			return (
-				<div key={item} className={[ style.count, !item ? style.count2 : '' ].join(' ')}>
-					{item ? item : '开始'}
+				<div key={item} className={style.box}>
+					<div className={style.numBg} />
+					<div className={style.num}>
+						<span>{item ? item : 'go'}</span>
+					</div>
 				</div>
 			);
 		}
