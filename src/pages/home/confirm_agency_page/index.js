@@ -214,8 +214,6 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 确认按钮点击事件
 	handleClickConfirm = () => {
-		// 确认代还信息按钮点击埋点
-		buriedPointEvent(home.borrowingPreSubmit);
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log(values);
@@ -245,7 +243,7 @@ export default class confirm_agency_page extends PureComponent {
 				this.checkMemSts();
 			} else {
 				// 确认代换信息返回结果失败埋点
-				buriedPointEvent(home.borrowingPreSubmitResult, {
+				buriedPointEvent(home.borrowingSubmitResult, {
 					is_success: false,
 					fail_cause: res.msgInfo
 				});
@@ -409,7 +407,7 @@ export default class confirm_agency_page extends PureComponent {
 					});
 				} else {
 					// 确认代换信息返回结果失败埋点
-					buriedPointEvent(home.borrowingPreSubmitResult, {
+					buriedPointEvent(home.borrowingSubmitResult, {
 						is_success: false,
 						fail_cause: result.msgInfo
 					});
@@ -641,6 +639,10 @@ export default class confirm_agency_page extends PureComponent {
 				}
 			);
 		}, 300);
+		// 代还确认-确认借款
+		buriedPointEvent(home.borrowingSubmit, {
+			lenders_date: this.state.repayInfo2.perdCnt
+		});
 		this.props.$fetch
 			.post(API.CONFIRM_REPAYMENT, params, {
 				timeout: 100000,
@@ -660,7 +662,7 @@ export default class confirm_agency_page extends PureComponent {
 						});
 						if (result && result.msgCode === 'PTM0000') {
 							this.handleShowTipModal();
-							buriedPointEvent(home.borrowingSubmit, {
+							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: true
 							});
 							// 清除卡信息
@@ -674,7 +676,7 @@ export default class confirm_agency_page extends PureComponent {
 								this.props.history.push('/home/home');
 							}, 3000);
 						} else {
-							buriedPointEvent(home.borrowingSubmit, {
+							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: false,
 								fail_cause: result.msgInfo
 							});

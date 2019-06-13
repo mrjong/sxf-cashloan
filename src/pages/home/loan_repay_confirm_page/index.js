@@ -255,13 +255,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	//更新账单
-	updateBill = () => {
-		// 重新更新按钮埋点
-		buriedPointEvent(home.HomeCardRenew);
-		this.queryUsrInfo();
-	};
-
 	goMoxieBankList = () => {
 		store.setToggleMoxieCard(true);
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
@@ -269,6 +262,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count, type) => {
+		buriedPointEvent(home.replaceCard)
 		// type针对一张卡也可以跳到银行列表页的情况
 		store.setToggleMoxieCard(true);
 		if (type && type === 'switch') {
@@ -735,23 +729,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
 								</div>
 							)}
-							{/* {isShowProgress ? (
-								<div className={style.progressWrap}>
-									<div className={style.percentTitleWrap}>
-										<span className={style.percentTitle}>账单导入中</span>
-										<em className={style.percentNum}>{percent}%</em>
-									</div>
-									<Progress percent={percent} position="normal" />
-								</div>
-							) : showAgainUpdateBtn ? (
-								<span onClick={this.updateBill} className={style.updateButton}>
-									重新更新
-								</span>
-							) : (
-								<span onClick={this.goMoxieBankList} className={style.updateButton}>
-									更新账单
-								</span>
-							)} */}
 						</div>
 						<div className={style.center}>
 							<strong className={style.billMoney}>{cardBillAmtData}</strong>
