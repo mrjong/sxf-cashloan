@@ -94,7 +94,8 @@ export default class bind_save_page extends PureComponent {
 				usrSignCnl: getH5Channel(),
 				cardTyp,
 				bankCd,
-				bankName
+				bankName,
+				type: '1', // 0 可以重复 1 不可以重复
 			})
 			.then((res) => {
 				switch (res.msgCode) {
