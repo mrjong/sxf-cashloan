@@ -15,7 +15,8 @@ const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
 	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
 	BINDCARD: '/withhold/card/bindConfirm', // 绑定银行卡
-	CHECKCARD: '/my/chkCard' // 是否绑定了一张信用卡一张储蓄卡
+	CHECKCARD: '/my/chkCard', // 是否绑定了一张信用卡一张储蓄卡
+	queryCardInfo: '/withhold/getLast4No' // 获取银行名称/后四位
 };
 
 // let isFetching = false;
@@ -42,6 +43,7 @@ export default class bind_credit_page extends PureComponent {
 		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
+		this.queryCardInfo()
 	}
 
 	componentWillUnmount() {
@@ -62,6 +64,24 @@ export default class bind_credit_page extends PureComponent {
 		);
 	};
 
+	// 获取信用卡后四位,发卡行
+	queryCardInfo = () => {
+		this.props.$fetch.get(`${API.queryCardInfo}/${autId ? autId : ''}`).then(
+			(result) => {
+				console.log(result)
+				if (result.msgCode === 'PTM0000' && result.data) {
+					this.setState({
+						bankNm: result.data.bankNm,
+						cardLastNo: result.data.cardLastNo
+					})
+				}
+			},
+			(error) => {
+				error.msgInfo && this.props.toast.info(error.msgInfo);
+			}
+		);
+	};
+
 	// 校验信用卡卡号
 	validateCarNumber = (rule, value, callback) => {
 		if (!validators.bankCardNumber(value.replace(/\s*/g, ''))) {
@@ -70,6 +90,7 @@ export default class bind_credit_page extends PureComponent {
 			callback();
 		}
 	};
+
 	// 绑定银行卡
 	bindConfirm = (params1) => {
 		this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
@@ -137,7 +158,7 @@ export default class bind_credit_page extends PureComponent {
 	// 通过输入的银行卡号 查出查到卡banCd
 	checkCard = (values) => {
 		values.valueInputCarNumber = values.valueInputCarNumber.replace(/\s*/g, '');
-		this.props.$fetch.post(API.GECARDINF, {cardNo: values.valueInputCarNumber}).then(
+		this.props.$fetch.post(API.GECARDINF, { cardNo: values.valueInputCarNumber }).then(
 			(result) => {
 				this.setState({
 					cardData: {
@@ -189,16 +210,16 @@ export default class bind_credit_page extends PureComponent {
 		});
 	};
 
-		//	校验必填项
-		validateFn = () => {
-			const { userName } = this.state
-			const formData = this.props.form.getFieldsValue();
-			if (userName && formData.valueInputCarNumber) {
-				return true
-			}
-			return false
+	//	校验必填项
+	validateFn = () => {
+		const { userName } = this.state
+		const formData = this.props.form.getFieldsValue();
+		if (userName && formData.valueInputCarNumber) {
+			return true
 		}
-	
+		return false
+	}
+
 
 	// 判断json里的每一项是否为空
 	jsonIsNull = (values) => {
@@ -223,20 +244,21 @@ export default class bind_credit_page extends PureComponent {
 				<div className={styles.header}>请确认需要还款的信用卡信息</div>
 				<div className="bind_credit_page_listBox">
 					<Item extra={this.state.userName}>持卡人</Item>
+					<Item extra={this.state.bankNm}>发卡行</Item>
 					<InputItem
 						maxLength="24"
 						type="bankCard"
 						{...getFieldProps('valueInputCarNumber', {
-							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
+							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }]
 						})}
-						placeholder="请输入信用卡卡号"
+						placeholder={`请补足尾号为${this.state.cardLastNo}的信用卡`}
 						onBlur={() => {
 							handleInputBlur();
 						}}
 					>
 						信用卡卡号
 					</InputItem>
-					<div className={[ styles.time_container, 'sms' ].join(' ')} />
+					<div className={[styles.time_container, 'sms'].join(' ')} />
 				</div>
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
