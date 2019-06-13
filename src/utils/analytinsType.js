@@ -63,6 +63,7 @@ const home = {
 	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`,	// 下载页点击按钮事件
 	protocolSmsFail: `${prefix}_HOME_PROTOCOL_SMS_FAIL`, // 签约借款页协议绑卡校验失败埋点
 	protocolBindFail: `${prefix}_HOME_PROTOCOL_BIND_FAIL`, // 签约借款页协议绑卡绑定失败埋点
+	protocolBindBtnClick: `${prefix}_HOME_PROTOCOL_MODAL_BTN_CLICK`, // 签约借款页协议绑卡短验弹框按钮点击
 };
 
 const mine = {

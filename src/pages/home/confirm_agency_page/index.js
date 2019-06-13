@@ -780,6 +780,7 @@ export default class confirm_agency_page extends PureComponent {
 		  this.props.toast.info('请输入正确的验证码');
 		  return;
 		}
+		buriedPointEvent(home.protocolBindBtnClick);
 		this.props.$fetch.post(API.protocolBind, {
 		  cardNo: repayInfo && repayInfo.withHoldAgrNo,
 		  smsCd: this.state.smsCode,
@@ -1153,7 +1154,7 @@ export default class confirm_agency_page extends PureComponent {
 					</Modal>
 					{
 						isShowSmsModal && <SmsModal
-							onCancel={this.skipProtocolBindCard}
+							onCancel={() => {}}
 							onConfirm={this.confirmProtocolBindCard}
 							onSmsCodeChange={this.handleSmsCodeChange}
 							smsCodeAgain={this.checkProtocolBindCard}
