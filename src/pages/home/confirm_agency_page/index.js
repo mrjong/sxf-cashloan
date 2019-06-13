@@ -3,7 +3,7 @@ import { Modal, Progress, InputItem, Icon, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import qs from 'qs';
 import { store } from 'utils/store';
-import { isMPOS } from 'utils/common';
+import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
@@ -15,6 +15,7 @@ import { createForm } from 'rc-form';
 import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
+import SmsModal from '../../order/order_detail_page/components/SmsModal';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -36,7 +37,9 @@ const API = {
 	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
 	COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	qryContractInfo: '/fund/qryContractInfo' // 合同数据流获取
+	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
+	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 };
 
 let indexData = null; // 首页带过来的信息
@@ -107,7 +110,9 @@ export default class confirm_agency_page extends PureComponent {
 			],
 			isShowVIPModal: false,
 			isVIP: false, // 是否有会员卡
-			contractData: [] // 合同和产品id数据
+			contractData: [], // 合同和产品id数据
+			isShowSmsModal: false, //是否显示短信验证码弹窗
+			smsCode: '',
 		};
 	}
 
@@ -123,6 +128,7 @@ export default class confirm_agency_page extends PureComponent {
 				pageData.repayInfo.bankName = bankInfo.bankName;
 				pageData.repayInfo.cardNoHid = bankInfo.lastCardNo;
 				pageData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
+				pageData.repayInfo.bankCode = bankInfo.bankCode;
 			}
 			this.recoveryPageData();
 		} else {
@@ -696,7 +702,8 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		this.requestBindCardState();
+		this.checkProtocolBindCard();
+		// this.requestBindCardState();
 	};
 	// 请求用户绑卡状态
 	// 请求用户绑卡状态
@@ -738,6 +745,91 @@ export default class confirm_agency_page extends PureComponent {
 			clearInterval(timer);
 		}
 	};
+	// 关闭短信弹窗并还款
+	closeSmsModal = () => {
+		this.setState({
+		  isShowSmsModal: false,
+		  smsCode: '',
+		});
+		this.requestBindCardState();
+	}
+	
+	// 确认协议绑卡
+	confirmProtocolBindCard = () => {
+		const { repayInfo } = this.state;
+		if (!this.state.smsCode) {
+		  this.props.toast.info('请输入验证码');
+		  return;
+		}
+		if (this.state.smsCode.length !== 6) {
+		  this.props.toast.info('请输入正确的验证码');
+		  return;
+		}
+		buriedPointEvent(home.protocolBindBtnClick);
+		this.props.$fetch.post(API.protocolBind, {
+		  cardNo: repayInfo && repayInfo.withHoldAgrNo,
+		  smsCd: this.state.smsCode,
+		  isEntry: "01"
+		}).then((res) => {
+		  if (res.msgCode === 'PTM0000') {
+			this.closeSmsModal()
+		  } else if (res.msgCode === 'PTM9901') {
+			this.props.toast.info(res.data);
+			this.setState({ smsCode: '' });
+			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
+		  } else {
+			this.props.toast.info('绑卡失败，请换卡或重试');
+			this.setState({
+			  smsCode: '',
+			  isShowSmsModal: false,
+			})
+			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
+		  }
+		})
+	}
+	// 协议绑卡校验接口
+	checkProtocolBindCard = () => {
+		const { repayInfo } = this.state;
+		const params = {
+		  	cardNo: repayInfo && repayInfo.withHoldAgrNo,
+		  	bankCd: repayInfo && repayInfo.bankCode,
+		  	usrSignCnl: getH5Channel(),
+		  	cardTyp: 'D',
+			isEntry: '01',
+			type: '1', // 0 可以重复 1 不可以重复
+		}
+		this.props.$fetch.post(API.protocolSms, params).then((res) => {
+		  switch (res.msgCode) {
+			case 'PTM0000':
+			  	//协议绑卡校验成功提示（走协议绑卡逻辑）
+				this.setState({
+					isShowSmsModal: true
+				})
+			break;
+			case 'PTM9901':
+				this.props.toast.info(res.data);
+				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
+		  	break;
+			case '1010': // 银行卡已经绑定 直接继续往下走
+			  	this.requestBindCardState();
+			break;
+			case 'PBM1010':
+				this.props.toast.info(res.msgInfo);	
+				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
+			break;
+			default:
+				this.props.toast.info('暂不支持该银行卡，请换卡重试');
+				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
+			break;
+		  }
+		})
+	}
+	// 处理输入的验证码
+	handleSmsCodeChange = (smsCode) => {
+		this.setState({
+		  smsCode,
+		})
+	}
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -755,7 +847,9 @@ export default class confirm_agency_page extends PureComponent {
 			defaultIndex,
 			lendersIndex,
 			percent,
-			isShowModal
+			isShowModal,
+			isShowSmsModal,
+			smsCode,
 		} = this.state;
 		return (
 			<div>
@@ -1044,6 +1138,17 @@ export default class confirm_agency_page extends PureComponent {
 							</ul>
 						</div>
 					</Modal>
+					{
+						isShowSmsModal && <SmsModal
+							onCancel={() => {}}
+							onConfirm={this.confirmProtocolBindCard}
+							onSmsCodeChange={this.handleSmsCodeChange}
+							smsCodeAgain={this.checkProtocolBindCard}
+							smsCode={smsCode}
+							toggleBtn={false}
+							ref={(ele) => { this.smsModal = ele; }}
+						/>
+					}
 				</div>
 			</div>
 		);
