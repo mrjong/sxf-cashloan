@@ -59,9 +59,9 @@
 		.modal_btn {
 			position: relative;
 			margin: 0 auto;
-			top: 580px;
-			width: 375px;
-			height: 96px;
+			top: 598px;
+			width: 351px;
+			height: 90px;
 			background-image: url('../../../assets/images/order/modal_btn1.png');
 			background-size: 100% 100%;
 		}
@@ -69,7 +69,7 @@
 	.close_btn {
 		position: absolute;
 		left: 50%;
-		top: 750px;
+		top: 775px;
 		@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, 0);
 		width: 68px;
 		height: 68px;
