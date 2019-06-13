@@ -10,7 +10,7 @@ var Mar2 = '';
 var child_div = '';
 var child_div2 = '';
 var jiangpinList = ['100元现金', '100元现金', '100元现金', '100元现金', '100元现金'];
-var nameList = ['陈**', '唐**', '赵**', '李**', '吴**']
+var nameList = ['陈**', '唐**', '赵**', '李**', '吴**', '刘**', '王**', '柯**']
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');
@@ -56,7 +56,7 @@ export default class AwardShow extends Component {
 	};
 	// 拼凑号码+文字
 	getNode = () => {
-		let telNo = `<div id="demo" class="new_tels" style="height:.48rem;line-height:.48rem">${this.getNameList(
+		let telNo = `<div id="demo" class="new_tels" style="height:.5rem;line-height:.5rem">${this.getNameList(
 			1
 		)} 获得 <span>${this.getJiangpin(1)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${this.getNameList(
 			4
@@ -70,8 +70,8 @@ export default class AwardShow extends Component {
 					<div
 						className="new_tels"
 						style={{
-							height: '.48rem',
-							lineHeight: '.48rem'
+							height: '.5rem',
+							lineHeight: '.5rem'
 						}}
 					>
 						{/* 恭喜136****7912获得<span>10元减息券</span> */}
@@ -81,8 +81,8 @@ export default class AwardShow extends Component {
 					<div
 						className="new_tels"
 						style={{
-							height: '.48rem',
-							lineHeight: '.48rem'
+							height: '.5rem',
+							lineHeight: '.5rem'
 						}}
 					>
 						<div>
