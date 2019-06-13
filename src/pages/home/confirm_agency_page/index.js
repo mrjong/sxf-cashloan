@@ -795,7 +795,8 @@ export default class confirm_agency_page extends PureComponent {
 		  	bankCd: repayInfo && repayInfo.bankCode,
 		  	usrSignCnl: getH5Channel(),
 		  	cardTyp: 'D',
-		  	isEntry: '01'
+			isEntry: '01',
+			type: '1', // 0 可以重复 1 不可以重复
 		}
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 		  switch (res.msgCode) {
