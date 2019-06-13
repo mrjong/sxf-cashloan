@@ -78,5 +78,6 @@ export const storeTypes = {
 	PercentCount: 'PercentCount', //百分比次数
 	HomeConfirmAgency: 'HomeConfirmAgency', // 首页进入到签约借款页面参数
   PayType: 'PayType', // 还款方式
-  WxPayEnd:'WxPayEnd' // 微信返回不刷新
+  WxPayEnd:'WxPayEnd', // 微信返回不刷新
+	DepositBankName: 'DepositBankName' // 储蓄卡银行名称
 };
