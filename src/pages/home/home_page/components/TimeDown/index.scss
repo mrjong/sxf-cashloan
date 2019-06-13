@@ -1,3 +1,22 @@
 .red {
 	color: red;
 }
+.timebox {
+	position: fixed;
+	bottom: .88rem;
+	right: 0;
+	width: 202px;
+	height: 204px;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-image: url(./img/timebox.png);
+	.num {
+    color: #fff;
+    font-size: 44px;
+    font-family: 'DINMitAlt';
+		position: absolute;
+    left: 50px;
+    letter-spacing: 1px;
+    top: 60px;
+	}
+}

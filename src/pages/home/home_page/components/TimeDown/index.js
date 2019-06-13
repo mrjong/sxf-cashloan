@@ -27,14 +27,18 @@ export default class TimeDown extends React.Component {
 			}
 		}
 	}
+	componentDidMount() {
+		this.props.onRef(this);
+	}
 
 	componentWillUnmount() {
 		clearInterval(this.timer);
 		this.timer = null;
 	}
-	handleStateChange = (nextStatus) => {
+	handleStateChange = (nextStatus, count) => {
 		this.setState({
-			status: nextStatus
+			status: nextStatus,
+			count
 		});
 	};
 
@@ -48,19 +52,24 @@ export default class TimeDown extends React.Component {
 	};
 	render() {
 		return (
-			<div className="container">
-				<div className="row">
-					<div className="col-md-4 col-md-offset-4">
-						<h1 className="text-center">计时器</h1>
-						<Clock count={this.state.count} />
-					</div>
-				</div>
-				<div className="row">
-					<div className="col-md-4 col-md-offset-4">
-						<Controls status={this.state.status} onStatusChange={this.handleStateChange} />
-					</div>
+			<div className={style.timebox}>
+				<div className={style.num}>
+					<Clock count={this.state.count} />
 				</div>
 			</div>
+			// <div className="container">
+			// 	<div className="row">
+			// 		<div className="col-md-4 col-md-offset-4">
+			// 			{/* <h1 className="text-center">计时器</h1> */}
+			// 			<Clock count={this.state.count} />
+			// 		</div>
+			// 	</div>
+			// 	{/* <div className="row">
+			// 		<div className="col-md-4 col-md-offset-4">
+			// 			<Controls status={this.state.status} onStatusChange={this.handleStateChange} />
+			// 		</div>
+			// 	</div> */}
+			// </div>
 		);
 	}
 }
