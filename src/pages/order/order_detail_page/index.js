@@ -90,12 +90,12 @@ export default class order_detail_page extends PureComponent {
 		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				let params = {
-					openIdFlag: res.data.openIdFlag
+					openIdFlag: (res.data && res.data.openIdFlag) || '0'
 				};
 				if (isWXOpen()) {
-					if (res.data.openIdFlag === '0') {
+					if (res.data && res.data.openIdFlag === '0') {
 						params.payType = 'BankPay';
-					} else if (res.data.openIdFlag === '1') {
+					} else if (res.data && res.data.openIdFlag === '1') {
 						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
 							params.payType = store.getPayType() || 'BankPay';
 							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
@@ -658,30 +658,30 @@ export default class order_detail_page extends PureComponent {
 			}
 		} else {
 			sendParams = repayParams;
-    }
-      // 添加微信新增参数
-      switch (payType) {
-        case 'WXPay':
-          // 微信外 02  微信内  03
-          const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-          queryData.backType = 'wxPay';
-          const callbackUrl = location.origin + '/order/wx_pay_success_page?' + qs.stringify(queryData);
-          sendParams = {
-            ...sendParams,
-            routeCode: payType,
-            wxPayReqVo: {
-              tradeType: isWXOpen() ? '03' : '02',
-              osNm: '还到',
-              callbackUrl,
-              wapUrl: '33',
-              wapNm: '44'
-            }
-          };
-          break;
-        case 'BankPay':
-        default:
-          break;
-      }
+		}
+		// 添加微信新增参数
+		switch (payType) {
+			case 'WXPay':
+				// 微信外 02  微信内  03
+				const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+				queryData.backType = 'wxPay';
+				const callbackUrl = location.origin + '/order/wx_pay_success_page?' + qs.stringify(queryData);
+				sendParams = {
+					...sendParams,
+					routeCode: payType,
+					wxPayReqVo: {
+						tradeType: isWXOpen() ? '03' : '02',
+						osNm: '还到',
+						callbackUrl,
+						wapUrl: '33',
+						wapNm: '44'
+					}
+				};
+				break;
+			case 'BankPay':
+			default:
+				break;
+		}
 		this.props.$fetch
 			.post(paybackAPI, sendParams)
 			.then((res) => {
@@ -739,7 +739,7 @@ export default class order_detail_page extends PureComponent {
 								);
 								// h5 支付方式
 							} else {
-                console.log('(;-----------)')
+								console.log('(;-----------)');
 								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
 								location.href = url;
 							}
