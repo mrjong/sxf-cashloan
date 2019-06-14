@@ -82,14 +82,13 @@
     height: 520px;
     background: url("./img/red_bag.png") no-repeat;
     background-size: cover;
+    text-align: center;
     .entryBtn {
-      display: block;
+      display: inline-block;
       width: 336px;
       height: 96px;
-      position: absolute;
-      left: 50%;
-      bottom: 14%;
-      transform: translateX(-50%);
+      margin-top: 350px;
+      animation: bounce-in 1s infinite;
     }
   }
 
@@ -179,6 +178,18 @@
     transform: scale(0.9);
   }
   100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-in {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.1);
+  }
+  100%{
     transform: scale(1);
   }
 }

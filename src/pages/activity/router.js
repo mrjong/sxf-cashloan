@@ -28,7 +28,7 @@ export default [
   },
   {
 		path: '/activity/jd618_page',
-		title: '618',
+		title: '嗨爆618',
 		component: () => import('pages/activity/jd618_page')
 	},
 	{

@@ -13,7 +13,13 @@ import SmsAlert from '../components/SmsAlert'
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import AwardShowMock from './AwardShowMock'
 import RuleModal from '../components/RuleModal'
+import { store } from '../../../utils/store';
+import { checkEngaged, checkIsEngagedUser } from '../../../utils'
+import { isMPOS } from 'utils/common';
+import Cookie from 'js-cookie'
+import fetch from 'sx-fetch';
 
+@fetch.inject()
 export default class funsisong_page extends PureComponent {
   constructor(props) {
     super(props)
@@ -38,7 +44,11 @@ export default class funsisong_page extends PureComponent {
 
   // 进入首页
   goHomePage = () => {
-    this.props.history.push('/home/home');
+    checkEngaged(this.props.$fetch, '').then(res => {
+      console.log(res)
+    })
+    // this.props.history.push('/home/home');
+    // store.setAC20190618(true)
   }
 
   joinNow = () => {
@@ -48,17 +58,22 @@ export default class funsisong_page extends PureComponent {
       return;
     }
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-    if (queryData.appId && queryData.token) {
-      this.child.validateMposRelSts({
-        smsProps_disabled: true,
-        loginProps_disabled: true,
-        loginProps_needLogin: true,
-        otherProps_type: 'home'
-      });
-    } else {
-      this.setState({
-        showLoginTip: true
-      });
+    if (isMPOS()) {
+      if (queryData.appId && queryData.token) {
+        this.child.validateMposRelSts({
+          smsProps_disabled: true,
+          loginProps_disabled: true,
+          loginProps_needLogin: true,
+          otherProps_type: 'home'
+        });
+      } else {
+        this.setState({
+          showLoginTip: true
+        });
+      }
+    } else if (Cookie.get('fin-v-card-token')) {
+      store.setToken(Cookie.get('fin-v-card-token'));
+      this.goHomePage();
     }
   }
 
