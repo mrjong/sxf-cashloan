@@ -628,7 +628,7 @@ export default class order_detail_page extends PureComponent {
   // 选择优惠劵
   selectCoupon = (useFlag) => {
     const { billNo, billDesc, couponInfo, bankInfo, detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt } = this.state
-    let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt }
+    let orderDtData = { detailArr, isShowDetail, isAdvance, isNewsContract, totalAmt, isSettle, perTotAmt };
     store.setOrderDetailData(orderDtData);
     if (useFlag) {
       store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
