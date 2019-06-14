@@ -1037,6 +1037,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'freebill': // 618活动弹框按钮
 				buriedPointEvent(activity.freeBillModalBtnClick);
+				this.props.history.push('/activity/freebill_page')
 				break;
 			default:
 				break;

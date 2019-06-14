@@ -10,7 +10,7 @@ import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import RuleModal from '../components/RuleModal'
 import number_bg from './img/number_bg.png'
 import { Icon, Carousel } from 'antd-mobile'
-import { generateRandomPhone } from '../../../utils'
+import { generateRandomPhone, saveUserInfoEngaged } from '../../../utils'
 
 const rewardList = [
   {
@@ -79,19 +79,34 @@ export default class funsisong_page extends PureComponent {
 
   joinNow = () => {
     buriedPointEvent(activity.freeBillBtnClick);
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-    if (queryData.appId && queryData.token) {
-      this.child.validateMposRelSts({
-        smsProps_disabled: true,
-        loginProps_disabled: true,
-        loginProps_needLogin: true,
-        otherProps_type: 'home'
-      });
-    } else {
-      this.setState({
-        showLoginTip: true
-      });
-    }
+    saveUserInfoEngaged({
+      $props: this.props,
+      AcCode: 'AC20190618_mianxi'
+    }).then(res => {
+      if (res.msgCode === 'PTM0000') {
+        this.goHomePage()
+      } else if (res.msgCode === 'PTM1000') {
+        this.props.toast.info(res.msgInfo)
+        setTimeout(() => {
+          this.props.history.push('/login')
+        }, 2000)
+      } else {
+        this.props.toast.info(res.msgInfo)
+      }
+    })
+    // const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+    // if (queryData.appId && queryData.token) {
+    //   this.child.validateMposRelSts({
+    //     smsProps_disabled: true,
+    //     loginProps_disabled: true,
+    //     loginProps_needLogin: true,
+    //     otherProps_type: 'home'
+    //   });
+    // } else {
+    //   this.setState({
+    //     showLoginTip: true
+    //   });
+    // }
   }
 
   onRef = (ref) => {

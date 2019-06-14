@@ -12,6 +12,9 @@ import failImg from './img/fail.png';
 import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import message from './img/message.png';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
+
 @setBackGround('#fff')
 @fetch.inject()
 export default class remit_ing_page extends PureComponent {
@@ -91,7 +94,10 @@ export default class remit_ing_page extends PureComponent {
 
 		return `${minutes}:${seconds}`;
 	};
-	closeBtnFunc = () => {
+	closeBtnFunc = (type) => {
+		buriedPointEvent(activity.jd618ResultModalClick, {
+			modalType: type
+		})
 		let queryData2 = this.state.queryData;
 		delete queryData2.needAlert;
 		this.setState(
@@ -143,13 +149,13 @@ export default class remit_ing_page extends PureComponent {
 					<img src={successImg} className={style.successImg} />
 					<div className={style.successTitle}>恭喜获得</div>
 					<div className={style.successTime}>总用时：{time}</div>
-					<img src={btnImg} onClick={this.closeBtnFunc} className={style.btnImg} />
+					<img src={btnImg} onClick={()=>{this.closeBtnFunc('success')}} className={style.btnImg} />
 				</Modal>
 				<Modal className="loan_apply_succ_alert" visible={failModalShow} transparent>
 					<img src={failImg} className={style.successImg} />
 					<div className={style.failTitle}>很遗憾，您已超时</div>
 					<div className={style.failTime}>总用时：{time}</div>
-					<img src={btnImg} onClick={this.closeBtnFunc} className={style.btnImg2} />
+					<img src={btnImg} onClick={()=>{this.closeBtnFunc('timeout')}} className={style.btnImg2} />
 				</Modal>
 
 				<ACTipAlert
@@ -157,7 +163,7 @@ export default class remit_ing_page extends PureComponent {
 					resetProps={{
 						title: '温馨提示',
 						desc: '由于您的借款不符合获奖规则 故无法获得奖励，再接再厉吧～',
-						closeBtnFunc: this.closeBtnFunc
+						closeBtnFunc: ()=>{this.closeBtnFunc('fail')}
 					}}
 				/>
 

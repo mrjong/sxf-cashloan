@@ -20,6 +20,10 @@ import Cookie from 'js-cookie'
 import fetch from 'sx-fetch';
 import ACTipAlert from 'components/ACTipAlert';
 
+const API = {
+  queryUsrInfo: '/signup/getUsrSts'
+}
+
 @fetch.inject()
 export default class funsisong_page extends PureComponent {
   constructor(props) {
@@ -60,8 +64,8 @@ export default class funsisong_page extends PureComponent {
         ischeckIsEngagedUser.data &&
         ischeckIsEngagedUser.data.isEngagedUser === '1'
       ) {
-        store.setAC20190618(true)
-        this.props.history.push('/home/home');
+        this.queryUsrInfo()
+
       } else if (
         //已参与
         ischeckIsEngagedUser.msgCode === 'PTM0000' &&
@@ -81,6 +85,20 @@ export default class funsisong_page extends PureComponent {
     } else {
       this.props.toast.info(ischeckEngaged.msgInfo)
     }
+  }
+
+  queryUsrInfo = () => {
+    this.props.$fetch.post(API.queryUsrInfo).then(res => {
+      if (res.msgCode === 'PTM0000' && !res.data.totBal) {
+        store.setAC20190618(true)
+        this.props.history.push('/home/home');
+      } else {
+        this.setState({
+          ACTipAlertShow: true,
+          alertDesc: '很抱歉,您没有活动参与资格~'
+        })
+      }
+    })
   }
 
   closeBtnFunc = () => {
