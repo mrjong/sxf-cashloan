@@ -747,7 +747,6 @@ export default class home_page extends PureComponent {
 				// 需要弹窗
 				this.setState({
 					modalType: 'freebill',
-					modalBtnFlag: true,
 					isShowActivityModal: true
 				});
 			}
@@ -910,7 +909,11 @@ export default class home_page extends PureComponent {
 					(result.data.indexSts === 'LN0001' ||
 						result.data.indexSts === 'LN0002' ||
 						result.data.indexSts === 'LN0010') &&
-					(ischeckEngaged.msgCode === 'PTM0000' && ischeckIsEngagedUser.data.isEngagedUser === '1')
+					(ischeckEngaged.msgCode === 'PTM0000' &&
+						((ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
+							(ischeckIsEngagedUser.data &&
+								ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+								ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
 				) {
 					this.getAC618();
 				} else if (
@@ -1082,7 +1085,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'freebill': // 618活动弹框按钮
 				buriedPointEvent(activity.freeBillModalBtnClick);
-				this.props.history.push('/activity/freebill_page')
+				this.props.history.push('/activity/freebill_page');
 				break;
 			default:
 				break;

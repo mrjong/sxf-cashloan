@@ -11,7 +11,7 @@ import RuleModal from '../components/RuleModal'
 import number_bg from './img/number_bg.png'
 import { Icon, Carousel } from 'antd-mobile'
 import { generateRandomPhone, saveUserInfoEngaged } from '../../../utils'
-
+import fetch from 'sx-fetch';
 const rewardList = [
   {
     user: '188****4219喜获',
@@ -36,7 +36,7 @@ const rewardList = [
 ]
 
 let timer = null
-
+@fetch.inject()
 export default class funsisong_page extends PureComponent {
   constructor(props) {
     super(props)
