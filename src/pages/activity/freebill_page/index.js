@@ -197,7 +197,7 @@ export default class funsisong_page extends PureComponent {
             {
               rewardList.map((item, idx) => (
                 <div className={styles.inner} key={idx}>
-                  <p className={styles.col_scroll_text}>{`${colScrollPhone ? colScrollPhone : '150****1489'}喜获`}</p>
+                  <p className={styles.col_scroll_text}>{colScrollPhone ? colScrollPhone : '150****1489'}喜获</p>
                   <div className={styles.square}> <i className={styles.free_bg}></i>
                     <em className={styles.del_money}>{item.money}
                       {
@@ -212,7 +212,7 @@ export default class funsisong_page extends PureComponent {
         </div>
         {
           showRowScroll && <div className={styles.row_scroll_wrap}>
-            <p className={styles.row_scroll_text}>{rewarded ? rewarded : '188****4219喜获'}<img src={number_bg} className={styles.number_bg} />元免单！</p>
+            <p className={styles.row_scroll_text}>{rewarded ? rewarded : '188****4219'}喜获<img src={number_bg} className={styles.number_bg} />元免单！</p>
           </div>
         }
 
