@@ -20,7 +20,10 @@ const API = {
 	submitState: '/bill/apply', // 提交代还金申请
 	idChkPhoto: '/auth/idChkPhoto',
 	getFace: '/auth/getTencentFaceidData', // 人脸识别认证跳转URL
-	CRED_CARD_COUNT: '/index/usrCredCardCount' // 授信信用卡数量查询
+	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
+	checkEngaged: '/activeConfig/checkEngaged',
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
+	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -773,9 +776,37 @@ export const generateRandomPhone = () => {
 export const checkEngaged = ({ $props, AcCode }) => {
 	return new Promise((resolve, reject) => {
 		$props.$fetch
-			.post(`${API.getOperator}`, {
-				clientCode: '04'
+			.get(`${API.checkEngaged}/${AcCode}`)
+			.then((result) => {
+				resolve(result);
 			})
+			.catch((err) => {
+				reject(err);
+			});
+	});
+};
+
+// 判断活动是否参与
+
+export const checkIsEngagedUser = ({ $props, AcCode }) => {
+	return new Promise((resolve, reject) => {
+		$props.$fetch
+			.get(`${API.checkIsEngagedUser}/${AcCode}`)
+			.then((result) => {
+				resolve(result);
+			})
+			.catch((err) => {
+				reject(err);
+			});
+	});
+};
+
+// 参与活动
+
+export const saveUserInfoEngaged = ({ $props, AcCode }) => {
+	return new Promise((resolve, reject) => {
+		$props.$fetch
+			.get(`${API.saveUserInfoEngaged}/${AcCode}`)
 			.then((result) => {
 				resolve(result);
 			})

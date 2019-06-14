@@ -16,7 +16,9 @@ export default class remit_ing_page extends PureComponent {
 		super(props);
 		this.state = {
 			queryData: {},
-			ACTipAlertShow: true
+			ACTipAlertShow: false,
+			successModalShow: false,
+			failModalShow: false
 		};
 	}
 	componentWillMount() {
@@ -27,11 +29,13 @@ export default class remit_ing_page extends PureComponent {
 	}
 	closeBtnFunc = () => {
 		this.setState({
-			ACTipAlertShow: false
+			ACTipAlertShow: false,
+			successModalShow: false,
+			failModalShow: false
 		});
 	};
 	render() {
-		const { queryData, ACTipAlertShow } = this.state;
+		const { queryData, ACTipAlertShow, successModalShow, failModalShow } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -60,18 +64,18 @@ export default class remit_ing_page extends PureComponent {
 						<div className={style.line} />
 					</div>
 				</div>
-				{/* <Modal className="loan_apply_succ_alert" visible={true} transparent>
+				<Modal className="loan_apply_succ_alert" visible={successModalShow} transparent>
 					<img src={successImg} className={style.successImg} />
-          <div className={style.successTitle}>恭喜获得</div>
+					<div className={style.successTitle}>恭喜获得</div>
 					<div className={style.successTime}>总用时：09:09</div>
-					<img src={btnImg} className={style.btnImg} />
-				</Modal> */}
-				{/* <Modal className="loan_apply_succ_alert" visible={true} transparent>
+					<img src={btnImg} onClick={this.closeBtnFunc} className={style.btnImg} />
+				</Modal>
+				<Modal className="loan_apply_succ_alert" visible={failModalShow} transparent>
 					<img src={failImg} className={style.successImg} />
 					<div className={style.failTitle}>很遗憾，您已超时</div>
 					<div className={style.failTime}>总用时：09:09</div>
-					<img src={btnImg} className={style.btnImg2} />
-				</Modal> */}
+					<img src={btnImg} onClick={this.closeBtnFunc} className={style.btnImg2} />
+				</Modal>
 
 				<ACTipAlert
 					ACTipAlertShow={ACTipAlertShow}
