@@ -122,6 +122,7 @@ export default class confirm_agency_page extends PureComponent {
 	componentWillMount() {
 		isSaveAmt = store.getSaveAmt();
 		store.removeSaveAmt();
+		store.removeInsuranceFlag();
 		let bankInfo = store.getCardData();
 		pageData = store.getRepaymentModalData();
 		store.removeRepaymentModalData();
@@ -209,10 +210,11 @@ export default class confirm_agency_page extends PureComponent {
 				cardBillAmt: this.state.cardBillAmt
 			},
 			() => {
-				const { repayInfo } = this.state;
+				const { repayInfo, repayInfo2 } = this.state;
 				store.setSaveAmt(true);
 				store.setRepaymentModalData(this.state);
 				store.setBackUrl('/home/confirm_agency?showModal=true');
+				repayInfo2 && repayInfo2.insurance && store.setInsuranceFlag(true);
 				this.props.history.push({
 					pathname: '/mine/select_save_page',
 					search: `?agrNo=${repayInfo.withHoldAgrNo}`
@@ -679,11 +681,10 @@ export default class confirm_agency_page extends PureComponent {
 							// 清除上个页面中的弹框数据
 							store.removeRepaymentModalData();
 							store.removeSaveAmt();
+						} else if (result && result.msgCode === 'PTM9958') {
+							this.checkProtocolBindCard();
 						} else if (result && result.msgCode === 'PTM7001') {
-							this.props.toast.info(result.msgInfo);
-							setTimeout(() => {
-								this.props.history.push('/home/home');
-							}, 3000);
+
 						} else {
 							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: false,
@@ -705,14 +706,11 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		const { isCheckInsure } = this.state;
-		// todo
-		if (false && !isCheckInsure) {
+		const { isCheckInsure, repayInfo2 } = this.state;
+		if (repayInfo2 && repayInfo2.insurance && !isCheckInsure) {
 			this.props.toast.info('请先购买保险');
 			return;
 		};
-		alert(22)
-		return;
 		this.checkProtocolBindCard();
 		// this.requestBindCardState();
 	};
@@ -778,9 +776,9 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		buriedPointEvent(home.protocolBindBtnClick);
 		this.props.$fetch.post(API.protocolBind, {
-		  cardNo: repayInfo && repayInfo.withHoldAgrNo,
-		  smsCd: this.state.smsCode,
-		  isEntry: "01"
+			cardNo: repayInfo && repayInfo.withHoldAgrNo,
+			smsCd: this.state.smsCode,
+			isEntry: "01",
 		}).then((res) => {
 		  if (res.msgCode === 'PTM0000') {
 			this.closeSmsModal()
@@ -800,9 +798,17 @@ export default class confirm_agency_page extends PureComponent {
 	}
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
-		const { repayInfo } = this.state;
-		const params = {
-		  	cardNo: repayInfo && repayInfo.withHoldAgrNo,
+		const { repayInfo, repayInfo2 } = this.state;
+		const params = repayInfo2 && repayInfo2.insurance ? {
+			cardNo: repayInfo && repayInfo.withHoldAgrNo,
+		  	bankCd: repayInfo && repayInfo.bankCode,
+		  	usrSignCnl: getH5Channel(),
+		  	cardTyp: 'D',
+			isEntry: '01',
+			type: '1', // 0 可以重复 1 不可以重复
+			forInsurance: '1', // 标识该次绑卡是否要求绑定支持收取保费的卡 1:是  其他情况:否
+		} : {
+			cardNo: repayInfo && repayInfo.withHoldAgrNo,
 		  	bankCd: repayInfo && repayInfo.bankCode,
 		  	usrSignCnl: getH5Channel(),
 		  	cardTyp: 'D',
@@ -1051,27 +1057,30 @@ export default class confirm_agency_page extends PureComponent {
 									</span>
 								</li>
 							</ul>
-							<ul className={style.pannel}>
-								<li className={style.listItem}>
-									<div className={style.insureLeft}>
-										<i className={style.insureIco} />
-										<div className={style.insureTipsCont}>
-											<p className={style.insureTipsTit} onClick={this.openInsureModal}>
-												借款人意外险
-												<i className={style.insureTips} />
-											</p>
-											<p>保费将在您首期还款时扣除</p>
+							{ repayInfo2 && repayInfo2.insurance ?
+								<ul className={style.pannel}>
+									<li className={style.listItem}>
+										<div className={style.insureLeft}>
+											<i className={style.insureIco} />
+											<div className={style.insureTipsCont}>
+												<p className={style.insureTipsTit} onClick={this.openInsureModal}>
+													借款人意外险
+													<i className={style.insureTips} />
+												</p>
+												<p>保费将在您首期还款时扣除</p>
+											</div>
 										</div>
-									</div>
-									<div className={style.insureRight} onClick={this.chooseInsure}>
-										<span>¥420</span>
-										<i className={ isCheckInsure ? `${style.unCheckIco} ${style.checkIco}` : style.unCheckIco} />
-									</div>
-								</li>
-							</ul>
+										<div className={style.insureRight} onClick={this.chooseInsure}>
+											<span>¥{repayInfo2.insurance}</span>
+											<i className={ isCheckInsure ? `${style.unCheckIco} ${style.checkIco}` : style.unCheckIco} />
+										</div>
+									</li>
+								</ul>
+								: null
+							}
 							<div className={style.protocolBox}>
 								{
-									<p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p>
+									repayInfo2 && repayInfo2.insurance ? <p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p> : null
 								}
 								{contractData.length > 0 && (
 									<p className={style.protocolLink}>
@@ -1101,8 +1110,7 @@ export default class confirm_agency_page extends PureComponent {
 								)
 							}
 							className={
-								// todo
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? true && !isCheckInsure ?
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? repayInfo2 && repayInfo2.insurance && !isCheckInsure ?
 								(
 									style.submitBtnDisabled
 								) : (

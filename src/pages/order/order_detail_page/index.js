@@ -78,6 +78,7 @@ export default class order_detail_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
+		store.removeInsuranceFlag();
 		if (!store.getBillNo()) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {
@@ -556,7 +557,8 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
-		const params = {
+		const insuranceFlag = false; // todo
+		const params = insuranceFlag ? {
 			cardNo:
 				this.state.bankInfo && this.state.bankInfo.agrNo
 					? this.state.bankInfo.agrNo
@@ -566,7 +568,18 @@ export default class order_detail_page extends PureComponent {
 			cardTyp: 'D',
 			isEntry: '01',
 			type: '0', // 0 可以重复 1 不可以重复
-		};
+			forInsurance: '1', // 标识该次绑卡是否要求绑定支持收取保费的卡 1:是  其他情况:否
+		} : {
+			cardNo:
+				this.state.bankInfo && this.state.bankInfo.agrNo
+					? this.state.bankInfo.agrNo
+					: this.state.billDesc.wthCrdAgrNo,
+			bankCd: this.state.billDesc.wthdCrdCorpOrg,
+			usrSignCnl: getH5Channel(),
+			cardTyp: 'D',
+			isEntry: '01',
+			type: '0', // 0 可以重复 1 不可以重复
+		}
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 			switch (res.msgCode) {
 				case 'PTM0000':
@@ -839,7 +852,9 @@ export default class order_detail_page extends PureComponent {
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
-		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
+		// todo
+		repayInfo2 && repayInfo2.insurance && store.setInsuranceFlag(true);
+		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${repayInfo2 && repayInfo2.insurance ? 'true' : 'false'}`);
 	};
 
 	// 选择优惠劵

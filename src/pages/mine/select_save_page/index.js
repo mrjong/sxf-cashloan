@@ -105,12 +105,19 @@ export default class select_save_page extends PureComponent {
 	};
 	// 获取储蓄卡银行卡列表
 	queryBankList = () => {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const params= queryData.insuranceFlag ? {
+			// agrNo:query.agrNo,
+			type: '2', //所有储蓄卡列表
+			corpBusTyp: '',
+			// 筛选出绑定通联支付的卡 todo
+		 } : {
+			// agrNo:query.agrNo,
+			type: '2', //所有储蓄卡列表
+			corpBusTyp: ''
+		 }
 		this.props.$fetch
-			.post(API.BANKLIST, {
-				// agrNo:query.agrNo,
-				type: '2', //所有储蓄卡列表
-				corpBusTyp: ''
-			})
+			.post(API.BANKLIST, params)
 			.then(
 				(res) => {
 					if (res.msgCode === 'PTM0000') {

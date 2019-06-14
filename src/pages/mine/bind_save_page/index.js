@@ -87,16 +87,28 @@ export default class bind_save_page extends PureComponent {
 	// 协议绑卡校验接口
 	checkProtocolBindCard = (params, fn) => {
 		const { valueInputCarNumber, valueInputCarPhone, cardTyp, bankCd, bankName } = params;
+		const insuranceFlag = store.getInsuranceFlag();
+		
+		const sendParams = insuranceFlag ? {
+			cardNo: valueInputCarNumber,
+			bnkMblNo: valueInputCarPhone,
+			usrSignCnl: getH5Channel(),
+			cardTyp,
+			bankCd,
+			bankName,
+			type: '1', // 0 可以重复 1 不可以重复
+			forInsurance: '1', // 标识该次绑卡是否要求绑定支持收取保费的卡 1:是  其他情况:否
+		} : {
+			cardNo: valueInputCarNumber,
+			bnkMblNo: valueInputCarPhone,
+			usrSignCnl: getH5Channel(),
+			cardTyp,
+			bankCd,
+			bankName,
+			type: '1', // 0 可以重复 1 不可以重复
+		}
 		this.props.$fetch
-			.post(API.protocolSms, {
-				cardNo: valueInputCarNumber,
-				bnkMblNo: valueInputCarPhone,
-				usrSignCnl: getH5Channel(),
-				cardTyp,
-				bankCd,
-				bankName,
-				type: '1', // 0 可以重复 1 不可以重复
-			})
+			.post(API.protocolSms, sendParams)
 			.then((res) => {
 				switch (res.msgCode) {
 					case 'PTM0000':
@@ -142,12 +154,14 @@ export default class bind_save_page extends PureComponent {
 		this.props.$fetch
 			.post(API.protocolBind, {
 				cardNo: params.cardNo,
-				smsCd: params.smsCd
+				smsCd: params.smsCd,
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					//协议绑卡成功
 					const backUrlData = store.getBackUrl();
+					// 在这里清，是为了防止进入支持银行卡列表页和协议页，返回的时候没有insuranceFlag
+					store.removeInsuranceFlag();
 					if (backUrlData) {
 						let cardDatas = { agrNo: res.data.agrNo, ...this.state.cardData };
 						// 首页不需要存储银行卡的情况，防止弹窗出现
