@@ -1059,7 +1059,7 @@ export default class confirm_agency_page extends PureComponent {
 							</ul>
 							{ repayInfo2 && repayInfo2.insurance ?
 								<ul className={style.pannel}>
-									<li className={style.listItem}>
+									<li className={`${style.listItem} ${style.listItem2}`}>
 										<div className={style.insureLeft}>
 											<i className={style.insureIco} />
 											<div className={style.insureTipsCont}>
