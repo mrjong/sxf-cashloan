@@ -1082,7 +1082,7 @@ export default class order_detail_page extends PureComponent {
 							<span className={styles.red}>
 								{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 							</span>
-							期账单，请保证卡内余额大于该 期账单金额
+							期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{'920.00'}</span>元
 						</div>
 					</div>
 				) : (
