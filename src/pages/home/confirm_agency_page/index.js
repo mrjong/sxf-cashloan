@@ -705,6 +705,14 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
+		const { isCheckInsure } = this.state;
+		// todo
+		if (false && !isCheckInsure) {
+			this.props.toast.info('请先购买保险');
+			return;
+		};
+		alert(22)
+		return;
 		this.checkProtocolBindCard();
 		// this.requestBindCardState();
 	};
@@ -1063,7 +1071,7 @@ export default class confirm_agency_page extends PureComponent {
 							</ul>
 							<div className={style.protocolBox}>
 								{
-									<p>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p>
+									<p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p>
 								}
 								{contractData.length > 0 && (
 									<p className={style.protocolLink}>
@@ -1093,14 +1101,18 @@ export default class confirm_agency_page extends PureComponent {
 								)
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? (
+								// todo
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? true && !isCheckInsure ?
+								(
+									style.submitBtnDisabled
+								) : (
 									style.submitBtn
 								) : (
 									style.submitBtnDisabled
 								)
 							}
 						>
-							签约借款
+							确定签约
 						</SXFButton>
 					</div>
 					<Modal

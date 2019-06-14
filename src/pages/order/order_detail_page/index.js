@@ -59,7 +59,22 @@ export default class order_detail_page extends PureComponent {
 			payType: '',
 			payTypes: [ 'BankPay' ],
 			openIdFlag: '',
-			thisPerdNum: ''
+			thisPerdNum: '',
+			insureInfo: {
+				label: {
+					name: '保费',
+				},
+				extra: [
+					{
+						name: '420.00',
+						color: '#333'
+					},
+					{
+						name: '已支付',
+						color: '#D2D2D6'
+					}
+				],
+			}
 		};
 	}
 	componentWillMount() {
@@ -959,7 +974,8 @@ export default class order_detail_page extends PureComponent {
 			payType,
 			payTypes,
 			openIdFlag,
-			perTotAmt
+			perTotAmt,
+			insureInfo,
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1056,7 +1072,7 @@ export default class order_detail_page extends PureComponent {
 					)}
 				</Panel>
 				<Panel title="还款计划" className={styles.mt24}>
-					<Lists listsInf={this.state.orderList} clickCb={this.clickCb} className={styles.order_list} />
+					<Lists listsInf={this.state.orderList} insureFee={insureInfo} clickCb={this.clickCb} className={styles.order_list} />
 				</Panel>
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>

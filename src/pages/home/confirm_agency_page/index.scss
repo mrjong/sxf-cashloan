@@ -14,15 +14,16 @@
 	.billInpBox {
 		position: relative;
 		margin-bottom: 30px;
-		padding: 0 60px;
+		padding: 57px 60px 37px;
 		background: #fff;
+		box-sizing: border-box;
 
 		.moneyUnit {
 			position: absolute;
 			font-size: 40px;
 			color: #333;
 			left: 60px;
-			top: 14px;
+			top: 76px;
 			z-index: 10;
 		}
 		// &::after {
@@ -142,7 +143,14 @@
 		}
 	}
 	.protocolBox{
-		padding: 0 30px;
+		margin-top: -10px;
+		padding: 0 60px;
+		.insureDesc {
+			font-size: 24px;
+			color: #C9CDD5;
+			line-height: 33px;
+			margin-bottom: 40px;
+		}
 	}
 	.protocolLink {
 		font-size: 24px;
@@ -248,6 +256,7 @@
 	.confirm_agency {
 		.am-list-item.am-input-item {
 			height: auto;
+			padding-left: 35px;
 		}
 	}
 	.fenqi_tip_modal.am-modal-transparent {
