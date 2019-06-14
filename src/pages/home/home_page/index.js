@@ -12,6 +12,7 @@ import Carousels from 'components/Carousels';
 import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
+import CountDownBox from 'components/CountDownBox';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -206,9 +207,9 @@ export default class home_page extends PureComponent {
 	};
 	// 首页现金分期基本信息查询接口
 	indexshowType = () => {
+		this.getAC618();
 		this.props.$fetch.post(API.indexshowType).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.getAC618();
 				this.setState({
 					blackData: result.data
 				});
@@ -1452,6 +1453,7 @@ export default class home_page extends PureComponent {
 					}}
 				/>
 				{this.componentsAddCards()}
+				{/* <CountDownBox></CountDownBox> */}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}

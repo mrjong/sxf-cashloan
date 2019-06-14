@@ -24,7 +24,7 @@ class CountDownBox extends Component {
 				<div key={item} className={style.box}>
 					<div className={style.numBg} />
 					<div className={style.num}>
-						<span>{item ? item : 'go'}</span>
+						<span className="breathe">{item ? item : 'go'}</span>
 					</div>
 				</div>
 			);

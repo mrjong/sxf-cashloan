@@ -52,7 +52,7 @@ export default class TimeDown extends React.Component {
 	};
 	render() {
 		return (
-			<div className={style.timebox}>
+			<div className={[ style.timebox, 'fadeInRight' ].join(' ')}>
 				<div className={style.num}>
 					<Clock count={this.state.count} />
 				</div>
