@@ -109,7 +109,9 @@ export default class TagList extends React.PureComponent {
             onClick(params);
           }
         }}
-        style={{ opacity: item.disable ? .4 : 1, ...item.style }}
+        isDisable={item.disable}
+        // style={{ opacity: item.disable ? .4 : 1, ...item.style }}
+        style={{ ...item.style }}
         {...restProps}
       >
         {item.name || item}

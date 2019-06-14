@@ -48,7 +48,7 @@ let pageData = null;
 let isSaveAmt = false;
 let timer;
 let timerOut;
-@setBackGround('#fff')
+@setBackGround('#F7F8FA')
 @fetch.inject()
 @createForm()
 export default class confirm_agency_page extends PureComponent {
@@ -115,6 +115,7 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			isShowInsureModal: false, // 是否显示保险说明弹框
+			isCheckInsure: false, // 是否选择了保费
 		};
 	}
 
@@ -838,6 +839,18 @@ export default class confirm_agency_page extends PureComponent {
 			isShowInsureModal: false,
 		})
 	}
+	// 选择保费
+	chooseInsure = () => {
+		this.setState({
+			isCheckInsure: !this.state.isCheckInsure
+		})
+	}
+	// 打开保险说明弹框
+	openInsureModal = () => {
+		this.setState({
+			isShowInsureModal: true,
+		})
+	}
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -859,6 +872,7 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal,
 			smsCode,
 			isShowInsureModal,
+			isCheckInsure,
 		} = this.state;
 		return (
 			<div>
@@ -927,8 +941,8 @@ export default class confirm_agency_page extends PureComponent {
 								/>
 							</div>
 						</div>
-						<div className={style.pannel}>
-							<ul>
+						<div>
+							<ul className={style.pannel}>
 								<li style={{ display: 'none' }}>
 									<TabList
 										tagList={repaymentDateList}
@@ -954,6 +968,8 @@ export default class confirm_agency_page extends PureComponent {
 										)}
 									</span>
 								</li>
+							</ul>
+							<ul className={style.pannel}>
 								<li className={style.listItem}>
 									<label>放款日期</label>
 									<span className={style.tagList}>
@@ -965,19 +981,6 @@ export default class confirm_agency_page extends PureComponent {
 											activeindex={lendersIndex}
 											onClick={this.handleLendersTagClick}
 										/>
-									</span>
-								</li>
-								<li className={style.listItem}>
-									<label>收款信用卡</label>
-									<span className={style.listValue}>
-										{indexData.bankName}({indexData.cardNoHid.slice(-4)})
-									</span>
-								</li>
-								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
-									<label>还款银行卡</label>
-									<span className={style.listValue}>
-										{repayInfo.bankName}({repayInfo.cardNoHid})
-										<Icon type="right" className={style.icon} />
 									</span>
 								</li>
 								<li
@@ -1025,21 +1028,59 @@ export default class confirm_agency_page extends PureComponent {
 									</span>
 								</li>
 							</ul>
-							{contractData.length > 0 && (
-								<p className={style.protocolLink}>
-									点击“签约借款”，表示同意{' '}
-									{contractData.map((item, idx) => (
-										<em
-											onClick={() => {
-												this.readContract(item);
-											}}
-											key={idx}
-										>
-											《{item.contractMdlName}》
-										</em>
-									))}
-								</p>
-							)}
+							<ul className={style.pannel}>
+								<li className={style.listItem}>
+									<label>收款信用卡</label>
+									<span className={style.listValue}>
+										{indexData.bankName}({indexData.cardNoHid.slice(-4)})
+									</span>
+								</li>
+								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
+									<label>还款银行卡</label>
+									<span className={style.listValue}>
+										{repayInfo.bankName}({repayInfo.cardNoHid})
+										<Icon type="right" className={style.icon} />
+									</span>
+								</li>
+							</ul>
+							<ul className={style.pannel}>
+								<li className={style.listItem}>
+									<div className={style.insureLeft}>
+										<i className={style.insureIco} />
+										<div className={style.insureTipsCont}>
+											<p className={style.insureTipsTit} onClick={this.openInsureModal}>
+												借款人意外险
+												<i className={style.insureTips} />
+											</p>
+											<p>保费将在您首期还款时扣除</p>
+										</div>
+									</div>
+									<div className={style.insureRight} onClick={this.chooseInsure}>
+										<span>¥420</span>
+										<i className={ isCheckInsure ? `${style.unCheckIco} ${style.checkIco}` : style.unCheckIco} />
+									</div>
+								</li>
+							</ul>
+							<div className={style.protocolBox}>
+								{
+									<p>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p>
+								}
+								{contractData.length > 0 && (
+									<p className={style.protocolLink}>
+										点击“签约借款”，表示同意{' '}
+										{contractData.map((item, idx) => (
+											<em
+												onClick={() => {
+													this.readContract(item);
+												}}
+												key={idx}
+											>
+												《{item.contractMdlName}》
+											</em>
+										))}
+									</p>
+								)}
+							</div>
 						</div>
 					</div>
 					<div className={style.buttonWrap}>

@@ -25,11 +25,11 @@ export default class Tag extends React.PureComponent {
   };
 
   render() {
-    const { className, active, children, onClick, tagType, defaultindex, isDotted, ...restProps } = this.props;
+    const { className, active, children, onClick, tagType, defaultindex, isDisable, isDotted, ...restProps } = this.props;
     return (
       <button
         onClick={event => _handleClick(onClick, event)}
-        className={`${style.sxp_tag} ${active ? style.sxp_tag_active : ''} ${tagType && tagType==='lenders' ? style.specail_tag_active : ''} ${className} ${isDotted ? style.borderDotted : ''}`}
+        className={`${style.sxp_tag} ${active ? style.sxp_tag_active : ''} ${tagType && tagType==='lenders' ? style.specail_tag_active : ''} ${className} ${isDotted ? style.borderDotted : ''} ${isDisable ? style.disabledBtn : ''}`}
         {...restProps}
       >
         {children}
