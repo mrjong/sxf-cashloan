@@ -2,7 +2,7 @@ import React from 'react';
 import style from './index.scss';
 
 import Clock from './Clock';
-import Controls from './Controls';
+// import Controls from './Controls';
 export default class TimeDown extends React.Component {
 	constructor() {
 		super();
@@ -51,25 +51,17 @@ export default class TimeDown extends React.Component {
 		}, 1000);
 	};
 	render() {
+		const { count } = this.state;
 		return (
-			<div className={[ style.timebox, 'fadeInRight' ].join(' ')}>
-				<div className={style.num}>
-					<Clock count={this.state.count} />
-				</div>
+			<div>
+				{count && count <= 15 * 60 ? (
+					<div className={[ style.timebox, 'fadeInRight' ].join(' ')}>
+						<div className={style.num}>
+							<Clock count={count} />
+						</div>
+					</div>
+				) : null}
 			</div>
-			// <div className="container">
-			// 	<div className="row">
-			// 		<div className="col-md-4 col-md-offset-4">
-			// 			{/* <h1 className="text-center">计时器</h1> */}
-			// 			<Clock count={this.state.count} />
-			// 		</div>
-			// 	</div>
-			// 	{/* <div className="row">
-			// 		<div className="col-md-4 col-md-offset-4">
-			// 			<Controls status={this.state.status} onStatusChange={this.handleStateChange} />
-			// 		</div>
-			// 	</div> */}
-			// </div>
 		);
 	}
 }

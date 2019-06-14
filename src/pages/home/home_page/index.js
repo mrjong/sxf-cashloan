@@ -2,7 +2,15 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan, checkEngaged } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	isCanLoan,
+	checkEngaged,
+	checkIsEngagedUser,
+	saveUserInfoEngaged
+} from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -104,16 +112,11 @@ export default class home_page extends PureComponent {
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
 			userMaxAmt: '', // 最高可申请还款金(元)
-			time618: 0
+			DownTime321: false
 		};
 	}
 
 	componentWillMount() {
-		this.setState({
-			modalType: 'freebill',
-			isShowActivityModal: true,
-			modalBtnFlag: true
-		});
 		// 获取token
 		token = Cookie.get('fin-v-card-token');
 		tokenFromStorage = store.getToken();
@@ -727,38 +730,72 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
+
 	// 618 逻辑处理
 	getAC618 = async () => {
 		if (!store.getAC20190618()) {
-			let ischeckEngaged = await checkEngaged({
-				$props: this.props,
-				ACCode: 'AC20190618_618'
-			});
-			if (ischeckEngaged.msgCode === 'PTM0000') {
-        let ischeckIsEngagedUser = await checkIsEngagedUser({
-          $props: this.props,
-          ACCode: 'AC20190618_618'
-        });
-				if (ischeckIsEngagedUser.msgCode === 'PTM0000') {
-					if (!store.getAC20190618()) {
-            // 需要弹窗
-            this.setState({
-
-            })
-					} else {
-						// 不需要弹窗
-						// TODO 参与活动
-						this.timeDown618(100);
-					}
-				} else {
-					// 参与了
-				}
-			}
-		} else {
+			this.getAC618_split();
+		} else if (!store.getShowActivityModal()) {
+			this.getAC618_split();
 		}
 	};
+	// 618 倒计时
+	getAC618_split = async () => {
+		let ischeckEngaged = await checkEngaged({
+			$props: this.props,
+			AcCode: 'AC20190618_618'
+		});
+		if (ischeckEngaged.msgCode === 'PTM0000') {
+			let ischeckIsEngagedUser = await checkIsEngagedUser({
+				$props: this.props,
+				AcCode: 'AC20190618_618'
+			});
+			if (
+				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+				ischeckIsEngagedUser.data &&
+				ischeckIsEngagedUser.data.isEngagedUser === '1'
+			) {
+				// 未参与
+				if (!store.getAC20190618()) {
+					// 需要弹窗
+					this.setState({
+						modalType: 'jd618',
+						isShowActivityModal: true
+					});
+					store.setShowActivityModal(true);
+				} else {
+					// 不需要弹窗
+					let issaveUserInfoEngaged = await saveUserInfoEngaged({
+						$props: this.props,
+						AcCode: 'AC20190618_618'
+					});
+					if (issaveUserInfoEngaged.msgCode === 'PTM0000') {
+						this.setState(
+							{
+								DownTime321: true
+							},
+							() => {
+								store.removeAC20190618();
+								setTimeout(() => {
+									this.timeDown618(1);
+								}, 4000);
+							}
+						);
+					} else {
+						this.props.toast.info(issaveUserInfoEngaged.msgInfo);
+					}
+				}
+			} else if (
+				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+				ischeckIsEngagedUser.data &&
+				ischeckIsEngagedUser.data.isEngagedUser === '0'
+			) {
+				this.timeDown618(ischeckIsEngagedUser.data.joinActivityTm);
+			}
+		}
+	};
+	// 开始调用倒计时
 	timeDown618 = (time) => {
-		console.log(time);
 		this.child.handleStateChange('started', time);
 	};
 
@@ -994,6 +1031,11 @@ export default class home_page extends PureComponent {
 			case 'koubei_old_user':
 				buriedPointEvent(activity.koubeiHomeOldModalClick);
 				break;
+			case 'jd618':
+				store.setAC20190618(true);
+				this.getAC618();
+				break;
+
 			default:
 				break;
 		}
@@ -1437,7 +1479,7 @@ export default class home_page extends PureComponent {
 			modalType,
 			modalBtnFlag,
 			blackData,
-			time618
+			DownTime321
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1467,7 +1509,7 @@ export default class home_page extends PureComponent {
 					}}
 				/>
 				{this.componentsAddCards()}
-				{/* <CountDownBox></CountDownBox> */}
+				{DownTime321 ? <CountDownBox /> : null}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}

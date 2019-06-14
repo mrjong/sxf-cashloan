@@ -5,6 +5,7 @@ import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import { Modal } from 'antd-mobile';
 import qs from 'qs';
+import { checkEngaged, checkIsEngagedUser, saveUserInfoEngaged } from 'utils';
 import successImg from './img/success.png';
 import failImg from './img/fail.png';
 import btnImg from './img/btn.png';
@@ -23,10 +24,42 @@ export default class remit_ing_page extends PureComponent {
 	}
 	componentWillMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		this.setState({
-			queryData
-		});
+		this.setState(
+			{
+				queryData
+			},
+			() => {
+				this.getAC618();
+			}
+		);
 	}
+	getAC618 = async () => {
+		if (queryData.needAlert) {
+			let ischeckEngaged = await checkEngaged({
+				$props: this.props,
+				AcCode: 'AC20190618_618'
+			});
+			if (ischeckEngaged.msgCode === 'PTM0000') {
+				let ischeckIsEngagedUser = await checkIsEngagedUser({
+					$props: this.props,
+					AcCode: 'AC20190618_618'
+				});
+				if (
+					ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+					ischeckIsEngagedUser.data &&
+					ischeckIsEngagedUser.data.isEngagedUser === '0'
+				) {
+					if (ischeckIsEngagedUser.data.joinActivityTm <= 10 * 60 ) {
+
+					} else if (ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60) {
+						this.setState({
+							failModalShow: true
+						});
+					}
+				}
+			}
+		}
+	};
 	closeBtnFunc = () => {
 		this.setState({
 			ACTipAlertShow: false,
@@ -34,6 +67,7 @@ export default class remit_ing_page extends PureComponent {
 			failModalShow: false
 		});
 	};
+
 	render() {
 		const { queryData, ACTipAlertShow, successModalShow, failModalShow } = this.state;
 		return (
