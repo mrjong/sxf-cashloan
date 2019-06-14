@@ -1057,7 +1057,10 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(activity.fenqiHomeModalClose);
 				break;
 			case 'jd618': // 618活动弹框按钮
-				buriedPointEvent(activity.jd618ModalBtnClick);
+				buriedPointEvent(activity.jd618HomeModalClose);
+				break;
+			case 'freebill': // 免息
+				buriedPointEvent(activity.freeBillHomeModalClose);
 				break;
 			default:
 				break;
@@ -1080,6 +1083,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(activity.koubeiHomeOldModalClick);
 				break;
 			case 'jd618':
+				buriedPointEvent(activity.jd618ModalBtnClick);
 				store.setAC20190618(true);
 				this.getAC618();
 				break;
