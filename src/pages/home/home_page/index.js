@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan } from 'utils';
+import { isWXOpen, getDeviceType, getNextStr, isCanLoan, checkEngaged } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -728,14 +728,23 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 618 逻辑处理
-	getAC618 = () => {
+	getAC618 = async () => {
 		if (!store.getAC20190618()) {
-			if (1 === 1) {
-				// 没有过期
-				if (1 === 1) {
-					//  没有参与
-					if (store.getAC20190618()) {
-						// 需要弹窗
+			let ischeckEngaged = await checkEngaged({
+				$props: this.props,
+				ACCode: 'AC20190618_618'
+			});
+			if (ischeckEngaged.msgCode === 'PTM0000') {
+        let ischeckIsEngagedUser = await checkIsEngagedUser({
+          $props: this.props,
+          ACCode: 'AC20190618_618'
+        });
+				if (ischeckIsEngagedUser.msgCode === 'PTM0000') {
+					if (!store.getAC20190618()) {
+            // 需要弹窗
+            this.setState({
+
+            })
 					} else {
 						// 不需要弹窗
 						// TODO 参与活动
