@@ -12,6 +12,7 @@ import Carousels from 'components/Carousels';
 import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
+import CountDownBox from 'components/CountDownBox';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -24,8 +25,8 @@ import {
 	HomeModal,
 	CardProgress,
 	AddCards,
-  ExamineCard,
-  TimeDown
+	ExamineCard,
+	TimeDown
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
@@ -48,7 +49,7 @@ const API = {
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
-	checkKoubei: '/activeConfig/userCheck'	//是否参与口碑活动,及新老用户区分
+	checkKoubei: '/activeConfig/userCheck' //是否参与口碑活动,及新老用户区分
 };
 let token = '';
 let tokenFromStorage = '';
@@ -102,7 +103,8 @@ export default class home_page extends PureComponent {
 			cardStatus: '',
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
-			userMaxAmt: '' // 最高可申请还款金(元)
+			userMaxAmt: '', // 最高可申请还款金(元)
+			time618: 0
 		};
 	}
 
@@ -210,6 +212,7 @@ export default class home_page extends PureComponent {
 	};
 	// 首页现金分期基本信息查询接口
 	indexshowType = () => {
+		this.getAC618();
 		this.props.$fetch.post(API.indexshowType).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				this.setState({
@@ -724,6 +727,31 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
+	// 618 逻辑处理
+	getAC618 = () => {
+		if (!store.getAC20190618()) {
+			if (1 === 1) {
+				// 没有过期
+				if (1 === 1) {
+					//  没有参与
+					if (store.getAC20190618()) {
+						// 需要弹窗
+					} else {
+						// 不需要弹窗
+						// TODO 参与活动
+						this.timeDown618(100);
+					}
+				} else {
+					// 参与了
+				}
+			}
+		} else {
+		}
+	};
+	timeDown618 = (time) => {
+		console.log(time);
+		this.child.handleStateChange('started', time);
+	};
 
 	handleApply = () => {
 		if (this.state.showDiv === '50000') {
@@ -743,11 +771,11 @@ export default class home_page extends PureComponent {
 	};
 	// 获取首页信息
 	requestGetUsrInfo = async () => {
-		let koubeiRes
+		let koubeiRes;
 		try {
-			koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
+			koubeiRes = isMPOS() && (await this.props.$fetch.post(API.checkKoubei));
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
 		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
 			// const result = {
@@ -806,7 +834,8 @@ export default class home_page extends PureComponent {
 					this.setState(
 						{
 							isShowActivityModal: true,
-							modalType: koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
+							modalType:
+								koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
 							modalBtnFlag: true
 						},
 						() => {
@@ -955,7 +984,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'koubei_old_user':
 				buriedPointEvent(activity.koubeiHomeOldModalClick);
-				break
+				break;
 			default:
 				break;
 		}
@@ -1398,7 +1427,8 @@ export default class home_page extends PureComponent {
 			overDueModalFlag,
 			modalType,
 			modalBtnFlag,
-			blackData
+			blackData,
+			time618
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1421,9 +1451,14 @@ export default class home_page extends PureComponent {
 				{componentsDisplay}
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
-        )}
-        <TimeDown></TimeDown>
+				)}
+				<TimeDown
+					onRef={(ref) => {
+						this.child = ref;
+					}}
+				/>
 				{this.componentsAddCards()}
+				{/* <CountDownBox></CountDownBox> */}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}

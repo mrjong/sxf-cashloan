@@ -16,7 +16,6 @@ import bannerImg1 from './img/login_bg1.png';
 import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
 import logoImg from 'assets/images/common/black_logo.png';
-import CountDownBox from 'components/CountDownBox'
 let timmer;
 const needDisplayOptions = [ 'basicInf' ];
 const API = {
@@ -283,7 +282,6 @@ export default class login_page extends PureComponent {
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page_wrap}>
-      <CountDownBox></CountDownBox>
 				<div ref="loginWrap" className={styles.dc_landing_page}>
 					<img className={styles.banner} src={bannerImg} alt="落地页banner" />
 					<div ref="loginContent" className={styles.content}>

@@ -3,14 +3,20 @@ import style from './index.scss';
 import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
+import { Modal } from 'antd-mobile';
 import qs from 'qs';
-
+import successImg from './img/success.png';
+import failImg from './img/fail.png';
+import btnImg from './img/btn.png';
+import ACTipAlert from 'components/ACTipAlert';
+import message from './img/message.png';
 @setBackGround('#fff')
 export default class remit_ing_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			queryData: {}
+			queryData: {},
+			ACTipAlertShow: true
 		};
 	}
 	componentWillMount() {
@@ -19,8 +25,13 @@ export default class remit_ing_page extends PureComponent {
 			queryData
 		});
 	}
+	closeBtnFunc = () => {
+		this.setState({
+			ACTipAlertShow: false
+		});
+	};
 	render() {
-		const { queryData } = this.state;
+		const { queryData, ACTipAlertShow } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -49,6 +60,28 @@ export default class remit_ing_page extends PureComponent {
 						<div className={style.line} />
 					</div>
 				</div>
+				{/* <Modal className="loan_apply_succ_alert" visible={true} transparent>
+					<img src={successImg} className={style.successImg} />
+          <div className={style.successTitle}>恭喜获得</div>
+					<div className={style.successTime}>总用时：09:09</div>
+					<img src={btnImg} className={style.btnImg} />
+				</Modal> */}
+				{/* <Modal className="loan_apply_succ_alert" visible={true} transparent>
+					<img src={failImg} className={style.successImg} />
+					<div className={style.failTitle}>很遗憾，您已超时</div>
+					<div className={style.failTime}>总用时：09:09</div>
+					<img src={btnImg} className={style.btnImg2} />
+				</Modal> */}
+
+				<ACTipAlert
+					ACTipAlertShow={ACTipAlertShow}
+					resetProps={{
+						title: '温馨提示',
+						desc: '由于您的借款不符合获奖规则 故无法获得奖励，再接再厉吧～',
+						closeBtnFunc: this.closeBtnFunc
+					}}
+				/>
+
 				<ZButton
 					onClick={() => {
 						this.props.history.push('/home/home');
