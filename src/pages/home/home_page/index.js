@@ -843,7 +843,7 @@ export default class home_page extends PureComponent {
 		} catch (error) {
 			console.log(error);
 		}
-		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
+		this.props.$fetch.post(API.USR_INDEX_INFO).then(async (result) => {
 			// const result = {
 			// 	msgCode: 'PTM0000',
 			// 	msgInfo: '',
@@ -895,17 +895,34 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
+				let ischeckIsEngagedUser = null;
+				let ischeckEngaged = await checkEngaged({
+					$props: this.props,
+					AcCode: 'AC20190618_618'
+				});
+				if (ischeckEngaged.msgCode === 'PTM0000') {
+					ischeckIsEngagedUser = await checkIsEngagedUser({
+						$props: this.props,
+						AcCode: 'AC20190618_618'
+					});
+				}
 				if (
-					result.data.indexSts === 'LN0001' ||
-					result.data.indexSts === 'LN0002' ||
-					result.data.indexSts === 'LN0010'
+					(result.data.indexSts === 'LN0001' ||
+						result.data.indexSts === 'LN0002' ||
+						result.data.indexSts === 'LN0010') &&
+					(ischeckEngaged.msgCode === 'PTM0000' && ischeckIsEngagedUser.data.isEngagedUser === '1')
 				) {
 					this.getAC618();
 				} else if (
 					(result.data.indexSts === 'LN0003' ||
 						result.data.indexSts === 'LN0006' ||
 						result.data.indexSts === 'LN0008') &&
-					!store.getShowActivityModal()
+					!store.getShowActivityModal() &&
+					(ischeckEngaged.msgCode !== 'PTM0000' ||
+						(ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
+						(ischeckIsEngagedUser.data &&
+							ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+							ischeckIsEngagedUser.data.joinActivityTm > 10 * 60))
 				) {
 					this.getACmianxi();
 				} else if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
