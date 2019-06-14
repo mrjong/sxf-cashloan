@@ -73,11 +73,12 @@ export const storeTypes = {
 	CashFenQiCardArr: 'CashFenQiCardArr', //现金分期收、还卡数组
 	HomeAutId: 'HomeAutId', // 首页的autId
 	AutId: 'AutId', // 接口调用需要的AutId
-  FQActivity: 'FQActivity', // 参与现金分期活动
+	FQActivity: 'FQActivity', // 参与现金分期活动
 	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
 	PercentCount: 'PercentCount', //百分比次数
 	HomeConfirmAgency: 'HomeConfirmAgency', // 首页进入到签约借款页面参数
   PayType: 'PayType', // 还款方式
   WxPayEnd:'WxPayEnd', // 微信返回不刷新
-	DepositBankName: 'DepositBankName' // 储蓄卡银行名称
+	DepositBankName: 'DepositBankName', // 储蓄卡银行名称
+	AC20190618: 'AC20190618' //618
 };

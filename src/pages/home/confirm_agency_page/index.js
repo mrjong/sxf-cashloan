@@ -343,7 +343,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 关闭弹框
 	handleCloseTipModal = (type) => {
-		const { isNeedExamine } = this.state;
+		const { isNeedExamine, cardBillAmt, repayInfo2 } = this.state;
 		this.setState(
 			{
 				[type]: false
@@ -360,7 +360,7 @@ export default class confirm_agency_page extends PureComponent {
 					let desc = goData.withdrawType === '3' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 					this.props.history.push({
 						pathname: '/home/loan_apply_succ_page',
-						search: `?title=${title}&desc=${desc}`
+						search: `?title=${title}&desc=${desc}&needAlert=true&cardBillAmt=${cardBillAmt}&perdCnt=${repayInfo2.perdCnt}`
 					});
 				}
 			}
@@ -537,7 +537,8 @@ export default class confirm_agency_page extends PureComponent {
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
-				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit === 'M'
+				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2
+					.perdUnit === 'M'
 					? this.state.repayInfo2.perdLth
 					: 1}`,
 				state: { nouseCoupon: true }
@@ -545,15 +546,14 @@ export default class confirm_agency_page extends PureComponent {
 			return;
 		}
 		if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-			console.log(this.state.repayInfo2, '=====11======');
 			store.setCouponData(this.state.couponInfo);
 		} else {
-			console.log(this.state.repayInfo2, '===========');
 			store.setCouponData(this.state.repayInfo2.data);
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit === 'M'
+			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit ===
+			'M'
 				? this.state.repayInfo2.perdLth
 				: 1}`
 		});
@@ -753,7 +753,7 @@ export default class confirm_agency_page extends PureComponent {
 		});
 		this.requestBindCardState();
 	}
-	
+
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
 		const { repayInfo } = this.state;
@@ -814,7 +814,7 @@ export default class confirm_agency_page extends PureComponent {
 			  	this.requestBindCardState();
 			break;
 			case 'PBM1010':
-				this.props.toast.info(res.msgInfo);	
+				this.props.toast.info(res.msgInfo);
 				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
 			default:

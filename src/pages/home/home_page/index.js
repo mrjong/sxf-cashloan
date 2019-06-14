@@ -2,7 +2,15 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	isCanLoan,
+	checkEngaged,
+	checkIsEngagedUser,
+	saveUserInfoEngaged
+} from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -12,6 +20,7 @@ import Carousels from 'components/Carousels';
 import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
+import CountDownBox from 'components/CountDownBox';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -24,7 +33,8 @@ import {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard
+	ExamineCard,
+	TimeDown
 } from './components';
 import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
@@ -47,7 +57,7 @@ const API = {
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
-	checkKoubei: '/activeConfig/userCheck'	//是否参与口碑活动,及新老用户区分
+	checkKoubei: '/activeConfig/userCheck' //是否参与口碑活动,及新老用户区分
 };
 let token = '';
 let tokenFromStorage = '';
@@ -100,7 +110,8 @@ export default class home_page extends PureComponent {
 			cardStatus: '',
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
-			userMaxAmt: '' // 最高可申请还款金(元)
+			userMaxAmt: '', // 最高可申请还款金(元)
+			DownTime321: false
 		};
 	}
 
@@ -145,8 +156,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
-    // 去除支付方式默认选中
-    store.removePayType();
+		// 去除支付方式默认选中
+		store.removePayType();
 		// 去除借款页面参数
 		store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息
@@ -487,7 +498,7 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
-				buriedPointEvent(home.machineAudit)
+				buriedPointEvent(home.machineAudit);
 				this.props.history.push({
 					pathname: '/home/credit_apply_succ_page',
 					search: `?autId=${indexData.autId}`
@@ -718,6 +729,94 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
+	getACmianxi = async () => {
+		let ischeckEngaged = await checkEngaged({
+			$props: this.props,
+			AcCode: 'AC20190618_mianxi'
+		});
+		if (ischeckEngaged.msgCode === 'PTM0000') {
+			let ischeckIsEngagedUser = await checkIsEngagedUser({
+				$props: this.props,
+				AcCode: 'AC20190618_mianxi'
+			});
+			if (
+				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+				ischeckIsEngagedUser.data &&
+				ischeckIsEngagedUser.data.isEngagedUser === '1'
+			) {
+				// 需要弹窗
+				this.setState({
+					modalType: 'freebill',
+					isShowActivityModal: true
+				});
+			}
+		}
+	};
+	// 618 逻辑处理
+	getAC618 = async () => {
+		if (store.getAC20190618() || !store.getShowActivityModal()) {
+			this.getAC618_split();
+		}
+	};
+	// 618 倒计时
+	getAC618_split = async () => {
+		let ischeckEngaged = await checkEngaged({
+			$props: this.props,
+			AcCode: 'AC20190618_618'
+		});
+		if (ischeckEngaged.msgCode === 'PTM0000') {
+			let ischeckIsEngagedUser = await checkIsEngagedUser({
+				$props: this.props,
+				AcCode: 'AC20190618_618'
+			});
+			if (
+				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+				ischeckIsEngagedUser.data &&
+				ischeckIsEngagedUser.data.isEngagedUser === '1'
+			) {
+				// 未参与
+				if (!store.getAC20190618()) {
+					// 需要弹窗
+					this.setState({
+						modalType: 'jd618',
+						isShowActivityModal: true
+					});
+				} else {
+					// 不需要弹窗
+					let issaveUserInfoEngaged = await saveUserInfoEngaged({
+						$props: this.props,
+						AcCode: 'AC20190618_618'
+					});
+					if (issaveUserInfoEngaged.msgCode === 'PTM0000') {
+						this.setState(
+							{
+								DownTime321: true
+							},
+							() => {
+								store.removeAC20190618();
+								store.removeShowActivityModal();
+								setTimeout(() => {
+									this.timeDown618(1);
+								}, 4000);
+							}
+						);
+					} else {
+						this.props.toast.info(issaveUserInfoEngaged.msgInfo);
+					}
+				}
+			} else if (
+				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+				ischeckIsEngagedUser.data &&
+				ischeckIsEngagedUser.data.isEngagedUser === '0'
+			) {
+				this.timeDown618(ischeckIsEngagedUser.data.joinActivityTm);
+			}
+		}
+	};
+	// 开始调用倒计时
+	timeDown618 = (time) => {
+		this.child.handleStateChange('started', time);
+	};
 
 	handleApply = () => {
 		if (this.state.showDiv === '50000') {
@@ -725,7 +824,7 @@ export default class home_page extends PureComponent {
 			buriedPointEvent(home.applyCreditRepayment);
 		}
 		getNextStr({
-			$props: this.props,
+			$props: this.props
 			// callBack: (resBackMsg) => {
 			// 	if (this.state.showDiv === 'circle') {
 			// 		buriedPointEvent(home.homeContinueApply, {
@@ -743,9 +842,9 @@ export default class home_page extends PureComponent {
 			isInvoking_jjp = await this.isInvoking_jjp();
 			// koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
-		this.props.$fetch.post(API.USR_INDEX_INFO).then((result) => {
+		this.props.$fetch.post(API.USR_INDEX_INFO).then(async (result) => {
 			// const result = {
 			// 	msgCode: 'PTM0000',
 			// 	msgInfo: '',
@@ -797,28 +896,48 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				//口碑活动弹窗
-				// if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
-				// 	this.setState(
-				// 		{
-				// 			isShowActivityModal: true,
-				// 			modalType: koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
-				// 			modalBtnFlag: true
-				// 		},
-				// 		() => {
-				// 			store.setShowActivityModal(true);
-				// 		}
-				// 	);
-				// } else 
-				// 拒就赔活动
-				if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
+				let ischeckIsEngagedUser = null;
+				let ischeckEngaged = await checkEngaged({
+					$props: this.props,
+					AcCode: 'AC20190618_618'
+				});
+				if (ischeckEngaged.msgCode === 'PTM0000') {
+					ischeckIsEngagedUser = await checkIsEngagedUser({
+						$props: this.props,
+						AcCode: 'AC20190618_618'
+					});
+				}
+				if (
+					(result.data.indexSts === 'LN0001' ||
+						result.data.indexSts === 'LN0002' ||
+						result.data.indexSts === 'LN0010') &&
+					(ischeckEngaged.msgCode === 'PTM0000' &&
+						((ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
+							(ischeckIsEngagedUser.data &&
+								ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+								ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
+				) {
+					this.getAC618();
+				} else if (
+					(result.data.indexSts === 'LN0003' ||
+						result.data.indexSts === 'LN0006' ||
+						result.data.indexSts === 'LN0008') &&
+					!store.getShowActivityModal() &&
+					(ischeckEngaged.msgCode !== 'PTM0000' ||
+						(ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
+						(ischeckIsEngagedUser.data &&
+							ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+							ischeckIsEngagedUser.data.joinActivityTm > 10 * 60))
+				) {
+					this.getACmianxi();
+				} else if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
 					this.setState(
 						{
 							isShowActivityModal: true,
 							modalType: 'jujiupei'
 						},
 						() => {
-							store.setShowActivityModal(true);
+							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
 				}
@@ -920,11 +1039,18 @@ export default class home_page extends PureComponent {
 		this.setState({
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
+		store.setShowActivityModal(true);
 		switch (type) {
 			case 'brand': // 品牌活动弹框按钮
 				break;
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalClose);
+				break;
+			case 'jd618': // 618活动弹框按钮
+				buriedPointEvent(activity.jd618HomeModalClose);
+				break;
+			case 'freebill': // 免息
+				buriedPointEvent(activity.freeBillHomeModalClose);
 				break;
 			default:
 				break;
@@ -945,11 +1071,21 @@ export default class home_page extends PureComponent {
 				break;
 			case 'koubei_old_user':
 				buriedPointEvent(activity.koubeiHomeOldModalClick);
-				break
+				break;
 			case 'jjp': // 拒就赔弹框按钮
-				buriedPointEvent(activity.jjpHomeModalClick)
+				buriedPointEvent(activity.jjpHomeModalClick);
 				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
-			break;
+				break;
+				break;
+			case 'jd618':
+				buriedPointEvent(activity.jd618ModalBtnClick);
+				store.setAC20190618(true);
+				this.getAC618();
+				break;
+			case 'freebill': // 618活动弹框按钮
+				buriedPointEvent(activity.freeBillModalBtnClick);
+				this.props.history.push('/activity/freebill_page');
+				break;
 			default:
 				break;
 		}
@@ -1300,7 +1436,7 @@ export default class home_page extends PureComponent {
 
 	// 点击不同进度状态，跳转页面
 	handleProgressApply = (sts) => {
-		buriedPointEvent(home.billImport)
+		buriedPointEvent(home.billImport);
 		// ，01：爬取中，02：爬取成功，03：爬取失败
 		switch (sts) {
 			case '00':
@@ -1387,7 +1523,8 @@ export default class home_page extends PureComponent {
 				.get(API.checkJoin)
 				.then((res) => {
 					// 0:不弹出  1:弹出
-					if (res && res.msgCode === 'JJP0002') { // 用户没参加过拒就赔活动
+					if (res && res.msgCode === 'JJP0002') {
+						// 用户没参加过拒就赔活动
 						// 如果是活动来的，
 						resolve('1');
 					} else {
@@ -1411,7 +1548,8 @@ export default class home_page extends PureComponent {
 			overDueModalFlag,
 			modalType,
 			modalBtnFlag,
-			blackData
+			blackData,
+			DownTime321
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1435,7 +1573,13 @@ export default class home_page extends PureComponent {
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				)}
+				<TimeDown
+					onRef={(ref) => {
+						this.child = ref;
+					}}
+				/>
 				{this.componentsAddCards()}
+				{DownTime321 ? <CountDownBox /> : null}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
