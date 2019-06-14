@@ -107,6 +107,11 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		this.setState({
+			modalType: 'freebill',
+			isShowActivityModal: true,
+			modalBtnFlag: true
+		});
 		// 获取token
 		token = Cookie.get('fin-v-card-token');
 		tokenFromStorage = store.getToken();

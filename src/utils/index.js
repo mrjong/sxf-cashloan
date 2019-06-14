@@ -423,8 +423,8 @@ export const getOperatorStatus = ({ $props }) => {
 									.then((result) => {
 										if (result.msgCode === 'PTM0000' && result.data.url) {
 											$props.SXFToast.hide();
-                      store.setMoxieBackUrl('/home/loan_repay_confirm_page');
-                      // TODO
+											store.setMoxieBackUrl('/home/loan_repay_confirm_page');
+											// TODO
 											// store.getToggleMoxieCard(true);
 											// setTimeout(() => {
 											// 运营商直接返回的问题
@@ -762,3 +762,8 @@ export const debounce = (method, delay) => {
 		}, delay);
 	};
 };
+
+export const generateRandomPhone = () => {
+	const chars = ['3', '5', '7', '8'];
+	return `1${chars[Math.ceil(Math.random() * 3)]}${Math.ceil(Math.random() * 9)}****${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}`
+}

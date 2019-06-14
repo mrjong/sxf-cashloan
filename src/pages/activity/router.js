@@ -31,4 +31,9 @@ export default [
 		title: '618',
 		component: () => import('pages/activity/jd618_page')
 	},
+	{
+		path: '/activity/freebill_page',
+		title: '免账单 随便刷',
+		component: () => import('pages/activity/freebill_page')
+	},
 ];
