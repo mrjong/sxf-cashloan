@@ -215,7 +215,6 @@ export default class home_page extends PureComponent {
 	};
 	// 首页现金分期基本信息查询接口
 	indexshowType = () => {
-		this.getAC618();
 		this.props.$fetch.post(API.indexshowType).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				this.setState({
@@ -730,12 +729,33 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-
+	getACmianxi = async () => {
+		let ischeckEngaged = await checkEngaged({
+			$props: this.props,
+			AcCode: 'AC20190618_mianxi'
+		});
+		if (ischeckEngaged.msgCode === 'PTM0000') {
+			let ischeckIsEngagedUser = await checkIsEngagedUser({
+				$props: this.props,
+				AcCode: 'AC20190618_mianxi'
+			});
+			if (
+				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+				ischeckIsEngagedUser.data &&
+				ischeckIsEngagedUser.data.isEngagedUser === '1'
+			) {
+				// 需要弹窗
+				this.setState({
+					modalType: 'freebill',
+					modalBtnFlag: true,
+					isShowActivityModal: true
+				});
+			}
+		}
+	};
 	// 618 逻辑处理
 	getAC618 = async () => {
-		if (!store.getAC20190618()) {
-			this.getAC618_split();
-		} else if (!store.getShowActivityModal()) {
+		if (store.getAC20190618() || !store.getShowActivityModal()) {
 			this.getAC618_split();
 		}
 	};
@@ -762,7 +782,6 @@ export default class home_page extends PureComponent {
 						modalType: 'jd618',
 						isShowActivityModal: true
 					});
-					store.setShowActivityModal(true);
 				} else {
 					// 不需要弹窗
 					let issaveUserInfoEngaged = await saveUserInfoEngaged({
@@ -776,6 +795,7 @@ export default class home_page extends PureComponent {
 							},
 							() => {
 								store.removeAC20190618();
+								store.removeShowActivityModal();
 								setTimeout(() => {
 									this.timeDown618(1);
 								}, 4000);
@@ -875,19 +895,27 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				//口碑活动弹窗
-				if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType:
-								koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
-							modalBtnFlag: true
-						},
-						() => {
-							store.setShowActivityModal(true);
-						}
-					);
+				if (
+					result.data.indexSts === 'LN0001' ||
+					result.data.indexSts === 'LN0002' ||
+					result.data.indexSts === 'LN0010'
+				) {
+					this.getAC618();
+				} else if (
+					(result.data.indexSts === 'LN0003' ||
+						result.data.indexSts === 'LN0006' ||
+						result.data.indexSts === 'LN0008') &&
+					!store.getShowActivityModal()
+				) {
+					this.getACmianxi();
+				} else if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
+					//口碑活动弹窗
+					this.setState({
+						isShowActivityModal: true,
+						modalType:
+							koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
+						modalBtnFlag: true
+					});
 				} else if (
 					isMPOS() &&
 					!store.getShowActivityModal() &&
@@ -899,7 +927,6 @@ export default class home_page extends PureComponent {
 							modalType: 'brand'
 						},
 						() => {
-							store.setShowActivityModal(true);
 							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
 						}
 					);
@@ -1002,6 +1029,7 @@ export default class home_page extends PureComponent {
 		this.setState({
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
+		store.setShowActivityModal(true);
 		switch (type) {
 			case 'brand': // 品牌活动弹框按钮
 				break;
