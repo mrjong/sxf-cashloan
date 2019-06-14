@@ -29,7 +29,7 @@ export default class RuleModal extends PureComponent {
                     }
                   </ol>
                 </div>
-                <p className={styles.bottom_desc}>如有疑问，请联系随行付还到客服400-088-7626</p>
+                <p className={styles.bottom_desc}>如有疑问，请联系随行付还到客服<br/>400-088-7626</p>
               </div>
               <div className={styles.closeBtn} onClick={handleClose}></div>
             </div>

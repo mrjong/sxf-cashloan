@@ -154,6 +154,9 @@ const activity = {
 	jd618Entry: `${prefix}_JD618_ENTRY`,
 	jd618BtnClick: `${prefix}_ACTIVITY_JD618_BTN`,
 	jd618ModalBtnClick: `${prefix}_ACTIVITY_JD618_MODAL_BTN`,
+	freeBillEntry: `${prefix}_FREEBILL_ENTRY`,
+	freeBillBtnClick: `${prefix}_ACTIVITY_FREEBILL_BTN`,
+	freeBillModalBtnClick: `${prefix}_ACTIVITY_FREEBILL_MODAL_BTN`,
 };
 
 const moxie_bank_list = {

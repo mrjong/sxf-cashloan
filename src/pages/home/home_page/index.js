@@ -1035,7 +1035,9 @@ export default class home_page extends PureComponent {
 				store.setAC20190618(true);
 				this.getAC618();
 				break;
-
+			case 'freebill': // 618活动弹框按钮
+				buriedPointEvent(activity.freeBillModalBtnClick);
+				break;
 			default:
 				break;
 		}

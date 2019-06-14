@@ -18,6 +18,7 @@ import { checkEngaged, checkIsEngagedUser } from '../../../utils'
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie'
 import fetch from 'sx-fetch';
+import ACTipAlert from 'components/ACTipAlert';
 
 @fetch.inject()
 export default class funsisong_page extends PureComponent {
@@ -43,13 +44,53 @@ export default class funsisong_page extends PureComponent {
   };
 
   // 进入首页
-  goHomePage = () => {
-    checkEngaged(this.props.$fetch, '').then(res => {
-      console.log(res)
-    })
-    // this.props.history.push('/home/home');
-    // store.setAC20190618(true)
+  goHomePage = async () => {
+    let ischeckEngaged = await checkEngaged({
+      $props: this.props,
+      AcCode: 'AC20190618_618'
+    });
+    if (ischeckEngaged.msgCode === 'PTM0000') {
+      let ischeckIsEngagedUser = await checkIsEngagedUser({
+        $props: this.props,
+        AcCode: 'AC20190618_618'
+      });
+      if (
+        // 未参与
+        ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+        ischeckIsEngagedUser.data &&
+        ischeckIsEngagedUser.data.isEngagedUser === '1'
+      ) {
+        store.setAC20190618(true)
+        this.props.history.push('/home/home');
+      } else if (
+        //已参与
+        ischeckIsEngagedUser.msgCode === 'PTM0000' &&
+        ischeckIsEngagedUser.data &&
+        ischeckIsEngagedUser.data.isEngagedUser === '0'
+      ) {
+        this.setState({
+          ACTipAlertShow: true,
+          alertDesc: '每位用户仅有1次参与机会，不要太贪心哦！'
+        })
+      }
+    } else if (ischeckEngaged.msgCode === 'PTM1000') {
+      this.props.toast.info(ischeckEngaged.msgInfo)
+      setTimeout(() => {
+        this.props.history.push('/login')
+      }, 2000)
+    } else {
+      this.props.toast.info(ischeckEngaged.msgInfo)
+    }
   }
+
+  closeBtnFunc = () => {
+    this.setState({
+      ACTipAlertShow: false,
+    }, () => {
+      this.props.history.push('/home/home');
+      store.setAC20190618(true)
+    })
+  };
 
   joinNow = () => {
     buriedPointEvent(activity.jd618BtnClick);
@@ -100,7 +141,7 @@ export default class funsisong_page extends PureComponent {
   }
 
   render() {
-    const { showLoginTip, isSelProtocal, showBoundle } = this.state;
+    const { showLoginTip, isSelProtocal, showBoundle, ACTipAlertShow, alertDesc } = this.state;
     return (
       <div className={styles.pinpai}>
         <SmsAlert
@@ -200,6 +241,14 @@ export default class funsisong_page extends PureComponent {
             </div>
           </div>
         }
+        <ACTipAlert
+          ACTipAlertShow={ACTipAlertShow}
+          resetProps={{
+            title: '温馨提示',
+            desc: alertDesc,
+            closeBtnFunc: this.closeBtnFunc
+          }}
+        />
         <RuleModal
           visible={this.state.showModal}
           actTime={'2019年6月18日-6月20日'}

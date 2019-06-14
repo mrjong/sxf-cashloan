@@ -50,7 +50,7 @@ export default class funsisong_page extends PureComponent {
   componentDidMount() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
     if (queryData.entry) {
-      buriedPointEvent(activity.jd618Entry, {
+      buriedPointEvent(activity.freeBillEntry, {
         entry: queryData.entry
       })
     }
@@ -78,7 +78,7 @@ export default class funsisong_page extends PureComponent {
   }
 
   joinNow = () => {
-    buriedPointEvent(activity.jd618BtnClick);
+    buriedPointEvent(activity.freeBillBtnClick);
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
     if (queryData.appId && queryData.token) {
       this.child.validateMposRelSts({
@@ -232,7 +232,7 @@ export default class funsisong_page extends PureComponent {
         <RuleModal
           visible={this.state.showModal}
           actTime={'2019年6月18日'}
-          actObject={'所有获得余额代偿额度未提交借款用户'}
+          actObject={'活动期间成功借款的用户即可参与'}
           actRules={[
             '1.活动期间，在每日成功借款的用户中抽取第88位、第188位、第288位、第388位、第488位，依此类推，用户获得免费还账单利息福利，最高免费代还2万元借款本金所产生的利息，相关数据以随行付还到后台记录为准；',
             '2.获奖用户将享受在还到的本笔获奖借款账单利息全免福利（超出2万部分不免息），奖励将以还款券的形式下发到用户账户中，仅限本笔订单还款时抵扣利息使用，不可转让或赠与；',
