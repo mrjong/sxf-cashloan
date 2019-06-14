@@ -1,17 +1,19 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
+import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import { Modal } from 'antd-mobile';
 import qs from 'qs';
-import { checkEngaged, checkIsEngagedUser, saveUserInfoEngaged } from 'utils';
+import { checkEngaged, checkIsEngagedUser } from 'utils';
 import successImg from './img/success.png';
 import failImg from './img/fail.png';
 import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import message from './img/message.png';
 @setBackGround('#fff')
+@fetch.inject()
 export default class remit_ing_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -19,7 +21,8 @@ export default class remit_ing_page extends PureComponent {
 			queryData: {},
 			ACTipAlertShow: false,
 			successModalShow: false,
-			failModalShow: false
+			failModalShow: false,
+			time: 0
 		};
 	}
 	componentWillMount() {
@@ -29,11 +32,11 @@ export default class remit_ing_page extends PureComponent {
 				queryData
 			},
 			() => {
-				this.getAC618();
+				this.getAC618(queryData);
 			}
 		);
 	}
-	getAC618 = async () => {
+	getAC618 = async (queryData) => {
 		if (queryData.needAlert) {
 			let ischeckEngaged = await checkEngaged({
 				$props: this.props,
@@ -49,27 +52,65 @@ export default class remit_ing_page extends PureComponent {
 					ischeckIsEngagedUser.data &&
 					ischeckIsEngagedUser.data.isEngagedUser === '0'
 				) {
-					if (ischeckIsEngagedUser.data.joinActivityTm <= 10 * 60 ) {
-
+					if (
+						ischeckIsEngagedUser.data.joinActivityTm <= 10 * 60 &&
+						queryData.perdCnt &&
+						Number(queryData.perdCnt) >= 3 &&
+						queryData.cardBillAmt &&
+						Number(queryData.cardBillAmt) >= 3000
+					) {
+						this.setState({
+							successModalShow: true,
+							time: this.formatSeconds(ischeckIsEngagedUser.data.joinActivityTm)
+						});
+					} else if (ischeckIsEngagedUser.data.joinActivityTm <= 10 * 60) {
+						this.setState({
+							ACTipAlertShow: true
+						});
 					} else if (ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60) {
 						this.setState({
-							failModalShow: true
+							failModalShow: true,
+							time: this.formatSeconds(ischeckIsEngagedUser.data.joinActivityTm)
 						});
 					}
 				}
 			}
 		}
 	};
+	formatSeconds = (count = 0) => {
+		let seconds = count % 60;
+		let minutes = Math.floor(count / 60);
+
+		if (seconds < 10) {
+			seconds = '0' + seconds;
+		}
+
+		if (minutes < 10) {
+			minutes = '0' + minutes;
+		}
+
+		return `${minutes}:${seconds}`;
+	};
 	closeBtnFunc = () => {
-		this.setState({
-			ACTipAlertShow: false,
-			successModalShow: false,
-			failModalShow: false
-		});
+		let queryData2 = this.state.queryData;
+		delete queryData2.needAlert;
+		this.setState(
+			{
+				ACTipAlertShow: false,
+				successModalShow: false,
+				failModalShow: false
+			},
+			() => {
+				this.props.history.replace({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?${qs.stringify(queryData2)}`
+				});
+			}
+		);
 	};
 
 	render() {
-		const { queryData, ACTipAlertShow, successModalShow, failModalShow } = this.state;
+		const { queryData, ACTipAlertShow, successModalShow, failModalShow, time } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -101,13 +142,13 @@ export default class remit_ing_page extends PureComponent {
 				<Modal className="loan_apply_succ_alert" visible={successModalShow} transparent>
 					<img src={successImg} className={style.successImg} />
 					<div className={style.successTitle}>恭喜获得</div>
-					<div className={style.successTime}>总用时：09:09</div>
+					<div className={style.successTime}>总用时：{time}</div>
 					<img src={btnImg} onClick={this.closeBtnFunc} className={style.btnImg} />
 				</Modal>
 				<Modal className="loan_apply_succ_alert" visible={failModalShow} transparent>
 					<img src={failImg} className={style.successImg} />
 					<div className={style.failTitle}>很遗憾，您已超时</div>
-					<div className={style.failTime}>总用时：09:09</div>
+					<div className={style.failTime}>总用时：{time}</div>
 					<img src={btnImg} onClick={this.closeBtnFunc} className={style.btnImg2} />
 				</Modal>
 
