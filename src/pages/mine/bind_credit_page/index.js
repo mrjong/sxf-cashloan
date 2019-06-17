@@ -46,8 +46,18 @@ export default class bind_credit_page extends PureComponent {
 		this.queryCardInfo()
 	}
 
+	componentDidMount() {
+		this.props.form.setFieldsValue({
+			valueInputCarNumber: store.getBindCreditCardNo(),
+		});
+	}
+
 	componentWillUnmount() {
 		// isFetching = false;
+		const pathname = this.props.history.location.pathname
+		if (!(pathname === '/mine/support_credit_page') ) {
+			store.removeBindCreditCardNo();
+		}
 	}
 
 	// 获取信用卡信息
@@ -249,9 +259,12 @@ export default class bind_credit_page extends PureComponent {
 						maxLength="24"
 						type="bankCard"
 						{...getFieldProps('valueInputCarNumber', {
-							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }]
+							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }],
+							onChange: (value) => {
+								store.setBindCreditCardNo(value);
+							}
 						})}
-						placeholder={`请补足尾号为${this.state.cardLastNo}的信用卡`}
+						placeholder={`请补足尾号为${this.state.cardLastNo || 'xxxx'}的信用卡`}
 						onBlur={() => {
 							handleInputBlur();
 						}}
