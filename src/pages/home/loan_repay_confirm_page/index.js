@@ -707,28 +707,28 @@ export default class loan_repay_confirm_page extends PureComponent {
 			? this.props.form.getFieldValue('loanMoney')
 			: fullMinAmt;
 		return (
-			<div className={[ style.pageWrapper, 'loan_repay_confirm' ].join(' ')}>
+			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
 				<ScrollText />
-				<div className={[ style.page_inner_wrap, 'modal_l_r2' ].join(' ')}>
+				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.top}>
 							<div className={style.bankBox}>
-								<span className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
+								<span className={['bank_ico', iconClass, `${style.bankLogo}`].join(' ')} />
 								<span className={style.name}>{!bankName ? '****' : bankName}</span>
 								<span className={style.lastNo}>（{!cardNoHid ? '****' : cardNoHid.slice(-4)}）</span>
 							</div>
 							{cardCount &&
-							cardCount > 0 && (
-								<div
-									className={style.cardNumBox}
-									onClick={() => {
-										this.repayForOtherBank(cardCount, 'switch');
-									}}
-								>
-									<span>{cardCount}张可更换</span>
-									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
-								</div>
-							)}
+								cardCount > 0 && (
+									<div
+										className={style.cardNumBox}
+										onClick={() => {
+											this.repayForOtherBank(cardCount, 'switch');
+										}}
+									>
+										<span>{cardCount}张可更换</span>
+										<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
+									</div>
+								)}
 						</div>
 						<div className={style.center}>
 							<strong className={style.billMoney}>{cardBillAmtData}</strong>
@@ -751,7 +751,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						<div className={`${style.value} ${style.special_val}`}>
 							<InputItem
 								{...getFieldProps('loanMoney', {
-									rules: [ { required: true, message: '请输入还款金额' } ]
+									rules: [{ required: true, message: '请输入还款金额' }]
 								})}
 								type="number"
 								placeholder={placeholderText}
@@ -815,8 +815,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 									repayType === tagList[2] ? (
 										`${style.unChecked} ${style.unChecked2} ${style.checked}`
 									) : (
-										`${style.unChecked} ${style.unChecked2}`
-									)
+											`${style.unChecked} ${style.unChecked2}`
+										)
 								}
 							/>
 						</div>
@@ -860,7 +860,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 					<SXFButton
 						onClick={this.handleSubmit}
-						className={[ style.confirmApplyBtn, btnDisabled ? style.disabledBtn : '' ].join(' ')}
+						className={[style.confirmApplyBtn, btnDisabled ? style.disabledBtn : ''].join(' ')}
 					>
 						提交申请
 					</SXFButton>
@@ -868,7 +868,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
-						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
+						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
 							<div className={style.modal_header}>
 								选择期限
 								<Icon
@@ -893,24 +893,24 @@ export default class loan_repay_confirm_page extends PureComponent {
 											return (item.perdLth == 30 &&
 												item.factLmtLow <= Number(repayMoney) &&
 												Number(repayMoney) <= item.factAmtHigh) ||
-											item.perdLth != 30 ? (
-												<div
-													key={index}
-													className={style.listitem}
-													className={
-														selectedLoanDate.perdCnt === item.perdCnt ? (
-															`${style.listitem} ${style.listActiveItem}`
-														) : (
-															style.listitem
-														)
-													}
-													onClick={() => {
-														this.filterLoanDate(item);
-													}}
-												>
-													<span>{item.perdPageNm}</span>
-												</div>
-											) : null;
+												item.perdLth != 30 ? (
+													<div
+														key={index}
+														className={style.listitem}
+														className={
+															selectedLoanDate.perdCnt === item.perdCnt ? (
+																`${style.listitem} ${style.listActiveItem}`
+															) : (
+																	style.listitem
+																)
+														}
+														onClick={() => {
+															this.filterLoanDate(item);
+														}}
+													>
+														<span>{item.perdPageNm}</span>
+													</div>
+												) : null;
 										})}
 									</div>
 								</div>
@@ -964,6 +964,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 								</div>
 							</div>
 						</div> */}
+					</div>
+				</Modal>
+				<Modal visible={true} transparent wrapClassName='timeout_pay_modal'>
+					<h3>审核超时赔</h3>
+					<p><strong>审核超时赔</strong>是指用户成功提交审核资料后，在还到承诺的审核时间内，未完成授信审核服务，借款还信用卡用户将获得相应的超时赔免息券。</p>
+					<div>
+						<h4>补偿说明</h4>
+						<ul>
+							<li>1、预计最快90秒完成审核，高峰期最高可能需要5分钟。</li>
+							<li>2、承诺的时间即超过审核高峰期的时间5分钟，则进行红包补偿，50元免息券。</li>
+							<li>3、审核超时，免息券会自动发放至我的账户，可在【我的】-【优惠券】中查看。</li>
+						</ul>
 					</div>
 				</Modal>
 			</div>
