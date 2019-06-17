@@ -926,7 +926,13 @@ export default class home_page extends PureComponent {
 						ischeckIsEngagedUser.data &&
 						ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
 						ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-						(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008'))
+						(result.data.indexSts === 'LN0006' ||
+							result.data.indexSts === 'LN0008' ||
+							result.data.indexSts === 'LN0001' ||
+							result.data.indexSts === 'LN0002' ||
+							result.data.indexSts === 'LN0004' ||
+							result.data.indexSts === 'LN0003' ||
+							result.data.indexSts === 'LN0010'))
 				) {
 					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (
