@@ -266,7 +266,7 @@ export default class bind_save_page extends PureComponent {
 	// 点击开始倒计时
 	countDownHandler = (fn) => {
 		const formData = this.props.form.getFieldsValue();
-		formData.valueInputCarNumber = formData.valueInputCarNumber.replace(/\s*/g, '')
+		formData.valueInputCarNumber = formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, '')
 		if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
 			this.props.toast.info('请输入有效银行卡号');
 			return;
