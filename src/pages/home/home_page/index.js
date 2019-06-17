@@ -1569,7 +1569,9 @@ export default class home_page extends PureComponent {
 				/>
 				{this.componentsAddCards()}
 				{DownTime321 ? <CountDownBox /> : null}
-				<FeedbackModal />
+				<FeedbackModal 
+					history={this.props.history}
+				/>
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
