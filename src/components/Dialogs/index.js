@@ -12,8 +12,8 @@ class Dialog extends Component {
       showDialog: false,
       menuList: []
     }
-    this.requestClose = (type) => {
-      this.props.onRequestClose(type)
+    this.requestClose = (type, questionName) => {
+      this.props.onRequestClose(type, questionName)
       if (this.props.autoClose) clearTimeout(this.autoClose)
     }
   }
@@ -156,13 +156,13 @@ class Dialog extends Component {
     return (
       <div className={style.dialog_container}>
         {
-          !this.state.menuList.length > 0 ? <div className={style.weui_dialog}>
-            <Icon type='cross' className={style.arrow_icon} color='red' onClick={() => { this.requestClose(false) }} />
+          this.state.menuList.length > 0 ? <div className={style.weui_dialog}>
+            <Icon type='cross' className={style.arrow_icon} color='#86919D' onClick={() => { this.requestClose(true, '关闭') }} />
             <h3 className={style.header_title}>2步操作即可获取最高50000元！真的要放弃吗？</h3>
             <ul>
               {
                 this.state.menuList.map((item, idx) => (
-                  <li className={style.button_item} key={item.type} onClick={() => { this.requestClose(false) }}>{item.name}</li>
+                  <li className={style.button_item} key={item.type} onClick={() => { this.requestClose(item.name === '再等等' ? true : false, item.name) }}>{item.name}</li>
                 ))
               }
             </ul>
@@ -171,12 +171,8 @@ class Dialog extends Component {
                 <div>即将获得50000元，确定放弃吗？</div>
               </div>
               <div className={style.btn_container}>
-                <div onClick={() => { this.requestClose(false) }} className={`${style.btn_one} ${style.btn_one_new}`}>
-                  放弃
-            </div>
-                <div onClick={() => { this.requestClose(true) }} className={`${style.btn_two} ${style.btn_two_new}`}>
-                  再等等
-            </div>
+                <div onClick={() => { this.requestClose(false, '放弃') }} className={`${style.btn_one} ${style.btn_one_new}`}>放弃 </div>
+                <div onClick={() => { this.requestClose(true, '再等等') }} className={`${style.btn_two} ${style.btn_two_new}`}>再等等</div>
               </div>
             </div>
         }

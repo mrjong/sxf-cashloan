@@ -69,6 +69,20 @@ const home = {
 	protocolSmsFail: `${prefix}_HOME_PROTOCOL_SMS_FAIL`, // 签约借款页协议绑卡校验失败埋点
 	protocolBindFail: `${prefix}_HOME_PROTOCOL_BIND_FAIL`, // 签约借款页协议绑卡绑定失败埋点
 	protocolBindBtnClick: `${prefix}_HOME_PROTOCOL_MODAL_BTN_CLICK`, // 签约借款页协议绑卡短验弹框按钮点击
+
+	dialogInformation: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION`,
+	dialogInformation_wait: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CONTINUE `,
+	dialogInformation_close: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CLOSE`,
+
+	dialogMoxieBank: `${prefix}_QUESTION_FEEDBACK_BANK`,
+	dialogMoxieBank_wait: `${prefix}_QUESTION_FEEDBACK_BANK_CONTINUE`,
+	dialogMoxieBank_close: `${prefix}_QUESTION_FEEDBACK_BANK_CLOSE`,
+
+	dialogLoanRepay: `${prefix}_QUESTION_FEEDBACK_APPLY`,
+	dialogLoanRepay_wait: `${prefix}_QUESTION_FEEDBACK_APPLY_CONTINUE`,
+	dialogLoanRepay_close: `${prefix}_QUESTION_FEEDBACK_APPLY_CLOSE`,
+
+
 };
 
 const mine = {

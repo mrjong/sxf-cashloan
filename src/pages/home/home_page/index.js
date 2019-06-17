@@ -21,6 +21,7 @@ import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import CountDownBox from 'components/CountDownBox';
+import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -1549,6 +1550,7 @@ export default class home_page extends PureComponent {
 				/>
 				{this.componentsAddCards()}
 				{DownTime321 ? <CountDownBox /> : null}
+				<FeedbackModal />
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}

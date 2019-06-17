@@ -12,7 +12,6 @@ import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-// const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
 	let obj = new PopUp(
 		(
@@ -26,30 +25,65 @@ let initDialog = (errMsg) => {
 					}
 				]}
 				pathname={location.pathname}
-				onRequestClose={(res) => {
-					console.log(res);
+				onRequestClose={(res, questionName) => {
 					switch (location.pathname) {
 						case '/home/loan_repay_confirm_page':
-							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
-								pageTitle: '借钱还信用卡'
-							});
+							switch (questionName) {
+								case '再等等':
+									buriedPointEvent(home.dialogLoanRepay_wait);
+									break;
+								case '关闭':
+									buriedPointEvent(home.dialogLoanRepay_close);
+									break;
+								default:
+									buriedPointEvent(home.dialogLoanRepay, {
+										questionName
+									});
+									break;
+							}
 							break;
 						case '/home/essential_information':
-							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
-								pageTitle: '基本信息认证'
-							});
+							switch (questionName) {
+								case '再等等':
+									buriedPointEvent(home.dialogInformation_wait, {
+										questionName
+									});
+									break;
+								case '关闭':
+									buriedPointEvent(home.dialogInformation_close, {
+										questionName
+									});
+									break;
+								default:
+									buriedPointEvent(home.dialogInformation, {
+										questionName
+									});
+									break;
+							}
 							break;
 						case '/home/moxie_bank_list_page':
-							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
-								pageTitle: '银行列表'
-							});
+							switch (questionName) {
+								case '再等等':
+									buriedPointEvent(home.dialogMoxieBank_wait, {
+										questionName
+									});
+									break;
+								case '关闭':
+									buriedPointEvent(home.dialogMoxieBank_close, {
+										questionName
+									});
+									break;
+								default:
+									buriedPointEvent(home.dialogMoxieBank, {
+										questionName
+									});
+									break;
+							}
 							break;
-
 						default:
 							break;
 					}
 					if (!res) {
-						const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
