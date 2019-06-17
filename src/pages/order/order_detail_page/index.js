@@ -60,21 +60,8 @@ export default class order_detail_page extends PureComponent {
 			payTypes: [ 'BankPay' ],
 			openIdFlag: '',
 			thisPerdNum: '',
-			insureInfo: {
-				label: {
-					name: '保费',
-				},
-				extra: [
-					{
-						name: '420.00',
-						color: '#333'
-					},
-					{
-						name: '已支付',
-						color: '#D2D2D6'
-					}
-				],
-			}
+			insureInfo: '',
+			insureFeeInfo: '',
 		};
 	}
 	componentWillMount() {
@@ -268,11 +255,43 @@ export default class order_detail_page extends PureComponent {
 					//         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
 					//     }
 					// }
+					if (Number(res.data.insuranceAmt)) {
+						let insuranceStsText = '';
+						let insuranceStsColor = '';
+						if (res.data.insuranceSts === '0') {
+							insuranceStsText = '待支付';
+							insuranceStsColor = '#4CA6FF';
+						} else if (res.data.insuranceSts === '1') {
+							insuranceStsText = '处理中';
+							insuranceStsColor = '#FBB947';
+						} else if (res.data.insuranceSts === '2') {
+							insuranceStsText = '已支付'
+							insuranceStsColor = '#C7C7CC';
+						}
+						this.setState({
+							insureFeeInfo: res.data.insuranceAmt,
+							insureInfo: {
+								label: {
+									name: '保费',
+								},
+								extra: [
+									{
+										name: parseFloat(res.data.insuranceAmt).toFixed(2),
+										color: '#333'
+									},
+									{
+										name: insuranceStsText,
+										color: insuranceStsColor
+									}
+								],
+							}
+						})
+					}
 					this.setState(
 						{
 							thisPerdNum: res.data.perdNum,
 							billDesc: res.data, //账单全部详情
-							perdList: res.data.perdList //账单期数列表
+							perdList: res.data.perdList, //账单期数列表
 						},
 						() => {
 							// 选择银行卡回来
@@ -557,7 +576,8 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
-		const insuranceFlag = false; // todo
+		const { insureFeeInfo } = this.state;
+		const insuranceFlag = insureFeeInfo ? true : false; 
 		const params = insuranceFlag ? {
 			cardNo:
 				this.state.bankInfo && this.state.bankInfo.agrNo
@@ -568,7 +588,7 @@ export default class order_detail_page extends PureComponent {
 			cardTyp: 'D',
 			isEntry: '01',
 			type: '0', // 0 可以重复 1 不可以重复
-			forInsurance: '1', // 标识该次绑卡是否要求绑定支持收取保费的卡 1:是  其他情况:否
+			priorityType: 'ZY', // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
 		} : {
 			cardNo:
 				this.state.bankInfo && this.state.bankInfo.agrNo
@@ -838,7 +858,8 @@ export default class order_detail_page extends PureComponent {
 			isNewsContract,
 			totalAmt,
 			isSettle,
-			perTotAmt
+			perTotAmt,
+			insureFeeInfo
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
@@ -852,9 +873,8 @@ export default class order_detail_page extends PureComponent {
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
-		// todo
-		repayInfo2 && repayInfo2.insurance && store.setInsuranceFlag(true);
-		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${repayInfo2 && repayInfo2.insurance ? 'true' : 'false'}`);
+		insureFeeInfo && store.setInsuranceFlag(true);
+		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${insureFeeInfo ? 'true' : 'false'}`);
 	};
 
 	// 选择优惠劵
@@ -991,6 +1011,7 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag,
 			perTotAmt,
 			insureInfo,
+			insureFeeInfo,
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1097,7 +1118,7 @@ export default class order_detail_page extends PureComponent {
 							<span className={styles.red}>
 								{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 							</span>
-							期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{'920.00'}</span>元
+							期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{insureFeeInfo ? money && (parseFloat(money)+parseFloat(insureFeeInfo)).toFixed(2) : money && parseFloat(money).toFixed(2)}</span>元
 						</div>
 					</div>
 				) : (

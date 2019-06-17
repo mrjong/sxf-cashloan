@@ -97,7 +97,7 @@ export default class bind_save_page extends PureComponent {
 			bankCd,
 			bankName,
 			type: '1', // 0 可以重复 1 不可以重复
-			forInsurance: '1', // 标识该次绑卡是否要求绑定支持收取保费的卡 1:是  其他情况:否
+			priorityType: 'ZY', // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
 		} : {
 			cardNo: valueInputCarNumber,
 			bnkMblNo: valueInputCarPhone,

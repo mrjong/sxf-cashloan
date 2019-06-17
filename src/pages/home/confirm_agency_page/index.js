@@ -214,7 +214,7 @@ export default class confirm_agency_page extends PureComponent {
 				store.setSaveAmt(true);
 				store.setRepaymentModalData(this.state);
 				store.setBackUrl('/home/confirm_agency?showModal=true');
-				repayInfo2 && repayInfo2.insurance && store.setInsuranceFlag(true);
+				repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
 				this.props.history.push({
 					pathname: '/mine/select_save_page',
 					search: `?agrNo=${repayInfo.withHoldAgrNo}`
@@ -707,7 +707,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	handleButtonClick = () => {
 		const { isCheckInsure, repayInfo2 } = this.state;
-		if (repayInfo2 && repayInfo2.insurance && !isCheckInsure) {
+		if (repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure) {
 			this.props.toast.info('请先购买保险');
 			return;
 		};
@@ -799,14 +799,14 @@ export default class confirm_agency_page extends PureComponent {
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
 		const { repayInfo, repayInfo2 } = this.state;
-		const params = repayInfo2 && repayInfo2.insurance ? {
+		const params = repayInfo2 && Number(repayInfo2.insurance) ? {
 			cardNo: repayInfo && repayInfo.withHoldAgrNo,
 		  	bankCd: repayInfo && repayInfo.bankCode,
 		  	usrSignCnl: getH5Channel(),
 		  	cardTyp: 'D',
 			isEntry: '01',
 			type: '1', // 0 可以重复 1 不可以重复
-			forInsurance: '1', // 标识该次绑卡是否要求绑定支持收取保费的卡 1:是  其他情况:否
+			priorityType: 'ZY', // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
 		} : {
 			cardNo: repayInfo && repayInfo.withHoldAgrNo,
 		  	bankCd: repayInfo && repayInfo.bankCode,
@@ -1057,7 +1057,7 @@ export default class confirm_agency_page extends PureComponent {
 									</span>
 								</li>
 							</ul>
-							{ repayInfo2 && repayInfo2.insurance ?
+							{ repayInfo2 && Number(repayInfo2.insurance) ?
 								<ul className={style.pannel}>
 									<li className={`${style.listItem} ${style.listItem2}`}>
 										<div className={style.insureLeft}>
@@ -1080,7 +1080,7 @@ export default class confirm_agency_page extends PureComponent {
 							}
 							<div className={style.protocolBox}>
 								{
-									repayInfo2 && repayInfo2.insurance ? <p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p> : null
+									repayInfo2 && Number(repayInfo2.insurance) ? <p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p> : null
 								}
 								{contractData.length > 0 && (
 									<p className={style.protocolLink}>
@@ -1110,7 +1110,7 @@ export default class confirm_agency_page extends PureComponent {
 								)
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? repayInfo2 && repayInfo2.insurance && !isCheckInsure ?
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure ?
 								(
 									style.submitBtnDisabled
 								) : (
