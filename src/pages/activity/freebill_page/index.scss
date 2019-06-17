@@ -45,10 +45,17 @@
   background-size: 100%;
   position: relative;
   background-color: #210c5d;
-  height: 100vh;
   padding-top: 35px;
   overflow: hidden;
   box-sizing: border-box;
+
+  .main_bg {
+    width: 100%;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: -100;
+  }
 
   .ruleBtn {
     position: absolute;
@@ -94,7 +101,7 @@
 
   .col_scroll_wrap {
     position: absolute;
-    top: 30%;
+    top: 33%;
     width: 200px;
     height: 80px;
     background: url("./img/col_bg.png") no-repeat;
@@ -143,7 +150,7 @@
 
   .row_scroll_wrap {
     position: absolute;
-    top: 38%;
+    top: 46%;
     width: 100%;
     height: 138px;
     line-height: 138px;
@@ -162,8 +169,8 @@
       position: relative;
       top: -1px;
       font-size: 69px;
-      color: #FEED47;
-      font-family: 'DINMitAlt';
+      color: #feed47;
+      font-family: "DINMitAlt";
       font-style: italic;
     }
   }
@@ -185,13 +192,13 @@
 }
 
 @keyframes bounce-in {
-  0%{
+  0% {
     transform: scale(1);
   }
-  50%{
+  50% {
     transform: scale(1.1);
   }
-  100%{
+  100% {
     transform: scale(1);
   }
 }
