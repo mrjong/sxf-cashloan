@@ -1026,8 +1026,6 @@ export default class home_page extends PureComponent {
 		});
 		store.setShowActivityModal(true);
 		switch (type) {
-			case 'brand': // 品牌活动弹框按钮
-				break;
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalClose);
 				break;
@@ -1045,17 +1043,8 @@ export default class home_page extends PureComponent {
 	activityModalBtn = (type) => {
 		this.closeActivityModal();
 		switch (type) {
-			case 'brand': // 品牌活动弹框按钮
-				buriedPointEvent(activity.brandHomeModalClick);
-				break;
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
-				break;
-			case 'koubei_new_user':
-				buriedPointEvent(activity.koubeiHomeNewModalClick);
-				break;
-			case 'koubei_old_user':
-				buriedPointEvent(activity.koubeiHomeOldModalClick);
 				break;
 			case 'jd618':
 				buriedPointEvent(activity.jd618ModalBtnClick);
@@ -1065,10 +1054,6 @@ export default class home_page extends PureComponent {
 			case 'freebill': // 618活动弹框按钮
 				buriedPointEvent(activity.freeBillModalBtnClick);
 				this.props.history.push('/activity/freebill_page');
-				break;
-			case 'jjp': // 拒就赔弹框按钮
-				buriedPointEvent(activity.jjpHomeModalClick);
-				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
 				break;
 			default:
 				break;
