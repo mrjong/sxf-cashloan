@@ -7,87 +7,175 @@
 	.card_tit {
 		margin-top: 59px;
 		font-size: 46px;
+		font-family: 'PingFangSC-Semibold';
+		font-weight: 600;
 		color: #121c32;
-		padding-left: 60px;
+		padding: 0 30px 0 60px;
+	}
+	.bankNameBox {
+		min-height: 80px;
+		position: relative;
+		left: -30px;
+		width: calc(100% + 30px);
+		&::after {
+			@include setBottomLine(#F0F1F5);
+		}
+	}
+	.updateBtn {
+		background-color: #f0f1f5;
+		padding: 10px 40px;
+		position: absolute;
+		border-radius: 30px;
+		color: #397be6;
+    font-size: 28px;
+    right: 30px;
+    bottom: 100px;
+    font-family: 'PingFangSC-Regular';
+    &:active{
+      opacity: .6;
+    }
+	}
+	.addCard {
+		float: right;
+		color: #397be6;
+		font-size: 30px;
+		line-height: 2.4;
+		position: relative;
+		padding-right: 40px;
+		i {
+			width: 20px;
+			height: 20px;
+			background-image: url(./img/plus.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: absolute;
+			right: 10px;
+			top: 25px;
+		}
+		&:active {
+			opacity: .6;
+		}
+	}
+	.dis {
+		.bank_name {
+			color: #c9cdd5;
+		}
+		.bank_icon {
+			opacity: .5;
+		}
+		.surplus_desc {
+			color: #c9cdd5;
+		}
+		.bill_remain_amt {
+			color: #c9cdd5;
+		}
+		.bank_number,
+		.bank_date {
+			color: #c9cdd5;
+		}
+	}
+
+	.subTitle {
+		position: absolute;
+		right: 0;
+		font-size: 30px;
+		font-family: 'PingFangSC-Medium';
 		font-weight: 500;
-  }
-  .bankNameBox{
-    min-height: 90px;
-    position: relative;
-    left: -30px;
-    width: calc(100% + 30px);
-    &::after {
-      @include setBottomLine(#F0F1F5);
-  }
-  }
+		line-height: 80px;
+		padding-right: 70px;
+		i {
+			width: 24px;
+			height: 24px;
+			background-image: url(./img/wh.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: absolute;
+			right: 30px;
+			top: 28px;
+		}
+	}
+	.cardContainer {
+		margin: 30px;
+		.desc {
+			color: #fe6666;
+			font-size: 22px;
+			font-family: 'PingFangSC-Regular';
+			font-weight: 400;
+			line-height: 1.4;
+			margin-top: 10px;
+		}
+	}
+	.cardBox {
+		position: relative;
+		background: #fff;
+		transition: all 100ms;
+		border-radius: 10px;
+		height: 282px;
+		font-size: 32px;
+		color: rgba(51, 51, 51, 1);
+		padding-left: 30px;
+		&.active {
+			box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
+			border-color: transparent;
+		}
+	}
+	.bank_name {
+		margin: 0 24px 0 42px;
+		color: #121c32;
+		position: absolute;
+		top: 20px;
+		left: 60px;
+		z-index: 1;
+	}
+	.bank_name.pending {
+		color: #34a6ff;
+	}
+	.bank_name.failed {
+		color: #f44258;
+	}
+	.surplus_desc {
+		position: absolute;
+		top: 90px;
+		letter-spacing: 1PX;
+		font-size: 24px;
+		color: #868e9e;
+	}
+	.bill_remain_amt {
+		position: absolute;
+		font-weight: normal;
+		bottom: 100px;
+		font-family: 'DINMitAlt';
+		font-size: 80px;
+		color: #121c32;
+		height: 55px;
+		line-height: 100px;
+	}
+	.bank_number {
+		position: absolute;
+		bottom: 10px;
+		font-size: 30px;
+		color: #868e9e;
+		text-shadow: 1px 1px 2px #f5f5f5;
+		height: 44px;
+		line-height: 44px;
+		z-index: 1;
+	}
+	.bank_date {
+		position: absolute;
+		bottom: 18px;
+		font-size: 24px;
+		color: #868e9e;
+		right: 30px;
+		height: 33px;
+		line-height: 33px;
+	}
 	.card_list {
 		li {
-			position: relative;
-			width: 660px;
-			margin: 30px auto 0;
-			background: #fff;
-			transition: all 100ms;
-			// border: 1PX solid #e5e5e5;
-			border-radius: 10px;
-			height: 330px;
-			//line-height: 140px;
-			font-size: 32px;
-			color: rgba(51, 51, 51, 1);
-			padding-left: 30px;
-			.bank_name {
-				margin: 0 24px 0 42px;
-				color: #121c32;
-				position: absolute;
-				top: 20px;
-				left: 60px;
-				z-index: 1;
-			}
-			.bank_name.pending {
-				color: #34a6ff;
-			}
-			.bank_name.failed {
-				color: #f44258;
-			}
-			.surplus_desc {
-				position: absolute;
-				top: 101px;
-				font-size: 24px;
-				color: #868e9e;
-			}
-			.bill_remain_amt {
-        position: absolute;
-        font-weight: normal;
-				bottom: 80px;
-				font-family: 'DINMitAlt';
-				font-size: 80px;
-				color: #121c32;
-				height: 100px;
-				line-height: 100px;
-			}
-			.bank_number {
-				position: absolute;
-        bottom: 10px;
-				font-size: 34px;
-				color: #121c32;
-				text-shadow: 1px 1px 2px #f5f5f5;
-				height: 44px;
-				line-height: 44px;
-				z-index: 1;
-			}
-			.bank_date {
-				position: absolute;
-				bottom: 10px;
-				font-size: 24px;
-				color: #121c32;
-				right: 30px;
-				height: 33px;
-				line-height: 33px;
-			}
 			.select_icon {
 				width: 100%;
 				position: absolute;
-				right: -2px;
-				top: -5px;
+				right: 0;
+				top: 0;
 			}
 			.selected_ico {
 				position: absolute;
@@ -107,55 +195,55 @@
 				z-index: 1;
 			}
 
-      :global {
-        .am-swipe-btn,.am-swipe-actions-right,.am-swipe-content{
-          border-top-right-radius: 10px;
-          border-bottom-right-radius: 10px;
-        }
-        .am-swipe-btn-text{
-          padding: 0 32px;
-          font-size: 36px;
-        }
-      }
-    }
-    li.active {
-      box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
-      border-color: transparent;
-    }
-  }
-  .add_card {
-    font-size: 32px;
-    color: #414A53;
-    text-align: center;
-    margin: 30px 0 30px 0;
-    .add_ico {
-      position: relative;
-      width: 32px;
-      height: 32px;
-      margin-right: 10px;
-      top: 5px;
-      display: inline-block;
-      @include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
-    }
-  }
-  .handle_authority {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #F7F8FA;
-    z-index: 2;
-    padding-top: 30px;
-  }
-  .button {
-    width: 634px;
-    height: 100px;
-    background: #EBDE74;
-    border-radius: 50px;
-    margin: 0 auto;
-    text-align: center;
-    line-height: 100px;
-    vertical-align: middle;
-    color: #121C32;
-    font-size: 34px;
-  }
+			:global {
+				.am-swipe-btn,
+				.am-swipe-actions-right,
+				.am-swipe-content {
+					border-top-right-radius: 10px;
+					border-bottom-right-radius: 10px;
+				}
+				.am-swipe-btn-text {
+					padding: 0 32px;
+					font-size: 36px;
+				}
+			}
+		}
+	}
+	.add_card {
+		font-size: 32px;
+		color: #414a53;
+		text-align: center;
+		margin: 30px 0 30px 0;
+		.add_ico {
+			position: relative;
+			width: 32px;
+			height: 32px;
+			margin-right: 10px;
+			top: 5px;
+			display: inline-block;
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
+		}
+	}
+	.handle_authority {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		background: #fff;
+		z-index: 2;
+		padding: 30px 0;
+	}
+	.button {
+		width: 634px;
+		height: 100px;
+		background: #ebde74;
+		border-radius: 50px;
+		margin: 0 auto;
+		text-align: center;
+		line-height: 100px;
+		vertical-align: middle;
+		color: #121c32;
+		font-size: 36px;
+		font-family: 'PingFangSC-Semibold';
+		font-weight: 600;
+	}
 }

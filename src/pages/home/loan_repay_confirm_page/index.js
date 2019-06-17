@@ -916,54 +916,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 								</div>
 							</div>
 						</div>
-						{/* <div
-							className={[ style.modal_right, this.state.modal_left ? style.modal_left2 : '' ].join(' ')}
-						>
-							<div className={style.modal_header}>
-								会员产品介绍
-								<Icon
-									className={style.modal_leftIcon}
-									onClick={() => {
-										buriedPointEvent(loan_repay_confirm.back30);
-										this.setState({
-											modal_left: false
-										});
-									}}
-									type="left"
-								/>
-							</div>
-							<div className={style.modal_Vip}>
-								<div>
-									<div className={style.title}>30天产品为会员专属产品</div>
-									<div className={style.desc}>1.使用前，需购买会员卡仅限于当次使用；</div>
-									<div className={style.desc}>2.购买后，获得68元等价MPOS刷卡优惠权益；</div>
-									<div className={style.desc}>3.申请后，当期借款期限不可修改；</div>
-									<div className={style.btn_box}>
-										<SXFButton
-											onClick={() => {
-												buriedPointEvent(loan_repay_confirm.cancle30);
-												this.setState({
-													modal_left: false
-												});
-											}}
-											type="line"
-											className={style.btn_item}
-										>
-											选择其他期限
-										</SXFButton>
-										<SXFButton
-											onClick={() => {
-												buriedPointEvent(loan_repay_confirm.sure30);
-												this.filterLoanDate(null, '30');
-											}}
-											className={style.btn_item}
-										>
-											确认申请
-										</SXFButton>
-									</div>
-								</div>
-							</div>
-						</div> */}
 					</div>
 				</Modal>
 				<Modal visible={false} transparent wrapClassName='timeout_pay_modal'>
@@ -979,7 +931,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 				</Modal>
 
-				
+
 			</div>
 		);
 	}
