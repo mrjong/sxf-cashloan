@@ -7,10 +7,10 @@ export default class FeedbackModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: true,
       showTextarea: false
     }
   }
+  
   componentWillMount() {
 
   }
@@ -29,16 +29,10 @@ export default class FeedbackModal extends React.Component {
     })
   }
 
-  closeModal = () => {
-    this.setState({
-      showModal: false
-    })
-  }
-
   render() {
-    // const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag } = this.props;
+    const { visible } = this.props;
     return (
-      <Modal wrapClassName="feedback_modal" visible={this.state.showModal} transparent>
+      <Modal wrapClassName="feedback_modal" visible={visible} transparent>
         <div>
           <Icon type='cross' className={style.arrow_icon} color='#86919D' onClick={this.closeModal} />
           <h3>你申请借钱还信用卡遇到了困难？</h3>

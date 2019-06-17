@@ -61,6 +61,25 @@
           color: #121C32;
           border-radius: 45px;
         }
+
+        .am-textarea-item {
+          margin-bottom: 65px;
+          padding: 0;
+        }
+
+        .am-textarea-control {
+          width: 100%;
+          height: 240px;
+          border: 1PX solid #ccc;
+          padding: 10px;
+        }
+        .am-textarea-control textarea {
+          font-size: 30px;
+        }
+        .am-textarea-count {
+          // color: #F66;
+          font-size: 26px;
+        }
       }
     }
   }

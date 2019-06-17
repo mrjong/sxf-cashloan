@@ -1571,6 +1571,7 @@ export default class home_page extends PureComponent {
 				{DownTime321 ? <CountDownBox /> : null}
 				<FeedbackModal 
 					history={this.props.history}
+					visible={false}
 				/>
 				<HomeModal
 					showAgreement={showAgreement}

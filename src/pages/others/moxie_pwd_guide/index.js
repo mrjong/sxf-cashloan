@@ -14,26 +14,6 @@ export default class moxie_pwd_guide extends React.Component {
 
     }
   }
-  componentWillMount() {
-  }
-
-  goInterBank = () => {
-
-  }
-
-  goOperator = () => {
-    // this.props.history.push('/')
-  }
-
-  goFeedback = () => {
-
-  }
-
-  closeModal = () => {
-    this.setState({
-      showModal: false
-    })
-  }
 
   render() {
     const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
