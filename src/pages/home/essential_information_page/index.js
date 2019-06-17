@@ -15,6 +15,8 @@ import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import StepBar from 'components/StepBar';
+import CountDownForm from './components/CountDownForm/CountDownForm';
+import Clock from './components/CountDownForm/Clock'
 import circle from './img/circle.png';
 import circle_not from './img/circle_not.png';
 import adsBg from './img/base_top_img.png';
@@ -36,7 +38,7 @@ const API = {
 	qryCity: '/rcm/qryCity',
 	queryUsrBasicInfo: '/auth/queryUsrBasicInfo',
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
+	readAgreement: '/index/saveAgreementViewRecord' // 上报我已阅读协议
 };
 
 const reducedFilter = (data, keys, fn) =>
@@ -57,13 +59,15 @@ export default class essential_information_page extends PureComponent {
 		super(props);
 		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.state = {
+			count: 0,
+			status: 'stopped',
 			loading: false,
 			relatData: [], // 亲属联系人数据
 			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
 			provValue: [], // 选中的省市区
 			provLabel: [],
-			showAgreement: false, // 显示协议弹窗
+			showAgreement: false // 显示协议弹窗
 		};
 	}
 
@@ -93,7 +97,23 @@ export default class essential_information_page extends PureComponent {
 			}
 		});
 	}
-
+	componentDidUpdate(prevProps, prevState) {
+		if (this.state.status !== prevState.status) {
+			switch (this.state.status) {
+				case 'started':
+					this.startTimer();
+					break;
+				case 'stopped':
+					this.setState({
+						count: 0
+					});
+				case 'paused':
+					clearInterval(this.timer);
+					this.timer = null;
+					break;
+			}
+		}
+	}
 	componentWillUnmount() {
 		buryingPoints();
 		window.removeEventListener('resize', function() {
@@ -103,6 +123,8 @@ export default class essential_information_page extends PureComponent {
 				}, 0);
 			}
 		});
+		clearInterval(this.timer);
+		this.timer = null;
 	}
 	getErrorInput = () => {
 		this.props.form.validateFields((err, values) => {
@@ -272,7 +294,7 @@ export default class essential_information_page extends PureComponent {
 			entry: !isFromMine || isFromMine === 'false' ? '我的' : '风控授信项',
 			is_success: isSucc,
 			fail_cause: failInf,
-			comeFrom: query.entry, // 是从确认授权页面、获取验证码页面，还是首页进入
+			comeFrom: query.entry // 是从确认授权页面、获取验证码页面，还是首页进入
 		});
 	};
 
@@ -339,7 +361,7 @@ export default class essential_information_page extends PureComponent {
 	// 放弃本次机会
 	quitSubmit = () => {
 		this.props.history.goBack();
-	}
+	};
 
 	// 关闭注册协议弹窗
 	readAgreementCb = () => {
@@ -363,7 +385,33 @@ export default class essential_information_page extends PureComponent {
 				this.props.toast.info(res.msgInfo);
 			}
 		});
+	};
+
+	handleStatusChange = (newStaus) => {
+		this.setState({
+			status: newStaus
+		});
+	};
+
+	startTimer() {
+		this.timer = setInterval(() => {
+			const newCount = this.state.count - 1;
+			this.setState({
+				count: newCount >= 0 ? newCount : 0
+			});
+			if (newCount === 0) {
+				this.setState({
+					status: 'stopped'
+				});
+			}
+		}, 1000);
 	}
+	handleSetCountDown = (totalSeconds) => {
+		this.setState({
+			count: totalSeconds,
+			status: 'started'
+		});
+	};
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
@@ -371,13 +419,16 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[ style.nameDiv, 'info_gb' ].join(' ')}>
-				{
-					urlQuery.jumpToBase && 
+				{urlQuery.jumpToBase && (
 					<div className={style.adsImg}>
 						<img src={adsBg} alt="ad" />
 					</div>
-				}
-				<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
+        )}
+        <Clock count={this.state.count} />
+
+				<CountDownForm onSetCountDown={this.handleSetCountDown} />
+				<div>22:22:10</div>
+				<div className={[ style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : '' ].join(' ')}>
 					<div className={[ style.step_item, style.active ].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
@@ -580,8 +631,7 @@ export default class essential_information_page extends PureComponent {
 						<div className={style.line} />
 					</div>
 				</div>
-				{
-					urlQuery.jumpToBase && 
+				{urlQuery.jumpToBase && (
 					<div className={style.operatorCont}>
 						<ButtonCustom
 							onClick={this.handleSubmit}
@@ -589,18 +639,19 @@ export default class essential_information_page extends PureComponent {
 						>
 							下一步
 						</ButtonCustom>
-						<div className={style.quitText} onClick={this.quitSubmit}>放弃本次机会</div>
+						<div className={style.quitText} onClick={this.quitSubmit}>
+							放弃本次机会
+						</div>
 					</div>
-				}
-				{
-					!urlQuery.jumpToBase && 
+				)}
+				{!urlQuery.jumpToBase && (
 					<ButtonCustom
 						onClick={this.handleSubmit}
 						className={[ style.sureBtn, !btn_dis ? style.dis : '' ].join(' ')}
 					>
 						{needNextUrl ? '下一步' : '完成'}
 					</ButtonCustom>
-				}
+				)}
 				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
 			</div>
 		);
