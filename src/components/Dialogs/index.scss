@@ -1,16 +1,31 @@
 @import "../../assets/styles/scss/base/fn.scss";
-.dialog_container{
-    position: fixed;
-    height: 100%;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 1199;
+.dialog_container {
+  position: fixed;
+  height: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1199;
 }
-.weui_dialog{
+.weui_dialog {
+  position: fixed;
+  z-index: 1200;
+  width: 650px;
+  border-radius: 6px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  overflow: hidden;
+  background: #fff;
+  box-sizing: border-box;
+  padding: 74px 54px 20px;
+}
+
+.weui_dialog_default {
     position: fixed;
     z-index: 1200;
     width: 580px;
@@ -18,80 +33,81 @@
     border-radius: 6px;
     top: 50%;
     left: 50%;
-    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
     overflow: hidden;
     background: #fff;
-    // background-image: url(../../assets/images/dialog/back_img@2x.png);
-    // background-size: 560px 407px;
-    // background-repeat: no-repeat;
-    .btn_container{
+
+    .btn_container {
         display: flex;
-        // padding: 20px 80px;
         font-size: 34px;
         font-family: PingFangSC-Medium;
         font-weight: 500;
         height: 100px;
         align-items: center;
-        color: #121C32;
-    }
-    .btn_one{
+        color: #121c32;
+      }
+      .btn_one {
         position: relative;
         flex: 1;
-        color: #868E9E;
-        // border: 1PX solid #4DA6FF;
-        // color: #4DA6FF;
-        // margin-right: 30px;
-        // border-radius: 30px;
+        color: #868e9e;
         cursor: pointer;
-        &:hover{
-            opacity: 0.5;
+        &:hover {
+          opacity: 0.5;
         }
         &::after {
-            @include setLeftLine(#F0F1F5);
-            left: auto;
-            height: 80px;
-            right: 0;
-            top: -10px;
+          @include setLeftLine(#f0f1f5);
+          left: auto;
+          height: 80px;
+          right: 0;
+          top: -10px;
         }
-    }
-    // .btn_one_new{
-    //     color: #ebde74;
-    //     border-color: #ebde74;
-    // }
-    .btn_two{
+      }
+      .btn_two {
         flex: 1;
-        // color: #fff;
-        // background-color: #4DA6FF;
-        // border: 1PX solid #4DA6FF;
-        // margin-left: 30px;
-        // border-radius: 30px;
         cursor: pointer;
-        &:hover{
-            opacity: 0.5;
+        &:hover {
+          opacity: 0.5;
         }
-    }
-    // .btn_two_new{
-    //     background-color: #ebde74;
-    //     border-color: #ebde74;
-    // }
+      }
 }
-.content_box{
-    position: relative;
-    font-size: 30px;
-    // position: absolute;
-    // top: 220px;
-    width: 100%;
-    text-align: center;
-    line-height: 42px;
-    color: #868E9E;
-    padding: 80px 0;
-    &::after {
-        @include setBottomLine(#F0F1F5);
-        left: 0;
-    }
-    // .money{
-    //     color: #F66;
-    // }
+
+.content_box {
+  position: relative;
+  font-size: 30px;
+  width: 100%;
+  text-align: center;
+  line-height: 42px;
+  color: #868e9e;
+  padding: 80px 0;
+  &::after {
+    @include setBottomLine(#f0f1f5);
+    left: 0;
+  }
+}
+
+.header_title {
+  font-size: 36px;
+  font-weight: 600;
+  text-align: left;
+  color: #121c32;
+  margin-bottom: 50px;
+}
+
+.button_item {
+  width: 542px;
+  height: 94px;
+  line-height: 94px;
+  border-radius: 65px;
+  border: 1px solid #ddd;
+  margin-bottom: 30px;
+}
+
+.arrow_icon {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 15px;
+  top: 20px;
+  z-index: 100;
 }
