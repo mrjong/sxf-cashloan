@@ -549,8 +549,8 @@ export default class order_detail_page extends PureComponent {
 			bankCd: this.state.billDesc.wthdCrdCorpOrg,
 			usrSignCnl: getH5Channel(),
 			cardTyp: 'D',
-      isEntry: '01',
-      type: '0', // 0 可以重复 1 不可以重复
+			isEntry: '01',
+			type: '0', // 0 可以重复 1 不可以重复
 		};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 			switch (res.msgCode) {

@@ -6,7 +6,6 @@ import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import { Modal } from 'antd-mobile';
 import qs from 'qs';
-import { home,activity } from 'utils/analytinsType';
 import { checkEngaged, checkIsEngagedUser } from 'utils';
 import successImg from './img/success.png';
 import failImg from './img/fail.png';
@@ -14,6 +13,7 @@ import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import message from './img/message.png';
 import { buriedPointEvent } from 'utils/analytins';
+import { activity, home } from 'utils/analytinsType';
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -37,8 +37,8 @@ export default class remit_ing_page extends PureComponent {
 			() => {
 				this.getAC618(queryData);
 			}
-    );
-    buriedPointEvent(home.quickLoan)
+		);
+		buriedPointEvent(home.quickLoan);
 	}
 	getAC618 = async (queryData) => {
 		if (queryData.needAlert) {
@@ -98,7 +98,7 @@ export default class remit_ing_page extends PureComponent {
 	closeBtnFunc = (type) => {
 		buriedPointEvent(activity.jd618ResultModalClick, {
 			modalType: type
-		})
+		});
 		let queryData2 = this.state.queryData;
 		delete queryData2.needAlert;
 		this.setState(
@@ -150,13 +150,25 @@ export default class remit_ing_page extends PureComponent {
 					<img src={successImg} className={style.successImg} />
 					<div className={style.successTitle}>恭喜获得</div>
 					<div className={style.successTime}>总用时：{time}</div>
-					<img src={btnImg} onClick={()=>{this.closeBtnFunc('success')}} className={style.btnImg} />
+					<img
+						src={btnImg}
+						onClick={() => {
+							this.closeBtnFunc('success');
+						}}
+						className={style.btnImg}
+					/>
 				</Modal>
 				<Modal className="loan_apply_succ_alert" visible={failModalShow} transparent>
 					<img src={failImg} className={style.successImg} />
 					<div className={style.failTitle}>很遗憾，您已超时</div>
 					<div className={style.failTime}>总用时：{time}</div>
-					<img src={btnImg} onClick={()=>{this.closeBtnFunc('timeout')}} className={style.btnImg2} />
+					<img
+						src={btnImg}
+						onClick={() => {
+							this.closeBtnFunc('timeout');
+						}}
+						className={style.btnImg2}
+					/>
 				</Modal>
 
 				<ACTipAlert
@@ -164,13 +176,15 @@ export default class remit_ing_page extends PureComponent {
 					resetProps={{
 						title: '温馨提示',
 						desc: '由于您的借款不符合获奖规则 故无法获得奖励，再接再厉吧～',
-						closeBtnFunc: ()=>{this.closeBtnFunc('fail')}
+						closeBtnFunc: () => {
+							this.closeBtnFunc('fail');
+						}
 					}}
 				/>
 
 				<ZButton
 					onClick={() => {
-						buriedPointEvent(home.gotIt)
+						buriedPointEvent(home.gotIt);
 						this.props.history.push('/home/home');
 					}}
 					className={style.submitBtn}

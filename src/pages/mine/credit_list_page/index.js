@@ -97,6 +97,7 @@ export default class credit_list_page extends PureComponent {
 	};
 	// 新增授权卡
 	goToNewMoXie = () => {
+    buriedPointEvent(home.addCreditCard)
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 		buriedPointEvent(home.addCreditCard)

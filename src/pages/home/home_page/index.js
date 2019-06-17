@@ -753,22 +753,26 @@ export default class home_page extends PureComponent {
 		}
 	};
 	// 618 逻辑处理
-	getAC618 = async () => {
+	getAC618 = async (ischeckEngagedCopy, ischeckIsEngagedUserCopy) => {
 		if (store.getAC20190618() || !store.getShowActivityModal()) {
-			this.getAC618_split();
+			this.getAC618_split(ischeckEngagedCopy, ischeckIsEngagedUserCopy);
 		}
 	};
 	// 618 倒计时
-	getAC618_split = async () => {
-		let ischeckEngaged = await checkEngaged({
-			$props: this.props,
-			AcCode: 'AC20190618_618'
-		});
-		if (ischeckEngaged.msgCode === 'PTM0000') {
-			let ischeckIsEngagedUser = await checkIsEngagedUser({
+	getAC618_split = async (ischeckEngagedCopy, ischeckIsEngagedUserCopy) => {
+		let ischeckEngaged =
+			ischeckEngagedCopy ||
+			(await checkEngaged({
 				$props: this.props,
 				AcCode: 'AC20190618_618'
-			});
+			}));
+		if (ischeckEngaged.msgCode === 'PTM0000') {
+			let ischeckIsEngagedUser =
+				ischeckIsEngagedUserCopy ||
+				(await checkIsEngagedUser({
+					$props: this.props,
+					AcCode: 'AC20190618_618'
+				}));
 			if (
 				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
 				ischeckIsEngagedUser.data &&
@@ -836,14 +840,6 @@ export default class home_page extends PureComponent {
 	};
 	// 获取首页信息
 	requestGetUsrInfo = async () => {
-		// let koubeiRes
-		let isInvoking_jjp;
-		try {
-			isInvoking_jjp = await this.isInvoking_jjp();
-			// koubeiRes = isMPOS() && await this.props.$fetch.post(API.checkKoubei)
-		} catch (error) {
-			console.log(error);
-		}
 		this.props.$fetch.post(API.USR_INDEX_INFO).then(async (result) => {
 			// const result = {
 			// 	msgCode: 'PTM0000',
@@ -910,6 +906,7 @@ export default class home_page extends PureComponent {
 				if (
 					(result.data.indexSts === 'LN0001' ||
 						result.data.indexSts === 'LN0002' ||
+						result.data.indexSts === 'LN0003' ||
 						result.data.indexSts === 'LN0010') &&
 					(ischeckEngaged.msgCode === 'PTM0000' &&
 						((ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
@@ -917,11 +914,9 @@ export default class home_page extends PureComponent {
 								ischeckIsEngagedUser.data.isEngagedUser === '0' &&
 								ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
 				) {
-					this.getAC618();
+					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (
-					(result.data.indexSts === 'LN0003' ||
-						result.data.indexSts === 'LN0006' ||
-						result.data.indexSts === 'LN0008') &&
+					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
 					!store.getShowActivityModal() &&
 					(ischeckEngaged.msgCode !== 'PTM0000' ||
 						(ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
@@ -930,16 +925,6 @@ export default class home_page extends PureComponent {
 							ischeckIsEngagedUser.data.joinActivityTm > 10 * 60))
 				) {
 					this.getACmianxi();
-				} else if (isInvoking_jjp === '1' && !store.getShowActivityModal()) {
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType: 'jujiupei'
-						},
-						() => {
-							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
-						}
-					);
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -1072,11 +1057,6 @@ export default class home_page extends PureComponent {
 			case 'koubei_old_user':
 				buriedPointEvent(activity.koubeiHomeOldModalClick);
 				break;
-			case 'jjp': // 拒就赔弹框按钮
-				buriedPointEvent(activity.jjpHomeModalClick);
-				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
-				break;
-				break;
 			case 'jd618':
 				buriedPointEvent(activity.jd618ModalBtnClick);
 				store.setAC20190618(true);
@@ -1085,6 +1065,10 @@ export default class home_page extends PureComponent {
 			case 'freebill': // 618活动弹框按钮
 				buriedPointEvent(activity.freeBillModalBtnClick);
 				this.props.history.push('/activity/freebill_page');
+				break;
+			case 'jjp': // 拒就赔弹框按钮
+				buriedPointEvent(activity.jjpHomeModalClick);
+				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
 				break;
 			default:
 				break;
