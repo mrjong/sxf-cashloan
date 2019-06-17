@@ -77,5 +77,7 @@ export const storeTypes = {
 	AutId2: 'AutId2', // 进度页物理返回存储的接口调用需要的AutId
 	PercentCount: 'PercentCount', //百分比次数
 	HomeConfirmAgency: 'HomeConfirmAgency', // 首页进入到签约借款页面参数
-	AC20190618: 'AC20190618' //618
+	AC20190618: 'AC20190618', //618
+  PayType: 'PayType', // 还款方式
+  WxPayEnd:'WxPayEnd' // 微信返回不刷新
 };

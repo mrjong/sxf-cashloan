@@ -3,7 +3,6 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 const API = {
@@ -185,6 +184,7 @@ export default class crawl_progress_page extends PureComponent {
   };
 
   reImport() {
+    buriedPointEvent(home.HomeCardRenew)
     this.props.$fetch
       .get(API.USER_IMPORT)
       .then((res) => {

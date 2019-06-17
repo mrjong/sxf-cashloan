@@ -4,9 +4,12 @@ import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import { Icon } from 'antd-mobile';
-import select from './img/select.png';
-import not_select from './img/not_select.png';
-import { setBackGround } from 'utils/background';
+import select from './img/select.png'
+import not_select from './img/not_select.png'
+import { setBackGround } from 'utils/background'
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
+
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
 	CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -91,6 +94,7 @@ export default class credit_list_page extends PureComponent {
 	};
 	// 新增授权卡
 	goToNewMoXie = () => {
+    buriedPointEvent(home.addCreditCard)
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
@@ -126,8 +130,8 @@ export default class credit_list_page extends PureComponent {
 											) : item.autSts === '3' ? (
 												<span className={`${styles.bank_name} ${styles.failed}`}>审核失败</span>
 											) : (
-												<span className={styles.bank_name}>{item.bankName}</span>
-											)}
+														<span className={styles.bank_name}>{item.bankName}</span>
+													)}
 										</div>
 										<div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
 										<div className={styles.bill_remain_amt}>
@@ -136,8 +140,8 @@ export default class credit_list_page extends PureComponent {
 											) : item.billRemainAmt === 0 ? (
 												'0'
 											) : (
-												item.cardBillAmt
-											)}
+														item.cardBillAmt
+													)}
 										</div>
 										{item.autSts === '2' ? (
 											<span>
@@ -153,8 +157,8 @@ export default class credit_list_page extends PureComponent {
 										{isSelected ? (
 											<img src={select} className={styles.select_icon} />
 										) : (
-											<img src={not_select} className={styles.select_icon} />
-										)}
+												<img src={not_select} className={styles.select_icon} />
+											)}
 									</li>
 								);
 							})}

@@ -1,11 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Modal, Progress } from 'antd-mobile';
-import overDueImg from 'assets/images/home/overDue_icon.png';
 import OverDueModal from '../OverDueModal';
 import ActivityModal from 'components/ActivityModal';
 import AgreementModal from 'components/AgreementModal';
-import SXFButton from 'components/ButtonCustom';
 
 import style from './index.scss';
 const API = {
@@ -32,7 +29,6 @@ export default class BlackCard extends React.PureComponent {
 	render() {
 		const {
 			showAgreement,
-			billOverDue,
 			overDueModalFlag,
 			isShowActivityModal,
 			visibleLoading,
@@ -51,17 +47,6 @@ export default class BlackCard extends React.PureComponent {
 		let homeModal = null;
 		if (showAgreement) {
 			homeModal = <AgreementModal visible={showAgreement} readAgreementCb={readAgreementCb} />;
-		} else if (billOverDue) {
-			homeModal = (
-				<Modal className="overDueModal" visible={billOverDue} transparent maskClosable={false}>
-					<div>
-						<img src={overDueImg} />
-						<h3 className={style.modalTitle}>信用风险提醒</h3>
-						<p>您的逾期记录已经报送至央行监管的征信机构，未来会影响银行及金融类借款申请，请尽快还款，维护信用。</p>
-						<SXFButton onClick={handleOverDueClick}>我知道了，前去还款</SXFButton>
-					</div>
-				</Modal>
-			);
 		} else if (overDueModalFlag) {
 			homeModal = (
 				<OverDueModal

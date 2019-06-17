@@ -5,17 +5,26 @@ const { localStorage, sessionStorage } = window;
 // 默认使用sessionstorage
 let STORAGE_METHOD = sessionStorage;
 const storageUtil = {
-	setItem(key, value) {
+	// && list.includes(funcName) bug机 全部存入到
+	setItem(key, value, funcName) {
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
+
 		STORAGE_METHOD.setItem(key, JSON.stringify(value));
 	},
-	getItem(key) {
+	getItem(key, funcName) {
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
+
 		const value = STORAGE_METHOD.getItem(key);
 		return JSON.parse(value);
 	},
-	clear() {
+	clear(funcName) {
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
+
 		STORAGE_METHOD.clear();
 	},
-	removeItem(key) {
+	removeItem(key, funcName) {
+		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
+
 		STORAGE_METHOD.removeItem(key);
 	},
 	multiGet(keys) {
@@ -31,7 +40,7 @@ const storageUtil = {
 };
 
 // 定义需要特殊处理的浏览器
-const bugBrowserArr = [ 'vivobrowser', 'oppobrowser' ];
+const bugBrowserArr = [ 'vivobrowser', 'oppobrowser', 'safari' ];
 
 // 检测是否是某种 bug 浏览器
 const isBugBrowser = () => {
@@ -42,32 +51,20 @@ const isBugBrowser = () => {
 
 let store = {};
 // 需要区别对待的存储字段
-let list = [ 'Token', 'JumpUrl', 'H5Channel' ];
+let list = [ 'Token', 'JumpUrl', 'H5Channel', 'billNo' ];
 
 // 本地存储工厂函数，生成 set get remove 方法(优先使用sessionstorage)
 const storeFactory = (funcName, key) => {
-	STORAGE_METHOD = isBugBrowser() && list.includes(funcName) ? localStorage : sessionStorage;
 	store[`set${funcName}`] = (data) => {
-		storageUtil.setItem(key, data);
+		storageUtil.setItem(key, data, funcName);
 	};
-	store[`get${funcName}`] = () => storageUtil.getItem(key);
-	store[`remove${funcName}`] = () => storageUtil.removeItem(key);
+	store[`get${funcName}`] = () => storageUtil.getItem(key, funcName);
+	store[`remove${funcName}`] = () => storageUtil.removeItem(key, funcName);
 };
 
 // 循环添加存储方法(包括local session)
 for (let funName in storeTypes) {
 	storeFactory(funName, storeTypes[funName]);
 }
-
-store['newType'] = ({ key, value }, type) => {
-	if (type === 'get') {
-		let value2 = localStorage.getItem(key);
-		return JSON.parse(value2);
-	} else if (type === 'remove') {
-		localStorage.removeItem(key);
-	} else {
-		STORAGE_METHOD.setItem(key, JSON.stringify(value));
-	}
-};
 
 export { store };

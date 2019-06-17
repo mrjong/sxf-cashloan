@@ -94,7 +94,6 @@ export default class home_page extends PureComponent {
 			CardOverDate: false,
 			pageCode: '',
 			showAgreement: false, // 显示协议弹窗
-			billOverDue: false, //逾期弹窗标志
 			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
 			isNeedExamine: false, // 是否需要人审
@@ -157,6 +156,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
+		// 去除支付方式默认选中
+		store.removePayType();
 		// 去除借款页面参数
 		store.removeHomeConfirmAgency();
 		// 删除授信弹窗信息
@@ -267,7 +268,6 @@ export default class home_page extends PureComponent {
 				// popupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1',
-					billOverDue: res.data.popupFlag === '1',
 					overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
 				});
 				const currProgress =
@@ -449,7 +449,6 @@ export default class home_page extends PureComponent {
 				search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
 			});
 		} else {
-			//   this.goToMoXie();
 			this.goToNewMoXie();
 		}
 	};
@@ -474,8 +473,8 @@ export default class home_page extends PureComponent {
 			case 'LN0002': // 账单爬取中
 				break;
 			case 'LN0003': // 账单爬取成功 (直接跳数据风控)
-				console.log('LN0003 无风控信息 直接跳数据风控');
-				buriedPointEvent(home.repaymentBtnClick3);
+				// console.log('LN0003 无风控信息 直接跳数据风控');
+				buriedPointEvent(home.applyLoan);
 				buriedPointEvent(mine.creditExtension, {
 					entry: '首页'
 				});
@@ -499,6 +498,7 @@ export default class home_page extends PureComponent {
 				}
 				break;
 			case 'LN0004': // 代还资格审核中
+				buriedPointEvent(home.machineAudit);
 				this.props.history.push({
 					pathname: '/home/credit_apply_succ_page',
 					search: `?autId=${indexData.autId}`
@@ -512,7 +512,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
-				buriedPointEvent(home.repaymentBtnClick6);
+				buriedPointEvent(home.signedLoan);
 				this.repayCheck();
 				break;
 			case 'LN0007': // 放款中
@@ -535,7 +535,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
-				buriedPointEvent(home.repaymentBtnClick8);
+				buriedPointEvent(home.signedLoan);
 				this.repayCheck();
 				break;
 			case 'LN0009': // 放款成功
@@ -753,22 +753,26 @@ export default class home_page extends PureComponent {
 		}
 	};
 	// 618 逻辑处理
-	getAC618 = async () => {
+	getAC618 = async (ischeckEngagedCopy, ischeckIsEngagedUserCopy) => {
 		if (store.getAC20190618() || !store.getShowActivityModal()) {
-			this.getAC618_split();
+			this.getAC618_split(ischeckEngagedCopy, ischeckIsEngagedUserCopy);
 		}
 	};
 	// 618 倒计时
-	getAC618_split = async () => {
-		let ischeckEngaged = await checkEngaged({
-			$props: this.props,
-			AcCode: 'AC20190618_618'
-		});
-		if (ischeckEngaged.msgCode === 'PTM0000') {
-			let ischeckIsEngagedUser = await checkIsEngagedUser({
+	getAC618_split = async (ischeckEngagedCopy, ischeckIsEngagedUserCopy) => {
+		let ischeckEngaged =
+			ischeckEngagedCopy ||
+			(await checkEngaged({
 				$props: this.props,
 				AcCode: 'AC20190618_618'
-			});
+			}));
+		if (ischeckEngaged.msgCode === 'PTM0000') {
+			let ischeckIsEngagedUser =
+				ischeckIsEngagedUserCopy ||
+				(await checkIsEngagedUser({
+					$props: this.props,
+					AcCode: 'AC20190618_618'
+				}));
 			if (
 				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
 				ischeckIsEngagedUser.data &&
@@ -824,24 +828,18 @@ export default class home_page extends PureComponent {
 			buriedPointEvent(home.applyCreditRepayment);
 		}
 		getNextStr({
-			$props: this.props,
-			callBack: (resBackMsg) => {
-				if (this.state.showDiv === 'circle') {
-					buriedPointEvent(home.homeContinueApply, {
-						next_step: resBackMsg
-					});
-				}
-			}
+			$props: this.props
+			// callBack: (resBackMsg) => {
+			// 	if (this.state.showDiv === 'circle') {
+			// 		buriedPointEvent(home.homeContinueApply, {
+			// 			next_step: resBackMsg
+			// 		});
+			// 	}
+			// }
 		});
 	};
 	// 获取首页信息
 	requestGetUsrInfo = async () => {
-		let koubeiRes;
-		try {
-			koubeiRes = isMPOS() && (await this.props.$fetch.post(API.checkKoubei));
-		} catch (error) {
-			console.log(error);
-		}
 		this.props.$fetch.post(API.USR_INDEX_INFO).then(async (result) => {
 			// const result = {
 			// 	msgCode: 'PTM0000',
@@ -915,7 +913,7 @@ export default class home_page extends PureComponent {
 								ischeckIsEngagedUser.data.isEngagedUser === '0' &&
 								ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
 				) {
-					this.getAC618();
+					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (
 					(result.data.indexSts === 'LN0003' ||
 						result.data.indexSts === 'LN0006' ||
@@ -928,28 +926,6 @@ export default class home_page extends PureComponent {
 							ischeckIsEngagedUser.data.joinActivityTm > 10 * 60))
 				) {
 					this.getACmianxi();
-				} else if (isMPOS() && koubeiRes && koubeiRes.data.joinMark === '00' && !store.getShowActivityModal()) {
-					//口碑活动弹窗
-					this.setState({
-						isShowActivityModal: true,
-						modalType:
-							koubeiRes && koubeiRes.data.isNewUser === '01' ? 'koubei_new_user' : 'koubei_old_user',
-						modalBtnFlag: true
-					});
-				} else if (
-					isMPOS() &&
-					!store.getShowActivityModal() &&
-					Cookie.get('currentTime') !== new Date().getDate().toString()
-				) {
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType: 'brand'
-						},
-						() => {
-							Cookie.set('currentTime', new Date().getDate(), { expires: 365 });
-						}
-					);
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -1091,6 +1067,10 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(activity.freeBillModalBtnClick);
 				this.props.history.push('/activity/freebill_page');
 				break;
+			case 'jjp': // 拒就赔弹框按钮
+				buriedPointEvent(activity.jjpHomeModalClick);
+				this.props.history.push('/activity/jupei_page?entry=isxdc_home_alert');
+				break;
 			default:
 				break;
 		}
@@ -1218,7 +1198,6 @@ export default class home_page extends PureComponent {
 				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
 			}
 		}
-		// console.log(showDiv, 'showDiv')
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
@@ -1442,6 +1421,7 @@ export default class home_page extends PureComponent {
 
 	// 点击不同进度状态，跳转页面
 	handleProgressApply = (sts) => {
+		buriedPointEvent(home.billImport);
 		// ，01：爬取中，02：爬取成功，03：爬取失败
 		switch (sts) {
 			case '00':
@@ -1521,12 +1501,32 @@ export default class home_page extends PureComponent {
 		return componentsAddCards;
 	};
 
+	// 判断是否参与拒就赔活动
+	isInvoking_jjp = () => {
+		return new Promise((resolve, reject) => {
+			this.props.$fetch
+				.get(API.checkJoin)
+				.then((res) => {
+					// 0:不弹出  1:弹出
+					if (res && res.msgCode === 'JJP0002') {
+						// 用户没参加过拒就赔活动
+						// 如果是活动来的，
+						resolve('1');
+					} else {
+						resolve('0');
+					}
+				})
+				.catch((err) => {
+					reject();
+				});
+		});
+	};
+
 	render() {
 		const {
 			bannerList,
 			percent,
 			showAgreement,
-			billOverDue,
 			isShowActivityModal,
 			visibleLoading,
 			overDueInf,
@@ -1573,7 +1573,6 @@ export default class home_page extends PureComponent {
 					history={this.props.history}
 					toast={this.props.toast}
 					isShowActivityModal={isShowActivityModal}
-					billOverDue={billOverDue}
 					overDueModalFlag={overDueModalFlag}
 					overDueInf={overDueInf}
 					visibleLoading={visibleLoading}

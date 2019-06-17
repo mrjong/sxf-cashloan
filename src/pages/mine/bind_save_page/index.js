@@ -16,8 +16,6 @@ import qs from 'qs';
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
 	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
-	BINDCARD: '/withhold/card/bindConfirm', // 绑定银行卡
-	GETCODE: '/withhold/card/bindApply', // 绑定银行卡短信验证码获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
@@ -96,7 +94,8 @@ export default class bind_save_page extends PureComponent {
 				usrSignCnl: getH5Channel(),
 				cardTyp,
 				bankCd,
-				bankName
+				bankName,
+				type: '1', // 0 可以重复 1 不可以重复
 			})
 			.then((res) => {
 				switch (res.msgCode) {
@@ -110,49 +109,19 @@ export default class bind_save_page extends PureComponent {
 						break;
 					case 'PTM9901':
 						this.props.toast.info(res.data);
+						buriedPointEvent(mine.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 						break;
+					case '1010':
 					case 'PBM1010':
 						this.props.toast.info(res.msgInfo);
+						buriedPointEvent(mine.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 						break;
 					default:
-						// 修改数据解构
-						const { valueInputCarNumber: cardNo, valueInputCarPhone: mblNo, cardTyp, bankCd } = params;
-						this.getOldBindCardCode(
-							{
-								cardNo,
-								mblNo,
-								cardTyp,
-								bankCd
-							},
-							fn
-						);
+						this.props.toast.info('暂不支持该银行卡，请换卡重试');
+						buriedPointEvent(mine.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 						break;
 				}
 			});
-	};
-	//老的绑卡获取验证码
-	getOldBindCardCode = (params, fn) => {
-		const { cardNo, mblNo, cardTyp, bankCd } = params;
-		this.props.$fetch
-			.post(API.GETCODE, {
-				cardNo, //持卡人卡号
-				mblNo,
-				cardTyp, //卡类型
-				bankCd
-			})
-			.then(
-				(result) => {
-					if (result.msgCode !== 'PTM0000') {
-						this.props.toast.info(result.msgInfo);
-					} else {
-						this.props.toast.info('发送成功，请注意查收！');
-						fn && fn(true);
-					}
-				},
-				(error) => {
-					error.retMsg && this.props.toast.info(error.retMsg);
-				}
-			);
 	};
 
 	//存储现金分期卡信息
@@ -201,12 +170,14 @@ export default class bind_save_page extends PureComponent {
 					}
 				} else if (res.msgCode === 'PTM9901') {
 					this.props.toast.info(res.data);
-					this.setState({ valueInputCarSms: '' });
+					// this.setState({ valueInputCarSms: '' });
+					this.props.form.setFieldsValue({
+						valueInputCarSms: ''
+					});
+					buriedPointEvent(mine.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 				} else {
-					this.props.toast.info('请重新输入验证码');
-					this.setState({ valueInputCarSms: '' });
-					//静默重新获取老的验证码(走老的代扣逻辑,此时不需要验证码倒计时)
-					this.getOldBindCardCode(params);
+					this.props.toast.info('绑卡失败，请换卡或重试');
+					buriedPointEvent(mine.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 				}
 			});
 	};
@@ -229,8 +200,9 @@ export default class bind_save_page extends PureComponent {
 						mblNo: values.valueInputCarPhone, //预留手机号
 						smsCd: values.valueInputCarSms //短信验证码
 					};
+					this.doProtocolBindCard(params);
 					// 判断用户是否为协议绑卡
-					this.state.isProtocolBindCard ? this.doProtocolBindCard(params) : this.bindSaveCard(params);
+					// this.state.isProtocolBindCard ? this.doProtocolBindCard(params) : this.bindSaveCard(params);
 				} else {
 					this.props.toast.info('请输入有效银行卡号');
 					buriedPointEvent(mine.saveConfirm, {
@@ -244,52 +216,6 @@ export default class bind_save_page extends PureComponent {
 				error.msgInfo && this.props.toast.info(error.msgInfo);
 			}
 		);
-	};
-
-	// 绑定储蓄卡（老的绑卡流程）
-	bindSaveCard = (params) => {
-		this.props.$fetch.post(API.BINDCARD, params).then((data) => {
-			if (
-				data.msgCode === 'PTM0000' ||
-				(store.getBackUrl() && data.msgCode === 'PTM0010') ||
-				(store.getBackUrl() && data.msgCode === 'PBM1010')
-			) {
-				buriedPointEvent(mine.saveConfirm, {
-					entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
-					is_success: true
-				});
-				const backUrlData = store.getBackUrl();
-				if (backUrlData) {
-					let cardDatas = { agrNo: data.data.agrNo, ...this.state.cardData };
-					// 首页不需要存储银行卡的情况，防止弹窗出现
-					const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-					if (queryData && queryData.noBankInfo) {
-						store.removeCardData();
-					} else {
-						this.storeCashFenQiCardData(cardDatas);
-						store.setCardData(cardDatas);
-					}
-					store.removeBackUrl();
-					// this.props.history.replace(backUrlData);
-					// 如果是从四项认证进入，绑卡成功则回到首页
-					if (store.getCheckCardRouter() === 'checkCardRouter') {
-						this.props.history.push('/home/home');
-					} else {
-						this.props.history.goBack();
-					}
-				} else {
-					this.props.history.goBack();
-				}
-			} else {
-				buriedPointEvent(mine.saveConfirm, {
-					entry: store.getBackUrl() ? '绑定储蓄卡' : '储蓄卡管理',
-					is_success: false,
-					fail_cause: data.msgInfo
-				});
-				this.props.toast.info(data.msgInfo);
-				this.setState({ valueInputCarSms: '' });
-			}
-		});
 	};
 
 	// 确认绑卡

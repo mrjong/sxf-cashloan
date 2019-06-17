@@ -4,6 +4,8 @@ import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 @setBackGround('#fff')
 export default class remit_ing_page extends PureComponent {
@@ -13,7 +15,11 @@ export default class remit_ing_page extends PureComponent {
 			copyText: '还到'
 		};
 	}
+	componentWillMount() {
+		buriedPointEvent(home.manualAudit)
+	}
 	copyOperation = () => {
+		buriedPointEvent(home.manualAuditFollow)
 		this.props.toast.info('复制成功！马上打开微信关注“还到”');
 		setTimeout(() => {
 			window.postMessage('复制成功', () => {});

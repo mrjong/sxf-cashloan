@@ -39,6 +39,22 @@ export const isWXOpen = () => {
 	return /micromessenger/.test(ua) ? true : false;
 };
 
+// 判断是否是手机打开
+export const isPhone = () => {
+  var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = false;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = true;
+            break;
+        }
+    }
+    return flag;
+};
+
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
 		let pageList = [
@@ -192,7 +208,8 @@ const interceptRouteArr = [
 	'/home/credit_apply_succ_page',
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
-	'/home/crawl_fail_page'
+  '/home/crawl_fail_page',
+  '/order/wx_pay_success_page',
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -483,6 +500,11 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			}
 		});
 		if (!needReturn) {
+			if(btnText === '继续确认身份信息') {
+				buriedPointEvent(home.continueRealInfo)
+			} else if (btnText === '继续导入信用卡账单') {
+				buriedPointEvent(home.billContinueImport)
+			}
 			store.setNeedNextUrl(true);
 			// 实名
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
@@ -750,6 +772,19 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 			goMoxieBankList();
 		});
 		state = false;
+	}
+	if(state) {
+		//卡可以提交埋点
+		buriedPointEvent(home.selectCreditCardResult, {
+			is_success: true,
+			bank_name: indexData.bankName
+		})
+	} else {
+		//卡不可以提交埋点
+		buriedPointEvent(home.selectCreditCardResult, {
+			is_success: false,
+			bank_name: indexData.bankName
+		})
 	}
 	return state;
 };

@@ -36,4 +36,10 @@ export default [
 		title: '免账单 随便刷',
 		component: () => import('pages/activity/freebill_page')
 	},
+	{
+		path: '/activity/jupei_page',
+		title: '还到拒就赔',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/jupei_page')
+	},
 ];

@@ -91,7 +91,7 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			/* 实名上传图片时 不允许返回 */
-      // 如果当前是从首页到绑卡页面，返回直接回到首页
+			// 如果当前是从首页到绑卡页面，返回直接回到首页
 			if (
 				store.getCheckCardRouter() &&
 				(store.getHistoryRouter() === '/mine/bind_credit_page' ||
@@ -120,7 +120,8 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
-				if (store.getBankMoxie()) { // 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
+				if (store.getBankMoxie()) {
+					// 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
 					// 银行卡直接返回的问题
 					store.removeBankMoxie();
 					window.ReactRouterHistory.push('/home/home');
@@ -218,6 +219,10 @@ if (window.history && window.history.pushState) {
 
 			changeHistoryState();
 			let historyRouter = store.getHistoryRouter();
+			if (historyRouter === '/order/wx_pay_success_page') {
+				window.ReactRouterHistory.replace('/order/order_page');
+				return;
+			}
 			// 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
 			if (store.getMoxieBackUrl()) {
 				store.removeMoxieBackUrl();
