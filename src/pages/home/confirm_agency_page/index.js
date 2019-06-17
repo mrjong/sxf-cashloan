@@ -546,10 +546,8 @@ export default class confirm_agency_page extends PureComponent {
 			return;
 		}
 		if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-			console.log(this.state.repayInfo2, '=====11======');
 			store.setCouponData(this.state.couponInfo);
 		} else {
-			console.log(this.state.repayInfo2, '===========');
 			store.setCouponData(this.state.repayInfo2.data);
 		}
 		this.props.history.push({
@@ -755,7 +753,7 @@ export default class confirm_agency_page extends PureComponent {
 		});
 		this.requestBindCardState();
 	}
-	
+
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
 		const { repayInfo } = this.state;
@@ -816,7 +814,7 @@ export default class confirm_agency_page extends PureComponent {
 			  	this.requestBindCardState();
 			break;
 			case 'PBM1010':
-				this.props.toast.info(res.msgInfo);	
+				this.props.toast.info(res.msgInfo);
 				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
 			default:

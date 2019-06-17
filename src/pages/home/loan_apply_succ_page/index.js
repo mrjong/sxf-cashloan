@@ -6,7 +6,7 @@ import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import { Modal } from 'antd-mobile';
 import qs from 'qs';
-import { checkEngaged, checkIsEngagedUser } from 'utils';
+import { checkEngaged, checkIsEngagedUser,saveUserInfoEngaged } from 'utils';
 import successImg from './img/success.png';
 import failImg from './img/fail.png';
 import btnImg from './img/btn.png';
@@ -42,6 +42,10 @@ export default class remit_ing_page extends PureComponent {
 	}
 	getAC618 = async (queryData) => {
 		if (queryData.needAlert) {
+			await saveUserInfoEngaged({
+				$props: this.props,
+				AcCode: 'AC20190618_618_RESULT'
+			});
 			let ischeckEngaged = await checkEngaged({
 				$props: this.props,
 				AcCode: 'AC20190618_618'

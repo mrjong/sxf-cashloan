@@ -161,9 +161,16 @@ export default class moxie_bank_list_page extends Component {
 
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
-						<div className={!headerIgnore() ? style.tipsBox : `${style.tipsBox} ${style.tipsBox2}`}>
+						<div className={style.tipsBox}>
 							<i />
 							银行专属链接，保护用户数据安全
+						</div>
+						<div className={style.progressBox}>
+							<i />
+							<div className={style.bottomText}>
+								<span>已完成98%</span>
+								<span>申请成功</span>
+							</div>
 						</div>
 						<div className={style.infromationTitle}>
 							<p>选择信用卡所在银行</p>
