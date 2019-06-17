@@ -373,7 +373,7 @@ export default class bind_save_page extends PureComponent {
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
 		const params = {
-			cardNo: formData.valueInputCarNumber.replace(/\s*/g, ''),
+			cardNo: formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, ''),
 			isEntry: '01'
 		};
 		this.props.$fetch.post(API.contractInfo, params).then((result) => {
