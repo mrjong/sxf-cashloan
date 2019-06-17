@@ -15,8 +15,8 @@ import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import StepBar from 'components/StepBar';
-import CountDownForm from './components/CountDownForm/CountDownForm';
-import Clock from './components/CountDownForm/Clock'
+import CountDownForm from 'components/TimeDown/CountDownForm';
+import ClockS from 'components/TimeDown/ClockS';
 import circle from './img/circle.png';
 import circle_not from './img/circle_not.png';
 import adsBg from './img/base_top_img.png';
@@ -67,7 +67,8 @@ export default class essential_information_page extends PureComponent {
 			relatValue: [], // 选中的联系人
 			provValue: [], // 选中的省市区
 			provLabel: [],
-			showAgreement: false // 显示协议弹窗
+			showAgreement: false, // 显示协议弹窗
+			millisecond: 0
 		};
 	}
 
@@ -85,6 +86,7 @@ export default class essential_information_page extends PureComponent {
 		this.initBasicInfo();
 		// mpos中从授权页进入基本信息，判断是否显示协议
 		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
+		this.getMillisecond();
 	}
 
 	componentDidMount() {
@@ -126,6 +128,21 @@ export default class essential_information_page extends PureComponent {
 		clearInterval(this.timer);
 		this.timer = null;
 	}
+	getMillisecond = () => {
+		setTimeout(() => {
+			setInterval(() => {
+				if (Number(this.state.millisecond) > 9) {
+					this.setState({
+						millisecond: 0
+					});
+				} else {
+					this.setState({
+						millisecond: this.state.millisecond + 1
+					});
+				}
+			}, 100);
+		}, 0);
+	};
 	getErrorInput = () => {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
@@ -419,15 +436,14 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[ style.nameDiv, 'info_gb' ].join(' ')}>
-				{urlQuery.jumpToBase && (
+				{/* {urlQuery.jumpToBase && ( */}
 					<div className={style.adsImg}>
 						<img src={adsBg} alt="ad" />
 					</div>
-        )}
-        <Clock count={this.state.count} />
-
+				{/* )} */}
+				<ClockS count={this.state.count} />
+				{this.state.millisecond}
 				<CountDownForm onSetCountDown={this.handleSetCountDown} />
-				<div>22:22:10</div>
 				<div className={[ style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : '' ].join(' ')}>
 					<div className={[ style.step_item, style.active ].join(' ')}>
 						<div className={style.title}>
