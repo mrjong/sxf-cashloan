@@ -903,24 +903,37 @@ export default class home_page extends PureComponent {
 						AcCode: 'AC20190618_618'
 					});
 				}
+				// (result.data.indexSts === 'LN0001' ||
+				// 		result.data.indexSts === 'LN0002' ||
+				// 		result.data.indexSts === 'LN0010') &&
+				// 	(ischeckEngaged.msgCode === 'PTM0000' &&
+				// 		((ischeckIsEngagedUser.data &&
+				// 			ischeckIsEngagedUser.data.isEngagedUser === '1' &&
+				// 			result.data.indexSts === 'LN0003' ||
+				// 			result.data.indexSts === 'LN0006' ||
+				// 			result.data.indexSts === 'LN0008' ||
+				// 			(ischeckIsEngagedUser.data &&
+				// 				ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+				// 				ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
+				// )
 				if (
-					(result.data.indexSts === 'LN0001' ||
-						result.data.indexSts === 'LN0002' ||
-						result.data.indexSts === 'LN0003' ||
-						result.data.indexSts === 'LN0006' ||
-						result.data.indexSts === 'LN0008' ||
-						result.data.indexSts === 'LN0010') &&
-					(ischeckEngaged.msgCode === 'PTM0000' &&
-						((ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
-							(ischeckIsEngagedUser.data &&
-								ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-								ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
+					(ischeckEngaged &&
+						ischeckEngaged.msgCode === 'PTM0000' &&
+						ischeckIsEngagedUser &&
+						ischeckIsEngagedUser.data &&
+						ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
+						(ischeckIsEngagedUser.data.isEngagedUser === '1' &&
+							(result.data.indexSts === 'LN0001' ||
+								result.data.indexSts === 'LN0002' ||
+								result.data.indexSts === 'LN0004' ||
+								result.data.indexSts === 'LN0003' ||
+								result.data.indexSts === 'LN0010'))) ||
+					(ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+						(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008'))
 				) {
 					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (
-					(result.data.indexSts === 'LN0003' ||
-						result.data.indexSts === 'LN0006' ||
-						result.data.indexSts === 'LN0008') &&
+					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
 					!store.getShowActivityModal() &&
 					(ischeckEngaged.msgCode !== 'PTM0000' ||
 						(ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
