@@ -25,6 +25,7 @@ let initDialog = (errMsg) => {
 						className: 'rob-btn rob-btn-danger rob-btn-circle'
 					}
 				]}
+				pathname={location.pathname}
 				onRequestClose={(res) => {
 					console.log(res);
 					switch (location.pathname) {
@@ -47,7 +48,6 @@ let initDialog = (errMsg) => {
 						default:
 							break;
 					}
-					console.log(location.pathname, '---------');
 					if (!res) {
 						const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {

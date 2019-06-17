@@ -966,7 +966,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div> */}
 					</div>
 				</Modal>
-				<Modal visible={true} transparent wrapClassName='timeout_pay_modal'>
+				<Modal visible={false} transparent wrapClassName='timeout_pay_modal'>
 					<h3>审核超时赔</h3>
 					<p><strong>审核超时赔</strong>是指用户成功提交审核资料后，在还到承诺的审核时间内，未完成授信审核服务，借款还信用卡用户将获得相应的超时赔免息券。</p>
 					<div>
@@ -978,6 +978,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</ul>
 					</div>
 				</Modal>
+
+				
 			</div>
 		);
 	}

@@ -1,591 +1,610 @@
 @import "../../../assets/styles/scss/base/fn.scss";
 .page_inner_wrap {
-	padding: 40px 30px 0;
+  padding: 40px 30px 0;
 }
 
 .bankCard {
-	width: 690px;
-	min-height: 289px;
-	background: rgba(255, 255, 255, 1);
-	box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
-	border-radius: 12px;
-	box-sizing: border-box;
-	padding: 0 30px;
-	margin-bottom: 60px;
+  width: 690px;
+  min-height: 289px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
+  border-radius: 12px;
+  box-sizing: border-box;
+  padding: 0 30px;
+  margin-bottom: 60px;
 
-	.top {
-		position: relative;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		height: 90px;
-		&::after {
-			@include setBottomLine(#e5e5e5);
-		}
-	}
+  .top {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;
+    &::after {
+      @include setBottomLine(#e5e5e5);
+    }
+  }
 
-	.billTitle {
-		font-size: 24px;
-		color: #999;
-		line-height: 1;
-	}
+  .billTitle {
+    font-size: 24px;
+    color: #999;
+    line-height: 1;
+  }
 
-	.billMoney {
-		font-family: 'DINMitAlt';
-		display: block;
-		font-weight: normal;
-		font-size: 80px;
-		color: #121c32;
-		margin-top: 20px;
-	}
+  .billMoney {
+    font-family: "DINMitAlt";
+    display: block;
+    font-weight: normal;
+    font-size: 80px;
+    color: #121c32;
+    margin-top: 20px;
+  }
 
-	.billInfo {
-		position: relative;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		line-height: 1;
-		padding-bottom: 30px;
-		&::after {
-			@include setBottomLine(#e5e5e5);
-		}
+  .billInfo {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 1;
+    padding-bottom: 30px;
+    &::after {
+      @include setBottomLine(#e5e5e5);
+    }
 
-		.item {
-			.value {
-				font-size: 30px;
-				color: #121c32;
-				font-weight: bold;
-				font-family: 'PingFangSC-Medium';
-			}
+    .item {
+      .value {
+        font-size: 30px;
+        color: #121c32;
+        font-weight: bold;
+        font-family: "PingFangSC-Medium";
+      }
 
-			.name {
-				font-size: 24px;
-				color: #121c32;
-				line-height: 1.4;
-			}
-			.moneyTit {
-				color: #868e9e;
-				font-size: 24px;
-				font-weight: 400;
-			}
-		}
-	}
+      .name {
+        font-size: 24px;
+        color: #121c32;
+        line-height: 1.4;
+      }
+      .moneyTit {
+        color: #868e9e;
+        font-size: 24px;
+        font-weight: 400;
+      }
+    }
+  }
 
-	.bottom {
-		display: flex;
-		align-items: center;
-		height: 80px;
-		justify-content: space-between;
-		font-size: 30px;
-		color: #333;
+  .bottom {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    justify-content: space-between;
+    font-size: 30px;
+    color: #333;
 
-		.rightArrow {
-			width: 40px;
-		}
-	}
-	.bankBox {
-		display: flex;
-		align-items: center;
-		font-size: 30px;
-		font-weight: 400;
-		color: #121c32;
-	}
-	.cardNumBox {
-		display: flex;
-		align-items: center;
-		font-size: 30px;
-		font-weight: 500;
-		color: #121c32;
-		.rightArrow {
-			width: 40px;
-			color: #121c32;
-		}
-	}
+    .rightArrow {
+      width: 40px;
+    }
+  }
+  .bankBox {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 400;
+    color: #121c32;
+  }
+  .cardNumBox {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #121c32;
+    .rightArrow {
+      width: 40px;
+      color: #121c32;
+    }
+  }
 
-	.bankLogo {
-		width: 50px;
-		height: 50px;
-		margin-right: 17px;
-		top: 0;
-	}
+  .bankLogo {
+    width: 50px;
+    height: 50px;
+    margin-right: 17px;
+    top: 0;
+  }
 
-	.updateButton {
-		display: inline-block;
-		width: 128px;
-		height: 50px;
-		line-height: 50px;
-		background: #3e8cec;
-		border-radius: 25px;
-		font-size: 24px;
-		font-weight: 400;
-		color: #fff;
-		text-align: center;
-	}
+  .updateButton {
+    display: inline-block;
+    width: 128px;
+    height: 50px;
+    line-height: 50px;
+    background: #3e8cec;
+    border-radius: 25px;
+    font-size: 24px;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+  }
 }
 
 .tagList {
-	display: flex;
-	justify-content: space-between;
-	margin: 86px 0 80px;
-	.tagButton {
-		display: inline-block;
-		width: 180px;
-		height: 50px;
-		line-height: 48px;
-		text-align: center;
-		border-radius: 25px;
-		font-size: 30px;
-		background: #fff;
-		color: #f66;
-		border: 1px solid #f66;
-		box-sizing: border-box;
-	}
-	.activeTag {
-		color: #fff;
-		background: #f66;
-	}
+  display: flex;
+  justify-content: space-between;
+  margin: 86px 0 80px;
+  .tagButton {
+    display: inline-block;
+    width: 180px;
+    height: 50px;
+    line-height: 48px;
+    text-align: center;
+    border-radius: 25px;
+    font-size: 30px;
+    background: #fff;
+    color: #f66;
+    border: 1px solid #f66;
+    box-sizing: border-box;
+  }
+  .activeTag {
+    color: #fff;
+    background: #f66;
+  }
 }
 
 .confirmApplyBtn {
-	width: 620px;
-	margin-top: 80px;
+  width: 620px;
+  margin-top: 80px;
 }
 
 .progressWrap {
-	width: 210px;
-	overflow: hidden;
-	font-size: 24px;
-	color: #333;
+  width: 210px;
+  overflow: hidden;
+  font-size: 24px;
+  color: #333;
 
-	.percentTitleWrap {
-		display: flex;
-		justify-content: space-between;
-	}
+  .percentTitleWrap {
+    display: flex;
+    justify-content: space-between;
+  }
 
-	.percentNum {
-		color: #3e8cec;
-		margin-left: 5px;
-	}
+  .percentNum {
+    color: #3e8cec;
+    margin-left: 5px;
+  }
 }
 
 :global {
-	.loan_repay_confirm_page {
-		.am-progress-bar {
-			border: 2px solid #3e8cec;
-		}
+  .loan_repay_confirm_page {
+    .am-progress-bar {
+      border: 2px solid #3e8cec;
+    }
 
-		.am-list-item {
-			padding-left: 0;
-			height: 108px;
-			.am-list-line {
-				padding-right: 0;
-			}
-		}
+    .am-list-item {
+      padding-left: 0;
+      height: 108px;
+      .am-list-line {
+        padding-right: 0;
+      }
+    }
 
-		.am-list-item .am-list-line .am-list-extra {
-			padding-right: 10px;
-			&::after {
-				content: "";
-				margin-left: 15px;
-				@include setArrow(right, 15px, #a9aeb6, 1px);
-				border-color: #333;
-			}
-		}
+    .am-list-item .am-list-line .am-list-extra {
+      padding-right: 10px;
+      &::after {
+        content: "";
+        margin-left: 15px;
+        @include setArrow(right, 15px, #a9aeb6, 1px);
+        border-color: #333;
+      }
+    }
 
-		.blackColor {
-			.am-input-control input,
-			.am-list-extra {
-				color: #333;
-			}
-			.am-input-control .fake-input-container .fake-input.fake-input-disabled {
-				color: #333;
-			}
-		}
+    .blackColor {
+      .am-input-control input,
+      .am-list-extra {
+        color: #333;
+      }
+      .am-input-control .fake-input-container .fake-input.fake-input-disabled {
+        color: #333;
+      }
+    }
 
-		.am-list-item .am-list-line {
-			.am-input-label {
-				width: 210px;
-			}
-			.am-list-content,
-			.am-input-label {
-				font-size: 0.3rem;
-				color: #333;
-			}
-		}
+    .am-list-item .am-list-line {
+      .am-input-label {
+        width: 210px;
+      }
+      .am-list-content,
+      .am-input-label {
+        font-size: 0.3rem;
+        color: #333;
+      }
+    }
 
-		.am-list-item .am-input-control input {
-			width: 100%;
-			text-align: right;
-			color: #000;
-			opacity: 1;
-		}
-		.am-list-item .am-input-control input:disabled {
-			text-align: right;
-			color: #000;
-			opacity: 1;
-		}
+    .am-list-item .am-input-control input {
+      width: 100%;
+      text-align: right;
+      color: #000;
+      opacity: 1;
+    }
+    .am-list-item .am-input-control input:disabled {
+      text-align: right;
+      color: #000;
+      opacity: 1;
+    }
 
-		.am-list-item.am-list-item-middle .am-list-line {
-			&:after {
-				@include setBottomLine();
-			}
-		}
-		.am-list-item .am-list-line .am-list-extra {
-			color: #333;
-			opacity: 1;
-		}
-	}
-	.timeout_pay_modal {
-		// .am-modal.am-modal-transparent {
-		// }
-		// .am-modal.am-modal-transparent .am-modal-content .am-modal-body {
-		// 	padding: 0;
-		// }
-		// .am-modal.am-modal-transparent .am-modal-content {
-		// 	padding: 0;
-		// }
-		// .am-modal-content {
-		// 	background: transparent;
-		// }
-	}
+    .am-list-item.am-list-item-middle .am-list-line {
+      &:after {
+        @include setBottomLine();
+      }
+    }
+    .am-list-item .am-list-line .am-list-extra {
+      color: #333;
+      opacity: 1;
+    }
+  }
+  .timeout_pay_modal {
+    .am-modal.am-modal-transparent {
+      width: 650px;
+      .am-modal-body {
+        color: #121c32;
+        text-align: left;
+        padding: 0 48px 70px;
+
+        h3 {
+          font-size: 40px;
+          font-weight: 600;
+          text-align: center;
+          margin-bottom: 32px;
+        }
+
+        strong {
+          font-size: 36px;
+        }
+
+        p {
+          font-size: 30px;
+          margin-bottom: 45px;
+        }
+
+        h4 {
+          font-size: 30px;
+          font-weight: 600;
+          margin-bottom: 15px;
+        }
+      }
+    }
+  }
 }
 .money_input {
-	position: relative;
-	.desc {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		color: #999;
-		font-size: 24px;
-	}
+  position: relative;
+  .desc {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #999;
+    font-size: 24px;
+  }
 }
 .repayTypeBox {
-	position: relative;
-	display: flex;
-	align-items: center;
-	height: 110px;
-	justify-content: space-between;
-	font-size: 30px;
-	font-weight: 400;
-	color: #121c32;
-	.value {
-		display: flex;
-		align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 110px;
+  justify-content: space-between;
+  font-size: 30px;
+  font-weight: 400;
+  color: #121c32;
+  .value {
+    display: flex;
+    align-items: center;
     font-size: 30px;
-		font-family: 'PingFangSC-Medium';
-		font-weight: 600;
-		.unChecked {
-			display: block;
-			width: 34px;
-			height: 34px;
-			background: url('../../../assets/images/home/unChecked_ico.png') no-repeat center;
-			background-size: 100%;
-			margin-left: 16px;
-		}
-		.unChecked2 {
-			margin-top: 10px;
-		}
-		.checked {
-			background-image: url('../../../assets/images/home/checked_ico.png');
-		}
-	}
-	.special_val {
-		width: 450px;
-	}
-	.unit {
-		margin-left: 10px;
-	}
-	&:after {
-		@include setBottomLine();
-	}
+    font-family: "PingFangSC-Medium";
+    font-weight: 600;
+    .unChecked {
+      display: block;
+      width: 34px;
+      height: 34px;
+      background: url("../../../assets/images/home/unChecked_ico.png") no-repeat center;
+      background-size: 100%;
+      margin-left: 16px;
+    }
+    .unChecked2 {
+      margin-top: 10px;
+    }
+    .checked {
+      background-image: url("../../../assets/images/home/checked_ico.png");
+    }
+  }
+  .special_val {
+    width: 450px;
+  }
+  .unit {
+    margin-left: 10px;
+  }
+  &:after {
+    @include setBottomLine();
+  }
 }
 .dayProd {
-	.title {
-		color: #333;
+  .title {
+    color: #333;
 
-		position: relative;
-		top: -13px;
-	}
-	&.dis {
-		.subtitle,
-		.title {
-			color: #e5e5e5;
-		}
-		i {
-			background-image: url("../../../assets/images/home/viplogo-dis.png");
-		}
-	}
+    position: relative;
+    top: -13px;
+  }
+  &.dis {
+    .subtitle,
+    .title {
+      color: #e5e5e5;
+    }
+    i {
+      background-image: url("../../../assets/images/home/viplogo-dis.png");
+    }
+  }
 
-	i {
-		position: absolute;
-		top: -10px;
-		margin-left: 15px;
-		width: 103px;
-		height: 35px;
-		display: inline-block;
-		background-size: 100%;
-		background-image: url("../../../assets/images/home/viplogo.png");
-		background-color: #fff;
-		background-repeat: no-repeat;
-		background-origin: content-box;
-	}
-	.subtitle {
-		font-size: 0.22rem;
-		color: #999;
-		position: absolute;
-		bottom: 0;
-		left: 50%;
-		transform: translate(-50%);
-	}
+  i {
+    position: absolute;
+    top: -10px;
+    margin-left: 15px;
+    width: 103px;
+    height: 35px;
+    display: inline-block;
+    background-size: 100%;
+    background-image: url("../../../assets/images/home/viplogo.png");
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+  }
+  .subtitle {
+    font-size: 0.22rem;
+    color: #999;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+  }
 }
 .disabledBtn {
   color: #fff;
-  background-color: #D8D8D8;
+  background-color: #d8d8d8;
 }
 // modal样式覆盖
 :global {
-	.money_input_loan {
-		.am-list-item .am-list-line {
-			padding-right: 5px;
-		}
-		.am-list-item .am-input-control .fake-input-container .fake-input.focus:after {
-			border-right: 0.03rem solid #484747;
-		}
-	}
-	.modal_l_r2 {
-		.am-modal-body {
-			overflow: hidden;
-		}
+  .money_input_loan {
+    .am-list-item .am-list-line {
+      padding-right: 5px;
+    }
+    .am-list-item .am-input-control .fake-input-container .fake-input.focus:after {
+      border-right: 0.03rem solid #484747;
+    }
+  }
+  .modal_l_r2 {
+    .am-modal-body {
+      overflow: hidden;
+    }
 
-		.am-list-item {
-			padding-left: 0;
-			height: 108px;
-			.am-list-line {
-				padding-right: 0;
-			}
-		}
+    .am-list-item {
+      padding-left: 0;
+      height: 108px;
+      .am-list-line {
+        padding-right: 0;
+      }
+    }
 
-		.blackColor {
-			width: 100%;
-			.am-input-control input,
-			.am-list-extra {
-				color: #333;
-			}
-		}
+    .blackColor {
+      width: 100%;
+      .am-input-control input,
+      .am-list-extra {
+        color: #333;
+      }
+    }
 
-		.am-list-item .am-list-line {
-			.am-input-label {
-				width: 210px;
-			}
-			.am-list-content,
-			.am-input-label {
-				font-size: 0.3rem;
-				color: #333;
-				opacity: 1;
-			}
-			.am-input-control input,
-			.am-list-extra {
-				font-size: 0.3rem;
-				color: #000;
-				opacity: 1;
-			}
-		}
+    .am-list-item .am-list-line {
+      .am-input-label {
+        width: 210px;
+      }
+      .am-list-content,
+      .am-input-label {
+        font-size: 0.3rem;
+        color: #333;
+        opacity: 1;
+      }
+      .am-input-control input,
+      .am-list-extra {
+        font-size: 0.3rem;
+        color: #000;
+        opacity: 1;
+      }
+    }
 
-		.am-list-item .am-input-control input {
-			text-align: right;
-		}
+    .am-list-item .am-input-control input {
+      text-align: right;
+    }
 
-		.am-list-item.am-list-item-middle.blackColor .am-list-line {
-			&:after {
-				display: none;
-			}
-		}
-	}
-	.zijian {
-		.am-progress-bar {
-			border: 0.04rem solid #ffda58;
-		}
-	}
+    .am-list-item.am-list-item-middle.blackColor .am-list-line {
+      &:after {
+        display: none;
+      }
+    }
+  }
+  .zijian {
+    .am-progress-bar {
+      border: 0.04rem solid #ffda58;
+    }
+  }
 }
 
 .border_bottom {
-	position: relative;
-	&::after {
-		@include setBottomLine();
-	}
+  position: relative;
+  &::after {
+    @include setBottomLine();
+  }
 }
 
 .subDesc {
-	font-size: 24px;
-	color: #c7c6cc;
-	text-align: center;
-	margin-top: 30px;
+  font-size: 24px;
+  color: #c7c6cc;
+  text-align: center;
+  margin-top: 30px;
 }
 .modalLoading {
-	color: #666;
-	margin-bottom: 15px;
-	font-size: 32px;
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 32px;
 }
 .modal_left {
-	background: #fff;
-	transition: all 0.3s;
+  background: #fff;
+  transition: all 0.3s;
 }
 .modal_left1 {
-	margin-left: -50%;
+  margin-left: -50%;
 }
 .modal_box {
-	width: 100%;
-	overflow: hidden;
-	height: 585px;
+  width: 100%;
+  overflow: hidden;
+  height: 585px;
 }
 .modal_right {
-	min-height: 760px;
-	background: #fff;
-	transition: all 0.3s;
+  min-height: 760px;
+  background: #fff;
+  transition: all 0.3s;
 }
 .modal_left2 {
-	margin-left: 0%;
+  margin-left: 0%;
 }
 
 .modal_header {
-	position: relative;
-	font-size: 36px;
-	color: #333;
-	font-weight: 600;
-	padding: 15px 0;
-	&::after {
-		@include setBottomLine();
-	}
+  position: relative;
+  font-size: 36px;
+  color: #333;
+  font-weight: 600;
+  padding: 15px 0;
+  &::after {
+    @include setBottomLine();
+  }
 
-	.modal_leftIcon {
-		position: absolute;
-		left: 0;
-		padding: 10px;
-		top: 0;
-	}
-	.close {
-		position: absolute;
-		right: 0;
-		padding: 10px;
-		top: 0;
-	}
+  .modal_leftIcon {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    top: 0;
+  }
+  .close {
+    position: absolute;
+    right: 0;
+    padding: 10px;
+    top: 0;
+  }
 }
 .modal_content {
-	padding: 0 30px;
-	.billMoneyTop {
-		display: flex;
-		justify-content: space-between;
-		margin-top: 38px;
-		color: #333;
-	}
-	.billMoneyTwoTop {
-		display: flex;
-		justify-content: space-between;
-		margin-top: 18px;
-		font-size: 26px;
-		color: #666;
-	}
-	.billMoneyBtm {
-		position: relative;
-		text-align: right;
-		color: #c5c5c5;
-		font-size: 22px;
-		&::after {
-			@include setBottomLine();
-		}
-	}
-	.trendBox {
-		position: relative;
-		margin: 81px 0 100px;
-		i {
-			display: block;
-			width: 606px;
-			height: 21px;
-			margin: 0 auto;
-			background-image: url(assets/images/home/trend_img.png);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-		}
-		.trendDesc {
-			margin-top: 10px;
-			display: flex;
-			font-size: 22px;
-			color: #333;
-			justify-content: space-between;
-		}
-	}
-	.limitBox {
-		display: flex;
-		justify-content: space-around;
-	}
+  padding: 0 30px;
+  .billMoneyTop {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 38px;
+    color: #333;
+  }
+  .billMoneyTwoTop {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+    font-size: 26px;
+    color: #666;
+  }
+  .billMoneyBtm {
+    position: relative;
+    text-align: right;
+    color: #c5c5c5;
+    font-size: 22px;
+    &::after {
+      @include setBottomLine();
+    }
+  }
+  .trendBox {
+    position: relative;
+    margin: 81px 0 100px;
+    i {
+      display: block;
+      width: 606px;
+      height: 21px;
+      margin: 0 auto;
+      background-image: url(assets/images/home/trend_img.png);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+    .trendDesc {
+      margin-top: 10px;
+      display: flex;
+      font-size: 22px;
+      color: #333;
+      justify-content: space-between;
+    }
+  }
+  .limitBox {
+    display: flex;
+    justify-content: space-around;
+  }
 }
 .listitem {
-	position: relative;
-	width: 120px;
-	height: 70px;
-	line-height: 70px;
-	border: 2px solid #f66;
-	border-radius: 35px;
-	font-size: 30px;
-	font-weight: 600;
-	color: #f66;
+  position: relative;
+  width: 120px;
+  height: 70px;
+  line-height: 70px;
+  border: 2px solid #f66;
+  border-radius: 35px;
+  font-size: 30px;
+  font-weight: 600;
+  color: #f66;
 }
 .listActiveItem {
-	color: #fff;
-	background: #f66;
+  color: #fff;
+  background: #f66;
 }
 .tagList {
-	display: flex;
-	justify-content: space-between;
-	margin: 56px 30px 40px;
-	.tagButton {
-		display: inline-block;
-		width: 180px;
-		height: 50px;
-		line-height: 48px;
-		text-align: center;
-		border-radius: 25px;
-		font-size: 30px;
-		background: #fff;
-		color: #f66;
-		border: 1px solid #f66;
-		box-sizing: border-box;
-	}
-	.activeTag {
-		color: #fff;
-		background: #f66;
-	}
+  display: flex;
+  justify-content: space-between;
+  margin: 56px 30px 40px;
+  .tagButton {
+    display: inline-block;
+    width: 180px;
+    height: 50px;
+    line-height: 48px;
+    text-align: center;
+    border-radius: 25px;
+    font-size: 30px;
+    background: #fff;
+    color: #f66;
+    border: 1px solid #f66;
+    box-sizing: border-box;
+  }
+  .activeTag {
+    color: #fff;
+    background: #f66;
+  }
 }
 .modal_btn_box {
-	margin: 60px auto 36px;
-	width: 620px;
+  margin: 60px auto 36px;
+  width: 620px;
 }
 
 .modal_Vip {
-	text-align: left;
-	padding: 80px 30px;
-	.title {
-		font-size: 34px;
-		font-family: "PingFangSC-Regular";
-		color: #333;
-		margin-bottom: 24px;
-	}
-	.desc {
-		font-size: 32px;
-		line-height: 60px;
-		color: #6c6c6c;
-	}
-	.btn_box {
-		display: flex;
-		margin-top: 250px;
-		.btn_item {
-			&:first-child {
-				background-color: #fff;
-				color: #333;
-				border: 1px solid #ebde74;
-			}
-			margin: 0 40px;
-			flex: 1;
-		}
-	}
+  text-align: left;
+  padding: 80px 30px;
+  .title {
+    font-size: 34px;
+    font-family: "PingFangSC-Regular";
+    color: #333;
+    margin-bottom: 24px;
+  }
+  .desc {
+    font-size: 32px;
+    line-height: 60px;
+    color: #6c6c6c;
+  }
+  .btn_box {
+    display: flex;
+    margin-top: 250px;
+    .btn_item {
+      &:first-child {
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #ebde74;
+      }
+      margin: 0 40px;
+      flex: 1;
+    }
+  }
 }
