@@ -22,6 +22,7 @@ import circle_not from './img/circle_not.png';
 import adsBg from './img/base_top_img.png';
 import AgreementModal from 'components/AgreementModal';
 const Step = Steps.Step;
+let timedown = null;
 const pageKey = home.basicInfoBury;
 const customIcon = (type) => {
 	return type ? (
@@ -86,10 +87,11 @@ export default class essential_information_page extends PureComponent {
 		this.initBasicInfo();
 		// mpos中从授权页进入基本信息，判断是否显示协议
 		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
-		this.getMillisecond();
 	}
 
 	componentDidMount() {
+		urlQuery && urlQuery.jumpToBase && this.handleSetCountDown(60 * 60);
+		this.getMillisecond();
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
@@ -125,13 +127,14 @@ export default class essential_information_page extends PureComponent {
 				}, 0);
 			}
 		});
+		clearInterval(timedown);
 		clearInterval(this.timer);
 		this.timer = null;
 	}
 	getMillisecond = () => {
 		setTimeout(() => {
-			setInterval(() => {
-				if (Number(this.state.millisecond) > 9) {
+			timedown = setInterval(() => {
+				if (Number(this.state.millisecond) > 8) {
 					this.setState({
 						millisecond: 0
 					});
@@ -436,14 +439,18 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[ style.nameDiv, 'info_gb' ].join(' ')}>
-				{/* {urlQuery.jumpToBase && ( */}
+				{urlQuery.jumpToBase && (
 					<div className={style.adsImg}>
 						<img src={adsBg} alt="ad" />
+						<div className={style.text}>
+							限时参与&nbsp;
+							<ClockS count={this.state.count} />
+							<span class="jg">:</span>
+							{this.state.millisecond < 9 ? <span class="mins">0</span> : <span class="mins">1</span>}
+							{<span class="mins">{this.state.millisecond}</span>}
+						</div>
 					</div>
-				{/* )} */}
-				<ClockS count={this.state.count} />
-				{this.state.millisecond}
-				<CountDownForm onSetCountDown={this.handleSetCountDown} />
+				)}
 				<div className={[ style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : '' ].join(' ')}>
 					<div className={[ style.step_item, style.active ].join(' ')}>
 						<div className={style.title}>
