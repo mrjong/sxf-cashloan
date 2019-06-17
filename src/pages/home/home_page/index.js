@@ -14,13 +14,14 @@ import {
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity } from 'utils/analytinsType';
+import { home, mine, activity,loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
 import CountDownBox from 'components/CountDownBox';
+import TimeDown from 'components/TimeDown'
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -33,10 +34,8 @@ import {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard,
-	TimeDown
+	ExamineCard
 } from './components';
-import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -926,7 +925,13 @@ export default class home_page extends PureComponent {
 						ischeckIsEngagedUser.data &&
 						ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
 						ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-						(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008'))
+						(result.data.indexSts === 'LN0006' ||
+							result.data.indexSts === 'LN0008' ||
+							result.data.indexSts === 'LN0001' ||
+							result.data.indexSts === 'LN0002' ||
+							result.data.indexSts === 'LN0004' ||
+							result.data.indexSts === 'LN0003' ||
+							result.data.indexSts === 'LN0010'))
 				) {
 					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (
