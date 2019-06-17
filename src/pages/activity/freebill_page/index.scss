@@ -160,9 +160,11 @@
 
     .number_bg {
       position: relative;
-      top: 10px;
-      width: 267px;
-      height: 55px;
+      top: -1px;
+      font-size: 69px;
+      color: #FEED47;
+      font-family: 'DINMitAlt';
+      font-style: italic;
     }
   }
 }

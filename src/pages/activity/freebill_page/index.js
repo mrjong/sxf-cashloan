@@ -61,7 +61,8 @@ export default class funsisong_page extends PureComponent {
       }, () => {
         if (this.state.showRowScroll) {
           this.setState({
-            rewarded: generateRandomPhone()
+            rewarded: generateRandomPhone(),
+            rowScrollMoney: this.generateRandomMoney()
           })
         }
       })
@@ -134,12 +135,17 @@ export default class funsisong_page extends PureComponent {
   hideDelLine = () => {
     this.setState({
       showDelLine: false,
-      colScrollPhone: generateRandomPhone()
+      colScrollPhone: generateRandomPhone(),
+      colScrollMoney: this.generateRandomMoney()
     })
   }
 
+  generateRandomMoney = () => {
+    return (Math.floor((Math.random() * 45000 + 5000) / 100) * 100).toFixed(2)
+  }
+
   render() {
-    const { showLoginTip, showBoundle, showRowScroll, rewarded, colScrollPhone } = this.state;
+    const { showLoginTip, showBoundle, showRowScroll, rewarded, colScrollPhone, colScrollMoney, rowScrollMoney } = this.state;
     return (
       <div className={styles.freebill}>
         <SmsAlert
@@ -214,7 +220,7 @@ export default class funsisong_page extends PureComponent {
                 <div className={styles.inner} key={idx}>
                   <p className={styles.col_scroll_text}>{colScrollPhone ? colScrollPhone : '150****1489'}喜获</p>
                   <div className={styles.square}> <i className={styles.free_bg}></i>
-                    <em className={styles.del_money}>{item.money}
+                    <em className={styles.del_money}>{colScrollMoney ? colScrollMoney : '34000,00'}
                       {
                         this.state.showDelLine && <i className={styles.del_line}></i>
                       }
@@ -227,7 +233,7 @@ export default class funsisong_page extends PureComponent {
         </div>
         {
           showRowScroll && <div className={styles.row_scroll_wrap}>
-            <p className={styles.row_scroll_text}>{rewarded ? rewarded : '188****4219'}喜获<img src={number_bg} className={styles.number_bg} />元免单！</p>
+            <p className={styles.row_scroll_text}>{rewarded ? rewarded : '188****4219'}喜获<span className={styles.number_bg}>{rowScrollMoney ? rowScrollMoney : '20000,00'}</span>元免单！</p>
           </div>
         }
 
@@ -249,8 +255,8 @@ export default class funsisong_page extends PureComponent {
           actTime={'2019年6月18日'}
           actObject={'活动期间成功借款的用户即可参与'}
           actRules={[
-            '1.活动期间，在每日成功借款的用户中抽取第88位、第188位、第288位、第388位、第488位，依此类推，用户获得免费还账单利息福利，最高免费代还2万元借款本金所产生的利息，相关数据以随行付还到后台记录为准；',
-            '2.获奖用户将享受在还到的本笔获奖借款账单利息全免福利（超出2万部分不免息），奖励将以还款券的形式下发到用户账户中，仅限本笔订单还款时抵扣利息使用，不可转让或赠与；',
+            '1.活动期间，在每日成功借款的用户中抽取第88位、第188位、第288位、第388位、第488位，依此类推，用户获得免费还账单免利息福利，相关数据以随行付还到后台记录为准；',
+            '2.获奖用户将享受在还到的本笔获奖借款账单利息全免福利，奖励将以还款券的形式下发到用户账户中，仅限本笔订单还款时抵扣利息使用，不可转让或赠与；',
             '3.同一用户，活动期间仅能享受1次免费还账单福利，免费还账单数量有限，先到先得；',
             '4.若用户活动期间存在退款行为，将无法获得免费还账单返息奖励。',
           ]}
