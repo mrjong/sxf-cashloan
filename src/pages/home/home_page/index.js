@@ -14,7 +14,7 @@ import {
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity } from 'utils/analytinsType';
+import { home, mine, activity,loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
@@ -22,6 +22,7 @@ import mockData from './mockData';
 import { createForm } from 'rc-form';
 import CountDownBox from 'components/CountDownBox';
 import FeedbackModal from 'components/FeedbackModal';
+import TimeDown from 'components/TimeDown'
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -34,10 +35,8 @@ import {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard,
-	TimeDown
+	ExamineCard
 } from './components';
-import { loan_fenqi } from '../../../utils/analytinsType';
 import linkConf from 'config/link.conf';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -894,26 +893,46 @@ export default class home_page extends PureComponent {
 					}
 				);
 				let ischeckIsEngagedUser = null;
+				let AC20190618_618_RESULT = null;
 				let ischeckEngaged = await checkEngaged({
 					$props: this.props,
 					AcCode: 'AC20190618_618'
 				});
+
 				if (ischeckEngaged.msgCode === 'PTM0000') {
 					ischeckIsEngagedUser = await checkIsEngagedUser({
 						$props: this.props,
 						AcCode: 'AC20190618_618'
 					});
+					AC20190618_618_RESULT = await checkIsEngagedUser({
+						$props: this.props,
+						AcCode: 'AC20190618_618_RESULT'
+					});
 				}
+
 				if (
-					(result.data.indexSts === 'LN0001' ||
-						result.data.indexSts === 'LN0002' ||
-						result.data.indexSts === 'LN0003' ||
-						result.data.indexSts === 'LN0010') &&
-					(ischeckEngaged.msgCode === 'PTM0000' &&
-						((ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
-							(ischeckIsEngagedUser.data &&
-								ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-								ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60)))
+					(AC20190618_618_RESULT &&
+						AC20190618_618_RESULT.data &&
+						AC20190618_618_RESULT.data.isEngagedUser === '1' &&
+						ischeckEngaged &&
+						ischeckEngaged.msgCode === 'PTM0000' &&
+						(ischeckIsEngagedUser.data.isEngagedUser === '1' &&
+							(result.data.indexSts === 'LN0001' ||
+								result.data.indexSts === 'LN0002' ||
+								result.data.indexSts === 'LN0004' ||
+								result.data.indexSts === 'LN0003' ||
+								result.data.indexSts === 'LN0010'))) ||
+					(ischeckIsEngagedUser &&
+						ischeckIsEngagedUser.data &&
+						ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
+						ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+						(result.data.indexSts === 'LN0006' ||
+							result.data.indexSts === 'LN0008' ||
+							result.data.indexSts === 'LN0001' ||
+							result.data.indexSts === 'LN0002' ||
+							result.data.indexSts === 'LN0004' ||
+							result.data.indexSts === 'LN0003' ||
+							result.data.indexSts === 'LN0010'))
 				) {
 					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (

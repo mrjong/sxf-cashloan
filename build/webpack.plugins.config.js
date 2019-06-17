@@ -288,39 +288,40 @@ let getTestPlugins = function() {
 
 //开发插件
 let getDevPlugins = function() {
-	plugins.push(
-		new webpack.HotModuleReplacementPlugin() //热更新插件
-	);
-	plugins.push(
-		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
-			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
-			{ from: path.resolve(__dirname, '../*.html'), to: './' },
-			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
-			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: [ '.*' ] }
-		])
-	),
-		plugins.push(
-			new webpack.DefinePlugin({
-				'process.env': {
-					NODE_ENV: JSON.stringify('development'),
-					PROJECT_ENV: JSON.stringify('dev'),
-					RELEASE_VERSION: JSON.stringify('dev')
-				},
-				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
-			})
-		);
-	// plugins.push(new webpack.HotModuleReplacementPlugin());
-	plugins.push(
-		new HappyPack({
-			id: 'happybabel',
-			loaders: [ 'babel-loader' ],
-			threadPool: happyThreadPool,
-			cache: true,
-			verbose: true
-		})
-	);
-	return plugins;
+  plugins.push(
+    new webpack.HotModuleReplacementPlugin() //热更新插件
+  );
+  plugins.push(
+    new CopyWebpackPlugin([
+      { from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
+      { from: path.resolve(__dirname, '../*.txt'), to: './' },
+            { from: path.resolve(__dirname, '../*.html'), to: './' },
+      { from: path.resolve(__dirname, '../*.apk'), to: './' },
+      { from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
+    ])
+  ),
+  plugins.push(
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development'),
+        PROJECT_ENV: JSON.stringify('dev'),
+        RELEASE_VERSION: JSON.stringify('dev'),
+      },
+      saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+      // saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
+    })
+  );
+  // plugins.push(new webpack.HotModuleReplacementPlugin());
+  plugins.push(
+    new HappyPack({
+      id: 'happybabel',
+      loaders: [ 'babel-loader' ],
+      threadPool: happyThreadPool,
+      cache: true,
+      verbose: true
+    })
+  );
+  return plugins;
 };
 
 //导出

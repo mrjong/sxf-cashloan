@@ -9,7 +9,6 @@ import WhiteCard from './WhiteCard';
 import CardProgress from './CardProgress';
 import AddCards from './AddCards';
 import ExamineCard from './ExamineCard';
-import TimeDown from './TimeDown'
 export {
 	CarouselHome,
 	BlackCard,
@@ -22,5 +21,4 @@ export {
 	CardProgress,
 	AddCards,
   ExamineCard,
-  TimeDown
 };

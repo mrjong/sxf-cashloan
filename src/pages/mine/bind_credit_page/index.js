@@ -15,7 +15,8 @@ const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
 	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
 	BINDCARD: '/withhold/card/bindConfirm', // 绑定银行卡
-	CHECKCARD: '/my/chkCard' // 是否绑定了一张信用卡一张储蓄卡
+	CHECKCARD: '/my/chkCard', // 是否绑定了一张信用卡一张储蓄卡
+	queryCardInfo: '/withhold/getLast4No' // 获取银行名称/后四位
 };
 
 // let isFetching = false;
@@ -42,10 +43,21 @@ export default class bind_credit_page extends PureComponent {
 		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
+		this.queryCardInfo()
+	}
+
+	componentDidMount() {
+		this.props.form.setFieldsValue({
+			valueInputCarNumber: store.getBindCreditCardNo(),
+		});
 	}
 
 	componentWillUnmount() {
 		// isFetching = false;
+		const pathname = this.props.history.location.pathname
+		if (!(pathname === '/mine/support_credit_page') ) {
+			store.removeBindCreditCardNo();
+		}
 	}
 
 	// 获取信用卡信息
@@ -62,14 +74,33 @@ export default class bind_credit_page extends PureComponent {
 		);
 	};
 
+	// 获取信用卡后四位,发卡行
+	queryCardInfo = () => {
+		this.props.$fetch.get(`${API.queryCardInfo}/${autId ? autId : ''}`).then(
+			(result) => {
+				console.log(result)
+				if (result.msgCode === 'PTM0000' && result.data) {
+					this.setState({
+						bankNm: result.data.bankNm,
+						cardLastNo: result.data.cardLastNo
+					})
+				}
+			},
+			(error) => {
+				error.msgInfo && this.props.toast.info(error.msgInfo);
+			}
+		);
+	};
+
 	// 校验信用卡卡号
 	validateCarNumber = (rule, value, callback) => {
-		if (!validators.bankCardNumber(value)) {
+		if (!validators.bankCardNumber(value.replace(/\s*/g, ''))) {
 			callback('请输入有效银行卡号');
 		} else {
 			callback();
 		}
 	};
+
 	// 绑定银行卡
 	bindConfirm = (params1) => {
 		this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
@@ -135,8 +166,9 @@ export default class bind_credit_page extends PureComponent {
 		});
 	};
 	// 通过输入的银行卡号 查出查到卡banCd
-	checkCard = (params, values) => {
-		this.props.$fetch.post(API.GECARDINF, params).then(
+	checkCard = (values) => {
+		values.valueInputCarNumber = values.valueInputCarNumber.replace(/\s*/g, '');
+		this.props.$fetch.post(API.GECARDINF, { cardNo: values.valueInputCarNumber }).then(
 			(result) => {
 				this.setState({
 					cardData: {
@@ -170,16 +202,10 @@ export default class bind_credit_page extends PureComponent {
 	};
 	// 确认购买
 	confirmBuy = () => {
-		// if (isFetching) {
-		// 	return;
-		// }
+		if (!this.validateFn()) return
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				// isFetching = true;
-				const params = {
-					cardNo: values.valueInputCarNumber
-				};
-				this.checkCard(params, values);
+				this.checkCard(values);
 				// TODO 发送请求等操作
 			} else {
 				if (!this.jsonIsNull(values)) {
@@ -189,11 +215,21 @@ export default class bind_credit_page extends PureComponent {
 						fail_cause: getFirstError(err)
 					});
 				}
-				// isFetching = false;
 				this.props.toast.info(getFirstError(err));
 			}
 		});
 	};
+
+	//	校验必填项
+	validateFn = () => {
+		const { userName } = this.state
+		const formData = this.props.form.getFieldsValue();
+		if (userName && formData.valueInputCarNumber) {
+			return true
+		}
+		return false
+	}
+
 
 	// 判断json里的每一项是否为空
 	jsonIsNull = (values) => {
@@ -218,25 +254,29 @@ export default class bind_credit_page extends PureComponent {
 				<div className={styles.header}>请确认需要还款的信用卡信息</div>
 				<div className="bind_credit_page_listBox">
 					<Item extra={this.state.userName}>持卡人</Item>
+					<Item extra={this.state.bankNm}>发卡行</Item>
 					<InputItem
 						maxLength="24"
-						type="number"
+						type="bankCard"
 						{...getFieldProps('valueInputCarNumber', {
-							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ]
+							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }],
+							onChange: (value) => {
+								store.setBindCreditCardNo(value);
+							}
 						})}
-						placeholder="请输入信用卡卡号"
+						placeholder={`请补足尾号为${this.state.cardLastNo || 'xxxx'}的信用卡`}
 						onBlur={() => {
 							handleInputBlur();
 						}}
 					>
 						信用卡卡号
 					</InputItem>
-					<div className={[ styles.time_container, 'sms' ].join(' ')} />
+					<div className={[styles.time_container, 'sms'].join(' ')} />
 				</div>
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<ButtonCustom onClick={this.confirmBuy} className={styles.confirm_btn}>
+				<ButtonCustom onClick={this.confirmBuy} className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}>
 					确认
 				</ButtonCustom>
 			</div>

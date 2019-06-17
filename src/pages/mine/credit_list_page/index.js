@@ -63,6 +63,9 @@ export default class credit_list_page extends PureComponent {
 	selectCard = (obj) => {
 		// if (backUrlData) {
 		this.setState({
+			// bankName: obj.bankName,
+			// lastCardNo: obj.lastCardNo,
+			// bankCode: obj.bankCode,
 			autId: obj.autId
 		});
 		// 如果选择的是同一张卡则不清除session里的RepaymentModalData
@@ -97,6 +100,7 @@ export default class credit_list_page extends PureComponent {
     buriedPointEvent(home.addCreditCard)
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+		buriedPointEvent(home.addCreditCard)
 	};
 
 	render() {
