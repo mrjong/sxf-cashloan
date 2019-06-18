@@ -20,12 +20,10 @@ export default class FeedbackModal extends React.Component {
   }
 
   goInterBank = () => {
-    store.removeGotoMoxieFlag()
     this.props.history.push('/others/moxie_pwd_guide?moxieType=interbank')
   }
 
   goOperator = () => {
-    store.removeGotoMoxieFlag()
     this.props.history.push('/others/moxie_pwd_guide?moxieType=operator')
   }
 
