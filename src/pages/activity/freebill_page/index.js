@@ -12,6 +12,8 @@ import number_bg from './img/number_bg.png'
 import { Icon, Carousel } from 'antd-mobile'
 import { generateRandomPhone, saveUserInfoEngaged } from '../../../utils'
 import fetch from 'sx-fetch';
+import main_bg from './img/main_bg.png'
+
 const rewardList = [
   {
     user: '188****4219喜获',
@@ -148,6 +150,7 @@ export default class funsisong_page extends PureComponent {
     const { showLoginTip, showBoundle, showRowScroll, rewarded, colScrollPhone, colScrollMoney, rowScrollMoney } = this.state;
     return (
       <div className={styles.freebill}>
+        <img src={main_bg} alt="" className={styles.main_bg} />
         <SmsAlert
           onRef={this.onRef}
           goSubmitCb={{

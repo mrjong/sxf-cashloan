@@ -14,7 +14,7 @@ import {
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity,loan_fenqi } from 'utils/analytinsType';
+import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
@@ -913,28 +913,28 @@ export default class home_page extends PureComponent {
 				}
 
 				if (
-					(AC20190618_618_RESULT &&
-						AC20190618_618_RESULT.data &&
-						AC20190618_618_RESULT.data.isEngagedUser === '1' &&
-						ischeckEngaged &&
-						ischeckEngaged.msgCode === 'PTM0000' &&
-						(ischeckIsEngagedUser.data.isEngagedUser === '1' &&
-							(result.data.indexSts === 'LN0001' ||
-								result.data.indexSts === 'LN0002' ||
-								result.data.indexSts === 'LN0004' ||
-								result.data.indexSts === 'LN0003' ||
-								result.data.indexSts === 'LN0010'))) ||
-					(ischeckIsEngagedUser &&
-						ischeckIsEngagedUser.data &&
-						ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
-						ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-						(result.data.indexSts === 'LN0006' ||
-							result.data.indexSts === 'LN0008' ||
-							result.data.indexSts === 'LN0001' ||
+					AC20190618_618_RESULT &&
+					AC20190618_618_RESULT.data &&
+					AC20190618_618_RESULT.data.isEngagedUser === '1' &&
+					ischeckEngaged &&
+					ischeckEngaged.msgCode === 'PTM0000' &&
+					((ischeckIsEngagedUser.data.isEngagedUser === '1' &&
+						(result.data.indexSts === 'LN0001' ||
 							result.data.indexSts === 'LN0002' ||
 							result.data.indexSts === 'LN0004' ||
 							result.data.indexSts === 'LN0003' ||
-							result.data.indexSts === 'LN0010'))
+							result.data.indexSts === 'LN0010')) ||
+						(ischeckIsEngagedUser &&
+							ischeckIsEngagedUser.data &&
+							ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
+							ischeckIsEngagedUser.data.isEngagedUser === '0' &&
+							(result.data.indexSts === 'LN0006' ||
+								result.data.indexSts === 'LN0008' ||
+								result.data.indexSts === 'LN0001' ||
+								result.data.indexSts === 'LN0002' ||
+								result.data.indexSts === 'LN0004' ||
+								result.data.indexSts === 'LN0003' ||
+								result.data.indexSts === 'LN0010')))
 				) {
 					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
 				} else if (
@@ -1578,7 +1578,7 @@ export default class home_page extends PureComponent {
 				/>
 				{this.componentsAddCards()}
 				{DownTime321 ? <CountDownBox /> : null}
-				<FeedbackModal 
+				<FeedbackModal
 					history={this.props.history}
 					toast={this.props.toast}
 					visible={showFeedbackModal}
