@@ -5,8 +5,12 @@ import jujiupei from '../../assets/images/home/huodongTootip4.png';
 import huodongTootipBtn4 from '../../assets/images/home/huodongTootip_btn4.png';
 import xianjin from './img/xianjin.png';
 import xianjinBtn from './img/xianjinBtn.png';
+import jd618Btn from './img/jd618Btn.png';
+import jd618 from './img/jd618.png';
 import koubei_new_bg from '../../assets/images/home/new_user.png';
 import koubei_old_bg from '../../assets/images/home/old_user.png';
+import freebill from './img/freebill.png';
+import freebill_btn from './img/freebill_btn.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -32,10 +36,8 @@ class ActivityModal extends React.Component {
 						<div className={styles.content}>
 							{/* 大图 */}
 							{modalType === 'xianjin' ? <img src={xianjin} /> : null}
-							{modalType === 'jujiupei' ? <img src={jujiupei} /> : null}
-							{/* {modalType === 'brand' ? <img src={brand} /> : null}
-							{modalType === 'koubei_new_user' ? <img src={koubei_new_bg} /> : null}
-							{modalType === 'koubei_old_user' ? <img src={koubei_old_bg} /> : null} */}
+							{modalType === 'jd618' ? <img src={jd618} /> : null}
+							{modalType === 'freebill' ? <img src={freebill} /> : null}
 							{/* 按钮 */}
 							{modalType === 'xianjin' ? (
 								<img
@@ -47,35 +49,25 @@ class ActivityModal extends React.Component {
 									}}
 								/>
 							) : null}
-							{modalType === 'jujiupei' ? (
+							{modalType === 'jd618' ? (
 								<img
-									className={styles.huodongTootipBtn4}
-									src={huodongTootipBtn4}
+									className={styles.jd618Btn}
+									src={jd618Btn}
 									onClick={() => {
-										activityModalBtn('jjp');
+										activityModalBtn('jd618');
 									}}
 								/>
 							) : null}
-							{/* {modalType === 'koubei_new_user' ? (
+							{modalType === 'freebill' ? (
 								<img
-									className={styles.koubeiBtn}
-									src={huodongTootipBtn4}
+									className={styles.freebillBtn}
+									src={freebill_btn}
 									onClick={() => {
-										activityModalBtn('koubei_new_user');
+										activityModalBtn('freebill');
 									}}
 								/>
 							) : null}
-							{modalType === 'koubei_old_user' ? (
-								<img
-									className={styles.koubeiBtn}
-									src={huodongTootipBtn4}
-									onClick={() => {
-										activityModalBtn('koubei_old_user');
-									}}
-								/>
-							) : null} */}
 						</div>
-						{/* 关闭按钮 */}
 						{!modalBtnFlag ? (
 							<div
 								className={styles.closeBtn}

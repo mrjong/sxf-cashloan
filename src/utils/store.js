@@ -1,5 +1,7 @@
 // 本地存储
 import { storeTypes } from './storeTypes';
+import { Toast } from 'antd-mobile';
+import { isPhone } from 'utils';
 
 const { localStorage, sessionStorage } = window;
 // 默认使用sessionstorage
@@ -45,8 +47,14 @@ const bugBrowserArr = [ 'vivobrowser', 'oppobrowser', 'safari' ];
 // 检测是否是某种 bug 浏览器
 const isBugBrowser = () => {
 	const u = navigator.userAgent.toLowerCase();
+	// Toast.info(u,0)
 	const bugBrowserList = bugBrowserArr.filter((item) => u.indexOf(item) > -1);
-	return bugBrowserList.length > 0 && u.indexOf('micromessenger') <= -1;
+	return (
+		bugBrowserList.length > 0 &&
+		u.indexOf('micromessenger') <= -1 &&
+		u.indexOf('suixingpay-mpos') <= -1 &&
+		!isPhone()
+	);
 };
 
 let store = {};

@@ -1,5 +1,5 @@
 .topBox {
-  margin-top: -60px;
+	margin-top: -60px;
 	.title {
 		font-size: 46px;
 		font-family: 'PingFangSC-Medium';
@@ -16,6 +16,72 @@
 			color: #397be6;
 		}
 	}
+}
+:global {
+	.loan_apply_succ_alert {
+		position: relative;
+		&.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		&.am-modal.am-modal-transparent {
+			width: 100%;
+		}
+		.am-modal-content {
+			background-color: rgba(0, 0, 0, 0);
+		}
+	}
+}
+.successImg {
+	width: 750px;
+	display: block;
+	margin: 0 auto;
+}
+.successTitle {
+	font-family: 'PingFangSC-Medium';
+  font-weight: 500;
+  color: #121C32;
+  position: relative;
+  top: -530px;
+  font-size: 40px;
+}
+.successTime{
+  font-family: 'PingFangSC-Medium';
+  font-weight: 500;
+  color: #868E9E;
+  position: relative;
+  top: -310px;
+  font-size: 32px;
+}
+.failTitle {
+	font-family: 'PingFangSC-Medium';
+  font-weight: 500;
+  color: #121C32;
+  position: relative;
+  top: -450px;
+  font-size: 40px;
+}
+.failTime{
+  font-family: 'PingFangSC-Medium';
+  font-weight: 500;
+  color: #868E9E;
+  position: relative;
+  top: -430px;
+  font-size: 32px;
+}
+
+.btnImg {
+	position: relative;
+	top: -290px;
+	width: 520px;
+	display: block;
+	margin: 0 auto;
+}
+.btnImg2 {
+	position: relative;
+	top: -380px;
+	display: block;
+	width: 520px;
+	margin: 0 auto;
 }
 .submitBtn {
 	width: 634px;

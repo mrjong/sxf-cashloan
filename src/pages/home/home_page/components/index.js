@@ -20,5 +20,5 @@ export {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard
+  ExamineCard,
 };

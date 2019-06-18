@@ -1,25 +1,11 @@
 @import '../../../assets/styles/scss/base/fn';
 .home_new_page {
+  padding-bottom: 150px;
 	// 代偿
 	.home_banner {
-	// -webkit-animation-name: fadeIn;
-	// 	-webkit-animation-duration: .3s;
-	// 	-webkit-animation-iteration-count: 1;
-	// 	-webkit-animation-delay: .3s;
 		margin-bottom: 30px;
 		img {
 			border-radius: 16px;
 		}
-	}
-}
-@-webkit-keyframes fadeIn {
-	0% {
-		opacity: 0;
-	}
-	50% {
-		opacity: 0.5;
-	}
-	100% {
-		opacity: 1;
 	}
 }
