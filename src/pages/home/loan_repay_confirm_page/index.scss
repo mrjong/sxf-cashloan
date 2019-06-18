@@ -115,7 +115,18 @@
 			top: 20px;
 			left: 0;
 			z-index: 1;
-		}
+    }
+    .edit_icon {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      top: 0.3rem;
+      right: 0;
+      z-index: 1;
+      background-image: url(./img/edit_icon.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+    }
 	}
 	.cardNumBox {
 		top: 30px;

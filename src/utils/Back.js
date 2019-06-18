@@ -24,7 +24,6 @@ let initDialog = (errMsg) => {
 						className: 'rob-btn rob-btn-danger rob-btn-circle'
 					}
 				]}
-				pathname={location.pathname}
 				onRequestClose={(res, questionName) => {
 					switch (location.pathname) {
 						case '/home/loan_repay_confirm_page':
@@ -172,7 +171,9 @@ if (window.history && window.history.pushState) {
 					return;
 				}
 				document.activeElement.blur();
-				obj.show();
+				if(!store.getGotoMoxieFlag()) {
+				  obj.show();
+        }
 				return;
 			}
 

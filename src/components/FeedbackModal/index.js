@@ -4,6 +4,8 @@ import style from './index.scss';
 import { Icon, TextareaItem } from 'antd-mobile'
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 const API = {
   feedback: '/question/save'
@@ -20,14 +22,25 @@ export default class FeedbackModal extends React.Component {
   }
 
   goInterBank = () => {
+    buriedPointEvent(home.feedModalInterbank)
+    buriedPointEvent(home.feedModalBtnClick, {
+      btnName: '去找回网银密码'
+    })
     this.props.history.push('/others/moxie_pwd_guide?moxieType=interbank')
   }
 
   goOperator = () => {
+    buriedPointEvent(home.feedModalOperator)
+    buriedPointEvent(home.feedModalBtnClick, {
+      btnName: '去查询、修改运营商服务密码'
+    })
     this.props.history.push('/others/moxie_pwd_guide?moxieType=operator')
   }
 
   goFeedback = () => {
+    buriedPointEvent(home.feedModalBtnClick, {
+      btnName: '其他问题'
+    })
     this.setState({
       showTextarea: true
     })
@@ -38,11 +51,12 @@ export default class FeedbackModal extends React.Component {
     this.props.$fetch.post(API.feedback, {
       val: this.state.textareaVal
     }).then(res => {
+      buriedPointEvent(home.feedModalSubmit)
       if (res.msgCode === 'PTM0000') {
         this.props.toast.info('提交成功')
-        setTimeout(()=>{
+        setTimeout(() => {
           this.props.closeModal()
-        },2000)
+        }, 2000)
       }
     })
   }

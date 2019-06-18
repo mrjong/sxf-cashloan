@@ -11,6 +11,7 @@ import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal'
+import FeedbackModal from 'components/FeedbackModal'
 // import ScrollText from 'components/ScrollText';
 import linkConf from 'config/link.conf';
 let isinputBlur = false;
@@ -65,14 +66,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 			cardCount: '', // 卡的数量
 			repayType: '', // 还款方式
       fullMinAmt: '', // 全额或者最低还卡金额
-      showTimeoutPayModal: false
+      showTimeoutPayModal: false,
+      showFeedbackModal: false
 		};
 	}
 
 	componentDidMount() {
 		store.removeToggleMoxieCard();
 		this.queryUsrInfo();
-		this.requestCredCardCount();
+    this.requestCredCardCount();
+    this.showFeedbackModal()
 	}
 
 	componentWillUnmount() {
@@ -427,17 +430,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	//计算该显示的还款金额
-	calcLoanMoney = (money, tag3, isClear) => {
+	calcLoanMoney = (money, tag3) => {
 		// isClear为true的时候点击最低还卡或者最高还卡都清除输入框
 		const { usrIndexInfo } = this.state;
 		const { indexData } = usrIndexInfo;
-		if (isClear) {
-			this.props.form.setFieldsValue({
-				loanMoney: ''
-			});
-			this.getQryPerdRate(money, tag3);
-			return;
-		}
 		if (indexData && indexData.maxApplAmt && Number(money) >= Number(indexData.maxApplAmt)) {
 			this.props.form.setFieldsValue({
 				loanMoney: indexData.maxApplAmt
@@ -541,13 +537,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 					this.setState({
 						fullMinAmt: maxApplAmt
 					});
-					this.calcLoanMoney(maxApplAmt, '', true);
+					this.calcLoanMoney(maxApplAmt, '');
 				} else if (idx === 1) {
 					this.setState({
 						fullMinAmt: minApplAmt
 					});
 					//最低还款
-					this.calcLoanMoney(minApplAmt, '', true);
+					this.calcLoanMoney(minApplAmt, '');
 				} else {
 					this.calcLoanMoney(maxApplAmt, '');
 				}
@@ -561,7 +557,22 @@ export default class loan_repay_confirm_page extends PureComponent {
 			return true;
 		}
 		return false;
-	};
+  };
+
+  showFeedbackModal = () => {
+		if(store.getGotoMoxieFlag()) {
+			this.setState({
+				showFeedbackModal: true
+			})
+		}
+	}
+
+	closeFeedbackModal = () => {
+		this.setState({
+			showFeedbackModal: false
+		})
+		store.removeGotoMoxieFlag()
+	}
 
 	// placeholderText = () => {
 	// 	const { fetchBillSucc, activeTag, usrIndexInfo } = this.state;
@@ -585,7 +596,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
 				// 跳银行登录页面
-				// this.getMoxieData(bankNo);
+				this.getMoxieData(bankNo);
 			});
 			return true;
 		}
@@ -634,7 +645,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			repayType,
 			fetchBillSucc,
       fullMinAmt,
-      showTimeoutPayModal
+      showTimeoutPayModal,
+      showFeedbackModal
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -786,6 +798,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									});
 								}}
 							/>
+              <i className={style.edit_icon}/>
 						</div>
 						<div className={style.repayTypeBox}>
 							<div
@@ -934,6 +947,12 @@ export default class loan_repay_confirm_page extends PureComponent {
             })
           }}
         />
+        <FeedbackModal
+					history={this.props.history}
+					toast={this.props.toast}
+					visible={showFeedbackModal}
+					closeModal={this.closeFeedbackModal}
+				/>
 			</div>
 		);
 	}

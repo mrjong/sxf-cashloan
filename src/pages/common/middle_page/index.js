@@ -37,7 +37,8 @@ export default class middle_page extends Component {
 						});
 						return;
 					}
-					this.buryPointsType(taskType, true);
+          this.buryPointsType(taskType, true);
+          store.removeGotoMoxieFlag()  //删除去到第三方魔蝎的标志
 					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 						getNextStr({
 							$props: this.props

@@ -71,7 +71,7 @@ const home = {
 	protocolBindBtnClick: `${prefix}_HOME_PROTOCOL_MODAL_BTN_CLICK`, // 签约借款页协议绑卡短验弹框按钮点击
 
 	dialogInformation: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION`,
-	dialogInformation_wait: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CONTINUE `,
+	dialogInformation_wait: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CONTINUE`,
 	dialogInformation_close: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CLOSE`,
 
 	dialogMoxieBank: `${prefix}_QUESTION_FEEDBACK_BANK`,
@@ -80,8 +80,12 @@ const home = {
 
 	dialogLoanRepay: `${prefix}_QUESTION_FEEDBACK_APPLY`,
 	dialogLoanRepay_wait: `${prefix}_QUESTION_FEEDBACK_APPLY_CONTINUE`,
-	dialogLoanRepay_close: `${prefix}_QUESTION_FEEDBACK_APPLY_CLOSE`,
+  dialogLoanRepay_close: `${prefix}_QUESTION_FEEDBACK_APPLY_CLOSE`,
 
+  feedModalOperator: `${prefix}_TIPS_OPERATORS_RETRIEVE`, //找回运营商密码
+  feedModalInterbank: `${prefix}_TIPS_INTERNETBANK_RETRIEVE`, //找回信用卡密码
+  feedModalSubmit: `${prefix}_TIPS_OTHERISSUES`, //反馈问题提交事件
+  feedModalBtnClick: `${prefix}_TIPS_RISSUES`, //选择问题按钮点击总事件
 
 };
 
@@ -184,7 +188,6 @@ const activity = {
   jd618ResultModalClick: `${prefix}_JD618_RESULT_MODAL_CLICK`,
   jd618HomeModalClose:`${prefix}_JD618HOMEMODALCLOSE`,
   freeBillHomeModalClose:`${prefix}_FREEBILLHOMEMODALCLOSE`,
-
 
 };
 

@@ -10,7 +10,8 @@ class Dialog extends Component {
     this.state = {
       showCover: false,
       showDialog: false,
-      menuList: []
+      menuList: [],
+      stepText: ''
     }
     this.requestClose = (type, questionName) => {
       this.props.onRequestClose(type, questionName)
@@ -47,8 +48,6 @@ class Dialog extends Component {
         this.setState({ showCover: false })
       }
     }
-    console.log(this.props.pathname)
-    console.log(window.location.pathname)
     this.toggleMenuList()
   }
   componentWillReceiveProps(props) {
@@ -66,7 +65,7 @@ class Dialog extends Component {
     }
   }
   toggleMenuList = () => {
-    const pathname = this.props.pathname
+    const pathname = window.location.pathname
     switch (pathname) {
       case '/home/loan_repay_confirm_page':
         this.setState({
@@ -91,59 +90,62 @@ class Dialog extends Component {
               name: '再等等',
               type: '00'
             }
-          ]
+          ],
+          stepText: '提交'
         })
         break;
       case '/home/essential_information':
         this.setState({
           menuList: [
             {
-              name: '不知道网银密码',
+              name: '操作不便，不想继续',
               type: '21'
             },
             {
-              name: '银行卡信息太敏感',
+              name: '不想填写个人信息，担心信息泄露',
               type: '22'
             },
             {
-              name: '没有支持银行',
+              name: '额度太低',
               type: '23'
             },
             {
-              name: '其他',
+              name: '暂时没有借款需求',
               type: '01'
             },
             {
               name: '再等等',
               type: '00'
             }
-          ]
+          ],
+          stepText: '2步操作'
         })
         break;
       case '/home/moxie_bank_list_page':
         this.setState({
           menuList: [
             {
-              name: '操作不便，不想继续',
+              name: '不知道网银密码',
               type: '31'
             },
             {
-              name: '不想填写个人信息，担心信息泄露',
+              name: '银行卡信息太敏感',
               type: '32'
             },
             {
-              name: '额度太低',
+              name: '没有支持银行',
               type: '33'
             },
             {
-              name: '暂时没有借款需求',
+              name: '其他',
               type: '34'
             },
             {
               name: '再等等',
               type: '00'
             }
-          ]
+          ],
+          stepText: '只剩1步操作'
         })
         break;
       default:
@@ -159,7 +161,7 @@ class Dialog extends Component {
         {
           this.state.menuList.length > 0 ? <div className={style.weui_dialog}>
             <Icon type='cross' className={style.arrow_icon} color='#86919D' onClick={() => { this.requestClose(true, '关闭') }} />
-            <h3 className={style.header_title}>2步操作即可获取最高50000元！真的要放弃吗？</h3>
+            <h3 className={style.header_title}>{this.state.stepText}即可获取最高50000元！真的要放弃吗？</h3>
             <ul>
               {
                 this.state.menuList.map((item, idx) => (
