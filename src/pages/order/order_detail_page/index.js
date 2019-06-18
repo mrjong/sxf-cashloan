@@ -1113,9 +1113,9 @@ export default class order_detail_page extends PureComponent {
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>
 						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
-						{/* 包含保费 */}
+						{/* 包含保费,并且保费为待支付状态 */}
 						{
-							insureFeeInfo &&
+							insureFeeInfo && billDesc.insuranceSts === '0' &&
 							<div className={styles.message}>
 								此次主动还款，将用于还第
 								<span className={styles.red}>
@@ -1124,9 +1124,9 @@ export default class order_detail_page extends PureComponent {
 								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{money && (parseFloat(money)+parseFloat(insureFeeInfo)).toFixed(2)}</span>元
 							</div>
 						}
-						{/* 不包含保费 */}
+						{/* 不包含保费或者有保费，保费为处理中或者已支付状态 */}
 						{
-							!insureFeeInfo &&
+							!(insureFeeInfo && billDesc.insuranceSts === '0') &&
 							<div className={styles.message}>
 								此次主动还款，将用于还第
 								<span className={styles.red}>
