@@ -1,6 +1,6 @@
 @import "../../../assets/styles/scss/base/fn.scss";
 .page_inner_wrap {
-	padding: 40px 30px 0;
+	padding: 0 30px 0;
 }
 .titleBg {
 	background-image: url(./img/titleBg.png);
@@ -18,6 +18,19 @@
 	line-height: 50px;
 }
 .bankCard {
+	&.heightMoney {
+		height: 310px;
+  }
+  &.heightSelect {
+    height: 110px;
+    padding: 0 30px;
+    .titleBg{
+      position: absolute;
+      top: 30px;
+      z-index: 1;
+    }
+  }
+
 	position: relative;
 	width: 690px;
 	height: 348px;
@@ -25,7 +38,7 @@
 	border-radius: 12px;
 	box-sizing: border-box;
 	padding: 30px;
-	margin-bottom: 60px;
+	margin-top: 30px;
 
 	.top {
 		position: relative;
@@ -95,14 +108,14 @@
 		position: relative;
 		&:after {
 			@include setBottomLine();
-    }
-    .dw{
-      font-size: 40px;
-      position: absolute;
-      top: 20px;
-      left: 0;
-      z-index: 1;
-    }
+		}
+		.dw {
+			font-size: 40px;
+			position: absolute;
+			top: 20px;
+			left: 0;
+			z-index: 1;
+		}
 	}
 	.cardNumBox {
 		top: 30px;
@@ -148,11 +161,6 @@
 		color: #fff;
 		text-align: center;
 	}
-}
-
-.confirmApplyBtn {
-	width: 620px;
-	margin-top: 80px;
 }
 
 :global {
@@ -246,6 +254,44 @@
 		}
 	}
 }
+.repayTypeBox {
+	margin-top: 10px;
+	display: flex;
+	text-align: center;
+	.item {
+		width: 100%;
+		justify-content: space-between;
+		position: relative;
+		&::after {
+			@include setRightLine(#C9CDD5);
+			top: 20px;
+		}
+		&:last-child {
+			&::after {
+				border: none;
+			}
+		}
+	}
+	.money {
+		color: #868e9e;
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		margin-left: 10px;
+	}
+	.desc {
+		color: #868e9e;
+		font-size: 22px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+	}
+	.title {
+		color: #397be6;
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+	}
+}
 .money_input {
 	position: relative;
 	.desc {
@@ -256,46 +302,46 @@
 		font-size: 24px;
 	}
 }
-.repayTypeBox {
-	position: relative;
-	display: flex;
-	align-items: center;
-	height: 110px;
-	justify-content: space-between;
-	font-size: 30px;
-	font-weight: 400;
-	color: #121c32;
-	.value {
-		display: flex;
-		align-items: center;
-		font-size: 30px;
-		font-family: "PingFangSC-Medium";
-		font-weight: 600;
-		.unChecked {
-			display: block;
-			width: 34px;
-			height: 34px;
-			background: url("../../../assets/images/home/unChecked_ico.png") no-repeat center;
-			background-size: 100%;
-			margin-left: 16px;
-		}
-		.unChecked2 {
-			margin-top: 10px;
-		}
-		.checked {
-			background-image: url("../../../assets/images/home/checked_ico.png");
-		}
-	}
-	.special_val {
-		width: 450px;
-	}
-	.unit {
-		margin-left: 10px;
-	}
-	&:after {
-		@include setBottomLine();
-	}
-}
+// .repayTypeBox {
+// 	position: relative;
+// 	display: flex;
+// 	align-items: center;
+// 	height: 110px;
+// 	justify-content: space-between;
+// 	font-size: 30px;
+// 	font-weight: 400;
+// 	color: #121c32;
+// 	.value {
+// 		display: flex;
+// 		align-items: center;
+// 		font-size: 30px;
+// 		font-family: "PingFangSC-Medium";
+// 		font-weight: 600;
+// 		.unChecked {
+// 			display: block;
+// 			width: 34px;
+// 			height: 34px;
+// 			background: url("../../../assets/images/home/unChecked_ico.png") no-repeat center;
+// 			background-size: 100%;
+// 			margin-left: 16px;
+// 		}
+// 		.unChecked2 {
+// 			margin-top: 10px;
+// 		}
+// 		.checked {
+// 			background-image: url("../../../assets/images/home/checked_ico.png");
+// 		}
+// 	}
+// 	.special_val {
+// 		width: 450px;
+// 	}
+// 	.unit {
+// 		margin-left: 10px;
+// 	}
+// 	&:after {
+// 		@include setBottomLine();
+// 	}
+// }
 .dayProd {
 	.title {
 		color: #333;
@@ -334,10 +380,6 @@
 		left: 50%;
 		transform: translate(-50%);
 	}
-}
-.disabledBtn {
-	color: #fff;
-	background-color: #d8d8d8;
 }
 // modal样式覆盖
 :global {
@@ -385,8 +427,8 @@
 		.am-list-item .am-input-control input {
 			font-family: "DINMitAlt";
 			color: #121c32;
-      font-size: 50px;
-      padding-left: 50px;
+			font-size: 50px;
+			padding-left: 50px;
 		}
 
 		.am-list-item.am-list-item-middle.blackColor .am-list-line {
@@ -399,9 +441,6 @@
 
 .border_bottom {
 	position: relative;
-	&::after {
-		@include setBottomLine();
-	}
 }
 .modal_left {
 	background: #fff;
@@ -502,4 +541,30 @@
 .listActiveItem {
 	color: #fff;
 	background: #f66;
+}
+.handle_authority {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 2;
+  padding: 30px 0;
+}
+.button {
+  width: 634px;
+  height: 100px;
+  background-color: #ebde74;
+  border-radius: 50px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 100px;
+  vertical-align: middle;
+  color: #121c32;
+  font-size: 36px;
+  font-family: 'PingFangSC-Semibold';
+  font-weight: 600;
+}
+.disabledBtn {
+	color: #fff;
+	background-color: #d8d8d8;
 }
