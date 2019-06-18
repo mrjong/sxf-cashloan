@@ -61,7 +61,8 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag: '',
 			thisPerdNum: '',
 			insureInfo: '',
-			insureFeeInfo: ''
+      insureFeeInfo: '',
+      isInsureValid: false, // 是否有保费并且为待支付状态
 		};
 	}
 	componentWillMount() {
@@ -269,6 +270,7 @@ export default class order_detail_page extends PureComponent {
 							insuranceStsColor = '#C7C7CC';
 						}
 						this.setState({
+              isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '0',
 							insureFeeInfo: res.data.insuranceAmt,
 							insureInfo: {
 								label: {
@@ -576,8 +578,8 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
-		const { insureFeeInfo } = this.state;
-		const insuranceFlag = insureFeeInfo ? true : false;
+		const { isInsureValid } = this.state;
+		const insuranceFlag = isInsureValid ? true : false;
 		const params = insuranceFlag
 			? {
 					cardNo:
@@ -861,7 +863,7 @@ export default class order_detail_page extends PureComponent {
 			totalAmt,
 			isSettle,
 			perTotAmt,
-			insureFeeInfo
+			isInsureValid
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
@@ -875,9 +877,9 @@ export default class order_detail_page extends PureComponent {
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
-		insureFeeInfo && store.setInsuranceFlag(true);
+		isInsureValid && store.setInsuranceFlag(true);
 		this.props.history.push(
-			`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${insureFeeInfo ? 'true' : 'false'}`
+			`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${isInsureValid ? '1' : '0'}`
 		);
 	};
 
@@ -1015,7 +1017,8 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag,
 			perTotAmt,
 			insureInfo,
-			insureFeeInfo
+      insureFeeInfo,
+      isInsureValid,
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1123,8 +1126,7 @@ export default class order_detail_page extends PureComponent {
 					<div className={styles.submit_btn}>
 						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
 						{/* 包含保费,并且保费为待支付状态 */}
-						{insureFeeInfo &&
-						billDesc.insuranceSts === '0' && (
+						{isInsureValid && (
 							<div className={styles.message}>
 								此次主动还款，将用于还第
 								<span className={styles.red}>
@@ -1136,7 +1138,7 @@ export default class order_detail_page extends PureComponent {
 							</div>
 						)}
 						{/* 不包含保费或者有保费，保费为处理中或者已支付状态 */}
-						{!(insureFeeInfo && billDesc.insuranceSts === '0') && (
+						{!isInsureValid && (
 							<div className={styles.message}>
 								此次主动还款，将用于还第
 								<span className={styles.red}>

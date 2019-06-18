@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
+import { store } from 'utils/store';
 
 const API = {
   SUPPORTBANKLIST: '/withhold/binkLists', // 银行卡列表
@@ -20,11 +21,18 @@ export default class support_save_page extends PureComponent {
 
   // 获取银行卡列表
   queryBankList = () => {
+    const insuranceFlag = store.getInsuranceFlag();
+
+		const sendParams = insuranceFlag ? {
+      cardTyp: 'D',
+      corpBusTyp: '',
+      supportType: '01', // 筛选出绑定通联支付的卡 01-通联
+    } : {
+      cardTyp: 'D',
+      corpBusTyp: '',
+    }
     this.props.$fetch
-      .post(API.SUPPORTBANKLIST, {
-        cardTyp: 'D',
-        corpBusTyp: '',
-      }).then(
+      .post(API.SUPPORTBANKLIST, sendParams).then(
         res => {
           if (res.msgCode === 'PTM0000') {
             this.setState({

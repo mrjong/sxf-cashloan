@@ -214,10 +214,11 @@ export default class confirm_agency_page extends PureComponent {
 				store.setSaveAmt(true);
 				store.setRepaymentModalData(this.state);
 				store.setBackUrl('/home/confirm_agency?showModal=true');
-				repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
+        repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
+        // 增加保费标识 insuranceFlag
 				this.props.history.push({
 					pathname: '/mine/select_save_page',
-					search: `?agrNo=${repayInfo.withHoldAgrNo}`
+					search: `?agrNo=${repayInfo.withHoldAgrNo}&insuranceFlag=${repayInfo2 && Number(repayInfo2.insurance) ? '1' : '0'}`
 				});
 			}
 		);

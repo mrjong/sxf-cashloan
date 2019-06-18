@@ -105,8 +105,9 @@ export default class select_save_page extends PureComponent {
 	};
 	// 获取储蓄卡银行卡列表
 	queryBankList = () => {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const params= queryData.insuranceFlag ? {
+    const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+    // 1为有保费，需要筛选出绑定通联支付的卡 0为不需要，按原有逻辑处理
+		const params= queryData.insuranceFlag === '1' ? {
 			// agrNo:query.agrNo,
 			type: '2', //所有储蓄卡列表
       corpBusTyp: '',
