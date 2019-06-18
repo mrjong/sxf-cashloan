@@ -109,8 +109,8 @@ export default class select_save_page extends PureComponent {
 		const params= queryData.insuranceFlag ? {
 			// agrNo:query.agrNo,
 			type: '2', //所有储蓄卡列表
-			corpBusTyp: '',
-			// 筛选出绑定通联支付的卡 todo
+      corpBusTyp: '',
+      supportType: '01', // 筛选出绑定通联支付的卡 01-通联
 		 } : {
 			// agrNo:query.agrNo,
 			type: '2', //所有储蓄卡列表
