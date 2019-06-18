@@ -5,7 +5,7 @@ import ExamineComponents from 'components/ExamineComponents';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
 import { store } from 'utils/store';
-
+import TimeoutPayModal from 'components/TimeoutPayModal'
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 let autId = '';
@@ -18,7 +18,9 @@ const API = {
 export default class credit_apply_succ_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+      showTimeoutPayModal: false
+    };
 	}
 	componentWillMount() {
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
@@ -90,7 +92,22 @@ export default class credit_apply_succ_page extends PureComponent {
 						</div>
 						<div className={style.line} />
 					</div>
+          <div className={[ style.step_item ].join(' ')}>
+						<div className={style.title}>
+							<div className={style.step_circle} />
+							审核超时即得免息券 <i />
+						</div>
+						<div className={style.dash_line} />
+					</div>
 				</div>
+        <TimeoutPayModal
+          visible={this.state.showTimeoutPayModal}
+          closeModal={()=>{
+            this.setState({
+              showTimeoutPayModal: false
+            })
+          }}
+        />
 			</div>
 		);
 	}

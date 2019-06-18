@@ -220,39 +220,6 @@
 			opacity: 1;
 		}
 	}
-	.timeout_pay_modal {
-		.am-modal.am-modal-transparent {
-			width: 650px;
-			.am-modal-body {
-				color: #121c32;
-				text-align: left;
-				padding: 0 48px 70px;
-
-				h3 {
-					font-size: 40px;
-					font-weight: 600;
-					text-align: center;
-					margin-bottom: 32px;
-				}
-
-				strong {
-					font-size: 36px;
-					color: #397be6;
-				}
-
-				p {
-					font-size: 30px;
-					margin-bottom: 45px;
-				}
-
-				h4 {
-					font-size: 30px;
-					font-weight: 600;
-					margin-bottom: 15px;
-				}
-			}
-		}
-	}
 }
 .repayTypeBox {
 	margin-top: 10px;
