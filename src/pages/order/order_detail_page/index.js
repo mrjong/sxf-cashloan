@@ -61,7 +61,7 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag: '',
 			thisPerdNum: '',
 			insureInfo: '',
-			insureFeeInfo: '',
+			insureFeeInfo: ''
 		};
 	}
 	componentWillMount() {
@@ -265,14 +265,14 @@ export default class order_detail_page extends PureComponent {
 							insuranceStsText = '处理中';
 							insuranceStsColor = '#FBB947';
 						} else if (res.data.insuranceSts === '2') {
-							insuranceStsText = '已支付'
+							insuranceStsText = '已支付';
 							insuranceStsColor = '#C7C7CC';
 						}
 						this.setState({
 							insureFeeInfo: res.data.insuranceAmt,
 							insureInfo: {
 								label: {
-									name: '保费',
+									name: '保费'
 								},
 								extra: [
 									{
@@ -283,15 +283,15 @@ export default class order_detail_page extends PureComponent {
 										name: insuranceStsText,
 										color: insuranceStsColor
 									}
-								],
+								]
 							}
-						})
+						});
 					}
 					this.setState(
 						{
 							thisPerdNum: res.data.perdNum,
 							billDesc: res.data, //账单全部详情
-							perdList: res.data.perdList, //账单期数列表
+							perdList: res.data.perdList //账单期数列表
 						},
 						() => {
 							// 选择银行卡回来
@@ -577,29 +577,31 @@ export default class order_detail_page extends PureComponent {
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
 		const { insureFeeInfo } = this.state;
-		const insuranceFlag = insureFeeInfo ? true : false; 
-		const params = insuranceFlag ? {
-			cardNo:
-				this.state.bankInfo && this.state.bankInfo.agrNo
-					? this.state.bankInfo.agrNo
-					: this.state.billDesc.wthCrdAgrNo,
-			bankCd: this.state.billDesc.wthdCrdCorpOrg,
-			usrSignCnl: getH5Channel(),
-			cardTyp: 'D',
-			isEntry: '01',
-			type: '0', // 0 可以重复 1 不可以重复
-			priorityType: 'ZY', // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
-		} : {
-			cardNo:
-				this.state.bankInfo && this.state.bankInfo.agrNo
-					? this.state.bankInfo.agrNo
-					: this.state.billDesc.wthCrdAgrNo,
-			bankCd: this.state.billDesc.wthdCrdCorpOrg,
-			usrSignCnl: getH5Channel(),
-			cardTyp: 'D',
-			isEntry: '01',
-			type: '0', // 0 可以重复 1 不可以重复
-		}
+		const insuranceFlag = insureFeeInfo ? true : false;
+		const params = insuranceFlag
+			? {
+					cardNo:
+						this.state.bankInfo && this.state.bankInfo.agrNo
+							? this.state.bankInfo.agrNo
+							: this.state.billDesc.wthCrdAgrNo,
+					bankCd: this.state.billDesc.wthdCrdCorpOrg,
+					usrSignCnl: getH5Channel(),
+					cardTyp: 'D',
+					isEntry: '01',
+					type: '0', // 0 可以重复 1 不可以重复
+					priorityType: 'ZY' // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
+				}
+			: {
+					cardNo:
+						this.state.bankInfo && this.state.bankInfo.agrNo
+							? this.state.bankInfo.agrNo
+							: this.state.billDesc.wthCrdAgrNo,
+					bankCd: this.state.billDesc.wthdCrdCorpOrg,
+					usrSignCnl: getH5Channel(),
+					cardTyp: 'D',
+					isEntry: '01',
+					type: '0' // 0 可以重复 1 不可以重复
+				};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 			switch (res.msgCode) {
 				case 'PTM0000':
@@ -874,7 +876,9 @@ export default class order_detail_page extends PureComponent {
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
 		insureFeeInfo && store.setInsuranceFlag(true);
-		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${insureFeeInfo ? 'true' : 'false'}`);
+		this.props.history.push(
+			`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${insureFeeInfo ? 'true' : 'false'}`
+		);
 	};
 
 	// 选择优惠劵
@@ -1011,7 +1015,7 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag,
 			perTotAmt,
 			insureInfo,
-			insureFeeInfo,
+			insureFeeInfo
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1108,33 +1112,41 @@ export default class order_detail_page extends PureComponent {
 					)}
 				</Panel>
 				<Panel title="还款计划" className={styles.mt24}>
-					<Lists listsInf={this.state.orderList} insureFee={insureInfo} clickCb={this.clickCb} className={styles.order_list} />
+					<Lists
+						listsInf={this.state.orderList}
+						insureFee={insureInfo}
+						clickCb={this.clickCb}
+						className={styles.order_list}
+					/>
 				</Panel>
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>
 						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
 						{/* 包含保费,并且保费为待支付状态 */}
-						{
-							insureFeeInfo && billDesc.insuranceSts === '0' &&
+						{insureFeeInfo &&
+						billDesc.insuranceSts === '0' && (
 							<div className={styles.message}>
 								此次主动还款，将用于还第
 								<span className={styles.red}>
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
-								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{money && (parseFloat(money)+parseFloat(insureFeeInfo)).toFixed(2)}</span>元
+								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>
+									{money && (parseFloat(money) + parseFloat(insureFeeInfo)).toFixed(2)}
+								</span>元
 							</div>
-						}
+						)}
 						{/* 不包含保费或者有保费，保费为处理中或者已支付状态 */}
-						{
-							!(insureFeeInfo && billDesc.insuranceSts === '0') &&
+						{!(insureFeeInfo && billDesc.insuranceSts === '0') && (
 							<div className={styles.message}>
 								此次主动还款，将用于还第
 								<span className={styles.red}>
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
-								期账单，请保证卡内余额大于<span className={styles.red}>{money && parseFloat(money).toFixed(2)}</span>元
+								期账单，请保证卡内余额大于<span className={styles.red}>
+									{money && parseFloat(money).toFixed(2)}
+								</span>元
 							</div>
-						}
+						)}
 					</div>
 				) : (
 					<div className={styles.mb50} />
