@@ -548,7 +548,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 					//最低还款
 					this.calcLoanMoney(minApplAmt, '', true);
 				} else {
-					this.inputRef.focus();
 					this.calcLoanMoney(maxApplAmt, '');
 				}
 			}
