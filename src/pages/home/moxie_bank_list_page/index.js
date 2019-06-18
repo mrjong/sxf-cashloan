@@ -9,7 +9,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import StepBar from 'components/StepBar';
 import linkConf from 'config/link.conf';
 import bankCode from 'config/bankCode'
-import { headerIgnore } from 'utils'
+import FeedbackModal from 'components/FeedbackModal';
 
 const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
@@ -24,7 +24,8 @@ export default class moxie_bank_list_page extends Component {
 		showAll: true,
 		lengthNum: 7,
 		bankList: [],
-		isnoData: false
+		isnoData: false,
+		showFeedbackModal: false
 	};
 	componentWillMount() {
 		// 信用卡直接返回的问题
@@ -32,6 +33,7 @@ export default class moxie_bank_list_page extends Component {
 		this.mxoieCardList();
 		this.getBackUrl();
 		this.getMoxieBackUrl();
+		this.showFeedbackModal()
 		const needNextUrl = store.getNeedNextUrl();
 		if (!needNextUrl) {
 			this.props.setTitle('添加信用卡');
@@ -43,6 +45,22 @@ export default class moxie_bank_list_page extends Component {
 		store.removeBackUrl2();
 		store.removeMoxieBackUrl2();
 	}
+
+	showFeedbackModal = () => {
+		if(store.getGotoMoxieFlag()) {
+			this.setState({
+				showFeedbackModal: true
+			})
+		}
+	}
+
+	closeFeedbackModal = () => {
+		this.setState({
+			showFeedbackModal: false
+		})
+		store.removeGotoMoxieFlag()
+	}
+
 	getBackUrl = () => {
 		backUrlData = store.getBackUrl();
 		if (backUrlData && JSON.stringify(backUrlData) !== '{}') {
@@ -123,6 +141,7 @@ export default class moxie_bank_list_page extends Component {
 		store.setBankMoxie(true);
 		store.setGoMoxie(true);
 
+		store.setGotoMoxieFlag(true)
 		window.location.href = item.href + `&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`)}`;
 	};
 	// 重新加载
@@ -208,6 +227,12 @@ export default class moxie_bank_list_page extends Component {
 						</div>
 					</div>
 				) : null}
+				<FeedbackModal
+					history={this.props.history}
+					toast={this.props.toast}
+					visible={this.state.showFeedbackModal}
+					closeModal={this.closeFeedbackModal}
+				/>
 			</div>
 		);
 	}

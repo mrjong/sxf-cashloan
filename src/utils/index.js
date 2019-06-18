@@ -449,6 +449,7 @@ export const getOperatorStatus = ({ $props }) => {
 											// setTimeout(() => {
 											// 运营商直接返回的问题
 											SXFToast.loading('加载中...', 0);
+											store.setGotoMoxieFlag(true)
 											window.location.href =
 												result.data.url +
 												`&localUrl=${window.location.origin}&routeType=${window.location
@@ -552,6 +553,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 							// setTimeout(() => {
 							// 运营商直接返回的问题
 							store.setCarrierMoxie(true);
+							store.setGotoMoxieFlag(true)
 							SXFToast.loading('加载中...', 0);
 							window.location.href =
 								result.data.url +

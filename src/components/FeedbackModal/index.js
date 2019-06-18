@@ -3,6 +3,7 @@ import { Modal } from 'antd-mobile';
 import style from './index.scss';
 import { Icon, TextareaItem } from 'antd-mobile'
 import fetch from 'sx-fetch';
+import { store } from 'utils/store';
 
 const API = {
   feedback: '/question/save'
@@ -19,10 +20,12 @@ export default class FeedbackModal extends React.Component {
   }
 
   goInterBank = () => {
+    store.removeGotoMoxieFlag()
     this.props.history.push('/others/moxie_pwd_guide?moxieType=interbank')
   }
 
   goOperator = () => {
+    store.removeGotoMoxieFlag()
     this.props.history.push('/others/moxie_pwd_guide?moxieType=operator')
   }
 

@@ -81,5 +81,6 @@ export const storeTypes = {
 	DepositBankName: 'DepositBankName', // 储蓄卡银行名称
 	AC20190618: 'AC20190618', //618
   PayType: 'PayType', // 还款方式
-  WxPayEnd:'WxPayEnd' // 微信返回不刷新
+	WxPayEnd:'WxPayEnd', // 微信返回不刷新
+	GotoMoxieFlag: 'GotoMoxieFlag' // 去到魔蝎第三方的标示
 };

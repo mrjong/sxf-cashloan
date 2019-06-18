@@ -48,6 +48,7 @@ class Dialog extends Component {
       }
     }
     console.log(this.props.pathname)
+    console.log(window.location.pathname)
     this.toggleMenuList()
   }
   componentWillReceiveProps(props) {

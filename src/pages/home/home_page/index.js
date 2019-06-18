@@ -376,6 +376,8 @@ export default class home_page extends PureComponent {
 					percentData: 80,
 					showDiv: 'circle',
 					percentBtnText: data.btnText
+				}, () => {
+					this.showFeedbackModal()
 				});
 				break;
 
@@ -385,6 +387,8 @@ export default class home_page extends PureComponent {
 					percentSatus: isshow ? '1' : '',
 					showDiv: 'circle',
 					percentBtnText: data.btnText
+				}, () => {
+					this.showFeedbackModal()
 				});
 				break;
 			case 3: // 显示信用卡爬取进度
@@ -406,6 +410,21 @@ export default class home_page extends PureComponent {
 			default:
 		}
 	};
+
+	showFeedbackModal = () => {
+		if(store.getGotoMoxieFlag()) {
+			this.setState({
+				showFeedbackModal: true
+			})
+		}
+	}
+
+	closeFeedbackModal = () => {
+		this.setState({
+			showFeedbackModal: false
+		})
+		store.removeGotoMoxieFlag()
+	}
 
 	// 请求信用卡数量
 	requestCredCardCount = (type, callback) => {
@@ -571,6 +590,7 @@ export default class home_page extends PureComponent {
 						});
 						const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
 						if (jumpUrl) {
+							store.setGotoMoxieFlag(true)
 							// 如果银行code一致跳登录页，否则跳列表页
 							window.location.href =
 								jumpUrl +
@@ -1528,12 +1548,6 @@ export default class home_page extends PureComponent {
 		});
 	};
 
-	closeFeedbankModal = () => {
-		this.setState({
-			showFeedbackModal: false
-		})
-	}
-
 	render() {
 		const {
 			bannerList,
@@ -1582,7 +1596,7 @@ export default class home_page extends PureComponent {
 					history={this.props.history}
 					toast={this.props.toast}
 					visible={showFeedbackModal}
-					closeModal={this.closeFeedbankModal}
+					closeModal={this.closeFeedbackModal}
 				/>
 				<HomeModal
 					showAgreement={showAgreement}
