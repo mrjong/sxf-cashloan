@@ -10,7 +10,7 @@ export default class ProgressBlock extends React.Component {
 	}
 	render() {
 		const { percentData, showData, handleClick } = this.props;
-		console.log(percentData);
+		// console.log(percentData);
 		return (
 			<WhiteCard showData={showData} handleClick={handleClick}>
 				<div className={style.circle_box}>
