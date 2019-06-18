@@ -681,10 +681,11 @@ export default class confirm_agency_page extends PureComponent {
 							// 清除上个页面中的弹框数据
 							store.removeRepaymentModalData();
 							store.removeSaveAmt();
-						} else if (result && result.msgCode === 'PTM9958') {
-							this.checkProtocolBindCard();
 						} else if (result && result.msgCode === 'PTM7001') {
-
+							this.props.toast.info(result.msgInfo);
+							setTimeout(() => {
+								this.props.history.push('/home/home');
+							}, 3000);
 						} else {
 							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: false,
@@ -762,7 +763,7 @@ export default class confirm_agency_page extends PureComponent {
 		});
 		this.requestBindCardState();
 	}
-	
+
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
 		const { repayInfo } = this.state;
@@ -831,7 +832,7 @@ export default class confirm_agency_page extends PureComponent {
 			  	this.requestBindCardState();
 			break;
 			case 'PBM1010':
-				this.props.toast.info(res.msgInfo);	
+				this.props.toast.info(res.msgInfo);
 				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
 			break;
 			default:
