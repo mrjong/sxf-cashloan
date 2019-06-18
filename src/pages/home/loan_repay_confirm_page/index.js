@@ -91,7 +91,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						});
 						const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
 						if (jumpUrl) {
-							store.setGotoMoxieFlag(true)							
+							store.setGotoMoxieFlag(true);
 							// 如果银行code一致跳登录页，否则跳列表页
 							window.location.href =
 								jumpUrl +
@@ -747,12 +747,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 					</div>
 
-					<div className={style.bankCard}>
+					<div className={[ style.bankCard, style.heightMoney ].join(' ')}>
 						<div>
 							<div className={style.titleBg}>借多少钱</div>
 						</div>
 						<div className={style.inputBox}>
-            <div className={style.dw}>￥</div>
+							<div className={style.dw}>￥</div>
 							<InputItem
 								{...getFieldProps('loanMoney', {
 									rules: [ { required: true, message: '请输入还款金额' } ]
@@ -787,9 +787,35 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}}
 							/>
 						</div>
+						<div className={style.repayTypeBox}>
+							<div
+								className={style.item}
+								onClick={() => {
+									this.toggleTag(2, 'click');
+								}}
+							>
+								<div>
+									<span className={style.title}>全部应还</span>
+									<span className={style.money}>¥{maxApplAmt || '-.--'}</span>
+								</div>
+								<div className={style.desc}>一键结清账单，释放卡额度</div>
+							</div>
+							<div
+								className={style.item}
+								onClick={() => {
+									this.toggleTag(1, 'click');
+								}}
+							>
+								<div>
+									<span className={style.title}>最低应还</span>
+									<span className={style.money}>¥{minApplAmt || '-.--'}</span>
+								</div>
+								<div className={style.desc}>信用卡免逾期，还款无压力</div>
+							</div>
+						</div>
 					</div>
 
-					<div className={style.repayTypeBox}>
+					{/* <div className={style.repayTypeBox}>
 						<span className={style.name}>部分还卡</span>
 						<div className={`${style.value} ${style.special_val}`}>
 							<InputItem
@@ -827,8 +853,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 							/>
 							<div className={style.unit}>元</div>
 						</div>
-					</div>
-					<div
+					</div> */}
+					{/* <div
 						className={style.repayTypeBox}
 						onClick={() => {
 							this.toggleTag(1, 'click');
@@ -863,52 +889,60 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}
 							/>
 						</div>
-					</div>
-					<div className={style.border_bottom}>
-						<List.Item
-							onClick={() => {
-								if (
-									!isCanLoan({
-										$props: this.props,
-										goMoxieBankList: () => {
-											this.repayForOtherBank(cardCount);
-										},
-										usrIndexInfo: this.state.usrIndexInfo
-									})
-								) {
-									return;
-								}
-								if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
+          </div> */}
+
+					<div className={[ style.bankCard, style.heightSelect ].join(' ')}>
+						<div>
+							<div className={style.titleBg}>借多久</div>
+						</div>
+						<div className={style.border_bottom}>
+							<List.Item
+								onClick={() => {
 									if (
-										this.state.perdRateList.length === 1 &&
-										this.state.perdRateList[0].perdLth == 30 &&
-										(this.state.perdRateList[0].factLmtLow > Number(repayMoney) ||
-											Number(repayMoney) > this.state.perdRateList[0].factAmtHigh)
+										!isCanLoan({
+											$props: this.props,
+											goMoxieBankList: () => {
+												this.repayForOtherBank(cardCount);
+											},
+											usrIndexInfo: this.state.usrIndexInfo
+										})
 									) {
-										this.props.toast.info('暂无可借产品');
-									} else {
-										this.setState({
-											isShowCreditModal: true
-										});
+										return;
 									}
-								} else {
-									this.props.toast.info('暂无可借产品');
-								}
-							}}
-							arrow="horizontal"
-							extra={(selectedLoanDate && selectedLoanDate.perdPageNm) || '请选择'}
-						>
-							借多久
-						</List.Item>
+									if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
+										if (
+											this.state.perdRateList.length === 1 &&
+											this.state.perdRateList[0].perdLth == 30 &&
+											(this.state.perdRateList[0].factLmtLow > Number(repayMoney) ||
+												Number(repayMoney) > this.state.perdRateList[0].factAmtHigh)
+										) {
+											this.props.toast.info('暂无可借产品');
+										} else {
+											this.setState({
+												isShowCreditModal: true
+											});
+										}
+									} else {
+										this.props.toast.info('暂无可借产品');
+									}
+								}}
+								arrow="horizontal"
+								extra={(selectedLoanDate && selectedLoanDate.perdPageNm) || '请选择'}
+							>
+								&nbsp;
+							</List.Item>
+						</div>
 					</div>
-					<SXFButton
-						onClick={this.handleSubmit}
-						className={[ style.confirmApplyBtn, btnDisabled ? style.disabledBtn : '' ].join(' ')}
-					>
-						提交申请
-					</SXFButton>
-					{/* <p className="bottomTip">怕逾期，用还到</p> */}
+
 				</div>
+        <div className={style.handle_authority}>
+						<div
+							className={[ style.button, btnDisabled ? style.disabledBtn : '' ].join(' ')}
+							onClick={this.handleSubmit}
+						>
+							提交申请
+						</div>
+					</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
 						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
