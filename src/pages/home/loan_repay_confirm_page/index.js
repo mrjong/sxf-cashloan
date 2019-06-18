@@ -815,82 +815,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 					</div>
 
-					{/* <div className={style.repayTypeBox}>
-						<span className={style.name}>部分还卡</span>
-						<div className={`${style.value} ${style.special_val}`}>
-							<InputItem
-								{...getFieldProps('loanMoney', {
-									rules: [ { required: true, message: '请输入还款金额' } ]
-								})}
-								type="number"
-								placeholder={placeholderText}
-								ref={(el) => (this.inputRef = el)}
-								className={this.inputDisabled() ? 'blackColor' : 'blackColor'}
-								onBlur={(v) => {
-									setTimeout(() => {
-										if (isinputBlur) {
-											return;
-										}
-										this.calcLoanMoney(v, 'tag3');
-									});
-
-									handleInputBlur();
-								}}
-								onFocus={(v) => {
-									this.setState({
-										repayType: tagList[0],
-										activeTag: 0,
-										btnDisabled: true,
-										fullMinAmt: ''
-									});
-									if (this.updateBillInf()) {
-										return;
-									}
-									this.props.form.setFieldsValue({
-										loanMoney: v ? v : maxApplAmt ? maxApplAmt : ''
-									});
-								}}
-							/>
-							<div className={style.unit}>元</div>
-						</div>
-					</div> */}
-					{/* <div
-						className={style.repayTypeBox}
-						onClick={() => {
-							this.toggleTag(1, 'click');
-						}}
-					>
-						<span className={style.name}>最低还卡</span>
-						<div className={style.value}>
-							<span>{minApplAmt}元</span>
-							<i
-								className={
-									repayType === tagList[1] ? `${style.unChecked} ${style.checked}` : style.unChecked
-								}
-							/>
-						</div>
-					</div>
-					<div
-						className={style.repayTypeBox}
-						onClick={() => {
-							this.toggleTag(2, 'click');
-						}}
-					>
-						<span className={style.name}>全额还卡</span>
-						<div className={style.value}>
-							<span>{maxApplAmt}元</span>
-							<i
-								className={
-									repayType === tagList[2] ? (
-										`${style.unChecked} ${style.unChecked2} ${style.checked}`
-									) : (
-										`${style.unChecked} ${style.unChecked2}`
-									)
-								}
-							/>
-						</div>
-          </div> */}
-
 					<div className={[ style.bankCard, style.heightSelect ].join(' ')}>
 						<div>
 							<div className={style.titleBg}>借多久</div>
@@ -933,16 +857,21 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</List.Item>
 						</div>
 					</div>
-
-				</div>
-        <div className={style.handle_authority}>
-						<div
-							className={[ style.button, btnDisabled ? style.disabledBtn : '' ].join(' ')}
-							onClick={this.handleSubmit}
-						>
-							提交申请
+					<div className={style.freeService}>
+						<div className={style.title}>
+							审核超时赔（免费服务）<i />
 						</div>
+						<div className={style.desc}>50元免息券</div>
 					</div>
+				</div>
+				<div className={style.handle_authority}>
+					<div
+						className={[ style.button, btnDisabled ? style.disabledBtn : '' ].join(' ')}
+						onClick={this.handleSubmit}
+					>
+						提交申请
+					</div>
+				</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
 						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
