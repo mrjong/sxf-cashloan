@@ -45,7 +45,7 @@
 		color: #121C32;
 		font-family: 'PingFangSC-Semibold';
 		font-weight: 600;
-		padding: 110px 40px 40px;
+		padding: 55px 40px 40px;
 		line-height: 1;
 	}
 	.desc{
@@ -56,7 +56,7 @@
 	}
 	.tipsBox{
 		position: fixed;
-		top: 88px;
+		bottom: 0;
 		height: 50px;
 		width: 100%;
 		background: #FAF3E4;
@@ -76,13 +76,32 @@
 			margin-right: 12px;
 		}
 	}
-	.tipsBox2{
-		top: 0;
+	// .tipsBox2{
+	// 	top: 0;
+	// }
+	.progressBox{
+		padding: 46px 50px 0 40px;
+		i{
+			display: block;
+			width: 636px;
+			height: 34px;
+			background-size: 100%;
+			background-repeat: no-repeat;
+			background-image: url(../../../assets/images/home/progress_98.png);
+		}
+		.bottomText{
+			display: flex;
+			justify-content: space-between;
+			font-size: 22px;
+			color: #397BE6;
+			margin-top: 2px;
+		}
 	}
 	.bankList {
-    text-align: center;
-    clear: both;
-    overflow: hidden;
+		text-align: center;
+		clear: both;
+		overflow: hidden;
+		padding-bottom: 50px;
 		.bankitem {
 			padding: 15px 0;
 			img {
