@@ -10,8 +10,8 @@ import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto, isCanLo
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
-import TimeoutPayModal from 'components/TimeoutPayModal'
-import FeedbackModal from 'components/FeedbackModal'
+import TimeoutPayModal from 'components/TimeoutPayModal';
+import FeedbackModal from 'components/FeedbackModal';
 // import ScrollText from 'components/ScrollText';
 import linkConf from 'config/link.conf';
 let isinputBlur = false;
@@ -65,17 +65,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 			dayPro: {},
 			cardCount: '', // 卡的数量
 			repayType: '', // 还款方式
-      fullMinAmt: '', // 全额或者最低还卡金额
-      showTimeoutPayModal: false,
-      showFeedbackModal: false
+			fullMinAmt: '', // 全额或者最低还卡金额
+			showTimeoutPayModal: false,
+			showFeedbackModal: false
 		};
 	}
 
 	componentDidMount() {
 		store.removeToggleMoxieCard();
 		this.queryUsrInfo();
-    this.requestCredCardCount();
-    this.showFeedbackModal()
+		this.requestCredCardCount();
+		this.showFeedbackModal();
 	}
 
 	componentWillUnmount() {
@@ -557,22 +557,22 @@ export default class loan_repay_confirm_page extends PureComponent {
 			return true;
 		}
 		return false;
-  };
+	};
 
-  showFeedbackModal = () => {
-		if(store.getGotoMoxieFlag()) {
+	showFeedbackModal = () => {
+		if (store.getGotoMoxieFlag()) {
 			this.setState({
 				showFeedbackModal: true
-			})
+			});
 		}
-	}
+	};
 
 	closeFeedbackModal = () => {
 		this.setState({
 			showFeedbackModal: false
-		})
-		store.removeGotoMoxieFlag()
-	}
+		});
+		store.removeGotoMoxieFlag();
+	};
 
 	// placeholderText = () => {
 	// 	const { fetchBillSucc, activeTag, usrIndexInfo } = this.state;
@@ -644,9 +644,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 			cardCount,
 			repayType,
 			fetchBillSucc,
-      fullMinAmt,
-      showTimeoutPayModal,
-      showFeedbackModal
+			fullMinAmt,
+			showTimeoutPayModal,
+			showFeedbackModal
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -798,7 +798,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 									});
 								}}
 							/>
-              <i className={style.edit_icon}/>
+							<i
+								className={style.edit_icon}
+								onClick={() => {
+									this.inputRef.focus();
+								}}
+							/>
 						</div>
 						<div className={style.repayTypeBox}>
 							<div
@@ -872,9 +877,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 					<div className={style.freeService}>
 						<div className={style.title}>
-							审核超时赔（免费服务）<i onClick={()=>{this.setState({
-                showTimeoutPayModal: true
-              })}} />
+							审核超时赔（免费服务）<i
+								onClick={() => {
+									this.setState({
+										showTimeoutPayModal: true
+									});
+								}}
+							/>
 						</div>
 						<div className={style.desc}>50元免息券</div>
 					</div>
@@ -940,14 +949,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 				</Modal>
 				<TimeoutPayModal
-          visible={showTimeoutPayModal}
-          closeModal={()=>{
-            this.setState({
-              showTimeoutPayModal: false
-            })
-          }}
-        />
-        <FeedbackModal
+					visible={showTimeoutPayModal}
+					closeModal={() => {
+						this.setState({
+							showTimeoutPayModal: false
+						});
+					}}
+				/>
+				<FeedbackModal
 					history={this.props.history}
 					toast={this.props.toast}
 					visible={showFeedbackModal}
