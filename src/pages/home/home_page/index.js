@@ -908,12 +908,14 @@ export default class home_page extends PureComponent {
 						AcCode: 'AC20190618_618_RESULT'
 					});
 				}
-
+				const { blackData } = this.state;
+				console.log(blackData);
 				if (
 					AC20190618_618_RESULT &&
 					AC20190618_618_RESULT.data &&
 					AC20190618_618_RESULT.data.isEngagedUser === '1' &&
 					ischeckEngaged &&
+					(!blackData || (blackData && (blackData.cashAcBalSts === '4' || blackData.cashAcBalSts === '2'))) &&
 					ischeckEngaged.msgCode === 'PTM0000' &&
 					((ischeckIsEngagedUser.data.isEngagedUser === '1' &&
 						(result.data.indexSts === 'LN0001' ||
