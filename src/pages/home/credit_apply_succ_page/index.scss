@@ -106,6 +106,15 @@
 				width: 2.5px;
 				background-color: #e0e2e6;
 			}
+    }
+    .dash_line {
+			position: absolute;
+			left: 14px;
+			top: -10px;
+			height: 100%;
+			width: 1PX;
+      padding: 30px 0 4px;
+      border-left: 1Px dashed #e0e2e6;
 		}
 		.desc {
 			color: #868e9e;

@@ -43,7 +43,7 @@ export default class moxie_bank_list_page extends Component {
 	}
 	componentWillUnmount() {
 		store.removeBackUrl2();
-		store.removeMoxieBackUrl2();
+    store.removeMoxieBackUrl2();
 	}
 
 	showFeedbackModal = () => {

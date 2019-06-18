@@ -4,14 +4,13 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
-import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto, isCanLoan, getOperatorStatus } from 'utils';
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
-import SXFButton from 'components/ButtonCustom';
+import TimeoutPayModal from 'components/TimeoutPayModal'
 // import ScrollText from 'components/ScrollText';
 import linkConf from 'config/link.conf';
 let isinputBlur = false;
@@ -65,7 +64,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			dayPro: {},
 			cardCount: '', // 卡的数量
 			repayType: '', // 还款方式
-			fullMinAmt: '' // 全额或者最低还卡金额
+      fullMinAmt: '', // 全额或者最低还卡金额
+      showTimeoutPayModal: false
 		};
 	}
 
@@ -585,7 +585,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
 				// 跳银行登录页面
-				this.getMoxieData(bankNo);
+				// this.getMoxieData(bankNo);
 			});
 			return true;
 		}
@@ -633,7 +633,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			cardCount,
 			repayType,
 			fetchBillSucc,
-			fullMinAmt
+      fullMinAmt,
+      showTimeoutPayModal
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -858,7 +859,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 					<div className={style.freeService}>
 						<div className={style.title}>
-							审核超时赔（免费服务）<i />
+							审核超时赔（免费服务）<i onClick={()=>{this.setState({
+                showTimeoutPayModal: true
+              })}} />
 						</div>
 						<div className={style.desc}>50元免息券</div>
 					</div>
@@ -923,20 +926,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 					</div>
 				</Modal>
-				<Modal visible={false} transparent wrapClassName="timeout_pay_modal">
-					<h3>审核超时赔</h3>
-					<p>
-						<strong>审核超时赔</strong>是指用户成功提交审核资料后，在还到承诺的审核时间内，未完成授信审核服务，借款还信用卡用户将获得相应的超时赔免息券。
-					</p>
-					<div>
-						<h4>补偿说明</h4>
-						<ul>
-							<li>1、预计最快90秒完成审核，高峰期最高可能需要5分钟。</li>
-							<li>2、承诺的时间即超过审核高峰期的时间5分钟，则进行红包补偿，50元免息券。</li>
-							<li>3、审核超时，免息券会自动发放至我的账户，可在【我的】-【优惠券】中查看。</li>
-						</ul>
-					</div>
-				</Modal>
+				<TimeoutPayModal
+          visible={showTimeoutPayModal}
+          closeModal={()=>{
+            this.setState({
+              showTimeoutPayModal: false
+            })
+          }}
+        />
 			</div>
 		);
 	}

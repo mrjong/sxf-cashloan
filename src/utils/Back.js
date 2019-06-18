@@ -187,8 +187,10 @@ if (window.history && window.history.pushState) {
 					store.removeBankMoxie();
 					return;
 				}
-				document.activeElement.blur();
-				obj.show();
+        document.activeElement.blur();
+        if(!store.getGotoMoxieFlag()) {
+				  obj.show();
+        }
 				return;
 			}
 
