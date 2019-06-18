@@ -20,16 +20,16 @@
 .bankCard {
 	&.heightMoney {
 		height: 310px;
-  }
-  &.heightSelect {
-    height: 110px;
-    padding: 0 30px;
-    .titleBg{
-      position: absolute;
-      top: 30px;
-      z-index: 1;
-    }
-  }
+	}
+	&.heightSelect {
+		height: 110px;
+		padding: 0 30px;
+		.titleBg {
+			position: absolute;
+			top: 30px;
+			z-index: 1;
+		}
+	}
 
 	position: relative;
 	width: 690px;
@@ -302,46 +302,6 @@
 		font-size: 24px;
 	}
 }
-// .repayTypeBox {
-// 	position: relative;
-// 	display: flex;
-// 	align-items: center;
-// 	height: 110px;
-// 	justify-content: space-between;
-// 	font-size: 30px;
-// 	font-weight: 400;
-// 	color: #121c32;
-// 	.value {
-// 		display: flex;
-// 		align-items: center;
-// 		font-size: 30px;
-// 		font-family: "PingFangSC-Medium";
-// 		font-weight: 600;
-// 		.unChecked {
-// 			display: block;
-// 			width: 34px;
-// 			height: 34px;
-// 			background: url("../../../assets/images/home/unChecked_ico.png") no-repeat center;
-// 			background-size: 100%;
-// 			margin-left: 16px;
-// 		}
-// 		.unChecked2 {
-// 			margin-top: 10px;
-// 		}
-// 		.checked {
-// 			background-image: url("../../../assets/images/home/checked_ico.png");
-// 		}
-// 	}
-// 	.special_val {
-// 		width: 450px;
-// 	}
-// 	.unit {
-// 		margin-left: 10px;
-// 	}
-// 	&:after {
-// 		@include setBottomLine();
-// 	}
-// }
 .dayProd {
 	.title {
 		color: #333;
@@ -543,28 +503,57 @@
 	background: #f66;
 }
 .handle_authority {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #fff;
-  z-index: 2;
-  padding: 30px 0;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background: #fff;
+	z-index: 2;
+	padding: 30px 0;
 }
 .button {
-  width: 634px;
-  height: 100px;
-  background-color: #ebde74;
-  border-radius: 50px;
-  margin: 0 auto;
-  text-align: center;
-  line-height: 100px;
-  vertical-align: middle;
-  color: #121c32;
-  font-size: 36px;
-  font-family: 'PingFangSC-Semibold';
-  font-weight: 600;
+	width: 634px;
+	height: 100px;
+	background-color: #ebde74;
+	border-radius: 50px;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 100px;
+	vertical-align: middle;
+	color: #121c32;
+	font-size: 36px;
+	font-family: 'PingFangSC-Semibold';
+	font-weight: 600;
 }
 .disabledBtn {
 	color: #fff;
 	background-color: #d8d8d8;
+}
+.freeService {
+	background-color: #fff;
+	margin-top: 30px;
+	border-radius: 4px;
+	display: flex;
+	padding: 30px;
+	justify-content: space-between;
+	.title {
+		font-size: 30px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		position: relative;
+		i {
+			width: 24px;
+			height: 24px;
+			background-image: url(./img/wh.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: absolute;
+			right: -15px;
+			top: 10px;
+		}
+	}
+	.desc {
+		font-size: 30px;
+		font-family: 'PingFangSC-Medium';
+		font-weight: 500;
+	}
 }
