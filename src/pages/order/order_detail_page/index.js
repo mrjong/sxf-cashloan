@@ -1113,13 +1113,28 @@ export default class order_detail_page extends PureComponent {
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>
 						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
-						<div className={styles.message}>
-							此次主动还款，将用于还第
-							<span className={styles.red}>
-								{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
-							</span>
-							期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{insureFeeInfo ? money && (parseFloat(money)+parseFloat(insureFeeInfo)).toFixed(2) : money && parseFloat(money).toFixed(2)}</span>元
-						</div>
+						{/* 包含保费 */}
+						{
+							insureFeeInfo &&
+							<div className={styles.message}>
+								此次主动还款，将用于还第
+								<span className={styles.red}>
+									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
+								</span>
+								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>{money && (parseFloat(money)+parseFloat(insureFeeInfo)).toFixed(2)}</span>元
+							</div>
+						}
+						{/* 不包含保费 */}
+						{
+							!insureFeeInfo &&
+							<div className={styles.message}>
+								此次主动还款，将用于还第
+								<span className={styles.red}>
+									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
+								</span>
+								期账单，请保证卡内余额大于<span className={styles.red}>{money && parseFloat(money).toFixed(2)}</span>元
+							</div>
+						}
 					</div>
 				) : (
 					<div className={styles.mb50} />
