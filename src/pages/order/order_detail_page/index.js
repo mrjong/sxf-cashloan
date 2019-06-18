@@ -578,32 +578,17 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
-		const { isInsureValid } = this.state;
-		const insuranceFlag = isInsureValid ? true : false;
-		const params = insuranceFlag
-			? {
-					cardNo:
-						this.state.bankInfo && this.state.bankInfo.agrNo
-							? this.state.bankInfo.agrNo
-							: this.state.billDesc.wthCrdAgrNo,
-					bankCd: this.state.billDesc.wthdCrdCorpOrg,
-					usrSignCnl: getH5Channel(),
-					cardTyp: 'D',
-					isEntry: '01',
-					type: '0', // 0 可以重复 1 不可以重复
-					priorityType: 'ZY' // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
-				}
-			: {
-					cardNo:
-						this.state.bankInfo && this.state.bankInfo.agrNo
-							? this.state.bankInfo.agrNo
-							: this.state.billDesc.wthCrdAgrNo,
-					bankCd: this.state.billDesc.wthdCrdCorpOrg,
-					usrSignCnl: getH5Channel(),
-					cardTyp: 'D',
-					isEntry: '01',
-					type: '0' // 0 可以重复 1 不可以重复
-				};
+		const params = {
+      cardNo:
+        this.state.bankInfo && this.state.bankInfo.agrNo
+          ? this.state.bankInfo.agrNo
+          : this.state.billDesc.wthCrdAgrNo,
+      bankCd: this.state.billDesc.wthdCrdCorpOrg,
+      usrSignCnl: getH5Channel(),
+      cardTyp: 'D',
+      isEntry: '01',
+      type: '0' // 0 可以重复 1 不可以重复
+		};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 			switch (res.msgCode) {
 				case 'PTM0000':
