@@ -90,14 +90,18 @@ export default class credit_apply_succ_page extends PureComponent {
 							<div className={style.step_circle} />
 							获得额度签约借款
 						</div>
-						<div className={style.line} />
+            {/* <div className={style.line} /> */}
+						<div className={style.dash_line} />
 					</div>
           <div className={[ style.step_item ].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							审核超时即得免息券 <i />
+							审核超时即得免息券 <i onClick={()=>{
+                this.setState({
+                  showTimeoutPayModal: true
+                })
+              }}/>
 						</div>
-						<div className={style.dash_line} />
 					</div>
 				</div>
         <TimeoutPayModal
