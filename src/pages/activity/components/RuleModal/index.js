@@ -11,8 +11,8 @@ export default class RuleModal extends PureComponent {
           visible && <div className={styles.rule_modal}>
             <div className={styles.mask}></div>
             <div className={styles.modalWrapper}>
-              <div>
-                <h2>活动规则</h2>
+              <h2>活动规则</h2>
+              <div className={styles.modal_body}>
                 <div className={styles.item}>
                   <h3>活动时间：</h3>
                   <em className={styles.desc}>{actTime}</em>
@@ -29,7 +29,7 @@ export default class RuleModal extends PureComponent {
                     }
                   </ol>
                 </div>
-                <p className={styles.bottom_desc}>如有疑问，请联系随行付还到客服<br/>400-088-7626</p>
+                <p className={styles.bottom_desc}>如有疑问，请联系随行付还到客服<br />400-088-7626</p>
               </div>
               <div className={styles.closeBtn} onClick={handleClose}></div>
             </div>
