@@ -111,7 +111,8 @@ export default class home_page extends PureComponent {
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
 			userMaxAmt: '', // 最高可申请还款金(元)
-			DownTime321: false
+			DownTime321: false,
+			showFeedbackModal: false
 		};
 	}
 
@@ -185,6 +186,7 @@ export default class home_page extends PureComponent {
 		store.removeCashFenQiCardArr();
 		store.removeCouponData();
 	};
+
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
 		this.props.$fetch
@@ -977,7 +979,7 @@ export default class home_page extends PureComponent {
 		if (token && tokenFromStorage) {
 			if (!store.getQueryUsrSCOpenId()) {
 				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-					console.log(res);
+					// console.log(res);
 					if (res.msgCode === 'PTM0000') {
 						sa.login(res.data);
 						store.setQueryUsrSCOpenId(res.data);
@@ -1525,6 +1527,12 @@ export default class home_page extends PureComponent {
 		});
 	};
 
+	closeFeedbankModal = () => {
+		this.setState({
+			showFeedbackModal: false
+		})
+	}
+
 	render() {
 		const {
 			bannerList,
@@ -1537,7 +1545,8 @@ export default class home_page extends PureComponent {
 			modalType,
 			modalBtnFlag,
 			blackData,
-			DownTime321
+			DownTime321,
+			showFeedbackModal
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1570,7 +1579,9 @@ export default class home_page extends PureComponent {
 				{DownTime321 ? <CountDownBox /> : null}
 				<FeedbackModal
 					history={this.props.history}
-					visible={false}
+					toast={this.props.toast}
+					visible={showFeedbackModal}
+					closeModal={this.closeFeedbankModal}
 				/>
 				<HomeModal
 					showAgreement={showAgreement}

@@ -1,18 +1,21 @@
 import React from 'react';
 import { Modal } from 'antd-mobile';
 import style from './index.scss';
-import { Icon,TextareaItem } from 'antd-mobile'
+import { Icon, TextareaItem } from 'antd-mobile'
+import fetch from 'sx-fetch';
 
+const API = {
+  feedback: '/question/save'
+}
+
+@fetch.inject()
 export default class FeedbackModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showTextarea: false
+      showTextarea: false,
+      textareaVal: ''
     }
-  }
-  
-  componentWillMount() {
-
   }
 
   goInterBank = () => {
@@ -29,23 +32,39 @@ export default class FeedbackModal extends React.Component {
     })
   }
 
+  feedbackSubmit = () => {
+    if (!this.state.textareaVal) return
+    this.props.$fetch.post(API.feedback, {
+      val: this.state.textareaVal
+    }).then(res => {
+      if (res.msgCode === 'PTM0000') {
+        this.props.toast.info('提交成功')
+        setTimeout(()=>{
+          this.props.closeModal()
+        },2000)
+      }
+    })
+  }
+
   render() {
-    const { visible } = this.props;
+    const { visible, closeModal } = this.props;
     return (
       <Modal wrapClassName="feedback_modal" visible={visible} transparent>
         <div>
-          <Icon type='cross' className={style.arrow_icon} color='#86919D' onClick={this.closeModal} />
+          <Icon type='cross' className={style.arrow_icon} color='#86919D' onClick={closeModal} />
           <h3>你申请借钱还信用卡遇到了困难？</h3>
           {
             this.state.showTextarea ? <div>
               <TextareaItem
-                onChange={(v)=>{
-                  console.log(v)
+                onChange={(v) => {
+                  this.setState({
+                    textareaVal: v
+                  })
                 }}
                 rows={5}
                 count={24}
               />
-              <div className='submit_btn'>提交</div>
+              <div className={`${[`submit_btn ${!this.state.textareaVal && 'submit_btn_disabled'}`].join(' ')}`} onClick={this.feedbackSubmit}>提交</div>
             </div> : <div>
                 <p>可以尝试以下方法解决：</p>
                 <ul>
