@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
+import dayjs from 'dayjs';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
@@ -9,7 +10,8 @@ import not_select from './img/not_select.png';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-
+import arrow from './img/arrow.png';
+import mock from './mock.js';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
 	CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -23,7 +25,8 @@ export default class credit_list_page extends PureComponent {
 		super(props);
 		this.state = {
 			autId: '', // 账单id
-			cardList: []
+			cardList: [],
+			resultLength: ''
 		};
 	}
 	componentWillMount() {
@@ -38,9 +41,10 @@ export default class credit_list_page extends PureComponent {
 		this.props.$fetch.post(API.CREDCARDLIST).then(
 			(res) => {
 				if (res.msgCode === 'PTM0000') {
-					this.fifterData(res.data);
+					console.log(mock.data);
 					this.setState({
-						cardList: res.data ? res.data : []
+						cardList: res.data && res.data.result ? res.data.result : [],
+						resultLength: (res.data && res.data.resultLength) || 0
 					});
 				} else {
 					if (res.msgCode === 'PTM3021') {
@@ -56,9 +60,6 @@ export default class credit_list_page extends PureComponent {
 				error.msgInfo && this.props.toast.info(error.msgInfo);
 			}
 		);
-	};
-	fifterData = (data) => {
-		console.log(data);
 	};
 
 	// 选择银行卡
@@ -111,9 +112,31 @@ export default class credit_list_page extends PureComponent {
 			<div className={styles.credit_list_page}>
 				{this.state.cardList.length ? (
 					<div>
-						<p className={styles.card_tit}>
+						{this.state.resultLength === 0 ? (
+							<div
+								className={styles.noCardTip}
+								onClick={() => {
+									this.setState({
+										resultLength: 1
+									});
+								}}
+							>
+								<div className={styles.imgbox}>
+									<img src={arrow} />
+									<div className={styles.text}>当前卡片均不支持，请添加其他信用卡</div>
+								</div>
+							</div>
+						) : null}
+
+						<p className={[ styles.card_tit ].join(' ')}>
 							选择收款信用卡
-							<div onClick={this.goToNewMoXie} className={styles.addCard}>
+							<div
+								onClick={this.goToNewMoXie}
+								className={[
+									styles.addCard,
+									`${this.state.resultLength === 0 ? styles.noCardTip_ : ''}`
+								].join(' ')}
+							>
 								添加信用卡<i />
 							</div>
 						</p>
@@ -129,73 +152,111 @@ export default class credit_list_page extends PureComponent {
 									<li
 										className={` ${styles.bank_item}`}
 										key={index}
-										onClick={this.selectCard.bind(this, item)}
+										onClick={() => {
+											item.operationMark === '01' ? this.selectCard(item) : () => {};
+										}}
 									>
 										<div className={styles.cardContainer}>
 											<div
-												className={`${isSelected ? styles.dis : ''} ${isSelected
-													? styles.active
-													: ''} ${styles.cardBox} `}
+												className={`${item.operationMark === '00'
+													? styles.dis
+													: ''} ${isSelected ? styles.active : ''} ${styles.cardBox} `}
 											>
 												<div className={styles.bankNameBox}>
 													<span className={`${icoClass} ${styles.bank_icon}`} />
-													{item.autSts === '1' ? (
-														<span className={`${styles.bank_name} ${styles.pending}`}>
-															审核中 ····
-														</span>
-													) : item.autSts === '3' ? (
-														<span className={`${styles.bank_name} ${styles.failed}`}>
-															审核失败
-														</span>
-													) : (
-														<span className={styles.bank_name}>{item.bankName}</span>
-													)}
+													<span className={styles.bank_name}>{item.bankName}</span>
 													<div className={styles.subTitle}>
-														最低可借500元
-														<Popover
-															placement="bottomRight"
-															overlayClassName="credit_list_pagePopover"
-															mask
-															visible={true}
-															overlay={[
-																<p className={styles.Popover}>
-																	还到最低可借款金额500元，请添加其他收款信用卡。
-																</p>
-															]}
-														>
-															<i />
-														</Popover>
+														{item.operationMark === '00' &&
+															((item.persionCheck === '00' && '非本人卡') ||
+																(item.cardBinSupport === '00' && '暂不支持该信用卡') ||
+																(item.cardBillCheck === '00' && '新卡未生成账单') ||
+																(item.moneyCheck === '00' && `最低可借${item.minProd}元`))}
+														{item.operationMark === '00' ? (
+															<Popover
+																placement="bottomRight"
+																overlayClassName="credit_list_pagePopover"
+																visible={false}
+																overlay={[
+																	<p className={styles.Popover}>
+																		{(item.persionCheck === '00' &&
+																			'仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。') ||
+																			(item.cardBinSupport === '00' &&
+																				'暂不支持该类型信用卡，请添加其他银联信用卡。') ||
+																			(item.cardBillCheck === '00' &&
+																				'该信用卡暂未生成账单，请添加其他信用卡或生成账单后使用还到。') ||
+																			(item.moneyCheck === '00' &&
+																				`还到最低可借款金额${item.minProd}元，请添加其他收款信用卡。`)}
+																	</p>
+																]}
+															>
+																<i />
+															</Popover>
+														) : null}
 													</div>
 												</div>
 												<div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
 												<div className={styles.bill_remain_amt}>
-													{item.billRemainAmt ? (
-														item.billRemainAmt
+													{item.autSts !== '2' && item.operationMark === '01' ? (
+														<span style={{ fontSize: '.6rem' }}>需更新账单</span>
+													) : item.cardBillCheck === '00' &&
+													item.operationMark === '00' &&
+													item.persionCheck !== '00' &&
+													item.cardBinSupport !== '00' ? (
+														<span style={{ fontSize: '.6rem' }}>----.--</span>
+													) : item.billRemainAmt && !isNaN(item.billRemainAmt) ? (
+														(item.billRemainAmt > 0 &&
+															parseFloat(Number(item.billRemainAmt) * 100 / 100).toFixed(
+																2
+															)) ||
+														'0.00'
 													) : item.billRemainAmt === 0 ? (
-														'0'
+														'0.00'
+													) : !isNaN(item.cardBillAmt) ? (
+														(item.cardBillAmt > 0 &&
+															parseFloat(Number(item.cardBillAmt) * 100 / 100).toFixed(
+																2
+															)) ||
+														'0.00'
 													) : (
 														item.cardBillAmt
 													)}
 												</div>
-												<div className={styles.updateBtn}>更新账单</div>
-												{item.autSts === '2' ? (
-													<span>
-														<span className={styles.bank_number}>
-															<span style={{ marginRight: '.2rem' }}>****</span>
-															<span style={{ marginRight: '.2rem' }}>****</span>
-															<span style={{ marginRight: '.2rem' }}>****</span>
-															{item.last}
-														</span>
-														<span className={styles.bank_date}>还款日：{item.cardBillDt}</span>
-													</span>
+												{item.autSts !== '2' && item.operationMark === '01' ? (
+													<div className={styles.updateBtn}>更新账单</div>
 												) : null}
-												{isSelected ? (
+
+												<span>
+													<span className={styles.bank_number}>
+														<span style={{ marginRight: '.2rem' }}>
+															{item.beforeCard4No}
+														</span>
+														<span style={{ marginRight: '.2rem' }}>****</span>
+														<span style={{ marginRight: '.2rem' }}>****</span>
+														{item.last}
+													</span>
+													<span className={styles.bank_date}>
+														还款日：{item.autSts !== '2' && item.operationMark === '01' ? (
+															'待更新'
+														) : item.cardBillCheck === '00' &&
+														item.operationMark === '00' &&
+														item.persionCheck !== '00' &&
+														item.cardBinSupport !== '00' ? (
+															'----/--/--'
+														) : (
+															dayjs(item.cardBillDt).format('YYYY/MM/DD')
+														)}
+													</span>
+												</span>
+												{item.operationMark === '01' && isSelected ? (
 													<img src={select} className={styles.select_icon} />
-												) : (
+												) : null}
+												{item.operationMark === '01' && !isSelected ? (
 													<img src={not_select} className={styles.select_icon} />
-												)}
+												) : null}
 											</div>
-											<div className={styles.desc}>部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。</div>
+											{item.autSts !== '2' && item.operationMark === '01' ? (
+												<div className={styles.desc}>部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。</div>
+											) : null}
 										</div>
 									</li>
 								);
