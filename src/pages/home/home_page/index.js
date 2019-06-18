@@ -918,7 +918,6 @@ export default class home_page extends PureComponent {
 					((ischeckIsEngagedUser.data.isEngagedUser === '1' &&
 						(result.data.indexSts === 'LN0001' ||
 							result.data.indexSts === 'LN0002' ||
-							result.data.indexSts === 'LN0004' ||
 							result.data.indexSts === 'LN0003' ||
 							result.data.indexSts === 'LN0010')) ||
 						(ischeckIsEngagedUser &&
