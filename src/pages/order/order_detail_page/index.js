@@ -885,7 +885,6 @@ export default class order_detail_page extends PureComponent {
 		} = this.state;
 
 		let orderDtData = {
-			isPayAll,
 			detailArr,
 			isShowDetail,
 			isAdvance,

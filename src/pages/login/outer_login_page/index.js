@@ -112,7 +112,8 @@ export default class login_page extends PureComponent {
 
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
-		if (!validators.phone(value)) {
+    let v = value && value.replace(/\s*/g, '')
+		if (!validators.phone(v)) {
 			callback('请输入正确手机号');
 		} else {
 			callback();
@@ -193,7 +194,7 @@ export default class login_page extends PureComponent {
 				} else {
 					param = {
 						type: '6',
-						mblNo: values.phoneValue,
+						mblNo: values.phoneValue && values.phoneValue.replace(/\s*/g, ''),
 						osType
 					};
 				}
@@ -247,8 +248,8 @@ export default class login_page extends PureComponent {
 						<InputItem
 							disabled={this.state.disabledInput}
 							id="inputPhone"
-							maxLength="11"
-							type="number"
+							maxLength="13"
+							type="phone"
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
@@ -295,9 +296,9 @@ export default class login_page extends PureComponent {
 							<span>查看额度</span>
 						</div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />		
-						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />		
-						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />				
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
 				</div>
 				<div className={styles.agreement}>

@@ -161,6 +161,17 @@ const activity = {
 	koubeiBtnClick: `${prefix}_ACTIVITY_KOUBEI_TIYAN_BTN`, // 口碑活动还到体验按钮点击
 	koubeiHomeOldModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_OLDMODAL_CLICK`, // 口碑活动首页老用户弹框
 	koubeiHomeNewModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_NEWMODAL_CLICK`, // 口碑活动首页新用户弹框
+	jd618Entry: `${prefix}_JD618_ENTRY`,
+	jd618BtnClick: `${prefix}_ACTIVITY_JD618_BTN`,
+	jd618ModalBtnClick: `${prefix}_ACTIVITY_JD618_MODAL_BTN`,
+	freeBillEntry: `${prefix}_FREEBILL_ENTRY`,
+	freeBillBtnClick: `${prefix}_ACTIVITY_FREEBILL_BTN`,
+	freeBillModalBtnClick: `${prefix}_ACTIVITY_FREEBILL_MODAL_BTN`,
+  jd618ResultModalClick: `${prefix}_JD618_RESULT_MODAL_CLICK`,
+  jd618HomeModalClose:`${prefix}_JD618HOMEMODALCLOSE`,
+  freeBillHomeModalClose:`${prefix}_FREEBILLHOMEMODALCLOSE`,
+
+
 };
 
 const moxie_bank_list = {

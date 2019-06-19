@@ -25,6 +25,16 @@ export default [
 		path: '/activity/wuyue_old_page',
 		title: '老用户专享',
 		component: () => import('pages/activity/wuyue_old_page')
+  },
+  {
+		path: '/activity/jd618_page',
+		title: '嗨爆618',
+		component: () => import('pages/activity/jd618_page')
+	},
+	{
+		path: '/activity/freebill_page',
+		title: '免账单 随便刷',
+		component: () => import('pages/activity/freebill_page')
 	},
 	{
 		path: '/activity/jupei_page',
