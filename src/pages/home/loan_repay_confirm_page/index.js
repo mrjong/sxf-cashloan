@@ -774,7 +774,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}}
 							>
 								<div>
-									<span className={style.title}>全部应还</span>
+									<span className={style.title}>借全额</span>
 									<span className={style.money}>¥{maxApplAmt || '-.--'}</span>
 								</div>
 								<div className={style.desc} style={{ paddingLeft: 0 }}>
@@ -788,7 +788,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}}
 							>
 								<div>
-									<span className={style.title}>最低应还</span>
+									<span className={style.title}>借最低</span>
 									<span className={style.money}>¥{minApplAmt || '-.--'}</span>
 								</div>
 								<div className={style.desc} style={{ paddingRight: 0 }}>

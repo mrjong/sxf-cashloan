@@ -146,7 +146,7 @@ export default class credit_list_page extends PureComponent {
 								{this.state.resultLength === 0 ? (
 									<div className={styles.imgbox}>
 										<img src={arrow} />
-										<div className={styles.text}>当前卡片均不支持，请添加其他信用卡</div>
+										<span className={styles.text}>当前卡片均不支持，请添加其他信用卡</span>
 									</div>
 								) : null}
 							</div>

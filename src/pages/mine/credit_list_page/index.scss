@@ -46,30 +46,31 @@
 			z-index: 4;
 			border: 4px solid #397be6;
 			background: #fff;
-    }
-    .imgbox {
-      position: absolute;
-      width: 100vw;
-      animation-name: fadeInUpBig;
-      animation-duration: 1s;
-      animation-timing-function: ease-in-out;
-      animation-iteration-count: 1;
-      img {
-        position: absolute;
-        width: 32px;
-        height: 92px;
-        top: 40px;
-        left: 80px;
-      }
-      .text {
-        position: absolute;
-        top: 140px;
-        color: #fff;
-        font-size: 30px;
-        letter-spacing: 3px;
-        left: -60vw;
-      }
-    }
+		}
+		.imgbox {
+			position: absolute;
+			animation-name: fadeInUpBig;
+			animation-duration: 1s;
+			animation-timing-function: ease-in-out;
+			animation-iteration-count: 1;
+			img {
+				position: absolute;
+				width: 32px;
+				height: 92px;
+				top: 40px;
+				left: 80px;
+			}
+			.text {
+				position: absolute;
+				top: 1.4rem;
+        display: inline-block;
+				margin-left: -100vw;
+				color: #fff;
+				font-size: 0.3rem;
+				letter-spacing: 0.03rem;
+				right: -50px;
+			}
+		}
 		position: absolute;
 		right: 0;
 		display: inline-block;
@@ -289,7 +290,7 @@
 }
 .noCardTip {
 	background-color: rgba(0, 0, 0, .6);
-	position: absolute;
+	position: fixed;
 	height: 100%;
 	width: 100%;
 	left: 0;

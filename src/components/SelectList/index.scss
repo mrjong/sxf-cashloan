@@ -4,8 +4,13 @@
 	font-size: 30px;
 	font-family: 'PingFangSC-Medium';
 	font-weight: 500;
-	position: relative;
-	&::after {
-		@include setArrow(right,15px,#A9AEB6,1PX);
-	}
+  position: relative;
+  line-height: 1.4;
+  .rightArrow{
+    width: 40px;
+    height: 40px;
+    color: #121c32;
+    vertical-align: middle;
+    margin-top: -5px;
+  }
 }

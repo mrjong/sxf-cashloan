@@ -8,8 +8,8 @@ export default class SelectList extends React.Component {
 			<div className={style.selectBox}>
 				<div className={style.noselect}>
 					请选择
+					<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
 				</div>
-
 			</div>
 		);
 	}
