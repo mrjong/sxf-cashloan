@@ -26,11 +26,12 @@
 			top: 76px;
 			z-index: 10;
 		}
-		// &::after {
-		// 	@include setBottomLine(#333);
-		// 	left: 0;
-		// 	bottom: 15px;
-		// }
+		&::after {
+			@include setBottomLine(#333);
+			left: 60px;
+      bottom: 30px;
+      width: 630px;
+		}
 	}
 	.billInput {
 		input {
@@ -267,7 +268,12 @@
 		.am-list-item.am-input-item {
 			height: auto;
 			padding-left: 35px;
-		}
+    }
+    .am-list-item {
+      .am-list-line {
+        padding-right: 0;
+      }
+    }
 	}
 	.fenqi_tip_modal.am-modal-transparent {
 		.am-modal-body {
