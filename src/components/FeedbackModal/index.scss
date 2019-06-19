@@ -60,6 +60,7 @@
           background-color: #EBDE74;
           color: #121C32;
           border-radius: 45px;
+          font-weight: 600;
         }
 
         .submit_btn_disabled {
@@ -81,9 +82,19 @@
         .am-textarea-control textarea {
           font-size: 30px;
         }
+
         .am-textarea-count {
-          // color: #F66;
           font-size: 26px;
+        }
+
+        .red_count {
+          .am-textarea-count {
+            span {
+              color: #F66;
+            }
+            color: #F66;
+            font-size: 26px;
+          }
         }
       }
     }

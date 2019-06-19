@@ -76,6 +76,9 @@ export default class FeedbackModal extends React.Component {
                     textareaVal: v
                   })
                 }}
+                className={`${this.state.textareaVal.length === 24 ? 'red_count' : ''}`}
+                placeholder='可以简要描述你遇到的问题，之后我们
+                会联系你，帮你解决操作问题。'
                 rows={5}
                 count={24}
               />
