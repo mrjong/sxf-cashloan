@@ -4,14 +4,14 @@ import style from './index.scss';
 import operator from './img/operator.png'
 import interbank from './img/interbank.png'
 import bank_operator from './img/bank_operator.png'
+import { setBackGround } from 'utils/background';
 
-
+@setBackGround('#fff')
 export default class moxie_pwd_guide extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: true,
-
+      showModal: true
     }
   }
 
