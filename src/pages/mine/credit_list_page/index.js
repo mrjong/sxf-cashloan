@@ -11,6 +11,7 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import arrow from './img/arrow.png';
+import { getMoxieData } from 'utils';
 import mock from './mock.js';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -41,9 +42,10 @@ export default class credit_list_page extends PureComponent {
 		this.props.$fetch.post(API.CREDCARDLIST).then(
 			(res) => {
 				if (res.msgCode === 'PTM0000') {
-					console.log(mock.data);
 					this.setState({
+						// cardList: mock.data.result,
 						cardList: res.data && res.data.result ? res.data.result : [],
+						// resultLength: 0
 						resultLength: (res.data && res.data.resultLength) || 0
 					});
 				} else {
@@ -97,6 +99,11 @@ export default class credit_list_page extends PureComponent {
 			}
 		);
 	};
+	goMoxieBankList = () => {
+		store.setToggleMoxieCard(true);
+		store.setMoxieBackUrl(`/home/crawl_progress_page`);
+		this.props.history.push('/home/moxie_bank_list_page');
+	};
 	// 新增授权卡
 	goToNewMoXie = () => {
 		buriedPointEvent(home.addCreditCard);
@@ -128,7 +135,7 @@ export default class credit_list_page extends PureComponent {
 							</div>
 						) : null}
 
-						<p className={[ styles.card_tit ].join(' ')}>
+						<div className={[ styles.card_tit ].join(' ')}>
 							选择收款信用卡
 							<div
 								onClick={this.goToNewMoXie}
@@ -137,9 +144,9 @@ export default class credit_list_page extends PureComponent {
 									`${this.state.resultLength === 0 ? styles.noCardTip_ : ''}`
 								].join(' ')}
 							>
-								添加信用卡<i />
+								<i />添加信用卡
 							</div>
-						</p>
+						</div>
 						<ul
 							className={styles.card_list}
 							style={this.state.cardList.length > 2 ? { paddingBottom: '2.5rem' } : {}}
@@ -196,7 +203,8 @@ export default class credit_list_page extends PureComponent {
 												</div>
 												<div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
 												<div className={styles.bill_remain_amt}>
-													{item.autSts !== '2' && item.operationMark === '01' ? (
+													{(item.autSts !== '2' && item.operationMark === '01') ||
+													(item.operationMark === '01' && item.cardBillSts === '02') ? (
 														<span style={{ fontSize: '.6rem' }}>需更新账单</span>
 													) : item.cardBillCheck === '00' &&
 													item.operationMark === '00' &&
@@ -221,21 +229,41 @@ export default class credit_list_page extends PureComponent {
 														item.cardBillAmt
 													)}
 												</div>
-												{item.autSts !== '2' && item.operationMark === '01' ? (
-													<div className={styles.updateBtn}>更新账单</div>
+												{(item.autSts !== '2' && item.operationMark === '01') ||
+												(item.cardBillSts === '02' && item.operationMark === '01') ? (
+													<div
+														onClick={// 跳银行登录页面
+														() => {
+															getMoxieData({
+																bankCode: item.bankNo,
+																$props: this.props,
+																goMoxieBankList: this.goMoxieBankList
+															});
+														}}
+														className={styles.updateBtn}
+													>
+														更新账单
+													</div>
 												) : null}
 
 												<span>
 													<span className={styles.bank_number}>
-														<span style={{ marginRight: '.2rem' }}>
-															{item.beforeCard4No}
-														</span>
+														{item.beforeCard4No ? (
+															<span style={{ marginRight: '.2rem' }}>
+																{item.beforeCard4No}
+															</span>
+														) : (
+															<span style={{ marginRight: '.2rem' }}>****</span>
+														)}
+
 														<span style={{ marginRight: '.2rem' }}>****</span>
 														<span style={{ marginRight: '.2rem' }}>****</span>
-														{item.last}
+
+														{item.last ? <span>{item.last}</span> : <span>****</span>}
 													</span>
 													<span className={styles.bank_date}>
-														还款日：{item.autSts !== '2' && item.operationMark === '01' ? (
+														还款日：{(item.autSts !== '2' && item.operationMark === '01') ||
+														(item.cardBillSts === '02' && item.operationMark === '01') ? (
 															'待更新'
 														) : item.cardBillCheck === '00' &&
 														item.operationMark === '00' &&
@@ -243,7 +271,9 @@ export default class credit_list_page extends PureComponent {
 														item.cardBinSupport !== '00' ? (
 															'----/--/--'
 														) : (
-															dayjs(item.cardBillDt).format('YYYY/MM/DD')
+															(item.cardBillDt &&
+																dayjs(item.cardBillDt).format('YYYY/MM/DD')) ||
+															'----/--/--'
 														)}
 													</span>
 												</span>
@@ -254,7 +284,8 @@ export default class credit_list_page extends PureComponent {
 													<img src={not_select} className={styles.select_icon} />
 												) : null}
 											</div>
-											{item.autSts !== '2' && item.operationMark === '01' ? (
+											{(item.autSts !== '2' && item.operationMark === '01') ||
+											(item.cardBillSts === '02' && item.operationMark === '01') ? (
 												<div className={styles.desc}>部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。</div>
 											) : null}
 										</div>

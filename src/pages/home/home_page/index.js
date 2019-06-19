@@ -1210,7 +1210,7 @@ export default class home_page extends PureComponent {
 		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 		let cardBillAmtData = '';
 		if (cardBillSts === '02') {
-			cardBillAmtData = '待更新';
+			cardBillAmtData = '需更新账单';
 		} else {
 			// 优先取剩余应还，否则去账单金额
 			if (billRemainAmt && Number(billRemainAmt) > 0) {

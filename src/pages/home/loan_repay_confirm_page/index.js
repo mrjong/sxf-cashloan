@@ -6,14 +6,13 @@ import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { getFirstError, handleClickConfirm, handleInputBlur, idChkPhoto, isCanLoan, getOperatorStatus } from 'utils';
+import { handleClickConfirm, handleInputBlur, idChkPhoto, isCanLoan, getOperatorStatus, getMoxieData } from 'utils';
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 // import ScrollText from 'components/ScrollText';
-import linkConf from 'config/link.conf';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -21,8 +20,7 @@ const API = {
 	qryPerdRate: '/bill/prod',
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
-	mxoieCardList: '/moxie/mxoieCardList/C'
+	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
 };
 const tagList = [
 	{
@@ -82,40 +80,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		clearInterval(timer);
 		store.removeRealNameNextStep();
 	}
-
-	getMoxieData = (bankCode) => {
-		this.props.$fetch
-			.get(API.mxoieCardList)
-			.then((res) => {
-				if (res && res.msgCode === 'PTM0000') {
-					if (res.data) {
-						const seleBank = res.data.filter((ele, index, array) => {
-							return ele.code === bankCode;
-						});
-						const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-						if (jumpUrl) {
-							store.setGotoMoxieFlag(true);
-							// 如果银行code一致跳登录页，否则跳列表页
-							window.location.href =
-								jumpUrl +
-								`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-									`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
-								)}`;
-						} else {
-							this.goMoxieBankList();
-						}
-					} else {
-						this.props.toast.info('系统开小差，请稍后重试');
-					}
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				this.props.toast.info('系统开小差，请稍后重试');
-			});
-	};
 
 	startInterval = () => {
 		timer = setInterval(() => {
@@ -590,13 +554,21 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (cardBillSts === '00') {
 			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
 				// 跳银行登录页面
-				this.getMoxieData(bankNo);
+				getMoxieData({
+					bankCode: bankNo,
+					$props: this.props,
+					goMoxieBankList: this.goMoxieBankList
+				});
 			});
 			return true;
 		} else if (cardBillSts === '02') {
 			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
 				// 跳银行登录页面
-				this.getMoxieData(bankNo);
+				getMoxieData({
+					bankCode: bankNo,
+					$props: this.props,
+					goMoxieBankList: this.goMoxieBankList
+				});
 			});
 			return true;
 		}
@@ -681,7 +653,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 		let cardBillAmtData = '';
 		if (cardBillSts === '02') {
-			cardBillAmtData = '待更新';
+			cardBillAmtData = '需更新账单';
 		} else {
 			// 优先取剩余应还，否则去账单金额
 			if (billRemainAmt && Number(billRemainAmt) > 0) {
@@ -697,22 +669,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 			}
 		}
 
-		let minPaymentData = '';
-		if (cardBillSts === '02') {
-			minPaymentData = '待更新';
-		} else {
-			if (!minPayment && minPayment !== 0) {
-				minPaymentData = '----.--';
-			} else if (cardBillSts === '01' && cardBillAmtData === '已结清') {
-				minPaymentData = '已结清';
-			} else {
-				minPaymentData = parseFloat(minPayment, 10).toFixed(2);
-			}
-		}
-
 		let placeholderText = '';
 		if (fetchBillSucc) {
-			placeholderText = `输入还卡金额 ${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}`;
+			placeholderText = `可申请 ${indexData.minApplAmt || ''}~${indexData.maxApplAmt || ''}`;
 		} else {
 			placeholderText = ``;
 		}
@@ -816,7 +775,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<span className={style.title}>全部应还</span>
 									<span className={style.money}>¥{maxApplAmt || '-.--'}</span>
 								</div>
-								<div className={style.desc}>一键结清账单，释放卡额度</div>
+								<div className={style.desc} style={{ paddingLeft: 0 }}>
+									一键结清账单，释放卡额度
+								</div>
 							</div>
 							<div
 								className={style.item}
@@ -828,7 +789,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<span className={style.title}>最低应还</span>
 									<span className={style.money}>¥{minApplAmt || '-.--'}</span>
 								</div>
-								<div className={style.desc}>信用卡免逾期，还款无压力</div>
+								<div className={style.desc} style={{ paddingRight: 0 }}>信用卡免逾期，还款无压力</div>
 							</div>
 						</div>
 					</div>

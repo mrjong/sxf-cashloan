@@ -2,7 +2,7 @@ export default {
 	msgCode: 'PTM0000',
 	msgInfo: 'SUCCESS',
 	data: {
-		resultLength: 1,
+		resultLength: 0,
 		result: [
 			{
 				autId: 'PRC00607320190603182152128070195',
@@ -24,7 +24,7 @@ export default {
 				billRemainAmt: 99,
 				billPaidAmt: null,
 				sxfPaidAmt: null,
-				cardBillSts: null,
+				cardBillSts: '02',
 				acOverDt: null,
 				minApplAmt: null,
 				maxApplAmt: null,
@@ -36,7 +36,7 @@ export default {
 				minProd: 900,
 				persionCheck: '01',
 				cardBinSupport: '01',
-				moneyCheck: '00',
+				moneyCheck: '01',
 				cardBillCheck: '01',
 				authCheck: '01',
 				beforeCard4No: '6222',
