@@ -82,14 +82,21 @@
 			font-family: 'PingFangSC-Medium';
       line-height: 2;
       color: #868E9E;
-		}
+    }
+    .hasArrow {
+      padding-right: 24px;
+    }
 
 		.icon {
-			vertical-align: middle;
+      // vertical-align: middle;
+      position: absolute;
 			width: 40px;
 			height: 50px;
-			color: #121c32;
-			margin-bottom: 5px;
+      color: #121c32;
+      right: -12px;
+      top: 50%;
+      margin-top: -25px;
+			// margin-bottom: 5px;
 		}
 		.insureLeft {
 			display: flex;

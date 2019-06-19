@@ -1009,23 +1009,23 @@ export default class confirm_agency_page extends PureComponent {
 								>
 									<label>优惠券</label>
 									{repayInfo2.data && repayInfo2.data.coupVal ? (
-										<span className={style.listValue}>
+										<span className={[style.listValue, style.hasArrow].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
 											{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 										</span>
 									) : (
 										(repayInfo2 && (
-											<span className={style.redText}>
+											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
 												无可用优惠券
 												<Icon type="right" className={style.icon} />
-												<i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} />
+												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)) || (
-											<span className={style.redText}>
+											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
 												请选择
 												<Icon type="right" className={style.icon} />
-												<i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} />
+												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)
 									)}
@@ -1037,7 +1037,7 @@ export default class confirm_agency_page extends PureComponent {
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
 										) : (
 											(repayInfo2 && (
-												<span className={style.listValue}>
+												<span className={[style.listValue, style.hasArrow].join(' ')}>
 													点击查看
 													<Icon type="right" className={style.icon} />
 												</span>
@@ -1055,7 +1055,7 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
 									<label>还款银行卡</label>
-									<span className={style.listValue}>
+									<span className={[style.listValue, style.hasArrow].join(' ')}>
 										{repayInfo.bankName}({repayInfo.cardNoHid})
 										<Icon type="right" className={style.icon} />
 									</span>
