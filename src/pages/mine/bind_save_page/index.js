@@ -98,7 +98,6 @@ export default class bind_save_page extends PureComponent {
 	checkProtocolBindCard = (params, fn) => {
 		const { valueInputCarNumber, valueInputCarPhone, cardTyp, bankCd, bankName } = params;
     const insuranceFlag = store.getInsuranceFlag();
-    console.log(insuranceFlag, 'insuranceFlag')
 
 		const sendParams = insuranceFlag ? {
 			cardNo: valueInputCarNumber,
