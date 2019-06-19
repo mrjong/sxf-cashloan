@@ -46,9 +46,32 @@
 			z-index: 4;
 			border: 4px solid #397be6;
 			background: #fff;
-		}
+    }
+    .imgbox {
+      position: absolute;
+      width: 100vw;
+      animation-name: fadeInUpBig;
+      animation-duration: 1s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: 1;
+      img {
+        position: absolute;
+        width: 32px;
+        height: 92px;
+        top: 40px;
+        left: 80px;
+      }
+      .text {
+        position: absolute;
+        top: 140px;
+        color: #fff;
+        font-size: 30px;
+        letter-spacing: 3px;
+        left: -60vw;
+      }
+    }
 		position: absolute;
-		right: 30px;
+		right: 0;
 		display: inline-block;
 		color: #397be6;
 		font-size: 30px;
@@ -95,8 +118,9 @@
 		font-family: 'PingFangSC-Medium';
 		font-weight: 500;
 		line-height: 80px;
-		padding-right: 70px;
+		padding-right: 40px;
 		i {
+			padding: 2px;
 			width: 24px;
 			height: 24px;
 			background-image: url(./img/wh.png);
@@ -104,7 +128,7 @@
 			background-size: 100% 100%;
 			position: absolute;
 			right: 30px;
-			top: 28px;
+			top: 23px;
 		}
 	}
 	.cardContainer {
@@ -131,6 +155,9 @@
 			// box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
 			border-color: transparent;
 		}
+	}
+	.wenhao {
+		padding: 0 20px;
 	}
 	.bank_name {
 		margin: 0 24px 0 42px;
@@ -268,27 +295,6 @@
 	left: 0;
 	z-index: 3;
 	top: 0;
-	.imgbox {
-		animation-name: fadeInUpBig;
-		animation-duration: 1s;
-		animation-timing-function: ease-in-out;
-		animation-iteration-count: 1;
-		img {
-			position: absolute;
-			width: 32px;
-			height: 92px;
-			top: 240px;
-			right: 100px;
-		}
-		.text {
-			position: absolute;
-			top: 340px;
-      color: #fff;
-      font-size: 30px;
-      letter-spacing: 3px;
-			right: 80px;
-		}
-	}
 }
 @keyframes fadeInUpBig {
 	0% {

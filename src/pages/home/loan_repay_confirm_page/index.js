@@ -725,6 +725,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						<div className={style.inputBox}>
 							<div className={style.dw}>￥</div>
 							<InputItem
+								maxLength={15}
 								{...getFieldProps('loanMoney', {
 									rules: [ { required: true, message: '请输入还款金额' } ]
 								})}
@@ -789,7 +790,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<span className={style.title}>最低应还</span>
 									<span className={style.money}>¥{minApplAmt || '-.--'}</span>
 								</div>
-								<div className={style.desc} style={{ paddingRight: 0 }}>信用卡免逾期，还款无压力</div>
+								<div className={style.desc} style={{ paddingRight: 0 }}>
+									信用卡免逾期，还款无压力
+								</div>
 							</div>
 						</div>
 					</div>
@@ -836,15 +839,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</List.Item>
 						</div>
 					</div>
-					<div className={style.freeService}>
+					<div
+						onClick={() => {
+							this.setState({
+								showTimeoutPayModal: true
+							});
+						}}
+						className={style.freeService}
+					>
 						<div className={style.title}>
-							审核超时赔（免费服务）<i
-								onClick={() => {
-									this.setState({
-										showTimeoutPayModal: true
-									});
-								}}
-							/>
+							审核超时赔（免费服务）<i />
 						</div>
 						<div className={style.desc}>50元免息券</div>
 					</div>

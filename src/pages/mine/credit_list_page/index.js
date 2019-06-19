@@ -45,7 +45,6 @@ export default class credit_list_page extends PureComponent {
 					this.setState({
 						// cardList: mock.data.result,
 						cardList: res.data && res.data.result ? res.data.result : [],
-						// resultLength: 0
 						resultLength: (res.data && res.data.resultLength) || 0
 					});
 				} else {
@@ -127,12 +126,7 @@ export default class credit_list_page extends PureComponent {
 										resultLength: 1
 									});
 								}}
-							>
-								<div className={styles.imgbox}>
-									<img src={arrow} />
-									<div className={styles.text}>当前卡片均不支持，请添加其他信用卡</div>
-								</div>
-							</div>
+							/>
 						) : null}
 
 						<div className={[ styles.card_tit ].join(' ')}>
@@ -145,6 +139,12 @@ export default class credit_list_page extends PureComponent {
 								].join(' ')}
 							>
 								<i />添加信用卡
+								{this.state.resultLength === 0 ? (
+									<div className={styles.imgbox}>
+										<img src={arrow} />
+										<div className={styles.text}>当前卡片均不支持，请添加其他信用卡</div>
+									</div>
+								) : null}
 							</div>
 						</div>
 						<ul
@@ -196,7 +196,9 @@ export default class credit_list_page extends PureComponent {
 																	</p>
 																]}
 															>
-																<i />
+																<span className={styles.wenhao}>
+																	<i />
+																</span>
 															</Popover>
 														) : null}
 													</div>
