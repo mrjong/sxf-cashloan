@@ -136,10 +136,7 @@ export default class funsisong_page extends PureComponent {
 			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else {
-			this.props.toast.info('请先登录', 2);
-			setTimeout(() => {
-				this.props.history.push('/login');
-			}, 2000);
+			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
 
