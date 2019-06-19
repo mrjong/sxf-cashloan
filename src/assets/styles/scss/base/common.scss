@@ -90,20 +90,25 @@
 		display: inline-block;
 	}
 	.credit_list_pagePopover {
-    left: 105px !important;
+		left: 105px !important;
 		border-radius: 6px;
 		.am-popover-arrow {
 			right: 0.25rem !important;
-			background-color: #121C32;
+			background-color: #121c32;
 		}
 		width: 80%;
 		p {
-			background: #121C32;
+			background: #121c32;
 			color: #fff;
 			font-size: 28px;
 			font-family: 'PingFangSC-Regular';
 			font-weight: 400;
 			padding: 20px;
+		}
+	}
+	.list-extra {
+		.am-list-item .am-list-line .am-list-extra {
+			flex-basis: 50%;
 		}
 	}
 }

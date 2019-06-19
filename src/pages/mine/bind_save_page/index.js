@@ -12,6 +12,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
+import SelectList from 'components/SelectList';
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -339,11 +340,10 @@ export default class bind_save_page extends PureComponent {
 		return (
 			<div>
 				<div className={styles.header}>请先绑定还款储蓄卡,再签约借款</div>
-				<div className="bind_save_page_listBox">
+				<div className="bind_save_page_listBox list-extra">
 					<Item extra={this.state.userName}>持卡人</Item>
 					<Item
-						extra={this.state.bankType ? this.state.bankType : '请选择发卡银行'}
-						arrow="horizontal"
+						extra={<SelectList selectText={this.state.bankType} defaultText={'请选择发卡银行'} />}
 						onClick={() => {
 							this.props.history.push('/mine/support_save_page?isClick=0');
 						}}

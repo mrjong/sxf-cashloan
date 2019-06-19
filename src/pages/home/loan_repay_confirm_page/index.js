@@ -830,7 +830,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.props.toast.info('暂无可借产品');
 									}
 								}}
-								extra={<SelectList text={selectedLoanDate}>22</SelectList>}
+								extra={
+									<SelectList
+										selectText={
+											(selectedLoanDate &&
+												selectedLoanDate.perdPageNm &&
+												selectedLoanDate.perdPageNm) ||
+											''
+										}
+										defaultText={'请选择'}
+									/>
+								}
 							>
 								&nbsp;
 							</List.Item>
