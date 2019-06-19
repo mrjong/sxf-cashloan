@@ -215,7 +215,7 @@ export default class funsisong_page extends PureComponent {
 				/>
 				<div className={styles.hd_logo_wrap}>
 					<img src={hd_logo} alt="" className={styles.hd_logo} />
-					<span>还到 | 怕预期用还到</span>
+					<span>还到 | 怕逾期用还到</span>
 				</div>
 				<div
 					className={styles.ruleBtn}

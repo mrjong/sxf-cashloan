@@ -161,7 +161,8 @@ const activity = {
 	koubeiBtnClick: `${prefix}_ACTIVITY_KOUBEI_TIYAN_BTN`, // 口碑活动还到体验按钮点击
 	koubeiHomeOldModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_OLDMODAL_CLICK`, // 口碑活动首页老用户弹框
 	koubeiHomeNewModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_NEWMODAL_CLICK`, // 口碑活动首页新用户弹框
-	jd618Entry: `${prefix}_JD618_ENTRY`,
+  jd618Entry: `${prefix}_JD618_ENTRY`,
+	freebillEntry: `${prefix}_FREEBILL_ENTRY`,
 	jd618BtnClick: `${prefix}_ACTIVITY_JD618_BTN`,
 	jd618ModalBtnClick: `${prefix}_ACTIVITY_JD618_MODAL_BTN`,
 	freeBillBtnClick: `${prefix}_ACTIVITY_FREEBILL_BTN`,
