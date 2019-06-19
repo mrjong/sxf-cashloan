@@ -119,7 +119,7 @@ export default class funsisong_page extends PureComponent {
 			return;
 		}
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (isMPOS()) {
+		if (queryData && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
 			if (queryData.appId && queryData.token) {
 				this.child.validateMposRelSts({
 					smsProps_disabled: true,
@@ -136,10 +136,7 @@ export default class funsisong_page extends PureComponent {
 			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else {
-			this.props.toast.info('请先登录', 2);
-			setTimeout(() => {
-				this.props.history.push('/login');
-			}, 2000);
+			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
 		}
 	};
 
@@ -218,7 +215,7 @@ export default class funsisong_page extends PureComponent {
 				/>
 				<div className={styles.hd_logo_wrap}>
 					<img src={hd_logo} alt="" className={styles.hd_logo} />
-					<span>还到 | 怕预期用还到</span>
+					<span>还到 | 怕逾期用还到</span>
 				</div>
 				<div
 					className={styles.ruleBtn}

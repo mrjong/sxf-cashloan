@@ -8,11 +8,12 @@ import { activity } from 'utils/analytinsType'
 import SmsAlert from '../components/SmsAlert'
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import RuleModal from '../components/RuleModal'
-import number_bg from './img/number_bg.png'
 import { Icon, Carousel } from 'antd-mobile'
 import { generateRandomPhone, saveUserInfoEngaged } from '../../../utils'
 import fetch from 'sx-fetch';
 import main_bg from './img/main_bg.png'
+import Cookie from 'js-cookie';
+import { store } from 'utils/store';
 
 const rewardList = [
   {
@@ -50,13 +51,12 @@ export default class funsisong_page extends PureComponent {
   }
 
   componentDidMount() {
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.entry) {
-      buriedPointEvent(activity.freeBillEntry, {
-        entry: queryData.entry
-      })
-    }
-
+    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.entry) {
+			buriedPointEvent(activity.freebillEntry, {
+				entry: queryData.entry
+			});
+		}
     timer = setInterval(() => {
       this.setState({
         showRowScroll: !this.state.showRowScroll
@@ -77,17 +77,12 @@ export default class funsisong_page extends PureComponent {
 
   // 进入首页
   goHomePage = () => {
-    this.props.history.push('/home/home');
-  }
-
-  joinNow = () => {
-    buriedPointEvent(activity.freeBillBtnClick);
     saveUserInfoEngaged({
       $props: this.props,
       AcCode: 'AC20190618_mianxi'
     }).then(res => {
       if (res.msgCode === 'PTM0000') {
-        this.goHomePage()
+        this.props.history.push('/home/home');
       } else if (res.msgCode === 'PTM1000') {
         this.props.toast.info(res.msgInfo)
         setTimeout(() => {
@@ -97,19 +92,16 @@ export default class funsisong_page extends PureComponent {
         this.props.toast.info(res.msgInfo)
       }
     })
-    // const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-    // if (queryData.appId && queryData.token) {
-    //   this.child.validateMposRelSts({
-    //     smsProps_disabled: true,
-    //     loginProps_disabled: true,
-    //     loginProps_needLogin: true,
-    //     otherProps_type: 'home'
-    //   });
-    // } else {
-    //   this.setState({
-    //     showLoginTip: true
-    //   });
-    // }
+  }
+
+  joinNow = () => {
+    buriedPointEvent(activity.freeBillBtnClick);
+		if (Cookie.get('fin-v-card-token')) {
+			store.setToken(Cookie.get('fin-v-card-token'));
+			this.goHomePage();
+		} else {
+			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');
+    }
   }
 
   onRef = (ref) => {
