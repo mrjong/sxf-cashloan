@@ -527,9 +527,9 @@ export default class confirm_agency_page extends PureComponent {
 	renderCoupon = () => {
 		const { deratePrice } = this.state;
 		if (deratePrice) {
-			return <span>-{deratePrice}元</span>;
+			return <span className={style.redText}>-{deratePrice}元</span>;
 		} else {
-			return <span>不使用</span>;
+			return <span className={style.redText}>不使用</span>;
 		}
 	};
 	// 选择优惠劵
