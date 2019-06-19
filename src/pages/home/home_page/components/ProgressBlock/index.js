@@ -16,7 +16,7 @@ export default class ProgressBlock extends React.Component {
 				<div className={style.circle_box}>
 					<div className={style.bar_top}>
 						<span>已提升额度</span>
-						<span>自动提现</span>
+						<span>自动提额</span>
 					</div>
 					<div className={style.bar_progress}>
 						<img src={finished_img} className={style.left_ico} alt="finished_img" />
