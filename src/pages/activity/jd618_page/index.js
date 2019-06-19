@@ -119,7 +119,7 @@ export default class funsisong_page extends PureComponent {
 			return;
 		}
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		if (isMPOS()) {
+		if (queryData && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
 			if (queryData.appId && queryData.token) {
 				this.child.validateMposRelSts({
 					smsProps_disabled: true,

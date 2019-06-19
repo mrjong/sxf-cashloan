@@ -50,13 +50,6 @@ export default class funsisong_page extends PureComponent {
   }
 
   componentDidMount() {
-    const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
-    if (queryData.entry) {
-      buriedPointEvent(activity.freeBillEntry, {
-        entry: queryData.entry
-      })
-    }
-
     timer = setInterval(() => {
       this.setState({
         showRowScroll: !this.state.showRowScroll
