@@ -314,6 +314,7 @@ if (window.history && window.history.pushState) {
 				// 	window.ReactRouterHistory.push('/mine/mine_page');
 				// 	break;
 				case '/mine/credit_list_page':
+          if(store.getGotoMoxieFlag()) return; // 如何页面弹出反馈窗则拦截
 					if (store.getToggleMoxieCard()) {
 						window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
 						return;
