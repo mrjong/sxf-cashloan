@@ -9,7 +9,8 @@ import {
 	isCanLoan,
 	checkEngaged,
 	checkIsEngagedUser,
-	saveUserInfoEngaged
+	saveUserInfoEngaged,
+	getMoxieData
 } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
@@ -22,7 +23,7 @@ import mockData from './mockData';
 import { createForm } from 'rc-form';
 import CountDownBox from 'components/CountDownBox';
 import FeedbackModal from 'components/FeedbackModal';
-import TimeDown from 'components/TimeDown'
+import TimeDown from 'components/TimeDown';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 
@@ -371,25 +372,31 @@ export default class home_page extends PureComponent {
 				break;
 
 			case 1: // 新用户，运营商未授权/基本信息未认证
-				this.setState({
-					percentSatus: '2',
-					percentData: 80,
-					showDiv: 'circle',
-					percentBtnText: data.btnText
-				}, () => {
-					this.showFeedbackModal()
-				});
+				this.setState(
+					{
+						percentSatus: '2',
+						percentData: 80,
+						showDiv: 'circle',
+						percentBtnText: data.btnText
+					},
+					() => {
+						this.showFeedbackModal();
+					}
+				);
 				break;
 
 			case 2: // 新用户，信用卡未授权
-				this.setState({
-					percentData: 98,
-					percentSatus: isshow ? '1' : '',
-					showDiv: 'circle',
-					percentBtnText: data.btnText
-				}, () => {
-					this.showFeedbackModal()
-				});
+				this.setState(
+					{
+						percentData: 98,
+						percentSatus: isshow ? '1' : '',
+						showDiv: 'circle',
+						percentBtnText: data.btnText
+					},
+					() => {
+						this.showFeedbackModal();
+					}
+				);
 				break;
 			case 3: // 显示信用卡爬取进度
 				// 获取爬取卡的进度
@@ -412,19 +419,19 @@ export default class home_page extends PureComponent {
 	};
 
 	showFeedbackModal = () => {
-		if(store.getGotoMoxieFlag()) {
+		if (store.getGotoMoxieFlag()) {
 			this.setState({
 				showFeedbackModal: true
-			})
+			});
 		}
-	}
+	};
 
 	closeFeedbackModal = () => {
 		this.setState({
 			showFeedbackModal: false
-		})
-		store.removeGotoMoxieFlag()
-	}
+		});
+		store.removeGotoMoxieFlag();
+	};
 
 	// 请求信用卡数量
 	requestCredCardCount = (type, callback) => {
@@ -579,38 +586,6 @@ export default class home_page extends PureComponent {
 		}
 	};
 
-	getMoxieData = (bankCode) => {
-		this.props.$fetch
-			.get(API.mxoieCardList)
-			.then((res) => {
-				if (res && res.msgCode === 'PTM0000') {
-					if (res.data) {
-						const seleBank = res.data.filter((ele, index, array) => {
-							return ele.code === bankCode;
-						});
-						const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-						if (jumpUrl) {
-							store.setGotoMoxieFlag(true)
-							// 如果银行code一致跳登录页，否则跳列表页
-							window.location.href =
-								jumpUrl +
-								`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-									`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
-								)}`;
-						} else {
-							this.goToNewMoXie();
-						}
-					} else {
-						this.props.toast.info(res.msgInfo);
-					}
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				this.props.toast.info('系统开小差，请稍后重试');
-			});
-	};
-
 	jumpToUrl = () => {
 		const { usrIndexInfo, pageCode } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
@@ -618,7 +593,11 @@ export default class home_page extends PureComponent {
 			this.requestCredCardCount('cbFn', () => {
 				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
 					// 跳银行登录页面
-					this.getMoxieData(bankNo);
+					getMoxieData({
+						$props: this.props,
+						bankCode: bankNo,
+						goMoxieBankList: this.goToNewMoXie
+					});
 				});
 			});
 			return;
@@ -626,7 +605,11 @@ export default class home_page extends PureComponent {
 			this.requestCredCardCount('cbFn', () => {
 				this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
 					// 跳银行登录页面
-					this.getMoxieData(bankNo);
+					getMoxieData({
+						$props: this.props,
+						bankCode: bankNo,
+						goMoxieBankList: this.goToNewMoXie
+					});
 				});
 			});
 			return;
