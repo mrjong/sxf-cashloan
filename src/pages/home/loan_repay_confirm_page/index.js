@@ -12,6 +12,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
+import SelectList from 'components/SelectList'
 // import ScrollText from 'components/ScrollText';
 let isinputBlur = false;
 const API = {
@@ -832,8 +833,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.props.toast.info('暂无可借产品');
 									}
 								}}
-								arrow="horizontal"
-								extra={(selectedLoanDate && selectedLoanDate.perdPageNm) || '请选择'}
+								extra={<SelectList>22</SelectList>}
 							>
 								&nbsp;
 							</List.Item>

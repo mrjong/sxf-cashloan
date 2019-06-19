@@ -1,0 +1,11 @@
+@import '../../assets/styles/scss/base/fn';
+.noselect {
+	color: #868e9e;
+	font-size: 30px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	position: relative;
+	&::after {
+		@include setArrow(right,15px,#A9AEB6,1PX);
+	}
+}

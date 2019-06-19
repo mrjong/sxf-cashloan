@@ -51,7 +51,8 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		height: 100px;
+    height: 100px;
+    margin-top: 20px;
 		&::after {
 			@include setBottomLine(#F0F1F5);
 			left: -30px;
@@ -111,7 +112,8 @@
 	}
 	.inputBox {
 		text-align: left;
-		position: relative;
+    position: relative;
+    margin-top: 20px;
 		&:after {
 			@include setBottomLine();
 		}
