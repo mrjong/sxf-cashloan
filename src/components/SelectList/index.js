@@ -4,6 +4,8 @@ import { Icon } from 'antd-mobile';
 
 export default class SelectList extends React.Component {
 	render() {
+    const { selectedLoanDate } = this.props;
+    console.log(selectedLoanDate)
 		return (
 			<div className={style.selectBox}>
 				<div className={style.noselect}>

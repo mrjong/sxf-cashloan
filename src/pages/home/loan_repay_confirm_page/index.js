@@ -12,7 +12,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
-import SelectList from 'components/SelectList'
+import SelectList from 'components/SelectList';
 // import ScrollText from 'components/ScrollText';
 let isinputBlur = false;
 const API = {
@@ -684,21 +684,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 				{/* <ScrollText /> */}
 				<div className={[ style.page_inner_wrap, 'modal_l_r2' ].join(' ')}>
 					<div className={style.bankCard}>
-						<div>
-							<div className={style.titleBg}>收款信用卡</div>
-							{cardCount &&
-							cardCount > 0 && (
-								<div
-									className={style.cardNumBox}
-									onClick={() => {
-										this.repayForOtherBank(cardCount, 'switch');
-									}}
-								>
-									<span>更换信用卡</span>
-									<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
-								</div>
-							)}
-						</div>
+						<div className={style.titleBg}>收款信用卡</div>
+						{cardCount && cardCount > 0 ? (
+							<div
+								className={style.cardNumBox}
+								onClick={() => {
+									this.repayForOtherBank(cardCount, 'switch');
+								}}
+							>
+								<span>更换信用卡</span>
+								<Icon type="right" color="#C5C5C5" className={style.rightArrow} />
+							</div>
+						) : null}
 						<div className={style.top}>
 							<div className={style.bankBox}>
 								<span className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
@@ -833,7 +830,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										this.props.toast.info('暂无可借产品');
 									}
 								}}
-								extra={<SelectList>22</SelectList>}
+								extra={<SelectList text={selectedLoanDate}>22</SelectList>}
 							>
 								&nbsp;
 							</List.Item>
