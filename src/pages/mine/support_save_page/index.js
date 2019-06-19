@@ -26,7 +26,7 @@ export default class support_save_page extends PureComponent {
 		const sendParams = insuranceFlag ? {
       cardTyp: 'D',
       corpBusTyp: '',
-      supportType: '01', // 筛选出绑定通联支付的卡 01-通联
+      supportType: 'ZY', // JR随行付金融 XD随行付小贷 ZY中元保险
     } : {
       cardTyp: 'D',
       corpBusTyp: '',

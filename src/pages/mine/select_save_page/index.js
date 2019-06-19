@@ -111,7 +111,7 @@ export default class select_save_page extends PureComponent {
 			// agrNo:query.agrNo,
 			type: '2', //所有储蓄卡列表
       corpBusTyp: '',
-      supportType: '01', // 筛选出绑定通联支付的卡 01-通联
+      supportType: 'ZY', // 筛选出绑定通联支付的卡 JR随行付金融 XD随行付小贷 ZY中元保险
 		 } : {
 			// agrNo:query.agrNo,
 			type: '2', //所有储蓄卡列表
