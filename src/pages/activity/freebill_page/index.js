@@ -13,6 +13,7 @@ import { generateRandomPhone, saveUserInfoEngaged } from '../../../utils'
 import fetch from 'sx-fetch';
 import main_bg from './img/main_bg.png'
 import Cookie from 'js-cookie';
+import { store } from 'utils/store';
 
 const rewardList = [
   {
