@@ -210,7 +210,7 @@ export default class credit_list_page extends PureComponent {
 																		{(item.persionCheck === '00' &&
 																			'仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。') ||
 																			(item.cardBinSupport === '00' &&
-																				'暂不支持该类型信用卡，请添加其他银联信用卡。') ||
+																				'暂不支持该类型信用卡，请添加其他收款信用卡。') ||
 																			(item.cardBillCheck === '00' &&
 																				'该信用卡暂未生成账单，请添加其他信用卡或生成账单后使用还到。') ||
 																			(item.moneyCheck === '00' &&
