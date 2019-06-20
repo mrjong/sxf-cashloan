@@ -210,7 +210,8 @@ export default class credit_list_page extends PureComponent {
 												<div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
 												<div className={styles.bill_remain_amt}>
 													{(item.autSts !== '2' && item.operationMark === '01') ||
-													(item.operationMark === '01' && item.cardBillSts === '02') ? (
+													(item.operationMark === '01' && item.cardBillSts === '02') ||
+													(item.operationMark === '01' && item.cardBillSts === '00') ? (
 														<span style={{ fontSize: '.6rem' }}>需更新账单</span>
 													) : item.cardBillCheck === '00' &&
 													item.operationMark === '00' &&
@@ -236,7 +237,8 @@ export default class credit_list_page extends PureComponent {
 													)}
 												</div>
 												{(item.autSts !== '2' && item.operationMark === '01') ||
-												(item.cardBillSts === '02' && item.operationMark === '01') ? (
+												(item.cardBillSts === '02' && item.operationMark === '01') ||
+												(item.cardBillSts === '00' && item.operationMark === '01') ? (
 													<div
 														onClick={// 跳银行登录页面
 														() => {
@@ -269,7 +271,8 @@ export default class credit_list_page extends PureComponent {
 													</span>
 													<span className={styles.bank_date}>
 														还款日：{(item.autSts !== '2' && item.operationMark === '01') ||
-														(item.cardBillSts === '02' && item.operationMark === '01') ? (
+														(item.cardBillSts === '02' && item.operationMark === '01') ||
+														(item.cardBillSts === '00' && item.operationMark === '01') ? (
 															'待更新'
 														) : item.cardBillCheck === '00' &&
 														item.operationMark === '00' &&

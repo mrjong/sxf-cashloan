@@ -1192,7 +1192,7 @@ export default class home_page extends PureComponent {
 		const bankCode = !bankNo ? '' : bankNo;
 		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 		let cardBillAmtData = '';
-		if (cardBillSts === '02') {
+		if (cardBillSts === '02' || cardBillSts === '00') {
 			cardBillAmtData = '需更新账单';
 		} else {
 			// 优先取剩余应还，否则去账单金额

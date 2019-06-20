@@ -401,14 +401,24 @@ export default class loan_repay_confirm_page extends PureComponent {
 		const { indexData } = usrIndexInfo;
 		if (indexData && indexData.maxApplAmt && Number(money) >= Number(indexData.maxApplAmt)) {
 			this.props.form.setFieldsValue({
-				loanMoney: indexData.maxApplAmt
+				loanMoney:
+					(indexData.maxApplAmt &&
+						!isNaN(indexData.maxApplAmt) &&
+						Number(indexData.maxApplAmt) >= 0 &&
+						indexData.maxApplAmt) ||
+					'0'
 			});
 			this.getQryPerdRate(indexData.maxApplAmt, tag3);
 		} else if (indexData && indexData.minApplAmt && Number(money) <= Number(indexData.minApplAmt)) {
 			if (money === '') {
 				// 默认最大值
 				this.props.form.setFieldsValue({
-					loanMoney: indexData.maxApplAmt
+					loanMoney:
+						(indexData.maxApplAmt &&
+							!isNaN(indexData.maxApplAmt) &&
+							Number(indexData.maxApplAmt) >= 0 &&
+							indexData.maxApplAmt) ||
+						'0'
 				});
 			} else {
 				this.props.form.setFieldsValue({
@@ -653,7 +663,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 
 		let cardBillAmtData = '';
-		if (cardBillSts === '02') {
+		if (cardBillSts === '02' || cardBillSts === '00') {
 			cardBillAmtData = '需更新账单';
 		} else {
 			// 优先取剩余应还，否则去账单金额
@@ -772,7 +782,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 							>
 								<div>
 									<span className={style.title}>借全额</span>
-									<span className={style.money}>¥{maxApplAmt || '-.--'}</span>
+									<span className={style.money}>
+										¥{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) ||
+											'-.--'}
+									</span>
 								</div>
 								<div className={style.desc} style={{ paddingLeft: 0 }}>
 									一键结清账单，释放卡额度
@@ -786,7 +799,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 							>
 								<div>
 									<span className={style.title}>借最低</span>
-									<span className={style.money}>¥{minApplAmt || '-.--'}</span>
+									<span className={style.money}>
+										¥
+										{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) ||
+											'-.--'}
+									</span>
 								</div>
 								<div className={style.desc} style={{ paddingRight: 0 }}>
 									信用卡免逾期，还款无压力
