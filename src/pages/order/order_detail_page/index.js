@@ -181,7 +181,9 @@ export default class order_detail_page extends PureComponent {
 								isNewsContract: true,
 								isSettle: isSettleStu,
 								totalAmt: res.data[0].totalAmt,
-								perTotAmt: perdData.totAmt
+                perTotAmt: perdData.totAmt,
+                totalAmtForShow: res.data[0].totalAmtForShow,
+                perTotAmtForShow: perdData.totAmtForShow,
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -259,18 +261,18 @@ export default class order_detail_page extends PureComponent {
 					if (Number(res.data.insuranceAmt)) {
 						let insuranceStsText = '';
 						let insuranceStsColor = '';
-						if (res.data.insuranceSts === '0') {
+						if (res.data.insuranceSts === '1') {
 							insuranceStsText = '待支付';
 							insuranceStsColor = '#4CA6FF';
-						} else if (res.data.insuranceSts === '1') {
+						} else if (res.data.insuranceSts === '2') {
 							insuranceStsText = '处理中';
 							insuranceStsColor = '#FBB947';
-						} else if (res.data.insuranceSts === '2') {
+						} else if (res.data.insuranceSts === '3') {
 							insuranceStsText = '已支付';
 							insuranceStsColor = '#C7C7CC';
 						}
 						this.setState({
-              isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '0',
+              isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '1',
 							insureFeeInfo: res.data.insuranceAmt,
 							insureInfo: {
 								label: {
@@ -312,7 +314,9 @@ export default class order_detail_page extends PureComponent {
 										isNewsContract: orderDtlData && orderDtlData.isNewsContract,
 										totalAmt: orderDtlData && orderDtlData.totalAmt,
 										isSettle: orderDtlData && orderDtlData.isSettle,
-										perTotAmt: orderDtlData && orderDtlData.perTotAmt
+                    perTotAmt: orderDtlData && orderDtlData.perTotAmt,
+                    perTotAmtForShow: orderDtlData && orderDtlData.perTotAmtForShow,
+                    totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow,
 									},
 									() => {
 										this.setState({
@@ -848,7 +852,9 @@ export default class order_detail_page extends PureComponent {
 			totalAmt,
 			isSettle,
 			perTotAmt,
-			isInsureValid
+      isInsureValid,
+      perTotAmtForShow,
+      totalAmtForShow,
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
@@ -858,7 +864,9 @@ export default class order_detail_page extends PureComponent {
 			isNewsContract,
 			totalAmt,
 			isSettle,
-			perTotAmt
+      perTotAmt,
+      perTotAmtForShow,
+      totalAmtForShow,
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
@@ -881,7 +889,9 @@ export default class order_detail_page extends PureComponent {
 			isNewsContract,
 			totalAmt,
 			isSettle,
-			perTotAmt
+      perTotAmt,
+      perTotAmtForShow,
+      totalAmtForShow,
 		} = this.state;
 
 		let orderDtData = {
@@ -891,7 +901,9 @@ export default class order_detail_page extends PureComponent {
 			isNewsContract,
 			totalAmt,
 			isSettle,
-			perTotAmt
+      perTotAmt,
+      perTotAmtForShow,
+      totalAmtForShow,
 		};
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
@@ -993,13 +1005,13 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			isAdvance,
 			isNewsContract,
-			totalAmt,
+			totalAmtForShow,
 			billOverDue,
 			overDueModalFlag,
 			payType,
 			payTypes,
 			openIdFlag,
-			perTotAmt,
+			perTotAmtForShow,
 			insureInfo,
       insureFeeInfo,
       isInsureValid,
@@ -1016,7 +1028,8 @@ export default class order_detail_page extends PureComponent {
 			wthdCrdNoLast = '',
 			perdNum = '',
 			waitRepAmt = '',
-			perdList
+      perdList,
+      waitRepAmtForShow = '',
 		} = billDesc;
 		const itemList = [
 			{
@@ -1160,11 +1173,11 @@ export default class order_detail_page extends PureComponent {
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
 								{isPayAll ? isNewsContract ? (
-									totalAmt && parseFloat(totalAmt).toFixed(2)
+									totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 								) : (
-									waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
+									waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
 								) : (
-									(perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
+									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 									(money && parseFloat(money).toFixed(2))
 								)}元
 							</span>
@@ -1188,11 +1201,11 @@ export default class order_detail_page extends PureComponent {
 									<span className={styles.modal_label}>本次应还总金额</span>
 									<span className={styles.modal_value}>
 										{isPayAll ? isNewsContract ? (
-											totalAmt && parseFloat(totalAmt).toFixed(2)
+											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 										) : (
-											waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
+											waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
 										) : (
-											(perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
+											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 											(money && parseFloat(money).toFixed(2))
 										)}元
 									</span>
