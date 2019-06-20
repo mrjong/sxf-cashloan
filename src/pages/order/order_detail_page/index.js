@@ -19,7 +19,7 @@ const API = {
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
-	payFrontBack: '/bill/payFrontBack', // 用户还款新接口
+	// payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	queryExtendedPayType: '/bill/queryExtendedPayType' //其他支付方式查询
 };
@@ -134,10 +134,12 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
-		const { billNo } = this.state;
+		const { billNo, billDesc } = this.state;
 		this.props.$fetch
 			.post(API.fundPlain, {
-				ordNo: billNo
+        ordNo: billNo,
+        isSettle: isPayAll,
+        prodType: billDesc.prodType
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
@@ -685,21 +687,30 @@ export default class order_detail_page extends PureComponent {
 			payType,
 			money,
 			thisPerdNum
-		} = this.state;
-		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+    } = this.state;
+    const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		let sendParams = {};
-		if (isNewsContract) {
-			if (isPayAll) {
-				sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
-			} else {
-				// 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
-				sendParams = perTotAmt
-					? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
-					: { ...repayParams, isSettle };
-			}
-		} else {
-			sendParams = repayParams;
-		}
+		// if (isNewsContract) {
+		// 	if (isPayAll) {
+		// 		sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
+		// 	} else {
+		// 		// 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
+		// 		sendParams = perTotAmt
+		// 			? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
+		// 			: { ...repayParams, isSettle };
+		// 	}
+		// } else {
+		// 	sendParams = repayParams;
+    // }
+    if (isPayAll) {
+      sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
+    } else {
+      // 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
+      sendParams = perTotAmt
+        ? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
+        : { ...repayParams, isSettle };
+    }
 		// 添加微信新增参数
 		switch (payType) {
 			case 'WXPay':
