@@ -31,12 +31,10 @@ export default class Lists extends PureComponent {
             insureFee &&
             <Item
               // className={insureFee.label.className ? styles.hasIcon : null}
-              // arrow={'empty'}
+              arrow={'empty'}
               extra={Object.prototype.toString.call(insureFee.extra) === '[object Array]' ? this.getExtra(insureFee.extra) : <span style={{ color: insureFee.extra && insureFee.extra.color }}>{insureFee.extra && insureFee.extra.name}</span>}
             >
               {insureFee.label.name}
-              {/* 隐藏占位用 */}
-              <Brief style={{visibility: 'hidden'}}>test</Brief>
             </Item>
           }
           {
