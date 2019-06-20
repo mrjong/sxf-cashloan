@@ -150,19 +150,21 @@ export default class order_detail_page extends PureComponent {
 						let isAdvance = false;
 						let isSettleStu = '';
 						if (isPayAll) {
-							if (currentStg === res.data[0].perdList.length) {
-								isAdvance = false;
-							} else {
-								isAdvance = true;
-							}
+							// if (currentStg === res.data[0].perdList.length) {
+							// 	isAdvance = false;
+							// } else {
+							// 	isAdvance = true;
+							// }
 							// 筛选出所有补偿金的数组
-							const buChangJinList = res.data[0].perdList.map((item2) =>
-								item2.feeInfos.find((item) => item.feeNm === '补偿金')
-							);
-							if (buChangJinList.find((item) => item.feeAmt !== 0)) {
+							const buChangJinList = res.data[0].totalList.find((item2) =>
+								item2.feeNm === '补偿金'
+              );
+							if (buChangJinList.feeAmt !== 0) {
+                isAdvance = true;
 								// 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
 								isSettleStu = '1';
 							} else {
+                isAdvance = false;
 								isSettleStu = '0';
 							}
 						} else {
@@ -688,8 +690,8 @@ export default class order_detail_page extends PureComponent {
 			money,
 			thisPerdNum
     } = this.state;
-    const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
-		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+    // const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+		const paybackAPI = API.payback;
 		let sendParams = {};
 		// if (isNewsContract) {
 		// 	if (isPayAll) {
@@ -1183,13 +1185,18 @@ export default class order_detail_page extends PureComponent {
 						<div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
-								{isPayAll ? isNewsContract ? (
+								{/* {isPayAll ? isNewsContract ? (
 									totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 								) : (
 									waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
 								) : (
 									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 									(money && parseFloat(money).toFixed(2))
+                )}元 */}
+                {isPayAll ? (
+									totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
+								) : (
+									perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)
 								)}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
@@ -1211,13 +1218,18 @@ export default class order_detail_page extends PureComponent {
 								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
 									<span className={styles.modal_label}>本次应还总金额</span>
 									<span className={styles.modal_value}>
-										{isPayAll ? isNewsContract ? (
+										{/* {isPayAll ? isNewsContract ? (
 											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 										) : (
 											waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
 										) : (
 											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 											(money && parseFloat(money).toFixed(2))
+                    )}元 */}
+                    {isPayAll ? (
+											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
+										) : (
+											perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)
 										)}元
 									</span>
 								</div>
