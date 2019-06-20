@@ -10,7 +10,8 @@ import {
 	checkEngaged,
 	checkIsEngagedUser,
 	saveUserInfoEngaged,
-	getMoxieData
+	getMoxieData,
+  dateDiffer,
 } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
@@ -482,7 +483,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 智能按钮点击事件
-	handleSmartClick = () => {
+	handleSmartClick = (days) => {
 		const { usrIndexInfo = {}, isNeedExamine } = this.state;
 		const { indexData } = usrIndexInfo;
 		if (usrIndexInfo.indexSts === 'LN0009') {
@@ -533,10 +534,14 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'LN0005': // 暂无代还资格
-				console.log('LN0005');
-				this.props.toast.info(
+        console.log('LN0005');
+        days && days > 60 ?
+        this.props.toast.info(
+					`您暂时没有代偿资格`
+        ) :
+        this.props.toast.info(
 					`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
-				);
+        );
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
@@ -1207,7 +1212,11 @@ export default class home_page extends PureComponent {
 			} else {
 				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
 			}
-		}
+    }
+    let differDays = '';
+    if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.netAppyDate) {
+      differDays = dateDiffer(dayjs(new Date()).format('YYYY/MM/DD'), dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD'))
+    }
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
@@ -1319,7 +1328,7 @@ export default class home_page extends PureComponent {
 					componentsDisplay = (
 						<MoneyCard
 							handleClick={() => {
-								this.handleSmartClick();
+								this.handleSmartClick(differDays);
 							}}
 							showData={{
 								btnText: '暂无借款资格',
@@ -1330,7 +1339,7 @@ export default class home_page extends PureComponent {
 								cardNoHid: cardCode,
 								bankNo: bankCode,
 								topTip:
-									usrIndexInfo.indexData.netAppyDate &&
+									usrIndexInfo.indexData.netAppyDate && differDays <= 60 &&
 									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
 							}}
 						/>
