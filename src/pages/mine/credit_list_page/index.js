@@ -312,7 +312,8 @@ export default class credit_list_page extends PureComponent {
 												) : null}
 											</div>
 											{(item.autSts !== '2' && item.operationMark === '01') ||
-											(item.cardBillSts === '02' && item.operationMark === '01') ? (
+                      (item.cardBillSts === '02' && item.operationMark === '01') ||
+                      (item.cardBillSts === '00' && item.operationMark === '01') ? (
 												<div className={styles.desc}>部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。</div>
 											) : null}
 										</div>

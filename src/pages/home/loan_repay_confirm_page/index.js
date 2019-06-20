@@ -548,17 +548,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		});
 		store.removeGotoMoxieFlag();
 	};
-
-	// placeholderText = () => {
-	// 	const { fetchBillSucc, activeTag, usrIndexInfo } = this.state;
-	// 	const { indexData } = usrIndexInfo;
-	// 	if (fetchBillSucc && activeTag === 2) {
-	// 		return `申请金额${indexData.minApplAmt || ''}-${indexData.maxApplAmt || ''}元`;
-	// 	} else {
-	// 		return ``;
-	// 	}
-	// };
-
 	updateBillInf = () => {
 		const { usrIndexInfo } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;

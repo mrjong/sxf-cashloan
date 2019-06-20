@@ -740,7 +740,7 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 		return;
   }
   // else if (indexData && indexData.cardBillSts === '00') {
-	// 	$props.toast.info(`未生成订单，请代偿其他信用卡`, 2, () => {
+	// 	$props.toast.info(`未生成账单，请代偿其他信用卡`, 2, () => {
 	// 		// 跳新版魔蝎
 	// 		goMoxieBankList();
 	// 	});
