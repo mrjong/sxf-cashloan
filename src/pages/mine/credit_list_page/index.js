@@ -28,13 +28,13 @@ export default class credit_list_page extends PureComponent {
 		this.state = {
 			autId: '', // 账单id
 			cardList: [],
-      resultLength: '',
-      showFeedbackModal: false
+			resultLength: '',
+			showFeedbackModal: false
 		};
 	}
 	componentWillMount() {
-    this.queryBankList();
-    this.showFeedbackModal()
+		this.queryBankList();
+		this.showFeedbackModal();
 	}
 	componentWillUnmount() {
 		store.removeBackUrl();
@@ -116,9 +116,9 @@ export default class credit_list_page extends PureComponent {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 		buriedPointEvent(home.addCreditCard);
-  };
+	};
 
-  showFeedbackModal = () => {
+	showFeedbackModal = () => {
 		if (store.getGotoMoxieFlag()) {
 			this.setState({
 				showFeedbackModal: true
@@ -240,16 +240,14 @@ export default class credit_list_page extends PureComponent {
 														(item.billRemainAmt > 0 &&
 															parseFloat(Number(item.billRemainAmt) * 100 / 100).toFixed(
 																2
-															)) ||
-														'已结清'
+															)) || <span style={{ fontSize: '.6rem' }}>已结清</span>
 													) : item.billRemainAmt === 0 ? (
-														'已结清'
+														<span style={{ fontSize: '.6rem' }}>已结清</span>
 													) : !isNaN(item.cardBillAmt) ? (
 														(item.cardBillAmt > 0 &&
 															parseFloat(Number(item.cardBillAmt) * 100 / 100).toFixed(
 																2
-															)) ||
-														'已结清'
+															)) || <span style={{ fontSize: '.6rem' }}>已结清</span>
 													) : (
 														item.cardBillAmt
 													)}
@@ -312,8 +310,8 @@ export default class credit_list_page extends PureComponent {
 												) : null}
 											</div>
 											{(item.autSts !== '2' && item.operationMark === '01') ||
-                      (item.cardBillSts === '02' && item.operationMark === '01') ||
-                      (item.cardBillSts === '00' && item.operationMark === '01') ? (
+											(item.cardBillSts === '02' && item.operationMark === '01') ||
+											(item.cardBillSts === '00' && item.operationMark === '01') ? (
 												<div className={styles.desc}>部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。</div>
 											) : null}
 										</div>
@@ -333,7 +331,7 @@ export default class credit_list_page extends PureComponent {
 						确认
 					</div>
 				</div>
-        <FeedbackModal
+				<FeedbackModal
 					history={this.props.history}
 					toast={this.props.toast}
 					visible={showFeedbackModal}

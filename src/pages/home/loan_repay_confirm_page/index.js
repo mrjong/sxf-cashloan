@@ -703,7 +703,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</div>
 						</div>
 						<div className={style.center}>
-							<strong className={style.billMoney}>{cardBillAmtData}</strong>
+							<strong className={style.billMoney}>
+								{(isNaN(cardBillAmtData) && (
+									<span style={{ fontSize: '.6rem' }}>{cardBillAmtData}</span>
+								)) ||
+									cardBillAmtData}
+							</strong>
 							<div className={style.billInfo}>
 								<div className={style.item}>
 									<p className={`${style.name} ${style.moneyTit}`}>剩余应还金额(元)</p>
@@ -817,6 +822,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 											usrIndexInfo: this.state.usrIndexInfo
 										})
 									) {
+										return;
+									}
+									if (this.updateBillInf()) {
 										return;
 									}
 									if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
