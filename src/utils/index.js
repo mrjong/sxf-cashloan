@@ -726,27 +726,28 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 	let state = true;
 	const { indexData = {} } = usrIndexInfo;
 	const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
-	if (indexData && indexData.persionCheck === '00') {
+	if (indexData && indexData.persionCheck && indexData.persionCheck === '00') {
 		$props.toast.info(`非本人信用卡，请代偿其他信用卡`, 2, () => {
 			// 跳新版魔蝎
 			goMoxieBankList();
 		});
 		return;
-	} else if (indexData && indexData.buidSts && indexData.buidSts === '02') {
+	} else if (
+		(indexData && indexData.buidSts && indexData.buidSts === '02') ||
+		(indexData && indexData.cardBinSupport && indexData.cardBinSupport === '00')
+	) {
 		$props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
 			// 跳新版魔蝎
 			goMoxieBankList();
 		});
 		return;
-  }
-  // else if (indexData && indexData.cardBillSts === '00') {
-	// 	$props.toast.info(`未生成账单，请代偿其他信用卡`, 2, () => {
-	// 		// 跳新版魔蝎
-	// 		goMoxieBankList();
-	// 	});
-	// 	return;
-  // }
-  else if (
+	} else if (indexData && indexData.cardBillCheck && indexData.cardBillCheck === '00') {
+		$props.toast.info(`未生成账单，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		return;
+	} else if (
 		indexData &&
 		cardBillSts === '01' &&
 		(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
