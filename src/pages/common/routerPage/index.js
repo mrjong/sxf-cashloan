@@ -10,6 +10,8 @@ import { changeHistoryState, pagesIgnore } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
 import { pageView } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
+import { Provider } from './context';
+
 let consoleshowStr = '';
 
 export default class router_Page extends PureComponent {
@@ -19,12 +21,13 @@ export default class router_Page extends PureComponent {
 			route: {},
 			newTitle: '',
 			showPage: false,
-			releaseBugs: false
+			releaseBugs: false,
+			footerTipIcon: ''
 		};
 	}
 	componentWillMount() {
 		// 为跳转到协议添加loading
-		store.setFromPage('wap')
+		store.setFromPage('wap');
 		if (!store.getHistoryRouter()) {
 			store.setHistoryRouter('first-come-in');
 		}
@@ -74,6 +77,7 @@ export default class router_Page extends PureComponent {
 					showPage: true,
 					route: { ...route },
 					component: React.createElement(component.default, {
+						globalTask: this.globalTask,
 						match,
 						history,
 						params: location.state,
@@ -115,17 +119,23 @@ export default class router_Page extends PureComponent {
 			});
 		}
 	};
+	globalTask = (type) => {
+    console.log(type)
+		this.setState({
+			footerTipIcon: type
+		});
+	};
 	render() {
 		const { component, route, newTitle, showPage = false } = this.state;
 		const { headerHide = false, footerHide = true } = route;
 		return showPage ? (
 			<div className="application_view">
 				<div className="application_page">
-					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
-					{footerHide ? null : <Footer footerProps={route} />}
-					<div className="application_content">
-						{component}
-					</div>
+					<Provider value={{ footerTipIcon: this.state.footerTipIcon }}>
+						{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
+						{footerHide ? null : <Footer footerProps={route} />}
+						<div className="application_content">{component}</div>
+					</Provider>
 				</div>
 			</div>
 		) : null;

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
+import { Consumer } from 'pages/common/routerPage/context';
 import {
 	isWXOpen,
 	getDeviceType,
@@ -27,7 +28,6 @@ import FeedbackModal from 'components/FeedbackModal';
 import TimeDown from 'components/TimeDown';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
-
 import {
 	CarouselHome,
 	BlackCard,
@@ -908,8 +908,6 @@ export default class home_page extends PureComponent {
 					AcCode: 'AC20190618_618'
 				});
 				let couponTestData = await this.props.$fetch.get(API.couponTest);
-				console.log(couponTestData);
-
 				if (ischeckEngaged.msgCode === 'PTM0000') {
 					ischeckIsEngagedUser = await checkIsEngagedUser({
 						$props: this.props,
@@ -953,6 +951,7 @@ export default class home_page extends PureComponent {
 					couponTestData.data &&
 					couponTestData.data !== '0'
 				) {
+					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
 					this.setState({
 						isShowActivityModal: true,
 						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
@@ -1096,6 +1095,14 @@ export default class home_page extends PureComponent {
 			case 'freebill': // 618活动弹框按钮
 				buriedPointEvent(activity.freeBillModalBtnClick);
 				this.props.history.push('/activity/freebill_page');
+				break;
+			case 'yhq7':
+				buriedPointEvent(activity.yhq7ModalBtnClick);
+				this.handleSmartClick();
+				break;
+			case 'yhq50':
+				buriedPointEvent(activity.yhq50ModalBtnClick);
+				this.handleSmartClick();
 				break;
 			default:
 				break;
@@ -1606,6 +1613,7 @@ export default class home_page extends PureComponent {
 					visible={showFeedbackModal}
 					closeModal={this.closeFeedbackModal}
 				/>
+				{/* <Demo globalTask={this.props.globalTask}/> */}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}

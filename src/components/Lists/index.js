@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { List } from 'antd-mobile';
 import ListDesc from '../ListDesc';
 import styles from './index.scss';
+import { Consumer } from 'pages/common/routerPage/context';
 
 export default class Lists extends PureComponent {
 	constructor(props) {
@@ -51,7 +52,20 @@ export default class Lists extends PureComponent {
 								>
 									{item.label.name}
 									{item.label.brief ? <Brief>{item.label.brief}</Brief> : null}
-									{item.label.name === '优惠劵' ? <div className={styles.rightIcon}>7折超级优惠券</div> : null}
+									{
+										<Consumer>
+											{({ footerTipIcon }) => {
+												return (
+													footerTipIcon &&
+													item.label.name === '优惠劵' && (
+														<div className={styles.rightIcon}>
+															{footerTipIcon === 'yhq7' ? '7折免息券' : '50元免息券'}
+														</div>
+													)
+												);
+											}}
+										</Consumer>
+									}
 								</Item>
 								{item.feeInfos && item.showDesc ? (
 									<div>
