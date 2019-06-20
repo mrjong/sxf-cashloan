@@ -738,13 +738,15 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 			goMoxieBankList();
 		});
 		return;
-	} else if (indexData && indexData.cardBillSts === '00') {
-		$props.toast.info(`未生成订单，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		return;
-	} else if (
+  }
+  // else if (indexData && indexData.cardBillSts === '00') {
+	// 	$props.toast.info(`未生成订单，请代偿其他信用卡`, 2, () => {
+	// 		// 跳新版魔蝎
+	// 		goMoxieBankList();
+	// 	});
+	// 	return;
+  // }
+  else if (
 		indexData &&
 		cardBillSts === '01' &&
 		(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
