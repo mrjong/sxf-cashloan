@@ -78,3 +78,33 @@
 		}
 	}
 }
+.rightIcon {
+	animation-name: fadeInRight;
+	animation-duration: .5s;
+	animation-timing-function: cubic-bezier(1, 1, 1, 1);
+	animation-iteration-count: 1;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translate(0%, -50%);
+	width: 184px;
+	height: 55px;
+	display: inline-block;
+	background: linear-gradient(90deg, rgba(252, 90, 77, 1), rgba(255, 134, 96, 1));
+	border-radius: 28px 0 0 28px;
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	color: #fff;
+	text-align: center;
+	line-height: 55px;
+}
+@keyframes fadeInRight {
+	0% {
+		right: -200px;
+	}
+
+	to {
+		right: 0;
+	}
+}
