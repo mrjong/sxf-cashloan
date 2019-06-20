@@ -492,13 +492,18 @@
 	background: #f66;
 }
 .handle_authority {
-	position: fixed;
-	bottom: 0;
+  position: fixed;
+  bottom: 0;
 	width: 100%;
 	background: #fff;
 	z-index: 2;
 	padding: 30px 0;
 }
+
+.handle_authority_relative {
+  position: relative;
+}
+
 .button {
 	width: 634px;
 	height: 100px;

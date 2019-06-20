@@ -87,7 +87,7 @@ export default class repayment_succ_page extends PureComponent {
 						<i className={styles.close_btn} onClick={this.closeModal} />
 					</Modal>
 				}
-				
+
 			</div>
 		);
 	}

@@ -129,7 +129,8 @@ export default class home_page extends PureComponent {
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
-		this.isRenderCash();
+    this.isRenderCash();
+    this.showFeedbackModal()
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -378,9 +379,6 @@ export default class home_page extends PureComponent {
 						percentData: 80,
 						showDiv: 'circle',
 						percentBtnText: data.btnText
-					},
-					() => {
-						this.showFeedbackModal();
 					}
 				);
 				break;
@@ -392,9 +390,6 @@ export default class home_page extends PureComponent {
 						percentSatus: isshow ? '1' : '',
 						showDiv: 'circle',
 						percentBtnText: data.btnText
-					},
-					() => {
-						this.showFeedbackModal();
 					}
 				);
 				break;
