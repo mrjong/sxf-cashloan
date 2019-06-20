@@ -79,9 +79,9 @@
 	}
 }
 .rightIcon {
-	animation-name: fadeInRight;
-	animation-duration: .5s;
-	animation-timing-function: cubic-bezier(1, 1, 1, 1);
+	animation-name: fadeInRightBig;
+	animation-duration: .3s;
+	animation-timing-function: cubic-bezier(.3, 1, 1, 1);
 	animation-iteration-count: 1;
 	position: absolute;
 	right: 0;
@@ -99,7 +99,7 @@
 	text-align: center;
 	line-height: 55px;
 }
-@keyframes fadeInRight {
+@keyframes fadeInRightBig {
 	0% {
 		right: -200px;
 	}

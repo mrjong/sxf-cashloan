@@ -11,7 +11,7 @@ import {
 	checkIsEngagedUser,
 	saveUserInfoEngaged,
 	getMoxieData,
-  dateDiffer,
+	dateDiffer
 } from 'utils';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
@@ -59,7 +59,8 @@ const API = {
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
-	checkKoubei: '/activeConfig/userCheck' //是否参与口碑活动,及新老用户区分
+	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
+	couponTest: '/activeConfig/couponTest' //签约测试
 };
 let token = '';
 let tokenFromStorage = '';
@@ -85,7 +86,7 @@ export default class home_page extends PureComponent {
 			percentSatus: '',
 			percent: 0,
 			showToast: false,
-			modalType: 'yhq7',
+			modalType: '',
 			modalBtnFlag: false,
 			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
@@ -96,7 +97,7 @@ export default class home_page extends PureComponent {
 			CardOverDate: false,
 			pageCode: '',
 			showAgreement: false, // 显示协议弹窗
-			isShowActivityModal: true, // 是否显示活动弹窗
+			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
 			isNeedExamine: false, // 是否需要人审
 			modal_left2: false,
@@ -534,14 +535,12 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'LN0005': // 暂无代还资格
-        console.log('LN0005');
-        days && days > 60 ?
-        this.props.toast.info(
-					`您暂时没有代偿资格`
-        ) :
-        this.props.toast.info(
-					`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
-        );
+				console.log('LN0005');
+				days && days > 60
+					? this.props.toast.info(`您暂时没有代偿资格`)
+					: this.props.toast.info(
+							`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
+						);
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
@@ -908,6 +907,8 @@ export default class home_page extends PureComponent {
 					$props: this.props,
 					AcCode: 'AC20190618_618'
 				});
+				let couponTestData = await this.props.$fetch.get(API.couponTest);
+				console.log(couponTestData);
 
 				if (ischeckEngaged.msgCode === 'PTM0000') {
 					ischeckIsEngagedUser = await checkIsEngagedUser({
@@ -946,6 +947,16 @@ export default class home_page extends PureComponent {
 								result.data.indexSts === 'LN0010')))
 				) {
 					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
+				} else if (
+					!store.getShowActivityModal() &&
+					couponTestData &&
+					couponTestData.data &&
+					couponTestData.data !== '0'
+				) {
+					this.setState({
+						isShowActivityModal: true,
+						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
+					});
 				} else if (
 					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
 					!store.getShowActivityModal() &&
@@ -1212,11 +1223,14 @@ export default class home_page extends PureComponent {
 			} else {
 				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
 			}
-    }
-    let differDays = '';
-    if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.netAppyDate) {
-      differDays = dateDiffer(dayjs(new Date()).format('YYYY/MM/DD'), dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD'))
-    }
+		}
+		let differDays = '';
+		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.netAppyDate) {
+			differDays = dateDiffer(
+				dayjs(new Date()).format('YYYY/MM/DD'),
+				dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')
+			);
+		}
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
@@ -1339,7 +1353,8 @@ export default class home_page extends PureComponent {
 								cardNoHid: cardCode,
 								bankNo: bankCode,
 								topTip:
-									usrIndexInfo.indexData.netAppyDate && differDays <= 60 &&
+									usrIndexInfo.indexData.netAppyDate &&
+									differDays <= 60 &&
 									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
 							}}
 						/>
