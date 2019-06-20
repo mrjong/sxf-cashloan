@@ -26,4 +26,10 @@ export default [
 		arrowHide: '',
 		component: () => import('pages/others/fenqi_landing_page')
 	},
+	{
+		path: '/others/moxie_pwd_guide',
+		title: '提示',
+		arrowHide: '',
+		component: () => import('pages/others/moxie_pwd_guide')
+	},
 ];

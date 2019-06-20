@@ -23,7 +23,8 @@ const API = {
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	checkEngaged: '/activeConfig/checkEngaged',
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
-	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser'
+	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser',
+	mxoieCardList: '/moxie/mxoieCardList/C'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -41,18 +42,16 @@ export const isWXOpen = () => {
 
 // 判断是否是手机打开
 export const isPhone = () => {
-  var userAgentInfo = navigator.userAgent;
-    var Agents = ["Android", "iPhone",
-                "SymbianOS", "Windows Phone",
-                "iPad", "iPod"];
-    var flag = false;
-    for (var v = 0; v < Agents.length; v++) {
-        if (userAgentInfo.indexOf(Agents[v]) > 0) {
-            flag = true;
-            break;
-        }
-    }
-    return flag;
+	var userAgentInfo = navigator.userAgent;
+	var Agents = [ 'Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod' ];
+	var flag = false;
+	for (var v = 0; v < Agents.length; v++) {
+		if (userAgentInfo.indexOf(Agents[v]) > 0) {
+			flag = true;
+			break;
+		}
+	}
+	return flag;
 };
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
@@ -208,8 +207,8 @@ const interceptRouteArr = [
 	'/home/credit_apply_succ_page',
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
-  '/home/crawl_fail_page',
-  '/order/wx_pay_success_page',
+	'/home/crawl_fail_page',
+	'/order/wx_pay_success_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -449,6 +448,7 @@ export const getOperatorStatus = ({ $props }) => {
 											// setTimeout(() => {
 											// 运营商直接返回的问题
 											SXFToast.loading('加载中...', 0);
+											store.setGotoMoxieFlag(true);
 											window.location.href =
 												result.data.url +
 												`&localUrl=${window.location.origin}&routeType=${window.location
@@ -500,10 +500,10 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			}
 		});
 		if (!needReturn) {
-			if(btnText === '继续确认身份信息') {
-				buriedPointEvent(home.continueRealInfo)
+			if (btnText === '继续确认身份信息') {
+				buriedPointEvent(home.continueRealInfo);
 			} else if (btnText === '继续导入信用卡账单') {
-				buriedPointEvent(home.billContinueImport)
+				buriedPointEvent(home.billContinueImport);
 			}
 			store.setNeedNextUrl(true);
 			// 实名
@@ -552,6 +552,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 							// setTimeout(() => {
 							// 运营商直接返回的问题
 							store.setCarrierMoxie(true);
+							store.setGotoMoxieFlag(true);
 							SXFToast.loading('加载中...', 0);
 							window.location.href =
 								result.data.url +
@@ -725,8 +726,23 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 	let state = true;
 	const { indexData = {} } = usrIndexInfo;
 	const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
-	if (indexData && indexData.buidSts && indexData.buidSts === '02') {
+	if (indexData && indexData.persionCheck && indexData.persionCheck === '00') {
+		$props.toast.info(`非本人信用卡，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		return;
+	} else if (
+		(indexData && indexData.buidSts && indexData.buidSts === '02') ||
+		(indexData && indexData.cardBinSupport && indexData.cardBinSupport === '00')
+	) {
 		$props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
+			// 跳新版魔蝎
+			goMoxieBankList();
+		});
+		return;
+	} else if (indexData && indexData.cardBillCheck && indexData.cardBillCheck === '00') {
+		$props.toast.info(`未生成账单，请代偿其他信用卡`, 2, () => {
 			// 跳新版魔蝎
 			goMoxieBankList();
 		});
@@ -773,18 +789,18 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 		});
 		state = false;
 	}
-	if(state) {
+	if (state) {
 		//卡可以提交埋点
 		buriedPointEvent(home.selectCreditCardResult, {
 			is_success: true,
 			bank_name: indexData.bankName
-		})
+		});
 	} else {
 		//卡不可以提交埋点
 		buriedPointEvent(home.selectCreditCardResult, {
 			is_success: false,
 			bank_name: indexData.bankName
-		})
+		});
 	}
 	return state;
 };
@@ -803,9 +819,11 @@ export const debounce = (method, delay) => {
 };
 
 export const generateRandomPhone = () => {
-	const chars = ['3', '5', '7', '8'];
-	return `1${chars[Math.ceil(Math.random() * 3)]}${Math.ceil(Math.random() * 9)}****${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}`
-}
+	const chars = [ '3', '5', '7', '8' ];
+	return `1${chars[Math.ceil(Math.random() * 3)]}${Math.ceil(Math.random() * 9)}****${Math.ceil(
+		Math.random() * 9
+	)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}`;
+};
 
 // 判断活动是否过期
 export const checkEngaged = ({ $props, AcCode }) => {
@@ -861,3 +879,38 @@ export const dateDiffer = (sDate1, sDate2) => {    //sDate1和sDate2是2006/12/1
   iDays = Math.floor(dateSpan / (24 * 3600 * 1000));
   return iDays
 }
+export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
+	$props.$fetch
+		.get(API.mxoieCardList)
+		.then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				if (res.data) {
+					const seleBank = res.data.filter((ele, index, array) => {
+						return ele.code === bankCode;
+					});
+					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
+					if (jumpUrl) {
+            store.setGotoMoxieFlag(true);
+						store.setAutId(seleBank[0].authorId);
+            store.setMoxieBackUrl(`/home/crawl_progress_page`);
+						// 如果银行code一致跳登录页，否则跳列表页
+						window.location.href =
+							jumpUrl +
+							`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+								`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
+							)}`;
+					} else {
+						goMoxieBankList();
+					}
+				} else {
+					$props.toast.info('系统开小差，请稍后重试');
+				}
+			} else {
+				$props.toast.info(res.msgInfo);
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			$props.toast.info('系统开小差，请稍后重试');
+		});
+};

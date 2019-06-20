@@ -1,6 +1,3 @@
-/* ========================== 公共样式 ========================== */
-
-/* ==== 协议提示文字 和 链接颜色 ==== */
 :global {
 	.protocol_tip {
 		margin-top: 0.3rem;
@@ -63,9 +60,55 @@
 			border-bottom: none;
 		}
 		html:not([data-scale]) .am-list-body::after,
-		html:not([data-scale]) .am-list-item:not(:last-child) .am-list-line::after,html:not([data-scale]) .am-list-body::before,
+		html:not([data-scale]) .am-list-item:not(:last-child) .am-list-line::after,
+		html:not([data-scale]) .am-list-body::before,
 		html:not([data-scale]) .am-list-body div:not(:last-child) .am-list-line::after {
 			background-color: #f0f1f5 !important;
+		}
+	}
+}
+:global {
+	.mins {
+		color: #ff5c50;
+		background-color: #fff;
+		border-radius: 6px;
+		font-size: 28px;
+		height: 34px;
+		width: 29px;
+		display: inline-block;
+		text-align: center;
+		font-family: 'PingFangSC-Semibold';
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 5px;
+	}
+	.jg {
+		font-size: 30px;
+		font-family: 'PingFangSC-Semibold';
+		font-weight: 300;
+		margin: 0 10px;
+		display: inline-block;
+	}
+	.credit_list_pagePopover {
+		left: 105px !important;
+		border-radius: 6px;
+		.am-popover-arrow {
+			right: 0.25rem !important;
+			background-color: #121c32;
+		}
+		width: 80%;
+		p {
+			background: #121c32;
+			color: #fff;
+			font-size: 28px;
+			font-family: 'PingFangSC-Regular';
+			font-weight: 400;
+			padding: 20px;
+		}
+	}
+	.list-extra {
+		.am-list-item .am-list-line .am-list-extra {
+			flex-basis: 50%;
 		}
 	}
 }

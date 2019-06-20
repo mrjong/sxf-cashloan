@@ -25,6 +25,9 @@
 	margin-top: -80px;
 	top: 0;
 }
+.wenhao{
+  padding: 15px;
+}
 .step_box_new {
 	position: relative;
 	margin: 80px 100px;
@@ -98,14 +101,39 @@
 				content: "";
 				display: inline-block;
 				background: #ddd;
-				// -webkit-transition: background .3s;
-				// transition: background .3s;
 				position: relative;
 				left: 2px;
 				height: 100%;
 				width: 2.5px;
 				background-color: #e0e2e6;
 			}
+    }
+    .dash_line {
+			position: absolute;
+			left: 14px;
+			top: -10px;
+			height: 100%;
+			width: 1PX;
+			padding: 30px 0 4px;
+			&::after {
+				content: "";
+				display: inline-block;
+				position: relative;
+				left: 2px;
+				height: 100%;
+				width: 100px;
+        border-left: 1PX dashed #e0e2e6;
+			}
+    }
+    i {
+      display: inline-block;
+			width: 24px;
+			height: 24px;
+			background-image: url(./img/wh.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+      position: relative;
+      left: 0;
 		}
 		.desc {
 			color: #868e9e;

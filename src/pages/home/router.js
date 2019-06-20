@@ -1,7 +1,7 @@
 export default [
 	{
 		path: '/home/home',
-		title: '还卡',
+		title: '借钱还信用卡',
 		footerHide: false,
 		arrowHide: 'empty',
 		component: () => import('pages/home/home_page')

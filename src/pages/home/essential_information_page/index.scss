@@ -33,7 +33,7 @@
 
 	.sureBtn {
 		width: 6.2rem;
-		margin-top: 89px;
+		margin: 50px auto 30px;
 		&:active {
 			opacity: .5;
 		}
@@ -43,28 +43,39 @@
 		}
 	}
 	.adsImg {
+		position: relative;
 		width: 670px;
 		margin: 25px auto 0;
-		img{
+		img {
 			width: 100%;
 			vertical-align: top;
 		}
+		.text {
+			position: absolute;
+			bottom: 10px;
+			color: #fff;
+			font-size: 24px;
+			left: 38px;
+			font-family: 'PingFangSC-Regular';
+			font-weight: 400;
+			letter-spacing: 2px;
+		}
 	}
-	.operatorCont{
+	.operatorCont {
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		background: #F7F8FA;
+		background: #f7f8fa;
 		z-index: 100;
 		padding-top: 24px;
 	}
-	.quitText{
+	.quitText {
 		font-size: 30px;
 		color: rgba(65, 74, 83, 1);
 		margin: 30px auto 27px;
 		text-align: center;
 	}
-	.nextBtn{
+	.nextBtn {
 		width: 634px;
 		&:active {
 			opacity: .5;

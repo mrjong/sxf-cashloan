@@ -1,61 +1,73 @@
 @import "../../../assets/styles/scss/base/fn.scss";
 .page_inner_wrap {
-	padding: 40px 30px 0;
+	padding: 0 30px 0;
 }
-
+.pageWrapper {
+	padding-bottom: 200px;
+	input::placeholder {
+    font-size: 32px;
+    padding-top: 16px;
+    // color: #999;
+    // line-height: 1.4;
+		// font-size: 0.32rem;
+	}
+}
+.titleBg {
+	background-image: url(./img/titleBg.png);
+	background-repeat: no-repeat;
+	background-size: 166px 50px;
+	width: 166px;
+	// position: absolute;
+	top: 20px;
+	height: 50px;
+	font-size: 26px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	text-align: center;
+	color: #fff;
+	line-height: 50px;
+}
 .bankCard {
+	&.heightSelect {
+		padding: 0 30px;
+		.titleBg {
+			position: absolute;
+			top: 30px;
+			z-index: 1;
+		}
+	}
+
+	position: relative;
 	width: 690px;
-	min-height: 289px;
+	// height: 348px;
 	background: rgba(255, 255, 255, 1);
-	box-shadow: 0 7px 27px 0 rgba(207, 207, 207, 0.54);
 	border-radius: 12px;
 	box-sizing: border-box;
-	padding: 0 30px;
-	margin-bottom: 60px;
+	padding: 30px 30px 10px;
+	margin-top: 30px;
 
 	.top {
 		position: relative;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		height: 90px;
+    height: 100px;
+    margin-top: 20px;
 		&::after {
-			@include setBottomLine(#e5e5e5);
+			@include setBottomLine(#F0F1F5);
+			left: -30px;
+			width: calc(100% + 60px);
 		}
-
-		// .name {
-		//   font-size: 30px;
-		//   color: #333;
-		//   vertical-align: middle;
-		// }
-
-		// .lastNo {
-		//   font-size: 24px;
-		//   color: #999;
-		//   margin-left: 15px;
-		// }
-	}
-
-	.billTitle {
-		font-size: 24px;
-		color: #999;
-		// margin: 30px 0 20px;
-		line-height: 1;
 	}
 
 	.billMoney {
-		// display: inline-block;
-		// font-size: 80px;
-		// color: #333;
-		// font-weight: normal;
-		// margin-bottom: 70px;
-		// line-height: 1;
-		font-family: 'DINMitAlt';
+		font-family: "DINMitAlt";
 		display: block;
 		font-weight: normal;
 		font-size: 80px;
 		color: #121c32;
-		margin-top: 20px;
+		line-height: 1.3;
+    margin-top: 10px;
 	}
 
 	.billInfo {
@@ -64,47 +76,27 @@
 		justify-content: space-between;
 		align-items: center;
 		line-height: 1;
-		padding-bottom: 30px;
-		&::after {
-			@include setBottomLine(#e5e5e5);
-		}
+		padding-bottom: 10px;
 
 		.item {
-			// display: flex;
-			// flex-direction: column;
-			// justify-content: space-between;
-
 			.value {
 				font-size: 30px;
 				color: #121c32;
 				font-weight: bold;
-				font-family: 'PingFangSC-Medium';
+				font-family: "PingFangSC-Medium";
 			}
 
 			.name {
 				font-size: 24px;
-				color: #121c32;
+				color: #868e9e;
 				line-height: 1.4;
-				// margin-top: 10px;
 			}
 			.moneyTit {
 				color: #868e9e;
 				font-size: 24px;
+				letter-spacing: 2px;
 				font-weight: 400;
 			}
-		}
-	}
-
-	.bottom {
-		display: flex;
-		align-items: center;
-		height: 80px;
-		justify-content: space-between;
-		font-size: 30px;
-		color: #333;
-
-		.rightArrow {
-			width: 40px;
 		}
 	}
 	.bankBox {
@@ -113,16 +105,59 @@
 		font-size: 30px;
 		font-weight: 400;
 		color: #121c32;
+		.lastNo {
+			margin-left: 15px;
+			font-size: 30px;
+		}
+	}
+	.inputBox {
+		text-align: left;
+    position: relative;
+    margin-top: 20px;
+		&:after {
+			@include setBottomLine();
+		}
+		.dw {
+			font-size: 40px;
+			position: absolute;
+			top: 20px;
+			left: 0;
+			z-index: 1;
+		}
+		.edit_icon {
+			width: 32px;
+			height: 32px;
+			position: absolute;
+			top: 0.3rem;
+			right: 0;
+			z-index: 1;
+			background-image: url(./img/edit_icon.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
 	}
 	.cardNumBox {
-		display: flex;
+		top: 30px;
+		position: absolute;
+		right: 30px;
 		align-items: center;
 		font-size: 30px;
 		font-weight: 500;
+		padding-right: 30px;
 		color: #121c32;
 		.rightArrow {
 			width: 40px;
+			top: -6px;
+			position: absolute;
 			color: #121c32;
+		}
+		span {
+			font-size: 30px;
+			font-family: 'PingFangSC-Medium';
+			font-weight: 500;
+			&:active {
+				opacity: .6;
+			}
 		}
 	}
 
@@ -147,51 +182,6 @@
 	}
 }
 
-.tagList {
-	display: flex;
-	justify-content: space-between;
-	margin: 86px 0 80px;
-	.tagButton {
-		display: inline-block;
-		width: 180px;
-		height: 50px;
-		line-height: 48px;
-		text-align: center;
-		border-radius: 25px;
-		font-size: 30px;
-		background: #fff;
-		color: #f66;
-		border: 1px solid #f66;
-		box-sizing: border-box;
-	}
-	.activeTag {
-		color: #fff;
-		background: #f66;
-	}
-}
-
-.confirmApplyBtn {
-	width: 620px;
-	margin-top: 80px;
-}
-
-.progressWrap {
-	width: 210px;
-	overflow: hidden;
-	font-size: 24px;
-	color: #333;
-
-	.percentTitleWrap {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.percentNum {
-		color: #3e8cec;
-		margin-left: 5px;
-	}
-}
-
 :global {
 	.loan_repay_confirm_page {
 		.am-progress-bar {
@@ -213,16 +203,6 @@
 				margin-left: 15px;
 				@include setArrow(right, 15px, #a9aeb6, 1px);
 				border-color: #333;
-			}
-		}
-
-		.blackColor {
-			.am-input-control input,
-			.am-list-extra {
-				color: #333;
-			}
-			.am-input-control .fake-input-container .fake-input.fake-input-disabled {
-				color: #333;
 			}
 		}
 
@@ -260,6 +240,46 @@
 		}
 	}
 }
+.repayTypeBox {
+	margin-top: 10px;
+	display: flex;
+	text-align: center;
+	.item {
+		width: 100%;
+		justify-content: space-between;
+		position: relative;
+		&::after {
+			@include setRightLine(#C9CDD5);
+      top: 15px;
+      bottom: 15px;
+		}
+		&:last-child {
+			&::after {
+				border: none;
+			}
+		}
+	}
+	.money {
+		color: #868e9e;
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		margin-left: 10px;
+	}
+	.desc {
+		color: #868e9e;
+		font-size: 22px;
+		padding: 0 .1rem;
+		font-family: 'PingFangSC-Regular';
+    font-weight: 400;
+	}
+	.title {
+		color: #397be6;
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+	}
+}
 .money_input {
 	position: relative;
 	.desc {
@@ -268,46 +288,6 @@
 		left: 0;
 		color: #999;
 		font-size: 24px;
-	}
-}
-.repayTypeBox {
-	position: relative;
-	display: flex;
-	align-items: center;
-	height: 110px;
-	justify-content: space-between;
-	font-size: 30px;
-	font-weight: 400;
-	color: #121c32;
-	.value {
-		display: flex;
-		align-items: center;
-    font-size: 30px;
-		font-family: 'PingFangSC-Medium';
-		font-weight: 600;
-		.unChecked {
-			display: block;
-			width: 34px;
-			height: 34px;
-			background: url('../../../assets/images/home/unChecked_ico.png') no-repeat center;
-			background-size: 100%;
-			margin-left: 16px;
-		}
-		.unChecked2 {
-			margin-top: 10px;
-		}
-		.checked {
-			background-image: url('../../../assets/images/home/checked_ico.png');
-		}
-	}
-	.special_val {
-		width: 450px;
-	}
-	.unit {
-		margin-left: 10px;
-	}
-	&:after {
-		@include setBottomLine();
 	}
 }
 .dayProd {
@@ -349,10 +329,6 @@
 		transform: translate(-50%);
 	}
 }
-.disabledBtn {
-  color: #fff;
-  background-color: #D8D8D8;
-}
 // modal样式覆盖
 :global {
 	.money_input_loan {
@@ -370,7 +346,7 @@
 
 		.am-list-item {
 			padding-left: 0;
-			height: 108px;
+			height: 110px;
 			.am-list-line {
 				padding-right: 0;
 			}
@@ -394,76 +370,38 @@
 				color: #333;
 				opacity: 1;
 			}
-			.am-input-control input,
-			.am-list-extra {
-				font-size: 0.3rem;
-				color: #000;
-				opacity: 1;
-			}
 		}
 
 		.am-list-item .am-input-control input {
-			text-align: right;
+			font-family: "DINMitAlt";
+			color: #121c32;
+      font-size: 50px;
+      line-height: 1.4;
+			padding-left: 50px;
 		}
 
 		.am-list-item.am-list-item-middle.blackColor .am-list-line {
 			&:after {
 				display: none;
-				// @include setBottomLine();
-				// background-color: transparent;
 			}
-		}
-	}
-	.zijian {
-		.am-progress-bar {
-			border: 0.04rem solid #ffda58;
 		}
 	}
 }
 
 .border_bottom {
 	position: relative;
-	&::after {
-		@include setBottomLine();
-	}
-}
-
-.subDesc {
-	font-size: 24px;
-	color: #c7c6cc;
-	text-align: center;
-	margin-top: 30px;
-}
-.modalLoading {
-	color: #666;
-	margin-bottom: 15px;
-	font-size: 32px;
 }
 .modal_left {
-	// float: left;
-	// min-height: 760px;
 	background: #fff;
-	// width: 50%;
 	transition: all 0.3s;
 }
 .modal_left1 {
 	margin-left: -50%;
 }
 .modal_box {
-	// width: 200%;
 	width: 100%;
 	overflow: hidden;
 	height: 585px;
-}
-.modal_right {
-	// float: left;
-	min-height: 760px;
-	background: #fff;
-	// width: 50%;
-	transition: all 0.3s;
-}
-.modal_left2 {
-	margin-left: 0%;
 }
 
 .modal_header {
@@ -540,9 +478,6 @@
 }
 .listitem {
 	position: relative;
-	// margin-top: 10px;
-	// color: #333;
-	// padding: 15px 35px;
 	width: 120px;
 	height: 70px;
 	line-height: 70px;
@@ -551,75 +486,69 @@
 	font-size: 30px;
 	font-weight: 600;
 	color: #f66;
-	// &::after {
-	//   @include setBottomLine();
-	//   left: 30px;
-	// }
-	// .checkIcon {
-	//   width: 30px;
-	//   height: 26px;
-	//   position: absolute;
-	//   right: 20px;
-	//   top: 20px;
-	//   @include spriteIcon('../../../assets/images/common/sprite_icon.png',-295px, -474px);
-	// }
 }
 .listActiveItem {
 	color: #fff;
 	background: #f66;
 }
-.tagList {
-	display: flex;
-	justify-content: space-between;
-	margin: 56px 30px 40px;
-	.tagButton {
-		display: inline-block;
-		width: 180px;
-		height: 50px;
-		line-height: 48px;
-		text-align: center;
-		border-radius: 25px;
-		font-size: 30px;
-		background: #fff;
-		color: #f66;
-		border: 1px solid #f66;
-		box-sizing: border-box;
-	}
-	.activeTag {
-		color: #fff;
-		background: #f66;
-	}
-}
-.modal_btn_box {
-	margin: 60px auto 36px;
-	width: 620px;
+.handle_authority {
+  position: fixed;
+  bottom: 0;
+	width: 100%;
+	background: #fff;
+	z-index: 2;
+	padding: 30px 0;
 }
 
-.modal_Vip {
-	text-align: left;
-	padding: 80px 30px;
+.handle_authority_relative {
+  position: relative;
+}
+
+.button {
+	width: 634px;
+	height: 100px;
+	background-color: #ebde74;
+	border-radius: 50px;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 100px;
+	vertical-align: middle;
+	color: #121c32;
+	font-size: 36px;
+	font-family: 'PingFangSC-Semibold';
+	font-weight: 600;
+}
+.disabledBtn {
+	color: #fff;
+	background-color: #d8d8d8;
+}
+.freeService {
+	background-color: #fff;
+	margin-top: 30px;
+	border-radius: 4px;
+	display: flex;
+	padding: 30px;
+	justify-content: space-between;
 	.title {
-		font-size: 34px;
-		font-family: "PingFangSC-Regular";
-		color: #333;
-		margin-bottom: 24px;
+		font-size: 30px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		position: relative;
+		i {
+			padding: 3px;
+			width: 24px;
+			height: 24px;
+			background-image: url(./img/wh.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: absolute;
+			right: -25px;
+			top: 8px;
+		}
 	}
 	.desc {
-		font-size: 32px;
-		line-height: 60px;
-		color: #6c6c6c;
-	}
-	.btn_box {
-		display: flex;
-		margin-top: 250px;
-		.btn_item {
-			&:first-child {
-				background-color: #fff;
-				color: #333;
-				border: 1px solid #ebde74;
-			}
-			margin: 0 40px;
-			flex: 1;
-		}
+		font-size: 30px;
+		font-family: 'PingFangSC-Medium';
+		font-weight: 500;
 	}
 }

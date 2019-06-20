@@ -12,7 +12,6 @@ import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-// const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 let initDialog = (errMsg) => {
 	let obj = new PopUp(
 		(
@@ -25,31 +24,65 @@ let initDialog = (errMsg) => {
 						className: 'rob-btn rob-btn-danger rob-btn-circle'
 					}
 				]}
-				onRequestClose={(res) => {
-					console.log(res);
+				onRequestClose={(res, questionName) => {
 					switch (location.pathname) {
 						case '/home/loan_repay_confirm_page':
-							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
-								pageTitle: '借钱还信用卡'
-							});
+							switch (questionName) {
+								case '再等等':
+									buriedPointEvent(home.dialogLoanRepay_wait);
+									break;
+								case '关闭':
+									buriedPointEvent(home.dialogLoanRepay_close);
+									break;
+								default:
+									buriedPointEvent(home.dialogLoanRepay, {
+										questionName
+									});
+									break;
+							}
 							break;
 						case '/home/essential_information':
-							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
-								pageTitle: '基本信息认证'
-							});
+							switch (questionName) {
+								case '再等等':
+									buriedPointEvent(home.dialogInformation_wait, {
+										questionName
+									});
+									break;
+								case '关闭':
+									buriedPointEvent(home.dialogInformation_close, {
+										questionName
+									});
+									break;
+								default:
+									buriedPointEvent(home.dialogInformation, {
+										questionName
+									});
+									break;
+							}
 							break;
 						case '/home/moxie_bank_list_page':
-							buriedPointEvent(!res ? home.userRetrieveQuit : home.userRetrieveContinue, {
-								pageTitle: '银行列表'
-							});
+							switch (questionName) {
+								case '再等等':
+									buriedPointEvent(home.dialogMoxieBank_wait, {
+										questionName
+									});
+									break;
+								case '关闭':
+									buriedPointEvent(home.dialogMoxieBank_close, {
+										questionName
+									});
+									break;
+								default:
+									buriedPointEvent(home.dialogMoxieBank, {
+										questionName
+									});
+									break;
+							}
 							break;
-
 						default:
 							break;
 					}
-					console.log(location.pathname, '---------');
 					if (!res) {
-						const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
@@ -120,8 +153,7 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
-				if (store.getBankMoxie()) {
-					// 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
+				if (store.getBankMoxie()) { // 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
 					// 银行卡直接返回的问题
 					store.removeBankMoxie();
 					window.ReactRouterHistory.push('/home/home');
@@ -139,7 +171,9 @@ if (window.history && window.history.pushState) {
 					return;
 				}
 				document.activeElement.blur();
-				obj.show();
+				if(!store.getGotoMoxieFlag()) {
+				  obj.show();
+        }
 				return;
 			}
 
@@ -154,8 +188,10 @@ if (window.history && window.history.pushState) {
 					store.removeBankMoxie();
 					return;
 				}
-				document.activeElement.blur();
-				obj.show();
+        document.activeElement.blur();
+        if(!store.getGotoMoxieFlag()) {
+				  obj.show();
+        }
 				return;
 			}
 
@@ -278,6 +314,7 @@ if (window.history && window.history.pushState) {
 				// 	window.ReactRouterHistory.push('/mine/mine_page');
 				// 	break;
 				case '/mine/credit_list_page':
+          if(store.getGotoMoxieFlag()) return; // 如何页面弹出反馈窗则拦截
 					if (store.getToggleMoxieCard()) {
 						window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
 						return;
