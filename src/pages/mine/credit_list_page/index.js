@@ -199,7 +199,7 @@ export default class credit_list_page extends PureComponent {
 															((item.persionCheck === '00' && '非本人卡') ||
 																(item.cardBinSupport === '00' && '暂不支持该信用卡') ||
 																(item.cardBillCheck === '00' && '新卡未生成账单') ||
-																(item.moneyCheck === '00' && `最低可借${item.minProd}元`))}
+																(item.moneyCheck === '00' && `账单小于${item.minProd}元`))}
 														{item.operationMark === '00' ? (
 															<Popover
 																placement="bottomRight"
@@ -214,7 +214,7 @@ export default class credit_list_page extends PureComponent {
 																			(item.cardBillCheck === '00' &&
 																				'该信用卡暂未生成账单，请添加其他信用卡或生成账单后使用还到。') ||
 																			(item.moneyCheck === '00' &&
-																				`还到最低可借款金额${item.minProd}元，请添加其他收款信用卡。`)}
+																				`账单小于最低可借金额${item.minProd}元，请添加其他收款信用卡。`)}
 																	</p>
 																]}
 															>
