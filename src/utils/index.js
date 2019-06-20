@@ -880,7 +880,8 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 					});
 					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
 					if (jumpUrl) {
-						store.setGotoMoxieFlag(true);
+            store.setGotoMoxieFlag(true);
+            store.setMoxieBackUrl(`/home/crawl_progress_page`);
 						// 如果银行code一致跳登录页，否则跳列表页
 						window.location.href =
 							jumpUrl +
