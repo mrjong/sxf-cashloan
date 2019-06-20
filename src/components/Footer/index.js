@@ -23,6 +23,7 @@ function TabItem(props) {
         className={styles.title}
         style={{ color: window.location.pathname === data.url ? '#6A6D70' : '#CECFD3' }}
       >
+      <span className={styles.icon_top}></span>
         {data.title}
       </div>
     </NavLink>

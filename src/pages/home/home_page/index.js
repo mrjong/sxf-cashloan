@@ -85,7 +85,7 @@ export default class home_page extends PureComponent {
 			percentSatus: '',
 			percent: 0,
 			showToast: false,
-			modalType: '',
+			modalType: 'yhq7',
 			modalBtnFlag: false,
 			// handleMoxie: false, // 触发跳转魔蝎方法
 			percentData: 0,
@@ -96,7 +96,7 @@ export default class home_page extends PureComponent {
 			CardOverDate: false,
 			pageCode: '',
 			showAgreement: false, // 显示协议弹窗
-			isShowActivityModal: false, // 是否显示活动弹窗
+			isShowActivityModal: true, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
 			isNeedExamine: false, // 是否需要人审
 			modal_left2: false,
