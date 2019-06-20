@@ -12,6 +12,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import arrow from './img/arrow.png';
 import { getMoxieData } from 'utils';
+import FeedbackModal from 'components/FeedbackModal';
 import mock from './mock.js';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -27,11 +28,13 @@ export default class credit_list_page extends PureComponent {
 		this.state = {
 			autId: '', // 账单id
 			cardList: [],
-			resultLength: ''
+      resultLength: '',
+      showFeedbackModal: false
 		};
 	}
 	componentWillMount() {
-		this.queryBankList();
+    this.queryBankList();
+    this.showFeedbackModal()
 	}
 	componentWillUnmount() {
 		store.removeBackUrl();
@@ -113,10 +116,25 @@ export default class credit_list_page extends PureComponent {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 		buriedPointEvent(home.addCreditCard);
+  };
+
+  showFeedbackModal = () => {
+		if (store.getGotoMoxieFlag()) {
+			this.setState({
+				showFeedbackModal: true
+			});
+		}
+	};
+
+	closeFeedbackModal = () => {
+		this.setState({
+			showFeedbackModal: false
+		});
+		store.removeGotoMoxieFlag();
 	};
 
 	render() {
-		let { autId } = this.state;
+		let { autId, showFeedbackModal } = this.state;
 		console.log(autId, 'autId');
 		return (
 			<div className={styles.credit_list_page}>
@@ -314,6 +332,12 @@ export default class credit_list_page extends PureComponent {
 						确认
 					</div>
 				</div>
+        <FeedbackModal
+					history={this.props.history}
+					toast={this.props.toast}
+					visible={showFeedbackModal}
+					closeModal={this.closeFeedbackModal}
+				/>
 			</div>
 		);
 	}
