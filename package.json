@@ -12,6 +12,7 @@
 		"express": "^4.16.4",
 		"js-cookie": "^2.2.0",
 		"mini-css-extract-plugin": "^0.5.0",
+		"pretty-quick": "^1.11.1",
 		"prop-types": "^15.6.1",
 		"raven-js": "^3.27.0",
 		"react": "^16.4.0",
@@ -104,9 +105,13 @@
 		"push-test": "rm -rf node_modules && yarn && npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
-    "precommit": "lint-staged",
-    "prettify": "prettier --fix --write 'src/**/*.js'"
-	},
+		"prettify": "prettier --fix --write 'src/**/*.js'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
 	"repository": {
 		"type": "git"
 	},
