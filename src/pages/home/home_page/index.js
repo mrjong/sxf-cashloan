@@ -119,6 +119,7 @@ export default class home_page extends PureComponent {
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
 		this.isRenderCash();
+		this.showFeedbackModal();
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -357,31 +358,21 @@ export default class home_page extends PureComponent {
 				break;
 
 			case 1: // 新用户，运营商未授权/基本信息未认证
-				this.setState(
-					{
-						percentSatus: '2',
-						percentData: 80,
-						showDiv: 'circle',
-						percentBtnText: data.btnText
-					},
-					() => {
-						this.showFeedbackModal();
-					}
-				);
+				this.setState({
+					percentSatus: '2',
+					percentData: 80,
+					showDiv: 'circle',
+					percentBtnText: data.btnText
+				});
 				break;
 
 			case 2: // 新用户，信用卡未授权
-				this.setState(
-					{
-						percentData: 98,
-						percentSatus: isshow ? '1' : '',
-						showDiv: 'circle',
-						percentBtnText: data.btnText
-					},
-					() => {
-						this.showFeedbackModal();
-					}
-				);
+				this.setState({
+					percentData: 98,
+					percentSatus: isshow ? '1' : '',
+					showDiv: 'circle',
+					percentBtnText: data.btnText
+				});
 				break;
 			case 3: // 显示信用卡爬取进度
 				// 获取爬取卡的进度
