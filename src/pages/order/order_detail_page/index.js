@@ -51,11 +51,9 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail: false, // 是否展示弹框中的明细详情
 			isAdvance: false, // 是否提前还款
 			isNewsContract: false, // 是否签署的是新合同
-			isSettle: '0', // 是否结清
 			totalAmt: '', // 一键结清传给后台的总金额
 			billOverDue: '', //逾期弹窗标志
 			overDueModalFlag: '', // 信用施压弹框标识
-			perTotAmt: '', // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
 			payType: '',
 			payTypes: [ 'BankPay' ],
 			openIdFlag: '',
@@ -63,6 +61,7 @@ export default class order_detail_page extends PureComponent {
 			insureInfo: '',
       insureFeeInfo: '',
       isInsureValid: false, // 是否有保费并且为待支付状态
+      totalAmtForShow: '',
 		};
 	}
 	componentWillMount() {
@@ -138,56 +137,29 @@ export default class order_detail_page extends PureComponent {
 		this.props.$fetch
 			.post(API.fundPlain, {
         ordNo: billNo,
-        isSettle: isPayAll,
+        isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
         prodType: billDesc.prodType
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					if (res.data) {
-						// 如果data不为空则为签署的是新合同,否则为旧合同，则收银台不展示详情，还款也为/bill/payback老接口
-						const currentStg = res.data[0].currentLenth;
-						const perdData = res.data[0].perdList[currentStg - 1];
+            // 现在统一取totalList里的明细，仅适用于按期还，不适用于跳跃还的
+            // 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
 						let isAdvance = false;
-						let isSettleStu = '';
-						if (isPayAll) {
-							// if (currentStg === res.data[0].perdList.length) {
-							// 	isAdvance = false;
-							// } else {
-							// 	isAdvance = true;
-							// }
-							// 筛选出所有补偿金的数组
-							const buChangJinList = res.data[0].totalList.find((item2) =>
-								item2.feeNm === '补偿金'
-              );
-							if (buChangJinList.feeAmt !== 0) {
-                isAdvance = true;
-								// 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
-								isSettleStu = '1';
-							} else {
-                isAdvance = false;
-								isSettleStu = '0';
-							}
-						} else {
-							// perdSts 0为未到期 1为已逾期 2为处理中 3为已撤销 4为已还清
-							// 如果该期补偿金不为0，那么是提前还款，否则不是
-							if (perdData.feeInfos.find((item) => item.feeNm === '补偿金').feeAmt) {
-								isAdvance = true;
-								isSettleStu = '1';
-							} else {
-								isAdvance = false;
-								isSettleStu = '0';
-							}
-						}
+						const buChangJinList = res.data[0].totalList.find((item2) =>
+              item2.feeNm === '补偿金'
+            );
+            if (buChangJinList.feeAmt !== 0) {
+              isAdvance = true;
+            } else {
+              isAdvance = false;
+            }
 						this.setState(
 							{
-								detailArr: isPayAll ? res.data[0].totalList : perdData.feeInfos,
+								detailArr: res.data[0].totalList,
 								isAdvance,
-								isNewsContract: true,
-								isSettle: isSettleStu,
 								totalAmt: res.data[0].totalAmt,
-                perTotAmt: perdData.totAmt,
                 totalAmtForShow: res.data[0].totalAmtForShow,
-                perTotAmtForShow: perdData.totAmtForShow,
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -317,9 +289,6 @@ export default class order_detail_page extends PureComponent {
 										isAdvance: orderDtlData && orderDtlData.isAdvance,
 										isNewsContract: orderDtlData && orderDtlData.isNewsContract,
 										totalAmt: orderDtlData && orderDtlData.totalAmt,
-										isSettle: orderDtlData && orderDtlData.isSettle,
-                    perTotAmt: orderDtlData && orderDtlData.perTotAmt,
-                    perTotAmtForShow: orderDtlData && orderDtlData.perTotAmtForShow,
                     totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow,
 									},
 									() => {
@@ -683,9 +652,7 @@ export default class order_detail_page extends PureComponent {
 			isPayAll,
 			isNewsContract,
 			repayParams,
-			isSettle,
 			totalAmt,
-			perTotAmt,
 			payType,
 			money,
 			thisPerdNum
@@ -705,13 +672,10 @@ export default class order_detail_page extends PureComponent {
 		// } else {
 		// 	sendParams = repayParams;
     // }
-    if (isPayAll) {
-      sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
+    if (isPayAll) { // 一键结清isSettle为1， 否则为0
+      sendParams = { ...repayParams, isSettle: '1', thisRepTotAmt: totalAmt };
     } else {
-      // 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
-      sendParams = perTotAmt
-        ? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
-        : { ...repayParams, isSettle };
+      sendParams = { ...repayParams, isSettle: '0', thisRepTotAmt: totalAmt }
     }
 		// 添加微信新增参数
 		switch (payType) {
@@ -753,12 +717,7 @@ export default class order_detail_page extends PureComponent {
 					store.setOrderSuccess({
 						isPayAll,
 						thisPerdNum,
-						thisRepTotAmt: isPayAll
-							? isNewsContract
-								? totalAmt && parseFloat(totalAmt).toFixed(2)
-								: billDesc.waitRepAmt && parseFloat(billDesc.waitRepAmt).toFixed(2)
-							: (perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
-								(money && parseFloat(money).toFixed(2)),
+						thisRepTotAmt: parseFloat(totalAmt).toFixed(2),
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
@@ -863,10 +822,7 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-			isSettle,
-			perTotAmt,
       isInsureValid,
-      perTotAmtForShow,
       totalAmtForShow,
 		} = this.state;
 		let orderDtData = {
@@ -876,9 +832,6 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-			isSettle,
-      perTotAmt,
-      perTotAmtForShow,
       totalAmtForShow,
 		};
 		store.setBackUrl('/order/order_detail_page');
@@ -901,9 +854,6 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-			isSettle,
-      perTotAmt,
-      perTotAmtForShow,
       totalAmtForShow,
 		} = this.state;
 
@@ -913,9 +863,6 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-			isSettle,
-      perTotAmt,
-      perTotAmtForShow,
       totalAmtForShow,
 		};
 		store.setOrderDetailData(orderDtData);
@@ -1024,7 +971,6 @@ export default class order_detail_page extends PureComponent {
 			payType,
 			payTypes,
 			openIdFlag,
-			perTotAmtForShow,
 			insureInfo,
       insureFeeInfo,
       isInsureValid,
@@ -1135,7 +1081,7 @@ export default class order_detail_page extends PureComponent {
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>
 						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
-						{/* 包含保费,并且保费为待支付状态 */}
+						{/* 包含保费,并且保费为待支付状态 perdList[perdNum - 1].perdTotAmt 与 money 取最小值？ */}
 						{isInsureValid && (
 							<div className={styles.message}>
 								此次主动还款，将用于还第
@@ -1143,7 +1089,7 @@ export default class order_detail_page extends PureComponent {
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
 								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>
-									{perdList && perdNum && (parseFloat(perdList[perdNum - 1].perdTotAmt) + parseFloat(insureFeeInfo)).toFixed(2)}
+									{perdList && perdNum && (parseFloat(Math.min(money, perdList[perdNum - 1].perdTotAmt)) + parseFloat(insureFeeInfo)).toFixed(2)}
 								</span>元
 							</div>
 						)}
@@ -1155,7 +1101,7 @@ export default class order_detail_page extends PureComponent {
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
 								期账单，请保证卡内余额大于<span className={styles.red}>
-									{perdList && perdNum && parseFloat(perdList[perdNum - 1].perdTotAmt).toFixed(2)}
+									{perdList && perdNum && parseFloat(Math.min(money, perdList[perdNum - 1].perdTotAmt)).toFixed(2)}
 								</span>元
 							</div>
 						)}
@@ -1193,11 +1139,7 @@ export default class order_detail_page extends PureComponent {
 									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 									(money && parseFloat(money).toFixed(2))
                 )}元 */}
-                {isPayAll ? (
-									totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
-								) : (
-									perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)
-								)}元
+                {totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
@@ -1226,11 +1168,7 @@ export default class order_detail_page extends PureComponent {
 											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 											(money && parseFloat(money).toFixed(2))
                     )}元 */}
-                    {isPayAll ? (
-											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
-										) : (
-											perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)
-										)}元
+                    {totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
 									</span>
 								</div>
 							</div>
@@ -1282,7 +1220,7 @@ export default class order_detail_page extends PureComponent {
 							<div className={styles.modal_weixin}>
 								<div className={styles.modal_label}>还款方式</div>
 								<div className={styles.flex_div}>
-									{payTypes.includes('WXPay') ? (
+									{payTypes.includes('WXPay') && !isInsureValid ? (
 										<div
 											className={
 												payType === 'WXPay' ? (
