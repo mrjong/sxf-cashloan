@@ -88,7 +88,9 @@ export default class dazhuanpan_page extends PureComponent {
 			count:
 				store.getRewardCount() && Number(store.getRewardCount()) > 0
 					? store.getRewardCount()
-					: !store.getRewardCount() ? 1 : 0
+					: !store.getRewardCount()
+					? 1
+					: 0
 		});
 		// 初始化大转盘活动
 		this.getConfigList();
@@ -146,32 +148,34 @@ export default class dazhuanpan_page extends PureComponent {
 
 	// 大转盘活动-用户抽奖剩余次数查询
 	getCount = () => {
-		this.props.$fetch.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true }).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				if (res.data.data.count && Number(res.data.data.count) > 0) {
-					this.getDraw(res.data.data.count);
+		this.props.$fetch
+			.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true })
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					if (res.data.data.count && Number(res.data.data.count) > 0) {
+						this.getDraw(res.data.data.count);
+					} else {
+						buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+							draw_result: '已用尽'
+						});
+						store.setRewardCount(0);
+						this.setState({
+							count: '0',
+							type: 'no_chance'
+						});
+					}
 				} else {
-					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-						draw_result: '已用尽'
-					});
-					store.setRewardCount(0);
-					this.setState({
-						count: '0',
-						type: 'no_chance'
-					});
+					if (res.msgCode === 'PTM1000') {
+						Cookie.remove('fin-v-card-token');
+						this.onloadZhuan();
+					} else if (res.msgCode === 'PTM0100') {
+						this.onloadZhuan();
+						Cookie.remove('fin-v-card-token');
+					} else {
+						Toast.info(res.msgInfo);
+					}
 				}
-			} else {
-				if (res.msgCode === 'PTM1000') {
-					Cookie.remove('fin-v-card-token');
-					this.onloadZhuan();
-				} else if (res.msgCode === 'PTM0100') {
-					this.onloadZhuan();
-					Cookie.remove('fin-v-card-token');
-				} else {
-					Toast.info(res.msgInfo);
-				}
-			}
-		});
+			});
 	};
 	isAuthFunc = (callBack, type) => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
@@ -187,8 +191,8 @@ export default class dazhuanpan_page extends PureComponent {
 				if (!query.appId || !query.token) {
 					this.setState({
 						type: 'login_tip'
-                    });
-                    buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+					});
+					buriedPointEvent(activity.dazhuanpan_316_draw_result, {
 						draw_result: '请先登录'
 					});
 					return;
@@ -290,7 +294,7 @@ export default class dazhuanpan_page extends PureComponent {
 						this.state.numdeg +
 						(this.state.awardList.length - index) * deg +
 						deg / 2 +
-						(360 - this.state.numdeg % 360),
+						(360 - (this.state.numdeg % 360)),
 					time: 7.5
 				},
 				() => {
@@ -375,7 +379,16 @@ export default class dazhuanpan_page extends PureComponent {
 		this.child = ref;
 	};
 	render() {
-		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
+		const {
+			awardList,
+			time,
+			transformType,
+			type,
+			userAwardList,
+			allUsersAward,
+			count,
+			alert_img
+		} = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
 				<SmsAlert
@@ -387,7 +400,7 @@ export default class dazhuanpan_page extends PureComponent {
 								draw_result: '暂无资格'
 							});
 							Toast.info('暂无活动资格');
-						},
+						}
 					}}
 					validateMposCb={{
 						PTM9000: () => {
@@ -443,7 +456,9 @@ export default class dazhuanpan_page extends PureComponent {
 								<ol>
 									<li>1.活动时间：2019年3月16日-3月24日;</li>
 									<li>2.活动对象：活动期间注册[还到]的用户</li>
-									<li>3.活动描述：所有符合条件的用户均有1次抽奖机会，抽中的现金奖品实时下发，您可到随行付还到—我的—我的钱包中查看。</li>
+									<li>
+										3.活动描述：所有符合条件的用户均有1次抽奖机会，抽中的现金奖品实时下发，您可到随行付还到—我的—我的钱包中查看。
+									</li>
 								</ol>
 							</div>
 							<div
