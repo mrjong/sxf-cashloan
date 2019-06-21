@@ -272,10 +272,10 @@ export default class login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
-								className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									rules: [ { required: true, message: '请输入正确验证码' } ]
+									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
 									this.setState({
@@ -286,11 +286,9 @@ export default class login_page extends PureComponent {
 							/>
 							<div
 								className={
-									this.state.timers.indexOf('s') === -1 ? (
-										styles.smsCode
-									) : (
-										[ styles.smsCode, styles.smsCode2 ].join(' ')
-									)
+									this.state.timers.indexOf('s') === -1
+										? styles.smsCode
+										: [styles.smsCode, styles.smsCode2].join(' ')
 								}
 								onClick={() => {
 									this.state.timeflag ? this.getTime(59) : '';
@@ -303,17 +301,15 @@ export default class login_page extends PureComponent {
 						<div className={styles.sureBtn} onClick={this.goLogin}>
 							<span>查看额度</span>
 						</div>
-						<i className={[ styles.commonLine, styles.leftTopLine ].join(' ')} />
-						<i className={[ styles.commonLine, styles.rightTopLine ].join(' ')} />
-						<i className={[ styles.commonLine, styles.leftBottomLine ].join(' ')} />
-						<i className={[ styles.commonLine, styles.rightBottomLine ].join(' ')} />
+						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
 				</div>
 				<div className={styles.agreement}>
 					<i
-						className={
-							this.state.isChecked ? styles.checked : [ styles.checked, styles.nochecked ].join(' ')
-						}
+						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
 						onClick={this.checkAgreement}
 					/>
 					<div className={styles.agreementCont}>
