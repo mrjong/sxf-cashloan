@@ -1,0 +1,246 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.modal {
+	.mask {
+		position: fixed;
+		background-color: rgba(0, 0, 0, 0.5);
+		margin: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999;
+	}
+	.modalWrapper {
+		position: fixed;
+		width: 620px;
+		height: 680px;
+		border-radius: 10px;
+		padding: 26px 30px 0;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1000;
+		background-color: #fff;
+		box-sizing: border-box;
+
+		h2 {
+			text-align: center;
+			font-size: 36px;
+			color: #333;
+			margin-bottom: 16px;
+		}
+
+		ol {
+			height: 550px;
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		li {
+			font-size: 30px;
+			color: #6c6c6c;
+			&.redText {
+				font-size: 30px;
+				font-weight: 500;
+				text-align: center;
+				color: rgb(250, 62, 33);
+				line-height: 42px;
+			}
+		}
+		.closeBtn {
+			width: 68px;
+			height: 68px;
+			position: absolute;
+			bottom: -100px;
+			left: 50%;
+			transform: translate(-50%, 0%);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
+		}
+	}
+}
+.main {
+	position: relative;
+	background: linear-gradient(180deg, rgba(250, 97, 72, 1) 0%, rgba(250, 50, 19, 1) 100%);
+	.activity_bg {
+		width: 100%;
+		// z-index: -1;
+	}
+	.rule {
+		position: absolute;
+		right: 0;
+		top: 16px;
+		color: #fa5535;
+		font-size: 30px;
+		width: 166px;
+		height: 51px;
+		background: #ffeb36;
+		border-radius: 26px 0 0 26px;
+		line-height: 51px;
+		text-align: center;
+		z-index: 2;
+	}
+	.couponContainer {
+		position: relative;
+		z-index: 1;
+		.couponBox {
+			padding: 42px 48px 30px;
+			background: #fff;
+			border-radius: 20px;
+			margin: 0 40px;
+			.couponTit {
+				font-size: 26px;
+				color: rgba(230, 41, 99, 1);
+				span {
+					font-size: 30px;
+					font-weight: 600;
+				}
+			}
+			.imgContainer {
+				position: relative;
+				margin-top: 44px;
+			}
+			.couponBg {
+				width: 100%;
+			}
+			.getBtn {
+				position: absolute;
+				width: 104px;
+				right: 18px;
+				top: 24px;
+			}
+		}
+	}
+	.mt_500 {
+		margin-top: -450px;
+	}
+	.card_box {
+		margin: 0 auto;
+		text-align: center;
+		img {
+			position: relative;
+			width: 95%;
+			display: inline-block;
+		}
+	}
+	.btn_box {
+		margin-top: -10px;
+		text-align: center;
+		a {
+			width: 540px;
+			display: inline-block;
+			font-family: 'PingFangSC-Semibold';
+			font-weight: 600;
+			color: rgba(168, 23, 0, 1);
+			line-height: 50px;
+			text-decoration: none;
+			background: linear-gradient(180deg, rgba(255, 239, 51, 1) 0%, rgba(253, 173, 88, 1) 100%);
+			box-shadow: 0 4px 10px 0 rgba(123, 26, 11, 0.6), 0 -3px 15px 0 rgba(255, 255, 255, 0.26);
+			border-radius: 59px;
+			padding: 20px;
+
+			animation-name: breath; /* 动画名称 */
+			animation-duration: 1s; /* 动画时长3秒 */
+			animation-timing-function: ease-in-out; /* 动画速度曲线：以低速开始和结束 */
+			animation-iteration-count: infinite; /* 播放次数：无限 */
+
+			/* Safari and Chrome */
+			-webkit-animation-name: breath; /* 动画名称 */
+			-webkit-animation-duration: 1s; /* 动画时长3秒 */
+			-webkit-animation-timing-function: ease-in-out; /* 动画速度曲线：以低速开始和结束 */
+			-webkit-animation-iteration-count: infinite; /* 播放次数：无限 */
+		}
+	}
+	@keyframes breath {
+		from {
+			transform: scale(0.95);
+		} /* 动画开始时 */
+		50% {
+			transform: scale(1.05);
+		} /* 动画50% 时 */
+		to {
+			transform: scale(0.95);
+		} /* 动画结束时 */
+	}
+
+	@-webkit-keyframes breath {
+		from {
+			transform: scale(0.95);
+		} /* 动画开始时 */
+		50% {
+			transform: scale(1.05);
+		} /* 动画50% 时 */
+		to {
+			transform: scale(0.95);
+		} /* 动画结束时的 */
+	}
+	.btn_bottom_text {
+		text-align: center;
+		font-size: 30px;
+		font-family: 'PingFangSC-Semibold';
+		font-weight: 400;
+		color: rgba(255, 255, 255, 1);
+		margin: 20px 0 60px;
+	}
+	.footer_text {
+		line-height: 37px;
+		padding: 0 30px;
+		margin-top: -10px;
+		font-size: 26px;
+		span {
+			color: #feee3a;
+		}
+	}
+	.footer_b_text {
+		font-size: 34px;
+		text-align: center;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		color: rgba(255, 255, 255, 1);
+		line-height: 55px;
+		margin-top: 60px;
+	}
+	.footer_h_text {
+		text-align: center;
+		padding: 0 0 40px;
+		width: 500px;
+		margin: 70px auto 0;
+		border-top: 1px solid #fff;
+		font-size: 24px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		color: rgba(255, 255, 255, 1);
+		line-height: 33px;
+		.text {
+			display: inline-block;
+			position: relative;
+			top: -18px;
+			padding: 0 10px;
+			background: #fa3314;
+		}
+	}
+	.tipText {
+		text-align: center;
+	}
+	.tipWrapper {
+		width: 5rem;
+		height: 2rem;
+	}
+}
+
+@keyframes slide {
+	0% {
+		top: 280px;
+	}
+	100% {
+		top: 50px;
+	}
+}
+
+@keyframes shake {
+	0% {
+		top: 0;
+	}
+	100% {
+		top: 15px;
+	}
+}
