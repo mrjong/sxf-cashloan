@@ -110,8 +110,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "pretty-quick prettier --fix --write --staged",
-			"lint": "eslint --fix"
+			"pre-commit": "pretty-quick  --staged"
 		}
 	},
 	"repository": {
