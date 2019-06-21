@@ -12,7 +12,6 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
-import logoImg from 'assets/images/common/black_logo.png';
 import { setBackGround } from 'utils/background';
 let timmer;
 const API = {
