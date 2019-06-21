@@ -11,9 +11,7 @@ import Carousels from 'components/Carousels';
 import style from './index.scss';
 import mockData from './mockData';
 import { createForm } from 'rc-form';
-import CountDownBox from 'components/CountDownBox';
 import FeedbackModal from 'components/FeedbackModal';
-import TimeDown from 'components/TimeDown';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
 import {
@@ -101,7 +99,6 @@ export default class home_page extends PureComponent {
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
 			userMaxAmt: '', // 最高可申请还款金(元)
-			DownTime321: false,
 			showFeedbackModal: false
 		};
 	}
@@ -1406,13 +1403,7 @@ export default class home_page extends PureComponent {
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				)}
-				<TimeDown
-					onRef={(ref) => {
-						this.child = ref;
-					}}
-				/>
 				{this.componentsAddCards()}
-				{DownTime321 ? <CountDownBox /> : null}
 				<FeedbackModal
 					history={this.props.history}
 					toast={this.props.toast}
