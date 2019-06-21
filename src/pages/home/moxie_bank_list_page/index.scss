@@ -103,7 +103,16 @@
 		overflow: hidden;
 		padding-bottom: 50px;
 		.bankitem {
-			padding: 15px 0;
+      position: relative;
+      padding: 15px 0;
+      .recommend_icon {
+        position: absolute;
+        display: inline-block;
+        right: 44px;
+        top: 0;
+        width: 54px;
+        height: 28px;
+      }
 			img {
 				width: 80px;
 			}
