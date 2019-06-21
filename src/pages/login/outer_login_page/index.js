@@ -18,6 +18,9 @@ let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
   sendsms: '/cmm/sendsms'
+
+
+
 };
 
 @setBackGround('#fff')
@@ -171,7 +174,6 @@ export default class login_page extends PureComponent {
 	//获得手机验证码
 	getTime(i) {
 		if (!this.getSmsCode(i)) {
-			return;
 		}
 	}
 
@@ -210,7 +212,7 @@ export default class login_page extends PureComponent {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: i-- + 's' });
+						this.setState({ flag: false, timers: `${i--}s` });
 						if (i === -1) {
 							clearInterval(timmer);
 							this.setState({ timers: '重新获取', timeflag: true, flag: true });
@@ -242,38 +244,38 @@ export default class login_page extends PureComponent {
 		const { getFieldProps } = this.props.form;
 		return (
 			<div ref="loginWrap" className={styles.dc_landing_page}>
-				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				<div ref="loginContent" className={styles.content}>
-					<div className={styles.loginContentBox}>
-						<p className={styles.title}>最高可借额度(元)</p>
+    <img className={styles.banner} src={bannerImg} alt="落地页banner" />
+    <div ref="loginContent" className={styles.content}>
+  <div className={styles.loginContentBox}>
+  <p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
 						<InputItem
-							disabled={this.state.disabledInput}
-							id="inputPhone"
-							maxLength="13"
-							type="phone"
+      disabled={this.state.disabledInput}
+      id="inputPhone"
+      maxLength="13"
+      type="phone"
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
-							{...getFieldProps('phoneValue', {
+      {...getFieldProps('phoneValue', {
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !this.state.disabledInput && this.validatePhone }
 								]
 							})}
-							onBlur={() => {
+      onBlur={() => {
 								this.setState({
 									inputFocus: false
 								});
 								handleInputBlur();
 							}}
-						/>
-						<div className={styles.smsBox}>
-							<InputItem
-								id="inputCode"
+    />
+  <div className={styles.smsBox}>
+      <InputItem
+      id="inputCode"
 								type="number"
 								maxLength="6"
-								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-								placeholder="请输入短信验证码"
+      className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+      placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
@@ -283,38 +285,38 @@ export default class login_page extends PureComponent {
 									});
 									handleInputBlur();
 								}}
-							/>
+    />
 							<div
-								className={
+      className={
 									this.state.timers.indexOf('s') === -1
 										? styles.smsCode
 										: [styles.smsCode, styles.smsCode2].join(' ')
 								}
-								onClick={() => {
+      onClick={() => {
 									this.state.timeflag ? this.getTime(59) : '';
 								}}
-							>
-								{this.state.timers}
-								<i className={styles.leftBorder} />
-							</div>
-						</div>
-						<div className={styles.sureBtn} onClick={this.goLogin}>
+    >
+      {this.state.timers}
+      <i className={styles.leftBorder} />
+    </div>
+    </div>
+  <div className={styles.sureBtn} onClick={this.goLogin}>
 							<span>查看额度</span>
-						</div>
+      </div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
 						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+  <i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
 						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
 				</div>
-				<div className={styles.agreement}>
+    <div className={styles.agreement}>
 					<i
-						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
+        className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
 						onClick={this.checkAgreement}
-					/>
-					<div className={styles.agreementCont}>
+      />
+  <div className={styles.agreementCont}>
 						阅读并接受
-						<span
+  <span
 							onClick={() => {
 								this.go('register_agreement_page');
 							}}
@@ -325,12 +327,12 @@ export default class login_page extends PureComponent {
 							onClick={() => {
 								this.go('privacy_agreement_page');
 							}}
-						>
+    >
 							《随行付用户隐私权政策》
-						</span>
+    </span>
 					</div>
 				</div>
-			</div>
+  </div>
 		);
 	}
 }

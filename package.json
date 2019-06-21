@@ -108,8 +108,7 @@
     "prettify": "prettier --fix --write 'src/**/*.js'"
 	},
 	"repository": {
-		"type": "git",
-		"url": "http://39.107.12.15/dai_zx/mercloan-page.git"
+		"type": "git"
 	},
 	"author": "suixingpay",
 	"license": "ISC",
