@@ -20,8 +20,6 @@ const API = {
   sendsms: '/cmm/sendsms'
 
 
-
-
 };
 
 @setBackGround('#fff')
