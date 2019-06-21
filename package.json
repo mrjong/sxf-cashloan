@@ -108,11 +108,6 @@
 		"precommit": "lint-staged",
 		"prettify": "prettier --fix --write 'src/**/*.js'"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "pretty-quick --staged"
-		}
-	},
 	"repository": {
 		"type": "git"
 	},
