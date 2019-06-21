@@ -151,16 +151,16 @@ export default class credit_list_page extends PureComponent {
 							/>
 						) : null}
 
-						<div className={[ styles.card_tit ].join(' ')}>
+						<div className={[styles.card_tit].join(' ')}>
 							选择收款信用卡
 							<div
 								onClick={this.goToNewMoXie}
-								className={[
-									styles.addCard,
-									`${this.state.resultLength === 0 ? styles.noCardTip_ : ''}`
-								].join(' ')}
+								className={[styles.addCard, `${this.state.resultLength === 0 ? styles.noCardTip_ : ''}`].join(
+									' '
+								)}
 							>
-								<i />添加信用卡
+								<i />
+								添加信用卡
 								{this.state.resultLength === 0 ? (
 									<div className={styles.imgbox}>
 										<img src={arrow} />
@@ -187,9 +187,9 @@ export default class credit_list_page extends PureComponent {
 									>
 										<div className={styles.cardContainer}>
 											<div
-												className={`${item.operationMark === '00'
-													? styles.dis
-													: ''} ${isSelected ? styles.active : ''} ${styles.cardBox} `}
+												className={`${item.operationMark === '00' ? styles.dis : ''} ${
+													isSelected ? styles.active : ''
+												} ${styles.cardBox} `}
 											>
 												<div className={styles.bankNameBox}>
 													<span className={`${icoClass} ${styles.bank_icon}`} />
@@ -199,7 +199,7 @@ export default class credit_list_page extends PureComponent {
 															((item.persionCheck === '00' && '非本人卡') ||
 																(item.cardBinSupport === '00' && '暂不支持该信用卡') ||
 																(item.cardBillCheck === '00' && '新卡未生成账单') ||
-																(item.moneyCheck === '00' && `最低可借${item.minProd}元`))}
+																(item.moneyCheck === '00' && `账单小于${item.minProd}元`))}
 														{item.operationMark === '00' ? (
 															<Popover
 																placement="bottomRight"
@@ -210,11 +210,11 @@ export default class credit_list_page extends PureComponent {
 																		{(item.persionCheck === '00' &&
 																			'仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。') ||
 																			(item.cardBinSupport === '00' &&
-																				'暂不支持该类型信用卡，请添加其他银联信用卡。') ||
+																				'暂不支持该类型信用卡，请添加其他收款信用卡。') ||
 																			(item.cardBillCheck === '00' &&
 																				'该信用卡暂未生成账单，请添加其他信用卡或生成账单后使用还到。') ||
 																			(item.moneyCheck === '00' &&
-																				`还到最低可借款金额${item.minProd}元，请添加其他收款信用卡。`)}
+																				`账单小于最低可借金额${item.minProd}元，请添加其他收款信用卡。`)}
 																	</p>
 																]}
 															>
@@ -232,22 +232,22 @@ export default class credit_list_page extends PureComponent {
 													(item.operationMark === '01' && item.cardBillSts === '00') ? (
 														<span style={{ fontSize: '.6rem' }}>需更新账单</span>
 													) : item.cardBillCheck === '00' &&
-													item.operationMark === '00' &&
-													item.persionCheck !== '00' &&
-													item.cardBinSupport !== '00' ? (
+													  item.operationMark === '00' &&
+													  item.persionCheck !== '00' &&
+													  item.cardBinSupport !== '00' ? (
 														<span style={{ fontSize: '.6rem' }}>----.--</span>
 													) : item.billRemainAmt && !isNaN(item.billRemainAmt) ? (
 														(item.billRemainAmt > 0 &&
-															parseFloat(Number(item.billRemainAmt) * 100 / 100).toFixed(
-																2
-															)) || <span style={{ fontSize: '.6rem' }}>已结清</span>
+															parseFloat((Number(item.billRemainAmt) * 100) / 100).toFixed(2)) || (
+															<span style={{ fontSize: '.6rem' }}>已结清</span>
+														)
 													) : item.billRemainAmt === 0 ? (
 														<span style={{ fontSize: '.6rem' }}>已结清</span>
 													) : !isNaN(item.cardBillAmt) ? (
 														(item.cardBillAmt > 0 &&
-															parseFloat(Number(item.cardBillAmt) * 100 / 100).toFixed(
-																2
-															)) || <span style={{ fontSize: '.6rem' }}>已结清</span>
+															parseFloat((Number(item.cardBillAmt) * 100) / 100).toFixed(2)) || (
+															<span style={{ fontSize: '.6rem' }}>已结清</span>
+														)
 													) : (
 														item.cardBillAmt
 													)}
@@ -256,14 +256,16 @@ export default class credit_list_page extends PureComponent {
 												(item.cardBillSts === '02' && item.operationMark === '01') ||
 												(item.cardBillSts === '00' && item.operationMark === '01') ? (
 													<div
-														onClick={// 跳银行登录页面
-														() => {
-															getMoxieData({
-																bankCode: item.bankNo,
-																$props: this.props,
-																goMoxieBankList: this.goMoxieBankList
-															});
-														}}
+														onClick={
+															// 跳银行登录页面
+															() => {
+																getMoxieData({
+																	bankCode: item.bankNo,
+																	$props: this.props,
+																	goMoxieBankList: this.goMoxieBankList
+																});
+															}
+														}
 														className={styles.updateBtn}
 													>
 														更新账单
@@ -273,9 +275,7 @@ export default class credit_list_page extends PureComponent {
 												<span>
 													<span className={styles.bank_number}>
 														{item.beforeCard4No ? (
-															<span style={{ marginRight: '.2rem' }}>
-																{item.beforeCard4No}
-															</span>
+															<span style={{ marginRight: '.2rem' }}>{item.beforeCard4No}</span>
 														) : (
 															<span style={{ marginRight: '.2rem' }}>****</span>
 														)}
@@ -286,20 +286,18 @@ export default class credit_list_page extends PureComponent {
 														{item.last ? <span>{item.last}</span> : <span>****</span>}
 													</span>
 													<span className={styles.bank_date}>
-														还款日：{(item.autSts !== '2' && item.operationMark === '01') ||
+														还款日：
+														{(item.autSts !== '2' && item.operationMark === '01') ||
 														(item.cardBillSts === '02' && item.operationMark === '01') ||
-														(item.cardBillSts === '00' && item.operationMark === '01') ? (
-															'待更新'
-														) : item.cardBillCheck === '00' &&
-														item.operationMark === '00' &&
-														item.persionCheck !== '00' &&
-														item.cardBinSupport !== '00' ? (
-															'----/--/--'
-														) : (
-															(item.cardBillDt &&
-																dayjs(item.cardBillDt).format('YYYY/MM/DD')) ||
-															'----/--/--'
-														)}
+														(item.cardBillSts === '00' && item.operationMark === '01')
+															? '待更新'
+															: item.cardBillCheck === '00' &&
+															  item.operationMark === '00' &&
+															  item.persionCheck !== '00' &&
+															  item.cardBinSupport !== '00'
+															? '----/--/--'
+															: (item.cardBillDt && dayjs(item.cardBillDt).format('YYYY/MM/DD')) ||
+															  '----/--/--'}
 													</span>
 												</span>
 												{item.operationMark === '01' && isSelected ? (
@@ -312,7 +310,9 @@ export default class credit_list_page extends PureComponent {
 											{(item.autSts !== '2' && item.operationMark === '01') ||
 											(item.cardBillSts === '02' && item.operationMark === '01') ||
 											(item.cardBillSts === '00' && item.operationMark === '01') ? (
-												<div className={styles.desc}>部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。</div>
+												<div className={styles.desc}>
+													部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。
+												</div>
 											) : null}
 										</div>
 									</li>

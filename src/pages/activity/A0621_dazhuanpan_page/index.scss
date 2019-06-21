@@ -1,0 +1,181 @@
+/* stylelint-disable */
+@import '../../../assets/styles/scss/base/fn.scss';
+.dazhuanpan {
+	overflow: scroll;
+	user-select: none;
+	.bg {
+		position: relative;
+		.rule_btn {
+			position: absolute;
+			top: 15px;
+			right: 0;
+			font-size: 24px;
+			background: rgba(0, 0, 0, 0.5);
+			color: #fff;
+			line-height: 1.4;
+			padding: 10px 10px 10px 20px;
+			border-top-left-radius: 0.3rem;
+			border-bottom-left-radius: 0.3rem;
+		}
+		.img {
+			display: block;
+			width: 100%;
+		}
+		.hd_box {
+			position: absolute;
+			top: 355px;
+			width: 100%;
+		}
+		.zp_bg_box {
+			transform: scale(0.95);
+			overflow: hidden;
+			position: absolute;
+			top: 80px;
+			.zp_bg {
+				width: 100%;
+				display: block;
+			}
+			.zp_btn {
+				position: absolute;
+				width: 200px;
+				top: 50%;
+				left: 50%;
+				z-index: 10;
+				display: block;
+				margin-top: -40px;
+				transform: translate(-50%, -50%);
+			}
+			.zp_box {
+				position: absolute;
+				top: 0;
+				will-change: transform;
+				width: 100%;
+				height: 100%;
+				opacity: 0.8;
+				border-radius: 50%;
+				.img1 {
+					position: absolute;
+					top: 0%;
+					left: 50%;
+					height: 50%;
+					transform-origin: 0 100%;
+					z-index: 10;
+				}
+			}
+		}
+		.myAward {
+			text-align: center;
+			position: absolute;
+			transform: translate(-50%, 0);
+			left: 50%;
+			top: 820px;
+			span {
+				width: 237px;
+				font-size: 36px;
+				letter-spacing: 3px;
+				color: #fff;
+				/* styleli*/
+				background: rgba(255, 175, 75, 1);
+				background: -moz-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: -webkit-gradient(
+					left top,
+					left bottom,
+					color-stop(0%, rgba(255, 175, 75, 1)),
+					color-stop(100%, rgba(244, 128, 51, 1))
+				);
+				background: -webkit-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: -o-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: -ms-linear-gradient(top, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				background: linear-gradient(to bottom, rgba(255, 175, 75, 1) 0%, rgba(244, 128, 51, 1) 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient(
+						startColorstr='#ffaf4b',
+						endColorstr='#f48033',
+						GradientType=0
+					);
+				padding: 10px 20px;
+				border-radius: 6px;
+				font-weight: 500;
+				display: inline-block;
+				margin-top: 30px;
+			}
+		}
+		.xieyi_box {
+			font-size: 24px;
+			color: #2a847c;
+			position: absolute;
+			transform: translate(-50%, 0);
+			left: 50%;
+			top: 990px;
+			.xieyi {
+				color: #f48733;
+			}
+		}
+		.submitBtn {
+			position: absolute;
+			top: 1750px;
+			width: 500px;
+			height: 110px;
+			color: #2a847c;
+			font-size: 30px;
+			font-weight: normal;
+			left: 50%;
+			margin: 0 auto;
+			transform: translate(-50%, 0);
+		}
+
+		.message_bottom {
+			font-size: 0.26rem;
+			position: absolute;
+			letter-spacing: 0.04rem;
+			width: 80%;
+			left: 50%;
+			top: 60px;
+			transform: translate(-50%, 0);
+			margin: 0 auto;
+			text-align: center;
+			color: #2a847c;
+			span {
+				color: #d1567c;
+			}
+		}
+	}
+}
+.get_rule_desc {
+	margin: 50px 25px;
+}
+.active_img_box {
+	img {
+		display: block;
+		width: 80%;
+		margin: 200px auto;
+	}
+}
+
+.modal {
+	.closeBtn {
+		width: 68px;
+		height: 68px;
+		position: absolute;
+		bottom: -100px;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
+	}
+}
+
+:global {
+	.modal_rule {
+		li {
+			margin-top: 15px;
+		}
+		&.am-modal.am-modal-transparent {
+			width: 90%;
+		}
+		.am-modal-content {
+			text-align: left;
+		}
+		.am-modal-body {
+			line-height: 1.7;
+		}
+	}
+}

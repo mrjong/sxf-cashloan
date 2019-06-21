@@ -12,7 +12,6 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
-import logoImg from 'assets/images/common/black_logo.png';
 import { setBackGround } from 'utils/background';
 let timmer;
 const API = {
@@ -171,7 +170,6 @@ export default class login_page extends PureComponent {
 	//获得手机验证码
 	getTime(i) {
 		if (!this.getSmsCode(i)) {
-			return;
 		}
 	}
 
@@ -210,7 +208,7 @@ export default class login_page extends PureComponent {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: i-- + 's' });
+						this.setState({ flag: false, timers: `${i--}s` });
 						if (i === -1) {
 							clearInterval(timmer);
 							this.setState({ timers: '重新获取', timeflag: true, flag: true });

@@ -2,19 +2,7 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { Consumer } from 'pages/common/routerPage/context';
-import {
-	isWXOpen,
-	getDeviceType,
-	getNextStr,
-	isCanLoan,
-	checkEngaged,
-	checkIsEngagedUser,
-	saveUserInfoEngaged,
-	getMoxieData,
-	dateDiffer
-} from 'utils';
-import { isMPOS } from 'utils/common';
+import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
@@ -39,7 +27,6 @@ import {
 	AddCards,
 	ExamineCard
 } from './components';
-import linkConf from 'config/link.conf';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	qryPerdRate: '/bill/prod',
@@ -132,6 +119,7 @@ export default class home_page extends PureComponent {
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
 		this.isRenderCash();
+		this.showFeedbackModal();
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -247,11 +235,7 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						if (
-							code === '1' &&
-							!store.getFQActivity() &&
-							this.state.usrCashIndexInfo.indexSts === 'CN0003'
-						) {
+						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
 							store.setFQActivity(true);
 							this.setState({
 								modalType: 'xianjin',
@@ -374,31 +358,21 @@ export default class home_page extends PureComponent {
 				break;
 
 			case 1: // 新用户，运营商未授权/基本信息未认证
-				this.setState(
-					{
-						percentSatus: '2',
-						percentData: 80,
-						showDiv: 'circle',
-						percentBtnText: data.btnText
-					},
-					() => {
-						this.showFeedbackModal();
-					}
-				);
+				this.setState({
+					percentSatus: '2',
+					percentData: 80,
+					showDiv: 'circle',
+					percentBtnText: data.btnText
+				});
 				break;
 
 			case 2: // 新用户，信用卡未授权
-				this.setState(
-					{
-						percentData: 98,
-						percentSatus: isshow ? '1' : '',
-						showDiv: 'circle',
-						percentBtnText: data.btnText
-					},
-					() => {
-						this.showFeedbackModal();
-					}
-				);
+				this.setState({
+					percentData: 98,
+					percentSatus: isshow ? '1' : '',
+					showDiv: 'circle',
+					percentBtnText: data.btnText
+				});
 				break;
 			case 3: // 显示信用卡爬取进度
 				// 获取爬取卡的进度
@@ -540,7 +514,7 @@ export default class home_page extends PureComponent {
 					? this.props.toast.info(`您暂时没有代偿资格`)
 					: this.props.toast.info(
 							`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
-						);
+					  );
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
@@ -550,20 +524,14 @@ export default class home_page extends PureComponent {
 			case 'LN0007': // 放款中
 				console.log('LN0007');
 				let title =
-					indexData.repayType === '0' ? `预计60秒完成放款` : `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
+					indexData.repayType === '0'
+						? `预计60秒完成放款`
+						: `${dayjs(indexData.repayDt).format('YYYY年MM月DD日')}完成放款`;
 				let desc = indexData.repayType === '0' ? `超过2个工作日没有放款成功，可` : '如有疑问，可';
 				this.props.history.push({
 					pathname: '/home/loan_apply_succ_page',
 					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
 				});
-
-				// if (isNeedExamine) {
-				// 	this.props.history.push('/home/loan_apply_succ_page');
-				// } else {
-				// 	this.props.toast.info(
-				// 		`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`
-				// 	);
-				// }
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
@@ -738,98 +706,6 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	getACmianxi = async () => {
-		let ischeckEngaged = await checkEngaged({
-			$props: this.props,
-			AcCode: 'AC20190618_mianxi'
-		});
-		if (ischeckEngaged.msgCode === 'PTM0000') {
-			let ischeckIsEngagedUser = await checkIsEngagedUser({
-				$props: this.props,
-				AcCode: 'AC20190618_mianxi'
-			});
-			if (
-				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
-				ischeckIsEngagedUser.data &&
-				ischeckIsEngagedUser.data.isEngagedUser === '1'
-			) {
-				// 需要弹窗
-				this.setState({
-					modalType: 'freebill',
-					isShowActivityModal: true
-				});
-			}
-		}
-	};
-	// 618 逻辑处理
-	getAC618 = async (ischeckEngagedCopy, ischeckIsEngagedUserCopy) => {
-		if (store.getAC20190618() || !store.getShowActivityModal()) {
-			this.getAC618_split(ischeckEngagedCopy, ischeckIsEngagedUserCopy);
-		}
-	};
-	// 618 倒计时
-	getAC618_split = async (ischeckEngagedCopy, ischeckIsEngagedUserCopy) => {
-		let ischeckEngaged =
-			ischeckEngagedCopy ||
-			(await checkEngaged({
-				$props: this.props,
-				AcCode: 'AC20190618_618'
-			}));
-		if (ischeckEngaged.msgCode === 'PTM0000') {
-			let ischeckIsEngagedUser =
-				ischeckIsEngagedUserCopy ||
-				(await checkIsEngagedUser({
-					$props: this.props,
-					AcCode: 'AC20190618_618'
-				}));
-			if (
-				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
-				ischeckIsEngagedUser.data &&
-				ischeckIsEngagedUser.data.isEngagedUser === '1'
-			) {
-				// 未参与
-				if (!store.getAC20190618()) {
-					// 需要弹窗
-					this.setState({
-						modalType: 'jd618',
-						isShowActivityModal: true
-					});
-				} else {
-					// 不需要弹窗
-					let issaveUserInfoEngaged = await saveUserInfoEngaged({
-						$props: this.props,
-						AcCode: 'AC20190618_618'
-					});
-					if (issaveUserInfoEngaged.msgCode === 'PTM0000') {
-						this.setState(
-							{
-								DownTime321: true
-							},
-							() => {
-								store.removeAC20190618();
-								store.removeShowActivityModal();
-								setTimeout(() => {
-									this.timeDown618(1);
-								}, 4000);
-							}
-						);
-					} else {
-						this.props.toast.info(issaveUserInfoEngaged.msgInfo);
-					}
-				}
-			} else if (
-				ischeckIsEngagedUser.msgCode === 'PTM0000' &&
-				ischeckIsEngagedUser.data &&
-				ischeckIsEngagedUser.data.isEngagedUser === '0'
-			) {
-				this.timeDown618(ischeckIsEngagedUser.data.joinActivityTm);
-			}
-		}
-	};
-	// 开始调用倒计时
-	timeDown618 = (time) => {
-		this.child.handleStateChange('started', time);
-	};
 
 	handleApply = () => {
 		if (this.state.showDiv === '50000') {
@@ -838,13 +714,6 @@ export default class home_page extends PureComponent {
 		}
 		getNextStr({
 			$props: this.props
-			// callBack: (resBackMsg) => {
-			// 	if (this.state.showDiv === 'circle') {
-			// 		buriedPointEvent(home.homeContinueApply, {
-			// 			next_step: resBackMsg
-			// 		});
-			// 	}
-			// }
 		});
 	};
 	// 获取首页信息
@@ -856,9 +725,6 @@ export default class home_page extends PureComponent {
 			// 	data: mockData.LN0011
 			// };
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				// if (result.data.indexSts === 'LN0003') {
-				// 	this.getPercent();
-				// }
 				if (result.data.indexSts === 'LN0002') {
 					store.getAutId() && store.setAutId2(store.getAutId());
 				}
@@ -901,51 +767,8 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				let ischeckIsEngagedUser = null;
-				let AC20190618_618_RESULT = null;
-				let ischeckEngaged = await checkEngaged({
-					$props: this.props,
-					AcCode: 'AC20190618_618'
-				});
 				let couponTestData = await this.props.$fetch.get(API.couponTest);
-				if (ischeckEngaged.msgCode === 'PTM0000') {
-					ischeckIsEngagedUser = await checkIsEngagedUser({
-						$props: this.props,
-						AcCode: 'AC20190618_618'
-					});
-					AC20190618_618_RESULT = await checkIsEngagedUser({
-						$props: this.props,
-						AcCode: 'AC20190618_618_RESULT'
-					});
-				}
-				const { blackData } = this.state;
-				console.log(blackData);
 				if (
-					AC20190618_618_RESULT &&
-					AC20190618_618_RESULT.data &&
-					AC20190618_618_RESULT.data.isEngagedUser === '1' &&
-					ischeckEngaged &&
-					(!blackData || (blackData && (blackData.cashAcBalSts === '4' || blackData.cashAcBalSts === '2'))) &&
-					ischeckEngaged.msgCode === 'PTM0000' &&
-					((ischeckIsEngagedUser.data.isEngagedUser === '1' &&
-						(result.data.indexSts === 'LN0001' ||
-							result.data.indexSts === 'LN0002' ||
-							result.data.indexSts === 'LN0003' ||
-							result.data.indexSts === 'LN0010')) ||
-						(ischeckIsEngagedUser &&
-							ischeckIsEngagedUser.data &&
-							ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60 &&
-							ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-							(result.data.indexSts === 'LN0006' ||
-								result.data.indexSts === 'LN0008' ||
-								result.data.indexSts === 'LN0001' ||
-								result.data.indexSts === 'LN0002' ||
-								result.data.indexSts === 'LN0004' ||
-								result.data.indexSts === 'LN0003' ||
-								result.data.indexSts === 'LN0010')))
-				) {
-					this.getAC618(ischeckEngaged, ischeckIsEngagedUser);
-				} else if (
 					!store.getShowActivityModal() &&
 					couponTestData &&
 					couponTestData.data &&
@@ -956,16 +779,6 @@ export default class home_page extends PureComponent {
 						isShowActivityModal: true,
 						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
 					});
-				} else if (
-					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
-					!store.getShowActivityModal() &&
-					(ischeckEngaged.msgCode !== 'PTM0000' ||
-						(ischeckIsEngagedUser.data && ischeckIsEngagedUser.data.isEngagedUser === '1') ||
-						(ischeckIsEngagedUser.data &&
-							ischeckIsEngagedUser.data.isEngagedUser === '0' &&
-							ischeckIsEngagedUser.data.joinActivityTm > 10 * 60))
-				) {
-					this.getACmianxi();
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -1070,12 +883,6 @@ export default class home_page extends PureComponent {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalClose);
 				break;
-			case 'jd618': // 618活动弹框按钮
-				buriedPointEvent(activity.jd618HomeModalClose);
-				break;
-			case 'freebill': // 免息
-				buriedPointEvent(activity.freeBillHomeModalClose);
-				break;
 			default:
 				break;
 		}
@@ -1086,15 +893,6 @@ export default class home_page extends PureComponent {
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
-				break;
-			case 'jd618':
-				buriedPointEvent(activity.jd618ModalBtnClick);
-				store.setAC20190618(true);
-				this.getAC618();
-				break;
-			case 'freebill': // 618活动弹框按钮
-				buriedPointEvent(activity.freeBillModalBtnClick);
-				this.props.history.push('/activity/freebill_page');
 				break;
 			case 'yhq7':
 				buriedPointEvent(activity.yhq7ModalBtnClick);
@@ -1175,8 +973,7 @@ export default class home_page extends PureComponent {
 							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
 							title: '还到-Plus',
 							subtitle: '借款金额(元)',
-							money:
-								usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.orderAmt,
+							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.orderAmt,
 							desc: '你信用等级良好'
 						}}
 					/>
@@ -1192,8 +989,7 @@ export default class home_page extends PureComponent {
 							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
 							title: '还到-Plus',
 							subtitle: '借款金额(元)',
-							money:
-								usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.orderAmt,
+							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.orderAmt,
 							desc: '你信用等级良好'
 						}}
 					/>
@@ -1206,7 +1002,15 @@ export default class home_page extends PureComponent {
 	// *****************************代偿****************************** //
 
 	getDCDisPlay = () => {
-		const { usrIndexInfo, showDiv, percentSatus, percentData, percentBtnText, cardStatus, userMaxAmt } = this.state;
+		const {
+			usrIndexInfo,
+			showDiv,
+			percentSatus,
+			percentData,
+			percentBtnText,
+			cardStatus,
+			userMaxAmt
+		} = this.state;
 		let componentsDisplay = null;
 		const { indexData = {}, indexSts } = usrIndexInfo;
 		const { cardBillAmt, cardBillSts, billRemainAmt, cardBillDt, bankName, bankNo, cardNoHid } = indexData;
@@ -1223,7 +1027,10 @@ export default class home_page extends PureComponent {
 				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2);
 			} else if (!cardBillAmt && cardBillAmt !== 0) {
 				cardBillAmtData = '----.--';
-			} else if (cardBillSts === '01' && (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))) {
+			} else if (
+				cardBillSts === '01' &&
+				(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+			) {
 				cardBillAmtData = '已结清';
 			} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
 				cardBillAmtData = '已结清';
@@ -1583,8 +1390,7 @@ export default class home_page extends PureComponent {
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
 		}
-		componentsDisplay = this.getDCDisPlay() ||
-		this.getFQDisPlay() || (
+		componentsDisplay = this.getDCDisPlay() || this.getFQDisPlay() || (
 			<CarouselHome
 				showData={{
 					demoTip: true

@@ -1,0 +1,59 @@
+.login_alert {
+	.form_control {
+		padding-left: 0;
+		:global {
+			.am-input-control input {
+				font-size: 30px;
+			}
+		}
+	}
+	.agreement {
+		text-align: left;
+		font-size: 26px;
+		color: #6c6c6c;
+		span {
+			color: #fd4073;
+		}
+	}
+}
+.logo_box {
+	margin: 6px 10px 25px;
+	.logo {
+		width: 100px;
+		height: 100px;
+	}
+	.text {
+		letter-spacing: 18px;
+		color: #424244;
+		margin-top: 8px;
+	}
+}
+.get_sms_box {
+	position: relative;
+	color: #ff3b5d;
+	cursor: pointer;
+	input {
+		padding-right: 180px !important;
+	}
+	.sms_text {
+		min-width: 180px;
+		position: absolute;
+		text-align: center;
+		right: 0;
+		top: 50%;
+		transform: translate(0, -50%);
+		.sms_text_dis {
+			color: #999;
+			opacity: 0.8;
+		}
+	}
+}
+
+.btn_box {
+	margin: 50px 0 12px;
+	.btn_primary {
+		color: #fff;
+		background: linear-gradient(180deg, rgba(252, 69, 135, 1) 0%, rgba(255, 57, 86, 1) 100%);
+		border-radius: 8px;
+	}
+}

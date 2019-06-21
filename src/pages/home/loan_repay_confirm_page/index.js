@@ -6,7 +6,14 @@ import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { handleClickConfirm, handleInputBlur, idChkPhoto, isCanLoan, getOperatorStatus, getMoxieData } from 'utils';
+import {
+	handleClickConfirm,
+	handleInputBlur,
+	idChkPhoto,
+	isCanLoan,
+	getOperatorStatus,
+	getMoxieData
+} from 'utils';
 import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
@@ -66,7 +73,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			repayType: '', // 还款方式
 			fullMinAmt: '', // 全额或者最低还卡金额
 			showTimeoutPayModal: false,
-			showFeedbackModal: false
+			showFeedbackModal: false,
+			inputFocus: false
 		};
 	}
 
@@ -75,6 +83,20 @@ export default class loan_repay_confirm_page extends PureComponent {
 		this.queryUsrInfo();
 		this.requestCredCardCount();
 		this.showFeedbackModal();
+		let _this = this;
+		let originClientHeight = document.documentElement.clientHeight;
+		// 安卓键盘抬起会触发resize事件，ios则不会
+		window.addEventListener('resize', function() {
+			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+				let clientHeight = document.documentElement.clientHeight;
+				_this.setState({
+					inputFocus: originClientHeight > clientHeight
+				});
+				window.setTimeout(function() {
+					document.activeElement.scrollIntoViewIfNeeded();
+				}, 0);
+			}
+		});
 	}
 
 	componentWillUnmount() {
@@ -239,9 +261,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 			const { usrIndexInfo } = this.state;
 			this.props.history.push({
 				pathname: '/mine/credit_list_page',
-				search: `?autId=${usrIndexInfo.indexSts === 'LN0010'
-					? ''
-					: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''}`
+				search: `?autId=${
+					usrIndexInfo.indexSts === 'LN0010'
+						? ''
+						: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''
+				}`
 			});
 		} else {
 			if (count > 1) {
@@ -249,9 +273,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 				const { usrIndexInfo } = this.state;
 				this.props.history.push({
 					pathname: '/mine/credit_list_page',
-					search: `?autId=${usrIndexInfo.indexSts === 'LN0010'
-						? ''
-						: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''}`
+					search: `?autId=${
+						usrIndexInfo.indexSts === 'LN0010'
+							? ''
+							: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''
+					}`
 				});
 			} else {
 				this.goMoxieBankList();
@@ -526,14 +552,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	inputDisabled = () => {
-		const { fetchBillSucc, activeTag } = this.state;
-		if (fetchBillSucc && (activeTag === 0 || activeTag === 1)) {
-			return true;
-		}
-		return false;
-	};
-
 	showFeedbackModal = () => {
 		if (store.getGotoMoxieFlag()) {
 			this.setState({
@@ -660,7 +678,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2);
 			} else if (!cardBillAmt && cardBillAmt !== 0) {
 				cardBillAmtData = '----.--';
-			} else if (cardBillSts === '01' && (billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))) {
+			} else if (
+				cardBillSts === '01' &&
+				(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+			) {
 				cardBillAmtData = '已结清';
 			} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
 				cardBillAmtData = '已结清';
@@ -679,9 +700,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 			? this.props.form.getFieldValue('loanMoney')
 			: fullMinAmt;
 		return (
-			<div className={[ style.pageWrapper, 'loan_repay_confirm' ].join(' ')}>
+			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
 				{/* <ScrollText /> */}
-				<div className={[ style.page_inner_wrap, 'modal_l_r2' ].join(' ')}>
+				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.titleBg}>收款信用卡</div>
 						{cardCount && cardCount > 0 ? (
@@ -697,16 +718,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 						) : null}
 						<div className={style.top}>
 							<div className={style.bankBox}>
-								<span className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
+								<span className={['bank_ico', iconClass, `${style.bankLogo}`].join(' ')} />
 								<span className={style.name}>{!bankName ? '****' : bankName}</span>
 								<span className={style.lastNo}>({!cardNoHid ? '****' : cardNoHid.slice(-4)})</span>
 							</div>
 						</div>
 						<div className={style.center}>
 							<strong className={style.billMoney}>
-								{(isNaN(cardBillAmtData) && (
-									<span style={{ fontSize: '.6rem' }}>{cardBillAmtData}</span>
-								)) ||
+								{(isNaN(cardBillAmtData) && <span style={{ fontSize: '.6rem' }}>{cardBillAmtData}</span>) ||
 									cardBillAmtData}
 							</strong>
 							<div className={style.billInfo}>
@@ -720,7 +739,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 					</div>
 
-					<div className={[ style.bankCard, style.heightMoney ].join(' ')}>
+					<div className={[style.bankCard, style.heightMoney].join(' ')}>
 						<div>
 							<div className={style.titleBg}>借多少钱</div>
 						</div>
@@ -729,12 +748,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<InputItem
 								maxLength={15}
 								{...getFieldProps('loanMoney', {
-									rules: [ { required: true, message: '请输入还款金额' } ]
+									rules: [{ required: true, message: '请输入还款金额' }]
 								})}
 								type="number"
 								placeholder={placeholderText}
 								ref={(el) => (this.inputRef = el)}
-								// className={this.inputDisabled() ? 'blackColor' : 'blackColor'}
 								onBlur={(v) => {
 									setTimeout(() => {
 										if (isinputBlur) {
@@ -777,8 +795,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<div>
 									<span className={style.title}>借全额</span>
 									<span className={style.money}>
-										¥{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) ||
-											'-.--'}
+										¥{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '-.--'}
 									</span>
 								</div>
 								<div className={style.desc} style={{ paddingLeft: 0 }}>
@@ -794,9 +811,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								<div>
 									<span className={style.title}>借最低</span>
 									<span className={style.money}>
-										¥
-										{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) ||
-											'-.--'}
+										¥{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) || '-.--'}
 									</span>
 								</div>
 								<div className={style.desc} style={{ paddingRight: 0 }}>
@@ -806,7 +821,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 					</div>
 
-					<div className={[ style.bankCard, style.heightSelect ].join(' ')}>
+					<div className={[style.bankCard, style.heightSelect].join(' ')}>
 						<div>
 							<div className={style.titleBg}>借多久</div>
 						</div>
@@ -847,10 +862,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								extra={
 									<SelectList
 										selectText={
-											(selectedLoanDate &&
-												selectedLoanDate.perdPageNm &&
-												selectedLoanDate.perdPageNm) ||
-											''
+											(selectedLoanDate && selectedLoanDate.perdPageNm && selectedLoanDate.perdPageNm) || ''
 										}
 										defaultText={'请选择'}
 									/>
@@ -869,14 +881,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 						className={style.freeService}
 					>
 						<div className={style.title}>
-							审核超时赔（免费服务）<i />
+							审核超时赔（免费服务）
+							<i />
 						</div>
 						<div className={style.desc}>50元免息券</div>
 					</div>
 				</div>
-				<div className={style.handle_authority}>
+				<div className={this.state.inputFocus ? style.handle_authority_relative : style.handle_authority}>
 					<div
-						className={[ style.button, btnDisabled ? style.disabledBtn : '' ].join(' ')}
+						className={[style.button, btnDisabled ? style.disabledBtn : ''].join(' ')}
 						onClick={this.handleSubmit}
 					>
 						提交申请
@@ -884,7 +897,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
-						<div className={[ style.modal_left, this.state.modal_left ? style.modal_left1 : '' ].join(' ')}>
+						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
 							<div className={style.modal_header}>
 								选择期限
 								<Icon
@@ -909,16 +922,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 											return (item.perdLth == 30 &&
 												item.factLmtLow <= Number(repayMoney) &&
 												Number(repayMoney) <= item.factAmtHigh) ||
-											item.perdLth != 30 ? (
+												item.perdLth != 30 ? (
 												<div
 													key={index}
 													className={style.listitem}
 													className={
-														selectedLoanDate.perdCnt === item.perdCnt ? (
-															`${style.listitem} ${style.listActiveItem}`
-														) : (
-															style.listitem
-														)
+														selectedLoanDate.perdCnt === item.perdCnt
+															? `${style.listitem} ${style.listActiveItem}`
+															: style.listitem
 													}
 													onClick={() => {
 														this.filterLoanDate(item);
