@@ -39,11 +39,13 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const queryData = qs.parse(this.props.history.location.search, {
+			ignoreQueryPrefix: true
+		});
 		this.setState({
 			queryData
 		});
-		store.removeLoginDownloadBtn()
+		store.removeLoginDownloadBtn();
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '还到';
@@ -80,15 +82,15 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
-		let _this = this
-		let originClientHeight = document.documentElement.clientHeight
+		let _this = this;
+		let originClientHeight = document.documentElement.clientHeight;
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let clientHeight = document.documentElement.clientHeight
+				let clientHeight = document.documentElement.clientHeight;
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
-				})
+				});
 				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
@@ -112,7 +114,7 @@ export default class login_page extends PureComponent {
 
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
-    let v = value && value.replace(/\s*/g, '')
+		let v = value && value.replace(/\s*/g, '');
 		if (!validators.phone(v)) {
 			callback('请输入正确手机号');
 		} else {
@@ -261,7 +263,7 @@ export default class login_page extends PureComponent {
 							onBlur={() => {
 								this.setState({
 									inputFocus: false
-								})
+								});
 								handleInputBlur();
 							}}
 						/>
@@ -278,12 +280,18 @@ export default class login_page extends PureComponent {
 								onBlur={() => {
 									this.setState({
 										inputFocus: false
-									})
+									});
 									handleInputBlur();
 								}}
 							/>
 							<div
-								className={this.state.timers.indexOf('s') === -1 ? styles.smsCode : [styles.smsCode, styles.smsCode2].join(' ')}
+								className={
+									this.state.timers.indexOf('s') === -1 ? (
+										styles.smsCode
+									) : (
+										[ styles.smsCode, styles.smsCode2 ].join(' ')
+									)
+								}
 								onClick={() => {
 									this.state.timeflag ? this.getTime(59) : '';
 								}}
@@ -295,15 +303,17 @@ export default class login_page extends PureComponent {
 						<div className={styles.sureBtn} onClick={this.goLogin}>
 							<span>查看额度</span>
 						</div>
-						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
+						<i className={[ styles.commonLine, styles.leftTopLine ].join(' ')} />
+						<i className={[ styles.commonLine, styles.rightTopLine ].join(' ')} />
+						<i className={[ styles.commonLine, styles.leftBottomLine ].join(' ')} />
+						<i className={[ styles.commonLine, styles.rightBottomLine ].join(' ')} />
 					</div>
 				</div>
 				<div className={styles.agreement}>
 					<i
-						className={this.state.isChecked ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
+						className={
+							this.state.isChecked ? styles.checked : [ styles.checked, styles.nochecked ].join(' ')
+						}
 						onClick={this.checkAgreement}
 					/>
 					<div className={styles.agreementCont}>

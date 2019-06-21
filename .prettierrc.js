@@ -1,20 +1,34 @@
 module.exports = {
-	printWidth: 120,
+	printWidth: 110,
 	semi: true,
+	useTabs: true,
 	singleQuote: true,
-	trailingComma: 'all',
+	trailingComma: 'none',
 	bracketSpacing: true,
 	jsxBracketSameLine: false,
-	arrowParens: 'avoid',
+	arrowParens: 'always',
 	requirePragma: false,
 	proseWrap: 'preserve',
 	insertPragma: false
-	// "printWidth": 80, //一行的字符数，如果超过会进行换行，默认为80
-	// "tabWidth": 2, //一个tab代表几个空格数，默认为80
-	// "useTabs": false, //是否使用tab进行缩进，默认为false，表示用空格进行缩减
-	// "singleQuote": false, //字符串是否使用单引号，默认为false，使用双引号
-	// "semi": true, //行位是否使用分号，默认为true
-	// "trailingComma": "none", //是否使用尾逗号，有三个可选值"<none|es5|all>"
-	// "bracketSpacing": true, //对象大括号直接是否有空格，默认为true，效果：{ foo: bar }
-	// "parser": "babylon" //代码的解析引擎，默认为babylon，与babel相同。
+   /*  prettier的配置 */
+  //  "prettier.printWidth": 100, // 超过最大值换行
+  //  "prettier.tabWidth": 4, // 缩进字节数
+  //  "prettier.useTabs": false, // 缩进不使用tab，使用空格
+  //  "prettier.semi": true, // 句尾添加分号
+  //  "prettier.singleQuote": true, // 使用单引号代替双引号
+  //  "prettier.proseWrap": "preserve", // 默认值。因为使用了一些折行敏感型的渲染器（如GitHub comment）而按照markdown文本样式进行折行
+  //  "prettier.arrowParens": "avoid", //  (x) => {} 箭头函数参数只有一个时是否要有小括号。avoid：省略括号
+  //  "prettier.bracketSpacing": true, // 在对象，数组括号与文字之间加空格 "{ foo: bar }"
+  //  "prettier.disableLanguages": ["vue"], // 不格式化vue文件，vue文件的格式化单独设置
+  //  "prettier.endOfLine": "auto", // 结尾是 \n \r \n\r auto
+  //  "prettier.eslintIntegration": false, //不让prettier使用eslint的代码格式进行校验
+  //  "prettier.htmlWhitespaceSensitivity": "ignore",
+  //  "prettier.ignorePath": ".prettierignore", // 不使用prettier格式化的文件填写在项目的.prettierignore文件中
+  //  "prettier.jsxBracketSameLine": false, // 在jsx中把'>' 是否单独放一行
+  //  "prettier.jsxSingleQuote": false, // 在jsx中使用单引号代替双引号
+  //  "prettier.parser": "babylon", // 格式化的解析器，默认是babylon
+  //  "prettier.requireConfig": false, // Require a 'prettierconfig' to format prettier
+  //  "prettier.stylelintIntegration": false, //不让prettier使用stylelint的代码格式进行校验
+  //  "prettier.trailingComma": "es5", // 在对象或数组最后一个元素后面是否加逗号（在ES5中加尾逗号）
+  //  "prettier.tslintIntegration": false // 不让prettier使用tslint的代码格式进行校验
 };

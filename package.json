@@ -105,7 +105,7 @@
     "clearMap": "rimraf ./dist/*.map",
     "clearApk": "rimraf ./dist/*.apk",
     "precommit": "lint-staged",
-    "prettify": "prettier --fix --write 'src/**/*.js'"
+    "prettier": "prettier --write './src/pages/login/**/*.js'"
   },
   "repository": {
     "type": "git",

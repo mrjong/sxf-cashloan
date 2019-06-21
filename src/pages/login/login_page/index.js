@@ -17,7 +17,7 @@ import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
 import logoImg from 'assets/images/common/black_logo.png';
 let timmer;
-const needDisplayOptions = [ 'basicInf' ];
+const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
@@ -41,7 +41,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const queryData = qs.parse(this.props.history.location.search, {
+			ignoreQueryPrefix: true
+		});
 		this.setState({
 			queryData
 		});
@@ -311,10 +313,10 @@ export default class login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
-								className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									rules: [ { required: true, message: '请输入正确验证码' } ]
+									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
 									this.setState({
