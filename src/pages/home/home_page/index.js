@@ -14,6 +14,7 @@ import { createForm } from 'rc-form';
 import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
 import TFDInit from 'utils/getTongFuDun';
+// console.log(aa)
 import {
 	CarouselHome,
 	BlackCard,

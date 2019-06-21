@@ -4,9 +4,9 @@ module.exports = function(options) {
 	return {
 		mode: options.mode,
 		devtool: options.devTool, // 配置生成Source Maps，选择合适的选项
-		entry: [ 'babel-polyfill', path.join(__dirname, '../src/app.js') ],
+		entry: ['babel-polyfill', path.join(__dirname, '../src/app.js')],
 		resolve: {
-			extensions: [ '.js', '.jsx', '.png', '.scss' ]
+			extensions: ['.js', '.jsx', '.png', '.scss']
 		},
 		output: {
 			filename: options.bundleHash ? 'bundle-[chunkhash:8].js' : 'bundle.js',
@@ -18,21 +18,22 @@ module.exports = function(options) {
 			// 在配置文件里添加JSON loader
 			rules: [
 				{
-					test: /\.json$/,
-					loader: 'json-loader'
-        },
-        {
 					test: /\.(jsx|js)?$/,
 					loader: 'eslint-loader',
 					enforce: 'pre',
-					include: [ path.resolve(__dirname, 'src') ], // 指定检查的目录
-					options: {
-						fix: true
-					}
+					exclude: /node_modules/,
+					include: [path.resolve(__dirname, '../src')], // 指定检查的目录
 					// options: {
-					// 	// 这里的配置项参数将会被传递到 eslint 的 CLIEngine
-					// 	formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
+					// 	fix: true
 					// }
+					options: {
+						// 这里的配置项参数将会被传递到 eslint 的 CLIEngine
+						formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
+					}
+				},
+				{
+					test: /\.json$/,
+					loader: 'json-loader'
 				},
 				{
 					test: /\.(jsx|js)?$/,
@@ -44,7 +45,7 @@ module.exports = function(options) {
 				},
 				{
 					test: /\.css$/,
-					use: [ 'style-loader', 'postcss-loader' ]
+					use: ['style-loader', 'postcss-loader']
 					// use: ExtractTextPlugin.extract({   // 调用分离插件
 					//   fallback: 'style-loader',
 					//   use: ['css-loader']
@@ -81,7 +82,7 @@ module.exports = function(options) {
 				},
 				{
 					test: /\.md$/,
-					loader: [ 'html-loader', 'markdown-loader' ]
+					loader: ['html-loader', 'markdown-loader']
 				},
 				{
 					test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -121,7 +122,7 @@ module.exports = function(options) {
 			historyApiFallback: true,
 			stats: {
 				cached: false,
-				exclude: [ /node_modules[\\/]react(-router)?[\\/]/, /node_modules[\\/]items-store[\\/]/ ]
+				exclude: [/node_modules[\\/]react(-router)?[\\/]/, /node_modules[\\/]items-store[\\/]/]
 			},
 			disableHostCheck: true,
 			proxy: {
@@ -130,8 +131,8 @@ module.exports = function(options) {
 					// target: 'http://172.18.40.181:8888/wap',
 					pathRewrite: { '^/wap': '' }, //重写接口
 					changeOrigin: true //是否跨域
-        },
-        '/shence': {
+				},
+				'/shence': {
 					target: '/sa', //目标接口域名
 					target: 'http://10.1.1.81:8106/sa',
 					changeOrigin: true //是否跨域
@@ -150,7 +151,7 @@ module.exports = function(options) {
 		},
 		optimization: options.optimization,
 		resolve: {
-			extensions: [ '.js', '.md', '.txt' ],
+			extensions: ['.js', '.md', '.txt'],
 			alias: {
 				pages: path.resolve(__dirname, '../src/pages'),
 				components: path.resolve(__dirname, '../src/components'),
