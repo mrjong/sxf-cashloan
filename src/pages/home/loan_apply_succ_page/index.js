@@ -6,12 +6,10 @@ import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
 import { Modal } from 'antd-mobile';
 import qs from 'qs';
-import { checkEngaged, checkIsEngagedUser } from 'utils';
 import successImg from './img/success.png';
 import failImg from './img/fail.png';
 import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
-import message from './img/message.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity, home } from 'utils/analytinsType';
 
@@ -30,57 +28,11 @@ export default class remit_ing_page extends PureComponent {
 	}
 	componentWillMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		this.setState(
-			{
-				queryData
-			},
-			() => {
-				this.getAC618(queryData);
-			}
-		);
+		this.setState({
+			queryData
+		});
 		buriedPointEvent(home.quickLoan);
 	}
-	getAC618 = async (queryData) => {
-		if (queryData.needAlert) {
-			let ischeckEngaged = await checkEngaged({
-				$props: this.props,
-				AcCode: 'AC20190618_618'
-			});
-			if (ischeckEngaged.msgCode === 'PTM0000') {
-				let ischeckIsEngagedUser = await checkIsEngagedUser({
-					$props: this.props,
-					AcCode: 'AC20190618_618'
-				});
-				if (
-					ischeckIsEngagedUser.msgCode === 'PTM0000' &&
-					ischeckIsEngagedUser.data &&
-					ischeckIsEngagedUser.data.isEngagedUser === '0'
-				) {
-					if (
-						ischeckIsEngagedUser.data.joinActivityTm <= 10 * 60 &&
-						queryData.perdCnt &&
-						Number(queryData.perdCnt) >= 3 &&
-						queryData.cardBillAmt &&
-						Number(queryData.cardBillAmt) >= 3000
-					) {
-						this.setState({
-							successModalShow: true,
-							time: this.formatSeconds(ischeckIsEngagedUser.data.joinActivityTm)
-						});
-					} else if (ischeckIsEngagedUser.data.joinActivityTm <= 10 * 60) {
-						this.setState({
-							ACTipAlertShow: true
-						});
-					} else if (ischeckIsEngagedUser.data.joinActivityTm <= 15 * 60) {
-						this.setState({
-							failModalShow: true,
-							time: this.formatSeconds(ischeckIsEngagedUser.data.joinActivityTm)
-						});
-					}
-				}
-			}
-		}
-	};
 	formatSeconds = (count = 0) => {
 		let seconds = count % 60;
 		let minutes = Math.floor(count / 60);
@@ -131,14 +83,14 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</div>
 				<div className={style.step_box_new}>
-					<div className={[ style.step_item, style.active ].join(' ')}>
+					<div className={[style.step_item, style.active].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							借款申请提交成功
 						</div>
 						<div className={style.line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							借款打入信用卡
@@ -149,7 +101,10 @@ export default class remit_ing_page extends PureComponent {
 				<Modal className="loan_apply_succ_alert" visible={successModalShow} transparent>
 					<img src={successImg} className={style.successImg} />
 					<div className={style.successTitle}>恭喜获得</div>
-					<div className={style.successTime}>总用时：{time}</div>
+					<div className={style.successTime}>
+						总用时：
+						{time}
+					</div>
 					<img
 						src={btnImg}
 						onClick={() => {
@@ -161,7 +116,10 @@ export default class remit_ing_page extends PureComponent {
 				<Modal className="loan_apply_succ_alert" visible={failModalShow} transparent>
 					<img src={failImg} className={style.successImg} />
 					<div className={style.failTitle}>很遗憾，您已超时</div>
-					<div className={style.failTime}>总用时：{time}</div>
+					<div className={style.failTime}>
+						总用时：
+						{time}
+					</div>
 					<img
 						src={btnImg}
 						onClick={() => {

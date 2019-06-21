@@ -2,19 +2,7 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { Consumer } from 'pages/common/routerPage/context';
-import {
-	isWXOpen,
-	getDeviceType,
-	getNextStr,
-	isCanLoan,
-	checkEngaged,
-	checkIsEngagedUser,
-	saveUserInfoEngaged,
-	getMoxieData,
-	dateDiffer
-} from 'utils';
-import { isMPOS } from 'utils/common';
+import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
@@ -39,7 +27,6 @@ import {
 	AddCards,
 	ExamineCard
 } from './components';
-import linkConf from 'config/link.conf';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	qryPerdRate: '/bill/prod',
@@ -554,14 +541,6 @@ export default class home_page extends PureComponent {
 					pathname: '/home/loan_apply_succ_page',
 					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
 				});
-
-				// if (isNeedExamine) {
-				// 	this.props.history.push('/home/loan_apply_succ_page');
-				// } else {
-				// 	this.props.toast.info(
-				// 		`您的代偿资金将于${dayjs(usrIndexInfo.indexData.repayDt).format('YYYY-MM-DD')}到账，请耐心等待`
-				// 	);
-				// }
 				break;
 			case 'LN0008': // 放款失败
 				console.log('LN0008 不跳账单页 走弹框流程');
@@ -744,13 +723,6 @@ export default class home_page extends PureComponent {
 		}
 		getNextStr({
 			$props: this.props
-			// callBack: (resBackMsg) => {
-			// 	if (this.state.showDiv === 'circle') {
-			// 		buriedPointEvent(home.homeContinueApply, {
-			// 			next_step: resBackMsg
-			// 		});
-			// 	}
-			// }
 		});
 	};
 	// 获取首页信息
@@ -762,9 +734,6 @@ export default class home_page extends PureComponent {
 			// 	data: mockData.LN0011
 			// };
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				// if (result.data.indexSts === 'LN0003') {
-				// 	this.getPercent();
-				// }
 				if (result.data.indexSts === 'LN0002') {
 					store.getAutId() && store.setAutId2(store.getAutId());
 				}
