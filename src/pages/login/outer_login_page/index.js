@@ -19,6 +19,9 @@ const API = {
 	smsForLogin: '/signup/smsForLogin',
   sendsms: '/cmm/sendsms'
 
+
+
+
 };
 
 @setBackGround('#fff')
