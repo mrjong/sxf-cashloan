@@ -15,6 +15,7 @@ import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 let timmer;
 let timmer2;
+console.log(aa);
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms'
