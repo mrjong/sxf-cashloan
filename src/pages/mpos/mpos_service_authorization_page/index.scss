@@ -1,6 +1,6 @@
-.padding_bottom{
-  height: calc(100% + 1px);
-  overflow-x: hidden;
+.padding_bottom {
+	height: calc(100% + 1px);
+	overflow-x: hidden;
 	overflow-y: auto;
 }
 .bg_top {
@@ -22,19 +22,19 @@
 	width: 634px;
 	margin: 0 auto;
 	&:active {
-		opacity: .5;
+		opacity: 0.5;
 	}
 	&.dis {
 		background: #dcdfe6;
 	}
 }
-.btn_fixed{
-  position: fixed;
-  bottom: 0;
-  z-index: 10;
-  margin: 0 auto;
-  left: 50%;
-  margin-left: -317px;
+.btn_fixed {
+	position: fixed;
+	bottom: 0;
+	z-index: 10;
+	margin: 0 auto;
+	left: 50%;
+	margin-left: -317px;
 }
 :global {
 	.mpos_middle_checkbox {
@@ -52,7 +52,7 @@
 			border-color: #2a2b2c;
 		}
 		&.am-checkbox-agree .am-checkbox-inner {
-			left: .2rem;
+			left: 0.2rem;
 		}
 		.am-checkbox-inner {
 			width: 0.32rem;
@@ -62,7 +62,7 @@
 			width: 0.09rem;
 			height: 0.18rem;
 			top: 0.02rem;
-      right: 0.09rem;
+			right: 0.09rem;
 		}
 	}
 }
