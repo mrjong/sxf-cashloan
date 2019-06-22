@@ -50,7 +50,6 @@ export default class order_detail_page extends PureComponent {
 			detailArr: [], // 还款详情数据
 			isShowDetail: false, // 是否展示弹框中的明细详情
 			isAdvance: false, // 是否提前还款
-			isNewsContract: false, // 是否签署的是新合同
 			totalAmt: '', // 一键结清传给后台的总金额
 			billOverDue: '', //逾期弹窗标志
 			overDueModalFlag: '', // 信用施压弹框标识
@@ -167,7 +166,6 @@ export default class order_detail_page extends PureComponent {
 						this.setState(
 							{
 								isAdvance: false,
-								isNewsContract: false
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -285,7 +283,6 @@ export default class order_detail_page extends PureComponent {
 										detailArr: orderDtlData && orderDtlData.detailArr,
 										isShowDetail: orderDtlData && orderDtlData.isShowDetail,
 										isAdvance: orderDtlData && orderDtlData.isAdvance,
-										isNewsContract: orderDtlData && orderDtlData.isNewsContract,
 										totalAmt: orderDtlData && orderDtlData.totalAmt,
 										totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow
 									},
@@ -643,9 +640,8 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	//调用还款接口逻辑
-	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const { billDesc, isPayAll, isNewsContract, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
+		const { billDesc, isPayAll, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
 		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		const paybackAPI = API.payback;
 		let sendParams = {};
@@ -810,7 +806,6 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
 			isInsureValid,
 			totalAmtForShow
@@ -820,7 +815,6 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
 			totalAmtForShow
 		};
@@ -842,7 +836,6 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
 			totalAmtForShow
 		} = this.state;
@@ -851,7 +844,6 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
 			totalAmtForShow
 		};
@@ -954,7 +946,6 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmtForShow,
 			billOverDue,
 			overDueModalFlag,
