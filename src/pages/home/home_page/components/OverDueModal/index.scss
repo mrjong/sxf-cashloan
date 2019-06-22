@@ -1,41 +1,41 @@
-.overDueTit{
-  font-size: 36px;
-  font-weight: 500;
-  color: rgba(51, 51, 51, 1);
-  line-height: 50px;
-  padding-top: 199px;
+.overDueTit {
+	font-size: 36px;
+	font-weight: 500;
+	color: rgba(51, 51, 51, 1);
+	line-height: 50px;
+	padding-top: 199px;
 }
 
-.overDueDesc{
-  font-size: 32px;
-  font-weight: 400;
-  color: rgba(51, 51, 51, 1);
-  line-height: 45px;
-  margin: 50px 0 56px;
-  text-align: left;
+.overDueDesc {
+	font-size: 32px;
+	font-weight: 400;
+	color: rgba(51, 51, 51, 1);
+	line-height: 45px;
+	margin: 50px 0 56px;
+	text-align: left;
 }
 
-.warningImg{
-  position: absolute;
-  width: 580px;
-  left: 0;
-  top: -65px;
+.warningImg {
+	position: absolute;
+	width: 580px;
+	left: 0;
+	top: -65px;
 }
 
-.download{
-  margin-top: 30px;
-  color: #4DA6FF;
-  font-size: 30px;
+.download {
+	margin-top: 30px;
+	color: #4da6ff;
+	font-size: 30px;
 }
 
 :global {
 	.overDueModalBox.am-modal-transparent {
 		width: 580px;
-  }
-  .overDueModalBox.am-modal-transparent .am-modal-content{
-    overflow: initial;
-  }
-  .overDueModalBox.am-modal-transparent .am-modal-content .am-modal-body{
-    padding: 0 60px 40px;
-  }
+	}
+	.overDueModalBox.am-modal-transparent .am-modal-content {
+		overflow: initial;
+	}
+	.overDueModalBox.am-modal-transparent .am-modal-content .am-modal-body {
+		padding: 0 60px 40px;
+	}
 }

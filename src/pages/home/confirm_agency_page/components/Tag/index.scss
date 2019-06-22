@@ -4,33 +4,33 @@
 	line-height: 1;
 	// height: 0.5rem;
 	color: #9d9d9d;
-	border: 1PX solid #d9d9d9;
+	border: 1px solid #d9d9d9;
 	border-radius: 0.4rem;
 	background-color: #fff;
 	margin-right: 20px;
 	&_active {
 		color: #fe6666;
-		border: 1PX solid #fe6666;
+		border: 1px solid #fe6666;
 		background-color: #fff;
 	}
 }
 .specail_tag_active {
 	position: relative;
 	padding: 0.1rem 0.15rem;
-	i{
-	  position: absolute;
-	  right: -20px;
-	  top: -30px;
-	  width: 34px;
-    height: 28px;
-    z-index: 100;
-	  background-image: url('./img/jian.png');
-	  background-size: 100% 100%;
+	i {
+		position: absolute;
+		right: -20px;
+		top: -30px;
+		width: 34px;
+		height: 28px;
+		z-index: 100;
+		background-image: url('./img/jian.png');
+		background-size: 100% 100%;
 	}
 }
 // .specail_tag_active.sxp_tag_active {
 // 	margin-right: 0;
 // }
 .borderDotted {
-	border: 1PX dashed #999;
+	border: 1px dashed #999;
 }

@@ -16,7 +16,7 @@
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
-	line-height: .9;
+	line-height: 0.9;
 	margin-bottom: 20px;
 }
 .desc {
@@ -24,7 +24,7 @@
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
-	line-height: .9;
+	line-height: 0.9;
 	margin-bottom: 20px;
 }
 .bg {
@@ -41,13 +41,13 @@
 	position: absolute;
 	height: 25px;
 	left: 50%;
-	border-right: 1PX solid #c3c8d0;
+	border-right: 1px solid #c3c8d0;
 }
 
 .money {
-	font-family: "DINMitAlt";
+	font-family: 'DINMitAlt';
 	font-size: 40px;
-	line-height: .9;
+	line-height: 0.9;
 	span {
 		font-size: 24px;
 	}

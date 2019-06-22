@@ -38,35 +38,35 @@
 }
 .successTitle {
 	font-family: 'PingFangSC-Medium';
-  font-weight: 500;
-  color: #121C32;
-  position: relative;
-  top: -530px;
-  font-size: 40px;
+	font-weight: 500;
+	color: #121c32;
+	position: relative;
+	top: -530px;
+	font-size: 40px;
 }
-.successTime{
-  font-family: 'PingFangSC-Medium';
-  font-weight: 500;
-  color: #868E9E;
-  position: relative;
-  top: -310px;
-  font-size: 32px;
+.successTime {
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	color: #868e9e;
+	position: relative;
+	top: -310px;
+	font-size: 32px;
 }
 .failTitle {
 	font-family: 'PingFangSC-Medium';
-  font-weight: 500;
-  color: #121C32;
-  position: relative;
-  top: -450px;
-  font-size: 40px;
+	font-weight: 500;
+	color: #121c32;
+	position: relative;
+	top: -450px;
+	font-size: 40px;
 }
-.failTime{
-  font-family: 'PingFangSC-Medium';
-  font-weight: 500;
-  color: #868E9E;
-  position: relative;
-  top: -430px;
-  font-size: 32px;
+.failTime {
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	color: #868e9e;
+	position: relative;
+	top: -430px;
+	font-size: 32px;
 }
 
 .btnImg {
@@ -153,10 +153,10 @@
 			left: 14px;
 			top: -10px;
 			height: 100%;
-			width: 1PX;
+			width: 1px;
 			padding: 30px 0 4px;
 			&::after {
-				content: "";
+				content: '';
 				display: inline-block;
 				background: #ddd;
 				// -webkit-transition: background .3s;

@@ -2,7 +2,7 @@
 	font-size: 24px;
 	font-family: 'PingFangSC-Semibold';
 	font-weight: 600;
-	color: #121C32;
+	color: #121c32;
 }
 .plus {
 	width: 459px;
@@ -72,7 +72,7 @@
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
-  color: #868e9e;
+	color: #868e9e;
 }
 
 .desc {
@@ -86,24 +86,24 @@
 	padding-top: 20px;
 	font-size: 80px;
 	line-height: 1;
-	font-family: "DINMitAlt";
+	font-family: 'DINMitAlt';
 	font-weight: normal;
-  color: #121c32;
-  &.small{
-    font-size: 60px;
-  }
+	color: #121c32;
+	&.small {
+		font-size: 60px;
+	}
 }
-.contentBox{
+.contentBox {
 	padding-top: 90px;
 	height: 300px;
 	// min-height: 300px;
 }
-.box{
+.box {
 	display: flex;
-	.flex2{
+	.flex2 {
 		flex: 2;
 	}
-	.flex1{
+	.flex1 {
 		flex: 1;
 	}
 }

@@ -1,6 +1,6 @@
 // 现金
 .home_xj_black {
-  // -webkit-animation-name: fadeIn;
+	// -webkit-animation-name: fadeIn;
 	// -webkit-animation-duration: .1s;
 	// -webkit-animation-iteration-count: 1;
 	// -webkit-animation-delay: 0s;
@@ -51,7 +51,7 @@
 	.subtitle_90 {
 		font-size: 80px;
 		line-height: 1.4;
-		font-family: "DINMitAlt";
+		font-family: 'DINMitAlt';
 		color: rgba(238, 194, 143, 1);
 		span {
 			font-family: 'PingFangSC-Regular';
@@ -78,9 +78,9 @@
 		.item_l {
 			overflow: hidden;
 			text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 4.7rem;
-      min-width: 4rem;
+			white-space: nowrap;
+			max-width: 4.7rem;
+			min-width: 4rem;
 			float: left;
 			text-align: left;
 			i {

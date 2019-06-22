@@ -103,12 +103,11 @@
 	.sureBtn {
 		width: 6.2rem;
 		margin-top: 50px;
-		margin-bottom: .35rem;
+		margin-bottom: 0.35rem;
 	}
 }
 :global {
-
-.real_name_page_list {
+	.real_name_page_list {
 		.am-list-item .am-input-label {
 			color: #333;
 			font-size: 0.3rem;

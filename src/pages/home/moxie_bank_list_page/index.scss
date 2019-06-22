@@ -19,7 +19,7 @@
 		padding: 5px 20px;
 		font-weight: 200;
 		margin-left: 30px;
-		letter-spacing: 1PX;
+		letter-spacing: 1px;
 		vertical-align: middle;
 	}
 	.bankDesc {
@@ -42,31 +42,31 @@
 	}
 	.infromationTitle {
 		font-size: 50px;
-		color: #121C32;
+		color: #121c32;
 		font-family: 'PingFangSC-Semibold';
 		font-weight: 600;
 		padding: 55px 40px 40px;
 		line-height: 1;
 	}
-	.desc{
+	.desc {
 		font-size: 26px;
 		font-weight: 400;
 		font-family: 'PingFangSC-Regular';
-		color: #868E9E;
+		color: #868e9e;
 	}
-	.tipsBox{
+	.tipsBox {
 		position: fixed;
 		bottom: 0;
 		height: 50px;
 		width: 100%;
-		background: #FAF3E4;
+		background: #faf3e4;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		font-size: 26px;
-		color: #121C32;
+		color: #121c32;
 		z-index: 1;
-		i{
+		i {
 			display: block;
 			width: 24px;
 			height: 28px;
@@ -79,9 +79,9 @@
 	// .tipsBox2{
 	// 	top: 0;
 	// }
-	.progressBox{
+	.progressBox {
 		padding: 46px 50px 0 40px;
-		i{
+		i {
 			display: block;
 			width: 636px;
 			height: 34px;
@@ -89,11 +89,11 @@
 			background-repeat: no-repeat;
 			background-image: url(../../../assets/images/home/progress_98.png);
 		}
-		.bottomText{
+		.bottomText {
 			display: flex;
 			justify-content: space-between;
 			font-size: 22px;
-			color: #397BE6;
+			color: #397be6;
 			margin-top: 2px;
 		}
 	}
@@ -103,16 +103,16 @@
 		overflow: hidden;
 		padding-bottom: 50px;
 		.bankitem {
-      position: relative;
-      padding: 15px 0;
-      .recommend_icon {
-        position: absolute;
-        display: inline-block;
-        right: 44px;
-        top: 0;
-        width: 54px;
-        height: 28px;
-      }
+			position: relative;
+			padding: 15px 0;
+			.recommend_icon {
+				position: absolute;
+				display: inline-block;
+				right: 44px;
+				top: 0;
+				width: 54px;
+				height: 28px;
+			}
 			img {
 				width: 80px;
 			}
@@ -120,7 +120,7 @@
 				font-size: 26px;
 				font-family: 'PingFangSC-Semibold';
 				font-weight: 600;
-				color: #121C32;
+				color: #121c32;
 			}
 			margin-bottom: 20px;
 			float: left;

@@ -1,24 +1,24 @@
 .descContainer {
-  padding: 30px;
-  .title {
-    margin-top: 80px;
-    color: #333;
-    font-size: 32px;
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-  .time {
-    color: #999;
-    font-size: 24px;
-    margin: 10px 0 40px;
-  }
-  .p {
-    font-size: 26px;
-    color: #666;
-    margin-bottom: 30px;
-    line-height: 40px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: -apple-system-font, "Helvetica Neue", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB";
-  }
+	padding: 30px;
+	.title {
+		margin-top: 80px;
+		color: #333;
+		font-size: 32px;
+		word-wrap: break-word;
+		word-break: break-all;
+	}
+	.time {
+		color: #999;
+		font-size: 24px;
+		margin: 10px 0 40px;
+	}
+	.p {
+		font-size: 26px;
+		color: #666;
+		margin-bottom: 30px;
+		line-height: 40px;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		font-family: -apple-system-font, 'Helvetica Neue', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB';
+	}
 }
