@@ -1,5 +1,5 @@
 @import '../../../assets/styles/scss/base/fn.scss';
-.income_page{
+.income_page {
 	margin: 0 19px;
 }
 .heightBody {
@@ -7,7 +7,7 @@
 }
 .application_navbar ~ .application_content {
 	.heightBody {
-		height: calc(100vh - .88rem);
+		height: calc(100vh - 0.88rem);
 	}
 }
 .incomeBox {
@@ -46,7 +46,7 @@
 			margin: 5px 0;
 		}
 	}
-	.incomeContExpired{
+	.incomeContExpired {
 		&::after {
 			display: block;
 			position: absolute;
@@ -55,10 +55,10 @@
 			top: 0;
 			width: 113px;
 			height: 65px;
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-171px, -353px);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -171px, -353px);
 		}
 	}
-	.incomeContSucc{
+	.incomeContSucc {
 		&::after {
 			display: block;
 			position: absolute;
@@ -67,7 +67,7 @@
 			top: 0;
 			width: 113px;
 			height: 65px;
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, -438px);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, -438px);
 		}
 	}
 	.incomeContent {

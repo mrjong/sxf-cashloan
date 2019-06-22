@@ -1,71 +1,71 @@
 @import '../../../assets/styles/scss/base/fn';
 .membership_card_page {
-  @include bg-image('../../../assets/images/menbership_card/vipcard');
-  background-repeat: no-repeat;
-  background-size: 6.2rem;
-  background-origin: content-box;
-  background-color: #fff;
-  min-height: 100%;
-  box-sizing: border-box;
-  padding: .43rem .65rem 1.27rem;
-  .btn{
-    margin-top: 130px;
-  }
+	@include bg-image('../../../assets/images/menbership_card/vipcard');
+	background-repeat: no-repeat;
+	background-size: 6.2rem;
+	background-origin: content-box;
+	background-color: #fff;
+	min-height: 100%;
+	box-sizing: border-box;
+	padding: 0.43rem 0.65rem 1.27rem;
+	.btn {
+		margin-top: 130px;
+	}
 }
 .cardMoney {
-  color: #ea2c32;
-  font-size: 1.2rem;
-  text-align: center;
-  padding-top: 0.6rem;
-  height: 1.8rem;
-  line-height: 1.8rem;
+	color: #ea2c32;
+	font-size: 1.2rem;
+	text-align: center;
+	padding-top: 0.6rem;
+	height: 1.8rem;
+	line-height: 1.8rem;
 }
 .cardNumber {
-  color: #ea2c32;
-  font-size: 0.6rem;
-  text-align: center;
-  padding-top: 0.6rem;
-  line-height: 1.8rem;
-  height: 1.8rem;
+	color: #ea2c32;
+	font-size: 0.6rem;
+	text-align: center;
+	padding-top: 0.6rem;
+	line-height: 1.8rem;
+	height: 1.8rem;
 }
 .icon {
-  color: #ea2c32;
-  font-size: 0.3rem;
-  margin-left: -0.3rem;
+	color: #ea2c32;
+	font-size: 0.3rem;
+	margin-left: -0.3rem;
 }
 .vipIcon {
-  margin-top: 0.73rem;
-  text-align: center;
-  img {
-    width: 100%;
-    // height: 0.33rem;
-  }
+	margin-top: 0.73rem;
+	text-align: center;
+	img {
+		width: 100%;
+		// height: 0.33rem;
+	}
 }
 .cardTitle {
-  color: #e6e6e6;
-  font-size: 0.24rem;
-  text-align: center;
-  padding: 0 30px;
-  .right{
-    margin-left: 10px;
-    display: inline-block;
-  }
-  .left{
-    margin-right: 10px;
-    display: inline-block;
-  }
+	color: #e6e6e6;
+	font-size: 0.24rem;
+	text-align: center;
+	padding: 0 30px;
+	.right {
+		margin-left: 10px;
+		display: inline-block;
+	}
+	.left {
+		margin-right: 10px;
+		display: inline-block;
+	}
 }
 .sureBtn {
-  width: 6.2rem !important;
-  margin: 0 auto;
+	width: 6.2rem !important;
+	margin: 0 auto;
 }
 .productList {
-  font-size: 0.3rem;
-  color: #333;
-  margin-top: 0.3rem;
+	font-size: 0.3rem;
+	color: #333;
+	margin-top: 0.3rem;
 }
 .prompt {
-  font-size: 0.3rem;
-  color: #f44258;
-  margin-top: 0.63rem;
+	font-size: 0.3rem;
+	color: #f44258;
+	margin-top: 0.63rem;
 }
