@@ -33,6 +33,7 @@ module.exports = {
 		'block-opening-brace-space-before': null,
 		'font-family-no-missing-generic-family-keyword': null,
 		'length-zero-no-unit': null,
-		'color-hex-case': null
+		'color-hex-case': null,
+		'declaration-block-trailing-semicolon': null
 	}
 };

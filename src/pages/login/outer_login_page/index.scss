@@ -23,57 +23,57 @@
 		margin: 0 auto;
 		padding: 23px;
 		box-sizing: border-box;
-		.loginContentBox{
+		.loginContentBox {
 			position: relative;
-			border: 1PX solid #BD9755;
+			border: 1px solid #bd9755;
 			padding: 29px;
 		}
-		.title{
+		.title {
 			position: relative;
 			font-size: 26px;
 			font-family: PingFangSC-Regular;
 			font-weight: bold;
-			color: #121C32;
+			color: #121c32;
 			top: -10px;
 		}
-		.moneyText{
+		.moneyText {
 			position: relative;
 			top: -55px;
 			font-size: 120px;
-			font-family: "DINMitAlt";
+			font-family: 'DINMitAlt';
 			font-weight: bold;
-			color: #121C32;
+			color: #121c32;
 			height: 91px;
 			margin-top: 32px;
 			margin-bottom: 34px;
 		}
-		.commonLine{
+		.commonLine {
 			position: absolute;
 			display: inline-block;
 			height: 18px;
 			width: 18px;
-			border-color: #BD9755;
+			border-color: #bd9755;
 			border-style: solid;
 			box-sizing: border-box;
 		}
-		.leftTopLine{
-			top: -1PX;
-			left: -1PX;
+		.leftTopLine {
+			top: -1px;
+			left: -1px;
 			border-width: 4px 0 0 4px;
 		}
-		.rightTopLine{
-			top: -1PX;
-			right: -1PX;
+		.rightTopLine {
+			top: -1px;
+			right: -1px;
 			border-width: 4px 4px 0 0;
 		}
-		.leftBottomLine{
-			bottom: -1PX;
-			left: -1PX;
+		.leftBottomLine {
+			bottom: -1px;
+			left: -1px;
 			border-width: 0 0 4px 4px;
 		}
-		.rightBottomLine{
-			bottom: -1PX;
-			right: -1PX;
+		.rightBottomLine {
+			bottom: -1px;
+			right: -1px;
 			border-width: 0 4px 4px 0;
 		}
 		.loginInput {
@@ -81,7 +81,7 @@
 			line-height: 91px;
 			margin-bottom: 20px;
 			box-sizing: border-box;
-			border: 2px solid #C9CDD5;
+			border: 2px solid #c9cdd5;
 			border-radius: 8px;
 			background-color: rgba(38, 28, 117, 0);
 			:global {
@@ -91,11 +91,11 @@
 			}
 		}
 		input::placeholder {
-			color: #C9CDD5;
+			color: #c9cdd5;
 			font-size: 30px;
 			font-weight: normal;
 		}
-		input:-webkit-autofill{
+		input:-webkit-autofill {
 			box-shadow: 0 0 0 1000px white inset !important;
 		}
 		// .smsCodeInput {
@@ -110,24 +110,24 @@
 		.smsCode {
 			position: absolute;
 			right: 0;
-			top: 1PX;
+			top: 1px;
 			font-size: 30px;
 			width: 235px;
 			height: 91px;
 			line-height: 91px;
 			text-align: center;
-			color: #FEC933;
+			color: #fec933;
 			.leftBorder {
 				position: absolute;
 				left: 0;
 				top: 18px;
 				width: 2px;
 				height: 52px;
-				background: #C9CDD5;
+				background: #c9cdd5;
 			}
 		}
 		.smsCode2 {
-			color: #C9CDD5;
+			color: #c9cdd5;
 		}
 		// .smsCodeNumber {
 		// 	color: #fff;
@@ -144,7 +144,7 @@
 			width: 444px;
 			height: 87px;
 			line-height: 87px;
-			background: #FEC933;
+			background: #fec933;
 			border-radius: 44px;
 			font-size: 30px;
 			// font-weight: bold;
@@ -164,12 +164,12 @@
 		display: flex;
 		position: relative;
 		top: -57px;
-		color: #8E8D7B;
+		color: #8e8d7b;
 		font-size: 24px;
 		margin: 0 58px;
 		text-align: left;
 		span {
-			color: #414A53;
+			color: #414a53;
 		}
 
 		.checked {
@@ -189,30 +189,30 @@
 		}
 	}
 
-		:global {
-			.am-list-item .am-input-control input {
-				font-size: 30px;
-				width: 100%;
-				display: inline-block;
-				text-align: left;
-				-moz-box-sizing: border-box;
-				box-sizing: border-box;
-				font-family: PingFang-SC-Regular;
-				padding: 0.16rem 0;
-				color: #121C32;
-				font-weight: bold;
-			}
-
-			// .am-list-item .am-checkbox .am-checkbox-inner {
-			// 	width: 28px;
-			// 	height: 28px;
-			// 	border-radius: 5px;
-			// 	border: 1PX solid #FE4D2A;
-			// }
-
-			// .am-list-item .am-checkbox-checked .am-checkbox-inner {
-			// 	background: #FE4D2A;
-			// 	font-size: 26px;
-			// }
+	:global {
+		.am-list-item .am-input-control input {
+			font-size: 30px;
+			width: 100%;
+			display: inline-block;
+			text-align: left;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			font-family: PingFang-SC-Regular;
+			padding: 0.16rem 0;
+			color: #121c32;
+			font-weight: bold;
 		}
+
+		// .am-list-item .am-checkbox .am-checkbox-inner {
+		// 	width: 28px;
+		// 	height: 28px;
+		// 	border-radius: 5px;
+		// 	border: 1PX solid #FE4D2A;
+		// }
+
+		// .am-list-item .am-checkbox-checked .am-checkbox-inner {
+		// 	background: #FE4D2A;
+		// 	font-size: 26px;
+		// }
 	}
+}
