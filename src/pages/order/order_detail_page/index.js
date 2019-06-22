@@ -1089,7 +1089,7 @@ export default class order_detail_page extends PureComponent {
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
 								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>
-									{perdList && perdNum && (parseFloat(Math.min(money, perdList[perdNum - 1].perdTotAmt)) + parseFloat(insureFeeInfo)).toFixed(2)}
+									{perdList && perdNum && (parseFloat(perdList[perdNum - 1].perdTotAmt) + parseFloat(insureFeeInfo)).toFixed(2)}
 								</span>元
 							</div>
 						)}
@@ -1101,7 +1101,7 @@ export default class order_detail_page extends PureComponent {
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
 								期账单，请保证卡内余额大于<span className={styles.red}>
-									{perdList && perdNum && parseFloat(Math.min(money, perdList[perdNum - 1].perdTotAmt)).toFixed(2)}
+									{perdList && perdNum && parseFloat(perdList[perdNum - 1].perdTotAmt).toFixed(2)}
 								</span>元
 							</div>
 						)}
