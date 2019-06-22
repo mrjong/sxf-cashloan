@@ -40,7 +40,7 @@ const API = {
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	protocolBind: '/withhold/protocolBink' //协议绑卡接口
 };
 
 let indexData = null; // 首页带过来的信息
@@ -115,7 +115,7 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			isShowInsureModal: false, // 是否显示保险说明弹框
-			isCheckInsure: false, // 是否选择了保费
+			isCheckInsure: false // 是否选择了保费
 		};
 	}
 
@@ -214,11 +214,14 @@ export default class confirm_agency_page extends PureComponent {
 				store.setSaveAmt(true);
 				store.setRepaymentModalData(this.state);
 				store.setBackUrl('/home/confirm_agency?showModal=true');
-        repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
-        // 增加保费标识 insuranceFlag
+				repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
+				// 增加保费标识 insuranceFlag
 				this.props.history.push({
 					pathname: '/mine/select_save_page',
-					search: `?agrNo=${repayInfo.withHoldAgrNo}&insuranceFlag=${repayInfo2 && Number(repayInfo2.insurance) ? '1' : '0'}`
+					search: `?agrNo=${repayInfo.withHoldAgrNo}&insuranceFlag=${repayInfo2 &&
+					Number(repayInfo2.insurance)
+						? '1'
+						: '0'}`
 				});
 			}
 		);
@@ -714,7 +717,7 @@ export default class confirm_agency_page extends PureComponent {
 		if (repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure) {
 			this.props.toast.info('请先购买保险');
 			return;
-		};
+		}
 		this.checkProtocolBindCard();
 		// this.requestBindCardState();
 	};
@@ -761,114 +764,119 @@ export default class confirm_agency_page extends PureComponent {
 	// 关闭短信弹窗并还款
 	closeSmsModal = () => {
 		this.setState({
-		  isShowSmsModal: false,
-		  smsCode: '',
+			isShowSmsModal: false,
+			smsCode: ''
 		});
 		this.requestBindCardState();
-	}
+	};
 
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
 		const { repayInfo } = this.state;
 		if (!this.state.smsCode) {
-		  this.props.toast.info('请输入验证码');
-		  return;
+			this.props.toast.info('请输入验证码');
+			return;
 		}
 		if (this.state.smsCode.length !== 6) {
-		  this.props.toast.info('请输入正确的验证码');
-		  return;
+			this.props.toast.info('请输入正确的验证码');
+			return;
 		}
 		buriedPointEvent(home.protocolBindBtnClick);
-		this.props.$fetch.post(API.protocolBind, {
-			cardNo: repayInfo && repayInfo.withHoldAgrNo,
-			smsCd: this.state.smsCode,
-			isEntry: "01",
-		}).then((res) => {
-		  if (res.msgCode === 'PTM0000') {
-			this.closeSmsModal()
-		  } else if (res.msgCode === 'PTM9901') {
-			this.props.toast.info(res.data);
-			this.setState({ smsCode: '' });
-			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-		  } else {
-			this.props.toast.info('绑卡失败，请换卡或重试');
-			this.setState({
-			  smsCode: '',
-			  isShowSmsModal: false,
+		this.props.$fetch
+			.post(API.protocolBind, {
+				cardNo: repayInfo && repayInfo.withHoldAgrNo,
+				smsCd: this.state.smsCode,
+				isEntry: '01'
 			})
-			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-		  }
-		})
-	}
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.closeSmsModal();
+				} else if (res.msgCode === 'PTM9901') {
+					this.props.toast.info(res.data);
+					this.setState({ smsCode: '' });
+					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+				} else {
+					this.props.toast.info('绑卡失败，请换卡或重试');
+					this.setState({
+						smsCode: '',
+						isShowSmsModal: false
+					});
+					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+				}
+			});
+	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
 		const { repayInfo, repayInfo2 } = this.state;
-		const params = repayInfo2 && Number(repayInfo2.insurance) ? {
-			cardNo: repayInfo && repayInfo.withHoldAgrNo,
-		  	bankCd: repayInfo && repayInfo.bankCode,
-		  	usrSignCnl: getH5Channel(),
-		  	cardTyp: 'D',
-			isEntry: '01',
-			type: '1', // 0 可以重复 1 不可以重复
-			priorityType: 'ZY', // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
-		} : {
-			cardNo: repayInfo && repayInfo.withHoldAgrNo,
-		  	bankCd: repayInfo && repayInfo.bankCode,
-		  	usrSignCnl: getH5Channel(),
-		  	cardTyp: 'D',
-			isEntry: '01',
-			type: '1', // 0 可以重复 1 不可以重复
-		}
+		const params =
+			repayInfo2 && Number(repayInfo2.insurance)
+				? {
+						cardNo: repayInfo && repayInfo.withHoldAgrNo,
+						bankCd: repayInfo && repayInfo.bankCode,
+						usrSignCnl: getH5Channel(),
+						cardTyp: 'D',
+						isEntry: '01',
+						type: '1', // 0 可以重复 1 不可以重复
+						priorityType: 'ZY' // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
+					}
+				: {
+						cardNo: repayInfo && repayInfo.withHoldAgrNo,
+						bankCd: repayInfo && repayInfo.bankCode,
+						usrSignCnl: getH5Channel(),
+						cardTyp: 'D',
+						isEntry: '01',
+						type: '1' // 0 可以重复 1 不可以重复
+					};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
-		  switch (res.msgCode) {
-			case 'PTM0000':
-			  	//协议绑卡校验成功提示（走协议绑卡逻辑）
-				this.setState({
-					isShowSmsModal: true
-				})
-			break;
-			case 'PTM9901':
-				this.props.toast.info(res.data);
-				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-		  	break;
-			case '1010': // 银行卡已经绑定 直接继续往下走
-			  	this.requestBindCardState();
-			break;
-			case 'PBM1010':
-				this.props.toast.info(res.msgInfo);
-				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-			break;
-			default:
-				this.props.toast.info('暂不支持该银行卡，请换卡重试');
-				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-			break;
-		  }
-		})
-	}
+			switch (res.msgCode) {
+				case 'PTM0000':
+					//协议绑卡校验成功提示（走协议绑卡逻辑）
+					this.setState({
+						isShowSmsModal: true
+					});
+					break;
+				case 'PTM9901':
+					this.props.toast.info(res.data);
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				case '1010': // 银行卡已经绑定 直接继续往下走
+					this.requestBindCardState();
+					break;
+				case 'PBM1010':
+					this.props.toast.info(res.msgInfo);
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				default:
+					this.props.toast.info('暂不支持该银行卡，请换卡重试');
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+			}
+		});
+	};
 	// 处理输入的验证码
 	handleSmsCodeChange = (smsCode) => {
 		this.setState({
-		  smsCode,
-		})
-	}
+			smsCode
+		});
+	};
 	// 关闭保险说明弹框
 	closeInsureModal = () => {
 		this.setState({
-			isShowInsureModal: false,
-		})
-	}
+			isShowInsureModal: false
+		});
+	};
 	// 选择保费
 	chooseInsure = () => {
 		this.setState({
 			isCheckInsure: !this.state.isCheckInsure
-		})
-	}
+		});
+	};
 	// 打开保险说明弹框
 	openInsureModal = () => {
 		this.setState({
-			isShowInsureModal: true,
-		})
-	}
+			isShowInsureModal: true
+		});
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -890,7 +898,7 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal,
 			smsCode,
 			isShowInsureModal,
-			isCheckInsure,
+			isCheckInsure
 		} = this.state;
 		return (
 			<div>
@@ -1009,20 +1017,24 @@ export default class confirm_agency_page extends PureComponent {
 								>
 									<label>优惠券</label>
 									{repayInfo2.data && repayInfo2.data.coupVal ? (
-										<span className={[style.listValue, style.hasArrow].join(' ')}>
+										<span className={[ style.listValue, style.hasArrow ].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
 											{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 										</span>
 									) : (
 										(repayInfo2 && (
-											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
+											<span
+												className={[ style.listValue, style.redText, style.hasArrow ].join(' ')}
+											>
 												无可用优惠券
 												<Icon type="right" className={style.icon} />
 												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)) || (
-											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
+											<span
+												className={[ style.listValue, style.redText, style.hasArrow ].join(' ')}
+											>
 												请选择
 												<Icon type="right" className={style.icon} />
 												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
@@ -1037,7 +1049,7 @@ export default class confirm_agency_page extends PureComponent {
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
 										) : (
 											(repayInfo2 && (
-												<span className={[style.listValue, style.hasArrow].join(' ')}>
+												<span className={[ style.listValue, style.hasArrow ].join(' ')}>
 													点击查看
 													<Icon type="right" className={style.icon} />
 												</span>
@@ -1055,13 +1067,13 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
 									<label>还款银行卡</label>
-									<span className={[style.listValue, style.hasArrow].join(' ')}>
+									<span className={[ style.listValue, style.hasArrow ].join(' ')}>
 										{repayInfo.bankName}({repayInfo.cardNoHid})
 										<Icon type="right" className={style.icon} />
 									</span>
 								</li>
 							</ul>
-							{ repayInfo2 && Number(repayInfo2.insurance) ?
+							{repayInfo2 && Number(repayInfo2.insurance) ? (
 								<ul className={style.pannel}>
 									<li className={`${style.listItem} ${style.listItem2}`}>
 										<div className={style.insureLeft}>
@@ -1076,16 +1088,23 @@ export default class confirm_agency_page extends PureComponent {
 										</div>
 										<div className={style.insureRight} onClick={this.chooseInsure}>
 											<span>¥{repayInfo2.insurance}</span>
-											<i className={ isCheckInsure ? `${style.unCheckIco} ${style.checkIco}` : style.unCheckIco} />
+											<i
+												className={
+													isCheckInsure ? (
+														`${style.unCheckIco} ${style.checkIco}`
+													) : (
+														style.unCheckIco
+													)
+												}
+											/>
 										</div>
 									</li>
 								</ul>
-								: null
-							}
+							) : null}
 							<div className={style.protocolBox}>
-								{
-									repayInfo2 && Number(repayInfo2.insurance) ? <p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p> : null
-								}
+								{repayInfo2 && Number(repayInfo2.insurance) ? (
+									<p className={style.insureDesc}>本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准</p>
+								) : null}
 								{contractData.length > 0 && (
 									<p className={style.protocolLink}>
 										点击“签约借款”，表示同意{' '}
@@ -1114,8 +1133,9 @@ export default class confirm_agency_page extends PureComponent {
 								)
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure ?
-								(
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? repayInfo2 &&
+								Number(repayInfo2.insurance) &&
+								!isCheckInsure ? (
 									style.submitBtnDisabled
 								) : (
 									style.submitBtn
@@ -1212,21 +1232,21 @@ export default class confirm_agency_page extends PureComponent {
 							</ul>
 						</div>
 					</Modal>
-					{
-						isShowSmsModal && <SmsModal
+					{isShowSmsModal && (
+						<SmsModal
 							onCancel={() => {}}
 							onConfirm={this.confirmProtocolBindCard}
 							onSmsCodeChange={this.handleSmsCodeChange}
 							smsCodeAgain={this.checkProtocolBindCard}
 							smsCode={smsCode}
 							toggleBtn={false}
-							ref={(ele) => { this.smsModal = ele; }}
+							ref={(ele) => {
+								this.smsModal = ele;
+							}}
 						/>
-					}
-					{
-						// 保险弹框
-						isShowInsureModal && <InsuranceModal onConfirmCb={ this.closeInsureModal } />
-					}
+					)}
+					{// 保险弹框
+					isShowInsureModal && <InsuranceModal onConfirmCb={this.closeInsureModal} />}
 				</div>
 			</div>
 		);

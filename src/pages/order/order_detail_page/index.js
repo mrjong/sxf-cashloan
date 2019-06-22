@@ -14,7 +14,7 @@ import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
 const API = {
 	qryDtl: '/bill/qryDtl',
-	payback: '/bill/payback',
+	payback: '/bill/paySubmit',
 	couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
@@ -59,9 +59,9 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag: '',
 			thisPerdNum: '',
 			insureInfo: '',
-      insureFeeInfo: '',
-      isInsureValid: false, // 是否有保费并且为待支付状态
-      totalAmtForShow: '',
+			insureFeeInfo: '',
+			isInsureValid: false, // 是否有保费并且为待支付状态
+			totalAmtForShow: ''
 		};
 	}
 	componentWillMount() {
@@ -136,30 +136,28 @@ export default class order_detail_page extends PureComponent {
 		const { billNo, billDesc } = this.state;
 		this.props.$fetch
 			.post(API.fundPlain, {
-        ordNo: billNo,
-        isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
-        prodType: billDesc.prodType
+				ordNo: billNo,
+				isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
+				prodType: billDesc.prodType
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					if (res.data) {
-            // 现在统一取totalList里的明细，仅适用于按期还，不适用于跳跃还的
-            // 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
+						// 现在统一取totalList里的明细，仅适用于按期还，不适用于跳跃还的
+						// 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
 						let isAdvance = false;
-						const buChangJinList = res.data[0].totalList.find((item2) =>
-              item2.feeNm === '补偿金'
-            );
-            if (buChangJinList.feeAmt !== 0) {
-              isAdvance = true;
-            } else {
-              isAdvance = false;
-            }
+						const buChangJinList = res.data[0].totalList.find((item2) => item2.feeNm === '补偿金');
+						if (buChangJinList.feeAmt !== 0) {
+							isAdvance = true;
+						} else {
+							isAdvance = false;
+						}
 						this.setState(
 							{
 								detailArr: res.data[0].totalList,
 								isAdvance,
 								totalAmt: res.data[0].totalAmt,
-                totalAmtForShow: res.data[0].totalAmtForShow,
+								totalAmtForShow: res.data[0].totalAmtForShow
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -248,7 +246,7 @@ export default class order_detail_page extends PureComponent {
 							insuranceStsColor = '#C7C7CC';
 						}
 						this.setState({
-              isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '1',
+							isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '1',
 							insureFeeInfo: res.data.insuranceAmt,
 							insureInfo: {
 								label: {
@@ -289,7 +287,7 @@ export default class order_detail_page extends PureComponent {
 										isAdvance: orderDtlData && orderDtlData.isAdvance,
 										isNewsContract: orderDtlData && orderDtlData.isNewsContract,
 										totalAmt: orderDtlData && orderDtlData.totalAmt,
-                    totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow,
+										totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow
 									},
 									() => {
 										this.setState({
@@ -556,15 +554,15 @@ export default class order_detail_page extends PureComponent {
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
 		const params = {
-      cardNo:
-        this.state.bankInfo && this.state.bankInfo.agrNo
-          ? this.state.bankInfo.agrNo
-          : this.state.billDesc.wthCrdAgrNo,
-      bankCd: this.state.billDesc.wthdCrdCorpOrg,
-      usrSignCnl: getH5Channel(),
-      cardTyp: 'D',
-      isEntry: '01',
-      type: '0' // 0 可以重复 1 不可以重复
+			cardNo:
+				this.state.bankInfo && this.state.bankInfo.agrNo
+					? this.state.bankInfo.agrNo
+					: this.state.billDesc.wthCrdAgrNo,
+			bankCd: this.state.billDesc.wthdCrdCorpOrg,
+			usrSignCnl: getH5Channel(),
+			cardTyp: 'D',
+			isEntry: '01',
+			type: '0' // 0 可以重复 1 不可以重复
 		};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 			switch (res.msgCode) {
@@ -647,17 +645,8 @@ export default class order_detail_page extends PureComponent {
 	//调用还款接口逻辑
 	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const {
-			billDesc,
-			isPayAll,
-			isNewsContract,
-			repayParams,
-			totalAmt,
-			payType,
-			money,
-			thisPerdNum
-    } = this.state;
-    // const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+		const { billDesc, isPayAll, isNewsContract, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
+		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		const paybackAPI = API.payback;
 		let sendParams = {};
 		// if (isNewsContract) {
@@ -671,12 +660,13 @@ export default class order_detail_page extends PureComponent {
 		// 	}
 		// } else {
 		// 	sendParams = repayParams;
-    // }
-    if (isPayAll) { // 一键结清isSettle为1， 否则为0
-      sendParams = { ...repayParams, isSettle: '1', thisRepTotAmt: totalAmt };
-    } else {
-      sendParams = { ...repayParams, isSettle: '0', thisRepTotAmt: totalAmt }
-    }
+		// }
+		if (isPayAll) {
+			// 一键结清isSettle为1， 否则为0
+			sendParams = { ...repayParams, isSettle: '1', thisRepTotAmt: totalAmt };
+		} else {
+			sendParams = { ...repayParams, isSettle: '0', thisRepTotAmt: totalAmt };
+		}
 		// 添加微信新增参数
 		switch (payType) {
 			case 'WXPay':
@@ -822,8 +812,8 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-      isInsureValid,
-      totalAmtForShow,
+			isInsureValid,
+			totalAmtForShow
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
@@ -832,7 +822,7 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-      totalAmtForShow,
+			totalAmtForShow
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
@@ -854,7 +844,7 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-      totalAmtForShow,
+			totalAmtForShow
 		} = this.state;
 
 		let orderDtData = {
@@ -863,7 +853,7 @@ export default class order_detail_page extends PureComponent {
 			isAdvance,
 			isNewsContract,
 			totalAmt,
-      totalAmtForShow,
+			totalAmtForShow
 		};
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
@@ -972,8 +962,8 @@ export default class order_detail_page extends PureComponent {
 			payTypes,
 			openIdFlag,
 			insureInfo,
-      insureFeeInfo,
-      isInsureValid,
+			insureFeeInfo,
+			isInsureValid
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -987,8 +977,8 @@ export default class order_detail_page extends PureComponent {
 			wthdCrdNoLast = '',
 			perdNum = '',
 			waitRepAmt = '',
-      perdList,
-      waitRepAmtForShow = '',
+			perdList,
+			waitRepAmtForShow = ''
 		} = billDesc;
 		const itemList = [
 			{
@@ -1089,7 +1079,10 @@ export default class order_detail_page extends PureComponent {
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
 								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>
-									{perdList && perdNum && (parseFloat(perdList[perdNum - 1].perdTotAmt) + parseFloat(insureFeeInfo)).toFixed(2)}
+									{perdList &&
+										perdNum &&
+										(parseFloat(perdList[perdNum - 1].perdTotAmt) +
+											parseFloat(insureFeeInfo)).toFixed(2)}
 								</span>元
 							</div>
 						)}
@@ -1139,7 +1132,7 @@ export default class order_detail_page extends PureComponent {
 									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 									(money && parseFloat(money).toFixed(2))
                 )}元 */}
-                {totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
+								{totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
@@ -1168,7 +1161,7 @@ export default class order_detail_page extends PureComponent {
 											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 											(money && parseFloat(money).toFixed(2))
                     )}元 */}
-                    {totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
+										{totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
 									</span>
 								</div>
 							</div>
