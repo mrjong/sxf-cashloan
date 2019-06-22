@@ -662,10 +662,10 @@ export default class order_detail_page extends PureComponent {
 		// 	sendParams = repayParams;
 		// }
 		if (isPayAll) {
-			// 一键结清isSettle为1， 否则为0
-			sendParams = { ...repayParams, isSettle: '1', thisRepTotAmt: totalAmt };
+			// 一键结清isPayOff为1， 否则为0
+			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt };
 		} else {
-			sendParams = { ...repayParams, isSettle: '0', thisRepTotAmt: totalAmt };
+			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt };
 		}
 		// 添加微信新增参数
 		switch (payType) {
