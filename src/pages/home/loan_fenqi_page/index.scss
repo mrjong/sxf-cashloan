@@ -1,262 +1,262 @@
-@import "../../../assets/styles/scss/base/fn.scss";
+@import '../../../assets/styles/scss/base/fn.scss';
 .fenqi_page {
-  padding: 70px 60px 0;
+	padding: 70px 60px 0;
 
-  .scrollWrap {
-    padding-bottom: 160px;
-  }
+	.scrollWrap {
+		padding-bottom: 160px;
+	}
 
-  .billInpBox {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    overflow: hidden;
-    color: #484747;
-    .moneyUnit {
-      line-height: 80px;
-      font-size: 40px;
-      color: #333;
-    }
-    &::after {
-      @include setBottomLine(#333);
-      left: 0;
-    }
-  }
-  .billInput {
-    width: 583px;
-    input {
-      text-align: left;
-      font-size: 56px;
-      font-family: "DINMitAlt";
-      padding-top: 15px;
-    }
-  }
-  .inputTip {
-    font-size: 24px;
-    color: #868e9e;
-    margin: 20px 0 30px;
-  }
+	.billInpBox {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		overflow: hidden;
+		color: #484747;
+		.moneyUnit {
+			line-height: 80px;
+			font-size: 40px;
+			color: #333;
+		}
+		&::after {
+			@include setBottomLine(#333);
+			left: 0;
+		}
+	}
+	.billInput {
+		width: 583px;
+		input {
+			text-align: left;
+			font-size: 56px;
+			font-family: 'DINMitAlt';
+			padding-top: 15px;
+		}
+	}
+	.inputTip {
+		font-size: 24px;
+		color: #868e9e;
+		margin: 20px 0 30px;
+	}
 
-  .pannel {
-    overflow: hidden;
-    .listItem {
-      position: relative;
-      display: flex;
-      min-height: 110px;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-      font-size: 30px;
-      color: #121c32;
-      &::after {
-        @include setBottomLine(#f0f1f5);
-        left: 0;
-      }
-    }
+	.pannel {
+		overflow: hidden;
+		.listItem {
+			position: relative;
+			display: flex;
+			min-height: 110px;
+			justify-content: space-between;
+			align-items: center;
+			box-sizing: border-box;
+			font-size: 30px;
+			color: #121c32;
+			&::after {
+				@include setBottomLine(#f0f1f5);
+				left: 0;
+			}
+		}
 
-    .listValue {
-      font-weight: 700;
-    }
+		.listValue {
+			font-weight: 700;
+		}
 
-    .icon {
-      vertical-align: middle;
-      width: 40px;
-      height: 50px;
-      margin-bottom: 5px;
-    }
-  }
+		.icon {
+			vertical-align: middle;
+			width: 40px;
+			height: 50px;
+			margin-bottom: 5px;
+		}
+	}
 
-  .protocolLink {
-    font-size: 24px;
-    color: #8e8d7b;
-    margin: 24px 0 24px;
-    em {
-      color: #121c32;
-    }
-  }
+	.protocolLink {
+		font-size: 24px;
+		color: #8e8d7b;
+		margin: 24px 0 24px;
+		em {
+			color: #121c32;
+		}
+	}
 
-  .greyText {
-    color: #868e9e;
-    font-weight: 700;
-  }
+	.greyText {
+		color: #868e9e;
+		font-weight: 700;
+	}
 
-  .redText {
-    color: #fe6666;
-    font-weight: 700;
-  }
+	.redText {
+		color: #fe6666;
+		font-weight: 700;
+	}
 
-  .highlightText {
-    color: #397BE6;
-    font-weight: 700;
-  }
+	.highlightText {
+		color: #397be6;
+		font-weight: 700;
+	}
 
-  .addIcon {
-    font-size: 35px;
-    color: #333;
-    margin-left: 10px;
-  }
+	.addIcon {
+		font-size: 35px;
+		color: #333;
+		margin-left: 10px;
+	}
 
-  .tagListWrap {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    width: 490px;
-  }
+	.tagListWrap {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		width: 490px;
+	}
 
-  .tagButton {
-    display: inline-block;
-    width: 140px;
-    height: 50px;
-    line-height: 48px;
-    text-align: center;
-    border-radius: 25px;
-    font-size: 30px;
-    background: #fff;
-    color: #868e9e;
-    border: 1PX solid #868e9e;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-    margin-left: 35px;
-    &:nth-child(3n + 1) {
-      margin-left: 0;
-    }
-  }
+	.tagButton {
+		display: inline-block;
+		width: 140px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #868e9e;
+		border: 1px solid #868e9e;
+		box-sizing: border-box;
+		margin-bottom: 20px;
+		margin-left: 35px;
+		&:nth-child(3n + 1) {
+			margin-left: 0;
+		}
+	}
 
-  .tagButtonActive {
-    color: #fe6666;
-    border: 1PX solid #fe6666;
-  }
+	.tagButtonActive {
+		color: #fe6666;
+		border: 1px solid #fe6666;
+	}
 
-  .buttonWrap {
-    width: 100%;
-    padding: 30px 0;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background-color: #fff;
+	.buttonWrap {
+		width: 100%;
+		padding: 30px 0;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		background-color: #fff;
 
-    .submitBtn {
-      width: 634px;
-    }
+		.submitBtn {
+			width: 634px;
+		}
 
-    .submitBtnDisabled {
-      width: 634px;
-      background-color: #d8d8d8;
-      color: #fff;
-    }
-  }
+		.submitBtnDisabled {
+			width: 634px;
+			background-color: #d8d8d8;
+			color: #fff;
+		}
+	}
 }
 
 :global {
-  .purpose_modal {
-    .am-modal-body {
-      padding: 50px 60px 0;
-    }
-  }
+	.purpose_modal {
+		.am-modal-body {
+			padding: 50px 60px 0;
+		}
+	}
 
-  .fenqi_tip_modal.am-modal-transparent {
-    .am-modal-body {
-      position: relative;
-    }
-    .am-modal-content {
-      padding: 0;
-      border-radius: 6px;
-      .am-modal-body {
-        padding: 0;
-      }
-    }
-  }
+	.fenqi_tip_modal.am-modal-transparent {
+		.am-modal-body {
+			position: relative;
+		}
+		.am-modal-content {
+			padding: 0;
+			border-radius: 6px;
+			.am-modal-body {
+				padding: 0;
+			}
+		}
+	}
 }
 
 .modalTitle {
-  font-size: 50px;
-  color: #121c32;
-  text-align: left;
+	font-size: 50px;
+	color: #121c32;
+	text-align: left;
 }
 
 .modalDesc {
-  font-size: 26px;
-  color: #868e9e;
-  text-align: left;
-  margin: 32px 0 64px;
+	font-size: 26px;
+	color: #868e9e;
+	text-align: left;
+	margin: 32px 0 64px;
 }
 
 .modalItem {
-  position: relative;
-  height: 110px;
-  line-height: 110px;
-  width: 100%;
-  font-size: 32px;
-  color: #121c32;
-  &::after {
-    @include setBottomLine(#f0f1f5);
-    left: 0;
-  }
+	position: relative;
+	height: 110px;
+	line-height: 110px;
+	width: 100%;
+	font-size: 32px;
+	color: #121c32;
+	&::after {
+		@include setBottomLine(#f0f1f5);
+		left: 0;
+	}
 }
 
 .tipInfo {
-  color: #868e9e;
-  font-size: 30px;
-  margin: 93px 35px 50px;
+	color: #868e9e;
+	font-size: 30px;
+	margin: 93px 35px 50px;
 }
 
 .tipButton {
-  position: relative;
-  color: #121c32;
-  width: 100%;
-  height: 100px;
-  line-height: 100px;
-  font-size: 34px;
-  font-weight: 400;
-  &::after {
-    @include setTopLine(#f0f1f5);
-    left: 0;
-  }
+	position: relative;
+	color: #121c32;
+	width: 100%;
+	height: 100px;
+	line-height: 100px;
+	font-size: 34px;
+	font-weight: 400;
+	&::after {
+		@include setTopLine(#f0f1f5);
+		left: 0;
+	}
 }
 
 .tipCloseIcon {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 55px;
-  height: 55px;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 55px;
+	height: 55px;
 }
 
 .modal_content {
-  position: relative;
-  .modal_close_btn {
-    position: absolute;
-    top: -5px;
-    right: 0;
-  }
+	position: relative;
+	.modal_close_btn {
+		position: absolute;
+		top: -5px;
+		right: 0;
+	}
 
-  .modal_title {
-    font-size: 0.36rem;
-    color: #333;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 0.3rem;
-  }
+	.modal_title {
+		font-size: 0.36rem;
+		color: #333;
+		border-bottom: 1px solid #e5e5e5;
+		padding-bottom: 0.3rem;
+	}
 
-  .bill_list {
-    padding: 0.1rem;
-    max-height: 500px;
-    overflow: scroll;
-  }
+	.bill_list {
+		padding: 0.1rem;
+		max-height: 500px;
+		overflow: scroll;
+	}
 
-  .list_item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.13rem 0;
-  }
+	.list_item {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.13rem 0;
+	}
 
-  .item_name {
-    font-size: 0.3rem;
-    color: #333;
-  }
+	.item_name {
+		font-size: 0.3rem;
+		color: #333;
+	}
 
-  .item_value {
-    font-size: 0.3rem;
-    color: #333;
-    font-weight: bold;
-  }
+	.item_value {
+		font-size: 0.3rem;
+		color: #333;
+		font-weight: bold;
+	}
 }
