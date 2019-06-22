@@ -132,7 +132,7 @@ export default class confirm_agency_page extends PureComponent {
 				pageData.repayInfo.bankName = bankInfo.bankName;
 				pageData.repayInfo.cardNoHid = bankInfo.lastCardNo;
 				pageData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
-				pageData.repayInfo.bankCode = bankInfo.bankCode;
+        pageData.repayInfo.bankCode = bankInfo.bankCode || bankInfo.bankCd;
 			}
 			this.recoveryPageData();
 		} else {
