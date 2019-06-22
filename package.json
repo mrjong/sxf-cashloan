@@ -108,7 +108,7 @@
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
 		"precommit": "lint-staged",
-		"prettify": "prettier --fix --write 'src/pages/home/**/*.scss'"
+		"prettify": "prettier --fix --write 'src/pages/**/*.scss'"
 	},
 	"husky": {
 		"hooks": {
