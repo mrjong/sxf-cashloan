@@ -17,6 +17,8 @@ import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
 import logoImg from 'assets/images/common/black_logo.png';
 let timmer;
+let timmer2;
+
 const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -277,6 +279,7 @@ export default class login_page extends PureComponent {
 				}
 			})
 			.catch((err) => {
+				// console.log()
 				this.props.history.replace('/home/home');
 			});
 	};

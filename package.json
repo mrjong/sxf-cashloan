@@ -107,12 +107,18 @@
 		"push-test": "rm -rf node_modules && yarn && npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
-		"precommit": "lint-staged",
+		"precommit": "pretty-quick --staged",
 		"prettify": "prettier --fix --write 'src/pages/login_page/index.js'"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "pretty-quick  --staged"
+	"lint-staged": {
+		"scripts": {
+			"precommit": "lint-staged",
+			"lint-staged": {
+				"*.{ts,js,css,json}": [
+					"prettier --write",
+					"git add"
+				]
+			}
 		}
 	},
 	"repository": {
