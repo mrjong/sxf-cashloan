@@ -277,6 +277,7 @@ export default class login_page extends PureComponent {
 				}
 			})
 			.catch((err) => {
+				// console.log()
 				this.props.history.replace('/home/home');
 			});
 	};
