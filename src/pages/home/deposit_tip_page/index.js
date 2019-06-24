@@ -9,7 +9,6 @@ import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi } from 'utils/analytinsType';
 import qs from 'qs';
-import { getDeviceType } from 'utils';
 
 const API = {
   DOWNLOADURL: 'download/getDownloadUrl',
