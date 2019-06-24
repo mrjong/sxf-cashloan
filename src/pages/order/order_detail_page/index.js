@@ -60,7 +60,8 @@ export default class order_detail_page extends PureComponent {
 			insureInfo: '',
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
-			totalAmtForShow: ''
+			totalAmtForShow: '',
+			couponPrice: '' // 优惠劵计算过的金额
 		};
 	}
 	componentWillMount() {
@@ -165,7 +166,7 @@ export default class order_detail_page extends PureComponent {
 					} else {
 						this.setState(
 							{
-								isAdvance: false,
+								isAdvance: false
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -369,7 +370,7 @@ export default class order_detail_page extends PureComponent {
 				this.setState({
 					couponInfo,
 					deratePrice: result.data.deratePrice,
-					money: result.data.resultPrice
+					couponPrice: result.data.resultPrice
 				});
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -954,7 +955,8 @@ export default class order_detail_page extends PureComponent {
 			openIdFlag,
 			insureInfo,
 			insureFeeInfo,
-			isInsureValid
+			isInsureValid,
+			couponPrice
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1003,6 +1005,12 @@ export default class order_detail_page extends PureComponent {
 				return item.perdSts === '1';
 			});
 		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
+		let moneyWithCoupon = '';
+		if (isInsureValid) {
+			moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
+		} else {
+			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
+		}
 		return (
 			<div className={styles.order_detail_page}>
 				{isOverdue &&
@@ -1072,7 +1080,7 @@ export default class order_detail_page extends PureComponent {
 								期账单，以及支付保费，请保证卡内余额大于<span className={styles.red}>
 									{perdList &&
 										perdNum &&
-										(parseFloat(perdList[perdNum - 1].perdTotAmt) +
+										(parseFloat(perdList[perdNum - 1].perdWaitRepAmt) +
 											parseFloat(insureFeeInfo)).toFixed(2)}
 								</span>元
 							</div>
@@ -1085,7 +1093,7 @@ export default class order_detail_page extends PureComponent {
 									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
 								</span>
 								期账单，请保证卡内余额大于<span className={styles.red}>
-									{perdList && perdNum && parseFloat(perdList[perdNum - 1].perdTotAmt).toFixed(2)}
+									{perdList && perdNum && parseFloat(perdList[perdNum - 1].perdWaitRepAmt).toFixed(2)}
 								</span>元
 							</div>
 						)}
@@ -1123,7 +1131,7 @@ export default class order_detail_page extends PureComponent {
 									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 									(money && parseFloat(money).toFixed(2))
                 )}元 */}
-								{totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
+								{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
@@ -1152,7 +1160,8 @@ export default class order_detail_page extends PureComponent {
 											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 											(money && parseFloat(money).toFixed(2))
                     )}元 */}
-										{totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)}元
+										{moneyWithCoupon ||
+											(totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 									</span>
 								</div>
 							</div>
