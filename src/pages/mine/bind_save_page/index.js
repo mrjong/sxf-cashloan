@@ -56,9 +56,6 @@ export default class bind_save_page extends PureComponent {
 			location.pathname !== '/protocol/delegation_withhold_page'
 		) {
 			store.removeBackUrl(); // 清除session里的backurl的值
-		}
-		//如果不是进入协议页面，清除反显数据
-		if (this.props.history.location.pathname.indexOf('/protocol') < 0) {
 			store.removeBindCardNo();
 			store.removeBindCardPhone();
 			store.removeDepositBankName();
@@ -207,7 +204,12 @@ export default class bind_save_page extends PureComponent {
 		const factCardNo = values.valueInputCarNumber.replace(/\s*/g, '');
 		this.props.$fetch.post(API.GECARDINF, { cardNo: factCardNo }).then(
 			(result) => {
-				if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'C') {
+				if (
+					result.msgCode === 'PTM0000' &&
+					result.data &&
+					result.data.bankCd &&
+					result.data.cardTyp !== 'C'
+				) {
 					this.setState({
 						cardData: {
 							cardNo: factCardNo,
@@ -288,7 +290,8 @@ export default class bind_save_page extends PureComponent {
 	// 点击开始倒计时
 	countDownHandler = (fn) => {
 		const formData = this.props.form.getFieldsValue();
-		formData.valueInputCarNumber = formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, '');
+		formData.valueInputCarNumber =
+			formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, '');
 		if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
 			this.props.toast.info('请输入有效银行卡号');
 			return;
@@ -354,7 +357,10 @@ export default class bind_save_page extends PureComponent {
 						maxLength="24"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
-							rules: [ { required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber } ],
+							rules: [
+								{ required: true, message: '请输入有效银行卡号' },
+								{ validator: this.validateCarNumber }
+							],
 							onChange: (value) => {
 								store.setBindCardNo(value);
 							}
@@ -387,11 +393,11 @@ export default class bind_save_page extends PureComponent {
 					>
 						手机号
 					</InputItem>
-					<div className={[ styles.time_container, 'sms' ].join(' ')}>
+					<div className={[styles.time_container, 'sms'].join(' ')}>
 						<InputItem
 							maxLength="6"
 							{...getFieldProps('valueInputCarSms', {
-								rules: [ { required: true, message: '请输入验证码' } ]
+								rules: [{ required: true, message: '请输入验证码' }]
 							})}
 							onBlur={() => {
 								handleInputBlur();
@@ -404,7 +410,7 @@ export default class bind_save_page extends PureComponent {
 								className={styles.CountDownButton}
 								enable={this.state.enable}
 								onClick={this.countDownHandler}
-								timerActiveTitle={[ '', '"' ]}
+								timerActiveTitle={['', '"']}
 							/>
 						</div>
 					</div>
@@ -414,7 +420,7 @@ export default class bind_save_page extends PureComponent {
 				</span>
 				<ButtonCustom
 					onClick={this.confirmBindCard}
-					className={[ styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn ].join(' ')}
+					className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
 				>
 					确认
 				</ButtonCustom>
