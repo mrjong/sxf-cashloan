@@ -7,5 +7,7 @@ build/
 # dist
 dist/
 
+src/assets/lib
+
 # serviceWorker
 src/serviceWorker.js

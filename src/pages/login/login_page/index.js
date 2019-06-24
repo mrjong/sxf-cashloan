@@ -6,7 +6,8 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
+import logoImg from 'assets/images/common/black_logo.png';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
@@ -15,10 +16,7 @@ import bannerImg from './img/login_bg.png';
 import bannerImg1 from './img/login_bg1.png';
 import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
-import logoImg from 'assets/images/common/black_logo.png';
 let timmer;
-let timmer2;
-
 const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -33,7 +31,6 @@ export default class login_page extends PureComponent {
 		this.state = {
 			timers: '获取验证码',
 			timeflag: true,
-			flag: true,
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
@@ -53,10 +50,6 @@ export default class login_page extends PureComponent {
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
-		// 保存h5Channel变量
-		const query = qs.parse(window.location.search, {
-			ignoreQueryPrefix: true
-		});
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
@@ -96,7 +89,7 @@ export default class login_page extends PureComponent {
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let clientHeight = document.documentElement.clientHeight;
+				let { clientHeight } = document.documentElement;
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
 				});
@@ -183,7 +176,7 @@ export default class login_page extends PureComponent {
 	//获得手机验证码
 	getTime(i) {
 		if (!this.getSmsCode(i)) {
-			return;
+			return false;
 		}
 	}
 	// 获得手机验证码
@@ -215,16 +208,15 @@ export default class login_page extends PureComponent {
 				this.props.$fetch.post(API.sendsms, param).then((result) => {
 					if (result.msgCode !== 'PTM0000') {
 						Toast.info(result.msgInfo);
-						this.setState({ valueInputImgCode: '' });
 						return false;
 					}
 					Toast.info('发送成功，请注意查收！');
 					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: i-- + '"' });
+						this.setState({ timers: i-- + '"' });
 						if (i === -1) {
 							clearInterval(timmer);
-							this.setState({ timers: '重新获取', timeflag: true, flag: true });
+							this.setState({ timers: '重新获取', timeflag: true });
 						}
 					}, 1000);
 				});
@@ -279,7 +271,7 @@ export default class login_page extends PureComponent {
 				}
 			})
 			.catch((err) => {
-				// console.log()
+				console.log(err);
 				this.props.history.replace('/home/home');
 			});
 	};

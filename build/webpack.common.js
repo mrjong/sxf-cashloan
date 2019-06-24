@@ -22,7 +22,7 @@ module.exports = function(options) {
 					loader: 'eslint-loader',
 					enforce: 'pre',
 					exclude: /node_modules/,
-					include: [path.resolve(__dirname, 'src/pages/login/login_page/index.js')], // 指定检查的目录
+					include: [path.resolve(__dirname, '../src')], // 指定检查的目录
 					// options: {
 					// 	fix: true
 					// }

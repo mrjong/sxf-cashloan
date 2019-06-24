@@ -108,7 +108,7 @@
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
 		"precommit": "pretty-quick --staged",
-		"prettify": "prettier --fix --write 'src/pages/login_page/index.js'"
+		"prettify": "prettier --fix --write 'src/pages/login/login_page/index.js'"
 	},
 	"lint-staged": {
 		"scripts": {
