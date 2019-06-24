@@ -121,11 +121,6 @@
 			}
 		}
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "pretty-quick  --staged"
-		}
-	},
 	"repository": {
 		"type": "git"
 	},
