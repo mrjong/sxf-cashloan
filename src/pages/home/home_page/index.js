@@ -766,12 +766,7 @@ export default class home_page extends PureComponent {
 					}
 				);
 				let couponTestData = await this.props.$fetch.get(API.couponTest);
-				if (
-					!store.getShowActivityModal() &&
-					couponTestData &&
-					couponTestData.data &&
-					couponTestData.data !== '0'
-				) {
+				if (couponTestData && couponTestData.data && couponTestData.data !== '0') {
 					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
 					this.setState({
 						isShowActivityModal: true,
