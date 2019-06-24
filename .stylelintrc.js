@@ -34,6 +34,9 @@ module.exports = {
 		'font-family-no-missing-generic-family-keyword': null,
 		'length-zero-no-unit': null,
 		'color-hex-case': null,
-		'declaration-block-trailing-semicolon': null
+		'declaration-block-trailing-semicolon': null,
+		'declaration-colon-newline-after': null,
+		'value-list-comma-newline-after': null,
+		'declaration-block-no-duplicate-properties': null
 	}
 };

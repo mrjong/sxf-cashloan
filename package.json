@@ -110,6 +110,11 @@
 		"precommit": "lint-staged",
 		"prettify": "prettier --fix --write 'src/pages/login_page/index.js'"
 	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "pretty-quick  --staged"
+		}
+	},
 	"repository": {
 		"type": "git"
 	},
