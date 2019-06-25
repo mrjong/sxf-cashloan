@@ -105,6 +105,7 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		this.props.globalTask(null);
 		// 获取token
 		token = Cookie.get('fin-v-card-token');
 		tokenFromStorage = store.getToken();
@@ -765,11 +766,7 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				if (
-					result.data.indexSts === 'LN0003' ||
-					result.data.indexSts === 'LN0006' ||
-					result.data.indexSts === 'LN0008'
-				) {
+				if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
 					let couponTestData = await this.props.$fetch.get(API.couponTest);
 					if (couponTestData && couponTestData.data && couponTestData.data !== '0') {
 						this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
