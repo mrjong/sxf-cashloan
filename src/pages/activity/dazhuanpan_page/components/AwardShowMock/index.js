@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import style from './index.scss'
+import style from './index.scss';
 var picH = 35; //移动高度
 var scrollstep = 3; //移动步幅,越大越快
 var scrolltime = 50; //移动频度(毫秒)越大越慢
@@ -10,8 +10,16 @@ var Mar2 = '';
 var child_div = '';
 var child_div2 = '';
 var child_div3 = '';
-var chars = [ '3', '5', '7', '8' ];
-var jiangpinList = [ '20元减息券', '杜蕾斯1盒', '100元减息券', '3期免息券', '首期免息券', '50元减息券', '12期免息券' ];
+var chars = ['3', '5', '7', '8'];
+var jiangpinList = [
+	'20元减息券',
+	'杜蕾斯1盒',
+	'100元减息券',
+	'3期免息券',
+	'首期免息券',
+	'50元减息券',
+	'12期免息券'
+];
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');
@@ -59,9 +67,11 @@ export default class AwardShow extends Component {
 	getNode = () => {
 		let telNo = `<div id="demo" class="new_tels" style="height:.6rem;line-height:.6rem">恭喜 1${this.generateMixed(
 			1
-		)}${Math.ceil(Math.random() * 9)}****${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(
+		)}${Math.ceil(Math.random() * 9)}****${Math.ceil(Math.random() * 9)}${Math.ceil(
 			Math.random() * 9
-		)}${Math.ceil(Math.random() * 9)}获得 <span>${this.getJiangpin(1)}</span></div>`;
+		)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}获得 <span>${this.getJiangpin(
+			1
+		)}</span></div>`;
 		return telNo;
 	};
 	render() {

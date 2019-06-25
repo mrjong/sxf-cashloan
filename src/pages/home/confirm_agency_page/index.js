@@ -39,7 +39,7 @@ const API = {
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	protocolBind: '/withhold/protocolBink' //协议绑卡接口
 };
 
 let indexData = null; // 首页带过来的信息
@@ -112,7 +112,7 @@ export default class confirm_agency_page extends PureComponent {
 			isVIP: false, // 是否有会员卡
 			contractData: [], // 合同和产品id数据
 			isShowSmsModal: false, //是否显示短信验证码弹窗
-			smsCode: '',
+			smsCode: ''
 		};
 	}
 
@@ -343,7 +343,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 关闭弹框
 	handleCloseTipModal = (type) => {
-		const { isNeedExamine, cardBillAmt, repayInfo2 } = this.state;
+		const { isNeedExamine } = this.state;
 		this.setState(
 			{
 				[type]: false
@@ -360,7 +360,7 @@ export default class confirm_agency_page extends PureComponent {
 					let desc = goData.withdrawType === '3' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 					this.props.history.push({
 						pathname: '/home/loan_apply_succ_page',
-						search: `?title=${title}&desc=${desc}&needAlert=true&cardBillAmt=${cardBillAmt}&perdCnt=${repayInfo2.perdCnt}`
+						search: `?title=${title}&desc=${desc}`
 					});
 				}
 			}
@@ -537,10 +537,9 @@ export default class confirm_agency_page extends PureComponent {
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
-				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2
-					.perdUnit === 'M'
-					? this.state.repayInfo2.perdLth
-					: 1}`,
+				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
+					this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
+				}`,
 				state: { nouseCoupon: true }
 			});
 			return;
@@ -552,10 +551,9 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${this.state.repayInfo2.perdUnit ===
-			'M'
-				? this.state.repayInfo2.perdLth
-				: 1}`
+			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
+				this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
+			}`
 		});
 	};
 	// 查看借款合同
@@ -565,18 +563,22 @@ export default class confirm_agency_page extends PureComponent {
 		store.setSaveAmt(true);
 		store.setRepaymentModalData(this.state);
 		console.log(
-			`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&productId=${contractData[0]
-				.productId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get(
-				'fin-v-card-token'
-			) || store.getToken()}`
+			`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${
+				item.contractNo
+			}&loanAmount=${billPrcpAmt}&productId=${contractData[0].productId}&agreementNo=${
+				repayInfo.withDrawAgrNo
+			}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') ||
+				store.getToken()}`
 		);
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&productId=${contractData[0]
-					.productId}&agreementNo=${repayInfo.withDrawAgrNo}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get(
-					'fin-v-card-token'
-				) || store.getToken()}`,
+				url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${
+					item.contractNo
+				}&loanAmount=${billPrcpAmt}&productId=${contractData[0].productId}&agreementNo=${
+					repayInfo.withDrawAgrNo
+				}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') ||
+					store.getToken()}`,
 				name: item.contractMdlName
 			}
 		});
@@ -748,88 +750,90 @@ export default class confirm_agency_page extends PureComponent {
 	// 关闭短信弹窗并还款
 	closeSmsModal = () => {
 		this.setState({
-		  isShowSmsModal: false,
-		  smsCode: '',
+			isShowSmsModal: false,
+			smsCode: ''
 		});
 		this.requestBindCardState();
-	}
+	};
 
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
 		const { repayInfo } = this.state;
 		if (!this.state.smsCode) {
-		  this.props.toast.info('请输入验证码');
-		  return;
+			this.props.toast.info('请输入验证码');
+			return;
 		}
 		if (this.state.smsCode.length !== 6) {
-		  this.props.toast.info('请输入正确的验证码');
-		  return;
+			this.props.toast.info('请输入正确的验证码');
+			return;
 		}
 		buriedPointEvent(home.protocolBindBtnClick);
-		this.props.$fetch.post(API.protocolBind, {
-		  cardNo: repayInfo && repayInfo.withHoldAgrNo,
-		  smsCd: this.state.smsCode,
-		  isEntry: "01"
-		}).then((res) => {
-		  if (res.msgCode === 'PTM0000') {
-			this.closeSmsModal()
-		  } else if (res.msgCode === 'PTM9901') {
-			this.props.toast.info(res.data);
-			this.setState({ smsCode: '' });
-			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-		  } else {
-			this.props.toast.info('绑卡失败，请换卡或重试');
-			this.setState({
-			  smsCode: '',
-			  isShowSmsModal: false,
+		this.props.$fetch
+			.post(API.protocolBind, {
+				cardNo: repayInfo && repayInfo.withHoldAgrNo,
+				smsCd: this.state.smsCode,
+				isEntry: '01'
 			})
-			buriedPointEvent(home.protocolBindFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-		  }
-		})
-	}
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.closeSmsModal();
+				} else if (res.msgCode === 'PTM9901') {
+					this.props.toast.info(res.data);
+					this.setState({ smsCode: '' });
+					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+				} else {
+					this.props.toast.info('绑卡失败，请换卡或重试');
+					this.setState({
+						smsCode: '',
+						isShowSmsModal: false
+					});
+					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+				}
+			});
+	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
 		const { repayInfo } = this.state;
 		const params = {
-		  	cardNo: repayInfo && repayInfo.withHoldAgrNo,
-		  	bankCd: repayInfo && repayInfo.bankCode,
-		  	usrSignCnl: getH5Channel(),
-		  	cardTyp: 'D',
+			cardNo: repayInfo && repayInfo.withHoldAgrNo,
+			bankCd: repayInfo && repayInfo.bankCode,
+			usrSignCnl: getH5Channel(),
+			cardTyp: 'D',
 			isEntry: '01',
-			type: '1', // 0 可以重复 1 不可以重复
-		}
+			type: '1' // 0 可以重复 1 不可以重复
+		};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
-		  switch (res.msgCode) {
-			case 'PTM0000':
-			  	//协议绑卡校验成功提示（走协议绑卡逻辑）
-				this.setState({
-					isShowSmsModal: true
-				})
-			break;
-			case 'PTM9901':
-				this.props.toast.info(res.data);
-				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-		  	break;
-			case '1010': // 银行卡已经绑定 直接继续往下走
-			  	this.requestBindCardState();
-			break;
-			case 'PBM1010':
-				this.props.toast.info(res.msgInfo);
-				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-			break;
-			default:
-				this.props.toast.info('暂不支持该银行卡，请换卡重试');
-				buriedPointEvent(home.protocolSmsFail, {reason: `${res.msgCode}-${res.msgInfo}`});
-			break;
-		  }
-		})
-	}
+			switch (res.msgCode) {
+				case 'PTM0000':
+					//协议绑卡校验成功提示（走协议绑卡逻辑）
+					this.setState({
+						isShowSmsModal: true
+					});
+					break;
+				case 'PTM9901':
+					this.props.toast.info(res.data);
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				case '1010': // 银行卡已经绑定 直接继续往下走
+					this.requestBindCardState();
+					break;
+				case 'PBM1010':
+					this.props.toast.info(res.msgInfo);
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				default:
+					this.props.toast.info('暂不支持该银行卡，请换卡重试');
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+			}
+		});
+	};
 	// 处理输入的验证码
 	handleSmsCodeChange = (smsCode) => {
 		this.setState({
-		  smsCode,
-		})
-	}
+			smsCode
+		});
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
 		const {
@@ -849,11 +853,11 @@ export default class confirm_agency_page extends PureComponent {
 			percent,
 			isShowModal,
 			isShowSmsModal,
-			smsCode,
+			smsCode
 		} = this.state;
 		return (
 			<div>
-				<div className={[ style.confirm_agency, 'confirm_agency' ].join(' ')}>
+				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>
 					<div className={style.scrollWrap}>
 						<div className={style.inputWrap}>
 							<div className={style.billInpBox}>
@@ -931,18 +935,13 @@ export default class confirm_agency_page extends PureComponent {
 								<li className={style.listItem}>
 									<label>借多久</label>
 									<span className={style.listValue}>
-										{repayInfo &&
-											repayInfo.prdList &&
-											repayInfo.prdList[0] &&
-											repayInfo.prdList[0].periodLth}
+										{repayInfo && repayInfo.prdList && repayInfo.prdList[0] && repayInfo.prdList[0].periodLth}
 										{repayInfo &&
 										repayInfo.prdList &&
 										repayInfo.prdList[0] &&
-										repayInfo.prdList[0].periodUnit === 'M' ? (
-											'个月'
-										) : (
-											'天'
-										)}
+										repayInfo.prdList[0].periodUnit === 'M'
+											? '个月'
+											: '天'}
 									</span>
 								</li>
 								<li className={style.listItem}>
@@ -1036,18 +1035,14 @@ export default class confirm_agency_page extends PureComponent {
 					<div className={style.buttonWrap}>
 						<SXFButton
 							onClick={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? (
-									this.handleButtonClick
-								) : (
-									() => {}
-								)
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn
+									? this.handleButtonClick
+									: () => {}
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn ? (
-									style.submitBtn
-								) : (
-									style.submitBtnDisabled
-								)
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn
+									? style.submitBtn
+									: style.submitBtnDisabled
 							}
 						>
 							签约借款
@@ -1085,7 +1080,8 @@ export default class confirm_agency_page extends PureComponent {
 						<div className={style.modal_tip_content}>
 							<h3 className={style.modl_tip_title}>"还到"已接入央行平台，逾期将影响您的个人信用！</h3>
 							<p className={style.modl_tip_text}>
-								若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。 这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
+								若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。
+								这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
 							</p>
 						</div>
 					</Modal>
@@ -1097,21 +1093,25 @@ export default class confirm_agency_page extends PureComponent {
 						onClose={() => {
 							this.handleCloseTipModal('isShowVIPModal');
 						}}
-						footer={[ { text: '立即开通', onPress: this.goVIP } ]}
+						footer={[{ text: '立即开通', onPress: this.goVIP }]}
 					>
 						<h2 className={style.modalTitle}>仅限VIP使用</h2>
 						<ul className={style.modalUl}>
 							<li>
-								<i className={style.vipIco1} />极速放款通道
+								<i className={style.vipIco1} />
+								极速放款通道
 							</li>
 							<li>
-								<i className={style.vipIco2} />精彩活动优先通知
+								<i className={style.vipIco2} />
+								精彩活动优先通知
 							</li>
 							<li>
-								<i className={style.vipIco3} />30天明星产品专享
+								<i className={style.vipIco3} />
+								30天明星产品专享
 							</li>
 							<li>
-								<i className={style.vipIco4} />刷卡优惠超值套餐
+								<i className={style.vipIco4} />
+								刷卡优惠超值套餐
 							</li>
 						</ul>
 					</Modal>
@@ -1129,26 +1129,26 @@ export default class confirm_agency_page extends PureComponent {
 									repayInfo2.perd &&
 									repayInfo2.perd.map((item) => (
 										<li className={style.list_item} key={item.perdNum}>
-											<label
-												className={style.item_name}
-											>{`${item.perdNum}/${repayInfo2.perdCnt}期`}</label>
+											<label className={style.item_name}>{`${item.perdNum}/${repayInfo2.perdCnt}期`}</label>
 											<span className={style.item_value}>{item.perdTotAmt}</span>
 										</li>
 									))}
 							</ul>
 						</div>
 					</Modal>
-					{
-						isShowSmsModal && <SmsModal
+					{isShowSmsModal && (
+						<SmsModal
 							onCancel={() => {}}
 							onConfirm={this.confirmProtocolBindCard}
 							onSmsCodeChange={this.handleSmsCodeChange}
 							smsCodeAgain={this.checkProtocolBindCard}
 							smsCode={smsCode}
 							toggleBtn={false}
-							ref={(ele) => { this.smsModal = ele; }}
+							ref={(ele) => {
+								this.smsModal = ele;
+							}}
 						/>
-					}
+					)}
 				</div>
 			</div>
 		);

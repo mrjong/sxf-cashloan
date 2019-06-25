@@ -1,33 +1,34 @@
-.wuyuekh_page{
-  position: relative;
-  // height: 100%;
-  height: 100vh;
-  .activity_bg {
-    width: 100%;
-    position: absolute;
-  }
-  .new_entry_box,.old_entry_box{
-    position: absolute;
-    top: 672px;
-    // bottom: 308px;
-    left: 60px;
-    width: 630px;
-  }
-  .old_entry_box{
-    top: 932px;
-    // bottom: 48px;
-  }
-  .entry_bg{
-    width: 100%;
-  }
-  .btn_style{
-    position: absolute;
-    right: 25px;
-    top: 53px;
-    width: 134px;
-    height: 134px;
-  }
+.wuyuekh_page {
+	position: relative;
+	// height: 100%;
+	height: 100vh;
+	.activity_bg {
+		width: 100%;
+		position: absolute;
+	}
+	.new_entry_box,
+	.old_entry_box {
+		position: absolute;
+		top: 672px;
+		// bottom: 308px;
+		left: 60px;
+		width: 630px;
+	}
+	.old_entry_box {
+		top: 932px;
+		// bottom: 48px;
+	}
+	.entry_bg {
+		width: 100%;
+	}
+	.btn_style {
+		position: absolute;
+		right: 25px;
+		top: 53px;
+		width: 134px;
+		height: 134px;
+	}
 }
-.wuyuekh_page2{
-  height: calc(100vh - .88rem);
+.wuyuekh_page2 {
+	height: calc(100vh - 0.88rem);
 }

@@ -10,8 +10,8 @@ export default [
 		title: '新手指南',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/koubei_page')
-  },
-  {
+	},
+	{
 		path: '/activity/wuyuekh_page',
 		title: '畅享双重豪礼',
 		component: () => import('pages/activity/wuyuekh_page')
@@ -25,8 +25,8 @@ export default [
 		path: '/activity/wuyue_old_page',
 		title: '老用户专享',
 		component: () => import('pages/activity/wuyue_old_page')
-  },
-  {
+	},
+	{
 		path: '/activity/jd618_page',
 		title: '嗨爆618',
 		component: () => import('pages/activity/jd618_page')
@@ -41,5 +41,5 @@ export default [
 		title: '还到拒就赔',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/jupei_page')
-	},
+	}
 ];

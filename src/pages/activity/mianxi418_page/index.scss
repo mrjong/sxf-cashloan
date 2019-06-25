@@ -2,7 +2,7 @@
 .modal {
 	.mask {
 		position: fixed;
-		background-color: rgba(0, 0, 0, .5);
+		background-color: rgba(0, 0, 0, 0.5);
 		margin: 0;
 		top: 0;
 		left: 0;
@@ -54,7 +54,7 @@
 			bottom: -100px;
 			left: 50%;
 			transform: translate(-50%, 0%);
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png',0, 0);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
 		}
 	}
 }
@@ -191,8 +191,8 @@
 		}
 	}
 	.footer_b_text {
-        font-size: 34px;
-        text-align: center;
+		font-size: 34px;
+		text-align: center;
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		color: rgba(255, 255, 255, 1);
@@ -204,7 +204,7 @@
 		padding: 0 0 40px;
 		width: 500px;
 		margin: 70px auto 0;
-		border-top: 1PX solid #fff;
+		border-top: 1px solid #fff;
 		font-size: 24px;
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;

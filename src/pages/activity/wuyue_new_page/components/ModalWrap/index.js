@@ -7,11 +7,10 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 
 export default class ModalWrap extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
-			modalShow: true,
+			modalShow: true
 		};
 	}
 
@@ -21,9 +20,7 @@ export default class ModalWrap extends Component {
 		const { history, contType, loginCb, closeCb, hasLoginCb, recordActCb } = this.props;
 		switch (contType) {
 			case 'login_alert': // 登陆弹框
-				componentsDisplay = (
-					<LoginAlert history={history} hasLoginCb={hasLoginCb} loginCb={loginCb} />
-				);
+				componentsDisplay = <LoginAlert history={history} hasLoginCb={hasLoginCb} loginCb={loginCb} />;
 				break;
 			case 'new_sorry_tips': // 老用户参加新用户活动提示弹框
 				componentsDisplay = (
@@ -95,7 +92,7 @@ export default class ModalWrap extends Component {
 						}}
 					/>
 				);
-				break;	
+				break;
 			default:
 				break;
 		}
@@ -107,8 +104,13 @@ export default class ModalWrap extends Component {
 				// onClose={this.onClose('modalShow')}
 			>
 				<div className={style.modal_wrap_style}>
-					<i onClick={()=>{ closeCb() }} className={style.close_icon} />
-					{ componentsDisplay }
+					<i
+						onClick={() => {
+							closeCb();
+						}}
+						className={style.close_icon}
+					/>
+					{componentsDisplay}
 				</div>
 			</Modal>
 		);

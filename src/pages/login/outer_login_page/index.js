@@ -12,7 +12,6 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
-import logoImg from 'assets/images/common/black_logo.png';
 import { setBackGround } from 'utils/background';
 let timmer;
 const API = {
@@ -39,11 +38,13 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const queryData = qs.parse(this.props.history.location.search, {
+			ignoreQueryPrefix: true
+		});
 		this.setState({
 			queryData
 		});
-		store.removeLoginDownloadBtn()
+		store.removeLoginDownloadBtn();
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '还到';
@@ -80,15 +81,15 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
-		let _this = this
-		let originClientHeight = document.documentElement.clientHeight
+		let _this = this;
+		let originClientHeight = document.documentElement.clientHeight;
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let clientHeight = document.documentElement.clientHeight
+				let clientHeight = document.documentElement.clientHeight;
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
-				})
+				});
 				window.setTimeout(function() {
 					document.activeElement.scrollIntoViewIfNeeded();
 				}, 0);
@@ -112,7 +113,7 @@ export default class login_page extends PureComponent {
 
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
-    let v = value && value.replace(/\s*/g, '')
+		let v = value && value.replace(/\s*/g, '');
 		if (!validators.phone(v)) {
 			callback('请输入正确手机号');
 		} else {
@@ -169,7 +170,6 @@ export default class login_page extends PureComponent {
 	//获得手机验证码
 	getTime(i) {
 		if (!this.getSmsCode(i)) {
-			return;
 		}
 	}
 
@@ -208,7 +208,7 @@ export default class login_page extends PureComponent {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: i-- + 's' });
+						this.setState({ flag: false, timers: `${i--}s` });
 						if (i === -1) {
 							clearInterval(timmer);
 							this.setState({ timers: '重新获取', timeflag: true, flag: true });
@@ -261,7 +261,7 @@ export default class login_page extends PureComponent {
 							onBlur={() => {
 								this.setState({
 									inputFocus: false
-								})
+								});
 								handleInputBlur();
 							}}
 						/>
@@ -270,20 +270,24 @@ export default class login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
-								className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									rules: [ { required: true, message: '请输入正确验证码' } ]
+									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
 									this.setState({
 										inputFocus: false
-									})
+									});
 									handleInputBlur();
 								}}
 							/>
 							<div
-								className={this.state.timers.indexOf('s') === -1 ? styles.smsCode : [styles.smsCode, styles.smsCode2].join(' ')}
+								className={
+									this.state.timers.indexOf('s') === -1
+										? styles.smsCode
+										: [styles.smsCode, styles.smsCode2].join(' ')
+								}
 								onClick={() => {
 									this.state.timeflag ? this.getTime(59) : '';
 								}}

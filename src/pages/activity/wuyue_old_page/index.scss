@@ -4,7 +4,7 @@
 	height: 100vh;
 	overflow: hidden;
 	user-select: none;
-	background: linear-gradient(1deg, #9235D4 0%, #F87783 100%);
+	background: linear-gradient(1deg, #9235d4 0%, #f87783 100%);
 	.bg {
 		position: relative;
 		.rule_btn {
@@ -12,7 +12,7 @@
 			right: 0;
 			top: 14px;
 			width: 149px;
-			img{
+			img {
 				width: 100%;
 			}
 		}
@@ -52,7 +52,7 @@
 				will-change: transform;
 				width: 100%;
 				height: 100%;
-				opacity: .8;
+				opacity: 0.8;
 				border-radius: 50%;
 				.img1 {
 					position: absolute;
@@ -71,14 +71,14 @@
 			left: 50%;
 			top: 770px;
 			z-index: 1;
-			img{
+			img {
 				width: 217px;
 			}
 		}
-		.platform{
+		.platform {
 			width: 674px;
 			position: absolute;
-			top: 595px
+			top: 595px;
 		}
 
 		.message_bottom {
@@ -94,14 +94,14 @@
 			font-size: 32px;
 			line-height: 50px;
 			span {
-				color: #9235D4;
+				color: #9235d4;
 				font-size: 36px;
 			}
 		}
 	}
 }
-.dazhuanpan2{
-	height: calc(100vh - .88rem);
+.dazhuanpan2 {
+	height: calc(100vh - 0.88rem);
 }
 .get_rule_desc {
 	margin: 50px 25px;
@@ -129,18 +129,18 @@
 }
 
 :global {
-	.modal_rule{
-        li{
-            margin-top: 15px;
-        }
-        &.am-modal.am-modal-transparent {
-            width: 90%;
-        }
-        .am-modal-content{
-            text-align: left;
-        }
-        .am-modal-body{
-            line-height: 1.7;
-        }
-    }
+	.modal_rule {
+		li {
+			margin-top: 15px;
+		}
+		&.am-modal.am-modal-transparent {
+			width: 90%;
+		}
+		.am-modal-content {
+			text-align: left;
+		}
+		.am-modal-body {
+			line-height: 1.7;
+		}
+	}
 }

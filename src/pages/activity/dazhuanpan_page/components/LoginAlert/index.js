@@ -48,17 +48,17 @@ export default class LoginAlert extends Component {
 	render() {
 		const { alertType, userAwardList, refreshPageFn, alert_img } = this.props;
 		let componentsDisplay = null;
-		let closeArr = [ 'closeImg' ];
-		let titleBoxArr = [ 'titleBox' ];
-		let loginModal = [ 'login_modal' ];
+		let closeArr = ['closeImg'];
+		let titleBoxArr = ['titleBox'];
+		let loginModal = ['login_modal'];
 		let titText = '';
 		switch (alertType) {
 			case 'alert_tel': // 登录
 				componentsDisplay = <LoginComponent refreshPageFn={refreshPageFn} closeCb={this.closeModal} />;
 				break;
 			case 'alert_dls': //
-				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
+				loginModal = ['login_modal', 'big_modal'];
+				titleBoxArr = ['titleBox', 'noTitleBox'];
 				componentsDisplay = (
 					<div>
 						<img src={alert_dls} className={style.alert_10} />
@@ -71,8 +71,8 @@ export default class LoginAlert extends Component {
 				);
 				break;
 			case 'alert_img': //
-				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
+				loginModal = ['login_modal', 'big_modal'];
+				titleBoxArr = ['titleBox', 'noTitleBox'];
 				componentsDisplay = (
 					<div>
 						<img src={this.props.alert_img} className={style.alert_10} />
@@ -83,8 +83,8 @@ export default class LoginAlert extends Component {
 				);
 				break;
 			case 'alert_1000': //
-				loginModal = [ 'login_modal', 'big_modal' ];
-				titleBoxArr = [ 'titleBox', 'noTitleBox' ];
+				loginModal = ['login_modal', 'big_modal'];
+				titleBoxArr = ['titleBox', 'noTitleBox'];
 				componentsDisplay = (
 					<div>
 						<img src={alert_1000} className={style.alert_10} />
@@ -106,12 +106,7 @@ export default class LoginAlert extends Component {
 											<Item
 												key={key}
 												extra={
-													<Button
-														type="warning"
-														size="small"
-														inline
-														onClick={this.props.goRoute}
-													>
+													<Button type="warning" size="small" inline onClick={this.props.goRoute}>
 														立即使用
 													</Button>
 												}
@@ -132,9 +127,9 @@ export default class LoginAlert extends Component {
 				break;
 			case 'no_award': // 没有中奖
 				titText = '抱歉，未抽中奖品';
-				loginModal = [ 'login_modal', 'special_bg_modal' ];
+				loginModal = ['login_modal', 'special_bg_modal'];
 				componentsDisplay = (
-					<div className={[ style.text_center, style.btn_alert ].join(' ')}>
+					<div className={[style.text_center, style.btn_alert].join(' ')}>
 						谢谢参与～
 						<Button onClick={this.props.goRoute} type="primary">
 							立即借款
@@ -144,7 +139,7 @@ export default class LoginAlert extends Component {
 				break;
 			case 'no_chance': // 没有抽奖机会
 				titText = '抱歉，没有抽奖机会';
-				loginModal = [ 'login_modal', 'special_bg_modal' ];
+				loginModal = ['login_modal', 'special_bg_modal'];
 				componentsDisplay = (
 					<div className={style.noChance}>
 						今日机会已用完，请您明日再来

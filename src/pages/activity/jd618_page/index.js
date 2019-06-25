@@ -261,7 +261,7 @@ export default class funsisong_page extends PureComponent {
 				{showLoginTip && (
 					<div className={styles.modal}>
 						<div className={styles.mask} />
-						<div className={[ styles.modalWrapper, styles.tipWrapper ].join(' ')}>
+						<div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
 							<div className={styles.tipText}>
 								<span>小主～</span>
 								<br />
@@ -283,7 +283,9 @@ export default class funsisong_page extends PureComponent {
 					visible={this.state.showModal}
 					actTime={'2019年6月18日-6月20日'}
 					actObject={'所有未获得额度的还到用户'}
-					actRules={[ '活动期间，用户通过活动页面在规定时间内成功完成借款（借款金额≧3000元， 且借款期限≧3个月），可获得100元现金奖励，每位用户仅可参与一次' ]}
+					actRules={[
+						'活动期间，用户通过活动页面在规定时间内成功完成借款（借款金额≧3000元， 且借款期限≧3个月），可获得100元现金奖励，每位用户仅可参与一次'
+					]}
 					handleClose={this.closeModal}
 				/>
 				{showBoundle ? <Alert_mpos /> : null}

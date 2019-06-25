@@ -35,7 +35,7 @@
 		width: 6.2rem;
 		margin: 50px auto 30px;
 		&:active {
-			opacity: .5;
+			opacity: 0.5;
 		}
 		&.dis {
 			background: #dcdfe6;
@@ -78,7 +78,7 @@
 	.nextBtn {
 		width: 634px;
 		&:active {
-			opacity: .5;
+			opacity: 0.5;
 		}
 		&.dis {
 			background: #dcdfe6;
@@ -192,10 +192,10 @@
 		left: 14px;
 		top: 0;
 		height: 100%;
-		width: 1PX;
+		width: 1px;
 		padding: 30px 0 4px;
 		&::after {
-			content: "";
+			content: '';
 			display: inline-block;
 			background: #ddd;
 			// -webkit-transition: background .3s;

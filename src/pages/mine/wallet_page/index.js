@@ -52,7 +52,7 @@ export default class wallet_page extends PureComponent {
 					this.setState({
 						accountNum: Number(result.data.acAmt).toFixed(2),
 						miniAmount: result.data.minAMt,
-						maxAmount: result.data.maxAmt,
+						maxAmount: result.data.maxAmt
 					});
 				}
 			},
@@ -74,7 +74,7 @@ export default class wallet_page extends PureComponent {
 	// 获取用户储蓄卡信息
 	getBankInf = () => {
 		let { accountNum, miniAmount, maxAmount } = this.state;
-		if(miniAmount === null || maxAmount === null){
+		if (miniAmount === null || maxAmount === null) {
 			this.props.toast.info('暂不能提现');
 			return;
 		}
@@ -86,7 +86,7 @@ export default class wallet_page extends PureComponent {
 		this.props.$fetch.post(API.cardList, params).then(
 			(data) => {
 				if (data.msgCode !== 'PTM0000') {
-					if(data.msgCode === 'PTM3021' ) {
+					if (data.msgCode === 'PTM3021') {
 						this.props.toast.info('请绑定储蓄卡', 3, () => {
 							store.setBackUrl('/wallet');
 							this.props.history.push('/mine/bind_save_page');
@@ -112,10 +112,10 @@ export default class wallet_page extends PureComponent {
 							showMoudle: true
 						});
 					} else {
-						if(accountNum < miniAmount){
+						if (accountNum < miniAmount) {
 							this.props.toast.info(`最低可提现金额${miniAmount}元`);
 						}
-						if(accountNum > maxAmount){
+						if (accountNum > maxAmount) {
 							this.props.toast.info(`最高可提现金额${maxAmount}元`);
 						}
 					}
@@ -164,7 +164,10 @@ export default class wallet_page extends PureComponent {
 				this.setState({
 					showMoudle: false
 				});
-				this.props.history.push({pathname:'/mine/withdrawing_page', state: { applyNo : res.data, withdrawMoney: accountNum }});
+				this.props.history.push({
+					pathname: '/mine/withdrawing_page',
+					state: { applyNo: res.data, withdrawMoney: accountNum }
+				});
 			},
 			(err) => {
 				err.msgInfo && this.props.toast.info(err.msgInfo);
@@ -180,7 +183,8 @@ export default class wallet_page extends PureComponent {
 				<img src={WalletBg} className={style.walletBg} />
 				<div className={style.walletTitle}>
 					<span className={style.leftPart}>
-						<i />当前账户余额
+						<i />
+						当前账户余额
 					</span>
 					<span className={style.rightPart}>去赚钱</span>
 				</div>
@@ -196,12 +200,12 @@ export default class wallet_page extends PureComponent {
 				<div className={style.entryBox}>
 					<span className={style.income} onClick={this.goIncome}>
 						收入
-						<Icon type='right' className={style.rightArrow} />
+						<Icon type="right" className={style.rightArrow} />
 					</span>
 					<span className={style.divideLine} />
 					<span className={style.withdraw} onClick={this.goWithdraw}>
 						提现
-						<Icon type='right' className={style.rightArrow} />						
+						<Icon type="right" className={style.rightArrow} />
 					</span>
 				</div>
 				<Modal
@@ -216,7 +220,14 @@ export default class wallet_page extends PureComponent {
 					<div className={style.modal_box}>
 						<div className={style.modal_title}>
 							提现到银行卡
-							<Icon type='cross' className={style.modal_close_btn} onClick={() => {this.setState({ showModel: false })}} color='#333'/>
+							<Icon
+								type="cross"
+								className={style.modal_close_btn}
+								onClick={() => {
+									this.setState({ showModel: false });
+								}}
+								color="#333"
+							/>
 						</div>
 						<div className={`${style.modal_flex} ${style.with_border}`}>
 							<span className={style.modal_label}>提现金额</span>

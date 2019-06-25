@@ -295,10 +295,10 @@ export default class wenjuan_page extends PureComponent {
 						this.setState({
 							showModal: true
 						});
-					} else if(res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000'){
-						this.props.toast.info(res.msgInfo,2,()=>{
-                            this.props.history.replace('/login')
-                        });
+					} else if (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000') {
+						this.props.toast.info(res.msgInfo, 2, () => {
+							this.props.history.replace('/login');
+						});
 					}
 				});
 		} else {
@@ -322,7 +322,7 @@ export default class wenjuan_page extends PureComponent {
 		}
 		this.getBtnStatus(data);
 		this.setState({
-			data: [ ...data ]
+			data: [...data]
 		});
 	};
 	getBtnStatus = (data) => {
@@ -355,7 +355,7 @@ export default class wenjuan_page extends PureComponent {
 		localStorage.setItem('wenjuan', JSON.stringify(data));
 		this.setState(
 			{
-				data: [ ...data ]
+				data: [...data]
 			},
 			() => {
 				if (type === 'submit') {
@@ -454,11 +454,8 @@ export default class wenjuan_page extends PureComponent {
 					<img src={wenjuan_02} className={styles.activity_bg} />
 					<img src={wenjuan_03} className={styles.activity_bg} />
 					<img src={wenjuan_04} className={styles.activity_bg} />
-					<div className={[ styles.btn_submit_box ]}>
-						<a
-							onClick={this.shareFunc}
-							className={[ styles.btn_submit, styles.btn_submit_share ].join(' ')}
-						>
+					<div className={[styles.btn_submit_box]}>
+						<a onClick={this.shareFunc} className={[styles.btn_submit, styles.btn_submit_share].join(' ')}>
 							转发参与抽奖
 						</a>
 					</div>
@@ -467,8 +464,8 @@ export default class wenjuan_page extends PureComponent {
 							<img src={title_img} className={styles.img_title} />
 							<img src={card_img} className={styles.img_card} />
 						</div>
-						<div className={[ styles.img_box_white, 'wenjuan' ].join(' ')}>
-							<ul className={[ styles.text_box, 'wenjuan' ].join(' ')}>
+						<div className={[styles.img_box_white, 'wenjuan'].join(' ')}>
+							<ul className={[styles.text_box, 'wenjuan'].join(' ')}>
 								{data.map((item, index) => {
 									return (
 										<li key={index} className={styles.text_title}>
@@ -481,12 +478,8 @@ export default class wenjuan_page extends PureComponent {
 															<AgreeItem
 																checked={item2.checked}
 																disabled={item2.disabled}
-																className={[
-																	styles.li_desc,
-																	item2.checked ? 'checked' : ''
-																].join(' ')}
-																onChange={(e) =>
-																	this.selectedFunc(e, index, index2, item)}
+																className={[styles.li_desc, item2.checked ? 'checked' : ''].join(' ')}
+																onChange={(e) => this.selectedFunc(e, index, index2, item)}
 															>
 																{item2.selected}.{item2.title}
 															</AgreeItem>
@@ -505,7 +498,7 @@ export default class wenjuan_page extends PureComponent {
 							<div className={styles.btn_submit_box}>
 								<a
 									onClick={this.submitData}
-									className={[ styles.btn_submit, !btnStatus ? styles.disabled : '' ].join(' ')}
+									className={[styles.btn_submit, !btnStatus ? styles.disabled : ''].join(' ')}
 								>
 									提交抽奖
 								</a>
@@ -540,7 +533,7 @@ export default class wenjuan_page extends PureComponent {
 						<div>
 							<img src={arrow} />
 						</div>
-						<div className={[ styles.modalWrapper, styles.tipWrapper ].join(' ')}>
+						<div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
 							<div className={styles.tipText}>
 								<span>小主～</span>
 								<br />
@@ -561,7 +554,7 @@ export default class wenjuan_page extends PureComponent {
 								});
 							}}
 						/>
-						<div className={[ styles.arrow_box, styles.animate_up ].join(' ')}>
+						<div className={[styles.arrow_box, styles.animate_up].join(' ')}>
 							<img src={arrow} />
 							<div className={styles.text}>点击右上角分享</div>
 						</div>
@@ -592,10 +585,7 @@ export default class wenjuan_page extends PureComponent {
 							</div>
 						) : null}
 						<div className={styles.btn_submit_box}>
-							<a
-								onClick={this.goHome}
-								className={[ styles.btn_submit, styles.btn_submit_alert ].join(' ')}
-							>
+							<a onClick={this.goHome} className={[styles.btn_submit, styles.btn_submit_alert].join(' ')}>
 								进入还到
 							</a>
 						</div>

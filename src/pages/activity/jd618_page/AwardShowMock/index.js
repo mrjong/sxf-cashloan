@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import style from './index.scss'
+import style from './index.scss';
 var picH = 35; //移动高度
 var scrollstep = 3; //移动步幅,越大越快
 var scrolltime = 50; //移动频度(毫秒)越大越慢
@@ -10,7 +10,7 @@ var Mar2 = '';
 var child_div = '';
 var child_div2 = '';
 var jiangpinList = ['100元现金', '100元现金', '100元现金', '100元现金', '100元现金'];
-var nameList = ['陈**', '唐**', '赵**', '李**', '吴**', '刘**', '王**', '柯**']
+var nameList = ['陈**', '唐**', '赵**', '李**', '吴**', '刘**', '王**', '柯**'];
 export default class AwardShow extends Component {
 	componentDidMount() {
 		Mar = document.getElementById('Marquee');
@@ -89,13 +89,13 @@ export default class AwardShow extends Component {
 							<span>
 								{this.getNameList(1)}
 								<span> 获得 {this.getJiangpin(1)}</span>
-							</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</span>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<span>
 								{this.getNameList(4)}
 								<span> 获得 {this.getJiangpin(4)}</span>
 							</span>
 						</div>
-
 					</div>
 				</div>
 			</div>

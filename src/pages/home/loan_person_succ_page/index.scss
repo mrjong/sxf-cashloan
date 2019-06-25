@@ -1,5 +1,5 @@
 .topBox {
-  margin-top: -80px;
+	margin-top: -80px;
 	.title {
 		font-size: 46px;
 		font-family: 'PingFangSC-Medium';
@@ -13,8 +13,8 @@
 		text-align: center;
 		color: #868e9e;
 		a {
-      color: #397be6;
-      font-weight: bold;
+			color: #397be6;
+			font-weight: bold;
 		}
 	}
 }
@@ -86,10 +86,10 @@
 			left: 14px;
 			top: -10px;
 			height: 100%;
-			width: 1PX;
+			width: 1px;
 			padding: 30px 0 4px;
 			&::after {
-				content: "";
+				content: '';
 				display: inline-block;
 				background: #ddd;
 				// -webkit-transition: background .3s;
@@ -116,7 +116,7 @@
 	color: #868e9e;
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
-  font-weight: 400;
-  text-align: center;
-  padding: 5px;
+	font-weight: 400;
+	text-align: center;
+	padding: 5px;
 }

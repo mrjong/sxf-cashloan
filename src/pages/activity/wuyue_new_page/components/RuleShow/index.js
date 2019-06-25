@@ -5,7 +5,7 @@ export default class RuleShow extends Component {
 	closeModal = () => {
 		const { onCloseCb } = this.props;
 		onCloseCb();
-	}
+	};
 	render() {
 		const { ruleTit, ruleDesc } = this.props;
 		// ruleDesc = ruleDesc.replace(/\r\n/g, '<br/>');
@@ -14,9 +14,7 @@ export default class RuleShow extends Component {
 				<div className={styles.mask} />
 				<div className={styles.modalWrapper}>
 					<div>
-						<div className={styles.title}>
-							{ruleTit}
-						</div>
+						<div className={styles.title}>{ruleTit}</div>
 						<div className={styles.content}>
 							<div dangerouslySetInnerHTML={{ __html: ruleDesc }} />
 							{/* {this.props.ruleDesc} */}

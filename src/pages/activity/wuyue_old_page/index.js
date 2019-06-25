@@ -22,8 +22,8 @@ import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
-import { rules } from './rulesData'
-import { headerIgnore } from 'utils'
+import { rules } from './rulesData';
+import { headerIgnore } from 'utils';
 
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
@@ -32,7 +32,7 @@ const API = {
 	userCount: '/activeConfig/count', // 用户抽奖次数查询
 	userDraw: '/activeConfig/draw', // 用户抽奖
 	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
-	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged', // 记录用户参与
+	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged' // 记录用户参与
 };
 @fetch.inject()
 @setBackGround('#9235D4')
@@ -58,7 +58,7 @@ export default class wuyue_old_page extends PureComponent {
 			showLoginTip: false,
 			smsTokenId: '',
 			mblNoHid: '',
-			isAwardFlag: false,
+			isAwardFlag: false
 		};
 	}
 	componentWillMount() {
@@ -90,12 +90,10 @@ export default class wuyue_old_page extends PureComponent {
 		// 默认中奖次数显示
 		this.setState({
 			count:
-				store.getRewardCount() !== null
-				? store.getRewardCount()
-				: store.getRewardCount()===null ? 1 : 0
-				// store.getRewardCount() && Number(store.getRewardCount()) > 0
-				// 	? store.getRewardCount()
-				// 	: !store.getRewardCount() ? 1 : 0
+				store.getRewardCount() !== null ? store.getRewardCount() : store.getRewardCount() === null ? 1 : 0
+			// store.getRewardCount() && Number(store.getRewardCount()) > 0
+			// 	? store.getRewardCount()
+			// 	: !store.getRewardCount() ? 1 : 0
 		});
 		// 初始化大转盘活动
 		this.getConfigList();
@@ -149,37 +147,39 @@ export default class wuyue_old_page extends PureComponent {
 
 	// 大转盘活动-用户抽奖剩余次数查询
 	getCount = () => {
-		this.props.$fetch.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true }).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				if (res.data.data.count && Number(res.data.data.count) > 0) {
-					this.getDraw(res.data.data.count);
+		this.props.$fetch
+			.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true })
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					if (res.data.data.count && Number(res.data.data.count) > 0) {
+						this.getDraw(res.data.data.count);
+					} else {
+						// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+						// 	draw_result: '已用尽'
+						// });
+						store.setRewardCount(0);
+						this.setState({
+							count: '0',
+							type: 'no_chance_tips'
+						});
+					}
 				} else {
-					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-					// 	draw_result: '已用尽'
-					// });
-					store.setRewardCount(0);
-					this.setState({
-						count: '0',
-						type: 'no_chance_tips'
-					});
+					if (res.msgCode === 'PTM1000') {
+						Cookie.remove('fin-v-card-token');
+						this.onloadZhuan();
+					} else if (res.msgCode === 'PTM0100') {
+						this.onloadZhuan();
+						Cookie.remove('fin-v-card-token');
+					} else {
+						Toast.info(res.msgInfo);
+					}
 				}
-			} else {
-				if (res.msgCode === 'PTM1000') {
-					Cookie.remove('fin-v-card-token');
-					this.onloadZhuan();
-				} else if (res.msgCode === 'PTM0100') {
-					this.onloadZhuan();
-					Cookie.remove('fin-v-card-token');
-				} else {
-					Toast.info(res.msgInfo);
-				}
-			}
-		});
+			});
 	};
 	isAuthFunc = (callBack, type) => {
 		const token = Cookie.get('fin-v-card-token');
 		const tokenFromStorage = store.getToken();
-    	if (tokenFromStorage && token) {
+		if (tokenFromStorage && token) {
 			callBack();
 			// 根据type 随便去干
 		} else {
@@ -219,7 +219,6 @@ export default class wuyue_old_page extends PureComponent {
 						type: 'award_list'
 					});
 				}
-				
 			} else {
 				Toast.info(res.msgInfo);
 			}
@@ -253,22 +252,25 @@ export default class wuyue_old_page extends PureComponent {
 	};
 	// 查询用户是否有额度
 	getUserSts = () => {
-		this.props.$fetch.get(API.USERSTATUS).then(res => {
-			if (res.msgCode !== 'PTM0000') {
-				res.msgInfo && this.props.toast.info(res.msgInfo);
-				return
+		this.props.$fetch.get(API.USERSTATUS).then(
+			(res) => {
+				if (res.msgCode !== 'PTM0000') {
+					res.msgInfo && this.props.toast.info(res.msgInfo);
+					return;
+				}
+				if (res.totBal && res.totBal > 0) {
+					this.getCount();
+				} else {
+					this.setState({
+						type: 'no_qualified_tips'
+					});
+				}
+			},
+			(err) => {
+				err.msgInfo && this.props.toast.info(err.msgInfo);
 			}
-			if (res.totBal && res.totBal > 0) {
-				this.getCount();
-			} else {
-				this.setState({
-					type: 'no_qualified_tips'
-				});
-			}
-		}, err => {
-		err.msgInfo && this.props.toast.info(err.msgInfo);
-		})
-	}
+		);
+	};
 	// 转盘开始转
 	zhuanpan = (obj) => {
 		this.isRotated = true;
@@ -296,7 +298,7 @@ export default class wuyue_old_page extends PureComponent {
 						this.state.numdeg +
 						(this.state.awardList.length - index) * deg +
 						deg / 2 +
-						(360 - this.state.numdeg % 360),
+						(360 - (this.state.numdeg % 360)),
 					time: 7.5
 				},
 				() => {
@@ -316,14 +318,17 @@ export default class wuyue_old_page extends PureComponent {
 				// 		alert_img: ''
 				// 	});
 				// } else {
-					// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
-					// 	draw_result: '中奖'
-					// });
-					this.setState({
+				// buriedPointEvent(activity.dazhuanpan_316_draw_result, {
+				// 	draw_result: '中奖'
+				// });
+				this.setState(
+					{
 						type: 'alert_congratulation'
-					}, () => {
+					},
+					() => {
 						this.recordUserAct();
-					});
+					}
+				);
 				// }
 
 				this.isRotated = false; //旋转改为false说明没有旋转
@@ -365,18 +370,18 @@ export default class wuyue_old_page extends PureComponent {
 		});
 		this.props.history.replace('/home/home');
 	};
-	
+
 	// 关闭活动规则
 	closeRules = () => {
 		this.setState({
 			showRuleModal: false
-		})
-	}
+		});
+	};
 	// 开始抽奖
 	beginDraw = () => {
 		buriedPointEvent(activity.mayOldDrawBtn);
 		this.onloadZhuan();
-	}
+	};
 
 	// 关闭活动弹框
 	closePrizeModal = () => {
@@ -384,12 +389,12 @@ export default class wuyue_old_page extends PureComponent {
 			type: '',
 			isAwardFlag: false
 		});
-	}
+	};
 
 	render() {
-		const { awardList, time, transformType, type, isAwardFlag, showRuleModal, count, } = this.state;
+		const { awardList, time, transformType, type, isAwardFlag, showRuleModal, count } = this.state;
 		return (
-      		<div className={headerIgnore() ? styles.dazhuanpan : `${styles.dazhuanpan2} ${styles.dazhuanpan}`}>
+			<div className={headerIgnore() ? styles.dazhuanpan : `${styles.dazhuanpan2} ${styles.dazhuanpan}`}>
 				{this.state.codeInfo ? (
 					<div className={styles.active_img_box}>
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}
@@ -397,8 +402,7 @@ export default class wuyue_old_page extends PureComponent {
 				) : null}
 				{!this.state.codeInfo ? (
 					<div>
-						{
-							type && type !== 'award_list' && type !== 'alert_congratulation' &&
+						{type && type !== 'award_list' && type !== 'alert_congratulation' && (
 							<ModalWrap
 								contType={type}
 								// goRoute={this.goRoute}
@@ -406,10 +410,32 @@ export default class wuyue_old_page extends PureComponent {
 								closeCb={this.closePrizeModal}
 								recordActCb={this.recordUserAct}
 							/>
-						}
-						{ showRuleModal && <RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} /> }
-						{ type && type === 'award_list' && <WinPrize type="myAward" clickCb={() => {this.goRoute('mayOldMyPrizeUseBtn')}} closeCb={this.closePrizeModal} setalertType={this.setalertType} noAward={isAwardFlag} /> }
-						{ type && type === 'alert_congratulation' && <WinPrize clickCb={() => {this.goRoute('mayOldUseNowBtn')}} closeCb={this.closePrizeModal} title="15元免息券" subTit="（借款满3000元可用）" setalertType={this.setalertType} />}
+						)}
+						{showRuleModal && (
+							<RuleShow ruleTit="老用户活动规则" ruleDesc={rules} onCloseCb={this.closeRules} />
+						)}
+						{type && type === 'award_list' && (
+							<WinPrize
+								type="myAward"
+								clickCb={() => {
+									this.goRoute('mayOldMyPrizeUseBtn');
+								}}
+								closeCb={this.closePrizeModal}
+								setalertType={this.setalertType}
+								noAward={isAwardFlag}
+							/>
+						)}
+						{type && type === 'alert_congratulation' && (
+							<WinPrize
+								clickCb={() => {
+									this.goRoute('mayOldUseNowBtn');
+								}}
+								closeCb={this.closePrizeModal}
+								title="15元免息券"
+								subTit="（借款满3000元可用）"
+								setalertType={this.setalertType}
+							/>
+						)}
 						<div className={styles.bg}>
 							<div
 								className={styles.rule_btn}
@@ -420,7 +446,7 @@ export default class wuyue_old_page extends PureComponent {
 									});
 								}}
 							>
-								<img src={rule_bg} className={styles.rule_bg} onClick={this.showRules} />								
+								<img src={rule_bg} className={styles.rule_bg} onClick={this.showRules} />
 							</div>
 							<img className={styles.img} src={bg} />
 							<div className={styles.hd_box}>

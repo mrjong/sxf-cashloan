@@ -19,7 +19,7 @@
 		left: -30px;
 		width: calc(100% + 30px);
 		&::after {
-			@include setBottomLine(#F0F1F5);
+			@include setBottomLine(#f0f1f5);
 		}
 	}
 	.updateBtn {
@@ -33,7 +33,7 @@
 		bottom: 100px;
 		font-family: 'PingFangSC-Regular';
 		&:active {
-			opacity: .6;
+			opacity: 0.6;
 		}
 	}
 	.addCard {
@@ -63,7 +63,7 @@
 			.text {
 				position: absolute;
 				top: 1.4rem;
-        display: inline-block;
+				display: inline-block;
 				margin-left: -100vw;
 				color: #fff;
 				font-size: 0.3rem;
@@ -90,7 +90,7 @@
 			top: 20px;
 		}
 		&:active {
-			opacity: .6;
+			opacity: 0.6;
 		}
 	}
 	.dis {
@@ -98,7 +98,7 @@
 			color: #c9cdd5;
 		}
 		.bank_icon {
-			opacity: .5;
+			opacity: 0.5;
 		}
 		.surplus_desc {
 			color: #c9cdd5;
@@ -177,7 +177,7 @@
 	.surplus_desc {
 		position: absolute;
 		top: 90px;
-		letter-spacing: 1PX;
+		letter-spacing: 1px;
 		font-size: 24px;
 		color: #868e9e;
 	}
@@ -262,7 +262,7 @@
 			margin-right: 10px;
 			top: 5px;
 			display: inline-block;
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png',-312px, -36px);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -312px, -36px);
 		}
 	}
 	.handle_authority {
@@ -289,7 +289,7 @@
 	}
 }
 .noCardTip {
-	background-color: rgba(0, 0, 0, .6);
+	background-color: rgba(0, 0, 0, 0.6);
 	position: fixed;
 	height: 100%;
 	width: 100%;

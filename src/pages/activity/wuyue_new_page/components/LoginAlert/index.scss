@@ -1,18 +1,18 @@
-.login_alert{
+.login_alert {
 	.form_control {
 		padding-left: 0;
 		:global {
-			.am-input-control input{
+			.am-input-control input {
 				font-size: 30px;
 			}
 		}
 	}
-	.agreement{
+	.agreement {
 		text-align: left;
 		font-size: 26px;
-		color: #6C6C6C;
-		span{
-			color: #FD4073;
+		color: #6c6c6c;
+		span {
+			color: #fd4073;
 		}
 	}
 }
@@ -30,7 +30,7 @@
 }
 .get_sms_box {
 	position: relative;
-	color: #FF3B5D;
+	color: #ff3b5d;
 	cursor: pointer;
 	input {
 		padding-right: 180px !important;
@@ -44,7 +44,7 @@
 		transform: translate(0, -50%);
 		.sms_text_dis {
 			color: #999;
-			opacity: .8;
+			opacity: 0.8;
 		}
 	}
 }

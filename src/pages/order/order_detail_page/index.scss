@@ -101,7 +101,7 @@
 			left: 20px;
 			top: 18px;
 			width: 31px;
-			opacity: .5;
+			opacity: 0.5;
 			height: 25px;
 			background-size: 31px 25px;
 			background-image: url(./img/bankpay.png);
@@ -111,7 +111,7 @@
 			top: 18px;
 			width: 30px;
 			height: 27px;
-			opacity: .5;
+			opacity: 0.5;
 			background-size: 30px 27px;
 			background-image: url(./img/wxpay.png);
 		}
@@ -129,7 +129,7 @@
 			margin-right: 60px;
 			padding: 5px 20px 10px 65px;
 			border-radius: 30px;
-			border: 1PX solid #868e9e;
+			border: 1px solid #868e9e;
 			font-size: 26px;
 			width: 80px;
 			height: 45px;
@@ -137,7 +137,7 @@
 			color: #868e9e;
 			position: relative;
 			&.active {
-				border: 1PX solid #f66;
+				border: 1px solid #f66;
 				color: #121c32;
 				i {
 					opacity: 1;
@@ -159,7 +159,7 @@
 		flex: 1;
 	}
 	i {
-		@include setArrow(right,15px,#A9AEB6,1PX);
+		@include setArrow(right, 15px, #a9aeb6, 1px);
 		top: 16px;
 	}
 }
@@ -172,12 +172,12 @@
 	}
 }
 i.arrow_down {
-	@include setArrow(down,15px,#A9AEB6,1PX);
+	@include setArrow(down, 15px, #a9aeb6, 1px);
 	top: 16px;
 	margin-left: 10px;
 }
 i.arrow_up {
-	@include setArrow(top,15px,#A9AEB6,1PX);
+	@include setArrow(top, 15px, #a9aeb6, 1px);
 	top: 20px;
 	margin-left: 10px;
 }
@@ -194,7 +194,7 @@ i.arrow_up {
 		color: rgba(159, 159, 159, 1);
 	}
 	.sum_total {
-		border-top: 1PX solid #e0e0e0;
+		border-top: 1px solid #e0e0e0;
 		padding: 24px 0 10px 0;
 		margin-top: 24px;
 	}

@@ -10,13 +10,12 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import { buriedPointEvent } from 'utils/analytins'
+import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
-
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
+	sendsms: '/cmm/sendsms'
 };
 let timmer;
 @fetch.inject()
@@ -29,7 +28,7 @@ export default class LoginAlert extends Component {
 			timeflag: true,
 			mblNoHid: '',
 			smsJrnNo: '', // 短信流水号
-			modalShow: true,
+			modalShow: true
 		};
 	}
 	componentWillUnmount() {
@@ -60,7 +59,7 @@ export default class LoginAlert extends Component {
 					.post(API.sendsms, {
 						type: '6',
 						mblNo: values.phoneValue,
-						osType: getDeviceType(), // 操作系统
+						osType: getDeviceType() // 操作系统
 					})
 					.then(
 						(result) => {
@@ -92,14 +91,14 @@ export default class LoginAlert extends Component {
 	closeCb = () => {
 		const { closeModal } = this.props;
 		closeModal && closeModal();
-	}
+	};
 	// 确定去登陆按钮
 	goLogin = () => {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true })
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.entry) {
 			buriedPointEvent(activity.jjpWxConfirmBtn, {
 				entry: queryData.entry
-			})
+			});
 		}
 		const { smsSuccess } = this.props;
 		const { otherProps_type } = this.state;
@@ -167,10 +166,7 @@ export default class LoginAlert extends Component {
 							maxLength={11}
 							type="number"
 							{...getFieldProps('phoneValue', {
-								rules: [
-									{ required: true, message: '请输入正确手机号' },
-									{ validator: this.validatePhone }
-								]
+								rules: [{ required: true, message: '请输入正确手机号' }, { validator: this.validatePhone }]
 							})}
 							className={style.form_control}
 							placeholder="请输入手机号码"
@@ -207,13 +203,7 @@ export default class LoginAlert extends Component {
 						</div>
 
 						<div className={style.btn_box}>
-							<Button
-								onClick={
-									this.goLogin
-								}
-								className={style.btn_primary}
-								type="primary"
-							>
+							<Button onClick={this.goLogin} className={style.btn_primary} type="primary">
 								确定
 							</Button>
 						</div>

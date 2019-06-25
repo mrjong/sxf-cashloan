@@ -157,11 +157,13 @@ export default class LoginComponent extends Component {
 						// 	this.setState({ phoneValue: e.target.value.replace(/\s+/g, '') });
 						// }}
 						{...getFieldProps('phoneValue', {
-							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
+							rules: [{ required: true, message: '请输入正确手机号' }, { validator: this.validatePhone }]
 						})}
 						className={style.form_control}
 						placeholder="请输入手机号码"
-						onBlur={() => {handleInputBlur()}}
+						onBlur={() => {
+							handleInputBlur();
+						}}
 					/>
 				</div>
 				<div className={style.inputCode}>
@@ -177,11 +179,13 @@ export default class LoginComponent extends Component {
 						// 	this.setState({ smsCd: e.target.value.replace(/\s+/g, '') });
 						// }}
 						{...getFieldProps('smsCd', {
-							rules: [ { required: true, message: '请输入正确验证码' } ]
+							rules: [{ required: true, message: '请输入正确验证码' }]
 						})}
 						className={style.form_control}
 						placeholder="请输入短信验证码"
-						onBlur={() => {handleInputBlur()}}
+						onBlur={() => {
+							handleInputBlur();
+						}}
 					/>
 					<div className={!this.state.timeflag ? style.getCodeAct : style.getCode}>
 						<Button

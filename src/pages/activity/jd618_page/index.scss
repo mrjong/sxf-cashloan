@@ -1,157 +1,157 @@
-@import "../../../assets//styles/scss/base/fn.scss";
+@import '../../../assets//styles/scss/base/fn.scss';
 .modal {
-  .mask {
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.5);
-    margin: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999;
-  }
-  .modalWrapper {
-    position: fixed;
-    width: 620px;
-    height: 594px;
-    border-radius: 10px;
-    padding: 26px 30px 0;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    background-color: #fff;
-    box-sizing: border-box;
-    .closeBtn {
-      width: 68px;
-      height: 68px;
-      position: absolute;
-      bottom: -100px;
-      left: 50%;
-      transform: translate(-50%, 0%);
-      @include spriteIcon("../../../assets/images/common/sprite_icon.png", 0, 0);
-    }
-    .tipText {
-      text-align: center;
-    }
-  }
-  .tipWrapper {
-    width: 5rem;
-    height: 2rem;
-  }
+	.mask {
+		position: fixed;
+		background-color: rgba(0, 0, 0, 0.5);
+		margin: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999;
+	}
+	.modalWrapper {
+		position: fixed;
+		width: 620px;
+		height: 594px;
+		border-radius: 10px;
+		padding: 26px 30px 0;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1000;
+		background-color: #fff;
+		box-sizing: border-box;
+		.closeBtn {
+			width: 68px;
+			height: 68px;
+			position: absolute;
+			bottom: -100px;
+			left: 50%;
+			transform: translate(-50%, 0%);
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
+		}
+		.tipText {
+			text-align: center;
+		}
+	}
+	.tipWrapper {
+		width: 5rem;
+		height: 2rem;
+	}
 }
 .pinpai {
-  background: url(./img/activity_bg.png) no-repeat;
-  background-size: 100%;
-  position: relative;
-  .hd_logo_wrap {
-    position: absolute;
-    left: 0;
-    top: 16px;
-    color: #fff;
-    font-size: 20px;
-    .hd_logo {
-      width: 50px;
-      height: 50px;
-      margin-right: 10px;
-      margin-left: 20px;
-      vertical-align: middle;
-    }
-  }
-  .scrollWrap {
-    position: relative;
-    text-align: center;
-    width: 85%;
-    margin: 0 auto;
-    h3 {
-      font-size: 32px;
-      color: #fff;
-      margin-bottom: 15px;
-    }
-    .coin_bg {
-      position: absolute;
-      right: 0;
-      top: -10px;
-      width: 94px;
-      height: 70px;
-    }
-  }
+	background: url(./img/activity_bg.png) no-repeat;
+	background-size: 100%;
+	position: relative;
+	.hd_logo_wrap {
+		position: absolute;
+		left: 0;
+		top: 16px;
+		color: #fff;
+		font-size: 20px;
+		.hd_logo {
+			width: 50px;
+			height: 50px;
+			margin-right: 10px;
+			margin-left: 20px;
+			vertical-align: middle;
+		}
+	}
+	.scrollWrap {
+		position: relative;
+		text-align: center;
+		width: 85%;
+		margin: 0 auto;
+		h3 {
+			font-size: 32px;
+			color: #fff;
+			margin-bottom: 15px;
+		}
+		.coin_bg {
+			position: absolute;
+			right: 0;
+			top: -10px;
+			width: 94px;
+			height: 70px;
+		}
+	}
 
-  .ruleBtn {
-    position: absolute;
-    right: 0;
-    top: 16px;
-    color: #fff;
-    font-size: 30px;
-    width: 166px;
-    height: 51px;
-    background: rgba(247, 145, 117, 1);
-    border-radius: 26px 0 0 26px;
-    line-height: 51px;
-    text-align: center;
-    z-index: 2;
-  }
+	.ruleBtn {
+		position: absolute;
+		right: 0;
+		top: 16px;
+		color: #fff;
+		font-size: 30px;
+		width: 166px;
+		height: 51px;
+		background: rgba(247, 145, 117, 1);
+		border-radius: 26px 0 0 26px;
+		line-height: 51px;
+		text-align: center;
+		z-index: 2;
+	}
 
-  .entryBtn {
-    display: block;
-    width: 620px;
-    margin: 44px auto 100px;
-    height: 112px;
-    animation: bounce-in 1s infinite;
-  }
-  .main_logo {
-    width: 100%;
-    display: block;
-    margin: 0 auto;
-    height: 780px;
-  }
-  .countdown_bg {
-    width: 100%;
-    display: block;
-    margin: 0 auto;
-    height: 470px;
-  }
-  .rule_bg {
-    width: 650px;
-    display: block;
-    margin: 0 auto;
-    height: 490px;
-  }
-  .protocolBox {
-    position: relative;
-    color: #414a53;
-    font-size: 24px;
-    line-height: 36px;
-    padding: 0 56px 36px;
-    .specailColor {
-      color: #8e8d7b;
-      margin-left: 34px;
-    }
-    .checked {
-      position: absolute;
-      top: 5px;
-      width: 28px;
-      height: 28px;
-      background: url(./img/checked_ico.png) no-repeat;
-      background-size: 100%;
-    }
+	.entryBtn {
+		display: block;
+		width: 620px;
+		margin: 44px auto 100px;
+		height: 112px;
+		animation: bounce-in 1s infinite;
+	}
+	.main_logo {
+		width: 100%;
+		display: block;
+		margin: 0 auto;
+		height: 780px;
+	}
+	.countdown_bg {
+		width: 100%;
+		display: block;
+		margin: 0 auto;
+		height: 470px;
+	}
+	.rule_bg {
+		width: 650px;
+		display: block;
+		margin: 0 auto;
+		height: 490px;
+	}
+	.protocolBox {
+		position: relative;
+		color: #414a53;
+		font-size: 24px;
+		line-height: 36px;
+		padding: 0 56px 36px;
+		.specailColor {
+			color: #8e8d7b;
+			margin-left: 34px;
+		}
+		.checked {
+			position: absolute;
+			top: 5px;
+			width: 28px;
+			height: 28px;
+			background: url(./img/checked_ico.png) no-repeat;
+			background-size: 100%;
+		}
 
-    .nochecked {
-      width: 26px;
-      height: 26px;
-      background-image: url(./img/unChecked_ico.png);
-    }
-  }
+		.nochecked {
+			width: 26px;
+			height: 26px;
+			background-image: url(./img/unChecked_ico.png);
+		}
+	}
 }
 
 @keyframes bounce-in {
-  0%{
-    transform: scale(.9);
-  }
-  50%{
-    transform: scale(1);
-  }
-  100%{
-    transform: scale(.9);
-  }
+	0% {
+		transform: scale(0.9);
+	}
+	50% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(0.9);
+	}
 }

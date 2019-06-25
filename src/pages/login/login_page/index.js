@@ -6,7 +6,8 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
+import logoImg from 'assets/images/common/black_logo.png';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
@@ -15,13 +16,12 @@ import bannerImg from './img/login_bg.png';
 import bannerImg1 from './img/login_bg1.png';
 import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
-import logoImg from 'assets/images/common/black_logo.png';
 let timmer;
-const needDisplayOptions = [ 'basicInf' ];
+const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
-	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
+	getStw: '/my/getStsw' // 获取4个认证项的状态(看基本信息是否认证)
 };
 @fetch.inject()
 @createForm()
@@ -31,7 +31,6 @@ export default class login_page extends PureComponent {
 		this.state = {
 			timers: '获取验证码',
 			timeflag: true,
-			flag: true,
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
@@ -41,7 +40,9 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const queryData = qs.parse(this.props.history.location.search, {
+			ignoreQueryPrefix: true
+		});
 		this.setState({
 			queryData
 		});
@@ -49,10 +50,6 @@ export default class login_page extends PureComponent {
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
-		// 保存h5Channel变量
-		const query = qs.parse(window.location.search, {
-			ignoreQueryPrefix: true
-		});
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
@@ -61,9 +58,9 @@ export default class login_page extends PureComponent {
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
-    let wenjuan = localStorage.getItem('wenjuan');
+		let wenjuan = localStorage.getItem('wenjuan');
 		sessionStorage.clear();
-    localStorage.clear();
+		localStorage.clear();
 
 		// 首页弹窗要用的
 		MessageTagError && store.setMessageTagError(MessageTagError);
@@ -92,7 +89,7 @@ export default class login_page extends PureComponent {
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let clientHeight = document.documentElement.clientHeight;
+				let { clientHeight } = document.documentElement;
 				_this.setState({
 					inputFocus: originClientHeight > clientHeight
 				});
@@ -179,7 +176,7 @@ export default class login_page extends PureComponent {
 	//获得手机验证码
 	getTime(i) {
 		if (!this.getSmsCode(i)) {
-			return;
+			return false;
 		}
 	}
 	// 获得手机验证码
@@ -211,16 +208,15 @@ export default class login_page extends PureComponent {
 				this.props.$fetch.post(API.sendsms, param).then((result) => {
 					if (result.msgCode !== 'PTM0000') {
 						Toast.info(result.msgInfo);
-						this.setState({ valueInputImgCode: '' });
 						return false;
 					}
 					Toast.info('发送成功，请注意查收！');
 					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: i-- + '"' });
+						this.setState({ timers: i-- + '"' });
 						if (i === -1) {
 							clearInterval(timmer);
-							this.setState({ timers: '重新获取', timeflag: true, flag: true });
+							this.setState({ timers: '重新获取', timeflag: true });
 						}
 					}, 1000);
 				});
@@ -247,33 +243,37 @@ export default class login_page extends PureComponent {
 
 	// 获取授信列表状态
 	requestGetStatus = () => {
-		this.props.$fetch.get(`${API.getStw}`).then((result) => {
-			if (result && result.data !== null && result.msgCode === 'PTM0000') {
-				const stswData = result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
-				if (stswData && stswData.length){
-					// case '0': // 未认证
-					// case '1': // 认证中
-					// case '2': // 认证成功
-					// case '3': // 认证失败
-					// case '4': // 认证过期
-					if (stswData[0].stsw.dicDetailCd === '0') {
-						this.props.history.replace({
-							pathname: '/home/essential_information',
-							search: '?jumpToBase=true&entry=fail'
-						});
-					} else {
-						this.props.history.replace('/home/home');
+		this.props.$fetch
+			.get(`${API.getStw}`)
+			.then((result) => {
+				if (result && result.data !== null && result.msgCode === 'PTM0000') {
+					const stswData =
+						result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
+					if (stswData && stswData.length) {
+						// case '0': // 未认证
+						// case '1': // 认证中
+						// case '2': // 认证成功
+						// case '3': // 认证失败
+						// case '4': // 认证过期
+						if (stswData[0].stsw.dicDetailCd === '0') {
+							this.props.history.replace({
+								pathname: '/home/essential_information',
+								search: '?jumpToBase=true&entry=fail'
+							});
+						} else {
+							this.props.history.replace('/home/home');
+						}
 					}
+				} else {
+					this.props.toast.info(result.msgInfo, 2, () => {
+						this.props.history.replace('/home/home');
+					});
 				}
-			} else {
-				this.props.toast.info(result.msgInfo, 2, () => {
-					this.props.history.replace('/home/home');
-				});
-			}
-		})
-		.catch((err) => {
-			this.props.history.replace('/home/home');
-		});
+			})
+			.catch((err) => {
+				console.log(err);
+				this.props.history.replace('/home/home');
+			});
 	};
 
 	render() {
@@ -308,10 +308,10 @@ export default class login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
-								className={[ styles.loginInput, styles.smsCodeInput ].join(' ')}
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									rules: [ { required: true, message: '请输入正确验证码' } ]
+									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
 									this.setState({

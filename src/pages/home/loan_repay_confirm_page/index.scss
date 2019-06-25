@@ -1,14 +1,14 @@
-@import "../../../assets/styles/scss/base/fn.scss";
+@import '../../../assets/styles/scss/base/fn.scss';
 .page_inner_wrap {
 	padding: 0 30px 0;
 }
 .pageWrapper {
 	padding-bottom: 200px;
 	input::placeholder {
-    font-size: 32px;
-    padding-top: 16px;
-    // color: #999;
-    // line-height: 1.4;
+		font-size: 32px;
+		padding-top: 16px;
+		// color: #999;
+		// line-height: 1.4;
 		// font-size: 0.32rem;
 	}
 }
@@ -51,23 +51,23 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-    height: 100px;
-    margin-top: 20px;
+		height: 100px;
+		margin-top: 20px;
 		&::after {
-			@include setBottomLine(#F0F1F5);
+			@include setBottomLine(#f0f1f5);
 			left: -30px;
 			width: calc(100% + 60px);
 		}
 	}
 
 	.billMoney {
-		font-family: "DINMitAlt";
+		font-family: 'DINMitAlt';
 		display: block;
 		font-weight: normal;
 		font-size: 80px;
 		color: #121c32;
 		line-height: 1.3;
-    margin-top: 10px;
+		margin-top: 10px;
 	}
 
 	.billInfo {
@@ -83,7 +83,7 @@
 				font-size: 30px;
 				color: #121c32;
 				font-weight: bold;
-				font-family: "PingFangSC-Medium";
+				font-family: 'PingFangSC-Medium';
 			}
 
 			.name {
@@ -112,8 +112,8 @@
 	}
 	.inputBox {
 		text-align: left;
-    position: relative;
-    margin-top: 20px;
+		position: relative;
+		margin-top: 20px;
 		&:after {
 			@include setBottomLine();
 		}
@@ -147,7 +147,8 @@
 		color: #121c32;
 		.rightArrow {
 			width: 40px;
-			top: -6px;
+			height: 40px;
+			top: 4px;
 			position: absolute;
 			color: #121c32;
 		}
@@ -156,7 +157,7 @@
 			font-family: 'PingFangSC-Medium';
 			font-weight: 500;
 			&:active {
-				opacity: .6;
+				opacity: 0.6;
 			}
 		}
 	}
@@ -199,7 +200,7 @@
 		.am-list-item .am-list-line .am-list-extra {
 			padding-right: 10px;
 			&::after {
-				content: "";
+				content: '';
 				margin-left: 15px;
 				@include setArrow(right, 15px, #a9aeb6, 1px);
 				border-color: #333;
@@ -249,9 +250,9 @@
 		justify-content: space-between;
 		position: relative;
 		&::after {
-			@include setRightLine(#C9CDD5);
-      top: 15px;
-      bottom: 15px;
+			@include setRightLine(#c9cdd5);
+			top: 15px;
+			bottom: 15px;
 		}
 		&:last-child {
 			&::after {
@@ -269,9 +270,9 @@
 	.desc {
 		color: #868e9e;
 		font-size: 22px;
-		padding: 0 .1rem;
+		padding: 0 0.1rem;
 		font-family: 'PingFangSC-Regular';
-    font-weight: 400;
+		font-weight: 400;
 	}
 	.title {
 		color: #397be6;
@@ -303,7 +304,7 @@
 			color: #e5e5e5;
 		}
 		i {
-			background-image: url("../../../assets/images/home/viplogo-dis.png");
+			background-image: url('../../../assets/images/home/viplogo-dis.png');
 		}
 	}
 
@@ -315,7 +316,7 @@
 		height: 35px;
 		display: inline-block;
 		background-size: 100%;
-		background-image: url("../../../assets/images/home/viplogo.png");
+		background-image: url('../../../assets/images/home/viplogo.png');
 		background-color: #fff;
 		background-repeat: no-repeat;
 		background-origin: content-box;
@@ -373,10 +374,10 @@
 		}
 
 		.am-list-item .am-input-control input {
-			font-family: "DINMitAlt";
+			font-family: 'DINMitAlt';
 			color: #121c32;
-      font-size: 50px;
-      line-height: 1.4;
+			font-size: 50px;
+			line-height: 1.4;
 			padding-left: 50px;
 		}
 
@@ -492,8 +493,8 @@
 	background: #f66;
 }
 .handle_authority {
-  position: fixed;
-  bottom: 0;
+	position: fixed;
+	bottom: 0;
 	width: 100%;
 	background: #fff;
 	z-index: 2;
@@ -501,7 +502,7 @@
 }
 
 .handle_authority_relative {
-  position: relative;
+	position: relative;
 }
 
 .button {

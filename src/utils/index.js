@@ -43,7 +43,7 @@ export const isWXOpen = () => {
 // 判断是否是手机打开
 export const isPhone = () => {
 	var userAgentInfo = navigator.userAgent;
-	var Agents = [ 'Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod' ];
+	var Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
 	var flag = false;
 	for (var v = 0; v < Agents.length; v++) {
 		if (userAgentInfo.indexOf(Agents[v]) > 0) {
@@ -65,11 +65,11 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/mpos/mpos_ioscontrol_page'
 		];
 		if (isWXOpen()) {
-			let pageListWx = [ '/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page' ];
+			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
 			// h5的banner也会跳到/mpos/mpos_ioscontrol_page这个落地页，因此放开
 			pageList = pageList.concat(pageListWx);
 		} else if (isMPOS()) {
-			let pageListMpos = [ '/mpos/' ];
+			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		} else {
 			let pageListCommon = [];
@@ -134,7 +134,9 @@ export const getDeviceType = () => {
 	const osType =
 		u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
 			? 'ANDRIOD'
-			: u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) ? 'IOS' : 'PC';
+			: u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+			? 'IOS'
+			: 'PC';
 	return osType;
 };
 
@@ -284,7 +286,9 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 						state = true;
 						const ele = (
 							<div>
-								身份证照片找不到了!<br />补充照片极速{msg}!
+								身份证照片找不到了!
+								<br />
+								补充照片极速{msg}!
 							</div>
 						);
 						Modal.alert('', ele, [
@@ -315,7 +319,9 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 						state = true;
 						const ele = (
 							<div>
-								身份证有效期不足30天或已过期!<br />重新补充极速{msg}!
+								身份证有效期不足30天或已过期!
+								<br />
+								重新补充极速{msg}!
 							</div>
 						);
 						Modal.alert('', ele, [
@@ -415,7 +421,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 			}
 		});
 };
-const needDisplayOptions2 = [ 'operator' ];
+const needDisplayOptions2 = ['operator'];
 export const getOperatorStatus = ({ $props }) => {
 	return new Promise(async (resolve, reject) => {
 		let res = await $props.$fetch.post(API.GETSTSW);
@@ -451,9 +457,9 @@ export const getOperatorStatus = ({ $props }) => {
 											store.setGotoMoxieFlag(true);
 											window.location.href =
 												result.data.url +
-												`&localUrl=${window.location.origin}&routeType=${window.location
-													.pathname}${window.location
-													.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+												`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+													window.location.search
+												}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
 													`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
 												)}`;
 										}
@@ -479,7 +485,7 @@ export const getOperatorStatus = ({ $props }) => {
 		}
 	});
 };
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
@@ -487,7 +493,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let resBackMsg = '';
 	let btnText = '';
 	let orderText = 0;
-	let btnArry = [ '继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单' ];
+	let btnArry = ['继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单'];
 	if (res && res.msgCode === 'PTM0000') {
 		res.data.forEach((item, index) => {
 			if (needDisplayOptions.includes(item.code)) {
@@ -556,9 +562,9 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 							SXFToast.loading('加载中...', 0);
 							window.location.href =
 								result.data.url +
-								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-									.location
-									.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+									window.location.search
+								}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
 									`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
 								)}`;
 							// }, 3000);
@@ -624,7 +630,8 @@ export const logoutApp = (that) => {
 			//退出时,删除通付盾script
 			document.getElementById('tonfudunScript') &&
 				document.body.removeChild(document.getElementById('tonfudunScript'));
-			document.getElementById('payegisIfm') && document.body.removeChild(document.getElementById('payegisIfm'));
+			document.getElementById('payegisIfm') &&
+				document.body.removeChild(document.getElementById('payegisIfm'));
 		},
 		(err) => {
 			err.msgInfo && Toast.info(err.msgInfo);
@@ -708,7 +715,11 @@ export const vconsole = (i, consoleshow) => {
 		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
 		head.appendChild(script);
 		store.setConsoleshow(true);
-	} else if ((i && i.length === 10 && i === '1111000110') || consoleshow || sessionStorage.getItem('consoleshow')) {
+	} else if (
+		(i && i.length === 10 && i === '1111000110') ||
+		consoleshow ||
+		sessionStorage.getItem('consoleshow')
+	) {
 		localStorage.clear();
 		sessionStorage.clear();
 		clearAllCookie();
@@ -757,7 +768,11 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 			goMoxieBankList();
 		});
 		state = false;
-	} else if (indexData && cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
+	} else if (
+		indexData &&
+		cardBillSts === '01' &&
+		(cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
+	) {
 		$props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
 			// 跳新版魔蝎
 			goMoxieBankList();
@@ -819,7 +834,7 @@ export const debounce = (method, delay) => {
 };
 
 export const generateRandomPhone = () => {
-	const chars = [ '3', '5', '7', '8' ];
+	const chars = ['3', '5', '7', '8'];
 	return `1${chars[Math.ceil(Math.random() * 3)]}${Math.ceil(Math.random() * 9)}****${Math.ceil(
 		Math.random() * 9
 	)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}${Math.ceil(Math.random() * 9)}`;
@@ -870,15 +885,16 @@ export const saveUserInfoEngaged = ({ $props, AcCode }) => {
 };
 
 // 查询两个日期相差的天数
-export const dateDiffer = (sDate1, sDate2) => {    //sDate1和sDate2是2006/12/18格式
-  var dateSpan, iDays;
-  sDate1 = Date.parse(sDate1);
-  sDate2 = Date.parse(sDate2);
-  dateSpan = sDate2 - sDate1;
-  dateSpan = Math.abs(dateSpan);
-  iDays = Math.floor(dateSpan / (24 * 3600 * 1000));
-  return iDays
-}
+export const dateDiffer = (sDate1, sDate2) => {
+	//sDate1和sDate2是2006/12/18格式
+	var dateSpan, iDays;
+	sDate1 = Date.parse(sDate1);
+	sDate2 = Date.parse(sDate2);
+	dateSpan = sDate2 - sDate1;
+	dateSpan = Math.abs(dateSpan);
+	iDays = Math.floor(dateSpan / (24 * 3600 * 1000));
+	return iDays;
+};
 export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 	$props.$fetch
 		.get(API.mxoieCardList)
@@ -890,9 +906,9 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 					});
 					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
 					if (jumpUrl) {
-            store.setGotoMoxieFlag(true);
+						store.setGotoMoxieFlag(true);
 						store.setAutId(seleBank[0].authorId);
-            store.setMoxieBackUrl(`/home/crawl_progress_page`);
+						store.setMoxieBackUrl(`/home/crawl_progress_page`);
 						// 如果银行code一致跳登录页，否则跳列表页
 						window.location.href =
 							jumpUrl +

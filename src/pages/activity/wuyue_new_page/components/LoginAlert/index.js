@@ -14,27 +14,23 @@ import { activity } from 'utils/analytinsType';
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
+	sendsms: '/cmm/sendsms'
 };
 let timmer;
 @fetch.inject()
 @createForm()
 export default class LoginAlert extends Component {
-
-	static defaultProps = {
-	};
+	static defaultProps = {};
 	constructor(props) {
 		super(props);
 		this.state = {
 			smsText: '获取验证码',
 			timeflag: true,
 			disabled: false,
-			smsJrnNo: '', // 短信流水号
+			smsJrnNo: '' // 短信流水号
 		};
 	}
-	componentDidMount() {
-
-	}
+	componentDidMount() {}
 	componentWillUnmount() {
 		clearInterval(timmer);
 	}
@@ -110,8 +106,9 @@ export default class LoginAlert extends Component {
 						osType: getDeviceType(),
 						smsCd: values.smsCd,
 						smsJrnNo: this.state.smsJrnNo,
-						usrCnl: getH5Channel(), // 用户渠道
-					}).then(
+						usrCnl: getH5Channel() // 用户渠道
+					})
+					.then(
 						(res) => {
 							if (res.msgCode !== 'PTM0000') {
 								res.msgInfo && Toast.info(res.msgInfo);
@@ -120,7 +117,8 @@ export default class LoginAlert extends Component {
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
-							if (res.data && res.data.registerFlg === '0') { // 1为已注册直接弹出针对于新用户弹框 0为发券
+							if (res.data && res.data.registerFlg === '0') {
+								// 1为已注册直接弹出针对于新用户弹框 0为发券
 								loginCb && loginCb();
 							} else {
 								hasLoginCb && hasLoginCb();
@@ -148,7 +146,7 @@ export default class LoginAlert extends Component {
 	// 跳转协议
 	go = (url) => {
 		this.props.history.push(`/protocol/${url}`);
-  	};
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
 		const { smsText, timeflag } = this.state;
@@ -165,7 +163,7 @@ export default class LoginAlert extends Component {
 						disabled={this.state.disabled}
 						pattern="[0-9]*"
 						{...getFieldProps('phoneValue', {
-							rules: [ { required: true, message: '请输入正确手机号' } ]
+							rules: [{ required: true, message: '请输入正确手机号' }]
 						})}
 						className={style.form_control}
 						placeholder="请输入手机号码"
@@ -179,10 +177,7 @@ export default class LoginAlert extends Component {
 							type="text"
 							pattern="[0-9]*{6,6}"
 							{...getFieldProps('smsCd', {
-								rules: [
-									{ required: true, message: '请输入正确验证码' },
-									{ validator: this.verifyVerifyCode }
-								]
+								rules: [{ required: true, message: '请输入正确验证码' }, { validator: this.verifyVerifyCode }]
 							})}
 							className={style.form_control}
 							placeholder="请输入验证码"
@@ -203,12 +198,7 @@ export default class LoginAlert extends Component {
 					</div>
 
 					<div className={style.btn_box}>
-						<SXFButton
-							onClick={
-								this.goLogin
-							}
-							className={style.btn_primary}
-						>
+						<SXFButton onClick={this.goLogin} className={style.btn_primary}>
 							确认领取
 						</SXFButton>
 					</div>

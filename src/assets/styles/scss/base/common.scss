@@ -31,11 +31,6 @@
 	.am-modal-button-group-h a.am-modal-button:first-child {
 		color: #666;
 	}
-	.am-icon-loading,
-	.am-icon {
-		width: 30PX;
-		height: 30PX;
-	}
 }
 //  去掉数字键盘的点
 :global {
@@ -49,12 +44,12 @@
 			background-color: #ebdd74;
 		}
 	}
-	.am-pull-to-refresh-down .am-pull-to-refresh-indicator {
-		margin-top: -0.8rem !important;
-	}
-	.am-pull-to-refresh-indicator {
-		height: 0.8rem !important;
-	}
+	// .am-pull-to-refresh-down .am-pull-to-refresh-indicator {
+	// 	margin-top: -0.8rem !important;
+	// }
+	// .am-pull-to-refresh-indicator {
+	// 	height: 0.8rem !important;
+	// }
 	@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
 		html:not([data-scale]) .am-number-keyboard-wrapper table tr .am-number-keyboard-item.keyboard-confirm {
 			border-bottom: none;

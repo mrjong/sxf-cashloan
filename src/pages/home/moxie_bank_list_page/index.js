@@ -10,11 +10,13 @@ import StepBar from 'components/StepBar';
 import linkConf from 'config/link.conf';
 import bankCode from 'config/bankCode'
 import FeedbackModal from 'components/FeedbackModal';
+import recommend_icon from './img/recommend_icon.png'
 
 const API = {
   mxoieCardList: '/moxie/mxoieCardList/C',
   CARD_AUTH: '/auth/cardAuth' // 信用卡授信
 };
+const RecommendBankList = ['BCOM', 'COMM', 'SPDB', 'SPD', 'CMB', 'CEBB', 'CEB']
 let backUrlData = {};
 let moxieBackUrlData = {};
 @fetch.inject()
@@ -207,6 +209,9 @@ export default class moxie_bank_list_page extends Component {
                     key={item.name}
                     className={style.bankitem}
                   >
+                    {
+                      RecommendBankList.includes(item.code) && <img src={recommend_icon} alt="" className={style.recommend_icon} />
+                    }
                     <span
                       className={`${bankCode.includes(item.code) ? 'important_bank_moxie_ico' : 'bank_moxie_ico'} bank_ico_${item.code}`}
                       style={{ backgroundImage: `url(${item.logo})` }}

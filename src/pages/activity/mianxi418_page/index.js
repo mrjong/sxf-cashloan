@@ -196,7 +196,9 @@ export default class mianxi418_page extends PureComponent {
 						</span>
 					</div>
 					<div className={styles.footer_b_text}>
-						关注还到公众号 后台回复【红包】<br />领100元现金抽奖资格
+						关注还到公众号 后台回复【红包】
+						<br />
+						领100元现金抽奖资格
 					</div>
 					<div className={styles.footer_h_text}>
 						<div className={styles.text}>本活动最终解释权归随行付-还到所有</div>
@@ -205,7 +207,7 @@ export default class mianxi418_page extends PureComponent {
 				{showLoginTip && (
 					<div className={styles.modal}>
 						<div className={styles.mask} />
-						<div className={[ styles.modalWrapper, styles.tipWrapper ].join(' ')}>
+						<div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
 							<div className={styles.tipText}>
 								<span>小主～</span>
 								<br />
@@ -228,7 +230,9 @@ export default class mianxi418_page extends PureComponent {
 									<li>
 										4.活动内容：活动期间，每天通过活动页面的前1000名借款用户，借款金额3000元及以上，则可享最高5万元，最高30天的免息（实际奖励以审批金额为准），每人仅限1次免息奖励；
 									</li>
-									<li>5.奖励形式：借款金额满足条件后，免息奖励以免息券形式发放，届时可前往“我的-优惠券”中查看使用；</li>
+									<li>
+										5.奖励形式：借款金额满足条件后，免息奖励以免息券形式发放，届时可前往“我的-优惠券”中查看使用；
+									</li>
 									<li>6.免息券自发放之日起35天内有效，请在还款时使用，未在有效期使用，则视为放弃；</li>
 									<li className={styles.redText}>Tips:已在还到借款并还清用户，再次借款，免息力度更大哦！</li>
 								</ol>

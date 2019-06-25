@@ -16,7 +16,7 @@ import item1 from './img/item1.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils/common';
-import {store} from 'utils/store'
+import { store } from 'utils/store';
 
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
@@ -67,7 +67,9 @@ export default class dazhuanpan_page extends PureComponent {
 			count:
 				store.getRewardCount() && Number(store.getRewardCount()) > 0
 					? store.getRewardCount()
-					: !store.getRewardCount() ? 1 : 0
+					: !store.getRewardCount()
+					? 1
+					: 0
 		});
 		this.getConfigList();
 	}
@@ -123,31 +125,33 @@ export default class dazhuanpan_page extends PureComponent {
 
 	// 大转盘活动-用户抽奖剩余次数查询
 	getCount = () => {
-		this.props.$fetch.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true }).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				if (res.data.data.count && Number(res.data.data.count) > 0) {
-					this.getDraw(res.data.data.count);
+		this.props.$fetch
+			.post(API.userCount, { activeId: config.activeId }, { noLginRouter: true })
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					if (res.data.data.count && Number(res.data.data.count) > 0) {
+						this.getDraw(res.data.data.count);
+					} else {
+						store.setRewardCount(0);
+						this.setState({
+							count: '0'
+						});
+						this.setState({
+							type: 'no_chance'
+						});
+					}
 				} else {
-					store.setRewardCount(0);
-					this.setState({
-						count: '0'
-					});
-					this.setState({
-						type: 'no_chance'
-					});
+					if (res.msgCode === 'PTM1000') {
+						Cookie.remove('fin-v-card-token');
+						this.onloadZhuan();
+					} else if (res.msgCode === 'PTM0100') {
+						this.onloadZhuan();
+						Cookie.remove('fin-v-card-token');
+					} else {
+						Toast.info(res.msgInfo);
+					}
 				}
-			} else {
-				if (res.msgCode === 'PTM1000') {
-                    Cookie.remove('fin-v-card-token');
-                    this.onloadZhuan()
-				} else if (res.msgCode === 'PTM0100') {
-                    this.onloadZhuan()
-					Cookie.remove('fin-v-card-token');
-				} else {
-					Toast.info(res.msgInfo);
-				}
-			}
-		});
+			});
 	};
 	// 获取我的奖品
 	getMyAward = () => {
@@ -236,7 +240,7 @@ export default class dazhuanpan_page extends PureComponent {
 						this.state.numdeg +
 						(this.state.awardList.length - index) * deg +
 						deg / 2 +
-						(360 - this.state.numdeg % 360),
+						(360 - (this.state.numdeg % 360)),
 					time: 7.5
 				},
 				() => {
@@ -288,7 +292,16 @@ export default class dazhuanpan_page extends PureComponent {
 		this.props.history.replace('/home');
 	};
 	render() {
-		const { awardList, time, transformType, type, userAwardList, allUsersAward, count, alert_img } = this.state;
+		const {
+			awardList,
+			time,
+			transformType,
+			type,
+			userAwardList,
+			allUsersAward,
+			count,
+			alert_img
+		} = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
 				{this.state.codeInfo ? (
