@@ -765,13 +765,19 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				let couponTestData = await this.props.$fetch.get(API.couponTest);
-				if (couponTestData && couponTestData.data && couponTestData.data !== '0') {
-					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
-					this.setState({
-						isShowActivityModal: true,
-						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
-					});
+				if (
+					result.data.indexSts === 'LN0003' ||
+					result.data.indexSts === 'LN0006' ||
+					result.data.indexSts === 'LN0008'
+				) {
+					let couponTestData = await this.props.$fetch.get(API.couponTest);
+					if (couponTestData && couponTestData.data && couponTestData.data !== '0') {
+						this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
+						this.setState({
+							isShowActivityModal: true,
+							modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
+						});
+					}
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
