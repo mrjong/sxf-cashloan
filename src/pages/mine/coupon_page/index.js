@@ -314,7 +314,7 @@ export default class coupon_page extends PureComponent {
             }
             <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.title} ${style.ellipsis} ${style.textGray}` : `${style.title} ${style.ellipsis}`}>{obj && obj.coupNm}</div>
             <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.ellipsis} ${style.textGray}` : style.ellipsis}>{obj && obj.coupDesc}</div>
-            <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>有效期至： {obj && obj.validEndTm.length && dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}</div>
+            <div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>有效期至： {obj && obj.validEndTm&&obj.validEndTm.length && dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}</div>
           </div>
         </div>
       );
