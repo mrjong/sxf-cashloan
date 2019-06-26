@@ -177,6 +177,14 @@ if (window.history && window.history.pushState) {
 			if (window.location.pathname === '/home/crawl_fail_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;
+      }
+      if (window.location.pathname === '/protocol/pdf_page') {
+        if (store.getCashFenQiStoreData()) {
+          window.ReactRouterHistory.replace('/home/loan_fenqi');
+        } else {
+          window.ReactRouterHistory.replace('/home/confirm_agency');
+        }
+        return;
 			}
 
 			/**首页拦截 */
@@ -271,7 +279,8 @@ if (window.history && window.history.pushState) {
 					break;
 				case '/order/repayment_succ_page':
 				case '/home/confirm_agency': // 确认信息页物理返回到首页
-				case '/home/loan_apply_succ_page': // 借款申请提交成功页物理返回到首页
+        case '/home/loan_apply_succ_page': // 借款申请提交成功页物理返回到首页
+        case '/home/loan_fenqi': // 现金分期确认签约页返回首页
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				// case '/mine/credit_extension_page':
