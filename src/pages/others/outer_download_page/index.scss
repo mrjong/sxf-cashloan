@@ -1,0 +1,23 @@
+.page_wrap {
+	background: url('./img/main_bg.png') no-repeat;
+	background-size: contain;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.desc {
+	text-align: center;
+	color: #121c32;
+	font-size: 24px;
+	width: 60%;
+	margin: 25px auto 0;
+}
+
+.button {
+	width: 634px;
+	height: 100px;
+	margin: 67vh auto 0;
+	background-color: #ffe105;
+	color: #121c32;
+	font-weight: 400;
+}

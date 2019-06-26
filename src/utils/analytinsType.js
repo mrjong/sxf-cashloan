@@ -50,10 +50,10 @@ const home = {
 	cardResult: `${prefix}_HOME_CARD_RESULT`, // 信用卡提交结果埋点
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
-	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`,	// 下载页点击按钮事件
-	manualAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`,	//人工审核
-	machineAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MACHINE`,	//机器审核
-	quickLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_LOAN`,	//快速放款
+	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`, // 下载页点击按钮事件
+	manualAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`, //人工审核
+	machineAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MACHINE`, //机器审核
+	quickLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_LOAN`, //快速放款
 	signedLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_BORROWING`, //立即签约借款
 	applyLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_APPLY`, //申请借钱还信用卡
 	billImport: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_IMPORT`, //账单导入
@@ -80,13 +80,12 @@ const home = {
 
 	dialogLoanRepay: `${prefix}_QUESTION_FEEDBACK_APPLY`,
 	dialogLoanRepay_wait: `${prefix}_QUESTION_FEEDBACK_APPLY_CONTINUE`,
-  dialogLoanRepay_close: `${prefix}_QUESTION_FEEDBACK_APPLY_CLOSE`,
+	dialogLoanRepay_close: `${prefix}_QUESTION_FEEDBACK_APPLY_CLOSE`,
 
-  feedModalOperator: `${prefix}_TIPS_OPERATORS_RETRIEVE`, //找回运营商密码
-  feedModalInterbank: `${prefix}_TIPS_INTERNETBANK_RETRIEVE`, //找回信用卡密码
-  feedModalSubmit: `${prefix}_TIPS_OTHERISSUES`, //反馈问题提交事件
-  feedModalBtnClick: `${prefix}_TIPS_RISSUES`, //选择问题按钮点击总事件
-
+	feedModalOperator: `${prefix}_TIPS_OPERATORS_RETRIEVE`, //找回运营商密码
+	feedModalInterbank: `${prefix}_TIPS_INTERNETBANK_RETRIEVE`, //找回信用卡密码
+	feedModalSubmit: `${prefix}_TIPS_OTHERISSUES`, //反馈问题提交事件
+	feedModalBtnClick: `${prefix}_TIPS_RISSUES` //选择问题按钮点击总事件
 };
 
 const mine = {
@@ -102,7 +101,7 @@ const mine = {
 	creditExtensionFaceAuth: `${prefix}_MINE_CREDIT_EXTENSION_FACEAUTH`, // 风控授信项页 点击人脸识别认证
 	creditExtensionZM: `${prefix}_MINE_CREDIT_EXTENSION_ZM`, // 风控授信项页 点击芝麻分认证
 	protocolSmsFail: `${prefix}_MINE_PROTOCOL_SMS_FAIL`, // 绑定储蓄卡页协议绑卡校验失败埋点
-	protocolBindFail: `${prefix}_MINE_PROTOCOL_BIND_FAIL`, // 绑定储蓄卡页协议绑卡绑定失败埋点
+	protocolBindFail: `${prefix}_MINE_PROTOCOL_BIND_FAIL` // 绑定储蓄卡页协议绑卡绑定失败埋点
 };
 
 const order = {
@@ -127,7 +126,7 @@ const bugLog = {
 
 const mpos_service_authorization = {
 	auth_btn: `${prefix}_AUTH_PAGE_AUTH_BTN`,
-	auth_page: `${prefix}_MPOS_AUTH_PAGE`,
+	auth_page: `${prefix}_MPOS_AUTH_PAGE`
 };
 
 const activity = {
@@ -156,7 +155,7 @@ const activity = {
 	brandEntry: `${prefix}_ACTIVITY_BRAND_ENTRY`, // 品牌活动入口
 	brandBtnClick: `${prefix}_ACTIVITY_BRAND_TIYAN_BTN`, // 品牌活动还到体验按钮点击
 	brandHomeModalClick: `${prefix}_ACTIVITY_BRAND_HOME_MODAL_CLICK`, // 品牌活动首页弹框开启生涯模式按钮点击
-	fenqiHomeModalGoBtn: `${prefix}_FENQI_HOME_MODAL_GO_BTN`,	//现金分期活动弹窗按钮点击
+	fenqiHomeModalGoBtn: `${prefix}_FENQI_HOME_MODAL_GO_BTN`, //现金分期活动弹窗按钮点击
 	fenqiHomeModalClose: `${prefix}_FENQI_HOME_MODAL_CLOSE`, //现金分期活动弹窗关闭
 	mayReceiveBtn: `${prefix}_ACTIVITY_TWO_RECEIVE`, // 五月狂欢活动 畅想双重豪礼 领取 按钮
 	mayExtractBtn: `${prefix}_ACTIVITY_TWO_EXTRACT`, // 五月狂欢活动 畅想双重豪礼 抽奖 按钮
@@ -179,18 +178,17 @@ const activity = {
 	koubeiBtnClick: `${prefix}_ACTIVITY_KOUBEI_TIYAN_BTN`, // 口碑活动还到体验按钮点击
 	koubeiHomeOldModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_OLDMODAL_CLICK`, // 口碑活动首页老用户弹框
 	koubeiHomeNewModalClick: `${prefix}_ACTIVITY_KOUBEI_HOME_NEWMODAL_CLICK`, // 口碑活动首页新用户弹框
-  jd618Entry: `${prefix}_JD618_ENTRY`,
+	jd618Entry: `${prefix}_JD618_ENTRY`,
 	freebillEntry: `${prefix}_FREEBILL_ENTRY`,
 	jd618BtnClick: `${prefix}_ACTIVITY_JD618_BTN`,
 	jd618ModalBtnClick: `${prefix}_ACTIVITY_JD618_MODAL_BTN`,
 	freeBillBtnClick: `${prefix}_ACTIVITY_FREEBILL_BTN`,
-  freeBillModalBtnClick: `${prefix}_ACTIVITY_FREEBILL_MODAL_BTN`,
-  yhq7ModalBtnClick: `${prefix}_ACTIVITY_YHQ7_MODAL_BTN`,
-  yhq50ModalBtnClick: `${prefix}_ACTIVITY_YHQ50_MODAL_BTN`,
-  jd618ResultModalClick: `${prefix}_JD618_RESULT_MODAL_CLICK`,
-  jd618HomeModalClose:`${prefix}_JD618HOMEMODALCLOSE`,
-  freeBillHomeModalClose:`${prefix}_FREEBILLHOMEMODALCLOSE`,
-
+	freeBillModalBtnClick: `${prefix}_ACTIVITY_FREEBILL_MODAL_BTN`,
+	yhq7ModalBtnClick: `${prefix}_ACTIVITY_YHQ7_MODAL_BTN`,
+	yhq50ModalBtnClick: `${prefix}_ACTIVITY_YHQ50_MODAL_BTN`,
+	jd618ResultModalClick: `${prefix}_JD618_RESULT_MODAL_CLICK`,
+	jd618HomeModalClose: `${prefix}_JD618HOMEMODALCLOSE`,
+	freeBillHomeModalClose: `${prefix}_FREEBILLHOMEMODALCLOSE`
 };
 
 const moxie_bank_list = {
@@ -210,6 +208,10 @@ const loan_repay_confirm = {
 	// select30: `${prefix}_PRODUCT_SELECT_30`
 };
 
+const other = {
+	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK` //外部下载页按钮点击事件
+};
+
 const loan_fenqi = {
 	day30: `${prefix}_FENQI_DATE_DAY_30`,
 	month3: `${prefix}_FENQI_DATE_MONTH_3`,
@@ -225,8 +227,8 @@ const loan_fenqi = {
 	submitResult: `${prefix}_FENQI_SUBMIT_RESULT`,
 	fenqiGoBack: `${prefix}_FENQI_GO_BACK`,
 	fenqiDownload: `${prefix}_FENQI_DOWNLOAD_CLICK`,
-	fenqiHomeApplyBtn: `${prefix}_FENQI_HOME_APPLY_BTN`,
-}
+	fenqiHomeApplyBtn: `${prefix}_FENQI_HOME_APPLY_BTN`
+};
 
 export {
 	login,
