@@ -1007,9 +1007,17 @@ export default class order_detail_page extends PureComponent {
 		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
 		let moneyWithCoupon = '';
 		if (isInsureValid) {
-			moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
+      if (isPayAll) { // 一键结清，不可使用优惠劵
+        moneyWithCoupon = '';
+      } else {
+			  moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
+      }
 		} else {
-			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
+      if (isPayAll) { // 一键结清，不可使用优惠劵
+			  moneyWithCoupon = '';
+      } else {
+			  moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
+      }
 		}
 		return (
 			<div className={styles.order_detail_page}>
