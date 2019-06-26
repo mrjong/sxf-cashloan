@@ -1098,7 +1098,7 @@ export default class confirm_agency_page extends PureComponent {
                 ) : null}
                 {contractData.length > 0 && (
                   <p className={style.protocolLink}>
-                    点击“签约借款”，表示同意{' '}
+                    点击“确定签约”，表示同意{' '}
                     {contractData.map((item, idx) => (
                       <em
                         onClick={() => {
