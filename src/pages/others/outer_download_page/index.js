@@ -6,6 +6,8 @@ import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { other } from 'utils/analytinsType';
+import logo from './img/logo.png';
+import cardBg from './img/card_bg.png';
 
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
@@ -55,7 +57,18 @@ export default class outer_download_page extends PureComponent {
 	};
 	render() {
 		return (
-			<div className={styles.page_wrap}>
+			<div>
+				<div className={styles.bg}>
+					<img className={styles.logo} src={logo} />
+					<div className={styles.top_title}>还到邀请您</div>
+					<div className={styles.sub_title}>开启VIP资格</div>
+				</div>
+				<img src={cardBg} className={styles.card_bg} />
+				<p className={styles.tooltip}>
+					月息低至
+					<em>1.2%</em> <del>1.5%</del>
+					<i />
+				</p>
 				<ButtonCustom className={styles.button} onClick={this.downloadClick}>
 					下载APP提现
 				</ButtonCustom>

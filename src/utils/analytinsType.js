@@ -242,5 +242,6 @@ export {
 	moxie_bank_list,
 	mpos_ioscontrol_page,
 	loan_repay_confirm,
-	loan_fenqi
+	loan_fenqi,
+	other
 };
