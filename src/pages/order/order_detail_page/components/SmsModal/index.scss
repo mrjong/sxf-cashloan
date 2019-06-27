@@ -28,6 +28,7 @@
 				font-weight: bold;
 			}
 			.smsCode {
+				position: relative;
 				font-size: 30px;
 				border-bottom: 1px solid #333;
 				padding-bottom: 15px;
@@ -38,7 +39,10 @@
 				}
 				span {
 					color: #d2d2d6;
-					float: right;
+					position: absolute;
+					right: 0;
+					bottom: 15px;
+					// float: right;
 				}
 			}
 			.tip {

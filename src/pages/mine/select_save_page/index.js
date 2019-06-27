@@ -105,33 +105,42 @@ export default class select_save_page extends PureComponent {
 	};
 	// 获取储蓄卡银行卡列表
 	queryBankList = () => {
-		this.props.$fetch
-			.post(API.BANKLIST, {
-				// agrNo:query.agrNo,
-				type: '2', //所有储蓄卡列表
-				corpBusTyp: ''
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		// 1为有保费，需要筛选出绑定通联支付的卡 0为不需要，按原有逻辑处理
+		const params =
+			queryData.insuranceFlag === '1'
+				? {
+						// agrNo:query.agrNo,
+						type: '2', //所有储蓄卡列表
+						corpBusTyp: '',
+						supportType: 'ZY' // 筛选出绑定通联支付的卡 JR随行付金融 XD随行付小贷 ZY中元保险
+				  }
+				: {
+						// agrNo:query.agrNo,
+						type: '2', //所有储蓄卡列表
+						corpBusTyp: ''
+				  };
+		this.props.$fetch.post(API.BANKLIST, params).then(
+			(res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState({
+						cardList: res.cardList ? res.cardList : []
+					});
+					this.getSelectedData();
+				} else {
+					if (res.msgCode === 'PTM3021') {
 						this.setState({
-							cardList: res.cardList ? res.cardList : []
+							cardList: []
 						});
-						this.getSelectedData();
-					} else {
-						if (res.msgCode === 'PTM3021') {
-							this.setState({
-								cardList: []
-							});
-							return;
-						}
-						res.msgInfo && this.props.toast.info(res.msgInfo);
+						return;
 					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+					res.msgInfo && this.props.toast.info(res.msgInfo);
 				}
-			);
+			},
+			(error) => {
+				error.msgInfo && this.props.toast.info(error.msgInfo);
+			}
+		);
 	};
 
 	// 点击解绑按钮
@@ -242,17 +251,14 @@ export default class select_save_page extends PureComponent {
 													lastCardNo: item.lastCardNo,
 													bankCode: item.bankCode,
 													agrNo: item.agrNo
-												})}
+												})
+											}
 										>
 											<span className={`bank_ico bank_ico_${item.bankCode}`} />
 											<span className={styles.bank_name}>{item.bankName}</span>
 											<span>···· {item.lastCardNo}</span>
 											{isSelected ? (
-												<Icon
-													type="check-circle-o"
-													color="#5CE492"
-													className={styles.selected_ico}
-												/>
+												<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
 											) : null}
 										</li>
 									);
@@ -285,7 +291,8 @@ export default class select_save_page extends PureComponent {
 					</div>
 				) : null}
 				<p onClick={this.addCard} className={styles.add_card}>
-					<i className={styles.add_ico} />绑定储蓄卡
+					<i className={styles.add_ico} />
+					绑定储蓄卡
 				</p>
 			</div>
 		);

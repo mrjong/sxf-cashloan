@@ -549,7 +549,7 @@ export default class home_page extends PureComponent {
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
 				console.log('LN0010');
 				break;
-			case 'LN0011': // 账单爬取失败/老用户 无按钮不做处理
+			case 'LN0011': // 需要过人审，人审中
 				this.props.history.push('/home/loan_person_succ_page');
 				break;
 			default:

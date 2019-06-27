@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { getDeviceType, isWXOpen, headerIgnore } from 'utils';
-import styles from './index.scss'
+import styles from './index.scss';
 export default class pdf_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -17,7 +17,8 @@ export default class pdf_page extends PureComponent {
 			// ios暂定mpos和微信打开是直接打开pdf
 			// if (osType === 'IOS' && (isWXOpen() || isMPOS())) {
 			if (osType === 'IOS') {
-				window.location.replace(params.url);
+				window.location.href = params.url;
+				// window.location.replace(params.url);
 			} else {
 				this.setState({ contractUrl: params.url });
 			}
@@ -34,7 +35,7 @@ export default class pdf_page extends PureComponent {
 		}
 	}
 	render() {
-		return (
+		return getDeviceType() === 'IOS' ? null : (
 			<iframe
 				className={headerIgnore() ? styles.container2 : styles.container}
 				frameBorder="0"

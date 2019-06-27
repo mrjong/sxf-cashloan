@@ -3,9 +3,11 @@
 	input::placeholder {
 		color: #999;
 		font-size: 0.6rem;
+		line-height: 0.6rem;
+		padding-top: 20px;
 	}
 
-	padding: 70px 60px 0;
+	// padding: 70px 60px 0;
 
 	.scrollWrap {
 		padding-bottom: 160px;
@@ -14,19 +16,23 @@
 	.billInpBox {
 		position: relative;
 		margin-bottom: 30px;
+		padding: 57px 60px 37px;
+		background: #fff;
+		box-sizing: border-box;
 
 		.moneyUnit {
 			position: absolute;
 			font-size: 40px;
 			color: #333;
-			left: 0;
-			top: 14px;
+			left: 60px;
+			top: 70px;
 			z-index: 10;
 		}
 		&::after {
 			@include setBottomLine(#333);
-			left: 0;
-			bottom: 15px;
+			left: 60px;
+			bottom: 45px;
+			width: 630px;
 		}
 	}
 	.billInput {
@@ -44,6 +50,11 @@
 
 	.pannel {
 		overflow: hidden;
+		margin: 30px;
+		background: #fff;
+		border-radius: 4px;
+		border: 1px solid #f0f1f5;
+		padding: 0 30px;
 		.listItem {
 			position: relative;
 			display: flex;
@@ -57,6 +68,9 @@
 				@include setBottomLine(#f0f1f5);
 				left: 0;
 			}
+		}
+		.listItem2 {
+			min-height: 140px;
 		}
 
 		.listValue {
@@ -72,16 +86,85 @@
 			line-height: 2;
 			color: #868e9e;
 		}
+		.hasArrow {
+			padding-right: 24px;
+		}
 
 		.icon {
-			vertical-align: middle;
+			// vertical-align: middle;
+			position: absolute;
 			width: 40px;
 			height: 50px;
 			color: #121c32;
-			margin-bottom: 5px;
+			right: -12px;
+			top: 50%;
+			margin-top: -25px;
+			// margin-bottom: 5px;
+		}
+		.insureLeft {
+			display: flex;
+			align-items: center;
+			.insureIco {
+				display: block;
+				width: 52px;
+				height: 52px;
+				background: url('../../../assets/images/home/insure_ico.png') no-repeat center;
+				background-size: 100%;
+				margin-right: 15px;
+			}
+			.insureTipsCont {
+				font-size: 26px;
+				color: #868e9e;
+				line-height: 37px;
+				.insureTipsTit {
+					display: flex;
+					align-items: center;
+					font-size: 30px;
+					color: #121c32;
+					line-height: 42px;
+					margin-bottom: 7px;
+				}
+				.insureTips {
+					display: block;
+					width: 24px;
+					height: 24px;
+					background: url('../../../assets/images/home/tip_ico.png') no-repeat center;
+					background-size: 100%;
+					margin-left: 10px;
+				}
+			}
+		}
+		.insureRight {
+			display: flex;
+			align-items: center;
+			font-size: 30px;
+			font-family: PingFangSC-Medium;
+			font-weight: 500;
+			color: #121c32;
+			line-height: 42px;
+			.unCheckIco {
+				display: block;
+				width: 34px;
+				height: 34px;
+				background: url('../../../assets/images/home/unChecked_ico.png') no-repeat center;
+				background-size: 100%;
+				margin-left: 16px;
+			}
+			.checkIco {
+				background-image: url('../../../assets/images/home/checked_ico.png');
+			}
 		}
 	}
-
+	.protocolBox {
+		margin-top: -10px;
+		padding: 0 60px;
+		.insureDesc {
+			font-size: 24px;
+			color: #c9cdd5;
+			line-height: 33px;
+			margin-bottom: 40px;
+		}
+	}
 	.protocolLink {
 		font-size: 24px;
 		color: #8e8d7b;
@@ -147,7 +230,7 @@
 
 		.submitBtnDisabled {
 			width: 634px;
-			background-color: #d8d8d8;
+			background-color: #dcdfe6;
 			color: #fff;
 		}
 	}
@@ -186,6 +269,12 @@
 	.confirm_agency {
 		.am-list-item.am-input-item {
 			height: auto;
+			padding-left: 35px;
+		}
+		.am-list-item {
+			.am-list-line {
+				padding-right: 0;
+			}
 		}
 	}
 	.fenqi_tip_modal.am-modal-transparent {

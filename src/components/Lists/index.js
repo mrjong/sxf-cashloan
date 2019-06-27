@@ -23,12 +23,29 @@ export default class Lists extends PureComponent {
 	};
 
 	render() {
-		const { listsInf, className } = this.props;
+		const { listsInf, className, insureFee } = this.props;
 		const Item = List.Item;
 		const Brief = Item.Brief;
 		return (
 			<div className={`${styles.listsContainer} ${className} list_box`}>
 				<List>
+					{insureFee && (
+						<Item
+							// className={insureFee.label.className ? styles.hasIcon : null}
+							arrow={'empty'}
+							extra={
+								Object.prototype.toString.call(insureFee.extra) === '[object Array]' ? (
+									this.getExtra(insureFee.extra)
+								) : (
+									<span style={{ color: insureFee.extra && insureFee.extra.color }}>
+										{insureFee.extra && insureFee.extra.name}
+									</span>
+								)
+							}
+						>
+							{insureFee.label.name}
+						</Item>
+					)}
 					{listsInf.map((item, index) => {
 						const icon = <i className={item.label.className} />;
 						return (

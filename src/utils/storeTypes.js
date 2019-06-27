@@ -80,7 +80,8 @@ export const storeTypes = {
 	HomeConfirmAgency: 'HomeConfirmAgency', // 首页进入到签约借款页面参数
 	DepositBankName: 'DepositBankName', // 储蓄卡银行名称
 	AC20190618: 'AC20190618', //618
-  PayType: 'PayType', // 还款方式
-	WxPayEnd:'WxPayEnd', // 微信返回不刷新
-	GotoMoxieFlag: 'GotoMoxieFlag' // 去到魔蝎第三方的标示
+	PayType: 'PayType', // 还款方式
+	WxPayEnd: 'WxPayEnd', // 微信返回不刷新
+	GotoMoxieFlag: 'GotoMoxieFlag', // 去到魔蝎第三方的标示
+	InsuranceFlag: 'InsuranceFlag' // 标识该次绑卡是否要求绑定支持收取保费的卡
 };

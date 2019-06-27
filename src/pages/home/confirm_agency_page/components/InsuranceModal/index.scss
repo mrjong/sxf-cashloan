@@ -1,0 +1,36 @@
+:global {
+	.insureModal.am-modal {
+		width: 580px;
+		.am-modal-content {
+			border-radius: 6px;
+			padding-top: 0;
+			.am-modal-body {
+				padding: 0;
+			}
+		}
+	}
+}
+.insureCont {
+	padding: 60px 35px;
+	font-size: 30px;
+	color: #868e9e;
+	line-height: 48px;
+	text-align: justify;
+	span {
+		color: #121c32;
+		font-size: 34px;
+	}
+}
+.insureBtn {
+	display: block;
+	width: 100%;
+	border: none;
+	border-top: 1px solid #f0f1f5;
+	font-size: 34px;
+	font-family: PingFangSC-Medium;
+	font-weight: 500;
+	color: #121c32;
+	line-height: 48px;
+	padding: 26px 0;
+	background: #fff;
+}

@@ -81,11 +81,21 @@
 	}
 	.order_list {
 		:global {
-			.am-list-content {
-				font-weight: bold;
-			}
 			.am-list-brief {
 				font-weight: normal;
+			}
+			.am-list-item {
+				min-height: 140px;
+				.am-list-line {
+					.am-list-content {
+						font-weight: 500;
+						font-size: 34px;
+					}
+				}
+			}
+			.am-list-extra span:first-child {
+				margin-bottom: 6px;
+				font-weight: 500;
 			}
 		}
 	}
@@ -234,10 +244,10 @@ i.arrow_up {
 }
 .message {
 	font-size: 24px;
-	color: #86919d;
+	color: #868e9e;
 	margin-top: 30px;
 	.red {
-		color: #f44258;
+		color: #fe6666;
 	}
 }
 .mb50 {

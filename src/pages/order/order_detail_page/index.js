@@ -14,12 +14,12 @@ import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
 const API = {
 	qryDtl: '/bill/qryDtl',
-	payback: '/bill/payback',
+	payback: '/bill/paySubmit',
 	couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
-	payFrontBack: '/bill/payFrontBack', // 用户还款新接口
+	// payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	queryExtendedPayType: '/bill/queryExtendedPayType' //其他支付方式查询
 };
@@ -50,19 +50,22 @@ export default class order_detail_page extends PureComponent {
 			detailArr: [], // 还款详情数据
 			isShowDetail: false, // 是否展示弹框中的明细详情
 			isAdvance: false, // 是否提前还款
-			isNewsContract: false, // 是否签署的是新合同
-			isSettle: '0', // 是否结清
 			totalAmt: '', // 一键结清传给后台的总金额
 			billOverDue: '', //逾期弹窗标志
 			overDueModalFlag: '', // 信用施压弹框标识
-			perTotAmt: '', // 试算的每一期应还总金额， 用于payFrontBack接口传递参数
 			payType: '',
-			payTypes: [ 'BankPay' ],
+			payTypes: ['BankPay'],
 			openIdFlag: '',
-			thisPerdNum: ''
+			thisPerdNum: '',
+			insureInfo: '',
+			insureFeeInfo: '',
+			isInsureValid: false, // 是否有保费并且为待支付状态
+			totalAmtForShow: '',
+			couponPrice: '' // 优惠劵计算过的金额
 		};
 	}
 	componentWillMount() {
+		store.removeInsuranceFlag();
 		if (!store.getBillNo()) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {
@@ -98,14 +101,14 @@ export default class order_detail_page extends PureComponent {
 					} else if (res.data && res.data.openIdFlag === '1') {
 						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
 							params.payType = store.getPayType() || 'BankPay';
-							params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+							params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
 						} else {
 							params.payType = 'BankPay';
-							params.payTypes = [ 'BankPay' ];
+							params.payTypes = ['BankPay'];
 						}
 					} else {
 						params.payType = 'BankPay';
-						params.payTypes = [ 'BankPay' ];
+						params.payTypes = ['BankPay'];
 					}
 				} else {
 					if (
@@ -116,10 +119,10 @@ export default class order_detail_page extends PureComponent {
 						!isMPOS()
 					) {
 						params.payType = store.getPayType() || 'BankPay';
-						params.payTypes = [ ...this.state.payTypes, ...res.data.routeCodes ];
+						params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
 					} else {
 						params.payType = 'BankPay';
-						params.payTypes = [ 'BankPay' ];
+						params.payTypes = ['BankPay'];
 					}
 				}
 				this.setState(params);
@@ -130,54 +133,31 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
-		const { billNo } = this.state;
+		const { billNo, billDesc } = this.state;
 		this.props.$fetch
 			.post(API.fundPlain, {
-				ordNo: billNo
+				ordNo: billNo,
+				isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
+				prodType: billDesc.prodType
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					if (res.data) {
-						// 如果data不为空则为签署的是新合同,否则为旧合同，则收银台不展示详情，还款也为/bill/payback老接口
-						const currentStg = res.data[0].currentLenth;
-						const perdData = res.data[0].perdList[currentStg - 1];
+						// 现在统一取totalList里的明细，仅适用于按期还，不适用于跳跃还的
+						// 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
 						let isAdvance = false;
-						let isSettleStu = '';
-						if (isPayAll) {
-							if (currentStg === res.data[0].perdList.length) {
-								isAdvance = false;
-							} else {
-								isAdvance = true;
-							}
-							// 筛选出所有补偿金的数组
-							const buChangJinList = res.data[0].perdList.map((item2) =>
-								item2.feeInfos.find((item) => item.feeNm === '补偿金')
-							);
-							if (buChangJinList.find((item) => item.feeAmt !== 0)) {
-								// 如果所有期数中有一期的补偿金不为零的就是提前还，isSettleStu为1，否则为0
-								isSettleStu = '1';
-							} else {
-								isSettleStu = '0';
-							}
+						const buChangJinList = res.data[0].totalList.find((item2) => item2.feeNm === '补偿金');
+						if (buChangJinList.feeAmt !== 0) {
+							isAdvance = true;
 						} else {
-							// perdSts 0为未到期 1为已逾期 2为处理中 3为已撤销 4为已还清
-							// 如果该期补偿金不为0，那么是提前还款，否则不是
-							if (perdData.feeInfos.find((item) => item.feeNm === '补偿金').feeAmt) {
-								isAdvance = true;
-								isSettleStu = '1';
-							} else {
-								isAdvance = false;
-								isSettleStu = '0';
-							}
+							isAdvance = false;
 						}
 						this.setState(
 							{
-								detailArr: isPayAll ? res.data[0].totalList : perdData.feeInfos,
+								detailArr: res.data[0].totalList,
 								isAdvance,
-								isNewsContract: true,
-								isSettle: isSettleStu,
 								totalAmt: res.data[0].totalAmt,
-								perTotAmt: perdData.totAmt
+								totalAmtForShow: res.data[0].totalAmtForShow
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -186,8 +166,7 @@ export default class order_detail_page extends PureComponent {
 					} else {
 						this.setState(
 							{
-								isAdvance: false,
-								isNewsContract: false
+								isAdvance: false
 							},
 							() => {
 								cb && cb(isPayAll);
@@ -252,6 +231,39 @@ export default class order_detail_page extends PureComponent {
 					//         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
 					//     }
 					// }
+					if (Number(res.data.insuranceAmt)) {
+						let insuranceStsText = '';
+						let insuranceStsColor = '';
+						if (res.data.insuranceSts === '1') {
+							insuranceStsText = '待支付';
+							insuranceStsColor = '#4CA6FF';
+						} else if (res.data.insuranceSts === '2') {
+							insuranceStsText = '处理中';
+							insuranceStsColor = '#FBB947';
+						} else if (res.data.insuranceSts === '3') {
+							insuranceStsText = '已支付';
+							insuranceStsColor = '#C7C7CC';
+						}
+						this.setState({
+							isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '1',
+							insureFeeInfo: res.data.insuranceAmt,
+							insureInfo: {
+								label: {
+									name: '保费'
+								},
+								extra: [
+									{
+										name: parseFloat(res.data.insuranceAmt).toFixed(2),
+										color: '#333'
+									},
+									{
+										name: insuranceStsText,
+										color: insuranceStsColor
+									}
+								]
+							}
+						});
+					}
 					this.setState(
 						{
 							thisPerdNum: res.data.perdNum,
@@ -272,10 +284,8 @@ export default class order_detail_page extends PureComponent {
 										detailArr: orderDtlData && orderDtlData.detailArr,
 										isShowDetail: orderDtlData && orderDtlData.isShowDetail,
 										isAdvance: orderDtlData && orderDtlData.isAdvance,
-										isNewsContract: orderDtlData && orderDtlData.isNewsContract,
 										totalAmt: orderDtlData && orderDtlData.totalAmt,
-										isSettle: orderDtlData && orderDtlData.isSettle,
-										perTotAmt: orderDtlData && orderDtlData.perTotAmt
+										totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow
 									},
 									() => {
 										this.setState({
@@ -360,7 +370,7 @@ export default class order_detail_page extends PureComponent {
 				this.setState({
 					couponInfo,
 					deratePrice: result.data.deratePrice,
-					money: result.data.resultPrice
+					couponPrice: result.data.resultPrice
 				});
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -476,7 +486,7 @@ export default class order_detail_page extends PureComponent {
 		}
 		this.state.orderList[item.key] = item;
 		this.setState({
-			orderList: [ ...this.state.orderList ]
+			orderList: [...this.state.orderList]
 		});
 	};
 	// 处理输入的验证码
@@ -550,7 +560,7 @@ export default class order_detail_page extends PureComponent {
 			usrSignCnl: getH5Channel(),
 			cardTyp: 'D',
 			isEntry: '01',
-			type: '0', // 0 可以重复 1 不可以重复
+			type: '0' // 0 可以重复 1 不可以重复
 		};
 		this.props.$fetch.post(API.protocolSms, params).then((res) => {
 			switch (res.msgCode) {
@@ -631,33 +641,28 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	//调用还款接口逻辑
-	// isNewsContract false为用户签署老合同所调用的还款接口 true为用户签署新合同所调用的还款接口
 	repay = () => {
-		const {
-			billDesc,
-			isPayAll,
-			isNewsContract,
-			repayParams,
-			isSettle,
-			totalAmt,
-			perTotAmt,
-			payType,
-			money,
-			thisPerdNum
-		} = this.state;
-		const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+		const { billDesc, isPayAll, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
+		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+		const paybackAPI = API.payback;
 		let sendParams = {};
-		if (isNewsContract) {
-			if (isPayAll) {
-				sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
-			} else {
-				// 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
-				sendParams = perTotAmt
-					? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
-					: { ...repayParams, isSettle };
-			}
+		// if (isNewsContract) {
+		// 	if (isPayAll) {
+		// 		sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
+		// 	} else {
+		// 		// 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
+		// 		sendParams = perTotAmt
+		// 			? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
+		// 			: { ...repayParams, isSettle };
+		// 	}
+		// } else {
+		// 	sendParams = repayParams;
+		// }
+		if (isPayAll) {
+			// 一键结清isPayOff为1， 否则为0
+			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt };
 		} else {
-			sendParams = repayParams;
+			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt };
 		}
 		// 添加微信新增参数
 		switch (payType) {
@@ -699,12 +704,7 @@ export default class order_detail_page extends PureComponent {
 					store.setOrderSuccess({
 						isPayAll,
 						thisPerdNum,
-						thisRepTotAmt: isPayAll
-							? isNewsContract
-								? totalAmt && parseFloat(totalAmt).toFixed(2)
-								: billDesc.waitRepAmt && parseFloat(billDesc.waitRepAmt).toFixed(2)
-							: (perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
-								(money && parseFloat(money).toFixed(2)),
+						thisRepTotAmt: parseFloat(totalAmt).toFixed(2),
 						perdLth: billDesc.perdLth,
 						perdUnit: billDesc.perdUnit,
 						billPrcpAmt: billDesc.billPrcpAmt,
@@ -807,24 +807,24 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
-			isSettle,
-			perTotAmt
+			isInsureValid,
+			totalAmtForShow
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
-			isSettle,
-			perTotAmt
+			totalAmtForShow
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
-		this.props.history.push(`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}`);
+		isInsureValid && store.setInsuranceFlag(true);
+		this.props.history.push(
+			`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${isInsureValid ? '1' : '0'}`
+		);
 	};
 
 	// 选择优惠劵
@@ -837,20 +837,16 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
-			isSettle,
-			perTotAmt
+			totalAmtForShow
 		} = this.state;
 
 		let orderDtData = {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
 			totalAmt,
-			isSettle,
-			perTotAmt
+			totalAmtForShow
 		};
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
@@ -910,7 +906,9 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 主动还款
 	activePay = () => {
-		buriedPointEvent(order.repayment, { entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单' });
+		buriedPointEvent(order.repayment, {
+			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'
+		});
 		this.getModalDtlInfo(this.showPayModal, false);
 	};
 
@@ -951,14 +949,16 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			isAdvance,
-			isNewsContract,
-			totalAmt,
+			totalAmtForShow,
 			billOverDue,
 			overDueModalFlag,
 			payType,
 			payTypes,
 			openIdFlag,
-			perTotAmt
+			insureInfo,
+			insureFeeInfo,
+			isInsureValid,
+			couponPrice
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -972,7 +972,8 @@ export default class order_detail_page extends PureComponent {
 			wthdCrdNoLast = '',
 			perdNum = '',
 			waitRepAmt = '',
-			perdList
+			perdList,
+			waitRepAmtForShow = ''
 		} = billDesc;
 		const itemList = [
 			{
@@ -1006,11 +1007,25 @@ export default class order_detail_page extends PureComponent {
 				return item.perdSts === '1';
 			});
 		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
+		let moneyWithCoupon = '';
+		if (isInsureValid) {
+			if (isPayAll) {
+				// 一键结清，不可使用优惠劵
+				moneyWithCoupon = '';
+			} else {
+				moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
+			}
+		} else {
+			if (isPayAll) {
+				// 一键结清，不可使用优惠劵
+				moneyWithCoupon = '';
+			} else {
+				moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
+			}
+		}
 		return (
 			<div className={styles.order_detail_page}>
-				{isOverdue &&
-				isOverdue.length > 0 &&
-				(isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
+				{isOverdue && isOverdue.length > 0 && (isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
 					<div className={styles.overdueEntryTip}>
 						关注“还到”公众号，使用<span>微信支付</span>还款
 					</div>
@@ -1047,26 +1062,53 @@ export default class order_detail_page extends PureComponent {
 							</li>
 						))}
 					</ul>
-					{perdNum !== 999 &&
-					!hideBtn && (
+					{perdNum !== 999 && !hideBtn && (
 						<span className={styles.payAll} onClick={this.payAllOrder}>
 							一键结清
 						</span>
 					)}
 				</Panel>
 				<Panel title="还款计划" className={styles.mt24}>
-					<Lists listsInf={this.state.orderList} clickCb={this.clickCb} className={styles.order_list} />
+					<Lists
+						listsInf={this.state.orderList}
+						insureFee={insureInfo}
+						clickCb={this.clickCb}
+						className={styles.order_list}
+					/>
 				</Panel>
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>
 						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
-						<div className={styles.message}>
-							此次主动还款，将用于还第
-							<span className={styles.red}>
-								{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
-							</span>
-							期账单，请保证卡内余额大于该 期账单金额
-						</div>
+						{/* 包含保费,并且保费为待支付状态 perdList[perdNum - 1].perdTotAmt 与 money 取最小值？ */}
+						{isInsureValid && (
+							<div className={styles.message}>
+								此次主动还款，将用于还第
+								<span className={styles.red}>
+									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
+								</span>
+								期账单，以及支付保费，请保证卡内余额大于
+								<span className={styles.red}>
+									{perdList &&
+										perdNum &&
+										(parseFloat(perdList[perdNum - 1].perdWaitRepAmt) + parseFloat(insureFeeInfo)).toFixed(2)}
+								</span>
+								元
+							</div>
+						)}
+						{/* 不包含保费或者有保费，保费为处理中或者已支付状态 */}
+						{!isInsureValid && (
+							<div className={styles.message}>
+								此次主动还款，将用于还第
+								<span className={styles.red}>
+									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
+								</span>
+								期账单，请保证卡内余额大于
+								<span className={styles.red}>
+									{perdList && perdNum && parseFloat(perdList[perdNum - 1].perdWaitRepAmt).toFixed(2)}
+								</span>
+								元
+							</div>
+						)}
 					</div>
 				) : (
 					<div className={styles.mb50} />
@@ -1093,42 +1135,43 @@ export default class order_detail_page extends PureComponent {
 						<div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
-								{isPayAll ? isNewsContract ? (
-									totalAmt && parseFloat(totalAmt).toFixed(2)
+								{/* {isPayAll ? isNewsContract ? (
+									totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 								) : (
-									waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
+									waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
 								) : (
-									(perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
+									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 									(money && parseFloat(money).toFixed(2))
-								)}元
+                )}元 */}
+								{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
 						{/* 账单明细展示 */}
 						{isShowDetail ? (
 							<div className={styles.feeDetail}>
-								{detailArr.map(
-									(item, index) =>
-										item.feeAmt ? (
-											<div className={styles.modal_flex} key={index}>
-												<span className={styles.modal_label}>{item.feeNm}</span>
-												<span className={styles.modal_value}>
-													{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元
-												</span>
-											</div>
-										) : null
+								{detailArr.map((item, index) =>
+									item.feeAmt ? (
+										<div className={styles.modal_flex} key={index}>
+											<span className={styles.modal_label}>{item.feeNm}</span>
+											<span className={styles.modal_value}>
+												{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元
+											</span>
+										</div>
+									) : null
 								)}
 								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
 									<span className={styles.modal_label}>本次应还总金额</span>
 									<span className={styles.modal_value}>
-										{isPayAll ? isNewsContract ? (
-											totalAmt && parseFloat(totalAmt).toFixed(2)
+										{/* {isPayAll ? isNewsContract ? (
+											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 										) : (
-											waitRepAmt && parseFloat(waitRepAmt).toFixed(2)
+											waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
 										) : (
-											(perTotAmt && parseFloat(perTotAmt).toFixed(2)) ||
+											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
 											(money && parseFloat(money).toFixed(2))
-										)}元
+                    )}元 */}
+										{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 									</span>
 								</div>
 							</div>
@@ -1146,7 +1189,9 @@ export default class order_detail_page extends PureComponent {
 											{wthdCrdCorpOrgNm}({wthdCrdNoLast})
 										</span>
 									)}
-								</span>&nbsp;<i />
+								</span>
+								&nbsp;
+								<i />
 							</div>
 						) : null}
 
@@ -1173,22 +1218,17 @@ export default class order_detail_page extends PureComponent {
 										无可用优惠券
 									</span>
 								)}
-								&nbsp;<i />
+								&nbsp;
+								<i />
 							</div>
 						)}
 						{payTypes.length !== 1 ? (
 							<div className={styles.modal_weixin}>
 								<div className={styles.modal_label}>还款方式</div>
 								<div className={styles.flex_div}>
-									{payTypes.includes('WXPay') ? (
+									{payTypes.includes('WXPay') && !isInsureValid ? (
 										<div
-											className={
-												payType === 'WXPay' ? (
-													[ styles.item, styles.active ].join(' ')
-												) : (
-													styles.item
-												)
-											}
+											className={payType === 'WXPay' ? [styles.item, styles.active].join(' ') : styles.item}
 											onClick={() => {
 												this.selectPayType('WXPay');
 											}}
@@ -1202,15 +1242,10 @@ export default class order_detail_page extends PureComponent {
 											onClick={() => {
 												this.selectPayType('BankPay');
 											}}
-											className={
-												payType === 'BankPay' ? (
-													[ styles.item, styles.active ].join(' ')
-												) : (
-													styles.item
-												)
-											}
+											className={payType === 'BankPay' ? [styles.item, styles.active].join(' ') : styles.item}
 										>
-											<i className={styles.bank} />银行卡
+											<i className={styles.bank} />
+											银行卡
 										</div>
 									) : null}
 								</div>

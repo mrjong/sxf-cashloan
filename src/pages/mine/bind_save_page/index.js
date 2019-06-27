@@ -95,41 +95,53 @@ export default class bind_save_page extends PureComponent {
 	// 协议绑卡校验接口
 	checkProtocolBindCard = (params, fn) => {
 		const { valueInputCarNumber, valueInputCarPhone, cardTyp, bankCd, bankName } = params;
-		this.props.$fetch
-			.post(API.protocolSms, {
-				cardNo: valueInputCarNumber,
-				bnkMblNo: valueInputCarPhone,
-				usrSignCnl: getH5Channel(),
-				cardTyp,
-				bankCd,
-				bankName,
-				type: '1' // 0 可以重复 1 不可以重复
-			})
-			.then((res) => {
-				switch (res.msgCode) {
-					case 'PTM0000':
-						//协议绑卡校验成功提示（走协议绑卡逻辑）
-						this.props.toast.info('发送成功，请注意查收！');
-						this.setState({
-							isProtocolBindCard: true
-						});
-						fn(true);
-						break;
-					case 'PTM9901':
-						this.props.toast.info(res.data);
-						buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-						break;
-					case '1010':
-					case 'PBM1010':
-						this.props.toast.info(res.msgInfo);
-						buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-						break;
-					default:
-						this.props.toast.info('暂不支持该银行卡，请换卡重试');
-						buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-						break;
-				}
-			});
+		const insuranceFlag = store.getInsuranceFlag();
+
+		const sendParams = insuranceFlag
+			? {
+					cardNo: valueInputCarNumber,
+					bnkMblNo: valueInputCarPhone,
+					usrSignCnl: getH5Channel(),
+					cardTyp,
+					bankCd,
+					bankName,
+					type: '1', // 0 可以重复 1 不可以重复
+					priorityType: 'ZY' // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
+			  }
+			: {
+					cardNo: valueInputCarNumber,
+					bnkMblNo: valueInputCarPhone,
+					usrSignCnl: getH5Channel(),
+					cardTyp,
+					bankCd,
+					bankName,
+					type: '1' // 0 可以重复 1 不可以重复
+			  };
+		this.props.$fetch.post(API.protocolSms, sendParams).then((res) => {
+			switch (res.msgCode) {
+				case 'PTM0000':
+					//协议绑卡校验成功提示（走协议绑卡逻辑）
+					this.props.toast.info('发送成功，请注意查收！');
+					this.setState({
+						isProtocolBindCard: true
+					});
+					fn(true);
+					break;
+				case 'PTM9901':
+					this.props.toast.info(res.data);
+					buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				case '1010':
+				case 'PBM1010':
+					this.props.toast.info(res.msgInfo);
+					buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				default:
+					this.props.toast.info('暂不支持该银行卡，请换卡重试');
+					buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+			}
+		});
 	};
 
 	//存储现金分期卡信息
@@ -160,6 +172,8 @@ export default class bind_save_page extends PureComponent {
 					});
 					//协议绑卡成功
 					const backUrlData = store.getBackUrl();
+					// 在这里清，是为了防止进入支持银行卡列表页和协议页，返回的时候没有insuranceFlag
+					store.removeInsuranceFlag();
 					if (backUrlData) {
 						let cardDatas = { agrNo: res.data.agrNo, ...this.state.cardData };
 						// 首页不需要存储银行卡的情况，防止弹窗出现

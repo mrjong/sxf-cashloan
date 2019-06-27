@@ -210,7 +210,9 @@ const interceptRouteArr = [
 	'/home/loan_apply_succ_page',
 	'/home/crawl_progress_page',
 	'/home/crawl_fail_page',
-	'/order/wx_pay_success_page'
+	'/order/wx_pay_success_page',
+	'/protocol/pdf_page',
+	'/home/loan_fenqi'
 ];
 
 // 在需要路由拦截的页面 pushState

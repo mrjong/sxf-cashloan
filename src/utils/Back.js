@@ -153,7 +153,8 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
-				if (store.getBankMoxie()) { // 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
+				if (store.getBankMoxie()) {
+					// 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
 					// 银行卡直接返回的问题
 					store.removeBankMoxie();
 					window.ReactRouterHistory.push('/home/home');
@@ -171,9 +172,9 @@ if (window.history && window.history.pushState) {
 					return;
 				}
 				document.activeElement.blur();
-				if(!store.getGotoMoxieFlag()) {
-				  obj.show();
-        }
+				if (!store.getGotoMoxieFlag()) {
+					obj.show();
+				}
 				return;
 			}
 
@@ -188,10 +189,10 @@ if (window.history && window.history.pushState) {
 					store.removeBankMoxie();
 					return;
 				}
-        document.activeElement.blur();
-        if(!store.getGotoMoxieFlag()) {
-				  obj.show();
-        }
+				document.activeElement.blur();
+				if (!store.getGotoMoxieFlag()) {
+					obj.show();
+				}
 				return;
 			}
 
@@ -212,6 +213,14 @@ if (window.history && window.history.pushState) {
 			// 进度失败页面物理返回
 			if (window.location.pathname === '/home/crawl_fail_page') {
 				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+			if (window.location.pathname === '/protocol/pdf_page') {
+				if (store.getCashFenQiStoreData()) {
+					window.ReactRouterHistory.replace('/home/loan_fenqi');
+				} else {
+					window.ReactRouterHistory.replace('/home/confirm_agency');
+				}
 				return;
 			}
 
@@ -308,13 +317,14 @@ if (window.history && window.history.pushState) {
 				case '/order/repayment_succ_page':
 				case '/home/confirm_agency': // 确认信息页物理返回到首页
 				case '/home/loan_apply_succ_page': // 借款申请提交成功页物理返回到首页
+				case '/home/loan_fenqi': // 现金分期确认签约页返回首页
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				// case '/mine/credit_extension_page':
 				// 	window.ReactRouterHistory.push('/mine/mine_page');
 				// 	break;
 				case '/mine/credit_list_page':
-          if(store.getGotoMoxieFlag()) return; // 如何页面弹出反馈窗则拦截
+					if (store.getGotoMoxieFlag()) return; // 如何页面弹出反馈窗则拦截
 					if (store.getToggleMoxieCard()) {
 						window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
 						return;
