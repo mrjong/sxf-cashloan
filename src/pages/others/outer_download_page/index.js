@@ -70,7 +70,7 @@ export default class outer_download_page extends PureComponent {
 					<i />
 				</p>
 				<ButtonCustom className={styles.button} onClick={this.downloadClick}>
-					下载APP提现
+					下载APP使用
 				</ButtonCustom>
 				<p className={styles.desc}>打开还到APP首页,查看是否获得VIP资格，或拨打客服电话400-088-7626</p>
 			</div>
