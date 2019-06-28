@@ -53,7 +53,7 @@ export default class TagList extends React.PureComponent {
 		const { currentIndex } = this.state;
 		const { onClick, tagList } = this.props;
 		if (nextProps) {
-			this._handleClick(onClick, nextProps.activeindex, nextProps.tagList[nextProps.activeindex]);
+			this._handleClick(onClick, nextProps.activeindex, nextProps.tagList[nextProps.activeindex], 'cb');
 		} else {
 			this._handleClick(onClick, currentIndex, tagList[currentIndex], 'first');
 		}

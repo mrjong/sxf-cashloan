@@ -186,15 +186,21 @@ export default class confirm_agency_page extends PureComponent {
 			repaymentIndex: data.index
 			// cardBillAmt: data.value.cardBillAmt,
 		});
-		this.handleClickConfirm();
+		// this.handleClickConfirm();
 	};
 
 	// 还款 Tag 点击事件
 	handleLendersTagClick = (data, type) => {
-		this.setState({
-			lendersDate: data.value,
-			lendersIndex: data.index
-		});
+		const cardBillAmt = this.props.form.getFieldValue('cardBillAmt');
+		this.setState(
+			{
+				lendersDate: data.value,
+				lendersIndex: data.index
+			},
+			() => {
+				type && cardBillAmt && this.handleClickConfirm();
+			}
+		);
 	};
 
 	// 按钮点击事件
