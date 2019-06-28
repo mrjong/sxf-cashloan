@@ -12,6 +12,8 @@ import { getH5Channel, isMPOS } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
+import Cashier from './components/Cashier';
+
 const API = {
 	qryDtl: '/bill/qryDtl',
 	payback: '/bill/paySubmit',
@@ -61,7 +63,9 @@ export default class order_detail_page extends PureComponent {
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
-			couponPrice: '' // 优惠劵计算过的金额
+			couponPrice: '', // 优惠劵计算过的金额
+			cashierVisible: true,
+			cashierStatus: 'part'
 		};
 	}
 	componentWillMount() {
@@ -925,18 +929,33 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail: !this.state.isShowDetail
 		});
 	};
+
 	// 查看逾期进度
 	goOverdue = () => {
 		this.props.history.push({
 			pathname: '/order/overdue_progress_page'
 		});
 	};
+
 	selectPayType = (type) => {
 		this.setState({
 			payType: type
 		});
 		store.setPayType(type);
 	};
+
+	//关闭收银台状态弹窗
+	closeCashierModal = () => {
+		this.setState({
+			cashierVisible: false
+		});
+	};
+
+	//收银台继续还款
+	continuePay = () => {
+		console.log(22);
+	};
+
 	render() {
 		const {
 			billDesc = {},
@@ -958,7 +977,9 @@ export default class order_detail_page extends PureComponent {
 			insureInfo,
 			insureFeeInfo,
 			isInsureValid,
-			couponPrice
+			couponPrice,
+			cashierVisible,
+			cashierStatus
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1132,6 +1153,9 @@ export default class order_detail_page extends PureComponent {
 								}}
 							/>
 						</div>
+						<div className={styles.modal_notice}>
+							<span className={styles.text}>因银行通道原因，可能出现部分还款成功情况，请留意账单详情</span>
+						</div>
 						<div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
@@ -1257,6 +1281,13 @@ export default class order_detail_page extends PureComponent {
 						</SXFButton>
 					</div>
 				</Modal>
+
+				<Cashier
+					status={cashierStatus}
+					onClose={this.closeCashierModal}
+					onConfirm={this.continuePay}
+					visible={cashierVisible}
+				/>
 			</div>
 		);
 	}

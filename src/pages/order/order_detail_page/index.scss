@@ -101,7 +101,8 @@
 	}
 }
 .modal_box {
-	padding: 25px 30px 56px;
+	// padding: 25px 30px 56px;
+	padding-bottom: 56px;
 }
 .modal_weixin {
 	.flex_div {
@@ -164,12 +165,12 @@
 .modal_flex {
 	display: flex;
 	position: relative;
-	padding: 25px 0;
+	padding: 20px 30px;
 	span {
 		flex: 1;
 	}
 	i {
-		@include setArrow(right, 15px, #a9aeb6, 1px);
+		@include setArrow(right, 12px, #a9aeb6, 1px);
 		top: 16px;
 	}
 }
@@ -182,17 +183,17 @@
 	}
 }
 i.arrow_down {
-	@include setArrow(down, 15px, #a9aeb6, 1px);
-	top: 16px;
+	@include setArrow(down, 12px, #a9aeb6, 1px);
+	top: 14px;
 	margin-left: 10px;
 }
 i.arrow_up {
-	@include setArrow(top, 15px, #a9aeb6, 1px);
-	top: 20px;
+	@include setArrow(top, 12px, #a9aeb6, 1px);
+	top: 18px;
 	margin-left: 10px;
 }
 .feeDetail {
-	padding-top: 14px;
+	padding: 14px 30px 0;
 	.modal_flex {
 		margin-top: 10px;
 		border-bottom: none;
@@ -212,32 +213,57 @@ i.arrow_up {
 
 .modal_title {
 	font-size: 36px;
-	color: #333;
+	height: 100px;
+	line-height: 100px;
+	color: #121c32;
 	font-weight: 700;
 	text-align: center;
 	position: relative;
-	margin-bottom: 25px;
+	background-color: #f7f8fa;
 	.modal_close_btn {
 		position: absolute;
-		top: 0;
-		right: 0;
+		top: 25px;
+		right: 25px;
+	}
+}
+.modal_notice {
+	height: 50px;
+	line-height: 50px;
+	background-color: #ffeeef;
+	overflow: hidden;
+	margin-bottom: 20px;
+	&::before {
+		content: '';
+		display: inline-block;
+		width: 26px;
+		height: 26px;
+		background: url('./img/notice.png') no-repeat;
+		background-size: cover;
+		position: relative;
+		top: 4px;
+	}
+	.text {
+		font-size: 22px;
+		padding-left: 16px;
+		color: #ff6666;
 	}
 }
 .modal_label {
-	font-size: 34px;
+	font-size: 30px;
 	color: #121c32;
 	text-align: left;
 }
 .modal_value {
 	text-align: right;
-	font-size: 34px;
+	font-size: 30px;
 	font-weight: bold;
 	font-family: 'PingFangSC-Semibold';
 	color: #121c32;
 }
 
 .modal_btn {
-	margin-top: 72px;
+	margin-top: 65px;
+	width: 670px;
 }
 .submit_btn {
 	margin: 45px 65px;
