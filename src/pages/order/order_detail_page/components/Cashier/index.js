@@ -2,33 +2,115 @@ import React from 'react';
 import styles from './index.scss';
 import { Modal, ActivityIndicator, Icon } from 'antd-mobile';
 import SXFButton from 'components/ButtonCustom';
+import fetch from 'sx-fetch';
+import success_icon from '../../img/success_icon.png';
 
+const API = {
+	queryPayStatus: '/bill/payNotify'
+};
+let timer = null;
+@fetch.inject()
 export default class Cashier extends React.PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			seconds: 15,
+			status: 'waiting',
+			remainAmt: 0,
+			repayOrdAmt: 0,
+			crdOrdAmt: 0,
+			orgRspMsg: ''
+		};
 	}
 
+	componentDidMount() {
+		timer = setInterval(() => {
+			this.setState(
+				{
+					seconds: this.state.seconds - 1
+				},
+				() => {
+					if (this.state.seconds < 1) {
+						clearInterval(timer);
+						this.setState({
+							status: 'timeout'
+						});
+					}
+					if (this.state.seconds % 2 === 0) {
+						this.queryPayStatus();
+					}
+				}
+			);
+		}, 1000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(timer);
+	}
+
+	queryPayStatus = () => {
+		this.props.$fetch.get(API.queryPayStatus + `/${this.props.repayOrdNo}`).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				const { resultMark, repayOrdAmt, crdOrdAmt, orgRspMsg } = res.data || {};
+				if (resultMark === '01') {
+					this.setState(
+						{
+							status: Number(repayOrdAmt) === Number(crdOrdAmt) ? 'success' : 'part',
+							repayOrdAmt: Number(repayOrdAmt).toFixed(2),
+							crdOrdAmt: Number(crdOrdAmt).toFixed(2),
+							remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
+							orgRspMsg
+						},
+						() => {
+							setTimeout(() => {
+								this.props.onClose('success');
+							}, 1000);
+						}
+					);
+				} else if (resultMark === '00') {
+					this.setState({
+						status: 'fail'
+					});
+				}
+			}
+		});
+	};
+
 	render() {
-		const { status, onClose, visible, onConfirm } = this.props;
+		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgRspMsg } = this.state;
+		const { onClose, bankName, bankNo } = this.props;
 		return (
-			<Modal visible={visible} transparent className="cashier_modal" animationType="slide-up" popup>
+			<Modal visible={true} transparent className="cashier_modal" animationType="slide-up" popup>
 				<div className={styles.modal_title}>
 					{status === 'part' ? '本次还款明细' : '支付'}
-					<Icon type="cross" className={styles.modal_close_btn} onClick={onClose} />
+					{status !== 'success' && status !== 'waiting' && (
+						<Icon
+							type="cross"
+							className={styles.modal_close_btn}
+							onClick={() => {
+								onClose();
+							}}
+						/>
+					)}
 				</div>
 				{status === 'waiting' && (
 					<div>
 						<div className={styles.icon_wrap}>
-							<ActivityIndicator animating className={styles.loading_icon} color="red" />
+							<ActivityIndicator animating className={styles.loading_icon} />
 						</div>
-						<p className={styles.desc}>还款中，预计15秒内完成...</p>
+						<p className={styles.desc}>
+							还款中，预计
+							{seconds}
+							秒内完成...
+						</p>
 					</div>
 				)}
 				{status === 'success' && (
 					<div>
 						<div className={styles.icon_wrap}>
-							<div className={[styles.success_icon, styles.icon].join(' ')} />
+							<div className={[styles.success_icon, styles.icon].join(' ')}>
+								<img src={success_icon} />
+							</div>
 						</div>
 						<p className={styles.desc}>还款成功</p>
 					</div>
@@ -46,11 +128,19 @@ export default class Cashier extends React.PureComponent {
 						<div className={styles.icon_wrap}>
 							<div className={[styles.fail_icon, styles.icon].join(' ')} />
 						</div>
-						<p className={styles.desc}>
-							还款失败
-							<br />
-							交通银行(1234)还款失败，请重试！
-						</p>
+						{orgRspMsg ? (
+							<p className={styles.desc}>
+								还款失败
+								<br />
+								{bankName}({bankNo})还款失败: {orgRspMsg}
+							</p>
+						) : (
+							<p className={styles.desc}>
+								还款失败
+								<br />
+								{bankName}({bankNo})还款失败，请重试！
+							</p>
+						)}
 					</div>
 				)}
 				{status === 'part' && (
@@ -58,19 +148,29 @@ export default class Cashier extends React.PureComponent {
 						<ul>
 							<li className={styles.list_item}>
 								<span>发起还款金额</span>
-								<span className={styles.value}>158.00元</span>
+								<span className={styles.value}>{crdOrdAmt}元</span>
 							</li>
 							<li className={styles.list_item}>
 								<span>成功还款</span>
-								<span className={styles.value}>158.00元</span>
+								<span className={styles.value}>{repayOrdAmt}元</span>
 							</li>
 							<li className={styles.list_item}>
 								<span>剩余应还</span>
-								<span className={styles.value}>158.00元</span>
+								<span className={styles.value}>{remainAmt}元</span>
 							</li>
 						</ul>
-						<p>失败原因：余额不足</p>
-						<SXFButton onClick={onConfirm} className={styles.modal_btn}>
+						{orgRspMsg && (
+							<p>
+								失败原因：
+								{orgRspMsg}
+							</p>
+						)}
+						<SXFButton
+							onClick={() => {
+								onClose();
+							}}
+							className={styles.modal_btn}
+						>
 							继续还款
 						</SXFButton>
 					</div>

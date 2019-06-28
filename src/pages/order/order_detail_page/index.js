@@ -64,8 +64,7 @@ export default class order_detail_page extends PureComponent {
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
 			couponPrice: '', // 优惠劵计算过的金额
-			cashierVisible: true,
-			cashierStatus: 'part'
+			cashierVisible: false
 		};
 	}
 	componentWillMount() {
@@ -664,9 +663,9 @@ export default class order_detail_page extends PureComponent {
 		// }
 		if (isPayAll) {
 			// 一键结清isPayOff为1， 否则为0
-			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt };
+			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt, adapter: '01' };
 		} else {
-			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt };
+			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt, adapter: '01' };
 		}
 		// 添加微信新增参数
 		switch (payType) {
@@ -704,6 +703,18 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
+					if (res.data.repayOrdNo) {
+						this.setState(
+							{
+								repayOrdNo: res.data.repayOrdNo
+							},
+							() => {
+								this.setState({
+									cashierVisible: true
+								});
+							}
+						);
+					}
 
 					store.setOrderSuccess({
 						isPayAll,
@@ -945,15 +956,16 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	//关闭收银台状态弹窗
-	closeCashierModal = () => {
+	closeCashierModal = (paySuccess) => {
+		const { billDesc, isPayAll } = this.state;
 		this.setState({
 			cashierVisible: false
 		});
-	};
-
-	//收银台继续还款
-	continuePay = () => {
-		console.log(22);
+		if (paySuccess) {
+			this.getpayResult(billDesc, isPayAll, '申请还款成功');
+		}
+		this.getLoanInfo();
+		this.queryExtendedPayType();
 	};
 
 	render() {
@@ -979,7 +991,7 @@ export default class order_detail_page extends PureComponent {
 			isInsureValid,
 			couponPrice,
 			cashierVisible,
-			cashierStatus
+			repayOrdNo
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1281,13 +1293,14 @@ export default class order_detail_page extends PureComponent {
 						</SXFButton>
 					</div>
 				</Modal>
-
-				<Cashier
-					status={cashierStatus}
-					onClose={this.closeCashierModal}
-					onConfirm={this.continuePay}
-					visible={cashierVisible}
-				/>
+				{cashierVisible && (
+					<Cashier
+						onClose={this.closeCashierModal}
+						repayOrdNo={repayOrdNo}
+						bankName={wthdCrdCorpOrgNm}
+						bankNo={wthdCrdNoLast}
+					/>
+				)}
 			</div>
 		);
 	}
