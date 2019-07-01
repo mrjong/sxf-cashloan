@@ -556,6 +556,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
+		const { contractData } = this.state;
 		if (!this.state.repayInfo2 || !this.state.repayInfo2.perdLth) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -567,7 +568,7 @@ export default class confirm_agency_page extends PureComponent {
 				pathname: '/mine/coupon_page',
 				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
 					this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-				}`,
+				}&prodId=${contractData[0].productId}`,
 				state: { nouseCoupon: true }
 			});
 			return;
@@ -581,7 +582,7 @@ export default class confirm_agency_page extends PureComponent {
 			pathname: '/mine/coupon_page',
 			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
 				this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-			}`
+			}&prodId=${contractData[0].productId}`
 		});
 	};
 	// 查看借款合同

@@ -271,6 +271,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择优惠劵
 	selectCoupon = () => {
+		const { prdId } = this.state;
 		this.storeTempData();
 		const { couponInfo, loanMoney, loanDate } = this.state;
 		if (couponInfo && couponInfo.coupId) {
@@ -280,7 +281,7 @@ export default class loan_fenqi_page extends PureComponent {
 			pathname: '/mine/coupon_page',
 			search: `?transactionType=fenqi&price=${loanMoney}&perCont=${
 				loanDate.perdUnit === 'M' ? loanDate.perdLth : 1
-			}`,
+			}&prodId=${prdId}`,
 			state: { nouseCoupon: !couponInfo.coupVal }
 		});
 	};
