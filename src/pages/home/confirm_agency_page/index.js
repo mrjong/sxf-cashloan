@@ -1052,20 +1052,50 @@ export default class confirm_agency_page extends PureComponent {
 										)
 									)}
 								</li>
-								<li className={style.listItem} onClick={this.handleShowModal}>
+								<li
+									className={repayInfo2 ? `${style.listItem} ${style.listItem3}` : style.listItem}
+									onClick={this.handleShowModal}
+								>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
-									<span>
-										{repayInfo2 && repayInfo2.perdUnit === 'D' ? (
+									<div>
+										{/* {repayInfo2 && repayInfo2.perdUnit === 'D' ? (
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
 										) : (
 											(repayInfo2 && (
-												<span className={[style.listValue, style.hasArrow].join(' ')}>
-													点击查看
+												<span className={[style.listValue, style.listValue3, style.hasArrow].join(' ')}>
+													<span className={style.moneyTit}>优惠后合计</span><span className={style.derateMoney}>{4950}</span>元
 													<Icon type="right" className={style.icon} />
 												</span>
 											)) || <span className={style.listValue2}>暂无</span>
+                    )} */}
+										{(repayInfo2 && (
+											<span
+												className={
+													repayInfo2 && repayInfo2.perdUnit === 'D'
+														? [style.listValue, style.listValue3].join(' ')
+														: [style.listValue, style.listValue3, style.hasArrow].join(' ')
+												}
+											>
+												<span className={style.moneyTit}>优惠后合计</span>
+												<span className={style.derateMoney}>{4950}</span>元
+												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
+													<Icon type="right" className={style.icon} />
+												)}
+											</span>
+										)) || <span className={style.listValue2}>暂无</span>}
+										{repayInfo2 && (
+											<div
+												className={
+													repayInfo2 && repayInfo2.perdUnit === 'D'
+														? style.allMoneyBox
+														: [style.allMoneyBox, style.hasArrow].join(' ')
+												}
+											>
+												<span className={style.moneyTit}>息费合计</span>
+												<span className={style.allMoney}>{5000}元</span>
+											</div>
 										)}
-									</span>
+									</div>
 								</li>
 							</ul>
 							<ul className={style.pannel}>

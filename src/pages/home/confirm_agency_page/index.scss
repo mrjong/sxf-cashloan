@@ -72,6 +72,11 @@
 		.listItem2 {
 			min-height: 140px;
 		}
+		.listItem3 {
+			align-items: flex-start;
+			min-height: 155px;
+			padding-top: 30px;
+		}
 
 		.listValue {
 			font-weight: 500;
@@ -86,8 +91,32 @@
 			line-height: 2;
 			color: #868e9e;
 		}
+		.listValue3 {
+			display: block;
+			position: relative;
+			line-height: normal;
+			margin-bottom: 14px;
+		}
 		.hasArrow {
 			padding-right: 24px;
+		}
+		// 息费合计
+		.derateMoney {
+			margin-left: 20px;
+		}
+		.allMoneyBox {
+			display: flex;
+			text-align: right;
+			color: #868e9e;
+			font-size: 26px;
+			justify-content: space-between;
+		}
+		.moneyTit {
+			width: 150px;
+			text-align: right;
+		}
+		.allMoney {
+			text-decoration: line-through;
 		}
 
 		.icon {
