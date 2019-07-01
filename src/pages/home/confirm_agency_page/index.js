@@ -539,8 +539,8 @@ export default class confirm_agency_page extends PureComponent {
 				prdId: contractData[0].productId,
 				cardId: indexData.autId,
 				billPrcpAmt: cardBillAmt,
-				wtdwTyp: lendersDate.value,
-				coupId: '-1'
+				wtdwTyp: lendersDate.value
+				// coupId: '-1'
 			};
 		} else {
 			params = {
