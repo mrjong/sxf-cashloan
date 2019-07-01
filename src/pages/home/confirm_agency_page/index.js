@@ -524,26 +524,48 @@ export default class confirm_agency_page extends PureComponent {
 	// 获取确认代还信息
 	requestGetRepayInfo = () => {
 		const { contractData, lendersDate, cardBillAmt } = this.state;
-		this.props.$fetch
-			.post(API.REPAY_INFO, {
+		let couponInfo = store.getCouponData();
+		let params = null;
+		// 第一次加载,coupId传'0',查最优的优惠券
+		// 不使用优惠券(包括无可用的情况),coupId传'-1',
+		// 使用优惠券,coupId传优惠券ID
+		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
+			// 不使用优惠劵的情况
+			this.setState({
+				couponInfo,
+				deratePrice: 0
+			});
+			params = {
 				prdId: contractData[0].productId,
 				cardId: indexData.autId,
 				billPrcpAmt: cardBillAmt,
-				wtdwTyp: lendersDate.value
-			})
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					this.setState({
-						repayInfo2: result.data
-					});
-					if (result.data.data && result.data.data.usrCoupNo) {
-						this.dealMoney(result.data);
-					}
-					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			});
+				wtdwTyp: lendersDate.value,
+				coupId: '-1'
+			};
+		} else {
+			params = {
+				prdId: contractData[0].productId,
+				cardId: indexData.autId,
+				billPrcpAmt: cardBillAmt,
+				wtdwTyp: lendersDate.value,
+				coupId: couponInfo && JSON.stringify(couponInfo) !== '{}' ? couponInfo.usrCoupNo : '0'
+			};
+		}
+		this.props.$fetch.post(API.REPAY_INFO, params).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				this.setState({
+					repayInfo2: result.data,
+					deratePrice: result.data.deductAmount,
+					couponInfo
+				});
+				// if (result.data.data && result.data.data.usrCoupNo) {
+				// 	this.dealMoney(result.data);
+				// }
+				this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		});
 	};
 	// 渲染优惠劵
 	renderCoupon = () => {
@@ -1077,7 +1099,10 @@ export default class confirm_agency_page extends PureComponent {
 												}
 											>
 												<span className={style.moneyTit}>优惠后合计</span>
-												<span className={style.derateMoney}>{4950}</span>元
+												<span className={style.derateMoney}>
+													{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+												</span>
+												元
 												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
 													<Icon type="right" className={style.icon} />
 												)}
@@ -1092,7 +1117,7 @@ export default class confirm_agency_page extends PureComponent {
 												}
 											>
 												<span className={style.moneyTit}>息费合计</span>
-												<span className={style.allMoney}>{5000}元</span>
+												<span className={style.allMoney}>{repayInfo2 && repayInfo2.intrFeeTotAmt}元</span>
 											</div>
 										)}
 									</div>
