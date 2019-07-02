@@ -25,24 +25,24 @@ export default class Cashier extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		// timer = setInterval(() => {
-		// 	this.setState(
-		// 		{
-		// 			seconds: this.state.seconds - 1
-		// 		},
-		// 		() => {
-		// 			if (this.state.seconds < 1) {
-		// 				clearInterval(timer);
-		// 				this.setState({
-		// 					status: 'timeout'
-		// 				});
-		// 			}
-		// 			if (this.state.status === 'waiting' && !isFetching) {
-		// 				this.queryPayStatus();
-		// 			}
-		// 		}
-		// 	);
-		// }, 1000);
+		timer = setInterval(() => {
+			this.setState(
+				{
+					seconds: this.state.seconds - 1
+				},
+				() => {
+					if (this.state.seconds < 1) {
+						clearInterval(timer);
+						this.setState({
+							status: 'timeout'
+						});
+					}
+					if (this.state.status === 'waiting' && !isFetching) {
+						this.queryPayStatus();
+					}
+				}
+			);
+		}, 1000);
 	}
 
 	componentWillUnmount() {
