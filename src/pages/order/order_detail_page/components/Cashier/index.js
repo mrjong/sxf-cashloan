@@ -9,6 +9,7 @@ const API = {
 	queryPayStatus: '/bill/payNotify'
 };
 let timer = null;
+let isFetching = false;
 @fetch.inject()
 export default class Cashier extends React.PureComponent {
 	constructor(props) {
@@ -19,7 +20,7 @@ export default class Cashier extends React.PureComponent {
 			remainAmt: 0,
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
-			orgRspMsg: ''
+			orgFnlCd: ''
 		};
 	}
 
@@ -36,7 +37,7 @@ export default class Cashier extends React.PureComponent {
 							status: 'timeout'
 						});
 					}
-					if (this.state.seconds % 2 === 0) {
+					if (this.state.status === 'waiting' && !isFetching) {
 						this.queryPayStatus();
 					}
 				}
@@ -49,40 +50,50 @@ export default class Cashier extends React.PureComponent {
 	}
 
 	queryPayStatus = () => {
-		this.props.$fetch.get(API.queryPayStatus + `/${this.props.repayOrdNo}`).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				const { resultMark, repayOrdAmt, crdOrdAmt, orgRspMsg } = res.data || {};
-				if (resultMark === '01') {
-					this.setState(
-						{
-							status: Number(repayOrdAmt) === Number(crdOrdAmt) ? 'success' : 'part',
-							repayOrdAmt: Number(repayOrdAmt).toFixed(2),
-							crdOrdAmt: Number(crdOrdAmt).toFixed(2),
-							remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
-							orgRspMsg
-						},
-						() => {
-							setTimeout(() => {
-								this.props.onClose('success');
-							}, 1000);
-						}
-					);
-				} else if (resultMark === '00') {
-					this.setState({
-						status: 'fail'
-					});
+		isFetching = true;
+		this.props.$fetch
+			.get(API.queryPayStatus + `/${this.props.repayOrdNo}`)
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					isFetching = false;
+					const { resultMark, repayOrdAmt, crdOrdAmt, orgFnlCd } = res.data || {};
+					if (resultMark === '01') {
+						this.setState(
+							{
+								status: Number(repayOrdAmt) === Number(crdOrdAmt) ? 'success' : 'part',
+								repayOrdAmt: Number(repayOrdAmt).toFixed(2),
+								crdOrdAmt: Number(crdOrdAmt).toFixed(2),
+								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
+								orgFnlCd
+							},
+							() => {
+								setTimeout(() => {
+									this.props.onClose('success');
+									clearInterval(timer);
+								}, 1000);
+							}
+						);
+					} else if (resultMark === '00') {
+						this.setState({
+							status: 'fail'
+						});
+						clearInterval(timer);
+					}
 				}
-			}
-		});
+			})
+			.catch((err) => {
+				console.log(err);
+				isFetching = false;
+			});
 	};
 
 	render() {
-		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgRspMsg } = this.state;
+		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgFnlCd } = this.state;
 		const { onClose, bankName, bankNo } = this.props;
 		return (
 			<Modal visible={true} transparent className="cashier_modal" animationType="slide-up" popup>
 				<div className={styles.modal_title}>
-					{status === 'part' ? '本次还款明细' : '支付'}
+					{status === 'part' ? '本次还款明细' : '还款'}
 					{status !== 'success' && status !== 'waiting' && (
 						<Icon
 							type="cross"
@@ -128,17 +139,19 @@ export default class Cashier extends React.PureComponent {
 						<div className={styles.icon_wrap}>
 							<div className={[styles.fail_icon, styles.icon].join(' ')} />
 						</div>
-						{orgRspMsg ? (
+						{orgFnlCd ? (
 							<p className={styles.desc}>
 								还款失败
 								<br />
-								{bankName}({bankNo})还款失败: {orgRspMsg}
+								{bankName}({bankNo}
+								)还款失败: {orgFnlCd}
 							</p>
 						) : (
 							<p className={styles.desc}>
 								还款失败
 								<br />
-								{bankName}({bankNo})还款失败，请重试！
+								{bankName}({bankNo}
+								)还款失败，请重试！
 							</p>
 						)}
 					</div>
@@ -159,10 +172,10 @@ export default class Cashier extends React.PureComponent {
 								<span className={styles.value}>{remainAmt}元</span>
 							</li>
 						</ul>
-						{orgRspMsg && (
+						{orgFnlCd && (
 							<p>
 								失败原因：
-								{orgRspMsg}
+								{orgFnlCd}
 							</p>
 						)}
 						<SXFButton

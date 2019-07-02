@@ -703,19 +703,6 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
-					if (res.data.repayOrdNo) {
-						this.setState(
-							{
-								repayOrdNo: res.data.repayOrdNo
-							},
-							() => {
-								this.setState({
-									cashierVisible: true
-								});
-							}
-						);
-					}
-
 					store.setOrderSuccess({
 						isPayAll,
 						thisPerdNum,
@@ -728,8 +715,7 @@ export default class order_detail_page extends PureComponent {
 
 					switch (payType) {
 						case 'WXPay':
-							let wxData = res.data && JSON.parse(res.data);
-
+							let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
 							if (isWXOpen()) {
 								WeixinJSBridge.invoke(
 									'getBrandWCPayRequest',
@@ -758,10 +744,21 @@ export default class order_detail_page extends PureComponent {
 								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
 								location.href = url;
 							}
-
 							break;
 						case 'BankPay':
-							this.getpayResult(billDesc, isPayAll, '申请还款成功');
+							if (res.data && res.data.repayOrdNo) {
+								this.setState(
+									{
+										repayOrdNo: res.data.repayOrdNo
+									},
+									() => {
+										this.setState({
+											cashierVisible: true
+										});
+									}
+								);
+							}
+							// this.getpayResult(billDesc, isPayAll, '申请还款成功');
 							break;
 						default:
 							break;
