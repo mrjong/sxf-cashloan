@@ -20,7 +20,7 @@ export default class Cashier extends React.PureComponent {
 			remainAmt: 0,
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
-			orgFnlCd: ''
+			orgFnlMsg: ''
 		};
 	}
 
@@ -56,15 +56,14 @@ export default class Cashier extends React.PureComponent {
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					isFetching = false;
-					const { resultMark, repayOrdAmt, crdOrdAmt, orgFnlCd } = res.data || {};
+					const { resultMark, repayOrdAmt, crdOrdAmt, orgFnlMsg } = res.data || {};
 					if (resultMark === '01') {
 						this.setState(
 							{
 								status: Number(repayOrdAmt) === Number(crdOrdAmt) ? 'success' : 'part',
 								repayOrdAmt: Number(repayOrdAmt).toFixed(2),
 								crdOrdAmt: Number(crdOrdAmt).toFixed(2),
-								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
-								orgFnlCd
+								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2)
 							},
 							() => {
 								setTimeout(() => {
@@ -75,7 +74,8 @@ export default class Cashier extends React.PureComponent {
 						);
 					} else if (resultMark === '00') {
 						this.setState({
-							status: 'fail'
+							status: 'fail',
+							orgFnlMsg
 						});
 						clearInterval(timer);
 					}
@@ -88,7 +88,7 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	render() {
-		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgFnlCd } = this.state;
+		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgFnlMsg } = this.state;
 		const { onClose, bankName, bankNo } = this.props;
 		return (
 			<Modal visible={true} transparent className="cashier_modal" animationType="slide-up" popup>
@@ -139,12 +139,12 @@ export default class Cashier extends React.PureComponent {
 						<div className={styles.icon_wrap}>
 							<div className={[styles.fail_icon, styles.icon].join(' ')} />
 						</div>
-						{orgFnlCd ? (
+						{orgFnlMsg ? (
 							<p className={styles.desc}>
 								还款失败
 								<br />
 								{bankName}({bankNo}
-								)还款失败: {orgFnlCd}
+								)还款失败: {orgFnlMsg}
 							</p>
 						) : (
 							<p className={styles.desc}>
@@ -172,10 +172,10 @@ export default class Cashier extends React.PureComponent {
 								<span className={styles.value}>{remainAmt}元</span>
 							</li>
 						</ul>
-						{orgFnlCd && (
+						{orgFnlMsg && (
 							<p>
 								失败原因：
-								{orgFnlCd}
+								{orgFnlMsg}
 							</p>
 						)}
 						<SXFButton
