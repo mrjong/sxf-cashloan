@@ -16,7 +16,7 @@ export default class Cashier extends React.PureComponent {
 		super(props);
 		this.state = {
 			seconds: 15,
-			status: 'waiting',
+			status: 'fail',
 			remainAmt: 0,
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
@@ -25,24 +25,24 @@ export default class Cashier extends React.PureComponent {
 	}
 
 	componentDidMount() {
-		timer = setInterval(() => {
-			this.setState(
-				{
-					seconds: this.state.seconds - 1
-				},
-				() => {
-					if (this.state.seconds < 1) {
-						clearInterval(timer);
-						this.setState({
-							status: 'timeout'
-						});
-					}
-					if (this.state.status === 'waiting' && !isFetching) {
-						this.queryPayStatus();
-					}
-				}
-			);
-		}, 1000);
+		// timer = setInterval(() => {
+		// 	this.setState(
+		// 		{
+		// 			seconds: this.state.seconds - 1
+		// 		},
+		// 		() => {
+		// 			if (this.state.seconds < 1) {
+		// 				clearInterval(timer);
+		// 				this.setState({
+		// 					status: 'timeout'
+		// 				});
+		// 			}
+		// 			if (this.state.status === 'waiting' && !isFetching) {
+		// 				this.queryPayStatus();
+		// 			}
+		// 		}
+		// 	);
+		// }, 1000);
 	}
 
 	componentWillUnmount() {
@@ -145,7 +145,9 @@ export default class Cashier extends React.PureComponent {
 								还款失败
 								<br />
 								{bankName}({bankNo}
-								)还款失败: {orgFnlMsg}
+								)还款失败: <span>{orgFnlMsg}</span>
+								<br />
+								请选择其他银行卡还款
 							</p>
 						) : (
 							<p className={styles.desc}>
