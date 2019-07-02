@@ -16,7 +16,7 @@ export default class Cashier extends React.PureComponent {
 		super(props);
 		this.state = {
 			seconds: 15,
-			status: 'fail',
+			status: 'waiting',
 			remainAmt: 0,
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
