@@ -70,7 +70,7 @@ export default class Cashier extends React.PureComponent {
 								setTimeout(() => {
 									this.props.onClose('success');
 									clearInterval(timer);
-								}, 1000);
+								}, 2000);
 							}
 						);
 					} else if (resultMark === '00') {

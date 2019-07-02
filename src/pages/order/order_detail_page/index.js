@@ -758,7 +758,6 @@ export default class order_detail_page extends PureComponent {
 									}
 								);
 							}
-							// this.getpayResult(billDesc, isPayAll, '申请还款成功');
 							break;
 						default:
 							break;
@@ -794,14 +793,11 @@ export default class order_detail_page extends PureComponent {
 	};
 	getpayResult = (billDesc, isPayAll, message) => {
 		if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
-			this.props.toast.info('还款完成');
 			store.removeBackData();
 			store.removeCouponData();
-			setTimeout(() => {
-				this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
-			}, 2000);
+			this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
 		} else {
-			this.props.toast.info(message);
+			message && this.props.toast.info(message);
 			store.removeCouponData();
 			// 刷新当前list
 			setTimeout(() => {
@@ -959,7 +955,7 @@ export default class order_detail_page extends PureComponent {
 			cashierVisible: false
 		});
 		if (paySuccess) {
-			this.getpayResult(billDesc, isPayAll, '申请还款成功');
+			this.getpayResult(billDesc, isPayAll);
 		}
 		this.getLoanInfo();
 		this.queryExtendedPayType();
