@@ -37,10 +37,8 @@ export default class Cashier extends React.PureComponent {
 							status: 'timeout'
 						});
 					}
-					if (this.state.status === 'waiting' && !isFetching) {
-						setTimeout(() => {
-							this.queryPayStatus();
-						}, 2000);
+					if (this.state.status === 'waiting' && this.state.seconds % 2 === 0 && !isFetching) {
+						this.queryPayStatus();
 					}
 				}
 			);
