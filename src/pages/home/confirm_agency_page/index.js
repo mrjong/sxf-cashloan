@@ -526,8 +526,8 @@ export default class confirm_agency_page extends PureComponent {
 		const { contractData, lendersDate, cardBillAmt } = this.state;
 		let couponInfo = store.getCouponData();
 		let params = null;
-		// 第一次加载,coupId传'0',查最优的优惠券
-		// 不使用优惠券(包括无可用的情况),coupId传'-1',
+		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
+		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
 		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
 			// 不使用优惠劵的情况
