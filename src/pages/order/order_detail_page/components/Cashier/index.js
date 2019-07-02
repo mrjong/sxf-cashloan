@@ -63,7 +63,8 @@ export default class Cashier extends React.PureComponent {
 								status: Number(repayOrdAmt) === Number(crdOrdAmt) ? 'success' : 'part',
 								repayOrdAmt: Number(repayOrdAmt).toFixed(2),
 								crdOrdAmt: Number(crdOrdAmt).toFixed(2),
-								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2)
+								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
+								orgFnlMsg
 							},
 							() => {
 								setTimeout(() => {
