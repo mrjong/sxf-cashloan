@@ -14,6 +14,13 @@ export default [
 		component: () => import('pages/others/download_page')
 	},
 	{
+		path: '/others/outer_download_page',
+		title: '下载页',
+		arrowHide: 'empty',
+		headerHide: true,
+		component: () => import('pages/others/outer_download_page')
+	},
+	{
 		path: '/others/clear_store_page',
 		title: '测试专用',
 		arrowHide: 'empty',
@@ -31,5 +38,5 @@ export default [
 		title: '提示',
 		arrowHide: '',
 		component: () => import('pages/others/moxie_pwd_guide')
-	},
+	}
 ];
