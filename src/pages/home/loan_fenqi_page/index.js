@@ -218,7 +218,8 @@ export default class loan_fenqi_page extends PureComponent {
 				price: loanMoney,
 				type: 'LOAN',
 				prodType: '11',
-				periodCount: loanDate.perdCnt
+				periodCount: loanDate.perdCnt,
+				prdId: prdId
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000' && res.data !== null) {
