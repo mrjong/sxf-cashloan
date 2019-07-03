@@ -67,10 +67,12 @@ export default class Cashier extends React.PureComponent {
 								orgFnlMsg
 							},
 							() => {
-								setTimeout(() => {
-									this.props.onClose('success');
-									clearInterval(timer);
-								}, 2000);
+								if (this.state.status === 'success') {
+									setTimeout(() => {
+										this.props.onClose('success');
+										clearInterval(timer);
+									}, 2000);
+								}
 							}
 						);
 					} else if (resultMark === '00') {
