@@ -466,61 +466,6 @@ export default class confirm_agency_page extends PureComponent {
 		}
 	}
 
-	// 处理优惠券金额显示
-	dealMoney = (result) => {
-		const { contractData, repayInfo, cardBillAmt } = this.state;
-		let couponInfo = store.getCouponData();
-		// store.removeCouponData();
-		let params = {};
-		// 如果没有coupId直接不调用接口
-		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
-			// 不使用优惠劵的情况
-			this.setState({
-				couponInfo,
-				deratePrice: 0
-			});
-			return;
-		}
-		if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
-			params = {
-				prodId: contractData[0].productId,
-				couponId: couponInfo.usrCoupNo, // 优惠劵id
-				type: '00', // 00为借款 01为还款
-				price: cardBillAmt
-			};
-		} else {
-			params = {
-				prodId: contractData[0].productId,
-				couponId: result.data.usrCoupNo, // 优惠劵id
-				type: '00', // 00为借款 01为还款
-				price: cardBillAmt
-			};
-		}
-		this.props.$fetch
-			.get(API.COUPON_COUNT, params)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					this.setState({
-						couponInfo,
-						deratePrice: result.data.deratePrice
-					});
-				} else {
-					store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
-					this.setState({
-						deratePrice: '',
-						couponInfo: { coupVal: -1, usrCoupNo: 'null' }
-					});
-					this.props.toast.info(result.msgInfo);
-				}
-			})
-			.catch((err) => {
-				store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
-				this.setState({
-					deratePrice: '',
-					couponInfo: { coupVal: -1, usrCoupNo: 'null' }
-				});
-			});
-	};
 	// 获取确认代还信息
 	requestGetRepayInfo = () => {
 		const { contractData, lendersDate, cardBillAmt } = this.state;
@@ -531,10 +476,6 @@ export default class confirm_agency_page extends PureComponent {
 		// 使用优惠券,coupId传优惠券ID
 		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
 			// 不使用优惠劵的情况
-			this.setState({
-				couponInfo,
-				deratePrice: 0
-			});
 			params = {
 				prdId: contractData[0].productId,
 				cardId: indexData.autId,
@@ -551,21 +492,35 @@ export default class confirm_agency_page extends PureComponent {
 				coupId: couponInfo && JSON.stringify(couponInfo) !== '{}' ? couponInfo.usrCoupNo : '0'
 			};
 		}
-		this.props.$fetch.post(API.REPAY_INFO, params).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+		this.props.$fetch
+			.post(API.REPAY_INFO, params)
+			.then((result) => {
+				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					this.setState({
+						repayInfo2: result.data,
+						deratePrice: result.data.deductAmount,
+						couponInfo
+					});
+					// if (result.data.data && result.data.data.usrCoupNo) {
+					// 	this.dealMoney(result.data);
+					// }
+					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
+				} else {
+					// store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
+					// this.setState({
+					//   deratePrice: '',
+					//   couponInfo: { coupVal: -1, usrCoupNo: 'null' }
+					// });
+					this.props.toast.info(result.msgInfo);
+				}
+			})
+			.catch((err) => {
+				store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
 				this.setState({
-					repayInfo2: result.data,
-					deratePrice: result.data.deductAmount,
-					couponInfo
+					deratePrice: '',
+					couponInfo: { coupVal: -1, usrCoupNo: 'null' }
 				});
-				// if (result.data.data && result.data.data.usrCoupNo) {
-				// 	this.dealMoney(result.data);
-				// }
-				this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
+			});
 	};
 	// 渲染优惠劵
 	renderCoupon = () => {
