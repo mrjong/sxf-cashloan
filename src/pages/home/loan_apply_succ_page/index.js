@@ -23,7 +23,8 @@ export default class remit_ing_page extends PureComponent {
 			ACTipAlertShow: false,
 			successModalShow: false,
 			failModalShow: false,
-			time: 0
+			time: 0,
+			isAppOpen: false
 		};
 	}
 	componentWillMount() {
@@ -32,6 +33,12 @@ export default class remit_ing_page extends PureComponent {
 			queryData
 		});
 		buriedPointEvent(home.quickLoan);
+		const that = this;
+		document.addEventListener('message', that.checkAppOpen);
+	}
+	componentWillUnmount() {
+		const that = this;
+		document.removeEventListener('message', that.checkAppOpen);
 	}
 	formatSeconds = (count = 0) => {
 		let seconds = count % 60;
@@ -68,8 +75,17 @@ export default class remit_ing_page extends PureComponent {
 		);
 	};
 
+	// 检查是否是app webview打开
+	checkAppOpen = (e) => {
+		const that = this;
+		const passData = JSON.parse(e.data);
+		that.setState({
+			isAppOpen: passData && passData.isAppOpen
+		});
+	};
+
 	render() {
-		const { queryData, ACTipAlertShow, successModalShow, failModalShow, time } = this.state;
+		const { queryData, ACTipAlertShow, successModalShow, failModalShow, time, isAppOpen } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -79,7 +95,20 @@ export default class remit_ing_page extends PureComponent {
 					<div className={style.title}>{queryData.title}</div>
 					<div className={style.subtitle}>
 						{queryData.desc}
-						<a href="tel:400-088-7626">联系客服</a>
+						<a
+							href={isAppOpen ? 'javascript:;' : 'tel:400-088-7626'}
+							onClick={
+								isAppOpen
+									? () => {
+											setTimeout(() => {
+												window.postMessage('tel:400-088-7626', () => {});
+											}, 0);
+									  }
+									: () => {}
+							}
+						>
+							联系客服
+						</a>
 					</div>
 				</div>
 				<div className={style.step_box_new}>
@@ -143,7 +172,13 @@ export default class remit_ing_page extends PureComponent {
 				<ZButton
 					onClick={() => {
 						buriedPointEvent(home.gotIt);
-						this.props.history.push('/home/home');
+						if (isAppOpen) {
+							setTimeout(() => {
+								window.postMessage('我知道了', () => {});
+							}, 0);
+						} else {
+							this.props.history.push('/home/home');
+						}
 					}}
 					className={style.submitBtn}
 				>
