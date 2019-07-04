@@ -12,6 +12,8 @@ import { getH5Channel, isMPOS } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
+import Cashier from './components/Cashier';
+
 const API = {
 	qryDtl: '/bill/qryDtl',
 	payback: '/bill/paySubmit',
@@ -61,7 +63,8 @@ export default class order_detail_page extends PureComponent {
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
-			couponPrice: '' // 优惠劵计算过的金额
+			couponPrice: '', // 优惠劵计算过的金额
+			cashierVisible: false
 		};
 	}
 	componentWillMount() {
@@ -660,9 +663,9 @@ export default class order_detail_page extends PureComponent {
 		// }
 		if (isPayAll) {
 			// 一键结清isPayOff为1， 否则为0
-			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt };
+			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt, adapter: '01' };
 		} else {
-			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt };
+			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt, adapter: '01' };
 		}
 		// 添加微信新增参数
 		switch (payType) {
@@ -700,7 +703,6 @@ export default class order_detail_page extends PureComponent {
 						couponInfo: {},
 						isShowDetail: false
 					});
-
 					store.setOrderSuccess({
 						isPayAll,
 						thisPerdNum,
@@ -713,8 +715,7 @@ export default class order_detail_page extends PureComponent {
 
 					switch (payType) {
 						case 'WXPay':
-							let wxData = res.data && JSON.parse(res.data);
-
+							let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
 							if (isWXOpen()) {
 								WeixinJSBridge.invoke(
 									'getBrandWCPayRequest',
@@ -743,10 +744,20 @@ export default class order_detail_page extends PureComponent {
 								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
 								location.href = url;
 							}
-
 							break;
 						case 'BankPay':
-							this.getpayResult(billDesc, isPayAll, '申请还款成功');
+							if (res.data && res.data.repayOrdNo) {
+								this.setState(
+									{
+										repayOrdNo: res.data.repayOrdNo
+									},
+									() => {
+										this.setState({
+											cashierVisible: true
+										});
+									}
+								);
+							}
 							break;
 						default:
 							break;
@@ -782,14 +793,11 @@ export default class order_detail_page extends PureComponent {
 	};
 	getpayResult = (billDesc, isPayAll, message) => {
 		if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
-			this.props.toast.info('还款完成');
 			store.removeBackData();
 			store.removeCouponData();
-			setTimeout(() => {
-				this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
-			}, 2000);
+			this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
 		} else {
-			this.props.toast.info(message);
+			message && this.props.toast.info(message);
 			store.removeCouponData();
 			// 刷新当前list
 			setTimeout(() => {
@@ -925,18 +933,34 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail: !this.state.isShowDetail
 		});
 	};
+
 	// 查看逾期进度
 	goOverdue = () => {
 		this.props.history.push({
 			pathname: '/order/overdue_progress_page'
 		});
 	};
+
 	selectPayType = (type) => {
 		this.setState({
 			payType: type
 		});
 		store.setPayType(type);
 	};
+
+	//关闭收银台状态弹窗
+	closeCashierModal = (paySuccess) => {
+		const { billDesc, isPayAll } = this.state;
+		this.setState({
+			cashierVisible: false
+		});
+		if (paySuccess) {
+			this.getpayResult(billDesc, isPayAll);
+		}
+		this.getLoanInfo();
+		this.queryExtendedPayType();
+	};
+
 	render() {
 		const {
 			billDesc = {},
@@ -958,7 +982,9 @@ export default class order_detail_page extends PureComponent {
 			insureInfo,
 			insureFeeInfo,
 			isInsureValid,
-			couponPrice
+			couponPrice,
+			cashierVisible,
+			repayOrdNo
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1132,6 +1158,9 @@ export default class order_detail_page extends PureComponent {
 								}}
 							/>
 						</div>
+						<div className={styles.modal_notice}>
+							<span className={styles.text}>因银行通道原因，可能出现部分还款成功情况，请留意账单详情</span>
+						</div>
 						<div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
@@ -1257,6 +1286,14 @@ export default class order_detail_page extends PureComponent {
 						</SXFButton>
 					</div>
 				</Modal>
+				{cashierVisible && (
+					<Cashier
+						onClose={this.closeCashierModal}
+						repayOrdNo={repayOrdNo}
+						bankName={wthdCrdCorpOrgNm}
+						bankNo={wthdCrdNoLast}
+					/>
+				)}
 			</div>
 		);
 	}
