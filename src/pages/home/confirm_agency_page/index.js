@@ -466,50 +466,51 @@ export default class confirm_agency_page extends PureComponent {
 		}
 	}
 
-	// 处理优惠券金额显示
-	dealMoney = (result) => {
-		const { contractData, repayInfo, cardBillAmt } = this.state;
+	// 获取确认代还信息
+	requestGetRepayInfo = () => {
+		const { contractData, lendersDate, cardBillAmt } = this.state;
 		let couponInfo = store.getCouponData();
-		// store.removeCouponData();
-		let params = {};
-		// 如果没有coupId直接不调用接口
+		let params = null;
+		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
+		// 不使用优惠券,不传coupId,
+		// 使用优惠券,coupId传优惠券ID
 		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
 			// 不使用优惠劵的情况
-			this.setState({
-				couponInfo,
-				deratePrice: 0
-			});
-			return;
-		}
-		if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
 			params = {
-				prodId: contractData[0].productId,
-				couponId: couponInfo.usrCoupNo, // 优惠劵id
-				type: '00', // 00为借款 01为还款
-				price: cardBillAmt
+				prdId: contractData[0].productId,
+				cardId: indexData.autId,
+				billPrcpAmt: cardBillAmt,
+				wtdwTyp: lendersDate.value
+				// coupId: '-1'
 			};
 		} else {
 			params = {
-				prodId: contractData[0].productId,
-				couponId: result.data.usrCoupNo, // 优惠劵id
-				type: '00', // 00为借款 01为还款
-				price: cardBillAmt
+				prdId: contractData[0].productId,
+				cardId: indexData.autId,
+				billPrcpAmt: cardBillAmt,
+				wtdwTyp: lendersDate.value,
+				coupId: couponInfo && JSON.stringify(couponInfo) !== '{}' ? couponInfo.usrCoupNo : '0'
 			};
 		}
 		this.props.$fetch
-			.get(API.COUPON_COUNT, params)
+			.post(API.REPAY_INFO, params)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 					this.setState({
-						couponInfo,
-						deratePrice: result.data.deratePrice
+						repayInfo2: result.data,
+						deratePrice: result.data.deductAmount,
+						couponInfo
 					});
+					// if (result.data.data && result.data.data.usrCoupNo) {
+					// 	this.dealMoney(result.data);
+					// }
+					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
 				} else {
-					store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
-					this.setState({
-						deratePrice: '',
-						couponInfo: { coupVal: -1, usrCoupNo: 'null' }
-					});
+					// store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
+					// this.setState({
+					//   deratePrice: '',
+					//   couponInfo: { coupVal: -1, usrCoupNo: 'null' }
+					// });
 					this.props.toast.info(result.msgInfo);
 				}
 			})
@@ -519,30 +520,6 @@ export default class confirm_agency_page extends PureComponent {
 					deratePrice: '',
 					couponInfo: { coupVal: -1, usrCoupNo: 'null' }
 				});
-			});
-	};
-	// 获取确认代还信息
-	requestGetRepayInfo = () => {
-		const { contractData, lendersDate, cardBillAmt } = this.state;
-		this.props.$fetch
-			.post(API.REPAY_INFO, {
-				prdId: contractData[0].productId,
-				cardId: indexData.autId,
-				billPrcpAmt: cardBillAmt,
-				wtdwTyp: lendersDate.value
-			})
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					this.setState({
-						repayInfo2: result.data
-					});
-					if (result.data.data && result.data.data.usrCoupNo) {
-						this.dealMoney(result.data);
-					}
-					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
 			});
 	};
 	// 渲染优惠劵
@@ -1052,20 +1029,53 @@ export default class confirm_agency_page extends PureComponent {
 										)
 									)}
 								</li>
-								<li className={style.listItem} onClick={this.handleShowModal}>
+								<li
+									className={repayInfo2 ? `${style.listItem} ${style.listItem3}` : style.listItem}
+									onClick={this.handleShowModal}
+								>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
-									<span>
-										{repayInfo2 && repayInfo2.perdUnit === 'D' ? (
+									<div>
+										{/* {repayInfo2 && repayInfo2.perdUnit === 'D' ? (
 											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
 										) : (
 											(repayInfo2 && (
-												<span className={[style.listValue, style.hasArrow].join(' ')}>
-													点击查看
+												<span className={[style.listValue, style.listValue3, style.hasArrow].join(' ')}>
+													<span className={style.moneyTit}>优惠后合计</span><span className={style.derateMoney}>{4950}</span>元
 													<Icon type="right" className={style.icon} />
 												</span>
 											)) || <span className={style.listValue2}>暂无</span>
+                    )} */}
+										{(repayInfo2 && (
+											<span
+												className={
+													repayInfo2 && repayInfo2.perdUnit === 'D'
+														? [style.listValue, style.listValue3].join(' ')
+														: [style.listValue, style.listValue3, style.hasArrow].join(' ')
+												}
+											>
+												<span className={style.moneyTit}>优惠后合计</span>
+												<span className={style.derateMoney}>
+													{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+												</span>
+												元
+												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
+													<Icon type="right" className={style.icon} />
+												)}
+											</span>
+										)) || <span className={style.listValue2}>暂无</span>}
+										{repayInfo2 && (
+											<div
+												className={
+													repayInfo2 && repayInfo2.perdUnit === 'D'
+														? style.allMoneyBox
+														: [style.allMoneyBox, style.hasArrow].join(' ')
+												}
+											>
+												<span className={style.moneyTit}>息费合计</span>
+												<span className={style.allMoney}>{repayInfo2 && repayInfo2.intrFeeTotAmt}元</span>
+											</div>
 										)}
-									</span>
+									</div>
 								</li>
 							</ul>
 							<ul className={style.pannel}>
