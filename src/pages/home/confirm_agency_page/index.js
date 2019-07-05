@@ -630,11 +630,12 @@ export default class confirm_agency_page extends PureComponent {
 			} else {
 				couponId = '';
 			}
-		} else {
-			// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
-			// 	couponId = this.state.repayInfo2.data.usrCoupNo;
-			// }
 		}
+		// else {
+		// 	// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
+		// 	// 	couponId = this.state.repayInfo2.data.usrCoupNo;
+		// 	// }
+		// }
 		const params = {
 			withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
 			withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
