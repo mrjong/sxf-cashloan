@@ -483,13 +483,20 @@ export default class confirm_agency_page extends PureComponent {
 				wtdwTyp: lendersDate.value
 				// coupId: '-1'
 			};
-		} else {
+		} else if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
 			params = {
 				prdId: contractData[0].productId,
 				cardId: indexData.autId,
 				billPrcpAmt: cardBillAmt,
 				wtdwTyp: lendersDate.value,
-				coupId: couponInfo && JSON.stringify(couponInfo) !== '{}' ? couponInfo.usrCoupNo : '0'
+				coupId: couponInfo.usrCoupNo
+			};
+		} else {
+			params = {
+				prdId: contractData[0].productId,
+				cardId: indexData.autId,
+				billPrcpAmt: cardBillAmt,
+				wtdwTyp: lendersDate.value
 			};
 		}
 		this.props.$fetch
@@ -553,7 +560,8 @@ export default class confirm_agency_page extends PureComponent {
 		if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
 			store.setCouponData(this.state.couponInfo);
 		} else {
-			store.setCouponData(this.state.repayInfo2.data);
+			store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
+			// store.setCouponData(this.state.repayInfo2.data);
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
@@ -624,9 +632,9 @@ export default class confirm_agency_page extends PureComponent {
 				couponId = '';
 			}
 		} else {
-			if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
-				couponId = this.state.repayInfo2.data.usrCoupNo;
-			}
+			// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
+			// 	couponId = this.state.repayInfo2.data.usrCoupNo;
+			// }
 		}
 		const params = {
 			withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
