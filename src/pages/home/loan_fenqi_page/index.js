@@ -50,7 +50,8 @@ export default class loan_fenqi_page extends PureComponent {
 			contractList: [],
 			repayPlanInfo: {
 				perd: []
-			}
+			},
+			couponData: {} // 优惠劵的信息
 		};
 	}
 
@@ -225,11 +226,17 @@ export default class loan_fenqi_page extends PureComponent {
 				if (res.msgCode === 'PTM0000' && res.data !== null) {
 					this.setState(
 						{
-							couponInfo: res.data
-						},
-						() => {
-							this.dealMoney(res.data, prdId);
+							// couponInfo: res.data
+							couponData: res.data,
+							couponInfo: {
+								coupVal: -1,
+								usrCoupNo: 'null'
+							},
+							deratePrice: ''
 						}
+						// () => {
+						// 	this.dealMoney(res.data, prdId);
+						// }
 					);
 				} else {
 					this.setState({
@@ -272,10 +279,10 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择优惠劵
 	selectCoupon = () => {
-		const { prdId } = this.state;
+		const { prdId, couponData } = this.state;
 		this.storeTempData();
 		const { couponInfo, loanMoney, loanDate } = this.state;
-		if (couponInfo && couponInfo.coupId) {
+		if (couponInfo && couponInfo.usrCoupNo) {
 			store.setCouponData(couponInfo);
 		}
 		this.props.history.push({
@@ -283,7 +290,7 @@ export default class loan_fenqi_page extends PureComponent {
 			search: `?transactionType=fenqi&price=${loanMoney}&perCont=${
 				loanDate.perdUnit === 'M' ? loanDate.perdLth : 1
 			}&prodId=${prdId}`,
-			state: { nouseCoupon: !couponInfo.coupVal }
+			state: { nouseCoupon: !(couponData && couponData.availableCoupAmt) }
 		});
 	};
 
@@ -401,7 +408,8 @@ export default class loan_fenqi_page extends PureComponent {
 			perdRateList,
 			contractList,
 			usageList,
-			deratePrice
+			deratePrice,
+			couponData
 		} = this.state;
 		const resaveCard = {
 			agrNo: resaveBankCardAgrNo,
@@ -426,7 +434,8 @@ export default class loan_fenqi_page extends PureComponent {
 			couponInfo,
 			deratePrice,
 			resaveBankCardAgrNo,
-			payBankCardAgrNo
+			payBankCardAgrNo,
+			couponData
 		});
 		store.setCashFenQiCardArr([resaveCard, payCard]);
 	};
@@ -611,7 +620,8 @@ export default class loan_fenqi_page extends PureComponent {
 			priceMin = '',
 			contractList,
 			repayPlanInfo,
-			deratePrice
+			deratePrice,
+			couponData
 		} = this.state;
 		return (
 			<div className={style.fenqi_page}>
@@ -699,14 +709,23 @@ export default class loan_fenqi_page extends PureComponent {
 							{loanMoney && loanDate && prdId && (
 								<li className={style.listItem}>
 									<label>优惠券</label>
-									<span className={style.listValue} onClick={this.selectCoupon}>
-										{couponInfo.coupVal ? (
-											<span className={style.redText}>{deratePrice ? `${deratePrice}` : '请选择'}</span>
+									<div className={`${style.listValue} ${style.couponListValue}`} onClick={this.selectCoupon}>
+										{couponData && Number(couponData.availableCoupAmt) ? (
+											<div className={style.redText}>
+												{deratePrice ? (
+													`${deratePrice}`
+												) : (
+													<span className={style.couNumBox}>
+														<i />
+														{couponData.availableCoupAmt}个可用
+													</span>
+												)}
+											</div>
 										) : (
 											<span className={style.greyText}>无可用优惠券</span>
 										)}
 										<Icon type="right" className={style.icon} />
-									</span>
+									</div>
 								</li>
 							)}
 							<li className={style.listItem}>

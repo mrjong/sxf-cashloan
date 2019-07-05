@@ -263,6 +263,27 @@
 			color: #fff;
 		}
 	}
+	// 优惠劵金额展示
+	.couNumBox {
+		display: flex;
+		height: 42px;
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		border-radius: 3px;
+		padding: 0 10px;
+		align-items: center;
+		font-size: 22px;
+		color: #fff;
+		font-weight: normal;
+		font-family: 'PingFangSC-Regular';
+		i {
+			display: block;
+			width: 20px;
+			height: 22px;
+			background: url('../../../assets/images/home/coupon_ico_img.png') no-repeat center;
+			background-size: 100%;
+			margin-right: 10px;
+		}
+	}
 }
 .closeIcon {
 	position: absolute;

@@ -470,33 +470,26 @@ export default class confirm_agency_page extends PureComponent {
 	requestGetRepayInfo = () => {
 		const { contractData, lendersDate, cardBillAmt } = this.state;
 		let couponInfo = store.getCouponData();
-		let params = null;
+		let params = {
+			prdId: contractData[0].productId,
+			cardId: indexData.autId,
+			billPrcpAmt: cardBillAmt,
+			wtdwTyp: lendersDate.value,
+			prodType: '01'
+		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
 		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
 			// 不使用优惠劵的情况
 			params = {
-				prdId: contractData[0].productId,
-				cardId: indexData.autId,
-				billPrcpAmt: cardBillAmt,
-				wtdwTyp: lendersDate.value
+				...params
 				// coupId: '-1'
 			};
 		} else if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
 			params = {
-				prdId: contractData[0].productId,
-				cardId: indexData.autId,
-				billPrcpAmt: cardBillAmt,
-				wtdwTyp: lendersDate.value,
+				...params,
 				coupId: couponInfo.usrCoupNo
-			};
-		} else {
-			params = {
-				prdId: contractData[0].productId,
-				cardId: indexData.autId,
-				billPrcpAmt: cardBillAmt,
-				wtdwTyp: lendersDate.value
 			};
 		}
 		this.props.$fetch
@@ -531,11 +524,17 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 渲染优惠劵
 	renderCoupon = () => {
-		const { deratePrice } = this.state;
+		const { deratePrice, repayInfo2 } = this.state;
 		if (deratePrice) {
 			return <span className={style.redText}>-{deratePrice}元</span>;
 		} else {
-			return <span className={style.redText}>不使用</span>;
+			//  可用优惠券数量
+			return (
+				<div className={style.couNumBox}>
+					<i />
+					{repayInfo2 && repayInfo2.availableCoupAmt}个可用
+				</div>
+			);
 		}
 	};
 	// 选择优惠劵
@@ -1012,16 +1011,16 @@ export default class confirm_agency_page extends PureComponent {
 								<li
 									className={style.listItem}
 									onClick={() => {
-										this.selectCoupon(!(repayInfo2.data && repayInfo2.data.coupVal));
+										this.selectCoupon(!(repayInfo2 && Number(repayInfo2.availableCoupAmt)));
 									}}
 								>
 									<label>优惠券</label>
-									{repayInfo2.data && repayInfo2.data.coupVal ? (
-										<span className={[style.listValue, style.hasArrow].join(' ')}>
+									{repayInfo2 && Number(repayInfo2.availableCoupAmt) ? (
+										<div className={[style.listValue, style.hasArrow].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
 											{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
-										</span>
+										</div>
 									) : (
 										(repayInfo2 && (
 											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
