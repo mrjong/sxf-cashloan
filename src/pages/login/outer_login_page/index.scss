@@ -11,10 +11,10 @@
 	}
 	.content {
 		position: relative;
-		top: -86px;
+		top: -136px;
 		text-align: center;
 		width: 666px;
-		height: 679px;
+		height: 729px;
 		background: #fff;
 		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
 		border-radius: 10px;
@@ -44,7 +44,7 @@
 			color: #121c32;
 			height: 91px;
 			margin-top: 32px;
-			margin-bottom: 34px;
+			margin-bottom: 20px;
 		}
 		.commonLine {
 			position: absolute;
@@ -148,7 +148,7 @@
 			font-size: 30px;
 			// font-weight: bold;
 			color: #fff;
-			margin: 53px auto 30px;
+			margin: 39px auto 0;
 			span {
 				display: inline-block;
 				width: 100%;
@@ -158,11 +158,23 @@
 			// 	background-color: #FE4D2A;
 			// }
 		}
+		// 图片验证码
+		.getCodeBox {
+			width: 152px;
+			height: 50px;
+			border-radius: 8px;
+			margin: 12px auto;
+		}
+		.getCode {
+			width: 152px;
+			height: 50px;
+			transform: scale(1.2);
+		}
 	}
 	.agreement {
 		display: flex;
 		position: relative;
-		top: -57px;
+		top: -107px;
 		color: #8e8d7b;
 		font-size: 24px;
 		margin: 0 58px;

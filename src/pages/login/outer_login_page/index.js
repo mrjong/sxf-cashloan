@@ -16,7 +16,8 @@ import { setBackGround } from 'utils/background';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms'
+	sendsms: '/cmm/sendsms',
+	imageCode: '/signup/sendImg'
 };
 
 @setBackGround('#fff')
@@ -33,7 +34,8 @@ export default class login_page extends PureComponent {
 			disabledInput: false,
 			queryData: {},
 			isChecked: true, // 是否勾选协议
-			inputFocus: false
+			inputFocus: false,
+			imageCodeUrl: '' // 图片验证码url
 		};
 	}
 
@@ -79,6 +81,7 @@ export default class login_page extends PureComponent {
 				disabledInput: true
 			});
 		}
+		this.getImage();
 	}
 	componentDidMount() {
 		let _this = this;
@@ -158,7 +161,10 @@ export default class login_page extends PureComponent {
 						this.props.history.replace('/others/download_page');
 					},
 					(error) => {
-						error.msgInfo && Toast.info(error.msgInfo);
+						error.msgInfo &&
+							Toast.info(error.msgInfo, 3, () => {
+								this.getImage();
+							});
 					}
 				);
 			} else {
@@ -189,19 +195,23 @@ export default class login_page extends PureComponent {
 					param = {
 						type: '6',
 						authToken: queryData && queryData.tokenId,
-						osType
+						osType,
+						imgCode: values.imgCd
 					};
 				} else {
 					param = {
 						type: '6',
 						mblNo: values.phoneValue && values.phoneValue.replace(/\s*/g, ''),
-						osType
+						osType,
+						imgCode: values.imgCd
 					};
 				}
 				// 发送验证码
 				this.props.$fetch.post(API.sendsms, param).then((result) => {
 					if (result.msgCode !== 'PTM0000') {
-						Toast.info(result.msgInfo);
+						Toast.info(result.msgInfo, 3, () => {
+							this.getImage();
+						});
 						this.setState({ valueInputImgCode: '' });
 						return false;
 					}
@@ -236,7 +246,22 @@ export default class login_page extends PureComponent {
 		});
 	};
 
+	//获取图片验证码
+	getImage = () => {
+		this.props.$fetch.get(API.imageCode).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					imageCodeUrl: res.image
+				});
+				store.setNoLoginToken(res.tokenId);
+			} else {
+				Toast.info(res.msgInfo);
+			}
+		});
+	};
+
 	render() {
+		const { imageCodeUrl } = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div ref="loginWrap" className={styles.dc_landing_page}>
@@ -265,6 +290,39 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
+						<div className={styles.smsBox}>
+							<InputItem
+								id="imgCode"
+								// type="number"
+								// maxLength="6"
+								maxLength="4"
+								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+								placeholder="请输入图形验证码"
+								{...getFieldProps('imgCd', {
+									rules: [{ required: true, message: '请输入正确图形验证码' }]
+								})}
+								onBlur={() => {
+									this.setState({
+										inputFocus: false
+									});
+									handleInputBlur();
+								}}
+							/>
+							<div
+								className={
+									this.state.timers.indexOf('s') === -1
+										? styles.smsCode
+										: [styles.smsCode, styles.smsCode2].join(' ')
+								}
+								onClick={() => {
+									this.getImage();
+								}}
+							>
+								<div className={styles.getCodeBox}>
+									<img className={styles.getCode} src={imageCodeUrl} />
+								</div>
+							</div>
+						</div>
 						<div className={styles.smsBox}>
 							<InputItem
 								id="inputCode"
