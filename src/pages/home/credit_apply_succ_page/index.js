@@ -70,11 +70,14 @@ export default class credit_apply_succ_page extends PureComponent {
 	};
 	// 检查是否是app webview打开
 	checkAppOpen = (e) => {
-		const that = this;
 		const passData = JSON.parse(e.data);
-		that.setState({
-			isAppOpen: passData && passData.isAppOpen
-		});
+		if (passData && passData.errorMsg) {
+			this.props.toast.info(passData.errorMsg);
+		} else {
+			this.setState({
+				isAppOpen: passData && passData.isAppOpen
+			});
+		}
 	};
 	render() {
 		return (
