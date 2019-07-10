@@ -83,5 +83,6 @@ export const storeTypes = {
 	PayType: 'PayType', // 还款方式
 	WxPayEnd: 'WxPayEnd', // 微信返回不刷新
 	GotoMoxieFlag: 'GotoMoxieFlag', // 去到魔蝎第三方的标示
-	InsuranceFlag: 'InsuranceFlag' // 标识该次绑卡是否要求绑定支持收取保费的卡
+	InsuranceFlag: 'InsuranceFlag', // 标识该次绑卡是否要求绑定支持收取保费的卡
+	NoLoginToken: 'NoLoginToken' // 设置 图片验证码 noLoginToken
 };

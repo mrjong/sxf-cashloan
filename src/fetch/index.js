@@ -4,7 +4,7 @@ import { Toast } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isWXOpen, pagesIgnore } from 'utils';
-import Raven from 'raven-js'
+import Raven from 'raven-js';
 
 const fetchInit = () => {
 	let num = 0;
@@ -14,7 +14,7 @@ const fetchInit = () => {
 		timeout: 10000, // 默认超时
 		baseURL: '/wap', // baseurl
 		onShowErrorTip: (err, errorTip) => {
-      console.log(err)
+			console.log(err);
 			setTimeout(() => {
 				if (errorTip) Toast.fail('系统开小差，请稍后重试');
 			}, 0);
@@ -34,7 +34,10 @@ const fetchInit = () => {
 					}, 3000);
 					return;
 				case 'PTM0100': // 未登录
-					Raven.captureException(response.config.url, { extra: {code: 'PTM0100',msgInfo:'未登录'}, level: 'info' });
+					Raven.captureException(response.config.url, {
+						extra: { code: 'PTM0100', msgInfo: '未登录' },
+						level: 'info'
+					});
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
@@ -64,6 +67,11 @@ const fetchInit = () => {
 				cfg.headers['fin-v-card-token'] = Cookie.get('fin-v-card-token');
 			} else {
 				cfg.headers['fin-v-card-token'] = '';
+			}
+			// 设置 图片验证码 noLoginToken
+			let noLoginToken = store.getNoLoginToken();
+			if (noLoginToken) {
+				cfg.headers['fin-v-card-token-not-login'] = noLoginToken;
 			}
 			num++;
 			if (!cfg.hideLoading) {
@@ -121,8 +129,9 @@ const fetchInit = () => {
 			timer = null;
 			timerList = [];
 			SXFToast.hide();
-			console.log(error,'error.response')
-			let error2 = error && error.message && error.message.canceled ? error : new Error('系统开小差，请稍后重试');
+			console.log(error, 'error.response');
+			let error2 =
+				error && error.message && error.message.canceled ? error : new Error('系统开小差，请稍后重试');
 			return Promise.reject(error2);
 		}
 	);

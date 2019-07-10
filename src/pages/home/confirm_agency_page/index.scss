@@ -72,6 +72,11 @@
 		.listItem2 {
 			min-height: 140px;
 		}
+		.listItem3 {
+			align-items: flex-start;
+			min-height: 155px;
+			padding-top: 30px;
+		}
 
 		.listValue {
 			font-weight: 500;
@@ -86,8 +91,32 @@
 			line-height: 2;
 			color: #868e9e;
 		}
+		.listValue3 {
+			display: block;
+			position: relative;
+			line-height: normal;
+			margin-bottom: 14px;
+		}
 		.hasArrow {
 			padding-right: 24px;
+		}
+		// 息费合计
+		.derateMoney {
+			margin-left: 20px;
+		}
+		.allMoneyBox {
+			display: flex;
+			text-align: right;
+			color: #868e9e;
+			font-size: 26px;
+			justify-content: space-between;
+		}
+		.moneyTit {
+			width: 150px;
+			text-align: right;
+		}
+		.allMoney {
+			text-decoration: line-through;
 		}
 
 		.icon {
@@ -232,6 +261,27 @@
 			width: 634px;
 			background-color: #dcdfe6;
 			color: #fff;
+		}
+	}
+	// 优惠劵金额展示
+	.couNumBox {
+		display: flex;
+		height: 42px;
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		border-radius: 3px;
+		padding: 0 10px;
+		align-items: center;
+		font-size: 22px;
+		color: #fff;
+		font-weight: normal;
+		font-family: 'PingFangSC-Regular';
+		i {
+			display: block;
+			width: 20px;
+			height: 22px;
+			background: url('../../../assets/images/home/coupon_ico_img.png') no-repeat center;
+			background-size: 100%;
+			margin-right: 10px;
 		}
 	}
 }
