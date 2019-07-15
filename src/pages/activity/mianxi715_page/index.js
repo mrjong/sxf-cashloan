@@ -1,0 +1,249 @@
+import React, { PureComponent } from 'react';
+import qs from 'qs';
+import { store } from 'utils/store';
+import { Icon } from 'antd-mobile';
+import styles from './index.scss';
+import activity_bg from './img/activity_bg.png';
+import new_bg from './img/new_entry.png';
+import new_btn from './img/new_btn.png';
+import old_bg from './img/old_entry.png';
+import old_btn from './img/old_btn.png';
+import rule_bg from './img/rule_bg.png';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
+import { setBackGround } from 'utils/background';
+import { headerIgnore } from 'utils';
+import fetch from 'sx-fetch';
+import SmsAlert from '../components/SmsAlert';
+import Cookie from 'js-cookie';
+import { isMPOS } from 'utils/common';
+import LoginAlert from './components/LoginAlert';
+
+const API = {
+	joinActivity: '/jjp/join' // 参加活动 里面会判断用户有没有资格
+};
+
+@setBackGround('#FFA348')
+@fetch.inject()
+export default class wuyuekh_page extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.state = {
+			showRuleModal: false,
+			isShowLogin: false, // 公众号显示登陆弹框
+			showLoginTip: false, // mpos开屏进入时是否登陆弹框
+			showBoundle: false // 是否展示未实名的弹框
+		};
+	}
+
+	componentDidMount() {}
+
+	goTo = () => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.entry) {
+			buriedPointEvent(activity.jjpGetBtn, {
+				entry: queryData.entry
+			});
+		}
+		if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
+			if (queryData.appId && queryData.token) {
+				this.getStatus();
+			} else {
+				this.setState({
+					showLoginTip: true
+				});
+			}
+		} else if (Cookie.get('fin-v-card-token')) {
+			store.setToken(Cookie.get('fin-v-card-token'));
+			this.goHomePage();
+		} else {
+			this.setState({
+				isShowLogin: true
+			});
+		}
+	};
+
+	getStatus = () => {
+		this.child.validateMposRelSts({
+			smsProps_disabled: true,
+			loginProps_disabled: true,
+			loginProps_needLogin: true,
+			otherProps_type: 'home'
+		});
+	};
+
+	onRef = (ref) => {
+		this.child = ref;
+	};
+
+	goHomePage = () => {
+		this.props.$fetch.get(API.joinActivity).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				// this.props.toast.info('参与成功', 2, () => {
+				// 	this.props.history.push('/home/home');
+				// });
+			} else if (res && res.msgCode === 'JJP0001') {
+				// 用户参加过拒就赔活动
+				this.props.toast.info('您已领取过，快去借款吧', 2, () => {
+					this.jumpToHome();
+				});
+			} else if (res && res.msgCode === 'JJP0004') {
+				// 用户没有资格参加拒就赔活动
+				// 暂无参与资格
+				this.props.toast.info('暂无领取资格', 2, () => {
+					this.jumpToHome();
+				});
+			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
+				this.props.toast.info(res.msgInfo, 2, () => {
+					Cookie.remove('fin-v-card-token');
+					sessionStorage.clear();
+					localStorage.clear();
+					this.goTo();
+				});
+			}
+		});
+	};
+
+	closeTip = () => {
+		this.setState({
+			showLoginTip: false
+		});
+	};
+
+	closeLoginModal = () => {
+		this.setState({
+			isShowLogin: false
+		});
+	};
+
+	closeRuleModal = () => {
+		this.setState({
+			showRuleModal: false
+		});
+	};
+
+	jumpToHome = () => {
+		this.props.history.push('/home/home');
+	};
+
+	render() {
+		const { isShowLogin, showLoginTip, showBoundle } = this.state;
+		return (
+			<div
+				className={headerIgnore() ? styles.wuyuekh_page : `${styles.wuyuekh_page2} ${styles.wuyuekh_page}`}
+			>
+				<SmsAlert
+					onRef={this.onRef}
+					isShowMobModal={true}
+					goSubmitCb={{
+						PTM0000: (res, getType) => {
+							this.goHomePage();
+						},
+						URM0008: (res, getType) => {},
+						others: (res, getType) => {
+							// this.props.toast.info('暂无领取资格');
+							this.props.toast.info(res.msgInfo);
+						}
+					}}
+					goLoginCb={{
+						PTM0000: (res, getType) => {
+							this.goHomePage();
+						},
+						URM0008: (res, getType) => {},
+						others: (res, getType) => {
+							// this.props.toast.info('暂无领取资格');
+							this.props.toast.info(res.msgInfo);
+						}
+					}}
+					validateMposCb={{
+						PTM9000: (res, getType) => {
+							this.props.history.replace('/mpos/mpos_ioscontrol_page');
+						},
+						others: (res, getType) => {
+							this.setState({
+								showBoundle: true
+							});
+						}
+					}}
+					chkAuthCb={{
+						authFlag0: (res, getType) => {},
+						authFlag1: (res, getType) => {
+							this.goHomePage();
+						},
+						authFlag2: (res, getType) => {
+							// this.props.toast.info('暂无领取资格');
+						},
+						others: (res, getType) => {
+							// this.props.toast.info('暂无领取资格');
+						}
+					}}
+					doAuthCb={{
+						authSts00: (res, getType) => {
+							this.goHomePage();
+						},
+						others: (res, getType) => {
+							// this.props.toast.info('暂无领取资格');
+						}
+					}}
+					modalBtnBuryPoint={this.confirmHandler}
+				/>
+				<img src={activity_bg} className={styles.activity_bg} />
+				<div className={styles.new_entry_box}>
+					<img src={new_bg} className={styles.entry_bg} />
+					<img src={new_btn} onClick={this.goTo} className={styles.btn_style} />
+				</div>
+				<div className={styles.old_entry_box}>
+					<img src={old_bg} className={styles.entry_bg} />
+					<img src={old_btn} onClick={this.goTo} className={styles.btn_style} />
+				</div>
+				{/* 活动规则 */}
+				<div
+					className={styles.rule}
+					onClick={() => {
+						this.setState({
+							showRuleModal: true
+						});
+					}}
+				>
+					<img src={rule_bg} />
+				</div>
+				{isShowLogin && <LoginAlert smsSuccess={this.goHomePage} closeModal={this.closeLoginModal} />}
+				{this.state.showRuleModal ? (
+					<div className={styles.modal}>
+						<div className={styles.mask}></div>
+						<div className={styles.modalWrapper}>
+							<Icon type="cross" color="#333" className={styles.closeBtn} onClick={this.closeRuleModal} />
+							<h2>活动规则</h2>
+							<div className={styles.rulesCont}>
+								<h3>活动时间：</h3>
+								<p>2019年7月17日起</p>
+								<h3>活动规则：</h3>
+								<p>1.活动期间，同一用户仅限领取一次免息券；</p>
+								<p>2.请在规定时间内使用免息券，过期失效视为放弃；</p>
+								<p>3.免息券请在借款时使用，首期免息券免除首期利息费用；</p>
+								<p>4.88元免息券免除首期利息最高88元，超过88元不予免除；</p>
+								<p style={{ textAlign: 'center' }}>
+									如有疑问，请致电客服：<span style={{ color: '#121C32' }}>400-088-7626</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				) : null}
+				{showLoginTip && (
+					<div className={styles.modal}>
+						<div className={styles.mask} />
+						<div className={[styles.modalWrapper, styles.tipWrapper].join(' ')}>
+							<div className={styles.tipText}>
+								<span>小主～</span>
+								<br />
+								<span>活动火热进行中，快前往「还到」参与！</span>
+							</div>
+							<div className={styles.closeBtnStyle} onClick={this.closeTip} />
+						</div>
+					</div>
+				)}
+				{showBoundle ? <Alert_mpos /> : null}
+			</div>
+		);
+	}
+}
