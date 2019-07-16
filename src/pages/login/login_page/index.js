@@ -16,13 +16,16 @@ import bannerImg from './img/login_bg.png';
 import bannerImg1 from './img/login_bg1.png';
 import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
+import ImageCode from 'components/ImageCode';
+
 let timmer;
 const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
 	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
-	imageCode: '/signup/sendImg'
+	imageCode: '/signup/sendImg',
+	slideImage: '/cmm/createImg'
 };
 @fetch.inject()
 @createForm()
@@ -37,7 +40,8 @@ export default class login_page extends PureComponent {
 			queryData: {},
 			isChecked: true, // 是否勾选协议
 			inputFocus: false,
-			imageCodeUrl: '' // 图片验证码url
+			imageCodeUrl: '', // 图片验证码url
+			showImageCode: true
 		};
 	}
 
@@ -300,8 +304,17 @@ export default class login_page extends PureComponent {
 		});
 	};
 
+	reloadSlideImage = () => {
+		// this.props.$fetch.get(API.slideImage).then(res => {
+
+		// }).catch(err => {
+
+		// })
+		this.setState({ slideImageUrl: bannerImg });
+	};
+
 	render() {
-		const { imageCodeUrl } = this.state;
+		const { imageCodeUrl, slideImageUrl, showImageCode } = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page_wrap}>
@@ -427,6 +440,20 @@ export default class login_page extends PureComponent {
 						立即下载
 					</div>
 				</div>
+				{showImageCode && (
+					<ImageCode
+						imageUrl={bannerImg}
+						onReload={this.reloadSlideImage}
+						onMatch={() => {
+							console.log('code is match');
+						}}
+						onClose={() => {
+							this.setState({
+								showImageCode: false
+							});
+						}}
+					/>
+				)}
 			</div>
 		);
 	}
