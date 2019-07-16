@@ -6,17 +6,20 @@
 		width: 100%;
 		position: absolute;
 	}
+	.bg_bottom {
+		position: absolute;
+		top: 382px;
+		width: 100%;
+	}
 	.new_entry_box,
 	.old_entry_box {
 		position: absolute;
 		top: 601px;
-		// bottom: 308px;
 		left: 60px;
 		width: 630px;
 	}
 	.old_entry_box {
 		top: 861px;
-		// bottom: 48px;
 	}
 	.entry_bg {
 		width: 100%;

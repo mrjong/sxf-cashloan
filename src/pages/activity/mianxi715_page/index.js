@@ -4,6 +4,7 @@ import { store } from 'utils/store';
 import { Icon } from 'antd-mobile';
 import styles from './index.scss';
 import activity_bg from './img/activity_bg.png';
+import activity_bg_bottom from './img/activity_bg_bottom.png';
 import new_bg from './img/new_entry.png';
 import new_btn from './img/new_btn.png';
 import old_bg from './img/old_entry.png';
@@ -21,7 +22,7 @@ import LoginAlert from './components/LoginAlert';
 import PrizeModal from './components/PrizeModal';
 
 const API = {
-	joinActivity: '/jjp/join' // 参加活动 里面会判断用户有没有资格
+	joinActivity: '/activeConfig/join' // 参加活动 里面会判断用户有没有资格
 };
 
 @setBackGround('#FFA348')
@@ -49,25 +50,30 @@ export default class wuyuekh_page extends PureComponent {
 				entry: queryData.entry
 			});
 		}
-		this.setState({
-			clickType: type
-		});
-		if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
-			if (queryData.appId && queryData.token) {
-				this.getStatus();
-			} else {
-				this.setState({
-					showLoginTip: true
-				});
+		console.log(type, 'typetype');
+		this.setState(
+			{
+				clickType: type
+			},
+			() => {
+				if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
+					if (queryData.appId && queryData.token) {
+						this.getStatus();
+					} else {
+						this.setState({
+							showLoginTip: true
+						});
+					}
+				} else if (Cookie.get('fin-v-card-token')) {
+					store.setToken(Cookie.get('fin-v-card-token'));
+					this.goHomePage();
+				} else {
+					this.setState({
+						isShowLogin: true
+					});
+				}
 			}
-		} else if (Cookie.get('fin-v-card-token')) {
-			store.setToken(Cookie.get('fin-v-card-token'));
-			this.goHomePage();
-		} else {
-			this.setState({
-				isShowLogin: true
-			});
-		}
+		);
 	};
 
 	getStatus = () => {
@@ -88,18 +94,24 @@ export default class wuyuekh_page extends PureComponent {
 		// clickType  0:首贷 1:复贷
 		this.props.$fetch.get(`${API.joinActivity}/${clickType}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
+				if (clickType === '0') {
+					this.setState({
+						prizeType: 'first'
+					});
+				} else {
+					this.setState({
+						prizeType: 'more'
+					});
+				}
 				// this.props.toast.info('参与成功', 2, () => {
 				// 	this.props.history.push('/home/home');
 				// });
-			} else if (res && res.msgCode === 'JJP0001') {
-				// 用户参加过拒就赔活动
-				this.props.toast.info('您已领取过，快去借款吧', 2, () => {
-					this.jumpToHome();
-				});
-			} else if (res && res.msgCode === 'JJP0004') {
-				// 用户没有资格参加拒就赔活动
-				// 暂无参与资格
-				this.props.toast.info('暂无领取资格', 2, () => {
+			} else if (res && (res.msgCode === 'MX0002' || res.msgCode === 'MX0003')) {
+				// DRAW_NOT_MATCH("MX0001", "暂不可领取，请尝试领取另一张"),
+				// DRAW_NOT_ALLOWED("MX0002", "暂无领取资格"),
+				// HAVE_DRAW("MX0003", "您已领取过,快去借款吧")
+				// ACTIVITY_OUT_TIME("PTM7007","活动已过期")
+				this.props.toast.info(res.msgInfo, 2, () => {
 					this.jumpToHome();
 				});
 			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
@@ -107,8 +119,10 @@ export default class wuyuekh_page extends PureComponent {
 					Cookie.remove('fin-v-card-token');
 					sessionStorage.clear();
 					localStorage.clear();
-					this.goTo();
+					this.goTo(clickType);
 				});
+			} else {
+				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -204,6 +218,7 @@ export default class wuyuekh_page extends PureComponent {
 					modalBtnBuryPoint={this.confirmHandler}
 				/>
 				<img src={activity_bg} className={styles.activity_bg} />
+				<img src={activity_bg_bottom} className={styles.bg_bottom} />
 				<div className={styles.new_entry_box}>
 					<img src={new_bg} className={styles.entry_bg} />
 					<img
@@ -251,7 +266,9 @@ export default class wuyuekh_page extends PureComponent {
 								<p>3.免息券请在借款时使用，首期免息券免除首期利息费用；</p>
 								<p>4.88元免息券免除首期利息最高88元，超过88元不予免除；</p>
 								<p style={{ textAlign: 'center' }}>
-									如有疑问，请致电客服：<span style={{ color: '#121C32' }}>400-088-7626</span>
+									如有疑问，请致电客服
+									<br />
+									400-088-7626
 								</p>
 							</div>
 						</div>

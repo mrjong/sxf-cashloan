@@ -777,17 +777,18 @@ export default class home_page extends PureComponent {
 						});
 					}
 				}
-				// let mxData = await this.props.$fetch.get(API.mxCheckJoin);
-				// if (mxData && mxData.data) {
-				//   this.setState({
-				//     isShowActivityModal: true,
-				//     modalType: 'mianxi'
-				//   });
-				// }
-				this.setState({
-					isShowActivityModal: true,
-					modalType: 'mianxi'
-				});
+				let mxData = await this.props.$fetch.get(API.mxCheckJoin);
+				if (mxData && mxData.msgCode === 'PTM0000' && !store.getShowActivityModal()) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'mianxi'
+						},
+						() => {
+							store.setShowActivityModal(true);
+						}
+					);
+				}
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
