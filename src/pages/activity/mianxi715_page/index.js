@@ -41,16 +41,24 @@ export default class wuyuekh_page extends PureComponent {
 		};
 	}
 
-	componentDidMount() {}
-
-	goTo = (type) => {
+	componentDidMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.entry) {
-			buriedPointEvent(activity.jjpGetBtn, {
+			buriedPointEvent(activity.mianxi715Entry, {
 				entry: queryData.entry
 			});
 		}
-		console.log(type, 'typetype');
+	}
+
+	goTo = (type) => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (type === '0') {
+			// type 0:首贷 1:复贷
+			buriedPointEvent(activity.mianxi715NewBtn);
+		} else {
+			buriedPointEvent(activity.mianxi715OldBtn);
+		}
+
 		this.setState(
 			{
 				clickType: type
@@ -147,6 +155,18 @@ export default class wuyuekh_page extends PureComponent {
 
 	jumpToHome = () => {
 		this.props.history.push('/home/home');
+	};
+
+	// 点击奖品弹框里的立即使用
+	useNowClick = () => {
+		const { clickType } = this.state;
+		if (clickType === '0') {
+			// clickType 0:首贷 1:复贷
+			buriedPointEvent(activity.mianxi715NewBtn);
+		} else {
+			buriedPointEvent(activity.mianxi715OldBtn);
+		}
+		this.jumpToHome();
 	};
 
 	// 关闭奖品弹框
@@ -259,11 +279,11 @@ export default class wuyuekh_page extends PureComponent {
 							<h2>活动规则</h2>
 							<div className={styles.rulesCont}>
 								<h3>活动时间：</h3>
-								<p>2019年7月17日起</p>
+								<p>2019年7月19日起</p>
 								<h3>活动规则：</h3>
 								<p>1.活动期间，同一用户仅限领取一次免息券；</p>
 								<p>2.请在规定时间内使用免息券，过期失效视为放弃；</p>
-								<p>3.免息券请在借款时使用，首期免息券免除首期利息费用；</p>
+								<p>3.免息券请在借款时使用，首期免息券免除首期利息；</p>
 								<p>4.88元免息券免除首期利息最高88元，超过88元不予免除；</p>
 								<p style={{ textAlign: 'center' }}>
 									如有疑问，请致电客服
@@ -289,7 +309,7 @@ export default class wuyuekh_page extends PureComponent {
 				)}
 				{showBoundle ? <Alert_mpos /> : null}
 				{prizeType ? (
-					<PrizeModal clickCb={this.jumpToHome} closeCb={this.closePrizeModal} type={this.prizeType} />
+					<PrizeModal clickCb={this.useNowClick} closeCb={this.closePrizeModal} type={this.prizeType} />
 				) : null}
 			</div>
 		);

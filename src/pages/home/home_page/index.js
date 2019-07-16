@@ -912,7 +912,7 @@ export default class home_page extends PureComponent {
 				this.handleSmartClick();
 				break;
 			case 'mianxi':
-				// buriedPointEvent(activity.mianxiModalBtnClick);
+				buriedPointEvent(activity.mianxiModalBtnClick);
 				this.props.history.push('/activity/mianxi_page');
 				break;
 			default:
