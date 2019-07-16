@@ -18,6 +18,7 @@ import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
 import { isMPOS } from 'utils/common';
 import LoginAlert from './components/LoginAlert';
+import PrizeModal from './components/PrizeModal';
 
 const API = {
 	joinActivity: '/jjp/join' // 参加活动 里面会判断用户有没有资格
@@ -32,19 +33,25 @@ export default class wuyuekh_page extends PureComponent {
 			showRuleModal: false,
 			isShowLogin: false, // 公众号显示登陆弹框
 			showLoginTip: false, // mpos开屏进入时是否登陆弹框
-			showBoundle: false // 是否展示未实名的弹框
+			showBoundle: false, // 是否展示未实名的弹框
+			prizeType: '', // 首复贷用户获奖
+			// prizeType: 'first',
+			clickType: '' // 点击首复贷
 		};
 	}
 
 	componentDidMount() {}
 
-	goTo = () => {
+	goTo = (type) => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.entry) {
 			buriedPointEvent(activity.jjpGetBtn, {
 				entry: queryData.entry
 			});
 		}
+		this.setState({
+			clickType: type
+		});
 		if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
 			if (queryData.appId && queryData.token) {
 				this.getStatus();
@@ -77,7 +84,9 @@ export default class wuyuekh_page extends PureComponent {
 	};
 
 	goHomePage = () => {
-		this.props.$fetch.get(API.joinActivity).then((res) => {
+		const { clickType } = this.state;
+		// clickType  0:首贷 1:复贷
+		this.props.$fetch.get(`${API.joinActivity}/${clickType}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				// this.props.toast.info('参与成功', 2, () => {
 				// 	this.props.history.push('/home/home');
@@ -126,8 +135,15 @@ export default class wuyuekh_page extends PureComponent {
 		this.props.history.push('/home/home');
 	};
 
+	// 关闭奖品弹框
+	closePrizeModal = () => {
+		this.setState({
+			prizeType: ''
+		});
+	};
+
 	render() {
-		const { isShowLogin, showLoginTip, showBoundle } = this.state;
+		const { isShowLogin, showLoginTip, showBoundle, prizeType } = this.state;
 		return (
 			<div
 				className={headerIgnore() ? styles.wuyuekh_page : `${styles.wuyuekh_page2} ${styles.wuyuekh_page}`}
@@ -190,11 +206,23 @@ export default class wuyuekh_page extends PureComponent {
 				<img src={activity_bg} className={styles.activity_bg} />
 				<div className={styles.new_entry_box}>
 					<img src={new_bg} className={styles.entry_bg} />
-					<img src={new_btn} onClick={this.goTo} className={styles.btn_style} />
+					<img
+						src={new_btn}
+						onClick={() => {
+							this.goTo('0');
+						}}
+						className={styles.btn_style}
+					/>
 				</div>
 				<div className={styles.old_entry_box}>
 					<img src={old_bg} className={styles.entry_bg} />
-					<img src={old_btn} onClick={this.goTo} className={styles.btn_style} />
+					<img
+						src={old_btn}
+						onClick={() => {
+							this.goTo('1');
+						}}
+						className={styles.btn_style}
+					/>
 				</div>
 				{/* 活动规则 */}
 				<div
@@ -210,7 +238,7 @@ export default class wuyuekh_page extends PureComponent {
 				{isShowLogin && <LoginAlert smsSuccess={this.goHomePage} closeModal={this.closeLoginModal} />}
 				{this.state.showRuleModal ? (
 					<div className={styles.modal}>
-						<div className={styles.mask}></div>
+						<div className={styles.mask} />
 						<div className={styles.modalWrapper}>
 							<Icon type="cross" color="#333" className={styles.closeBtn} onClick={this.closeRuleModal} />
 							<h2>活动规则</h2>
@@ -243,6 +271,9 @@ export default class wuyuekh_page extends PureComponent {
 					</div>
 				)}
 				{showBoundle ? <Alert_mpos /> : null}
+				{prizeType ? (
+					<PrizeModal clickCb={this.jumpToHome} closeCb={this.closePrizeModal} type={this.prizeType} />
+				) : null}
 			</div>
 		);
 	}

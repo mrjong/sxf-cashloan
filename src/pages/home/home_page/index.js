@@ -46,7 +46,8 @@ const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
-	couponTest: '/activeConfig/couponTest' //签约测试
+	couponTest: '/activeConfig/couponTest', //签约测试
+	mxCheckJoin: '/activeConfig/checkJoin' // 免息活动检查是否参与
 };
 let token = '';
 let tokenFromStorage = '';
@@ -776,6 +777,17 @@ export default class home_page extends PureComponent {
 						});
 					}
 				}
+				// let mxData = await this.props.$fetch.get(API.mxCheckJoin);
+				// if (mxData && mxData.data) {
+				//   this.setState({
+				//     isShowActivityModal: true,
+				//     modalType: 'mianxi'
+				//   });
+				// }
+				this.setState({
+					isShowActivityModal: true,
+					modalType: 'mianxi'
+				});
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
@@ -897,6 +909,10 @@ export default class home_page extends PureComponent {
 			case 'yhq50':
 				buriedPointEvent(activity.yhq50ModalBtnClick);
 				this.handleSmartClick();
+				break;
+			case 'mianxi':
+				// buriedPointEvent(activity.mianxiModalBtnClick);
+				this.props.history.push('/activity/mianxi_page');
 				break;
 			default:
 				break;

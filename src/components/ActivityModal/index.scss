@@ -5,6 +5,7 @@
 			position: relative;
 			width: 100%;
 			img {
+				display: block;
 				width: 100%;
 			}
 			.huodongTootipBtn {
@@ -57,6 +58,14 @@
 				left: 50%;
 				transform: translateX(-50%);
 			}
+			.mianxiBtn {
+				position: absolute;
+				bottom: 105px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 160px;
+				height: 166px;
+			}
 		}
 		.closeBtn {
 			text-align: center;
@@ -64,7 +73,7 @@
 			height: 70px;
 			vertical-align: middle;
 			margin: 0 auto;
-			@include spriteIcon('../../assets/images/common/sprite_icon.png',0, 0);
+			@include spriteIcon('../../assets/images/common/sprite_icon.png', 0, 0);
 		}
 	}
 }
@@ -103,7 +112,7 @@
 }
 .transitionName {
 	animation-name: bounceInDown;
-	animation-duration: .8s;
+	animation-duration: 0.8s;
 	animation-timing-function: cubic-bezier(1, 1, 1, 1);
 	animation-iteration-count: 1;
 }
@@ -113,8 +122,8 @@
 	75%,
 	90%,
 	to {
-		-webkit-animation-timing-function: cubic-bezier(.215, .61, .355, 1);
-		animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+		-webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+		animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 	}
 
 	0% {

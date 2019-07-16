@@ -15,7 +15,8 @@ import { activity } from 'utils/analytinsType';
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms'
+	sendsms: '/cmm/sendsms',
+	imageCode: '/signup/sendImg'
 };
 let timmer;
 @fetch.inject()
@@ -28,9 +29,14 @@ export default class LoginAlert extends Component {
 			timeflag: true,
 			mblNoHid: '',
 			smsJrnNo: '', // 短信流水号
-			modalShow: true
+			modalShow: true,
+			imageCodeUrl: '' // 图片验证码url
 		};
 	}
+	componentWillMount() {
+		this.getImage();
+	}
+
 	componentWillUnmount() {
 		clearInterval(timmer);
 	}
@@ -59,12 +65,15 @@ export default class LoginAlert extends Component {
 					.post(API.sendsms, {
 						type: '6',
 						mblNo: values.phoneValue,
-						osType: getDeviceType() // 操作系统
+						osType: getDeviceType(), // 操作系统
+						imgCode: values.imgCd
 					})
 					.then(
 						(result) => {
 							if (result.msgCode !== 'PTM0000') {
-								Toast.info(result.msgInfo);
+								Toast.info(result.msgInfo, 3, () => {
+									this.getImage();
+								});
 								return;
 							} else {
 								Toast.info('发送成功，请注意查收！');
@@ -129,7 +138,9 @@ export default class LoginAlert extends Component {
 							}
 						},
 						(err) => {
-							Toast.info(err.msgInfo);
+							Toast.info(err.msgInfo, 3, () => {
+								this.getImage();
+							});
 						}
 					);
 			} else {
@@ -145,9 +156,23 @@ export default class LoginAlert extends Component {
 			callback();
 		}
 	};
+
+	//获取图片验证码
+	getImage = () => {
+		this.props.$fetch.get(API.imageCode).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					imageCodeUrl: res.image
+				});
+				store.setNoLoginToken(res.tokenId);
+			} else {
+				Toast.info(res.msgInfo);
+			}
+		});
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag } = this.state;
+		const { smsText, timeflag, imageCodeUrl } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
@@ -174,6 +199,33 @@ export default class LoginAlert extends Component {
 								handleInputBlur();
 							}}
 						/>
+						<div className={style.imgCodeBox}>
+							<InputItem
+								id="imgCode"
+								// type="number"
+								// maxLength="6"
+								maxLength="4"
+								className={style.loginInput}
+								placeholder="请输入图形验证码"
+								{...getFieldProps('imgCd', {
+									rules: [{ required: true, message: '请输入正确图形验证码' }]
+								})}
+								onBlur={() => {
+									this.setState({
+										inputFocus: false
+									});
+									handleInputBlur();
+								}}
+							/>
+							<div
+								className={style.imgCode}
+								onClick={() => {
+									this.getImage();
+								}}
+							>
+								<img className={style.getCode} src={imageCodeUrl} />
+							</div>
+						</div>
 						<div className={style.get_sms_box}>
 							<InputItem
 								maxLength={6}

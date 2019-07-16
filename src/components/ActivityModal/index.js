@@ -10,6 +10,8 @@ import freebill_btn from './img/freebill_btn.png';
 import yhq7 from './img/yhq7.png';
 import yhq50 from './img/yhq50.png';
 import yhq_btn from './img/yhq_btn.png';
+import mianxi from './img/mianxi.png';
+import mianxi_btn from './img/mianxi_btn.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -30,7 +32,7 @@ class ActivityModal extends React.Component {
 		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag } = this.props;
 		return (
 			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
-				<div className={[ styles.modal, styles.transitionName ].join(' ')}>
+				<div className={[styles.modal, styles.transitionName].join(' ')}>
 					<div className={styles.modalWrapper}>
 						<div className={styles.content}>
 							{/* 大图 */}
@@ -39,6 +41,7 @@ class ActivityModal extends React.Component {
 							{modalType === 'freebill' ? <img src={freebill} /> : null}
 							{modalType === 'yhq7' ? <img src={yhq7} /> : null}
 							{modalType === 'yhq50' ? <img src={yhq50} /> : null}
+							{modalType === 'mianxi' ? <img src={mianxi} /> : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -75,6 +78,15 @@ class ActivityModal extends React.Component {
 									src={freebill_btn}
 									onClick={() => {
 										activityModalBtn('freebill');
+									}}
+								/>
+							) : null}
+							{modalType === 'mianxi' ? (
+								<img
+									className={styles.mianxiBtn}
+									src={mianxi_btn}
+									onClick={() => {
+										activityModalBtn('mianxi');
 									}}
 								/>
 							) : null}
