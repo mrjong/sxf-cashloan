@@ -20,12 +20,12 @@ import Cookie from 'js-cookie';
 import { isMPOS } from 'utils/common';
 import LoginAlert from './components/LoginAlert';
 import PrizeModal from './components/PrizeModal';
+import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 
 const API = {
 	joinActivity: '/activeConfig/join' // 参加活动 里面会判断用户有没有资格
 };
 
-@setBackGround('#FFA348')
 @fetch.inject()
 export default class wuyuekh_page extends PureComponent {
 	constructor(props) {
@@ -309,7 +309,7 @@ export default class wuyuekh_page extends PureComponent {
 				)}
 				{showBoundle ? <Alert_mpos /> : null}
 				{prizeType ? (
-					<PrizeModal clickCb={this.useNowClick} closeCb={this.closePrizeModal} type={this.prizeType} />
+					<PrizeModal clickCb={this.useNowClick} closeCb={this.closePrizeModal} type={prizeType} />
 				) : null}
 			</div>
 		);

@@ -32,7 +32,7 @@ export default class WinPrize extends Component {
 			<Modal className="win_prize_modal" visible={isPrizeModal} transparent>
 				<div className={style.win_prize_cont}>
 					<img
-						src={type === 'first' ? coupon_img2 : coupon_img}
+						src={type === 'first' ? coupon_img : coupon_img2}
 						className={style.win_prize_bg}
 						alt="huodong"
 					/>
