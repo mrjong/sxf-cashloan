@@ -184,7 +184,6 @@ export default class wuyuekh_page extends PureComponent {
 			>
 				<SmsAlert
 					onRef={this.onRef}
-					isShowMobModal={true}
 					goSubmitCb={{
 						PTM0000: (res, getType) => {
 							this.goHomePage();
