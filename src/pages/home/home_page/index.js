@@ -928,7 +928,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'mianxi':
 				buriedPointEvent(activity.mianxiModalBtnClick);
-				this.props.history.push('/activity/mianxi_page');
+				this.props.history.push('/activity/mianxi_page?entry=home_alert');
 				break;
 			default:
 				break;
