@@ -235,15 +235,14 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
-							store.setFQActivity(true);
-							this.setState({
-								modalType: 'xianjin',
-								isShowActivityModal: true
-							});
-						} else {
-							this.getMianxi7();
-						}
+						// if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
+						// 	store.setFQActivity(true);
+						// 	this.setState({
+						// 		modalType: 'xianjin',
+						// 		isShowActivityModal: true
+						// 	});
+						// }
+						this.getMianxi7();
 					}
 				);
 			} else {
@@ -896,7 +895,7 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 关闭活动弹窗
-	closeActivityModal = (type, clickType) => {
+	closeActivityModal = (type) => {
 		this.setState({
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
@@ -904,13 +903,6 @@ export default class home_page extends PureComponent {
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalClose);
-				this.getMianxi7();
-				break;
-			case 'yhq7': // 优惠券签约率测试活动弹框按钮
-			case 'yhq50': // 优惠券签约率测试活动弹框按钮
-				if (!(clickType && clickType === 'btnClick')) {
-					this.getMianxi7();
-				}
 				break;
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
@@ -921,7 +913,7 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
-		this.closeActivityModal(type, 'btnClick');
+		this.closeActivityModal(type);
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
