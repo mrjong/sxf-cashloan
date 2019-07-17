@@ -162,9 +162,9 @@ export default class wuyuekh_page extends PureComponent {
 		const { clickType } = this.state;
 		if (clickType === '0') {
 			// clickType 0:首贷 1:复贷
-			buriedPointEvent(activity.mianxi715NewBtn);
+			buriedPointEvent(activity.mianxi715NewPrizeBtn);
 		} else {
-			buriedPointEvent(activity.mianxi715OldBtn);
+			buriedPointEvent(activity.mianxi715OldPrizeBtn);
 		}
 		this.jumpToHome();
 	};
