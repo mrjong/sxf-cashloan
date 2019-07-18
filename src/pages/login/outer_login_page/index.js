@@ -88,8 +88,8 @@ export default class login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
+			this.getImage();
 		}
-		// this.getImage();
 	}
 	componentDidMount() {
 		let _this = this;
@@ -171,7 +171,7 @@ export default class login_page extends PureComponent {
 					(error) => {
 						error.msgInfo &&
 							Toast.info(error.msgInfo, 3, () => {
-								this.getImage();
+								this.state.disabledInput && this.getImage();
 							});
 					}
 				);
@@ -327,16 +327,15 @@ export default class login_page extends PureComponent {
 	// 老的获取短信验证码(mpos)
 	sendSmsCode = (param) => {
 		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode !== 'PTM0000') {
+			if (result.msgCode === 'PTM0000') {
+				Toast.info('发送成功，请注意查收！');
+				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+				this.startCountDownTime();
+			} else {
 				Toast.info(result.msgInfo, 3, () => {
 					this.getImage();
 				});
-				// return false;
 			}
-			Toast.info('发送成功，请注意查收！');
-			this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-
-			this.startCountDownTime();
 		});
 	};
 
@@ -388,7 +387,15 @@ export default class login_page extends PureComponent {
 	};
 
 	render() {
-		const { imageCodeUrl, slideImageUrl, smallImageUrl, showSlideModal, yOffset, bigImageH } = this.state;
+		const {
+			imageCodeUrl,
+			slideImageUrl,
+			smallImageUrl,
+			showSlideModal,
+			yOffset,
+			bigImageH,
+			disabledInput
+		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div ref="loginWrap" className={styles.dc_landing_page}>
@@ -398,7 +405,7 @@ export default class login_page extends PureComponent {
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
 						<InputItem
-							disabled={this.state.disabledInput}
+							disabled={disabledInput}
 							id="inputPhone"
 							maxLength="13"
 							type="phone"
@@ -407,7 +414,7 @@ export default class login_page extends PureComponent {
 							{...getFieldProps('phoneValue', {
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
-									{ validator: !this.state.disabledInput && this.validatePhone }
+									{ validator: !disabledInput && this.validatePhone }
 								]
 							})}
 							onBlur={() => {
@@ -417,39 +424,40 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						{/* <div className={styles.smsBox}>
-							<InputItem
-								id="imgCode"
-								// type="number"
-								// maxLength="6"
-								maxLength="4"
-								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-								placeholder="请输入图形验证码"
-								{...getFieldProps('imgCd', {
-									rules: [{ required: true, message: '请输入正确图形验证码' }]
-								})}
-								onBlur={() => {
-									this.setState({
-										inputFocus: false
-									});
-									handleInputBlur();
-								}}
-							/>
-							<div
-								className={
-									this.state.timers.indexOf('s') === -1
-										? styles.smsCode
-										: [styles.smsCode, styles.smsCode2].join(' ')
-								}
-								onClick={() => {
-									this.getImage();
-								}}
-							>
-								<div className={styles.getCodeBox}>
-									<img className={styles.getCode} src={imageCodeUrl} />
+						{disabledInput && (
+							<div className={styles.smsBox}>
+								<InputItem
+									id="imgCode"
+									maxLength="4"
+									className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+									placeholder="请输入图形验证码"
+									{...getFieldProps('imgCd', {
+										rules: [{ required: true, message: '请输入正确图形验证码' }]
+									})}
+									onBlur={() => {
+										this.setState({
+											inputFocus: false
+										});
+										handleInputBlur();
+									}}
+								/>
+								<div
+									className={
+										this.state.timers.indexOf('s') === -1
+											? styles.smsCode
+											: [styles.smsCode, styles.smsCode2].join(' ')
+									}
+									onClick={() => {
+										this.getImage();
+									}}
+								>
+									<div className={styles.getCodeBox}>
+										<img className={styles.getCode} src={imageCodeUrl} />
+									</div>
 								</div>
 							</div>
-						</div> */}
+						)}
+
 						<div className={styles.smsBox}>
 							<InputItem
 								id="inputCode"
