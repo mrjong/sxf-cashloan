@@ -18,7 +18,8 @@ var ref = gitHEAD.split(': ')[1]; // refs/heads/develop
 var develop = gitHEAD.split('/')[2]; // 环境：develop
 var gitVersion = ref ? fs.readFileSync('.git/' + ref, 'utf-8').trim() : ''; // git版本号，例如：6ceb0ab5059d01fd444cf4e78467cc2dd1184a66
 // var gitCommitVersion = '"' + develop + '_' + gitVersion + '"' // 例如dev环境: "develop: 6ceb0ab5059d01fd444cf4e78467cc2dd1184a66"
-var gitCommitVersion = develop && gitVersion ? develop + '_' + gitVersion : gitHEAD;
+// var gitCommitVersion = develop && gitVersion ? develop + '_' + gitVersion : gitHEAD;
+var gitCommitVersion = gitVersion;
 
 var sentryTestVersion = 'sentry_test_' + gitCommitVersion;
 var sentryVersion = 'sentry_' + gitCommitVersion;
@@ -54,11 +55,11 @@ let getProdPlugins = function() {
 	var w_data = new Buffer(w_data);
 
 	/**
-   * filename, 必选参数，文件名
-   * data, 写入的数据，可以字符或一个Buffer对象
-   * [options],flag,mode(权限),encoding
-   * callback 读取文件后的回调函数，参数默认第一个err,第二个data 数据
-   */
+	 * filename, 必选参数，文件名
+	 * data, 写入的数据，可以字符或一个Buffer对象
+	 * [options],flag,mode(权限),encoding
+	 * callback 读取文件后的回调函数，参数默认第一个err,第二个data 数据
+	 */
 
 	fs.writeFile(path.resolve(__dirname, '../.sentryclirc'), w_data, { flag: 'a' }, function(err) {
 		if (err) {
@@ -127,17 +128,20 @@ let getProdPlugins = function() {
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
-			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: [ '.*' ] }
+			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: ['.*'] }
 		])
 	);
-	// plugins.push(
-	//   new SentryPlugin({
-	//     include: './dist',
-	//     release: sentryVersion,
-	//     configFile: 'sentry.properties',
-	//     urlPrefix: '~/'
-	//   })
-	// );
+	console.log(process.env.npm_config_sentry, 'npm run build --sentry');
+	if (process.env.npm_config_sentry) {
+		plugins.push(
+			new SentryPlugin({
+				include: './dist',
+				release: sentryVersion,
+				configFile: 'sentry.properties',
+				urlPrefix: '~/'
+			})
+		);
+	}
 	plugins.push(
 		new webpack.DefinePlugin({
 			'process.env': {
@@ -186,7 +190,7 @@ let getRcPlugins = function() {
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
-			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: [ '.*' ] }
+			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: ['.*'] }
 		])
 	),
 		plugins.push(
@@ -223,11 +227,11 @@ let getTestPlugins = function() {
 	var w_data = new Buffer(w_data);
 
 	/**
-   * filename, 必选参数，文件名
-   * data, 写入的数据，可以字符或一个Buffer对象
-   * [options],flag,mode(权限),encoding
-   * callback 读取文件后的回调函数，参数默认第一个err,第二个data 数据
-   */
+	 * filename, 必选参数，文件名
+	 * data, 写入的数据，可以字符或一个Buffer对象
+	 * [options],flag,mode(权限),encoding
+	 * callback 读取文件后的回调函数，参数默认第一个err,第二个data 数据
+	 */
 
 	fs.writeFile(path.resolve(__dirname, '../.sentryclirc'), w_data, { flag: 'a' }, function(err) {
 		if (err) {
@@ -255,7 +259,7 @@ let getTestPlugins = function() {
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
-			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: [ '.*' ] }
+			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: ['.*'] }
 		])
 	),
 		// plugins.push(
@@ -288,40 +292,40 @@ let getTestPlugins = function() {
 
 //开发插件
 let getDevPlugins = function() {
-  plugins.push(
-    new webpack.HotModuleReplacementPlugin() //热更新插件
-  );
-  plugins.push(
-    new CopyWebpackPlugin([
-      { from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
-      { from: path.resolve(__dirname, '../*.txt'), to: './' },
-            { from: path.resolve(__dirname, '../*.html'), to: './' },
-      { from: path.resolve(__dirname, '../*.apk'), to: './' },
-      { from: path.resolve(__dirname, '../static'),to: 'static',ignore: ['.*'] }
-    ])
-  ),
-  plugins.push(
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-        PROJECT_ENV: JSON.stringify('dev'),
-        RELEASE_VERSION: JSON.stringify('dev'),
-      },
-      saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
-      // saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
-    })
-  );
-  // plugins.push(new webpack.HotModuleReplacementPlugin());
-  plugins.push(
-    new HappyPack({
-      id: 'happybabel',
-      loaders: [ 'babel-loader' ],
-      threadPool: happyThreadPool,
-      cache: true,
-      verbose: true
-    })
-  );
-  return plugins;
+	plugins.push(
+		new webpack.HotModuleReplacementPlugin() //热更新插件
+	);
+	plugins.push(
+		new CopyWebpackPlugin([
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
+			{ from: path.resolve(__dirname, '../*.html'), to: './' },
+			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
+			{ from: path.resolve(__dirname, '../static'), to: 'static', ignore: ['.*'] }
+		])
+	),
+		plugins.push(
+			new webpack.DefinePlugin({
+				'process.env': {
+					NODE_ENV: JSON.stringify('development'),
+					PROJECT_ENV: JSON.stringify('dev'),
+					RELEASE_VERSION: JSON.stringify('dev')
+				},
+				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+				// saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
+			})
+		);
+	// plugins.push(new webpack.HotModuleReplacementPlugin());
+	plugins.push(
+		new HappyPack({
+			id: 'happybabel',
+			loaders: ['babel-loader'],
+			threadPool: happyThreadPool,
+			cache: true,
+			verbose: true
+		})
+	);
+	return plugins;
 };
 
 //导出
