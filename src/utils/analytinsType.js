@@ -188,7 +188,13 @@ const activity = {
 	yhq50ModalBtnClick: `${prefix}_ACTIVITY_YHQ50_MODAL_BTN`,
 	jd618ResultModalClick: `${prefix}_JD618_RESULT_MODAL_CLICK`,
 	jd618HomeModalClose: `${prefix}_JD618HOMEMODALCLOSE`,
-	freeBillHomeModalClose: `${prefix}_FREEBILLHOMEMODALCLOSE`
+	freeBillHomeModalClose: `${prefix}_FREEBILLHOMEMODALCLOSE`,
+	mianxi715Entry: `${prefix}_ACTIVITY_MIANXI_715_ENTRY`, // 七月活动 活动入口
+	mianxi715NewBtn: `${prefix}_ACTIVITY_MIANXI_715_NEW_GET_BTN`, // 七月活动 首贷用户领取按钮
+	mianxi715OldBtn: `${prefix}_ACTIVITY_MIANXI_715_OLD_GET_BTN`, // 七月活动 复贷用户领取按钮
+	mianxi715NewPrizeBtn: `${prefix}_ACTIVITY_MIANXI_715_NEW_PRIZE_BTN`, // 七月活动 首贷用户奖品弹框按钮点击
+	mianxi715OldPrizeBtn: `${prefix}_ACTIVITY_MIANXI_715_OLD_PRIZE_BTN`, // 七月活动 复贷用户奖品弹框按钮点击
+	mianxiModalBtnClick: `${prefix}_ACTIVITY_MIANXI_715_MODAL_BTN` // 七月活动 首页弹窗按钮点击
 };
 
 const moxie_bank_list = {

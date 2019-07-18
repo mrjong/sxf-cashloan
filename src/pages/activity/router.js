@@ -41,5 +41,10 @@ export default [
 		title: '还到拒就赔',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/jupei_page')
+	},
+	{
+		path: '/activity/mianxi_page',
+		title: '借钱免息30天',
+		component: () => import('pages/activity/mianxi715_page')
 	}
 ];

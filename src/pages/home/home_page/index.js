@@ -46,7 +46,8 @@ const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
-	couponTest: '/activeConfig/couponTest' //签约测试
+	couponTest: '/activeConfig/couponTest', //签约测试
+	mxCheckJoin: '/activeConfig/checkJoin' // 免息活动检查是否参与
 };
 let token = '';
 let tokenFromStorage = '';
@@ -234,13 +235,14 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
-							store.setFQActivity(true);
-							this.setState({
-								modalType: 'xianjin',
-								isShowActivityModal: true
-							});
-						}
+						// if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
+						// 	store.setFQActivity(true);
+						// 	this.setState({
+						// 		modalType: 'xianjin',
+						// 		isShowActivityModal: true
+						// 	});
+						// }
+						this.getMianxi7();
 					}
 				);
 			} else {
@@ -766,20 +768,43 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
+				let couponTestData = null;
 				if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
-					let couponTestData = await this.props.$fetch.get(API.couponTest);
-					if (couponTestData && couponTestData.data && couponTestData.data !== '0') {
-						this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
-						this.setState({
-							isShowActivityModal: true,
-							modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
-						});
-					}
+					couponTestData = await this.props.$fetch.get(API.couponTest);
+				}
+				if (
+					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
+					(couponTestData && couponTestData.data && couponTestData.data !== '0')
+				) {
+					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
+					this.setState({
+						isShowActivityModal: true,
+						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
+					});
+				} else {
+					this.getMianxi7();
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
 		});
+	};
+	getMianxi7 = async () => {
+		if (store.getShowActivityModal()) {
+			return;
+		}
+		let mxData = await this.props.$fetch.get(API.mxCheckJoin);
+		if (mxData && mxData.msgCode === 'PTM0000' && !store.getShowActivityModal()) {
+			this.setState(
+				{
+					isShowActivityModal: true,
+					modalType: 'mianxi'
+				},
+				() => {
+					store.setShowActivityModal(true);
+				}
+			);
+		}
 	};
 	// 缓存banner
 	cacheBanner = () => {
@@ -874,10 +899,13 @@ export default class home_page extends PureComponent {
 		this.setState({
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
-		store.setShowActivityModal(true);
+
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalClose);
+				break;
+			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
+				store.setShowActivityModal(true);
 				break;
 			default:
 				break;
@@ -885,7 +913,7 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
-		this.closeActivityModal();
+		this.closeActivityModal(type);
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
@@ -897,6 +925,10 @@ export default class home_page extends PureComponent {
 			case 'yhq50':
 				buriedPointEvent(activity.yhq50ModalBtnClick);
 				this.handleSmartClick();
+				break;
+			case 'mianxi':
+				buriedPointEvent(activity.mianxiModalBtnClick);
+				this.props.history.push('/activity/mianxi_page?entry=home_alert');
 				break;
 			default:
 				break;
