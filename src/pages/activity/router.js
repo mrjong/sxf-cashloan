@@ -44,7 +44,7 @@ export default [
 	},
 	{
 		path: '/activity/mianxi_page',
-		title: '畅享双重豪礼',
+		title: '借钱免息30天',
 		component: () => import('pages/activity/mianxi715_page')
 	}
 ];
