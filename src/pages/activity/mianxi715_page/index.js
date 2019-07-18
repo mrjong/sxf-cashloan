@@ -98,6 +98,7 @@ export default class wuyuekh_page extends PureComponent {
 	};
 
 	goHomePage = () => {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const { clickType } = this.state;
 		// clickType  0:首贷 1:复贷
 		this.props.$fetch.get(`${API.joinActivity}/${clickType}`).then((res) => {
@@ -130,7 +131,13 @@ export default class wuyuekh_page extends PureComponent {
 					this.goTo(clickType);
 				});
 			} else {
-				this.props.toast.info(res.msgInfo);
+				if (queryData && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
+					this.props.toast.info(res.msgInfo, 2, () => {
+						this.jumpToHome();
+					});
+				} else {
+					this.props.toast.info(res.msgInfo);
+				}
 			}
 		});
 	};
