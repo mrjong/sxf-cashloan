@@ -28,6 +28,7 @@
 		background-color: #fff;
 	}
 }
+
 .image_code {
 	position: absolute;
 	left: 50%;
@@ -41,25 +42,46 @@
 	box-sizing: border-box;
 }
 
+.image_code_shake {
+	animation: shake 0.3s ease-in;
+}
+
 .image_container {
 	position: relative;
 	background-color: #ddd;
+	background-size: cover;
+	overflow: hidden;
 }
 
-.canvas {
+.highlight_box {
 	position: absolute;
+	left: 700px;
 	top: 0;
-	left: 0;
+	width: 150px;
+	height: 320px;
+	background-image: -webkit-linear-gradient(
+		0deg,
+		rgba(255, 255, 255, 0),
+		rgba(255, 255, 255, 0.6),
+		rgba(255, 255, 255, 0)
+	);
+	transform: skewx(45deg);
+}
+
+.highlight_box_active {
+	left: -320px;
+	transition: all 1s ease;
 }
 
 .reload_container {
-	margin: 20px 0;
+	margin: 20px 0 30px;
+	position: relative;
+	z-index: 50;
 }
 
 .reload_wrapper {
 	display: inline-flex;
 	align-items: center;
-	cursor: pointer;
 }
 
 .reload_ico {
@@ -92,18 +114,24 @@
 }
 
 .slider_bar_txt {
-	animation: fadeIn 0.3s ease-in;
+	opacity: 1;
+	transition: all 0.5s;
+}
+
+.slider_bar_txt_active {
+	opacity: 0;
 }
 
 .slider_button {
 	position: absolute;
 	top: 50%;
 	left: 0;
-	width: 116px;
-	height: 116px;
+	width: 100px;
+	height: 100px;
 	transform: translateY(-50%);
-	cursor: pointer;
 	background-size: cover;
+	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 50%;
 }
 
 /* 提示信息 */
@@ -114,28 +142,23 @@
 	left: 0;
 	width: 100%;
 	height: 40px;
-	line-height: 40px;
-	transition: all 0.25s;
-	background: red;
+	line-height: 35px;
+	transition: all 0.15s;
+	background: #fe6666;
 	color: #fff;
 	visibility: hidden;
 	opacity: 0;
+	text-align: center;
 }
 
 .tips_container_active {
 	visibility: visible;
-	opacity: 1;
-}
-
-.tips_ico {
-	// width: 20px;
-	// height: 20px;
-	// margin-right: 10px;
-	// background: center/cover no-repeat;
+	opacity: 0.8;
 }
 
 .tips_text {
-	color: #666;
+	color: #fff;
+	font-size: 22px;
 }
 
 @keyframes fadeIn {
@@ -144,5 +167,21 @@
 	}
 	100% {
 		opacity: 1;
+	}
+}
+
+@keyframes shake {
+	0%,
+	45%,
+	100% {
+		left: 50%;
+	}
+	15%,
+	60% {
+		left: 49%;
+	}
+	30%,
+	75% {
+		left: 51%;
 	}
 }
