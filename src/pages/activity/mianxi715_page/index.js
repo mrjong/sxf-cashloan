@@ -131,7 +131,12 @@ export default class wuyuekh_page extends PureComponent {
 					this.goTo(clickType);
 				});
 			} else {
-				if (queryData && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
+				if (
+					queryData &&
+					queryData.entry &&
+					queryData.entry.indexOf('ismpos_') > -1 &&
+					(res && res.msgCode !== 'MX0001')
+				) {
 					this.props.toast.info(res.msgInfo, 2, () => {
 						this.jumpToHome();
 					});
