@@ -263,57 +263,56 @@ export default class login_page extends PureComponent {
 	// 获取短信(滑动验证码)
 	sendSlideVerifySmsCode = (xOffset = '', cb) => {
 		let data = Object.assign({}, this.state.submitData, { bFlag: xOffset });
-		this.props.$fetch.post(API.sendImgSms, data).then((result) => {
-			if (result.msgCode === 'PTM0000') {
-				Toast.info('发送成功，请注意查收！');
-				this.setState({
-					timeflag: false,
-					smsJrnNo: result.data.smsJrnNo
-				});
-				cb && cb('success');
-				setTimeout(() => {
-					this.closeSlideModal();
-				}, 1500);
-
-				this.startCountDownTime();
-			} else if (result.msgCode === 'PTM3019') {
-				// 弹窗不存在时请求大图
-				!this.state.showSlideModal && this.reloadSlideImage();
-				cb && cb('error');
-			} else if (result.msgCode === 'PTM3020') {
-				//重新刷新relyToken
-				this.handleTokenAndImage();
-				cb && cb('refresh');
-			} else {
-				// 达到短信次数限制
-				Toast.info(result.msgInfo);
-				cb && cb('error');
-				this.closeSlideModal();
-			}
-		});
-	};
-
-	reloadSlideImage = () => {
 		this.props.$fetch
-			.get(`${API.createImg}/${this.state.mobilePhone}`)
-			.then((res) => {
-				if (res && res.msgCode === 'PTM0000') {
+			.post(API.sendImgSms, data)
+			.then((result) => {
+				if (result.msgCode === 'PTM0000') {
+					Toast.info('发送成功，请注意查收！');
 					this.setState({
-						slideImageUrl: `data:image/png;base64,${res.data.b}`,
-						smallImageUrl: `data:image/png;base64,${res.data.s}`,
-						yOffset: res.data.sy, // 小图距离大图顶部距离
-						bigImageH: res.data.bh, // 大图实际高度
-						showSlideModal: true
+						timeflag: false,
+						smsJrnNo: result.data.smsJrnNo
 					});
-				} else {
+					cb && cb('success');
+					setTimeout(() => {
+						this.closeSlideModal();
+					}, 1500);
+
+					this.startCountDownTime();
+				} else if (result.msgCode === 'PTM3019') {
+					// 弹窗不存在时请求大图
+					!this.state.showSlideModal && this.reloadSlideImage();
+					cb && cb('error');
+				} else if (result.msgCode === 'PTM3020') {
+					//重新刷新relyToken
 					this.handleTokenAndImage();
-					Toast.info(res.msgInfo);
+					cb && cb('refresh');
+				} else {
+					// 达到短信次数限制
+					Toast.info(result.msgInfo);
+					cb && cb('error');
+					this.closeSlideModal();
 				}
 			})
 			.catch((err) => {
+				cb && cb('error');
 				this.closeSlideModal();
-				console.log(err);
 			});
+	};
+
+	reloadSlideImage = () => {
+		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					slideImageUrl: `data:image/png;base64,${res.data.b}`,
+					smallImageUrl: `data:image/png;base64,${res.data.s}`,
+					yOffset: res.data.sy, // 小图距离大图顶部距离
+					bigImageH: res.data.bh, // 大图实际高度
+					showSlideModal: true
+				});
+			} else {
+				Toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	showSlideModal = () => {
