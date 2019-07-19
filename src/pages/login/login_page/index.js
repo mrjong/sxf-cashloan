@@ -188,6 +188,39 @@ export default class login_page extends PureComponent {
 		});
 	};
 
+	// 老的获取短信验证码(mpos)
+	sendSmsCode = (param) => {
+		this.props.$fetch.post(API.sendsms, param).then((result) => {
+			if (result.msgCode === 'PTM0000') {
+				Toast.info('发送成功，请注意查收！');
+				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+				this.startCountDownTime();
+			} else {
+				Toast.info(result.msgInfo, 3, () => {
+					this.getImage();
+				});
+			}
+		});
+	};
+
+	// 开始倒计时
+	startCountDownTime = () => {
+		clearInterval(timmer);
+		timmer = setInterval(() => {
+			this.setState(
+				{
+					timers: this.state.countDownTime-- + '"'
+				},
+				() => {
+					if (this.state.countDownTime === -1) {
+						clearInterval(timmer);
+						this.setState({ timers: '重新获取', timeflag: true, countDownTime: 59 });
+					}
+				}
+			);
+		}, 1000);
+	};
+
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
 		if (!this.state.timeflag) return;
@@ -309,6 +342,7 @@ export default class login_page extends PureComponent {
 			});
 	};
 
+	// 重新加载大图
 	reloadSlideImage = () => {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
@@ -323,38 +357,6 @@ export default class login_page extends PureComponent {
 				Toast.info(res.msgInfo);
 			}
 		});
-	};
-
-	// 老的获取短信验证码(mpos)
-	sendSmsCode = (param) => {
-		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
-				Toast.info('发送成功，请注意查收！');
-				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-				this.startCountDownTime();
-			} else {
-				Toast.info(result.msgInfo, 3, () => {
-					this.getImage();
-				});
-			}
-		});
-	};
-
-	startCountDownTime = () => {
-		clearInterval(timmer);
-		timmer = setInterval(() => {
-			this.setState(
-				{
-					timers: this.state.countDownTime-- + '"'
-				},
-				() => {
-					if (this.state.countDownTime === -1) {
-						clearInterval(timmer);
-						this.setState({ timers: '重新获取', timeflag: true, countDownTime: 59 });
-					}
-				}
-			);
-		}, 1000);
 	};
 
 	showSlideModal = () => {

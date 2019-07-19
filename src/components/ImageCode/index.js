@@ -164,27 +164,31 @@ class ImageCode extends React.Component {
 							onClose();
 						}}
 					></div>
-					<div
-						className={style.image_container}
-						style={{ width: imageWidth, height: imageHeight, backgroundImage: `url("${imageUrl}")` }}
-					>
-						<span
-							className={[style.highlight_box, status === 2 ? style.highlight_box_active : ''].join(' ')}
-						></span>
-						<img
-							src={smallImageUrl}
-							width={fragmentSize}
-							height={fragmentSize}
-							style={{
-								left: currX + 'px',
-								top: yOffset / this.state.scale + 'px',
-								position: 'absolute'
-							}}
-						/>
+					<div className={style.image_wrap}>
+						<div
+							className={style.image_container}
+							style={{ width: imageWidth, height: imageHeight, backgroundImage: `url("${imageUrl}")` }}
+						>
+							<span
+								className={[style.highlight_box, status === 2 ? style.highlight_box_active : ''].join(' ')}
+							></span>
+							<img
+								src={smallImageUrl}
+								width={fragmentSize}
+								height={fragmentSize}
+								style={{
+									left: currX + 'px',
+									top: yOffset / this.state.scale + 'px'
+								}}
+								className={style.small_image}
+							/>
 
-						<div className={showTips ? style.tips_container_active : style.tips_container}>
-							<span className={style.tips_text}>拖动滑块将悬浮图像正确拼合</span>
+							<div className={showTips ? style.tips_container_active : style.tips_container}>
+								<span className={style.tips_text}>拖动滑块将悬浮图像正确拼合</span>
+							</div>
 						</div>
+
+						<div className={style.image_cover}></div>
 					</div>
 
 					<div className={style.reload_container}>

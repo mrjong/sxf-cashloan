@@ -53,6 +53,25 @@
 	overflow: hidden;
 }
 
+.image_wrap {
+	position: relative;
+}
+
+.image_cover {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 540px;
+	height: 320px;
+	z-index: 100;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.small_image {
+	position: absolute;
+	z-index: 101;
+}
+
 .highlight_box {
 	position: absolute;
 	left: 700px;
@@ -71,6 +90,7 @@
 .highlight_box_active {
 	left: -320px;
 	transition: all 1s ease;
+	z-index: 101;
 }
 
 .reload_container {
@@ -154,6 +174,7 @@
 .tips_container_active {
 	visibility: visible;
 	opacity: 0.8;
+	z-index: 101;
 }
 
 .tips_text {
