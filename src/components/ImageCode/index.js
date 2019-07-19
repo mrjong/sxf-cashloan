@@ -173,7 +173,6 @@ class ImageCode extends React.Component {
 						></span>
 						<img
 							src={smallImageUrl}
-							className={style.small_img_container}
 							width={fragmentSize}
 							height={fragmentSize}
 							style={{
