@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType } from 'utils';
@@ -62,7 +62,8 @@ export default class wx_middle_page extends Component {
 				.catch((err) => {
 					console.log(err);
 					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
 		} else {
@@ -114,7 +115,8 @@ export default class wx_middle_page extends Component {
 				.catch((err) => {
 					console.log(err);
 					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
 		}

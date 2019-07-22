@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { SXFToast } from 'utils/SXFToast';
 import STabs from 'components/Tab';
 import { store } from 'utils/store';
@@ -37,7 +37,11 @@ export default class message_page extends PureComponent {
 			msgReadAllState: false,
 			msgType: 0,
 			hasMore: true,
-			tabs: [{ title: <Badge>活动通知</Badge> }, { title: <Badge>系统通知</Badge> }, { title: <Badge>公告通知</Badge> }]
+			tabs: [
+				{ title: <Badge>活动通知</Badge> },
+				{ title: <Badge>系统通知</Badge> },
+				{ title: <Badge>公告通知</Badge> }
+			]
 		};
 	}
 	scrollTop = 0;
@@ -66,8 +70,7 @@ export default class message_page extends PureComponent {
 							isLoading: false
 						},
 						() => {
-							document.getElementsByClassName('iview' + backData.msgType)[0].scrollTop =
-								backData.scrollTop;
+							document.getElementsByClassName('iview' + backData.msgType)[0].scrollTop = backData.scrollTop;
 						}
 					);
 					store.removeMsgBackData();
@@ -362,7 +365,8 @@ export default class message_page extends PureComponent {
 						) : null}
 						<div className={style.desc}>{obj.dec}</div>
 						<div className={style.handle}>
-							查看详情<i />
+							查看详情
+							<i />
 						</div>
 					</div>
 				</div>
@@ -387,13 +391,11 @@ export default class message_page extends PureComponent {
 						renderSeparator={separator}
 						useBodyScroll={this.state.useBodyScroll}
 						style={
-							this.state.useBodyScroll ? (
-								{}
-							) : (
-									{
+							this.state.useBodyScroll
+								? {}
+								: {
 										height: this.state.height
-									}
-								)
+								  }
 						}
 						pullToRefresh={<PullToRefresh refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
 						onEndReached={this.onEndReached}
@@ -403,7 +405,8 @@ export default class message_page extends PureComponent {
 			} else {
 				return (
 					<div className={style.noMsg}>
-						<i />暂无消息
+						<i />
+						暂无消息
 					</div>
 				);
 			}
@@ -413,7 +416,7 @@ export default class message_page extends PureComponent {
 				{this.state.msgReadAllState ? (
 					<div onClick={this.msgReadAll} className={style.allRead}>
 						<i className={style.allReadIcon}></i>一键读取
-          </div>
+					</div>
 				) : null}
 				{this.state.tabState ? (
 					<STabs
@@ -424,7 +427,9 @@ export default class message_page extends PureComponent {
 						}}
 						ref={(el) => (this.messageTabBox = el)}
 					>
-						{this.state.tabs.map((item2, index2) => <div key={index2}>{item('iview' + index2)}</div>)}
+						{this.state.tabs.map((item2, index2) => (
+							<div key={index2}>{item('iview' + index2)}</div>
+						))}
 					</STabs>
 				) : null}
 			</div>

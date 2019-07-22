@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import styles from './index.scss';
 import { getDeviceType } from 'utils';
 import { setBackGround } from 'utils/background';

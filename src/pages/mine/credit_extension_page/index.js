@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
@@ -17,7 +17,7 @@ const API = {
 };
 let urlQuery = '';
 let autId = '';
-const needDisplayOptions = [ 'idCheck', 'basicInf', 'operator', 'card' ];
+const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 
 @fetch.inject()
 export default class credit_extension_page extends PureComponent {
@@ -78,7 +78,7 @@ export default class credit_extension_page extends PureComponent {
 		if (!this.checkCreditCardStatus()) {
 			return;
 		}
-		this.setState({isShowModal: true});
+		this.setState({ isShowModal: true });
 	};
 
 	// 判断信用卡状态
@@ -155,9 +155,11 @@ export default class credit_extension_page extends PureComponent {
 								this.props.SXFToast.loading('加载中...', 0);
 								window.location.href =
 									result.data.url +
-									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${window
-                                        .location.search}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(`${linkConf.BASE_URL}/disting/#/carrier_auth_page`)}`;
-
+									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+										window.location.search
+									}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+									)}`;
 							} else {
 								this.props.toast.info(result.msgInfo);
 							}

@@ -17,7 +17,7 @@ import { store } from '../../../utils/store';
 import { checkEngaged, checkIsEngagedUser } from '../../../utils';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import ACTipAlert from 'components/ACTipAlert';
 
 const API = {

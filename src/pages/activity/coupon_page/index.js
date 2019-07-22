@@ -13,7 +13,7 @@ import coupon88 from './img/coupon_bg88.png';
 import submit_btn1 from './img/btn_bg1.png';
 import submit_btn2 from './img/btn_bg2.png';
 import AwardShowMock from './components/AwardShowMock';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import Cookie from 'js-cookie';
 import closeBtn from './img/close_icon.png';
 
