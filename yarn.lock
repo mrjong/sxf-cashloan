@@ -8108,7 +8108,7 @@ react-tween-state@^0.1.5:
 
 react@^15.6.1:
   version "15.6.2"
-  resolved "https://registry.npm.taobao.org/react/download/react-15.6.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
+  resolved "https://registry.npm.taobao.org/react/download/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
   integrity sha1-26BDSrQ5z+gvEI8PURZjkIF5qnI=
   dependencies:
     create-react-class "^15.6.0"
@@ -9667,10 +9667,10 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
-sx-fetch-rjl@^9.0.11:
-  version "9.0.11"
-  resolved "https://registry.npm.taobao.org/sx-fetch-rjl/download/sx-fetch-rjl-9.0.11.tgz#9eb9418a8ee48a66a7f540581610f52556e7e37d"
-  integrity sha1-nrlBio7kiman9UBYFhD1JVbn430=
+sx-fetch-rjl@^9.0.12:
+  version "9.0.12"
+  resolved "https://registry.npm.taobao.org/sx-fetch-rjl/download/sx-fetch-rjl-9.0.12.tgz#061c0e5da462d26e8e4b3304df0b533e0cdd0baa"
+  integrity sha1-BhwOXaRi0m6OSzME3wtTPgzdC6o=
   dependencies:
     axios "^0.16.2"
     babel-preset-es2017 "^6.24.1"
