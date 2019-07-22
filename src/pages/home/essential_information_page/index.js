@@ -173,8 +173,10 @@ export default class essential_information_page extends PureComponent {
 					this.setState({
 						relatValue:
 							res.data && res.data.cntRelTyp1
-								? [ `${res.data.cntRelTyp1}` ]
-								: store.getRelationValue() ? store.getRelationValue() : []
+								? [`${res.data.cntRelTyp1}`]
+								: store.getRelationValue()
+								? store.getRelationValue()
+								: []
 					});
 				} else {
 					this.getErrorInput();
@@ -205,22 +207,22 @@ export default class essential_information_page extends PureComponent {
 		let cityPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${city}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 		this.props.$fetch.get(`${API.getProv}`).then((result) => {
 			if (result && result.data) {
-				const provItem = reducedFilter(result.data, [ 'key', 'value' ], (item) => {
+				const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
 					let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (proPattern.test(item.value) || proPattern2.test(pro)) {
 						return item;
 					}
 				});
 				this.props.$fetch.get(`${API.qryCity}/${provItem[0].key}`).then((result2) => {
-					const cityItem = reducedFilter(result2.data, [ 'key', 'value' ], (item2) => {
+					const cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
 						let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 						if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
 							return item2;
 						}
 					});
 					this.setState({
-						provValue: provItem && cityItem && [ provItem[0].key + '', cityItem[0].key + '' ],
-						provLabel: provItem && cityItem && [ provItem[0].value + '', cityItem[0].value + '' ]
+						provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + ''],
+						provLabel: provItem && cityItem && [provItem[0].value + '', cityItem[0].value + '']
 					});
 					this.getErrorInput();
 					console.log(this.state.provValue, this.state.provLabel);
@@ -258,7 +260,7 @@ export default class essential_information_page extends PureComponent {
 					} else {
 						// isFetching = true;
 						// values中存放的是经过 getFieldDecorator 包装的表单元素的值
-						this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
+						this.props.$fetch.singlePost(`${API.submitData}`, params).then((result) => {
 							if (result && result.msgCode === 'PTM0000') {
 								store.setBackFlag(true);
 								// 埋点-基本信息页-确定按钮
@@ -438,7 +440,7 @@ export default class essential_information_page extends PureComponent {
 		const { showAgreement } = this.state;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
-			<div className={[ style.nameDiv, 'info_gb' ].join(' ')}>
+			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				{urlQuery.jumpToBase && (
 					<div className={style.adsImg}>
 						<img src={adsBg} alt="ad" />
@@ -451,8 +453,8 @@ export default class essential_information_page extends PureComponent {
 						</div>
 					</div>
 				)}
-				<div className={[ style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : '' ].join(' ')}>
-					<div className={[ style.step_item, style.active ].join(' ')}>
+				<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
+					<div className={[style.step_item, style.active].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							请先完善个人信息
@@ -463,7 +465,7 @@ export default class essential_information_page extends PureComponent {
 								<div className={style.labelDiv}>
 									{getFieldDecorator('city', {
 										initialValue: this.state.provValue,
-										rules: [ { required: true, message: '请选择城市' } ],
+										rules: [{ required: true, message: '请选择城市' }],
 										onChange: (value, label) => {
 											this.selectSure({
 												value: JSON.stringify(value),
@@ -481,10 +483,7 @@ export default class essential_information_page extends PureComponent {
 											loadData={[
 												() =>
 													this.props.$fetch.get(`${API.getProv}`).then((result) => {
-														const prov =
-															result && result.data && result.data.length
-																? result.data
-																: [];
+														const prov = result && result.data && result.data.length ? result.data : [];
 														return prov.map((item) => ({
 															value: item.key,
 															label: item.value
@@ -492,10 +491,7 @@ export default class essential_information_page extends PureComponent {
 													}),
 												(provCd) =>
 													this.props.$fetch.get(`${API.qryCity}/${provCd}`).then((result) => {
-														const city =
-															result && result.data && result.data.length
-																? result.data
-																: [];
+														const city = result && result.data && result.data.length ? result.data : [];
 														return city.map((item) => ({
 															value: item.key,
 															label: item.value
@@ -518,10 +514,7 @@ export default class essential_information_page extends PureComponent {
 									<img className={style.informationMore} src={informationMore} />
 								</div>
 								{getFieldDecorator('address', {
-									rules: [
-										{ required: true, message: '请输入常住地址' },
-										{ validator: this.validateAddress }
-									],
+									rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
 									onChange: (value) => {
 										// 本地缓存常住地址
 										store.setAddress(value);
@@ -548,7 +541,7 @@ export default class essential_information_page extends PureComponent {
 								<div className={style.labelDiv}>
 									{getFieldDecorator('cntRelTyp1', {
 										initialValue: this.state.relatValue,
-										rules: [ { required: true, message: '请选择联系人关系' } ],
+										rules: [{ required: true, message: '请选择联系人关系' }],
 										onChange: (value, label) => {
 											store.setRelationValue(value);
 											this.selectSure({
@@ -563,10 +556,7 @@ export default class essential_information_page extends PureComponent {
 											loadData={[
 												() =>
 													this.props.$fetch.get(`${API.getRelat}/2`).then((result) => {
-														const prov =
-															result && result.data && result.data.length
-																? result.data
-																: [];
+														const prov = result && result.data && result.data.length ? result.data : [];
 														return prov.map((item) => ({
 															value: item.key,
 															label: item.value
@@ -589,10 +579,7 @@ export default class essential_information_page extends PureComponent {
 									<img className={style.informationMore} src={informationMore} />
 								</div>
 								{getFieldDecorator('linkman', {
-									rules: [
-										{ required: true, message: '请输入联系人姓名' },
-										{ validator: this.validateName }
-									],
+									rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
 									onChange: (value) => {
 										store.setLinkman(value);
 										this.setState({ linkman: value });
@@ -639,14 +626,14 @@ export default class essential_information_page extends PureComponent {
 							</div>
 						</div>
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							继续添加要还款的信用卡
 						</div>
 						<div className={style.line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							获得还款金
@@ -658,7 +645,7 @@ export default class essential_information_page extends PureComponent {
 					<div className={style.operatorCont}>
 						<ButtonCustom
 							onClick={this.handleSubmit}
-							className={[ style.nextBtn, !btn_dis ? style.dis : '' ].join(' ')}
+							className={[style.nextBtn, !btn_dis ? style.dis : ''].join(' ')}
 						>
 							下一步
 						</ButtonCustom>
@@ -670,7 +657,7 @@ export default class essential_information_page extends PureComponent {
 				{!urlQuery.jumpToBase && (
 					<ButtonCustom
 						onClick={this.handleSubmit}
-						className={[ style.sureBtn, !btn_dis ? style.dis : '' ].join(' ')}
+						className={[style.sureBtn, !btn_dis ? style.dis : ''].join(' ')}
 					>
 						{needNextUrl ? '下一步' : '完成'}
 					</ButtonCustom>

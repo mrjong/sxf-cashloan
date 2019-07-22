@@ -209,7 +209,7 @@ export default class real_name_page extends Component {
 			idAddrLctn: '', //身份证户籍地经纬度
 			usrBrowInfo: '' //授信浏览器信息
 		};
-		this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
+		this.props.$fetch.singlePost(`${API.submitName}`, params).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				store.setBackFlag(true);
 				buriedPointEvent(mine.creditExtensionBack, {

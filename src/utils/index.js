@@ -378,7 +378,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 		getContactsList();
 	}
 	$props.$fetch
-		.post(`${API.submitState}`, params, { hideLoading: true })
+		.singlePost(`${API.submitState}`, params, { hideLoading: true })
 		.then((res) => {
 			$props.SXFToast.hide();
 			// 提交风控返回成功
