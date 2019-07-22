@@ -4,7 +4,7 @@ import { InputItem, List, Steps } from 'antd-mobile';
 import informationMore from './img/back.png';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { getLngLat, getAddress } from 'utils/Address.js';
 import style from './index.scss';
 import { getFirstError, validators, handleInputBlur, getNextStr } from 'utils';
