@@ -12,11 +12,12 @@ import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
-import bannerImg from './img/login_bg.png';
-import bannerImg1 from './img/login_bg1.png';
-import bannerImg2 from './img/login_bg2.png';
-import backTopBtn from './img/backtop_btn.png';
+// import bannerImg from './img/login_bg.png';
+// import bannerImg1 from './img/login_bg1.png';
+// import bannerImg2 from './img/login_bg2.png';
+// import backTopBtn from './img/backtop_btn.png';
 import ImageCode from 'components/ImageCode';
+import { setBackGround } from 'utils/background';
 
 let timmer;
 const needDisplayOptions = ['basicInf'];
@@ -31,6 +32,7 @@ const API = {
 };
 @fetch.inject()
 @createForm()
+@setBackGround('#fff')
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -137,6 +139,9 @@ export default class login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		if (!this.validateFn()) {
+			return;
+		}
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
@@ -383,6 +388,23 @@ export default class login_page extends PureComponent {
 		});
 	};
 
+	//	校验必填项 按钮是否可以点击
+	validateFn = () => {
+		const { disabledInput, isChecked } = this.state;
+		const formData = this.props.form.getFieldsValue();
+		console.log(formData, 'formDataformData');
+		if (formData.phoneValue && formData.smsCd && isChecked) {
+			if (disabledInput && formData.imgCd) {
+				return true;
+			} else if (disabledInput && !formData.imgCd) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	// 获取授信列表状态
 	requestGetStatus = () => {
 		this.props.$fetch
@@ -446,7 +468,13 @@ export default class login_page extends PureComponent {
 		return (
 			<div className={styles.dc_landing_page_wrap}>
 				<div ref="loginWrap" className={styles.dc_landing_page}>
-					<img className={styles.banner} src={bannerImg} alt="落地页banner" />
+					<div className={styles.greeting_box}>
+						<h2 className={styles.greeting_tit}>您好！</h2>
+						<p className={styles.greeting_cont}>
+							欢迎来到<span>还到</span>
+						</p>
+					</div>
+					{/* <img className={styles.banner} src={bannerImg} alt="落地页banner" /> */}
 					<div ref="loginContent" className={styles.content}>
 						<InputItem
 							disabled={disabledInput}
@@ -468,6 +496,7 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
+						{/* {true && ( */}
 						{disabledInput && (
 							<div className={styles.imgCodeBox}>
 								<InputItem
@@ -522,36 +551,41 @@ export default class login_page extends PureComponent {
 								{this.state.timers}
 							</div>
 						</div>
-						<div className={styles.sureBtn} onClick={this.goLogin}>
-							<span>免费借款</span>
+						<div
+							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
+							onClick={this.goLogin}
+						>
+							<span>注册/登录</span>
 						</div>
 						<div className={styles.agreement}>
 							<i
-								className={this.state.isChecked ? styles.checked : styles.nochecked}
+								className={this.state.isChecked ? styles.checked : `${styles.checked} ${styles.nochecked}`}
 								onClick={this.checkAgreement}
 							/>
-							注册即视为同意
-							<span
-								onClick={() => {
-									this.go('register_agreement_page');
-								}}
-							>
-								《用户注册协议》
-							</span>
-							<span
-								onClick={() => {
-									this.go('privacy_agreement_page');
-								}}
-							>
-								《用户隐私权政策》
-							</span>
+							<div className={styles.agreementCont}>
+								请阅读协议内容，点击按钮即视为同意
+								<span
+									onClick={() => {
+										this.go('register_agreement_page');
+									}}
+								>
+									《用户注册协议》
+								</span>
+								<span
+									onClick={() => {
+										this.go('privacy_agreement_page');
+									}}
+								>
+									《用户隐私权政策》
+								</span>
+							</div>
 						</div>
 					</div>
-					<img src={bannerImg1} className={styles.banner} alt="落地页banner" />
+					{/* <img src={bannerImg1} className={styles.banner} alt="落地页banner" />
 					<div className={styles.imgWrap}>
 						<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
 						<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
-					</div>
+					</div> */}
 				</div>
 				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>

@@ -103,19 +103,20 @@
 
 	.content {
 		text-align: center;
-		background: #fff;
-		padding: 50px 50px 30px;
+		// background: #fff;
+		padding: 101px 60px 30px;
 
 		.loginInput {
-			height: 90px;
-			line-height: 90px;
-			margin-bottom: 20px;
-			border-radius: 12px;
-			border: 1px solid #e3e3e3;
-			background-color: #f6f6f6;
+			height: 110px;
+			line-height: 110px;
+			padding-left: 0;
+			// margin-bottom: 20px;
+			// border-radius: 12px;
+			// border: 1px solid #e3e3e3;
+			// background-color: #f6f6f6;
 			:global {
 				.am-list-line::after {
-					background-color: transparent !important;
+					background-color: #f0f1f5 !important;
 				}
 			}
 		}
@@ -125,49 +126,58 @@
 			font-size: 32px;
 		}
 
-		.smsCodeInput {
-			flex: 1;
-			margin-right: 20px;
-		}
+		// .smsCodeInput {
+		// 	flex: 1;
+		// 	margin-right: 20px;
+		// }
 
 		.smsBox {
-			display: flex;
-			justify-content: space-between;
+			position: relative;
+			// display: flex;
+			// justify-content: space-between;
 		}
 
 		.smsCode {
+			position: absolute;
+			right: 0;
+			top: 0;
 			color: #fff;
 			font-size: 32px;
 			width: 270px;
-			height: 90px;
-			line-height: 90px;
+			height: 110px;
+			line-height: 110px;
 			text-align: center;
-			background-color: #fe4d2a;
+			// background-color: #fe4d2a;
 			border-radius: 12px;
 		}
 
 		.sureBtn {
 			display: block;
 			box-sizing: border-box;
-			background-color: #fe4d2a;
-			color: #fff;
+			background-color: #ebde74;
 			font-size: 36px;
-			font-weight: 400;
-			margin-top: 30px;
-			height: 90px;
-			line-height: 90px;
-			border-radius: 12px;
+			margin-top: 93px;
+			height: 100px;
+			line-height: 100px;
+			border-radius: 50px;
 			border: none;
+			font-family: 'PingFangSC-Medium';
+			font-weight: 500;
+			color: #121c32;
 
 			span {
 				display: inline-block;
 				width: 100%;
 			}
 
-			&:hover,
-			&:active {
-				background-color: #fe4d2a;
-			}
+			// &:hover,
+			// &:active {
+			// 	background-color: #fe4d2a;
+			// }
+		}
+		.sureDisableBtn {
+			background-color: #dcdfe6;
+			color: #fff;
 		}
 		// 图片验证码
 		.imgCodeBox {
@@ -202,49 +212,33 @@
 	}
 
 	.agreement {
-		color: #333;
-		font-size: 26px;
-		margin: 16px auto 0;
+		display: flex;
+		color: #868e9e;
+		font-size: 24px;
+		margin-top: 20px;
 		text-align: left;
+		line-height: 38px;
 
 		span {
-			color: #fe4d2a;
+			color: #121c32;
 		}
 
 		.checked {
-			vertical-align: middle;
-			display: inline-block;
-			width: 28px;
-			height: 28px;
-			line-height: 28px;
-			background-color: #fe4d2a;
-			color: #fff;
-			box-sizing: border-box;
-			border-radius: 5px;
+			display: block;
+			width: 30px;
+			height: 30px;
 			margin-right: 10px;
-			&::after {
-				vertical-align: middle;
-				display: inline-block;
-				content: '';
-				width: 20px;
-				height: 8px;
-				border-style: solid;
-				border-width: 0 0 3px 3px;
-				border-color: #fff;
-				transform: translate(3px, -2px) rotateZ(-45deg);
-			}
+			background-size: 100%;
+			background-repeat: no-repeat;
+			background-image: url(./img/selected_ico.png);
+			margin-top: 5px;
 		}
 
 		.nochecked {
-			vertical-align: middle;
-			display: inline-block;
-			width: 28px;
-			height: 28px;
-			line-height: 28px;
-			border: 1px solid #fe4d2a;
-			box-sizing: border-box;
-			border-radius: 5px;
-			margin-right: 10px;
+			background-image: url(./img/unselected_ico.png);
+		}
+		.agreementCont {
+			flex: 1;
 		}
 	}
 
@@ -288,13 +282,36 @@
 		width: 190px;
 		height: 112px;
 		line-height: 112px;
-		background-color: #fe4d2a;
-		color: #fff;
+		background-color: #ebde74;
+		color: #121c32;
 		text-align: center;
-		border-top: 1px solid #fe4d2a;
+		border-top: 1px solid #ebde74;
 		box-sizing: border-box;
+		font-family: 'PingFangSC-Medium';
+		font-weight: 500;
+		font-size: 32px;
 	}
 }
 .relative_bottom_box {
 	position: relative;
+}
+.greeting_box {
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	color: #121c32;
+	margin-top: 63px;
+	margin-left: 60px;
+}
+.greeting_tit {
+	font-size: 72px;
+	line-height: 100px;
+}
+.greeting_cont {
+	font-size: 48px;
+	line-height: 67px;
+	margin-top: 10px;
+	span {
+		color: #397be6;
+		margin-left: 20px;
+	}
 }
