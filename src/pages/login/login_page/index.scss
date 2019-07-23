@@ -95,6 +95,15 @@
 		.am-list-item .am-input-control input:disabled {
 			// background-color: #f6f6f6;
 		}
+		.am-list-item .am-input-clear {
+			width: 30px;
+			height: 30px;
+			background-size: 30px auto;
+			background-position: 3.5px 3.5px;
+		}
+		.am-list-item .am-input-clear-active {
+			background-color: #ccc;
+		}
 	}
 	.banner {
 		width: 100%;
@@ -169,7 +178,6 @@
 			box-sizing: border-box;
 			background-color: #ebde74;
 			font-size: 36px;
-			margin-top: 93px;
 			height: 100px;
 			line-height: 100px;
 			border-radius: 50px;
@@ -207,6 +215,18 @@
 				height: 50px;
 				transform: scale(1.2);
 			}
+		}
+		.errMsgBox {
+			position: absolute;
+			top: 10px;
+			left: 0;
+			font-size: 24px;
+			color: #fe6666;
+			line-height: 33px;
+		}
+		.operateBox {
+			position: relative;
+			padding-top: 93px;
 		}
 	}
 

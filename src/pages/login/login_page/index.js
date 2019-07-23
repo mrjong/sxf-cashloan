@@ -48,7 +48,8 @@ export default class login_page extends PureComponent {
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
-			mobilePhone: ''
+			mobilePhone: '',
+			errMsg: '' // 错误信息
 		};
 	}
 
@@ -144,15 +145,25 @@ export default class login_page extends PureComponent {
 		}
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
-			Toast.info('请先获取短信验证码');
+			// Toast.info('请先获取短信验证码');
+			this.setState({
+				errMsg: '请先获取短信验证码'
+			});
 			return;
 		}
-		if (!this.state.isChecked) {
-			Toast.info('请先勾选协议');
-			return;
-		}
+		// if (!this.state.isChecked) {
+		//   // Toast.info('请先勾选协议');
+		//   this.setState({
+		//     errMsg: '请先勾选协议'
+		//   })
+		// 	return;
+		// }
+
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
+				this.setState({
+					errMsg: ''
+				});
 				// 埋点-注册登录页一键代还
 				buriedPointEvent(login.submit);
 				let param = {
@@ -168,9 +179,15 @@ export default class login_page extends PureComponent {
 				this.props.$fetch.post(API.smsForLogin, param).then(
 					(res) => {
 						if (res.msgCode !== 'PTM0000') {
-							res.msgInfo && Toast.info(res.msgInfo);
+							this.setState({
+								errMsg: res.msgInfo
+							});
+							// res.msgInfo && Toast.info(res.msgInfo);
 							return;
 						}
+						this.setState({
+							errMsg: ''
+						});
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
@@ -182,13 +199,24 @@ export default class login_page extends PureComponent {
 					},
 					(error) => {
 						error.msgInfo &&
-							Toast.info(error.msgInfo, 3, () => {
-								this.state.disabledInput && this.getImage();
-							});
+							this.setState(
+								{
+									errMsg: error.msgInfo
+								},
+								() => {
+									this.state.disabledInput && this.getImage();
+								}
+							);
+						// Toast.info(error.msgInfo, 3, () => {
+						//   this.state.disabledInput && this.getImage();
+						// });
 					}
 				);
 			} else {
-				Toast.info(getFirstError(err));
+				this.setState({
+					errMsg: getFirstError(err)
+				});
+				// Toast.info(getFirstError(err));
 			}
 		});
 	};
@@ -197,13 +225,24 @@ export default class login_page extends PureComponent {
 	sendSmsCode = (param) => {
 		this.props.$fetch.post(API.sendsms, param).then((result) => {
 			if (result.msgCode === 'PTM0000') {
+				this.setState({
+					errMsg: ''
+				});
 				Toast.info('发送成功，请注意查收！');
 				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 				this.startCountDownTime();
 			} else {
-				Toast.info(result.msgInfo, 3, () => {
-					this.getImage();
-				});
+				this.setState(
+					{
+						errMsg: result.msgInfo
+					},
+					() => {
+						this.getImage();
+					}
+				);
+				// Toast.info(result.msgInfo, 3, () => {
+				// 	this.getImage();
+				// });
 			}
 		});
 	};
@@ -214,7 +253,7 @@ export default class login_page extends PureComponent {
 		timmer = setInterval(() => {
 			this.setState(
 				{
-					timers: this.state.countDownTime-- + '"'
+					timers: this.state.countDownTime-- + 's'
 				},
 				() => {
 					if (this.state.countDownTime === -1) {
@@ -241,6 +280,9 @@ export default class login_page extends PureComponent {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
+				this.setState({
+					errMsg: ''
+				});
 				// 埋点-登录页获取验证码
 				buriedPointEvent(login.getCode);
 				let param = {};
@@ -263,7 +305,10 @@ export default class login_page extends PureComponent {
 					);
 				}
 			} else {
-				Toast.info(getFirstError(err));
+				this.setState({
+					errMsg: getFirstError(err)
+				});
+				// Toast.info(getFirstError(err));
 			}
 		});
 	}
@@ -314,6 +359,10 @@ export default class login_page extends PureComponent {
 		this.props.$fetch
 			.post(API.sendImgSms, data)
 			.then((result) => {
+				this.setState({
+					// 去掉错误显示
+					errMsg: ''
+				});
 				if (result.msgCode === 'PTM0000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
@@ -336,7 +385,13 @@ export default class login_page extends PureComponent {
 					cb && cb('refresh');
 				} else {
 					// 达到短信次数限制
-					Toast.info(result.msgInfo);
+					if (xOffset) {
+						Toast.info(result.msgInfo);
+					} else {
+						this.setState({
+							errMsg: result.msgInfo
+						});
+					}
 					cb && cb('error');
 					this.closeSlideModal();
 				}
@@ -352,6 +407,9 @@ export default class login_page extends PureComponent {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
+					errMsg: ''
+				});
+				this.setState({
 					slideImageUrl: `data:image/png;base64,${res.data.b}`,
 					smallImageUrl: `data:image/png;base64,${res.data.s}`,
 					yOffset: res.data.sy, // 小图距离大图顶部距离
@@ -359,7 +417,10 @@ export default class login_page extends PureComponent {
 					showSlideModal: true
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				this.setState({
+					errMsg: res.msgInfo
+				});
+				// Toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -392,7 +453,6 @@ export default class login_page extends PureComponent {
 	validateFn = () => {
 		const { disabledInput, isChecked } = this.state;
 		const formData = this.props.form.getFieldsValue();
-		console.log(formData, 'formDataformData');
 		if (formData.phoneValue && formData.smsCd && isChecked) {
 			if (disabledInput && formData.imgCd) {
 				return true;
@@ -462,7 +522,8 @@ export default class login_page extends PureComponent {
 			showSlideModal,
 			yOffset,
 			bigImageH,
-			disabledInput
+			disabledInput,
+			errMsg
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
@@ -495,6 +556,7 @@ export default class login_page extends PureComponent {
 								});
 								handleInputBlur();
 							}}
+							clear
 						/>
 						{/* {true && ( */}
 						{disabledInput && (
@@ -505,7 +567,7 @@ export default class login_page extends PureComponent {
 									className={styles.loginInput}
 									placeholder="请输入图形验证码"
 									{...getFieldProps('imgCd', {
-										rules: [{ required: true, message: '请输入正确图形验证码' }]
+										rules: [{ required: true, message: '请输入正确的图形验证码' }]
 									})}
 									onBlur={() => {
 										this.setState({
@@ -555,11 +617,14 @@ export default class login_page extends PureComponent {
 								{this.state.timers}
 							</div>
 						</div>
-						<div
-							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
-							onClick={this.goLogin}
-						>
-							<span>注册/登录</span>
+						<div className={styles.operateBox}>
+							{errMsg ? <div className={styles.errMsgBox}>{errMsg}</div> : null}
+							<div
+								className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
+								onClick={this.goLogin}
+							>
+								<span>注册/登录</span>
+							</div>
 						</div>
 						<div className={styles.agreement}>
 							<i
