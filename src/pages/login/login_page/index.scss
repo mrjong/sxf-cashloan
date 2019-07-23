@@ -93,7 +93,7 @@
 	background: #fff;
 	:global {
 		.am-list-item .am-input-control input:disabled {
-			background-color: #f6f6f6;
+			// background-color: #f6f6f6;
 		}
 	}
 	.banner {
@@ -141,14 +141,27 @@
 			position: absolute;
 			right: 0;
 			top: 0;
-			color: #fff;
-			font-size: 32px;
-			width: 270px;
+			color: #397be6;
+			font-size: 26px;
+			width: 170px;
 			height: 110px;
 			line-height: 110px;
 			text-align: center;
 			// background-color: #fe4d2a;
 			border-radius: 12px;
+			&:after {
+				position: absolute;
+				content: '';
+				width: 1px;
+				height: 60px;
+				top: 50%;
+				left: 0;
+				transform: translate(0, -50%);
+				background: #f0f1f5;
+			}
+		}
+		.smsCode2 {
+			color: #868e9e;
 		}
 
 		.sureBtn {
@@ -264,7 +277,7 @@
 	.img {
 		width: 80px;
 		height: 80px;
-		vertical-align: middle;
+		// vertical-align: middle;
 		margin-right: 30px;
 	}
 	.f_left {
@@ -277,6 +290,8 @@
 		box-sizing: border-box;
 		font-size: 32px;
 		border-top: 1px solid #e5e5e5;
+		display: flex;
+		align-items: center;
 	}
 	.f_right {
 		width: 190px;

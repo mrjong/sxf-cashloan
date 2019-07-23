@@ -543,7 +543,11 @@ export default class login_page extends PureComponent {
 								}}
 							/>
 							<div
-								className={styles.smsCode}
+								className={
+									this.state.timers.indexOf('s') > -1
+										? `${styles.smsCode} ${styles.smsCode2}`
+										: styles.smsCode
+								}
 								onClick={() => {
 									this.handleSmsCodeClick();
 								}}
