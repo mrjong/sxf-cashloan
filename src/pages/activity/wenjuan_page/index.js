@@ -21,7 +21,7 @@ import wxshare from 'utils/wxshare';
 import SmsAlert from '../components/SmsAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 const AgreeItem = Checkbox.AgreeItem;
 const API = {

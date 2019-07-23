@@ -8,7 +8,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import AwardShowMock from './components/AwardShowMock';
 import { isMPOS } from 'utils/common';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
 import LoginAlert from './components/LoginAlert';

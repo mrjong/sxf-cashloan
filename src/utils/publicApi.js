@@ -1,5 +1,5 @@
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 const API = {
 	saveAppOrContactInfo: '/auth/saveAppOrContactInfo'
 };

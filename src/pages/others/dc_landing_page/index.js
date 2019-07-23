@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import { store } from 'utils/store';
 import { InputItem } from 'antd-mobile';
@@ -155,7 +155,7 @@ export default class dc_landing_page extends PureComponent {
 						className={styles.loginInput}
 						placeholder="请输入您的手机号"
 						{...getFieldProps('phoneValue', {
-							rules: [ { required: true, message: '请输入正确手机号' }, { validator: this.validatePhone } ]
+							rules: [{ required: true, message: '请输入正确手机号' }, { validator: this.validatePhone }]
 						})}
 						onBlur={() => {
 							handleInputBlur();
@@ -172,7 +172,7 @@ export default class dc_landing_page extends PureComponent {
 							className={styles.loginInput}
 							placeholder="请输入短信验证码"
 							{...getFieldProps('smsCd', {
-								rules: [ { required: true, message: '请输入正确验证码' } ]
+								rules: [{ required: true, message: '请输入正确验证码' }]
 							})}
 							onBlur={() => {
 								handleInputBlur();

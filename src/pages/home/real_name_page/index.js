@@ -9,9 +9,16 @@ import { InputItem, List, Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
-import { getDeviceType, validators, handleInputBlur, getNextStr, handleClickConfirm, idChkPhoto } from 'utils';
+import {
+	getDeviceType,
+	validators,
+	handleInputBlur,
+	getNextStr,
+	handleClickConfirm,
+	idChkPhoto
+} from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
@@ -383,8 +390,9 @@ export default class real_name_page extends Component {
 	render() {
 		const { disabledupload } = this.state;
 		return (
-			<div className={[ style.real_name_page, 'real_name_page_list' ].join(' ')}>
-				{this.state.showState && (!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
+			<div className={[style.real_name_page, 'real_name_page_list'].join(' ')}>
+				{this.state.showState &&
+				(!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
 						<div className={style.updateTitle}>
 							<span>上传身份证正 、反面</span>
@@ -453,7 +461,8 @@ export default class real_name_page extends Component {
 						<p className="bottomTip">怕逾期，用还到</p>
 					</div>
 				) : null}
-				{this.state.showState && (this.state.userInfo && this.state.userInfo.nameHid && !urlQuery.newTitle) ? (
+				{this.state.showState &&
+				(this.state.userInfo && this.state.userInfo.nameHid && !urlQuery.newTitle) ? (
 					<div>
 						<List className={style.is_true}>
 							<InputItem value={this.state.userInfo && this.state.userInfo.name} editable={false}>

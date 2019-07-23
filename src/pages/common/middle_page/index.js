@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { getNextStr } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
@@ -37,8 +37,8 @@ export default class middle_page extends Component {
 						});
 						return;
 					}
-          this.buryPointsType(taskType, true);
-          store.removeGotoMoxieFlag()  //删除去到第三方魔蝎的标志
+					this.buryPointsType(taskType, true);
+					store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
 					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 						getNextStr({
 							$props: this.props
@@ -50,7 +50,8 @@ export default class middle_page extends Component {
 				.catch((err) => {
 					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
 					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
 		} else if (mxcode && mxcode === -1) {
@@ -71,7 +72,8 @@ export default class middle_page extends Component {
 			}
 		} else {
 			this.setState({
-				errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+				errorInf:
+					'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 			});
 		}
 	}
