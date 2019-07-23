@@ -187,7 +187,6 @@ class ImageCode extends React.Component {
 								<span className={style.tips_text}>拖动滑块将悬浮图像正确拼合</span>
 							</div>
 						</div>
-
 						<div className={style.image_cover}></div>
 					</div>
 
