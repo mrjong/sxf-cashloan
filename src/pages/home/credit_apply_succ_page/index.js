@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import ExamineComponents from 'components/ExamineComponents';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
@@ -65,17 +65,18 @@ export default class credit_apply_succ_page extends PureComponent {
 					<div className={style.subtitle}>高峰期可能5分钟左右</div>
 				</div>
 				<div className={style.step_box_new}>
-					<div className={[ style.step_item, style.active ].join(' ')}>
+					<div className={[style.step_item, style.active].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							快速评估中
 						</div>
 						<div className={style.line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
-							绑定还款储蓄卡<a
+							绑定还款储蓄卡
+							<a
 								onClick={() => {
 									this.checkIsBandCard();
 								}}
@@ -85,7 +86,7 @@ export default class credit_apply_succ_page extends PureComponent {
 						</div>
 						<div className={style.line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							获得额度签约借款
@@ -93,12 +94,12 @@ export default class credit_apply_succ_page extends PureComponent {
 						{/* <div className={style.line} /> */}
 						<div className={style.dash_line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							审核超时即得免息券
 							<span
-              className={style.wenhao}
+								className={style.wenhao}
 								onClick={() => {
 									this.setState({
 										showTimeoutPayModal: true

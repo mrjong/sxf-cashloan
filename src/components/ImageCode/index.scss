@@ -55,14 +55,15 @@
 
 .image_wrap {
 	position: relative;
+	overflow: hidden;
 }
 
 .image_cover {
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 540px;
-	height: 320px;
+	width: 580px;
+	height: 360px;
 	z-index: 100;
 	background-color: rgba(0, 0, 0, 0.4);
 }

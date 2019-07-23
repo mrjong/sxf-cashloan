@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import ButtonCustom from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import styles from './index.scss';
@@ -41,8 +41,7 @@ export default class wx_pay_success_page extends Component {
 					} else {
 						this.setState({
 							orderData:
-								(res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1]) ||
-								{},
+								(res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1]) || {},
 							thisRepTotAmt: (test && test.thisRepTotAmt) || ''
 						});
 					}

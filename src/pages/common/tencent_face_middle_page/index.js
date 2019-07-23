@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { getNextStr, getDeviceType, handleClickConfirm } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -131,7 +131,7 @@ export default class tencent_face_middle_page extends Component {
 						<button onClick={this.goBack} className={style.button}>
 							退出验证
 						</button>
-						<button onClick={this.goFaceAuth} className={[ style.button, style.active_btn ].join(' ')}>
+						<button onClick={this.goFaceAuth} className={[style.button, style.active_btn].join(' ')}>
 							重新验证
 						</button>
 					</div>

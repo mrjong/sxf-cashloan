@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import { store } from 'utils/store';
 import { Toast, InputItem } from 'antd-mobile';

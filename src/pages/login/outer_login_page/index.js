@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';

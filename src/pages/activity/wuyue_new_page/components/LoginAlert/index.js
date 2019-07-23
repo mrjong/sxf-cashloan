@@ -7,7 +7,7 @@ import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils
 import { getH5Channel } from 'utils/common';
 import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';

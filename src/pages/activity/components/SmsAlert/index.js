@@ -7,7 +7,7 @@ import logo from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 
@@ -74,7 +74,7 @@ export default class SmsAlert extends Component {
 			otherProps_type: '', // 传递过来的参数
 			loginProps_needLogin: false, // 是登陆不是短验
 			loginProps_needLogin_copy: false,
-			isShowMobile: false, // 是否需要展示
+			isShowMobile: false // 是否需要展示
 		};
 	}
 	componentDidMount() {
@@ -243,7 +243,7 @@ export default class SmsAlert extends Component {
 				usrCnl: getH5Channel()
 			})
 			.then((res) => {
-                //  未授权
+				//  未授权
 				if (res.authFlag === '0') {
 					chkAuthCb.authFlag0 && chkAuthCb.authFlag0(res, otherProps_type);
 					this.setState({
@@ -254,7 +254,7 @@ export default class SmsAlert extends Component {
 						this.setState({
 							modalShow: true,
 							isShowMobile: true,
-							otherProps_type,
+							otherProps_type
 						});
 					} else {
 						this.doAuth(res.tokenId, otherProps_type);
@@ -269,19 +269,19 @@ export default class SmsAlert extends Component {
 					this.setState({
 						loginProps_needLogin_copy: false
 					});
-				}  else {
+				} else {
 					if (this.state.loginProps_needLogin) {
 						// 授权失败的话都跳转到登陆页(如果返回值有mblNoHid) 暂时注释
 						if (res.mblNoHid && res.tokenId) {
 							this.setState({
-                                authToken:res.tokenId,
-                                mblNoHid:res.mblNoHid,
+								authToken: res.tokenId,
+								mblNoHid: res.mblNoHid,
 								modalShow: true,
 								disabled: this.state.loginProps_disabled,
 								loginProps_needLogin_copy: true,
 								loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
 								otherProps_type,
-								isShowMobile: false,
+								isShowMobile: false
 							});
 							this.props.form.setFieldsValue({
 								phoneValue: res.mblNoHid,
@@ -314,7 +314,7 @@ export default class SmsAlert extends Component {
 							otherProps_type,
 							loginProps_needLogin_copy: false,
 							isShowMobile: false,
-							disabled: true,
+							disabled: true
 						});
 						this.props.form.setFieldsValue({
 							phoneValue: res.mblNoHid,
@@ -341,7 +341,7 @@ export default class SmsAlert extends Component {
 									loginProps_needLogin_copy: true,
 									loginProps_needLogin: this.state.loginProps_needLogin, // 跳转登陆而非短验
 									otherProps_type,
-									isShowMobile: false,
+									isShowMobile: false
 								});
 								this.props.form.setFieldsValue({
 									phoneValue: this.state.mblNoHid,
@@ -435,16 +435,16 @@ export default class SmsAlert extends Component {
 				delete err.phoneValue;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
-				this.doAuth(authToken, otherProps_type)
+				this.doAuth(authToken, otherProps_type);
 				this.closeCb();
 			} else {
 				Toast.info(getFirstError(err));
 			}
 		});
-	}
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
-		const { smsText, timeflag, loginProps_needLogin,loginProps_needLogin_copy, isShowMobile } = this.state;
+		const { smsText, timeflag, loginProps_needLogin, loginProps_needLogin_copy, isShowMobile } = this.state;
 		return (
 			<Modal
 				className="alert_sms"
@@ -458,17 +458,13 @@ export default class SmsAlert extends Component {
 						<img className={style.logo} src={logo} />
 						<div className={style.text}>怕逾期，用还到</div>
 					</div>
-					{
-						isShowMobile ?
+					{isShowMobile ? (
 						<div>
 							<InputItem
 								maxLength={11}
 								type="number"
 								{...getFieldProps('userPhone', {
-									rules: [
-										{ required: true, message: '请输入正确手机号' },
-										{ validator: this.validatePhone }
-									]
+									rules: [{ required: true, message: '请输入正确手机号' }, { validator: this.validatePhone }]
 								})}
 								className={style.form_control}
 								placeholder="请输入注册随行付PLUS的手机号"
@@ -478,18 +474,12 @@ export default class SmsAlert extends Component {
 							/>
 
 							<div className={style.btn_box}>
-								<Button
-									onClick={
-										this.btnHandler
-									}
-									className={style.btn_primary}
-									type="primary"
-								>
+								<Button onClick={this.btnHandler} className={style.btn_primary} type="primary">
 									确定
 								</Button>
 							</div>
 						</div>
-						:
+					) : (
 						<div>
 							<InputItem
 								maxLength={11}
@@ -537,9 +527,7 @@ export default class SmsAlert extends Component {
 
 							<div className={style.btn_box}>
 								<Button
-									onClick={
-										loginProps_needLogin_copy && loginProps_needLogin ? this.goLogin : this.goSubmit
-									}
+									onClick={loginProps_needLogin_copy && loginProps_needLogin ? this.goLogin : this.goSubmit}
 									className={style.btn_primary}
 									type="primary"
 								>
@@ -547,7 +535,7 @@ export default class SmsAlert extends Component {
 								</Button>
 							</div>
 						</div>
-					}
+					)}
 				</div>
 			</Modal>
 		);
