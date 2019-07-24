@@ -733,10 +733,6 @@ export default class home_page extends PureComponent {
 				if (!store.getAutId2() || result.data.indexSts !== 'LN0002') {
 					store.removeAutId();
 				}
-				if (result.data.indexSts === 'LN0007') {
-					// 获取是否需要人审
-					this.getExamineSts();
-				}
 				this.setState(
 					{
 						usrIndexInfo: result.data.indexData
@@ -842,18 +838,7 @@ export default class home_page extends PureComponent {
 			}
 		}
 	};
-	// 获取是否需要人审
-	getExamineSts = () => {
-		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					isNeedExamine: res.data && res.data.flag === '01' && res.data.ptMark === '01'
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
+
 	// 现金分期点击事件
 	handleCN = (code) => {
 		const { usrCashIndexInfo } = this.state;
