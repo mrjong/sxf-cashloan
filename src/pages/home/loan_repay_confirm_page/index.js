@@ -307,7 +307,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	handleSubmit = async () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const { selectedLoanDate = {}, usrIndexInfo, cardCount, btnDisabled, fullMinAmt } = this.state;
+		const {
+			selectedLoanDate = {},
+			usrIndexInfo,
+			cardCount,
+			btnDisabled,
+			fullMinAmt,
+			selectFlag
+		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { minApplAmt, maxApplAmt } = indexData;
 		if (!this.state.fetchBillSucc) {
@@ -360,7 +367,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			this.props.toast.info('请选择借款期限');
 			return;
 		}
-		if (btnDisabled) {
+		if (btnDisabled || !selectFlag) {
 			return;
 		}
 		const params = {
@@ -640,22 +647,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 		});
 	};
 	selectProtocol = () => {
-		this.setState(
-			{
-				selectFlag: !this.state.selectFlag
-			},
-			() => {
-				if (this.state.selectFlag) {
-					this.setState({
-						btnDisabled: false
-					});
-				} else {
-					this.setState({
-						btnDisabled: true
-					});
-				}
-			}
-		);
+		this.setState({
+			selectFlag: !this.state.selectFlag
+		});
 	};
 	render() {
 		const {
@@ -922,7 +916,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<div className={this.state.inputFocus ? style.handle_authority_relative : style.handle_authority}>
 					<div
-						className={[style.button, btnDisabled ? style.disabledBtn : ''].join(' ')}
+						className={[style.button, !btnDisabled && selectFlag ? '' : style.disabledBtn].join(' ')}
 						onClick={this.handleSubmit}
 					>
 						提交申请
