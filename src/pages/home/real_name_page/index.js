@@ -9,7 +9,7 @@ import { InputItem, List, Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import {
 	getDeviceType,

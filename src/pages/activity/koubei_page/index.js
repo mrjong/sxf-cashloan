@@ -11,7 +11,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import SmsAlert from '../components/SmsAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 
 const API = {
 	joinActivity: '/activeConfig/partake'

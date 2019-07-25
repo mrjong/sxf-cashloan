@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/store';
 import { Modal, Icon } from 'antd-mobile';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 

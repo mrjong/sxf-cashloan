@@ -5,7 +5,7 @@ import style from './index.scss';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 

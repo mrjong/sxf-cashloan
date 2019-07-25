@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
