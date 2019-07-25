@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Progress, Icon, InputItem, List, Modal } from 'antd-mobile';
+import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
@@ -14,13 +14,12 @@ import {
 	getOperatorStatus,
 	getMoxieData
 } from 'utils';
-import mockData from './mockData';
+// import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, loan_repay_confirm } from 'utils/analytinsType';
+import { home } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
-// import ScrollText from 'components/ScrollText';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -175,7 +174,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					}
 				);
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.hideProgress();
 				this.state.retryCount--;
 				this.setState({
@@ -200,7 +199,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			isShowCreditModal: false
 		});
 	};
-	getQryPerdRate = (money, tag3) => {
+	getQryPerdRate = (money) => {
 		if (!money) {
 			return;
 		}
@@ -392,7 +391,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	//过滤选中的还款期限
-	filterLoanDate = (item, type) => {
+	filterLoanDate = (item) => {
 		let itemCopy = item;
 		console.log(item);
 		this.dateType(itemCopy.perdLth);
@@ -632,7 +631,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			perdRateList,
 			btnDisabled,
 			cardCount,
-			repayType,
 			fetchBillSucc,
 			fullMinAmt,
 			showTimeoutPayModal,
@@ -640,10 +638,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
-			overDt,
-			billDt,
 			cardBillAmt,
-			minPayment,
 			cardNoHid,
 			bankNo,
 			bankName,
@@ -655,18 +650,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} = indexData;
 		const { getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
-		let overDtStr = '';
-		if (overDt > 0) {
-			overDtStr = `<span class="blod">${overDt}</span>天 后到期`;
-		} else if (parseInt(overDt, 10) === 0) {
-			overDtStr = '<span class="blod">今天到期</span>';
-		} else if (overDt < 0) {
-			overDtStr = `<span class="blod">已到期</span>`;
-		} else {
-			overDtStr = `<span class="blod">--</span>天`;
-		}
-		const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-
 		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 
 		let cardBillAmtData = '';
@@ -701,7 +684,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			: fullMinAmt;
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
-				{/* <ScrollText /> */}
 				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.titleBg}>收款信用卡</div>
@@ -925,7 +907,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 												item.perdLth != 30 ? (
 												<div
 													key={index}
-													className={style.listitem}
 													className={
 														selectedLoanDate.perdCnt === item.perdCnt
 															? `${style.listitem} ${style.listActiveItem}`
