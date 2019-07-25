@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress, InputItem, Icon, Toast } from 'antd-mobile';
+import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
 import dayjs from 'dayjs';
-import qs from 'qs';
 import { store } from 'utils/store';
 import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
@@ -24,7 +23,6 @@ if (isIPhone) {
 		onTouchStart: (e) => e.preventDefault()
 	};
 }
-let inputRef = '';
 let closeBtn = true;
 const API = {
 	REPAY_INFO: '/bill/prebill', // 代还确认页面
@@ -74,7 +72,6 @@ export default class confirm_agency_page extends PureComponent {
 			payBankCardLastNo: '',
 			payBankCardName: '',
 			perdRateList: [],
-			contractData: [],
 			repayPlanInfo: {
 				perd: []
 			},
@@ -514,7 +511,7 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
 				this.setState({
 					deratePrice: '',
@@ -527,15 +524,14 @@ export default class confirm_agency_page extends PureComponent {
 		const { deratePrice, repayInfo2 } = this.state;
 		if (deratePrice) {
 			return <span className={style.redText}>-{deratePrice}元</span>;
-		} else {
-			//  可用优惠券数量
-			return (
-				<div className={style.couNumBox}>
-					<i />
-					{repayInfo2 && repayInfo2.availableCoupAmt}个可用
-				</div>
-			);
 		}
+		//  可用优惠券数量
+		return (
+			<div className={style.couNumBox}>
+				<i />
+				{repayInfo2 && repayInfo2.availableCoupAmt}个可用
+			</div>
+		);
 	};
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
@@ -656,7 +652,7 @@ export default class confirm_agency_page extends PureComponent {
 				() => {
 					timer = setInterval(() => {
 						this.setPercent();
-						++this.state.time;
+						// ++this.state.time;
 					}, 1000);
 				}
 			);
@@ -707,7 +703,7 @@ export default class confirm_agency_page extends PureComponent {
 					}
 				);
 			})
-			.catch((err) => {
+			.catch(() => {
 				clearInterval(timer);
 				clearTimeout(timerOut);
 				this.setState({ percent: 100 }, () => {
@@ -915,7 +911,6 @@ export default class confirm_agency_page extends PureComponent {
 
 								<InputItem
 									className={style.billInput}
-									placeholder=""
 									clear={() => {
 										console.log('cl99999999');
 									}}
@@ -925,7 +920,6 @@ export default class confirm_agency_page extends PureComponent {
 										Number(repaymentDate.minAmt) == Number(repaymentDate.maxAmt)
 									}
 									type="number"
-									ref={(el) => (inputRef = el)}
 									{...getFieldProps('cardBillAmt', {
 										onChange: (v) => {
 											if (!v) {
