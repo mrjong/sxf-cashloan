@@ -71,18 +71,18 @@ class ImageCode extends React.Component {
 	};
 
 	onMoveStart = (e) => {
-		if (this.state.status !== STATUS_READY) {
-			return;
-		}
+		// if (this.state.status !== STATUS_READY) {
+		// 	return;
+		// }
 
 		// 记录滑动开始时的绝对坐标x
 		this.setState({ isMovable: true, startX: e.touches[0].clientX, showSlideText: false });
 	};
 
 	onMoving = (e) => {
-		if (this.state.status !== STATUS_READY || !this.state.isMovable) {
-			return;
-		}
+		// if (this.state.status !== STATUS_READY || !this.state.isMovable) {
+		// 	return;
+		// }
 
 		const distance = e.touches[0].clientX - this.state.startX;
 		let currX = this.state.oldX + distance;
@@ -93,9 +93,9 @@ class ImageCode extends React.Component {
 	};
 
 	onMoveEnd = () => {
-		if (this.state.status !== STATUS_READY || !this.state.isMovable) {
-			return;
-		}
+		// if (this.state.status !== STATUS_READY || !this.state.isMovable) {
+		// 	return;
+		// }
 		// 将旧的固定坐标x更新
 		this.setState((pre) => ({ isMovable: false, oldX: pre.currX }));
 		const xAxis = (this.state.currX * this.state.scale).toFixed(2);
