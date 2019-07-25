@@ -6,7 +6,7 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
@@ -58,10 +58,6 @@ export default class login_page extends PureComponent {
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '还到';
-		// 保存h5Channel变量
-		const query = qs.parse(window.location.search, {
-			ignoreQueryPrefix: true
-		});
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
@@ -225,21 +221,21 @@ export default class login_page extends PureComponent {
 
 	// 获取滑动验证码token并发短信
 	handleTokenAndSms = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.sendSlideVerifySmsCode();
 		});
 	};
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.reloadSlideImage();
 		});
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
 				if (result.msgCode === 'PTM0000') {
@@ -293,7 +289,7 @@ export default class login_page extends PureComponent {
 					this.closeSlideModal();
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				cb && cb('error');
 				this.closeSlideModal();
 			});
@@ -340,13 +336,14 @@ export default class login_page extends PureComponent {
 
 	startCountDownTime = () => {
 		clearInterval(timmer);
+		let { countDownTime } = this.state;
 		timmer = setInterval(() => {
 			this.setState(
 				{
-					timers: this.state.countDownTime-- + '"'
+					timers: countDownTime-- + '"'
 				},
 				() => {
-					if (this.state.countDownTime === -1) {
+					if (countDownTime === -1) {
 						clearInterval(timmer);
 						this.setState({ timers: '重新获取', timeflag: true, countDownTime: 59 });
 					}
