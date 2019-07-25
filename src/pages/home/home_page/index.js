@@ -235,14 +235,7 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						// if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
-						// 	store.setFQActivity(true);
-						// 	this.setState({
-						// 		modalType: 'xianjin',
-						// 		isShowActivityModal: true
-						// 	});
-						// }
-						this.getMianxi7();
+						this.getMianxi7(code);
 					}
 				);
 			} else {
@@ -789,10 +782,7 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	getMianxi7 = async () => {
-		if (store.getShowActivityModal()) {
-			return;
-		}
+	getMianxi7 = async (code) => {
 		let mxData = await this.props.$fetch.get(API.mxCheckJoin);
 		if (mxData && mxData.msgCode === 'PTM0000' && !store.getShowActivityModal()) {
 			this.setState(
@@ -804,6 +794,12 @@ export default class home_page extends PureComponent {
 					store.setShowActivityModal(true);
 				}
 			);
+		} else if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
+			store.setFQActivity(true);
+			this.setState({
+				modalType: 'xianjin',
+				isShowActivityModal: true
+			});
 		}
 	};
 	// 缓存banner
