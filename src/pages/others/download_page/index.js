@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { getDeviceType } from 'utils';
 import styles from './index.scss';
 import downloadBtn from './img/download_btn.jpg';

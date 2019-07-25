@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { PullToRefresh, List, ListView } from 'antd-mobile';
 import { store } from 'utils/store';
 import { isWXOpen } from 'utils';

@@ -14,7 +14,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import { headerIgnore } from 'utils';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
 import { isMPOS } from 'utils/common';
