@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
 import qs from 'qs';
+import { getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
@@ -47,7 +48,8 @@ const API = {
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
-	mxCheckJoin: '/activeConfig/checkJoin' // 免息活动检查是否参与
+	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
+	couponNotify: '/activeConfig/couponNotify' // 免息活动检查是否参与
 };
 let token = '';
 let tokenFromStorage = '';
@@ -798,7 +800,7 @@ export default class home_page extends PureComponent {
 			this.setState(
 				{
 					isShowActivityModal: true,
-					modalType: 'mianxi'
+					modalType: 'mianxi7'
 				},
 				() => {
 					store.setShowActivityModal(true);
@@ -897,6 +899,7 @@ export default class home_page extends PureComponent {
 	// 关闭活动弹窗
 	closeActivityModal = (type) => {
 		this.setState({
+			modalBtnFlag: false,
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
 
@@ -929,6 +932,27 @@ export default class home_page extends PureComponent {
 			case 'mianxi':
 				buriedPointEvent(activity.mianxiModalBtnClick);
 				this.props.history.push('/activity/mianxi_page?entry=home_alert');
+				break;
+			case 'mianxi7':
+				buriedPointEvent(activity.mianxi726ModalBtnClick, {
+					dayType: '7',
+					H5Channel: getH5Channel()
+				});
+				this.handleSmartClick();
+				break;
+			case 'mianxi15':
+				buriedPointEvent(activity.mianxi726ModalBtnClick, {
+					dayType: '15',
+					H5Channel: getH5Channel()
+				});
+				this.handleSmartClick();
+				break;
+			case 'mianxi30':
+				buriedPointEvent(activity.mianxi726ModalBtnClick, {
+					dayType: '30',
+					H5Channel: getH5Channel()
+				});
+				this.handleSmartClick();
 				break;
 			default:
 				break;
