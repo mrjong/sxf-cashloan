@@ -407,9 +407,6 @@ export default class login_page extends PureComponent {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
-					errMsg: ''
-				});
-				this.setState({
 					slideImageUrl: `data:image/png;base64,${res.data.b}`,
 					smallImageUrl: `data:image/png;base64,${res.data.s}`,
 					yOffset: res.data.sy, // 小图距离大图顶部距离
@@ -417,10 +414,7 @@ export default class login_page extends PureComponent {
 					showSlideModal: true
 				});
 			} else {
-				this.setState({
-					errMsg: res.msgInfo
-				});
-				// Toast.info(res.msgInfo);
+				Toast.info(res.msgInfo);
 			}
 		});
 	};
