@@ -237,7 +237,13 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						this.getMianxi7(code);
+						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
+							store.setFQActivity(true);
+							this.setState({
+								modalType: 'xianjin',
+								isShowActivityModal: true
+							});
+						}
 					}
 				);
 			} else {
@@ -784,25 +790,26 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	getMianxi7 = async (code) => {
-		let mxData = await this.props.$fetch.get(API.mxCheckJoin);
-		if (mxData && mxData.msgCode === 'PTM0000' && !store.getShowActivityModal()) {
-			this.setState(
-				{
-					isShowActivityModal: true,
-					modalType: 'mianxi7'
-				},
-				() => {
-					store.setShowActivityModal(true);
-				}
-			);
-		} else if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
-			store.setFQActivity(true);
-			this.setState({
-				modalType: 'xianjin',
-				isShowActivityModal: true
-			});
-		}
+	getMianxi7 = async () => {
+		setTimeout(() => {
+			// let mxData = await this.props.$fetch.get(API.couponNotify);
+			let mxData = {
+				msgCode: 'PTM0000',
+				data: 7
+			};
+			if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal2()) {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalBtnFlag: true,
+						modalType: `mianxi${mxData.data}`
+					},
+					() => {
+						store.setShowActivityModal2(true);
+					}
+				);
+			}
+		}, 100);
 	};
 	// 缓存banner
 	cacheBanner = () => {
@@ -906,6 +913,11 @@ export default class home_page extends PureComponent {
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
 				break;
+			case 'yhq7': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
+			case 'yhq50': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
+				this.getMianxi7();
+				break;
+
 			default:
 				break;
 		}

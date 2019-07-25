@@ -5,6 +5,8 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import { getH5Channel } from 'utils/common';
 import { address } from 'utils/Address';
 import Alert_mpos from '../mpos_no_realname_alert_page';
@@ -30,6 +32,11 @@ export default class mpos_middle_page extends Component {
 		// // 移除notice是否显示的标记
 		// store.removeShowNotice();
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+		if (query.h5Channel) {
+			buriedPointEvent(activity.MposH5Channel, {
+				h5Channel: query.h5Channel
+			});
+		}
 		if (query.appId && query.token) {
 			this.props.$fetch
 				.post(API.validateMposRelSts, {
