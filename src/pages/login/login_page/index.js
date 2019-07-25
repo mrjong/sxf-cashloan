@@ -18,8 +18,6 @@ import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
 import ImageCode from 'components/ImageCode';
 
-let aa = '';
-let bb = '';
 let timmer;
 const needDisplayOptions = ['basicInf'];
 const API = {
@@ -208,13 +206,14 @@ export default class login_page extends PureComponent {
 	// 开始倒计时
 	startCountDownTime = () => {
 		clearInterval(timmer);
+		let { countDownTime } = this.state;
 		timmer = setInterval(() => {
 			this.setState(
 				{
-					timers: this.state.countDownTime-- + '"'
+					timers: countDownTime-- + '"'
 				},
 				() => {
-					if (this.state.countDownTime === -1) {
+					if (countDownTime === -1) {
 						clearInterval(timmer);
 						this.setState({ timers: '重新获取', timeflag: true, countDownTime: 59 });
 					}
@@ -267,21 +266,21 @@ export default class login_page extends PureComponent {
 
 	// 获取滑动验证码token并发短信
 	handleTokenAndSms = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.sendSlideVerifySmsCode();
 		});
 	};
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.reloadSlideImage();
 		});
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
 				if (result.msgCode === 'PTM0000') {
@@ -338,7 +337,7 @@ export default class login_page extends PureComponent {
 					this.closeSlideModal();
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				cb && cb('error');
 				this.closeSlideModal();
 			});

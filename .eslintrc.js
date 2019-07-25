@@ -41,7 +41,7 @@ const eslintrc = {
 		'import/no-unresolved': 0,
 		'import/extensions': 0,
 		'import/no-absolute-path': 0,
-		'import/no-duplicates': 2,
+		'import/no-duplicates': 0, //此规则要求从单个模块进行的所有导入都以单一import语句存在
 		'space-before-function-paren': 0,
 		'no-param-reassign': 0,
 		'import/no-extraneous-dependencies': 0,
@@ -93,7 +93,11 @@ const eslintrc = {
 		'camelcase': 0
 	},
 	globals: {},
-	settings: {}
+	settings: {
+    "react": {
+      "version": "detect"
+    }
+  }
 };
 if (process.env.NODE_ENV === 'development') {
 	Object.assign(eslintrc.rules, {
