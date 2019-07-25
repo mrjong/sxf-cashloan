@@ -5,7 +5,7 @@ import { createForm } from 'rc-form';
 import ButtonCustom from 'components/ButtonCustom';
 import CountDownButton from 'components/CountDownButton';
 import styles from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getFirstError, handleInputBlur } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';

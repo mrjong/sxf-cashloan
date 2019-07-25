@@ -3,7 +3,7 @@ import { Modal, InputItem, Icon } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi } from 'utils/analytinsType';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import SXFButton from 'components/ButtonCustom';

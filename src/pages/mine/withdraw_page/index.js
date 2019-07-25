@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFToast';

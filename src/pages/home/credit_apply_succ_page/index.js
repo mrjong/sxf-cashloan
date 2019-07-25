@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import ExamineComponents from 'components/ExamineComponents';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';

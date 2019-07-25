@@ -4,7 +4,7 @@ import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import { getDeviceType } from 'utils';
 import qs from 'qs';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import click from '../mpos_service_authorization_page/img/Button.png';
 const needDisplayOptions = ['basicInf'];

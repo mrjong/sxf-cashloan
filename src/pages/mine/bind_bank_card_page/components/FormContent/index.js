@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { List, InputItem, Picker, DatePicker } from 'antd-mobile';
 import { createForm } from 'rc-form';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
 import ButtonCustom from 'components/ButtonCustom';

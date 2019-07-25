@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import dayjs from 'dayjs';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import { Popover, Icon } from 'antd-mobile';

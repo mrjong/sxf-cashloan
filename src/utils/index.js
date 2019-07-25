@@ -2,7 +2,7 @@ import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { bugLog, home } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { SXFToast } from 'utils/SXFToast';
 

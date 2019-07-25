@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 
 const API = {
 	queryOrdSts: '/redAccount/queryOrdSts' // 付款结果查询接口

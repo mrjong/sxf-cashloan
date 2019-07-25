@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import STabs from 'components/Tab';
 import { store } from 'utils/store';

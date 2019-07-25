@@ -1,4 +1,4 @@
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFToast';
