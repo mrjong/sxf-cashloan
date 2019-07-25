@@ -19,6 +19,7 @@ import backTopBtn from './img/backtop_btn.png';
 import ImageCode from 'components/ImageCode';
 
 let aa = ''
+let bb = ''
 let timmer;
 const needDisplayOptions = ['basicInf'];
 const API = {
