@@ -107,11 +107,10 @@
 		"push-test": "rm -rf node_modules && yarn && npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
-		"precommit": "lint-staged",
-		"prettify": "prettier --fix --write 'src/pages/login/login_page/index.js'"
+		"precommit": "lint-staged"
 	},
 	"lint-staged": {
-		"src/pages/**/*.{js,jsx}": [
+		"src/**/*.{js,jsx}": [
 			"prettier --tab-width 2 --write",
 			"eslint --fix",
 			"git add"
