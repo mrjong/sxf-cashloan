@@ -9,7 +9,7 @@
 		// background: -o-linear-gradient(right, #ffd958, #ffda58); /* Opera 11.1 - 12.0 */
 		// background: -moz-linear-gradient(right, #ffd958, #ffda58); /* Firefox 3.6 - 15 */
 		// background: linear-gradient(to right, #ffd958, #ffda58); /* 标准的语法 */
-		padding: 76px 0 67px;
+		padding: 49px 0 76px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -40,13 +40,17 @@
 		}
 	}
 	.common_margin {
-		margin-top: 30px;
+		position: relative;
+		&::after {
+			@include setTopLine(#f0f1f5);
+		}
+		// margin-top: 30px;
 	}
 	.mine_list {
 		:global {
 			.am-list-item {
 				min-height: 110px;
-				padding: 0 30px;
+				padding: 0;
 				border-radius: 4px;
 			}
 			.am-list-body {
@@ -68,6 +72,12 @@
 				height: 20px;
 				background-image: url('../../../assets/images/mine/arrow_ico.png');
 			}
+			@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+				.am-list-body::after,
+				.am-list-body::before {
+					transform: scaleY(0);
+				}
+			}
 		}
 	}
 	.logout {
@@ -79,7 +89,8 @@
 		font-size: 30px;
 		color: #121c32;
 		text-align: center;
-		margin: 60px auto 42px;
+		border: 1px solid #868e9e;
+		margin: 45px auto 40px;
 	}
 	i {
 		position: absolute;
@@ -101,7 +112,7 @@
 	}
 	// 未登录状态
 	.notLoginBox {
-		padding: 78px 0 60px;
+		padding: 40px 0 60px;
 		text-align: center;
 		img {
 			width: 199px;

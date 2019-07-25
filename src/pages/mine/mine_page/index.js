@@ -23,7 +23,7 @@ let token = '';
 let tokenFromStorage = '';
 
 @fetch.inject()
-@setBackGround('#F7F8FA')
+@setBackGround('#fff')
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
