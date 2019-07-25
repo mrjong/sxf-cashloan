@@ -1,12 +1,13 @@
 const eslintrc = {
-	extends: ['prettier', 'airbnb'],
+	extends: ["eslint:recommended", "plugin:react/recommended"],
 	plugins: ['prettier'],
 	parser: 'babel-eslint',
 	parserOptions: {
 		ecmaVersion: 6,
 		sourceType: 'module',
 		ecmaFeatures: {
-			experimentalObjectRestSpread: true
+      experimentalObjectRestSpread: true,
+      legacyDecorators: true
 		}
 	},
 	env: {
@@ -31,7 +32,7 @@ const eslintrc = {
 		'jsx-a11y/label-has-for': 0,
 		'import/prefer-default-export': 0,
 		'import/imports-first': 0,
-		semi: [2, 'always'],
+		'semi': [2, 'always'],
 		'no-use-before-define': 2,
 		'no-plusplus': 0,
 		'import/no-mutable-exports': 2, // 可导出对象禁止用let或者var修饰 ->const
@@ -60,7 +61,7 @@ const eslintrc = {
 		'one-var': 0,
 		'react/jsx-indent': 0,
 		'no-tabs': 0,
-		eqeqeq: 0,
+		'eqeqeq': 0,
 		'comma-dangle': [2, 'never'],
 		'prefer-const': 0,
 		'consistent-return': 0,
@@ -77,7 +78,7 @@ const eslintrc = {
 		'react/jsx-no-bind': 0,
 		'no-script-url': 0,
 		'no-alert': 0,
-		indent: [0, 2],
+		'indent': [0, 2],
 		'jsx-a11y/alt-text': 0,
 		'linebreak-style': 1,
 		'object-curly-newline': 0,
@@ -89,7 +90,7 @@ const eslintrc = {
 		'spaced-comment': 0,
 		'no-else-return': 2,
 		'no-empty': 2,
-		camelcase: 0
+		'camelcase': 0
 	},
 	globals: {},
 	settings: {}

@@ -18,6 +18,7 @@ import bannerImg2 from './img/login_bg2.png';
 import backTopBtn from './img/backtop_btn.png';
 import ImageCode from 'components/ImageCode';
 
+let aa = ''
 let timmer;
 const needDisplayOptions = ['basicInf'];
 const API = {
