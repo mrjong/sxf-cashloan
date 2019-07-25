@@ -791,25 +791,19 @@ export default class home_page extends PureComponent {
 		});
 	};
 	getMianxi7 = async () => {
-		setTimeout(() => {
-			// let mxData = await this.props.$fetch.get(API.couponNotify);
-			let mxData = {
-				msgCode: 'PTM0000',
-				data: 7
-			};
-			if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal2()) {
-				this.setState(
-					{
-						isShowActivityModal: true,
-						modalBtnFlag: true,
-						modalType: `mianxi${mxData.data}`
-					},
-					() => {
-						store.setShowActivityModal2(true);
-					}
-				);
-			}
-		}, 100);
+		let mxData = await this.props.$fetch.get(API.couponNotify);
+		if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal2()) {
+			this.setState(
+				{
+					isShowActivityModal: true,
+					modalBtnFlag: true,
+					modalType: `mianxi${mxData.data}`
+				},
+				() => {
+					store.setShowActivityModal2(true);
+				}
+			);
+		}
 	};
 	// 缓存banner
 	cacheBanner = () => {
