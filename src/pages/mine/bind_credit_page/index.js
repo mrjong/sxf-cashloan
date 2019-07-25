@@ -43,19 +43,19 @@ export default class bind_credit_page extends PureComponent {
 		// isFetching = false;
 		store.removeBackUrl();
 		this.queryUserInf();
-		this.queryCardInfo()
+		this.queryCardInfo();
 	}
 
 	componentDidMount() {
 		this.props.form.setFieldsValue({
-			valueInputCarNumber: store.getBindCreditCardNo(),
+			valueInputCarNumber: store.getBindCreditCardNo()
 		});
 	}
 
 	componentWillUnmount() {
 		// isFetching = false;
-		const pathname = this.props.history.location.pathname
-		if (!(pathname === '/mine/support_credit_page') ) {
+		const pathname = this.props.history.location.pathname;
+		if (!(pathname === '/mine/support_credit_page')) {
 			store.removeBindCreditCardNo();
 		}
 	}
@@ -78,12 +78,12 @@ export default class bind_credit_page extends PureComponent {
 	queryCardInfo = () => {
 		this.props.$fetch.get(`${API.queryCardInfo}/${autId ? autId : ''}`).then(
 			(result) => {
-				console.log(result)
+				console.log(result);
 				if (result.msgCode === 'PTM0000' && result.data) {
 					this.setState({
 						bankNm: result.data.bankNm,
 						cardLastNo: result.data.cardLastNo
-					})
+					});
 				}
 			},
 			(error) => {
@@ -177,7 +177,12 @@ export default class bind_credit_page extends PureComponent {
 						...result.data
 					}
 				});
-				if (result.msgCode === 'PTM0000' && result.data && result.data.bankCd && result.data.cardTyp !== 'D') {
+				if (
+					result.msgCode === 'PTM0000' &&
+					result.data &&
+					result.data.bankCd &&
+					result.data.cardTyp !== 'D'
+				) {
 					const params1 = {
 						bankCd: result.data.bankCd,
 						cardTyp: 'C', //卡类型。
@@ -202,7 +207,7 @@ export default class bind_credit_page extends PureComponent {
 	};
 	// 确认购买
 	confirmBuy = () => {
-		if (!this.validateFn()) return
+		if (!this.validateFn()) return;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.checkCard(values);
@@ -222,14 +227,13 @@ export default class bind_credit_page extends PureComponent {
 
 	//	校验必填项
 	validateFn = () => {
-		const { userName } = this.state
+		const { userName } = this.state;
 		const formData = this.props.form.getFieldsValue();
 		if (userName && formData.valueInputCarNumber) {
-			return true
+			return true;
 		}
-		return false
-	}
-
+		return false;
+	};
 
 	// 判断json里的每一项是否为空
 	jsonIsNull = (values) => {
@@ -259,7 +263,10 @@ export default class bind_credit_page extends PureComponent {
 						maxLength="24"
 						type="bankCard"
 						{...getFieldProps('valueInputCarNumber', {
-							rules: [{ required: true, message: '请输入有效银行卡号' }, { validator: this.validateCarNumber }],
+							rules: [
+								{ required: true, message: '请输入有效银行卡号' },
+								{ validator: this.validateCarNumber }
+							],
 							onChange: (value) => {
 								store.setBindCreditCardNo(value);
 							}
@@ -276,7 +283,10 @@ export default class bind_credit_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<ButtonCustom onClick={this.confirmBuy} className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}>
+				<ButtonCustom
+					onClick={this.confirmBuy}
+					className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
+				>
 					确认
 				</ButtonCustom>
 			</div>

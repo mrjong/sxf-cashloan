@@ -32,7 +32,8 @@ export default class auth_page extends Component {
 				.catch((err) => {
 					console.log(err);
 					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
 		} else {

@@ -23,7 +23,7 @@ export default class mpos_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		address()
+		address();
 		this.validateMposRelSts();
 	}
 	validateMposRelSts = () => {
@@ -40,7 +40,7 @@ export default class mpos_middle_page extends Component {
 					if (res.msgCode === 'URM0000') {
 						// entryType为入口类型，DC为贷款超市进入
 						if (query && query.entryType === 'DC') {
-							window.location.href = `${linkConf.DC_URL}&appId=${query.appId}&token=${query.token}`
+							window.location.href = `${linkConf.DC_URL}&appId=${query.appId}&token=${query.token}`;
 						} else {
 							this.transition();
 						}
@@ -54,14 +54,14 @@ export default class mpos_middle_page extends Component {
 				})
 				.catch((err) => {
 					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
 		} else {
 			this.setState({ showBoundle: true });
 		}
-
-	}
+	};
 	transition = () => {
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
@@ -92,14 +92,16 @@ export default class mpos_middle_page extends Component {
 				},
 				(err) => {
 					this.setState({
-						errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 					console.log(err);
 				}
 			)
 			.catch((err) => {
 				this.setState({
-					errorInf: '加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+					errorInf:
+						'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 				});
 				console.log(err);
 			});

@@ -11,7 +11,7 @@ if (PROJECT_ENV === 'pro' || PROJECT_ENV === 'rc') {
 } else {
 	appId = '7811333';
 }
-let hasReport = false //是否上报后台标识
+let hasReport = false; //是否上报后台标识
 function getTongFuDun() {
 	const element = document.createElement('script');
 	const ts = new Date().getTime();
@@ -24,7 +24,7 @@ function getTongFuDun() {
 
 // 通付盾验证成功后向后端报备下
 function requestBackReport() {
-	hasReport = true
+	hasReport = true;
 	fetch
 		.get(`${TONFUDUN_BAOBEI}/${sessionId}`, null, {
 			hideLoading: true
@@ -36,7 +36,7 @@ function requestBackReport() {
 			// console.log(err);
 		})
 		.finally(() => {
-			hasReport = false
+			hasReport = false;
 			// console.log('请求完成'); // 无论请求成功或失败都会执行。
 		});
 }
@@ -54,12 +54,13 @@ function jspCallBack(res) {
 }
 
 const TFDInit = (flag) => {
-	window.OnngFuDunCallBack = jspCallBack
+	window.OnngFuDunCallBack = jspCallBack;
 	if (flag) {
-		document.getElementById('tonfudunScript') && document.body.removeChild(document.getElementById('tonfudunScript'));
+		document.getElementById('tonfudunScript') &&
+			document.body.removeChild(document.getElementById('tonfudunScript'));
 		document.getElementById('payegisIfm') && document.body.removeChild(document.getElementById('payegisIfm'));
 		getTongFuDun();
-		return
+		return;
 	}
 	if (!document.getElementById(elementId)) {
 		getTongFuDun();

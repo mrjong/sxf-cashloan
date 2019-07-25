@@ -13,11 +13,16 @@ import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
+import ImageCode from 'components/ImageCode';
+
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
-	imageCode: '/signup/sendImg'
+	imageCode: '/signup/sendImg',
+	createImg: '/cmm/createImg', // 获取滑动大图
+	getRelyToken: '/cmm/getRelyToken', //图片token获取
+	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
 };
 
 @setBackGround('#fff')
@@ -28,14 +33,17 @@ export default class login_page extends PureComponent {
 		super(props);
 		this.state = {
 			timers: '获取验证码',
+			countDownTime: 59,
 			timeflag: true,
-			flag: true,
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
 			isChecked: true, // 是否勾选协议
 			inputFocus: false,
-			imageCodeUrl: '' // 图片验证码url
+			imageCodeUrl: '', // 图片验证码url
+			showSlideModal: false,
+			slideImageUrl: '',
+			mobilePhone: ''
 		};
 	}
 
@@ -80,8 +88,8 @@ export default class login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
+			this.getImage();
 		}
-		this.getImage();
 	}
 	componentDidMount() {
 		let _this = this;
@@ -163,7 +171,7 @@ export default class login_page extends PureComponent {
 					(error) => {
 						error.msgInfo &&
 							Toast.info(error.msgInfo, 3, () => {
-								this.getImage();
+								this.state.disabledInput && this.getImage();
 							});
 					}
 				);
@@ -173,14 +181,14 @@ export default class login_page extends PureComponent {
 		});
 	};
 
-	//获得手机验证码
-	getTime(i) {
-		if (!this.getSmsCode(i)) {
-		}
-	}
+	// 处理获取验证码按钮点击事件
+	handleSmsCodeClick = () => {
+		if (!this.state.timeflag) return;
+		this.getSmsCode();
+	};
 
 	// 获得手机验证码
-	getSmsCode(i) {
+	getSmsCode() {
 		const { queryData } = this.state;
 		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
@@ -198,38 +206,155 @@ export default class login_page extends PureComponent {
 						osType,
 						imgCode: values.imgCd
 					};
+					this.sendSmsCode(param);
 				} else {
-					param = {
-						type: '6',
-						mblNo: values.phoneValue && values.phoneValue.replace(/\s*/g, ''),
-						osType,
-						imgCode: values.imgCd
-					};
-				}
-				// 发送验证码
-				this.props.$fetch.post(API.sendsms, param).then((result) => {
-					if (result.msgCode !== 'PTM0000') {
-						Toast.info(result.msgInfo, 3, () => {
-							this.getImage();
-						});
-						this.setState({ valueInputImgCode: '' });
-						return false;
-					}
-					Toast.info('发送成功，请注意查收！');
-					this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-					timmer = setInterval(() => {
-						this.setState({ flag: false, timers: `${i--}s` });
-						if (i === -1) {
-							clearInterval(timmer);
-							this.setState({ timers: '重新获取', timeflag: true, flag: true });
+					this.setState(
+						{
+							mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
+						},
+						() => {
+							this.handleTokenAndSms();
 						}
-					}, 1000);
-				});
+					);
+				}
 			} else {
 				Toast.info(getFirstError(err));
 			}
 		});
 	}
+
+	// 获取滑动验证码token并发短信
+	handleTokenAndSms = () => {
+		this.refreshSlideToken().then((res) => {
+			this.sendSlideVerifySmsCode();
+		});
+	};
+
+	// 获取滑动验证码token并获取大图
+	handleTokenAndImage = () => {
+		this.refreshSlideToken().then((res) => {
+			this.reloadSlideImage();
+		});
+	};
+
+	// 刷新滑动验证码token
+	refreshSlideToken = () => {
+		return new Promise((resolve, reject) => {
+			const osType = getDeviceType();
+			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
+				if (result.msgCode === 'PTM0000') {
+					this.setState({
+						submitData: {
+							relyToken: result.data.relyToken,
+							mblNo: this.state.mobilePhone,
+							osType,
+							bFlag: '',
+							type: '6'
+						}
+					});
+					resolve();
+				} else {
+					Toast.info(result.msgInfo);
+				}
+			});
+		});
+	};
+
+	// 获取短信(滑动验证码)
+	sendSlideVerifySmsCode = (xOffset = '', cb) => {
+		let data = Object.assign({}, this.state.submitData, { bFlag: xOffset });
+		this.props.$fetch
+			.post(API.sendImgSms, data)
+			.then((result) => {
+				if (result.msgCode === 'PTM0000') {
+					Toast.info('发送成功，请注意查收！');
+					this.setState({
+						timeflag: false,
+						smsJrnNo: result.data.smsJrnNo
+					});
+					cb && cb('success');
+					setTimeout(() => {
+						this.closeSlideModal();
+					}, 1500);
+
+					this.startCountDownTime();
+				} else if (result.msgCode === 'PTM3019') {
+					// 弹窗不存在时请求大图
+					!this.state.showSlideModal && this.reloadSlideImage();
+					cb && cb('error');
+				} else if (result.msgCode === 'PTM3020') {
+					//重新刷新relyToken
+					this.handleTokenAndImage();
+					cb && cb('refresh');
+				} else {
+					// 达到短信次数限制
+					Toast.info(result.msgInfo);
+					cb && cb('error');
+					this.closeSlideModal();
+				}
+			})
+			.catch((err) => {
+				cb && cb('error');
+				this.closeSlideModal();
+			});
+	};
+
+	reloadSlideImage = () => {
+		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState({
+					slideImageUrl: `data:image/png;base64,${res.data.b}`,
+					smallImageUrl: `data:image/png;base64,${res.data.s}`,
+					yOffset: res.data.sy, // 小图距离大图顶部距离
+					bigImageH: res.data.bh, // 大图实际高度
+					showSlideModal: true
+				});
+			} else {
+				Toast.info(res.msgInfo);
+			}
+		});
+	};
+
+	showSlideModal = () => {
+		this.setState({ showSlideModal: true });
+	};
+
+	closeSlideModal = () => {
+		this.setState({ showSlideModal: false });
+	};
+
+	// 老的获取短信验证码(mpos)
+	sendSmsCode = (param) => {
+		this.props.$fetch.post(API.sendsms, param).then((result) => {
+			if (result.msgCode === 'PTM0000') {
+				Toast.info('发送成功，请注意查收！');
+				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+				this.startCountDownTime();
+			} else {
+				Toast.info(result.msgInfo, 3, () => {
+					this.getImage();
+				});
+			}
+		});
+	};
+
+	startCountDownTime = () => {
+		clearInterval(timmer);
+		timmer = setInterval(() => {
+			this.setState(
+				{
+					timers: this.state.countDownTime-- + '"'
+				},
+				() => {
+					if (this.state.countDownTime === -1) {
+						clearInterval(timmer);
+						this.setState({ timers: '重新获取', timeflag: true, countDownTime: 59 });
+					}
+				}
+			);
+		}, 1000);
+	};
+
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
@@ -261,7 +386,15 @@ export default class login_page extends PureComponent {
 	};
 
 	render() {
-		const { imageCodeUrl } = this.state;
+		const {
+			imageCodeUrl,
+			slideImageUrl,
+			smallImageUrl,
+			showSlideModal,
+			yOffset,
+			bigImageH,
+			disabledInput
+		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div ref="loginWrap" className={styles.dc_landing_page}>
@@ -271,7 +404,7 @@ export default class login_page extends PureComponent {
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
 						<InputItem
-							disabled={this.state.disabledInput}
+							disabled={disabledInput}
 							id="inputPhone"
 							maxLength="13"
 							type="phone"
@@ -280,7 +413,7 @@ export default class login_page extends PureComponent {
 							{...getFieldProps('phoneValue', {
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
-									{ validator: !this.state.disabledInput && this.validatePhone }
+									{ validator: !disabledInput && this.validatePhone }
 								]
 							})}
 							onBlur={() => {
@@ -290,39 +423,40 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						<div className={styles.smsBox}>
-							<InputItem
-								id="imgCode"
-								// type="number"
-								// maxLength="6"
-								maxLength="4"
-								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-								placeholder="请输入图形验证码"
-								{...getFieldProps('imgCd', {
-									rules: [{ required: true, message: '请输入正确图形验证码' }]
-								})}
-								onBlur={() => {
-									this.setState({
-										inputFocus: false
-									});
-									handleInputBlur();
-								}}
-							/>
-							<div
-								className={
-									this.state.timers.indexOf('s') === -1
-										? styles.smsCode
-										: [styles.smsCode, styles.smsCode2].join(' ')
-								}
-								onClick={() => {
-									this.getImage();
-								}}
-							>
-								<div className={styles.getCodeBox}>
-									<img className={styles.getCode} src={imageCodeUrl} />
+						{disabledInput && (
+							<div className={styles.smsBox}>
+								<InputItem
+									id="imgCode"
+									maxLength="4"
+									className={[styles.loginInput, styles.smsCodeInput].join(' ')}
+									placeholder="请输入图形验证码"
+									{...getFieldProps('imgCd', {
+										rules: [{ required: true, message: '请输入正确图形验证码' }]
+									})}
+									onBlur={() => {
+										this.setState({
+											inputFocus: false
+										});
+										handleInputBlur();
+									}}
+								/>
+								<div
+									className={
+										this.state.timers.indexOf('s') === -1
+											? styles.smsCode
+											: [styles.smsCode, styles.smsCode2].join(' ')
+									}
+									onClick={() => {
+										this.getImage();
+									}}
+								>
+									<div className={styles.getCodeBox}>
+										<img className={styles.getCode} src={imageCodeUrl} />
+									</div>
 								</div>
 							</div>
-						</div>
+						)}
+
 						<div className={styles.smsBox}>
 							<InputItem
 								id="inputCode"
@@ -347,7 +481,7 @@ export default class login_page extends PureComponent {
 										: [styles.smsCode, styles.smsCode2].join(' ')
 								}
 								onClick={() => {
-									this.state.timeflag ? this.getTime(59) : '';
+									this.handleSmsCodeClick();
 								}}
 							>
 								{this.state.timers}
@@ -386,6 +520,19 @@ export default class login_page extends PureComponent {
 						</span>
 					</div>
 				</div>
+				{showSlideModal && (
+					<ImageCode
+						imageUrl={slideImageUrl}
+						smallImageUrl={smallImageUrl}
+						yOffset={yOffset}
+						bigImageH={bigImageH}
+						onReload={this.handleTokenAndImage}
+						onMoveEnd={(xOffset, cb) => {
+							this.sendSlideVerifySmsCode(xOffset, cb);
+						}}
+						onClose={this.closeSlideModal}
+					/>
+				)}
 			</div>
 		);
 	}

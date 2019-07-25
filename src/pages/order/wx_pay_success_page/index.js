@@ -41,8 +41,7 @@ export default class wx_pay_success_page extends Component {
 					} else {
 						this.setState({
 							orderData:
-								(res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1]) ||
-								{},
+								(res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1]) || {},
 							thisRepTotAmt: (test && test.thisRepTotAmt) || ''
 						});
 					}

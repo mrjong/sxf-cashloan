@@ -11,10 +11,10 @@ import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
 import { Checkbox } from 'antd-mobile';
 const AgreeItem = Checkbox.AgreeItem;
-const needDisplayOptions = [ 'basicInf' ];
+const needDisplayOptions = ['basicInf'];
 const API = {
 	doAuth: '/authorize/doAuth',
-	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
+	getStw: '/my/getStsw' // 获取4个认证项的状态(看基本信息是否认证)
 };
 @setBackGround('#fff')
 @fetch.inject()
@@ -65,33 +65,36 @@ export default class mpos_service_authorization_page extends PureComponent {
 
 	// 获取授信列表状态
 	requestGetStatus = () => {
-		this.props.$fetch.get(`${API.getStw}`).then((result) => {
-			if (result && result.data !== null && result.msgCode === 'PTM0000') {
-				const stswData = result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
-				if (stswData && stswData.length){
-					// case '0': // 未认证
-					// case '1': // 认证中
-					// case '2': // 认证成功
-					// case '3': // 认证失败
-					// case '4': // 认证过期
-					if (stswData[0].stsw.dicDetailCd === '0') {
-						this.props.history.replace({
-							pathname: '/home/essential_information',
-							search: '?jumpToBase=true&entry=authorize'
-						});
-					} else {
-						this.props.history.replace('/home/home');
+		this.props.$fetch
+			.get(`${API.getStw}`)
+			.then((result) => {
+				if (result && result.data !== null && result.msgCode === 'PTM0000') {
+					const stswData =
+						result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
+					if (stswData && stswData.length) {
+						// case '0': // 未认证
+						// case '1': // 认证中
+						// case '2': // 认证成功
+						// case '3': // 认证失败
+						// case '4': // 认证过期
+						if (stswData[0].stsw.dicDetailCd === '0') {
+							this.props.history.replace({
+								pathname: '/home/essential_information',
+								search: '?jumpToBase=true&entry=authorize'
+							});
+						} else {
+							this.props.history.replace('/home/home');
+						}
 					}
+				} else {
+					this.props.toast.info(result.msgInfo, 2, () => {
+						this.props.history.replace('/home/home');
+					});
 				}
-			} else {
-				this.props.toast.info(result.msgInfo, 2, () => {
-					this.props.history.replace('/home/home');
-				});
-			}
-		})
-		.catch((err) => {
-			this.props.history.replace('/home/home');
-		});
+			})
+			.catch((err) => {
+				this.props.history.replace('/home/home');
+			});
 	};
 
 	// 跳转协议
@@ -109,7 +112,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 				<div>
 					<div className={styles.btn_fixed}>
 						<SXFButton
-							className={selectFlag ? styles.smart_button : [ styles.smart_button, styles.dis ].join(' ')}
+							className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
 							onClick={selectFlag ? () => this.goSubmit() : null}
 						>
 							确定
