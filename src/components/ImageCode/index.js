@@ -124,9 +124,9 @@ class ImageCode extends React.Component {
 	};
 
 	onReload = () => {
-		if (this.state.status !== STATUS_READY && this.state.status !== STATUS_MATCH) {
-			return;
-		}
+		// if (this.state.status !== STATUS_READY && this.state.status !== STATUS_MATCH) {
+		// 	return;
+		// }
 
 		this.setState(
 			{
