@@ -104,26 +104,24 @@ export default class SmsAlert extends Component {
 							if (result.msgCode !== 'PTM0000') {
 								Toast.info(result.msgInfo);
 								return;
-							} else {
-								Toast.info('发送成功，请注意查收！');
-								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-								timmer = setInterval(() => {
-									this.setState({ flag: false, smsText: i-- + '"' });
-									if (i === -1) {
-										clearInterval(timmer);
-										this.setState({ smsText: '重新获取', timeflag: true, flag: true });
-									}
-								}, 1000);
 							}
+							Toast.info('发送成功，请注意查收！');
+							this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+							timmer = setInterval(() => {
+								this.setState({ flag: false, smsText: i-- + '"' });
+								if (i === -1) {
+									clearInterval(timmer);
+									this.setState({ smsText: '重新获取', timeflag: true, flag: true });
+								}
+							}, 1000);
 						},
 						(error) => {
 							error.msgInfo && Toast.info(error.msgInfo);
 						}
 					);
 				return true;
-			} else {
-				Toast.info(getFirstError(err));
 			}
+			Toast.info(getFirstError(err));
 		});
 	}
 	//登录判断

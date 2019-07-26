@@ -74,11 +74,10 @@ export default class wuyue_old_page extends PureComponent {
 			});
 			Toast.info('活动id不能为空');
 			return;
-		} else {
-			this.setState({
-				codeInfo: ''
-			});
 		}
+		this.setState({
+			codeInfo: ''
+		});
 		// 保存入口
 		if (queryData.entry) {
 			this.setState({

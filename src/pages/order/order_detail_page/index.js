@@ -885,9 +885,8 @@ export default class order_detail_page extends PureComponent {
 		const { deratePrice } = this.state;
 		if (deratePrice !== '') {
 			return <span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>;
-		} else {
-			return <span>不使用</span>;
 		}
+		return <span>不使用</span>;
 		// if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
 		//     if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
 		//         if (this.state.showItrtAmt) {

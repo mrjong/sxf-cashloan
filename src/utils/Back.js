@@ -293,9 +293,8 @@ if (window.history && window.history.pushState) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
 							return;
-						} else {
-							logoutAppHandler();
 						}
+						logoutAppHandler();
 					} else if (isWXOpen() && !tokenFromStorage && !token) {
 						window.close();
 						window.WeixinJSBridge.call('closeWindow');
@@ -326,9 +325,8 @@ if (window.history && window.history.pushState) {
 					if (store.getToggleMoxieCard()) {
 						window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
 						return;
-					} else {
-						window.ReactRouterHistory.push('/home/home');
 					}
+					window.ReactRouterHistory.push('/home/home');
 					break;
 				case '/home/credit_apply_succ_page':
 					window.ReactRouterHistory.push('/home/home');

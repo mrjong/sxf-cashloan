@@ -82,33 +82,27 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 };
 
 // 逻辑有待优化
-export const headerIgnore = (type) => {
+export const headerIgnore = () => {
 	const ua = window.navigator.userAgent;
-	if (type === 'false') {
-		if (
-			!/MicroMessenger/i.test(ua) &&
-			!/QQ/i.test(ua) &&
-			!/AlipayClient/i.test(ua) &&
-			!/SuiXingPay-Mpos/i.test(ua) &&
-			!/SuiXingPay-Cashier/i.test(ua)
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	} else {
-		if (
-			/MicroMessenger/i.test(ua) ||
-			/QQ/i.test(ua) ||
-			/AlipayClient/i.test(ua) ||
-			/SuiXingPay-Mpos/i.test(ua) ||
-			/SuiXingPay-Cashier/i.test(ua)
-		) {
-			return true;
-		} else {
-			return false;
-		}
+	if (
+		!/MicroMessenger/i.test(ua) &&
+		!/QQ/i.test(ua) &&
+		!/AlipayClient/i.test(ua) &&
+		!/SuiXingPay-Mpos/i.test(ua) &&
+		!/SuiXingPay-Cashier/i.test(ua)
+	) {
+		return true;
 	}
+	if (
+		/MicroMessenger/i.test(ua) ||
+		/QQ/i.test(ua) ||
+		/AlipayClient/i.test(ua) ||
+		/SuiXingPay-Mpos/i.test(ua) ||
+		/SuiXingPay-Cashier/i.test(ua)
+	) {
+		return true;
+	}
+	return false;
 };
 
 export const setTitle = (getTitle) => {

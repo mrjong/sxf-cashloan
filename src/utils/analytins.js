@@ -1,4 +1,3 @@
-// import qs from 'qs';
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
 
@@ -11,17 +10,7 @@ export const initAnalytics = () => {
 		show_log: false, //是否打印上报日志
 		is_single_page: true
 	});
-	// const query = qs.parse(window.location.search, {
-	// 	ignoreQueryPrefix: true
-	// });
-	// const ua = window.navigator.userAgent;
-	// if (!store.getH5Channel()) {
-	//   /SuiXingPay-Mpos/i.test(ua)
-	//     ? query.h5Channel
-	//       ? store.setH5Channel(query.h5Channel)
-	//       : store.setH5Channel('MPOS')
-	//     : store.setH5Channel(query.h5Channel ? query.h5Channel : 'other');
-	// }
+
 	// 解决banner等通过location href在mpos中跳转返回后h5Channel丢失的问题
 	const storeH5Channel = getH5Channel();
 	setH5Channel(storeH5Channel);

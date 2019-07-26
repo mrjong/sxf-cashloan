@@ -129,9 +129,8 @@ export default class order_page extends PureComponent {
 						// }
 					}
 					return dataArr;
-				} else {
-					return [];
 				}
+				return [];
 			})
 			.catch(() => {
 				if (pIndex === 0) {
@@ -288,19 +287,18 @@ export default class order_page extends PureComponent {
 						pageSize={1}
 					/>
 				);
-			} else {
-				return (
-					<div className={style.no_data}>
-						<i />
-						暂无账单
-						{isWXOpen() && !tokenFromStorage && !token ? (
-							<SXFButton className={style.noLogin} onClick={this.goLogin}>
-								去登录
-							</SXFButton>
-						) : null}
-					</div>
-				);
 			}
+			return (
+				<div className={style.no_data}>
+					<i />
+					暂无账单
+					{isWXOpen() && !tokenFromStorage && !token ? (
+						<SXFButton className={style.noLogin} onClick={this.goLogin}>
+							去登录
+						</SXFButton>
+					) : null}
+				</div>
+			);
 		};
 		return (
 			<div className={style.orderScroll}>

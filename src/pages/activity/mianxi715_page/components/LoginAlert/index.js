@@ -74,26 +74,24 @@ export default class LoginAlert extends Component {
 									this.getImage();
 								});
 								return;
-							} else {
-								Toast.info('发送成功，请注意查收！');
-								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-								timmer = setInterval(() => {
-									this.setState({ flag: false, smsText: i-- + '"' });
-									if (i === -1) {
-										clearInterval(timmer);
-										this.setState({ smsText: '重新获取', timeflag: true, flag: true });
-									}
-								}, 1000);
 							}
+							Toast.info('发送成功，请注意查收！');
+							this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+							timmer = setInterval(() => {
+								this.setState({ flag: false, smsText: i-- + '"' });
+								if (i === -1) {
+									clearInterval(timmer);
+									this.setState({ smsText: '重新获取', timeflag: true, flag: true });
+								}
+							}, 1000);
 						},
 						(error) => {
 							error.msgInfo && Toast.info(error.msgInfo);
 						}
 					);
 				return true;
-			} else {
-				Toast.info(getFirstError(err));
 			}
+			Toast.info(getFirstError(err));
 		});
 	}
 	closeCb = () => {
