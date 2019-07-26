@@ -939,8 +939,8 @@ export default class home_page extends PureComponent {
 				break;
 			case 'mianxi7':
 				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType: '7',
-					H5Channel: getH5Channel()
+					dayType726: '7',
+					h5Channel726: getH5Channel()
 				});
 				setTimeout(() => {
 					if (indexSts === 'LN0001') {
@@ -957,8 +957,8 @@ export default class home_page extends PureComponent {
 				break;
 			case 'mianxi15':
 				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType: '15',
-					H5Channel: getH5Channel()
+					dayType726: '15',
+					h5Channel726: getH5Channel()
 				});
 
 				setTimeout(() => {
@@ -975,8 +975,8 @@ export default class home_page extends PureComponent {
 				break;
 			case 'mianxi30':
 				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType: '15',
-					H5Channel: getH5Channel()
+					dayType726: '15',
+					h5Channel726: getH5Channel()
 				});
 				setTimeout(() => {
 					if (indexSts === 'LN0001') {
