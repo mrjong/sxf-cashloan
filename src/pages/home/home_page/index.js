@@ -919,6 +919,8 @@ export default class home_page extends PureComponent {
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
 		this.closeActivityModal(type);
+		const { usrIndexInfo } = this.state;
+		const { indexSts } = usrIndexInfo;
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
@@ -940,8 +942,7 @@ export default class home_page extends PureComponent {
 					dayType: '7',
 					H5Channel: getH5Channel()
 				});
-				const { usrIndexInfo } = this.state;
-				const { indexSts } = usrIndexInfo;
+
 				if (indexSts === 'LN0001') {
 					this.handleApply();
 				} else if (indexSts === 'LN0002') {
@@ -957,8 +958,7 @@ export default class home_page extends PureComponent {
 					dayType: '15',
 					H5Channel: getH5Channel()
 				});
-				const { usrIndexInfo } = this.state;
-				const { indexSts } = usrIndexInfo;
+
 				if (indexSts === 'LN0001') {
 					this.handleApply();
 				} else if (indexSts === 'LN0002') {
@@ -974,8 +974,7 @@ export default class home_page extends PureComponent {
 					dayType: '30',
 					H5Channel: getH5Channel()
 				});
-				const { usrIndexInfo } = this.state;
-				const { indexSts } = usrIndexInfo;
+
 				if (indexSts === 'LN0001') {
 					this.handleApply();
 				} else if (indexSts === 'LN0002') {
