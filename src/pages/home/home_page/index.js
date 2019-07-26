@@ -946,7 +946,7 @@ export default class home_page extends PureComponent {
 					this.handleApply();
 				} else if (indexSts === 'LN0002') {
 					this.handleProgressApply('01');
-				} else if (indexSts === 'PTM0010') {
+				} else if (indexSts === 'LN0010') {
 					this.goToNewMoXie();
 				} else {
 					this.handleSmartClick();
@@ -963,7 +963,7 @@ export default class home_page extends PureComponent {
 					this.handleApply();
 				} else if (indexSts === 'LN0002') {
 					this.handleProgressApply('01');
-				} else if (indexSts === 'PTM0010') {
+				} else if (indexSts === 'LN0010') {
 					this.goToNewMoXie();
 				} else {
 					this.handleSmartClick();
