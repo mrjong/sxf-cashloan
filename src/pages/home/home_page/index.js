@@ -975,7 +975,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'mianxi30':
 				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '15',
+					dayType726: '30',
 					h5Channel726: getH5Channel()
 				});
 				setTimeout(() => {
