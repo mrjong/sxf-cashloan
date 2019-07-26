@@ -10,7 +10,7 @@ import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
-import fqaImg from 'assets/images/mine/login_logo.png';
+import fqaImg from 'assets/images/mine/fqa_img.png';
 import notLoginImg from 'assets/images/mine/not_login_logo.png';
 
 const API = {
