@@ -8,7 +8,11 @@ const Loading = ({ error, pastDelay }) => {
 	if (pastDelay) {
 		return <div>{React.createElement(SXFLoading)}</div>;
 	} else if (error) {
-		return <div><ErrPage></ErrPage></div>;
+		return (
+			<div>
+				<ErrPage></ErrPage>
+			</div>
+		);
 	}
 	return null;
 };

@@ -6,16 +6,16 @@ import { Consumer } from 'pages/common/routerPage/context';
 import yhq50 from './img/yhq50.png';
 import yhq7 from './img/yhq7.png';
 /*
-* 接收一个配置文件数组
-* parms: {
-*   icon: 激活时icon
-*   icon_not: 未激活时icon
-*   title: 相应icon描述文字
-*   color: 激活时文字描述颜色
-*   color-not: 未激活时文字描述颜色
-* }
-*
-* */
+ * 接收一个配置文件数组
+ * parms: {
+ *   icon: 激活时icon
+ *   icon_not: 未激活时icon
+ *   title: 相应icon描述文字
+ *   color: 激活时文字描述颜色
+ *   color-not: 未激活时文字描述颜色
+ * }
+ *
+ * */
 
 function TabItem(props) {
 	const { data } = props;
@@ -53,7 +53,9 @@ function TabBarList(props) {
 		return null;
 	}
 	let tabBarBottom = null;
-	tabBarBottom = tabList.map((item) => <TabItem key={item.url ? item.url : new Date().getTime()} data={item} />);
+	tabBarBottom = tabList.map((item) => (
+		<TabItem key={item.url ? item.url : new Date().getTime()} data={item} />
+	));
 	return tabBarBottom;
 }
 
@@ -93,7 +95,9 @@ export default class Footer extends PureComponent {
 		let { data, footerProps } = this.props;
 		const { footerHide } = footerProps;
 		return footerHide ? null : (
-			<div className={[ styles.footer, 'application_footerbar' ].join(' ')}>{<TabBarList tabList={data} />}</div>
+			<div className={[styles.footer, 'application_footerbar'].join(' ')}>
+				{<TabBarList tabList={data} />}
+			</div>
 		);
 	}
 }

@@ -21,7 +21,7 @@ export default class FEZIpImage extends Component {
 			beforeCompress();
 			// if (file) {
 			// 	beforeCompress();
-			// } 
+			// }
 			// else {
 			// 	afterCompress();
 			// }
@@ -33,8 +33,8 @@ export default class FEZIpImage extends Component {
 					onChange({ base64Data, size, fileName });
 				})
 				.catch(console.error)
-				.always(()=>{
-					afterCompress()
+				.always(() => {
+					afterCompress();
 				});
 		});
 	}
@@ -76,13 +76,13 @@ export default class FEZIpImage extends Component {
 		const {
 			className,
 			style,
-			onChange,
+			// onChange,
+			// beforeCompress,
+			// afterCompress,
+			// activeClassName,
 			disabledupload,
-			beforeCompress,
-			afterCompress,
 			accept,
 			value,
-			activeClassName,
 			...others
 		} = this.props;
 
@@ -96,8 +96,8 @@ export default class FEZIpImage extends Component {
 					ref={(input) => (this.fileSelectorInput = input)}
 					type="file"
 					disabled={disabledupload === 'false' ? false : true}
-                    accept={accept}
-                    value=""
+					accept={accept}
+					value=""
 					capture="camera"
 				/>
 			</div>
