@@ -940,21 +940,51 @@ export default class home_page extends PureComponent {
 					dayType: '7',
 					H5Channel: getH5Channel()
 				});
-				this.handleSmartClick();
+				const { usrIndexInfo } = this.state;
+				const { indexSts } = usrIndexInfo;
+				if (indexSts === 'LN0001') {
+					this.handleApply();
+				} else if (indexSts === 'LN0002') {
+					this.handleProgressApply('01');
+				} else if (indexSts === 'PTM0010') {
+					this.goToNewMoXie();
+				} else {
+					this.handleSmartClick();
+				}
 				break;
 			case 'mianxi15':
 				buriedPointEvent(activity.mianxi726ModalBtnClick, {
 					dayType: '15',
 					H5Channel: getH5Channel()
 				});
-				this.handleSmartClick();
+				const { usrIndexInfo } = this.state;
+				const { indexSts } = usrIndexInfo;
+				if (indexSts === 'LN0001') {
+					this.handleApply();
+				} else if (indexSts === 'LN0002') {
+					this.handleProgressApply('01');
+				} else if (indexSts === 'PTM0010') {
+					this.goToNewMoXie();
+				} else {
+					this.handleSmartClick();
+				}
 				break;
 			case 'mianxi30':
 				buriedPointEvent(activity.mianxi726ModalBtnClick, {
 					dayType: '30',
 					H5Channel: getH5Channel()
 				});
-				this.handleSmartClick();
+				const { usrIndexInfo } = this.state;
+				const { indexSts } = usrIndexInfo;
+				if (indexSts === 'LN0001') {
+					this.handleApply();
+				} else if (indexSts === 'LN0002') {
+					this.handleProgressApply('01');
+				} else if (indexSts === 'PTM0010') {
+					this.goToNewMoXie();
+				} else {
+					this.handleSmartClick();
+				}
 				break;
 			default:
 				break;
