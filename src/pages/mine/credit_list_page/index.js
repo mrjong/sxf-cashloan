@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import dayjs from 'dayjs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import styles from './index.scss';
-import { Popover, Icon } from 'antd-mobile';
+import { Popover } from 'antd-mobile';
 import select from './img/select.png';
 import not_select from './img/not_select.png';
 import { setBackGround } from 'utils/background';
@@ -13,7 +13,6 @@ import { home } from 'utils/analytinsType';
 import arrow from './img/arrow.png';
 import { getMoxieData } from 'utils';
 import FeedbackModal from 'components/FeedbackModal';
-import mock from './mock.js';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
 	CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -50,7 +49,6 @@ export default class credit_list_page extends PureComponent {
 				(res) => {
 					if (res.msgCode === 'PTM0000') {
 						this.setState({
-							// cardList: mock.data.result,
 							cardList: res.data && res.data.result ? res.data.result : [],
 							resultLength: (res.data && res.data.resultLength) || 0
 						});
@@ -206,7 +204,7 @@ export default class credit_list_page extends PureComponent {
 																overlayClassName="credit_list_pagePopover"
 																visible={false}
 																overlay={[
-																	<p className={styles.Popover}>
+																	<p className={styles.Popover} key="0">
 																		{(item.persionCheck === '00' &&
 																			'仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。') ||
 																			(item.cardBinSupport === '00' &&

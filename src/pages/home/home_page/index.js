@@ -6,7 +6,7 @@ import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffe
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
 // import mockData from './mockData';

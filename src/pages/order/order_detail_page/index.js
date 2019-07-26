@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import Panel from 'components/Panel';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import { Modal, Icon } from 'antd-mobile';
@@ -201,7 +201,7 @@ export default class order_detail_page extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.setState({
 					firstUserInfo: 'error'
 				});
@@ -645,7 +645,7 @@ export default class order_detail_page extends PureComponent {
 
 	//调用还款接口逻辑
 	repay = () => {
-		const { billDesc, isPayAll, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
+		const { billDesc, isPayAll, repayParams, totalAmt, payType, thisPerdNum } = this.state;
 		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		const paybackAPI = API.payback;
 		let sendParams = {};
@@ -669,7 +669,7 @@ export default class order_detail_page extends PureComponent {
 		}
 		// 添加微信新增参数
 		switch (payType) {
-			case 'WXPay':
+			case 'WXPay': {
 				// 微信外 02  微信内  03
 				const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 				queryData.backType = 'wxPay';
@@ -686,6 +686,7 @@ export default class order_detail_page extends PureComponent {
 					}
 				};
 				break;
+			}
 			case 'BankPay':
 			default:
 				break;
@@ -714,10 +715,10 @@ export default class order_detail_page extends PureComponent {
 					});
 
 					switch (payType) {
-						case 'WXPay':
+						case 'WXPay': {
 							let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
 							if (isWXOpen()) {
-								WeixinJSBridge.invoke(
+								window.WeixinJSBridge.invoke(
 									'getBrandWCPayRequest',
 									{
 										appId: wxData.appId,
@@ -745,6 +746,7 @@ export default class order_detail_page extends PureComponent {
 								location.href = url;
 							}
 							break;
+						}
 						case 'BankPay':
 							if (res.data && res.data.repayOrdNo) {
 								this.setState(
@@ -782,7 +784,7 @@ export default class order_detail_page extends PureComponent {
 					}, 3000);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				store.removeCouponData();
 				this.setState({
 					showModal: false,
@@ -964,7 +966,6 @@ export default class order_detail_page extends PureComponent {
 	render() {
 		const {
 			billDesc = {},
-			money,
 			hideBtn,
 			isPayAll,
 			isShowSmsModal,
@@ -997,9 +998,7 @@ export default class order_detail_page extends PureComponent {
 			wthdCrdCorpOrgNm = '',
 			wthdCrdNoLast = '',
 			perdNum = '',
-			waitRepAmt = '',
-			perdList,
-			waitRepAmtForShow = ''
+			perdList
 		} = billDesc;
 		const itemList = [
 			{
@@ -1029,7 +1028,7 @@ export default class order_detail_page extends PureComponent {
 		];
 		const isOverdue =
 			perdList &&
-			perdList.filter((item, index) => {
+			perdList.filter((item) => {
 				return item.perdSts === '1';
 			});
 		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;

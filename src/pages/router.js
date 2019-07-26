@@ -10,14 +10,14 @@ import ActivityPage from 'pages/activity/router'; // 活动
 import OthersRoute from 'pages/others/router'; // 其他页面（下载页）
 
 export default [
-  ...AuthRoute,
-  ...MineRoute,
-  ...OrderRoute,
-  ...Login,
-  ...Common,
-  ...Mpos,
-  ...Protocol,
-  ...LandingPage,
-  ...ActivityPage,
-  ...OthersRoute
+	...AuthRoute,
+	...MineRoute,
+	...OrderRoute,
+	...Login,
+	...Common,
+	...Mpos,
+	...Protocol,
+	...LandingPage,
+	...ActivityPage,
+	...OthersRoute
 ];

@@ -1,6 +1,6 @@
 import qs from 'qs';
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import vipIcon from 'assets/images/menbership_card/vipIcon.png';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';

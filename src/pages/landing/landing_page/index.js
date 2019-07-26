@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import qs from 'qs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';

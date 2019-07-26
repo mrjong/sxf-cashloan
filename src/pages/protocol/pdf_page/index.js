@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { getDeviceType, isWXOpen, headerIgnore } from 'utils';
+import { getDeviceType, headerIgnore } from 'utils';
 import styles from './index.scss';
 export default class pdf_page extends PureComponent {
 	constructor(props) {

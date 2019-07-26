@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Modal, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
@@ -7,7 +6,7 @@ import logo from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
@@ -101,7 +100,6 @@ export default class LoginAlert extends Component {
 			});
 		}
 		const { smsSuccess } = this.props;
-		const { otherProps_type } = this.state;
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;

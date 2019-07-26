@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import styles from './index.scss';
 import AwardShow from './components/AwardShow';
@@ -12,7 +12,6 @@ import zp_bg from './img/zp_bg.png';
 import over from './img/over.png';
 import notstart from './img/notstart.png';
 import zp_btn from './img/zp_btn.png';
-import item1 from './img/item1.png';
 import config from './config.js';
 import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils/common';
@@ -199,7 +198,6 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 用户抽奖
 	getDraw = (count) => {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const params = {
 			activeId: config.activeId,
 			channel: getH5Channel() // 用户渠道
@@ -342,8 +340,6 @@ export default class dazhuanpan_page extends PureComponent {
 											overflow: 'hidden',
 											transform: `scale(0.85) rotate(${this.state.numdeg}deg)`,
 											WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
-											transition: `-webkit-transform ${time}s ${transformType}`,
-											transition: `transform ${time}s ${transformType}`,
 											transition: `transform ${time}s ${transformType}`
 										}}
 									>

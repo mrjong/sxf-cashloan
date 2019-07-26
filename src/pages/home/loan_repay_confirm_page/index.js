@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';

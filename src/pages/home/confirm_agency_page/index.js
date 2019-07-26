@@ -6,7 +6,7 @@ import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';

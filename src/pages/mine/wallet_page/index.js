@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import WalletBg from 'assets/images/mine/wallet/wallet_bg.png';
 import ButtonCustom from 'components/ButtonCustom';
 import { getDeviceType } from 'utils';

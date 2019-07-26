@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import Countdown from './components/Countdown';
 
 let applyNo = ''; // 订单号

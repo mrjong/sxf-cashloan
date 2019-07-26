@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Modal, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
@@ -7,7 +6,7 @@ import logo from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import Cookie from 'js-cookie';
 
@@ -22,15 +21,6 @@ let timmer;
 @fetch.inject()
 @createForm()
 export default class SmsAlert extends Component {
-	// static propTypes = {
-	// 	goSubmitCb: PropTypes.object,
-	// 	validateMposCb: PropTypes.object,
-	// 	chkAuthCb: PropTypes.object,
-	// 	doAuthCb: PropTypes.object,
-	// 	goLoginCb: PropTypes.object,
-	// 	smsSuccess: PropTypes.func,
-	// };
-
 	static defaultProps = {
 		goSubmitCb: {
 			PTM0000: () => {},
@@ -98,7 +88,7 @@ export default class SmsAlert extends Component {
 		}
 	}
 	getSmsCode(i) {
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}
@@ -433,7 +423,7 @@ export default class SmsAlert extends Component {
 		const { modalBtnBuryPoint } = this.props;
 		const { authToken, otherProps_type } = this.state;
 		modalBtnBuryPoint(); // 埋点需求
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}

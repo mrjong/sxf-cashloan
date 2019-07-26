@@ -9,7 +9,6 @@ var Mar = '';
 var Mar2 = '';
 var child_div = '';
 var child_div2 = '';
-var child_div3 = '';
 var chars = ['3', '5', '7', '8'];
 var jiangpinList = [
 	'已领取5.8元赔付金',

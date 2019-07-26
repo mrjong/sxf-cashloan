@@ -24,5 +24,5 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/mpos/mpos_ioscontrol_page')
-	},
+	}
 ];

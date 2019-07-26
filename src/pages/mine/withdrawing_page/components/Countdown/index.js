@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 
 const API = {
 	queryOrdSts: '/redAccount/queryOrdSts' // 付款结果查询接口
@@ -81,7 +81,7 @@ export default class Countdown extends React.Component {
 	}
 
 	render() {
-		const { counting, timerCount, selfEnable } = this.state;
+		const { timerCount } = this.state;
 		return (
 			<div className={style.Countdown_page}>
 				<div className={style.CountdownCont}>{timerCount}s</div>
