@@ -13,6 +13,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		.userInfBox {
+			display: flex;
+			align-items: center;
+		}
 		img {
 			width: 100px;
 			height: 100px;
@@ -26,6 +30,7 @@
 		.mobile {
 			font-size: 48px;
 			font-family: 'DINMitAlt';
+			margin-top: 8px;
 		}
 		.follow_btn {
 			width: 200px;

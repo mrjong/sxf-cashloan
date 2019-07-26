@@ -313,7 +313,7 @@ export default class mine_page extends PureComponent {
 			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
 				{tokenFromStorage && token ? (
 					<div className={styles.user_inf}>
-						<div>
+						<div className={styles.userInfBox}>
 							<img src={avatar} alt="用户头像" />
 							<span className={styles.mobile}>{mblNoHid}</span>
 						</div>
