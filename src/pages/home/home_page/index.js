@@ -502,7 +502,6 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'LN0005': // 暂无代还资格
-				console.log('LN0005');
 				days && days > 60
 					? this.props.toast.info(`您暂时没有代偿资格`)
 					: this.props.toast.info(
@@ -510,12 +509,11 @@ export default class home_page extends PureComponent {
 					  );
 				break;
 			case 'LN0006': // 风控审核通过
-				console.log('LN0006');
 				buriedPointEvent(home.signedLoan);
 				this.repayCheck();
 				break;
-			case 'LN0007': // 放款中
-				console.log('LN0007');
+			case 'LN0007': {
+				// 放款中
 				let title =
 					indexData.repayType === '0'
 						? `预计60秒完成放款`
@@ -526,13 +524,12 @@ export default class home_page extends PureComponent {
 					search: `?title=${title}&desc=${desc}&autId=${indexData.autId}`
 				});
 				break;
+			}
 			case 'LN0008': // 放款失败
-				console.log('LN0008 不跳账单页 走弹框流程');
 				buriedPointEvent(home.signedLoan);
 				this.repayCheck();
 				break;
 			case 'LN0009': // 放款成功
-				console.log('LN0009');
 				store.setBillNo(usrIndexInfo.indexData.billNo);
 				// entryFrom 给打点使用，区分从哪个页面进入订单页的
 				this.props.history.push({
@@ -541,13 +538,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
-				console.log('LN0010');
 				break;
 			case 'LN0011': // 需要过人审，人审中
 				this.props.history.push('/home/loan_person_succ_page');
 				break;
 			default:
-				console.log('default');
 		}
 	};
 
