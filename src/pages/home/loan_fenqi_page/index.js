@@ -206,7 +206,7 @@ export default class loan_fenqi_page extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.removeTempData();
 			});
 	};
@@ -244,7 +244,7 @@ export default class loan_fenqi_page extends PureComponent {
 					});
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.removeTempData();
 			});
 	};
@@ -523,7 +523,7 @@ export default class loan_fenqi_page extends PureComponent {
 					this.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.removeTempData();
 			});
 	};
@@ -615,7 +615,6 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCardLastNo,
 			payBankCardName,
 			perdRateList,
-			couponInfo,
 			priceMax = '',
 			priceMin = '',
 			contractList,

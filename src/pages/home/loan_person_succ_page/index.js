@@ -16,10 +16,10 @@ export default class remit_ing_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		buriedPointEvent(home.manualAudit)
+		buriedPointEvent(home.manualAudit);
 	}
 	copyOperation = () => {
-		buriedPointEvent(home.manualAuditFollow)
+		buriedPointEvent(home.manualAuditFollow);
 		this.props.toast.info('复制成功！马上打开微信关注“还到”');
 		setTimeout(() => {
 			window.postMessage('复制成功', () => {});
@@ -38,21 +38,21 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</div>
 				<div className={style.step_box_new}>
-					<div className={[ style.step_item, style.active ].join(' ')}>
+					<div className={[style.step_item, style.active].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							放款审核中
 						</div>
 						<div className={style.line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
-						<div className={[ style.title ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
+						<div className={[style.title].join(' ')}>
 							<div className={style.step_circle} />
 							请注意接听010-86355XXX的审核电话
 						</div>
 						<div className={style.line} />
 					</div>
-					<div className={[ style.step_item ].join(' ')}>
+					<div className={[style.step_item].join(' ')}>
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							短信形式告知您审核结果，审核通过自动放款

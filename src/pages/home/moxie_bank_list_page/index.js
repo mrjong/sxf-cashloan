@@ -6,7 +6,6 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
-import StepBar from 'components/StepBar';
 import linkConf from 'config/link.conf';
 import bankCode from 'config/bankCode';
 import FeedbackModal from 'components/FeedbackModal';
@@ -128,7 +127,7 @@ export default class moxie_bank_list_page extends Component {
 		);
 	};
 	gotoMoxie = (item) => {
-		let setMoxieData = store.getMoxieBackUrl2();
+		// let setMoxieData = store.getMoxieBackUrl2();
 		store.setBackUrl(backUrlData);
 		store.setMoxieBackUrl(moxieBackUrlData);
 		store.removeBackUrl2();
@@ -157,7 +156,7 @@ export default class moxie_bank_list_page extends Component {
 		window.location.reload();
 	};
 	render() {
-		const needNextUrl = store.getNeedNextUrl();
+		// const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.moxie_bank_list_page}>
 				{/* {needNextUrl ? (
@@ -204,7 +203,7 @@ export default class moxie_bank_list_page extends Component {
 							{/* <div className={style.subTitle_info}>通过网银添加</div> */}
 						</div>
 						<div className={style.bankList}>
-							{this.state.bankList.map((item, index) => {
+							{this.state.bankList.map((item) => {
 								return (
 									<div
 										onClick={() => {

@@ -79,6 +79,7 @@ const eslintrc = {
 		'no-empty': 2,
     'camelcase': 0,
     'no-mixed-spaces-and-tabs': 0,
+    'no-case-declarations': 1,
 
     'react/jsx-indent-props': [0, 2],
 		'react/jsx-indent': [2, 2],

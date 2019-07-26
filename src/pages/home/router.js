@@ -78,7 +78,7 @@ export default [
 		title: '添加进度',
 		component: () => import('pages/home/crawl_fail_page')
 	},
-  {
+	{
 		path: '/home/loan_person_succ_page',
 		title: '等待人工审核',
 		component: () => import('pages/home/loan_person_succ_page')

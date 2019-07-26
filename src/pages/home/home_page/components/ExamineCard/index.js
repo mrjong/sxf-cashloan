@@ -25,7 +25,8 @@ export default class ExamineCard extends React.PureComponent {
 						</div>
 						<div className={style.item}>
 							<div className={style.money}>
-								{showData.date}<span>期</span>
+								{showData.date}
+								<span>期</span>
 							</div>
 							<div className={style.dw}>申请期限</div>
 						</div>

@@ -9,7 +9,7 @@ import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
-import mockData from './mockData';
+// import mockData from './mockData';
 import { createForm } from 'rc-form';
 import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
@@ -201,7 +201,7 @@ export default class home_page extends PureComponent {
 					this.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				if (token && tokenFromStorage) {
 					this.credit_extension();
 				}
@@ -227,7 +227,7 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 现金分期首页接口
-	usrCashIndexInfo = (code) => {
+	usrCashIndexInfo = () => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				this.setState(
@@ -235,13 +235,6 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						// if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
-						// 	store.setFQActivity(true);
-						// 	this.setState({
-						// 		modalType: 'xianjin',
-						// 		isShowActivityModal: true
-						// 	});
-						// }
 						this.getMianxi7();
 					}
 				);
@@ -264,7 +257,7 @@ export default class home_page extends PureComponent {
 					res.data &&
 					res.data.processInfo &&
 					res.data.processInfo.length > 0 &&
-					res.data.processInfo.filter((item, index) => {
+					res.data.processInfo.filter((item) => {
 						return item.hasProgress;
 					});
 				this.setState({
@@ -287,7 +280,6 @@ export default class home_page extends PureComponent {
 
 	// 首页进度
 	getPercent = async () => {
-		const { usrIndexInfo } = this.state;
 		let data = await getNextStr({ $props: this.props, needReturn: true });
 		this.calculatePercent(data);
 	};
@@ -309,13 +301,13 @@ export default class home_page extends PureComponent {
 		// case '2': // 认证成功
 		// case '3': // 认证失败
 		// case '4': // 认证过期
-		let newCodes = codes.filter((ele, index, array) => {
+		let newCodes = codes.filter((ele) => {
 			return ele === '0';
 		});
-		let newCodes2 = codes.filter((ele, index, array) => {
+		let newCodes2 = codes.filter((ele) => {
 			return ele === '1' || ele === '2';
 		});
-		let newCodes3 = codes.filter((ele, index, array) => {
+		let newCodes3 = codes.filter((ele) => {
 			return ele === '4';
 		});
 		if (codes[codes.length - 1] === '4') {
@@ -460,7 +452,7 @@ export default class home_page extends PureComponent {
 
 	// 智能按钮点击事件
 	handleSmartClick = (days) => {
-		const { usrIndexInfo = {}, isNeedExamine } = this.state;
+		const { usrIndexInfo = {} } = this.state;
 		const { indexData } = usrIndexInfo;
 		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
@@ -560,7 +552,7 @@ export default class home_page extends PureComponent {
 	};
 
 	jumpToUrl = () => {
-		const { usrIndexInfo, pageCode } = this.state;
+		const { usrIndexInfo } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
 		if (cardBillSts === '00') {
 			this.requestCredCardCount('cbFn', () => {
@@ -593,7 +585,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 设置百分比
-	setPercent = (percent) => {
+	setPercent = () => {
 		if (this.state.percent < 90 && this.state.percent >= 0) {
 			this.setState({
 				percent: this.state.percent + parseInt(Math.random() * 10 + 1)
@@ -669,7 +661,7 @@ export default class home_page extends PureComponent {
 				}
 				// })
 			})
-			.catch((err) => {
+			.catch(() => {
 				clearInterval(timer);
 				clearTimeout(timerOut);
 				this.setState(
@@ -758,7 +750,7 @@ export default class home_page extends PureComponent {
 									result.data.indexData &&
 									result.data.indexData.prodList &&
 									result.data.indexData.prodList.length &&
-									result.data.indexData.prodList.map((item, index) => {
+									result.data.indexData.prodList.map((item) => {
 										return item.maxAmt;
 									})) ||
 								[];
@@ -833,9 +825,8 @@ export default class home_page extends PureComponent {
 		if (token && tokenFromStorage) {
 			if (!store.getQueryUsrSCOpenId()) {
 				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-					// console.log(res);
 					if (res.msgCode === 'PTM0000') {
-						sa.login(res.data);
+						window.sa.login(res.data);
 						store.setQueryUsrSCOpenId(res.data);
 					}
 				});
@@ -958,9 +949,8 @@ export default class home_page extends PureComponent {
 		if (overDt > 10) return false;
 		if (overDt === 0 || overDt <= 0) {
 			return '1天后失去资格';
-		} else {
-			return `${overDt}天后失去资格`;
 		}
+		return `${overDt}天后失去资格`;
 	};
 	// *****************************分期****************************** //
 	getFQDisPlay = () => {
@@ -1297,12 +1287,12 @@ export default class home_page extends PureComponent {
 
 	// 点击不同进度状态，跳转页面
 	handleProgressApply = (sts) => {
+		const mainAutId = store.getAutId() ? store.getAutId() : '';
 		buriedPointEvent(home.billImport);
 		// ，01：爬取中，02：爬取成功，03：爬取失败
 		switch (sts) {
 			case '00':
 			case '01':
-				const mainAutId = store.getAutId() ? store.getAutId() : '';
 				store.setAutId(mainAutId);
 				this.props.history.push('/home/crawl_progress_page');
 				break;
@@ -1392,7 +1382,7 @@ export default class home_page extends PureComponent {
 						resolve('0');
 					}
 				})
-				.catch((err) => {
+				.catch(() => {
 					reject();
 				});
 		});
@@ -1410,7 +1400,6 @@ export default class home_page extends PureComponent {
 			modalType,
 			modalBtnFlag,
 			blackData,
-			DownTime321,
 			showFeedbackModal
 		} = this.state;
 		let componentsDisplay = null;
