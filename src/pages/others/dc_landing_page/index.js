@@ -26,7 +26,6 @@ export default class dc_landing_page extends PureComponent {
 			smsJrnNo: '' // 短信流水号
 		};
 	}
-	componentWillMount() {}
 
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {

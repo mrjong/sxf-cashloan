@@ -358,10 +358,6 @@ export default class login_page extends PureComponent {
 		this.props.history.push(`/protocol/${url}`);
 	};
 
-	backTop = () => {
-		this.refs.loginWrap.scrollTop = 0;
-	};
-
 	checkAgreement = () => {
 		this.setState({
 			isChecked: !this.state.isChecked
@@ -394,9 +390,9 @@ export default class login_page extends PureComponent {
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
-			<div ref="loginWrap" className={styles.dc_landing_page}>
+			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				<div ref="loginContent" className={styles.content}>
+				<div className={styles.content}>
 					<div className={styles.loginContentBox}>
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>

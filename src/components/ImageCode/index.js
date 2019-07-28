@@ -54,22 +54,6 @@ class ImageCode extends React.Component {
 		}
 	}
 
-	renderImage = () => {
-		// 初始化状态
-		this.setState({ status: STATUS_LOADING });
-		// 创建一个图片对象，主要用于canvas.context.drawImage()
-		const objImage = new Image();
-
-		objImage.addEventListener('load', () => {
-			// 修改状态
-			this.setState({
-				status: STATUS_READY,
-				scale: this.props.bigImageH / this.props.imageHeight
-			});
-		});
-		objImage.src = this.props.imageUrl;
-	};
-
 	onMoveStart = (e) => {
 		if (this.state.status !== STATUS_READY) {
 			return;
@@ -150,6 +134,22 @@ class ImageCode extends React.Component {
 			this.setState({ showTips: false });
 			clearTimeout(timer);
 		}, 1000);
+	};
+
+	renderImage = () => {
+		// 初始化状态
+		this.setState({ status: STATUS_LOADING });
+		// 创建一个图片对象，主要用于canvas.context.drawImage()
+		const objImage = new Image();
+
+		objImage.addEventListener('load', () => {
+			// 修改状态
+			this.setState({
+				status: STATUS_READY,
+				scale: this.props.bigImageH / this.props.imageHeight
+			});
+		});
+		objImage.src = this.props.imageUrl;
 	};
 
 	render() {
