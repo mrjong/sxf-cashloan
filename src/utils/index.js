@@ -82,16 +82,19 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 };
 
 // 逻辑有待优化
-export const headerIgnore = () => {
+export const headerIgnore = (type) => {
 	const ua = window.navigator.userAgent;
-	if (
-		!/MicroMessenger/i.test(ua) &&
-		!/QQ/i.test(ua) &&
-		!/AlipayClient/i.test(ua) &&
-		!/SuiXingPay-Mpos/i.test(ua) &&
-		!/SuiXingPay-Cashier/i.test(ua)
-	) {
-		return true;
+	if (type === 'false') {
+		if (
+			!/MicroMessenger/i.test(ua) &&
+			!/QQ/i.test(ua) &&
+			!/AlipayClient/i.test(ua) &&
+			!/SuiXingPay-Mpos/i.test(ua) &&
+			!/SuiXingPay-Cashier/i.test(ua)
+		) {
+			return true;
+		}
+		return false;
 	}
 	if (
 		/MicroMessenger/i.test(ua) ||
@@ -300,9 +303,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 					break;
 				case 'PTM0006':
 					store.setToggleMoxieCard(true);
-					$props.history.push({
-						pathname: '/home/real_name'
-					});
+					$props.history.push({ pathname: '/home/real_name' });
 					resolve('2');
 					break;
 				case 'PTM0008':
@@ -465,29 +466,25 @@ export const getOperatorStatus = ({ $props }) => {
 							$props.toast.info('身份信息确认失败，请重新确认');
 							setTimeout(() => {
 								SXFToast.loading('加载中...', 0);
-								$props.$fetch
-									.post(`${API.getOperator}`, {
-										clientCode: '04'
-									})
-									.then((result) => {
-										if (result.msgCode === 'PTM0000' && result.data.url) {
-											$props.SXFToast.hide();
-											store.setMoxieBackUrl('/home/loan_repay_confirm_page');
-											// TODO
-											// store.getToggleMoxieCard(true);
-											// setTimeout(() => {
-											// 运营商直接返回的问题
-											SXFToast.loading('加载中...', 0);
-											store.setGotoMoxieFlag(true);
-											window.location.href =
-												result.data.url +
-												`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
-													window.location.search
-												}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-													`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-												)}`;
-										}
-									});
+								$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
+									if (result.msgCode === 'PTM0000' && result.data.url) {
+										$props.SXFToast.hide();
+										store.setMoxieBackUrl('/home/loan_repay_confirm_page');
+										// TODO
+										// store.getToggleMoxieCard(true);
+										// setTimeout(() => {
+										// 运营商直接返回的问题
+										SXFToast.loading('加载中...', 0);
+										store.setGotoMoxieFlag(true);
+										window.location.href =
+											result.data.url +
+											`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+												window.location.search
+											}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+												`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+											)}`;
+									}
+								});
 							}, 2000);
 							break;
 						case '1':
@@ -549,9 +546,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.SXFToast.hide();
 				resBackMsg = '基本信息认证';
-				$props.history.replace({
-					pathname: '/home/essential_information'
-				});
+				$props.history.replace({ pathname: '/home/essential_information' });
 				if (callBack) {
 					callBack(resBackMsg);
 				}
@@ -560,30 +555,26 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
 			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
-				$props.$fetch
-					.post(`${API.getOperator}`, {
-						clientCode: '04'
-					})
-					.then((result) => {
-						if (result.msgCode === 'PTM0000' && result.data.url) {
-							$props.SXFToast.hide();
-							resBackMsg = '运营商认证';
-							// 运营商直接返回的问题
-							store.setCarrierMoxie(true);
-							store.setGotoMoxieFlag(true);
-							SXFToast.loading('加载中...', 0);
-							window.location.href =
-								result.data.url +
-								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
-									window.location.search
-								}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-									`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-								)}`;
-							if (callBack) {
-								callBack(resBackMsg);
-							}
+				$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
+					if (result.msgCode === 'PTM0000' && result.data.url) {
+						$props.SXFToast.hide();
+						resBackMsg = '运营商认证';
+						// 运营商直接返回的问题
+						store.setCarrierMoxie(true);
+						store.setGotoMoxieFlag(true);
+						SXFToast.loading('加载中...', 0);
+						window.location.href =
+							result.data.url +
+							`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+								window.location.search
+							}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+								`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+							)}`;
+						if (callBack) {
+							callBack(resBackMsg);
 						}
-					});
+					}
+				});
 
 				return;
 			}
