@@ -12,6 +12,10 @@ import yhq50 from './img/yhq50.png';
 import yhq_btn from './img/yhq_btn.png';
 import mianxi from './img/mianxi.png';
 import mianxi_btn from './img/mianxi_btn.png';
+import syx_btn from './img/syx_btn.png';
+import mianxi7 from './img/mianxi7.png';
+import mianxi15 from './img/mianxi15.png';
+import mianxi30 from './img/mianxi30.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -42,6 +46,9 @@ class ActivityModal extends React.Component {
 							{modalType === 'yhq7' ? <img src={yhq7} /> : null}
 							{modalType === 'yhq50' ? <img src={yhq50} /> : null}
 							{modalType === 'mianxi' ? <img src={mianxi} /> : null}
+							{modalType === 'mianxi7' ? <img src={mianxi7} /> : null}
+							{modalType === 'mianxi15' ? <img src={mianxi15} /> : null}
+							{modalType === 'mianxi30' ? <img src={mianxi30} /> : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -87,6 +94,15 @@ class ActivityModal extends React.Component {
 									src={mianxi_btn}
 									onClick={() => {
 										activityModalBtn('mianxi');
+									}}
+								/>
+							) : null}
+							{modalType === 'mianxi7' || modalType === 'mianxi30' || modalType === 'mianxi15' ? (
+								<img
+									className={styles.syx_btn}
+									src={syx_btn}
+									onClick={() => {
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}

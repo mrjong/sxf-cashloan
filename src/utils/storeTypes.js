@@ -45,6 +45,7 @@ export const storeTypes = {
 	Province: 'Province', // 省份
 	City: 'City', // 城市
 	ShowActivityModal: 'ShowActivityModal', // 是否显示活动弹窗
+	ShowActivityModal2: 'ShowActivityModal2', // 是否显示活动弹窗2
 	SaveAmt: 'SaveAmt', // 回显代还金额的数据
 	BindCardNo: 'BindCardNo', // 回显绑卡卡号
 	BindCreditCardNo: 'BindCreditCardNo', // 回显绑卡信用卡卡号
