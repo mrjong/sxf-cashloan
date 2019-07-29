@@ -57,7 +57,7 @@ const eslintrc = {
 		indent: [0, 2],
 		'jsx-a11y/alt-text': 0,
 		'linebreak-style': 2,
-		'object-curly-newline': 2,
+		'object-curly-newline': 0,
 		'jsx-a11y/no-noninteractive-element-interactions': 0,
 		'jsx-a11y/no-noninteractive-element-to-interactive-role': 0,
 		'no-restricted-syntax': 0,
