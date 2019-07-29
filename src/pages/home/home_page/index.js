@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
 import qs from 'qs';
+import { getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch-rjl';
@@ -47,7 +48,8 @@ const API = {
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
-	mxCheckJoin: '/activeConfig/checkJoin' // 免息活动检查是否参与
+	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
+	couponNotify: '/activeConfig/couponNotify' // 免息活动检查是否参与
 };
 let token = '';
 let tokenFromStorage = '';
@@ -227,7 +229,7 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 现金分期首页接口
-	usrCashIndexInfo = () => {
+	usrCashIndexInfo = (code) => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				this.setState(
@@ -235,7 +237,13 @@ export default class home_page extends PureComponent {
 						usrCashIndexInfo: result.data
 					},
 					() => {
-						this.getMianxi7();
+						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
+							store.setFQActivity(true);
+							this.setState({
+								modalType: 'xianjin',
+								isShowActivityModal: true
+							});
+						}
 					}
 				);
 			} else {
@@ -777,18 +785,16 @@ export default class home_page extends PureComponent {
 		});
 	};
 	getMianxi7 = async () => {
-		if (store.getShowActivityModal()) {
-			return;
-		}
-		let mxData = await this.props.$fetch.get(API.mxCheckJoin);
-		if (mxData && mxData.msgCode === 'PTM0000' && !store.getShowActivityModal()) {
+		let mxData = await this.props.$fetch.get(API.couponNotify);
+		if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal2()) {
 			this.setState(
 				{
 					isShowActivityModal: true,
-					modalType: 'mianxi'
+					modalBtnFlag: true,
+					modalType: `mianxi${mxData.data}`
 				},
 				() => {
-					store.setShowActivityModal(true);
+					store.setShowActivityModal2(true);
 				}
 			);
 		}
@@ -883,6 +889,7 @@ export default class home_page extends PureComponent {
 	// 关闭活动弹窗
 	closeActivityModal = (type) => {
 		this.setState({
+			modalBtnFlag: false,
 			isShowActivityModal: !this.state.isShowActivityModal
 		});
 
@@ -893,6 +900,11 @@ export default class home_page extends PureComponent {
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
 				break;
+			case 'yhq7': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
+			case 'yhq50': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
+				this.getMianxi7();
+				break;
+
 			default:
 				break;
 		}
@@ -900,6 +912,8 @@ export default class home_page extends PureComponent {
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
 		this.closeActivityModal(type);
+		const { usrIndexInfo } = this.state;
+		const { indexSts } = usrIndexInfo;
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
@@ -915,6 +929,59 @@ export default class home_page extends PureComponent {
 			case 'mianxi':
 				buriedPointEvent(activity.mianxiModalBtnClick);
 				this.props.history.push('/activity/mianxi_page?entry=home_alert');
+				break;
+			case 'mianxi7':
+				buriedPointEvent(activity.mianxi726ModalBtnClick, {
+					dayType726: '7',
+					h5Channel726: getH5Channel()
+				});
+				setTimeout(() => {
+					if (indexSts === 'LN0001') {
+						this.handleApply();
+					} else if (indexSts === 'LN0002') {
+						this.handleProgressApply('01');
+					} else if (indexSts === 'LN0010') {
+						this.goToNewMoXie();
+					} else {
+						this.handleSmartClick();
+					}
+				}, 500);
+
+				break;
+			case 'mianxi15':
+				buriedPointEvent(activity.mianxi726ModalBtnClick, {
+					dayType726: '15',
+					h5Channel726: getH5Channel()
+				});
+
+				setTimeout(() => {
+					if (indexSts === 'LN0001') {
+						this.handleApply();
+					} else if (indexSts === 'LN0002') {
+						this.handleProgressApply('01');
+					} else if (indexSts === 'LN0010') {
+						this.goToNewMoXie();
+					} else {
+						this.handleSmartClick();
+					}
+				}, 500);
+				break;
+			case 'mianxi30':
+				buriedPointEvent(activity.mianxi726ModalBtnClick, {
+					dayType726: '30',
+					h5Channel726: getH5Channel()
+				});
+				setTimeout(() => {
+					if (indexSts === 'LN0001') {
+						this.handleApply();
+					} else if (indexSts === 'LN0002') {
+						this.handleProgressApply('01');
+					} else if (indexSts === 'LN0010') {
+						this.goToNewMoXie();
+					} else {
+						this.handleSmartClick();
+					}
+				}, 500);
 				break;
 			default:
 				break;
