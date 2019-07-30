@@ -368,7 +368,7 @@ export default class bind_save_page extends PureComponent {
 						发卡行
 					</Item>
 					<InputItem
-						maxLength="24"
+						maxLength="29"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
 							rules: [
