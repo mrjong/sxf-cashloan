@@ -11,6 +11,7 @@ import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils/common';
+import SmsModal from '../../order/order_detail_page/components/SmsModal';
 
 const API = {
 	prodInfo: '/cash/prodList', //产品列表基本信息查询
@@ -582,8 +583,6 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	submitHandler = () => {
-		console.log(this.state.payBankCode, 'payBankCode');
-		return;
 		const { loanMoney, loanUsage, resaveBankCardAgrNo, payBankCardAgrNo, prdId, couponInfo } = this.state;
 		this.props.$fetch
 			.post(API.agentRepay, {
