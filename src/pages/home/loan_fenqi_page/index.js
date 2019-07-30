@@ -599,6 +599,8 @@ export default class loan_fenqi_page extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
+					// 清除卡信息
+					store.removeCardData();
 					this.props.history.push('/home/home');
 					buriedPointEvent(loan_fenqi.submitResult, {
 						is_success: true
