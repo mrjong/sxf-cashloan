@@ -563,7 +563,7 @@ export default class loan_fenqi_page extends PureComponent {
 				loanDate: loanDate.perdCnt
 			});
 			this.props.$fetch
-				.singlePost(API.agentRepay, {
+				.post(API.agentRepay, {
 					withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
 					withHoldAgrNo: payBankCardAgrNo, // 还款卡号主键
 					prdId, // 产品ID

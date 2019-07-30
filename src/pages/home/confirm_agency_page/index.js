@@ -666,7 +666,7 @@ export default class confirm_agency_page extends PureComponent {
 			lenders_date: this.state.repayInfo2.perdCnt
 		});
 		this.props.$fetch
-			.singlePost(API.CONFIRM_REPAYMENT, params, {
+			.post(API.CONFIRM_REPAYMENT, params, {
 				timeout: 100000,
 				hideLoading: true
 			})

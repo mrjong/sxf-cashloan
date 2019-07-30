@@ -155,7 +155,7 @@ export default class wallet_page extends PureComponent {
 			cardAgr: bankInf.agrNo,
 			osTyp: osType
 		};
-		this.props.$fetch.singlePost(API.cashApply, params).then(
+		this.props.$fetch.post(API.cashApply, params).then(
 			(res) => {
 				if (res.msgCode !== 'PTM0000') {
 					res.msgInfo && this.props.toast.info(res.msgInfo);

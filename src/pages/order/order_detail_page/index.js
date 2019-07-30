@@ -691,7 +691,7 @@ export default class order_detail_page extends PureComponent {
 				break;
 		}
 		this.props.$fetch
-			.singlePost(paybackAPI, sendParams)
+			.post(paybackAPI, sendParams)
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					buriedPointEvent(order.repaymentFirst, {
