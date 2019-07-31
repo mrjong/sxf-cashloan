@@ -221,8 +221,10 @@ export default class real_name_page extends Component {
 				// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
 				// 是否需要下一步
 				if (urlQuery.newTitle) {
+					// 需要补身份证的
 					this.nextFunc();
 				} else if (store.getNeedNextUrl()) {
+					// 首页正常流程走实名认证的
 					this.props.SXFToast.loading('数据加载中...', 0);
 					this.nextFunc(() => {
 						getNextStr({
@@ -230,6 +232,7 @@ export default class real_name_page extends Component {
 						});
 					});
 				} else {
+					// 我的页面
 					this.nextFunc(() => {
 						this.props.history.goBack();
 					});

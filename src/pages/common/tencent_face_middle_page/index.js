@@ -50,7 +50,8 @@ export default class tencent_face_middle_page extends Component {
 					fail_cause: ''
 				});
 				// 借钱还信用卡页进入
-				if (!store.getRealNameNextStep()) {
+				// if (!store.getRealNameNextStep()) {
+				if (store.getLoanAspirationHome()) {
 					handleClickConfirm(this.props, {
 						...store.getLoanAspirationHome()
 					});
