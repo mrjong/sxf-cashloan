@@ -76,10 +76,10 @@ export default class FEZIpImage extends Component {
 		const {
 			className,
 			style,
-			// onChange,
-			// beforeCompress,
-			// afterCompress,
-			// activeClassName,
+			onChange, // eslint-disable-line
+			beforeCompress, // eslint-disable-line
+			afterCompress, // eslint-disable-line
+			activeClassName, // eslint-disable-line
 			disabledupload,
 			accept,
 			value,
