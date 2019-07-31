@@ -368,7 +368,7 @@ export default class bind_save_page extends PureComponent {
 						发卡行
 					</Item>
 					<InputItem
-						maxLength="24"
+						maxLength="29"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
 							rules: [
@@ -440,15 +440,16 @@ export default class bind_save_page extends PureComponent {
 				</ButtonCustom>
 				<div className={styles.xieyi}>
 					{' '}
-					确认即代表同意
+					请阅读协议内容，点击确认即视为您同意
 					<a
 						onClick={() => {
 							this.readContract('delegation_withhold_page');
 						}}
 						className={styles.link}
 					>
-						《用户授权扣款委托书》
+						《用户收款扣款委托书》
 					</a>
+					并确认授权
 				</div>
 			</div>
 		);

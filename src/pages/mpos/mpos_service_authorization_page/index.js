@@ -124,20 +124,20 @@ export default class mpos_service_authorization_page extends PureComponent {
 								data-seed="logId"
 								onChange={(e) => this.setState({ selectFlag: e.target.checked })}
 							>
-								阅读并接受
+								请阅读协议内容，点击按钮即视为同意
 								<a
 									onClick={() => {
 										this.go('register_agreement_page');
 									}}
 								>
-									《随行付金融用户注册协议》
+									《用户注册协议》
 								</a>
 								<a
 									onClick={() => {
 										this.go('privacy_agreement_page');
 									}}
 								>
-									《随行付用户隐私权政策》
+									《用户隐私权政策》
 								</a>
 							</AgreeItem>
 						</div>

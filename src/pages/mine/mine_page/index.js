@@ -2,13 +2,16 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import avatar from 'assets/images/mine/avatar.png';
+import avatar from 'assets/images/mine/login_logo.png';
 import Lists from 'components/Lists';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
+import { setBackGround } from 'utils/background';
+import fqaImg from 'assets/images/mine/fqa_img.png';
+import notLoginImg from 'assets/images/mine/not_login_logo.png';
 
 const API = {
 	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -20,6 +23,7 @@ let token = '';
 let tokenFromStorage = '';
 
 @fetch.inject()
+@setBackGround('#fff')
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -233,6 +237,17 @@ export default class mine_page extends PureComponent {
 		this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine');
 	};
 
+	// 常见问题跳转
+	jumpToFqa = () => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		this.props.history.push('/mine/fqa_page');
+	};
+
 	render() {
 		const { mblNoHid, realNmFlg } = this.state;
 		// 定义list所需的数据
@@ -271,7 +286,7 @@ export default class mine_page extends PureComponent {
 			{
 				extra: {
 					name: mblNoHid && realNmFlg ? '已认证' : '未认证',
-					color: mblNoHid && realNmFlg ? '#4CA6FF' : '#FF5A5A'
+					color: mblNoHid && realNmFlg ? '#66C879' : '#FF6666'
 				},
 				label: {
 					name: '实名认证',
@@ -285,32 +300,46 @@ export default class mine_page extends PureComponent {
 					className: styles.select_save_page
 				},
 				jumpToUrl: '/mine/select_save_page'
-			},
-			{
-				label: {
-					name: '常见问题',
-					className: styles.fqa_page
-				},
-				jumpToUrl: '/mine/fqa_page'
 			}
+			// {
+			// 	label: {
+			// 		name: '常见问题',
+			// 		className: styles.fqa_page
+			// 	},
+			// 	jumpToUrl: '/mine/fqa_page'
+			// }
 		];
 		return (
 			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
-				<div className={styles.user_inf}>
-					<div>
-						<img src={avatar} alt="用户头像" />
-						{tokenFromStorage && token ? (
-							<span>{mblNoHid}</span>
-						) : (
-							<span onClick={this.logInHandler}>登录/注册</span>
-						)}
+				{tokenFromStorage && token ? (
+					<div className={styles.user_inf}>
+						<div className={styles.userInfBox}>
+							<img src={avatar} alt="用户头像" />
+							<span className={styles.mobile}>{mblNoHid}</span>
+						</div>
+						<div className={styles.follow_btn} onClick={this.goPage}>
+							关注得免息
+						</div>
 					</div>
-					<div className={styles.follow_btn} onClick={this.goPage}>
-						关注得免息
+				) : null}
+				{!(tokenFromStorage && token) ? (
+					<div className={styles.notLoginBox}>
+						<img src={notLoginImg} alt="未登录" />
+						<p className={styles.desc}>借钱还信用卡，找还到</p>
+						<div className={styles.loginBtn} onClick={this.logInHandler}>
+							登录
+						</div>
 					</div>
+				) : null}
+				<Lists className={styles.mine_list} clickCb={this.clickhandle} listsInf={listsArr} />
+				<Lists
+					clickCb={this.clickhandle2}
+					listsInf={listsArr2}
+					className={[styles.common_margin, styles.mine_list].join(' ')}
+				/>
+				<div className={styles.fqaBox} onClick={this.jumpToFqa}>
+					<img src={fqaImg} alt="用户头像" />
 				</div>
-				<Lists clickCb={this.clickhandle} listsInf={listsArr} />
-				<Lists clickCb={this.clickhandle2} listsInf={listsArr2} className={styles.common_margin} />
 				{/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
 				{tokenFromStorage && token && !isMPOS() && (
 					<div onClick={this.logoutHandler} className={styles.logout}>

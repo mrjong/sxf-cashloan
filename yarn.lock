@@ -8100,7 +8100,7 @@ react-tween-state@^0.1.5:
 
 react@^15.6.1:
   version "15.6.2"
-  resolved "https://registry.npm.taobao.org/react/download/react-15.6.2.tgz?cache=0&sync_timestamp=1563845827688&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
+  resolved "https://registry.npm.taobao.org/react/download/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
   integrity sha1-26BDSrQ5z+gvEI8PURZjkIF5qnI=
   dependencies:
     create-react-class "^15.6.0"

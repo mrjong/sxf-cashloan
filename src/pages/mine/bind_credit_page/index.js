@@ -94,7 +94,7 @@ export default class bind_credit_page extends PureComponent {
 
 	// 校验信用卡卡号
 	validateCarNumber = (rule, value, callback) => {
-		if (!validators.bankCardNumber(value.replace(/\s*/g, ''))) {
+		if (!validators.bankCreditCardNumber(value.replace(/\s*/g, ''))) {
 			callback('请输入有效银行卡号');
 		} else {
 			callback();

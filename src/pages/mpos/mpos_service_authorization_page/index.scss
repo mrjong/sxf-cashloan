@@ -34,8 +34,18 @@
 	z-index: 10;
 	margin: 0 auto;
 	left: 50%;
+	// transform: translate(-50%, 0)
 	margin-left: -317px;
 }
+// .protocol_box{
+//   padding: 18px 0;
+//   font-size: 24px;
+//   margin: 0 auto;
+//   color: #a8a79b;
+//   a {
+//     color: #414a53;
+//   }
+// }
 :global {
 	.mpos_middle_checkbox {
 		width: 634px;
