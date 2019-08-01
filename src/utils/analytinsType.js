@@ -217,6 +217,8 @@ const loan_repay_confirm = {
 };
 
 const other = {
+	mposDownloadPage: `${prefix}_MPOS_DOWNLOAD_PAGE`, //页面埋点
+	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK` //外部下载页按钮点击事件
 };
 
