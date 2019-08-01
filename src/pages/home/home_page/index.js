@@ -515,6 +515,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(home.goSuperMarket, {
 					medium: 'H5'
 				});
+				store.setCarrierMoxie(true); // 设置去到第三方标示
 				window.location.href = linkConf.MARKET_URL;
 				break;
 			case 'LN0006': // 风控审核通过
