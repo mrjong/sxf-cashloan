@@ -275,6 +275,7 @@ export default class real_name_page extends Component {
 								store.setRealNameNextStep('home');
 							} else {
 								store.setRealNameNextStep('other');
+								store.setTencentBackUrl('/mine/mine_page');
 							}
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
 							store.setChkPhotoBackNew(-2); //活体直接返回
@@ -302,8 +303,9 @@ export default class real_name_page extends Component {
 							}, 2000);
 							break;
 						case '3':
-							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							store.setChkPhotoBackNew(-2); //活体直接返回
+							store.setTencentBackUrl('/home/loan_repay_confirm_page');
+							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							// store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
 						default:
 							break;
@@ -353,8 +355,9 @@ export default class real_name_page extends Component {
 							}, 3000);
 							break;
 						case '3':
-							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							store.setChkPhotoBackNew(-2); //活体直接返回
+							store.setTencentBackUrl('/home/confirm_agency');
+							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							// store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
 						default:
 							break;

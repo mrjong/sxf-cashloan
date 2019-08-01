@@ -86,5 +86,6 @@ export const storeTypes = {
 	GotoMoxieFlag: 'GotoMoxieFlag', // 去到魔蝎第三方的标示
 	InsuranceFlag: 'InsuranceFlag', // 标识该次绑卡是否要求绑定支持收取保费的卡
 	NoLoginToken: 'NoLoginToken', // 设置 图片验证码 noLoginToken
-	ProtocolPersonalData: 'ProtocolPersonalData' // 个人信息授权书数据
+	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
+	TencentBackUrl: 'TencentBackUrl' // 跳转到人脸识别返回的url
 };

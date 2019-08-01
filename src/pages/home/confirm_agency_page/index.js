@@ -419,7 +419,8 @@ export default class confirm_agency_page extends PureComponent {
 								this.requestConfirmRepaymentInfo();
 								break;
 							case '3':
-								store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
+								store.setTencentBackUrl('/home/confirm_agency');
+								// store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
 								break;
 							default:
 								break;
