@@ -4,7 +4,6 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
-import { mpos_service_authorization } from 'utils/analytinsType';
 import { getDeviceType } from 'utils';
 import { other } from 'utils/analytinsType';
 const API = {
