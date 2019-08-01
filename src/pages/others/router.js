@@ -38,5 +38,12 @@ export default [
 		title: '提示',
 		arrowHide: '',
 		component: () => import('pages/others/moxie_pwd_guide')
+	},
+	{
+		path: '/others/mpos_download_page',
+		title: '还到-借钱还信用卡',
+		arrowHide: '',
+		arrowHide: 'empty',
+		component: () => import('pages/others/mpos_download_page')
 	}
 ];
