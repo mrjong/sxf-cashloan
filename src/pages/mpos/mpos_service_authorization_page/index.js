@@ -28,6 +28,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 	}
 	componentWillMount() {
 		buriedPointEvent(mpos_service_authorization.auth_page);
+		document.title = '随行付金融';
 	}
 
 	goSubmit = () => {
@@ -109,7 +110,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 			<div>
 				<img src={logo} alt="" className={styles.logoWrap} />
 				<p className={styles.text}>
-					随行付金融提供<em className={styles.highlight}>信用卡账单代还</em>服务 <br /> 200万信用卡用户新选择{' '}
+					随行付金融提供 <em className={styles.highlight}>信用卡账单代还</em>服务 <br /> 200万信用卡用户新选择{' '}
 				</p>
 				<div className={styles.btn_fixed}>
 					<SXFButton

@@ -44,8 +44,8 @@
 
 .agreement_box {
 	position: absolute;
-	bottom: 25px;
-	left: 50%;
+	bottom: 6px;
+	left: 47%;
 	transform: translateX(-50%);
 }
 
@@ -68,14 +68,14 @@
 			left: 0.2rem;
 		}
 		.am-checkbox-inner {
-			width: 0.32rem;
-			height: 0.32rem;
+			width: 0.24rem;
+			height: 0.24rem;
 		}
 		.am-checkbox-inner:after {
-			width: 0.09rem;
-			height: 0.18rem;
-			top: 0.02rem;
-			right: 0.09rem;
+			width: 0.06rem;
+			height: 0.16rem;
+			top: -0.02rem;
+			right: 0.06rem;
 		}
 	}
 }
