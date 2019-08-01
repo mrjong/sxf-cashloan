@@ -113,7 +113,10 @@ export default class tencent_face_middle_page extends Component {
 			this.props.history.push('/mine/mine_page');
 		} else if (store.getIdChkPhotoBack()) {
 			window.tencent_face_middle_page = true;
-			history.go(Number(store.getIdChkPhotoBack()));
+			// history.go(Number(store.getIdChkPhotoBack()));
+			getDeviceType() === 'IOS'
+				? history.go(Number(store.getIdChkPhotoBack()) + 1)
+				: history.go(Number(store.getIdChkPhotoBack()));
 			store.removeIdChkPhotoBack();
 			store.removeRealNameNextStep();
 		}
