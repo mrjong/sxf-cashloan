@@ -15,9 +15,7 @@ const API = {
 export default class mpos_download_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {
-			selectFlag: true
-		};
+		this.state = {};
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
@@ -59,7 +57,6 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	render() {
-		const { selectFlag } = this.state;
 		return (
 			<div>
 				<div className={styles.padding_bottom}>
