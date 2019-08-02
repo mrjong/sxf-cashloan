@@ -222,7 +222,7 @@ const interceptRouteArr = [
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
 		// if (store.getChkPhotoBackNew()) {
-		if (store.getTencentBackUrl()) {
+		if (store.getTencentBackUrl() && getDeviceType() === 'ANDRIOD') {
 			window.ReactRouterHistory.replace(store.getTencentBackUrl());
 			// history.go(Number(store.getChkPhotoBackNew()));
 			store.removeTencentBackUrl();

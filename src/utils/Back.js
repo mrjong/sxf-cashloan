@@ -134,11 +134,12 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			// 人脸中间页物理返回
+			const tencentBackUrl = store.getTencentBackUrl();
 			// if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
-			if (!window.tencent_face_middle_page && store.getTencentBackUrl()) {
+			if (!window.tencent_face_middle_page && tencentBackUrl) {
 				// history.go(Number(store.getIdChkPhotoBack()));
-				this.props.history.replace(store.getTencentBackUrl());
 				store.removeTencentBackUrl();
+				window.ReactRouterHistory.replace(tencentBackUrl);
 				// store.removeIdChkPhotoBack();
 				return;
 			}
