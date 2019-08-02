@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Steps } from 'antd-mobile';
 import style from './index.scss';
 
 export default class StepBar extends Component {
@@ -8,29 +7,60 @@ export default class StepBar extends Component {
 	}
 	render() {
 		const { current } = this.props;
-		const Step = Steps.Step;
 		const steps = [
 			{
-				title: '基本信息'
+				period: '首期',
+				title: '3422',
+				desc: '本金本金3000+利息300+服务费+3',
+				subDesc: '-优惠178'
 			},
 			{
-				title: '运营商认证'
+				period: '2期',
+				title: '3422',
+				desc: '本金本金3000+利息300+服务费+3本金本金3000+利息300+服务费+3',
+				subDesc: '-优惠178'
 			},
 			{
-				title: '提交申请'
+				period: '3期',
+				title: '3422',
+				desc: '本金本金3000+利息300+服务费+3',
+				subDesc: '-优惠178'
+			},
+			{
+				period: '4期',
+				title: '3422',
+				desc: '本金本金3000+利息300+服务费+3',
+				subDesc: '-优惠178'
+			},
+			{
+				period: '5期',
+				title: '3422',
+				desc: '本金本金3000+利息300+服务费+3',
+				subDesc: '-优惠178'
 			}
-		].map((s, i) => (
-			<Step
-				key={i}
-				title={<span className={i < current ? style.stepTextActive : ''}>{s.title}</span>}
-				icon={<i className={[ style.stepIcon, i < current ? style.stepActive : '' ].join(' ')}>{i + 1}</i>}
-			/>
-		));
+		];
 		return (
-			<div className={[ 'credit_step', style.stepWrapper ].join(' ')}>
-				<Steps direction="horizontal" current={current - 1}>
-					{steps}
-				</Steps>
+			<div className={style.step_wrap}>
+				<ul>
+					{steps &&
+						steps.length > 0 &&
+						steps.map((item) => (
+							<li key={item.period} className={style.item_wrap}>
+								<div className={style.top_line}>
+									<span className={style.step_index}>{item.period}</span>
+									<span className={style.circle_dot}></span>
+									<span className={style.step_title}>
+										<i>¥ </i>
+										<i className={style.value}>{item.title}</i>
+									</span>
+								</div>
+								<div className={style.right_box}>
+									<span className={style.step_desc}>{item.desc}</span>
+									<span className={style.step_subDesc}>{item.subDesc}</span>
+								</div>
+							</li>
+						))}
+				</ul>
 			</div>
 		);
 	}

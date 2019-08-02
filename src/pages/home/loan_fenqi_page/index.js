@@ -38,7 +38,6 @@ export default class loan_fenqi_page extends PureComponent {
 			inputClear: false,
 			usageModal: false,
 			planModal: false,
-			tipModal: false,
 			prdId: '',
 			loanDate: '',
 			loanMoney: '',
@@ -715,7 +714,6 @@ export default class loan_fenqi_page extends PureComponent {
 			prdId,
 			loanUsage: loanUsageObj,
 			usageList,
-			tipModal,
 			loanDate,
 			loanMoney,
 			planModal,
@@ -938,26 +936,6 @@ export default class loan_fenqi_page extends PureComponent {
 							</li>
 						))}
 					</ul>
-				</Modal>
-
-				<Modal visible={tipModal} className="fenqi_tip_modal" transparent>
-					<p className={style.tipInfo}>抱歉！还到plus额度无法使用，仍可申请还到基础版。</p>
-					<div
-						className={style.tipButton}
-						onClick={() => {
-							this.props.history.push('/home/home');
-						}}
-					>
-						申请还到基础版
-					</div>
-					<Icon
-						type="cross"
-						className={style.tipCloseIcon}
-						color="#333"
-						onClick={() => {
-							this.closeModal('tip');
-						}}
-					/>
 				</Modal>
 
 				<Modal

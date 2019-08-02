@@ -17,6 +17,7 @@ import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_detail_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
+import RepayPlanModal from 'components/RepayPlanModal';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -1020,20 +1021,17 @@ export default class confirm_agency_page extends PureComponent {
 										<div className={[style.listValue, style.hasArrow].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
-											{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 										</div>
 									) : (
 										(repayInfo2 && (
 											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
 												无可用优惠券
 												<Icon type="right" className={style.icon} />
-												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)) || (
 											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
 												请选择
 												<Icon type="right" className={style.icon} />
-												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)
 									)}
@@ -1044,16 +1042,6 @@ export default class confirm_agency_page extends PureComponent {
 								>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
 									<div>
-										{/* {repayInfo2 && repayInfo2.perdUnit === 'D' ? (
-											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
-										) : (
-											(repayInfo2 && (
-												<span className={[style.listValue, style.listValue3, style.hasArrow].join(' ')}>
-													<span className={style.moneyTit}>优惠后合计</span><span className={style.derateMoney}>{4950}</span>元
-													<Icon type="right" className={style.icon} />
-												</span>
-											)) || <span className={style.listValue2}>暂无</span>
-                    )} */}
 										{(repayInfo2 && (
 											<span
 												className={
@@ -1179,6 +1167,7 @@ export default class confirm_agency_page extends PureComponent {
 							</div>
 						</div>
 					</Modal>
+
 					<Modal
 						wrapClassName="confirm_agency_warp"
 						visible={isShowTipModal}
@@ -1203,6 +1192,7 @@ export default class confirm_agency_page extends PureComponent {
 							</p>
 						</div>
 					</Modal>
+
 					<Modal
 						wrapClassName="modal_VIPTip_warp"
 						visible={isShowVIPModal}
@@ -1233,7 +1223,8 @@ export default class confirm_agency_page extends PureComponent {
 							</li>
 						</ul>
 					</Modal>
-					<Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
+
+					{/* <Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
 						<div className={style.modal_content}>
 							<Icon
 								type="cross"
@@ -1253,7 +1244,15 @@ export default class confirm_agency_page extends PureComponent {
 									))}
 							</ul>
 						</div>
-					</Modal>
+          </Modal> */}
+
+					<RepayPlanModal
+						visible={isShowModal}
+						onClose={this.handleCloseModal}
+						data={repayInfo2.perd}
+						history={this.props.history}
+					/>
+
 					{isShowSmsModal && (
 						<SmsModal
 							onCancel={() => {}}
