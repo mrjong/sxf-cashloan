@@ -273,6 +273,7 @@ export default class real_name_page extends Component {
 						case '3':
 							if (urlQuery.fromRouter === 'home') {
 								store.setRealNameNextStep('home');
+								store.setTencentBackUrl('/home/home');
 							} else {
 								store.setRealNameNextStep('other');
 								store.setTencentBackUrl('/mine/mine_page');
