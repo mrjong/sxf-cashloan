@@ -58,10 +58,12 @@ export default class tencent_face_middle_page extends Component {
 					});
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
+					store.removeTencentBackUrl();
 				} else if (store.getNeedNextUrl() && store.getRealNameNextStep() === 'home') {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
+					store.removeTencentBackUrl();
 					getNextStr({
 						$props: this.props
 					});
