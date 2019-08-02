@@ -1190,7 +1190,7 @@ export default class confirm_agency_page extends PureComponent {
 						]}
 					>
 						<div className={style.modal_tip_content}>
-							<h3 className={style.modl_tip_title}>"还到"已接入央行平台，逾期将影响您的个人信用！</h3>
+							<h3 className={style.modl_tip_title}>"还到"将上报央行征信，逾期将影响您的个人信用</h3>
 							<p className={style.modl_tip_text}>
 								若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。
 								这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。

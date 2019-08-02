@@ -43,5 +43,10 @@ export default [
 		path: '/protocol/pdf_page',
 		title: '',
 		component: () => import('pages/protocol/pdf_page')
+	},
+	{
+		path: '/protocol/personal_auth_page',
+		title: '个人信息授权书',
+		component: () => import('pages/protocol/personal_auth_page')
 	}
 ];

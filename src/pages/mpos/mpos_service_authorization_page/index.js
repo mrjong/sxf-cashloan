@@ -10,6 +10,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
 import { Checkbox } from 'antd-mobile';
+import logo from './img/logo.png';
 const AgreeItem = Checkbox.AgreeItem;
 const needDisplayOptions = ['basicInf'];
 const API = {
@@ -27,7 +28,9 @@ export default class mpos_service_authorization_page extends PureComponent {
 	}
 	componentWillMount() {
 		buriedPointEvent(mpos_service_authorization.auth_page);
+		document.title = '随行付金融';
 	}
+
 	goSubmit = () => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
@@ -105,43 +108,41 @@ export default class mpos_service_authorization_page extends PureComponent {
 		const { selectFlag } = this.state;
 		return (
 			<div>
-				<div className={styles.padding_bottom}>
-					<div className={styles.bg_top} />
-					<div className={styles.bg_list} />
+				<img src={logo} alt="" className={styles.logoWrap} />
+				<p className={styles.text}>
+					随行付金融提供 <em className={styles.highlight}>信用卡账单代还</em>服务 <br /> 200万信用卡用户新选择{' '}
+				</p>
+				<div className={styles.btn_fixed}>
+					<SXFButton
+						className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
+						onClick={selectFlag ? () => this.goSubmit() : null}
+					>
+						下一步
+					</SXFButton>
 				</div>
-				<div>
-					<div className={styles.btn_fixed}>
-						<SXFButton
-							className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
-							onClick={selectFlag ? () => this.goSubmit() : null}
+				<div className={styles.agreement_box}>
+					<AgreeItem
+						className="mpos_middle_checkbox"
+						checked={selectFlag}
+						data-seed="logId"
+						onChange={(e) => this.setState({ selectFlag: e.target.checked })}
+					>
+						请阅读协议内容，点击按钮即视为同意
+						<a
+							onClick={() => {
+								this.go('register_agreement_page');
+							}}
 						>
-							确定
-						</SXFButton>
-						<div>
-							<AgreeItem
-								className="mpos_middle_checkbox"
-								checked={selectFlag}
-								data-seed="logId"
-								onChange={(e) => this.setState({ selectFlag: e.target.checked })}
-							>
-								阅读并接受
-								<a
-									onClick={() => {
-										this.go('register_agreement_page');
-									}}
-								>
-									《随行付金融用户注册协议》
-								</a>
-								<a
-									onClick={() => {
-										this.go('privacy_agreement_page');
-									}}
-								>
-									《随行付用户隐私权政策》
-								</a>
-							</AgreeItem>
-						</div>
-					</div>
+							《用户注册协议》
+						</a>
+						<a
+							onClick={() => {
+								this.go('privacy_agreement_page');
+							}}
+						>
+							《用户隐私权政策》
+						</a>
+					</AgreeItem>
 				</div>
 			</div>
 		);

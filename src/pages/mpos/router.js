@@ -8,7 +8,7 @@ export default [
 	},
 	{
 		path: '/mpos/mpos_service_authorization_page',
-		title: '',
+		title: '随行付金融',
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/mpos/mpos_service_authorization_page')

@@ -302,7 +302,21 @@
 	.confirm_agency_warp {
 		:global {
 			.am-modal-button-group-v .am-modal-button {
-				color: #ebde74;
+				color: #121c32;
+				font-size: 34px;
+				font-family: 'PingFangSC-Medium';
+				font-weight: 500;
+			}
+			.am-modal-transparent {
+				width: 580px;
+			}
+			.am-modal-transparent .am-modal-content {
+				padding-top: 60px;
+				border-radius: 6px;
+			}
+			.am-modal-transparent .am-modal-content .am-modal-body {
+				padding: 0 35px 60px;
+				text-align: justify;
 			}
 		}
 	}
@@ -339,6 +353,19 @@
 			}
 		}
 	}
+}
+.modl_tip_title {
+	font-size: 34px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	color: #121c32;
+	line-height: 48px;
+}
+.modl_tip_text {
+	font-size: 30px;
+	color: #868e9e;
+	line-height: 42px;
+	margin-top: 20px;
 }
 
 .modalDesc {

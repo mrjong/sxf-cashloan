@@ -217,6 +217,8 @@ const loan_repay_confirm = {
 };
 
 const other = {
+	mposDownloadPage: `${prefix}_MPOS_DOWNLOAD_PAGE`, //页面埋点
+	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK` //外部下载页按钮点击事件
 };
 
@@ -235,7 +237,10 @@ const loan_fenqi = {
 	submitResult: `${prefix}_FENQI_SUBMIT_RESULT`,
 	fenqiGoBack: `${prefix}_FENQI_GO_BACK`,
 	fenqiDownload: `${prefix}_FENQI_DOWNLOAD_CLICK`,
-	fenqiHomeApplyBtn: `${prefix}_FENQI_HOME_APPLY_BTN`
+	fenqiHomeApplyBtn: `${prefix}_FENQI_HOME_APPLY_BTN`,
+	protocolSmsFail: `${prefix}_FENQI_PROTOCOL_SMS_FAIL`, // 现金分期签约借款页协议绑卡校验失败埋点
+	protocolBindFail: `${prefix}_FENQI_PROTOCOL_BIND_FAIL`, // 现金分期签约借款页协议绑卡绑定失败埋点
+	protocolBindBtnClick: `${prefix}_FENQI_PROTOCOL_MODAL_BTN_CLICK` // 现金分期签约借款页协议绑卡短验弹框按钮点击
 };
 
 export {

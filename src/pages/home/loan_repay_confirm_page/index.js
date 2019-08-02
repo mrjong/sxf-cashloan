@@ -27,7 +27,8 @@ const API = {
 	qryPerdRate: '/bill/prod',
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
+	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
+	contractInfo: '/bill/personalDataAuthInfo' // 个人信息授权书数据查询
 };
 const tagList = [
 	{
@@ -73,7 +74,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			fullMinAmt: '', // 全额或者最低还卡金额
 			showTimeoutPayModal: false,
 			showFeedbackModal: false,
-			inputFocus: false
+			inputFocus: false,
+			selectFlag: true // 协议是否勾选
 		};
 	}
 
@@ -304,7 +306,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	handleSubmit = async () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const { selectedLoanDate = {}, usrIndexInfo, cardCount, btnDisabled, fullMinAmt } = this.state;
+		const {
+			selectedLoanDate = {},
+			usrIndexInfo,
+			cardCount,
+			btnDisabled,
+			fullMinAmt,
+			selectFlag
+		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { minApplAmt, maxApplAmt } = indexData;
 		if (!this.state.fetchBillSucc) {
@@ -357,7 +366,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			this.props.toast.info('请选择借款期限');
 			return;
 		}
-		if (btnDisabled) {
+		if (btnDisabled || !selectFlag) {
 			return;
 		}
 		const params = {
@@ -624,6 +633,23 @@ export default class loan_repay_confirm_page extends PureComponent {
 				break;
 		}
 	};
+	// 跳转个人信息授权书
+	readContract = () => {
+		this.props.$fetch.get(API.contractInfo).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				store.setToggleMoxieCard(true);
+				store.setProtocolPersonalData(result.data);
+				this.props.history.push('/protocol/personal_auth_page');
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		});
+	};
+	selectProtocol = () => {
+		this.setState({
+			selectFlag: !this.state.selectFlag
+		});
+	};
 	render() {
 		const {
 			usrIndexInfo,
@@ -634,7 +660,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			fetchBillSucc,
 			fullMinAmt,
 			showTimeoutPayModal,
-			showFeedbackModal
+			showFeedbackModal,
+			selectFlag
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -871,10 +898,25 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<div className={this.state.inputFocus ? style.handle_authority_relative : style.handle_authority}>
 					<div
-						className={[style.button, btnDisabled ? style.disabledBtn : ''].join(' ')}
+						className={[style.button, !btnDisabled && selectFlag ? '' : style.disabledBtn].join(' ')}
 						onClick={this.handleSubmit}
 					>
 						提交申请
+					</div>
+					<div className={style.protocolBox}>
+						<i
+							className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
+							onClick={this.selectProtocol}
+						/>
+						点击按钮即视为同意
+						<a
+							onClick={() => {
+								this.readContract();
+							}}
+							className={style.link}
+						>
+							《个人信息授权书》
+						</a>
 					</div>
 				</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>

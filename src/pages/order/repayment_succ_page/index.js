@@ -54,7 +54,7 @@ export default class repayment_succ_page extends PureComponent {
 			<div className={styles.repayment_succ_page}>
 				<div className={styles.tips}>
 					<i className={styles.success_ico} />
-					<p>申请还款成功</p>
+					<p>还款成功</p>
 				</div>
 				<div className={styles.details}>
 					<p>借款金额：{this.state.orderSuccess.billPrcpAmt}元</p>

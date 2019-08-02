@@ -1,57 +1,145 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .mine_page {
 	overflow-y: auto;
+	padding: 0 40px;
 	.user_inf {
 		line-height: 100px;
-		background: #ffda58;
-		background: -webkit-linear-gradient(left, #ffd958, #ffda58); /* Safari 5.1 - 6.0 */
-		background: -o-linear-gradient(right, #ffd958, #ffda58); /* Opera 11.1 - 12.0 */
-		background: -moz-linear-gradient(right, #ffd958, #ffda58); /* Firefox 3.6 - 15 */
-		background: linear-gradient(to right, #ffd958, #ffda58); /* 标准的语法 */
-		padding: 50px 40px;
+		// background: #ffda58;
+		// background: -webkit-linear-gradient(left, #ffd958, #ffda58); /* Safari 5.1 - 6.0 */
+		// background: -o-linear-gradient(right, #ffd958, #ffda58); /* Opera 11.1 - 12.0 */
+		// background: -moz-linear-gradient(right, #ffd958, #ffda58); /* Firefox 3.6 - 15 */
+		// background: linear-gradient(to right, #ffd958, #ffda58); /* 标准的语法 */
+		padding: 49px 0 76px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		.userInfBox {
+			display: flex;
+			align-items: center;
+		}
 		img {
 			width: 100px;
 			height: 100px;
-			margin-right: 31px;
+			margin-right: 20px;
 			vertical-align: middle;
 		}
-		span {
-			font-size: 36px;
-			color: #fff;
+		// span {
+		// 	font-size: 36px;
+		// 	color: #fff;
+		// }
+		.mobile {
+			font-size: 48px;
+			font-family: 'DINMitAlt';
+			margin-top: 8px;
 		}
 		.follow_btn {
-			width: 183px;
+			width: 200px;
 			height: 60px;
 			line-height: 60px;
-			border-radius: 30px;
-			background-color: #fff;
-			color: #ffbd18;
+			color: #fff;
 			font-size: 30px;
 			text-align: center;
+			background: #317af1;
+			box-shadow: 0px 3px 10px 0px rgba(49, 122, 241, 0.35);
+			border-radius: 30px;
 		}
 	}
 	.common_margin {
-		margin-top: 26px;
+		position: relative;
+		&::after {
+			@include setTopLine(#f0f1f5);
+		}
+		// margin-top: 30px;
+	}
+	.mine_list {
+		:global {
+			.am-list-item {
+				min-height: 110px;
+				padding: 0;
+				border-radius: 4px;
+			}
+			.am-list-body {
+				border-radius: 4px;
+			}
+			.am-list-item .am-list-line {
+				padding-right: 0;
+				font-family: 'PingFangSC-Semibold';
+				font-weight: 600;
+			}
+			.am-list-item .am-list-line .am-list-content {
+				font-size: 30px;
+			}
+			.am-list-extra span {
+				font-size: 30px;
+			}
+			.am-list-item .am-list-line .am-list-arrow {
+				width: 11px;
+				height: 20px;
+				background-image: url('../../../assets/images/mine/arrow_ico.png');
+			}
+			@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+				.am-list-body::after,
+				.am-list-body::before {
+					transform: scaleY(0);
+				}
+			}
+		}
 	}
 	.logout {
-		height: 100px;
+		width: 200px;
+		height: 70px;
 		background: #fff;
-		line-height: 100px;
+		line-height: 70px;
+		border-radius: 35px;
 		font-size: 30px;
-		color: rgba(51, 51, 51, 1);
+		color: #121c32;
 		text-align: center;
-		margin: 42px 0;
+		border: 1px solid #868e9e;
+		margin: 45px auto 40px;
 	}
 	i {
 		position: absolute;
 		top: 51%;
 		transform: translate(0, -50%);
 		display: inline-block;
-		width: 42px;
-		height: 42px;
+		width: 40px;
+		height: 40px;
+	}
+	// 常见问题
+	.fqaBox {
+		margin-top: 30px;
+		img {
+			display: block;
+			width: 100%;
+			height: 150px;
+			border-radius: 4px;
+		}
+	}
+	// 未登录状态
+	.notLoginBox {
+		padding: 40px 0 60px;
+		text-align: center;
+		img {
+			width: 199px;
+			vertical-align: top;
+		}
+		.desc {
+			font-size: 34px;
+			color: #394259;
+			margin: 24px 0 47px;
+			line-height: 1;
+		}
+		.loginBtn {
+			margin: 0 auto;
+			width: 260px;
+			height: 70px;
+			line-height: 70px;
+			background: #317af1;
+			box-shadow: 0px 3px 10px 0px rgba(49, 122, 241, 0.35);
+			border-radius: 35px;
+			color: #fff;
+			font-size: 30px;
+		}
 	}
 }
 
