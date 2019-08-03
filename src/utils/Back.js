@@ -12,18 +12,11 @@ import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-let initDialog = (errMsg) => {
+let initDialog = () => {
 	let obj = new PopUp(
 		(
 			<Dialog
 				open
-				content={errMsg || '连接服务器失败，请稍后重试'}
-				actions={[
-					{
-						label: '确定',
-						className: 'rob-btn rob-btn-danger rob-btn-circle'
-					}
-				]}
 				onRequestClose={(res, questionName) => {
 					switch (location.pathname) {
 						case '/home/loan_repay_confirm_page':
@@ -79,6 +72,9 @@ let initDialog = (errMsg) => {
 									break;
 							}
 							break;
+						case '/login':
+							this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
+							break;
 						default:
 							break;
 					}
@@ -105,7 +101,7 @@ let initDialog = (errMsg) => {
 	);
 	return obj;
 };
-let obj = initDialog('22222');
+let obj = initDialog();
 
 if (window.history && window.history.pushState) {
 	window.addEventListener(
@@ -284,13 +280,10 @@ if (window.history && window.history.pushState) {
 			}
 			switch (historyRouter) {
 				case '/login':
+					obj.show();
 					return;
 				case '/home/home':
 					if (tokenFromStorage && token) {
-						// if (window.handleCloseHomeModal) {
-						// 	window.handleCloseHomeModal();
-						// 	return;
-						// }
 						if (store.getCarrierMoxie()) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
@@ -315,14 +308,13 @@ if (window.history && window.history.pushState) {
 					logoutAppHandler();
 					break;
 				case '/order/repayment_succ_page':
-				case '/home/confirm_agency': // 确认信息页物理返回到首页
-				case '/home/loan_apply_succ_page': // 借款申请提交成功页物理返回到首页
-				case '/home/loan_fenqi': // 现金分期确认签约页返回首页
+				case '/home/confirm_agency':
+					obj.show();
+					break;
+				case '/home/loan_apply_succ_page':
+				case '/home/loan_fenqi':
 					window.ReactRouterHistory.push('/home/home');
 					break;
-				// case '/mine/credit_extension_page':
-				// 	window.ReactRouterHistory.push('/mine/mine_page');
-				// 	break;
 				case '/mine/credit_list_page':
 					if (store.getGotoMoxieFlag()) return; // 如何页面弹出反馈窗则拦截
 					if (store.getToggleMoxieCard()) {
@@ -339,7 +331,6 @@ if (window.history && window.history.pushState) {
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				default:
-					// window.ReactRouterHistory.goBack()
 					break;
 			}
 		},

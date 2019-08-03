@@ -56,7 +56,6 @@ export default class confirm_agency_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		const queryData = store.getHomeConfirmAgency();
-		// qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		indexData = queryData;
 		this.state = {
 			inputClear: false,
