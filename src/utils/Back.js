@@ -72,9 +72,6 @@ let initDialog = () => {
 									break;
 							}
 							break;
-						case '/login':
-							this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
-							break;
 						default:
 							break;
 					}
@@ -308,9 +305,7 @@ if (window.history && window.history.pushState) {
 					logoutAppHandler();
 					break;
 				case '/order/repayment_succ_page':
-				case '/home/confirm_agency':
-					obj.show();
-					break;
+				// case '/home/confirm_agency':
 				case '/home/loan_apply_succ_page':
 				case '/home/loan_fenqi':
 					window.ReactRouterHistory.push('/home/home');

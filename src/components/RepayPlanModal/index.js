@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Icon, Drawer } from 'antd-mobile';
+import { Modal, Icon, Drawer, NoticeBar } from 'antd-mobile';
 import style from './index.scss';
 import StepBar from 'components/StepBar';
 
@@ -119,7 +119,17 @@ export default class RepayPlanModal extends React.PureComponent {
 					</div>
 				</Drawer>
 				<div className={style.fix_bottom}>
-					出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准
+					<NoticeBar
+						marqueeProps={{
+							loop: true,
+							leading: 1000,
+							trailing: 1000,
+							style: { color: '#C9CDD5', fontSize: '0.22rem' }
+						}}
+						icon={null}
+					>
+						出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准
+					</NoticeBar>
 				</div>
 			</Modal>
 		);

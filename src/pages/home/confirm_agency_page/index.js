@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress, InputItem, Icon, Toast } from 'antd-mobile';
+import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
 import dayjs from 'dayjs';
-import qs from 'qs';
 import { store } from 'utils/store';
 import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
@@ -12,12 +11,14 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
+import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto, changeHistoryState } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_detail_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
 import RepayPlanModal from 'components/RepayPlanModal';
+import CouponAlert from './components/CouponAlert';
+
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -25,7 +26,7 @@ if (isIPhone) {
 		onTouchStart: (e) => e.preventDefault()
 	};
 }
-let inputRef = '';
+
 let closeBtn = true;
 const API = {
 	REPAY_INFO: '/bill/prebill', // 代还确认页面
@@ -115,7 +116,8 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			isShowInsureModal: false, // 是否显示保险说明弹框
-			isCheckInsure: false // 是否选择了保费
+			isCheckInsure: false, // 是否选择了保费
+			showCouponAlert: false // 是否显示优惠券拦截弹窗
 		};
 	}
 
@@ -143,6 +145,27 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		this.getExamineSts(); // 检查是否需要人审
 	}
+
+	componentDidMount() {
+		this.addBackListening();
+	}
+
+	// 监听返回拦截
+	addBackListening = () => {
+		window.addEventListener(
+			'popstate',
+			() => {
+				if (this.state.repayInfo2.availableCoupAmt) {
+					this.setState({
+						showCouponAlert: true
+					});
+				} else {
+					this.props.history.push('/home/home');
+				}
+			},
+			false
+		);
+	};
 
 	// 查询用户会员卡状态
 	checkUsrMemSts = () => {
@@ -903,7 +926,8 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal,
 			smsCode,
 			isShowInsureModal,
-			isCheckInsure
+			isCheckInsure,
+			showCouponAlert
 		} = this.state;
 		return (
 			<div>
@@ -1250,6 +1274,17 @@ export default class confirm_agency_page extends PureComponent {
 						onClose={this.handleCloseModal}
 						data={repayInfo2.perd}
 						history={this.props.history}
+					/>
+
+					<CouponAlert
+						visible={showCouponAlert}
+						history={this.props.history}
+						onConfirm={() => {
+							this.setState({
+								showCouponAlert: false
+							});
+							this.requestGetRepayInfo();
+						}}
 					/>
 
 					{isShowSmsModal && (
