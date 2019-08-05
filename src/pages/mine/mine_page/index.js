@@ -52,9 +52,7 @@ export default class mine_page extends PureComponent {
 		console.log('---------', tokenFromStorage, token);
 		if (tokenFromStorage && token) {
 			// 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
-			if (Cookie.get('authFlag') && !store.getIsRefresh()) {
-				console.log('9999');
-				store.removeIsRefresh();
+			if (Cookie.get('authFlag')) {
 				this.setState({
 					mblNoHid: store.getUserPhone(),
 					realNmFlg: Cookie.get('authFlag') === '1' ? true : false
