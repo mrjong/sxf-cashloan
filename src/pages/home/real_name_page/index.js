@@ -276,6 +276,7 @@ export default class real_name_page extends Component {
 								store.setTencentBackUrl('/home/home');
 							} else {
 								store.setRealNameNextStep('other');
+								store.setIsRefresh(true); // 实名返回个人中心调用接口
 								store.setTencentBackUrl('/mine/mine_page');
 							}
 							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
