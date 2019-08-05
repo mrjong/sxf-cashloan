@@ -223,7 +223,12 @@ export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
 		// if (store.getChkPhotoBackNew()) {
 		if (store.getTencentBackUrl() && getDeviceType() === 'ANDRIOD') {
-			window.ReactRouterHistory.replace(store.getTencentBackUrl());
+			if (store.getTencentBackUrl() === '/mine/mine_page') {
+				// 解决人脸直接返回不调用接口的问题
+				history.go(-2);
+			} else {
+				window.ReactRouterHistory.replace(store.getTencentBackUrl());
+			}
 			// history.go(Number(store.getChkPhotoBackNew()));
 			store.removeTencentBackUrl();
 			store.removeIdChkPhotoBack();
