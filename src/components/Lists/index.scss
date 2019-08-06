@@ -64,6 +64,27 @@
 		padding-left: 34px;
 		padding-right: 34px;
 	}
+	.checkList {
+		position: relative;
+		:global {
+			.am-list-content {
+				padding-left: 40px;
+			}
+		}
+	}
+	.checkBoxStyle {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translate(0, -50%);
+		width: 20px;
+		height: 20px;
+		border: 1px solid red;
+	}
+	.checkBoxActiveStyle {
+		border-color: transparent;
+		background: red;
+	}
 }
 :global {
 	.list_box {

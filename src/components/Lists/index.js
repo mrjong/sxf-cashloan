@@ -23,7 +23,15 @@ export default class Lists extends PureComponent {
 	};
 
 	render() {
-		const { listsInf, className, insureFee } = this.props;
+		const {
+			listsInf,
+			className,
+			insureFee,
+			isCheckbox,
+			checkClickCb,
+			penaltyInfo,
+			isShowPenaltyCheck
+		} = this.props;
 		const Item = List.Item;
 		const Brief = Item.Brief;
 		return (
@@ -46,12 +54,43 @@ export default class Lists extends PureComponent {
 							{insureFee.label.name}
 						</Item>
 					)}
+					{penaltyInfo && (
+						<Item
+							// className={insureFee.label.className ? styles.hasIcon : null}
+							arrow={'empty'}
+							extra={
+								Object.prototype.toString.call(penaltyInfo.extra) === '[object Array]' ? (
+									this.getExtra(penaltyInfo.extra)
+								) : (
+									<span style={{ color: insureFee.extra && insureFee.extra.color }}>
+										{penaltyInfo.extra && penaltyInfo.extra.name}
+									</span>
+								)
+							}
+						>
+							{isShowPenaltyCheck && (
+								<span
+									onClick={(e) => {
+										e.stopPropagation();
+										checkClickCb(item);
+									}}
+									className={
+										item.isChecked
+											? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
+											: styles.checkBoxStyle
+									}
+								/>
+							)}
+							<p>{penaltyInfo.label.name}</p>
+							{penaltyInfo.label.brief}
+						</Item>
+					)}
 					{listsInf.map((item, index) => {
 						const icon = <i className={item.label.className} />;
 						return (
 							<div key={index}>
 								<Item
-									className={item.label.className ? styles.hasIcon : null}
+									className={item.label.className ? styles.hasIcon : isCheckbox ? styles.checkList : null}
 									arrow={item.arrowHide ? item.arrowHide : 'horizontal'}
 									onClick={() => {
 										this.props.clickCb(item);
@@ -67,6 +106,19 @@ export default class Lists extends PureComponent {
 									}
 									thumb={icon}
 								>
+									{isCheckbox && item.isShowCheck && (
+										<span
+											onClick={(e) => {
+												e.stopPropagation();
+												checkClickCb(item);
+											}}
+											className={
+												item.isChecked
+													? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
+													: styles.checkBoxStyle
+											}
+										/>
+									)}
 									{item.label.name}
 									{item.label.brief ? <Brief>{item.label.brief}</Brief> : null}
 									{

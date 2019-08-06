@@ -64,7 +64,24 @@ export default class order_detail_page extends PureComponent {
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
 			couponPrice: '', // 优惠劵计算过的金额
-			cashierVisible: false
+			cashierVisible: false,
+			penaltyInfo: {
+				// 罚息数据
+				label: {
+					name: '罚息',
+					brief: '逾期管理费'
+				},
+				extra: [
+					{
+						name: '10.00',
+						color: '#333'
+					},
+					{
+						name: '32.00',
+						color: '#333'
+					}
+				]
+			}
 		};
 	}
 	componentWillMount() {
@@ -383,6 +400,7 @@ export default class order_detail_page extends PureComponent {
 
 	// 显示还款计划
 	showPerdList = (perdNum) => {
+		const { thisPerdNum } = this.state;
 		this.setState({
 			hideBtn: false
 		});
@@ -411,8 +429,26 @@ export default class order_detail_page extends PureComponent {
 					}
 				],
 				arrowHide: 'down',
-				feeInfos: perdList[i].feeInfos
+				feeInfos: perdList[i].feeInfos,
+				isShowCheck: true,
+				isChecked: false
 			};
+			// 处理默认选中
+			if (true) {
+				// 总账单的状态是否有逾期
+				if (perdList[i].perdSts === '1') {
+					item.isChecked = true;
+				}
+			} else {
+				if (thisPerdNum === i + 1) {
+					item.isChecked = true;
+				}
+			}
+			// 已还清、已支付的状态的栏位不显示勾选框
+			// perdSts 0：未到期;1：已逾期;2：处理中;3：已撤销;4：已还清
+			if (perdList[i].perdSts === '4' || perdList[i].perdSts === '2') {
+				item.isShowCheck = false;
+			}
 			if (perdNum !== 999 && perdList[i].perdNum === perdNum) {
 				item.showDesc = true;
 				item.arrowHide = 'up';
@@ -485,6 +521,30 @@ export default class order_detail_page extends PureComponent {
 			if (i !== item.key) {
 				this.state.orderList[i].showDesc = false;
 				this.state.orderList[i].arrowHide = 'down';
+			}
+		}
+		this.state.orderList[item.key] = item;
+		this.setState({
+			orderList: [...this.state.orderList]
+		});
+	};
+	checkClickCb = (item) => {
+		if (item.isChecked) {
+			item = {
+				...item,
+				isChecked: false
+			};
+		} else {
+			item = {
+				...item,
+				isChecked: true
+			};
+		}
+		for (let i = 0; i < this.state.orderList.length; i++) {
+			if (i < item.key) {
+				this.state.orderList[i].isChecked = true;
+			} else {
+				this.state.orderList[i].isChecked = false;
 			}
 		}
 		this.state.orderList[item.key] = item;
@@ -984,7 +1044,8 @@ export default class order_detail_page extends PureComponent {
 			isInsureValid,
 			couponPrice,
 			cashierVisible,
-			repayOrdNo
+			repayOrdNo,
+			penaltyInfo
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1100,6 +1161,9 @@ export default class order_detail_page extends PureComponent {
 						insureFee={insureInfo}
 						clickCb={this.clickCb}
 						className={styles.order_list}
+						isCheckbox={true}
+						checkClickCb={this.checkClickCb}
+						penaltyInfo={penaltyInfo}
 					/>
 				</Panel>
 				{perdNum !== 999 && !hideBtn ? (
