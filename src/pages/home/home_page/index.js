@@ -11,6 +11,7 @@ import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
 import mockData from './mockData';
+import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
@@ -511,12 +512,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'LN0005': // 暂无代还资格
-				console.log('LN0005');
-				days && days > 60
-					? this.props.toast.info(`您暂时没有代偿资格`)
-					: this.props.toast.info(
-							`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
-					  );
+				buriedPointEvent(home.goSuperMarket, {
+					medium: 'H5'
+				});
+				store.setCarrierMoxie(true); // 设置去到第三方标示
+				window.location.href = linkConf.MARKET_URL;
 				break;
 			case 'LN0006': // 风控审核通过
 				console.log('LN0006');
@@ -1227,24 +1227,43 @@ export default class home_page extends PureComponent {
 					break;
 				case 'LN0005': // 暂无代还资格
 					componentsDisplay = (
-						<MoneyCard
+						<ExamineCard
 							handleClick={() => {
-								this.handleSmartClick(differDays);
+								this.handleSmartClick();
 							}}
 							showData={{
-								btnText: '暂无借款资格',
-								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								type: 'LN0005',
+								btnText: '去试试其他借款平台',
+								title: '还到-基础版',
+								subtitle: '非常抱歉，本次审核未通过',
 								money: cardBillAmtData,
-								desc: `还款日：${cardBillDtData}`,
-								cardNoHid: cardCode,
-								bankNo: bankCode,
-								topTip:
+								desc: '',
+								cardNoHid: '',
+								bankNo: '',
+								highlightText:
 									usrIndexInfo.indexData.netAppyDate &&
 									differDays <= 60 &&
-									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')}`
 							}}
 						/>
+						// <MoneyCard
+						// 	handleClick={() => {
+						// 		this.handleSmartClick(differDays);
+						// 	}}
+						// 	showData={{
+						// 		btnText: '暂无借款资格',
+						// 		title: bankNm,
+						// 		subtitle: '信用卡剩余应还金额(元)',
+						// 		money: cardBillAmtData,
+						// 		desc: `还款日：${cardBillDtData}`,
+						// 		cardNoHid: cardCode,
+						// 		bankNo: bankCode,
+						// 		topTip:
+						// 			usrIndexInfo.indexData.netAppyDate &&
+						// 			differDays <= 60 &&
+						// 			`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+						// 	}}
+						// />
 					);
 					break;
 				case 'LN0006': // 风控审核通过

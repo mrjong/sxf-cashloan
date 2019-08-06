@@ -85,7 +85,8 @@ const home = {
 	feedModalOperator: `${prefix}_TIPS_OPERATORS_RETRIEVE`, //找回运营商密码
 	feedModalInterbank: `${prefix}_TIPS_INTERNETBANK_RETRIEVE`, //找回信用卡密码
 	feedModalSubmit: `${prefix}_TIPS_OTHERISSUES`, //反馈问题提交事件
-	feedModalBtnClick: `${prefix}_TIPS_RISSUES` //选择问题按钮点击总事件
+	feedModalBtnClick: `${prefix}_TIPS_RISSUES`, //选择问题按钮点击总事件
+	goSuperMarket: `${prefix}_HOME_GOTO_LOAN_SUPERMARKET` //还卡-点击进入贷超页面按钮
 };
 
 const mine = {
