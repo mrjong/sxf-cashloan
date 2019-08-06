@@ -17,7 +17,18 @@ export default class RepayPlanModal extends React.PureComponent {
 
 	render() {
 		const { openDrawer } = this.state;
-		const { visible, onClose, data } = this.props;
+		const { visible, onClose, data, loanMoney } = this.props;
+		const filterData =
+			data &&
+			data.map((item) => {
+				let { perdPrcpAmt, perdItrtAmt, perdNum, perdTotAmt } = item;
+				return {
+					perdNum,
+					perdTotAmt,
+					perdPrcpAmt,
+					perdItrtAmt
+				};
+			});
 		const sidebar = (
 			<div className={style.drawer_wrap}>
 				<div className={style.modalTitle}>
@@ -43,7 +54,7 @@ export default class RepayPlanModal extends React.PureComponent {
 					<span className={style.label}>借款金额</span>
 					<span className={style.money}>
 						<i>¥ </i>
-						<i className={style.value}>25000</i>
+						<i className={style.value}>{loanMoney}</i>
 					</span>
 				</div>
 				<div className={style.inner_wrap}>
@@ -57,7 +68,7 @@ export default class RepayPlanModal extends React.PureComponent {
 						<span>查看详情</span>
 						<Icon type="right" className={style.link_bar_close} />
 					</a>
-					<StepBar />
+					<StepBar data={filterData} />
 				</div>
 			</div>
 		);
@@ -99,7 +110,7 @@ export default class RepayPlanModal extends React.PureComponent {
 						<span className={style.label}>借款金额</span>
 						<span className={style.money}>
 							<i>¥ </i>
-							<i className={style.value}>25000</i>
+							<i className={style.value}>{loanMoney}</i>
 						</span>
 					</div>
 					<div className={style.inner_wrap}>
@@ -115,7 +126,7 @@ export default class RepayPlanModal extends React.PureComponent {
 							<span>查看详情</span>
 							<Icon type="right" className={style.link_bar_close} />
 						</a>
-						<StepBar />
+						<StepBar data={data} />
 					</div>
 				</Drawer>
 				<div className={style.fix_bottom}>

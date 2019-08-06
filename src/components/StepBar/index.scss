@@ -1,5 +1,7 @@
 .step_wrap {
 	height: 600px;
+	padding-bottom: 40px;
+	box-sizing: border-box;
 	overflow: scroll;
 
 	.top_line {
@@ -19,6 +21,9 @@
 	}
 
 	.right_box {
+		display: flex;
+		flex-direction: column;
+		min-width: 50px;
 		padding: 0 0 42px 38px;
 		text-align: left;
 		margin-left: 117px;
@@ -43,9 +48,16 @@
 		}
 	}
 
-	.step_desc,
-	.step_subDesc {
+	.step_desc {
 		font-size: 24px;
 		color: #868e9e;
+	}
+
+	.step_subDesc {
+		padding: 0 10px;
+		background: rgba(254, 102, 102, 0.1);
+		color: #fe6666;
+		border-radius: 2px;
+		font-size: 24px;
 	}
 }

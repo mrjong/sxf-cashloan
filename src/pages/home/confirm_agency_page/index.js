@@ -42,7 +42,8 @@ const API = {
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink' //协议绑卡接口
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	sendCoupon: '/activeConfig/issueCoup' //拦截发放优惠券
 };
 
 let indexData = null; // 首页带过来的信息
@@ -155,16 +156,31 @@ export default class confirm_agency_page extends PureComponent {
 		window.addEventListener(
 			'popstate',
 			() => {
-				if (this.state.repayInfo2.availableCoupAmt) {
-					this.setState({
-						showCouponAlert: true
-					});
+				if (!Number(this.state.repayInfo2.availableCoupAmt)) {
+					this.sendCoupon();
 				} else {
 					this.props.history.push('/home/home');
 				}
 			},
 			false
 		);
+	};
+
+	// 拦截发放优惠券
+	sendCoupon = () => {
+		this.props.$fetch.post(API.sendCoupon).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				this.setState({
+					showCouponAlert: true,
+					couponAlertData: {
+						coupVal: result.data.coupVal,
+						time: result.data.validEndTm
+					}
+				});
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		});
 	};
 
 	// 查询用户会员卡状态
@@ -522,7 +538,8 @@ export default class confirm_agency_page extends PureComponent {
 					this.setState({
 						repayInfo2: result.data,
 						deratePrice: result.data.deductAmount,
-						couponInfo
+						couponInfo,
+						showInterestTotal: result.data.showFlag === '1'
 					});
 					// if (result.data.data && result.data.data.usrCoupNo) {
 					// 	this.dealMoney(result.data);
@@ -927,7 +944,9 @@ export default class confirm_agency_page extends PureComponent {
 			smsCode,
 			isShowInsureModal,
 			isCheckInsure,
-			showCouponAlert
+			showCouponAlert,
+			couponAlertData,
+			showInterestTotal
 		} = this.state;
 		return (
 			<div>
@@ -1060,7 +1079,9 @@ export default class confirm_agency_page extends PureComponent {
 									)}
 								</li>
 								<li
-									className={repayInfo2 ? `${style.listItem} ${style.listItem3}` : style.listItem}
+									className={
+										repayInfo2 && showInterestTotal ? `${style.listItem} ${style.listItem3}` : style.listItem
+									}
 									onClick={this.handleShowModal}
 								>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
@@ -1073,17 +1094,21 @@ export default class confirm_agency_page extends PureComponent {
 														: [style.listValue, style.listValue3, style.hasArrow].join(' ')
 												}
 											>
-												<span className={style.moneyTit}>优惠后合计</span>
-												<span className={style.derateMoney}>
-													{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
-												</span>
-												元
+												{showInterestTotal && (
+													<span>
+														<span className={style.moneyTit}>优惠后合计</span>
+														<span className={style.derateMoney}>
+															{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+														</span>
+														元
+													</span>
+												)}
 												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
 													<Icon type="right" className={style.icon} />
 												)}
 											</span>
 										)) || <span className={style.listValue2}>暂无</span>}
-										{repayInfo2 && (
+										{repayInfo2 && showInterestTotal && (
 											<div
 												className={
 													repayInfo2 && repayInfo2.perdUnit === 'D'
@@ -1247,37 +1272,17 @@ export default class confirm_agency_page extends PureComponent {
 						</ul>
 					</Modal>
 
-					{/* <Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
-						<div className={style.modal_content}>
-							<Icon
-								type="cross"
-								className={style.modal_close_btn}
-								onClick={this.handleCloseModal}
-								color="#333"
-							/>
-							<h2 className={style.modal_title}>还款计划</h2>
-							<ul className={style.bill_list}>
-								{repayInfo2 &&
-									repayInfo2.perd &&
-									repayInfo2.perd.map((item) => (
-										<li className={style.list_item} key={item.perdNum}>
-											<label className={style.item_name}>{`${item.perdNum}/${repayInfo2.perdCnt}期`}</label>
-											<span className={style.item_value}>{item.perdTotAmt}</span>
-										</li>
-									))}
-							</ul>
-						</div>
-          </Modal> */}
-
 					<RepayPlanModal
 						visible={isShowModal}
 						onClose={this.handleCloseModal}
 						data={repayInfo2.perd}
+						loanMoney={this.state.cardBillAmt}
 						history={this.props.history}
 					/>
 
 					<CouponAlert
 						visible={showCouponAlert}
+						data={couponAlertData}
 						history={this.props.history}
 						onConfirm={() => {
 							this.setState({

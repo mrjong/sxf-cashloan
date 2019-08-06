@@ -6,57 +6,31 @@ export default class StepBar extends Component {
 		super(props);
 	}
 	render() {
-		const { current } = this.props;
-		const steps = [
-			{
-				period: '首期',
-				title: '3422',
-				desc: '本金本金3000+利息300+服务费+3',
-				subDesc: '-优惠178'
-			},
-			{
-				period: '2期',
-				title: '3422',
-				desc: '本金本金3000+利息300+服务费+3本金本金3000+利息300+服务费+3',
-				subDesc: '-优惠178'
-			},
-			{
-				period: '3期',
-				title: '3422',
-				desc: '本金本金3000+利息300+服务费+3',
-				subDesc: '-优惠178'
-			},
-			{
-				period: '4期',
-				title: '3422',
-				desc: '本金本金3000+利息300+服务费+3',
-				subDesc: '-优惠178'
-			},
-			{
-				period: '5期',
-				title: '3422',
-				desc: '本金本金3000+利息300+服务费+3',
-				subDesc: '-优惠178'
-			}
-		];
+		const { data } = this.props;
 		return (
 			<div className={style.step_wrap}>
 				<ul>
-					{steps &&
-						steps.length > 0 &&
-						steps.map((item) => (
-							<li key={item.period} className={style.item_wrap}>
+					{data &&
+						data.length > 0 &&
+						data.map((item) => (
+							<li key={item.perdNum} className={style.item_wrap}>
 								<div className={style.top_line}>
-									<span className={style.step_index}>{item.period}</span>
+									<span className={style.step_index}>{item.perdNum === '1' ? '首' : item.perdNum}期</span>
 									<span className={style.circle_dot}></span>
 									<span className={style.step_title}>
 										<i>¥ </i>
-										<i className={style.value}>{item.title}</i>
+										<i className={style.value}>{item.perdTotAmt}</i>
 									</span>
 								</div>
 								<div className={style.right_box}>
-									<span className={style.step_desc}>{item.desc}</span>
-									<span className={style.step_subDesc}>{item.subDesc}</span>
+									<span className={style.step_desc}>
+										<span>本金{item.perdPrcpAmt}</span>
+										<span>+利息{item.perdItrtAmt}</span>
+										{item.perdMngAmt && <span>+服务费{item.perdMngAmt}</span>}
+									</span>
+									{item.perdDeductAmt && (
+										<span className={style.step_subDesc}>-优惠{item.perdDeductAmt}</span>
+									)}
 								</div>
 							</li>
 						))}
