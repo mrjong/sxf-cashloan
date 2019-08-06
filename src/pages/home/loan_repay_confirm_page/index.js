@@ -391,7 +391,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 					store.setLoanAspirationHome(params);
 					break;
 				case '3':
-					store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
+					store.setTencentBackUrl('/home/loan_repay_confirm_page');
+					// store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 					store.setLoanAspirationHome(params);
 					break;
 				default:

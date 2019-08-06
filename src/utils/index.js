@@ -221,8 +221,16 @@ const interceptRouteArr = [
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
-		if (store.getChkPhotoBackNew()) {
-			history.go(Number(store.getChkPhotoBackNew()));
+		// if (store.getChkPhotoBackNew()) {
+		if (store.getTencentBackUrl() && getDeviceType() === 'ANDRIOD') {
+			if (store.getTencentBackUrl() === '/mine/mine_page') {
+				// 解决人脸直接返回不调用接口的问题
+				history.go(-2);
+			} else {
+				window.ReactRouterHistory.replace(store.getTencentBackUrl());
+			}
+			// history.go(Number(store.getChkPhotoBackNew()));
+			store.removeTencentBackUrl();
 			store.removeIdChkPhotoBack();
 			store.removeChkPhotoBackNew();
 		} else if (store.getGoMoxie()) {
