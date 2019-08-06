@@ -52,35 +52,35 @@ export default class carouselHome extends React.Component {
 			subtitle: '最高可申请还款金(元)',
 			money: '50000.00',
 			desc: '还款日：8888/88/88',
-			btnText: !isMPOS() && btnText ? btnText : '申请借款' , // mpos中展示文案不同
-			color: 'rgba(248, 164, 65, 1)',
+			btnText: !isMPOS() && btnText ? btnText : '去申请', // mpos中展示文案不同
+			color: 'rgba(248, 164, 65, 1)'
 		};
 		const iconClass = 'logo_ico';
 		return (
 			<div className="carouselHome">
 				<div className={style.title}>
-					<i className={[ 'bank_ico', iconClass, `${style.bankLogo}` ].join(' ')} />
+					<i className={['bank_ico', iconClass, `${style.bankLogo}`].join(' ')} />
 					<i>{showData.title}</i>
 				</div>
 				<WhiteCard showData={showData} noLogoBtn={true} handleClick={handleClick}>
 					{/* <Carousel {...restProps}> */}
-						<div className={style.contentBox}>
-							{showData.demoTip ? <div className={style.demoTip} /> : null}
-							{/* <div className={style.demoTip} /> */}
-							<div className={style.box}>
-								<div className={style.flex1}>
-									<div className={style.subtitle}>
-										<i />
-										{showData.subtitle}
-									</div>
-									<div className={style.money} style={{ color: showData.color && showData.color }}>
-										{showData.money ? showData.money : '----.--'}
-									</div>
+					<div className={style.contentBox}>
+						{showData.demoTip ? <div className={style.demoTip} /> : null}
+						{/* <div className={style.demoTip} /> */}
+						<div className={style.box}>
+							<div className={style.flex1}>
+								<div className={style.subtitle}>
+									<i />
+									{showData.subtitle}
+								</div>
+								<div className={style.money} style={{ color: showData.color && showData.color }}>
+									{showData.money ? showData.money : '----.--'}
 								</div>
 							</div>
-							{/* <div className={style.desc}>{showData.desc}</div> */}
 						</div>
-						{/* <div className={style.contentBox}>
+						{/* <div className={style.desc}>{showData.desc}</div> */}
+					</div>
+					{/* <div className={style.contentBox}>
 							<img src={bank} className={style.bank} />
 							<div className={style.desc_b}>支持100+信用卡</div>
 						</div>
