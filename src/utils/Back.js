@@ -104,6 +104,7 @@ if (window.history && window.history.pushState) {
 	window.addEventListener(
 		'popstate',
 		() => {
+			console.log(window.location.pathname, 'back');
 			const queryData = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 			// 获取token
 			let token = Cookie.get('fin-v-card-token');

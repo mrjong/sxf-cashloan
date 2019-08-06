@@ -11,10 +11,6 @@ export default class RepayPlanModal extends React.PureComponent {
 		};
 	}
 
-	onOpenChange = () => {
-		this.setState({ open: !this.state.open });
-	};
-
 	render() {
 		const { openDrawer } = this.state;
 		const { visible, onClose, data, loanMoney } = this.props;
@@ -47,6 +43,12 @@ export default class RepayPlanModal extends React.PureComponent {
 						className={style.modal_close_btn}
 						onClick={() => {
 							onClose();
+							let timer = setTimeout(() => {
+								this.setState({
+									openDrawer: !this.state.openDrawer
+								});
+								clearTimeout(timer);
+							}, 500);
 						}}
 					/>
 				</div>
@@ -62,6 +64,7 @@ export default class RepayPlanModal extends React.PureComponent {
 						className={style.link_bar}
 						onClick={() => {
 							this.props.history.push('/home/payment_notes');
+							// store.setConfirmAgencyBackHome(true);
 						}}
 					>
 						<span>借款须知</span>
@@ -91,7 +94,6 @@ export default class RepayPlanModal extends React.PureComponent {
 					style={{ minHeight: document.documentElement.clientHeight }}
 					sidebar={sidebar}
 					open={openDrawer}
-					onOpenChange={this.onOpenChange}
 					sidebarStyle={{
 						width: '100%'
 					}}
