@@ -27,6 +27,9 @@ export default class download_page extends PureComponent {
 
 	componentDidMount() {
 		entryPageTime = new Date();
+		if (!store.getLoginDownloadBtn()) {
+			buriedPointEvent(daicao.downloadPageView);
+		}
 	}
 
 	componentWillUnmount() {
