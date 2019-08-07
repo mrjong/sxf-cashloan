@@ -59,14 +59,20 @@ export default class download_page extends PureComponent {
 	downloadClick = () => {
 		const { downloadUrl } = this.state;
 		const phoneType = getDeviceType();
-		buriedPointEvent(home.downloadBtnClick);
+		if (!store.getLoginDownloadBtn()) {
+			buriedPointEvent(daicao.downloadBtnClick, {
+				deviceType: phoneType
+			});
+		} else {
+			buriedPointEvent(home.downloadBtnClick, {
+				deviceType: phoneType
+			});
+		}
 		if (phoneType === 'IOS') {
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
-			// this.props.toast.info('暂不支持ios下载')
 		} else {
 			this.props.toast.info('安全下载中');
 			window.location.href = downloadUrl;
-			// window.location.href = 'http://172.16.138.162:8920/app-release.apk'
 		}
 	};
 

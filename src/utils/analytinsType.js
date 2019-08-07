@@ -226,7 +226,8 @@ const other = {
 const daicao = {
 	loginBtn: `${prefix}_DAICAO_LOGIN_BTN`,
 	loginPageTime: `${prefix}_DAICAO_LOGINPAGE_DURATION_TIME`,
-	downloadPageTime: `${prefix}_DAICAO_DOWNLOADPAGE_DURATION_TIME`
+	downloadPageTime: `${prefix}_DAICAO_DOWNLOADPAGE_DURATION_TIME`,
+	downloadBtnClick: `${prefix}_DAICAO_DOWNLOAD_BUTTON_CLICK`
 };
 
 const loan_fenqi = {
