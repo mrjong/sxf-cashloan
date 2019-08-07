@@ -20,6 +20,12 @@
 		margin: 0 30p;
 	}
 
+	.item_wrap {
+		&:last-child .right_box {
+			border-left: none;
+		}
+	}
+
 	.right_box {
 		padding: 0 0 42px 38px;
 		text-align: left;

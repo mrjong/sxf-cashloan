@@ -11,7 +11,7 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto, changeHistoryState } from 'utils';
+import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_detail_page/components/SmsModal';
@@ -149,9 +149,10 @@ export default class confirm_agency_page extends PureComponent {
 	}
 
 	componentDidUpdate() {
+		console.log(this.state.isShowModal);
 		let flag = store.getConfirmAgencyBackHome();
 		store.removeConfirmAgencyBackHome();
-		flag && this.sendCoupon();
+		flag && !this.state.isShowModal && this.sendCoupon();
 	}
 
 	componentWillUnmount() {
