@@ -4,11 +4,15 @@ import { getDeviceType } from 'utils';
 import styles from './index.scss';
 import downloadBtn from './img/download_btn.jpg';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { home, daicao } from 'utils/analytinsType';
+import { store } from 'utils/store';
 
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
+
+let entryPageTime = '';
+
 @fetch.inject()
 export default class download_page extends PureComponent {
 	constructor(props) {
@@ -19,6 +23,20 @@ export default class download_page extends PureComponent {
 	}
 	componentWillMount() {
 		this.getDownloadUrl();
+	}
+
+	componentDidMount() {
+		entryPageTime = new Date();
+	}
+
+	componentWillUnmount() {
+		let exitPageTime = new Date();
+		let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+		if (!store.getLoginDownloadBtn()) {
+			buriedPointEvent(daicao.downloadPageTime, {
+				durationTime: durationTime
+			});
+		}
 	}
 
 	getDownloadUrl = () => {

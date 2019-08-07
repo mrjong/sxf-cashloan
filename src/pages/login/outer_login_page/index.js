@@ -26,6 +26,8 @@ const API = {
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 
+let entryPageTime = '';
+
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -110,6 +112,7 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
+		entryPageTime = new Date();
 	}
 
 	componentWillUnmount() {
@@ -121,6 +124,11 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
+		let exitPageTime = new Date();
+		let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+		buriedPointEvent(daicao.loginPageTime, {
+			durationTime: durationTime
+		});
 	}
 
 	// 校验手机号
