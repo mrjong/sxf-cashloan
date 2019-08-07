@@ -223,6 +223,10 @@ const other = {
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK` //外部下载页按钮点击事件
 };
 
+const daicao = {
+	loginBtn: `${prefix}_DAICAO_LOGIN_BTN`
+};
+
 const loan_fenqi = {
 	day30: `${prefix}_FENQI_DATE_DAY_30`,
 	month3: `${prefix}_FENQI_DATE_MONTH_3`,
@@ -257,5 +261,6 @@ export {
 	mpos_ioscontrol_page,
 	loan_repay_confirm,
 	loan_fenqi,
-	other
+	other,
+	daicao
 };
