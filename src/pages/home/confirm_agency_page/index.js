@@ -149,7 +149,6 @@ export default class confirm_agency_page extends PureComponent {
 	}
 
 	componentDidUpdate() {
-		console.log(this.state.isShowModal);
 		let flag = store.getConfirmAgencyBackHome();
 		store.removeConfirmAgencyBackHome();
 		flag && !this.state.isShowModal && this.sendCoupon();

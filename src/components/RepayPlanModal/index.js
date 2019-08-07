@@ -64,7 +64,6 @@ export default class RepayPlanModal extends React.PureComponent {
 						className={style.link_bar}
 						onClick={() => {
 							this.props.history.push('/home/payment_notes');
-							// store.setConfirmAgencyBackHome(true);
 						}}
 					>
 						<span>借款须知</span>
@@ -141,7 +140,9 @@ export default class RepayPlanModal extends React.PureComponent {
 						}}
 						icon={null}
 					>
-						出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准
+						{this.state.openDrawer
+							? '出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准'
+							: '本平台仅收取服务费，利息由实际出借人收取，综合成本不超过36%/年'}
 					</NoticeBar>
 				</div>
 			</Modal>
