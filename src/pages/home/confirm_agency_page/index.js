@@ -49,7 +49,6 @@ const API = {
 let indexData = null; // 首页带过来的信息
 let pageData = null;
 let isSaveAmt = false;
-let confirmAgencyBackHomeFlag = false;
 let timer;
 let timerOut;
 @setBackGround('#F7F8FA')
@@ -125,8 +124,6 @@ export default class confirm_agency_page extends PureComponent {
 
 	componentWillMount() {
 		isSaveAmt = store.getSaveAmt();
-		confirmAgencyBackHomeFlag = store.getConfirmAgencyBackHome();
-		store.removeConfirmAgencyBackHome();
 		store.removeSaveAmt();
 		store.removeInsuranceFlag();
 
@@ -151,25 +148,16 @@ export default class confirm_agency_page extends PureComponent {
 		this.getExamineSts(); // 检查是否需要人审
 	}
 
-	componentDidMount() {
-		this.addBackListening();
+	componentDidUpdate() {
+		let flag = store.getConfirmAgencyBackHome();
+		store.removeConfirmAgencyBackHome();
+		flag && this.sendCoupon();
 	}
 
-	// 监听返回拦截
-	addBackListening = () => {
-		window.addEventListener(
-			'popstate',
-			() => {
-				console.log('flag', confirmAgencyBackHomeFlag);
-				if (!Number(this.state.repayInfo2.availableCoupAmt && !confirmAgencyBackHomeFlag)) {
-					this.sendCoupon();
-				} else {
-					// !flag && this.props.history.push('/home/home');
-				}
-			},
-			false
-		);
-	};
+	componentWillUnmount() {
+		store.removeConfirmAgencyBackHome();
+		store.removeAvailableCoupAmt();
+	}
 
 	// 拦截发放优惠券
 	sendCoupon = () => {
@@ -179,7 +167,7 @@ export default class confirm_agency_page extends PureComponent {
 					showCouponAlert: true,
 					couponAlertData: {
 						coupVal: result.data.coupVal,
-						time: result.data.validEndTm
+						validEndTm: result.data.validEndTm
 					}
 				});
 			} else {
@@ -263,7 +251,6 @@ export default class confirm_agency_page extends PureComponent {
 				const { repayInfo, repayInfo2 } = this.state;
 				store.setSaveAmt(true);
 				store.setRepaymentModalData(this.state);
-				store.setConfirmAgencyBackHome(true);
 				store.setBackUrl('/home/confirm_agency?showModal=true');
 				repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
 				// 增加保费标识 insuranceFlag
@@ -547,6 +534,7 @@ export default class confirm_agency_page extends PureComponent {
 						couponInfo,
 						showInterestTotal: result.data.showFlag === '1'
 					});
+					store.setAvailableCoupAmt(result.data.availableCoupAmt);
 					// if (result.data.data && result.data.data.usrCoupNo) {
 					// 	this.dealMoney(result.data);
 					// }
@@ -592,7 +580,6 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		store.setSaveAmt(true);
 		store.setRepaymentModalData(this.state);
-		store.setConfirmAgencyBackHome(true);
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
@@ -622,7 +609,6 @@ export default class confirm_agency_page extends PureComponent {
 		const billPrcpAmt = this.props.form.getFieldValue('cardBillAmt');
 		store.setSaveAmt(true);
 		store.setRepaymentModalData(this.state);
-		store.setConfirmAgencyBackHome(true);
 		console.log(
 			`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${
 				item.contractNo

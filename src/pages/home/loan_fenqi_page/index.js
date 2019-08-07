@@ -7,6 +7,7 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import SXFButton from 'components/ButtonCustom';
+import RepayPlanModal from 'components/RepayPlanModal';
 import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
@@ -938,7 +939,7 @@ export default class loan_fenqi_page extends PureComponent {
 					</ul>
 				</Modal>
 
-				<Modal
+				{/* <Modal
 					visible={planModal}
 					transparent
 					onClose={() => {
@@ -964,7 +965,17 @@ export default class loan_fenqi_page extends PureComponent {
 							))}
 						</ul>
 					</div>
-				</Modal>
+        </Modal> */}
+
+				<RepayPlanModal
+					visible={planModal}
+					onClose={() => {
+						this.closeModal('plan');
+					}}
+					data={repayPlanInfo.perd}
+					loanMoney={loanMoney}
+					history={this.props.history}
+				/>
 
 				{isShowSmsModal && (
 					<SmsModal

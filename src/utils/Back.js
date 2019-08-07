@@ -305,8 +305,14 @@ if (window.history && window.history.pushState) {
 				case '/mine/mine_page':
 					logoutAppHandler();
 					break;
+				case '/home/confirm_agency':
+					if (Number(store.getAvailableCoupAmt() === 0)) {
+						store.setConfirmAgencyBackHome(true);
+					} else {
+						window.ReactRouterHistory.push('/home/home');
+					}
+					break;
 				case '/order/repayment_succ_page':
-				// case '/home/confirm_agency':
 				case '/home/loan_apply_succ_page':
 				case '/home/loan_fenqi':
 					window.ReactRouterHistory.push('/home/home');

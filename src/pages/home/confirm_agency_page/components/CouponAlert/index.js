@@ -26,8 +26,8 @@ export default class CouponAlert extends PureComponent {
 								<h3>今日借款可享受以下优惠</h3>
 								<p>确定退出吗？</p>
 								<div className={style.coupon_box}>
-									<div className={style.coupon_time}>有效期至{data.time}</div>
-									<div className={style.coupon_value}>{data.value}元</div>
+									<div className={style.coupon_time}>有效期至{data.validEndTm}</div>
+									<div className={style.coupon_value}>{data.coupVal}元</div>
 								</div>
 							</div>
 							<div className={style.button_box}>

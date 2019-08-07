@@ -23,11 +23,11 @@ export default class StepBar extends Component {
 									</span>
 								</div>
 								<div className={style.right_box}>
-									<span className={style.step_desc}>
+									<div className={style.step_desc}>
 										<span>本金{item.perdPrcpAmt}</span>
 										<span>+利息{item.perdItrtAmt}</span>
 										{item.perdMngAmt && <span>+服务费{item.perdMngAmt}</span>}
-									</span>
+									</div>
 									{item.perdDeductAmt && (
 										<span className={style.step_subDesc}>-优惠{item.perdDeductAmt}</span>
 									)}
