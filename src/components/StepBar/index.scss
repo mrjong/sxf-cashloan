@@ -5,19 +5,17 @@
 	overflow: scroll;
 
 	.top_line {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 250px;
+		text-align: left;
 	}
 
 	.circle_dot {
+		display: inline-block;
 		width: 20px;
 		height: 20px;
 		border-radius: 50%;
 		border: 4px solid #868e9e;
 		box-sizing: border-box;
-		margin: 0 30p;
+		margin: 0 30px;
 	}
 
 	.item_wrap {
@@ -29,15 +27,16 @@
 	.right_box {
 		padding: 0 0 42px 38px;
 		text-align: left;
-		margin-left: 117px;
+		margin-left: 110px;
 		border-left: 1px solid #c9cdd5;
 	}
 
 	.step_index {
+		display: inline-block;
 		font-size: 30px;
 		color: #121c32;
 		font-weight: 500;
-		min-width: 80px;
+		min-width: 70px;
 		text-align: right;
 	}
 

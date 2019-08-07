@@ -263,30 +263,43 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//查询还款计划
 	queryRepayPlan = () => {
+		let couponInfo = store.getCouponData();
 		const { loanMoney, prdId } = this.state;
 		if (!prdId || !loanMoney) return;
-		this.props.$fetch
-			.post(API.repayPlan, {
-				billPrcpAmt: loanMoney,
-				prdId,
-				wtdwTyp: '0',
-				prodType: '11'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data !== null) {
-					this.setState(
-						{
-							repayPlanInfo: res.data
-						},
-						() => {
-							buriedPointEvent(loan_fenqi.repayPlan);
-							this.openModal('plan');
-						}
-					);
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			});
+
+		let params = {
+			billPrcpAmt: loanMoney,
+			prdId,
+			wtdwTyp: '0',
+			prodType: '11'
+		};
+		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
+			// 不使用优惠劵的情况
+			params = {
+				...params
+				// coupId: '-1'
+			};
+		} else if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
+			params = {
+				...params,
+				coupId: couponInfo.usrCoupNo
+			};
+		}
+		this.props.$fetch.post(API.repayPlan, params).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data !== null) {
+				this.setState(
+					{
+						repayPlanInfo: res.data
+					},
+					() => {
+						buriedPointEvent(loan_fenqi.repayPlan);
+						this.openModal('plan');
+					}
+				);
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	// 选择优惠劵
