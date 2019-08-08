@@ -17,12 +17,14 @@ export default class RepayPlanModal extends React.PureComponent {
 		const data1 =
 			data &&
 			data.map((item) => {
-				let { perdPrcpAmt, perdItrtAmt, perdNum, perdTotAmt } = item;
+				let { perdPrcpAmt, perdItrtAmt, perdNum, perdTotAmt, perdMngAmt, perdDeductAmt } = item;
 				return {
 					perdNum,
 					perdTotalMoney: perdTotAmt,
 					perdPrcpAmt,
-					perdItrtAmt
+					perdItrtAmt,
+					perdMngAmt,
+					perdDeductAmt
 				};
 			});
 		const data2 =
