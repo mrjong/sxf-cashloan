@@ -7,12 +7,14 @@ import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import progressIcon from './img/crawl.png';
+import { domListen } from 'utils/domListen';
 const API = {
 	USER_IMPORT: '/auth/cardAuth'
 };
 
 @fetch.inject()
 @setBackGround('#fff')
+@domListen()
 export default class crawl_progress_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -78,10 +80,31 @@ export default class crawl_progress_page extends PureComponent {
 					onClick={() => {
 						this.goMoxieBankList();
 					}}
+					data-sxf-props={JSON.stringify({
+						type: 'btn',
+						name: 'selotherCard',
+						eventList: [
+							{
+								type: 'click'
+							}
+						]
+					})}
 				>
 					选择导入其他银行卡
 				</div>
-				<div style={{ textAlign: 'center' }} onClick={this.tryAgain}>
+				<div
+					style={{ textAlign: 'center' }}
+					onClick={this.tryAgain}
+					data-sxf-props={JSON.stringify({
+						type: 'btn',
+						name: 'tryAgainBtn',
+						eventList: [
+							{
+								type: 'click'
+							}
+						]
+					})}
+				>
 					尝试再次导入
 				</div>
 			</div>

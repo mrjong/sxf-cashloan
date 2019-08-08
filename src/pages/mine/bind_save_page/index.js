@@ -13,6 +13,7 @@ import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
 import SelectList from 'components/SelectList';
+import { domListen } from 'utils/domListen';
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -25,6 +26,7 @@ const API = {
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
+@domListen()
 export default class bind_save_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -368,6 +370,24 @@ export default class bind_save_page extends PureComponent {
 						发卡行
 					</Item>
 					<InputItem
+						data-sxf-props={JSON.stringify({
+							type: 'input',
+							name: 'valueInputCarNumber',
+							eventList: [
+								{
+									type: 'focus'
+								},
+								{
+									type: 'delete'
+								},
+								{
+									type: 'blur'
+								},
+								{
+									type: 'paste'
+								}
+							]
+						})}
 						maxLength="29"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
@@ -409,6 +429,24 @@ export default class bind_save_page extends PureComponent {
 					</InputItem>
 					<div className={[styles.time_container, 'sms'].join(' ')}>
 						<InputItem
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: 'valueInputCarSms',
+								eventList: [
+									{
+										type: 'focus'
+									},
+									{
+										type: 'delete'
+									},
+									{
+										type: 'blur'
+									},
+									{
+										type: 'paste'
+									}
+								]
+							})}
 							maxLength="6"
 							{...getFieldProps('valueInputCarSms', {
 								rules: [{ required: true, message: '请输入验证码' }]

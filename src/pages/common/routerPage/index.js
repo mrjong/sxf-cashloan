@@ -104,7 +104,7 @@ export default class router_Page extends PureComponent {
 				});
 			}
 			pageView();
-			sxfDataPv({ pId: route.zhName });
+			sxfDataPv({ pId: (route && route.zhName) || '' });
 		} catch (error) {
 			console.log(error);
 			this.setState({

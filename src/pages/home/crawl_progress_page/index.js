@@ -5,6 +5,7 @@ import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import { domListen } from 'utils/domListen';
 const API = {
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 0103-首页信息查询接口
 	USER_IMPORT: '/auth/cardAuth',
@@ -16,6 +17,7 @@ let arr = [];
 let data;
 @fetch.inject()
 @setBackGround('#fff')
+@domListen()
 export default class crawl_progress_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -239,6 +241,15 @@ export default class crawl_progress_page extends PureComponent {
 						onClick={() => {
 							this.reImport();
 						}}
+						data-sxf-props={JSON.stringify({
+							type: 'btn',
+							name: 'tryAgainBtn',
+							eventList: [
+								{
+									type: 'click'
+								}
+							]
+						})}
 					>
 						尝试再次导入
 					</div>

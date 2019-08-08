@@ -2039,6 +2039,7 @@ var EVENT_TRACK = (function() {
 		{
 			key: 'trackPv',
 			value: function trackPv(properties, callback) {
+				console$1.log('----进入页面----');
 				this.track('pv', _.extend({}, properties), callback);
 			}
 			/**
@@ -2161,7 +2162,7 @@ var EVENT_TRACK = (function() {
 			value: function login(user_id) {
 				this._signup(user_id);
 				this['local_storage'].register({ userId: user_id });
-				this.track('sxfData_u_login');
+				this.track('login');
 			}
 			// 清除本地用户信息，退出用户（选则调用）
 		},
@@ -2169,7 +2170,7 @@ var EVENT_TRACK = (function() {
 			key: 'logout',
 			value: function logout() {
 				this['local_storage'].unregister('userId');
-				this.track('sxfData_u_logout');
+				this.track('logout');
 			}
 		}
 	]);
@@ -2500,7 +2501,7 @@ var SPA = {
 				var oldPath = _this.path;
 				var newPath = getPath();
 				if (oldPath != newPath && _this.shouldTrackUrlChange(newPath, oldPath)) {
-					console.log('----离开页面');
+					console.log('----离开页面----');
 					_this.instance['event'].trackPvOut();
 					_this.path = newPath;
 					if (historyDidUpdate || _this.config.track_replace_state) {
@@ -2521,8 +2522,6 @@ var SPA = {
 		return !!(newPath && oldPath);
 	}
 };
-
-// import pako from "pako";
 
 var BPOINT = (function() {
 	function BPOINT(instance) {
@@ -2788,7 +2787,6 @@ var BPOINT = (function() {
 			value: function push(infoObj) {
 				if (infoObj) {
 					//   infoObj.dateTime = new Date().getTime();
-					console$1.log(infoObj);
 					this._scanStack(CONFIG.stackTime);
 					this._stackSave(infoObj);
 				}
@@ -2820,16 +2818,30 @@ var DOMLISTEN = (function() {
 						var eventList = eventItem.eventList;
 						var data = {};
 						eventList.forEach(function(eventItem) {
+							var type = eventItem.type;
+							if (eventItem.type === 'delete') {
+								type = 'keyup';
+							}
 							_.register_event(
 								domItem,
-								eventItem.type,
+								type,
 								function(e) {
 									if (eventType === 'input') {
 										data = {
 											value: e.target.value
 										};
 									}
-									console$1.log(eventItem.type);
+									if (eventItem.type === 'delete') {
+										if (e.keyCode === 8) {
+											_this.instance['event'].track(
+												'' + eventName,
+												{ actId: eventItem.type || '' },
+												null,
+												data
+											);
+										}
+										return;
+									}
 									_this.instance['event'].track('' + eventName, { actId: eventItem.type || '' }, null, data);
 								},
 								false,

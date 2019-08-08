@@ -10,7 +10,9 @@ import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
+import { sxfhome } from 'utils/sxfAnalytinsType';
 import { store } from 'utils/store';
+import { domListen } from 'utils/domListen';
 import {
 	getDeviceType,
 	validators,
@@ -19,7 +21,7 @@ import {
 	handleClickConfirm,
 	idChkPhoto
 } from 'utils';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
 
@@ -36,6 +38,7 @@ let urlQuery = '';
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
+@domListen()
 export default class real_name_page extends Component {
 	state = {
 		idName: '',
@@ -369,6 +372,13 @@ export default class real_name_page extends Component {
 				break;
 		}
 	};
+	cardMD = (type) => {
+		if (type === 'z') {
+			sxfburiedPointEvent(sxfhome.idCardF);
+		} else {
+			sxfburiedPointEvent(sxfhome.idCardB);
+		}
+	};
 	handleBeforeCompress = (type) => {
 		store.setDisableBack(true);
 		this.setState(
@@ -391,7 +401,12 @@ export default class real_name_page extends Component {
 			fail_cause: failInf
 		});
 	};
-	handleAfterCompress = () => {
+	handleAfterCompress = (type) => {
+		if (type === 'z') {
+			sxfburiedPointEvent(sxfhome.idCardOutF);
+		} else {
+			sxfburiedPointEvent(sxfhome.idCardOutB);
+		}
 		store.removeDisableBack();
 	};
 	render() {
@@ -405,25 +420,39 @@ export default class real_name_page extends Component {
 							<span>上传身份证正 、反面</span>
 						</div>
 						<div className={style.updateContent}>
-							<div className={style.updateImgLeft}>
+							<div
+								className={style.updateImgLeft}
+								onClick={() => {
+									this.cardMD('z');
+								}}
+							>
 								<FEZipImage
 									disabledupload={disabledupload}
 									style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
 									value={this.state.leftValue}
 									onChange={this.handleChangePositive}
 									beforeCompress={this.handleBeforeCompress}
-									afterCompress={this.handleAfterCompress}
+									afterCompress={() => {
+										this.handleAfterCompress('z');
+									}}
 								/>
 								<p>拍摄身份证正面</p>
 							</div>
-							<div className={style.updateImgRight}>
+							<div
+								className={style.updateImgRight}
+								onClick={() => {
+									this.cardMD('f');
+								}}
+							>
 								<FEZipImage
 									disabledupload={disabledupload}
 									style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
 									value={this.state.rightValue}
 									onChange={this.handleChangeSide}
 									beforeCompress={this.handleBeforeCompress}
-									afterCompress={this.handleAfterCompress}
+									afterCompress={() => {
+										this.handleAfterCompress('f');
+									}}
 								/>
 								<p>拍摄身份证反面</p>
 							</div>
@@ -437,6 +466,24 @@ export default class real_name_page extends Component {
 							onFocus={() => {
 								buriedPointEvent(home.informationTapNameInp);
 							}}
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: 'idName',
+								eventList: [
+									{
+										type: 'focus'
+									},
+									{
+										type: 'delete'
+									},
+									{
+										type: 'blur'
+									},
+									{
+										type: 'paste'
+									}
+								]
+							})}
 							onBlur={() => {
 								handleInputBlur();
 							}}
@@ -444,6 +491,24 @@ export default class real_name_page extends Component {
 							姓名
 						</InputItem>
 						<InputItem
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: 'idNo',
+								eventList: [
+									{
+										type: 'focus'
+									},
+									{
+										type: 'delete'
+									},
+									{
+										type: 'blur'
+									},
+									{
+										type: 'paste'
+									}
+								]
+							})}
 							onChange={this.handleNumberChange}
 							placeholder="借款人身份证号"
 							value={this.state.idNo}

@@ -8,7 +8,7 @@ import fetch from 'sx-fetch';
 import { getLngLat, getAddress } from 'utils/Address.js';
 import style from './index.scss';
 import { getFirstError, validators, handleInputBlur, getNextStr } from 'utils';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
 import qs from 'qs';
@@ -21,6 +21,9 @@ import circle from './img/circle.png';
 import circle_not from './img/circle_not.png';
 import adsBg from './img/base_top_img.png';
 import AgreementModal from 'components/AgreementModal';
+import { domListen } from 'utils/domListen';
+import { sxfhome } from 'utils/sxfAnalytinsType';
+
 const Step = Steps.Step;
 let timedown = null;
 const pageKey = home.basicInfoBury;
@@ -55,6 +58,7 @@ let urlQuery = '';
 @fetch.inject()
 @createForm()
 @setBackGround('#F7F8FA')
+@domListen()
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -434,6 +438,9 @@ export default class essential_information_page extends PureComponent {
 			status: 'started'
 		});
 	};
+	sxfMD = (type) => {
+		sxfburiedPointEvent(sxfhome[type]);
+	};
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
@@ -500,10 +507,13 @@ export default class essential_information_page extends PureComponent {
 											]}
 											onVisibleChange={(bool) => {
 												if (bool) {
+													this.sxfMD('resident_city');
 													this.selectClick({
 														value: JSON.stringify(this.state.provValue),
 														label: 'resident_city'
 													});
+												} else {
+													this.sxfMD('resident_cityOut');
 												}
 											}}
 											cols={2}
@@ -522,6 +532,24 @@ export default class essential_information_page extends PureComponent {
 									}
 								})(
 									<InputItem
+										data-sxf-props={JSON.stringify({
+											type: 'input',
+											name: 'resident_address',
+											eventList: [
+												{
+													type: 'focus'
+												},
+												{
+													type: 'delete'
+												},
+												{
+													type: 'blur'
+												},
+												{
+													type: 'paste'
+												}
+											]
+										})}
 										className="noBorder"
 										placeholder="县区、街道、小区、楼栋号"
 										type="text"
@@ -566,10 +594,13 @@ export default class essential_information_page extends PureComponent {
 											cols={1}
 											onVisibleChange={(bool) => {
 												if (bool) {
+													this.sxfMD('cntRelTyp1');
 													this.selectClick({
 														value: JSON.stringify(this.state.relatValue),
 														label: 'clan_relation'
 													});
+												} else {
+													this.sxfMD('cntRelTypOut1');
 												}
 											}}
 										>
@@ -586,6 +617,24 @@ export default class essential_information_page extends PureComponent {
 									}
 								})(
 									<InputItem
+										data-sxf-props={JSON.stringify({
+											type: 'input',
+											name: 'contact_name_one',
+											eventList: [
+												{
+													type: 'focus'
+												},
+												{
+													type: 'delete'
+												},
+												{
+													type: 'blur'
+												},
+												{
+													type: 'paste'
+												}
+											]
+										})}
 										placeholder="联系人真实姓名"
 										type="text"
 										onBlur={(v) => {

@@ -5,7 +5,7 @@ import { store } from 'utils/store';
 import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
 import qs from 'qs';
 import { getH5Channel } from 'utils/common';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfDataLogin } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
@@ -831,6 +831,7 @@ export default class home_page extends PureComponent {
 					// console.log(res);
 					if (res.msgCode === 'PTM0000') {
 						sa.login(res.data);
+						sxfDataLogin(res.data);
 						store.setQueryUsrSCOpenId(res.data);
 					}
 				});

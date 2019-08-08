@@ -64,13 +64,33 @@ function getStaticParams() {
 		channelType: getH5Channel()
 	};
 }
-
 /*
- * PV统计
+ * 随行付绑定用户
+ *
+ * */
+export const sxfDataLogin = (userId) => {
+	SxfData.login(userId);
+};
+/*
+ * 随行付PV统计
  *
  * */
 export const sxfDataPv = (obj) => {
 	SxfData.trackPv(obj);
+};
+/*
+ * 随行付监听
+ *
+ * */
+export const _addlisten = () => {
+	SxfData._addlisten();
+};
+/*
+ * 随行付埋点事件
+ *
+ * */
+export const sxfburiedPointEvent = (buriedKey, params) => {
+	SxfData.trackEvent(buriedKey, params);
 };
 
 /*

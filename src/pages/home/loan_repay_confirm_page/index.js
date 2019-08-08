@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
+import { domListen } from 'utils/domListen';
 import {
 	handleClickConfirm,
 	handleInputBlur,
@@ -50,6 +51,7 @@ let timer = null;
 @fetch.inject()
 @createForm()
 @setBackGround('#F7F8FA')
+@domListen()
 export default class loan_repay_confirm_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -774,6 +776,24 @@ export default class loan_repay_confirm_page extends PureComponent {
 						<div className={style.inputBox}>
 							<div className={style.dw}>￥</div>
 							<InputItem
+								data-sxf-props={JSON.stringify({
+									type: 'input',
+									name: 'loanMoney',
+									eventList: [
+										{
+											type: 'focus'
+										},
+										{
+											type: 'delete'
+										},
+										{
+											type: 'blur'
+										},
+										{
+											type: 'paste'
+										}
+									]
+								})}
 								maxLength={15}
 								{...getFieldProps('loanMoney', {
 									rules: [{ required: true, message: '请输入还款金额' }]
@@ -819,6 +839,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 								onClick={() => {
 									this.toggleTag(2, 'click');
 								}}
+								data-sxf-props={JSON.stringify({
+									type: 'btn',
+									name: 'maxApplAmt',
+									eventList: [
+										{
+											type: 'click'
+										}
+									]
+								})}
 							>
 								<div>
 									<span className={style.title}>借全额</span>
@@ -832,6 +861,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</div>
 							<div
 								className={style.item}
+								data-sxf-props={JSON.stringify({
+									type: 'btn',
+									name: 'minApplAmt',
+									eventList: [
+										{
+											type: 'click'
+										}
+									]
+								})}
 								onClick={() => {
 									this.toggleTag(1, 'click');
 								}}

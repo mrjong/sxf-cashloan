@@ -9,8 +9,10 @@ import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView, sxfDataPv } from 'utils/analytins';
+import { buriedPointEvent, pageView, sxfDataPv, sxfburiedPointEvent } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
+import { sxflogin } from 'utils/sxfAnalytinsType';
+import { domListen } from 'utils/domListen';
 import styles from './index.scss';
 // import bannerImg from './img/login_bg.png';
 // import bannerImg1 from './img/login_bg1.png';
@@ -32,6 +34,7 @@ const API = {
 };
 @fetch.inject()
 @createForm()
+@domListen()
 @setBackGround('#fff')
 export default class login_page extends PureComponent {
 	constructor(props) {
@@ -72,6 +75,8 @@ export default class login_page extends PureComponent {
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
 		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
+		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
+		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		let wenjuan = localStorage.getItem('wenjuan');
 		sessionStorage.clear();
 		localStorage.clear();
@@ -82,6 +87,9 @@ export default class login_page extends PureComponent {
 		MessageTagLimitDate && store.setMessageTagLimitDate(MessageTagLimitDate); // 额度有效期标识
 
 		wenjuan && localStorage.setItem('wenjuan', wenjuan);
+		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
+		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);
+
 		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
@@ -97,6 +105,7 @@ export default class login_page extends PureComponent {
 			});
 			this.getImage();
 		}
+		sxfburiedPointEvent(sxflogin.chkBox);
 	}
 	componentDidMount() {
 		let _this = this;
@@ -439,9 +448,16 @@ export default class login_page extends PureComponent {
 	};
 
 	checkAgreement = () => {
-		this.setState({
-			isChecked: !this.state.isChecked
-		});
+		this.setState(
+			{
+				isChecked: !this.state.isChecked
+			},
+			() => {
+				if (this.state.isChecked) {
+					sxfburiedPointEvent(sxflogin.chkBox);
+				}
+			}
+		);
 	};
 
 	//	校验必填项 按钮是否可以点击
@@ -552,6 +568,24 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 							clear
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: 'inputPhone',
+								eventList: [
+									{
+										type: 'focus'
+									},
+									{
+										type: 'delete'
+									},
+									{
+										type: 'blur'
+									},
+									{
+										type: 'paste'
+									}
+								]
+							})}
 						/>
 						{/* {true && ( */}
 						{disabledInput && (
@@ -598,6 +632,24 @@ export default class login_page extends PureComponent {
 									});
 									handleInputBlur();
 								}}
+								data-sxf-props={JSON.stringify({
+									type: 'input',
+									name: 'inputCode',
+									eventList: [
+										{
+											type: 'focus'
+										},
+										{
+											type: 'delete'
+										},
+										{
+											type: 'blur'
+										},
+										{
+											type: 'paste'
+										}
+									]
+								})}
 							/>
 							<div
 								className={
@@ -605,6 +657,15 @@ export default class login_page extends PureComponent {
 										? `${styles.smsCode} ${styles.smsCode2}`
 										: styles.smsCode
 								}
+								data-sxf-props={JSON.stringify({
+									type: 'btn',
+									name: 'clickCode',
+									eventList: [
+										{
+											type: 'click'
+										}
+									]
+								})}
 								onClick={() => {
 									this.handleSmsCodeClick();
 								}}
@@ -617,6 +678,15 @@ export default class login_page extends PureComponent {
 							<div
 								className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
 								onClick={this.goLogin}
+								data-sxf-props={JSON.stringify({
+									type: 'btn',
+									name: 'loginBtn',
+									eventList: [
+										{
+											type: 'click'
+										}
+									]
+								})}
 							>
 								<span>注册/登录</span>
 							</div>

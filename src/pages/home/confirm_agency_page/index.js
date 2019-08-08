@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import qs from 'qs';
 import { store } from 'utils/store';
 import { isMPOS, getH5Channel } from 'utils/common';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import fetch from 'sx-fetch';
@@ -17,6 +17,8 @@ import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_detail_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
+import { domListen } from 'utils/domListen';
+import { sxfhome } from 'utils/sxfAnalytinsType';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -51,6 +53,7 @@ let timerOut;
 @setBackGround('#F7F8FA')
 @fetch.inject()
 @createForm()
+@domListen()
 export default class confirm_agency_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -191,6 +194,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 还款 Tag 点击事件
 	handleLendersTagClick = (data, type) => {
+		sxfburiedPointEvent(sxfhome['agency' + type]);
 		const cardBillAmt = this.props.form.getFieldValue('cardBillAmt');
 		this.setState(
 			{
@@ -915,6 +919,24 @@ export default class confirm_agency_page extends PureComponent {
 								<i className={style.moneyUnit}>¥</i>
 
 								<InputItem
+									data-sxf-props={JSON.stringify({
+										type: 'input',
+										name: 'cardBillAmt',
+										eventList: [
+											{
+												type: 'focus'
+											},
+											{
+												type: 'delete'
+											},
+											{
+												type: 'blur'
+											},
+											{
+												type: 'paste'
+											}
+										]
+									})}
 									className={style.billInput}
 									placeholder=""
 									clear={() => {
