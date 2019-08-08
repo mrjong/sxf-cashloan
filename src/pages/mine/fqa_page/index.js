@@ -36,14 +36,14 @@ export default class fqa_page extends PureComponent {
 
 	goOnline = () => {
 		const { QYConfig } = this.state;
-		ysf('config', {
+		window.ysf('config', {
 			uid: QYConfig && QYConfig.uid, // 用户Id
 			robotShuntSwitch: 1, // 机器人优先开关
 			groupid: QYConfig && QYConfig.groupid, // 客服组id 金融在线（IOS）397748874   金融在线（安卓）397743127   金融在线（微信公众号）397748875
 			robotId: QYConfig && QYConfig.robotId, // 机器人ID
 			success: function() {
 				// 成功回调
-				location.href = ysf('url', { templateId: QYConfig && QYConfig.templateId });
+				location.href = window.ysf('url', { templateId: QYConfig && QYConfig.templateId });
 				// ysf('open', {
 				//   templateId: 10317938
 				// });
