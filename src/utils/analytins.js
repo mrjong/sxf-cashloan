@@ -1,7 +1,7 @@
 import qs from 'qs';
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
-
+import SxfData from '../assets/lib/sxfData';
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
 	window.version = 'v1.1';
@@ -34,6 +34,26 @@ export const initAnalytics = () => {
 	}
 };
 
+// 初始化随行付埋点 及渠道信息
+export const initSxfData = () => {
+	SxfData.init({
+		track_url: 'http://localhost:3000/',
+		local_storage: {
+			type: 'localStorage'
+		},
+		SPA: {
+			is: true,
+			mode: 'history'
+		},
+		pageview: false,
+		debug: true,
+		loaded: function(sdk) {
+			// 公用属性
+			sdk.registerEventSuperProperties({ cType: getH5Channel(), pLine: 'HD' });
+		}
+	});
+};
+
 // 定义固定参数
 function getStaticParams() {
 	return {
@@ -44,6 +64,14 @@ function getStaticParams() {
 		channelType: getH5Channel()
 	};
 }
+
+/*
+ * PV统计
+ *
+ * */
+export const sxfDataPv = (obj) => {
+	SxfData.trackPv(obj);
+};
 
 /*
  * PV统计

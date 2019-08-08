@@ -6,7 +6,7 @@ import 'utils/Back';
 import { BrowserRouter } from 'react-router-dom';
 import 'assets/styles/scss/main.scss';
 import fetchInit from './fetch';
-import { initAnalytics } from './utils/analytins';
+import { initAnalytics, initSxfData } from './utils/analytins';
 import { isMPOS } from 'utils/common';
 import { isWXOpen } from 'utils';
 import fastClick from 'fastclick';
@@ -42,6 +42,7 @@ if (!window.sa) {
 isMPOS();
 fetchInit();
 initAnalytics();
+initSxfData();
 const renders = (Component) =>
 	render(
 		<BrowserRouter>

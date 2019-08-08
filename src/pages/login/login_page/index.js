@@ -9,7 +9,7 @@ import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView } from 'utils/analytins';
+import { buriedPointEvent, pageView, sxfDataPv } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import styles from './index.scss';
 // import bannerImg from './img/login_bg.png';
@@ -116,6 +116,7 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
+		sxfDataPv({ pId: 'dl' });
 	}
 
 	componentWillUnmount() {

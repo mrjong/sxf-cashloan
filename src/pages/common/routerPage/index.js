@@ -8,7 +8,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { changeHistoryState, pagesIgnore } from 'utils';
 import TFDInit from 'utils/getTongFuDun';
-import { pageView } from 'utils/analytins';
+import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { Provider } from './context';
 
@@ -104,6 +104,7 @@ export default class router_Page extends PureComponent {
 				});
 			}
 			pageView();
+			sxfDataPv({ pId: route.zhName });
 		} catch (error) {
 			console.log(error);
 			this.setState({
@@ -120,7 +121,7 @@ export default class router_Page extends PureComponent {
 		}
 	};
 	globalTask = (type) => {
-    console.log(type)
+		console.log(type);
 		this.setState({
 			footerTipIcon: type
 		});

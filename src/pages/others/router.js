@@ -1,6 +1,7 @@
 export default [
 	{
 		path: '/others/dc_landing_page',
+		zhName: 'dcldy',
 		title: '贷超落地页',
 		arrowHide: 'empty',
 		headerHide: true,
@@ -8,6 +9,7 @@ export default [
 	},
 	{
 		path: '/others/download_page',
+		zhName: 'xzy',
 		title: '下载页',
 		arrowHide: 'empty',
 		headerHide: true,
@@ -15,6 +17,7 @@ export default [
 	},
 	{
 		path: '/others/outer_download_page',
+		zhName: 'dwxzy',
 		title: '下载页',
 		arrowHide: 'empty',
 		headerHide: true,
@@ -22,6 +25,7 @@ export default [
 	},
 	{
 		path: '/others/clear_store_page',
+		zhName: 'cszy',
 		title: '测试专用',
 		arrowHide: 'empty',
 		headerHide: true,
@@ -29,18 +33,21 @@ export default [
 	},
 	{
 		path: '/others/fenqi_landing',
+		zhName: 'hdplus',
 		title: '还到Plus',
 		arrowHide: '',
 		component: () => import('pages/others/fenqi_landing_page')
 	},
 	{
 		path: '/others/moxie_pwd_guide',
+		zhName: 'ts',
 		title: '提示',
 		arrowHide: '',
 		component: () => import('pages/others/moxie_pwd_guide')
 	},
 	{
 		path: '/others/mpos_download_page',
+		zhName: 'hd-jqhxyk',
 		title: '还到-借钱还信用卡',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_download_page')
