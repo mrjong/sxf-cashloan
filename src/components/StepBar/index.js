@@ -19,7 +19,7 @@ export default class StepBar extends Component {
 									<span className={style.circle_dot}></span>
 									<span className={style.step_title}>
 										<i>¥ </i>
-										<i className={style.value}>{item.perdTotAmt}</i>
+										<i className={style.value}>{item.perdTotalMoney}</i>
 									</span>
 								</div>
 								<div className={style.right_box}>

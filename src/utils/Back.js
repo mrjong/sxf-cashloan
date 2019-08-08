@@ -304,11 +304,7 @@ if (window.history && window.history.pushState) {
 					logoutAppHandler();
 					break;
 				case '/home/confirm_agency':
-					if (Number(store.getAvailableCoupAmt() === 0)) {
-						store.setConfirmAgencyBackHome(true);
-					} else {
-						window.ReactRouterHistory.push('/home/home');
-					}
+					store.setConfirmAgencyBackHome(true);
 					break;
 				case '/order/repayment_succ_page':
 				case '/home/loan_apply_succ_page':

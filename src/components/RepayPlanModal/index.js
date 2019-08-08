@@ -14,13 +14,24 @@ export default class RepayPlanModal extends React.PureComponent {
 	render() {
 		const { openDrawer } = this.state;
 		const { visible, onClose, data, loanMoney } = this.props;
-		const filterData =
+		const data1 =
 			data &&
 			data.map((item) => {
 				let { perdPrcpAmt, perdItrtAmt, perdNum, perdTotAmt } = item;
 				return {
 					perdNum,
-					perdTotAmt,
+					perdTotalMoney: perdTotAmt,
+					perdPrcpAmt,
+					perdItrtAmt
+				};
+			});
+		const data2 =
+			data &&
+			data.map((item) => {
+				let { perdPrcpAmt, perdItrtAmt, perdNum, perdPrcpAndIntr } = item;
+				return {
+					perdNum,
+					perdTotalMoney: perdPrcpAndIntr,
 					perdPrcpAmt,
 					perdItrtAmt
 				};
@@ -70,7 +81,7 @@ export default class RepayPlanModal extends React.PureComponent {
 						<span>查看详情</span>
 						<Icon type="right" className={style.link_bar_close} />
 					</a>
-					<StepBar data={filterData} />
+					<StepBar data={data2} />
 				</div>
 			</div>
 		);
@@ -127,7 +138,7 @@ export default class RepayPlanModal extends React.PureComponent {
 							<span>查看详情</span>
 							<Icon type="right" className={style.link_bar_close} />
 						</a>
-						<StepBar data={data} />
+						<StepBar data={data1} />
 					</div>
 				</Drawer>
 				<div className={style.fix_bottom}>

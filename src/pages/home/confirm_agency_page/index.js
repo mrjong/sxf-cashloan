@@ -156,24 +156,28 @@ export default class confirm_agency_page extends PureComponent {
 
 	componentWillUnmount() {
 		store.removeConfirmAgencyBackHome();
-		store.removeAvailableCoupAmt();
 	}
 
 	// 拦截发放优惠券
 	sendCoupon = () => {
-		this.props.$fetch.post(API.sendCoupon).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					showCouponAlert: true,
-					couponAlertData: {
-						coupVal: result.data.coupVal,
-						validEndTm: result.data.validEndTm
-					}
-				});
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
+		this.props.$fetch
+			.post(API.sendCoupon)
+			.then((result) => {
+				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					this.setState({
+						showCouponAlert: true,
+						couponAlertData: {
+							coupVal: result.data.coupVal,
+							validEndTm: result.data.validEndTm
+						}
+					});
+				} else {
+					this.props.history.push('/home/home');
+				}
+			})
+			.catch(() => {
+				this.props.history.push('/home/home');
+			});
 	};
 
 	// 查询用户会员卡状态
@@ -534,7 +538,6 @@ export default class confirm_agency_page extends PureComponent {
 						couponInfo,
 						showInterestTotal: result.data.showFlag === '1'
 					});
-					store.setAvailableCoupAmt(result.data.availableCoupAmt);
 					// if (result.data.data && result.data.data.usrCoupNo) {
 					// 	this.dealMoney(result.data);
 					// }
