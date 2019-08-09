@@ -21,6 +21,7 @@ import circle from './img/circle.png';
 import circle_not from './img/circle_not.png';
 import adsBg from './img/base_top_img.png';
 import AgreementModal from 'components/AgreementModal';
+
 const Step = Steps.Step;
 let timedown = null;
 const pageKey = home.basicInfoBury;
@@ -441,6 +442,7 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
+				<div className={style.warning_tip}>还到不向学生借款</div>
 				{urlQuery.jumpToBase && (
 					<div className={style.adsImg}>
 						<img src={adsBg} alt="ad" />

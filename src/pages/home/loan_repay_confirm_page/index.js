@@ -730,6 +730,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
 				{/* <ScrollText /> */}
+				<div className={style.warning_tip}>还到不向学生借款</div>
 				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.titleBg}>收款信用卡</div>
