@@ -13,7 +13,7 @@ export default class RepayPlanModal extends React.PureComponent {
 
 	render() {
 		const { openDrawer } = this.state;
-		const { visible, onClose, data, loanMoney } = this.props;
+		const { visible, onClose, data, loanMoney, goPage } = this.props;
 		const data1 =
 			data &&
 			data.map((item) => {
@@ -76,7 +76,7 @@ export default class RepayPlanModal extends React.PureComponent {
 					<a
 						className={style.link_bar}
 						onClick={() => {
-							this.props.history.push('/home/payment_notes');
+							goPage();
 						}}
 					>
 						<span>借款须知</span>

@@ -1281,6 +1281,11 @@ export default class confirm_agency_page extends PureComponent {
 						data={repayInfo2.perd}
 						loanMoney={this.state.cardBillAmt}
 						history={this.props.history}
+						goPage={() => {
+							store.setSaveAmt(true);
+							store.setRepaymentModalData(this.state);
+							this.props.history.push('/home/payment_notes');
+						}}
 					/>
 
 					<CouponAlert
