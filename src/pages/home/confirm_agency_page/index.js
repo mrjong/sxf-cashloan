@@ -151,7 +151,7 @@ export default class confirm_agency_page extends PureComponent {
 	componentDidUpdate() {
 		let flag = store.getConfirmAgencyBackHome();
 		store.removeConfirmAgencyBackHome();
-		flag && !this.state.isShowModal && this.sendCoupon();
+		flag && this.sendCoupon();
 	}
 
 	componentWillUnmount() {
@@ -160,24 +160,30 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 拦截发放优惠券
 	sendCoupon = () => {
-		this.props.$fetch
-			.post(API.sendCoupon)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					this.setState({
-						showCouponAlert: true,
-						couponAlertData: {
-							coupVal: result.data.coupVal,
-							validEndTm: result.data.validEndTm
-						}
-					});
-				} else {
-					this.props.history.push('/home/home');
-				}
-			})
-			.catch(() => {
-				this.props.history.push('/home/home');
+		if (this.state.isShowModal) {
+			this.setState({
+				isShowModal: false
 			});
+		} else {
+			this.props.$fetch
+				.post(API.sendCoupon)
+				.then((result) => {
+					if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+						this.setState({
+							showCouponAlert: true,
+							couponAlertData: {
+								coupVal: result.data.coupVal,
+								validEndTm: result.data.validEndTm
+							}
+						});
+					} else {
+						this.props.history.push('/home/home');
+					}
+				})
+				.catch(() => {
+					this.props.history.push('/home/home');
+				});
+		}
 	};
 
 	// 查询用户会员卡状态
