@@ -89,16 +89,7 @@ export default class RepayPlanModal extends React.PureComponent {
 		);
 
 		return (
-			<Modal
-				popup
-				className="plan_modal"
-				visible={visible}
-				animationType="slide-up"
-				transparent
-				onClose={() => {
-					onClose();
-				}}
-			>
+			<Modal popup className="plan_modal" visible={visible} animationType="slide-up" transparent>
 				<Drawer
 					className="my-drawer"
 					position="right"
