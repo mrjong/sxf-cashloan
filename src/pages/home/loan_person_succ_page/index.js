@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import { Modal, Icon } from 'antd-mobile';
+import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import ExamineComponents from 'components/ExamineComponents';
 import ZButton from 'components/ButtonCustom';
@@ -58,7 +59,15 @@ const hhh = [
 	}
 ];
 
+const API = {
+	qryDtl: '/bill/qryDtl',
+	payback: '/bill/paySubmit',
+	couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
+	protocolSms: '/withhold/protocolSms' // 校验协议绑卡
+};
+
 @setBackGround('#fff')
+@fetch.inject()
 export default class remit_ing_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -69,7 +78,7 @@ export default class remit_ing_page extends PureComponent {
 		};
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		buriedPointEvent(manualAudit.pageview);
 	}
 
