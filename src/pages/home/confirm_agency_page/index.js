@@ -162,7 +162,11 @@ export default class confirm_agency_page extends PureComponent {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
-					isNeedExamine: res.data && res.data.flag === '01'
+					isNeedExamine: res.data && res.data.flag === '01',
+					examineData: {
+						creadNo: res.data && res.data.creadNo,
+						loanNo: res.data && res.data.loanNo
+					}
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -357,14 +361,17 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 关闭弹框
 	handleCloseTipModal = (type) => {
-		const { isNeedExamine } = this.state;
+		const { isNeedExamine, examineData } = this.state;
 		this.setState(
 			{
 				[type]: false
 			},
 			() => {
 				if (type === 'isShowTipModal' && isNeedExamine) {
-					this.props.history.push('/home/loan_person_succ_page');
+					this.props.history.push({
+						pathname: '/home/loan_person_succ_page',
+						search: `?creadNo=${examineData.creadNo}loanNo=${examineData.loanNo}`
+					});
 				} else if (type === 'isShowTipModal') {
 					const { goData } = this.state;
 					let title =

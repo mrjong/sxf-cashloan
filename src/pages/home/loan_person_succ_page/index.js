@@ -10,6 +10,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { manualAudit } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import q_icon from '../../../assets/images/home/tip_ico.png';
+import qs from 'qs';
 
 const hhh = [
 	{
@@ -59,12 +60,7 @@ const hhh = [
 	}
 ];
 
-const API = {
-	qryDtl: '/bill/qryDtl',
-	payback: '/bill/paySubmit',
-	couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-	protocolSms: '/withhold/protocolSms' // 校验协议绑卡
-};
+let queryData = null;
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -79,8 +75,56 @@ export default class remit_ing_page extends PureComponent {
 	}
 
 	componentDidMount() {
+		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(manualAudit.pageview);
+		this.querySubscribeInfo();
 	}
+
+	querySubscribeInfo = () => {
+		this.props.$fetch.get(`/bill/querySubscribeInfo/${queryData.loanNo}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				const { applyDate, applyTime, today, tomorrow, scheduledTime, availiableItemCode } = res.data || {};
+				if (res.data.existFlag === '1') {
+					this.setState({
+						applyDate,
+						applyTime
+					});
+				} else {
+					this.setState(
+						{
+							today,
+							tomorrow,
+							scheduledTime,
+							availiableItemCode
+						},
+						() => {
+							this.handleClosePannel();
+						}
+					);
+				}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
+
+	handleSubmitOrder = () => {
+		this.props.$fetch
+			.post(`/bill/submitSubscribe`, {
+				applyDateCode: '1',
+				applyTimeCode: '',
+				credApplNo: queryData.creadNo
+			})
+			.then((res) => {
+				if (res && res.msgCode === 'PTM0000') {
+					this.props.toast.info('预约成功');
+					this.handleClosePannel();
+					this.querySubscribeInfo();
+				} else {
+					this.props.toast.info(res.msgInfo);
+				}
+			});
+	};
 
 	copyOperation = () => {
 		buriedPointEvent(manualAudit.follow_button);
@@ -114,10 +158,17 @@ export default class remit_ing_page extends PureComponent {
 		});
 	};
 
-	handleSubmitOrder = () => {};
-
 	render() {
-		const { showRulesPannel, visibleModal } = this.state;
+		const {
+			showRulesPannel,
+			visibleModal,
+			applyDate,
+			applyTime,
+			today,
+			tomorrow,
+			scheduledTime,
+			availiableItemCode
+		} = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -142,14 +193,14 @@ export default class remit_ing_page extends PureComponent {
 					<div className={[style.step_item].join(' ')}>
 						<div className={[style.title].join(' ')}>
 							<div className={style.step_circle} />
-							{true ? (
+							{applyDate ? (
 								<span className={style.order_button} onClick={this.handleClosePannel}>
 									请预约人工审核时间
 								</span>
 							) : (
-								<p>
+								<p style={{ display: 'flex', alignItems: 'center' }}>
 									<span className={[style.order_button, style.order_active_button].join(' ')}>
-										今天 08:00-10:00
+										{applyDate} {applyTime}
 									</span>
 									<span>人工审核电话</span>
 								</p>
