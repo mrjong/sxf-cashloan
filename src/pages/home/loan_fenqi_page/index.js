@@ -988,6 +988,9 @@ export default class loan_fenqi_page extends PureComponent {
 					data={repayPlanInfo.perd}
 					loanMoney={loanMoney}
 					history={this.props.history}
+					goPage={() => {
+						this.props.history.push('/home/payment_notes');
+					}}
 				/>
 
 				{isShowSmsModal && (
