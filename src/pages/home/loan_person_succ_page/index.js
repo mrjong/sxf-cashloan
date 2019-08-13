@@ -34,7 +34,16 @@ export default class remit_ing_page extends PureComponent {
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(manualAudit.pageview);
-		this.querySubscribeInfo();
+		if (queryData.system) {
+			document.addEventListener('message', () => {
+				const passData = JSON.parse(e.data);
+				store.setToken(passData.apptoken);
+				this.querySubscribeInfo();
+			});
+		} else {
+			this.querySubscribeInfo();
+		}
+		// this.querySubscribeInfo();
 	}
 
 	querySubscribeInfo = () => {
