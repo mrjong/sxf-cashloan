@@ -12,54 +12,6 @@ import SXFButton from 'components/ButtonCustom';
 import q_icon from '../../../assets/images/home/tip_ico.png';
 import qs from 'qs';
 
-const hhh = [
-	{
-		key: '上午',
-		arr: [
-			{
-				key: 1,
-				value: '10:00-13:00'
-			},
-			{
-				key: 1,
-				value: '10:00-13:00'
-			}
-		]
-	},
-	{
-		key: '中午',
-
-		arr: [
-			{
-				key: 1,
-				value: '10:00-13:00'
-			},
-			{
-				key: 1,
-				value: '10:00-13:00'
-			}
-		]
-	},
-	{
-		key: '下午',
-
-		arr: [
-			{
-				key: 1,
-				value: '10:00-13:00'
-			},
-			{
-				key: 1,
-				value: '10:00-13:00'
-			},
-			{
-				key: 1,
-				value: '10:00-13:00'
-			}
-		]
-	}
-];
-
 let queryData = null;
 
 @setBackGround('#fff')
@@ -74,7 +26,7 @@ export default class remit_ing_page extends PureComponent {
 			timeSelectedItem: {},
 			daySelectedItem: {
 				code: '0',
-				value: '今日'
+				day: '今日'
 			}
 		};
 	}
@@ -113,17 +65,29 @@ export default class remit_ing_page extends PureComponent {
 	};
 
 	handleSubmitOrder = () => {
+		const { timeSelectedItem, daySelectedItem } = this.state;
+		if (!timeSelectedItem.code) {
+			this.props.toast.info('请选择时间');
+			return;
+		}
 		this.props.$fetch
 			.post(`/bill/submitSubscribe`, {
-				applyDateCode: '1',
-				applyTimeCode: '',
+				applyDateCode: daySelectedItem.code,
+				applyTimeCode: timeSelectedItem.code,
 				credApplNo: queryData.creadNo
 			})
 			.then((res) => {
 				if (res && res.msgCode === 'PTM0000') {
+					buriedPointEvent(manualAudit.order_submit, {
+						day: daySelectedItem.day,
+						time: timeSelectedItem.time
+					});
 					this.props.toast.info('预约成功');
-					this.handleClosePannel();
-					this.querySubscribeInfo();
+					let timer = setTimeout(() => {
+						this.handleClosePannel();
+						this.querySubscribeInfo();
+						clearTimeout(timer);
+					}, 2000);
 				} else {
 					this.props.toast.info(res.msgInfo);
 				}
@@ -146,6 +110,7 @@ export default class remit_ing_page extends PureComponent {
 
 	handleClosePannel = () => {
 		if (this.state.showRulesPannel) {
+			buriedPointEvent(manualAudit.order_rule);
 			this.setState({
 				showRulesPannel: !this.state.showRulesPannel
 			});
@@ -157,9 +122,46 @@ export default class remit_ing_page extends PureComponent {
 	};
 
 	handleButtonClick = (type, item) => {
+		if (this.state.daySelectedItem.code === '0' && !item.availiable) return; //为今日且不可用时
+		if (type === 'day') {
+			this.setState({
+				timeSelectedItem: {} //切换是清空
+			});
+		}
 		this.setState({
 			[type + 'SelectedItem']: item
 		});
+		if (type === 'time') {
+			switch (item.code) {
+				case '1':
+					buriedPointEvent(manualAudit.order_time_9, {
+						day: this.state.daySelectedItem.day
+					});
+					break;
+				case '2':
+					buriedPointEvent(manualAudit.order_time_11, {
+						day: this.state.daySelectedItem.day
+					});
+					break;
+				case '3':
+					buriedPointEvent(manualAudit.order_time_13, {
+						day: this.state.daySelectedItem.day
+					});
+					break;
+				case '4':
+					buriedPointEvent(manualAudit.order_time_15, {
+						day: this.state.daySelectedItem.day
+					});
+					break;
+				case '5':
+					buriedPointEvent(manualAudit.order_time_17, {
+						day: this.state.daySelectedItem.day
+					});
+					break;
+				default:
+					break;
+			}
+		}
 	};
 
 	render() {
@@ -178,11 +180,13 @@ export default class remit_ing_page extends PureComponent {
 		const dayList = [
 			{
 				code: '0',
-				day: today
+				day: today,
+				availiable: true
 			},
 			{
 				code: '1',
-				day: tomorrow
+				day: tomorrow,
+				availiable: true
 			}
 		];
 
@@ -211,13 +215,21 @@ export default class remit_ing_page extends PureComponent {
 						<div className={[style.title].join(' ')}>
 							<div className={style.step_circle} />
 							{!applyDate ? (
-								<span className={style.order_button} onClick={this.handleClosePannel}>
+								<span
+									className={style.order_button}
+									onClick={() => {
+										this.setState({
+											visibleModal: true
+										});
+										buriedPointEvent(manualAudit.order_button);
+									}}
+								>
 									请预约人工审核时间
 								</span>
 							) : (
 								<p style={{ display: 'flex', alignItems: 'center' }}>
 									<span className={[style.order_button, style.order_active_button].join(' ')}>
-										{applyDate} {applyTime}
+										{applyDate === '0' ? '今天' : applyDate} {applyTime}
 									</span>
 									<span>人工审核电话</span>
 								</p>
@@ -276,26 +288,6 @@ export default class remit_ing_page extends PureComponent {
 											{item.day}
 										</span>
 									))}
-									{/* <span
-										className={[style.opts_button_day, style.opts_button_active].join(' ')}
-										onClick={() => {
-											this.handleButtonClick('day', {
-												code: '0'
-											});
-										}}
-									>
-										今日
-									</span>
-									<span
-										className={style.opts_button_day}
-										onClick={() => {
-											this.handleButtonClick('day', {
-												code: '1'
-											});
-										}}
-									>
-										{tomorrow}
-									</span> */}
 								</div>
 								<div className={style.options_time}>
 									{scheduledTime &&
@@ -307,7 +299,8 @@ export default class remit_ing_page extends PureComponent {
 														<span
 															className={[
 																style.opts_button,
-																item.code === timeSelectedItem.code && style.opts_button_active
+																item.code === timeSelectedItem.code && style.opts_button_active,
+																daySelectedItem.code === '0' && !item.availiable && style.opts_button_disabled
 															].join(' ')}
 															onClick={() => {
 																this.handleButtonClick('time', item);
@@ -326,7 +319,7 @@ export default class remit_ing_page extends PureComponent {
 					)}
 
 					<SXFButton
-						className={false ? style.submitBtn : style.submitBtnDisabled}
+						className={timeSelectedItem.code ? style.submitBtn : style.submitBtnDisabled}
 						onClick={this.handleSubmitOrder}
 					>
 						确定预约
