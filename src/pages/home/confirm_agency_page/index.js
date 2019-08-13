@@ -610,15 +610,25 @@ export default class confirm_agency_page extends PureComponent {
 		if (repayInfo2 && repayInfo2.perdUnit === 'D') {
 			return;
 		}
-		this.setState({
-			isShowModal: true
-		});
+		this.setState(
+			{
+				isShowModal: true
+			},
+			() => {
+				sxfburiedPointEvent(sxfhome['ShowModal_plan']);
+			}
+		);
 	};
 
 	handleCloseModal = () => {
-		this.setState({
-			isShowModal: false
-		});
+		this.setState(
+			{
+				isShowModal: false
+			},
+			() => {
+				sxfburiedPointEvent(sxfhome['ShowModal_planOut']);
+			}
+		);
 	};
 	handleShowTipModal = () => {
 		this.setState({

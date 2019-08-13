@@ -2020,20 +2020,6 @@ var EVENT_TRACK = (function() {
 				}
 			}
 			/**
-			 * 页面离开时触发
-			 * @param {Object} properties  pv属性
-			 * @param {*} callback
-			 */
-		},
-		{
-			key: 'trackPvOut',
-			value: function trackPvOut(properties, callback) {
-				if (pageId) {
-					console.log('----离开页面11----');
-					this.track('pvout', _.extend({}, properties), callback);
-				}
-			}
-			/**
 			 * 发送PV事件，在此之前检测session
 			 * @param {Object} properties  pv属性
 			 * @param {*} callback
@@ -2042,7 +2028,7 @@ var EVENT_TRACK = (function() {
 		{
 			key: 'trackPv',
 			value: function trackPv(properties, callback) {
-				console.log('----进入页面----');
+				this.track('pvout', _.extend({}, properties), callback);
 				this.track('pv', _.extend({}, properties), callback);
 			}
 			/**
@@ -2057,11 +2043,15 @@ var EVENT_TRACK = (function() {
 			key: 'track',
 			value: function track(event_name, properties, callback, track_data) {
 				if (event_name === 'pv') {
+					console.log('----进入页面----');
 					if (properties && properties.pId) {
 						pageId = new Date().getTime().toString() + '_' + properties.pId;
 					} else {
-						new Error('pId不能为空');
+						return;
 					}
+				}
+				if (event_name === 'pvout') {
+					console.log('----离开页面----');
 				}
 				if (_.isUndefined(event_name)) {
 					console.error('上报数据需要一个事件名称');
@@ -2496,19 +2486,10 @@ var SPA = {
 	handleUrlChange: function handleUrlChange(historyDidUpdate) {
 		var _this = this;
 
-		if (this.config.mode === 'history') {
-			var oldPathCopy = this.path;
-			var newPathCopy = getPath();
-
-			if (oldPathCopy != newPathCopy && this.shouldTrackUrlChange(newPathCopy, oldPathCopy)) {
-				this.instance['event'].trackPvOut();
-			}
-		}
 		setTimeout(function() {
 			if (_this.config.mode === 'hash') {
 				if (_.isFunction(_this.config.callback_fn)) {
 					_this.config.callback_fn.call();
-					_this.instance['event'].trackPvOut();
 					_.innerEvent.trigger('singlePage:change', {
 						oldUrl: _this.url,
 						nowUrl: document.URL

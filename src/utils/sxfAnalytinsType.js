@@ -25,7 +25,9 @@ const sxfhome = {
 	isShowCreditModal_out: `${prefix}_isShowCreditModal_out`, //选择期限退出
 	isShowCreditModal_in: `${prefix}_isShowCreditModal_in`, // 选择期限进入
 	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
-	lendersOrder: `${prefix}_HOME_LENDERS_ORDER` // 放款日期-预约放款
+	lendersOrder: `${prefix}_HOME_LENDERS_ORDER`, // 放款日期-预约放款
+	ShowModal_planOut: '${prefix}_ShowModal_planOut', // 关闭还款计划
+	ShowModal_plan: '${prefix}_ShowModal_plan' // 打开还款计划
 };
 
 export { sxfhome, sxflogin };
