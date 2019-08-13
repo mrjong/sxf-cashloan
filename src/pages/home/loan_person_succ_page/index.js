@@ -11,6 +11,7 @@ import { manualAudit } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import q_icon from '../../../assets/images/home/tip_ico.png';
 import qs from 'qs';
+import { store } from '../../../utils/store';
 
 let queryData = null;
 
@@ -33,17 +34,16 @@ export default class remit_ing_page extends PureComponent {
 
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		buriedPointEvent(manualAudit.pageview);
-		if (queryData.system) {
-			document.addEventListener('message', () => {
-				const passData = JSON.parse(e.data);
-				store.setToken(passData.apptoken);
-				this.querySubscribeInfo();
-			});
+		buriedPointEvent(manualAudit.pageview, {
+			medium: queryData.apptoken ? 'APP' : 'H5'
+		});
+		if (queryData.apptoken) {
+			//如果从APP过来
+			store.setToken(queryData.apptoken);
+			this.querySubscribeInfo();
 		} else {
 			this.querySubscribeInfo();
 		}
-		// this.querySubscribeInfo();
 	}
 
 	querySubscribeInfo = () => {
@@ -89,7 +89,8 @@ export default class remit_ing_page extends PureComponent {
 				if (res && res.msgCode === 'PTM0000') {
 					buriedPointEvent(manualAudit.order_submit, {
 						day: daySelectedItem.day,
-						time: timeSelectedItem.time
+						time: timeSelectedItem.time,
+						medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					this.props.toast.info('预约成功');
 					let timer = setTimeout(() => {
@@ -104,7 +105,9 @@ export default class remit_ing_page extends PureComponent {
 	};
 
 	copyOperation = () => {
-		buriedPointEvent(manualAudit.follow_button);
+		buriedPointEvent(manualAudit.follow_button, {
+			medium: queryData.apptoken ? 'APP' : 'H5'
+		});
 		this.props.toast.info('复制成功！马上打开微信关注“还到”');
 		setTimeout(() => {
 			window.postMessage('复制成功', () => {});
@@ -119,7 +122,9 @@ export default class remit_ing_page extends PureComponent {
 
 	handleClosePannel = () => {
 		if (this.state.showRulesPannel) {
-			buriedPointEvent(manualAudit.order_rule);
+			buriedPointEvent(manualAudit.order_rule, {
+				medium: queryData.apptoken ? 'APP' : 'H5'
+			});
 			this.setState({
 				showRulesPannel: !this.state.showRulesPannel
 			});
@@ -144,27 +149,32 @@ export default class remit_ing_page extends PureComponent {
 			switch (item.code) {
 				case '1':
 					buriedPointEvent(manualAudit.order_time_9, {
-						day: this.state.daySelectedItem.day
+						day: this.state.daySelectedItem.day,
+						medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '2':
 					buriedPointEvent(manualAudit.order_time_11, {
-						day: this.state.daySelectedItem.day
+						day: this.state.daySelectedItem.day,
+						medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '3':
 					buriedPointEvent(manualAudit.order_time_13, {
-						day: this.state.daySelectedItem.day
+						day: this.state.daySelectedItem.day,
+						medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '4':
 					buriedPointEvent(manualAudit.order_time_15, {
-						day: this.state.daySelectedItem.day
+						day: this.state.daySelectedItem.day,
+						medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '5':
 					buriedPointEvent(manualAudit.order_time_17, {
-						day: this.state.daySelectedItem.day
+						day: this.state.daySelectedItem.day,
+						medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				default:
@@ -230,7 +240,9 @@ export default class remit_ing_page extends PureComponent {
 										this.setState({
 											visibleModal: true
 										});
-										buriedPointEvent(manualAudit.order_button);
+										buriedPointEvent(manualAudit.order_button, {
+											medium: queryData.apptoken ? 'APP' : 'H5'
+										});
 									}}
 								>
 									请预约人工审核时间
@@ -268,7 +280,7 @@ export default class remit_ing_page extends PureComponent {
 					{showRulesPannel ? (
 						<ul className={style.rule_wrap}>
 							<li className={style.rule_item}>
-								1、已经提交审核的用户，如果需要人工审核，则需要按照自己可以接电话的时间，预约人工审时间。
+								1、已经提交审核的用户，如果需要人工审核，则需要按照自己可以接电话的时间，预约人工审核时间。
 							</li>
 							<li className={style.rule_item}>2、为保证您能接听到电话，您选择的时段以外也会尝试致电。</li>
 							<li className={style.rule_item}> 3、如果不预约，则正常排队审核。</li>
