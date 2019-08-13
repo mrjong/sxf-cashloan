@@ -1474,7 +1474,7 @@ _.register_event = (function() {
 	 */
 	var register_event = function register_event(element, type, handler, oldSchool, useCapture) {
 		if (!element) {
-			console$1.error('No valid element provided to register_event');
+			console.error('No valid element provided to register_event');
 			return;
 		}
 
@@ -1482,7 +1482,7 @@ _.register_event = (function() {
 			element.addEventListener(type, handler, !!useCapture);
 		} else {
 			var ontype = 'on' + type;
-			console$1.log('ontype', ontype);
+			console.log('ontype', ontype);
 			var old_handler = element[ontype]; // can be undefined
 			element[ontype] = makeHandler(element, handler, old_handler);
 		}
@@ -1699,7 +1699,7 @@ _.UUID = (function() {
 // 存储方法封装 localStorage  cookie
 _.localStorage = {
 	error: function error(msg) {
-		console$1.error('localStorage error: ' + msg);
+		console.error('localStorage error: ' + msg);
 	},
 
 	get: function get(name) {
@@ -1820,7 +1820,7 @@ _.cookie = {
 };
 
 var windowConsole = win.console;
-var console$1 = {
+var console = {
 	log: function log() {
 		if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
 			try {
@@ -1922,9 +1922,9 @@ _.safewrap = function(f) {
 		try {
 			return f.apply(this, arguments);
 		} catch (e) {
-			console$1.log('Implementation error. Please turn on debug and contact support@mixpanel.com.');
+			console.log('Implementation error. Please turn on debug and contact support@mixpanel.com.');
 			if (CONFIG.DEBUG) {
-				console$1.log(e);
+				console.log(e);
 			}
 		}
 	};
@@ -2028,7 +2028,10 @@ var EVENT_TRACK = (function() {
 		{
 			key: 'trackPvOut',
 			value: function trackPvOut(properties, callback) {
-				this.track('pvout', _.extend({}, properties), callback);
+				if (pageId) {
+					console.log('----离开页面11----');
+					this.track('pvout', _.extend({}, properties), callback);
+				}
 			}
 			/**
 			 * 发送PV事件，在此之前检测session
@@ -2039,7 +2042,7 @@ var EVENT_TRACK = (function() {
 		{
 			key: 'trackPv',
 			value: function trackPv(properties, callback) {
-				console$1.log('----进入页面----');
+				console.log('----进入页面----');
 				this.track('pv', _.extend({}, properties), callback);
 			}
 			/**
@@ -2061,7 +2064,7 @@ var EVENT_TRACK = (function() {
 					}
 				}
 				if (_.isUndefined(event_name)) {
-					console$1.error('上报数据需要一个事件名称');
+					console.error('上报数据需要一个事件名称');
 					return;
 				}
 				if (!_.isFunction(callback)) {
@@ -2101,6 +2104,8 @@ var EVENT_TRACK = (function() {
 					eId: event_name,
 					// 事件触发时间
 					t: time,
+					// 用户每次登录绑定的唯一标识
+					bId: this.instance.get_property('bId') || '',
 					// 客户端唯一凭证(设备凭证)
 					dId: this.instance.get_device_id(),
 					// 事件自定义属性
@@ -2117,7 +2122,7 @@ var EVENT_TRACK = (function() {
 					truncated_data = _.truncate(data, truncateLength);
 				}
 
-				console$1.log(JSON.stringify(truncated_data, null, '  '));
+				console.log(JSON.stringify(truncated_data, null, '  '));
 
 				var callback_fn = function callback_fn(response) {
 					callback(response, data);
@@ -2161,7 +2166,11 @@ var EVENT_TRACK = (function() {
 			key: 'login',
 			value: function login(user_id) {
 				this._signup(user_id);
-				this['local_storage'].register({ userId: user_id });
+				var time = (+new Date()).toString();
+				this['local_storage'].register({
+					userId: user_id,
+					bId: user_id + '_' + time
+				});
 				this.track('login');
 			}
 			// 清除本地用户信息，退出用户（选则调用）
@@ -2205,7 +2214,7 @@ var LOCAL_STORAGE = (function() {
 					supported = false;
 				}
 				if (!supported) {
-					console$1.error('localStorage 不支持，自动退回到cookie存储方式');
+					console.error('localStorage 不支持，自动退回到cookie存储方式');
 				}
 				return supported;
 			};
@@ -2222,7 +2231,7 @@ var LOCAL_STORAGE = (function() {
 			this.upgrade();
 			this.save();
 		} else {
-			console$1.error('local_storage配置设置错误');
+			console.error('local_storage配置设置错误');
 		}
 	}
 	// 加载本地存储信息
@@ -2487,10 +2496,19 @@ var SPA = {
 	handleUrlChange: function handleUrlChange(historyDidUpdate) {
 		var _this = this;
 
+		if (this.config.mode === 'history') {
+			var oldPathCopy = this.path;
+			var newPathCopy = getPath();
+
+			if (oldPathCopy != newPathCopy && this.shouldTrackUrlChange(newPathCopy, oldPathCopy)) {
+				this.instance['event'].trackPvOut();
+			}
+		}
 		setTimeout(function() {
 			if (_this.config.mode === 'hash') {
 				if (_.isFunction(_this.config.callback_fn)) {
 					_this.config.callback_fn.call();
+					_this.instance['event'].trackPvOut();
 					_.innerEvent.trigger('singlePage:change', {
 						oldUrl: _this.url,
 						nowUrl: document.URL
@@ -2500,9 +2518,8 @@ var SPA = {
 			} else if (_this.config.mode === 'history') {
 				var oldPath = _this.path;
 				var newPath = getPath();
+
 				if (oldPath != newPath && _this.shouldTrackUrlChange(newPath, oldPath)) {
-					console.log('----离开页面----');
-					_this.instance['event'].trackPvOut();
 					_this.path = newPath;
 					if (historyDidUpdate || _this.config.track_replace_state) {
 						if (typeof _this.config.callback_fn === 'function') {
@@ -2589,7 +2606,7 @@ var BPOINT = (function() {
 						_this.stack2queue();
 					}, t * 1000);
 				} else {
-					console$1.log('埋点内置对象丢失,栈扫描器创建失败', 1);
+					console.log('埋点内置对象丢失,栈扫描器创建失败', 1);
 					throw new ReferenceError('埋点内置对象丢失,栈扫描器创建失败');
 				}
 			}
@@ -2605,11 +2622,11 @@ var BPOINT = (function() {
 						clearInterval(this._scanWaitSendQqueueIntervalId);
 					}
 					this._scanWaitSendQqueueIntervalId = setInterval(function() {
-						console$1.log('开启等待发送--scanWaitSendQqueue');
+						console.log('开启等待发送--scanWaitSendQqueue');
 						_this2.send();
 					}, t * 1000);
 				} else {
-					console$1.log('埋点内置对象丢失,队列扫描器创建失败', 1);
+					console.log('埋点内置对象丢失,队列扫描器创建失败', 1);
 					throw new ReferenceError('埋点内置对象丢失,队列扫描器创建失败');
 				}
 			}
@@ -2643,7 +2660,7 @@ var BPOINT = (function() {
 					_.localStorage.set('_bp_wqueue', JSON.stringify(this._waitSendQueue));
 				}
 
-				console$1.log('send stack(queue shift):');
+				console.log('send stack(queue shift):');
 
 				var sendData = {};
 				sendData = stack;
@@ -2656,7 +2673,7 @@ var BPOINT = (function() {
 		{
 			key: '_sendByImg',
 			value: function _sendByImg(truncated_data) {
-				console$1.log('truncated_data', truncated_data);
+				console.log('truncated_data', truncated_data);
 				var url = this.instance._get_config('track_url');
 				url += 'track.gif';
 				_.sendRequest(
@@ -2695,7 +2712,7 @@ var BPOINT = (function() {
 		{
 			key: 'stack2queue',
 			value: function stack2queue() {
-				console$1.log('开始扫描--scanStack');
+				console.log('开始扫描--scanStack');
 				var is = this._infoStack;
 				// if (window._sxfmt && window._sxfmt.length > 0) {
 				//   console.log("_sxfmt.length=" + _sxfmt.length);
@@ -2704,12 +2721,12 @@ var BPOINT = (function() {
 				//   window._sxfmt = [];
 				// }
 
-				console$1.log('infoStack length=' + is.length);
+				console.log('infoStack length=' + is.length);
 				if (is.length > 0) {
 					this._queueSave(is);
 					this._infoStack = [];
 				} else {
-					console$1.log('关闭扫描--_scanStackInterval');
+					console.log('关闭扫描--_scanStackInterval');
 					clearInterval(this._scanStackIntervalId);
 				}
 			}
@@ -2753,10 +2770,10 @@ var BPOINT = (function() {
 			value: function _send() {
 				var _this3 = this;
 
-				console$1.log('start send');
-				console$1.log('waitSendQueue length=' + this._waitSendQueue.length);
+				console.log('start send');
+				console.log('waitSendQueue length=' + this._waitSendQueue.length);
 				if (this._waitSendQueue.length == 0) {
-					console$1.log('关闭等待发送--_scanWaitSendQqueueInterval');
+					console.log('关闭等待发送--_scanWaitSendQqueueInterval');
 					clearInterval(this._scanWaitSendQqueueIntervalId);
 					this._queueSending = false;
 					return;
@@ -2850,7 +2867,7 @@ var DOMLISTEN = (function() {
 						});
 					});
 				} catch (error) {
-					console$1.error('自动添加监听事件失败,请校验语法是否有误！');
+					console.error('自动添加监听事件失败,请校验语法是否有误！');
 				}
 			}
 		},
@@ -2992,7 +3009,7 @@ var SxfDataLib = (function() {
 				try {
 					this._get_config('loaded')(this);
 				} catch (error) {
-					console$1.error(error);
+					console.error(error);
 				}
 			}
 			/**

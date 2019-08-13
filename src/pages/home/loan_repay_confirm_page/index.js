@@ -16,8 +16,9 @@ import {
 	getMoxieData
 } from 'utils';
 import mockData from './mockData';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, loan_repay_confirm } from 'utils/analytinsType';
+import { sxfhome } from 'utils/sxfAnalytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
@@ -200,6 +201,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	closeCreditModal = () => {
+		sxfburiedPointEvent(sxfhome['isShowCreditModal_out']);
 		this.setState({
 			isShowCreditModal: false
 		});
@@ -424,6 +426,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				isShowCreditModal: false
 			},
 			() => {
+				sxfburiedPointEvent(sxfhome['isShowCreditModal_out']);
 				this.setState({
 					btnDisabled: false,
 					modal_left: false
@@ -917,6 +920,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										) {
 											this.props.toast.info('暂无可借产品');
 										} else {
+											sxfburiedPointEvent(sxfhome['isShowCreditModal_in']);
 											this.setState({
 												isShowCreditModal: true
 											});

@@ -8,12 +8,13 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView, sxfDataPv } from 'utils/analytins';
+import { buriedPointEvent, pageView, sxfDataPv, sxfburiedPointEvent } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
+import { sxflogin } from 'utils/sxfAnalytinsType';
 
 let timmer;
 const API = {
@@ -93,6 +94,8 @@ export default class login_page extends PureComponent {
 			});
 			this.getImage();
 		}
+		sxfDataPv({ pId: 'dwdl' });
+		sxfburiedPointEvent(sxflogin.chkBox_dw);
 	}
 	componentDidMount() {
 		let _this = this;
@@ -112,7 +115,6 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
-		sxfDataPv({ pId: 'dwdl' });
 		entryPageTime = new Date();
 	}
 
@@ -381,9 +383,16 @@ export default class login_page extends PureComponent {
 	};
 
 	checkAgreement = () => {
-		this.setState({
-			isChecked: !this.state.isChecked
-		});
+		this.setState(
+			{
+				isChecked: !this.state.isChecked
+			},
+			() => {
+				if (this.state.isChecked) {
+					sxfburiedPointEvent(sxflogin.chkBox_dw);
+				}
+			}
+		);
 	};
 
 	//获取图片验证码

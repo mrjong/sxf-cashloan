@@ -13,7 +13,6 @@ import { SXFToast } from 'utils/SXFToast';
 import { Provider } from './context';
 
 let consoleshowStr = '';
-
 export default class router_Page extends PureComponent {
 	constructor(props) {
 		super(props);

@@ -105,6 +105,7 @@ export default class login_page extends PureComponent {
 			});
 			this.getImage();
 		}
+		sxfDataPv({ pId: 'dl' });
 		sxfburiedPointEvent(sxflogin.chkBox);
 	}
 	componentDidMount() {
@@ -125,7 +126,6 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
-		sxfDataPv({ pId: 'dl' });
 	}
 
 	componentWillUnmount() {
