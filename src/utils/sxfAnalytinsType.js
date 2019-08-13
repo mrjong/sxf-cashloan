@@ -23,7 +23,9 @@ const sxfhome = {
 	resident_city: `${prefix}_resident_city`, // 点击居住城市
 	resident_cityOut: `${prefix}_resident_cityOut`, // 居住城市停留
 	isShowCreditModal_out: `${prefix}_isShowCreditModal_out`, //选择期限退出
-	isShowCreditModal_in: `${prefix}_isShowCreditModal_in` // 选择期限进入
+	isShowCreditModal_in: `${prefix}_isShowCreditModal_in`, // 选择期限进入
+	lenders: `${prefix}_HOME_LENDERS`, // 放款日期-立即放款
+	lendersOrder: `${prefix}_HOME_LENDERS_ORDER` // 放款日期-预约放款
 };
 
 export { sxfhome, sxflogin };

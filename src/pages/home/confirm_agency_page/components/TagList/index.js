@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tag from '../Tag';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { store } from 'utils/store';
-
+import { sxfhome } from 'utils/sxfAnalytinsType';
 export default class TagList extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -87,12 +87,20 @@ export default class TagList extends React.PureComponent {
 				active={!item.disable && index === currentIndex}
 				onClick={() => {
 					if (item.value === '1') {
+						sxfburiedPointEvent(sxfhome.lendersOrder, {
+							lenders_type: item.name,
+							disable: item.disable || false
+						});
 						// 预约还款埋点
 						buriedPointEvent(home.lendersOrder, {
 							lenders_type: item.name,
 							disable: item.disable || false
 						});
 					} else if (item.value === '0') {
+						sxfburiedPointEvent(sxfhome.lenders, {
+							lenders_type: item.name,
+							disable: item.disable || false
+						});
 						// 立即还款埋点
 						buriedPointEvent(home.lenders, {
 							lenders_type: item.name,
