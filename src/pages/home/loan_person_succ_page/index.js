@@ -70,7 +70,12 @@ export default class remit_ing_page extends PureComponent {
 		this.state = {
 			copyText: '还到',
 			showRulesPannel: false,
-			visibleModal: false
+			visibleModal: false,
+			timeSelectedItem: {},
+			daySelectedItem: {
+				code: '0',
+				value: '今日'
+			}
 		};
 	}
 
@@ -81,9 +86,9 @@ export default class remit_ing_page extends PureComponent {
 	}
 
 	querySubscribeInfo = () => {
-		this.props.$fetch.get(`/bill/querySubscribeInfo/${queryData.loanNo}`).then((res) => {
+		this.props.$fetch.get(`/bill/querySubscribeInfo/${queryData.creadNo}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				const { applyDate, applyTime, today, tomorrow, scheduledTime, availiableItemCode } = res.data || {};
+				const { applyDate, applyTime, today, tomorrow, scheduledTime } = res.data || {};
 				if (res.data.existFlag === '1') {
 					this.setState({
 						applyDate,
@@ -94,8 +99,7 @@ export default class remit_ing_page extends PureComponent {
 						{
 							today,
 							tomorrow,
-							scheduledTime,
-							availiableItemCode
+							scheduledTime
 						},
 						() => {
 							this.handleClosePannel();
@@ -154,7 +158,7 @@ export default class remit_ing_page extends PureComponent {
 
 	handleButtonClick = (type, item) => {
 		this.setState({
-			[type + 'item']: item
+			[type + 'SelectedItem']: item
 		});
 	};
 
@@ -167,8 +171,21 @@ export default class remit_ing_page extends PureComponent {
 			today,
 			tomorrow,
 			scheduledTime,
-			availiableItemCode
+			daySelectedItem,
+			timeSelectedItem
 		} = this.state;
+
+		const dayList = [
+			{
+				code: '0',
+				day: today
+			},
+			{
+				code: '1',
+				day: tomorrow
+			}
+		];
+
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -193,7 +210,7 @@ export default class remit_ing_page extends PureComponent {
 					<div className={[style.step_item].join(' ')}>
 						<div className={[style.title].join(' ')}>
 							<div className={style.step_circle} />
-							{applyDate ? (
+							{!applyDate ? (
 								<span className={style.order_button} onClick={this.handleClosePannel}>
 									请预约人工审核时间
 								</span>
@@ -245,10 +262,26 @@ export default class remit_ing_page extends PureComponent {
 							<p className={style.modalDesc}>预约时间到达前2小时则不能修改预约时间</p>
 							<div>
 								<div className={style.options_day}>
-									<span
+									{dayList.map((item) => (
+										<span
+											className={[
+												style.opts_button_day,
+												item.code === daySelectedItem.code && style.opts_button_active
+											].join(' ')}
+											onClick={() => {
+												this.handleButtonClick('day', item);
+											}}
+											key={item.code}
+										>
+											{item.day}
+										</span>
+									))}
+									{/* <span
 										className={[style.opts_button_day, style.opts_button_active].join(' ')}
 										onClick={() => {
-											this.handleButtonClick('day', item);
+											this.handleButtonClick('day', {
+												code: '0'
+											});
 										}}
 									>
 										今日
@@ -256,30 +289,37 @@ export default class remit_ing_page extends PureComponent {
 									<span
 										className={style.opts_button_day}
 										onClick={() => {
-											this.handleButtonClick('day', item);
+											this.handleButtonClick('day', {
+												code: '1'
+											});
 										}}
 									>
-										今日
-									</span>
+										{tomorrow}
+									</span> */}
 								</div>
 								<div className={style.options_time}>
-									{hhh.map((item) => (
-										<div className={style.opts_item}>
-											<h3 className={style.opts_title}>{item.key}</h3>
-											<div className={style.opts_button_wrap}>
-												{item.arr.map((item) => (
-													<span
-														className={[style.opts_button, style.opts_button_active].join(' ')}
-														onClick={() => {
-															this.handleButtonClick('time', item);
-														}}
-													>
-														{item.value}
-													</span>
-												))}
+									{scheduledTime &&
+										scheduledTime.map((item) => (
+											<div className={style.opts_item} key={item.name}>
+												<h3 className={style.opts_title}>{item.name}</h3>
+												<div className={style.opts_button_wrap}>
+													{item.timeItems.map((item) => (
+														<span
+															className={[
+																style.opts_button,
+																item.code === timeSelectedItem.code && style.opts_button_active
+															].join(' ')}
+															onClick={() => {
+																this.handleButtonClick('time', item);
+															}}
+															key={item.code}
+														>
+															{item.time}
+														</span>
+													))}
+												</div>
 											</div>
-										</div>
-									))}
+										))}
 								</div>
 							</div>
 						</div>

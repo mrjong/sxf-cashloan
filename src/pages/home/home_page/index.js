@@ -568,14 +568,13 @@ export default class home_page extends PureComponent {
 					{
 						isNeedExamine: res.data && res.data.flag === '01',
 						examineData: {
-							creadNo: res.data && res.data.creadNo,
-							loanNo: res.data && res.data.loanNo
+							creadNo: res.data && res.data.creadNo
 						}
 					},
 					() => {
 						this.props.history.push({
 							pathname: '/home/loan_person_succ_page',
-							search: `?creadNo=${this.state.examineData.creadNo}loanNo=${this.state.examineData.loanNo}`
+							search: `?creadNo=${this.state.examineData.creadNo}`
 						});
 					}
 				);

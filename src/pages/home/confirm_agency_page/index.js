@@ -164,8 +164,7 @@ export default class confirm_agency_page extends PureComponent {
 				this.setState({
 					isNeedExamine: res.data && res.data.flag === '01',
 					examineData: {
-						creadNo: res.data && res.data.creadNo,
-						loanNo: res.data && res.data.loanNo
+						creadNo: res.data && res.data.creadNo
 					}
 				});
 			} else {
@@ -370,7 +369,7 @@ export default class confirm_agency_page extends PureComponent {
 				if (type === 'isShowTipModal' && isNeedExamine) {
 					this.props.history.push({
 						pathname: '/home/loan_person_succ_page',
-						search: `?creadNo=${examineData.creadNo}loanNo=${examineData.loanNo}`
+						search: `?creadNo=${examineData.creadNo}`
 					});
 				} else if (type === 'isShowTipModal') {
 					const { goData } = this.state;
