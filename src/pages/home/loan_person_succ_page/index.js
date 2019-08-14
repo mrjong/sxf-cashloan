@@ -252,7 +252,7 @@ export default class remit_ing_page extends PureComponent {
 									<span className={[style.order_button, style.order_active_button].join(' ')}>
 										{applyDate === '0' ? '今天' : applyDate} {applyTime}
 									</span>
-									<span>人工审核电话</span>
+									<span>人工电话审核</span>
 								</p>
 							)}
 						</div>
