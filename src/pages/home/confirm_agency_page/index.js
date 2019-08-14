@@ -141,7 +141,6 @@ export default class confirm_agency_page extends PureComponent {
 		if (isMPOS()) {
 			this.checkUsrMemSts();
 		}
-		this.getExamineSts(); // 检查是否需要人审
 	}
 
 	// 查询用户会员卡状态
@@ -161,12 +160,17 @@ export default class confirm_agency_page extends PureComponent {
 	getExamineSts = () => {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					isNeedExamine: res.data && res.data.flag === '01',
-					examineData: {
-						creadNo: res.data && res.data.creadNo
+				this.setState(
+					{
+						isNeedExamine: res.data && res.data.flag === '01',
+						examineData: {
+							creadNo: res.data && res.data.creadNo
+						}
+					},
+					() => {
+						this.handleShowTipModal();
 					}
-				});
+				);
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -690,7 +694,7 @@ export default class confirm_agency_page extends PureComponent {
 							progressLoading: false
 						});
 						if (result && result.msgCode === 'PTM0000') {
-							this.handleShowTipModal();
+							this.getExamineSts(); // 检查是否需要人审
 							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: true
 							});
