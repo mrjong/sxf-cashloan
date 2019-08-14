@@ -338,13 +338,14 @@ export default class remit_ing_page extends PureComponent {
 							</div>
 						</div>
 					)}
-
-					<SXFButton
-						className={timeSelectedItem.code ? style.submitBtn : style.submitBtnDisabled}
-						onClick={this.handleSubmitOrder}
-					>
-						确定预约
-					</SXFButton>
+					{!showRulesPannel && (
+						<SXFButton
+							className={timeSelectedItem.code ? style.submitBtn : style.submitBtnDisabled}
+							onClick={this.handleSubmitOrder}
+						>
+							确定预约
+						</SXFButton>
+					)}
 				</Modal>
 
 				<CopyToClipboard text={this.state.copyText} onCopy={() => this.copyOperation()}>
