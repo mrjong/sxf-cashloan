@@ -35,7 +35,7 @@ export default class remit_ing_page extends PureComponent {
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(manualAudit.pageview, {
-			medium: queryData.apptoken ? 'APP' : 'H5'
+			s_medium: queryData.apptoken ? 'APP' : 'H5'
 		});
 		if (queryData.apptoken) {
 			//如果从APP过来
@@ -88,9 +88,9 @@ export default class remit_ing_page extends PureComponent {
 			.then((res) => {
 				if (res && res.msgCode === 'PTM0000') {
 					buriedPointEvent(manualAudit.order_submit, {
-						day: daySelectedItem.day,
-						time: timeSelectedItem.time,
-						medium: queryData.apptoken ? 'APP' : 'H5'
+						s_day: daySelectedItem.day,
+						s_time: timeSelectedItem.time,
+						s_medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					this.props.toast.info('预约成功');
 					let timer = setTimeout(() => {
@@ -106,7 +106,7 @@ export default class remit_ing_page extends PureComponent {
 
 	copyOperation = () => {
 		buriedPointEvent(manualAudit.follow_button, {
-			medium: queryData.apptoken ? 'APP' : 'H5'
+			s_medium: queryData.apptoken ? 'APP' : 'H5'
 		});
 		this.props.toast.info('复制成功！马上打开微信关注“还到”');
 		setTimeout(() => {
@@ -123,7 +123,7 @@ export default class remit_ing_page extends PureComponent {
 	handleClosePannel = () => {
 		if (this.state.showRulesPannel) {
 			buriedPointEvent(manualAudit.order_rule, {
-				medium: queryData.apptoken ? 'APP' : 'H5'
+				s_medium: queryData.apptoken ? 'APP' : 'H5'
 			});
 			this.setState({
 				showRulesPannel: !this.state.showRulesPannel
@@ -149,32 +149,32 @@ export default class remit_ing_page extends PureComponent {
 			switch (item.code) {
 				case '1':
 					buriedPointEvent(manualAudit.order_time_9, {
-						day: this.state.daySelectedItem.day,
-						medium: queryData.apptoken ? 'APP' : 'H5'
+						s_day: this.state.daySelectedItem.day,
+						s_medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '2':
 					buriedPointEvent(manualAudit.order_time_11, {
-						day: this.state.daySelectedItem.day,
-						medium: queryData.apptoken ? 'APP' : 'H5'
+						s_day: this.state.daySelectedItem.day,
+						s_medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '3':
 					buriedPointEvent(manualAudit.order_time_13, {
-						day: this.state.daySelectedItem.day,
-						medium: queryData.apptoken ? 'APP' : 'H5'
+						s_day: this.state.daySelectedItem.day,
+						s_medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '4':
 					buriedPointEvent(manualAudit.order_time_15, {
-						day: this.state.daySelectedItem.day,
-						medium: queryData.apptoken ? 'APP' : 'H5'
+						s_day: this.state.daySelectedItem.day,
+						s_medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				case '5':
 					buriedPointEvent(manualAudit.order_time_17, {
-						day: this.state.daySelectedItem.day,
-						medium: queryData.apptoken ? 'APP' : 'H5'
+						s_day: this.state.daySelectedItem.day,
+						s_medium: queryData.apptoken ? 'APP' : 'H5'
 					});
 					break;
 				default:
@@ -241,7 +241,7 @@ export default class remit_ing_page extends PureComponent {
 											visibleModal: true
 										});
 										buriedPointEvent(manualAudit.order_button, {
-											medium: queryData.apptoken ? 'APP' : 'H5'
+											s_medium: queryData.apptoken ? 'APP' : 'H5'
 										});
 									}}
 								>
