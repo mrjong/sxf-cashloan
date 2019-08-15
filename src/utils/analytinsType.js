@@ -51,7 +51,6 @@ const home = {
 	operatorResult: `${prefix}_HOME_OPERATOR_RESULT`, // 运营商提交结果埋点
 	faceAuthResult: `${prefix}_HOME_FACEAUTH_RESULT`, // 人脸提交结果埋点
 	downloadBtnClick: `${prefix}_DOWNLOAD_BTN_CLICK`, // 下载页点击按钮事件
-	manualAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`, //人工审核
 	machineAudit: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MACHINE`, //机器审核
 	quickLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_LOAN`, //快速放款
 	signedLoan: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_BORROWING`, //立即签约借款
@@ -64,7 +63,6 @@ const home = {
 	importOtherCreditCard: `${prefix}_ADD_SCHEDULE_CREDIT_CARDS`, //选择导入其他信用卡
 	replaceCard: `${prefix}_APPLY_LOAN_CARD_REPLACEMENT`, //申请借钱还-更换卡
 	gotIt: `${prefix}_QUICK_PAY_GOTIT`, //快速打款中-我知道了
-	manualAuditFollow: `${prefix}_AWAITING_AUDIT_FOLLOW`, //等待人工审核-关注
 	assessingBindCard: `${prefix}_RAPID_ASSESSMENT_BINDING_CARD`, //快速评估中-绑卡
 	protocolSmsFail: `${prefix}_HOME_PROTOCOL_SMS_FAIL`, // 签约借款页协议绑卡校验失败埋点
 	protocolBindFail: `${prefix}_HOME_PROTOCOL_BIND_FAIL`, // 签约借款页协议绑卡绑定失败埋点
@@ -210,11 +208,17 @@ const mpos_ioscontrol_page = {
 	copySuccess: `${prefix}_COPY_SUCCESS` // mpos 管控页页面/mpos引流微信页面复制成功
 };
 
-const loan_repay_confirm = {
-	// back30: `${prefix}_PRODUCT_BACK_30`,
-	// sure30: `${prefix}_PRODUCT_SURE_30`,
-	// cancle30: `${prefix}_PRODUCT_CANCLE_30`,
-	// select30: `${prefix}_PRODUCT_SELECT_30`
+const manualAudit = {
+	order_button: `${prefix}_AWAITING_AUDIT_ORDER`, //等待人工审核-预约
+	order_rule: `${prefix}_RESERVATION_MANPOWER_PROBLEM`, //人工审核-问题按钮
+	order_time_9: `${prefix}_RESERVATION_MANPOWER_9`, //人工审核-时间
+	order_time_11: `${prefix}_RESERVATION_MANPOWER_11`, //人工审核-时间
+	order_time_13: `${prefix}_RESERVATION_MANPOWER_13`, //人工审核-时间
+	order_time_15: `${prefix}_RESERVATION_MANPOWER_15`, //人工审核-时间
+	order_time_17: `${prefix}_RESERVATION_MANPOWER_17`, //人工审核-时间
+	order_submit: `${prefix}_RESERVATION_MANPOWER_CONFIRM`, //人工审核-提交按钮
+	pageview: `${prefix}_RETURN_CARD_VIEWING_PROGRESS_MANUALAUDIT`, //人工审核
+	follow_button: `${prefix}_AWAITING_AUDIT_FOLLOW` //等待人工审核-关注
 };
 
 const other = {
@@ -263,8 +267,8 @@ export {
 	activity,
 	moxie_bank_list,
 	mpos_ioscontrol_page,
-	loan_repay_confirm,
 	loan_fenqi,
 	other,
-	daicao
+	daicao,
+	manualAudit
 };
