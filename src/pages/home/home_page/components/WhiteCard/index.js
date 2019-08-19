@@ -23,7 +23,10 @@ export default class DCCard extends React.Component {
 					)}
 					{children}
 					{!noLogoBtn && (
-						<ZButton onClick={handleClick} className={style.submitBtn}>
+						<ZButton
+							onClick={handleClick}
+							className={[style.submitBtn, showData.type === 'LN0005' && style.submitBtn_l].join(' ')}
+						>
 							{showData.btnText}
 						</ZButton>
 					)}

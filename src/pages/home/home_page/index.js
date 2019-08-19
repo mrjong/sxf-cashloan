@@ -11,6 +11,7 @@ import fetch from 'sx-fetch-rjl';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
 // import mockData from './mockData';
+import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
@@ -459,7 +460,7 @@ export default class home_page extends PureComponent {
 	};
 
 	// 智能按钮点击事件
-	handleSmartClick = (days) => {
+	handleSmartClick = () => {
 		const { usrIndexInfo = {} } = this.state;
 		const { indexData } = usrIndexInfo;
 		if (usrIndexInfo.indexSts === 'LN0009') {
@@ -510,11 +511,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'LN0005': // 暂无代还资格
-				days && days > 60
-					? this.props.toast.info(`您暂时没有代偿资格`)
-					: this.props.toast.info(
-							`您暂时没有代偿资格，请${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY-MM-DD')}日再试`
-					  );
+				buriedPointEvent(home.goSuperMarket, {
+					medium: 'H5'
+				});
+				store.setCarrierMoxie(true); // 设置去到第三方标示
+				window.location.href = linkConf.MARKET_URL;
 				break;
 			case 'LN0006': // 风控审核通过
 				buriedPointEvent(home.signedLoan);
@@ -548,10 +549,34 @@ export default class home_page extends PureComponent {
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
 				break;
 			case 'LN0011': // 需要过人审，人审中
-				this.props.history.push('/home/loan_person_succ_page');
+				this.getExamineSts();
 				break;
 			default:
 		}
+	};
+
+	// 检查是否需要人审
+	getExamineSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState(
+					{
+						isNeedExamine: res.data && res.data.flag === '01',
+						examineData: {
+							creadNo: res.data && res.data.creadNo
+						}
+					},
+					() => {
+						this.props.history.push({
+							pathname: '/home/loan_person_succ_page',
+							search: `?creadNo=${this.state.examineData.creadNo}`
+						});
+					}
+				);
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	jumpToUrl = () => {
@@ -1219,24 +1244,43 @@ export default class home_page extends PureComponent {
 					break;
 				case 'LN0005': // 暂无代还资格
 					componentsDisplay = (
-						<MoneyCard
+						<ExamineCard
 							handleClick={() => {
-								this.handleSmartClick(differDays);
+								this.handleSmartClick();
 							}}
 							showData={{
-								btnText: '暂无借款资格',
-								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								type: 'LN0005',
+								btnText: '去试试其他借款平台',
+								title: '还到-基础版',
+								subtitle: '非常抱歉，本次审核未通过',
 								money: cardBillAmtData,
-								desc: `还款日：${cardBillDtData}`,
-								cardNoHid: cardCode,
-								bankNo: bankCode,
-								topTip:
+								desc: '',
+								cardNoHid: '',
+								bankNo: '',
+								highlightText:
 									usrIndexInfo.indexData.netAppyDate &&
 									differDays <= 60 &&
-									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+									`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')}`
 							}}
 						/>
+						// <MoneyCard
+						// 	handleClick={() => {
+						// 		this.handleSmartClick(differDays);
+						// 	}}
+						// 	showData={{
+						// 		btnText: '暂无借款资格',
+						// 		title: bankNm,
+						// 		subtitle: '信用卡剩余应还金额(元)',
+						// 		money: cardBillAmtData,
+						// 		desc: `还款日：${cardBillDtData}`,
+						// 		cardNoHid: cardCode,
+						// 		bankNo: bankCode,
+						// 		topTip:
+						// 			usrIndexInfo.indexData.netAppyDate &&
+						// 			differDays <= 60 &&
+						// 			`${dayjs(usrIndexInfo.indexData.netAppyDate).format('YYYY/MM/DD')} 可再次申请`
+						// 	}}
+						// />
 					);
 					break;
 				case 'LN0006': // 风控审核通过

@@ -49,28 +49,40 @@ export default class tencent_face_middle_page extends Component {
 					is_success: true,
 					fail_cause: ''
 				});
+				const tencentBackUrl = store.getTencentBackUrl();
 				// 借钱还信用卡页进入
-				if (!store.getRealNameNextStep()) {
+				// if (!store.getRealNameNextStep()) {
+				if (store.getLoanAspirationHome()) {
 					handleClickConfirm(this.props, {
 						...store.getLoanAspirationHome()
 					});
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
+					store.removeTencentBackUrl();
 				} else if (store.getNeedNextUrl() && store.getRealNameNextStep() === 'home') {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
+					store.removeTencentBackUrl();
 					getNextStr({
 						$props: this.props
 					});
-				} else if (store.getIdChkPhotoBack()) {
-					// 我的  借款确认页
-					history.go(Number(store.getIdChkPhotoBack()));
+				} else if (tencentBackUrl) {
+					store.removeTencentBackUrl();
 					store.removeIdChkPhotoBack();
 					store.removeRealNameNextStep();
+					this.props.history.replace(tencentBackUrl);
 				} else {
-					this.props.history.push('/home/home');
+					this.props.history.replace('/home/home');
 				}
+				//  else if (store.getIdChkPhotoBack()) {
+				// 	// 我的  借款确认页
+				// 	history.go(Number(store.getIdChkPhotoBack()));
+				// 	store.removeIdChkPhotoBack();
+				// 	store.removeRealNameNextStep();
+				// } else {
+				// 	this.props.history.push('/home/home');
+				// }
 			})
 			.catch(() => {
 				this.setState({
@@ -100,22 +112,38 @@ export default class tencent_face_middle_page extends Component {
 	};
 
 	goRouter = () => {
-		// 首页进入然后返回
-		if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'home') {
-			store.removeRealNameNextStep();
-			store.removeIdChkPhotoBack();
-			this.props.history.push('/home/home');
-		} else if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'other') {
-			// 我的页面进入然后返回
-			store.removeRealNameNextStep();
-			store.removeIdChkPhotoBack();
-			this.props.history.push('/mine/mine_page');
-		} else if (store.getIdChkPhotoBack()) {
-			window.tencent_face_middle_page = true;
-			history.go(Number(store.getIdChkPhotoBack()));
-			store.removeIdChkPhotoBack();
-			store.removeRealNameNextStep();
+		const tencentBackUrl = store.getTencentBackUrl();
+		if (tencentBackUrl) {
+			store.removeTencentBackUrl();
+			this.props.history.replace(tencentBackUrl);
+		} else {
+			this.props.history.replace('/home/home');
 		}
+		store.removeIdChkPhotoBack();
+		store.removeRealNameNextStep();
+		// 首页进入然后返回
+		// if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'home') {
+		// 	store.removeRealNameNextStep();
+		// 	store.removeIdChkPhotoBack();
+		// 	this.props.history.push('/home/home');
+		// } else if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'other') {
+		// 	// 我的页面进入然后返回
+		// 	store.removeRealNameNextStep();
+		// 	store.removeIdChkPhotoBack();
+		// 	this.props.history.push('/mine/mine_page');
+		// } else if (store.getIdChkPhotoBack()) {
+		// 	window.tencent_face_middle_page = true;
+		// 	// history.go(Number(store.getIdChkPhotoBack()));
+		// 	const tencentBackUrl = store.getTencentBackUrl();
+		// 	if (tencentBackUrl) {
+		// 		store.removeTencentBackUrl();
+		// 		this.props.history.replace(tencentBackUrl);
+		// 	} else {
+		// 		this.props.history.replace('/home/home');
+		// 	}
+		// 	store.removeIdChkPhotoBack();
+		// 	store.removeRealNameNextStep();
+		// }
 	};
 
 	render() {

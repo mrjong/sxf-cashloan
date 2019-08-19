@@ -9756,6 +9756,18 @@ sx-fetch-rjl@^9.0.13:
     hoist-non-react-statics "^2.2.1"
     react "^15.6.1"
 
+sx-fetch@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.npm.taobao.org/sx-fetch/download/sx-fetch-0.2.4.tgz#3c84408b39c898e597fdaf1a67dcb21fa1ea41a4"
+  integrity sha1-PIRAiznImOWX/a8aZ9yyH6HqQaQ=
+  dependencies:
+    axios "^0.16.2"
+    babel-preset-es2015 "^6.24.1"
+    babel-preset-react "^6.24.1"
+    babel-preset-stage-0 "^6.24.1"
+    hoist-non-react-statics "^2.2.1"
+    react "^15.6.1"
+
 symbol-observable@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"

@@ -390,7 +390,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 					store.setLoanAspirationHome(params);
 					break;
 				case '3':
-					store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
+					store.setTencentBackUrl('/home/loan_repay_confirm_page');
+					// store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
 					store.setLoanAspirationHome(params);
 					break;
 				default:
@@ -711,6 +712,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			: fullMinAmt;
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
+				<div className={style.warning_tip}>还到不向学生借款</div>
 				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.titleBg}>收款信用卡</div>

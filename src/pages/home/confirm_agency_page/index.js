@@ -138,7 +138,6 @@ export default class confirm_agency_page extends PureComponent {
 		if (isMPOS()) {
 			this.checkUsrMemSts();
 		}
-		this.getExamineSts(); // 检查是否需要人审
 	}
 
 	// 查询用户会员卡状态
@@ -158,9 +157,17 @@ export default class confirm_agency_page extends PureComponent {
 	getExamineSts = () => {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					isNeedExamine: res.data && res.data.flag === '01'
-				});
+				this.setState(
+					{
+						isNeedExamine: res.data && res.data.flag === '01',
+						examineData: {
+							creadNo: res.data && res.data.creadNo
+						}
+					},
+					() => {
+						this.handleShowTipModal();
+					}
+				);
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -354,14 +361,17 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 关闭弹框
 	handleCloseTipModal = (type) => {
-		const { isNeedExamine } = this.state;
+		const { isNeedExamine, examineData } = this.state;
 		this.setState(
 			{
 				[type]: false
 			},
 			() => {
 				if (type === 'isShowTipModal' && isNeedExamine) {
-					this.props.history.push('/home/loan_person_succ_page');
+					this.props.history.push({
+						pathname: '/home/loan_person_succ_page',
+						search: `?creadNo=${examineData.creadNo}`
+					});
 				} else if (type === 'isShowTipModal') {
 					const { goData } = this.state;
 					let title =
@@ -416,7 +426,8 @@ export default class confirm_agency_page extends PureComponent {
 								this.requestConfirmRepaymentInfo();
 								break;
 							case '3':
-								store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
+								store.setTencentBackUrl('/home/confirm_agency');
+								// store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
 								break;
 							default:
 								break;
@@ -679,7 +690,7 @@ export default class confirm_agency_page extends PureComponent {
 							progressLoading: false
 						});
 						if (result && result.msgCode === 'PTM0000') {
-							this.handleShowTipModal();
+							this.getExamineSts(); // 检查是否需要人审
 							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: true
 							});

@@ -49,7 +49,7 @@ export default class carouselHome extends React.Component {
 			subtitle: '最高可申请还款金(元)',
 			money: '50000.00',
 			desc: '还款日：8888/88/88',
-			btnText: !isMPOS() && btnText ? btnText : '申请借款', // mpos中展示文案不同
+			btnText: !isMPOS() && btnText ? btnText : '去申请', // mpos中展示文案不同
 			color: 'rgba(248, 164, 65, 1)'
 		};
 		const iconClass = 'logo_ico';
@@ -60,6 +60,7 @@ export default class carouselHome extends React.Component {
 					<i>{showData.title}</i>
 				</div>
 				<WhiteCard showData={showData} noLogoBtn={true} handleClick={handleClick}>
+					{/* <Carousel {...restProps}> */}
 					<div className={style.contentBox}>
 						{showData.demoTip ? <div className={style.demoTip} /> : null}
 						{/* <div className={style.demoTip} /> */}

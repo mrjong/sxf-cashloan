@@ -220,8 +220,10 @@ export default class real_name_page extends Component {
 				// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
 				// 是否需要下一步
 				if (urlQuery.newTitle) {
+					// 需要补身份证的
 					this.nextFunc();
 				} else if (store.getNeedNextUrl()) {
+					// 首页正常流程走实名认证的
 					this.props.SXFToast.loading('数据加载中...', 0);
 					this.nextFunc(() => {
 						getNextStr({
@@ -229,6 +231,7 @@ export default class real_name_page extends Component {
 						});
 					});
 				} else {
+					// 我的页面
 					this.nextFunc(() => {
 						this.props.history.goBack();
 					});
@@ -269,11 +272,13 @@ export default class real_name_page extends Component {
 						case '3':
 							if (urlQuery.fromRouter === 'home') {
 								store.setRealNameNextStep('home');
+								store.setTencentBackUrl('/home/home');
 							} else {
 								store.setRealNameNextStep('other');
+								store.setTencentBackUrl('/mine/mine_page');
 							}
-							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							store.setChkPhotoBackNew(-2); //活体直接返回
+							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							// store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
 						default:
 							break;
@@ -298,8 +303,9 @@ export default class real_name_page extends Component {
 							}, 2000);
 							break;
 						case '3':
-							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							store.setChkPhotoBackNew(-2); //活体直接返回
+							store.setTencentBackUrl('/home/loan_repay_confirm_page');
+							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							// store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
 						default:
 							break;
@@ -349,8 +355,9 @@ export default class real_name_page extends Component {
 							}, 3000);
 							break;
 						case '3':
-							store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							store.setChkPhotoBackNew(-2); //活体直接返回
+							store.setTencentBackUrl('/home/confirm_agency');
+							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
+							// store.setChkPhotoBackNew(-2); //活体直接返回
 							break;
 						default:
 							break;

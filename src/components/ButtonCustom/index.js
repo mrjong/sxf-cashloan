@@ -21,7 +21,7 @@ export default class ButtonCustom extends React.PureComponent {
 		className: '',
 		active: false,
 		// children: '按钮',
-		children: '申请借款',
+		children: '去申请',
 		onClick: () => {},
 		interval: 1600,
 		disabled: false

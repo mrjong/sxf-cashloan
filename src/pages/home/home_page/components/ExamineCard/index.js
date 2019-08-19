@@ -11,12 +11,21 @@ export default class ExamineCard extends React.PureComponent {
 		const { showData, handleClick } = this.props;
 		return (
 			<WhiteCard showData={showData} handleClick={handleClick}>
-				<div className={showData.type !== 'LN0004' ? style.titleBox : style.titleBox2}>
+				<div
+					className={
+						showData.type !== 'LN0004' && showData.type !== 'LN0005' ? style.titleBox : style.titleBox2
+					}
+				>
 					<div className={style.title}>{showData.subtitle}</div>
 					{showData.tel ? <div className={style.tel}>{showData.tel}</div> : null}
 					{showData.desc ? <div className={style.desc}>{showData.desc}</div> : null}
+					{showData.highlightText ? (
+						<div className={style.desc}>
+							您可在<em className={style.highlightText}>{showData.highlightText}</em>再次申请
+						</div>
+					) : null}
 				</div>
-				{showData.type !== 'LN0004' ? (
+				{showData.type !== 'LN0004' && showData.type !== 'LN0005' ? (
 					<div className={style.bg}>
 						<div className={style.line} />
 						<div className={style.item}>

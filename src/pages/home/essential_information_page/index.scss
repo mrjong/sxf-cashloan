@@ -31,6 +31,26 @@
 		clear: both;
 	}
 
+	.warning_tip {
+		position: relative;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		background-color: #ffeeef;
+		font-size: 22px;
+		color: #ff6666;
+		// &::before {
+		// 	width: 28px;
+		// 	height: 28px;
+		// 	content: '';
+		// 	position: absolute;
+		// 	left: 32%;
+		// 	top: 10px;
+		// 	background-image: url('../../../assets/images/order/warn_ico@2x.png');
+		// 	background-size: cover;
+		// }
+	}
+
 	.sureBtn {
 		width: 6.2rem;
 		margin: 50px auto 30px;

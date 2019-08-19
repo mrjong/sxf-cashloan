@@ -132,9 +132,13 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 			// 人脸中间页物理返回
-			if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
-				history.go(Number(store.getIdChkPhotoBack()));
-				store.removeIdChkPhotoBack();
+			const tencentBackUrl = store.getTencentBackUrl();
+			// if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
+			if (!window.tencent_face_middle_page && tencentBackUrl) {
+				// history.go(Number(store.getIdChkPhotoBack()));
+				store.removeTencentBackUrl();
+				window.ReactRouterHistory.replace(tencentBackUrl);
+				// store.removeIdChkPhotoBack();
 				return;
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */

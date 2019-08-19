@@ -427,6 +427,7 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
+				<div className={style.warning_tip}>还到不向学生借款</div>
 				{urlQuery.jumpToBase && (
 					<div className={style.adsImg}>
 						<img src={adsBg} alt="ad" />
