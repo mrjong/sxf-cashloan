@@ -37,7 +37,7 @@ export const initAnalytics = () => {
 // 初始化随行付埋点 及渠道信息
 export const initSxfData = () => {
 	SxfData.init({
-		track_url: 'http://localhost:3000/',
+		track_url: '/',
 		local_storage: {
 			type: 'localStorage'
 		},

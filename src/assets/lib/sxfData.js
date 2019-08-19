@@ -22,258 +22,15 @@ var DEFAULT_CONFIG = {
 		queueTime: 5
 	},
 	CONFIG = { DEBUG: !1, isBpoint: !0, stackSize: 10, stackTime: 3, queueSize: 20, queueTime: 5 },
-	_typeof =
-		'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
-			? function(e) {
-					return typeof e;
-			  }
-			: function(e) {
-					return e && 'function' == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype
-						? 'symbol'
-						: typeof e;
-			  },
-	classCallCheck = function(e, t) {
-		if (!(e instanceof t)) throw new TypeError('Cannot call a class as a function');
-	},
-	createClass = (function() {
-		function i(e, t) {
-			for (var n = 0; n < t.length; n++) {
-				var i = t[n];
-				(i.enumerable = i.enumerable || !1),
-					(i.configurable = !0),
-					'value' in i && (i.writable = !0),
-					Object.defineProperty(e, i.key, i);
-			}
-		}
-		return function(e, t, n) {
-			return t && i(e.prototype, t), n && i(e, n), e;
-		};
-	})(),
-	previousDevice = window.device,
-	device = {},
-	changeOrientationList = [];
-window.device = device;
-var documentElement = window.document.documentElement,
-	userAgent = window.navigator.userAgent.toLowerCase(),
-	television = [
-		'googletv',
-		'viera',
-		'smarttv',
-		'internet.tv',
-		'netcast',
-		'nettv',
-		'appletv',
-		'boxee',
-		'kylo',
-		'roku',
-		'dlnadoc',
-		'roku',
-		'pov_tv',
-		'hbbtv',
-		'ce-html'
-	];
-function find(e) {
-	return !!~userAgent.indexOf(e);
-}
-function hasClass(e) {
-	return documentElement.className.match(RegExp(e, 'i'));
-}
-function addClass(e) {
-	var t = null;
-	hasClass(e) ||
-		((t = documentElement.className.replace(/^\s+|\s+$/g, '')), (documentElement.className = t + ' ' + e));
-}
-function removeClass(e) {
-	hasClass(e) && (documentElement.className = documentElement.className.replace(' ' + e, ''));
-}
-function handleOrientation() {
-	device.landscape()
-		? (removeClass('portrait'), addClass('landscape'), walkOnChangeOrientationList('landscape'))
-		: (removeClass('landscape'), addClass('portrait'), walkOnChangeOrientationList('portrait')),
-		setOrientationCache();
-}
-function walkOnChangeOrientationList(e) {
-	for (var t in changeOrientationList) changeOrientationList[t](e);
-}
-(device.macos = function() {
-	return find('mac');
-}),
-	(device.ios = function() {
-		return device.iphone() || device.ipod() || device.ipad();
-	}),
-	(device.iphone = function() {
-		return !device.windows() && find('iphone');
-	}),
-	(device.ipod = function() {
-		return find('ipod');
-	}),
-	(device.ipad = function() {
-		return find('ipad');
-	}),
-	(device.android = function() {
-		return !device.windows() && find('android');
-	}),
-	(device.androidPhone = function() {
-		return device.android() && find('mobile');
-	}),
-	(device.androidTablet = function() {
-		return device.android() && !find('mobile');
-	}),
-	(device.blackberry = function() {
-		return find('blackberry') || find('bb10') || find('rim');
-	}),
-	(device.blackberryPhone = function() {
-		return device.blackberry() && !find('tablet');
-	}),
-	(device.blackberryTablet = function() {
-		return device.blackberry() && find('tablet');
-	}),
-	(device.windows = function() {
-		return find('windows');
-	}),
-	(device.windowsPhone = function() {
-		return device.windows() && find('phone');
-	}),
-	(device.windowsTablet = function() {
-		return device.windows() && find('touch') && !device.windowsPhone();
-	}),
-	(device.fxos = function() {
-		return (find('(mobile') || find('(tablet')) && find(' rv:');
-	}),
-	(device.fxosPhone = function() {
-		return device.fxos() && find('mobile');
-	}),
-	(device.fxosTablet = function() {
-		return device.fxos() && find('tablet');
-	}),
-	(device.meego = function() {
-		return find('meego');
-	}),
-	(device.cordova = function() {
-		return window.cordova && 'file:' === location.protocol;
-	}),
-	(device.nodeWebkit = function() {
-		return 'object' === _typeof(window.process);
-	}),
-	(device.mobile = function() {
-		return (
-			device.androidPhone() ||
-			device.iphone() ||
-			device.ipod() ||
-			device.windowsPhone() ||
-			device.blackberryPhone() ||
-			device.fxosPhone() ||
-			device.meego()
-		);
-	}),
-	(device.tablet = function() {
-		return (
-			device.ipad() ||
-			device.androidTablet() ||
-			device.blackberryTablet() ||
-			device.windowsTablet() ||
-			device.fxosTablet()
-		);
-	}),
-	(device.desktop = function() {
-		return !device.tablet() && !device.mobile();
-	}),
-	(device.television = function() {
-		for (var e = 0; e < television.length; ) {
-			if (find(television[e])) return !0;
-			e++;
-		}
-		return !1;
-	}),
-	(device.portrait = function() {
-		return screen.orientation && Object.prototype.hasOwnProperty.call(window, 'onorientationchange')
-			? screen.orientation.type.includes('portrait')
-			: 1 < window.innerHeight / window.innerWidth;
-	}),
-	(device.landscape = function() {
-		return screen.orientation && Object.prototype.hasOwnProperty.call(window, 'onorientationchange')
-			? screen.orientation.type.includes('landscape')
-			: window.innerHeight / window.innerWidth < 1;
-	}),
-	(device.noConflict = function() {
-		return (window.device = previousDevice), this;
-	}),
-	device.ios()
-		? device.ipad()
-			? addClass('ios ipad tablet')
-			: device.iphone()
-			? addClass('ios iphone mobile')
-			: device.ipod() && addClass('ios ipod mobile')
-		: device.macos()
-		? addClass('macos desktop')
-		: device.android()
-		? device.androidTablet()
-			? addClass('android tablet')
-			: addClass('android mobile')
-		: device.blackberry()
-		? device.blackberryTablet()
-			? addClass('blackberry tablet')
-			: addClass('blackberry mobile')
-		: device.windows()
-		? device.windowsTablet()
-			? addClass('windows tablet')
-			: device.windowsPhone()
-			? addClass('windows mobile')
-			: addClass('windows desktop')
-		: device.fxos()
-		? device.fxosTablet()
-			? addClass('fxos tablet')
-			: addClass('fxos mobile')
-		: device.meego()
-		? addClass('meego mobile')
-		: device.nodeWebkit()
-		? addClass('node-webkit')
-		: device.television()
-		? addClass('television')
-		: device.desktop() && addClass('desktop'),
-	device.cordova() && addClass('cordova'),
-	(device.onChangeOrientation = function(e) {
-		'function' == typeof e && changeOrientationList.push(e);
-	});
-var orientationEvent = 'resize';
-function findMatch(e) {
-	for (var t = 0; t < e.length; t++) if (device[e[t]]()) return e[t];
-	return 'unknown';
-}
-function setOrientationCache() {
-	device.orientation = findMatch(['portrait', 'landscape']);
-}
-Object.prototype.hasOwnProperty.call(window, 'onorientationchange') &&
-	(orientationEvent = 'orientationchange'),
-	window.addEventListener
-		? window.addEventListener(orientationEvent, handleOrientation, !1)
-		: window.attachEvent
-		? window.attachEvent(orientationEvent, handleOrientation)
-		: (window[orientationEvent] = handleOrientation),
-	handleOrientation(),
-	(device.type = findMatch(['mobile', 'tablet', 'desktop'])),
-	(device.os = findMatch([
-		'ios',
-		'iphone',
-		'ipad',
-		'ipod',
-		'android',
-		'blackberry',
-		'windows',
-		'fxos',
-		'meego',
-		'television'
-	])),
-	setOrientationCache();
-var utf8Encode = function(e) {
+	utf8Encode = function(e) {
 		var t,
 			n,
-			i,
+			r,
 			o,
-			r = '';
+			i = '';
 		for (
-			t = n = 0, i = (e = (e + '').replace(/\r\n/g, '\n').replace(/\r/g, '\n')).length, o = 0;
-			o < i;
+			t = n = 0, r = (e = (e + '').replace(/\r\n/g, '\n').replace(/\r/g, '\n')).length, o = 0;
+			o < r;
 			o++
 		) {
 			var a = e.charCodeAt(o),
@@ -284,35 +41,35 @@ var utf8Encode = function(e) {
 						127 < a && a < 2048
 							? String.fromCharCode((a >> 6) | 192, (63 & a) | 128)
 							: String.fromCharCode((a >> 12) | 224, ((a >> 6) & 63) | 128, (63 & a) | 128)),
-				null !== s && (t < n && (r += e.substring(t, n)), (r += s), (t = n = o + 1));
+				null !== s && (t < n && (i += e.substring(t, n)), (i += s), (t = n = o + 1));
 		}
-		return t < n && (r += e.substring(t, e.length)), r;
+		return t < n && (i += e.substring(t, e.length)), i;
 	},
 	base64Encode = function(e) {
 		var t,
 			n,
-			i,
+			r,
 			o,
-			r = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+			i = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
 			a = 0,
 			s = 0,
 			c = '',
-			l = [];
+			u = [];
 		if (!e) return e;
 		for (
 			e = utf8Encode(e);
 			(t = e.charCodeAt(a++)),
 				(n = e.charCodeAt(a++)),
-				(i = e.charCodeAt(a++)),
-				(l[s++] =
-					r[0 | (((o = (t << 16) | (n << 8) | i) >> 18) & 63)] +
-					r[0 | ((o >> 12) & 63)] +
-					r[0 | ((o >> 6) & 63)] +
-					r[0 | (63 & o)]),
+				(r = e.charCodeAt(a++)),
+				(u[s++] =
+					i[0 | (((o = (t << 16) | (n << 8) | r) >> 18) & 63)] +
+					i[0 | ((o >> 12) & 63)] +
+					i[0 | ((o >> 6) & 63)] +
+					i[0 | (63 & o)]),
 				a < e.length;
 
 		);
-		switch (((c = l.join('')), e.length % 3)) {
+		switch (((c = u.join('')), e.length % 3)) {
 			case 1:
 				c = c.slice(0, -2) + '==';
 				break;
@@ -332,7 +89,7 @@ function isFunction(e) {
 	return '[object Function]' === toString(e);
 }
 function each(e, t) {
-	for (var n = 0, i = e.length; n < i && !1 !== t.call(e, e[n], n); n++);
+	for (var n = 0, r = e.length; n < r && !1 !== t.call(e, e[n], n); n++);
 }
 win$1 =
 	'undefined' == typeof window
@@ -345,7 +102,7 @@ win$1 =
 		: window;
 var NA_VERSION = '-1',
 	external = win$1.external,
-	userAgent$1 = win$1.navigator.userAgent || '',
+	userAgent = win$1.navigator.userAgent || '',
 	appVersion = win$1.navigator.appVersion || '',
 	vendor = win$1.navigator.vendor || '',
 	detector = {},
@@ -631,118 +388,117 @@ function checkTW360External(e) {
 		try {
 			var t = external.twGetRunPath.toLowerCase(),
 				n = external.twGetSecurityID(win$1),
-				i = external.twGetVersion(n);
+				r = external.twGetVersion(n);
 			if (t && !~t.indexOf(e)) return !1;
-			if (i) return { version: i };
+			if (r) return { version: r };
 		} catch (e) {}
 }
 function IEMode(e) {
 	if (!re_msie.test(e)) return null;
-	var t, n, i, o, r;
+	var t, n, r, o, i;
 	if (~e.indexOf('trident/') && (t = /\btrident\/([0-9.]+)/.exec(e)) && 2 <= t.length) {
-		var a = (i = t[1]).split('.');
-		(a[0] = parseInt(a[0], 10) + 4), (r = a.join('.'));
+		var a = (r = t[1]).split('.');
+		(a[0] = parseInt(a[0], 10) + 4), (i = a.join('.'));
 	}
 	var s = (o = (t = re_msie.exec(e))[1]).split('.');
 	return (
-		void 0 === r && (r = o),
+		void 0 === i && (i = o),
 		(s[0] = parseInt(s[0], 10) - 4),
 		(n = s.join('.')),
-		void 0 === i && (i = n),
-		{ browserVersion: r, browserMode: o, engineVersion: i, engineMode: n, compatible: i !== n }
+		void 0 === r && (r = n),
+		{ browserVersion: i, browserMode: o, engineVersion: r, engineMode: n, compatible: r !== n }
 	);
 }
 function detect(e, t, n) {
-	var i = isFunction(t) ? t.call(null, n) : t;
-	if (!i) return null;
+	var r = isFunction(t) ? t.call(null, n) : t;
+	if (!r) return null;
 	var o = { name: e, version: NA_VERSION, codename: '' },
-		r = toString(i);
-	if (!0 === i) return o;
-	if ('[object String]' === r) {
-		if (~n.indexOf(i)) return o;
+		i = toString(r);
+	if (!0 === r) return o;
+	if ('[object String]' === i) {
+		if (~n.indexOf(r)) return o;
 	} else {
-		if (isObject(i)) return i.hasOwnProperty('version') && (o.version = i.version), o;
-		if (i.exec) {
-			var a = i.exec(n);
+		if (isObject(r)) return r.hasOwnProperty('version') && (o.version = r.version), o;
+		if (r.exec) {
+			var a = r.exec(n);
 			if (a) return (o.version = 2 <= a.length && a[1] ? a[1].replace(/_/g, '.') : NA_VERSION), o;
 		}
 	}
 }
 var na = { name: '', version: '' };
-function init(n, e, t, i) {
+function init(n, e, t, r) {
 	var o = na;
 	each(e, function(e) {
 		var t = detect(e[0], e[1], n);
 		if (t) return (o = t), !1;
 	}),
-		t.call(i, o.name, o.version);
+		t.call(r, o.name, o.version);
 }
 var parse = function(e) {
-	e = (e || '').toLowerCase();
-	var o = {};
-	init(
-		e,
-		DEVICES,
-		function(e, t) {
-			var n = parseFloat(t);
-			(o.device = { name: e, version: n, fullVersion: t }), (o.device[e] = n);
-		},
-		o
-	),
+		e = (e || '').toLowerCase();
+		var o = {};
 		init(
 			e,
-			OS,
+			DEVICES,
 			function(e, t) {
 				var n = parseFloat(t);
-				(o.os = { name: e, version: n, fullVersion: t }), (o.os[e] = n);
+				(o.device = { name: e, version: n, fullVersion: t }), (o.device[e] = n);
 			},
+			o
+		),
+			init(
+				e,
+				OS,
+				function(e, t) {
+					var n = parseFloat(t);
+					(o.os = { name: e, version: n, fullVersion: t }), (o.os[e] = n);
+				},
+				o
+			);
+		var i = IEMode(e);
+		return (
+			init(
+				e,
+				ENGINE,
+				function(e, t) {
+					var n = t;
+					i && ((t = i.engineVersion || i.engineMode), (n = i.engineMode));
+					var r = parseFloat(t);
+					(o.engine = {
+						name: e,
+						version: r,
+						fullVersion: t,
+						mode: parseFloat(n),
+						fullMode: n,
+						compatible: !!i && i.compatible
+					}),
+						(o.engine[e] = r);
+				},
+				o
+			),
+			init(
+				e,
+				BROWSER,
+				function(e, t) {
+					var n = t;
+					i && ('ie' === e && (t = i.browserVersion), (n = i.browserMode));
+					var r = parseFloat(t);
+					(o.browser = {
+						name: e,
+						version: r,
+						fullVersion: t,
+						mode: parseFloat(n),
+						fullMode: n,
+						compatible: !!i && i.compatible
+					}),
+						(o.browser[e] = r);
+				},
+				o
+			),
 			o
 		);
-	var r = IEMode(e);
-	return (
-		init(
-			e,
-			ENGINE,
-			function(e, t) {
-				var n = t;
-				r && ((t = r.engineVersion || r.engineMode), (n = r.engineMode));
-				var i = parseFloat(t);
-				(o.engine = {
-					name: e,
-					version: i,
-					fullVersion: t,
-					mode: parseFloat(n),
-					fullMode: n,
-					compatible: !!r && r.compatible
-				}),
-					(o.engine[e] = i);
-			},
-			o
-		),
-		init(
-			e,
-			BROWSER,
-			function(e, t) {
-				var n = t;
-				r && ('ie' === e && (t = r.browserVersion), (n = r.browserMode));
-				var i = parseFloat(t);
-				(o.browser = {
-					name: e,
-					version: i,
-					fullVersion: t,
-					mode: parseFloat(n),
-					fullMode: n,
-					compatible: !!r && r.compatible
-				}),
-					(o.browser[e] = i);
-			},
-			o
-		),
-		o
-	);
-};
-detector = parse(userAgent$1 + ' ' + appVersion + ' ' + vendor);
-var detector$1 = detector,
+	},
+	detector$1 = (detector = parse(userAgent + ' ' + appVersion + ' ' + vendor)),
 	networkType = '',
 	ArrayProto = Array.prototype,
 	FuncProto = Function.prototype,
@@ -764,8 +520,8 @@ var breaker = {},
 			if (null != e)
 				if (Array.prototype.forEach && e.forEach === Array.prototype.forEach) e.forEach(t, n);
 				else if (e.length === +e.length) {
-					for (var i = 0, o = e.length; i < o; i++) if (i in e && t.call(n, e[i], i, e) === breaker) return;
-				} else for (var r in e) if (e.hasOwnProperty.call(e, r) && t.call(n, e[r], r, e) === breaker) return;
+					for (var r = 0, o = e.length; r < o; r++) if (r in e && t.call(n, e[r], r, e) === breaker) return;
+				} else for (var i in e) if (e.hasOwnProperty.call(e, i) && t.call(n, e[i], i, e) === breaker) return;
 		},
 		extend: function(n) {
 			return (
@@ -830,22 +586,22 @@ var breaker = {},
 			return '';
 		},
 		truncate: function(e, n) {
-			var i = void 0;
+			var r = void 0;
 			return (
 				'string' == typeof e
-					? (i = e.slice(0, n))
+					? (r = e.slice(0, n))
 					: _.isArray(e)
-					? ((i = []),
+					? ((r = []),
 					  _.each(e, function(e) {
-							i.push(_.truncate(e, n));
+							r.push(_.truncate(e, n));
 					  }))
 					: _.isObject(e)
-					? ((i = {}),
+					? ((r = {}),
 					  _.each(e, function(e, t) {
-							i[t] = _.truncate(e, n);
+							r[t] = _.truncate(e, n);
 					  }))
-					: (i = e),
-				i
+					: (r = e),
+				r
 			);
 		},
 		isNumber: function(e) {
@@ -856,13 +612,13 @@ var breaker = {},
 		},
 		HTTPBuildQuery: function(e, t) {
 			var n = void 0,
-				i = [];
+				r = [];
 			return (
 				_.isUndefined(t) && (t = '&'),
 				_.each(e, function(e, t) {
-					(n = encodeURIComponent(e && '' + e)), (i[i.length] = encodeURIComponent(t) + '=' + n);
+					(n = encodeURIComponent(e && '' + e)), (r[r.length] = encodeURIComponent(t) + '=' + n);
 				}),
-				i.join(t)
+				r.join(t)
 			);
 		},
 		trim: function(e) {
@@ -878,10 +634,10 @@ var breaker = {},
 		},
 		getQueryParam: function(e, t) {
 			var n = t.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]'),
-				i = RegExp('[\\?&]' + n + '=([^&#]*)').exec(e);
-			return null === i || (i && 'string' != typeof i[1] && i[1].length)
+				r = RegExp('[\\?&]' + n + '=([^&#]*)').exec(e);
+			return null === r || (r && 'string' != typeof r[1] && r[1].length)
 				? ''
-				: decodeURIComponent(i[1]).replace(/\+/g, ' ');
+				: decodeURIComponent(r[1]).replace(/\+/g, ' ');
 		},
 		deleteEmptyProperty: function(e) {
 			if (this.isObject(e)) {
@@ -934,24 +690,24 @@ var breaker = {},
 			(s.stopPropagation = function() {
 				this.cancelBubble = !0;
 			}),
-			function(e, t, n, i, o) {
+			function(e, t, n, r, o) {
 				if (e)
-					if (e.addEventListener && !i) e.addEventListener(t, n, !!o);
+					if (e.addEventListener && !r) e.addEventListener(t, n, !!o);
 					else {
-						var r = 'on' + t;
-						console.log('ontype', r),
-							(e[r] = (function(o, r, a) {
+						var i = 'on' + t;
+						console.log('ontype', i),
+							(e[i] = (function(o, i, a) {
 								return function(e) {
 									if ((e = e || s(window.event))) {
 										var t,
 											n,
-											i = !0;
+											r = !0;
 										return (
-											_.isFunction(a) && (t = a(e)), (n = r.call(o, e)), (!1 !== t && !1 !== n) || (i = !1), i
+											_.isFunction(a) && (t = a(e)), (n = i.call(o, e)), (!1 !== t && !1 !== n) || (r = !1), r
 										);
 									}
 								};
-							})(e, n, e[r]));
+							})(e, n, e[i]));
 					}
 				else console.error('No valid element provided to register_event');
 			}
@@ -967,14 +723,52 @@ var breaker = {},
 	(_.info = {
 		properties: function(e) {
 			return (
-				'pv' === e && (networkType = _.getNetworkType()),
-				{
-					netType: networkType,
-					Os: detector$1.os.name,
-					bs: detector$1.browser.name,
-					bVer: detector$1.browser.fullVersion
-				}
+				'pv' === e && (networkType = _.getNetworkType()), { netType: networkType, Os: detector$1.os.name }
 			);
+		}
+	}),
+	(_.ajax = {
+		post: function(e, t, n, r) {
+			console.log(e, '----------url');
+			var o = this;
+			o.callback = n || function(e) {};
+			try {
+				var i = new XMLHttpRequest();
+				i.open('POST', e, !0),
+					i.setRequestHeader('Content-type', 'application/json'),
+					(i.withCredentials = !0),
+					(i.ontimeout = function() {
+						o.callback({ status: 0, error: !0, message: 'request ' + e + ' time out' });
+					}),
+					(i.onreadystatechange = function() {
+						4 === i.readyState &&
+							o.callback(
+								200 === i.status
+									? _.JSONDecode(i.responseText)
+									: { status: 0, error: !0, message: 'Bad HTTP status: ' + i.status + ' ' + i.statusText }
+							);
+					}),
+					(i.timeout = r || 5e3),
+					console.log(t, '=======options'),
+					i.send(_.JSONEncode(t));
+			} catch (e) {
+				console.error(e);
+			}
+		},
+		get: function(e, t) {
+			try {
+				var n = new XMLHttpRequest();
+				n.open('GET', e, !0),
+					(n.withCredentials = !0),
+					(n.onreadystatechange = function() {
+						4 === n.readyState &&
+							(200 === n.status
+								? t && t(n.responseText)
+								: t &&
+								  t({ status: 0, error: !0, message: 'Bad HTTP status: ' + n.status + ' ' + n.statusText }));
+					}),
+					n.send(null);
+			} catch (e) {}
 		}
 	}),
 	(_.innerEvent = {
@@ -991,22 +785,27 @@ var breaker = {},
 				for (var n = 0; n < t.length; n++) 'function' == typeof t[n] && t[n].apply(this, e);
 		}
 	}),
-	(_.sendRequest = function(e, t, n) {
-		(t._ = '' + new Date().getTime()), (e += '?' + _.HTTPBuildQuery(t));
-		var i = document.createElement('img');
-		(i.src = e),
-			(i.width = 1),
-			(i.height = 1),
-			_.isFunction(n) && n(0),
-			(i.onload = function() {
-				this.onload = null;
-			}),
-			(i.onerror = function() {
-				this.onerror = null;
-			}),
-			(i.onabort = function() {
-				this.onabort = null;
-			});
+	(_.sendRequest = function(e, t, n, r) {
+		if ('img' === t) {
+			e += '?' + _.HTTPBuildQuery(n);
+			var o = document.createElement('img');
+			(o.src = e),
+				(o.width = 1),
+				(o.height = 1),
+				_.isFunction(r) && r(0),
+				(o.onload = function() {
+					this.onload = null;
+				}),
+				(o.onerror = function() {
+					this.onerror = null;
+				}),
+				(o.onabort = function() {
+					this.onabort = null;
+				});
+		} else
+			'get' === t
+				? ((e += '?' + _.HTTPBuildQuery(n)), _.ajax.get(e, r))
+				: 'post' === t && _.ajax.post(e, n, r);
 	}),
 	(_.UUID = (function() {
 		function n() {
@@ -1028,16 +827,16 @@ var breaker = {},
 						t,
 						n = navigator.userAgent,
 						o = [],
-						i = 0;
-					function r(e, t) {
+						r = 0;
+					function i(e, t) {
 						var n,
-							i = 0;
-						for (n = 0; n < t.length; n++) i |= o[n] << (8 * n);
-						return e ^ i;
+							r = 0;
+						for (n = 0; n < t.length; n++) r |= o[n] << (8 * n);
+						return e ^ r;
 					}
 					for (e = 0; e < n.length; e++)
-						(t = n.charCodeAt(e)), o.unshift(255 & t), o.length < 4 || ((i = r(i, o)), (o = []));
-					return 0 < o.length && (i = r(i, o)), i.toString(16);
+						(t = n.charCodeAt(e)), o.unshift(255 & t), o.length < 4 || ((r = i(r, o)), (o = []));
+					return 0 < o.length && (r = i(r, o)), r.toString(16);
 				})() +
 				'-' +
 				e +
@@ -1081,8 +880,8 @@ var breaker = {},
 	}),
 	(_.cookie = {
 		get: function(e) {
-			for (var t = e + '=', n = document.cookie.split(';'), i = 0; i < n.length; i++) {
-				for (var o = n[i]; ' ' == o[0]; ) o = o.substring(1, o.length);
+			for (var t = e + '=', n = document.cookie.split(';'), r = 0; r < n.length; r++) {
+				for (var o = n[r]; ' ' == o[0]; ) o = o.substring(1, o.length);
 				if (!o.indexOf(t)) return decodeURIComponent(o.substring(t.length, o.length));
 			}
 			return null;
@@ -1094,36 +893,36 @@ var breaker = {},
 			} catch (e) {}
 			return t;
 		},
-		set_seconds: function(e, t, n, i, o) {
-			var r = '',
+		set_seconds: function(e, t, n, r, o) {
+			var i = '',
 				a = '',
 				s = '';
-			if (i) {
+			if (r) {
 				var c = document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),
-					l = c ? c[0] : '';
-				r = l ? '; domain=.' + l : '';
+					u = c ? c[0] : '';
+				i = u ? '; domain=.' + u : '';
 			}
 			if (n) {
-				var u = new Date();
-				u.setTime(u.getTime() + 1e3 * n), (a = '; expires=' + u.toGMTString());
+				var l = new Date();
+				l.setTime(l.getTime() + 1e3 * n), (a = '; expires=' + l.toGMTString());
 			}
-			o && (s = '; secure'), (document.cookie = e + '=' + encodeURIComponent(t) + a + '; path=/' + r + s);
+			o && (s = '; secure'), (document.cookie = e + '=' + encodeURIComponent(t) + a + '; path=/' + i + s);
 		},
-		set: function(e, t, n, i, o) {
-			var r = '',
+		set: function(e, t, n, r, o) {
+			var i = '',
 				a = '',
 				s = '';
-			if (i) {
+			if (r) {
 				var c = document.location.hostname.match(/[a-z0-9][a-z0-9\-]+\.[a-z\.]{2,6}$/i),
-					l = c ? c[0] : '';
-				r = l ? '; domain=.' + l : '';
+					u = c ? c[0] : '';
+				i = u ? '; domain=.' + u : '';
 			}
 			if (n) {
-				var u = new Date();
-				u.setTime(u.getTime() + 24 * n * 60 * 60 * 1e3), (a = '; expires=' + u.toGMTString());
+				var l = new Date();
+				l.setTime(l.getTime() + 24 * n * 60 * 60 * 1e3), (a = '; expires=' + l.toGMTString());
 			}
 			o && (s = '; secure');
-			var d = e + '=' + encodeURIComponent(t) + a + '; path=/' + r + s;
+			var d = e + '=' + encodeURIComponent(t) + a + '; path=/' + i + s;
 			return (document.cookie = d);
 		},
 		remove: function(e, t) {
@@ -1177,19 +976,19 @@ var windowConsole = win.console,
 			t += String.fromCharCode(e.charCodeAt(n) - t.charCodeAt(n - 1));
 		return t;
 	}),
-	(_.bind = function(i, o) {
-		var r, a;
-		if (nativeBind && i.bind === nativeBind) return nativeBind.apply(i, slice.call(arguments, 1));
-		if (!_.isFunction(i)) throw new TypeError();
+	(_.bind = function(r, o) {
+		var i, a;
+		if (nativeBind && r.bind === nativeBind) return nativeBind.apply(r, slice.call(arguments, 1));
+		if (!_.isFunction(r)) throw new TypeError();
 		return (
-			(r = slice.call(arguments, 2)),
+			(i = slice.call(arguments, 2)),
 			(a = function() {
-				if (!(this instanceof a)) return i.apply(o, r.concat(slice.call(arguments)));
+				if (!(this instanceof a)) return r.apply(o, i.concat(slice.call(arguments)));
 				var e = {};
-				e.prototype = i.prototype;
+				e.prototype = r.prototype;
 				var t = new e();
 				e.prototype = null;
-				var n = i.apply(t, r.concat(slice.call(arguments)));
+				var n = r.apply(t, i.concat(slice.call(arguments)));
 				return Object(n) === n ? n : t;
 			})
 		);
@@ -1242,7 +1041,24 @@ var windowConsole = win.console,
 		}
 		return e;
 	});
-var pageId = '',
+var classCallCheck = function(e, t) {
+		if (!(e instanceof t)) throw new TypeError('Cannot call a class as a function');
+	},
+	createClass = (function() {
+		function r(e, t) {
+			for (var n = 0; n < t.length; n++) {
+				var r = t[n];
+				(r.enumerable = r.enumerable || !1),
+					(r.configurable = !0),
+					'value' in r && (r.writable = !0),
+					Object.defineProperty(e, r.key, r);
+			}
+		}
+		return function(e, t, n) {
+			return t && r(e.prototype, t), n && r(e, n), e;
+		};
+	})(),
+	pageId = '',
 	EVENT_TRACK = (function() {
 		function t(e) {
 			classCallCheck(this, t), (this.instance = e), (this.local_storage = this.instance.local_storage);
@@ -1270,7 +1086,7 @@ var pageId = '',
 				},
 				{
 					key: 'track',
-					value: function(e, t, n, i) {
+					value: function(e, t, n, r) {
 						if ('pv' === e) {
 							if ((console.log('----进入页面----'), !t || !t.pId)) return;
 							pageId = new Date().getTime() + '_' + t.pId;
@@ -1282,39 +1098,40 @@ var pageId = '',
 							else {
 								this.local_storage.load();
 								var o = _.JSONDecode(_.JSONEncode((t = t || {}))) || {},
-									r = new Date().getTime();
+									i = new Date().getTime();
 								o = _.extend({}, this.instance.get_property('superProperties'), o, {});
 								var a = {
 									uId: this.instance.get_property('userId') || '',
-									pAttr: i || {},
+									pAttr: r || {},
 									sdkT: 'h5',
 									eId: e,
-									t: r,
+									t: i,
 									bId: this.instance.get_property('bId') || '',
 									dId: this.instance.get_device_id(),
 									cType: o.cType || '',
 									actId: o.actId || '',
-									pId: pageId
+									pId: pageId,
+									dAttr: { bs: detector$1.browser.name, bVer: detector$1.browser.fullVersion }
 								};
 								a = _.extend({}, a, _.info.properties(e));
 								var s = this.instance._get_config('truncateLength'),
 									c = a;
 								_.isNumber(s) && 0 < s && (c = _.truncate(a, s)), console.log(JSON.stringify(c, null, '  '));
-								var l = function(e) {
+								var u = function(e) {
 										n(e, a);
 									},
-									u = this.instance._get_config('track_url');
+									l = this.instance._get_config('track_url');
 								if (
-									((u += 'track.gif'),
+									((l += 'track.gif'),
 									!this.instance._get_config('isBpoint') ||
 										(o && o.sxfDataConfig && !o.sxfDataConfig.isBpoint))
 								)
-									_.sendRequest(u, { data: _.base64Encode(_.JSONEncode(c)) }, l);
+									_.sendRequest(l, 'post', { data: _.base64Encode(_.JSONEncode(c)) }, u);
 								else
 									try {
 										this.instance.bpoint.push(c);
 									} catch (e) {
-										_.sendRequest(u, { data: _.base64Encode(_.JSONEncode(c)) }, l);
+										_.sendRequest(l, 'post', { data: c }, u);
 									}
 							}
 					}
@@ -1486,10 +1303,10 @@ var pageId = '',
 	})();
 function on(e, t, n) {
 	if (e[t]) {
-		var i = e[t];
+		var r = e[t];
 		e[t] = function() {
 			var e = Array.prototype.slice.call(arguments);
-			n.apply(this, e), i.apply(this, e);
+			n.apply(this, e), r.apply(this, e);
 		};
 	} else
 		e[t] = function() {
@@ -1530,24 +1347,24 @@ var SPA = {
 			this.handleUrlChange(!0);
 		},
 		handleUrlChange: function(n) {
-			var i = this;
+			var r = this;
 			setTimeout(function() {
-				if ('hash' === i.config.mode)
-					_.isFunction(i.config.callback_fn) &&
-						(i.config.callback_fn.call(),
-						_.innerEvent.trigger('singlePage:change', { oldUrl: i.url, nowUrl: document.URL }),
-						(i.url = document.URL));
-				else if ('history' === i.config.mode) {
-					var e = i.path,
+				if ('hash' === r.config.mode)
+					_.isFunction(r.config.callback_fn) &&
+						(r.config.callback_fn.call(),
+						_.innerEvent.trigger('singlePage:change', { oldUrl: r.url, nowUrl: document.URL }),
+						(r.url = document.URL));
+				else if ('history' === r.config.mode) {
+					var e = r.path,
 						t = getPath();
 					e != t &&
-						i.shouldTrackUrlChange(t, e) &&
-						((i.path = t),
-						(n || i.config.track_replace_state) &&
-							'function' == typeof i.config.callback_fn &&
-							(i.config.callback_fn.call(),
-							_.innerEvent.trigger('singlePage:change', { oldUrl: i.url, nowUrl: document.URL }),
-							(i.url = document.URL)));
+						r.shouldTrackUrlChange(t, e) &&
+						((r.path = t),
+						(n || r.config.track_replace_state) &&
+							'function' == typeof r.config.callback_fn &&
+							(r.config.callback_fn.call(),
+							_.innerEvent.trigger('singlePage:change', { oldUrl: r.url, nowUrl: document.URL }),
+							(r.url = document.URL)));
 				}
 			}, 0);
 		},
@@ -1556,8 +1373,8 @@ var SPA = {
 		}
 	},
 	BPOINT = (function() {
-		function BPOINT(e) {
-			classCallCheck(this, BPOINT),
+		function t(e) {
+			classCallCheck(this, t),
 				(this.instance = e),
 				(this._infoStack = []),
 				(this._waitSendQueue = []),
@@ -1567,24 +1384,23 @@ var SPA = {
 				(this._loadFN = []);
 		}
 		return (
-			createClass(BPOINT, [
+			createClass(t, [
 				{
 					key: '_oldDataCheck',
-					value: function _oldDataCheck() {
-						var oldData = _.localStorage.get('_bp_wqueue');
-						if (null != oldData && '' != oldData) {
+					value: function() {
+						var e = _.localStorage.get('_bp_wqueue');
+						if (null != e && '' != e) {
 							try {
-								if (((oldData = eval('(' + oldData + ')')), _.isArray(oldData) && 0 < oldData.length)) {
-									var sendData = {};
-									for (
-										sendData = _.localStorage.set('_bp_infoConf'), sendData = eval('(' + sendData + ')');
-										0 < oldData.length;
-
-									)
-										(sendData = oldData.pop()), this._sendByImg(sendData);
-								}
+								if (
+									(_.localStorage.set('_bp_wqueue_copy', e),
+									(e = JSON.parse(e)) && _.isArray(e) && 0 < e.length)
+								)
+									for (; 0 < e.length; ) {
+										var t = e.shift();
+										this._sendByImg(t);
+									}
 							} catch (e) {}
-							_.localStorage.remove('_bp_wqueue');
+							_.localStorage.remove('_bp_wqueue_copy');
 						}
 					}
 				},
@@ -1618,8 +1434,8 @@ var SPA = {
 					key: 'strlen',
 					value: function(e) {
 						for (var t = 0, n = 0; n < e.length; n++) {
-							var i = e.charCodeAt(n);
-							(1 <= i && i <= 126) || (65376 <= i && i <= 65439) ? t++ : (t += 2);
+							var r = e.charCodeAt(n);
+							(1 <= r && r <= 126) || (65376 <= r && r <= 65439) ? t++ : (t += 2);
 						}
 						return t;
 					}
@@ -1628,8 +1444,7 @@ var SPA = {
 					key: 'sendOldestStack',
 					value: function() {
 						var e = this._waitSendQueue.shift();
-						_.localStorage && _.localStorage.set('_bp_wqueue', JSON.stringify(this._waitSendQueue)),
-							console.log('send stack(queue shift):');
+						_.localStorage && _.localStorage.set('_bp_wqueue', JSON.stringify(this._waitSendQueue));
 						this._sendByImg(e);
 					}
 				},
@@ -1638,7 +1453,11 @@ var SPA = {
 					value: function(e) {
 						console.log('truncated_data', e);
 						var t = this.instance._get_config('track_url');
-						_.sendRequest((t += 'track.gif'), { data: _.base64Encode(_.JSONEncode(e)) }, function() {});
+						(t += 'sxf'),
+							console.log('原数据', e),
+							console.log('JSONEncode', _.JSONEncode(e)),
+							console.log('base64Encode', _.base64Encode(_.JSONEncode(e))),
+							_.sendRequest(t, 'post', { data: _.base64Encode(_.JSONEncode(e)) }, function() {});
 					}
 				},
 				{
@@ -1706,7 +1525,7 @@ var SPA = {
 					}
 				}
 			]),
-			BPOINT
+			t
 		);
 	})(),
 	DOMLISTEN = (function() {
@@ -1722,9 +1541,9 @@ var SPA = {
 						try {
 							_.getPropsDom(document, 'data-sxf-props').forEach(function(n) {
 								var e = JSON.parse(n.getAttribute('data-sxf-props')),
-									i = e.name,
+									r = e.name,
 									o = e.type,
-									r = {};
+									i = {};
 								e.eventList.forEach(function(t) {
 									var e = t.type;
 									'delete' === t.type && (e = 'keyup'),
@@ -1732,11 +1551,11 @@ var SPA = {
 											n,
 											e,
 											function(e) {
-												'input' === o && (r = { value: e.target.value }),
+												'input' === o && (i = { value: e.target.value }),
 													'delete' !== t.type
-														? a.instance.event.track('' + i, { actId: t.type || '' }, null, r)
+														? a.instance.event.track('' + r, { actId: t.type || '' }, null, i)
 														: 8 === e.keyCode &&
-														  a.instance.event.track('' + i, { actId: t.type || '' }, null, r);
+														  a.instance.event.track('' + r, { actId: t.type || '' }, null, i);
 											},
 											!1,
 											!0
@@ -1866,36 +1685,36 @@ var SPA = {
 				},
 				{
 					key: 'trackEvent',
-					value: function(e, t, n, i) {
-						this.event.track(e, t, n, i);
+					value: function(e, t, n, r) {
+						this.event.track(e, t, n, r);
 					}
 				},
 				{
 					key: 'registerEventSuperProperties',
 					value: function(e, t) {
 						var n = {},
-							i = this.get_property('superProperties');
+							r = this.get_property('superProperties');
 						_.isObject(e)
 							? _.each(e, function(e, t) {
 									n[t] = e;
 							  })
 							: (n[e] = t),
-							(i = _.extend({}, i, n)),
-							this.local_storage.register({ superProperties: i });
+							(r = _.extend({}, r, n)),
+							this.local_storage.register({ superProperties: r });
 					}
 				},
 				{
 					key: 'registerEventSuperPropertiesOnce',
 					value: function(e, t) {
 						var n = {},
-							i = this.get_property('superProperties');
+							r = this.get_property('superProperties');
 						_.isObject(e)
 							? _.each(e, function(e, t) {
 									n[t] = e;
 							  })
 							: (n[e] = t),
-							(i = _.extend({}, n, i)),
-							this.local_storage.register({ superProperties: i });
+							(r = _.extend({}, n, r)),
+							this.local_storage.register({ superProperties: r });
 					}
 				},
 				{
