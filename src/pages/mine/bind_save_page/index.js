@@ -131,11 +131,12 @@ export default class bind_save_page extends PureComponent {
 					this.props.toast.info(res.data);
 					buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 					break;
-				case 'PTM9902':
+				case 'PTM9902': {
 					let err = res.data ? `绑定失败：${res.data}` : '绑定失败，请重试';
 					this.props.toast.info(err);
 					buriedPointEvent(mine.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 					break;
+				}
 				case '1010':
 				case 'PBM1010':
 					this.props.toast.info(res.msgInfo);

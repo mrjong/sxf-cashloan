@@ -818,7 +818,7 @@ export default class confirm_agency_page extends PureComponent {
 						protocolSmsFailFlag: true,
 						isShowSmsModal: true
 					});
-					buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 				} else {
 					this.props.toast.info('绑卡失败，请换卡或重试');
 					this.setState({
@@ -870,7 +870,7 @@ export default class confirm_agency_page extends PureComponent {
 						protocolSmsFailFlag: true,
 						isShowSmsModal: true
 					});
-					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 					break;
 				case '1010': // 银行卡已经绑定 直接继续往下走
 					this.requestBindCardState();
