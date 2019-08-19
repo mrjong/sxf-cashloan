@@ -132,10 +132,10 @@ module.exports = function(options) {
 					pathRewrite: { '^/wap': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},
-				'/sxf': {
-					target: 'http://172.18.40.90:8080/sxf', //目标接口域名
+				'/buried': {
+					target: 'http://172.16.173.18:8080/buried', //目标接口域名
 					// target: 'http://172.18.40.181:8888/wap',
-					pathRewrite: { '^/sxf': '' }, //重写接口
+					pathRewrite: { '^/buried': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},
 				'/shence': {

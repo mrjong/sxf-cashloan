@@ -37,7 +37,7 @@ export const initAnalytics = () => {
 // 初始化随行付埋点 及渠道信息
 export const initSxfData = () => {
 	SxfData.init({
-		track_url: '/',
+		track_url: '/buried',
 		local_storage: {
 			type: 'localStorage'
 		},
