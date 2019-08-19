@@ -811,6 +811,14 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.info(res.data);
 					this.setState({ smsCode: '' });
 					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+				} else if (res.msgCode === 'PTM9902') {
+					//该卡完全绑不上
+					this.setState({
+						protocolSmsFailInfo: res.data,
+						protocolSmsFailFlag: true,
+						isShowSmsModal: true
+					});
+					buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 				} else {
 					this.props.toast.info('绑卡失败，请换卡或重试');
 					this.setState({
@@ -854,6 +862,15 @@ export default class confirm_agency_page extends PureComponent {
 				case 'PTM9901':
 					this.props.toast.info(res.data);
 					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				case 'PTM9902':
+					//该卡完全绑不上
+					this.setState({
+						protocolSmsFailInfo: res.data,
+						protocolSmsFailFlag: true,
+						isShowSmsModal: true
+					});
+					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 					break;
 				case '1010': // 银行卡已经绑定 直接继续往下走
 					this.requestBindCardState();
@@ -1267,12 +1284,28 @@ export default class confirm_agency_page extends PureComponent {
 					</Modal>
 					{isShowSmsModal && (
 						<SmsModal
-							onCancel={() => {}}
+							onCancel={() => {
+								buriedPointEvent(home.protocolAlertClose);
+								this.setState({
+									isShowSmsModal: false,
+									protocolSmsFailFlag: false
+								});
+							}}
 							onConfirm={this.confirmProtocolBindCard}
 							onSmsCodeChange={this.handleSmsCodeChange}
 							smsCodeAgain={this.checkProtocolBindCard}
+							protocolSmsFailFlag={this.state.protocolSmsFailFlag}
+							protocolSmsFailInfo={this.state.protocolSmsFailInfo}
 							smsCode={smsCode}
 							toggleBtn={false}
+							selectBankCard={() => {
+								buriedPointEvent(home.protocolAlertChange);
+								this.handleClickChoiseBank();
+								this.setState({
+									isShowSmsModal: false,
+									protocolSmsFailFlag: false
+								});
+							}}
 							ref={(ele) => {
 								this.smsModal = ele;
 							}}
