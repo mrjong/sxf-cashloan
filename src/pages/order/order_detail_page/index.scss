@@ -50,12 +50,23 @@
 	.loadInfBox {
 		position: relative;
 	}
+
 	.payAll {
 		position: absolute;
-		top: 38px;
-		right: 41px;
-		font-size: 30px;
-		color: rgba(254, 143, 0, 1);
+		top: 0.06rem;
+		right: 0.08rem;
+		padding: 0.3rem;
+		color: #397be6;
+		i {
+			position: absolute;
+			right: 10px;
+			top: 0;
+			display: block;
+			width: 34px;
+			height: 28px;
+			background-size: 34px 28px;
+			background-image: url(./img/youhui.png);
+		}
 	}
 	.panel_conten {
 		padding: 0.3rem;
@@ -193,6 +204,8 @@ i.arrow_up {
 	margin-left: 10px;
 }
 .feeDetail {
+	background: #f7f8fa;
+	margin: 0 30px;
 	padding: 14px 30px 0;
 	.modal_flex {
 		margin-top: 10px;
@@ -202,11 +215,11 @@ i.arrow_up {
 	.modal_label,
 	.modal_value {
 		font-size: 28px;
-		color: rgba(159, 159, 159, 1);
+		color: #868e9e;
 	}
 	.sum_total {
 		border-top: 1px solid #e0e0e0;
-		padding: 24px 0 10px 0;
+		padding: 24px 0 15px 0;
 		margin-top: 24px;
 	}
 }
@@ -245,13 +258,18 @@ i.arrow_up {
 	.text {
 		font-size: 22px;
 		padding-left: 16px;
-		color: #ff6666;
+		color: #f66;
 	}
 }
 .modal_label {
 	font-size: 30px;
 	color: #121c32;
 	text-align: left;
+}
+.modal_value_desc {
+	text-align: right;
+	font-size: 30px;
+	color: #868e9e;
 }
 .modal_value {
 	text-align: right;
@@ -260,8 +278,16 @@ i.arrow_up {
 	font-family: 'PingFangSC-Semibold';
 	color: #121c32;
 }
+.modal_value_red {
+	text-align: right;
+	font-size: 30px;
+	font-weight: bold;
+	font-family: 'PingFangSC-Semibold';
+	color: #f66;
+}
 
 .modal_btn {
+	font-weight: 800;
 	margin-top: 65px;
 	width: 670px;
 }
