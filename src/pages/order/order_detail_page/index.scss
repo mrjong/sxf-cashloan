@@ -207,6 +207,7 @@ i.arrow_up {
 	background: #f7f8fa;
 	margin: 0 30px;
 	padding: 14px 30px 0;
+	border-radius: 6px;
 	.modal_flex {
 		margin-top: 10px;
 		border-bottom: none;
@@ -217,9 +218,15 @@ i.arrow_up {
 		font-size: 28px;
 		color: #868e9e;
 	}
+	.modal_label_last,
+	.modal_value_last {
+		font-size: 28px;
+		font-weight: 800;
+		color: #868e9e;
+	}
 	.sum_total {
 		border-top: 1px solid #e0e0e0;
-		padding: 24px 0 15px 0;
+		padding: 24px 0 25px 0;
 		margin-top: 24px;
 	}
 }
@@ -261,6 +268,11 @@ i.arrow_up {
 		color: #f66;
 	}
 }
+.modal_label_last {
+	font-size: 30px;
+	color: #121c32;
+	text-align: left;
+}
 .modal_label {
 	font-size: 30px;
 	color: #121c32;
@@ -270,6 +282,13 @@ i.arrow_up {
 	text-align: right;
 	font-size: 30px;
 	color: #868e9e;
+}
+.modal_value_last {
+	text-align: right;
+	font-size: 30px;
+	font-weight: bold;
+	font-family: 'PingFangSC-Semibold';
+	color: #121c32;
 }
 .modal_value {
 	text-align: right;

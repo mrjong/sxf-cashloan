@@ -150,7 +150,11 @@ export default class order_detail_page extends PureComponent {
 						// 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
 						let isAdvance = false;
 						const buChangJinList = res.data[0].totalList.find((item2) => item2.feeNm === '补偿金');
-						if (buChangJinList.feeAmt !== 0) {
+						const buChangJinList2 = res.data[0].totalList.find((item2) => item2.feeNm === '提前结清优惠');
+						if (
+							(buChangJinList && buChangJinList.feeAmt !== 0) ||
+							(buChangJinList2 && buChangJinList2.feeAmt !== 0)
+						) {
 							isAdvance = true;
 						} else {
 							isAdvance = false;
@@ -1194,8 +1198,8 @@ export default class order_detail_page extends PureComponent {
 									) : null
 								)}
 								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
-									<span className={styles.modal_label}>本次应还总金额</span>
-									<span className={styles.modal_value}>
+									<span className={styles.modal_label_last}>本次应还总金额</span>
+									<span className={styles.modal_value_last}>
 										{/* {isPayAll ? isNewsContract ? (
 											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 										) : (
