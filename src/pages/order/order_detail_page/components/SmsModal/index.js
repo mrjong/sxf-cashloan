@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
+import { handleInputBlur } from '../../../../../utils';
 
 let timer = null;
 export default class SmsModal extends React.PureComponent {
@@ -74,7 +75,7 @@ export default class SmsModal extends React.PureComponent {
 				{protocolSmsFailFlag ? (
 					<div className={styles.smsModal_error}>
 						<p className={styles.smsModal_error_info}>
-							还款银行卡异常：{protocolSmsFailInfo}请联系客服或更换还款银行卡。
+							还款银行卡异常：{protocolSmsFailInfo && `${protocolSmsFailInfo},`}请联系客服或更换还款银行卡。
 						</p>
 						<div className={styles.button_box}>
 							<div className={styles.button_wrap}>
@@ -111,6 +112,9 @@ export default class SmsModal extends React.PureComponent {
 										placeholder="请输入短信验证码"
 										value={smsCode}
 										onChange={this.handleChange}
+										onBlur={() => {
+											handleInputBlur();
+										}}
 										pattern="[0-9]*"
 									/>
 									{times ? (
