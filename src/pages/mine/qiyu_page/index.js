@@ -1,7 +1,4 @@
 import React, { PureComponent } from 'react';
-import { headerIgnore } from 'utils';
-import styles from './index.scss';
-import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import IframeProtocol from 'components/IframeProtocol';
 
