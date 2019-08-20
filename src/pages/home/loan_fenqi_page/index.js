@@ -7,6 +7,7 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import SXFButton from 'components/ButtonCustom';
+import RepayPlanModal from 'components/RepayPlanModal';
 import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
@@ -38,7 +39,6 @@ export default class loan_fenqi_page extends PureComponent {
 			inputClear: false,
 			usageModal: false,
 			planModal: false,
-			tipModal: false,
 			prdId: '',
 			loanDate: '',
 			loanMoney: '',
@@ -263,30 +263,43 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//查询还款计划
 	queryRepayPlan = () => {
+		let couponInfo = store.getCouponData();
 		const { loanMoney, prdId } = this.state;
 		if (!prdId || !loanMoney) return;
-		this.props.$fetch
-			.post(API.repayPlan, {
-				billPrcpAmt: loanMoney,
-				prdId,
-				wtdwTyp: '0',
-				prodType: '11'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data !== null) {
-					this.setState(
-						{
-							repayPlanInfo: res.data
-						},
-						() => {
-							buriedPointEvent(loan_fenqi.repayPlan);
-							this.openModal('plan');
-						}
-					);
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			});
+
+		let params = {
+			billPrcpAmt: loanMoney,
+			prdId,
+			wtdwTyp: '0',
+			prodType: '11'
+		};
+		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
+			// 不使用优惠劵的情况
+			params = {
+				...params
+				// coupId: '-1'
+			};
+		} else if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
+			params = {
+				...params,
+				coupId: couponInfo.usrCoupNo
+			};
+		}
+		this.props.$fetch.post(API.repayPlan, params).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data !== null) {
+				this.setState(
+					{
+						repayPlanInfo: res.data
+					},
+					() => {
+						buriedPointEvent(loan_fenqi.repayPlan);
+						this.openModal('plan');
+					}
+				);
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	// 选择优惠劵
@@ -715,7 +728,6 @@ export default class loan_fenqi_page extends PureComponent {
 			prdId,
 			loanUsage: loanUsageObj,
 			usageList,
-			tipModal,
 			loanDate,
 			loanMoney,
 			planModal,
@@ -940,27 +952,7 @@ export default class loan_fenqi_page extends PureComponent {
 					</ul>
 				</Modal>
 
-				<Modal visible={tipModal} className="fenqi_tip_modal" transparent>
-					<p className={style.tipInfo}>抱歉！还到plus额度无法使用，仍可申请还到基础版。</p>
-					<div
-						className={style.tipButton}
-						onClick={() => {
-							this.props.history.push('/home/home');
-						}}
-					>
-						申请还到基础版
-					</div>
-					<Icon
-						type="cross"
-						className={style.tipCloseIcon}
-						color="#333"
-						onClick={() => {
-							this.closeModal('tip');
-						}}
-					/>
-				</Modal>
-
-				<Modal
+				{/* <Modal
 					visible={planModal}
 					transparent
 					onClose={() => {
@@ -986,7 +978,20 @@ export default class loan_fenqi_page extends PureComponent {
 							))}
 						</ul>
 					</div>
-				</Modal>
+        </Modal> */}
+
+				<RepayPlanModal
+					visible={planModal}
+					onClose={() => {
+						this.closeModal('plan');
+					}}
+					data={repayPlanInfo.perd}
+					loanMoney={loanMoney}
+					history={this.props.history}
+					goPage={() => {
+						this.props.history.push('/home/payment_notes');
+					}}
+				/>
 
 				{isShowSmsModal && (
 					<SmsModal

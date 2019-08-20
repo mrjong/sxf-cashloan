@@ -553,11 +553,35 @@ export default class home_page extends PureComponent {
 				console.log('LN0010');
 				break;
 			case 'LN0011': // 需要过人审，人审中
-				this.props.history.push('/home/loan_person_succ_page');
+				this.getExamineSts();
 				break;
 			default:
 				console.log('default');
 		}
+	};
+
+	// 检查是否需要人审
+	getExamineSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				this.setState(
+					{
+						isNeedExamine: res.data && res.data.flag === '01',
+						examineData: {
+							creadNo: res.data && res.data.creadNo
+						}
+					},
+					() => {
+						this.props.history.push({
+							pathname: '/home/loan_person_succ_page',
+							search: `?creadNo=${this.state.examineData.creadNo}`
+						});
+					}
+				);
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	jumpToUrl = () => {

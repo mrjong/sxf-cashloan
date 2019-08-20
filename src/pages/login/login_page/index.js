@@ -14,10 +14,6 @@ import { login } from 'utils/analytinsType';
 import { sxflogin } from 'utils/sxfAnalytinsType';
 import { domListen } from 'utils/domListen';
 import styles from './index.scss';
-// import bannerImg from './img/login_bg.png';
-// import bannerImg1 from './img/login_bg1.png';
-// import bannerImg2 from './img/login_bg2.png';
-// import backTopBtn from './img/backtop_btn.png';
 import ImageCode from 'components/ImageCode';
 import { setBackGround } from 'utils/background';
 
@@ -443,10 +439,6 @@ export default class login_page extends PureComponent {
 		this.props.history.push(`/protocol/${url}`);
 	};
 
-	backTop = () => {
-		this.refs.loginWrap.scrollTop = 0;
-	};
-
 	checkAgreement = () => {
 		this.setState(
 			{
@@ -539,15 +531,14 @@ export default class login_page extends PureComponent {
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page_wrap}>
-				<div ref="loginWrap" className={styles.dc_landing_page}>
+				<div className={styles.dc_landing_page}>
 					<div className={styles.greeting_box}>
 						<h2 className={styles.greeting_tit}>您好！</h2>
 						<p className={styles.greeting_cont}>
 							欢迎来到<span>还到</span>
 						</p>
 					</div>
-					{/* <img className={styles.banner} src={bannerImg} alt="落地页banner" /> */}
-					<div ref="loginContent" className={styles.content}>
+					<div className={styles.content}>
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
@@ -587,7 +578,6 @@ export default class login_page extends PureComponent {
 								]
 							})}
 						/>
-						{/* {true && ( */}
 						{disabledInput && (
 							<div className={styles.imgCodeBox}>
 								<InputItem
@@ -715,12 +705,8 @@ export default class login_page extends PureComponent {
 							</div>
 						</div>
 					</div>
-					{/* <img src={bannerImg1} className={styles.banner} alt="落地页banner" />
-					<div className={styles.imgWrap}>
-						<img src={bannerImg2} className={styles.banner} alt="落地页banner" />
-						<img src={backTopBtn} alt="" className={styles.backTopBtn} onClick={this.backTop} />
-					</div> */}
 				</div>
+
 				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
 					<div className={styles.f_left}>
 						<img src={logoImg} className={styles.img} />

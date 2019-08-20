@@ -1,87 +1,5 @@
 @import '../../../assets/styles/scss/base/fn';
 
-// .loginContent {
-//   height: 100%;
-//   overflow: auto;
-//   -webkit-overflow-scrolling: touch;
-//   .loginLog {
-//     @include bg-image('../../../assets/images/login/loginBg');
-//     background-repeat: no-repeat;
-//     background-size: 100%;
-//     background-origin: content-box;
-//     width: 750px;
-//     height: 1334px;
-//     text-align: center;
-//   }
-
-//   .centent {
-//     position: relative;
-//     top: 7.5rem;
-//     .loginInput {
-//       width: 5.59rem;
-//       height: 0.85rem;
-//       line-height: 0.85rem;
-//       float: left;
-//       margin: 0.25rem 0.79rem;
-//       border-radius: 0.07rem;
-//       border: none;
-//     }
-//     input::placeholder {
-//       color: #999;
-//       font-size: 0.27rem;
-//     }
-//     .smsCode {
-//       color: #fff;
-//       background: #FFC601;
-//       font-size: 0.27rem;
-//       display: inline;
-//       left: 4.8rem;
-//       top: 1.82rem;
-//       position: absolute;
-//       width: 1.64rem;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//     }
-//     .smsCodeNumber {
-//       color: #fff;
-//       background: #B9B9B9;
-//       font-size: 0.27rem;
-//       display: inline;
-//       left: 4.8rem;
-//       top: 1.82rem;
-//       position: absolute;
-//       width: 1.64rem;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//     }
-//     .sureBtn {
-//       display: inline;
-//       background: #FFE401;
-//       color: #333;
-//       font-size: 0.48rem;
-//       padding: 0.15rem 2rem;
-//       position: relative;
-//       top: 0.3rem;
-//       border-radius: 0.07rem;
-//       border: none;
-//     }
-//   }
-//   :global {
-//     .am-list-item .am-input-control input {
-//       font-size: 0.27rem;
-//       width: 100%;
-//       display: inline-block;
-//       text-align: left;
-//       -moz-box-sizing: border-box;
-//       box-sizing: border-box;
-//       font-family: PingFang-SC-Regular;
-//       padding: 0.16rem 0;
-//     }
-//   }
-// }
-
 .dc_landing_page_wrap {
 	height: 100%;
 }
@@ -92,9 +10,6 @@
 	height: 100%;
 	background: #fff;
 	:global {
-		.am-list-item .am-input-control input:disabled {
-			// background-color: #f6f6f6;
-		}
 		.am-list-item .am-input-clear {
 			width: 30px;
 			height: 30px;
@@ -113,17 +28,12 @@
 
 	.content {
 		text-align: center;
-		// background: #fff;
 		padding: 101px 60px 30px;
 
 		.loginInput {
 			height: 110px;
 			line-height: 110px;
 			padding-left: 0;
-			// margin-bottom: 20px;
-			// border-radius: 12px;
-			// border: 1px solid #e3e3e3;
-			// background-color: #f6f6f6;
 			:global {
 				.am-list-line::after {
 					background-color: #f0f1f5 !important;
@@ -136,15 +46,8 @@
 			font-size: 32px;
 		}
 
-		// .smsCodeInput {
-		// 	flex: 1;
-		// 	margin-right: 20px;
-		// }
-
 		.smsBox {
 			position: relative;
-			// display: flex;
-			// justify-content: space-between;
 		}
 
 		.smsCode {
@@ -157,7 +60,6 @@
 			height: 110px;
 			line-height: 110px;
 			text-align: center;
-			// background-color: #fe4d2a;
 			border-radius: 12px;
 			&:after {
 				position: absolute;
@@ -191,11 +93,6 @@
 				display: inline-block;
 				width: 100%;
 			}
-
-			// &:hover,
-			// &:active {
-			// 	background-color: #fe4d2a;
-			// }
 		}
 		.sureDisableBtn {
 			background-color: #dcdfe6;
@@ -298,7 +195,6 @@
 	.img {
 		width: 80px;
 		height: 80px;
-		// vertical-align: middle;
 		margin-right: 30px;
 	}
 	.f_left {

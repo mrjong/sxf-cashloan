@@ -98,5 +98,10 @@ export default [
 		zhName: 'ddrgsh',
 		title: '等待人工审核',
 		component: () => import('pages/home/loan_person_succ_page')
+	},
+	{
+		path: '/home/payment_notes',
+		title: '借款须知',
+		component: () => import('pages/home/payment_notes')
 	}
 ];
