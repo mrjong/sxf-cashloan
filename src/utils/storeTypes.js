@@ -87,5 +87,6 @@ export const storeTypes = {
 	InsuranceFlag: 'InsuranceFlag', // 标识该次绑卡是否要求绑定支持收取保费的卡
 	NoLoginToken: 'NoLoginToken', // 设置 图片验证码 noLoginToken
 	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
-	TencentBackUrl: 'TencentBackUrl' // 跳转到人脸识别返回的url
+	TencentBackUrl: 'TencentBackUrl', // 跳转到人脸识别返回的url
+	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome' // 签约页控制物理返回到首页标识
 };

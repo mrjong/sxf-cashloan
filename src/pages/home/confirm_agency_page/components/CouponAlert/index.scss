@@ -1,0 +1,103 @@
+@import '../../../../../assets/styles/scss/base/fn.scss';
+.alert_wrap {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	z-index: 111;
+	background-color: rgba(0, 0, 0, 0.3);
+
+	.alert_body {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #fff;
+		text-align: center;
+		border-radius: 6px;
+	}
+
+	.alert_body_box {
+		padding: 50px 16px 0;
+	}
+
+	h3 {
+		font-size: 36px;
+		color: #121c32;
+		font-weight: 500;
+		margin-bottom: 10px;
+	}
+
+	p {
+		color: #414a53;
+		font-size: 32px;
+	}
+
+	.coupon_box {
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		width: 546px;
+		height: 186px;
+		box-sizing: border-box;
+		margin: 20px 0 30px;
+		position: relative;
+		background: url('./coupon_bg.png') no-repeat;
+		background-size: cover;
+	}
+
+	.coupon_time {
+		padding: 0 10px;
+		margin-top: 95px;
+		margin-left: 20px;
+		background-color: rgba(255, 255, 255, 0.4);
+		color: #ff5c5a;
+		font-size: 22px;
+		border-radius: 6px;
+	}
+
+	.coupon_value {
+		font-size: 56px;
+		font-family: 'DINMitAlt';
+		color: #fff;
+	}
+
+	.button_box {
+		position: relative;
+		overflow: hidden;
+
+		&::after {
+			position: absolute;
+			left: 0;
+			@include setTopLine(#f0f1f5);
+		}
+	}
+
+	.button_wrap {
+		display: flex;
+		position: relative;
+		margin: 10px 0;
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 50%;
+			@include setRightLine(#f0f1f5);
+			height: 100%;
+			background-color: #f0f1f5;
+		}
+	}
+
+	.button {
+		width: 50%;
+		padding: 15px 0;
+		font-size: 34px;
+		font-weight: 500;
+	}
+
+	.exit {
+		color: #868e9e;
+	}
+}

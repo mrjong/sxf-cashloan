@@ -14,7 +14,6 @@ import { buryingPoints } from 'utils/buryPointMethods';
 import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import StepBar from 'components/StepBar';
 import CountDownForm from 'components/TimeDown/CountDownForm';
 import ClockS from 'components/TimeDown/ClockS';
 import circle from './img/circle.png';

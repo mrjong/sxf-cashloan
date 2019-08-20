@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Progress, Icon, InputItem, List, Modal } from 'antd-mobile';
+import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
@@ -14,13 +14,12 @@ import {
 	getOperatorStatus,
 	getMoxieData
 } from 'utils';
-import mockData from './mockData';
+// import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, loan_repay_confirm } from 'utils/analytinsType';
+import { home } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
-// import ScrollText from 'components/ScrollText';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -729,7 +728,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			: fullMinAmt;
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
-				{/* <ScrollText /> */}
 				<div className={style.warning_tip}>还到不向学生借款</div>
 				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
 					<div className={style.bankCard}>

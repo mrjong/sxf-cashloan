@@ -1,11 +1,10 @@
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
-import { bugLog, home } from 'utils/analytinsType';
+import { home } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { SXFToast } from 'utils/SXFToast';
-
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
@@ -214,7 +213,7 @@ const interceptRouteArr = [
 	'/home/crawl_progress_page',
 	'/home/crawl_fail_page',
 	'/order/wx_pay_success_page',
-	'/protocol/pdf_page',
+	// '/protocol/pdf_page',
 	'/home/loan_fenqi'
 ];
 

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Modal, Progress, InputItem, Icon, Toast } from 'antd-mobile';
+import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
 import dayjs from 'dayjs';
-import qs from 'qs';
 import { store } from 'utils/store';
 import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
@@ -17,6 +16,9 @@ import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_detail_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
+import RepayPlanModal from 'components/RepayPlanModal';
+import CouponAlert from './components/CouponAlert';
+
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -24,7 +26,7 @@ if (isIPhone) {
 		onTouchStart: (e) => e.preventDefault()
 	};
 }
-let inputRef = '';
+
 let closeBtn = true;
 const API = {
 	REPAY_INFO: '/bill/prebill', // 代还确认页面
@@ -40,7 +42,8 @@ const API = {
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink' //协议绑卡接口
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	sendCoupon: '/activeConfig/issueCoup' //拦截发放优惠券
 };
 
 let indexData = null; // 首页带过来的信息
@@ -55,7 +58,6 @@ export default class confirm_agency_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		const queryData = store.getHomeConfirmAgency();
-		// qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		indexData = queryData;
 		this.state = {
 			inputClear: false,
@@ -115,7 +117,8 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			isShowInsureModal: false, // 是否显示保险说明弹框
-			isCheckInsure: false // 是否选择了保费
+			isCheckInsure: false, // 是否选择了保费
+			showCouponAlert: false // 是否显示优惠券拦截弹窗
 		};
 	}
 
@@ -123,6 +126,7 @@ export default class confirm_agency_page extends PureComponent {
 		isSaveAmt = store.getSaveAmt();
 		store.removeSaveAmt();
 		store.removeInsuranceFlag();
+
 		let bankInfo = store.getCardData();
 		pageData = store.getRepaymentModalData();
 		store.removeRepaymentModalData();
@@ -142,6 +146,44 @@ export default class confirm_agency_page extends PureComponent {
 			this.checkUsrMemSts();
 		}
 	}
+
+	componentDidUpdate() {
+		let flag = store.getConfirmAgencyBackHome();
+		store.removeConfirmAgencyBackHome();
+		flag && this.sendCoupon();
+	}
+
+	componentWillUnmount() {
+		store.removeConfirmAgencyBackHome();
+	}
+
+	// 拦截发放优惠券
+	sendCoupon = () => {
+		if (this.state.isShowModal) {
+			this.setState({
+				isShowModal: false
+			});
+		} else {
+			this.props.$fetch
+				.post(API.sendCoupon)
+				.then((result) => {
+					if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+						this.setState({
+							showCouponAlert: true,
+							couponAlertData: {
+								coupVal: result.data.coupVal,
+								validEndTm: result.data.validEndTm
+							}
+						});
+					} else {
+						this.props.history.push('/home/home');
+					}
+				})
+				.catch(() => {
+					this.props.history.push('/home/home');
+				});
+		}
+	};
 
 	// 查询用户会员卡状态
 	checkUsrMemSts = () => {
@@ -510,7 +552,8 @@ export default class confirm_agency_page extends PureComponent {
 					this.setState({
 						repayInfo2: result.data,
 						deratePrice: result.data.deductAmount,
-						couponInfo
+						couponInfo,
+						showInterestTotal: result.data.showFlag === '1'
 					});
 					// if (result.data.data && result.data.data.usrCoupNo) {
 					// 	this.dealMoney(result.data);
@@ -914,7 +957,10 @@ export default class confirm_agency_page extends PureComponent {
 			isShowSmsModal,
 			smsCode,
 			isShowInsureModal,
-			isCheckInsure
+			isCheckInsure,
+			showCouponAlert,
+			couponAlertData,
+			showInterestTotal
 		} = this.state;
 		return (
 			<div>
@@ -1031,40 +1077,29 @@ export default class confirm_agency_page extends PureComponent {
 										<div className={[style.listValue, style.hasArrow].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
-											{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 										</div>
 									) : (
 										(repayInfo2 && (
 											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
 												无可用优惠券
 												<Icon type="right" className={style.icon} />
-												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)) || (
 											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
 												请选择
 												<Icon type="right" className={style.icon} />
-												{/* <i className={style.list_item_arrow} style={{ marginLeft: '.1rem' }} /> */}
 											</span>
 										)
 									)}
 								</li>
 								<li
-									className={repayInfo2 ? `${style.listItem} ${style.listItem3}` : style.listItem}
+									className={
+										repayInfo2 && showInterestTotal ? `${style.listItem} ${style.listItem3}` : style.listItem
+									}
 									onClick={this.handleShowModal}
 								>
 									<label>{repayInfo2 && repayInfo2.perdUnit === 'D' ? '应还金额(元)' : '还款计划'}</label>
 									<div>
-										{/* {repayInfo2 && repayInfo2.perdUnit === 'D' ? (
-											<span className={style.listValue}>{repayInfo2.perdTotAmt}</span>
-										) : (
-											(repayInfo2 && (
-												<span className={[style.listValue, style.listValue3, style.hasArrow].join(' ')}>
-													<span className={style.moneyTit}>优惠后合计</span><span className={style.derateMoney}>{4950}</span>元
-													<Icon type="right" className={style.icon} />
-												</span>
-											)) || <span className={style.listValue2}>暂无</span>
-                    )} */}
 										{(repayInfo2 && (
 											<span
 												className={
@@ -1073,17 +1108,21 @@ export default class confirm_agency_page extends PureComponent {
 														: [style.listValue, style.listValue3, style.hasArrow].join(' ')
 												}
 											>
-												<span className={style.moneyTit}>优惠后合计</span>
-												<span className={style.derateMoney}>
-													{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
-												</span>
-												元
+												{showInterestTotal && (
+													<span>
+														<span className={style.moneyTit}>优惠后合计</span>
+														<span className={style.derateMoney}>
+															{repayInfo2 && repayInfo2.intrFeeTotAmtAfterDeduce}
+														</span>
+														元
+													</span>
+												)}
 												{repayInfo2 && repayInfo2.perdUnit !== 'D' && (
 													<Icon type="right" className={style.icon} />
 												)}
 											</span>
 										)) || <span className={style.listValue2}>暂无</span>}
-										{repayInfo2 && (
+										{repayInfo2 && showInterestTotal && (
 											<div
 												className={
 													repayInfo2 && repayInfo2.perdUnit === 'D'
@@ -1190,6 +1229,7 @@ export default class confirm_agency_page extends PureComponent {
 							</div>
 						</div>
 					</Modal>
+
 					<Modal
 						wrapClassName="confirm_agency_warp"
 						visible={isShowTipModal}
@@ -1214,6 +1254,7 @@ export default class confirm_agency_page extends PureComponent {
 							</p>
 						</div>
 					</Modal>
+
 					<Modal
 						wrapClassName="modal_VIPTip_warp"
 						visible={isShowVIPModal}
@@ -1244,27 +1285,32 @@ export default class confirm_agency_page extends PureComponent {
 							</li>
 						</ul>
 					</Modal>
-					<Modal visible={isShowModal} transparent onClose={this.handleCloseModal}>
-						<div className={style.modal_content}>
-							<Icon
-								type="cross"
-								className={style.modal_close_btn}
-								onClick={this.handleCloseModal}
-								color="#333"
-							/>
-							<h2 className={style.modal_title}>还款计划</h2>
-							<ul className={style.bill_list}>
-								{repayInfo2 &&
-									repayInfo2.perd &&
-									repayInfo2.perd.map((item) => (
-										<li className={style.list_item} key={item.perdNum}>
-											<label className={style.item_name}>{`${item.perdNum}/${repayInfo2.perdCnt}期`}</label>
-											<span className={style.item_value}>{item.perdTotAmt}</span>
-										</li>
-									))}
-							</ul>
-						</div>
-					</Modal>
+
+					<RepayPlanModal
+						visible={isShowModal}
+						onClose={this.handleCloseModal}
+						data={repayInfo2.perd}
+						loanMoney={this.state.cardBillAmt}
+						history={this.props.history}
+						goPage={() => {
+							store.setSaveAmt(true);
+							store.setRepaymentModalData(this.state);
+							this.props.history.push('/home/payment_notes');
+						}}
+					/>
+
+					<CouponAlert
+						visible={showCouponAlert}
+						data={couponAlertData}
+						history={this.props.history}
+						onConfirm={() => {
+							this.setState({
+								showCouponAlert: false
+							});
+							this.requestGetRepayInfo();
+						}}
+					/>
+
 					{isShowSmsModal && (
 						<SmsModal
 							onCancel={() => {}}
