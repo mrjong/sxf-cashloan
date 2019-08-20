@@ -159,31 +159,6 @@ export default class moxie_bank_list_page extends Component {
 		// const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.moxie_bank_list_page}>
-				{/* {needNextUrl ? (
-					<StepBar current={3} />
-				) : (
-					<div className={style.moxie_bank_top}>
-						<div className={style.title}>
-							选择发卡银行
-							<span className={style.subTitle}>获3项优质服务</span>
-						</div>
-						<div className={style.bankDesc}>
-							<span>
-								<i className={style.dot} />
-								高效管理信用卡
-							</span>
-							<span>
-								<i className={style.dot} />
-								一键同步账单
-							</span>
-							<span>
-								<i className={style.dot} />
-								多重加密
-							</span>
-						</div>
-					</div>
-				)} */}
-
 				{this.state.bankList && this.state.bankList.length > 0 ? (
 					<div>
 						<div className={style.tipsBox}>
@@ -200,7 +175,6 @@ export default class moxie_bank_list_page extends Component {
 						<div className={style.infromationTitle}>
 							<p>选择信用卡所在银行</p>
 							<span className={style.desc}>登录网上银行，自动查询并添加信用卡</span>
-							{/* <div className={style.subTitle_info}>通过网银添加</div> */}
 						</div>
 						<div className={style.bankList}>
 							{this.state.bankList.map((item) => {

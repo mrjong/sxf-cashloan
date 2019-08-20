@@ -236,7 +236,7 @@ const interceptRouteArr = [
 	'/home/crawl_progress_page',
 	'/home/crawl_fail_page',
 	'/order/wx_pay_success_page',
-	'/protocol/pdf_page',
+	// '/protocol/pdf_page',
 	'/home/loan_fenqi'
 ];
 
