@@ -6,10 +6,10 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, isWXOpen, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
-import { login } from 'utils/analytinsType';
+import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
@@ -22,8 +22,11 @@ const API = {
 	imageCode: '/signup/sendImg',
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
+	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
+
+let entryPageTime = '';
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -109,6 +112,7 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
+		entryPageTime = new Date();
 	}
 
 	componentWillUnmount() {
@@ -120,6 +124,11 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
+		let exitPageTime = new Date();
+		let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+		buriedPointEvent(daicao.loginPageTime, {
+			durationTime: durationTime
+		});
 	}
 
 	// 校验手机号
@@ -145,8 +154,7 @@ export default class login_page extends PureComponent {
 		}
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				// 埋点-注册登录页一键代还
-				buriedPointEvent(login.submit);
+				buriedPointEvent(daicao.loginBtn);
 				let param = {
 					smsJrnNo: this.state.smsJrnNo, // 短信流水号
 					osType, // 操作系统
@@ -166,7 +174,15 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
-						this.props.history.replace('/others/download_page');
+						if (!store.getQueryUsrSCOpenId()) {
+							this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
+								if (res.msgCode === 'PTM0000') {
+									sa.login(res.data);
+									store.setQueryUsrSCOpenId(res.data);
+								}
+								this.props.history.replace('/others/download_page');
+							});
+						}
 					},
 					(error) => {
 						error.msgInfo &&
@@ -196,8 +212,6 @@ export default class login_page extends PureComponent {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
-				// 埋点-登录页获取验证码
-				buriedPointEvent(login.getCode);
 				let param = {};
 				if (this.state.disabledInput) {
 					param = {
