@@ -13,7 +13,6 @@ import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
 import Cashier from './components/Cashier';
-
 const API = {
 	qryDtl: '/bill/qryDtl',
 	payback: '/bill/paySubmit',
@@ -81,7 +80,8 @@ export default class order_detail_page extends PureComponent {
 						color: '#333'
 					}
 				]
-			}
+			},
+			disDisRepayAmt: 0 // 优惠金额
 		};
 	}
 	componentWillMount() {
@@ -174,6 +174,7 @@ export default class order_detail_page extends PureComponent {
 						}
 						this.setState(
 							{
+								disDisRepayAmt: res.data[0].disDisRepayAmt,
 								detailArr: res.data[0].totalList,
 								isAdvance,
 								totalAmt: res.data[0].totalAmt,
@@ -1045,7 +1046,8 @@ export default class order_detail_page extends PureComponent {
 			couponPrice,
 			cashierVisible,
 			repayOrdNo,
-			penaltyInfo
+			penaltyInfo,
+			disDisRepayAmt = 0
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -1060,6 +1062,7 @@ export default class order_detail_page extends PureComponent {
 			perdNum = '',
 			waitRepAmt = '',
 			perdList,
+			discRedRepay = false,
 			waitRepAmtForShow = ''
 		} = billDesc;
 		const itemList = [
@@ -1150,9 +1153,10 @@ export default class order_detail_page extends PureComponent {
 						))}
 					</ul>
 					{perdNum !== 999 && !hideBtn && (
-						<span className={styles.payAll} onClick={this.payAllOrder}>
+						<div className={styles.payAll} onClick={this.payAllOrder}>
+							{discRedRepay && <i />}
 							一键结清
-						</span>
+						</div>
 					)}
 				</Panel>
 				<Panel title="还款计划" className={styles.mt24}>
@@ -1247,7 +1251,7 @@ export default class order_detail_page extends PureComponent {
 									item.feeAmt ? (
 										<div className={styles.modal_flex} key={index}>
 											<span className={styles.modal_label}>{item.feeNm}</span>
-											<span className={styles.modal_value}>
+											<span className={styles.modal_value_desc}>
 												{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元
 											</span>
 										</div>
@@ -1285,6 +1289,13 @@ export default class order_detail_page extends PureComponent {
 								</span>
 								&nbsp;
 								<i />
+							</div>
+						) : null}
+
+						{disDisRepayAmt ? (
+							<div className={styles.modal_flex}>
+								<span className={styles.modal_label}>提前结清优惠</span>
+								<span className={`${styles.modal_value_red}`}>-{disDisRepayAmt}元</span>
 							</div>
 						) : null}
 
