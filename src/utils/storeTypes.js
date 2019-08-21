@@ -88,5 +88,6 @@ export const storeTypes = {
 	NoLoginToken: 'NoLoginToken', // 设置 图片验证码 noLoginToken
 	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
 	TencentBackUrl: 'TencentBackUrl', // 跳转到人脸识别返回的url
-	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome' // 签约页控制物理返回到首页标识
+	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome', // 签约页控制物理返回到首页标识
+	OrderRepayInfo: 'OrderRepayInfo' //还款信息页数据
 };

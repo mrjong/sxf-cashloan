@@ -64,26 +64,11 @@ export default class order_detail_page extends PureComponent {
 			totalAmtForShow: '',
 			couponPrice: '', // 优惠劵计算过的金额
 			cashierVisible: false,
-			penaltyInfo: {
-				// 罚息数据
-				label: {
-					name: '罚息',
-					brief: '逾期管理费'
-				},
-				extra: [
-					{
-						name: '10.00',
-						color: '#333'
-					},
-					{
-						name: '32.00',
-						color: '#333'
-					}
-				]
-			},
+
 			disDisRepayAmt: 0 // 优惠金额
 		};
 	}
+
 	componentWillMount() {
 		store.removeInsuranceFlag();
 		if (!store.getBillNo()) {
@@ -109,6 +94,7 @@ export default class order_detail_page extends PureComponent {
 	componentWillUnmount() {
 		store.removeCardData();
 	}
+
 	queryExtendedPayType = () => {
 		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
 			if (res.msgCode === 'PTM0000') {
@@ -234,24 +220,11 @@ export default class order_detail_page extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					// const calcMoney = res.data.perdNum !== 999 && ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt*100 - res.data.perdList[res.data.perdNum - 1].deductionAmt*100)/100).toFixed(2);
 					res.data.perdNum !== 999 &&
 						this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-					// res.data.perdNum !== 999 && this.setState({ money: calcMoney });
 					res.data.perdNum !== 999 &&
 						this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-					// res.data.perdNum !== 999 && this.setState({ ItrtAmt: res.data.perdList[res.data.perdNum - 1].perdItrtAmt })
-					// if (res.data.data && res.data.data.coupVal && res.data.perdNum !== 999) {
-					//     // 优惠劵最大不超过每期利息
-					//     if (parseFloat(res.data.data.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
-					//         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) });
-					//         res.data.perdNum !== 999 && this.setState({ showItrtAmt: true });
 
-					//     } else {
-					//         res.data.perdNum !== 999 && this.setState({ showItrtAmt: false });
-					//         res.data.perdNum !== 999 && this.setState({ money: ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.data.coupVal * 100) / 100).toFixed(2) });
-					//     }
-					// }
 					if (Number(res.data.insuranceAmt)) {
 						let insuranceStsText = '';
 						let insuranceStsColor = '';
@@ -317,21 +290,6 @@ export default class order_detail_page extends PureComponent {
 										if (res.data && res.data.data && res.data.perdNum !== 999) {
 											this.dealMoney(res.data);
 										}
-										// // 前端计算优惠劵减免金额
-										// if (couponInfo && couponInfo !== {}) {
-										//     this.setState({
-										//         money: couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-										//             ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - res.data.perdList[res.data.perdNum - 1].perdItrtAmt * 100) / 100).toFixed(2) :
-										//             couponInfo.coupVal && parseFloat(couponInfo.coupVal) <= parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt) ?
-										//                 ((res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt * 100 - couponInfo.coupVal * 100) / 100).toFixed(2) :
-										//                 res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt, // 优惠劵最大不超过每期利息
-										//     })
-										//     if (couponInfo.coupVal && parseFloat(couponInfo.coupVal) > parseFloat(res.data.perdList[res.data.perdNum - 1].perdItrtAmt)) {
-										//         this.setState({ showItrtAmt: true });
-										//     } else {
-										//         this.setState({ showItrtAmt: false });
-										//     }
-										// }
 									}
 								);
 							} else {
@@ -456,17 +414,6 @@ export default class order_detail_page extends PureComponent {
 			} else {
 				item.showDesc = false;
 			}
-			// 已还金额-减免金额
-			// let perdTotRepAmt = 0;
-			// 暂时把优惠劵的金额加在利息上，改变后台返回的利息数量
-			// for(let j=0; j < item.feeInfos.length; j++){
-			//     if(item.feeInfos[j].feeNm === '利息'){
-			//         item.feeInfos[j].feeAmt = (item.feeInfos[j].feeAmt * 100 + perdList[i].deductionAmt * 100)/100
-			//     }
-			//     if(item.feeInfos[j].feeNm === '减免金额'){
-			//         perdTotRepAmt = item.feeInfos[j].feeAmt;
-			//     }
-			// }
 
 			item.feeInfos.push({
 				feeNm: '优惠劵',
@@ -480,13 +427,10 @@ export default class order_detail_page extends PureComponent {
 				item.feeInfos.push({
 					feeNm: '已还金额',
 					feeAmt: perdList[i].perdTotRepAmt
-					// feeAmt: (perdList[i].perdTotRepAmt*100 + perdTotRepAmt*100)/100,
 				});
 				item.feeInfos.push({
 					feeNm: '剩余应还',
 					feeAmt: Number(perdList[i].perdWaitRepAmt)
-					// feeAmt: ((perdList[i].perdWaitRepAmt*100 - perdList[i].deductionAmt*100)/100).toFixed(2),
-					// feeAmt: perdList[i].perdSts === '4' ? Number(perdList[i].perdTotAmt) : Number(perdList[i].perdWaitRepAmt)
 				});
 			}
 			perdListArray.push(item);
@@ -495,64 +439,7 @@ export default class order_detail_page extends PureComponent {
 			orderList: perdListArray
 		});
 	};
-	// 展开隐藏
-	clickCb = (item) => {
-		switch (item.arrowHide) {
-			case 'empty':
-				break;
-			case 'up':
-				item = {
-					...item,
-					arrowHide: 'down',
-					showDesc: false
-				};
-				break;
-			case 'down':
-				item = {
-					...item,
-					arrowHide: 'up',
-					showDesc: true
-				};
 
-				break;
-			default:
-				break;
-		}
-		for (let i = 0; i < this.state.orderList.length; i++) {
-			if (i !== item.key) {
-				this.state.orderList[i].showDesc = false;
-				this.state.orderList[i].arrowHide = 'down';
-			}
-		}
-		this.state.orderList[item.key] = item;
-		this.setState({
-			orderList: [...this.state.orderList]
-		});
-	};
-	checkClickCb = (item) => {
-		if (item.isChecked) {
-			item = {
-				...item,
-				isChecked: false
-			};
-		} else {
-			item = {
-				...item,
-				isChecked: true
-			};
-		}
-		for (let i = 0; i < this.state.orderList.length; i++) {
-			if (i < item.key) {
-				this.state.orderList[i].isChecked = true;
-			} else {
-				this.state.orderList[i].isChecked = false;
-			}
-		}
-		this.state.orderList[item.key] = item;
-		this.setState({
-			orderList: [...this.state.orderList]
-		});
-	};
 	// 处理输入的验证码
 	handleSmsCodeChange = (smsCode) => {
 		this.setState({
@@ -947,27 +834,6 @@ export default class order_detail_page extends PureComponent {
 		} else {
 			return <span>不使用</span>;
 		}
-		// if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-		//     if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
-		//         if (this.state.showItrtAmt) {
-		//             return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
-		//         } else {
-		//             return (<span>-{this.state.couponInfo.coupVal}元</span>)
-		//         }
-		//     } else {
-		//         return (<span>不使用</span>)
-		//     }
-
-		// } else {
-		//     if (this.state.billDesc.data && this.state.billDesc.data.coupVal) {
-		//         if (this.state.showItrtAmt) {
-		//             return (<span>-{this.state.ItrtAmt}元/仅可减免当期利息金额</span>)
-		//         } else {
-		//             return (<span>-{this.state.billDesc.data.coupVal}元</span>)
-		//         }
-
-		//     }
-		// }
 	};
 	// 一键结清
 	payAllOrder = () => {
@@ -978,7 +844,12 @@ export default class order_detail_page extends PureComponent {
 		buriedPointEvent(order.repayment, {
 			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'
 		});
-		this.getModalDtlInfo(this.showPayModal, false);
+		store.setOrderRepayInfo({
+			insureInfo: this.state.insureInfo,
+			orderList: this.state.orderList
+		});
+		this.props.history.push('/order/order_repay_page');
+		// this.getModalDtlInfo(this.showPayModal, false);
 	};
 
 	showPayModal = (boolen) => {
@@ -1040,13 +911,11 @@ export default class order_detail_page extends PureComponent {
 			payType,
 			payTypes,
 			openIdFlag,
-			insureInfo,
 			insureFeeInfo,
 			isInsureValid,
 			couponPrice,
 			cashierVisible,
 			repayOrdNo,
-			penaltyInfo,
 			disDisRepayAmt = 0
 		} = this.state;
 		const {
@@ -1159,50 +1028,10 @@ export default class order_detail_page extends PureComponent {
 						</div>
 					)}
 				</Panel>
-				<Panel title="还款计划" className={styles.mt24}>
-					<Lists
-						listsInf={this.state.orderList}
-						insureFee={insureInfo}
-						clickCb={this.clickCb}
-						className={styles.order_list}
-						isCheckbox={true}
-						checkClickCb={this.checkClickCb}
-						penaltyInfo={penaltyInfo}
-					/>
-				</Panel>
+
 				{perdNum !== 999 && !hideBtn ? (
 					<div className={styles.submit_btn}>
-						<SXFButton onClick={this.activePay}>主动还款</SXFButton>
-						{/* 包含保费,并且保费为待支付状态 perdList[perdNum - 1].perdTotAmt 与 money 取最小值？ */}
-						{isInsureValid && (
-							<div className={styles.message}>
-								此次主动还款，将用于还第
-								<span className={styles.red}>
-									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
-								</span>
-								期账单，以及支付保费，请保证卡内余额大于
-								<span className={styles.red}>
-									{perdList &&
-										perdNum &&
-										(parseFloat(perdList[perdNum - 1].perdWaitRepAmt) + parseFloat(insureFeeInfo)).toFixed(2)}
-								</span>
-								元
-							</div>
-						)}
-						{/* 不包含保费或者有保费，保费为处理中或者已支付状态 */}
-						{!isInsureValid && (
-							<div className={styles.message}>
-								此次主动还款，将用于还第
-								<span className={styles.red}>
-									{perdNum}/{perdUnit === 'M' ? perdLth : '1'}
-								</span>
-								期账单，请保证卡内余额大于
-								<span className={styles.red}>
-									{perdList && perdNum && parseFloat(perdList[perdNum - 1].perdWaitRepAmt).toFixed(2)}
-								</span>
-								元
-							</div>
-						)}
+						<SXFButton onClick={this.activePay}>去还款</SXFButton>
 					</div>
 				) : (
 					<div className={styles.mb50} />
@@ -1232,14 +1061,6 @@ export default class order_detail_page extends PureComponent {
 						<div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
-								{/* {isPayAll ? isNewsContract ? (
-									totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
-								) : (
-									waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
-								) : (
-									(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
-									(money && parseFloat(money).toFixed(2))
-                )}元 */}
 								{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 							</span>
 							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
@@ -1260,14 +1081,6 @@ export default class order_detail_page extends PureComponent {
 								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
 									<span className={styles.modal_label}>本次应还总金额</span>
 									<span className={styles.modal_value}>
-										{/* {isPayAll ? isNewsContract ? (
-											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
-										) : (
-											waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
-										) : (
-											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
-											(money && parseFloat(money).toFixed(2))
-                    )}元 */}
 										{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 									</span>
 								</div>

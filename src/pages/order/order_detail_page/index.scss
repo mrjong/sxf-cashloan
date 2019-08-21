@@ -2,11 +2,10 @@
 
 .order_detail_page {
 	flex: 1;
-	// padding: 0.24rem 0 0;
 	background-color: #f1f1f1;
 	.topBlock {
 		background-color: #f1f1f1;
-		height: 0.24rem;
+		height: 30px;
 	}
 	.overdueEntryTip {
 		text-align: center;
@@ -49,14 +48,17 @@
 	}
 	.loadInfBox {
 		position: relative;
+		margin: 0 30px;
+		border-radius: 6px;
 	}
 
 	.payAll {
 		position: absolute;
 		top: 0.06rem;
 		right: 0.08rem;
-		padding: 0.3rem;
+		padding: 20px 30px;
 		color: #397be6;
+		font-size: 26px;
 		i {
 			position: absolute;
 			right: 10px;
@@ -69,26 +71,23 @@
 		}
 	}
 	.panel_conten {
-		padding: 0.3rem;
+		padding-top: 30px;
 		.list_item {
 			display: flex;
 			justify-content: space-between;
-			padding: 0.25rem 0;
+			padding-bottom: 30px;
 		}
 		.item_name {
 			font-size: 0.3rem;
-			color: #252729;
+			color: #868e9e;
 			display: flex;
 			align-items: center;
+			font-weight: 400;
 		}
 		.item_value {
 			font-size: 0.3rem;
-			color: #333;
-			font-weight: bold;
+			color: #868e9e;
 		}
-	}
-	.mt24 {
-		margin-top: 22px;
 	}
 	.order_list {
 		:global {
@@ -292,7 +291,7 @@ i.arrow_up {
 	width: 670px;
 }
 .submit_btn {
-	margin: 45px 65px;
+	margin: 120px 58px;
 }
 .message {
 	font-size: 24px;
