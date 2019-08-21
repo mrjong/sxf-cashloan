@@ -31,7 +31,9 @@ export default class order_repay_page extends PureComponent {
 						color: '#333'
 					}
 				]
-			}
+			},
+			totalMoney: 0,
+			showTipModal: false
 		};
 	}
 
@@ -44,7 +46,14 @@ export default class order_repay_page extends PureComponent {
 			penaltyInfo
 		});
 	}
+
+	componentWillUnmount() {
+		store.removeOrderRepayInfo();
+	}
+
 	checkClickCb = (item) => {
+		console.log(item);
+		let totalMoney = 0;
 		if (item.isChecked) {
 			item = {
 				...item,
@@ -56,9 +65,21 @@ export default class order_repay_page extends PureComponent {
 				isChecked: true
 			};
 		}
+
 		for (let i = 0; i < this.state.orderList.length; i++) {
-			if (i < item.key) {
+			if (i <= item.key) {
 				this.state.orderList[i].isChecked = true;
+
+				for (let j = 0; j < this.state.orderList[i].feeInfos.length; j++) {
+					let itm = this.state.orderList[i].feeInfos[j];
+					if (itm.feeNm === '剩余应还') {
+						totalMoney += itm.feeAmt;
+						console.log(totalMoney);
+					}
+				}
+				this.setState({
+					totalMoney: Number(totalMoney).toFixed(2)
+				});
 			} else {
 				this.state.orderList[i].isChecked = false;
 			}
@@ -104,24 +125,39 @@ export default class order_repay_page extends PureComponent {
 		});
 	};
 
+	handleCloseTipModal = () => {
+		this.setState({
+			showTipModal: !this.state.showTipModal
+		});
+	};
+
 	render() {
-		const { insureInfo, orderList, penaltyInfo } = this.state;
+		const { insureInfo, orderList, penaltyInfo, totalMoney, showTipModal } = this.state;
 
 		return (
 			<div className={styles.order_repay_page}>
 				<Panel title="其他费用">
-					<Lists
-						insureFee={insureInfo}
-						clickCb={this.clickCb}
-						className={styles.order_list}
-						isCheckbox={true}
-						checkClickCb={this.checkClickCb}
-					/>
+					<Lists insureFee={insureInfo} className={styles.order_list} isCheckbox={true} />
 				</Panel>
-				<Panel title="账单">
+				<Panel
+					title="账单"
+					extra={{
+						style: {
+							color: '#FE6666',
+							fontSize: '0.34rem',
+							float: 'right',
+							position: 'relative',
+							paddingRight: '0.3rem'
+						},
+						text: '已逾期(45天)',
+						clickCb: () => {
+							this.handleCloseTipModal();
+						},
+						icon: <i className={styles.extra_icon} />
+					}}
+				>
 					<Lists
 						listsInf={orderList}
-						// insureFee={insureInfo}
 						clickCb={this.clickCb}
 						className={styles.order_list}
 						isCheckbox={true}
@@ -129,6 +165,37 @@ export default class order_repay_page extends PureComponent {
 						penaltyInfo={penaltyInfo}
 					/>
 				</Panel>
+				<div className={styles.fixed_button}>
+					<span className={styles.money_show}>
+						共计<em>{totalMoney}</em>元
+					</span>
+					<SXFButton onClick={this.handleClickConfirm} className={styles.sxf_btn}>
+						立即还款
+					</SXFButton>
+					<Modal
+						wrapClassName="order_repay_page"
+						visible={showTipModal}
+						transparent
+						footer={[
+							{
+								text: '我知道了',
+								onPress: () => {
+									this.handleCloseTipModal();
+								}
+							}
+						]}
+					>
+						<div className={styles.modal_tip_content}>
+							<h3 className={styles.modal_title}>逾期天数说明</h3>
+							<p className={styles.modal_desc}>
+								任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
+							</p>
+							<p className={styles.modal_desc}>
+								您的逾期开始日期：<em>2019年05月22日</em>
+							</p>
+						</div>
+					</Modal>
+				</div>
 			</div>
 		);
 	}

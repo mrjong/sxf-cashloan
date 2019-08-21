@@ -14,7 +14,14 @@ export default class Lists extends PureComponent {
 		let extraList = [];
 		list.forEach((item, index) => {
 			extraList.push(
-				<span key={index} style={{ color: item.color, fontSize: '0.34rem' }}>
+				<span
+					key={index}
+					style={{
+						color: item.color,
+						fontWeight: '500',
+						fontSize: item.fontSize ? item.fontSize : '0.26rem'
+					}}
+				>
 					{item.name}
 				</span>
 			);
@@ -39,6 +46,7 @@ export default class Lists extends PureComponent {
 				<List>
 					{insureFee && (
 						<Item
+							className={styles.checkList}
 							// className={insureFee.label.className ? styles.hasIcon : null}
 							arrow={'empty'}
 							extra={
@@ -51,38 +59,48 @@ export default class Lists extends PureComponent {
 								)
 							}
 						>
+							{isCheckbox && (
+								<span
+									className={
+										true ? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}` : styles.checkBoxStyle
+									}
+								/>
+							)}
 							{insureFee.label.name}
+							{insureFee.label.brief ? <Brief>{insureFee.label.brief}</Brief> : null}
 						</Item>
 					)}
 					{penaltyInfo && (
 						<Item
-							// className={insureFee.label.className ? styles.hasIcon : null}
+							className={styles.checkList}
 							arrow={'empty'}
 							extra={
 								Object.prototype.toString.call(penaltyInfo.extra) === '[object Array]' ? (
 									this.getExtra(penaltyInfo.extra)
 								) : (
 									<span style={{ color: insureFee.extra && insureFee.extra.color }}>
-										{penaltyInfo.extra && penaltyInfo.extra.name}
+										{insureFee.extra && insureFee.extra.name}
 									</span>
 								)
 							}
 						>
-							{isShowPenaltyCheck && (
+							{isCheckbox && (
 								<span
 									onClick={(e) => {
 										e.stopPropagation();
-										checkClickCb(item);
+										checkClickCb({ isChecked: false });
 									}}
 									className={
-										item.isChecked
-											? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
-											: styles.checkBoxStyle
+										true ? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}` : styles.checkBoxStyle
 									}
 								/>
 							)}
-							<p>{penaltyInfo.label.name}</p>
-							{penaltyInfo.label.brief}
+							{penaltyInfo.label.name}
+							{penaltyInfo.label.brief ? (
+								<Brief style={{ fontWeight: '500', color: '#121C32', fontSize: '0.3rem' }}>
+									{penaltyInfo.label.brief}
+								</Brief>
+							) : null}
 						</Item>
 					)}
 					{listsInf &&

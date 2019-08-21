@@ -22,15 +22,14 @@
 		}
 		.am-list-item .am-list-line .am-list-extra {
 			padding: 0;
-			line-height: 1;
+			line-height: 1.5;
 			margin-right: 0;
+			margin-top: -16px;
 		}
 		.am-list-extra span {
-			font-size: 28px;
 			display: block;
 			& + span {
-				font-size: 28px !important;
-				line-height: 1.5;
+				font-size: 26px;
 			}
 		}
 		.am-list-item .am-list-line .am-list-arrow {
@@ -48,7 +47,7 @@
 			margin-right: 0;
 		}
 		.am-list-item .am-list-line .am-list-brief {
-			font-size: 28px;
+			font-size: 26px;
 			color: #868e9e;
 			margin-top: 8px;
 			font-weight: normal;
@@ -71,6 +70,7 @@
 		:global {
 			.am-list-content {
 				padding-left: 50px;
+				overflow: visible;
 			}
 		}
 	}
@@ -81,11 +81,12 @@
 		transform: translate(0, -50%);
 		width: 34px;
 		height: 34px;
-		border: 1px solid red;
+		background-image: url('../../assets/images/home/unChecked_ico.png');
+		background-size: cover;
+		background-repeat: no-repeat;
 	}
 	.checkBoxActiveStyle {
-		border-color: transparent;
-		background: red;
+		background-image: url('../../assets/images/home/checked_ico.png');
 	}
 }
 :global {

@@ -1,0 +1,398 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.order_detail_page {
+	flex: 1;
+	background-color: #f1f1f1;
+	.topBlock {
+		background-color: #f1f1f1;
+		height: 30px;
+	}
+	.overdueEntryTip {
+		text-align: center;
+		font-size: 30px;
+		padding: 10px;
+		background-color: #f9d45e;
+		span {
+			color: #f66;
+		}
+	}
+	.overdueEntry {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: #ffdfdf;
+		height: 80px;
+		padding: 0 30px;
+		color: #f66;
+		font-size: 30px;
+		.overdueItem {
+			display: flex;
+			align-items: center;
+		}
+		.warningIco {
+			width: 40px;
+			height: 40px;
+			@include bg-image('../../../assets/images/order/warn_ico');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			margin-right: 19px;
+		}
+		.entryIco {
+			width: 16px;
+			height: 28px;
+			@include bg-image('../../../assets/images/order/entry_ico');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			margin-left: 19px;
+		}
+	}
+	.loadInfBox {
+		position: relative;
+		margin: 0 30px;
+		border-radius: 6px;
+	}
+
+	.payAll {
+		position: absolute;
+		top: 0.06rem;
+		right: 0.08rem;
+		padding: 20px 30px;
+		color: #397be6;
+		font-size: 26px;
+		i {
+			position: absolute;
+			right: 10px;
+			top: 0;
+			display: block;
+			width: 34px;
+			height: 28px;
+			background-size: 34px 28px;
+			background-image: url(./img/youhui.png);
+		}
+	}
+	.panel_conten {
+		padding-top: 30px;
+		.list_item {
+			display: flex;
+			justify-content: space-between;
+			padding-bottom: 30px;
+		}
+		.item_name {
+			font-size: 0.3rem;
+			color: #868e9e;
+			display: flex;
+			align-items: center;
+			font-weight: 400;
+		}
+		.item_value {
+			font-size: 0.3rem;
+			color: #868e9e;
+		}
+	}
+	.order_list {
+		:global {
+			.am-list-brief {
+				font-weight: normal;
+			}
+			.am-list-item {
+				min-height: 140px;
+				.am-list-line {
+					.am-list-content {
+						font-weight: 500;
+						font-size: 34px;
+					}
+				}
+			}
+			.am-list-extra span:first-child {
+				margin-bottom: 6px;
+				font-weight: 500;
+			}
+		}
+	}
+}
+.modal_box {
+	padding-bottom: 56px;
+}
+.modal_weixin {
+	padding: 20px 30px;
+	.flex_div {
+		display: flex;
+		margin-top: 45px;
+		.bank {
+			left: 20px;
+			top: 18px;
+			width: 31px;
+			opacity: 0.5;
+			height: 25px;
+			background-size: 31px 25px;
+			background-image: url(./img/bankpay.png);
+		}
+		.wx {
+			left: 30px;
+			top: 18px;
+			width: 30px;
+			height: 27px;
+			opacity: 0.5;
+			background-size: 30px 27px;
+			background-image: url(./img/wxpay.png);
+		}
+		.jian {
+			position: absolute;
+			right: -20px;
+			top: -30px;
+			width: 34px;
+			height: 28px;
+			z-index: 100;
+			background-image: url('./img/jian.png');
+			background-size: 100% 100%;
+		}
+		.item {
+			margin-right: 60px;
+			padding: 5px 20px 10px 65px;
+			border-radius: 30px;
+			border: 1px solid #868e9e;
+			font-size: 26px;
+			width: 80px;
+			height: 45px;
+			line-height: 50px;
+			color: #868e9e;
+			position: relative;
+			&.active {
+				border: 1px solid #f66;
+				color: #121c32;
+				i {
+					opacity: 1;
+				}
+			}
+			i {
+				position: absolute;
+				display: inline-block;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+}
+.modal_flex {
+	display: flex;
+	position: relative;
+	padding: 20px 30px;
+	span {
+		flex: 1;
+	}
+	i {
+		@include setArrow(right, 12px, #a9aeb6, 1px);
+		top: 16px;
+	}
+}
+.modal_flex2 {
+	span {
+		flex: 5;
+	}
+	span:first-child {
+		flex: 1;
+	}
+}
+i.arrow_down {
+	@include setArrow(down, 12px, #a9aeb6, 1px);
+	top: 14px;
+	margin-left: 10px;
+}
+i.arrow_up {
+	@include setArrow(top, 12px, #a9aeb6, 1px);
+	top: 18px;
+	margin-left: 10px;
+}
+.feeDetail {
+	background: #f7f8fa;
+	margin: 0 30px;
+	padding: 14px 30px 0;
+	.modal_flex {
+		margin-top: 10px;
+		border-bottom: none;
+		padding: 0;
+	}
+	.modal_label,
+	.modal_value {
+		font-size: 28px;
+		color: #868e9e;
+	}
+	.sum_total {
+		border-top: 1px solid #e0e0e0;
+		padding: 24px 0 15px 0;
+		margin-top: 24px;
+	}
+}
+
+.modal_title {
+	font-size: 36px;
+	height: 100px;
+	line-height: 100px;
+	color: #121c32;
+	font-weight: 700;
+	text-align: center;
+	position: relative;
+	background-color: #f7f8fa;
+	.modal_close_btn {
+		position: absolute;
+		top: 25px;
+		right: 25px;
+	}
+}
+.modal_notice {
+	height: 50px;
+	line-height: 50px;
+	background-color: #ffeeef;
+	overflow: hidden;
+	margin-bottom: 20px;
+	&::before {
+		content: '';
+		display: inline-block;
+		width: 26px;
+		height: 26px;
+		background: url('./img/notice.png') no-repeat;
+		background-size: cover;
+		position: relative;
+		top: 4px;
+	}
+	.text {
+		font-size: 22px;
+		padding-left: 16px;
+		color: #f66;
+	}
+}
+.modal_label {
+	font-size: 30px;
+	color: #121c32;
+	text-align: left;
+}
+.modal_value_desc {
+	text-align: right;
+	font-size: 30px;
+	color: #868e9e;
+}
+.modal_value {
+	text-align: right;
+	font-size: 30px;
+	font-weight: bold;
+	font-family: 'PingFangSC-Semibold';
+	color: #121c32;
+}
+.modal_value_red {
+	text-align: right;
+	font-size: 30px;
+	font-weight: bold;
+	font-family: 'PingFangSC-Semibold';
+	color: #f66;
+}
+
+.modal_btn {
+	font-weight: 800;
+	margin-top: 65px;
+	width: 670px;
+}
+.submit_btn {
+	margin: 120px 58px;
+}
+.message {
+	font-size: 24px;
+	color: #868e9e;
+	margin-top: 30px;
+	.red {
+		color: #fe6666;
+	}
+}
+.mb50 {
+	margin-bottom: 50px;
+}
+
+.order_repay_page {
+	margin: 30px 30px 180px;
+
+	.extra_icon {
+		position: absolute;
+		right: 0;
+		top: 0;
+		display: inline-block;
+		background: url('../../../assets/images/home/tip_ico.png') no-repeat;
+		background-size: cover;
+		width: 24px;
+		height: 24px;
+	}
+
+	.fixed_button {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		background-color: #fff;
+		z-index: 100;
+		box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1);
+
+		.money_show {
+			font-size: 36px;
+			color: #868e9e;
+			font-weight: 500;
+
+			em {
+				color: #fe6666;
+			}
+		}
+
+		.sxf_btn {
+			width: 320px;
+			height: 100px;
+			font-size: 36px;
+			color: #121c32;
+			border-radius: 50px;
+			margin: 20px 0 40px;
+		}
+	}
+}
+.modal_title {
+	color: #121c32;
+	font-size: 34px;
+	margin-bottom: 10px;
+	&::before {
+		content: '';
+		display: inline-block;
+		background: url('../../../assets/images/order/mark_icon.png') no-repeat;
+		background-size: cover;
+		width: 34px;
+		height: 34px;
+		vertical-align: middle;
+		margin-right: 10px;
+		margin-top: -5px;
+	}
+}
+
+.modal_desc {
+	color: #868e9e;
+	font-size: 30px;
+
+	em {
+		font-weight: 500;
+		color: #fe6666;
+	}
+}
+:global {
+	.order_repay_page {
+		.am-modal-transparent {
+			width: 580px;
+		}
+		.am-modal-button {
+			color: #121c32;
+			font-size: 34px;
+		}
+		.am-modal-transparent .am-modal-content {
+			padding-top: 40px;
+			border-radius: 6px;
+		}
+		.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0 35px 56px;
+			text-align: justify;
+		}
+	}
+}
