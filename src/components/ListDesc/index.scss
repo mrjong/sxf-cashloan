@@ -12,6 +12,15 @@
 		margin-top: 0;
 	}
 }
+.list_desc_container_FW {
+	display: flex;
+	margin-top: 10px;
+	font-size: 28px;
+	font-weight: 800;
+	&:first-child {
+		margin-top: 0;
+	}
+}
 .hasTotal {
 	&:last-child {
 		position: relative;
@@ -45,6 +54,17 @@
 	flex: 1;
 	color: #868e9e;
 	font-size: 28px;
+	text-align: right;
+	width: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.list_desc_extra_FW {
+	flex: 1;
+	color: #9d9d9d;
+	font-size: 28px;
+	font-weight: 800;
 	text-align: right;
 	width: auto;
 	overflow: hidden;
