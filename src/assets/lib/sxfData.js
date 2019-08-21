@@ -40,7 +40,7 @@ var DEFAULT_CONFIG = {
 	isBpoint: true, // 是否开启断点发送，默认开启
 	stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
 	stackTime: 3, //信息存储栈时间（单位 秒） 定时扫描，栈有数据就发
-	queueSize: 20, //待发送队列大小
+	queueSize: 10, //待发送队列大小 最好不要超过50
 	queueTime: 5 //待发送队列 自动扫描发送时间
 };
 
@@ -52,11 +52,9 @@ var CONFIG = {
 	stackSize: 10, //信息存储栈大小 栈满 则打包 转存到待发送队列
 	stackTime: 3, //信息存储栈时间（单位 秒） 定时扫描，栈有数据就发
 
-	queueSize: 20, //待发送队列大小
+	queueSize: 10, //待发送队列大小 最好不要超过50
 	queueTime: 5 //待发送队列 自动扫描发送时间
 };
-
-// People类系统保留属性，用户设置这些属性将无法成功
 
 var utf8Encode = function utf8Encode(string) {
 	string = (string + '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
@@ -1104,7 +1102,6 @@ _.register_event = (function() {
 			element.addEventListener(type, handler, !!useCapture);
 		} else {
 			var ontype = 'on' + type;
-			console.log('ontype', ontype);
 			var old_handler = element[ontype]; // can be undefined
 			element[ontype] = makeHandler(element, handler, old_handler);
 		}
@@ -1184,7 +1181,6 @@ _.info = {
 };
 _.ajax = {
 	post: function post(url, options, callback, timeout) {
-		console.log(url, '----------url');
 		var that = this;
 		that.callback = callback || function(params) {};
 		try {
@@ -1210,7 +1206,6 @@ _.ajax = {
 				}
 			};
 			req.timeout = timeout || 5000;
-			console.log(options, '=======options');
 			req.send(_.JSONEncode(options));
 		} catch (e) {
 			console.error(e);
@@ -1748,7 +1743,6 @@ var EVENT_TRACK = (function() {
 			key: 'track',
 			value: function track(event_name, properties, callback, track_data) {
 				if (event_name === 'pv') {
-					console.log('----进入页面----');
 					if (properties && properties.pId) {
 						pageId = new Date().getTime().toString() + '_' + properties.pId;
 					} else {
@@ -1757,9 +1751,6 @@ var EVENT_TRACK = (function() {
 				}
 				if (!pageId) {
 					return;
-				}
-				if (event_name === 'pvout') {
-					console.log('----离开页面----');
 				}
 				if (_.isUndefined(event_name)) {
 					console.error('上报数据需要一个事件名称');
@@ -1810,6 +1801,7 @@ var EVENT_TRACK = (function() {
 					cType: user_set_properties.cType || '',
 					actId: user_set_properties.actId || '',
 					pId: pageId, // 页面id
+					gps: user_set_properties.gps || '',
 					dAttr: {
 						// 浏览器名称
 						bs: detector$1.browser.name,
@@ -2237,8 +2229,6 @@ var SPA = {
 	}
 };
 
-// import pako from "pako";
-
 var BPOINT = (function() {
 	function BPOINT(instance) {
 		classCallCheck(this, BPOINT);
@@ -2301,7 +2291,6 @@ var BPOINT = (function() {
 						_this.stack2queue();
 					}, t * 1000);
 				} else {
-					console.log('埋点内置对象丢失,栈扫描器创建失败', 1);
 					throw new ReferenceError('埋点内置对象丢失,栈扫描器创建失败');
 				}
 			}
@@ -2317,11 +2306,9 @@ var BPOINT = (function() {
 						clearInterval(this._scanWaitSendQqueueIntervalId);
 					}
 					this._scanWaitSendQqueueIntervalId = setInterval(function() {
-						console.log('开启等待发送--scanWaitSendQqueue');
 						_this2.send();
 					}, t * 1000);
 				} else {
-					console.log('埋点内置对象丢失,队列扫描器创建失败', 1);
 					throw new ReferenceError('埋点内置对象丢失,队列扫描器创建失败');
 				}
 			}
@@ -2357,7 +2344,6 @@ var BPOINT = (function() {
 				var sendData = {};
 				sendData = stack;
 				//数据发送
-				console.log(sendData, '=========');
 				this._sendByImg(sendData);
 				//发送栈帧+环境配置信息
 			}
@@ -2365,12 +2351,7 @@ var BPOINT = (function() {
 		{
 			key: '_sendByImg',
 			value: function _sendByImg(truncated_data) {
-				console.log('truncated_data', truncated_data);
 				var url = this.instance._get_config('track_url');
-				// console.log("原数据", truncated_data);
-				// console.log("JSONEncode", _.JSONEncode(truncated_data));
-				// console.log("base64Encode", _.base64Encode(_.JSONEncode(truncated_data)));
-				console.log(_.base64Encode(_.JSONEncode(truncated_data)));
 				_.sendRequest(
 					url,
 					'post',
@@ -2380,26 +2361,23 @@ var BPOINT = (function() {
 					function() {}
 				);
 			}
-			/**
-			 * 设置存在埋点信息的栈的大小
-			 * 调用此方法，如果栈的数据量>stackSize，则触发栈帧入待发送队列
-			 * @param stackSize 栈的大小 大于0的整数 如果是小数或者字符串，将先使用parseInt处理
-			 */
-		},
-		{
-			key: 'setStackSize',
-			value: function setStackSize(stackSize) {
-				stackSize = parseInt(stackSize);
-				if (stackSize < 1) {
-					return;
-				}
-				this._option.stackSize = stackSize;
+			//   /**
+			//    * 设置存在埋点信息的栈的大小
+			//    * 调用此方法，如果栈的数据量>stackSize，则触发栈帧入待发送队列
+			//    * @param stackSize 栈的大小 大于0的整数 如果是小数或者字符串，将先使用parseInt处理
+			//    */
+			//   setStackSize(stackSize) {
+			//     stackSize = parseInt(stackSize);
+			//     if (stackSize < 1) {
+			//       return;
+			//     }
+			//     this._option.stackSize = stackSize;
 
-				if (this._infoStack.length >= stackSize) {
-					// 如果已经满了 则送入待发送队列
-					this.stack2queue();
-				}
-			}
+			//     if (this._infoStack.length >= stackSize) {
+			//       // 如果已经满了 则送入待发送队列
+			//       this.stack2queue();
+			//     }
+			//   }
 
 			/**
 			 * 栈帧入队列  等待被发送
@@ -2408,22 +2386,24 @@ var BPOINT = (function() {
 		{
 			key: 'stack2queue',
 			value: function stack2queue() {
-				console.log('开始扫描--scanStack');
 				var is = this._infoStack;
 
-				console.log('infoStack length=' + is.length);
 				if (is.length > 0) {
 					this._queueSave(is);
 					this._infoStack = [];
 				} else {
-					console.log('关闭扫描--_scanStackInterval');
 					clearInterval(this._scanStackIntervalId);
 				}
 			}
+			// 发送栈保存数据
 		},
 		{
 			key: '_queueSave',
 			value: function _queueSave(is) {
+				if (this._waitSendQueue && this._waitSendQueue.length >= CONFIG.queueSize) {
+					// 如果待发送已经满了 则放弃后续动作
+					return;
+				}
 				this._waitSendQueue.push(is);
 				this._scanWaitSendQqueue(CONFIG.queueTime);
 				if (_.localStorage) {
@@ -2434,6 +2414,10 @@ var BPOINT = (function() {
 		{
 			key: '_stackSave',
 			value: function _stackSave(infoObj) {
+				if (this._waitSendQueue && this._waitSendQueue.length >= CONFIG.queueSize) {
+					// 如果待发送已经满了 则放弃后续动作
+					return;
+				}
 				this._infoStack.push(infoObj);
 				//检查信息栈是否已经满了
 				if (this._infoStack.length >= CONFIG.stackSize) {
@@ -2448,7 +2432,6 @@ var BPOINT = (function() {
 				if (this._waitSendQueue.length == 0 || this._queueSending) {
 					return;
 				}
-
 				this._send();
 			}
 			/**
@@ -2460,10 +2443,7 @@ var BPOINT = (function() {
 			value: function _send() {
 				var _this3 = this;
 
-				console.log('start send');
-				console.log('waitSendQueue length=' + this._waitSendQueue.length);
 				if (this._waitSendQueue.length == 0) {
-					console.log('关闭等待发送--_scanWaitSendQqueueInterval');
 					clearInterval(this._scanWaitSendQqueueIntervalId);
 					this._queueSending = false;
 					return;
@@ -2495,7 +2475,9 @@ var BPOINT = (function() {
 				if (infoObj) {
 					//   infoObj.dateTime = new Date().getTime();
 					this._scanStack(CONFIG.stackTime);
-					this._stackSave(infoObj);
+					for (var index = 0; index < 10000; index++) {
+						this._stackSave(infoObj);
+					}
 				}
 			}
 		}
@@ -2522,6 +2504,7 @@ var DOMLISTEN = (function() {
 						var eventItem = JSON.parse(domItem.getAttribute('data-sxf-props'));
 						var eventName = eventItem.name;
 						var eventType = eventItem.type;
+						var notSendValue = eventItem.notSendValue;
 						var eventList = eventItem.eventList;
 						var data = {};
 						eventList.forEach(function(eventItem) {
@@ -2533,7 +2516,7 @@ var DOMLISTEN = (function() {
 								domItem,
 								type,
 								function(e) {
-									if (eventType === 'input') {
+									if (eventType === 'input' && !notSendValue) {
 										data = {
 											value: e.target.value
 										};

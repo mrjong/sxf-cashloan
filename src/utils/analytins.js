@@ -2,13 +2,15 @@ import qs from 'qs';
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import SxfData from '../assets/lib/sxfData';
+const { PROJECT_ENV, RELEASE_VERSION } = process.env;
+import SxfDataConfig from '../assets/lib/SxfDataConfig';
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
 	window.version = 'v1.1';
 	sa.init({
 		server_url: saUrl,
 		sdk_url: 'https://static.sensorsdata.cn/sdk/1.7.1.1/sensorsdata.min.js',
-		show_log: false, //是否打印上报日志
+		show_log: PROJECT_ENV !== 'pro', //是否打印上报日志
 		is_single_page: true
 	});
 	const query = qs.parse(window.location.search, {
@@ -36,8 +38,11 @@ export const initAnalytics = () => {
 
 // 初始化随行付埋点 及渠道信息
 export const initSxfData = () => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
 	SxfData.init({
-		track_url: '/buried',
+		track_url: 'http://172.18.40.90:8080/buried',
 		local_storage: {
 			type: 'localStorage'
 		},
@@ -46,7 +51,7 @@ export const initSxfData = () => {
 			mode: 'history'
 		},
 		pageview: false,
-		debug: true,
+		debug: PROJECT_ENV !== 'pro',
 		loaded: function(sdk) {
 			// 公用属性
 			sdk.registerEventSuperProperties({ cType: getH5Channel(), pLine: 'HD' });
@@ -69,6 +74,9 @@ function getStaticParams() {
  *
  * */
 export const sxfDataLogin = (userId) => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
 	SxfData.login(userId);
 };
 /*
@@ -76,13 +84,39 @@ export const sxfDataLogin = (userId) => {
  *
  * */
 export const sxfDataPv = (obj) => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
 	SxfData.trackPv(obj);
+};
+/*
+ * 设置通用属性，会覆盖其他属性
+ *
+ * */
+export const SxfDataRegisterEventSuperProperties = (obj) => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
+	SxfData.SxfDataRegisterEventSuperProperties(obj);
+};
+/*
+ * 设置通用属性，不会覆盖其他属性
+ *
+ * */
+export const SxfDataRegisterEventSuperPropertiesOnce = (obj) => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
+	SxfData.registerEventSuperPropertiesOnce(obj);
 };
 /*
  * 随行付监听
  *
  * */
 export const _addlisten = () => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
 	SxfData._addlisten();
 };
 /*
@@ -90,9 +124,21 @@ export const _addlisten = () => {
  *
  * */
 export const sxfburiedPointEvent = (buriedKey, params) => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return;
+	}
 	SxfData.trackEvent(buriedKey, params);
 };
-
+/*
+ * 随行付埋点事件
+ *
+ * */
+export const SxfDataObj = () => {
+	if (SxfDataConfig && SxfDataConfig.closed) {
+		return {};
+	}
+	return SxfData;
+};
 /*
  * PV统计
  *

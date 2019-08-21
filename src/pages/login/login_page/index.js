@@ -9,7 +9,13 @@ import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView, sxfDataPv, sxfburiedPointEvent } from 'utils/analytins';
+import {
+	buriedPointEvent,
+	pageView,
+	SxfDataRegisterEventSuperPropertiesOnce,
+	sxfDataPv,
+	sxfburiedPointEvent
+} from 'utils/analytins';
 import { login } from 'utils/analytinsType';
 import { sxflogin } from 'utils/sxfAnalytinsType';
 import { domListen } from 'utils/domListen';
@@ -197,6 +203,7 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
 						if (this.state.disabledInput) {
 							this.requestGetStatus();
 						} else {
@@ -562,6 +569,7 @@ export default class login_page extends PureComponent {
 							data-sxf-props={JSON.stringify({
 								type: 'input',
 								name: 'inputPhone',
+								notSendValue: true, // 无需上报输入框的值
 								eventList: [
 									{
 										type: 'focus'
