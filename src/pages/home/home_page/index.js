@@ -151,6 +151,8 @@ export default class home_page extends PureComponent {
 	}
 	// 移除store
 	removeStore = () => {
+		// 清除卡信息
+		store.removeCardData();
 		// 去除支付方式默认选中
 		store.removePayType();
 		// 去除借款页面参数
