@@ -538,7 +538,7 @@ export default class order_detail_page extends PureComponent {
 				isEntry: '01'
 			})
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.msgCode === 'PTM0000' || res.msgCode === 'PTM9902') {
 					this.closeSmsModal();
 				} else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
 					this.closeSmsModal();
