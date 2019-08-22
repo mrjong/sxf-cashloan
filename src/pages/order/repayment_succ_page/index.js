@@ -5,7 +5,6 @@ import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
-import qs from 'qs';
 
 export default class repayment_succ_page extends PureComponent {
 	constructor(props) {
@@ -30,7 +29,7 @@ export default class repayment_succ_page extends PureComponent {
 	}
 
 	// 返回首页
-	backHome = (type, canyu) => {
+	backHome = (type) => {
 		buriedPointEvent(type);
 		this.props.history.push('/home/home');
 		// if (canyu) {
@@ -51,7 +50,6 @@ export default class repayment_succ_page extends PureComponent {
 
 	render() {
 		const { isShowTipsModal } = this.state;
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		return (
 			<div className={styles.repayment_succ_page}>
 				<div className={styles.tips}>

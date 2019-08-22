@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { SXFToast } from 'utils/SXFToast';
 import STabs from 'components/Tab';
 import { store } from 'utils/store';
@@ -46,7 +46,6 @@ export default class message_page extends PureComponent {
 	}
 	scrollTop = 0;
 	componentWillMount() {
-		var _body = document.getElementsByTagName('body')[0];
 		// 处理详情返回之后
 		let backData = store.getMsgBackData();
 		if (backData && JSON.stringify(backData) !== '{}') {
@@ -212,11 +211,10 @@ export default class message_page extends PureComponent {
 						});
 					}
 					return dataArr;
-				} else {
-					return [];
 				}
+				return [];
 			})
-			.catch((err) => {
+			.catch(() => {
 				if (pIndex === 1) {
 					setTimeout(() => {
 						SXFToast.hide();
@@ -252,7 +250,7 @@ export default class message_page extends PureComponent {
 		});
 	};
 	// 渲染每一页完成之后
-	onEndReached = async (event) => {
+	onEndReached = async () => {
 		if (this.state.isLoading && !this.state.hasMore) {
 			this.setState({
 				pageIndex: totalPage ? totalPage : 1
@@ -402,14 +400,13 @@ export default class message_page extends PureComponent {
 						pageSize={1}
 					/>
 				);
-			} else {
-				return (
-					<div className={style.noMsg}>
-						<i />
-						暂无消息
-					</div>
-				);
 			}
+			return (
+				<div className={style.noMsg}>
+					<i />
+					暂无消息
+				</div>
+			);
 		};
 		return (
 			<div className={style.message_page} ref={(el) => (this.messageBox = el)}>

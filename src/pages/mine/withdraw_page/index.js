@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import dayjs from 'dayjs';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import { SXFToast } from 'utils/SXFToast';
@@ -135,7 +135,7 @@ export default class withdraw_page extends PureComponent {
 				}
 				return [];
 			})
-			.catch((err) => {
+			.catch(() => {
 				if (pIndex === 1) {
 					setTimeout(() => {
 						SXFToast.hide();
@@ -171,22 +171,20 @@ export default class withdraw_page extends PureComponent {
 				pageIndex: 1
 			},
 			() => {
+				let bodyDom = '';
 				if (!(this.state.rData && this.state.rData.length > 0)) {
-					var bodyDom = document.getElementsByTagName('body')[0];
+					bodyDom = document.getElementsByTagName('body')[0];
 					bodyDom.style.backgroundColor = '#fff';
 				} else {
-					var bodyDom = document.getElementsByTagName('body')[0];
+					bodyDom = document.getElementsByTagName('body')[0];
 					bodyDom.style.backgroundColor = '#f5f5f5';
 				}
 			}
 		);
 	};
 	// 渲染每一页完成之后
-	onEndReached = async (event) => {
+	onEndReached = async () => {
 		if (this.state.isLoading && !this.state.hasMore) {
-			// this.setState({
-			//   pageIndex: totalPage || 1,
-			// });
 			return;
 		}
 		this.setState({ isLoading: true });
@@ -207,7 +205,7 @@ export default class withdraw_page extends PureComponent {
 	render() {
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
-		const row = (rowData, sectionID, rowID) => {
+		const row = () => {
 			if (index < 0) {
 				index = this.state.rData && this.state.rData.length - 1;
 			}
@@ -245,7 +243,7 @@ export default class withdraw_page extends PureComponent {
 				</div>
 			);
 		};
-		const item = (classN) => {
+		const item = () => {
 			if (this.state.rData && this.state.rData.length > 0) {
 				return (
 					<ListView

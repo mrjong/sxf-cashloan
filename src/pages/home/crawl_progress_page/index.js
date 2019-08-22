@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
@@ -203,7 +203,7 @@ export default class crawl_progress_page extends PureComponent {
 					location.reload();
 				}
 			})
-			.catch((err) => {});
+			.catch(() => {});
 	}
 
 	componentWillUnmount() {

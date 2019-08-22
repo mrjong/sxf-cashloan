@@ -12,9 +12,8 @@ import old_btn from './img/old_btn.png';
 import rule_bg from './img/rule_bg.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
-import { setBackGround } from 'utils/background';
 import { headerIgnore } from 'utils';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
 import { isMPOS } from 'utils/common';
@@ -197,54 +196,46 @@ export default class wuyuekh_page extends PureComponent {
 				<SmsAlert
 					onRef={this.onRef}
 					goSubmitCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
-							// this.props.toast.info('暂无领取资格');
+						URM0008: () => {},
+						others: (res) => {
 							this.props.toast.info(res.msgInfo);
 						}
 					}}
 					goLoginCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
-							// this.props.toast.info('暂无领取资格');
+						URM0008: () => {},
+						others: (res) => {
 							this.props.toast.info(res.msgInfo);
 						}
 					}}
 					validateMposCb={{
-						PTM9000: (res, getType) => {
+						PTM9000: () => {
 							this.props.history.replace('/mpos/mpos_ioscontrol_page');
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.setState({
 								showBoundle: true
 							});
 						}
 					}}
 					chkAuthCb={{
-						authFlag0: (res, getType) => {},
-						authFlag1: (res, getType) => {
+						authFlag0: () => {},
+						authFlag1: () => {
 							this.goHomePage();
 						},
-						authFlag2: (res, getType) => {
-							// this.props.toast.info('暂无领取资格');
-						},
-						others: (res, getType) => {
-							// this.props.toast.info('暂无领取资格');
-						}
+						authFlag2: () => {},
+						others: () => {}
 					}}
 					doAuthCb={{
-						authSts00: (res, getType) => {
+						authSts00: () => {
 							this.goHomePage();
 						},
-						others: (res, getType) => {
-							// this.props.toast.info('暂无领取资格');
-						}
+						others: () => {}
 					}}
 					modalBtnBuryPoint={this.confirmHandler}
 				/>

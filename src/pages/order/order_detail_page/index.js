@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import Panel from 'components/Panel';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import { Modal, Icon } from 'antd-mobile';
@@ -13,7 +13,6 @@ import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
 import Cashier from './components/Cashier';
-
 const API = {
 	qryDtl: '/bill/qryDtl',
 	payback: '/bill/paySubmit',
@@ -64,7 +63,8 @@ export default class order_detail_page extends PureComponent {
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
 			couponPrice: '', // 优惠劵计算过的金额
-			cashierVisible: false
+			cashierVisible: false,
+			disDisRepayAmt: 0 // 优惠金额
 		};
 	}
 	componentWillMount() {
@@ -150,13 +150,18 @@ export default class order_detail_page extends PureComponent {
 						// 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
 						let isAdvance = false;
 						const buChangJinList = res.data[0].totalList.find((item2) => item2.feeNm === '补偿金');
-						if (buChangJinList.feeAmt !== 0) {
+						const buChangJinList2 = res.data[0].totalList.find((item2) => item2.feeNm === '提前结清优惠');
+						if (
+							(buChangJinList && buChangJinList.feeAmt !== 0) ||
+							(buChangJinList2 && buChangJinList2.feeAmt !== 0)
+						) {
 							isAdvance = true;
 						} else {
 							isAdvance = false;
 						}
 						this.setState(
 							{
+								disDisRepayAmt: res.data[0].disDisRepayAmt,
 								detailArr: res.data[0].totalList,
 								isAdvance,
 								totalAmt: res.data[0].totalAmt,
@@ -201,7 +206,7 @@ export default class order_detail_page extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.setState({
 					firstUserInfo: 'error'
 				});
@@ -538,7 +543,7 @@ export default class order_detail_page extends PureComponent {
 				isEntry: '01'
 			})
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.msgCode === 'PTM0000' || res.msgCode === 'PTM9902') {
 					this.closeSmsModal();
 				} else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
 					this.closeSmsModal();
@@ -645,7 +650,7 @@ export default class order_detail_page extends PureComponent {
 
 	//调用还款接口逻辑
 	repay = () => {
-		const { billDesc, isPayAll, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
+		const { billDesc, isPayAll, repayParams, totalAmt, payType, thisPerdNum } = this.state;
 		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
 		const paybackAPI = API.payback;
 		let sendParams = {};
@@ -669,7 +674,7 @@ export default class order_detail_page extends PureComponent {
 		}
 		// 添加微信新增参数
 		switch (payType) {
-			case 'WXPay':
+			case 'WXPay': {
 				// 微信外 02  微信内  03
 				const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 				queryData.backType = 'wxPay';
@@ -686,6 +691,7 @@ export default class order_detail_page extends PureComponent {
 					}
 				};
 				break;
+			}
 			case 'BankPay':
 			default:
 				break;
@@ -714,10 +720,10 @@ export default class order_detail_page extends PureComponent {
 					});
 
 					switch (payType) {
-						case 'WXPay':
+						case 'WXPay': {
 							let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
 							if (isWXOpen()) {
-								WeixinJSBridge.invoke(
+								window.WeixinJSBridge.invoke(
 									'getBrandWCPayRequest',
 									{
 										appId: wxData.appId,
@@ -745,6 +751,7 @@ export default class order_detail_page extends PureComponent {
 								location.href = url;
 							}
 							break;
+						}
 						case 'BankPay':
 							if (res.data && res.data.repayOrdNo) {
 								this.setState(
@@ -782,7 +789,7 @@ export default class order_detail_page extends PureComponent {
 					}, 3000);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				store.removeCouponData();
 				this.setState({
 					showModal: false,
@@ -883,9 +890,8 @@ export default class order_detail_page extends PureComponent {
 		const { deratePrice } = this.state;
 		if (deratePrice !== '') {
 			return <span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>;
-		} else {
-			return <span>不使用</span>;
 		}
+		return <span>不使用</span>;
 		// if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
 		//     if (this.state.couponInfo.usrCoupNo !== 'null' && this.state.couponInfo.coupVal) {
 		//         if (this.state.showItrtAmt) {
@@ -964,7 +970,6 @@ export default class order_detail_page extends PureComponent {
 	render() {
 		const {
 			billDesc = {},
-			money,
 			hideBtn,
 			isPayAll,
 			isShowSmsModal,
@@ -984,7 +989,8 @@ export default class order_detail_page extends PureComponent {
 			isInsureValid,
 			couponPrice,
 			cashierVisible,
-			repayOrdNo
+			repayOrdNo,
+			disDisRepayAmt = 0
 		} = this.state;
 		const {
 			billPrcpAmt = '',
@@ -997,9 +1003,8 @@ export default class order_detail_page extends PureComponent {
 			wthdCrdCorpOrgNm = '',
 			wthdCrdNoLast = '',
 			perdNum = '',
-			waitRepAmt = '',
 			perdList,
-			waitRepAmtForShow = ''
+			discRedRepay = false
 		} = billDesc;
 		const itemList = [
 			{
@@ -1029,7 +1034,7 @@ export default class order_detail_page extends PureComponent {
 		];
 		const isOverdue =
 			perdList &&
-			perdList.filter((item, index) => {
+			perdList.filter((item) => {
 				return item.perdSts === '1';
 			});
 		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
@@ -1089,9 +1094,10 @@ export default class order_detail_page extends PureComponent {
 						))}
 					</ul>
 					{perdNum !== 999 && !hideBtn && (
-						<span className={styles.payAll} onClick={this.payAllOrder}>
+						<div className={styles.payAll} onClick={this.payAllOrder}>
+							{discRedRepay && <i />}
 							一键结清
-						</span>
+						</div>
 					)}
 				</Panel>
 				<Panel title="还款计划" className={styles.mt24}>
@@ -1183,15 +1189,15 @@ export default class order_detail_page extends PureComponent {
 									item.feeAmt ? (
 										<div className={styles.modal_flex} key={index}>
 											<span className={styles.modal_label}>{item.feeNm}</span>
-											<span className={styles.modal_value}>
+											<span className={styles.modal_value_desc}>
 												{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元
 											</span>
 										</div>
 									) : null
 								)}
 								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
-									<span className={styles.modal_label}>本次应还总金额</span>
-									<span className={styles.modal_value}>
+									<span className={styles.modal_label_last}>本次应还总金额</span>
+									<span className={styles.modal_value_last}>
 										{/* {isPayAll ? isNewsContract ? (
 											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
 										) : (
@@ -1221,6 +1227,13 @@ export default class order_detail_page extends PureComponent {
 								</span>
 								&nbsp;
 								<i />
+							</div>
+						) : null}
+
+						{disDisRepayAmt ? (
+							<div className={styles.modal_flex}>
+								<span className={styles.modal_label}>提前结清优惠</span>
+								<span className={`${styles.modal_value_red}`}>-{disDisRepayAmt}元</span>
 							</div>
 						) : null}
 

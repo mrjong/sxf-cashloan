@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
@@ -263,13 +263,14 @@ export default class login_page extends PureComponent {
 	// 开始倒计时
 	startCountDownTime = () => {
 		clearInterval(timmer);
+		let { countDownTime } = this.state;
 		timmer = setInterval(() => {
 			this.setState(
 				{
-					timers: this.state.countDownTime-- + 's'
+					timers: countDownTime-- + 's'
 				},
 				() => {
-					if (this.state.countDownTime === -1) {
+					if (countDownTime === -1) {
 						clearInterval(timmer);
 						this.setState({ timers: '重新获取', timeflag: true, countDownTime: 59 });
 					}
@@ -328,27 +329,27 @@ export default class login_page extends PureComponent {
 
 	// 获取滑动验证码token并发短信
 	handleTokenAndSms = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.sendSlideVerifySmsCode();
 		});
 	};
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.reloadSlideImage();
 		});
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
 				if (result.msgCode === 'PTM0000') {
 					this.setState({
 						submitData: {
-							relyToken: result.data.relyToken,
+							relyToken: (result && result.data && result.data.relyToken) || '',
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -409,7 +410,7 @@ export default class login_page extends PureComponent {
 					this.closeSlideModal();
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				cb && cb('error');
 				this.closeSlideModal();
 			});
@@ -468,9 +469,8 @@ export default class login_page extends PureComponent {
 				return true;
 			} else if (disabledInput && !formData.imgCd) {
 				return false;
-			} else {
-				return true;
 			}
+			return true;
 		}
 		return false;
 	};

@@ -6,7 +6,7 @@ import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
@@ -28,7 +28,6 @@ if (isIPhone) {
 		onTouchStart: (e) => e.preventDefault()
 	};
 }
-
 let closeBtn = true;
 const API = {
 	REPAY_INFO: '/bill/prebill', // 代还确认页面
@@ -79,7 +78,6 @@ export default class confirm_agency_page extends PureComponent {
 			payBankCardLastNo: '',
 			payBankCardName: '',
 			perdRateList: [],
-			contractData: [],
 			repayPlanInfo: {
 				perd: []
 			},
@@ -572,7 +570,7 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
 				this.setState({
 					deratePrice: '',
@@ -585,15 +583,14 @@ export default class confirm_agency_page extends PureComponent {
 		const { deratePrice, repayInfo2 } = this.state;
 		if (deratePrice) {
 			return <span className={style.redText}>-{deratePrice}元</span>;
-		} else {
-			//  可用优惠券数量
-			return (
-				<div className={style.couNumBox}>
-					<i />
-					{repayInfo2 && repayInfo2.availableCoupAmt}个可用
-				</div>
-			);
 		}
+		//  可用优惠券数量
+		return (
+			<div className={style.couNumBox}>
+				<i />
+				{repayInfo2 && repayInfo2.availableCoupAmt}个可用
+			</div>
+		);
 	};
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
@@ -724,7 +721,7 @@ export default class confirm_agency_page extends PureComponent {
 				() => {
 					timer = setInterval(() => {
 						this.setPercent();
-						++this.state.time;
+						// ++this.state.time;
 					}, 1000);
 				}
 			);
@@ -775,7 +772,7 @@ export default class confirm_agency_page extends PureComponent {
 					}
 				);
 			})
-			.catch((err) => {
+			.catch(() => {
 				clearInterval(timer);
 				clearTimeout(timerOut);
 				this.setState({ percent: 100 }, () => {
@@ -868,6 +865,14 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.info(res.data);
 					this.setState({ smsCode: '' });
 					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+				} else if (res.msgCode === 'PTM9902') {
+					//该卡完全绑不上
+					this.setState({
+						protocolSmsFailInfo: res.data,
+						protocolSmsFailFlag: true,
+						isShowSmsModal: true
+					});
+					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 				} else {
 					this.props.toast.info('绑卡失败，请换卡或重试');
 					this.setState({
@@ -910,6 +915,15 @@ export default class confirm_agency_page extends PureComponent {
 					break;
 				case 'PTM9901':
 					this.props.toast.info(res.data);
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					break;
+				case 'PTM9902':
+					//该卡完全绑不上
+					this.setState({
+						protocolSmsFailInfo: res.data,
+						protocolSmsFailFlag: true,
+						isShowSmsModal: true
+					});
 					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
 					break;
 				case '1010': // 银行卡已经绑定 直接继续往下走
@@ -1004,7 +1018,6 @@ export default class confirm_agency_page extends PureComponent {
 										]
 									})}
 									className={style.billInput}
-									placeholder=""
 									clear={() => {
 										console.log('cl99999999');
 									}}
@@ -1014,7 +1027,6 @@ export default class confirm_agency_page extends PureComponent {
 										Number(repaymentDate.minAmt) == Number(repaymentDate.maxAmt)
 									}
 									type="number"
-									ref={(el) => (inputRef = el)}
 									{...getFieldProps('cardBillAmt', {
 										onChange: (v) => {
 											if (!v) {
@@ -1345,12 +1357,28 @@ export default class confirm_agency_page extends PureComponent {
 
 					{isShowSmsModal && (
 						<SmsModal
-							onCancel={() => {}}
+							onCancel={() => {
+								buriedPointEvent(home.protocolAlertClose);
+								this.setState({
+									isShowSmsModal: false,
+									protocolSmsFailFlag: false
+								});
+							}}
 							onConfirm={this.confirmProtocolBindCard}
 							onSmsCodeChange={this.handleSmsCodeChange}
 							smsCodeAgain={this.checkProtocolBindCard}
+							protocolSmsFailFlag={this.state.protocolSmsFailFlag}
+							protocolSmsFailInfo={this.state.protocolSmsFailInfo}
 							smsCode={smsCode}
 							toggleBtn={false}
+							selectBankCard={() => {
+								buriedPointEvent(home.protocolAlertChange);
+								this.handleClickChoiseBank();
+								this.setState({
+									isShowSmsModal: false,
+									protocolSmsFailFlag: false
+								});
+							}}
 							ref={(ele) => {
 								this.smsModal = ele;
 							}}

@@ -7,7 +7,7 @@ const data = [
 	{ value: 'fin-v-card-token-wechat', type: 'cookie', label: '微信token' },
 	{ value: 'fin-v-card-token', type: 'cookie', label: '登录token' },
 	{ value: 'sessionStorage', type: 'sessionStorage', label: '所有sessionStorage缓存' },
-	{ value: 'localStorage',type:'localStorage', label: '所有localStorage缓存' }
+	{ value: 'localStorage', type: 'localStorage', label: '所有localStorage缓存' }
 ];
 export default class dc_landing_page extends PureComponent {
 	constructor(props) {
@@ -36,6 +36,7 @@ export default class dc_landing_page extends PureComponent {
 				break;
 			case 'sessionStorage':
 				sessionStorage.clear();
+				break;
 			case 'localStorage':
 				localStorage.clear();
 				break;

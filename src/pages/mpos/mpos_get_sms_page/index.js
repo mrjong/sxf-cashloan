@@ -4,7 +4,7 @@ import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import { getDeviceType } from 'utils';
 import qs from 'qs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { setBackGround } from 'utils/background';
 import click from '../mpos_service_authorization_page/img/Button.png';
 const needDisplayOptions = ['basicInf'];
@@ -68,7 +68,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			);
 	}
 	//登录判断
-	goSubmit(code) {
+	goSubmit() {
 		let { codeInput } = this.state;
 		if (!codeInput) {
 			this.props.toast.info('请输入验证码');
@@ -138,7 +138,7 @@ export default class mpos_get_sms_page extends PureComponent {
 					});
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.props.history.replace('/home/home');
 			});
 	};

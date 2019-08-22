@@ -5,7 +5,7 @@ import updateLeft from 'assets/images/real_name/left.png';
 import updateRight from 'assets/images/real_name/right.png';
 import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
 import FEZipImage from 'components/FEZIpImage';
-import { InputItem, List, Toast } from 'antd-mobile';
+import { InputItem, List } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
@@ -28,7 +28,6 @@ import qs from 'qs';
 const isEquipment = window.navigator.userAgent.match(
 	/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
 );
-let timer;
 const API = {
 	getImgUrl: '/auth/ocrIdChk',
 	submitName: '/auth/idChk'

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import qs from 'qs';
@@ -33,10 +33,10 @@ export default class crawl_progress_page extends PureComponent {
 		if (store.getPercentCount()) {
 			this.props.$fetch
 				.get(API.USER_IMPORT)
-				.then((res) => {
+				.then(() => {
 					store.setPercentCount(null);
 				})
-				.catch((err) => {});
+				.catch(() => {});
 		}
 	}
 

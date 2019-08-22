@@ -1,6 +1,6 @@
 import { guid } from 'utils';
 import { Toast } from 'antd-mobile';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 
 const TONFUDUN_BAOBEI = '/signup/getUsrRqpInf';
 const { PROJECT_ENV } = process.env;
@@ -29,15 +29,10 @@ function requestBackReport() {
 		.get(`${TONFUDUN_BAOBEI}/${sessionId}`, null, {
 			hideLoading: true
 		})
-		.then((user) => {
-			// console.log(user);
-		})
-		.catch((err) => {
-			// console.log(err);
-		})
+		.then(() => {})
+		.catch(() => {})
 		.finally(() => {
 			hasReport = false;
-			// console.log('请求完成'); // 无论请求成功或失败都会执行。
 		});
 }
 

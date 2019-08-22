@@ -1,11 +1,9 @@
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import avatar from 'assets/images/mine/login_logo.png';
 import Lists from 'components/Lists';
-import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
@@ -178,37 +176,16 @@ export default class mine_page extends PureComponent {
 			});
 			return;
 		}
-		if (
-			item.jumpToUrl === '/home/real_name?type=noRealName' ||
-			// item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
-			item.jumpToUrl === '/mine/fqa_page'
-		) {
-			// if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
-			// 	buriedPointEvent(mine.creditExtension, {
-			// 		entry: '我的'
-			// 	});
-			// }
+		if (item.jumpToUrl === '/home/real_name?type=noRealName' || item.jumpToUrl === '/mine/fqa_page') {
 			this.props.history.push(item.jumpToUrl);
 		} else {
 			const { mblNoHid, realNmFlg } = this.state;
 			if (mblNoHid && realNmFlg) {
 				this.props.history.push(item.jumpToUrl);
 			}
-			// if (!mblNoHid) {
-			//   this.props.toast.info('用户未登录', 2, () => {
-			//     this.props.history.push('/login');
-			//   })
-			// }
 			if (!realNmFlg) {
 				this.props.toast.info('请先进行实名认证', 2, () => {
-					// let isWx=this.is_weixn()
-					// if (isWx) {
-					//     //在微信中打开
-					//     this.props.history.replace('/wxName')
-					// }
-					//else{
 					this.props.history.push('/home/real_name?type=noRealName');
-					//}
 				});
 			}
 		}

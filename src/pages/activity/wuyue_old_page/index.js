@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import styles from './index.scss';
 import ModalWrap from '../wuyue_new_page/components/ModalWrap';
 import RuleShow from '../wuyue_new_page/components/RuleShow';
 import WinPrize from '../wuyue_new_page/components/WinPrize';
-
 import { setBackGround } from 'utils/background';
-import { Toast, Modal } from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import bg from './img/bg.png';
 import zp_bg from './img/zp_bg.png';
 import over from './img/over.png';
@@ -52,7 +51,6 @@ export default class wuyue_old_page extends PureComponent {
 			callBackType: '',
 			allUsersAward: [],
 			type: '', // 弹框类型
-			// type: 'no_award_tips',
 			userAwardList: [], // 用户中奖列表
 			channel_value: '', // 那个渠道  mpos VS xdc
 			showLoginTip: false,
@@ -76,11 +74,10 @@ export default class wuyue_old_page extends PureComponent {
 			});
 			Toast.info('活动id不能为空');
 			return;
-		} else {
-			this.setState({
-				codeInfo: ''
-			});
 		}
+		this.setState({
+			codeInfo: ''
+		});
 		// 保存入口
 		if (queryData.entry) {
 			this.setState({
@@ -176,7 +173,7 @@ export default class wuyue_old_page extends PureComponent {
 				}
 			});
 	};
-	isAuthFunc = (callBack, type) => {
+	isAuthFunc = (callBack) => {
 		const token = Cookie.get('fin-v-card-token');
 		const tokenFromStorage = store.getToken();
 		if (tokenFromStorage && token) {
@@ -226,7 +223,6 @@ export default class wuyue_old_page extends PureComponent {
 	};
 	// 用户抽奖
 	getDraw = (count) => {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const params = {
 			activeId: config.activeId,
 			channel: getH5Channel() // 用户渠道
@@ -465,8 +461,6 @@ export default class wuyue_old_page extends PureComponent {
 											overflow: 'hidden',
 											transform: `scale(0.83) rotate(${this.state.numdeg}deg)`,
 											WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
-											transition: `-webkit-transform ${time}s ${transformType}`,
-											transition: `transform ${time}s ${transformType}`,
 											transition: `transform ${time}s ${transformType}`
 										}}
 									>

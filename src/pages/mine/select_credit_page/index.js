@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { SwipeAction } from 'antd-mobile';
 import { store } from 'utils/store';
 import { Modal, Icon } from 'antd-mobile';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import styles from './index.scss';
 
@@ -224,30 +224,29 @@ export default class select_credit_page extends PureComponent {
 											) : null}
 										</li>
 									);
-								} else {
-									return (
-										<li key={index}>
-											<SwipeAction
-												autoClose
-												right={[
-													{
-														text: '解绑',
-														onPress: () => {
-															this.unbindHandler(item.agrNo);
-														},
-														style: { backgroundColor: '#FF5A5A', color: 'white' }
-													}
-												]}
-												onOpen={() => {}}
-												onClose={() => {}}
-											>
-												<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
-												<span className={styles.bank_name}>{item.bankName}</span>
-												<span>···· {item.lastCardNo}</span>
-											</SwipeAction>
-										</li>
-									);
 								}
+								return (
+									<li key={index}>
+										<SwipeAction
+											autoClose
+											right={[
+												{
+													text: '解绑',
+													onPress: () => {
+														this.unbindHandler(item.agrNo);
+													},
+													style: { backgroundColor: '#FF5A5A', color: 'white' }
+												}
+											]}
+											onOpen={() => {}}
+											onClose={() => {}}
+										>
+											<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+											<span className={styles.bank_name}>{item.bankName}</span>
+											<span>···· {item.lastCardNo}</span>
+										</SwipeAction>
+									</li>
+								);
 							})}
 						</ul>
 					</div>

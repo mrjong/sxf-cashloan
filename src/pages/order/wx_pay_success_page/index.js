@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import ButtonCustom from 'components/ButtonCustom';
 import { store } from 'utils/store';
 import styles from './index.scss';

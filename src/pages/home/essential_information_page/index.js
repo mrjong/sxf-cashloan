@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { InputItem, List, Steps } from 'antd-mobile';
+import { InputItem, List } from 'antd-mobile';
 import informationMore from './img/back.png';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { getLngLat, getAddress } from 'utils/Address.js';
 import style from './index.scss';
 import { getFirstError, validators, handleInputBlur, getNextStr } from 'utils';
@@ -14,25 +14,14 @@ import { buryingPoints } from 'utils/buryPointMethods';
 import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import CountDownForm from 'components/TimeDown/CountDownForm';
 import ClockS from 'components/TimeDown/ClockS';
-import circle from './img/circle.png';
-import circle_not from './img/circle_not.png';
 import adsBg from './img/base_top_img.png';
 import AgreementModal from 'components/AgreementModal';
 import { domListen } from 'utils/domListen';
 import { sxfhome } from 'utils/sxfAnalytinsType';
 
-const Step = Steps.Step;
 let timedown = null;
 const pageKey = home.basicInfoBury;
-const customIcon = (type) => {
-	return type ? (
-		<img className={style.step_circle} src={circle} />
-	) : (
-		<img className={style.step_circle} src={circle_not} />
-	);
-};
 let btn_dis = false;
 const API = {
 	getProv: '/rcm/qryProv',
@@ -114,6 +103,7 @@ export default class essential_information_page extends PureComponent {
 					this.setState({
 						count: 0
 					});
+					break;
 				case 'paused':
 					clearInterval(this.timer);
 					this.timer = null;
@@ -150,7 +140,7 @@ export default class essential_information_page extends PureComponent {
 		}, 0);
 	};
 	getErrorInput = () => {
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (!err) {
 				btn_dis = true;
 			} else {
@@ -161,33 +151,30 @@ export default class essential_information_page extends PureComponent {
 
 	//获取基本信息
 	queryUsrBasicInfo = (province, city) => {
-		this.props.$fetch.post(API.queryUsrBasicInfo).then(
-			(res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.getProCode(
-						res.data.provNm || store.getProvince() || province || '',
-						res.data.cityNm || store.getCity() || city || ''
-					);
-					this.props.form.setFieldsValue({
-						address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
-						linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-						linkphone: store.getLinkphone() || ''
-					});
-					this.setState({
-						relatValue:
-							res.data && res.data.cntRelTyp1
-								? [`${res.data.cntRelTyp1}`]
-								: store.getRelationValue()
-								? store.getRelationValue()
-								: []
-					});
-				} else {
-					this.getErrorInput();
-					this.props.toast.info(res.msgInfo);
-				}
-			},
-			(error) => {}
-		);
+		this.props.$fetch.post(API.queryUsrBasicInfo).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				this.getProCode(
+					res.data.provNm || store.getProvince() || province || '',
+					res.data.cityNm || store.getCity() || city || ''
+				);
+				this.props.form.setFieldsValue({
+					address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
+					linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
+					linkphone: store.getLinkphone() || ''
+				});
+				this.setState({
+					relatValue:
+						res.data && res.data.cntRelTyp1
+							? [`${res.data.cntRelTyp1}`]
+							: store.getRelationValue()
+							? store.getRelationValue()
+							: []
+				});
+			} else {
+				this.getErrorInput();
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	// 初始化页面信息（反显）
@@ -454,9 +441,9 @@ export default class essential_information_page extends PureComponent {
 						<div className={style.text}>
 							限时参与&nbsp;
 							<ClockS count={this.state.count} />
-							<span class="jg">:</span>
-							{this.state.millisecond < 9 ? <span class="mins">0</span> : <span class="mins">1</span>}
-							{<span class="mins">{this.state.millisecond}</span>}
+							<span className="jg">:</span>
+							{this.state.millisecond < 9 ? <span className="mins">0</span> : <span className="mins">1</span>}
+							{<span className="mins">{this.state.millisecond}</span>}
 						</div>
 					</div>
 				)}
@@ -570,7 +557,7 @@ export default class essential_information_page extends PureComponent {
 									{getFieldDecorator('cntRelTyp1', {
 										initialValue: this.state.relatValue,
 										rules: [{ required: true, message: '请选择联系人关系' }],
-										onChange: (value, label) => {
+										onChange: (value) => {
 											store.setRelationValue(value);
 											this.selectSure({
 												value: JSON.stringify(value),

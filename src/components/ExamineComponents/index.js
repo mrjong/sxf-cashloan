@@ -17,15 +17,14 @@ export default class ExamineComponents extends React.Component {
 			<div className={style.box_container}>
 				<div className={style.bgBox}>
 					<img className={style.bg} src={bg} />
-          <img className={style.paper1} src={paper} />
-          <img className={style.paper2} src={paper} />
-          <img className={style.person} src={person} />
-          <img className={style.handle} src={handle} />
-          <img className={style.jing} src={jing} />
-          <img className={style.zfx} src={zfx} />
-          <img className={style.zfx2} src={zfx2} />
+					<img className={style.paper1} src={paper} />
+					<img className={style.paper2} src={paper} />
+					<img className={style.person} src={person} />
+					<img className={style.handle} src={handle} />
+					<img className={style.jing} src={jing} />
+					<img className={style.zfx} src={zfx} />
+					<img className={style.zfx2} src={zfx2} />
 				</div>
-
 			</div>
 		);
 	}

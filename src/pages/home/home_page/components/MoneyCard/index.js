@@ -18,14 +18,10 @@ export default class MoneyCard extends React.PureComponent {
 							{showData.subtitle}
 						</div>
 						<div className={style.money} style={{ color: showData.color && showData.color }}>
-							{showData.money ? (
-								(isNaN(showData.money) && (
-									<span style={{ fontSize: '.6rem' }}>{showData.money}</span>
-								)) ||
-								showData.money
-							) : (
-								'----.--'
-							)}
+							{showData.money
+								? (isNaN(showData.money) && <span style={{ fontSize: '.6rem' }}>{showData.money}</span>) ||
+								  showData.money
+								: '----.--'}
 						</div>
 					</div>
 					{showData.money2 ? (
@@ -35,7 +31,7 @@ export default class MoneyCard extends React.PureComponent {
 								{showData.subtitle2}
 							</div>
 							<div
-								className={[ style.money, style.small ].join(' ')}
+								className={[style.money, style.small].join(' ')}
 								style={{ color: showData.color && showData.color }}
 							>
 								{showData.money2}

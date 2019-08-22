@@ -3,7 +3,7 @@ import styles from './index.scss';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import qs from 'qs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -95,7 +95,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 					});
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.props.history.replace('/home/home');
 			});
 	};
