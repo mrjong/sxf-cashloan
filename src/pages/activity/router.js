@@ -49,6 +49,7 @@ export default [
 	},
 	{
 		path: '/activity/mianxi100_page',
+		zhName: 'lxhbxsl',
 		title: '100元利息红包限时领',
 		component: () => import('pages/activity/mianxi822_page')
 	}
