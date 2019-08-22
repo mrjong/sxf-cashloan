@@ -999,6 +999,10 @@ export default class home_page extends PureComponent {
 					}
 				}, 500);
 				break;
+			case 'getBonus':
+				// buriedPointEvent(activity.mianxi726ModalBtnClick);
+				this.couponHandler();
+				break;
 			default:
 				break;
 		}
@@ -1484,6 +1488,51 @@ export default class home_page extends PureComponent {
 					reject();
 				});
 		});
+	};
+
+	// 100元利息红包限时领活动中点击去使用、去参与按钮
+	couponHandler = () => {
+		const { showDiv, cardStatus } = this.state;
+		if (showDiv) {
+			switch (showDiv) {
+				case '50000':
+				case 'circle':
+					this.handleApply();
+					break;
+				case 'progress':
+					this.handleProgressApply(cardStatus);
+					break;
+				case 'applyCredict':
+					this.handleSmartClick();
+					break;
+				default:
+					break;
+			}
+		} else {
+			switch (indexSts) {
+				case 'LN0001': // 新用户，信用卡未授权
+					this.handleApply();
+					break;
+				case 'LN0002': // 账单爬取中
+					this.handleProgressApply('01');
+					break;
+				case 'LN0003': // 账单爬取成功
+				case 'LN0004': // 代还资格审核中
+				case 'LN0005': // 暂无代还资格
+				case 'LN0006': // 风控审核通过
+				case 'LN0007': // 放款中
+				case 'LN0008': // 放款失败
+				case 'LN0009': // 放款成功
+				case 'LN0011':
+					this.handleSmartClick();
+					break;
+				case 'LN0010': // 账单爬取失败/老用户
+					this.goToNewMoXie();
+					break;
+				default:
+					break;
+			}
+		}
 	};
 
 	render() {
