@@ -21,6 +21,8 @@ import get_bonus_btn from './img/get_bonus_btn.png';
 import join_bonus from './img/join_bonus.png';
 import join_bonus_btn from './img/join_bonus_btn.png';
 import CouponDesc from './components/CouponDesc';
+import not_use_bonus from './img/not_use_bonus.png';
+import not_use_bonus_btn from './img/not_use_bonus_btn.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -59,7 +61,10 @@ class ActivityModal extends React.Component {
 							{modalType === 'getBonus' ? <img src={get_bonus} /> : null}
 							{modalType === 'getBonus' ? <CouponDesc history={history} /> : null}
 							{modalType === 'joinBonus' ? <img src={join_bonus} /> : null}
-							{modalType === 'notUseBonus' ? <img src={join_bonus} /> : null}
+							{modalType === 'notUseBonus' ? <img src={not_use_bonus} /> : null}
+							{modalType === 'notUseBonus' ? (
+								<CouponDesc className={styles.couponDesc} history={history} />
+							) : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -137,8 +142,8 @@ class ActivityModal extends React.Component {
 							) : null}
 							{modalType === 'notUseBonus' ? (
 								<img
-									className={styles.joinBonusBtn}
-									src={join_bonus_btn}
+									className={styles.notUseBonusBtn}
+									src={not_use_bonus_btn}
 									onClick={() => {
 										activityModalBtn('notUseBonus');
 									}}
