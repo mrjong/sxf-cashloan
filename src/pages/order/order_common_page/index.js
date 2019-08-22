@@ -13,8 +13,6 @@ import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
 import Cashier from './components/Cashier';
-import CashierModal from './components/CashierModal';
-
 const API = {
 	qryDtl: '/bill/qryDtl',
 	payback: '/bill/paySubmit',
@@ -51,7 +49,7 @@ export default class order_detail_page extends PureComponent {
 			protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
 			toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
 			detailArr: [], // 还款详情数据
-			isShowDetail: true, // 是否展示弹框中的明细详情
+			isShowDetail: false, // 是否展示弹框中的明细详情
 			isAdvance: false, // 是否提前还款
 			totalAmt: '', // 一键结清传给后台的总金额
 			billOverDue: '', //逾期弹窗标志
@@ -67,7 +65,8 @@ export default class order_detail_page extends PureComponent {
 			couponPrice: '', // 优惠劵计算过的金额
 			cashierVisible: false,
 
-			disDisRepayAmt: 0 // 优惠金额
+			disDisRepayAmt: 0, // 优惠金额
+			totalMoney: 0
 		};
 	}
 
@@ -155,7 +154,11 @@ export default class order_detail_page extends PureComponent {
 						// 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
 						let isAdvance = false;
 						const buChangJinList = res.data[0].totalList.find((item2) => item2.feeNm === '补偿金');
-						if (buChangJinList.feeAmt !== 0) {
+						const buChangJinList2 = res.data[0].totalList.find((item2) => item2.feeNm === '提前结清优惠');
+						if (
+							(buChangJinList && buChangJinList.feeAmt !== 0) ||
+							(buChangJinList2 && buChangJinList2.feeAmt !== 0)
+						) {
 							isAdvance = true;
 						} else {
 							isAdvance = false;
@@ -250,8 +253,7 @@ export default class order_detail_page extends PureComponent {
 								extra: [
 									{
 										name: parseFloat(res.data.insuranceAmt).toFixed(2),
-										color: '#333',
-										fontSize: '0.3rem'
+										color: '#333'
 									},
 									{
 										name: insuranceStsText,
@@ -383,8 +385,7 @@ export default class order_detail_page extends PureComponent {
 				extra: [
 					{
 						name: perdList[i].perdTotAmt,
-						color: '#333',
-						fontSize: '0.3rem'
+						color: '#333'
 					},
 					{
 						name: perdList[i].perdStsNm,
@@ -848,10 +849,6 @@ export default class order_detail_page extends PureComponent {
 		buriedPointEvent(order.repayment, {
 			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'
 		});
-		// store.setOrderRepayInfo({
-		// 	// insureInfo: this.state.insureInfo,
-
-		// });
 		this.props.history.push('/order/order_repay_page');
 		// this.getModalDtlInfo(this.showPayModal, false);
 	};
@@ -885,7 +882,7 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	//关闭收银台状态弹窗
-	closeCashier = (paySuccess) => {
+	closeCashierModal = (paySuccess) => {
 		const { billDesc, isPayAll } = this.state;
 		this.setState({
 			cashierVisible: false
@@ -897,8 +894,84 @@ export default class order_detail_page extends PureComponent {
 		this.queryExtendedPayType();
 	};
 
-	closeCashierModal = () => {
-		this.setState({ showModal: false, isShowDetail: false });
+	checkClickCb = (item) => {
+		console.log(item);
+		let totalMoney = 0;
+		if (item.isChecked) {
+			item = {
+				...item,
+				isChecked: false
+			};
+		} else {
+			item = {
+				...item,
+				isChecked: true
+			};
+		}
+
+		for (let i = 0; i < this.state.orderList.length; i++) {
+			if (i <= item.key) {
+				this.state.orderList[i].isChecked = true;
+
+				for (let j = 0; j < this.state.orderList[i].feeInfos.length; j++) {
+					let itm = this.state.orderList[i].feeInfos[j];
+					if (itm.feeNm === '剩余应还') {
+						totalMoney += itm.feeAmt;
+						console.log(totalMoney);
+					}
+				}
+				this.setState({
+					totalMoney: Number(totalMoney).toFixed(2)
+				});
+			} else {
+				this.state.orderList[i].isChecked = false;
+			}
+		}
+		this.state.orderList[item.key] = item;
+		this.setState({
+			orderList: [...this.state.orderList]
+		});
+	};
+
+	// 展开隐藏
+	clickCb = (item) => {
+		switch (item.arrowHide) {
+			case 'empty':
+				break;
+			case 'up':
+				item = {
+					...item,
+					arrowHide: 'down',
+					showDesc: false
+				};
+				break;
+			case 'down':
+				item = {
+					...item,
+					arrowHide: 'up',
+					showDesc: true
+				};
+
+				break;
+			default:
+				break;
+		}
+		for (let i = 0; i < this.state.orderList.length; i++) {
+			if (i !== item.key) {
+				this.state.orderList[i].showDesc = false;
+				this.state.orderList[i].arrowHide = 'down';
+			}
+		}
+		this.state.orderList[item.key] = item;
+		this.setState({
+			orderList: [...this.state.orderList]
+		});
+	};
+
+	handleCloseTipModal = () => {
+		this.setState({
+			showTipModal: !this.state.showTipModal
+		});
 	};
 
 	render() {
@@ -928,22 +1001,6 @@ export default class order_detail_page extends PureComponent {
 			orderList,
 			totalMoney
 		} = this.state;
-		const {
-			billPrcpAmt = '',
-			perdLth = '',
-			perdUnit = '',
-			repayTypNm = '',
-			loanDt = '',
-			payCrdCorpOrgNm = '',
-			payCrdNoLast = '',
-			wthdCrdCorpOrgNm = '',
-			wthdCrdNoLast = '',
-			perdNum = '',
-			waitRepAmt = '',
-			perdList,
-			discRedRepay = false,
-			waitRepAmtForShow = ''
-		} = billDesc;
 		let insureInfo = {
 			label: {
 				name: '保费',
@@ -980,6 +1037,22 @@ export default class order_detail_page extends PureComponent {
 				}
 			]
 		};
+		const {
+			billPrcpAmt = '',
+			perdLth = '',
+			perdUnit = '',
+			repayTypNm = '',
+			loanDt = '',
+			payCrdCorpOrgNm = '',
+			payCrdNoLast = '',
+			wthdCrdCorpOrgNm = '',
+			wthdCrdNoLast = '',
+			perdNum = '',
+			waitRepAmt = '',
+			perdList,
+			discRedRepay = false,
+			waitRepAmtForShow = ''
+		} = billDesc;
 		const itemList = [
 			{
 				name: '借款本金(元)',
@@ -1030,7 +1103,7 @@ export default class order_detail_page extends PureComponent {
 		}
 		return (
 			<div>
-				{false ? (
+				{window.location.pathname === '/order/order_detail_page' ? (
 					<div className={styles.order_detail_page}>
 						{isOverdue &&
 							isOverdue.length > 0 &&
@@ -1088,7 +1161,7 @@ export default class order_detail_page extends PureComponent {
 						)}
 						<Modal
 							popup
-							visible={false}
+							visible={this.state.showModal}
 							onClose={() => {
 								this.setState({ showModal: false, isShowDetail: false });
 							}}
@@ -1131,8 +1204,16 @@ export default class order_detail_page extends PureComponent {
 											) : null
 										)}
 										<div className={`${styles.modal_flex} ${styles.sum_total}`}>
-											<span className={styles.modal_label}>本次应还总金额</span>
-											<span className={styles.modal_value}>
+											<span className={styles.modal_label_last}>本次应还总金额</span>
+											<span className={styles.modal_value_last}>
+												{/* {isPayAll ? isNewsContract ? (
+											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
+										) : (
+											waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
+										) : (
+											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
+											(money && parseFloat(money).toFixed(2))
+                    )}元 */}
 												{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 											</span>
 										</div>
@@ -1230,31 +1311,9 @@ export default class order_detail_page extends PureComponent {
 								</SXFButton>
 							</div>
 						</Modal>
-
-						{/* <CashierModal
-					visible={this.state.showModal}
-					data={{
-            isAdvance,
-            moneyWithCoupon,
-            totalAmtForShow,
-            isShowDetail,
-            detailArr,
-            payType: 'BankPay',
-            wthdCrdCorpOrgNm,
-            wthdCrdNoLast,
-            disDisRepayAmt,
-            isPayAll,
-            billDesc
-          }}
-          onClose={this.closeCashierModal}
-          onSelectCoupon={(type)=>{
-            this.selectCoupon(type)
-          }}
-          onSelectBank={this.selectBank}
-				/> */}
 						{cashierVisible && (
 							<Cashier
-								onClose={this.closeCashier}
+								onClose={this.closeCashierModal}
 								repayOrdNo={repayOrdNo}
 								bankName={wthdCrdCorpOrgNm}
 								bankNo={wthdCrdNoLast}
@@ -1301,7 +1360,7 @@ export default class order_detail_page extends PureComponent {
 							</SXFButton>
 							<Modal
 								wrapClassName="order_repay_page"
-								visible={false}
+								visible={this.state.showTipModal}
 								transparent
 								footer={[
 									{
