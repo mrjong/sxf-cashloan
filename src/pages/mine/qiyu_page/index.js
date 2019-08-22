@@ -6,20 +6,6 @@ import qs from 'qs';
 const API = {
 	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
 };
-// // 键盘收不起来的问题
-// if (!!document.addEventListener) {
-// 	window.addEventListener('message', function(msg) {
-// 		if (msg.data === 'pkg:{"category":"inputblur"}') {
-// 			document.body.scrollIntoView(false);
-// 		}
-// 	});
-// } else {
-// 	window.addEventListener('onmessage', function(msg) {
-// 		if (msg.data === 'pkg:{"category":"inputblur"}') {
-// 			document.body.scrollIntoView(false);
-// 		}
-// 	});
-// }
 (function(w, d, n, a, j) {
 	w[n] =
 		w[n] ||
@@ -70,7 +56,7 @@ export default class qiyu_page extends PureComponent {
 			data: JSON.stringify([{ key: 'uid', value: QYConfig && QYConfig.uid, label: '用户ID' }]),
 			success: function() {
 				// 成功回调
-				// location.replace(window.ysf('url', { templateId: QYConfig && QYConfig.templateId }));
+				location.replace(window.ysf('url', { templateId: QYConfig && QYConfig.templateId }));
 				// ysf('open', {
 				//   templateId: 10317938
 				// });
