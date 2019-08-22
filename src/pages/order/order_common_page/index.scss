@@ -351,32 +351,36 @@ i.arrow_up {
 		}
 	}
 }
-.modal_title {
-	color: #121c32;
-	font-size: 34px;
-	margin-bottom: 10px;
-	&::before {
-		content: '';
-		display: inline-block;
-		background: url('../../../assets/images/order/mark_icon.png') no-repeat;
-		background-size: cover;
-		width: 34px;
-		height: 34px;
-		vertical-align: middle;
-		margin-right: 10px;
-		margin-top: -5px;
+
+.modal_tip_content {
+	.modal_tip_title {
+		color: #121c32;
+		font-size: 34px;
+		margin-bottom: 10px;
+		&::before {
+			content: '';
+			display: inline-block;
+			background: url('../../../assets/images/order/mark_icon.png') no-repeat;
+			background-size: cover;
+			width: 34px;
+			height: 34px;
+			vertical-align: middle;
+			margin-right: 10px;
+			margin-top: -8px;
+		}
+	}
+
+	.modal_tip_desc {
+		color: #868e9e;
+		font-size: 30px;
+
+		em {
+			font-weight: 500;
+			color: #fe6666;
+		}
 	}
 }
 
-.modal_desc {
-	color: #868e9e;
-	font-size: 30px;
-
-	em {
-		font-weight: 500;
-		color: #fe6666;
-	}
-}
 :global {
 	.order_repay_page {
 		.am-modal-transparent {

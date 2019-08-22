@@ -19,7 +19,6 @@ export default class Panel extends React.PureComponent {
 
 	render() {
 		const { className, title, children, extra, ...restProps } = this.props;
-		console.log(this.props);
 		return (
 			<div className={`${style.panel_wrap} ${className}`} {...restProps}>
 				<h2 className={style.panle_title}>
