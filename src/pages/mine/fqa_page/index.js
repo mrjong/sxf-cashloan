@@ -5,6 +5,7 @@ import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
+import { store } from 'utils/store';
 
 const API = {
 	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
@@ -36,26 +37,6 @@ export default class fqa_page extends PureComponent {
 
 	goOnline = () => {
 		this.props.history.push('/mine/qiyu_page');
-		// const { QYConfig } = this.state;
-		// window.ysf('config', {
-		// 	uid: QYConfig && QYConfig.uid, // 用户Id
-		// 	robotShuntSwitch: 1, // 机器人优先开关
-		// 	groupid: QYConfig && QYConfig.groupid, // 客服组id 金融在线（IOS）397748874   金融在线（安卓）397743127   金融在线（微信公众号）397748875
-		// 	robotId: QYConfig && QYConfig.robotId, // 机器人ID
-		// 	data: JSON.stringify([{ key: 'uid', value: QYConfig && QYConfig.uid, label: '用户ID' }]),
-		// 	success: function() {
-		// 		// 成功回调
-		// 		location.href = window.ysf('url', { templateId: QYConfig && QYConfig.templateId });
-		// 		// ysf('open', {
-		// 		//   templateId: 10317938
-		// 		// });
-		// 	},
-		// 	error: function() {
-		// 		// 错误回调
-		// 		console.log('出错了');
-		// 		// handle error
-		// 	}
-		// });
 	};
 
 	render() {
@@ -70,12 +51,14 @@ export default class fqa_page extends PureComponent {
 					height="100%"
 					frameBorder="0"
 				/>
-				<div className={styles.service_box}>
-					<ButtonCustom onClick={this.goOnline} className={styles.online_btn}>
-						<i />
-						在线咨询
-					</ButtonCustom>
-				</div>
+				{store.getToken() ? (
+					<div className={styles.service_box}>
+						<ButtonCustom onClick={this.goOnline} className={styles.online_btn}>
+							<i />
+							在线咨询
+						</ButtonCustom>
+					</div>
+				) : null}
 			</div>
 		);
 	}
