@@ -35,9 +35,21 @@ export default class ButtonCustom extends React.PureComponent {
 										}
 									>
 										<div className={styles.list_desc_content}>
-											<label>{item.feeNm}</label>
+											<label
+												className={
+													item.feeNm === '剩余应还'
+														? styles.list_desc_container_FW
+														: styles.list_desc_container
+												}
+											>
+												{item.feeNm}
+											</label>
 										</div>
-										<div className={styles.list_desc_extra}>
+										<div
+											className={
+												item.feeNm === '剩余应还' ? styles.list_desc_extra_FW : styles.list_desc_extra
+											}
+										>
 											<span>{parseFloat(item.feeAmt).toFixed(2)}</span>
 										</div>
 									</li>

@@ -64,6 +64,7 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/mpos/mpos_ioscontrol_page',
 			'/home/credit_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
 			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
+			'/mine/qiyu', // 因为app直接跳转到h5的webview，因为放开
 			'/home/loan_person_succ_page' // 因为app直接跳转到h5的webview，因为放开
 		];
 		if (isWXOpen()) {
@@ -679,35 +680,6 @@ export const validators = {
 		let maxNum = max || 100000;
 		let chReg = new RegExp(`^(([\u4e00-\u9fa5])|(\\.)|(\\·)){${minNum},${maxNum}}$`);
 		return chReg.test(val);
-	}
-};
-
-function clearAllCookie() {
-	var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-	if (keys) {
-		for (var i = keys.length; i--; ) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
-	}
-}
-export const vconsole = (i, consoleshow) => {
-	let head = document.getElementsByTagName('head')[0];
-	let script = document.createElement('script');
-	if ((i && i.length === 10 && i === '0110001111') || consoleshow || sessionStorage.getItem('consoleshow')) {
-		script.type = 'text/javascript';
-		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
-		head.appendChild(script);
-		store.setConsoleshow(true);
-	} else if (
-		(i && i.length === 10 && i === '1111000110') ||
-		consoleshow ||
-		sessionStorage.getItem('consoleshow')
-	) {
-		localStorage.clear();
-		sessionStorage.clear();
-		clearAllCookie();
-		script.type = 'text/javascript';
-		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
-		head.appendChild(script);
-		store.setConsoleshow(true);
 	}
 };
 

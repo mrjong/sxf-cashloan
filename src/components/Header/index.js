@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import styles from './index.scss';
+import React from 'react';
 import { headerIgnore, setTitle } from 'utils';
-export default class Header extends Component {
+export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -38,15 +37,16 @@ export default class Header extends Component {
 		const { headerProps, newTitle } = this.props;
 		const { hideHederByApp } = this.state;
 		setTitle(newTitle || headerProps.title || '');
-		return headerIgnore('false') && !headerProps.headerHide && !hideHederByApp ? (
-			<div className={[styles.navbar, 'application_navbar'].join(' ')}>
-				{!headerProps.arrowHide ? (
-					<div className={styles.arrows} onClick={() => this.goBack()}>
-						<div className={styles.left} />
-					</div>
-				) : null}
-				<div className={styles.center}>{newTitle || headerProps.title || ''}</div>
-			</div>
-		) : null;
+		return headerIgnore('false') && !headerProps.headerHide && !hideHederByApp
+			? // <div className={[styles.navbar, 'application_navbar'].join(' ')}>
+			  //   {!headerProps.arrowHide ? (
+			  //     <div className={styles.arrows} onClick={() => this.goBack()}>
+			  //       <div className={styles.left} />
+			  //     </div>
+			  //   ) : null}
+			  //   <div className={styles.center}>{newTitle || headerProps.title || ''}</div>
+			  // </div>
+			  null
+			: null;
 	}
 }

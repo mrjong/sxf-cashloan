@@ -101,5 +101,10 @@ export default [
 		path: '/mine/withdrawing_page',
 		title: '提现中',
 		component: () => import('pages/mine/withdrawing_page')
+	},
+	{
+		path: '/mine/qiyu_page',
+		title: '在线客服',
+		component: () => import('pages/mine/qiyu_page')
 	}
 ];
