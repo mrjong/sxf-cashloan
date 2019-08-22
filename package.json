@@ -112,6 +112,11 @@
 		"precommit": "lint-staged"
 	},
 	"lint-staged": {
+		"src/**/*.{js,jsx}": [
+			"prettier --tab-width 2 --write",
+			"eslint --fix",
+			"git add"
+		]
 	},
 	"repository": {
 		"type": "git"
