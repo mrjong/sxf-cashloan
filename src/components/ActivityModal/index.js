@@ -16,6 +16,11 @@ import syx_btn from './img/syx_btn.png';
 import mianxi7 from './img/mianxi7.png';
 import mianxi15 from './img/mianxi15.png';
 import mianxi30 from './img/mianxi30.png';
+import get_bonus from './img/get_bonus.png';
+import get_bonus_btn from './img/get_bonus_btn.png';
+import join_bonus from './img/join_bonus.png';
+import join_bonus_btn from './img/join_bonus_btn.png';
+import CouponDesc from './components/CouponDesc';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -31,9 +36,11 @@ class ActivityModal extends React.Component {
 			});
 		}, 300);
 	}
+	// 查看优惠劵
+	goCoupon = () => {};
 	// 优先弹688  再弹出免息  再弹iphone
 	render() {
-		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag } = this.props;
+		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag, history } = this.props;
 		return (
 			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
 				<div className={[styles.modal, styles.transitionName].join(' ')}>
@@ -49,6 +56,9 @@ class ActivityModal extends React.Component {
 							{modalType === 'mianxi7' ? <img src={mianxi7} /> : null}
 							{modalType === 'mianxi15' ? <img src={mianxi15} /> : null}
 							{modalType === 'mianxi30' ? <img src={mianxi30} /> : null}
+							{modalType === 'getBonus' ? <img src={get_bonus} /> : null}
+							{modalType === 'getBonus' ? <CouponDesc history={history} /> : null}
+							{modalType === 'joinBonus' ? <img src={join_bonus} /> : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -103,6 +113,24 @@ class ActivityModal extends React.Component {
 									src={syx_btn}
 									onClick={() => {
 										activityModalBtn(modalType);
+									}}
+								/>
+							) : null}
+							{modalType === 'getBonus' ? (
+								<img
+									className={styles.getBonusBtn}
+									src={get_bonus_btn}
+									onClick={() => {
+										activityModalBtn('getBonus');
+									}}
+								/>
+							) : null}
+							{modalType === 'joinBonus' ? (
+								<img
+									className={styles.joinBonusBtn}
+									src={join_bonus_btn}
+									onClick={() => {
+										activityModalBtn('joinBonus');
 									}}
 								/>
 							) : null}

@@ -46,5 +46,10 @@ export default [
 		path: '/activity/mianxi_page',
 		title: '借钱免息30天',
 		component: () => import('pages/activity/mianxi715_page')
+	},
+	{
+		path: '/activity/mianxi100_page',
+		title: '100元利息红包限时领',
+		component: () => import('pages/activity/mianxi822_page')
 	}
 ];
