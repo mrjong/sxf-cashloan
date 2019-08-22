@@ -1000,7 +1000,23 @@ export default class home_page extends PureComponent {
 				}, 500);
 				break;
 			case 'getBonus':
-				// buriedPointEvent(activity.mianxi726ModalBtnClick);
+				buriedPointEvent(activity.mianxi822ModalUseBtn, {
+					medium: 'H5',
+					clickType: 'getPrize'
+				});
+				this.couponHandler();
+				break;
+			case 'notUseBonus':
+				buriedPointEvent(activity.mianxi822ModalUseBtn, {
+					medium: 'H5',
+					clickType: 'notUse'
+				});
+				this.couponHandler();
+				break;
+			case 'joinBonus':
+				buriedPointEvent(activity.mianxi822ModalJoinBtn, {
+					medium: 'H5'
+				});
 				this.couponHandler();
 				break;
 			default:

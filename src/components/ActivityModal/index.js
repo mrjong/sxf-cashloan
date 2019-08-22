@@ -59,6 +59,7 @@ class ActivityModal extends React.Component {
 							{modalType === 'getBonus' ? <img src={get_bonus} /> : null}
 							{modalType === 'getBonus' ? <CouponDesc history={history} /> : null}
 							{modalType === 'joinBonus' ? <img src={join_bonus} /> : null}
+							{modalType === 'notUseBonus' ? <img src={join_bonus} /> : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -131,6 +132,15 @@ class ActivityModal extends React.Component {
 									src={join_bonus_btn}
 									onClick={() => {
 										activityModalBtn('joinBonus');
+									}}
+								/>
+							) : null}
+							{modalType === 'notUseBonus' ? (
+								<img
+									className={styles.joinBonusBtn}
+									src={join_bonus_btn}
+									onClick={() => {
+										activityModalBtn('notUseBonus');
 									}}
 								/>
 							) : null}
