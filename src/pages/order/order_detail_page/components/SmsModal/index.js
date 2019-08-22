@@ -75,7 +75,7 @@ export default class SmsModal extends React.PureComponent {
 				{protocolSmsFailFlag ? (
 					<div className={styles.smsModal_error}>
 						<p className={styles.smsModal_error_info}>
-							还款银行卡异常：{protocolSmsFailInfo && `${protocolSmsFailInfo},`}请联系客服或更换还款银行卡。
+							还款银行卡异常：{protocolSmsFailInfo && `${protocolSmsFailInfo};`}请联系客服或更换还款银行卡。
 						</p>
 						<div className={styles.button_box}>
 							<div className={styles.button_wrap}>
