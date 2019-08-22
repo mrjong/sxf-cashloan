@@ -46,6 +46,7 @@ export const storeTypes = {
 	City: 'City', // 城市
 	ShowActivityModal: 'ShowActivityModal', // 是否显示活动弹窗
 	ShowActivityModal2: 'ShowActivityModal2', // 是否显示活动弹窗2
+	ShowActivityModal3: 'ShowActivityModal3', // 是否显示活动弹窗3
 	SaveAmt: 'SaveAmt', // 回显代还金额的数据
 	BindCardNo: 'BindCardNo', // 回显绑卡卡号
 	BindCreditCardNo: 'BindCreditCardNo', // 回显绑卡信用卡卡号
@@ -88,5 +89,6 @@ export const storeTypes = {
 	NoLoginToken: 'NoLoginToken', // 设置 图片验证码 noLoginToken
 	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
 	TencentBackUrl: 'TencentBackUrl', // 跳转到人脸识别返回的url
-	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome' // 签约页控制物理返回到首页标识
+	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome', // 签约页控制物理返回到首页标识
+	BonusActivity: 'BonusActivity' // 参与100元利息红包限时领活动
 };

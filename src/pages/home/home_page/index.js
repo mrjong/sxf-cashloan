@@ -805,6 +805,15 @@ export default class home_page extends PureComponent {
 				} else {
 					this.getMianxi7();
 				}
+				if (store.getBonusActivity()) {
+					store.removeBonusActivity();
+					this.setState({
+						isShowActivityModal: true,
+						modalType: 'getBonus'
+					});
+				} else {
+					this.isInvoking_bonus();
+				}
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
@@ -1504,6 +1513,39 @@ export default class home_page extends PureComponent {
 					reject();
 				});
 		});
+	};
+
+	// 判断是否参与过与使用过100元利息红包限时领活动
+	isInvoking_bonus = async () => {
+		let mxData = await this.props.$fetch.get(API.couponNotify);
+		if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal()) {
+			this.setState(
+				{
+					isShowActivityModal: true,
+					modalBtnFlag: true,
+					modalType: 'joinBonus'
+				},
+				() => {
+					store.setShowActivityModal(true);
+				}
+			);
+		} else if (
+			mxData &&
+			mxData.msgCode === 'PTM0000' &&
+			mxData.data !== null &&
+			!store.getShowActivityModal3()
+		) {
+			this.setState(
+				{
+					isShowActivityModal: true,
+					modalBtnFlag: true,
+					modalType: 'notUseBonus'
+				},
+				() => {
+					store.setShowActivityModal3(true);
+				}
+			);
+		}
 	};
 
 	// 100元利息红包限时领活动中点击去使用、去参与按钮

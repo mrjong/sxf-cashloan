@@ -89,7 +89,9 @@ export default class wuyuekh_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch.get(API.joinActivity).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				// this.jumpToHome();
+				store.setBonusActivity(true);
+				this.jumpToHome();
+
 				// this.props.toast.info('参与成功', 2, () => {
 				// 	this.props.history.push('/home/home');
 				// });
