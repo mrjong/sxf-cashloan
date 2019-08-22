@@ -1,3 +1,4 @@
+/*eslint-disable */
 'use strict';
 var CONFIG = {
 		track_url: 'http://localhost:3300/',

@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React from 'react';
 import { _addlisten } from './analytins';
 export const domListen = () => (WrappedComponent) => {

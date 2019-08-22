@@ -378,7 +378,7 @@ export default class real_name_page extends Component {
 			sxfburiedPointEvent(sxfhome.idCardB);
 		}
 	};
-	handleBeforeCompress = (type) => {
+	handleBeforeCompress = () => {
 		store.setDisableBack(true);
 		this.setState(
 			{

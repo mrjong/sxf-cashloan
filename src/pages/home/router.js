@@ -101,6 +101,7 @@ export default [
 	},
 	{
 		path: '/home/payment_notes',
+		zhName: 'ddrgsh',
 		title: '借款须知',
 		component: () => import('pages/home/payment_notes')
 	}

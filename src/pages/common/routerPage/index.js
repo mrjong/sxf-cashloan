@@ -11,6 +11,7 @@ import TFDInit from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { Provider } from './context';
+const { PROJECT_ENV } = process.env;
 
 export default class router_Page extends PureComponent {
 	constructor(props) {
@@ -24,6 +25,9 @@ export default class router_Page extends PureComponent {
 		};
 	}
 	componentWillMount() {
+		if (PROJECT_ENV === 'dev') {
+			this.getTip();
+		}
 		// 为跳转到协议添加loading
 		store.setFromPage('wap');
 		if (!store.getHistoryRouter()) {
@@ -38,6 +42,43 @@ export default class router_Page extends PureComponent {
 		this.loadComponent(nextProps);
 		store.setHistoryRouter(location.pathname);
 	}
+	getTip = () => {
+		let arr = [];
+		for (let index = 0; index < Routers.length; index++) {
+			const element = Routers[index];
+			if (!element.zhName) {
+				console.error(`《${element.title}'》忘记:zhName属性'`);
+			} else {
+				arr.push(element.zhName);
+			}
+		}
+
+		function arrayCnt(arr) {
+			var newArr = [];
+			for (var i = 0; i < arr.length; i++) {
+				if (newArr.indexOf(arr[i]) == -1) {
+					newArr.push(arr[i]);
+				}
+			}
+			var newarr2 = new Array(newArr.length);
+			for (var t = 0; t < newarr2.length; t++) {
+				newarr2[t] = 0;
+			}
+			for (var p = 0; p < newArr.length; p++) {
+				for (var j = 0; j < arr.length; j++) {
+					if (newArr[p] == arr[j]) {
+						newarr2[p]++;
+					}
+				}
+			}
+			for (var m = 0; m < newArr.length; m++) {
+				if (newarr2[m] > 1) {
+					console.error(newArr[m] + '重复的次数为：' + newarr2[m]);
+				}
+			}
+		}
+		arrayCnt(arr);
+	};
 	loadComponent = async (props) => {
 		const token = Cookie.get('fin-v-card-token');
 		let tokenFromStorage = '';
