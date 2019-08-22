@@ -29,7 +29,7 @@ export const initAnalytics = () => {
 export const initSxfData = () => {
 	SxfData &&
 		SxfData.init({
-			track_url: 'http://172.16.173.18:8080/buried',
+			track_url: '/buried',
 			local_storage: {
 				type: 'localStorage'
 			},
