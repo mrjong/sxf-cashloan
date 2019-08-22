@@ -44,7 +44,8 @@ export default class Lists extends PureComponent {
 		return (
 			<div className={`${styles.listsContainer} ${className} list_box`}>
 				<List>
-					{insureFee && (
+					{/* 保费 */}
+					{insureFee && insureFee.show && (
 						<Item
 							className={styles.checkList}
 							// className={insureFee.label.className ? styles.hasIcon : null}
@@ -62,7 +63,9 @@ export default class Lists extends PureComponent {
 							{isCheckbox && (
 								<span
 									className={
-										true ? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}` : styles.checkBoxStyle
+										insureFee.isChecked
+											? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
+											: styles.checkBoxStyle
 									}
 								/>
 							)}
@@ -70,7 +73,8 @@ export default class Lists extends PureComponent {
 							{insureFee.label.brief ? <Brief>{insureFee.label.brief}</Brief> : null}
 						</Item>
 					)}
-					{penaltyInfo && (
+					{/* 罚息 */}
+					{penaltyInfo && penaltyInfo.show && (
 						<Item
 							className={styles.checkList}
 							arrow={'empty'}
@@ -88,10 +92,12 @@ export default class Lists extends PureComponent {
 								<span
 									onClick={(e) => {
 										e.stopPropagation();
-										checkClickCb({ isChecked: false });
+										checkClickCb(penaltyInfo, true);
 									}}
 									className={
-										true ? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}` : styles.checkBoxStyle
+										penaltyInfo.isChecked
+											? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
+											: styles.checkBoxStyle
 									}
 								/>
 							)}
@@ -103,6 +109,7 @@ export default class Lists extends PureComponent {
 							) : null}
 						</Item>
 					)}
+					{/* 账单列表 */}
 					{listsInf &&
 						listsInf.map((item, index) => {
 							const icon = <i className={item.label.className} />;

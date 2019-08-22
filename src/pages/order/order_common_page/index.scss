@@ -1,54 +1,55 @@
 @import '../../../assets/styles/scss/base/fn';
 
+.topBlock {
+	background-color: #f1f1f1;
+	height: 30px;
+}
+.overdueEntryTip {
+	text-align: center;
+	font-size: 30px;
+	padding: 10px;
+	background-color: #f9d45e;
+	span {
+		color: #f66;
+	}
+}
+.overdueEntry {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #ffdfdf;
+	height: 80px;
+	padding: 0 30px;
+	color: #f66;
+	font-size: 30px;
+	.overdueItem {
+		display: flex;
+		align-items: center;
+	}
+	.warningIco {
+		width: 40px;
+		height: 40px;
+		@include bg-image('../../../assets/images/order/warn_ico');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-right: 19px;
+	}
+	.entryIco {
+		width: 16px;
+		height: 28px;
+		@include bg-image('../../../assets/images/order/entry_ico');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-left: 19px;
+	}
+}
+
 .order_detail_page {
 	flex: 1;
-	background-color: #f1f1f1;
-	.topBlock {
-		background-color: #f1f1f1;
-		height: 30px;
-	}
-	.overdueEntryTip {
-		text-align: center;
-		font-size: 30px;
-		padding: 10px;
-		background-color: #f9d45e;
-		span {
-			color: #f66;
-		}
-	}
-	.overdueEntry {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		background: #ffdfdf;
-		height: 80px;
-		padding: 0 30px;
-		color: #f66;
-		font-size: 30px;
-		.overdueItem {
-			display: flex;
-			align-items: center;
-		}
-		.warningIco {
-			width: 40px;
-			height: 40px;
-			@include bg-image('../../../assets/images/order/warn_ico');
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			margin-right: 19px;
-		}
-		.entryIco {
-			width: 16px;
-			height: 28px;
-			@include bg-image('../../../assets/images/order/entry_ico');
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			margin-left: 19px;
-		}
-	}
+
 	.loadInfBox {
 		position: relative;
-		margin: 0 30px;
+		margin: 30px 30px 0;
 		border-radius: 6px;
 	}
 
@@ -348,6 +349,10 @@ i.arrow_up {
 			color: #121c32;
 			border-radius: 50px;
 			margin: 20px 0 40px;
+		}
+		.sxf_btn_disabled {
+			background-color: #dcdfe6;
+			color: #f7f8fa;
 		}
 	}
 }
