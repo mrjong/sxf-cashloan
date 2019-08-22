@@ -1,4 +1,3 @@
-const sxfDataConfig = {
-	closed: false
+window.sxfDataConfig = {
+	opened: true
 };
-export default sxfDataConfig;

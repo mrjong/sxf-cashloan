@@ -1,5 +1,5 @@
 'use strict';
-var DEFAULT_CONFIG = {
+var CONFIG = {
 		track_url: 'http://localhost:3300/',
 		debug: !1,
 		local_storage: {
@@ -13,15 +13,12 @@ var DEFAULT_CONFIG = {
 		loaded: function() {},
 		SPA: { is: !1, mode: 'hash' },
 		pageview: !0,
-		truncateLength: -1,
-		session_interval_mins: 30,
-		isBpoint: !0,
 		stackSize: 10,
 		stackTime: 3,
 		queueSize: 20,
-		queueTime: 5
+		queueTime: 5,
+		DEBUG: !1
 	},
-	CONFIG = { DEBUG: !1, isBpoint: !0, stackSize: 10, stackTime: 3, queueSize: 20, queueTime: 5 },
 	utf8Encode = function(e) {
 		var t,
 			n,
@@ -582,28 +579,6 @@ var breaker = {},
 		base64Encode: function(e) {
 			return base64Encode(e);
 		},
-		sha1: function(e) {
-			return '';
-		},
-		truncate: function(e, n) {
-			var r = void 0;
-			return (
-				'string' == typeof e
-					? (r = e.slice(0, n))
-					: _.isArray(e)
-					? ((r = []),
-					  _.each(e, function(e) {
-							r.push(_.truncate(e, n));
-					  }))
-					: _.isObject(e)
-					? ((r = {}),
-					  _.each(e, function(e, t) {
-							r[t] = _.truncate(e, n);
-					  }))
-					: (r = e),
-				r
-			);
-		},
 		isNumber: function(e) {
 			return '[object Number]' == Object.prototype.toString.call(e);
 		},
@@ -620,64 +595,12 @@ var breaker = {},
 				}),
 				r.join(t)
 			);
-		},
-		trim: function(e) {
-			if (e) return e.replace(/(^\s*)|(\s*$)/g, '');
-		},
-		checkTime: function(e) {
-			return !!e && /^(\d{4})-(\d{2})-(\d{2})$/.test(e);
-		},
-		getHost: function(e) {
-			var t = '',
-				n = (e = e || document.URL).match(/.*\:\/\/([^\/]*).*/);
-			return n && (t = n[1]), t;
-		},
-		getQueryParam: function(e, t) {
-			var n = t.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]'),
-				r = RegExp('[\\?&]' + n + '=([^&#]*)').exec(e);
-			return null === r || (r && 'string' != typeof r[1] && r[1].length)
-				? ''
-				: decodeURIComponent(r[1]).replace(/\+/g, ' ');
-		},
-		deleteEmptyProperty: function(e) {
-			if (this.isObject(e)) {
-				for (var t in e)
-					e.hasOwnProperty(t) && ((null !== e[t] && !this.isUndefined(e[t]) && '' !== e[t]) || delete e[t]);
-				return e;
-			}
 		}
 	};
 (_.isArray =
 	Array.isArray ||
 	function(e) {
 		return '[object Array]' === Object.prototype.toString.apply(e);
-	}),
-	(_.loadScript = function(e) {
-		e = _.extend(
-			{
-				success: function() {},
-				error: function() {},
-				appendCall: function(e) {
-					document.getElementsByTagName('head')[0].appendChild(e);
-				}
-			},
-			e
-		);
-		var t = null;
-		'css' === e.type && (((t = document.createElement('link')).rel = 'stylesheet'), (t.href = e.url)),
-			'js' === e.type &&
-				(((t = document.createElement('script')).async = 'async'),
-				t.setAttribute('charset', 'UTF-8'),
-				(t.src = e.url),
-				(t.type = 'text/javascript')),
-			(t.onload = t.onreadystatechange = function() {
-				(this.readyState && 'loaded' !== this.readyState && 'complete' !== this.readyState) ||
-					(e.success(), (t.onload = t.onreadystatechange = null));
-			}),
-			(t.onerror = function() {
-				e.error(), (t.onerror = null);
-			}),
-			e.appendCall(t);
 	}),
 	(_.register_event = (function() {
 		function s(e) {
@@ -929,7 +852,7 @@ var breaker = {},
 var windowConsole = win.console,
 	console = {
 		log: function() {
-			if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole)
+			if (CONFIG.debug && !_.isUndefined(windowConsole) && windowConsole)
 				try {
 					windowConsole.log.apply(windowConsole, arguments);
 				} catch (e) {
@@ -939,7 +862,7 @@ var windowConsole = win.console,
 				}
 		},
 		error: function() {
-			if (CONFIG.DEBUG && !_.isUndefined(windowConsole) && windowConsole) {
+			if (CONFIG.debug && !_.isUndefined(windowConsole) && windowConsole) {
 				var t = ['DATracker error:'].concat(_.toArray(arguments));
 				try {
 					windowConsole.error.apply(windowConsole, t);
@@ -963,43 +886,30 @@ var windowConsole = win.console,
 			}
 		}
 	};
-(_.compile = function(e) {
-	for (var t = String.fromCharCode(e.charCodeAt(0) + e.length), n = 1; n < e.length; n++)
-		t += String.fromCharCode(e.charCodeAt(n) + e.charCodeAt(n - 1));
-	return t;
+(_.bind = function(r, i) {
+	var o, a;
+	if (nativeBind && r.bind === nativeBind) return nativeBind.apply(r, slice.call(arguments, 1));
+	if (!_.isFunction(r)) throw new TypeError();
+	return (
+		(o = slice.call(arguments, 2)),
+		(a = function() {
+			if (!(this instanceof a)) return r.apply(i, o.concat(slice.call(arguments)));
+			var e = {};
+			e.prototype = r.prototype;
+			var t = new e();
+			e.prototype = null;
+			var n = r.apply(t, o.concat(slice.call(arguments)));
+			return Object(n) === n ? n : t;
+		})
+	);
 }),
-	(_.uncompile = function(e) {
-		for (var t = String.fromCharCode(e.charCodeAt(0) - e.length), n = 1; n < e.length; n++)
-			t += String.fromCharCode(e.charCodeAt(n) - t.charCodeAt(n - 1));
-		return t;
-	}),
-	(_.bind = function(r, i) {
-		var o, a;
-		if (nativeBind && r.bind === nativeBind) return nativeBind.apply(r, slice.call(arguments, 1));
-		if (!_.isFunction(r)) throw new TypeError();
-		return (
-			(o = slice.call(arguments, 2)),
-			(a = function() {
-				if (!(this instanceof a)) return r.apply(i, o.concat(slice.call(arguments)));
-				var e = {};
-				e.prototype = r.prototype;
-				var t = new e();
-				e.prototype = null;
-				var n = r.apply(t, o.concat(slice.call(arguments)));
-				return Object(n) === n ? n : t;
-			})
-		);
-	}),
-	(_.bindInstanceMethods = function(e) {
-		for (var t in e) 'function' == typeof e[t] && (e[t] = _.bind(e[t], e));
-	}),
 	(_.safewrap = function(e) {
 		return function() {
 			try {
 				return e.apply(this, arguments);
 			} catch (e) {
 				console.log('Implementation error. Please turn on debug and contact support@mixpanel.com.'),
-					CONFIG.DEBUG && console.log(e);
+					CONFIG.debug && console.log(e);
 			}
 		};
 	}),
@@ -1097,39 +1007,24 @@ var classCallCheck = function(e, t) {
 									o = new Date().getTime();
 								i = _.extend({}, this.instance.get_property('superProperties'), i, {});
 								var a = {
-									uId: this.instance.get_property('userId') || '',
-									pAttr: r || {},
-									sdkT: 'h5',
-									eId: e,
-									t: o,
-									bId: this.instance.get_property('bId') || '',
-									dId: this.instance.get_device_id(),
-									cType: i.cType || '',
-									actId: i.actId || '',
-									pId: pageId,
-									gps: i.gps || '',
-									dAttr: { bs: detector$1.browser.name, bVer: detector$1.browser.fullVersion }
-								};
-								a = _.extend({}, a, _.info.properties(e));
-								var s = this.instance._get_config('truncateLength'),
-									c = a;
-								_.isNumber(s) && 0 < s && (c = _.truncate(a, s)), console.log(JSON.stringify(c, null, '  '));
-								var u = function(e) {
-										n(e, a);
+										uId: this.instance.get_property('userId') || '',
+										pAttr: r || {},
+										sdkT: 'h5',
+										eId: e,
+										t: o,
+										bId: this.instance.get_property('bId') || '',
+										dId: this.instance.get_device_id(),
+										cType: i.cType || '',
+										actId: i.actId || '',
+										pId: pageId,
+										gps: i.gps || '',
+										dAttr: {
+											bs: this.instance.get_property('browserName') || '',
+											bVer: this.instance.get_property('fullVersion') || ''
+										}
 									},
-									l = this.instance._get_config('track_url');
-								if (
-									((l += 'track.gif'),
-									!this.instance._get_config('isBpoint') ||
-										(i && i.sxfDataConfig && !i.sxfDataConfig.isBpoint))
-								)
-									_.sendRequest(l, 'post', { data: _.base64Encode(_.JSONEncode(c)) }, u);
-								else
-									try {
-										this.instance.bpoint.push(c);
-									} catch (e) {
-										_.sendRequest(l, 'post', { data: c }, u);
-									}
+									s = (a = _.extend({}, a, _.info.properties(e)));
+								console.log(JSON.stringify(s, null, '  ')), this.instance.bpoint.push(s);
 							}
 					}
 				},
@@ -1377,8 +1272,7 @@ var SPA = {
 				(this._waitSendQueue = []),
 				(this._queueSending = !1),
 				(this._scanStackIntervalId = null),
-				(this._scanWaitSendQqueueIntervalId = null),
-				(this._loadFN = []);
+				(this._scanWaitSendQqueueIntervalId = null);
 		}
 		return (
 			createClass(t, [
@@ -1567,16 +1461,16 @@ var SPA = {
 							((this.__loaded = !0),
 							(this._ = _),
 							(this.config = {}),
-							this._set_config(_.extend({}, DEFAULT_CONFIG, CONFIG, e, {})),
+							this._set_config(_.extend({}, CONFIG, e, {})),
 							(this.local_storage = new LOCAL_STORAGE(this.config)),
 							this._loaded(),
 							(this.event = new EVENT_TRACK(this)),
 							(this.domlisten = new DOMLISTEN(this)),
 							this._set_device_id(),
-							this._get_config('isBpoint') &&
-								((this.bpoint = new BPOINT(this)),
-								this.bpoint._oldDataCheck(),
-								this.bpoint._scanStack(CONFIG.stackTime)),
+							this.getBrowerInfo(),
+							(this.bpoint = new BPOINT(this)),
+							this.bpoint._oldDataCheck(),
+							this.bpoint._scanStack(CONFIG.stackTime),
 							this._trackPv(),
 							this._get_config('SPA').is && this._SPA());
 					}
@@ -1607,8 +1501,7 @@ var SPA = {
 					value: function(e) {
 						_.isObject(e) &&
 							((this.config = _.extend(this.config, e)),
-							(CONFIG.DEBUG = CONFIG.DEBUG || this._get_config('debug')),
-							(CONFIG.isBpoint = CONFIG.isBpoint || this._get_config('isBpoint')));
+							(CONFIG.debug = CONFIG.debug || this._get_config('debug')));
 					}
 				},
 				{
@@ -1631,6 +1524,15 @@ var SPA = {
 					key: '_set_device_id',
 					value: function() {
 						this.get_device_id() || this.local_storage.register_once({ deviceId: _.UUID() }, '');
+					}
+				},
+				{
+					key: 'getBrowerInfo',
+					value: function() {
+						this.local_storage.register_once(
+							{ browserName: detector$1.browser.name, fullVersion: detector$1.browser.fullVersion },
+							''
+						);
 					}
 				},
 				{

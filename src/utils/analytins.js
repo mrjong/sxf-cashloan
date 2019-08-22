@@ -1,9 +1,9 @@
 import qs from 'qs';
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import SxfData from '../assets/lib/sxfData';
 const { PROJECT_ENV, RELEASE_VERSION } = process.env;
-import SxfDataConfig from '../assets/lib/SxfDataConfig';
+const SxfData = window.sxfDataConfig && window.sxfDataConfig.opened ? require('../assets/lib/sxfData') : '';
+
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
 	window.version = 'v1.1';
@@ -38,25 +38,23 @@ export const initAnalytics = () => {
 
 // 初始化随行付埋点 及渠道信息
 export const initSxfData = () => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData.init({
-		track_url: 'http://172.18.40.90:8080/buried',
-		local_storage: {
-			type: 'localStorage'
-		},
-		SPA: {
-			is: true,
-			mode: 'history'
-		},
-		pageview: false,
-		debug: PROJECT_ENV !== 'pro',
-		loaded: function(sdk) {
-			// 公用属性
-			sdk.registerEventSuperProperties({ cType: getH5Channel(), pLine: 'HD' });
-		}
-	});
+	SxfData &&
+		SxfData.init({
+			track_url: 'http://172.16.173.18:8080/buried',
+			local_storage: {
+				type: 'localStorage'
+			},
+			SPA: {
+				is: true,
+				mode: 'history'
+			},
+			pageview: false,
+			debug: PROJECT_ENV !== 'pro',
+			loaded: function(sdk) {
+				// 公用属性
+				sdk.registerEventSuperProperties({ cType: getH5Channel(), pLine: 'HD' });
+			}
+		});
 };
 
 // 定义固定参数
@@ -74,70 +72,49 @@ function getStaticParams() {
  *
  * */
 export const sxfDataLogin = (userId) => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData.login(userId);
+	SxfData && SxfData.login(userId);
 };
 /*
  * 随行付PV统计
  *
  * */
 export const sxfDataPv = (obj) => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData.trackPv(obj);
+	SxfData && SxfData.trackPv(obj);
 };
 /*
  * 设置通用属性，会覆盖其他属性
  *
  * */
 export const SxfDataRegisterEventSuperProperties = (obj) => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData.SxfDataRegisterEventSuperProperties(obj);
+	SxfData && SxfData.SxfDataRegisterEventSuperProperties(obj);
 };
 /*
  * 设置通用属性，不会覆盖其他属性
  *
  * */
 export const SxfDataRegisterEventSuperPropertiesOnce = (obj) => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData.registerEventSuperPropertiesOnce(obj);
+	SxfData && SxfData.registerEventSuperPropertiesOnce(obj);
 };
 /*
  * 随行付监听
  *
  * */
 export const _addlisten = () => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData._addlisten();
+	SxfData && SxfData._addlisten();
 };
 /*
  * 随行付埋点事件
  *
  * */
 export const sxfburiedPointEvent = (buriedKey, params) => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return;
-	}
-	SxfData.trackEvent(buriedKey, params);
+	SxfData && SxfData.trackEvent(buriedKey, params);
 };
 /*
  * 随行付埋点事件
  *
  * */
 export const SxfDataObj = () => {
-	if (SxfDataConfig && SxfDataConfig.closed) {
-		return {};
-	}
-	return SxfData;
+	return SxfData && SxfData;
 };
 /*
  * PV统计
