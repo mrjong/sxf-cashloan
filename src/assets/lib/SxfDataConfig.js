@@ -1,3 +1,7 @@
-window.sxfDataConfig = {
-	opened: true
-};
+function sxfDataConfigInit() {
+	console.log('====sxfDataConfig===');
+	window.sxfDataConfig = {
+		opened: true
+	};
+}
+sxfDataConfigInit();
