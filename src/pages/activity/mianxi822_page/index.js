@@ -45,7 +45,8 @@ export default class mianxi822_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.entry) {
 			buriedPointEvent(activity.mianxi822Entry, {
-				entry: queryData.entry
+				entry: queryData.entry,
+				medium: isAppOpen ? 'APP' : 'H5'
 			});
 		}
 		if (isAppOpen) {
@@ -62,7 +63,9 @@ export default class mianxi822_page extends PureComponent {
 	goTo = () => {
 		const { isAppOpen } = this.state;
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		buriedPointEvent(activity.mianxi822UseBtn);
+		buriedPointEvent(activity.mianxi822UseBtn, {
+			medium: isAppOpen ? 'APP' : 'H5'
+		});
 
 		if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
 			if (queryData.appId && queryData.token) {
