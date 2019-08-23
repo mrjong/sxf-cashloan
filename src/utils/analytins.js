@@ -29,7 +29,7 @@ export const initAnalytics = () => {
 export const initSxfData = () => {
 	SxfData &&
 		SxfData.init({
-			track_url: '/buried',
+			track_url: 'https://fbds-test.vbillbank.com/buried',
 			local_storage: {
 				type: 'localStorage'
 			},
