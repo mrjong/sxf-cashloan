@@ -16,11 +16,11 @@ import LoginAlert from './components/LoginAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 
 const API = {
-	joinActivity: '/activeConfig/join' // 参加活动 里面会判断用户有没有资格
+	joinActivity: 'activeConfig/hundred/draw' // 参加活动 里面会判断用户有没有资格
 };
 
 @fetch.inject()
-export default class wuyuekh_page extends PureComponent {
+export default class mianxi822_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -32,25 +32,35 @@ export default class wuyuekh_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		const that = this;
-		document.addEventListener('message', that.checkAppOpen);
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.fromApp) {
+			this.setState({
+				isAppOpen: true
+			});
+		}
 	}
 
 	componentDidMount() {
+		const { isAppOpen } = this.state;
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.entry) {
 			buriedPointEvent(activity.mianxi822Entry, {
 				entry: queryData.entry
 			});
 		}
+		if (isAppOpen) {
+			if (queryData.activityToken) {
+				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+			} else {
+				Cookie.remove('fin-v-card-token');
+			}
+		}
 	}
 
-	componentWillUnmount() {
-		const that = this;
-		document.removeEventListener('message', that.checkAppOpen);
-	}
+	componentWillUnmount() {}
 
 	goTo = () => {
+		const { isAppOpen } = this.state;
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(activity.mianxi822UseBtn);
 
@@ -66,9 +76,19 @@ export default class wuyuekh_page extends PureComponent {
 			store.setToken(Cookie.get('fin-v-card-token'));
 			this.goHomePage();
 		} else {
-			this.setState({
-				isShowLogin: true
-			});
+			if (isAppOpen) {
+				const activityInf = {
+					activityNm: '100元免息红包限时领',
+					isLogin: false
+				};
+				setTimeout(() => {
+					window.postMessage(JSON.stringify(activityInf), () => {});
+				}, 0);
+			} else {
+				this.setState({
+					isShowLogin: true
+				});
+			}
 		}
 	};
 
@@ -86,23 +106,19 @@ export default class wuyuekh_page extends PureComponent {
 	};
 
 	goHomePage = () => {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		// 接口返回，详见 http://172.16.154.77/web/#/3?page_id=616
 		this.props.$fetch.get(API.joinActivity).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				store.setBonusActivity(true);
-				this.jumpToHome();
-
-				// this.props.toast.info('参与成功', 2, () => {
-				// 	this.props.history.push('/home/home');
-				// });
-			} else if (res && (res.msgCode === 'MX0002' || res.msgCode === 'MX0003')) {
-				// DRAW_NOT_MATCH("MX0001", "暂不可领取，请尝试领取另一张"),
-				// DRAW_NOT_ALLOWED("MX0002", "暂无领取资格"),
-				// HAVE_DRAW("MX0003", "您已领取过,快去借款吧")
-				// ACTIVITY_OUT_TIME("PTM7007","活动已过期")
-				this.props.toast.info(res.msgInfo, 2, () => {
+				if (res.data && res.data.sts === '00') {
+					store.setBonusActivity(true);
+					this.jumpToHome(true);
+				} else if (res.data && res.data.sts === '04') {
+					this.props.toast.info('不符合领取条件', 2, () => {
+						this.jumpToHome();
+					});
+				} else {
 					this.jumpToHome();
-				});
+				}
 			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
 				this.props.toast.info(res.msgInfo, 2, () => {
 					Cookie.remove('fin-v-card-token');
@@ -114,19 +130,6 @@ export default class wuyuekh_page extends PureComponent {
 				this.props.toast.info(res.msgInfo, 2, () => {
 					this.jumpToHome();
 				});
-				// if (
-				// 	queryData &&
-				// 	queryData.entry &&
-				// 	queryData.entry.indexOf('ismpos_') > -1 &&
-				// 	(res && res.msgCode !== 'MX0001')
-				// ) {
-				// 	this.props.toast.info(res.msgInfo, 2, () => {
-				// 		this.jumpToHome();
-				// 	});
-				// }
-				// else {
-				// 	this.props.toast.info(res.msgInfo);
-				// }
 			}
 		});
 	};
@@ -143,21 +146,25 @@ export default class wuyuekh_page extends PureComponent {
 		});
 	};
 
-	jumpToHome = () => {
-		this.props.history.push('/home/home');
+	jumpToHome = (isSuccess) => {
+		const { isAppOpen } = this.state;
+		const activityInf = {
+			activityNm: '100元免息红包限时领',
+			isLogin: true,
+			joinSucc: isSuccess ? true : false
+		};
+		if (isAppOpen) {
+			setTimeout(() => {
+				window.postMessage(JSON.stringify(activityInf), () => {});
+			}, 0);
+		} else {
+			this.props.history.push('/home/home');
+		}
 	};
 
 	// 跳转协议
 	go = (url) => {
 		this.props.history.push(`/protocol/${url}`);
-	};
-
-	// 检查是否是app webview打开
-	checkAppOpen = (e) => {
-		const passData = JSON.parse(e.data);
-		this.setState({
-			isAppOpen: passData && passData.isAppOpen
-		});
 	};
 
 	render() {

@@ -50,7 +50,8 @@ const API = {
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
 	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
-	couponNotify: '/activeConfig/couponNotify' // 免息活动检查是否参与
+	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
+	bonusSts: 'activeConfig/hundred/sts' // 百元活动用户状态查询
 };
 let token = '';
 let tokenFromStorage = '';
@@ -1026,7 +1027,7 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(activity.mianxi822ModalJoinBtn, {
 					medium: 'H5'
 				});
-				this.couponHandler();
+				this.props.history.push('/activity/mianxi100_page?entry=homeModal');
 				break;
 			default:
 				break;
@@ -1517,40 +1518,38 @@ export default class home_page extends PureComponent {
 
 	// 判断是否参与过与使用过100元利息红包限时领活动
 	isInvoking_bonus = async () => {
-		let mxData = await this.props.$fetch.get(API.couponNotify);
-		if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal()) {
-			this.setState(
-				{
-					isShowActivityModal: true,
-					modalBtnFlag: true,
-					modalType: 'joinBonus'
-				},
-				() => {
-					store.setShowActivityModal(true);
-				}
-			);
-		} else if (
-			mxData &&
-			mxData.msgCode === 'PTM0000' &&
-			mxData.data !== null &&
-			!store.getShowActivityModal3()
-		) {
-			this.setState(
-				{
-					isShowActivityModal: true,
-					modalBtnFlag: true,
-					modalType: 'notUseBonus'
-				},
-				() => {
-					store.setShowActivityModal3(true);
-				}
-			);
+		let mxData = await this.props.$fetch.get(API.bonusSts);
+		if (mxData && mxData.msgCode === 'PTM0000') {
+			if (mxData.data && mxData.data.sts === '00' && !store.getShowActivityModal()) {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalBtnFlag: true,
+						modalType: 'joinBonus'
+					},
+					() => {
+						store.setShowActivityModal(true);
+					}
+				);
+			} else if (mxData.data && mxData.data.sts === '01' && !store.getShowActivityModal3()) {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalBtnFlag: true,
+						modalType: 'notUseBonus'
+					},
+					() => {
+						store.setShowActivityModal3(true);
+					}
+				);
+			}
 		}
 	};
 
 	// 100元利息红包限时领活动中点击去使用、去参与按钮
 	couponHandler = () => {
-		const { showDiv, cardStatus } = this.state;
+		const { showDiv, cardStatus, usrIndexInfo } = this.state;
+		const { indexSts } = usrIndexInfo;
 		if (showDiv) {
 			switch (showDiv) {
 				case '50000':
