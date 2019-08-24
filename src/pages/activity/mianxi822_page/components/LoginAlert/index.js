@@ -1,5 +1,5 @@
+/*eslint-disable*/
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Modal, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';

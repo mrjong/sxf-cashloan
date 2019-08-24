@@ -1,5 +1,4 @@
 import React from 'react';
-import { store } from 'utils/store';
 import styles from './index.scss';
 
 export default class CouponDesc extends React.Component {
