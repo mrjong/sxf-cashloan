@@ -20,7 +20,6 @@ const API = {
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
-	// payFrontBack: '/bill/payFrontBack', // 用户还款新接口
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	queryExtendedPayType: '/bill/queryExtendedPayType' //其他支付方式查询
 };
@@ -35,8 +34,6 @@ export default class order_detail_page extends PureComponent {
 			billDesc: {},
 			showModal: false,
 			orderList: [],
-			money: '',
-			sendMoney: '',
 			bankInfo: {},
 			couponInfo: {},
 			hideBtn: false,
@@ -227,11 +224,6 @@ export default class order_detail_page extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					res.data.perdNum !== 999 &&
-						this.setState({ money: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-					res.data.perdNum !== 999 &&
-						this.setState({ sendMoney: res.data.perdList[res.data.perdNum - 1].perdWaitRepAmt });
-
 					if (Number(res.data.insuranceAmt)) {
 						let insuranceStsText = '';
 						let insuranceStsColor = '';
@@ -616,7 +608,7 @@ export default class order_detail_page extends PureComponent {
 			sendParams = {
 				billNo,
 				cardAgrNo,
-				thisRepTotAmt: billDesc.waitRepAmt,
+				// thisRepTotAmt: billDesc.waitRepAmt,
 				repayStsw: repayStswStr,
 				usrBusCnl: 'WEB',
 				prodType: billDesc.prodType
@@ -625,8 +617,8 @@ export default class order_detail_page extends PureComponent {
 			sendParams = {
 				billNo,
 				cardAgrNo,
-				thisRepTotAmt: this.state.sendMoney,
-				repayStsw: billDesc.billPerdStsw,
+				thisRepTotAmt: '',
+				// repayStsw: billDesc.billPerdStsw,
 				coupId: couponId,
 				usrBusCnl: 'WEB',
 				prodType: billDesc.prodType
@@ -650,22 +642,9 @@ export default class order_detail_page extends PureComponent {
 
 	//调用还款接口逻辑
 	repay = () => {
-		const { billDesc, isPayAll, repayParams, totalAmt, payType, money, thisPerdNum } = this.state;
-		// const paybackAPI = isNewsContract ? API.payFrontBack : API.payback;
+		const { billDesc, isPayAll, repayParams, totalAmt, payType, thisPerdNum } = this.state;
 		const paybackAPI = API.payback;
 		let sendParams = {};
-		// if (isNewsContract) {
-		// 	if (isPayAll) {
-		// 		sendParams = { ...repayParams, isSettle, thisRepTotAmt: totalAmt };
-		// 	} else {
-		// 		// 立即还款的时候，如果perTotAmt有值，则取plain接口里的totAmt,否则取qryDtl里的perdWaitRepAmt
-		// 		sendParams = perTotAmt
-		// 			? { ...repayParams, isSettle, thisRepTotAmt: perTotAmt }
-		// 			: { ...repayParams, isSettle };
-		// 	}
-		// } else {
-		// 	sendParams = repayParams;
-		// }
 		if (isPayAll) {
 			// 一键结清isPayOff为1， 否则为0
 			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt, adapter: '01' };
@@ -1110,7 +1089,6 @@ export default class order_detail_page extends PureComponent {
 	render() {
 		const {
 			billDesc = {},
-			money,
 			hideBtn,
 			isPayAll,
 			isShowSmsModal,
@@ -1149,10 +1127,8 @@ export default class order_detail_page extends PureComponent {
 			wthdCrdCorpOrgNm = '',
 			wthdCrdNoLast = '',
 			perdNum = '',
-			waitRepAmt = '',
 			perdList,
-			discRedRepay = false,
-			waitRepAmtForShow = ''
+			discRedRepay = false
 		} = billDesc;
 		const itemList = [
 			{
@@ -1180,6 +1156,7 @@ export default class order_detail_page extends PureComponent {
 				value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
 			}
 		];
+		console.log(itemList, '987');
 		const isOverdue =
 			perdList &&
 			perdList.filter((item, index) => {
@@ -1249,14 +1226,6 @@ export default class order_detail_page extends PureComponent {
 								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
 									<span className={styles.modal_label_last}>本次应还总金额</span>
 									<span className={styles.modal_value_last}>
-										{/* {isPayAll ? isNewsContract ? (
-											totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2)
-										) : (
-											waitRepAmtForShow && parseFloat(waitRepAmtForShow).toFixed(2)
-										) : (
-											(perTotAmtForShow && parseFloat(perTotAmtForShow).toFixed(2)) ||
-											(money && parseFloat(money).toFixed(2))
-                    )}元 */}
 										{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
 									</span>
 								</div>

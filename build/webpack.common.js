@@ -127,8 +127,8 @@ module.exports = function(options) {
 			disableHostCheck: true,
 			proxy: {
 				'/wap': {
-					target: 'http://172.16.154.47:8080/wap', //目标接口域名
-					// target: 'http://172.18.40.181:8888/wap',
+					// target: 'http://172.16.154.47:8080/wap', //目标接口域名
+					target: 'http://172.18.40.146:8080/wap',
 					pathRewrite: { '^/wap': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},
