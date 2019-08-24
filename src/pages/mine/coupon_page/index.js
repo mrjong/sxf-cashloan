@@ -7,14 +7,25 @@ import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { SXFToast } from 'utils/SXFToast';
-
+import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView } from 'antd-mobile';
+import {
+	indexshowType,
+	handleSmartClick,
+	usrCashIndexInfo,
+	requestGetUsrInfo,
+	handleCN,
+	requestBindCardState,
+	getDeviceType,
+	getPercent
+} from 'utils';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
 let saveBankData = null; // 还款详情页带过来的银行信息
 const API = {
-	couponList: '/coupon/list'
+	couponList: '/coupon/list',
+	AGENT_REPAY_CHECK: '/bill/agentRepayCheck' // 复借风控校验接
 };
 @fetch.inject()
 export default class coupon_page extends PureComponent {
@@ -281,6 +292,77 @@ export default class coupon_page extends PureComponent {
 			}
 		);
 	};
+	getTime = (time) => {
+		if (!time) {
+			return '';
+		}
+		const y = time.substring(0, 4);
+		const m = time.substring(4, 6);
+		const d = time.substring(6, 8);
+		const h = time.substring(8, 10);
+		const m1 = time.substring(10, 12);
+		const s = time.substring(12, 14);
+		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
+	};
+	// 复借风控校验接口
+	repayCheck = ({ usrIndexInfo }) => {
+		const osType = getDeviceType();
+		const params = {
+			osTyp: osType
+		};
+		this.props.$fetch
+			.post(API.AGENT_REPAY_CHECK, params)
+			.then((result) => {
+				if (result && result.msgCode === 'PTM0000') {
+					requestBindCardState({ usrIndexInfo, $props: this.props });
+				} else {
+					this.props.history.push('/home/home');
+				}
+				// })
+			})
+			.catch((err) => {
+				this.props.history.push('/home/home');
+			});
+	};
+	goUse = () => {
+		indexshowType({
+			$props: this.props,
+			callback: (result) => {
+				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
+					// 分期流程
+					usrCashIndexInfo({
+						$props: this.props,
+						callback: (result) => {
+							handleCN({
+								code: result.data.indexSts,
+								usrCashIndexInfo: result.data,
+								routeType: 'coupon_page'
+							});
+						}
+					});
+				} else {
+					// 代偿流程
+					requestGetUsrInfo({
+						$props: this.props,
+						callback: (result) => {
+							getPercent({
+								$props: this.props,
+								callback: () => {
+									handleSmartClick({
+										usrIndexInfo: result.data,
+										$props: this.props,
+										repayCheck: this.repayCheck,
+										routeType: 'coupon_page'
+									});
+								}
+							});
+						}
+					});
+				}
+			}
+		});
+	};
+
 	render() {
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
@@ -356,6 +438,13 @@ export default class coupon_page extends PureComponent {
 								}
 							/>
 						)}
+						{receiveData && (receiveData.billNo || receiveData.price)
+							? null
+							: this.state.msgType === 0 && (
+									<button className={style.goUse} onClick={this.goUse}>
+										去使用
+									</button>
+							  )}
 						<div
 							className={
 								obj.useSts === '02' || obj.useSts === '03'
@@ -372,14 +461,23 @@ export default class coupon_page extends PureComponent {
 									: style.ellipsis
 							}
 						>
-							{obj && obj.coupDesc}
+							{(obj && obj.coupDesc) || <div className={style.none}>_</div>}
 						</div>
 						<div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>
-							有效期至：{' '}
-							{obj &&
-								obj.validEndTm &&
-								obj.validEndTm.length &&
-								dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}
+							{this.state.msgType === 0 ? (
+								<span>
+									有效期还剩{' '}
+									{obj && obj.validEndTm && <CountDown endTime={this.getTime(obj.validEndTm)} type="day" />}
+								</span>
+							) : (
+								<span>
+									有效期至：{' '}
+									{obj &&
+										obj.validEndTm &&
+										obj.validEndTm.length &&
+										dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}
+								</span>
+							)}
 						</div>
 					</div>
 				</div>
