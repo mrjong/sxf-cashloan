@@ -1524,7 +1524,6 @@ export default class home_page extends PureComponent {
 				this.setState(
 					{
 						isShowActivityModal: true,
-						modalBtnFlag: true,
 						modalType: 'joinBonus'
 					},
 					() => {
@@ -1535,7 +1534,6 @@ export default class home_page extends PureComponent {
 				this.setState(
 					{
 						isShowActivityModal: true,
-						modalBtnFlag: true,
 						modalType: 'notUseBonus'
 					},
 					() => {

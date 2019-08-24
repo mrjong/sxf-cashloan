@@ -168,7 +168,18 @@ export default class mianxi822_page extends PureComponent {
 
 	// 跳转协议
 	go = (url) => {
-		this.props.history.push(`/protocol/${url}`);
+		const { isAppOpen } = this.state;
+		const activityInf = {
+			activityNm: '100元免息红包限时领',
+			protocolNm: url
+		};
+		if (isAppOpen) {
+			setTimeout(() => {
+				window.postMessage(JSON.stringify(activityInf), () => {});
+			}, 0);
+		} else {
+			this.props.history.push(`/protocol/${url}`);
+		}
 	};
 
 	render() {
