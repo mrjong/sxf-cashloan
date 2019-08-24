@@ -60,38 +60,43 @@ export default class mianxi822_page extends PureComponent {
 
 	componentWillUnmount() {}
 
+	prePressTime2 = 0;
 	goTo = () => {
-		const { isAppOpen } = this.state;
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
-		buriedPointEvent(activity.mianxi822UseBtn, {
-			entry: queryData.entry,
-			medium: isAppOpen ? 'APP' : 'H5'
-		});
+		const nowTime = Date.now();
+		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
+			this.prePressTime2 = nowTime;
+			const { isAppOpen } = this.state;
+			const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+			buriedPointEvent(activity.mianxi822UseBtn, {
+				entry: queryData.entry,
+				medium: isAppOpen ? 'APP' : 'H5'
+			});
 
-		if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
-			if (queryData.appId && queryData.token) {
-				this.getStatus();
+			if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
+				if (queryData.appId && queryData.token) {
+					this.getStatus();
+				} else {
+					this.setState({
+						showLoginTip: true
+					});
+				}
+			} else if (Cookie.get('fin-v-card-token')) {
+				store.setToken(Cookie.get('fin-v-card-token'));
+				this.goHomePage();
 			} else {
-				this.setState({
-					showLoginTip: true
-				});
-			}
-		} else if (Cookie.get('fin-v-card-token')) {
-			store.setToken(Cookie.get('fin-v-card-token'));
-			this.goHomePage();
-		} else {
-			if (isAppOpen) {
-				const activityInf = {
-					activityNm: '100元免息红包限时领',
-					isLogin: false
-				};
-				setTimeout(() => {
-					window.postMessage(JSON.stringify(activityInf), () => {});
-				}, 0);
-			} else {
-				this.setState({
-					isShowLogin: true
-				});
+				if (isAppOpen) {
+					const activityInf = {
+						activityNm: '100元免息红包限时领',
+						isLogin: false
+					};
+					setTimeout(() => {
+						window.postMessage(JSON.stringify(activityInf), () => {});
+					}, 0);
+				} else {
+					this.setState({
+						isShowLogin: true
+					});
+				}
 			}
 		}
 	};
@@ -166,19 +171,25 @@ export default class mianxi822_page extends PureComponent {
 		}
 	};
 
+	prePressTime = 0;
+
 	// 跳转协议
 	go = (url) => {
-		const { isAppOpen } = this.state;
-		const activityInf = {
-			activityNm: '100元免息红包限时领',
-			protocolNm: url
-		};
-		if (isAppOpen) {
-			setTimeout(() => {
-				window.postMessage(JSON.stringify(activityInf), () => {});
-			}, 0);
-		} else {
-			this.props.history.push(`/protocol/${url}`);
+		const nowTime = Date.now();
+		if (nowTime - this.prePressTime > 1600 || !this.prePressTime) {
+			this.prePressTime = nowTime;
+			const { isAppOpen } = this.state;
+			const activityInf = {
+				activityNm: '100元免息红包限时领',
+				protocolNm: url
+			};
+			if (isAppOpen) {
+				setTimeout(() => {
+					window.postMessage(JSON.stringify(activityInf), () => {});
+				}, 0);
+			} else {
+				this.props.history.push(`/protocol/${url}`);
+			}
 		}
 	};
 
