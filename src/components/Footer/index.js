@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import styles from './index.scss';
 import { Consumer } from 'pages/common/routerPage/context';
-import yhq50 from './img/yhq50.png';
-import yhq7 from './img/yhq7.png';
 /*
  * 接收一个配置文件数组
  * parms: {

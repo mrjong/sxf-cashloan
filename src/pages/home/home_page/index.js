@@ -185,14 +185,11 @@ export default class home_page extends PureComponent {
 		store.removeCouponData();
 	};
 	couponRedDot = () => {
-		this.props.$fetch
-			.get(API.couponRedDot)
-			.then((result) => {
-				if (result && result.data) {
-					this.props.globalTask(result.data);
-				}
-			})
-			.catch((err) => {});
+		this.props.$fetch.get(API.couponRedDot).then((result) => {
+			if (result && result.data) {
+				this.props.globalTask(result.data);
+			}
+		});
 	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
