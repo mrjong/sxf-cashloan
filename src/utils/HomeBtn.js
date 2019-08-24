@@ -1,7 +1,7 @@
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
+import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
+import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import TFDInit from 'utils/getTongFuDun';
 const API = {
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -59,7 +59,7 @@ class HomeBtn {
 					this.instance.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.instance.HomeBtnStatus = false;
 				this.credit_extension();
 			});
@@ -104,7 +104,7 @@ class HomeBtn {
 					this.instance.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.instance.HomeBtnStatus = false;
 			});
 	};
@@ -150,7 +150,7 @@ class HomeBtn {
 					this.instance.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.instance.HomeBtnStatus = false;
 			});
 	};
@@ -162,7 +162,7 @@ class HomeBtn {
 	};
 
 	// 进度计算
-	calculatePercent = (data, isshow) => {
+	calculatePercent = (data) => {
 		const { usrIndexInfo } = this.instance.state;
 		let codes = [];
 		let demo = data.codes;
@@ -176,13 +176,13 @@ class HomeBtn {
 		// case '2': // 认证成功
 		// case '3': // 认证失败
 		// case '4': // 认证过期
-		let newCodes = codes.filter((ele, index, array) => {
+		let newCodes = codes.filter((ele) => {
 			return ele === '0';
 		});
-		let newCodes2 = codes.filter((ele, index, array) => {
+		let newCodes2 = codes.filter((ele) => {
 			return ele === '1' || ele === '2';
 		});
-		let newCodes3 = codes.filter((ele, index, array) => {
+		let newCodes3 = codes.filter((ele) => {
 			return ele === '4';
 		});
 		if (codes[codes.length - 1] === '4') {
@@ -256,8 +256,7 @@ class HomeBtn {
 	};
 	// 智能按钮点击事件
 	handleSmartClick = () => {
-		const { usrIndexInfo = {}, isNeedExamine } = this.instance.state;
-		const { indexData } = usrIndexInfo;
+		const { usrIndexInfo = {} } = this.instance.state;
 		if (usrIndexInfo.indexSts === 'LN0009') {
 			// 埋点-首页-点击查看代还账单
 			buriedPointEvent(home.viewBill);
@@ -409,8 +408,7 @@ class HomeBtn {
 					});
 				}
 				// })
-			})
-			.catch((err) => {});
+			});
 	};
 	// 检查是否需要人审
 	getExamineSts = () => {
@@ -499,7 +497,7 @@ class HomeBtn {
 					this.instance.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.instance.props.toast.info(err.message);
 			});
 	};

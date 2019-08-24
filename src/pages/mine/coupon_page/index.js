@@ -418,7 +418,9 @@ export default class coupon_page extends PureComponent {
 							{this.state.msgType === 0 ? (
 								<span>
 									有效期还剩{' '}
-									{obj && obj.validEndTm && <CountDown endTime={this.getTime(obj.validEndTm)} type="day" />}
+									{obj && obj.validEndTm && (
+										<CountDown endTime={this.getTime(obj.validEndTm)} timeOver={this.onRefresh} type="day" />
+									)}
 								</span>
 							) : (
 								<span>
