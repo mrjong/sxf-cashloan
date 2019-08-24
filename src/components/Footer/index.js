@@ -28,6 +28,7 @@ function TabItem(props) {
 					{({ footerTipIcon }) => {
 						return (
 							footerTipIcon &&
+							footerTipIcon.redDot &&
 							data.title === '我的' && (
 								<span className={styles.icon_top}>
 									<i></i>

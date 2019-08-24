@@ -73,11 +73,13 @@ export default class Lists extends PureComponent {
 											{({ footerTipIcon }) => {
 												return (
 													footerTipIcon &&
+													footerTipIcon.couponCount &&
+													footerTipIcon.couponCount > 0 &&
 													item.label.name === '优惠劵' &&
 													footerTipIcon && (
 														<div className={styles.rightIcon}>
 															<span className={styles.redBag}></span>
-															5个可用
+															{footerTipIcon.couponCount}个可用
 														</div>
 													)
 												);
