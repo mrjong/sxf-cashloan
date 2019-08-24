@@ -84,20 +84,32 @@
 	animation-timing-function: cubic-bezier(0.3, 1, 1, 1);
 	animation-iteration-count: 1;
 	position: absolute;
-	right: 0;
+	right: 25px;
 	top: 50%;
 	transform: translate(0%, -50%);
-	width: 184px;
-	height: 55px;
+	width: 110px;
+	height: 42px;
 	display: inline-block;
-	background: linear-gradient(90deg, rgba(252, 90, 77, 1), rgba(255, 134, 96, 1));
-	border-radius: 28px 0 0 28px;
+	background: linear-gradient(90deg, #fe7117, #ff3d14);
+	border-radius: 6px;
 	font-size: 24px;
 	font-family: 'PingFangSC-Regular';
 	font-weight: 400;
 	color: #fff;
 	text-align: center;
-	line-height: 55px;
+	line-height: 42px;
+	padding-left: 35px;
+	.redBag {
+		width: 0.2rem;
+		height: 0.22rem;
+		position: absolute;
+		top: 0.1rem;
+		left: 0.15rem;
+		background-image: url(./img/redBag@2x.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		box-sizing: border-box;
+	}
 }
 @keyframes fadeInRightBig {
 	0% {

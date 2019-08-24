@@ -50,7 +50,8 @@ const API = {
 	couponTest: '/activeConfig/couponTest', //签约测试
 	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
 	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
-	bonusSts: 'activeConfig/hundred/sts' // 百元活动用户状态查询
+	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
+	couponRedDot: '/index/couponRedDot' // 优惠券红点
 };
 let token = '';
 let tokenFromStorage = '';
@@ -123,6 +124,7 @@ export default class home_page extends PureComponent {
 		this.cacheBanner();
 		this.isRenderCash();
 		this.showFeedbackModal();
+		this.couponRedDot(); // 优惠券使用红点
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -182,7 +184,16 @@ export default class home_page extends PureComponent {
 		store.removeCashFenQiCardArr();
 		store.removeCouponData();
 	};
-
+	couponRedDot = () => {
+		this.props.$fetch
+			.get(API.couponRedDot)
+			.then((result) => {
+				if (result && result.data) {
+					this.props.globalTask(result.data);
+				}
+			})
+			.catch((err) => {});
+	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
 		this.props.$fetch
@@ -791,20 +802,6 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				let couponTestData = null;
-				if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
-					couponTestData = await this.props.$fetch.get(API.couponTest);
-				}
-				if (
-					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
-					(couponTestData && couponTestData.data && couponTestData.data !== '0')
-				) {
-					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
-					this.setState({
-						isShowActivityModal: true,
-						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
-					});
-				}
 				if (store.getBonusActivity()) {
 					store.removeBonusActivity();
 					this.setState({

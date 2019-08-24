@@ -3,7 +3,6 @@ import { List } from 'antd-mobile';
 import ListDesc from '../ListDesc';
 import styles from './index.scss';
 import { Consumer } from 'pages/common/routerPage/context';
-
 export default class Lists extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -74,9 +73,11 @@ export default class Lists extends PureComponent {
 											{({ footerTipIcon }) => {
 												return (
 													footerTipIcon &&
-													item.label.name === '优惠劵' && (
+													item.label.name === '优惠劵' &&
+													footerTipIcon && (
 														<div className={styles.rightIcon}>
-															{footerTipIcon === 'yhq7' ? '7折免息券' : '50元免息券'}
+															<span className={styles.redBag}></span>
+															5个可用
 														</div>
 													)
 												);
