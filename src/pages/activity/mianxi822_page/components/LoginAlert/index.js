@@ -105,8 +105,9 @@ export default class LoginAlert extends Component {
 	goLogin = () => {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.entry) {
-			buriedPointEvent(activity.jjpWxConfirmBtn, {
-				entry: queryData.entry
+			buriedPointEvent(activity.mianxi822LoginBtn, {
+				entry: queryData.entry,
+				medium: 'H5'
 			});
 		}
 		const { smsSuccess } = this.props;

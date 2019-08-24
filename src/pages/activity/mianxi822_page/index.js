@@ -64,6 +64,7 @@ export default class mianxi822_page extends PureComponent {
 		const { isAppOpen } = this.state;
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(activity.mianxi822UseBtn, {
+			entry: queryData.entry,
 			medium: isAppOpen ? 'APP' : 'H5'
 		});
 
