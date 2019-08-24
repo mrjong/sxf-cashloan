@@ -9,23 +9,13 @@ import { store } from 'utils/store';
 import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView } from 'antd-mobile';
-import {
-	indexshowType,
-	handleSmartClick,
-	usrCashIndexInfo,
-	requestGetUsrInfo,
-	handleCN,
-	requestBindCardState,
-	getDeviceType,
-	getPercent
-} from 'utils';
+import HomeBtnClass from 'utils/HomeBtn';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
 let saveBankData = null; // 还款详情页带过来的银行信息
 const API = {
-	couponList: '/coupon/list',
-	AGENT_REPAY_CHECK: '/bill/agentRepayCheck' // 复借风控校验接
+	couponList: '/coupon/list'
 };
 @fetch.inject()
 export default class coupon_page extends PureComponent {
@@ -58,14 +48,19 @@ export default class coupon_page extends PureComponent {
 			msgType: 0,
 			hasMore: true,
 			tabs: [],
-			couponSelected: ''
+			couponSelected: '',
+			HomeBtnShow: false
 		};
+		if (receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine') {
+			this['HomeBtn'] = new HomeBtnClass(this);
+		}
 	}
 	scrollTop = 0;
 	componentWillMount() {
 		this.getTab();
 	}
 	componentWillUnmount() {
+		this.HomeBtnStatus = false;
 		// 从不可使用的优惠劵点进来，显示弹框
 		if (nouseFlag) {
 			if (saveBankData) {
@@ -125,7 +120,7 @@ export default class coupon_page extends PureComponent {
 		this.getCommonData('tabshow');
 	};
 	// 获取每一页数据
-	genData = async (pIndex = 1) => {
+	genData = async (pIndex = 1, tab) => {
 		if (totalPage && totalPage < pIndex) {
 			this.setState({
 				isLoading: false,
@@ -180,7 +175,20 @@ export default class coupon_page extends PureComponent {
 						});
 					}
 					for (let i = res.data.data.length - 1; i >= 0; i--) {
-						// res.data.data[i].coupCategory = '00'
+						// 是否出现去使用
+						if (
+							this.state.msgType === 0 &&
+							+new Date(this.getTime(res.data.data[i].validEndTm)) > +new Date() &&
+							!this.HomeBtnStatus &&
+							tab === 'tabshow' &&
+							pIndex === 1 &&
+							receiveData &&
+							receiveData.entryFrom &&
+							receiveData.entryFrom === 'mine'
+						) {
+							this.HomeBtnStatus = true;
+							this['HomeBtn'].fetchData();
+						}
 						if (
 							this.state.msgType !== 0 ||
 							!receiveData ||
@@ -226,7 +234,7 @@ export default class coupon_page extends PureComponent {
 		this.setState({
 			isLoading: true
 		});
-		let list = await this.genData(1);
+		let list = await this.genData(1, tab);
 		if (tab === 'tabshow') {
 			this.setState({
 				tabState: true
@@ -304,66 +312,8 @@ export default class coupon_page extends PureComponent {
 		const s = time.substring(12, 14);
 		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
 	};
-	// 复借风控校验接口
-	repayCheck = ({ usrIndexInfo }) => {
-		const osType = getDeviceType();
-		const params = {
-			osTyp: osType
-		};
-		this.props.$fetch
-			.post(API.AGENT_REPAY_CHECK, params)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000') {
-					requestBindCardState({ usrIndexInfo, $props: this.props });
-				} else {
-					this.props.history.push('/home/home');
-				}
-				// })
-			})
-			.catch((err) => {
-				this.props.history.push('/home/home');
-			});
-	};
-	goUse = () => {
-		indexshowType({
-			$props: this.props,
-			callback: (result) => {
-				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
-					// 分期流程
-					usrCashIndexInfo({
-						$props: this.props,
-						callback: (result) => {
-							handleCN({
-								code: result.data.indexSts,
-								usrCashIndexInfo: result.data,
-								routeType: 'coupon_page'
-							});
-						}
-					});
-				} else {
-					// 代偿流程
-					requestGetUsrInfo({
-						$props: this.props,
-						callback: (result) => {
-							getPercent({
-								$props: this.props,
-								callback: () => {
-									handleSmartClick({
-										usrIndexInfo: result.data,
-										$props: this.props,
-										repayCheck: this.repayCheck,
-										routeType: 'coupon_page'
-									});
-								}
-							});
-						}
-					});
-				}
-			}
-		});
-	};
-
 	render() {
+		const { HomeBtnShow } = this.state;
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
 		const row = (rowData, sectionID, rowID) => {
@@ -440,8 +390,9 @@ export default class coupon_page extends PureComponent {
 						)}
 						{receiveData && (receiveData.billNo || receiveData.price)
 							? null
-							: this.state.msgType === 0 && (
-									<button className={style.goUse} onClick={this.goUse}>
+							: this.state.msgType === 0 &&
+							  HomeBtnShow && (
+									<button className={style.goUse} onClick={this['HomeBtn'].getData}>
 										去使用
 									</button>
 							  )}

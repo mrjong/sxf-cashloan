@@ -144,7 +144,7 @@ export default class mine_page extends PureComponent {
 			return;
 		}
 		if (item.jumpToUrl === '/mine/coupon_page') {
-			this.props.history.push(item.jumpToUrl);
+			this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
 		} else {
 			const { mblNoHid, realNmFlg } = this.state;
 			if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
