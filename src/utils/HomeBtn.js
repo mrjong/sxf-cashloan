@@ -81,7 +81,7 @@ class HomeBtn {
 					this.instance.props.toast.info(result.msgInfo);
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.instance.HomeBtnStatus = false;
 			});
 	};
@@ -496,9 +496,6 @@ class HomeBtn {
 				} else {
 					this.instance.props.toast.info(result.msgInfo);
 				}
-			})
-			.catch(() => {
-				this.instance.props.toast.info(err.message);
 			});
 	};
 	// 现金分期点击事件
