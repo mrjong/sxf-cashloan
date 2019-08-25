@@ -410,29 +410,6 @@ class HomeBtn {
 				// })
 			});
 	};
-	// 检查是否需要人审
-	getExamineSts = () => {
-		this.instance.props.$fetch.post(`${API.creditSts}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState(
-					{
-						isNeedExamine: res.data && res.data.flag === '01',
-						examineData: {
-							creadNo: res.data && res.data.creadNo
-						}
-					},
-					() => {
-						this.instance.props.history.push({
-							pathname: '/home/loan_person_succ_page',
-							search: `?creadNo=${this.instance.state.examineData.creadNo}`
-						});
-					}
-				);
-			} else {
-				this.instance.props.toast.info(res.msgInfo);
-			}
-		});
-	};
 
 	jumpToUrl = () => {
 		const { usrIndexInfo } = this.instance.state;
@@ -498,6 +475,19 @@ class HomeBtn {
 				}
 			});
 	};
+	// 代还其他信用卡点击事件
+	repayForOtherBank = (count) => {
+		if (count > 1) {
+			store.setToggleMoxieCard(true);
+			const { usrIndexInfo } = this.instance.state;
+			this.instance.props.history.push({
+				pathname: '/mine/credit_list_page',
+				search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
+			});
+		} else {
+			this.goToNewMoXie();
+		}
+	};
 	// 现金分期点击事件
 	handleCN = (code) => {
 		const { usrCashIndexInfo } = this.instance.state;
@@ -536,19 +526,11 @@ class HomeBtn {
 		console.log(usrCashIndexInfo);
 		switch (usrCashIndexInfo && usrCashIndexInfo.indexSts) {
 			case 'CN0001': // 现金分期额度评估中,不可能出现
-				break;
 			case 'CN0002': // (抱歉，暂无申请资格
+				this.goHome();
 				break;
 			case 'CN0003': // 申请通过有额度
-				componentsDisplay = () => {
-					this.handleCN(usrCashIndexInfo.indexSts);
-				};
-				break;
 			case 'CN0004': // 放款中
-				componentsDisplay = () => {
-					this.handleCN(usrCashIndexInfo.indexSts);
-				};
-				break;
 			case 'CN0005': // 去还款
 				componentsDisplay = () => {
 					this.handleCN(usrCashIndexInfo.indexSts);
@@ -580,10 +562,7 @@ class HomeBtn {
 					componentsDisplay = this.handleApply;
 					break;
 				case 'progress':
-					componentsDisplay = () => {
-						this.goHome();
-						// this.handleProgressApply(cardStatus);
-					};
+					componentsDisplay = this.goHome;
 					break;
 				case 'applyCredict':
 					componentsDisplay = this.handleSmartClick;

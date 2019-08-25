@@ -388,7 +388,7 @@ export default class coupon_page extends PureComponent {
 								}
 							/>
 						)}
-						{receiveData && (receiveData.billNo || receiveData.price)
+						{receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine'
 							? null
 							: this.state.msgType === 0 &&
 							  HomeBtnShow && (
