@@ -403,9 +403,7 @@ class HomeBtn {
 					this.requestBindCardState();
 				} else {
 					// 失败的话刷新首页
-					this.instance.props.toast.info(result.msgInfo, 2, () => {
-						this.requestGetUsrInfo();
-					});
+					this.goHome();
 				}
 				// })
 			});
@@ -506,7 +504,7 @@ class HomeBtn {
 				}
 				break;
 			case 'CN0004':
-				this.instance.props.history('/home/home');
+				this.goHome();
 				break;
 			case 'CN0005':
 				store.setBillNo(usrCashIndexInfo.indexData.billNo);
@@ -527,7 +525,7 @@ class HomeBtn {
 		switch (usrCashIndexInfo && usrCashIndexInfo.indexSts) {
 			case 'CN0001': // 现金分期额度评估中,不可能出现
 			case 'CN0002': // (抱歉，暂无申请资格
-				this.goHome();
+				componentsDisplay = this.goHome;
 				break;
 			case 'CN0003': // 申请通过有额度
 			case 'CN0004': // 放款中
