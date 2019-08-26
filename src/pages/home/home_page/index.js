@@ -794,7 +794,16 @@ export default class home_page extends PureComponent {
 				if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
 					couponTestData = await this.props.$fetch.get(API.couponTest);
 				}
-
+				if (
+					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
+					(couponTestData && couponTestData.data && couponTestData.data !== '0')
+				) {
+					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
+					this.setState({
+						isShowActivityModal: true,
+						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
+					});
+				}
 				if (store.getBonusActivity()) {
 					store.removeBonusActivity();
 					this.setState({
@@ -809,7 +818,6 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-
 	// 缓存banner
 	cacheBanner = () => {
 		const bannerAble = Cookie.getJSON('bannerAble');
@@ -915,62 +923,17 @@ export default class home_page extends PureComponent {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
 				break;
+			case 'yhq7':
+				buriedPointEvent(activity.yhq7ModalBtnClick);
+				this.handleSmartClick();
+				break;
+			case 'yhq50':
+				buriedPointEvent(activity.yhq50ModalBtnClick);
+				this.handleSmartClick();
+				break;
 			case 'mianxi':
 				buriedPointEvent(activity.mianxiModalBtnClick);
 				this.props.history.push('/activity/mianxi_page?entry=home_alert');
-				break;
-			case 'mianxi7':
-				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '7',
-					h5Channel726: getH5Channel()
-				});
-				setTimeout(() => {
-					if (indexSts === 'LN0001') {
-						this.handleApply();
-					} else if (indexSts === 'LN0002') {
-						this.handleProgressApply('01');
-					} else if (indexSts === 'LN0010') {
-						this.goToNewMoXie();
-					} else {
-						this.handleSmartClick();
-					}
-				}, 500);
-
-				break;
-			case 'mianxi15':
-				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '15',
-					h5Channel726: getH5Channel()
-				});
-
-				setTimeout(() => {
-					if (indexSts === 'LN0001') {
-						this.handleApply();
-					} else if (indexSts === 'LN0002') {
-						this.handleProgressApply('01');
-					} else if (indexSts === 'LN0010') {
-						this.goToNewMoXie();
-					} else {
-						this.handleSmartClick();
-					}
-				}, 500);
-				break;
-			case 'mianxi30':
-				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '30',
-					h5Channel726: getH5Channel()
-				});
-				setTimeout(() => {
-					if (indexSts === 'LN0001') {
-						this.handleApply();
-					} else if (indexSts === 'LN0002') {
-						this.handleProgressApply('01');
-					} else if (indexSts === 'LN0010') {
-						this.goToNewMoXie();
-					} else {
-						this.handleSmartClick();
-					}
-				}, 500);
 				break;
 			case 'getBonus':
 				buriedPointEvent(activity.mianxi822ModalUseBtn, {
