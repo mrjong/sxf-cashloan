@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { List } from 'antd-mobile';
 import ListDesc from '../ListDesc';
 import styles from './index.scss';
-import { Consumer } from 'pages/common/routerPage/context';
 export default class Lists extends PureComponent {
 	constructor(props) {
 		super(props);
