@@ -794,18 +794,7 @@ export default class home_page extends PureComponent {
 				if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
 					couponTestData = await this.props.$fetch.get(API.couponTest);
 				}
-				if (
-					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
-					(couponTestData && couponTestData.data && couponTestData.data !== '0')
-				) {
-					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
-					this.setState({
-						isShowActivityModal: true,
-						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
-					});
-				} else {
-					this.getMianxi7();
-				}
+
 				if (store.getBonusActivity()) {
 					store.removeBonusActivity();
 					this.setState({
@@ -820,21 +809,7 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	getMianxi7 = async () => {
-		let mxData = await this.props.$fetch.get(API.couponNotify);
-		if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal2()) {
-			this.setState(
-				{
-					isShowActivityModal: true,
-					modalBtnFlag: true,
-					modalType: `mianxi${mxData.data}`
-				},
-				() => {
-					store.setShowActivityModal2(true);
-				}
-			);
-		}
-	};
+
 	// 缓存banner
 	cacheBanner = () => {
 		const bannerAble = Cookie.getJSON('bannerAble');
@@ -926,10 +901,6 @@ export default class home_page extends PureComponent {
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
 				break;
-			case 'yhq7': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
-			case 'yhq50': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
-				this.getMianxi7();
-				break;
 
 			default:
 				break;
@@ -943,14 +914,6 @@ export default class home_page extends PureComponent {
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
-				break;
-			case 'yhq7':
-				buriedPointEvent(activity.yhq7ModalBtnClick);
-				this.handleSmartClick();
-				break;
-			case 'yhq50':
-				buriedPointEvent(activity.yhq50ModalBtnClick);
-				this.handleSmartClick();
 				break;
 			case 'mianxi':
 				buriedPointEvent(activity.mianxiModalBtnClick);
