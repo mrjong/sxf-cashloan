@@ -388,14 +388,15 @@ export default class coupon_page extends PureComponent {
 								}
 							/>
 						)}
-						{receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine'
-							? null
-							: this.state.msgType === 0 &&
-							  HomeBtnShow && (
-									<button className={style.goUse} onClick={this['HomeBtn'].getData}>
-										去使用
-									</button>
-							  )}
+						{receiveData &&
+							receiveData.entryFrom &&
+							receiveData.entryFrom === 'mine' &&
+							this.state.msgType === 0 &&
+							HomeBtnShow && (
+								<button className={style.goUse} onClick={this['HomeBtn'].getData}>
+									去使用
+								</button>
+							)}
 						<div
 							className={
 								obj.useSts === '02' || obj.useSts === '03'

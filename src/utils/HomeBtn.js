@@ -122,13 +122,6 @@ class HomeBtn {
 			})
 			.then(async (result) => {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					if (result.data.indexSts === 'LN0002') {
-						store.getAutId() && store.setAutId2(store.getAutId());
-					}
-					// 从进度页面返回或者卡是爬取中不删除AutId
-					if (!store.getAutId2() || result.data.indexSts !== 'LN0002') {
-						store.removeAutId();
-					}
 					this.instance.setState(
 						{
 							HomeBtnShow: true,
