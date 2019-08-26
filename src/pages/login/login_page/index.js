@@ -331,7 +331,7 @@ export default class login_page extends PureComponent {
 				if (result.msgCode === 'PTM0000') {
 					this.setState({
 						submitData: {
-							relyToken: result.data.relyToken,
+							relyToken: (result && result.data && result.data.relyToken) || '',
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
