@@ -416,7 +416,10 @@ export default class coupon_page extends PureComponent {
 							{(obj && obj.coupDesc) || <div className={style.none}>_</div>}
 						</div>
 						<div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>
-							{this.state.msgType === 0 ? (
+							{this.state.msgType === 0 &&
+							receiveData &&
+							receiveData.entryFrom &&
+							receiveData.entryFrom === 'mine' ? (
 								<span>
 									有效期还剩{' '}
 									{obj && obj.validEndTm && (
