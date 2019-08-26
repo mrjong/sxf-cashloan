@@ -359,6 +359,7 @@ class HomeBtn {
 				} else if (result && result.msgCode === 'PTM2003') {
 					// 有风控没绑储蓄卡 跳绑储蓄卡页面
 					store.setBackUrl('/home/home');
+					store.setCheckCardRouter(true);
 					this.instance.props.toast.info(result.msgInfo);
 					setTimeout(() => {
 						this.instance.props.history.push({
@@ -369,6 +370,7 @@ class HomeBtn {
 				} else if (result && result.msgCode === 'PTM2002') {
 					// 有风控没绑信用卡 跳绑信用卡页面
 					store.setBackUrl('/home/home');
+					store.setCheckCardRouter(true);
 					this.instance.props.toast.info(result.msgInfo);
 					setTimeout(() => {
 						this.instance.props.history.push({
@@ -492,7 +494,7 @@ class HomeBtn {
 					this.instance.props.history.push(
 						`/home/deposit_tip?cashMoney=${usrCashIndexInfo.indexData.curAmt}`
 					);
-				} else {
+				} else if (usrCashIndexInfo.indexData) {
 					this.instance.props.history.push('/home/loan_fenqi');
 				}
 				break;
