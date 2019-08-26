@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
 import qs from 'qs';
-import { getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
@@ -917,8 +916,6 @@ export default class home_page extends PureComponent {
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
 		this.closeActivityModal(type);
-		const { usrIndexInfo } = this.state;
-		const { indexSts } = usrIndexInfo;
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
