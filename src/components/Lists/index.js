@@ -22,7 +22,7 @@ export default class Lists extends PureComponent {
 	};
 
 	render() {
-		const { listsInf, className, insureFee } = this.props;
+		const { listsInf, className, insureFee, CouponCount } = this.props;
 		const Item = List.Item;
 		const Brief = Item.Brief;
 		return (
@@ -68,24 +68,13 @@ export default class Lists extends PureComponent {
 								>
 									{item.label.name}
 									{item.label.brief ? <Brief>{item.label.brief}</Brief> : null}
-									{
-										<Consumer>
-											{({ footerTipIcon }) => {
-												return (
-													(footerTipIcon &&
-														footerTipIcon.couponCount &&
-														footerTipIcon.couponCount > 0 &&
-														item.label.name === '优惠劵' && (
-															<div className={styles.rightIcon}>
-																<span className={styles.redBag}></span>
-																{footerTipIcon.couponCount}个可用
-															</div>
-														)) ||
-													null
-												);
-											}}
-										</Consumer>
-									}
+									{(CouponCount && CouponCount > 0 && item.label.name === '优惠劵' && (
+										<div className={styles.rightIcon}>
+											<span className={styles.redBag}></span>
+											{CouponCount}个可用
+										</div>
+									)) ||
+										null}
 								</Item>
 								{item.feeInfos && item.showDesc ? (
 									<div>

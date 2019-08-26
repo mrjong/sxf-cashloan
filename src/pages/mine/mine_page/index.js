@@ -17,7 +17,8 @@ const API = {
 	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
 	LOGOUT: '/signup/logout', // 用户退出登陆
 	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
-	couponRedDot: '/index/couponRedDot' // 优惠券红点
+	couponRedDot: '/index/couponRedDot', // 优惠券红点
+	couponCount: '/index/couponCount' // 优惠券红点
 };
 
 let token = '';
@@ -34,6 +35,7 @@ export default class mine_page extends PureComponent {
 		this.state = {
 			realNmFlg: false, // 用户是否实名
 			mblNoHid: '',
+			CouponCount: 0,
 			memberInf: {
 				// 会员卡信息
 				status: '',
@@ -63,12 +65,26 @@ export default class mine_page extends PureComponent {
 				this.getUsrInfo();
 			}
 			this.couponRedDot();
+			this.couponCount();
 		}
 	}
 	couponRedDot = () => {
 		this.props.$fetch.get(API.couponRedDot).then((result) => {
 			if (result && result.data) {
 				this.props.globalTask(result.data);
+			}
+		});
+	};
+	couponCount = () => {
+		this.props.$fetch.get(API.couponCount).then((result) => {
+			if (result && result.data) {
+				this.setState({
+					CouponCount: (result.data && result.data.couponCount) || 0
+				});
+			} else {
+				this.setState({
+					CouponCount: 0
+				});
 			}
 		});
 	};
@@ -322,7 +338,12 @@ export default class mine_page extends PureComponent {
 						</div>
 					</div>
 				) : null}
-				<Lists className={styles.mine_list} clickCb={this.clickhandle} listsInf={listsArr} />
+				<Lists
+					className={styles.mine_list}
+					clickCb={this.clickhandle}
+					CouponCount={this.state.CouponCount}
+					listsInf={listsArr}
+				/>
 				<Lists
 					clickCb={this.clickhandle2}
 					listsInf={listsArr2}
