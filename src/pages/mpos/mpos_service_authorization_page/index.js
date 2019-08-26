@@ -109,15 +109,16 @@ export default class mpos_service_authorization_page extends PureComponent {
 		return (
 			<div>
 				<img src={logo} alt="" className={styles.logoWrap} />
-				<p className={styles.text}>
-					随行付金融提供 <em className={styles.highlight}>信用卡账单代还</em>服务 <br /> 200万信用卡用户新选择{' '}
+				<p className={styles.text}>借钱还信用卡找还到</p>
+				<p className={`${styles.text} ${styles.text2}`}>
+					最高<span>50000</span>还款金
 				</p>
 				<div className={styles.btn_fixed}>
 					<SXFButton
 						className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
 						onClick={selectFlag ? () => this.goSubmit() : null}
 					>
-						下一步
+						去看看
 					</SXFButton>
 				</div>
 				<div className={styles.agreement_box}>
