@@ -423,7 +423,18 @@ export default class coupon_page extends PureComponent {
 								<span>
 									有效期还剩{' '}
 									{obj && obj.validEndTm && (
-										<CountDown endTime={this.getTime(obj.validEndTm)} timeOver={this.onRefresh} type="day" />
+										<CountDown
+											endTime={this.getTime(obj.validEndTm)}
+											timeOver={() => {
+												let now = +new Date();
+												let thisTime = +new Date(this.getTime(obj.validEndTm));
+												if (now > thisTime) {
+													return;
+												}
+												this.onRefresh();
+											}}
+											type="day"
+										/>
 									)}
 								</span>
 							) : (
