@@ -8,7 +8,7 @@ export default class CouponDesc extends React.Component {
 	}
 
 	goCoupon = () => {
-		this.props.history.push('/mine/coupon_page');
+		this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
 	};
 
 	render() {
