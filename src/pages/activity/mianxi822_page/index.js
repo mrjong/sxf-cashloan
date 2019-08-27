@@ -278,7 +278,9 @@ export default class mianxi822_page extends PureComponent {
 					<img src={rule_bg} className={styles.ruleBg} />
 					<div className={styles.ruleContBox}>
 						<p>1.活动时间：2019年8月28日开始 （活动时间视具体情况，随时调整）;</p>
-						<p>2.活动期间，用户通过活动页面参与，可获得100元免息券1张，有效期7天;</p>
+						<p>
+							2.活动期间，用户通过活动页面参与，可获得100元免息券1张，有效期7天，未还清及有额度未借款用户暂无参与资格;
+						</p>
 						<p>3.同一ID在活动期间限领取一次;</p>
 						<p>4.100元红包在借款时使用，仅减免首期产生的利息，超过或不足100元部分按实际首期利息抵扣。</p>
 					</div>
