@@ -197,7 +197,12 @@ const activity = {
 	mianxi715OldPrizeBtn: `${prefix}_ACTIVITY_MIANXI_715_OLD_PRIZE_BTN`, // 七月活动 复贷用户奖品弹框按钮点击
 	mianxiModalBtnClick: `${prefix}_ACTIVITY_MIANXI_715_MODAL_BTN`, // 七月活动 首页弹窗按钮点击
 	mianxi726ModalBtnClick: `${prefix}_ACTIVITY_MIANXI_726_MODAL_BTN`, // 七月26活动 首页弹窗按钮点击
-	MposH5Channel: `${prefix}_MPOS_H5CHANNEL` // 七月26活动 首页弹窗按钮点击
+	MposH5Channel: `${prefix}_MPOS_H5CHANNEL`, // 七月26活动 首页弹窗按钮点击
+	mianxi822Entry: `${prefix}_ACTIVITY_MIANXI_822_ENTRY`, // 100元利息红包限时领活动 活动入口
+	mianxi822UseBtn: `${prefix}_ACTIVITY_MIANXI_822_USE_BTN`, // 100元利息红包限时领活动 领取按钮
+	mianxi822ModalUseBtn: `${prefix}_ACTIVITY_MIANXI_822_MODAL_USE`, // 100元利息红包限时领活动 弹窗-去使用
+	mianxi822ModalJoinBtn: `${prefix}_ACTIVITY_MIANXI_822_MODAL_JOIN`, // 100元利息红包限时领活动 弹窗-去参与
+	mianxi822LoginBtn: `${prefix}_ACTIVITY_MIANXI_822_LOGIN_BTN` // 100元利息红包限时领活动 注册弹窗-确定
 };
 
 const moxie_bank_list = {

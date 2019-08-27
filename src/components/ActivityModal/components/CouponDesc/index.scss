@@ -1,0 +1,18 @@
+.checkCoupon {
+	position: absolute;
+	bottom: 150px;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 26px;
+	font-weight: 500;
+	color: #eff5ff;
+	line-height: 37px;
+	width: 100%;
+	span {
+		color: #420000;
+		text-decoration: underline;
+	}
+	i {
+		margin: 0 8px;
+	}
+}
