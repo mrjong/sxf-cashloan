@@ -271,7 +271,7 @@ export default class remit_ing_page extends PureComponent {
 					<Icon type="cross" className={style.close_icon} onClick={this.handleClosePannel} />
 					<div className={style.title_wrap}>
 						<h3 className={style.modalTitle}>
-							{showRulesPannel ? '人工审核的预约须知' : '请预约人工审核时间'}
+							{showRulesPannel ? '人工审核的预约须知' : '请预约电话审核时间'}
 						</h3>
 						{!showRulesPannel && (
 							<img src={q_icon} className={style.question_icon} onClick={this.showRulesPannel} />
@@ -292,7 +292,10 @@ export default class remit_ing_page extends PureComponent {
 						</ul>
 					) : (
 						<div>
-							<p className={style.modalDesc}>预约时间到达前2小时则不能修改预约时间</p>
+							{/* <p className={style.modalDesc}>预约时间到达前2小时则不能修改预约时间</p> */}
+							<p className={style.modalDesc}>
+								审核电话为<span>010-86355xxx</span>，请注意接听
+							</p>
 							<div>
 								<div className={style.options_day}>
 									{dayList.map((item) => (

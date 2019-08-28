@@ -5,41 +5,55 @@
 }
 
 .logoWrap {
-	width: 130px;
-	height: 188px;
+	width: 94px;
+	height: 94px;
 	display: block;
-	margin: 72px auto 0;
+	margin: 31px 0 0 33px;
 }
 
 .text {
-	font-size: 36px;
+	font-size: 70px;
+	font-family: PingFang SC;
+	font-weight: 600;
 	color: #121c32;
-	margin-top: 60px;
+	margin-top: 104px;
 	text-align: center;
+	line-height: 100%;
 }
-
-.highlight {
-	color: #2e7af2;
-	font-size: 36px;
-	font-weight: bold;
+.text2 {
+	font-size: 50px;
+	margin-top: 44px;
+	span {
+		position: relative;
+		font-size: 64px;
+		font-family: 'DINMitAlt';
+		font-weight: bold;
+		top: 6px;
+		margin: 0 12px;
+	}
 }
 
 .smart_button {
-	background: #4c7afd;
+	background: #fec933;
 	color: #fff;
-	width: 634px;
+	width: 694px;
+	height: 93px;
+	line-height: 93px;
 	margin: 0 auto;
 	border-radius: 8px;
-	box-shadow: 0 3px 9px rgba(76, 122, 253, 0.56);
+	box-shadow: 0px 3px 9px 0px rgba(254, 201, 51, 0.56);
+	font-family: PingFang SC;
+	font-weight: 600;
 	&:active {
 		opacity: 0.5;
 	}
 	&.dis {
 		background: #dcdfe6;
+		box-shadow: 0px 3px 9px 0px rgba(220, 223, 230, 0.56);
 	}
 }
 .btn_fixed {
-	margin: 208px auto 0;
+	margin: 244px auto 0;
 }
 
 .agreement_box {
@@ -55,14 +69,14 @@
 		margin: 0 auto;
 		&.am-checkbox-agree .am-checkbox-agree-label {
 			font-size: 20px;
-			color: #a8a79b;
+			color: #8e8d7b;
 			a {
 				color: #414a53;
 			}
 		}
 		.am-checkbox.am-checkbox-checked .am-checkbox-inner {
-			background-color: #4c7afd;
-			border-color: #4c7afd;
+			background-color: #020202;
+			border-color: #020202;
 		}
 		&.am-checkbox-agree .am-checkbox-inner {
 			left: 0.2rem;

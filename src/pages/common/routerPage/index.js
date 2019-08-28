@@ -114,10 +114,10 @@ export default class router_Page extends PureComponent {
 			});
 		}
 	};
-	globalTask = (type) => {
-		console.log(type);
+	globalTask = (obj) => {
+		console.log(obj);
 		this.setState({
-			footerTipIcon: type
+			footerTipIcon: obj
 		});
 	};
 	render() {

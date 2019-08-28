@@ -13,7 +13,8 @@ const Brief = Item.Brief;
 const API = {
 	msgRead: '/my/msgRead',
 	msgCount: '/my/msgCount',
-	billList: '/bill/list'
+	billList: '/bill/list',
+	couponRedDot: '/index/couponRedDot' // 优惠券红点
 };
 
 let token = '';
@@ -46,6 +47,7 @@ export default class order_page extends PureComponent {
 	}
 	scrollTop = 0;
 	componentWillMount() {
+		this.props.globalTask(null);
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -74,6 +76,7 @@ export default class order_page extends PureComponent {
 			);
 		} else {
 			hasNext = true;
+			this.couponRedDot();
 			this.getCommonData();
 		}
 	}
@@ -84,6 +87,13 @@ export default class order_page extends PureComponent {
 			setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
 		}
 	}
+	couponRedDot = () => {
+		this.props.$fetch.get(API.couponRedDot).then((result) => {
+			if (result && result.data) {
+				this.props.globalTask(result.data);
+			}
+		});
+	};
 	// 获取每一页数据
 	genData = async (pIndex = 0) => {
 		if (!hasNext) {

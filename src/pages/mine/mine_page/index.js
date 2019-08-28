@@ -14,7 +14,9 @@ import notLoginImg from 'assets/images/mine/not_login_logo.png';
 const API = {
 	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
 	LOGOUT: '/signup/logout', // 用户退出登陆
-	USERSTATUS: '/signup/getUsrSts' // 用户状态获取
+	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
+	couponRedDot: '/index/couponRedDot', // 优惠券红点
+	couponCount: '/index/couponCount' // 优惠券红点
 };
 
 let token = '';
@@ -31,6 +33,7 @@ export default class mine_page extends PureComponent {
 		this.state = {
 			realNmFlg: false, // 用户是否实名
 			mblNoHid: '',
+			CouponCount: 0,
 			memberInf: {
 				// 会员卡信息
 				status: '',
@@ -39,6 +42,7 @@ export default class mine_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
+		this.props.globalTask(null);
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -58,26 +62,30 @@ export default class mine_page extends PureComponent {
 			} else {
 				this.getUsrInfo();
 			}
-			// 判断session是否存了购买会员卡的状态，没有调用接口，有的话直接从session里取
-			// if (Cookie.get('VIPFlag')) {
-			//   switch (Cookie.get('VIPFlag')) {
-			//     case '0':
-			//       this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
-			//       break;
-			//     case '1':
-			//       this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
-			//       break;
-			//     case '2':
-			//       this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
-			//       break;
-			//     default:
-			//       break;
-			//   }
-			// } else {
-			//   this.queryVipCard();
-			// }
+			this.couponRedDot();
+			this.couponCount();
 		}
 	}
+	couponRedDot = () => {
+		this.props.$fetch.get(API.couponRedDot).then((result) => {
+			if (result && result.data) {
+				this.props.globalTask(result.data);
+			}
+		});
+	};
+	couponCount = () => {
+		this.props.$fetch.get(API.couponCount).then((result) => {
+			if (result && result.data) {
+				this.setState({
+					CouponCount: (result.data && result.data.couponCount) || 0
+				});
+			} else {
+				this.setState({
+					CouponCount: 0
+				});
+			}
+		});
+	};
 	// 获取用户信息
 	getUsrInfo = () => {
 		console.log('+++');
@@ -142,7 +150,7 @@ export default class mine_page extends PureComponent {
 			return;
 		}
 		if (item.jumpToUrl === '/mine/coupon_page') {
-			this.props.history.push(item.jumpToUrl);
+			this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
 		} else {
 			const { mblNoHid, realNmFlg } = this.state;
 			if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
@@ -307,7 +315,12 @@ export default class mine_page extends PureComponent {
 						</div>
 					</div>
 				) : null}
-				<Lists className={styles.mine_list} clickCb={this.clickhandle} listsInf={listsArr} />
+				<Lists
+					className={styles.mine_list}
+					clickCb={this.clickhandle}
+					CouponCount={this.state.CouponCount}
+					listsInf={listsArr}
+				/>
 				<Lists
 					clickCb={this.clickhandle2}
 					listsInf={listsArr2}
