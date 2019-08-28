@@ -1084,6 +1084,9 @@ export default class order_detail_page extends PureComponent {
 						smsCodeAgain={this.checkProtocolBindCard}
 						smsCode={smsCode}
 						toggleBtn={toggleBtn}
+						history={this.props.history}
+						fetch={this.props.$fetch}
+						toast={this.props.toast}
 					/>
 				)}
 				<Panel title="借款信息" className={styles.loadInfBox}>
