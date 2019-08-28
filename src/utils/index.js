@@ -23,7 +23,8 @@ const API = {
 	checkEngaged: '/activeConfig/checkEngaged',
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser',
-	mxoieCardList: '/moxie/mxoieCardList/C'
+	mxoieCardList: '/moxie/mxoieCardList/C',
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -943,4 +944,31 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 			console.log(err);
 			$props.toast.info('系统开小差，请稍后重试');
 		});
+};
+
+// 神策用户绑定
+export const queryUsrSCOpenId = ({ $props }) => {
+	return new Promise((resolve, reject) => {
+		// 获取token
+		let token = Cookie.get('fin-v-card-token');
+		let tokenFromStorage = store.getToken();
+		if (token && tokenFromStorage) {
+			if (!store.getQueryUsrSCOpenId()) {
+				$props.$fetch
+					.get(API.queryUsrSCOpenId)
+					.then((res) => {
+						if (res.msgCode === 'PTM0000') {
+							window.sa.login(res.data);
+							store.setQueryUsrSCOpenId(res.data);
+						}
+						resolve(true);
+					})
+					.catch(() => {
+						resolve(true);
+					});
+			}
+		} else {
+			resolve(true);
+		}
+	});
 };

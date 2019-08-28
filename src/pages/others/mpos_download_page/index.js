@@ -5,10 +5,13 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import { getDeviceType } from 'utils';
-import { other } from 'utils/analytinsType';
+import { other, wxTest } from 'utils/analytinsType';
+import qs from 'qs';
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
+let urlParams = {};
+let entryPageTime = '';
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
@@ -18,6 +21,22 @@ export default class mpos_download_page extends PureComponent {
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
+		urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
+	}
+	componentDidMount() {
+		entryPageTime = new Date();
+	}
+	componentWillUnmount() {
+		if (urlParams && urlParams.wxTestFrom) {
+			let exitPageTime = new Date();
+			let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+			buriedPointEvent(wxTest.wxTestDownPageTime, {
+				durationTime: durationTime,
+				entry: urlParams && urlParams.wxTestFrom
+			});
+		} else {
+			entryPageTime = '';
+		}
 	}
 
 	getDownloadUrl = () => {
@@ -40,6 +59,11 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
+		if (urlParams && urlParams.wxTestFrom) {
+			buriedPointEvent(wxTest.btnClick_download, {
+				entry: urlParams.wxTestFrom
+			});
+		}
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {
@@ -67,30 +91,6 @@ export default class mpos_download_page extends PureComponent {
 						<SXFButton className={styles.smart_button} onClick={this.downloadClick}>
 							安全下载
 						</SXFButton>
-						{/* <div>
-							<AgreeItem
-								className="mpos_middle_checkbox"
-								checked={selectFlag}
-								data-seed="logId"
-								onChange={(e) => this.setState({ selectFlag: e.target.checked })}
-							>
-								请阅读协议内容，点击按钮即视为同意
-								<a
-									onClick={() => {
-										this.go('register_agreement_page');
-									}}
-								>
-									《用户注册协议》
-								</a>
-								<a
-									onClick={() => {
-										this.go('privacy_agreement_page');
-									}}
-								>
-									《用户隐私权政策》
-								</a>
-							</AgreeItem>
-						</div> */}
 					</div>
 				</div>
 			</div>

@@ -10,7 +10,6 @@ import old_btn from './img/old_btn.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
-import { headerIgnore } from 'utils';
 
 @setBackGround('#FF9C42')
 export default class wuyuekh_page extends PureComponent {
@@ -35,9 +34,7 @@ export default class wuyuekh_page extends PureComponent {
 
 	render() {
 		return (
-			<div
-				className={headerIgnore() ? styles.wuyuekh_page : `${styles.wuyuekh_page2} ${styles.wuyuekh_page}`}
-			>
+			<div className={styles.wuyuekh_page}>
 				<img src={activity_bg} className={styles.activity_bg} />
 				<div className={styles.new_entry_box}>
 					<img src={new_bg} className={styles.entry_bg} />

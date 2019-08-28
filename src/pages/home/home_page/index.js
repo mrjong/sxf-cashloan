@@ -2,7 +2,15 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	isCanLoan,
+	getMoxieData,
+	dateDiffer,
+	queryUsrSCOpenId
+} from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
@@ -39,7 +47,6 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
@@ -117,7 +124,7 @@ export default class home_page extends PureComponent {
 		// 清除一些store
 		this.removeStore();
 		// 埋点绑定
-		this.queryUsrSCOpenId();
+		queryUsrSCOpenId({ $props: this.props });
 		// 获取token 并设置
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
@@ -832,21 +839,6 @@ export default class home_page extends PureComponent {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
 			});
-		}
-	};
-
-	// 神策用户绑定
-	queryUsrSCOpenId = () => {
-		if (token && tokenFromStorage) {
-			if (!store.getQueryUsrSCOpenId()) {
-				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-					// console.log(res);
-					if (res.msgCode === 'PTM0000') {
-						sa.login(res.data);
-						store.setQueryUsrSCOpenId(res.data);
-					}
-				});
-			}
 		}
 	};
 

@@ -132,7 +132,7 @@ export default class router_Page extends PureComponent {
 			<div className="application_view">
 				<div className="application_page">
 					<Provider value={{ footerTipIcon: this.state.footerTipIcon }}>
-						{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
+						{/* {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />} */}
 						{footerHide ? null : <Footer footerProps={route} />}
 						<div className="application_content">{component}</div>
 					</Provider>

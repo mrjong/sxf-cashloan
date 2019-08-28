@@ -8,7 +8,11 @@ const Loading = ({ error, pastDelay }) => {
 	if (pastDelay) {
 		return <div>{React.createElement(SXFLoading)}</div>;
 	} else if (error) {
-		return <div><ErrPage></ErrPage></div>;
+		return (
+			<div>
+				<ErrPage></ErrPage>
+			</div>
+		);
 	}
 	return null;
 };
@@ -27,6 +31,12 @@ const OuterLoginPage = Loadable({
 	LoadingComponent,
 	delay: 300
 });
+const OuterMposLoginPage = Loadable({
+	loader: () => import('pages/login/outer_mpos_login_page'),
+	loading: Loading,
+	LoadingComponent,
+	delay: 300
+});
 const RouterPage = Loadable({
 	loader: () => import('pages/common/routerPage'),
 	loading: Loading,
@@ -40,6 +50,7 @@ export default class Routers extends Component {
 				<Route exact path="/" component={LoginPage} />
 				<Route path="/login" component={LoginPage} />
 				<Route path="/outer_login" component={OuterLoginPage} />
+				<Route path="/outer_mpos_login" component={OuterMposLoginPage} />
 				<Route path="/:modules/:page" component={RouterPage} />
 			</Switch>
 		);

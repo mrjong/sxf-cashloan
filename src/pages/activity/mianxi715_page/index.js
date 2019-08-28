@@ -13,7 +13,6 @@ import rule_bg from './img/rule_bg.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
-import { headerIgnore } from 'utils';
 import fetch from 'sx-fetch';
 import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
@@ -191,9 +190,7 @@ export default class wuyuekh_page extends PureComponent {
 	render() {
 		const { isShowLogin, showLoginTip, showBoundle, prizeType } = this.state;
 		return (
-			<div
-				className={headerIgnore() ? styles.wuyuekh_page : `${styles.wuyuekh_page2} ${styles.wuyuekh_page}`}
-			>
+			<div className={styles.wuyuekh_page}>
 				<SmsAlert
 					onRef={this.onRef}
 					goSubmitCb={{

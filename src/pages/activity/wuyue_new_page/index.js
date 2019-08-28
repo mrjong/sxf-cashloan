@@ -17,7 +17,6 @@ import WinPrize from './components/WinPrize';
 import { rules } from './rulesData';
 import Cookie from 'js-cookie';
 import config from '../wuyue_old_page/config';
-import { headerIgnore } from 'utils';
 
 const API = {
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged' // 记录用户参与
@@ -120,11 +119,7 @@ export default class wuyue_new_page extends PureComponent {
 	render() {
 		const { contType, mayModalShow, rulesShow, prizeShow } = this.state;
 		return (
-			<div
-				className={
-					headerIgnore() ? styles.wuyue_new_page : `${styles.wuyue_new_page2} ${styles.wuyue_new_page}`
-				}
-			>
+			<div className={styles.wuyue_new_page}>
 				<img src={activity_bg} className={styles.activity_bg} />
 				<img src={rule_bg} className={styles.rule_bg} onClick={this.showRules} />
 				<div className={styles.main_cont}>

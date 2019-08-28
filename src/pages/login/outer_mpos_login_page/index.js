@@ -9,7 +9,7 @@ import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur, queryUsrSCOpenId } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
-import { daicao } from 'utils/analytinsType';
+import { wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
@@ -60,10 +60,6 @@ export default class login_page extends PureComponent {
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '还到';
-		// 保存h5Channel变量
-		const query = qs.parse(window.location.search, {
-			ignoreQueryPrefix: true
-		});
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
@@ -123,11 +119,17 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
-		let exitPageTime = new Date();
-		let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
-		buriedPointEvent(daicao.loginPageTime, {
-			durationTime: durationTime
-		});
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			let exitPageTime = new Date();
+			let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+			buriedPointEvent(wxTest.wxTestMposLoginPageTime, {
+				durationTime: durationTime,
+				entry: queryData.wxTestFrom
+			});
+		} else {
+			entryPageTime = '';
+		}
 	}
 
 	// 校验手机号
@@ -142,6 +144,7 @@ export default class login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		buriedPointEvent(wxTest.btnClick_login);
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
@@ -153,7 +156,6 @@ export default class login_page extends PureComponent {
 		}
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				buriedPointEvent(daicao.loginBtn);
 				let param = {
 					smsJrnNo: this.state.smsJrnNo, // 短信流水号
 					osType, // 操作系统
@@ -173,8 +175,12 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						const { queryData = {} } = this.state;
 						queryUsrSCOpenId({ $props: this.props }).then(() => {
-							this.props.history.replace('/others/download_page');
+							this.props.history.replace({
+								pathname: '/others/mpos_download_page',
+								search: `?wxTestFrom=${(queryData && queryData.wxTestFrom) || ''}`
+							});
 						});
 					},
 					(error) => {
@@ -192,6 +198,7 @@ export default class login_page extends PureComponent {
 
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
+		buriedPointEvent(wxTest.sendSmsCodeMposClick);
 		if (!this.state.timeflag) return;
 		this.getSmsCode();
 	};
