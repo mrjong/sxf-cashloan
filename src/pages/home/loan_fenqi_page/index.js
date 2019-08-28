@@ -12,7 +12,7 @@ import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils/common';
-import SmsModal from '../../order/order_detail_page/components/SmsModal';
+import SmsModal from '../../order/order_common_page/components/SmsModal';
 
 const API = {
 	prodInfo: '/cash/prodList', //产品列表基本信息查询
