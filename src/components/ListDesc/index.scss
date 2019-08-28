@@ -1,8 +1,10 @@
 .list_desc_container_box {
 	background-color: #f7f8fa;
 	padding: 30px;
-	height: 300px;
 	box-sizing: border-box;
+}
+.list_desc_container_clearbox {
+	margin-left: 50px;
 }
 .list_desc_container {
 	display: flex;

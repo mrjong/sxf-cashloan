@@ -30,15 +30,7 @@ export default class Lists extends PureComponent {
 	};
 
 	render() {
-		const {
-			listsInf,
-			className,
-			insureFee,
-			isCheckbox,
-			checkClickCb,
-			penaltyInfo,
-			isShowPenaltyCheck
-		} = this.props;
+		const { listsInf, className, insureFee, isCheckbox, checkClickCb, penaltyInfo } = this.props;
 		const Item = List.Item;
 		const Brief = Item.Brief;
 		return (
@@ -116,7 +108,10 @@ export default class Lists extends PureComponent {
 							return (
 								<div key={index}>
 									<Item
-										className={item.label.className ? styles.hasIcon : isCheckbox ? styles.checkList : null}
+										className={[
+											item.label.className ? styles.hasIcon : isCheckbox ? styles.checkList : null,
+											!item.isShowCheck && styles.nocheckbox_list_desc
+										].join(' ')}
 										arrow={item.arrowHide ? item.arrowHide : 'horizontal'}
 										onClick={() => {
 											this.props.clickCb(item);

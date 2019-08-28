@@ -36,10 +36,7 @@ export default class order_detail_page extends PureComponent {
 			orderList: [],
 			bankInfo: {},
 			couponInfo: {},
-			hideBtn: false,
 			isPayAll: false, // 是否一键结清
-			// showItrtAmt: false, // 优惠劵金额小于利息金额 true为大于
-			// ItrtAmt: 0, // 每期利息金额
 			deratePrice: '',
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
@@ -49,7 +46,6 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail: false, // 是否展示弹框中的明细详情
 			isAdvance: false, // 是否提前还款
 			totalAmt: '', // 一键结清传给后台的总金额
-			billOverDue: '', //逾期弹窗标志
 			overDueModalFlag: '', // 信用施压弹框标识
 			payType: '',
 			payTypes: ['BankPay'],
@@ -61,10 +57,10 @@ export default class order_detail_page extends PureComponent {
 			totalAmtForShow: '',
 			couponPrice: '', // 优惠劵计算过的金额
 			cashierVisible: false,
-
 			disDisRepayAmt: 0, // 优惠金额
-			totalMoney: 0, //勾选的待还款总金额
-			penaltyInfo: ''
+			penaltyInfo: '',
+			canUseCoupon: false, //优惠券是否可用
+			repayPerds: []
 		};
 	}
 
@@ -138,13 +134,13 @@ export default class order_detail_page extends PureComponent {
 	};
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
-		const { billNo, billDesc } = this.state;
+		const { billNo, billDesc, repayPerds } = this.state;
 		this.props.$fetch
 			.post(API.fundPlain, {
 				ordNo: billNo,
 				isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
-				prodType: billDesc.prodType
-				// repayPerds: []
+				prodType: billDesc.prodType,
+				repayPerds: isPayAll ? [] : repayPerds
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
@@ -199,9 +195,7 @@ export default class order_detail_page extends PureComponent {
 			.then((res) => {
 				if (res && res.msgCode === 'PTM0000') {
 					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-					// popupFlag信用施压弹框，1为显示，0为隐藏
 					this.setState({
-						billOverDue: res.data.popupFlag,
 						overDueModalFlag: res.data.overduePopupFlag
 					});
 					res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
@@ -224,127 +218,66 @@ export default class order_detail_page extends PureComponent {
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					if (Number(res.data.insuranceAmt)) {
-						let insuranceStsText = '';
-						let insuranceStsColor = '';
-						if (res.data.insuranceSts === '1') {
-							insuranceStsText = '待支付';
-							insuranceStsColor = '#4CA6FF';
-						} else if (res.data.insuranceSts === '2') {
-							insuranceStsText = '处理中';
-							insuranceStsColor = '#FBB947';
-						} else if (res.data.insuranceSts === '3') {
-							insuranceStsText = '已支付';
-							insuranceStsColor = '#C7C7CC';
-						}
+					const {
+						insuranceAmt,
+						insuranceSts,
+						perdNum,
+						perdList,
+						billOvduSts,
+						billFineAmt,
+						billOvduAmt,
+						billOvduDays,
+						billOvduStartDt,
+						billSts
+					} = res.data;
+					Number(insuranceAmt) && this.handleInsureFeeInfo(insuranceAmt, insuranceSts);
+					if (!(billOvduSts === null || billOvduSts === '4')) {
+						//有罚息或滞纳金
+						this.handlePenaltyInfo(billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt);
+					} else {
 						this.setState({
-							isInsureValid: Number(res.data.insuranceAmt) && res.data.insuranceSts === '1',
-							insureFeeInfo: res.data.insuranceAmt,
-							insureInfo: {
-								label: {
-									name: '保费'
-								},
-								extra: [
-									{
-										name: parseFloat(res.data.insuranceAmt).toFixed(2),
-										color: '#333'
-									},
-									{
-										name: insuranceStsText,
-										color: insuranceStsColor
-									}
-								]
-							}
-						});
-					}
-					if (true) {
-						this.setState({
-							penaltyInfo: {
-								label: {
-									name: '罚息',
-									brief: '逾期管理费'
-								},
-								extra: [
-									{
-										name: 100,
-										color: '#121C32',
-										fontSize: '0.3rem'
-									},
-									{
-										name: 200,
-										color: '#121C32',
-										fontSize: '0.3rem'
-									}
-								],
-								show: true,
-								isChecked: true
-							},
-							billFineAmt: 100,
-							billOvduAmt: 200,
-							billOvduDays: 99,
-							insureInfo: {
-								label: {
-									name: '保费',
-									brief: '应支付日：2019年05月21日'
-								},
-								extra: [
-									{
-										name: parseFloat(1000).toFixed(2),
-										color: '#333',
-										fontSize: '0.3rem'
-									},
-									{
-										name: '处理中',
-										color: '#FBB947'
-									}
-								],
-								show: true,
-								isChecked: true
-							}
+							penaltyInfo: {}
 						});
 					}
 					this.setState(
 						{
-							thisPerdNum: res.data.perdNum,
+							thisPerdNum: perdNum,
 							billDesc: res.data, //账单全部详情
-							perdList: res.data.perdList //账单期数列表
+							isBillClean: billSts === '4', //总账单是否结清
+							perdList //账单期数列表
 						},
 						() => {
 							// 选择银行卡回来
 							let bankInfo = store.getCardData();
-							let orderDtlData = store.getOrderDetailData();
+							let orderDtlData = store.getOrderDetailData() || {};
+							let { isPayAll, detailArr, isShowDetail, isAdvance, totalAmt, totalAmtForShow } = orderDtlData;
 							store.removeOrderDetailData();
-							// let couponInfo = store.getCouponData();
 							if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
 								this.setState(
 									{
 										showModal: true,
-										isPayAll: orderDtlData && orderDtlData.isPayAll,
-										detailArr: orderDtlData && orderDtlData.detailArr,
-										isShowDetail: orderDtlData && orderDtlData.isShowDetail,
-										isAdvance: orderDtlData && orderDtlData.isAdvance,
-										totalAmt: orderDtlData && orderDtlData.totalAmt,
-										totalAmtForShow: orderDtlData && orderDtlData.totalAmtForShow
+										isPayAll,
+										detailArr,
+										isShowDetail,
+										isAdvance,
+										totalAmt,
+										totalAmtForShow
 									},
 									() => {
 										this.setState({
-											bankInfo: bankInfo
-											// couponInfo: couponInfo,
+											bankInfo
 										});
 										store.removeCardData();
-										if (res.data && res.data.data && res.data.perdNum !== 999) {
+										if (res.data && res.data.data && !this.state.isBillClean) {
 											this.dealMoney(res.data);
 										}
 									}
 								);
-							} else {
-								if (res.data && res.data.data && res.data.perdNum !== 999) {
-									this.dealMoney(res.data);
-								}
-								// this.setState({ couponInfo: null });
+							} else if (res.data && res.data.data && !this.state.isBillClean) {
+								this.dealMoney(res.data);
 							}
-							this.showPerdList(res.data.perdNum);
-							this.calcPayTotalMoney();
+
+							this.showPerdList(perdNum);
 						}
 					);
 				} else {
@@ -356,11 +289,85 @@ export default class order_detail_page extends PureComponent {
 			});
 	};
 
+	//处理保费展示数据
+	handleInsureFeeInfo = (insuranceAmt, insuranceSts) => {
+		let insuranceStsText = '';
+		let insuranceStsColor = '';
+		if (insuranceSts === '1') {
+			insuranceStsText = '待支付';
+			insuranceStsColor = '#4CA6FF';
+		} else if (insuranceSts === '2') {
+			insuranceStsText = '处理中';
+			insuranceStsColor = '#FBB947';
+		} else if (insuranceSts === '3') {
+			insuranceStsText = '已支付';
+			insuranceStsColor = '#C7C7CC';
+		}
+		this.setState({
+			isInsureValid: Number(insuranceAmt) && insuranceSts === '1',
+			insureFeeInfo: insuranceAmt,
+			insureInfo: {
+				label: {
+					name: '保费',
+					brief: '应支付日：2019年05月21日'
+				},
+				extra: [
+					{
+						name: parseFloat(insuranceAmt).toFixed(2),
+						color: '#333',
+						fontSize: '0.3rem'
+					},
+					{
+						name: insuranceStsText,
+						color: insuranceStsColor
+					}
+				],
+				show: true,
+				isChecked: true
+			}
+		});
+	};
+
+	//处理罚息数据展示
+	handlePenaltyInfo = (billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt) => {
+		this.setState({
+			penaltyInfo: {
+				label: {
+					name: '罚息',
+					brief: '逾期管理费'
+				},
+				extra: [
+					{
+						name: Number(billFineAmt).toFixed(2),
+						color: '#121C32',
+						fontSize: '0.3rem'
+					},
+					{
+						name: Number(billOvduAmt).toFixed(2),
+						color: '#121C32',
+						fontSize: '0.3rem'
+					}
+				],
+				show: true,
+				isChecked: true
+			},
+			billOvduDays,
+			billOvduStartDt
+		});
+	};
+
 	// 后台计算优惠券减免金额以及本次还款金额
 	dealMoney = (result) => {
 		let couponInfo = store.getCouponData();
 		store.removeCouponData();
-		let params = {};
+		let params = {
+			billNo: this.state.billNo,
+			type: '01', // 00为借款 01为还款
+			currentStage: result.perdNum,
+			price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
+			totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
+			prodType: this.state.billDesc.prodType
+		};
 		// 如果没有coupId直接不调用接口
 		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
 			// 不使用优惠劵的情况
@@ -370,25 +377,9 @@ export default class order_detail_page extends PureComponent {
 			return;
 		}
 		if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
-			params = {
-				billNo: this.state.billNo,
-				couponId: couponInfo.usrCoupNo, // 优惠劵id
-				type: '01', // 00为借款 01为还款
-				currentStage: result.perdNum,
-				price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-				totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
-				prodType: this.state.billDesc.prodType
-			};
+			params.couponId = couponInfo.usrCoupNo; // 优惠劵id
 		} else {
-			params = {
-				billNo: this.state.billNo,
-				couponId: result.data.usrCoupNo, // 优惠劵id
-				type: '01', // 00为借款 01为还款
-				currentStage: result.perdNum,
-				price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-				totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
-				prodType: this.state.billDesc.prodType
-			};
+			params.couponId = result.data.usrCoupNo;
 		}
 		this.props.$fetch.get(API.couponCount, params).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
@@ -406,22 +397,19 @@ export default class order_detail_page extends PureComponent {
 	// 显示还款计划
 	showPerdList = (perdNum) => {
 		const { thisPerdNum } = this.state;
-		this.setState({
-			hideBtn: false
-		});
 		let perdListArray = [];
 		let perdList = this.state.perdList;
 		for (let i = 0; i < perdList.length; i++) {
-			if (perdList[i].perdStsNm === '处理中') {
-				this.setState({
-					hideBtn: true
-				});
-			}
+			// if (perdList[i].perdStsNm === '处理中') {
+			// 	this.setState({
+			// 		hideBtn: true
+			// 	});
+			// }
 			let item = {
 				key: i,
 				label: {
 					name: `${i + 1}/${perdList.length}期`,
-					brief: perdList[i].perdDueDt + '还款'
+					brief: '应还款日: ' + perdList[i].perdDueDt
 				},
 				extra: [
 					{
@@ -452,7 +440,7 @@ export default class order_detail_page extends PureComponent {
 			if (perdList[i].perdSts === '4' || perdList[i].perdSts === '2') {
 				item.isShowCheck = false;
 			}
-			if (perdNum !== 999 && perdList[i].perdNum === perdNum) {
+			if (!this.state.isBillClean && perdList[i].perdNum === perdNum) {
 				item.showDesc = true;
 				item.arrowHide = 'up';
 			} else {
@@ -473,7 +461,7 @@ export default class order_detail_page extends PureComponent {
 					feeAmt: perdList[i].perdTotRepAmt
 				});
 				item.feeInfos.push({
-					feeNm: '剩余应还',
+					feeNm: '合计',
 					feeAmt: Number(perdList[i].perdWaitRepAmt)
 				});
 			}
@@ -484,7 +472,9 @@ export default class order_detail_page extends PureComponent {
 				orderList: perdListArray
 			},
 			() => {
-				this.calcPayTotalMoney();
+				if (window.location.pathname === '/order/order_repay_page') {
+					this.calcPayTotalMoney();
+				}
 			}
 		);
 	};
@@ -549,6 +539,7 @@ export default class order_detail_page extends PureComponent {
 				}
 			});
 	};
+
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
 		const params = {
@@ -582,7 +573,6 @@ export default class order_detail_page extends PureComponent {
 		const { billDesc = {}, billNo, isPayAll, payType } = this.state;
 		const cardAgrNo =
 			this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo;
-		let sendParams = null;
 		let couponId = '';
 		if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
 			if (this.state.couponInfo.usrCoupNo !== 'null') {
@@ -595,33 +585,18 @@ export default class order_detail_page extends PureComponent {
 				couponId = this.state.billDesc.data.usrCoupNo;
 			}
 		}
-		// 判断是否为一键结清
-		let repayStswStr = '';
-		if (isPayAll) {
-			if (billDesc.billPerdStsw.indexOf('1') > -1) {
-				// 只适用里面有一个1的情况
-				repayStswStr =
-					billDesc.billPerdStsw.split('1')[0] + '1' + billDesc.billPerdStsw.split('1')[1].replace(/0/g, '1');
-			} else {
-				return;
-			}
+		let sendParams = {
+			billNo,
+			cardAgrNo,
+			usrBusCnl: 'WEB',
+			prodType: billDesc.prodType
+		};
+
+		//如果勾选多期,则不支持优惠券(罚息也不支持优惠券)
+		if (this.state.canUseCoupon) {
 			sendParams = {
-				billNo,
-				cardAgrNo,
-				// thisRepTotAmt: billDesc.waitRepAmt,
-				repayStsw: repayStswStr,
-				usrBusCnl: 'WEB',
-				prodType: billDesc.prodType
-			};
-		} else {
-			sendParams = {
-				billNo,
-				cardAgrNo,
-				thisRepTotAmt: '',
-				// repayStsw: billDesc.billPerdStsw,
-				coupId: couponId,
-				usrBusCnl: 'WEB',
-				prodType: billDesc.prodType
+				...sendParams,
+				coupId: couponId
 			};
 		}
 		//全局设置还款传递后台的参数
@@ -642,15 +617,14 @@ export default class order_detail_page extends PureComponent {
 
 	//调用还款接口逻辑
 	repay = () => {
-		const { billDesc, isPayAll, repayParams, totalAmt, payType, thisPerdNum } = this.state;
-		const paybackAPI = API.payback;
-		let sendParams = {};
-		if (isPayAll) {
-			// 一键结清isPayOff为1， 否则为0
-			sendParams = { ...repayParams, isPayOff: '1', thisRepTotAmt: totalAmt, adapter: '01' };
-		} else {
-			sendParams = { ...repayParams, isPayOff: '0', thisRepTotAmt: totalAmt, adapter: '01' };
-		}
+		const { billDesc, isPayAll, repayParams, totalAmt, payType, thisPerdNum, repayPerds } = this.state;
+		let sendParams = {
+			...repayParams,
+			isPayOff: isPayAll ? '1' : '0',
+			thisRepTotAmt: totalAmt,
+			adapter: '01',
+			repayPerds: isPayAll ? [] : repayPerds
+		};
 		// 添加微信新增参数
 		switch (payType) {
 			case 'WXPay':
@@ -675,7 +649,7 @@ export default class order_detail_page extends PureComponent {
 				break;
 		}
 		this.props.$fetch
-			.post(paybackAPI, sendParams)
+			.post(API.payback, sendParams)
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					buriedPointEvent(order.repaymentFirst, {
@@ -714,7 +688,7 @@ export default class order_detail_page extends PureComponent {
 									(result) => {
 										if (result.err_msg == 'get_brand_wcpay_request:ok') {
 											setTimeout(() => {
-												this.getpayResult(billDesc, isPayAll, '支付成功');
+												this.getpayResult('支付成功');
 											}, 2000);
 										} else {
 											this.getLoanInfo();
@@ -724,7 +698,6 @@ export default class order_detail_page extends PureComponent {
 								);
 								// h5 支付方式
 							} else {
-								console.log('(;-----------)');
 								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
 								location.href = url;
 							}
@@ -775,8 +748,23 @@ export default class order_detail_page extends PureComponent {
 				});
 			});
 	};
-	getpayResult = (billDesc, isPayAll, message) => {
-		if (billDesc.perdUnit === 'D' || Number(billDesc.perdNum) === Number(billDesc.perdLth) || isPayAll) {
+
+	getpayResult = (message) => {
+		const { billDesc, isPayAll, orderList, penaltyInfo } = this.state;
+		const lastPerd = orderList[orderList.length - 1];
+		//判断是否有罚息来决定是否结清
+		let isClear = false;
+		if (penaltyInfo.show) {
+			if (lastPerd.perdStsNm === '已结清') {
+				isClear = penaltyInfo.isChecked;
+			} else {
+				isClear = lastPerd.isChecked && penaltyInfo.isChecked;
+			}
+		} else {
+			isClear = lastPerd.isChecked;
+		}
+
+		if (billDesc.perdUnit === 'D' || isClear || isPayAll) {
 			store.removeBackData();
 			store.removeCouponData();
 			this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
@@ -790,6 +778,7 @@ export default class order_detail_page extends PureComponent {
 			}, 3000);
 		}
 	};
+
 	// 选择银行卡
 	selectBank = () => {
 		const {
@@ -862,6 +851,7 @@ export default class order_detail_page extends PureComponent {
 			state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
 		});
 	};
+
 	// 判断优惠劵显示
 	renderCoupon = () => {
 		const { deratePrice } = this.state;
@@ -921,12 +911,11 @@ export default class order_detail_page extends PureComponent {
 
 	//关闭收银台状态弹窗
 	closeCashierModal = (paySuccess) => {
-		const { billDesc, isPayAll } = this.state;
 		this.setState({
 			cashierVisible: false
 		});
 		if (paySuccess) {
-			this.getpayResult(billDesc, isPayAll);
+			this.getpayResult();
 		}
 		this.getLoanInfo();
 		this.queryExtendedPayType();
@@ -934,6 +923,12 @@ export default class order_detail_page extends PureComponent {
 
 	//勾选款点击回调
 	checkClickCb = (item, checkboxType) => {
+		const { orderList } = this.state;
+		let arr = orderList.filter((v) => v.isShowCheck);
+		// let flag1 = arr.every((v) => v.isChecked === true);
+		let flag2 = orderList.some((v) => v.isChecked && v.perdStsNm === '待还款');
+
+		if (checkboxType && flag2) return;
 		item = {
 			...item,
 			isChecked: !item.isChecked
@@ -948,7 +943,7 @@ export default class order_detail_page extends PureComponent {
 
 	orderListCheckClick = (item) => {
 		for (let i = 0; i < this.state.orderList.length; i++) {
-			if (i <= item.key) {
+			if (i <= item.key && this.state.orderList[i].isShowCheck) {
 				this.state.orderList[i].isChecked = true;
 			} else {
 				this.state.orderList[i].isChecked = false;
@@ -999,7 +994,10 @@ export default class order_detail_page extends PureComponent {
 
 		this.setState(
 			{
-				penaltyInfo: { ...this.state.penaltyInfo, isChecked: checkedArr.length >= overdueArr.length }
+				penaltyInfo: {
+					...this.state.penaltyInfo,
+					isChecked: this.state.penaltyInfo.show && checkedArr.length >= overdueArr.length
+				}
 			},
 			() => {
 				this.calcPayTotalMoney();
@@ -1009,40 +1007,32 @@ export default class order_detail_page extends PureComponent {
 
 	//实时计算还款总金额
 	calcPayTotalMoney = () => {
-		// let totalMoney = 0;
 		let repayPerds = [];
-
 		let checkedArr = this.state.orderList.filter((v) => v.isChecked);
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].key + 1);
-			// totalMoney += Number(checkedArr[i].perdTotAmt);
 		}
 
 		if (this.state.penaltyInfo.isChecked) {
-			// const { billFineAmt, billOvduAmt } = this.state;
-			// totalMoney = totalMoney + billFineAmt + billOvduAmt;
 			repayPerds.unshift(0);
 		}
-		console.log(repayPerds);
 
-		this.setState({
-			insureInfo: { ...this.state.insureInfo, isChecked: checkedArr.length > 0 }
-		});
-		// if () {
-		// 	//加入保费金额
-		// 	// totalMoney = totalMoney + this.state.insureInfo.insureFeeInfo;
-
-		// } else {
-		// 	this.setState({
-		// 		insureInfo: { ...this.state.insureInfo, isChecked: false }
-		// 	});
-		// }
-
-		// this.getModalDtlInfo();
-
-		// this.setState({
-		// 	totalMoney: Number(totalMoney).toFixed(2)
-		// });
+		this.setState(
+			{
+				insureInfo: { ...this.state.insureInfo, isChecked: checkedArr.length > 0 },
+				repayPerds,
+				canUseCoupon: repayPerds.length === 1 && !this.state.penaltyInfo.isChecked //设置优惠券是否可用
+			},
+			() => {
+				if (repayPerds.length > 0) {
+					this.getModalDtlInfo();
+				} else {
+					this.setState({
+						totalAmtForShow: 0
+					});
+				}
+			}
+		);
 	};
 
 	// 展开隐藏每期明细
@@ -1089,7 +1079,6 @@ export default class order_detail_page extends PureComponent {
 	render() {
 		const {
 			billDesc = {},
-			hideBtn,
 			isPayAll,
 			isShowSmsModal,
 			smsCode,
@@ -1098,7 +1087,6 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			isAdvance,
 			totalAmtForShow,
-			billOverDue,
 			overDueModalFlag,
 			payType,
 			payTypes,
@@ -1110,10 +1098,11 @@ export default class order_detail_page extends PureComponent {
 			repayOrdNo,
 			disDisRepayAmt = 0,
 			orderList,
-			totalMoney,
 			penaltyInfo,
 			insureInfo,
-			billOvduDays
+			billOvduDays,
+			billOvduStartDt,
+			isBillClean
 		} = this.state;
 
 		const {
@@ -1156,29 +1145,22 @@ export default class order_detail_page extends PureComponent {
 				value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
 			}
 		];
-		console.log(itemList, '987');
 		const isOverdue =
 			perdList &&
 			perdList.filter((item, index) => {
 				return item.perdSts === '1';
 			});
-		const isEntryShow = billOverDue === '0' && overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
+		const isEntryShow = overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
 		let moneyWithCoupon = '';
-		if (isInsureValid) {
-			if (isPayAll) {
-				// 一键结清，不可使用优惠劵
-				moneyWithCoupon = '';
-			} else {
-				moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
-			}
+
+		if (!this.state.canUseCoupon) {
+			moneyWithCoupon = '';
+		} else if (isInsureValid) {
+			moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
 		} else {
-			if (isPayAll) {
-				// 一键结清，不可使用优惠劵
-				moneyWithCoupon = '';
-			} else {
-				moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
-			}
+			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
 		}
+
 		return (
 			<div>
 				<Modal
@@ -1261,7 +1243,7 @@ export default class order_detail_page extends PureComponent {
 						!isPayAll && (
 							<div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
 								<span className={styles.modal_label}>优惠券</span>
-								{this.state.billDesc.data && this.state.billDesc.data.coupVal ? (
+								{this.state.billDesc.data && this.state.billDesc.data.coupVal && this.state.canUseCoupon ? (
 									<span
 										onClick={() => {
 											this.selectCoupon(false);
@@ -1354,7 +1336,6 @@ export default class order_detail_page extends PureComponent {
 						</span>
 					</div>
 				)}
-				{!isEntryShow && <div className={styles.topBlock} />}
 				{window.location.pathname === '/order/order_detail_page' ? (
 					<div className={styles.order_detail_page}>
 						<Panel title="借款信息" className={styles.loadInfBox}>
@@ -1366,7 +1347,7 @@ export default class order_detail_page extends PureComponent {
 									</li>
 								))}
 							</ul>
-							{perdNum !== 999 && !hideBtn && (
+							{!isBillClean && (
 								<div className={styles.payAll} onClick={this.payAllOrder}>
 									{discRedRepay && <i />}
 									一键结清
@@ -1374,17 +1355,13 @@ export default class order_detail_page extends PureComponent {
 							)}
 						</Panel>
 
-						{perdNum !== 999 && !hideBtn ? (
-							<div className={styles.submit_btn}>
-								<SXFButton onClick={this.gotoPay}>去还款</SXFButton>
-							</div>
-						) : (
-							<div className={styles.mb50} />
-						)}
+						<div className={styles.submit_btn}>
+							<SXFButton onClick={this.gotoPay}>去还款</SXFButton>
+						</div>
 					</div>
 				) : (
 					<div className={styles.order_repay_page}>
-						{true && (
+						{insureInfo.show && (
 							<Panel title="其他费用">
 								<Lists insureFee={insureInfo} className={styles.order_list} isCheckbox={true} />
 							</Panel>
@@ -1418,40 +1395,42 @@ export default class order_detail_page extends PureComponent {
 								penaltyInfo={penaltyInfo}
 							/>
 						</Panel>
-						<div className={styles.fixed_button}>
-							<span className={styles.money_show}>
-								共计<em>{totalMoney}</em>元
-							</span>
-							<SXFButton
-								onClick={this.activePay}
-								className={[styles.sxf_btn, !totalAmtForShow && styles.sxf_btn_disabled].join(' ')}
-							>
-								立即还款
-							</SXFButton>
-							<Modal
-								wrapClassName="order_repay_page"
-								visible={this.state.showTipModal}
-								transparent
-								footer={[
-									{
-										text: '我知道了',
-										onPress: () => {
-											this.handleCloseTipModal();
+						{!isBillClean && (
+							<div className={styles.fixed_button}>
+								<span className={styles.money_show}>
+									共计<em>{totalAmtForShow}</em>元
+								</span>
+								<SXFButton
+									onClick={this.activePay}
+									className={[styles.sxf_btn, !totalAmtForShow && styles.sxf_btn_disabled].join(' ')}
+								>
+									立即还款
+								</SXFButton>
+								<Modal
+									wrapClassName="order_repay_page"
+									visible={this.state.showTipModal}
+									transparent
+									footer={[
+										{
+											text: '我知道了',
+											onPress: () => {
+												this.handleCloseTipModal();
+											}
 										}
-									}
-								]}
-							>
-								<div className={styles.modal_tip_content}>
-									<h3 className={styles.modal_tip_title}>逾期天数说明</h3>
-									<p className={styles.modal_tip_desc}>
-										任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
-									</p>
-									<p className={styles.modal_tip_desc}>
-										您的逾期开始日期：<em>2019年05月22日</em>
-									</p>
-								</div>
-							</Modal>
-						</div>
+									]}
+								>
+									<div className={styles.modal_tip_content}>
+										<h3 className={styles.modal_tip_title}>逾期天数说明</h3>
+										<p className={styles.modal_tip_desc}>
+											任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
+										</p>
+										<p className={styles.modal_tip_desc}>
+											您的逾期开始日期：<em>{billOvduStartDt}</em>
+										</p>
+									</div>
+								</Modal>
+							</div>
+						)}
 					</div>
 				)}
 			</div>

@@ -257,10 +257,9 @@ export default class home_page extends PureComponent {
 		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-				// popupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1',
-					overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
+					overDueModalFlag: res.data.overduePopupFlag === '1'
 				});
 				const currProgress =
 					res.data &&
