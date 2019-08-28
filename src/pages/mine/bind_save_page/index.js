@@ -385,6 +385,7 @@ export default class bind_save_page extends PureComponent {
 					<InputItem
 						data-sxf-props={JSON.stringify({
 							type: 'input',
+							notSendValue: true, // 无需上报输入框的值
 							name: 'valueInputCarNumber',
 							eventList: [
 								{
@@ -423,6 +424,25 @@ export default class bind_save_page extends PureComponent {
 					<InputItem
 						maxLength="11"
 						type="number"
+						data-sxf-props={JSON.stringify({
+							type: 'input',
+							notSendValue: true, // 无需上报输入框的值
+							name: 'valueInputCarSms',
+							eventList: [
+								{
+									type: 'focus'
+								},
+								{
+									type: 'delete'
+								},
+								{
+									type: 'blur'
+								},
+								{
+									type: 'paste'
+								}
+							]
+						})}
 						{...getFieldProps('valueInputCarPhone', {
 							initialValue: this.state.bindCardPhone,
 							rules: [

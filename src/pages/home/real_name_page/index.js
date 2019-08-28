@@ -467,6 +467,7 @@ export default class real_name_page extends Component {
 							}}
 							data-sxf-props={JSON.stringify({
 								type: 'input',
+								notSendValue: true, // 无需上报输入框的值
 								name: 'idName',
 								eventList: [
 									{
@@ -492,6 +493,7 @@ export default class real_name_page extends Component {
 						<InputItem
 							data-sxf-props={JSON.stringify({
 								type: 'input',
+								notSendValue: true, // 无需上报输入框的值
 								name: 'idNo',
 								eventList: [
 									{

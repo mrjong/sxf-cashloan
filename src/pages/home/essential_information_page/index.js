@@ -606,6 +606,7 @@ export default class essential_information_page extends PureComponent {
 									<InputItem
 										data-sxf-props={JSON.stringify({
 											type: 'input',
+											notSendValue: true, // 无需上报输入框的值
 											name: 'contact_name_one',
 											eventList: [
 												{
