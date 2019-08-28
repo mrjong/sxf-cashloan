@@ -54,7 +54,7 @@ export default class mpos_middle_page extends Component {
 					} else if (res.msgCode === 'URM9999') {
 						this.props.toast.info(res.msgInfo);
 					} else if (res.msgCode === 'PTM9000') {
-						this.props.history.replace('/outer_mpos_login?wxTestFrom=mpos');
+						this.props.history.replace('/outer_mpos_login?wxTestFrom=mpos&h5Channel=MPOS-fjj');
 						// this.props.history.replace('/mpos/mpos_ioscontrol_page?entryType=ioscontrol');
 					} else {
 						this.setState({ showBoundle: true });
