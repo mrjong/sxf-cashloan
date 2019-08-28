@@ -1355,6 +1355,9 @@ export default class confirm_agency_page extends PureComponent {
 							ref={(ele) => {
 								this.smsModal = ele;
 							}}
+							history={this.props.history}
+							fetch={this.props.$fetch}
+							toast={this.props.toast}
 						/>
 					)}
 					{// 保险弹框

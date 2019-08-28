@@ -5,6 +5,9 @@ import { Modal } from 'antd-mobile';
 import { handleInputBlur } from '../../../../../utils';
 
 let timer = null;
+const API = {
+	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
+};
 export default class SmsModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -59,7 +62,22 @@ export default class SmsModal extends React.PureComponent {
 		clearInterval(timer);
 	};
 
-	goProtocol = () => {};
+	// 协议支付协议预览
+	readProtocol = () => {
+		const { repayInfo, history, fetch, toast } = this.props;
+		const params = {
+			// cardNo: repayInfo && repayInfo.withHoldAgrNo,
+			isEntry: '01'
+		};
+		fetch.post(API.contractInfo, params).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				store.setProtocolFinancialData(result.data);
+				history.push('/protocol/delegation_withhold_page');
+			} else {
+				toast.info(result.msgInfo);
+			}
+		});
+	};
 
 	render() {
 		const { times } = this.state;
@@ -145,7 +163,7 @@ export default class SmsModal extends React.PureComponent {
 								</div>
 								<p className={styles.tip}>
 									温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意
-									<span onClick={this.goProtocol}>《用户授权扣款委托书》</span>约定扣款
+									<span onClick={this.readProtocol}>《用户授权扣款委托书》</span>约定扣款
 								</p>
 							</div>
 						</div>
