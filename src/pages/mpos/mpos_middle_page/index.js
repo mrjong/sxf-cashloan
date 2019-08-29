@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
+import { activity } from 'utils/analytinsType';
 import { getH5Channel } from 'utils/common';
 import { address } from 'utils/Address';
 import Alert_mpos from '../mpos_no_realname_alert_page';
@@ -59,7 +59,7 @@ export default class mpos_middle_page extends Component {
 						this.setState({ showBoundle: true });
 					}
 				})
-				.catch((err) => {
+				.catch(() => {
 					this.setState({
 						errorInf:
 							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'

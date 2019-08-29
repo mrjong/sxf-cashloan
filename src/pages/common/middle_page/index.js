@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { getNextStr } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';

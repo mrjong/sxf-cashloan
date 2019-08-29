@@ -9,7 +9,7 @@ import { activity } from 'utils/analytinsType';
 import SmsAlert from '../components/SmsAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 
 const API = {
@@ -97,10 +97,10 @@ export default class mianxi418_page extends PureComponent {
 	goHomePage = () => {
 		this.props.$fetch
 			.get(API.saveUserInfoEngaged)
-			.then((res) => {
+			.then(() => {
 				this.props.history.push('/home/home');
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.props.history.push('/home/home');
 			});
 	};
@@ -116,44 +116,44 @@ export default class mianxi418_page extends PureComponent {
 				<SmsAlert
 					onRef={this.onRef}
 					goSubmitCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {}
+						URM0008: () => {},
+						others: () => {}
 					}}
 					goLoginCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {}
+						URM0008: () => {},
+						others: () => {}
 					}}
 					validateMposCb={{
-						PTM9000: (res, getType) => {
+						PTM9000: () => {
 							this.props.history.replace('/mpos/mpos_ioscontrol_page?entryType=ioscontrol');
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.setState({
 								showBoundle: true
 							});
 						}
 					}}
 					chkAuthCb={{
-						authFlag0: (res, getType) => {},
-						authFlag1: (res, getType) => {
+						authFlag0: () => {},
+						authFlag1: () => {
 							this.goHomePage();
 						},
-						authFlag2: (res, getType) => {
+						authFlag2: () => {
 							// this.props.toast.info('暂无活动资格');
 						},
-						others: (res, getType) => {}
+						others: () => {}
 					}}
 					doAuthCb={{
-						authSts00: (res, getType) => {
+						authSts00: () => {
 							this.goHomePage();
 						},
-						others: (res, getType) => {}
+						others: () => {}
 					}}
 				/>
 				<img src={activity_bg} className={styles.activity_bg} />

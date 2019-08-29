@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import STabs from 'components/Tab';
 import qs from 'qs';
 import dayjs from 'dayjs';
@@ -214,7 +214,7 @@ export default class coupon_page extends PureComponent {
 				}
 				return [];
 			})
-			.catch((err) => {
+			.catch(() => {
 				if (pIndex === 1) {
 					setTimeout(() => {
 						SXFToast.hide();
@@ -250,11 +250,8 @@ export default class coupon_page extends PureComponent {
 		});
 	};
 	// 渲染每一页完成之后
-	onEndReached = async (event) => {
+	onEndReached = async () => {
 		if (this.state.isLoading && !this.state.hasMore) {
-			// this.setState({
-			//   pageIndex: totalPage || 1,
-			// });
 			return;
 		}
 		this.setState({ isLoading: true });
@@ -289,7 +286,7 @@ export default class coupon_page extends PureComponent {
 		this.props.history.goBack();
 	};
 	// 切换tab
-	changeTab = (tab, index) => {
+	changeTab = (tab) => {
 		this.setState(
 			{
 				msgType: tab.value,

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
@@ -16,7 +16,6 @@ const API = {
 	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
 };
 let urlQuery = '';
-let autId = '';
 const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 
 @fetch.inject()
@@ -44,7 +43,6 @@ export default class credit_extension_page extends PureComponent {
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		urlQuery = this.props.history.location.search;
 		urlQuery = urlQuery ? urlQuery + '&type=noRealName' : '?type=noRealName';
-		autId = query.autId;
 		const isShowCommit = query.isShowCommit; // 个人中心进入该页面不展示提交代还金申请按钮
 		if (!isShowCommit || isShowCommit === 'false') {
 			this.setState({ isShowBtn: false });
@@ -175,7 +173,7 @@ export default class credit_extension_page extends PureComponent {
 		}
 	};
 	render() {
-		const { submitFlag, stswData, isShowBtn } = this.state;
+		const { stswData } = this.state;
 		const data = stswData.map((item) => {
 			return {
 				dicDetailCd: item.stsw.dicDetailCd,

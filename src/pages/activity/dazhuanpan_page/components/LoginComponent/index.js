@@ -5,8 +5,7 @@ import style from './index.scss';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
-import qs from 'qs';
+import fetch from 'sx-fetch-rjl';
 import Cookie from 'js-cookie';
 
 const API = {
@@ -92,7 +91,6 @@ export default class LoginComponent extends Component {
 			this.props.toast.info('请先获取短信验证码');
 			return;
 		}
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.props.$fetch

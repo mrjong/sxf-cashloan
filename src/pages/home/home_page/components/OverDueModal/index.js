@@ -1,5 +1,5 @@
 import React from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import style from './index.scss';
 import overDueImg from 'assets/images/home/overDue_icon.png';
 import SXFButton from 'components/ButtonCustom';

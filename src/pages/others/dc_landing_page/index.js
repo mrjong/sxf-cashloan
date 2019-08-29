@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
-import qs from 'qs';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import { InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
@@ -27,7 +26,6 @@ export default class dc_landing_page extends PureComponent {
 			smsJrnNo: '' // 短信流水号
 		};
 	}
-	componentWillMount() {}
 
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
@@ -45,7 +43,6 @@ export default class dc_landing_page extends PureComponent {
 			this.props.toast.info('请先获取短信验证码');
 			return;
 		}
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				// 埋点-注册登录页一键代还
@@ -65,7 +62,7 @@ export default class dc_landing_page extends PureComponent {
 								res.msgInfo && this.props.toast.info(res.msgInfo);
 								return;
 							}
-							sa.login(res.data.userId);
+							window.sa.login(res.data.userId);
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
 							// store.setToken(res.data.tokenId);
@@ -147,9 +144,6 @@ export default class dc_landing_page extends PureComponent {
 				<div className={styles.content}>
 					<InputItem
 						id="inputPhone"
-						onBlur={() => {
-							handleInputBlur();
-						}}
 						maxLength="11"
 						type="number"
 						className={styles.loginInput}
@@ -164,9 +158,6 @@ export default class dc_landing_page extends PureComponent {
 					<div className={styles.smsBox}>
 						<InputItem
 							id="inputCode"
-							onBlur={() => {
-								handleInputBlur();
-							}}
 							type="number"
 							maxLength="6"
 							className={styles.loginInput}

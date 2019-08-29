@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import qs from 'qs';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { store } from 'utils/store';
 import styles from './index.scss';
 import activity_bg from './img/activity_bg.png';

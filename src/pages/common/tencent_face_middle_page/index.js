@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { getNextStr, getDeviceType, handleClickConfirm } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -84,7 +84,7 @@ export default class tencent_face_middle_page extends Component {
 				// 	this.props.history.push('/home/home');
 				// }
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.setState({
 					authStatus: false
 				});

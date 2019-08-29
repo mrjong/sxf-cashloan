@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch';
+import fetch from 'sx-fetch-rjl';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/ButtonCustom';
