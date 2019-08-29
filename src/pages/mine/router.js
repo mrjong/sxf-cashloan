@@ -116,5 +116,15 @@ export default [
 		path: '/mine/question_category_page',
 		title: '',
 		component: () => import('pages/mine/question_category_page')
+	},
+	{
+		path: '/mine/feedback_page',
+		title: '意见分类',
+		component: () => import('pages/mine/feedback_page')
+	},
+	{
+		path: '/mine/feedback_save_page',
+		title: '意见反馈',
+		component: () => import('pages/mine/feedback_save_page')
 	}
 ];
