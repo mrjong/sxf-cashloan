@@ -1358,6 +1358,7 @@ export default class confirm_agency_page extends PureComponent {
 							history={this.props.history}
 							fetch={this.props.$fetch}
 							toast={this.props.toast}
+							bankNo={repayInfo && repayInfo.withHoldAgrNo}
 						/>
 					)}
 					{// 保险弹框

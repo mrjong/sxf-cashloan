@@ -1087,6 +1087,11 @@ export default class order_detail_page extends PureComponent {
 						history={this.props.history}
 						fetch={this.props.$fetch}
 						toast={this.props.toast}
+						bankNo={
+							this.state.bankInfo && this.state.bankInfo.agrNo
+								? this.state.bankInfo.agrNo
+								: this.state.billDesc.wthCrdAgrNo
+						}
 					/>
 				)}
 				<Panel title="借款信息" className={styles.loadInfBox}>

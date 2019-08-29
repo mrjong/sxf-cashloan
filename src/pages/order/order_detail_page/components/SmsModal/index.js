@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
-import { handleInputBlur } from '../../../../../utils';
+import { handleInputBlur, recordContract } from '../../../../../utils';
 
 let timer = null;
 const API = {
@@ -79,11 +79,21 @@ export default class SmsModal extends React.PureComponent {
 		});
 	};
 
+	confirmHandler = () => {
+		const { onConfirm, bankNo } = this.props;
+		// cardNo为银行卡号
+		// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+		recordContract({
+			cardNo: bankNo,
+			contractType: '03'
+		});
+		onConfirm();
+	};
+
 	render() {
 		const { times } = this.state;
 		const {
 			onCancel,
-			onConfirm,
 			smsCode,
 			toggleBtn,
 			selectBankCard,
@@ -151,12 +161,12 @@ export default class SmsModal extends React.PureComponent {
 											<button onClick={onCancel} key="1" className={styles.skipButton}>
 												跳过,直接还款
 											</button>,
-											<button onClick={onConfirm} key="2" className={styles.smallButton}>
+											<button onClick={this.confirmHandler} key="2" className={styles.smallButton}>
 												确定
 											</button>
 										]
 									) : (
-										<button onClick={onConfirm} className={styles.largeButton}>
+										<button onClick={this.confirmHandler} className={styles.largeButton}>
 											确定
 										</button>
 									)}
