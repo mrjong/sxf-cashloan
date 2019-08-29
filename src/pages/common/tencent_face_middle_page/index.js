@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { getNextStr, getDeviceType, handleClickConfirm } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';

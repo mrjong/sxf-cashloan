@@ -1,6 +1,6 @@
 import { guid } from 'utils';
 import { Toast } from 'antd-mobile';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 
 const TONFUDUN_BAOBEI = '/signup/getUsrRqpInf';
 const { PROJECT_ENV } = process.env;

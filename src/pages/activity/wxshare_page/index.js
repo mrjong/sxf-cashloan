@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import qs from 'qs';
 import { store } from 'utils/store';
 import { Toast, InputItem } from 'antd-mobile';
@@ -42,18 +42,17 @@ export default class wxshare_page extends PureComponent {
 		if (!queryData.activeId) {
 			this.props.toast.info('活动id不能为空');
 			return;
-		} else {
-			this.setState(
-				{
-					href: location.href,
-					activeId: queryData.activeId,
-					hideInput: hideInputFlag ? true : false
-				},
-				() => {
-					this.wxshare();
-				}
-			);
 		}
+		this.setState(
+			{
+				href: location.href,
+				activeId: queryData.activeId,
+				hideInput: hideInputFlag ? true : false
+			},
+			() => {
+				this.wxshare();
+			}
+		);
 	}
 	componentWillUnmount() {
 		clearInterval(timmer);

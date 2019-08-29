@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 
 const API = {

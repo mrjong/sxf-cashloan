@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/login_logo.png';
 import Lists from 'components/Lists';
 import { isWXOpen, logoutAppHandler } from 'utils';

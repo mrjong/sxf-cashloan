@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import AwardShow from './components/AwardShow';
@@ -56,11 +56,11 @@ export default class dazhuanpan_page extends PureComponent {
 			});
 			Toast.info('活动id不能为空');
 			return;
-		} else {
-			this.setState({
-				codeInfo: ''
-			});
 		}
+		this.setState({
+			codeInfo: ''
+		});
+
 		token = Cookie.get('fin-v-card-token');
 		this.setState({
 			count:

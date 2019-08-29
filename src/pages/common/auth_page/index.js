@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blank from 'components/Blank';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.scss';
 import { Modal, ActivityIndicator, Icon } from 'antd-mobile';
 import SXFButton from 'components/ButtonCustom';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import success_icon from '../../img/success_icon.png';
 
 const API = {

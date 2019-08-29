@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';

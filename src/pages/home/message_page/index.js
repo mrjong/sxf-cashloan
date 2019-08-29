@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { SXFToast } from 'utils/SXFToast';
 import STabs from 'components/Tab';
 import { store } from 'utils/store';
