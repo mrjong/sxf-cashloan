@@ -64,9 +64,8 @@ export default class SmsModal extends React.PureComponent {
 
 	// 协议支付协议预览
 	readProtocol = () => {
-		const { repayInfo, history, fetch, toast } = this.props;
+		const { history, fetch, toast } = this.props;
 		const params = {
-			// cardNo: repayInfo && repayInfo.withHoldAgrNo,
 			isEntry: '01'
 		};
 		fetch.post(API.contractInfo, params).then((result) => {
