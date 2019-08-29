@@ -1,0 +1,108 @@
+:global {
+	.question_feedback_modal {
+		.am-modal-content {
+			border-radius: 0;
+			height: auto;
+			box-sizing: border-box;
+			padding-top: 0;
+			.am-modal-body {
+				padding: 80px 60px 60px;
+				overflow: hidden;
+			}
+		}
+	}
+}
+
+.modalTitle {
+	font-size: 36px;
+	font-weight: 500;
+	color: #121c32;
+	position: relative;
+	text-align: left;
+}
+
+.modalDesc {
+	color: #868e9e;
+	font-size: 30px;
+	margin-top: 35px;
+	margin-bottom: 85px;
+	text-align: left;
+}
+
+.desc_icon {
+	position: relative;
+	color: #868e9e;
+	font-weight: 400;
+	margin-bottom: 60px;
+	font-size: 26px;
+	&::before {
+		position: absolute;
+		left: 0;
+		top: 20px;
+		content: '';
+		display: inline-block;
+		height: 1px;
+		width: 130px;
+		background-color: #c9cdd5;
+	}
+	&::after {
+		position: absolute;
+		right: 0;
+		top: 20px;
+		content: '';
+		display: inline-block;
+		height: 1px;
+		width: 130px;
+		background-color: #c9cdd5;
+	}
+}
+
+.left_arrow {
+	position: absolute;
+	top: 25px;
+	left: 25px;
+	color: #868e9e;
+}
+
+.modal_close_btn {
+	position: absolute;
+	top: -55px;
+	right: -35px;
+	color: #868e9e;
+}
+
+.zan_wrap {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	color: #868e9e;
+
+	.zan_icon {
+		display: inline-block;
+		background-image: url('./img/agree_ico.png');
+		width: 36px;
+		height: 32px;
+		background-size: cover;
+		margin-right: 24px;
+		position: relative;
+		top: 5px;
+	}
+	.zan_icon_active {
+		background-image: url('./img/agree_ico1.png');
+	}
+
+	.nozan_icon {
+		display: inline-block;
+		background-image: url('./img/noagree_ico.png');
+		width: 36px;
+		height: 32px;
+		background-size: cover;
+		margin-right: 24px;
+		position: relative;
+		top: 5px;
+	}
+
+	.nozan_icon_active {
+		background-image: url('./img/noagree_ico1.png');
+	}
+}

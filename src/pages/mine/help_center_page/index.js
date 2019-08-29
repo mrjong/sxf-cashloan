@@ -1,123 +1,120 @@
 import React, { PureComponent } from 'react';
-import { headerIgnore } from 'utils';
+// import { headerIgnore } from 'utils';
+import { Modal, InputItem, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
+import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import Lists from 'components/Lists';
 import { store } from 'utils/store';
+import QuestionModal from './components/QuestionModal';
 
 const API = {
+	hotList: '/question/topSeven',
+	categoryList: '/question/questionList',
 	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
 };
 
 const topNavList = [
 	{
-		img: '图片',
+		img: require('./img/phone_icon.png'),
 		label: '修改手机号',
 		url: '/mine/mine_page'
 	},
 	{
-		img: '图片',
+		img: require('./img/pwd_icon.png'),
 		label: '修改密码',
 		url: '/mine/mine_page'
 	},
 	{
-		img: '图片',
+		img: require('./img/msg_icon.png'),
 		label: '意见反馈',
 		url: '/mine/mine_page'
 	}
 ];
 
+@setBackGround('#fff')
 @fetch.inject()
 export default class help_center_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			hotList: [
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				},
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				},
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				},
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				},
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				},
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				},
-				{
-					label: {
-						name: '1.如何使用还到借款？',
-						className: ''
-					}
-				}
-			],
-			categoryList: [
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				},
-				{
-					img: '',
-					label: '实名认证'
-				}
-			]
+			hotList: [],
+
+			categoryList: [],
+			QYConfig: null, // 七鱼的openId
+
+			showQuestionModal: false,
+			question: {}
 		};
 	}
 
+	componentDidMount() {
+		this.qryHotList();
+		this.qryCategoryList();
+		this.qiyu();
+	}
+
+	qiyu = () => {
+		this.props.$fetch.get(API.queryQYOpenId).then((res) => {
+			if (res && res.msgCode === 'PTM0000' && res.data !== null) {
+				this.setState({
+					QYConfig: res.data
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
+
+	qryHotList = () => {
+		this.props.$fetch.post(API.hotList).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data) {
+				let arr = res.data.map((v, i) => {
+					return {
+						label: {
+							name: `${i + 1}. ${v.question}`,
+							answer: v.answer
+						},
+						bizId: v.bizId
+					};
+				});
+				this.setState({
+					hotList: arr
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
+
+	qryCategoryList = () => {
+		this.props.$fetch.post(API.categoryList).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data) {
+				let arr = res.data.map((v, i) => {
+					return {
+						img: '',
+						label: v.name,
+						code: v.code
+					};
+				});
+				this.setState({
+					categoryList: arr
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
+
 	gotoPage = (url) => {
 		this.props.history.push(url);
+	};
+
+	goOnline = () => {
+		this.props.history.push('/mine/qiyu_page');
 	};
 
 	renderTopNav = () => {
@@ -129,7 +126,7 @@ export default class help_center_page extends PureComponent {
 					this.gotoPage(v.url);
 				}}
 			>
-				<span className={styles.top_nav_img}></span>
+				<img src={v.img} alt="" className={styles.top_nav_img} />
 				<span className={styles.top_nav_label}>{v.label}</span>
 			</div>
 		));
@@ -138,19 +135,48 @@ export default class help_center_page extends PureComponent {
 	renderCategoryList = () => {
 		const { categoryList } = this.state;
 		return categoryList.map((v, i) => (
-			<div key={i} className={styles.category_item}>
+			<div
+				key={i}
+				className={styles.category_item}
+				onClick={() => {
+					this.categoryItemClick(v);
+				}}
+			>
 				<img src="" alt="" />
 				<span>{v.label}</span>
 			</div>
 		));
 	};
 
+	categoryItemClick = (item) => {
+		this.props.history.push({
+			pathname: '/mine/question_category_page',
+			state: {
+				pageTitle: item.label,
+				code: item.code
+			}
+		});
+	};
+
 	hotListClick = (item) => {
-		console.log(item);
+		this.setState({
+			showQuestionModal: true,
+			question: {
+				title: item.label.name,
+				answer: item.label.answer,
+				bizId: item.bizId
+			}
+		});
+	};
+
+	closeModal = () => {
+		this.setState({
+			showQuestionModal: false
+		});
 	};
 
 	render() {
-		const { hotList } = this.state;
+		const { hotList, showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
 				<div className={styles.top_nav}>{this.renderTopNav()}</div>
@@ -165,8 +191,25 @@ export default class help_center_page extends PureComponent {
 					<div className={styles.pannel_title}>
 						<span>问题分类</span>
 					</div>
-					<div className={styles.pannel_list}>{this.renderCategoryList()}</div>
+					<div className={[styles.pannel_list, styles.category_list].join(' ')}>
+						{this.renderCategoryList()}
+					</div>
 				</div>
+				{store.getToken() ? (
+					<div className={styles.service_box}>
+						<ButtonCustom onClick={this.goOnline} className={styles.online_btn}>
+							<i />
+							在线咨询
+						</ButtonCustom>
+					</div>
+				) : null}
+
+				<QuestionModal
+					visible={showQuestionModal}
+					question={question}
+					onClose={this.closeModal}
+					{...this.props}
+				/>
 			</div>
 		);
 	}

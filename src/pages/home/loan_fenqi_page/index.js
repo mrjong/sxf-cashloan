@@ -972,34 +972,6 @@ export default class loan_fenqi_page extends PureComponent {
 					</ul>
 				</Modal>
 
-				{/* <Modal
-					visible={planModal}
-					transparent
-					onClose={() => {
-						this.closeModal('plan');
-					}}
-				>
-					<div className={style.modal_content}>
-						<Icon
-							type="cross"
-							className={style.modal_close_btn}
-							onClick={() => {
-								this.closeModal('plan');
-							}}
-							color="#333"
-						/>
-						<h2 className={style.modal_title}>还款计划</h2>
-						<ul className={style.bill_list}>
-							{repayPlanInfo.perd.map((item) => (
-								<li className={style.list_item} key={item.perdNum}>
-									<label className={style.item_name}>{`${item.perdNum}/${repayPlanInfo.perdCnt}期`}</label>
-									<span className={style.item_value}>{item.perdTotAmt}</span>
-								</li>
-							))}
-						</ul>
-					</div>
-        </Modal> */}
-
 				<RepayPlanModal
 					visible={planModal}
 					onClose={() => {

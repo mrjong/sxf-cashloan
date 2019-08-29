@@ -111,5 +111,10 @@ export default [
 		path: '/mine/help_center_page',
 		title: '帮助中心',
 		component: () => import('pages/mine/help_center_page')
+	},
+	{
+		path: '/mine/question_category_page',
+		title: '',
+		component: () => import('pages/mine/question_category_page')
 	}
 ];
