@@ -1,0 +1,51 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.mine_page {
+	overflow-y: auto;
+	.textTitle {
+		color: #121c32;
+		font-size: 30px;
+		font-family: 'PingFangSC';
+		padding: 30px 40px 10px;
+		font-weight: 500;
+	}
+	.topLine {
+		position: relative;
+		&::before {
+			border: 1px solid red;
+			position: absolute;
+		}
+	}
+	.textArea {
+		border: 1px solid rgba(240, 241, 245, 1);
+		margin: 30px;
+		border-radius: 6px;
+		:global {
+			.am-textarea-count {
+				color: #414a53;
+				span {
+					color: #414a53;
+				}
+			}
+		}
+	}
+	.textAreaMax {
+		:global {
+			.am-textarea-count {
+				span {
+					color: #f66;
+				}
+				color: #f66;
+				font-size: 26px;
+			}
+		}
+	}
+	.red_count {
+		.am-textarea-count {
+			span {
+				color: #f66;
+			}
+			color: #f66;
+			font-size: 26px;
+		}
+	}
+}

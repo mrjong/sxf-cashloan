@@ -189,7 +189,8 @@ export default class mine_page extends PureComponent {
 		if (
 			item.jumpToUrl === '/home/real_name?type=noRealName' ||
 			// item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
-			item.jumpToUrl === '/mine/fqa_page'
+			item.jumpToUrl === '/mine/fqa_page' ||
+			item.jumpToUrl === '/mine/feedback_page'
 		) {
 			// if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
 			// 	buriedPointEvent(mine.creditExtension, {
@@ -308,6 +309,13 @@ export default class mine_page extends PureComponent {
 					className: styles.select_save_page
 				},
 				jumpToUrl: '/mine/select_save_page'
+			},
+			{
+				label: {
+					name: '意见反馈',
+					className: styles.select_save_page
+				},
+				jumpToUrl: '/mine/feedback_page'
 			}
 			// {
 			// 	label: {

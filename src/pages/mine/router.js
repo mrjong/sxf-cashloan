@@ -111,5 +111,15 @@ export default [
 		path: '/mine/help_center_page',
 		title: '帮助中心',
 		component: () => import('pages/mine/help_center_page')
+	},
+	{
+		path: '/mine/feedback_page',
+		title: '意见分类',
+		component: () => import('pages/mine/feedback_page')
+	},
+	{
+		path: '/mine/feedback_save_page',
+		title: '意见反馈',
+		component: () => import('pages/mine/feedback_save_page')
 	}
 ];
