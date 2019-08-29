@@ -1,0 +1,40 @@
+.help_center_page {
+	background-color: #fff;
+	.top_nav {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		align-items: center;
+		padding: 30px 0;
+		margin: 0 60px;
+		border-bottom: 1px solid #f0f1f5;
+	}
+
+	.top_nav_label {
+		font-size: 26px;
+		color: #121c32;
+	}
+
+	.pannel_title {
+		font-size: 36px;
+		color: #121c32;
+		font-weight: 500;
+		margin: 0 0 30px 40px;
+	}
+
+	.pannel_list {
+		padding: 0 60px;
+	}
+
+	.hot_title {
+	}
+
+	.hot_icon {
+		background-image: url('./img/hot_top.png');
+		background-size: cover;
+		width: 75px;
+		height: 28px;
+		display: inline-block;
+		margin-top: -10px;
+	}
+}

@@ -106,5 +106,10 @@ export default [
 		path: '/mine/qiyu_page',
 		title: '在线客服',
 		component: () => import('pages/mine/qiyu_page')
+	},
+	{
+		path: '/mine/help_center_page',
+		title: '帮助中心',
+		component: () => import('pages/mine/help_center_page')
 	}
 ];

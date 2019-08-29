@@ -252,7 +252,8 @@ export default class mine_page extends PureComponent {
 			});
 			return;
 		}
-		this.props.history.push('/mine/fqa_page');
+		// this.props.history.push('/mine/fqa_page');
+		this.props.history.push('/mine/help_center_page');
 	};
 
 	render() {
