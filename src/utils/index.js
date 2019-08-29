@@ -950,5 +950,5 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 export const recordContract = (params) => {
 	// params中的cardNo为银行卡号，只在协议支付的时候传递
 	// contractType为 协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-	fetch.post(API.contractLog, params, { hideLoading: true }).then((res) => {}, (error) => {});
+	fetch.post(API.contractLog, params, { hideLoading: true }).then(() => {}, () => {});
 };
