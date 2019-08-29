@@ -44,10 +44,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 					buriedPointEvent(mpos_service_authorization.auth_btn);
 					// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
 					recordContract({
-						contractType: '01'
-					});
-					recordContract({
-						contractType: '02'
+						contractType: '01,02'
 					});
 					if (res.authSts === '01') {
 						console.log('发验证码');
