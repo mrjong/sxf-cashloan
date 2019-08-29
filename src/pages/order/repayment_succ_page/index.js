@@ -30,15 +30,9 @@ export default class repayment_succ_page extends PureComponent {
 	}
 
 	// 返回首页
-	backHome = (type, canyu) => {
+	backHome = (type) => {
 		buriedPointEvent(type);
 		this.props.history.push('/home/home');
-		// if (canyu) {
-		// 	store.setSuccessPay(true);
-		// 	this.props.history.replace('/activity/jupei_page?entry=isxdc_order_alert');
-		// } else {
-		// 	this.props.history.push('/home/home');
-		// }
 	};
 
 	// 关闭弹窗
@@ -76,6 +70,7 @@ export default class repayment_succ_page extends PureComponent {
 				</ButtonCustom>
 				{
 					<Modal wrapClassName={styles.success_modal_warp} visible={isShowTipsModal} transparent>
+						<i className={styles.close_btn} onClick={this.closeModal} />
 						<div className={styles.modal_tip_content}>
 							<div
 								onClick={() => {
@@ -84,7 +79,6 @@ export default class repayment_succ_page extends PureComponent {
 								className={styles.modal_btn}
 							/>
 						</div>
-						<i className={styles.close_btn} onClick={this.closeModal} />
 					</Modal>
 				}
 			</div>
