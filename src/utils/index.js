@@ -946,7 +946,7 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 		});
 };
 
-// 退出功能
+// 协议预览记录功能
 export const recordContract = (params) => {
 	// params中的cardNo为银行卡号，只在协议支付的时候传递
 	// contractType为 协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
