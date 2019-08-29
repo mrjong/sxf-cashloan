@@ -3,17 +3,14 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import Lists from 'components/Lists';
+import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
 
 const API = {
-	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
-	LOGOUT: '/signup/logout', // 用户退出登陆
-	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
-	couponRedDot: '/index/couponRedDot', // 优惠券红点
-	couponCount: '/index/couponCount' // 优惠券红点
+	opinionList: '/question/opinionList' // 意见类型列表接口
 };
 
 @fetch.inject()
@@ -21,37 +18,73 @@ const API = {
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			listsArr: [],
+			isnoData: false
+		};
 	}
-	clickhandle = () => {
-		this.props.history.push('/mine/feedback_save_page');
+	componentWillMount() {
+		this.getOpinionList();
+	}
+
+	getOpinionList = () => {
+		this.props.$fetch
+			.post(API.opinionList)
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					const listsArr = res.data.map((item) => {
+						return {
+							label: {
+								name: item.name
+							},
+							type: item.value
+						};
+					});
+					this.setState({
+						listsArr,
+						isnoData: false
+					});
+				} else {
+					this.setState({
+						isnoData: true
+					});
+					res.msgInfo && this.props.toast.info(res.msgInfo);
+				}
+			})
+			.catch(() => {
+				this.setState({
+					isnoData: true
+				});
+			});
+	};
+	clickhandle = (item) => {
+		this.props.history.push('/mine/feedback_save_page?type=' + item.type);
 	};
 	render() {
-		// 定义list所需的数据
-		const listsArr = [
-			{
-				label: {
-					name: '优惠劵',
-					className: styles.coupon_page
-				},
-				jumpToUrl: '/mine/coupon_page'
-			},
-			{
-				label: {
-					name: '我的钱包',
-					className: styles.wallet_page
-				},
-				jumpToUrl: '/mine/wallet_page'
-			}
-		];
+		const { listsArr = [] } = this.state;
 		return (
 			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
-				<div className={styles.textTitle}>我们聆听您的反馈，把更好的体验带给你</div>
-				<Lists
-					clickCb={this.clickhandle}
-					listsInf={listsArr}
-					className={[styles.common_margin, styles.mine_list].join(' ')}
-				/>
+				{this.state.isnoData ? (
+					<div>
+						<div className={styles.err_page}>
+							<i className={styles.err_img} />
+							<ButtonCustom onClick={this.getOpinionList} className={styles.reload_btn}>
+								刷新
+							</ButtonCustom>
+						</div>
+					</div>
+				) : (
+					<div>
+						<div className={styles.textTitle}>我们聆听您的反馈，把更好的体验带给你</div>
+						<Lists
+							clickCb={this.clickhandle}
+							listsInf={listsArr}
+							className={[styles.common_margin, styles.mine_list].join(' ')}
+						/>
+
+						<div className={styles.topLine}></div>
+					</div>
+				)}
 			</div>
 		);
 	}

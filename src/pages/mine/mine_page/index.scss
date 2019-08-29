@@ -165,3 +165,6 @@
 .fqa_page {
 	@include spriteSkinIcon('../../../assets/images/common/skin_icon.png', -265px, 0);
 }
+.feedback_page {
+	@include spriteSkinIcon('../../../assets/images/common/skin_icon.png', -106px, -58px);
+}

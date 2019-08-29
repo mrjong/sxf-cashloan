@@ -10,7 +10,7 @@
 	}
 	.topLine {
 		position: relative;
-		padding: 40px 0;
+		padding: 40px 0 0;
 		&::before {
 			content: '';
 			position: absolute;
@@ -56,6 +56,32 @@
 		}
 	}
 	.ImagePicker {
-		margin: 0 60px;
+		margin: -30px 60px 0;
+		:global {
+			.am-image-picker-list {
+				padding: 0.18rem 0 0;
+			}
+			.am-image-picker-list .am-image-picker-item {
+				margin: 18px 18px 0 0;
+			}
+			.am-image-picker-list .am-flexbox .am-flexbox-item {
+				margin-right: 20px;
+			}
+			.am-image-picker-list .am-image-picker-item .am-image-picker-item-remove {
+				top: -0.15rem;
+				right: -0.15rem;
+			}
+			.am-image-picker-list .am-flexbox {
+				height: 180px;
+			}
+		}
+	}
+	.submitBtn {
+		position: fixed;
+		bottom: 40px;
+		left: 50%;
+		font-weight: 800;
+		width: 634px;
+		margin-left: -317px;
 	}
 }

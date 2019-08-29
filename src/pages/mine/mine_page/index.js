@@ -313,7 +313,7 @@ export default class mine_page extends PureComponent {
 			{
 				label: {
 					name: '意见反馈',
-					className: styles.select_save_page
+					className: styles.feedback_page
 				},
 				jumpToUrl: '/mine/feedback_page'
 			}
