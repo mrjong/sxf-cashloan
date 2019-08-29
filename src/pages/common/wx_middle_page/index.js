@@ -131,11 +131,14 @@ export default class wx_middle_page extends Component {
 			this.props.history.replace(NoLoginUrl);
 		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
-		} else {
+		} else if (window.globalConfig && window.globalConfig.wxTest) {
+			// 微信测试
 			this.props.history.replace({
 				pathname: '/others/mpos_download_page',
 				search: `?wxTestFrom=wx_middle_page`
-			}); //微信授权成功调到登录页
+			});
+		} else {
+			this.props.history.replace('/home/home');
 		}
 	};
 	render() {
