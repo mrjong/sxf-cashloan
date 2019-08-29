@@ -400,11 +400,6 @@ export default class order_detail_page extends PureComponent {
 		let perdListArray = [];
 		let perdList = this.state.perdList;
 		for (let i = 0; i < perdList.length; i++) {
-			// if (perdList[i].perdStsNm === '处理中') {
-			// 	this.setState({
-			// 		hideBtn: true
-			// 	});
-			// }
 			let item = {
 				key: i,
 				label: {
@@ -440,12 +435,13 @@ export default class order_detail_page extends PureComponent {
 			if (perdList[i].perdSts === '4' || perdList[i].perdSts === '2') {
 				item.isShowCheck = false;
 			}
-			if (!this.state.isBillClean && perdList[i].perdNum === perdNum) {
-				item.showDesc = true;
-				item.arrowHide = 'up';
-			} else {
-				item.showDesc = false;
-			}
+
+			// if (!this.state.isBillClean && perdList[i].perdNum === perdNum) {
+			// 	item.showDesc = true;
+			// 	item.arrowHide = 'up';
+			// } else {
+			// 	item.showDesc = false;
+			// }
 
 			item.feeInfos.push({
 				feeNm: '优惠劵',
@@ -1356,7 +1352,7 @@ export default class order_detail_page extends PureComponent {
 						</Panel>
 
 						<div className={styles.submit_btn}>
-							<SXFButton onClick={this.gotoPay}>去还款</SXFButton>
+							<SXFButton onClick={this.gotoPay}>{isBillClean ? '查看还款信息' : '去还款'}</SXFButton>
 						</div>
 					</div>
 				) : (
