@@ -29,15 +29,10 @@ function requestBackReport() {
 		.get(`${TONFUDUN_BAOBEI}/${sessionId}`, null, {
 			hideLoading: true
 		})
-		.then((user) => {
-			// console.log(user);
-		})
-		.catch((err) => {
-			// console.log(err);
-		})
+		.then(() => {})
+		.catch(() => {})
 		.finally(() => {
 			hasReport = false;
-			// console.log('请求完成'); // 无论请求成功或失败都会执行。
 		});
 }
 

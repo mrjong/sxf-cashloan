@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import qs from 'qs';
-import { Checkbox, List, Modal } from 'antd-mobile';
+import { Checkbox, Modal } from 'antd-mobile';
 import styles from './index.scss';
 import wenjuan_01 from './img/wenjuan_01.jpg';
 import result_img from './img/result_img.png';
@@ -409,44 +409,42 @@ export default class wenjuan_page extends PureComponent {
 				<SmsAlert
 					onRef={this.onRef}
 					goSubmitCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {}
+						URM0008: () => {},
+						others: () => {}
 					}}
 					goLoginCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {}
+						URM0008: () => {},
+						others: () => {}
 					}}
 					validateMposCb={{
-						PTM9000: (res, getType) => {
+						PTM9000: () => {
 							this.props.history.replace('/mpos/mpos_ioscontrol_page');
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.setState({
 								showBoundle: true
 							});
 						}
 					}}
 					chkAuthCb={{
-						authFlag0: (res, getType) => {},
-						authFlag1: (res, getType) => {
+						authFlag0: () => {},
+						authFlag1: () => {
 							this.goHomePage();
 						},
-						authFlag2: (res, getType) => {
-							// this.props.toast.info('暂无活动资格');
-						},
-						others: (res, getType) => {}
+						authFlag2: () => {},
+						others: () => {}
 					}}
 					doAuthCb={{
-						authSts00: (res, getType) => {
+						authSts00: () => {
 							this.goHomePage();
 						},
-						others: (res, getType) => {}
+						others: () => {}
 					}}
 				/>
 				<div className={styles.imgBox}>

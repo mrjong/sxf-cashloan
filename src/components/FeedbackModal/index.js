@@ -3,7 +3,6 @@ import { Modal } from 'antd-mobile';
 import style from './index.scss';
 import { Icon, TextareaItem } from 'antd-mobile';
 import fetch from 'sx-fetch';
-import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 

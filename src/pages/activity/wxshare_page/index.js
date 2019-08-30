@@ -42,25 +42,24 @@ export default class wxshare_page extends PureComponent {
 		if (!queryData.activeId) {
 			this.props.toast.info('活动id不能为空');
 			return;
-		} else {
-			this.setState(
-				{
-					href: location.href,
-					activeId: queryData.activeId,
-					hideInput: hideInputFlag ? true : false
-				},
-				() => {
-					this.wxshare();
-				}
-			);
 		}
+		this.setState(
+			{
+				href: location.href,
+				activeId: queryData.activeId,
+				hideInput: hideInputFlag ? true : false
+			},
+			() => {
+				this.wxshare();
+			}
+		);
 	}
 	componentWillUnmount() {
 		clearInterval(timmer);
 	}
 	wxshare = () => {
 		const _this = this;
-		if (isWXOpen() && wx) {
+		if (isWXOpen() && window.wx) {
 			const params = {
 				channelCode: '01',
 				redirectUrl: window.location.href
@@ -72,7 +71,7 @@ export default class wxshare_page extends PureComponent {
 				if (result) {
 					const { appId, timestamp, nonceStr, signature } = result;
 
-					wx.config({
+					window.wx.config({
 						debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 						appId, // 必填，公众号的唯一标识
 						timestamp, // 必填，生成签名的时间戳
@@ -88,10 +87,10 @@ export default class wxshare_page extends PureComponent {
 							'onMenuShareQZone'
 						] // 必填，需要使用的JS接口列表
 					});
-					wx.ready(function() {
+					window.wx.ready(function() {
 						_this.updateLink();
 					});
-					wx.error(function(res) {
+					window.wx.error(function(res) {
 						Toast.info('error: ' + res.errMsg);
 					});
 				}
@@ -119,20 +118,20 @@ export default class wxshare_page extends PureComponent {
 				Toast.info('取消分享');
 			}
 		};
-		// wx.updateAppMessageShareData(shareData);
-		// wx.updateTimelineShareData(shareData);
-		// wx.onMenuShareWeibo(shareData);
+		// window.wx.updateAppMessageShareData(shareData);
+		// window.wx.updateTimelineShareData(shareData);
+		// window.wx.onMenuShareWeibo(shareData);
 		// 老版sdk
-		wx.onMenuShareTimeline(shareData);
-		wx.onMenuShareAppMessage({
+		window.wx.onMenuShareTimeline(shareData);
+		window.wx.onMenuShareAppMessage({
 			...shareData,
 			success: function() {
 				_this.doInvite(true);
 			}
 		});
-		wx.onMenuShareQQ(shareData);
-		wx.onMenuShareWeibo(shareData);
-		wx.onMenuShareQZone(shareData);
+		window.wx.onMenuShareQQ(shareData);
+		window.wx.onMenuShareWeibo(shareData);
+		window.wx.onMenuShareQZone(shareData);
 	};
 	// 校验手机号
 	validatePhone = (rule, value, callback) => {
@@ -248,7 +247,7 @@ export default class wxshare_page extends PureComponent {
 				osType,
 				url: this.state.href
 			})
-			.then((res) => {
+			.then(() => {
 				// if (res.msgCode !== 'PTM0000') { // 暂时注释，活动id错误时不应影响用户注册登录
 				// 	res.msgInfo && Toast.info(res.msgInfo);
 				// 	return;

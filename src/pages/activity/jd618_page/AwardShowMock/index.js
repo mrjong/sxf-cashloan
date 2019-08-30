@@ -23,7 +23,7 @@ export default class AwardShow extends Component {
 		if (tmpH < picH) {
 			tmpH += scrollstep;
 			if (tmpH > picH) tmpH = picH;
-			this.refs.Mar.scrollTop = tmpH;
+			this.Mar.scrollTop = tmpH;
 			setTimeout(this.start, scrolltime);
 		} else {
 			tmpH = 0;
@@ -32,7 +32,7 @@ export default class AwardShow extends Component {
 			if (child_div.length > 2) {
 				Mar.removeChild(child_div[0]);
 			}
-			this.refs.Mar.scrollTop = 0;
+			this.Mar.scrollTop = 0;
 			setTimeout(this.start, stoptime);
 		}
 	};
@@ -77,7 +77,13 @@ export default class AwardShow extends Component {
 						{/* 恭喜136****7912获得<span>10元减息券</span> */}
 					</div>
 				</div>
-				<div ref="Mar" id="Marquee" className={style.message}>
+				<div
+					ref={(c) => {
+						this.Mar = c;
+					}}
+					id="Marquee"
+					className={style.message}
+				>
 					<div
 						className="new_tels"
 						style={{

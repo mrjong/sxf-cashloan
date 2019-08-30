@@ -1,12 +1,11 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:32:50
+ */
 import React, { PureComponent } from 'react';
-import Cookie from 'js-cookie';
-import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
-import { Icon, TextareaItem, ImagePicker, WingBlank, SegmentedControl } from 'antd-mobile';
-import Lists from 'components/Lists';
-import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
+import { TextareaItem, ImagePicker } from 'antd-mobile';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
@@ -21,20 +20,32 @@ export default class mine_page extends PureComponent {
 		super(props);
 		this.state = {
 			images: [],
-			textareaVal: '我最大的意见就是没意见。'
+			textareaVal: ''
 		};
 	}
 	componentWillMount() {
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 	}
-	onChange = (images) => {
+	onChange = (images, type, index) => {
+		console.log(images, type, index);
+		if (type === 'add' && images && images[images.length - 1].file.size > 2 * 1024 * 1024) {
+			this.props.toast.info('图片大小不能超过2M');
+			return;
+		}
+		if (type === 'add' && images && !/.(jpg|png)$/.test(images[images.length - 1].file.name)) {
+			this.props.toast.info('请上传jpg、png格式的图片');
+			return;
+		}
 		this.setState({
 			images
 		});
 	};
-
 	addOpinion = () => {
 		const { textareaVal = '', images = [] } = this.state;
+		let imagesStream = new FormData();
+		for (let index = 0; index < images.length; index++) {
+			imagesStream.append('images', images[index].file);
+		}
 		if (!textareaVal) {
 			this.props.toast.info('请输入您的反馈意见');
 			return;
@@ -47,21 +58,17 @@ export default class mine_page extends PureComponent {
 			this.props.toast.info('提交成功');
 			return;
 		}
-		this.props.$fetch
-			.post(API.addOpinion, {
-				content: textareaVal,
-				images,
-				type: queryData.type
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.props.toast.info('提交成功', 2, () => {
-						this.props.history.push('/mine/mine_page');
-					});
-				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
-				}
-			});
+		imagesStream.append('content', textareaVal);
+		imagesStream.append('type', queryData.type);
+		this.props.$fetch.post(API.addOpinion, imagesStream).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				this.props.toast.info('提交成功', 2, () => {
+					this.props.history.push('/mine/mine_page');
+				});
+			} else {
+				res.msgInfo && this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 	render() {
 		const { images, textareaVal = '' } = this.state;
@@ -76,9 +83,9 @@ export default class mine_page extends PureComponent {
 					}}
 					value={textareaVal}
 					className={`${
-						textareaVal >= 1 ? [styles.textArea, styles.textAreaMax].join(' ') : styles.textArea
+						textareaVal >= 180 ? [styles.textArea, styles.textAreaMax].join(' ') : styles.textArea
 					}`}
-					placeholder="我最大的意见就是没意见。"
+					placeholder="请输入你的反馈意见。"
 					rows={5}
 					count={180}
 				/>
@@ -89,7 +96,7 @@ export default class mine_page extends PureComponent {
 						onChange={this.onChange}
 						selectable={images.length < 4}
 						multiple={true}
-						accept="image/jpeg,image/jpg,image/png"
+						accept="image/jpg,image/png"
 					/>
 				</div>
 				<div>

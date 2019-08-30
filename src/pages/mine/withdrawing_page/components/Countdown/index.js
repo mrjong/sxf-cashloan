@@ -81,7 +81,7 @@ export default class Countdown extends React.Component {
 	}
 
 	render() {
-		const { counting, timerCount, selfEnable } = this.state;
+		const { timerCount } = this.state;
 		return (
 			<div className={style.Countdown_page}>
 				<div className={style.CountdownCont}>{timerCount}s</div>

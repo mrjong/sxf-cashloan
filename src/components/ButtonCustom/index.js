@@ -46,7 +46,7 @@ export default class ButtonCustom extends React.PureComponent {
 	};
 
 	render() {
-		const { className, active, children, onClick, ...restProps } = this.props;
+		const { className, active, children, ...restProps } = this.props;
 		return (
 			<button
 				onClick={(event) => this.handleClick(event)}

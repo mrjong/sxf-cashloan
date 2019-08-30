@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:32:58
+ */
 import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter } from 'utils/analytinsType';
@@ -86,7 +90,7 @@ export default class help_center_page extends PureComponent {
 	qryCategoryList = () => {
 		this.props.$fetch.post(API.categoryList).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
-				let arr = res.data.map((v, i) => {
+				let arr = res.data.map((v) => {
 					return {
 						code: v.code,
 						label: v.name,

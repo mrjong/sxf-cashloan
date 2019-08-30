@@ -3,8 +3,6 @@ import Lists from 'components/Lists';
 import QuestionModal from '../help_center_page/components/QuestionModal';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { buriedPointEvent } from 'utils/analytins';
-import { helpCenter } from 'utils/analytinsType';
 
 const API = {
 	questionList: '/question/questionListByType'
@@ -68,8 +66,6 @@ export default class question_category_page extends PureComponent {
 	// quota: `${prefix}_QUOTA_CLICKQUESTION`,
 	// repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
 	listItemClick = (item) => {
-		let title = this.props.history.location.state.pageTitle;
-
 		this.setState({
 			showQuestionModal: true,
 			question: {

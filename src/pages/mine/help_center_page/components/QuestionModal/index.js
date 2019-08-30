@@ -1,6 +1,12 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:32:21
+ */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { Modal, Icon } from 'antd-mobile';
+import { buriedPointEvent } from 'utils/analytins';
+import { helpCenter } from 'utils/analytinsType';
 
 const API = {
 	solvedQuestion: '/question/solvedCount'
@@ -14,7 +20,7 @@ export default class QuestionModal extends PureComponent {
 		};
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate() {
 		if (this.props.visible) {
 			this.setState({
 				resolve: false,
@@ -37,10 +43,10 @@ export default class QuestionModal extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			});
-		this.buriedPoint();
+		this.buriedPoint('');
 	};
 
-	buriedPoint = () => {
+	buriedPoint = (title) => {
 		switch (title) {
 			case '实名认证':
 				buriedPointEvent(helpCenter.realname, {
@@ -49,37 +55,37 @@ export default class QuestionModal extends PureComponent {
 					is_resolve: 'no'
 				});
 				break;
-			case '实名认证':
+			case '实名认证1':
 				buriedPointEvent(helpCenter.basic, {
 					is_hot: true
 				});
 				break;
-			case '实名认证':
+			case '实名认证2':
 				buriedPointEvent(helpCenter.operators, {
 					is_hot: true
 				});
 				break;
-			case '实名认证':
+			case '实名认证3':
 				buriedPointEvent(helpCenter.creditCard, {
 					is_hot: true
 				});
 				break;
-			case '实名认证':
+			case '实名认证4':
 				buriedPointEvent(helpCenter.submission, {
 					is_hot: true
 				});
 				break;
-			case '实名认证':
+			case '实名认证5':
 				buriedPointEvent(helpCenter.toexamine, {
 					is_hot: true
 				});
 				break;
-			case '实名认证':
+			case '实名认证6':
 				buriedPointEvent(helpCenter.quota, {
 					is_hot: true
 				});
 				break;
-			case '实名认证':
+			case '实名认证7':
 				buriedPointEvent(helpCenter.repayment, {
 					is_hot: true
 				});

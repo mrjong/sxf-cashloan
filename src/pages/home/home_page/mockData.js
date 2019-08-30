@@ -97,8 +97,8 @@ export default {
 			cardNoHid: '6785 **** **** 6654',
 			cardBillDt: '2018-07-17',
 			cardBillAmt: '786.45',
-      overDt: '7',
-      netAppyDate: '20190817'
+			overDt: '7',
+			netAppyDate: '20190817'
 		}
 	},
 	LN0006: {

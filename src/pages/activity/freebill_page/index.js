@@ -157,48 +157,48 @@ export default class funsisong_page extends PureComponent {
 				<SmsAlert
 					onRef={this.onRef}
 					goSubmitCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
+						URM0008: () => {},
+						others: (res) => {
 							this.props.toast.info(res.msgInfo);
 						}
 					}}
 					goLoginCb={{
-						PTM0000: (res, getType) => {
+						PTM0000: () => {
 							this.goHomePage();
 						},
-						URM0008: (res, getType) => {},
-						others: (res, getType) => {
+						URM0008: () => {},
+						others: (res) => {
 							this.props.toast.info(res.msgInfo);
 						}
 					}}
 					validateMposCb={{
-						PTM9000: (res, getType) => {
+						PTM9000: () => {
 							this.props.history.replace('/mpos/mpos_ioscontrol_page');
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.setState({
 								showBoundle: true
 							});
 						}
 					}}
 					chkAuthCb={{
-						authFlag0: (res, getType) => {},
-						authFlag1: (res, getType) => {
+						authFlag0: () => {},
+						authFlag1: () => {
 							this.goHomePage();
 						},
-						authFlag2: (res, getType) => {
+						authFlag2: () => {
 							// this.props.toast.info('暂无活动资格');
 						},
-						others: (res, getType) => {}
+						others: () => {}
 					}}
 					doAuthCb={{
-						authSts00: (res, getType) => {
+						authSts00: () => {
 							this.goHomePage();
 						},
-						others: (res, getType) => {}
+						others: () => {}
 					}}
 				/>
 				<div

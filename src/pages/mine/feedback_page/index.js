@@ -1,11 +1,11 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:33:08
+ */
 import React, { PureComponent } from 'react';
-import Cookie from 'js-cookie';
-import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import Lists from 'components/Lists';
 import ButtonCustom from 'components/ButtonCustom';
-import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
 

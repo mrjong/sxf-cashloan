@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Modal, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
@@ -22,15 +21,6 @@ let timmer;
 @fetch.inject()
 @createForm()
 export default class SmsAlert extends Component {
-	// static propTypes = {
-	// 	goSubmitCb: PropTypes.object,
-	// 	validateMposCb: PropTypes.object,
-	// 	chkAuthCb: PropTypes.object,
-	// 	doAuthCb: PropTypes.object,
-	// 	goLoginCb: PropTypes.object,
-	// 	smsSuccess: PropTypes.func,
-	// };
-
 	static defaultProps = {
 		goSubmitCb: {
 			PTM0000: () => {},
@@ -98,7 +88,7 @@ export default class SmsAlert extends Component {
 		}
 	}
 	getSmsCode(i) {
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}
@@ -114,26 +104,24 @@ export default class SmsAlert extends Component {
 							if (result.msgCode !== 'PTM0000') {
 								Toast.info(result.msgInfo);
 								return;
-							} else {
-								Toast.info('发送成功，请注意查收！');
-								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-								timmer = setInterval(() => {
-									this.setState({ flag: false, smsText: i-- + '"' });
-									if (i === -1) {
-										clearInterval(timmer);
-										this.setState({ smsText: '重新获取', timeflag: true, flag: true });
-									}
-								}, 1000);
 							}
+							Toast.info('发送成功，请注意查收！');
+							this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+							timmer = setInterval(() => {
+								this.setState({ flag: false, smsText: i-- + '"' });
+								if (i === -1) {
+									clearInterval(timmer);
+									this.setState({ smsText: '重新获取', timeflag: true, flag: true });
+								}
+							}, 1000);
 						},
 						(error) => {
 							error.msgInfo && Toast.info(error.msgInfo);
 						}
 					);
 				return true;
-			} else {
-				Toast.info(getFirstError(err));
 			}
+			Toast.info(getFirstError(err));
 		});
 	}
 	//登录判断
@@ -433,7 +421,7 @@ export default class SmsAlert extends Component {
 		const { modalBtnBuryPoint } = this.props;
 		const { authToken, otherProps_type } = this.state;
 		modalBtnBuryPoint(); // 埋点需求
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}

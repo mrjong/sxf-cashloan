@@ -1,7 +1,6 @@
-import React, { Component, PureComponent } from 'react';
-import styles from './index.scss';
+import React from 'react';
 import { headerIgnore, setTitle } from 'utils';
-export default class Header extends Component {
+export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {

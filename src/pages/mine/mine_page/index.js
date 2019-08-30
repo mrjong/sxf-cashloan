@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 14:45:17
+ */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
@@ -206,21 +210,9 @@ export default class mine_page extends PureComponent {
 			if (mblNoHid && realNmFlg) {
 				this.props.history.push(item.jumpToUrl);
 			}
-			// if (!mblNoHid) {
-			//   this.props.toast.info('用户未登录', 2, () => {
-			//     this.props.history.push('/login');
-			//   })
-			// }
 			if (!realNmFlg) {
 				this.props.toast.info('请先进行实名认证', 2, () => {
-					// let isWx=this.is_weixn()
-					// if (isWx) {
-					//     //在微信中打开
-					//     this.props.history.replace('/wxName')
-					// }
-					//else{
 					this.props.history.push('/home/real_name?type=noRealName');
-					//}
 				});
 			}
 		}

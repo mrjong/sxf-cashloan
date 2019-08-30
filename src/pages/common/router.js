@@ -26,5 +26,5 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/common/tencent_face_middle_page')
-  }
+	}
 ];

@@ -31,8 +31,8 @@ function buryingPoints(info) {
 							totalTime: 0,
 							label: info.label,
 							value: '',
-							editNum: 0,
-						})
+							editNum: 0
+						});
 					}
 				} else {
 					inforArr.push({
@@ -41,13 +41,13 @@ function buryingPoints(info) {
 						totalTime: 0,
 						label: info.label,
 						value: '',
-						editNum: 0,
-					})
+						editNum: 0
+					});
 				}
-				sa.track(info.pageKey, {
-					'label': info.label,
-					'product_line': '还到-余额代偿',
-					'channelType': getH5Channel()
+				window.sa.track(info.pageKey, {
+					label: info.label,
+					product_line: '还到-余额代偿',
+					channelType: getH5Channel()
 				});
 				break;
 			case 'blur':
@@ -58,12 +58,12 @@ function buryingPoints(info) {
 							inforArr[i].blurTime = new Date().getTime();
 							if (info.value !== inforArr[i].value) {
 								inforArr[i].editNum += 1;
-								inforArr[i].totalTime += (convertTime(inforArr[i].blurTime - inforArr[i].focusTime));
+								inforArr[i].totalTime += convertTime(inforArr[i].blurTime - inforArr[i].focusTime);
 								inforArr[i].value = info.value;
-								sa.track(info.pageKey, {
+								window.sa.track(info.pageKey, {
 									...inforArr[i],
-									'product_line': '还到-余额代偿',
-									'channelType': getH5Channel()
+									product_line: '还到-余额代偿',
+									channelType: getH5Channel()
 								});
 							}
 							inforArr[i].value = info.value;
@@ -78,8 +78,5 @@ function buryingPoints(info) {
 	} else {
 		inforArr = [];
 	}
-
 }
-export {
-	buryingPoints,
-}
+export { buryingPoints };

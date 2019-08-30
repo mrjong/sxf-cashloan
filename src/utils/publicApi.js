@@ -38,7 +38,7 @@ const getAppsList = () => {
 						type: '1',
 						appList: responseData.appsList
 					})
-					.then((res) => {}, (error) => {});
+					.then(() => {}, () => {});
 			}
 		});
 	});
@@ -60,7 +60,7 @@ const getContactsList = () => {
 						type: '2',
 						contactList: responseData.contactsList
 					})
-					.then((res) => {}, (error) => {});
+					.then(() => {}, () => {});
 			}
 		});
 	});
@@ -72,7 +72,7 @@ const mposShare = ({ $props, shareData }) => {
 		bridge.callHandler(
 			'mposShare',
 			{ title: shareData.title, description: shareData.desc, url: shareData.link, iconUrl: shareData.imgUrl },
-			function(response) {
+			function() {
 				$props.toast.info('分享成功');
 			}
 		);
