@@ -173,9 +173,7 @@
 	display: flex;
 	position: relative;
 	padding: 20px 30px;
-	span {
-		flex: 1;
-	}
+	justify-content: space-between;
 	i {
 		@include setArrow(right, 12px, #a9aeb6, 1px);
 		top: 16px;
@@ -191,12 +189,12 @@
 }
 i.arrow_down {
 	@include setArrow(down, 12px, #a9aeb6, 1px);
-	top: 14px;
+	top: -8px;
 	margin-left: 10px;
 }
 i.arrow_up {
 	@include setArrow(top, 12px, #a9aeb6, 1px);
-	top: 18px;
+	top: 0;
 	margin-left: 10px;
 }
 .feeDetail {

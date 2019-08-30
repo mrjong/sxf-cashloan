@@ -1185,8 +1185,8 @@ export default class order_detail_page extends PureComponent {
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
 								{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
+								{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 							</span>
-							{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 						</div>
 						{/* 账单明细展示 */}
 						{isShowDetail ? (
