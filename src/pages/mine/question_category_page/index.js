@@ -3,6 +3,8 @@ import Lists from 'components/Lists';
 import QuestionModal from '../help_center_page/components/QuestionModal';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
+import { buriedPointEvent } from 'utils/analytins';
+import { helpCenter } from 'utils/analytinsType';
 
 const API = {
 	questionList: '/question/questionListByType'
@@ -57,7 +59,17 @@ export default class question_category_page extends PureComponent {
 		});
 	};
 
+	// realname: `${prefix}_REALNAME_CLICKQUESTION`,
+	// basic: `${prefix}_BASIC_CLICKQUESTION`,
+	// operators: `${prefix}_OPERATORS_CLICKQUESTION`,
+	// creditCard: `${prefix}_CREDIT_CARD_CLICKQUESTION`,
+	// submission: `${prefix}_SUBMISSION_CLICKQUESTION`,
+	// toexamine: `${prefix}_TOEXAMINE_CLICKQUESTION`,
+	// quota: `${prefix}_QUOTA_CLICKQUESTION`,
+	// repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
 	listItemClick = (item) => {
+		let title = this.props.history.location.state.pageTitle;
+
 		this.setState({
 			showQuestionModal: true,
 			question: {

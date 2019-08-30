@@ -1,5 +1,7 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .help_center_page {
 	background-color: #fff;
+	padding-bottom: 170px;
 	.top_nav {
 		display: flex;
 		flex-direction: row;
@@ -58,6 +60,8 @@
 	}
 
 	.category_item {
+		display: flex;
+		align-items: center;
 		border: 1px solid #f0f1f5;
 		padding: 30px 0 30px 65px;
 		width: 305px;
@@ -69,6 +73,17 @@
 		&:nth-child(2n) {
 			margin-right: 0;
 		}
+	}
+
+	.category_item_icon {
+		display: inline-block;
+		width: 38px;
+		height: 38px;
+		margin-right: 20px;
+
+		// .i_0001 {
+		// 	@include spriteSkinIcon('../../../assets/images/common/skin_icon.png', -212px, 0);
+		// }
 	}
 
 	.service_box {

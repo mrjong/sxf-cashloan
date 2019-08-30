@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
+import { helpCenter } from 'utils/analytinsType';
 import styles from './index.scss';
 import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
@@ -88,7 +88,7 @@ export default class help_center_page extends PureComponent {
 			if (res.msgCode === 'PTM0000' && res.data) {
 				let arr = res.data.map((v, i) => {
 					return {
-						img: '',
+						code: v.code,
 						label: v.name,
 						value: v.value
 					};
@@ -102,11 +102,15 @@ export default class help_center_page extends PureComponent {
 		});
 	};
 
-	gotoPage = (url) => {
-		this.props.history.push(url);
+	gotoPage = (item) => {
+		buriedPointEvent(helpCenter.fast_entry, {
+			entry_name: item.label
+		});
+		this.props.history.push(item.url);
 	};
 
 	goOnline = () => {
+		buriedPointEvent(helpCenter.goOnline);
 		this.props.history.push('/mine/qiyu_page');
 	};
 
@@ -116,7 +120,7 @@ export default class help_center_page extends PureComponent {
 				className={styles.top_nav_item}
 				key={i}
 				onClick={() => {
-					this.gotoPage(v.url);
+					this.gotoPage(v);
 				}}
 			>
 				<img src={v.img} alt="" className={styles.top_nav_img} />
@@ -135,13 +139,17 @@ export default class help_center_page extends PureComponent {
 					this.categoryItemClick(v);
 				}}
 			>
-				<img src="" alt="" />
+				{/* <img src={require(`./img/category_icon${i+1}@2x.png`)} alt="" className={styles.category_item_icon}/> */}
+				{/* <i className={[styles.category_item_icon,styles[v.code]].join(' ')}/> */}
 				<span>{v.label}</span>
 			</div>
 		));
 	};
 
 	categoryItemClick = (item) => {
+		buriedPointEvent(helpCenter.classification, {
+			type_name: item.label
+		});
 		this.props.history.push({
 			pathname: '/mine/question_category_page',
 			state: {
@@ -152,6 +160,9 @@ export default class help_center_page extends PureComponent {
 	};
 
 	hotListClick = (item) => {
+		buriedPointEvent(helpCenter.hot_issue, {
+			q_title: item.label.name
+		});
 		this.setState({
 			showQuestionModal: true,
 			question: {

@@ -37,6 +37,56 @@ export default class QuestionModal extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			});
+		this.buriedPoint();
+	};
+
+	buriedPoint = () => {
+		switch (title) {
+			case '实名认证':
+				buriedPointEvent(helpCenter.realname, {
+					is_hot: true,
+					q_title: '',
+					is_resolve: 'no'
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.basic, {
+					is_hot: true
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.operators, {
+					is_hot: true
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.creditCard, {
+					is_hot: true
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.submission, {
+					is_hot: true
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.toexamine, {
+					is_hot: true
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.quota, {
+					is_hot: true
+				});
+				break;
+			case '实名认证':
+				buriedPointEvent(helpCenter.repayment, {
+					is_hot: true
+				});
+				break;
+			default:
+				break;
+		}
 	};
 
 	render() {

@@ -263,6 +263,26 @@ const loan_fenqi = {
 	protocolBindBtnClick: `${prefix}_FENQI_PROTOCOL_MODAL_BTN_CLICK` // 现金分期签约借款页协议绑卡短验弹框按钮点击
 };
 
+const helpCenter = {
+	feedback: `${prefix}_MINE_CREDIT_FEEDBACK`,
+	select_class: `${prefix}_MINE_CLASSIFICATION_CHOICE`,
+	submit_succ: `${prefix}_CLASSIFICATION_SUCCESSFUL_SUBMISSION`,
+
+	fast_entry: `${prefix}_HELPCENTER_FASTENTRY`,
+	hot_issue: `${prefix}_HELPCENTER_HOTISSUES`,
+	classification: `${prefix}_HELPCENTER_CLASSIFICATION`,
+	goOnline: `${prefix}_HELPCENTER_CONSULTATION`,
+
+	realname: `${prefix}_REALNAME_CLICKQUESTION`,
+	basic: `${prefix}_BASIC_CLICKQUESTION`,
+	operators: `${prefix}_OPERATORS_CLICKQUESTION`,
+	creditCard: `${prefix}_CREDIT_CARD_CLICKQUESTION`,
+	submission: `${prefix}_SUBMISSION_CLICKQUESTION`,
+	toexamine: `${prefix}_TOEXAMINE_CLICKQUESTION`,
+	quota: `${prefix}_QUOTA_CLICKQUESTION`,
+	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
+};
+
 export {
 	login,
 	home,
@@ -277,5 +297,6 @@ export {
 	loan_fenqi,
 	other,
 	daicao,
-	manualAudit
+	manualAudit,
+	helpCenter
 };

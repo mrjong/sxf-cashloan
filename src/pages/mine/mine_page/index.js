@@ -5,13 +5,13 @@ import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/login_logo.png';
 import Lists from 'components/Lists';
 import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
 import fqaImg from 'assets/images/mine/fqa_img.png';
 import notLoginImg from 'assets/images/mine/not_login_logo.png';
+import { helpCenter } from '../../../utils/analytinsType';
 
 const API = {
 	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -197,6 +197,9 @@ export default class mine_page extends PureComponent {
 			// 		entry: '我的'
 			// 	});
 			// }
+			if (item.jumpToUrl === '/mine/feedback_page') {
+				buriedPointEvent(helpCenter.feedback);
+			}
 			this.props.history.push(item.jumpToUrl);
 		} else {
 			const { mblNoHid, realNmFlg } = this.state;
