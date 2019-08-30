@@ -1222,9 +1222,9 @@ export default class order_detail_page extends PureComponent {
 											{wthdCrdCorpOrgNm}({wthdCrdNoLast})
 										</span>
 									)}
+									&nbsp;
+									<i style={{ position: 'relative', top: '-2px' }} />
 								</span>
-								&nbsp;
-								<i />
 							</div>
 						) : null}
 
@@ -1369,7 +1369,7 @@ export default class order_detail_page extends PureComponent {
 								billOvduDays && {
 									style: {
 										color: '#FE6666',
-										fontSize: '0.34rem',
+										fontSize: '0.3rem',
 										float: 'right',
 										position: 'relative',
 										paddingRight: '0.3rem'

@@ -22,7 +22,7 @@ $color-border-line: #e5e5e5; // 标题横线颜色
 }
 
 .panel_wrap {
-	padding: 20px 30px;
+	padding: 20px 30px 0;
 	background-color: $color-bg-default;
 	.panle_title {
 		position: relative;

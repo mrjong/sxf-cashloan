@@ -19,11 +19,12 @@ $border-radius: 45px; // 默认圆角
 	background-color: $color-bg-default;
 	border-radius: $border-radius;
 	border: 0;
+	font-weight: 500;
 	cursor: pointer;
 	&_active {
 		background-color: $color-bg--active;
 	}
 }
 .sxp_button[disabled] {
-    opacity: .8;
+	opacity: 0.8;
 }
