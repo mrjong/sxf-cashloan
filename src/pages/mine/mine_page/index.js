@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 14:43:08
+ * @LastEditTime: 2019-08-30 14:45:17
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';

@@ -1,16 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 14:00:13
+ * @LastEditTime: 2019-08-30 15:32:50
  */
 import React, { PureComponent } from 'react';
-import Cookie from 'js-cookie';
-import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
-import { Icon, TextareaItem, ImagePicker, WingBlank, SegmentedControl } from 'antd-mobile';
-import Lists from 'components/Lists';
-import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
+import { TextareaItem, ImagePicker } from 'antd-mobile';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';

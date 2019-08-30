@@ -1,6 +1,8 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:32:58
+ */
 import React, { PureComponent } from 'react';
-import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
@@ -86,7 +88,7 @@ export default class help_center_page extends PureComponent {
 	qryCategoryList = () => {
 		this.props.$fetch.post(API.categoryList).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
-				let arr = res.data.map((v, i) => {
+				let arr = res.data.map((v) => {
 					return {
 						img: '',
 						label: v.name,

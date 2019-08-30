@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:32:21
+ */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { Modal, Icon } from 'antd-mobile';
@@ -14,7 +18,7 @@ export default class QuestionModal extends PureComponent {
 		};
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate() {
 		if (this.props.visible) {
 			this.setState({
 				resolve: false,
