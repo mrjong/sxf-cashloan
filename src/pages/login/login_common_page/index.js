@@ -149,66 +149,65 @@ export default class login_common_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		this.setState(
-			{
-				showDownloadModal: true
-			},
-			() => {
-				this.startCountDown();
+		const osType = getDeviceType();
+		if (!this.state.smsJrnNo) {
+			Toast.info('请先获取短信验证码');
+			return;
+		}
+		if (!this.state.isChecked) {
+			Toast.info('请先勾选协议');
+			return;
+		}
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				buriedPointEvent(daicao.loginBtn);
+				let param = {
+					smsJrnNo: this.state.smsJrnNo, // 短信流水号
+					osType, // 操作系统
+					smsCd: values.smsCd,
+					usrCnl: getH5Channel(), // 用户渠道
+					location: store.getPosition() // 定位地址 TODO 从session取
+				};
+				if (!this.state.disabledInput) {
+					param.mblNo = values.phoneValue; // 手机号
+				}
+				this.props.$fetch.post(API.smsForLogin, param).then(
+					(res) => {
+						if (res.msgCode !== 'PTM0000') {
+							res.msgInfo && Toast.info(res.msgInfo);
+							return;
+						}
+						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.data.tokenId);
+						if (!store.getQueryUsrSCOpenId()) {
+							this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
+								if (res.msgCode === 'PTM0000') {
+									window.sa.login(res.data);
+									store.setQueryUsrSCOpenId(res.data);
+								}
+								this.setState(
+									{
+										showDownloadModal: true
+									},
+									() => {
+										this.startCountDown();
+									}
+								);
+							});
+						}
+					},
+					(error) => {
+						error.msgInfo &&
+							Toast.info(error.msgInfo, 3, () => {
+								this.state.disabledInput && this.getImage();
+							});
+					}
+				);
+			} else {
+				Toast.info(getFirstError(err));
 			}
-		);
-		// const osType = getDeviceType();
-		// if (!this.state.smsJrnNo) {
-		// 	Toast.info('请先获取短信验证码');
-		// 	return;
-		// }
-		// if (!this.state.isChecked) {
-		// 	Toast.info('请先勾选协议');
-		// 	return;
-		// }
-		// this.props.form.validateFields((err, values) => {
-		// 	if (!err) {
-		// 		buriedPointEvent(daicao.loginBtn);
-		// 		let param = {
-		// 			smsJrnNo: this.state.smsJrnNo, // 短信流水号
-		// 			osType, // 操作系统
-		// 			smsCd: values.smsCd,
-		// 			usrCnl: getH5Channel(), // 用户渠道
-		// 			location: store.getPosition() // 定位地址 TODO 从session取
-		// 		};
-		// 		if (!this.state.disabledInput) {
-		// 			param.mblNo = values.phoneValue; // 手机号
-		// 		}
-		// 		this.props.$fetch.post(API.smsForLogin, param).then(
-		// 			(res) => {
-		// 				if (res.msgCode !== 'PTM0000') {
-		// 					res.msgInfo && Toast.info(res.msgInfo);
-		// 					return;
-		// 				}
-		// 				Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-		// 				// TODO: 根据设备类型存储token
-		// 				store.setToken(res.data.tokenId);
-		// 				if (!store.getQueryUsrSCOpenId()) {
-		// 					this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-		// 						if (res.msgCode === 'PTM0000') {
-		// 							window.sa.login(res.data);
-		// 							store.setQueryUsrSCOpenId(res.data);
-		// 						}
-		// 						this.props.history.replace('/others/download_page');
-		// 					});
-		// 				}
-		// 			},
-		// 			(error) => {
-		// 				error.msgInfo &&
-		// 					Toast.info(error.msgInfo, 3, () => {
-		// 						this.state.disabledInput && this.getImage();
-		// 					});
-		// 			}
-		// 		);
-		// 	} else {
-		// 		Toast.info(getFirstError(err));
-		// 	}
-		// });
+		});
 	};
 
 	// 处理获取验证码按钮点击事件
