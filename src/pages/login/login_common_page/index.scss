@@ -49,7 +49,27 @@
     .proDesc {
       font-size: 23px;
       font-weight: 600;
-      color: #282506
+      color: #ff4e00;
+      span {
+        position: relative;
+        padding: 0 30px;
+        i{
+          position: absolute;
+          top: 50%;
+          right: 0;
+          width: 4px;
+          height: 12px;
+          background: #ff4e00;
+          border-radius: 2px;
+          margin-top: -6px;
+        }
+      }
+      span:last-child{
+        padding-right: 0;
+      }
+      span:first-child{
+        padding-left: 0;
+      }
     }
 		.commonLine {
 			position: absolute;

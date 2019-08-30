@@ -14,7 +14,6 @@ import styles from './index.scss';
 import defaultBannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-/*eslint-disable*/
 
 let timmer;
 const API = {
@@ -394,6 +393,7 @@ export default class login_common_page extends PureComponent {
 	};
 
 	render() {
+		/* eslint-disable */
 		const { bannerImg } = this.props;
 		const {
 			imageCodeUrl,
@@ -414,8 +414,14 @@ export default class login_common_page extends PureComponent {
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
 						<p className={styles.proDesc}>
-							<span>最快10分钟到账</span>
-							<span>期限灵活</span>
+							<span>
+								最快10分钟到账
+								<i />
+							</span>
+							<span>
+								期限灵活
+								<i />
+							</span>
 							<span>日利息低至0.04%</span>
 						</p>
 						<InputItem
