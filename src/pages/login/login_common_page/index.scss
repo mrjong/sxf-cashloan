@@ -11,10 +11,10 @@
 	}
 	.content {
 		position: relative;
-		top: -136px;
+		top: -86px;
 		text-align: center;
 		width: 666px;
-		height: 729px;
+		height: 679px;
 		background: #fff;
 		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
 		border-radius: 10px;
@@ -44,8 +44,13 @@
 			color: #121c32;
 			height: 91px;
 			margin-top: 32px;
-			margin-bottom: 20px;
-		}
+			margin-bottom: 34px;
+    }
+    .proDesc {
+      font-size: 23px;
+      font-weight: 600;
+      color: #282506
+    }
 		.commonLine {
 			position: absolute;
 			display: inline-block;
@@ -148,7 +153,7 @@
 			font-size: 30px;
 			// font-weight: bold;
 			color: #fff;
-			margin: 39px auto 0;
+			margin: 53px auto 30px;
 			span {
 				display: inline-block;
 				width: 100%;
@@ -174,7 +179,7 @@
 	.agreement {
 		display: flex;
 		position: relative;
-		top: -107px;
+		top: -57px;
 		color: #8e8d7b;
 		font-size: 24px;
 		margin: 0 58px;
