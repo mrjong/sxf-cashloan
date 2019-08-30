@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 14:16:17
+ */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
@@ -132,7 +136,7 @@ export default class router_Page extends PureComponent {
 			<div className="application_view">
 				<div className="application_page">
 					<Provider value={{ footerTipIcon: this.state.footerTipIcon }}>
-						{/* {headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />} */}
+						{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 						{footerHide ? null : <Footer footerProps={route} />}
 						<div className="application_content">{component}</div>
 					</Provider>
