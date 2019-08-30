@@ -16,8 +16,6 @@ import { pageView } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { Provider } from './context';
 
-let consoleshowStr = '';
-
 export default class router_Page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -43,9 +41,6 @@ export default class router_Page extends PureComponent {
 	componentWillReceiveProps(nextProps) {
 		this.loadComponent(nextProps);
 		store.setHistoryRouter(location.pathname);
-	}
-	componentWillUnmount() {
-		consoleshowStr = '';
 	}
 	loadComponent = async (props) => {
 		const token = Cookie.get('fin-v-card-token');

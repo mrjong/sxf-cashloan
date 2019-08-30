@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import qs from 'qs';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import styles from './index.scss';

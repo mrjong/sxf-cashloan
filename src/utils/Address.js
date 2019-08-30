@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { store } from 'utils/store';
 import { getLocation } from 'utils/publicApi';
 import { isMPOS } from 'utils/common';
@@ -36,7 +37,6 @@ export const address = () => {
 							geocoder.getLocation(lnglatXY, function(status, result) {
 								if (status === 'complete' && result.info === 'OK') {
 									// console.log(result,1231123)
-								} else {
 								}
 							});
 						});

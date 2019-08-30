@@ -12,7 +12,8 @@ export default class AddCards extends React.Component {
 		return (
 			<div className={style.box_container}>
 				<ZButton onClick={handleClick} className={style.addBtn}>
-					<i />添加需要还款的信用卡
+					<i />
+					添加需要还款的信用卡
 				</ZButton>
 			</div>
 		);

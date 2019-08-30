@@ -6,7 +6,6 @@ import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils
 import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import qs from 'qs';
 import Cookie from 'js-cookie';
 
 const API = {
@@ -62,26 +61,24 @@ export default class LoginComponent extends Component {
 							if (result.msgCode !== 'PTM0000') {
 								this.props.toast.info(result.msgInfo);
 								return;
-							} else {
-								this.props.toast.info('发送成功，请注意查收！');
-								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-								timmer = setInterval(() => {
-									this.setState({ flag: false, smsText: i-- + '"' });
-									if (i === -1) {
-										clearInterval(timmer);
-										this.setState({ smsText: '重新获取', timeflag: true, flag: true });
-									}
-								}, 1000);
 							}
+							this.props.toast.info('发送成功，请注意查收！');
+							this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+							timmer = setInterval(() => {
+								this.setState({ flag: false, smsText: i-- + '"' });
+								if (i === -1) {
+									clearInterval(timmer);
+									this.setState({ smsText: '重新获取', timeflag: true, flag: true });
+								}
+							}, 1000);
 						},
 						(error) => {
 							error.msgInfo && this.props.toast.info(error.msgInfo);
 						}
 					);
 				return true;
-			} else {
-				this.props.toast.info(getFirstError(err));
 			}
+			this.props.toast.info(getFirstError(err));
 		});
 	}
 	// 确定去登陆按钮
@@ -92,7 +89,6 @@ export default class LoginComponent extends Component {
 			this.props.toast.info('请先获取短信验证码');
 			return;
 		}
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.props.$fetch

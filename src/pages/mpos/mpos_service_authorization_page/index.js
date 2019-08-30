@@ -95,7 +95,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 					});
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.props.history.replace('/home/home');
 			});
 	};

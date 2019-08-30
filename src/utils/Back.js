@@ -2,8 +2,7 @@
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 import React from 'react';
-import { logoutAppHandler, changeHistoryState, isWXOpen, getDeviceType } from 'utils';
-import qs from 'qs';
+import { logoutAppHandler, changeHistoryState, isWXOpen } from 'utils';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
@@ -246,7 +245,7 @@ if (window.history && window.history.pushState) {
 					} else {
 						if (!store.getLoginDownloadBtn()) {
 							window.close();
-							WeixinJSBridge.call('closeWindow');
+							window.WeixinJSBridge.call('closeWindow');
 						}
 					}
 				} else if (isMPOS()) {
@@ -288,12 +287,11 @@ if (window.history && window.history.pushState) {
 							// 运营商直接返回的问题
 							store.removeCarrierMoxie();
 							return;
-						} else {
-							logoutAppHandler();
 						}
+						logoutAppHandler();
 					} else if (isWXOpen() && !tokenFromStorage && !token) {
 						window.close();
-						WeixinJSBridge.call('closeWindow');
+						window.WeixinJSBridge.call('closeWindow');
 					}
 					break;
 				case '/order/order_page':
@@ -301,7 +299,7 @@ if (window.history && window.history.pushState) {
 						logoutAppHandler();
 					} else if (isWXOpen() && !tokenFromStorage && !token) {
 						window.close();
-						WeixinJSBridge.call('closeWindow');
+						window.WeixinJSBridge.call('closeWindow');
 					}
 					break;
 				case '/mine/mine_page':
@@ -320,9 +318,8 @@ if (window.history && window.history.pushState) {
 					if (store.getToggleMoxieCard()) {
 						window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
 						return;
-					} else {
-						window.ReactRouterHistory.push('/home/home');
 					}
+					window.ReactRouterHistory.push('/home/home');
 					break;
 				case '/home/credit_apply_succ_page':
 					window.ReactRouterHistory.push('/home/home');

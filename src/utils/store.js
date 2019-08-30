@@ -1,30 +1,44 @@
 // 本地存储
 import { storeTypes } from './storeTypes';
-import { Toast } from 'antd-mobile';
 import { isPhone } from 'utils';
 
 const { localStorage, sessionStorage } = window;
 // 默认使用sessionstorage
 let STORAGE_METHOD = sessionStorage;
+
+// 定义需要特殊处理的浏览器
+const bugBrowserArr = ['vivobrowser', 'oppobrowser', 'safari'];
+// 检测是否是某种 bug 浏览器
+const isBugBrowser = () => {
+	const u = navigator.userAgent.toLowerCase();
+	const bugBrowserList = bugBrowserArr.filter((item) => u.indexOf(item) > -1);
+	return (
+		bugBrowserList.length > 0 &&
+		u.indexOf('micromessenger') <= -1 &&
+		u.indexOf('suixingpay-mpos') <= -1 &&
+		!isPhone()
+	);
+};
+
 const storageUtil = {
 	// && list.includes(funcName) bug机 全部存入到
-	setItem(key, value, funcName) {
+	setItem(key, value) {
 		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		STORAGE_METHOD.setItem(key, JSON.stringify(value));
 	},
-	getItem(key, funcName) {
+	getItem(key) {
 		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		const value = STORAGE_METHOD.getItem(key);
 		return JSON.parse(value);
 	},
-	clear(funcName) {
+	clear() {
 		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		STORAGE_METHOD.clear();
 	},
-	removeItem(key, funcName) {
+	removeItem(key) {
 		STORAGE_METHOD = isBugBrowser() ? localStorage : sessionStorage;
 
 		STORAGE_METHOD.removeItem(key);
@@ -41,25 +55,9 @@ const storageUtil = {
 	}
 };
 
-// 定义需要特殊处理的浏览器
-const bugBrowserArr = [ 'vivobrowser', 'oppobrowser', 'safari' ];
-
-// 检测是否是某种 bug 浏览器
-const isBugBrowser = () => {
-	const u = navigator.userAgent.toLowerCase();
-	// Toast.info(u,0)
-	const bugBrowserList = bugBrowserArr.filter((item) => u.indexOf(item) > -1);
-	return (
-		bugBrowserList.length > 0 &&
-		u.indexOf('micromessenger') <= -1 &&
-		u.indexOf('suixingpay-mpos') <= -1 &&
-		!isPhone()
-	);
-};
-
 let store = {};
 // 需要区别对待的存储字段
-let list = [ 'Token', 'JumpUrl', 'H5Channel', 'billNo' ];
+// let list = ['Token', 'JumpUrl', 'H5Channel', 'billNo'];
 
 // 本地存储工厂函数，生成 set get remove 方法(优先使用sessionstorage)
 const storeFactory = (funcName, key) => {

@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:48:51
+ */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -95,22 +99,19 @@ export const headerIgnore = (type) => {
 			!/SuiXingPay-Cashier/i.test(ua)
 		) {
 			return true;
-		} else {
-			return false;
 		}
-	} else {
-		if (
-			/MicroMessenger/i.test(ua) ||
-			/QQ/i.test(ua) ||
-			/AlipayClient/i.test(ua) ||
-			/SuiXingPay-Mpos/i.test(ua) ||
-			/SuiXingPay-Cashier/i.test(ua)
-		) {
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
+	if (
+		/MicroMessenger/i.test(ua) ||
+		/QQ/i.test(ua) ||
+		/AlipayClient/i.test(ua) ||
+		/SuiXingPay-Mpos/i.test(ua) ||
+		/SuiXingPay-Cashier/i.test(ua)
+	) {
+		return true;
+	}
+	return false;
 };
 
 export const setTitle = (getTitle) => {
@@ -169,6 +170,32 @@ export const closeCurrentWebView = () => {
 };
 // 点击退出
 let state = false;
+
+// 退出功能
+export const logoutApp = () => {
+	fetch.get(API.LOGOUT).then(
+		(result) => {
+			if (result && result.msgCode !== 'PTM0000') {
+				result.msgInfo && Toast.info(result.msgInfo);
+				return;
+			}
+			window.ReactRouterHistory.push('/login');
+			// sessionStorage.clear();
+			// localStorage.clear();
+			// Cookie.remove('fin-v-card-token');
+			Cookie.remove('authFlag');
+			Cookie.remove('VIPFlag');
+			//退出时,删除通付盾script
+			document.getElementById('tonfudunScript') &&
+				document.body.removeChild(document.getElementById('tonfudunScript'));
+			document.getElementById('payegisIfm') &&
+				document.body.removeChild(document.getElementById('payegisIfm'));
+		},
+		(err) => {
+			err.msgInfo && Toast.info(err.msgInfo);
+		}
+	);
+};
 
 export const logoutAppHandler = (that) => {
 	if (isMPOS()) {
@@ -290,9 +317,7 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 					break;
 				case 'PTM0006':
 					store.setToggleMoxieCard(true);
-					$props.history.push({
-						pathname: '/home/real_name'
-					});
+					$props.history.push({ pathname: '/home/real_name' });
 					resolve('2');
 					break;
 				case 'PTM0008':
@@ -419,7 +444,7 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 				$props.toast.info(res.msgInfo);
 			}
 		})
-		.catch((err) => {
+		.catch(() => {
 			buriedPointEvent(home.moneyCreditCardConfirm, {
 				is_success: false,
 				fail_cause: '未知错误',
@@ -437,10 +462,10 @@ export const handleClickConfirm = ($props, repaymentDate, type) => {
 };
 const needDisplayOptions2 = ['operator'];
 export const getOperatorStatus = ({ $props }) => {
-	return new Promise(async (resolve, reject) => {
+	return new Promise(async (resolve) => {
 		let res = await $props.$fetch.post(API.GETSTSW);
 		if (res && res.msgCode === 'PTM0000') {
-			res.data.forEach((item, index) => {
+			res.data.forEach((item) => {
 				if (needDisplayOptions2.includes(item.code)) {
 					// case '0': // 未认证
 					// case '1': // 认证中
@@ -455,29 +480,25 @@ export const getOperatorStatus = ({ $props }) => {
 							$props.toast.info('身份信息确认失败，请重新确认');
 							setTimeout(() => {
 								SXFToast.loading('加载中...', 0);
-								$props.$fetch
-									.post(`${API.getOperator}`, {
-										clientCode: '04'
-									})
-									.then((result) => {
-										if (result.msgCode === 'PTM0000' && result.data.url) {
-											$props.SXFToast.hide();
-											store.setMoxieBackUrl('/home/loan_repay_confirm_page');
-											// TODO
-											// store.getToggleMoxieCard(true);
-											// setTimeout(() => {
-											// 运营商直接返回的问题
-											SXFToast.loading('加载中...', 0);
-											store.setGotoMoxieFlag(true);
-											window.location.href =
-												result.data.url +
-												`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
-													window.location.search
-												}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-													`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-												)}`;
-										}
-									});
+								$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
+									if (result.msgCode === 'PTM0000' && result.data.url) {
+										$props.SXFToast.hide();
+										store.setMoxieBackUrl('/home/loan_repay_confirm_page');
+										// TODO
+										// store.getToggleMoxieCard(true);
+										// setTimeout(() => {
+										// 运营商直接返回的问题
+										SXFToast.loading('加载中...', 0);
+										store.setGotoMoxieFlag(true);
+										window.location.href =
+											result.data.url +
+											`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+												window.location.search
+											}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+												`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+											)}`;
+									}
+								});
 							}, 2000);
 							break;
 						case '1':
@@ -509,7 +530,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let orderText = 0;
 	let btnArry = ['继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单'];
 	if (res && res.msgCode === 'PTM0000') {
-		res.data.forEach((item, index) => {
+		res.data.forEach((item) => {
 			if (needDisplayOptions.includes(item.code)) {
 				orderText = orderText + 1;
 				if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
@@ -529,28 +550,17 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			// 实名
 			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
 				$props.SXFToast.hide();
-				let msg = '请先实名认证';
-				// $props.toast.info(msg);
-				// setTimeout(() => {
 				$props.history.push({
 					pathname: '/home/real_name',
 					search: '?type=noRealName&fromRouter=home'
 				});
-				// }, 3000);
 				return;
 			}
 			// 基本信息
 			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
 				$props.SXFToast.hide();
-				let msg = '请进行基本信息认证';
-				// $props.toast.info(msg);
 				resBackMsg = '基本信息认证';
-				// setTimeout(() => {
-				$props.history.replace({
-					pathname: '/home/essential_information'
-					// search: urlQuery
-				});
-				// }, 3000);
+				$props.history.replace({ pathname: '/home/essential_information' });
 				if (callBack) {
 					callBack(resBackMsg);
 				}
@@ -559,34 +569,26 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
 			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
-				$props.$fetch
-					.post(`${API.getOperator}`, {
-						clientCode: '04'
-					})
-					.then((result) => {
-						if (result.msgCode === 'PTM0000' && result.data.url) {
-							$props.SXFToast.hide();
-							let msg = '请进行运营商认证';
-							// $props.toast.info(msg);
-							resBackMsg = '运营商认证';
-							// setTimeout(() => {
-							// 运营商直接返回的问题
-							store.setCarrierMoxie(true);
-							store.setGotoMoxieFlag(true);
-							SXFToast.loading('加载中...', 0);
-							window.location.href =
-								result.data.url +
-								`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
-									window.location.search
-								}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-									`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-								)}`;
-							// }, 3000);
-							if (callBack) {
-								callBack(resBackMsg);
-							}
+				$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
+					if (result.msgCode === 'PTM0000' && result.data.url) {
+						$props.SXFToast.hide();
+						resBackMsg = '运营商认证';
+						// 运营商直接返回的问题
+						store.setCarrierMoxie(true);
+						store.setGotoMoxieFlag(true);
+						SXFToast.loading('加载中...', 0);
+						window.location.href =
+							result.data.url +
+							`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
+								window.location.search
+							}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
+								`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
+							)}`;
+						if (callBack) {
+							callBack(resBackMsg);
 						}
-					});
+					}
+				});
 
 				return;
 			}
@@ -594,13 +596,9 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				$props.SXFToast.hide();
-				let msg = '请进行信用卡认证';
-				// $props.toast.info(msg);
 				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
-				// setTimeout(() => {
 				$props.history.push({ pathname: '/home/moxie_bank_list_page' });
-				// }, 3000);
 				if (callBack) {
 					callBack(resBackMsg);
 				}
@@ -625,32 +623,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 		resBackMsg,
 		btnText
 	};
-};
-
-// 退出功能
-export const logoutApp = (that) => {
-	fetch.get(API.LOGOUT).then(
-		(result) => {
-			if (result && result.msgCode !== 'PTM0000') {
-				result.msgInfo && Toast.info(result.msgInfo);
-				return;
-			}
-			window.ReactRouterHistory.push('/login');
-			// sessionStorage.clear();
-			// localStorage.clear();
-			// Cookie.remove('fin-v-card-token');
-			Cookie.remove('authFlag');
-			Cookie.remove('VIPFlag');
-			//退出时,删除通付盾script
-			document.getElementById('tonfudunScript') &&
-				document.body.removeChild(document.getElementById('tonfudunScript'));
-			document.getElementById('payegisIfm') &&
-				document.body.removeChild(document.getElementById('payegisIfm'));
-		},
-		(err) => {
-			err.msgInfo && Toast.info(err.msgInfo);
-		}
-	);
 };
 
 export const getNowDate = () => {
@@ -713,37 +685,6 @@ export const validators = {
 		let maxNum = max || 100000;
 		let chReg = new RegExp(`^(([\u4e00-\u9fa5])|(\\.)|(\\·)){${minNum},${maxNum}}$`);
 		return chReg.test(val);
-	}
-};
-
-function clearAllCookie() {
-	var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-	if (keys) {
-		for (var i = keys.length; i--; ) document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
-	}
-}
-export const vconsole = (i, consoleshow) => {
-	if ((i && i.length === 10 && i === '0110001111') || consoleshow || sessionStorage.getItem('consoleshow')) {
-		var head = document.getElementsByTagName('head')[0];
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
-		head.appendChild(script);
-		store.setConsoleshow(true);
-	} else if (
-		(i && i.length === 10 && i === '1111000110') ||
-		consoleshow ||
-		sessionStorage.getItem('consoleshow')
-	) {
-		localStorage.clear();
-		sessionStorage.clear();
-		clearAllCookie();
-		var head = document.getElementsByTagName('head')[0];
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = 'https://cdn.bootcss.com/vConsole/2.0.1/vconsole.min.js';
-		head.appendChild(script);
-		store.setConsoleshow(true);
 	}
 };
 
@@ -916,7 +857,7 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 		.then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				if (res.data) {
-					const seleBank = res.data.filter((ele, index, array) => {
+					const seleBank = res.data.filter((ele) => {
 						return ele.code === bankCode;
 					});
 					const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
@@ -948,7 +889,7 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 
 // 神策用户绑定
 export const queryUsrSCOpenId = ({ $props }) => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		// 获取token
 		let token = Cookie.get('fin-v-card-token');
 		let tokenFromStorage = store.getToken();

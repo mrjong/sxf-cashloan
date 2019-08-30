@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:48:37
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -239,21 +243,21 @@ export default class login_page extends PureComponent {
 
 	// 获取滑动验证码token并发短信
 	handleTokenAndSms = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.sendSlideVerifySmsCode();
 		});
 	};
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then((res) => {
+		this.refreshSlideToken().then(() => {
 			this.reloadSlideImage();
 		});
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
 				if (result.msgCode === 'PTM0000') {
@@ -307,7 +311,7 @@ export default class login_page extends PureComponent {
 					this.closeSlideModal();
 				}
 			})
-			.catch((err) => {
+			.catch(() => {
 				cb && cb('error');
 				this.closeSlideModal();
 			});
@@ -374,11 +378,6 @@ export default class login_page extends PureComponent {
 		store.setLoginBack(true);
 		this.props.history.push(`/protocol/${url}`);
 	};
-
-	backTop = () => {
-		this.refs.loginWrap.scrollTop = 0;
-	};
-
 	checkAgreement = () => {
 		this.setState({
 			isChecked: !this.state.isChecked
@@ -411,9 +410,9 @@ export default class login_page extends PureComponent {
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
-			<div ref="loginWrap" className={styles.dc_landing_page}>
+			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={bannerImg} alt="落地页banner" />
-				<div ref="loginContent" className={styles.content}>
+				<div className={styles.content}>
 					<div className={styles.loginContentBox}>
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>

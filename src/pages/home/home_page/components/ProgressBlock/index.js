@@ -20,7 +20,12 @@ export default class ProgressBlock extends React.Component {
 					</div>
 					<div className={style.bar_progress}>
 						<img src={finished_img} className={style.left_ico} alt="finished_img" />
-						<Progress percent={Number(percentData)} position="normal" barStyle={{borderColor: '#397BE6',borderWidth: '0.02rem'}}  style={{backgroundColor: '#C9CDD5',marginLeft: '0.18rem',marginRight: '0.18rem'}} />
+						<Progress
+							percent={Number(percentData)}
+							position="normal"
+							barStyle={{ borderColor: '#397BE6', borderWidth: '0.02rem' }}
+							style={{ backgroundColor: '#C9CDD5', marginLeft: '0.18rem', marginRight: '0.18rem' }}
+						/>
 						<img src={unfinished_img} className={style.right_ico} alt="unfinished_img" />
 					</div>
 					<div className={style.bar_bottom}>
@@ -29,7 +34,10 @@ export default class ProgressBlock extends React.Component {
 					</div>
 				</div>
 				<div className={style.percent_text}>
-					<span>{Number(percentData)}<i>%</i></span>
+					<span>
+						{Number(percentData)}
+						<i>%</i>
+					</span>
 					已完成
 				</div>
 			</WhiteCard>

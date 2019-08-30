@@ -1,5 +1,10 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:46:57
+ */
 import React from 'react';
 import styles from './index.scss';
+
 export default class IframeProtocol extends React.Component {
 	constructor(props) {
 		super(props);
@@ -10,7 +15,6 @@ export default class IframeProtocol extends React.Component {
 
 	render() {
 		const { name, postData } = this.props;
-		// const ID = isMPOS() ? `mpos_${name}` : `${name}`
 		const ID = name;
 
 		return (

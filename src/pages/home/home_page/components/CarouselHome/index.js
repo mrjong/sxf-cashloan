@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import style from './index.scss';
-import { Carousel } from 'antd-mobile';
 import ZButton from 'components/ButtonCustom';
-import plus from './img/plus.png';
-import bank from './img/bank.png';
 import WhiteCard from '../WhiteCard';
 import { isMPOS } from 'utils/common';
 
@@ -45,7 +42,7 @@ export default class carouselHome extends React.Component {
 	};
 
 	render() {
-		const { children, handleClick, btnText, ...restProps } = this.props;
+		const { handleClick, btnText } = this.props;
 		const showData = {
 			title: '还到-基础版',
 			bankNo: '',

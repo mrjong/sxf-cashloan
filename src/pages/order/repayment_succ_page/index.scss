@@ -43,7 +43,7 @@
 			.am-modal-content {
 				padding-top: 0;
 				background-color: transparent;
-				height: 850px;
+				height: 900px;
 				.am-modal-body {
 					padding: 0;
 				}
@@ -54,22 +54,23 @@
 		background-image: url('../../../assets/images/order/modal_bg.png');
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
+		margin-top: 50px;
 		width: 750px;
 		height: 750px;
 		.modal_btn {
 			position: relative;
 			margin: 0 auto;
-			top: 660px;
-			width: 420px;
-			height: 90px;
+			top: 610px;
+			width: 490px;
+			height: 105px;
 			background-image: url('../../../assets/images/order/modal_btn.png');
 			background-size: 100% 100%;
 		}
 	}
 	.close_btn {
 		position: absolute;
-		left: 50%;
-		top: 775px;
+		right: 45px;
+		top: 0;
 		@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
 		width: 68px;
 		height: 68px;

@@ -5,7 +5,6 @@ import styles from './index.scss';
 import AwardShow from './components/AwardShowMock';
 import LoginAlert from './components/LoginAlert';
 import SmsAlert from '../components/SmsAlert';
-
 import { setBackGround } from 'utils/background';
 import { Toast, Modal } from 'antd-mobile';
 import bg from './img/bg.jpg';
@@ -72,11 +71,11 @@ export default class dazhuanpan_page extends PureComponent {
 			});
 			Toast.info('活动id不能为空');
 			return;
-		} else {
-			this.setState({
-				codeInfo: ''
-			});
 		}
+		this.setState({
+			codeInfo: ''
+		});
+
 		// 保存入口
 		if (queryData.entry) {
 			this.setState({
@@ -253,7 +252,6 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 用户抽奖
 	getDraw = (count) => {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		const params = {
 			activeId: config.activeId,
 			channel: getH5Channel() // 用户渠道
@@ -379,16 +377,7 @@ export default class dazhuanpan_page extends PureComponent {
 		this.child = ref;
 	};
 	render() {
-		const {
-			awardList,
-			time,
-			transformType,
-			type,
-			userAwardList,
-			allUsersAward,
-			count,
-			alert_img
-		} = this.state;
+		const { awardList, time, transformType, type, userAwardList, allUsersAward, alert_img } = this.state;
 		return (
 			<div className={styles.dazhuanpan}>
 				<SmsAlert
@@ -514,8 +503,6 @@ export default class dazhuanpan_page extends PureComponent {
 											overflow: 'hidden',
 											transform: `scale(0.83) rotate(${this.state.numdeg}deg)`,
 											WebkitTransition: `-webkit-transform ${time}s ${transformType}`,
-											transition: `-webkit-transform ${time}s ${transformType}`,
-											transition: `transform ${time}s ${transformType}`,
 											transition: `transform ${time}s ${transformType}`
 										}}
 									>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Modal, InputItem, Toast, Icon } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import style from './index.scss';
@@ -75,26 +74,24 @@ export default class LoginAlert extends Component {
 									this.getImage();
 								});
 								return;
-							} else {
-								Toast.info('发送成功，请注意查收！');
-								this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-								timmer = setInterval(() => {
-									this.setState({ flag: false, smsText: i-- + '"' });
-									if (i === -1) {
-										clearInterval(timmer);
-										this.setState({ smsText: '重新获取', timeflag: true, flag: true });
-									}
-								}, 1000);
 							}
+							Toast.info('发送成功，请注意查收！');
+							this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
+							timmer = setInterval(() => {
+								this.setState({ flag: false, smsText: i-- + '"' });
+								if (i === -1) {
+									clearInterval(timmer);
+									this.setState({ smsText: '重新获取', timeflag: true, flag: true });
+								}
+							}, 1000);
 						},
 						(error) => {
 							error.msgInfo && Toast.info(error.msgInfo);
 						}
 					);
 				return true;
-			} else {
-				Toast.info(getFirstError(err));
 			}
+			Toast.info(getFirstError(err));
 		});
 	}
 	closeCb = () => {
@@ -110,7 +107,6 @@ export default class LoginAlert extends Component {
 			});
 		}
 		const { smsSuccess } = this.props;
-		const { otherProps_type } = this.state;
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;

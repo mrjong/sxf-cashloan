@@ -1,6 +1,4 @@
 import React, { PureComponent } from 'react';
-import qs from 'qs';
-import { store } from 'utils/store';
 import styles from './index.scss';
 import activity_bg from './img/activity_bg.png';
 import new_bg from './img/new_entry.png';

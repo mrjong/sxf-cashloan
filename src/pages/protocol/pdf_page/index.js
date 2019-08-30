@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:45:58
+ */
 import React, { PureComponent } from 'react';
 import { getDeviceType } from 'utils';
 import styles from './index.scss';
