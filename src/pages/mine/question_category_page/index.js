@@ -29,7 +29,7 @@ export default class question_category_page extends PureComponent {
 		const { state } = this.props.history.location;
 		this.props.$fetch
 			.post(API.questionList, {
-				type: state.code
+				type: state.value
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000' && res.data) {

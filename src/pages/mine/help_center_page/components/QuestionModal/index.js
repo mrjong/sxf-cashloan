@@ -28,19 +28,15 @@ export default class QuestionModal extends PureComponent {
 			[type]: !this.state[type]
 		});
 		this.props.onClose();
-
-		// this.props.$fetch
-		// 	.post(API.solvedQuestion, {
-		// 		bizId: this.props.question.bizId,
-		// 		type: type === 'resolve' ? 'yes' : 'no'
-		// 	})
-		// 	.then((res) => {
-		// 		if (res.msgCode === 'PTM0000' && res.data) {
-		// 			console.log(res);
-		// 		} else {
-		// 			this.props.toast.info(res.msgInfo);
-		// 		}
-		// 	});
+		this.props.$fetch
+			.post(`${API.solvedQuestion}/${this.props.question.bizId}/${type === 'resolve' ? 'yes' : 'no'}`)
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.props.toast.info('感谢您的反馈');
+				} else {
+					this.props.toast.info(res.msgInfo);
+				}
+			});
 	};
 
 	render() {
@@ -84,7 +80,6 @@ export default class QuestionModal extends PureComponent {
 						}}
 					>
 						<span className={[styles.zan_icon, resolve && styles.zan_icon_active].join(' ')}></span>
-
 						<span>已解决</span>
 					</div>
 				</div>
