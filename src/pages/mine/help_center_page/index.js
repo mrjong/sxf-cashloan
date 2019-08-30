@@ -143,8 +143,11 @@ export default class help_center_page extends PureComponent {
 					this.categoryItemClick(v);
 				}}
 			>
-				{/* <img src={require(`./img/category_icon${i+1}@2x.png`)} alt="" className={styles.category_item_icon}/> */}
-				{/* <i className={[styles.category_item_icon,styles[v.code]].join(' ')}/> */}
+				<img
+					src={require(`./img/category_icon${i + 1}@3x.png`)}
+					alt=""
+					className={styles.category_item_icon}
+				/>
 				<span>{v.label}</span>
 			</div>
 		));
