@@ -63,13 +63,21 @@ export default class BlackCard extends React.PureComponent {
 								{showdata && showdata[0].desc}
 								<i />
 							</div>
-							<div className={styles.item_r} onClick={() => { history.push('/others/fenqi_landing') }} >
-								了解更多<i />
+							<div
+								className={styles.item_r}
+								onClick={() => {
+									history.push('/others/fenqi_landing');
+								}}
+							>
+								了解更多
+								<i />
 							</div>
 						</div>
 					</section>
 				) : null}
-				{(showdata && showdata[0].cashAcBalSts === '0') || (showdata && showdata[0].cashAcBalSts === '1') || (showdata && showdata[0].cashAcBalSts === '3') ? (
+				{(showdata && showdata[0].cashAcBalSts === '0') ||
+				(showdata && showdata[0].cashAcBalSts === '1') ||
+				(showdata && showdata[0].cashAcBalSts === '3') ? (
 					<section className={styles.home_xj_black}>
 						<div className={styles.title}>
 							{showdata && showdata[0].title}
@@ -83,8 +91,14 @@ export default class BlackCard extends React.PureComponent {
 							<div className={styles.item_l} style={{ opacity: 0.6, fontSize: '.22rem' }}>
 								{showdata && showdata[0].desc}
 							</div>
-							<div className={styles.item_r} onClick={() => { history.push('/others/fenqi_landing') }} >
-								了解更多<i />
+							<div
+								className={styles.item_r}
+								onClick={() => {
+									history.push('/others/fenqi_landing');
+								}}
+							>
+								了解更多
+								<i />
 							</div>
 						</div>
 					</section>

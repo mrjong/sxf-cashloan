@@ -84,7 +84,7 @@ export default class tencent_face_middle_page extends Component {
 				// 	this.props.history.push('/home/home');
 				// }
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.setState({
 					authStatus: false
 				});

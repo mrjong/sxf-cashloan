@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 export default class PopUp {
 	constructor(Component, props) {
@@ -12,9 +12,6 @@ export default class PopUp {
 		this.container = null;
 		this.isContainerMax = Component.name === 'PopTip';
 	}
-	static propTypes = {
-		// onClose: PropTypes.func
-	};
 	show = () => {
 		this.renderComponent();
 		return this;

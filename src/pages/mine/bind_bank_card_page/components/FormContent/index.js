@@ -151,7 +151,7 @@ export default class FormContent extends PureComponent {
 
 	// 点击发送验证码
 	countDownHandler = (fn) => {
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (!err) {
 				this.requestVerifyCode(fn);
 			} else {
@@ -171,7 +171,7 @@ export default class FormContent extends PureComponent {
 
 	// 发送验证码
 	requestVerifyCode = (fn) => {
-		const { formtype, userinfo } = this.props;
+		const { formtype } = this.props;
 		const { getFieldsValue } = this.props.form;
 		const formData = getFieldsValue();
 		const { bank, validityDate, bankCardNo, phoneNo, safeCode } = formData;
@@ -202,7 +202,7 @@ export default class FormContent extends PureComponent {
 		// if (isFetching) {
 		//   return;
 		// }
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields((err) => {
 			if (!err) {
 				// isFetching = true;
 				this.requestBindBankCard();
@@ -215,7 +215,7 @@ export default class FormContent extends PureComponent {
 
 	// 绑定银行卡请求
 	requestBindBankCard = () => {
-		const { formtype, userinfo } = this.props;
+		const { formtype } = this.props;
 		const { smsJrnNo } = this.state;
 		const { getFieldsValue } = this.props.form;
 		const formData = getFieldsValue();

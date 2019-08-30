@@ -201,7 +201,7 @@ export default class crawl_progress_page extends PureComponent {
 					location.reload();
 				}
 			})
-			.catch((err) => {});
+			.catch(() => {});
 	}
 
 	componentWillUnmount() {

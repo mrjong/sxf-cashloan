@@ -19,7 +19,7 @@ const fetchInit = () => {
 				if (errorTip) Toast.fail('系统开小差，请稍后重试');
 			}, 0);
 		},
-		onShowSuccessTip: (response, successTip) => {
+		onShowSuccessTip: (response) => {
 			switch (response.data.msgCode) {
 				case 'PTM0000':
 					return;

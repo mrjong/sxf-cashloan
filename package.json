@@ -9,12 +9,7 @@
 		"antd-mobile": "^2.2.13",
 		"crypto-js": "^3.1.9-1",
 		"dayjs": "^1.7.4",
-		"eslint-config-prettier": "^5.0.0",
-		"eslint-friendly-formatter": "^4.0.1",
-		"eslint-loader": "^2.1.2",
-		"eslint-plugin-prettier": "^3.1.0",
 		"express": "^4.16.4",
-		"husky": "^2.4.1",
 		"js-cookie": "^2.2.0",
 		"mini-css-extract-plugin": "^0.5.0",
 		"prettier": "^1.18.2",
@@ -33,13 +28,14 @@
 		"sa-sdk-javascript": "^1.10.3",
 		"source-map": "^0.7.3",
 		"sx-fetch": "^0.2.4",
+		"sx-fetch-rjl": "^9.0.13",
 		"webpack-bundle-analyzer": "^3.0.4",
 		"webpack-zip-plugin": "^0.1.6"
 	},
 	"devDependencies": {
 		"babel": "^6.23.0",
 		"babel-core": "^6.26.3",
-		"babel-eslint": "^8.2.3",
+		"babel-eslint": "^10.0.2",
 		"babel-loader": "^7.1.4",
 		"babel-plugin-add-module-exports": "^0.2.1",
 		"babel-plugin-import": "^1.7.0",
@@ -58,10 +54,14 @@
 		"cross-env": "^5.1.6",
 		"css-loader": "^0.28.11",
 		"cssnano": "^3.10.0",
-		"eslint": "^4.19.1",
+		"eslint": "^6.1.0",
 		"eslint-config-airbnb": "^16.1.0",
+		"eslint-config-prettier": "^6.0.0",
+		"eslint-friendly-formatter": "^4.0.1",
+		"eslint-loader": "^2.2.1",
 		"eslint-plugin-import": "^2.12.0",
 		"eslint-plugin-jsx-a11y": "^6.0.3",
+		"eslint-plugin-prettier": "^3.1.0",
 		"eslint-plugin-react": "^7.8.2",
 		"extract-text-webpack-plugin": "^4.0.0-beta.0",
 		"fastclick": "^1.0.6",
@@ -69,6 +69,7 @@
 		"happypack": "^5.0.0",
 		"html-loader": "^0.5.5",
 		"html-webpack-plugin": "^3.2.0",
+		"husky": "^3.0.1",
 		"immutable": "^3.8.2",
 		"jquery": "^3.3.1",
 		"json-loader": "^0.5.7",
@@ -108,19 +109,14 @@
 		"push-test": "rm -rf node_modules && yarn && npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
-		"precommit": "pretty-quick --staged",
-		"prettify": "prettier --fix --write 'src/pages/login/login_page/index.js'"
+		"precommit": "lint-staged"
 	},
 	"lint-staged": {
-		"scripts": {
-			"precommit": "lint-staged",
-			"lint-staged": {
-				"*.{ts,js,css,json}": [
-					"prettier --write",
-					"git add"
-				]
-			}
-		}
+		"src/**/*.{js,jsx}": [
+			"prettier --tab-width 2 --write",
+			"eslint --fix",
+			"git add"
+		]
 	},
 	"repository": {
 		"type": "git"

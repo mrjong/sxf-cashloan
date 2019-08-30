@@ -127,7 +127,7 @@ export default class moxie_bank_list_page extends Component {
 		);
 	};
 	gotoMoxie = (item) => {
-		let setMoxieData = store.getMoxieBackUrl2();
+		// let setMoxieData = store.getMoxieBackUrl2();
 		store.setBackUrl(backUrlData);
 		store.setMoxieBackUrl(moxieBackUrlData);
 		store.removeBackUrl2();
@@ -156,7 +156,7 @@ export default class moxie_bank_list_page extends Component {
 		window.location.reload();
 	};
 	render() {
-		const needNextUrl = store.getNeedNextUrl();
+		// const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={style.moxie_bank_list_page}>
 				{this.state.bankList && this.state.bankList.length > 0 ? (
@@ -177,7 +177,7 @@ export default class moxie_bank_list_page extends Component {
 							<span className={style.desc}>登录网上银行，自动查询并添加信用卡</span>
 						</div>
 						<div className={style.bankList}>
-							{this.state.bankList.map((item, index) => {
+							{this.state.bankList.map((item) => {
 								return (
 									<div
 										onClick={() => {

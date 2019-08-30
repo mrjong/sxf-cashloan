@@ -139,11 +139,10 @@ export default class order_page extends PureComponent {
 						// }
 					}
 					return dataArr;
-				} else {
-					return [];
 				}
+				return [];
 			})
-			.catch((err) => {
+			.catch(() => {
 				if (pIndex === 0) {
 					setTimeout(() => {
 						this.setState({
@@ -188,7 +187,7 @@ export default class order_page extends PureComponent {
 		);
 	};
 	// 渲染每一页完成之后
-	onEndReached = async (event) => {
+	onEndReached = async () => {
 		if (this.state.isLoading && !this.state.hasMore) {
 			this.setState({
 				pageIndex: this.state.pageIndex - 1 ? this.state.pageIndex - 1 : 0
@@ -253,7 +252,7 @@ export default class order_page extends PureComponent {
 	render() {
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
-		const row = (rowData, sectionID, rowID) => {
+		const row = () => {
 			if (index < 0) {
 				index = this.state.rData && this.state.rData.length - 1;
 			}
@@ -266,7 +265,6 @@ export default class order_page extends PureComponent {
 					}}
 					extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>}
 					style={{ color: obj.color }}
-					arrow="empty"
 					arrow={obj.billSts === '-1' || obj.billSts === '-2' ? 'empty' : 'horizontal'}
 					wrap
 				>
@@ -299,19 +297,18 @@ export default class order_page extends PureComponent {
 						pageSize={1}
 					/>
 				);
-			} else {
-				return (
-					<div className={style.no_data}>
-						<i />
-						暂无账单
-						{isWXOpen() && !tokenFromStorage && !token ? (
-							<SXFButton className={style.noLogin} onClick={this.goLogin}>
-								去登录
-							</SXFButton>
-						) : null}
-					</div>
-				);
 			}
+			return (
+				<div className={style.no_data}>
+					<i />
+					暂无账单
+					{isWXOpen() && !tokenFromStorage && !token ? (
+						<SXFButton className={style.noLogin} onClick={this.goLogin}>
+							去登录
+						</SXFButton>
+					) : null}
+				</div>
+			);
 		};
 		return (
 			<div className={style.orderScroll}>

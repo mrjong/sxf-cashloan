@@ -176,7 +176,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					}
 				);
 			})
-			.catch((err) => {
+			.catch(() => {
 				this.hideProgress();
 				this.state.retryCount--;
 				this.setState({
@@ -201,7 +201,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			isShowCreditModal: false
 		});
 	};
-	getQryPerdRate = (money, tag3) => {
+	getQryPerdRate = (money) => {
 		if (!money) {
 			return;
 		}
@@ -401,7 +401,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	//过滤选中的还款期限
-	filterLoanDate = (item, type) => {
+	filterLoanDate = (item) => {
 		let itemCopy = item;
 		console.log(item);
 		this.dateType(itemCopy.perdLth);
@@ -658,7 +658,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			perdRateList,
 			btnDisabled,
 			cardCount,
-			repayType,
 			fetchBillSucc,
 			fullMinAmt,
 			showTimeoutPayModal,
@@ -667,10 +666,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
-			overDt,
-			billDt,
 			cardBillAmt,
-			minPayment,
 			cardNoHid,
 			bankNo,
 			bankName,
@@ -682,18 +678,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		} = indexData;
 		const { getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
-		let overDtStr = '';
-		if (overDt > 0) {
-			overDtStr = `<span class="blod">${overDt}</span>天 后到期`;
-		} else if (parseInt(overDt, 10) === 0) {
-			overDtStr = '<span class="blod">今天到期</span>';
-		} else if (overDt < 0) {
-			overDtStr = `<span class="blod">已到期</span>`;
-		} else {
-			overDtStr = `<span class="blod">--</span>天`;
-		}
-		const billDtData = !billDt ? '----/--/--' : dayjs(billDt).format('YYYY/MM/DD');
-
 		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 
 		let cardBillAmtData = '';
@@ -967,7 +951,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 												item.perdLth != 30 ? (
 												<div
 													key={index}
-													className={style.listitem}
 													className={
 														selectedLoanDate.perdCnt === item.perdCnt
 															? `${style.listitem} ${style.listActiveItem}`

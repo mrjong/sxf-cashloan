@@ -1,11 +1,13 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 14:43:08
+ */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/login_logo.png';
 import Lists from 'components/Lists';
-import { buriedPointEvent } from 'utils/analytins';
-import { mine } from 'utils/analytinsType';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
@@ -203,21 +205,9 @@ export default class mine_page extends PureComponent {
 			if (mblNoHid && realNmFlg) {
 				this.props.history.push(item.jumpToUrl);
 			}
-			// if (!mblNoHid) {
-			//   this.props.toast.info('用户未登录', 2, () => {
-			//     this.props.history.push('/login');
-			//   })
-			// }
 			if (!realNmFlg) {
 				this.props.toast.info('请先进行实名认证', 2, () => {
-					// let isWx=this.is_weixn()
-					// if (isWx) {
-					//     //在微信中打开
-					//     this.props.history.replace('/wxName')
-					// }
-					//else{
 					this.props.history.push('/home/real_name?type=noRealName');
-					//}
 				});
 			}
 		}

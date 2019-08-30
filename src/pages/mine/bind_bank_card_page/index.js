@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import { Toast } from 'antd-mobile';
 import STabs from 'components/Tab';
 import { store } from 'utils/store';
 import FormContent from './components/FormContent';
@@ -62,7 +61,6 @@ export default class bind_bank_card_page extends PureComponent {
 
 	render() {
 		const { userInfo, swipeable } = this.state;
-		const { history } = this.props;
 		return (
 			<div className={style.bind_bank_card_page}>
 				<STabs tabTit={tabBar} onChange={this.handleChangeTabs} swipeable={swipeable}>

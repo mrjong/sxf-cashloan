@@ -31,10 +31,10 @@ export default class crawl_progress_page extends PureComponent {
 		if (store.getPercentCount()) {
 			this.props.$fetch
 				.get(API.USER_IMPORT)
-				.then((res) => {
+				.then(() => {
 					store.setPercentCount(null);
 				})
-				.catch((err) => {});
+				.catch(() => {});
 		}
 	}
 

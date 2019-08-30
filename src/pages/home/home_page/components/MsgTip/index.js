@@ -44,8 +44,7 @@ export default class MsgTip extends React.PureComponent {
 				<div className={style.title}>
 					借钱还信用卡
 					<span className={style.subtitle}>200万人都在用</span>
-					{token &&
-					tokenFromStorage && (
+					{token && tokenFromStorage && (
 						<span onClick={this.jumpToMsg} className={style.messageIcon}>
 							{count ? <i className={style.active} /> : null}
 						</span>
