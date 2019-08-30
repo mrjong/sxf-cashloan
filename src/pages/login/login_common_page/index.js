@@ -35,7 +35,6 @@ let entryPageTime = '';
 export default class login_common_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		console.log(props, 'props');
 		this.state = {
 			timers: '获取验证码',
 			countDownTime: 59,
@@ -43,7 +42,7 @@ export default class login_common_page extends PureComponent {
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
-			isChecked: true, // 是否勾选协议
+			isChecked: props.isChecked, // 是否勾选协议
 			inputFocus: false,
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
