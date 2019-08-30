@@ -413,6 +413,11 @@ export default class login_common_page extends PureComponent {
 					<div className={styles.loginContentBox}>
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
+						<p className={styles.proDesc}>
+							<span>最快10分钟到账</span>
+							<span>期限灵活</span>
+							<span>日利息低至0.04%</span>
+						</p>
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
