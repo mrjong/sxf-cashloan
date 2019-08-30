@@ -12,8 +12,13 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import defaultBannerImg from './img/login_bg.png';
+import descImg from './img/desc_img.png';
+import loginModalBg from './img/login_modal.png';
+import loginModalBtn from './img/login_modal_btn.png';
+import closeIco from './img/close_ico.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
+import { Modal } from 'antd-mobile';
 
 let timmer;
 const API = {
@@ -23,8 +28,10 @@ const API = {
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
 	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
+	DOWNLOADURL: 'download/getDownloadUrl'
 };
+let modalTimer = null;
 
 let entryPageTime = '';
 
@@ -46,7 +53,9 @@ export default class login_common_page extends PureComponent {
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
-			mobilePhone: ''
+			mobilePhone: '',
+			times: 3, // 弹框里的倒计时
+			showDownloadModal: false
 		};
 	}
 
@@ -125,6 +134,7 @@ export default class login_common_page extends PureComponent {
 		buriedPointEvent(daicao.loginPageTime, {
 			durationTime: durationTime
 		});
+		this.clearCountDown();
 	}
 
 	// 校验手机号
@@ -139,58 +149,66 @@ export default class login_common_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		const osType = getDeviceType();
-		if (!this.state.smsJrnNo) {
-			Toast.info('请先获取短信验证码');
-			return;
-		}
-		if (!this.state.isChecked) {
-			Toast.info('请先勾选协议');
-			return;
-		}
-		this.props.form.validateFields((err, values) => {
-			if (!err) {
-				buriedPointEvent(daicao.loginBtn);
-				let param = {
-					smsJrnNo: this.state.smsJrnNo, // 短信流水号
-					osType, // 操作系统
-					smsCd: values.smsCd,
-					usrCnl: getH5Channel(), // 用户渠道
-					location: store.getPosition() // 定位地址 TODO 从session取
-				};
-				if (!this.state.disabledInput) {
-					param.mblNo = values.phoneValue; // 手机号
-				}
-				this.props.$fetch.post(API.smsForLogin, param).then(
-					(res) => {
-						if (res.msgCode !== 'PTM0000') {
-							res.msgInfo && Toast.info(res.msgInfo);
-							return;
-						}
-						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.data.tokenId);
-						if (!store.getQueryUsrSCOpenId()) {
-							this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-								if (res.msgCode === 'PTM0000') {
-									window.sa.login(res.data);
-									store.setQueryUsrSCOpenId(res.data);
-								}
-								this.props.history.replace('/others/download_page');
-							});
-						}
-					},
-					(error) => {
-						error.msgInfo &&
-							Toast.info(error.msgInfo, 3, () => {
-								this.state.disabledInput && this.getImage();
-							});
-					}
-				);
-			} else {
-				Toast.info(getFirstError(err));
+		this.setState(
+			{
+				showDownloadModal: true
+			},
+			() => {
+				this.startCountDown();
 			}
-		});
+		);
+		// const osType = getDeviceType();
+		// if (!this.state.smsJrnNo) {
+		// 	Toast.info('请先获取短信验证码');
+		// 	return;
+		// }
+		// if (!this.state.isChecked) {
+		// 	Toast.info('请先勾选协议');
+		// 	return;
+		// }
+		// this.props.form.validateFields((err, values) => {
+		// 	if (!err) {
+		// 		buriedPointEvent(daicao.loginBtn);
+		// 		let param = {
+		// 			smsJrnNo: this.state.smsJrnNo, // 短信流水号
+		// 			osType, // 操作系统
+		// 			smsCd: values.smsCd,
+		// 			usrCnl: getH5Channel(), // 用户渠道
+		// 			location: store.getPosition() // 定位地址 TODO 从session取
+		// 		};
+		// 		if (!this.state.disabledInput) {
+		// 			param.mblNo = values.phoneValue; // 手机号
+		// 		}
+		// 		this.props.$fetch.post(API.smsForLogin, param).then(
+		// 			(res) => {
+		// 				if (res.msgCode !== 'PTM0000') {
+		// 					res.msgInfo && Toast.info(res.msgInfo);
+		// 					return;
+		// 				}
+		// 				Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+		// 				// TODO: 根据设备类型存储token
+		// 				store.setToken(res.data.tokenId);
+		// 				if (!store.getQueryUsrSCOpenId()) {
+		// 					this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
+		// 						if (res.msgCode === 'PTM0000') {
+		// 							window.sa.login(res.data);
+		// 							store.setQueryUsrSCOpenId(res.data);
+		// 						}
+		// 						this.props.history.replace('/others/download_page');
+		// 					});
+		// 				}
+		// 			},
+		// 			(error) => {
+		// 				error.msgInfo &&
+		// 					Toast.info(error.msgInfo, 3, () => {
+		// 						this.state.disabledInput && this.getImage();
+		// 					});
+		// 			}
+		// 		);
+		// 	} else {
+		// 		Toast.info(getFirstError(err));
+		// 	}
+		// });
 	};
 
 	// 处理获取验证码按钮点击事件
@@ -392,6 +410,59 @@ export default class login_common_page extends PureComponent {
 		});
 	};
 
+	// 下载app
+	downloadApp = () => {
+		const phoneType = getDeviceType();
+		if (phoneType === 'IOS') {
+			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
+		} else {
+			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+				(res) => {
+					if (res.msgCode === 'PTM0000') {
+						this.props.toast.info('安全下载中');
+						window.location.href = res.data;
+					} else {
+						res.msgInfo && this.props.toast.info(res.msgInfo);
+					}
+				},
+				(error) => {
+					error.msgInfo && this.props.toast.info(error.msgInfo);
+				}
+			);
+		}
+	};
+
+	// 弹框里的倒计时
+	startCountDown = () => {
+		let times = this.state.times;
+		modalTimer = setInterval(() => {
+			this.setState({
+				times: times--
+			});
+			if (times <= 0) {
+				this.downloadApp();
+				this.clearCountDown();
+			}
+		}, 1000);
+	};
+
+	clearCountDown = () => {
+		clearInterval(modalTimer);
+	};
+
+	// 关闭弹框
+	closeModal = () => {
+		this.setState(
+			{
+				showDownloadModal: false,
+				times: 3
+			},
+			() => {
+				this.clearCountDown();
+			}
+		);
+	};
+
 	render() {
 		/* eslint-disable */
 		const { bannerImg } = this.props;
@@ -402,7 +473,9 @@ export default class login_common_page extends PureComponent {
 			showSlideModal,
 			yOffset,
 			bigImageH,
-			disabledInput
+			disabledInput,
+			times,
+			showDownloadModal
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		const loginBgImg = bannerImg ? bannerImg : defaultBannerImg;
@@ -414,15 +487,7 @@ export default class login_common_page extends PureComponent {
 						<p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
 						<p className={styles.proDesc}>
-							<span>
-								最快10分钟到账
-								<i />
-							</span>
-							<span>
-								期限灵活
-								<i />
-							</span>
-							<span>日利息低至0.04%</span>
+							<img src={descImg} alt="描述" />
 						</p>
 						<InputItem
 							disabled={disabledInput}
@@ -530,6 +595,13 @@ export default class login_common_page extends PureComponent {
 								this.go('register_agreement_page');
 							}}
 						>
+							《个人征信查询授权书》
+						</span>
+						<span
+							onClick={() => {
+								this.go('register_agreement_page');
+							}}
+						>
 							《随行付金融用户注册协议》
 						</span>
 						<span
@@ -553,6 +625,26 @@ export default class login_common_page extends PureComponent {
 						}}
 						onClose={this.closeSlideModal}
 					/>
+				)}
+				{showDownloadModal && (
+					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
+						<div className={styles.loginModalContainer}>
+							{/* 大图 */}
+							<img className={styles.loginModalBg} src={loginModalBg} alt="背景" />
+							{/* 按钮 */}
+							<img
+								className={styles.loginModalBtn}
+								src={loginModalBtn}
+								onClick={this.downloadApp}
+								alt="按钮"
+							/>
+							<p className={styles.tipsCont}>
+								<span>{times}</span>秒后自动下载APP
+							</p>
+							{/* 关闭 */}
+							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
+						</div>
+					</Modal>
 				)}
 			</div>
 		);
