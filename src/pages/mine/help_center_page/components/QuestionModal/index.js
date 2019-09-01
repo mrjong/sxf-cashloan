@@ -43,53 +43,40 @@ export default class QuestionModal extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			});
-		// this.buriedPoint();
+		this.buriedPoint(type);
 	};
 
-	buriedPoint = () => {
+	buriedPoint = (type) => {
 		const { is_title } = this.props;
+		let buriedParams = {
+			is_hot: true,
+			q_title: '',
+			is_resolve: type
+		};
 		switch (is_title) {
 			case '实名认证':
-				buriedPointEvent(helpCenter.realname, {
-					is_hot: true,
-					q_title: '',
-					is_resolve: 'no'
-				});
+				buriedPointEvent(helpCenter.realname, buriedParams);
 				break;
 			case '实名认证1':
-				buriedPointEvent(helpCenter.basic, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.basic, buriedParams);
 				break;
 			case '实名认证2':
-				buriedPointEvent(helpCenter.operators, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.operators, buriedParams);
 				break;
 			case '实名认证3':
-				buriedPointEvent(helpCenter.creditCard, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.creditCard, buriedParams);
 				break;
 			case '实名认证4':
-				buriedPointEvent(helpCenter.submission, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.submission, buriedParams);
 				break;
 			case '实名认证5':
-				buriedPointEvent(helpCenter.toexamine, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.toexamine, buriedParams);
 				break;
 			case '实名认证6':
-				buriedPointEvent(helpCenter.quota, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.quota, buriedParams);
 				break;
 			case '实名认证7':
-				buriedPointEvent(helpCenter.repayment, {
-					is_hot: true
-				});
+				buriedPointEvent(helpCenter.repayment, buriedParams);
 				break;
 			default:
 				break;
@@ -107,7 +94,7 @@ export default class QuestionModal extends PureComponent {
 				animationType="slide-up"
 				transparent
 				onClose={() => {
-					// buriedPointEvent()
+					this.buriedPoint('no_click');
 					onClose();
 				}}
 			>
@@ -117,7 +104,7 @@ export default class QuestionModal extends PureComponent {
 						type="cross"
 						className={styles.modal_close_btn}
 						onClick={() => {
-							// buriedPointEvent()
+							this.buriedPoint('no_click');
 							onClose();
 						}}
 					/>
