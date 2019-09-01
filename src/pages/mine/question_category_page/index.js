@@ -154,7 +154,6 @@ export default class coupon_page extends PureComponent {
 	};
 
 	listItemClick = (item) => {
-		console.log(item);
 		this.setState({
 			showQuestionModal: true,
 			question: {
@@ -174,7 +173,7 @@ export default class coupon_page extends PureComponent {
 	render() {
 		const { showQuestionModal, question } = this.state;
 		let index = this.state.rData && this.state.rData.length - 1;
-		const row = (rowData, sectionID, rowID) => {
+		const row = (rowID) => {
 			if (index < 0) {
 				index = this.state.rData && this.state.rData.length - 1;
 			}
@@ -226,6 +225,7 @@ export default class coupon_page extends PureComponent {
 					/>
 				);
 			}
+			return <div className={styles.noMsg}>暂无问题</div>;
 		};
 		return (
 			<div className="category_page" ref={(el) => (this.messageBox = el)}>

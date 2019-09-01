@@ -43,11 +43,12 @@ export default class QuestionModal extends PureComponent {
 					this.props.toast.info(res.msgInfo);
 				}
 			});
-		this.buriedPoint('');
+		// this.buriedPoint();
 	};
 
-	buriedPoint = (title) => {
-		switch (title) {
+	buriedPoint = () => {
+		const { is_title } = this.props;
+		switch (is_title) {
 			case '实名认证':
 				buriedPointEvent(helpCenter.realname, {
 					is_hot: true,
@@ -106,6 +107,7 @@ export default class QuestionModal extends PureComponent {
 				animationType="slide-up"
 				transparent
 				onClose={() => {
+					// buriedPointEvent()
 					onClose();
 				}}
 			>
@@ -115,6 +117,7 @@ export default class QuestionModal extends PureComponent {
 						type="cross"
 						className={styles.modal_close_btn}
 						onClick={() => {
+							// buriedPointEvent()
 							onClose();
 						}}
 					/>
