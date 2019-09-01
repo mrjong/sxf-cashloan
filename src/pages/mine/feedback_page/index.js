@@ -8,6 +8,8 @@ import Lists from 'components/Lists';
 import ButtonCustom from 'components/ButtonCustom';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
+import { buriedPointEvent } from 'utils/analytins';
+import { helpCenter } from 'utils/analytinsType';
 
 const API = {
 	opinionList: '/question/opinionList' // 意见类型列表接口
@@ -58,6 +60,9 @@ export default class mine_page extends PureComponent {
 			});
 	};
 	clickhandle = (item) => {
+		buriedPointEvent(helpCenter.select_class, {
+			type_name: item.type
+		});
 		this.props.history.push('/mine/feedback_save_page?type=' + item.type);
 	};
 	render() {

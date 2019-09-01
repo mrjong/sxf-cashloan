@@ -9,6 +9,9 @@ import { TextareaItem, ImagePicker } from 'antd-mobile';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/analytins';
+import { helpCenter } from 'utils/analytinsType';
+
 const API = {
 	addOpinion: '/question/addOpinion'
 };
@@ -64,6 +67,10 @@ export default class mine_page extends PureComponent {
 			if (res.msgCode === 'PTM0000') {
 				this.props.toast.info('提交成功', 2, () => {
 					this.props.history.push('/mine/mine_page');
+				});
+				buriedPointEvent(helpCenter.submit_succ, {
+					img_count: images.length,
+					type_name: queryData.type
 				});
 			} else {
 				res.msgInfo && this.props.toast.info(res.msgInfo);
