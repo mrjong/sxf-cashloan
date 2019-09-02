@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 12:33:10
+ * @LastEditTime: 2019-09-02 13:36:15
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -422,6 +422,7 @@ export default class bind_save_page extends PureComponent {
 								store.setBindCardNo(value);
 							}
 						})}
+						clear
 						type="bankCard"
 						placeholder="请输入储蓄卡卡号"
 						onBlur={() => {
@@ -467,6 +468,7 @@ export default class bind_save_page extends PureComponent {
 								store.setBindCardPhone(value);
 							}
 						})}
+						clear
 						placeholder="银行卡预留手机号"
 						onBlur={() => {
 							handleInputBlur();
@@ -501,6 +503,7 @@ export default class bind_save_page extends PureComponent {
 							onBlur={() => {
 								handleInputBlur();
 							}}
+							clear
 							onChange={(value) => {
 								if (!value) {
 									sxfburiedPointEvent('valueInputCarSms', {

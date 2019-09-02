@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 13:22:15
+ * @LastEditTime: 2019-09-02 13:36:23
  */
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
@@ -479,6 +479,7 @@ export default class real_name_page extends Component {
 							onFocus={() => {
 								buriedPointEvent(home.informationTapNameInp);
 							}}
+							clear
 							data-sxf-props={JSON.stringify({
 								type: 'input',
 								notSendValue: true, // 无需上报输入框的值
@@ -524,6 +525,7 @@ export default class real_name_page extends Component {
 									}
 								]
 							})}
+							clear
 							onChange={this.handleNumberChange}
 							placeholder="借款人身份证号"
 							value={this.state.idNo}
