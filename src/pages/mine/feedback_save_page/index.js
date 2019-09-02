@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 15:32:50
+ * @LastEditTime: 2019-08-30 18:59:49
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -35,7 +35,7 @@ export default class mine_page extends PureComponent {
 			this.props.toast.info('图片大小不能超过2M');
 			return;
 		}
-		if (type === 'add' && images && !/.(jpg|png)$/.test(images[images.length - 1].file.name)) {
+		if (type === 'add' && images && !/.(jpg|png|PNG|JPG)$/.test(images[images.length - 1].file.name)) {
 			this.props.toast.info('请上传jpg、png格式的图片');
 			return;
 		}
@@ -79,6 +79,8 @@ export default class mine_page extends PureComponent {
 	};
 	render() {
 		const { images, textareaVal = '' } = this.state;
+		const btnDisable = !textareaVal || (textareaVal && textareaVal.length < 6);
+
 		return (
 			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
 				<div className={styles.textTitle}>输入您的反馈意见（最少6个字）</div>
@@ -89,9 +91,7 @@ export default class mine_page extends PureComponent {
 						});
 					}}
 					value={textareaVal}
-					className={`${
-						textareaVal >= 180 ? [styles.textArea, styles.textAreaMax].join(' ') : styles.textArea
-					}`}
+					className={styles.textArea}
 					placeholder="请输入你的反馈意见。"
 					rows={5}
 					count={180}
@@ -107,7 +107,11 @@ export default class mine_page extends PureComponent {
 					/>
 				</div>
 				<div>
-					<SXFButton onClick={this.addOpinion} className={styles.submitBtn}>
+					<SXFButton
+						className={[styles.submitBtn, btnDisable ? styles.dis : ''].join(' ')}
+						onClick={this.addOpinion}
+						disabled={!!btnDisable}
+					>
 						提交意见
 					</SXFButton>
 				</div>

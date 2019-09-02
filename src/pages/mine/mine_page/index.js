@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 14:45:17
+ * @LastEditTime: 2019-08-30 19:02:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -304,14 +304,8 @@ export default class mine_page extends PureComponent {
 					className: styles.select_save_page
 				},
 				jumpToUrl: '/mine/select_save_page'
-			},
-			{
-				label: {
-					name: '意见反馈',
-					className: styles.feedback_page
-				},
-				jumpToUrl: '/mine/feedback_page'
 			}
+
 			// {
 			// 	label: {
 			// 		name: '常见问题',
@@ -320,6 +314,15 @@ export default class mine_page extends PureComponent {
 			// 	jumpToUrl: '/mine/fqa_page'
 			// }
 		];
+		if (tokenFromStorage && token) {
+			listsArr2.push({
+				label: {
+					name: '意见反馈',
+					className: styles.feedback_page
+				},
+				jumpToUrl: '/mine/feedback_page'
+			});
+		}
 		return (
 			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
 				{tokenFromStorage && token ? (
