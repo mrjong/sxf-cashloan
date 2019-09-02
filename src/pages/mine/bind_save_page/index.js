@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 10:05:56
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch-rjl';
 import { createForm } from 'rc-form';
@@ -427,7 +431,7 @@ export default class bind_save_page extends PureComponent {
 						data-sxf-props={JSON.stringify({
 							type: 'input',
 							notSendValue: true, // 无需上报输入框的值
-							name: 'valueInputCarSms',
+							name: 'valueInputCarPhone',
 							eventList: [
 								{
 									type: 'focus'
