@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 18:59:26
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -7,7 +11,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur, queryUsrSCOpenId } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login, wxTest } from 'utils/analytinsType';
@@ -478,9 +482,11 @@ export default class login_page extends PureComponent {
 	goHome = () => {
 		const { queryData = {} } = this.state;
 		if (queryData && queryData.wxTestFrom) {
-			this.props.history.replace({
-				pathname: '/others/mpos_download_page',
-				search: `?wxTestFrom=${queryData.wxTestFrom}`
+			queryUsrSCOpenId({ $props: this.props }).then(() => {
+				this.props.history.replace({
+					pathname: '/others/mpos_download_page',
+					search: `?wxTestFrom=${queryData.wxTestFrom}`
+				});
 			});
 		} else {
 			this.props.history.replace('/home/home');
