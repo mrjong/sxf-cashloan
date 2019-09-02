@@ -1098,7 +1098,8 @@ export default class order_detail_page extends PureComponent {
 			insureInfo,
 			billOvduDays,
 			billOvduStartDt,
-			isBillClean
+			isBillClean,
+			canUseCoupon
 		} = this.state;
 
 		const {
@@ -1149,7 +1150,7 @@ export default class order_detail_page extends PureComponent {
 		const isEntryShow = overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
 		let moneyWithCoupon = '';
 
-		if (!this.state.canUseCoupon) {
+		if (!canUseCoupon) {
 			moneyWithCoupon = '';
 		} else if (isInsureValid) {
 			moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
@@ -1239,7 +1240,7 @@ export default class order_detail_page extends PureComponent {
 						!isPayAll && (
 							<div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
 								<span className={styles.modal_label}>优惠券</span>
-								{this.state.billDesc.data && this.state.billDesc.data.coupVal && this.state.canUseCoupon ? (
+								{this.state.billDesc.data && this.state.billDesc.data.coupVal && canUseCoupon ? (
 									<span
 										onClick={() => {
 											this.selectCoupon(false);
