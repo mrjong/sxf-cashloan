@@ -195,6 +195,15 @@ export default class login_common_page extends PureComponent {
 									}
 								);
 							});
+						} else {
+							this.setState(
+								{
+									showDownloadModal: true
+								},
+								() => {
+									this.startCountDown();
+								}
+							);
 						}
 					},
 					(error) => {
