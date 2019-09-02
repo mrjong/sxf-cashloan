@@ -44,7 +44,6 @@ export default class order_detail_page extends PureComponent {
 			toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
 			detailArr: [], // 还款详情数据
 			isShowDetail: false, // 是否展示弹框中的明细详情
-			isAdvance: false, // 是否提前还款
 			totalAmt: '', // 一键结清传给后台的总金额
 			overDueModalFlag: '', // 信用施压弹框标识
 			payType: '',
@@ -145,24 +144,10 @@ export default class order_detail_page extends PureComponent {
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					if (res.data) {
-						// 现在统一取totalList里的明细，仅适用于按期还，不适用于跳跃还的
-						// 如果还当期totalList就等于当期数据，如果还全部，totalList就为全部
-						let isAdvance = false;
-						const buChangJinList = res.data[0].totalList.find((item2) => item2.feeNm === '补偿金');
-						const buChangJinList2 = res.data[0].totalList.find((item2) => item2.feeNm === '提前结清优惠');
-						if (
-							(buChangJinList && buChangJinList.feeAmt !== 0) ||
-							(buChangJinList2 && buChangJinList2.feeAmt !== 0)
-						) {
-							isAdvance = true;
-						} else {
-							isAdvance = false;
-						}
 						this.setState(
 							{
 								disDisRepayAmt: res.data[0].disDisRepayAmt,
 								detailArr: res.data[0].totalList,
-								isAdvance,
 								totalAmt: res.data[0].totalAmt,
 								totalAmtForShow: res.data[0].totalAmtForShow
 							},
@@ -171,14 +156,7 @@ export default class order_detail_page extends PureComponent {
 							}
 						);
 					} else {
-						this.setState(
-							{
-								isAdvance: false
-							},
-							() => {
-								cb && cb(isPayAll);
-							}
-						);
+						cb && cb(isPayAll);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -250,7 +228,7 @@ export default class order_detail_page extends PureComponent {
 							// 选择银行卡回来
 							let bankInfo = store.getCardData();
 							let orderDtlData = store.getOrderDetailData() || {};
-							let { isPayAll, detailArr, isShowDetail, isAdvance, totalAmt, totalAmtForShow } = orderDtlData;
+							let { isPayAll, detailArr, isShowDetail, totalAmt, totalAmtForShow } = orderDtlData;
 							store.removeOrderDetailData();
 							if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
 								this.setState(
@@ -259,7 +237,6 @@ export default class order_detail_page extends PureComponent {
 										isPayAll,
 										detailArr,
 										isShowDetail,
-										isAdvance,
 										totalAmt,
 										totalAmtForShow
 									},
@@ -783,7 +760,6 @@ export default class order_detail_page extends PureComponent {
 			isPayAll,
 			detailArr,
 			isShowDetail,
-			isAdvance,
 			totalAmt,
 			isInsureValid,
 			totalAmtForShow
@@ -792,7 +768,6 @@ export default class order_detail_page extends PureComponent {
 			isPayAll,
 			detailArr,
 			isShowDetail,
-			isAdvance,
 			totalAmt,
 			totalAmtForShow
 		};
@@ -813,7 +788,6 @@ export default class order_detail_page extends PureComponent {
 			bankInfo,
 			detailArr,
 			isShowDetail,
-			isAdvance,
 			totalAmt,
 			totalAmtForShow
 		} = this.state;
@@ -821,7 +795,6 @@ export default class order_detail_page extends PureComponent {
 		let orderDtData = {
 			detailArr,
 			isShowDetail,
-			isAdvance,
 			totalAmt,
 			totalAmtForShow
 		};
@@ -1081,7 +1054,6 @@ export default class order_detail_page extends PureComponent {
 			toggleBtn,
 			detailArr,
 			isShowDetail,
-			isAdvance,
 			totalAmtForShow,
 			overDueModalFlag,
 			payType,
@@ -1182,11 +1154,11 @@ export default class order_detail_page extends PureComponent {
 						<div className={styles.modal_notice}>
 							<span className={styles.text}>因银行通道原因，可能出现部分还款成功情况，请留意账单详情</span>
 						</div>
-						<div className={styles.modal_flex} onClick={isAdvance ? this.showDetail : () => {}}>
+						<div className={styles.modal_flex} onClick={isPayAll ? this.showDetail : () => {}}>
 							<span className={styles.modal_label}>本次还款金额</span>
 							<span className={styles.modal_value}>
 								{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
-								{isAdvance && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
+								{isPayAll && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
 							</span>
 						</div>
 						{/* 账单明细展示 */}
