@@ -61,7 +61,7 @@ export default class mine_page extends PureComponent {
 	};
 	clickhandle = (item) => {
 		buriedPointEvent(helpCenter.select_class, {
-			type_name: item.type
+			type_name: item.label.name
 		});
 		this.props.history.push('/mine/feedback_save_page?type=' + item.type);
 	};
