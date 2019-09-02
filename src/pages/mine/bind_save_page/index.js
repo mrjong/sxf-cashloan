@@ -3,7 +3,7 @@
  * @LastEditTime: 2019-09-02 10:05:56
  */
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import { store } from 'utils/store';

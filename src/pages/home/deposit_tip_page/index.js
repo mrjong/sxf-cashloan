@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import styles from './index.scss';
 import { getDeviceType } from 'utils';
 import { isMPOS } from 'utils/common';

@@ -16,7 +16,7 @@ import RuleModal from '../components/RuleModal';
 import { store } from '../../../utils/store';
 import { checkEngaged, checkIsEngagedUser } from '../../../utils';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import ACTipAlert from 'components/ACTipAlert';
 
 const API = {

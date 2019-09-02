@@ -1,7 +1,11 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 12:08:40
+ */
 import React, { Component } from 'react';
 import qs from 'qs';
 import Cookie from 'js-cookie';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType } from 'utils';

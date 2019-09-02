@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
 import ModalWrap from '../wuyue_new_page/components/ModalWrap';

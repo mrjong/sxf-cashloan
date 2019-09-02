@@ -10,7 +10,7 @@ import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 import RuleModal from '../components/RuleModal';
 import { Icon, Carousel } from 'antd-mobile';
 import { generateRandomPhone, saveUserInfoEngaged } from '../../../utils';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import main_bg from './img/main_bg.png';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';

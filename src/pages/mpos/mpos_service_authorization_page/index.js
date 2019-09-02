@@ -3,7 +3,7 @@ import styles from './index.scss';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import qs from 'qs';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';

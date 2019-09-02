@@ -7,7 +7,7 @@ import qs from 'qs';
 import { getH5Channel } from 'utils/common';
 import { buriedPointEvent, sxfDataLogin } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
-import fetch from 'sx-fetch-rjl';
+import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
 import style from './index.scss';
 // import mockData from './mockData';
