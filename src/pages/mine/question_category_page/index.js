@@ -159,7 +159,9 @@ export default class coupon_page extends PureComponent {
 			question: {
 				title: item.question,
 				answer: item.answer,
-				bizId: item.bizId
+				bizId: item.bizId,
+				status: item.status,
+				type: item.type
 			}
 		});
 	};

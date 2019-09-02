@@ -75,7 +75,9 @@ export default class help_center_page extends PureComponent {
 							name: `${i + 1}. ${v.question}`,
 							answer: v.answer
 						},
-						bizId: v.bizId
+						bizId: v.bizId,
+						type: v.type,
+						status: v.status
 					};
 				});
 				this.setState({
@@ -171,7 +173,9 @@ export default class help_center_page extends PureComponent {
 			question: {
 				title: item.label.name,
 				answer: item.label.answer,
-				bizId: item.bizId
+				bizId: item.bizId,
+				type: item.type,
+				status: item.status
 			}
 		});
 	};

@@ -47,35 +47,37 @@ export default class QuestionModal extends PureComponent {
 	};
 
 	buriedPoint = (type) => {
-		const { is_title } = this.props;
+		const { status, question, type: q_type } = this.props;
 		let buriedParams = {
-			is_hot: true,
-			q_title: '',
+			is_hot: status === '03',
+			q_title: question.title,
 			is_resolve: type
 		};
-		switch (is_title) {
-			case '实名认证':
+		console.log(this.props);
+
+		switch (q_type) {
+			case '01':
 				buriedPointEvent(helpCenter.realname, buriedParams);
 				break;
-			case '实名认证1':
+			case '02':
 				buriedPointEvent(helpCenter.basic, buriedParams);
 				break;
-			case '实名认证2':
+			case '03':
 				buriedPointEvent(helpCenter.operators, buriedParams);
 				break;
-			case '实名认证3':
+			case '04':
 				buriedPointEvent(helpCenter.creditCard, buriedParams);
 				break;
-			case '实名认证4':
+			case '05':
 				buriedPointEvent(helpCenter.submission, buriedParams);
 				break;
-			case '实名认证5':
+			case '06':
 				buriedPointEvent(helpCenter.toexamine, buriedParams);
 				break;
-			case '实名认证6':
+			case '07':
 				buriedPointEvent(helpCenter.quota, buriedParams);
 				break;
-			case '实名认证7':
+			case '08':
 				buriedPointEvent(helpCenter.repayment, buriedParams);
 				break;
 			default:
