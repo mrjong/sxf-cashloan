@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 15:33:06
+ * @LastEditTime: 2019-09-02 15:32:51
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';

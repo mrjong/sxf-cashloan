@@ -1,0 +1,62 @@
+.padding_bottom {
+	height: calc(100% + 1px);
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.bg_top {
+	background: url('./img/top.png') no-repeat;
+	background-size: 100%;
+	width: 100%;
+	height: 649px;
+}
+.bg_list {
+	margin: 0 auto 0;
+	background: url('./img/bottom.png') no-repeat;
+	background-size: 100%;
+	width: 100%;
+	height: 690px;
+}
+.smart_button {
+	background: #2a2b2c;
+	color: #fff;
+	width: 634px;
+	margin: 0 auto;
+	&:active {
+		opacity: 0.5;
+	}
+	&.dis {
+		background: #dfe6;
+	}
+}
+.moreUse {
+	color: #4c7afd;
+	i {
+		width: 11px;
+		height: 14px;
+		position: absolute;
+		bottom: -100px;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		background-image: url(./img/arrow.png);
+		background-repeat: no-repeat;
+		background-size: 11px 14px;
+	}
+}
+.bg_list_box {
+	background: #fff;
+	margin-top: -70px;
+	padding: 60px 0 0;
+	border-top-left-radius: 35px;
+	border-top-right-radius: 35px;
+}
+.btn_fixed {
+	position: absolute;
+	background: url('./img/btn.png') no-repeat;
+	background-size: 100%;
+	width: 708px;
+	height: 111px;
+	z-index: 10;
+	left: 50%;
+	bottom: 100px;
+	margin-left: -354px;
+}

@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 16:45:30
+ */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -23,7 +27,8 @@ const API = {
 	checkEngaged: '/activeConfig/checkEngaged',
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser',
-	mxoieCardList: '/moxie/mxoieCardList/C'
+	mxoieCardList: '/moxie/mxoieCardList/C',
+	activeConfigSts: '/activeConfig/ab/sts'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -65,7 +70,8 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/home/credit_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
 			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
 			'/mine/qiyu', // 因为app直接跳转到h5的webview，因为放开
-			'/home/loan_person_succ_page' // 因为app直接跳转到h5的webview，因为放开
+			'/home/loan_person_succ_page', // 因为app直接跳转到h5的webview，因为放开
+			'/mpos/'
 		];
 		if (isWXOpen()) {
 			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
@@ -878,6 +884,36 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 		})
 		.catch((err) => {
 			console.log(err);
+			$props.toast.info('系统开小差，请稍后重试');
+		});
+};
+
+export const activeConfigSts = ({ $props, callback }) => {
+	$props.$fetch
+		.get(API.activeConfigSts)
+		.then((res) => {
+			if (res && res.msgCode === 'PTM0000' && res.data) {
+				switch (res.data) {
+					case '00':
+						callback();
+						break;
+					case '01':
+						//下载页面
+						$props.history.replace('/others/mpos_testA_download_page');
+						break;
+					case '02':
+						//下载页面
+						$props.history.replace('/others/mpos_testB_download_page');
+						break;
+
+					default:
+						break;
+				}
+			} else {
+				callback();
+			}
+		})
+		.catch(() => {
 			$props.toast.info('系统开小差，请稍后重试');
 		});
 };

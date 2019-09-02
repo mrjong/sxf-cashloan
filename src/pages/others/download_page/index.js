@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 15:32:38
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { getDeviceType } from 'utils';
@@ -6,6 +10,7 @@ import downloadBtn from './img/download_btn.jpg';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, daicao } from 'utils/analytinsType';
 import { store } from 'utils/store';
+import linkConf from 'config/link.conf';
 
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
@@ -72,7 +77,7 @@ export default class download_page extends PureComponent {
 			});
 		}
 		if (phoneType === 'IOS') {
-			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
+			window.location.href = linkConf.APPSTORE_URL;
 		} else {
 			this.props.toast.info('安全下载中');
 			window.location.href = downloadUrl;

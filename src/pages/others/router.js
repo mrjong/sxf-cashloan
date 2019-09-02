@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 15:55:16
+ */
 export default [
 	{
 		path: '/others/dc_landing_page',
@@ -44,5 +48,17 @@ export default [
 		title: '还到-借钱还信用卡',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_download_page')
+	},
+	{
+		path: '/others/mpos_testA_download_page',
+		title: '借钱还信用卡',
+		arrowHide: 'empty',
+		component: () => import('pages/others/mpos_testA_download_page')
+	},
+	{
+		path: '/others/mpos_testB_download_page',
+		title: '借钱还信用卡',
+		arrowHide: 'empty',
+		component: () => import('pages/others/mpos_testB_download_page')
 	}
 ];
