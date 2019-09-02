@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 10:05:56
+ * @LastEditTime: 2019-09-02 12:33:10
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -12,7 +12,7 @@ import CountDownButton from 'components/CountDownButton';
 import { setBackGround } from 'utils/background';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { getH5Channel } from 'utils/common';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
@@ -414,6 +414,11 @@ export default class bind_save_page extends PureComponent {
 								{ validator: this.validateCarNumber }
 							],
 							onChange: (value) => {
+								if (!value) {
+									sxfburiedPointEvent('valueInputCarNumber', {
+										actId: 'delAll'
+									});
+								}
 								store.setBindCardNo(value);
 							}
 						})}
@@ -454,6 +459,11 @@ export default class bind_save_page extends PureComponent {
 								{ validator: this.validateCarPhone }
 							],
 							onChange: (value) => {
+								if (!value) {
+									sxfburiedPointEvent('valueInputCarPhone', {
+										actId: 'delAll'
+									});
+								}
 								store.setBindCardPhone(value);
 							}
 						})}
@@ -490,6 +500,13 @@ export default class bind_save_page extends PureComponent {
 							})}
 							onBlur={() => {
 								handleInputBlur();
+							}}
+							onChange={(value) => {
+								if (!value) {
+									sxfburiedPointEvent('valueInputCarSms', {
+										actId: 'delAll'
+									});
+								}
 							}}
 						>
 							验证码

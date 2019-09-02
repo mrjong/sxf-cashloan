@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 12:26:34
+ */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
 import dayjs from 'dayjs';
@@ -1018,9 +1022,7 @@ export default class confirm_agency_page extends PureComponent {
 										]
 									})}
 									className={style.billInput}
-									clear={() => {
-										console.log('cl99999999');
-									}}
+									clear
 									disabled={
 										repaymentDate.minAmt &&
 										repaymentDate.maxAmt &&
@@ -1038,6 +1040,9 @@ export default class confirm_agency_page extends PureComponent {
 												});
 												this.props.form.setFieldsValue({
 													cardBillAmt: ''
+												});
+												sxfburiedPointEvent('cardBillAmt', {
+													actId: 'delAll'
 												});
 											} else {
 												closeBtn = true;

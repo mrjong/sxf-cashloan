@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 12:31:11
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -554,6 +558,13 @@ export default class login_page extends PureComponent {
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
+								onChange(value) {
+									if (value === '') {
+										sxfburiedPointEvent('inputPhone', {
+											actId: 'delAll'
+										});
+									}
+								},
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !disabledInput && this.validatePhone }
@@ -622,6 +633,13 @@ export default class login_page extends PureComponent {
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
+									onChange(value) {
+										if (value === '') {
+											sxfburiedPointEvent('inputCode', {
+												actId: 'delAll'
+											});
+										}
+									},
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {

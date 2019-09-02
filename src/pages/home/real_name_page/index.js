@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 13:22:15
+ */
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
@@ -78,9 +82,19 @@ export default class real_name_page extends Component {
 	}
 
 	handleNameChange = (value) => {
+		if (!value) {
+			sxfburiedPointEvent('idName', {
+				actId: 'delAll'
+			});
+		}
 		this.setState({ idName: value });
 	};
 	handleNumberChange = (value) => {
+		if (!value) {
+			sxfburiedPointEvent('idNo', {
+				actId: 'delAll'
+			});
+		}
 		this.setState({ idNo: value });
 	};
 

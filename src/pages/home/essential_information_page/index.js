@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 12:28:32
+ */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { InputItem, List } from 'antd-mobile';
@@ -513,6 +517,11 @@ export default class essential_information_page extends PureComponent {
 								{getFieldDecorator('address', {
 									rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
 									onChange: (value) => {
+										if (!value) {
+											sxfburiedPointEvent('resident_address', {
+												actId: 'delAll'
+											});
+										}
 										// 本地缓存常住地址
 										store.setAddress(value);
 										this.setState({ address: value });
@@ -543,6 +552,7 @@ export default class essential_information_page extends PureComponent {
 										onBlur={(v) => {
 											this.inputOnBlur(v, 'resident_address');
 										}}
+										clear
 										onFocus={(v) => {
 											this.inputOnFocus(v, 'resident_address');
 										}}
@@ -599,6 +609,11 @@ export default class essential_information_page extends PureComponent {
 								{getFieldDecorator('linkman', {
 									rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
 									onChange: (value) => {
+										if (!value) {
+											sxfburiedPointEvent('contact_name_one', {
+												actId: 'delAll'
+											});
+										}
 										store.setLinkman(value);
 										this.setState({ linkman: value });
 									}
