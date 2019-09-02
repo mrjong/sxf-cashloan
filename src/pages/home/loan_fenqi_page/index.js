@@ -1039,6 +1039,10 @@ export default class loan_fenqi_page extends PureComponent {
 						ref={(ele) => {
 							this.smsModal = ele;
 						}}
+						history={this.props.history}
+						fetch={this.props.$fetch}
+						toast={this.props.toast}
+						bankNo={payBankCardAgrNo}
 					/>
 				)}
 			</div>
