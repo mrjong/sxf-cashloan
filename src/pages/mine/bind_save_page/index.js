@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 13:36:15
+ * @LastEditTime: 2019-09-02 18:03:26
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -498,19 +498,19 @@ export default class bind_save_page extends PureComponent {
 							})}
 							maxLength="6"
 							{...getFieldProps('valueInputCarSms', {
-								rules: [{ required: true, message: '请输入验证码' }]
+								rules: [{ required: true, message: '请输入验证码' }],
+								onChange: (value) => {
+									if (!value) {
+										sxfburiedPointEvent('valueInputCarSms', {
+											actId: 'delAll'
+										});
+									}
+								}
 							})}
 							onBlur={() => {
 								handleInputBlur();
 							}}
 							clear
-							onChange={(value) => {
-								if (!value) {
-									sxfburiedPointEvent('valueInputCarSms', {
-										actId: 'delAll'
-									});
-								}
-							}}
 						>
 							验证码
 						</InputItem>
