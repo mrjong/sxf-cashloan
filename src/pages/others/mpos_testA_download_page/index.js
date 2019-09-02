@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 16:38:06
+ * @LastEditTime: 2019-09-02 17:28:16
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -45,6 +45,9 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
+		buriedPointEvent(other.testDownloadClick, {
+			position: '打开还到按钮'
+		});
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {
@@ -65,16 +68,18 @@ export default class mpos_download_page extends PureComponent {
 			<div>
 				<div className={styles.padding_bottom}>
 					<div className={styles.bg_top} />
-					<div className={styles.bg_list_box}>
-						<div className={styles.bg_list} />
-						<div className={styles.moreUse}>
+					<div className={styles.bg_list}>
+						<div
+							className={styles.moreUse}
+							onClick={() => {
+								buriedPointEvent(other.testDownloadClick, {
+									position: '更多权益链接1'
+								});
+							}}
+						>
 							更多权益<i></i>
 						</div>
-						<div className={styles.btn_fixed}>
-							{/* <SXFButton className={styles.smart_button} onClick={this.downloadClick}>
-						安全下载
-					</SXFButton> */}
-						</div>
+						<div className={styles.btn_fixed} onClick={this.downloadClick}></div>
 					</div>
 				</div>
 			</div>

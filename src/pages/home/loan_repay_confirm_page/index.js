@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 17:36:29
+ */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
@@ -12,7 +16,8 @@ import {
 	idChkPhoto,
 	isCanLoan,
 	getOperatorStatus,
-	getMoxieData
+	getMoxieData,
+	activeConfigSts
 } from 'utils';
 // import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
@@ -20,6 +25,7 @@ import { home } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
+import { getH5Channel } from 'utils/common';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -384,7 +390,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 				case '1':
 					// 成功
 					//调用授信接口
-					handleClickConfirm(this.props, params);
+					if (getH5Channel() === 'MPOS') {
+						activeConfigSts({
+							$props: this.props,
+							callback: () => {
+								handleClickConfirm(this.props, params);
+							}
+						});
+					} else {
+						handleClickConfirm(this.props, params);
+					}
 					break;
 				case '2':
 					store.setLoanAspirationHome(params);

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 16:45:30
+ * @LastEditTime: 2019-09-02 17:38:37
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -70,8 +70,7 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/home/credit_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
 			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
 			'/mine/qiyu', // 因为app直接跳转到h5的webview，因为放开
-			'/home/loan_person_succ_page', // 因为app直接跳转到h5的webview，因为放开
-			'/mpos/'
+			'/home/loan_person_succ_page' // 因为app直接跳转到h5的webview，因为放开
 		];
 		if (isWXOpen()) {
 			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
@@ -892,7 +891,7 @@ export const activeConfigSts = ({ $props, callback }) => {
 	$props.$fetch
 		.get(API.activeConfigSts)
 		.then((res) => {
-			if (res && res.msgCode === 'PTM0000' && res.data) {
+			if (res && res.msgCode === 'PTM0000' && res.data && res.data.sts) {
 				switch (res.data) {
 					case '00':
 						callback();
@@ -910,7 +909,7 @@ export const activeConfigSts = ({ $props, callback }) => {
 						break;
 				}
 			} else {
-				callback();
+				$props.toast.info('系统开小差，请稍后重试');
 			}
 		})
 		.catch(() => {
