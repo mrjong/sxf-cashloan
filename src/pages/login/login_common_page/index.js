@@ -237,6 +237,7 @@ export default class login_common_page extends PureComponent {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
+				buriedPointEvent(daicao.smsCodeBtnClick);
 				let param = {};
 				if (this.state.disabledInput) {
 					param = {
@@ -402,6 +403,7 @@ export default class login_common_page extends PureComponent {
 	};
 
 	checkAgreement = () => {
+		buriedPointEvent(daicao.selectProtocol);
 		this.setState({
 			isChecked: !this.state.isChecked
 		});
@@ -646,7 +648,10 @@ export default class login_common_page extends PureComponent {
 							<img
 								className={styles.loginModalBtn}
 								src={loginModalBtn}
-								onClick={this.downloadApp}
+								onClick={() => {
+									buriedPointEvent(daicao.modalBtnClick);
+									this.downloadApp();
+								}}
 								alt="按钮"
 							/>
 							<p className={styles.tipsCont}>
