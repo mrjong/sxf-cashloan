@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 13:31:26
+ * @LastEditTime: 2019-09-02 19:13:41
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -638,6 +638,7 @@ export default class essential_information_page extends PureComponent {
 												}
 											]
 										})}
+										crear
 										placeholder="联系人真实姓名"
 										type="text"
 										onBlur={(v) => {
@@ -661,6 +662,7 @@ export default class essential_information_page extends PureComponent {
 									}
 								})(
 									<InputItem
+										clear
 										className="noBorder"
 										type="number"
 										maxLength="11"
