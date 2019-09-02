@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 17:28:16
+ * @LastEditTime: 2019-09-02 18:37:56
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -48,6 +48,9 @@ export default class mpos_download_page extends PureComponent {
 		buriedPointEvent(other.testDownloadClick, {
 			position: '打开还到按钮'
 		});
+		this.downloadClickFun();
+	};
+	downloadClickFun = () => {
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {
@@ -75,6 +78,7 @@ export default class mpos_download_page extends PureComponent {
 								buriedPointEvent(other.testDownloadClick, {
 									position: '更多权益链接1'
 								});
+								this.downloadClickFun();
 							}}
 						>
 							更多权益<i></i>

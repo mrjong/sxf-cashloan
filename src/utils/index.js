@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 17:38:37
+ * @LastEditTime: 2019-09-02 18:42:38
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -902,7 +902,7 @@ export const activeConfigSts = ({ $props, callback }) => {
 						break;
 					case '02':
 						//下载页面
-						$props.history.replace('/others/mpos_testB_download_page');
+						$props.history.push('/others/mpos_testB_download_page');
 						break;
 
 					default:

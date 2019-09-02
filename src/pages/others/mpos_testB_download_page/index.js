@@ -1,13 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 15:32:51
+ * @LastEditTime: 2019-09-02 18:43:23
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
-import SXFButton from 'components/ButtonCustom';
 import { getDeviceType } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
@@ -45,6 +44,12 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
+		buriedPointEvent(other.testDownloadClick, {
+			position: '专项通道按钮'
+		});
+		this.downloadClickFun();
+	};
+	downloadClickFun = () => {
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {
@@ -59,43 +64,30 @@ export default class mpos_download_page extends PureComponent {
 			this.getDownloadUrl();
 		}
 	};
-
+	msgClick = () => {
+		buriedPointEvent(other.testDownloadClick, {
+			position: '喇叭链接'
+		});
+		this.downloadClickFun();
+	};
 	render() {
 		return (
-			<div>
+			<div className={styles.bg}>
 				<div className={styles.padding_bottom}>
-					<div className={styles.bg_top} />
-					<div className={styles.bg_list} />
-				</div>
-				<div>
-					<div className={styles.btn_fixed}>
-						<SXFButton className={styles.smart_button} onClick={this.downloadClick}>
-							安全下载
-						</SXFButton>
-						{/* <div>
-							<AgreeItem
-								className="mpos_middle_checkbox"
-								checked={selectFlag}
-								data-seed="logId"
-								onChange={(e) => this.setState({ selectFlag: e.target.checked })}
-							>
-								请阅读协议内容，点击按钮即视为同意
-								<a
-									onClick={() => {
-										this.go('register_agreement_page');
-									}}
-								>
-									《用户注册协议》
-								</a>
-								<a
-									onClick={() => {
-										this.go('privacy_agreement_page');
-									}}
-								>
-									《用户隐私权政策》
-								</a>
-							</AgreeItem>
-						</div> */}
+					<div className={styles.bg_top} onClick={this.msgClick} />
+					<div className={styles.bg_list}>
+						<div className={styles.bg_btn} onClick={this.downloadClick} />
+						<div
+							className={styles.moreUse}
+							onClick={() => {
+								buriedPointEvent(other.testDownloadClick, {
+									position: '更多权益链接2'
+								});
+								this.downloadClickFun();
+							}}
+						>
+							更多权益<i></i>
+						</div>
 					</div>
 				</div>
 			</div>
