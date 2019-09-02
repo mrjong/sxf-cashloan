@@ -47,15 +47,14 @@ export default class QuestionModal extends PureComponent {
 	};
 
 	buriedPoint = (type) => {
-		const { status, question, type: q_type } = this.props;
+		const { question } = this.props;
 		let buriedParams = {
-			is_hot: status === '03',
+			is_hot: question.status === '03',
 			q_title: question.title,
 			is_resolve: type
 		};
-		console.log(this.props);
 
-		switch (q_type) {
+		switch (question.type) {
 			case '01':
 				buriedPointEvent(helpCenter.realname, buriedParams);
 				break;

@@ -204,14 +204,14 @@ export default class coupon_page extends PureComponent {
 						key={this.state.useBodyScroll ? '0' : '1'}
 						ref={(el) => (this.lv = el)}
 						dataSource={this.state.dataSource}
-						renderFooter={() => (
-							<div
-								style={{ paddingBottom: 30, textAlign: 'center' }}
-								className={!this.state.isLoading ? styles.reach_bottom : null}
-							>
-								{this.state.isLoading ? '加载中...' : <span>已无更多问题</span>}
-							</div>
-						)}
+						// renderFooter={() => (
+						// 	<div
+						// 		style={{ paddingBottom: 30, textAlign: 'center' }}
+						// 		className={!this.state.isLoading ? styles.reach_bottom : null}
+						// 	>
+						// 		{this.state.isLoading ? '加载中...' : <span>已无更多问题</span>}
+						// 	</div>
+						// )}
 						renderRow={row}
 						useBodyScroll={this.state.useBodyScroll}
 						style={
