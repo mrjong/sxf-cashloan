@@ -228,7 +228,7 @@ export default class order_detail_page extends PureComponent {
 							// 选择银行卡回来
 							let bankInfo = store.getCardData();
 							let orderDtlData = store.getOrderDetailData() || {};
-							let { isPayAll, detailArr, isShowDetail, totalAmt, totalAmtForShow } = orderDtlData;
+							let { isPayAll, detailArr, isShowDetail, totalAmt, totalAmtForShow, orderList } = orderDtlData;
 							store.removeOrderDetailData();
 							if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
 								this.setState(
@@ -253,8 +253,7 @@ export default class order_detail_page extends PureComponent {
 							} else if (res.data && res.data.data && !this.state.isBillClean) {
 								this.dealMoney(res.data);
 							}
-
-							this.showPerdList(perdNum);
+							this.showPerdList(orderList);
 						}
 					);
 				} else {
@@ -372,7 +371,7 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	// 显示还款计划
-	showPerdList = (perdNum) => {
+	showPerdList = (orderList = []) => {
 		const { thisPerdNum } = this.state;
 		let perdListArray = [];
 		let perdList = this.state.perdList;
@@ -442,7 +441,7 @@ export default class order_detail_page extends PureComponent {
 		}
 		this.setState(
 			{
-				orderList: perdListArray
+				orderList: orderList.length > 0 ? orderList : perdListArray
 			},
 			() => {
 				if (window.location.pathname === '/order/order_repay_page') {
@@ -762,14 +761,16 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			isInsureValid,
-			totalAmtForShow
+			totalAmtForShow,
+			orderList
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
 			detailArr,
 			isShowDetail,
 			totalAmt,
-			totalAmtForShow
+			totalAmtForShow,
+			orderList
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
@@ -789,14 +790,16 @@ export default class order_detail_page extends PureComponent {
 			detailArr,
 			isShowDetail,
 			totalAmt,
-			totalAmtForShow
+			totalAmtForShow,
+			orderList
 		} = this.state;
 
 		let orderDtData = {
 			detailArr,
 			isShowDetail,
 			totalAmt,
-			totalAmtForShow
+			totalAmtForShow,
+			orderList
 		};
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
