@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 18:53:44
+ */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
 module.exports = function(options) {
