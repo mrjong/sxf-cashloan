@@ -605,7 +605,7 @@ export default class login_common_page extends PureComponent {
 						阅读并接受
 						<span
 							onClick={() => {
-								this.go('register_agreement_page');
+								this.go('personal_credit_page');
 							}}
 						>
 							《个人征信查询授权书》
