@@ -48,9 +48,13 @@
 			}
 			.tip {
 				font-size: 20px;
-				color: #86919d;
+				// color: #86919d;
+				color: #8e8d7b;
 				line-height: 30px;
 				text-align: left;
+				span {
+					color: #121c32;
+				}
 			}
 			.bottom {
 				display: flex;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 10:03:13
+ * @LastEditTime: 2019-09-03 14:42:57
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -28,7 +28,9 @@ const API = {
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser',
 	mxoieCardList: '/moxie/mxoieCardList/C',
-	activeConfigSts: '/activeConfig/ab/sts'
+	activeConfigSts: '/activeConfig/ab/sts',
+	contractLog: '/contract/log', // 协议预览留痕记录
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -887,6 +889,38 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 		});
 };
 
+// 协议预览记录功能
+export const recordContract = (params) => {
+	// params中的cardNo为银行卡号，只在协议支付的时候传递
+	// contractType为 协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+	fetch.post(API.contractLog, params, { hideLoading: true }).then(() => {}, () => {});
+};
+// 神策用户绑定
+export const queryUsrSCOpenId = ({ $props }) => {
+	return new Promise((resolve) => {
+		// 获取token
+		let token = Cookie.get('fin-v-card-token');
+		let tokenFromStorage = store.getToken();
+		if (token && tokenFromStorage) {
+			if (!store.getQueryUsrSCOpenId()) {
+				$props.$fetch
+					.get(API.queryUsrSCOpenId)
+					.then((res) => {
+						if (res.msgCode === 'PTM0000') {
+							window.sa.login(res.data);
+							store.setQueryUsrSCOpenId(res.data);
+						}
+						resolve(true);
+					})
+					.catch(() => {
+						resolve(true);
+					});
+			}
+		} else {
+			resolve(true);
+		}
+	});
+};
 export const activeConfigSts = ({ $props, callback, type }) => {
 	$props.$fetch
 		.get(API.activeConfigSts)

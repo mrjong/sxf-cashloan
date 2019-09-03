@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:46:42
+ */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
 import { store } from 'utils/store';
@@ -12,7 +16,6 @@ import old_btn from './img/old_btn.png';
 import rule_bg from './img/rule_bg.png';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
-import { headerIgnore } from 'utils';
 import fetch from 'sx-fetch';
 import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
@@ -190,9 +193,7 @@ export default class wuyuekh_page extends PureComponent {
 	render() {
 		const { isShowLogin, showLoginTip, showBoundle, prizeType } = this.state;
 		return (
-			<div
-				className={headerIgnore() ? styles.wuyuekh_page : `${styles.wuyuekh_page2} ${styles.wuyuekh_page}`}
-			>
+			<div className={styles.wuyuekh_page}>
 				<SmsAlert
 					onRef={this.onRef}
 					goSubmitCb={{

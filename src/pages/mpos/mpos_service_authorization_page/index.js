@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 10:08:35
+ * @LastEditTime: 2019-09-03 14:41:35
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -9,7 +9,7 @@ import Cookie from 'js-cookie';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType, activeConfigSts } from 'utils';
+import { getDeviceType, activeConfigSts, recordContract } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
@@ -46,6 +46,10 @@ export default class mpos_service_authorization_page extends PureComponent {
 			.then(
 				(res) => {
 					buriedPointEvent(mpos_service_authorization.auth_btn);
+					// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+					recordContract({
+						contractType: '01,02'
+					});
 					if (res.authSts === '01') {
 						console.log('发验证码');
 						this.props.history.replace(
@@ -120,16 +124,15 @@ export default class mpos_service_authorization_page extends PureComponent {
 		return (
 			<div>
 				<img src={logo} alt="" className={styles.logoWrap} />
-				<p className={styles.text}>借钱还信用卡找还到</p>
-				<p className={`${styles.text} ${styles.text2}`}>
-					最高<span>50000</span>还款金
+				<p className={styles.text}>
+					随行付金融提供 <em className={styles.highlight}>信用卡账单代还</em>服务 <br /> 200万信用卡用户新选择{' '}
 				</p>
 				<div className={styles.btn_fixed}>
 					<SXFButton
 						className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
 						onClick={selectFlag ? () => this.goSubmit() : null}
 					>
-						去看看
+						下一步
 					</SXFButton>
 				</div>
 				<div className={styles.agreement_box}>

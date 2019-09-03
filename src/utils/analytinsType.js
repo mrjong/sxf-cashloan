@@ -268,6 +268,17 @@ const loan_fenqi = {
 	protocolBindBtnClick: `${prefix}_FENQI_PROTOCOL_MODAL_BTN_CLICK` // 现金分期签约借款页协议绑卡短验弹框按钮点击
 };
 
+const wxTest = {
+	wxTestDownPageTime: `${prefix}_WXTESTDOWNPAGETIME`, //下载页 页面时长
+	wxTestLoginPageTime: `${prefix}_WXTESTLOGINPAGETIME`, // mpos登录页 页面时长
+	wxTestMposLoginPageTime: `${prefix}_WXTESTMPOSLOGINPAGETIME`, // mpos登录页 页面时长
+	btnClick_download: `${prefix}_BTNCLICK_DOWNLOAD`, //下载页 按钮点击
+	btnClick_login: `${prefix}_BTNCLICK_LOGIN`, //mpos登录页 登录按钮点击
+	sendSmsCodeMposClick: `${prefix}_SENDSMSCODEMPOSCLICK`, //mpos登录页 发送验证码次数
+	wxTestLoginBtnClick: `${prefix}_WXTESTLOGINBTNCLICK`, // 登录页 按钮 点击次数
+	wxTestLoginSmsCode: `${prefix}_WXTESTLOGINSMSCODE` //  登录页 发送验证码次数
+};
+
 export {
 	login,
 	home,
@@ -282,5 +293,6 @@ export {
 	loan_fenqi,
 	other,
 	daicao,
-	manualAudit
+	manualAudit,
+	wxTest
 };
