@@ -214,7 +214,7 @@ export default class order_detail_page extends PureComponent {
 						{
 							thisPerdNum: perdNum,
 							billDesc: res.data, //账单全部详情
-							isBillClean: billSts === '4', //总账单是否结清
+							isBillClean: billSts === '4' || billSts === '2', //总账单是否结清或处理中
 							perdList //账单期数列表
 						},
 						() => {
