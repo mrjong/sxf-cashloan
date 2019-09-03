@@ -10,5 +10,11 @@ export default [
 		title: '还到',
 		arrowHide: true,
 		component: () => import('pages/login/outer_login_page')
+	},
+	{
+		path: '/outer_mpos_login',
+		title: '还到',
+		arrowHide: true,
+		component: () => import('pages/login/outer_mpos_login_page')
 	}
 ];
