@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 17:36:29
+ * @LastEditTime: 2019-09-03 09:59:24
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -393,6 +393,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					if (getH5Channel() === 'MPOS') {
 						activeConfigSts({
 							$props: this.props,
+							type: 'B',
 							callback: () => {
 								handleClickConfirm(this.props, params);
 							}

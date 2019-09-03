@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 19:19:37
+ * @LastEditTime: 2019-09-03 10:08:35
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -73,6 +73,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 	goHome = () => {
 		activeConfigSts({
 			$props: this.props,
+			type: 'A',
 			callback: this.requestGetStatus
 		});
 	};

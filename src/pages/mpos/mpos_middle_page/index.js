@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 16:57:50
+ * @LastEditTime: 2019-09-03 10:08:42
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -102,6 +102,7 @@ export default class mpos_middle_page extends Component {
 						if (getH5Channel() === 'MPOS') {
 							activeConfigSts({
 								$props: this.props,
+								type: 'A',
 								callback: () => {
 									this.this.goHome(res);
 								}

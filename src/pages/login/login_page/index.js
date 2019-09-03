@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 10:08:51
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -7,7 +11,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur, activeConfigSts } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { login } from 'utils/analytinsType';
@@ -133,7 +137,13 @@ export default class login_page extends PureComponent {
 			callback();
 		}
 	};
-
+	goHome = () => {
+		activeConfigSts({
+			$props: this.props,
+			type: 'A',
+			callback: this.requestGetStatus
+		});
+	};
 	//去登陆按钮
 	goLogin = () => {
 		if (!this.validateFn()) {
@@ -188,7 +198,7 @@ export default class login_page extends PureComponent {
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
 						if (this.state.disabledInput) {
-							this.requestGetStatus();
+							this.goHome();
 						} else {
 							this.props.history.push('/home/home');
 						}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 18:42:38
+ * @LastEditTime: 2019-09-03 10:03:13
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -887,7 +887,7 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 		});
 };
 
-export const activeConfigSts = ({ $props, callback }) => {
+export const activeConfigSts = ({ $props, callback, type }) => {
 	$props.$fetch
 		.get(API.activeConfigSts)
 		.then((res) => {
@@ -901,8 +901,13 @@ export const activeConfigSts = ({ $props, callback }) => {
 						$props.history.replace('/others/mpos_testA_download_page');
 						break;
 					case '02':
-						//下载页面
-						$props.history.push('/others/mpos_testB_download_page');
+						if (type === 'A') {
+							callback();
+						} else {
+							//下载页面
+							$props.history.push('/others/mpos_testB_download_page');
+						}
+
 						break;
 
 					default:
