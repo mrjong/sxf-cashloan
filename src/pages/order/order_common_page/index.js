@@ -209,14 +209,7 @@ export default class order_detail_page extends PureComponent {
 						billSts
 					} = res.data;
 					Number(insuranceAmt) && this.handleInsureFeeInfo(insuranceAmt, insuranceSts);
-					if (!(billOvduSts === null || billOvduSts === '4')) {
-						//有罚息或滞纳金
-						this.handlePenaltyInfo(billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt);
-					} else {
-						this.setState({
-							penaltyInfo: {}
-						});
-					}
+
 					this.setState(
 						{
 							thisPerdNum: perdNum,
@@ -228,7 +221,15 @@ export default class order_detail_page extends PureComponent {
 							// 选择银行卡回来
 							let bankInfo = store.getCardData();
 							let orderDtlData = store.getOrderDetailData() || {};
-							let { isPayAll, detailArr, isShowDetail, totalAmt, totalAmtForShow, orderList } = orderDtlData;
+							let {
+								isPayAll,
+								detailArr,
+								isShowDetail,
+								totalAmt,
+								totalAmtForShow,
+								orderList,
+								penaltyInfo
+							} = orderDtlData;
 							store.removeOrderDetailData();
 							if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
 								this.setState(
@@ -252,6 +253,19 @@ export default class order_detail_page extends PureComponent {
 								);
 							} else if (res.data && res.data.data && !this.state.isBillClean) {
 								this.dealMoney(res.data);
+							}
+							if (penaltyInfo && JSON.stringify(penaltyInfo) !== '{}') {
+								//有缓存则取缓存
+								this.setState({
+									penaltyInfo
+								});
+							} else if (!(billOvduSts === null || billOvduSts === '4')) {
+								//有罚息或滞纳金
+								this.handlePenaltyInfo(billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt);
+							} else {
+								this.setState({
+									penaltyInfo: {}
+								});
 							}
 							this.showPerdList(orderList);
 						}
@@ -762,7 +776,8 @@ export default class order_detail_page extends PureComponent {
 			totalAmt,
 			isInsureValid,
 			totalAmtForShow,
-			orderList
+			orderList,
+			penaltyInfo
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
@@ -770,7 +785,8 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			totalAmtForShow,
-			orderList
+			orderList,
+			penaltyInfo
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
@@ -791,7 +807,8 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			totalAmtForShow,
-			orderList
+			orderList,
+			penaltyInfo
 		} = this.state;
 
 		let orderDtData = {
@@ -799,7 +816,8 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			totalAmtForShow,
-			orderList
+			orderList,
+			penaltyInfo
 		};
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
@@ -938,7 +956,6 @@ export default class order_detail_page extends PureComponent {
 				penaltyInfo: { ...item }
 			},
 			() => {
-				this.calcPayTotalMoney();
 				if (item.isChecked) {
 					//勾选所有逾期账单
 					for (let i = 0; i < this.state.orderList.length; i++) {
@@ -954,6 +971,8 @@ export default class order_detail_page extends PureComponent {
 							this.calcPayTotalMoney();
 						}
 					);
+				} else {
+					this.calcPayTotalMoney();
 				}
 			}
 		);
@@ -963,7 +982,6 @@ export default class order_detail_page extends PureComponent {
 	handlePenaltyInfoCheckSts = () => {
 		let checkedArr = this.state.orderList.filter((v) => v.isChecked);
 		let overdueArr = this.state.orderList.filter((v) => v.perdStsNm === '已逾期');
-
 		this.setState(
 			{
 				penaltyInfo: {
@@ -984,6 +1002,7 @@ export default class order_detail_page extends PureComponent {
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].key + 1);
 		}
+		console.log(this.state.penaltyInfo, 'peno');
 
 		if (this.state.penaltyInfo.isChecked) {
 			repayPerds.unshift(0);
@@ -1211,11 +1230,10 @@ export default class order_detail_page extends PureComponent {
 							</div>
 						) : null}
 
-						{// 一键结清不显示优惠劵
-						!isPayAll && (
+						{canUseCoupon && (
 							<div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
 								<span className={styles.modal_label}>优惠券</span>
-								{this.state.billDesc.data && this.state.billDesc.data.coupVal && canUseCoupon ? (
+								{this.state.billDesc.data && this.state.billDesc.data.coupVal ? (
 									<span
 										onClick={() => {
 											this.selectCoupon(false);
