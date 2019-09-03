@@ -432,14 +432,14 @@ export default class login_common_page extends PureComponent {
 			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
 				(res) => {
 					if (res.msgCode === 'PTM0000') {
-						this.props.toast.info('安全下载中');
+						Toast.info('安全下载中');
 						window.location.href = res.data;
 					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
+						res.msgInfo && Toast.info(res.msgInfo);
 					}
 				},
 				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+					error.msgInfo && Toast.info(error.msgInfo);
 				}
 			);
 		}
