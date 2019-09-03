@@ -339,10 +339,10 @@ export default class order_detail_page extends PureComponent {
 					}
 				],
 				show: true,
-				isChecked: true
-			},
-			billOvduDays,
-			billOvduStartDt
+				isChecked: true,
+				billOvduDays,
+				billOvduStartDt
+			}
 		});
 	};
 
@@ -1002,8 +1002,6 @@ export default class order_detail_page extends PureComponent {
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].key + 1);
 		}
-		console.log(this.state.penaltyInfo, 'peno');
-
 		if (this.state.penaltyInfo.isChecked) {
 			repayPerds.unshift(0);
 		}
@@ -1090,8 +1088,6 @@ export default class order_detail_page extends PureComponent {
 			orderList,
 			penaltyInfo,
 			insureInfo,
-			billOvduDays,
-			billOvduStartDt,
 			isBillClean,
 			canUseCoupon
 		} = this.state;
@@ -1106,7 +1102,6 @@ export default class order_detail_page extends PureComponent {
 			payCrdNoLast = '',
 			wthdCrdCorpOrgNm = '',
 			wthdCrdNoLast = '',
-			perdNum = '',
 			perdList,
 			discRedRepay = false
 		} = billDesc;
@@ -1360,7 +1355,7 @@ export default class order_detail_page extends PureComponent {
 						<Panel
 							title="账单"
 							extra={
-								billOvduDays && {
+								penaltyInfo.billOvduDays && {
 									style: {
 										color: '#FE6666',
 										fontSize: '0.3rem',
@@ -1368,7 +1363,7 @@ export default class order_detail_page extends PureComponent {
 										position: 'relative',
 										paddingRight: '0.3rem'
 									},
-									text: `已逾期(${billOvduDays}天)`,
+									text: `已逾期(${penaltyInfo.billOvduDays}天)`,
 									clickCb: () => {
 										this.handleCloseTipModal();
 									},
@@ -1415,7 +1410,7 @@ export default class order_detail_page extends PureComponent {
 											任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
 										</p>
 										<p className={styles.modal_tip_desc}>
-											您的逾期开始日期：<em>{billOvduStartDt}</em>
+											您的逾期开始日期：<em>{penaltyInfo.billOvduStartDt}</em>
 										</p>
 									</div>
 								</Modal>
