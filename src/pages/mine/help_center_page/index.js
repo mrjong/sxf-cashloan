@@ -10,7 +10,6 @@ import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
-import Lists from 'components/Lists';
 import { store } from 'utils/store';
 import QuestionModal from './components/QuestionModal';
 
@@ -71,10 +70,8 @@ export default class help_center_page extends PureComponent {
 			if (res.msgCode === 'PTM0000' && res.data) {
 				let arr = res.data.map((v, i) => {
 					return {
-						label: {
-							name: `${i + 1}. ${v.question}`,
-							answer: v.answer
-						},
+						question: `${i + 1}. ${v.question}`,
+						answer: v.answer,
 						bizId: v.bizId,
 						type: v.type,
 						status: v.status
@@ -151,6 +148,22 @@ export default class help_center_page extends PureComponent {
 		));
 	};
 
+	renderHotList = () => {
+		const { hotList } = this.state;
+		return hotList.map((v, i) => (
+			<div
+				key={i}
+				className={styles.hotlist_item}
+				onClick={() => {
+					this.hotListClick(v);
+				}}
+			>
+				<span className={styles.question_title}>{v.question}</span>
+				<span className={styles.question_arrow}></span>
+			</div>
+		));
+	};
+
 	categoryItemClick = (item) => {
 		buriedPointEvent(helpCenter.classification, {
 			type_name: item.label
@@ -166,13 +179,13 @@ export default class help_center_page extends PureComponent {
 
 	hotListClick = (item) => {
 		buriedPointEvent(helpCenter.hot_issue, {
-			q_title: item.label.name
+			q_title: item.question
 		});
 		this.setState({
 			showQuestionModal: true,
 			question: {
-				title: item.label.name,
-				answer: item.label.answer,
+				title: item.question,
+				answer: item.answer,
 				bizId: item.bizId,
 				type: item.type,
 				status: item.status
@@ -187,7 +200,7 @@ export default class help_center_page extends PureComponent {
 	};
 
 	render() {
-		const { hotList, showQuestionModal, question } = this.state;
+		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
 				{tokenFromStorage && token && <div className={styles.top_nav}>{this.renderTopNav()}</div>}
@@ -196,7 +209,7 @@ export default class help_center_page extends PureComponent {
 						<span>热门问题</span>
 						<span className={styles.hot_icon}></span>
 					</div>
-					<Lists className={styles.pannel_list} clickCb={this.hotListClick} listsInf={hotList} />
+					<div className={styles.pannel_list}>{this.renderHotList()}</div>
 				</div>
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>

@@ -92,6 +92,7 @@ export default class coupon_page extends PureComponent {
 						});
 					}
 					for (let i = res.data.length - 1; i >= 0; i--) {
+						res.data[i].question = `${i + 1}. ${res.data[i].question}`;
 						dataArr.push(res.data[i]);
 					}
 					return dataArr;
