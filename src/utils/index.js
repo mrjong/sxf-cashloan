@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 17:18:26
+ * @LastEditTime: 2019-09-03 17:26:02
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -933,7 +933,7 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 		.get(API.activeConfigSts)
 		.then((res) => {
 			if (res && res.msgCode === 'PTM0000' && res.data && res.data.sts) {
-				switch (res.data) {
+				switch (res.data.sts) {
 					case '00':
 						callback();
 						break;
