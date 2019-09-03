@@ -1,10 +1,15 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 11:45:01
+ */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
-import { getDeviceType } from 'utils';
+import DownloadTip from 'components/DownloadTip';
+import { getDeviceType, isWXOpen } from 'utils';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
 const API = {
@@ -17,7 +22,9 @@ let entryPageTime = '';
 export default class mpos_download_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			visible: false
+		};
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
@@ -71,6 +78,11 @@ export default class mpos_download_page extends PureComponent {
 			});
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
 		} else {
+			if (isWXOpen()) {
+				this.setState({
+					visible: !this.state.visible
+				});
+			}
 			buriedPointEvent(other.mposDownloadBtnClick, {
 				device_type: 'ANDROID'
 			});
@@ -80,8 +92,10 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	render() {
+		const { visible = false } = this.state;
 		return (
 			<div>
+				<DownloadTip visible={visible}></DownloadTip>
 				<div className={styles.padding_bottom}>
 					<div className={styles.bg_top} />
 					<div className={styles.bg_list} />
