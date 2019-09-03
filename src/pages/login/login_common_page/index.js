@@ -425,6 +425,7 @@ export default class login_common_page extends PureComponent {
 
 	// 下载app
 	downloadApp = () => {
+		this.closeModal();
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
