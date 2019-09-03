@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 17:44:37
+ */
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
@@ -17,7 +21,8 @@ import {
 	handleInputBlur,
 	getNextStr,
 	handleClickConfirm,
-	idChkPhoto
+	idChkPhoto,
+	activeConfigSts
 } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
@@ -297,10 +302,16 @@ export default class real_name_page extends Component {
 							this.props.toast.info('实名照片补充成功!');
 							store.removeToggleMoxieCard();
 							setTimeout(() => {
-								handleClickConfirm(this.props, {
-									...store.getLoanAspirationHome()
+								activeConfigSts({
+									$props: this.props,
+									type: 'B',
+									callback: () => {
+										handleClickConfirm(this.props, {
+											...store.getLoanAspirationHome()
+										});
+									}
 								});
-							}, 2000);
+							}, 1000);
 							break;
 						case '3':
 							store.setTencentBackUrl('/home/loan_repay_confirm_page');
