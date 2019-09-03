@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 10:08:42
+ * @LastEditTime: 2019-09-03 12:07:07
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -99,17 +99,13 @@ export default class mpos_middle_page extends Component {
 							`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`
 						);
 					} else if (res.authFlag === '1') {
-						if (getH5Channel() === 'MPOS') {
-							activeConfigSts({
-								$props: this.props,
-								type: 'A',
-								callback: () => {
-									this.this.goHome(res);
-								}
-							});
-						} else {
-							this.goHome(res);
-						}
+						activeConfigSts({
+							$props: this.props,
+							type: 'A',
+							callback: () => {
+								this.this.goHome(res);
+							}
+						});
 					} else {
 						this.props.history.replace(`/login?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
 					}
