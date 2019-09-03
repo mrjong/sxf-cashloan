@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 15:55:16
+ * @LastEditTime: 2019-09-03 15:50:08
  */
 export default [
 	{
@@ -51,13 +51,13 @@ export default [
 	},
 	{
 		path: '/others/mpos_testA_download_page',
-		title: '借钱还信用卡',
+		title: '下载App享特权',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testA_download_page')
 	},
 	{
 		path: '/others/mpos_testB_download_page',
-		title: '借钱还信用卡',
+		title: '下载App进入专享通道',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testB_download_page')
 	}
