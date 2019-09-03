@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 18:37:56
+ * @LastEditTime: 2019-09-03 14:54:00
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -8,7 +8,7 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 // import SXFButton from 'components/ButtonCustom';
-import { getDeviceType } from 'utils';
+import { getDeviceType, queryUsrSCOpenId } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
 const API = {
@@ -23,6 +23,9 @@ export default class mpos_download_page extends PureComponent {
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
+		queryUsrSCOpenId({
+			$props: this.props
+		});
 	}
 
 	getDownloadUrl = () => {
