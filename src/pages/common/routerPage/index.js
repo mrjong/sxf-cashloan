@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 14:16:17
+ */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
@@ -156,10 +160,10 @@ export default class router_Page extends PureComponent {
 			});
 		}
 	};
-	globalTask = (type) => {
-		console.log(type);
+	globalTask = (obj) => {
+		console.log(obj);
 		this.setState({
-			footerTipIcon: type
+			footerTipIcon: obj
 		});
 	};
 	render() {

@@ -197,7 +197,12 @@ const activity = {
 	mianxi715OldPrizeBtn: `${prefix}_ACTIVITY_MIANXI_715_OLD_PRIZE_BTN`, // 七月活动 复贷用户奖品弹框按钮点击
 	mianxiModalBtnClick: `${prefix}_ACTIVITY_MIANXI_715_MODAL_BTN`, // 七月活动 首页弹窗按钮点击
 	mianxi726ModalBtnClick: `${prefix}_ACTIVITY_MIANXI_726_MODAL_BTN`, // 七月26活动 首页弹窗按钮点击
-	MposH5Channel: `${prefix}_MPOS_H5CHANNEL` // 七月26活动 首页弹窗按钮点击
+	MposH5Channel: `${prefix}_MPOS_H5CHANNEL`, // 七月26活动 首页弹窗按钮点击
+	mianxi822Entry: `${prefix}_ACTIVITY_MIANXI_822_ENTRY`, // 100元利息红包限时领活动 活动入口
+	mianxi822UseBtn: `${prefix}_ACTIVITY_MIANXI_822_USE_BTN`, // 100元利息红包限时领活动 领取按钮
+	mianxi822ModalUseBtn: `${prefix}_ACTIVITY_MIANXI_822_MODAL_USE`, // 100元利息红包限时领活动 弹窗-去使用
+	mianxi822ModalJoinBtn: `${prefix}_ACTIVITY_MIANXI_822_MODAL_JOIN`, // 100元利息红包限时领活动 弹窗-去参与
+	mianxi822LoginBtn: `${prefix}_ACTIVITY_MIANXI_822_LOGIN_BTN` // 100元利息红包限时领活动 注册弹窗-确定
 };
 
 const moxie_bank_list = {
@@ -258,6 +263,17 @@ const loan_fenqi = {
 	protocolBindBtnClick: `${prefix}_FENQI_PROTOCOL_MODAL_BTN_CLICK` // 现金分期签约借款页协议绑卡短验弹框按钮点击
 };
 
+const wxTest = {
+	wxTestDownPageTime: `${prefix}_WXTESTDOWNPAGETIME`, //下载页 页面时长
+	wxTestLoginPageTime: `${prefix}_WXTESTLOGINPAGETIME`, // mpos登录页 页面时长
+	wxTestMposLoginPageTime: `${prefix}_WXTESTMPOSLOGINPAGETIME`, // mpos登录页 页面时长
+	btnClick_download: `${prefix}_BTNCLICK_DOWNLOAD`, //下载页 按钮点击
+	btnClick_login: `${prefix}_BTNCLICK_LOGIN`, //mpos登录页 登录按钮点击
+	sendSmsCodeMposClick: `${prefix}_SENDSMSCODEMPOSCLICK`, //mpos登录页 发送验证码次数
+	wxTestLoginBtnClick: `${prefix}_WXTESTLOGINBTNCLICK`, // 登录页 按钮 点击次数
+	wxTestLoginSmsCode: `${prefix}_WXTESTLOGINSMSCODE` //  登录页 发送验证码次数
+};
+
 export {
 	login,
 	home,
@@ -272,5 +288,6 @@ export {
 	loan_fenqi,
 	other,
 	daicao,
-	manualAudit
+	manualAudit,
+	wxTest
 };

@@ -2,9 +2,12 @@ import React from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
-import { handleInputBlur } from '../../../../../utils';
+import { handleInputBlur, recordContract } from '../../../../../utils';
 
 let timer = null;
+const API = {
+	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
+};
 export default class SmsModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -59,11 +62,37 @@ export default class SmsModal extends React.PureComponent {
 		clearInterval(timer);
 	};
 
+	// 协议支付协议预览
+	readProtocol = () => {
+		const { history, fetch, toast } = this.props;
+		const params = {
+			isEntry: '01'
+		};
+		fetch.post(API.contractInfo, params).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				store.setProtocolFinancialData(result.data);
+				history.push('/protocol/delegation_withhold_page');
+			} else {
+				toast.info(result.msgInfo);
+			}
+		});
+	};
+
+	confirmHandler = () => {
+		const { onConfirm, bankNo } = this.props;
+		// cardNo为银行卡号
+		// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+		recordContract({
+			cardNo: bankNo,
+			contractType: '03'
+		});
+		onConfirm();
+	};
+
 	render() {
 		const { times } = this.state;
 		const {
 			onCancel,
-			onConfirm,
 			smsCode,
 			toggleBtn,
 			selectBankCard,
@@ -131,18 +160,19 @@ export default class SmsModal extends React.PureComponent {
 											<button onClick={onCancel} key="1" className={styles.skipButton}>
 												跳过,直接还款
 											</button>,
-											<button onClick={onConfirm} key="2" className={styles.smallButton}>
+											<button onClick={this.confirmHandler} key="2" className={styles.smallButton}>
 												确定
 											</button>
 										]
 									) : (
-										<button onClick={onConfirm} className={styles.largeButton}>
+										<button onClick={this.confirmHandler} className={styles.largeButton}>
 											确定
 										</button>
 									)}
 								</div>
 								<p className={styles.tip}>
-									温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意《用户授权扣款委托书》约定扣款
+									温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意
+									<span onClick={this.readProtocol}>《用户授权扣款委托书》</span>约定扣款
 								</p>
 							</div>
 						</div>

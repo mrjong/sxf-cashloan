@@ -22,7 +22,6 @@ import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { rules } from './rulesData';
-import { headerIgnore } from 'utils';
 
 const API = {
 	activeConfig: '/activeConfig/list', // 活动配置接口
@@ -390,7 +389,7 @@ export default class wuyue_old_page extends PureComponent {
 	render() {
 		const { awardList, time, transformType, type, isAwardFlag, showRuleModal, count } = this.state;
 		return (
-			<div className={headerIgnore() ? styles.dazhuanpan : `${styles.dazhuanpan2} ${styles.dazhuanpan}`}>
+			<div className={styles.dazhuanpan}>
 				{this.state.codeInfo ? (
 					<div className={styles.active_img_box}>
 						<img src={this.state.codeInfo !== 'PCC-MARKET-0001' ? notstart : over} />{' '}

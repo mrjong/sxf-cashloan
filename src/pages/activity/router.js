@@ -55,5 +55,11 @@ export default [
 		zhName: 'mx30',
 		title: '借钱免息30天',
 		component: () => import('pages/activity/mianxi715_page')
+	},
+	{
+		path: '/activity/mianxi100_page',
+		zhName: 'mxhbxsl',
+		title: '100元免息红包限时领',
+		component: () => import('pages/activity/mianxi822_page')
 	}
 ];

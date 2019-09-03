@@ -614,7 +614,10 @@ export default class loan_fenqi_page extends PureComponent {
 				if (res.msgCode === 'PTM0000') {
 					// 清除卡信息
 					store.removeCardData();
-					this.props.history.push('/home/home');
+					this.props.toast.info('签约成功，请留意放款通知！');
+					setTimeout(() => {
+						this.props.history.push('/home/home');
+					}, 2000);
 					buriedPointEvent(loan_fenqi.submitResult, {
 						is_success: true
 					});
@@ -1036,6 +1039,10 @@ export default class loan_fenqi_page extends PureComponent {
 						ref={(ele) => {
 							this.smsModal = ele;
 						}}
+						history={this.props.history}
+						fetch={this.props.$fetch}
+						toast={this.props.toast}
+						bankNo={payBankCardAgrNo}
 					/>
 				)}
 			</div>

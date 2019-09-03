@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 14:31:25
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -6,7 +10,14 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import {
+	getDeviceType,
+	getFirstError,
+	validators,
+	handleInputBlur,
+	queryUsrSCOpenId,
+	recordContract
+} from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView, sxfDataPv, sxfburiedPointEvent } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
@@ -23,8 +34,7 @@ const API = {
 	imageCode: '/signup/sendImg',
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
+	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
 };
 
 let entryPageTime = '';
@@ -173,15 +183,12 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
-						if (!store.getQueryUsrSCOpenId()) {
-							this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-								if (res.msgCode === 'PTM0000') {
-									window.sa.login(res.data);
-									store.setQueryUsrSCOpenId(res.data);
-								}
-								this.props.history.replace('/others/download_page');
-							});
-						}
+						recordContract({
+							contractType: '01,02'
+						});
+						queryUsrSCOpenId({ $props: this.props }).then(() => {
+							this.props.history.replace('/others/download_page');
+						});
 					},
 					(error) => {
 						error.msgInfo &&

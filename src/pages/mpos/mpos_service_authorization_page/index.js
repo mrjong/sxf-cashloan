@@ -5,7 +5,7 @@ import Cookie from 'js-cookie';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType } from 'utils';
+import { getDeviceType, recordContract } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
@@ -42,6 +42,10 @@ export default class mpos_service_authorization_page extends PureComponent {
 			.then(
 				(res) => {
 					buriedPointEvent(mpos_service_authorization.auth_btn);
+					// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+					recordContract({
+						contractType: '01,02'
+					});
 					if (res.authSts === '01') {
 						console.log('发验证码');
 						this.props.history.replace(

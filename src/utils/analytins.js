@@ -1,8 +1,12 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 15:20:58
+ */
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
 const { PROJECT_ENV } = process.env;
-const SxfData = window.sxfDataConfig && window.sxfDataConfig.opened ? require('../assets/lib/sxfData') : '';
-
+const SxfData = window.globalConfig && window.globalConfig.MDopen ? require('../assets/lib/sxfData') : '';
+import linkConf from 'config/link.conf';
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
 	window.version = 'v1.1';
@@ -29,7 +33,7 @@ export const initAnalytics = () => {
 export const initSxfData = () => {
 	SxfData &&
 		SxfData.init({
-			track_url: 'https://fbds-test.vbillbank.com/buried',
+			track_url: `${linkConf.MD_URL}/buried`,
 			local_storage: {
 				type: 'localStorage'
 			},

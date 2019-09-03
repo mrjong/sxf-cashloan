@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 14:38:12
+ */
 import React, { Component } from 'react';
 import qs from 'qs';
 import Cookie from 'js-cookie';
@@ -128,11 +132,21 @@ export default class wx_middle_page extends Component {
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
-			this.props.history.replace(NoLoginUrl);
+			if (window.globalConfig && window.globalConfig.wxTest) {
+				this.props.history.replace(NoLoginUrl + '?wxTestFrom=wx_middle_page');
+			} else {
+				this.props.history.replace(NoLoginUrl);
+			}
 		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
+		} else if (window.globalConfig && window.globalConfig.wxTest) {
+			// 微信测试
+			this.props.history.replace({
+				pathname: '/others/mpos_download_page',
+				search: `?wxTestFrom=wx_middle_page`
+			});
 		} else {
-			this.props.history.replace('/home/home'); //微信授权成功调到登录页
+			this.props.history.replace('/home/home');
 		}
 	};
 	render() {

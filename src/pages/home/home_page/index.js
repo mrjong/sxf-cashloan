@@ -1,11 +1,22 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 15:01:52
+ */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	isCanLoan,
+	getMoxieData,
+	dateDiffer,
+	queryUsrSCOpenId
+} from 'utils';
 import qs from 'qs';
-import { getH5Channel } from 'utils/common';
-import { buriedPointEvent, sxfDataLogin } from 'utils/analytins';
+import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import Carousels from 'components/Carousels';
@@ -40,7 +51,6 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
@@ -50,7 +60,9 @@ const API = {
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
 	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
-	couponNotify: '/activeConfig/couponNotify' // 免息活动检查是否参与
+	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
+	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
+	couponRedDot: '/index/couponRedDot' // 优惠券红点
 };
 let token = '';
 let tokenFromStorage = '';
@@ -116,13 +128,14 @@ export default class home_page extends PureComponent {
 		// 清除一些store
 		this.removeStore();
 		// 埋点绑定
-		this.queryUsrSCOpenId();
+		queryUsrSCOpenId({ $props: this.props });
 		// 获取token 并设置
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
 		this.isRenderCash();
 		this.showFeedbackModal();
+		this.couponRedDot(); // 优惠券使用红点
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
@@ -182,7 +195,13 @@ export default class home_page extends PureComponent {
 		store.removeCashFenQiCardArr();
 		store.removeCouponData();
 	};
-
+	couponRedDot = () => {
+		this.props.$fetch.get(API.couponRedDot).then((result) => {
+			if (result && result.data) {
+				this.props.globalTask(result.data);
+			}
+		});
+	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
 		this.props.$fetch
@@ -786,41 +805,19 @@ export default class home_page extends PureComponent {
 						}
 					}
 				);
-				let couponTestData = null;
-				if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
-					couponTestData = await this.props.$fetch.get(API.couponTest);
-				}
-				if (
-					(result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') &&
-					(couponTestData && couponTestData.data && couponTestData.data !== '0')
-				) {
-					this.props.globalTask(couponTestData.data === '1' ? 'yhq7' : 'yhq50');
+				if (store.getBonusActivity()) {
+					store.removeBonusActivity();
 					this.setState({
 						isShowActivityModal: true,
-						modalType: couponTestData.data === '1' ? 'yhq7' : 'yhq50'
+						modalType: 'getBonus'
 					});
 				} else {
-					this.getMianxi7();
+					this.isInvoking_bonus();
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
 		});
-	};
-	getMianxi7 = async () => {
-		let mxData = await this.props.$fetch.get(API.couponNotify);
-		if (mxData && mxData.msgCode === 'PTM0000' && mxData.data !== null && !store.getShowActivityModal2()) {
-			this.setState(
-				{
-					isShowActivityModal: true,
-					modalBtnFlag: true,
-					modalType: `mianxi${mxData.data}`
-				},
-				() => {
-					store.setShowActivityModal2(true);
-				}
-			);
-		}
 	};
 	// 缓存banner
 	cacheBanner = () => {
@@ -841,21 +838,6 @@ export default class home_page extends PureComponent {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
 			});
-		}
-	};
-
-	// 神策用户绑定
-	queryUsrSCOpenId = () => {
-		if (token && tokenFromStorage) {
-			if (!store.getQueryUsrSCOpenId()) {
-				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-					if (res.msgCode === 'PTM0000') {
-						window.sa.login(res.data);
-						sxfDataLogin(res.data);
-						store.setQueryUsrSCOpenId(res.data);
-					}
-				});
-			}
 		}
 	};
 
@@ -913,10 +895,6 @@ export default class home_page extends PureComponent {
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
 				break;
-			case 'yhq7': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
-			case 'yhq50': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
-				this.getMianxi7();
-				break;
 
 			default:
 				break;
@@ -925,8 +903,6 @@ export default class home_page extends PureComponent {
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
 		this.closeActivityModal(type);
-		const { usrIndexInfo } = this.state;
-		const { indexSts } = usrIndexInfo;
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
@@ -943,58 +919,25 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(activity.mianxiModalBtnClick);
 				this.props.history.push('/activity/mianxi_page?entry=home_alert');
 				break;
-			case 'mianxi7':
-				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '7',
-					h5Channel726: getH5Channel()
+			case 'getBonus':
+				buriedPointEvent(activity.mianxi822ModalUseBtn, {
+					medium: 'H5',
+					clickType: 'getPrize'
 				});
-				setTimeout(() => {
-					if (indexSts === 'LN0001') {
-						this.handleApply();
-					} else if (indexSts === 'LN0002') {
-						this.handleProgressApply('01');
-					} else if (indexSts === 'LN0010') {
-						this.goToNewMoXie();
-					} else {
-						this.handleSmartClick();
-					}
-				}, 500);
-
+				this.couponHandler();
 				break;
-			case 'mianxi15':
-				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '15',
-					h5Channel726: getH5Channel()
+			case 'notUseBonus':
+				buriedPointEvent(activity.mianxi822ModalUseBtn, {
+					medium: 'H5',
+					clickType: 'notUse'
 				});
-
-				setTimeout(() => {
-					if (indexSts === 'LN0001') {
-						this.handleApply();
-					} else if (indexSts === 'LN0002') {
-						this.handleProgressApply('01');
-					} else if (indexSts === 'LN0010') {
-						this.goToNewMoXie();
-					} else {
-						this.handleSmartClick();
-					}
-				}, 500);
+				this.couponHandler();
 				break;
-			case 'mianxi30':
-				buriedPointEvent(activity.mianxi726ModalBtnClick, {
-					dayType726: '30',
-					h5Channel726: getH5Channel()
+			case 'joinBonus':
+				buriedPointEvent(activity.mianxi822ModalJoinBtn, {
+					medium: 'H5'
 				});
-				setTimeout(() => {
-					if (indexSts === 'LN0001') {
-						this.handleApply();
-					} else if (indexSts === 'LN0002') {
-						this.handleProgressApply('01');
-					} else if (indexSts === 'LN0010') {
-						this.goToNewMoXie();
-					} else {
-						this.handleSmartClick();
-					}
-				}, 500);
+				this.props.history.push('/activity/mianxi100_page?entry=homeModal');
 				break;
 			default:
 				break;
@@ -1480,6 +1423,80 @@ export default class home_page extends PureComponent {
 					reject();
 				});
 		});
+	};
+
+	// 判断是否参与过与使用过100元利息红包限时领活动
+	isInvoking_bonus = async () => {
+		let mxData = await this.props.$fetch.get(API.bonusSts);
+		if (mxData && mxData.msgCode === 'PTM0000') {
+			if (mxData.data && mxData.data.sts === '00' && !store.getShowActivityModal()) {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalType: 'joinBonus'
+					},
+					() => {
+						store.setShowActivityModal(true);
+					}
+				);
+			} else if (mxData.data && mxData.data.sts === '01' && !store.getShowActivityModal3()) {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalType: 'notUseBonus'
+					},
+					() => {
+						store.setShowActivityModal3(true);
+					}
+				);
+			}
+		}
+	};
+
+	// 100元利息红包限时领活动中点击去使用、去参与按钮
+	couponHandler = () => {
+		const { showDiv, cardStatus, usrIndexInfo } = this.state;
+		const { indexSts } = usrIndexInfo;
+		if (showDiv) {
+			switch (showDiv) {
+				case '50000':
+				case 'circle':
+					this.handleApply();
+					break;
+				case 'progress':
+					this.handleProgressApply(cardStatus);
+					break;
+				case 'applyCredict':
+					this.handleSmartClick();
+					break;
+				default:
+					break;
+			}
+		} else {
+			switch (indexSts) {
+				case 'LN0001': // 新用户，信用卡未授权
+					this.handleApply();
+					break;
+				case 'LN0002': // 账单爬取中
+					this.handleProgressApply('01');
+					break;
+				case 'LN0003': // 账单爬取成功
+				case 'LN0004': // 代还资格审核中
+				case 'LN0005': // 暂无代还资格
+				case 'LN0006': // 风控审核通过
+				case 'LN0007': // 放款中
+				case 'LN0008': // 放款失败
+				case 'LN0009': // 放款成功
+				case 'LN0011':
+					this.handleSmartClick();
+					break;
+				case 'LN0010': // 账单爬取失败/老用户
+					this.goToNewMoXie();
+					break;
+				default:
+					break;
+			}
+		}
 	};
 
 	render() {

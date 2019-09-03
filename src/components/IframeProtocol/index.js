@@ -1,5 +1,8 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:46:57
+ */
 import React from 'react';
-import { headerIgnore } from 'utils';
 import styles from './index.scss';
 
 export default class IframeProtocol extends React.Component {
@@ -16,7 +19,7 @@ export default class IframeProtocol extends React.Component {
 
 		return (
 			<iframe
-				className={headerIgnore() ? styles.container2 : styles.container}
+				className={styles.container2}
 				src={`${this.state.prefix}${ID}`}
 				name={ID}
 				id={ID}

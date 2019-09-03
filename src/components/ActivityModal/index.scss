@@ -74,6 +74,33 @@
 				width: 270px;
 				height: 110px;
 			}
+			.getBonusBtn {
+				position: absolute;
+				bottom: 190px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 434px;
+				height: 122px;
+			}
+			.joinBonusBtn {
+				position: absolute;
+				bottom: 115px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 160px;
+				height: 160px;
+			}
+			.notUseBonusBtn {
+				position: absolute;
+				bottom: 108px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 434px;
+				height: 122px;
+			}
+			.couponDesc {
+				bottom: 68px;
+			}
 		}
 		.closeBtn {
 			text-align: center;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 12:31:11
+ * @LastEditTime: 2019-09-03 15:08:07
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,7 +11,14 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import logoImg from 'assets/images/common/black_logo.png';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import {
+	getDeviceType,
+	getFirstError,
+	validators,
+	handleInputBlur,
+	queryUsrSCOpenId,
+	recordContract
+} from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
 	buriedPointEvent,
@@ -20,14 +27,15 @@ import {
 	sxfDataPv,
 	sxfburiedPointEvent
 } from 'utils/analytins';
-import { login } from 'utils/analytinsType';
 import { sxflogin } from 'utils/sxfAnalytinsType';
 import { domListen } from 'utils/domListen';
+import { login, wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
 import { setBackGround } from 'utils/background';
 
 let timmer;
+let entryPageTime = '';
 const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -132,6 +140,7 @@ export default class login_page extends PureComponent {
 		// 获取地址
 		address();
 		pageView();
+		entryPageTime = new Date();
 	}
 
 	componentWillUnmount() {
@@ -143,6 +152,17 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			let exitPageTime = new Date();
+			let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+			buriedPointEvent(wxTest.wxTestLoginPageTime, {
+				durationTime: durationTime,
+				entry: queryData.wxTestFrom
+			});
+		} else {
+			entryPageTime = '';
+		}
 	}
 
 	// 校验手机号
@@ -156,6 +176,12 @@ export default class login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			buriedPointEvent(wxTest.wxTestLoginBtnClick, {
+				entry: queryData.wxTestFrom
+			});
+		}
 		if (!this.validateFn()) {
 			return;
 		}
@@ -208,10 +234,14 @@ export default class login_page extends PureComponent {
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
 						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
+						// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+						recordContract({
+							contractType: '01,02'
+						});
 						if (this.state.disabledInput) {
 							this.requestGetStatus();
 						} else {
-							this.props.history.push('/home/home');
+							this.goHome();
 						}
 					},
 					(error) => {
@@ -285,6 +315,12 @@ export default class login_page extends PureComponent {
 
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			buriedPointEvent(wxTest.wxTestLoginSmsCode, {
+				entry: queryData.wxTestFrom
+			});
+		}
 		if (!this.state.timeflag) return;
 		this.getSmsCode();
 	};
@@ -478,7 +514,19 @@ export default class login_page extends PureComponent {
 		}
 		return false;
 	};
-
+	goHome = () => {
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			queryUsrSCOpenId({ $props: this.props }).then(() => {
+				this.props.history.replace({
+					pathname: '/others/mpos_download_page',
+					search: `?wxTestFrom=${queryData.wxTestFrom}`
+				});
+			});
+		} else {
+			this.props.history.replace('/home/home');
+		}
+	};
 	// 获取授信列表状态
 	requestGetStatus = () => {
 		this.props.$fetch
@@ -499,18 +547,18 @@ export default class login_page extends PureComponent {
 								search: '?jumpToBase=true&entry=fail'
 							});
 						} else {
-							this.props.history.replace('/home/home');
+							this.goHome();
 						}
 					}
 				} else {
 					this.props.toast.info(result.msgInfo, 2, () => {
-						this.props.history.replace('/home/home');
+						this.goHome();
 					});
 				}
 			})
 			.catch((err) => {
 				console.log(err);
-				this.props.history.replace('/home/home');
+				this.goHome();
 			});
 	};
 
