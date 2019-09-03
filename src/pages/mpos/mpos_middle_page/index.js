@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 12:07:07
+ * @LastEditTime: 2019-09-03 17:21:57
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -78,11 +78,7 @@ export default class mpos_middle_page extends Component {
 			this.setState({ showBoundle: true });
 		}
 	};
-	goHome = (res) => {
-		// sa.login(res.userId);
-		Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
-		// TODO: 根据设备类型存储token
-		store.setToken(res.loginToken);
+	goHome = () => {
 		this.props.history.replace('/home/home');
 	};
 	transition = () => {
@@ -103,12 +99,14 @@ export default class mpos_middle_page extends Component {
 							`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`
 						);
 					} else if (res.authFlag === '1') {
+						// sa.login(res.userId);
+						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.loginToken);
 						activeConfigSts({
 							$props: this.props,
 							type: 'A',
-							callback: () => {
-								this.this.goHome(res);
-							}
+							callback: this.goHome
 						});
 					} else {
 						this.props.history.replace(`/login?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);

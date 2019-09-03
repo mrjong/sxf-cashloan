@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:42:57
+ * @LastEditTime: 2019-09-03 17:18:26
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -921,6 +921,13 @@ export const queryUsrSCOpenId = ({ $props }) => {
 		}
 	});
 };
+/**
+ * @description: AB测试
+ * @param {$props} this.props
+ * @param {callback} 回调函数
+ * @param {type} 类型 A/B
+ * @return:
+ */
 export const activeConfigSts = ({ $props, callback, type }) => {
 	$props.$fetch
 		.get(API.activeConfigSts)
