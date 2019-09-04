@@ -259,7 +259,7 @@ export default class order_detail_page extends PureComponent {
 								this.setState({
 									penaltyInfo
 								});
-							} else if (!(billOvduSts === null || billOvduSts === '4')) {
+							} else if (!(billOvduSts === null || billOvduSts === '4' || billOvduSts === '2')) {
 								//有罚息或滞纳金
 								this.handlePenaltyInfo(billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt);
 							} else {
