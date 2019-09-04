@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-04 11:33:09
+ */
 /*eslint-disable */
 'use strict';
 var CONFIG = {
@@ -646,7 +650,8 @@ var breaker = {},
 	(_.info = {
 		properties: function(e) {
 			return (
-				'pv' === e && (networkType = _.getNetworkType()), { netType: networkType, Os: detector$1.os.name }
+				'pv' === e && (networkType = _.getNetworkType()),
+				{ netType: networkType || '', Os: detector$1.os.name || '' }
 			);
 		}
 	}),
@@ -1006,22 +1011,28 @@ var classCallCheck = function(e, t) {
 								this.local_storage.load();
 								var i = _.JSONDecode(_.JSONEncode((t = t || {}))) || {},
 									o = new Date().getTime();
-								i = _.extend({}, this.instance.get_property('superProperties'), i, {});
+								i = _.extend(
+									{},
+									this.instance.get_property && this.instance.get_property('superProperties'),
+									i,
+									{}
+								);
 								var a = {
-										uId: this.instance.get_property('userId') || '',
+										uId: (this.instance.get_property && this.instance.get_property('userId')) || '',
 										pAttr: r || {},
 										sdkT: 'h5',
-										eId: e,
-										t: o,
-										bId: this.instance.get_property('bId') || '',
-										dId: this.instance.get_device_id(),
-										cType: i.cType || '',
-										actId: i.actId || '',
-										pId: pageId,
-										gps: i.gps || '',
+										eId: e || '',
+										t: o || '',
+										bId: (this.instance.get_property && this.instance.get_property('bId')) || '',
+										dId: (this.instance.get_device_id && this.instance.get_device_id()) || '',
+										cType: (i && i.cType) || '',
+										actId: (i && i.actId) || '',
+										pLine: (i && i.pLine) || '',
+										pId: pageId || '',
+										gps: (i && i.gps) || '',
 										dAttr: {
-											bs: this.instance.get_property('browserName') || '',
-											bVer: this.instance.get_property('fullVersion') || ''
+											bs: (this.instance.get_property && this.instance.get_property('browserName')) || '',
+											bVer: (this.instance.get_property && this.instance.get_property('fullVersion')) || ''
 										}
 									},
 									s = (a = _.extend({}, a, _.info.properties(e)));
