@@ -2,7 +2,7 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem } from 'antd-mobile';
+import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -18,7 +18,6 @@ import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-import { Modal } from 'antd-mobile';
 
 let timmer;
 const API = {
@@ -449,13 +448,14 @@ export default class login_common_page extends PureComponent {
 	// 弹框里的倒计时
 	startCountDown = () => {
 		let times = this.state.times;
+		this.clearCountDown();
 		modalTimer = setInterval(() => {
 			this.setState({
 				times: times--
 			});
 			if (times <= 0) {
-				this.downloadApp();
 				this.clearCountDown();
+				this.downloadApp();
 			}
 		}, 1000);
 	};
