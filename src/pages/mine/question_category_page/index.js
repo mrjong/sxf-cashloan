@@ -75,6 +75,7 @@ export default class coupon_page extends PureComponent {
 			type: this.props.history.location.state.value
 		};
 
+		let startIndex = (pIndex - 1) * 15; //每次分页的起始序号
 		let data = await this.props.$fetch
 			.post(API.questionList, sendParams)
 			.then((res) => {
@@ -92,7 +93,7 @@ export default class coupon_page extends PureComponent {
 						});
 					}
 					for (let i = res.data.length - 1; i >= 0; i--) {
-						res.data[i].question = `${i + 1}. ${res.data[i].question}`;
+						res.data[i].question = `${startIndex + i + 1}. ${res.data[i].question}`;
 						dataArr.push(res.data[i]);
 					}
 					return dataArr;

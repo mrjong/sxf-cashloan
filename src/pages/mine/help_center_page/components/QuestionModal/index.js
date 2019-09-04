@@ -110,7 +110,8 @@ export default class QuestionModal extends PureComponent {
 						}}
 					/>
 				</div>
-				<p className={styles.modalDesc} dangerouslySetInnerHTML={{ __html: question.answer }}></p>
+				<pre className={styles.modalDesc} dangerouslySetInnerHTML={{ __html: question.answer }}></pre>
+
 				<div className={styles.desc_icon}>以上内容是否解决了您的问题</div>
 				<div className={styles.zan_wrap}>
 					<div
