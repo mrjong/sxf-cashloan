@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 17:26:02
+ * @LastEditTime: 2019-09-04 10:38:11
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -929,6 +929,10 @@ export const queryUsrSCOpenId = ({ $props }) => {
  * @return:
  */
 export const activeConfigSts = ({ $props, callback, type }) => {
+	if (type === 'B') {
+		$props.history.push('/others/mpos_testB_download_page');
+		return;
+	}
 	$props.$fetch
 		.get(API.activeConfigSts)
 		.then((res) => {
@@ -944,9 +948,6 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 					case '02':
 						if (type === 'A') {
 							callback();
-						} else {
-							//下载页面
-							$props.history.push('/others/mpos_testB_download_page');
 						}
 
 						break;
