@@ -28,19 +28,19 @@ export default class outer_test_login_page extends PureComponent {
 				break;
 			case '03':
 				showData = {
-					bannerImg: bannerImg2,
+					bannerImg: bannerImg3,
 					isChecked: true
 				};
 				break;
 			case '04':
 				showData = {
-					bannerImg: bannerImg2,
+					bannerImg: bannerImg3,
 					isChecked: false
 				};
 				break;
 			case '05':
 				showData = {
-					bannerImg: bannerImg3,
+					bannerImg: bannerImg2,
 					isChecked: true
 				};
 				break;
