@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-04 17:26:10
+ * @LastEditTime: 2019-09-04 17:31:08
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
