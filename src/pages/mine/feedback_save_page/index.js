@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 18:59:49
+ * @LastEditTime: 2019-09-04 17:26:10
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,7 +11,7 @@ import { setBackGround } from 'utils/background';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter } from 'utils/analytinsType';
-
+import lrz from 'lrz';
 const API = {
 	addOpinion: '/question/addOpinion'
 };
@@ -31,17 +31,31 @@ export default class mine_page extends PureComponent {
 	}
 	onChange = (images, type, index) => {
 		console.log(images, type, index);
-		if (type === 'add' && images && images[images.length - 1].file.size > 2 * 1024 * 1024) {
-			this.props.toast.info('图片大小不能超过2M');
-			return;
-		}
+		let imagesCopy = images;
 		if (type === 'add' && images && !/.(jpg|png|PNG|JPG)$/.test(images[images.length - 1].file.name)) {
 			this.props.toast.info('请上传jpg、png格式的图片');
 			return;
 		}
-		this.setState({
-			images
-		});
+		type === 'add' &&
+			lrz(images && images[images.length - 1].file, { quality: 0.5 })
+				.then((rst) => {
+					if (rst.file.size > 2 * 1024 * 1024) {
+						this.props.toast.info('图片大小不能超过2M');
+						return;
+					}
+					imagesCopy.pop();
+					imagesCopy.push({ ...rst, url: rst.base64 });
+					this.setState({
+						images: imagesCopy
+					});
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		type === 'remove' &&
+			this.setState({
+				images: imagesCopy
+			});
 	};
 	addOpinion = () => {
 		const { textareaVal = '', images = [] } = this.state;
