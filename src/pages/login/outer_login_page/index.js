@@ -1,9 +1,10 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:31:25
+ * @LastEditTime: 2019-09-04 10:53:47
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
+
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
@@ -79,11 +80,15 @@ export default class login_page extends PureComponent {
 
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
+		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
+		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		sessionStorage.clear();
 		localStorage.clear();
 		// 首页弹窗要用的
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);
+		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
+		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);
 
 		setH5Channel(storeH5Channel);
 
