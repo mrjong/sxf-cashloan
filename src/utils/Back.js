@@ -248,6 +248,8 @@ if (window.history && window.history.pushState) {
 							window.WeixinJSBridge.call('closeWindow');
 						}
 					}
+				} else if (isMPOS() && protocolBack) {
+					return;
 				} else if (isMPOS()) {
 					closeCurrentWebView();
 				} else {

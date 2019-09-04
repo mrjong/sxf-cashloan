@@ -68,7 +68,7 @@ export default class login_common_page extends PureComponent {
 		});
 		store.removeLoginDownloadBtn();
 		// 登录页单独处理
-		window.history.pushState(null, null, document.URL);
+		// window.history.pushState(null, null, document.URL);
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
