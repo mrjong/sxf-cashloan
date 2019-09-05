@@ -458,7 +458,7 @@ export default class login_common_page extends PureComponent {
 			this.setState({
 				times: times--
 			});
-			if (times <= 0) {
+			if (times <= -1) {
 				this.clearCountDown();
 				this.downloadApp();
 			}
