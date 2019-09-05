@@ -17,4 +17,24 @@
 			color: #fe6666;
 		}
 	}
+	.fix_bottom {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		z-index: 100;
+	}
+}
+.fix_bottom {
+	:global {
+		.am-notice-bar {
+			height: 50px;
+			line-height: 50px;
+			background-color: #fff;
+			box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1) inset;
+		}
+		.am-notice-bar-content {
+			margin: 0 15px;
+		}
+	}
 }

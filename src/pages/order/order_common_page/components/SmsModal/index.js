@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 10:11:15
+ */
 import React from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';

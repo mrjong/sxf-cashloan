@@ -21,7 +21,11 @@ export default class ButtonCustom extends React.PureComponent {
 		const { listdescinfo = [], isClear } = this.props;
 		return (
 			<div>
-				<ul className={styles.list_desc_container_box}>
+				<ul
+					className={[styles.list_desc_container_box, isClear && styles.list_desc_container_clearbox].join(
+						' '
+					)}
+				>
 					{listdescinfo.length > 0 &&
 						listdescinfo.map((item, index) => {
 							if (parseFloat(item.feeAmt) !== 0) {
@@ -37,18 +41,14 @@ export default class ButtonCustom extends React.PureComponent {
 										<div className={styles.list_desc_content}>
 											<label
 												className={
-													item.feeNm === '剩余应还'
-														? styles.list_desc_container_FW
-														: styles.list_desc_container
+													item.feeNm === '合计' ? styles.list_desc_container_FW : styles.list_desc_container
 												}
 											>
 												{item.feeNm}
 											</label>
 										</div>
 										<div
-											className={
-												item.feeNm === '剩余应还' ? styles.list_desc_extra_FW : styles.list_desc_extra
-											}
+											className={item.feeNm === '合计' ? styles.list_desc_extra_FW : styles.list_desc_extra}
 										>
 											<span>{parseFloat(item.feeAmt).toFixed(2)}</span>
 										</div>
