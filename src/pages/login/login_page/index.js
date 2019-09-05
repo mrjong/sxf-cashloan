@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:41:15
+ * @LastEditTime: 2019-09-05 15:10:26
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -158,7 +158,7 @@ export default class login_page extends PureComponent {
 			callback();
 		}
 	};
-	goHome = () => {
+	goFLHome = () => {
 		activeConfigSts({
 			$props: this.props,
 			type: 'A',
@@ -229,7 +229,7 @@ export default class login_page extends PureComponent {
 							contractType: '01,02'
 						});
 						if (this.state.disabledInput) {
-							this.goHome();
+							this.goFLHome();
 						} else {
 							this.goHome();
 						}
