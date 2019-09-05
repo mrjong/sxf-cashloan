@@ -10,7 +10,7 @@ const Loading = ({ error, pastDelay }) => {
 	} else if (error) {
 		return (
 			<div>
-				<ErrPage></ErrPage>
+				<ErrPage />
 			</div>
 		);
 	}
@@ -43,6 +43,12 @@ const RouterPage = Loadable({
 	LoadingComponent,
 	delay: 300
 });
+const OuterTestLoginPage = Loadable({
+	loader: () => import('pages/login/outer_test_login_page'),
+	loading: Loading,
+	LoadingComponent,
+	delay: 300
+});
 export default class Routers extends Component {
 	render() {
 		return (
@@ -52,6 +58,7 @@ export default class Routers extends Component {
 				<Route path="/outer_login" component={OuterLoginPage} />
 				<Route path="/outer_mpos_login" component={OuterMposLoginPage} />
 				<Route path="/:modules/:page" component={RouterPage} />
+				<Route path="/outer_test_login" component={OuterTestLoginPage} />
 			</Switch>
 		);
 	}

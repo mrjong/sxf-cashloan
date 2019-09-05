@@ -43,8 +43,18 @@
 			font-weight: bold;
 			color: #121c32;
 			height: 91px;
-			margin-top: 32px;
-			margin-bottom: 34px;
+      margin-top: 28px;
+			margin-bottom: 5px;
+			// margin-bottom: 34px;
+		}
+		.proDesc {
+			margin-bottom: 37px;
+			img {
+				display: block;
+				width: 546px;
+				height: 25px;
+				margin: 0 auto;
+			}
 		}
 		.commonLine {
 			position: absolute;
@@ -148,7 +158,7 @@
 			font-size: 30px;
 			// font-weight: bold;
 			color: #fff;
-			margin: 53px auto 30px;
+			margin: 43px auto 10px;
 			span {
 				display: inline-block;
 				width: 100%;
@@ -225,5 +235,62 @@
 		// 	background: #FE4D2A;
 		// 	font-size: 26px;
 		// }
+	}
+}
+
+.loginModalContainer {
+	position: relative;
+	padding-top: 87px;
+	.loginModalBg {
+		display: block;
+		width: 100%;
+	}
+	.loginModalBtn {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, 0);
+		bottom: 20px;
+		width: 422px;
+		height: 112px;
+	}
+	.tipsCont {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, 0);
+		bottom: 185px;
+		font-size: 26px;
+		color: #f6521f;
+		line-height: 100%;
+		span {
+			font-weight: 600;
+		}
+	}
+	.closeIcoStyle {
+		position: absolute;
+		right: 42px;
+		width: 25px;
+		height: 26px;
+		top: 0;
+	}
+}
+
+:global {
+	.loginModalBox {
+		.am-modal.am-modal-transparent {
+      width: 100%;
+      position: relative;
+      top: -87px;
+      // position: absolute;
+      // top: 60px;
+		}
+		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		.am-modal.am-modal-transparent .am-modal-content {
+			padding: 0;
+		}
+		.am-modal-content {
+			background: transparent;
+		}
 	}
 }

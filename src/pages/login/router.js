@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 10:18:00
+ */
 export default [
 	{
 		path: '/login',
@@ -16,5 +20,11 @@ export default [
 		title: '还到',
 		arrowHide: true,
 		component: () => import('pages/login/outer_mpos_login_page')
+	},
+	{
+		path: '/outer_test_login',
+		title: '还到',
+		arrowHide: true,
+		component: () => import('pages/login/outer_test_login_page')
 	}
 ];
