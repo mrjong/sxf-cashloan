@@ -16,6 +16,7 @@ const API = {
 	addOpinion: '/question/addOpinion'
 };
 let queryData = {};
+let isFetching = false;
 @fetch.inject()
 @setBackGround('#fff')
 export default class mine_page extends PureComponent {
@@ -58,6 +59,7 @@ export default class mine_page extends PureComponent {
 			});
 	};
 	addOpinion = () => {
+		if (isFetching) return;
 		const { textareaVal = '', images = [] } = this.state;
 		let imagesStream = new FormData();
 		for (let index = 0; index < images.length; index++) {
@@ -77,19 +79,26 @@ export default class mine_page extends PureComponent {
 		}
 		imagesStream.append('content', textareaVal);
 		imagesStream.append('type', queryData.type);
-		this.props.$fetch.post(API.addOpinion, imagesStream).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				this.props.toast.info('提交成功', 2, () => {
-					this.props.history.push('/mine/mine_page');
-				});
-				buriedPointEvent(helpCenter.submit_succ, {
-					img_count: images.length,
-					type_name: queryData.type
-				});
-			} else {
-				res.msgInfo && this.props.toast.info(res.msgInfo);
-			}
-		});
+		isFetching = true;
+		this.props.$fetch
+			.post(API.addOpinion, imagesStream)
+			.then((res) => {
+				isFetching = false;
+				if (res.msgCode === 'PTM0000') {
+					this.props.toast.info('提交成功', 2, () => {
+						this.props.history.push('/mine/mine_page');
+					});
+					buriedPointEvent(helpCenter.submit_succ, {
+						img_count: images.length,
+						type_name: queryData.type
+					});
+				} else {
+					res.msgInfo && this.props.toast.info(res.msgInfo);
+				}
+			})
+			.catch(() => {
+				isFetching = false;
+			});
 	};
 	render() {
 		const { images, textareaVal = '' } = this.state;

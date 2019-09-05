@@ -229,7 +229,6 @@ export default class coupon_page extends PureComponent {
 					/>
 				);
 			}
-			return <div className={styles.noMsg}>暂无问题</div>;
 		};
 		return (
 			<div className="category_page" ref={(el) => (this.messageBox = el)}>
