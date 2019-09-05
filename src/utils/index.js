@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:28:24
+ * @LastEditTime: 2019-09-04 10:38:11
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -28,6 +28,7 @@ const API = {
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser',
 	mxoieCardList: '/moxie/mxoieCardList/C',
+	activeConfigSts: '/activeConfig/ab/sts',
 	contractLog: '/contract/log', // 协议预览留痕记录
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
@@ -919,4 +920,46 @@ export const queryUsrSCOpenId = ({ $props }) => {
 			resolve(true);
 		}
 	});
+};
+/**
+ * @description: AB测试
+ * @param {$props} this.props
+ * @param {callback} 回调函数
+ * @param {type} 类型 A/B
+ * @return:
+ */
+export const activeConfigSts = ({ $props, callback, type }) => {
+	if (type === 'B') {
+		$props.history.push('/others/mpos_testB_download_page');
+		return;
+	}
+	$props.$fetch
+		.get(API.activeConfigSts)
+		.then((res) => {
+			if (res && res.msgCode === 'PTM0000' && res.data && res.data.sts) {
+				switch (res.data.sts) {
+					case '00':
+						callback();
+						break;
+					case '01':
+						//下载页面
+						$props.history.replace('/others/mpos_testA_download_page');
+						break;
+					case '02':
+						if (type === 'A') {
+							callback();
+						}
+
+						break;
+
+					default:
+						break;
+				}
+			} else {
+				$props.toast.info('系统开小差，请稍后重试');
+			}
+		})
+		.catch(() => {
+			$props.toast.info('系统开小差，请稍后重试');
+		});
 };

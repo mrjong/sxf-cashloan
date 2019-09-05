@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:31:42
+ * @LastEditTime: 2019-09-05 15:10:26
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -16,6 +16,7 @@ import {
 	getFirstError,
 	validators,
 	handleInputBlur,
+	activeConfigSts,
 	queryUsrSCOpenId,
 	recordContract
 } from 'utils';
@@ -157,7 +158,13 @@ export default class login_page extends PureComponent {
 			callback();
 		}
 	};
-
+	goFLHome = () => {
+		activeConfigSts({
+			$props: this.props,
+			type: 'A',
+			callback: this.requestGetStatus
+		});
+	};
 	//去登陆按钮
 	goLogin = () => {
 		const { queryData = {} } = this.state;
@@ -222,7 +229,7 @@ export default class login_page extends PureComponent {
 							contractType: '01,02'
 						});
 						if (this.state.disabledInput) {
-							this.requestGetStatus();
+							this.goFLHome();
 						} else {
 							this.goHome();
 						}
