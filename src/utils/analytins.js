@@ -1,5 +1,10 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 10:41:45
+ */
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
+const { PROJECT_ENV } = process.env;
 
 //初始化神策埋点 及 渠道信息
 export const initAnalytics = () => {
@@ -7,7 +12,7 @@ export const initAnalytics = () => {
 	window.sa.init({
 		server_url: saUrl, // eslint-disable-line
 		sdk_url: 'https://static.sensorsdata.cn/sdk/1.7.1.1/sensorsdata.min.js',
-		show_log: true, //是否打印上报日志
+		show_log: PROJECT_ENV !== 'pro', //是否打印上报日志
 		is_single_page: true
 	});
 
