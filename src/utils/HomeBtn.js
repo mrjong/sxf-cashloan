@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-06 18:05:43
+ */
 import { store } from 'utils/store';
 import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
@@ -243,7 +247,6 @@ class HomeBtn {
 	goToNewMoXie = () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.instance.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 	// 智能按钮点击事件

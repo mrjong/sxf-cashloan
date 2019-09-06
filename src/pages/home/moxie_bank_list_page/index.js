@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-06 17:45:33
+ */
 import React, { Component } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
@@ -134,7 +138,6 @@ export default class moxie_bank_list_page extends Component {
 		store.removeMoxieBackUrl2();
 		store.setAutId(item.authorId);
 		// if (setMoxieData && setMoxieData.indexOf('noAuthId') > -1) {
-		// 	store.setMoxieBackUrl(`/mine/credit_extension_page?isShowCommit=true&autId=${item.authorId}`);
 		// }
 		buriedPointEvent(moxie_bank_list.bankChooes, {
 			bankName: item.name
