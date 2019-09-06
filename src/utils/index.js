@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 18:05:33
+ * @LastEditTime: 2019-09-06 18:08:50
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -501,7 +501,7 @@ export const getOperatorStatus = ({ $props }) => {
 							resolve(false);
 							$props.toast.info('身份信息确认失败，请重新确认');
 							setTimeout(async () => {
-								let mxRes = await getMxStatus();
+								let mxRes = await getMxStatus({ $props });
 								if (mxRes && mxRes === '0') {
 									let mxQuery = location.pathname.split('/');
 									let RouterType = (mxQuery && mxQuery[2]) || '';
@@ -598,7 +598,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
 			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
-				let mxRes = await getMxStatus();
+				let mxRes = await getMxStatus({ $props });
 				if (mxRes && mxRes === '0') {
 					let mxQuery = location.pathname.split('/');
 					let RouterType = (mxQuery && mxQuery[2]) || '';
