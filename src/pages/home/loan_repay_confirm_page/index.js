@@ -17,7 +17,8 @@ import {
 	isCanLoan,
 	getOperatorStatus,
 	getMoxieData,
-	activeConfigSts
+	activeConfigSts,
+	getMxStatus
 } from 'utils';
 // import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
@@ -252,10 +253,17 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	goMoxieBankList = () => {
+	goMoxieBankList = async () => {
 		store.setToggleMoxieCard(true);
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		this.props.history.push('/home/moxie_bank_list_page');
+		let mxRes = await getMxStatus({ $props: this.props });
+		if (mxRes && mxRes === '0') {
+			let mxQuery = location.pathname.split('/');
+			let RouterType = (mxQuery && mxQuery[2]) || '';
+			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		} else {
+			this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+		}
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count, type) => {

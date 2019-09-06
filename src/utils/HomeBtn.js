@@ -3,7 +3,7 @@
  * @LastEditTime: 2019-09-06 18:05:43
  */
 import { store } from 'utils/store';
-import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
+import { getDeviceType, getNextStr, isCanLoan, getMoxieData, getMxStatus } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import TFDInit from 'utils/getTongFuDun';
@@ -244,10 +244,17 @@ class HomeBtn {
 		this.instance.props.history.push('/home/home');
 	};
 	// 跳新版魔蝎
-	goToNewMoXie = () => {
+	goToNewMoXie = async () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		this.instance.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+		let mxRes = await getMxStatus({ $props: this.props });
+		if (mxRes && mxRes === '0') {
+			let mxQuery = location.pathname.split('/');
+			let RouterType = (mxQuery && mxQuery[2]) || '';
+			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		} else {
+			this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+		}
 	};
 	// 智能按钮点击事件
 	handleSmartClick = () => {

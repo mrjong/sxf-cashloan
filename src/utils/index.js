@@ -631,6 +631,13 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+				let mxRes = await getMxStatus({ $props });
+				if (mxRes && mxRes === '0') {
+					let mxQuery = location.pathname.split('/');
+					let RouterType = (mxQuery && mxQuery[2]) || '';
+					$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+					return;
+				}
 				$props.SXFToast.hide();
 				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
@@ -887,7 +894,14 @@ export const dateDiffer = (sDate1, sDate2) => {
 	iDays = Math.floor(dateSpan / (24 * 3600 * 1000));
 	return iDays;
 };
-export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
+export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
+	let mxRes = await getMxStatus({ $props });
+	if (mxRes && mxRes === '0') {
+		let mxQuery = location.pathname.split('/');
+		let RouterType = (mxQuery && mxQuery[2]) || '';
+		$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		return;
+	}
 	$props.$fetch
 		.get(API.mxoieCardList)
 		.then((res) => {
