@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 18:13:10
+ * @LastEditTime: 2019-09-06 20:07:32
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -265,7 +265,8 @@ const interceptRouteArr = [
 	'/home/crawl_fail_page',
 	'/order/wx_pay_success_page',
 	// '/protocol/pdf_page',
-	'/home/loan_fenqi'
+	'/home/loan_fenqi',
+	'/common/crash_page'
 ];
 
 // 在需要路由拦截的页面 pushState

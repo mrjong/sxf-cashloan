@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-09-06 20:07:19
+ */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
@@ -132,6 +137,10 @@ if (window.history && window.history.pushState) {
 				store.removeTencentBackUrl();
 				window.ReactRouterHistory.replace(tencentBackUrl);
 				// store.removeIdChkPhotoBack();
+				return;
+			}
+			if (window.location.pathname === '/common/crash_page') {
+				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
