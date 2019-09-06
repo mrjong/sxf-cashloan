@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 15:46:26
+ * @LastEditTime: 2019-09-06 17:45:29
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -647,7 +647,6 @@ export default class home_page extends PureComponent {
 	goToNewMoXie = () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
 		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
 	};
 	// 请求用户绑卡状态

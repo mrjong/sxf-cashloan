@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 17:31:31
+ * @LastEditTime: 2019-09-06 18:05:33
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -60,7 +60,27 @@ export const isPhone = () => {
 	}
 	return flag;
 };
-
+/**
+ * @description: 运营商开关
+ * @param {type}
+ * @return:
+ */
+export const getMxStatus = ({ $props }) => {
+	return new Promise((resolve) => {
+		$props.$fetch
+			.post(`${API.MX_CRED_SWITCH}`)
+			.then((result) => {
+				if (result && result.msgCode === 'PTM0000') {
+					resolve((result && result.data && result.data.value) || '0');
+				} else {
+					resolve('0');
+				}
+			})
+			.catch(() => {
+				resolve('0');
+			});
+	});
+};
 export const pagesIgnore = (pathname = window.location.pathname) => {
 	if (pathname) {
 		let pageList = [
@@ -232,7 +252,6 @@ const interceptRouteArr = [
 	'/home/home',
 	'/order/order_page',
 	'/mine/mine_page',
-	// '/mine/credit_extension_page',
 	'/order/repayment_succ_page',
 	'/mine/credit_list_page',
 	'/home/essential_information',
@@ -481,7 +500,14 @@ export const getOperatorStatus = ({ $props }) => {
 						case '4':
 							resolve(false);
 							$props.toast.info('身份信息确认失败，请重新确认');
-							setTimeout(() => {
+							setTimeout(async () => {
+								let mxRes = await getMxStatus();
+								if (mxRes && mxRes === '0') {
+									let mxQuery = location.pathname.split('/');
+									let RouterType = (mxQuery && mxQuery[2]) || '';
+									$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+									return;
+								}
 								SXFToast.loading('加载中...', 0);
 								$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
 									if (result.msgCode === 'PTM0000' && result.data.url) {
@@ -523,12 +549,6 @@ export const getOperatorStatus = ({ $props }) => {
 		}
 	});
 };
-/**
- * @description: 运营商开关
- * @param {type}
- * @return:
- */
-export const MX_CRED_SWITCH = () => {};
 const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
@@ -578,6 +598,13 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
 			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
+				let mxRes = await getMxStatus();
+				if (mxRes && mxRes === '0') {
+					let mxQuery = location.pathname.split('/');
+					let RouterType = (mxQuery && mxQuery[2]) || '';
+					$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+					return;
+				}
 				$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
 					if (result.msgCode === 'PTM0000' && result.data.url) {
 						$props.SXFToast.hide();
