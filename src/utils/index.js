@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 18:08:50
+ * @LastEditTime: 2019-09-06 18:09:47
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -31,7 +31,7 @@ const API = {
 	activeConfigSts: '/activeConfig/ab/sts',
 	contractLog: '/contract/log', // 协议预览留痕记录
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
-	MX_CRED_SWITCH: '/my//switchFlag/MX_CRED_SWITCH'
+	MX_CRED_SWITCH: '/my/switchFlag/MX_CRED_SWITCH'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
