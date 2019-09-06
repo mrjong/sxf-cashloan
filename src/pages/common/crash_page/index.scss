@@ -1,0 +1,40 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.err_page {
+  height: 100vh;
+  text-align: center;
+  background: #fff;
+  padding-top: 240px;
+  box-sizing: border-box;
+	.err_img {
+		display: block;
+		width: 426px;
+		height: 363px;
+    background-image: url('./img/under_maintenance.png');
+		background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin: 0 auto;
+	}
+	.err_cont {
+		color: #333;
+		font-size: 34px;
+    font-weight: bold;
+    margin: 41px 0 21px 0;
+    line-height: 1;
+  }
+  .err_cont2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #B4B4B4;
+    line-height: 1;
+  }
+  .contact_tips {
+    position: fixed;
+    bottom: 38px;
+    left: 0;
+    width: 100%;
+    font-size:28px;
+    // font-weight: bold;
+    color: #333;
+  }
+}
