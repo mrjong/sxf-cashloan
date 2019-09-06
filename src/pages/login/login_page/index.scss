@@ -187,46 +187,6 @@
 	}
 }
 
-.fix_bottom_box {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	display: flex;
-	.img {
-		width: 80px;
-		height: 80px;
-		margin-right: 30px;
-	}
-	.f_left {
-		width: 560px;
-		height: 112px;
-		line-height: 112px;
-		background-color: #fff;
-		color: #777;
-		padding-left: 40px;
-		box-sizing: border-box;
-		font-size: 32px;
-		border-top: 1px solid #f0f1f5;
-		display: flex;
-		align-items: center;
-	}
-	.f_right {
-		width: 190px;
-		height: 112px;
-		line-height: 112px;
-		background-color: #ebde74;
-		color: #121c32;
-		text-align: center;
-		border-top: 1px solid #ebde74;
-		box-sizing: border-box;
-		font-family: 'PingFangSC-Medium';
-		font-weight: 500;
-		font-size: 32px;
-	}
-}
-.relative_bottom_box {
-	position: relative;
-}
 .greeting_box {
 	font-family: 'PingFangSC-Medium';
 	font-weight: 500;

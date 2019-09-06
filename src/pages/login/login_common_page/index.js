@@ -65,7 +65,6 @@ export default class login_common_page extends PureComponent {
 		this.setState({
 			queryData
 		});
-		store.removeLoginDownloadBtn();
 		// 登录页单独处理
 		// window.history.pushState(null, null, document.URL);
 		document.title = '还到';
