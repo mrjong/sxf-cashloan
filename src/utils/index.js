@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-04 10:38:11
+ * @LastEditTime: 2019-09-06 17:31:31
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -30,7 +30,8 @@ const API = {
 	mxoieCardList: '/moxie/mxoieCardList/C',
 	activeConfigSts: '/activeConfig/ab/sts',
 	contractLog: '/contract/log', // 协议预览留痕记录
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
+	MX_CRED_SWITCH: '/my//switchFlag/MX_CRED_SWITCH'
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -522,6 +523,12 @@ export const getOperatorStatus = ({ $props }) => {
 		}
 	});
 };
+/**
+ * @description: 运营商开关
+ * @param {type}
+ * @return:
+ */
+export const MX_CRED_SWITCH = () => {};
 const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
