@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 17:28:45
+ * @LastEditTime: 2019-09-06 18:06:38
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -236,7 +236,8 @@ const other = {
 	mposDownloadPage: `${prefix}_MPOS_DOWNLOAD_PAGE`, //页面埋点
 	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK`, //外部下载页按钮点击事件
-	testDownloadClick: `${prefix}_DOWNLOAD_CLICK` //A测试
+	testDownloadClick: `${prefix}_DOWNLOAD_CLICK`, //A测试
+	previewMaintenance: `${prefix}_MAINTENANCE_PAGE` //进入系统维护页面
 };
 
 const daicao = {

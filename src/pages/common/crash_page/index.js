@@ -1,20 +1,24 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-09-06 17:56:53
+ * @LastEditTime: 2019-09-06 18:06:45
  */
 import React, { PureComponent } from 'react';
+import qs from 'qs';
 import styles from './index.scss';
+import { buriedPointEvent } from 'utils/analytins';
+import { other } from 'utils/analytinsType';
 
 export default class crash_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {};
 	}
-	// 重新加载
-	reloadHandler = () => {
-		window.location.reload();
-	};
+	componentWillMount() {
+		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const { RouterType } = query;
+		buriedPointEvent(other.previewMaintenance, { from_page: RouterType });
+	}
 	render() {
 		return (
 			<div className={styles.err_page}>
