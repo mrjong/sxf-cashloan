@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 18:09:47
+ * @LastEditTime: 2019-09-06 18:13:10
  */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -68,7 +68,7 @@ export const isPhone = () => {
 export const getMxStatus = ({ $props }) => {
 	return new Promise((resolve) => {
 		$props.$fetch
-			.post(`${API.MX_CRED_SWITCH}`)
+			.get(`${API.MX_CRED_SWITCH}`)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000') {
 					resolve((result && result.data && result.data.value) || '0');
