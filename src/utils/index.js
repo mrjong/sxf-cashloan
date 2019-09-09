@@ -963,3 +963,9 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 			$props.toast.info('系统开小差，请稍后重试');
 		});
 };
+
+export const openNativeApp = () => {
+	if (!(isMPOS() && getDeviceType() === 'ANDRIOD')) {
+		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
+	}
+};

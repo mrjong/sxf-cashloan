@@ -5,8 +5,7 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
-import { getDeviceType } from 'utils';
-import { isMPOS } from 'utils/common';
+import { getDeviceType, openNativeApp } from 'utils';
 import logo from './img/logo.png';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
@@ -27,9 +26,8 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		if (!isMPOS() && getDeviceType() !== 'ANDRIOD') {
-			window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
-		}
+		openNativeApp();
+
 		this.getDownloadUrl();
 	}
 
