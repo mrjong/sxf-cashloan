@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-04 17:31:08
+ * @LastEditTime: 2019-09-10 20:05:00
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -73,10 +73,6 @@ export default class mine_page extends PureComponent {
 			this.props.toast.info('反馈意见字数不小于6个');
 			return;
 		}
-		if (!textareaVal) {
-			this.props.toast.info('提交成功');
-			return;
-		}
 		imagesStream.append('content', textareaVal);
 		imagesStream.append('type', queryData.type);
 		isFetching = true;
@@ -100,6 +96,9 @@ export default class mine_page extends PureComponent {
 				isFetching = false;
 			});
 	};
+	componentWillUnmount() {
+		isFetching = false;
+	}
 	render() {
 		const { images, textareaVal = '' } = this.state;
 		const btnDisable = !textareaVal || (textareaVal && textareaVal.length < 6);
@@ -125,7 +124,7 @@ export default class mine_page extends PureComponent {
 						files={images}
 						onChange={this.onChange}
 						selectable={images.length < 4}
-						multiple={true}
+						multiple={false}
 						accept="image/jpg,image/png"
 					/>
 				</div>
