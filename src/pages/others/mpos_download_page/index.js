@@ -9,7 +9,7 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import DownloadTip from 'components/DownloadTip';
-import { getDeviceType, isWXOpen, openNativeApp } from 'utils';
+import { getDeviceType, isWXOpen } from 'utils';
 import linkConf from 'config/link.conf';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
@@ -28,7 +28,6 @@ export default class mpos_download_page extends PureComponent {
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
 		urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
-		openNativeApp();
 	}
 	componentDidMount() {
 		entryPageTime = new Date();

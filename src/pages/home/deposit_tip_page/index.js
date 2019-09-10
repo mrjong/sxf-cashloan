@@ -5,7 +5,7 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
-import { getDeviceType, openNativeApp } from 'utils';
+import { getDeviceType } from 'utils';
 import logo from './img/logo.png';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
@@ -26,8 +26,6 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		openNativeApp();
-
 		this.getDownloadUrl();
 	}
 
