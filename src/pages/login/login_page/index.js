@@ -10,7 +10,6 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import logoImg from 'assets/images/common/black_logo.png';
 import {
 	getDeviceType,
 	getFirstError,
@@ -53,7 +52,6 @@ export default class login_page extends PureComponent {
 			disabledInput: false,
 			queryData: {},
 			isChecked: true, // 是否勾选协议
-			inputFocus: false,
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
@@ -69,7 +67,6 @@ export default class login_page extends PureComponent {
 		this.setState({
 			queryData
 		});
-		store.removeLoginDownloadBtn();
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -108,20 +105,6 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
-		let _this = this;
-		let originClientHeight = document.documentElement.clientHeight;
-		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function() {
-			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let { clientHeight } = document.documentElement;
-				_this.setState({
-					inputFocus: originClientHeight > clientHeight
-				});
-				window.setTimeout(function() {
-					document.activeElement.scrollIntoViewIfNeeded();
-				}, 0);
-			}
-		});
 		// 获取地址
 		address();
 		pageView();
@@ -595,9 +578,6 @@ export default class login_page extends PureComponent {
 								]
 							})}
 							onBlur={() => {
-								this.setState({
-									inputFocus: false
-								});
 								handleInputBlur();
 							}}
 							clear
@@ -613,9 +593,6 @@ export default class login_page extends PureComponent {
 										rules: [{ required: true, message: '请输入正确的图形验证码' }]
 									})}
 									onBlur={() => {
-										this.setState({
-											inputFocus: false
-										});
 										handleInputBlur();
 									}}
 								/>
@@ -641,9 +618,6 @@ export default class login_page extends PureComponent {
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
-									this.setState({
-										inputFocus: false
-									});
 									handleInputBlur();
 								}}
 							/>
@@ -692,22 +666,6 @@ export default class login_page extends PureComponent {
 								</span>
 							</div>
 						</div>
-					</div>
-				</div>
-
-				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
-					<div className={styles.f_left}>
-						<img src={logoImg} className={styles.img} />
-						<span>直接下载，放款更快！</span>
-					</div>
-					<div
-						className={styles.f_right}
-						onClick={() => {
-							this.props.history.push('/others/download_page');
-							store.setLoginDownloadBtn(true);
-						}}
-					>
-						立即下载
 					</div>
 				</div>
 				{showSlideModal && (

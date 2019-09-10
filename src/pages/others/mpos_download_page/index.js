@@ -13,9 +13,7 @@ import { getDeviceType, isWXOpen } from 'utils';
 import linkConf from 'config/link.conf';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
+
 let urlParams = {};
 let entryPageTime = '';
 @setBackGround('#fff')
@@ -47,25 +45,6 @@ export default class mpos_download_page extends PureComponent {
 		}
 	}
 
-	getDownloadUrl = () => {
-		this.props.$fetch
-			.get(API.DOWNLOADURL, {
-				type: '03'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						window.location.href = res.data;
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
-				}
-			);
-	};
-
 	downloadClick = () => {
 		if (urlParams && urlParams.wxTestFrom) {
 			buriedPointEvent(wxTest.btnClick_download, {
@@ -87,8 +66,7 @@ export default class mpos_download_page extends PureComponent {
 			buriedPointEvent(other.mposDownloadBtnClick, {
 				device_type: 'ANDROID'
 			});
-			this.props.toast.info('安全下载中');
-			this.getDownloadUrl();
+			window.location.href = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.suixingpay.cashloan';
 		}
 	};
 
@@ -103,6 +81,9 @@ export default class mpos_download_page extends PureComponent {
 				</div>
 				<div>
 					<div className={styles.btn_fixed}>
+						{((urlParams && urlParams.wxTestFrom) || isWXOpen()) && (
+							<p className={styles.tip_text}>老用户请下载还到app进行操作或还款</p>
+						)}
 						<SXFButton className={styles.smart_button} onClick={this.downloadClick}>
 							安全下载
 						</SXFButton>

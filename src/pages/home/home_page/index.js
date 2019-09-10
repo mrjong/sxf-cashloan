@@ -1315,7 +1315,7 @@ export default class home_page extends PureComponent {
 								date: indexData.perdCnt || '-',
 								dw: '申请借款金额(元) ',
 								dw2: '申请期限 ',
-								tel: `010-86355XXX的审核电话`
+								tel: `0532-5808XXXX的审核电话`
 							}}
 							handleClick={this.handleSmartClick}
 						/>

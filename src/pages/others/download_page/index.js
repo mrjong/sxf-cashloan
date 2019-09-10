@@ -8,8 +8,7 @@ import { getDeviceType } from 'utils';
 import styles from './index.scss';
 import downloadBtn from './img/download_btn.jpg';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, daicao } from 'utils/analytinsType';
-import { store } from 'utils/store';
+import { daicao } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
 
 const API = {
@@ -32,19 +31,15 @@ export default class download_page extends PureComponent {
 
 	componentDidMount() {
 		entryPageTime = new Date();
-		if (!store.getLoginDownloadBtn()) {
-			buriedPointEvent(daicao.downloadPageView);
-		}
+		buriedPointEvent(daicao.downloadPageView);
 	}
 
 	componentWillUnmount() {
 		let exitPageTime = new Date();
 		let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
-		if (!store.getLoginDownloadBtn()) {
-			buriedPointEvent(daicao.downloadPageTime, {
-				durationTime: durationTime
-			});
-		}
+		buriedPointEvent(daicao.downloadPageTime, {
+			durationTime: durationTime
+		});
 	}
 
 	getDownloadUrl = () => {
@@ -67,15 +62,9 @@ export default class download_page extends PureComponent {
 	downloadClick = () => {
 		const { downloadUrl } = this.state;
 		const phoneType = getDeviceType();
-		if (!store.getLoginDownloadBtn()) {
-			buriedPointEvent(daicao.downloadBtnClick, {
-				deviceType: phoneType
-			});
-		} else {
-			buriedPointEvent(home.downloadBtnClick, {
-				deviceType: phoneType
-			});
-		}
+		buriedPointEvent(daicao.downloadBtnClick, {
+			deviceType: phoneType
+		});
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
