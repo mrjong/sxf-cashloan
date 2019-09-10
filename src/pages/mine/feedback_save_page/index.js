@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-10 20:05:00
+ * @LastEditTime: 2019-09-10 20:40:45
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -30,8 +30,12 @@ export default class mine_page extends PureComponent {
 	componentWillMount() {
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 	}
-	onChange = (images, type, index) => {
-		console.log(images, type, index);
+	onChange = (images, type) => {
+		console.log(images);
+		if (type === 'add' && images && this.state.images && images.length > 4) {
+			this.props.toast.info('图片上传不能超过4张');
+			return;
+		}
 		let imagesCopy = images;
 		if (type === 'add' && images && !/.(jpg|png|PNG|JPG)$/.test(images[images.length - 1].file.name)) {
 			this.props.toast.info('请上传jpg、png格式的图片');
@@ -124,7 +128,7 @@ export default class mine_page extends PureComponent {
 						files={images}
 						onChange={this.onChange}
 						selectable={images.length < 4}
-						multiple={false}
+						multiple={true}
 						accept="image/jpg,image/png"
 					/>
 				</div>
