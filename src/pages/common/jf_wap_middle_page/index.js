@@ -12,7 +12,6 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 
 const API = {
-	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
 	updateCredStsForHandle: '/auth/updateCredStsForHandle'
 };
 @fetch.inject()

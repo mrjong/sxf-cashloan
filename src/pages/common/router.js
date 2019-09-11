@@ -36,5 +36,15 @@ export default [
 		path: '/common/crash_page',
 		title: '系统维护',
 		component: () => import('pages/common/crash_page')
+	},
+	{
+		path: '/common/jf_wap_middle_page',
+		title: '',
+		component: () => import('pages/common/jf_wap_middle_page')
+	},
+	{
+		path: '/common/jf_app_middle_page',
+		title: '',
+		component: () => import('pages/common/jf_app_middle_page')
 	}
 ];
