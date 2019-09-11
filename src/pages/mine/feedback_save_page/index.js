@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 17:28:08
+ * @LastEditTime: 2019-09-11 17:37:48
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -39,8 +39,8 @@ export default class mine_page extends PureComponent {
 			let fileArr = filepath.split('/');
 			let fileend = fileArr[fileArr.length - 1];
 			if (
-				// 'jpg' !== fileend.toLowerCase() &&
-				// 'jpeg' !== fileend.toLowerCase() &&
+				'jpg' !== fileend.toLowerCase() &&
+				'jpeg' !== fileend.toLowerCase() &&
 				'png' !== fileend.toLowerCase()
 			) {
 				getFileType = false;
