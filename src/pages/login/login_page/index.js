@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 15:10:26
+ * @LastEditTime: 2019-09-11 12:02:11
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -198,7 +198,9 @@ export default class login_page extends PureComponent {
 							this.setState({
 								errMsg: res.msgInfo
 							});
-							// res.msgInfo && Toast.info(res.msgInfo);
+							buriedPointEvent(login.submitFail, {
+								fail_cause: res.msgInfo
+							});
 							return;
 						}
 						this.setState({
@@ -218,6 +220,9 @@ export default class login_page extends PureComponent {
 						}
 					},
 					(error) => {
+						buriedPointEvent(login.submitFail, {
+							fail_cause: error.msgInfo
+						});
 						error.msgInfo &&
 							this.setState(
 								{
@@ -483,13 +488,19 @@ export default class login_page extends PureComponent {
 	goHome = () => {
 		const { queryData = {} } = this.state;
 		if (queryData && queryData.wxTestFrom) {
-			queryUsrSCOpenId({ $props: this.props }).then(() => {
-				this.props.history.replace({
-					pathname: '/others/mpos_download_page',
-					search: `?wxTestFrom=${queryData.wxTestFrom}`
+			queryUsrSCOpenId({ $props: this.props })
+				.then(() => {
+					buriedPointEvent(login.goDownLoad);
+					this.props.history.replace({
+						pathname: '/others/mpos_download_page',
+						search: `?wxTestFrom=${queryData.wxTestFrom}`
+					});
+				})
+				.catch(() => {
+					buriedPointEvent(login.queryUsrSCOpenIdFail);
 				});
-			});
 		} else {
+			buriedPointEvent(login.goHome);
 			this.props.history.replace('/home/home');
 		}
 	};

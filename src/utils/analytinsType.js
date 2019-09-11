@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 11:24:25
+ * @LastEditTime: 2019-09-11 12:10:40
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -15,7 +15,11 @@ if (isMPOS() || JSON.parse(sessionStorage.getItem('isMPOS'))) {
 // console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
 const login = {
 	getCode: `${prefix}_LOGIN_GET_CODE`, // 注册登录页-点击获取验证码
-	submit: `${prefix}_LOGIN_SUBMIT` // 注册登录页-一键代还
+	submit: `${prefix}_LOGIN_SUBMIT`, // 注册登录页-一键代还
+	submitFail: `${prefix}_LOGIN_SUBMIT_FAIL`, // 失败
+	queryUsrSCOpenIdFail: `${prefix}_QUERYUSRSCOPENIDFAIL`,
+	goHome: `${prefix}_GOHOME`,
+	goDownLoad: `${prefix}_GODOWNLOAD`
 };
 
 const home = {
