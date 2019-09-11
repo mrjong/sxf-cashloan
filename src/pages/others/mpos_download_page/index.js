@@ -66,7 +66,8 @@ export default class mpos_download_page extends PureComponent {
 			buriedPointEvent(other.mposDownloadBtnClick, {
 				device_type: 'ANDROID'
 			});
-			window.location.href = 'https://a.app.qq.com/o/simple.jsp?pkgname=com.suixingpay.cashloan';
+			window.location.href =
+				'http://a.app.qq.com/o/simple.jsp?pkgname=com.suixingpay.cashloan&ckey=CK1438101189290';
 		}
 	};
 
