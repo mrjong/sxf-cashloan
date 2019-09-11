@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 14:16:17
+ */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';

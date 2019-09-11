@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 15:33:00
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
@@ -5,6 +9,7 @@ import { getDeviceType } from 'utils';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
+import linkConf from 'config/link.conf';
 import { other } from 'utils/analytinsType';
 import logo from './img/logo.png';
 import cardBg from './img/card_bg.png';
@@ -46,7 +51,7 @@ export default class outer_download_page extends PureComponent {
 			buriedPointEvent(other.outerDownloadBtnClick, {
 				device_type: 'IOS'
 			});
-			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
+			window.location.href = linkConf.APPSTORE_URL;
 		} else {
 			buriedPointEvent(other.outerDownloadBtnClick, {
 				device_type: 'ANDROID'

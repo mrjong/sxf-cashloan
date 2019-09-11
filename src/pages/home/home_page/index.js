@@ -1,8 +1,20 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:46:26
+ */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isWXOpen, getDeviceType, getNextStr, isCanLoan, getMoxieData, dateDiffer } from 'utils';
+import {
+	isWXOpen,
+	getDeviceType,
+	getNextStr,
+	isCanLoan,
+	getMoxieData,
+	dateDiffer,
+	queryUsrSCOpenId
+} from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
@@ -39,7 +51,6 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
@@ -117,7 +128,7 @@ export default class home_page extends PureComponent {
 		// 清除一些store
 		this.removeStore();
 		// 埋点绑定
-		this.queryUsrSCOpenId();
+		queryUsrSCOpenId({ $props: this.props });
 		// 获取token 并设置
 		this.getTokenFromUrl();
 		// 判断是否是微信打通（微信登陆）
@@ -267,10 +278,9 @@ export default class home_page extends PureComponent {
 		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-				// popupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1',
-					overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
+					overDueModalFlag: res.data.overduePopupFlag === '1'
 				});
 				const currProgress =
 					res.data &&
@@ -830,20 +840,6 @@ export default class home_page extends PureComponent {
 		}
 	};
 
-	// 神策用户绑定
-	queryUsrSCOpenId = () => {
-		if (token && tokenFromStorage) {
-			if (!store.getQueryUsrSCOpenId()) {
-				this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-					if (res.msgCode === 'PTM0000') {
-						window.sa.login(res.data);
-						store.setQueryUsrSCOpenId(res.data);
-					}
-				});
-			}
-		}
-	};
-
 	// 现金分期点击事件
 	handleCN = (code) => {
 		const { usrCashIndexInfo } = this.state;
@@ -1312,7 +1308,7 @@ export default class home_page extends PureComponent {
 								date: indexData.perdCnt || '-',
 								dw: '申请借款金额(元) ',
 								dw2: '申请期限 ',
-								tel: `010-86355XXX的审核电话`
+								tel: `0532-5808XXXX的审核电话`
 							}}
 							handleClick={this.handleSmartClick}
 						/>

@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 17:42:31
+ */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
@@ -12,7 +16,8 @@ import {
 	idChkPhoto,
 	isCanLoan,
 	getOperatorStatus,
-	getMoxieData
+	getMoxieData,
+	activeConfigSts
 } from 'utils';
 // import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
@@ -384,7 +389,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 				case '1':
 					// 成功
 					//调用授信接口
-					handleClickConfirm(this.props, params);
+					activeConfigSts({
+						$props: this.props,
+						type: 'B',
+						callback: () => {
+							handleClickConfirm(this.props, params);
+						}
+					});
 					break;
 				case '2':
 					store.setLoanAspirationHome(params);

@@ -14,7 +14,7 @@ import { createForm } from 'rc-form';
 import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
-import SmsModal from '../../order/order_detail_page/components/SmsModal';
+import SmsModal from '../../order/order_common_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
 import RepayPlanModal from 'components/RepayPlanModal';
 import CouponAlert from './components/CouponAlert';
@@ -1350,6 +1350,10 @@ export default class confirm_agency_page extends PureComponent {
 							ref={(ele) => {
 								this.smsModal = ele;
 							}}
+							history={this.props.history}
+							fetch={this.props.$fetch}
+							toast={this.props.toast}
+							bankNo={repayInfo && repayInfo.withHoldAgrNo}
 						/>
 					)}
 					{// 保险弹框

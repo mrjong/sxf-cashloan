@@ -217,7 +217,7 @@ export default class remit_ing_page extends PureComponent {
 				<div className={style.topBox}>
 					<div className={style.title}>需要人工审核，耐心等待</div>
 					<div className={style.subtitle}>
-						<a>010-86355 XXX</a>的审核电话
+						<a>0532-5808XXXX</a>的审核电话
 						<br />
 						至少会拨打3次，最长不超过3个工作日
 					</div>
@@ -286,7 +286,7 @@ export default class remit_ing_page extends PureComponent {
 							<li className={style.rule_item}> 3、如果不预约，则正常排队审核。</li>
 							<li className={style.rule_item}>4、预约了审核时间，确定预约后，则不能取消。</li>
 							<li className={style.rule_item}>
-								5、人工审核电话为 010-86355 xxx的审核电话，请注意接听。如没有接听，会尝试多次拨打。
+								5、人工审核电话为 0532-5808XXXX的审核电话，请注意接听。如没有接听，会尝试多次拨打。
 							</li>
 							<li className={style.rule_item}>6、最长不超过3个工作日拨打。</li>
 						</ul>
@@ -294,7 +294,7 @@ export default class remit_ing_page extends PureComponent {
 						<div>
 							{/* <p className={style.modalDesc}>预约时间到达前2小时则不能修改预约时间</p> */}
 							<p className={style.modalDesc}>
-								审核电话为<span>010-86355xxx</span>，请注意接听
+								审核电话为<span>0532-5808XXXX</span>，请注意接听
 							</p>
 							<div>
 								<div className={style.options_day}>

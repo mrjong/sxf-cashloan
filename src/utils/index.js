@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-04 10:38:11
+ */
 import React from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -23,7 +27,10 @@ const API = {
 	checkEngaged: '/activeConfig/checkEngaged',
 	saveUserInfoEngaged: '/activeConfig/saveUserInfoEngaged',
 	checkIsEngagedUser: '/activeConfig/checkIsEngagedUser',
-	mxoieCardList: '/moxie/mxoieCardList/C'
+	mxoieCardList: '/moxie/mxoieCardList/C',
+	activeConfigSts: '/activeConfig/ab/sts',
+	contractLog: '/contract/log', // 协议预览留痕记录
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -880,4 +887,85 @@ export const getMoxieData = ({ $props, bankCode, goMoxieBankList }) => {
 			console.log(err);
 			$props.toast.info('系统开小差，请稍后重试');
 		});
+};
+
+// 协议预览记录功能
+export const recordContract = (params) => {
+	// params中的cardNo为银行卡号，只在协议支付的时候传递
+	// contractType为 协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+	fetch.post(API.contractLog, params, { hideLoading: true }).then(() => {}, () => {});
+};
+// 神策用户绑定
+export const queryUsrSCOpenId = ({ $props }) => {
+	return new Promise((resolve) => {
+		// 获取token
+		let token = Cookie.get('fin-v-card-token');
+		let tokenFromStorage = store.getToken();
+		if (token && tokenFromStorage) {
+			if (!store.getQueryUsrSCOpenId()) {
+				$props.$fetch
+					.get(API.queryUsrSCOpenId)
+					.then((res) => {
+						if (res.msgCode === 'PTM0000') {
+							window.sa.login(res.data);
+							store.setQueryUsrSCOpenId(res.data);
+						}
+						resolve(true);
+					})
+					.catch(() => {
+						resolve(true);
+					});
+			}
+		} else {
+			resolve(true);
+		}
+	});
+};
+/**
+ * @description: AB测试
+ * @param {$props} this.props
+ * @param {callback} 回调函数
+ * @param {type} 类型 A/B
+ * @return:
+ */
+export const activeConfigSts = ({ $props, callback, type }) => {
+	if (type === 'B') {
+		$props.history.push('/others/mpos_testB_download_page');
+		return;
+	}
+	$props.$fetch
+		.get(API.activeConfigSts)
+		.then((res) => {
+			if (res && res.msgCode === 'PTM0000' && res.data && res.data.sts) {
+				switch (res.data.sts) {
+					case '00':
+						callback();
+						break;
+					case '01':
+						//下载页面
+						$props.history.replace('/others/mpos_testA_download_page');
+						break;
+					case '02':
+						if (type === 'A') {
+							callback();
+						}
+
+						break;
+
+					default:
+						break;
+				}
+			} else {
+				$props.toast.info('系统开小差，请稍后重试');
+			}
+		})
+		.catch(() => {
+			$props.toast.info('系统开小差，请稍后重试');
+		});
+};
+
+export const openNativeApp = () => {
+	if (!(isMPOS() && getDeviceType() === 'ANDRIOD')) {
+		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
+	}
 };

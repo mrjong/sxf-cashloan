@@ -1,8 +1,12 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 10:05:41
+ */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
-import { getDeviceType } from 'utils';
+import { getDeviceType, activeConfigSts } from 'utils';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
@@ -94,7 +98,7 @@ export default class mpos_get_sms_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
-						this.requestGetStatus();
+						this.goHome();
 					} else {
 						this.props.toast.info('授权失败', 3, () => {
 							this.props.history.replace(
@@ -108,7 +112,14 @@ export default class mpos_get_sms_page extends PureComponent {
 				}
 			);
 	}
-
+	// AB 测试
+	goHome = () => {
+		activeConfigSts({
+			$props: this.props,
+			type: 'A',
+			callback: this.requestGetStatus
+		});
+	};
 	// 获取授信列表状态
 	requestGetStatus = () => {
 		this.props.$fetch

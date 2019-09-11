@@ -243,11 +243,11 @@ if (window.history && window.history.pushState) {
 					if (tokenFromStorage && token) {
 						window.ReactRouterHistory.goBack();
 					} else {
-						if (!store.getLoginDownloadBtn()) {
-							window.close();
-							window.WeixinJSBridge.call('closeWindow');
-						}
+						window.close();
+						window.WeixinJSBridge.call('closeWindow');
 					}
+				} else if (isMPOS() && protocolBack) {
+					return;
 				} else if (isMPOS()) {
 					closeCurrentWebView();
 				} else {

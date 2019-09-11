@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 15:10:26
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -6,16 +10,24 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import logoImg from 'assets/images/common/black_logo.png';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import {
+	getDeviceType,
+	getFirstError,
+	validators,
+	handleInputBlur,
+	activeConfigSts,
+	queryUsrSCOpenId,
+	recordContract
+} from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
-import { login } from 'utils/analytinsType';
+import { login, wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
 import { setBackGround } from 'utils/background';
 
 let timmer;
+let entryPageTime = '';
 const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -40,7 +52,6 @@ export default class login_page extends PureComponent {
 			disabledInput: false,
 			queryData: {},
 			isChecked: true, // 是否勾选协议
-			inputFocus: false,
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
@@ -56,7 +67,6 @@ export default class login_page extends PureComponent {
 		this.setState({
 			queryData
 		});
-		store.removeLoginDownloadBtn();
 		// 登录页单独处理
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
@@ -95,23 +105,10 @@ export default class login_page extends PureComponent {
 		}
 	}
 	componentDidMount() {
-		let _this = this;
-		let originClientHeight = document.documentElement.clientHeight;
-		// 安卓键盘抬起会触发resize事件，ios则不会
-		window.addEventListener('resize', function() {
-			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-				let { clientHeight } = document.documentElement;
-				_this.setState({
-					inputFocus: originClientHeight > clientHeight
-				});
-				window.setTimeout(function() {
-					document.activeElement.scrollIntoViewIfNeeded();
-				}, 0);
-			}
-		});
 		// 获取地址
 		address();
 		pageView();
+		entryPageTime = new Date();
 	}
 
 	componentWillUnmount() {
@@ -123,6 +120,17 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			let exitPageTime = new Date();
+			let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
+			buriedPointEvent(wxTest.wxTestLoginPageTime, {
+				durationTime: durationTime,
+				entry: queryData.wxTestFrom
+			});
+		} else {
+			entryPageTime = '';
+		}
 	}
 
 	// 校验手机号
@@ -133,9 +141,21 @@ export default class login_page extends PureComponent {
 			callback();
 		}
 	};
-
+	goFLHome = () => {
+		activeConfigSts({
+			$props: this.props,
+			type: 'A',
+			callback: this.requestGetStatus
+		});
+	};
 	//去登陆按钮
 	goLogin = () => {
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			buriedPointEvent(wxTest.wxTestLoginBtnClick, {
+				entry: queryData.wxTestFrom
+			});
+		}
 		if (!this.validateFn()) {
 			return;
 		}
@@ -187,10 +207,14 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+						recordContract({
+							contractType: '01,02'
+						});
 						if (this.state.disabledInput) {
-							this.requestGetStatus();
+							this.goFLHome();
 						} else {
-							this.props.history.push('/home/home');
+							this.goHome();
 						}
 					},
 					(error) => {
@@ -264,6 +288,12 @@ export default class login_page extends PureComponent {
 
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			buriedPointEvent(wxTest.wxTestLoginSmsCode, {
+				entry: queryData.wxTestFrom
+			});
+		}
 		if (!this.state.timeflag) return;
 		this.getSmsCode();
 	};
@@ -450,7 +480,19 @@ export default class login_page extends PureComponent {
 		}
 		return false;
 	};
-
+	goHome = () => {
+		const { queryData = {} } = this.state;
+		if (queryData && queryData.wxTestFrom) {
+			queryUsrSCOpenId({ $props: this.props }).then(() => {
+				this.props.history.replace({
+					pathname: '/others/mpos_download_page',
+					search: `?wxTestFrom=${queryData.wxTestFrom}`
+				});
+			});
+		} else {
+			this.props.history.replace('/home/home');
+		}
+	};
 	// 获取授信列表状态
 	requestGetStatus = () => {
 		this.props.$fetch
@@ -471,18 +513,18 @@ export default class login_page extends PureComponent {
 								search: '?jumpToBase=true&entry=fail'
 							});
 						} else {
-							this.props.history.replace('/home/home');
+							this.goHome();
 						}
 					}
 				} else {
 					this.props.toast.info(result.msgInfo, 2, () => {
-						this.props.history.replace('/home/home');
+						this.goHome();
 					});
 				}
 			})
 			.catch((err) => {
 				console.log(err);
-				this.props.history.replace('/home/home');
+				this.goHome();
 			});
 	};
 
@@ -536,9 +578,6 @@ export default class login_page extends PureComponent {
 								]
 							})}
 							onBlur={() => {
-								this.setState({
-									inputFocus: false
-								});
 								handleInputBlur();
 							}}
 							clear
@@ -554,9 +593,6 @@ export default class login_page extends PureComponent {
 										rules: [{ required: true, message: '请输入正确的图形验证码' }]
 									})}
 									onBlur={() => {
-										this.setState({
-											inputFocus: false
-										});
 										handleInputBlur();
 									}}
 								/>
@@ -582,9 +618,6 @@ export default class login_page extends PureComponent {
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
-									this.setState({
-										inputFocus: false
-									});
 									handleInputBlur();
 								}}
 							/>
@@ -633,22 +666,6 @@ export default class login_page extends PureComponent {
 								</span>
 							</div>
 						</div>
-					</div>
-				</div>
-
-				<div className={this.state.inputFocus ? styles.relative_bottom_box : styles.fix_bottom_box}>
-					<div className={styles.f_left}>
-						<img src={logoImg} className={styles.img} />
-						<span>直接下载，放款更快！</span>
-					</div>
-					<div
-						className={styles.f_right}
-						onClick={() => {
-							this.props.history.push('/others/download_page');
-							store.setLoginDownloadBtn(true);
-						}}
-					>
-						立即下载
 					</div>
 				</div>
 				{showSlideModal && (

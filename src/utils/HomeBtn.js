@@ -13,7 +13,6 @@ const API = {
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	creditSts: '/bill/credit/sts', // 用户是否过人审接口
 	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询

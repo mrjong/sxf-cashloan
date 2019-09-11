@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 15:50:08
+ */
 export default [
 	{
 		path: '/others/dc_landing_page',
@@ -44,5 +48,17 @@ export default [
 		title: '还到-借钱还信用卡',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_download_page')
+	},
+	{
+		path: '/others/mpos_testA_download_page',
+		title: '下载App享特权',
+		arrowHide: 'empty',
+		component: () => import('pages/others/mpos_testA_download_page')
+	},
+	{
+		path: '/others/mpos_testB_download_page',
+		title: '下载App进入专享通道',
+		arrowHide: 'empty',
+		component: () => import('pages/others/mpos_testB_download_page')
 	}
 ];

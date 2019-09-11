@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 17:28:45
+ */
 // DC 对外
 // XDC mpos入口=>对内
 import { isMPOS } from './common';
@@ -231,7 +235,8 @@ const manualAudit = {
 const other = {
 	mposDownloadPage: `${prefix}_MPOS_DOWNLOAD_PAGE`, //页面埋点
 	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
-	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK` //外部下载页按钮点击事件
+	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK`, //外部下载页按钮点击事件
+	testDownloadClick: `${prefix}_DOWNLOAD_CLICK` //A测试
 };
 
 const daicao = {
@@ -239,7 +244,10 @@ const daicao = {
 	loginPageTime: `${prefix}_DAICAO_LOGINPAGE_DURATION_TIME`, //代超登录页停留时间
 	downloadPageTime: `${prefix}_DAICAO_DOWNLOADPAGE_DURATION_TIME`, // 代超下载页停留时间
 	downloadBtnClick: `${prefix}_DAICAO_DOWNLOAD_BUTTON_CLICK`, //代超下载页按钮
-	downloadPageView: `${prefix}_DAICAO_DOWNLOAD_PAGEVIEW` //代超下载页pageview
+	downloadPageView: `${prefix}_DAICAO_DOWNLOAD_PAGEVIEW`, //代超下载页pageview
+	smsCodeBtnClick: `${prefix}_DAICAO_GET_SMSCODE_BTN`, // 贷超登录页获取验证码按钮
+	modalBtnClick: `${prefix}_DAICAO_MODAL_BTN`, // 贷超登录页弹框按钮
+	selectProtocol: `${prefix}_DAICAO_SELECT_PROTOCOL` // 贷超登录页勾选协议
 };
 
 const loan_fenqi = {
@@ -282,6 +290,16 @@ const helpCenter = {
 	quota: `${prefix}_QUOTA_CLICKQUESTION`,
 	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
 };
+const wxTest = {
+	wxTestDownPageTime: `${prefix}_WXTESTDOWNPAGETIME`, //下载页 页面时长
+	wxTestLoginPageTime: `${prefix}_WXTESTLOGINPAGETIME`, // mpos登录页 页面时长
+	wxTestMposLoginPageTime: `${prefix}_WXTESTMPOSLOGINPAGETIME`, // mpos登录页 页面时长
+	btnClick_download: `${prefix}_BTNCLICK_DOWNLOAD`, //下载页 按钮点击
+	btnClick_login: `${prefix}_BTNCLICK_LOGIN`, //mpos登录页 登录按钮点击
+	sendSmsCodeMposClick: `${prefix}_SENDSMSCODEMPOSCLICK`, //mpos登录页 发送验证码次数
+	wxTestLoginBtnClick: `${prefix}_WXTESTLOGINBTNCLICK`, // 登录页 按钮 点击次数
+	wxTestLoginSmsCode: `${prefix}_WXTESTLOGINSMSCODE` //  登录页 发送验证码次数
+};
 
 export {
 	login,
@@ -298,5 +316,6 @@ export {
 	other,
 	daicao,
 	manualAudit,
-	helpCenter
+	helpCenter,
+	wxTest
 };

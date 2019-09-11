@@ -1,62 +1,61 @@
 @import '../../../assets/styles/scss/base/fn';
 
+.overdueEntryTip {
+	text-align: center;
+	font-size: 30px;
+	padding: 10px;
+	background-color: #f9d45e;
+	span {
+		color: #f66;
+	}
+}
+.overdueEntry {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #ffdfdf;
+	height: 80px;
+	padding: 0 30px;
+	color: #f66;
+	font-size: 30px;
+	.overdueItem {
+		display: flex;
+		align-items: center;
+	}
+	.warningIco {
+		width: 40px;
+		height: 40px;
+		@include bg-image('../../../assets/images/order/warn_ico');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-right: 19px;
+	}
+	.entryIco {
+		width: 16px;
+		height: 28px;
+		@include bg-image('../../../assets/images/order/entry_ico');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-left: 19px;
+	}
+}
+
 .order_detail_page {
 	flex: 1;
-	// padding: 0.24rem 0 0;
-	background-color: #f1f1f1;
-	.topBlock {
-		background-color: #f1f1f1;
-		height: 0.24rem;
-	}
-	.overdueEntryTip {
-		text-align: center;
-		font-size: 30px;
-		padding: 10px;
-		background-color: #f9d45e;
-		span {
-			color: #f66;
-		}
-	}
-	.overdueEntry {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		background: #ffdfdf;
-		height: 80px;
-		padding: 0 30px;
-		color: #f66;
-		font-size: 30px;
-		.overdueItem {
-			display: flex;
-			align-items: center;
-		}
-		.warningIco {
-			width: 40px;
-			height: 40px;
-			@include bg-image('../../../assets/images/order/warn_ico');
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			margin-right: 19px;
-		}
-		.entryIco {
-			width: 16px;
-			height: 28px;
-			@include bg-image('../../../assets/images/order/entry_ico');
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			margin-left: 19px;
-		}
-	}
+
 	.loadInfBox {
 		position: relative;
+		margin: 30px 30px 0;
+		border-radius: 6px;
 	}
 
 	.payAll {
 		position: absolute;
 		top: 0.06rem;
 		right: 0.08rem;
-		padding: 0.3rem;
+		padding: 20px 30px;
 		color: #397be6;
+		font-size: 26px;
 		i {
 			position: absolute;
 			right: 10px;
@@ -69,26 +68,23 @@
 		}
 	}
 	.panel_conten {
-		padding: 0.3rem;
+		padding-top: 30px;
 		.list_item {
 			display: flex;
 			justify-content: space-between;
-			padding: 0.25rem 0;
+			padding-bottom: 30px;
 		}
 		.item_name {
 			font-size: 0.3rem;
-			color: #252729;
+			color: #868e9e;
 			display: flex;
 			align-items: center;
+			font-weight: 500;
 		}
 		.item_value {
 			font-size: 0.3rem;
-			color: #333;
-			font-weight: bold;
+			color: #868e9e;
 		}
-	}
-	.mt24 {
-		margin-top: 22px;
 	}
 	.order_list {
 		:global {
@@ -177,9 +173,7 @@
 	display: flex;
 	position: relative;
 	padding: 20px 30px;
-	span {
-		flex: 1;
-	}
+	justify-content: space-between;
 	i {
 		@include setArrow(right, 12px, #a9aeb6, 1px);
 		top: 16px;
@@ -195,19 +189,18 @@
 }
 i.arrow_down {
 	@include setArrow(down, 12px, #a9aeb6, 1px);
-	top: 14px;
+	top: -8px;
 	margin-left: 10px;
 }
 i.arrow_up {
 	@include setArrow(top, 12px, #a9aeb6, 1px);
-	top: 18px;
+	top: 0;
 	margin-left: 10px;
 }
 .feeDetail {
 	background: #f7f8fa;
 	margin: 0 30px;
 	padding: 14px 30px 0;
-	border-radius: 6px;
 	.modal_flex {
 		margin-top: 10px;
 		border-bottom: none;
@@ -218,15 +211,9 @@ i.arrow_up {
 		font-size: 28px;
 		color: #868e9e;
 	}
-	.modal_label_last,
-	.modal_value_last {
-		font-size: 28px;
-		font-weight: 800;
-		color: #868e9e;
-	}
 	.sum_total {
 		border-top: 1px solid #e0e0e0;
-		padding: 24px 0 25px 0;
+		padding: 24px 0 15px 0;
 		margin-top: 24px;
 	}
 }
@@ -268,11 +255,6 @@ i.arrow_up {
 		color: #f66;
 	}
 }
-.modal_label_last {
-	font-size: 30px;
-	color: #121c32;
-	text-align: left;
-}
 .modal_label {
 	font-size: 30px;
 	color: #121c32;
@@ -282,13 +264,6 @@ i.arrow_up {
 	text-align: right;
 	font-size: 30px;
 	color: #868e9e;
-}
-.modal_value_last {
-	text-align: right;
-	font-size: 30px;
-	font-weight: bold;
-	font-family: 'PingFangSC-Semibold';
-	color: #121c32;
 }
 .modal_value {
 	text-align: right;
@@ -311,7 +286,7 @@ i.arrow_up {
 	width: 670px;
 }
 .submit_btn {
-	margin: 45px 65px;
+	margin: 120px 58px;
 }
 .message {
 	font-size: 24px;
@@ -321,6 +296,103 @@ i.arrow_up {
 		color: #fe6666;
 	}
 }
-.mb50 {
-	margin-bottom: 50px;
+
+.order_repay_page {
+	margin: 30px 30px 180px;
+
+	.extra_icon {
+		position: absolute;
+		right: 0;
+		top: 0;
+		display: inline-block;
+		background: url('../../../assets/images/home/tip_ico.png') no-repeat;
+		background-size: cover;
+		width: 24px;
+		height: 24px;
+	}
+
+	.fixed_button {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		background-color: #fff;
+		z-index: 100;
+		box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1);
+
+		.money_show {
+			font-size: 36px;
+			color: #868e9e;
+			font-weight: 500;
+
+			em {
+				color: #fe6666;
+			}
+		}
+
+		.sxf_btn {
+			width: 320px;
+			height: 100px;
+			font-size: 36px;
+			color: #121c32;
+			border-radius: 50px;
+			margin: 20px 0 40px;
+		}
+		.sxf_btn_disabled {
+			background-color: #dcdfe6;
+			color: #f7f8fa;
+		}
+	}
+}
+
+.modal_tip_content {
+	.modal_tip_title {
+		color: #121c32;
+		font-size: 34px;
+		margin-bottom: 10px;
+		&::before {
+			content: '';
+			display: inline-block;
+			background: url('../../../assets/images/order/mark_icon.png') no-repeat;
+			background-size: cover;
+			width: 34px;
+			height: 34px;
+			vertical-align: middle;
+			margin-right: 10px;
+			margin-top: -8px;
+		}
+	}
+
+	.modal_tip_desc {
+		color: #868e9e;
+		font-size: 30px;
+
+		em {
+			font-weight: 500;
+			color: #fe6666;
+		}
+	}
+}
+
+:global {
+	.order_repay_page {
+		.am-modal-transparent {
+			width: 580px;
+		}
+		.am-modal-button {
+			color: #121c32;
+			font-size: 34px;
+		}
+		.am-modal-transparent .am-modal-content {
+			padding-top: 40px;
+			border-radius: 6px;
+		}
+		.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0 35px 40px;
+			text-align: justify;
+		}
+	}
 }

@@ -1,5 +1,9 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 15:45:58
+ */
 import React, { PureComponent } from 'react';
-import { getDeviceType, headerIgnore } from 'utils';
+import { getDeviceType } from 'utils';
 import styles from './index.scss';
 export default class pdf_page extends PureComponent {
 	constructor(props) {
@@ -37,7 +41,7 @@ export default class pdf_page extends PureComponent {
 	render() {
 		return getDeviceType() === 'IOS' ? null : (
 			<iframe
-				className={headerIgnore() ? styles.container2 : styles.container}
+				className={styles.container2}
 				frameBorder="0"
 				src={`/static/pdf/web/viewer.html?file=${encodeURIComponent(this.state.contractUrl)}`}
 				width="100%"

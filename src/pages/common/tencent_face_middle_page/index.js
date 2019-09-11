@@ -1,7 +1,11 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 17:41:09
+ */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import { getNextStr, getDeviceType, handleClickConfirm } from 'utils';
+import { getNextStr, getDeviceType, handleClickConfirm, activeConfigSts } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
@@ -53,12 +57,18 @@ export default class tencent_face_middle_page extends Component {
 				// 借钱还信用卡页进入
 				// if (!store.getRealNameNextStep()) {
 				if (store.getLoanAspirationHome()) {
-					handleClickConfirm(this.props, {
-						...store.getLoanAspirationHome()
+					activeConfigSts({
+						$props: this.props,
+						type: 'B',
+						callback: () => {
+							handleClickConfirm(this.props, {
+								...store.getLoanAspirationHome()
+							});
+							store.removeRealNameNextStep();
+							store.removeIdChkPhotoBack();
+							store.removeTencentBackUrl();
+						}
 					});
-					store.removeRealNameNextStep();
-					store.removeIdChkPhotoBack();
-					store.removeTencentBackUrl();
 				} else if (store.getNeedNextUrl() && store.getRealNameNextStep() === 'home') {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
