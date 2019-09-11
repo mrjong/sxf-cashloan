@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 18:06:38
+ * @LastEditTime: 2019-09-11 10:51:27
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -282,6 +282,25 @@ const wxTest = {
 	wxTestLoginBtnClick: `${prefix}_WXTESTLOGINBTNCLICK`, // 登录页 按钮 点击次数
 	wxTestLoginSmsCode: `${prefix}_WXTESTLOGINSMSCODE` //  登录页 发送验证码次数
 };
+const helpCenter = {
+	feedback: `${prefix}_MINE_CREDIT_FEEDBACK`,
+	select_class: `${prefix}_MINE_CLASSIFICATION_CHOICE`,
+	submit_succ: `${prefix}_CLASSIFICATION_SUCCESSFUL_SUBMISSION`,
+
+	fast_entry: `${prefix}_HELPCENTER_FASTENTRY`,
+	hot_issue: `${prefix}_HELPCENTER_HOTISSUES`,
+	classification: `${prefix}_HELPCENTER_CLASSIFICATION`,
+	goOnline: `${prefix}_HELPCENTER_CONSULTATION`,
+
+	realname: `${prefix}_REALNAME_CLICKQUESTION`,
+	basic: `${prefix}_BASIC_CLICKQUESTION`,
+	operators: `${prefix}_OPERATORS_CLICKQUESTION`,
+	creditCard: `${prefix}_CREDIT_CARD_CLICKQUESTION`,
+	submission: `${prefix}_SUBMISSION_CLICKQUESTION`,
+	toexamine: `${prefix}_TOEXAMINE_CLICKQUESTION`,
+	quota: `${prefix}_QUOTA_CLICKQUESTION`,
+	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
+};
 
 export {
 	login,
@@ -298,5 +317,6 @@ export {
 	other,
 	daicao,
 	manualAudit,
-	wxTest
+	wxTest,
+	helpCenter
 };

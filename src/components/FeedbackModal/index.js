@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 23:00:17
+ */
 import React from 'react';
 import { Modal } from 'antd-mobile';
 import style from './index.scss';
@@ -58,6 +62,8 @@ export default class FeedbackModal extends React.Component {
 					setTimeout(() => {
 						this.props.closeModal();
 					}, 2000);
+				} else {
+					this.props.toast.info(res.msgInfo);
 				}
 			});
 	};
