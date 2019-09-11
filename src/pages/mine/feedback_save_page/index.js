@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-10 20:40:45
+ * @LastEditTime: 2019-09-11 16:57:49
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -30,37 +30,95 @@ export default class mine_page extends PureComponent {
 	componentWillMount() {
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 	}
-	onChange = (images, type) => {
-		console.log(images);
-		if (type === 'add' && images && this.state.images && images.length > 4) {
-			this.props.toast.info('图片上传不能超过4张');
-			return;
+
+	getFileType = (images) => {
+		let getFileType = true;
+		for (let index = 0; index < images.length; index++) {
+			const element = images[index];
+			let filepath = element.file.type;
+			let fileArr = filepath.split('/');
+			let fileend = fileArr[fileArr.length - 1];
+			if (
+				'jpg' !== fileend.toLowerCase() &&
+				'jpeg' !== fileend.toLowerCase() &&
+				'png' !== fileend.toLowerCase()
+			) {
+				getFileType = false;
+				break;
+			}
 		}
-		let imagesCopy = images;
-		if (type === 'add' && images && !/.(jpg|png|PNG|JPG)$/.test(images[images.length - 1].file.name)) {
-			this.props.toast.info('请上传jpg、png格式的图片');
-			return;
-		}
-		type === 'add' &&
-			lrz(images && images[images.length - 1].file, { quality: 0.5 })
-				.then((rst) => {
+		return getFileType;
+	};
+
+	getFile = (images = []) => {
+		let getFileType = true;
+		let fileList = [];
+		return new Promise(async (resove) => {
+			for (let index = 0; index < images.length; index++) {
+				const element = images[index];
+				if (!element.origin) {
+					let rst = await lrz(element.file, { quality: 0.5 });
+					fileList.push({ ...rst, url: rst.base64 });
 					if (rst.file.size > 2 * 1024 * 1024) {
 						this.props.toast.info('图片大小不能超过2M');
-						return;
+						getFileType = false;
+						resove({ getFileType });
+					} else if (index === images.length - 1) {
+						resove({
+							getFileType,
+							fileList
+						});
 					}
-					imagesCopy.pop();
-					imagesCopy.push({ ...rst, url: rst.base64 });
-					this.setState({
-						images: imagesCopy
-					});
-				})
-				.catch((err) => {
-					console.log(err);
+				} else {
+					fileList.push(element);
+					if (index === images.length - 1) {
+						resove({
+							getFileType,
+							fileList
+						});
+					}
+				}
+			}
+		});
+	};
+
+	onChange = (images, type) => {
+		console.log(images);
+
+		switch (type) {
+			case 'add':
+				// 张数
+				if (images && this.state.images && images.length > 4) {
+					this.props.toast.info('图片上传不能超过4张');
+					return;
+				}
+				if (!this.getFileType(images)) {
+					this.props.toast.info('请上传jpg、png格式的图片');
+					return;
+				}
+
+				this.getFile(images).then(({ getFileType, fileList = [] }) => {
+					console.log(fileList, '========');
+					if (getFileType) {
+						this.setState({
+							images: fileList
+						});
+					} else {
+						this.setState({
+							images: this.state.images || []
+						});
+					}
 				});
-		type === 'remove' &&
-			this.setState({
-				images: imagesCopy
-			});
+				break;
+			case 'remove':
+				this.setState({
+					images
+				});
+				break;
+
+			default:
+				break;
+		}
 	};
 	addOpinion = () => {
 		if (isFetching) return;
