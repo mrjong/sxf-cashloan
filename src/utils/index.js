@@ -90,10 +90,11 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/landing/landing_page',
 			'/common/auth_page',
 			'/mpos/mpos_ioscontrol_page',
-			'/home/credit_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
-			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，因为放开
-			'/mine/qiyu', // 因为app直接跳转到h5的webview，因为放开
-			'/home/loan_person_succ_page' // 因为app直接跳转到h5的webview，因为放开
+			'/home/credit_apply_succ_page', // 因为app直接跳转到h5的webview，所以放开
+			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，所以放开
+			'/mine/qiyu', // 因为app直接跳转到h5的webview，所以放开
+			'/home/loan_person_succ_page', // 因为app直接跳转到h5的webview，所以放开
+			'/common/jf_app_middle_page'
 		];
 		if (isWXOpen()) {
 			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];

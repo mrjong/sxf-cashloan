@@ -23,10 +23,16 @@ export default class jf_app_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
+		store.setToken('c9267ec062de41c4bcbe2f8a122c3acc');
+
 		store.removeGoMoxie();
 		//芝麻信用的回调
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const { taskType, mxcode } = query;
+		const { taskType, mxcode, token } = query;
+		if (token) {
+			store.setToken(token);
+		}
+
 		if (taskType) {
 			this.props.$fetch
 				.get(`${API.updateCredStsForHandle}/${taskType}`)
@@ -51,6 +57,9 @@ export default class jf_app_middle_page extends Component {
 					}
 				})
 				.catch((err) => {
+					setTimeout(() => {
+						window.postMessage('jf_success', () => {});
+					}, 0);
 					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
 					this.setState({
 						errorInf:
