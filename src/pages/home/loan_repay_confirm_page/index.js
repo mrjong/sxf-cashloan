@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 18:03:06
+ * @LastEditTime: 2019-09-11 19:58:11
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -26,6 +26,7 @@ import { home } from 'utils/analytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
+import { switchCreditService } from '../../../utils';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -262,7 +263,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 			let RouterType = (mxQuery && mxQuery[2]) || '';
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
-			this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+			switchCreditService({
+				$props: this.props
+			});
 		}
 	};
 	// 代还其他信用卡点击事件

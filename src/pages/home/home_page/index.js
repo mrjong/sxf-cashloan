@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 17:45:29
+ * @LastEditTime: 2019-09-11 19:32:00
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -14,7 +14,8 @@ import {
 	getMoxieData,
 	dateDiffer,
 	queryUsrSCOpenId,
-	getMxStatus
+	getMxStatus,
+	switchCreditService
 } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -56,7 +57,6 @@ const API = {
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
-	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
@@ -654,7 +654,7 @@ export default class home_page extends PureComponent {
 			let RouterType = (mxQuery && mxQuery[2]) || '';
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
-			this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+			switchCreditService({ $props: this.props });
 		}
 	};
 	// 请求用户绑卡状态
