@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 19:32:00
+ * @LastEditTime: 2019-09-15 14:24:01
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -175,6 +175,8 @@ export default class home_page extends PureComponent {
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
 		store.removeBackFlag();
+		// 信用卡前置
+		store.removeAutIdCard();
 		// 运营商直接返回的问题
 		// store.removeCarrierMoxie();
 		// 信用卡绑卡之后立即去提交页需要提示

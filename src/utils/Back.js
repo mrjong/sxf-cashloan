@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-11 19:53:58
+ * @LastEditTime: 2019-09-15 14:00:40
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -126,7 +126,11 @@ if (window.history && window.history.pushState) {
 				(store.getHistoryRouter() === '/mine/bind_credit_page' ||
 					store.getHistoryRouter() === '/mine/bind_save_page')
 			) {
-				window.ReactRouterHistory.push('/home/home');
+				if (store.getCheckCardRouter() === 'loan_repay_confirm_page') {
+					window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
+				} else {
+					window.ReactRouterHistory.push('/home/home');
+				}
 				return;
 			}
 			// 人脸中间页物理返回

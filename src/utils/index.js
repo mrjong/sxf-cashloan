@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 10:43:22
+ * @LastEditTime: 2019-09-15 14:26:56
  */
 /*eslint-disable */
 import React from 'react';
@@ -34,7 +34,8 @@ const API = {
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	MX_CRED_SWITCH: '/my/switchFlag/MX_CRED_SWITCH',
 	cardAuth: '/auth/cardAuth', // 信用卡授信
-	operatorAuth: '/auth/operatorAuth' // 运营商授信
+	operatorAuth: '/auth/operatorAuth', // 运营商授信
+	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -116,15 +117,19 @@ export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => 
  * @return:
  */
 export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type }) => {
-	$props.$fetch.post(`${API.cardAuth}`).then((result) => {
-		if (result && result.msgCode === 'PTM0000') {
-			jfCallBack && jfCallBack();
-			result.data && store.setAutId(result.data.autId);
-			location.href = result.data && result.data.url;
-		} else {
-			$props.toast.info(result.msgInfo);
-		}
-	});
+	$props.$fetch
+		.post(`${API.cardAuth}`, {
+			backUrl: location.origin + '/common/middle_page?medium_type=web'
+		})
+		.then((result) => {
+			if (result && result.msgCode === 'PTM0000') {
+				jfCallBack && jfCallBack();
+				result.data && store.setAutId(result.data.autId);
+				location.href = result.data && result.data.url;
+			} else {
+				$props.toast.info(result.msgInfo);
+			}
+		});
 
 	// if (1) {
 	// 	jfCallBack && jfCallBack();
@@ -476,8 +481,42 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 		});
 	});
 };
+/**
+ * @description: 信用卡前置
+ * @param {type}
+ * @return:
+ */
+export const getBindCardStatus = ({ $props }) => {
+	return new Promise((resolve, reject) => {
+		let autIdCopy = store.getAutIdCard();
+		$props.$fetch
+			.get(`${API.chkCredCard}/${autIdCopy}`)
+			.then((result) => {
+				// 跳转至储蓄卡
+				if (result && (result.msgCode === 'PTM2003' || result.msgCode === 'PTM0000')) {
+					resolve('1');
+				} else if (result && result.msgCode === 'PTM2002') {
+					store.setCheckCardRouter('loan_repay_confirm_page');
+					$props.toast.info(result.msgInfo);
+					store.setBackUrl('/home/loan_repay_confirm_page');
+					setTimeout(() => {
+						$props.history.replace({
+							pathname: '/mine/bind_credit_page',
+							search: `?noBankInfo=true&autId=${autIdCopy}&action=handleClickConfirm`
+						});
+					}, 3000);
+					resolve('0');
+				} else {
+					$props.history.push('/home/home');
+				}
+			})
+			.catch(() => {
+				reject();
+			});
+	});
+};
 // 确认按钮点击事件 提交到风控
-export const handleClickConfirm = ($props, repaymentDate, type) => {
+export const handleClickConfirm = async ($props, repaymentDate, type) => {
 	$props.SXFToast.loading('数据加载中...', 0);
 	const address = store.getPosition();
 	const params = {

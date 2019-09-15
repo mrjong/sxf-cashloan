@@ -1,9 +1,13 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-15 14:23:36
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/ButtonCustom';
-import { validators, handleInputBlur, getFirstError } from 'utils';
+import { validators, handleInputBlur, getFirstError, activeConfigSts, handleClickConfirm } from 'utils';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
@@ -22,6 +26,7 @@ const API = {
 // let isFetching = false;
 let backUrlData = ''; // 从除了我的里面其他页面进去
 let autId = '';
+let query = {};
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -37,7 +42,7 @@ export default class bind_credit_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		autId = query && query.autId;
 		console.log(autId, '------------');
 		// isFetching = false;
@@ -118,13 +123,28 @@ export default class bind_credit_page extends PureComponent {
 					...this.state.cardData
 				};
 				if (backUrlData) {
+					if (query && query.action === 'handleClickConfirm') {
+						store.removeAutIdCard(); // 信用卡前置
+						activeConfigSts({
+							$props: this.props,
+							type: 'B',
+							callback: () => {
+								handleClickConfirm(this.props, {
+									...store.getLoanAspirationHome()
+								});
+								store.removeRealNameNextStep();
+								store.removeIdChkPhotoBack();
+								store.removeTencentBackUrl();
+							}
+						});
+						return;
+					}
 					// 提交申请 判断是否绑定信用卡和储蓄卡
 					this.props.$fetch.get(API.CHECKCARD).then((result) => {
 						if (result.msgCode === 'PTM2003') {
 							// 进入绑定储蓄卡页面，如何不需要存银行卡（防止弹窗出现）则加一个noBankInfo
-							const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 							store.setBackUrl(backUrlData);
-							if (queryData && queryData.noBankInfo) {
+							if (query && query.noBankInfo) {
 								this.props.history.replace({
 									pathname: '/mine/bind_save_page',
 									search: '?noBankInfo=true'
@@ -134,8 +154,7 @@ export default class bind_credit_page extends PureComponent {
 							}
 						} else {
 							// 首页不需要存储银行卡的情况，防止弹窗出现
-							const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-							if (queryData && queryData.noBankInfo) {
+							if (query && query.noBankInfo) {
 								store.removeCardData();
 							} else {
 								store.setCardData(cardDatas);
