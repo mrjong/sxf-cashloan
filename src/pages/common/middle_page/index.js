@@ -55,6 +55,14 @@ export default class middle_page extends Component {
 				break;
 		}
 	}
+
+	postRouterMessage = (taskType) => {
+		if (taskType === 'bank') {
+			window.postMessage('CrawlProgressPage', () => {});
+		} else {
+			window.postMessage('Home', () => {});
+		}
+	};
 	/**
 	 * @description: 玖富回调
 	 * @param {type}
@@ -80,9 +88,7 @@ export default class middle_page extends Component {
 						return;
 					}
 					if (medium_type === 'app') {
-						setTimeout(() => {
-							window.postMessage('Home', () => {});
-						}, 0);
+						this.postRouterMessage(taskType);
 					} else {
 						this.buryPointsType(taskType, true);
 						store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
