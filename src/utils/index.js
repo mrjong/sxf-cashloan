@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 10:43:22
+ * @LastEditTime: 2019-09-15 11:24:55
  */
 /*eslint-disable */
 import React from 'react';
@@ -116,15 +116,19 @@ export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => 
  * @return:
  */
 export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type }) => {
-	$props.$fetch.post(`${API.cardAuth}`).then((result) => {
-		if (result && result.msgCode === 'PTM0000') {
-			jfCallBack && jfCallBack();
-			result.data && store.setAutId(result.data.autId);
-			location.href = result.data && result.data.url;
-		} else {
-			$props.toast.info(result.msgInfo);
-		}
-	});
+	$props.$fetch
+		.post(`${API.cardAuth}`, {
+			backUrl: location.origin + '/common/middle_page?medium_type=web'
+		})
+		.then((result) => {
+			if (result && result.msgCode === 'PTM0000') {
+				jfCallBack && jfCallBack();
+				result.data && store.setAutId(result.data.autId);
+				location.href = result.data && result.data.url;
+			} else {
+				$props.toast.info(result.msgInfo);
+			}
+		});
 
 	// if (1) {
 	// 	jfCallBack && jfCallBack();
@@ -476,6 +480,32 @@ export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
 		});
 	});
 };
+// const a=()=>{
+//   const api = autId ? `${API.chkCredCard}/${autId}` : API.isBankCard;
+//   this.props.$fetch.get(api).then((result) => {
+//     // 跳转至储蓄卡
+//     if (result && result.msgCode === 'PTM2003') {
+//       store.setCheckCardRouter('checkCardRouter');
+//       this.props.toast.info(result.msgInfo);
+//       store.setBackUrl('/home/home');
+//       setTimeout(() => {
+//         this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+//       }, 3000);
+//     } else if (result && result.msgCode === 'PTM2002') {
+//       store.setCheckCardRouter('checkCardRouter');
+//       this.props.toast.info(result.msgInfo);
+//       store.setBackUrl('/home/home');
+//       setTimeout(() => {
+//         this.props.history.replace({
+//           pathname: '/mine/bind_credit_page',
+//           search: `?noBankInfo=true&autId=${autId}`
+//         });
+//       }, 3000);
+//     } else {
+//       this.props.history.push('/home/home');
+//     }
+// }
+// }
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = ($props, repaymentDate, type) => {
 	$props.SXFToast.loading('数据加载中...', 0);
