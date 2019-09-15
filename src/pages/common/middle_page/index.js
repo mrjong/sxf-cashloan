@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 10:49:20
+ * @LastEditTime: 2019-09-15 11:00:12
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -14,6 +14,7 @@ import { home } from 'utils/analytinsType';
 const API = {
 	updateCredStsForHandle: '/auth/updateCredStsForHandle'
 };
+let query = {};
 @fetch.inject()
 export default class middle_page extends Component {
 	constructor(props) {
@@ -25,67 +26,80 @@ export default class middle_page extends Component {
 	componentWillMount() {
 		store.removeGoMoxie();
 		//芝麻信用的回调
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const { taskType, mxcode, token, type, medium_type } = query;
+		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const { token, type, medium_type, taskState } = query;
+		if (!taskState) {
+			this.props.history.push('/home/home');
+		}
 		if (token && medium_type === 'app') {
 			store.setToken(token);
 		}
-
-		if (type === 'mxOperator' || type === 'mxCard') {
-			if (taskType) {
-				this.props.$fetch
-					.get(`${API.updateCredStsForHandle}/${taskType}`)
-					.then((res) => {
-						if (res.msgCode !== 'PTM0000') {
-							this.buryPointsType(taskType, false, res.msgInfo);
-							this.props.toast.info(res.msgInfo);
-							this.setState({
-								errorInf:
-									'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-							});
-							return;
-						}
-						this.buryPointsType(taskType, true);
-						store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
-						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-							getNextStr({
-								$props: this.props
-							});
-						} else {
-							this.goRouter();
-						}
-					})
-					.catch((err) => {
-						err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
-						this.setState({
-							errorInf:
-								'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-						});
+		switch (type) {
+			case 'mxOperator':
+			case 'mxCard':
+				this.goMoxieFunc();
+				break;
+			case 'jfOperator':
+			case 'jfCard':
+				this.goJfFunc();
+				break;
+			default:
+				break;
+		}
+	}
+	/**
+	 * @description: 玖富回调
+	 * @param {type}
+	 * @return:
+	 */
+	goJfFunc = () => {
+		const { type, medium_type } = query;
+		let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
+		this.props.$fetch
+			.get(`${API.updateCredStsForHandle}/${taskType}`)
+			.then((res) => {
+				if (res.msgCode !== 'PTM0000') {
+					this.buryPointsType(taskType, false, res.msgInfo);
+					this.props.toast.info(res.msgInfo);
+					this.setState({
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
-			} else if (mxcode && mxcode === -1) {
-				/** mxcode
-               * 当配置了backUrl，自动跳转到该backUrl时，添加该参数到backUrl上
-                  -4 用户输入出错（密码等输错且未继续输入）
-                  -3 魔蝎数据服务异常
-                  -2 平台方服务问题（如中国移动维护等）
-                  -1 默认状态（用于没有进行操作退出）
-                  0 认证失败，异常错误
-                  1 任务进行成功
-                  2 任务进行中
-               */
-				if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-					this.props.history.push('/home/home');
-				} else {
-					this.props.history.back();
+					return;
 				}
-			} else {
+				if (medium_type === 'app') {
+					setTimeout(() => {
+						window.postMessage(JSON.stringify(query), () => {});
+					}, 0);
+				} else {
+					this.buryPointsType(taskType, true);
+					store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
+					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+						getNextStr({
+							$props: this.props
+						});
+					} else {
+						this.goRouter();
+					}
+				}
+			})
+			.catch((err) => {
+				err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
 				this.setState({
 					errorInf:
 						'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 				});
-			}
-		} else if (type === 'jfOperator' || type === 'jfCard') {
-			let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
+			});
+	};
+	/**
+	 * @description: 魔蝎回调
+	 * @param {type}
+	 * @return:
+	 */
+
+	goMoxieFunc = () => {
+		const { taskType, mxcode } = query;
+		if (taskType) {
 			this.props.$fetch
 				.get(`${API.updateCredStsForHandle}/${taskType}`)
 				.then((res) => {
@@ -98,20 +112,14 @@ export default class middle_page extends Component {
 						});
 						return;
 					}
-					if (medium_type === 'app') {
-						setTimeout(() => {
-							window.postMessage(JSON.stringify(query), () => {});
-						}, 0);
+					this.buryPointsType(taskType, true);
+					store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
+					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+						getNextStr({
+							$props: this.props
+						});
 					} else {
-						this.buryPointsType(taskType, true);
-						store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
-						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-							getNextStr({
-								$props: this.props
-							});
-						} else {
-							this.goRouter();
-						}
+						this.goRouter();
 					}
 				})
 				.catch((err) => {
@@ -121,8 +129,29 @@ export default class middle_page extends Component {
 							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
 				});
+		} else if (mxcode && mxcode === -1) {
+			/** mxcode
+             * 当配置了backUrl，自动跳转到该backUrl时，添加该参数到backUrl上
+                -4 用户输入出错（密码等输错且未继续输入）
+                -3 魔蝎数据服务异常
+                -2 平台方服务问题（如中国移动维护等）
+                -1 默认状态（用于没有进行操作退出）
+                0 认证失败，异常错误
+                1 任务进行成功
+                2 任务进行中
+             */
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
+			} else {
+				this.props.history.back();
+			}
+		} else {
+			this.setState({
+				errorInf:
+					'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+			});
 		}
-	}
+	};
 	goRouter = () => {
 		const moxieBackUrl = store.getMoxieBackUrl();
 		if (moxieBackUrl) {
