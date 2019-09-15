@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 11:00:12
+ * @LastEditTime: 2019-09-15 11:03:17
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -30,6 +30,7 @@ export default class middle_page extends Component {
 		const { token, type, medium_type, taskState } = query;
 		if (!taskState) {
 			this.props.history.push('/home/home');
+			return;
 		}
 		if (token && medium_type === 'app') {
 			store.setToken(token);
