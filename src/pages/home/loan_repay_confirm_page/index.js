@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 19:58:11
+ * @LastEditTime: 2019-09-15 14:16:27
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -18,7 +18,8 @@ import {
 	getOperatorStatus,
 	getMoxieData,
 	activeConfigSts,
-	getMxStatus
+	getMxStatus,
+	getBindCardStatus
 } from 'utils';
 // import mockData from './mockData';
 import { buriedPointEvent } from 'utils/analytins';
@@ -88,6 +89,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	componentDidMount() {
 		store.removeToggleMoxieCard();
+		store.removeAutIdCard(); // 信用卡前置
 		this.queryUsrInfo();
 		this.requestCredCardCount();
 		this.showFeedbackModal();
@@ -385,10 +387,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (btnDisabled || !selectFlag) {
 			return;
 		}
+		let autId = usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId;
+		store.setAutIdCard(autId);
 		const params = {
 			...this.state.selectedLoanDate,
 			activeName: tagList[this.state.activeTag].name,
-			autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
+			autId,
 			rpyAmt: Number(repayMoney)
 		};
 		idChkPhoto({
@@ -399,14 +403,21 @@ export default class loan_repay_confirm_page extends PureComponent {
 			switch (res) {
 				case '1':
 					// 成功
-					//调用授信接口
-					activeConfigSts({
-						$props: this.props,
-						type: 'B',
-						callback: () => {
-							handleClickConfirm(this.props, params);
+					getBindCardStatus({
+						$props: this.props
+					}).then((res) => {
+						if (res === '1') {
+							//调用授信接口
+							activeConfigSts({
+								$props: this.props,
+								type: 'B',
+								callback: () => {
+									handleClickConfirm(this.props, params);
+								}
+							});
 						}
 					});
+
 					break;
 				case '2':
 					store.setLoanAspirationHome(params);
