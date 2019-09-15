@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 11:10:26
+ * @LastEditTime: 2019-09-15 11:32:08
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -59,7 +59,7 @@ export default class middle_page extends Component {
 	 */
 	goJfFunc = () => {
 		const { type, medium_type, taskState } = query;
-		if (taskState && taskState === 352) {
+		if (taskState && taskState === '352') {
 			let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
 			this.props.$fetch
 				.get(`${API.updateCredStsForHandle}/${taskType}`)
