@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 11:03:17
+ * @LastEditTime: 2019-09-15 11:10:26
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -29,7 +29,11 @@ export default class middle_page extends Component {
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const { token, type, medium_type, taskState } = query;
 		if (!taskState) {
-			this.props.history.push('/home/home');
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
+			} else {
+				this.props.history.back();
+			}
 			return;
 		}
 		if (token && medium_type === 'app') {
@@ -54,43 +58,51 @@ export default class middle_page extends Component {
 	 * @return:
 	 */
 	goJfFunc = () => {
-		const { type, medium_type } = query;
-		let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
-		this.props.$fetch
-			.get(`${API.updateCredStsForHandle}/${taskType}`)
-			.then((res) => {
-				if (res.msgCode !== 'PTM0000') {
-					this.buryPointsType(taskType, false, res.msgInfo);
-					this.props.toast.info(res.msgInfo);
+		const { type, medium_type, taskState } = query;
+		if (taskState && taskState === 352) {
+			let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
+			this.props.$fetch
+				.get(`${API.updateCredStsForHandle}/${taskType}`)
+				.then((res) => {
+					if (res.msgCode !== 'PTM0000') {
+						this.buryPointsType(taskType, false, res.msgInfo);
+						this.props.toast.info(res.msgInfo);
+						this.setState({
+							errorInf:
+								'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						});
+						return;
+					}
+					if (medium_type === 'app') {
+						setTimeout(() => {
+							window.postMessage(JSON.stringify(query), () => {});
+						}, 0);
+					} else {
+						this.buryPointsType(taskType, true);
+						store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
+						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+							getNextStr({
+								$props: this.props
+							});
+						} else {
+							this.goRouter();
+						}
+					}
+				})
+				.catch((err) => {
+					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
 					this.setState({
 						errorInf:
 							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 					});
-					return;
-				}
-				if (medium_type === 'app') {
-					setTimeout(() => {
-						window.postMessage(JSON.stringify(query), () => {});
-					}, 0);
-				} else {
-					this.buryPointsType(taskType, true);
-					store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
-					if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-						getNextStr({
-							$props: this.props
-						});
-					} else {
-						this.goRouter();
-					}
-				}
-			})
-			.catch((err) => {
-				err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
-				this.setState({
-					errorInf:
-						'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 				});
-			});
+		} else {
+			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
+			} else {
+				this.props.history.back();
+			}
+		}
 	};
 	/**
 	 * @description: 魔蝎回调
