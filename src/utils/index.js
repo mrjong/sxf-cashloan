@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:26:56
+ * @LastEditTime: 2019-09-15 19:14:05
  */
 /*eslint-disable */
 import React from 'react';
@@ -1109,10 +1109,10 @@ export const queryUsrSCOpenId = ({ $props }) => {
  * @return:
  */
 export const activeConfigSts = ({ $props, callback, type }) => {
-	if (type === 'B') {
-		$props.history.push('/others/mpos_testB_download_page');
-		return;
-	}
+	// if (type === 'B') {
+	// 	$props.history.push('/others/mpos_testB_download_page');
+	// 	return;
+	// }
 	$props.$fetch
 		.get(API.activeConfigSts)
 		.then((res) => {

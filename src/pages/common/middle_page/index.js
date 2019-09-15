@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:43:48
+ * @LastEditTime: 2019-09-15 19:15:00
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -10,9 +10,9 @@ import { getNextStr } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-
 const API = {
-	updateCredStsForHandle: '/auth/updateCredStsForHandle'
+	updateCredStsForHandle: '/auth/updateCredStsForHandle',
+	queryJfCredSts: '/auth/queryJfCredSts/'
 };
 let query = {};
 @fetch.inject()
@@ -27,14 +27,12 @@ export default class middle_page extends Component {
 		store.removeGoMoxie();
 		//芝麻信用的回调
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const { token, type, medium_type, taskState } = query;
+		const { token, type, medium_type, taskState, task_key } = query;
 		if (type === 'jfOperator' && !taskState) {
 			if (medium_type === 'app') {
 				window.postMessage('Home', () => {});
-			} else if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-				this.props.history.push('/home/home');
 			} else {
-				this.props.history.goBack();
+				this.goHome();
 			}
 
 			return;
@@ -48,8 +46,26 @@ export default class middle_page extends Component {
 				this.goMoxieFunc();
 				break;
 			case 'jfOperator':
-			case 'jfCard':
 				this.goJfFunc();
+				break;
+			case 'jfCard':
+				if (task_key) {
+					let taskTypeNum = type === 'jfOperator' ? '4' : '5';
+					this.props.$fetch
+						.get(`${API.queryJfCredSts}/${taskTypeNum}/${task_key}`)
+						.then((res) => {
+							if (res && res.msgCode === 'PTM0000') {
+								this.goJfFunc();
+							} else {
+								this.goHome();
+							}
+						})
+						.catch(() => {
+							this.goHome();
+						});
+				} else {
+					this.goHome();
+				}
 				break;
 			default:
 				break;
@@ -177,6 +193,13 @@ export default class middle_page extends Component {
 				errorInf:
 					'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 			});
+		}
+	};
+	goHome = () => {
+		if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+			this.props.history.push('/home/home');
+		} else {
+			this.props.history.goBack();
 		}
 	};
 	goRouter = () => {
