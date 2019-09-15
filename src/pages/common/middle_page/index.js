@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 11:32:08
+ * @LastEditTime: 2019-09-15 14:43:48
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -28,15 +28,13 @@ export default class middle_page extends Component {
 		//芝麻信用的回调
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const { token, type, medium_type, taskState } = query;
-		if (!taskState) {
+		if (type === 'jfOperator' && !taskState) {
 			if (medium_type === 'app') {
 				window.postMessage('Home', () => {});
+			} else if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
 			} else {
-				if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-					this.props.history.push('/home/home');
-				} else {
-					this.props.history.back();
-				}
+				this.props.history.goBack();
 			}
 
 			return;
@@ -64,8 +62,11 @@ export default class middle_page extends Component {
 	 */
 	goJfFunc = () => {
 		const { type, medium_type, taskState } = query;
-		if (taskState && taskState === '352') {
-			let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
+		let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
+		if (
+			(taskType && taskType === 'carrier' && taskState && taskState === '352') ||
+			(taskType && taskType === 'bank')
+		) {
 			this.props.$fetch
 				.get(`${API.updateCredStsForHandle}/${taskType}`)
 				.then((res) => {
@@ -102,10 +103,12 @@ export default class middle_page extends Component {
 					});
 				});
 		} else {
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+			if (medium_type === 'app') {
+				window.postMessage('Home', () => {});
+			} else if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				this.props.history.push('/home/home');
 			} else {
-				this.props.history.back();
+				this.props.history.goBack();
 			}
 		}
 	};
@@ -161,7 +164,7 @@ export default class middle_page extends Component {
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				this.props.history.push('/home/home');
 			} else {
-				this.props.history.back();
+				this.props.history.goBack();
 			}
 		} else {
 			this.setState({
