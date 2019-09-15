@@ -29,11 +29,16 @@ export default class middle_page extends Component {
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const { token, type, medium_type, taskState } = query;
 		if (!taskState) {
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
-				this.props.history.push('/home/home');
+			if (medium_type === 'app') {
+				window.postMessage('Home', () => {});
 			} else {
-				this.props.history.back();
+				if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+					this.props.history.push('/home/home');
+				} else {
+					this.props.history.back();
+				}
 			}
+
 			return;
 		}
 		if (token && medium_type === 'app') {
@@ -75,7 +80,7 @@ export default class middle_page extends Component {
 					}
 					if (medium_type === 'app') {
 						setTimeout(() => {
-							window.postMessage(JSON.stringify(query), () => {});
+							window.postMessage('Home', () => {});
 						}, 0);
 					} else {
 						this.buryPointsType(taskType, true);
