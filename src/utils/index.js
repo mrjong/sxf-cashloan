@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 20:49:27
+ * @LastEditTime: 2019-09-15 10:43:22
  */
 /*eslint-disable */
 import React from 'react';
@@ -32,7 +32,9 @@ const API = {
 	activeConfigSts: '/activeConfig/ab/sts',
 	contractLog: '/contract/log', // 协议预览留痕记录
 	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
-	MX_CRED_SWITCH: '/my/switchFlag/MX_CRED_SWITCH'
+	MX_CRED_SWITCH: '/my/switchFlag/MX_CRED_SWITCH',
+	cardAuth: '/auth/cardAuth', // 信用卡授信
+	operatorAuth: '/auth/operatorAuth' // 运营商授信
 };
 // 处理输入框失焦页面不回弹
 export const handleInputBlur = () => {
@@ -87,13 +89,26 @@ export const getMxStatus = ({ $props }) => {
  * @param {type}
  * @return:
  */
-export const switchOperatorService = ({ jfCallBack, moxieCallBack }) => {
-	if (1) {
-		jfCallBack && jfCallBack();
-		window.location.href = 'http://172.18.30.201:8082/#/test_mx';
-	} else if (2) {
-		moxieCallBack && moxieCallBack();
-	}
+export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => {
+	$props.$fetch
+		.post(`${API.operatorAuth}`, {
+			backUrl: location.origin + '/common/middle_page?medium_type=web'
+		})
+		.then((result) => {
+			if (result && result.msgCode === 'PTM0000') {
+				jfCallBack && jfCallBack();
+				location.href = result.data && result.data.url;
+			} else {
+				$props.toast.info(result.msgInfo);
+			}
+		})
+		.catch(() => {});
+	// if (1) {
+	// 	jfCallBack && jfCallBack();
+	// 	window.location.href = 'http://172.18.30.201:8082/#/test_mx';
+	// } else if (2) {
+	// 	moxieCallBack && moxieCallBack();
+	// }
 };
 /**
  * @description: 选择哪个三方信用卡
@@ -101,16 +116,27 @@ export const switchOperatorService = ({ jfCallBack, moxieCallBack }) => {
  * @return:
  */
 export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type }) => {
-	if (1) {
-		jfCallBack && jfCallBack();
-		store.setAutId('0000000');
-		window.location.href = 'http://172.18.30.201:8082/#/test_mx';
-	} else if (2) {
-		moxieCallBack && moxieCallBack();
-		if (!type) {
-			$props.history.push({ pathname: '/home/moxie_bank_list_page' });
+	$props.$fetch.post(`${API.cardAuth}`).then((result) => {
+		if (result && result.msgCode === 'PTM0000') {
+			jfCallBack && jfCallBack();
+			result.data && store.setAutId(result.data.autId);
+			location.href = result.data && result.data.url;
+		} else {
+			$props.toast.info(result.msgInfo);
 		}
-	}
+	});
+
+	// if (1) {
+	// 	jfCallBack && jfCallBack();
+	// 	store.setAutId('0000000');
+	// 	window.location.href = 'http://172.18.30.201:8082/#/test_mx';
+	// }
+	// else if (2) {
+	// 	moxieCallBack && moxieCallBack();
+	// 	if (!type) {
+	// 		$props.history.push({ pathname: '/home/moxie_bank_list_page' });
+	// 	}
+	// }
 };
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
@@ -543,6 +569,7 @@ export const getOperatorStatus = ({ $props }) => {
 									return;
 								}
 								switchOperatorService({
+									$props,
 									jfCallBack: () => {
 										store.setMoxieBackUrl('/home/loan_repay_confirm_page');
 										store.setGotoMoxieFlag(true);
@@ -648,6 +675,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 					return;
 				}
 				switchOperatorService({
+					$props,
 					jfCallBack: () => {
 						$props.SXFToast.hide();
 						resBackMsg = '运营商认证';
