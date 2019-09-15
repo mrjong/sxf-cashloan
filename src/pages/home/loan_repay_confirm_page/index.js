@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:16:27
+ * @LastEditTime: 2019-09-15 14:54:28
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -402,6 +402,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}).then((res) => {
 			switch (res) {
 				case '1':
+					store.setLoanAspirationHome(params);
 					// 成功
 					getBindCardStatus({
 						$props: this.props
