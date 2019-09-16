@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-16 10:46:00
+ */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { InputItem, List } from 'antd-mobile';
@@ -27,7 +31,8 @@ const API = {
 	qryCity: '/rcm/qryCity',
 	queryUsrBasicInfo: '/auth/queryUsrBasicInfo',
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	readAgreement: '/index/saveAgreementViewRecord' // 上报我已阅读协议
+	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
+	contractInfo: '/bill/personalDataAuthInfo' // 个人信息授权书数据查询
 };
 
 const reducedFilter = (data, keys, fn) =>
@@ -57,7 +62,8 @@ export default class essential_information_page extends PureComponent {
 			provValue: [], // 选中的省市区
 			provLabel: [],
 			showAgreement: false, // 显示协议弹窗
-			millisecond: 0
+			millisecond: 0,
+			selectFlag: true
 		};
 	}
 
@@ -120,6 +126,22 @@ export default class essential_information_page extends PureComponent {
 		clearInterval(this.timer);
 		this.timer = null;
 	}
+	// 跳转个人信息授权书
+	readContract = () => {
+		this.props.$fetch.get(API.contractInfo).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				store.setProtocolPersonalData(result.data);
+				this.props.history.push('/protocol/personal_auth_page');
+			} else {
+				this.props.toast.info(result.msgInfo);
+			}
+		});
+	};
+	selectProtocol = () => {
+		this.setState({
+			selectFlag: !this.state.selectFlag
+		});
+	};
 	getMillisecond = () => {
 		setTimeout(() => {
 			timedown = setInterval(() => {
@@ -221,10 +243,14 @@ export default class essential_information_page extends PureComponent {
 		// if (isFetching) {
 		// 	return;
 		// }
-		const { loading } = this.state;
+		const { loading, selectFlag } = this.state;
 		if (loading) return; // 防止重复提交
 		const city = this.state.provLabel[0];
 		const prov = this.state.provLabel[1];
+		if (!selectFlag) {
+			this.props.toast.info('请先勾选个人信息授权书');
+			return;
+		}
 		// 调基本信息接口
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
@@ -423,7 +449,7 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement } = this.state;
+		const { showAgreement, selectFlag } = this.state;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
@@ -632,7 +658,7 @@ export default class essential_information_page extends PureComponent {
 					<div className={style.operatorCont}>
 						<ButtonCustom
 							onClick={this.handleSubmit}
-							className={[style.nextBtn, !btn_dis ? style.dis : ''].join(' ')}
+							className={[style.nextBtn, !btn_dis || !selectFlag ? style.dis : ''].join(' ')}
 						>
 							下一步
 						</ButtonCustom>
@@ -644,11 +670,26 @@ export default class essential_information_page extends PureComponent {
 				{!urlQuery.jumpToBase && (
 					<ButtonCustom
 						onClick={this.handleSubmit}
-						className={[style.sureBtn, !btn_dis ? style.dis : ''].join(' ')}
+						className={[style.sureBtn, !btn_dis || !selectFlag ? style.dis : ''].join(' ')}
 					>
 						{needNextUrl ? '下一步' : '完成'}
 					</ButtonCustom>
 				)}
+				<div className={style.protocolBox}>
+					<i
+						className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
+						onClick={this.selectProtocol}
+					/>
+					点击按钮即视为同意
+					<a
+						onClick={() => {
+							this.readContract();
+						}}
+						className={style.link}
+					>
+						《个人信息授权书》
+					</a>
+				</div>
 				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
 			</div>
 		);

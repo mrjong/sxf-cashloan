@@ -228,3 +228,26 @@
 		}
 	}
 }
+.protocolBox {
+	display: flex;
+	align-items: center;
+	font-size: 24px;
+	line-height: 33px;
+	color: #868e9e;
+	margin: 20px 58px 0;
+	.selectStyle {
+		display: block;
+		width: 30px;
+		height: 30px;
+		background-size: 100%;
+		background-repeat: no-repeat;
+		background-image: url(./img/selected_ico.png);
+		margin-right: 10px;
+	}
+	.unselectStyle {
+		background-image: url(./img/unselected_ico.png);
+	}
+	.link {
+		color: #121c32;
+	}
+}
