@@ -106,7 +106,7 @@
 		"rc": "cross-env NODE_ENV=production webpack --config build/webpack.rc.js && npm run clearMap",
 		"clear": "rimraf ./dist",
 		"push-rc": "npm run rc && cp -rf ./upload-rc.sh ./dist && cd dist && sh upload-rc.sh",
-		"push-test": "rm -rf node_modules && yarn && npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
+		"push-test": "npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
 		"precommit": "lint-staged"
