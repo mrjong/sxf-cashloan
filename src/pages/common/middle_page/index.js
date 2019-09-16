@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-16 11:32:55
+ * @LastEditTime: 2019-09-16 16:51:48
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -204,7 +204,8 @@ export default class middle_page extends Component {
 		if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 			this.props.history.push('/home/home');
 		} else if (query && query.medium_type === 'web' && query.type === 'jfCard') {
-			this.props.history.push('/home/home');
+			// 直接返回
+			history.go(-2);
 		} else {
 			this.props.history.goBack();
 		}

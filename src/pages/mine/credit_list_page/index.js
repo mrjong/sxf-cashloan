@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 19:46:42
+ * @LastEditTime: 2019-09-16 16:51:04
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -110,6 +110,7 @@ export default class credit_list_page extends PureComponent {
 	// 新增授权卡
 	goToNewMoXie = async (type) => {
 		if (type === 'add') {
+			store.setGotoMoxieFlag(true);
 			buriedPointEvent(home.addCreditCard);
 		} else {
 			store.setToggleMoxieCard(true);
