@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 19:15:00
+ * @LastEditTime: 2019-09-16 11:32:55
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -52,7 +52,7 @@ export default class middle_page extends Component {
 				if (task_key) {
 					let taskTypeNum = type === 'jfOperator' ? '4' : '5';
 					this.props.$fetch
-						.get(`${API.queryJfCredSts}/${taskTypeNum}/${task_key}`)
+						.get(`${API.queryJfCredSts}${taskTypeNum}/${task_key}`)
 						.then((res) => {
 							if (res && res.msgCode === 'PTM0000') {
 								this.goJfFunc();
@@ -197,6 +197,8 @@ export default class middle_page extends Component {
 	};
 	goHome = () => {
 		if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+			this.props.history.push('/home/home');
+		} else if (query && query.medium_type === 'web' && query.type === 'jfCard') {
 			this.props.history.push('/home/home');
 		} else {
 			this.props.history.goBack();
