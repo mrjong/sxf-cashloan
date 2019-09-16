@@ -30,13 +30,10 @@ export default class middle_page extends Component {
 		const { token, type, medium_type, taskState, task_key } = query;
 		if (type === 'jfOperator' && !taskState) {
 			if (medium_type === 'app') {
-				setTimeout(() => {
-					window.postMessage('Home', () => {});
-				}, 0);
+				this.postMessageToApp('goBack');
 			} else {
 				this.goHome();
 			}
-
 			return;
 		}
 		if (token && medium_type === 'app') {
@@ -78,11 +75,17 @@ export default class middle_page extends Component {
 	postRouterMessage = (taskType) => {
 		if (taskType === 'bank') {
 			//信用卡认证完->进度页
-			window.postMessage('CrawlProgressPage', () => {});
+			this.postMessageToApp('CrawlProgressPage');
 		} else {
 			//运营商认证完->调用下一步
-			window.postMessage('Home', () => {});
+			this.postMessageToApp('Home');
 		}
+	};
+
+	postMessageToApp = (message, delay = 500) => {
+		setTimeout(() => {
+			window.postMessage(message, () => {});
+		}, delay);
 	};
 	/**
 	 * @description: 玖富回调
@@ -131,7 +134,7 @@ export default class middle_page extends Component {
 				});
 		} else {
 			if (medium_type === 'app') {
-				window.postMessage('Home', () => {});
+				this.postMessageToApp('goBack');
 			} else if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				this.props.history.push('/home/home');
 			} else {
