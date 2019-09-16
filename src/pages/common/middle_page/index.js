@@ -56,10 +56,13 @@ export default class middle_page extends Component {
 		}
 	}
 
+	//通知APP路由跳转方法
 	postRouterMessage = (taskType) => {
 		if (taskType === 'bank') {
+			//信用卡认证完->进度页
 			window.postMessage('CrawlProgressPage', () => {});
 		} else {
+			//运营商认证完->调用下一步
 			window.postMessage('Home', () => {});
 		}
 	};
