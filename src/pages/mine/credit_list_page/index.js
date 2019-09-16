@@ -234,7 +234,7 @@ export default class credit_list_page extends PureComponent {
 														) : null}
 													</div>
 												</div>
-												<div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
+												<div className={styles.surplus_desc}>信用卡账单金额(元)</div>
 												<div className={styles.bill_remain_amt}>
 													{(item.autSts !== '2' && item.operationMark === '01') ||
 													(item.operationMark === '01' && item.cardBillSts === '02') ||

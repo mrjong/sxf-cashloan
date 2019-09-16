@@ -1138,7 +1138,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '申请借钱还信用卡',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1224,7 +1224,7 @@ export default class home_page extends PureComponent {
 						// 	showData={{
 						// 		btnText: '暂无借款资格',
 						// 		title: bankNm,
-						// 		subtitle: '信用卡剩余应还金额(元)',
+						// 		subtitle: '信用卡账单金额(元)',
 						// 		money: cardBillAmtData,
 						// 		desc: `还款日：${cardBillDtData}`,
 						// 		cardNoHid: cardCode,
@@ -1247,7 +1247,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '立即签约借款',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1293,7 +1293,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '查看代偿账单',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,

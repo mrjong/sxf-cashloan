@@ -748,7 +748,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</strong>
 							<div className={style.billInfo}>
 								<div className={style.item}>
-									<p className={`${style.name} ${style.moneyTit}`}>剩余应还金额(元)</p>
+									<p className={`${style.name} ${style.moneyTit}`}>账单金额(元)</p>
 								</div>
 								<div className={style.item}>
 									<span className={style.name}>还款日：{cardBillDtData}</span>

@@ -30,7 +30,9 @@ export default class middle_page extends Component {
 		const { token, type, medium_type, taskState, task_key } = query;
 		if (type === 'jfOperator' && !taskState) {
 			if (medium_type === 'app') {
-				window.postMessage('Home', () => {});
+				setTimeout(() => {
+					window.postMessage('Home', () => {});
+				}, 0);
 			} else {
 				this.goHome();
 			}
