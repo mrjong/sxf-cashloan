@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 17:14:15
+ * @LastEditTime: 2019-09-17 17:22:01
  */
 /*eslint-disable */
 import React from 'react';
@@ -98,6 +98,7 @@ export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => 
 		.then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				jfCallBack && jfCallBack();
+				store.setGotoMoxieFlag(true);
 				location.href = result.data && result.data.url;
 			} else {
 				$props.toast.info(result.msgInfo);
@@ -124,6 +125,7 @@ export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type, R
 		.then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				jfCallBack && jfCallBack();
+				store.setGotoMoxieFlag(true);
 				result.data && store.setAutId(result.data.autId);
 				store.setJFBackUrl(RouterType);
 				location.href = result.data && result.data.url;
