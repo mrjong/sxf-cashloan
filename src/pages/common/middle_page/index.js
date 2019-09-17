@@ -29,11 +29,7 @@ export default class middle_page extends Component {
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const { token, type, medium_type, taskState, task_key } = query;
 		if (type === 'jfOperator' && !taskState) {
-			if (medium_type === 'app') {
-				this.postMessageToApp('goBack');
-			} else {
-				this.goHome();
-			}
+			this.goHome();
 			return;
 		}
 		if (token && medium_type === 'app') {
@@ -209,6 +205,8 @@ export default class middle_page extends Component {
 		} else if (query && query.medium_type === 'web') {
 			// 直接返回
 			history.go(-2);
+		} else if (query && query.medium_type === 'app') {
+			this.postMessageToApp('goBack');
 		} else {
 			this.props.history.goBack();
 		}
