@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:19:46
+ * @LastEditTime: 2019-09-17 13:57:34
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -63,9 +63,13 @@ export default class tencent_face_middle_page extends Component {
 								$props: this.props,
 								type: 'B',
 								callback: () => {
-									handleClickConfirm(this.props, {
-										...store.getLoanAspirationHome()
-									});
+									handleClickConfirm(
+										this.props,
+										{
+											...store.getLoanAspirationHome()
+										},
+										'goHome'
+									);
 									store.removeRealNameNextStep();
 									store.removeIdChkPhotoBack();
 									store.removeTencentBackUrl();

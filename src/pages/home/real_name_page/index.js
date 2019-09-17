@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:13:01
+ * @LastEditTime: 2019-09-17 13:57:16
  */
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
@@ -309,9 +309,13 @@ export default class real_name_page extends Component {
 											$props: this.props,
 											type: 'B',
 											callback: () => {
-												handleClickConfirm(this.props, {
-													...store.getLoanAspirationHome()
-												});
+												handleClickConfirm(
+													this.props,
+													{
+														...store.getLoanAspirationHome()
+													},
+													'goHome'
+												);
 											}
 										});
 									}

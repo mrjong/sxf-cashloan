@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:23:36
+ * @LastEditTime: 2019-09-17 13:57:05
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -129,9 +129,13 @@ export default class bind_credit_page extends PureComponent {
 							$props: this.props,
 							type: 'B',
 							callback: () => {
-								handleClickConfirm(this.props, {
-									...store.getLoanAspirationHome()
-								});
+								handleClickConfirm(
+									this.props,
+									{
+										...store.getLoanAspirationHome()
+									},
+									'goHome'
+								);
 								store.removeRealNameNextStep();
 								store.removeIdChkPhotoBack();
 								store.removeTencentBackUrl();

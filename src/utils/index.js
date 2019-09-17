@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-16 16:50:14
+ * @LastEditTime: 2019-09-17 13:56:32
  */
 /*eslint-disable */
 import React from 'react';
@@ -516,7 +516,7 @@ export const getBindCardStatus = ({ $props }) => {
 	});
 };
 // 确认按钮点击事件 提交到风控
-export const handleClickConfirm = async ($props, repaymentDate, type) => {
+export const handleClickConfirm = async ($props, repaymentDate, goHome) => {
 	$props.SXFToast.loading('数据加载中...', 0);
 	const address = store.getPosition();
 	const params = {
@@ -563,6 +563,11 @@ export const handleClickConfirm = async ($props, repaymentDate, type) => {
 					activeName: repaymentDate.activeName
 				});
 				$props.toast.info(res.msgInfo);
+				if (goHome) {
+					setTimeout(() => {
+						$props.history.push('/home/home');
+					});
+				}
 			}
 		})
 		.catch(() => {
@@ -574,11 +579,10 @@ export const handleClickConfirm = async ($props, repaymentDate, type) => {
 				activeName: repaymentDate.activeName
 			});
 			$props.SXFToast.hide();
-			if (type) {
-				$props.history.goBack();
-			} else {
+			$props.toast.info('网络开小差，请稍后重试');
+			setTimeout(() => {
 				$props.history.push('/home/home');
-			}
+			}, 2000);
 		});
 };
 const needDisplayOptions2 = ['operator'];
