@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-15 14:24:01
+ * @LastEditTime: 2019-09-17 16:26:18
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -656,7 +656,7 @@ export default class home_page extends PureComponent {
 			let RouterType = (mxQuery && mxQuery[2]) || '';
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
-			switchCreditService({ $props: this.props });
+			switchCreditService({ $props: this.props, RouterType: '/home/home' });
 		}
 	};
 	// 请求用户绑卡状态

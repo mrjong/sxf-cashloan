@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 13:56:32
+ * @LastEditTime: 2019-09-17 16:39:02
  */
 /*eslint-disable */
 import React from 'react';
@@ -116,7 +116,7 @@ export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => 
  * @param {type}
  * @return:
  */
-export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type }) => {
+export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type, RouterType = '' }) => {
 	$props.$fetch
 		.post(`${API.cardAuth}`, {
 			backUrl: location.origin + '/common/middle_page?medium_type=web'
@@ -125,6 +125,7 @@ export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type })
 			if (result && result.msgCode === 'PTM0000') {
 				jfCallBack && jfCallBack();
 				result.data && store.setAutId(result.data.autId);
+				store.setMoxieBackUrl(RouterType);
 				location.href = result.data && result.data.url;
 			} else {
 				$props.toast.info(result.msgInfo);
@@ -767,7 +768,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				$props.SXFToast.hide();
 				resBackMsg = '银行列表';
 				store.setCreditSuccessBack(true);
-				switchCreditService({ $props });
+				switchCreditService({ $props, RouterType: '/home/home' });
 				if (callBack) {
 					callBack(resBackMsg);
 				}
@@ -1031,6 +1032,7 @@ export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
 	switchCreditService({
 		$props,
 		type: 'login',
+		RouterType: location.pathname,
 		jfCallBack: () => {
 			store.setGotoMoxieFlag(true);
 			store.setMoxieBackUrl(`/home/crawl_progress_page`);

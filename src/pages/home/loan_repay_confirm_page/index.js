@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-16 10:43:09
+ * @LastEditTime: 2019-09-17 16:27:18
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -264,7 +264,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
 			switchCreditService({
-				$props: this.props
+				$props: this.props,
+				RouterType: '/home/loan_repay_confirm_page'
 			});
 		}
 	};

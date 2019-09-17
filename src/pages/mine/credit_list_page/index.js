@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-16 16:51:04
+ * @LastEditTime: 2019-09-17 16:20:26
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -122,7 +122,7 @@ export default class credit_list_page extends PureComponent {
 			let RouterType = (mxQuery && mxQuery[2]) || '';
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
-			switchCreditService({ $props: this.props });
+			switchCreditService({ $props: this.props, RouterType: '/mine/credit_list_page' });
 		}
 	};
 

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-16 17:06:35
+ * @LastEditTime: 2019-09-17 16:35:53
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -202,9 +202,17 @@ export default class middle_page extends Component {
 	goHome = () => {
 		if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 			this.props.history.push('/home/home');
-		} else if (query && query.medium_type === 'web') {
+		} else if (query && query.medium_type === 'web' && query.type === 'jfOperator') {
 			// 直接返回
 			history.go(-2);
+		} else if (query && query.medium_type === 'web' && query.type === 'jfCard') {
+			const JFBackUrl = store.getJFBackUrl();
+			if (JFBackUrl) {
+				store.removeJFBackUrl();
+				this.props.history.replace(JFBackUrl);
+			} else {
+				this.props.history.replace('/home/home');
+			}
 		} else if (query && query.medium_type === 'app') {
 			this.postMessageToApp('goBack');
 		} else {

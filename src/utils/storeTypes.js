@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 11:23:22
+ * @LastEditTime: 2019-09-17 16:35:06
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -93,5 +93,6 @@ export const storeTypes = {
 	TencentBackUrl: 'TencentBackUrl', // 跳转到人脸识别返回的url
 	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome', // 签约页控制物理返回到首页标识
 	BonusActivity: 'BonusActivity', // 参与100元利息红包限时领活动
-	AutIdCard: 'AutIdCard' // 信用卡前置authid
+	AutIdCard: 'AutIdCard', // 信用卡前置authid
+	JFBackUrl: 'JFBackUrl' // 跳转jf授权页 授权后返回的url
 };

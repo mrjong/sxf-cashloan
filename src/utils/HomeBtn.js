@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 19:53:28
+ * @LastEditTime: 2019-09-17 16:28:38
  */
 import { store } from 'utils/store';
 import { getDeviceType, getNextStr, isCanLoan, getMoxieData, getMxStatus } from 'utils';
@@ -254,7 +254,8 @@ class HomeBtn {
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
 			switchCreditService({
-				$props: this.props
+				$props: this.props,
+				RouterType: '/home/home'
 			});
 		}
 	};

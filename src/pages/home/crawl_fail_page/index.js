@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-13 07:18:56
+ * @LastEditTime: 2019-09-17 16:23:39
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -64,7 +64,7 @@ export default class crawl_progress_page extends PureComponent {
 			let RouterType = (mxQuery && mxQuery[2]) || '';
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
-			switchCreditService({ $props: this.props });
+			switchCreditService({ $props: this.props, RouterType: '/home/home' });
 		}
 		buriedPointEvent(home.importOtherCreditCard);
 	};
