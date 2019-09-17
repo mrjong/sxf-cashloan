@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 16:39:02
+ * @LastEditTime: 2019-09-17 17:14:15
  */
 /*eslint-disable */
 import React from 'react';
@@ -125,7 +125,7 @@ export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type, R
 			if (result && result.msgCode === 'PTM0000') {
 				jfCallBack && jfCallBack();
 				result.data && store.setAutId(result.data.autId);
-				store.setMoxieBackUrl(RouterType);
+				store.setJFBackUrl(RouterType);
 				location.href = result.data && result.data.url;
 			} else {
 				$props.toast.info(result.msgInfo);
