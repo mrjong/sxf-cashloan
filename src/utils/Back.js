@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-15 14:00:40
+ * @LastEditTime: 2019-09-17 11:50:42
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -166,6 +166,8 @@ if (window.history && window.history.pushState) {
 					// 银行卡直接返回的问题
 					store.removeBankMoxie();
 					window.ReactRouterHistory.push('/home/home');
+					return;
+				} else if (store.getProtocolPersonalData()) {
 					return;
 				}
 				document.activeElement.blur();
