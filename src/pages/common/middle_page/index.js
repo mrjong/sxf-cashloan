@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-18 11:59:08
+ * @LastEditTime: 2019-09-18 13:53:21
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -41,7 +41,12 @@ export default class middle_page extends Component {
 				this.goMoxieFunc();
 				break;
 			case 'jfOperator':
-				this.goJfFunc();
+				if (store.getGotoCard()) {
+					store.removeGotoCard();
+					this.goHome();
+				} else {
+					this.goJfFunc();
+				}
 				break;
 			case 'jfCard':
 				if (task_key) {
@@ -113,6 +118,11 @@ export default class middle_page extends Component {
 						this.buryPointsType(taskType, true);
 						store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
 						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+							if (query && query.taskState && query.taskState === '352') {
+								store.setGotoCard(true);
+							} else {
+								store.removeGotoCard();
+							}
 							getNextStr({
 								$props: this.props
 							});
