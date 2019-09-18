@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-18 12:11:30
+ * @LastEditTime: 2019-09-18 12:18:00
  */
 /*eslint-disable */
 import React from 'react';
@@ -293,7 +293,7 @@ export const logoutAppHandler = (that) => {
 		closeCurrentWebView();
 		return;
 	}
-	if (!state) {
+	if (!state && !store.getGotoMoxieFlag()) {
 		state = true;
 		const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
 		Modal.alert('', ele, [
