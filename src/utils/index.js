@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-18 12:00:12
+ * @LastEditTime: 2019-09-18 12:11:30
  */
 /*eslint-disable */
 import React from 'react';
@@ -761,7 +761,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				return;
 			}
 			// 信用卡
-			if (codesArray[3] === '1' && codesArray[3] !== '2') {
+			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
 				let mxRes = await getMxStatus({ $props });
 				if (mxRes && mxRes === '0') {
 					let mxQuery = location.pathname.split('/');
