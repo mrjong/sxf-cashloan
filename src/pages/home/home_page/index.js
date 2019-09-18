@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 17:45:29
+ * @LastEditTime: 2019-09-18 12:10:42
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -14,7 +14,8 @@ import {
 	getMoxieData,
 	dateDiffer,
 	queryUsrSCOpenId,
-	getMxStatus
+	getMxStatus,
+	switchCreditService
 } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -56,7 +57,6 @@ const API = {
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
-	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
@@ -175,6 +175,8 @@ export default class home_page extends PureComponent {
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
 		store.removeBackFlag();
+		// 信用卡前置
+		store.removeAutIdCard();
 		// 运营商直接返回的问题
 		// store.removeCarrierMoxie();
 		// 信用卡绑卡之后立即去提交页需要提示
@@ -654,7 +656,7 @@ export default class home_page extends PureComponent {
 			let RouterType = (mxQuery && mxQuery[2]) || '';
 			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		} else {
-			this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+			switchCreditService({ $props: this.props, RouterType: '/home/home' });
 		}
 	};
 	// 请求用户绑卡状态
@@ -1136,7 +1138,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '申请借钱还信用卡',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1222,7 +1224,7 @@ export default class home_page extends PureComponent {
 						// 	showData={{
 						// 		btnText: '暂无借款资格',
 						// 		title: bankNm,
-						// 		subtitle: '信用卡剩余应还金额(元)',
+						// 		subtitle: '信用卡账单金额(元)',
 						// 		money: cardBillAmtData,
 						// 		desc: `还款日：${cardBillDtData}`,
 						// 		cardNoHid: cardCode,
@@ -1245,7 +1247,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '立即签约借款',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1291,7 +1293,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '查看代偿账单',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,

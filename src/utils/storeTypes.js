@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-18 13:47:50
+ */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
 	RepaymentModalData: 'RepaymentModalData', // 保存确认代还信息弹框数据
@@ -88,5 +92,8 @@ export const storeTypes = {
 	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
 	TencentBackUrl: 'TencentBackUrl', // 跳转到人脸识别返回的url
 	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome', // 签约页控制物理返回到首页标识
-	BonusActivity: 'BonusActivity' // 参与100元利息红包限时领活动
+	BonusActivity: 'BonusActivity', // 参与100元利息红包限时领活动
+	AutIdCard: 'AutIdCard', // 信用卡前置authid
+	JFBackUrl: 'JFBackUrl', // 跳转jf授权页 授权后返回的url
+	GotoCard: 'GotoCard' // 运营上成功之后 无法返回首页
 };

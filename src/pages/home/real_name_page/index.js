@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 17:44:37
+ * @LastEditTime: 2019-09-17 13:57:16
  */
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
@@ -22,7 +22,8 @@ import {
 	getNextStr,
 	handleClickConfirm,
 	idChkPhoto,
-	activeConfigSts
+	activeConfigSts,
+	getBindCardStatus
 } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
@@ -302,12 +303,20 @@ export default class real_name_page extends Component {
 							this.props.toast.info('实名照片补充成功!');
 							store.removeToggleMoxieCard();
 							setTimeout(() => {
-								activeConfigSts({
-									$props: this.props,
-									type: 'B',
-									callback: () => {
-										handleClickConfirm(this.props, {
-											...store.getLoanAspirationHome()
+								getBindCardStatus({ $props: this.props }).then((res) => {
+									if (res === '1') {
+										activeConfigSts({
+											$props: this.props,
+											type: 'B',
+											callback: () => {
+												handleClickConfirm(
+													this.props,
+													{
+														...store.getLoanAspirationHome()
+													},
+													'goHome'
+												);
+											}
 										});
 									}
 								});

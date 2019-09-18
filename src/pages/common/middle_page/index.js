@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-18 13:53:21
+ */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
@@ -6,11 +10,11 @@ import { getNextStr } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-
 const API = {
-	getXMURL: '/auth/zmAuth', // 芝麻认证之后的回调状态
-	updateCredStsForHandle: '/auth/updateCredStsForHandle'
+	updateCredStsForHandle: '/auth/updateCredStsForHandle',
+	queryJfCredSts: '/auth/queryJfCredSts/'
 };
+let query = {};
 @fetch.inject()
 export default class middle_page extends Component {
 	constructor(props) {
@@ -22,7 +26,135 @@ export default class middle_page extends Component {
 	componentWillMount() {
 		store.removeGoMoxie();
 		//芝麻信用的回调
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const { token, type, medium_type, taskState, task_key } = query;
+		if (type === 'jfOperator' && !taskState) {
+			this.goHome();
+			return;
+		}
+		if (token && medium_type === 'app') {
+			store.setToken(token);
+		}
+		switch (type) {
+			case 'mxOperator':
+			case 'mxCard':
+				this.goMoxieFunc();
+				break;
+			case 'jfOperator':
+				if (store.getGotoCard()) {
+					store.removeGotoCard();
+					this.goHome();
+				} else {
+					this.goJfFunc();
+				}
+				break;
+			case 'jfCard':
+				if (task_key) {
+					let taskTypeNum = type === 'jfOperator' ? '4' : '5';
+					this.props.$fetch
+						.get(`${API.queryJfCredSts}${taskTypeNum}/${task_key}`)
+						.then((res) => {
+							if (res && res.msgCode === 'PTM0000') {
+								this.goJfFunc();
+							} else {
+								this.goHome();
+							}
+						})
+						.catch(() => {
+							this.goHome();
+						});
+				} else {
+					this.goHome();
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	//通知APP路由跳转方法
+	postRouterMessage = (taskType) => {
+		if (taskType === 'bank') {
+			//信用卡认证完->进度页
+			this.postMessageToApp('CrawlProgressPage');
+		} else {
+			//运营商认证完->调用下一步
+			this.postMessageToApp('Home');
+		}
+	};
+
+	postMessageToApp = (message, delay = 500) => {
+		setTimeout(() => {
+			window.postMessage(message, () => {});
+		}, delay);
+	};
+	/**
+	 * @description: 玖富回调
+	 * @param {type}
+	 * @return:
+	 */
+	goJfFunc = () => {
+		const { type, medium_type, taskState } = query;
+		let taskType = type === 'jfOperator' ? 'carrier' : 'bank';
+		if (
+			(taskType && taskType === 'carrier' && taskState && taskState === '352') ||
+			(taskType && taskType === 'bank')
+		) {
+			this.props.$fetch
+				.get(`${API.updateCredStsForHandle}/${taskType}`)
+				.then((res) => {
+					if (res.msgCode !== 'PTM0000') {
+						this.buryPointsType(taskType, false, res.msgInfo);
+						this.props.toast.info(res.msgInfo);
+						this.setState({
+							errorInf:
+								'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+						});
+						return;
+					}
+					if (medium_type === 'app') {
+						this.postRouterMessage(taskType);
+					} else {
+						this.buryPointsType(taskType, true);
+						store.removeGotoMoxieFlag(); //删除去到第三方魔蝎的标志
+						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+							if (query && query.taskState && query.taskState === '352') {
+								store.setGotoCard(true);
+							} else {
+								store.removeGotoCard();
+							}
+							getNextStr({
+								$props: this.props
+							});
+						} else {
+							this.goRouter();
+						}
+					}
+				})
+				.catch((err) => {
+					err.msgInfo && this.buryPointsType(taskType, false, err.msgInfo);
+					this.setState({
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+					});
+				});
+		} else {
+			if (medium_type === 'app') {
+				this.postMessageToApp('goBack');
+			} else if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+				this.props.history.push('/home/home');
+			} else {
+				this.props.history.goBack();
+			}
+		}
+	};
+	/**
+	 * @description: 魔蝎回调
+	 * @param {type}
+	 * @return:
+	 */
+
+	goMoxieFunc = () => {
 		const { taskType, mxcode } = query;
 		if (taskType) {
 			this.props.$fetch
@@ -68,7 +200,7 @@ export default class middle_page extends Component {
 			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
 				this.props.history.push('/home/home');
 			} else {
-				this.props.history.back();
+				this.props.history.goBack();
 			}
 		} else {
 			this.setState({
@@ -76,7 +208,24 @@ export default class middle_page extends Component {
 					'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
 			});
 		}
-	}
+	};
+	goHome = () => {
+		if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+			this.props.history.push('/home/home');
+		} else if (query && query.medium_type === 'web') {
+			const JFBackUrl = store.getJFBackUrl();
+			if (JFBackUrl) {
+				store.removeJFBackUrl();
+				this.props.history.replace(JFBackUrl);
+			} else {
+				this.props.history.replace('/home/home');
+			}
+		} else if (query && query.medium_type === 'app') {
+			this.postMessageToApp('goBack');
+		} else {
+			this.props.history.goBack();
+		}
+	};
 	goRouter = () => {
 		const moxieBackUrl = store.getMoxieBackUrl();
 		if (moxieBackUrl) {
