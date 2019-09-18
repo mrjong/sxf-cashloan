@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 17:22:01
+ * @LastEditTime: 2019-09-18 12:00:12
  */
 /*eslint-disable */
 import React from 'react';
@@ -90,7 +90,7 @@ export const getMxStatus = ({ $props }) => {
  * @param {type}
  * @return:
  */
-export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => {
+export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack, RouterType }) => {
 	$props.$fetch
 		.post(`${API.operatorAuth}`, {
 			backUrl: location.origin + '/common/middle_page?medium_type=web'
@@ -98,6 +98,7 @@ export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack }) => 
 		.then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				jfCallBack && jfCallBack();
+				store.setJFBackUrl(RouterType);
 				store.setGotoMoxieFlag(true);
 				location.href = result.data && result.data.url;
 			} else {
@@ -620,6 +621,7 @@ export const getOperatorStatus = ({ $props }) => {
 										store.setMoxieBackUrl('/home/loan_repay_confirm_page');
 										store.setGotoMoxieFlag(true);
 									},
+									RouterType: '/home/loan_repay_confirm_page',
 									moxieCallBack: () => {
 										SXFToast.loading('加载中...', 0);
 										$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
@@ -722,6 +724,7 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 				}
 				switchOperatorService({
 					$props,
+					RouterType: '/home/home',
 					jfCallBack: () => {
 						$props.SXFToast.hide();
 						resBackMsg = '运营商认证';
@@ -757,9 +760,8 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 				return;
 			}
-
 			// 信用卡
-			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
+			if (codesArray[3] === '1' && codesArray[3] !== '2') {
 				let mxRes = await getMxStatus({ $props });
 				if (mxRes && mxRes === '0') {
 					let mxQuery = location.pathname.split('/');
