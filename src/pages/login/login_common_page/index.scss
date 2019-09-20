@@ -14,7 +14,6 @@
 		top: -86px;
 		text-align: center;
 		width: 666px;
-		height: 679px;
 		background: #fff;
 		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
 		border-radius: 10px;
@@ -25,7 +24,7 @@
 		.loginContentBox {
 			position: relative;
 			border: 1px solid #bd9755;
-			padding: 29px;
+			padding: 62px 30px 80px;
 		}
 		.title {
 			position: relative;
@@ -88,7 +87,7 @@
 		.loginInput {
 			height: 91px;
 			line-height: 91px;
-			margin-bottom: 20px;
+			margin-bottom: 50px;
 			box-sizing: border-box;
 			border: 2px solid #c9cdd5;
 			border-radius: 8px;
@@ -151,14 +150,14 @@
 		.sureBtn {
 			display: block;
 			width: 444px;
-			height: 87px;
+      height: 87px;
 			line-height: 87px;
 			background: #fec933;
 			border-radius: 44px;
 			font-size: 30px;
 			// font-weight: bold;
 			color: #fff;
-			margin: 43px auto 10px;
+			margin: 73px auto 10px;
 			span {
 				display: inline-block;
 				width: 100%;
@@ -187,7 +186,7 @@
 		top: -57px;
 		color: #8e8d7b;
 		font-size: 24px;
-		margin: 0 58px;
+		margin: 80px 58px 0;
 		text-align: left;
 		span {
 			color: #414a53;

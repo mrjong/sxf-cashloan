@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-20 10:28:52
+ */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
@@ -12,7 +16,6 @@ import { buriedPointEvent, pageView } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import defaultBannerImg from './img/login_bg.png';
-import descImg from './img/desc_img.png';
 import loginModalBg from './img/login_modal.png';
 import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
@@ -502,11 +505,11 @@ export default class login_common_page extends PureComponent {
 				<img className={styles.banner} src={loginBgImg} alt="落地页banner" />
 				<div className={styles.content}>
 					<div className={styles.loginContentBox}>
-						<p className={styles.title}>最高可借额度(元)</p>
+						{/* <p className={styles.title}>最高可借额度(元)</p>
 						<p className={styles.moneyText}>50000</p>
 						<p className={styles.proDesc}>
 							<img src={descImg} alt="描述" />
-						</p>
+						</p> */}
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
@@ -593,7 +596,7 @@ export default class login_common_page extends PureComponent {
 							</div>
 						</div>
 						<div className={styles.sureBtn} onClick={this.goLogin}>
-							<span>查看额度</span>
+							<span>立即申请</span>
 						</div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
 						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
@@ -620,14 +623,14 @@ export default class login_common_page extends PureComponent {
 								this.go('register_agreement_page');
 							}}
 						>
-							《随行付金融用户注册协议》
+							《用户注册协议》
 						</span>
 						<span
 							onClick={() => {
 								this.go('privacy_agreement_page');
 							}}
 						>
-							《随行付用户隐私权政策》
+							《用户隐私权政策》
 						</span>
 					</div>
 				</div>
@@ -659,9 +662,6 @@ export default class login_common_page extends PureComponent {
 								}}
 								alt="按钮"
 							/>
-							<p className={styles.tipsCont}>
-								<span>{times}</span>秒后自动下载APP
-							</p>
 							{/* 关闭 */}
 							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
 						</div>
