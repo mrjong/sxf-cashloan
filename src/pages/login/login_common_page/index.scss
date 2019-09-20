@@ -42,7 +42,7 @@
 			font-weight: bold;
 			color: #121c32;
 			height: 91px;
-      margin-top: 28px;
+			margin-top: 28px;
 			margin-bottom: 5px;
 			// margin-bottom: 34px;
 		}
@@ -85,10 +85,7 @@
 			border-width: 0 4px 4px 0;
 		}
 		.loginInput {
-			height: 91px;
-			line-height: 91px;
 			margin-bottom: 50px;
-			box-sizing: border-box;
 			border: 2px solid #c9cdd5;
 			border-radius: 8px;
 			background-color: rgba(38, 28, 117, 0);
@@ -100,8 +97,10 @@
 		}
 		input::placeholder {
 			color: #c9cdd5;
-			font-size: 30px;
-			font-weight: normal;
+      font-size: 30px;
+      height: 91px;
+      line-height: 1.5;
+      font-weight: bold;
 		}
 		input:-webkit-autofill {
 			box-shadow: 0 0 0 1000px white inset !important;
@@ -123,7 +122,8 @@
 			width: 235px;
 			height: 91px;
 			line-height: 91px;
-			text-align: center;
+      text-align: center;
+      font-weight: bold;
 			color: #fec933;
 			.leftBorder {
 				position: absolute;
@@ -150,12 +150,13 @@
 		.sureBtn {
 			display: block;
 			width: 444px;
-      height: 87px;
+			height: 87px;
 			line-height: 87px;
 			background: #fec933;
 			border-radius: 44px;
 			font-size: 30px;
-			// font-weight: bold;
+			font-weight: bold;
+			font-family: 'PingFang SC';
 			color: #fff;
 			margin: 73px auto 10px;
 			span {
@@ -211,8 +212,9 @@
 
 	:global {
 		.am-list-item .am-input-control input {
-			font-size: 30px;
-			width: 100%;
+			font-size: 29px;
+      width: 100%;
+      line-height: 1.4;
 			display: inline-block;
 			text-align: left;
 			-moz-box-sizing: border-box;
@@ -276,11 +278,11 @@
 :global {
 	.loginModalBox {
 		.am-modal.am-modal-transparent {
-      width: 100%;
-      position: relative;
-      top: -87px;
-      // position: absolute;
-      // top: 60px;
+			width: 100%;
+			position: relative;
+			top: -87px;
+			// position: absolute;
+			// top: 60px;
 		}
 		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
 			padding: 0;
