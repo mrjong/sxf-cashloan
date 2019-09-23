@@ -1,3 +1,7 @@
+<!--
+ * @Author: shawn
+ * @LastEditTime: 2019-09-06 17:45:10
+ -->
 # 还到2.0
 
 ## 启动
@@ -93,7 +97,6 @@ src/pages
 │   ├── bind_credit_page/            我的-绑定信用卡
 │   ├── bind_save_page/              我的-绑定储蓄卡
 │   ├── confirm_purchase_page/       我的-确认购买（会员卡）
-│   ├── credit_extension_page/       我的-四项认证页/信用加分页
 │   ├── credit_list_page/            我的-选择授权卡页面
 │   ├── fqa_page/                    我的-常见问题
 │   ├── membership_card_page/        我的-会员卡购买

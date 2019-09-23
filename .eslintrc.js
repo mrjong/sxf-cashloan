@@ -107,7 +107,7 @@ const eslintrc = {
 		'react/prop-types': 0,
 		'react/no-unescaped-entities': 0,
 		'react/no-find-dom-node': 0,
-		'react/no-direct-mutation-state': 1
+		'react/no-direct-mutation-state': 0
 	},
 	globals: {},
 	settings: {

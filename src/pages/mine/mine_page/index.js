@@ -1,15 +1,21 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-08-30 19:02:03
+ */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import avatar from 'assets/images/mine/login_logo.png';
 import Lists from 'components/Lists';
+import { buriedPointEvent } from 'utils/analytins';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
 import fqaImg from 'assets/images/mine/fqa_img.png';
 import notLoginImg from 'assets/images/mine/not_login_logo.png';
+import { helpCenter } from '../../../utils/analytinsType';
 
 const API = {
 	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -184,7 +190,20 @@ export default class mine_page extends PureComponent {
 			});
 			return;
 		}
-		if (item.jumpToUrl === '/home/real_name?type=noRealName' || item.jumpToUrl === '/mine/fqa_page') {
+		if (
+			item.jumpToUrl === '/home/real_name?type=noRealName' ||
+			// item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
+			item.jumpToUrl === '/mine/fqa_page' ||
+			item.jumpToUrl === '/mine/feedback_page'
+		) {
+			// if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
+			// 	buriedPointEvent(mine.creditExtension, {
+			// 		entry: '我的'
+			// 	});
+			// }
+			if (item.jumpToUrl === '/mine/feedback_page') {
+				buriedPointEvent(helpCenter.feedback);
+			}
 			this.props.history.push(item.jumpToUrl);
 		} else {
 			const { mblNoHid, realNmFlg } = this.state;
@@ -229,7 +248,8 @@ export default class mine_page extends PureComponent {
 			});
 			return;
 		}
-		this.props.history.push('/mine/fqa_page');
+		// this.props.history.push('/mine/fqa_page');
+		this.props.history.push('/mine/help_center_page');
 	};
 
 	render() {
@@ -285,6 +305,7 @@ export default class mine_page extends PureComponent {
 				},
 				jumpToUrl: '/mine/select_save_page'
 			}
+
 			// {
 			// 	label: {
 			// 		name: '常见问题',
@@ -293,6 +314,15 @@ export default class mine_page extends PureComponent {
 			// 	jumpToUrl: '/mine/fqa_page'
 			// }
 		];
+		if (tokenFromStorage && token) {
+			listsArr2.push({
+				label: {
+					name: '意见反馈',
+					className: styles.feedback_page
+				},
+				jumpToUrl: '/mine/feedback_page'
+			});
+		}
 		return (
 			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
 				{tokenFromStorage && token ? (

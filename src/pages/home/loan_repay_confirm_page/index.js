@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-17 16:27:18
+ */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
@@ -13,7 +17,10 @@ import {
 	idChkPhoto,
 	isCanLoan,
 	getOperatorStatus,
-	getMoxieData
+	getMoxieData,
+	activeConfigSts,
+	getMxStatus,
+	getBindCardStatus
 } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -21,6 +28,7 @@ import { sxfhome } from 'utils/sxfAnalytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
+import { switchCreditService } from '../../../utils';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -28,8 +36,7 @@ const API = {
 	qryPerdRate: '/bill/prod',
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
-	contractInfo: '/bill/personalDataAuthInfo' // 个人信息授权书数据查询
+	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
 };
 const tagList = [
 	{
@@ -76,13 +83,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 			fullMinAmt: '', // 全额或者最低还卡金额
 			showTimeoutPayModal: false,
 			showFeedbackModal: false,
-			inputFocus: false,
-			selectFlag: true // 协议是否勾选
+			inputFocus: false
 		};
 	}
 
 	componentDidMount() {
 		store.removeToggleMoxieCard();
+		store.removeAutIdCard(); // 信用卡前置
 		this.queryUsrInfo();
 		this.requestCredCardCount();
 		this.showFeedbackModal();
@@ -250,10 +257,20 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	goMoxieBankList = () => {
+	goMoxieBankList = async () => {
 		store.setToggleMoxieCard(true);
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		this.props.history.push('/home/moxie_bank_list_page');
+		let mxRes = await getMxStatus({ $props: this.props });
+		if (mxRes && mxRes === '0') {
+			let mxQuery = location.pathname.split('/');
+			let RouterType = (mxQuery && mxQuery[2]) || '';
+			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		} else {
+			switchCreditService({
+				$props: this.props,
+				RouterType: '/home/loan_repay_confirm_page'
+			});
+		}
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count, type) => {
@@ -309,14 +326,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	handleSubmit = async () => {
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const {
-			selectedLoanDate = {},
-			usrIndexInfo,
-			cardCount,
-			btnDisabled,
-			fullMinAmt,
-			selectFlag
-		} = this.state;
+		const { selectedLoanDate = {}, usrIndexInfo, cardCount, btnDisabled, fullMinAmt } = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const { minApplAmt, maxApplAmt } = indexData;
 		if (!this.state.fetchBillSucc) {
@@ -369,13 +379,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 			this.props.toast.info('请选择借款期限');
 			return;
 		}
-		if (btnDisabled || !selectFlag) {
+		if (btnDisabled) {
 			return;
 		}
+		let autId = usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId;
+		store.setAutIdCard(autId);
 		const params = {
 			...this.state.selectedLoanDate,
 			activeName: tagList[this.state.activeTag].name,
-			autId: usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId,
+			autId,
 			rpyAmt: Number(repayMoney)
 		};
 		idChkPhoto({
@@ -385,9 +397,23 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}).then((res) => {
 			switch (res) {
 				case '1':
+					store.setLoanAspirationHome(params);
 					// 成功
-					//调用授信接口
-					handleClickConfirm(this.props, params);
+					getBindCardStatus({
+						$props: this.props
+					}).then((res) => {
+						if (res === '1') {
+							//调用授信接口
+							activeConfigSts({
+								$props: this.props,
+								type: 'B',
+								callback: () => {
+									handleClickConfirm(this.props, params);
+								}
+							});
+						}
+					});
+
 					break;
 				case '2':
 					store.setLoanAspirationHome(params);
@@ -638,23 +664,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 				break;
 		}
 	};
-	// 跳转个人信息授权书
-	readContract = () => {
-		this.props.$fetch.get(API.contractInfo).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				store.setToggleMoxieCard(true);
-				store.setProtocolPersonalData(result.data);
-				this.props.history.push('/protocol/personal_auth_page');
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
-	};
-	selectProtocol = () => {
-		this.setState({
-			selectFlag: !this.state.selectFlag
-		});
-	};
 	render() {
 		const {
 			usrIndexInfo,
@@ -665,8 +674,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			fetchBillSucc,
 			fullMinAmt,
 			showTimeoutPayModal,
-			showFeedbackModal,
-			selectFlag
+			showFeedbackModal
 		} = this.state;
 		const { indexData = {} } = usrIndexInfo;
 		const {
@@ -745,7 +753,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							</strong>
 							<div className={style.billInfo}>
 								<div className={style.item}>
-									<p className={`${style.name} ${style.moneyTit}`}>剩余应还金额(元)</p>
+									<p className={`${style.name} ${style.moneyTit}`}>账单金额(元)</p>
 								</div>
 								<div className={style.item}>
 									<span className={style.name}>还款日：{cardBillDtData}</span>
@@ -941,25 +949,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 				</div>
 				<div className={this.state.inputFocus ? style.handle_authority_relative : style.handle_authority}>
 					<div
-						className={[style.button, !btnDisabled && selectFlag ? '' : style.disabledBtn].join(' ')}
+						className={[style.button, !btnDisabled ? '' : style.disabledBtn].join(' ')}
 						onClick={this.handleSubmit}
 					>
 						提交申请
-					</div>
-					<div className={style.protocolBox}>
-						<i
-							className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
-							onClick={this.selectProtocol}
-						/>
-						点击按钮即视为同意
-						<a
-							onClick={() => {
-								this.readContract();
-							}}
-							className={style.link}
-						>
-							《个人信息授权书》
-						</a>
 					</div>
 				</div>
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>

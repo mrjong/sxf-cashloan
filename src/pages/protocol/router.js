@@ -58,5 +58,10 @@ export default [
 		title: '个人信息授权书',
 		zhName: 'grxxsqs',
 		component: () => import('pages/protocol/personal_auth_page')
+	},
+	{
+		path: '/protocol/personal_credit_page',
+		title: '个人征信查询授权书',
+		component: () => import('pages/protocol/personal_credit_page')
 	}
 ];

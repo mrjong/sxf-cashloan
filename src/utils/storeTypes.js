@@ -1,7 +1,10 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-18 13:47:50
+ */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
 	RepaymentModalData: 'RepaymentModalData', // 保存确认代还信息弹框数据
-	// HomeCardIndexData: 'HomeCardIndexData', // 保存首页信用卡信息
 	BackUrl: 'BackUrl', // 保存跳转的url
 	BackUrl2: 'BackUrl2', // 临时缓存
 	CardData: 'CardData', // 跳转路由中的银行卡信息
@@ -65,7 +68,6 @@ export const storeTypes = {
 	GoMoxie: 'GoMoxie', // 魔蝎银行列表去魔蝎再返回的两次退出才退出的问题
 	CreditSuccessBack: 'CreditSuccessBack', // 信用卡绑卡之后立即去提交页需要提示
 	NoLoginUrl: 'NoLoginUrl', // 微信授权失败跳转到那个页面
-	LoginDownloadBtn: 'LoginDownloadBtn', // 登陆页点击立即下载按钮标识
 	MessageTagLimitDate: 'MessageTagLimitDate', // 首页的额度有效期显示标识
 	OverdueInf: 'OverdueInf', // 逾期进度数据
 	SuccessPay: 'SuccessPay', // 418 活动返回
@@ -90,5 +92,8 @@ export const storeTypes = {
 	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
 	TencentBackUrl: 'TencentBackUrl', // 跳转到人脸识别返回的url
 	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome', // 签约页控制物理返回到首页标识
-	BonusActivity: 'BonusActivity' // 参与100元利息红包限时领活动
+	BonusActivity: 'BonusActivity', // 参与100元利息红包限时领活动
+	AutIdCard: 'AutIdCard', // 信用卡前置authid
+	JFBackUrl: 'JFBackUrl', // 跳转jf授权页 授权后返回的url
+	GotoCard: 'GotoCard' // 运营上成功之后 无法返回首页
 };

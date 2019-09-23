@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-11 12:10:40
+ */
 // DC 对外
 // XDC mpos入口=>对内
 import { isMPOS } from './common';
@@ -11,7 +15,11 @@ if (isMPOS() || JSON.parse(sessionStorage.getItem('isMPOS'))) {
 // console.log(JSON.parse(sessionStorage.getItem('isMPOS')),'test')
 const login = {
 	getCode: `${prefix}_LOGIN_GET_CODE`, // 注册登录页-点击获取验证码
-	submit: `${prefix}_LOGIN_SUBMIT` // 注册登录页-一键代还
+	submit: `${prefix}_LOGIN_SUBMIT`, // 注册登录页-一键代还
+	submitFail: `${prefix}_LOGIN_SUBMIT_FAIL`, // 失败
+	queryUsrSCOpenIdFail: `${prefix}_QUERYUSRSCOPENIDFAIL`,
+	goHome: `${prefix}_GOHOME`,
+	goDownLoad: `${prefix}_GODOWNLOAD`
 };
 
 const home = {
@@ -231,7 +239,9 @@ const manualAudit = {
 const other = {
 	mposDownloadPage: `${prefix}_MPOS_DOWNLOAD_PAGE`, //页面埋点
 	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
-	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK` //外部下载页按钮点击事件
+	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK`, //外部下载页按钮点击事件
+	testDownloadClick: `${prefix}_DOWNLOAD_CLICK`, //A测试
+	previewMaintenance: `${prefix}_MAINTENANCE_PAGE` //进入系统维护页面
 };
 
 const daicao = {
@@ -239,7 +249,10 @@ const daicao = {
 	loginPageTime: `${prefix}_DAICAO_LOGINPAGE_DURATION_TIME`, //代超登录页停留时间
 	downloadPageTime: `${prefix}_DAICAO_DOWNLOADPAGE_DURATION_TIME`, // 代超下载页停留时间
 	downloadBtnClick: `${prefix}_DAICAO_DOWNLOAD_BUTTON_CLICK`, //代超下载页按钮
-	downloadPageView: `${prefix}_DAICAO_DOWNLOAD_PAGEVIEW` //代超下载页pageview
+	downloadPageView: `${prefix}_DAICAO_DOWNLOAD_PAGEVIEW`, //代超下载页pageview
+	smsCodeBtnClick: `${prefix}_DAICAO_GET_SMSCODE_BTN`, // 贷超登录页获取验证码按钮
+	modalBtnClick: `${prefix}_DAICAO_MODAL_BTN`, // 贷超登录页弹框按钮
+	selectProtocol: `${prefix}_DAICAO_SELECT_PROTOCOL` // 贷超登录页勾选协议
 };
 
 const loan_fenqi = {
@@ -273,6 +286,25 @@ const wxTest = {
 	wxTestLoginBtnClick: `${prefix}_WXTESTLOGINBTNCLICK`, // 登录页 按钮 点击次数
 	wxTestLoginSmsCode: `${prefix}_WXTESTLOGINSMSCODE` //  登录页 发送验证码次数
 };
+const helpCenter = {
+	feedback: `${prefix}_MINE_CREDIT_FEEDBACK`,
+	select_class: `${prefix}_MINE_CLASSIFICATION_CHOICE`,
+	submit_succ: `${prefix}_CLASSIFICATION_SUCCESSFUL_SUBMISSION`,
+
+	fast_entry: `${prefix}_HELPCENTER_FASTENTRY`,
+	hot_issue: `${prefix}_HELPCENTER_HOTISSUES`,
+	classification: `${prefix}_HELPCENTER_CLASSIFICATION`,
+	goOnline: `${prefix}_HELPCENTER_CONSULTATION`,
+
+	realname: `${prefix}_REALNAME_CLICKQUESTION`,
+	basic: `${prefix}_BASIC_CLICKQUESTION`,
+	operators: `${prefix}_OPERATORS_CLICKQUESTION`,
+	creditCard: `${prefix}_CREDIT_CARD_CLICKQUESTION`,
+	submission: `${prefix}_SUBMISSION_CLICKQUESTION`,
+	toexamine: `${prefix}_TOEXAMINE_CLICKQUESTION`,
+	quota: `${prefix}_QUOTA_CLICKQUESTION`,
+	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
+};
 
 export {
 	login,
@@ -289,5 +321,6 @@ export {
 	other,
 	daicao,
 	manualAudit,
-	wxTest
+	wxTest,
+	helpCenter
 };

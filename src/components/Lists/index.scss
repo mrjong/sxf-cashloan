@@ -1,16 +1,17 @@
 .listsContainer {
 	:global {
 		.am-list-item {
-			min-height: 100px;
-			padding-left: 34px;
+			min-height: 148px;
+			padding-left: 0;
 		}
 		.am-list-item .am-list-line {
-			padding-right: 34px;
+			padding-right: 0;
 		}
 		.am-list-item .am-list-line .am-list-content {
-			font-size: 28px;
+			font-size: 30px;
 			line-height: 1;
-			color: #333;
+			font-weight: 500;
+			color: #121c32;
 		}
 		.am-list-item img {
 			width: 42px;
@@ -21,20 +22,18 @@
 		}
 		.am-list-item .am-list-line .am-list-extra {
 			padding: 0;
-			line-height: 1;
+			line-height: 1.5;
 			margin-right: 0;
 		}
 		.am-list-extra span {
-			font-size: 28px;
 			display: block;
 			& + span {
-				font-size: 28px !important;
-				line-height: 1.5;
+				font-size: 26px;
 			}
 		}
 		.am-list-item .am-list-line .am-list-arrow {
-			width: 16px;
-			height: 28px;
+			width: 28px;
+			height: 16px;
 			margin-left: 18px;
 		}
 		.am-list-body {
@@ -43,13 +42,15 @@
 		.am-list-body div:not(:last-child) .am-list-line {
 			border-color: #e5e5e5;
 		}
+
 		.am-list-item .am-list-thumb:first-child {
 			margin-right: 0;
 		}
 		.am-list-item .am-list-line .am-list-brief {
-			font-size: 28px;
-			color: rgba(157, 157, 157, 1);
+			font-size: 26px;
+			color: #868e9e;
 			margin-top: 8px;
+			font-weight: normal;
 		}
 	}
 	.hasIcon {
@@ -64,7 +65,43 @@
 		padding-left: 34px;
 		padding-right: 34px;
 	}
+	.checkList {
+		position: relative;
+		:global {
+			.am-list-content {
+				padding-left: 50px;
+				overflow: visible;
+			}
+		}
+	}
+
+	.nocheckbox_list_desc {
+		:global {
+			.am-list-content {
+				padding-left: 0;
+				overflow: visible;
+			}
+			.am-list-line {
+				margin-left: 50px;
+			}
+		}
+	}
+	.checkBoxStyle {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translate(0, -50%);
+		width: 34px;
+		height: 34px;
+		background-image: url('../../assets/images/home/unChecked_ico.png');
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+	.checkBoxActiveStyle {
+		background-image: url('../../assets/images/home/checked_ico.png');
+	}
 }
+
 :global {
 	.list_box {
 		@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {

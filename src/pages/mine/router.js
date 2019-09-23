@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-23 11:05:05
+ */
 export default [
 	{
 		path: '/mine/mine_page',
@@ -25,12 +29,6 @@ export default [
 		title: '绑定储蓄卡',
 		component: () => import('pages/mine/bind_save_page')
 	},
-	// {
-	//   path: '/mine/credit_extension_page',
-	//   zhName:'ldy',
-	// title: '信用加分',
-	//   component: () => import('pages/mine/credit_extension_page'),
-	// },
 	{
 		path: '/mine/select_credit_page',
 		zhName: 'xzxyk',
@@ -121,5 +119,30 @@ export default [
 		zhName: 'txz',
 		title: '提现中',
 		component: () => import('pages/mine/withdrawing_page')
+	},
+	{
+		path: '/mine/qiyu_page',
+		title: '在线客服',
+		component: () => import('pages/mine/qiyu_page')
+	},
+	{
+		path: '/mine/help_center_page',
+		title: '帮助中心',
+		component: () => import('pages/mine/help_center_page')
+	},
+	{
+		path: '/mine/question_category_page',
+		title: '',
+		component: () => import('pages/mine/question_category_page')
+	},
+	{
+		path: '/mine/feedback_page',
+		title: '意见分类',
+		component: () => import('pages/mine/feedback_page')
+	},
+	{
+		path: '/mine/feedback_save_page',
+		title: '意见反馈',
+		component: () => import('pages/mine/feedback_save_page')
 	}
 ];

@@ -1,8 +1,13 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-17 16:28:38
+ */
 import { store } from 'utils/store';
-import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
+import { getDeviceType, getNextStr, isCanLoan, getMoxieData, getMxStatus } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import TFDInit from 'utils/getTongFuDun';
+import { switchCreditService } from 'utils';
 const API = {
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -17,7 +22,6 @@ const API = {
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
-	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
@@ -240,11 +244,20 @@ class HomeBtn {
 		this.instance.props.history.push('/home/home');
 	};
 	// 跳新版魔蝎
-	goToNewMoXie = () => {
+	goToNewMoXie = async () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
-		this.instance.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+		let mxRes = await getMxStatus({ $props: this.props });
+		if (mxRes && mxRes === '0') {
+			let mxQuery = location.pathname.split('/');
+			let RouterType = (mxQuery && mxQuery[2]) || '';
+			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		} else {
+			switchCreditService({
+				$props: this.props,
+				RouterType: '/home/home'
+			});
+		}
 	};
 	// 智能按钮点击事件
 	handleSmartClick = () => {

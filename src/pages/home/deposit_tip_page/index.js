@@ -1,15 +1,18 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-02 15:29:23
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import { getDeviceType } from 'utils';
-import { isMPOS } from 'utils/common';
 import logo from './img/logo.png';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi } from 'utils/analytinsType';
 import qs from 'qs';
-
+import linkConf from 'config/link.conf';
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
@@ -23,9 +26,6 @@ export default class login_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		if (!isMPOS() && getDeviceType() !== 'ANDRIOD') {
-			window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
-		}
 		this.getDownloadUrl();
 	}
 
@@ -55,7 +55,7 @@ export default class login_page extends PureComponent {
 		const phoneType = getDeviceType();
 		buriedPointEvent(loan_fenqi.fenqiDownload);
 		if (phoneType === 'IOS') {
-			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
+			window.location.href = linkConf.APPSTORE_URL;
 			// this.props.toast.info('暂不支持ios下载')
 		} else {
 			this.props.toast.info('安全下载中');

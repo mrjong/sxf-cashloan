@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-03 14:41:35
+ */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
@@ -5,7 +9,7 @@ import Cookie from 'js-cookie';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType, recordContract } from 'utils';
+import { getDeviceType, activeConfigSts, recordContract } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
@@ -56,7 +60,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
-						this.requestGetStatus();
+						this.goHome();
 					} else {
 						this.props.toast.info('授权失败', 3, () => {
 							// token和手机号取chkAuth的
@@ -69,7 +73,14 @@ export default class mpos_service_authorization_page extends PureComponent {
 				}
 			);
 	};
-
+	// AB 测试
+	goHome = () => {
+		activeConfigSts({
+			$props: this.props,
+			type: 'A',
+			callback: this.requestGetStatus
+		});
+	};
 	// 获取授信列表状态
 	requestGetStatus = () => {
 		this.props.$fetch

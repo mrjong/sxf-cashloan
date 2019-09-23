@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-17 16:20:26
+ */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import dayjs from 'dayjs';
@@ -11,7 +15,7 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import arrow from './img/arrow.png';
-import { getMoxieData } from 'utils';
+import { getMoxieData, getMxStatus, switchCreditService } from 'utils';
 import FeedbackModal from 'components/FeedbackModal';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -103,17 +107,23 @@ export default class credit_list_page extends PureComponent {
 			}
 		);
 	};
-	goMoxieBankList = () => {
-		store.setToggleMoxieCard(true);
-		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		this.props.history.push('/home/moxie_bank_list_page');
-	};
 	// 新增授权卡
-	goToNewMoXie = () => {
-		buriedPointEvent(home.addCreditCard);
+	goToNewMoXie = async (type) => {
+		if (type === 'add') {
+			store.setGotoMoxieFlag(true);
+			buriedPointEvent(home.addCreditCard);
+		} else {
+			store.setToggleMoxieCard(true);
+		}
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
-		buriedPointEvent(home.addCreditCard);
+		let mxRes = await getMxStatus({ $props: this.props });
+		if (mxRes && mxRes === '0') {
+			let mxQuery = location.pathname.split('/');
+			let RouterType = (mxQuery && mxQuery[2]) || '';
+			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		} else {
+			switchCreditService({ $props: this.props, RouterType: '/mine/credit_list_page' });
+		}
 	};
 
 	showFeedbackModal = () => {
@@ -152,7 +162,9 @@ export default class credit_list_page extends PureComponent {
 						<div className={[styles.card_tit].join(' ')}>
 							选择收款信用卡
 							<div
-								onClick={this.goToNewMoXie}
+								onClick={() => {
+									this.goToNewMoXie('add');
+								}}
 								className={[styles.addCard, `${this.state.resultLength === 0 ? styles.noCardTip_ : ''}`].join(
 									' '
 								)}
@@ -223,7 +235,7 @@ export default class credit_list_page extends PureComponent {
 														) : null}
 													</div>
 												</div>
-												<div className={styles.surplus_desc}>信用卡剩余应还金额(元)</div>
+												<div className={styles.surplus_desc}>信用卡账单金额(元)</div>
 												<div className={styles.bill_remain_amt}>
 													{(item.autSts !== '2' && item.operationMark === '01') ||
 													(item.operationMark === '01' && item.cardBillSts === '02') ||
@@ -260,7 +272,7 @@ export default class credit_list_page extends PureComponent {
 																getMoxieData({
 																	bankCode: item.bankNo,
 																	$props: this.props,
-																	goMoxieBankList: this.goMoxieBankList
+																	goMoxieBankList: this.goToNewMoXie
 																});
 															}
 														}

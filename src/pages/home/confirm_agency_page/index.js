@@ -18,7 +18,7 @@ import { createForm } from 'rc-form';
 import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
-import SmsModal from '../../order/order_detail_page/components/SmsModal';
+import SmsModal from '../../order/order_common_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
 import { domListen } from 'utils/domListen';
 import { sxfhome } from 'utils/sxfAnalytinsType';

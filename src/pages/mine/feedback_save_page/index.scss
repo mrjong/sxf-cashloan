@@ -1,0 +1,97 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.mine_page {
+	overflow-y: auto;
+	.textTitle {
+		color: #121c32;
+		font-size: 30px;
+		font-family: 'PingFangSC';
+		margin: 30px 60px 10px;
+		font-weight: 500;
+	}
+	.topLine {
+		position: relative;
+		padding: 40px 0 0;
+		&::before {
+			content: '';
+			position: absolute;
+			background-color: #f0f1f5;
+			display: block;
+			z-index: 1;
+			top: auto;
+			right: auto;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 1px;
+			-webkit-transform-origin: 50% 100%;
+			-ms-transform-origin: 50% 100%;
+			transform-origin: 50% 100%;
+			-webkit-transform: scaleY(0.5);
+			-ms-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+		}
+	}
+	.textArea {
+		border: 1px solid rgba(240, 241, 245, 1);
+		margin: 30px 60px 50px;
+		border-radius: 6px;
+		:global {
+			.am-textarea-control textarea {
+				font-size: 28px;
+			}
+			.am-textarea-count {
+				color: #414a53;
+				span {
+					color: #414a53;
+				}
+			}
+		}
+	}
+	.textAreaMax {
+		:global {
+			.am-textarea-count {
+				span {
+					color: #f66;
+				}
+				color: #f66;
+				font-size: 26px;
+			}
+		}
+	}
+	.ImagePicker {
+		margin: -30px 60px 0;
+		:global {
+			.am-image-picker-list {
+				padding: 0.18rem 0 0;
+			}
+			.am-image-picker-list .am-image-picker-item {
+				margin: 18px 18px 0 0;
+			}
+			.am-image-picker-list .am-flexbox .am-flexbox-item {
+				margin-right: 20px;
+			}
+			.am-image-picker-list .am-image-picker-item .am-image-picker-item-remove {
+				top: -0.15rem;
+				right: -0.15rem;
+			}
+			.am-image-picker-list .am-image-picker-upload-btn {
+				border: 1px solid #c9cdd5;
+			}
+			.am-image-picker-list .am-flexbox {
+				height: 180px;
+			}
+		}
+	}
+	.submitBtn {
+		position: fixed;
+		bottom: 40px;
+		left: 50%;
+		font-weight: 800;
+		width: 634px;
+		margin-left: -317px;
+	}
+	.dis {
+		background: #dcdfe6;
+		color: #fff;
+	}
+}

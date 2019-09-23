@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-11 11:23:52
+ */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
 module.exports = function(options) {
@@ -128,7 +132,7 @@ module.exports = function(options) {
 			proxy: {
 				'/wap': {
 					target: 'http://172.16.154.47:8080/wap', //目标接口域名
-					// target: 'http://172.18.40.181:8888/wap',
+					// target: 'http://172.18.40.146:8888/wap',
 					pathRewrite: { '^/wap': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},

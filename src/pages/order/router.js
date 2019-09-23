@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 10:07:58
+ */
 export default [
 	{
 		path: '/order/order_page',
@@ -31,5 +35,10 @@ export default [
 		zhName: 'zfjg',
 		title: '支付结果',
 		component: () => import('pages/order/wx_pay_success_page')
+	},
+	{
+		path: '/order/order_repay_page',
+		title: '还款信息',
+		component: () => import('pages/order/order_repay_page')
 	}
 ];

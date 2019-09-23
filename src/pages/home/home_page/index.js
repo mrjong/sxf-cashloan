@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 15:01:52
+ * @LastEditTime: 2019-09-23 11:03:28
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -13,7 +13,9 @@ import {
 	isCanLoan,
 	getMoxieData,
 	dateDiffer,
-	queryUsrSCOpenId
+	queryUsrSCOpenId,
+	getMxStatus,
+	switchCreditService
 } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -55,7 +57,6 @@ const API = {
 	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
 	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
 	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
-	mxoieCardList: '/moxie/mxoieCardList/C', // 魔蝎银行卡列表
 	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
 	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
 	couponTest: '/activeConfig/couponTest', //签约测试
@@ -174,6 +175,8 @@ export default class home_page extends PureComponent {
 		store.removeLoanAspirationHome();
 		// 清除返回的flag
 		store.removeBackFlag();
+		// 信用卡前置
+		store.removeAutIdCard();
 		// 运营商直接返回的问题
 		// store.removeCarrierMoxie();
 		// 信用卡绑卡之后立即去提交页需要提示
@@ -278,10 +281,9 @@ export default class home_page extends PureComponent {
 		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-				// popupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1',
-					overDueModalFlag: res.data.popupFlag === '0' && res.data.overduePopupFlag === '1'
+					overDueModalFlag: res.data.overduePopupFlag === '1'
 				});
 				const currProgress =
 					res.data &&
@@ -645,11 +647,17 @@ export default class home_page extends PureComponent {
 	};
 
 	// 跳新版魔蝎
-	goToNewMoXie = () => {
+	goToNewMoXie = async () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		// store.setMoxieBackUrl(`/mine/credit_extension_page?noAuthId=true`);
-		this.props.history.push({ pathname: '/home/moxie_bank_list_page' });
+		let mxRes = await getMxStatus({ $props: this.props });
+		if (mxRes && mxRes === '0') {
+			let mxQuery = location.pathname.split('/');
+			let RouterType = (mxQuery && mxQuery[2]) || '';
+			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		} else {
+			switchCreditService({ $props: this.props, RouterType: '/home/home' });
+		}
 	};
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
@@ -1130,7 +1138,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '申请借钱还信用卡',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1216,7 +1224,7 @@ export default class home_page extends PureComponent {
 						// 	showData={{
 						// 		btnText: '暂无借款资格',
 						// 		title: bankNm,
-						// 		subtitle: '信用卡剩余应还金额(元)',
+						// 		subtitle: '信用卡账单金额(元)',
 						// 		money: cardBillAmtData,
 						// 		desc: `还款日：${cardBillDtData}`,
 						// 		cardNoHid: cardCode,
@@ -1239,7 +1247,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '立即签约借款',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1285,7 +1293,7 @@ export default class home_page extends PureComponent {
 							showData={{
 								btnText: '查看代偿账单',
 								title: bankNm,
-								subtitle: '信用卡剩余应还金额(元)',
+								subtitle: '信用卡账单金额(元)',
 								money: cardBillAmtData,
 								desc: `还款日：${cardBillDtData}`,
 								cardNoHid: cardCode,
@@ -1309,7 +1317,7 @@ export default class home_page extends PureComponent {
 								date: indexData.perdCnt || '-',
 								dw: '申请借款金额(元) ',
 								dw2: '申请期限 ',
-								tel: `010-86355XXX的审核电话`
+								tel: `0532-5808XXXX的审核电话`
 							}}
 							handleClick={this.handleSmartClick}
 						/>

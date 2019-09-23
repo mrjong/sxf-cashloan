@@ -8,7 +8,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import Blanks from 'components/Blank';
-import { getDeviceType } from 'utils';
+import { getDeviceType, activeConfigSts } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { getH5Channel } from 'utils/common';
@@ -19,6 +19,7 @@ const API = {
 	validateMposRelSts: '/authorize/validateMposRelSts',
 	chkAuth: '/authorize/chkAuth'
 };
+let query = {};
 @fetch.inject()
 export default class mpos_middle_page extends Component {
 	constructor(props) {
@@ -35,7 +36,7 @@ export default class mpos_middle_page extends Component {
 	validateMposRelSts = () => {
 		// // 移除notice是否显示的标记
 		// store.removeShowNotice();
-		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+		query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		if (query.h5Channel) {
 			buriedPointEvent(activity.MposH5Channel, {
 				h5Channel: query.h5Channel
@@ -77,8 +78,10 @@ export default class mpos_middle_page extends Component {
 			this.setState({ showBoundle: true });
 		}
 	};
+	goHome = () => {
+		this.props.history.replace('/home/home');
+	};
 	transition = () => {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
 			.post(API.chkAuth, {
 				mblNo: query.telNo,
@@ -100,7 +103,11 @@ export default class mpos_middle_page extends Component {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
-						this.props.history.replace('/home/home');
+						activeConfigSts({
+							$props: this.props,
+							type: 'A',
+							callback: this.goHome
+						});
 					} else {
 						this.props.history.replace(`/login?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
 					}

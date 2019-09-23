@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-09-06 17:44:52
+ */
 export default [
 	{
 		path: '/common/middle_page',
@@ -30,5 +35,10 @@ export default [
 		arrowHide: 'empty',
 		headerHide: true,
 		component: () => import('pages/common/tencent_face_middle_page')
+	},
+	{
+		path: '/common/crash_page',
+		title: '系统维护',
+		component: () => import('pages/common/crash_page')
 	}
 ];

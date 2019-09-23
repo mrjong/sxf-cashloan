@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-17 11:50:42
+ */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
@@ -121,7 +126,11 @@ if (window.history && window.history.pushState) {
 				(store.getHistoryRouter() === '/mine/bind_credit_page' ||
 					store.getHistoryRouter() === '/mine/bind_save_page')
 			) {
-				window.ReactRouterHistory.push('/home/home');
+				if (store.getCheckCardRouter() === 'loan_repay_confirm_page') {
+					window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
+				} else {
+					window.ReactRouterHistory.push('/home/home');
+				}
 				return;
 			}
 			// 人脸中间页物理返回
@@ -132,6 +141,10 @@ if (window.history && window.history.pushState) {
 				store.removeTencentBackUrl();
 				window.ReactRouterHistory.replace(tencentBackUrl);
 				// store.removeIdChkPhotoBack();
+				return;
+			}
+			if (window.location.pathname === '/common/crash_page') {
+				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
@@ -154,6 +167,8 @@ if (window.history && window.history.pushState) {
 					store.removeBankMoxie();
 					window.ReactRouterHistory.push('/home/home');
 					return;
+				} else if (store.getProtocolPersonalData()) {
+					return;
 				}
 				document.activeElement.blur();
 				obj.show();
@@ -172,10 +187,6 @@ if (window.history && window.history.pushState) {
 				}
 				return;
 			}
-
-			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-
-			/* 魔蝎银行卡列表 */
 
 			/* 魔蝎银行卡列表 */
 			if (window.location.pathname === '/home/moxie_bank_list_page') {
@@ -243,11 +254,11 @@ if (window.history && window.history.pushState) {
 					if (tokenFromStorage && token) {
 						window.ReactRouterHistory.goBack();
 					} else {
-						if (!store.getLoginDownloadBtn()) {
-							window.close();
-							window.WeixinJSBridge.call('closeWindow');
-						}
+						window.close();
+						window.WeixinJSBridge.call('closeWindow');
 					}
+				} else if (isMPOS() && protocolBack) {
+					return;
 				} else if (isMPOS()) {
 					closeCurrentWebView();
 				} else {

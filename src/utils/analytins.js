@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 15:20:58
+ * @LastEditTime: 2019-09-23 11:05:22
  */
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel } from 'utils/common';
