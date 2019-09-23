@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-09-06 17:44:52
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-23 11:13:31
  */
 export default [
 	{
@@ -39,6 +39,7 @@ export default [
 	{
 		path: '/common/crash_page',
 		title: '系统维护',
+		zhName: 'xtwh',
 		component: () => import('pages/common/crash_page')
 	}
 ];

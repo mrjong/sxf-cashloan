@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:18:00
+ * @LastEditTime: 2019-09-23 11:15:40
  */
 export default [
 	{
@@ -20,12 +20,14 @@ export default [
 	{
 		path: '/outer_mpos_login',
 		title: '还到',
+		zhName: 'dwmposdl',
 		arrowHide: true,
 		component: () => import('pages/login/outer_mpos_login_page')
 	},
 	{
 		path: '/outer_test_login',
 		title: '还到',
+		zhName: 'dwtestdl',
 		arrowHide: true,
 		component: () => import('pages/login/outer_test_login_page')
 	}

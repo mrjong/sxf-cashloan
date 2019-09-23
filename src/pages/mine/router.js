@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:05:05
+ * @LastEditTime: 2019-09-23 11:12:49
  */
 export default [
 	{
@@ -122,27 +122,32 @@ export default [
 	},
 	{
 		path: '/mine/qiyu_page',
+		zhName: 'zxkf',
 		title: '在线客服',
 		component: () => import('pages/mine/qiyu_page')
 	},
 	{
 		path: '/mine/help_center_page',
+		zhName: 'bzzx',
 		title: '帮助中心',
 		component: () => import('pages/mine/help_center_page')
 	},
 	{
 		path: '/mine/question_category_page',
 		title: '',
+		zhName: 'wtfl',
 		component: () => import('pages/mine/question_category_page')
 	},
 	{
 		path: '/mine/feedback_page',
 		title: '意见分类',
+		zhName: 'yjfl',
 		component: () => import('pages/mine/feedback_page')
 	},
 	{
 		path: '/mine/feedback_save_page',
 		title: '意见反馈',
+		zhName: 'yjfk',
 		component: () => import('pages/mine/feedback_save_page')
 	}
 ];

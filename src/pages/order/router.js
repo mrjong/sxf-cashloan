@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:07:58
+ * @LastEditTime: 2019-09-23 11:13:16
  */
 export default [
 	{
@@ -38,6 +38,7 @@ export default [
 	},
 	{
 		path: '/order/order_repay_page',
+		zhName: 'hkxx',
 		title: '还款信息',
 		component: () => import('pages/order/order_repay_page')
 	}

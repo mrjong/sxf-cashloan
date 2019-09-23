@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-23 11:02:47
+ */
 export default [
 	{
 		path: '/protocol/privacy_agreement_page',
@@ -61,6 +65,7 @@ export default [
 	},
 	{
 		path: '/protocol/personal_credit_page',
+		zhName: 'grzxcxsqs',
 		title: '个人征信查询授权书',
 		component: () => import('pages/protocol/personal_credit_page')
 	}

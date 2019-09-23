@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 15:50:08
+ * @LastEditTime: 2019-09-23 11:14:42
  */
 export default [
 	{
@@ -58,12 +58,14 @@ export default [
 	},
 	{
 		path: '/others/mpos_testA_download_page',
+		zhName: 'xzAppxtq',
 		title: '下载App享特权',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testA_download_page')
 	},
 	{
 		path: '/others/mpos_testB_download_page',
+		zhName: 'xzApjrzxtd',
 		title: '下载App进入专享通道',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testB_download_page')
