@@ -8,7 +8,7 @@
 	.banner {
 		width: 100%;
 		display: block;
-	}
+  }
 	.content {
 		position: relative;
 		top: -96px;
@@ -124,13 +124,10 @@
 			text-align: center;
 			font-weight: bold;
 			color: #febe3d;
-			.leftBorder {
-				position: absolute;
-				left: 0;
-				top: 18px;
-				width: 2px;
-				height: 52px;
-				background: #c9cdd5;
+			&::after {
+        @include setLeftLine(#e5e5e5);
+        height: 60%;
+        top: 20%;
 			}
 		}
 		.smsCode2 {

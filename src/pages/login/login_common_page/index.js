@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-24 12:10:17
+ * @LastEditTime: 2019-09-24 12:15:09
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -594,7 +594,6 @@ export default class login_common_page extends PureComponent {
 								}}
 							>
 								{this.state.timers}
-								<i className={styles.leftBorder} />
 							</div>
 						</div>
 						<div
