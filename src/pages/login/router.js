@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:18:00
+ * @LastEditTime: 2019-09-24 11:08:55
  */
 export default [
 	{
@@ -23,7 +23,7 @@ export default [
 	},
 	{
 		path: '/outer_test_login',
-		title: '还到',
+		title: '携手权威征信机构，让信用有价值',
 		arrowHide: true,
 		component: () => import('pages/login/outer_test_login_page')
 	}

@@ -11,20 +11,24 @@
 	}
 	.content {
 		position: relative;
-		top: -86px;
+		top: -96px;
 		text-align: center;
-		width: 666px;
 		background: #fff;
-		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
-		border-radius: 10px;
+		border-radius: 30px;
 		margin: 0 auto;
-		padding: 23px;
 		box-sizing: border-box;
 
 		.loginContentBox {
 			position: relative;
-			border: 1px solid #bd9755;
-			padding: 62px 30px 80px;
+			padding: 42px 63px 80px;
+			:global {
+				.am-list-item.am-input-item {
+					height: 96px;
+				}
+				.am-list-line::after {
+					background-color: transparent RED;
+				}
+			}
 		}
 		.title {
 			position: relative;
@@ -86,21 +90,16 @@
 		}
 		.loginInput {
 			margin-bottom: 50px;
-			border: 2px solid #c9cdd5;
-			border-radius: 8px;
-			background-color: rgba(38, 28, 117, 0);
-			:global {
-				.am-list-line::after {
-					background-color: transparent !important;
-				}
-			}
+			border: none;
+			border-radius: 50px;
+			background-color: #f5f4f4;
 		}
 		input::placeholder {
 			color: #c9cdd5;
-      font-size: 30px;
-      height: 91px;
-      line-height: 1.5;
-      font-weight: bold;
+			font-size: 30px;
+			height: 91px;
+			line-height: 1.5;
+			font-weight: bold;
 		}
 		input:-webkit-autofill {
 			box-shadow: 0 0 0 1000px white inset !important;
@@ -122,9 +121,9 @@
 			width: 235px;
 			height: 91px;
 			line-height: 91px;
-      text-align: center;
-      font-weight: bold;
-			color: #fec933;
+			text-align: center;
+			font-weight: bold;
+			color: #FEBE3D;
 			.leftBorder {
 				position: absolute;
 				left: 0;
@@ -149,9 +148,8 @@
 		// }
 		.sureBtn {
 			display: block;
-			width: 444px;
-			height: 87px;
-			line-height: 87px;
+			height: 96px;
+			line-height: 96px;
 			background: #fec933;
 			border-radius: 44px;
 			font-size: 30px;
@@ -187,7 +185,7 @@
 		top: -57px;
 		color: #8e8d7b;
 		font-size: 24px;
-		margin: 80px 58px 0;
+		margin: 0px 58px 0;
 		text-align: left;
 		span {
 			color: #414a53;
@@ -213,8 +211,8 @@
 	:global {
 		.am-list-item .am-input-control input {
 			font-size: 29px;
-      width: 100%;
-      line-height: 1.4;
+			width: 100%;
+			line-height: 1.4;
 			display: inline-block;
 			text-align: left;
 			-moz-box-sizing: border-box;
@@ -294,4 +292,14 @@
 			background: transparent;
 		}
 	}
+}
+.yuanPNG {
+  width: 676px;
+  height: 334px;
+  margin-top: 53px;
+}
+.listPNG{
+  width: 693px;
+  height: 372px;
+  margin: 0 auto;
 }

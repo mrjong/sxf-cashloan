@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-20 10:28:52
+ * @LastEditTime: 2019-09-24 11:10:56
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -21,6 +21,8 @@ import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
+import listPNG from './img/list.png';
+import yuanPNG from './img/yuan.png';
 
 let timmer;
 const API = {
@@ -504,12 +506,8 @@ export default class login_common_page extends PureComponent {
 			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={loginBgImg} alt="落地页banner" />
 				<div className={styles.content}>
+					<img className={styles.yuanPNG} src={yuanPNG} />
 					<div className={styles.loginContentBox}>
-						{/* <p className={styles.title}>最高可借额度(元)</p>
-						<p className={styles.moneyText}>50000</p>
-						<p className={styles.proDesc}>
-							<img src={descImg} alt="描述" />
-						</p> */}
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
@@ -598,11 +596,8 @@ export default class login_common_page extends PureComponent {
 						<div className={styles.sureBtn} onClick={this.goLogin}>
 							<span>立即申请</span>
 						</div>
-						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
+					<img className={styles.listPNG} src={listPNG} />
 				</div>
 				<div className={styles.agreement}>
 					<i
