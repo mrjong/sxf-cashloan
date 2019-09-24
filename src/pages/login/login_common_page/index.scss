@@ -123,7 +123,7 @@
 			line-height: 91px;
 			text-align: center;
 			font-weight: bold;
-			color: #FEBE3D;
+			color: #febe3d;
 			.leftBorder {
 				position: absolute;
 				left: 0;
@@ -165,7 +165,11 @@
 			// &:active {
 			// 	background-color: #FE4D2A;
 			// }
+			&.dis {
+				opacity: 0.5;
+			}
 		}
+
 		// 图片验证码
 		.getCodeBox {
 			width: 152px;
@@ -294,12 +298,12 @@
 	}
 }
 .yuanPNG {
-  width: 676px;
-  height: 334px;
-  margin-top: 53px;
+	width: 676px;
+	height: 334px;
+	margin-top: 53px;
 }
-.listPNG{
-  width: 693px;
-  height: 372px;
-  margin: 0 auto;
+.listPNG {
+	width: 693px;
+	height: 372px;
+	margin: 0 auto;
 }

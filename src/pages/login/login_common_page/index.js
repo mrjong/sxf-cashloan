@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-24 11:10:56
+ * @LastEditTime: 2019-09-24 11:45:56
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -72,7 +72,7 @@ export default class login_common_page extends PureComponent {
 		});
 		// 登录页单独处理
 		// window.history.pushState(null, null, document.URL);
-		document.title = '还到';
+		document.title = '携手权威征信机构，让信用有价值';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
@@ -502,6 +502,7 @@ export default class login_common_page extends PureComponent {
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		const loginBgImg = bannerImg ? bannerImg : defaultBannerImg;
+		const isTrue = false;
 		return (
 			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={loginBgImg} alt="落地页banner" />
@@ -593,7 +594,10 @@ export default class login_common_page extends PureComponent {
 								<i className={styles.leftBorder} />
 							</div>
 						</div>
-						<div className={styles.sureBtn} onClick={this.goLogin}>
+						<div
+							className={isTrue ? [styles.sureBtn].join(' ') : [styles.sureBtn, styles.dis].join(' ')}
+							onClick={this.goLogin}
+						>
 							<span>立即申请</span>
 						</div>
 					</div>
