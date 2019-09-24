@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-18 13:53:21
+ * @LastEditTime: 2019-09-24 16:53:41
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -113,6 +113,7 @@ export default class middle_page extends Component {
 						return;
 					}
 					if (medium_type === 'app') {
+						this.buryPointsType(taskType, true);
 						this.postRouterMessage(taskType);
 					} else {
 						this.buryPointsType(taskType, true);
