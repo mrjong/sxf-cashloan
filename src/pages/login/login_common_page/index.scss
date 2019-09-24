@@ -20,7 +20,7 @@
 
 		.loginContentBox {
 			position: relative;
-			padding: 42px 63px 80px;
+			padding: 60px 63px 80px;
 			:global {
 				.am-list-item.am-input-item {
 					height: 96px;
@@ -89,7 +89,7 @@
 			border-width: 0 4px 4px 0;
 		}
 		.loginInput {
-			margin-bottom: 50px;
+			margin-bottom: 34px;
 			border: none;
 			border-radius: 50px;
 			background-color: #f5f4f4;
@@ -156,7 +156,7 @@
 			font-weight: bold;
 			font-family: 'PingFang SC';
 			color: #fff;
-			margin: 73px auto 10px;
+			margin: 34px auto 10px;
 			span {
 				display: inline-block;
 				width: 100%;

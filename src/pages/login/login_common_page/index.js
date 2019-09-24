@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-24 11:45:56
+ * @LastEditTime: 2019-09-24 12:10:17
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -498,11 +498,14 @@ export default class login_common_page extends PureComponent {
 			bigImageH,
 			disabledInput,
 			times,
-			showDownloadModal
+			isChecked,
+			showDownloadModal,
+			smsCOde,
+			mobilePhone
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		const loginBgImg = bannerImg ? bannerImg : defaultBannerImg;
-		const isTrue = false;
+		const isTrue = isChecked;
 		return (
 			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={loginBgImg} alt="落地页banner" />
