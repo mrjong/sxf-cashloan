@@ -1,6 +1,10 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:15:40
+<<<<<<< HEAD
+ * @LastEditTime: 2019-09-24 14:09:26
+=======
+ * @LastEditTime: 2019-09-24 11:08:55
+>>>>>>> origin/BR_20190924_DCLOGIN_JKJS-2749
  */
 export default [
 	{

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-20 10:28:52
+ * @LastEditTime: 2019-09-24 12:15:09
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -21,6 +21,8 @@ import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
+import listPNG from './img/list.png';
+import yuanPNG from './img/yuan.png';
 
 let timmer;
 const API = {
@@ -70,7 +72,7 @@ export default class login_common_page extends PureComponent {
 		});
 		// 登录页单独处理
 		// window.history.pushState(null, null, document.URL);
-		document.title = '还到';
+		document.title = '携手权威征信机构，让信用有价值';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
@@ -496,20 +498,20 @@ export default class login_common_page extends PureComponent {
 			bigImageH,
 			disabledInput,
 			times,
-			showDownloadModal
+			isChecked,
+			showDownloadModal,
+			smsCOde,
+			mobilePhone
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		const loginBgImg = bannerImg ? bannerImg : defaultBannerImg;
+		const isTrue = isChecked;
 		return (
 			<div className={styles.dc_landing_page}>
 				<img className={styles.banner} src={loginBgImg} alt="落地页banner" />
 				<div className={styles.content}>
+					<img className={styles.yuanPNG} src={yuanPNG} />
 					<div className={styles.loginContentBox}>
-						{/* <p className={styles.title}>最高可借额度(元)</p>
-						<p className={styles.moneyText}>50000</p>
-						<p className={styles.proDesc}>
-							<img src={descImg} alt="描述" />
-						</p> */}
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
@@ -592,17 +594,16 @@ export default class login_common_page extends PureComponent {
 								}}
 							>
 								{this.state.timers}
-								<i className={styles.leftBorder} />
 							</div>
 						</div>
-						<div className={styles.sureBtn} onClick={this.goLogin}>
+						<div
+							className={isTrue ? [styles.sureBtn].join(' ') : [styles.sureBtn, styles.dis].join(' ')}
+							onClick={this.goLogin}
+						>
 							<span>立即申请</span>
 						</div>
-						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
+					<img className={styles.listPNG} src={listPNG} />
 				</div>
 				<div className={styles.agreement}>
 					<i
