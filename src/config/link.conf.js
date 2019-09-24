@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-24 11:26:58
+ * @LastEditTime: 2019-09-24 11:46:58
  */
 /**
  * 外链url配置
@@ -34,7 +34,7 @@ const envMap = {
 		APPSTORE_URL: 'https://itunes.apple.com/cn/app/id1439290777?mt=8'
 	},
 	rc: {
-		MD_URL: 'http://172.16.160.74:8080',
+		MD_URL: 'https://fbds-test.vbillbank.com',
 		DC_URL: 'https://ffp.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP', // 生产地址
 		PDF_URL: 'https://lns-wap-rc.vbillbank.com/wap', // pdf预览的接口url
 		BASE_URL: 'https://lns-wap-rc.vbillbank.com',
