@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-26 12:20:37
+ */
 import React from 'react';
 import style from './index.scss';
 import WhiteCard from '../WhiteCard';
@@ -17,7 +21,7 @@ export default class ExamineCard extends React.PureComponent {
 					}
 				>
 					<div className={style.title}>{showData.subtitle}</div>
-					{showData.tel ? <div className={style.tel}>{showData.tel}</div> : null}
+					{showData.tel ? <div className={style.tel}></div> : null}
 					{showData.desc ? <div className={style.desc}>{showData.desc}</div> : null}
 					{showData.highlightText ? (
 						<div className={style.desc}>

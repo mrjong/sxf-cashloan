@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-26 12:11:58
+ */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import { Modal, Icon } from 'antd-mobile';
@@ -217,7 +221,7 @@ export default class remit_ing_page extends PureComponent {
 				<div className={style.topBox}>
 					<div className={style.title}>需要人工审核，耐心等待</div>
 					<div className={style.subtitle}>
-						<a>0532-5808XXXX</a>的审核电话
+						{/* <a>0532-5808XXXX</a>的审核电话 */}
 						<br />
 						至少会拨打3次，最长不超过3个工作日
 					</div>
@@ -285,17 +289,15 @@ export default class remit_ing_page extends PureComponent {
 							<li className={style.rule_item}>2、为保证您能接听到电话，您选择的时段以外也会尝试致电。</li>
 							<li className={style.rule_item}> 3、如果不预约，则正常排队审核。</li>
 							<li className={style.rule_item}>4、预约了审核时间，确定预约后，则不能取消。</li>
-							<li className={style.rule_item}>
-								5、人工审核电话为 0532-5808XXXX的审核电话，请注意接听。如没有接听，会尝试多次拨打。
-							</li>
+							<li className={style.rule_item}>5、如没有接听，会尝试多次拨打。</li>
 							<li className={style.rule_item}>6、最长不超过3个工作日拨打。</li>
 						</ul>
 					) : (
 						<div>
 							{/* <p className={style.modalDesc}>预约时间到达前2小时则不能修改预约时间</p> */}
-							<p className={style.modalDesc}>
+							{/* <p className={style.modalDesc}>
 								审核电话为<span>0532-5808XXXX</span>，请注意接听
-							</p>
+							</p> */}
 							<div>
 								<div className={style.options_day}>
 									{dayList.map((item) => (
