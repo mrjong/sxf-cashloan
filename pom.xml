@@ -7,7 +7,7 @@
 	<artifactId>cashloan-plus-ng</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0</version>
-	<name>JR-FFP-FRONT</name>
+	<name>CASHLOAN-PLUS-NG</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
