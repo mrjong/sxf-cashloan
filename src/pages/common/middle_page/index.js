@@ -1,12 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-24 16:53:41
+ * @LastEditTime: 2019-10-08 15:02:35
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import qs from 'qs';
 import fetch from 'sx-fetch';
-import { getNextStr } from 'utils';
+import Cookie from 'js-cookie';
+import { getNextStr, queryUsrSCOpenId } from 'utils';
 import Blank from 'components/Blank';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -23,7 +24,7 @@ export default class middle_page extends Component {
 			errorInf: ''
 		};
 	}
-	componentWillMount() {
+	async componentWillMount() {
 		store.removeGoMoxie();
 		//芝麻信用的回调
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
@@ -34,6 +35,9 @@ export default class middle_page extends Component {
 		}
 		if (token && medium_type === 'app') {
 			store.setToken(token);
+			Cookie.set('fin-v-card-token', token, { expires: 365 });
+			// 埋点绑定
+			await queryUsrSCOpenId({ $props: this.props });
 		}
 		switch (type) {
 			case 'mxOperator':
