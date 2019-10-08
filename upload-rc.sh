@@ -1,9 +1,13 @@
+###
+# @Author: shawn
+ # @LastEditTime: 2019-10-08 17:56:03
+ ###
 #!/usr/bin/env bash
 
-remote_path=/home/app/nginx/html
-remote_path2=/home/app/nginx/html/www
+remote_path=/home/app/nginx
+remote_path2=/home/app/nginx/html
 remote_user=app
-remote_ip=172.16.157.101
+remote_ip=172.16.176.31
 
 tar czvf dist.tar ./*
 echo -e "\033[41;37m 请输入远程服务器密码开始上传文件 \033[0m"
