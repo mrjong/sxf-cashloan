@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:02:47
+ * @LastEditTime: 2019-10-09 13:44:12
  */
 export default [
 	{
@@ -65,8 +65,8 @@ export default [
 	},
 	{
 		path: '/protocol/personal_credit_page',
-		zhName: 'grzxcxsqs',
-		title: '个人征信查询授权书',
+		zhName: 'xyfxgzs',
+		title: '信用风险告知书',
 		component: () => import('pages/protocol/personal_credit_page')
 	}
 ];
