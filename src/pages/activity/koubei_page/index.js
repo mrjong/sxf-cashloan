@@ -167,7 +167,7 @@ export default class koubei_page extends PureComponent {
 							this.go('privacy_agreement_page');
 						}}
 					>
-						《随行付用户隐私权政策》
+						《用户隐私权政策》
 					</span>
 				</div>
 				{showLoginTip && (

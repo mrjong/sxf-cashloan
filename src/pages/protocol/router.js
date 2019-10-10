@@ -5,7 +5,7 @@
 export default [
 	{
 		path: '/protocol/privacy_agreement_page',
-		title: '随行付用户隐私权政策',
+		title: '用户隐私权政策',
 		zhName: 'sxfyhyszc',
 		component: () => import('pages/protocol/privacy_agreement_page')
 	},

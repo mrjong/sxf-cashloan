@@ -192,7 +192,7 @@ export default class mianxi418_page extends PureComponent {
 								this.go('privacy_agreement_page');
 							}}
 						>
-							《随行付用户隐私权政策》
+							《用户隐私权政策》
 						</span>
 					</div>
 					<div className={styles.footer_b_text}>

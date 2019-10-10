@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-10-10 15:45:17
+ */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
 import styles from './index.scss';
@@ -178,15 +182,15 @@ export default class funsisong_page extends PureComponent {
 						PTM0000: (res, getType) => {
 							this.judgeOper(getType);
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.props.toast.info('暂无活动资格');
 						}
 					}}
 					validateMposCb={{
-						PTM9000: (res, getType) => {
+						PTM9000: () => {
 							this.props.history.replace('/mpos/mpos_ioscontrol_page?entryType=ioscontrol');
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.setState({
 								showBoundle: true
 							});
@@ -212,10 +216,10 @@ export default class funsisong_page extends PureComponent {
 								this.goHomePage();
 							}
 						},
-						authFlag2: (res, getType) => {
+						authFlag2: () => {
 							this.props.toast.info('暂无活动资格');
 						},
-						others: (res, getType) => {
+						others: () => {
 							this.props.toast.info('暂无活动资格');
 						}
 					}}
@@ -223,7 +227,7 @@ export default class funsisong_page extends PureComponent {
 						authSts00: (res, getType) => {
 							this.judgeOper(getType);
 						},
-						others: (res, getType) => {
+						others: () => {
 							// 暂无抽奖资格
 							this.props.toast.info('暂无活动资格');
 						}
@@ -309,7 +313,7 @@ export default class funsisong_page extends PureComponent {
 								this.go('privacy_agreement_page');
 							}}
 						>
-							《随行付用户隐私权政策》
+							《用户隐私权政策》
 						</span>
 					</div>
 				</div>
