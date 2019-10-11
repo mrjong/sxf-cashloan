@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:05:32
+ * @LastEditTime: 2019-10-11 16:02:07
  */
 /*eslint-disable */
 import React from 'react';
@@ -156,6 +156,7 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/others/',
 			'/landing/landing_page',
 			'/common/auth_page',
+			'/common/postmessage_app',
 			'/mpos/mpos_ioscontrol_page',
 			'/home/credit_apply_succ_page', // 因为app直接跳转到h5的webview，所以放开
 			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，所以放开
