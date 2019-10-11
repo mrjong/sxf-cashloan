@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-11 14:43:04
+ * @LastEditTime: 2019-10-11 16:28:28
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -133,11 +133,14 @@ export default class wx_qr_pay_page extends Component {
 								(result) => {
 									if (result.err_msg == 'get_brand_wcpay_request:ok') {
 										setTimeout(() => {
-											// this.getpayResult('支付成功');
+											window.close();
+											window.WeixinJSBridge.call('closeWindow');
 										}, 2000);
 									} else {
-										// this.getLoanInfo();
-										// this.queryExtendedPayType();
+										this.setState({
+											errorInf:
+												'支付失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重试</a>'
+										});
 									}
 								}
 							);
