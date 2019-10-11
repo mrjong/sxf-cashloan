@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-11 13:36:16
+ * @LastEditTime: 2019-10-11 13:59:00
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -143,11 +143,12 @@ export default class wx_qr_pay_page extends Component {
 								}
 							);
 						});
-						// h5 支付方式
-					} else {
-						// let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
-						// location.href = url;
 					}
+					// // h5 支付方式
+					// else {
+					// 	// let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
+					// 	// location.href = url;
+					// }
 				} else {
 					this.props.toast.info(res.msgInfo);
 				}
