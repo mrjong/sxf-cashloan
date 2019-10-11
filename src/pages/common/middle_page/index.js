@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-11 14:56:51
+ * @LastEditTime: 2019-10-11 15:33:01
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -87,10 +87,11 @@ export default class middle_page extends Component {
 		}
 	};
 
-	postMessageToApp = (message, delay = 500) => {
-		setTimeout(() => {
-			window.postMessage(message, () => {});
-		}, delay);
+	postMessageToApp = (message) => {
+		this.props.history.push(`/home/postmessage_app?routerMessage=${message || 'Home'}`);
+		// setTimeout(() => {
+		// 	window.postMessage(message);
+		// }, delay);
 	};
 	/**
 	 * @description: 玖富回调

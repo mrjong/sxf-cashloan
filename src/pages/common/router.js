@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-23 11:13:31
+ * @LastEditTime: 2019-10-11 15:29:04
  */
 export default [
 	{
@@ -41,5 +41,11 @@ export default [
 		title: '系统维护',
 		zhName: 'xtwh',
 		component: () => import('pages/common/crash_page')
+	},
+	{
+		path: '/common/postmessage_app',
+		title: '',
+		zhName: 'tzz',
+		component: () => import('pages/common/postmessage_app')
 	}
 ];
