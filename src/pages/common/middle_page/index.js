@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-11 15:33:01
+ * @LastEditTime: 2019-10-11 16:15:07
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -88,7 +88,7 @@ export default class middle_page extends Component {
 	};
 
 	postMessageToApp = (message) => {
-		this.props.history.push(`/home/postmessage_app?routerMessage=${message || 'Home'}`);
+		this.props.history.push(`/common/postmessage_app?routerMessage=${message || 'Home'}`);
 		// setTimeout(() => {
 		// 	window.postMessage(message);
 		// }, delay);
