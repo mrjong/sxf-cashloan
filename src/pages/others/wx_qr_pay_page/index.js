@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-11 13:59:00
+ * @LastEditTime: 2019-10-11 14:43:04
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -117,7 +117,6 @@ export default class wx_qr_pay_page extends Component {
 			.post(API.payUrl, sendParams)
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					// let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
 					let wxData = res.data && JSON.parse(res.data);
 					if (isWXOpen()) {
 						document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
