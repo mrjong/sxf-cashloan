@@ -1,20 +1,23 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-09-25 15:22:18
+ * @LastEditTime: 2019-10-11 13:36:16
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
-// import { store } from 'utils/store';
-import { isWXOpen } from 'utils';
+import { store } from 'utils/store';
+import { isWXOpen, getDeviceType } from 'utils';
 import qs from 'qs';
 import Blank from 'components/Blank';
+import Cookie from 'js-cookie';
 
 const API = {
-	payback: '/bill/getPayDate'
+	wxAuthcb: '/wx/authcb',
+	wxAuth: '/wx/auth',
+	payUrl: '/bill/getPayUrl'
 };
 @fetch.inject()
-export default class wx_middle_page extends Component {
+export default class wx_qr_pay_page extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -22,110 +25,134 @@ export default class wx_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		this.repay();
+		this.silentAuth();
 	}
-	//调用还款接口逻辑
-	repay = () => {
+	// 静默授权逻辑
+	silentAuth = () => {
+		// 移除cookie中的token
+		Cookie.remove('fin-v-card-token');
+		// 从url截取数据
+		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		const osType = getDeviceType();
+		if (query && query.code) {
+			this.props.$fetch
+				.post(API.wxAuthcb, {
+					state: query.state,
+					code: query.code,
+					// channelCode: getH5Channel(),
+					osType: osType
+				})
+				.then((res) => {
+					if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {
+						//请求成功,跳到登录页(前提是不存在已登录未注册的情况)
+						console.log(res);
+						// this.props.history.replace('/login')
+						this.wxPay();
+					} else if (res.msgCode == 'WX0100') {
+						// 已授权不需要登陆
+						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
+						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.loginToken);
+						// localStorage.setItem('authorizedNotLoginStats', 'true')
+						// this.props.history.replace('/home/home')
+						this.wxPay();
+					} else {
+						this.props.toast.info(res.msgInfo); //请求失败,弹出请求失败信息
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					this.setState({
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+					});
+				});
+		} else {
+			this.props.$fetch
+				.post(API.wxAuth, {
+					// channelCode: getH5Channel(),
+					redirectUrl: encodeURIComponent(window.location.href),
+					osType: osType
+				})
+				.then((res) => {
+					if (res.msgCode == 'WX0101') {
+						//没有授权
+						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
+						window.location.href = decodeURIComponent(res.url);
+					} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
+						//已授权未登录 (静默授权为7天，7天后过期）
+						// this.props.history.replace('/home/home')
+						// this.props.history.replace('/login')
+						this.wxPay();
+					} else if (res.msgCode == 'WX0100') {
+						//已授权已登录
+						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.loginToken);
+						// localStorage.setItem('authorizedNotLoginStats', 'true')
+						this.wxPay();
+					} else {
+						this.props.toast.info(res.msgInfo);
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					this.setState({
+						errorInf:
+							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
+					});
+				});
+		}
+	};
+	// 调用微信支付逻辑
+	wxPay = () => {
 		// 微信外 02  微信内  03
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		queryData.backType = 'wxPay';
-		const callbackUrl = location.origin + '/order/wx_pay_success_page?' + qs.stringify(queryData);
 		const sendParams = {
-			billNo: '',
-			// cardAgrNo: '',
-			usrBusCnl: 'WEB',
-			prodType: '01',
-			// coupId: '',
-			// isPayOff: isPayAll ? '1' : '0',
-			isPayOff: '0',
-			thisRepTotAmt: '',
-			adapter: '01',
-			// repayPerds: isPayAll ? [] : repayPerds,
-			repayPerds: [1],
-			routeCode: 'WXPay',
-			wxPayReqVo: {
-				tradeType: isWXOpen() ? '03' : '02',
-				osNm: '还到',
-				callbackUrl,
-				wapUrl: '33',
-				wapNm: '44'
-			}
+			reqOrdNo: queryData && queryData.reqOrdNo,
+			osName: getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : ''
 		};
 		this.props.$fetch
-			.post(API.payback, sendParams)
+			.post(API.payUrl, sendParams)
 			.then((res) => {
-				// if (res.msgCode === 'PTM0000') {
-				// buriedPointEvent(order.repaymentFirst, {
-				// 	entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
-				// 	is_success: true
-				// });
-				// store.setOrderSuccess({
-				// 	isPayAll,
-				// 	thisPerdNum,
-				// 	thisRepTotAmt: parseFloat(totalAmt).toFixed(2),
-				// 	perdLth: billDesc.perdLth,
-				// 	perdUnit: billDesc.perdUnit,
-				// 	billPrcpAmt: billDesc.billPrcpAmt,
-				// 	billRegDt: billDesc.billRegDt
-				// });
-				// let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
-				let wxData = res.data && JSON.parse(res.data);
-				if (isWXOpen()) {
-					document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-						window.WeixinJSBridge.invoke(
-							'getBrandWCPayRequest',
-							{
-								appId: wxData.appId,
-								timeStamp: wxData.timeStamp,
-								nonceStr: wxData.nonceStr,
-								package: wxData.package,
-								signType: wxData.signType,
-								paySign: wxData.paySign
-							},
-							(result) => {
-								if (result.err_msg == 'get_brand_wcpay_request:ok') {
-									setTimeout(() => {
-										// this.getpayResult('支付成功');
-									}, 2000);
-								} else {
-									// this.getLoanInfo();
-									// this.queryExtendedPayType();
+				if (res.msgCode === 'PTM0000') {
+					// let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
+					let wxData = res.data && JSON.parse(res.data);
+					if (isWXOpen()) {
+						document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+							window.WeixinJSBridge.invoke(
+								'getBrandWCPayRequest',
+								{
+									appId: wxData.appId,
+									timeStamp: wxData.timeStamp,
+									nonceStr: wxData.nonceStr,
+									package: wxData.package,
+									signType: wxData.signType,
+									paySign: wxData.paySign
+								},
+								(result) => {
+									if (result.err_msg == 'get_brand_wcpay_request:ok') {
+										setTimeout(() => {
+											// this.getpayResult('支付成功');
+										}, 2000);
+									} else {
+										// this.getLoanInfo();
+										// this.queryExtendedPayType();
+									}
 								}
-							}
-						);
-					});
-					// h5 支付方式
+							);
+						});
+						// h5 支付方式
+					} else {
+						// let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
+						// location.href = url;
+					}
 				} else {
-					// let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
-					// location.href = url;
+					this.props.toast.info(res.msgInfo);
 				}
-				// } else {
-				// 	// buriedPointEvent(order.repaymentFirst, {
-				// 	// 	entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
-				// 	// 	is_success: false,
-				// 	// 	fail_cause: res.msgInfo
-				// 	// });
-				// 	// this.setState({
-				// 	// 	showModal: false,
-				// 	// 	couponInfo: {},
-				// 	// 	isShowDetail: false
-				// 	// });
-				// 	// this.props.toast.info(res.msgInfo);
-				// 	// store.removeCouponData();
-				// 	// // 刷新当前list
-				// 	// setTimeout(() => {
-				// 	// 	this.queryExtendedPayType();
-				// 	// 	this.getLoanInfo();
-				// 	// }, 3000);
-				// }
 			})
 			.catch(() => {
-				// store.removeCouponData();
-				// this.setState({
-				// 	showModal: false,
-				// 	couponInfo: {},
-				// 	isShowDetail: false
-				// });
 				this.setState({
 					errorInf:
 						'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
