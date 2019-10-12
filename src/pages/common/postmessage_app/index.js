@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-12 10:37:23
+ * @LastEditTime: 2019-10-12 14:50:28
  */
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/ButtonCustom';
@@ -12,12 +12,6 @@ export default class postmessage_app extends PureComponent {
 		this.state = {
 			showPage: false
 		};
-	}
-	componentWillMount() {
-		if (!sessionStorage.getItem('showPage')) {
-			sessionStorage.setItem('showPage', true);
-			window.location.reload();
-		}
 	}
 	componentDidMount() {
 		timer = setTimeout(() => {
