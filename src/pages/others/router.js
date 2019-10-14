@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-25 15:40:38
+ * @LastEditTime: 2019-10-14 18:07:14
  */
 export default [
 	{
@@ -69,12 +69,5 @@ export default [
 		title: '下载App进入专享通道',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testB_download_page')
-	},
-	{
-		path: '/others/wx_qr_pay_page',
-		zhName: 'ewmzf',
-		title: '',
-		arrowHide: 'empty',
-		component: () => import('pages/others/wx_qr_pay_page')
 	}
 ];

@@ -1,0 +1,245 @@
+<!--
+ * @Author: shawn
+ * @LastEditTime: 2019-10-14 18:11:30
+ -->
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="description" content="helloworld" />
+		<meta
+			name="viewport"
+			content="user-scalable=0, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"
+		/>
+		<meta name="theme-color" content="#000000" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>支付界面</title>
+		<link type="favicon" rel="shortcut icon" href="./favicon.ico" />
+		<!-- <script src="/assets/lib/vconsole.min.js"></script> -->
+		<script src="/assets/lib/flexible_css.js"></script>
+    <script src="/assets/lib/flexible.min.js"></script>
+    <script src="/assets/lib/jquery.min.js"></script>
+		<style>
+      /* stylelint-disable */
+      .QRPay_box {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #868E9E;
+        font-size: 0.36rem;
+        line-height: 0.7rem;
+      }
+      .err_img {
+        width: 100%;
+      }
+      .reloadBtn {
+        color: #ebde74;
+      }
+      .dot {
+        font-size: 0.5rem;
+        display: inline-block;
+        width: 0;
+        vertical-align: bottom;
+        overflow: hidden;
+        animation: dot 2s infinite step-start;
+        letter-spacing: 0.05rem;
+      }
+      @keyframes dot {
+        0% { width: 0; margin-right: 1em; }
+        33% { width: 0.3em; margin-right: 0.7em; }
+        66% { width: 0.6em; margin-right: 0.4em; }
+        100% { width: 1em; margin-right: 0;}
+      }
+		</style>
+	</head>
+
+	<body ontouchstart>
+		<div id="root">
+			<div class="QRPay_box" id="QRPay">
+          正在启动微信支付
+					<br />
+          请您耐心等待<span class="dot">...</span>
+			</div>
+      <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+      <script>
+        // 获取url参数
+        function getUrlParam(name){
+          var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+          var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+          if (r!=null) return unescape(r[2]); return null; //返回参数值
+        }
+        // 获取机型
+        function getDeviceType(){
+          const u = navigator.userAgent;
+          const osType =
+            u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+              ? 'ANDRIOD'
+              : u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+              ? 'IOS'
+              : 'PC';
+          return osType;
+        };
+        // 设置cookie
+        function setCookie(cname, cvalue, exdays){
+          var d = new Date();
+          d.setTime(d.getTime()+(exdays*24*60*60*1000));
+          var expires = "expires="+d.toGMTString();
+          document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+        // 页面加载完成
+        $(function(){
+          // 物理返回
+          window.history.pushState(null, null, document.URL);
+          if (window.history && window.history.pushState) {
+            window.addEventListener(
+              'popstate',
+              () => {
+                window.close();
+                window.WeixinJSBridge.call('closeWindow');
+              },
+              false
+            )
+          }
+          silentAuth();
+        })
+        // 静默授权
+        function silentAuth() {
+          if (getUrlParam('code')) {
+            wxAuth();
+          } else {
+            wxCheckAuth();
+          }
+        }
+
+        // 微信授权
+        function wxAuth(){
+          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : '';
+          $.ajax({
+              type: "POST",
+              url: "/wap/wx/authcb",
+              data: JSON.stringify({
+                state: getUrlParam('state'),
+                code: getUrlParam('code'),
+                // channelCode: getH5Channel(),
+                osType: getDeviceType()
+              }),
+             contentType: "application/json",
+             dataType: "json",
+             success: function(res){
+              if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {
+                //请求成功,跳到登录页(前提是不存在已登录未注册的情况)
+                console.log(res);
+                // this.props.history.replace('/login')
+                getWXPayParams();
+              } else if (res.msgCode == 'WX0100') {
+                // 已授权不需要登陆
+                setCookie('fin-v-card-token-wechat', res.token, 365); // 微信授权token
+                setCookie('fin-v-card-token', res.loginToken, 365);
+                getWXPayParams();
+              } else {
+                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.msgInfo+'</p>');
+              }
+            }
+          });
+        }
+
+        // 检查微信授权
+        function wxCheckAuth(){
+          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : '';
+          $.ajax({
+              type: "POST",
+              url: "/wap/wx/auth",
+              data: JSON.stringify({
+                redirectUrl: encodeURIComponent(window.location.href),
+                osType: getDeviceType()
+              }),
+             contentType: "application/json",
+             dataType: "json",
+             success: function(res){
+              if (res.msgCode == 'WX0101') {
+                //没有授权
+                setCookie('fin-v-card-token-wechat', res.token, 365);
+                window.location.href = decodeURIComponent(res.url);
+              } else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
+                //已授权未登录 (静默授权为7天，7天后过期）
+                // this.props.history.replace('/home/home')
+                // this.props.history.replace('/login')
+                getWXPayParams();
+              } else if (res.msgCode == 'WX0100') {
+                //已授权已登录
+                setCookie('fin-v-card-token', res.loginToken, { expires: 365 });
+                // localStorage.setItem('authorizedNotLoginStats', 'true')
+                getWXPayParams();
+              } else {
+                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.msgInfo+'</p>');
+              }
+            }
+          });
+        }
+
+        // 判断是否有WeixinJSBridge方法
+        function wxPay(wxData) {
+          if (window.WeixinJSBridge) {
+            openWxPay(wxData);
+          } else {
+            document.addEventListener(
+              'WeixinJSBridgeReady',
+              () => {
+                openWxPay(wxData);
+              },
+              false
+            );
+          }
+        }
+        // 调起微信支付
+        function openWxPay(wxData) {
+          window.WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            {
+              appId: wxData.appId,
+              timeStamp: wxData.timeStamp,
+              nonceStr: wxData.nonceStr,
+              package: wxData.package,
+              signType: wxData.signType,
+              paySign: wxData.paySign
+            },
+            (result) => {
+              if (result.err_msg == 'get_brand_wcpay_request:ok') {
+                setTimeout(() => {
+                  window.close();
+                  window.WeixinJSBridge.call('closeWindow');
+                }, 2000);
+              } else {
+                $('#QRPay').html('支付失败,请点击<a class="reloadBtn" href="javascript:void(0);" onclick="window.location.reload()">重试</a>');
+              }
+            }
+          );
+        }
+
+        // 获取微信支付需要的参数
+        function getWXPayParams() {
+          const reqOrdNo = getUrlParam('reqOrdNo');
+          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : '';
+          $.ajax({
+             type: "POST",
+             url: "/wap/bill/getPayUrl",
+             data: JSON.stringify({"reqOrdNo": reqOrdNo, "osName": osName}),
+             contentType: "application/json",
+             dataType: "json",
+             success: function(res){
+              if (res.msgCode === 'PTM0000') {
+					      let wxData = res.data && JSON.parse(res.data);
+                wxPay(wxData);
+              } else {
+                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.msgInfo+'</p>');
+              }
+            }
+          });
+        }
+      </script>
+		</div>
+	</body>
+</html>
