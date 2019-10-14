@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-14 18:34:43
+ * @LastEditTime: 2019-10-14 18:38:11
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -197,6 +197,7 @@
         }
         // 调起微信支付
         function openWxPay(wxData) {
+          $('#QRPay').html('');
           window.WeixinJSBridge.invoke(
             'getBrandWCPayRequest',
             {
@@ -208,7 +209,6 @@
               paySign: wxData.paySign
             },
             (result) => {
-              $('#QRPay').html('');
               if (result.err_msg == 'get_brand_wcpay_request:ok') {
                 setTimeout(() => {
                   window.close();
