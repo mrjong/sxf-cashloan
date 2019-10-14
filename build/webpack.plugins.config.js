@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-09-05 12:02:39
+ */
 let webpack = require('webpack');
 let CompressionPlugin = require('compression-webpack-plugin');
 let HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -201,7 +205,7 @@ let getRcPlugins = function() {
 					PROJECT_ENV: JSON.stringify('rc'),
 					RELEASE_VERSION: JSON.stringify('rc')
 				},
-				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+				saUrl: JSON.stringify('http://10.3.99.113:8106/sa')
 			})
 		);
 	plugins.push(
@@ -278,7 +282,7 @@ let getTestPlugins = function() {
 					PROJECT_ENV: JSON.stringify('test'),
 					RELEASE_VERSION: JSON.stringify(sentryTestVersion)
 				},
-				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
+				saUrl: JSON.stringify('http://10.3.99.113:8106/sa')
 			})
 		);
 	// plugins.push(
@@ -312,8 +316,8 @@ let getDevPlugins = function() {
 					PROJECT_ENV: JSON.stringify('dev'),
 					RELEASE_VERSION: JSON.stringify('dev')
 				},
-				saUrl: JSON.stringify('http://10.1.1.81:8106/sa')
-				// saUrl: JSON.stringify('http://10.1.1.81:8106/sa'),
+				saUrl: JSON.stringify('http://10.3.99.113:8106/sa')
+				// saUrl: JSON.stringify('http://10.3.99.113:8106/sa'),
 			})
 		);
 	// plugins.push(new webpack.HotModuleReplacementPlugin());

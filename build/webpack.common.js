@@ -144,7 +144,7 @@ module.exports = function(options) {
 				// },
 				'/shence': {
 					target: '/sa', //目标接口域名
-					target: 'http://10.1.1.81:8106/sa',
+					target: 'http://10.3.99.113:8106/sa',
 					changeOrigin: true //是否跨域
 				},
 				'/disting': {
