@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-14 11:40:25
+ * @LastEditTime: 2019-10-14 18:34:43
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -208,6 +208,7 @@
               paySign: wxData.paySign
             },
             (result) => {
+              $('#QRPay').html('');
               if (result.err_msg == 'get_brand_wcpay_request:ok') {
                 setTimeout(() => {
                   window.close();
