@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-15 16:12:03
+ * @LastEditTime: 2019-10-15 17:30:36
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -623,7 +623,7 @@ export default class momo_outer_login_page extends PureComponent {
 								this.go('register_agreement_page');
 							}}
 						>
-							《随行付金融用户注册协议》
+							《用户注册协议》
 						</span>
 						<span
 							onClick={() => {
