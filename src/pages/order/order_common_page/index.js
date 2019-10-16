@@ -1355,7 +1355,7 @@ export default class order_detail_page extends PureComponent {
 						</Panel>
 
 						<div className={styles.submit_btn}>
-							<SXFButton onClick={this.gotoPay}>{isBillClean ? '查看还款信息' : '去还款'}</SXFButton>
+							<SXFButton onClick={this.gotoPay}>{isBillClean ? '查看还款信息' : '查看还款计划'}</SXFButton>
 						</div>
 					</div>
 				) : (
@@ -1421,11 +1421,12 @@ export default class order_detail_page extends PureComponent {
 									<div className={styles.modal_tip_content}>
 										<h3 className={styles.modal_tip_title}>逾期天数说明</h3>
 										<p className={styles.modal_tip_desc}>
-											任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
-										</p>
-										<p className={styles.modal_tip_desc}>
 											您的逾期开始日期：<em>{penaltyInfo.billOvduStartDt}</em>
 										</p>
+										<p className={styles.modal_tip_desc}>
+											任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
+										</p>
+										<p className={styles.modal_tip_desc}>罚息由出借方收取，逾期管理费由平台方收取。</p>
 									</div>
 								</Modal>
 							</div>

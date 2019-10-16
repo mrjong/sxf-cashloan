@@ -28,6 +28,13 @@ export default class payment_notes_page extends PureComponent {
 					逾期还款的，出借人会收取罚息。罚息按照<em>未还本金的0.02%/天计算</em>
 					。逾期会影响到您的个人信用，请您珍视信用，及时还款。
 				</dd>
+				<dt>收费规则：</dt>
+				<dd>
+					本金、利息、罚息由出借方收取
+					<br />
+					服务费、逾期管理费由平台方收取
+				</dd>
+
 				<div className={style.fix_bottom}>
 					<NoticeBar
 						marqueeProps={{
