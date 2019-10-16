@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-15 17:30:36
+ * @LastEditTime: 2019-10-16 17:41:33
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -13,16 +13,16 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur, recordContract } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView, sxfDataPv, sxfburiedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, pageView } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-import { sxflogin } from 'utils/sxfAnalytinsType';
 import loginModalBg from '../login_common_page/img/login_modal.png';
 import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
 import closeIco from '../login_common_page/img/close_ico.png';
+import linkConf from 'config/link.conf';
 
 let timmer;
 const API = {
@@ -71,7 +71,7 @@ export default class momo_outer_login_page extends PureComponent {
 			queryData
 		});
 		// 登录页单独处理
-		window.history.pushState(null, null, document.URL);
+		// window.history.pushState(null, null, document.URL);
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
@@ -80,15 +80,11 @@ export default class momo_outer_login_page extends PureComponent {
 
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
-		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
-		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		sessionStorage.clear();
 		localStorage.clear();
 		// 首页弹窗要用的
 		MessageTagError && store.setMessageTagError(MessageTagError);
 		MessageTagStep && store.setMessageTagStep(MessageTagStep);
-		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
-		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);
 
 		setH5Channel(storeH5Channel);
 
@@ -105,8 +101,6 @@ export default class momo_outer_login_page extends PureComponent {
 			});
 			this.getImage();
 		}
-		sxfDataPv({ pId: 'dwdl' });
-		sxfburiedPointEvent(sxflogin.chkBox_dw);
 	}
 	componentDidMount() {
 		let _this = this;
@@ -245,6 +239,7 @@ export default class momo_outer_login_page extends PureComponent {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
+				buriedPointEvent(daicao.smsCodeBtnClick);
 				let param = {};
 				if (this.state.disabledInput) {
 					param = {
@@ -410,16 +405,10 @@ export default class momo_outer_login_page extends PureComponent {
 	};
 
 	checkAgreement = () => {
-		this.setState(
-			{
-				isChecked: !this.state.isChecked
-			},
-			() => {
-				if (this.state.isChecked) {
-					sxfburiedPointEvent(sxflogin.chkBox_dw);
-				}
-			}
-		);
+		buriedPointEvent(daicao.selectProtocol);
+		this.setState({
+			isChecked: !this.state.isChecked
+		});
 	};
 
 	//获取图片验证码
@@ -441,7 +430,7 @@ export default class momo_outer_login_page extends PureComponent {
 		this.closeModal();
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
-			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
+			window.location.href = linkConf.APPSTORE_URL;
 		} else {
 			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
 				(res) => {
