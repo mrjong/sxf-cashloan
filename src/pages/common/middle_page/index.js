@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-17 15:11:09
+ * @LastEditTime: 2019-10-17 16:06:04
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -88,8 +88,7 @@ export default class middle_page extends Component {
 	};
 
 	postMessageToApp = (message) => {
-		const { postMessageType } = query;
-		if (postMessageType && postMessageType === 'newType') {
+		if (location.href.indexOf('postMessageType=newType') > -1) {
 			location.href = location.origin + `/common/postmessage_app?routerMessage=${message || 'Home'}`;
 		} else {
 			setTimeout(() => {
