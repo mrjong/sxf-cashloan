@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-08 15:02:35
+ * @LastEditTime: 2019-10-17 15:11:09
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -87,10 +87,15 @@ export default class middle_page extends Component {
 		}
 	};
 
-	postMessageToApp = (message, delay = 500) => {
-		setTimeout(() => {
-			window.postMessage(message, () => {});
-		}, delay);
+	postMessageToApp = (message) => {
+		const { postMessageType } = query;
+		if (postMessageType && postMessageType === 'newType') {
+			location.href = location.origin + `/common/postmessage_app?routerMessage=${message || 'Home'}`;
+		} else {
+			setTimeout(() => {
+				window.postMessage(message);
+			}, 500);
+		}
 	};
 	/**
 	 * @description: 玖富回调
