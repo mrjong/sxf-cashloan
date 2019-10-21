@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-10-18 15:22:33
+ */
 export default [
 	{
 		path: '/activity/pinpai_page',
@@ -61,5 +66,11 @@ export default [
 		zhName: 'mxhbxsl',
 		title: '100元免息红包限时领',
 		component: () => import('pages/activity/mianxi822_page')
+	},
+	{
+		path: '/activity/new_users_page',
+		zhName: 'xrzxl',
+		title: '新人专享礼',
+		component: () => import('pages/activity/new_users_page')
 	}
 ];

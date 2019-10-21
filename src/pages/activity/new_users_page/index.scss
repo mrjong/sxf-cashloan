@@ -1,0 +1,83 @@
+.new_users_page {
+	img {
+		vertical-align: top;
+	}
+	.activityBg {
+		width: 100%;
+  }
+  .contentContainer {
+    overflow: hidden;
+  }
+	.contentBox {
+    position: absolute;
+    overflow: hidden;
+    top: 380px;
+    height: 1045px;
+    width: 100%;
+		&::after {
+			content: '';
+			position: absolute;
+      top: 0;
+      left: -40%;
+      width: 180%;
+      height: 1045px;
+      background: linear-gradient(153deg, rgba(255, 161, 158, 1) 0%, rgba(246, 76, 70, 1) 100%);
+      border-radius: 80% 80% 0 0;
+		}
+	}
+	.wallet {
+		position: absolute;
+		top: 336px;
+		width: 100%;
+		img {
+			position: absolute;
+			width: 100%;
+		}
+		.img1 {
+			z-index: 3;
+		}
+		.img2 {
+			width: 430px;
+			height: 258px;
+			left: 50%;
+			top: 188px;
+			margin-left: -215px;
+			z-index: 2;
+		}
+		.slideImg {
+			animation: slide 1s forwards;
+		}
+		.img3 {
+			z-index: 1;
+		}
+	}
+	.submitBtn {
+		position: relative;
+		top: 977px;
+		width: 600px;
+		height: 90px;
+		margin: 0 auto;
+		.btn {
+			position: absolute;
+			width: 600px;
+			background-repeat: no-repeat;
+		}
+		.btn1 {
+			z-index: 2;
+			animation: shake 1.2s infinite;
+		}
+		.btn2 {
+			top: 14px;
+			z-index: 0;
+		}
+	}
+}
+
+@keyframes slide {
+	0% {
+		top: 188px;
+	}
+	100% {
+		top: 44px;
+	}
+}
