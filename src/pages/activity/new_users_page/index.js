@@ -1,12 +1,14 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-21 17:18:47
+ * @LastEditTime: 2019-10-22 14:51:18
  */
 import React, { PureComponent } from 'react';
+import fetch from 'sx-fetch';
 import styles from './index.scss';
 import activity_bg from './img/activityBg.png';
 import submit_btn1 from './img/btn_bg.png';
+import submit_btn2 from './img/btn_bg2.png';
 import wallet_img1 from './img/wallet_img1.png';
 import wallet_img2 from './img/wallet_img2.png';
 import wallet_img3 from './img/wallet_img3.png';
@@ -17,11 +19,18 @@ import rules_bg from './img/rules_bg.png';
 // import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
 
+const API = {
+	noviceJudge: '/novice/judge', // 判断用户是否满足领取条件接口
+	noviceReceive: '/novice/receive' // 领取新手优惠券接口
+};
+
 // @setBackGround('#F64C46')
+@fetch.inject()
 export default class new_users_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
+			userStsInf: null,
 			isOpen: false
 		};
 	}
@@ -34,14 +43,51 @@ export default class new_users_page extends PureComponent {
 		// buriedPointEvent(activity.mayReceiveBtn);
 	}
 
+	// 点击领取按钮
 	goTo = () => {
+		const { userStsInf } = this.state;
+		console.log(userStsInf, 'userStsInf');
 		this.setState({
 			isOpen: true
+		});
+		if (userStsInf) {
+			this.getCoupon();
+		} else if (userStsInf) {
+			// todo
+		} else {
+			this.props.toast.info();
+		}
+	};
+
+	// 查询用户领取的状态
+	checkUserStatus = () => {
+		this.props.$fetch.post(API.noviceJudge).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data) {
+				this.setState({
+					userStsInf: res.data
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
+
+	// 用户领取优惠劵
+	getCoupon = () => {
+		this.props.$fetch.post(API.noviceReceive).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data) {
+				this.setState({
+					userStsInf: res.data
+				});
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
 		});
 	};
 
 	render() {
-		const { isOpen } = this.state;
+		const { isOpen, userStsInf } = this.state;
+		const submitBtnBg = userStsInf ? submit_btn2 : submit_btn1;
 		return (
 			<div className={styles.new_users_page}>
 				<div>
@@ -60,7 +106,7 @@ export default class new_users_page extends PureComponent {
 					<img src={shadow_img} className={styles.shadowImg} />
 				</div>
 				<div onClick={this.goTo}>
-					<img src={submit_btn1} className={styles.submitBtn} />
+					<img src={submitBtnBg} className={styles.submitBtn} />
 				</div>
 				{/* 奖品列表 */}
 				<div className={styles.awardListCont}>
