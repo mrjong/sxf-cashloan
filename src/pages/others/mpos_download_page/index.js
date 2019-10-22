@@ -14,6 +14,10 @@ import linkConf from 'config/link.conf';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
 
+const API = {
+	DOWNLOADURL: 'download/getDownloadUrl'
+};
+
 let urlParams = {};
 let entryPageTime = '';
 @setBackGround('#fff')
@@ -22,12 +26,14 @@ export default class mpos_download_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			visible: false
+			visible: false,
+			downloadUrl: ''
 		};
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
 		urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
+		this.getDownloadUrl();
 	}
 	componentDidMount() {
 		entryPageTime = new Date();
@@ -44,6 +50,23 @@ export default class mpos_download_page extends PureComponent {
 			entryPageTime = '';
 		}
 	}
+
+	getDownloadUrl = () => {
+		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+			(res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState({
+						downloadUrl: res.data
+					});
+				} else {
+					res.msgInfo && this.props.toast.info(res.msgInfo);
+				}
+			},
+			(error) => {
+				error.msgInfo && this.props.toast.info(error.msgInfo);
+			}
+		);
+	};
 
 	downloadClick = () => {
 		if (urlParams && urlParams.wxTestFrom) {
@@ -66,8 +89,9 @@ export default class mpos_download_page extends PureComponent {
 			buriedPointEvent(other.mposDownloadBtnClick, {
 				device_type: 'ANDROID'
 			});
-			window.location.href =
-				'http://a.app.qq.com/o/simple.jsp?pkgname=com.suixingpay.cashloan&ckey=CK1438101189290';
+			window.location.href = this.state.downloadUrl;
+			// window.location.href =
+			// 	'http://a.app.qq.com/o/simple.jsp?pkgname=com.suixingpay.cashloan&ckey=CK1438101189290';
 		}
 	};
 
