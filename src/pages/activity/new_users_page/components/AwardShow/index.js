@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-17 17:59:44
+ * @LastEditTime: 2019-10-21 17:01:09
  */
 import React, { Component } from 'react';
 import { Carousel } from 'antd-mobile';
@@ -92,10 +92,11 @@ export default class AwardShow extends Component {
 	};
 
 	render() {
+		const { className } = this.props;
 		const awards = this.getAwardList();
 		return (
 			<Carousel
-				className={style.awardCarousel}
+				className={[style.awardCarousel, className].join(' ')}
 				vertical
 				dots={false}
 				dragging={false}
