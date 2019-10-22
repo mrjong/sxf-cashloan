@@ -1,10 +1,11 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-22 14:51:18
+ * @LastEditTime: 2019-10-22 16:00:38
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
+import qs from 'qs';
 import styles from './index.scss';
 import activity_bg from './img/activityBg.png';
 import submit_btn1 from './img/btn_bg.png';
@@ -14,8 +15,9 @@ import wallet_img2 from './img/wallet_img2.png';
 import wallet_img3 from './img/wallet_img3.png';
 import shadow_img from './img/shadow_img.png';
 import rules_bg from './img/rules_bg.png';
-// import { buriedPointEvent } from 'utils/analytins';
-// import { activity } from 'utils/analytinsType';
+import Cookie from 'js-cookie';
+import { buriedPointEvent } from 'utils/analytins';
+import { activity } from 'utils/analytinsType';
 // import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
 
@@ -30,33 +32,115 @@ export default class new_users_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			userStsInf: null,
-			isOpen: false
+			userStsCode: null,
+			isOpen: false,
+			isAppOpen: false // 是否是app webview打开
 		};
 	}
 
 	componentWillMount() {
-		// buriedPointEvent(activity.mayReceiveBtn);
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.fromApp) {
+			this.setState(
+				{
+					isAppOpen: true
+				},
+				() => {
+					this.checkUserStatus();
+				}
+			);
+		}
 	}
 
 	componentDidMount() {
-		// buriedPointEvent(activity.mayReceiveBtn);
+		const { isAppOpen } = this.state;
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		if (queryData.comeFrom) {
+			buriedPointEvent(activity.newUserActivityEntry, {
+				entry: queryData.comeFrom
+			});
+		}
+		if (isAppOpen) {
+			if (queryData.activityToken) {
+				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+			} else {
+				Cookie.remove('fin-v-card-token');
+			}
+		}
 	}
 
+	prePressTime2 = 0;
 	// 点击领取按钮
 	goTo = () => {
-		const { userStsInf } = this.state;
-		console.log(userStsInf, 'userStsInf');
-		this.setState({
-			isOpen: true
-		});
-		if (userStsInf) {
-			this.getCoupon();
-		} else if (userStsInf) {
-			// todo
-		} else {
-			this.props.toast.info();
+		const nowTime = Date.now();
+		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
+			this.prePressTime2 = nowTime;
+			const { userStsCode, isAppOpen } = this.state;
+			console.log(userStsCode, 'userStsCode');
+			this.setState({
+				isOpen: true
+			});
+			if (isAppOpen && Cookie.get('fin-v-card-token')) {
+				if (userStsCode) {
+					buriedPointEvent(activity.newUserActivityGetNow, {
+						receiveSts: this.transferCode().buryMsg
+					});
+					this.getCoupon();
+				} else if (userStsCode) {
+					buriedPointEvent(activity.newUserActivityUseNow);
+					// 已领取，去使用 通知app做相关操作
+					const activityInf = {
+						isWelfare: true,
+						operation: 'useCoupon'
+					};
+					setTimeout(() => {
+						window.postMessage(JSON.stringify(activityInf), () => {});
+					}, 0);
+				} else {
+					buriedPointEvent(activity.newUserActivityGetNow, {
+						receiveSts: this.transferCode().buryMsg
+					});
+					this.props.toast.info(this.transferCode().showMsg);
+				}
+			} else {
+				this.props.toast.info('请登录还到app进行操作');
+			}
 		}
+	};
+
+	// 转义后台返回的code
+	transferCode = () => {
+		const { userStsCode } = this.state;
+		let showMsg = '';
+		let buryMsg = '';
+		switch (userStsCode) {
+			case '00':
+				showMsg = '可以领取';
+				buryMsg = '可以领取';
+				break;
+			case '01':
+				showMsg = '此次活动随行付plus用户注册还到专享';
+				buryMsg = '非mpos用户';
+				break;
+			case '02':
+				showMsg = '已超过参与时间';
+				buryMsg = '已超过参与时间';
+				break;
+			case '03':
+				showMsg = '已领取，去使用';
+				buryMsg = '已领取，去使用';
+				break;
+			case '04':
+				showMsg = '活动期间只能获取一次';
+				buryMsg = '已失效';
+				break;
+			default:
+				break;
+		}
+		return {
+			showMsg,
+			buryMsg
+		};
 	};
 
 	// 查询用户领取的状态
@@ -64,7 +148,7 @@ export default class new_users_page extends PureComponent {
 		this.props.$fetch.post(API.noviceJudge).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
 				this.setState({
-					userStsInf: res.data
+					userStsCode: res.data
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -77,7 +161,7 @@ export default class new_users_page extends PureComponent {
 		this.props.$fetch.post(API.noviceReceive).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
 				this.setState({
-					userStsInf: res.data
+					userStsCode: res.data
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -86,8 +170,8 @@ export default class new_users_page extends PureComponent {
 	};
 
 	render() {
-		const { isOpen, userStsInf } = this.state;
-		const submitBtnBg = userStsInf ? submit_btn2 : submit_btn1;
+		const { isOpen, userStsCode } = this.state;
+		const submitBtnBg = userStsCode ? submit_btn2 : submit_btn1;
 		return (
 			<div className={styles.new_users_page}>
 				<div>
