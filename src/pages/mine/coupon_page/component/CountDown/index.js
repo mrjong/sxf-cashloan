@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-10-22 17:21:05
+ */
 import React from 'react';
 import styles from './index.scss';
 export default class CountDown extends React.Component {
@@ -51,15 +56,16 @@ export default class CountDown extends React.Component {
 	};
 	render() {
 		const { endRender } = this.state;
+		const { className } = this.props;
 		return (
 			<span>
 				{endRender && this.state.day > 0 && this.props.type == 'day' ? (
 					<span>
-						<span className={styles.hour}>{this.state.day}</span>天
+						<span className={[styles.hour, className].join(' ')}>{this.state.day}</span> 天
 					</span>
 				) : (
 					endRender && (
-						<span className={styles.hour}>
+						<span className={[styles.hour, className].join(' ')}>
 							<span>{this.state.hour}:</span>
 							{this.state.minute}:{this.state.second}s
 						</span>

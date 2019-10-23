@@ -110,19 +110,33 @@
 		width: 384px;
 	}
 	.rulesContent {
-    padding: 50px 37px 30px;
+		padding: 50px 37px 30px;
 		background: rgba(255, 255, 255, 0.09);
-    border-radius: 21px;
-    font-size:26px;
-    color: #fff;
-    line-height:37px;
-    p{
-      text-align: left;
-      margin-bottom: 16px;
-    }
-    p:last-child {
-      margin-bottom: 0;
-    }
+		border-radius: 21px;
+		font-size: 26px;
+		color: #fff;
+		line-height: 37px;
+		p {
+			text-align: left;
+			margin-bottom: 16px;
+		}
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+	.validDate {
+		position: absolute;
+		width: 100%;
+		bottom: 30px;
+		font-size: 28px;
+		font-weight: 500;
+		color: #fff;
+		line-height: 40px;
+		text-align: center;
+		z-index: 3;
+		.validDateTxt {
+			color: #ff0707;
+		}
 	}
 }
 

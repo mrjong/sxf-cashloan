@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-22 16:00:38
+ * @LastEditTime: 2019-10-22 17:16:18
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -20,6 +20,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 // import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
+import CountDown from '../../mine/coupon_page/component/CountDown';
 
 const API = {
 	noviceJudge: '/novice/judge', // 判断用户是否满足领取条件接口
@@ -32,7 +33,8 @@ export default class new_users_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			userStsCode: null,
+			userStsCode: null, // 用户状态code
+			validEndTm: '20191022180346', // 优惠劵有效期
 			isOpen: false,
 			isAppOpen: false // 是否是app webview打开
 		};
@@ -76,12 +78,12 @@ export default class new_users_page extends PureComponent {
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
 			const { userStsCode, isAppOpen } = this.state;
-			console.log(userStsCode, 'userStsCode');
-			this.setState({
-				isOpen: true
-			});
+
 			if (isAppOpen && Cookie.get('fin-v-card-token')) {
 				if (userStsCode) {
+					this.setState({
+						isOpen: true
+					});
 					buriedPointEvent(activity.newUserActivityGetNow, {
 						receiveSts: this.transferCode().buryMsg
 					});
@@ -147,8 +149,14 @@ export default class new_users_page extends PureComponent {
 	checkUserStatus = () => {
 		this.props.$fetch.post(API.noviceJudge).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
+				if (res.data) {
+					this.setState({
+						isOpen: true
+					});
+				}
 				this.setState({
-					userStsCode: res.data
+					userStsCode: res.data,
+					validEndTm: res.data
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -169,8 +177,22 @@ export default class new_users_page extends PureComponent {
 		});
 	};
 
+	// 处理后台返回的时间
+	getTime = (time) => {
+		if (!time) {
+			return '';
+		}
+		const y = time.substring(0, 4);
+		const m = time.substring(4, 6);
+		const d = time.substring(6, 8);
+		const h = time.substring(8, 10);
+		const m1 = time.substring(10, 12);
+		const s = time.substring(12, 14);
+		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
+	};
+
 	render() {
-		const { isOpen, userStsCode } = this.state;
+		const { isOpen, userStsCode, validEndTm } = this.state;
 		const submitBtnBg = userStsCode ? submit_btn2 : submit_btn1;
 		return (
 			<div className={styles.new_users_page}>
@@ -185,6 +207,27 @@ export default class new_users_page extends PureComponent {
 							className={isOpen ? [styles.img2, styles.slideImg].join(' ') : styles.img2}
 						/>
 						<img src={wallet_img3} className={styles.img3} />
+						{/* 只有已领取未使用的状态下才展示有效期 */}
+						{/* {userStsCode ? ( */}
+						<div className={styles.validDate}>
+							有效期还剩{' '}
+							{validEndTm && (
+								<CountDown
+									endTime={this.getTime(validEndTm)}
+									timeOver={() => {
+										let now = +new Date();
+										let thisTime = +new Date(this.getTime(validEndTm));
+										if (now > thisTime) {
+											return;
+										}
+										this.checkUserStatus();
+									}}
+									type="day"
+									className={styles.validDateTxt}
+								/>
+							)}
+						</div>
+						{/* ) : null} */}
 					</div>
 					{/* 特殊阴影 */}
 					<img src={shadow_img} className={styles.shadowImg} />
