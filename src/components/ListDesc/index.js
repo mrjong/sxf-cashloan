@@ -17,6 +17,14 @@ export default class ButtonCustom extends React.PureComponent {
 		onClick: () => {}
 	};
 
+	showSubTextDesc = (name) => {
+		if (name === '服务费') {
+			return '（由平台方收取）';
+		} else if (name === '本金' || name === '利息') {
+			return '（由出借方收取）';
+		}
+	};
+
 	render() {
 		const { listdescinfo = [], isClear } = this.props;
 		return (
@@ -45,6 +53,7 @@ export default class ButtonCustom extends React.PureComponent {
 												}
 											>
 												{item.feeNm}
+												<span className={styles.list_sub_desc}>{this.showSubTextDesc(item.feeNm)}</span>
 											</label>
 										</div>
 										<div

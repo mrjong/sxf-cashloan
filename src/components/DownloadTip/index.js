@@ -17,6 +17,7 @@ export default class DownloadTip extends React.Component {
 					textAlign: 'center',
 					padding: '.1rem .1rem'
 				}}
+				mask
 				overlay={[
 					<div
 						key={0}
@@ -25,8 +26,9 @@ export default class DownloadTip extends React.Component {
 							padding: '.1rem .1rem'
 						}}
 					>
-						请点击右上角<br></br>
-						选择“浏览器中打开”
+						请点击右上角···按钮
+						<br />
+						选择在浏览器中打开
 					</div>
 				]}
 				align={{
