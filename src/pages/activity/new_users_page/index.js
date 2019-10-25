@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-22 17:16:18
+ * @LastEditTime: 2019-10-25 14:56:44
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -52,6 +52,7 @@ export default class new_users_page extends PureComponent {
 				}
 			);
 		}
+		// this.checkUserStatus();
 	}
 
 	componentDidMount() {
@@ -77,18 +78,16 @@ export default class new_users_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
+			// const { userStsCode } = this.state;
 			const { userStsCode, isAppOpen } = this.state;
 
 			if (isAppOpen && Cookie.get('fin-v-card-token')) {
-				if (userStsCode) {
-					this.setState({
-						isOpen: true
-					});
+				if (userStsCode === '00') {
 					buriedPointEvent(activity.newUserActivityGetNow, {
 						receiveSts: this.transferCode().buryMsg
 					});
 					this.getCoupon();
-				} else if (userStsCode) {
+				} else if (userStsCode == '04') {
 					buriedPointEvent(activity.newUserActivityUseNow);
 					// 已领取，去使用 通知app做相关操作
 					const activityInf = {
@@ -121,7 +120,7 @@ export default class new_users_page extends PureComponent {
 				buryMsg = '可以领取';
 				break;
 			case '01':
-				showMsg = '此次活动随行付plus用户注册还到专享';
+				showMsg = '此次活动随行付plus用户专享';
 				buryMsg = '非mpos用户';
 				break;
 			case '02':
@@ -129,12 +128,12 @@ export default class new_users_page extends PureComponent {
 				buryMsg = '已超过参与时间';
 				break;
 			case '03':
-				showMsg = '已领取，去使用';
-				buryMsg = '已领取，去使用';
-				break;
-			case '04':
 				showMsg = '活动期间只能获取一次';
 				buryMsg = '已失效';
+				break;
+			case '04':
+				showMsg = '已领取，去使用';
+				buryMsg = '已领取，去使用';
 				break;
 			default:
 				break;
@@ -149,14 +148,14 @@ export default class new_users_page extends PureComponent {
 	checkUserStatus = () => {
 		this.props.$fetch.post(API.noviceJudge).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
-				if (res.data) {
+				if (res.data.status === '04' || res.data.status === '03') {
 					this.setState({
 						isOpen: true
 					});
 				}
 				this.setState({
-					userStsCode: res.data,
-					validEndTm: res.data
+					userStsCode: res.data.status,
+					validEndTm: res.data.validTm
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -169,7 +168,9 @@ export default class new_users_page extends PureComponent {
 		this.props.$fetch.post(API.noviceReceive).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
 				this.setState({
-					userStsCode: res.data
+					isOpen: true,
+					userStsCode: res.data.status,
+					validEndTm: res.data.validTm
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -193,7 +194,7 @@ export default class new_users_page extends PureComponent {
 
 	render() {
 		const { isOpen, userStsCode, validEndTm } = this.state;
-		const submitBtnBg = userStsCode ? submit_btn2 : submit_btn1;
+		const submitBtnBg = userStsCode === '04' ? submit_btn2 : submit_btn1;
 		return (
 			<div className={styles.new_users_page}>
 				<div>
@@ -208,26 +209,26 @@ export default class new_users_page extends PureComponent {
 						/>
 						<img src={wallet_img3} className={styles.img3} />
 						{/* 只有已领取未使用的状态下才展示有效期 */}
-						{/* {userStsCode ? ( */}
-						<div className={styles.validDate}>
-							有效期还剩{' '}
-							{validEndTm && (
-								<CountDown
-									endTime={this.getTime(validEndTm)}
-									timeOver={() => {
-										let now = +new Date();
-										let thisTime = +new Date(this.getTime(validEndTm));
-										if (now > thisTime) {
-											return;
-										}
-										this.checkUserStatus();
-									}}
-									type="day"
-									className={styles.validDateTxt}
-								/>
-							)}
-						</div>
-						{/* ) : null} */}
+						{userStsCode === '04' ? (
+							<div className={styles.validDate}>
+								有效期还剩{' '}
+								{validEndTm && (
+									<CountDown
+										endTime={this.getTime(validEndTm)}
+										timeOver={() => {
+											let now = +new Date();
+											let thisTime = +new Date(this.getTime(validEndTm));
+											if (now > thisTime) {
+												return;
+											}
+											this.checkUserStatus();
+										}}
+										type="day"
+										className={styles.validDateTxt}
+									/>
+								)}
+							</div>
+						) : null}
 					</div>
 					{/* 特殊阴影 */}
 					<img src={shadow_img} className={styles.shadowImg} />
