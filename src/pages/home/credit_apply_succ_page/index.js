@@ -8,6 +8,8 @@ import { store } from 'utils/store';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import { NoticeBar } from 'antd-mobile';
+
 let autId = '';
 const API = {
 	isBankCard: '/my/chkCard', // 是否绑定了银行卡
@@ -144,6 +146,19 @@ export default class credit_apply_succ_page extends PureComponent {
 						});
 					}}
 				/>
+				<div className={style.fix_bottom}>
+					<NoticeBar
+						marqueeProps={{
+							loop: true,
+							leading: 1000,
+							trailing: 1000,
+							style: { color: '#C9CDD5', fontSize: '0.22rem' }
+						}}
+						icon={null}
+					>
+						长时间没有评估结果可联系客服，最长不超过3天
+					</NoticeBar>
+				</div>
 			</div>
 		);
 	}
