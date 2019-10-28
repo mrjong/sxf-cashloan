@@ -9,8 +9,13 @@
     // letter-spacing: 1px;
     height: 45px;
     line-height: 45px;
-    span {
-      color: #fff;
+    color: #fff;
+    :global {
+      .txtStyle {
+        font-family: 'PingFangSC-Medium';
+        font-weight: 600;
+      }
     }
   }
 }
+

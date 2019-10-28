@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-22 15:58:43
+ * @LastEditTime: 2019-10-28 12:54:15
  */
 import React, { Component } from 'react';
 import { Carousel } from 'antd-mobile';
@@ -77,7 +77,7 @@ export default class AwardShow extends Component {
 	// 拼凑号码+文字
 	getNode = () => {
 		let str = '';
-		str = `${this.randomPhoneNum()} ${this.randomAwardUser()} 领取了新手礼 成功借款并减免了${this.randomAwardAmt()}元利息`;
+		str = `${this.randomPhoneNum()} ${this.randomAwardUser()} <span class="txtStyle">领取了新手礼</span> 成功借款并减免了<span class="txtStyle">${this.randomAwardAmt()}元</span>利息`;
 		return str;
 	};
 
@@ -105,9 +105,7 @@ export default class AwardShow extends Component {
 			>
 				{/* {this.getNode()} */}
 				{awards.map((item, index) => (
-					<div className={style.carouselItem} key={index}>
-						{item}
-					</div>
+					<div className={style.carouselItem} key={index} dangerouslySetInnerHTML={{ __html: item }} />
 				))}
 			</Carousel>
 		);
