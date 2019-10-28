@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-25 14:56:44
+ * @LastEditTime: 2019-10-28 11:27:30
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -36,7 +36,8 @@ export default class new_users_page extends PureComponent {
 			userStsCode: null, // 用户状态code
 			validEndTm: '20191022180346', // 优惠劵有效期
 			isOpen: false,
-			isAppOpen: false // 是否是app webview打开
+			isAppOpen: false, // 是否是app webview打开
+			registerChannel: '' // 注册渠道
 		};
 	}
 
@@ -52,15 +53,20 @@ export default class new_users_page extends PureComponent {
 				}
 			);
 		}
-		// this.checkUserStatus();
+		if (queryData.regChannel) {
+			this.setState({
+				registerChannel: queryData.regChannel
+			});
+		}
 	}
 
 	componentDidMount() {
-		const { isAppOpen } = this.state;
+		const { isAppOpen, registerChannel } = this.state;
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.comeFrom) {
 			buriedPointEvent(activity.newUserActivityEntry, {
-				entry: queryData.comeFrom
+				entry: queryData.comeFrom,
+				regChannel: registerChannel
 			});
 		}
 		if (isAppOpen) {
@@ -78,17 +84,19 @@ export default class new_users_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
-			// const { userStsCode } = this.state;
-			const { userStsCode, isAppOpen } = this.state;
+			const { userStsCode, isAppOpen, registerChannel } = this.state;
 
 			if (isAppOpen && Cookie.get('fin-v-card-token')) {
 				if (userStsCode === '00') {
 					buriedPointEvent(activity.newUserActivityGetNow, {
-						receiveSts: this.transferCode().buryMsg
+						receiveSts: this.transferCode().buryMsg,
+						regChannel: registerChannel
 					});
 					this.getCoupon();
 				} else if (userStsCode == '04') {
-					buriedPointEvent(activity.newUserActivityUseNow);
+					buriedPointEvent(activity.newUserActivityUseNow, {
+						regChannel: registerChannel
+					});
 					// 已领取，去使用 通知app做相关操作
 					const activityInf = {
 						isWelfare: true,
@@ -99,7 +107,8 @@ export default class new_users_page extends PureComponent {
 					}, 0);
 				} else {
 					buriedPointEvent(activity.newUserActivityGetNow, {
-						receiveSts: this.transferCode().buryMsg
+						receiveSts: this.transferCode().buryMsg,
+						regChannel: registerChannel
 					});
 					this.props.toast.info(this.transferCode().showMsg);
 				}
