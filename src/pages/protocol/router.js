@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-09 13:44:12
+ * @LastEditTime: 2019-10-28 15:14:41
  */
 export default [
 	{
@@ -68,5 +68,17 @@ export default [
 		zhName: 'xyfxgzs',
 		title: '信用风险告知书',
 		component: () => import('pages/protocol/personal_credit_page')
+	},
+	{
+		path: '/protocol/credit_query_page',
+		zhName: 'grxyxxcxsqs',
+		title: '个人信用信息查询授权书',
+		component: () => import('pages/protocol/credit_query_page')
+	},
+	{
+		path: '/protocol/overdue_effect_page',
+		zhName: 'grxyyqyxgzs',
+		title: '个人信用逾期影响告知书',
+		component: () => import('pages/protocol/overdue_effect_page')
 	}
 ];
