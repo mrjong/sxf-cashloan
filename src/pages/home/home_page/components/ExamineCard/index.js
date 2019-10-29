@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-26 12:20:37
+ * @LastEditTime: 2019-10-29 10:35:41
  */
 import React from 'react';
 import style from './index.scss';
@@ -17,7 +17,9 @@ export default class ExamineCard extends React.PureComponent {
 			<WhiteCard showData={showData} handleClick={handleClick}>
 				<div
 					className={
-						showData.type !== 'LN0004' && showData.type !== 'LN0005' ? style.titleBox : style.titleBox2
+						showData.type !== 'LN0004' && showData.type !== 'LN0005' && showData.type !== 'LN0012'
+							? style.titleBox
+							: style.titleBox2
 					}
 				>
 					<div className={style.title}>{showData.subtitle}</div>
@@ -29,7 +31,7 @@ export default class ExamineCard extends React.PureComponent {
 						</div>
 					) : null}
 				</div>
-				{showData.type !== 'LN0004' && showData.type !== 'LN0005' ? (
+				{showData.type !== 'LN0004' && showData.type !== 'LN0005' && showData.type !== 'LN0012' ? (
 					<div className={style.bg}>
 						<div className={style.line} />
 						<div className={style.item}>

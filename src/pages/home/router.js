@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-10-29 11:16:20
+ */
 export default [
 	{
 		path: '/home/home',
@@ -104,5 +109,11 @@ export default [
 		zhName: 'jkxz',
 		title: '借款须知',
 		component: () => import('pages/home/payment_notes')
+	},
+	{
+		path: '/home/loan_robot_succ_page',
+		zhName: 'ddrgsh',
+		title: '等待人工审核',
+		component: () => import('pages/home/loan_robot_succ_page')
 	}
 ];
