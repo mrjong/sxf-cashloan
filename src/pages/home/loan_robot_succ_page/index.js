@@ -17,7 +17,7 @@ let queryData = null;
 
 @setBackGround('#fff')
 @fetch.inject()
-export default class loan_person_robot_page extends PureComponent {
+export default class loan_robot_succ_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {};

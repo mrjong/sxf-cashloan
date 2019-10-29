@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-09-17 11:50:42
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-10-29 11:45:36
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -336,6 +336,7 @@ if (window.history && window.history.pushState) {
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				case '/home/loan_person_succ_page':
+				case '/home/loan_robot_succ_page':
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				default:
