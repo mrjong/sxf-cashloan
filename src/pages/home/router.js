@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-29 11:16:20
+ * @LastEditTime: 2019-10-29 13:50:41
  */
 export default [
 	{
@@ -112,7 +112,7 @@ export default [
 	},
 	{
 		path: '/home/loan_robot_succ_page',
-		zhName: 'ddrgsh',
+		zhName: 'ddjqrsh',
 		title: '等待人工审核',
 		component: () => import('pages/home/loan_robot_succ_page')
 	}

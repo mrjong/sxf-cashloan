@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-29 11:37:05
+ * @LastEditTime: 2019-10-29 13:50:54
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -13,26 +13,35 @@ import ZButton from 'components/ButtonCustom';
 import qs from 'qs';
 import { store } from '../../../utils/store';
 
-let queryData = null;
-
 @setBackGround('#fff')
 @fetch.inject()
 export default class loan_robot_succ_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			queryData: null
+		};
+	}
+
+	componentWillMount() {
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		queryData &&
+			this.setState({
+				queryData
+			});
 	}
 
 	componentDidMount() {
-		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (queryData.apptoken) {
+		const { queryData } = this.state;
+		if (queryData && queryData.apptoken) {
 			//如果从APP过来
 			store.setToken(queryData.apptoken);
 		}
 	}
 
 	handleButtonClick = () => {
-		if (queryData.apptoken) {
+		const { queryData } = this.state;
+		if (queryData && queryData.apptoken) {
 			setTimeout(() => {
 				window.postMessage('我知道了', () => {});
 			}, 0);
@@ -42,6 +51,7 @@ export default class loan_robot_succ_page extends PureComponent {
 	};
 
 	render() {
+		const { queryData } = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -50,7 +60,7 @@ export default class loan_robot_succ_page extends PureComponent {
 				<div className={style.topBox}>
 					<div className={style.title}>需要人工审核，耐心等待</div>
 					<div className={style.subtitle}>
-						<a>021-60634627</a>的审核电话
+						<a>{queryData && queryData.telNo}</a>的审核电话
 						<br />
 						至少会拨打3次，最长不超过3个工作日
 					</div>
@@ -67,7 +77,7 @@ export default class loan_robot_succ_page extends PureComponent {
 						<div className={[style.title, style.blue].join(' ')}>
 							<div className={style.step_circle} />
 							<p style={{ display: 'flex', alignItems: 'center' }}>
-								<span>请注意接听021-60634627的审核电话</span>
+								<span>请注意接听{queryData && queryData.telNo}的审核电话</span>
 							</p>
 						</div>
 						<div className={style.line} />
