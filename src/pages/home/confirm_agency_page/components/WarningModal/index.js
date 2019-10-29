@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-28 18:05:14
+ * @LastEditTime: 2019-10-29 10:14:58
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -75,10 +75,26 @@ export default class InsuranceModal extends React.PureComponent {
 						</p>
 						<h3 className={styles.subTit}>二、为了避免影响您的信用，请您务必认真阅读以下内容：</h3>
 						<p className={styles.subCont}>
-							① <span className={styles.underlineText}>个人信用信息查询授权书</span>
+							①{' '}
+							<span
+								className={styles.underlineText}
+								onClick={() => {
+									this.go('credit_query_page');
+								}}
+							>
+								个人信用信息查询授权书
+							</span>
 						</p>
 						<p className={styles.subCont}>
-							② <span className={styles.underlineText}>个人信用逾期影响告知书</span>
+							②{' '}
+							<span
+								className={styles.underlineText}
+								onClick={() => {
+									this.go('overdue_effect_page');
+								}}
+							>
+								个人信用逾期影响告知书
+							</span>
 						</p>
 						<h3 className={[styles.subTit, styles.spaceStyle].join(' ')}>
 							三、如您的逾期记录上传至征信平台后将会对您产生以下影响：
