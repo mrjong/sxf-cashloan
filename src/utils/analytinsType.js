@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 12:10:40
+ * @LastEditTime: 2019-10-29 13:35:44
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -75,6 +75,10 @@ const home = {
 	protocolSmsFail: `${prefix}_HOME_PROTOCOL_SMS_FAIL`, // 签约借款页协议绑卡校验失败埋点
 	protocolBindFail: `${prefix}_HOME_PROTOCOL_BIND_FAIL`, // 签约借款页协议绑卡绑定失败埋点
 	protocolBindBtnClick: `${prefix}_HOME_PROTOCOL_MODAL_BTN_CLICK`, // 签约借款页协议绑卡短验弹框按钮点击
+	warningModalClose: `${prefix}_HOME_WARNING_MODAL_CLOSE`, // 签约借款-警示-关闭
+	warningTips: `${prefix}_HOME_WARNING_TIPS`, // 签约借款-警示-继续申请借款-提示
+	warningProtoClick: `${prefix}_HOME_WARNING_PROTOCOL_CLICK`, // 签约借款-警示-勾选协议
+	loanBtnClick: `${prefix}_HOME_BORROWING_SUBMIT_BTN_CLICK`, // 签约借款-点击签约借款按钮 (只有代偿)
 
 	dialogInformation: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION`,
 	dialogInformation_wait: `${prefix}_QUESTION_FEEDBACK_BASIC_INFORMATION_CONTINUE`,

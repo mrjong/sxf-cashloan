@@ -1,12 +1,12 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-29 10:14:58
+ * @LastEditTime: 2019-10-29 12:06:31
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
-// import { home } from 'utils/analytinsType';
+import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
 
@@ -26,7 +26,7 @@ export default class InsuranceModal extends React.PureComponent {
 	closeModal = () => {
 		const { closeWarningModal, prodType } = this.props;
 		closeWarningModal && closeWarningModal();
-		buriedPointEvent('DC_HOME_WARNING_MODAL_CLOSE', {
+		buriedPointEvent(home.warningModalClose, {
 			prodType
 		});
 	};
@@ -41,7 +41,7 @@ export default class InsuranceModal extends React.PureComponent {
 			handleConfirm && handleConfirm();
 		} else {
 			// 签约借款-警示-继续申请借款-提示 埋点
-			buriedPointEvent('DC_HOME_WARNING_TIPS', {
+			buriedPointEvent(home.warningTips, {
 				prodType
 			});
 			toast.info('请同意并勾选协议才能继续申请借款', 3);
@@ -51,7 +51,7 @@ export default class InsuranceModal extends React.PureComponent {
 	checkAgreement = () => {
 		const { prodType } = this.props;
 		const { checkBox1 } = this.state;
-		buriedPointEvent('DC_HOME_WARNING_PROTOCOL_CLICK', {
+		buriedPointEvent(home.warningProtoClick, {
 			isSelected: checkBox1,
 			prodType
 		});

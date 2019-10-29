@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-28 18:09:50
+ * @LastEditTime: 2019-10-29 13:35:22
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -794,6 +794,8 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.toast.info('请先购买保险');
 			return;
 		}
+		// 埋点
+		buriedPointEvent(home.loanBtnClick);
 		this.checkProtocolBindCard();
 		// this.requestBindCardState();
 	};
