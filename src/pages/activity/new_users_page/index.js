@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-28 11:27:30
+ * @LastEditTime: 2019-10-30 16:44:05
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -34,7 +34,7 @@ export default class new_users_page extends PureComponent {
 		super(props);
 		this.state = {
 			userStsCode: null, // 用户状态code
-			validEndTm: '20191022180346', // 优惠劵有效期
+			validEndTm: '', // 优惠劵有效期
 			isOpen: false,
 			isAppOpen: false, // 是否是app webview打开
 			registerChannel: '' // 注册渠道
@@ -143,6 +143,10 @@ export default class new_users_page extends PureComponent {
 			case '04':
 				showMsg = '已领取，去使用';
 				buryMsg = '已领取，去使用';
+				break;
+			case '05':
+				showMsg = '您是非活动时间注册还到，不符合领取条件';
+				buryMsg = '您是非活动时间注册还到，不符合领取条件';
 				break;
 			default:
 				break;
