@@ -154,7 +154,7 @@ export default class RepayPlanModal extends React.PureComponent {
 							: `本平台仅收取服务费，利息由实际出借人收取，综合成本不超过${(
 									((totalMoney - totalPrincipal) / totalPrincipal / periods) *
 									12
-							  ).toFixed(2)}%/年`}
+							  ).toFixed(2) * 100}%/年`}
 					</NoticeBar>
 				</div>
 			</Modal>
