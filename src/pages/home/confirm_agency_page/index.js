@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-29 13:35:22
+ * @LastEditTime: 2019-10-30 15:22:17
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -204,21 +204,11 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 
-	// 检查是否需要人审
+	// 检查是否需要人审或者机器人审核
 	getExamineSts = () => {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				this.setState(
-					{
-						isNeedExamine: res.data && res.data.flag === '01',
-						examineData: {
-							creadNo: res.data && res.data.creadNo
-						}
-					},
-					() => {
-						this.jumpRouter();
-					}
-				);
+				res.data && this.jumpRouter(res.data);
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -419,12 +409,16 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	// 跳转页面
-	jumpRouter = () => {
-		const { isNeedExamine, examineData } = this.state;
-		if (isNeedExamine) {
+	jumpRouter = (res) => {
+		if (res.flag === '01') {
 			this.props.history.push({
 				pathname: '/home/loan_person_succ_page',
-				search: `?creadNo=${examineData.creadNo}`
+				search: `?creadNo=${res.creadNo}`
+			});
+		} else if (res.flag === '02') {
+			this.props.history.replace({
+				pathname: '/home/loan_robot_succ_page',
+				search: `?telNo=${res.telNo}`
 			});
 		} else {
 			const { goData } = this.state;

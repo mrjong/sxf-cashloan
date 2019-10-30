@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-29 11:41:20
+ * @LastEditTime: 2019-10-30 15:22:27
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -585,20 +585,12 @@ export default class home_page extends PureComponent {
 	getRobotSts = () => {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				this.setState(
-					{
-						isNeedExamine: res.data && res.data.flag === '01',
-						examineData: {
-							creadNo: res.data && res.data.creadNo
-						}
-					},
-					() => {
-						this.props.history.push({
-							pathname: '/home/loan_robot_succ_page',
-							search: `?telNo=${this.state.examineData.creadNo}`
-						});
-					}
-				);
+				if (res.data && res.data.flag === '02') {
+					this.props.history.push({
+						pathname: '/home/loan_robot_succ_page',
+						search: `?telNo=${res.data && res.data.telNo}`
+					});
+				}
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
