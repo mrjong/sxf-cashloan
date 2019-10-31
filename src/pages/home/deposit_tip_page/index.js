@@ -73,40 +73,21 @@ export default class login_page extends PureComponent {
 					<div className={styles.sub_title}>{queryData.cashMoney}额度已到账</div>
 				</div>
 				<ButtonCustom className={styles.joinBtn} onClick={this.downloadClick}>
-					下载APP提现
+					下载APP使用
 				</ButtonCustom>
 				<div>
 					<ul className={styles.boxs}>
 						<li className={styles.item}>
-							<i className={[styles.item1, styles.icon].join(' ')} />
-							<div>
-								<div className={styles.title}>额度高</div>
-								<div className={styles.subtitle}>
-									平均提额<span>50%</span>
-								</div>
-							</div>
-						</li>
-						<li className={styles.item}>
 							<i className={[styles.item2, styles.icon].join(' ')} />
-							<div>
-								<div className={styles.title}>放款快</div>
-								<div className={styles.subtitle}>
-									提款储蓄卡快至<span>3s</span>
-								</div>
-							</div>
+							<div className={styles.title}>放款快</div>
 						</li>
 						<li className={styles.item}>
 							<i className={[styles.item3, styles.icon].join(' ')} />
-							<div>
-								<div className={styles.title}>
-									利率低
-									<i />
-								</div>
-								<div className={styles.subtitle}>
-									月利率低至<span>1.2%</span>
-									<span className={styles.midLine}>1.5%</span>
-								</div>
-							</div>
+							<div className={styles.title}>利率低</div>
+						</li>
+						<li className={styles.item}>
+							<i className={[styles.item1, styles.icon].join(' ')} />
+							<div className={styles.title}>安全合规</div>
 						</li>
 					</ul>
 				</div>

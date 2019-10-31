@@ -69,5 +69,19 @@ export default [
 		title: '下载App进入专享通道',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testB_download_page')
+	},
+	{
+		path: '/others/loan_introduce_page',
+		zhName: 'jkgl',
+		title: '借款攻略',
+		arrowHide: 'empty',
+		component: () => import('pages/others/loan_introduce_page')
+	},
+	{
+		path: '/others/service_pwd_guide',
+		zhName: 'fwmm',
+		title: '',
+		arrowHide: 'empty',
+		component: () => import('pages/others/service_pwd_guide')
 	}
 ];

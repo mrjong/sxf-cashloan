@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-25 14:58:33
+ * @LastEditTime: 2019-10-31 10:40:13
  */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
@@ -143,7 +143,6 @@ module.exports = function(options) {
 				// 	changeOrigin: true //是否跨域
 				// },
 				'/shence': {
-					target: '/sa', //目标接口域名
 					target: 'https://sa.vbillbank.com/sa/sa?project=default',
 					changeOrigin: true //是否跨域
 				},

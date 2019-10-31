@@ -14,10 +14,15 @@ export default class RepayPlanModal extends React.PureComponent {
 	render() {
 		const { openDrawer } = this.state;
 		const { visible, onClose, data, loanMoney, goPage } = this.props;
+		let totalMoney = 0,
+			totalPrincipal = 0,
+			periods = data && data.length;
 		const data1 =
 			data &&
 			data.map((item) => {
 				let { perdPrcpAmt, perdItrtAmt, perdNum, perdTotAmt, perdMngAmt, perdDeductAmt } = item;
+				totalMoney = totalMoney + Number(perdTotAmt); //总金额
+				totalPrincipal = totalPrincipal + Number(perdPrcpAmt); //总本金
 				return {
 					perdNum,
 					perdTotalMoney: perdTotAmt,
@@ -146,7 +151,10 @@ export default class RepayPlanModal extends React.PureComponent {
 					>
 						{this.state.openDrawer
 							? '出借人仅收取本金、利息、罚息（如有），其他费用以您与平台的约定为准'
-							: '本平台仅收取服务费，利息由实际出借人收取，综合成本不超过36%/年'}
+							: `本平台仅收取服务费，利息由实际出借人收取，综合成本不超过${(
+									((totalMoney - totalPrincipal) / totalPrincipal / periods) *
+									12
+							  ).toFixed(2) * 100}%/年`}
 					</NoticeBar>
 				</div>
 			</Modal>
