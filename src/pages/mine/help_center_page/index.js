@@ -207,7 +207,7 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{tokenFromStorage && token && queryData.pageSource !== 'weixin' && (
+				{tokenFromStorage && token && (queryData && queryData.pageSource !== 'weixin') && (
 					<div className={styles.top_nav}>{this.renderTopNav()}</div>
 				)}
 				<div className={styles.pannel}>

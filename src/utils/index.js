@@ -162,7 +162,8 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/home/loan_apply_succ_page', // 因为app直接跳转到h5的webview，所以放开
 			'/mine/qiyu', // 因为app直接跳转到h5的webview，所以放开
 			'/home/loan_person_succ_page', // 因为app直接跳转到h5的webview，所以放开
-			'/common/middle_page'
+			'/common/middle_page',
+			'/mine/help_center_page'
 		];
 		if (isWXOpen()) {
 			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
