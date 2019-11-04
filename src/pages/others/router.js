@@ -83,5 +83,12 @@ export default [
 		title: '',
 		arrowHide: 'empty',
 		component: () => import('pages/others/service_pwd_guide')
+	},
+	{
+		path: '/others/wx_download_page',
+		zhName: 'hd-wx',
+		title: '还到',
+		arrowHide: 'empty',
+		component: () => import('pages/others/wx_download_page')
 	}
 ];

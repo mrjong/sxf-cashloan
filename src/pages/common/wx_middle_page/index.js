@@ -30,10 +30,6 @@ export default class wx_middle_page extends Component {
 		// 从url截取数据
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const osType = getDeviceType();
-		// if (query && query.h5Channel) {
-		// 	// localStorage.setItem('h5Channel', query.h5Channel);
-		// 	store.setH5Channel(query.h5Channel)
-		// }
 		setH5Channel();
 		if (query && query.code) {
 			this.props.$fetch
@@ -46,8 +42,6 @@ export default class wx_middle_page extends Component {
 				.then((res) => {
 					if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {
 						//请求成功,跳到登录页(前提是不存在已登录未注册的情况)
-						console.log(res);
-						// this.props.history.replace('/login')
 						let NoLoginUrl = store.getNoLoginUrl();
 						this.jumpRouter(NoLoginUrl);
 					} else if (res.msgCode == 'WX0100') {
@@ -56,15 +50,12 @@ export default class wx_middle_page extends Component {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
-						// localStorage.setItem('authorizedNotLoginStats', 'true')
-						// this.props.history.replace('/home/home')
 						this.jumpRouter();
 					} else {
 						this.props.toast.info(res.msgInfo); //请求失败,弹出请求失败信息
 					}
 				})
-				.catch((err) => {
-					console.log(err);
+				.catch(() => {
 					this.setState({
 						errorInf:
 							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
@@ -90,14 +81,10 @@ export default class wx_middle_page extends Component {
 					}
 					if (res.msgCode == 'WX0101') {
 						//没有授权
-						console.log(res);
-						console.log(res.url);
 						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
 						window.location.href = decodeURIComponent(res.url);
 					} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
 						//已授权未登录 (静默授权为7天，7天后过期）
-						// this.props.history.replace('/home/home')
-						// this.props.history.replace('/login')
 						let NoLoginUrl = store.getNoLoginUrl();
 						this.jumpRouter(NoLoginUrl);
 					} else if (res.msgCode == 'WX0100') {
@@ -105,19 +92,16 @@ export default class wx_middle_page extends Component {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
-						// localStorage.setItem('authorizedNotLoginStats', 'true')
 						if (query.url) {
 							window.location.href = query.url;
 						} else {
-							// this.props.history.replace('/home/home')
 							this.jumpRouter();
 						}
 					} else {
 						this.props.toast.info(res.msgInfo);
 					}
 				})
-				.catch((err) => {
-					console.log(err);
+				.catch(() => {
 					this.setState({
 						errorInf:
 							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
@@ -142,7 +126,7 @@ export default class wx_middle_page extends Component {
 		} else if (window.globalConfig && window.globalConfig.wxTest) {
 			// 微信测试
 			this.props.history.replace({
-				pathname: '/others/mpos_download_page',
+				pathname: '/others/wx_download_page',
 				search: `?wxTestFrom=wx_middle_page`
 			});
 		} else {

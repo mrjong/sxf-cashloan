@@ -8,7 +8,7 @@
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	height: 100%;
-	background: #fff;
+	background: linear-gradient(0deg, rgba(80, 197, 252, 1), rgba(0, 132, 255, 1));
 	:global {
 		.am-list-item .am-input-clear {
 			width: 30px;
@@ -21,19 +21,67 @@
 			background-color: #ccc;
 		}
 	}
-	.banner {
-		width: 100%;
-		display: block;
+
+	.img_wrap {
+		position: relative;
+		padding-left: 30px;
+	}
+
+	.login_bg1 {
+		position: relative;
+		z-index: 2;
+		width: 344px;
+		height: 43px;
+		margin: 20px 0 70px;
+	}
+	.login_bg2 {
+		position: relative;
+		z-index: 2;
+		width: 567px;
+		height: 180px;
+		margin-bottom: 78px;
+	}
+	.login_bg3 {
+		position: relative;
+		z-index: 2;
+		width: 420px;
+		height: 50px;
+		margin-bottom: 20px;
+	}
+	.login_bg4 {
+		position: absolute;
+		right: 0;
+		top: 100px;
+		z-index: 1;
+		width: 750px;
+		height: 534px;
 	}
 
 	.content {
+		position: relative;
+		z-index: 3;
+		width: 690px;
 		text-align: center;
-		padding: 101px 60px 30px;
+		padding: 50px 30px 20px;
+		border-radius: 20px;
+		background-color: #fff;
+		box-sizing: border-box;
+		margin: 0 auto;
+
+		.hegui_bg {
+			width: 545px;
+			height: 124px;
+			margin: 0 auto 50px;
+			display: block;
+		}
 
 		.loginInput {
-			height: 110px;
-			line-height: 110px;
-			padding-left: 0;
+			height: 88px;
+			line-height: 88px;
+			padding-left: 40px;
+			border-radius: 44px;
+			background-color: #eff1f2;
+			margin-bottom: 24px;
 			:global {
 				.am-list-line::after {
 					background-color: #f0f1f5 !important;
@@ -42,52 +90,42 @@
 		}
 
 		input::placeholder {
-			color: #999;
+			color: #cecece;
 			font-size: 32px;
 		}
 
 		.smsBox {
-			position: relative;
+			display: flex;
+			justify-content: space-between;
 		}
 
 		.smsCode {
-			position: absolute;
-			right: 0;
-			top: 0;
-			color: #397be6;
-			font-size: 26px;
-			width: 170px;
-			height: 110px;
-			line-height: 110px;
+			color: #fff;
+			background-color: #1898fe;
+			font-size: 30px;
+			width: 240px;
+			height: 88px;
+			line-height: 88px;
 			text-align: center;
-			border-radius: 12px;
-			&:after {
-				position: absolute;
-				content: '';
-				width: 1px;
-				height: 60px;
-				top: 50%;
-				left: 0;
-				transform: translate(0, -50%);
-				background: #f0f1f5;
-			}
+			border-radius: 44px;
 		}
 		.smsCode2 {
-			color: #868e9e;
+      background-color: #EFF1F2;
+      color: #CECECE;
 		}
 
 		.sureBtn {
 			display: block;
 			box-sizing: border-box;
-			background-color: #ebde74;
+			background-color: #0084ff;
 			font-size: 36px;
-			height: 100px;
-			line-height: 100px;
-			border-radius: 50px;
+			height: 88px;
+			line-height: 88px;
+			border-radius: 44px;
 			border: none;
 			font-family: 'PingFangSC-Medium';
 			font-weight: 500;
-			color: #121c32;
+			color: #fff;
 
 			span {
 				display: inline-block;
@@ -95,7 +133,7 @@
 			}
 		}
 		.sureDisableBtn {
-			background-color: #dcdfe6;
+			background-color: #b2daff;
 			color: #fff;
 		}
 		// 图片验证码
@@ -115,43 +153,34 @@
 			}
 		}
 		.errMsgBox {
-			position: absolute;
-			top: 10px;
-			left: 0;
 			font-size: 24px;
 			color: #fe6666;
+			text-align: left;
+			padding-left: 10px;
 			line-height: 33px;
 		}
 		.operateBox {
 			position: relative;
-			padding-top: 93px;
+			padding-top: 60px;
+		}
+
+		.bottom_tip {
+			color: #ff6666;
+			font-size: 22px;
+			text-align: center;
+			margin-top: 50px;
 		}
 	}
-
-	.imgWrap {
-		position: relative;
-	}
-
-	.backTopBtn {
-		position: absolute;
-		margin-left: -300px;
-		left: 50%;
-		bottom: 200px;
-		width: 600px;
-		height: 90px;
-		display: block;
-	}
-
 	.agreement {
 		display: flex;
-		color: #868e9e;
+		color: #8e8d7b;
 		font-size: 24px;
 		margin-top: 20px;
 		text-align: left;
 		line-height: 38px;
 
 		span {
-			color: #121c32;
+			color: #414a53;
 		}
 
 		.checked {
@@ -161,12 +190,12 @@
 			margin-right: 10px;
 			background-size: 100%;
 			background-repeat: no-repeat;
-			background-image: url(./img/selected_ico.png);
+			background-image: url('../../../assets/images/home/checked_ico.png');
 			margin-top: 5px;
 		}
 
 		.nochecked {
-			background-image: url(./img/unselected_ico.png);
+			background-image: url('../../../assets/images/home/unChecked_ico.png');
 		}
 		.agreementCont {
 			flex: 1;
@@ -187,23 +216,59 @@
 	}
 }
 
-.greeting_box {
-	font-family: 'PingFangSC-Medium';
-	font-weight: 500;
-	color: #121c32;
-	margin-top: 63px;
-	margin-left: 60px;
+.loginModalContainer {
+	position: relative;
+	padding-top: 87px;
+	.loginModalBg {
+		display: block;
+		width: 100%;
+	}
+	.loginModalBtn {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, 0);
+		bottom: 20px;
+		width: 422px;
+		height: 112px;
+	}
+	.tipsCont {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, 0);
+		bottom: 185px;
+		font-size: 26px;
+		color: #f6521f;
+		line-height: 100%;
+		span {
+			font-weight: 600;
+		}
+	}
+	.closeIcoStyle {
+		position: absolute;
+		right: 42px;
+		width: 25px;
+		height: 26px;
+		top: 0;
+	}
 }
-.greeting_tit {
-	font-size: 72px;
-	line-height: 100px;
-}
-.greeting_cont {
-	font-size: 48px;
-	line-height: 67px;
-	margin-top: 10px;
-	span {
-		color: #397be6;
-		margin-left: 20px;
+
+:global {
+	.loginModalBox {
+		.am-modal.am-modal-transparent {
+			width: 100%;
+			position: relative;
+			top: -87px;
+			// position: absolute;
+			// top: 60px;
+		}
+		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		.am-modal.am-modal-transparent .am-modal-content {
+			padding: 0;
+		}
+		.am-modal-content {
+			background: transparent;
+		}
 	}
 }

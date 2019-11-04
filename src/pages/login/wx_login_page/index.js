@@ -6,7 +6,7 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem, Modal } from 'antd-mobile';
+import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -33,17 +33,8 @@ import { login, wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
 import { setBackGround } from 'utils/background';
-import hegui_bg from './img/hegui_bg.png';
-import login_bg1 from './img/login_bg1.png';
-import login_bg2 from './img/login_bg2.png';
-import login_bg3 from './img/login_bg3.png';
-import login_bg4 from './img/login_bg4.png';
-import loginModalBg from './img/login_modal.png';
-import loginModalBtn from './img/login_modal_btn.png';
-import closeIco from './img/close_ico.png';
 
 let timmer;
-let modalTimer = null;
 let entryPageTime = '';
 const needDisplayOptions = ['basicInf'];
 const API = {
@@ -53,8 +44,7 @@ const API = {
 	imageCode: '/signup/sendImg',
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	DOWNLOADURL: 'download/getDownloadUrl'
+	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
 };
 @fetch.inject()
 @createForm()
@@ -75,8 +65,6 @@ export default class login_page extends PureComponent {
 			showSlideModal: false,
 			slideImageUrl: '',
 			mobilePhone: '',
-			times: 3, // 弹框里的倒计时
-			showDownloadModal: false,
 			errMsg: '' // 错误信息
 		};
 	}
@@ -195,6 +183,14 @@ export default class login_page extends PureComponent {
 			});
 			return;
 		}
+		// if (!this.state.isChecked) {
+		//   // Toast.info('请先勾选协议');
+		//   this.setState({
+		//     errMsg: '请先勾选协议'
+		//   })
+		// 	return;
+		// }
+
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.setState({
@@ -253,12 +249,16 @@ export default class login_page extends PureComponent {
 									this.state.disabledInput && this.getImage();
 								}
 							);
+						// Toast.info(error.msgInfo, 3, () => {
+						//   this.state.disabledInput && this.getImage();
+						// });
 					}
 				);
 			} else {
 				this.setState({
 					errMsg: getFirstError(err)
 				});
+				// Toast.info(getFirstError(err));
 			}
 		});
 	};
@@ -282,6 +282,9 @@ export default class login_page extends PureComponent {
 						this.getImage();
 					}
 				);
+				// Toast.info(result.msgInfo, 3, () => {
+				// 	this.getImage();
+				// });
 			}
 		});
 	};
@@ -512,18 +515,10 @@ export default class login_page extends PureComponent {
 			queryUsrSCOpenId({ $props: this.props })
 				.then(() => {
 					buriedPointEvent(login.goDownLoad);
-					// this.props.history.replace({
-					// 	pathname: '/others/mpos_download_page',
-					// 	search: `?wxTestFrom=${queryData.wxTestFrom}`
-					// });
-					this.setState(
-						{
-							showDownloadModal: true
-						},
-						() => {
-							this.startCountDown();
-						}
-					);
+					this.props.history.replace({
+						pathname: '/others/mpos_download_page',
+						search: `?wxTestFrom=${queryData.wxTestFrom}`
+					});
 				})
 				.catch(() => {
 					buriedPointEvent(login.queryUsrSCOpenIdFail);
@@ -582,61 +577,6 @@ export default class login_page extends PureComponent {
 		});
 	};
 
-	// 弹框里的倒计时
-	startCountDown = () => {
-		let times = this.state.times;
-		this.clearCountDown();
-		modalTimer = setInterval(() => {
-			this.setState({
-				times: times--
-			});
-			if (times <= -1) {
-				this.clearCountDown();
-				this.downloadApp();
-			}
-		}, 1000);
-	};
-
-	clearCountDown = () => {
-		clearInterval(modalTimer);
-	};
-
-	// 下载app
-	downloadApp = () => {
-		this.closeModal();
-		const phoneType = getDeviceType();
-		if (phoneType === 'IOS') {
-			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
-		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						Toast.info('安全下载中');
-						window.location.href = res.data;
-					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
-				}
-			);
-		}
-	};
-
-	// 关闭弹框
-	closeModal = () => {
-		this.setState(
-			{
-				showDownloadModal: false,
-				times: 3
-			},
-			() => {
-				this.clearCountDown();
-			}
-		);
-	};
-
 	render() {
 		const {
 			imageCodeUrl,
@@ -646,21 +586,19 @@ export default class login_page extends PureComponent {
 			yOffset,
 			bigImageH,
 			disabledInput,
-			errMsg,
-			showDownloadModal
+			errMsg
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page_wrap}>
 				<div className={styles.dc_landing_page}>
-					<div className={styles.img_wrap}>
-						<img src={login_bg1} alt="" className={styles.login_bg1} />
-						<img src={login_bg2} alt="" className={styles.login_bg2} />
-						<img src={login_bg3} alt="" className={styles.login_bg3} />
-						<img src={login_bg4} alt="" className={styles.login_bg4} />
+					<div className={styles.greeting_box}>
+						<h2 className={styles.greeting_tit}>您好！</h2>
+						<p className={styles.greeting_cont}>
+							欢迎来到<span>还到</span>
+						</p>
 					</div>
 					<div className={styles.content}>
-						<img src={hegui_bg} alt="" className={styles.hegui_bg} />
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
@@ -791,8 +729,8 @@ export default class login_page extends PureComponent {
 								{this.state.timers}
 							</div>
 						</div>
-						{errMsg ? <p className={styles.errMsgBox}>{errMsg}</p> : null}
 						<div className={styles.operateBox}>
+							{errMsg ? <div className={styles.errMsgBox}>{errMsg}</div> : null}
 							<div
 								className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
 								onClick={this.goLogin}
@@ -806,7 +744,7 @@ export default class login_page extends PureComponent {
 									]
 								})}
 							>
-								<span>立即申请</span>
+								<span>注册/登录</span>
 							</div>
 						</div>
 						<div className={styles.agreement}>
@@ -815,7 +753,7 @@ export default class login_page extends PureComponent {
 								onClick={this.checkAgreement}
 							/>
 							<div className={styles.agreementCont}>
-								阅读并接受
+								请阅读协议内容，点击按钮即视为同意
 								<span
 									onClick={() => {
 										this.go('register_agreement_page');
@@ -832,7 +770,6 @@ export default class login_page extends PureComponent {
 								</span>
 							</div>
 						</div>
-						<p className={styles.bottom_tip}>温馨提示：如您是老用户，请前往还到app操作并还款</p>
 					</div>
 				</div>
 				{showSlideModal && (
@@ -847,26 +784,6 @@ export default class login_page extends PureComponent {
 						}}
 						onClose={this.closeSlideModal}
 					/>
-				)}
-				{showDownloadModal && (
-					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
-						<div className={styles.loginModalContainer}>
-							{/* 大图 */}
-							<img className={styles.loginModalBg} src={loginModalBg} alt="背景" />
-							{/* 按钮 */}
-							<img
-								className={styles.loginModalBtn}
-								src={loginModalBtn}
-								onClick={() => {
-									// buriedPointEvent(daicao.modalBtnClick);
-									this.downloadApp();
-								}}
-								alt="按钮"
-							/>
-							{/* 关闭 */}
-							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
-						</div>
-					</Modal>
 				)}
 			</div>
 		);

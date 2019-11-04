@@ -12,6 +12,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import QuestionModal from './components/QuestionModal';
+import qs from 'qs';
 
 const API = {
 	hotList: '/question/topSeven',
@@ -29,7 +30,7 @@ const topNavList = [
 
 let token = '';
 let tokenFromStorage = '';
-
+let queryData = null;
 @setBackGround('#fff')
 @fetch.inject()
 export default class help_center_page extends PureComponent {
@@ -48,6 +49,9 @@ export default class help_center_page extends PureComponent {
 	}
 
 	componentDidMount() {
+		queryData = qs.parse(this.props.history.location.search, {
+			ignoreQueryPrefix: true
+		});
 		this.qryHotList();
 		this.qryCategoryList();
 		this.qiyu();
@@ -203,7 +207,9 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{tokenFromStorage && token && <div className={styles.top_nav}>{this.renderTopNav()}</div>}
+				{tokenFromStorage && token && queryData.pageSource !== 'weixin' && (
+					<div className={styles.top_nav}>{this.renderTopNav()}</div>
+				)}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>
