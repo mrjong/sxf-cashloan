@@ -106,6 +106,15 @@
 					letter-spacing: -6px;
 				}
 			}
+			.failText {
+				font-size: 30px;
+				font-family: PingFangSC-Semibold;
+				font-weight: 600;
+				color: rgba(211, 155, 86, 1);
+				line-height: 42px;
+				letter-spacing: 0.8px;
+				margin-top: 80px;
+			}
 		}
 		.slideImg {
 			animation: slide 1s forwards;
@@ -167,16 +176,16 @@
 		margin: 0 auto;
 	}
 	.rulesBg {
-    display: block;
-    width: 368px;
-    margin: 0 auto;
+		display: block;
+		width: 368px;
+		margin: 0 auto;
 	}
 	.rulesContent {
 		padding: 30px 0;
 		font-size: 26px;
 		color: rgba(192, 133, 59, 1);
-    line-height: 37px;
-    text-align: left;
+		line-height: 37px;
+		text-align: left;
 	}
 }
 
