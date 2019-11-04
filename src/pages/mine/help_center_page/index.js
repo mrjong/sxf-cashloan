@@ -30,7 +30,7 @@ const topNavList = [
 
 let token = '';
 let tokenFromStorage = '';
-let queryData = null;
+let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
 export default class help_center_page extends PureComponent {
