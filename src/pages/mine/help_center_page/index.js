@@ -48,10 +48,13 @@ export default class help_center_page extends PureComponent {
 		};
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
 		});
+	}
+
+	componentDidMount() {
 		if (queryData.pageSource === 'wxTabBar') {
 			buriedPointEvent(wxTabBar.helpCenterView);
 		}
@@ -213,7 +216,7 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{queryData.pageSource !== 'wxTabBar' ? (
+				{queryData && queryData.pageSource !== 'wxTabBar' ? (
 					store.getToken() ? (
 						<div className={styles.top_nav}>{this.renderTopNav()}</div>
 					) : null
