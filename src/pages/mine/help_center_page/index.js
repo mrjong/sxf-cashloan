@@ -220,8 +220,8 @@ export default class help_center_page extends PureComponent {
 				) : null}
 				{/* {queryData.pageSource === 'wxTabBar' ? (
 					<div className={styles.top_nav}>{this.renderTopNav()}</div>
-				) : null}
-				{queryData.pageSource} */}
+				) : null} */}
+				{`${queryData.pageSource}999`}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>
