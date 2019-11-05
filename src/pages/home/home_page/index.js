@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-05 14:09:48
+ * @LastEditTime: 2019-11-05 16:33:39
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -243,9 +243,8 @@ export default class home_page extends PureComponent {
 					blackData: result.data
 				});
 				// 是否展示还款券测试弹框
-				if (!Cookie.get('modalShowTime')) {
-					this.showCouponTestModal();
-				}
+				this.showCouponTestModal();
+
 				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
 					this.usrCashIndexInfo(result.data.cashAcBalSts);
@@ -263,18 +262,18 @@ export default class home_page extends PureComponent {
 		// 接口调用
 		this.props.$fetch.get(API.actiPopupSwitch).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data && result.data.value === '1') {
-				this.setState(
-					{
-						isShowActivityModal: true,
-						modalType: 'payCouponTest'
-					},
-					() => {
-						const expireTime = 1;
-						// const expireTime = new Date(new Date().getTime() + 1000 * 60 * 0.5);
-						Cookie.set('modalShowTime', true, { expires: expireTime });
-						store.setShowActivityModal(true);
-					}
-				);
+				if (Cookie.get('modalShowTime') !== dayjs(new Date()).format('YYYYMMDD')) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'payCouponTest'
+						},
+						() => {
+							Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
+							// store.setShowActivityModal(true);
+						}
+					);
+				}
 			}
 		});
 	};
