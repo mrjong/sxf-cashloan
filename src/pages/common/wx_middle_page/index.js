@@ -111,13 +111,12 @@ export default class wx_middle_page extends Component {
 	}
 	// 跳转路由判断
 	jumpRouter = (NoLoginUrl) => {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		// 登陆的token
 		let jumpUrl = store.getJumpUrl();
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
-			if ((window.globalConfig && window.globalConfig.wxTest) || query.entry === 'wxTabBar') {
+			if (window.globalConfig && window.globalConfig.wxTest) {
 				this.props.history.replace(NoLoginUrl + '?wxTestFrom=wx_middle_page');
 			} else {
 				this.props.history.replace(NoLoginUrl);
