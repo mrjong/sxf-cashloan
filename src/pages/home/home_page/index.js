@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-05 11:38:03
+ * @LastEditTime: 2019-11-05 11:46:44
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -968,9 +968,9 @@ export default class home_page extends PureComponent {
 				this.props.history.push('/activity/mianxi100_page?entry=homeModal');
 				break;
 			case 'payCouponTest':
-				// buriedPointEvent(activity.mianxi822ModalJoinBtn, {
-				//   medium: 'H5'
-				// });
+				buriedPointEvent(activity.couponTestModalJoinBtn, {
+					medium: 'H5'
+				});
 				this.props.history.push('/activity/coupon_test_page?comeFrom=mposHomeModal');
 				break;
 			default:

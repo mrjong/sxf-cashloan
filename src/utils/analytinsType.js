@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-05 11:38:30
+ * @LastEditTime: 2019-11-05 11:46:36
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -215,7 +215,8 @@ const activity = {
 	newUserActivityUseNow: `${prefix}_ACTIVITY_NEWUSERS_USE_NOW`, // 重启新手活动 点击已领取去使用
 	newUserActivityGetNow: `${prefix}_ACTIVITY_NEWUSERS_GET_NOW`, // 重启新手活动 点击立即领取
 	couponTestActivityEntry: `${prefix}_ACTIVITY_COUPONTEST_ENTRY`, // 还款券测试 进入入口
-	couponTestActivityUseNow: `${prefix}_ACTIVITY_COUPONTEST_USE_NOW` // 还款券测试 点击已领取去使用
+	couponTestActivityUseNow: `${prefix}_ACTIVITY_COUPONTEST_USE_NOW`, // 还款券测试 点击已领取去使用
+	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN` // 还款券测试 首页弹窗-收入囊中
 };
 
 const moxie_bank_list = {
