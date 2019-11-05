@@ -28,10 +28,11 @@ export default class qiyu_page extends PureComponent {
 		this.state = {};
 	}
 
-	componentWillMount() {}
-
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		if (queryData.pageSource === 'wxTabBar') {
+			buriedPointEvent(wxTabBar.onlineService);
+		}
 		if (queryData.apptoken) {
 			//如果从APP过来
 			store.setToken(queryData.apptoken);
@@ -43,9 +44,6 @@ export default class qiyu_page extends PureComponent {
 	getOpenId = () => {
 		this.props.$fetch.get(API.queryQYOpenId).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				if (queryData.pageSource === 'wxTabBar') {
-					buriedPointEvent(wxTabBar.onlineService);
-				}
 				this.goOnline(result.data);
 			} else {
 				this.props.toast.info(result.msgInfo);

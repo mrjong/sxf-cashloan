@@ -124,6 +124,7 @@ export default class help_center_page extends PureComponent {
 
 	goOnline = () => {
 		buriedPointEvent(helpCenter.goOnline);
+		alert(window.location.href);
 		if (queryData.pageSource === 'wxTabBar') {
 			buriedPointEvent(wxTabBar.onlineBtnClick);
 		}
