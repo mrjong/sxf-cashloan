@@ -121,6 +121,7 @@ export default class wx_middle_page extends Component {
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
 			if (window.globalConfig && window.globalConfig.wxTest) {
+				alert(NoLoginUrl);
 				this.props.history.replace(NoLoginUrl + '?wxTestFrom=wx_middle_page');
 			} else {
 				this.props.history.replace(NoLoginUrl);
@@ -128,6 +129,8 @@ export default class wx_middle_page extends Component {
 		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
 		} else if (window.globalConfig && window.globalConfig.wxTest) {
+			alert(123);
+
 			this.props.history.replace('/home/home');
 
 			// 微信测试
@@ -136,6 +139,8 @@ export default class wx_middle_page extends Component {
 			// 	search: `?wxTestFrom=wx_middle_page`
 			// });
 		} else {
+			alert(456);
+
 			this.props.history.replace('/home/home');
 		}
 	};
