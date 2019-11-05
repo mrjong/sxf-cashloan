@@ -213,9 +213,11 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{tokenFromStorage && token && (queryData && queryData.pageSource !== 'wxTabBar') && (
-					<div className={styles.top_nav}>{this.renderTopNav()}</div>
-				)}
+				{queryData.pageSource !== 'wxTabBar' ? (
+					tokenFromStorage && token ? (
+						<div className={styles.top_nav}>{this.renderTopNav()}</div>
+					) : null
+				) : null}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>
