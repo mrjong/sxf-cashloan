@@ -30,7 +30,7 @@ export default class qiyu_page extends PureComponent {
 
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (queryData.pageSource === 'wxTabBar') {
+		if (queryData.entry === 'wxTabBar') {
 			buriedPointEvent(wxTabBar.onlineService);
 		}
 		if (queryData.apptoken) {

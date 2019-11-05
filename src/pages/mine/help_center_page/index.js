@@ -55,7 +55,7 @@ export default class help_center_page extends PureComponent {
 	}
 
 	componentDidMount() {
-		if (queryData.pageSource === 'wxTabBar') {
+		if (queryData.entry === 'wxTabBar') {
 			buriedPointEvent(wxTabBar.helpCenterView);
 		}
 		this.qryHotList();
@@ -124,8 +124,7 @@ export default class help_center_page extends PureComponent {
 
 	goOnline = () => {
 		buriedPointEvent(helpCenter.goOnline);
-		alert(window.location.href);
-		if (queryData.pageSource === 'wxTabBar') {
+		if (queryData.entry === 'wxTabBar') {
 			buriedPointEvent(wxTabBar.onlineBtnClick);
 		}
 		this.props.history.push('/mine/qiyu_page');
@@ -217,15 +216,11 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{queryData && queryData.pageSource !== 'wxTabBar' ? (
+				{queryData.entry !== 'wxTabBar' ? (
 					store.getToken() ? (
 						<div className={styles.top_nav}>{this.renderTopNav()}</div>
 					) : null
 				) : null}
-				{/* {queryData.pageSource === 'wxTabBar' ? (
-					<div className={styles.top_nav}>{this.renderTopNav()}</div>
-				) : null} */}
-				{`${queryData.pageSource}999`}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>
