@@ -76,8 +76,12 @@ export default class wx_middle_page extends Component {
 						store.setJumpUrl(jumpToUrl);
 					}
 					if (query.NoLoginUrl) {
+						// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
+						const NoLoginToUrl = query.jumpUrl
+							? `${query.NoLoginUrl}?jumpUrl=${query.jumpUrl}`
+							: query.NoLoginUrl;
 						// 登陆的token
-						store.setNoLoginUrl(query.NoLoginUrl);
+						store.setNoLoginUrl(NoLoginToUrl);
 					}
 					if (res.msgCode == 'WX0101') {
 						//没有授权

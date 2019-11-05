@@ -512,11 +512,12 @@ export default class login_page extends PureComponent {
 			queryUsrSCOpenId({ $props: this.props })
 				.then(() => {
 					buriedPointEvent(login.goDownLoad);
-					// this.props.history.replace({
-					// 	pathname: '/others/mpos_download_page',
-					// 	search: `?wxTestFrom=${queryData.wxTestFrom}`
-					// });
-					this.showDownLoadModal();
+					if (queryData.jumpUrl) {
+						//如果登录页链接存在jumpUrl,则登录后直接跳转至目标页
+						this.props.history.replace(queryData.jumpUrl);
+					} else {
+						this.showDownLoadModal();
+					}
 				})
 				.catch(() => {
 					buriedPointEvent(login.queryUsrSCOpenIdFail);
