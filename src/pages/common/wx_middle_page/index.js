@@ -118,10 +118,14 @@ export default class wx_middle_page extends Component {
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
-			URL = query.jumpUrl ? NoLoginUrl + `?${query.jumpUrl}` : NoLoginUrl;
+			URL = query.jumpUrl ? NoLoginUrl + `?jumpUrl=${query.jumpUrl}` : NoLoginUrl;
 			// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
 			if (window.globalConfig && window.globalConfig.wxTest) {
-				this.props.history.replace(URL + '&wxTestFrom=wx_middle_page');
+				if (query.jumpUrl) {
+					this.props.history.replace(URL + '&wxTestFrom=wx_middle_page');
+				} else {
+					this.props.history.replace(URL + '?wxTestFrom=wx_middle_page');
+				}
 			} else {
 				this.props.history.replace(URL);
 			}
