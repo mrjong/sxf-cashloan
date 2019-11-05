@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:03:28
+ * @LastEditTime: 2019-11-05 11:38:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -63,7 +63,8 @@ const API = {
 	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
 	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
 	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
-	couponRedDot: '/index/couponRedDot' // 优惠券红点
+	couponRedDot: '/index/couponRedDot', // 优惠券红点
+	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH' // 还款优惠劵测试弹框开关
 };
 let token = '';
 let tokenFromStorage = '';
@@ -241,6 +242,8 @@ export default class home_page extends PureComponent {
 				this.setState({
 					blackData: result.data
 				});
+				// 是否展示还款券测试弹框
+				this.showCouponTestModal();
 				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
 					this.usrCashIndexInfo(result.data.cashAcBalSts);
@@ -250,6 +253,23 @@ export default class home_page extends PureComponent {
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
+			}
+		});
+	};
+	// 是否展示还款券测试弹框
+	showCouponTestModal = () => {
+		// 接口调用
+		this.props.$fetch.get(API.actiPopupSwitch).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data && result.data.value === '1') {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalType: 'payCouponTest'
+					},
+					() => {
+						store.setShowActivityModal(true);
+					}
+				);
 			}
 		});
 	};
@@ -946,6 +966,12 @@ export default class home_page extends PureComponent {
 					medium: 'H5'
 				});
 				this.props.history.push('/activity/mianxi100_page?entry=homeModal');
+				break;
+			case 'payCouponTest':
+				// buriedPointEvent(activity.mianxi822ModalJoinBtn, {
+				//   medium: 'H5'
+				// });
+				this.props.history.push('/activity/coupon_test_page?comeFrom=mposHomeModal');
 				break;
 			default:
 				break;

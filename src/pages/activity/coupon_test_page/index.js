@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-04 18:05:43
+ * @LastEditTime: 2019-11-05 11:40:32
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -24,7 +24,7 @@ import AwardShow from './components/AwardShow';
 import CountDown from '../../mine/coupon_page/component/CountDown';
 
 const API = {
-	noviceJudge: '/novice/judge' // 判断用户是否满足领取条件接口
+	couponJudge: '/couponTest/judge' // 判断用户是否满足领取条件接口
 };
 
 @setBackGround('#EEDFCA')
@@ -35,6 +35,7 @@ export default class coupon_test_page extends PureComponent {
 		this.state = {
 			userStsCode: null, // 用户状态code
 			validEndTm: '', // 优惠劵有效期
+			couponNm: '', // 优惠劵名称
 			isAppOpen: false, // 是否是app webview打开
 			registerChannel: '' // 注册渠道
 		};
@@ -51,6 +52,8 @@ export default class coupon_test_page extends PureComponent {
 					this.checkUserStatus();
 				}
 			);
+		} else if (Cookie.get('fin-v-card-token')) {
+			this.checkUserStatus();
 		}
 		if (queryData.regChannel) {
 			this.setState({
@@ -63,7 +66,7 @@ export default class coupon_test_page extends PureComponent {
 		const { isAppOpen, registerChannel } = this.state;
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.comeFrom) {
-			buriedPointEvent(activity.newUserActivityEntry, {
+			buriedPointEvent(activity.couponTestActivityEntry, {
 				entry: queryData.comeFrom,
 				regChannel: registerChannel
 			});
@@ -85,18 +88,24 @@ export default class coupon_test_page extends PureComponent {
 			this.prePressTime2 = nowTime;
 			const { userStsCode, isAppOpen, registerChannel } = this.state;
 
-			if (isAppOpen && Cookie.get('fin-v-card-token')) {
-				if (userStsCode === '00') {
+			if (Cookie.get('fin-v-card-token')) {
+				if (userStsCode === '01') {
 					// 未发放优惠券 返回首页
 					const activityInf = {
 						isWelfare: true,
 						isLogin: true
 					};
-					setTimeout(() => {
-						window.postMessage(JSON.stringify(activityInf), () => {});
-					}, 0);
-				} else if (userStsCode == '04') {
-					buriedPointEvent(activity.newUserActivityUseNow, {
+					if (isAppOpen) {
+						setTimeout(() => {
+							window.postMessage(JSON.stringify(activityInf), () => {});
+						}, 0);
+					} else {
+						// mpos或者h5中跳转首页
+						this.props.history.push('/home/home');
+					}
+				} else if (userStsCode == '00') {
+					buriedPointEvent(activity.couponTestActivityUseNow, {
+						receiveSts: this.transferCode().buryMsg,
 						regChannel: registerChannel
 					});
 					// 已领取，去使用 通知app做相关操作
@@ -104,11 +113,19 @@ export default class coupon_test_page extends PureComponent {
 						isWelfare: true,
 						operation: 'useCoupon'
 					};
-					setTimeout(() => {
-						window.postMessage(JSON.stringify(activityInf), () => {});
-					}, 0);
+					if (isAppOpen) {
+						setTimeout(() => {
+							window.postMessage(JSON.stringify(activityInf), () => {});
+						}, 0);
+					} else {
+						// mpos或者h5中跳转账单页
+						this.props.history.push({
+							pathname: '/order/order_detail_page',
+							search: '?entryFrom=home'
+						});
+					}
 				} else {
-					buriedPointEvent(activity.newUserActivityGetNow, {
+					buriedPointEvent(activity.couponTestActivityUseNow, {
 						receiveSts: this.transferCode().buryMsg,
 						regChannel: registerChannel
 					});
@@ -131,20 +148,16 @@ export default class coupon_test_page extends PureComponent {
 				buryMsg = '已领取，去使用';
 				break;
 			case '01':
-				showMsg = '已领取优惠券失效，请耐心等待下次机会';
-				buryMsg = '已失效';
-				break;
-			case '02':
-				showMsg = '优惠券已使用，请耐心等待下次机会';
-				buryMsg = '已使用';
-				break;
-			case '03':
 				showMsg = '未发放优惠券';
 				buryMsg = '未发放优惠券';
 				break;
-			case '04':
-				showMsg = '您是非活动时间注册还到，不符合领取条件';
-				buryMsg = '您是非活动时间注册还到，不符合领取条件';
+			case '02':
+				showMsg = '已领取优惠券失效，请耐心等待下次机会';
+				buryMsg = '已失效';
+				break;
+			case '03':
+				showMsg = '优惠券已使用，请耐心等待下次机会';
+				buryMsg = '已使用';
 				break;
 			default:
 				break;
@@ -157,16 +170,12 @@ export default class coupon_test_page extends PureComponent {
 
 	// 查询用户领取的状态
 	checkUserStatus = () => {
-		this.props.$fetch.post(API.noviceJudge).then((res) => {
+		this.props.$fetch.post(API.couponJudge).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data) {
-				// if (res.data.status === '04' || res.data.status === '03') {
-				// 	this.setState({
-				// 		isOpen: true
-				// 	});
-				// }
 				this.setState({
 					userStsCode: res.data.status,
-					validEndTm: res.data.validTm
+					validEndTm: res.data.validTm,
+					couponNm: res.data.name
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
@@ -189,8 +198,8 @@ export default class coupon_test_page extends PureComponent {
 	};
 
 	render() {
-		const { userStsCode, validEndTm } = this.state;
-		const submitBtnBg = userStsCode === '04' ? submit_btn2 : submit_btn1;
+		const { userStsCode, validEndTm, couponNm } = this.state;
+		const submitBtnBg = userStsCode === '01' ? submit_btn2 : submit_btn1;
 		return (
 			<div className={styles.coupon_test_page}>
 				<div className={styles.topContent}>
@@ -205,7 +214,7 @@ export default class coupon_test_page extends PureComponent {
 					<div className={styles.mainBox}>
 						<div className={styles.wallet}>
 							<img src={wallet_img1} className={styles.img1} />
-							{userStsCode === '04' ? (
+							{userStsCode === '01' ? (
 								<div className={[styles.couponBox, styles.slideImg].join(' ')}>
 									<p className={styles.titText}>非常遗憾</p>
 									<p className={styles.failText}>
@@ -218,27 +227,31 @@ export default class coupon_test_page extends PureComponent {
 								<div className={[styles.couponBox, styles.slideImg].join(' ')}>
 									<p className={styles.titText}>领取成功</p>
 									<p className={styles.couponNm}>
-										<span>6</span>折还款优惠券
+										<span>{couponNm[0]}</span>
+										{couponNm.slice(1)}
 									</p>
 									<div className={styles.tagBox}>还款用户专享</div>
-									<div className={styles.validDate}>
-										有效期还剩：
-										{validEndTm && (
-											<CountDown
-												endTime={this.getTime(validEndTm)}
-												timeOver={() => {
-													let now = +new Date();
-													let thisTime = +new Date(this.getTime(validEndTm));
-													if (now > thisTime) {
-														return;
-													}
-													this.checkUserStatus();
-												}}
-												type="day"
-												className={styles.validDateTxt}
-											/>
-										)}
-									</div>
+									{/* 只有已领取未使用的状态下才展示有效期 */}
+									{userStsCode === '00' ? (
+										<div className={styles.validDate}>
+											有效期还剩：
+											{validEndTm && (
+												<CountDown
+													endTime={this.getTime(validEndTm)}
+													timeOver={() => {
+														let now = +new Date();
+														let thisTime = +new Date(this.getTime(validEndTm));
+														if (now > thisTime) {
+															return;
+														}
+														this.checkUserStatus();
+													}}
+													type="day"
+													className={styles.validDateTxt}
+												/>
+											)}
+										</div>
+									) : null}
 								</div>
 							)}
 							<img src={wallet_img3} className={styles.img3} />
