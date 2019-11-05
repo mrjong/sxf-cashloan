@@ -119,6 +119,8 @@ export default class wx_middle_page extends Component {
 		if (NoLoginUrl) {
 			// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
 			if (window.globalConfig && window.globalConfig.wxTest) {
+				alert(NoLoginUrl + `?wxTestFrom=wx_middle_page&${query.jumpUrl}`);
+
 				this.props.history.replace(NoLoginUrl + `?wxTestFrom=wx_middle_page&${query.jumpUrl}`);
 			} else {
 				this.props.history.replace(NoLoginUrl + `?${query.jumpUrl}`);
