@@ -124,7 +124,7 @@ export default class wx_middle_page extends Component {
 			}
 		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
-		} else if ((window.globalConfig && window.globalConfig.wxTest) || query.pageSource === 'wxTabBar') {
+		} else if (window.globalConfig && window.globalConfig.wxTest) {
 			// 微信测试
 			this.props.history.replace({
 				pathname: '/others/wx_download_page',
