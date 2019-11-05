@@ -218,6 +218,7 @@ export default class help_center_page extends PureComponent {
 						<div className={styles.top_nav}>{this.renderTopNav()}</div>
 					) : null
 				) : null}
+				{`${queryData.pageSource}99999`}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>
