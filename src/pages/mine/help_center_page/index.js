@@ -6,7 +6,7 @@ import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter, wxTabBar } from 'utils/analytinsType';
 import styles from './index.scss';
-import Cookie from 'js-cookie';
+// import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
@@ -28,17 +28,17 @@ const topNavList = [
 	}
 ];
 
-let token = '';
-let tokenFromStorage = '';
+// let token = '';
+// let tokenFromStorage = '';
 let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
 export default class help_center_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		// 获取token
-		token = Cookie.get('fin-v-card-token');
-		tokenFromStorage = store.getToken();
+		// // 获取token
+		// token = Cookie.get('fin-v-card-token');
+		// tokenFromStorage = store.getToken();
 		this.state = {
 			hotList: [],
 			categoryList: [],
@@ -214,11 +214,10 @@ export default class help_center_page extends PureComponent {
 		return (
 			<div className={styles.help_center_page}>
 				{queryData.pageSource !== 'wxTabBar' ? (
-					tokenFromStorage && token ? (
+					store.getToken() ? (
 						<div className={styles.top_nav}>{this.renderTopNav()}</div>
 					) : null
 				) : null}
-				{`${queryData.pageSource}99999`}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>

@@ -111,19 +111,20 @@ export default class wx_middle_page extends Component {
 	}
 	// 跳转路由判断
 	jumpRouter = (NoLoginUrl) => {
+		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		// 登陆的token
 		let jumpUrl = store.getJumpUrl();
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
-			if (window.globalConfig && !window.globalConfig.wxTest) {
+			if ((window.globalConfig && window.globalConfig.wxTest) || query.pageSource === 'wxTabBar') {
 				this.props.history.replace(NoLoginUrl + '?wxTestFrom=wx_middle_page');
 			} else {
 				this.props.history.replace(NoLoginUrl);
 			}
 		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
-		} else if (window.globalConfig && window.globalConfig.wxTest) {
+		} else if ((window.globalConfig && window.globalConfig.wxTest) || query.pageSource === 'wxTabBar') {
 			// 微信测试
 			this.props.history.replace({
 				pathname: '/others/wx_download_page',

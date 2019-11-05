@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 15:08:07
+ * @LastEditTime: 2019-09-24 12:24:56
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -27,9 +27,9 @@ import {
 	sxfDataPv,
 	sxfburiedPointEvent
 } from 'utils/analytins';
+import { login, wxTest } from 'utils/analytinsType';
 import { sxflogin } from 'utils/sxfAnalytinsType';
 import { domListen } from 'utils/domListen';
-import { login, wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
 import { setBackGround } from 'utils/background';
@@ -596,6 +596,7 @@ export default class login_page extends PureComponent {
 
 	// 下载app
 	downloadApp = () => {
+		buriedPointEvent(login.downloadModalBtnClick);
 		this.closeDownLoadModal();
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
@@ -864,7 +865,6 @@ export default class login_page extends PureComponent {
 								className={styles.loginModalBtn}
 								src={loginModalBtn}
 								onClick={() => {
-									// buriedPointEvent(daicao.modalBtnClick);
 									this.downloadApp();
 								}}
 								alt="按钮"

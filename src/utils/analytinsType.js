@@ -20,7 +20,8 @@ const login = {
 	queryUsrSCOpenIdFail: `${prefix}_QUERYUSRSCOPENIDFAIL`,
 	goHome: `${prefix}_GOHOME`,
 	goDownLoad: `${prefix}_GODOWNLOAD`,
-	downloadModalShow: `${prefix}_DOWNLOADMODAL_SHOW` //首页显示下载弹窗
+	downloadModalShow: `${prefix}_DOWNLOADMODAL_SHOW`, //首页显示下载弹窗
+	downloadModalBtnClick: `${prefix}_DOWNLOADMODALBTN_CLICK` //首页显示下载弹窗按钮点击
 };
 
 const home = {
