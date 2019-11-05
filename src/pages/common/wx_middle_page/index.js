@@ -76,12 +76,8 @@ export default class wx_middle_page extends Component {
 						store.setJumpUrl(jumpToUrl);
 					}
 					if (query.NoLoginUrl) {
-						// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
-						const NoLoginToUrl = query.jumpUrl
-							? `${query.NoLoginUrl}?jumpUrl=${query.jumpUrl}`
-							: query.NoLoginUrl;
 						// 登陆的token
-						store.setNoLoginUrl(NoLoginToUrl);
+						store.setNoLoginUrl(query.NoLoginUrl);
 					}
 					if (res.msgCode == 'WX0101') {
 						//没有授权
@@ -115,22 +111,21 @@ export default class wx_middle_page extends Component {
 	}
 	// 跳转路由判断
 	jumpRouter = (NoLoginUrl) => {
+		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		// 登陆的token
 		let jumpUrl = store.getJumpUrl();
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
+			// 针对微信菜单栏上的在线客服，在url上增加entry参数,登录后可直接跳转
 			if (window.globalConfig && window.globalConfig.wxTest) {
-				alert(NoLoginUrl);
-				this.props.history.replace(NoLoginUrl + '?wxTestFrom=wx_middle_page');
+				this.props.history.replace(NoLoginUrl + `?wxTestFrom=wx_middle_page&${query.jumpUrl}`);
 			} else {
-				this.props.history.replace(NoLoginUrl);
+				this.props.history.replace(NoLoginUrl + `?${query.jumpUrl}`);
 			}
 		} else if (jumpUrl) {
 			this.props.history.replace(jumpUrl);
 		} else if (window.globalConfig && window.globalConfig.wxTest) {
-			alert(123);
-
 			this.props.history.replace('/home/home');
 
 			// 微信测试
@@ -139,8 +134,6 @@ export default class wx_middle_page extends Component {
 			// 	search: `?wxTestFrom=wx_middle_page`
 			// });
 		} else {
-			alert(456);
-
 			this.props.history.replace('/home/home');
 		}
 	};
