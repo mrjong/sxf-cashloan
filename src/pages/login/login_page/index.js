@@ -513,6 +513,7 @@ export default class login_page extends PureComponent {
 				.then(() => {
 					buriedPointEvent(login.goDownLoad);
 					if (queryData.jumpUrl) {
+						alert(queryData.jumpUrl);
 						//如果登录页链接存在jumpUrl,则登录后直接跳转至目标页
 						this.props.history.replace(queryData.jumpUrl);
 					} else {
