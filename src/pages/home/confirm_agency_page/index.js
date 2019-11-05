@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 12:26:34
+ * @LastEditTime: 2019-10-30 15:22:17
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -24,6 +24,7 @@ import { domListen } from 'utils/domListen';
 import { sxfhome } from 'utils/sxfAnalytinsType';
 import RepayPlanModal from 'components/RepayPlanModal';
 import CouponAlert from './components/CouponAlert';
+import WarningModal from './components/WarningModal';
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
@@ -203,21 +204,11 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 
-	// 检查是否需要人审
+	// 检查是否需要人审或者机器人审核
 	getExamineSts = () => {
 		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
-				this.setState(
-					{
-						isNeedExamine: res.data && res.data.flag === '01',
-						examineData: {
-							creadNo: res.data && res.data.creadNo
-						}
-					},
-					() => {
-						this.handleShowTipModal();
-					}
-				);
+				res.data && this.jumpRouter(res.data);
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -412,31 +403,35 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 关闭弹框
 	handleCloseTipModal = (type) => {
-		const { isNeedExamine, examineData } = this.state;
-		this.setState(
-			{
-				[type]: false
-			},
-			() => {
-				if (type === 'isShowTipModal' && isNeedExamine) {
-					this.props.history.push({
-						pathname: '/home/loan_person_succ_page',
-						search: `?creadNo=${examineData.creadNo}`
-					});
-				} else if (type === 'isShowTipModal') {
-					const { goData } = this.state;
-					let title =
-						goData.withdrawType === '3'
-							? `${dayjs(goData.reserveDate).format('YYYY年MM月DD日')}完成放款`
-							: `预计60秒完成放款`;
-					let desc = goData.withdrawType === '3' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
-					this.props.history.push({
-						pathname: '/home/loan_apply_succ_page',
-						search: `?title=${title}&desc=${desc}`
-					});
-				}
-			}
-		);
+		this.setState({
+			[type]: false
+		});
+	};
+
+	// 跳转页面
+	jumpRouter = (res) => {
+		if (res.flag === '01') {
+			this.props.history.push({
+				pathname: '/home/loan_person_succ_page',
+				search: `?creadNo=${res.creadNo}`
+			});
+		} else if (res.flag === '02') {
+			this.props.history.replace({
+				pathname: '/home/loan_robot_succ_page',
+				search: `?telNo=${res.telNo}`
+			});
+		} else {
+			const { goData } = this.state;
+			let title =
+				goData.withdrawType === '3'
+					? `${dayjs(goData.reserveDate).format('YYYY年MM月DD日')}完成放款`
+					: `预计60秒完成放款`;
+			let desc = goData.withdrawType === '3' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
+			this.props.history.push({
+				pathname: '/home/loan_apply_succ_page',
+				search: `?title=${title}&desc=${desc}`
+			});
+		}
 	};
 
 	// 跳转到会员卡
@@ -474,7 +469,8 @@ export default class confirm_agency_page extends PureComponent {
 					}).then((res) => {
 						switch (res) {
 							case '1':
-								this.requestConfirmRepaymentInfo();
+								// this.requestConfirmRepaymentInfo();
+								this.handleShowTipModal();
 								break;
 							case '3':
 								store.setTencentBackUrl('/home/confirm_agency');
@@ -792,6 +788,8 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.toast.info('请先购买保险');
 			return;
 		}
+		// 埋点
+		buriedPointEvent(home.loanBtnClick);
 		this.checkProtocolBindCard();
 		// this.requestBindCardState();
 	};
@@ -969,6 +967,7 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 	render() {
+		const { history, toast } = this.props;
 		const { getFieldProps } = this.props.form;
 		const {
 			contractData,
@@ -1279,7 +1278,7 @@ export default class confirm_agency_page extends PureComponent {
 						</div>
 					</Modal>
 
-					<Modal
+					{/* <Modal
 						wrapClassName="confirm_agency_warp"
 						visible={isShowTipModal}
 						transparent
@@ -1302,7 +1301,18 @@ export default class confirm_agency_page extends PureComponent {
 								这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
 							</p>
 						</div>
-					</Modal>
+					</Modal> */}
+					{isShowTipModal ? (
+						<WarningModal
+							history={history}
+							handleConfirm={this.requestConfirmRepaymentInfo}
+							closeWarningModal={() => {
+								this.handleCloseTipModal('isShowTipModal');
+							}}
+							prodType="代偿"
+							toast={toast}
+						/>
+					) : null}
 
 					<Modal
 						wrapClassName="modal_VIPTip_warp"

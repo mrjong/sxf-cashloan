@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:03:28
+ * @LastEditTime: 2019-10-30 15:22:27
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -574,8 +574,27 @@ export default class home_page extends PureComponent {
 			case 'LN0011': // 需要过人审，人审中
 				this.getExamineSts();
 				break;
+			case 'LN0012': // 机器人审核
+				this.getRobotSts();
+				break;
 			default:
 		}
+	};
+
+	// 检查是否需要机器人审核
+	getRobotSts = () => {
+		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
+			if (res && res.msgCode === 'PTM0000') {
+				if (res.data && res.data.flag === '02') {
+					this.props.history.push({
+						pathname: '/home/loan_robot_succ_page',
+						search: `?telNo=${res.data && res.data.telNo}`
+					});
+				}
+			} else {
+				this.props.toast.info(res.msgInfo);
+			}
+		});
 	};
 
 	// 检查是否需要人审
@@ -1318,6 +1337,20 @@ export default class home_page extends PureComponent {
 								dw: '申请借款金额(元) ',
 								dw2: '申请期限 ',
 								tel: `0532-5808XXXX的审核电话`
+							}}
+							handleClick={this.handleSmartClick}
+						/>
+					);
+					break;
+				case 'LN0012': // 账单爬取失败/老用户
+					componentsDisplay = (
+						<ExamineCard
+							showData={{
+								type: 'LN0012',
+								btnText: '查看进度',
+								title: '还到-基础版',
+								subtitle: '等待电话审核中',
+								desc: '请保持电话畅通'
 							}}
 							handleClick={this.handleSmartClick}
 						/>
