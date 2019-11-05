@@ -3,6 +3,9 @@ import fetch from 'sx-fetch';
 import style from './index.scss';
 import { store } from 'utils/store';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/analytins';
+import { wxTabBar } from 'utils/analytinsType';
+
 const API = {
 	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
 };
@@ -40,6 +43,9 @@ export default class qiyu_page extends PureComponent {
 	getOpenId = () => {
 		this.props.$fetch.get(API.queryQYOpenId).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				if (queryData.pageSource === 'wxTabBar') {
+					buriedPointEvent(wxTabBar.onlineService);
+				}
 				this.goOnline(result.data);
 			} else {
 				this.props.toast.info(result.msgInfo);

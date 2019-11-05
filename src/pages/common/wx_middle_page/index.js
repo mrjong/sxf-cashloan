@@ -116,7 +116,7 @@ export default class wx_middle_page extends Component {
 		store.removeJumpUrl();
 		store.removeNoLoginUrl();
 		if (NoLoginUrl) {
-			if (window.globalConfig && window.globalConfig.wxTest) {
+			if (window.globalConfig && !window.globalConfig.wxTest) {
 				this.props.history.replace(NoLoginUrl + '?wxTestFrom=wx_middle_page');
 			} else {
 				this.props.history.replace(NoLoginUrl);

@@ -11,8 +11,8 @@ import SXFButton from 'components/ButtonCustom';
 import DownloadTip from 'components/DownloadTip';
 import { getDeviceType, isWXOpen } from 'utils';
 import linkConf from 'config/link.conf';
-import { other, wxTest } from 'utils/analytinsType';
-import qs from 'qs';
+import { other } from 'utils/analytinsType';
+// import qs from 'qs';
 import hegui_bg from './img/hegui_bg.png';
 import top_bg from './img/top_bg.png';
 
@@ -20,8 +20,6 @@ const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
 
-let urlParams = {};
-// let entryPageTime = '';
 @setBackGround('#fff')
 @fetch.inject()
 export default class wx_download_page extends PureComponent {
@@ -33,24 +31,8 @@ export default class wx_download_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		buriedPointEvent(other.mposDownloadPage);
-		urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
+		buriedPointEvent(other.weixinDownloadPage);
 		this.getDownloadUrl();
-	}
-	componentDidMount() {
-		// entryPageTime = new Date();
-	}
-	componentWillUnmount() {
-		// if (urlParams && urlParams.wxTestFrom) {
-		// 	let exitPageTime = new Date();
-		// 	let durationTime = (exitPageTime.getTime() - entryPageTime.getTime()) / 1000;
-		// 	buriedPointEvent(wxTest.wxTestDownPageTime, {
-		// 		durationTime: durationTime,
-		// 		entry: urlParams && urlParams.wxTestFrom
-		// 	});
-		// } else {
-		// 	entryPageTime = '';
-		// }
 	}
 
 	getDownloadUrl = () => {
@@ -71,26 +53,21 @@ export default class wx_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
-		if (urlParams && urlParams.wxTestFrom) {
-			buriedPointEvent(wxTest.btnClick_download, {
-				entry: urlParams.wxTestFrom
-			});
-		}
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
-			buriedPointEvent(other.mposDownloadBtnClick, {
+			buriedPointEvent(other.weixinDownloadBtnClick, {
 				device_type: 'IOS'
 			});
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
+			buriedPointEvent(other.weixinDownloadBtnClick, {
+				device_type: 'ANDROID'
+			});
 			if (isWXOpen()) {
 				this.setState({
 					visible: !this.state.visible
 				});
 			}
-			buriedPointEvent(other.mposDownloadBtnClick, {
-				device_type: 'ANDROID'
-			});
 			window.location.href = this.state.downloadUrl;
 		}
 	};

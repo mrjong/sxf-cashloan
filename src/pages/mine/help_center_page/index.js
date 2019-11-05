@@ -4,7 +4,7 @@
  */
 import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
-import { helpCenter } from 'utils/analytinsType';
+import { helpCenter, wxTabBar } from 'utils/analytinsType';
 import styles from './index.scss';
 import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
@@ -52,6 +52,9 @@ export default class help_center_page extends PureComponent {
 		queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
 		});
+		if (queryData.pageSource === 'wxTabBar') {
+			buriedPointEvent(wxTabBar.helpCenterView);
+		}
 		this.qryHotList();
 		this.qryCategoryList();
 		this.qiyu();
@@ -118,6 +121,9 @@ export default class help_center_page extends PureComponent {
 
 	goOnline = () => {
 		buriedPointEvent(helpCenter.goOnline);
+		if (queryData.pageSource === 'wxTabBar') {
+			buriedPointEvent(wxTabBar.onlineBtnClick);
+		}
 		this.props.history.push('/mine/qiyu_page');
 	};
 
@@ -207,7 +213,7 @@ export default class help_center_page extends PureComponent {
 		const { showQuestionModal, question } = this.state;
 		return (
 			<div className={styles.help_center_page}>
-				{tokenFromStorage && token && (queryData && queryData.pageSource !== 'weixin') && (
+				{tokenFromStorage && token && (queryData && queryData.pageSource !== 'wxTabBar') && (
 					<div className={styles.top_nav}>{this.renderTopNav()}</div>
 				)}
 				<div className={styles.pannel}>

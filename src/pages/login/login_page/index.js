@@ -59,7 +59,7 @@ const API = {
 @fetch.inject()
 @createForm()
 @domListen()
-@setBackGround('#fff')
+@setBackGround('#50C5FC')
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -516,14 +516,7 @@ export default class login_page extends PureComponent {
 					// 	pathname: '/others/mpos_download_page',
 					// 	search: `?wxTestFrom=${queryData.wxTestFrom}`
 					// });
-					this.setState(
-						{
-							showDownloadModal: true
-						},
-						() => {
-							this.startCountDown();
-						}
-					);
+					this.showDownLoadModal();
 				})
 				.catch(() => {
 					buriedPointEvent(login.queryUsrSCOpenIdFail);
@@ -603,7 +596,7 @@ export default class login_page extends PureComponent {
 
 	// 下载app
 	downloadApp = () => {
-		this.closeModal();
+		this.closeDownLoadModal();
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
@@ -624,8 +617,21 @@ export default class login_page extends PureComponent {
 		}
 	};
 
+	// 显示弹框
+	showDownLoadModal = () => {
+		buriedPointEvent(login.downloadModalShow);
+		this.setState(
+			{
+				showDownloadModal: true
+			},
+			() => {
+				this.startCountDown();
+			}
+		);
+	};
+
 	// 关闭弹框
-	closeModal = () => {
+	closeDownLoadModal = () => {
 		this.setState(
 			{
 				showDownloadModal: false,
@@ -864,7 +870,12 @@ export default class login_page extends PureComponent {
 								alt="按钮"
 							/>
 							{/* 关闭 */}
-							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
+							<img
+								className={styles.closeIcoStyle}
+								src={closeIco}
+								onClick={this.closeDownLoadModal}
+								alt="关闭"
+							/>
 						</div>
 					</Modal>
 				)}
