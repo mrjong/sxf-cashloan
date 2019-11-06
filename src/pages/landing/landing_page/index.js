@@ -1,17 +1,19 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-06 15:57:42
+ * @LastEditTime: 2019-11-06 16:57:57
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-// import { buriedPointEvent } from 'utils/analytins';
-// import { home } from 'utils/analytinsType';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 import { getH5Channel } from 'utils/common';
 import Cookie from 'js-cookie';
+import invalidImg from './img/invalid_img.png';
+import { Modal } from 'antd-mobile';
 
 const API = {
 	LANDING_IMG_URL: '/my/getLandingPage', // 获取落地页配置数据
@@ -25,7 +27,9 @@ export default class landing_page extends PureComponent {
 		super(props);
 		this.state = {
 			isAppOpen: false, // 是否是app webview打开
-			configData: null
+			configData: null,
+			invalidTxt: '', // 失效提示
+			invalidModalShow: false // 失效弹框
 		};
 	}
 
@@ -58,6 +62,10 @@ export default class landing_page extends PureComponent {
 		this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data !== null) {
 				res.data.landingTitle && this.props.setTitle(res.data.landingTitle);
+				res.data.landingError &&
+					this.setState({
+						invalidTxt: res.data.landingError
+					});
 				res.data.configs &&
 					res.data.configs.length &&
 					this.setState({
@@ -79,7 +87,14 @@ export default class landing_page extends PureComponent {
 				// 	imgUrl: res.data.landingImage
 				// });
 			} else {
-				this.props.toast.info(res.msgInfo);
+				if (res.msgCode === 'PCC-MARKET-0001' && res.data) {
+					this.setState({
+						invalidTxt: res.data,
+						invalidModalShow: true
+					});
+				} else {
+					this.props.toast.info(res.msgInfo);
+				}
 			}
 		});
 	}
@@ -108,6 +123,9 @@ export default class landing_page extends PureComponent {
 			case '0':
 				break;
 			case '1':
+				buriedPointEvent(home.landingImgClick, {
+					imgName: item.imageName
+				});
 				if (item.skipType === '0') {
 					window.location.href = item.skipUrl;
 				} else if (item.skipType === '1') {
@@ -140,6 +158,9 @@ export default class landing_page extends PureComponent {
 				}
 				break;
 			case '2':
+				buriedPointEvent(home.landingImgClick, {
+					imgName: item.imageName
+				});
 				// 参与活动
 				this.judgeLogin(() => {
 					this.getCount(item);
@@ -255,15 +276,7 @@ export default class landing_page extends PureComponent {
 	};
 
 	render() {
-		const { configData } = this.state;
-		// let frameUrl = '';
-		// if (PROJECT_ENV === 'pro') {
-		// 	frameUrl = 'https://lns-wap.vbillbank.com/disting/#/landing_page';
-		// } else if (PROJECT_ENV === 'dev') {
-		// 	frameUrl = 'https://lns-wap-test.vbillbank.com/disting/#/landing_page';
-		// } else if (PROJECT_ENV === 'test') {
-		// 	frameUrl = 'https://lns-wap-test.vbillbank.com/disting/#/landing_page';
-		// }
+		const { configData, invalidTxt, invalidModalShow } = this.state;
 		return (
 			<div className={styles.landing_page}>
 				{configData
@@ -280,6 +293,12 @@ export default class landing_page extends PureComponent {
 							);
 					  })
 					: null}
+				<Modal className="invalid_modal" visible={invalidModalShow} transparent>
+					<div className={styles.invalidBox}>
+						<img className={styles.invalidImg} src={invalidImg} />
+						{invalidTxt && <p>{invalidTxt}</p>}
+					</div>
+				</Modal>
 			</div>
 		);
 	}
