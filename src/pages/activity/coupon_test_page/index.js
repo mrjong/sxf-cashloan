@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-05 11:40:32
+ * @LastEditTime: 2019-11-06 16:03:50
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -22,6 +22,7 @@ import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
 import CountDown from '../../mine/coupon_page/component/CountDown';
+import HomeBtnClass from 'utils/HomeBtn';
 
 const API = {
 	couponJudge: '/couponTest/judge' // 判断用户是否满足领取条件接口
@@ -39,6 +40,7 @@ export default class coupon_test_page extends PureComponent {
 			isAppOpen: false, // 是否是app webview打开
 			registerChannel: '' // 注册渠道
 		};
+		this['HomeBtn'] = new HomeBtnClass(this);
 	}
 
 	componentWillMount() {
@@ -60,6 +62,7 @@ export default class coupon_test_page extends PureComponent {
 				registerChannel: queryData.regChannel
 			});
 		}
+		this['HomeBtn'].fetchData();
 	}
 
 	componentDidMount() {
@@ -118,11 +121,12 @@ export default class coupon_test_page extends PureComponent {
 							window.postMessage(JSON.stringify(activityInf), () => {});
 						}, 0);
 					} else {
-						// mpos或者h5中跳转账单页
-						this.props.history.push({
-							pathname: '/order/order_detail_page',
-							search: '?entryFrom=home'
-						});
+						// mpos或者h5中跳转对应节点
+						// this.props.history.push({
+						// 	pathname: '/order/order_detail_page',
+						// 	search: '?entryFrom=home'
+						// });
+						this['HomeBtn'].getData();
 					}
 				} else {
 					buriedPointEvent(activity.couponTestActivityUseNow, {
