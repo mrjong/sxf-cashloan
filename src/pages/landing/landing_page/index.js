@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-06 14:35:27
+ * @LastEditTime: 2019-11-06 15:57:42
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -264,19 +264,23 @@ export default class landing_page extends PureComponent {
 		// } else if (PROJECT_ENV === 'test') {
 		// 	frameUrl = 'https://lns-wap-test.vbillbank.com/disting/#/landing_page';
 		// }
-		return configData
-			? configData.map((item, index) => {
-					return (
-						<div
-							onClick={() => {
-								this.clickHandler(item);
-							}}
-							key={index}
-						>
-							{item.imageUrl && <img className={styles.configImg} src={item.imageUrl} />}
-						</div>
-					);
-			  })
-			: null;
+		return (
+			<div className={styles.landing_page}>
+				{configData
+					? configData.map((item, index) => {
+							return (
+								<div
+									onClick={() => {
+										this.clickHandler(item);
+									}}
+									key={index}
+								>
+									{item.imageUrl && <img className={styles.configImg} src={item.imageUrl} />}
+								</div>
+							);
+					  })
+					: null}
+			</div>
+		);
 	}
 }
