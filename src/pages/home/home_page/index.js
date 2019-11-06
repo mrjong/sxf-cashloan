@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-05 16:33:39
+ * @LastEditTime: 2019-11-06 15:26:51
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -262,18 +262,18 @@ export default class home_page extends PureComponent {
 		// 接口调用
 		this.props.$fetch.get(API.actiPopupSwitch).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data && result.data.value === '1') {
-				if (Cookie.get('modalShowTime') !== dayjs(new Date()).format('YYYYMMDD')) {
-					this.setState(
-						{
-							isShowActivityModal: true,
-							modalType: 'payCouponTest'
-						},
-						() => {
-							Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
-							// store.setShowActivityModal(true);
-						}
-					);
-				}
+				// if (Cookie.get('modalShowTime') !== dayjs(new Date()).format('YYYYMMDD')) {
+				this.setState(
+					{
+						isShowActivityModal: true,
+						modalType: 'payCouponTest'
+					},
+					() => {
+						Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
+						// store.setShowActivityModal(true);
+					}
+				);
+				// }
 			}
 		});
 	};
