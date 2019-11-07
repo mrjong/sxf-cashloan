@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-30 16:44:05
+ * @LastEditTime: 2019-11-07 11:35:35
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -18,7 +18,7 @@ import rules_bg from './img/rules_bg.png';
 import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
-// import { setBackGround } from 'utils/background';
+import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
 import CountDown from '../../mine/coupon_page/component/CountDown';
 
@@ -27,7 +27,7 @@ const API = {
 	noviceReceive: '/novice/receive' // 领取新手优惠券接口
 };
 
-// @setBackGround('#F64C46')
+@setBackGround('#F64C46')
 @fetch.inject()
 export default class new_users_page extends PureComponent {
 	constructor(props) {
