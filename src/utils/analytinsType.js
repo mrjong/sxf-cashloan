@@ -19,7 +19,9 @@ const login = {
 	submitFail: `${prefix}_LOGIN_SUBMIT_FAIL`, // 失败
 	queryUsrSCOpenIdFail: `${prefix}_QUERYUSRSCOPENIDFAIL`,
 	goHome: `${prefix}_GOHOME`,
-	goDownLoad: `${prefix}_GODOWNLOAD`
+	goDownLoad: `${prefix}_GODOWNLOAD`,
+	downloadModalShow: `${prefix}_DOWNLOADMODAL_SHOW`, //首页显示下载弹窗
+	downloadModalBtnClick: `${prefix}_DOWNLOADMODALBTN_CLICK` //首页显示下载弹窗按钮点击
 };
 
 const home = {
@@ -251,7 +253,9 @@ const other = {
 	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK`, //外部下载页按钮点击事件
 	testDownloadClick: `${prefix}_DOWNLOAD_CLICK`, //A测试
-	previewMaintenance: `${prefix}_MAINTENANCE_PAGE` //进入系统维护页面
+	previewMaintenance: `${prefix}_MAINTENANCE_PAGE`, //进入系统维护页面
+	weixinDownloadPage: `${prefix}_WEIXIN_DOWNLOAD_PAGE`, //微信下载页pv
+	weixinDownloadBtnClick: `${prefix}_WEIXIN_DOWNLOAD_BTN_CLICK` //微信下载页按钮点击事件
 };
 
 const daicao = {
@@ -296,6 +300,11 @@ const wxTest = {
 	wxTestLoginBtnClick: `${prefix}_WXTESTLOGINBTNCLICK`, // 登录页 按钮 点击次数
 	wxTestLoginSmsCode: `${prefix}_WXTESTLOGINSMSCODE` //  登录页 发送验证码次数
 };
+const wxTabBar = {
+	onlineService: `${prefix}_WX_ONLINE_SERVICE`, // 微信tab栏在线客服浏览次数
+	helpCenterView: `${prefix}_WX_HELPCENTERVIEW`, // 微信tab栏常见问题浏览次数
+	onlineBtnClick: `${prefix}_WX_ONLINEBTNCLICK` // 微信tab栏常见问题里面在线客服点击次数
+};
 const helpCenter = {
 	feedback: `${prefix}_MINE_CREDIT_FEEDBACK`,
 	select_class: `${prefix}_MINE_CLASSIFICATION_CHOICE`,
@@ -332,5 +341,6 @@ export {
 	daicao,
 	manualAudit,
 	wxTest,
-	helpCenter
+	helpCenter,
+	wxTabBar
 };

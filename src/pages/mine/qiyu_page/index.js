@@ -3,6 +3,9 @@ import fetch from 'sx-fetch';
 import style from './index.scss';
 import { store } from 'utils/store';
 import qs from 'qs';
+import { buriedPointEvent } from 'utils/analytins';
+import { wxTabBar } from 'utils/analytinsType';
+
 const API = {
 	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
 };
@@ -25,10 +28,11 @@ export default class qiyu_page extends PureComponent {
 		this.state = {};
 	}
 
-	componentWillMount() {}
-
 	componentDidMount() {
 		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		if (queryData.entry === 'wxTabBar') {
+			buriedPointEvent(wxTabBar.onlineService);
+		}
 		if (queryData.apptoken) {
 			//如果从APP过来
 			store.setToken(queryData.apptoken);

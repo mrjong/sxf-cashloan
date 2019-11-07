@@ -37,5 +37,12 @@ export default [
 		title: '还到',
 		arrowHide: true,
 		component: () => import('pages/login/momo_outer_login_page')
+	},
+	{
+		path: '/wx_login',
+		zhName: 'wxdl',
+		title: '登录',
+		arrowHide: true,
+		component: () => import('pages/login/wx_login_page')
 	}
 ];

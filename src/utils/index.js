@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-29 11:45:24
+ * @LastEditTime: 2019-11-07 13:46:31
  */
 /*eslint-disable */
 import React from 'react';
@@ -163,7 +163,9 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			'/mine/qiyu', // 因为app直接跳转到h5的webview，所以放开
 			'/home/loan_person_succ_page', // 因为app直接跳转到h5的webview，所以放开
 			'/home/loan_robot_succ_page', // 因为app直接跳转到h5的webview，所以放开
-			'/common/middle_page'
+			'/common/middle_page',
+			'/mine/help_center_page',
+			'/mine/question_category_page'
 		];
 		if (isWXOpen()) {
 			let pageListWx = ['/home/home', '/common/wx_middle_page', '/mpos/mpos_ioscontrol_page'];
