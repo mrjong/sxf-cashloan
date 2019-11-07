@@ -100,7 +100,11 @@
 			}
 			.couponDesc {
 				bottom: 68px;
-			}
+      }
+      .payCouponTestBtn {
+        position: absolute;
+				bottom: 0;
+      }
 		}
 		.closeBtn {
 			text-align: center;

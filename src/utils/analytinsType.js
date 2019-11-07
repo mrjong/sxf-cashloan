@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-05 15:06:18
+ * @LastEditTime: 2019-11-07 10:35:53
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -217,7 +217,10 @@ const activity = {
 	mianxi822LoginBtn: `${prefix}_ACTIVITY_MIANXI_822_LOGIN_BTN`, // 100元利息红包限时领活动 注册弹窗-确定
 	newUserActivityEntry: `${prefix}_ACTIVITY_NEWUSERS_ENTRY`, // 重启新手活动 进入入口
 	newUserActivityUseNow: `${prefix}_ACTIVITY_NEWUSERS_USE_NOW`, // 重启新手活动 点击已领取去使用
-	newUserActivityGetNow: `${prefix}_ACTIVITY_NEWUSERS_GET_NOW` // 重启新手活动 点击立即领取
+	newUserActivityGetNow: `${prefix}_ACTIVITY_NEWUSERS_GET_NOW`, // 重启新手活动 点击立即领取
+	couponTestActivityEntry: `${prefix}_ACTIVITY_COUPONTEST_ENTRY`, // 还款券测试 进入入口
+	couponTestActivityUseNow: `${prefix}_ACTIVITY_COUPONTEST_USE_NOW`, // 还款券测试 点击已领取去使用
+	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN` // 还款券测试 首页弹窗-收入囊中
 };
 
 const moxie_bank_list = {

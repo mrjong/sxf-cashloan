@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-21 15:24:57
+ * @LastEditTime: 2019-11-04 13:53:54
  */
 export default [
 	{
@@ -72,5 +72,11 @@ export default [
 		zhName: 'xrzxl',
 		title: '新人专享礼',
 		component: () => import('pages/activity/new_users_page')
+	},
+	{
+		path: '/activity/coupon_test_page',
+		zhName: 'hkyh',
+		title: '还款优惠',
+		component: () => import('pages/activity/coupon_test_page')
 	}
 ];
