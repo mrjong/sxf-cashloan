@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-06 16:57:57
+ * @LastEditTime: 2019-11-07 10:22:01
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -29,7 +29,8 @@ export default class landing_page extends PureComponent {
 			isAppOpen: false, // 是否是app webview打开
 			configData: null,
 			invalidTxt: '', // 失效提示
-			invalidModalShow: false // 失效弹框
+			invalidModalShow: false, // 失效弹框
+			landingTit: '' // 落地页title
 		};
 	}
 
@@ -61,7 +62,12 @@ export default class landing_page extends PureComponent {
 		const landingId = searchParams.landingId || '';
 		this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data !== null) {
-				res.data.landingTitle && this.props.setTitle(res.data.landingTitle);
+				if (res.data.landingTitle) {
+					this.props.setTitle(res.data.landingTitle);
+					this.setState({
+						landingTit: res.data.landingTitle
+					});
+				}
 				res.data.landingError &&
 					this.setState({
 						invalidTxt: res.data.landingError
@@ -101,6 +107,7 @@ export default class landing_page extends PureComponent {
 
 	// 点击图片
 	clickHandler = (item) => {
+		const { isAppOpen, landingTit } = this.state;
 		//  /** 图片地址 */
 		//  private String imageUrl;
 		//  /** 图片名称 */
@@ -127,7 +134,22 @@ export default class landing_page extends PureComponent {
 					imgName: item.imageName
 				});
 				if (item.skipType === '0') {
-					window.location.href = item.skipUrl;
+					// app 打开另一个webview
+					if (isAppOpen) {
+						setTimeout(() => {
+							window.postMessage(
+								JSON.stringify({
+									isWelfare: true,
+									operation: 'openWebview',
+									landingTit,
+									landingUrl: item.skipUrl
+								}),
+								() => {}
+							);
+						}, 0);
+					} else {
+						window.location.href = item.skipUrl;
+					}
 				} else if (item.skipType === '1') {
 					// APP页面 中 0 代表跳转首页 1代码跳转优惠券列表页面
 					if (item.skipUrl === '0') {
@@ -225,6 +247,7 @@ export default class landing_page extends PureComponent {
 
 	// 用户抽奖
 	getDraw = (item) => {
+		const { isAppOpen, landingTit } = this.state;
 		const params = {
 			activeId: item.activeBizId,
 			channel: getH5Channel() // 用户渠道
@@ -241,7 +264,22 @@ export default class landing_page extends PureComponent {
 						// 成功后跳转
 						if (item.activeSuccess === '1') {
 							if (item.skipType === '0') {
-								window.location.href = item.skipUrl;
+								// app 打开另一个webview
+								if (isAppOpen) {
+									setTimeout(() => {
+										window.postMessage(
+											JSON.stringify({
+												isWelfare: true,
+												operation: 'openWebview',
+												landingTit,
+												landingUrl: item.skipUrl
+											}),
+											() => {}
+										);
+									}, 0);
+								} else {
+									window.location.href = item.skipUrl;
+								}
 							} else if (item.skipType === '1') {
 								// APP页面 中 0 代表跳转首页 1代码跳转优惠券列表页面
 								if (item.skipUrl === '0') {
