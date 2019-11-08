@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-07 10:22:01
+ * @LastEditTime: 2019-11-08 11:15:40
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -68,10 +68,10 @@ export default class landing_page extends PureComponent {
 						landingTit: res.data.landingTitle
 					});
 				}
-				res.data.landingError &&
-					this.setState({
-						invalidTxt: res.data.landingError
-					});
+				// res.data.landingError &&
+				// 	this.setState({
+				// 		invalidTxt: res.data.landingError
+				// 	});
 				res.data.configs &&
 					res.data.configs.length &&
 					this.setState({
@@ -95,7 +95,7 @@ export default class landing_page extends PureComponent {
 			} else {
 				if (res.msgCode === 'PCC-MARKET-0001' && res.data) {
 					this.setState({
-						invalidTxt: res.data,
+						invalidTxt: res.data.landingError,
 						invalidModalShow: true
 					});
 				} else {
@@ -230,6 +230,7 @@ export default class landing_page extends PureComponent {
 
 	// 大转盘活动-用户抽奖剩余次数查询
 	getCount = (item) => {
+		const failTip = item.activeError ? item.activeError : '领取失败';
 		this.props.$fetch
 			.post(API.userCount, { activeId: item.activeBizId }, { noLginRouter: true })
 			.then((res) => {
@@ -237,7 +238,7 @@ export default class landing_page extends PureComponent {
 					if (res.data.data.count && Number(res.data.data.count) > 0) {
 						this.getDraw(item);
 					} else {
-						this.props.toast.info('您的抽奖次数已用尽');
+						this.props.toast.info(failTip);
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
