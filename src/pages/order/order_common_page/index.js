@@ -457,6 +457,11 @@ export default class order_detail_page extends PureComponent {
 			}
 			perdListArray.push(item);
 		}
+		if (this.state.penaltyInfo.show) {
+			//如果账单逾期
+			orderList = orderList.filter((item) => item.perdSts === '1');
+			perdListArray = perdListArray.filter((item) => item.perdSts === '1');
+		}
 		this.setState(
 			{
 				orderList: orderList.length > 0 ? orderList : perdListArray
@@ -939,16 +944,17 @@ export default class order_detail_page extends PureComponent {
 
 	orderListCheckClick = (item) => {
 		for (let i = 0; i < this.state.orderList.length; i++) {
-			if (i <= item.key && this.state.orderList[i].isShowCheck) {
+			if (this.state.orderList[i].perdNum <= item.perdNum && this.state.orderList[i].isShowCheck) {
 				this.state.orderList[i].isChecked = true;
 			} else {
 				this.state.orderList[i].isChecked = false;
 			}
 		}
-		this.state.orderList[item.key] = item;
+		let arr = this.state.orderList.map((v) => (v.perdNum === item.perdNum ? item : v));
+
 		this.setState(
 			{
-				orderList: [...this.state.orderList]
+				orderList: arr
 			},
 			() => {
 				this.handlePenaltyInfoCheckSts();
