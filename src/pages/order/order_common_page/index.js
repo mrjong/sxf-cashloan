@@ -1063,14 +1063,16 @@ export default class order_detail_page extends PureComponent {
 				break;
 		}
 		for (let i = 0; i < this.state.orderList.length; i++) {
-			if (i !== item.key) {
+			if (this.state.orderList[i].perdNum !== item.perdNum) {
 				this.state.orderList[i].showDesc = false;
 				this.state.orderList[i].arrowHide = 'down';
 			}
 		}
-		this.state.orderList[item.key] = item;
+		let arr = this.state.orderList.map((v) => (v.perdNum === item.perdNum ? item : v));
+
+		// this.state.orderList[item.key] = item;
 		this.setState({
-			orderList: [...this.state.orderList]
+			orderList: arr
 		});
 	};
 
