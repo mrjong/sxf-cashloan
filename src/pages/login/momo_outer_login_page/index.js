@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-16 17:41:33
+ * @LastEditTime: 2019-11-11 17:23:57
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,7 +11,14 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { getDeviceType, getFirstError, validators, handleInputBlur, recordContract } from 'utils';
+import {
+	getDeviceType,
+	getFirstError,
+	validators,
+	handleInputBlur,
+	recordContract,
+	queryUsrSCOpenId
+} from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
@@ -23,6 +30,7 @@ import loginModalBg from '../login_common_page/img/login_modal.png';
 import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
 import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 let timmer;
 const API = {
@@ -182,25 +190,12 @@ export default class momo_outer_login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						recordContract({
 							contractType: '01,02'
 						});
-						if (!store.getQueryUsrSCOpenId()) {
-							this.props.$fetch.get(API.queryUsrSCOpenId).then((res) => {
-								if (res.msgCode === 'PTM0000') {
-									window.sa.login(res.data);
-									store.setQueryUsrSCOpenId(res.data);
-								}
-								this.setState(
-									{
-										showDownloadModal: true
-									},
-									() => {
-										this.startCountDown();
-									}
-								);
-							});
-						} else {
+						queryUsrSCOpenId({ $props: this.props }).then(() => {
 							this.setState(
 								{
 									showDownloadModal: true
@@ -209,7 +204,7 @@ export default class momo_outer_login_page extends PureComponent {
 									this.startCountDown();
 								}
 							);
-						}
+						});
 					},
 					(error) => {
 						error.msgInfo &&

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-07 10:36:00
+ * @LastEditTime: 2019-11-11 17:00:38
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -28,7 +28,7 @@ import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
-import TFDInit from 'utils/getTongFuDun';
+import { TFDLogin } from 'utils/getTongFuDun';
 // console.log(aa)
 import {
 	CarouselHome,
@@ -898,7 +898,7 @@ export default class home_page extends PureComponent {
 		switch (code) {
 			case 'CN0003':
 				// 通付盾 获取设备指纹
-				TFDInit('fq');
+				TFDLogin();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
 					//需要引导下载app

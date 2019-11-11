@@ -4,10 +4,11 @@ import { store } from 'utils/store';
 import { InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import Cookie from 'js-cookie';
-import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur, queryUsrSCOpenId } from 'utils';
 import { getH5Channel } from 'utils/common';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 let timmer;
 const API = {
@@ -62,13 +63,15 @@ export default class dc_landing_page extends PureComponent {
 								res.msgInfo && this.props.toast.info(res.msgInfo);
 								return;
 							}
-							window.sa.login(res.data.userId);
+							queryUsrSCOpenId({ $props: this.props });
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 
 							// store.setToken(res.data.tokenId);
 
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
 							this.props.toast.info('领取成功，请去APP打开使用', 2, () => {
 								this.props.history.replace('/others/download_page');
 							});

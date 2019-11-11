@@ -1,12 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 16:28:38
+ * @LastEditTime: 2019-11-11 16:29:55
  */
 import { store } from 'utils/store';
 import { getDeviceType, getNextStr, isCanLoan, getMoxieData, getMxStatus } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
-import TFDInit from 'utils/getTongFuDun';
+import { TFDLogin } from 'utils/getTongFuDun';
 import { switchCreditService } from 'utils';
 const API = {
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
@@ -499,7 +499,7 @@ class HomeBtn {
 		switch (code) {
 			case 'CN0003':
 				// 通付盾 获取设备指纹
-				TFDInit('fq');
+				TFDLogin();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
 				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
 					//需要引导下载app

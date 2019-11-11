@@ -11,6 +11,7 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -115,6 +116,8 @@ export default class LoginAlert extends Component {
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
 							if (res.data && res.data.registerFlg === '0') {
 								// 1为已注册直接弹出针对于新用户弹框 0为发券
 								loginCb && loginCb();

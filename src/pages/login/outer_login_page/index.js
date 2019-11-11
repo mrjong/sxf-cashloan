@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-04 10:53:47
+ * @LastEditTime: 2019-11-11 17:18:10
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -27,6 +27,7 @@ import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { sxflogin } from 'utils/sxfAnalytinsType';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 let timmer;
 const API = {
@@ -187,6 +188,8 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						recordContract({
 							contractType: '01,02'
 						});

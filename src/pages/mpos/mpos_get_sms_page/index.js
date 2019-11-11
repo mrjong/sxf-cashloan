@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 10:05:41
+ * @LastEditTime: 2019-11-11 17:50:31
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -11,6 +11,9 @@ import qs from 'qs';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import click from '../mpos_service_authorization_page/img/Button.png';
+
+import { TFDLogin } from 'utils/getTongFuDun';
+
 const needDisplayOptions = ['basicInf'];
 const API = {
 	sendsms: '/cmm/sendsms',
@@ -94,10 +97,11 @@ export default class mpos_get_sms_page extends PureComponent {
 			.then(
 				(res) => {
 					if (res.authSts === '00') {
-						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						this.goHome();
 					} else {
 						this.props.toast.info('授权失败', 3, () => {

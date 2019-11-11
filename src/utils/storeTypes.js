@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-18 13:47:50
+ * @LastEditTime: 2019-11-11 16:07:47
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -95,5 +95,7 @@ export const storeTypes = {
 	BonusActivity: 'BonusActivity', // 参与100元利息红包限时领活动
 	AutIdCard: 'AutIdCard', // 信用卡前置authid
 	JFBackUrl: 'JFBackUrl', // 跳转jf授权页 授权后返回的url
-	GotoCard: 'GotoCard' // 运营上成功之后 无法返回首页
+	GotoCard: 'GotoCard', // 运营上成功之后 无法返回首页
+	TFDBack1: 'TFDBack1', // call通付盾成功
+	TFDBack2: 'TFDBack2' // 通付盾报备给后端成功
 };
