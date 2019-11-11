@@ -1114,8 +1114,8 @@ export default class order_detail_page extends PureComponent {
 			payCrdNoLast = '',
 			wthdCrdCorpOrgNm = '',
 			wthdCrdNoLast = '',
-			perdList,
-			discRedRepay = false
+			perdList
+			// discRedRepay = false
 		} = billDesc;
 		const itemList = [
 			{
@@ -1352,12 +1352,12 @@ export default class order_detail_page extends PureComponent {
 									</li>
 								))}
 							</ul>
-							{!isBillClean && (
+							{/* {!isBillClean && (
 								<div className={styles.payAll} onClick={this.payAllOrder}>
 									{discRedRepay && <i />}
 									一键结清
 								</div>
-							)}
+							)} */}
 						</Panel>
 
 						<div className={styles.submit_btn}>
