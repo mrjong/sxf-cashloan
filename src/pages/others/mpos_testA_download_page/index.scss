@@ -6,109 +6,76 @@
 	.banner {
 		width: 100%;
 		display: block;
-  }
+	}
 	.content {
 		position: relative;
-		top: -96px;
+		top: -40px;
 		text-align: center;
+		width: 666px;
+		height: 670px;
 		background: #fff;
-		border-radius: 30px;
+		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
+		border-radius: 10px;
 		margin: 0 auto;
+		padding: 23px;
 		box-sizing: border-box;
 
-		.sureBtn {
-      display: block;
-      width:624px;
-			height: 96px;
-			line-height: 96px;
-      background: linear-gradient(-90deg,rgba(102,171,250,1),rgba(76,122,253,1));
-      box-shadow: 0px 2px 21px 0px rgba(77,124,253,0.5);
-      border-radius: 48px;
-			font-size: 30px;
-			font-weight: bold;
-			font-family: 'PingFang SC';
-			color: #fff;
-			margin: 84px auto 80px;
-			span {
-				display: inline-block;
-				width: 100%;
-			}
-			// &:hover,
-			// &:active {
-			// 	background-color: #FE4D2A;
-			// }
-			&.dis {
-				opacity: 0.5;
-			}
-		}
-	}
-  .yuanPNG {
-    width: 676px;
-    height: 334px;
-    margin-top: 53px;
-    vertical-align: top;
-  }
-  .listPNG {
-    width: 693px;
-    height: 372px;
-    margin: 0 auto;
-    vertical-align: top;
-  }
-}
-
-.loginModalContainer {
-	position: relative;
-	padding-top: 87px;
-	.loginModalBg {
-		display: block;
-		width: 100%;
-	}
-	.loginModalBtn {
-		position: absolute;
-		left: 50%;
-		transform: translate(-50%, 0);
-		bottom: 20px;
-		width: 422px;
-		height: 112px;
-	}
-	.tipsCont {
-		position: absolute;
-		left: 50%;
-		transform: translate(-50%, 0);
-		bottom: 185px;
-		font-size: 26px;
-		color: #f6521f;
-		line-height: 100%;
-		span {
-			font-weight: 600;
-		}
-	}
-	.closeIcoStyle {
-		position: absolute;
-		right: 42px;
-		width: 25px;
-		height: 26px;
-		top: 0;
-	}
-}
-
-:global {
-	.loginModalBox {
-		.am-modal.am-modal-transparent {
-			width: 100%;
+		.loginContentBox {
 			position: relative;
-			top: -87px;
-			// position: absolute;
-			// top: 60px;
+			border: 1px solid #283042;
+			padding: 30px;
+			box-sizing: border-box;
+			height: 100%;
 		}
-		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
-			padding: 0;
+		.title {
+			position: relative;
+			font-size: 34px;
+			font-family: PingFangSC-Regular;
+			color: #737c91;
+			margin-top: 80px;
 		}
-		.am-modal.am-modal-transparent .am-modal-content {
-			padding: 0;
+		.moneyText {
+			position: relative;
+			top: -30px;
+			font-size: 168px;
+			letter-spacing: 10px;
+			font-family: 'DINMitAlt';
+			color: #121c32;
 		}
-		.am-modal-content {
-			background: transparent;
+		.commonLine {
+			position: absolute;
+			display: inline-block;
+			height: 18px;
+			width: 18px;
+			border-color: #283042;
+			border-style: solid;
+			box-sizing: border-box;
+		}
+		.leftTopLine {
+			top: -1px;
+			left: -1px;
+			border-width: 4px 0 0 4px;
+		}
+		.rightTopLine {
+			top: -1px;
+			right: -1px;
+			border-width: 4px 4px 0 0;
+		}
+		.leftBottomLine {
+			bottom: -1px;
+			left: -1px;
+			border-width: 0 0 4px 4px;
+		}
+		.rightBottomLine {
+			bottom: -1px;
+			right: -1px;
+			border-width: 0 4px 4px 0;
+		}
+		.sureBtn {
+			display: block;
+			width: 580px;
+			height: 160px;
+			margin: -20px auto 0;
 		}
 	}
 }
