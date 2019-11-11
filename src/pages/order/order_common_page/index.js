@@ -194,6 +194,7 @@ export default class order_detail_page extends PureComponent {
 
 	// 获取还款信息
 	getLoanInfo = () => {
+		let isFilterOverdueBill = false;
 		this.props.$fetch
 			.post(API.qryDtl, {
 				billNo: this.state.billNo
@@ -266,12 +267,13 @@ export default class order_detail_page extends PureComponent {
 							} else if (!(billOvduSts === null || billOvduSts === '4' || billOvduSts === '2')) {
 								//有罚息或滞纳金
 								this.handlePenaltyInfo(billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt);
+								isFilterOverdueBill = true;
 							} else {
 								this.setState({
 									penaltyInfo: {}
 								});
 							}
-							this.showPerdList(orderList);
+							this.showPerdList(orderList, isFilterOverdueBill);
 						}
 					);
 				} else {
@@ -389,7 +391,7 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	// 显示还款计划
-	showPerdList = (orderList = []) => {
+	showPerdList = (orderList = [], isFilterOverdueBill) => {
 		const { thisPerdNum } = this.state;
 		let perdListArray = [];
 		let perdList = this.state.perdList;
@@ -415,7 +417,9 @@ export default class order_detail_page extends PureComponent {
 				isShowCheck: true,
 				isChecked: false,
 				perdTotAmt: perdList[i].perdTotAmt,
-				perdStsNm: perdList[i].perdStsNm
+				perdStsNm: perdList[i].perdStsNm,
+				perdSts: perdList[i].perdSts,
+				perdNum: perdList[i].perdNum
 			};
 			// 总账单的状态是否有逾期
 			if (perdList[i].perdSts === '1') {
@@ -457,7 +461,7 @@ export default class order_detail_page extends PureComponent {
 			}
 			perdListArray.push(item);
 		}
-		if (this.state.penaltyInfo.show) {
+		if (isFilterOverdueBill) {
 			//如果账单逾期
 			orderList = orderList.filter((item) => item.perdSts === '1');
 			perdListArray = perdListArray.filter((item) => item.perdSts === '1');
@@ -951,7 +955,6 @@ export default class order_detail_page extends PureComponent {
 			}
 		}
 		let arr = this.state.orderList.map((v) => (v.perdNum === item.perdNum ? item : v));
-
 		this.setState(
 			{
 				orderList: arr
@@ -1012,7 +1015,7 @@ export default class order_detail_page extends PureComponent {
 		let repayPerds = [];
 		let checkedArr = this.state.orderList.filter((v) => v.isChecked);
 		for (let i = 0; i < checkedArr.length; i++) {
-			repayPerds.push(checkedArr[i].key + 1);
+			repayPerds.push(checkedArr[i].perdNum);
 		}
 		if (this.state.penaltyInfo.isChecked) {
 			repayPerds.unshift(0);
