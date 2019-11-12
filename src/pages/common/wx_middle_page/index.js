@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 14:38:12
+ * @LastEditTime: 2019-11-11 17:51:19
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -10,6 +10,7 @@ import { store } from 'utils/store';
 import Blanks from 'components/Blank';
 import { getDeviceType } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 const API = {
 	wxAuthcb: '/wx/authcb',
@@ -50,6 +51,8 @@ export default class wx_middle_page extends Component {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						this.jumpRouter();
 					} else {
 						this.props.toast.info(res.msgInfo); //请求失败,弹出请求失败信息
@@ -92,6 +95,8 @@ export default class wx_middle_page extends Component {
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						if (query.url) {
 							window.location.href = query.url;
 						} else {

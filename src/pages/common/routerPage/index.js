@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 14:16:17
+ * @LastEditTime: 2019-11-11 16:31:03
  */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
@@ -11,7 +11,7 @@ import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { changeHistoryState, pagesIgnore } from 'utils';
-import TFDInit from 'utils/getTongFuDun';
+import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { Provider } from './context';
@@ -98,10 +98,8 @@ export default class router_Page extends PureComponent {
 
 		try {
 			let route;
-			if (!pagesIgnore(window.location.pathname)) {
-				// 通付盾 获取设备指纹
-				TFDInit();
-			}
+			// 看条件自动触发通付盾
+			TFDInit();
 			for (let i = 0; i < Routers.length; i++) {
 				if (match.url === Routers[i].path) {
 					this.setState({

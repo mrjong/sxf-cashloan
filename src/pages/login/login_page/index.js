@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-24 12:24:56
+ * @LastEditTime: 2019-11-11 17:15:21
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -10,6 +10,7 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { TFDLogin } from 'utils/getTongFuDun';
 import {
 	getDeviceType,
 	getFirstError,
@@ -229,6 +230,8 @@ export default class login_page extends PureComponent {
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
 						// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
 						recordContract({

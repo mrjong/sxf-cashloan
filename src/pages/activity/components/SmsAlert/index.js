@@ -9,6 +9,7 @@ import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import Cookie from 'js-cookie';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -147,12 +148,13 @@ export default class SmsAlert extends Component {
 						(res) => {
 							if (res.msgCode === 'PTM0000') {
 								goSubmitCb.PTM0000 && goSubmitCb.PTM0000(res, otherProps_type);
-								// sa.login(res.userId);
 								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setMposToken(true);
 								smsSuccess && smsSuccess();
 								store.setToken(res.loginToken);
+								// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+								TFDLogin();
 								this.closeCb();
 								// refreshPageFn();
 							} else if (
@@ -259,6 +261,8 @@ export default class SmsAlert extends Component {
 					smsSuccess && smsSuccess();
 					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 					store.setToken(res.loginToken);
+					// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+					TFDLogin();
 					chkAuthCb.authFlag1 && chkAuthCb.authFlag1(res, otherProps_type);
 					this.setState({
 						loginProps_needLogin_copy: false
@@ -317,11 +321,12 @@ export default class SmsAlert extends Component {
 					} else if (res.authSts === '00') {
 						// 授权成功
 						doAuthCb.authSts00 && doAuthCb.authSts00(res, otherProps_type);
-						// sa.login(res.userId);
 						store.setMposToken(true);
 						smsSuccess && smsSuccess();
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						this.setState({
 							loginProps_needLogin_copy: false
 						});
@@ -375,12 +380,13 @@ export default class SmsAlert extends Component {
 						(res) => {
 							if (res.msgCode === 'PTM0000') {
 								goLoginCb.PTM0000 && goLoginCb.PTM0000(res, otherProps_type);
-								// sa.login(res.userId);
 								store.setMposToken(true);
 								smsSuccess && smsSuccess();
 								Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setToken(res.data.tokenId);
+								// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+								TFDLogin();
 								this.closeCb();
 								// refreshPageFn();
 							} else if (

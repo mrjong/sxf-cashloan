@@ -9,6 +9,7 @@ import Cookie from 'js-cookie';
 import { getDeviceType, getFirstError, isWXOpen } from 'utils';
 import styles from './index.scss';
 import bannerImg from './img/banner.png';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 let timmer;
 const API = {
@@ -178,6 +179,8 @@ export default class wxshare_page extends PureComponent {
 
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
 							this.getShareUrl();
 						},
 						(error) => {

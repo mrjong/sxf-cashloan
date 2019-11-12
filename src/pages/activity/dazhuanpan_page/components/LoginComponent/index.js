@@ -7,7 +7,7 @@ import { getH5Channel } from 'utils/common';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
-
+import { TFDLogin } from 'utils/getTongFuDun';
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms'
@@ -107,11 +107,10 @@ export default class LoginComponent extends Component {
 								return;
 							}
 							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
-
-							// store.setToken(res.data.tokenId);
-
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
 							closeCb();
 							refreshPageFn();
 						},

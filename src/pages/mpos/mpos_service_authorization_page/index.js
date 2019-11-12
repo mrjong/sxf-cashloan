@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:41:35
+ * @LastEditTime: 2019-11-11 17:49:28
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -14,6 +14,8 @@ import { buriedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import { mpos_service_authorization } from 'utils/analytinsType';
 import { Checkbox } from 'antd-mobile';
+import { TFDLogin } from 'utils/getTongFuDun';
+
 import logo from './img/logo.png';
 const AgreeItem = Checkbox.AgreeItem;
 const needDisplayOptions = ['basicInf'];
@@ -56,10 +58,11 @@ export default class mpos_service_authorization_page extends PureComponent {
 							`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${res.mblNoHid}`
 						);
 					} else if (res.authSts === '00') {
-						// sa.login(res.userId);
 						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
+						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+						TFDLogin();
 						this.goHome();
 					} else {
 						this.props.toast.info('授权失败', 3, () => {
