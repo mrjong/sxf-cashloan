@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 20:16:46
+ * @LastEditTime: 2019-11-12 09:38:32
  */
 import { guid } from 'utils';
 import fetch from 'sx-fetch';
@@ -36,6 +36,7 @@ function requestBackReport() {
 	isFetch = true;
 	if (store.getTFDBack2()) {
 		clearInterval(timer);
+		isFetch = false;
 		return;
 	}
 	fetch
