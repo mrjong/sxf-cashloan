@@ -461,6 +461,10 @@ export default class order_detail_page extends PureComponent {
 			}
 			perdListArray.push(item);
 		}
+		this.setState({
+			actOrderList: orderList.length > 0 ? orderList : perdListArray //实际的子账单列表
+		});
+
 		if (isFilterOverdueBill) {
 			//如果账单逾期
 			orderList = orderList.filter((item) => item.perdSts === '1');
@@ -752,8 +756,8 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	getpayResult = (message) => {
-		const { billDesc, isPayAll, orderList, penaltyInfo } = this.state;
-		const lastPerd = orderList[orderList.length - 1];
+		const { billDesc, isPayAll, actOrderList, penaltyInfo } = this.state;
+		const lastPerd = actOrderList[actOrderList.length - 1];
 		//判断是否有罚息来决定是否结清
 		let isClear = false;
 		if (penaltyInfo.show) {
