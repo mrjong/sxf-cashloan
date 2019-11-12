@@ -453,8 +453,8 @@ export default class login_page extends PureComponent {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				this.setState({
-					slideImageUrl: `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: `data:image/png;base64,${res.data.s}`,
+					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
+					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
 					yOffset: res.data.sy, // 小图距离大图顶部距离
 					bigImageH: res.data.bh, // 大图实际高度
 					showSlideModal: true

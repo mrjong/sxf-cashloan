@@ -786,7 +786,7 @@ export default class home_page extends PureComponent {
 		this.props.$fetch.post(API.BANNER, params, { hideLoading: true }).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				const bannerData = result.data.map((item) => ({
-					src: `data:image/png;base64,${item.picUrl}`,
+					src: item.ossUrl ? item.ossUrl : `data:image/png;base64,${item.picUrl}`,
 					url: item.gotoFlag !== 0 ? item.gotoUrl : '',
 					title: item.title
 				}));
