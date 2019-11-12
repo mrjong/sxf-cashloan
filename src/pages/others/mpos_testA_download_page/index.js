@@ -5,33 +5,23 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
-import { Toast, Modal } from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
-// import SXFButton from 'components/ButtonCustom';
 import { getDeviceType, queryUsrSCOpenId } from 'utils';
-import { other, daicao } from 'utils/analytinsType';
+import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
-import loginModalBg from '../../login/login_common_page/img/login_modal.png';
-import loginModalBtn from '../../login/login_common_page/img/login_modal_btn.png';
-import closeIco from '../../login/login_common_page/img/close_ico.png';
-import listPNG from './img/list.png';
-import yuanPNG from './img/yuan.png';
-import loginBgImg from './img/loginBg.png';
+import button_img from './img/button_img.png';
+import cover_img from './img/cover_img.png';
 
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
-let modalTimer = null;
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {
-			times: 3, // 弹框里的倒计时
-			showDownloadModal: false
-		};
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage);
@@ -70,51 +60,11 @@ export default class mpos_download_page extends PureComponent {
 				device_type: 'ANDROID'
 			});
 		}
-		this.setState(
-			{
-				showDownloadModal: true
-			},
-			() => {
-				this.startCountDown();
-			}
-		);
-	};
-
-	// 弹框里的倒计时
-	startCountDown = () => {
-		let times = this.state.times;
-		this.clearCountDown();
-		modalTimer = setInterval(() => {
-			this.setState({
-				times: times--
-			});
-			if (times <= -1) {
-				this.clearCountDown();
-				this.downloadApp();
-			}
-		}, 1000);
-	};
-
-	clearCountDown = () => {
-		clearInterval(modalTimer);
-	};
-
-	// 关闭弹框
-	closeModal = () => {
-		this.setState(
-			{
-				showDownloadModal: false,
-				times: 3
-			},
-			() => {
-				this.clearCountDown();
-			}
-		);
+		this.downloadApp();
 	};
 
 	// 下载app
 	downloadApp = () => {
-		this.closeModal();
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
@@ -136,37 +86,27 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	render() {
-		const { showDownloadModal } = this.state;
 		return (
 			<div className={styles.mpos_download_page}>
-				<img className={styles.banner} src={loginBgImg} alt="落地页banner" />
+				<img className={styles.banner} src={cover_img} alt="落地页banner" />
 				<div className={styles.content}>
-					<img className={styles.yuanPNG} src={yuanPNG} />
-					<div className={styles.sureBtn} onClick={this.downloadClickFun}>
-						<span>立即申请</span>
+					<div className={styles.loginContentBox}>
+						<p className={styles.title}>最高可借(元）</p>
+						<p className={styles.moneyText}>50000</p>
+						<img
+							src={button_img}
+							alt=""
+							onClick={() => {
+								this.downloadClickFun();
+							}}
+							className={styles.sureBtn}
+						/>
+						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
-					<img className={styles.listPNG} src={listPNG} />
 				</div>
-				{showDownloadModal && (
-					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
-						<div className={styles.loginModalContainer}>
-							{/* 大图 */}
-							<img className={styles.loginModalBg} src={loginModalBg} alt="背景" />
-							{/* 按钮 */}
-							<img
-								className={styles.loginModalBtn}
-								src={loginModalBtn}
-								onClick={() => {
-									buriedPointEvent(daicao.modalBtnClick);
-									this.downloadApp();
-								}}
-								alt="按钮"
-							/>
-							{/* 关闭 */}
-							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
-						</div>
-					</Modal>
-				)}
 			</div>
 		);
 	}
