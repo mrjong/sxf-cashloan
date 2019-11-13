@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 13:57:05
+ * @LastEditTime: 2019-11-13 17:56:07
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -99,7 +99,7 @@ export default class bind_credit_page extends PureComponent {
 
 	// 校验信用卡卡号
 	validateCarNumber = (rule, value, callback) => {
-		if (!validators.bankCreditCardNumber(value.replace(/\s*/g, ''))) {
+		if (!value || !validators.number(value.replace(/\s*/g, ''))) {
 			callback('请输入有效银行卡号');
 		} else {
 			callback();
@@ -283,7 +283,7 @@ export default class bind_credit_page extends PureComponent {
 					<Item extra={this.state.userName}>持卡人</Item>
 					<Item extra={this.state.bankNm}>发卡行</Item>
 					<InputItem
-						maxLength="24"
+						maxLength="29"
 						type="bankCard"
 						{...getFieldProps('valueInputCarNumber', {
 							rules: [
