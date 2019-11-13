@@ -1,22 +1,25 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 16:31:03
+ * @LastEditTime: 2019-11-13 16:43:42
  */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
 import errPage from 'pages/common/err_page';
 import Header from 'components/Header';
+import fetch from 'sx-fetch';
+
 import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { changeHistoryState, pagesIgnore } from 'utils';
+
+import { changeHistoryState, pagesIgnore, activeConfigSts } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { Provider } from './context';
 const { PROJECT_ENV } = process.env;
-
+@fetch.inject()
 export default class router_Page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -40,10 +43,10 @@ export default class router_Page extends PureComponent {
 		if (!window.ReactRouterHistory) {
 			window.ReactRouterHistory = this.props.history;
 		}
-		this.loadComponent(this.props);
+		this.acRouter(this.props);
 	}
 	componentWillReceiveProps(nextProps) {
-		this.loadComponent(nextProps);
+		this.acRouter(nextProps);
 		store.setHistoryRouter(location.pathname);
 	}
 	getTip = () => {
@@ -82,6 +85,19 @@ export default class router_Page extends PureComponent {
 			}
 		}
 		arrayCnt(arr);
+	};
+	acRouter = (Props) => {
+		if (location.pathname === '/home/home' || location.pathname === '/mine/mine_page') {
+			activeConfigSts({
+				$props: this.props,
+				type: 'A',
+				callback: () => {
+					this.loadComponent(Props);
+				}
+			});
+			return;
+		}
+		this.loadComponent(Props);
 	};
 	loadComponent = async (props) => {
 		const token = Cookie.get('fin-v-card-token');
