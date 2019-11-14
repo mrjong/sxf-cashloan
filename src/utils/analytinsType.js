@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-07 10:35:53
+ * @LastEditTime: 2019-11-14 09:34:25
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -100,7 +100,8 @@ const home = {
 	feedModalBtnClick: `${prefix}_TIPS_RISSUES`, //选择问题按钮点击总事件
 	goSuperMarket: `${prefix}_HOME_GOTO_LOAN_SUPERMARKET`, //还卡-点击进入贷超页面按钮
 	protocolAlertChange: `${prefix}_PROTOCOL_ALERT_CHANGE`,
-	protocolAlertClose: `${prefix}_PROTOCOL_ALERT_CLOSE`
+	protocolAlertClose: `${prefix}_PROTOCOL_ALERT_CLOSE`,
+	landingImgClick: `${prefix}_HOME_LANDING_IMG_CLICK` // 落地页图片交互点击
 };
 
 const mine = {
