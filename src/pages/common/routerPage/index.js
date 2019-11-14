@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-13 16:43:42
+ * @LastEditTime: 2019-11-13 17:24:03
  */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
@@ -87,7 +87,7 @@ export default class router_Page extends PureComponent {
 		arrayCnt(arr);
 	};
 	acRouter = (Props) => {
-		if (location.pathname === '/home/home' || location.pathname === '/mine/mine_page') {
+		if (location.pathname === '/home/home') {
 			activeConfigSts({
 				$props: this.props,
 				type: 'A',
