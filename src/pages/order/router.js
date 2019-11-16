@@ -41,5 +41,17 @@ export default [
 		zhName: 'hkxx',
 		title: '还款信息',
 		component: () => import('pages/order/order_repay_page')
+	},
+	{
+		path: '/order/order_repay_result',
+		zhName: 'hkjg',
+		title: '还款结果',
+		component: () => import('pages/order/order_repay_result')
+	},
+	{
+		path: '/order/order_repay_confirm',
+		zhName: 'hkqr',
+		title: '还款确认',
+		component: () => import('pages/order/order_repay_confirm')
 	}
 ];

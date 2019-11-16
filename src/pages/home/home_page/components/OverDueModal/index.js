@@ -2,7 +2,6 @@ import React from 'react';
 import fetch from 'sx-fetch';
 import style from './index.scss';
 import overDueImg from 'assets/images/home/overDue_icon.png';
-import SXFButton from 'components/ButtonCustom';
 import { store } from '../../../../../utils/store';
 import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
@@ -44,8 +43,12 @@ export default class OverDueModal extends React.PureComponent {
 		);
 	};
 
+	toCouponPage = () => {
+		this.props.history.push('/mine/coupon_page?entryFrom=mine');
+	};
+
 	render() {
-		const { handleClick, overDueInf } = this.props;
+		const { handleClick, overDueInf, decreaseCoupExpiryDate } = this.props;
 		const { downloadUrl } = this.state;
 		const osType = getDeviceType();
 		return (
@@ -54,7 +57,10 @@ export default class OverDueModal extends React.PureComponent {
 					<img className={style.warningImg} src={overDueImg} />
 					<h3 className={style.overDueTit}>{overDueInf && overDueInf.progressDesc}</h3>
 					<p className={style.overDueDesc}>{overDueInf && overDueInf.progressContent}</p>
-					<SXFButton onClick={handleClick}>我知道了，前去还款</SXFButton>
+					<div className={style.couponEntry} onClick={this.toCouponPage}>
+						<span>有减免券可用</span>
+						<span className={style.value}>有效期{decreaseCoupExpiryDate}</span>
+					</div>
 					{overDueInf &&
 						(overDueInf.progressOrder === 8 || overDueInf.progressOrder === 9) &&
 						osType !== 'IOS' && (
@@ -77,6 +83,9 @@ export default class OverDueModal extends React.PureComponent {
 						)}
 
 					{/* <a href="http://172.18.30.184:8888/wap/procedure/docDownLoad/LzIwMTkwNDE5L+ijgeWGs+S5pi5wZGY=?fin-v-card-token=a6d11943acb04d09af5ebfe0231346e0" target="_parent" download="裁决书.pdf">立即下载裁决书</a> */}
+				</div>
+				<div onClick={handleClick} className={style.button}>
+					我知道了，前去还款
 				</div>
 			</Modal>
 		);

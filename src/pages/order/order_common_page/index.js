@@ -12,7 +12,7 @@ import { Modal, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
-import { getH5Channel, isMPOS } from 'utils/common';
+import { isMPOS } from 'utils/common';
 import qs from 'qs';
 import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
@@ -61,7 +61,6 @@ export default class order_detail_page extends PureComponent {
 			couponPrice: '', // 优惠劵计算过的金额
 			cashierVisible: false,
 			disDisRepayAmt: 0, // 优惠金额
-			penaltyInfo: '',
 			canUseCoupon: false, //优惠券是否可用
 			repayPerds: []
 		};
@@ -84,7 +83,7 @@ export default class order_detail_page extends PureComponent {
 				this.getLoanInfo();
 				// 因为会有直接进到账单的公众号入口，所以在此在调一遍接口
 				this.getOverdueInfo();
-				this.queryExtendedPayType();
+				// this.queryExtendedPayType();
 			}
 		);
 	}
@@ -93,48 +92,49 @@ export default class order_detail_page extends PureComponent {
 		store.removeCardData();
 	}
 
-	queryExtendedPayType = () => {
-		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				let params = {
-					openIdFlag: (res.data && res.data.openIdFlag) || '0'
-				};
-				if (isWXOpen()) {
-					if (res.data && res.data.openIdFlag === '0') {
-						params.payType = 'BankPay';
-					} else if (res.data && res.data.openIdFlag === '1') {
-						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
-							params.payType = store.getPayType() || 'BankPay';
-							params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
-						} else {
-							params.payType = 'BankPay';
-							params.payTypes = ['BankPay'];
-						}
-					} else {
-						params.payType = 'BankPay';
-						params.payTypes = ['BankPay'];
-					}
-				} else {
-					if (
-						isPhone() &&
-						res.data &&
-						res.data.routeCodes &&
-						res.data.routeCodes.includes('WXPay') &&
-						!isMPOS()
-					) {
-						params.payType = store.getPayType() || 'BankPay';
-						params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
-					} else {
-						params.payType = 'BankPay';
-						params.payTypes = ['BankPay'];
-					}
-				}
-				this.setState(params);
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
+	// queryExtendedPayType = () => {
+	// 	this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
+	// 		if (res.msgCode === 'PTM0000') {
+	// 			let params = {
+	// 				openIdFlag: (res.data && res.data.openIdFlag) || '0'
+	// 			};
+	// 			if (isWXOpen()) {
+	// 				if (res.data && res.data.openIdFlag === '0') {
+	// 					params.payType = 'BankPay';
+	// 				} else if (res.data && res.data.openIdFlag === '1') {
+	// 					if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
+	// 						params.payType = store.getPayType() || 'BankPay';
+	// 						params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
+	// 					} else {
+	// 						params.payType = 'BankPay';
+	// 						params.payTypes = ['BankPay'];
+	// 					}
+	// 				} else {
+	// 					params.payType = 'BankPay';
+	// 					params.payTypes = ['BankPay'];
+	// 				}
+	// 			} else {
+	// 				if (
+	// 					isPhone() &&
+	// 					res.data &&
+	// 					res.data.routeCodes &&
+	// 					res.data.routeCodes.includes('WXPay') &&
+	// 					!isMPOS()
+	// 				) {
+	// 					params.payType = store.getPayType() || 'BankPay';
+	// 					params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
+	// 				} else {
+	// 					params.payType = 'BankPay';
+	// 					params.payTypes = ['BankPay'];
+	// 				}
+	// 			}
+	// 			this.setState(params);
+	// 		} else {
+	// 			this.props.toast.info(res.msgInfo);
+	// 		}
+	// 	});
+	// };
+
 	// 获取弹框明细信息
 	getModalDtlInfo = (cb, isPayAll) => {
 		const { billNo, billDesc, repayPerds } = this.state;
@@ -194,7 +194,6 @@ export default class order_detail_page extends PureComponent {
 
 	// 获取还款信息
 	getLoanInfo = () => {
-		let isFilterOverdueBill = false;
 		this.props.$fetch
 			.post(API.qryDtl, {
 				billNo: this.state.billNo
@@ -206,9 +205,6 @@ export default class order_detail_page extends PureComponent {
 						insuranceSts,
 						perdNum,
 						perdList,
-						billOvduSts,
-						billFineAmt,
-						billOvduAmt,
 						billOvduDays,
 						billOvduStartDt,
 						billSts
@@ -220,21 +216,15 @@ export default class order_detail_page extends PureComponent {
 							thisPerdNum: perdNum,
 							billDesc: res.data, //账单全部详情
 							isBillClean: billSts === '4' || billSts === '2', //总账单是否结清或处理中
-							perdList //账单期数列表
+							perdList, //账单期数列表
+							billOvduDays,
+							billOvduStartDt
 						},
 						() => {
 							// 选择银行卡回来
 							let bankInfo = store.getCardData();
 							let orderDtlData = store.getOrderDetailData() || {};
-							let {
-								isPayAll,
-								detailArr,
-								isShowDetail,
-								totalAmt,
-								totalAmtForShow,
-								orderList,
-								penaltyInfo
-							} = orderDtlData;
+							let { isPayAll, detailArr, isShowDetail, totalAmt, totalAmtForShow, orderList } = orderDtlData;
 							store.removeOrderDetailData();
 							if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
 								this.setState(
@@ -259,21 +249,8 @@ export default class order_detail_page extends PureComponent {
 							} else if (res.data && res.data.data && !this.state.isBillClean) {
 								this.dealMoney(res.data);
 							}
-							if (penaltyInfo && JSON.stringify(penaltyInfo) !== '{}') {
-								//有缓存则取缓存
-								this.setState({
-									penaltyInfo
-								});
-							} else if (!(billOvduSts === null || billOvduSts === '4' || billOvduSts === '2')) {
-								//有罚息或滞纳金
-								this.handlePenaltyInfo(billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt);
-								isFilterOverdueBill = true;
-							} else {
-								this.setState({
-									penaltyInfo: {}
-								});
-							}
-							this.showPerdList(orderList, isFilterOverdueBill);
+
+							this.showPerdList(orderList);
 						}
 					);
 				} else {
@@ -324,34 +301,6 @@ export default class order_detail_page extends PureComponent {
 		});
 	};
 
-	//处理罚息数据展示
-	handlePenaltyInfo = (billFineAmt, billOvduAmt, billOvduDays, billOvduStartDt) => {
-		this.setState({
-			penaltyInfo: {
-				label: {
-					name: '罚息',
-					brief: '逾期管理费'
-				},
-				extra: [
-					{
-						name: Number(billFineAmt).toFixed(2),
-						color: '#121C32',
-						fontSize: '0.3rem'
-					},
-					{
-						name: Number(billOvduAmt).toFixed(2),
-						color: '#121C32',
-						fontSize: '0.3rem'
-					}
-				],
-				show: true,
-				isChecked: true,
-				billOvduDays,
-				billOvduStartDt
-			}
-		});
-	};
-
 	// 后台计算优惠券减免金额以及本次还款金额
 	dealMoney = (result) => {
 		let couponInfo = store.getCouponData();
@@ -391,8 +340,8 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	// 显示还款计划
-	showPerdList = (orderList = [], isFilterOverdueBill) => {
-		const { thisPerdNum } = this.state;
+	showPerdList = (orderList = []) => {
+		const { thisPerdNum, billOvduDays } = this.state;
 		let perdListArray = [];
 		let perdList = this.state.perdList;
 		for (let i = 0; i < perdList.length; i++) {
@@ -422,53 +371,25 @@ export default class order_detail_page extends PureComponent {
 				perdNum: perdList[i].perdNum
 			};
 			// 总账单的状态是否有逾期
-			if (perdList[i].perdSts === '1') {
-				item.isChecked = true;
-			} else if (thisPerdNum === i + 1) {
-				item.isChecked = true;
-			}
+			item.isChecked = perdList[i].perdSts === '1' || thisPerdNum === i + 1;
 
 			// 已还清、已支付的状态的栏位不显示勾选框
 			// perdSts 0：未到期;1：已逾期;2：处理中;3：已撤销;4：已还清
 			if (perdList[i].perdSts === '4' || perdList[i].perdSts === '2') {
 				item.isShowCheck = false;
 			}
-
-			// if (!this.state.isBillClean && perdList[i].perdNum === perdNum) {
-			// 	item.showDesc = true;
-			// 	item.arrowHide = 'up';
-			// } else {
-			// 	item.showDesc = false;
-			// }
-
-			item.feeInfos.push({
-				feeNm: '优惠劵',
-				feeAmt: '-' + perdList[i].deductionAmt
-			});
 			// 判断是否结清
-			if (perdList[i].perdSts === '4') {
-				item.isClear = true;
-			} else {
-				item.isClear = false;
-				item.feeInfos.push({
-					feeNm: '已还金额',
-					feeAmt: perdList[i].perdTotRepAmt
-				});
-				item.feeInfos.push({
-					feeNm: '合计',
-					feeAmt: Number(perdList[i].perdWaitRepAmt)
-				});
-			}
+			item.isClear = perdList[i].perdSts === '4';
 			perdListArray.push(item);
 		}
 		this.setState({
 			actOrderList: orderList.length > 0 ? orderList : perdListArray //实际的子账单列表
 		});
 
-		if (isFilterOverdueBill) {
+		if (billOvduDays) {
 			//如果账单逾期
-			orderList = orderList.filter((item) => item.perdSts === '1');
-			perdListArray = perdListArray.filter((item) => item.perdSts === '1');
+			orderList = orderList.filter((item) => item.perdSts === '1').slice(0, 1);
+			perdListArray = perdListArray.filter((item) => item.perdSts === '1').slice(0, 1);
 		}
 		this.setState(
 			{
@@ -482,309 +403,6 @@ export default class order_detail_page extends PureComponent {
 		);
 	};
 
-	// 处理输入的验证码
-	handleSmsCodeChange = (smsCode) => {
-		this.setState({
-			smsCode
-		});
-	};
-
-	// 跳过验证直接执行代扣逻辑
-	skipProtocolBindCard = () => {
-		this.closeSmsModal();
-	};
-
-	// 关闭短信弹窗并还款
-	closeSmsModal = () => {
-		this.setState({
-			isShowSmsModal: false,
-			smsCode: '',
-			protocolBindCardCount: 0,
-			toggleBtn: false
-		});
-		this.repay();
-	};
-
-	// 确认协议绑卡
-	confirmProtocolBindCard = () => {
-		if (!this.state.smsCode) {
-			this.props.toast.info('请输入验证码');
-			return;
-		}
-		if (this.state.smsCode.length !== 6) {
-			this.props.toast.info('请输入正确的验证码');
-			return;
-		}
-		this.setState({
-			protocolBindCardCount: this.state.protocolBindCardCount + 1
-		});
-		this.props.$fetch
-			.post(API.protocolBind, {
-				cardNo:
-					this.state.bankInfo && this.state.bankInfo.agrNo
-						? this.state.bankInfo.agrNo
-						: this.state.billDesc.wthCrdAgrNo,
-				smsCd: this.state.smsCode,
-				isEntry: '01'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.closeSmsModal();
-				} else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
-					this.closeSmsModal();
-				} else {
-					// 切换短信弹窗底部按钮
-					this.setState({
-						toggleBtn: true,
-						smsCode: ''
-					});
-					this.props.toast.info(res.data || res.msgInfo);
-				}
-			});
-	};
-
-	// 协议绑卡校验接口
-	checkProtocolBindCard = () => {
-		const params = {
-			cardNo:
-				this.state.bankInfo && this.state.bankInfo.agrNo
-					? this.state.bankInfo.agrNo
-					: this.state.billDesc.wthCrdAgrNo,
-			bankCd: this.state.billDesc.wthdCrdCorpOrg,
-			usrSignCnl: getH5Channel(),
-			cardTyp: 'D',
-			isEntry: '01',
-			type: '0' // 0 可以重复 1 不可以重复
-		};
-		this.props.$fetch.post(API.protocolSms, params).then((res) => {
-			switch (res.msgCode) {
-				case 'PTM0000':
-					//协议绑卡校验成功提示（走协议绑卡逻辑）
-					this.setState({
-						isShowSmsModal: true
-					});
-					break;
-				default:
-					this.repay();
-					break;
-			}
-		});
-	};
-
-	// 立即还款
-	handleClickConfirm = () => {
-		const { billDesc = {}, billNo, isPayAll, payType } = this.state;
-		const cardAgrNo =
-			this.state.bankInfo && this.state.bankInfo.agrNo ? this.state.bankInfo.agrNo : billDesc.wthCrdAgrNo;
-		let couponId = '';
-		if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-			if (this.state.couponInfo.usrCoupNo !== 'null') {
-				couponId = this.state.couponInfo.usrCoupNo;
-			} else {
-				couponId = '';
-			}
-		} else {
-			if (this.state.billDesc.data && this.state.billDesc.data.usrCoupNo) {
-				couponId = this.state.billDesc.data.usrCoupNo;
-			}
-		}
-		let sendParams = {
-			billNo,
-			cardAgrNo,
-			usrBusCnl: 'WEB',
-			prodType: billDesc.prodType
-		};
-
-		//如果勾选多期,则不支持优惠券(罚息也不支持优惠券)
-		if (this.state.canUseCoupon) {
-			sendParams = {
-				...sendParams,
-				coupId: couponId
-			};
-		}
-		//全局设置还款传递后台的参数
-		this.setState(
-			{
-				repayParams: sendParams
-			},
-			() => {
-				if (isPayAll || payType === 'WXPay') {
-					this.repay();
-				} else {
-					//调用协议绑卡接口
-					this.checkProtocolBindCard();
-				}
-			}
-		);
-	};
-
-	//调用还款接口逻辑
-	repay = () => {
-		const { billDesc, isPayAll, repayParams, totalAmt, payType, thisPerdNum, repayPerds } = this.state;
-		let sendParams = {
-			...repayParams,
-			isPayOff: isPayAll ? '1' : '0',
-			thisRepTotAmt: totalAmt,
-			adapter: '01',
-			repayPerds: isPayAll ? [] : repayPerds
-		};
-		// 添加微信新增参数
-		switch (payType) {
-			case 'WXPay': {
-				// 微信外 02  微信内  03
-				const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-				queryData.backType = 'wxPay';
-				const callbackUrl = location.origin + '/order/wx_pay_success_page?' + qs.stringify(queryData);
-				sendParams = {
-					...sendParams,
-					routeCode: payType,
-					wxPayReqVo: {
-						tradeType: isWXOpen() ? '03' : '02',
-						osNm: '还到',
-						callbackUrl,
-						wapUrl: '33',
-						wapNm: '44'
-					}
-				};
-				break;
-			}
-
-			case 'BankPay':
-			default:
-				break;
-		}
-		this.props.$fetch
-			.post(API.payback, sendParams)
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					buriedPointEvent(order.repaymentFirst, {
-						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
-						is_success: true
-					});
-					this.setState({
-						showModal: false,
-						couponInfo: {},
-						isShowDetail: false
-					});
-					store.setOrderSuccess({
-						isPayAll,
-						thisPerdNum,
-						thisRepTotAmt: parseFloat(totalAmt).toFixed(2),
-						perdLth: billDesc.perdLth,
-						perdUnit: billDesc.perdUnit,
-						billPrcpAmt: billDesc.billPrcpAmt,
-						billRegDt: billDesc.billRegDt
-					});
-
-					switch (payType) {
-						case 'WXPay': {
-							let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
-							if (isWXOpen()) {
-								window.WeixinJSBridge.invoke(
-									'getBrandWCPayRequest',
-									{
-										appId: wxData.appId,
-										timeStamp: wxData.timeStamp,
-										nonceStr: wxData.nonceStr,
-										package: wxData.package,
-										signType: wxData.signType,
-										paySign: wxData.paySign
-									},
-									(result) => {
-										if (result.err_msg == 'get_brand_wcpay_request:ok') {
-											setTimeout(() => {
-												this.getpayResult('支付成功');
-											}, 2000);
-										} else {
-											this.getLoanInfo();
-											this.queryExtendedPayType();
-										}
-									}
-								);
-								// h5 支付方式
-							} else {
-								let url = wxData.mweb_url && wxData.mweb_url.replace('&amp;', '&');
-								location.href = url;
-							}
-							break;
-						}
-						case 'BankPay':
-							if (res.data && res.data.repayOrdNo) {
-								this.setState(
-									{
-										repayOrdNo: res.data.repayOrdNo
-									},
-									() => {
-										this.setState({
-											cashierVisible: true
-										});
-									}
-								);
-							}
-							break;
-						default:
-							break;
-					}
-				} else {
-					buriedPointEvent(order.repaymentFirst, {
-						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
-						is_success: false,
-						fail_cause: res.msgInfo
-					});
-					this.setState({
-						showModal: false,
-						couponInfo: {},
-						isShowDetail: false
-					});
-					this.props.toast.info(res.msgInfo);
-					store.removeCouponData();
-					// 刷新当前list
-					setTimeout(() => {
-						this.queryExtendedPayType();
-						this.getLoanInfo();
-					}, 3000);
-				}
-			})
-			.catch(() => {
-				store.removeCouponData();
-				this.setState({
-					showModal: false,
-					couponInfo: {},
-					isShowDetail: false
-				});
-			});
-	};
-
-	getpayResult = (message) => {
-		const { billDesc, isPayAll, actOrderList, penaltyInfo } = this.state;
-		const lastPerd = actOrderList[actOrderList.length - 1];
-		//判断是否有罚息来决定是否结清
-		let isClear = false;
-		if (penaltyInfo.show) {
-			if (lastPerd.perdStsNm === '已结清') {
-				isClear = penaltyInfo.isChecked;
-			} else {
-				isClear = lastPerd.isChecked && penaltyInfo.isChecked;
-			}
-		} else {
-			isClear = lastPerd.isChecked;
-		}
-
-		if (billDesc.perdUnit === 'D' || isClear || isPayAll) {
-			store.removeBackData();
-			store.removeCouponData();
-			this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
-		} else {
-			message && this.props.toast.info(message);
-			store.removeCouponData();
-			// 刷新当前list
-			setTimeout(() => {
-				this.queryExtendedPayType();
-				this.getLoanInfo();
-			}, 3000);
-		}
-	};
-
 	// 选择银行卡
 	selectBank = () => {
 		const {
@@ -796,8 +414,7 @@ export default class order_detail_page extends PureComponent {
 			totalAmt,
 			isInsureValid,
 			totalAmtForShow,
-			orderList,
-			penaltyInfo
+			orderList
 		} = this.state;
 		let orderDtData = {
 			isPayAll,
@@ -805,8 +422,7 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			totalAmtForShow,
-			orderList,
-			penaltyInfo
+			orderList
 		};
 		store.setBackUrl('/order/order_detail_page');
 		store.setOrderDetailData(orderDtData);
@@ -827,8 +443,7 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			totalAmtForShow,
-			orderList,
-			penaltyInfo
+			orderList
 		} = this.state;
 
 		let orderDtData = {
@@ -836,8 +451,7 @@ export default class order_detail_page extends PureComponent {
 			isShowDetail,
 			totalAmt,
 			totalAmtForShow,
-			orderList,
-			penaltyInfo
+			orderList
 		};
 		store.setOrderDetailData(orderDtData);
 		if (useFlag) {
@@ -878,8 +492,20 @@ export default class order_detail_page extends PureComponent {
 
 	// 主动还款
 	activePay = () => {
+		const { billNo, billDesc, repayPerds, prodType, canUseCoupon, actOrderList } = this.state;
 		if (!this.state.totalAmtForShow) return;
-		this.getModalDtlInfo(this.showPayModal, false);
+		this.props.history.push({
+			pathname: '/order/order_repay_confirm',
+			state: {
+				billNo,
+				billDesc,
+				repayPerds,
+				prodType,
+				canUseCoupon,
+				actOrderList,
+				isPayAll: false
+			}
+		});
 	};
 
 	// 去还款
@@ -944,7 +570,7 @@ export default class order_detail_page extends PureComponent {
 		};
 
 		if (checkboxType) {
-			this.penaltyInfoCheckClick(item);
+			// this.penaltyInfoCheckClick(item);
 		} else {
 			this.orderListCheckClick(item);
 		}
@@ -964,55 +590,56 @@ export default class order_detail_page extends PureComponent {
 				orderList: arr
 			},
 			() => {
-				this.handlePenaltyInfoCheckSts();
+				this.calcPayTotalMoney();
+				// this.handlePenaltyInfoCheckSts();
 			}
 		);
 	};
 
-	penaltyInfoCheckClick = (item) => {
-		this.setState(
-			{
-				penaltyInfo: { ...item }
-			},
-			() => {
-				if (item.isChecked) {
-					//勾选所有逾期账单
-					for (let i = 0; i < this.state.orderList.length; i++) {
-						if (this.state.orderList[i].perdStsNm === '已逾期') {
-							this.state.orderList[i].isChecked = true;
-						}
-					}
-					this.setState(
-						{
-							orderList: [...this.state.orderList]
-						},
-						() => {
-							this.calcPayTotalMoney();
-						}
-					);
-				} else {
-					this.calcPayTotalMoney();
-				}
-			}
-		);
-	};
+	// penaltyInfoCheckClick = (item) => {
+	// 	this.setState(
+	// 		{
+	// 			penaltyInfo: { ...item }
+	// 		},
+	// 		() => {
+	// 			if (item.isChecked) {
+	// 				//勾选所有逾期账单
+	// 				for (let i = 0; i < this.state.orderList.length; i++) {
+	// 					if (this.state.orderList[i].perdStsNm === '已逾期') {
+	// 						this.state.orderList[i].isChecked = true;
+	// 					}
+	// 				}
+	// 				this.setState(
+	// 					{
+	// 						orderList: [...this.state.orderList]
+	// 					},
+	// 					() => {
+	// 						this.calcPayTotalMoney();
+	// 					}
+	// 				);
+	// 			} else {
+	// 				this.calcPayTotalMoney();
+	// 			}
+	// 		}
+	// 	);
+	// };
 
 	//罚息复选框与订单列表联动逻辑
-	handlePenaltyInfoCheckSts = () => {
-		let checkedArr = this.state.orderList.filter((v) => v.isChecked);
-		let overdueArr = this.state.orderList.filter((v) => v.perdStsNm === '已逾期');
-		this.setState(
-			{
-				penaltyInfo: {
-					...this.state.penaltyInfo,
-					isChecked: this.state.penaltyInfo.show && checkedArr.length >= overdueArr.length
-				}
-			},
-			() => {
-				this.calcPayTotalMoney();
-			}
-		);
-	};
+	// handlePenaltyInfoCheckSts = () => {
+	// 	let checkedArr = this.state.orderList.filter((v) => v.isChecked);
+	// 	let overdueArr = this.state.orderList.filter((v) => v.perdStsNm === '已逾期');
+	// 	this.setState(
+	// 		{
+	// 			penaltyInfo: {
+	// 				...this.state.penaltyInfo,
+	// 				isChecked: this.state.penaltyInfo.show && checkedArr.length >= overdueArr.length
+	// 			}
+	// 		},
+	// 		() => {
+	// 			this.calcPayTotalMoney();
+	// 		}
+	// 	);
+	// };
 
 	//实时计算还款总金额
 	calcPayTotalMoney = () => {
@@ -1021,15 +648,15 @@ export default class order_detail_page extends PureComponent {
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].perdNum);
 		}
-		if (this.state.penaltyInfo.isChecked) {
-			repayPerds.unshift(0);
-		}
+		// if (this.state.penaltyInfo.isChecked) {
+		// 	repayPerds.unshift(0);
+		// }
 
 		this.setState(
 			{
 				insureInfo: { ...this.state.insureInfo, isChecked: checkedArr.length > 0 },
 				repayPerds,
-				canUseCoupon: repayPerds.length === 1 && !this.state.penaltyInfo.isChecked //设置优惠券是否可用
+				canUseCoupon: repayPerds.length === 1
 			},
 			() => {
 				if (repayPerds.length > 0) {
@@ -1074,7 +701,6 @@ export default class order_detail_page extends PureComponent {
 		}
 		let arr = this.state.orderList.map((v) => (v.perdNum === item.perdNum ? item : v));
 
-		// this.state.orderList[item.key] = item;
 		this.setState({
 			orderList: arr
 		});
@@ -1107,10 +733,11 @@ export default class order_detail_page extends PureComponent {
 			repayOrdNo,
 			disDisRepayAmt = 0,
 			orderList,
-			penaltyInfo,
 			insureInfo,
 			isBillClean,
-			canUseCoupon
+			canUseCoupon,
+			billOvduDays,
+			billOvduStartDt
 		} = this.state;
 
 		const {
@@ -1122,8 +749,7 @@ export default class order_detail_page extends PureComponent {
 			payCrdCorpOrgNm = '',
 			payCrdNoLast = '',
 			wthdCrdCorpOrgNm = '',
-			wthdCrdNoLast = '',
-			perdList
+			wthdCrdNoLast = ''
 			// discRedRepay = false
 		} = billDesc;
 		const itemList = [
@@ -1152,12 +778,7 @@ export default class order_detail_page extends PureComponent {
 				value: `${wthdCrdCorpOrgNm}(${wthdCrdNoLast})`
 			}
 		];
-		const isOverdue =
-			perdList &&
-			perdList.filter((item) => {
-				return item.perdSts === '1';
-			});
-		const isEntryShow = overDueModalFlag === '1' && isOverdue && isOverdue.length > 0;
+		const isEntryShow = overDueModalFlag === '1' && billOvduDays;
 		let moneyWithCoupon = '';
 
 		if (!canUseCoupon) {
@@ -1171,12 +792,12 @@ export default class order_detail_page extends PureComponent {
 		return (
 			<div>
 				<Modal
-					popup
 					visible={this.state.showModal}
 					onClose={() => {
 						this.setState({ showModal: false, isShowDetail: false });
 					}}
 					animationType="slide-up"
+					popup
 				>
 					<div className={styles.modal_box}>
 						<div className={styles.modal_title}>
@@ -1333,7 +954,7 @@ export default class order_detail_page extends PureComponent {
 						}
 					/>
 				)}
-				{isOverdue && isOverdue.length > 0 && (isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
+				{billOvduDays && (isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
 					<div className={styles.overdueEntryTip}>
 						关注“还到”公众号，使用<span>微信支付</span>还款
 					</div>
@@ -1382,9 +1003,9 @@ export default class order_detail_page extends PureComponent {
 						)}
 
 						<Panel
-							title="账单"
+							title="我的账单"
 							extra={
-								penaltyInfo.billOvduDays && {
+								billOvduDays && {
 									style: {
 										color: '#FE6666',
 										fontSize: '0.3rem',
@@ -1392,7 +1013,7 @@ export default class order_detail_page extends PureComponent {
 										position: 'relative',
 										paddingRight: '0.3rem'
 									},
-									text: `已逾期(${penaltyInfo.billOvduDays}天)`,
+									text: `已逾期(${billOvduDays}天)`,
 									clickCb: () => {
 										this.handleCloseTipModal();
 									},
@@ -1406,7 +1027,6 @@ export default class order_detail_page extends PureComponent {
 								className={styles.order_list}
 								isCheckbox={true}
 								checkClickCb={this.checkClickCb}
-								penaltyInfo={penaltyInfo}
 							/>
 						</Panel>
 						{!isBillClean && (
@@ -1436,7 +1056,7 @@ export default class order_detail_page extends PureComponent {
 									<div className={styles.modal_tip_content}>
 										<h3 className={styles.modal_tip_title}>逾期天数说明</h3>
 										<p className={styles.modal_tip_desc}>
-											您的逾期开始日期：<em>{penaltyInfo.billOvduStartDt}</em>
+											您的逾期开始日期：<em>{billOvduStartDt}</em>
 										</p>
 										<p className={styles.modal_tip_desc}>
 											任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。

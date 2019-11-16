@@ -15,18 +15,26 @@
 	}
 }
 .list_sub_desc {
-  font-size: 22px;
-  color: #C9CDD5;
-  margin-top: 5px;
+	font-size: 22px;
+	color: #c9cdd5;
+	margin-top: 5px;
 }
 .list_desc_container_FW {
 	display: flex;
 	margin-top: 10px;
 	font-size: 28px;
-	font-weight: 700;
+	font-weight: 500;
 	&:first-child {
 		margin-top: 0;
 	}
+}
+.red_box {
+	border: 1px solid #fe6666;
+	background-color: #F6E8EA;
+	padding: 0 8px;
+	box-sizing: border-box;
+	color: #fe6666;
+	font-size: 22px;
 }
 .hasTotal {
 	&:last-child {

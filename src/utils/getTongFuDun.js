@@ -67,10 +67,8 @@ function jspCallBack(res) {
  * @return:
  */
 export const TFDInit = () => {
-	console.log('循环上报', timer);
 	if (store.getTFDBack1() && store.getToken() && !store.getTFDBack2()) {
 		if (!timer) {
-			console.log('循环上报112', timer);
 			timer = setInterval(() => {
 				TFDInit();
 			}, 10000);

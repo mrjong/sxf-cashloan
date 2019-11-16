@@ -223,12 +223,14 @@ export default class coupon_page extends PureComponent {
 			});
 		return data;
 	};
+
 	// 刷新
 	onRefresh = () => {
 		totalPage = false;
 		this.setState({ refreshing: true, isLoading: true });
 		this.getCommonData();
 	};
+
 	// 公用
 	getCommonData = async (tab) => {
 		this.setState({
@@ -336,7 +338,13 @@ export default class coupon_page extends PureComponent {
 					}
 				>
 					<div className={style.leftBox}>
-						{obj && obj.coupCategory === '00' ? (
+						{obj && obj.useScene === '03' ? (
+							<span className={style.couponType4}>
+								￥<i className={style.money}>{obj && obj.coupVal}</i>
+								<br />
+								<span>还款减免券</span>
+							</span>
+						) : obj && obj.coupCategory === '00' ? (
 							<span>
 								￥<i className={style.money}>{obj && obj.coupVal}</i>
 							</span>

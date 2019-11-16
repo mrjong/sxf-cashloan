@@ -159,7 +159,6 @@ export default class router_Page extends PureComponent {
 		}
 	};
 	globalTask = (obj) => {
-		console.log(obj);
 		this.setState({
 			footerTipIcon: obj
 		});
