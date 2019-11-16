@@ -43,10 +43,6 @@ export default class OverDueModal extends React.PureComponent {
 		);
 	};
 
-	toCouponPage = () => {
-		this.props.history.push('/mine/coupon_page?entryFrom=mine');
-	};
-
 	render() {
 		const { handleClick, overDueInf, decreaseCoupExpiryDate } = this.props;
 		const { downloadUrl } = this.state;
@@ -57,7 +53,7 @@ export default class OverDueModal extends React.PureComponent {
 					<img className={style.warningImg} src={overDueImg} />
 					<h3 className={style.overDueTit}>{overDueInf && overDueInf.progressDesc}</h3>
 					<p className={style.overDueDesc}>{overDueInf && overDueInf.progressContent}</p>
-					<div className={style.couponEntry} onClick={this.toCouponPage}>
+					<div className={style.couponEntry} onClick={handleClick}>
 						<span>有减免券可用</span>
 						<span className={style.value}>有效期{decreaseCoupExpiryDate}</span>
 					</div>

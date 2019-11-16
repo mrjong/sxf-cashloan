@@ -142,7 +142,8 @@
 	padding: 30px;
 	.item {
 		display: flex;
-		justify-content: space-between;
+    justify-content: space-between;
+    align-items: center;
 		font-size: 28px;
 		color: #868e9e;
 		margin-bottom: 5px;

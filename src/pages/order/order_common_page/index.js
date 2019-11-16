@@ -8,24 +8,17 @@ import Panel from 'components/Panel';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
 import { store } from 'utils/store';
-import { Modal, Icon } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import qs from 'qs';
-import SmsModal from './components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
-import Cashier from './components/Cashier';
 const API = {
 	qryDtl: '/bill/qryDtl',
-	payback: '/bill/paySubmit',
-	couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
-	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	queryExtendedPayType: '/bill/queryExtendedPayType' //其他支付方式查询
+	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
 };
 let entryFrom = '';
 @fetch.inject()
@@ -41,25 +34,15 @@ export default class order_detail_page extends PureComponent {
 			bankInfo: {},
 			couponInfo: {},
 			isPayAll: false, // 是否一键结清
-			deratePrice: '',
-			isShowSmsModal: false, //是否显示短信验证码弹窗
-			smsCode: '',
-			protocolBindCardCount: 0, // 协议绑卡接口调用次数统计
-			toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
 			detailArr: [], // 还款详情数据
-			isShowDetail: false, // 是否展示弹框中的明细详情
 			totalAmt: '', // 一键结清传给后台的总金额
 			overDueModalFlag: '', // 信用施压弹框标识
-			payType: '',
-			payTypes: ['BankPay'],
 			openIdFlag: '',
 			thisPerdNum: '',
 			insureInfo: '',
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
-			couponPrice: '', // 优惠劵计算过的金额
-			cashierVisible: false,
 			disDisRepayAmt: 0, // 优惠金额
 			canUseCoupon: false, //优惠券是否可用
 			repayPerds: []
@@ -83,60 +66,17 @@ export default class order_detail_page extends PureComponent {
 				this.getLoanInfo();
 				// 因为会有直接进到账单的公众号入口，所以在此在调一遍接口
 				this.getOverdueInfo();
-				// this.queryExtendedPayType();
 			}
 		);
 	}
 
 	componentWillUnmount() {
 		store.removeCardData();
+		store.removeCouponData();
 	}
 
-	// queryExtendedPayType = () => {
-	// 	this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
-	// 		if (res.msgCode === 'PTM0000') {
-	// 			let params = {
-	// 				openIdFlag: (res.data && res.data.openIdFlag) || '0'
-	// 			};
-	// 			if (isWXOpen()) {
-	// 				if (res.data && res.data.openIdFlag === '0') {
-	// 					params.payType = 'BankPay';
-	// 				} else if (res.data && res.data.openIdFlag === '1') {
-	// 					if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
-	// 						params.payType = store.getPayType() || 'BankPay';
-	// 						params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
-	// 					} else {
-	// 						params.payType = 'BankPay';
-	// 						params.payTypes = ['BankPay'];
-	// 					}
-	// 				} else {
-	// 					params.payType = 'BankPay';
-	// 					params.payTypes = ['BankPay'];
-	// 				}
-	// 			} else {
-	// 				if (
-	// 					isPhone() &&
-	// 					res.data &&
-	// 					res.data.routeCodes &&
-	// 					res.data.routeCodes.includes('WXPay') &&
-	// 					!isMPOS()
-	// 				) {
-	// 					params.payType = store.getPayType() || 'BankPay';
-	// 					params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
-	// 				} else {
-	// 					params.payType = 'BankPay';
-	// 					params.payTypes = ['BankPay'];
-	// 				}
-	// 			}
-	// 			this.setState(params);
-	// 		} else {
-	// 			this.props.toast.info(res.msgInfo);
-	// 		}
-	// 	});
-	// };
-
 	// 获取弹框明细信息
-	getModalDtlInfo = (cb, isPayAll) => {
+	getModalDtlInfo = (isPayAll) => {
 		const { billNo, billDesc, repayPerds } = this.state;
 		this.props.$fetch
 			.post(API.fundPlain, {
@@ -148,19 +88,12 @@ export default class order_detail_page extends PureComponent {
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					if (res.data) {
-						this.setState(
-							{
-								disDisRepayAmt: res.data[0].disDisRepayAmt,
-								detailArr: res.data[0].totalList,
-								totalAmt: res.data[0].totalAmt,
-								totalAmtForShow: res.data[0].totalAmtForShow
-							},
-							() => {
-								cb && cb(isPayAll);
-							}
-						);
-					} else {
-						cb && cb(isPayAll);
+						this.setState({
+							disDisRepayAmt: res.data[0].disDisRepayAmt,
+							detailArr: res.data[0].totalList,
+							totalAmt: res.data[0].totalAmt,
+							totalAmtForShow: res.data[0].totalAmtForShow
+						});
 					}
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -241,13 +174,8 @@ export default class order_detail_page extends PureComponent {
 											bankInfo
 										});
 										store.removeCardData();
-										if (res.data && res.data.data && !this.state.isBillClean) {
-											this.dealMoney(res.data);
-										}
 									}
 								);
-							} else if (res.data && res.data.data && !this.state.isBillClean) {
-								this.dealMoney(res.data);
 							}
 
 							this.showPerdList(orderList);
@@ -297,44 +225,6 @@ export default class order_detail_page extends PureComponent {
 				],
 				show: true,
 				isChecked: true
-			}
-		});
-	};
-
-	// 后台计算优惠券减免金额以及本次还款金额
-	dealMoney = (result) => {
-		let couponInfo = store.getCouponData();
-		store.removeCouponData();
-		let params = {
-			billNo: this.state.billNo,
-			type: '01', // 00为借款 01为还款
-			currentStage: result.perdNum,
-			price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-			totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
-			prodType: this.state.billDesc.prodType
-		};
-		// 如果没有coupId直接不调用接口
-		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
-			// 不使用优惠劵的情况
-			this.setState({
-				couponInfo
-			});
-			return;
-		}
-		if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
-			params.couponId = couponInfo.usrCoupNo; // 优惠劵id
-		} else {
-			params.couponId = result.data.usrCoupNo;
-		}
-		this.props.$fetch.get(API.couponCount, params).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					couponInfo,
-					deratePrice: result.data.deratePrice,
-					couponPrice: result.data.resultPrice
-				});
-			} else {
-				this.props.toast.info(result.msgInfo);
 			}
 		});
 	};
@@ -485,13 +375,8 @@ export default class order_detail_page extends PureComponent {
 		return <span>不使用</span>;
 	};
 
-	// 一键结清
-	payAllOrder = () => {
-		this.getModalDtlInfo(this.showPayModal, true);
-	};
-
 	// 主动还款
-	activePay = () => {
+	goOrderRepayConfirm = () => {
 		const { billNo, billDesc, repayPerds, prodType, canUseCoupon, actOrderList } = this.state;
 		if (!this.state.totalAmtForShow) return;
 		this.props.history.push({
@@ -509,25 +394,11 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	// 去还款
-	gotoPay = () => {
+	goOrderRepayPage = () => {
 		buriedPointEvent(order.repayment, {
 			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'
 		});
 		this.props.history.push('/order/order_repay_page');
-	};
-
-	showPayModal = (boolen) => {
-		this.setState({
-			showModal: true,
-			isPayAll: boolen
-		});
-	};
-
-	// 展示详情
-	showDetail = () => {
-		this.setState({
-			isShowDetail: !this.state.isShowDetail
-		});
 	};
 
 	// 查看逾期进度
@@ -537,43 +408,14 @@ export default class order_detail_page extends PureComponent {
 		});
 	};
 
-	selectPayType = (type) => {
-		this.setState({
-			payType: type
-		});
-		store.setPayType(type);
-	};
-
-	//关闭收银台状态弹窗
-	closeCashierModal = (paySuccess) => {
-		this.setState({
-			cashierVisible: false
-		});
-		if (paySuccess) {
-			this.getpayResult();
-		}
-		this.getLoanInfo();
-		this.queryExtendedPayType();
-	};
-
 	//勾选款点击回调
-	checkClickCb = (item, checkboxType) => {
-		const { orderList } = this.state;
-		// let arr = orderList.filter((v) => v.isShowCheck);
-		// let flag1 = arr.every((v) => v.isChecked === true);
-		let flag2 = orderList.some((v) => v.isChecked && v.perdStsNm === '待还款');
-
-		if (checkboxType && flag2) return;
+	checkClickCb = (item) => {
 		item = {
 			...item,
 			isChecked: !item.isChecked
 		};
 
-		if (checkboxType) {
-			// this.penaltyInfoCheckClick(item);
-		} else {
-			this.orderListCheckClick(item);
-		}
+		this.orderListCheckClick(item);
 	};
 
 	orderListCheckClick = (item) => {
@@ -591,55 +433,9 @@ export default class order_detail_page extends PureComponent {
 			},
 			() => {
 				this.calcPayTotalMoney();
-				// this.handlePenaltyInfoCheckSts();
 			}
 		);
 	};
-
-	// penaltyInfoCheckClick = (item) => {
-	// 	this.setState(
-	// 		{
-	// 			penaltyInfo: { ...item }
-	// 		},
-	// 		() => {
-	// 			if (item.isChecked) {
-	// 				//勾选所有逾期账单
-	// 				for (let i = 0; i < this.state.orderList.length; i++) {
-	// 					if (this.state.orderList[i].perdStsNm === '已逾期') {
-	// 						this.state.orderList[i].isChecked = true;
-	// 					}
-	// 				}
-	// 				this.setState(
-	// 					{
-	// 						orderList: [...this.state.orderList]
-	// 					},
-	// 					() => {
-	// 						this.calcPayTotalMoney();
-	// 					}
-	// 				);
-	// 			} else {
-	// 				this.calcPayTotalMoney();
-	// 			}
-	// 		}
-	// 	);
-	// };
-
-	//罚息复选框与订单列表联动逻辑
-	// handlePenaltyInfoCheckSts = () => {
-	// 	let checkedArr = this.state.orderList.filter((v) => v.isChecked);
-	// 	let overdueArr = this.state.orderList.filter((v) => v.perdStsNm === '已逾期');
-	// 	this.setState(
-	// 		{
-	// 			penaltyInfo: {
-	// 				...this.state.penaltyInfo,
-	// 				isChecked: this.state.penaltyInfo.show && checkedArr.length >= overdueArr.length
-	// 			}
-	// 		},
-	// 		() => {
-	// 			this.calcPayTotalMoney();
-	// 		}
-	// 	);
-	// };
 
 	//实时计算还款总金额
 	calcPayTotalMoney = () => {
@@ -715,27 +511,12 @@ export default class order_detail_page extends PureComponent {
 	render() {
 		const {
 			billDesc = {},
-			isPayAll,
-			isShowSmsModal,
-			smsCode,
-			toggleBtn,
-			detailArr,
-			isShowDetail,
 			totalAmtForShow,
 			overDueModalFlag,
-			payType,
-			payTypes,
 			openIdFlag,
-			insureFeeInfo,
-			isInsureValid,
-			couponPrice,
-			cashierVisible,
-			repayOrdNo,
-			disDisRepayAmt = 0,
 			orderList,
 			insureInfo,
 			isBillClean,
-			canUseCoupon,
 			billOvduDays,
 			billOvduStartDt
 		} = this.state;
@@ -779,181 +560,9 @@ export default class order_detail_page extends PureComponent {
 			}
 		];
 		const isEntryShow = overDueModalFlag === '1' && billOvduDays;
-		let moneyWithCoupon = '';
-
-		if (!canUseCoupon) {
-			moneyWithCoupon = '';
-		} else if (isInsureValid) {
-			moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
-		} else {
-			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
-		}
 
 		return (
 			<div>
-				<Modal
-					visible={this.state.showModal}
-					onClose={() => {
-						this.setState({ showModal: false, isShowDetail: false });
-					}}
-					animationType="slide-up"
-					popup
-				>
-					<div className={styles.modal_box}>
-						<div className={styles.modal_title}>
-							还款详情
-							<Icon
-								type="cross"
-								className={styles.modal_close_btn}
-								onClick={() => {
-									this.setState({ showModal: false, isShowDetail: false });
-								}}
-							/>
-						</div>
-						<div className={styles.modal_notice}>
-							<span className={styles.text}>因银行通道原因，可能出现部分还款成功情况，请留意账单详情</span>
-						</div>
-						<div className={styles.modal_flex} onClick={isPayAll ? this.showDetail : () => {}}>
-							<span className={styles.modal_label}>本次还款金额</span>
-							<span className={styles.modal_value}>
-								{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
-								{isPayAll && <i className={isShowDetail ? styles.arrow_up : styles.arrow_down} />}
-							</span>
-						</div>
-						{/* 账单明细展示 */}
-						{isShowDetail ? (
-							<div className={styles.feeDetail}>
-								{detailArr.map((item, index) =>
-									item.feeAmt ? (
-										<div className={styles.modal_flex} key={index}>
-											<span className={styles.modal_label}>{item.feeNm}</span>
-											<span className={styles.modal_value_desc}>
-												{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}元
-											</span>
-										</div>
-									) : null
-								)}
-								<div className={`${styles.modal_flex} ${styles.sum_total}`}>
-									<span className={styles.modal_label_last}>本次应还总金额</span>
-									<span className={styles.modal_value_last}>
-										{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元
-									</span>
-								</div>
-							</div>
-						) : null}
-						{!payType || payType === 'BankPay' ? (
-							<div className={styles.modal_flex}>
-								<span className={styles.modal_label}>还款银行卡</span>
-								<span onClick={this.selectBank} className={`${styles.modal_value}`}>
-									{this.state.bankInfo && this.state.bankInfo.bankName ? (
-										<span>
-											{this.state.bankInfo.bankName}({this.state.bankInfo.lastCardNo})
-										</span>
-									) : (
-										<span>
-											{wthdCrdCorpOrgNm}({wthdCrdNoLast})
-										</span>
-									)}
-									&nbsp;
-									<i style={{ position: 'relative', top: '-2px' }} />
-								</span>
-							</div>
-						) : null}
-
-						{disDisRepayAmt ? (
-							<div className={styles.modal_flex}>
-								<span className={styles.modal_label}>提前结清优惠</span>
-								<span className={`${styles.modal_value_red}`}>-{disDisRepayAmt}元</span>
-							</div>
-						) : null}
-
-						{canUseCoupon && (
-							<div className={`${styles.modal_flex} ${styles.modal_flex2}`}>
-								<span className={styles.modal_label}>优惠券</span>
-								{this.state.billDesc.data && this.state.billDesc.data.coupVal ? (
-									<span
-										onClick={() => {
-											this.selectCoupon(false);
-										}}
-										className={`${styles.modal_value}`}
-									>
-										{this.renderCoupon()}
-									</span>
-								) : (
-									<span
-										onClick={() => {
-											this.selectCoupon(true);
-										}}
-										className={`${styles.modal_value}`}
-									>
-										无可用优惠券
-									</span>
-								)}
-								&nbsp;
-								<i />
-							</div>
-						)}
-						{payTypes.length !== 1 ? (
-							<div className={styles.modal_weixin}>
-								<div className={styles.modal_label}>还款方式</div>
-								<div className={styles.flex_div}>
-									{payTypes.includes('WXPay') && !isInsureValid ? (
-										<div
-											className={payType === 'WXPay' ? [styles.item, styles.active].join(' ') : styles.item}
-											onClick={() => {
-												this.selectPayType('WXPay');
-											}}
-										>
-											<span className={styles.jian} />
-											<i className={styles.wx} />微 信
-										</div>
-									) : null}
-									{payTypes.includes('BankPay') ? (
-										<div
-											onClick={() => {
-												this.selectPayType('BankPay');
-											}}
-											className={payType === 'BankPay' ? [styles.item, styles.active].join(' ') : styles.item}
-										>
-											<i className={styles.bank} />
-											银行卡
-										</div>
-									) : null}
-								</div>
-							</div>
-						) : null}
-
-						<SXFButton onClick={this.handleClickConfirm} className={styles.modal_btn}>
-							立即还款
-						</SXFButton>
-					</div>
-				</Modal>
-				{cashierVisible && (
-					<Cashier
-						onClose={this.closeCashierModal}
-						repayOrdNo={repayOrdNo}
-						bankName={wthdCrdCorpOrgNm}
-						bankNo={wthdCrdNoLast}
-					/>
-				)}
-				{isShowSmsModal && (
-					<SmsModal
-						onCancel={this.skipProtocolBindCard}
-						onConfirm={this.confirmProtocolBindCard}
-						onSmsCodeChange={this.handleSmsCodeChange}
-						smsCodeAgain={this.checkProtocolBindCard}
-						smsCode={smsCode}
-						toggleBtn={toggleBtn}
-						history={this.props.history}
-						fetch={this.props.$fetch}
-						toast={this.props.toast}
-						bankNo={
-							this.state.bankInfo && this.state.bankInfo.agrNo
-								? this.state.bankInfo.agrNo
-								: this.state.billDesc.wthCrdAgrNo
-						}
-					/>
-				)}
 				{billOvduDays && (isMPOS() || !isPhone() || (isWXOpen() && openIdFlag === '0')) && (
 					<div className={styles.overdueEntryTip}>
 						关注“还到”公众号，使用<span>微信支付</span>还款
@@ -991,7 +600,9 @@ export default class order_detail_page extends PureComponent {
 						</Panel>
 
 						<div className={styles.submit_btn}>
-							<SXFButton onClick={this.gotoPay}>{isBillClean ? '查看还款信息' : '查看还款计划'}</SXFButton>
+							<SXFButton onClick={this.goOrderRepayPage}>
+								{isBillClean ? '查看还款信息' : '查看还款计划'}
+							</SXFButton>
 						</div>
 					</div>
 				) : (
@@ -1035,7 +646,7 @@ export default class order_detail_page extends PureComponent {
 									共计<em>{totalAmtForShow}</em>元
 								</span>
 								<SXFButton
-									onClick={this.activePay}
+									onClick={this.goOrderRepayConfirm}
 									className={[styles.sxf_btn, !totalAmtForShow && styles.sxf_btn_disabled].join(' ')}
 								>
 									立即还款

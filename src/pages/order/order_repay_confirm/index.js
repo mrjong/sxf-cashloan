@@ -74,6 +74,7 @@ export default class order_repay_confirm extends PureComponent {
 		//数据反显
 		const { billDesc = {} } = this.props.history.location.state;
 		let bankInfo = store.getCardData() || {};
+		// let couponInfo = store.getCouponData() || {};
 		// let { detailArr, totalAmt, totalAmtForShow } = orderDtlData;
 		store.removeOrderDetailData();
 		this.setState({
@@ -172,7 +173,7 @@ export default class order_repay_confirm extends PureComponent {
 	// 获取还款确认信息
 	getRepayConfirmInfo = (isPayAll) => {
 		const { billNo, repayPerds, billDesc } = this.props.history.location.state;
-		const couponInfo = store.getCouponData() || {};
+		let couponInfo = store.getCouponData() || {};
 		let params = {
 			ordNo: billNo,
 			isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
@@ -204,44 +205,7 @@ export default class order_repay_confirm extends PureComponent {
 			});
 	};
 
-	// 后台计算优惠券减免金额以及本次还款金额
-	// dealMoney = (result) => {
-	// 	let couponInfo = store.getCouponData();
-	// 	store.removeCouponData();
-	// 	let params = {
-	// 		billNo: this.state.billNo,
-	// 		type: '01', // 00为借款 01为还款
-	// 		currentStage: result.perdNum,
-	// 		price: result.perdList[result.perdNum - 1].perdWaitRepAmt,
-	// 		totalStage: result.perdUnit === 'M' ? result.perdLth : '1',
-	// 		prodType: this.state.billDesc.prodType
-	// 	};
-	// 	// 如果没有coupId直接不调用接口
-	// 	if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
-	// 		// 不使用优惠劵的情况
-	// 		this.setState({
-	// 			couponInfo
-	// 		});
-	// 		return;
-	// 	}
-	// 	if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
-	// 		params.couponId = couponInfo.usrCoupNo; // 优惠劵id
-	// 	} else {
-	// 		params.couponId = result.data.usrCoupNo;
-	// 	}
-	// 	this.props.$fetch.get(API.couponCount, params).then((result) => {
-	// 		if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-	// 			this.setState({
-	// 				couponInfo,
-	// 				deratePrice: result.data.deratePrice,
-	// 				couponPrice: result.data.resultPrice
-	// 			});
-	// 		} else {
-	// 			this.props.toast.info(result.msgInfo);
-	// 		}
-	// 	});
-	// };
-
+	//获取使用优惠券试算金额
 	getDiscountMoney = (arr = []) => {
 		arr.forEach((item) => {
 			if (item.feeNm === '优惠金额') {
@@ -341,9 +305,10 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 立即还款
 	handleClickConfirm = () => {
-		const { deratePrice } = this.state;
+		const { availableCoupNum } = this.state;
+		let couponInfo = store.getCouponData() || {};
 
-		if (!deratePrice) {
+		if (availableCoupNum && !couponInfo.coupId) {
 			this.setState({
 				showAlert: true
 			});
@@ -354,7 +319,8 @@ export default class order_repay_confirm extends PureComponent {
 
 	//还款确认提交
 	repayConfirmSubmit = () => {
-		const { isPayAll, payType, cardAgrNo, couponInfo = {} } = this.state;
+		const { isPayAll, payType, cardAgrNo } = this.state;
+		let couponInfo = store.getCouponData() || {};
 
 		const { billDesc = {}, billNo, canUseCoupon } = this.props.history.location.state;
 
@@ -589,7 +555,8 @@ export default class order_repay_confirm extends PureComponent {
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
 		const { bankInfo } = this.state;
-		const couponInfo = store.getCouponData() || {};
+		let couponInfo = store.getCouponData() || {};
+
 		const { billNo, billDesc, billOvduDays } = this.props.history.location.state;
 		if (useFlag) {
 			store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
@@ -616,9 +583,14 @@ export default class order_repay_confirm extends PureComponent {
 	// 判断优惠劵显示
 	renderCoupon = () => {
 		const { deratePrice, availableCoupNum } = this.state;
-		if (deratePrice !== '') {
+		let couponInfo = store.getCouponData() || {};
+
+		if (couponInfo.coupId) {
 			return <span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>;
 		}
+		// if (deratePrice !== '') {
+		// 	return <span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>;
+		// }
 		//  可用优惠券数量
 		return (
 			<span className={styles.couNumBox}>

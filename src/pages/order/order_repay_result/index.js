@@ -231,7 +231,7 @@ export default class Cashier extends React.PureComponent {
 				</div>
 				{exceedingAmt ? (
 					<div className={styles.discount_box}>
-						<span>为您下期账单减免</span>
+						<span>为您剩余账单减免</span>
 						<span className={styles.discount}>{exceedingAmt}元</span>
 					</div>
 				) : null}
