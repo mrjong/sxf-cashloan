@@ -338,13 +338,7 @@ export default class coupon_page extends PureComponent {
 					}
 				>
 					<div className={style.leftBox}>
-						{obj && obj.useScene === '03' ? (
-							<span className={style.couponType4}>
-								￥<i className={style.money}>{obj && obj.coupVal}</i>
-								<br />
-								<span>还款减免券</span>
-							</span>
-						) : obj && obj.coupCategory === '00' ? (
+						{obj && obj.coupCategory === '00' ? (
 							<span>
 								￥<i className={style.money}>{obj && obj.coupVal}</i>
 							</span>

@@ -18,7 +18,6 @@ import { setBackGround } from 'utils/background';
 
 const API = {
 	payback: '/bill/paySubmit',
-	couponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
 	fundPlain: '/fund/plain', // 费率接口
@@ -34,7 +33,6 @@ export default class order_repay_confirm extends PureComponent {
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		entryFrom = queryData.entryFrom;
 		this.state = {
-			billDesc: {},
 			bankInfo: {},
 			couponInfo: {},
 			deratePrice: '',
@@ -46,59 +44,42 @@ export default class order_repay_confirm extends PureComponent {
 			totalAmt: '', // 一键结清传给后台的总金额
 			payType: '',
 			payTypes: ['BankPay'],
-			thisPerdNum: '',
 			insureInfo: '',
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
 			couponPrice: '', // 优惠劵计算过的金额
 			disDisRepayAmt: 0, // 优惠金额
-			repayPerds: [],
-			showAlert: false,
-			isUseCoupon: false
+			showAlert: false
 		};
 	}
 
 	componentDidMount() {
-		this.queryCouponCount();
-		this.getRepayConfirmInfo();
-		this.queryExtendedPayType();
-		this.dataFill();
+		this.dataInit();
 	}
 
 	componentWillUnmount() {
 		store.removeCardData();
 	}
 
-	dataFill = () => {
-		//数据反显
+	dataInit = () => {
+		//数据填充
 		const { billDesc = {} } = this.props.history.location.state;
 		let bankInfo = store.getCardData() || {};
-		// let couponInfo = store.getCouponData() || {};
-		// let { detailArr, totalAmt, totalAmtForShow } = orderDtlData;
 		store.removeOrderDetailData();
-		this.setState({
-			bankName: bankInfo.bankName || billDesc.wthdCrdCorpOrgNm,
-			bankNo: bankInfo.lastCardNo || billDesc.wthdCrdNoLast,
-			bankInfo,
-			cardAgrNo: bankInfo.agrNo || billDesc.wthCrdAgrNo
-		});
-		// if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
-		// 	this.setState(
-		// 		{
-		// 			detailArr,
-		// 			totalAmt,
-		// 			totalAmtForShow,
-		// 			bankInfo
-		// 		},
-		// 		() => {
-		// 			store.removeCardData();
-		// 			// if (res.data && res.data.data && !this.state.isBillClean) {
-		// 			// 	this.dealMoney(res.data);
-		// 			// }
-		// 		}
-		// 	);
-		// }
+		this.setState(
+			{
+				bankName: bankInfo.bankName || billDesc.wthdCrdCorpOrgNm,
+				bankNo: bankInfo.lastCardNo || billDesc.wthdCrdNoLast,
+				bankInfo,
+				cardAgrNo: bankInfo.agrNo || billDesc.wthCrdAgrNo
+			},
+			() => {
+				this.queryCouponCount();
+				this.getRepayConfirmInfo();
+				this.queryExtendedPayType();
+			}
+		);
 	};
 
 	//查询支付方式
@@ -162,7 +143,6 @@ export default class order_repay_confirm extends PureComponent {
 			)
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
-					console.log(res.data.totalSize, 'size');
 					this.setState({
 						availableCoupNum: res.data.totalSize
 					});
@@ -305,6 +285,11 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 立即还款
 	handleClickConfirm = () => {
+		const { billOvduDays, repayPerds } = this.props.history.location.state; //逾期的期数
+		buriedPointEvent(order.repayConfirmSubmitBtn, {
+			isOverdue: !!billOvduDays,
+			repayPerds: repayPerds.join(',')
+		});
 		const { availableCoupNum } = this.state;
 		let couponInfo = store.getCouponData() || {};
 
@@ -330,10 +315,6 @@ export default class order_repay_confirm extends PureComponent {
 				couponId = couponInfo.usrCoupNo;
 			} else {
 				couponId = '';
-			}
-		} else {
-			if (billDesc.data && billDesc.data.usrCoupNo) {
-				couponId = billDesc.data.usrCoupNo;
 			}
 		}
 		let sendParams = {
@@ -368,8 +349,8 @@ export default class order_repay_confirm extends PureComponent {
 
 	//调用还款接口逻辑
 	repay = () => {
-		const { billDesc = {}, isPayAll, repayPerds } = this.props.history.location.state;
-		const { repayParams, totalAmt, payType, thisPerdNum } = this.state;
+		const { billDesc = {}, isPayAll, repayPerds, thisPerdNum } = this.props.history.location.state;
+		const { repayParams, totalAmt, payType } = this.state;
 		let sendParams = {
 			...repayParams,
 			isPayOff: isPayAll ? '1' : '0',
@@ -456,7 +437,7 @@ export default class order_repay_confirm extends PureComponent {
 						}
 						case 'BankPay':
 							if (res.data && res.data.repayOrdNo) {
-								const { billNo, repayPerds, billDesc } = this.props.history.location.state;
+								const { billNo, repayPerds, billDesc, billOvduDays } = this.props.history.location.state;
 								const { bankNo, bankName } = this.state;
 
 								this.props.history.replace({
@@ -470,7 +451,8 @@ export default class order_repay_confirm extends PureComponent {
 										bankNo,
 										bankName,
 										billDesc,
-										isLastPerd: this.isLastPerd()
+										isLastPerd: this.isLastPerd(),
+										billOvduDays
 									}
 								});
 							}
@@ -536,19 +518,12 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 选择银行卡
 	selectBank = () => {
-		const {
-			bankInfo: { agrNo = '' },
-			isInsureValid
-		} = this.state;
-
-		const {
-			billDesc: { wthCrdAgrNo = '' }
-		} = this.props.history.location.state;
+		const { isInsureValid, cardAgrNo } = this.state;
 
 		store.setBackUrl('/order/order_detail_page');
 		isInsureValid && store.setInsuranceFlag(true);
 		this.props.history.push(
-			`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${isInsureValid ? '1' : '0'}`
+			`/mine/select_save_page?agrNo=${cardAgrNo}&insuranceFlag=${isInsureValid ? '1' : '0'}`
 		);
 	};
 
@@ -612,7 +587,10 @@ export default class order_repay_confirm extends PureComponent {
 			showAlert: false
 		});
 		if (type === 'submit') {
+			buriedPointEvent(order.couponUseAlert_yes);
 			this.repayConfirmSubmit();
+		} else {
+			buriedPointEvent(order.couponUseAlert_no);
 		}
 	};
 
@@ -632,10 +610,11 @@ export default class order_repay_confirm extends PureComponent {
 			disDisRepayAmt = 0,
 			bankName,
 			bankNo,
+			cardAgrNo,
 			availableCoupNum
 		} = this.state;
 
-		const { canUseCoupon, billDesc } = this.props.history.location.state;
+		const { canUseCoupon } = this.props.history.location.state;
 
 		let moneyWithCoupon = '';
 
@@ -803,11 +782,7 @@ export default class order_repay_confirm extends PureComponent {
 						history={this.props.history}
 						fetch={this.props.$fetch}
 						toast={this.props.toast}
-						bankNo={
-							this.state.bankInfo && this.state.bankInfo.agrNo
-								? this.state.bankInfo.agrNo
-								: billDesc.wthCrdAgrNo
-						}
+						bankNo={cardAgrNo}
 					/>
 				)}
 			</div>

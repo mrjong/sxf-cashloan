@@ -76,7 +76,7 @@ export default class order_detail_page extends PureComponent {
 	}
 
 	// 获取弹框明细信息
-	getModalDtlInfo = (isPayAll) => {
+	getFundPlainInfo = (isPayAll) => {
 		const { billNo, billDesc, repayPerds } = this.state;
 		this.props.$fetch
 			.post(API.fundPlain, {
@@ -293,91 +293,22 @@ export default class order_detail_page extends PureComponent {
 		);
 	};
 
-	// 选择银行卡
-	selectBank = () => {
-		const {
-			bankInfo: { agrNo = '' },
-			billDesc: { wthCrdAgrNo = '' },
-			isPayAll,
-			detailArr,
-			isShowDetail,
-			totalAmt,
-			isInsureValid,
-			totalAmtForShow,
-			orderList
-		} = this.state;
-		let orderDtData = {
-			isPayAll,
-			detailArr,
-			isShowDetail,
-			totalAmt,
-			totalAmtForShow,
-			orderList
-		};
-		store.setBackUrl('/order/order_detail_page');
-		store.setOrderDetailData(orderDtData);
-		isInsureValid && store.setInsuranceFlag(true);
-		this.props.history.push(
-			`/mine/select_save_page?agrNo=${agrNo || wthCrdAgrNo}&insuranceFlag=${isInsureValid ? '1' : '0'}`
-		);
-	};
-
-	// 选择优惠劵
-	selectCoupon = (useFlag) => {
+	// 立即还款
+	goOrderRepayConfirmPage = () => {
 		const {
 			billNo,
 			billDesc,
-			couponInfo,
-			bankInfo,
-			detailArr,
-			isShowDetail,
-			totalAmt,
-			totalAmtForShow,
-			orderList
+			repayPerds,
+			prodType,
+			canUseCoupon,
+			actOrderList,
+			thisPerdNum,
+			billOvduDays
 		} = this.state;
-
-		let orderDtData = {
-			detailArr,
-			isShowDetail,
-			totalAmt,
-			totalAmtForShow,
-			orderList
-		};
-		store.setOrderDetailData(orderDtData);
-		if (useFlag) {
-			store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
-			this.props.history.push({
-				pathname: '/mine/coupon_page',
-				search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
-				state: { nouseCoupon: true, cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
-			});
-			return;
-		}
-		store.setBackUrl('/order/order_detail_page');
-		if (couponInfo && couponInfo.usrCoupNo) {
-			store.setCouponData(couponInfo);
-		} else {
-			store.setCouponData(billDesc.data);
-		}
-		this.props.history.push({
-			pathname: '/mine/coupon_page',
-			search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
-			state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
+		buriedPointEvent(order.gotoRepayConfirmPage, {
+			isOverdue: !!billOvduDays,
+			repayPerds: repayPerds.join(',')
 		});
-	};
-
-	// 判断优惠劵显示
-	renderCoupon = () => {
-		const { deratePrice } = this.state;
-		if (deratePrice !== '') {
-			return <span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>;
-		}
-		return <span>不使用</span>;
-	};
-
-	// 主动还款
-	goOrderRepayConfirm = () => {
-		const { billNo, billDesc, repayPerds, prodType, canUseCoupon, actOrderList } = this.state;
 		if (!this.state.totalAmtForShow) return;
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',
@@ -388,15 +319,20 @@ export default class order_detail_page extends PureComponent {
 				prodType,
 				canUseCoupon,
 				actOrderList,
-				isPayAll: false
+				isPayAll: false,
+				thisPerdNum,
+				billOvduDays
 			}
 		});
 	};
 
-	// 去还款
+	// 查看还款信息
 	goOrderRepayPage = () => {
-		buriedPointEvent(order.repayment, {
-			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单'
+		const { billOvduDays, repayPerds } = this.state;
+		buriedPointEvent(order.viewRepayInfoBtn, {
+			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
+			isOverdue: !!billOvduDays,
+			repayPerds: repayPerds.join(',')
 		});
 		this.props.history.push('/order/order_repay_page');
 	};
@@ -444,9 +380,6 @@ export default class order_detail_page extends PureComponent {
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].perdNum);
 		}
-		// if (this.state.penaltyInfo.isChecked) {
-		// 	repayPerds.unshift(0);
-		// }
 
 		this.setState(
 			{
@@ -456,7 +389,7 @@ export default class order_detail_page extends PureComponent {
 			},
 			() => {
 				if (repayPerds.length > 0) {
-					this.getModalDtlInfo();
+					this.getFundPlainInfo();
 				} else {
 					this.setState({
 						totalAmtForShow: 0
@@ -646,7 +579,7 @@ export default class order_detail_page extends PureComponent {
 									共计<em>{totalAmtForShow}</em>元
 								</span>
 								<SXFButton
-									onClick={this.goOrderRepayConfirm}
+									onClick={this.goOrderRepayConfirmPage}
 									className={[styles.sxf_btn, !totalAmtForShow && styles.sxf_btn_disabled].join(' ')}
 								>
 									立即还款

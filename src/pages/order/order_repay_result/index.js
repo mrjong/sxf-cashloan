@@ -7,6 +7,8 @@ import success_icon from './img/success_icon.png';
 import circle_icon from './img/circle_icon.png';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
+import { buriedPointEvent } from 'utils/analytins';
+import { order } from 'utils/analytinsType';
 
 const API = {
 	queryPayStatus: '/bill/payNotify',
@@ -100,6 +102,9 @@ export default class Cashier extends React.PureComponent {
 								orgFnlMsg
 							},
 							() => {
+								buriedPointEvent(order.repayResultStatus, {
+									repayStatus: this.state.status
+								});
 								if (this.state.status === 'success') {
 									if (isLastPerd) {
 										//如果还的是最后一期
@@ -115,10 +120,17 @@ export default class Cashier extends React.PureComponent {
 							}
 						);
 					} else if (resultMark === '00') {
-						this.setState({
-							status: 'fail',
-							orgFnlMsg
-						});
+						this.setState(
+							{
+								status: 'fail',
+								orgFnlMsg
+							},
+							() => {
+								buriedPointEvent(order.repayResultStatus, {
+									repayStatus: this.state.status
+								});
+							}
+						);
 						clearInterval(timer);
 					}
 				}
@@ -129,24 +141,21 @@ export default class Cashier extends React.PureComponent {
 			});
 	};
 
+	continueRepay = () => {
+		const { repayPerds, billOvduDays } = this.props.history.location.state;
+		buriedPointEvent(order.continueRepayBtn, {
+			isOverdue: !!billOvduDays,
+			repayPerds: repayPerds.join(',')
+		});
+		this.props.history.replace('/order/order_repay_page');
+	};
+
 	render() {
 		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgFnlMsg, exceedingAmt } = this.state;
 		const { bankName, bankNo, isLastPerd } = this.props.history.location.state;
 
 		return (
 			<div>
-				{/* <div className={styles.modal_title}>
-					{status === 'part' ? '本次还款明细' : '还款'}
-					{status !== 'success' && status !== 'waiting' && (
-						<Icon
-							type="cross"
-							className={styles.modal_close_btn}
-							onClick={() => {
-								onClose();
-							}}
-						/>
-					)}
-        </div> */}
 				<div className={styles.loading_box}>
 					{status === 'waiting' && (
 						<div>
@@ -237,12 +246,7 @@ export default class Cashier extends React.PureComponent {
 				) : null}
 
 				{!isLastPerd && status !== 'waiting' ? (
-					<SXFButton
-						onClick={() => {
-							this.props.history.replace('/order/order_repay_page');
-						}}
-						className={styles.button}
-					>
+					<SXFButton onClick={this.continueRepay} className={styles.button}>
 						继续还款
 					</SXFButton>
 				) : null}
