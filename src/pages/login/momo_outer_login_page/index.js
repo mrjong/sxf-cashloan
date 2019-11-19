@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:23:57
+ * @LastEditTime: 2019-11-19 11:35:10
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -159,6 +159,18 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		// 防止用户关闭弹框,继续点击进行登录
+		if (store.getToken() || Cookie.get('fin-v-card-token')) {
+			this.setState(
+				{
+					showDownloadModal: true
+				},
+				() => {
+					this.startCountDown();
+				}
+			);
+			return;
+		}
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');

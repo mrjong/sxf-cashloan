@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:23:01
+ * @LastEditTime: 2019-11-19 11:35:02
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -165,6 +165,18 @@ export default class login_common_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime > 1600 || !this.prePressTime) {
 			this.prePressTime = nowTime;
+			// 防止用户关闭弹框,继续点击进行登录
+			if (store.getToken() || Cookie.get('fin-v-card-token')) {
+				this.setState(
+					{
+						showDownloadModal: true
+					},
+					() => {
+						this.startCountDown();
+					}
+				);
+				return;
+			}
 			if (!this.state.smsJrnNo) {
 				Toast.info('请先获取短信验证码');
 				return;
