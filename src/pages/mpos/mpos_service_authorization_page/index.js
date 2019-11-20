@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:49:28
+ * @LastEditTime: 2019-11-20 19:48:18
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -128,7 +128,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 			<div>
 				<img src={logo} alt="" className={styles.logoWrap} />
 				<p className={styles.text}>
-					随行付金融提供 <em className={styles.highlight}>信用卡账单代还</em>服务 <br /> 众多信用卡用户新选择{' '}
+					随行付金融提供 <em className={styles.highlight}>借钱还信用卡</em>服务 <br /> 众多信用卡用户新选择{' '}
 				</p>
 				<div className={styles.btn_fixed}>
 					<SXFButton
