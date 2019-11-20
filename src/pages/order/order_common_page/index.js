@@ -29,13 +29,8 @@ export default class order_detail_page extends PureComponent {
 		entryFrom = queryData.entryFrom;
 		this.state = {
 			billDesc: {},
-			showModal: false,
 			orderList: [],
-			bankInfo: {},
-			couponInfo: {},
 			isPayAll: false, // 是否一键结清
-			detailArr: [], // 还款详情数据
-			totalAmt: '', // 一键结清传给后台的总金额
 			overDueModalFlag: '', // 信用施压弹框标识
 			openIdFlag: '',
 			thisPerdNum: '',
@@ -43,7 +38,6 @@ export default class order_detail_page extends PureComponent {
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
 			totalAmtForShow: '',
-			disDisRepayAmt: 0, // 优惠金额
 			canUseCoupon: false, //优惠券是否可用
 			repayPerds: []
 		};
@@ -51,6 +45,8 @@ export default class order_detail_page extends PureComponent {
 
 	componentWillMount() {
 		store.removeInsuranceFlag();
+		store.removeCardData();
+		store.removeCouponData();
 		if (!store.getBillNo()) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {
@@ -70,11 +66,6 @@ export default class order_detail_page extends PureComponent {
 		);
 	}
 
-	componentWillUnmount() {
-		store.removeCardData();
-		store.removeCouponData();
-	}
-
 	// 获取弹框明细信息
 	getFundPlainInfo = (isPayAll) => {
 		const { billNo, billDesc, repayPerds } = this.state;
@@ -86,15 +77,12 @@ export default class order_detail_page extends PureComponent {
 				repayPerds: isPayAll ? [] : repayPerds
 			})
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					if (res.data) {
-						this.setState({
-							disDisRepayAmt: res.data[0].disDisRepayAmt,
-							detailArr: res.data[0].totalList,
-							totalAmt: res.data[0].totalAmt,
-							totalAmtForShow: res.data[0].totalAmtForShow
-						});
-					}
+				if (res.msgCode === 'PTM0000' && res.data) {
+					const { totalAmtForShow, totalList = [] } = res.data[0] || {};
+					this.setState({
+						totalAmtForShow,
+						totalList
+					});
 				} else {
 					this.props.toast.info(res.msgInfo);
 				}
@@ -154,31 +142,7 @@ export default class order_detail_page extends PureComponent {
 							billOvduStartDt
 						},
 						() => {
-							// 选择银行卡回来
-							let bankInfo = store.getCardData();
-							let orderDtlData = store.getOrderDetailData() || {};
-							let { isPayAll, detailArr, isShowDetail, totalAmt, totalAmtForShow, orderList } = orderDtlData;
-							store.removeOrderDetailData();
-							if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
-								this.setState(
-									{
-										showModal: true,
-										isPayAll,
-										detailArr,
-										isShowDetail,
-										totalAmt,
-										totalAmtForShow
-									},
-									() => {
-										this.setState({
-											bankInfo
-										});
-										store.removeCardData();
-									}
-								);
-							}
-
-							this.showPerdList(orderList);
+							this.showPerdList();
 						}
 					);
 				} else {
@@ -230,10 +194,9 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	// 显示还款计划
-	showPerdList = (orderList = []) => {
-		const { thisPerdNum, billOvduDays } = this.state;
+	showPerdList = () => {
+		const { thisPerdNum, billOvduDays, perdList } = this.state;
 		let perdListArray = [];
-		let perdList = this.state.perdList;
 		for (let i = 0; i < perdList.length; i++) {
 			let item = {
 				key: i,
@@ -273,17 +236,16 @@ export default class order_detail_page extends PureComponent {
 			perdListArray.push(item);
 		}
 		this.setState({
-			actOrderList: orderList.length > 0 ? orderList : perdListArray //实际的子账单列表
+			actOrderList: perdListArray //实际的子账单列表
 		});
 
 		if (billOvduDays) {
 			//如果账单逾期
-			orderList = orderList.filter((item) => item.perdSts === '1').slice(0, 1);
 			perdListArray = perdListArray.filter((item) => item.perdSts === '1').slice(0, 1);
 		}
 		this.setState(
 			{
-				orderList: orderList.length > 0 ? orderList : perdListArray
+				orderList: perdListArray
 			},
 			() => {
 				if (window.location.pathname === '/order/order_repay_page') {
@@ -303,13 +265,15 @@ export default class order_detail_page extends PureComponent {
 			canUseCoupon,
 			actOrderList,
 			thisPerdNum,
-			billOvduDays
+			billOvduDays,
+			totalList,
+			totalAmtForShow
 		} = this.state;
 		buriedPointEvent(order.gotoRepayConfirmPage, {
 			isOverdue: !!billOvduDays,
 			repayPerds: repayPerds.join(',')
 		});
-		if (!this.state.totalAmtForShow) return;
+		if (!totalAmtForShow) return;
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',
 			state: {
@@ -321,7 +285,9 @@ export default class order_detail_page extends PureComponent {
 				actOrderList,
 				isPayAll: false,
 				thisPerdNum,
-				billOvduDays
+				billOvduDays,
+				totalList,
+				totalAmtForShow
 			}
 		});
 	};
