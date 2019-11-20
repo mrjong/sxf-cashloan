@@ -125,7 +125,14 @@ const order = {
 	repaymentFirst: `${prefix}_ORDER_DETAILS_REPAYMENT_FIRST`, // 账单详情页-付款详情-立即还款按钮
 	returnHome: `${prefix}_ORDER_BACK_HOME`, // 还款完成页-返回首页按钮
 	openNow: `${prefix}_ORDER_OPEN_NOW`, // 还款完成页-弹框里立即开启按钮
-	closeModal: `${prefix}_ORDER_CLOSE_MODAL` // 还款完成页-弹框里关闭按钮
+	closeModal: `${prefix}_ORDER_CLOSE_MODAL`, // 还款完成页-弹框里关闭按钮
+	viewRepayInfoBtn: `${prefix}_VIEW_REPAYINFO_BTN`, // 查看还款信息按钮点击
+	gotoRepayConfirmPage: `${prefix}_GOTO_REPAYCONFIRM_PAGE`, // 点击去还款确认页按钮
+	repayConfirmSubmitBtn: `${prefix}_REPAYCONFIRM_SUBMITBTN`, // 确认还款按钮点击
+	couponUseAlert_no: `${prefix}_COUPONUSEALERT_NO`, // 优惠券使用弹窗按钮点击
+	couponUseAlert_yes: `${prefix}_COUPONUSEALERT_YES`, // 优惠券使用弹窗按钮点击
+	repayResultStatus: `${prefix}_REPAYRESULT_STATUS`, // 还款完成页-还款状态
+	continueRepayBtn: `${prefix}_CONTINUEREPAY_BTN` // 结果页-继续还款按钮点击
 };
 
 const membership = {

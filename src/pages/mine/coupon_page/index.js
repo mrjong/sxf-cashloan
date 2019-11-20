@@ -224,12 +224,14 @@ export default class coupon_page extends PureComponent {
 			});
 		return data;
 	};
+
 	// 刷新
 	onRefresh = () => {
 		totalPage = false;
 		this.setState({ refreshing: true, isLoading: true });
 		this.getCommonData();
 	};
+
 	// 公用
 	getCommonData = async (tab) => {
 		this.setState({

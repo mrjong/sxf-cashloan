@@ -307,7 +307,8 @@ export default class home_page extends PureComponent {
 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1',
-					overDueModalFlag: res.data.overduePopupFlag === '1'
+					overDueModalFlag: res.data.overduePopupFlag === '1',
+					decreaseCoupExpiryDate: res.data.decreaseCoupExpiryDate
 				});
 				const currProgress =
 					res.data &&
@@ -1579,6 +1580,7 @@ export default class home_page extends PureComponent {
 			visibleLoading,
 			overDueInf,
 			overDueModalFlag,
+			decreaseCoupExpiryDate,
 			modalType,
 			modalBtnFlag,
 			blackData,
@@ -1622,6 +1624,7 @@ export default class home_page extends PureComponent {
 					toast={this.props.toast}
 					isShowActivityModal={isShowActivityModal}
 					overDueModalFlag={overDueModalFlag}
+					decreaseCoupExpiryDate={decreaseCoupExpiryDate}
 					overDueInf={overDueInf}
 					visibleLoading={visibleLoading}
 					readAgreementCb={this.readAgreementCb}

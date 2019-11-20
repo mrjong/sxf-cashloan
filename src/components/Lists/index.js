@@ -11,7 +11,6 @@ export default class Lists extends PureComponent {
 		super(props);
 	}
 
-	componentWillMount() {}
 	getExtra = (list) => {
 		let extraList = [];
 		list.forEach((item, index) => {
@@ -32,7 +31,7 @@ export default class Lists extends PureComponent {
 	};
 
 	render() {
-		const { listsInf, className, insureFee, isCheckbox, checkClickCb, penaltyInfo, CouponCount } = this.props;
+		const { listsInf, className, insureFee, isCheckbox, checkClickCb, CouponCount } = this.props;
 		const Item = List.Item;
 		const Brief = Item.Brief;
 		return (
@@ -67,42 +66,7 @@ export default class Lists extends PureComponent {
 							{insureFee.label.brief ? <Brief>{insureFee.label.brief}</Brief> : null}
 						</Item>
 					)}
-					{/* 罚息 */}
-					{penaltyInfo && penaltyInfo.show && (
-						<Item
-							className={styles.checkList}
-							arrow={'empty'}
-							extra={
-								Object.prototype.toString.call(penaltyInfo.extra) === '[object Array]' ? (
-									this.getExtra(penaltyInfo.extra)
-								) : (
-									<span style={{ color: insureFee.extra && insureFee.extra.color }}>
-										{insureFee.extra && insureFee.extra.name}
-									</span>
-								)
-							}
-						>
-							{isCheckbox && (
-								<span
-									onClick={(e) => {
-										e.stopPropagation();
-										checkClickCb(penaltyInfo, true);
-									}}
-									className={
-										penaltyInfo.isChecked
-											? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
-											: styles.checkBoxStyle
-									}
-								/>
-							)}
-							{penaltyInfo.label.name}
-							{penaltyInfo.label.brief ? (
-								<Brief style={{ fontWeight: '500', color: '#121C32', fontSize: '0.3rem' }}>
-									{penaltyInfo.label.brief}
-								</Brief>
-							) : null}
-						</Item>
-					)}
+
 					{/* 账单列表 */}
 					{listsInf &&
 						listsInf.map((item, index) => {

@@ -1,0 +1,159 @@
+.loading_box {
+	background-color: #fff;
+	text-align: center;
+  padding: 50px 0 30px;
+  height: 372px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.loading_icon {
+	justify-content: center;
+
+	span {
+		width: 150px;
+		height: 150px;
+	}
+}
+
+.desc {
+	color: #121C32;
+	font-size: 36px;
+  line-height: 1;
+  margin-top: 30px;
+	span {
+		color: #ff6666;
+	}
+}
+
+.sub_desc {
+  font-size: 30px;
+  color: #868E9E;
+  margin-top: 30px;
+}
+
+.icon_wrap {
+	// margin-bottom: 30px;
+}
+
+.icon {
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+}
+
+.success_icon {
+	position: relative;
+	width: 150px;
+	height: 150px;
+	line-height: 150px;
+	background-color: #fff6f1;
+	border-radius: 50%;
+	margin: 0 auto;
+	text-align: center;
+
+	img {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 78px;
+		height: 55px;
+		z-index: 1;
+	}
+
+	&::after {
+		position: absolute;
+		right: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		content: '';
+		display: inline-block;
+		height: 55px;
+		animation: del_line 1.2s linear forwards;
+		background: #fff6f1;
+		z-index: 2;
+	}
+}
+
+.timeout_icon {
+	background: url('./img/timeout_icon.png') no-repeat;
+	background-size: cover;
+}
+
+.fail_icon {
+	background: url('./img/fail_icon.png') no-repeat;
+	background-size: cover;
+}
+
+.list_wrap {
+	padding: 40px 30px 0;
+	.list_item {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 40px;
+		font-size: 30px;
+		color: #121c32;
+		.value {
+			font-weight: 500;
+		}
+	}
+	p {
+		color: #ff6666;
+		text-align: left;
+		font-size: 30px;
+	}
+}
+
+.button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 260px;
+	width: 670px;
+	font-weight: 500;
+}
+
+.discount_box {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 690px;
+	height: 110px;
+	margin: 30px auto 0;
+	padding: 0 30px;
+	box-sizing: border-box;
+	background-color: #fff;
+	border-radius: 6px;
+	font-size: 30px;
+	color: #414a53;
+}
+
+.discount {
+	color: #fe6666;
+}
+
+@keyframes del_line {
+	0% {
+		width: 120px;
+	}
+	100% {
+		width: 0;
+	}
+}
+
+@keyframes rotateInfinte {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.circle_icon {
+	width: 150px;
+	height: 150px;
+	// margin: 50px auto;
+	background-color: #fff;
+	animation: rotateInfinte 1.5s linear 0.2s infinite;
+}

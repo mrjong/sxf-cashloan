@@ -1,3 +1,5 @@
+@import '../../../../../assets/styles/scss/base/fn';
+
 .overDueTit {
 	font-size: 36px;
 	font-weight: 500;
@@ -11,8 +13,11 @@
 	font-weight: 400;
 	color: rgba(51, 51, 51, 1);
 	line-height: 45px;
-	margin: 50px 0 56px;
+	margin: 50px auto 56px;
 	text-align: left;
+	padding: 0 30px;
+	width: 520px;
+	box-sizing: border-box;
 }
 
 .warningImg {
@@ -23,9 +28,46 @@
 }
 
 .download {
-	margin-top: 30px;
-	color: #4da6ff;
+	margin: 20px 0 15px;
+	color: #ff6666;
+	font-size: 28px;
+}
+
+.couponEntry {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 520px;
+	height: 80px;
+	background: linear-gradient(180deg, rgba(255, 118, 70, 1) 0%, rgba(255, 87, 94, 1) 100%);
+	box-shadow: 0px 2px 13px 0px rgba(255, 52, 52, 0.5);
+	border-radius: 6px;
+	color: #fff;
 	font-size: 30px;
+	margin: 0 auto 40px;
+	padding: 0 16px;
+	box-sizing: border-box;
+	.value {
+		position: relative;
+		&::after {
+      content: '';
+      @include setArrow(right, 12px, #fff, 1px);
+      top: -3px;
+		}
+	}
+}
+
+.button {
+	position: relative;
+	font-size: 34px;
+	color: #121c32;
+	font-weight: 500;
+	text-align: center;
+	height: 100px;
+	line-height: 100px;
+	&::after {
+		@include setTopLine(#f0f1f5);
+	}
 }
 
 :global {
@@ -36,6 +78,6 @@
 		overflow: initial;
 	}
 	.overDueModalBox.am-modal-transparent .am-modal-content .am-modal-body {
-		padding: 0 60px 40px;
+		padding: 0;
 	}
 }

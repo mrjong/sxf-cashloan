@@ -49,7 +49,9 @@ export default class ButtonCustom extends React.PureComponent {
 										<div className={styles.list_desc_content}>
 											<label
 												className={
-													item.feeNm === '合计' ? styles.list_desc_container_FW : styles.list_desc_container
+													index === listdescinfo.length - 1
+														? styles.list_desc_container_FW
+														: styles.list_desc_container
 												}
 											>
 												{item.feeNm}
@@ -57,9 +59,15 @@ export default class ButtonCustom extends React.PureComponent {
 											</label>
 										</div>
 										<div
-											className={item.feeNm === '合计' ? styles.list_desc_extra_FW : styles.list_desc_extra}
+											className={
+												index === listdescinfo.length - 1 ? styles.list_desc_extra_FW : styles.list_desc_extra
+											}
 										>
-											<span>{parseFloat(item.feeAmt).toFixed(2)}</span>
+											{item.feeNm === '优惠金额' || item.feeNm === '减免金额' ? (
+												<span className={styles.red_box}>-优惠{parseFloat(item.feeAmt)}</span>
+											) : (
+												<span>{parseFloat(item.feeAmt).toFixed(2)}</span>
+											)}
 										</div>
 									</li>
 								);

@@ -27,6 +27,7 @@ export default class BlackCard extends React.PureComponent {
 			handleOverDueClick,
 			activityModalBtn,
 			closeActivityModal,
+			decreaseCoupExpiryDate,
 			toast
 		} = this.props;
 
@@ -34,7 +35,15 @@ export default class BlackCard extends React.PureComponent {
 		if (showAgreement) {
 			homeModal = <AgreementModal visible={showAgreement} readAgreementCb={readAgreementCb} />;
 		} else if (overDueModalFlag) {
-			homeModal = <OverDueModal toast={toast} overDueInf={overDueInf} handleClick={handleOverDueClick} />;
+			homeModal = (
+				<OverDueModal
+					toast={toast}
+					history={history}
+					overDueInf={overDueInf}
+					decreaseCoupExpiryDate={decreaseCoupExpiryDate}
+					handleClick={handleOverDueClick}
+				/>
+			);
 		} else if (isShowActivityModal) {
 			homeModal = (
 				<ActivityModal
