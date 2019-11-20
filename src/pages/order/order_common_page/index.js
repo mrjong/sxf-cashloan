@@ -241,7 +241,9 @@ export default class order_detail_page extends PureComponent {
 
 		if (billOvduDays) {
 			//如果账单逾期
-			perdListArray = perdListArray.filter((item) => item.perdSts === '1').slice(0, 1);
+			perdListArray = perdListArray
+				.filter((item) => item.perdSts === '1' || item.perdSts === '2')
+				.slice(0, 1);
 		}
 		this.setState(
 			{

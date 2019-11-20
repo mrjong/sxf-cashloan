@@ -479,9 +479,7 @@ export default class order_repay_confirm extends PureComponent {
 			this.props.history.replace(`/order/repayment_succ_page?prodType=${billDesc.prodType}`);
 		} else {
 			message && this.props.toast.info(message);
-			setTimeout(() => {
-				this.goBackForWeixin();
-			}, 3000);
+			this.goBackForWeixin();
 		}
 	};
 
@@ -623,7 +621,7 @@ export default class order_repay_confirm extends PureComponent {
 				</div>
 				<div className={styles.repayInfo_box}>
 					<div className={styles.title}>
-						<span>账单金额</span>
+						<span>应还金额</span>
 						<span>{moneyWithCoupon || (totalBillAmt && parseFloat(totalBillAmt).toFixed(2))}元</span>
 					</div>
 					{/* 账单明细展示 */}

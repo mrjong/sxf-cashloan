@@ -32,6 +32,7 @@ export default class Cashier extends React.PureComponent {
 	}
 
 	componentDidMount() {
+		clearInterval(timer);
 		timer = setInterval(() => {
 			this.setState(
 				{
