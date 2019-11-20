@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-11-20 16:55:04
+ */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import ioscontrol from './img/leadwx_bg.png';
@@ -8,6 +12,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { mpos_ioscontrol_page } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
+let queryData = null;
 @setBackGround('linear-gradient(139deg, #ff3749 0%, #feba55 84%)')
 export default class ioscontrol_page extends PureComponent {
 	constructor(props) {
@@ -18,7 +23,7 @@ export default class ioscontrol_page extends PureComponent {
 		};
 	}
 	componentDidMount() {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		buriedPointEvent(mpos_ioscontrol_page.iosControlPageView, {
 			entryType: queryData.entryType
 		});
@@ -33,7 +38,11 @@ export default class ioscontrol_page extends PureComponent {
 		buriedPointEvent(mpos_ioscontrol_page.copySuccess);
 		this.props.toast.info('复制成功！马上打开微信关注“还到”，抢免息吧！');
 		setTimeout(() => {
-			window.postMessage('复制成功', () => {});
+			if (queryData.isPlus) {
+				window.ReactNativeWebView.postMessage('openWeChat', () => {});
+			} else {
+				window.postMessage('复制成功', () => {});
+			}
 		}, 0);
 	};
 

@@ -22,7 +22,8 @@ export default class credit_apply_succ_page extends PureComponent {
 		super(props);
 		this.state = {
 			showTimeoutPayModal: false,
-			isAppOpen: false // 是否是app webview打开
+			isAppOpen: false, // 是否是app webview打开
+			isPlus: false
 		};
 	}
 	componentWillMount() {
@@ -37,11 +38,15 @@ export default class credit_apply_succ_page extends PureComponent {
 	}
 	// 判断是否绑卡
 	checkIsBandCard = () => {
-		const { isAppOpen } = this.state;
+		const { isAppOpen, isPlus } = this.state;
 		buriedPointEvent(home.assessingBindCard);
 		if (isAppOpen) {
 			setTimeout(() => {
-				window.postMessage('判断是否绑卡', () => {});
+				if (isPlus) {
+					window.ReactNativeWebView.postMessage('判断是否绑卡', () => {});
+				} else {
+					window.postMessage('判断是否绑卡', () => {});
+				}
 			}, 0);
 			return;
 		}
@@ -77,7 +82,8 @@ export default class credit_apply_succ_page extends PureComponent {
 			this.props.toast.info(passData.errorMsg);
 		} else {
 			this.setState({
-				isAppOpen: passData && passData.isAppOpen
+				isAppOpen: passData && passData.isAppOpen,
+				isPlus: passData && passData.isPlus
 			});
 		}
 	};

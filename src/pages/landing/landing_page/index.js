@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-08 11:15:40
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-11-20 17:35:57
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -30,7 +30,8 @@ export default class landing_page extends PureComponent {
 			configData: null,
 			invalidTxt: '', // 失效提示
 			invalidModalShow: false, // 失效弹框
-			landingTit: '' // 落地页title
+			landingTit: '', // 落地页title
+			isPlus: false
 		};
 	}
 
@@ -38,7 +39,8 @@ export default class landing_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.fromApp) {
 			this.setState({
-				isAppOpen: true
+				isAppOpen: true,
+				isPlus: queryData.isPlus
 			});
 		}
 		this.getLandingImgByUrl();
@@ -107,7 +109,7 @@ export default class landing_page extends PureComponent {
 
 	// 点击图片
 	clickHandler = (item) => {
-		const { isAppOpen, landingTit } = this.state;
+		const { isAppOpen, landingTit, isPlus } = this.state;
 		//  /** 图片地址 */
 		//  private String imageUrl;
 		//  /** 图片名称 */
@@ -137,15 +139,27 @@ export default class landing_page extends PureComponent {
 					// app 打开另一个webview
 					if (isAppOpen) {
 						setTimeout(() => {
-							window.postMessage(
-								JSON.stringify({
-									isWelfare: true,
-									operation: 'openWebview',
-									landingTit,
-									landingUrl: item.skipUrl
-								}),
-								() => {}
-							);
+							if (isPlus) {
+								window.ReactNativeWebView.postMessage(
+									JSON.stringify({
+										isWelfare: true,
+										operation: 'openWebview',
+										landingTit,
+										landingUrl: item.skipUrl
+									}),
+									() => {}
+								);
+							} else {
+								window.postMessage(
+									JSON.stringify({
+										isWelfare: true,
+										operation: 'openWebview',
+										landingTit,
+										landingUrl: item.skipUrl
+									}),
+									() => {}
+								);
+							}
 						}, 0);
 					} else {
 						window.location.href = item.skipUrl;
@@ -155,25 +169,45 @@ export default class landing_page extends PureComponent {
 					if (item.skipUrl === '0') {
 						this.judgeLogin(() => {
 							setTimeout(() => {
-								window.postMessage(
-									JSON.stringify({
-										isWelfare: true,
-										isLogin: true
-									}),
-									() => {}
-								);
+								if (isPlus) {
+									window.ReactNativeWebView.postMessage(
+										JSON.stringify({
+											isWelfare: true,
+											isLogin: true
+										}),
+										() => {}
+									);
+								} else {
+									window.postMessage(
+										JSON.stringify({
+											isWelfare: true,
+											isLogin: true
+										}),
+										() => {}
+									);
+								}
 							}, 0);
 						});
 					} else if (item.skipUrl === '1') {
 						this.judgeLogin(() => {
 							setTimeout(() => {
-								window.postMessage(
-									JSON.stringify({
-										isWelfare: true,
-										operation: 'checkCoupon'
-									}),
-									() => {}
-								);
+								if (isPlus) {
+									window.ReactNativeWebView.postMessage(
+										JSON.stringify({
+											isWelfare: true,
+											operation: 'checkCoupon'
+										}),
+										() => {}
+									);
+								} else {
+									window.postMessage(
+										JSON.stringify({
+											isWelfare: true,
+											operation: 'checkCoupon'
+										}),
+										() => {}
+									);
+								}
 							}, 0);
 						});
 					}
@@ -195,7 +229,7 @@ export default class landing_page extends PureComponent {
 
 	// 判断用户是否登录
 	judgeLogin = (callback) => {
-		const { isAppOpen } = this.state;
+		const { isAppOpen, isPlus } = this.state;
 		// const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		// if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
 		// 	if (queryData.appId && queryData.token) {
@@ -216,7 +250,11 @@ export default class landing_page extends PureComponent {
 					isLogin: false
 				};
 				setTimeout(() => {
-					window.postMessage(JSON.stringify(activityInf), () => {});
+					if (isPlus) {
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+					} else {
+						window.postMessage(JSON.stringify(activityInf), () => {});
+					}
 				}, 0);
 			} else {
 				// h5 未登录情况下
@@ -248,7 +286,7 @@ export default class landing_page extends PureComponent {
 
 	// 用户抽奖
 	getDraw = (item) => {
-		const { isAppOpen, landingTit } = this.state;
+		const { isAppOpen, landingTit, isPlus } = this.state;
 		const params = {
 			activeId: item.activeBizId,
 			channel: getH5Channel() // 用户渠道
@@ -268,15 +306,27 @@ export default class landing_page extends PureComponent {
 								// app 打开另一个webview
 								if (isAppOpen) {
 									setTimeout(() => {
-										window.postMessage(
-											JSON.stringify({
-												isWelfare: true,
-												operation: 'openWebview',
-												landingTit,
-												landingUrl: item.skipUrl
-											}),
-											() => {}
-										);
+										if (isPlus) {
+											window.ReactNativeWebView.postMessage(
+												JSON.stringify({
+													isWelfare: true,
+													operation: 'openWebview',
+													landingTit,
+													landingUrl: item.skipUrl
+												}),
+												() => {}
+											);
+										} else {
+											window.postMessage(
+												JSON.stringify({
+													isWelfare: true,
+													operation: 'openWebview',
+													landingTit,
+													landingUrl: item.skipUrl
+												}),
+												() => {}
+											);
+										}
 									}, 0);
 								} else {
 									window.location.href = item.skipUrl;
@@ -285,23 +335,43 @@ export default class landing_page extends PureComponent {
 								// APP页面 中 0 代表跳转首页 1代码跳转优惠券列表页面
 								if (item.skipUrl === '0') {
 									setTimeout(() => {
-										window.postMessage(
-											JSON.stringify({
-												isWelfare: true,
-												isLogin: true
-											}),
-											() => {}
-										);
+										if (isPlus) {
+											window.ReactNativeWebView.postMessage(
+												JSON.stringify({
+													isWelfare: true,
+													isLogin: true
+												}),
+												() => {}
+											);
+										} else {
+											window.postMessage(
+												JSON.stringify({
+													isWelfare: true,
+													isLogin: true
+												}),
+												() => {}
+											);
+										}
 									}, 0);
 								} else if (item.skipUrl === '1') {
 									setTimeout(() => {
-										window.postMessage(
-											JSON.stringify({
-												isWelfare: true,
-												operation: 'checkCoupon'
-											}),
-											() => {}
-										);
+										if (isPlus) {
+											window.ReactNativeWebView.postMessage(
+												JSON.stringify({
+													isWelfare: true,
+													operation: 'checkCoupon'
+												}),
+												() => {}
+											);
+										} else {
+											window.postMessage(
+												JSON.stringify({
+													isWelfare: true,
+													operation: 'checkCoupon'
+												}),
+												() => {}
+											);
+										}
 									}, 0);
 								}
 							}

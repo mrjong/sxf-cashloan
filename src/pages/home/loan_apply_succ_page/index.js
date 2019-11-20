@@ -24,7 +24,8 @@ export default class remit_ing_page extends PureComponent {
 			successModalShow: false,
 			failModalShow: false,
 			time: 0,
-			isAppOpen: false
+			isAppOpen: false,
+			isPlus: false
 		};
 	}
 	componentWillMount() {
@@ -80,12 +81,21 @@ export default class remit_ing_page extends PureComponent {
 		const that = this;
 		const passData = JSON.parse(e.data);
 		that.setState({
-			isAppOpen: passData && passData.isAppOpen
+			isAppOpen: passData && passData.isAppOpen,
+			isPlus: passData && passData.isPlus
 		});
 	};
 
 	render() {
-		const { queryData, ACTipAlertShow, successModalShow, failModalShow, time, isAppOpen } = this.state;
+		const {
+			queryData,
+			ACTipAlertShow,
+			successModalShow,
+			failModalShow,
+			time,
+			isAppOpen,
+			isPlus
+		} = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -101,7 +111,11 @@ export default class remit_ing_page extends PureComponent {
 								isAppOpen
 									? () => {
 											setTimeout(() => {
-												window.postMessage('tel:400-088-7626', () => {});
+												if (isPlus) {
+													window.ReactNativeWebView.postMessage('tel:400-088-7626', () => {});
+												} else {
+													window.postMessage('tel:400-088-7626', () => {});
+												}
 											}, 0);
 									  }
 									: () => {}
@@ -174,7 +188,11 @@ export default class remit_ing_page extends PureComponent {
 						buriedPointEvent(home.gotIt);
 						if (isAppOpen) {
 							setTimeout(() => {
-								window.postMessage('我知道了', () => {});
+								if (isPlus) {
+									window.ReactNativeWebView.postMessage('我知道了', () => {});
+								} else {
+									window.postMessage('我知道了', () => {});
+								}
 							}, 0);
 						} else {
 							this.props.history.push('/home/home');
