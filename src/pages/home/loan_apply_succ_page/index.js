@@ -12,7 +12,7 @@ import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity, home } from 'utils/analytinsType';
-
+let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
 export default class remit_ing_page extends PureComponent {
@@ -29,17 +29,31 @@ export default class remit_ing_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.setState({
 			queryData
 		});
 		buriedPointEvent(home.quickLoan);
 		const that = this;
-		document.addEventListener('message', that.checkAppOpen);
+		if (queryData && queryData.isPlus) {
+			this.setState({
+				isAppOpen: true,
+				isPlus: queryData.isPlus
+			});
+		} else {
+			document.addEventListener('message', that.checkAppOpen);
+		}
 	}
 	componentWillUnmount() {
 		const that = this;
-		document.removeEventListener('message', that.checkAppOpen);
+		if (queryData && queryData.isPlus) {
+			this.setState({
+				isAppOpen: false,
+				isPlus: false
+			});
+		} else {
+			document.removeEventListener('message', that.checkAppOpen);
+		}
 	}
 	formatSeconds = (count = 0) => {
 		let seconds = count % 60;
