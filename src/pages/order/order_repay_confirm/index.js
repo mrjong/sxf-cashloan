@@ -284,7 +284,7 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 立即还款
 	handleClickConfirm = () => {
-		const { billOvduDays, repayPerds } = this.props.history.location.state; //逾期的期数
+		const { billOvduDays, repayPerds, canUseCoupon } = this.props.history.location.state; //逾期的期数
 		buriedPointEvent(order.repayConfirmSubmitBtn, {
 			isOverdue: !!billOvduDays,
 			repayPerds: repayPerds.join(',')
@@ -292,7 +292,7 @@ export default class order_repay_confirm extends PureComponent {
 		const { availableCoupNum } = this.state;
 		let couponInfo = store.getCouponData() || {};
 
-		if (availableCoupNum && !couponInfo.coupId) {
+		if (canUseCoupon && availableCoupNum && !couponInfo.coupId) {
 			this.setState({
 				showCouponAlert: true
 			});
