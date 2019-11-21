@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-11-20 17:04:27
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-11-21 22:27:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -103,7 +103,7 @@ export default class coupon_test_page extends PureComponent {
 					if (isAppOpen) {
 						setTimeout(() => {
 							if (isPlus) {
-								window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+								window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 							} else {
 								window.postMessage(JSON.stringify(activityInf), () => {});
 							}
@@ -125,7 +125,7 @@ export default class coupon_test_page extends PureComponent {
 					if (isAppOpen) {
 						setTimeout(() => {
 							if (isPlus) {
-								window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+								window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 							} else {
 								window.postMessage(JSON.stringify(activityInf), () => {});
 							}

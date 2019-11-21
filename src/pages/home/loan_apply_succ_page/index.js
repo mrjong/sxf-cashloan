@@ -126,7 +126,7 @@ export default class remit_ing_page extends PureComponent {
 									? () => {
 											setTimeout(() => {
 												if (isPlus) {
-													window.ReactNativeWebView.postMessage('tel:400-088-7626', () => {});
+													window.ReactNativeWebView.postMessage('tel:400-088-7626');
 												} else {
 													window.postMessage('tel:400-088-7626', () => {});
 												}

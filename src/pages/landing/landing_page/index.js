@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-11-20 17:35:57
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-11-21 22:29:59
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -146,8 +146,7 @@ export default class landing_page extends PureComponent {
 										operation: 'openWebview',
 										landingTit,
 										landingUrl: item.skipUrl
-									}),
-									() => {}
+									})
 								);
 							} else {
 								window.postMessage(
@@ -174,8 +173,7 @@ export default class landing_page extends PureComponent {
 										JSON.stringify({
 											isWelfare: true,
 											isLogin: true
-										}),
-										() => {}
+										})
 									);
 								} else {
 									window.postMessage(
@@ -196,8 +194,7 @@ export default class landing_page extends PureComponent {
 										JSON.stringify({
 											isWelfare: true,
 											operation: 'checkCoupon'
-										}),
-										() => {}
+										})
 									);
 								} else {
 									window.postMessage(
@@ -251,7 +248,7 @@ export default class landing_page extends PureComponent {
 				};
 				setTimeout(() => {
 					if (isPlus) {
-						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 					} else {
 						window.postMessage(JSON.stringify(activityInf), () => {});
 					}
@@ -313,8 +310,7 @@ export default class landing_page extends PureComponent {
 													operation: 'openWebview',
 													landingTit,
 													landingUrl: item.skipUrl
-												}),
-												() => {}
+												})
 											);
 										} else {
 											window.postMessage(
@@ -340,8 +336,7 @@ export default class landing_page extends PureComponent {
 												JSON.stringify({
 													isWelfare: true,
 													isLogin: true
-												}),
-												() => {}
+												})
 											);
 										} else {
 											window.postMessage(
@@ -360,8 +355,7 @@ export default class landing_page extends PureComponent {
 												JSON.stringify({
 													isWelfare: true,
 													operation: 'checkCoupon'
-												}),
-												() => {}
+												})
 											);
 										} else {
 											window.postMessage(

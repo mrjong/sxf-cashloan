@@ -92,7 +92,7 @@ export default class mianxi822_page extends PureComponent {
 					};
 					setTimeout(() => {
 						if (isPlus) {
-							window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+							window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 						} else {
 							window.postMessage(JSON.stringify(activityInf), () => {});
 						}
@@ -170,7 +170,7 @@ export default class mianxi822_page extends PureComponent {
 		if (isAppOpen) {
 			setTimeout(() => {
 				if (isPlus) {
-					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 				} else {
 					window.postMessage(JSON.stringify(activityInf), () => {});
 				}
@@ -195,7 +195,7 @@ export default class mianxi822_page extends PureComponent {
 			if (isAppOpen) {
 				setTimeout(() => {
 					if (isPlus) {
-						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 					} else {
 						window.postMessage(JSON.stringify(activityInf), () => {});
 					}

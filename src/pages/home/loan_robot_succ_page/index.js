@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-20 17:28:23
+ * @LastEditTime: 2019-11-21 22:29:01
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -44,7 +44,7 @@ export default class loan_robot_succ_page extends PureComponent {
 		if (queryData && queryData.apptoken) {
 			setTimeout(() => {
 				if (queryData && queryData.isPlus) {
-					window.ReactNativeWebView.postMessage('我知道了', () => {});
+					window.ReactNativeWebView.postMessage('我知道了');
 				} else {
 					window.postMessage('我知道了', () => {});
 				}

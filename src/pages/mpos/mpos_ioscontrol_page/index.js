@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-20 16:55:04
+ * @LastEditTime: 2019-11-21 22:30:20
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -39,7 +39,7 @@ export default class ioscontrol_page extends PureComponent {
 		this.props.toast.info('复制成功！马上打开微信关注“还到”，抢免息吧！');
 		setTimeout(() => {
 			if (queryData.isPlus) {
-				window.ReactNativeWebView.postMessage('openWeChat', () => {});
+				window.ReactNativeWebView.postMessage('openWeChat');
 			} else {
 				window.postMessage('复制成功', () => {});
 			}

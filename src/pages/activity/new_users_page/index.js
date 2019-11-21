@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-11-20 17:16:15
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-11-21 22:28:09
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -106,7 +106,7 @@ export default class new_users_page extends PureComponent {
 					};
 					setTimeout(() => {
 						if (isPlus) {
-							window.ReactNativeWebView.postMessage(JSON.stringify(activityInf), () => {});
+							window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 						} else {
 							window.postMessage(JSON.stringify(activityInf), () => {});
 						}
