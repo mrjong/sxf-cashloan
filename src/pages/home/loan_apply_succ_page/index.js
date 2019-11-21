@@ -203,7 +203,7 @@ export default class remit_ing_page extends PureComponent {
 						if (isAppOpen) {
 							setTimeout(() => {
 								if (isPlus) {
-									window.ReactNativeWebView.postMessage('我知道了', () => {});
+									window.ReactNativeWebView.postMessage('我知道了');
 								} else {
 									window.postMessage('我知道了', () => {});
 								}
