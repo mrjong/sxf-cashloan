@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 18:03:26
+ * @LastEditTime: 2019-11-13 17:33:31
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -84,7 +84,7 @@ export default class bind_save_page extends PureComponent {
 
 	// 校验储蓄卡卡号
 	validateCarNumber = (rule, value, callback) => {
-		if (!validators.bankCardNumber(value.replace(/\s*/g, ''))) {
+		if (!value || !validators.number(value.replace(/\s*/g, ''))) {
 			callback('请输入有效银行卡号');
 		} else {
 			callback();
@@ -325,7 +325,7 @@ export default class bind_save_page extends PureComponent {
 		const formData = this.props.form.getFieldsValue();
 		formData.valueInputCarNumber =
 			formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, '');
-		if (!validators.bankCardNumber(formData.valueInputCarNumber)) {
+		if (!formData.valueInputCarNumber || !validators.number(formData.valueInputCarNumber)) {
 			this.props.toast.info('请输入有效银行卡号');
 			return;
 		}
