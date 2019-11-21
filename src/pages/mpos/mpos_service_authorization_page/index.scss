@@ -5,8 +5,8 @@
 }
 
 .logoWrap {
-	width: 130px;
-	height: 188px;
+	width: 152px;
+	height: 152px;
 	display: block;
 	margin: 72px auto 0;
 }
@@ -14,7 +14,7 @@
 .text {
 	font-size: 36px;
 	color: #121c32;
-	margin-top: 60px;
+	margin-top: 95px;
 	text-align: center;
 }
 
@@ -38,8 +38,16 @@
 		background: #dcdfe6;
 	}
 }
+
+.bold_text{
+  font-size: 24px;
+  margin-top: 10px;
+  text-align: center;
+  color: #B5BFC8;
+}
+
 .btn_fixed {
-	margin: 208px auto 0;
+	margin: 200px auto 0;
 }
 
 .agreement_box {
