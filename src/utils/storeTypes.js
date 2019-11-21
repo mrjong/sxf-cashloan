@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 16:07:47
+ * @LastEditTime: 2019-11-21 14:43:26
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -16,7 +16,7 @@ export const storeTypes = {
 	ParamVip: 'ParamVip', // 会员卡参数
 	VIPInfo: 'VIPInfo', // 会员卡信息
 	VipBackUrl: 'VipBackUrl', // 会员卡入口与出口
-	Position: 'Position', // 定位信息
+	Position: 'sxf_Position', // 定位信息
 	ProtocolFinancialData: 'ProtocolFinancialData',
 	OrderSuccess: 'OrderSuccess', // 付款成功信息
 	BackData: 'BackData', // 订单信息
