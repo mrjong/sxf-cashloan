@@ -185,7 +185,7 @@ export default class order_repay_confirm extends PureComponent {
 		const { totalList } = this.props.history.location.state;
 
 		arr.forEach((item) => {
-			if (item.feeNm === '优惠金额' || item.feeNm === '减免金额') {
+			if (item.feeNm === '优惠金额') {
 				totalList.push(item);
 				this.setState({
 					deratePrice: item.feeAmt,
@@ -631,7 +631,7 @@ export default class order_repay_confirm extends PureComponent {
 								item.feeAmt ? (
 									<div className={styles.item} key={index}>
 										<span>{item.feeNm}</span>
-										{item.feeNm === '优惠金额' || item.feeNm === '减免金额' ? (
+										{item.feeNm === '优惠金额' ? (
 											<span className={styles.red_box}>-优惠{parseFloat(item.feeAmt)}</span>
 										) : (
 											<span>{parseFloat(item.feeAmt).toFixed(2)}</span>
