@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-20 19:48:18
+ * @LastEditTime: 2019-11-21 09:53:24
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -23,6 +23,7 @@ const API = {
 	doAuth: '/authorize/doAuth',
 	getStw: '/my/getStsw' // 获取4个认证项的状态(看基本信息是否认证)
 };
+let query = '';
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_service_authorization_page extends PureComponent {
@@ -35,10 +36,10 @@ export default class mpos_service_authorization_page extends PureComponent {
 	componentWillMount() {
 		buriedPointEvent(mpos_service_authorization.auth_page);
 		document.title = '随行付金融';
+		query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 	}
 
 	goSubmit = () => {
-		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
 		this.props.$fetch
 			.post(API.doAuth, {
 				location: store.getPosition(), // 定位地址 TODO 从session取,
@@ -137,6 +138,11 @@ export default class mpos_service_authorization_page extends PureComponent {
 					>
 						下一步
 					</SXFButton>
+					{query.mblNoHid && query.mblNoHid.substr(-4) && (
+						<p className={styles.bold_text}>
+							还到将获取您尾号{query.mblNoHid && query.mblNoHid.substr(-4)}的手机号用于登录
+						</p>
+					)}
 				</div>
 				<div className={styles.agreement_box}>
 					<AgreeItem
