@@ -52,11 +52,15 @@ export default class credit_apply_succ_page extends PureComponent {
 	}
 	// 判断是否绑卡
 	checkIsBandCard = () => {
-		const { isAppOpen } = this.state;
+		const { isAppOpen, isPlus } = this.state;
 		buriedPointEvent(home.assessingBindCard);
 		if (isAppOpen) {
 			setTimeout(() => {
-				window.postMessage('判断是否绑卡', () => {});
+				if (isPlus) {
+					window.ReactNativeWebView.postMessage('判断是否绑卡');
+				} else {
+					window.postMessage('判断是否绑卡', () => {});
+				}
 			}, 0);
 			return;
 		}
