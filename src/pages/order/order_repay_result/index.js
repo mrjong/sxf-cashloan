@@ -151,6 +151,28 @@ export default class Cashier extends React.PureComponent {
 		this.props.history.replace('/order/order_repay_page');
 	};
 
+	renderContinueButton = (isLastPerd, status) => {
+		if (isLastPerd) {
+			if (status === 'success' || status === 'waiting') {
+				return null;
+			}
+			return (
+				<SXFButton onClick={this.continueRepay} className={styles.button}>
+					继续还款
+				</SXFButton>
+			);
+		} else if (!isLastPerd) {
+			if (status === 'waiting') {
+				return null;
+			}
+			return (
+				<SXFButton onClick={this.continueRepay} className={styles.button}>
+					继续还款
+				</SXFButton>
+			);
+		}
+	};
+
 	render() {
 		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgFnlMsg, exceedingAmt } = this.state;
 		const { bankName, bankNo, isLastPerd } = this.props.history.location.state;
@@ -245,12 +267,7 @@ export default class Cashier extends React.PureComponent {
 						<span className={styles.discount}>{exceedingAmt}元</span>
 					</div>
 				) : null}
-
-				{!isLastPerd && status !== 'waiting' ? (
-					<SXFButton onClick={this.continueRepay} className={styles.button}>
-						继续还款
-					</SXFButton>
-				) : null}
+				{this.renderContinueButton(isLastPerd, status)}
 			</div>
 		);
 	}
