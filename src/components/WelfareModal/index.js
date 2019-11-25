@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-25 14:34:30
+ * @LastEditTime: 2019-11-25 15:21:25
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -34,9 +34,9 @@ export default class WelfareModal extends PureComponent {
 	};
 
 	render() {
-		const { closeWelfareModal, welfareModalBtn, welfareModalInf, closeBtnStyle } = this.props;
+		const { closeWelfareModal, welfareModalBtn, welfareModalInf, closeBtnStyle, wrapperStyle } = this.props;
 		return (
-			<div className={styles.modalWrapper}>
+			<div className={[styles.modalWrapper, wrapperStyle].join(' ')}>
 				<div className={styles.content}>
 					{welfareModalInf.backImgUrl && (
 						<img src={welfareModalInf.backImgUrl} className={styles.activityBg} />
