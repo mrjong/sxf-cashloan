@@ -1,11 +1,12 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-25 15:21:25
+ * @LastEditTime: 2019-11-25 16:30:31
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 const API = {
 	POP_DONE: '/popup/done' // 首页弹框
@@ -44,8 +45,7 @@ export default class WelfareModal extends PureComponent {
 					{/* {welfareModalInf.skipType === '1' ? ( */}
 					<div
 						onClick={() => {
-							// buriedPointEvent('DC_HOME_WELFARE_MODAL_JOIN_CLICK');
-							buriedPointEvent('DC_HOME_CONFIG_MODAL_JOIN_CLICK', {
+							buriedPointEvent(home.configModalJoinClick, {
 								adsName: welfareModalInf.name
 							});
 							welfareModalBtn(welfareModalInf);
@@ -62,7 +62,7 @@ export default class WelfareModal extends PureComponent {
 					<div
 						className={[styles.closeBtn, closeBtnStyle].join(' ')}
 						onClick={() => {
-							buriedPointEvent('DC_HOME_CONFIG_MODAL_CLOSE_CLICK', {
+							buriedPointEvent(home.configModalCloseClick, {
 								adsName: welfareModalInf.name
 							});
 							closeWelfareModal(welfareModalInf);
