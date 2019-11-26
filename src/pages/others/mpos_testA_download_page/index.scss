@@ -1,80 +1,73 @@
 .mpos_download_page {
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
-	height: 100%;
-	background: #fff;
-	.banner {
-		width: 100%;
-		display: block;
+	background: linear-gradient(0deg, rgba(80, 197, 252, 1), rgba(0, 132, 255, 1));
+
+	.img_wrap {
+		position: relative;
+		padding-left: 30px;
 	}
+
+	.logo {
+		position: relative;
+		z-index: 2;
+		width: 264px;
+		height: 43px;
+		margin: 20px 0 70px;
+	}
+	.title_bg {
+		position: relative;
+		z-index: 2;
+		width: 527px;
+		height: 180px;
+		margin-bottom: 186px;
+	}
+	.cover_bg {
+		position: absolute;
+		right: 0;
+		top: 70px;
+		z-index: 1;
+		width: 750px;
+		height: 534px;
+	}
+
 	.content {
 		position: relative;
-		top: -40px;
+		z-index: 3;
+		width: 690px;
 		text-align: center;
-		width: 666px;
-		height: 670px;
-		background: #fff;
-		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
-		border-radius: 10px;
-		margin: 0 auto;
-		padding: 23px;
+		padding: 73px 30px 86px;
+		border-radius: 20px;
+		background-color: #fff;
 		box-sizing: border-box;
+		margin: 0 auto;
 
-		.loginContentBox {
-			position: relative;
-			border: 1px solid #283042;
-			box-sizing: border-box;
-			height: 100%;
+		.button_bg {
+			width: 630px;
+      height: 100px;
+      margin-top: 80px;
 		}
-		.title {
-			position: relative;
-			font-size: 34px;
-			font-family: PingFangSC-Regular;
-			color: #737c91;
-			margin-top: 80px;
+
+		img {
+			width: 582px;
+			height: 124px;
+			margin: 0 auto;
 		}
-		.moneyText {
-			position: relative;
-			top: -30px;
-			font-size: 168px;
-			letter-spacing: 10px;
-			font-family: 'DINMitAlt';
-			color: #121c32;
-		}
-		.commonLine {
-			position: absolute;
-			display: inline-block;
-			height: 18px;
-			width: 18px;
-			border-color: #283042;
-			border-style: solid;
-			box-sizing: border-box;
-		}
-		.leftTopLine {
-			top: -1px;
-			left: -1px;
-			border-width: 4px 0 0 4px;
-		}
-		.rightTopLine {
-			top: -1px;
-			right: -1px;
-			border-width: 4px 4px 0 0;
-		}
-		.leftBottomLine {
-			bottom: -1px;
-			left: -1px;
-			border-width: 0 0 4px 4px;
-		}
-		.rightBottomLine {
-			bottom: -1px;
-			right: -1px;
-			border-width: 0 4px 4px 0;
-		}
-		.sureBtn {
+	}
+
+	.content2 {
+		top: 30px;
+		padding: 25px;
+		box-sizing: border-box;
+		background-color: #fff;
+		position: relative;
+		z-index: 3;
+		width: 690px;
+		margin: 0 auto;
+		border-radius: 20px;
+
+		img {
 			display: block;
-			width: 580px;
-			height: 160px;
-			margin: -20px auto 0;
+      width: 100%;
+			margin: 0 auto;
 		}
 	}
 }
