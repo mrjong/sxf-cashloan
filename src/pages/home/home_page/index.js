@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-25 14:27:43
+ * @LastEditTime: 2019-11-26 15:41:08
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -221,6 +221,7 @@ export default class home_page extends PureComponent {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 					if (result.data.value === '1') {
 						if (token && tokenFromStorage) {
+							this.showCouponNoticeModal();
 							this.requestGetHomeModal();
 							this.indexshowType();
 						} else {
@@ -230,6 +231,7 @@ export default class home_page extends PureComponent {
 						}
 					} else {
 						if (token && tokenFromStorage) {
+							this.showCouponNoticeModal();
 							this.requestGetHomeModal();
 							this.credit_extension();
 						}
@@ -252,7 +254,7 @@ export default class home_page extends PureComponent {
 					blackData: result.data
 				});
 				// 是否展示还款券测试弹框
-				this.showCouponTestModal();
+				// this.showCouponTestModal();
 
 				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
@@ -276,6 +278,26 @@ export default class home_page extends PureComponent {
 						{
 							isShowActivityModal: true,
 							modalType: 'payCouponTest'
+						},
+						() => {
+							Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
+							// store.setShowActivityModal(true);
+						}
+					);
+				}
+			}
+		});
+	};
+	// 是否展示优惠劵到账通知弹框
+	showCouponNoticeModal = () => {
+		// 接口调用
+		this.props.$fetch.get(API.actiPopupSwitch).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data && result.data.value === '1') {
+				if (!Cookie.get('modalShowTime')) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'couponNotice'
 						},
 						() => {
 							Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
@@ -1005,6 +1027,9 @@ export default class home_page extends PureComponent {
 					medium: 'H5'
 				});
 				this.props.history.push('/activity/coupon_test_page?comeFrom=mposHomeModal');
+				break;
+			case 'couponNotice':
+				this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
 				break;
 			default:
 				break;
