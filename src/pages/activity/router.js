@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-04 13:53:54
+ * @LastEditTime: 2019-11-26 16:58:23
  */
 export default [
 	{
@@ -78,5 +78,17 @@ export default [
 		zhName: 'hkyh',
 		title: '还款优惠',
 		component: () => import('pages/activity/coupon_test_page')
+	},
+	{
+		path: '/activity/guosong_page',
+		zhName: 'gjs',
+		title: '还到',
+		component: () => import('pages/activity/guosong_page')
+	},
+	{
+		path: '/activity/yongfan_page',
+		zhName: 'yjf',
+		title: '还到',
+		component: () => import('pages/activity/yongfan_page')
 	}
 ];
