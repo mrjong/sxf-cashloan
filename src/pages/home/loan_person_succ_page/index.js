@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-26 12:11:58
+ * @LastEditTime: 2019-11-21 22:28:53
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -32,7 +32,8 @@ export default class remit_ing_page extends PureComponent {
 			daySelectedItem: {
 				code: '0',
 				day: '今日'
-			}
+			},
+			isPlus: false
 		};
 	}
 
@@ -45,6 +46,9 @@ export default class remit_ing_page extends PureComponent {
 			//如果从APP过来
 			store.setToken(queryData.apptoken);
 			this.querySubscribeInfo();
+			this.setState({
+				isPlus: queryData.isPlus
+			});
 		} else {
 			this.querySubscribeInfo();
 		}
@@ -112,9 +116,14 @@ export default class remit_ing_page extends PureComponent {
 		buriedPointEvent(manualAudit.follow_button, {
 			s_medium: queryData.apptoken ? 'APP' : 'H5'
 		});
+		const { isPlus } = this.state;
 		this.props.toast.info('复制成功！马上打开微信关注“还到”');
 		setTimeout(() => {
-			window.postMessage('复制成功', () => {});
+			if (isPlus) {
+				window.ReactNativeWebView.postMessage('复制成功');
+			} else {
+				window.postMessage('复制成功', () => {});
+			}
 		}, 0);
 	};
 

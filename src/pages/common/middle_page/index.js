@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-17 16:06:04
+ * @LastEditTime: 2019-11-20 17:37:41
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -92,7 +92,11 @@ export default class middle_page extends Component {
 			location.href = location.origin + `/common/postmessage_app?routerMessage=${message || 'Home'}`;
 		} else {
 			setTimeout(() => {
-				window.postMessage(message);
+				if (query && query.isPlus) {
+					window.ReactNativeWebView.postMessage(message);
+				} else {
+					window.postMessage(message);
+				}
 			}, 500);
 		}
 	};

@@ -12,7 +12,7 @@ import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity, home } from 'utils/analytinsType';
-
+let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
 export default class remit_ing_page extends PureComponent {
@@ -24,21 +24,36 @@ export default class remit_ing_page extends PureComponent {
 			successModalShow: false,
 			failModalShow: false,
 			time: 0,
-			isAppOpen: false
+			isAppOpen: false,
+			isPlus: false
 		};
 	}
 	componentWillMount() {
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.setState({
 			queryData
 		});
 		buriedPointEvent(home.quickLoan);
 		const that = this;
-		document.addEventListener('message', that.checkAppOpen);
+		if (queryData && queryData.isPlus) {
+			this.setState({
+				isAppOpen: true,
+				isPlus: queryData.isPlus
+			});
+		} else {
+			document.addEventListener('message', that.checkAppOpen);
+		}
 	}
 	componentWillUnmount() {
 		const that = this;
-		document.removeEventListener('message', that.checkAppOpen);
+		if (queryData && queryData.isPlus) {
+			this.setState({
+				isAppOpen: false,
+				isPlus: false
+			});
+		} else {
+			document.removeEventListener('message', that.checkAppOpen);
+		}
 	}
 	formatSeconds = (count = 0) => {
 		let seconds = count % 60;
@@ -80,12 +95,21 @@ export default class remit_ing_page extends PureComponent {
 		const that = this;
 		const passData = JSON.parse(e.data);
 		that.setState({
-			isAppOpen: passData && passData.isAppOpen
+			isAppOpen: passData && passData.isAppOpen,
+			isPlus: passData && passData.isPlus
 		});
 	};
 
 	render() {
-		const { queryData, ACTipAlertShow, successModalShow, failModalShow, time, isAppOpen } = this.state;
+		const {
+			queryData,
+			ACTipAlertShow,
+			successModalShow,
+			failModalShow,
+			time,
+			isAppOpen,
+			isPlus
+		} = this.state;
 		return (
 			<div className={style.remit_ing_page}>
 				<div className={style.topImg}>
@@ -101,7 +125,11 @@ export default class remit_ing_page extends PureComponent {
 								isAppOpen
 									? () => {
 											setTimeout(() => {
-												window.postMessage('tel:400-088-7626', () => {});
+												if (isPlus) {
+													window.ReactNativeWebView.postMessage('tel:400-088-7626');
+												} else {
+													window.postMessage('tel:400-088-7626', () => {});
+												}
 											}, 0);
 									  }
 									: () => {}
@@ -174,7 +202,11 @@ export default class remit_ing_page extends PureComponent {
 						buriedPointEvent(home.gotIt);
 						if (isAppOpen) {
 							setTimeout(() => {
-								window.postMessage('我知道了', () => {});
+								if (isPlus) {
+									window.ReactNativeWebView.postMessage('我知道了');
+								} else {
+									window.postMessage('我知道了', () => {});
+								}
 							}, 0);
 						} else {
 							this.props.history.push('/home/home');
