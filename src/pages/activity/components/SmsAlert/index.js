@@ -426,7 +426,7 @@ export default class SmsAlert extends Component {
 	btnHandler = () => {
 		const { modalBtnBuryPoint } = this.props;
 		const { authToken, otherProps_type } = this.state;
-		modalBtnBuryPoint(); // 埋点需求
+		modalBtnBuryPoint && modalBtnBuryPoint(); // 埋点需求
 		this.props.form.validateFields((err) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;

@@ -14,7 +14,10 @@
 		top: 520px;
 		left: 0;
 		padding-bottom: 145px;
-	}
+  }
+  .listImgContainer2 {
+    padding-bottom: 10px;
+  }
 	.listImg {
 		width: 100%;
 	}
@@ -37,7 +40,7 @@
 		-webkit-justify-content: center;
 		-ms-flex-pack: center;
 		justify-content: center;
-	}
+  }
 	.downloadBtn {
 		width: 609px;
 		height: 84px;
@@ -49,7 +52,22 @@
 		color: #fff;
     font-size: 41px;
     animation: bounce 1s infinite;
-	}
+  }
+  .enterBtn {
+    position: absolute;
+    top: 111px;
+    right: 28px;
+    width: 166px;
+  }
+  .enterBtn2 {
+    top: 414px;
+  }
+  .enterBtn3 {
+    top: 726px;
+  }
+  .enterBtn4 {
+    top: 1033px;
+  }
 }
 
 @keyframes bounce {

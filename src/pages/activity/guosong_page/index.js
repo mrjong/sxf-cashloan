@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-26 16:52:51
+ * @LastEditTime: 2019-11-28 11:14:47
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -124,7 +124,7 @@ export default class guosong_page extends PureComponent {
 
 	// 跳转更多福利
 	goMore = () => {
-		// this.props.history.push('');
+		this.props.history.push('/activity/anxin_plan_page');
 	};
 
 	render() {

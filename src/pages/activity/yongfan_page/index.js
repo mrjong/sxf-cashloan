@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-26 18:37:28
+ * @LastEditTime: 2019-11-28 14:25:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -39,7 +39,7 @@ export default class yongfan_page extends PureComponent {
 			this.setState({
 				isAppOpen: true
 			});
-		} else {
+		} else if (queryData.activityToken || Cookie.get('fin-v-card-token')) {
 			this['HomeBtn'].fetchData();
 		}
 		if (queryData.regChannel) {
@@ -121,7 +121,11 @@ export default class yongfan_page extends PureComponent {
 
 	// 跳转更多福利
 	goMore = () => {
-		// this.props.history.push('');
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		this.props.history.push({
+			pathname: '/activity/anxin_plan_page',
+			search: qs.stringify(queryData)
+		});
 	};
 
 	render() {
