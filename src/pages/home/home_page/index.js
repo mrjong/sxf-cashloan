@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-26 15:41:08
+ * @LastEditTime: 2019-11-29 16:11:20
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -65,7 +65,8 @@ const API = {
 	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
 	couponRedDot: '/index/couponRedDot', // 优惠券红点
 	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH', // 还款优惠劵测试弹框开关
-	popupList: '/popup/list' // 首页弹框
+	popupList: '/popup/list', // 首页弹框
+	thirdCheck: '/activeConfig/thirdCheck' // 三陪一返,首页用户获取优惠券校验 01情况下首页弹框
 };
 let token = '';
 let tokenFromStorage = '';
@@ -291,8 +292,8 @@ export default class home_page extends PureComponent {
 	// 是否展示优惠劵到账通知弹框
 	showCouponNoticeModal = () => {
 		// 接口调用
-		this.props.$fetch.get(API.actiPopupSwitch).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data && result.data.value === '1') {
+		this.props.$fetch.get(API.thirdCheck).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data && result.data.flag === '01') {
 				if (!Cookie.get('modalShowTime')) {
 					this.setState(
 						{
