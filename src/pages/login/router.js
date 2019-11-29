@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-15 15:28:42
+ * @LastEditTime: 2019-11-28 20:22:10
  */
 export default [
 	{
@@ -37,12 +37,5 @@ export default [
 		title: '还到',
 		arrowHide: true,
 		component: () => import('pages/login/momo_outer_login_page')
-	},
-	{
-		path: '/wx_login',
-		zhName: 'wxdl',
-		title: '登录',
-		arrowHide: true,
-		component: () => import('pages/login/wx_login_page')
 	}
 ];

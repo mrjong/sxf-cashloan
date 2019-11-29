@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-28 14:56:39
+ * @LastEditTime: 2019-11-29 10:16:19
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -91,9 +91,12 @@ export default class yongfan_page extends PureComponent {
 						window.postMessage(JSON.stringify(activityInf), () => {});
 					}, 0);
 				} else {
-					// 除了app
-					this.setState({
-						isShowLogin: true
+					// 除了app以外的其他未登录的情况
+					this.props.history.replace({
+						pathname: '/login',
+						search:
+							'?wxTestFrom=anxin_plan_page&jumpUrl=' +
+							encodeURIComponent(`/activity/anxin_plan_page?${qs.stringify(queryData)}`)
 					});
 				}
 			}
@@ -102,7 +105,13 @@ export default class yongfan_page extends PureComponent {
 
 	// 下载APP参加活动
 	downloadApp = () => {
-		this.props.history.push('/others/mpos_testA_download_page');
+		const { queryData } = this.state;
+		if (queryData.isWxOpen) {
+			// 微信公共号菜单栏跳转特殊的下载落地页
+			this.props.history.push('/others/mpos_testB_download_page');
+		} else {
+			this.props.history.push('/others/mpos_testA_download_page');
+		}
 	};
 
 	// 进入活动详情落地页

@@ -70,6 +70,75 @@
   }
 }
 
+.modal {
+	.mask {
+		position: fixed;
+		background-color: rgba(0, 0, 0, 0.3);
+		margin: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999;
+	}
+	.modalWrapper {
+		position: fixed;
+		width: 620px;
+		border-radius: 10px;
+		padding: 26px 30px 50px;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1000;
+		background-color: #fff;
+		box-sizing: border-box;
+
+		h2 {
+			text-align: center;
+			font-size: 36px;
+			color: #121c32;
+			margin-bottom: 26px;
+		}
+
+		h3 {
+			font-size: 36px;
+			color: #121c32;
+			margin-bottom: 10px;
+		}
+
+		p {
+			color: #6c6c6c;
+			font-size: 30px;
+			// text-indent: 0.8em;
+			margin-bottom: 10px;
+			margin-left: 20px;
+		}
+
+		.closeBtn {
+			width: 50px;
+			height: 50px;
+			position: absolute;
+			right: 24px;
+			top: 14px;
+		}
+	}
+	.tipText {
+		text-align: center;
+		margin: 20px 20px 0;
+	}
+	.closeBtnStyle {
+		width: 50px;
+		height: 50px;
+		background-image: url(./img/close_btn.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		position: absolute;
+		bottom: -80px;
+		left: 50%;
+		transform: translate(-50%, 0%);
+	}
+}
+
 @keyframes bounce {
 	0% {
 		transform: scale(1);
