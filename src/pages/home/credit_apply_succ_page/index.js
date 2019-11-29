@@ -9,7 +9,7 @@ import TimeoutPayModal from 'components/TimeoutPayModal';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { NoticeBar } from 'antd-mobile';
-
+let query = {};
 let autId = '';
 const API = {
 	isBankCard: '/my/chkCard', // 是否绑定了银行卡
@@ -22,26 +22,45 @@ export default class credit_apply_succ_page extends PureComponent {
 		super(props);
 		this.state = {
 			showTimeoutPayModal: false,
-			isAppOpen: false // 是否是app webview打开
+			isAppOpen: false, // 是否是app webview打开
+			isPlus: false
 		};
 	}
 	componentWillMount() {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		autId = query && query.autId;
 		const that = this;
-		document.addEventListener('message', that.checkAppOpen);
+		if (query && query.isPlus) {
+			this.setState({
+				isAppOpen: true,
+				isPlus: query.isPlus
+			});
+		} else {
+			document.addEventListener('message', that.checkAppOpen);
+		}
 	}
 	componentWillUnmount() {
 		const that = this;
-		document.removeEventListener('message', that.checkAppOpen);
+		if (query && query.isPlus) {
+			this.setState({
+				isAppOpen: false,
+				isPlus: false
+			});
+		} else {
+			document.removeEventListener('message', that.checkAppOpen);
+		}
 	}
 	// 判断是否绑卡
 	checkIsBandCard = () => {
-		const { isAppOpen } = this.state;
+		const { isAppOpen, isPlus } = this.state;
 		buriedPointEvent(home.assessingBindCard);
 		if (isAppOpen) {
 			setTimeout(() => {
-				window.postMessage('判断是否绑卡', () => {});
+				if (isPlus) {
+					window.ReactNativeWebView.postMessage('判断是否绑卡');
+				} else {
+					window.postMessage('判断是否绑卡', () => {});
+				}
 			}, 0);
 			return;
 		}

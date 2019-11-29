@@ -26,7 +26,8 @@ export default class mianxi822_page extends PureComponent {
 			isShowLogin: false, // 公众号显示登陆弹框
 			showLoginTip: false, // mpos开屏进入时是否登陆弹框
 			showBoundle: false, // 是否展示未实名的弹框
-			isAppOpen: false // 是否是app webview打开
+			isAppOpen: false, // 是否是app webview打开
+			isPlus: false
 		};
 	}
 
@@ -34,6 +35,7 @@ export default class mianxi822_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (queryData.fromApp) {
 			this.setState({
+				isPlus: queryData.isPlus,
 				isAppOpen: true
 			});
 		}
@@ -64,7 +66,7 @@ export default class mianxi822_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
-			const { isAppOpen } = this.state;
+			const { isAppOpen, isPlus } = this.state;
 			const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 			buriedPointEvent(activity.mianxi822UseBtn, {
 				entry: queryData.entry,
@@ -89,7 +91,11 @@ export default class mianxi822_page extends PureComponent {
 						isLogin: false
 					};
 					setTimeout(() => {
-						window.postMessage(JSON.stringify(activityInf), () => {});
+						if (isPlus) {
+							window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+						} else {
+							window.postMessage(JSON.stringify(activityInf), () => {});
+						}
 					}, 0);
 				} else {
 					this.setState({
@@ -155,7 +161,7 @@ export default class mianxi822_page extends PureComponent {
 	};
 
 	jumpToHome = (isSuccess) => {
-		const { isAppOpen } = this.state;
+		const { isAppOpen, isPlus } = this.state;
 		const activityInf = {
 			activityNm: '100元免息红包限时领',
 			isLogin: true,
@@ -163,7 +169,11 @@ export default class mianxi822_page extends PureComponent {
 		};
 		if (isAppOpen) {
 			setTimeout(() => {
-				window.postMessage(JSON.stringify(activityInf), () => {});
+				if (isPlus) {
+					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+				} else {
+					window.postMessage(JSON.stringify(activityInf), () => {});
+				}
 			}, 0);
 		} else {
 			this.props.history.push('/home/home');
@@ -177,14 +187,18 @@ export default class mianxi822_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime > 1600 || !this.prePressTime) {
 			this.prePressTime = nowTime;
-			const { isAppOpen } = this.state;
+			const { isAppOpen, isPlus } = this.state;
 			const activityInf = {
 				activityNm: '100元免息红包限时领',
 				protocolNm: url
 			};
 			if (isAppOpen) {
 				setTimeout(() => {
-					window.postMessage(JSON.stringify(activityInf), () => {});
+					if (isPlus) {
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+					} else {
+						window.postMessage(JSON.stringify(activityInf), () => {});
+					}
 				}, 0);
 			} else {
 				this.props.history.push(`/protocol/${url}`);

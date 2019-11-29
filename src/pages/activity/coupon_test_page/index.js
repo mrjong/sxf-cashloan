@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-06 16:03:50
+ * @LastEditTime: 2019-11-21 22:27:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -38,7 +38,8 @@ export default class coupon_test_page extends PureComponent {
 			validEndTm: '', // 优惠劵有效期
 			couponNm: '', // 优惠劵名称
 			isAppOpen: false, // 是否是app webview打开
-			registerChannel: '' // 注册渠道
+			registerChannel: '', // 注册渠道
+			isPlus: false
 		};
 		this['HomeBtn'] = new HomeBtnClass(this);
 	}
@@ -48,6 +49,7 @@ export default class coupon_test_page extends PureComponent {
 		if (queryData.fromApp) {
 			this.setState(
 				{
+					isPlus: queryData.isPlus,
 					isAppOpen: true
 				},
 				() => {
@@ -89,7 +91,7 @@ export default class coupon_test_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
-			const { userStsCode, isAppOpen, registerChannel } = this.state;
+			const { userStsCode, isAppOpen, registerChannel, isPlus } = this.state;
 
 			if (Cookie.get('fin-v-card-token')) {
 				if (userStsCode === '01') {
@@ -100,7 +102,11 @@ export default class coupon_test_page extends PureComponent {
 					};
 					if (isAppOpen) {
 						setTimeout(() => {
-							window.postMessage(JSON.stringify(activityInf), () => {});
+							if (isPlus) {
+								window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+							} else {
+								window.postMessage(JSON.stringify(activityInf), () => {});
+							}
 						}, 0);
 					} else {
 						// mpos或者h5中跳转首页
@@ -118,7 +124,11 @@ export default class coupon_test_page extends PureComponent {
 					};
 					if (isAppOpen) {
 						setTimeout(() => {
-							window.postMessage(JSON.stringify(activityInf), () => {});
+							if (isPlus) {
+								window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+							} else {
+								window.postMessage(JSON.stringify(activityInf), () => {});
+							}
 						}, 0);
 					} else {
 						// mpos或者h5中跳转对应节点
