@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 10:16:19
+ * @LastEditTime: 2019-11-29 10:25:48
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -84,7 +84,7 @@ export default class yongfan_page extends PureComponent {
 			} else {
 				if (queryData.fromApp) {
 					const activityInf = {
-						activityNm: '100元免息红包限时领',
+						isWelfare: true,
 						isLogin: false
 					};
 					setTimeout(() => {
