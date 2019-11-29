@@ -136,6 +136,7 @@ export default class home_page extends PureComponent {
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
 		this.isRenderCash();
+		this.queryOverdueModal();
 		this.showFeedbackModal();
 		this.couponRedDot(); // 优惠券使用红点
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
@@ -222,7 +223,7 @@ export default class home_page extends PureComponent {
 						}
 					} else {
 						if (token && tokenFromStorage) {
-							this.credit_extension();
+							this.queryUsrIndexInfo();
 						}
 					}
 				} else {
@@ -231,7 +232,7 @@ export default class home_page extends PureComponent {
 			})
 			.catch(() => {
 				if (token && tokenFromStorage) {
-					this.credit_extension();
+					this.queryUsrIndexInfo();
 				}
 			});
 	};
@@ -247,10 +248,10 @@ export default class home_page extends PureComponent {
 
 				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
-					this.usrCashIndexInfo(result.data.cashAcBalSts);
+					this.queryUsrCashIndexInfo(result.data.cashAcBalSts);
 				} else {
 					// 代偿流程
-					this.credit_extension();
+					this.queryUsrIndexInfo();
 				}
 			} else {
 				this.props.toast.info(result.msgInfo);
@@ -278,7 +279,7 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 现金分期首页接口
-	usrCashIndexInfo = (code) => {
+	queryUsrCashIndexInfo = (code) => {
 		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				this.setState(
@@ -300,8 +301,8 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 判断是否授信
-	credit_extension = () => {
+
+	queryOverdueModal = () => {
 		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
@@ -320,12 +321,12 @@ export default class home_page extends PureComponent {
 				this.setState({
 					overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
 				});
-				this.requestGetUsrInfo();
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
+
 	// 从 url 中获取参数，如果有 token 就设置下
 	getTokenFromUrl = () => {
 		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -757,7 +758,7 @@ export default class home_page extends PureComponent {
 				} else {
 					// 失败的话刷新首页
 					this.props.toast.info(result.msgInfo, 2, () => {
-						this.requestGetUsrInfo();
+						this.queryUsrIndexInfo();
 					});
 				}
 				// })
@@ -811,7 +812,7 @@ export default class home_page extends PureComponent {
 		});
 	};
 	// 获取首页信息
-	requestGetUsrInfo = async () => {
+	queryUsrIndexInfo = async () => {
 		this.props.$fetch.post(API.USR_INDEX_INFO).then(async (result) => {
 			// const result = {
 			// 	msgCode: 'PTM0000',
