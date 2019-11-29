@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 10:25:48
+ * @LastEditTime: 2019-11-29 13:56:19
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -21,7 +21,7 @@ import { store } from 'utils/store';
 
 @setBackGround('#499BFE')
 @fetch.inject()
-export default class yongfan_page extends PureComponent {
+export default class anxin_plan_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -51,10 +51,18 @@ export default class yongfan_page extends PureComponent {
 	componentDidMount() {
 		const { queryData } = this.state;
 		if (queryData.comeFrom) {
-			buriedPointEvent(activity.newUserActivityEntry, {
+			buriedPointEvent(activity.anXinActivityEntry, {
 				entry: queryData.comeFrom,
-				regChannel: queryData && queryData.regChannel ? queryData.regChannel : ''
+				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
+				pageNm: '集合列表页'
 			});
+		}
+		if (queryData.fromApp) {
+			if (queryData.activityToken) {
+				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+			} else {
+				Cookie.remove('fin-v-card-token');
+			}
 		}
 	}
 
@@ -65,8 +73,10 @@ export default class yongfan_page extends PureComponent {
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
 			const { queryData } = this.state;
-			buriedPointEvent(activity.newUserActivityGetNow, {
-				regChannel: queryData && queryData.regChannel ? queryData.regChannel : ''
+			buriedPointEvent(activity.anXinActivityListDownLoadClick, {
+				entry: queryData.comeFrom,
+				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
+				pageNm: '集合列表页'
 			});
 			// mpos的banner
 			if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
@@ -88,7 +98,7 @@ export default class yongfan_page extends PureComponent {
 						isLogin: false
 					};
 					setTimeout(() => {
-						window.postMessage(JSON.stringify(activityInf), () => {});
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 					}, 0);
 				} else {
 					// 除了app以外的其他未登录的情况
@@ -117,6 +127,11 @@ export default class yongfan_page extends PureComponent {
 	// 进入活动详情落地页
 	enterDetail = (path) => {
 		const { queryData } = this.state;
+		buriedPointEvent(activity.anXinActivityListGoClick, {
+			entry: queryData.comeFrom,
+			regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
+			pageNm: '集合列表页'
+		});
 		this.props.history.push({
 			pathname: path,
 			search: qs.stringify(queryData)
@@ -227,7 +242,7 @@ export default class yongfan_page extends PureComponent {
 							<img
 								src={enter_btn}
 								onClick={() => {
-									this.enterDetail();
+									this.enterDetail('/activity/manpei_page');
 								}}
 								className={[styles.enterBtn, styles.enterBtn3].join(' ')}
 							/>

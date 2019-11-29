@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-28 09:27:04
+ * @LastEditTime: 2019-11-29 13:55:31
  */
 export default [
 	{
@@ -90,6 +90,12 @@ export default [
 		zhName: 'yjf',
 		title: '还到',
 		component: () => import('pages/activity/yongfan_page')
+	},
+	{
+		path: '/activity/manpei_page',
+		zhName: 'mjp',
+		title: '还到',
+		component: () => import('pages/activity/manpei_page')
 	},
 	{
 		path: '/activity/anxin_plan_page',

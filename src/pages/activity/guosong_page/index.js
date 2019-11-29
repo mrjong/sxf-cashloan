@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-28 11:14:47
+ * @LastEditTime: 2019-11-29 13:43:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -15,10 +15,10 @@ import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
+import HomeBtnClass from 'utils/HomeBtn';
 
 const API = {
-	noviceJudge: '/novice/judge', // 判断用户是否满足领取条件接口
-	noviceReceive: '/novice/receive' // 领取新手优惠券接口
+	activeConfigThird: '/activeConfig/third' // 三陪一返活动:用户参与
 };
 
 @setBackGround('#499BFE')
@@ -27,20 +27,24 @@ export default class guosong_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			userStsCode: null, // 用户状态code
-			validEndTm: '', // 优惠劵有效期
-			isOpen: false,
+			queryData: {}, // url上的参数
 			isAppOpen: false, // 是否是app webview打开
 			registerChannel: '' // 注册渠道
 		};
+		this['HomeBtn'] = new HomeBtnClass(this);
 	}
 
 	componentWillMount() {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		this.setState({
+			queryData
+		});
 		if (queryData.fromApp) {
 			this.setState({
 				isAppOpen: true
 			});
+		} else if (Cookie.get('fin-v-card-token')) {
+			this['HomeBtn'].fetchData();
 		}
 		if (queryData.regChannel) {
 			this.setState({
@@ -50,12 +54,12 @@ export default class guosong_page extends PureComponent {
 	}
 
 	componentDidMount() {
-		const { isAppOpen, registerChannel } = this.state;
-		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+		const { isAppOpen, registerChannel, queryData } = this.state;
 		if (queryData.comeFrom) {
-			buriedPointEvent(activity.newUserActivityEntry, {
+			buriedPointEvent(activity.anXinActivityEntry, {
 				entry: queryData.comeFrom,
-				regChannel: registerChannel
+				regChannel: registerChannel,
+				pageNm: '过就送'
 			});
 		}
 		if (isAppOpen) {
@@ -73,49 +77,48 @@ export default class guosong_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
-			const { userStsCode, isAppOpen, registerChannel } = this.state;
-
-			if (isAppOpen && Cookie.get('fin-v-card-token')) {
-				if (userStsCode === '00') {
-					buriedPointEvent(activity.newUserActivityGetNow, {
-						receiveSts: this.transferCode().buryMsg,
-						regChannel: registerChannel
-					});
-					this.getCoupon();
-				} else if (userStsCode == '04') {
-					buriedPointEvent(activity.newUserActivityUseNow, {
-						regChannel: registerChannel
-					});
-					// 已领取，去使用 通知app做相关操作
-					const activityInf = {
-						isWelfare: true,
-						operation: 'useCoupon'
-					};
-					setTimeout(() => {
-						window.postMessage(JSON.stringify(activityInf), () => {});
-					}, 0);
-				} else {
-					buriedPointEvent(activity.newUserActivityGetNow, {
-						receiveSts: this.transferCode().buryMsg,
-						regChannel: registerChannel
-					});
-					this.props.toast.info(this.transferCode().showMsg);
-				}
+			const { isAppOpen, registerChannel, queryData } = this.state;
+			buriedPointEvent(activity.anXinActivityDetailJoinClick, {
+				entry: queryData.comeFrom,
+				regChannel: registerChannel,
+				pageNm: '过就送'
+			});
+			if (Cookie.get('fin-v-card-token')) {
+				this.getCoupon();
+			} else if (isAppOpen && !Cookie.get('fin-v-card-token')) {
+				// 未登录 通知app登录
+				const activityInf = {
+					isWelfare: true
+				};
+				setTimeout(() => {
+					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+				}, 0);
 			} else {
 				this.props.toast.info('请登录还到app进行操作');
 			}
 		}
 	};
 
-	// 用户领取优惠劵
+	// 用户立即申请
 	getCoupon = () => {
-		this.props.$fetch.post(API.noviceReceive).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data) {
-				this.setState({
-					isOpen: true,
-					userStsCode: res.data.status,
-					validEndTm: res.data.validTm
-				});
+		const { isAppOpen } = this.state;
+		// 01 过就送,02 低就赔,03 慢就赔,04 用就返
+		this.props.$fetch.post(`${API.activeConfigThird}/01`).then((res) => {
+			if (res.msgCode === 'PTM0000') {
+				if (isAppOpen) {
+					// 在去sq以后,才能如此跳转
+					// 立即申请 通知app做相关操作
+					const activityInf = {
+						isWelfare: true,
+						operation: 'useCoupon'
+					};
+					setTimeout(() => {
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+					}, 0);
+				} else {
+					// mpos或者h5中跳转对应节点
+					this['HomeBtn'].getData();
+				}
 			} else {
 				this.props.toast.info(res.msgInfo);
 			}
@@ -124,7 +127,11 @@ export default class guosong_page extends PureComponent {
 
 	// 跳转更多福利
 	goMore = () => {
-		this.props.history.push('/activity/anxin_plan_page');
+		const { queryData } = this.state;
+		this.props.history.push({
+			pathname: '/activity/anxin_plan_page',
+			search: qs.stringify(queryData)
+		});
 	};
 
 	render() {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-25 16:23:49
+ * @LastEditTime: 2019-11-29 11:54:17
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -232,7 +232,11 @@ const activity = {
 	newUserActivityGetNow: `${prefix}_ACTIVITY_NEWUSERS_GET_NOW`, // 重启新手活动 点击立即领取
 	couponTestActivityEntry: `${prefix}_ACTIVITY_COUPONTEST_ENTRY`, // 还款券测试 进入入口
 	couponTestActivityUseNow: `${prefix}_ACTIVITY_COUPONTEST_USE_NOW`, // 还款券测试 点击已领取去使用
-	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN` // 还款券测试 首页弹窗-收入囊中
+	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN`, // 还款券测试 首页弹窗-收入囊中
+	anXinActivityEntry: `${prefix}_ACTIVITY_ANXIN_ENTRY`, // 安心计划各个活动落地页 进入入口
+	anXinActivityListGoClick: `${prefix}_ACTIVITY_ANXIN_LIST_GO`, // 安心计划活动列表页 go按钮的点击
+	anXinActivityListDownLoadClick: `${prefix}_ACTIVITY_ANXIN_LIST_DOWNLOAD`, // 安心计划活动列表页 下载按钮的点击
+	anXinActivityDetailJoinClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_JOIN` // 安心计划活动详情页 申请/参加活动按钮的点击
 };
 
 const moxie_bank_list = {

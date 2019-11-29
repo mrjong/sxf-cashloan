@@ -1,0 +1,60 @@
+.new_users_page {
+  padding-bottom: 30px;
+	img {
+		vertical-align: top;
+	}
+	.activityBg {
+		width: 100%;
+	}
+	.topContainer {
+		position: relative;
+	}
+	.submitBtn {
+    display: block;
+    margin: 0 auto 15px;
+		width: 460px;
+		animation: bounce 1s infinite;
+	}
+	.moreList {
+		font-size: 26px;
+		font-weight: 500;
+		color: #fffffe;
+		text-align: center;
+		line-height: 100%;
+	}
+	.rulesCont {
+		width: 750px;
+		text-align: center;
+		margin: 0 auto;
+	}
+	.rulesBg {
+		width: 750px;
+		margin: 55px auto 35px;
+	}
+	.rulesContent {
+		font-size: 24px;
+		color: #fff;
+		line-height: 29px;
+		width: 644px;
+		margin: 0 auto;
+		p {
+			text-align: left;
+			margin-bottom: 16px;
+		}
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+@keyframes bounce {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.07);
+	}
+	100% {
+		transform: scale(1);
+	}
+}

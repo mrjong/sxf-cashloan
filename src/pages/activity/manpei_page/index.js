@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 13:42:49
+ * @LastEditTime: 2019-11-29 14:05:55
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -10,7 +10,6 @@ import styles from './index.scss';
 import activity_bg from './img/activity_bg.png';
 import submit_btn1 from './img/btn_bg.png';
 import rules_bg from './img/rules_bg.png';
-import feature_img from './img/feature_img.png';
 import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
@@ -21,9 +20,9 @@ const API = {
 	activeConfigThird: '/activeConfig/third' // 三陪一返活动:用户参与
 };
 
-@setBackGround('#427BF6')
+@setBackGround('#2B96FF')
 @fetch.inject()
-export default class yongfan_page extends PureComponent {
+export default class manpei_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -59,7 +58,7 @@ export default class yongfan_page extends PureComponent {
 			buriedPointEvent(activity.anXinActivityEntry, {
 				entry: queryData.comeFrom,
 				regChannel: registerChannel,
-				pageNm: '用就返'
+				pageNm: '慢就赔'
 			});
 		}
 		if (isAppOpen) {
@@ -81,7 +80,7 @@ export default class yongfan_page extends PureComponent {
 			buriedPointEvent(activity.anXinActivityDetailJoinClick, {
 				entry: queryData.comeFrom,
 				regChannel: registerChannel,
-				pageNm: '用就返'
+				pageNm: '慢就赔'
 			});
 			if (Cookie.get('fin-v-card-token')) {
 				this.getCoupon();
@@ -103,7 +102,7 @@ export default class yongfan_page extends PureComponent {
 	getCoupon = () => {
 		const { isAppOpen } = this.state;
 		// 01 过就送,02 低就赔,03 慢就赔,04 用就返
-		this.props.$fetch.post(`${API.activeConfigThird}/04`).then((res) => {
+		this.props.$fetch.post(`${API.activeConfigThird}/03`).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				if (isAppOpen) {
 					// 在去sq以后,才能如此跳转
@@ -146,18 +145,21 @@ export default class yongfan_page extends PureComponent {
 				<div className={styles.moreList} onClick={this.goMore}>
 					更多福利 >>
 				</div>
-				<div>
-					<img src={feature_img} className={styles.featureStyle} />
-				</div>
 				{/* 活动规则 */}
 				<div className={styles.rulesCont}>
 					<img src={rules_bg} className={styles.rulesBg} />
 					<div className={styles.rulesContent}>
 						<p>1、活动开始时间：待定</p>
-						<p>2、本活动仅限mpos、微信公众号渠道注册未发生首次借款的用户参与，且仅从该活动入口参与有效；</p>
-						<p>3、活动期间，通过活动首次借款成功的用户可获得199元免息券；</p>
-						<p>4、满足获奖条件，免息券实时下发，您可前往“我的-优惠券”查看；</p>
-						<p>5、免息券于借款时使用，仅抵扣首期利息，有效期365天，请您在有效期内尽快使用哦。</p>
+						<p>2、本活动仅限mpos、微信公众号渠道注册未发生首次借款的用户参与，且仅从该活动入口参与有效； </p>
+						<p>3、活动期间，通过活动自发起借款至到账用时＞24小时（预约借款用户除外），可获得88元免息券；</p>
+						<p>
+							4、计时规则：自点击“签约借款页面—“立即借钱”按钮计时开始，至“到账”结束，若用时＞24小时可获得免息券；
+						</p>
+						<p>5、成功提交审核资料后，若超过5分钟，未完成授信审核服务的用户，可获得50元免息券；</p>
+						<p>6、只要符合补偿条件，免息券实时到账，您可前往“我的-优惠券”查看；</p>
+						<p>
+							7、免息券于借款时使用，仅抵扣首期利息，88元免息券有效期365天，50元免息券有效期7天，请您在有效期内尽快使用哦。
+						</p>
 					</div>
 				</div>
 			</div>
