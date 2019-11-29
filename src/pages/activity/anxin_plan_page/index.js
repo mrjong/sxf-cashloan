@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 15:16:34
+ * @LastEditTime: 2019-11-29 15:52:26
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -118,7 +118,7 @@ export default class anxin_plan_page extends PureComponent {
 		const { queryData } = this.state;
 		if (queryData.isWxOpen) {
 			// 微信公共号菜单栏跳转特殊的下载落地页
-			this.props.history.push('/others/mpos_testB_download_page');
+			this.props.history.push('/others/wx_activity_download_page');
 		} else {
 			this.props.history.push('/others/mpos_testA_download_page');
 		}

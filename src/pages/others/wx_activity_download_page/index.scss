@@ -1,0 +1,73 @@
+.mpos_download_page {
+	background: linear-gradient(0deg, rgba(80, 197, 252, 1), rgba(0, 132, 255, 1));
+
+	.img_wrap {
+		position: relative;
+		padding-left: 30px;
+	}
+
+	.logo {
+		position: relative;
+		z-index: 2;
+		width: 264px;
+		height: 43px;
+		margin: 20px 0 70px;
+	}
+	.title_bg {
+		position: relative;
+		z-index: 2;
+		width: 527px;
+		height: 180px;
+		margin-bottom: 186px;
+	}
+	.cover_bg {
+		position: absolute;
+		right: 0;
+		top: 70px;
+		z-index: 1;
+		width: 750px;
+		height: 534px;
+	}
+
+	.content {
+		position: relative;
+		z-index: 3;
+		width: 690px;
+		text-align: center;
+		padding: 73px 30px 86px;
+		border-radius: 20px;
+		background-color: #fff;
+		box-sizing: border-box;
+		margin: 0 auto;
+
+		.button_bg {
+			width: 630px;
+      height: 100px;
+      margin-top: 80px;
+		}
+
+		img {
+			width: 582px;
+			height: 124px;
+			margin: 0 auto;
+		}
+	}
+
+	.content2 {
+		top: 30px;
+		padding: 25px;
+		box-sizing: border-box;
+		background-color: #fff;
+		position: relative;
+		z-index: 3;
+		width: 690px;
+		margin: 0 auto;
+		border-radius: 20px;
+
+		img {
+			display: block;
+      width: 100%;
+			margin: 0 auto;
+		}
+	}
+}
