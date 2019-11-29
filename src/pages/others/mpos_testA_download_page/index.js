@@ -11,17 +11,13 @@ import { buriedPointEvent } from 'utils/analytins';
 import { getDeviceType, queryUsrSCOpenId } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
-import button_bg from './img/button_bg.png';
-import cover_bg from './img/cover_bg.png';
-import logo from './img/logo.png';
-import title_bg from './img/title_bg.png';
-import img1 from './img/img1.png';
-import img2 from './img/img2.png';
+import button_img from './img/button_img.png';
+import cover_img from './img/cover_img.png';
 
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
-@setBackGround('#50C5FC')
+@setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
 	constructor(props) {
@@ -29,7 +25,9 @@ export default class mpos_download_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		buriedPointEvent(other.mposDownloadPage);
+		buriedPointEvent(other.mposDownloadPage, {
+			position: 'testA_download'
+		});
 		queryUsrSCOpenId({
 			$props: this.props
 		});
@@ -58,11 +56,13 @@ export default class mpos_download_page extends PureComponent {
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {
-				device_type: 'IOS'
+				device_type: 'IOS',
+				position: 'testA_download'
 			});
 		} else {
 			buriedPointEvent(other.mposDownloadBtnClick, {
-				device_type: 'ANDROID'
+				device_type: 'ANDROID',
+				position: 'testA_download'
 			});
 		}
 		this.downloadApp();
@@ -93,17 +93,24 @@ export default class mpos_download_page extends PureComponent {
 	render() {
 		return (
 			<div className={styles.mpos_download_page}>
-				<div className={styles.img_wrap}>
-					<img src={logo} alt="" className={styles.logo} />
-					<img src={title_bg} alt="" className={styles.title_bg} />
-					<img src={cover_bg} alt="" className={styles.cover_bg} />
-				</div>
+				<img className={styles.banner} src={cover_img} alt="落地页banner" />
 				<div className={styles.content}>
-					<img src={img1} alt="" />
-					<img src={button_bg} alt="" className={styles.button_bg} onClick={this.downloadClickFun} />
-				</div>
-				<div className={styles.content2}>
-					<img src={img2} alt="" />
+					<div className={styles.loginContentBox}>
+						<p className={styles.title}>最高可借(元）</p>
+						<p className={styles.moneyText}>50000</p>
+						<img
+							src={button_img}
+							alt=""
+							onClick={() => {
+								this.downloadClickFun();
+							}}
+							className={styles.sureBtn}
+						/>
+						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
+					</div>
 				</div>
 			</div>
 		);
