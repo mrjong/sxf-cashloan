@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 13:55:31
+ * @LastEditTime: 2019-11-29 15:17:00
  */
 export default [
 	{
@@ -96,6 +96,12 @@ export default [
 		zhName: 'mjp',
 		title: '还到',
 		component: () => import('pages/activity/manpei_page')
+	},
+	{
+		path: '/activity/dibu_page',
+		zhName: 'djb',
+		title: '还到',
+		component: () => import('pages/activity/dibu_page')
 	},
 	{
 		path: '/activity/anxin_plan_page',

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 13:56:19
+ * @LastEditTime: 2019-11-29 15:16:34
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -233,7 +233,7 @@ export default class anxin_plan_page extends PureComponent {
 							<img
 								src={enter_btn}
 								onClick={() => {
-									this.enterDetail();
+									this.enterDetail('/activity/dibu_page');
 								}}
 								className={[styles.enterBtn, styles.enterBtn2].join(' ')}
 							/>

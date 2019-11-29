@@ -10,9 +10,11 @@
 		position: relative;
 	}
 	.submitBtn {
-    display: block;
-    margin: 0 auto 15px;
-		width: 435.8px;
+    position: absolute;
+		bottom: 31px;
+		left: 50%;
+		width: 504px;
+		margin-left: -252px;
 		animation: bounce 1s infinite;
 	}
 	.moreList {
@@ -20,7 +22,8 @@
 		font-weight: 500;
 		color: #fffffe;
 		text-align: center;
-		line-height: 100%;
+    line-height: 100%;
+    margin-top: 10px;
 	}
 	.rulesCont {
 		width: 750px;
@@ -29,7 +32,7 @@
 	}
 	.rulesBg {
 		width: 750px;
-		margin: 55px auto 35px;
+		margin: 58px auto 32px;
 	}
 	.rulesContent {
 		font-size: 24px;
