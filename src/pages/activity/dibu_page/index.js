@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 17:02:20
+ * @LastEditTime: 2019-12-02 17:17:44
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -176,7 +176,7 @@ export default class dibu_page extends PureComponent {
 				<div className={styles.rulesCont}>
 					<img src={rules_bg} className={styles.rulesBg} />
 					<div className={styles.rulesContent}>
-						<p>1、活动开始时间：待定</p>
+						<p>1、活动开始时间：2019年12月6日；</p>
 						<p>2、本活动仅限mpos、微信公众号渠道注册未发生首次借款的用户参与，且仅从该活动入口参与有效； </p>
 						<p>
 							3、活动期间，获得额度的用户，若可借金额未满足信用卡账单金额，（即：可借金额＜信用卡账单金额），可获得100元免息券；

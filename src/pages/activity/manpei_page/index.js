@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 17:00:21
+ * @LastEditTime: 2019-12-02 17:17:34
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -176,7 +176,7 @@ export default class manpei_page extends PureComponent {
 				<div className={styles.rulesCont}>
 					<img src={rules_bg} className={styles.rulesBg} />
 					<div className={styles.rulesContent}>
-						<p>1、活动开始时间：待定</p>
+						<p>1、活动开始时间：2019年12月6日；</p>
 						<p>2、本活动仅限mpos、微信公众号渠道注册未发生首次借款的用户参与，且仅从该活动入口参与有效； </p>
 						<p>3、活动期间，通过活动自发起借款至到账用时＞24小时（预约借款用户除外），可获得88元免息券；</p>
 						<p>

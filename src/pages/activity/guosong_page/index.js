@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 16:47:25
+ * @LastEditTime: 2019-12-02 17:17:17
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -180,7 +180,7 @@ export default class guosong_page extends PureComponent {
 				<div className={styles.rulesCont}>
 					<img src={rules_bg} className={styles.rulesBg} />
 					<div className={styles.rulesContent}>
-						<p>1、活动开始时间：待定</p>
+						<p>1、活动开始时间：2019年12月6日；</p>
 						<p>2、本活动仅限mpos、微信公众号渠道注册且未发生首次借款的用户参与，且仅从该活动入口参与有效；</p>
 						<p>3、活动期间，提交通过的用户可获得118元免息券；</p>
 						<p>4、免息券实时发放，您可前往“我的-优惠券”查看，使用规则以免息券上所载的规则为准；</p>
