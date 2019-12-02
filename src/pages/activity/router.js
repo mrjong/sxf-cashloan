@@ -78,5 +78,11 @@ export default [
 		zhName: 'hkyh',
 		title: '还款优惠',
 		component: () => import('pages/activity/coupon_test_page')
+	},
+	{
+		path: '/activity/fudai_page',
+		zhName: 'hkjh',
+		title: '还款计划',
+		component: () => import('pages/activity/fudai_page')
 	}
 ];
