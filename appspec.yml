@@ -6,6 +6,10 @@ files:
   
 
 hooks:
+  ApplicationStop:
+    - location: deployment_hooks/application_stop.sh
+      timeout: 300
+      runas: app
   BeforeInstall:
     - location: deployment_hooks/before_install.sh
       timeout: 300
