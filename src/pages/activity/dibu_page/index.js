@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 17:17:44
+ * @LastEditTime: 2019-12-02 17:36:41
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -103,7 +103,7 @@ export default class dibu_page extends PureComponent {
 	// 用户立即申请
 	getCoupon = () => {
 		const { isAppOpen } = this.state;
-		// 01 过就送,02 低就赔,03 慢就赔,04 用就返
+		// 01 过就送,02 低就补,03 慢就赔,04 用就返
 		this.props.$fetch.post(`${API.activeConfigThird}/02`).then((res) => {
 			if (res.msgCode === 'PTM0000') {
 				if (isAppOpen) {
@@ -128,7 +128,12 @@ export default class dibu_page extends PureComponent {
 
 	// 跳转更多福利
 	goMore = () => {
-		const { queryData, isAppOpen } = this.state;
+		const { queryData, isAppOpen, registerChannel } = this.state;
+		buriedPointEvent(activity.anXinActivityDetailMoreClick, {
+			entry: queryData.comeFrom,
+			regChannel: registerChannel,
+			pageNm: '低就补'
+		});
 		if (isAppOpen) {
 			let activityInf = {};
 			if (queryData.isGoBack) {

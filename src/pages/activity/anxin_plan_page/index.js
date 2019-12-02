@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 16:46:56
+ * @LastEditTime: 2019-12-02 17:29:12
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -52,12 +52,13 @@ export default class anxin_plan_page extends PureComponent {
 	}
 
 	// 进入活动详情落地页
-	enterDetail = (path, title) => {
+	enterDetail = (path, title, name) => {
 		const { queryData } = this.state;
 		buriedPointEvent(activity.anXinActivityListGoClick, {
 			entry: queryData.comeFrom,
 			regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
-			pageNm: '集合列表页'
+			pageNm: '集合列表页',
+			actiNm: name
 		});
 		if (queryData.fromApp) {
 			let activityInf = {};
@@ -100,28 +101,28 @@ export default class anxin_plan_page extends PureComponent {
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/guosong_page', '还到');
+								this.enterDetail('/activity/guosong_page', '还到', '过就送');
 							}}
 							className={styles.enterBtn}
 						/>
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/dibu_page', '还到');
+								this.enterDetail('/activity/dibu_page', '还到', '低就补');
 							}}
 							className={[styles.enterBtn, styles.enterBtn2].join(' ')}
 						/>
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/manpei_page', '还到');
+								this.enterDetail('/activity/manpei_page', '还到', '慢就赔');
 							}}
 							className={[styles.enterBtn, styles.enterBtn3].join(' ')}
 						/>
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/yongfan_page', '还到');
+								this.enterDetail('/activity/yongfan_page', '还到', '用就返');
 							}}
 							className={[styles.enterBtn, styles.enterBtn4].join(' ')}
 						/>

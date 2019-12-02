@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 17:17:17
+ * @LastEditTime: 2019-12-02 17:37:26
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -129,7 +129,12 @@ export default class guosong_page extends PureComponent {
 
 	// 跳转更多福利
 	goMore = () => {
-		const { queryData, isAppOpen } = this.state;
+		const { queryData, isAppOpen, registerChannel } = this.state;
+		buriedPointEvent(activity.anXinActivityDetailMoreClick, {
+			entry: queryData.comeFrom,
+			regChannel: registerChannel,
+			pageNm: '过就送'
+		});
 		if (isAppOpen) {
 			let activityInf = {};
 			if (queryData.isGoBack) {

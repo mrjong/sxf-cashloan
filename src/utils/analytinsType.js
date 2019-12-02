@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-29 11:54:17
+ * @LastEditTime: 2019-12-02 17:37:52
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -236,7 +236,8 @@ const activity = {
 	anXinActivityEntry: `${prefix}_ACTIVITY_ANXIN_ENTRY`, // 安心计划各个活动落地页 进入入口
 	anXinActivityListGoClick: `${prefix}_ACTIVITY_ANXIN_LIST_GO`, // 安心计划活动列表页 go按钮的点击
 	anXinActivityListDownLoadClick: `${prefix}_ACTIVITY_ANXIN_LIST_DOWNLOAD`, // 安心计划活动列表页 下载按钮的点击
-	anXinActivityDetailJoinClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_JOIN` // 安心计划活动详情页 申请/参加活动按钮的点击
+	anXinActivityDetailJoinClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_JOIN`, // 安心计划活动详情页 申请/参加活动按钮的点击
+	anXinActivityDetailMoreClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_MORE` // 安心计划活动详情页 更多福利按钮的点击
 };
 
 const moxie_bank_list = {
