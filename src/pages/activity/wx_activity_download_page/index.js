@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 11:58:35
+ * @LastEditTime: 2019-12-02 14:07:03
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -45,7 +45,7 @@ export default class wx_activity_download_page extends PureComponent {
 			buriedPointEvent(activity.anXinActivityEntry, {
 				entry: queryData.comeFrom,
 				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
-				pageNm: '集合列表页'
+				pageNm: '微信子菜单活动落地页'
 			});
 		}
 		if (queryData.fromApp) {
@@ -67,7 +67,7 @@ export default class wx_activity_download_page extends PureComponent {
 			buriedPointEvent(activity.anXinActivityListDownLoadClick, {
 				entry: queryData.comeFrom,
 				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
-				pageNm: '集合列表页',
+				pageNm: '微信子菜单活动落地页',
 				device_type: getDeviceType() === 'IOS' ? 'IOS' : 'ANDROID'
 			});
 			if (Cookie.get('fin-v-card-token')) {
@@ -93,7 +93,7 @@ export default class wx_activity_download_page extends PureComponent {
 						pathname: '/login',
 						search:
 							'?wxTestFrom=/activity/wx_activity_download_page&jumpUrl=' +
-							encodeURIComponent(`/activity//activity/wx_activity_download_page?${qs.stringify(queryData)}`)
+							encodeURIComponent(`/activity/wx_activity_download_page?${qs.stringify(queryData)}`)
 					});
 				}
 			}

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 12:09:05
+ * @LastEditTime: 2019-12-02 15:27:06
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -14,6 +14,7 @@ import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
+import linkConf from 'config/link.conf';
 
 @setBackGround('#499BFE')
 @fetch.inject()
@@ -51,17 +52,28 @@ export default class anxin_plan_page extends PureComponent {
 	}
 
 	// 进入活动详情落地页
-	enterDetail = (path) => {
+	enterDetail = (path, title) => {
 		const { queryData } = this.state;
 		buriedPointEvent(activity.anXinActivityListGoClick, {
 			entry: queryData.comeFrom,
 			regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
 			pageNm: '集合列表页'
 		});
-		this.props.history.push({
-			pathname: path,
-			search: qs.stringify(queryData)
-		});
+		if (queryData.fromApp) {
+			window.ReactNativeWebView.postMessage(
+				JSON.stringify({
+					isWelfare: true,
+					operation: 'openWebview',
+					landingTit: title,
+					landingUrl: `${linkConf.BASE_URL}${path}?comeFrom=${queryData.comeFrom}`
+				})
+			);
+		} else {
+			this.props.history.push({
+				pathname: path,
+				search: qs.stringify(queryData)
+			});
+		}
 	};
 
 	render() {
@@ -74,28 +86,28 @@ export default class anxin_plan_page extends PureComponent {
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/guosong_page');
+								this.enterDetail('/activity/guosong_page', '还到');
 							}}
 							className={styles.enterBtn}
 						/>
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/dibu_page');
+								this.enterDetail('/activity/dibu_page', '还到');
 							}}
 							className={[styles.enterBtn, styles.enterBtn2].join(' ')}
 						/>
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/manpei_page');
+								this.enterDetail('/activity/manpei_page', '还到');
 							}}
 							className={[styles.enterBtn, styles.enterBtn3].join(' ')}
 						/>
 						<img
 							src={enter_btn}
 							onClick={() => {
-								this.enterDetail('/activity/yongfan_page');
+								this.enterDetail('/activity/yongfan_page', '还到');
 							}}
 							className={[styles.enterBtn, styles.enterBtn4].join(' ')}
 						/>

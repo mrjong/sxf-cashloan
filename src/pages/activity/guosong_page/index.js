@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 13:43:33
+ * @LastEditTime: 2019-12-02 14:24:31
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -88,7 +88,8 @@ export default class guosong_page extends PureComponent {
 			} else if (isAppOpen && !Cookie.get('fin-v-card-token')) {
 				// 未登录 通知app登录
 				const activityInf = {
-					isWelfare: true
+					isWelfare: true,
+					isLogin: false
 				};
 				setTimeout(() => {
 					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-02 12:11:30
+ * @LastEditTime: 2019-12-02 14:08:44
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -48,7 +48,7 @@ export default class mpos_activity_download_page extends PureComponent {
 			buriedPointEvent(activity.anXinActivityEntry, {
 				entry: queryData.comeFrom,
 				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
-				pageNm: '集合列表页'
+				pageNm: 'mpos活动落地页'
 			});
 		}
 		if (queryData.fromApp) {
@@ -89,10 +89,11 @@ export default class mpos_activity_download_page extends PureComponent {
 			buriedPointEvent(activity.anXinActivityListDownLoadClick, {
 				entry: queryData.comeFrom,
 				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
-				pageNm: '集合列表页'
+				pageNm: 'mpos活动落地页',
+				device_type: getDeviceType() === 'IOS' ? 'IOS' : 'ANDROID'
 			});
 			// mpos的banner
-			if (isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1) {
+			if (isMPOS() && queryData.comeFrom && queryData.comeFrom.indexOf('ismpos_') > -1) {
 				if (queryData.appId && queryData.token) {
 					this.getStatus();
 				} else {
@@ -122,8 +123,8 @@ export default class mpos_activity_download_page extends PureComponent {
 					this.props.history.replace({
 						pathname: '/login',
 						search:
-							'?wxTestFrom=anxin_plan_page&jumpUrl=' +
-							encodeURIComponent(`/activity/anxin_plan_page?${qs.stringify(queryData)}`)
+							'?wxTestFrom=/activity/mpos_activity_download_page&jumpUrl=' +
+							encodeURIComponent(`/activity/mpos_activity_download_page?${qs.stringify(queryData)}`)
 					});
 				}
 			}
@@ -169,7 +170,7 @@ export default class mpos_activity_download_page extends PureComponent {
 		const { queryData, showLoginTip, showBoundle } = this.state;
 		return (
 			<div className={styles.mpos_download_page}>
-				{isMPOS() && queryData.entry && queryData.entry.indexOf('ismpos_') > -1 && (
+				{isMPOS() && queryData.comeFrom && queryData.comeFrom.indexOf('ismpos_') > -1 && (
 					<SmsAlert
 						onRef={this.onRef}
 						goSubmitCb={{
