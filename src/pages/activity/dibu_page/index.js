@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 16:30:09
+ * @LastEditTime: 2019-12-02 17:02:20
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -149,10 +149,14 @@ export default class dibu_page extends PureComponent {
 				window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 			}, 0);
 		} else {
-			this.props.history.push({
-				pathname: '/activity/anxin_plan_page',
-				search: qs.stringify(queryData)
-			});
+			if (queryData.isGoBack) {
+				this.props.history.goBack();
+			} else {
+				this.props.history.push({
+					pathname: '/activity/anxin_plan_page',
+					search: `${qs.stringify(queryData)}&isGoBack=true&currentPath=/activity/dibu_page`
+				});
+			}
 		}
 	};
 

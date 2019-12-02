@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 16:29:07
+ * @LastEditTime: 2019-12-02 17:06:36
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -150,10 +150,14 @@ export default class yongfan_page extends PureComponent {
 				window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 			}, 0);
 		} else {
-			this.props.history.push({
-				pathname: '/activity/anxin_plan_page',
-				search: qs.stringify(queryData)
-			});
+			if (queryData.isGoBack) {
+				this.props.history.goBack();
+			} else {
+				this.props.history.push({
+					pathname: '/activity/anxin_plan_page',
+					search: `${qs.stringify(queryData)}&isGoBack=true&currentPath=/activity/yongfan_page`
+				});
+			}
 		}
 	};
 

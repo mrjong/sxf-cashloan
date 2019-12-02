@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 16:29:54
+ * @LastEditTime: 2019-12-02 16:46:56
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -79,10 +79,14 @@ export default class anxin_plan_page extends PureComponent {
 				window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 			}, 0);
 		} else {
-			this.props.history.push({
-				pathname: path,
-				search: qs.stringify(queryData)
-			});
+			if (queryData.isGoBack && queryData.currentPath === path) {
+				this.props.history.goBack();
+			} else {
+				this.props.history.push({
+					pathname: path,
+					search: `${qs.stringify(queryData)}&isGoBack=true`
+				});
+			}
 		}
 	};
 
