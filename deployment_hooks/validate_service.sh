@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sleep 30
 processesNum=`ps aux | grep nginx  | grep -v grep | wc -l | sed 's/ //g'`
 #ps aux | grep SimpleHTTPServer  | grep 8080 | grep -v grep
 echo process number is $processesNum
