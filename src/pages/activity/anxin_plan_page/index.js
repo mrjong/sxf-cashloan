@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 15:27:06
+ * @LastEditTime: 2019-12-02 16:29:54
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -60,14 +60,24 @@ export default class anxin_plan_page extends PureComponent {
 			pageNm: '集合列表页'
 		});
 		if (queryData.fromApp) {
-			window.ReactNativeWebView.postMessage(
-				JSON.stringify({
+			let activityInf = {};
+			if (queryData.isGoBack && queryData.currentPath === path) {
+				activityInf = {
+					isWelfare: true,
+					isLogin: true
+				};
+			} else {
+				activityInf = {
 					isWelfare: true,
 					operation: 'openWebview',
 					landingTit: title,
-					landingUrl: `${linkConf.BASE_URL}${path}?comeFrom=${queryData.comeFrom}`
-				})
-			);
+					// landingUrl: `http://172.18.40.129:8010${path}?comeFrom=${queryData.comeFrom}&isGoBack=true`
+					landingUrl: `${linkConf.BASE_URL}${path}?comeFrom=${queryData.comeFrom}&isGoBack=true`
+				};
+			}
+			setTimeout(() => {
+				window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+			}, 0);
 		} else {
 			this.props.history.push({
 				pathname: path,

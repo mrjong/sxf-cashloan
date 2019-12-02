@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 14:24:31
+ * @LastEditTime: 2019-12-02 16:30:01
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -16,6 +16,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import HomeBtnClass from 'utils/HomeBtn';
+import linkConf from 'config/link.conf';
 
 const API = {
 	activeConfigThird: '/activeConfig/third' // 三陪一返活动:用户参与
@@ -128,11 +129,32 @@ export default class guosong_page extends PureComponent {
 
 	// 跳转更多福利
 	goMore = () => {
-		const { queryData } = this.state;
-		this.props.history.push({
-			pathname: '/activity/anxin_plan_page',
-			search: qs.stringify(queryData)
-		});
+		const { queryData, isAppOpen } = this.state;
+		if (isAppOpen) {
+			let activityInf = {};
+			if (queryData.isGoBack) {
+				activityInf = {
+					isWelfare: true,
+					isLogin: true
+				};
+			} else {
+				activityInf = {
+					isWelfare: true,
+					operation: 'openWebview',
+					landingTit: '还到',
+					// landingUrl: `http://172.18.40.129:8010/activity/anxin_plan_page?comeFrom=${queryData.comeFrom}&isGoBack=true&currentPath=/activity/guosong_page`
+					landingUrl: `${linkConf.BASE_URL}/activity/anxin_plan_page?comeFrom=${queryData.comeFrom}&isGoBack=true&currentPath=/activity/guosong_page`
+				};
+			}
+			setTimeout(() => {
+				window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+			}, 0);
+		} else {
+			this.props.history.push({
+				pathname: '/activity/anxin_plan_page',
+				search: qs.stringify(queryData)
+			});
+		}
 	};
 
 	render() {
