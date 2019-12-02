@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 14:07:03
+ * @LastEditTime: 2019-12-02 18:36:31
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -41,9 +41,9 @@ export default class wx_activity_download_page extends PureComponent {
 
 	componentDidMount() {
 		const { queryData } = this.state;
-		if (queryData.comeFrom) {
+		if (queryData.entry) {
 			buriedPointEvent(activity.anXinActivityEntry, {
-				entry: queryData.comeFrom,
+				entry: queryData.entry,
 				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
 				pageNm: '微信子菜单活动落地页'
 			});
@@ -65,7 +65,7 @@ export default class wx_activity_download_page extends PureComponent {
 			this.prePressTime2 = nowTime;
 			const { queryData } = this.state;
 			buriedPointEvent(activity.anXinActivityListDownLoadClick, {
-				entry: queryData.comeFrom,
+				entry: queryData.entry,
 				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
 				pageNm: '微信子菜单活动落地页',
 				device_type: getDeviceType() === 'IOS' ? 'IOS' : 'ANDROID'
