@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-07 13:46:31
+ * @LastEditTime: 2019-12-02 11:53:01
  */
 /*eslint-disable */
 import React from 'react';
@@ -1110,6 +1110,8 @@ export const queryUsrSCOpenId = ({ $props }) => {
 					.catch(() => {
 						resolve(true);
 					});
+			} else {
+				resolve(true);
 			}
 		} else {
 			resolve(true);

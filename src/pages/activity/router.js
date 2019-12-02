@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-29 15:17:00
+ * @LastEditTime: 2019-12-02 10:55:56
  */
 export default [
 	{
@@ -108,5 +108,19 @@ export default [
 		zhName: 'axjh',
 		title: '还到',
 		component: () => import('pages/activity/anxin_plan_page')
+	},
+	{
+		path: '/activity/mpos_activity_download_page',
+		zhName: 'hd-mpos-xz',
+		title: '还到',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/mpos_activity_download_page')
+	},
+	{
+		path: '/activity/wx_activity_download_page',
+		zhName: 'hd-wx-xz',
+		title: '还到',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/wx_activity_download_page')
 	}
 ];

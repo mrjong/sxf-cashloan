@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-29 15:53:00
+ * @LastEditTime: 2019-12-02 10:32:10
  */
 export default [
 	{
@@ -90,12 +90,5 @@ export default [
 		title: '还到',
 		arrowHide: 'empty',
 		component: () => import('pages/others/wx_download_page')
-	},
-	{
-		path: '/others/wx_activity_download_page',
-		zhName: 'hd-wx-xz',
-		title: '还到',
-		arrowHide: 'empty',
-		component: () => import('pages/others/wx_activity_download_page')
 	}
 ];
