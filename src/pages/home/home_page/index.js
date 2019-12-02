@@ -136,7 +136,6 @@ export default class home_page extends PureComponent {
 		// 判断是否是微信打通（微信登陆）
 		this.cacheBanner();
 		this.isRenderCash();
-		this.queryOverdueModal();
 		this.showFeedbackModal();
 		this.couponRedDot(); // 优惠券使用红点
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
@@ -146,6 +145,10 @@ export default class home_page extends PureComponent {
 		// 从进度页面返回不删除AutId
 		if (!store.getAutId2()) {
 			store.removeAutId();
+		}
+
+		if (token && tokenFromStorage) {
+			this.queryOverdueModal();
 		}
 
 		// 隔5秒调取相关变量
@@ -1005,9 +1008,12 @@ export default class home_page extends PureComponent {
 
 	// 逾期弹窗
 	handleOverDueClick = () => {
-		const { usrIndexInfo } = this.state;
-		if (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.billNo) {
-			store.setBillNo(usrIndexInfo.indexData.billNo);
+		const { usrIndexInfo, usrCashIndexInfo } = this.state;
+		const billNo =
+			(usrIndexInfo.indexData && usrIndexInfo.indexData.billNo) ||
+			(usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.billNo);
+		if (billNo) {
+			store.setBillNo(billNo);
 			this.props.history.push({
 				pathname: '/order/order_detail_page',
 				search: '?entryFrom=home'
