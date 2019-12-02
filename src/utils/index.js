@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-07 13:46:31
+ * @LastEditTime: 2019-12-02 13:44:42
  */
 /*eslint-disable */
 import React from 'react';
@@ -670,7 +670,7 @@ export const getOperatorStatus = ({ $props }) => {
 		}
 	});
 };
-const needDisplayOptions = ['idCheck', 'basicInf', 'operator', 'card'];
+const needDisplayOptions = ['idCheck', 'faceDetect', 'basicInf', 'supple', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];

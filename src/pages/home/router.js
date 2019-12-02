@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-29 13:50:41
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-12-02 11:14:31
  */
 export default [
 	{
@@ -115,5 +115,11 @@ export default [
 		zhName: 'ddjqrsh',
 		title: '等待人工审核',
 		component: () => import('pages/home/loan_robot_succ_page')
+	},
+	{
+		path: '/home/addInfo',
+		zhName: 'wsbcxx',
+		title: '完善补充信息',
+		component: () => import('pages/home/addInfo')
 	}
 ];
