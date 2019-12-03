@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 12:02:45
+ * @LastEditTime: 2019-12-03 14:17:50
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -26,8 +26,8 @@ import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-import loginModalBg from '../login_common_page/img/login_modal.png';
-import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
+import loginModalBg from './img/login_modal.png';
+import loginModalBtn from './img/login_modal_btn.png';
 import feature_img1 from './img/feature_img1.png';
 import feature_img2 from './img/feature_img2.png';
 import feature_img3 from './img/feature_img3.png';
@@ -350,7 +350,7 @@ export default class momo_outer_login_page extends PureComponent {
 		timmer = setInterval(() => {
 			this.setState(
 				{
-					timers: countDownTime-- + '"'
+					timers: countDownTime-- + 's'
 				},
 				() => {
 					if (countDownTime === -1) {
