@@ -30,7 +30,8 @@ export default class Cashier extends React.PureComponent {
 			crdOrdAmt: 0,
 			orgFnlMsg: '',
 			tip_modal: false,
-			reward_modal: false
+			reward_modal: false,
+			rewardDate: ''
 		};
 	}
 
@@ -61,7 +62,7 @@ export default class Cashier extends React.PureComponent {
 	}
 
 	queryRepayReward = () => {
-		const { billDesc, repayPerds } = this.props.history.location.state;
+		const { billDesc, repayPerds, isLastPerd, prodType } = this.props.history.location.state;
 
 		this.props.$fetch
 			.get(API.queryRepayReward, {
@@ -69,9 +70,27 @@ export default class Cashier extends React.PureComponent {
 				perdNum: repayPerds[repayPerds.length - 1],
 				entrance: 1
 			})
-			.then(() => {
-				// if (res.msgCode === 'PTM0000') {
-				// }
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState({
+						rewardDate: res.data
+					});
+					if (res.data === 15) {
+						this.setState({
+							reward_modal: true
+						});
+					} else {
+						this.setState({
+							tip_modal: true
+						});
+					}
+				} else if (isLastPerd) {
+					//如果还的是最后一期
+					setTimeout(() => {
+						store.removeBackData();
+						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
+					}, 2000);
+				}
 			})
 			.catch(() => {});
 	};
@@ -102,7 +121,7 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	queryPayStatus = () => {
-		const { repayOrdNo, isLastPerd, prodType } = this.props.history.location.state;
+		const { repayOrdNo } = this.props.history.location.state;
 		isFetching = true;
 		this.props.$fetch
 			.get(API.queryPayStatus + `/${repayOrdNo}`)
@@ -127,15 +146,7 @@ export default class Cashier extends React.PureComponent {
 								});
 								if (this.state.status === 'success') {
 									this.queryRepayReward();
-									if (isLastPerd) {
-										//如果还的是最后一期
-										setTimeout(() => {
-											store.removeBackData();
-											this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
-										}, 2000);
-									} else {
-										this.queryPlain();
-									}
+									this.queryPlain();
 									clearInterval(timer);
 								}
 							}
@@ -203,7 +214,8 @@ export default class Cashier extends React.PureComponent {
 			orgFnlMsg,
 			exceedingAmt,
 			tip_modal,
-			reward_modal
+			reward_modal,
+			rewardDate
 		} = this.state;
 		const { bankName, bankNo, isLastPerd } = this.props.history.location.state;
 
@@ -308,7 +320,7 @@ export default class Cashier extends React.PureComponent {
 						}}
 					/>
 					<div className={styles.modal_tip_content}>
-						<span className={styles.date}>5天</span>
+						<span className={styles.date}>{rewardDate}天</span>
 					</div>
 				</Modal>
 
@@ -320,8 +332,8 @@ export default class Cashier extends React.PureComponent {
 						<div
 							onClick={() => {
 								this.props.history.replace({
-									pathname: '/mine/coupon_page'
-									// search: '?entryFrom=home'
+									pathname: '/mine/coupon_page',
+									search: '?entryFrom=orderRepayResult'
 								});
 							}}
 							className={styles.modal_btn}
