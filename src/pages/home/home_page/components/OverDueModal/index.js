@@ -53,10 +53,13 @@ export default class OverDueModal extends React.PureComponent {
 					<img className={style.warningImg} src={overDueImg} />
 					<h3 className={style.overDueTit}>{overDueInf && overDueInf.progressDesc}</h3>
 					<p className={style.overDueDesc}>{overDueInf && overDueInf.progressContent}</p>
-					<div className={style.couponEntry} onClick={handleClick}>
-						<span>有减免券可用</span>
-						<span className={style.value}>有效期{decreaseCoupExpiryDate}</span>
-					</div>
+					{decreaseCoupExpiryDate ? (
+						<div className={style.couponEntry} onClick={handleClick}>
+							<span>有减免券可用</span>
+							<span className={style.value}>有效期{decreaseCoupExpiryDate}</span>
+						</div>
+					) : null}
+
 					{overDueInf &&
 						(overDueInf.progressOrder === 8 || overDueInf.progressOrder === 9) &&
 						osType !== 'IOS' && (
