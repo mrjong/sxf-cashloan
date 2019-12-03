@@ -1,13 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 16:29:55
+ * @LastEditTime: 2019-12-03 16:49:25
  */
 import { store } from 'utils/store';
-import { getDeviceType, getNextStr, isCanLoan, getMoxieData, getMxStatus } from 'utils';
+import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import { TFDLogin } from 'utils/getTongFuDun';
-import { switchCreditService } from 'utils';
 const API = {
 	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
 	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
@@ -247,17 +246,9 @@ class HomeBtn {
 	goToNewMoXie = async () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		let mxRes = await getMxStatus({ $props: this.props });
-		if (mxRes && mxRes === '0') {
-			let mxQuery = location.pathname.split('/');
-			let RouterType = (mxQuery && mxQuery[2]) || '';
-			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-		} else {
-			switchCreditService({
-				$props: this.props,
-				RouterType: '/home/home'
-			});
-		}
+		let mxQuery = location.pathname.split('/');
+		let RouterType = (mxQuery && mxQuery[2]) || '';
+		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 	};
 	// 智能按钮点击事件
 	handleSmartClick = () => {

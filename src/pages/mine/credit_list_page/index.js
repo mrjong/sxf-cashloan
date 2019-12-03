@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 16:20:26
+ * @LastEditTime: 2019-12-03 16:48:58
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -15,7 +15,7 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import arrow from './img/arrow.png';
-import { getMoxieData, getMxStatus, switchCreditService } from 'utils';
+import { getMoxieData } from 'utils';
 import FeedbackModal from 'components/FeedbackModal';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -116,14 +116,10 @@ export default class credit_list_page extends PureComponent {
 			store.setToggleMoxieCard(true);
 		}
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		let mxRes = await getMxStatus({ $props: this.props });
-		if (mxRes && mxRes === '0') {
-			let mxQuery = location.pathname.split('/');
-			let RouterType = (mxQuery && mxQuery[2]) || '';
-			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-		} else {
-			switchCreditService({ $props: this.props, RouterType: '/mine/credit_list_page' });
-		}
+
+		let mxQuery = location.pathname.split('/');
+		let RouterType = (mxQuery && mxQuery[2]) || '';
+		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 	};
 
 	showFeedbackModal = () => {

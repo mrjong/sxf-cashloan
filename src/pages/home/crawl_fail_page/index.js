@@ -1,13 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 16:23:39
+ * @LastEditTime: 2019-12-03 16:48:20
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import { getMxStatus, switchCreditService } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -58,16 +57,11 @@ export default class crawl_progress_page extends PureComponent {
 		}
 	};
 
-	goMoxieBankList = async () => {
+	goMoxieBankList = () => {
 		store.setMoxieBackUrl('/home/home');
-		let mxRes = await getMxStatus({ $props: this.props });
-		if (mxRes && mxRes === '0') {
-			let mxQuery = location.pathname.split('/');
-			let RouterType = (mxQuery && mxQuery[2]) || '';
-			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-		} else {
-			switchCreditService({ $props: this.props, RouterType: '/home/home' });
-		}
+		let mxQuery = location.pathname.split('/');
+		let RouterType = (mxQuery && mxQuery[2]) || '';
+		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 		buriedPointEvent(home.importOtherCreditCard);
 	};
 	render() {

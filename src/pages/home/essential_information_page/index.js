@@ -1,10 +1,10 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:03:10
+ * @LastEditTime: 2019-12-03 16:37:14
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { InputItem, List } from 'antd-mobile';
+import { InputItem, List, Modal } from 'antd-mobile';
 import informationMore from './img/back.png';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
@@ -23,6 +23,7 @@ import adsBg from './img/base_top_img.png';
 import AgreementModal from 'components/AgreementModal';
 import { domListen } from 'utils/domListen';
 import { sxfhome } from 'utils/sxfAnalytinsType';
+import AddressSelect from 'components/react-picker-address';
 
 let timedown = null;
 const pageKey = home.basicInfoBury;
@@ -67,7 +68,8 @@ export default class essential_information_page extends PureComponent {
 			provLabel: [],
 			showAgreement: false, // 显示协议弹窗
 			millisecond: 0,
-			selectFlag: true
+			selectFlag: true,
+			addressList: []
 		};
 	}
 
@@ -454,12 +456,57 @@ export default class essential_information_page extends PureComponent {
 		sxfburiedPointEvent(sxfhome[type]);
 	};
 
+	onSelectArea = (area) => {
+		console.log(area, 'area');
+		let areaStr = '';
+		area.forEach((element) => {
+			areaStr += element.value + ',';
+		});
+		console.log(areaStr, 'areaStr');
+		areaStr = areaStr.substring(0, areaStr.length - 1);
+		console.log(areaStr, 'areaStr');
+		// store.setProvCity(area);
+		this.selectClick({
+			value: areaStr,
+			label: 'resident_city'
+		});
+		this.setState({
+			ProvincesValue: areaStr,
+			addressList: area
+		});
+	};
+
+	handleSetModal(value) {
+		// sxfBuriedEvent('resident_cityOut');
+		this.setState({
+			visible: value
+		});
+	}
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement, selectFlag } = this.state;
+		const { showAgreement, selectFlag, addressList, visible } = this.state;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
+				<Modal
+					onClose={() => {
+						this.handleSetModal(false);
+					}}
+					closable={true}
+					className="cashier_modal_info"
+					wrapClassName="cashier_modal_info"
+					visible={visible}
+					animationType="slide-up"
+					popup
+				>
+					<AddressSelect
+						level={4}
+						value={addressList}
+						commitFun={(area) => this.onSelectArea(area)}
+						dissmissFun={() => this.handleSetModal(false)}
+					/>
+				</Modal>
 				<div className={style.warning_tip}>还到不向学生借款</div>
 				{urlQuery.jumpToBase && (
 					<div className={style.adsImg}>
@@ -482,59 +529,17 @@ export default class essential_information_page extends PureComponent {
 						<div className={style.line} />
 						<div className={style.content}>
 							<div className={style.item_box}>
-								<div className={style.labelDiv}>
-									{getFieldDecorator('city', {
-										initialValue: this.state.provValue,
-										rules: [{ required: true, message: '请选择城市' }],
-										onChange: (value, label) => {
-											this.selectSure({
-												value: JSON.stringify(value),
-												label: 'resident_city'
-											});
-											store.setProvince(label[0]);
-											store.setCity(label[1]);
-											this.setState({ provValue: value });
-											this.setState({ provLabel: label });
-										}
-									})(
-										// 这里面的组件，要有 value onChange属性就行，一般都是表单组件，自定义组件，提供了value onChange 属性的也可以用，也可以通过 valuePropName 来指定，这个就是高级一点的用法了。
-										<AsyncCascadePicker
-											title="选择省市"
-											loadData={[
-												() =>
-													this.props.$fetch.get(`${API.getProv}`).then((result) => {
-														const prov = result && result.data && result.data.length ? result.data : [];
-														return prov.map((item) => ({
-															value: item.key,
-															label: item.value
-														}));
-													}),
-												(provCd) =>
-													this.props.$fetch.get(`${API.qryCity}/${provCd}`).then((result) => {
-														const city = result && result.data && result.data.length ? result.data : [];
-														return city.map((item) => ({
-															value: item.key,
-															label: item.value
-														}));
-													})
-											]}
-											onVisibleChange={(bool) => {
-												if (bool) {
-													this.sxfMD('resident_city');
-													this.selectClick({
-														value: JSON.stringify(this.state.provValue),
-														label: 'resident_city'
-													});
-												} else {
-													this.sxfMD('resident_cityOut');
-												}
-											}}
-											cols={2}
-										>
-											<List.Item className="hasborder">居住城市</List.Item>
-										</AsyncCascadePicker>
-									)}
-									<img className={style.informationMore} src={informationMore} />
+								<div className={style.titleTop}>居住地址</div>
+								<div
+									className={style.listRow}
+									onClick={() =>
+										this.setState({
+											visible: true
+										})
+									}
+								>
+									{addressList ? <span className={style.active}>111</span> : '请选择您的现居住城市'}
+									<img className={style.informationMoreNew} src={informationMore} />
 								</div>
 								{getFieldDecorator('address', {
 									rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
@@ -569,7 +574,7 @@ export default class essential_information_page extends PureComponent {
 											]
 										})}
 										className="noBorder"
-										placeholder="县区、街道、小区、楼栋号"
+										placeholder="详细地址示例：中关村大街2号楼3单元601"
 										type="text"
 										onBlur={(v) => {
 											this.inputOnBlur(v, 'resident_address');
@@ -578,13 +583,12 @@ export default class essential_information_page extends PureComponent {
 										onFocus={(v) => {
 											this.inputOnFocus(v, 'resident_address');
 										}}
-									>
-										常住地址
-									</InputItem>
+									></InputItem>
 								)}
 							</div>
 
 							<div className={style.item_box}>
+								<div className={style.titleTop}>紧急联系人1</div>
 								<div className={style.labelDiv}>
 									{getFieldDecorator('cntRelTyp1', {
 										initialValue: this.state.relatValue,
@@ -623,7 +627,7 @@ export default class essential_information_page extends PureComponent {
 												}
 											}}
 										>
-											<List.Item className="hasborder">联系人关系</List.Item>
+											<List.Item className="hasborder"></List.Item>
 										</AsyncCascadePicker>
 									)}
 									<img className={style.informationMore} src={informationMore} />
@@ -661,7 +665,7 @@ export default class essential_information_page extends PureComponent {
 											]
 										})}
 										crear
-										placeholder="联系人真实姓名"
+										placeholder="联系人姓名"
 										type="text"
 										onBlur={(v) => {
 											this.inputOnBlur(v, 'contact_name_one');
@@ -669,9 +673,7 @@ export default class essential_information_page extends PureComponent {
 										onFocus={(v) => {
 											this.inputOnFocus(v, 'contact_name_one');
 										}}
-									>
-										联系人姓名
-									</InputItem>
+									></InputItem>
 								)}
 								{getFieldDecorator('linkphone', {
 									rules: [
@@ -688,16 +690,128 @@ export default class essential_information_page extends PureComponent {
 										className="noBorder"
 										type="number"
 										maxLength="11"
-										placeholder="有效联系人的手机号"
+										placeholder="联系人电话"
 										onBlur={(v) => {
 											this.inputOnBlur(v, 'contact_tel_one');
 										}}
 										onFocus={(v) => {
 											this.inputOnFocus(v, 'contact_tel_one');
 										}}
-									>
-										联系人电话
-									</InputItem>
+									></InputItem>
+								)}
+							</div>
+
+							<div className={style.item_box}>
+								<div className={style.titleTop}>紧急联系人2</div>
+								<div className={style.labelDiv}>
+									{getFieldDecorator('cntRelTyp2', {
+										initialValue: this.state.relatValue,
+										rules: [{ required: true, message: '请选择联系人关系' }],
+										onChange: (value) => {
+											store.setRelationValue(value);
+											this.selectSure({
+												value: JSON.stringify(value),
+												label: 'clan_relation'
+											});
+										}
+									})(
+										<AsyncCascadePicker
+											className="hasborder"
+											title="选择联系人"
+											loadData={[
+												() =>
+													this.props.$fetch.get(`${API.getRelat}/1`).then((result) => {
+														const prov = result && result.data && result.data.length ? result.data : [];
+														return prov.map((item) => ({
+															value: item.key,
+															label: item.value
+														}));
+													})
+											]}
+											cols={1}
+											onVisibleChange={(bool) => {
+												if (bool) {
+													this.sxfMD('cntRelTyp2');
+													this.selectClick({
+														value: JSON.stringify(this.state.relatValue),
+														label: 'clan_relation'
+													});
+												} else {
+													this.sxfMD('cntRelTypOut2');
+												}
+											}}
+										>
+											<List.Item className="hasborder"></List.Item>
+										</AsyncCascadePicker>
+									)}
+									<img className={style.informationMore} src={informationMore} />
+								</div>
+								{getFieldDecorator('linkman', {
+									rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+									onChange: (value) => {
+										if (!value) {
+											sxfburiedPointEvent('contact_name_one', {
+												actId: 'delAll'
+											});
+										}
+										store.setLinkman(value);
+										this.setState({ linkman: value });
+									}
+								})(
+									<InputItem
+										data-sxf-props={JSON.stringify({
+											type: 'input',
+											notSendValue: true, // 无需上报输入框的值
+											name: 'contact_name_one',
+											eventList: [
+												{
+													type: 'focus'
+												},
+												{
+													type: 'delete'
+												},
+												{
+													type: 'blur'
+												},
+												{
+													type: 'paste'
+												}
+											]
+										})}
+										crear
+										placeholder="联系人姓名"
+										type="text"
+										onBlur={(v) => {
+											this.inputOnBlur(v, 'contact_name_one');
+										}}
+										onFocus={(v) => {
+											this.inputOnFocus(v, 'contact_name_one');
+										}}
+									></InputItem>
+								)}
+								{getFieldDecorator('linkphone', {
+									rules: [
+										{ required: true, message: '请输入联系人手机号' },
+										{ validator: this.validatePhone }
+									],
+									onChange: (value) => {
+										store.setLinkphone(value);
+										this.setState({ linkphone: value });
+									}
+								})(
+									<InputItem
+										clear
+										className="noBorder"
+										type="number"
+										maxLength="11"
+										placeholder="联系人电话"
+										onBlur={(v) => {
+											this.inputOnBlur(v, 'contact_tel_one');
+										}}
+										onFocus={(v) => {
+											this.inputOnFocus(v, 'contact_tel_one');
+										}}
+									></InputItem>
 								)}
 							</div>
 						</div>

@@ -10,7 +10,6 @@ import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import HomeBtnClass from 'utils/HomeBtn';
-import { activeConfigSts } from 'utils';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
@@ -396,13 +395,7 @@ export default class coupon_page extends PureComponent {
 								<button
 									className={style.goUse}
 									onClick={() => {
-										activeConfigSts({
-											$props: this.props,
-											type: 'A',
-											callback: () => {
-												this['HomeBtn'].getData();
-											}
-										});
+										this['HomeBtn'].getData();
 									}}
 								>
 									去使用

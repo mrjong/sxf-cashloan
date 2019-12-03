@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:00:38
+ * @LastEditTime: 2019-12-03 16:48:12
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -13,9 +13,7 @@ import {
 	isCanLoan,
 	getMoxieData,
 	dateDiffer,
-	queryUsrSCOpenId,
-	getMxStatus,
-	switchCreditService
+	queryUsrSCOpenId
 } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -691,17 +689,12 @@ export default class home_page extends PureComponent {
 	};
 
 	// 跳新版魔蝎
-	goToNewMoXie = async () => {
+	goToNewMoXie = () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		let mxRes = await getMxStatus({ $props: this.props });
-		if (mxRes && mxRes === '0') {
-			let mxQuery = location.pathname.split('/');
-			let RouterType = (mxQuery && mxQuery[2]) || '';
-			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-		} else {
-			switchCreditService({ $props: this.props, RouterType: '/home/home' });
-		}
+		let mxQuery = location.pathname.split('/');
+		let RouterType = (mxQuery && mxQuery[2]) || '';
+		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 	};
 	// 请求用户绑卡状态
 	requestBindCardState = () => {

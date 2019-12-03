@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 16:27:18
+ * @LastEditTime: 2019-12-03 16:48:44
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -19,7 +19,6 @@ import {
 	getOperatorStatus,
 	getMoxieData,
 	activeConfigSts,
-	getMxStatus,
 	getBindCardStatus
 } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
@@ -28,7 +27,6 @@ import { sxfhome } from 'utils/sxfAnalytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
-import { switchCreditService } from '../../../utils';
 let isinputBlur = false;
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
@@ -260,17 +258,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 	goMoxieBankList = async () => {
 		store.setToggleMoxieCard(true);
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		let mxRes = await getMxStatus({ $props: this.props });
-		if (mxRes && mxRes === '0') {
-			let mxQuery = location.pathname.split('/');
-			let RouterType = (mxQuery && mxQuery[2]) || '';
-			this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-		} else {
-			switchCreditService({
-				$props: this.props,
-				RouterType: '/home/loan_repay_confirm_page'
-			});
-		}
+		let mxQuery = location.pathname.split('/');
+		let RouterType = (mxQuery && mxQuery[2]) || '';
+		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count, type) => {

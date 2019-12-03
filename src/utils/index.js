@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-02 13:44:42
+ * @LastEditTime: 2019-12-03 19:55:59
  */
 /*eslint-disable */
 import React from 'react';
@@ -63,27 +63,6 @@ export const isPhone = () => {
 		}
 	}
 	return flag;
-};
-/**
- * @description: 运营商开关
- * @param {type}
- * @return:
- */
-export const getMxStatus = ({ $props }) => {
-	return new Promise((resolve) => {
-		$props.$fetch
-			.get(`${API.MX_CRED_SWITCH}`)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000') {
-					resolve((result && result.data && result.data.value) || '0');
-				} else {
-					resolve('0');
-				}
-			})
-			.catch(() => {
-				resolve('0');
-			});
-	});
 };
 /**
  * @description: 选择哪个三方运营商
@@ -611,44 +590,11 @@ export const getOperatorStatus = ({ $props }) => {
 						case '4':
 							resolve(false);
 							$props.toast.info('身份信息确认失败，请重新确认');
-							setTimeout(async () => {
-								let mxRes = await getMxStatus({ $props });
-								if (mxRes && mxRes === '0') {
-									let mxQuery = location.pathname.split('/');
-									let RouterType = (mxQuery && mxQuery[2]) || '';
-									$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-									return;
-								}
-								switchOperatorService({
-									$props,
-									jfCallBack: () => {
-										store.setMoxieBackUrl('/home/loan_repay_confirm_page');
-										store.setGotoMoxieFlag(true);
-									},
-									RouterType: '/home/loan_repay_confirm_page',
-									moxieCallBack: () => {
-										SXFToast.loading('加载中...', 0);
-										$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
-											if (result.msgCode === 'PTM0000' && result.data.url) {
-												$props.SXFToast.hide();
-												store.setMoxieBackUrl('/home/loan_repay_confirm_page');
-												// TODO
-												// store.getToggleMoxieCard(true);
-												// setTimeout(() => {
-												// 运营商直接返回的问题
-												SXFToast.loading('加载中...', 0);
-												store.setGotoMoxieFlag(true);
-												window.location.href =
-													result.data.url +
-													`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
-														window.location.search
-													}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-														`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-													)}`;
-											}
-										});
-									}
-								});
+							setTimeout(() => {
+								let mxQuery = location.pathname.split('/');
+								let RouterType = (mxQuery && mxQuery[2]) || '';
+								$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+								return;
 							}, 2000);
 							break;
 						case '1':
@@ -719,67 +665,17 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 
 			// 运营商前一步是成功或者审核中,可直接返回url链接
 			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
-				let mxRes = await getMxStatus({ $props });
-				if (mxRes && mxRes === '0') {
-					let mxQuery = location.pathname.split('/');
-					let RouterType = (mxQuery && mxQuery[2]) || '';
-					$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-					return;
-				}
-				switchOperatorService({
-					$props,
-					RouterType: '/home/home',
-					jfCallBack: () => {
-						$props.SXFToast.hide();
-						resBackMsg = '运营商认证';
-						store.setCarrierMoxie(true);
-						store.setGotoMoxieFlag(true);
-						if (callBack) {
-							callBack(resBackMsg);
-						}
-					},
-					moxieCallBack: () => {
-						$props.$fetch.post(`${API.getOperator}`, { clientCode: '04' }).then((result) => {
-							if (result.msgCode === 'PTM0000' && result.data.url) {
-								$props.SXFToast.hide();
-								resBackMsg = '运营商认证';
-								// 运营商直接返回的问题
-								store.setCarrierMoxie(true);
-								store.setGotoMoxieFlag(true);
-								SXFToast.loading('加载中...', 0);
-								window.location.href =
-									result.data.url +
-									`&localUrl=${window.location.origin}&routeType=${window.location.pathname}${
-										window.location.search
-									}&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-										`${linkConf.BASE_URL}/disting/#/carrier_auth_page`
-									)}`;
-								if (callBack) {
-									callBack(resBackMsg);
-								}
-							}
-						});
-					}
-				});
-
+				let mxQuery = location.pathname.split('/');
+				let RouterType = (mxQuery && mxQuery[2]) || '';
+				$props.history.push(`/home/addInfo?RouterType=${RouterType}`);
 				return;
 			}
 			// 信用卡
 			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
-				let mxRes = await getMxStatus({ $props });
-				if (mxRes && mxRes === '0') {
-					let mxQuery = location.pathname.split('/');
-					let RouterType = (mxQuery && mxQuery[2]) || '';
-					$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-					return;
-				}
-				$props.SXFToast.hide();
-				resBackMsg = '银行列表';
-				store.setCreditSuccessBack(true);
-				switchCreditService({ $props, RouterType: '/home/home' });
-				if (callBack) {
-					callBack(resBackMsg);
-				}
+				activeConfigSts({
+					$props,
+					type: 'B'
+				});
 				return;
 			}
 			// 如果是银行卡则跳转到进度否则是确认借款页
@@ -1030,57 +926,10 @@ export const dateDiffer = (sDate1, sDate2) => {
 	return iDays;
 };
 export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
-	let mxRes = await getMxStatus({ $props });
-	if (mxRes && mxRes === '0') {
-		let mxQuery = location.pathname.split('/');
-		let RouterType = (mxQuery && mxQuery[2]) || '';
-		$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
-		return;
-	}
-	switchCreditService({
-		$props,
-		type: 'login',
-		RouterType: location.pathname,
-		jfCallBack: () => {
-			store.setGotoMoxieFlag(true);
-			store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		},
-		moxieCallBack: () => {
-			$props.$fetch
-				.get(API.mxoieCardList)
-				.then((res) => {
-					if (res && res.msgCode === 'PTM0000') {
-						if (res.data) {
-							const seleBank = res.data.filter((ele) => {
-								return ele.code === bankCode;
-							});
-							const jumpUrl = seleBank && seleBank.length && seleBank[0].href;
-							if (jumpUrl) {
-								store.setGotoMoxieFlag(true);
-								store.setAutId(seleBank[0].authorId);
-								store.setMoxieBackUrl(`/home/crawl_progress_page`);
-								// 如果银行code一致跳登录页，否则跳列表页
-								window.location.href =
-									jumpUrl +
-									`&showTitleBar=NO&agreementEntryText=《个人信息授权书》&agreementUrl=${encodeURIComponent(
-										`${linkConf.BASE_URL}/disting/#/internet_bank_auth_page`
-									)}`;
-							} else {
-								goMoxieBankList();
-							}
-						} else {
-							$props.toast.info('系统开小差，请稍后重试');
-						}
-					} else {
-						$props.toast.info(res.msgInfo);
-					}
-				})
-				.catch((err) => {
-					console.log(err);
-					$props.toast.info('系统开小差，请稍后重试');
-				});
-		}
-	});
+	let mxQuery = location.pathname.split('/');
+	let RouterType = (mxQuery && mxQuery[2]) || '';
+	$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+	return;
 };
 
 // 协议预览记录功能

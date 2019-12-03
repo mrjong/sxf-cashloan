@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-13 17:24:03
+ * @LastEditTime: 2019-12-03 16:50:31
  */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
@@ -13,7 +13,7 @@ import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 
-import { changeHistoryState, pagesIgnore, activeConfigSts } from 'utils';
+import { changeHistoryState, pagesIgnore } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
@@ -87,16 +87,16 @@ export default class router_Page extends PureComponent {
 		arrayCnt(arr);
 	};
 	acRouter = (Props) => {
-		if (location.pathname === '/home/home') {
-			activeConfigSts({
-				$props: this.props,
-				type: 'A',
-				callback: () => {
-					this.loadComponent(Props);
-				}
-			});
-			return;
-		}
+		// if (location.pathname === '/home/home') {
+		// 	activeConfigSts({
+		// 		$props: this.props,
+		// 		type: 'A',
+		// 		callback: () => {
+		// 			this.loadComponent(Props);
+		// 		}
+		// 	});
+		// 	return;
+		// }
 		this.loadComponent(Props);
 	};
 	loadComponent = async (props) => {
