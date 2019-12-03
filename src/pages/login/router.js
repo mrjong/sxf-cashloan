@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-15 15:28:42
+ * @LastEditTime: 2019-12-03 10:31:40
  */
 export default [
 	{
@@ -44,5 +44,12 @@ export default [
 		title: '登录',
 		arrowHide: true,
 		component: () => import('pages/login/wx_login_page')
+	},
+	{
+		path: '/toutiao_login_page',
+		zhName: 'ttdl',
+		title: '登录',
+		arrowHide: true,
+		component: () => import('pages/login/toutiao_login_page')
 	}
 ];

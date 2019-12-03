@@ -5,6 +5,7 @@ import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isWXOpen, pagesIgnore } from 'utils';
 import Raven from 'raven-js';
+import baseUrl from './baseUrlConf';
 
 const fetchInit = () => {
 	let num = 0;
@@ -12,7 +13,7 @@ const fetchInit = () => {
 	let timerList = [];
 	fetch.init({
 		timeout: 10000, // 默认超时
-		baseURL: '/wap', // baseurl
+		baseURL: baseUrl, // baseurl
 		onShowErrorTip: (err, errorTip) => {
 			console.log(err);
 			setTimeout(() => {

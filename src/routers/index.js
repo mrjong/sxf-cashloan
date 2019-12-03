@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-15 15:28:28
+ * @LastEditTime: 2019-12-03 10:34:06
  */
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -60,6 +60,13 @@ const MomoOuterLoginPage = Loadable({
 	LoadingComponent,
 	delay: 300
 });
+const ToutiaoLoginPage = Loadable({
+	loader: () => import('pages/login/toutiao_login_page'),
+	loading: Loading,
+	LoadingComponent,
+	delay: 300
+});
+
 export default class Routers extends Component {
 	render() {
 		return (
@@ -71,6 +78,7 @@ export default class Routers extends Component {
 				<Route path="/:modules/:page" component={RouterPage} />
 				<Route path="/outer_test_login" component={OuterTestLoginPage} />
 				<Route path="/momo_outer_login" component={MomoOuterLoginPage} />
+				<Route path="/toutiao_login_page" component={ToutiaoLoginPage} />
 			</Switch>
 		);
 	}
