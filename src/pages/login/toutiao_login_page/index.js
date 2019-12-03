@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 14:42:41
+ * @LastEditTime: 2019-12-03 15:05:14
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -41,7 +41,6 @@ const API = {
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
 	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
 
@@ -195,7 +194,6 @@ export default class momo_outer_login_page extends PureComponent {
 						recordContract({
 							contractType: '01,02'
 						});
-						// 由于接口前缀改变,所以不用公共方法
 						queryUsrSCOpenId({ $props: this.props }).then(() => {
 							this.setState(
 								{
