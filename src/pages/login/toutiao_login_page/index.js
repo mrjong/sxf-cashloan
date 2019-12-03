@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 14:17:50
+ * @LastEditTime: 2019-12-03 14:42:41
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -195,6 +195,7 @@ export default class momo_outer_login_page extends PureComponent {
 						recordContract({
 							contractType: '01,02'
 						});
+						// 由于接口前缀改变,所以不用公共方法
 						queryUsrSCOpenId({ $props: this.props }).then(() => {
 							this.setState(
 								{
