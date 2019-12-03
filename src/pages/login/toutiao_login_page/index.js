@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 15:05:14
+ * @LastEditTime: 2019-12-03 15:52:15
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,14 +11,7 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import {
-	getDeviceType,
-	getFirstError,
-	validators,
-	handleInputBlur,
-	recordContract,
-	queryUsrSCOpenId
-} from 'utils';
+import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
@@ -37,11 +30,11 @@ import { TFDLogin } from 'utils/getTongFuDun';
 
 let timmer;
 const API = {
-	smsForLogin: '/signup/smsForLogin',
-	createImg: '/cmm/createImg', // 获取滑动大图
-	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	DOWNLOADURL: 'download/getDownloadUrl'
+	smsForLogin: '/passport/loginBySms',
+	createImg: '/passport/createImg', // 获取滑动大图
+	getRelyToken: '/passport/getRelyToken', //图片token获取
+	sendImgSms: '/passport/sendImgSms', //新的验证码获取接口
+	DOWNLOADURL: '/download/getDownloadUrl'
 };
 
 let entryPageTime = '';
@@ -178,7 +171,9 @@ export default class momo_outer_login_page extends PureComponent {
 					smsCd: values.smsCd,
 					usrCnl: getH5Channel(), // 用户渠道
 					location: store.getPosition(), // 定位地址 TODO 从session取
-					mblNo: values.phoneValue // 手机号
+					mblNo: values.phoneValue, // 手机号
+					userContract: { contractType: '01,02' },
+					queryUsrSCOpenId: true
 				};
 				this.props.$fetch.post(API.smsForLogin, param).then(
 					(res) => {
@@ -191,19 +186,14 @@ export default class momo_outer_login_page extends PureComponent {
 						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
-						recordContract({
-							contractType: '01,02'
-						});
-						queryUsrSCOpenId({ $props: this.props }).then(() => {
-							this.setState(
-								{
-									showDownloadModal: true
-								},
-								() => {
-									this.startCountDown();
-								}
-							);
-						});
+						this.setState(
+							{
+								showDownloadModal: true
+							},
+							() => {
+								this.startCountDown();
+							}
+						);
 					},
 					(error) => {
 						error.msgInfo && Toast.info(error.msgInfo);
