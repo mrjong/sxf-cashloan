@@ -10,6 +10,9 @@ import { buriedPointEvent } from 'utils/analytins';
 import { getDeviceType } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
+import button_img from './img/button_img.png';
+import cover_img from './img/cover_img.png';
+
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
 };
@@ -21,7 +24,9 @@ export default class mpos_download_page extends PureComponent {
 		this.state = {};
 	}
 	componentWillMount() {
-		buriedPointEvent(other.mposDownloadPage);
+		buriedPointEvent(other.mposDownloadPage, {
+			position: 'testB_download'
+		});
 	}
 
 	getDownloadUrl = () => {
@@ -43,51 +48,43 @@ export default class mpos_download_page extends PureComponent {
 			);
 	};
 
-	downloadClick = () => {
-		buriedPointEvent(other.testDownloadClick, {
-			position: '专项通道按钮'
-		});
-		this.downloadClickFun();
-	};
 	downloadClickFun = () => {
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {
-				device_type: 'IOS'
+				device_type: 'IOS',
+				position: 'testB_download'
 			});
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
 			buriedPointEvent(other.mposDownloadBtnClick, {
-				device_type: 'ANDROID'
+				device_type: 'ANDROID',
+				position: 'testB_download'
 			});
 			this.props.toast.info('安全下载中');
 			this.getDownloadUrl();
 		}
 	};
-	msgClick = () => {
-		buriedPointEvent(other.testDownloadClick, {
-			position: '喇叭链接'
-		});
-		this.downloadClickFun();
-	};
 	render() {
 		return (
-			<div className={styles.bg}>
-				<div className={styles.padding_bottom}>
-					<div className={styles.bg_top} onClick={this.msgClick} />
-					<div className={styles.bg_list}>
-						<div className={styles.bg_btn} onClick={this.downloadClick} />
-						<div
-							className={styles.moreUse}
+			<div className={styles.mpos_download_page}>
+				<img className={styles.banner} src={cover_img} alt="落地页banner" />
+				<div className={styles.content}>
+					<div className={styles.loginContentBox}>
+						<p className={styles.title}>最高可借(元）</p>
+						<p className={styles.moneyText}>50000</p>
+						<img
+							src={button_img}
+							alt=""
 							onClick={() => {
-								buriedPointEvent(other.testDownloadClick, {
-									position: '更多权益链接2'
-								});
 								this.downloadClickFun();
 							}}
-						>
-							更多权益<i></i>
-						</div>
+							className={styles.sureBtn}
+						/>
+						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
+						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
+						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
 					</div>
 				</div>
 			</div>
