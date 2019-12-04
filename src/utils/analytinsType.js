@@ -273,7 +273,10 @@ const daicao = {
 	downloadPageView: `${prefix}_DAICAO_DOWNLOAD_PAGEVIEW`, //代超下载页pageview
 	smsCodeBtnClick: `${prefix}_DAICAO_GET_SMSCODE_BTN`, // 贷超登录页获取验证码按钮
 	modalBtnClick: `${prefix}_DAICAO_MODAL_BTN`, // 贷超登录页弹框按钮
-	selectProtocol: `${prefix}_DAICAO_SELECT_PROTOCOL` // 贷超登录页勾选协议
+	selectProtocol: `${prefix}_DAICAO_SELECT_PROTOCOL`, // 贷超登录页勾选协议
+	mpos_push_loginBtn: `${prefix}_DAICAO_MPOS_PUSH_LOGIN_BTN`,
+	mpos_push_modalBtnClick: `${prefix}_DAICAO_MPOS_PUSH_LOGIN_MODALBTN_CLICK`,
+	mpos_push_modalshow: `${prefix}_DAICAO_MPOS_PUSH_LOGIN_MODAL_SHOW`
 };
 
 const loan_fenqi = {

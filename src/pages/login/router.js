@@ -44,5 +44,12 @@ export default [
 		title: '登录',
 		arrowHide: true,
 		component: () => import('pages/login/wx_login_page')
+	},
+	{
+		path: '/mpos_push_login',
+		zhName: 'mpushdl',
+		title: '登录',
+		arrowHide: true,
+		component: () => import('pages/login/mpos_push_login')
 	}
 ];
