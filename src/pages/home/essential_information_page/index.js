@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:10:53
+ * @LastEditTime: 2019-12-04 14:28:29
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -783,6 +783,7 @@ export default class essential_information_page extends PureComponent {
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<Modal
 					onClose={() => {
+						this.sxfMD('resident_cityOut');
 						this.handleSetModal(false);
 					}}
 					closable={true}
@@ -824,11 +825,12 @@ export default class essential_information_page extends PureComponent {
 								<div className={style.titleTop}>居住地址</div>
 								<div
 									className={style.listRow}
-									onClick={() =>
+									onClick={() => {
+										this.sxfMD('resident_city');
 										this.setState({
 											visible: true
-										})
-									}
+										});
+									}}
 								>
 									{ProvincesValue ? (
 										<span className={style.active}>{ProvincesValue}</span>
