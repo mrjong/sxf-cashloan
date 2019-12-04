@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:26:20
+ * @LastEditTime: 2019-12-04 14:41:45
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -12,6 +12,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import progressIcon from './img/crawl.png';
 import { domListen } from 'utils/domListen';
+import { activeConfigSts } from 'utils';
 const API = {
 	USER_IMPORT: '/auth/cardAuth'
 };
@@ -59,8 +60,11 @@ export default class crawl_progress_page extends PureComponent {
 
 	goMoxieBankList = () => {
 		store.setMoxieBackUrl('/home/home');
-		this.props.history.push('/others/mpos_testB_download_page');
 		buriedPointEvent(home.importOtherCreditCard);
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 	render() {
 		let { showPopover } = this.state;

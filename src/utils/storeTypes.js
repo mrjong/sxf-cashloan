@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 13:40:23
+ * @LastEditTime: 2019-12-04 14:58:15
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -101,5 +101,6 @@ export const storeTypes = {
 	JFBackUrl: 'JFBackUrl', // 跳转jf授权页 授权后返回的url
 	GotoCard: 'GotoCard', // 运营上成功之后 无法返回首页
 	TFDBack1: 'TFDBack1', // call通付盾成功
-	TFDBack2: 'TFDBack2' // 通付盾报备给后端成功
+	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
+	TestABTag: 'TestABTag' // 全局AB测试标志
 };

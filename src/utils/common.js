@@ -18,6 +18,10 @@ export const getH5Channel = () => {
 	return h5Channel;
 };
 
+export const getTestABTag = () => {
+	return store.getTestABTag() || 'other';
+};
+
 // 判断是对内mpos还是对外
 export const isMPOS = () => {
 	const ua = navigator.userAgent;

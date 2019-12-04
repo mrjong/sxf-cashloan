@@ -10,6 +10,8 @@ import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import { getH5Channel } from 'utils/common';
+import { buriedPointEvent } from 'utils/analytins';
+import { addinfo } from 'utils/analytinsType';
 
 import { getFirstError, getNextStr } from 'utils';
 import style from './index.scss';
@@ -55,6 +57,7 @@ export default class essential_information_page extends PureComponent {
 			.catch(() => {});
 	};
 	handleSubmit = () => {
+		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT);
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;
 		let timer = setTimeout(() => {

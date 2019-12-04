@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:27:18
+ * @LastEditTime: 2019-12-04 14:42:50
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -15,7 +15,7 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import arrow from './img/arrow.png';
-import { getMoxieData } from 'utils';
+import { getMoxieData, activeConfigSts } from 'utils';
 import FeedbackModal from 'components/FeedbackModal';
 const API = {
 	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
@@ -116,7 +116,10 @@ export default class credit_list_page extends PureComponent {
 			store.setToggleMoxieCard(true);
 		}
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		this.props.history.push('/others/mpos_testB_download_page');
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 
 	showFeedbackModal = () => {

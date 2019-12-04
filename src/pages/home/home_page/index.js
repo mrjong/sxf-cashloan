@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:26:42
+ * @LastEditTime: 2019-12-04 14:42:02
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -13,7 +13,8 @@ import {
 	isCanLoan,
 	getMoxieData,
 	dateDiffer,
-	queryUsrSCOpenId
+	queryUsrSCOpenId,
+	activeConfigSts
 } from 'utils';
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
@@ -696,7 +697,10 @@ export default class home_page extends PureComponent {
 	goToNewMoXie = () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		this.props.history.push('/others/mpos_testB_download_page');
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 	// 请求用户绑卡状态
 	requestBindCardState = () => {

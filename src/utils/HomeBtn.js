@@ -1,9 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:27:44
+ * @LastEditTime: 2019-12-04 14:43:24
  */
 import { store } from 'utils/store';
-import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
+import { getDeviceType, getNextStr, isCanLoan, getMoxieData, activeConfigSts } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import { TFDLogin } from 'utils/getTongFuDun';
@@ -246,7 +246,10 @@ class HomeBtn {
 	goToNewMoXie = async () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		this.props.history.push('/others/mpos_testB_download_page');
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 	// 智能按钮点击事件
 	handleSmartClick = () => {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-14 09:34:25
+ * @LastEditTime: 2019-12-04 15:20:10
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -257,6 +257,7 @@ const manualAudit = {
 };
 
 const other = {
+	mposDownloadPageAB: `${prefix}_MPOS_DOWNLOAD_PAGE_AB`, //页面埋点
 	mposDownloadPage: `${prefix}_MPOS_DOWNLOAD_PAGE`, //页面埋点
 	mposDownloadBtnClick: `${prefix}_MPOS_DOWNLOAD_BUTTON_CLICK`, //mpos下载页按钮点击事件
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK`, //外部下载页按钮点击事件
@@ -331,6 +332,9 @@ const helpCenter = {
 	quota: `${prefix}_QUOTA_CLICKQUESTION`,
 	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
 };
+const addinfo = {
+	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT` // 补充信息下一步
+};
 
 export {
 	login,
@@ -349,5 +353,6 @@ export {
 	manualAudit,
 	wxTest,
 	helpCenter,
-	wxTabBar
+	wxTabBar,
+	addinfo
 };

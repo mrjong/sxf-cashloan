@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-16 20:01:21
+ * @LastEditTime: 2019-12-04 15:15:45
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -26,6 +26,9 @@ export default class mpos_download_page extends PureComponent {
 
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage, {
+			position: 'testA_download'
+		});
+		buriedPointEvent(other.mposDownloadPageAB, {
 			position: 'testA_download'
 		});
 		queryUsrSCOpenId({

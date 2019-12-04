@@ -1,9 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:05:22
+ * @LastEditTime: 2019-12-04 15:17:15
  */
 import { store } from 'utils/store';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { setH5Channel, getH5Channel, getTestABTag } from 'utils/common';
 const { PROJECT_ENV } = process.env;
 const SxfData = window.globalConfig && window.globalConfig.MDopen ? require('../assets/lib/sxfData') : '';
 import linkConf from 'config/link.conf';
@@ -57,7 +57,8 @@ function getStaticParams() {
 		project_name: document.title,
 		forward_module: document.referrer,
 		page_category: document.title,
-		channelType: getH5Channel()
+		channelType: getH5Channel(),
+		testABTag: getTestABTag()
 	};
 }
 /*

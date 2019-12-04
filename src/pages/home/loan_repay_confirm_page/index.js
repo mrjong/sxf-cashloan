@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:26:59
+ * @LastEditTime: 2019-12-04 14:42:32
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -16,7 +16,6 @@ import {
 	handleInputBlur,
 	idChkPhoto,
 	isCanLoan,
-	getOperatorStatus,
 	getMoxieData,
 	activeConfigSts,
 	getBindCardStatus
@@ -258,7 +257,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 	goMoxieBankList = async () => {
 		store.setToggleMoxieCard(true);
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		this.props.history.push('/others/mpos_testB_download_page');
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count, type) => {
@@ -355,11 +357,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			this.props.toast.info(`申请金额${minApplAmt}~${maxApplAmt}元且为100整数倍`, 2, () => {
 				this.calcLoanMoney(repayMoney, 'tag3');
 			});
-			return;
-		}
-		let getOperatorData = await getOperatorStatus({ $props: this.props });
-		console.log(getOperatorData);
-		if (!getOperatorData) {
 			return;
 		}
 

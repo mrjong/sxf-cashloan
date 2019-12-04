@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 18:43:23
+ * @LastEditTime: 2019-12-04 15:16:38
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -25,6 +25,9 @@ export default class mpos_download_page extends PureComponent {
 	}
 	componentWillMount() {
 		buriedPointEvent(other.mposDownloadPage, {
+			position: 'testB_download'
+		});
+		buriedPointEvent(other.mposDownloadPageAB, {
 			position: 'testB_download'
 		});
 	}

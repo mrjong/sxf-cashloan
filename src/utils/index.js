@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:28:18
+ * @LastEditTime: 2019-12-04 15:52:51
  */
 /*eslint-disable */
 import React from 'react';
@@ -9,11 +9,9 @@ import { home } from 'utils/analytinsType';
 import { Modal, Toast } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
-import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
-import linkConf from 'config/link.conf';
 
 // 退出的api
 const API = {
@@ -63,68 +61,6 @@ export const isPhone = () => {
 		}
 	}
 	return flag;
-};
-/**
- * @description: 选择哪个三方运营商
- * @param {type}
- * @return:
- */
-export const switchOperatorService = ({ $props, jfCallBack, moxieCallBack, RouterType }) => {
-	$props.$fetch
-		.post(`${API.operatorAuth}`, {
-			backUrl: location.origin + '/common/middle_page?medium_type=web'
-		})
-		.then((result) => {
-			if (result && result.msgCode === 'PTM0000') {
-				jfCallBack && jfCallBack();
-				store.setJFBackUrl(RouterType);
-				store.setGotoMoxieFlag(true);
-				location.href = result.data && result.data.url;
-			} else {
-				$props.toast.info(result.msgInfo);
-			}
-		})
-		.catch(() => {});
-	// if (1) {
-	// 	jfCallBack && jfCallBack();
-	// 	window.location.href = 'http://172.18.30.201:8082/#/test_mx';
-	// } else if (2) {
-	// 	moxieCallBack && moxieCallBack();
-	// }
-};
-/**
- * @description: 选择哪个三方信用卡
- * @param {type}
- * @return:
- */
-export const switchCreditService = ({ $props, jfCallBack, moxieCallBack, type, RouterType = '' }) => {
-	$props.$fetch
-		.post(`${API.cardAuth}`, {
-			backUrl: location.origin + '/common/middle_page?medium_type=web'
-		})
-		.then((result) => {
-			if (result && result.msgCode === 'PTM0000') {
-				jfCallBack && jfCallBack();
-				store.setGotoMoxieFlag(true);
-				result.data && store.setAutId(result.data.autId);
-				store.setJFBackUrl(RouterType);
-				location.href = result.data && result.data.url;
-			} else {
-				$props.toast.info(result.msgInfo);
-			}
-		});
-
-	// if (1) {
-	// 	jfCallBack && jfCallBack();
-	// 	store.setAutId('0000000');
-	// 	window.location.href = 'http://172.18.30.201:8082/#/test_mx';
-	// }
-	// else if (2) {
-	// 	moxieCallBack && moxieCallBack();
-	// 	if (!type) {
-	// 		$props.history.push({ pathname: '/home/moxie_bank_list_page' });
-	// 	}
-	// }
 };
 
 export const pagesIgnore = (pathname = window.location.pathname) => {
@@ -317,7 +253,8 @@ const interceptRouteArr = [
 	'/order/wx_pay_success_page',
 	// '/protocol/pdf_page',
 	'/home/loan_fenqi',
-	'/common/crash_page'
+	'/common/crash_page',
+	'/others/mpos_testB_download_page'
 ];
 
 // 在需要路由拦截的页面 pushState
@@ -572,48 +509,6 @@ export const handleClickConfirm = async ($props, repaymentDate, goHome) => {
 			}, 2000);
 		});
 };
-const needDisplayOptions2 = ['operator'];
-export const getOperatorStatus = ({ $props }) => {
-	return new Promise(async (resolve) => {
-		let res = await $props.$fetch.post(API.GETSTSW);
-		if (res && res.msgCode === 'PTM0000') {
-			res.data.forEach((item) => {
-				if (needDisplayOptions2.includes(item.code)) {
-					// case '0': // 未认证
-					// case '1': // 认证中
-					// case '2': // 认证成功
-					// case '3': // 认证失败
-					// case '4': // 认证过期
-					switch (item.stsw.dicDetailCd) {
-						case '0':
-						case '3':
-						case '4':
-							resolve(false);
-							$props.toast.info('身份信息确认失败，请重新确认');
-							setTimeout(() => {
-								this.props.history.push('/others/mpos_testB_download_page');
-								return;
-							}, 2000);
-							break;
-						case '1':
-							resolve(false);
-							$props.toast.info('请耐心等待信息确认结果');
-							break;
-						case '2':
-							resolve(true);
-							break;
-
-						default:
-							break;
-					}
-				}
-			});
-		} else {
-			$props.toast.info(res.msgInfo);
-			resolve(false);
-		}
-	});
-};
 const needDisplayOptions = ['idCheck', 'basicInf', 'supple', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
@@ -624,16 +519,6 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let orderText = 0;
 	let btnArry = ['继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单'];
 	if (res && res.msgCode === 'PTM0000') {
-		// res.data.forEach((item) => {
-		// 	if (needDisplayOptions.includes(item.code)) {
-		// 		orderText = orderText + 1;
-		// 		if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
-		// 			btnText = btnArry[orderText - 2];
-		// 		}
-		// 		codes += item.stsw.dicDetailCd;
-		// 		codesArray.push(item.stsw.dicDetailCd);
-		// 	}
-		// });
 		for (let index = 0; index < needDisplayOptions.length; index++) {
 			res.data.forEach((item) => {
 				if (needDisplayOptions[index] === item.code) {
@@ -860,19 +745,6 @@ export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
 	return state;
 };
 
-//函数防抖
-export const debounce = (method, delay) => {
-	let timer = null;
-	return function() {
-		var context = this,
-			args = arguments;
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-			method.apply(context, args);
-		}, delay);
-	};
-};
-
 export const generateRandomPhone = () => {
 	const chars = ['3', '5', '7', '8'];
 	return `1${chars[Math.ceil(Math.random() * 3)]}${Math.ceil(Math.random() * 9)}****${Math.ceil(
@@ -936,7 +808,10 @@ export const dateDiffer = (sDate1, sDate2) => {
 	return iDays;
 };
 export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
-	this.props.history.push('/others/mpos_testB_download_page');
+	activeConfigSts({
+		$props,
+		type: 'B'
+	});
 	return;
 };
 
@@ -994,6 +869,7 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 						callback();
 						break;
 					case '01':
+						store.setTestABTag('A');
 						//下载页面
 						$props.history.replace('/others/mpos_testA_download_page');
 						break;
@@ -1001,6 +877,7 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 						if (type === 'A') {
 							callback();
 						}
+						store.setTestABTag('B');
 
 						break;
 

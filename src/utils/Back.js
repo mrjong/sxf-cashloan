@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-29 11:45:36
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-12-04 15:52:42
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -143,7 +143,7 @@ if (window.history && window.history.pushState) {
 				// store.removeIdChkPhotoBack();
 				return;
 			}
-			if (window.location.pathname === '/common/crash_page') {
+			if (window.location.pathname === '/others/mpos_testB_download_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
