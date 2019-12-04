@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-02 14:08:44
+ * @LastEditTime: 2019-12-04 10:55:14
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -79,54 +79,49 @@ export default class mpos_activity_download_page extends PureComponent {
 			);
 	};
 
-	prePressTime2 = 0;
 	// 点击下载按钮
 	goTo = () => {
-		const nowTime = Date.now();
-		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
-			this.prePressTime2 = nowTime;
-			const { queryData } = this.state;
-			buriedPointEvent(activity.anXinActivityListDownLoadClick, {
-				entry: queryData.comeFrom,
-				regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
-				pageNm: 'mpos活动落地页',
-				device_type: getDeviceType() === 'IOS' ? 'IOS' : 'ANDROID'
-			});
-			// mpos的banner
-			if (isMPOS() && queryData.comeFrom && queryData.comeFrom.indexOf('ismpos_') > -1) {
-				if (queryData.appId && queryData.token) {
-					this.getStatus();
-				} else {
-					this.setState({
-						showLoginTip: true
-					});
-				}
-			} else if (Cookie.get('fin-v-card-token')) {
-				// h5已登陆情况下以及mpos里还到的弹框
-				store.setToken(Cookie.get('fin-v-card-token'));
-				queryUsrSCOpenId({
-					$props: this.props
-				}).then(() => {
-					this.downloadApp();
-				});
+		const { queryData } = this.state;
+		buriedPointEvent(activity.anXinActivityListDownLoadClick, {
+			entry: queryData.comeFrom,
+			regChannel: queryData && queryData.regChannel ? queryData.regChannel : '',
+			pageNm: 'mpos活动落地页',
+			device_type: getDeviceType() === 'IOS' ? 'IOS' : 'ANDROID'
+		});
+		// mpos的banner
+		if (isMPOS() && queryData.comeFrom && queryData.comeFrom.indexOf('ismpos_') > -1) {
+			if (queryData.appId && queryData.token) {
+				this.getStatus();
 			} else {
-				if (queryData.fromApp) {
-					const activityInf = {
-						isWelfare: true,
-						isLogin: false
-					};
-					setTimeout(() => {
-						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
-					}, 0);
-				} else {
-					// 除了app以外的其他未登录的情况
-					this.props.history.replace({
-						pathname: '/login',
-						search:
-							'?wxTestFrom=/activity/mpos_activity_download_page&jumpUrl=' +
-							encodeURIComponent(`/activity/mpos_activity_download_page?${qs.stringify(queryData)}`)
-					});
-				}
+				this.setState({
+					showLoginTip: true
+				});
+			}
+		} else if (Cookie.get('fin-v-card-token')) {
+			// h5已登陆情况下以及mpos里还到的弹框
+			store.setToken(Cookie.get('fin-v-card-token'));
+			queryUsrSCOpenId({
+				$props: this.props
+			}).then(() => {
+				this.downloadApp();
+			});
+		} else {
+			if (queryData.fromApp) {
+				const activityInf = {
+					isWelfare: true,
+					isLogin: false
+				};
+				setTimeout(() => {
+					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+				}, 0);
+			} else {
+				// 除了app以外的其他未登录的情况
+				this.props.history.replace({
+					pathname: '/login',
+					search:
+						'?wxTestFrom=/activity/mpos_activity_download_page&jumpUrl=' +
+						encodeURIComponent(`/activity/mpos_activity_download_page?${qs.stringify(queryData)}`)
+				});
 			}
 		}
 	};
@@ -164,6 +159,12 @@ export default class mpos_activity_download_page extends PureComponent {
 
 	onRef = (ref) => {
 		this.child = ref;
+	};
+
+	closeTip = () => {
+		this.setState({
+			showLoginTip: false
+		});
 	};
 
 	render() {
