@@ -92,9 +92,11 @@ export default class yongfan_page extends PureComponent {
 					isWelfare: true,
 					isLogin: false
 				};
-				setTimeout(() => {
-					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
-				}, 0);
+				this.props.toast.info('请先登录', 2, () => {
+					setTimeout(() => {
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+					}, 0);
+				});
 			} else {
 				this.props.toast.info('请登录还到app进行操作');
 			}

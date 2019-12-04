@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 18:36:31
+ * @LastEditTime: 2019-12-04 10:47:05
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -89,11 +89,13 @@ export default class wx_activity_download_page extends PureComponent {
 					}, 0);
 				} else {
 					// 除了app以外的其他未登录的情况
-					this.props.history.replace({
-						pathname: '/login',
-						search:
-							'?wxTestFrom=/activity/wx_activity_download_page&jumpUrl=' +
-							encodeURIComponent(`/activity/wx_activity_download_page?${qs.stringify(queryData)}`)
+					this.props.toast.info('请先登录', 2, () => {
+						this.props.history.replace({
+							pathname: '/login',
+							search:
+								'?wxTestFrom=/activity/wx_activity_download_page&jumpUrl=' +
+								encodeURIComponent(`/activity/wx_activity_download_page?${qs.stringify(queryData)}`)
+						});
 					});
 				}
 			}

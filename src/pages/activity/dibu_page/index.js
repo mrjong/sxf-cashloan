@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 17:36:41
+ * @LastEditTime: 2019-12-04 10:46:03
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -91,9 +91,11 @@ export default class dibu_page extends PureComponent {
 					isWelfare: true,
 					isLogin: false
 				};
-				setTimeout(() => {
-					window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
-				}, 0);
+				this.props.toast.info('请先登录', 2, () => {
+					setTimeout(() => {
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
+					}, 0);
+				});
 			} else {
 				this.props.toast.info('请登录还到app进行操作');
 			}
