@@ -230,7 +230,11 @@ const activity = {
 	newUserActivityGetNow: `${prefix}_ACTIVITY_NEWUSERS_GET_NOW`, // 重启新手活动 点击立即领取
 	couponTestActivityEntry: `${prefix}_ACTIVITY_COUPONTEST_ENTRY`, // 还款券测试 进入入口
 	couponTestActivityUseNow: `${prefix}_ACTIVITY_COUPONTEST_USE_NOW`, // 还款券测试 点击已领取去使用
-	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN` // 还款券测试 首页弹窗-收入囊中
+	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN`, // 还款券测试 首页弹窗-收入囊中
+	rewardResultModalShow: `${prefix}_ACTIVITY_REWARD_RESULT_MODAL_SHOW`, //复贷活动15天弹窗
+	rewardResultModalClick: `${prefix}_ACTIVITY_REWARD_RESULT_MODAL_CLICK`,
+	rewardTipModalShow: `${prefix}_ACTIVITY_REWARD_TIP_MODAL_SHOW`, //复贷活动还款提示弹窗
+	rewardTipModalClose: `${prefix}_ACTIVITY_REWARD_TIP_MODAL_CLOSE`
 };
 
 const moxie_bank_list = {

@@ -64,7 +64,8 @@ const API = {
 	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
 	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
 	couponRedDot: '/index/couponRedDot', // 优惠券红点
-	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH' // 还款优惠劵测试弹框开关
+	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH', // 还款优惠劵测试弹框开关
+	queryRepayReward: '/activeConfig/queryRepayReward'
 };
 let token = '';
 let tokenFromStorage = '';
@@ -145,6 +146,10 @@ export default class home_page extends PureComponent {
 		// 从进度页面返回不删除AutId
 		if (!store.getAutId2()) {
 			store.removeAutId();
+		}
+
+		if (token && tokenFromStorage) {
+			this.queryRepayReward();
 		}
 
 		// 隔5秒调取相关变量
@@ -948,6 +953,11 @@ export default class home_page extends PureComponent {
 				store.setShowActivityModal(true);
 				break;
 
+			case 'reward_tip':
+				buriedPointEvent(activity.rewardTipModalClose);
+
+				break;
+
 			default:
 				break;
 		}
@@ -996,6 +1006,12 @@ export default class home_page extends PureComponent {
 					medium: 'H5'
 				});
 				this.props.history.push('/activity/coupon_test_page?comeFrom=mposHomeModal');
+				break;
+			case 'reward_result':
+				buriedPointEvent(activity.rewardResultModalClick, {
+					positon: 'homeModal'
+				});
+				this.props.history.push('/mine/coupon_page?entry=homeModal');
 				break;
 			default:
 				break;
@@ -1571,6 +1587,35 @@ export default class home_page extends PureComponent {
 		}
 	};
 
+	queryRepayReward = () => {
+		this.props.$fetch
+			.get(API.queryRepayReward, {
+				entrance: 0
+			})
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState(
+						{
+							modalType: res.data === 15 ? 'reward_result' : 'reward_tip',
+							rewardDate: res.data,
+							isShowActivityModal: true,
+							modalBtnFlag: res.data === 15
+						},
+						() => {
+							if (this.state.modalType === 'reward_result') {
+								buriedPointEvent(activity.rewardResultModalShow, {
+									positon: 'homeModal'
+								});
+							} else if (this.state.modalType === 'reward_tip')
+								buriedPointEvent(activity.rewardTipModalShow, {
+									positon: 'homeModal'
+								});
+						}
+					);
+				}
+			});
+	};
+
 	render() {
 		const {
 			bannerList,
@@ -1584,7 +1629,8 @@ export default class home_page extends PureComponent {
 			modalType,
 			modalBtnFlag,
 			blackData,
-			showFeedbackModal
+			showFeedbackModal,
+			rewardDate
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1631,6 +1677,7 @@ export default class home_page extends PureComponent {
 					handleOverDueClick={this.handleOverDueClick}
 					activityModalBtn={this.activityModalBtn}
 					closeActivityModal={this.closeActivityModal}
+					rewardDate={rewardDate}
 				/>
 			</div>
 		);

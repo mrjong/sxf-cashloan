@@ -28,7 +28,8 @@ export default class BlackCard extends React.PureComponent {
 			activityModalBtn,
 			closeActivityModal,
 			decreaseCoupExpiryDate,
-			toast
+			toast,
+			rewardDate
 		} = this.props;
 
 		let homeModal = null;
@@ -52,6 +53,7 @@ export default class BlackCard extends React.PureComponent {
 					history={history}
 					modalType={modalType}
 					modalBtnFlag={modalBtnFlag}
+					rewardDate={rewardDate}
 				/>
 			);
 		} else if (visibleLoading) {

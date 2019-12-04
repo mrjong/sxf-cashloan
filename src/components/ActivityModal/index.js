@@ -25,6 +25,9 @@ import not_use_bonus from './img/not_use_bonus.png';
 import not_use_bonus_btn from './img/not_use_bonus_btn.png';
 import pay_coupon_test from './img/pay_coupon_test.png';
 import pay_coupon_test_btn from './img/pay_coupon_test_btn.png';
+import reward_btn from './img/reward_btn.png';
+import reward_result from './img/reward_result.png';
+import reward_tip from './img/reward_tip.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -44,7 +47,7 @@ class ActivityModal extends React.Component {
 	goCoupon = () => {};
 	// 优先弹688  再弹出免息  再弹iphone
 	render() {
-		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag, history } = this.props;
+		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag, history, rewardDate } = this.props;
 		return (
 			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
 				<div className={[styles.modal, styles.transitionName].join(' ')}>
@@ -52,6 +55,18 @@ class ActivityModal extends React.Component {
 						<div className={styles.content}>
 							{/* 大图 */}
 							{modalType === 'xianjin' ? <img src={xianjin} /> : null}
+							{modalType === 'reward_tip' ? <img src={reward_tip} /> : null}
+							{modalType === 'reward_result' ? <img src={reward_result} /> : null}
+
+							{modalType === 'reward_tip' ? (
+								<span className={styles.reward_tip__text}>{rewardDate}天</span>
+							) : null}
+							{modalType === 'reward_result' ? (
+								<span className={styles.reward_result__text}>
+									已激活<span className={styles.reward_result__text_color}>15天</span>免息
+								</span>
+							) : null}
+
 							{modalType === 'jd618' ? <img src={jd618} /> : null}
 							{modalType === 'freebill' ? <img src={freebill} /> : null}
 							{modalType === 'yhq7' ? <img src={yhq7} /> : null}
@@ -158,6 +173,15 @@ class ActivityModal extends React.Component {
 									src={pay_coupon_test_btn}
 									onClick={() => {
 										activityModalBtn('payCouponTest');
+									}}
+								/>
+							) : null}
+							{modalType === 'reward_result' ? (
+								<img
+									className={styles.reward_btn}
+									src={reward_btn}
+									onClick={() => {
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}

@@ -8,7 +8,7 @@ import circle_icon from './img/circle_icon.png';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
-import { order } from 'utils/analytinsType';
+import { order, activity } from 'utils/analytinsType';
 
 const API = {
 	queryPayStatus: '/bill/payNotify',
@@ -79,9 +79,15 @@ export default class Cashier extends React.PureComponent {
 						this.setState({
 							reward_modal: true
 						});
+						buriedPointEvent(activity.rewardResultModalShow, {
+							positon: 'orderRepayResult'
+						});
 					} else {
 						this.setState({
 							tip_modal: true
+						});
+						buriedPointEvent(activity.rewardTipModalShow, {
+							positon: 'orderRepayResult'
 						});
 					}
 				} else if (isLastPerd) {
@@ -317,6 +323,9 @@ export default class Cashier extends React.PureComponent {
 							this.setState({
 								tip_modal: false
 							});
+							buriedPointEvent(activity.rewardTipModalClose, {
+								positon: 'orderRepayResult'
+							});
 						}}
 					/>
 					<div className={styles.modal_tip_content}>
@@ -334,6 +343,9 @@ export default class Cashier extends React.PureComponent {
 								this.props.history.replace({
 									pathname: '/mine/coupon_page',
 									search: '?entryFrom=orderRepayResult'
+								});
+								buriedPointEvent(activity.rewardResultModalClick, {
+									positon: 'orderRepayResult'
 								});
 							}}
 							className={styles.modal_btn}
