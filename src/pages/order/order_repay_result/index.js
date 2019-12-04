@@ -335,9 +335,6 @@ export default class Cashier extends React.PureComponent {
 
 				<Modal wrapClassName={styles.modal_tip} visible={reward_modal} transparent>
 					<div className={styles.modal_tip_content1}>
-						<p className={styles.title}>
-							已激活<span className={styles.date}>15天</span>免息
-						</p>
 						<div
 							onClick={() => {
 								this.props.history.replace({

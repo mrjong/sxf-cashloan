@@ -174,7 +174,7 @@
 		}
 	}
 	.modal_tip_content {
-		background-image: url('./img/modal_bg.png');
+		background-image: url('../../../components/ActivityModal/img/reward_tip.png');
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		margin-top: 50px;
@@ -188,34 +188,23 @@
       position: relative;
       top: 430px;
       left: 15px;
+      animation: fadeIn .8s linear;
     }
 	}
 	.modal_tip_content1 {
-		background-image: url('./img/modal_2_bg.png');
+		background-image: url('../../../components/ActivityModal/img/reward_result.png');
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 		margin-top: 50px;
 		width: 750px;
     height: 750px;
-    .title {
-      color: #854F35;
-      font-size: 34px;
-      font-weight: 500;
-      position: relative;
-      top: 280px;
-    }
-    .date {
-      font-size: 70px;
-      color: #E94F28;
-      font-weight: bold;
-    }
 		.modal_btn {
 			position: relative;
 			margin: 0 auto;
 			top: 300px;
 			width: 100%;
 			height: 350px;
-			background-image: url('./img/modal_btn.png');
+			background-image: url('../../../components/ActivityModal/img/reward_btn.png');
 			background-size: 100% 100%;
 		}
 	}
@@ -229,4 +218,15 @@
 		margin-left: -34px;
 		z-index: 1;
 	}
+}
+
+@keyframes fadeIn {
+	0% {
+    opacity: 0;
+    transform: scale(.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
