@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:28:29
+ * @LastEditTime: 2019-12-04 16:02:34
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -68,7 +68,7 @@ export default class essential_information_page extends PureComponent {
 			provLabel: [],
 			showAgreement: false, // 显示协议弹窗
 			millisecond: 0,
-			selectFlag: true,
+			selectFlag: false,
 			addressList: [],
 			relatValue2: [],
 			ProvincesValue: ''
