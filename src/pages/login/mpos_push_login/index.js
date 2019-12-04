@@ -24,6 +24,8 @@ import closeIco from '../login_common_page/img/close_ico.png';
 import { daicao } from '../../../utils/analytinsType';
 
 let timmer;
+let modalTimer = null;
+
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',
@@ -52,7 +54,8 @@ export default class login_page extends PureComponent {
 			showSlideModal: false,
 			slideImageUrl: '',
 			mobilePhone: '',
-			showDownloadModal: false
+			showDownloadModal: false,
+			times: 3
 		};
 	}
 
@@ -124,6 +127,7 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
+		this.clearCountDown();
 	}
 
 	// 校验手机号
@@ -147,7 +151,7 @@ export default class login_page extends PureComponent {
 					showDownloadModal: true
 				},
 				() => {
-					// this.startCountDown();
+					this.startCountDown();
 				}
 			);
 			return;
@@ -190,7 +194,7 @@ export default class login_page extends PureComponent {
 								},
 								() => {
 									buriedPointEvent(daicao.mpos_push_modalshow);
-									// this.startCountDown();
+									this.startCountDown();
 								}
 							);
 						});
@@ -405,6 +409,25 @@ export default class login_page extends PureComponent {
 		});
 	};
 
+	// 弹框里的倒计时
+	startCountDown = () => {
+		let times = this.state.times;
+		this.clearCountDown();
+		modalTimer = setInterval(() => {
+			this.setState({
+				times: times--
+			});
+			if (times <= -1) {
+				this.clearCountDown();
+				this.downloadApp();
+			}
+		}, 1000);
+	};
+
+	clearCountDown = () => {
+		clearInterval(modalTimer);
+	};
+
 	// 下载app
 	downloadApp = () => {
 		this.closeModal();
@@ -432,11 +455,11 @@ export default class login_page extends PureComponent {
 	closeModal = () => {
 		this.setState(
 			{
-				showDownloadModal: false
-				// times: 3
+				showDownloadModal: false,
+				times: 3
 			},
 			() => {
-				// this.clearCountDown();
+				this.clearCountDown();
 			}
 		);
 	};
