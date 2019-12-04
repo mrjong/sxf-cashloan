@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2019-12-03 20:30:40
+ */
 /* eslint-disable */
 import { store } from 'utils/store';
 import { getLocation } from 'utils/publicApi';
@@ -74,6 +78,7 @@ export function getAddress() {
 				const addressData = address.split(',').map((item) => window.parseFloat(item, 10));
 				geocoder.getAddress(addressData, function(status, result) {
 					if (status === 'complete' && result.info === 'OK') {
+						console.log(result.regeocode.addressComponent, '--------');
 						resolve(result.regeocode.addressComponent);
 					} else {
 						reject();

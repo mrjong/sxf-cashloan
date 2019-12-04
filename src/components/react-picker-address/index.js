@@ -32,9 +32,7 @@ export default class AddressSelect extends Component {
 				value: '请选择'
 			}
 		],
-		commitFun(value) {
-			console.log(value);
-		},
+		commitFun() {},
 		dissmissFun() {}
 	};
 
@@ -219,7 +217,6 @@ export default class AddressSelect extends Component {
 			});
 			return null;
 		}
-		console.log(selectAddressNew);
 		this.setState({ selectAddress: selectAddressNew });
 
 		setTimeout(() => {

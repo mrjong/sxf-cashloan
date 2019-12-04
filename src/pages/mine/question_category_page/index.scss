@@ -1,6 +1,6 @@
 @import '../../../assets/styles/scss/base/fn';
 .category_page {
-  background-color: #fff;
+	background-color: #fff;
 }
 .heightBody {
 	height: calc(100vh - 1.88rem);
@@ -17,10 +17,10 @@
 			&::before,
 			&::after {
 				background-color: transparent !important;
-      }
-      .list-view-section-body {
-        background-color: #fff;
-      }
+			}
+			.list-view-section-body {
+				background-color: #fff;
+			}
 		}
 		.am-pull-to-refresh-content-wrapper {
 			overflow: visible;
@@ -43,20 +43,25 @@
 }
 .item_wrap {
 	display: flex;
-  align-items: center;
-  justify-content: space-between;
+	align-items: center;
+	justify-content: space-between;
 	position: relative;
 	height: 110px;
 	background-color: #fff;
-	border-bottom: 1px solid #f0f1f5;
+	// border-bottom: 1px solid #f0f1f5;
 	margin: 0 60px;
-	&:after {
-		visibility: hidden;
-		display: block;
-		content: '.';
-		clear: both;
-		height: 0;
+	&::after {
+		@include setBottomLine(#f0f1f5);
+		left: 0px;
+		right: 0px;
 	}
+	// &:after {
+	// 	visibility: hidden;
+	// 	display: block;
+	// 	content: '.';
+	// 	clear: both;
+	// 	height: 0;
+	// }
 }
 
 .question_title {

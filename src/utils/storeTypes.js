@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-21 14:43:26
+ * @LastEditTime: 2019-12-04 13:40:23
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -44,7 +44,11 @@ export const storeTypes = {
 	Address: 'Address', // 常住地址
 	Linkman: 'Linkman', // 联系人姓名
 	Linkphone: 'Linkphone', // 联系人电话
-	RelationValue: 'RelationValue', // 亲属关系
+	Linkman2: 'Linkman2', // 联系人2姓名
+	Linkphone2: 'Linkphone2', // 联系人2电话
+	ProvCity: 'provCity', //省份城市信息
+	RelationValue: 'RelationValue', // 联系人1关系
+	RelationValue2: 'RelationValue2', // 联系人2关系
 	Province: 'Province', // 省份
 	City: 'City', // 城市
 	ShowActivityModal: 'ShowActivityModal', // 是否显示活动弹窗

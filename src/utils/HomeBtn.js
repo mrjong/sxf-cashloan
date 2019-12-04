@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 16:49:25
+ * @LastEditTime: 2019-12-04 11:27:44
  */
 import { store } from 'utils/store';
 import { getDeviceType, getNextStr, isCanLoan, getMoxieData } from 'utils';
@@ -246,9 +246,7 @@ class HomeBtn {
 	goToNewMoXie = async () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		let mxQuery = location.pathname.split('/');
-		let RouterType = (mxQuery && mxQuery[2]) || '';
-		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		this.props.history.push('/others/mpos_testB_download_page');
 	};
 	// 智能按钮点击事件
 	handleSmartClick = () => {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 16:48:20
+ * @LastEditTime: 2019-12-04 11:26:20
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -59,9 +59,7 @@ export default class crawl_progress_page extends PureComponent {
 
 	goMoxieBankList = () => {
 		store.setMoxieBackUrl('/home/home');
-		let mxQuery = location.pathname.split('/');
-		let RouterType = (mxQuery && mxQuery[2]) || '';
-		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		this.props.history.push('/others/mpos_testB_download_page');
 		buriedPointEvent(home.importOtherCreditCard);
 	};
 	render() {

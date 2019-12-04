@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 16:37:14
+ * @LastEditTime: 2019-12-04 14:10:53
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -27,7 +27,7 @@ import AddressSelect from 'components/react-picker-address';
 
 let timedown = null;
 const pageKey = home.basicInfoBury;
-let btn_dis = false;
+let submitButtonLocked = false;
 const API = {
 	getProv: '/rcm/qryProv',
 	getRelat: '/rcm/qryRelat',
@@ -36,7 +36,8 @@ const API = {
 	queryUsrBasicInfo: '/auth/queryUsrBasicInfo',
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	contractInfo: '/bill/personalDataAuthInfo' // 个人信息授权书数据查询
+	contractInfo: '/bill/personalDataAuthInfo', // 个人信息授权书数据查询
+	rcm_qryArea: '/rcm/qryArea' // 获取地理位置
 };
 
 const reducedFilter = (data, keys, fn) =>
@@ -60,7 +61,6 @@ export default class essential_information_page extends PureComponent {
 		this.state = {
 			count: 0,
 			status: 'stopped',
-			loading: false,
 			relatData: [], // 亲属联系人数据
 			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
@@ -69,7 +69,9 @@ export default class essential_information_page extends PureComponent {
 			showAgreement: false, // 显示协议弹窗
 			millisecond: 0,
 			selectFlag: true,
-			addressList: []
+			addressList: [],
+			relatValue2: [],
+			ProvincesValue: ''
 		};
 	}
 
@@ -163,40 +165,98 @@ export default class essential_information_page extends PureComponent {
 			}, 100);
 		}, 0);
 	};
-	getErrorInput = () => {
-		this.props.form.validateFields((err) => {
-			if (!err) {
-				btn_dis = true;
-			} else {
-				btn_dis = false;
-			}
+
+	buttonDisabled = () => {
+		const formData = this.props.form.getFieldsValue();
+		const { ProvincesValue } = this.state;
+		const { address, linkman, linkman2, linkphone, linkphone2, cntRelTyp1, cntRelTyp2 } = formData;
+		if (
+			ProvincesValue &&
+			address &&
+			cntRelTyp2 &&
+			linkman &&
+			linkphone2 &&
+			cntRelTyp1 &&
+			linkman2 &&
+			linkphone
+		) {
+			return true;
+		}
+		return false;
+	};
+	// 回显地址
+	commonFunc = (res, { province, city, district, township }) => {
+		console.log(province, city, district, township);
+		const provCity = store.getProvCity() || [];
+		if (res && res.data && res.data.provCd && res.data.cityCd && res.data.districtCd && res.data.streetCd) {
+			this.getProCode(res.data.provCd, res.data.cityCd, res.data.districtCd, res.data.streetCd);
+		} else if (res && res.data && res.data.provCd && res.data.cityCd && res.data.districtCd) {
+			this.getProCode(res.data.provCd, res.data.cityCd, res.data.districtCd);
+		} else if (res && res.data && res.data.provCd && res.data.cityCd) {
+			this.getProCode(res.data.provCd, res.data.cityCd);
+		} else if (
+			provCity &&
+			provCity[0] &&
+			provCity[0].key &&
+			provCity[1] &&
+			provCity[1].key &&
+			provCity[2] &&
+			provCity[2].key &&
+			provCity[3] &&
+			provCity[3].key
+		) {
+			this.getProCode(provCity[0].key, provCity[1].key, provCity[2].key, provCity[3].key);
+		} else if (
+			provCity &&
+			provCity[0] &&
+			provCity[0].key &&
+			provCity[1] &&
+			provCity[1].key &&
+			provCity[2] &&
+			provCity[2].key
+		) {
+			this.getProCode(provCity[0].key, provCity[1].key, provCity[2].key);
+		} else if (provCity && provCity[0] && provCity[0].key && provCity[1] && provCity[1].key) {
+			this.getProCode(provCity[0].key, provCity[1].key);
+		} else if (province && city && district) {
+			this.getProName(province, city, district);
+		} else if (province && city && district && township) {
+			this.getProName(province, city, district, township);
+		} else if (province && city) {
+			this.getProName(province, city);
+		} else {
+			console.log('没有获取到省市区');
+		}
+		this.props.form.setFieldsValue({
+			address: (res && res.data && res.data.usrDtlAddr) || store.getAddress() || '',
+			linkman: (res && res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
+			linkphone: store.getLinkphone() || '',
+			linkman2: (res && res.data && res.data.cntUsrNm2) || store.getLinkman2() || '',
+			linkphone2: store.getLinkphone2() || ''
+		});
+		this.setState({
+			relatValue:
+				res && res.data && res.data.cntRelTyp1
+					? [`${res.data.cntRelTyp1}`]
+					: store.getRelationValue()
+					? store.getRelationValue()
+					: [],
+			relatValue2:
+				res && res.data && res.data.cntRelTyp2
+					? [`${res.data.cntRelTyp2}`]
+					: store.getRelationValue2()
+					? store.getRelationValue2()
+					: []
 		});
 	};
 
 	//获取基本信息
-	queryUsrBasicInfo = (province, city) => {
+	queryUsrBasicInfo = (province, city, district, township) => {
 		this.props.$fetch.post(API.queryUsrBasicInfo).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				this.getProCode(
-					res.data.provNm || store.getProvince() || province || '',
-					res.data.cityNm || store.getCity() || city || ''
-				);
-				this.props.form.setFieldsValue({
-					address: (res.data && res.data.usrDtlAddr) || store.getAddress() || '',
-					linkman: (res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-					linkphone: store.getLinkphone() || ''
-				});
-				this.setState({
-					relatValue:
-						res.data && res.data.cntRelTyp1
-							? [`${res.data.cntRelTyp1}`]
-							: store.getRelationValue()
-							? store.getRelationValue()
-							: []
-				});
+			if (res.msgCode === 'PTM0000' && res && res.data) {
+				this.commonFunc(res, { province, city, district, township });
 			} else {
-				this.getErrorInput();
-				this.props.toast.info(res.msgInfo);
+				this.commonFunc(null, { province, city, district, township });
 			}
 		});
 	};
@@ -206,120 +266,356 @@ export default class essential_information_page extends PureComponent {
 		//通过经纬度获取省市
 		getAddress()
 			.then((res) => {
-				const { province, city } = res;
-				this.queryUsrBasicInfo(province, city || province);
+				const { province, city, district, township } = res;
+				this.queryUsrBasicInfo(province, city || province, district, township);
 			})
 			.catch(() => {
 				this.queryUsrBasicInfo();
 				console.log('经纬度获取省市报错了');
 			});
 	};
-
-	// 获取城市标签反显
-	getProCode = (pro, city) => {
+	// 获取城市标签反显(中文匹配),用于gps定位返回中文处理
+	getProName = async (pro, city, area, township) => {
 		let proPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${pro}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 		let cityPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${city}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-		this.props.$fetch.get(`${API.getProv}`).then((result) => {
-			if (result && result.data) {
-				const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
-					let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-					if (proPattern.test(item.value) || proPattern2.test(pro)) {
-						return item;
+		let areaPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${area}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+		let townshipPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${township}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+		let result = await this.props.$fetch.get(`${API.rcm_qryArea}/0`);
+
+		if (result && result.data) {
+			let cityItem = [];
+			let areaItem = [];
+			let townshipItem = [];
+			const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
+				let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+				if (proPattern.test(item.value) || proPattern2.test(pro)) {
+					return item;
+				}
+			});
+			if (provItem && provItem.length > 0) {
+				let result2 = await this.props.$fetch.get(`${API.rcm_qryArea}/${provItem && provItem[0].key}`);
+				cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
+					let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+					if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
+						return item2;
 					}
 				});
-				this.props.$fetch.get(`${API.qryCity}/${provItem[0].key}`).then((result2) => {
-					const cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
-						let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-						if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
-							return item2;
-						}
-					});
-					this.setState({
-						provValue: provItem && cityItem && [provItem[0].key + '', cityItem[0].key + ''],
-						provLabel: provItem && cityItem && [provItem[0].value + '', cityItem[0].value + '']
-					});
-					this.getErrorInput();
-					console.log(this.state.provValue, this.state.provLabel);
+			}
+
+			if (cityItem && cityItem.length > 0) {
+				let result3 = await this.props.$fetch.get(`${API.rcm_qryArea}/${cityItem && cityItem[0].key}`);
+				areaItem = reducedFilter(result3.data, ['key', 'value'], (item3) => {
+					let areaPattern3 = new RegExp(`^[\\u4E00-\\u9FA5]*${item3.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+					if (areaPattern.test(item3.value) || areaPattern3.test(area)) {
+						return item3;
+					}
 				});
 			}
-		});
+
+			if (areaItem && areaItem.length > 0) {
+				let result4 = await this.props.$fetch.get(`${API.rcm_qryArea}/${areaItem && areaItem[0].key}`);
+				townshipItem = reducedFilter(result4.data, ['key', 'value'], (item4) => {
+					let townshipPattern4 = new RegExp(`^[\\u4E00-\\u9FA5]*${item4.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+					if (townshipPattern.test(item4.value) || townshipPattern4.test(area)) {
+						return item4;
+					}
+				});
+			}
+			let addressList = [];
+			/**
+			 * @description: 省、市、区
+			 * @param {type}
+			 * @return: 省不存在，其他也没法回显，同上得出
+			 */
+			if (
+				provItem &&
+				provItem.length > 0 &&
+				cityItem &&
+				cityItem.length > 0 &&
+				areaItem &&
+				areaItem.length > 0 &&
+				townshipItem &&
+				townshipItem.length > 0
+			) {
+				addressList = [provItem[0], cityItem[0], areaItem[0], townshipItem[0]];
+			} else if (
+				provItem &&
+				provItem.length > 0 &&
+				cityItem &&
+				cityItem.length > 0 &&
+				areaItem &&
+				areaItem.length > 0
+			) {
+				addressList = [provItem[0], cityItem[0], areaItem[0]];
+			} else if (provItem && provItem.length > 0 && cityItem && cityItem.length > 0) {
+				addressList = [provItem[0], cityItem[0]];
+			} else if (provItem && provItem.length > 0) {
+				addressList = [provItem[0]];
+			} else {
+				this.setState({
+					ProvincesValue: ''
+				});
+			}
+			this.setState({
+				addressList
+			});
+		}
+	};
+
+	// 获取城市标签反显(code匹配)
+	getProCode = async (pro, city, area, street) => {
+		let result = await this.props.$fetch.get(`${API.rcm_qryArea}/0`);
+
+		if (result && result.data) {
+			let cityItem = [];
+			let areaItem = [];
+			let streetItem = [];
+
+			const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
+				if (item.key === pro) {
+					return item;
+				}
+			});
+			if (provItem && provItem.length > 0) {
+				let result2 = await this.props.$fetch.get(`${API.rcm_qryArea}/${provItem && provItem[0].key}`);
+				cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
+					if (item2.key === city) {
+						return item2;
+					}
+				});
+			}
+
+			if (cityItem && cityItem.length > 0) {
+				let result3 = await this.props.$fetch.get(`${API.rcm_qryArea}/${cityItem && cityItem[0].key}`);
+				areaItem = reducedFilter(result3.data, ['key', 'value'], (item3) => {
+					if (item3.key === area) {
+						return item3;
+					}
+				});
+			}
+			if (areaItem && areaItem.length > 0) {
+				let result3 = await this.props.$fetch.get(`${API.rcm_qryArea}/${areaItem && areaItem[0].key}`);
+				streetItem = reducedFilter(result3.data, ['key', 'value'], (item4) => {
+					if (item4.key === street) {
+						return item4;
+					}
+				});
+			}
+
+			let addressList = [];
+			/**
+			 * @description: 省、市、区
+			 * @param {type}
+			 * @return: 省不存在，其他也没法回显，同上得出
+			 */
+			if (
+				provItem &&
+				provItem.length > 0 &&
+				cityItem &&
+				cityItem.length > 0 &&
+				areaItem &&
+				areaItem.length > 0 &&
+				streetItem &&
+				streetItem.length > 0
+			) {
+				addressList = [provItem[0], cityItem[0], areaItem[0], streetItem[0]];
+				let areaStr = '';
+				addressList.forEach((element) => {
+					areaStr += element.value + ',';
+				});
+				areaStr = areaStr.substring(0, areaStr.length - 1);
+				this.setState({
+					ProvincesValue: areaStr
+				});
+			} else if (
+				provItem &&
+				provItem.length > 0 &&
+				cityItem &&
+				cityItem.length > 0 &&
+				areaItem &&
+				areaItem.length > 0
+			) {
+				addressList = [provItem[0], cityItem[0], areaItem[0]];
+				let areaStr = '';
+				addressList.forEach((element) => {
+					areaStr += element.value + ',';
+				});
+				areaStr = areaStr.substring(0, areaStr.length - 1);
+				this.setState({
+					ProvincesValue: areaStr
+				});
+			} else if (provItem && provItem.length > 0 && cityItem && cityItem.length > 0) {
+				addressList = [provItem[0], cityItem[0]];
+				let areaStr = '';
+				addressList.forEach((element) => {
+					areaStr += element.value + ',';
+				});
+				areaStr = areaStr.substring(0, areaStr.length - 1);
+
+				this.setState({
+					ProvincesValue: areaStr
+				});
+			} else if (provItem && provItem.length > 0) {
+				addressList = [provItem[0]];
+				let areaStr = '';
+				addressList.forEach((element) => {
+					areaStr += element.value + ',';
+				});
+				areaStr = areaStr.substring(0, areaStr.length - 1);
+				this.setState({
+					ProvincesValue: areaStr
+				});
+			} else {
+				this.setState({
+					ProvincesValue: ''
+				});
+			}
+			this.setState({
+				addressList
+			});
+		}
 	};
 
 	handleSubmit = () => {
-		// if (isFetching) {
-		// 	return;
-		// }
-		const { loading, selectFlag } = this.state;
-		if (loading) return; // 防止重复提交
-		const city = this.state.provLabel[0];
-		const prov = this.state.provLabel[1];
+		const { ProvincesValue, addressList, selectFlag } = this.state;
 		if (!selectFlag) {
 			this.props.toast.info('请先勾选个人信息授权书');
+			return;
+		}
+		if (submitButtonLocked) return;
+		submitButtonLocked = true;
+		let timer = setTimeout(() => {
+			submitButtonLocked = false;
+			clearTimeout(timer);
+		}, 3000);
+		let cityNm = '';
+		let provNm = '';
+		let districtNm = '';
+		let streetNm = '';
+		if (ProvincesValue && ProvincesValue.length > 0) {
+			let ProvincesList = ProvincesValue.split(',');
+			if (ProvincesList[0]) {
+				provNm = ProvincesList[0];
+			}
+			if (ProvincesList[1]) {
+				cityNm = ProvincesList[1];
+			}
+			if (ProvincesList[2]) {
+				districtNm = ProvincesList[2];
+			}
+			if (ProvincesList[3]) {
+				streetNm = ProvincesList[3];
+			}
+		}
+
+		let provCd = '';
+		let cityCd = '';
+		let districtCd = '';
+		let streetCd = '';
+		if (addressList && addressList.length > 0) {
+			if (addressList[0]) {
+				provCd = addressList[0].key;
+			}
+			if (addressList[1]) {
+				cityCd = addressList[1].key;
+			}
+			if (addressList[2]) {
+				districtCd = addressList[2].key;
+			}
+
+			if (addressList[3]) {
+				streetCd = addressList[3].key;
+			}
+		}
+		if (!(streetNm && streetCd)) {
+			submitButtonLocked = false;
+			this.props.toast.info('请选择完整的居住地址');
 			return;
 		}
 		// 调基本信息接口
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				const data = `${city}${prov}${values.address}`;
-				getLngLat(data).then((lngLat) => {
-					const params = {
-						provNm: this.state.provLabel[0],
-						cityNm: this.state.provLabel[1],
-						usrDtlAddr: values.address,
-						usrDtlAddrLctn: lngLat,
-						cntRelTyp1: values.cntRelTyp1[0],
-						cntUsrNm1: values.linkman,
-						cntMblNo1: values.linkphone,
-						credCorpOrg: ''
-					};
-					if (values.linkphone === values.relativesPhone) {
-						this.props.toast.info('联系人手机号重复，请重新填写');
-						// isFetching = false;
-					} else {
+				const data = `${provNm}${cityNm}${districtNm}${values.address}`;
+				getLngLat(data)
+					.then((lngLat) => {
+						submitButtonLocked = false;
+						const params = {
+							provNm,
+							cityNm,
+							districtNm,
+							streetNm,
+							provCd,
+							cityCd,
+							districtCd,
+							streetCd,
+							usrDtlAddr: values.address,
+							usrDtlAddrLctn: lngLat,
+							cntRelTyp1: values.cntRelTyp1[0],
+							cntUsrNm1: values.linkman,
+							cntMblNo1: values.linkphone,
+							cntUsrNm2: values.linkman2,
+							cntMblNo2: values.linkphone2,
+							credCorpOrg: ''
+						};
+						if (values.linkphone === values.linkphone2) {
+							this.props.toast.info('联系人手机号重复，请重新填写');
+							// isFetching = false;
+							submitButtonLocked = false;
+							return;
+						}
+
 						// isFetching = true;
 						// values中存放的是经过 getFieldDecorator 包装的表单元素的值
-						this.props.$fetch.post(`${API.submitData}`, params).then((result) => {
-							if (result && result.msgCode === 'PTM0000') {
-								store.setBackFlag(true);
-								// 埋点-基本信息页-确定按钮
-								this.confirmBuryPoint(true);
-								buriedPointEvent(mine.creditExtensionBack, {
-									current_step: '基本信息认证'
-								});
-								if (store.getNeedNextUrl()) {
-									this.props.toast.info('提交成功', 2);
-									setTimeout(() => {
-										getNextStr({
-											$props: this.props
-										});
-									}, 2000);
-									store.setMoxieBackUrl('/home/home');
+						this.props.$fetch
+							.post(`${API.submitData}`, params)
+							.then((result) => {
+								submitButtonLocked = false;
+								if (result && result.msgCode === 'PTM0000') {
+									store.setBackFlag(true);
+									// 埋点-基本信息页-确定按钮
+									this.confirmBuryPoint(true);
+									buriedPointEvent(mine.creditExtensionBack, {
+										current_step: '基本信息认证'
+									});
+									if (store.getNeedNextUrl()) {
+										this.props.toast.info('提交成功', 2);
+										setTimeout(() => {
+											getNextStr({
+												$props: this.props
+											});
+										}, 2000);
+										store.setMoxieBackUrl('/home/home');
+									} else {
+										// this.props.history.replace({
+										// 	pathname: '/mine/credit_extension_page',
+										// 	search: urlQuery
+										// });
+									}
+								} else if (result.msgCode === 'PCC-PRC-9994') {
+									if (store.getNeedNextUrl()) {
+										this.props.toast.info('提交成功', 2);
+										setTimeout(() => {
+											getNextStr({
+												$props: this.props
+											});
+										}, 2000);
+										store.setMoxieBackUrl('/home/home');
+									}
 								} else {
-									// this.props.history.replace({
-									// 	pathname: '/mine/credit_extension_page',
-									// 	search: urlQuery
-									// });
+									this.confirmBuryPoint(false, result.msgInfo);
+									// isFetching = false;
+									this.props.toast.info(result.msgInfo);
 								}
-							} else if (result.msgCode === 'PCC-PRC-9994') {
-								if (store.getNeedNextUrl()) {
-									this.props.toast.info('提交成功', 2);
-									setTimeout(() => {
-										getNextStr({
-											$props: this.props
-										});
-									}, 2000);
-									store.setMoxieBackUrl('/home/home');
-								}
-							} else {
-								this.confirmBuryPoint(false, result.msgInfo);
-								// isFetching = false;
-								this.props.toast.info(result.msgInfo);
-							}
-						});
-					}
-				});
+							})
+							.catch(() => {
+								submitButtonLocked = false;
+							});
+					})
+					.catch(() => {
+						submitButtonLocked = false;
+					});
 			} else {
-				// isFetching = false;
+				submitButtonLocked = false;
 				this.props.toast.info(getFirstError(err));
 			}
 		});
@@ -381,7 +677,6 @@ export default class essential_information_page extends PureComponent {
 			value: val,
 			label: lab
 		});
-		this.getErrorInput();
 	}
 
 	selectClick(obj) {
@@ -457,15 +752,12 @@ export default class essential_information_page extends PureComponent {
 	};
 
 	onSelectArea = (area) => {
-		console.log(area, 'area');
 		let areaStr = '';
 		area.forEach((element) => {
 			areaStr += element.value + ',';
 		});
-		console.log(areaStr, 'areaStr');
 		areaStr = areaStr.substring(0, areaStr.length - 1);
-		console.log(areaStr, 'areaStr');
-		// store.setProvCity(area);
+		store.setProvCity(area);
 		this.selectClick({
 			value: areaStr,
 			label: 'resident_city'
@@ -485,7 +777,7 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement, selectFlag, addressList, visible } = this.state;
+		const { showAgreement, selectFlag, addressList, visible, ProvincesValue } = this.state;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
@@ -538,7 +830,11 @@ export default class essential_information_page extends PureComponent {
 										})
 									}
 								>
-									{addressList ? <span className={style.active}>111</span> : '请选择您的现居住城市'}
+									{ProvincesValue ? (
+										<span className={style.active}>{ProvincesValue}</span>
+									) : (
+										'请选择您的现居住城市'
+									)}
 									<img className={style.informationMoreNew} src={informationMore} />
 								</div>
 								{getFieldDecorator('address', {
@@ -555,6 +851,7 @@ export default class essential_information_page extends PureComponent {
 									}
 								})(
 									<InputItem
+										clear
 										data-sxf-props={JSON.stringify({
 											type: 'input',
 											name: 'resident_address',
@@ -579,7 +876,6 @@ export default class essential_information_page extends PureComponent {
 										onBlur={(v) => {
 											this.inputOnBlur(v, 'resident_address');
 										}}
-										clear
 										onFocus={(v) => {
 											this.inputOnFocus(v, 'resident_address');
 										}}
@@ -645,6 +941,7 @@ export default class essential_information_page extends PureComponent {
 									}
 								})(
 									<InputItem
+										clear
 										data-sxf-props={JSON.stringify({
 											type: 'input',
 											notSendValue: true, // 无需上报输入框的值
@@ -664,7 +961,6 @@ export default class essential_information_page extends PureComponent {
 												}
 											]
 										})}
-										crear
 										placeholder="联系人姓名"
 										type="text"
 										onBlur={(v) => {
@@ -705,10 +1001,10 @@ export default class essential_information_page extends PureComponent {
 								<div className={style.titleTop}>紧急联系人2</div>
 								<div className={style.labelDiv}>
 									{getFieldDecorator('cntRelTyp2', {
-										initialValue: this.state.relatValue,
+										initialValue: this.state.relatValue2,
 										rules: [{ required: true, message: '请选择联系人关系' }],
 										onChange: (value) => {
-											store.setRelationValue(value);
+											store.setRelationValue2(value);
 											this.selectSure({
 												value: JSON.stringify(value),
 												label: 'clan_relation'
@@ -733,7 +1029,7 @@ export default class essential_information_page extends PureComponent {
 												if (bool) {
 													this.sxfMD('cntRelTyp2');
 													this.selectClick({
-														value: JSON.stringify(this.state.relatValue),
+														value: JSON.stringify(this.state.relatValue2),
 														label: 'clan_relation'
 													});
 												} else {
@@ -746,23 +1042,23 @@ export default class essential_information_page extends PureComponent {
 									)}
 									<img className={style.informationMore} src={informationMore} />
 								</div>
-								{getFieldDecorator('linkman', {
+								{getFieldDecorator('linkman2', {
 									rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
 									onChange: (value) => {
 										if (!value) {
-											sxfburiedPointEvent('contact_name_one', {
+											sxfburiedPointEvent('contact_name_two', {
 												actId: 'delAll'
 											});
 										}
-										store.setLinkman(value);
-										this.setState({ linkman: value });
+										store.setLinkman2(value);
+										this.setState({ linkman2: value });
 									}
 								})(
 									<InputItem
 										data-sxf-props={JSON.stringify({
 											type: 'input',
 											notSendValue: true, // 无需上报输入框的值
-											name: 'contact_name_one',
+											name: 'contact_name_two',
 											eventList: [
 												{
 													type: 'focus'
@@ -778,25 +1074,25 @@ export default class essential_information_page extends PureComponent {
 												}
 											]
 										})}
-										crear
+										clear
 										placeholder="联系人姓名"
 										type="text"
 										onBlur={(v) => {
-											this.inputOnBlur(v, 'contact_name_one');
+											this.inputOnBlur(v, 'contact_name_two');
 										}}
 										onFocus={(v) => {
-											this.inputOnFocus(v, 'contact_name_one');
+											this.inputOnFocus(v, 'contact_name_two');
 										}}
 									></InputItem>
 								)}
-								{getFieldDecorator('linkphone', {
+								{getFieldDecorator('linkphone2', {
 									rules: [
 										{ required: true, message: '请输入联系人手机号' },
 										{ validator: this.validatePhone }
 									],
 									onChange: (value) => {
-										store.setLinkphone(value);
-										this.setState({ linkphone: value });
+										store.setLinkphone2(value);
+										this.setState({ linkphone2: value });
 									}
 								})(
 									<InputItem
@@ -806,10 +1102,10 @@ export default class essential_information_page extends PureComponent {
 										maxLength="11"
 										placeholder="联系人电话"
 										onBlur={(v) => {
-											this.inputOnBlur(v, 'contact_tel_one');
+											this.inputOnBlur(v, 'contact_tel_two');
 										}}
 										onFocus={(v) => {
-											this.inputOnFocus(v, 'contact_tel_one');
+											this.inputOnFocus(v, 'contact_tel_two');
 										}}
 									></InputItem>
 								)}
@@ -835,7 +1131,7 @@ export default class essential_information_page extends PureComponent {
 					<div className={style.operatorCont}>
 						<ButtonCustom
 							onClick={this.handleSubmit}
-							className={[style.nextBtn, !btn_dis || !selectFlag ? style.dis : ''].join(' ')}
+							className={[style.nextBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}
 						>
 							下一步
 						</ButtonCustom>
@@ -847,7 +1143,7 @@ export default class essential_information_page extends PureComponent {
 				{!urlQuery.jumpToBase && (
 					<ButtonCustom
 						onClick={this.handleSubmit}
-						className={[style.sureBtn, !btn_dis || !selectFlag ? style.dis : ''].join(' ')}
+						className={[style.sureBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}
 					>
 						{needNextUrl ? '下一步' : '完成'}
 					</ButtonCustom>

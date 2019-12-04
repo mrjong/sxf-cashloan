@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 16:48:12
+ * @LastEditTime: 2019-12-04 11:26:42
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -696,9 +696,7 @@ export default class home_page extends PureComponent {
 	goToNewMoXie = () => {
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
-		let mxQuery = location.pathname.split('/');
-		let RouterType = (mxQuery && mxQuery[2]) || '';
-		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		this.props.history.push('/others/mpos_testB_download_page');
 	};
 	// 请求用户绑卡状态
 	requestBindCardState = () => {

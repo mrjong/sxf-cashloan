@@ -3,7 +3,7 @@ import qs from 'qs';
 import styles from './index.scss';
 import main_logo from './img/main.png';
 import countdown_bg from './img/countdown.png';
-import hd_logo from '../../../assets/images/common/black_logo.png';
+import hd_logo from '../../../assets/images/logo/black_logo.png';
 import btn_bg from './img/btn_bg.png';
 import coin_bg from './img/coin_bg.png';
 import rule_bg from './img/rule_bg.png';

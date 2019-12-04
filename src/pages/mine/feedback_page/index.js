@@ -68,7 +68,7 @@ export default class mine_page extends PureComponent {
 	render() {
 		const { listsArr = [] } = this.state;
 		return (
-			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
+			<div className={[styles.mine_page].join(' ')}>
 				{this.state.isnoData ? (
 					<div>
 						<div className={styles.err_page}>

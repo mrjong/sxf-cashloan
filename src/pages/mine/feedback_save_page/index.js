@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-11 17:37:48
+ * @LastEditTime: 2019-12-04 10:47:08
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -166,7 +166,7 @@ export default class mine_page extends PureComponent {
 		const btnDisable = !textareaVal || (textareaVal && textareaVal.length < 6);
 
 		return (
-			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
+			<div className={[styles.mine_page].join(' ')}>
 				<div className={styles.textTitle}>输入您的反馈意见（最少6个字）</div>
 				<TextareaItem
 					onChange={(v) => {

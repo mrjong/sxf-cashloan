@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 16:48:44
+ * @LastEditTime: 2019-12-04 11:26:59
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -258,9 +258,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	goMoxieBankList = async () => {
 		store.setToggleMoxieCard(true);
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-		let mxQuery = location.pathname.split('/');
-		let RouterType = (mxQuery && mxQuery[2]) || '';
-		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		this.props.history.push('/others/mpos_testB_download_page');
 	};
 	// 代还其他信用卡点击事件
 	repayForOtherBank = (count, type) => {

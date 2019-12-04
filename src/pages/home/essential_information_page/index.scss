@@ -279,7 +279,11 @@
 	position: relative;
 	padding: 30px 30px;
 	color: #868e9e;
-	font-size: 30px;
+  font-size: 28px;
+  @include ellipsis(610px);
+  &:active{
+    opacity: .6;
+  }
 	.informationMoreNew {
 		position: absolute;
 		width: 0.13rem;

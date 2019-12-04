@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-02 13:43:12
+ * @LastEditTime: 2019-12-03 21:49:36
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -83,6 +83,15 @@ export default class essential_information_page extends PureComponent {
 									$props: this.props
 								});
 							}, 2000);
+						}
+						if (result.msgCode === 'PCC-PRC-9994') {
+							this.props.toast.info('提交成功');
+							setTimeout(() => {
+								getNextStr({
+									RouterType: 'add_info',
+									$props: this.props
+								});
+							}, 2000);
 						} else {
 							this.props.toast.info(result.msgInfo);
 						}
@@ -101,7 +110,7 @@ export default class essential_information_page extends PureComponent {
 		const { suppleInfo } = this.state;
 		const needNextUrl = store.getNeedNextUrl();
 		return (
-			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
+			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
 				<div className={style.warning_tip}>还到不向学生借款</div>
 				<div>
 					<div className={style.item_box}>

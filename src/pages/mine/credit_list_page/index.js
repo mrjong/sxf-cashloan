@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 16:48:58
+ * @LastEditTime: 2019-12-04 11:27:18
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -116,10 +116,7 @@ export default class credit_list_page extends PureComponent {
 			store.setToggleMoxieCard(true);
 		}
 		store.setMoxieBackUrl(`/home/crawl_progress_page`);
-
-		let mxQuery = location.pathname.split('/');
-		let RouterType = (mxQuery && mxQuery[2]) || '';
-		this.props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+		this.props.history.push('/others/mpos_testB_download_page');
 	};
 
 	showFeedbackModal = () => {

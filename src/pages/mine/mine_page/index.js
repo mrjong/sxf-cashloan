@@ -1,12 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 19:02:03
+ * @LastEditTime: 2019-12-04 11:06:07
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import avatar from 'assets/images/mine/login_logo.png';
+import avatar from 'assets/images/logo/black_logo.png';
 import Lists from 'components/Lists';
 import { buriedPointEvent } from 'utils/analytins';
 import { isWXOpen, logoutAppHandler } from 'utils';
@@ -14,7 +14,6 @@ import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
 import fqaImg from 'assets/images/mine/fqa_img.png';
-import notLoginImg from 'assets/images/mine/not_login_logo.png';
 import { helpCenter } from '../../../utils/analytinsType';
 
 const API = {
@@ -29,7 +28,7 @@ let token = '';
 let tokenFromStorage = '';
 
 @fetch.inject()
-@setBackGround('#fff')
+@setBackGround('#F7F8FA')
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -324,7 +323,7 @@ export default class mine_page extends PureComponent {
 			});
 		}
 		return (
-			<div className={[styles.mine_page, 'mine_page_global'].join(' ')}>
+			<div className={[styles.mine_pages].join(' ')}>
 				{tokenFromStorage && token ? (
 					<div className={styles.user_inf}>
 						<div className={styles.userInfBox}>
@@ -338,7 +337,7 @@ export default class mine_page extends PureComponent {
 				) : null}
 				{!(tokenFromStorage && token) ? (
 					<div className={styles.notLoginBox}>
-						<img src={notLoginImg} alt="未登录" />
+						<img src={avatar} alt="未登录" />
 						<p className={styles.desc}>借钱还信用卡，找还到</p>
 						<div className={styles.loginBtn} onClick={this.logInHandler}>
 							登录

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 19:55:59
+ * @LastEditTime: 2019-12-04 11:28:18
  */
 /*eslint-disable */
 import React from 'react';
@@ -591,9 +591,7 @@ export const getOperatorStatus = ({ $props }) => {
 							resolve(false);
 							$props.toast.info('身份信息确认失败，请重新确认');
 							setTimeout(() => {
-								let mxQuery = location.pathname.split('/');
-								let RouterType = (mxQuery && mxQuery[2]) || '';
-								$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+								this.props.history.push('/others/mpos_testB_download_page');
 								return;
 							}, 2000);
 							break;
@@ -616,7 +614,7 @@ export const getOperatorStatus = ({ $props }) => {
 		}
 	});
 };
-const needDisplayOptions = ['idCheck', 'faceDetect', 'basicInf', 'supple', 'card'];
+const needDisplayOptions = ['idCheck', 'basicInf', 'supple', 'card'];
 export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let codes = '';
 	let codesArray = [];
@@ -626,16 +624,28 @@ export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
 	let orderText = 0;
 	let btnArry = ['继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单'];
 	if (res && res.msgCode === 'PTM0000') {
-		res.data.forEach((item) => {
-			if (needDisplayOptions.includes(item.code)) {
-				orderText = orderText + 1;
-				if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
-					btnText = btnArry[orderText - 2];
+		// res.data.forEach((item) => {
+		// 	if (needDisplayOptions.includes(item.code)) {
+		// 		orderText = orderText + 1;
+		// 		if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
+		// 			btnText = btnArry[orderText - 2];
+		// 		}
+		// 		codes += item.stsw.dicDetailCd;
+		// 		codesArray.push(item.stsw.dicDetailCd);
+		// 	}
+		// });
+		for (let index = 0; index < needDisplayOptions.length; index++) {
+			res.data.forEach((item) => {
+				if (needDisplayOptions[index] === item.code) {
+					orderText = ++orderText;
+					if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
+						btnText = btnArry[orderText - 2];
+					}
+					codes += item.stsw.dicDetailCd;
+					codesArray.push(item.stsw.dicDetailCd);
 				}
-				codes += item.stsw.dicDetailCd;
-				codesArray.push(item.stsw.dicDetailCd);
-			}
-		});
+			});
+		}
 		if (!needReturn) {
 			if (btnText === '继续确认身份信息') {
 				buriedPointEvent(home.continueRealInfo);
@@ -926,9 +936,7 @@ export const dateDiffer = (sDate1, sDate2) => {
 	return iDays;
 };
 export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
-	let mxQuery = location.pathname.split('/');
-	let RouterType = (mxQuery && mxQuery[2]) || '';
-	$props.history.push(`/common/crash_page?RouterType=${RouterType}`);
+	this.props.history.push('/others/mpos_testB_download_page');
 	return;
 };
 
