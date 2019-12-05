@@ -108,7 +108,7 @@ export default class yongfan_page extends PureComponent {
 		const { isAppOpen } = this.state;
 		// 01 过就送,02 低就赔,03 慢就赔,04 用就返
 		this.props.$fetch.post(`${API.activeConfigThird}/04`).then((res) => {
-			if (res.msgCode === 'PTM0000') {
+			if (res.msgCode === 'PTM0000' || res.msgCode === 'PTM7009') {
 				if (isAppOpen) {
 					// 在去sq以后,才能如此跳转
 					// 立即申请 通知app做相关操作
