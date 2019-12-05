@@ -1,12 +1,13 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 15:08:07
+ * @LastEditTime: 2019-12-05 17:53:53
  */
 import React, { PureComponent } from 'react';
-import { store } from 'utils/store';
+// import { store } from 'utils/store';
 import { Icon } from 'antd-mobile';
 import styles from './index.scss';
+import ButtonCustom from 'components/ButtonCustom';
 
 export default class reco_contact_page extends PureComponent {
 	constructor(props) {
@@ -20,7 +21,8 @@ export default class reco_contact_page extends PureComponent {
 				},
 				{
 					contactName: '李四',
-					contactTel: '15812349834'
+					contactTel: '15812349834',
+					isMarked: false
 				},
 				{
 					contactName: '王五',
@@ -29,11 +31,13 @@ export default class reco_contact_page extends PureComponent {
 				},
 				{
 					contactName: '陈大',
-					contactTel: '15212124567'
+					contactTel: '15212124567',
+					isMarked: false
 				},
 				{
 					contactName: '胡二',
-					contactTel: '1712124532'
+					contactTel: '1712124532',
+					isMarked: false
 				},
 				{
 					contactName: '田六',
@@ -42,7 +46,8 @@ export default class reco_contact_page extends PureComponent {
 				},
 				{
 					contactName: '徐七',
-					contactTel: '14256981234'
+					contactTel: '14256981234',
+					isMarked: false
 				},
 				{
 					contactName: '任八',
@@ -51,7 +56,8 @@ export default class reco_contact_page extends PureComponent {
 				},
 				{
 					contactName: '宋九',
-					contactTel: '15342335445'
+					contactTel: '15342335445',
+					isMarked: false
 				},
 				{
 					contactName: '杨十',
@@ -65,22 +71,46 @@ export default class reco_contact_page extends PureComponent {
 	componentDidMount() {}
 	componentWillUnmount() {}
 
-	// 选择银行卡
-	selectCard = (obj) => {
-		// if (backUrlData) {
-		this.setState({
-			// bankName: obj.bankName,
-			// lastCardNo: obj.lastCardNo,
-			// bankCode: obj.bankCode,
-			agrNo: obj.agrNo
+	// 选择联系人
+	selectContact = (obj) => {
+		const { contactList } = this.state;
+		const changeList = [];
+		const selectedList = contactList.filter((item) => {
+			return item.isMarked;
 		});
-		// this.props.history.replace(backUrlData);
-		this.props.history.goBack();
-		store.setCardData(obj);
-		let paramVip = store.getParamVip() || {};
-		Object.assign(paramVip, obj);
-		store.setParamVip(paramVip);
-		// }
+		if (!obj.isMarked && selectedList.length >= 5) {
+			this.props.toast.info('最多只能勾选5个推荐联系人');
+			return;
+		}
+		contactList.map((item) => {
+			if (obj.contactTel === item.contactTel) {
+				item.isMarked = !item.isMarked;
+			}
+			changeList.push(item);
+		});
+		this.setState({
+			contactList: changeList
+		});
+	};
+
+	// 确认按钮点击
+	confirmHandler = () => {
+		if (!this.isAbleClick()) {
+			this.props.toast.info('请勾选满5个指定联系人');
+		}
+	};
+
+	// 是否小于5个联系人
+	isAbleClick = () => {
+		let isCanClick = true;
+		const { contactList } = this.state;
+		const selectedList = contactList.filter((item) => {
+			return item.isMarked;
+		});
+		if (selectedList.length < 5) {
+			isCanClick = false;
+		}
+		return isCanClick;
 	};
 
 	render() {
@@ -96,7 +126,7 @@ export default class reco_contact_page extends PureComponent {
 									<li
 										// className={isSelected ? styles.active : ''}
 										key={index}
-										onClick={() => this.selectCard(item)}
+										onClick={() => this.selectContact(item)}
 									>
 										<span>{item.contactName}</span>
 										<span className={styles.bank_name}>{item.contactTel}</span>
@@ -109,11 +139,16 @@ export default class reco_contact_page extends PureComponent {
 						</ul>
 					</div>
 				) : null}
-				<p onClick={this.addCard} className={styles.add_card}>
-					<i className={styles.add_ico}></i>
-					{this.state.isVipEnter ? '绑定银行卡' : '绑定信用卡'}
-				</p>
-				{/* {this.state.showMoudle && <Moudles cb={this} logOut={this.unbindCard.bind(this, this.state.unbindData)} textCont="确认解绑该卡？" />} */}
+				<ButtonCustom
+					onClick={this.confirmHandler}
+					className={
+						this.isAbleClick()
+							? styles.confirm_btn
+							: [styles.confirm_btn, styles.disabled_confirm_btn].join(' ')
+					}
+				>
+					确认
+				</ButtonCustom>
 			</div>
 		);
 	}

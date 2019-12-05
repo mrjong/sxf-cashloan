@@ -64,7 +64,11 @@
 			display: inline-block;
 			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -312px, -36px);
 		}
-	}
+  }
+  .disabled_confirm_btn {
+    background: gray;
+    color: #fff;
+  }
 }
 // modal样式覆盖
 :global {
