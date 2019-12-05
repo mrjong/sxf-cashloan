@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-29 16:11:20
+ * @LastEditTime: 2019-12-05 09:20:44
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -979,6 +979,9 @@ export default class home_page extends PureComponent {
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
 				break;
+			case 'couponNotice': // 安心计划活动弹框按钮
+				buriedPointEvent(activity.anXinActivityCouponCloseClick);
+				break;
 
 			default:
 				break;
@@ -986,7 +989,7 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
-		this.closeActivityModal(type);
+		this.closeActivityModal();
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
@@ -1030,6 +1033,9 @@ export default class home_page extends PureComponent {
 				this.props.history.push('/activity/coupon_test_page?comeFrom=mposHomeModal');
 				break;
 			case 'couponNotice':
+				buriedPointEvent(activity.anXinActivityCouponCheckClick, {
+					medium: 'H5'
+				});
 				this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
 				break;
 			default:
