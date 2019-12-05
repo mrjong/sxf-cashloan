@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 09:20:44
+ * @LastEditTime: 2019-12-05 11:28:24
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -980,7 +980,9 @@ export default class home_page extends PureComponent {
 				store.setShowActivityModal(true);
 				break;
 			case 'couponNotice': // 安心计划活动弹框按钮
-				buriedPointEvent(activity.anXinActivityCouponCloseClick);
+				buriedPointEvent(activity.anXinActivityCouponCloseClick, {
+					medium: 'H5'
+				});
 				break;
 
 			default:
