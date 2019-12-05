@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './index.scss';
-// import { Modal, ActivityIndicator, Icon } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import success_icon from './img/success_icon.png';
@@ -8,10 +8,11 @@ import circle_icon from './img/circle_icon.png';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
-import { order } from 'utils/analytinsType';
+import { order, activity } from 'utils/analytinsType';
 
 const API = {
 	queryPayStatus: '/bill/payNotify',
+	queryRepayReward: '/activeConfig/queryRepayReward',
 	fundPlain: '/fund/plain' // 费率接口
 };
 let timer = null;
@@ -27,7 +28,10 @@ export default class Cashier extends React.PureComponent {
 			remainAmt: 0,
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
-			orgFnlMsg: ''
+			orgFnlMsg: '',
+			tip_modal: false,
+			reward_modal: false,
+			rewardDate: ''
 		};
 	}
 
@@ -57,6 +61,46 @@ export default class Cashier extends React.PureComponent {
 		clearInterval(timer);
 	}
 
+	queryRepayReward = () => {
+		const { billDesc, repayPerds, isLastPerd, prodType } = this.props.history.location.state;
+
+		this.props.$fetch
+			.get(API.queryRepayReward, {
+				totalPerds: billDesc.perdCnt,
+				perdNum: repayPerds[repayPerds.length - 1],
+				entrance: 1
+			})
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState({
+						rewardDate: res.data
+					});
+					if (res.data === 15) {
+						this.setState({
+							reward_modal: true
+						});
+						buriedPointEvent(activity.rewardResultModalShow, {
+							positon: 'orderRepayResult'
+						});
+					} else {
+						this.setState({
+							tip_modal: true
+						});
+						buriedPointEvent(activity.rewardTipModalShow, {
+							positon: 'orderRepayResult'
+						});
+					}
+				} else if (isLastPerd) {
+					//如果还的是最后一期
+					setTimeout(() => {
+						store.removeBackData();
+						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
+					}, 2000);
+				}
+			})
+			.catch(() => {});
+	};
+
 	//查询本期减免金额
 	queryPlain = () => {
 		const { repayOrdNo, ordNo, isSettle, prodType, repayPerds } = this.props.history.location.state;
@@ -83,7 +127,7 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	queryPayStatus = () => {
-		const { repayOrdNo, isLastPerd, prodType } = this.props.history.location.state;
+		const { repayOrdNo } = this.props.history.location.state;
 		isFetching = true;
 		this.props.$fetch
 			.get(API.queryPayStatus + `/${repayOrdNo}`)
@@ -107,15 +151,8 @@ export default class Cashier extends React.PureComponent {
 									repayStatus: this.state.status
 								});
 								if (this.state.status === 'success') {
-									if (isLastPerd) {
-										//如果还的是最后一期
-										setTimeout(() => {
-											store.removeBackData();
-											this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
-										}, 2000);
-									} else {
-										this.queryPlain();
-									}
+									this.queryRepayReward();
+									this.queryPlain();
 									clearInterval(timer);
 								}
 							}
@@ -174,7 +211,18 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	render() {
-		const { seconds, status, remainAmt, repayOrdAmt, crdOrdAmt, orgFnlMsg, exceedingAmt } = this.state;
+		const {
+			seconds,
+			status,
+			remainAmt,
+			repayOrdAmt,
+			crdOrdAmt,
+			orgFnlMsg,
+			exceedingAmt,
+			tip_modal,
+			reward_modal,
+			rewardDate
+		} = this.state;
 		const { bankName, bankNo, isLastPerd } = this.props.history.location.state;
 
 		return (
@@ -184,7 +232,6 @@ export default class Cashier extends React.PureComponent {
 						<div>
 							<div className={styles.icon_wrap}>
 								<img src={circle_icon} alt="" className={styles.circle_icon} />
-								{/* <ActivityIndicator animating className={styles.loading_icon} /> */}
 							</div>
 							<p className={styles.desc}>
 								还款中，预计
@@ -268,6 +315,40 @@ export default class Cashier extends React.PureComponent {
 					</div>
 				) : null}
 				{this.renderContinueButton(isLastPerd, status)}
+
+				<Modal wrapClassName={styles.modal_tip} visible={tip_modal} transparent>
+					<i
+						className={styles.close_btn}
+						onClick={() => {
+							this.setState({
+								tip_modal: false
+							});
+							buriedPointEvent(activity.rewardTipModalClose, {
+								positon: 'orderRepayResult'
+							});
+						}}
+					/>
+					<div className={styles.modal_tip_content}>
+						<span className={styles.date}>{rewardDate}天</span>
+					</div>
+				</Modal>
+
+				<Modal wrapClassName={styles.modal_tip} visible={reward_modal} transparent>
+					<div className={styles.modal_tip_content1}>
+						<div
+							onClick={() => {
+								this.props.history.replace({
+									pathname: '/mine/coupon_page',
+									search: '?entryFrom=orderRepayResult'
+								});
+								buriedPointEvent(activity.rewardResultModalClick, {
+									positon: 'orderRepayResult'
+								});
+							}}
+							className={styles.modal_btn}
+						/>
+					</div>
+				</Modal>
 			</div>
 		);
 	}

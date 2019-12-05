@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-04 13:53:54
+ * @LastEditTime: 2019-12-05 16:06:00
  */
 export default [
 	{
@@ -78,5 +78,55 @@ export default [
 		zhName: 'hkyh',
 		title: '还款优惠',
 		component: () => import('pages/activity/coupon_test_page')
+	},
+	{
+		path: '/activity/guosong_page',
+		zhName: 'gjs',
+		title: '还到',
+		component: () => import('pages/activity/guosong_page')
+	},
+	{
+		path: '/activity/yongfan_page',
+		zhName: 'yjf',
+		title: '还到',
+		component: () => import('pages/activity/yongfan_page')
+	},
+	{
+		path: '/activity/manpei_page',
+		zhName: 'mjp',
+		title: '还到',
+		component: () => import('pages/activity/manpei_page')
+	},
+	{
+		path: '/activity/dibu_page',
+		zhName: 'djb',
+		title: '还到',
+		component: () => import('pages/activity/dibu_page')
+	},
+	{
+		path: '/activity/anxin_plan_page',
+		zhName: 'axjh',
+		title: '还到',
+		component: () => import('pages/activity/anxin_plan_page')
+	},
+	{
+		path: '/activity/mpos_activity_download_page',
+		zhName: 'hd-mpos-xz',
+		title: '还到',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/mpos_activity_download_page')
+	},
+	{
+		path: '/activity/wx_activity_download_page',
+		zhName: 'hd-wx-xz',
+		title: '还到',
+		arrowHide: 'empty',
+		component: () => import('pages/activity/wx_activity_download_page')
+	},
+	{
+		path: '/activity/fudai_page',
+		zhName: 'hkmxjh',
+		title: '还款免息计划',
+		component: () => import('pages/activity/fudai_page')
 	}
 ];

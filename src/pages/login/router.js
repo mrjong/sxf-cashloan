@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-15 15:28:42
+ * @LastEditTime: 2019-12-05 16:04:08
  */
 export default [
 	{
@@ -39,10 +39,10 @@ export default [
 		component: () => import('pages/login/momo_outer_login_page')
 	},
 	{
-		path: '/wx_login',
-		zhName: 'wxdl',
+		path: '/mpos_push_login',
+		zhName: 'mpushdl',
 		title: '登录',
 		arrowHide: true,
-		component: () => import('pages/login/wx_login_page')
+		component: () => import('pages/login/mpos_push_login')
 	}
 ];

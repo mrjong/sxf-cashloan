@@ -1,10 +1,12 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .loading_box {
 	background-color: #fff;
 	text-align: center;
-  padding: 50px 0 30px;
-  height: 372px;
-  box-sizing: border-box;
-  overflow: hidden;
+	padding: 50px 0 30px;
+	height: 372px;
+	box-sizing: border-box;
+	overflow: hidden;
 }
 
 .loading_icon {
@@ -17,19 +19,19 @@
 }
 
 .desc {
-	color: #121C32;
+	color: #121c32;
 	font-size: 36px;
-  line-height: 1;
-  margin-top: 30px;
+	line-height: 1;
+	margin-top: 30px;
 	span {
-		color: #ff6666;
+		color: #f66;
 	}
 }
 
 .sub_desc {
-  font-size: 30px;
-  color: #868E9E;
-  margin-top: 30px;
+	font-size: 30px;
+	color: #868e9e;
+	margin-top: 30px;
 }
 
 .icon_wrap {
@@ -99,17 +101,17 @@
 		}
 	}
 	p {
-		color: #ff6666;
+		color: #f66;
 		text-align: left;
 		font-size: 30px;
 	}
 }
 
 .button {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 260px;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 260px;
 	width: 670px;
 	font-weight: 500;
 }
@@ -153,7 +155,78 @@
 .circle_icon {
 	width: 150px;
 	height: 150px;
-	// margin: 50px auto;
 	background-color: #fff;
 	animation: rotateInfinte 1.5s linear 0.2s infinite;
+}
+
+.modal_tip {
+	:global {
+		.am-modal {
+			width: 750px;
+			.am-modal-content {
+				padding-top: 0;
+				background-color: transparent;
+				height: 900px;
+				.am-modal-body {
+					padding: 0;
+				}
+			}
+		}
+	}
+	.modal_tip_content {
+		background-image: url('../../../components/ActivityModal/img/reward_tip.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-top: 50px;
+		width: 750px;
+    height: 750px;
+    .date {
+      font-size: 70px;
+      color: #FFF3E7;
+      font-weight: 500;
+      text-shadow: 5px 5px 5px #A92900;
+      position: relative;
+      top: 430px;
+      left: 15px;
+      animation: fadeIn .6s linear;
+    }
+	}
+	.modal_tip_content1 {
+		background-image: url('../../../components/ActivityModal/img/reward_result.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-top: 50px;
+		width: 750px;
+    height: 750px;
+		.modal_btn {
+			position: relative;
+			margin: 0 auto;
+			top: 400px;
+			width: 100%;
+			height: 350px;
+			background-image: url('../../../components/ActivityModal/img/reward_btn.png');
+			background-size: 100% 100%;
+		}
+	}
+	.close_btn {
+		position: absolute;
+		left: 50%;
+		bottom: 80px;
+		@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
+		width: 68px;
+		height: 68px;
+		margin-left: -34px;
+		z-index: 1;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+    opacity: 0;
+    transform: scale(.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

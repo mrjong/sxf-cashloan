@@ -25,6 +25,11 @@ import not_use_bonus from './img/not_use_bonus.png';
 import not_use_bonus_btn from './img/not_use_bonus_btn.png';
 import pay_coupon_test from './img/pay_coupon_test.png';
 import pay_coupon_test_btn from './img/pay_coupon_test_btn.png';
+import coupon_notice_bg from './img/coupon_notice_bg.png';
+import coupon_notice_btn from './img/coupon_notice_btn.png';
+import reward_btn from './img/reward_btn.png';
+import reward_result from './img/reward_result.png';
+import reward_tip from './img/reward_tip.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -44,7 +49,7 @@ class ActivityModal extends React.Component {
 	goCoupon = () => {};
 	// 优先弹688  再弹出免息  再弹iphone
 	render() {
-		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag, history } = this.props;
+		const { closeActivityModal, modalType, activityModalBtn, modalBtnFlag, history, rewardDate } = this.props;
 		return (
 			<Modal wrapClassName="home_modal_warp" visible={this.state.isShowActivityModal} transparent>
 				<div className={[styles.modal, styles.transitionName].join(' ')}>
@@ -52,6 +57,19 @@ class ActivityModal extends React.Component {
 						<div className={styles.content}>
 							{/* 大图 */}
 							{modalType === 'xianjin' ? <img src={xianjin} /> : null}
+							{modalType === 'reward_tip' ? <img src={reward_tip} /> : null}
+							{modalType === 'reward_result' ? <img src={reward_result} /> : null}
+
+							{modalType === 'reward_tip' ? (
+								<span
+									className={[
+										styles.reward_tip__text,
+										rewardDate && rewardDate < 10 && styles.reward_tip__text_active
+									].join(' ')}
+								>
+									{rewardDate}天
+								</span>
+							) : null}
 							{modalType === 'jd618' ? <img src={jd618} /> : null}
 							{modalType === 'freebill' ? <img src={freebill} /> : null}
 							{modalType === 'yhq7' ? <img src={yhq7} /> : null}
@@ -68,6 +86,7 @@ class ActivityModal extends React.Component {
 								<CouponDesc className={styles.couponDesc} history={history} />
 							) : null}
 							{modalType === 'payCouponTest' ? <img src={pay_coupon_test} /> : null}
+							{modalType === 'couponNotice' ? <img src={coupon_notice_bg} /> : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -158,6 +177,24 @@ class ActivityModal extends React.Component {
 									src={pay_coupon_test_btn}
 									onClick={() => {
 										activityModalBtn('payCouponTest');
+									}}
+								/>
+							) : null}
+							{modalType === 'couponNotice' ? (
+								<img
+									className={styles.payCouponTestBtn}
+									src={coupon_notice_btn}
+									onClick={() => {
+										activityModalBtn('couponNotice');
+									}}
+								/>
+							) : null}
+							{modalType === 'reward_result' ? (
+								<img
+									className={styles.reward_btn}
+									src={reward_btn}
+									onClick={() => {
+										activityModalBtn(modalType);
 									}}
 								/>
 							) : null}
