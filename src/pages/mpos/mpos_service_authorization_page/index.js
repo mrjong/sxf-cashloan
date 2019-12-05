@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 18:49:28
+ * @LastEditTime: 2019-12-05 11:52:38
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -167,8 +167,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 							《用户隐私权政策》
 						</a>
 						<span className="agreement_highlight">
-							。您同意授权获取信息（实名信息、注册手机号、商标编号及相关信
-							息）。以上信息仅用于还到用户风险评估。
+							。您同意授权获取信息（实名信息、注册手机号、商标编号及相关信息）。以上信息仅用于还到用户风险评估。
 						</span>
 					</AgreeItem>
 				</div>
