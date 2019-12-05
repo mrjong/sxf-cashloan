@@ -1,8 +1,14 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-11-25 14:29:14
+ */
 import React from 'react';
 import { Modal, Progress } from 'antd-mobile';
 import OverDueModal from '../OverDueModal';
 import ActivityModal from 'components/ActivityModal';
 import AgreementModal from 'components/AgreementModal';
+import WelfareModal from 'components/WelfareModal';
 import style from './index.scss';
 
 export default class BlackCard extends React.PureComponent {
@@ -28,7 +34,10 @@ export default class BlackCard extends React.PureComponent {
 			activityModalBtn,
 			closeActivityModal,
 			decreaseCoupExpiryDate,
-			toast
+			toast,
+			isShowWelfareModal,
+			welfareModalInf2,
+			...others
 		} = this.props;
 
 		let homeModal = null;
@@ -53,6 +62,18 @@ export default class BlackCard extends React.PureComponent {
 					modalType={modalType}
 					modalBtnFlag={modalBtnFlag}
 				/>
+			);
+		} else if (isShowWelfareModal) {
+			let welfareModalFilterInf = welfareModalInf2.filter((ele) => {
+				return ele.hadShow === false;
+			});
+			homeModal = (
+				<Modal visible={isShowWelfareModal} className="welfareModal" transparent maskClosable={false}>
+					<WelfareModal
+						welfareModalInf={welfareModalFilterInf.length ? welfareModalFilterInf[0] : {}}
+						{...others}
+					/>
+				</Modal>
 			);
 		} else if (visibleLoading) {
 			homeModal = (

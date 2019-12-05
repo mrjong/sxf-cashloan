@@ -25,6 +25,8 @@ import not_use_bonus from './img/not_use_bonus.png';
 import not_use_bonus_btn from './img/not_use_bonus_btn.png';
 import pay_coupon_test from './img/pay_coupon_test.png';
 import pay_coupon_test_btn from './img/pay_coupon_test_btn.png';
+import coupon_notice_bg from './img/coupon_notice_bg.png';
+import coupon_notice_btn from './img/coupon_notice_btn.png';
 
 class ActivityModal extends React.Component {
 	constructor(props) {
@@ -68,6 +70,7 @@ class ActivityModal extends React.Component {
 								<CouponDesc className={styles.couponDesc} history={history} />
 							) : null}
 							{modalType === 'payCouponTest' ? <img src={pay_coupon_test} /> : null}
+							{modalType === 'couponNotice' ? <img src={coupon_notice_bg} /> : null}
 							{/* 按钮 */}
 							{modalType === 'yhq50' || modalType === 'yhq7' ? (
 								<img
@@ -158,6 +161,15 @@ class ActivityModal extends React.Component {
 									src={pay_coupon_test_btn}
 									onClick={() => {
 										activityModalBtn('payCouponTest');
+									}}
+								/>
+							) : null}
+							{modalType === 'couponNotice' ? (
+								<img
+									className={styles.payCouponTestBtn}
+									src={coupon_notice_btn}
+									onClick={() => {
+										activityModalBtn('couponNotice');
 									}}
 								/>
 							) : null}
