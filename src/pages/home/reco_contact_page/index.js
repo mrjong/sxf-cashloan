@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 14:52:40
+ * @LastEditTime: 2019-12-05 15:08:07
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -12,7 +12,53 @@ export default class reco_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contactList: []
+			contactList: [
+				{
+					contactName: '张三',
+					contactTel: '18500211234',
+					isMarked: true
+				},
+				{
+					contactName: '李四',
+					contactTel: '15812349834'
+				},
+				{
+					contactName: '王五',
+					contactTel: '13521212232',
+					isMarked: true
+				},
+				{
+					contactName: '陈大',
+					contactTel: '15212124567'
+				},
+				{
+					contactName: '胡二',
+					contactTel: '1712124532'
+				},
+				{
+					contactName: '田六',
+					contactTel: '16512345431',
+					isMarked: true
+				},
+				{
+					contactName: '徐七',
+					contactTel: '14256981234'
+				},
+				{
+					contactName: '任八',
+					contactTel: '17437663244',
+					isMarked: true
+				},
+				{
+					contactName: '宋九',
+					contactTel: '15342335445'
+				},
+				{
+					contactName: '杨十',
+					contactTel: '19834764214',
+					isMarked: true
+				}
+			]
 		};
 	}
 	componentWillMount() {}
@@ -38,23 +84,23 @@ export default class reco_contact_page extends PureComponent {
 	};
 
 	render() {
+		const { contactList } = this.state;
 		return (
 			<div className={styles.select_credit_page}>
-				{this.state.contactList.length ? (
+				{contactList.length ? (
 					<div>
 						<p className={styles.card_tit}>{this.state.isVipEnter ? '已绑定银行卡' : '已绑定信用卡'}</p>
 						<ul className={styles.card_list}>
-							{this.state.contactList.map((item, index) => {
-								const isSelected = this.state.agrNo === item.agrNo;
+							{contactList.map((item, index) => {
 								return (
 									<li
-										className={isSelected ? styles.active : ''}
+										// className={isSelected ? styles.active : ''}
 										key={index}
 										onClick={() => this.selectCard(item)}
 									>
 										<span>{item.contactName}</span>
-										<span className={styles.bank_name}>{item.contact}</span>
-										{isSelected ? (
+										<span className={styles.bank_name}>{item.contactTel}</span>
+										{item.isMarked ? (
 											<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
 										) : null}
 									</li>
