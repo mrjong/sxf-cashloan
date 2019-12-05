@@ -13,7 +13,7 @@ class fudai_page extends Component {
 					<h3 className={styles.title}>活动规则</h3>
 					<ul>
 						<li className={styles.rule_item}>1.活动参与对象：随行付plus首贷用户</li>
-						<li className={styles.rule_item}>2.活动奖励：免息券，3天内有效，借款时使用</li>
+						<li className={styles.rule_item}>2.活动奖励：免息券，5天内有效，借款时使用</li>
 						<li className={styles.rule_item}>3.用户每按时结清或提前结清1期账单，可激活免息券奖</li>
 					</ul>
 					<p className={styles.desc}>更多特权活动持续更新中。。。</p>

@@ -81,8 +81,8 @@ export default [
 	},
 	{
 		path: '/activity/fudai_page',
-		zhName: 'hkjh',
-		title: '还款计划',
+		zhName: 'hkmxjh',
+		title: '还款免息计划',
 		component: () => import('pages/activity/fudai_page')
 	}
 ];
