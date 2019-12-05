@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-02 10:32:10
+ * @LastEditTime: 2019-12-05 13:42:52
  */
 export default [
 	{
@@ -21,7 +21,7 @@ export default [
 	},
 	{
 		path: '/others/outer_download_page',
-		zhName: 'dwxzy',
+		zhName: 'xzy',
 		title: '下载页',
 		arrowHide: 'empty',
 		headerHide: true,
@@ -51,21 +51,21 @@ export default [
 	},
 	{
 		path: '/others/mpos_download_page',
-		zhName: 'hd-jqhxyk',
+		zhName: 'xzy',
 		title: '还到-借钱还信用卡',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_download_page')
 	},
 	{
 		path: '/others/mpos_testA_download_page',
-		zhName: 'xzAppxtq',
+		zhName: 'xzy',
 		title: '下载App享特权',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testA_download_page')
 	},
 	{
 		path: '/others/mpos_testB_download_page',
-		zhName: 'xzApjrzxtd',
+		zhName: 'xzy',
 		title: '下载App进入专享通道',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testB_download_page')
@@ -86,7 +86,7 @@ export default [
 	},
 	{
 		path: '/others/wx_download_page',
-		zhName: 'hd-wx',
+		zhName: 'xzy',
 		title: '还到',
 		arrowHide: 'empty',
 		component: () => import('pages/others/wx_download_page')

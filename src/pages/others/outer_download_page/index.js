@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 15:33:00
+ * @LastEditTime: 2019-12-05 14:39:27
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -8,7 +8,7 @@ import styles from './index.scss';
 import { getDeviceType } from 'utils';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import linkConf from 'config/link.conf';
 import { other } from 'utils/analytinsType';
 import logo from './img/logo.png';
@@ -46,6 +46,7 @@ export default class outer_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
+		sxfburiedPointEvent('xzyBtn');
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.outerDownloadBtnClick, {

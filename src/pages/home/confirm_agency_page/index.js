@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-30 15:22:17
+ * @LastEditTime: 2019-12-05 11:32:59
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -21,7 +21,6 @@ import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
 import InsuranceModal from './components/InsuranceModal';
 import { domListen } from 'utils/domListen';
-import { sxfhome } from 'utils/sxfAnalytinsType';
 import RepayPlanModal from 'components/RepayPlanModal';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
@@ -236,7 +235,6 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 还款 Tag 点击事件
 	handleLendersTagClick = (data, type) => {
-		sxfburiedPointEvent(sxfhome['agency' + type]);
 		const cardBillAmt = this.props.form.getFieldValue('cardBillAmt');
 		this.setState(
 			{
@@ -665,7 +663,7 @@ export default class confirm_agency_page extends PureComponent {
 				isShowModal: true
 			},
 			() => {
-				sxfburiedPointEvent(sxfhome['ShowModal_plan']);
+				sxfburiedPointEvent('ShowModal_plan');
 			}
 		);
 	};
@@ -676,7 +674,7 @@ export default class confirm_agency_page extends PureComponent {
 				isShowModal: false
 			},
 			() => {
-				sxfburiedPointEvent(sxfhome['ShowModal_planOut']);
+				sxfburiedPointEvent('ShowModal_planOut');
 			}
 		);
 	};

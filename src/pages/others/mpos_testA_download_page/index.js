@@ -1,13 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 15:15:45
+ * @LastEditTime: 2019-12-05 14:39:17
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { getDeviceType, queryUsrSCOpenId } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
@@ -56,6 +56,7 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClickFun = () => {
+		sxfburiedPointEvent('xzyBtn');
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {

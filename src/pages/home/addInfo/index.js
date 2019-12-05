@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 21:49:36
+ * @LastEditTime: 2019-12-05 11:57:20
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -10,7 +10,7 @@ import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import { getH5Channel } from 'utils/common';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { addinfo } from 'utils/analytinsType';
 
 import { getFirstError, getNextStr } from 'utils';
@@ -57,6 +57,7 @@ export default class essential_information_page extends PureComponent {
 			.catch(() => {});
 	};
 	handleSubmit = () => {
+		this.sxfMD('DC_ADDINFO_SUBMIT');
 		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT);
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;
@@ -107,6 +108,9 @@ export default class essential_information_page extends PureComponent {
 			}
 		});
 	};
+	sxfMD = (type) => {
+		sxfburiedPointEvent(type);
+	};
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
@@ -140,6 +144,13 @@ export default class essential_information_page extends PureComponent {
 												}
 											]}
 											cols={1}
+											onVisibleChange={(bool) => {
+												if (bool) {
+													this.sxfMD(item.code + 'In');
+												} else {
+													this.sxfMD(item.code + 'Out');
+												}
+											}}
 										>
 											<List.Item className="hasborder">{item.name}</List.Item>
 										</AsyncCascadePicker>
