@@ -41,5 +41,15 @@
 		.am-progress-bar {
 			border: 0.04rem solid #ffda58;
 		}
-	}
+  }
+  .welfareModal {
+    width: 100%;
+    .am-modal-content {
+      padding: 0;
+      background: none;
+      .am-modal-body {
+        padding: 0;
+      }
+    }
+  }
 }

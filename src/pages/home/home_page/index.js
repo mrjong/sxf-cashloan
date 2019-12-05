@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:42:02
+ * @LastEditTime: 2019-12-05 10:29:19
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -63,7 +63,9 @@ const API = {
 	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
 	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
 	couponRedDot: '/index/couponRedDot', // 优惠券红点
-	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH' // 还款优惠劵测试弹框开关
+	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH', // 还款优惠劵测试弹框开关
+	popupList: '/popup/list', // 首页弹框
+	thirdCheck: '/activeConfig/thirdCheck' // 三陪一返,首页用户获取优惠券校验 01情况下首页弹框
 };
 let token = '';
 let tokenFromStorage = '';
@@ -117,7 +119,9 @@ export default class home_page extends PureComponent {
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
 			userMaxAmt: '', // 最高可申请还款金(元)
-			showFeedbackModal: false
+			showFeedbackModal: false,
+			isShowWelfareModal: false, // 福利专区弹框显示
+			welfareModalInf: [] // 首页弹框信息
 		};
 	}
 
@@ -166,6 +170,10 @@ export default class home_page extends PureComponent {
 		if (timerPercent) {
 			clearInterval(timerPercent);
 		}
+		// 关闭弹框
+		this.setState({
+			isShowWelfareModal: false
+		});
 	}
 	// 移除store
 	removeStore = () => {
@@ -217,6 +225,8 @@ export default class home_page extends PureComponent {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 					if (result.data.value === '1') {
 						if (token && tokenFromStorage) {
+							this.showCouponNoticeModal();
+							this.requestGetHomeModal();
 							this.indexshowType();
 						} else {
 							this.setState({
@@ -226,6 +236,8 @@ export default class home_page extends PureComponent {
 					} else {
 						if (token && tokenFromStorage) {
 							this.queryUsrIndexInfo();
+							this.showCouponNoticeModal();
+							this.requestGetHomeModal();
 						}
 					}
 				} else {
@@ -246,7 +258,7 @@ export default class home_page extends PureComponent {
 					blackData: result.data
 				});
 				// 是否展示还款券测试弹框
-				this.showCouponTestModal();
+				// this.showCouponTestModal();
 
 				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
 					// 分期流程
@@ -270,6 +282,26 @@ export default class home_page extends PureComponent {
 						{
 							isShowActivityModal: true,
 							modalType: 'payCouponTest'
+						},
+						() => {
+							Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
+							// store.setShowActivityModal(true);
+						}
+					);
+				}
+			}
+		});
+	};
+	// 是否展示优惠劵到账通知弹框
+	showCouponNoticeModal = () => {
+		// 接口调用
+		this.props.$fetch.get(API.thirdCheck).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data && result.data.flag === '01') {
+				if (!Cookie.get('modalShowTime')) {
+					this.setState(
+						{
+							isShowActivityModal: true,
+							modalType: 'couponNotice'
 						},
 						() => {
 							Cookie.set('modalShowTime', dayjs(new Date()).format('YYYYMMDD'), { expires: 365 });
@@ -946,6 +978,9 @@ export default class home_page extends PureComponent {
 			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
 				store.setShowActivityModal(true);
 				break;
+			case 'couponNotice': // 安心计划活动弹框按钮
+				buriedPointEvent(activity.anXinActivityCouponCloseClick);
+				break;
 
 			default:
 				break;
@@ -953,7 +988,7 @@ export default class home_page extends PureComponent {
 	};
 	// 弹窗 按钮事件
 	activityModalBtn = (type) => {
-		this.closeActivityModal(type);
+		this.closeActivityModal();
 		switch (type) {
 			case 'xianjin': // 品牌活动弹框按钮
 				buriedPointEvent(activity.fenqiHomeModalGoBtn);
@@ -995,6 +1030,12 @@ export default class home_page extends PureComponent {
 					medium: 'H5'
 				});
 				this.props.history.push('/activity/coupon_test_page?comeFrom=mposHomeModal');
+				break;
+			case 'couponNotice':
+				buriedPointEvent(activity.anXinActivityCouponCheckClick, {
+					medium: 'H5'
+				});
+				this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
 				break;
 			default:
 				break;
@@ -1573,6 +1614,101 @@ export default class home_page extends PureComponent {
 		}
 	};
 
+	/**
+	 * 首页弹框是否显示
+	 * @param 无
+	 * @return {void}
+	 */
+	requestGetHomeModal = () => {
+		// site 0:首页
+		this.props.$fetch.get(`${API.popupList}/0`, {}, { hideLoading: true }).then((result) => {
+			if (result && result.msgCode === 'PTM0000' && result.data && result.data.length) {
+				result.data.map((item) => (item.hadShow = false));
+				this.setState({
+					isShowWelfareModal: true,
+					welfareModalInf: result.data
+					// welfareModalInf: result.data[0],
+				});
+			} else {
+				this.setState({
+					isShowWelfareModal: false,
+					welfareModalInf: []
+				});
+			}
+		});
+	};
+
+	/**
+	 * 点击按钮跳转落地页
+	 * @param 无
+	 * @return {void}
+	 */
+	jumpLand = (modalInf) => {
+		// this.closeWelfareModal();
+		if (modalInf) {
+			const { welfareModalInf } = this.state;
+			let filterModalInf = welfareModalInf.filter((ele) => {
+				return ele.hadShow === false && ele.code === modalInf.code;
+			});
+			if (filterModalInf[0].skipType === '1') {
+				this.setState({
+					isShowWelfareModal: !this.state.isShowWelfareModal
+				});
+				window.location.href = filterModalInf[0].skip;
+			} else if (filterModalInf[0].skipType === '2') {
+				// skip 0 代表跳转首页 1代码跳转优惠券列表页面
+				if (filterModalInf[0].skip === '1') {
+					this.setState({
+						isShowWelfareModal: !this.state.isShowWelfareModal
+					});
+					this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
+				} else {
+					// 暂时不作处理 只关闭弹框
+					this.closeWelfareModal(modalInf);
+				}
+			} else {
+				// 无跳转
+				// 暂时不作处理 只关闭弹框
+				this.closeWelfareModal(modalInf);
+			}
+		}
+	};
+
+	/**
+	 * 关闭首页弹框
+	 * @param 无
+	 * @return {void}
+	 */
+	closeWelfareModal = (modalInf) => {
+		const { welfareModalInf } = this.state;
+		welfareModalInf.length &&
+			welfareModalInf.map((item) => {
+				if (modalInf && item.code === modalInf.code) {
+					return (item.hadShow = true);
+				}
+			});
+		this.setState(
+			{
+				isShowWelfareModal: !this.state.isShowWelfareModal,
+				welfareModalInf
+			},
+			() => {
+				let filterModalInf =
+					welfareModalInf.length &&
+					welfareModalInf.filter((ele) => {
+						return ele.hadShow === false;
+					});
+				if (filterModalInf.length) {
+					setTimeout(() => {
+						this.setState({
+							isShowWelfareModal: !this.state.isShowWelfareModal
+						});
+					}, 200);
+				}
+			}
+		);
+	};
+
 	render() {
 		const {
 			bannerList,
@@ -1586,7 +1722,9 @@ export default class home_page extends PureComponent {
 			modalType,
 			modalBtnFlag,
 			blackData,
-			showFeedbackModal
+			showFeedbackModal,
+			isShowWelfareModal,
+			welfareModalInf
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1633,6 +1771,11 @@ export default class home_page extends PureComponent {
 					handleOverDueClick={this.handleOverDueClick}
 					activityModalBtn={this.activityModalBtn}
 					closeActivityModal={this.closeActivityModal}
+					fetch={this.props.$fetch}
+					isShowWelfareModal={isShowWelfareModal}
+					welfareModalBtn={this.jumpLand}
+					closeWelfareModal={this.closeWelfareModal}
+					welfareModalInf2={welfareModalInf}
 				/>
 			</div>
 		);

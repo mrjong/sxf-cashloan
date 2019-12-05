@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 15:20:10
+ * @LastEditTime: 2019-12-05 10:28:16
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -101,7 +101,9 @@ const home = {
 	goSuperMarket: `${prefix}_HOME_GOTO_LOAN_SUPERMARKET`, //还卡-点击进入贷超页面按钮
 	protocolAlertChange: `${prefix}_PROTOCOL_ALERT_CHANGE`,
 	protocolAlertClose: `${prefix}_PROTOCOL_ALERT_CLOSE`,
-	landingImgClick: `${prefix}_HOME_LANDING_IMG_CLICK` // 落地页图片交互点击
+	landingImgClick: `${prefix}_HOME_LANDING_IMG_CLICK`, // 落地页图片交互点击
+	configModalJoinClick: `${prefix}_HOME_CONFIG_MODAL_JOIN_CLICK`, // 首页配置化弹框点击参与按钮
+	configModalCloseClick: `${prefix}_HOME_CONFIG_MODAL_CLOSE_CLICK` // 首页配置化弹框点击关闭按钮
 };
 
 const mine = {
@@ -230,7 +232,14 @@ const activity = {
 	newUserActivityGetNow: `${prefix}_ACTIVITY_NEWUSERS_GET_NOW`, // 重启新手活动 点击立即领取
 	couponTestActivityEntry: `${prefix}_ACTIVITY_COUPONTEST_ENTRY`, // 还款券测试 进入入口
 	couponTestActivityUseNow: `${prefix}_ACTIVITY_COUPONTEST_USE_NOW`, // 还款券测试 点击已领取去使用
-	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN` // 还款券测试 首页弹窗-收入囊中
+	couponTestModalJoinBtn: `${prefix}_ACTIVITY_COUPONTEST_MODAL_JOIN`, // 还款券测试 首页弹窗-收入囊中
+	anXinActivityEntry: `${prefix}_ACTIVITY_ANXIN_ENTRY`, // 安心计划各个活动落地页 进入入口
+	anXinActivityListGoClick: `${prefix}_ACTIVITY_ANXIN_LIST_GO`, // 安心计划活动列表页 go按钮的点击
+	anXinActivityListDownLoadClick: `${prefix}_ACTIVITY_ANXIN_LIST_DOWNLOAD`, // 安心计划活动列表页 下载按钮的点击
+	anXinActivityDetailJoinClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_JOIN`, // 安心计划活动详情页 申请/参加活动按钮的点击
+	anXinActivityDetailMoreClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_MORE`, // 安心计划活动详情页 更多福利按钮的点击
+	anXinActivityCouponCheckClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CHECK`, // 安心计划首页优惠劵提示弹框 去查看按钮的点击
+	anXinActivityCouponCloseClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CLOSE` // 安心计划首页优惠劵提示弹框  关闭按钮的点击
 };
 
 const moxie_bank_list = {
