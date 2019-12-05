@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-02 10:55:56
+ * @LastEditTime: 2019-12-05 16:06:00
  */
 export default [
 	{
@@ -122,5 +122,11 @@ export default [
 		title: '还到',
 		arrowHide: 'empty',
 		component: () => import('pages/activity/wx_activity_download_page')
+	},
+	{
+		path: '/activity/fudai_page',
+		zhName: 'hkmxjh',
+		title: '还款免息计划',
+		component: () => import('pages/activity/fudai_page')
 	}
 ];

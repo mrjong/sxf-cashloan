@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-25 14:29:14
+ * @LastEditTime: 2019-12-05 16:07:56
  */
 import React from 'react';
 import { Modal, Progress } from 'antd-mobile';
@@ -37,6 +37,7 @@ export default class BlackCard extends React.PureComponent {
 			toast,
 			isShowWelfareModal,
 			welfareModalInf2,
+			rewardDate,
 			...others
 		} = this.props;
 
@@ -61,6 +62,7 @@ export default class BlackCard extends React.PureComponent {
 					history={history}
 					modalType={modalType}
 					modalBtnFlag={modalBtnFlag}
+					rewardDate={rewardDate}
 				/>
 			);
 		} else if (isShowWelfareModal) {

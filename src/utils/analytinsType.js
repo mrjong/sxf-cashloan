@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 09:16:32
+ * @LastEditTime: 2019-12-05 16:08:12
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -239,7 +239,11 @@ const activity = {
 	anXinActivityDetailJoinClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_JOIN`, // 安心计划活动详情页 申请/参加活动按钮的点击
 	anXinActivityDetailMoreClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_MORE`, // 安心计划活动详情页 更多福利按钮的点击
 	anXinActivityCouponCheckClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CHECK`, // 安心计划首页优惠劵提示弹框 去查看按钮的点击
-	anXinActivityCouponCloseClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CLOSE` // 安心计划首页优惠劵提示弹框  关闭按钮的点击
+	anXinActivityCouponCloseClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CLOSE`, // 安心计划首页优惠劵提示弹框  关闭按钮的点击
+	rewardResultModalShow: `${prefix}_ACTIVITY_REWARD_RESULT_MODAL_SHOW`, //复贷活动15天弹窗
+	rewardResultModalClick: `${prefix}_ACTIVITY_REWARD_RESULT_MODAL_CLICK`,
+	rewardTipModalShow: `${prefix}_ACTIVITY_REWARD_TIP_MODAL_SHOW`, //复贷活动还款提示弹窗
+	rewardTipModalClose: `${prefix}_ACTIVITY_REWARD_TIP_MODAL_CLOSE`
 };
 
 const moxie_bank_list = {
