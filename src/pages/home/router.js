@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-29 13:50:41
+ * @LastEditTime: 2019-12-05 14:39:32
  */
 export default [
 	{
@@ -115,5 +115,11 @@ export default [
 		zhName: 'ddjqrsh',
 		title: '等待人工审核',
 		component: () => import('pages/home/loan_robot_succ_page')
+	},
+	{
+		path: '/home/reco_contact_page',
+		zhName: 'tjlxr',
+		title: '推荐联系人',
+		component: () => import('pages/home/reco_contact_page')
 	}
 ];
