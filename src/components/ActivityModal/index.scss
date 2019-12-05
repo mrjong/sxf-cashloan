@@ -140,8 +140,12 @@
 	text-shadow: 5px 5px 5px #a92900;
 	position: absolute;
 	top: 430px;
-  left: 380px;
-  animation: fadeIn .8s linear;
+  left: 310px;
+  animation: fadeIn .6s linear;
+}
+
+.reward_tip__text_active {
+  left: 340px;
 }
 
 .reward_result__text {

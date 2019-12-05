@@ -59,7 +59,14 @@ class ActivityModal extends React.Component {
 							{modalType === 'reward_result' ? <img src={reward_result} /> : null}
 
 							{modalType === 'reward_tip' ? (
-								<span className={styles.reward_tip__text}>{rewardDate}天</span>
+								<span
+									className={[
+										styles.reward_tip__text,
+										rewardDate && rewardDate < 10 && styles.reward_tip__text_active
+									].join(' ')}
+								>
+									{rewardDate}天
+								</span>
 							) : null}
 							{modalType === 'jd618' ? <img src={jd618} /> : null}
 							{modalType === 'freebill' ? <img src={freebill} /> : null}
