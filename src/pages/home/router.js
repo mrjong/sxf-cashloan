@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 14:39:32
+ * @LastEditTime: 2019-12-05 20:10:30
  */
 export default [
 	{
@@ -121,5 +121,11 @@ export default [
 		zhName: 'tjlxr',
 		title: '推荐联系人',
 		component: () => import('pages/home/reco_contact_page')
+	},
+	{
+		path: '/home/contact_result_page',
+		zhName: 'zdlxr',
+		title: '指定联系人',
+		component: () => import('pages/home/contact_result_page')
 	}
 ];

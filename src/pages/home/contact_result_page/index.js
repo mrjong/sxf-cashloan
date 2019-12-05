@@ -1,81 +1,38 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 20:11:30
+ * @LastEditTime: 2019-12-05 20:42:32
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
-import { Icon } from 'antd-mobile';
+import { InputItem } from 'antd-mobile';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
+import { createForm } from 'rc-form';
+import { handleInputBlur } from 'utils';
 
-export default class reco_contact_page extends PureComponent {
+@createForm()
+export default class contact_result_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contactList: [
-				{
-					contactName: '张三',
-					contactTel: '18500211234',
-					isMarked: true
-				},
-				{
-					contactName: '李四',
-					contactTel: '15812349834',
-					isMarked: false
-				},
-				{
-					contactName: '王五',
-					contactTel: '13521212232',
-					isMarked: true
-				},
-				{
-					contactName: '陈大',
-					contactTel: '15212124567',
-					isMarked: false
-				},
-				{
-					contactName: '胡二',
-					contactTel: '1712124532',
-					isMarked: false
-				},
-				{
-					contactName: '田六',
-					contactTel: '16512345431',
-					isMarked: true
-				},
-				{
-					contactName: '徐七',
-					contactTel: '14256981234',
-					isMarked: false
-				},
-				{
-					contactName: '任八',
-					contactTel: '17437663244',
-					isMarked: true
-				},
-				{
-					contactName: '宋九',
-					contactTel: '15342335445',
-					isMarked: false
-				},
-				{
-					contactName: '杨十',
-					contactTel: '19834764214',
-					isMarked: true
-				}
-			]
+			seleContactList: []
 		};
 	}
-	componentWillMount() {}
+	componentWillMount() {
+		const contactList = store.getContactList();
+		this.setState({
+			seleContactList: contactList || []
+		});
+	}
 	componentDidMount() {}
 	componentWillUnmount() {}
 
 	// 选择联系人
 	selectContact = (obj) => {
-		const { contactList } = this.state;
+		const { seleContactList } = this.state;
 		const changeList = [];
-		const selectedList = contactList.filter((item) => {
+		const selectedList = seleContactList.filter((item) => {
 			return item.isMarked;
 		});
 		// 用户点击已选中的取消选中,点击未选中的如果大于五个则提示
@@ -83,14 +40,14 @@ export default class reco_contact_page extends PureComponent {
 			this.props.toast.info('最多只能勾选5个推荐联系人');
 			return;
 		}
-		contactList.map((item) => {
+		seleContactList.map((item) => {
 			if (obj.contactTel === item.contactTel) {
 				item.isMarked = !item.isMarked;
 			}
 			changeList.push(item);
 		});
 		this.setState({
-			contactList: changeList
+			seleContactList: changeList
 		});
 	};
 
@@ -101,40 +58,72 @@ export default class reco_contact_page extends PureComponent {
 			this.props.toast.info('请勾选满5个指定联系人');
 		} else {
 			store.setContactList(selectedList);
-			this.props.history.replace('/home/contact_result_page');
 		}
 	};
 
 	// 选中的联系人列表
 	getSeleList = () => {
 		let selectedList = [];
-		const { contactList } = this.state;
-		selectedList = contactList.filter((item) => {
+		const { seleContactList } = this.state;
+		selectedList = seleContactList.filter((item) => {
 			return item.isMarked;
 		});
 		return selectedList;
 	};
 
+	// 修改联系人信息
+	modifyContact = (obj, val, key) => {
+		const { seleContactList } = this.state;
+		const changeList = [];
+		seleContactList.map((item) => {
+			if (obj.contactTel === item.contactTel) {
+				item[key] = !item.isMarked;
+			}
+			changeList.push(item);
+		});
+		this.setState({
+			seleContactList: changeList
+		});
+	};
+
 	render() {
-		const { contactList } = this.state;
+		const { seleContactList } = this.state;
 		return (
 			<div className={styles.select_credit_page}>
-				{contactList.length ? (
+				{seleContactList.length ? (
 					<div>
 						<p className={styles.card_tit}>{this.state.isVipEnter ? '已绑定银行卡' : '已绑定信用卡'}</p>
 						<ul className={styles.card_list}>
-							{contactList.map((item, index) => {
+							{seleContactList.map((item, index) => {
 								return (
 									<li
 										// className={isSelected ? styles.active : ''}
 										key={index}
 										onClick={() => this.selectContact(item)}
 									>
-										<span>{item.contactName}</span>
-										<span className={styles.bank_name}>{item.contactTel}</span>
-										{item.isMarked ? (
+										<InputItem
+											clear
+											placeholder="联系人真实姓名"
+											type="text"
+											defaultValue={item.contactName}
+											onBlur={(v) => {
+												this.modifyContact(item, v, 'contactName');
+												handleInputBlur();
+											}}
+										/>
+										{/* {item.isMarked ? (
 											<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
-										) : null}
+										) : null} */}
+										<InputItem
+											maxLength="11"
+											type="number"
+											clear
+											placeholder="银行卡预留手机号"
+											defaultValue={item.contactTel}
+											onBlur={() => {
+												handleInputBlur();
+											}}
+										/>
 									</li>
 								);
 							})}
