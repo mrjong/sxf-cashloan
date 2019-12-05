@@ -1,10 +1,10 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 17:53:53
+ * @LastEditTime: 2019-12-05 20:00:59
  */
 import React, { PureComponent } from 'react';
-// import { store } from 'utils/store';
+import { store } from 'utils/store';
 import { Icon } from 'antd-mobile';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
@@ -78,6 +78,7 @@ export default class reco_contact_page extends PureComponent {
 		const selectedList = contactList.filter((item) => {
 			return item.isMarked;
 		});
+		// 用户点击已选中的取消选中,点击未选中的如果大于五个则提示
 		if (!obj.isMarked && selectedList.length >= 5) {
 			this.props.toast.info('最多只能勾选5个推荐联系人');
 			return;
@@ -95,22 +96,22 @@ export default class reco_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
-		if (!this.isAbleClick()) {
+		const selectedList = this.getSeleList();
+		if (selectedList.length < 5) {
 			this.props.toast.info('请勾选满5个指定联系人');
+		} else {
+			store.setContactList(selectedList);
 		}
 	};
 
-	// 是否小于5个联系人
-	isAbleClick = () => {
-		let isCanClick = true;
+	// 选中的联系人列表
+	getSeleList = () => {
+		let selectedList = [];
 		const { contactList } = this.state;
-		const selectedList = contactList.filter((item) => {
+		selectedList = contactList.filter((item) => {
 			return item.isMarked;
 		});
-		if (selectedList.length < 5) {
-			isCanClick = false;
-		}
-		return isCanClick;
+		return selectedList;
 	};
 
 	render() {
@@ -142,9 +143,9 @@ export default class reco_contact_page extends PureComponent {
 				<ButtonCustom
 					onClick={this.confirmHandler}
 					className={
-						this.isAbleClick()
-							? styles.confirm_btn
-							: [styles.confirm_btn, styles.disabled_confirm_btn].join(' ')
+						this.getSeleList().length < 5
+							? [styles.confirm_btn, styles.disabled_confirm_btn].join(' ')
+							: styles.confirm_btn
 					}
 				>
 					确认
