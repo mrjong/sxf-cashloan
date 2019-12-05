@@ -32,7 +32,8 @@ const API = {
 	imageCode: '/signup/sendImg',
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
+	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
+	DOWNLOADURL: 'download/getDownloadUrl'
 };
 
 @setBackGround('#fff')
