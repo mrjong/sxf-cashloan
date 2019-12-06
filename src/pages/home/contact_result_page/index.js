@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 20:42:32
+ * @LastEditTime: 2019-12-05 21:13:28
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -72,18 +72,15 @@ export default class contact_result_page extends PureComponent {
 	};
 
 	// 修改联系人信息
-	modifyContact = (obj, val, key) => {
+	modifyContact = (dataIndex, val, key) => {
 		const { seleContactList } = this.state;
-		const changeList = [];
-		seleContactList.map((item) => {
-			if (obj.contactTel === item.contactTel) {
-				item[key] = !item.isMarked;
+		seleContactList.map((item, index) => {
+			if (dataIndex === index) {
+				item[key] = val;
 			}
-			changeList.push(item);
 		});
-		this.setState({
-			seleContactList: changeList
-		});
+		store.setContactList(seleContactList);
+		console.log(seleContactList, 'seleContactListseleContactList');
 	};
 
 	render() {
@@ -107,7 +104,7 @@ export default class contact_result_page extends PureComponent {
 											type="text"
 											defaultValue={item.contactName}
 											onBlur={(v) => {
-												this.modifyContact(item, v, 'contactName');
+												this.modifyContact(index, v, 'contactName');
 												handleInputBlur();
 											}}
 										/>
@@ -120,7 +117,8 @@ export default class contact_result_page extends PureComponent {
 											clear
 											placeholder="银行卡预留手机号"
 											defaultValue={item.contactTel}
-											onBlur={() => {
+											onBlur={(v) => {
+												this.modifyContact(index, v, 'contactTel');
 												handleInputBlur();
 											}}
 										/>
