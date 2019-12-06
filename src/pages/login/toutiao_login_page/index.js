@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 15:52:15
+ * @LastEditTime: 2019-12-06 10:19:32
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -141,6 +141,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		const { queryData } = this.state;
 		// 防止用户关闭弹框,继续点击进行登录
 		if (store.getToken() || Cookie.get('fin-v-card-token')) {
 			this.setState(
@@ -173,7 +174,9 @@ export default class momo_outer_login_page extends PureComponent {
 					location: store.getPosition(), // 定位地址 TODO 从session取
 					mblNo: values.phoneValue, // 手机号
 					userContract: { contractType: '01,02' },
-					queryUsrSCOpenId: true
+					queryUsrSCOpenId: true,
+					sourceData: window.location.href,
+					sourceId: queryData.clickid || ''
 				};
 				this.props.$fetch.post(API.smsForLogin, param).then(
 					(res) => {
