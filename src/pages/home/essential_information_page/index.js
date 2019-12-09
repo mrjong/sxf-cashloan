@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 16:02:34
+ * @LastEditTime: 2019-12-09 17:11:24
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -1131,6 +1131,21 @@ export default class essential_information_page extends PureComponent {
 				</div>
 				{urlQuery.jumpToBase && (
 					<div className={style.operatorCont}>
+						<div className={style.protocolBox}>
+							<i
+								className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
+								onClick={this.selectProtocol}
+							/>
+							点击按钮即视为同意
+							<a
+								onClick={() => {
+									this.readContract();
+								}}
+								className={style.link}
+							>
+								《个人信息授权书》
+							</a>
+						</div>
 						<ButtonCustom
 							onClick={this.handleSubmit}
 							className={[style.nextBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}

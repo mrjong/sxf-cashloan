@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-03 21:49:36
+ * @LastEditTime: 2019-12-09 17:06:18
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -30,7 +30,7 @@ const API = {
 @createForm()
 @setBackGround('#F7F8FA')
 @domListen()
-export default class essential_information_page extends PureComponent {
+export default class add_info extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -86,8 +86,7 @@ export default class essential_information_page extends PureComponent {
 									$props: this.props
 								});
 							}, 2000);
-						}
-						if (result.msgCode === 'PCC-PRC-9994') {
+						} else if (result.msgCode === 'PCC-PRC-9994') {
 							this.props.toast.info('提交成功');
 							setTimeout(() => {
 								getNextStr({
