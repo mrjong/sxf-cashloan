@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 16:25:27
+ * @LastEditTime: 2019-12-09 17:05:35
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -118,9 +118,9 @@ export default class modify_contact_page extends PureComponent {
 									>
 										<div className={styles.left_part}>
 											<i className={styles.select_ico} />
-											<span className={styles.contact_name}>{item.contactName}</span>
+											<span className={styles.contact_name}>{item.name}</span>
 										</div>
-										<span className={styles.contact_tel}>{this.formatePhone(item.contactTel)}</span>
+										<span className={styles.contact_tel}>{this.formatePhone(item.number)}</span>
 									</li>
 								);
 							})}

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 17:00:42
+ * @LastEditTime: 2019-12-09 17:07:58
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -84,7 +84,7 @@ export default class contact_result_page extends PureComponent {
 		const seletedContactList = store.getSelContactList();
 		contactList.map((item) => {
 			if (item.uniqMark === obj.uniqMark) {
-				if (obj.contactName === item.contactName && obj.contactTel === item.contactTel) {
+				if (obj.name === item.name && obj.number === item.number) {
 					item.isMarked = true;
 				} else {
 					item.isMarked = false;
@@ -92,7 +92,7 @@ export default class contact_result_page extends PureComponent {
 			} else {
 				// 不能选择相同电话号码的人,名称可以一直
 				const filterList = seletedContactList.filter((item2) => {
-					return item2.uniqMark === item.uniqMark && item2.contactTel === item.contactTel && !item.isMarked;
+					return item2.uniqMark === item.uniqMark && item2.number === item.number && !item.isMarked;
 				});
 				if (filterList.length) {
 					item.isMarked = true;
@@ -116,9 +116,9 @@ export default class contact_result_page extends PureComponent {
 											// clear
 											placeholder="联系人真实姓名"
 											type="text"
-											defaultValue={item.contactName}
+											defaultValue={item.name}
 											onBlur={(v) => {
-												this.modifyContact(item, v, 'contactName');
+												this.modifyContact(item, v, 'name');
 												handleInputBlur();
 											}}
 										/>
@@ -127,10 +127,10 @@ export default class contact_result_page extends PureComponent {
 											type="phone"
 											// clear
 											placeholder="银行卡预留手机号"
-											defaultValue={this.formatePhone(item.contactTel)}
+											defaultValue={this.formatePhone(item.number)}
 											onBlur={(v) => {
 												const val = v.replace(/\s*/g, '');
-												this.modifyContact(item, val, 'contactTel');
+												this.modifyContact(item, val, 'number');
 												handleInputBlur();
 											}}
 										/>

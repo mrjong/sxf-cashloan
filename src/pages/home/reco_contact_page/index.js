@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 16:26:08
+ * @LastEditTime: 2019-12-09 17:08:32
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -16,53 +16,53 @@ export default class reco_contact_page extends PureComponent {
 		this.state = {
 			contactList: [
 				{
-					contactName: '张三',
-					contactTel: '18500211234',
+					name: '张三',
+					number: '18500211234',
 					isMarked: true
 				},
 				{
-					contactName: '李四',
-					contactTel: '15812349834',
+					name: '李四',
+					number: '15812349834',
 					isMarked: false
 				},
 				{
-					contactName: '王五',
-					contactTel: '13521212232',
+					name: '王五',
+					number: '13521212232',
 					isMarked: true
 				},
 				{
-					contactName: '陈大',
-					contactTel: '15212124567',
+					name: '陈大',
+					number: '15212124567',
 					isMarked: false
 				},
 				{
-					contactName: '胡二',
-					contactTel: '17121245321',
+					name: '胡二',
+					number: '17121245321',
 					isMarked: false
 				},
 				{
-					contactName: '田六',
-					contactTel: '16512345431',
+					name: '田六',
+					number: '16512345431',
 					isMarked: true
 				},
 				{
-					contactName: '徐七',
-					contactTel: '14256981234',
+					name: '徐七',
+					number: '14256981234',
 					isMarked: false
 				},
 				{
-					contactName: '任八',
-					contactTel: '17437663244',
+					name: '任八',
+					number: '17437663244',
 					isMarked: true
 				},
 				{
-					contactName: '宋九',
-					contactTel: '15342335445',
+					name: '宋九',
+					number: '15342335445',
 					isMarked: false
 				},
 				{
-					contactName: '杨十',
-					contactTel: '19834764214',
+					name: '杨十',
+					number: '19834764214',
 					isMarked: true
 				}
 			]
@@ -164,9 +164,9 @@ export default class reco_contact_page extends PureComponent {
 									>
 										<div className={styles.left_part}>
 											<i className={styles.select_ico} />
-											<span className={styles.contact_name}>{item.contactName}</span>
+											<span className={styles.contact_name}>{item.name}</span>
 										</div>
-										<span className={styles.contact_tel}>{this.formatePhone(item.contactTel)}</span>
+										<span className={styles.contact_tel}>{this.formatePhone(item.number)}</span>
 									</li>
 								);
 							})}
