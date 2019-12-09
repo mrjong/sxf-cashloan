@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 20:07:32
+ * @LastEditTime: 2019-12-06 15:36:07
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -98,5 +98,6 @@ export const storeTypes = {
 	GotoCard: 'GotoCard', // 运营上成功之后 无法返回首页
 	TFDBack1: 'TFDBack1', // call通付盾成功
 	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
-	ContactList: 'ContactList' // 借款增加的五个联系人
+	ContactList: 'ContactList', // 借款中总的联系人
+	SelContactList: 'SelContactList' // 借款选中的五个联系人
 };

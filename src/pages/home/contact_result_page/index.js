@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 21:13:28
+ * @LastEditTime: 2019-12-09 17:00:42
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -10,7 +10,9 @@ import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import { handleInputBlur } from 'utils';
+import { setBackGround } from 'utils/background';
 
+@setBackGround('#fff')
 @createForm()
 export default class contact_result_page extends PureComponent {
 	constructor(props) {
@@ -20,124 +22,133 @@ export default class contact_result_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		const contactList = store.getContactList();
+		const contactList = store.getSelContactList();
+		const seleContactList = contactList.filter((item) => {
+			return item.isMarked;
+		});
 		this.setState({
-			seleContactList: contactList || []
+			seleContactList: seleContactList || []
 		});
 	}
 	componentDidMount() {}
 	componentWillUnmount() {}
 
-	// 选择联系人
-	selectContact = (obj) => {
-		const { seleContactList } = this.state;
-		const changeList = [];
-		const selectedList = seleContactList.filter((item) => {
-			return item.isMarked;
-		});
-		// 用户点击已选中的取消选中,点击未选中的如果大于五个则提示
-		if (!obj.isMarked && selectedList.length >= 5) {
-			this.props.toast.info('最多只能勾选5个推荐联系人');
-			return;
-		}
-		seleContactList.map((item) => {
-			if (obj.contactTel === item.contactTel) {
-				item.isMarked = !item.isMarked;
-			}
-			changeList.push(item);
-		});
-		this.setState({
-			seleContactList: changeList
-		});
+	// 修改联系人
+	editContactHandler = (obj) => {
+		this.checkModify(obj);
+		this.props.history.push({ pathname: '/home/modify_contact_page', state: obj });
 	};
 
 	// 确认按钮点击
 	confirmHandler = () => {
-		const selectedList = this.getSeleList();
-		if (selectedList.length < 5) {
-			this.props.toast.info('请勾选满5个指定联系人');
-		} else {
-			store.setContactList(selectedList);
-		}
-	};
-
-	// 选中的联系人列表
-	getSeleList = () => {
-		let selectedList = [];
-		const { seleContactList } = this.state;
-		selectedList = seleContactList.filter((item) => {
-			return item.isMarked;
-		});
-		return selectedList;
+		// const { seleContactList } = this.state;
+		// store.setSelContactList(seleContactList);
 	};
 
 	// 修改联系人信息
-	modifyContact = (dataIndex, val, key) => {
-		const { seleContactList } = this.state;
-		seleContactList.map((item, index) => {
-			if (dataIndex === index) {
-				item[key] = val;
+	modifyContact = (obj, val, key) => {
+		const modifyList = store.getSelContactList();
+		const selectIndex = modifyList.findIndex((item) => {
+			return item.uniqMark === obj.uniqMark;
+		});
+		modifyList[selectIndex][key] = val;
+		this.setState(
+			{
+				seleContactList: modifyList || []
+			},
+			() => {
+				store.setSelContactList(modifyList);
+			}
+		);
+	};
+
+	// 格式化手机号
+	formatePhone = (val) => {
+		let formateVal = '';
+		if (!val) {
+			return null;
+		}
+		formateVal = val.replace(/\D/g, '').substring(0, 11);
+		var valueLen = formateVal.length;
+		if (valueLen > 3 && valueLen < 8) {
+			formateVal = formateVal.substr(0, 3) + ' ' + formateVal.substr(3);
+		} else if (valueLen >= 8) {
+			formateVal = formateVal.substr(0, 3) + ' ' + formateVal.substr(3, 4) + ' ' + formateVal.substr(7);
+		}
+		return formateVal;
+	};
+
+	// 查看是否更改
+	checkModify = (obj) => {
+		const contactList = store.getContactList();
+		const seletedContactList = store.getSelContactList();
+		contactList.map((item) => {
+			if (item.uniqMark === obj.uniqMark) {
+				if (obj.contactName === item.contactName && obj.contactTel === item.contactTel) {
+					item.isMarked = true;
+				} else {
+					item.isMarked = false;
+				}
+			} else {
+				// 不能选择相同电话号码的人,名称可以一直
+				const filterList = seletedContactList.filter((item2) => {
+					return item2.uniqMark === item.uniqMark && item2.contactTel === item.contactTel && !item.isMarked;
+				});
+				if (filterList.length) {
+					item.isMarked = true;
+				}
 			}
 		});
-		store.setContactList(seleContactList);
-		console.log(seleContactList, 'seleContactListseleContactList');
+		store.setContactList(contactList);
 	};
 
 	render() {
 		const { seleContactList } = this.state;
 		return (
-			<div className={styles.select_credit_page}>
+			<div className={styles.contact_result_page}>
 				{seleContactList.length ? (
-					<div>
-						<p className={styles.card_tit}>{this.state.isVipEnter ? '已绑定银行卡' : '已绑定信用卡'}</p>
-						<ul className={styles.card_list}>
+					<div className={styles.contact_list_box}>
+						<ul className={styles.contact_list}>
 							{seleContactList.map((item, index) => {
 								return (
-									<li
-										// className={isSelected ? styles.active : ''}
-										key={index}
-										onClick={() => this.selectContact(item)}
-									>
+									<li key={index}>
 										<InputItem
-											clear
+											// clear
 											placeholder="联系人真实姓名"
 											type="text"
 											defaultValue={item.contactName}
 											onBlur={(v) => {
-												this.modifyContact(index, v, 'contactName');
+												this.modifyContact(item, v, 'contactName');
 												handleInputBlur();
 											}}
 										/>
-										{/* {item.isMarked ? (
-											<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
-										) : null} */}
 										<InputItem
-											maxLength="11"
-											type="number"
-											clear
+											maxLength="13"
+											type="phone"
+											// clear
 											placeholder="银行卡预留手机号"
-											defaultValue={item.contactTel}
+											defaultValue={this.formatePhone(item.contactTel)}
 											onBlur={(v) => {
-												this.modifyContact(index, v, 'contactTel');
+												const val = v.replace(/\s*/g, '');
+												this.modifyContact(item, val, 'contactTel');
 												handleInputBlur();
 											}}
 										/>
+										{/* 选择图标 */}
+										<div className={styles.telSelectBox} onClick={() => this.editContactHandler(item)}>
+											<i className={styles.telSelect} />
+										</div>
 									</li>
 								);
 							})}
 						</ul>
 					</div>
 				) : null}
-				<ButtonCustom
-					onClick={this.confirmHandler}
-					className={
-						this.getSeleList().length < 5
-							? [styles.confirm_btn, styles.disabled_confirm_btn].join(' ')
-							: styles.confirm_btn
-					}
-				>
-					确认
-				</ButtonCustom>
+				<div className={styles.confirm_btn_box}>
+					<ButtonCustom onClick={this.confirmHandler} className={styles.confirm_btn}>
+						确认
+					</ButtonCustom>
+				</div>
 			</div>
 		);
 	}

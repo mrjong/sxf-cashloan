@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 16:26:08
+ * @LastEditTime: 2019-12-09 16:25:27
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -10,73 +10,20 @@ import ButtonCustom from 'components/ButtonCustom';
 import { setBackGround } from 'utils/background';
 
 @setBackGround('#fff')
-export default class reco_contact_page extends PureComponent {
+export default class modify_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contactList: [
-				{
-					contactName: '张三',
-					contactTel: '18500211234',
-					isMarked: true
-				},
-				{
-					contactName: '李四',
-					contactTel: '15812349834',
-					isMarked: false
-				},
-				{
-					contactName: '王五',
-					contactTel: '13521212232',
-					isMarked: true
-				},
-				{
-					contactName: '陈大',
-					contactTel: '15212124567',
-					isMarked: false
-				},
-				{
-					contactName: '胡二',
-					contactTel: '17121245321',
-					isMarked: false
-				},
-				{
-					contactName: '田六',
-					contactTel: '16512345431',
-					isMarked: true
-				},
-				{
-					contactName: '徐七',
-					contactTel: '14256981234',
-					isMarked: false
-				},
-				{
-					contactName: '任八',
-					contactTel: '17437663244',
-					isMarked: true
-				},
-				{
-					contactName: '宋九',
-					contactTel: '15342335445',
-					isMarked: false
-				},
-				{
-					contactName: '杨十',
-					contactTel: '19834764214',
-					isMarked: true
-				}
-			]
+			contactList: []
 		};
 	}
 	componentWillMount() {
-		const { contactList } = this.state;
-		let changedList = [];
-		contactList.map((item, index) => {
-			item.uniqMark = 'uniq' + index;
-			changedList.push(item);
+		const contactList = store.getContactList();
+		const unSeleContactList = contactList.filter((item) => {
+			return !item.isMarked;
 		});
 		this.setState({
-			contactList: changedList
+			contactList: unSeleContactList || []
 		});
 	}
 	componentDidMount() {}
@@ -86,17 +33,10 @@ export default class reco_contact_page extends PureComponent {
 	selectContact = (obj) => {
 		const { contactList } = this.state;
 		const changeList = [];
-		const selectedList = contactList.filter((item) => {
-			return item.isMarked;
-		});
-		// 用户点击已选中的取消选中,点击未选中的如果大于五个则提示
-		if (!obj.isMarked && selectedList.length >= 5) {
-			this.props.toast.info('最多只能勾选5个推荐联系人');
-			return;
-		}
 		contactList.map((item) => {
+			item.isMarked = false;
 			if (obj.uniqMark === item.uniqMark) {
-				item.isMarked = !item.isMarked;
+				item.isMarked = true;
 			}
 			changeList.push(item);
 		});
@@ -107,15 +47,30 @@ export default class reco_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
-		const { contactList } = this.state;
-		const selectedList = this.getSeleList();
-		if (selectedList.length < 5) {
-			this.props.toast.info('请勾选满5个指定联系人');
+		const seleContactList = this.getSeleList();
+		const allContactList = store.getContactList();
+		const seleAllContactList = store.getSelContactList();
+		const modifyItem = this.props.history.location.state && this.props.history.location.state.uniqMark;
+		const selectIndex = seleAllContactList.findIndex((item) => {
+			return item.uniqMark === modifyItem;
+		});
+		if (seleContactList.length) {
+			allContactList.map((item) => {
+				// 当前修改的下次还可以选择
+				if (modifyItem === item.uniqMark) {
+					item.isMarked = false;
+				}
+				if (item.uniqMark === seleContactList[0].uniqMark) {
+					item.isMarked = true;
+				}
+			});
+			seleAllContactList[selectIndex] = seleContactList[0];
+			store.setContactList(allContactList);
+			store.setSelContactList(seleAllContactList);
 		} else {
-			store.setSelContactList(selectedList);
-			store.setContactList(contactList);
-			this.props.history.replace('/home/contact_result_page');
+			this.props.toast.info('请勾选一个推荐联系人');
 		}
+		this.props.history.goBack();
 	};
 
 	// 选中的联系人列表
@@ -147,10 +102,9 @@ export default class reco_contact_page extends PureComponent {
 	render() {
 		const { contactList } = this.state;
 		return (
-			<div className={styles.reco_contact_page}>
+			<div className={styles.modify_contact_page}>
 				{contactList.length ? (
 					<div className={styles.contact_list_box}>
-						<p className={styles.contact_tit}>请勾选5个联系人</p>
 						<p className={styles.contact_desc}>
 							勾选联系人授权于我们，在紧急联系人无法接通时，用于与您取得联系
 						</p>
@@ -177,12 +131,12 @@ export default class reco_contact_page extends PureComponent {
 					<ButtonCustom
 						onClick={this.confirmHandler}
 						className={
-							this.getSeleList().length < 5
-								? [styles.confirm_btn, styles.disabled_confirm_btn].join(' ')
-								: styles.confirm_btn
+							this.getSeleList().length
+								? styles.confirm_btn
+								: [styles.confirm_btn, styles.disabled_confirm_btn].join(' ')
 						}
 					>
-						确认
+						保存
 					</ButtonCustom>
 				</div>
 			</div>

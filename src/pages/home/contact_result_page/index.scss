@@ -1,78 +1,66 @@
-@import '../../../assets/styles/scss/base/fn';
-
-.select_credit_page {
-	.card_tit {
-		margin-top: 59px;
-		font-size: 28px;
-		color: rgba(157, 157, 157, 1);
-		text-align: center;
+.contact_result_page {
+	padding: 60px 0 160px;
+	.contact_list_box {
+		padding: 0 60px;
 	}
-	.card_list {
+	.contact_list {
 		li {
 			position: relative;
-			width: 660px;
-			margin: 30px auto 0;
-			background: #fff;
-			transition: all 100ms;
-			border: 2px solid #f2f4f5;
-			border-radius: 10px;
-			// height: 140px;
-			line-height: 140px;
-			font-size: 32px;
-			color: rgba(51, 51, 51, 1);
-			padding-left: 30px;
-			.bank_name {
-				margin: 0 24px 0 42px;
-			}
-			.selected_ico {
+			border: 1px solid rgba(240, 241, 245, 1);
+			box-shadow: 0px 2px 16px 0px rgba(9, 36, 96, 0.13);
+			border-radius: 4px;
+			margin-bottom: 30px;
+			.telSelectBox {
 				position: absolute;
-				top: 50%;
-				right: 30px;
-				width: 50px;
-				height: 50px;
-				margin-top: -25px;
+				top: 18px;
+				right: 15px;
+        padding: 15px 15px 15px 20px;
+        z-index: 1;
 			}
-			:global {
-				.am-swipe-btn,
-				.am-swipe-actions-right,
-				.am-swipe-content {
-					border-top-right-radius: 10px;
-					border-bottom-right-radius: 10px;
-				}
-				.am-swipe-btn-text {
-					padding: 0 32px;
-					font-size: 36px;
-				}
+			.telSelect {
+				display: block;
+				width: 28px;
+				height: 34px;
+				background: url(./img/tel_ico.png) no-repeat;
+				background-size: 100%;
 			}
 		}
-		li.active {
-			box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
-			border-color: transparent;
+		li:last-child {
+			border-bottom: none;
 		}
 	}
-	.add_card {
-		font-size: 32px;
-		color: rgba(235, 222, 116, 1);
-		text-align: center;
-		padding: 60px 0 30px 0;
-		.add_ico {
-			position: relative;
-			width: 32px;
-			height: 32px;
-			margin-right: 10px;
-			top: 5px;
-			display: inline-block;
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -312px, -36px);
+	.confirm_btn_box {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 160px;
+		box-sizing: border-box;
+		padding: 30px 58px;
+    background: #fff;
+    z-index: 1;
+	}
+	.confirm_btn {
+		height: 100px;
+		line-height: 100px;
+		border-radius: 50px;
+	}
+	.disabled_confirm_btn {
+		background: #dcdfe6;
+		color: #fff;
+	}
+	:global {
+		.am-list-item.am-input-item {
+			height: 100px;
+			padding: 0 30px;
 		}
-  }
-  .disabled_confirm_btn {
-    background: gray;
-    color: #fff;
-  }
-}
-// modal样式覆盖
-:global {
-	body.white {
-		background: #fff;
+		.am-list-item .am-list-line {
+			padding-right: 50px;
+		}
+		.am-list-item .am-input-control input {
+			font-weight: 600;
+			color: #121c32;
+			font-size: 32px;
+		}
 	}
 }

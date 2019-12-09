@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 20:10:30
+ * @LastEditTime: 2019-12-09 11:30:00
  */
 export default [
 	{
@@ -127,5 +127,11 @@ export default [
 		zhName: 'zdlxr',
 		title: '指定联系人',
 		component: () => import('pages/home/contact_result_page')
+	},
+	{
+		path: '/home/modify_contact_page',
+		zhName: 'xglxr',
+		title: '修改联系人',
+		component: () => import('pages/home/modify_contact_page')
 	}
 ];

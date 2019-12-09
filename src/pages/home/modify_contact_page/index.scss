@@ -1,18 +1,15 @@
-.reco_contact_page {
+@import '../../../assets/styles/scss/base/fn';
+
+.modify_contact_page {
 	padding: 59px 0 160px;
 	.contact_list_box {
 		padding: 0 60px;
 	}
-	.contact_tit {
-		font-size: 46px;
-		font-weight: 600;
-		color: #121c32;
-	}
 	.contact_desc {
 		font-size: 26px;
 		font-weight: 400;
-		color: #868e9e;
-		margin-top: 20px;
+		color: #181818;
+		// margin-top: 20px;
 	}
 	.contact_list {
 		padding-top: 60px;
