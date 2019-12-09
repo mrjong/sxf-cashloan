@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 17:08:32
+ * @LastEditTime: 2019-12-09 17:50:27
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -14,69 +14,14 @@ export default class reco_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contactList: [
-				{
-					name: '张三',
-					number: '18500211234',
-					isMarked: true
-				},
-				{
-					name: '李四',
-					number: '15812349834',
-					isMarked: false
-				},
-				{
-					name: '王五',
-					number: '13521212232',
-					isMarked: true
-				},
-				{
-					name: '陈大',
-					number: '15212124567',
-					isMarked: false
-				},
-				{
-					name: '胡二',
-					number: '17121245321',
-					isMarked: false
-				},
-				{
-					name: '田六',
-					number: '16512345431',
-					isMarked: true
-				},
-				{
-					name: '徐七',
-					number: '14256981234',
-					isMarked: false
-				},
-				{
-					name: '任八',
-					number: '17437663244',
-					isMarked: true
-				},
-				{
-					name: '宋九',
-					number: '15342335445',
-					isMarked: false
-				},
-				{
-					name: '杨十',
-					number: '19834764214',
-					isMarked: true
-				}
-			]
+			contactList: []
 		};
 	}
 	componentWillMount() {
-		const { contactList } = this.state;
-		let changedList = [];
-		contactList.map((item, index) => {
-			item.uniqMark = 'uniq' + index;
-			changedList.push(item);
-		});
+		const sendContactList =
+			this.props.history.location.state && this.props.history.location.state.contactList;
 		this.setState({
-			contactList: changedList
+			contactList: sendContactList
 		});
 	}
 	componentDidMount() {}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-30 15:22:17
+ * @LastEditTime: 2019-12-09 18:03:04
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -124,7 +124,8 @@ export default class confirm_agency_page extends PureComponent {
 			smsCode: '',
 			isShowInsureModal: false, // 是否显示保险说明弹框
 			isCheckInsure: false, // 是否选择了保费
-			showCouponAlert: false // 是否显示优惠券拦截弹窗
+			showCouponAlert: false, // 是否显示优惠券拦截弹窗
+			contactList: []
 		};
 	}
 
@@ -551,12 +552,67 @@ export default class confirm_agency_page extends PureComponent {
 			.post(API.REPAY_INFO, params)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					const testList = [
+						{
+							name: '张三',
+							number: '18500211234'
+						},
+						{
+							name: '李四',
+							number: '15812349834'
+						},
+						{
+							name: '王五',
+							number: '13521212232'
+						},
+						{
+							name: '陈大',
+							number: '15212124567'
+						},
+						{
+							name: '胡二',
+							number: '17121245321'
+						},
+						{
+							name: '田六',
+							number: '16512345431'
+						},
+						{
+							name: '徐七',
+							number: '14256981234'
+						},
+						{
+							name: '任八',
+							number: '17437663244'
+						},
+						{
+							name: '宋九',
+							number: '15342335445'
+						},
+						{
+							name: '杨十',
+							number: '19834764214'
+						}
+					];
+					let contactList = [];
+					// result.data.contactList
+					for (var i = 0; i < testList.length; i++) {
+						if (i < 5) {
+							testList[i].isMarked = true;
+						} else {
+							testList[i].isMarked = false;
+						}
+						testList[i].uniqMark = 'uniq' + i;
+						contactList.push(testList[i]);
+					}
 					this.setState({
 						repayInfo2: result.data,
 						deratePrice: result.data.deductAmount,
 						couponInfo,
-						showInterestTotal: result.data.showFlag === '1'
+						showInterestTotal: result.data.showFlag === '1',
+						contactList
 					});
+
 					// if (result.data.data && result.data.data.usrCoupNo) {
 					// 	this.dealMoney(result.data);
 					// }
@@ -966,6 +1022,25 @@ export default class confirm_agency_page extends PureComponent {
 			isShowInsureModal: true
 		});
 	};
+	// 选择指定联系人
+	handleClickChooseContact = () => {
+		this.props.history.push({
+			pathname: '/home/add_contact_page'
+		});
+		// const { contactList } = this.state;
+		// if (contactList.length) {
+		// 	this.props.history.push({
+		// 		pathname: '/home/reco_contact_page',
+		// 		state: {
+		// 			contactList: contactList
+		// 		}
+		// 	});
+		// } else {
+		// 	this.props.history.push({
+		// 		pathname: '/home/contact_result_page'
+		// 	});
+		// }
+	};
 	render() {
 		const { history, toast } = this.props;
 		const { getFieldProps } = this.props.form;
@@ -1183,6 +1258,13 @@ export default class confirm_agency_page extends PureComponent {
 											</div>
 										)}
 									</div>
+								</li>
+								<li className={style.listItem} onClick={this.handleClickChooseContact}>
+									<label>指定联系人</label>
+									<span className={[style.listValue, style.greyText, style.hasArrow].join(' ')}>
+										请选择
+										<Icon type="right" className={style.icon} />
+									</span>
 								</li>
 							</ul>
 							<ul className={style.pannel}>
