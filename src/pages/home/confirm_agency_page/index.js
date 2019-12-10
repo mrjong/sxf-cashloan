@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 14:51:13
+ * @LastEditTime: 2019-12-10 14:55:07
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -747,7 +747,7 @@ export default class confirm_agency_page extends PureComponent {
 			price: cardBillAmt, // 签约金额
 			osType: getDeviceType(), // 操作系统
 			prodType: '01', // 业务线
-			contact: contactParams
+			contactList: contactParams
 		};
 		timerOut = setTimeout(() => {
 			this.setState(

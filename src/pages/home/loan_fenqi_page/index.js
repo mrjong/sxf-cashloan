@@ -127,8 +127,23 @@ export default class loan_fenqi_page extends PureComponent {
 						priceMax,
 						priceMin,
 						payBankCode,
-						resaveBankCode
+						resaveBankCode,
+						contactList
 					} = res.data;
+
+					let filterContactList = [];
+					if (contactList && contactList.length) {
+						for (var i = 0; i < contactList.length; i++) {
+							if (i < 5) {
+								contactList[i].isMarked = true;
+							} else {
+								contactList[i].isMarked = false;
+							}
+							contactList[i].uniqMark = 'uniq' + i;
+							filterContactList.push(contactList[i]);
+						}
+					}
+
 					this.setState({
 						resaveBankCardAgrNo,
 						resaveBankCardLastNo,
@@ -140,7 +155,8 @@ export default class loan_fenqi_page extends PureComponent {
 						priceMax,
 						priceMin,
 						payBankCode,
-						resaveBankCode
+						resaveBankCode,
+						contactList: filterContactList
 					});
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -288,22 +304,9 @@ export default class loan_fenqi_page extends PureComponent {
 		}
 		this.props.$fetch.post(API.repayPlan, params).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data !== null) {
-				let contactList = [];
-				if (res.data.contactList && res.data.contactList.length) {
-					for (var i = 0; i < res.data.contactList.length; i++) {
-						if (i < 5) {
-							res.data.contactList[i].isMarked = true;
-						} else {
-							res.data.contactList[i].isMarked = false;
-						}
-						res.data.contactList[i].uniqMark = 'uniq' + i;
-						contactList.push(res.data.contactList[i]);
-					}
-				}
 				this.setState(
 					{
-						repayPlanInfo: res.data,
-						contactList
+						repayPlanInfo: res.data
 					},
 					() => {
 						buriedPointEvent(loan_fenqi.repayPlan);
@@ -653,7 +656,7 @@ export default class loan_fenqi_page extends PureComponent {
 				prodType: '11',
 				channelType: 'h5',
 				loanUsage: loanUsage.value,
-				contact: contactParams
+				contactList: contactParams
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
