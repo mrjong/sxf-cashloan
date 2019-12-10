@@ -1,11 +1,11 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 18:26:13
+ * @LastEditTime: 2019-12-09 20:04:57
  */
 import React from 'react';
 import { InputItem } from 'antd-mobile';
-import { handleInputBlur } from 'utils';
+import { handleInputBlur, validators } from 'utils';
 import styles from './index.scss';
 
 export default class ContactResultList extends React.Component {
@@ -28,6 +28,13 @@ export default class ContactResultList extends React.Component {
 			formateVal = formateVal.substr(0, 3) + ' ' + formateVal.substr(3, 4) + ' ' + formateVal.substr(7);
 		}
 		return formateVal;
+	};
+
+	// 校验手机号
+	validatePhone = (value) => {
+		if (!validators.phone(value)) {
+			this.props.toast.info('请输入有效手机号');
+		}
 	};
 
 	render() {
@@ -59,6 +66,7 @@ export default class ContactResultList extends React.Component {
 										const val = v.replace(/\s*/g, '');
 										modifyContact && modifyContact(item, val, 'number');
 										handleInputBlur();
+										// this.validatePhone(v);
 									}}
 									className={isCanSelect ? 'hasIcon' : ''}
 								/>

@@ -25,22 +25,23 @@
 	}
 	li:last-child {
 		border-bottom: none;
-	}
-}
-:global {
-	.am-list-item.am-input-item {
-		height: 100px;
-		padding: 0 30px;
   }
-  .am-list-item .am-list-line {
-		padding-right: 0;
-	}
-	.am-list-item.hasIcon .am-list-line {
-		padding-right: 50px;
-	}
-	.am-list-item .am-input-control input {
-		font-weight: 600;
-		color: #121c32;
-		font-size: 32px;
-	}
+  :global {
+    .am-list-item.am-input-item {
+      height: 100px;
+      padding: 0 30px;
+    }
+    .am-list-item .am-list-line {
+      padding-right: 0;
+    }
+    .am-list-item.hasIcon .am-list-line {
+      padding-right: 50px;
+    }
+    .am-list-item .am-input-control input {
+      font-weight: 600;
+      color: #121c32;
+      font-size: 32px;
+    }
+  }
 }
+

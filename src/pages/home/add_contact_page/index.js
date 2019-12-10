@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 18:26:27
+ * @LastEditTime: 2019-12-09 20:14:19
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -10,6 +10,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import ContactResultList from '../contact_result_page/components/ContactResultList';
+import { validators } from 'utils';
 
 @setBackGround('#fff')
 @createForm()
@@ -21,14 +22,14 @@ export default class add_contact_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		const contactList = store.getSelContactList();
+		const contactList = store.getSelEmptyContactList();
 		this.setState({
 			seleContactList: contactList || [
-				{ name: '', number: '' },
-				{ name: '', number: '' },
-				{ name: '', number: '' },
-				{ name: '', number: '' },
-				{ name: '', number: '' }
+				{ name: '', number: '', uniqMark: 'uniq0' },
+				{ name: '', number: '', uniqMark: 'uniq1' },
+				{ name: '', number: '', uniqMark: 'uniq2' },
+				{ name: '', number: '', uniqMark: 'uniq3' },
+				{ name: '', number: '', uniqMark: 'uniq4' }
 			]
 		});
 	}
@@ -37,26 +38,31 @@ export default class add_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
+		const { seleContactList } = this.state;
+		let filterList = seleContactList.filter((item) => {
+			return !item.name || !item.number;
+		});
+		if (filterList.length) {
+			this.props.toast.info('请添加满5个指定联系人');
+			return;
+		}
+		for (var i = 0; i < seleContactList.length; i++) {
+			if (!validators.phone(seleContactList[i].number)) {
+				this.props.toast.info('请输入有效手机号');
+				return;
+			}
+		}
 		this.props.history.goBack();
-		// const { seleContactList } = this.state;
-		// store.setSelContactList(seleContactList);
 	};
 
 	// 修改联系人信息
 	modifyContact = (obj, val, key) => {
-		const modifyList = store.getSelContactList();
-		const selectIndex = modifyList.findIndex((item) => {
+		const { seleContactList } = this.state;
+		const selectIndex = seleContactList.findIndex((item) => {
 			return item.uniqMark === obj.uniqMark;
 		});
-		modifyList[selectIndex][key] = val;
-		this.setState(
-			{
-				seleContactList: modifyList || []
-			},
-			() => {
-				store.setSelContactList(modifyList);
-			}
-		);
+		seleContactList[selectIndex][key] = val;
+		store.setSelEmptyContactList(seleContactList);
 	};
 
 	render() {
@@ -68,6 +74,7 @@ export default class add_contact_page extends PureComponent {
 						isCanSelect={false}
 						modifyContact={this.modifyContact}
 						seleContactList={seleContactList}
+						toast={this.props.toast}
 					/>
 				) : null}
 				<div className={styles.confirm_btn_box}>

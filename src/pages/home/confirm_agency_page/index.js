@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-09 18:03:04
+ * @LastEditTime: 2019-12-09 20:45:44
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -15,7 +15,7 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
+import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto, validators } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
@@ -552,58 +552,17 @@ export default class confirm_agency_page extends PureComponent {
 			.post(API.REPAY_INFO, params)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					const testList = [
-						{
-							name: '张三',
-							number: '18500211234'
-						},
-						{
-							name: '李四',
-							number: '15812349834'
-						},
-						{
-							name: '王五',
-							number: '13521212232'
-						},
-						{
-							name: '陈大',
-							number: '15212124567'
-						},
-						{
-							name: '胡二',
-							number: '17121245321'
-						},
-						{
-							name: '田六',
-							number: '16512345431'
-						},
-						{
-							name: '徐七',
-							number: '14256981234'
-						},
-						{
-							name: '任八',
-							number: '17437663244'
-						},
-						{
-							name: '宋九',
-							number: '15342335445'
-						},
-						{
-							name: '杨十',
-							number: '19834764214'
-						}
-					];
 					let contactList = [];
-					// result.data.contactList
-					for (var i = 0; i < testList.length; i++) {
-						if (i < 5) {
-							testList[i].isMarked = true;
-						} else {
-							testList[i].isMarked = false;
+					if (result.data.contactList && result.data.contactList.length) {
+						for (var i = 0; i < result.data.contactList.length; i++) {
+							if (i < 5) {
+								result.data.contactList[i].isMarked = true;
+							} else {
+								result.data.contactList[i].isMarked = false;
+							}
+							result.data.contactList[i].uniqMark = 'uniq' + i;
+							contactList.push(result.data.contactList[i]);
 						}
-						testList[i].uniqMark = 'uniq' + i;
-						contactList.push(testList[i]);
 					}
 					this.setState({
 						repayInfo2: result.data,
@@ -752,6 +711,12 @@ export default class confirm_agency_page extends PureComponent {
 				couponId = '';
 			}
 		}
+		let contactParams = '';
+		if (store.getSelContactList()) {
+			contactParams = JSON.stringify(store.getSelContactList());
+		} else if (store.getSelEmptyContactList()) {
+			contactParams = JSON.stringify(store.getSelEmptyContactList());
+		}
 		// else {
 		// 	// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
 		// 	// 	couponId = this.state.repayInfo2.data.usrCoupNo;
@@ -766,7 +731,8 @@ export default class confirm_agency_page extends PureComponent {
 			usrBusCnl: '', // 操作渠道
 			coupId: couponId, // 优惠劵id
 			price: cardBillAmt, // 签约金额
-			osType: getDeviceType() // 操作系统
+			osType: getDeviceType(), // 操作系统
+			contact: contactParams
 		};
 		timerOut = setTimeout(() => {
 			this.setState(
@@ -813,6 +779,11 @@ export default class confirm_agency_page extends PureComponent {
 							// 清除上个页面中的弹框数据
 							store.removeRepaymentModalData();
 							store.removeSaveAmt();
+							// 清除借款中总的联系人
+							store.removeContactList();
+							// 清除借款选中的五个联系人
+							store.removeSelContactList();
+							store.removeSelEmptyContactList();
 						} else if (result && result.msgCode === 'PTM7001') {
 							this.props.toast.info(result.msgInfo);
 							setTimeout(() => {
@@ -843,6 +814,24 @@ export default class confirm_agency_page extends PureComponent {
 		if (repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure) {
 			this.props.toast.info('请先购买保险');
 			return;
+		}
+		if (!(store.getSelEmptyContactList() || store.getSelContactList())) {
+			this.props.toast.info('请选择指定联系人');
+			return;
+		}
+		const seleContactList = store.getSelEmptyContactList() || store.getSelContactList();
+		let filterList = seleContactList.filter((item) => {
+			return !item.name || !item.number;
+		});
+		if (filterList.length) {
+			this.props.toast.info('请添加满5个指定联系人');
+			return;
+		}
+		for (var i = 0; i < seleContactList.length; i++) {
+			if (!validators.phone(seleContactList[i].number)) {
+				this.props.toast.info('请在指定联系人列表中输入有效手机号');
+				return;
+			}
 		}
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
@@ -1024,22 +1013,25 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 选择指定联系人
 	handleClickChooseContact = () => {
-		this.props.history.push({
-			pathname: '/home/add_contact_page'
-		});
-		// const { contactList } = this.state;
-		// if (contactList.length) {
-		// 	this.props.history.push({
-		// 		pathname: '/home/reco_contact_page',
-		// 		state: {
-		// 			contactList: contactList
-		// 		}
-		// 	});
-		// } else {
-		// 	this.props.history.push({
-		// 		pathname: '/home/contact_result_page'
-		// 	});
-		// }
+		const { contactList } = this.state;
+		if (contactList.length) {
+			if (store.getSelContactList()) {
+				this.props.history.push({
+					pathname: '/home/contact_result_page'
+				});
+			} else {
+				this.props.history.push({
+					pathname: '/home/reco_contact_page',
+					state: {
+						contactList: contactList
+					}
+				});
+			}
+		} else {
+			this.props.history.push({
+				pathname: '/home/add_contact_page'
+			});
+		}
 	};
 	render() {
 		const { history, toast } = this.props;
@@ -1068,6 +1060,7 @@ export default class confirm_agency_page extends PureComponent {
 			couponAlertData,
 			showInterestTotal
 		} = this.state;
+		const isBtnAble = store.getSelEmptyContactList() || store.getSelContactList();
 		return (
 			<div>
 				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>
@@ -1336,7 +1329,7 @@ export default class confirm_agency_page extends PureComponent {
 									: () => {}
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && isBtnAble
 									? repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure
 										? style.submitBtnDisabled
 										: style.submitBtn

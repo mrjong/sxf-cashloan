@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 18:12:45
+ * @LastEditTime: 2019-12-09 20:07:53
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -10,6 +10,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import ContactResultList from './components/ContactResultList';
+import { validators } from 'utils';
 
 @setBackGround('#fff')
 @createForm()
@@ -42,9 +43,21 @@ export default class contact_result_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
+		const { seleContactList } = this.state;
+		let filterList = seleContactList.filter((item) => {
+			return !item.name || !item.number;
+		});
+		if (filterList.length) {
+			this.props.toast.info('请添加满5个指定联系人');
+			return;
+		}
+		for (var i = 0; i < seleContactList.length; i++) {
+			if (!validators.phone(seleContactList[i].number)) {
+				this.props.toast.info('请输入有效手机号');
+				return;
+			}
+		}
 		this.props.history.goBack();
-		// const { seleContactList } = this.state;
-		// store.setSelContactList(seleContactList);
 	};
 
 	// 修改联系人信息
@@ -98,6 +111,7 @@ export default class contact_result_page extends PureComponent {
 						editContactHandler={this.editContactHandler}
 						modifyContact={this.modifyContact}
 						seleContactList={seleContactList}
+						toast={this.props.toast}
 					/>
 				) : null}
 				<div className={styles.confirm_btn_box}>

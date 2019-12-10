@@ -5,7 +5,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType } from 'utils';
+import { getDeviceType, validators } from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import RepayPlanModal from 'components/RepayPlanModal';
 import style from './index.scss';
@@ -59,7 +59,8 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			payBankCode: '',
-			resaveBankCode: ''
+			resaveBankCode: '',
+			contactList: []
 		};
 	}
 
@@ -287,9 +288,22 @@ export default class loan_fenqi_page extends PureComponent {
 		}
 		this.props.$fetch.post(API.repayPlan, params).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data !== null) {
+				let contactList = [];
+				if (res.data.contactList && res.data.contactList.length) {
+					for (var i = 0; i < res.data.contactList.length; i++) {
+						if (i < 5) {
+							res.data.contactList[i].isMarked = true;
+						} else {
+							res.data.contactList[i].isMarked = false;
+						}
+						res.data.contactList[i].uniqMark = 'uniq' + i;
+						contactList.push(res.data.contactList[i]);
+					}
+				}
 				this.setState(
 					{
-						repayPlanInfo: res.data
+						repayPlanInfo: res.data,
+						contactList
 					},
 					() => {
 						buriedPointEvent(loan_fenqi.repayPlan);
@@ -533,7 +547,14 @@ export default class loan_fenqi_page extends PureComponent {
 	//验证信息是否填写完整
 	validateFn = () => {
 		const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo, prdId } = this.state;
-		if (loanMoney && loanDate && resaveBankCardAgrNo && payBankCardAgrNo && prdId) {
+		if (
+			loanMoney &&
+			loanDate &&
+			resaveBankCardAgrNo &&
+			payBankCardAgrNo &&
+			prdId &&
+			(store.getSelEmptyContactList() || store.getSelContactList())
+		) {
 			return true;
 		}
 		return false;
@@ -591,12 +612,36 @@ export default class loan_fenqi_page extends PureComponent {
 				loanMoney,
 				loanDate: loanDate.perdCnt
 			});
+			if (!(store.getSelEmptyContactList() || store.getSelContactList())) {
+				this.props.toast.info('请选择指定联系人');
+				return;
+			}
+			const seleContactList = store.getSelEmptyContactList() || store.getSelContactList();
+			let filterList = seleContactList.filter((item) => {
+				return !item.name || !item.number;
+			});
+			if (filterList.length) {
+				this.props.toast.info('请添加满5个指定联系人');
+				return;
+			}
+			for (var i = 0; i < seleContactList.length; i++) {
+				if (!validators.phone(seleContactList[i].number)) {
+					this.props.toast.info('请在指定联系人列表中输入有效手机号');
+					return;
+				}
+			}
 			this.checkProtocolBindCard();
 		}
 	};
 
 	submitHandler = () => {
 		const { loanMoney, loanUsage, resaveBankCardAgrNo, payBankCardAgrNo, prdId, couponInfo } = this.state;
+		let contactParams = '';
+		if (store.getSelContactList()) {
+			contactParams = JSON.stringify(store.getSelContactList());
+		} else if (store.getSelEmptyContactList()) {
+			contactParams = JSON.stringify(store.getSelEmptyContactList());
+		}
 		this.props.$fetch
 			.post(API.agentRepay, {
 				withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
@@ -608,7 +653,8 @@ export default class loan_fenqi_page extends PureComponent {
 				osType: getDeviceType(), // 操作系统
 				prodType: '11',
 				channelType: 'h5',
-				loanUsage: loanUsage.value
+				loanUsage: loanUsage.value,
+				contact: contactParams
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
@@ -742,6 +788,29 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	// 选择指定联系人
+	handleClickChooseContact = () => {
+		const { contactList } = this.state;
+		if (contactList.length) {
+			if (store.getSelContactList()) {
+				this.props.history.push({
+					pathname: '/home/contact_result_page'
+				});
+			} else {
+				this.props.history.push({
+					pathname: '/home/reco_contact_page',
+					state: {
+						contactList: contactList
+					}
+				});
+			}
+		} else {
+			this.props.history.push({
+				pathname: '/home/add_contact_page'
+			});
+		}
+	};
+
 	render() {
 		const {
 			usageModal,
@@ -848,6 +917,13 @@ export default class loan_fenqi_page extends PureComponent {
 									) : (
 										<span className={style.greyText}>暂无</span>
 									)}
+								</span>
+							</li>
+							<li className={style.listItem} onClick={this.handleClickChooseContact}>
+								<label>指定联系人</label>
+								<span className={style.listValue}>
+									请选择
+									<Icon type="right" className={style.icon} />
 								</span>
 							</li>
 							{loanMoney && loanDate && prdId && (
