@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 10:09:13
+ * @LastEditTime: 2019-12-10 10:24:30
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -712,11 +712,25 @@ export default class confirm_agency_page extends PureComponent {
 			}
 		}
 		let contactParams = '';
-		if (store.getSelContactList()) {
-			contactParams = JSON.stringify(store.getSelContactList());
+		const selectedList = [];
+		if (store.getSelContactList() && store.getSelContactList().length) {
+			store.getSelContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = JSON.stringify(selectedList);
 		} else if (store.getSelEmptyContactList()) {
-			contactParams = JSON.stringify(store.getSelEmptyContactList());
+			store.getSelEmptyContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = JSON.stringify(selectedList);
 		}
+
 		// else {
 		// 	// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
 		// 	// 	couponId = this.state.repayInfo2.data.usrCoupNo;
@@ -834,7 +848,7 @@ export default class confirm_agency_page extends PureComponent {
 			}
 		}
 		if (!arrCheckDup(seleContactList, 'number')) {
-			this.props.toast.info('请输入不同的手机号');
+			this.props.toast.info('请输入不同联系人手机号');
 			return;
 		}
 		// 埋点

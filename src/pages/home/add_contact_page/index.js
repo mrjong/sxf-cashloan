@@ -53,7 +53,7 @@ export default class add_contact_page extends PureComponent {
 			}
 		}
 		if (!arrCheckDup(seleContactList, 'number')) {
-			this.props.toast.info('请输入不同的手机号');
+			this.props.toast.info('请输入不同联系人手机号');
 			return;
 		}
 		this.props.history.goBack();

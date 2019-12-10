@@ -631,7 +631,7 @@ export default class loan_fenqi_page extends PureComponent {
 				}
 			}
 			if (!arrCheckDup(seleContactList, 'number')) {
-				this.props.toast.info('请输入不同的手机号');
+				this.props.toast.info('请输入不同联系人手机号');
 				return;
 			}
 			this.checkProtocolBindCard();
@@ -641,10 +641,23 @@ export default class loan_fenqi_page extends PureComponent {
 	submitHandler = () => {
 		const { loanMoney, loanUsage, resaveBankCardAgrNo, payBankCardAgrNo, prdId, couponInfo } = this.state;
 		let contactParams = '';
-		if (store.getSelContactList()) {
-			contactParams = JSON.stringify(store.getSelContactList());
+		const selectedList = [];
+		if (store.getSelContactList() && store.getSelContactList().length) {
+			store.getSelContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = JSON.stringify(selectedList);
 		} else if (store.getSelEmptyContactList()) {
-			contactParams = JSON.stringify(store.getSelEmptyContactList());
+			store.getSelEmptyContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = JSON.stringify(selectedList);
 		}
 		this.props.$fetch
 			.post(API.agentRepay, {
