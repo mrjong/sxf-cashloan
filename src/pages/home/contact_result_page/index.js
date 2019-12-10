@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 10:09:04
+ * @LastEditTime: 2019-12-10 10:49:02
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -61,6 +61,7 @@ export default class contact_result_page extends PureComponent {
 			this.props.toast.info('请输入不同联系人手机号');
 			return;
 		}
+		store.setSaveContactList(true);
 		this.props.history.goBack();
 	};
 

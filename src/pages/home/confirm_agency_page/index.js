@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 10:24:30
+ * @LastEditTime: 2019-12-10 10:54:01
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -15,7 +15,7 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto, validators, arrCheckDup } from 'utils';
+import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
@@ -798,6 +798,8 @@ export default class confirm_agency_page extends PureComponent {
 							// 清除借款选中的五个联系人
 							store.removeSelContactList();
 							store.removeSelEmptyContactList();
+							store.removeSaveContactList();
+							store.removeSaveEmptyContactList();
 						} else if (result && result.msgCode === 'PTM7001') {
 							this.props.toast.info(result.msgInfo);
 							setTimeout(() => {
@@ -829,28 +831,33 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.toast.info('请先购买保险');
 			return;
 		}
-		if (!(store.getSelEmptyContactList() || store.getSelContactList())) {
+		if (
+			!(
+				(store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
+				(store.getSaveContactList() && store.getSelContactList())
+			)
+		) {
 			this.props.toast.info('请选择指定联系人');
 			return;
 		}
-		const seleContactList = store.getSelEmptyContactList() || store.getSelContactList();
-		let filterList = seleContactList.filter((item) => {
-			return !item.name || !item.number;
-		});
-		if (filterList.length) {
-			this.props.toast.info('请添加满5个指定联系人');
-			return;
-		}
-		for (var i = 0; i < seleContactList.length; i++) {
-			if (!validators.phone(seleContactList[i].number)) {
-				this.props.toast.info('请在指定联系人列表中输入有效手机号');
-				return;
-			}
-		}
-		if (!arrCheckDup(seleContactList, 'number')) {
-			this.props.toast.info('请输入不同联系人手机号');
-			return;
-		}
+		// const seleContactList = store.getSelEmptyContactList() || store.getSelContactList();
+		// let filterList = seleContactList.filter((item) => {
+		// 	return !item.name || !item.number;
+		// });
+		// if (filterList.length) {
+		// 	this.props.toast.info('请添加满5个指定联系人');
+		// 	return;
+		// }
+		// for (var i = 0; i < seleContactList.length; i++) {
+		// 	if (!validators.phone(seleContactList[i].number)) {
+		// 		this.props.toast.info('请在指定联系人列表中输入有效手机号');
+		// 		return;
+		// 	}
+		// }
+		// if (!arrCheckDup(seleContactList, 'number')) {
+		// 	this.props.toast.info('请输入不同联系人手机号');
+		// 	return;
+		// }
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
 		this.checkProtocolBindCard();
@@ -1078,7 +1085,9 @@ export default class confirm_agency_page extends PureComponent {
 			couponAlertData,
 			showInterestTotal
 		} = this.state;
-		const isBtnAble = store.getSelEmptyContactList() || store.getSelContactList();
+		const isBtnAble =
+			(store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
+			(store.getSaveContactList() && store.getSelContactList());
 		return (
 			<div>
 				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>

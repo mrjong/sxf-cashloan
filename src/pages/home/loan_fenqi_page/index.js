@@ -5,7 +5,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType, validators, arrCheckDup } from 'utils';
+import { getDeviceType } from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import RepayPlanModal from 'components/RepayPlanModal';
 import style from './index.scss';
@@ -553,7 +553,8 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCardAgrNo &&
 			payBankCardAgrNo &&
 			prdId &&
-			(store.getSelEmptyContactList() || store.getSelContactList())
+			((store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
+				(store.getSaveContactList() && store.getSelContactList()))
 		) {
 			return true;
 		}
@@ -607,33 +608,20 @@ export default class loan_fenqi_page extends PureComponent {
 	//借款申请提交
 	loanApplySubmit = () => {
 		const { loanMoney, loanDate } = this.state;
+		if (
+			!(
+				(store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
+				(store.getSaveContactList() && store.getSelContactList())
+			)
+		) {
+			this.props.toast.info('请选择指定联系人');
+			return;
+		}
 		if (this.validateFn()) {
 			buriedPointEvent(loan_fenqi.clickSubmit, {
 				loanMoney,
 				loanDate: loanDate.perdCnt
 			});
-			if (!(store.getSelEmptyContactList() || store.getSelContactList())) {
-				this.props.toast.info('请选择指定联系人');
-				return;
-			}
-			const seleContactList = store.getSelEmptyContactList() || store.getSelContactList();
-			let filterList = seleContactList.filter((item) => {
-				return !item.name || !item.number;
-			});
-			if (filterList.length) {
-				this.props.toast.info('请添加满5个指定联系人');
-				return;
-			}
-			for (var i = 0; i < seleContactList.length; i++) {
-				if (!validators.phone(seleContactList[i].number)) {
-					this.props.toast.info('请在指定联系人列表中输入有效手机号');
-					return;
-				}
-			}
-			if (!arrCheckDup(seleContactList, 'number')) {
-				this.props.toast.info('请输入不同联系人手机号');
-				return;
-			}
 			this.checkProtocolBindCard();
 		}
 	};
@@ -677,6 +665,13 @@ export default class loan_fenqi_page extends PureComponent {
 				if (res.msgCode === 'PTM0000') {
 					// 清除卡信息
 					store.removeCardData();
+					// 清除借款中总的联系人
+					store.removeContactList();
+					// 清除借款选中的五个联系人
+					store.removeSelContactList();
+					store.removeSelEmptyContactList();
+					store.removeSaveContactList();
+					store.removeSaveEmptyContactList();
 					this.props.toast.info('签约成功，请留意放款通知！');
 					setTimeout(() => {
 						this.props.history.push('/home/home');

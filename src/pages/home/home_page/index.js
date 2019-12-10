@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-09 20:13:25
+ * @LastEditTime: 2019-12-10 10:47:26
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -217,6 +217,8 @@ export default class home_page extends PureComponent {
 		// 清除借款选中的五个联系人
 		store.removeSelContactList();
 		store.removeSelEmptyContactList();
+		store.removeSaveContactList();
+		store.removeSaveEmptyContactList();
 	};
 	couponRedDot = () => {
 		this.props.$fetch.get(API.couponRedDot).then((result) => {

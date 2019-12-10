@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-09 20:11:44
+ * @LastEditTime: 2019-12-10 10:45:27
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -100,5 +100,7 @@ export const storeTypes = {
 	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
 	ContactList: 'ContactList', // 借款中总的联系人
 	SelContactList: 'SelContactList', // 返回联系人不为空的借款选中的五个联系人
-	SelEmptyContactList: 'SelEmptyContactList' // 返回联系人为空的借款选中的五个联系人
+	SelEmptyContactList: 'SelEmptyContactList', // 返回联系人为空的借款选中的五个联系人,
+	SaveContactList: 'SaveContactList', // 保存联系人不为空的借款选中的五个联系人
+	SaveEmptyContactList: 'SaveEmptyContactList' // 保存联系人为空的借款选中的五个联系人
 };
