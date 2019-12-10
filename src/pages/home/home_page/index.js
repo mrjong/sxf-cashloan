@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 10:29:19
+ * @LastEditTime: 2019-12-10 09:43:29
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -65,7 +65,8 @@ const API = {
 	couponRedDot: '/index/couponRedDot', // 优惠券红点
 	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH', // 还款优惠劵测试弹框开关
 	popupList: '/popup/list', // 首页弹框
-	thirdCheck: '/activeConfig/thirdCheck' // 三陪一返,首页用户获取优惠券校验 01情况下首页弹框
+	thirdCheck: '/activeConfig/thirdCheck', // 三陪一返,首页用户获取优惠券校验 01情况下首页弹框
+	queryRepayReward: '/activeConfig/queryRepayReward'
 };
 let token = '';
 let tokenFromStorage = '';
@@ -152,6 +153,7 @@ export default class home_page extends PureComponent {
 
 		if (token && tokenFromStorage) {
 			this.queryOverdueModal();
+			this.queryRepayReward();
 		}
 
 		// 隔5秒调取相关变量
@@ -235,9 +237,9 @@ export default class home_page extends PureComponent {
 						}
 					} else {
 						if (token && tokenFromStorage) {
-							this.queryUsrIndexInfo();
 							this.showCouponNoticeModal();
 							this.requestGetHomeModal();
+							this.queryUsrIndexInfo();
 						}
 					}
 				} else {
@@ -979,7 +981,14 @@ export default class home_page extends PureComponent {
 				store.setShowActivityModal(true);
 				break;
 			case 'couponNotice': // 安心计划活动弹框按钮
-				buriedPointEvent(activity.anXinActivityCouponCloseClick);
+				buriedPointEvent(activity.anXinActivityCouponCloseClick, {
+					medium: 'H5'
+				});
+				break;
+
+			case 'reward_tip':
+				buriedPointEvent(activity.rewardTipModalClose);
+
 				break;
 
 			default:
@@ -1036,6 +1045,12 @@ export default class home_page extends PureComponent {
 					medium: 'H5'
 				});
 				this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
+				break;
+			case 'reward_result':
+				buriedPointEvent(activity.rewardResultModalClick, {
+					positon: 'homeModal'
+				});
+				this.props.history.push('/mine/coupon_page?entry=homeModal');
 				break;
 			default:
 				break;
@@ -1708,6 +1723,34 @@ export default class home_page extends PureComponent {
 			}
 		);
 	};
+	queryRepayReward = () => {
+		this.props.$fetch
+			.get(API.queryRepayReward, {
+				entrance: 0
+			})
+			.then((res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState(
+						{
+							modalType: res.data === 15 ? 'reward_result' : 'reward_tip',
+							rewardDate: res.data,
+							isShowActivityModal: true,
+							modalBtnFlag: res.data === 15
+						},
+						() => {
+							if (this.state.modalType === 'reward_result') {
+								buriedPointEvent(activity.rewardResultModalShow, {
+									positon: 'homeModal'
+								});
+							} else if (this.state.modalType === 'reward_tip')
+								buriedPointEvent(activity.rewardTipModalShow, {
+									positon: 'homeModal'
+								});
+						}
+					);
+				}
+			});
+	};
 
 	render() {
 		const {
@@ -1724,7 +1767,8 @@ export default class home_page extends PureComponent {
 			blackData,
 			showFeedbackModal,
 			isShowWelfareModal,
-			welfareModalInf
+			welfareModalInf,
+			rewardDate
 		} = this.state;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
@@ -1776,6 +1820,7 @@ export default class home_page extends PureComponent {
 					welfareModalBtn={this.jumpLand}
 					closeWelfareModal={this.closeWelfareModal}
 					welfareModalInf2={welfareModalInf}
+					rewardDate={rewardDate}
 				/>
 			</div>
 		);

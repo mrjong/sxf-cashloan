@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-21 09:53:24
+ * @LastEditTime: 2019-12-05 11:52:38
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -126,7 +126,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 	render() {
 		const { selectFlag } = this.state;
 		return (
-			<div>
+			<div className={styles.mpos_service_authorization_page}>
 				<img src={logo} alt="" className={styles.logoWrap} />
 				<p className={styles.text}>
 					随行付金融提供 <em className={styles.highlight}>借钱还信用卡</em>服务 <br /> 众多信用卡用户新选择{' '}
@@ -136,7 +136,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 						className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
 						onClick={selectFlag ? () => this.goSubmit() : null}
 					>
-						下一步
+						授权并登录
 					</SXFButton>
 					{query.mblNoHid && query.mblNoHid.substr(-4) && (
 						<p className={styles.bold_text}>
@@ -151,13 +151,13 @@ export default class mpos_service_authorization_page extends PureComponent {
 						data-seed="logId"
 						onChange={(e) => this.setState({ selectFlag: e.target.checked })}
 					>
-						请阅读协议内容，点击按钮即视为同意
+						点击授权并登录视为您阅读并同意签署
 						<a
 							onClick={() => {
 								this.go('register_agreement_page');
 							}}
 						>
-							《用户注册协议》
+							《金融用户注册协议》
 						</a>
 						<a
 							onClick={() => {
@@ -166,6 +166,9 @@ export default class mpos_service_authorization_page extends PureComponent {
 						>
 							《用户隐私权政策》
 						</a>
+						<span className="agreement_highlight">
+							。您同意授权获取信息（实名信息、注册手机号、商标编号及相关信息）。以上信息仅用于还到用户风险评估。
+						</span>
 					</AgreeItem>
 				</div>
 			</div>

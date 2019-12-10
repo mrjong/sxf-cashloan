@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-28 20:22:10
+ * @LastEditTime: 2019-12-05 16:04:08
  */
 export default [
 	{
@@ -37,5 +37,12 @@ export default [
 		title: '还到',
 		arrowHide: true,
 		component: () => import('pages/login/momo_outer_login_page')
+	},
+	{
+		path: '/mpos_push_login',
+		zhName: 'mpushdl',
+		title: '登录',
+		arrowHide: true,
+		component: () => import('pages/login/mpos_push_login')
 	}
 ];

@@ -239,7 +239,11 @@ const activity = {
 	anXinActivityDetailJoinClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_JOIN`, // 安心计划活动详情页 申请/参加活动按钮的点击
 	anXinActivityDetailMoreClick: `${prefix}_ACTIVITY_ANXIN_DETAIL_MORE`, // 安心计划活动详情页 更多福利按钮的点击
 	anXinActivityCouponCheckClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CHECK`, // 安心计划首页优惠劵提示弹框 去查看按钮的点击
-	anXinActivityCouponCloseClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CLOSE` // 安心计划首页优惠劵提示弹框  关闭按钮的点击
+	anXinActivityCouponCloseClick: `${prefix}_ACTIVITY_ANXIN_COUPON_NOTICE_CLOSE`, // 安心计划首页优惠劵提示弹框  关闭按钮的点击
+	rewardResultModalShow: `${prefix}_ACTIVITY_REWARD_RESULT_MODAL_SHOW`, //复贷活动15天弹窗
+	rewardResultModalClick: `${prefix}_ACTIVITY_REWARD_RESULT_MODAL_CLICK`,
+	rewardTipModalShow: `${prefix}_ACTIVITY_REWARD_TIP_MODAL_SHOW`, //复贷活动还款提示弹窗
+	rewardTipModalClose: `${prefix}_ACTIVITY_REWARD_TIP_MODAL_CLOSE`
 };
 
 const moxie_bank_list = {
@@ -283,7 +287,10 @@ const daicao = {
 	downloadPageView: `${prefix}_DAICAO_DOWNLOAD_PAGEVIEW`, //代超下载页pageview
 	smsCodeBtnClick: `${prefix}_DAICAO_GET_SMSCODE_BTN`, // 贷超登录页获取验证码按钮
 	modalBtnClick: `${prefix}_DAICAO_MODAL_BTN`, // 贷超登录页弹框按钮
-	selectProtocol: `${prefix}_DAICAO_SELECT_PROTOCOL` // 贷超登录页勾选协议
+	selectProtocol: `${prefix}_DAICAO_SELECT_PROTOCOL`, // 贷超登录页勾选协议
+	mpos_push_loginBtn: `${prefix}_DAICAO_MPOS_PUSH_LOGIN_BTN`,
+	mpos_push_modalBtnClick: `${prefix}_DAICAO_MPOS_PUSH_LOGIN_MODALBTN_CLICK`,
+	mpos_push_modalshow: `${prefix}_DAICAO_MPOS_PUSH_LOGIN_MODAL_SHOW`
 };
 
 const loan_fenqi = {

@@ -60,6 +60,12 @@ const MomoOuterLoginPage = Loadable({
 	LoadingComponent,
 	delay: 300
 });
+const MposPushLogin = Loadable({
+	loader: () => import('pages/login/mpos_push_login'),
+	loading: Loading,
+	LoadingComponent,
+	delay: 300
+});
 export default class Routers extends Component {
 	render() {
 		return (
@@ -71,6 +77,7 @@ export default class Routers extends Component {
 				<Route path="/:modules/:page" component={RouterPage} />
 				<Route path="/outer_test_login" component={OuterTestLoginPage} />
 				<Route path="/momo_outer_login" component={MomoOuterLoginPage} />
+				<Route path="/mpos_push_login" component={MposPushLogin} />
 			</Switch>
 		);
 	}
