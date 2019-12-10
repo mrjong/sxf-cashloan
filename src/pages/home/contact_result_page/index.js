@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 10:49:02
+ * @LastEditTime: 2019-12-10 14:22:06
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -61,7 +61,7 @@ export default class contact_result_page extends PureComponent {
 			this.props.toast.info('请输入不同联系人手机号');
 			return;
 		}
-		store.setSaveContactList(true);
+		store.setSaveContactList(seleContactList);
 		this.props.history.goBack();
 	};
 
@@ -98,8 +98,14 @@ export default class contact_result_page extends PureComponent {
 				const filterList = seletedContactList.filter((item2) => {
 					return item2.uniqMark === item.uniqMark && item2.number === item.number && !item.isMarked;
 				});
+				const filterList2 = seletedContactList.filter((item2) => {
+					return item2.uniqMark === item.uniqMark && item2.number !== item.number;
+				});
 				if (filterList.length) {
 					item.isMarked = true;
+				}
+				if (filterList2.length) {
+					item.isMarked = false;
 				}
 			}
 		});

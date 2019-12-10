@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 11:03:04
+ * @LastEditTime: 2019-12-10 14:51:13
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -720,7 +720,7 @@ export default class confirm_agency_page extends PureComponent {
 					n: item.name
 				});
 			});
-			contactParams = JSON.stringify(selectedList);
+			contactParams = selectedList;
 		} else if (store.getSelEmptyContactList()) {
 			store.getSelEmptyContactList().map((item) => {
 				selectedList.push({
@@ -728,7 +728,7 @@ export default class confirm_agency_page extends PureComponent {
 					n: item.name
 				});
 			});
-			contactParams = JSON.stringify(selectedList);
+			contactParams = selectedList;
 		}
 
 		// else {
@@ -746,6 +746,7 @@ export default class confirm_agency_page extends PureComponent {
 			coupId: couponId, // 优惠劵id
 			price: cardBillAmt, // 签约金额
 			osType: getDeviceType(), // 操作系统
+			prodType: '01', // 业务线
 			contact: contactParams
 		};
 		timerOut = setTimeout(() => {
@@ -831,12 +832,7 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.toast.info('请先购买保险');
 			return;
 		}
-		if (
-			!(
-				(store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
-				(store.getSaveContactList() && store.getSelContactList())
-			)
-		) {
+		if (!(store.getSaveEmptyContactList() || store.getSaveContactList())) {
 			this.props.toast.info('请选择指定联系人');
 			return;
 		}
@@ -1067,9 +1063,7 @@ export default class confirm_agency_page extends PureComponent {
 			couponAlertData,
 			showInterestTotal
 		} = this.state;
-		const isBtnAble =
-			(store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
-			(store.getSaveContactList() && store.getSelContactList());
+		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		return (
 			<div>
 				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>

@@ -553,8 +553,7 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCardAgrNo &&
 			payBankCardAgrNo &&
 			prdId &&
-			((store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
-				(store.getSaveContactList() && store.getSelContactList()))
+			(store.getSaveEmptyContactList() || store.getSaveContactList())
 		) {
 			return true;
 		}
@@ -608,12 +607,7 @@ export default class loan_fenqi_page extends PureComponent {
 	//借款申请提交
 	loanApplySubmit = () => {
 		const { loanMoney, loanDate } = this.state;
-		if (
-			!(
-				(store.getSaveEmptyContactList() && store.getSelEmptyContactList()) ||
-				(store.getSaveContactList() && store.getSelContactList())
-			)
-		) {
+		if (!(store.getSaveEmptyContactList() || store.getSaveContactList())) {
 			this.props.toast.info('请选择指定联系人');
 			return;
 		}
@@ -637,7 +631,7 @@ export default class loan_fenqi_page extends PureComponent {
 					n: item.name
 				});
 			});
-			contactParams = JSON.stringify(selectedList);
+			contactParams = selectedList;
 		} else if (store.getSelEmptyContactList()) {
 			store.getSelEmptyContactList().map((item) => {
 				selectedList.push({
@@ -645,7 +639,7 @@ export default class loan_fenqi_page extends PureComponent {
 					n: item.name
 				});
 			});
-			contactParams = JSON.stringify(selectedList);
+			contactParams = selectedList;
 		}
 		this.props.$fetch
 			.post(API.agentRepay, {
