@@ -1,13 +1,15 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 17:05:35
+ * @LastEditTime: 2019-12-10 20:25:58
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
 import { setBackGround } from 'utils/background';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 @setBackGround('#fff')
 export default class modify_contact_page extends PureComponent {
@@ -47,6 +49,7 @@ export default class modify_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
+		buriedPointEvent(home.speContactSaveClick);
 		const seleContactList = this.getSeleList();
 		const allContactList = store.getContactList();
 		const seleAllContactList = store.getSelContactList();

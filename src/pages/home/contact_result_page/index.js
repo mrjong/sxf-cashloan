@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 14:22:06
+ * @LastEditTime: 2019-12-10 20:26:07
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -11,6 +11,8 @@ import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import ContactResultList from './components/ContactResultList';
 import { validators, arrCheckDup } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 @setBackGround('#fff')
 @createForm()
@@ -37,12 +39,14 @@ export default class contact_result_page extends PureComponent {
 
 	// 修改联系人
 	editContactHandler = (obj) => {
+		buriedPointEvent(home.speContactConfirmModify);
 		this.checkModify(obj);
 		this.props.history.push({ pathname: '/home/modify_contact_page', state: obj });
 	};
 
 	// 确认按钮点击
 	confirmHandler = () => {
+		buriedPointEvent(home.reContactSaveClick);
 		const { seleContactList } = this.state;
 		let filterList = seleContactList.filter((item) => {
 			return !item.name || !item.number;

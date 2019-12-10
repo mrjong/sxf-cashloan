@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 11:10:30
+ * @LastEditTime: 2019-12-10 20:25:50
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -11,6 +11,8 @@ import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import ContactResultList from '../contact_result_page/components/ContactResultList';
 import { validators, arrCheckDup } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 
 @setBackGround('#fff')
 @createForm()
@@ -38,6 +40,7 @@ export default class add_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
+		buriedPointEvent(home.speContactConfirmClick);
 		const { seleContactList } = this.state;
 		let filterList = seleContactList.filter((item) => {
 			return !item.name || !item.number;
