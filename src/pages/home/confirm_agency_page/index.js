@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 10:54:01
+ * @LastEditTime: 2019-12-10 11:03:04
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -840,24 +840,6 @@ export default class confirm_agency_page extends PureComponent {
 			this.props.toast.info('请选择指定联系人');
 			return;
 		}
-		// const seleContactList = store.getSelEmptyContactList() || store.getSelContactList();
-		// let filterList = seleContactList.filter((item) => {
-		// 	return !item.name || !item.number;
-		// });
-		// if (filterList.length) {
-		// 	this.props.toast.info('请添加满5个指定联系人');
-		// 	return;
-		// }
-		// for (var i = 0; i < seleContactList.length; i++) {
-		// 	if (!validators.phone(seleContactList[i].number)) {
-		// 		this.props.toast.info('请在指定联系人列表中输入有效手机号');
-		// 		return;
-		// 	}
-		// }
-		// if (!arrCheckDup(seleContactList, 'number')) {
-		// 	this.props.toast.info('请输入不同联系人手机号');
-		// 	return;
-		// }
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
 		this.checkProtocolBindCard();
