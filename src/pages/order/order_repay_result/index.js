@@ -33,7 +33,7 @@ export default class Cashier extends React.PureComponent {
 			orgFnlMsg: '',
 			tip_modal: false,
 			reward_modal: false,
-			showRewardLoading: true,
+			showRewardLoading: false,
 			rewardDate: '',
 			percent: 0
 		};
