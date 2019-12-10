@@ -5,6 +5,7 @@ import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import success_icon from './img/success_icon.png';
 import circle_icon from './img/circle_icon.png';
+import reward_loading from './img/reward_loading.png';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
@@ -16,6 +17,7 @@ const API = {
 	fundPlain: '/fund/plain' // 费率接口
 };
 let timer = null;
+let timer1 = null;
 let isFetching = false;
 @fetch.inject()
 @setBackGround('#F7F8FA')
@@ -31,7 +33,9 @@ export default class Cashier extends React.PureComponent {
 			orgFnlMsg: '',
 			tip_modal: false,
 			reward_modal: false,
-			rewardDate: ''
+			showRewardLoading: true,
+			rewardDate: '',
+			percent: 0
 		};
 	}
 
@@ -61,9 +65,36 @@ export default class Cashier extends React.PureComponent {
 		clearInterval(timer);
 	}
 
+	startRewardLoading = () => {
+		clearInterval(timer1);
+		this.setState({
+			showRewardLoading: true
+		});
+		timer1 = setInterval(() => {
+			this.setState(
+				{
+					percent: this.state.percent + 1
+				},
+				() => {
+					if (this.state.percent >= 100) {
+						clearInterval(timer1);
+					}
+				}
+			);
+		}, 1000);
+	};
+
+	stopRewardLoading = () => {
+		clearInterval(timer1);
+		this.setState({
+			showRewardLoading: false,
+			percent: 0
+		});
+	};
+
 	queryRepayReward = () => {
 		const { billDesc, repayPerds, isLastPerd, prodType } = this.props.history.location.state;
-
+		this.startRewardLoading();
 		this.props.$fetch
 			.get(API.queryRepayReward, {
 				totalPerds: billDesc.perdCnt,
@@ -71,6 +102,7 @@ export default class Cashier extends React.PureComponent {
 				entrance: 1
 			})
 			.then((res) => {
+				this.stopRewardLoading();
 				if (res.msgCode === 'PTM0000') {
 					this.setState({
 						rewardDate: res.data
@@ -98,7 +130,9 @@ export default class Cashier extends React.PureComponent {
 					}, 2000);
 				}
 			})
-			.catch(() => {});
+			.catch(() => {
+				this.stopRewardLoading();
+			});
 	};
 
 	//查询本期减免金额
@@ -221,7 +255,9 @@ export default class Cashier extends React.PureComponent {
 			exceedingAmt,
 			tip_modal,
 			reward_modal,
-			rewardDate
+			rewardDate,
+			showRewardLoading,
+			percent
 		} = this.state;
 		const { bankName, bankNo, isLastPerd } = this.props.history.location.state;
 
@@ -312,6 +348,12 @@ export default class Cashier extends React.PureComponent {
 					<div className={styles.discount_box}>
 						<span>为您剩余账单减免</span>
 						<span className={styles.discount}>{exceedingAmt}元</span>
+					</div>
+				) : null}
+				{showRewardLoading ? (
+					<div className={styles.reward_loading}>
+						<img src={reward_loading} alt="" className={styles.reward_loading_icon} />
+						<span>{percent}s</span>
 					</div>
 				) : null}
 				{this.renderContinueButton(isLastPerd, status)}
