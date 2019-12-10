@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-06 10:19:32
+ * @LastEditTime: 2019-12-06 11:58:04
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -180,13 +180,13 @@ export default class momo_outer_login_page extends PureComponent {
 				};
 				this.props.$fetch.post(API.smsForLogin, param).then(
 					(res) => {
-						if (res.msgCode !== 'PTM0000') {
-							res.msgInfo && Toast.info(res.msgInfo);
+						if (res.code !== '0000') {
+							res.message && Toast.info(res.message);
 							return;
 						}
-						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+						Cookie.set('fin-v-card-token', res.dataGram.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
-						store.setToken(res.data.tokenId);
+						store.setToken(res.dataGram.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
 						this.setState(
@@ -199,7 +199,7 @@ export default class momo_outer_login_page extends PureComponent {
 						);
 					},
 					(error) => {
-						error.msgInfo && Toast.info(error.msgInfo);
+						error.message && Toast.info(error.message);
 					}
 				);
 			} else {
@@ -255,10 +255,10 @@ export default class momo_outer_login_page extends PureComponent {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '0000') {
 					this.setState({
 						submitData: {
-							relyToken: result.data.relyToken,
+							relyToken: result.dataGram.relyToken,
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -267,7 +267,7 @@ export default class momo_outer_login_page extends PureComponent {
 					});
 					resolve();
 				} else {
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 				}
 			});
 		});
@@ -279,11 +279,11 @@ export default class momo_outer_login_page extends PureComponent {
 		this.props.$fetch
 			.post(API.sendImgSms, data)
 			.then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '0000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
-						smsJrnNo: result.data.smsJrnNo
+						smsJrnNo: result.dataGram.smsJrnNo
 					});
 					cb && cb('success');
 					setTimeout(() => {
@@ -291,17 +291,17 @@ export default class momo_outer_login_page extends PureComponent {
 					}, 1500);
 
 					this.startCountDownTime();
-				} else if (result.msgCode === 'PTM3019') {
+				} else if (result.code === '3019') {
 					// 弹窗不存在时请求大图
 					!this.state.showSlideModal && this.reloadSlideImage();
 					cb && cb('error');
-				} else if (result.msgCode === 'PTM3020') {
+				} else if (result.code === '3020') {
 					//重新刷新relyToken
 					this.handleTokenAndImage();
 					cb && cb('refresh');
 				} else {
 					// 达到短信次数限制
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 					cb && cb('error');
 					this.closeSlideModal();
 				}
@@ -314,16 +314,20 @@ export default class momo_outer_login_page extends PureComponent {
 
 	reloadSlideImage = () => {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === '0000') {
 				this.setState({
-					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
-					yOffset: res.data.sy, // 小图距离大图顶部距离
-					bigImageH: res.data.bh, // 大图实际高度
+					slideImageUrl: res.dataGram.ossImgBig
+						? res.dataGram.ossImgBig
+						: `data:image/png;base64,${res.dataGram.b}`,
+					smallImageUrl: res.dataGram.ossImgSm
+						? res.dataGram.ossImgSm
+						: `data:image/png;base64,${res.dataGram.s}`,
+					yOffset: res.dataGram.sy, // 小图距离大图顶部距离
+					bigImageH: res.dataGram.bh, // 大图实际高度
 					showSlideModal: true
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -374,17 +378,17 @@ export default class momo_outer_login_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+			this.props.$fetch.get(API.DOWNLOADURL).then(
 				(res) => {
-					if (res.msgCode === 'PTM0000') {
+					if (res.code === '0000') {
 						Toast.info('安全下载中');
-						window.location.href = res.data;
+						window.location.href = res.dataGram;
 					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
+						res.message && Toast.info(res.message);
 					}
 				},
 				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
+					error.message && Toast.info(error.message);
 				}
 			);
 		}
