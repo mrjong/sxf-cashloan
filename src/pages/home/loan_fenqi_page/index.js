@@ -5,7 +5,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType, validators } from 'utils';
+import { getDeviceType, validators, arrCheckDup } from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import RepayPlanModal from 'components/RepayPlanModal';
 import style from './index.scss';
@@ -629,6 +629,10 @@ export default class loan_fenqi_page extends PureComponent {
 					this.props.toast.info('请在指定联系人列表中输入有效手机号');
 					return;
 				}
+			}
+			if (!arrCheckDup(seleContactList, 'number')) {
+				this.props.toast.info('请输入不同的手机号');
+				return;
 			}
 			this.checkProtocolBindCard();
 		}

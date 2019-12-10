@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 20:14:19
+ * @LastEditTime: 2019-12-10 10:05:36
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -10,7 +10,7 @@ import ButtonCustom from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import ContactResultList from '../contact_result_page/components/ContactResultList';
-import { validators } from 'utils';
+import { validators, arrCheckDup } from 'utils';
 
 @setBackGround('#fff')
 @createForm()
@@ -51,6 +51,10 @@ export default class add_contact_page extends PureComponent {
 				this.props.toast.info('请输入有效手机号');
 				return;
 			}
+		}
+		if (!arrCheckDup(seleContactList, 'number')) {
+			this.props.toast.info('请输入不同的手机号');
+			return;
 		}
 		this.props.history.goBack();
 	};

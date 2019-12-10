@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-09 20:45:44
+ * @LastEditTime: 2019-12-10 10:09:13
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -15,7 +15,7 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto, validators } from 'utils';
+import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto, validators, arrCheckDup } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
@@ -832,6 +832,10 @@ export default class confirm_agency_page extends PureComponent {
 				this.props.toast.info('请在指定联系人列表中输入有效手机号');
 				return;
 			}
+		}
+		if (!arrCheckDup(seleContactList, 'number')) {
+			this.props.toast.info('请输入不同的手机号');
+			return;
 		}
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
