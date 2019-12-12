@@ -39,7 +39,7 @@ export default class contact_result_page extends PureComponent {
 
 	// 修改联系人
 	editContactHandler = (obj) => {
-		buriedPointEvent(home.speContactConfirmModify);
+		buriedPointEvent(home.reContactConfirmModify);
 		this.checkModify(obj);
 		this.props.history.push({ pathname: '/home/modify_contact_page', state: obj });
 	};

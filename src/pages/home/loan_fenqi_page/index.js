@@ -799,7 +799,11 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择指定联系人
 	handleClickChooseContact = () => {
+		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		const { contactList } = this.state;
+		buriedPointEvent(home.selectContactClick, {
+			operation: isBtnAble ? 'edit' : 'select'
+		});
 		if (contactList.length) {
 			if (store.getSelContactList()) {
 				this.props.history.push({
