@@ -128,7 +128,8 @@ export default class loan_fenqi_page extends PureComponent {
 						priceMin,
 						payBankCode,
 						resaveBankCode,
-						contactList
+						contactList,
+						excludedContactList
 					} = res.data;
 
 					let filterContactList = [];
@@ -156,7 +157,8 @@ export default class loan_fenqi_page extends PureComponent {
 						priceMin,
 						payBankCode,
 						resaveBankCode,
-						contactList: filterContactList
+						contactList: filterContactList,
+						excludedContactList
 					});
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -669,6 +671,7 @@ export default class loan_fenqi_page extends PureComponent {
 					store.removeSelEmptyContactList();
 					store.removeSaveContactList();
 					store.removeSaveEmptyContactList();
+					store.removeExcContactList();
 					this.props.toast.info('签约成功，请留意放款通知！');
 					setTimeout(() => {
 						this.props.history.push('/home/home');
@@ -800,10 +803,13 @@ export default class loan_fenqi_page extends PureComponent {
 	// 选择指定联系人
 	handleClickChooseContact = () => {
 		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
-		const { contactList } = this.state;
+		const { contactList, excludedContactList } = this.state;
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
+		if (excludedContactList) {
+			store.setExcContactList(excludedContactList);
+		}
 		if (contactList.length) {
 			if (store.getSelContactList()) {
 				this.props.history.push({

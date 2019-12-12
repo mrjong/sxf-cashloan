@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 20:25:50
+ * @LastEditTime: 2019-12-12 18:16:40
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -40,6 +40,7 @@ export default class add_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
+		const excConatactList = store.getExcContactList();
 		buriedPointEvent(home.speContactConfirmClick);
 		const { seleContactList } = this.state;
 		let filterList = seleContactList.filter((item) => {
@@ -52,6 +53,10 @@ export default class add_contact_page extends PureComponent {
 		for (var i = 0; i < seleContactList.length; i++) {
 			if (!validators.phone(seleContactList[i].number)) {
 				this.props.toast.info('请输入有效手机号');
+				return;
+			}
+			if (excConatactList.includes(seleContactList[i].number)) {
+				this.props.toast.info('请不要填写当前注册手机号或紧急联系人手机号', 3);
 				return;
 			}
 		}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 20:13:34
+ * @LastEditTime: 2019-12-12 17:21:24
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -801,6 +801,7 @@ export default class confirm_agency_page extends PureComponent {
 							store.removeSelEmptyContactList();
 							store.removeSaveContactList();
 							store.removeSaveEmptyContactList();
+							store.removeExcContactList();
 						} else if (result && result.msgCode === 'PTM7001') {
 							this.props.toast.info(result.msgInfo);
 							setTimeout(() => {
@@ -1017,10 +1018,13 @@ export default class confirm_agency_page extends PureComponent {
 	// 选择指定联系人
 	handleClickChooseContact = () => {
 		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
-		const { contactList } = this.state;
+		const { contactList, repayInfo2 } = this.state;
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
+		if (repayInfo2 && repayInfo2.excludedContactList) {
+			store.setExcContactList(repayInfo2.excludedContactList);
+		}
 		if (contactList.length) {
 			if (store.getSelContactList()) {
 				this.props.history.push({

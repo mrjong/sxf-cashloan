@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 10:45:27
+ * @LastEditTime: 2019-12-12 17:14:45
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -102,5 +102,6 @@ export const storeTypes = {
 	SelContactList: 'SelContactList', // 返回联系人不为空的借款选中的五个联系人
 	SelEmptyContactList: 'SelEmptyContactList', // 返回联系人为空的借款选中的五个联系人,
 	SaveContactList: 'SaveContactList', // 保存联系人不为空的借款选中的五个联系人
-	SaveEmptyContactList: 'SaveEmptyContactList' // 保存联系人为空的借款选中的五个联系人
+	SaveEmptyContactList: 'SaveEmptyContactList', // 保存联系人为空的借款选中的五个联系人
+	ExcContactList: 'ExcContactList' // 包含本人以及紧1和紧2联系人
 };

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 10:47:26
+ * @LastEditTime: 2019-12-12 17:38:33
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -219,6 +219,7 @@ export default class home_page extends PureComponent {
 		store.removeSelEmptyContactList();
 		store.removeSaveContactList();
 		store.removeSaveEmptyContactList();
+		store.removeExcContactList();
 	};
 	couponRedDot = () => {
 		this.props.$fetch.get(API.couponRedDot).then((result) => {
