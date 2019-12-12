@@ -60,7 +60,8 @@ export default class loan_fenqi_page extends PureComponent {
 			smsCode: '',
 			payBankCode: '',
 			resaveBankCode: '',
-			contactList: []
+			contactList: [],
+			excludedContactList: []
 		};
 	}
 
