@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-12 18:16:40
+ * @LastEditTime: 2019-12-13 11:42:37
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -69,12 +69,9 @@ export default class add_contact_page extends PureComponent {
 	};
 
 	// 修改联系人信息
-	modifyContact = (obj, val, key) => {
+	modifyContact = (obj, val, key, dataIndex) => {
 		const { seleContactList } = this.state;
-		const selectIndex = seleContactList.findIndex((item) => {
-			return item.uniqMark === obj.uniqMark;
-		});
-		seleContactList[selectIndex][key] = val;
+		seleContactList[dataIndex][key] = val;
 		store.setSelEmptyContactList(seleContactList);
 	};
 

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 20:25:58
+ * @LastEditTime: 2019-12-13 11:41:45
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -21,9 +21,14 @@ export default class modify_contact_page extends PureComponent {
 	}
 	componentWillMount() {
 		const contactList = store.getContactList();
-		const unSeleContactList = contactList.filter((item) => {
-			return !item.isMarked;
+		const selContactList = store.getSelContactList();
+		let unSeleContactList = contactList.filter(
+			(item) => !selContactList.some((ele) => ele.number === item.number)
+		);
+		unSeleContactList.map((item) => {
+			item.isMarked = false;
 		});
+
 		this.setState({
 			contactList: unSeleContactList || []
 		});
@@ -51,27 +56,14 @@ export default class modify_contact_page extends PureComponent {
 	confirmHandler = () => {
 		buriedPointEvent(home.speContactSaveClick);
 		const seleContactList = this.getSeleList();
-		const allContactList = store.getContactList();
 		const seleAllContactList = store.getSelContactList();
-		const modifyItem = this.props.history.location.state && this.props.history.location.state.uniqMark;
-		const selectIndex = seleAllContactList.findIndex((item) => {
-			return item.uniqMark === modifyItem;
-		});
-		if (seleContactList.length) {
-			allContactList.map((item) => {
-				// 当前修改的下次还可以选择
-				if (modifyItem === item.uniqMark) {
-					item.isMarked = false;
-				}
-				if (item.uniqMark === seleContactList[0].uniqMark) {
-					item.isMarked = true;
-				}
-			});
-			seleAllContactList[selectIndex] = seleContactList[0];
-			store.setContactList(allContactList);
+		const modifyItem = this.props.history.location.state;
+		if (seleContactList.length && modifyItem) {
+			seleAllContactList[modifyItem.ind] = seleContactList[0];
 			store.setSelContactList(seleAllContactList);
 		} else {
 			this.props.toast.info('请勾选一个推荐联系人');
+			return;
 		}
 		this.props.history.goBack();
 	};

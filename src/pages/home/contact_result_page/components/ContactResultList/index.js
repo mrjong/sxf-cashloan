@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-09 20:04:57
+ * @LastEditTime: 2019-12-13 11:33:00
  */
 import React from 'react';
 import { InputItem } from 'antd-mobile';
@@ -50,9 +50,11 @@ export default class ContactResultList extends React.Component {
 									placeholder="输入联系人姓名"
 									type="text"
 									defaultValue={item.name}
-									onBlur={(v) => {
-										modifyContact && modifyContact(item, v, 'name');
+									onBlur={() => {
 										handleInputBlur();
+									}}
+									onChange={(v) => {
+										modifyContact && modifyContact(item, v, 'name', index);
 									}}
 									className={isCanSelect ? 'hasIcon' : ''}
 								/>
@@ -62,11 +64,13 @@ export default class ContactResultList extends React.Component {
 									// clear
 									placeholder="输入联系人手机号"
 									defaultValue={this.formatePhone(item.number)}
-									onBlur={(v) => {
-										const val = v.replace(/\s*/g, '');
-										modifyContact && modifyContact(item, val, 'number');
+									onBlur={() => {
 										handleInputBlur();
 										// this.validatePhone(v);
+									}}
+									onChange={(v) => {
+										const val = v.replace(/\s*/g, '');
+										modifyContact && modifyContact(item, val, 'number', index);
 									}}
 									className={isCanSelect ? 'hasIcon' : ''}
 								/>
@@ -74,7 +78,7 @@ export default class ContactResultList extends React.Component {
 								{isCanSelect ? (
 									<div
 										className={styles.telSelectBox}
-										onClick={() => editContactHandler && editContactHandler(item)}
+										onClick={() => editContactHandler && editContactHandler(item, index)}
 									>
 										<i className={styles.telSelect} />
 									</div>

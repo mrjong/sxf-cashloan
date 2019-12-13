@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-12 18:09:13
+ * @LastEditTime: 2019-12-13 11:40:32
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -38,10 +38,9 @@ export default class contact_result_page extends PureComponent {
 	componentWillUnmount() {}
 
 	// 修改联系人
-	editContactHandler = (obj) => {
+	editContactHandler = (obj, dataIndex) => {
 		buriedPointEvent(home.reContactConfirmModify);
-		this.checkModify(obj);
-		this.props.history.push({ pathname: '/home/modify_contact_page', state: obj });
+		this.props.history.push({ pathname: '/home/modify_contact_page', state: { ind: dataIndex, ...obj } });
 	};
 
 	// 确认按钮点击
@@ -75,12 +74,9 @@ export default class contact_result_page extends PureComponent {
 	};
 
 	// 修改联系人信息
-	modifyContact = (obj, val, key) => {
+	modifyContact = (obj, val, key, dataIndex) => {
 		const modifyList = store.getSelContactList();
-		const selectIndex = modifyList.findIndex((item) => {
-			return item.uniqMark === obj.uniqMark;
-		});
-		modifyList[selectIndex][key] = val;
+		modifyList[dataIndex][key] = val;
 		this.setState(
 			{
 				seleContactList: modifyList || []
@@ -89,36 +85,6 @@ export default class contact_result_page extends PureComponent {
 				store.setSelContactList(modifyList);
 			}
 		);
-	};
-
-	// 查看是否更改
-	checkModify = (obj) => {
-		const contactList = store.getContactList();
-		const seletedContactList = store.getSelContactList();
-		contactList.map((item) => {
-			if (item.uniqMark === obj.uniqMark) {
-				if (obj.name === item.name && obj.number === item.number) {
-					item.isMarked = true;
-				} else {
-					item.isMarked = false;
-				}
-			} else {
-				// 不能选择相同电话号码的人,名称可以一直
-				const filterList = seletedContactList.filter((item2) => {
-					return item2.uniqMark === item.uniqMark && item2.number === item.number && !item.isMarked;
-				});
-				const filterList2 = seletedContactList.filter((item2) => {
-					return item2.uniqMark === item.uniqMark && item2.number !== item.number;
-				});
-				if (filterList.length) {
-					item.isMarked = true;
-				}
-				if (filterList2.length) {
-					item.isMarked = false;
-				}
-			}
-		});
-		store.setContactList(contactList);
 	};
 
 	render() {

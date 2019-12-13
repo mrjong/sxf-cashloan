@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-12 17:21:24
+ * @LastEditTime: 2019-12-13 11:48:42
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -125,7 +125,7 @@ export default class confirm_agency_page extends PureComponent {
 			isShowInsureModal: false, // 是否显示保险说明弹框
 			isCheckInsure: false, // 是否选择了保费
 			showCouponAlert: false, // 是否显示优惠券拦截弹窗
-			contactList: []
+			contactList: null
 		};
 	}
 
@@ -1019,6 +1019,9 @@ export default class confirm_agency_page extends PureComponent {
 	handleClickChooseContact = () => {
 		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		const { contactList, repayInfo2 } = this.state;
+		if (!contactList) {
+			return;
+		}
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
