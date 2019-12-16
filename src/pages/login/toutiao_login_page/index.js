@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-06 11:58:04
+ * @LastEditTime: 2019-12-16 19:15:20
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -13,7 +13,7 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView } from 'utils/analytins';
+import { buriedPointEvent, pageView, sxfDataLogin } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
@@ -172,7 +172,7 @@ export default class momo_outer_login_page extends PureComponent {
 					smsCd: values.smsCd,
 					usrCnl: getH5Channel(), // 用户渠道
 					location: store.getPosition(), // 定位地址 TODO 从session取
-					mblNo: values.phoneValue, // 手机号
+					mblNo: values.phoneValue && values.phoneValue.replace(/\s*/g, ''), // 手机号
 					userContract: { contractType: '01,02' },
 					queryUsrSCOpenId: true,
 					sourceData: window.location.href,
@@ -184,11 +184,17 @@ export default class momo_outer_login_page extends PureComponent {
 							res.message && Toast.info(res.message);
 							return;
 						}
-						Cookie.set('fin-v-card-token', res.dataGram.tokenId, { expires: 365 });
+						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
-						store.setToken(res.dataGram.tokenId);
+						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
+						// 神策用户绑定
+						if (!store.getQueryUsrSCOpenId() && res.data.openId) {
+							window.sa.login(res.data.openId);
+							sxfDataLogin(res.data.openId);
+							store.setQueryUsrSCOpenId(res.data.openId);
+						}
 						this.setState(
 							{
 								showDownloadModal: true
@@ -258,7 +264,7 @@ export default class momo_outer_login_page extends PureComponent {
 				if (result.code === '0000') {
 					this.setState({
 						submitData: {
-							relyToken: result.dataGram.relyToken,
+							relyToken: result.data.relyToken,
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -283,7 +289,7 @@ export default class momo_outer_login_page extends PureComponent {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
-						smsJrnNo: result.dataGram.smsJrnNo
+						smsJrnNo: result.data.smsJrnNo
 					});
 					cb && cb('success');
 					setTimeout(() => {
@@ -316,14 +322,10 @@ export default class momo_outer_login_page extends PureComponent {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
 			if (res && res.code === '0000') {
 				this.setState({
-					slideImageUrl: res.dataGram.ossImgBig
-						? res.dataGram.ossImgBig
-						: `data:image/png;base64,${res.dataGram.b}`,
-					smallImageUrl: res.dataGram.ossImgSm
-						? res.dataGram.ossImgSm
-						: `data:image/png;base64,${res.dataGram.s}`,
-					yOffset: res.dataGram.sy, // 小图距离大图顶部距离
-					bigImageH: res.dataGram.bh, // 大图实际高度
+					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
+					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
+					yOffset: res.data.sy, // 小图距离大图顶部距离
+					bigImageH: res.data.bh, // 大图实际高度
 					showSlideModal: true
 				});
 			} else {
@@ -382,7 +384,7 @@ export default class momo_outer_login_page extends PureComponent {
 				(res) => {
 					if (res.code === '0000') {
 						Toast.info('安全下载中');
-						window.location.href = res.dataGram;
+						window.location.href = res.data.downUrl;
 					} else {
 						res.message && Toast.info(res.message);
 					}
