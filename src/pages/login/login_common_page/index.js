@@ -642,6 +642,13 @@ export default class login_common_page extends PureComponent {
 						</span>
 					</div>
 				</div>
+				<div className={styles.footer_copyright}>
+					<p>贷款有风险,借款需谨慎;请根据个人能力合理贷款,理性消费,避免逾期</p>
+					<p> 贷款额度、放款时间以实际审核批准结果为准</p>
+					<p>Copyright ©2019 All Rights Reserved</p>
+					<p>随行付（北京）金融信息服务有限公司 京ICP备14062512号-1</p>
+				</div>
+
 				{showSlideModal && (
 					<ImageCode
 						imageUrl={slideImageUrl}

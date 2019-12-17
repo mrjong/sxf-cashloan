@@ -207,7 +207,14 @@
 		.nochecked {
 			background-image: url(./img/unChecked_ico.png);
 		}
-	}
+  }
+  .footer_copyright {
+    font-size: 20px;
+    color: #868E9E;
+    text-align: center;
+    margin: 0 30px;
+  }
+
 
 	:global {
 		.am-list-item .am-input-control input {
