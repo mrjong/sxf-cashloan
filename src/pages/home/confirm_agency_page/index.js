@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-13 11:48:42
+ * @LastEditTime: 2019-12-17 15:29:57
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -1022,6 +1022,8 @@ export default class confirm_agency_page extends PureComponent {
 		if (!contactList) {
 			return;
 		}
+		store.setSaveAmt(true);
+		store.setRepaymentModalData(this.state);
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
