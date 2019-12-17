@@ -456,7 +456,9 @@ export default class loan_fenqi_page extends PureComponent {
 			deratePrice,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			contactList,
+			excludedContactList
 		} = this.state;
 		const resaveCard = {
 			agrNo: resaveBankCardAgrNo,
@@ -486,7 +488,9 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCardAgrNo,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			contactList,
+			excludedContactList
 		});
 		store.setCashFenQiCardArr([resaveCard, payCard]);
 	};
