@@ -803,6 +803,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择指定联系人
 	handleClickChooseContact = () => {
+		this.storeTempData();
 		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		const { contactList, excludedContactList } = this.state;
 		buriedPointEvent(home.selectContactClick, {
