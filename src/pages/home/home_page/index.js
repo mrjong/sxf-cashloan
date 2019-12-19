@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 09:43:29
+ * @LastEditTime : 2019-12-19 09:45:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -211,6 +211,14 @@ export default class home_page extends PureComponent {
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
 		store.removeCouponData();
+		// 清除借款中总的联系人
+		store.removeContactList();
+		// 清除借款选中的五个联系人
+		store.removeSelContactList();
+		store.removeSelEmptyContactList();
+		store.removeSaveContactList();
+		store.removeSaveEmptyContactList();
+		store.removeExcContactList();
 	};
 	couponRedDot = () => {
 		this.props.$fetch.get(API.couponRedDot).then((result) => {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-30 15:22:17
+ * @LastEditTime: 2019-12-17 15:29:57
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -124,7 +124,8 @@ export default class confirm_agency_page extends PureComponent {
 			smsCode: '',
 			isShowInsureModal: false, // 是否显示保险说明弹框
 			isCheckInsure: false, // 是否选择了保费
-			showCouponAlert: false // 是否显示优惠券拦截弹窗
+			showCouponAlert: false, // 是否显示优惠券拦截弹窗
+			contactList: null
 		};
 	}
 
@@ -551,12 +552,26 @@ export default class confirm_agency_page extends PureComponent {
 			.post(API.REPAY_INFO, params)
 			.then((result) => {
 				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					let contactList = [];
+					if (result.data.contactList && result.data.contactList.length) {
+						for (var i = 0; i < result.data.contactList.length; i++) {
+							if (i < 5) {
+								result.data.contactList[i].isMarked = true;
+							} else {
+								result.data.contactList[i].isMarked = false;
+							}
+							result.data.contactList[i].uniqMark = 'uniq' + i;
+							contactList.push(result.data.contactList[i]);
+						}
+					}
 					this.setState({
 						repayInfo2: result.data,
 						deratePrice: result.data.deductAmount,
 						couponInfo,
-						showInterestTotal: result.data.showFlag === '1'
+						showInterestTotal: result.data.showFlag === '1',
+						contactList
 					});
+
 					// if (result.data.data && result.data.data.usrCoupNo) {
 					// 	this.dealMoney(result.data);
 					// }
@@ -696,6 +711,26 @@ export default class confirm_agency_page extends PureComponent {
 				couponId = '';
 			}
 		}
+		let contactParams = '';
+		const selectedList = [];
+		if (store.getSelContactList() && store.getSelContactList().length) {
+			store.getSelContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = selectedList;
+		} else if (store.getSelEmptyContactList()) {
+			store.getSelEmptyContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = selectedList;
+		}
+
 		// else {
 		// 	// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
 		// 	// 	couponId = this.state.repayInfo2.data.usrCoupNo;
@@ -710,7 +745,9 @@ export default class confirm_agency_page extends PureComponent {
 			usrBusCnl: '', // 操作渠道
 			coupId: couponId, // 优惠劵id
 			price: cardBillAmt, // 签约金额
-			osType: getDeviceType() // 操作系统
+			osType: getDeviceType(), // 操作系统
+			prodType: '01', // 业务线
+			contactList: contactParams
 		};
 		timerOut = setTimeout(() => {
 			this.setState(
@@ -757,6 +794,14 @@ export default class confirm_agency_page extends PureComponent {
 							// 清除上个页面中的弹框数据
 							store.removeRepaymentModalData();
 							store.removeSaveAmt();
+							// 清除借款中总的联系人
+							store.removeContactList();
+							// 清除借款选中的五个联系人
+							store.removeSelContactList();
+							store.removeSelEmptyContactList();
+							store.removeSaveContactList();
+							store.removeSaveEmptyContactList();
+							store.removeExcContactList();
 						} else if (result && result.msgCode === 'PTM7001') {
 							this.props.toast.info(result.msgInfo);
 							setTimeout(() => {
@@ -786,6 +831,10 @@ export default class confirm_agency_page extends PureComponent {
 		const { isCheckInsure, repayInfo2 } = this.state;
 		if (repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure) {
 			this.props.toast.info('请先购买保险');
+			return;
+		}
+		if (!(store.getSaveEmptyContactList() || store.getSaveContactList())) {
+			this.props.toast.info('请选择指定联系人');
 			return;
 		}
 		// 埋点
@@ -966,6 +1015,40 @@ export default class confirm_agency_page extends PureComponent {
 			isShowInsureModal: true
 		});
 	};
+	// 选择指定联系人
+	handleClickChooseContact = () => {
+		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
+		const { contactList, repayInfo2 } = this.state;
+		if (!contactList) {
+			return;
+		}
+		store.setSaveAmt(true);
+		store.setRepaymentModalData(this.state);
+		buriedPointEvent(home.selectContactClick, {
+			operation: isBtnAble ? 'edit' : 'select'
+		});
+		if (repayInfo2 && repayInfo2.excludedContactList) {
+			store.setExcContactList(repayInfo2.excludedContactList);
+		}
+		if (contactList.length) {
+			if (store.getSelContactList()) {
+				this.props.history.push({
+					pathname: '/home/contact_result_page'
+				});
+			} else {
+				this.props.history.push({
+					pathname: '/home/reco_contact_page',
+					state: {
+						contactList: contactList
+					}
+				});
+			}
+		} else {
+			this.props.history.push({
+				pathname: '/home/add_contact_page'
+			});
+		}
+	};
 	render() {
 		const { history, toast } = this.props;
 		const { getFieldProps } = this.props.form;
@@ -993,6 +1076,7 @@ export default class confirm_agency_page extends PureComponent {
 			couponAlertData,
 			showInterestTotal
 		} = this.state;
+		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		return (
 			<div>
 				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>
@@ -1184,6 +1268,13 @@ export default class confirm_agency_page extends PureComponent {
 										)}
 									</div>
 								</li>
+								<li className={style.listItem} onClick={this.handleClickChooseContact}>
+									<label>指定联系人</label>
+									<span className={[style.listValue, style.greyText, style.hasArrow].join(' ')}>
+										请选择
+										<Icon type="right" className={style.icon} />
+									</span>
+								</li>
 							</ul>
 							<ul className={style.pannel}>
 								<li className={style.listItem}>
@@ -1254,7 +1345,7 @@ export default class confirm_agency_page extends PureComponent {
 									: () => {}
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && isBtnAble
 									? repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure
 										? style.submitBtnDisabled
 										: style.submitBtn

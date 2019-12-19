@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 10:29:56
+ * @LastEditTime: 2019-12-10 09:58:57
  */
 /*eslint-disable */
 import React from 'react';
@@ -899,4 +899,22 @@ export const openNativeApp = () => {
 	if (!(isMPOS() && getDeviceType() === 'ANDRIOD')) {
 		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
 	}
+};
+
+// 引用类型数组校验是否存在重复项
+/**判断数组中 某个key是否重复
+ *param arr 判断的数组
+ *param key 判断的key
+ *return 重复返回false 不重复返回true
+ */
+export const arrCheckDup = (arr, key) => {
+	var obj = {};
+	for (var i = 0; i < arr.length; i++) {
+		if (obj[arr[i][key]]) {
+			return false;
+		} else {
+			obj[arr[i][key]] = arr[i];
+		}
+	}
+	return true;
 };

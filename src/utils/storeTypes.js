@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:58:15
+ * @LastEditTime : 2019-12-19 09:46:41
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -102,5 +102,11 @@ export const storeTypes = {
 	GotoCard: 'GotoCard', // 运营上成功之后 无法返回首页
 	TFDBack1: 'TFDBack1', // call通付盾成功
 	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
-	TestABTag: 'TestABTag' // 全局AB测试标志
+	TestABTag: 'TestABTag', // 全局AB测试标志
+	ContactList: 'ContactList', // 借款中总的联系人
+	SelContactList: 'SelContactList', // 返回联系人不为空的借款选中的五个联系人
+	SelEmptyContactList: 'SelEmptyContactList', // 返回联系人为空的借款选中的五个联系人,
+	SaveContactList: 'SaveContactList', // 保存联系人不为空的借款选中的五个联系人
+	SaveEmptyContactList: 'SaveEmptyContactList', // 保存联系人为空的借款选中的五个联系人
+	ExcContactList: 'ExcContactList' // 包含本人以及紧1和紧2联系人
 };

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-29 12:06:31
+ * @LastEditTime: 2019-12-10 10:24:50
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -60,7 +60,6 @@ export default class InsuranceModal extends React.PureComponent {
 	render() {
 		// const { prodType } = this.props;
 		const { checkBox1 } = this.state;
-		console.log(checkBox1, 'ssss');
 		return (
 			<Modal popup className="warningModal" visible={true} animationType="slide-up" maskClosable={false}>
 				<div className={styles.warningModalCont}>

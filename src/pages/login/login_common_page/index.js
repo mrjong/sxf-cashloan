@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-19 11:35:02
+ * @LastEditTime : 2019-12-19 09:46:01
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -648,7 +648,6 @@ export default class login_common_page extends PureComponent {
 					<p>Copyright ©2019 All Rights Reserved</p>
 					<p>随行付（北京）金融信息服务有限公司 京ICP备14062512号-1</p>
 				</div>
-
 				{showSlideModal && (
 					<ImageCode
 						imageUrl={slideImageUrl}

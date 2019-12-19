@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 10:28:16
+ * @LastEditTime : 2019-12-19 09:46:30
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -103,7 +103,14 @@ const home = {
 	protocolAlertClose: `${prefix}_PROTOCOL_ALERT_CLOSE`,
 	landingImgClick: `${prefix}_HOME_LANDING_IMG_CLICK`, // 落地页图片交互点击
 	configModalJoinClick: `${prefix}_HOME_CONFIG_MODAL_JOIN_CLICK`, // 首页配置化弹框点击参与按钮
-	configModalCloseClick: `${prefix}_HOME_CONFIG_MODAL_CLOSE_CLICK` // 首页配置化弹框点击关闭按钮
+	configModalCloseClick: `${prefix}_HOME_CONFIG_MODAL_CLOSE_CLICK`, // 首页配置化弹框点击关闭按钮
+
+	selectContactClick: `${prefix}_HOME_SELECT_CONTACT_CLICK`, // 签约借款-指定联系人-请选择/修改
+	reContactConfirmClick: `${prefix}_HOME_RECOM_CONTACT_CONFIRM`, // 推荐联系人-确认
+	reContactSaveClick: `${prefix}_HOME_RECOM_CONTACT_SAVE`, // 推荐联系人-确认(联系人列表不为空时,指定联系人确认按钮)
+	speContactConfirmClick: `${prefix}_HOME_SPECIFY_CONTACT_CONFIRM`, // 联系人列表为空时,指定联系人确认按钮
+	speContactSaveClick: `${prefix}_HOME_SPECIFY_CONTACT_SAVE`, // 修改联系人-保存
+	reContactConfirmModify: `${prefix}_HOME_RECOM_CONTACT_MODIFY` // 联系人列表不为空时,指定联系人-修改
 };
 
 const mine = {

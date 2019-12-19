@@ -59,7 +59,9 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			payBankCode: '',
-			resaveBankCode: ''
+			resaveBankCode: '',
+			contactList: [],
+			excludedContactList: []
 		};
 	}
 
@@ -126,8 +128,24 @@ export default class loan_fenqi_page extends PureComponent {
 						priceMax,
 						priceMin,
 						payBankCode,
-						resaveBankCode
+						resaveBankCode,
+						contactList,
+						excludedContactList
 					} = res.data;
+
+					let filterContactList = [];
+					if (contactList && contactList.length) {
+						for (var i = 0; i < contactList.length; i++) {
+							if (i < 5) {
+								contactList[i].isMarked = true;
+							} else {
+								contactList[i].isMarked = false;
+							}
+							contactList[i].uniqMark = 'uniq' + i;
+							filterContactList.push(contactList[i]);
+						}
+					}
+
 					this.setState({
 						resaveBankCardAgrNo,
 						resaveBankCardLastNo,
@@ -139,7 +157,9 @@ export default class loan_fenqi_page extends PureComponent {
 						priceMax,
 						priceMin,
 						payBankCode,
-						resaveBankCode
+						resaveBankCode,
+						contactList: filterContactList,
+						excludedContactList
 					});
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -436,7 +456,9 @@ export default class loan_fenqi_page extends PureComponent {
 			deratePrice,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			contactList,
+			excludedContactList
 		} = this.state;
 		const resaveCard = {
 			agrNo: resaveBankCardAgrNo,
@@ -466,7 +488,9 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCardAgrNo,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			contactList,
+			excludedContactList
 		});
 		store.setCashFenQiCardArr([resaveCard, payCard]);
 	};
@@ -533,7 +557,14 @@ export default class loan_fenqi_page extends PureComponent {
 	//验证信息是否填写完整
 	validateFn = () => {
 		const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo, prdId } = this.state;
-		if (loanMoney && loanDate && resaveBankCardAgrNo && payBankCardAgrNo && prdId) {
+		if (
+			loanMoney &&
+			loanDate &&
+			resaveBankCardAgrNo &&
+			payBankCardAgrNo &&
+			prdId &&
+			(store.getSaveEmptyContactList() || store.getSaveContactList())
+		) {
 			return true;
 		}
 		return false;
@@ -586,6 +617,10 @@ export default class loan_fenqi_page extends PureComponent {
 	//借款申请提交
 	loanApplySubmit = () => {
 		const { loanMoney, loanDate } = this.state;
+		if (!(store.getSaveEmptyContactList() || store.getSaveContactList())) {
+			this.props.toast.info('请选择指定联系人');
+			return;
+		}
 		if (this.validateFn()) {
 			buriedPointEvent(loan_fenqi.clickSubmit, {
 				loanMoney,
@@ -597,6 +632,25 @@ export default class loan_fenqi_page extends PureComponent {
 
 	submitHandler = () => {
 		const { loanMoney, loanUsage, resaveBankCardAgrNo, payBankCardAgrNo, prdId, couponInfo } = this.state;
+		let contactParams = '';
+		const selectedList = [];
+		if (store.getSelContactList() && store.getSelContactList().length) {
+			store.getSelContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = selectedList;
+		} else if (store.getSelEmptyContactList()) {
+			store.getSelEmptyContactList().map((item) => {
+				selectedList.push({
+					num: item.number,
+					n: item.name
+				});
+			});
+			contactParams = selectedList;
+		}
 		this.props.$fetch
 			.post(API.agentRepay, {
 				withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
@@ -608,12 +662,21 @@ export default class loan_fenqi_page extends PureComponent {
 				osType: getDeviceType(), // 操作系统
 				prodType: '11',
 				channelType: 'h5',
-				loanUsage: loanUsage.value
+				loanUsage: loanUsage.value,
+				contactList: contactParams
 			})
 			.then((res) => {
 				if (res.msgCode === 'PTM0000') {
 					// 清除卡信息
 					store.removeCardData();
+					// 清除借款中总的联系人
+					store.removeContactList();
+					// 清除借款选中的五个联系人
+					store.removeSelContactList();
+					store.removeSelEmptyContactList();
+					store.removeSaveContactList();
+					store.removeSaveEmptyContactList();
+					store.removeExcContactList();
 					this.props.toast.info('签约成功，请留意放款通知！');
 					setTimeout(() => {
 						this.props.history.push('/home/home');
@@ -742,6 +805,37 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	// 选择指定联系人
+	handleClickChooseContact = () => {
+		this.storeTempData();
+		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
+		const { contactList, excludedContactList } = this.state;
+		buriedPointEvent(home.selectContactClick, {
+			operation: isBtnAble ? 'edit' : 'select'
+		});
+		if (excludedContactList) {
+			store.setExcContactList(excludedContactList);
+		}
+		if (contactList.length) {
+			if (store.getSelContactList()) {
+				this.props.history.push({
+					pathname: '/home/contact_result_page'
+				});
+			} else {
+				this.props.history.push({
+					pathname: '/home/reco_contact_page',
+					state: {
+						contactList: contactList
+					}
+				});
+			}
+		} else {
+			this.props.history.push({
+				pathname: '/home/add_contact_page'
+			});
+		}
+	};
+
 	render() {
 		const {
 			usageModal,
@@ -848,6 +942,13 @@ export default class loan_fenqi_page extends PureComponent {
 									) : (
 										<span className={style.greyText}>暂无</span>
 									)}
+								</span>
+							</li>
+							<li className={style.listItem} onClick={this.handleClickChooseContact}>
+								<label>指定联系人</label>
+								<span className={style.listValue}>
+									请选择
+									<Icon type="right" className={style.icon} />
 								</span>
 							</li>
 							{loanMoney && loanDate && prdId && (

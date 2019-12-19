@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-12-02 11:14:31
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2019-12-19 09:43:59
  */
 export default [
 	{
@@ -121,5 +121,29 @@ export default [
 		zhName: 'wsbcxx',
 		title: '完善补充信息',
 		component: () => import('pages/home/addInfo')
+	},
+	{
+		path: '/home/reco_contact_page',
+		zhName: 'tjlxr',
+		title: '推荐联系人',
+		component: () => import('pages/home/reco_contact_page')
+	},
+	{
+		path: '/home/contact_result_page',
+		zhName: 'zdlxr',
+		title: '指定联系人',
+		component: () => import('pages/home/contact_result_page')
+	},
+	{
+		path: '/home/modify_contact_page',
+		zhName: 'xglxr',
+		title: '修改联系人',
+		component: () => import('pages/home/modify_contact_page')
+	},
+	{
+		path: '/home/add_contact_page',
+		zhName: 'kzdlxr',
+		title: '指定联系人',
+		component: () => import('pages/home/add_contact_page')
 	}
 ];

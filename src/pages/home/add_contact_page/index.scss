@@ -1,0 +1,23 @@
+.contact_result_page {
+	padding: 60px 0 160px;
+	.confirm_btn_box {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 160px;
+		box-sizing: border-box;
+		padding: 30px 58px;
+    background: #fff;
+    z-index: 1;
+	}
+	.confirm_btn {
+		height: 100px;
+		line-height: 100px;
+		border-radius: 50px;
+	}
+	.disabled_confirm_btn {
+		background: #dcdfe6;
+		color: #fff;
+	}
+}
