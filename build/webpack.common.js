@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-31 10:40:13
+ * @LastEditTime: 2019-12-16 19:16:44
  */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
@@ -135,7 +135,13 @@ module.exports = function(options) {
 					// target: 'http://172.18.40.146:8080/wap',
 					pathRewrite: { '^/wap': '' }, //重写接口
 					changeOrigin: true //是否跨域
-				},
+        },
+        '/web/api/v09': {
+          target: 'http://172.16.174.104:8080/web/api/v09', //目标接口域名
+					// target: 'http://172.18.40.62:8080/web/api/v09',
+					pathRewrite: { '^/web/api/v09': '' }, //重写接口
+					changeOrigin: true //是否跨域
+        },
 				// '/buried': {
 				// 	target: 'http://172.16.173.18:8080/buried', //目标接口域名
 				// 	// target: 'http://172.18.40.181:8888/wap',

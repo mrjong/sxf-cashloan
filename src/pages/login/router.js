@@ -1,6 +1,11 @@
 /*
+ * @Author: sunjiankun
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2019-12-19 15:03:17
+ */
+/*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 16:04:08
+ * @LastEditTime : 2019-12-19 15:02:39
  */
 export default [
 	{
@@ -44,5 +49,12 @@ export default [
 		title: '登录',
 		arrowHide: true,
 		component: () => import('pages/login/mpos_push_login')
+	},
+	{
+		path: '/toutiao_login_page',
+		zhName: 'ttdl',
+		title: '登录',
+		arrowHide: true,
+		component: () => import('pages/login/toutiao_login_page')
 	}
 ];
