@@ -141,7 +141,8 @@ const order = {
 	couponUseAlert_no: `${prefix}_COUPONUSEALERT_NO`, // 优惠券使用弹窗按钮点击
 	couponUseAlert_yes: `${prefix}_COUPONUSEALERT_YES`, // 优惠券使用弹窗按钮点击
 	repayResultStatus: `${prefix}_REPAYRESULT_STATUS`, // 还款完成页-还款状态
-	continueRepayBtn: `${prefix}_CONTINUEREPAY_BTN` // 结果页-继续还款按钮点击
+	continueRepayBtn: `${prefix}_CONTINUEREPAY_BTN`, // 结果页-继续还款按钮点击
+	payAllOrderBtnClick: `${prefix}_PAYALL_BTN_CLICK` // 一键结清按钮点击
 };
 
 const membership = {

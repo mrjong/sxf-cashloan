@@ -148,14 +148,14 @@ export default class order_repay_confirm extends PureComponent {
 	};
 
 	// 获取还款确认信息
-	getRepayConfirmInfo = (isPayAll) => {
-		const { billNo, repayPerds, billDesc } = this.props.history.location.state;
+	getRepayConfirmInfo = () => {
+		const { billNo, repayPerds, billDesc, isPayAll } = this.props.history.location.state;
 		let couponInfo = store.getCouponData() || {};
 		let params = {
 			ordNo: billNo,
 			isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 			prodType: billDesc.prodType,
-			repayPerds: isPayAll ? [] : repayPerds
+			repayPerds
 		};
 		if (couponInfo.coupId) {
 			params.coupId = couponInfo.coupId;
@@ -182,7 +182,13 @@ export default class order_repay_confirm extends PureComponent {
 
 	//获取使用优惠券试算金额
 	getDiscountMoney = (arr = []) => {
-		const { totalList } = this.props.history.location.state;
+		const { totalList, isPayAll } = this.props.history.location.state;
+		if (isPayAll) {
+			this.setState({
+				detailList: arr
+			});
+			return;
+		}
 
 		arr.forEach((item) => {
 			if (item.feeNm === '优惠金额') {
@@ -303,10 +309,10 @@ export default class order_repay_confirm extends PureComponent {
 
 	//还款确认提交
 	repayConfirmSubmit = () => {
-		const { isPayAll, payType, cardAgrNo } = this.state;
+		const { payType, cardAgrNo } = this.state;
 		let couponInfo = store.getCouponData() || {};
 
-		const { billDesc = {}, billNo, canUseCoupon } = this.props.history.location.state;
+		const { billDesc = {}, billNo, canUseCoupon, isPayAll } = this.props.history.location.state;
 
 		let couponId = '';
 		if (couponInfo && couponInfo.usrCoupNo) {
@@ -355,7 +361,7 @@ export default class order_repay_confirm extends PureComponent {
 			isPayOff: isPayAll ? '1' : '0',
 			thisRepTotAmt: totalAmt,
 			adapter: '01',
-			repayPerds: isPayAll ? [] : repayPerds
+			repayPerds
 		};
 		// 添加微信新增参数
 		switch (payType) {
@@ -442,7 +448,7 @@ export default class order_repay_confirm extends PureComponent {
 										ordNo: billNo,
 										isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 										prodType: billDesc.prodType,
-										repayPerds: isPayAll ? [] : repayPerds,
+										repayPerds,
 										bankNo,
 										bankName,
 										billDesc,
@@ -603,6 +609,8 @@ export default class order_repay_confirm extends PureComponent {
 		} else {
 			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
 		}
+
+		console.log(detailList, 'list');
 
 		return (
 			<div>

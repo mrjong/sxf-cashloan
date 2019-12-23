@@ -263,7 +263,6 @@ export default class order_detail_page extends PureComponent {
 			billNo,
 			billDesc,
 			repayPerds,
-			prodType,
 			canUseCoupon,
 			actOrderList,
 			thisPerdNum,
@@ -282,7 +281,6 @@ export default class order_detail_page extends PureComponent {
 				billNo,
 				billDesc,
 				repayPerds,
-				prodType,
 				canUseCoupon,
 				actOrderList,
 				isPayAll: false,
@@ -292,6 +290,53 @@ export default class order_detail_page extends PureComponent {
 				totalAmtForShow
 			}
 		});
+	};
+
+	//一键结清
+	payAllOrder = () => {
+		const { billNo, billDesc, actOrderList, thisPerdNum } = this.state;
+
+		let repayPerds = [];
+		for (let i = 0; i < actOrderList.length; i++) {
+			const item = actOrderList[i];
+			if (item.perdSts === '0') {
+				repayPerds.push(item.perdNum);
+			}
+		}
+		buriedPointEvent(order.payAllOrderBtnClick, {
+			isOverdue: false,
+			repayPerds: repayPerds.join(',')
+		});
+		this.props.$fetch
+			.post(API.fundPlain, {
+				ordNo: billNo,
+				isSettle: '1', // 一键结清isSettle为1， 否则为0
+				prodType: billDesc.prodType,
+				repayPerds
+			})
+			.then((res) => {
+				if (res.msgCode === 'PTM0000' && res.data) {
+					const { totalAmtForShow } = res.data[0] || {};
+					this.props.history.push({
+						pathname: '/order/order_repay_confirm',
+						state: {
+							billNo,
+							billDesc,
+							repayPerds,
+							canUseCoupon: false,
+							actOrderList,
+							isPayAll: true,
+							thisPerdNum,
+							billOvduDays: '',
+							totalList: [],
+							totalAmtForShow
+						}
+					});
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	// 查看还款信息
@@ -431,8 +476,8 @@ export default class order_detail_page extends PureComponent {
 			payCrdCorpOrgNm = '',
 			payCrdNoLast = '',
 			wthdCrdCorpOrgNm = '',
-			wthdCrdNoLast = ''
-			// discRedRepay = false
+			wthdCrdNoLast = '',
+			discRedRepay
 		} = billDesc;
 		const itemList = [
 			{
@@ -492,12 +537,12 @@ export default class order_detail_page extends PureComponent {
 									</li>
 								))}
 							</ul>
-							{/* {!isBillClean && (
+							{!isEntryShow && !isBillClean && (
 								<div className={styles.payAll} onClick={this.payAllOrder}>
 									{discRedRepay && <i />}
 									一键结清
 								</div>
-							)} */}
+							)}
 						</Panel>
 
 						<div className={styles.submit_btn}>
