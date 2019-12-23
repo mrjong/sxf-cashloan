@@ -128,7 +128,8 @@ export default class order_detail_page extends PureComponent {
 						perdList,
 						billOvduDays,
 						billOvduStartDt,
-						billSts
+						billSts,
+						waitRepAmt
 					} = res.data;
 					Number(insuranceAmt) && this.handleInsureFeeInfo(insuranceAmt, insuranceSts);
 
@@ -139,7 +140,8 @@ export default class order_detail_page extends PureComponent {
 							isBillClean: billSts === '4' || billSts === '2', //总账单是否结清或处理中
 							perdList, //账单期数列表
 							billOvduDays,
-							billOvduStartDt
+							billOvduStartDt,
+							waitRepAmt
 						},
 						() => {
 							this.showPerdList();
@@ -294,7 +296,7 @@ export default class order_detail_page extends PureComponent {
 
 	//一键结清
 	payAllOrder = () => {
-		const { billNo, billDesc, actOrderList, thisPerdNum } = this.state;
+		const { billNo, billDesc, actOrderList, thisPerdNum, waitRepAmt } = this.state;
 
 		let repayPerds = [];
 		for (let i = 0; i < actOrderList.length; i++) {
@@ -307,36 +309,21 @@ export default class order_detail_page extends PureComponent {
 			isOverdue: false,
 			repayPerds: repayPerds.join(',')
 		});
-		this.props.$fetch
-			.post(API.fundPlain, {
-				ordNo: billNo,
-				isSettle: '1', // 一键结清isSettle为1， 否则为0
-				prodType: billDesc.prodType,
-				repayPerds
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data) {
-					const { totalAmtForShow } = res.data[0] || {};
-					this.props.history.push({
-						pathname: '/order/order_repay_confirm',
-						state: {
-							billNo,
-							billDesc,
-							repayPerds,
-							canUseCoupon: false,
-							actOrderList,
-							isPayAll: true,
-							thisPerdNum,
-							billOvduDays: '',
-							totalList: [],
-							totalAmtForShow
-						}
-					});
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		this.props.history.push({
+			pathname: '/order/order_repay_confirm',
+			state: {
+				billNo,
+				billDesc,
+				repayPerds,
+				canUseCoupon: false,
+				actOrderList,
+				isPayAll: true,
+				thisPerdNum,
+				billOvduDays: '',
+				totalList: [],
+				totalAmtForShow: waitRepAmt
+			}
+		});
 	};
 
 	// 查看还款信息
@@ -537,7 +524,7 @@ export default class order_detail_page extends PureComponent {
 									</li>
 								))}
 							</ul>
-							{!isEntryShow && !isBillClean && (
+							{!billOvduDays && !isBillClean && (
 								<div className={styles.payAll} onClick={this.payAllOrder}>
 									{discRedRepay && <i />}
 									一键结清
