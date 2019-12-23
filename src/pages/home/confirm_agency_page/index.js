@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-17 15:29:57
+ * @LastEditTime : 2019-12-23 10:50:30
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -1271,7 +1271,7 @@ export default class confirm_agency_page extends PureComponent {
 								<li className={style.listItem} onClick={this.handleClickChooseContact}>
 									<label>指定联系人</label>
 									<span className={[style.listValue, style.greyText, style.hasArrow].join(' ')}>
-										请选择
+										{isBtnAble ? '去修改' : '请选择'}
 										<Icon type="right" className={style.icon} />
 									</span>
 								</li>

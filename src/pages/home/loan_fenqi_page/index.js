@@ -861,6 +861,7 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowSmsModal,
 			smsCode
 		} = this.state;
+		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		return (
 			<div className={style.fenqi_page}>
 				<div className={style.scrollWrap}>
@@ -947,7 +948,7 @@ export default class loan_fenqi_page extends PureComponent {
 							<li className={style.listItem} onClick={this.handleClickChooseContact}>
 								<label>指定联系人</label>
 								<span className={style.listValue}>
-									请选择
+									{isBtnAble ? '去修改' : '请选择'}
 									<Icon type="right" className={style.icon} />
 								</span>
 							</li>
