@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 10:44:50
+ * @LastEditTime : 2019-12-24 11:04:07
  */
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel, getTestABTag } from 'utils/common';

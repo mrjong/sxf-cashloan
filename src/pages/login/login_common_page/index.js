@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 10:38:48
+ * @LastEditTime : 2019-12-24 11:05:14
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -10,6 +10,8 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { domListen } from 'utils/domListen';
+
 import {
 	getDeviceType,
 	getFirstError,
@@ -37,7 +39,6 @@ import ImageCode from 'components/ImageCode';
 import listPNG from './img/list.png';
 import yuanPNG from './img/yuan.png';
 import { TFDLogin } from 'utils/getTongFuDun';
-import { domListen } from 'utils/domListen';
 
 let timmer;
 const API = {
@@ -80,7 +81,7 @@ export default class login_common_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		sxfDataPv('dwdl');
+		sxfDataPv({ pId: 'dwdl' });
 		sxfburiedPointEvent('dl_chkBox');
 		const queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
@@ -137,6 +138,7 @@ export default class login_common_page extends PureComponent {
 		});
 		// 获取地址
 		address();
+		console.log('11111111111111');
 		pageView();
 		entryPageTime = new Date();
 	}
