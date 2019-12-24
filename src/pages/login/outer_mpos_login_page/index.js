@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:35:42
+ * @LastEditTime : 2019-12-24 10:36:43
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -19,6 +19,8 @@ import {
 	sxfDataPv,
 	sxfburiedPointEvent
 } from 'utils/analytins';
+import { domListen } from 'utils/domListen';
+
 import { wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
@@ -41,6 +43,7 @@ let entryPageTime = '';
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@domListen()
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);

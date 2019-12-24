@@ -1,12 +1,14 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-20 10:27:24
+ * @LastEditTime : 2019-12-24 10:43:19
  */
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
+
 import LoginCommonPage from '../login_common_page';
 import bannerImg4 from './img/login_bg4.png';
+
 /*eslint-disable */
-export default class outer_test_login_page extends PureComponent {
+export default class outer_test_login_page extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};

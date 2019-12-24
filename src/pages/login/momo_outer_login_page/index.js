@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:31:10
+ * @LastEditTime : 2019-12-24 10:41:29
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -37,6 +37,7 @@ import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
 import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { domListen } from 'utils/domListen';
 
 let timmer;
 const API = {
@@ -56,6 +57,7 @@ let modalTimer = null;
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@domListen()
 export default class momo_outer_login_page extends PureComponent {
 	constructor(props) {
 		super(props);

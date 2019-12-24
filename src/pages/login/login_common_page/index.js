@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:25:54
+ * @LastEditTime : 2019-12-24 10:38:48
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -37,6 +37,7 @@ import ImageCode from 'components/ImageCode';
 import listPNG from './img/list.png';
 import yuanPNG from './img/yuan.png';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { domListen } from 'utils/domListen';
 
 let timmer;
 const API = {
@@ -56,6 +57,7 @@ let entryPageTime = '';
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@domListen()
 export default class login_common_page extends PureComponent {
 	constructor(props) {
 		super(props);
