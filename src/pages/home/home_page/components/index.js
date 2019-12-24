@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2019-12-24 17:09:11
+ */
 import CarouselHome from './CarouselHome';
 import BlackCard from './BlackCard';
 import HomeModal from './HomeModal';
@@ -9,6 +14,7 @@ import WhiteCard from './WhiteCard';
 import CardProgress from './CardProgress';
 import AddCards from './AddCards';
 import ExamineCard from './ExamineCard';
+import CreditCard from './CreditCard';
 export {
 	CarouselHome,
 	BlackCard,
@@ -20,5 +26,6 @@ export {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard
+	ExamineCard,
+	CreditCard
 };
