@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-16 19:15:20
+ * @LastEditTime : 2019-12-24 13:53:52
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -523,7 +523,7 @@ export default class momo_outer_login_page extends PureComponent {
 						<img className={styles.featureImg} src={feature_img1} alt="特征" />
 						<p className={styles.featureTit}>简单</p>
 						<p className={styles.featureDesc}>
-							急需身份证
+							仅需身份证
 							<br />
 							信用卡
 						</p>
