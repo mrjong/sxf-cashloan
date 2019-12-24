@@ -1,80 +1,46 @@
 .mpos_download_page {
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
-	height: 100%;
+	// overflow: auto;
+	// -webkit-overflow-scrolling: touch;
+	// height: 100%;
+	padding-top: 65px;
 	background: #fff;
+	text-align: center;
 	.banner {
-		width: 100%;
-		display: block;
+		width: 340px;
+		vertical-align: top;
 	}
 	.content {
-		position: relative;
-		top: -40px;
-		text-align: center;
-		width: 666px;
-		height: 670px;
-		background: #fff;
-		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
-		border-radius: 10px;
-		margin: 0 auto;
-		padding: 23px;
-		box-sizing: border-box;
-
-		.loginContentBox {
-			position: relative;
-			border: 1px solid #283042;
-			box-sizing: border-box;
-			height: 100%;
-		}
+		padding-top: 45px;
 		.title {
-			position: relative;
-			font-size: 34px;
-			font-family: PingFangSC-Regular;
-			color: #737c91;
-			margin-top: 80px;
+			font-size: 46px;
+			font-family: PingFangSC-Medium, PingFang SC;
+			font-weight: 500;
+			color: #121c32;
+			line-height: 65px;
 		}
 		.moneyText {
-			position: relative;
-			top: -30px;
-			font-size: 168px;
-			letter-spacing: 10px;
-			font-family: 'DINMitAlt';
+			margin-top: 10px;
+			font-size: 26px;
+			color: #868e9e;
+			line-height: 37px;
+			span {
+				color: #3a7ae5;
+				font-weight: 500;
+			}
+		}
+		.download_button {
+			margin-top: 170px;
+			width: 634px;
+			height: 100px;
+			line-height: 100px;
+			border-radius: 50px;
 			color: #121c32;
 		}
-		.commonLine {
-			position: absolute;
-			display: inline-block;
-			height: 18px;
-			width: 18px;
-			border-color: #283042;
-			border-style: solid;
-			box-sizing: border-box;
-		}
-		.leftTopLine {
-			top: -1px;
-			left: -1px;
-			border-width: 4px 0 0 4px;
-		}
-		.rightTopLine {
-			top: -1px;
-			right: -1px;
-			border-width: 4px 4px 0 0;
-		}
-		.leftBottomLine {
-			bottom: -1px;
-			left: -1px;
-			border-width: 0 0 4px 4px;
-		}
-		.rightBottomLine {
-			bottom: -1px;
-			right: -1px;
-			border-width: 0 4px 4px 0;
-		}
-		.sureBtn {
-			display: block;
-			width: 580px;
-			height: 160px;
-			margin: -20px auto 0;
+		.tipsText {
+			margin-top: 16px;
+			font-size: 26px;
+			color: #868e9e;
+			line-height: 37px;
 		}
 	}
 }

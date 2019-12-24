@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-02 10:32:10
+ * @LastEditTime : 2019-12-24 14:36:06
  */
 export default [
 	{
@@ -66,7 +66,7 @@ export default [
 	{
 		path: '/others/mpos_testB_download_page',
 		zhName: 'xzApjrzxtd',
-		title: '下载App进入专享通道',
+		title: '预审结果',
 		arrowHide: 'empty',
 		component: () => import('pages/others/mpos_testB_download_page')
 	},

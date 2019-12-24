@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 15:16:38
+ * @LastEditTime : 2019-12-24 14:45:42
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -10,8 +10,8 @@ import { buriedPointEvent } from 'utils/analytins';
 import { getDeviceType } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
-import button_img from './img/button_img.png';
-import cover_img from './img/cover_img.png';
+import check_img from './img/check_img.png';
+import SXFButton from 'components/ButtonCustom';
 
 const API = {
 	DOWNLOADURL: 'download/getDownloadUrl'
@@ -71,24 +71,16 @@ export default class mpos_download_page extends PureComponent {
 	render() {
 		return (
 			<div className={styles.mpos_download_page}>
-				<img className={styles.banner} src={cover_img} alt="落地页banner" />
+				<img className={styles.banner} src={check_img} alt="落地页banner" />
 				<div className={styles.content}>
-					<div className={styles.loginContentBox}>
-						<p className={styles.title}>最高可借(元）</p>
-						<p className={styles.moneyText}>50000</p>
-						<img
-							src={button_img}
-							alt=""
-							onClick={() => {
-								this.downloadClickFun();
-							}}
-							className={styles.sureBtn}
-						/>
-						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
-						<i className={[styles.commonLine, styles.leftBottomLine].join(' ')} />
-						<i className={[styles.commonLine, styles.rightBottomLine].join(' ')} />
-					</div>
+					<p className={styles.title}>恭喜，您提交的资料已通过预审</p>
+					<p className={styles.moneyText}>
+						最高可获得额度<span>50000元</span>
+					</p>
+					<SXFButton className={styles.download_button} onClick={this.downloadClickFun}>
+						下载APP，查看额度
+					</SXFButton>
+					<p className={styles.tipsText}>首次登陆APP用户，可领取新手礼</p>
 				</div>
 			</div>
 		);
