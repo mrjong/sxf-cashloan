@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 13:53:52
+ * @LastEditTime : 2019-12-24 15:17:58
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -532,9 +532,9 @@ export default class momo_outer_login_page extends PureComponent {
 						<img className={styles.featureImg} src={feature_img2} alt="特征" />
 						<p className={styles.featureTit}>快捷</p>
 						<p className={styles.featureDesc}>
-							直接还到信用卡
+							最快5分钟到账
 							<br />
-							秒到账
+							最长可分12期
 						</p>
 					</li>
 					<li>
@@ -543,7 +543,7 @@ export default class momo_outer_login_page extends PureComponent {
 						<p className={styles.featureDesc}>
 							持牌金融机构
 							<br />
-							专业代偿
+							放心用
 						</p>
 					</li>
 				</ul>
