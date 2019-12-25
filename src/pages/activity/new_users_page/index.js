@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-21 22:28:09
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2019-12-25 11:09:23
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -135,12 +135,12 @@ export default class new_users_page extends PureComponent {
 				buryMsg = '可以领取';
 				break;
 			case '01':
-				showMsg = '此次活动随行付plus用户专享';
+				showMsg = '此次活动随行付plus用户注册还到专享';
 				buryMsg = '非mpos用户';
 				break;
 			case '02':
-				showMsg = '已超过参与时间';
-				buryMsg = '已超过参与时间';
+				showMsg = '您是复贷用户，已不能领取新手优惠券';
+				buryMsg = '您是复贷用户，已不能领取新手优惠券';
 				break;
 			case '03':
 				showMsg = '活动期间只能获取一次';
