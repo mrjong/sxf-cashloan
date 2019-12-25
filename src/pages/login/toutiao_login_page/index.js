@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 15:17:58
+ * @LastEditTime : 2019-12-25 18:07:37
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -457,7 +457,7 @@ export default class momo_outer_login_page extends PureComponent {
 						<p className={styles.moneyTextStyle}>
 							¥<span className={styles.moneyText}>50000</span>
 						</p>
-						<p className={styles.tipsStyle}>欠多少还多少，有账单就能借</p>
+						{/* <p className={styles.tipsStyle}>欠多少还多少，有账单就能借</p> */}
 						<InputItem
 							id="inputPhone"
 							maxLength="13"
@@ -510,7 +510,7 @@ export default class momo_outer_login_page extends PureComponent {
 							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
 							onClick={this.goLogin}
 						>
-							<span>去还信用卡</span>
+							<span>申请借款</span>
 						</div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
 						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
@@ -523,9 +523,9 @@ export default class momo_outer_login_page extends PureComponent {
 						<img className={styles.featureImg} src={feature_img1} alt="特征" />
 						<p className={styles.featureTit}>简单</p>
 						<p className={styles.featureDesc}>
-							仅需身份证
+							凭身份证
 							<br />
-							信用卡
+							和信用卡
 						</p>
 					</li>
 					<li>
