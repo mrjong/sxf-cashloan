@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2019-12-26 11:09:43
+ * @LastEditTime : 2019-12-26 11:43:27
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -265,7 +265,7 @@ export default class new_users_page extends PureComponent {
 					<div className={styles.rulesContent}>
 						<p>1、活动期间，注册“还到”的新用户可获得10天新手免息券；</p>
 						<p>2、免息券仅在借款时使用，可减免首期利息；</p>
-						<p>3、免息券有效期4天，请您的有效期内尽快使用哦。</p>
+						<p>3、免息券有效期4天，请您在有效期内尽快使用哦。</p>
 					</div>
 				</div>
 			</div>
