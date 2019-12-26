@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 14:45:42
+ * @LastEditTime : 2019-12-26 10:21:01
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -81,6 +81,7 @@ export default class mpos_download_page extends PureComponent {
 						下载APP，查看额度
 					</SXFButton>
 					<p className={styles.tipsText}>首次登陆APP用户，可领取新手礼</p>
+					<p className={styles.descText}>最终以实际审批额度为准</p>
 				</div>
 			</div>
 		);
