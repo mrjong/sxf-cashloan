@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-19 09:45:03
+ * @LastEditTime : 2019-12-24 17:06:58
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -38,7 +38,8 @@ import {
 	HomeModal,
 	CardProgress,
 	AddCards,
-	ExamineCard
+	ExamineCard,
+	CreditCard
 } from './components';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -465,7 +466,7 @@ export default class home_page extends PureComponent {
 				this.setState({
 					percentData: 98,
 					percentSatus: isshow ? '1' : '',
-					showDiv: 'circle',
+					showDiv: data.btnText === '继续导入信用卡账单' ? 'creditCard' : 'circle', // 针对信用卡提出单独的样式
 					percentBtnText: data.btnText
 				});
 				break;
@@ -1216,6 +1217,11 @@ export default class home_page extends PureComponent {
 							handleClick={this.handleApply}
 							btnText={percentBtnText}
 						/>
+					);
+					break;
+				case 'creditCard':
+					componentsDisplay = (
+						<CreditCard handleClick={this.handleApply} btnText="添加收款信用卡" percentData={percentData} />
 					);
 					break;
 				case 'circle':
