@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-21 22:28:09
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2019-12-26 11:43:27
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -135,12 +135,12 @@ export default class new_users_page extends PureComponent {
 				buryMsg = '可以领取';
 				break;
 			case '01':
-				showMsg = '此次活动随行付plus用户专享';
+				showMsg = '此次活动随行付plus用户注册还到专享';
 				buryMsg = '非mpos用户';
 				break;
 			case '02':
-				showMsg = '已超过参与时间';
-				buryMsg = '已超过参与时间';
+				showMsg = '您是复贷用户，已不能领取新手优惠券';
+				buryMsg = '您是复贷用户，已不能领取新手优惠券';
 				break;
 			case '03':
 				showMsg = '活动期间只能获取一次';
@@ -263,10 +263,9 @@ export default class new_users_page extends PureComponent {
 				<div className={styles.rulesCont}>
 					<img src={rules_bg} className={styles.rulesBg} />
 					<div className={styles.rulesContent}>
-						<p>1.活动期间，新注册用户可获得10天新手免息券，有效期4天；</p>
-						<p>2.同一ID在活动期间仅限领取一次;</p>
-						<p>3.免息券过期失效视为放弃，不可重复领取；</p>
-						<p>4.仅在借款时使用，可减免首期利息。</p>
+						<p>1、活动期间，注册“还到”的新用户可获得10天新手免息券；</p>
+						<p>2、免息券仅在借款时使用，可减免首期利息；</p>
+						<p>3、免息券有效期4天，请您在有效期内尽快使用哦。</p>
 					</div>
 				</div>
 			</div>
