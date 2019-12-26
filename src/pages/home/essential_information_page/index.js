@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-09 17:11:24
+ * @LastEditTime : 2019-12-24 13:49:28
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -230,9 +230,9 @@ export default class essential_information_page extends PureComponent {
 		this.props.form.setFieldsValue({
 			address: (res && res.data && res.data.usrDtlAddr) || store.getAddress() || '',
 			linkman: (res && res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-			linkphone: store.getLinkphone() || '',
+			linkphone: (res && res.data && res.data.mobForOne) || store.getLinkphone() || '',
 			linkman2: (res && res.data && res.data.cntUsrNm2) || store.getLinkman2() || '',
-			linkphone2: store.getLinkphone2() || ''
+			linkphone2: (res && res.data && res.data.mobForSec) || store.getLinkphone2() || ''
 		});
 		this.setState({
 			relatValue:
@@ -873,7 +873,7 @@ export default class essential_information_page extends PureComponent {
 											]
 										})}
 										className="noBorder"
-										placeholder="详细地址示例：中关村大街2号楼3单元601"
+										placeholder="详细地址：如道路、门牌号、小区、楼栋号、单元室等"
 										type="text"
 										onBlur={(v) => {
 											this.inputOnBlur(v, 'resident_address');
