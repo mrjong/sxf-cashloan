@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2019-12-25 11:09:23
+ * @LastEditTime : 2019-12-26 11:09:43
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -263,10 +263,9 @@ export default class new_users_page extends PureComponent {
 				<div className={styles.rulesCont}>
 					<img src={rules_bg} className={styles.rulesBg} />
 					<div className={styles.rulesContent}>
-						<p>1.活动期间，新注册用户可获得10天新手免息券，有效期4天；</p>
-						<p>2.同一ID在活动期间仅限领取一次;</p>
-						<p>3.免息券过期失效视为放弃，不可重复领取；</p>
-						<p>4.仅在借款时使用，可减免首期利息。</p>
+						<p>1、活动期间，注册“还到”的新用户可获得10天新手免息券；</p>
+						<p>2、免息券仅在借款时使用，可减免首期利息；</p>
+						<p>3、免息券有效期4天，请您的有效期内尽快使用哦。</p>
 					</div>
 				</div>
 			</div>
