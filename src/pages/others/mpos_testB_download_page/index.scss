@@ -2,7 +2,7 @@
 	// overflow: auto;
 	// -webkit-overflow-scrolling: touch;
 	// height: 100%;
-	padding-top: 65px;
+	padding-top: 80px;
 	background: #fff;
 	text-align: center;
 	.banner {
@@ -10,26 +10,27 @@
 		vertical-align: top;
 	}
 	.content {
-		padding-top: 45px;
+		padding-top: 76px;
 		.title {
-			font-size: 46px;
+			font-size: 36px;
 			font-family: PingFangSC-Medium, PingFang SC;
 			font-weight: 500;
 			color: #121c32;
-			line-height: 65px;
+			line-height: 50px;
 		}
 		.moneyText {
-			margin-top: 10px;
-			font-size: 26px;
-			color: #868e9e;
-			line-height: 37px;
+			margin-top: 64px;
+			font-size: 36px;
+			color: #121c32;
+			line-height: 50px;
+			font-weight: 500;
 			span {
-				color: #3a7ae5;
-				font-weight: 500;
+				color: #f76c5c;
+				margin-left: 10px;
 			}
 		}
 		.download_button {
-			margin-top: 170px;
+			margin-top: 20px;
 			width: 634px;
 			height: 100px;
 			line-height: 100px;
@@ -38,19 +39,28 @@
 			font-weight: bold;
 		}
 		.tipsText {
+			margin-top: 85px;
+			font-size: 24px;
+			color: #868e9e;
+			line-height: 33px;
+		}
+		.tipsText2 {
 			margin-top: 16px;
 			font-size: 26px;
 			color: #868e9e;
 			line-height: 37px;
+			span {
+				color: #f76c5c;
+			}
 		}
 		.descText {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
+			position: fixed;
+			bottom: 40px;
+			left: 0;
+			width: 100%;
 			font-size: 24px;
-			color: #C9CDD5;
-			line-height: 80px;
+			color: #868e9e;
+			line-height: 33px;
 		}
 	}
 }

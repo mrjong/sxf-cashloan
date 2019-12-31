@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-26 10:21:01
+ * @LastEditTime : 2019-12-31 10:53:49
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -77,10 +77,13 @@ export default class mpos_download_page extends PureComponent {
 					<p className={styles.moneyText}>
 						最高可获得额度<span>50000元</span>
 					</p>
+					<p className={styles.tipsText2}>
+						已领先<span>95%</span>的申请用户
+					</p>
+					<p className={styles.tipsText}>首次登陆APP用户，可领取新手礼</p>
 					<SXFButton className={styles.download_button} onClick={this.downloadClickFun}>
 						下载APP，查看额度
 					</SXFButton>
-					<p className={styles.tipsText}>首次登陆APP用户，可领取新手礼</p>
 					<p className={styles.descText}>最终以实际审批额度为准</p>
 				</div>
 			</div>
