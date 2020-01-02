@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:20:04
+ * @LastEditTime : 2020-01-02 16:28:03
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -124,7 +124,6 @@ export default class miniprogram_login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
-		this.clearCountDown();
 	}
 
 	// 校验手机号
