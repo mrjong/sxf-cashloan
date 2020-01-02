@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2019-12-19 15:03:17
+ * @LastEditTime : 2020-01-02 16:15:01
  */
 /*
  * @Author: shawn
@@ -56,5 +56,12 @@ export default [
 		title: '登录',
 		arrowHide: true,
 		component: () => import('pages/login/toutiao_login_page')
+	},
+	{
+		path: '/miniprogram_login',
+		zhName: 'xcxdl',
+		title: '登录',
+		arrowHide: true,
+		component: () => import('pages/login/miniprogram_login_page')
 	}
 ];
