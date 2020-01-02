@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:18:10
+ * @LastEditTime : 2020-01-02 16:39:39
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -20,14 +20,20 @@ import {
 	recordContract
 } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView, sxfDataPv, sxfburiedPointEvent } from 'utils/analytins';
+import {
+	buriedPointEvent,
+	pageView,
+	sxfDataPv,
+	sxfburiedPointEvent,
+	SxfDataRegisterEventSuperPropertiesOnce
+} from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-import { sxflogin } from 'utils/sxfAnalytinsType';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { domListen } from 'utils/domListen';
 
 let timmer;
 const API = {
@@ -44,6 +50,7 @@ let entryPageTime = '';
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@domListen()
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -106,7 +113,7 @@ export default class login_page extends PureComponent {
 			this.getImage();
 		}
 		sxfDataPv({ pId: 'dwdl' });
-		sxfburiedPointEvent(sxflogin.chkBox_dw);
+		sxfburiedPointEvent('dl_chkBox');
 	}
 	componentDidMount() {
 		let _this = this;
@@ -157,6 +164,7 @@ export default class login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		sxfburiedPointEvent('dlgoLogin');
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
@@ -190,6 +198,7 @@ export default class login_page extends PureComponent {
 						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
+						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
 						recordContract({
 							contractType: '01,02'
 						});
@@ -212,6 +221,7 @@ export default class login_page extends PureComponent {
 
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
+		sxfburiedPointEvent('dlsmsCodeBtn');
 		if (!this.state.timeflag) return;
 		this.getSmsCode();
 	};
@@ -396,7 +406,7 @@ export default class login_page extends PureComponent {
 			},
 			() => {
 				if (this.state.isChecked) {
-					sxfburiedPointEvent(sxflogin.chkBox_dw);
+					sxfburiedPointEvent('dl_chkBox');
 				}
 			}
 		);
@@ -437,11 +447,37 @@ export default class login_page extends PureComponent {
 						<InputItem
 							disabled={disabledInput}
 							id="inputPhone"
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: 'dlinputPhone',
+								notSendValue: true, // 无需上报输入框的值
+								eventList: [
+									{
+										type: 'focus'
+									},
+									{
+										type: 'delete'
+									},
+									{
+										type: 'blur'
+									},
+									{
+										type: 'paste'
+									}
+								]
+							})}
 							maxLength="13"
 							type="phone"
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
+								onChange(value) {
+									if (value === '') {
+										sxfburiedPointEvent('dlinputPhone', {
+											actId: 'delAll'
+										});
+									}
+								},
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !disabledInput && this.validatePhone }
@@ -493,9 +529,34 @@ export default class login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
+								data-sxf-props={JSON.stringify({
+									type: 'input',
+									name: 'dlinputCode',
+									eventList: [
+										{
+											type: 'focus'
+										},
+										{
+											type: 'delete'
+										},
+										{
+											type: 'blur'
+										},
+										{
+											type: 'paste'
+										}
+									]
+								})}
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
+									onChange(value) {
+										if (value === '') {
+											sxfburiedPointEvent('dlinputCode', {
+												actId: 'delAll'
+											});
+										}
+									},
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {

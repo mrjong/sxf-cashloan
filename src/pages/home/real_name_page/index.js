@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:04:35
+ * @LastEditTime: 2019-12-05 11:12:26
  */
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
@@ -14,7 +14,6 @@ import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import { sxfhome } from 'utils/sxfAnalytinsType';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import {
@@ -403,9 +402,9 @@ export default class real_name_page extends Component {
 	};
 	cardMD = (type) => {
 		if (type === 'z') {
-			sxfburiedPointEvent(sxfhome.idCardF);
+			sxfburiedPointEvent('DC_idCardF');
 		} else {
-			sxfburiedPointEvent(sxfhome.idCardB);
+			sxfburiedPointEvent('DC_idCardB');
 		}
 	};
 	handleBeforeCompress = () => {
@@ -432,9 +431,9 @@ export default class real_name_page extends Component {
 	};
 	handleAfterCompress = (type) => {
 		if (type === 'z') {
-			sxfburiedPointEvent(sxfhome.idCardOutF);
+			sxfburiedPointEvent('DC_idCardOutF');
 		} else {
-			sxfburiedPointEvent(sxfhome.idCardOutB);
+			sxfburiedPointEvent('DC_idCardOutB');
 		}
 		store.removeDisableBack();
 	};

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:42:32
+ * @LastEditTime: 2019-12-05 12:01:41
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
@@ -22,7 +22,6 @@ import {
 } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import { sxfhome } from 'utils/sxfAnalytinsType';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import FeedbackModal from 'components/FeedbackModal';
 import SelectList from 'components/SelectList';
@@ -203,7 +202,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	closeCreditModal = () => {
-		sxfburiedPointEvent(sxfhome['isShowCreditModal_out']);
+		sxfburiedPointEvent('isShowCreditModal_out');
 		this.setState({
 			isShowCreditModal: false
 		});
@@ -315,6 +314,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	handleSubmit = async () => {
+		sxfburiedPointEvent('moneyCreditCardConfirmBtn');
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
 		const { selectedLoanDate = {}, usrIndexInfo, cardCount, btnDisabled, fullMinAmt } = this.state;
 		const { indexData = {} } = usrIndexInfo;
@@ -435,7 +435,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				isShowCreditModal: false
 			},
 			() => {
-				sxfburiedPointEvent(sxfhome['isShowCreditModal_out']);
+				sxfburiedPointEvent('isShowCreditModal_out');
 				this.setState({
 					btnDisabled: false,
 					modal_left: false
@@ -895,7 +895,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										) {
 											this.props.toast.info('暂无可借产品');
 										} else {
-											sxfburiedPointEvent(sxfhome['isShowCreditModal_in']);
+											sxfburiedPointEvent('isShowCreditModal_in');
 											this.setState({
 												isShowCreditModal: true
 											});
@@ -919,6 +919,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 					<div
 						onClick={() => {
+							sxfburiedPointEvent('freeServiceIn');
 							this.setState({
 								showTimeoutPayModal: true
 							});
@@ -992,6 +993,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				<TimeoutPayModal
 					visible={showTimeoutPayModal}
 					closeModal={() => {
+						sxfburiedPointEvent('freeServiceOut');
 						this.setState({
 							showTimeoutPayModal: false
 						});

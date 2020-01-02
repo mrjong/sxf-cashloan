@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-19 11:35:10
+ * @LastEditTime : 2019-12-24 10:41:29
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -20,7 +20,13 @@ import {
 	queryUsrSCOpenId
 } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView } from 'utils/analytins';
+import {
+	buriedPointEvent,
+	pageView,
+	SxfDataRegisterEventSuperPropertiesOnce,
+	sxfDataPv,
+	sxfburiedPointEvent
+} from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
@@ -31,6 +37,7 @@ import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
 import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { domListen } from 'utils/domListen';
 
 let timmer;
 const API = {
@@ -50,6 +57,7 @@ let modalTimer = null;
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@domListen()
 export default class momo_outer_login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -72,6 +80,8 @@ export default class momo_outer_login_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		sxfDataPv({ pId: 'dwdl' });
+		sxfburiedPointEvent('dl_chkBox');
 		const queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
 		});
@@ -159,6 +169,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		sxfburiedPointEvent('dlgoLogin');
 		// 防止用户关闭弹框,继续点击进行登录
 		if (store.getToken() || Cookie.get('fin-v-card-token')) {
 			this.setState(
@@ -204,6 +215,7 @@ export default class momo_outer_login_page extends PureComponent {
 						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
+						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
 						recordContract({
 							contractType: '01,02'
 						});
@@ -413,9 +425,14 @@ export default class momo_outer_login_page extends PureComponent {
 
 	checkAgreement = () => {
 		buriedPointEvent(daicao.selectProtocol);
-		this.setState({
-			isChecked: !this.state.isChecked
-		});
+		this.setState(
+			{
+				isChecked: !this.state.isChecked
+			},
+			() => {
+				sxfburiedPointEvent('dl_chkBox');
+			}
+		);
 	};
 
 	//获取图片验证码
@@ -511,9 +528,35 @@ export default class momo_outer_login_page extends PureComponent {
 							id="inputPhone"
 							maxLength="13"
 							type="phone"
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: 'dlinputPhone',
+								notSendValue: true, // 无需上报输入框的值
+								eventList: [
+									{
+										type: 'focus'
+									},
+									{
+										type: 'delete'
+									},
+									{
+										type: 'blur'
+									},
+									{
+										type: 'paste'
+									}
+								]
+							})}
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
+								onChange(value) {
+									if (value === '') {
+										sxfburiedPointEvent('dlinputPhone', {
+											actId: 'delAll'
+										});
+									}
+								},
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !disabledInput && this.validatePhone }
@@ -565,9 +608,34 @@ export default class momo_outer_login_page extends PureComponent {
 								id="inputCode"
 								type="number"
 								maxLength="6"
+								data-sxf-props={JSON.stringify({
+									type: 'input',
+									name: 'dlinputCode',
+									eventList: [
+										{
+											type: 'focus'
+										},
+										{
+											type: 'delete'
+										},
+										{
+											type: 'blur'
+										},
+										{
+											type: 'paste'
+										}
+									]
+								})}
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
+									onChange(value) {
+										if (value === '') {
+											sxfburiedPointEvent('dlinputCode', {
+												actId: 'delAll'
+											});
+										}
+									},
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
@@ -584,6 +652,7 @@ export default class momo_outer_login_page extends PureComponent {
 										: [styles.smsCode, styles.smsCode2].join(' ')
 								}
 								onClick={() => {
+									sxfburiedPointEvent('dlsmsCodeBtn');
 									this.handleSmsCodeClick();
 								}}
 							>

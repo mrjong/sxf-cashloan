@@ -25,20 +25,20 @@ export default [
 	{
 		path: '/outer_mpos_login',
 		title: '还到',
-		zhName: 'dwmposdl',
+		zhName: 'dwdl',
 		arrowHide: true,
 		component: () => import('pages/login/outer_mpos_login_page')
 	},
 	{
 		path: '/outer_test_login',
 		title: '还到',
-		zhName: 'dwtestdl',
+		zhName: 'dwdl',
 		arrowHide: true,
 		component: () => import('pages/login/outer_test_login_page')
 	},
 	{
 		path: '/momo_outer_login',
-		zhName: 'mmdwdl',
+		zhName: 'dwdl',
 		title: '还到',
 		arrowHide: true,
 		component: () => import('pages/login/momo_outer_login_page')

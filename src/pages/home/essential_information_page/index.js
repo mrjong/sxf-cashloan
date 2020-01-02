@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 13:49:28
+ * @LastEditTime : 2020-01-02 16:37:33
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -22,7 +22,6 @@ import ClockS from 'components/TimeDown/ClockS';
 import adsBg from './img/base_top_img.png';
 import AgreementModal from 'components/AgreementModal';
 import { domListen } from 'utils/domListen';
-import { sxfhome } from 'utils/sxfAnalytinsType';
 import AddressSelect from 'components/react-picker-address';
 
 let timedown = null;
@@ -748,7 +747,7 @@ export default class essential_information_page extends PureComponent {
 		});
 	};
 	sxfMD = (type) => {
-		sxfburiedPointEvent(sxfhome[type]);
+		sxfburiedPointEvent(type);
 	};
 
 	onSelectArea = (area) => {
@@ -769,7 +768,9 @@ export default class essential_information_page extends PureComponent {
 	};
 
 	handleSetModal(value) {
-		// sxfBuriedEvent('resident_cityOut');
+		if (!value) {
+			this.sxfMD('resident_cityOut');
+		}
 		this.setState({
 			visible: value
 		});
@@ -783,7 +784,6 @@ export default class essential_information_page extends PureComponent {
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<Modal
 					onClose={() => {
-						this.sxfMD('resident_cityOut');
 						this.handleSetModal(false);
 					}}
 					closable={true}
@@ -826,7 +826,7 @@ export default class essential_information_page extends PureComponent {
 								<div
 									className={style.listRow}
 									onClick={() => {
-										this.sxfMD('resident_city');
+										this.sxfMD('DC_resident_city');
 										this.setState({
 											visible: true
 										});
@@ -979,11 +979,35 @@ export default class essential_information_page extends PureComponent {
 										{ validator: this.validatePhone }
 									],
 									onChange: (value) => {
+										if (!value) {
+											sxfburiedPointEvent('linkphone', {
+												actId: 'delAll'
+											});
+										}
 										store.setLinkphone(value);
 										this.setState({ linkphone: value });
 									}
 								})(
 									<InputItem
+										data-sxf-props={JSON.stringify({
+											type: 'input',
+											notSendValue: true, // 无需上报输入框的值
+											name: 'linkphone',
+											eventList: [
+												{
+													type: 'focus'
+												},
+												{
+													type: 'delete'
+												},
+												{
+													type: 'blur'
+												},
+												{
+													type: 'paste'
+												}
+											]
+										})}
 										clear
 										className="noBorder"
 										type="number"
@@ -1093,11 +1117,35 @@ export default class essential_information_page extends PureComponent {
 										{ validator: this.validatePhone }
 									],
 									onChange: (value) => {
+										if (!value) {
+											sxfburiedPointEvent('linkphone2', {
+												actId: 'delAll'
+											});
+										}
 										store.setLinkphone2(value);
 										this.setState({ linkphone2: value });
 									}
 								})(
 									<InputItem
+										data-sxf-props={JSON.stringify({
+											type: 'input',
+											notSendValue: true, // 无需上报输入框的值
+											name: 'linkphone2',
+											eventList: [
+												{
+													type: 'focus'
+												},
+												{
+													type: 'delete'
+												},
+												{
+													type: 'blur'
+												},
+												{
+													type: 'paste'
+												}
+											]
+										})}
 										clear
 										className="noBorder"
 										type="number"

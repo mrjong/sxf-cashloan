@@ -4,7 +4,6 @@ import Tag from '../Tag';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { store } from 'utils/store';
-import { sxfhome } from 'utils/sxfAnalytinsType';
 export default class TagList extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -87,7 +86,7 @@ export default class TagList extends React.PureComponent {
 				active={!item.disable && index === currentIndex}
 				onClick={() => {
 					if (item.value === '1') {
-						sxfburiedPointEvent(sxfhome.lendersOrder, {
+						sxfburiedPointEvent('DC_HOME_LENDERS_ORDER', {
 							lenders_type: item.name,
 							disable: item.disable || false
 						});
@@ -97,7 +96,7 @@ export default class TagList extends React.PureComponent {
 							disable: item.disable || false
 						});
 					} else if (item.value === '0') {
-						sxfburiedPointEvent(sxfhome.lenders, {
+						sxfburiedPointEvent('DC_HOME_LENDERS', {
 							lenders_type: item.name,
 							disable: item.disable || false
 						});

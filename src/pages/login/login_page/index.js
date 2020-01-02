@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:15:21
+ * @LastEditTime : 2019-12-24 10:31:36
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -29,7 +29,6 @@ import {
 	sxfburiedPointEvent
 } from 'utils/analytins';
 import { login, wxTest } from 'utils/analytinsType';
-import { sxflogin } from 'utils/sxfAnalytinsType';
 import { domListen } from 'utils/domListen';
 import styles from './index.scss';
 import ImageCode from 'components/ImageCode';
@@ -131,7 +130,7 @@ export default class login_page extends PureComponent {
 			this.getImage();
 		}
 		sxfDataPv({ pId: 'dl' });
-		sxfburiedPointEvent(sxflogin.chkBox);
+		sxfburiedPointEvent('DC_chkBox');
 	}
 	componentDidMount() {
 		// 获取地址
@@ -489,7 +488,7 @@ export default class login_page extends PureComponent {
 			},
 			() => {
 				if (this.state.isChecked) {
-					sxfburiedPointEvent(sxflogin.chkBox);
+					sxfburiedPointEvent('DC_chkBox');
 				}
 			}
 		);

@@ -1,12 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 14:42:05
+ * @LastEditTime: 2019-12-05 14:39:36
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import SXFButton from 'components/ButtonCustom';
 import DownloadTip from 'components/DownloadTip';
 import { getDeviceType, isWXOpen } from 'utils';
@@ -53,6 +53,7 @@ export default class wx_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
+		sxfburiedPointEvent('xzyBtn');
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.weixinDownloadBtnClick, {
