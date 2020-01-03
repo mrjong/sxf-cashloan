@@ -1,12 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:28:03
+ * @LastEditTime : 2020-01-03 16:08:05
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem, Modal } from 'antd-mobile';
+import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -17,10 +17,8 @@ import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-import loginModalBg from '../login_common_page/img/login_modal.png';
-import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
-import closeIco from '../login_common_page/img/close_ico.png';
 import { daicao } from '../../../utils/analytinsType';
+import CopyModal from 'components/CopyModal';
 
 let timmer;
 
@@ -577,26 +575,7 @@ export default class miniprogram_login_page extends PureComponent {
 						onClose={this.closeSlideModal}
 					/>
 				)}
-				{showDownloadModal && (
-					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
-						<div className={styles.loginModalContainer}>
-							{/* 大图 */}
-							<img className={styles.loginModalBg} src={loginModalBg} alt="背景" />
-							{/* 按钮 */}
-							<img
-								className={styles.loginModalBtn}
-								src={loginModalBtn}
-								onClick={() => {
-									buriedPointEvent(daicao.mpos_push_modalBtnClick);
-									this.downloadApp();
-								}}
-								alt="按钮"
-							/>
-							{/* 关闭 */}
-							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
-						</div>
-					</Modal>
-				)}
+				<CopyModal visible={showDownloadModal} closeModal={this.closeModal} />
 			</div>
 		);
 	}
