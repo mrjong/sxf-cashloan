@@ -4,7 +4,7 @@
 	overflow-y: auto;
 }
 .top_bg {
-  display: block;
+	display: block;
 	width: 100%;
 	height: 455px;
 }
@@ -26,4 +26,17 @@
 	width: 475px;
 	height: 387px;
 	margin: 0 auto;
+}
+.tipsText {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 100%;
+  font-size: 24px;
+  line-height: 1;
+  color: #0b0f32;
+  text-align: center;
+	span {
+		color: #fd2727;
+	}
 }

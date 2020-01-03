@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-03 16:22:31
+ * @LastEditTime : 2020-01-03 16:40:58
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -48,6 +48,9 @@ export default class miniprogram_download_page extends PureComponent {
 				</SXFButton>
 				<p className={styles.desc}>如果您是老用户，请前往还到APP操作并还款</p>
 				<img src={hegui_bg} alt="" className={styles.hegui_bg} />
+				<p className={styles.tipsText}>
+					关注<span>【还到】</span>公众号，回复<span>【免息】</span>领取最高30天免息券
+				</p>
 				<CopyModal visible={modalVisible} closeModal={this.closeModal} />
 			</div>
 		);
