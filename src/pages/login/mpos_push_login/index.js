@@ -18,9 +18,10 @@ import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
-import loginModalBg from '../login_common_page/img/login_modal.png';
-import loginModalBtn from '../login_common_page/img/login_modal_btn.png';
-import closeIco from '../login_common_page/img/close_ico.png';
+import loginModalBg from './img/login_modal.png';
+import loginModalBtn from './img/login_modal_btn.png';
+import tooltip from './img/tooltip.png';
+import closeIco from './img/close_btn.png';
 import { daicao } from '../../../utils/analytinsType';
 
 let timmer;
@@ -589,6 +590,7 @@ export default class login_page extends PureComponent {
 							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
 						>
 							<span>查看我的额度</span>
+							<img className={styles.sureBtn_tooltip} src={tooltip} />
 						</div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />
 						<i className={[styles.commonLine, styles.rightTopLine].join(' ')} />
