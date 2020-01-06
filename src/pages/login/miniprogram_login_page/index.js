@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-03 16:08:05
+ * @LastEditTime : 2020-01-06 21:58:13
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -17,7 +17,7 @@ import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
-import { daicao } from '../../../utils/analytinsType';
+import { miniprogram } from '../../../utils/analytinsType';
 import CopyModal from 'components/CopyModal';
 
 let timmer;
@@ -136,7 +136,7 @@ export default class miniprogram_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		buriedPointEvent(daicao.mpos_push_loginBtn);
+		buriedPointEvent(miniprogram.loginBtnClick);
 		const osType = getDeviceType();
 		// 防止用户关闭弹框,继续点击进行登录
 		if (store.getToken() || Cookie.get('fin-v-card-token')) {
@@ -145,7 +145,7 @@ export default class miniprogram_login_page extends PureComponent {
 					showDownloadModal: true
 				},
 				() => {
-					buriedPointEvent(daicao.mpos_push_modalshow);
+					buriedPointEvent(miniprogram.copyModalShow);
 				}
 			);
 			return;
@@ -186,7 +186,7 @@ export default class miniprogram_login_page extends PureComponent {
 									showDownloadModal: true
 								},
 								() => {
-									buriedPointEvent(daicao.mpos_push_modalshow);
+									buriedPointEvent(miniprogram.copyModalShow);
 								}
 							);
 						});
@@ -423,6 +423,10 @@ export default class miniprogram_login_page extends PureComponent {
 		return false;
 	};
 
+	confirmHandler = () => {
+		buriedPointEvent(miniprogram.copyModalBtnClick);
+	};
+
 	render() {
 		const {
 			imageCodeUrl,
@@ -575,7 +579,11 @@ export default class miniprogram_login_page extends PureComponent {
 						onClose={this.closeSlideModal}
 					/>
 				)}
-				<CopyModal visible={showDownloadModal} closeModal={this.closeModal} />
+				<CopyModal
+					visible={showDownloadModal}
+					closeModal={this.closeModal}
+					confirmAction={this.confirmHandler}
+				/>
 			</div>
 		);
 	}

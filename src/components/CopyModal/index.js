@@ -1,14 +1,14 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-01-03 16:07:23
+ * @LastEditTime : 2020-01-06 21:59:06
  */
 import React from 'react';
 import { Modal, Toast } from 'antd-mobile';
 import style from './index.scss';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-export default class TimeoutPayModal extends React.Component {
+export default class CopyModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -18,8 +18,9 @@ export default class TimeoutPayModal extends React.Component {
 
 	// 点我复制“还到”
 	copyOperation = () => {
-		const { closeModal } = this.props;
+		const { closeModal, confirmAction } = this.props;
 		closeModal && closeModal();
+		confirmAction && confirmAction();
 		Toast.info('复制成功');
 	};
 
