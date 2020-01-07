@@ -1,9 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-06 21:58:13
+ * @LastEditTime : 2020-01-07 13:22:00
  */
 import qs from 'qs';
-import { address } from 'utils/Address';
+// import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
@@ -109,7 +109,7 @@ export default class miniprogram_login_page extends PureComponent {
 			}
 		});
 		// 获取地址
-		address();
+		// address();
 		pageView();
 	}
 
@@ -136,6 +136,8 @@ export default class miniprogram_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		// const { queryData } = this.state;
+		// alert(queryData.location);
 		buriedPointEvent(miniprogram.loginBtnClick);
 		const osType = getDeviceType();
 		// 防止用户关闭弹框,继续点击进行登录
