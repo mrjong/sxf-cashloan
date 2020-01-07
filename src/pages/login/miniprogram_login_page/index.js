@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-07 13:22:00
+ * @LastEditTime : 2020-01-07 13:30:00
  */
 import qs from 'qs';
 // import { address } from 'utils/Address';
@@ -136,8 +136,7 @@ export default class miniprogram_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		// const { queryData } = this.state;
-		// alert(queryData.location);
+		const { queryData } = this.state;
 		buriedPointEvent(miniprogram.loginBtnClick);
 		const osType = getDeviceType();
 		// 防止用户关闭弹框,继续点击进行登录
@@ -167,7 +166,7 @@ export default class miniprogram_login_page extends PureComponent {
 					osType, // 操作系统
 					smsCd: values.smsCd,
 					usrCnl: getH5Channel(), // 用户渠道
-					location: store.getPosition() // 定位地址 TODO 从session取
+					location: (queryData && queryData.location) || '-1,-1' // 定位地址 TODO 从session取
 				};
 				if (!this.state.disabledInput) {
 					param.mblNo = values.phoneValue; // 手机号
