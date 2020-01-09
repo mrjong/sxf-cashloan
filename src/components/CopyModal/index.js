@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-01-06 21:59:06
+ * @LastEditTime : 2020-01-09 10:28:58
  */
 import React from 'react';
 import { Modal, Toast } from 'antd-mobile';
@@ -30,7 +30,7 @@ export default class CopyModal extends React.Component {
 		return (
 			<Modal visible={visible} transparent wrapClassName="copy_modal">
 				<p className={style.copyModalCont}>
-					恭喜，您收到（50000.00）元备用金，请在应用商店搜索“还到”下载（复制还到）完成申请后可直接提现至信用卡，额度请以最终审批结果为准。
+					恭喜，您收到50000元备用金，请在应用商店搜索“还到”下载，完成申请后可直接提现至信用卡，额度请以最终审批结果为准。
 				</p>
 				<CopyToClipboard text={copyText} onCopy={() => this.copyOperation()}>
 					<p className={style.copyBtn}>点我复制“还到”</p>
