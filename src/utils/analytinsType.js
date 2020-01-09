@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-19 09:46:30
+ * @LastEditTime : 2020-01-06 21:56:51
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -360,6 +360,12 @@ const addinfo = {
 	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT` // 补充信息下一步
 };
 
+const miniprogram = {
+	loginBtnClick: `${prefix}_LOGIN_BTN_CLICK`, // 登录按钮点击数
+	copyModalShow: `${prefix}_COPY_MODAL_SHOW`, // 弹窗浏览数
+	copyModalBtnClick: `${prefix}_COPY_MODAL_BTN_CLICK` // 弹窗按钮点击数
+};
+
 export {
 	login,
 	home,
@@ -378,5 +384,6 @@ export {
 	wxTest,
 	helpCenter,
 	wxTabBar,
-	addinfo
+	addinfo,
+	miniprogram
 };
