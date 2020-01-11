@@ -8,6 +8,7 @@ import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import RepayPlanModal from 'components/RepayPlanModal';
+import TipModal from 'components/TipModal';
 import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
@@ -25,7 +26,8 @@ const API = {
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	doCouponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink' //协议绑卡接口
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	bill_isOpenLoanPopup: '/bill/isOpenLoanPopup' // 判断是否开启放款限制弹窗
 };
 
 let isFetching = false;
@@ -60,7 +62,8 @@ export default class loan_fenqi_page extends PureComponent {
 			smsCode: '',
 			payBankCode: '',
 			resaveBankCode: '',
-			checkBox1: false
+			checkBox1: false,
+			isShowLoanTipModal: false
 		};
 	}
 
@@ -599,8 +602,35 @@ export default class loan_fenqi_page extends PureComponent {
 				this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
 				return;
 			}
-			this.checkProtocolBindCard();
+			this.isShowLoanModal();
+			// this.checkProtocolBindCard();
 		}
+	};
+
+	isShowLoanModal = () => {
+		const { $fetch } = this.props;
+		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data === '1') {
+				this.setState({
+					isShowLoanTipModal: true
+				});
+			} else {
+				this.checkProtocolBindCard();
+			}
+		});
+	};
+
+	// 关闭春节放款策略弹框
+	closeTipModal = () => {
+		this.setState({
+			isShowLoanTipModal: false
+		});
+	};
+
+	// 点击稍后申请
+	cancelHandler = () => {
+		buriedPointEvent(home.loanTipGetLaterClick);
+		this.closeTipModal();
 	};
 
 	submitHandler = () => {
@@ -779,7 +809,8 @@ export default class loan_fenqi_page extends PureComponent {
 			couponData,
 			isShowSmsModal,
 			smsCode,
-			checkBox1
+			checkBox1,
+			isShowLoanTipModal
 		} = this.state;
 		return (
 			<div className={style.fenqi_page}>
@@ -997,6 +1028,17 @@ export default class loan_fenqi_page extends PureComponent {
 					history={this.props.history}
 					goPage={() => {
 						this.props.history.push('/home/payment_notes');
+					}}
+				/>
+
+				{/* 春节放款策略弹框 */}
+				<TipModal
+					visible={isShowLoanTipModal}
+					onCancel={this.cancelHandler}
+					closeHandler={this.closeTipModal}
+					onConfirm={() => {
+						buriedPointEvent(home.loanTipGetNowClick);
+						this.checkProtocolBindCard();
 					}}
 				/>
 

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-06 21:56:51
+ * @LastEditTime : 2020-01-11 15:06:06
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -110,7 +110,9 @@ const home = {
 	reContactSaveClick: `${prefix}_HOME_RECOM_CONTACT_SAVE`, // 推荐联系人-确认(联系人列表不为空时,指定联系人确认按钮)
 	speContactConfirmClick: `${prefix}_HOME_SPECIFY_CONTACT_CONFIRM`, // 联系人列表为空时,指定联系人确认按钮
 	speContactSaveClick: `${prefix}_HOME_SPECIFY_CONTACT_SAVE`, // 修改联系人-保存
-	reContactConfirmModify: `${prefix}_HOME_RECOM_CONTACT_MODIFY` // 联系人列表不为空时,指定联系人-修改
+	reContactConfirmModify: `${prefix}_HOME_RECOM_CONTACT_MODIFY`, // 联系人列表不为空时,指定联系人-修改
+	loanTipGetNowClick: `${prefix}_HOME_LOAN_TIP_GET_NOW`, // 签约借款-温馨提示-现在申请
+	loanTipGetLaterClick: `${prefix}_HOME_LOAN_TIP_GET_LATER` // 签约借款-温馨提示-稍后申请
 };
 
 const mine = {

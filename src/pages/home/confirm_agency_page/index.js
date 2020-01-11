@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-11 10:10:11
+ * @LastEditTime : 2020-01-11 15:13:26
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -24,6 +24,7 @@ import { domListen } from 'utils/domListen';
 import RepayPlanModal from 'components/RepayPlanModal';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
+import TipModal from 'components/TipModal';
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
@@ -48,7 +49,8 @@ const API = {
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
 	protocolBind: '/withhold/protocolBink', //协议绑卡接口
-	sendCoupon: '/activeConfig/issueCoup' //拦截发放优惠券
+	sendCoupon: '/activeConfig/issueCoup', //拦截发放优惠券
+	bill_isOpenLoanPopup: '/bill/isOpenLoanPopup' // 判断是否开启放款限制弹窗
 };
 
 let indexData = null; // 首页带过来的信息
@@ -125,7 +127,8 @@ export default class confirm_agency_page extends PureComponent {
 			isCheckInsure: false, // 是否选择了保费
 			showCouponAlert: false, // 是否显示优惠券拦截弹窗
 			contactList: null,
-			checkBox1: false
+			checkBox1: false,
+			isShowLoanTipModal: false
 		};
 	}
 
@@ -842,10 +845,36 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
-		this.checkProtocolBindCard();
-		// this.requestBindCardState();
+		this.isShowLoanModal();
+		// this.checkProtocolBindCard();
 	};
-	// 请求用户绑卡状态
+
+	isShowLoanModal = () => {
+		const { $fetch } = this.props;
+		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
+			if (res.msgCode === 'PTM0000' && res.data === '1') {
+				this.setState({
+					isShowLoanTipModal: true
+				});
+			} else {
+				this.checkProtocolBindCard();
+			}
+		});
+	};
+
+	// 关闭春节放款策略弹框
+	closeTipModal = () => {
+		this.setState({
+			isShowLoanTipModal: false
+		});
+	};
+
+	// 点击稍后申请
+	cancelHandler = () => {
+		buriedPointEvent(home.loanTipGetLaterClick);
+		this.closeTipModal();
+	};
+
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
 		const api = indexData.autId ? `${API.chkCredCard}/${indexData.autId}` : API.CHECK_CARD;
@@ -1083,7 +1112,8 @@ export default class confirm_agency_page extends PureComponent {
 			showCouponAlert,
 			couponAlertData,
 			showInterestTotal,
-			checkBox1
+			checkBox1,
+			isShowLoanTipModal
 		} = this.state;
 		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		return (
@@ -1467,6 +1497,17 @@ export default class confirm_agency_page extends PureComponent {
 								showCouponAlert: false
 							});
 							this.requestGetRepayInfo();
+						}}
+					/>
+
+					{/* 春节放款策略弹框 */}
+					<TipModal
+						visible={isShowLoanTipModal}
+						onCancel={this.cancelHandler}
+						closeHandler={this.closeTipModal}
+						onConfirm={() => {
+							buriedPointEvent(home.loanTipGetNowClick);
+							this.checkProtocolBindCard();
 						}}
 					/>
 
