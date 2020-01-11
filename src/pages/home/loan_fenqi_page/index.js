@@ -59,7 +59,8 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			payBankCode: '',
-			resaveBankCode: ''
+			resaveBankCode: '',
+			checkBox1: false
 		};
 	}
 
@@ -437,7 +438,8 @@ export default class loan_fenqi_page extends PureComponent {
 			deratePrice,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			checkBox1
 		} = this.state;
 		const resaveCard = {
 			agrNo: resaveBankCardAgrNo,
@@ -467,7 +469,8 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCardAgrNo,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			checkBox1
 		});
 		store.setCashFenQiCardArr([resaveCard, payCard]);
 	};
@@ -586,12 +589,16 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//借款申请提交
 	loanApplySubmit = () => {
-		const { loanMoney, loanDate } = this.state;
+		const { loanMoney, loanDate, checkBox1 } = this.state;
 		if (this.validateFn()) {
 			buriedPointEvent(loan_fenqi.clickSubmit, {
 				loanMoney,
 				loanDate: loanDate.perdCnt
 			});
+			if (!checkBox1) {
+				this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
+				return;
+			}
 			this.checkProtocolBindCard();
 		}
 	};
@@ -743,6 +750,11 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	// 点击勾选协议
+	checkAgreement = () => {
+		this.setState({ checkBox1: !this.state.checkBox1 });
+	};
+
 	render() {
 		const {
 			usageModal,
@@ -766,7 +778,8 @@ export default class loan_fenqi_page extends PureComponent {
 			deratePrice,
 			couponData,
 			isShowSmsModal,
-			smsCode
+			smsCode,
+			checkBox1
 		} = this.state;
 		return (
 			<div className={style.fenqi_page}>
@@ -921,11 +934,13 @@ export default class loan_fenqi_page extends PureComponent {
 							</li>
 						</ul>
 						{loanMoney && loanDate && contractList.length > 0 && (
-							<p className={style.protocolLink}>
+							<p className={style.protocolLink} onClick={this.checkAgreement}>
+								<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
 								点击“签约借款”，表示同意{' '}
 								{contractList.map((item, idx) => (
 									<em
-										onClick={() => {
+										onClick={(e) => {
+											e.stopPropagation();
 											this.readContract(item);
 										}}
 										key={idx}
@@ -940,7 +955,7 @@ export default class loan_fenqi_page extends PureComponent {
 				<div className={style.buttonWrap}>
 					<SXFButton
 						onClick={this.loanApplySubmit}
-						className={this.validateFn() ? style.submitBtn : style.submitBtnDisabled}
+						className={this.validateFn() && checkBox1 ? style.submitBtn : style.submitBtnDisabled}
 					>
 						签约借款
 					</SXFButton>

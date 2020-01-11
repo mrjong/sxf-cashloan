@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:37:24
+ * @LastEditTime : 2020-01-11 10:10:11
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -124,7 +124,8 @@ export default class confirm_agency_page extends PureComponent {
 			isShowInsureModal: false, // 是否显示保险说明弹框
 			isCheckInsure: false, // 是否选择了保费
 			showCouponAlert: false, // 是否显示优惠券拦截弹窗
-			contactList: null
+			contactList: null,
+			checkBox1: false
 		};
 	}
 
@@ -826,13 +827,17 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		const { isCheckInsure, repayInfo2 } = this.state;
+		const { isCheckInsure, repayInfo2, checkBox1 } = this.state;
 		if (repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure) {
 			this.props.toast.info('请先购买保险');
 			return;
 		}
 		if (!(store.getSaveEmptyContactList() || store.getSaveContactList())) {
 			this.props.toast.info('请选择指定联系人');
+			return;
+		}
+		if (!checkBox1) {
+			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
 			return;
 		}
 		// 埋点
@@ -1047,6 +1052,11 @@ export default class confirm_agency_page extends PureComponent {
 			});
 		}
 	};
+
+	// 点击勾选协议
+	checkAgreement = () => {
+		this.setState({ checkBox1: !this.state.checkBox1 });
+	};
 	render() {
 		const { history, toast } = this.props;
 		const { getFieldProps } = this.props.form;
@@ -1072,7 +1082,8 @@ export default class confirm_agency_page extends PureComponent {
 			isCheckInsure,
 			showCouponAlert,
 			couponAlertData,
-			showInterestTotal
+			showInterestTotal,
+			checkBox1
 		} = this.state;
 		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		return (
@@ -1318,11 +1329,13 @@ export default class confirm_agency_page extends PureComponent {
 									</p>
 								) : null}
 								{contractData.length > 0 && (
-									<p className={style.protocolLink}>
+									<p className={style.protocolLink} onClick={this.checkAgreement}>
+										<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
 										点击“确定签约”，表示同意{' '}
 										{contractData.map((item, idx) => (
 											<em
-												onClick={() => {
+												onClick={(e) => {
+													e.stopPropagation();
 													this.readContract(item);
 												}}
 												key={idx}
@@ -1343,10 +1356,8 @@ export default class confirm_agency_page extends PureComponent {
 									: () => {}
 							}
 							className={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && isBtnAble
-									? repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure
-										? style.submitBtnDisabled
-										: style.submitBtn
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && isBtnAble && checkBox1
+									? style.submitBtn
 									: style.submitBtnDisabled
 							}
 						>
