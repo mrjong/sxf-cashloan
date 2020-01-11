@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:37:33
+ * @LastEditTime : 2020-01-11 14:20:50
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -134,11 +134,13 @@ export default class essential_information_page extends PureComponent {
 		this.timer = null;
 	}
 	// 跳转个人信息授权书
-	readContract = () => {
+	readContract = (jumpUrl) => {
+		const { selectFlag } = this.state;
+		store.setCacheBaseInfo({ selectFlag });
 		this.props.$fetch.get(API.contractInfo).then((result) => {
 			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
 				store.setProtocolPersonalData(result.data);
-				this.props.history.push('/protocol/personal_auth_page');
+				this.props.history.push(jumpUrl);
 			} else {
 				this.props.toast.info(result.msgInfo);
 			}
@@ -167,7 +169,7 @@ export default class essential_information_page extends PureComponent {
 
 	buttonDisabled = () => {
 		const formData = this.props.form.getFieldsValue();
-		const { ProvincesValue } = this.state;
+		const { ProvincesValue, selectFlag } = this.state;
 		const { address, linkman, linkman2, linkphone, linkphone2, cntRelTyp1, cntRelTyp2 } = formData;
 		if (
 			ProvincesValue &&
@@ -177,7 +179,8 @@ export default class essential_information_page extends PureComponent {
 			linkphone2 &&
 			cntRelTyp1 &&
 			linkman2 &&
-			linkphone
+			linkphone &&
+			selectFlag
 		) {
 			return true;
 		}
@@ -187,11 +190,34 @@ export default class essential_information_page extends PureComponent {
 	commonFunc = (res, { province, city, district, township }) => {
 		console.log(province, city, district, township);
 		const provCity = store.getProvCity() || [];
-		if (res && res.data && res.data.provCd && res.data.cityCd && res.data.districtCd && res.data.streetCd) {
+		const cacheData = store.getCacheBaseInfo();
+		store.removeCacheBaseInfo();
+		if (
+			res &&
+			res.data &&
+			res.data.provCd &&
+			res.data.cityCd &&
+			res.data.districtCd &&
+			res.data.streetCd &&
+			(!cacheData || !store.getProvCity())
+		) {
 			this.getProCode(res.data.provCd, res.data.cityCd, res.data.districtCd, res.data.streetCd);
-		} else if (res && res.data && res.data.provCd && res.data.cityCd && res.data.districtCd) {
+		} else if (
+			res &&
+			res.data &&
+			res.data.provCd &&
+			res.data.cityCd &&
+			res.data.districtCd &&
+			(!cacheData || !store.getProvCity())
+		) {
 			this.getProCode(res.data.provCd, res.data.cityCd, res.data.districtCd);
-		} else if (res && res.data && res.data.provCd && res.data.cityCd) {
+		} else if (
+			res &&
+			res.data &&
+			res.data.provCd &&
+			res.data.cityCd &&
+			(!cacheData || !store.getProvCity())
+		) {
 			this.getProCode(res.data.provCd, res.data.cityCd);
 		} else if (
 			provCity &&
@@ -227,25 +253,26 @@ export default class essential_information_page extends PureComponent {
 			console.log('没有获取到省市区');
 		}
 		this.props.form.setFieldsValue({
-			address: (res && res.data && res.data.usrDtlAddr) || store.getAddress() || '',
-			linkman: (res && res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-			linkphone: (res && res.data && res.data.mobForOne) || store.getLinkphone() || '',
-			linkman2: (res && res.data && res.data.cntUsrNm2) || store.getLinkman2() || '',
-			linkphone2: (res && res.data && res.data.mobForSec) || store.getLinkphone2() || ''
+			address: (res && res.data && !cacheData && res.data.usrDtlAddr) || store.getAddress() || '',
+			linkman: (res && res.data && !cacheData && res.data.cntUsrNm1) || store.getLinkman() || '',
+			linkphone: (res && res.data && !cacheData && res.data.mobForOne) || store.getLinkphone() || '',
+			linkman2: (res && res.data && !cacheData && res.data.cntUsrNm2) || store.getLinkman2() || '',
+			linkphone2: (res && res.data && !cacheData && res.data.mobForSec) || store.getLinkphone2() || ''
 		});
 		this.setState({
 			relatValue:
-				res && res.data && res.data.cntRelTyp1
+				res && res.data && res.data.cntRelTyp1 && !cacheData
 					? [`${res.data.cntRelTyp1}`]
 					: store.getRelationValue()
 					? store.getRelationValue()
 					: [],
 			relatValue2:
-				res && res.data && res.data.cntRelTyp2
+				res && res.data && res.data.cntRelTyp2 && !cacheData
 					? [`${res.data.cntRelTyp2}`]
 					: store.getRelationValue2()
 					? store.getRelationValue2()
-					: []
+					: [],
+			selectFlag: (cacheData && cacheData.selectFlag) || false
 		});
 	};
 
@@ -478,7 +505,7 @@ export default class essential_information_page extends PureComponent {
 	handleSubmit = () => {
 		const { ProvincesValue, addressList, selectFlag } = this.state;
 		if (!selectFlag) {
-			this.props.toast.info('请先勾选个人信息授权书');
+			this.props.toast.info('请先阅读并勾选相关协议');
 			return;
 		}
 		if (submitButtonLocked) return;
@@ -550,6 +577,7 @@ export default class essential_information_page extends PureComponent {
 							usrDtlAddr: values.address,
 							usrDtlAddrLctn: lngLat,
 							cntRelTyp1: values.cntRelTyp1[0],
+							cntRelTyp2: values.cntRelTyp2[0],
 							cntUsrNm1: values.linkman,
 							cntMblNo1: values.linkphone,
 							cntUsrNm2: values.linkman2,
@@ -1179,20 +1207,27 @@ export default class essential_information_page extends PureComponent {
 				</div>
 				{urlQuery.jumpToBase && (
 					<div className={style.operatorCont}>
-						<div className={style.protocolBox}>
-							<i
-								className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
-								onClick={this.selectProtocol}
-							/>
+						<div className={style.protocolBox} onClick={this.selectProtocol}>
+							<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
 							点击按钮即视为同意
-							<a
-								onClick={() => {
-									this.readContract();
+							<em
+								onClick={(e) => {
+									e.stopPropagation();
+									this.readContract('/protocol/personal_auth_page');
 								}}
 								className={style.link}
 							>
 								《个人信息授权书》
-							</a>
+							</em>
+							<em
+								onClick={(e) => {
+									e.stopPropagation();
+									this.readContract('/protocol/user_privacy_page');
+								}}
+								className={style.link}
+							>
+								《用户隐私权政策》
+							</em>
 						</div>
 						<ButtonCustom
 							onClick={this.handleSubmit}
@@ -1213,20 +1248,27 @@ export default class essential_information_page extends PureComponent {
 						{needNextUrl ? '下一步' : '完成'}
 					</ButtonCustom>
 				)}
-				<div className={style.protocolBox}>
-					<i
-						className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
-						onClick={this.selectProtocol}
-					/>
+				<div className={style.protocolBox} onClick={this.selectProtocol}>
+					<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
 					点击按钮即视为同意
-					<a
-						onClick={() => {
-							this.readContract();
+					<em
+						onClick={(e) => {
+							e.stopPropagation();
+							this.readContract('/protocol/personal_auth_page');
 						}}
 						className={style.link}
 					>
 						《个人信息授权书》
-					</a>
+					</em>
+					<em
+						onClick={(e) => {
+							e.stopPropagation();
+							this.readContract('/protocol/user_privacy_page');
+						}}
+						className={style.link}
+					>
+						《用户隐私权政策》
+					</em>
 				</div>
 				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
 			</div>

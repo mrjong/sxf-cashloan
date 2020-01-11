@@ -235,14 +235,16 @@
 	}
 }
 .protocolBox {
-	display: flex;
-	align-items: center;
+	// display: flex;
+	// align-items: center;
 	font-size: 24px;
-	line-height: 33px;
+	line-height: 40px;
 	color: #868e9e;
 	margin: 20px 58px 30px;
 	.selectStyle {
-		display: block;
+    display: inline-block;
+    position: relative;
+    top: 6px;
 		width: 30px;
 		height: 30px;
 		background-size: 100%;

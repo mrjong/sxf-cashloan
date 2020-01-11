@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-10-28 15:14:41
+ * @LastEditTime : 2020-01-11 10:43:43
  */
 export default [
 	{
@@ -80,5 +80,11 @@ export default [
 		zhName: 'grxyyqyxgzs',
 		title: '个人信用逾期影响告知书',
 		component: () => import('pages/protocol/overdue_effect_page')
+	},
+	{
+		path: '/protocol/user_privacy_page', // 基本信息页面的用户隐私权政策是html,不是图片
+		zhName: 'jbxxyhysqzc',
+		title: '用户隐私权政策',
+		component: () => import('pages/protocol/user_privacy_page')
 	}
 ];
