@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-11 15:13:26
+ * @LastEditTime : 2020-01-13 17:43:34
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -852,7 +852,8 @@ export default class confirm_agency_page extends PureComponent {
 	isShowLoanModal = () => {
 		const { $fetch } = this.props;
 		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data === '1') {
+			// 判断是否开启弹窗 0 打开 1 关闭
+			if (res.msgCode === 'PTM0000' && res.data === '0') {
 				this.setState({
 					isShowLoanTipModal: true
 				});

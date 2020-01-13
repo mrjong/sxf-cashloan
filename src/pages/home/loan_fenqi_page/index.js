@@ -610,7 +610,8 @@ export default class loan_fenqi_page extends PureComponent {
 	isShowLoanModal = () => {
 		const { $fetch } = this.props;
 		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data === '1') {
+			// 判断是否开启弹窗 0 打开 1 关闭
+			if (res.msgCode === 'PTM0000' && res.data === '0') {
 				this.setState({
 					isShowLoanTipModal: true
 				});
