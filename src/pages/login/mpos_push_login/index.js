@@ -6,7 +6,7 @@ import qs from 'qs';
 import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
-import { Toast, InputItem, Modal } from 'antd-mobile';
+import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -18,10 +18,10 @@ import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
-import loginModalBg from './img/login_modal.png';
-import loginModalBtn from './img/login_modal_btn.png';
+// import loginModalBg from './img/login_modal.png';
+// import loginModalBtn from './img/login_modal_btn.png';
 import tooltip from './img/tooltip.png';
-import closeIco from './img/close_btn.png';
+// import closeIco from './img/close_btn.png';
 import { daicao } from '../../../utils/analytinsType';
 
 let timmer;
@@ -55,9 +55,9 @@ export default class login_page extends PureComponent {
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
-			mobilePhone: '',
-			showDownloadModal: false,
-			times: 3
+			mobilePhone: ''
+			// showDownloadModal: false,
+			// times: 3
 		};
 	}
 
@@ -147,17 +147,17 @@ export default class login_page extends PureComponent {
 		buriedPointEvent(daicao.mpos_push_loginBtn);
 		const osType = getDeviceType();
 		// 防止用户关闭弹框,继续点击进行登录
-		if (store.getToken() || Cookie.get('fin-v-card-token')) {
-			this.setState(
-				{
-					showDownloadModal: true
-				},
-				() => {
-					this.startCountDown();
-				}
-			);
-			return;
-		}
+		// if (store.getToken() || Cookie.get('fin-v-card-token')) {
+		// 	this.setState(
+		// 		{
+		// 			showDownloadModal: true
+		// 		},
+		// 		() => {
+		// 			this.startCountDown();
+		// 		}
+		// 	);
+		// 	return;
+		// }
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -190,15 +190,17 @@ export default class login_page extends PureComponent {
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
 						queryUsrSCOpenId({ $props: this.props }).then(() => {
-							this.setState(
-								{
-									showDownloadModal: true
-								},
-								() => {
-									buriedPointEvent(daicao.mpos_push_modalshow);
-									this.startCountDown();
-								}
-							);
+							this.props.history.replace('/home/home');
+
+							// this.setState(
+							// 	{
+							// 		showDownloadModal: true
+							// 	},
+							// 	() => {
+							// 		buriedPointEvent(daicao.mpos_push_modalshow);
+							// 		this.startCountDown();
+							// 	}
+							// );
 						});
 					},
 					(error) => {
@@ -412,59 +414,59 @@ export default class login_page extends PureComponent {
 	};
 
 	// 弹框里的倒计时
-	startCountDown = () => {
-		let times = this.state.times;
-		this.clearCountDown();
-		modalTimer = setInterval(() => {
-			this.setState({
-				times: times--
-			});
-			if (times <= -1) {
-				this.clearCountDown();
-				this.downloadApp();
-			}
-		}, 1000);
-	};
+	// startCountDown = () => {
+	// 	let times = this.state.times;
+	// 	this.clearCountDown();
+	// 	modalTimer = setInterval(() => {
+	// 		this.setState({
+	// 			times: times--
+	// 		});
+	// 		if (times <= -1) {
+	// 			this.clearCountDown();
+	// 			this.downloadApp();
+	// 		}
+	// 	}, 1000);
+	// };
 
 	clearCountDown = () => {
 		clearInterval(modalTimer);
 	};
 
 	// 下载app
-	downloadApp = () => {
-		this.closeModal();
-		const phoneType = getDeviceType();
-		if (phoneType === 'IOS') {
-			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
-		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						Toast.info('安全下载中');
-						window.location.href = res.data;
-					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
-				}
-			);
-		}
-	};
+	// downloadApp = () => {
+	// 	this.closeModal();
+	// 	const phoneType = getDeviceType();
+	// 	if (phoneType === 'IOS') {
+	// 		window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
+	// 	} else {
+	// 		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+	// 			(res) => {
+	// 				if (res.msgCode === 'PTM0000') {
+	// 					Toast.info('安全下载中');
+	// 					window.location.href = res.data;
+	// 				} else {
+	// 					res.msgInfo && Toast.info(res.msgInfo);
+	// 				}
+	// 			},
+	// 			(error) => {
+	// 				error.msgInfo && Toast.info(error.msgInfo);
+	// 			}
+	// 		);
+	// 	}
+	// };
 
 	// 关闭弹框
-	closeModal = () => {
-		this.setState(
-			{
-				showDownloadModal: false,
-				times: 3
-			},
-			() => {
-				this.clearCountDown();
-			}
-		);
-	};
+	// closeModal = () => {
+	// 	this.setState(
+	// 		{
+	// 			showDownloadModal: false,
+	// 			times: 3
+	// 		},
+	// 		() => {
+	// 			this.clearCountDown();
+	// 		}
+	// 	);
+	// };
 
 	//	校验必填项 按钮是否可以点击
 	validateFn = () => {
@@ -489,8 +491,8 @@ export default class login_page extends PureComponent {
 			showSlideModal,
 			yOffset,
 			bigImageH,
-			disabledInput,
-			showDownloadModal
+			disabledInput
+			// showDownloadModal
 		} = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
@@ -634,12 +636,10 @@ export default class login_page extends PureComponent {
 						onClose={this.closeSlideModal}
 					/>
 				)}
-				{showDownloadModal && (
+				{/* {showDownloadModal && (
 					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
 						<div className={styles.loginModalContainer}>
-							{/* 大图 */}
 							<img className={styles.loginModalBg} src={loginModalBg} alt="背景" />
-							{/* 按钮 */}
 							<img
 								className={styles.loginModalBtn}
 								src={loginModalBtn}
@@ -649,11 +649,10 @@ export default class login_page extends PureComponent {
 								}}
 								alt="按钮"
 							/>
-							{/* 关闭 */}
 							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
 						</div>
 					</Modal>
-				)}
+				)} */}
 			</div>
 		);
 	}
