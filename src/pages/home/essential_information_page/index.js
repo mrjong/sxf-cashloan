@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-11 14:20:50
+ * @LastEditTime : 2020-01-13 10:43:34
  */
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
@@ -252,28 +252,55 @@ export default class essential_information_page extends PureComponent {
 		} else {
 			console.log('没有获取到省市区');
 		}
-		this.props.form.setFieldsValue({
-			address: (res && res.data && !cacheData && res.data.usrDtlAddr) || store.getAddress() || '',
-			linkman: (res && res.data && !cacheData && res.data.cntUsrNm1) || store.getLinkman() || '',
-			linkphone: (res && res.data && !cacheData && res.data.mobForOne) || store.getLinkphone() || '',
-			linkman2: (res && res.data && !cacheData && res.data.cntUsrNm2) || store.getLinkman2() || '',
-			linkphone2: (res && res.data && !cacheData && res.data.mobForSec) || store.getLinkphone2() || ''
-		});
-		this.setState({
-			relatValue:
-				res && res.data && res.data.cntRelTyp1 && !cacheData
-					? [`${res.data.cntRelTyp1}`]
-					: store.getRelationValue()
+		// 阅读协议后缓存信息
+		if (cacheData) {
+			this.props.form.setFieldsValue({
+				address: store.getAddress() || (res && res.data && res.data.usrDtlAddr) || '',
+				linkman: store.getLinkman() || (res && res.data && res.data.cntUsrNm1) || '',
+				linkphone: store.getLinkphone() || (res && res.data && res.data.mobForOne) || '',
+				linkman2: store.getLinkman2() || (res && res.data && res.data.cntUsrNm2) || '',
+				linkphone2: store.getLinkphone2() || (res && res.data && res.data.mobForSec) || ''
+			});
+		} else {
+			this.props.form.setFieldsValue({
+				address: (res && res.data && res.data.usrDtlAddr) || store.getAddress() || '',
+				linkman: (res && res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
+				linkphone: (res && res.data && res.data.mobForOne) || store.getLinkphone() || '',
+				linkman2: (res && res.data && res.data.cntUsrNm2) || store.getLinkman2() || '',
+				linkphone2: (res && res.data && res.data.mobForSec) || store.getLinkphone2() || ''
+			});
+		}
+		if (cacheData) {
+			this.setState({
+				relatValue: store.getRelationValue()
 					? store.getRelationValue()
+					: res && res.data && res.data.cntRelTyp1
+					? [`${res.data.cntRelTyp1}`]
 					: [],
-			relatValue2:
-				res && res.data && res.data.cntRelTyp2 && !cacheData
-					? [`${res.data.cntRelTyp2}`]
-					: store.getRelationValue2()
+				relatValue2: store.getRelationValue2()
 					? store.getRelationValue2()
+					: res && res.data && res.data.cntRelTyp2
+					? [`${res.data.cntRelTyp2}`]
 					: [],
-			selectFlag: (cacheData && cacheData.selectFlag) || false
-		});
+				selectFlag: cacheData.selectFlag || false
+			});
+		} else {
+			this.setState({
+				relatValue:
+					res && res.data && res.data.cntRelTyp1
+						? [`${res.data.cntRelTyp1}`]
+						: store.getRelationValue()
+						? store.getRelationValue()
+						: [],
+				relatValue2:
+					res && res.data && res.data.cntRelTyp2
+						? [`${res.data.cntRelTyp2}`]
+						: store.getRelationValue2()
+						? store.getRelationValue2()
+						: [],
+				selectFlag: (cacheData && cacheData.selectFlag) || false
+			});
+		}
 	};
 
 	//获取基本信息
