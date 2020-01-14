@@ -8,6 +8,7 @@ import { setBackGround } from 'utils/background';
 import { getDeviceType } from 'utils';
 import SXFButton from 'components/ButtonCustom';
 import RepayPlanModal from 'components/RepayPlanModal';
+import TipModal from 'components/TipModal';
 import style from './index.scss';
 import linkConf from 'config/link.conf';
 import Cookie from 'js-cookie';
@@ -25,7 +26,8 @@ const API = {
 	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
 	doCouponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink' //协议绑卡接口
+	protocolBind: '/withhold/protocolBink', //协议绑卡接口
+	bill_isOpenLoanPopup: '/bill/isOpenLoanPopup' // 判断是否开启放款限制弹窗
 };
 
 let isFetching = false;
@@ -59,7 +61,9 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
 			payBankCode: '',
-			resaveBankCode: ''
+			resaveBankCode: '',
+			checkBox1: false,
+			isShowLoanTipModal: false
 		};
 	}
 
@@ -437,7 +441,8 @@ export default class loan_fenqi_page extends PureComponent {
 			deratePrice,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			checkBox1
 		} = this.state;
 		const resaveCard = {
 			agrNo: resaveBankCardAgrNo,
@@ -467,7 +472,8 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCardAgrNo,
 			couponData,
 			payBankCode,
-			resaveBankCode
+			resaveBankCode,
+			checkBox1
 		});
 		store.setCashFenQiCardArr([resaveCard, payCard]);
 	};
@@ -586,14 +592,46 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//借款申请提交
 	loanApplySubmit = () => {
-		const { loanMoney, loanDate } = this.state;
+		const { loanMoney, loanDate, checkBox1 } = this.state;
 		if (this.validateFn()) {
 			buriedPointEvent(loan_fenqi.clickSubmit, {
 				loanMoney,
 				loanDate: loanDate.perdCnt
 			});
-			this.checkProtocolBindCard();
+			if (!checkBox1) {
+				this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
+				return;
+			}
+			this.isShowLoanModal();
+			// this.checkProtocolBindCard();
 		}
+	};
+
+	isShowLoanModal = () => {
+		const { $fetch } = this.props;
+		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
+			// 判断是否开启弹窗 0 打开 1 关闭
+			if (res.msgCode === 'PTM0000' && res.data === '0') {
+				this.setState({
+					isShowLoanTipModal: true
+				});
+			} else {
+				this.checkProtocolBindCard();
+			}
+		});
+	};
+
+	// 关闭春节放款策略弹框
+	closeTipModal = () => {
+		this.setState({
+			isShowLoanTipModal: false
+		});
+	};
+
+	// 点击稍后申请
+	cancelHandler = () => {
+		buriedPointEvent(home.loanTipGetLaterClick);
+		this.closeTipModal();
 	};
 
 	submitHandler = () => {
@@ -743,6 +781,11 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	// 点击勾选协议
+	checkAgreement = () => {
+		this.setState({ checkBox1: !this.state.checkBox1 });
+	};
+
 	render() {
 		const {
 			usageModal,
@@ -766,7 +809,9 @@ export default class loan_fenqi_page extends PureComponent {
 			deratePrice,
 			couponData,
 			isShowSmsModal,
-			smsCode
+			smsCode,
+			checkBox1,
+			isShowLoanTipModal
 		} = this.state;
 		return (
 			<div className={style.fenqi_page}>
@@ -921,11 +966,13 @@ export default class loan_fenqi_page extends PureComponent {
 							</li>
 						</ul>
 						{loanMoney && loanDate && contractList.length > 0 && (
-							<p className={style.protocolLink}>
+							<p className={style.protocolLink} onClick={this.checkAgreement}>
+								<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
 								点击“签约借款”，表示同意{' '}
 								{contractList.map((item, idx) => (
 									<em
-										onClick={() => {
+										onClick={(e) => {
+											e.stopPropagation();
 											this.readContract(item);
 										}}
 										key={idx}
@@ -940,7 +987,7 @@ export default class loan_fenqi_page extends PureComponent {
 				<div className={style.buttonWrap}>
 					<SXFButton
 						onClick={this.loanApplySubmit}
-						className={this.validateFn() ? style.submitBtn : style.submitBtnDisabled}
+						className={this.validateFn() && checkBox1 ? style.submitBtn : style.submitBtnDisabled}
 					>
 						签约借款
 					</SXFButton>
@@ -982,6 +1029,17 @@ export default class loan_fenqi_page extends PureComponent {
 					history={this.props.history}
 					goPage={() => {
 						this.props.history.push('/home/payment_notes');
+					}}
+				/>
+
+				{/* 春节放款策略弹框 */}
+				<TipModal
+					visible={isShowLoanTipModal}
+					onCancel={this.cancelHandler}
+					closeHandler={this.closeTipModal}
+					onConfirm={() => {
+						buriedPointEvent(home.loanTipGetNowClick);
+						this.checkProtocolBindCard();
 					}}
 				/>
 

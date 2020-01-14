@@ -1,0 +1,46 @@
+:global {
+  .loan_tip_modal {
+    .am-modal.am-modal-transparent {
+      width: 640px;
+      .am-modal-content {
+        padding-top: 0;
+        border-radius: 6px;
+        .am-modal-body {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.head {
+  height: 120px;
+  line-height: 120px;
+  font-size: 38px;
+  color: #121C32;
+  font-weight: 600;
+}
+.mainContent {
+  padding: 0 40px;
+}
+
+.title {
+  line-height: 48px;
+  font-size: 34px;
+  color: #121C32;
+  text-align: left;
+}
+.desc {
+  line-height: 42px;
+  font-size: 30px;
+  color: #868E9E;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  text-align: justify;
+}
+.cancelStyle {
+  height: 90px;
+  line-height: 90px;
+  font-size: 36px;
+  color: #868E9E;
+}
