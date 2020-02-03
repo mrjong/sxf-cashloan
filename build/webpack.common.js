@@ -118,8 +118,7 @@ module.exports = function(options) {
 		plugins: options.plugins,
 		devServer: {
 			hot: true,
-			// host: '0.0.0.0',
-			host: '192.168.1.12',
+			host: '0.0.0.0',
 			port: 8010,
 			publicPath: '/',
 			clientLogLevel: 'none',
