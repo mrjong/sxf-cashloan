@@ -51,5 +51,6 @@ const renders = (Component) =>
 		document.getElementById('root')
 	);
 renders(router);
+
 // 取消警告
 console.disableYellowBox = true;
