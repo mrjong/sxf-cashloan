@@ -1,0 +1,39 @@
+.subtitle {
+	margin-top: 30px;
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	color: #868e9e;
+}
+
+.desc {
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	color: #868e9e;
+}
+.money {
+	padding-top: 10px;
+	font-size: 80px;
+	line-height: 1.4;
+	font-family: 'DINMitAlt';
+	font-weight: normal;
+	color: #121c32;
+	&.small {
+		font-size: 60px;
+	}
+}
+.box {
+	display: flex;
+	.flex2 {
+		flex: 1.5;
+	}
+	.flex1 {
+		flex: 1;
+	}
+	.rightPart {
+		// .subtitle, .money {
+		// 	margin-left: 60px;
+		// }
+	}
+}

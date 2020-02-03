@@ -1,0 +1,27 @@
+.configImg {
+	vertical-align: top;
+	width: 100%;
+}
+.invalidBox {
+  padding: 27px 0 48px;
+  font-size: 42px;
+  color: #394259;
+  p {
+    margin-top: 83px;
+    line-height: 42px;
+  }
+}
+.invalidImg {
+  width: 342px;
+  vertical-align: top;
+}
+:global {
+	.invalid_modal.am-modal {
+		&.am-modal-transparent {
+			width: 580px;
+			.am-modal-content {
+				border-radius: 6px;
+			}
+		}
+	}
+}

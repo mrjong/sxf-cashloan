@@ -1,0 +1,168 @@
+.topBox {
+	margin-top: -60px;
+	.title {
+		font-size: 46px;
+		font-family: 'PingFangSC-Medium';
+		font-weight: 500;
+		text-align: center;
+	}
+	.subtitle {
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		text-align: center;
+		color: #868e9e;
+		a {
+			color: #397be6;
+			font-weight: bold;
+		}
+	}
+}
+
+.topImg {
+	min-height: 1px;
+	// position: absolute;
+	margin-top: -80px;
+	top: 0;
+}
+.wenhao {
+	padding: 15px;
+}
+.step_box_new {
+	position: relative;
+	margin: 80px 100px;
+	.content {
+		padding: 45px 0;
+		.item_box {
+			background: #fff;
+			border-radius: 6px;
+			margin-top: 20px;
+		}
+	}
+
+	.step_item {
+		min-height: 120px;
+		padding: 0 40px;
+		position: relative;
+		vertical-align: top;
+		flex: 1;
+		&:last-child .line {
+			display: none;
+		}
+		.title {
+			font-size: 30px;
+			line-height: 1.4;
+			color: #868e9e;
+			position: relative;
+			font-family: 'PingFangSC-Semibold';
+			font-weight: 600;
+			.step_circle {
+				background-image: url(./img/circle_not.png);
+				background-repeat: no-repeat;
+				background-size: 14px 14px;
+				width: 14px;
+				position: absolute;
+				left: -30px;
+				background-color: #f7f8fa;
+				z-index: 100;
+				top: 20px;
+				height: 14px;
+			}
+			a {
+				color: #397be6;
+				font-size: 30px;
+				margin-left: 15px;
+				text-decoration: underline;
+			}
+			&.blue {
+				color: #397be6;
+			}
+		}
+		&.active .title {
+			font-size: 30px;
+			color: #121c32;
+			font-family: 'PingFangSC-Semibold';
+			font-weight: 600;
+			.step_circle {
+				top: 15px;
+				z-index: 100;
+				background-color: #f7f8fa;
+				background-image: url(./img/circle.png);
+			}
+		}
+		.line {
+			position: absolute;
+			left: 14px;
+			top: -10px;
+			height: 100%;
+			width: 1px;
+			padding: 30px 0 4px;
+			&::after {
+				content: '';
+				display: inline-block;
+				background: #ddd;
+				position: relative;
+				left: 2px;
+				height: 100%;
+				width: 2.5px;
+				background-color: #e0e2e6;
+			}
+		}
+		.dash_line {
+			position: absolute;
+			left: 14px;
+			top: -10px;
+			height: 100%;
+			width: 1px;
+			padding: 30px 0 4px;
+			&::after {
+				content: '';
+				display: inline-block;
+				position: relative;
+				left: 2px;
+				height: 100%;
+				width: 100px;
+				border-left: 1px dashed #e0e2e6;
+			}
+		}
+		i {
+			display: inline-block;
+			width: 24px;
+			height: 24px;
+			background-image: url(./img/wh.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: relative;
+			left: 0;
+		}
+		.desc {
+			color: #868e9e;
+			font-size: 22px;
+			font-family: 'PingFangSC-Regular';
+			font-weight: 400;
+		}
+	}
+}
+
+.fix_bottom {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+  z-index: 100;
+  text-align: center;
+}
+
+.fix_bottom {
+	:global {
+		.am-notice-bar {
+			height: 50px;
+			line-height: 50px;
+			background-color: #fff;
+			box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1) inset;
+		}
+		.am-notice-bar-content {
+			margin: 0 15px;
+		}
+	}
+}

@@ -1,0 +1,66 @@
+.mpos_download_page {
+	// overflow: auto;
+	// -webkit-overflow-scrolling: touch;
+	// height: 100%;
+	padding-top: 80px;
+	background: #fff;
+	text-align: center;
+	.banner {
+		width: 340px;
+		vertical-align: top;
+	}
+	.content {
+		padding-top: 76px;
+		.title {
+			font-size: 36px;
+			font-family: PingFangSC-Medium, PingFang SC;
+			font-weight: 500;
+			color: #121c32;
+			line-height: 50px;
+		}
+		.moneyText {
+			margin-top: 64px;
+			font-size: 36px;
+			color: #121c32;
+			line-height: 50px;
+			font-weight: 500;
+			span {
+				color: #f76c5c;
+				margin-left: 10px;
+			}
+		}
+		.download_button {
+			margin-top: 15px;
+			width: 634px;
+			height: 100px;
+			line-height: 100px;
+			border-radius: 50px;
+			color: #121c32;
+			font-weight: bold;
+		}
+		.tipsText {
+			margin-top: 85px;
+			font-size: 24px;
+			color: #868e9e;
+			line-height: 33px;
+		}
+		.tipsText2 {
+			margin-top: 16px;
+			font-size: 26px;
+			color: #868e9e;
+			line-height: 37px;
+			span {
+				color: #f76c5c;
+			}
+		}
+		.descText {
+			position: fixed;
+			bottom: 40px;
+			left: 0;
+			width: 100%;
+			font-size: 24px;
+			color: #868e9e;
+			line-height: 33px;
+		}
+	}
+}

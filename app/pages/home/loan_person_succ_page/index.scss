@@ -1,0 +1,275 @@
+.topBox {
+	margin-top: -80px;
+	.title {
+		font-size: 46px;
+		font-family: 'PingFangSC-Medium';
+		font-weight: 500;
+		text-align: center;
+	}
+	.subtitle {
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		text-align: center;
+		color: #868e9e;
+		a {
+			color: #397be6;
+			font-weight: bold;
+		}
+	}
+}
+
+.topImg {
+	min-height: 1px;
+	margin-top: -80px;
+}
+.step_box_new {
+	position: relative;
+	margin: 70px 70px;
+	.content {
+		padding: 45px 0;
+		.item_box {
+			background: #fff;
+			border-radius: 6px;
+			margin-top: 20px;
+		}
+	}
+
+	.step_item {
+		min-height: 120px;
+		padding: 0 15px 0 40px;
+		position: relative;
+		vertical-align: top;
+		flex: 1;
+		&:last-child .line {
+			display: none;
+		}
+		.title {
+			font-size: 30px;
+			line-height: 1.4;
+			color: #868e9e;
+			position: relative;
+			font-family: 'PingFangSC-Semibold';
+			font-weight: 600;
+			.step_circle {
+				background-image: url(./img/circle_not.png);
+				background-repeat: no-repeat;
+				background-size: 14px 14px;
+				width: 14px;
+				position: absolute;
+				left: -30px;
+				background-color: #f7f8fa;
+				z-index: 100;
+				top: 20px;
+				height: 14px;
+			}
+			&.blue {
+				color: #397be6;
+			}
+		}
+		&.active .title {
+			font-size: 30px;
+			color: #121c32;
+			font-family: 'PingFangSC-Semibold';
+			font-weight: 600;
+			.step_circle {
+				top: 15px;
+				z-index: 100;
+				background-color: #f7f8fa;
+				background-image: url(./img/circle.png);
+			}
+		}
+		.line {
+			position: absolute;
+			left: 14px;
+			top: -10px;
+			height: 100%;
+			width: 1px;
+			padding: 30px 0 4px;
+			&::after {
+				content: '';
+				display: inline-block;
+				background: #ddd;
+				position: relative;
+				left: 2px;
+				height: 100%;
+				width: 2.5px;
+				background-color: #e0e2e6;
+			}
+		}
+		.desc {
+			color: #868e9e;
+			font-size: 22px;
+			font-family: 'PingFangSC-Regular';
+			font-weight: 400;
+		}
+	}
+	.order_button {
+		display: inline-block;
+		width: 350px;
+		height: 50px;
+		line-height: 52px;
+		text-align: center;
+		background-color: #fff;
+		border-radius: 28px;
+		border: 2px solid #397be6;
+		color: #397be6;
+		font-size: 30;
+		font-weight: 400;
+		margin-right: 10px;
+	}
+	.order_active_button {
+		color: #ff6666;
+		border: 2px solid #ff6666;
+	}
+}
+.submitBtn {
+	width: 670px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+}
+.desctext {
+	color: #868e9e;
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	text-align: center;
+	padding: 5px;
+}
+
+.title_wrap {
+	position: relative;
+}
+
+.question_icon {
+	position: absolute;
+	right: 200px;
+	top: 20px;
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+}
+
+.modalTitle {
+	font-size: 46px;
+	color: #121c32;
+	text-align: left;
+	font-weight: 500;
+}
+
+.modalDesc {
+	font-size: 30px;
+	color: #868e9e;
+	text-align: left;
+	margin-bottom: 64px;
+	span {
+		color: #397be6;
+	}
+}
+
+.close_icon {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	padding: 10px;
+	z-index: 100;
+}
+
+.options_day {
+	margin: 66px 0;
+	text-align: left;
+}
+
+.opts_button_day {
+	display: inline-block;
+	width: 230px;
+	height: 70px;
+	line-height: 70px;
+	box-sizing: border-box;
+	border-radius: 35px;
+	text-align: center;
+	margin-right: 36px;
+	font-size: 28px;
+	font-weight: 400;
+	color: #121c32;
+	border: 1px solid #dcdfe6;
+}
+
+.opts_button {
+	display: inline-block;
+	height: 60px;
+	line-height: 60px;
+	width: 210px;
+	text-align: center;
+	border: 1px solid #dcdfe6;
+	font-size: 28px;
+	font-weight: bold;
+	color: #121c32;
+	border-radius: 6px;
+	margin-right: 14px;
+
+	&:last-child {
+		margin-right: 0;
+	}
+}
+
+.opts_button_active {
+	border: 1px solid #397be6;
+	color: #397be6;
+	background-color: #f0f6ff;
+	font-weight: bold;
+}
+
+.opts_button_disabled {
+	color: #dcdfe6;
+}
+
+.opts_item {
+	margin-bottom: 36px;
+}
+
+.opts_title {
+	font-size: 22px;
+	color: #dcdfe6;
+	margin-bottom: 8px;
+	text-align: left;
+}
+
+.opts_button_wrap {
+	display: flex;
+}
+
+.submitBtn {
+	margin-top: 60px;
+	width: 634px;
+}
+
+.submitBtnDisabled {
+	margin-top: 60px;
+	width: 634px;
+	background-color: #dcdfe6;
+	color: #fff;
+}
+
+.rule_wrap {
+	margin-top: 70px;
+}
+
+.rule_item {
+	font-size: 30px;
+	color: #121c32;
+	text-align: left;
+	margin-bottom: 30px;
+}
+
+:global {
+	.examine_modal {
+		.am-modal-content {
+			padding: 60px 40px 50px;
+			border-radius: 0px;
+			.am-modal-body {
+				padding: 0;
+			}
+		}
+	}
+}

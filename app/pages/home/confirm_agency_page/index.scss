@@ -1,0 +1,510 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.confirm_agency {
+	input::placeholder {
+		color: #999;
+		font-size: 0.6rem;
+		line-height: 0.6rem;
+		padding-top: 20px;
+	}
+
+	.scrollWrap {
+		padding-bottom: 160px;
+	}
+
+	.billInpBox {
+		position: relative;
+		margin-bottom: 30px;
+		padding: 57px 60px 37px;
+		background: #fff;
+		box-sizing: border-box;
+
+		.moneyUnit {
+			position: absolute;
+			font-size: 40px;
+			color: #333;
+			left: 60px;
+			top: 70px;
+			z-index: 10;
+		}
+		&::after {
+			@include setBottomLine(#333);
+			left: 60px;
+			bottom: 45px;
+			width: 630px;
+		}
+	}
+	.billInput {
+		input {
+			text-align: left;
+			font-size: 90px;
+			font-family: 'DINMitAlt';
+		}
+	}
+	.inputTip {
+		font-size: 24px;
+		color: #868e9e;
+		margin: 20px 0 30px;
+	}
+
+	.pannel {
+		overflow: hidden;
+		margin: 30px;
+		background: #fff;
+		border-radius: 4px;
+		border: 1px solid #f0f1f5;
+		padding: 0 30px;
+		.listItem {
+			position: relative;
+			display: flex;
+			min-height: 110px;
+			justify-content: space-between;
+			align-items: center;
+			box-sizing: border-box;
+			font-size: 30px;
+			color: #121c32;
+			&::after {
+				@include setBottomLine(#f0f1f5);
+				left: 0;
+			}
+		}
+		.listItem2 {
+			min-height: 140px;
+		}
+		.listItem3 {
+			align-items: flex-start;
+			min-height: 155px;
+			padding-top: 30px;
+		}
+
+		.listValue {
+			font-weight: 500;
+			font-size: 30px;
+			font-family: 'PingFangSC-Medium';
+			line-height: 2;
+		}
+		.listValue2 {
+			font-weight: 500;
+			font-size: 30px;
+			font-family: 'PingFangSC-Medium';
+			line-height: 2;
+			color: #868e9e;
+		}
+		.listValue3 {
+			display: block;
+			position: relative;
+			line-height: normal;
+			margin-bottom: 14px;
+		}
+		.hasArrow {
+			padding-right: 24px;
+		}
+		// 息费合计
+		.derateMoney {
+			margin-left: 20px;
+		}
+		.allMoneyBox {
+			display: flex;
+			text-align: right;
+			color: #868e9e;
+			font-size: 26px;
+			justify-content: space-between;
+		}
+		.moneyTit {
+			width: 150px;
+			text-align: right;
+		}
+		.allMoney {
+			text-decoration: line-through;
+		}
+
+		.icon {
+			// vertical-align: middle;
+			position: absolute;
+			width: 40px;
+			height: 50px;
+			color: #121c32;
+			right: -12px;
+			top: 50%;
+			margin-top: -25px;
+			// margin-bottom: 5px;
+		}
+		.insureLeft {
+			display: flex;
+			align-items: center;
+			.insureIco {
+				display: block;
+				width: 52px;
+				height: 52px;
+				background: url('../../../assets/images/home/insure_ico.png') no-repeat center;
+				background-size: 100%;
+				margin-right: 15px;
+			}
+			.insureTipsCont {
+				font-size: 26px;
+				color: #868e9e;
+				line-height: 37px;
+				.insureTipsTit {
+					display: flex;
+					align-items: center;
+					font-size: 30px;
+					color: #121c32;
+					line-height: 42px;
+					margin-bottom: 7px;
+				}
+				.insureTips {
+					display: block;
+					width: 24px;
+					height: 24px;
+					background: url('../../../assets/images/home/tip_ico.png') no-repeat center;
+					background-size: 100%;
+					margin-left: 10px;
+				}
+			}
+		}
+		.insureRight {
+			display: flex;
+			align-items: center;
+			font-size: 30px;
+			font-family: PingFangSC-Medium;
+			font-weight: 500;
+			color: #121c32;
+			line-height: 42px;
+			.unCheckIco {
+				display: block;
+				width: 34px;
+				height: 34px;
+				background: url('../../../assets/images/home/unChecked_ico.png') no-repeat center;
+				background-size: 100%;
+				margin-left: 16px;
+			}
+			.checkIco {
+				background-image: url('../../../assets/images/home/checked_ico.png');
+			}
+		}
+	}
+	.protocolBox {
+		margin-top: -10px;
+		padding: 0 60px;
+		.insureDesc {
+			font-size: 24px;
+			color: #c9cdd5;
+			line-height: 33px;
+			margin-bottom: 40px;
+		}
+	}
+	.protocolLink {
+		font-size: 24px;
+		color: #8e8d7b;
+		margin: 24px 0 24px;
+		em {
+			color: #121c32;
+		}
+	}
+
+	.greyText {
+    color: #868e9e;
+	}
+
+	.redText {
+		color: #fe6666;
+	}
+
+	.addIcon {
+		font-size: 35px;
+		color: #333;
+		margin-left: 10px;
+	}
+
+	.tagListWrap {
+		color: #121c32;
+	}
+
+	.tagButton {
+		display: inline-block;
+		width: 140px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #868e9e;
+		border: 1px solid #868e9e;
+		box-sizing: border-box;
+		margin-bottom: 20px;
+		margin-right: 35px;
+		&:nth-child(3n + 3) {
+			margin-right: 0;
+		}
+	}
+
+	.tagButtonActive {
+		color: #fe6666;
+		border: 1px solid #fe6666;
+	}
+
+	.buttonWrap {
+		width: 100%;
+		padding: 30px 0;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		background-color: #fff;
+
+		.submitBtn {
+			width: 634px;
+		}
+
+		.submitBtnDisabled {
+			width: 634px;
+			background-color: #dcdfe6;
+			color: #fff;
+		}
+	}
+	// 优惠劵金额展示
+	.couNumBox {
+		display: flex;
+		height: 42px;
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		border-radius: 3px;
+		padding: 0 10px;
+		align-items: center;
+		font-size: 22px;
+		color: #fff;
+		font-weight: normal;
+		font-family: 'PingFangSC-Regular';
+		i {
+			display: block;
+			width: 20px;
+			height: 22px;
+			background: url('../../../assets/images/home/coupon_ico_img.png') no-repeat center;
+			background-size: 100%;
+			margin-right: 10px;
+		}
+  }
+
+  .checked {
+    position: relative;
+    top: 6px;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    margin-right: 11px;
+    background: url(../../login/login_page/img/selected_ico.png) no-repeat;
+    background-size: 100%;
+  }
+  .nochecked {
+    background: url(../../login/login_page/img/unselected_ico.png) no-repeat;
+    background-size: 100%;
+  }
+}
+.closeIcon {
+	position: absolute;
+	right: 0;
+	top: 5px;
+	width: 40px;
+	color: #c9cdd5;
+	z-index: 10;
+}
+:global {
+	.modal_VIPTip_warp {
+		.am-modal-button-group-v .am-modal-button {
+			color: #ebde74;
+		}
+	}
+	.confirm_agency_warp {
+		:global {
+			.am-modal-button-group-v .am-modal-button {
+				color: #121c32;
+				font-size: 34px;
+				font-family: 'PingFangSC-Medium';
+				font-weight: 500;
+			}
+			.am-modal-transparent {
+				width: 580px;
+			}
+			.am-modal-transparent .am-modal-content {
+				padding-top: 60px;
+				border-radius: 6px;
+			}
+			.am-modal-transparent .am-modal-content .am-modal-body {
+				padding: 0 35px 60px;
+				text-align: justify;
+			}
+		}
+	}
+	.confirm_agency_progress {
+		.am-progress-bar {
+			border: 0.04rem solid #ffda58;
+		}
+	}
+	.purpose_modal {
+		.am-modal-body {
+			padding: 50px 60px 0;
+		}
+	}
+	.confirm_agency {
+		.am-list-item.am-input-item {
+			height: auto;
+			padding-left: 35px;
+		}
+		.am-list-item {
+			.am-list-line {
+				padding-right: 0;
+			}
+		}
+	}
+	.fenqi_tip_modal.am-modal-transparent {
+		.am-modal-body {
+			position: relative;
+		}
+		.am-modal-content {
+			padding: 0;
+			border-radius: 6px;
+			.am-modal-body {
+				padding: 0;
+			}
+		}
+	}
+}
+.modl_tip_title {
+	font-size: 34px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	color: #121c32;
+	line-height: 48px;
+}
+.modl_tip_text {
+	font-size: 30px;
+	color: #868e9e;
+	line-height: 42px;
+	margin-top: 20px;
+}
+
+.modalDesc {
+	font-size: 26px;
+	color: #868e9e;
+	text-align: left;
+	margin: 32px 0 64px;
+}
+
+.modalItem {
+	position: relative;
+	height: 110px;
+	line-height: 110px;
+	width: 100%;
+	font-size: 32px;
+	color: #121c32;
+	&::after {
+		@include setBottomLine(#f0f1f5);
+		left: 0;
+	}
+}
+
+.tipInfo {
+	color: #868e9e;
+	font-size: 30px;
+	margin: 93px 35px 50px;
+}
+
+.tipButton {
+	position: relative;
+	color: #121c32;
+	width: 100%;
+	height: 100px;
+	line-height: 100px;
+	font-size: 34px;
+	font-weight: 400;
+	&::after {
+		@include setTopLine(#f0f1f5);
+		left: 0;
+	}
+}
+
+.tipCloseIcon {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 55px;
+	height: 55px;
+}
+.modalLoading {
+	color: #666;
+	margin-bottom: 15px;
+	font-size: 32px;
+}
+.modal_content {
+	position: relative;
+	.modal_close_btn {
+		position: absolute;
+		top: -5px;
+		right: 0;
+	}
+
+	.modal_title {
+		font-size: 0.36rem;
+		color: #333;
+		border-bottom: 1px solid #e5e5e5;
+		padding-bottom: 0.3rem;
+	}
+
+	.bill_list {
+		padding: 0.1rem;
+		max-height: 500px;
+		overflow: scroll;
+	}
+
+	.list_item {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.13rem 0;
+	}
+
+	.item_name {
+		font-size: 0.3rem;
+		color: #333;
+	}
+
+	.item_value {
+		font-size: 0.3rem;
+		color: #333;
+		font-weight: bold;
+	}
+}
+.tagList {
+	margin-right: 0;
+}
+.modalTitle {
+	font-size: 36px;
+	color: #121c32;
+}
+.modalUl {
+	margin-top: 20px;
+	li {
+		font-size: 30px;
+		color: rgba(134, 145, 157, 1);
+		text-align: left;
+		margin-left: 45px;
+		line-height: 50px;
+		i {
+			display: inline-block;
+			width: 40px;
+			height: 40px;
+			position: relative;
+			top: 8px;
+			margin-right: 20px;
+		}
+		.vipIco1 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -320px, -296px);
+		}
+		.vipIco2 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -320px, -246px);
+		}
+		.vipIco3 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -320px, -346px);
+		}
+		.vipIco4 {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -320px, -396px);
+		}
+	}
+}

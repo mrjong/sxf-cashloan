@@ -1,0 +1,34 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.withdraw_fail_page {
+	text-align: center;
+	.withdrawFailCont {
+		font-size: 32px;
+		font-weight: 400;
+		color: rgba(150, 150, 150, 1);
+		background: #fff;
+		padding: 81px 0;
+		.failIco {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -238px, -88px);
+			display: inline-block;
+			width: 128px;
+			height: 128px;
+		}
+	}
+	.contactWays {
+		a {
+			color: #4ca6ff;
+		}
+	}
+	.failTip {
+		font-size: 40px;
+		font-weight: 600;
+		color: rgba(61, 61, 61, 1);
+		margin: 40px 0;
+	}
+	.backBtn {
+		width: 652px;
+		margin: 159px auto;
+		height: 102px;
+		line-height: 102px;
+	}
+}

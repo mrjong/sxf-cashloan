@@ -1,0 +1,261 @@
+@import '../../../assets/styles/scss/base/fn';
+
+.loading_box {
+	background-color: #fff;
+	text-align: center;
+	padding: 50px 0 30px;
+	height: 372px;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.loading_icon {
+	justify-content: center;
+
+	span {
+		width: 150px;
+		height: 150px;
+	}
+}
+
+.desc {
+	color: #121c32;
+	font-size: 36px;
+	line-height: 1;
+	margin-top: 30px;
+	span {
+		color: #f66;
+	}
+}
+
+.sub_desc {
+	font-size: 30px;
+	color: #868e9e;
+	margin-top: 30px;
+}
+
+.icon_wrap {
+	// margin-bottom: 30px;
+}
+
+.icon {
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+}
+
+.success_icon {
+	position: relative;
+	width: 150px;
+	height: 150px;
+	line-height: 150px;
+	background-color: #fff6f1;
+	border-radius: 50%;
+	margin: 0 auto;
+	text-align: center;
+
+	img {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 78px;
+		height: 55px;
+		z-index: 1;
+	}
+
+	&::after {
+		position: absolute;
+		right: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		content: '';
+		display: inline-block;
+		height: 55px;
+		animation: del_line 1.2s linear forwards;
+		background: #fff6f1;
+		z-index: 2;
+	}
+}
+
+.timeout_icon {
+	background: url('./img/timeout_icon.png') no-repeat;
+	background-size: cover;
+}
+
+.fail_icon {
+	background: url('./img/fail_icon.png') no-repeat;
+	background-size: cover;
+}
+
+.list_wrap {
+	padding: 40px 30px 0;
+	.list_item {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 40px;
+		font-size: 30px;
+		color: #121c32;
+		.value {
+			font-weight: 500;
+		}
+	}
+	p {
+		color: #f66;
+		text-align: left;
+		font-size: 30px;
+	}
+}
+
+.button {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 260px;
+	width: 670px;
+	font-weight: 500;
+}
+
+.discount_box {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 690px;
+	height: 110px;
+	margin: 30px auto 0;
+	padding: 0 30px;
+	box-sizing: border-box;
+	background-color: #fff;
+	border-radius: 6px;
+	font-size: 30px;
+	color: #414a53;
+}
+
+.discount {
+	color: #fe6666;
+}
+
+@keyframes del_line {
+	0% {
+		width: 120px;
+	}
+	100% {
+		width: 0;
+	}
+}
+
+@keyframes rotateInfinte {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes rotateInfinte1 {
+	0% {
+		transform: rotate(360deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+.circle_icon {
+	width: 150px;
+	height: 150px;
+	background-color: #fff;
+	animation: rotateInfinte 1.5s linear 0.2s infinite;
+}
+.reward_loading {
+	position: relative;
+	width: 180px;
+	height: 180px;
+	margin: 0 auto;
+	line-height: 180px;
+	text-align: center;
+	margin-top: 60px;
+	color: #2a71f5;
+	font-size: 40px;
+	font-weight: 500;
+}
+
+.reward_loading_icon {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	animation: rotateInfinte1 2s linear 0.2s infinite;
+}
+
+.modal_tip {
+	:global {
+		.am-modal {
+			width: 750px;
+			.am-modal-content {
+				padding-top: 0;
+				background-color: transparent;
+				height: 900px;
+				.am-modal-body {
+					padding: 0;
+				}
+			}
+		}
+	}
+	.modal_tip_content {
+		background-image: url('../../../components/ActivityModal/img/reward_tip.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-top: 50px;
+		width: 750px;
+		height: 750px;
+		.date {
+			font-size: 70px;
+			color: #fff3e7;
+			font-weight: 500;
+			text-shadow: 5px 5px 5px #a92900;
+			position: relative;
+			top: 430px;
+			left: 15px;
+			animation: fadeIn 0.6s linear;
+		}
+	}
+	.modal_tip_content1 {
+		background-image: url('../../../components/ActivityModal/img/reward_result.png');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-top: 50px;
+		width: 750px;
+		height: 750px;
+		.modal_btn {
+			position: relative;
+			margin: 0 auto;
+			top: 400px;
+			width: 100%;
+			height: 350px;
+			background-image: url('../../../components/ActivityModal/img/reward_btn.png');
+			background-size: 100% 100%;
+		}
+	}
+	.close_btn {
+		position: absolute;
+		left: 50%;
+		bottom: 80px;
+		@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, 0);
+		width: 68px;
+		height: 68px;
+		margin-left: -34px;
+		z-index: 1;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		transform: scale(0.3);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}

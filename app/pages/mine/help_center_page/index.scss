@@ -1,0 +1,145 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.help_center_page {
+	background-color: #fff;
+	padding-bottom: 170px;
+	.top_nav {
+		display: flex;
+		flex-direction: row;
+		// justify-content: space-around;
+		align-items: center;
+		padding: 30px 0;
+		margin: 0 60px 40px;
+		position: relative;
+		&::after {
+			@include setBottomLine(#f0f1f5);
+			left: 30px;
+			right: 30px;
+		}
+	}
+
+	.top_nav_item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.top_nav_img {
+		width: 38px;
+		height: 38px;
+		margin-bottom: 16px;
+	}
+	.top_nav_label {
+		font-size: 26px;
+		color: #121c32;
+	}
+
+	.pannel_title {
+		font-size: 36px;
+		color: #121c32;
+		font-weight: 500;
+		margin: 0 0 30px 40px;
+	}
+
+	.pannel {
+		margin-top: 30px;
+	}
+	.pannel_list {
+		padding: 0 60px;
+	}
+
+	.category_list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+
+	.hot_icon {
+		position: relative;
+		top: -30px;
+		background-image: url('./img/hot_top.png');
+		background-size: cover;
+		width: 75px;
+		height: 28px;
+		display: inline-block;
+	}
+
+	.hotlist_item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		position: relative;
+		height: 110px;
+		background-color: #fff;
+		position: relative;
+		&::after {
+			@include setBottomLine(#f0f1f5);
+			left: 30px;
+			right: 30px;
+		}
+	}
+
+	.question_title {
+		color: #414a53;
+		font-size: 30px;
+		@include ellipsis(580px);
+	}
+
+	.question_arrow {
+		@include setArrow(right, 10px, #414a53, 1px);
+	}
+
+	.category_item {
+		display: flex;
+		align-items: center;
+		border: 1px solid #f0f1f5;
+		padding: 30px 0 30px 65px;
+		width: 305px;
+		height: 100px;
+		margin-bottom: 20px;
+		overflow: hidden;
+		box-sizing: border-box;
+		margin-right: 20px;
+		&:nth-child(2n) {
+			margin-right: 0;
+		}
+	}
+
+	.category_item_icon {
+		display: inline-block;
+		width: 38px;
+		height: 38px;
+		margin-right: 20px;
+	}
+
+	.service_box {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		padding: 30px 58px;
+		box-sizing: border-box;
+		background: #fff;
+		border-top: 1px solid #f0f1f5;
+
+		.online_btn {
+			font-size: 36px;
+			font-family: 'PingFangSC-Semibold';
+			font-weight: 600;
+			height: 100px;
+			line-height: 100px;
+			border-radius: 50px;
+			color: #121c32;
+			i {
+				display: inline-block;
+				width: 46px;
+				height: 46px;
+				background-image: url(../../../assets/images/mine/service_ico.png);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+				vertical-align: top;
+				margin-top: 27px;
+				margin-right: 24px;
+			}
+		}
+	}
+}

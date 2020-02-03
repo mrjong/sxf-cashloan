@@ -1,0 +1,575 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.page_inner_wrap {
+	padding: 0 30px 0;
+}
+.pageWrapper {
+	// padding-bottom: 200px;
+	input::placeholder {
+		font-size: 32px;
+		padding-top: 16px;
+		// color: #999;
+		// line-height: 1.4;
+		// font-size: 0.32rem;
+	}
+}
+
+.warning_tip {
+	position: relative;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: #ffeeef;
+	font-size: 22px;
+	color: #ff6666;
+	// &::before {
+	// 	width: 28px;
+	// 	height: 28px;
+	// 	content: '';
+	// 	position: absolute;
+	// 	left: 32%;
+	// 	top: 10px;
+	// 	background-image: url('../../../assets/images/order/warn_ico@2x.png');
+	// 	background-size: cover;
+	// }
+}
+.titleBg {
+	background-image: url(./img/titleBg.png);
+	background-repeat: no-repeat;
+	background-size: 166px 50px;
+	width: 166px;
+	// position: absolute;
+	top: 20px;
+	height: 50px;
+	font-size: 26px;
+	font-family: 'PingFangSC-Medium';
+	font-weight: 500;
+	text-align: center;
+	color: #fff;
+	line-height: 50px;
+}
+.bankCard {
+	&.heightSelect {
+		padding: 0 30px;
+		.titleBg {
+			position: absolute;
+			top: 30px;
+			z-index: 1;
+		}
+	}
+
+	position: relative;
+	width: 690px;
+	// height: 348px;
+	background: rgba(255, 255, 255, 1);
+	border-radius: 12px;
+	box-sizing: border-box;
+	padding: 30px 30px 10px;
+	margin-top: 30px;
+
+	.top {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 100px;
+		margin-top: 20px;
+		&::after {
+			@include setBottomLine(#f0f1f5);
+			left: -30px;
+			width: calc(100% + 60px);
+		}
+	}
+
+	.billMoney {
+		font-family: 'DINMitAlt';
+		display: block;
+		font-weight: normal;
+		font-size: 80px;
+		color: #121c32;
+		line-height: 1.3;
+		margin-top: 10px;
+	}
+
+	.billInfo {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		line-height: 1;
+		padding-bottom: 10px;
+
+		.item {
+			.value {
+				font-size: 30px;
+				color: #121c32;
+				font-weight: bold;
+				font-family: 'PingFangSC-Medium';
+			}
+
+			.name {
+				font-size: 24px;
+				color: #868e9e;
+				line-height: 1.4;
+			}
+			.moneyTit {
+				color: #868e9e;
+				font-size: 24px;
+				letter-spacing: 2px;
+				font-weight: 400;
+			}
+		}
+	}
+	.bankBox {
+		display: flex;
+		align-items: center;
+		font-size: 30px;
+		font-weight: 400;
+		color: #121c32;
+		.lastNo {
+			margin-left: 15px;
+			font-size: 30px;
+		}
+	}
+	.inputBox {
+		text-align: left;
+		position: relative;
+		margin-top: 20px;
+		&:after {
+			@include setBottomLine();
+		}
+		.dw {
+			font-size: 40px;
+			position: absolute;
+			top: 20px;
+			left: 0;
+			z-index: 1;
+		}
+		.edit_icon {
+			width: 32px;
+			height: 32px;
+			position: absolute;
+			top: 0.3rem;
+			right: 0;
+			z-index: 1;
+			background-image: url(./img/edit_icon.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+	}
+	.cardNumBox {
+		top: 30px;
+		position: absolute;
+		right: 30px;
+		align-items: center;
+		font-size: 30px;
+		font-weight: 500;
+		padding-right: 30px;
+		color: #121c32;
+		.rightArrow {
+			width: 40px;
+			height: 40px;
+			top: 4px;
+			position: absolute;
+			color: #121c32;
+		}
+		span {
+			font-size: 30px;
+			font-family: 'PingFangSC-Medium';
+			font-weight: 500;
+			&:active {
+				opacity: 0.6;
+			}
+		}
+	}
+
+	.bankLogo {
+		width: 50px;
+		height: 50px;
+		margin-right: 17px;
+		top: 0;
+	}
+
+	.updateButton {
+		display: inline-block;
+		width: 128px;
+		height: 50px;
+		line-height: 50px;
+		background: #3e8cec;
+		border-radius: 25px;
+		font-size: 24px;
+		font-weight: 400;
+		color: #fff;
+		text-align: center;
+	}
+}
+
+:global {
+	.loan_repay_confirm_page {
+		.am-progress-bar {
+			border: 2px solid #3e8cec;
+		}
+
+		.am-list-item {
+			padding-left: 0;
+			height: 108px;
+			.am-list-line {
+				padding-right: 0;
+			}
+		}
+
+		.am-list-item .am-list-line .am-list-extra {
+			padding-right: 10px;
+			&::after {
+				content: '';
+				margin-left: 15px;
+				@include setArrow(right, 15px, #a9aeb6, 1px);
+				border-color: #333;
+			}
+		}
+
+		.am-list-item .am-list-line {
+			.am-input-label {
+				width: 210px;
+			}
+			.am-list-content,
+			.am-input-label {
+				font-size: 0.3rem;
+				color: #333;
+			}
+		}
+
+		.am-list-item .am-input-control input {
+			width: 100%;
+			text-align: right;
+			color: #000;
+			opacity: 1;
+		}
+		.am-list-item .am-input-control input:disabled {
+			text-align: right;
+			color: #000;
+			opacity: 1;
+		}
+
+		.am-list-item.am-list-item-middle .am-list-line {
+			&:after {
+				@include setBottomLine();
+			}
+		}
+		.am-list-item .am-list-line .am-list-extra {
+			color: #333;
+			opacity: 1;
+		}
+	}
+}
+.repayTypeBox {
+	margin-top: 10px;
+	display: flex;
+	text-align: center;
+	.item {
+		width: 100%;
+		justify-content: space-between;
+		position: relative;
+		&::after {
+			@include setRightLine(#c9cdd5);
+			top: 15px;
+			bottom: 15px;
+		}
+		&:last-child {
+			&::after {
+				border: none;
+			}
+		}
+	}
+	.money {
+		color: #868e9e;
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		margin-left: 10px;
+	}
+	.desc {
+		color: #868e9e;
+		font-size: 22px;
+		padding: 0 0.1rem;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+	}
+	.title {
+		color: #397be6;
+		font-size: 26px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+	}
+}
+.money_input {
+	position: relative;
+	.desc {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		color: #999;
+		font-size: 24px;
+	}
+}
+.dayProd {
+	.title {
+		color: #333;
+
+		position: relative;
+		top: -13px;
+	}
+	&.dis {
+		.subtitle,
+		.title {
+			color: #e5e5e5;
+		}
+		i {
+			background-image: url('../../../assets/images/home/viplogo-dis.png');
+		}
+	}
+
+	i {
+		position: absolute;
+		top: -10px;
+		margin-left: 15px;
+		width: 103px;
+		height: 35px;
+		display: inline-block;
+		background-size: 100%;
+		background-image: url('../../../assets/images/home/viplogo.png');
+		background-color: #fff;
+		background-repeat: no-repeat;
+		background-origin: content-box;
+	}
+	.subtitle {
+		font-size: 0.22rem;
+		color: #999;
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%);
+	}
+}
+// modal样式覆盖
+:global {
+	.money_input_loan {
+		.am-list-item .am-list-line {
+			padding-right: 5px;
+		}
+		.am-list-item .am-input-control .fake-input-container .fake-input.focus:after {
+			border-right: 0.03rem solid #484747;
+		}
+	}
+	.modal_l_r2 {
+		.am-modal-body {
+			overflow: hidden;
+		}
+
+		.am-list-item {
+			padding-left: 0;
+			height: 110px;
+			.am-list-line {
+				padding-right: 0;
+			}
+		}
+
+		.blackColor {
+			width: 100%;
+			.am-input-control input,
+			.am-list-extra {
+				color: #333;
+			}
+		}
+
+		.am-list-item .am-list-line {
+			.am-input-label {
+				width: 210px;
+			}
+			.am-list-content,
+			.am-input-label {
+				font-size: 0.3rem;
+				color: #333;
+				opacity: 1;
+			}
+		}
+
+		.am-list-item .am-input-control input {
+			font-family: 'DINMitAlt';
+			color: #121c32;
+			font-size: 50px;
+			line-height: 1.4;
+			padding-left: 50px;
+		}
+
+		.am-list-item.am-list-item-middle.blackColor .am-list-line {
+			&:after {
+				display: none;
+			}
+		}
+	}
+}
+
+.border_bottom {
+	position: relative;
+}
+.modal_left {
+	background: #fff;
+	transition: all 0.3s;
+}
+.modal_left1 {
+	margin-left: -50%;
+}
+.modal_box {
+	width: 100%;
+	overflow: hidden;
+	height: 585px;
+}
+
+.modal_header {
+	position: relative;
+	font-size: 36px;
+	color: #333;
+	font-weight: 600;
+	padding: 15px 0;
+	&::after {
+		@include setBottomLine();
+	}
+
+	.modal_leftIcon {
+		position: absolute;
+		left: 0;
+		padding: 10px;
+		top: 0;
+	}
+	.close {
+		position: absolute;
+		right: 0;
+		padding: 10px;
+		top: 0;
+	}
+}
+.modal_content {
+	padding: 0 30px;
+	.billMoneyTop {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 38px;
+		color: #333;
+	}
+	.billMoneyTwoTop {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 18px;
+		font-size: 26px;
+		color: #666;
+	}
+	.billMoneyBtm {
+		position: relative;
+		text-align: right;
+		color: #c5c5c5;
+		font-size: 22px;
+		&::after {
+			@include setBottomLine();
+		}
+	}
+	.trendBox {
+		position: relative;
+		margin: 81px 0 100px;
+		i {
+			display: block;
+			width: 606px;
+			height: 21px;
+			margin: 0 auto;
+			background-image: url(assets/images/home/trend_img.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+		.trendDesc {
+			margin-top: 10px;
+			display: flex;
+			font-size: 22px;
+			color: #333;
+			justify-content: space-between;
+		}
+	}
+	.limitBox {
+		display: flex;
+		justify-content: space-around;
+	}
+}
+.listitem {
+	position: relative;
+	width: 120px;
+	height: 70px;
+	line-height: 70px;
+	border: 2px solid #f66;
+	border-radius: 35px;
+	font-size: 30px;
+	font-weight: 600;
+	color: #f66;
+}
+.listActiveItem {
+	color: #fff;
+	background: #f66;
+}
+.handle_authority {
+	// position: fixed;
+	// bottom: 0;
+	width: 100%;
+	// background: #fff;
+	z-index: 2;
+	padding: 60px 0 30px;
+}
+
+.handle_authority_relative {
+	position: relative;
+}
+
+.button {
+	width: 634px;
+	height: 100px;
+	background-color: #ebde74;
+	border-radius: 50px;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 100px;
+	vertical-align: middle;
+	color: #121c32;
+	font-size: 36px;
+	font-family: 'PingFangSC-Semibold';
+	font-weight: 600;
+}
+.disabledBtn {
+	color: #fff;
+	background-color: #d8d8d8;
+}
+.freeService {
+	background-color: #fff;
+	margin-top: 30px;
+	border-radius: 4px;
+	display: flex;
+	padding: 30px;
+	justify-content: space-between;
+	.title {
+		font-size: 30px;
+		font-family: 'PingFangSC-Regular';
+		font-weight: 400;
+		position: relative;
+		i {
+			padding: 3px;
+			width: 24px;
+			height: 24px;
+			background-image: url(./img/wh.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			position: absolute;
+			right: -25px;
+			top: 8px;
+		}
+	}
+	.desc {
+		font-size: 30px;
+		font-family: 'PingFangSC-Medium';
+		font-weight: 500;
+	}
+}

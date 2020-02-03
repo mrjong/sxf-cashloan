@@ -1,0 +1,198 @@
+.coupon_test_page {
+	img {
+		vertical-align: top;
+	}
+	.activityBg {
+		width: 100%;
+	}
+	.topContent {
+		position: relative;
+		.shadowContent {
+			position: absolute;
+			bottom: -21px;
+			left: 0;
+			width: 100%;
+			background-image: url('./img/bound_img.png');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			height: 56px;
+		}
+	}
+	.mainContent {
+		position: absolute;
+		top: 80px;
+		width: 100%;
+		left: 0;
+	}
+	.mainBox {
+		position: relative;
+		width: 750px;
+	}
+	.wallet {
+		position: relative;
+		overflow: hidden;
+		.img1 {
+			position: absolute;
+			width: 750px;
+			left: 0;
+			bottom: 0;
+			z-index: 3;
+		}
+		.img2 {
+			width: 100%;
+		}
+		.couponBox {
+			position: absolute;
+			width: 750px;
+			height: 570px;
+			left: 0;
+			top: 440px;
+			z-index: 2;
+			background-image: url('./img/wallet_img2.png');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			text-align: center;
+			.titText {
+				margin-top: 110px;
+				height: 50px;
+				font-size: 36px;
+				font-family: PingFangSC-Semibold, PingFang SC;
+				font-weight: 600;
+				color: rgba(212, 59, 54, 1);
+				line-height: 50px;
+				background: linear-gradient(180deg, rgba(181, 132, 74, 1) 0%, rgba(223, 182, 118, 1) 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+			.couponNm {
+				font-size: 44px;
+				font-family: PingFangSC-Semibold;
+				font-weight: 600;
+				color: rgba(211, 155, 86, 1);
+				line-height: 62px;
+				letter-spacing: 2px;
+				margin-top: 65px;
+				span {
+					font-size: 100px;
+					color: #d43b36;
+					font-family: 'DINMitAlt';
+					margin-right: 5px;
+				}
+			}
+			.tagBox {
+				width: 240px;
+				height: 51px;
+				background: linear-gradient(90deg, rgba(255, 206, 130, 1) 0%, rgba(250, 165, 42, 1) 100%);
+				border-radius: 30px;
+				line-height: 51px;
+				font-size: 28px;
+				// font-family: PingFangSC-Medium, PingFang SC;
+				font-weight: 500;
+				color: rgba(255, 255, 255, 1);
+				letter-spacing: 1px;
+				text-shadow: 0px 2px 0px rgba(203, 131, 56, 1);
+				margin: 30px auto 20px;
+			}
+			.validDate {
+				font-size: 26px;
+				color: #d39b56;
+				line-height: 37px;
+				letter-spacing: 2px;
+				.validDateTxt {
+					color: #d43b36;
+					font-family: 'DINMitAlt';
+					font-size: 30px;
+					// letter-spacing: -6px;
+				}
+			}
+			.failText {
+				font-size: 30px;
+				font-family: PingFangSC-Semibold;
+				font-weight: 600;
+				color: rgba(211, 155, 86, 1);
+				line-height: 42px;
+				letter-spacing: 0.8px;
+				margin-top: 80px;
+			}
+		}
+		.slideImg {
+			animation: slide 1s forwards;
+		}
+		.img3 {
+			position: relative;
+			z-index: 1;
+			width: 750px;
+			left: 0;
+			// top: 20px;
+		}
+	}
+	.shadowImg {
+		position: absolute;
+		bottom: -40px;
+		left: 0;
+		width: 750px;
+		z-index: 4;
+	}
+	.coinImg {
+		position: absolute;
+		bottom: -79px;
+		right: 98px;
+		width: 140px;
+	}
+
+	.submitBtn {
+		display: block;
+		width: 570px;
+		margin: 91px auto 70px;
+		// .btn {
+		// 	position: absolute;
+		// 	width: 600px;
+		// 	background-repeat: no-repeat;
+		// }
+		// .btn1 {
+		// 	z-index: 2;
+		// 	animation: shake 1.2s infinite;
+		// }
+		// .btn2 {
+		// 	top: 14px;
+		// 	z-index: 0;
+		// }
+	}
+	.awardListCont {
+		width: 650px;
+		height: 45px;
+		line-height: 45px;
+		margin: 0 auto 45px;
+	}
+	.awardList {
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 23px;
+		font-size: 22px;
+	}
+	.rulesCont {
+		width: 556px;
+		text-align: center;
+		margin: 0 auto;
+	}
+	.rulesBg {
+		display: block;
+		width: 368px;
+		margin: 0 auto;
+	}
+	.rulesContent {
+		padding: 30px 0;
+		font-size: 26px;
+		color: rgba(192, 133, 59, 1);
+		line-height: 37px;
+		text-align: left;
+	}
+}
+
+@keyframes slide {
+	0% {
+		top: 440px;
+	}
+	100% {
+		top: 0px;
+	}
+}

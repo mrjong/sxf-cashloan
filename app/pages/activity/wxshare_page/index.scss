@@ -1,0 +1,101 @@
+.dc_landing_page {
+	height: 100%;
+	background: #fff;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	.banner {
+		width: 100%;
+		display: block;
+	}
+	.content {
+		padding-top: 0.5rem;
+		text-align: center;
+		background: #fff;
+		padding-bottom: 80px;
+		.loginInput {
+			width: 5.59rem;
+			height: 0.85rem;
+			line-height: 0.85rem;
+			// float: left;
+			margin: 0.25rem 0.79rem;
+			border-radius: 0.07rem;
+			border: 1px solid #f2f2f2;
+			:global {
+				.am-list-line::after {
+					background-color: transparent !important;
+				}
+			}
+		}
+		input::placeholder {
+			color: #999;
+			font-size: 0.27rem;
+		}
+		.smsBox {
+			position: relative;
+			.loginInput {
+				margin-top: 0.5rem;
+			}
+		}
+		.smsCode {
+			color: #3d9efc;
+			font-size: 0.27rem;
+			// display: inline;
+			left: 5rem;
+			top: 50%;
+			position: absolute;
+			width: 1.65rem;
+			height: 0.6rem;
+			line-height: 0.6rem;
+			text-align: center;
+			margin-top: -0.3rem;
+			border-left: 1px solid rgba(220, 220, 220, 1);
+		}
+		.smsCodeNumber {
+			color: #b9b9b9;
+			// background: #B9B9B9;
+			font-size: 0.27rem;
+			// display: inline;
+			left: 5rem;
+			top: 50%;
+			position: absolute;
+			width: 1.65rem;
+			height: 0.6rem;
+			line-height: 0.6rem;
+			text-align: center;
+			margin-top: -0.3rem;
+			border-left: 1px solid rgba(220, 220, 220, 1);
+			opacity: 0.8;
+		}
+		.sureBtn {
+			display: block;
+			box-sizing: border-box;
+			background: #fe581e;
+			color: #fff;
+			font-size: 33px;
+			margin: 0 0.79rem;
+			height: 0.84rem;
+			line-height: 0.84rem;
+			// padding: 0.15rem 2rem;
+			position: relative;
+			top: 0.3rem;
+			border-radius: 0.07rem;
+			border: none;
+			span {
+				display: inline-block;
+				width: 100%;
+			}
+		}
+	}
+	:global {
+		.am-list-item .am-input-control input {
+			font-size: 0.27rem;
+			width: 100%;
+			display: inline-block;
+			text-align: left;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			font-family: PingFang-SC-Regular;
+			padding: 0.16rem 0;
+		}
+	}
+}

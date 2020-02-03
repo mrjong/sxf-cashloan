@@ -1,0 +1,39 @@
+.wuyue_new_page {
+	position: relative;
+	// height: 100%;
+	height: 100vh;
+	.activity_bg {
+		width: 100%;
+		position: absolute;
+	}
+	.main_cont {
+		position: absolute;
+		width: 100%;
+		top: 80px;
+		.main_bg {
+			width: 100%;
+			vertical-align: top;
+		}
+		.btn_style {
+			position: absolute;
+			width: 500px;
+			bottom: 72px;
+			left: 126px;
+		}
+	}
+	.reason_block {
+		position: absolute;
+		top: 954px;
+		left: 35px;
+		width: 680px;
+	}
+	.rule_bg {
+		position: absolute;
+		right: 0;
+		top: 14px;
+		width: 149px;
+	}
+}
+.wuyue_new_page2 {
+	height: calc(100vh - 0.88rem);
+}

@@ -1,0 +1,263 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.fenqi_page {
+	padding: 70px 60px 0;
+
+	.scrollWrap {
+		padding-bottom: 160px;
+	}
+
+	.billInpBox {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		overflow: hidden;
+		color: #484747;
+		.moneyUnit {
+			line-height: 80px;
+			font-size: 40px;
+			color: #333;
+		}
+		&::after {
+			@include setBottomLine(#333);
+			left: 0;
+		}
+	}
+	.billInput {
+		width: 583px;
+		input {
+			text-align: left;
+			font-size: 56px;
+			font-family: 'DINMitAlt';
+			padding-top: 15px;
+		}
+	}
+	.inputTip {
+		font-size: 24px;
+		color: #868e9e;
+		margin: 20px 0 30px;
+	}
+
+	.pannel {
+		overflow: hidden;
+		.listItem {
+			position: relative;
+			display: flex;
+			min-height: 110px;
+			justify-content: space-between;
+			align-items: center;
+			box-sizing: border-box;
+			font-size: 30px;
+			color: #121c32;
+			&::after {
+				@include setBottomLine(#f0f1f5);
+				left: 0;
+			}
+		}
+
+		.listValue {
+			font-weight: 700;
+		}
+
+		.icon {
+			vertical-align: middle;
+			width: 40px;
+			height: 50px;
+			margin-bottom: 5px;
+		}
+	}
+
+	.protocolLink {
+		font-size: 24px;
+		color: #8e8d7b;
+		margin: 24px 0 24px;
+		em {
+			color: #121c32;
+		}
+	}
+
+	.greyText {
+		color: #868e9e;
+		font-weight: 700;
+	}
+
+	.redText {
+		color: #fe6666;
+		font-weight: 700;
+	}
+
+	.highlightText {
+		color: #397be6;
+		font-weight: 700;
+	}
+
+	.addIcon {
+		font-size: 35px;
+		color: #333;
+		margin-left: 10px;
+	}
+
+	.tagListWrap {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		width: 490px;
+	}
+
+	.tagButton {
+		display: inline-block;
+		width: 140px;
+		height: 50px;
+		line-height: 48px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 30px;
+		background: #fff;
+		color: #868e9e;
+		border: 1px solid #868e9e;
+		box-sizing: border-box;
+		margin-bottom: 20px;
+		margin-left: 35px;
+		&:nth-child(3n + 1) {
+			margin-left: 0;
+		}
+	}
+
+	.tagButtonActive {
+		color: #fe6666;
+		border: 1px solid #fe6666;
+	}
+
+	.buttonWrap {
+		width: 100%;
+		padding: 30px 0;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		background-color: #fff;
+
+		.submitBtn {
+			width: 634px;
+		}
+
+		.submitBtnDisabled {
+			width: 634px;
+			background-color: #d8d8d8;
+			color: #fff;
+		}
+	}
+	// 优惠劵金额展示
+	.couponListValue {
+		display: flex;
+		align-items: center;
+		.icon {
+			margin-bottom: 0;
+		}
+	}
+	.couNumBox {
+		display: flex;
+		height: 42px;
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		border-radius: 3px;
+		padding: 0 10px;
+		align-items: center;
+		font-size: 22px;
+		color: #fff;
+		font-weight: normal;
+		font-family: 'PingFangSC-Regular';
+		i {
+			display: block;
+			width: 20px;
+			height: 22px;
+			background: url('../../../assets/images/home/coupon_ico_img.png') no-repeat center;
+			background-size: 100%;
+			margin-right: 10px;
+		}
+  }
+  .checked {
+    position: relative;
+    top: 6px;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    margin-right: 11px;
+    background: url(../../login/login_page/img/selected_ico.png) no-repeat;
+    background-size: 100%;
+  }
+  .nochecked {
+    background: url(../../login/login_page/img/unselected_ico.png) no-repeat;
+    background-size: 100%;
+  }
+}
+
+:global {
+	.purpose_modal {
+		.am-modal-body {
+			padding: 50px 60px 0;
+		}
+	}
+}
+
+.modalTitle {
+	font-size: 50px;
+	color: #121c32;
+	text-align: left;
+}
+
+.modalDesc {
+	font-size: 26px;
+	color: #868e9e;
+	text-align: left;
+	margin: 32px 0 64px;
+}
+
+.modalItem {
+	position: relative;
+	height: 110px;
+	line-height: 110px;
+	width: 100%;
+	font-size: 32px;
+	color: #121c32;
+	&::after {
+		@include setBottomLine(#f0f1f5);
+		left: 0;
+	}
+}
+
+.modal_content {
+	position: relative;
+	.modal_close_btn {
+		position: absolute;
+		top: -5px;
+		right: 0;
+	}
+
+	.modal_title {
+		font-size: 0.36rem;
+		color: #333;
+		border-bottom: 1px solid #e5e5e5;
+		padding-bottom: 0.3rem;
+	}
+
+	.bill_list {
+		padding: 0.1rem;
+		max-height: 500px;
+		overflow: scroll;
+	}
+
+	.list_item {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.13rem 0;
+	}
+
+	.item_name {
+		font-size: 0.3rem;
+		color: #333;
+	}
+
+	.item_value {
+		font-size: 0.3rem;
+		color: #333;
+		font-weight: bold;
+	}
+}

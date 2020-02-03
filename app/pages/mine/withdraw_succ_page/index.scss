@@ -1,0 +1,29 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.withdraw_succ_page {
+	text-align: center;
+	.withdrawSuccCont {
+		font-size: 36px;
+		font-weight: 400;
+		color: rgba(150, 150, 150, 1);
+		background: #fff;
+		padding: 81px 0;
+		.successIco {
+			@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, -88px);
+			display: inline-block;
+			width: 128px;
+			height: 128px;
+		}
+	}
+	.withdrawMoney {
+		font-size: 72px;
+		font-weight: 400;
+		color: rgba(61, 61, 61, 1);
+		margin: 50px 0 39px 0;
+	}
+	.backBtn {
+		width: 652px;
+		margin: 159px auto;
+		height: 102px;
+		line-height: 102px;
+	}
+}
