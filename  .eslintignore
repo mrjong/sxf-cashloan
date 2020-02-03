@@ -8,6 +8,8 @@ build/
 dist/
 
 src/assets/lib
+app/assets/lib
 
 # serviceWorker
 src/serviceWorker.js
+app/serviceWorker.js
