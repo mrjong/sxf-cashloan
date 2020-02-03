@@ -108,14 +108,8 @@
 		"push-test": "npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
-		"precommit": "lint-staged"
 	},
 	"lint-staged": {
-		"src/**/*.{js,jsx}": [
-			"prettier --tab-width 2 --write",
-			"eslint --fix",
-			"git add"
-    ],
     "app/**/*.{js,jsx}": [
 			"prettier --tab-width 2 --write",
 			"eslint --fix",
