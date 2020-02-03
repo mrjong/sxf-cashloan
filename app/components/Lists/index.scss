@@ -1,0 +1,159 @@
+.listsContainer {
+	:global {
+		.am-list-item {
+			min-height: 148px;
+			padding-left: 0;
+		}
+		.am-list-item .am-list-line {
+			padding-right: 0;
+		}
+		.am-list-item .am-list-line .am-list-content {
+			font-size: 30px;
+			line-height: 1;
+			font-weight: 500;
+			color: #121c32;
+		}
+		.am-list-item img {
+			width: 42px;
+			height: auto;
+			position: absolute;
+			top: 50%;
+			transform: translate(0, -50%);
+		}
+		.am-list-item .am-list-line .am-list-extra {
+			padding: 0;
+			line-height: 1.5;
+			margin-right: 0;
+		}
+		.am-list-extra span {
+			display: block;
+			& + span {
+				font-size: 26px;
+			}
+		}
+		.am-list-item .am-list-line .am-list-arrow {
+			width: 28px;
+			height: 16px;
+			margin-left: 18px;
+		}
+		.am-list-body {
+			border: none;
+		}
+		.am-list-body div:not(:last-child) .am-list-line {
+			border-color: #e5e5e5;
+		}
+
+		.am-list-item .am-list-thumb:first-child {
+			margin-right: 0;
+		}
+		.am-list-item .am-list-line .am-list-brief {
+			font-size: 26px;
+			color: #868e9e;
+			margin-top: 8px;
+			font-weight: normal;
+		}
+	}
+	.hasIcon {
+		:global {
+			.am-list-line {
+				padding-left: 55px;
+			}
+		}
+	}
+	.item_desc {
+		background-color: #f5f5f5;
+		padding-left: 34px;
+		padding-right: 34px;
+	}
+	.checkList {
+		position: relative;
+		:global {
+			.am-list-content {
+				padding-left: 50px;
+				overflow: visible;
+			}
+		}
+	}
+
+	.nocheckbox_list_desc {
+		:global {
+			.am-list-content {
+				padding-left: 0;
+				overflow: visible;
+			}
+			.am-list-line {
+				margin-left: 50px;
+			}
+		}
+	}
+	.checkBoxStyle {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translate(0, -50%);
+		width: 34px;
+		height: 34px;
+		background-image: url('../../assets/images/home/unChecked_ico.png');
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+	.checkBoxActiveStyle {
+		background-image: url('../../assets/images/home/checked_ico.png');
+	}
+}
+
+:global {
+	.list_box {
+		@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+			html:not([data-scale]) .am-list-body div:not(:last-child) .am-list-line::after {
+				background-color: #e5e5e5;
+			}
+			html:not([data-scale]) .am-list-body::after,
+			html:not([data-scale]) .am-list-body::before {
+				background-color: transparent;
+			}
+		}
+	}
+}
+.rightIcon {
+	animation-name: fadeInRightBig;
+	animation-duration: 0.3s;
+	animation-timing-function: cubic-bezier(0.3, 1, 1, 1);
+	animation-iteration-count: 1;
+	position: absolute;
+	right: 25px;
+	top: 50%;
+	transform: translate(0%, -50%);
+	width: 110px;
+	height: 42px;
+	display: inline-block;
+	background: linear-gradient(90deg, #fe7117, #ff3d14);
+	border-radius: 6px;
+	font-size: 24px;
+	font-family: 'PingFangSC-Regular';
+	font-weight: 400;
+	color: #fff;
+	text-align: center;
+	line-height: 42px;
+	padding-left: 35px;
+	.redBag {
+		width: 0.2rem;
+		height: 0.22rem;
+		position: absolute;
+		top: 0.1rem;
+		left: 0.15rem;
+		background-image: url(./img/redBag@2x.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		box-sizing: border-box;
+	}
+}
+@keyframes fadeInRightBig {
+	0% {
+		right: -200px;
+	}
+
+	to {
+		right: 0;
+	}
+}

@@ -1,0 +1,243 @@
+@import '../../assets/styles/scss/base/fn.scss';
+.modal {
+	.modalWrapper {
+		.content {
+			position: relative;
+			width: 100%;
+			img {
+				display: block;
+				width: 100%;
+			}
+			.huodongTootipBtn {
+				width: 50%;
+				position: absolute;
+				bottom: 16px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			// fun肆送弹框
+			.huodongTootipBtn2 {
+				width: 254px;
+				position: absolute;
+				bottom: 82px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			// 拒就赔活动
+			.huodongTootipBtn4 {
+				width: 397px;
+				position: absolute;
+				bottom: 80px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			//口碑活动按钮
+			.koubeiBtn {
+				width: 471px;
+				position: absolute;
+				bottom: 55px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			.jd618Btn {
+				width: 420px;
+				height: 110px;
+				position: absolute;
+				bottom: 22%;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			.freebillBtn {
+				width: 420px;
+				height: 96px;
+				position: absolute;
+				bottom: 10%;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			.mianxiBtn {
+				position: absolute;
+				bottom: 105px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 160px;
+				height: 166px;
+			}
+			.syx_btn {
+				position: absolute;
+				bottom: 150px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 270px;
+				height: 110px;
+			}
+			.getBonusBtn {
+				position: absolute;
+				bottom: 190px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 434px;
+				height: 122px;
+			}
+			.joinBonusBtn {
+				position: absolute;
+				bottom: 115px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 160px;
+				height: 160px;
+			}
+			.notUseBonusBtn {
+				position: absolute;
+				bottom: 108px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 434px;
+				height: 122px;
+			}
+			.couponDesc {
+				bottom: 68px;
+			}
+			.payCouponTestBtn {
+				position: absolute;
+				bottom: 0;
+			}
+		}
+		.closeBtn {
+			text-align: center;
+			width: 70px;
+			height: 70px;
+			vertical-align: middle;
+			margin: 0 auto;
+			@include spriteIcon('../../assets/images/common/sprite_icon.png', 0, 0);
+		}
+	}
+}
+.mianxi30 {
+	position: relative;
+	top: 80px;
+}
+.btn_mianxi {
+	display: inline-block;
+	color: #fff;
+	padding: 16px 80px;
+	background: linear-gradient(178deg, rgba(255, 211, 50, 1) 0%, rgba(243, 157, 35, 1) 100%);
+	box-shadow: 0 5px 11px 0 rgba(90, 0, 0, 0.6);
+	border-radius: 45px;
+	position: relative;
+	letter-spacing: 2px;
+	font-weight: 500;
+	font-family: 'PingFangSC-Regular';
+	top: -60px;
+}
+.reward_tip__text {
+	font-size: 70px;
+	color: #fff3e7;
+	font-weight: 500;
+	text-shadow: 5px 5px 5px #a92900;
+	position: absolute;
+	top: 430px;
+  left: 310px;
+  animation: fadeIn .6s linear;
+}
+
+.reward_tip__text_active {
+  left: 340px;
+}
+
+.reward_result__text {
+	color: #854f35;
+	font-size: 34px;
+	font-weight: bold;
+	position: absolute;
+  top: 300px;
+	transform: translateX(-50%);
+	left: 50%;
+}
+
+.reward_result__text_color {
+	font-size: 70px;
+	color: #e94f28;
+}
+
+.reward_btn {
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+}
+
+:global {
+	.home_modal_warp {
+		.am-modal.am-modal-transparent {
+			width: 100%;
+		}
+		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		.am-modal.am-modal-transparent .am-modal-content {
+			padding: 0;
+		}
+		.am-modal-content {
+			background: transparent;
+		}
+	}
+}
+.transitionName {
+	animation-name: bounceInDown;
+	animation-duration: 0.8s;
+	animation-timing-function: cubic-bezier(1, 1, 1, 1);
+	animation-iteration-count: 1;
+}
+@keyframes bounceInDown {
+	0%,
+	60%,
+	75%,
+	90%,
+	to {
+		-webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+		animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+	}
+
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -3000px, 0);
+		transform: translate3d(0, -3000px, 0);
+	}
+
+	60% {
+		opacity: 1;
+		-webkit-transform: translate3d(0, 25px, 0);
+		transform: translate3d(0, 25px, 0);
+	}
+
+	75% {
+		-webkit-transform: translate3d(0, -10px, 0);
+		transform: translate3d(0, -10px, 0);
+	}
+
+	90% {
+		-webkit-transform: translate3d(0, 5px, 0);
+		transform: translate3d(0, 5px, 0);
+	}
+
+	to {
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+    opacity: 0;
+    transform: scale(.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
