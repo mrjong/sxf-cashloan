@@ -39,7 +39,9 @@ import {
 	CardProgress,
 	AddCards,
 	ExamineCard,
-	CreditCard
+	CreditCard,
+	ActivityEntry,
+	SwitchCard
 } from './components';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -1162,6 +1164,267 @@ export default class home_page extends PureComponent {
 	};
 	// *****************************代偿****************************** //
 
+	getCardBillAmtData() {
+		const homeData = this.state.usrCashIndexInfo;
+		const { dcDataInfo = {} } = homeData;
+		const { cardBillAmt, cardBillSts, billRemainAmt } = dcDataInfo || {};
+		let cardBillAmtData = '';
+		if (cardBillSts === '00') {
+			cardBillAmtData = '待更新';
+			// 优先取剩余应还，否则去账单金额
+		} else if (billRemainAmt && Number(billRemainAmt) > 0) {
+			cardBillAmtData = parseFloat(billRemainAmt, 10);
+		} else if (!cardBillAmt && cardBillAmt !== 0) {
+			cardBillAmtData = '----.--';
+		} else if (
+			cardBillSts === '01' &&
+			(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
+		) {
+			cardBillAmtData = '已结清';
+		} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
+			cardBillAmtData = '已结清';
+		} else {
+			cardBillAmtData = parseFloat(cardBillAmt, 10);
+		}
+		return cardBillAmtData;
+	}
+
+	// 主要是设置 解锁状态
+	setPlusCardData(plusCardData) {
+		const homeData = this.state.usrCashIndexInfo;
+		const { dcDataInfo = {} } = homeData;
+
+		if (homeData.showType === '01' && dcDataInfo.cashAcSts === '00') {
+			plusCardData.loanText = '解锁中...';
+			plusCardData.loanAmont = 90;
+			plusCardData.loanAmontUnit = 's';
+		}
+	}
+
+	getDisPlayData() {
+		// console.log(this.props.userInfo, 'userInfo');
+		let basicCardData = {
+			cardType: 'basic',
+			cardLabel: '基础版',
+			title: '基础版',
+			titleSub: '快速审批',
+			loanText: '最高可申请还款金(元)',
+			loanAmont: '50000',
+			btnText: '查看额度',
+			handleClick: this.handleApply
+		};
+
+		let plusCardData = {
+			cardType: 'plus',
+			cardLabel: 'PLUS版',
+			title: 'PLUS版',
+			titleSub: '灵活借款',
+			loanText: '最高可借额度(元)',
+			loanAmont: '300000',
+			btnText: '查看额度',
+			handleClick: this.handleGoPlusDetail,
+			handleDetailClick: this.handleGoPlusDetail,
+			isShowDetailLink: false
+		};
+		this.setPlusCardData(plusCardData);
+		if (!this.props.userInfo || !this.props.userInfo.tokenId) {
+			return [basicCardData, plusCardData];
+		}
+
+		const homeData = this.state.usrCashIndexInfo;
+		const { dcDataInfo = {} } = homeData;
+		const { cardRepayDt, bankName, cardNoHid } = dcDataInfo || {};
+
+		const cardBillDtData = !cardRepayDt ? '----/--/--' : dayjs(cardRepayDt).format('YYYY/MM/DD');
+		const cardCode = !cardNoHid ? '****' : cardNoHid.slice(-4);
+		const bankNm = !bankName ? '****' : bankName;
+
+		let differDays = '';
+		if (homeData && homeData.dcDataInfo && homeData.dcDataInfo.netAppyDate) {
+			differDays = dateDiffer(
+				dayjs(new Date()).format('YYYY/MM/DD'),
+				dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')
+			);
+		}
+
+		basicCardData.codeType = homeData.indexSts;
+		plusCardData.codeType = homeData.indexSts;
+
+		let disPlayData = [];
+		switch (homeData.indexSts) {
+			case 'LN0001':
+			case 'LN0003':
+			case 'LN0010':
+				if (homeData && homeData.dcDataInfo && homeData.dcDataInfo.credRateShow === '添加收款信用卡') {
+					basicCardData.loanText = '预审额度（元）';
+					basicCardData.loanAmont = '36000';
+					basicCardData.bottomTip = '预审通过，添加收款信用卡';
+					basicCardData.btnText = homeData.dcDataInfo.credRateShow;
+					basicCardData.handleClick = this.handleSmartClick;
+				} else if (homeData && homeData.dcDataInfo.credRate === 0) {
+					basicCardData.btnText = homeData.dcDataInfo.credRateShow;
+					basicCardData.handleClick = this.handleApply;
+				} else if (homeData && homeData.dcDataInfo.credRate > 0) {
+					basicCardData.btnText = homeData.dcDataInfo.credRateShow;
+					basicCardData.progress = homeData.dcDataInfo.credRate;
+					basicCardData.handleClick = this.handleSmartClick;
+				}
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0002': // 账单爬取中 不存在了
+				disPlayData = [];
+				break;
+			case 'LN0004': // 代还资格审核中
+				basicCardData.title = homeData.dcDataInfo.bankName;
+				basicCardData.titleSub = `(${cardCode})`;
+				basicCardData.statusTitle = '预计最快90秒完成审核';
+				basicCardData.statusTitleSub = '高峰期可能5分钟左右';
+				basicCardData.btnText = '查看进度';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0005': // 暂无代还资格
+				basicCardData.tipText =
+					homeData.dcDataInfo.netAppyDate &&
+					differDays <= 60 &&
+					`${dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')}`;
+				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
+				basicCardData.statusTitleSub = '去试试其他借款平台';
+				basicCardData.btnText = '去试试';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0006': // 风控审核通过
+			case 'LN0008': // 放款失败
+				basicCardData.title = bankNm;
+				basicCardData.titleSub = `(${cardCode})`;
+				basicCardData.titleSubIsBankNo = true;
+				basicCardData.loanText = '最高可申请还款金(元)';
+				basicCardData.loanAmont =
+					homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt
+						? parseFloat(homeData.dcDataInfo.maxApplAmt, 10)
+						: '';
+				basicCardData.topTip =
+					homeData.dcDataInfo.acOverDt &&
+					`额度有效期至${dayjs(homeData.dcDataInfo.acOverDt).format('YYYY/MM/DD')}`;
+				basicCardData.bottomTip = `还款日：${cardBillDtData}`;
+				basicCardData.btnText = '立即签约借款';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0007': // 放款中
+				basicCardData.title = bankNm;
+				basicCardData.titleSub = `(${cardCode})`;
+				basicCardData.titleSubIsBankNo = true;
+				basicCardData.statusTitle =
+					dcDataInfo.repayType === '0'
+						? '预计60秒完成放款'
+						: `${dayjs(dcDataInfo.repayDt).format('YYYY年MM月DD日')}完成放款`;
+				basicCardData.statusTitleSub = dcDataInfo.repayType === '0' ? '最长不超过2个工作日' : '请耐心等待...';
+				basicCardData.bottomTip = `申请借款金额:${dcDataInfo.billAmt}元`;
+				basicCardData.bottomTip2 = `申请期数:${dcDataInfo.perdCnt}期`;
+				basicCardData.btnText = '查看进度';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0009': // 放款成功
+				// 查询是否逾期
+				basicCardData.title = bankNm;
+				basicCardData.titleSub = `(${cardCode})`;
+				basicCardData.titleSubIsBankNo = true;
+				basicCardData.loanText = '信用卡账单金额(元)';
+				basicCardData.loanAmont = this.getCardBillAmtData();
+				basicCardData.bottomTip = `还款日：${cardBillDtData}`;
+				basicCardData.btnText = '查看代偿账单';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0011': // 人审中
+				basicCardData.statusTitle = '需要人工审核，耐心等待';
+				basicCardData.statusTitleSub = '010-86355XXX的审核电话';
+				basicCardData.bottomTip = `申请借款金额:${dcDataInfo.billAmt}元`;
+				basicCardData.bottomTip2 = `申请期数:${dcDataInfo.perdCnt}期`;
+				basicCardData.btnText = '查看进度';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'LN0012': // 机器人审核中
+				basicCardData.statusTitle = '需要人工审核，耐心等待';
+				basicCardData.statusTitleSub = '请保持电话畅通';
+				basicCardData.btnText = '查看进度';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
+				disPlayData.push(plusCardData);
+				break;
+			case 'CN0001': // 现金分期额度评估中,不可能出现
+			case 'CN0002': // 抱歉，暂无申请资格
+				break;
+			case 'CN0003': // 申请通过有额度
+				plusCardData.isShowDetailLink = true;
+				plusCardData.topTip =
+					homeData &&
+					homeData.cashDataInfo &&
+					homeData.cashDataInfo.acOverDt &&
+					homeData.cashDataInfo.acOverDt <= 10
+						? `${homeData.cashDataInfo.acOverDt}天后失去资格`
+						: '';
+				plusCardData.loanText = '可提现金额(元)';
+				plusCardData.loanAmont =
+					(homeData.cashDataInfo.curAmt && parseFloat(homeData.cashDataInfo.curAmt, 10)) || '';
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.handleClick = this.handleSmartClick;
+				plusCardData.handleDetailClick = this.handleGoPlusDetail;
+				disPlayData.push(plusCardData);
+				break;
+			case 'CN0004': // 放款中
+				plusCardData.isShowDetailLink = true;
+				plusCardData.loanText = '借款金额(元)';
+				plusCardData.loanAmont =
+					homeData &&
+					homeData.cashDataInfo &&
+					homeData.cashDataInfo.orderAmt &&
+					parseFloat(homeData.cashDataInfo.orderAmt, 10);
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.handleClick = this.handleSmartClick;
+				plusCardData.handleDetailClick = this.handleGoPlusDetail;
+				disPlayData.push(plusCardData);
+				break;
+			case 'CN0005': // 去还款
+				plusCardData.isShowDetailLink = true;
+				plusCardData.loanText = '借款金额(元)';
+				plusCardData.loanAmont =
+					homeData &&
+					homeData.cashDataInfo &&
+					homeData.cashDataInfo.orderAmt &&
+					parseFloat(homeData.cashDataInfo.orderAmt, 10);
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.handleClick = this.handleSmartClick;
+				plusCardData.handleDetailClick = this.handleGoPlusDetail;
+				disPlayData.push(plusCardData);
+				break;
+			default:
+				basicCardData.handleClick = this.handleApply;
+				disPlayData.push(basicCardData);
+				break;
+		}
+		return disPlayData;
+	}
+
 	getDCDisPlay = () => {
 		const {
 			usrIndexInfo,
@@ -1802,6 +2065,9 @@ export default class home_page extends PureComponent {
 		return (
 			<div className={style.home_new_page}>
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
+				<ActivityEntry $fetch={this.props.$fetch} history={this.props.history} />
+				<SwitchCard data={this.getDisPlayData()} />
+
 				{componentsBlackCard}
 				{componentsDisplay}
 				{bannerList.length > 0 && (

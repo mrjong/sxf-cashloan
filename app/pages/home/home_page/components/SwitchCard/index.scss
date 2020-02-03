@@ -1,0 +1,35 @@
+.carouselWrap {
+  height: 350px;
+  margin-top: 40px;
+}
+.itemWrap {
+  display: flex;
+  flex-direction: row;
+  height: 330px;
+}
+.itemContainer {
+  flex: 1
+}
+.placeHolderBtn {
+  height: 330px;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.placeHolderText {
+  font-weight: bold;
+  font-size: 24px;
+  font-family: 'PingFang SC';
+}
+.placeHolderTextArrow {
+  margin-top: 10px;
+}
+.placeHolderTextArrowReversal {
+  transform: rotateY(180deg);
+}
+.placeHolderTextEng {
+  font-size: 28px;
+  line-height: 32px;
+}
