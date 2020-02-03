@@ -115,6 +115,11 @@
 			"prettier --tab-width 2 --write",
 			"eslint --fix",
 			"git add"
+    ],
+    "app/**/*.{js,jsx}": [
+			"prettier --tab-width 2 --write",
+			"eslint --fix",
+			"git add"
 		]
 	},
 	"repository": {
