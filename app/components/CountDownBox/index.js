@@ -6,7 +6,7 @@ class CountDownBox extends Component {
 		super(props);
 		this.state = {
 			item: 3,
-			data: [ 1, 2, 3 ]
+			data: [1, 2, 3]
 		};
 		this.requestClose = (type) => {
 			this.props.onRequestClose(type);

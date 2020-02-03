@@ -55,7 +55,7 @@ export default class TimeDown extends React.Component {
 		return (
 			<div>
 				{count && count <= 15 * 60 ? (
-					<div className={[ style.timebox, 'fadeInRight' ].join(' ')}>
+					<div className={[style.timebox, 'fadeInRight'].join(' ')}>
 						<div className={style.num}>
 							<Clock count={count} />
 						</div>

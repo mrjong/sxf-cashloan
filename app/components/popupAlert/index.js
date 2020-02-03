@@ -7,12 +7,12 @@ export default class popupAlert extends Component {
 	render() {
 		return (
 			<div>
-				<div className={style.mask}/>
+				<div className={style.mask} />
 				<div className={style.wrap}>
-                <div className={[style.popup,style.popup_slide_up].join(' ')}>
-                    <div className={style.header}>221221</div>
-                    </div>
-                </div>
+					<div className={[style.popup, style.popup_slide_up].join(' ')}>
+						<div className={style.header}>221221</div>
+					</div>
+				</div>
 			</div>
 		);
 	}

@@ -39,14 +39,14 @@ export default class SvgCirPro extends Component {
 	};
 
 	/**
-    * 传入相应参数返回圆形制定半径的弧度坐标
-    * @param {*} x 中心点X坐标
-    * @param {*} y 中心点y坐标
-    * @param {*} R 圆半径
-    * @param {*} a 角度
-    */
+	 * 传入相应参数返回圆形制定半径的弧度坐标
+	 * @param {*} x 中心点X坐标
+	 * @param {*} y 中心点y坐标
+	 * @param {*} R 圆半径
+	 * @param {*} a 角度
+	 */
 	coordMap(x, y, R, a) {
-		var ta = (360 - a) * Math.PI / 180,
+		var ta = ((360 - a) * Math.PI) / 180,
 			tx,
 			ty;
 		tx = R * Math.cos(ta); // 角度邻边
@@ -80,7 +80,7 @@ export default class SvgCirPro extends Component {
 				className="svgcirproOut"
 				style={{
 					width: width,
-					height: height,
+					height: height
 				}}
 			>
 				<div
@@ -101,7 +101,7 @@ export default class SvgCirPro extends Component {
 					style={{
 						width: width,
 						height: height,
-						lineHeight: height + 10 + 'px',
+						lineHeight: height + 10 + 'px'
 					}}
 					className="circle_text homePrecent"
 				>

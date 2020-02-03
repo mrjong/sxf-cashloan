@@ -2,7 +2,7 @@ import React from 'react';
 import ErrPage from 'pages/common/err_page';
 import { buriedPointEvent } from 'utils/analytins';
 import { bugLog } from 'utils/analytinsType';
-import Raven from 'raven-js'
+import Raven from 'raven-js';
 
 export default class ErrorBoundary extends React.Component {
 	// constructor(props) {
@@ -36,34 +36,34 @@ export default class ErrorBoundary extends React.Component {
 	// 	return this.props.children;
 	// }
 	constructor(props) {
-        super(props);
-        this.state = { error: null };
-    }
+		super(props);
+		this.state = { error: null };
+	}
 
-    componentDidCatch(error, errorInfo) {
-        this.setState({ error });
-        Raven.captureException(error, { extra: errorInfo });
-    }
+	componentDidCatch(error, errorInfo) {
+		this.setState({ error });
+		Raven.captureException(error, { extra: errorInfo });
+	}
 
-    render() {
+	render() {
 		if (this.state.error) {
-			return <ErrPage />
+			return <ErrPage />;
 		}
-        // if (this.state.error) {
-        //     //render fallback UI
-        //     return (
-        //         <div
-        //         className="snap"
-        //         onClick={() => Raven.lastEventId() && Raven.showReportDialog()}>
-        //             {/* <img src={oops} /> */}
-        //             <p>We're sorry — something's gone wrong.</p>
-        //             <p>Our team has been notified, but click here fill out a report.</p>
-        //         </div>
-        //     );
-        // } else {
-        //     //when there's not an error, render children untouched
-        //     return this.props.children;
+		// if (this.state.error) {
+		//     //render fallback UI
+		//     return (
+		//         <div
+		//         className="snap"
+		//         onClick={() => Raven.lastEventId() && Raven.showReportDialog()}>
+		//             {/* <img src={oops} /> */}
+		//             <p>We're sorry — something's gone wrong.</p>
+		//             <p>Our team has been notified, but click here fill out a report.</p>
+		//         </div>
+		//     );
+		// } else {
+		//     //when there's not an error, render children untouched
+		//     return this.props.children;
 		// }
 		return this.props.children;
-    }
+	}
 }
