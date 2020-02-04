@@ -40,16 +40,19 @@ export default class MsgTip extends React.PureComponent {
 	render() {
 		const { count } = this.state;
 		return (
-			<section className={style.home_header}>
-				<div className={style.title}>
-					借钱还信用卡
-					<span className={style.subtitle}>200万人都在用</span>
-					{token && tokenFromStorage && (
-						<span onClick={this.jumpToMsg} className={style.messageIcon}>
-							{count ? <i className={style.active} /> : null}
-						</span>
-					)}
+			<section className={style.home_header_wrap}>
+				<div className={style.home_header_main}>
+					<span className={style.home_header_title}>想还·就还到</span>
+					<div>
+						{token &&
+							tokenFromStorage && (
+								<span onClick={this.jumpToMsg} className={style.messageIcon}>
+									{count ? <i className={style.active} /> : null}
+								</span>
+							)}
+					</div>
 				</div>
+				<p className={style.home_header_sub}>随行付金融旗下信贷服务</p>
 			</section>
 		);
 	}

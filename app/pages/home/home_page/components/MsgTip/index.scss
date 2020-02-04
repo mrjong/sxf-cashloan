@@ -1,31 +1,24 @@
-.home_header {
-	padding: 30px 40px 0;
-	.title {
-		position: relative;
-		font-size: 46px;
-		font-family: 'PingFangSC-Semibold';
-		font-weight: 600;
-		color: rgba(18, 28, 50, 1);
-	}
-	.subtitle {
-		font-size: 24px;
-		font-family: 'PingFangSC-Regular';
-		font-weight: 400;
-		background-color: #121c32;
-		padding: 2px 10px;
-		color: #fff;
-		line-height: 1.4;
-		display: inline-block;
-		vertical-align: middle;
-		border-radius: 18px;
-		margin-left: 10px;
-	}
+.home_header_wrap {
+  padding: 34px 40px 20px;
+  background-color: #fff;
+  .home_header_main {
+    display: flex;
+    .home_header_title {
+      flex: 1;
+      font-size: 46px;
+      font-family: 'PingFangSC-Semibold';
+      font-weight: 600;
+      color: #121B33;
+    }
+  }
+  .home_header_sub {
+    margin-top: 5px;
+    font-size: 24px;
+  }
 	.messageIcon {
+    display: inline-block;
 		width: 60px;
-		right: -10px;
-		top: 0;
-		position: absolute;
-		bottom: 0;
+		position: relative;
 		margin: auto;
 		height: 60px;
 		background-position: 10px 10px;
