@@ -5,7 +5,7 @@ export default {
 		colorMain: '#FFCF01',
 		colorMain2: '#FFD72E',
 		colorTextMain: '#121C32',
-		colorTextMainOpacity: 'rgba(18, 28, 50, .2)',
+		colorTextMainOpacity: 'rgba(18, 28, 50, .15)',
 		colorTextSub: '#394259',
 		colorTipBg: '#EB4747',
 		colorTipText: '#fff'
@@ -16,7 +16,7 @@ export default {
 		colorMain: '#121C32',
 		colorMain2: '#121C32',
 		colorTextMain: '#E4C585',
-		colorTextMainOpacity: 'rgb(228, 197, 133, .2)',
+		colorTextMainOpacity: 'rgb(228, 197, 133, .15)',
 		colorTextSub: '#E4C585',
 		colorTipBg: '#E4C585',
 		colorTipText: '#121C32'

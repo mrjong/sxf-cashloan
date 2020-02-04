@@ -1,0 +1,52 @@
+.welfareWrap {
+  margin: 20px 40px;
+}
+.welfareTitle {
+  font-size: 34px;
+  color: #121C32;
+  margin-bottom: 38px;
+}
+.welfareBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 15px 25px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.welfareItem {
+  box-sizing: border-box;
+  width: 50%;
+  padding: 25px 10px;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+.welfareImg {
+  width: 70px;
+  height: 70px;
+  flex-basis: 70px;
+  display: flex;
+  margin-right: 20px;
+}
+.welfareNameWrap {
+  overflow: hidden;
+  flex: 1;
+}
+.welfareName {
+  font-size: 30px;
+  color: #121C32;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.welfareNameSub {
+  margin-top: 10px;
+  font-size: 24px;
+  color: #868F9E;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

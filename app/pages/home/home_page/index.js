@@ -41,7 +41,8 @@ import {
 	ExamineCard,
 	CreditCard,
 	ActivityEntry,
-	SwitchCard
+	SwitchCard,
+	Welfare
 } from './components';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
@@ -2067,12 +2068,12 @@ export default class home_page extends PureComponent {
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
 				<ActivityEntry $fetch={this.props.$fetch} history={this.props.history} />
 				<SwitchCard data={this.getDisPlayData()} />
-
-				{componentsBlackCard}
-				{componentsDisplay}
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				)}
+				<Welfare />
+				{componentsBlackCard}
+				{componentsDisplay}
 				{this.componentsAddCards()}
 				<FeedbackModal
 					history={this.props.history}

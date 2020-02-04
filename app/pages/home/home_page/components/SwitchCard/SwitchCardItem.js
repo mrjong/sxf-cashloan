@@ -21,7 +21,8 @@ export default class ActivityEntry extends React.PureComponent {
 	buildCardWrapStyle() {
 		const { cardType } = this.props;
 		return {
-			backgroundColor: typeConfig[cardType].colorMain
+			backgroundColor: typeConfig[cardType].colorMain,
+			boxShadow: `0px 9px 15px -13px ${typeConfig[cardType].colorMain}`
 		};
 	}
 
@@ -45,7 +46,7 @@ export default class ActivityEntry extends React.PureComponent {
 			color: typeConfig[cardType].colorTextSub
 		};
 		if (titleSubIsBankNo) {
-			cardNameSubStyleFinal.fontFamily = 'SFUDINMitAlt';
+			cardNameSubStyleFinal.fontFamily = 'DINMitAlt';
 			cardNameSubStyleFinal.fontWeight = 'bold';
 			cardNameSubStyleFinal.color = typeConfig[cardType].colorTextMain;
 		}
@@ -192,7 +193,7 @@ export default class ActivityEntry extends React.PureComponent {
 			let loanAmontStyle = {
 				...this.buildLoanAmoutStyle(),
 				fontSize: !isNaN(Number(loanAmont)) ? '.8rem' : '.54rem',
-				fontFamily: !isNaN(Number(loanAmont)) ? 'SFUDINMitAlt' : 'PingFangSC-Regular'
+				fontFamily: !isNaN(Number(loanAmont)) ? 'DINMitAlt' : 'PingFangSC-Regular'
 			};
 			return (
 				<div className={classNM.loanWrap}>
@@ -245,29 +246,27 @@ export default class ActivityEntry extends React.PureComponent {
 	render() {
 		const { title, titleSub } = this.props;
 		return (
-			<div>
-				<div className={classNM.cardWrap} style={this.buildCardWrapStyle()}>
-					<div className={classNM.header} style={this.buildHeaderStyle()}>
-						<div className={classNM.cardNameWrap}>
-							<span className={classNM.cardName} style={this.buildCardNameStyle()}>
-								{title}
-							</span>
-							<span className={classNM.cardNameSub} style={this.buildCardNameSubStyle()}>
-								{titleSub}
-							</span>
-						</div>
-						{this.renderProgress()}
-						{this.renderDetailLink()}
+			<div className={classNM.cardWrap} style={this.buildCardWrapStyle()}>
+				<div className={classNM.header} style={this.buildHeaderStyle()}>
+					<div className={classNM.cardNameWrap}>
+						<span className={classNM.cardName} style={this.buildCardNameStyle()}>
+							{title}
+						</span>
+						<span className={classNM.cardNameSub} style={this.buildCardNameSubStyle()}>
+							{titleSub}
+						</span>
 					</div>
-
-					{this.renderTopTip()}
-
-					{this.renderStatusContent() || this.renderLoanContent()}
-
-					{this.renderBottomTip()}
-
-					{this.renderBtn()}
+					{this.renderProgress()}
+					{this.renderDetailLink()}
 				</div>
+
+				{this.renderTopTip()}
+
+				{this.renderStatusContent() || this.renderLoanContent()}
+
+				{this.renderBottomTip()}
+
+				{this.renderBtn()}
 			</div>
 		);
 	}

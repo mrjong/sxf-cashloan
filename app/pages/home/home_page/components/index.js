@@ -17,6 +17,7 @@ import ExamineCard from './ExamineCard';
 import CreditCard from './CreditCard';
 import ActivityEntry from './ActivityEntry';
 import SwitchCard from './SwitchCard';
+import Welfare from './Welfare';
 export {
 	CarouselHome,
 	BlackCard,
@@ -31,5 +32,6 @@ export {
 	ExamineCard,
 	CreditCard,
 	ActivityEntry,
-	SwitchCard
+	SwitchCard,
+	Welfare
 };
