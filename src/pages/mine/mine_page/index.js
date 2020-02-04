@@ -15,6 +15,7 @@ import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
 import fqaImg from 'assets/images/mine/fqa_img.png';
 import { helpCenter } from '../../../utils/analytinsType';
+import images from 'assets/image';
 
 const API = {
 	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
@@ -333,31 +334,31 @@ export default class mine_page extends PureComponent {
 							</p>
 							<p className={styles.bannerHaaderTitleSub}>随行付金融旗下信贷服务</p>
 						</div>
-						<div className={styles.follow_btn} onClick={this.goPage}>
+						<div className={styles.bannerHaaderBtn} onClick={this.goPage}>
 							关注得免息
 						</div>
 					</div>
 					<div className={styles.entranceList}>
-						<div className={styles.entranceListItem}>
+						<div className={[styles.entranceListItem, styles.entranceListItem1].join(' ')}>
 							<div className={styles.entranceListItemIconWrap}>
-								<img className={styles.entranceListItemIcon} src="" alt="" />
+								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_card} alt="" />
 								<span className={styles.entranceListItemMsg}>1</span>
 							</div>
 							<p className={styles.entranceListItemName}>储蓄卡管理</p>
 						</div>
-						<div className={styles.entranceListItem}>
+						<div className={[styles.entranceListItem, styles.entranceListItem2].join(' ')}>
 							<div className={styles.entranceListItemIconWrap}>
-								<img className={styles.entranceListItemIcon} src="" alt="" />
+								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_coupon} alt="" />
 								<span className={styles.entranceListItemMsg}>1</span>
 							</div>
-							<p className={styles.entranceListItemName}>储蓄卡管理</p>
+							<p className={styles.entranceListItemName}>优惠券</p>
 						</div>
-						<div className={styles.entranceListItem}>
+						<div className={[styles.entranceListItem, styles.entranceListItem3].join(' ')}>
 							<div className={styles.entranceListItemIconWrap}>
-								<img className={styles.entranceListItemIcon} src="" alt="" />
+								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_msg} alt="" />
 								<span className={styles.entranceListItemMsg}>1</span>
 							</div>
-							<p className={styles.entranceListItemName}>储蓄卡管理</p>
+							<p className={styles.entranceListItemName}>消息</p>
 						</div>
 					</div>
 				</div>

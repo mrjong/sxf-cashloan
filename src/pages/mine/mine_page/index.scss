@@ -1,12 +1,67 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .myPages {
-  border: 1px solid $baseColor;
-  background-color: #F0F3F9;
+  background-color: $colorBg;
   .bannerTop {
     padding: 60px 60px 120px;
     background:linear-gradient(223deg,rgba(255,207,5,1) 0%,rgba(255,207,5,1) 100%);
+    .bannerHaader {
+      margin-bottom: 80px;
+      display: flex;
+      .bannerHaaderTitleWrap {
+        flex: 1;
+      }
+    }
+    .bannerHaaderTitle {
+      color: $colorBlack;
+      font-size: 46px;
+      font-family: 'DINMitAlt';
+      line-height: 1;
+    }
+    .bannerHaaderTitleSub {
+      color: $colorBlack;
+      font-size: 24px;
+      margin-top: 10px;
+    }
+    .bannerHaaderBtn {
+			width: 230px;
+			height: 75px;
+			line-height: 75px;
+			color: $colorYellow;
+			font-size: 30px;
+			text-align: center;
+      background: $colorBlack;
+      font-weight: 600;
+			box-shadow: 0px 3px 10px 0px rgba(253, 205, 0, 0.35);
+			border-radius: 100px;
+    }
+    .entranceList {
+      display: flex;
+      justify-content: space-between;
+    }
+    .entranceListItem {
+      // flex: 1;
+      text-align: center;
+    }
+    .entranceListItem1 {
+      padding-right: 10px;
+    }
+    .entranceListItem2 {
+      margin-right: 40px;
+    }
+    .entranceListItem3 {
+      margin-right: 20px;
+    }
+    .entranceListItemName {
+      font-weight:400;
+      color: $colorBlack;
+      font-size: 24px;
+    }
+    .entranceListItemIconWrap {
+      position: relative;
+    }
   }
   .pageContent {
+    margin-top: 10px;
     padding: 0 40px;
   }
 }
