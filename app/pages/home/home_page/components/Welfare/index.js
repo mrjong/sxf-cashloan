@@ -29,6 +29,7 @@ export default class Welfare extends React.PureComponent {
 		this.setState({
 			welfareList: [
 				{
+					link: 'https://www.baidu.com',
 					name: '玩赚绿洲玩赚绿洲',
 					cornerContent: '集砖石 分现金集砖石 分现金',
 					img:
@@ -71,7 +72,13 @@ export default class Welfare extends React.PureComponent {
 				<p className={classNM.welfareTitle}>福利专区</p>
 				<div className={classNM.welfareBox}>
 					{welfareList.map((item, index) => (
-						<div key={index} className={classNM.welfareItem} onClick={this.goActivity}>
+						<div
+							key={index}
+							className={classNM.welfareItem}
+							onClick={() => {
+								this.goActivity(item);
+							}}
+						>
 							{item.img ? <img src={item.img} className={classNM.welfareImg} /> : null}
 							<div className={classNM.welfareNameWrap}>
 								<p className={classNM.welfareName}>{item.name}</p>
