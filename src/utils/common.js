@@ -46,3 +46,16 @@ export const setH5Channel = (channel) => {
 		store.setH5Channel('OTHER');
 	}
 };
+
+// 千分位展示 格式化
+export const thousandFormatNum = (num) => {
+	num = num + '';
+	if (!num.includes('.')) {
+		num += '.';
+	}
+	return num
+		.replace(/(\d)(?=(\d{3})+\.)/g, function($0, $1) {
+			return $1 + ',';
+		})
+		.replace(/\.$/, '');
+};

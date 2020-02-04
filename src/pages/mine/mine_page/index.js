@@ -29,7 +29,7 @@ let token = '';
 let tokenFromStorage = '';
 
 @fetch.inject()
-@setBackGround('#F7F8FA')
+@setBackGround('#f0f3f9')
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -116,128 +116,17 @@ export default class mine_page extends PureComponent {
 			}
 		);
 	};
-	// 查询用户会员卡状态
-	queryVipCard = () => {
-		this.props.$fetch.get(API.VIPCARD).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				let inOnwMinute = new Date(new Date().getTime() + 1 * 15 * 1000);
-				Cookie.set('VIPFlag', result.data.memSts, {
-					expires: inOnwMinute
-				});
-				store.setVIPInfo(result.data);
-				store.setVipBackUrl('/mine/mine_page');
-				switch (result.data.memSts) {
-					case '0':
-						this.setState({ memberInf: { status: '未购买', color: '#FF5A5A' } });
-						break;
-					case '1':
-						this.setState({ memberInf: { status: '已购买', color: '#4CA6FF' } });
-						break;
-					case '2':
-						this.setState({ memberInf: { status: '处理中', color: '#4CA6FF' } });
-						break;
-					default:
-						break;
-				}
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
-	};
 
-	// 退出
-
-	// 第一组里的点击事件
-	clickhandle = (item) => {
-		if (!tokenFromStorage && !token) {
-			this.props.toast.info('请先登录', 2, () => {
-				this.props.history.push('/login');
-			});
-			return;
-		}
-		if (item.jumpToUrl === '/mine/coupon_page') {
-			this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
-		} else {
-			const { mblNoHid, realNmFlg } = this.state;
-			if (mblNoHid && realNmFlg && Cookie.get('VIPFlag') !== '2') {
-				// this.props.history.push(item.jumpToUrl);
-				this.props.history.push({ pathname: item.jumpToUrl, search: '?entryFrom=mine' });
-			}
-			// if (!mblNoHid) {
-			//   this.props.toast.info('用户未登录', 2, () => {
-			//     this.props.history.push('/login');
-			//   })
-			// }
-			if (!realNmFlg) {
-				this.props.toast.info('请先进行实名认证', 2, () => {
-					// let isWx=this.is_weixn()
-					// if (isWx) {
-					//     //在微信中打开
-					//     this.props.history.replace('/wxName')
-					// }
-					//else{
-					this.props.history.push('/home/real_name?type=noRealName');
-					//}
-				});
-			}
-		}
-	};
-	// 第二组里的点击事件
-	clickhandle2 = (item) => {
-		if (!tokenFromStorage && !token) {
-			this.props.toast.info('请先登录', 2, () => {
-				this.props.history.push('/login');
-			});
-			return;
-		}
-		if (
-			item.jumpToUrl === '/home/real_name?type=noRealName' ||
-			// item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false' ||
-			item.jumpToUrl === '/mine/fqa_page' ||
-			item.jumpToUrl === '/mine/feedback_page'
-		) {
-			// if (item.jumpToUrl === '/mine/credit_extension_page?isShowCommit=false') {
-			// 	buriedPointEvent(mine.creditExtension, {
-			// 		entry: '我的'
-			// 	});
-			// }
-			if (item.jumpToUrl === '/mine/feedback_page') {
-				buriedPointEvent(helpCenter.feedback);
-			}
-			this.props.history.push(item.jumpToUrl);
-		} else {
-			const { mblNoHid, realNmFlg } = this.state;
-			if (mblNoHid && realNmFlg) {
-				this.props.history.push(item.jumpToUrl);
-			}
-			if (!realNmFlg) {
-				this.props.toast.info('请先进行实名认证', 2, () => {
-					this.props.history.push('/home/real_name?type=noRealName');
-				});
-			}
-		}
-	};
-	// 第三组里的点击事件
-	clickhandle3 = (item) => {
-		if (!tokenFromStorage && !token) {
-			this.props.toast.info('请先登录', 2, () => {
-				this.props.history.push('/login');
-			});
-			return;
-		}
-		this.props.history.push(item.jumpToUrl);
-	};
-	// 点击退出登录后弹框
 	logoutHandler = () => {
 		logoutAppHandler();
 	};
-	// 登陆
-	logInHandler = () => {
-		this.props.history.push('/login');
-	};
 
 	goPage = () => {
-		this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine');
+		if (tokenFromStorage && token) {
+			this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine');
+		} else {
+			this.props.history.push('/login');
+		}
 	};
 
 	// 常见问题跳转
@@ -252,77 +141,74 @@ export default class mine_page extends PureComponent {
 		this.props.history.push('/mine/help_center_page');
 	};
 
-	render() {
-		const { mblNoHid, realNmFlg } = this.state;
-		// 定义list所需的数据
-		const listsArr = [
-			// {
-			//   extra: {
-			//     name: this.state.memberInf.status,
-			//     color: this.state.memberInf.color,
-			//   },
-			//   label: {
-			//     name: '会员卡',
-			//     icon: require('assets/images/mine/menu_ico7.png')
-			//   },
-			//   jumpToUrl: '/mine/membership_card_page',
-			// },
-			{
-				// extra: {
-				//   name: this.state.memberInf.status,
-				//   color: this.state.memberInf.color,
-				// },
-				label: {
-					name: '优惠劵',
-					className: styles.coupon_page
-				},
-				jumpToUrl: '/mine/coupon_page'
-			},
-			{
-				label: {
-					name: '我的钱包',
-					className: styles.wallet_page
-				},
-				jumpToUrl: '/mine/wallet_page'
-			}
-		];
-		const listsArr2 = [
-			{
-				extra: {
-					name: mblNoHid && realNmFlg ? '已认证' : '未认证',
-					color: mblNoHid && realNmFlg ? '#66C879' : '#FF6666'
-				},
-				label: {
-					name: '实名认证',
-					className: styles.real_name
-				},
-				jumpToUrl: '/home/real_name?type=noRealName'
-			},
-			{
-				label: {
-					name: '储蓄卡管理',
-					className: styles.select_save_page
-				},
-				jumpToUrl: '/mine/select_save_page'
-			}
-
-			// {
-			// 	label: {
-			// 		name: '常见问题',
-			// 		className: styles.fqa_page
-			// 	},
-			// 	jumpToUrl: '/mine/fqa_page'
-			// }
-		];
-		if (tokenFromStorage && token) {
-			listsArr2.push({
-				label: {
-					name: '意见反馈',
-					className: styles.feedback_page
-				},
-				jumpToUrl: '/mine/feedback_page'
+	handleGoToPage = (url) => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
 			});
+			return;
 		}
+		this.props.history.push({ pathname: url });
+	};
+
+	handleGoToSelectCardPage = () => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		const { realNmFlg } = this.state;
+		if (!realNmFlg) {
+			this.props.toast.info('请先进行实名认证', 2, () => {
+				this.props.history.push('/home/real_name?type=noRealName');
+			});
+		} else {
+			this.props.history.push({ pathname: '/mine/select_save_page' });
+		}
+	};
+
+	handleGoToCouponPage = () => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+
+		const { mblNoHid, realNmFlg } = this.state;
+		if (!realNmFlg) {
+			this.props.toast.info('请先进行实名认证', 2, () => {
+				this.props.history.push({ pathname: '/home/real_name', search: '?type=noRealName' });
+			});
+		} else if (mblNoHid && Cookie.get('VIPFlag') !== '2') {
+			this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
+		}
+	};
+
+	handleGoToRealNamePage = () => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		this.props.history.push({ pathname: '/home/real_name', search: '?type=noRealName' });
+	};
+
+	handleGoToFeedbackPage = () => {
+		if (!tokenFromStorage && !token) {
+			this.props.toast.info('请先登录', 2, () => {
+				this.props.history.push('/login');
+			});
+			return;
+		}
+		buriedPointEvent(helpCenter.feedback);
+		this.props.history.push({ pathname: '/mine/feedback_page' });
+	};
+
+	render() {
+		const { mblNoHid } = this.state;
 		return (
 			<div className={styles.myPages}>
 				<div className={styles.bannerTop}>
@@ -335,28 +221,43 @@ export default class mine_page extends PureComponent {
 							<p className={styles.bannerHaaderTitleSub}>随行付金融旗下信贷服务</p>
 						</div>
 						<div className={styles.bannerHaaderBtn} onClick={this.goPage}>
-							关注得免息
+							{tokenFromStorage && token ? '关注得免息' : '登录'}
 						</div>
 					</div>
 					<div className={styles.entranceList}>
-						<div className={[styles.entranceListItem, styles.entranceListItem1].join(' ')}>
+						<div
+							className={[styles.entranceListItem, styles.entranceListItem1].join(' ')}
+							onClick={() => {
+								this.handleGoToSelectCardPage();
+							}}
+						>
 							<div className={styles.entranceListItemIconWrap}>
 								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_card} alt="" />
 								<span className={styles.entranceListItemMsg}>1</span>
 							</div>
 							<p className={styles.entranceListItemName}>储蓄卡管理</p>
 						</div>
-						<div className={[styles.entranceListItem, styles.entranceListItem2].join(' ')}>
+						<div
+							className={[styles.entranceListItem, styles.entranceListItem2].join(' ')}
+							onClick={() => {
+								this.handleGoToCouponPage();
+							}}
+						>
 							<div className={styles.entranceListItemIconWrap}>
 								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_coupon} alt="" />
 								<span className={styles.entranceListItemMsg}>1</span>
 							</div>
 							<p className={styles.entranceListItemName}>优惠券</p>
 						</div>
-						<div className={[styles.entranceListItem, styles.entranceListItem3].join(' ')}>
+						<div
+							className={[styles.entranceListItem, styles.entranceListItem3].join(' ')}
+							onClick={() => {
+								this.handleGoToPage('/home/message_page');
+							}}
+						>
 							<div className={styles.entranceListItemIconWrap}>
 								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_msg} alt="" />
-								<span className={styles.entranceListItemMsg}>1</span>
+								<span className={styles.entranceListItemMsg}>99+</span>
 							</div>
 							<p className={styles.entranceListItemName}>消息</p>
 						</div>
@@ -364,7 +265,12 @@ export default class mine_page extends PureComponent {
 				</div>
 				<div className={styles.pageContent}>
 					<div className={styles.optionListWrap}>
-						<div className={styles.optionListItem}>
+						<div
+							className={styles.optionListItem}
+							onClick={() => {
+								this.handleGoToRealNamePage();
+							}}
+						>
 							<span className={styles.optionListItemName}>实名认证</span>
 							<div className={styles.optionListItemAddition}>
 								<span className={styles.optionListItemAdditionText}>待完善信息</span>
@@ -373,62 +279,41 @@ export default class mine_page extends PureComponent {
 						</div>
 					</div>
 					<div className={styles.optionListWrap}>
-						<div className={styles.optionListItem}>
+						<div
+							className={styles.optionListItem}
+							onClick={() => {
+								this.handleGoToRealNamePage();
+							}}
+						>
 							<span className={styles.optionListItemName}>修改密码</span>
 							<div className={styles.optionListItemAddition}>
 								<span className={styles.optionListItemAdditionArrow} />
 							</div>
 						</div>
-						<div className={styles.optionListItem}>
+						<div
+							className={styles.optionListItem}
+							onClick={() => {
+								this.handleGoToFeedbackPage();
+							}}
+						>
 							<span className={styles.optionListItemName}>意见反馈</span>
 							<div className={styles.optionListItemAddition}>
 								<span className={styles.optionListItemAdditionArrow} />
 							</div>
 						</div>
-						<div className={styles.optionListItem}>
+						<div
+							className={styles.optionListItem}
+							onClick={() => {
+								this.handleGoToPage('/mine/help_center_page');
+							}}
+						>
 							<span className={styles.optionListItemName}>帮助中心</span>
 							<div className={styles.optionListItemAddition}>
 								<span className={styles.optionListItemAdditionArrow} />
 							</div>
 						</div>
 					</div>
-				</div>
-				<div className={[styles.mine_pages].join(' ')}>
-					{tokenFromStorage && token ? (
-						<div className={styles.user_inf}>
-							<div className={styles.userInfBox}>
-								<img src={avatar} alt="用户头像" />
-								<span className={styles.mobile}>{mblNoHid}</span>
-							</div>
-							<div className={styles.follow_btn} onClick={this.goPage}>
-								关注得免息
-							</div>
-						</div>
-					) : null}
-					{!(tokenFromStorage && token) ? (
-						<div className={styles.notLoginBox}>
-							<img src={avatar} alt="未登录" />
-							<p className={styles.desc}>借钱还信用卡，找还到</p>
-							<div className={styles.loginBtn} onClick={this.logInHandler}>
-								登录
-							</div>
-						</div>
-					) : null}
-					<Lists
-						className={styles.mine_list}
-						clickCb={this.clickhandle}
-						CouponCount={this.state.CouponCount}
-						listsInf={listsArr}
-					/>
-					<Lists
-						clickCb={this.clickhandle2}
-						listsInf={listsArr2}
-						className={[styles.common_margin, styles.mine_list].join(' ')}
-					/>
-					<div className={styles.fqaBox} onClick={this.jumpToFqa}>
-						<img src={fqaImg} alt="用户头像" />
-					</div>
-					{/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
+
 					{tokenFromStorage &&
 						token &&
 						!isMPOS() && (
@@ -436,6 +321,7 @@ export default class mine_page extends PureComponent {
 								退出登录
 							</div>
 						)}
+					<p className={styles.bottomSlogen}>随行付金融旗下信贷服务</p>
 				</div>
 			</div>
 		);

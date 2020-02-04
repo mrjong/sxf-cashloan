@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import typeConfig from './typeConfig';
+import { thousandFormatNum } from 'utils/common';
 
 import classNM from './SwitchCardItem.scss';
 
@@ -201,8 +202,7 @@ export default class ActivityEntry extends React.PureComponent {
 						{loanText}
 					</p>
 					<p className={classNM.loanAmout} style={loanAmontStyle}>
-						{/* {thousandFormatNum(loanAmont)} */}
-						{loanAmont}
+						{thousandFormatNum(loanAmont)}
 						{loanAmontUnit ? <span style={{ fontSize: '.3rem' }}>{loanAmontUnit}</span> : null}
 					</p>
 				</div>
