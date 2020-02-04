@@ -8,7 +8,7 @@ module.exports = function(options) {
 	return {
 		mode: options.mode,
 		devtool: options.devTool, // 配置生成Source Maps，选择合适的选项
-		entry: ['babel-polyfill', path.join(__dirname, '../app/app.js')],
+		entry: ['babel-polyfill', path.join(__dirname, '../src/app.js')],
 		resolve: {
 			extensions: ['.js', '.jsx', '.png', '.scss']
 		},
@@ -26,7 +26,7 @@ module.exports = function(options) {
 					loader: 'eslint-loader',
 					enforce: 'pre',
 					exclude: /node_modules/,
-					include: [path.resolve(__dirname, '../app')], // 指定检查的目录
+					include: [path.resolve(__dirname, '../src')], // 指定检查的目录
 					// options: {
 					// 	fix: true
 					// }
@@ -122,7 +122,7 @@ module.exports = function(options) {
 			port: 8010,
 			publicPath: '/',
 			clientLogLevel: 'none',
-			contentBase: path.resolve(__dirname, '../app'),
+			contentBase: path.resolve(__dirname, '../src'),
 			historyApiFallback: true,
 			stats: {
 				cached: false,
@@ -168,13 +168,13 @@ module.exports = function(options) {
 		resolve: {
 			extensions: ['.js', '.md', '.txt'],
 			alias: {
-				pages: path.resolve(__dirname, '../app/pages'),
-				components: path.resolve(__dirname, '../app/components'),
-				utils: path.resolve(__dirname, '../app/utils'),
-				routers: path.resolve(__dirname, '../app/routers'),
-				assets: path.resolve(__dirname, '../app/assets'),
-				example: path.resolve(__dirname, '../app/example'),
-				config: path.resolve(__dirname, '../app/config')
+				pages: path.resolve(__dirname, '../src/pages'),
+				components: path.resolve(__dirname, '../src/components'),
+				utils: path.resolve(__dirname, '../src/utils'),
+				routers: path.resolve(__dirname, '../src/routers'),
+				assets: path.resolve(__dirname, '../src/assets'),
+				example: path.resolve(__dirname, '../src/example'),
+				config: path.resolve(__dirname, '../src/config')
 			}
 		}
 	};

@@ -30,7 +30,7 @@ var sentryVersion = 'sentry_' + gitCommitVersion;
 let plugins = [
 	new HtmlWebpackPlugin({
 		filename: 'index.html', //生成的html的文件名
-		template: path.resolve(__dirname, '../app/index.html'), //依据的模板
+		template: path.resolve(__dirname, '../src/index.html'), //依据的模板
 		title: 'sx-webpack',
 		inject: true, //注入的js文件将会被放在body标签中,当值为'head'时，将被放在head标签中
 		minify: {
@@ -39,7 +39,7 @@ let plugins = [
 			collapseWhitespace: true, //删除html中的空白符
 			removeAttributeQuotes: true //删除html元素中属性的引号
 		},
-		favicon: path.resolve(__dirname, '../app/favicon.ico'),
+		favicon: path.resolve(__dirname, '../src/favicon.ico'),
 		chunksSortMode: 'dependency' //按dependency的顺序引入
 	})
 	// new webpack.ProvidePlugin({ $: 'jquery', _: 'lodash' })
@@ -128,7 +128,7 @@ let getProdPlugins = function() {
 	}
 	plugins.push(
 		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, '../app/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
@@ -191,7 +191,7 @@ let getRcPlugins = function() {
 	plugins.push(new webpack.HashedModuleIdsPlugin());
 	plugins.push(
 		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, '../app/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
@@ -260,7 +260,7 @@ let getTestPlugins = function() {
 	plugins.push(new webpack.HashedModuleIdsPlugin());
 	plugins.push(
 		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, '../app/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },
@@ -302,7 +302,7 @@ let getDevPlugins = function() {
 	);
 	plugins.push(
 		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, '../app/assets/lib'), to: 'assets/lib' },
+			{ from: path.resolve(__dirname, '../src/assets/lib'), to: 'assets/lib' },
 			{ from: path.resolve(__dirname, '../*.txt'), to: './' },
 			{ from: path.resolve(__dirname, '../*.html'), to: './' },
 			{ from: path.resolve(__dirname, '../*.apk'), to: './' },

@@ -15,6 +15,9 @@ import CardProgress from './CardProgress';
 import AddCards from './AddCards';
 import ExamineCard from './ExamineCard';
 import CreditCard from './CreditCard';
+import ActivityEntry from './ActivityEntry';
+import SwitchCard from './SwitchCard';
+import Welfare from './Welfare';
 export {
 	CarouselHome,
 	BlackCard,
@@ -27,5 +30,8 @@ export {
 	CardProgress,
 	AddCards,
 	ExamineCard,
-	CreditCard
+	CreditCard,
+	ActivityEntry,
+	SwitchCard,
+	Welfare
 };

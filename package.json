@@ -110,7 +110,7 @@
 		"clearApk": "rimraf ./dist/*.apk"
 	},
 	"lint-staged": {
-    "app/**/*.{js,jsx}": [
+    "src/**/*.{js,jsx}": [
 			"prettier --tab-width 2 --write",
 			"eslint --fix",
 			"git add"

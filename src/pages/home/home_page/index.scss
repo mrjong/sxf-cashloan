@@ -1,9 +1,12 @@
 @import '../../../assets/styles/scss/base/fn';
 .home_new_page {
-	padding-bottom: 150px;
+  padding-bottom: 150px;
+  background-color: #F0F3F9;
 	// 代偿
 	.home_banner {
-		margin-bottom: 30px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    height: 180px;
 		img {
 			border-radius: 16px;
 		}
