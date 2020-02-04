@@ -1790,15 +1790,14 @@ export default class home_page extends PureComponent {
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
 		}
-		componentsDisplay = this.getDCDisPlay() ||
-			this.getFQDisPlay() || (
-				<CarouselHome
-					showData={{
-						demoTip: true
-					}}
-					handleClick={this.handleNeedLogin}
-				/>
-			);
+		componentsDisplay = this.getDCDisPlay() || this.getFQDisPlay() || (
+			<CarouselHome
+				showData={{
+					demoTip: true
+				}}
+				handleClick={this.handleNeedLogin}
+			/>
+		);
 		return (
 			<div className={style.home_new_page}>
 				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
