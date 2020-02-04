@@ -26,6 +26,7 @@
 		"react-router-dom": "^4.2.2",
 		"rimraf": "^2.6.2",
 		"sa-sdk-javascript": "^1.10.3",
+		"sass-resources-loader": "^2.0.1",
 		"source-map": "^0.7.3",
 		"sx-fetch": "0.2.4",
 		"webpack-bundle-analyzer": "^3.0.4",
@@ -110,7 +111,7 @@
 		"clearApk": "rimraf ./dist/*.apk"
 	},
 	"lint-staged": {
-    "src/**/*.{js,jsx}": [
+		"src/**/*.{js,jsx}": [
 			"prettier --tab-width 2 --write",
 			"eslint --fix",
 			"git add"

@@ -62,7 +62,16 @@ module.exports = function(options) {
 						'style-loader', // creates style nodes from JS strings,
 						'css-loader?modules&localIdentName=[local][hash:8]',
 						'postcss-loader',
-						'sass-loader' // compiles Sass to CSS
+						'sass-loader', // compiles Sass to CSS
+						{
+							loader: 'sass-resources-loader',
+							options: {
+								resources: [
+									// resolve方法第二个参数为scss配置文件地址，如果有多个，就进行依次添加即可
+									path.resolve(__dirname, './../src/assets/styles/scss/base/variable.scss')
+								]
+							}
+						}
 					]
 				},
 				{

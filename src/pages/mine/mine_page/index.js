@@ -323,47 +323,119 @@ export default class mine_page extends PureComponent {
 			});
 		}
 		return (
-			<div className={[styles.mine_pages].join(' ')}>
-				{tokenFromStorage && token ? (
-					<div className={styles.user_inf}>
-						<div className={styles.userInfBox}>
-							<img src={avatar} alt="用户头像" />
-							<span className={styles.mobile}>{mblNoHid}</span>
+			<div className={styles.myPages}>
+				<div className={styles.bannerTop}>
+					<div className={styles.bannerHaader}>
+						<div className={styles.bannerHaaderTitleWrap}>
+							<p className={styles.bannerHaaderTitle}>
+								Hi,
+								{mblNoHid || '欢迎使用还到'}
+							</p>
+							<p className={styles.bannerHaaderTitleSub}>随行付金融旗下信贷服务</p>
 						</div>
 						<div className={styles.follow_btn} onClick={this.goPage}>
 							关注得免息
 						</div>
 					</div>
-				) : null}
-				{!(tokenFromStorage && token) ? (
-					<div className={styles.notLoginBox}>
-						<img src={avatar} alt="未登录" />
-						<p className={styles.desc}>借钱还信用卡，找还到</p>
-						<div className={styles.loginBtn} onClick={this.logInHandler}>
-							登录
+					<div className={styles.entranceList}>
+						<div className={styles.entranceListItem}>
+							<div className={styles.entranceListItemIconWrap}>
+								<img className={styles.entranceListItemIcon} src="" alt="" />
+								<span className={styles.entranceListItemMsg}>1</span>
+							</div>
+							<p className={styles.entranceListItemName}>储蓄卡管理</p>
+						</div>
+						<div className={styles.entranceListItem}>
+							<div className={styles.entranceListItemIconWrap}>
+								<img className={styles.entranceListItemIcon} src="" alt="" />
+								<span className={styles.entranceListItemMsg}>1</span>
+							</div>
+							<p className={styles.entranceListItemName}>储蓄卡管理</p>
+						</div>
+						<div className={styles.entranceListItem}>
+							<div className={styles.entranceListItemIconWrap}>
+								<img className={styles.entranceListItemIcon} src="" alt="" />
+								<span className={styles.entranceListItemMsg}>1</span>
+							</div>
+							<p className={styles.entranceListItemName}>储蓄卡管理</p>
 						</div>
 					</div>
-				) : null}
-				<Lists
-					className={styles.mine_list}
-					clickCb={this.clickhandle}
-					CouponCount={this.state.CouponCount}
-					listsInf={listsArr}
-				/>
-				<Lists
-					clickCb={this.clickhandle2}
-					listsInf={listsArr2}
-					className={[styles.common_margin, styles.mine_list].join(' ')}
-				/>
-				<div className={styles.fqaBox} onClick={this.jumpToFqa}>
-					<img src={fqaImg} alt="用户头像" />
 				</div>
-				{/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
-				{tokenFromStorage && token && !isMPOS() && (
-					<div onClick={this.logoutHandler} className={styles.logout}>
-						退出登录
+				<div className={styles.pageContent}>
+					<div className={styles.optionListWrap}>
+						<div className={styles.optionListItem}>
+							<span className={styles.optionListItemName}>实名认证</span>
+							<div className={styles.optionListItemAddition}>
+								<span className={styles.optionListItemAdditionText}>待完善信息</span>
+								<span className={styles.optionListItemAdditionArrow} />
+							</div>
+						</div>
 					</div>
-				)}
+					<div className={styles.optionListWrap}>
+						<div className={styles.optionListItem}>
+							<span className={styles.optionListItemName}>修改密码</span>
+							<div className={styles.optionListItemAddition}>
+								<span className={styles.optionListItemAdditionArrow} />
+							</div>
+						</div>
+						<div className={styles.optionListItem}>
+							<span className={styles.optionListItemName}>意见反馈</span>
+							<div className={styles.optionListItemAddition}>
+								<span className={styles.optionListItemAdditionArrow} />
+							</div>
+						</div>
+						<div className={styles.optionListItem}>
+							<span className={styles.optionListItemName}>帮助中心</span>
+							<div className={styles.optionListItemAddition}>
+								<span className={styles.optionListItemAdditionArrow} />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className={[styles.mine_pages].join(' ')}>
+					{tokenFromStorage && token ? (
+						<div className={styles.user_inf}>
+							<div className={styles.userInfBox}>
+								<img src={avatar} alt="用户头像" />
+								<span className={styles.mobile}>{mblNoHid}</span>
+							</div>
+							<div className={styles.follow_btn} onClick={this.goPage}>
+								关注得免息
+							</div>
+						</div>
+					) : null}
+					{!(tokenFromStorage && token) ? (
+						<div className={styles.notLoginBox}>
+							<img src={avatar} alt="未登录" />
+							<p className={styles.desc}>借钱还信用卡，找还到</p>
+							<div className={styles.loginBtn} onClick={this.logInHandler}>
+								登录
+							</div>
+						</div>
+					) : null}
+					<Lists
+						className={styles.mine_list}
+						clickCb={this.clickhandle}
+						CouponCount={this.state.CouponCount}
+						listsInf={listsArr}
+					/>
+					<Lists
+						clickCb={this.clickhandle2}
+						listsInf={listsArr2}
+						className={[styles.common_margin, styles.mine_list].join(' ')}
+					/>
+					<div className={styles.fqaBox} onClick={this.jumpToFqa}>
+						<img src={fqaImg} alt="用户头像" />
+					</div>
+					{/* <Lists clickCb={this.clickhandle3} listsInf={listsArr3} className={styles.common_margin} /> */}
+					{tokenFromStorage &&
+						token &&
+						!isMPOS() && (
+							<div onClick={this.logoutHandler} className={styles.logout}>
+								退出登录
+							</div>
+						)}
+				</div>
 			</div>
 		);
 	}

@@ -1,4 +1,16 @@
 @import '../../../assets/styles/scss/base/fn.scss';
+.myPages {
+  border: 1px solid $baseColor;
+  background-color: #F0F3F9;
+  .bannerTop {
+    padding: 60px 60px 120px;
+    background:linear-gradient(223deg,rgba(255,207,5,1) 0%,rgba(255,207,5,1) 100%);
+  }
+  .pageContent {
+    padding: 0 40px;
+  }
+}
+
 .mine_pages {
 	overflow-y: auto;
 	padding: 0 40px;
