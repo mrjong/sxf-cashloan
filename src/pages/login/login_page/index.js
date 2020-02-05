@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:34:12
+ * @LastEditTime : 2020-02-05 16:51:54
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -10,7 +10,7 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { TFDLogin } from 'utils/getTongFuDun';
 import {
 	getDeviceType,
@@ -21,7 +21,9 @@ import {
 	queryUsrSCOpenId,
 	recordContract
 } from 'utils';
-import { signup_sms, msg_sms, msg_slide, idfa_relateIdfaWithUser } from 'fetch/api';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
@@ -63,6 +65,10 @@ const API = {
 @createForm()
 @domListen()
 @setBackGround('#50C5FC')
+@connect(
+	(state) => state,
+	{ setUserInfoAction }
+)
 // @connect()
 export default class login_page extends PureComponent {
 	constructor(props) {
@@ -207,29 +213,34 @@ export default class login_page extends PureComponent {
 				// 埋点-注册登录页一键代还
 				buriedPointEvent(login.submit);
 				let param = {
-					smsJrnNo: this.state.smsJrnNo, // 短信流水号
-					osType, // 操作系统
-					smsCd: values.smsCd,
-					usrCnl: getH5Channel(), // 用户渠道
+					tokenId: this.state.submitData.relyToken, // 短信流水号
+					osType: 'ios', // 操作系统
+					loginType: '1',
+					smsCode: values.smsCd,
+					imei: '',
+					mac: '',
+					registrationId: '',
+					userChannel: getH5Channel(), // 用户渠道
 					location: store.getPosition() // 定位地址 TODO 从session取
 				};
-				if (!this.state.disabledInput) {
-					param.mblNo = values.phoneValue; // 手机号
-				}
-				this.props.$fetch.post(API.smsForLogin, param).then(
+				// if (!this.state.disabledInput) {
+				// 	param.mblNo = values.phoneValue; // 手机号
+				// }
+				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
-						if (res.msgCode !== 'PTM0000') {
+						if (res.code !== '000000') {
 							this.setState({
-								errMsg: res.msgInfo
+								errMsg: res.message
 							});
 							buriedPointEvent(login.submitFail, {
-								fail_cause: res.msgInfo
+								fail_cause: res.message
 							});
 							return;
 						}
 						this.setState({
 							errMsg: ''
 						});
+						this.props.setUserInfoAction(res.data);
 						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
@@ -248,12 +259,12 @@ export default class login_page extends PureComponent {
 					},
 					(error) => {
 						buriedPointEvent(login.submitFail, {
-							fail_cause: error.msgInfo
+							fail_cause: error.message
 						});
-						error.msgInfo &&
+						error.message &&
 							this.setState(
 								{
-									errMsg: error.msgInfo
+									errMsg: error.message
 								},
 								() => {
 									this.state.disabledInput && this.getImage();
@@ -272,7 +283,7 @@ export default class login_page extends PureComponent {
 	// 老的获取短信验证码(mpos)
 	sendSmsCode = (param) => {
 		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
+			if (result.code === 'PTM0000') {
 				this.setState({
 					errMsg: ''
 				});
@@ -282,7 +293,7 @@ export default class login_page extends PureComponent {
 			} else {
 				this.setState(
 					{
-						errMsg: result.msgInfo
+						errMsg: result.message
 					},
 					() => {
 						this.getImage();
@@ -383,11 +394,11 @@ export default class login_page extends PureComponent {
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
-				if (result.msgCode === 'PTM0000') {
+			this.props.$fetch.get(`${msg_slide}/${base64Encode(this.state.mobilePhone)}`).then((result) => {
+				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({
 						submitData: {
-							relyToken: (result && result.data && result.data.relyToken) || '',
+							relyToken: (result && result.data && result.data.tokenId) || '',
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -396,7 +407,7 @@ export default class login_page extends PureComponent {
 					});
 					resolve();
 				} else {
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 				}
 			});
 		});
@@ -404,22 +415,27 @@ export default class login_page extends PureComponent {
 
 	// 获取短信(滑动验证码)
 	sendSlideVerifySmsCode = (xOffset = '', cb) => {
-		let data = Object.assign({}, this.state.submitData, {
-			bFlag: xOffset,
-			aFlag: (this.state.yOffset * 2) / 3
-		});
+		// let data = Object.assign({}, this.state.submitData, {
+		// 	bFlag: xOffset,
+		// 	aFlag: (this.state.yOffset * 2) / 3
+		// });
+		const data = {
+			slideDistance: this.bFlag,
+			tokenId: this.state.submitData.relyToken,
+			type: '6'
+		};
 		this.props.$fetch
-			.post(API.sendImgSms, data)
+			.post(msg_sms, data)
 			.then((result) => {
 				this.setState({
 					// 去掉错误显示
 					errMsg: ''
 				});
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '000000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
-						smsJrnNo: result.data.smsJrnNo
+						smsJrnNo: result.data.tokenId
 					});
 					cb && cb('success');
 					setTimeout(() => {
@@ -427,21 +443,21 @@ export default class login_page extends PureComponent {
 					}, 1500);
 
 					this.startCountDownTime();
-				} else if (result.msgCode === 'PTM3019') {
+				} else if (result.code === '000006') {
 					// 弹窗不存在时请求大图
 					!this.state.showSlideModal && this.reloadSlideImage();
 					cb && cb('error');
-				} else if (result.msgCode === 'PTM3020') {
+				} else if (result.code === '000004') {
 					//重新刷新relyToken
 					this.handleTokenAndImage();
 					cb && cb('refresh');
 				} else {
 					// 达到短信次数限制
 					if (xOffset) {
-						Toast.info(result.msgInfo);
+						Toast.info(result.message);
 					} else {
 						this.setState({
-							errMsg: result.msgInfo
+							errMsg: result.message
 						});
 					}
 					cb && cb('error');
@@ -457,7 +473,7 @@ export default class login_page extends PureComponent {
 	// 重新加载大图
 	reloadSlideImage = () => {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === 'PTM0000') {
 				this.setState({
 					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
 					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
@@ -466,7 +482,7 @@ export default class login_page extends PureComponent {
 					showSlideModal: true
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -538,7 +554,7 @@ export default class login_page extends PureComponent {
 		this.props.$fetch
 			.get(`${API.getStw}`)
 			.then((result) => {
-				if (result && result.data !== null && result.msgCode === 'PTM0000') {
+				if (result && result.data !== null && result.code === 'PTM0000') {
 					const stswData =
 						result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
 					if (stswData && stswData.length) {
@@ -557,7 +573,7 @@ export default class login_page extends PureComponent {
 						}
 					}
 				} else {
-					this.props.toast.info(result.msgInfo, 2, () => {
+					this.props.toast.info(result.message, 2, () => {
 						this.goHome();
 					});
 				}
@@ -571,13 +587,13 @@ export default class login_page extends PureComponent {
 	//获取图片验证码
 	getImage = () => {
 		this.props.$fetch.get(API.imageCode).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === 'PTM0000') {
 				this.setState({
 					imageCodeUrl: res.image
 				});
 				store.setNoLoginToken(res.tokenId);
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -611,15 +627,15 @@ export default class login_page extends PureComponent {
 		} else {
 			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
 				(res) => {
-					if (res.msgCode === 'PTM0000') {
+					if (res.code === 'PTM0000') {
 						Toast.info('安全下载中');
 						window.location.href = res.data;
 					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
+						res.message && Toast.info(res.message);
 					}
 				},
 				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
+					error.message && Toast.info(error.message);
 				}
 			);
 		}

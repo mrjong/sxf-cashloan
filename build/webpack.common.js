@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:28:10
+ * @LastEditTime : 2020-02-05 17:17:02
  */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
@@ -184,8 +184,8 @@ module.exports = function(options) {
 				assets: path.resolve(__dirname, '../src/assets'),
 				example: path.resolve(__dirname, '../src/example'),
 				config: path.resolve(__dirname, '../src/config'),
-				fetch: path.resolve(__dirname, '../src/fetch'),
-				reduxes: path.resolve(__dirname, '../src/reduxes')
+				reduxes: path.resolve(__dirname, '../src/reduxes'),
+				fetch: path.resolve(__dirname, '../src/fetch')
 			}
 		}
 	};
