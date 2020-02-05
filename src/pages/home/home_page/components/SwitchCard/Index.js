@@ -25,7 +25,7 @@ export default class SwitchCard extends Component {
 		};
 	}
 
-	carouselChange = (index, total) => {
+	carouselChange = (index) => {
 		this.setState({
 			activeIndex: index
 		});

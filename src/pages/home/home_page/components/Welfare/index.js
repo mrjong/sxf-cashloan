@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-05 14:18:06
+ */
 import React from 'react';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';

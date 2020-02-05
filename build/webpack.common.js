@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-16 19:16:44
+ * @LastEditTime : 2020-02-05 13:32:23
  */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
@@ -183,7 +183,8 @@ module.exports = function(options) {
 				routers: path.resolve(__dirname, '../src/routers'),
 				assets: path.resolve(__dirname, '../src/assets'),
 				example: path.resolve(__dirname, '../src/example'),
-				config: path.resolve(__dirname, '../src/config')
+				config: path.resolve(__dirname, '../src/config'),
+				reduxes: path.resolve(__dirname, '../src/reduxes')
 			}
 		}
 	};
