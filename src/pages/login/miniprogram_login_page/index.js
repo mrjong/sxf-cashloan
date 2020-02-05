@@ -67,7 +67,7 @@ export default class miniprogram_login_page extends PureComponent {
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
-		Cookie.remove('fin-v-card-token');
+		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
@@ -140,7 +140,7 @@ export default class miniprogram_login_page extends PureComponent {
 		buriedPointEvent(miniprogram.loginBtnClick);
 		const osType = getDeviceType();
 		// 防止用户关闭弹框,继续点击进行登录
-		if (store.getToken() || Cookie.get('fin-v-card-token')) {
+		if (store.getToken() || Cookie.get('FIN-HD-AUTH-TOKEN')) {
 			this.setState(
 				{
 					showDownloadModal: true
@@ -177,7 +177,7 @@ export default class miniprogram_login_page extends PureComponent {
 							res.msgInfo && Toast.info(res.msgInfo);
 							return;
 						}
-						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
 						// 小程序登录不触发通付盾

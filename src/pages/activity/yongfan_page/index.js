@@ -44,7 +44,7 @@ export default class yongfan_page extends PureComponent {
 			this.setState({
 				isAppOpen: true
 			});
-		} else if (Cookie.get('fin-v-card-token')) {
+		} else if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
 			this['HomeBtn'].fetchData();
 		}
 		if (queryData.regChannel) {
@@ -65,9 +65,9 @@ export default class yongfan_page extends PureComponent {
 		}
 		if (isAppOpen) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}
@@ -84,9 +84,9 @@ export default class yongfan_page extends PureComponent {
 				regChannel: registerChannel,
 				pageNm: '用就返'
 			});
-			if (Cookie.get('fin-v-card-token')) {
+			if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
 				this.getCoupon();
-			} else if (isAppOpen && !Cookie.get('fin-v-card-token')) {
+			} else if (isAppOpen && !Cookie.get('FIN-HD-AUTH-TOKEN')) {
 				// 未登录 通知app登录
 				const activityInf = {
 					isWelfare: true,

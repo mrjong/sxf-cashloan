@@ -104,7 +104,7 @@ export default class login_page extends PureComponent {
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
-		Cookie.remove('fin-v-card-token');
+		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
 		let MessageTagError = store.getMessageTagError();
 		let MessageTagStep = store.getMessageTagStep();
@@ -241,7 +241,7 @@ export default class login_page extends PureComponent {
 							errMsg: ''
 						});
 						this.props.setUserInfoAction(res.data);
-						Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke

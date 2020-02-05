@@ -38,7 +38,7 @@ export default class wuyue_new_page extends PureComponent {
 	// 一键领取按钮点击
 	getNow = () => {
 		buriedPointEvent(activity.mayNewRecBtn);
-		const token = Cookie.get('fin-v-card-token');
+		const token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		const tokenFromStorage = store.getToken();
 		if (!tokenFromStorage && !token) {
 			this.setState({

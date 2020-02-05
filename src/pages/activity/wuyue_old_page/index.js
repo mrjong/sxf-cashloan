@@ -161,11 +161,11 @@ export default class wuyue_old_page extends PureComponent {
 					}
 				} else {
 					if (res.msgCode === 'PTM1000') {
-						Cookie.remove('fin-v-card-token');
+						Cookie.remove('FIN-HD-AUTH-TOKEN');
 						this.onloadZhuan();
 					} else if (res.msgCode === 'PTM0100') {
 						this.onloadZhuan();
-						Cookie.remove('fin-v-card-token');
+						Cookie.remove('FIN-HD-AUTH-TOKEN');
 					} else {
 						Toast.info(res.msgInfo);
 					}
@@ -173,7 +173,7 @@ export default class wuyue_old_page extends PureComponent {
 			});
 	};
 	isAuthFunc = (callBack) => {
-		const token = Cookie.get('fin-v-card-token');
+		const token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		const tokenFromStorage = store.getToken();
 		if (tokenFromStorage && token) {
 			callBack();

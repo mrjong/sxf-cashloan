@@ -53,9 +53,9 @@ export default class mpos_activity_download_page extends PureComponent {
 		}
 		if (queryData.fromApp) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}
@@ -97,9 +97,9 @@ export default class mpos_activity_download_page extends PureComponent {
 					showLoginTip: true
 				});
 			}
-		} else if (Cookie.get('fin-v-card-token')) {
+		} else if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
 			// h5已登陆情况下以及mpos里还到的弹框
-			store.setToken(Cookie.get('fin-v-card-token'));
+			store.setToken(Cookie.get('FIN-HD-AUTH-TOKEN'));
 			queryUsrSCOpenId({
 				$props: this.props
 			}).then(() => {
