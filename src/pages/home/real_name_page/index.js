@@ -5,8 +5,6 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
-// import updateLeft from 'assets/images/real_name/left.png';
-// import updateRight from 'assets/images/real_name/right.png';
 // import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
 import FEZipImage from 'components/FEZIpImage';
 import { InputItem, List } from 'antd-mobile';
@@ -33,8 +31,10 @@ import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
 import Images from 'assets/image';
 
-const updateLeft = Images.adorn.id_card_front;
-const updateRight = Images.adorn.id_card_after;
+const updateLeftPlaceHolder = Images.adorn.id_card_front;
+const updateLeftSuccessPlaceHolder = Images.adorn.id_card_front_success;
+const updateRightPlaceHolder = Images.adorn.id_card_after;
+const updateRightSuccessPlaceHolder = Images.adorn.id_card_after_success;
 const updateBottomTip = Images.bg.id_card_tip;
 
 const isEquipment = window.navigator.userAgent.match(
@@ -56,9 +56,9 @@ export default class real_name_page extends Component {
 		idNo: '',
 		ocrZhengData: {},
 		ocrFanData: {},
-		leftValue: updateLeft,
+		leftValue: '',
 		updateLeftValue: '',
-		rightValue: updateRight,
+		rightValue: '',
 		leftUploaded: false,
 		rightUploaded: false,
 		footerUploaded: false,
@@ -140,7 +140,7 @@ export default class real_name_page extends Component {
 					this.setState({ leftUploaded: true });
 				} else {
 					this.props.toast.info(result.msgInfo);
-					this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
+					this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
 				}
 			})
 			.catch(() => {
@@ -148,7 +148,7 @@ export default class real_name_page extends Component {
 				this.setState({
 					disabledupload: 'false'
 				});
-				this.setState({ leftUploaded: false, leftValue: updateLeft, showFloat: false });
+				this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
 			});
 	};
 	// 上传身份证反面
@@ -183,7 +183,7 @@ export default class real_name_page extends Component {
 					this.setState({ showFloat: false });
 				} else {
 					this.props.toast.info(res.msgInfo);
-					this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
+					this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
 				}
 			})
 			.catch(() => {
@@ -191,7 +191,7 @@ export default class real_name_page extends Component {
 				this.setState({
 					disabledupload: 'false'
 				});
-				this.setState({ rightUploaded: false, rightValue: updateRight, showFloat: false });
+				this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
 			});
 	};
 
@@ -462,9 +462,9 @@ export default class real_name_page extends Component {
 									}}
 								>
 									<FEZipImage
-										disabledupload={disabledupload}
+										disabledupload="false"
 										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-										value={this.state.leftValue}
+										value={this.state.leftValue ? updateLeftSuccessPlaceHolder : updateLeftPlaceHolder}
 										onChange={this.handleChangePositive}
 										beforeCompress={this.handleBeforeCompress}
 										afterCompress={() => {
@@ -479,9 +479,9 @@ export default class real_name_page extends Component {
 									}}
 								>
 									<FEZipImage
-										disabledupload={disabledupload}
+										disabledupload="false"
 										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-										value={this.state.rightValue}
+										value={this.state.rightValue ? updateRightSuccessPlaceHolder : updateRightPlaceHolder}
 										onChange={this.handleChangeSide}
 										beforeCompress={this.handleBeforeCompress}
 										afterCompress={() => {
