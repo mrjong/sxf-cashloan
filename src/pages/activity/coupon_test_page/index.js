@@ -56,7 +56,7 @@ export default class coupon_test_page extends PureComponent {
 					this.checkUserStatus();
 				}
 			);
-		} else if (Cookie.get('fin-v-card-token')) {
+		} else if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
 			this.checkUserStatus();
 		}
 		if (queryData.regChannel) {
@@ -78,9 +78,9 @@ export default class coupon_test_page extends PureComponent {
 		}
 		if (isAppOpen) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}
@@ -93,7 +93,7 @@ export default class coupon_test_page extends PureComponent {
 			this.prePressTime2 = nowTime;
 			const { userStsCode, isAppOpen, registerChannel, isPlus } = this.state;
 
-			if (Cookie.get('fin-v-card-token')) {
+			if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
 				if (userStsCode === '01') {
 					// 未发放优惠券 返回首页
 					const activityInf = {

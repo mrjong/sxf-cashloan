@@ -148,7 +148,7 @@ export default class SmsAlert extends Component {
 						(res) => {
 							if (res.msgCode === 'PTM0000') {
 								goSubmitCb.PTM0000 && goSubmitCb.PTM0000(res, otherProps_type);
-								Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+								Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setMposToken(true);
 								smsSuccess && smsSuccess();
@@ -259,7 +259,7 @@ export default class SmsAlert extends Component {
 					// 已授权
 					store.setMposToken(true);
 					smsSuccess && smsSuccess();
-					Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+					Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 					store.setToken(res.loginToken);
 					// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 					TFDLogin();
@@ -323,7 +323,7 @@ export default class SmsAlert extends Component {
 						doAuthCb.authSts00 && doAuthCb.authSts00(res, otherProps_type);
 						store.setMposToken(true);
 						smsSuccess && smsSuccess();
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 						store.setToken(res.loginToken);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
@@ -382,7 +382,7 @@ export default class SmsAlert extends Component {
 								goLoginCb.PTM0000 && goLoginCb.PTM0000(res, otherProps_type);
 								store.setMposToken(true);
 								smsSuccess && smsSuccess();
-								Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+								Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 								// TODO: 根据设备类型存储token
 								store.setToken(res.data.tokenId);
 								// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke

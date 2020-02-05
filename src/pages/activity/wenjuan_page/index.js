@@ -158,8 +158,8 @@ export default class wenjuan_page extends PureComponent {
 				entry: queryData.entry
 			});
 		}
-		if (Cookie.get('fin-v-card-token')) {
-			store.setToken(Cookie.get('fin-v-card-token'));
+		if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
+			store.setToken(Cookie.get('FIN-HD-AUTH-TOKEN'));
 			this.queryQuestionnaire();
 		}
 	}
@@ -245,8 +245,8 @@ export default class wenjuan_page extends PureComponent {
 					showLoginTip: true
 				});
 			}
-		} else if (Cookie.get('fin-v-card-token')) {
-			store.setToken(Cookie.get('fin-v-card-token'));
+		} else if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
+			store.setToken(Cookie.get('FIN-HD-AUTH-TOKEN'));
 			this.goHomePage();
 		} else if (urlData.entry.indexOf('isxdc_menu') > -1 || urlData.entry.indexOf('isxdc_share') > -1) {
 			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');

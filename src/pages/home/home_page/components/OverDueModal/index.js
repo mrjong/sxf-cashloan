@@ -30,7 +30,7 @@ export default class OverDueModal extends React.PureComponent {
 		}
 		const href = `${linkConf.PDF_URL}${
 			API.downLoadContract
-		}?relativePath=${downloadUrl}&fin-v-card-token=${Cookie.get('fin-v-card-token') || store.getToken()}`; // 创建下载的链接
+		}?relativePath=${downloadUrl}&fin-v-card-token=${Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken()}`; // 创建下载的链接
 		// const href = `http://172.18.30.184:8888/wap/procedure/docDownLoad?relativePath=\\20190419113804123745\\2018）衢仲网字第1117号_孙建坤_裁决书.pdf&fin-v-card-token=4bc51edd8b6949989686dd2aff48dd45`
 
 		window.location.href = href;

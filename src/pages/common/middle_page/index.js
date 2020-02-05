@@ -35,7 +35,7 @@ export default class middle_page extends Component {
 		}
 		if (token && medium_type === 'app') {
 			store.setToken(token);
-			Cookie.set('fin-v-card-token', token, { expires: 365 });
+			Cookie.set('FIN-HD-AUTH-TOKEN', token, { expires: 365 });
 			// 埋点绑定
 			await queryUsrSCOpenId({ $props: this.props });
 		}

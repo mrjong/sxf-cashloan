@@ -97,7 +97,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			.then(
 				(res) => {
 					if (res.authSts === '00') {
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke

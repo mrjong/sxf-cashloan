@@ -52,9 +52,9 @@ export default class mianxi822_page extends PureComponent {
 		}
 		if (isAppOpen) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}
@@ -81,8 +81,8 @@ export default class mianxi822_page extends PureComponent {
 						showLoginTip: true
 					});
 				}
-			} else if (Cookie.get('fin-v-card-token')) {
-				store.setToken(Cookie.get('fin-v-card-token'));
+			} else if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
+				store.setToken(Cookie.get('FIN-HD-AUTH-TOKEN'));
 				this.goHomePage();
 			} else {
 				if (isAppOpen) {
@@ -135,7 +135,7 @@ export default class mianxi822_page extends PureComponent {
 				}
 			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
 				this.props.toast.info(res.msgInfo, 2, () => {
-					Cookie.remove('fin-v-card-token');
+					Cookie.remove('FIN-HD-AUTH-TOKEN');
 					sessionStorage.clear();
 					localStorage.clear();
 					this.goTo();

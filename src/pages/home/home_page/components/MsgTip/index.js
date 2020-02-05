@@ -15,7 +15,7 @@ export default class MsgTip extends React.PureComponent {
 		};
 	}
 	componentWillMount() {
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		tokenFromStorage = store.getToken();
 		if (token && tokenFromStorage) {
 			this.requestMsgCount();

@@ -44,9 +44,9 @@ export default class anxin_plan_page extends PureComponent {
 		}
 		if (queryData.fromApp) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}

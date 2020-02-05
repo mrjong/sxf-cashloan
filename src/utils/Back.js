@@ -109,7 +109,7 @@ if (window.history && window.history.pushState) {
 		'popstate',
 		() => {
 			// 获取token
-			let token = Cookie.get('fin-v-card-token');
+			let token = Cookie.get('FIN-HD-AUTH-TOKEN');
 			let tokenFromStorage = '';
 			tokenFromStorage = store.getToken();
 			// 返回拦截弹窗

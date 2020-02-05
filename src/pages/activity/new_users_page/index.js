@@ -73,9 +73,9 @@ export default class new_users_page extends PureComponent {
 		}
 		if (isAppOpen) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}
@@ -88,7 +88,7 @@ export default class new_users_page extends PureComponent {
 			this.prePressTime2 = nowTime;
 			const { userStsCode, isAppOpen, registerChannel, isPlus } = this.state;
 
-			if (isAppOpen && Cookie.get('fin-v-card-token')) {
+			if (isAppOpen && Cookie.get('FIN-HD-AUTH-TOKEN')) {
 				if (userStsCode === '00') {
 					buriedPointEvent(activity.newUserActivityGetNow, {
 						receiveSts: this.transferCode().buryMsg,

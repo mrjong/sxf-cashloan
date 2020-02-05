@@ -652,7 +652,7 @@ export default class confirm_agency_page extends PureComponent {
 				item.contractNo
 			}&loanAmount=${billPrcpAmt}&productId=${contractData[0].productId}&agreementNo=${
 				repayInfo.withDrawAgrNo
-			}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') ||
+			}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('FIN-HD-AUTH-TOKEN') ||
 				store.getToken()}`
 		);
 		this.props.history.push({
@@ -662,7 +662,7 @@ export default class confirm_agency_page extends PureComponent {
 					item.contractNo
 				}&loanAmount=${billPrcpAmt}&productId=${contractData[0].productId}&agreementNo=${
 					repayInfo.withDrawAgrNo
-				}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('fin-v-card-token') ||
+				}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('FIN-HD-AUTH-TOKEN') ||
 					store.getToken()}`,
 				name: item.contractMdlName
 			}
