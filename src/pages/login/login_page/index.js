@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:17:22
+ * @LastEditTime : 2020-02-05 14:34:12
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -21,6 +21,8 @@ import {
 	queryUsrSCOpenId,
 	recordContract
 } from 'utils';
+import { signup_sms, msg_sms, msg_slide, idfa_relateIdfaWithUser } from 'fetch/api';
+
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
 	buriedPointEvent,
