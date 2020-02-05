@@ -5,13 +5,15 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
-import updateLeft from 'assets/images/real_name/left.png';
-import updateRight from 'assets/images/real_name/right.png';
-import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
+// import updateLeft from 'assets/images/real_name/left.png';
+// import updateRight from 'assets/images/real_name/right.png';
+// import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
 import FEZipImage from 'components/FEZIpImage';
 import { InputItem, List } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
+import StepTitle from 'components/StepTitle';
+import StepList from 'components/StepList';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -29,6 +31,11 @@ import {
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
+import Images from 'assets/image';
+
+const updateLeft = Images.adorn.id_card_front;
+const updateRight = Images.adorn.id_card_after;
+const updateBottomTip = Images.bg.id_card_tip;
 
 const isEquipment = window.navigator.userAgent.match(
 	/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
@@ -441,51 +448,53 @@ export default class real_name_page extends Component {
 		const { disabledupload } = this.state;
 		return (
 			<div className={[style.real_name_page, 'real_name_page_list'].join(' ')}>
+				<StepTitle title="上传身份证照片" titleSub="请上传身份证照片，仅用于公安网身份核实" stepNum="01" />
+				{/* <StepList stepList={[{ title: '11', stepNum: '03' }, { title: '11', stepNum: '04' }]} /> */}
 				{this.state.showState &&
 				(!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
-						<div className={style.updateTitle}>
-							<span>上传身份证正 、反面</span>
-						</div>
 						<div className={style.updateContent}>
-							<div
-								className={style.updateImgLeft}
-								onClick={() => {
-									this.cardMD('z');
-								}}
-							>
-								<FEZipImage
-									disabledupload={disabledupload}
-									style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-									value={this.state.leftValue}
-									onChange={this.handleChangePositive}
-									beforeCompress={this.handleBeforeCompress}
-									afterCompress={() => {
-										this.handleAfterCompress('z');
+							<div className={style.updateImgWrap}>
+								<div
+									className={style.updateImgLeft}
+									onClick={() => {
+										this.cardMD('z');
 									}}
-								/>
-								<p>拍摄身份证正面</p>
-							</div>
-							<div
-								className={style.updateImgRight}
-								onClick={() => {
-									this.cardMD('f');
-								}}
-							>
-								<FEZipImage
-									disabledupload={disabledupload}
-									style={{ width: '3.26rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-									value={this.state.rightValue}
-									onChange={this.handleChangeSide}
-									beforeCompress={this.handleBeforeCompress}
-									afterCompress={() => {
-										this.handleAfterCompress('f');
+								>
+									<FEZipImage
+										disabledupload={disabledupload}
+										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
+										value={this.state.leftValue}
+										onChange={this.handleChangePositive}
+										beforeCompress={this.handleBeforeCompress}
+										afterCompress={() => {
+											this.handleAfterCompress('z');
+										}}
+									/>
+								</div>
+								<div
+									className={style.updateImgRight}
+									onClick={() => {
+										this.cardMD('f');
 									}}
-								/>
-								<p>拍摄身份证反面</p>
+								>
+									<FEZipImage
+										disabledupload={disabledupload}
+										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
+										value={this.state.rightValue}
+										onChange={this.handleChangeSide}
+										beforeCompress={this.handleBeforeCompress}
+										afterCompress={() => {
+											this.handleAfterCompress('f');
+										}}
+									/>
+								</div>
 							</div>
-							<img src={updateBottomTip} style={{ width: '100%', marginTop: '.3rem' }} />
+
+							<img src={updateBottomTip} className={style.updateImgTip} />
 						</div>
+
+						<p className={style.sectionTitle}>确认信息</p>
 
 						<InputItem
 							onChange={this.handleNameChange}

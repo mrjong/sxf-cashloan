@@ -14,6 +14,8 @@ import { store } from 'utils/store';
 import QuestionModal from './components/QuestionModal';
 import qs from 'qs';
 
+import { question_questionInfo } from 'fetch/api.js';
+
 const API = {
 	hotList: '/question/topSeven',
 	categoryList: '/question/questionList',
@@ -58,8 +60,9 @@ export default class help_center_page extends PureComponent {
 		if (queryData.entry === 'wxTabBar') {
 			buriedPointEvent(wxTabBar.helpCenterView);
 		}
-		this.qryHotList();
-		this.qryCategoryList();
+		this.qryHotListAdnTypes();
+		// this.qryHotList();
+		// this.qryCategoryList();
 		this.qiyu();
 	}
 
@@ -71,6 +74,29 @@ export default class help_center_page extends PureComponent {
 				});
 			} else {
 				this.props.toast.info(res.msgInfo);
+			}
+		});
+	};
+
+	/**
+	 * 请求 热门问题 和 问题分类
+	 * @memberof HelpCenter
+	 */
+	qryHotListAdnTypes = () => {
+		this.props.$fetch.post(question_questionInfo).then((res) => {
+			if (res.code === '000000' && res.data) {
+				if (res.data.questions && res.data.questions.list && res.data.questions.list.length) {
+					this.setState({
+						hotList: res.data.questions.list
+					});
+				}
+				if (res.data.types && res.data.types.list && res.data.types.list.length) {
+					this.setState({
+						categoryList: res.data.types.list
+					});
+				}
+			} else {
+				this.props.toast.info(res.message);
 			}
 		});
 	};
@@ -172,7 +198,7 @@ export default class help_center_page extends PureComponent {
 				}}
 			>
 				<span className={styles.question_title}>{v.question}</span>
-				<span className={styles.question_arrow}></span>
+				<span className={styles.question_arrow} />
 			</div>
 		));
 	};
@@ -224,7 +250,7 @@ export default class help_center_page extends PureComponent {
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
 						<span>热门问题</span>
-						<span className={styles.hot_icon}></span>
+						<span className={styles.hot_icon} />
 					</div>
 					<div className={styles.pannel_list}>{this.renderHotList()}</div>
 				</div>

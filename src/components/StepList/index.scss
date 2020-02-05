@@ -1,0 +1,61 @@
+.stepListWrap {
+  .stepListItem {
+    display: flex;
+    padding: 20px 0;
+  }
+  .stepNumWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    font-size: 0;
+  }
+  .stepNum {
+    position: relative;
+    height: 40px;
+    width: 40px;
+    margin: 0 15px;
+    border-radius: 100px;
+    background-color: #d7c8a6;
+    color: #fff;
+    font-size: 30px;
+    font-family: 'DINMitAlt';
+    text-align: center;
+    line-height: 46px;
+  }
+  .stepNumBefore,
+  .stepNumAfter {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    flex-basis: 10px;
+    border-radius: 100px;
+  }
+  .stepNumBefore {
+    left: -15px;
+    background-color: #d7c8a6;
+  }
+  .stepNumAfter {
+    right: -15px;
+    background-color: #d7c8a6;
+  }
+  .stepNumTop,
+  .stepNumBottom {
+    width: 1px;
+    height: 20px;
+    position: absolute;
+    left: 50%;
+    background-color: #d7c8a6;
+  }
+  .stepNumTop {
+    top: -20px;
+  }
+  .stepNumBottom {
+    bottom: -20px;
+  }
+
+  .title {
+    color: #B2B6BF;
+    font-size: 30px;
+  }
+}

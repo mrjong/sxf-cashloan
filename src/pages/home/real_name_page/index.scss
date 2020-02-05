@@ -1,4 +1,5 @@
 .real_name_page {
+  padding: 54px 60px 0;
 	.updateTitle {
 		color: #333;
 		margin-top: 20px;
@@ -15,19 +16,27 @@
 		background: #fff;
 		padding: 0.1rem 0.1rem 0.2rem 0.1rem;
 		text-align: center;
-		margin: 20px auto 0 auto;
+		margin: 80px auto 0 auto;
 	}
 	.mt30 {
 		margin-top: 50px;
-	}
+  }
+  .updateImgWrap {
+    display: flex;
+  }
 	.updateImgLeft {
-		width: 50%;
-		cursor: pointer;
+    padding: 36px 0;
+    flex: 1;
+		// width: 50%;
+    cursor: pointer;
+    margin-right: 15px;
 		display: inline-block;
-		overflow: hidden;
+    overflow: hidden;
+    box-shadow:0px 0px 41px 0px rgba(226,229,247,0.77);
+    border-radius: 10px;
 		img {
-			width: 326px;
-			height: 2rem;
+			// width: 326px;
+			height: 12rem;
 			cursor: pointer;
 			border-radius: 8px;
 		}
@@ -41,16 +50,34 @@
 		display: none;
 	}
 	.updateImgRight {
-		width: 50%;
+    padding: 36px 0;
+    flex: 1;
+    // width: 50%;
+    margin-left: 15px;
 		cursor: pointer;
 		display: inline-block;
-		overflow: hidden;
+    overflow: hidden;
+    box-shadow:0px 0px 41px 0px rgba(226,229,247,0.77);
+    border-radius: 10px;
 		p {
 			color: #333;
 			font-size: 0.26rem;
 			margin-top: 10px;
 		}
-	}
+  }
+  .updateImgTip {
+    padding-top: 50px;
+    margin-top: 50px;
+    border-top: 1px solid $colorDivide;
+    width: 100%;
+  }
+  .sectionTitle {
+    color: $colorBlack;
+    font-size: 32px;
+    font-weight: 600;
+    margin-top: 64px;
+    margin-bottom: 60px;
+  }
 	.labelDiv {
 		text-align: right;
 		background: #fff;
@@ -90,7 +117,7 @@
 	}
 	.des {
 		font-size: 20px;
-		color: #9d9d9d;
+		color: $colorGolden;
 		padding: 20px 30px;
 		letter-spacing: 1.5px;
 		line-height: 17px;
@@ -113,8 +140,11 @@
 			font-size: 0.3rem;
 		}
 		.am-list-item.am-input-item {
-			padding-left: 0.3rem;
-		}
+			padding-left: 0;
+    }
+    .am-list-line {
+      padding-right: 0;
+    }
 		.am-list-item .am-input-control input {
 			text-align: right;
 		}

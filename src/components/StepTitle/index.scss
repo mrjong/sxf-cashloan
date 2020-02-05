@@ -1,0 +1,50 @@
+.stepTitleWrap {
+  .titleWrap {
+    display: flex;
+  }
+  .stepNumWrap {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+  }
+  .stepNum {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    margin: 0 15px;
+    border-radius: 100px;
+    background-color: $colorGolden;
+    color: #fff;
+    font-size: 30px;
+    font-family: 'DINMitAlt';
+    text-align: center;
+    line-height: 46px;
+  }
+  .stepNumBefore,
+  .stepNumAfter {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 100px;
+  }
+  .stepNumBefore {
+    left: -15px;
+    background-color: #ddc6a7;
+  }
+  .stepNumAfter {
+    right: -15px;
+    background-color: #c4c6c7;
+  }
+
+  .title {
+    color: $colorBlack;
+    font-size: 46px;
+    font-weight: 600;
+  }
+  .titleSub {
+    margin-top: 10px;
+    color: $colorSubTitle;
+    font-size: 28px;
+  }
+}
