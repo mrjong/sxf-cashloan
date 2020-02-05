@@ -28,14 +28,17 @@ export default {
 
 	// 背景
 	bg: {
-		id_card_tip: require('./bg/id_card_tip.png')
+		id_card_tip: require('./bg/id_card_tip.png'),
+		navBarBg: require('./bg/navBarBg.png')
 	},
 
 	// 按钮
 	btn: {},
 
 	// 图标类
-	icon: {},
+	icon: {
+		trigon_right_black: require('./icon/trigon_right_black.png')
+	},
 
 	// 标志性的图片
 	logo: {},

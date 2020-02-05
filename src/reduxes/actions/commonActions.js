@@ -1,0 +1,146 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-05 13:40:50
+ */
+import { createAction } from 'redux-actions';
+import {
+	COMMON_CARD_TYPE,
+	COMMON_WITHDRAW_CARD_DATA,
+	COMMON_WITHHOLD_CARD_DATA,
+	COMMON_CONFIRM_AGENCY_INFO,
+	COMMON_CLEAR_STATE,
+	COMMON_HOMEMODAL,
+	COMMON_COUPON_DATA,
+	COMMON_SAVE_CONTACT,
+	COMMON_CACHE_CONTACT,
+	COMMON_NEXT_STEP_STATUS,
+	COMMON_OVERDUE_MODAL_INFO,
+	COMMON_BACK_ROUTER,
+	COMMON_HOME_DATA,
+	COMMON_HOME_BANNER_LIST,
+	COMMON_WELFARE_LIST,
+	COMMON_APPLY_CREDIT_DTATA
+} from '../constants/commonConstants';
+
+/**
+ * @description: 设置选择银行卡的类型 withdraw:收款银行卡 withhold:还款银行卡
+ * @param {type}
+ * @return:
+ */
+export const setCardTypeAction = createAction(COMMON_CARD_TYPE, (info) => ({ cardType: info }));
+
+/**
+ * @description: 设置收款银行卡信息
+ * @param {type}
+ * @return:
+ */
+export const setWithdrawCardDataAction = createAction(COMMON_WITHDRAW_CARD_DATA, (info) => ({
+	withdrawCardData: info
+}));
+
+/**
+ * @description: 设置还款银行卡信息
+ * @param {type}
+ * @return:
+ */
+export const setWithholdCardDataAction = createAction(COMMON_WITHHOLD_CARD_DATA, (info) => ({
+	withholdCardData: info
+}));
+
+/**
+ * @description: 设置优惠劵信息
+ * @param {type}
+ * @return:
+ */
+export const setCouponDataAction = createAction(COMMON_COUPON_DATA, (info) => ({ couponData: info }));
+
+/**
+ * @description: 设置签约借款页面信息
+ * @param {type}
+ * @return:
+ */
+export const setConfirmAgencyInfoAction = createAction(COMMON_CONFIRM_AGENCY_INFO, (info) => ({
+	confirmAgencyInfo: info
+}));
+
+/**
+ * @description: 自动清除store状态
+ * @param {type}
+ * @return:
+ */
+export const commonClearState = createAction(COMMON_CLEAR_STATE, () => {});
+
+/**
+ * @description: 首页弹窗状态
+ * @param {type}
+ * @return:
+ */
+export const setHomeModalAction = createAction(COMMON_HOMEMODAL, (info) => ({ homeModal: info || {} }));
+
+/**
+ * @description: 保存选中联系人信息
+ * @param {type}
+ * @return:
+ */
+export const setSaveContactAction = createAction(COMMON_SAVE_CONTACT, (info) => ({
+	saveContact: info || {}
+}));
+
+/**
+ * @description: 缓存选中联系人信息
+ * @param {type}
+ * @return:
+ */
+export const setCacheContactAction = createAction(COMMON_CACHE_CONTACT, (info) => ({ cacheContact: info }));
+
+/**
+ * @description: 授信是否需要下一步
+ * @param {type}
+ * @return:
+ */
+export const setNextStepStatus = createAction(COMMON_NEXT_STEP_STATUS, (info) => ({ nextStepStatus: info }));
+
+/**
+ * @description: 设置逾期弹窗相关
+ * @param {type}
+ * @return:
+ */
+export const setOverDueModalInfo = createAction(COMMON_OVERDUE_MODAL_INFO, (info) => ({
+	overdueModalInfo: info
+}));
+/**
+ * @description: 授信是否需要下一步
+ * @param {type}
+ * @return:
+ */
+export const setBackRouter = createAction(COMMON_BACK_ROUTER, (info) => ({ backRouter: info }));
+
+/**
+ * @description: 首页数据缓存
+ * @param {type}
+ * @return:
+ */
+export const setHomeData = createAction(COMMON_HOME_DATA, (info) => ({ homeData: info }));
+
+/**
+ * @description: 首页banner数据缓存
+ * @param {type}
+ * @return:
+ */
+export const setBannerList = createAction(COMMON_HOME_BANNER_LIST, (info) => ({ bannerList: info }));
+
+/**
+ * @description: 首页banner数据缓存
+ * @param {type}
+ * @return:
+ */
+export const setWelfareList = createAction(COMMON_WELFARE_LIST, (info) => ({ welfareList: info }));
+
+/**
+ * @description: 用户提交授信的信息
+ * @param {type}
+ * @return:
+ */
+export const setApplyCreditData = createAction(COMMON_APPLY_CREDIT_DTATA, (info) => ({
+	applyCreditData: info
+}));

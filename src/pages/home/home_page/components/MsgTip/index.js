@@ -44,12 +44,11 @@ export default class MsgTip extends React.PureComponent {
 				<div className={style.home_header_main}>
 					<span className={style.home_header_title}>想还·就还到</span>
 					<div>
-						{token &&
-							tokenFromStorage && (
-								<span onClick={this.jumpToMsg} className={style.messageIcon}>
-									{count ? <i className={style.active} /> : null}
-								</span>
-							)}
+						{token && tokenFromStorage && (
+							<span onClick={this.jumpToMsg} className={style.messageIcon}>
+								{count ? <i className={style.active} /> : null}
+							</span>
+						)}
 					</div>
 				</div>
 				<p className={style.home_header_sub}>随行付金融旗下信贷服务</p>

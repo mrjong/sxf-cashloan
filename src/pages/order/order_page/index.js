@@ -2,14 +2,20 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import { PullToRefresh, List, ListView } from 'antd-mobile';
+import { List, ListView } from 'antd-mobile';
 import { store } from 'utils/store';
 import { isWXOpen } from 'utils';
-import SXFButton from 'components/ButtonCustom';
+// import SXFButton from 'components/ButtonCustom';
+import { FooterBar } from 'components';
+import { setBackGround } from 'utils/background';
+import Image from 'assets/image';
+
+import SectionList from './components/SectionList';
+import utils from 'utils/CommonUtil';
 import dayjs from 'dayjs';
 let hasNext = true;
 const Item = List.Item;
-const Brief = Item.Brief;
+// const Brief = Item.Brief;
 const API = {
 	msgRead: '/my/msgRead',
 	msgCount: '/my/msgCount',
@@ -17,9 +23,10 @@ const API = {
 	couponRedDot: '/index/couponRedDot' // 优惠券红点
 };
 
-let token = '';
-let tokenFromStorage = '';
+// let token = '';
+// let tokenFromStorage = '';
 @fetch.inject()
+@setBackGround('#F0F3F9')
 export default class order_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -249,70 +256,199 @@ export default class order_page extends PureComponent {
 	goLogin = () => {
 		this.props.history.push('/login');
 	};
-	render() {
-		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
-		let index = this.state.rData && this.state.rData.length - 1;
-		const row = () => {
-			if (index < 0) {
-				index = this.state.rData && this.state.rData.length - 1;
-			}
-			const obj = this.state.rData && this.state.rData[index--];
-			return (
-				<Item
-					className={'iview' + obj.billNo}
-					onClick={() => {
-						this.gotoDesc(obj);
-					}}
-					extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>}
-					style={{ color: obj.color }}
-					arrow={obj.billSts === '-1' || obj.billSts === '-2' ? 'empty' : 'horizontal'}
-					wrap
-				>
-					{obj.billAmt}
-					<Brief>{obj.billDt}</Brief>
-				</Item>
-			);
-		};
-		const item = () => {
-			if (this.state.rData && this.state.rData.length > 0) {
-				return (
-					<ListView
-						initialListSize={this.state.Listlength}
-						onScroll={this.handleScroll}
-						key={this.state.useBodyScroll ? '0' : '1'}
-						ref={(el) => (this.lv = el)}
-						dataSource={this.state.dataSource}
-						renderFooter={() => (
-							<div className={style.has_more}>{this.state.isLoading ? '数据加载中...' : '已无更多账单'}</div>
-						)}
-						renderRow={row}
-						direction="down"
-						renderSeparator={separator}
-						useBodyScroll={this.state.useBodyScroll}
-						className={!this.state.useBodyScroll ? 'heightBody1' : ''}
-						pullToRefresh={
-							<PullToRefresh damping={60} refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
-						}
-						onEndReached={this.onEndReached}
-						pageSize={1}
-					/>
-				);
-			}
-			return (
-				<div className={style.no_data}>
-					<i />
-					暂无账单
-					{isWXOpen() && !tokenFromStorage && !token ? (
-						<SXFButton className={style.noLogin} onClick={this.goLogin}>
-							去登录
-						</SXFButton>
-					) : null}
-				</div>
-			);
-		};
+
+	/**
+	 * @description 生成分组标题组件
+	 */
+	renderGroupTitle(title) {
 		return (
-			<div className={style.orderScroll}>
-				<div className={style.order_page}>{item()}</div>
+			<div className={style.groupTitleWrap}>
+				<span className={style.groupTitle}>{title}年</span>
+			</div>
+		);
+	}
+
+	/**
+	 * @description 生成列表 item
+	 */
+	renderItem(item, index) {
+		return (
+			<div className={style.listItem} key={index}>
+				<div className={style.listItemLeft}>
+					<span className={style.itemLabel}>
+						借款￥<em>{item.billAmt && utils.thousandFormatNum(item.billAmt)}</em>
+					</span>
+					<div className={style.itemDesc}>
+						<em>{item.billDt}</em>
+						<span>共12期</span>
+					</div>
+				</div>
+				<div className={style.listItemRight} style={{ color: item.color }}>
+					<span>{item.billStsNm}</span>
+					<img src={Image.icon.trigon_right_black} className={style.trigon_right_black} />
+				</div>
+			</div>
+		);
+	}
+
+	/**
+	 * @description 生成分组列表数据
+	 */
+	handleGenerateBillGroupArr() {
+		const billGroupObj = this.GenerateBillGroupObj();
+
+		let billGroupArr = [];
+		Object.keys(billGroupObj)
+			.sort((a, b) => b - a)
+			.forEach((item) => {
+				billGroupArr.push({
+					title: item,
+					data: JSON.parse(JSON.stringify(billGroupObj[item]))
+				});
+			});
+		return billGroupArr;
+	}
+
+	/**
+	 * @description 数据格式化 按日期进行分组
+	 */
+	GenerateBillGroupObj() {
+		const { rData: dataSource } = this.state;
+		let billGroupObj = {};
+		dataSource.forEach((item) => {
+			let years = dayjs(item.billRegDt).format('YYYY');
+			if (!billGroupObj[years]) {
+				billGroupObj[years] = [];
+				billGroupObj[years].push(JSON.parse(JSON.stringify(item)));
+			} else {
+				billGroupObj[years].push(JSON.parse(JSON.stringify(item)));
+			}
+		});
+		return billGroupObj;
+	}
+
+	/**
+	 * @description 生成尾部组件 包含公司名
+	 */
+	renderFooterComponentWrap() {
+		return (
+			<div>
+				{this.renderFooterComponent()}
+				{this.state.rData.length > 4 ? <FooterBar /> : null}
+			</div>
+		);
+	}
+
+	/**
+	 * @description 生成尾部组件
+	 */
+	renderFooterComponent() {
+		if (!this.state.dataSource || this.state.dataSource.length < 5) {
+			return null;
+		}
+		if (this.state.isFinishDone) {
+			return <span className={style.nodataText}>没有更多数据了</span>;
+		}
+		return (
+			<span>查看更多</span>
+			// <Button
+			// 	containerStyle={{
+			// 		paddingVertical: px(30),
+			// 		borderBottomLeftRadius: px(10),
+			// 		borderBottomRightRadius: px(10)
+			// 	}}
+			// 	backgroundColor="#fff"
+			// 	size="md"
+			// 	shape="rect"
+			// 	label="查看更多"
+			// 	iconOnRight
+			// 	iconSource={Images.icon.trigon_right_black}
+			// 	onPress={this.handleLoadMore}
+			// 	loading={this.state.isLoadingMore}
+			// />
+		);
+	}
+
+	render() {
+		// const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
+		// let index = this.state.rData && this.state.rData.length - 1;
+		// const row = () => {
+		// 	if (index < 0) {
+		// 		index = this.state.rData && this.state.rData.length - 1;
+		// 	}
+		// 	const obj = this.state.rData && this.state.rData[index--];
+		// 	return (
+		// 		<Item
+		// 			className={'iview' + obj.billNo}
+		// 			onClick={() => {
+		// 				this.gotoDesc(obj);
+		// 			}}
+		// 			extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>}
+		// 			style={{ color: obj.color }}
+		// 			arrow={obj.billSts === '-1' || obj.billSts === '-2' ? 'empty' : 'horizontal'}
+		// 			wrap
+		// 		>
+		// 			{obj.billAmt}
+		// 			<Brief>{obj.billDt}</Brief>
+		// 		</Item>
+		// 	);
+		// };
+		// const item = () => {
+		// 	if (this.state.rData && this.state.rData.length > 0) {
+		// 		return (
+		// 			<ListView
+		// 				initialListSize={this.state.Listlength}
+		// 				onScroll={this.handleScroll}
+		// 				key={this.state.useBodyScroll ? '0' : '1'}
+		// 				ref={(el) => (this.lv = el)}
+		// 				dataSource={this.state.dataSource}
+		// 				renderFooter={() => (
+		// 					<div className={style.has_more}>{this.state.isLoading ? '数据加载中...' : '已无更多账单'}</div>
+		// 				)}
+		// 				renderRow={row}
+		// 				direction="down"
+		// 				renderSeparator={separator}
+		// 				useBodyScroll={this.state.useBodyScroll}
+		// 				className={!this.state.useBodyScroll ? 'heightBody1' : ''}
+		// 				pullToRefresh={
+		// 					<PullToRefresh damping={60} refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
+		// 				}
+		// 				onEndReached={this.onEndReached}
+		// 				pageSize={1}
+		// 			/>
+		// 		);
+		// 	}
+		// 	return (
+		// 		<div className={style.no_data}>
+		// 			<i />
+		// 			暂无账单
+		// 			{isWXOpen() && !tokenFromStorage && !token ? (
+		// 				<SXFButton className={style.noLogin} onClick={this.goLogin}>
+		// 					去登录
+		// 				</SXFButton>
+		// 			) : null}
+		// 		</div>
+		// 	);
+		// };
+		return (
+			<div className={style.orderPage}>
+				<div className={style.orderPageHead}>
+					<strong className={style.orderPageHeadTitle}>账单</strong>
+					<span className={style.orderPageHeadDesc}>还信用卡用还到，有账单就能还</span>
+				</div>
+				<div className={style.orderListCard}>
+					<div className={style.order_page}>
+						{/* {item()} */}
+						<SectionList
+							renderItem={({ item, index }) => this.renderItem(item, index)}
+							renderSectionHeader={({ section: { title } }) => this.renderGroupTitle(title)}
+							sections={this.handleGenerateBillGroupArr()}
+							// keyExtractor={(item, index) => item + index}
+							// style={styles.listBox}
+							ListFooterComponent={this.renderFooterComponentWrap()}
+						/>
+					</div>
+				</div>
 			</div>
 		);
 	}
