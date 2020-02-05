@@ -33,11 +33,12 @@ export default class Tab extends PureComponent {
 										<div
 											style={{
 												width: tabUnderLineWidth,
-												height: 2,
-												backgroundColor: '#FFC601',
-												margin: '0 auto'
+												height: 3,
+												backgroundColor: '#121C32',
+												margin: '0 auto',
+												borderRadius: '3px'
 											}}
-										></div>
+										/>
 									</div>
 								);
 							}}

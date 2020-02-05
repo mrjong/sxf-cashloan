@@ -21,7 +21,7 @@
 			border: 2px #108ee9 solid;
 		}
 		.am-list-body {
-			background-color: #efeff4;
+			background-color: $colorBg;
 			&::before {
 				background-color: transparent !important;
 			}
@@ -69,7 +69,7 @@
 	.msgItem {
 		padding-top: 40px;
 		.time {
-			color: #999;
+			color: $colorInactiveColor;
 			font-size: 22px;
 			margin-bottom: 18px;
 			text-align: center;
@@ -78,11 +78,12 @@
 			}
 		}
 		.msgContainer {
-			padding: 30px 20px 20px;
+			padding: 20px 30px 20px;
 			background-color: #fff;
-			margin: 0 20px;
+      margin: 0 40px;
+      border-radius: 10px;
 			.title {
-				color: #333;
+				color: $colorBlack;
 				word-wrap: break-word;
 				word-break: break-all;
 				font-size: 32px;

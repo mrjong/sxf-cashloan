@@ -9,9 +9,8 @@ import { setBackGround } from 'utils/background';
 import QuestionModal from '../help_center_page/components/QuestionModal';
 
 let totalPage = false;
-const API = {
-	questionList: '/question/questionListByType'
-};
+import { question_questionListByType } from 'fetch/api.js';
+
 @setBackGround('#fff')
 @fetch.inject()
 export default class coupon_page extends PureComponent {
@@ -77,14 +76,14 @@ export default class coupon_page extends PureComponent {
 
 		let startIndex = (pIndex - 1) * 15; //每次分页的起始序号
 		let data = await this.props.$fetch
-			.post(API.questionList, sendParams)
+			.post(question_questionListByType, sendParams)
 			.then((res) => {
 				if (pIndex === 1) {
 					setTimeout(() => {
 						SXFToast.hide();
 					}, 600);
 				}
-				if (res.msgCode === 'PTM0000' && res.data) {
+				if (res.code === '000000' && res.data) {
 					let dataArr = [];
 					if (pIndex === 1) {
 						// totalPage = Math.ceil(res.data.totalSize / 10);
@@ -92,10 +91,16 @@ export default class coupon_page extends PureComponent {
 							hasMore: false
 						});
 					}
-					for (let i = res.data.length - 1; i >= 0; i--) {
-						res.data[i].question = `${startIndex + i + 1}. ${res.data[i].question}`;
-						dataArr.push(res.data[i]);
+					for (let i = res.data.list.length - 1; i >= 0; i--) {
+						res.data.list[i].question = `${startIndex + i + 1}. ${res.data.list[i].question}`;
+						dataArr.push(res.data.list[i]);
 					}
+
+					// dataArr = res.data.list.map((item, i) => ({
+					// 	...item,
+					// 	question: `${startIndex + i + 1}. ${item.question}`
+					// }));
+					console.log(dataArr, 'dataArr');
 					return dataArr;
 				}
 				return [];
@@ -123,6 +128,7 @@ export default class coupon_page extends PureComponent {
 			isLoading: true
 		});
 		let list = await this.genData(1);
+		console.log(list, 'list');
 		this.setState({
 			rData: list,
 			Listlength: list.length,
@@ -191,7 +197,7 @@ export default class coupon_page extends PureComponent {
 					className={styles.item_wrap}
 				>
 					<span className={styles.question_title}>{obj.question}</span>
-					<span className={styles.question_arrow}></span>
+					<span className={styles.question_arrow} />
 				</div>
 			);
 		};

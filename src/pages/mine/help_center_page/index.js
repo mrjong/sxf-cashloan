@@ -182,7 +182,7 @@ export default class help_center_page extends PureComponent {
 				}}
 			>
 				<img src={require(`./img/category_icon${i + 1}@3x.png`)} className={styles.category_item_icon} />
-				<span>{v.label}</span>
+				<span>{v.name}</span>
 			</div>
 		));
 	};
@@ -205,12 +205,12 @@ export default class help_center_page extends PureComponent {
 
 	categoryItemClick = (item) => {
 		buriedPointEvent(helpCenter.classification, {
-			type_name: item.label
+			type_name: item.name
 		});
 		this.props.history.push({
 			pathname: '/mine/question_category_page',
 			state: {
-				pageTitle: item.label,
+				pageTitle: item.name,
 				value: item.value
 			}
 		});
