@@ -22,13 +22,17 @@ export default {
 	banner: {},
 
 	// 背景
-	bg: {},
+	bg: {
+		navBarBg: require('./bg/navBarBg.png')
+	},
 
 	// 按钮
 	btn: {},
 
 	// 图标类
-	icon: {},
+	icon: {
+		trigon_right_black: require('./icon/trigon_right_black.png')
+	},
 
 	// 标志性的图片
 	logo: {},

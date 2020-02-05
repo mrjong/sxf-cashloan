@@ -6,14 +6,14 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import avatar from 'assets/images/logo/black_logo.png';
-import Lists from 'components/Lists';
+// import avatar from 'assets/images/logo/black_logo.png';
+// import Lists from 'components/Lists';
 import { buriedPointEvent } from 'utils/analytins';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
-import fqaImg from 'assets/images/mine/fqa_img.png';
+// import fqaImg from 'assets/images/mine/fqa_img.png';
 import { helpCenter } from '../../../utils/analytinsType';
 import images from 'assets/image';
 
@@ -314,13 +314,11 @@ export default class mine_page extends PureComponent {
 						</div>
 					</div>
 
-					{tokenFromStorage &&
-						token &&
-						!isMPOS() && (
-							<div onClick={this.logoutHandler} className={styles.logout}>
-								退出登录
-							</div>
-						)}
+					{tokenFromStorage && token && !isMPOS() && (
+						<div onClick={this.logoutHandler} className={styles.logout}>
+							退出登录
+						</div>
+					)}
 					<p className={styles.bottomSlogen}>随行付金融旗下信贷服务</p>
 				</div>
 			</div>

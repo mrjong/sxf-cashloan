@@ -1,8 +1,5 @@
 @import '../../../assets/styles/scss/base/fn';
 
-.orderScroll {
-	// height: 100%;
-}
 :global {
 	.application_footerbar ~ .application_content {
 		.heightBody1 {
@@ -15,8 +12,75 @@
 		}
 	}
 }
+.orderPage {
+	width: 670px;
+	margin: 0 auto;
+}
+.orderPageHead {
+}
+.orderPageHeadTitle {
+	font-size: 46px;
+	color: $colorBlack;
+	font-weight: bold;
+	margin-right: 20px;
+}
+.orderPageHeadDesc {
+	font-size: 24px;
+	color: $colorBlack;
+}
+.orderListCard {
+	border-radius: 10px;
+	background-color: #fff;
+	margin-top: 34px;
+}
+.groupTitleWrap {
+	padding-left: 45px;
+	box-sizing: border-box;
+	height: 100px;
+	line-height: 100px;
+	border-bottom: 1px solid $colorDivide;
+}
+.groupTitle {
+	font-size: 30px;
+	color: $colorInactiveColor;
+	font-family: $fontFamilyNumber;
+}
+.listItem {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 40px;
+	box-sizing: border-box;
+}
+.itemLabel {
+	font-size: 28px;
+	color: $colorBlack;
+	font-weight: bold;
+
+	em {
+		font-family: $fontFamilyNumber;
+	}
+}
+.itemDesc {
+	font-size: 24px;
+	color: $colorSubTitle;
+	em {
+		font-family: $fontFamilyNumber;
+	}
+}
+.listItemRight {
+	font-weight: bold;
+  font-size: 24px;
+
+}
+.trigon_right_black {
+	width: 11px;
+	height: 13px;
+	display: inline-block;
+  margin-left: 16px;
+  margin-bottom: 1px;
+}
 .order_page {
-	// height: 100%;
 	.no_data {
 		box-sizing: border-box;
 		position: relative;
@@ -24,7 +88,6 @@
 		width: 100%;
 		color: #999;
 		font-size: 36px;
-		// height: 400px;
 		padding-top: 170px;
 		text-align: center;
 		i {
@@ -36,7 +99,6 @@
 			@include bg-image('../../../assets/images/order/no_bill');
 			background-repeat: no-repeat;
 			background-size: 100% 100%;
-			//  background: black;
 			box-sizing: border-box;
 		}
 	}
