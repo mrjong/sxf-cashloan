@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 10:31:36
+ * @LastEditTime : 2020-02-05 14:17:22
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -10,6 +10,7 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+// import { connect } from 'react-redux';
 import { TFDLogin } from 'utils/getTongFuDun';
 import {
 	getDeviceType,
@@ -60,6 +61,7 @@ const API = {
 @createForm()
 @domListen()
 @setBackGround('#50C5FC')
+// @connect()
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);

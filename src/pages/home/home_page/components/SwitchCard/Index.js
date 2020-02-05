@@ -8,14 +8,14 @@ import classNM from './index.scss';
 
 const checkAZ = /[a-zA-Z]/;
 
-const styles = {
-	placeHolderTextArrow: {
-		marginTop: '.1rem'
-	},
-	placeHolderTextArrowReversal: {
-		transform: 'rotateY(180deg)'
-	}
-};
+// const styles = {
+// 	placeHolderTextArrow: {
+// 		marginTop: '.1rem'
+// 	},
+// 	placeHolderTextArrowReversal: {
+// 		transform: 'rotateY(180deg)'
+// 	}
+// };
 
 export default class SwitchCard extends Component {
 	constructor(props) {
@@ -25,7 +25,7 @@ export default class SwitchCard extends Component {
 		};
 	}
 
-	carouselChange = (index, total) => {
+	carouselChange = (index) => {
 		this.setState({
 			activeIndex: index
 		});

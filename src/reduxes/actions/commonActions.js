@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 10:59:30
+ * @LastEditTime : 2020-02-05 13:40:50
  */
 import { createAction } from 'redux-actions';
 import {
@@ -20,7 +20,7 @@ import {
 	COMMON_HOME_BANNER_LIST,
 	COMMON_WELFARE_LIST,
 	COMMON_APPLY_CREDIT_DTATA
-} from '../constants';
+} from '../constants/commonConstants';
 
 /**
  * @description: 设置选择银行卡的类型 withdraw:收款银行卡 withhold:还款银行卡

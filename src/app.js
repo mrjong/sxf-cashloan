@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-05 14:18:28
+ */
 /*eslint-disable*/
 import React from 'react';
 import { render } from 'react-dom';
@@ -11,7 +15,9 @@ import { isMPOS } from 'utils/common';
 import { isWXOpen } from 'utils';
 import fastClick from 'fastclick';
 import Raven from 'raven-js';
+import { Provider } from 'react-redux';
 import { store } from 'utils/store';
+import storeRedux from './reduxes';
 const { PROJECT_ENV, RELEASE_VERSION } = process.env;
 console.log(RELEASE_VERSION, 'RELEASE_VERSION');
 if (PROJECT_ENV === 'pro') {
@@ -45,9 +51,11 @@ initAnalytics();
 initSxfData();
 const renders = (Component) =>
 	render(
-		<BrowserRouter>
-			<Component />
-		</BrowserRouter>,
+		<Provider store={storeRedux}>
+			<BrowserRouter>
+				<Component />
+			</BrowserRouter>
+		</Provider>,
 		document.getElementById('root')
 	);
 renders(router);

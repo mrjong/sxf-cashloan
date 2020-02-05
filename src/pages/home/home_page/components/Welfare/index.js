@@ -1,11 +1,15 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-05 14:18:06
+ */
 import React from 'react';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import classNM from './index.scss';
 
-const API = {
-	MSG_COUNT: '/my/msgCount' // h5-查询未读消息总数
-};
+// const API = {
+// 	MSG_COUNT: '/my/msgCount' // h5-查询未读消息总数
+// };
 let token = '';
 let tokenFromStorage = '';
 
@@ -48,15 +52,15 @@ export default class Welfare extends React.PureComponent {
 			]
 		});
 		return;
-		this.props.$fetch.post(API.MSG_COUNT, null, { hideLoading: true }).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					welfareList: result.data.count
-				});
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
+		// this.props.$fetch.post(API.MSG_COUNT, null, { hideLoading: true }).then((result) => {
+		// 	if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+		// 		this.setState({
+		// 			welfareList: result.data.count
+		// 		});
+		// 	} else {
+		// 		this.props.toast.info(result.msgInfo);
+		// 	}
+		// });
 	};
 
 	goActivity = (item) => {

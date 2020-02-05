@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 10:52:20
+ * @LastEditTime : 2020-02-05 13:43:06
  */
 /*eslint-disable*/
 import { createStore, compose, applyMiddleware } from 'redux';
@@ -15,5 +15,5 @@ store.subscribe(() => {
   console.log('[LOG--]', store.getState());
 });
 // 注入到reducer中
-injectStore(store);
+// injectStore(store);
 export default store;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 10:58:50
+ * @LastEditTime : 2020-02-05 14:09:15
  */
 import { handleActions } from 'redux-actions';
 
@@ -21,7 +21,7 @@ import {
 	COMMON_HOME_BANNER_LIST,
 	COMMON_WELFARE_LIST,
 	COMMON_APPLY_CREDIT_DTATA
-} from '../constants';
+} from '../constants/commonConstants';
 /**
  * @description: commonState 初始化
  * @param {type}
@@ -45,7 +45,7 @@ const initState = {
 	backRouter: '',
 	msgCount: 0
 };
-export const commonState = handleActions(
+export default handleActions(
 	{
 		[COMMON_CARD_TYPE]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_WITHDRAW_CARD_DATA]: (state, action) => ({ ...state, ...action.payload }),
