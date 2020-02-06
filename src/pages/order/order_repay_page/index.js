@@ -5,6 +5,7 @@ import { Modal, Card } from 'antd-mobile';
 import { bill_queryBillDetail, repay_queryCashRegisterDetail } from 'fetch/api';
 import PerdList from './PerdList';
 import fetch from 'sx-fetch';
+import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
 
 const noData = {
@@ -15,10 +16,12 @@ const noData = {
 };
 const errorData = {
 	img: Image.bg.no_network,
-	text: '网络错误,点击重试'
+	text: '网络错误,点击重试',
+	width: '100%',
+	height: '100%'
 };
 
-// @setBackGround('#F0F3F9')
+@setBackGround('#F0F3F9')
 @fetch.inject()
 export default class order_repay_page extends PureComponent {
 	constructor(props) {
@@ -30,7 +33,8 @@ export default class order_repay_page extends PureComponent {
 			isShowBottomBtn: false,
 			overdueDays: '',
 			billOvduStartDt: '',
-			buttonDisabled: true
+			buttonDisabled: true,
+			haha: false
 		};
 	}
 	componentDidMount = () => {
@@ -191,11 +195,39 @@ export default class order_repay_page extends PureComponent {
 	 * @description 勾选点击
 	 */
 	handleCheckboxClick = (item) => {
-		// item = {
-		// 	...item,
-		// 	isChecked: !item.isChecked
-		// };
-		// this.orderListCheckClick(item);
+		item = {
+			...item,
+			isChecked: !item.isChecked
+		};
+		this.orderListCheckClick(item);
+	};
+
+	/**
+	 * @description 账单勾选实时计算
+	 */
+	orderListCheckClick = (clickedItem) => {
+		const { panelList, actPanelListDatas } = this.state;
+		for (let i = 0; i < panelList.length; i++) {
+			let item = panelList[i];
+			if (item.perdNum <= clickedItem.perdNum && item.isShowCheck) {
+				item.isChecked = true;
+				actPanelListDatas[i].isChecked = true;
+			} else {
+				item.isChecked = false;
+				actPanelListDatas[i].isChecked = false;
+			}
+		}
+		let arr = panelList.map((v) => (v.perdNum === clickedItem.perdNum ? clickedItem : v));
+
+		this.setState(
+			{
+				actPanelListDatas: [...actPanelListDatas],
+				panelList: arr
+			},
+			() => {
+				this.calcPayTotalMoney();
+			}
+		);
 	};
 
 	render() {
@@ -208,17 +240,14 @@ export default class order_repay_page extends PureComponent {
 			perdLth,
 			buttonDisabled
 		} = this.state;
-
 		return (
 			<LoadingView
 				ref={(view) => (this.viewRef = view)}
 				nodata={noData}
 				errordata={errorData}
-				// onReloadData={() => {
-				// 	this.onReloadData();
-				// }}
+				onReloadData={this.onReloadData}
 			>
-				<div className={styles.orderDetailCard}>
+				<div className={styles.orderListWrap}>
 					<Card className={styles.antCard}>
 						<Card.Header title="账单" />
 						<Card.Body>
@@ -228,17 +257,11 @@ export default class order_repay_page extends PureComponent {
 								onCheckboxClick={this.handleCheckboxClick}
 								onPerdDetailShow={(list) => {
 									this.setState({
-										panelList: list
+										panelList: list,
+										haha: !this.state.haha
 									});
 								}}
 							/>
-							{/* <Lists
-								listsInf={orderList}
-								clickCb={this.clickCb}
-								className={styles.order_list}
-								isCheckbox={true}
-								checkClickCb={this.checkClickCb}
-							/> */}
 						</Card.Body>
 					</Card>
 					{/* {!isBillClean && (
@@ -254,8 +277,8 @@ export default class order_repay_page extends PureComponent {
 							</SXFButton>
 						</div>
 					)} */}
-				</div>
-				{/* <Modal
+
+					{/* <Modal
 					wrapClassName="order_repay_page"
 					visible={this.state.showTipModal}
 					transparent
@@ -279,6 +302,7 @@ export default class order_repay_page extends PureComponent {
 						<p className={styles.modal_tip_desc}>罚息由出借方收取，逾期管理费由平台方收取。</p>
 					</div>
 				</Modal> */}
+				</div>
 			</LoadingView>
 		);
 	}

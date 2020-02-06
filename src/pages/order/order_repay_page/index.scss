@@ -1,0 +1,20 @@
+.orderListWrap {
+	margin: 40px;
+}
+
+.antCard {
+	margin-bottom: 130px;
+	:global {
+		.am-card-header {
+			font-size: 32px;
+      font-weight: 500;
+      color: $colorBlack;
+		}
+		.am-card-body {
+			padding-top: 0px;
+			&::before {
+				height: 0 !important;
+			}
+		}
+	}
+}
