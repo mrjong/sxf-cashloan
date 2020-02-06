@@ -1,30 +1,116 @@
-$color-bg-default: #ebde74; // 默认背景颜色
-$color-bg--active: #e8e206; // 高亮背景颜色
+$btn_color_text_black: $colorBlack;
+$btn_color_text_white: #fff;
+$btn_color_default: $colorGrey;
+$btn_color_yellow: $colorYellow;
+$btn_color_golden: $colorGolden;
+$btn_color_error: $colorTipRed;
 
-$color-text-default: #333; // 默认文字颜色
-$font-size-default: 0.36rem;
+.sxp_btn {
+  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  touch-action: manipulation;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 0 15px;
+  font-size: 14px;
+  transition: color .2s linear,background-color .2s linear,border .2s linear,box-shadow .2s linear;
+  color: #515a6e;
+  // background-color: #fff;
+  background-color: red;
+  user-select: none;
+  outline: none;
+  border: 0;
+  line-height: 1.5;
+  vertical-align: middle;
+  box-sizing: border-box;
+  opacity: 1;
+  &:active {
+    opacity: 0.5;
+  }
 
-$height-default: 0.9rem; // 默认高度
-$border-radius: 45px; // 默认圆角
+  &_long {
+    width: 100%;
+  }
 
-.sxp_button {
-	display: block;
-	width: 100%;
-	margin-right: auto;
-	margin-left: auto;
-	text-align: center;
-	line-height: $height-default;
-	color: $color-text-default;
-	font-size: $font-size-default;
-	background-color: $color-bg-default;
-	border-radius: $border-radius;
-	border: 0;
-	font-weight: 500;
-	cursor: pointer;
-	&_active {
-		background-color: $color-bg--active;
-	}
+  &_icon {
+    vertical-align: middle;
+    margin-top: -2px;
+  }
+
+  &_xl {
+    min-height: 100px;
+    font-size: 36px;
+    font-weight: 600;
+    .sxp_btn_icon {
+      height: 45px;
+    }
+  }
+  &_lg {
+    min-height: 80px;
+    font-size: 30px;
+    font-weight: 500;
+    .sxp_btn_icon {
+      height: 40px;
+    }
+  }
+  &_md {
+    min-height: 64px;
+    font-size: 24px;
+    font-weight: 500;
+    .sxp_btn_icon {
+      height: 30px;
+    }
+  }
+  &_sm {
+    min-height: 50px;
+    font-size: 24px;
+    .sxp_btn_icon {
+      height: 30px;
+    }
+  }
+  &_xs {
+    min-height: 40px;
+    font-size: 24px;
+    .sxp_btn_icon {
+      height: 20px;
+    }
+  }
+
+  &_default {
+    background-color: $btn_color_default;
+    color: $btn_color_text_white;
+  }
+  &_yellow {
+    background-color: $btn_color_yellow;
+    color: $btn_color_text_black;
+  }
+  &_gray {
+    background-color: $btn_color_default;
+    color: $btn_color_text_white;
+  }
+  &_golden {
+    background-color: $btn_color_golden;
+    color: $btn_color_text_black;
+  }
+  &_error {
+    background-color: $btn_color_error;
+    color: $btn_color_text_white;
+  }
+
+  &_rect {
+    border-radius: 0;
+  }
+  &_circle {
+    border-radius: 1000px;
+  }
 }
-.sxp_button[disabled] {
-	opacity: 0.8;
+.sxp_btn[disabled] {
+  opacity: 0.8;
+  background-color: $btn_color_default;
+  color: $btn_color_text_white;
 }

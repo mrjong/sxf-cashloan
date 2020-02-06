@@ -12,6 +12,10 @@ export default {
 
 	activity: {},
 
+	gif: {
+		btn_loading: require('./gif/loading.gif')
+	},
+
 	// 装饰性的图片
 	adorn: {
 		id_card_front: require('./adorn/id_card_front.png'),

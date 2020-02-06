@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from './index.scss';
+import classNM from './index.scss';
+import Images from 'assets/image';
 
 const _handleClick = (onClick, event) => {
 	event.preventDefault();
@@ -9,22 +10,48 @@ const _handleClick = (onClick, event) => {
 
 export default class ButtonCustom extends React.PureComponent {
 	static propTypes = {
+		style: PropTypes.object,
 		className: PropTypes.string,
-		active: PropTypes.bool,
+		color: PropTypes.string,
+		type: PropTypes.oneOf(['default', 'yellow', 'gray', 'golden', 'error']),
+		backgroundcolor: PropTypes.string,
+		iconSource: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.func]),
+		iconStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+		// icononright: PropTypes.bool,
+		long: PropTypes.bool,
+		size: PropTypes.oneOf(['xl', 'lg', 'md', 'sm', 'xs']),
+		// outline: PropTypes.bool,
+		outlinecolor: PropTypes.string,
+		outlinewidth: PropTypes.string,
+		outlinetype: PropTypes.oneOf(['solid', 'dotted', 'dashed']),
+		shape: PropTypes.oneOf(['rect', 'radius', 'circle']),
+		borderRadius: PropTypes.string,
+		disabled: PropTypes.bool,
+		// loading: PropTypes.bool,
+		loadingsize: PropTypes.oneOf(['xl', 'lg', 'md', 'sm', 'xs']),
 		children: PropTypes.node,
-		onClick: PropTypes.func,
 		interval: PropTypes.number,
-		disabled: PropTypes.bool
+		onClick: PropTypes.func
 	};
 
 	static defaultProps = {
 		className: '',
-		active: false,
-		// children: '按钮',
+		disabled: false,
+		type: 'yellow',
+		size: 'xl',
+		long: true,
+		// loading: false,
+		loadingsize: 'xl',
+		// icononright: false,
+		// outline: false,
+		outlinecolor: '#C9CDD5',
+		outlinewidth: '1px',
+		outlinetype: 'solid',
+		shape: 'circle',
+		borderRadius: '0.1rem',
 		children: '去申请',
-		onClick: () => {},
 		interval: 1600,
-		disabled: false
+		onClick: () => {}
 	};
 
 	prePressTime = 0;
@@ -45,15 +72,88 @@ export default class ButtonCustom extends React.PureComponent {
 		}
 	};
 
+	// 生成按钮图标
+	renderIcon() {
+		const { iconSource, loading, icononright } = this.props;
+		let iconStyleFinaly = {};
+		if (icononright) {
+			iconStyleFinaly.marginLeft = '10px';
+		} else {
+			iconStyleFinaly.marginRight = '10px';
+		}
+		if (loading) {
+			return <img src={Images.gif.btn_loading} className={classNM.sxp_btn_icon} style={iconStyleFinaly} />;
+		}
+		if (iconSource) {
+			return <img src={iconSource} className={classNM.sxp_btn_icon} style={iconStyleFinaly} />;
+		}
+		return null;
+	}
+
+	buildClassNames = () => {
+		const { className, type, long, size, shape } = this.props;
+		return [
+			classNM.sxp_btn,
+			className,
+			long ? classNM.sxp_btn_long : '',
+			classNM[`sxp_btn_${size}`],
+			classNM[`sxp_btn_${type}`],
+			classNM[`sxp_btn_${shape}`]
+		].join(' ');
+	};
+
+	buildStyles = () => {
+		const {
+			style,
+			color,
+			backgroundcolor,
+			shape,
+			borderRadius,
+			outline,
+			outlinewidth,
+			outlinetype,
+			outlinecolor
+		} = this.props;
+		let btnStyle = { ...style };
+		if (color) {
+			btnStyle.color = color;
+		}
+		if (backgroundcolor) {
+			btnStyle.backgroundColor = backgroundcolor;
+		}
+		if (shape === 'radius' && borderRadius) {
+			btnStyle.borderRadius = borderRadius;
+		}
+		if (outline) {
+			btnStyle.border = `${outlinewidth} ${outlinetype} ${outlinecolor}`;
+			btnStyle.backgroundColor = 'transparent';
+		}
+		return btnStyle;
+	};
+
 	render() {
-		const { className, active, children, ...restProps } = this.props;
+		let {
+			style,
+			className,
+			type,
+			long,
+			size,
+			shape,
+			borderRadius,
+			icononright,
+			children,
+			onClick,
+			...restProps
+		} = this.props;
 		return (
 			<button
 				onClick={(event) => this.handleClick(event)}
-				className={`${style.sxp_button} ${active ? style.sxp_button_active : ''} ${className}`}
+				className={this.buildClassNames()}
+				style={this.buildStyles()}
 				{...restProps}
 			>
-				{children}
+				{icononright ? children : this.renderIcon()}
+				{icononright ? this.renderIcon() : children}
 			</button>
 		);
 	}
