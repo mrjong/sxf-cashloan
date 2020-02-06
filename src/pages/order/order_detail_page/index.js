@@ -201,8 +201,8 @@ export default class order_detail_page extends PureComponent {
 		return (
 			<LoadingView
 				ref={(view) => (this.viewRef = view)}
-				noData={{}}
-				errorData={{}}
+				nodata={{}}
+				errordata={{}}
 				onReloadData={() => {
 					this.onReloadData();
 				}}
