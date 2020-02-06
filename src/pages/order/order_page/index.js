@@ -23,8 +23,8 @@ const API = {
 	couponRedDot: '/index/couponRedDot' // 优惠券红点
 };
 
-// let token = '';
-// let tokenFromStorage = '';
+let token = '';
+let tokenFromStorage = '';
 @fetch.inject()
 @setBackGround('#F0F3F9')
 export default class order_page extends PureComponent {
@@ -49,10 +49,17 @@ export default class order_page extends PureComponent {
 			msgReadAllState: false,
 			msgType: 0,
 			hasMore: true,
-			limitRow: 10
+			limitRow: 10,
+			isFinishDone: true
 		};
 	}
 	scrollTop = 0;
+
+	//当前页面
+	currentPage = 1;
+	//每页的size
+	pageSize = 5;
+
 	componentWillMount() {
 		this.props.globalTask(null);
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
@@ -222,39 +229,35 @@ export default class order_page extends PureComponent {
 	};
 	// 查看详情
 	gotoDesc = (obj) => {
+		const { billSts } = obj;
 		// 账单状态(0：放款成功,1：已逾期,2：还款中,4：已还清;  已撤销状态专用于免手续费时间限制内的全额退款)， -2: 放款中  -1放款失败
-		const noDetailsPageArr = ['-2', '-1'];
-		if (noDetailsPageArr.includes(obj.billSts)) {
-			return;
-		}
-		let backData = {
-			scrollTop: this.scrollTop || 0,
-			rData: this.state.rData,
-			billNo: obj.billNo,
-			pageIndex: this.state.pageIndex,
-			hasNext: hasNext
-		};
+		// const noDetailsPageArr = ['-2', '-1'];
+		// if (noDetailsPageArr.includes(obj.billSts)) {
+		// 	return;
+		// }
+		if (billSts !== '-1' && billSts !== '-2') {
+			let backData = {
+				scrollTop: this.scrollTop || 0,
+				rData: this.state.rData,
+				billNo: obj.billNo,
+				pageIndex: this.state.pageIndex,
+				hasNext: hasNext
+			};
 
-		// 0:无，1:URL，2:文本，3:APP"
-		store.setBackData(backData);
-		store.setBillNo(obj.billNo);
-		this.props.history.push(`/order/order_detail_page`);
+			store.setBackData(backData);
+			store.setBillNo(obj.billNo);
+			this.props.history.push(`/order/order_detail_page`);
+		}
 	};
-	// 切换tab
-	changeTab = (tab, index) => {
-		this.setState(
-			{
-				msgType: index,
-				rData: []
-			},
-			() => {
-				this.getCommonData();
-			}
-		);
-	};
+
 	// 去登陆
 	goLogin = () => {
 		this.props.history.push('/login');
+	};
+
+  //加载更多数据
+	handleLoadMore = () => {
+		// this.genData(++this.currentPage);
 	};
 
 	/**
@@ -283,7 +286,13 @@ export default class order_page extends PureComponent {
 						<span>共12期</span>
 					</div>
 				</div>
-				<div className={style.listItemRight} style={{ color: item.color }}>
+				<div
+					className={style.listItemRight}
+					style={{ color: item.color }}
+					onClick={() => {
+						this.gotoDesc(item);
+					}}
+				>
 					<span>{item.billStsNm}</span>
 					<img src={Image.icon.trigon_right_black} className={style.trigon_right_black} />
 				</div>
@@ -334,7 +343,7 @@ export default class order_page extends PureComponent {
 		return (
 			<div>
 				{this.renderFooterComponent()}
-				{this.state.rData.length > 4 ? <FooterBar /> : null}
+				{/* {this.state.rData.length > 5 ? <FooterBar /> : null} */}
 			</div>
 		);
 	}
@@ -347,25 +356,17 @@ export default class order_page extends PureComponent {
 			return null;
 		}
 		if (this.state.isFinishDone) {
-			return <span className={style.nodataText}>没有更多数据了</span>;
+			return (
+				<div className={style.listBottomText}>
+					<span>没有更多数据了</span>
+				</div>
+			);
 		}
 		return (
-			<span>查看更多</span>
-			// <Button
-			// 	containerStyle={{
-			// 		paddingVertical: px(30),
-			// 		borderBottomLeftRadius: px(10),
-			// 		borderBottomRightRadius: px(10)
-			// 	}}
-			// 	backgroundColor="#fff"
-			// 	size="md"
-			// 	shape="rect"
-			// 	label="查看更多"
-			// 	iconOnRight
-			// 	iconSource={Images.icon.trigon_right_black}
-			// 	onPress={this.handleLoadMore}
-			// 	loading={this.state.isLoadingMore}
-			// />
+			<div className={style.listBottomText} onClick={this.handleLoadMore}>
+				<span>查看更多</span>
+				<img src={Image.icon.trigon_right_black} className={style.trigon_right_black} />
+			</div>
 		);
 	}
 
@@ -449,6 +450,9 @@ export default class order_page extends PureComponent {
 						/>
 					</div>
 				</div>
+				{!this.state.dataSource || !this.state.dataSource.length || this.state.dataSource.length <= 5 ? (
+					<FooterBar />
+				) : null}
 			</div>
 		);
 	}

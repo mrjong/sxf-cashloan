@@ -1,0 +1,31 @@
+.orderDetailCard {
+	margin: 50px 30px 0;
+}
+
+.payAllButton {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+	font-size: 26px;
+	color: $colorInactiveColor;
+	margin: 20px auto 0;
+}
+
+.cardItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $colorListText;
+  font-size: 28px;
+  margin-bottom: 32px;
+}
+
+.antCard {
+  margin-bottom: 130px;
+  :global {
+    .am-card-header {
+      font-size: 32px;
+      font-weight: 500;
+    }
+  }
+}

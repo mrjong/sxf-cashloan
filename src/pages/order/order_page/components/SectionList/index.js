@@ -3,12 +3,10 @@ import React, { Component } from 'react';
 
 class SectionList extends Component {
 	render() {
-		const { sections, renderSectionHeader, renderItem } = this.props;
+		const { sections, renderSectionHeader, renderItem, ListFooterComponent } = this.props;
 		return (
 			<div>
 				{sections.map((section, index) => {
-					console.log(section, 'selc111');
-
 					return (
 						<div key={index}>
 							{renderSectionHeader({ section })}
@@ -20,7 +18,7 @@ class SectionList extends Component {
 										return <div key={i}>{renderItem({ item: v, index: i })}</div>;
 									})}
 							</div>
-							{/* <ListFooterComponent /> */}
+							{ListFooterComponent}
 						</div>
 					);
 				})}

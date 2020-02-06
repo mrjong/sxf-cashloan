@@ -31,7 +31,8 @@
 .orderListCard {
 	border-radius: 10px;
 	background-color: #fff;
-	margin-top: 34px;
+  margin-top: 34px;
+  margin-bottom: 50px;
 }
 .groupTitleWrap {
 	padding-left: 45px;
@@ -51,6 +52,14 @@
 	align-items: center;
 	padding: 40px;
 	box-sizing: border-box;
+	border-bottom: 1px solid $colorDivide;
+}
+.listBottomText {
+  height: 76px;
+  line-height: 76px;
+  color: $colorListText;
+  text-align: center;
+  font-size: 24px;
 }
 .itemLabel {
 	font-size: 28px;
@@ -70,15 +79,14 @@
 }
 .listItemRight {
 	font-weight: bold;
-  font-size: 24px;
-
+	font-size: 24px;
 }
 .trigon_right_black {
 	width: 11px;
 	height: 13px;
 	display: inline-block;
-  margin-left: 16px;
-  margin-bottom: 1px;
+	margin-left: 16px;
+	margin-bottom: 1px;
 }
 .order_page {
 	.no_data {
