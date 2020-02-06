@@ -133,7 +133,7 @@ export default class home_page extends PureComponent {
 	componentWillMount() {
 		this.props.globalTask(null);
 		// 获取token
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		tokenFromStorage = store.getToken();
 		// 清除一些store
 		this.removeStore();
@@ -379,7 +379,7 @@ export default class home_page extends PureComponent {
 	getTokenFromUrl = () => {
 		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (urlParams.token) {
-			Cookie.set('fin-v-card-token', urlParams.token, { expires: 365 });
+			Cookie.set('FIN-HD-AUTH-TOKEN', urlParams.token, { expires: 365 });
 			store.setToken(urlParams.token);
 		}
 	};

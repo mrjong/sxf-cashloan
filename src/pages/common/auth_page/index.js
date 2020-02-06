@@ -41,7 +41,7 @@ export default class auth_page extends Component {
 		}
 	}
 	goRouter = (token) => {
-		Cookie.set('fin-v-card-token', token, { expires: 365 });
+		Cookie.set('FIN-HD-AUTH-TOKEN', token, { expires: 365 });
 		// TODO: 根据设备类型存储token
 		store.setToken(token);
 		this.props.history.replace('/home/home');

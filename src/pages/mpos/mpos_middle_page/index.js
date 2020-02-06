@@ -101,7 +101,7 @@ export default class mpos_middle_page extends Component {
 							`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`
 						);
 					} else if (res.authFlag === '1') {
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke

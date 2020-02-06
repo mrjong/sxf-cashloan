@@ -64,7 +64,7 @@ export default class dc_landing_page extends PureComponent {
 								return;
 							}
 							queryUsrSCOpenId({ $props: this.props });
-							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 
 							// store.setToken(res.data.tokenId);
 

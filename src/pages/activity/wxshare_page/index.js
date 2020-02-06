@@ -173,7 +173,7 @@ export default class wxshare_page extends PureComponent {
 								res.msgInfo && Toast.info(res.msgInfo);
 								return;
 							}
-							Cookie.set('fin-v-card-token', res.data.tokenId, { expires: 365 });
+							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 
 							// store.setToken(res.data.tokenId);
 

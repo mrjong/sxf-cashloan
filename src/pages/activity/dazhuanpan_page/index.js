@@ -61,7 +61,7 @@ export default class dazhuanpan_page extends PureComponent {
 			codeInfo: ''
 		});
 
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		this.setState({
 			count:
 				store.getRewardCount() && Number(store.getRewardCount()) > 0
@@ -141,11 +141,11 @@ export default class dazhuanpan_page extends PureComponent {
 					}
 				} else {
 					if (res.msgCode === 'PTM1000') {
-						Cookie.remove('fin-v-card-token');
+						Cookie.remove('FIN-HD-AUTH-TOKEN');
 						this.onloadZhuan();
 					} else if (res.msgCode === 'PTM0100') {
 						this.onloadZhuan();
-						Cookie.remove('fin-v-card-token');
+						Cookie.remove('FIN-HD-AUTH-TOKEN');
 					} else {
 						Toast.info(res.msgInfo);
 					}
@@ -154,7 +154,7 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	// 获取我的奖品
 	getMyAward = () => {
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		if (!token) {
 			this.setState({
 				type: 'alert_tel'
@@ -259,7 +259,7 @@ export default class dazhuanpan_page extends PureComponent {
 
 	// 转盘按钮
 	onloadZhuan = async () => {
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		if (!token) {
 			this.setState({
 				type: 'alert_tel'

@@ -100,7 +100,7 @@ export default class router_Page extends PureComponent {
 		this.loadComponent(Props);
 	};
 	loadComponent = async (props) => {
-		const token = Cookie.get('fin-v-card-token');
+		const token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		let tokenFromStorage = '';
 		tokenFromStorage = store.getToken();
 		if (!tokenFromStorage && !pagesIgnore(window.location.pathname) && !token) {

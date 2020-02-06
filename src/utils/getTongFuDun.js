@@ -1,12 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-12 09:38:32
+ * @LastEditTime : 2020-02-05 17:10:03
  */
 import { guid } from 'utils';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-
-const TONFUDUN_BAOBEI = '/signup/getUsrRqpInf';
+import { signup_device } from 'fetch/api';
 const { PROJECT_ENV } = process.env;
 let elementId, sessionId;
 let timer = null;
@@ -40,8 +39,8 @@ function requestBackReport() {
 		return;
 	}
 	fetch
-		.get(`${TONFUDUN_BAOBEI}/${sessionId}`, null, {
-			hideLoading: true
+		.get(`${signup_device}/${sessionId}`, null, {
+			hideToast: true
 		})
 		.then(() => {
 			clearInterval(timer);

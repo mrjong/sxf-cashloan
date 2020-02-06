@@ -99,8 +99,8 @@ export default class funsisong_page extends PureComponent {
 
 	joinNow = () => {
 		buriedPointEvent(activity.freeBillBtnClick);
-		if (Cookie.get('fin-v-card-token')) {
-			store.setToken(Cookie.get('fin-v-card-token'));
+		if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
+			store.setToken(Cookie.get('FIN-HD-AUTH-TOKEN'));
 			this.goHomePage();
 		} else {
 			this.props.history.replace('/common/wx_middle_page?NoLoginUrl="/login"');

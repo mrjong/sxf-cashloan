@@ -31,7 +31,7 @@ export default class order_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		// 获取token
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		tokenFromStorage = store.getToken();
 		const dataSource = new ListView.DataSource({
 			rowHasChanged: (row1, row2) => row1 !== row2

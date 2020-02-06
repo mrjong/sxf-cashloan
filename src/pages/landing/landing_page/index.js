@@ -51,9 +51,9 @@ export default class landing_page extends PureComponent {
 		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (isAppOpen) {
 			if (queryData.activityToken) {
-				Cookie.set('fin-v-card-token', queryData.activityToken, { expires: 365 });
+				Cookie.set('FIN-HD-AUTH-TOKEN', queryData.activityToken, { expires: 365 });
 			} else {
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 			}
 		}
 	}
@@ -237,8 +237,8 @@ export default class landing_page extends PureComponent {
 		// 	  });
 		// 	}
 		// } else
-		if (Cookie.get('fin-v-card-token')) {
-			store.setToken(Cookie.get('fin-v-card-token'));
+		if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
+			store.setToken(Cookie.get('FIN-HD-AUTH-TOKEN'));
 			callback && callback();
 		} else {
 			if (isAppOpen) {

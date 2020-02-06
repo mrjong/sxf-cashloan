@@ -13,7 +13,12 @@ export default {
 	activity: {},
 
 	// 装饰性的图片
-	adorn: {},
+	adorn: {
+		id_card_front: require('./adorn/id_card_front.png'),
+		id_card_front_success: require('./adorn/id_card_front_success.png'),
+		id_card_after: require('./adorn/id_card_after.png'),
+		id_card_after_success: require('./adorn/id_card_after_success.png')
+	},
 
 	// 银行图标 单独放这
 	bank: {},
@@ -23,6 +28,7 @@ export default {
 
 	// 背景
 	bg: {
+		id_card_tip: require('./bg/id_card_tip.png'),
 		navBarBg: require('./bg/navBarBg.png')
 	},
 

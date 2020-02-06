@@ -27,7 +27,7 @@ export default class wx_middle_page extends Component {
 	}
 	componentWillMount() {
 		// 移除cookie中的token
-		Cookie.remove('fin-v-card-token');
+		Cookie.remove('FIN-HD-AUTH-TOKEN');
 		// 从url截取数据
 		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const osType = getDeviceType();
@@ -48,7 +48,7 @@ export default class wx_middle_page extends Component {
 					} else if (res.msgCode == 'WX0100') {
 						// 已授权不需要登陆
 						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
@@ -92,7 +92,7 @@ export default class wx_middle_page extends Component {
 						this.jumpRouter(NoLoginUrl);
 					} else if (res.msgCode == 'WX0100') {
 						//已授权已登录
-						Cookie.set('fin-v-card-token', res.loginToken, { expires: 365 });
+						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke

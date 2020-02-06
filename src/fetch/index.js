@@ -58,16 +58,16 @@ const fetchInit = () => {
 			if (!isWXOpen()) {
 				Cookie.remove('fin-v-card-token-wechat');
 			}
-			// const TOKEN = Cookie.get('fin-v-card-token');
+			// const TOKEN = Cookie.get('FIN-HD-AUTH-TOKEN');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStorage = '';
 			tokenFromStorage = store.getToken();
 			if (tokenFromStorage && !location.pathname.indexOf('activity') > -1) {
-				cfg.headers['fin-v-card-token'] = tokenFromStorage;
+				cfg.headers['FIN-HD-AUTH-TOKEN'] = tokenFromStorage;
 			} else if (location.pathname.indexOf('activity') > -1) {
-				cfg.headers['fin-v-card-token'] = Cookie.get('fin-v-card-token');
+				cfg.headers['FIN-HD-AUTH-TOKEN'] = Cookie.get('FIN-HD-AUTH-TOKEN');
 			} else {
-				cfg.headers['fin-v-card-token'] = '';
+				cfg.headers['FIN-HD-AUTH-TOKEN'] = '';
 			}
 			// 设置 图片验证码 noLoginToken
 			let noLoginToken = store.getNoLoginToken();

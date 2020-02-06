@@ -165,11 +165,11 @@ export default class dazhuanpan_page extends PureComponent {
 					}
 				} else {
 					if (res.msgCode === 'PTM1000') {
-						Cookie.remove('fin-v-card-token');
+						Cookie.remove('FIN-HD-AUTH-TOKEN');
 						this.onloadZhuan();
 					} else if (res.msgCode === 'PTM0100') {
 						this.onloadZhuan();
-						Cookie.remove('fin-v-card-token');
+						Cookie.remove('FIN-HD-AUTH-TOKEN');
 					} else {
 						Toast.info(res.msgInfo);
 					}
@@ -178,7 +178,7 @@ export default class dazhuanpan_page extends PureComponent {
 	};
 	isAuthFunc = (callBack, type) => {
 		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-		let token = Cookie.get('fin-v-card-token');
+		let token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		if (
 			(token && query.entry && query.entry.indexOf('ismpos') > -1 && store.getMposToken()) ||
 			(token && query.entry && query.entry.indexOf('isxdc') > -1)
@@ -200,7 +200,7 @@ export default class dazhuanpan_page extends PureComponent {
 				this.setState({
 					callBackType: type
 				});
-				Cookie.remove('fin-v-card-token');
+				Cookie.remove('FIN-HD-AUTH-TOKEN');
 				this.child.validateMposRelSts(true);
 			} else {
 				// 新代偿

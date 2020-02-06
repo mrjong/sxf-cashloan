@@ -411,7 +411,7 @@ export default class loan_fenqi_page extends PureComponent {
 				}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${
 					item.productId
 				}&agreementNo=${resaveBankCardAgrNo}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get(
-					'fin-v-card-token'
+					'FIN-HD-AUTH-TOKEN'
 				) || store.getToken()}`,
 				name: item.contractMdlName
 			}

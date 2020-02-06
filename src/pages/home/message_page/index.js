@@ -412,7 +412,8 @@ export default class message_page extends PureComponent {
 			<div className={style.message_page} ref={(el) => (this.messageBox = el)}>
 				{this.state.msgReadAllState ? (
 					<div onClick={this.msgReadAll} className={style.allRead}>
-						<i className={style.allReadIcon}></i>一键读取
+						<i className={style.allReadIcon} />
+						一键读取
 					</div>
 				) : null}
 				{this.state.tabState ? (

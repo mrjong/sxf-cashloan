@@ -192,7 +192,7 @@ export const logoutApp = () => {
 			window.ReactRouterHistory.push('/login');
 			// sessionStorage.clear();
 			// localStorage.clear();
-			// Cookie.remove('fin-v-card-token');
+			// Cookie.remove('FIN-HD-AUTH-TOKEN');
 			Cookie.remove('authFlag');
 			Cookie.remove('VIPFlag');
 			//退出时,删除通付盾script
@@ -825,7 +825,7 @@ export const recordContract = (params) => {
 export const queryUsrSCOpenId = ({ $props }) => {
 	return new Promise((resolve) => {
 		// 获取token
-		let token = Cookie.get('fin-v-card-token');
+		let token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		let tokenFromStorage = store.getToken();
 		if (token && tokenFromStorage) {
 			if (!store.getQueryUsrSCOpenId()) {

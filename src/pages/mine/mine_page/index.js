@@ -34,7 +34,7 @@ export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		// 获取token
-		token = Cookie.get('fin-v-card-token');
+		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		tokenFromStorage = store.getToken();
 		this.state = {
 			realNmFlg: false, // 用户是否实名
