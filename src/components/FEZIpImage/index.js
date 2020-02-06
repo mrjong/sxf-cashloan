@@ -60,7 +60,7 @@ export default class FEZIpImage extends Component {
 					const size = rst.fileLen;
 					const fileName = file.name;
 
-					onChange({ base64Data, size, fileName });
+					onChange({ base64Data, size, fileName, file });
 					fileSelectorEl.value = '';
 					afterCompress();
 				})

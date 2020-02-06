@@ -1186,7 +1186,7 @@ export default class home_page extends PureComponent {
 	}
 
 	getDisPlayData() {
-		// console.log(this.props.userInfo, 'userInfo');
+		console.log(this.props.userInfo, 'userInfo');
 		let basicCardData = {
 			cardType: 'basic',
 			cardLabel: '基础版',
@@ -1215,7 +1215,7 @@ export default class home_page extends PureComponent {
 			return [basicCardData, plusCardData];
 		}
 
-		const homeData = this.state.usrCashIndexInfo;
+		const { homeData } = this.state;
 		const { dcDataInfo = {} } = homeData;
 		const { cardRepayDt, bankName, cardNoHid } = dcDataInfo || {};
 
@@ -1973,26 +1973,32 @@ export default class home_page extends PureComponent {
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
 		}
-		componentsDisplay = this.getDCDisPlay() || this.getFQDisPlay() || (
-			<CarouselHome
-				showData={{
-					demoTip: true
-				}}
-				handleClick={this.handleNeedLogin}
-			/>
-		);
+		componentsDisplay = this.getDCDisPlay() ||
+			this.getFQDisPlay() || (
+				<CarouselHome
+					showData={{
+						demoTip: true
+					}}
+					handleClick={this.handleNeedLogin}
+				/>
+			);
 		return (
 			<div className={style.home_new_page}>
-				<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
-				<ActivityEntry $fetch={this.props.$fetch} history={this.props.history} />
-				<SwitchCard data={this.getDisPlayData()} />
-				{bannerList.length > 0 && (
-					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
-				)}
-				{welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null}
-				{componentsBlackCard}
-				{componentsDisplay}
-				{this.componentsAddCards()}
+				<div className={style.content_top}>
+					<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
+					<ActivityEntry $fetch={this.props.$fetch} history={this.props.history} />
+				</div>
+				<div className={style.content_main}>
+					<SwitchCard data={this.getDisPlayData()} />
+					{bannerList.length > 0 && (
+						<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
+					)}
+					{welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null}
+					{componentsBlackCard}
+					{componentsDisplay}
+					{this.componentsAddCards()}
+				</div>
+
 				{/* <Demo globalTask={this.props.globalTask}/> */}
 				<HomeModal
 					showAgreement={showAgreement}

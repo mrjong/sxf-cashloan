@@ -31,6 +31,8 @@ import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
 import Images from 'assets/image';
 
+import { auth_ocrIdChk } from 'fetch/api.js';
+
 const updateLeftPlaceHolder = Images.adorn.id_card_front;
 const updateLeftSuccessPlaceHolder = Images.adorn.id_card_front_success;
 const updateRightPlaceHolder = Images.adorn.id_card_after;
@@ -107,7 +109,7 @@ export default class real_name_page extends Component {
 	};
 
 	// 上传身份证正面
-	handleChangePositive = ({ base64Data }) => {
+	handleChangePositive = ({ base64Data, file }) => {
 		if (!base64Data) {
 			this.props.SXFToast.hide();
 			this.setState({
@@ -125,21 +127,40 @@ export default class real_name_page extends Component {
 			imageBase64: this.state.leftValue, //身份证正面图片信息
 			ocrType: '2'
 		};
+
+		let bytes = window.atob(base64Data.split(',')[1]);
+		let array = [];
+		for (let i = 0; i < bytes.length; i++) {
+			array.push(bytes.charCodeAt(i));
+		}
+		let blob = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
+		const formData = new FormData();
+
+		formData.append('image', blob);
+
+		// formData.append('image', {
+		// 	type: 'image/jpeg',
+		// 	uri: file,
+		// 	name: 'imgFront.jpg'
+		// });
+
+		formData.append('ocrType', '2');
+
 		this.props.$fetch
-			.post(`${API.getImgUrl}`, params, { timeout: 30000 })
+			.post(`${auth_ocrIdChk}/2`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((result) => {
 				this.props.SXFToast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '000000') {
 					this.setState({ ocrZhengData: result.data });
 					this.setState({ idName: result.data.idName || '' });
 					this.setState({ idNo: result.data.idNo || '' });
 					this.setState({ showFloat: false });
 					this.setState({ leftUploaded: true });
 				} else {
-					this.props.toast.info(result.msgInfo);
+					this.props.toast.info(result.message);
 					this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
 				}
 			})
@@ -152,7 +173,7 @@ export default class real_name_page extends Component {
 			});
 	};
 	// 上传身份证反面
-	handleChangeSide = ({ base64Data }) => {
+	handleChangeSide = ({ base64Data, file }) => {
 		if (!base64Data) {
 			this.props.SXFToast.hide();
 			this.setState({
@@ -170,19 +191,37 @@ export default class real_name_page extends Component {
 			imageBase64: this.state.rightValue, //身份证反面图片信息
 			ocrType: '3'
 		};
+		let bytes = window.atob(base64Data.split(',')[1]);
+		let array = [];
+		for (let i = 0; i < bytes.length; i++) {
+			array.push(bytes.charCodeAt(i));
+		}
+		let blob = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
+		const formData = new FormData();
+
+		formData.append('image', blob);
+
+		// formData.append('image', {
+		// 	type: 'image/jpeg',
+		// 	uri: file,
+		// 	name: 'imgFront.jpg'
+		// });
+
+		formData.append('ocrType', '2');
+
 		this.props.$fetch
-			.post(`${API.getImgUrl}`, params1, { timeout: 30000 })
+			.post(`${auth_ocrIdChk}/3`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((res) => {
 				this.props.SXFToast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({ ocrFanData: res.data });
 					this.setState({ rightUploaded: true });
 					this.setState({ showFloat: false });
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 					this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
 				}
 			})
@@ -234,7 +273,7 @@ export default class real_name_page extends Component {
 			usrBrowInfo: '' //授信浏览器信息
 		};
 		this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
-			if (result && result.msgCode === 'PTM0000') {
+			if (result && result.code === '000000') {
 				store.setBackFlag(true);
 				buriedPointEvent(mine.creditExtensionBack, {
 					current_step: '实名认证'
@@ -262,7 +301,7 @@ export default class real_name_page extends Component {
 					});
 					// this.props.history.goBack();
 				}
-			} else if (result.msgCode === 'URM5016' && !urlQuery.newTitle) {
+			} else if (result.code === 'URM5016' && !urlQuery.newTitle) {
 				this.nextFunc(() => {
 					if (store.getNeedNextUrl()) {
 						this.props.SXFToast.loading('数据加载中...', 0);
@@ -271,12 +310,12 @@ export default class real_name_page extends Component {
 						});
 					}
 				});
-			} else if (result.msgCode === 'URM5016' && urlQuery.newTitle) {
+			} else if (result.code === 'URM5016' && urlQuery.newTitle) {
 				store.setBackFlag(true);
 				this.nextFunc();
 			} else {
-				this.confirmBuryPoint(false, result.msgInfo);
-				this.props.toast.info(result.msgInfo);
+				this.confirmBuryPoint(false, result.message);
+				this.props.toast.info(result.message);
 			}
 		});
 	};
@@ -462,7 +501,7 @@ export default class real_name_page extends Component {
 									}}
 								>
 									<FEZipImage
-										disabledupload="false"
+										disabledupload={disabledupload}
 										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
 										value={this.state.leftValue ? updateLeftSuccessPlaceHolder : updateLeftPlaceHolder}
 										onChange={this.handleChangePositive}
@@ -479,7 +518,7 @@ export default class real_name_page extends Component {
 									}}
 								>
 									<FEZipImage
-										disabledupload="false"
+										disabledupload={disabledupload}
 										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
 										value={this.state.rightValue ? updateRightSuccessPlaceHolder : updateRightPlaceHolder}
 										onChange={this.handleChangeSide}
