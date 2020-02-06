@@ -1,11 +1,14 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 17:06:58
+ * @LastEditTime : 2020-02-06 11:45:12
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
+import { connect } from 'react-redux';
+import { Toast } from 'antd-mobile';
+
 import {
 	isWXOpen,
 	getDeviceType,
@@ -13,9 +16,24 @@ import {
 	isCanLoan,
 	getMoxieData,
 	dateDiffer,
-	queryUsrSCOpenId,
 	activeConfigSts
 } from 'utils';
+import {
+	index_queryIndexInfo,
+	index_queryBannerList,
+	index_queryWelfareList,
+	bank_card_check
+} from 'fetch/api';
+
+import { showRedDot } from 'reduxes/actions/specialActions';
+import { setAuthId } from 'reduxes/actions/staticActions';
+import {
+	setOverDueModalInfo,
+	setHomeData,
+	setBannerList,
+	setWelfareList
+} from 'reduxes/actions/commonActions';
+
 import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
@@ -25,7 +43,6 @@ import style from './index.scss';
 // import mockData from './mockData';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
-import FeedbackModal from 'components/FeedbackModal';
 import { setBackGround } from 'utils/background';
 import { TFDLogin } from 'utils/getTongFuDun';
 // console.log(aa)
@@ -80,11 +97,21 @@ let timerOut;
 
 //隔5秒调取接口相关变量
 let timerPercent; //计时器
-let timers = 0; //时间秒级
 
 @createForm()
 @fetch.inject()
 @setBackGround('#fff')
+@connect(
+	(state) => ({
+		userInfo: state.staticState.userInfo,
+		homeData: state.commonState.homeData,
+		bannerList: state.commonState.bannerList,
+		welfareList: state.commonState.welfareList,
+		overdueModalInfo: state.commonState.overdueModalInfo,
+		msgCount: state.specialState.msgCount
+	}),
+	{ showRedDot, setHomeData, setBannerList, setWelfareList, setOverDueModalInfo, setAuthId }
+)
 export default class home_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -131,38 +158,33 @@ export default class home_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		this.props.globalTask(null);
 		// 获取token
 		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		tokenFromStorage = store.getToken();
-		// 清除一些store
-		this.removeStore();
-		// 埋点绑定
-		queryUsrSCOpenId({ $props: this.props });
-		// 获取token 并设置
+		const { userInfo } = this.props;
+		// 已经登录
+		if (userInfo && userInfo.tokenId) {
+			// 获取首页信息
+			this.index_queryIndexInfo();
+			// 获取福利专区/新手活动信息
+			this.index_queryWelfareList();
+			// 上报我已阅读(针对首次未登录用户上报)
+			// this.readPrivacyProtocol();
+			// 活动弹窗列表
+			// this.msg_popup_list();
+		} else {
+			// this.initData();
+		}
+		// 获取banner
+		this.index_queryBannerList();
+		// 第三方直接打通方式
 		this.getTokenFromUrl();
-		// 判断是否是微信打通（微信登陆）
-		this.cacheBanner();
-		this.isRenderCash();
-		this.showFeedbackModal();
-		this.couponRedDot(); // 优惠券使用红点
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
-		// 从进度页面返回不删除AutId
-		if (!store.getAutId2()) {
-			store.removeAutId();
-		}
-
-		if (token && tokenFromStorage) {
-			this.queryOverdueModal();
-			this.queryRepayReward();
-		}
-
-		// 隔5秒调取相关变量
-		timers = 0;
-		timerPercent = null;
+		// 清除一些store
+		this.removeStore();
 	}
 	componentWillUnmount() {
 		// 离开首页的时候 将 是否打开过底部弹框标志恢复
@@ -181,6 +203,134 @@ export default class home_page extends PureComponent {
 			isShowWelfareModal: false
 		});
 	}
+
+	/**
+	 * @description: 获取首页信息
+	 * @param {type}
+	 * @return:
+	 */
+	index_queryIndexInfo = () => {
+		Toast.loading('', 10);
+		this.props.$fetch
+			.get(index_queryIndexInfo)
+			.then((result) => {
+				if (result && result.code === '000000' && result.data) {
+					// 前端缓存authid
+					if (result.data && result.data.dcDataInfo && result.data.dcDataInfo.autId) {
+						// 更换authid
+						this.props.setAuthId(result.data.dcDataInfo.autId);
+					} else {
+						this.props.setAuthId('');
+					}
+					this.setState(
+						{
+							homeData: result.data
+						},
+						() => {
+							this.props.setHomeData(result.data);
+						}
+					);
+				} else {
+					this.setState(
+						{
+							homeData: {}
+						},
+						() => {
+							this.props.setHomeData({});
+						}
+					);
+				}
+			})
+			.catch(() => {
+				this.props.setHomeData({});
+			})
+			.finally(() => {
+				Toast.hide();
+			});
+	};
+
+	/**
+	 * @description: 获取福利专区/新手活动信息
+	 * @param {type}
+	 * @return:
+	 */
+	index_queryWelfareList = () => {
+		this.props.$fetch
+			.get(index_queryWelfareList, null, { hideToast: true })
+			.then((result) => {
+				if (result && result.code === '000000' && result.data) {
+					this.setState(
+						{
+							welfareList: result.data.welfares,
+							activities: result.data.activities
+						},
+						() => {
+							this.props.setWelfareList({
+								welfares: result.data && result.data.welfares,
+								activities: result.data && result.data.activities
+							});
+						}
+					);
+				} else {
+					this.setState(
+						{
+							welfareList: [],
+							activities: []
+						},
+						() => {
+							this.props.setWelfareList({});
+						}
+					);
+				}
+			})
+			.catch(() => {
+				this.props.setWelfareList([]);
+			});
+	};
+	/**
+	 * @description: 获取 banner 列表
+	 * @param {type}
+	 * @return:
+	 */
+	index_queryBannerList = () => {
+		const params = {
+			type: '1',
+			cilent: 'h5'
+		};
+		this.props.$fetch
+			.post(index_queryBannerList, params, { hideToast: true })
+			.then((result) => {
+				if (result && result.code === '000000' && result.data) {
+					const bannerData = result.data.list.map((item) => ({
+						src: {
+							uri: item.ossUrl
+						},
+						url: item.gotoFlag !== 0 ? item.gotoUrl : '',
+						title: item.title
+					}));
+					this.setState(
+						{
+							bannerList: bannerData
+						},
+						() => {
+							this.props.setBannerList(bannerData);
+						}
+					);
+				} else {
+					this.setState(
+						{
+							bannerList: []
+						},
+						() => {
+							this.props.setBannerList([]);
+						}
+					);
+				}
+			})
+			.catch(() => {
+				this.props.setBannerList([]);
+			});
+	};
 	// 移除store
 	removeStore = () => {
 		// 清除卡信息
@@ -224,13 +374,6 @@ export default class home_page extends PureComponent {
 		store.removeSaveEmptyContactList();
 		store.removeExcContactList();
 	};
-	couponRedDot = () => {
-		this.props.$fetch.get(API.couponRedDot).then((result) => {
-			if (result && result.data) {
-				this.props.globalTask(result.data);
-			}
-		});
-	};
 	// 是否渲染现金分期模块
 	isRenderCash = () => {
 		this.props.$fetch
@@ -263,28 +406,6 @@ export default class home_page extends PureComponent {
 					this.queryUsrIndexInfo();
 				}
 			});
-	};
-	// 首页现金分期基本信息查询接口
-	indexshowType = () => {
-		this.props.$fetch.post(API.indexshowType).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					blackData: result.data
-				});
-				// 是否展示还款券测试弹框
-				// this.showCouponTestModal();
-
-				if (result.data.cashAcBalSts === '1' || result.data.cashAcBalSts === '3') {
-					// 分期流程
-					this.queryUsrCashIndexInfo(result.data.cashAcBalSts);
-				} else {
-					// 代偿流程
-					this.queryUsrIndexInfo();
-				}
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
 	};
 	// 是否展示还款券测试弹框
 	showCouponTestModal = () => {
@@ -326,186 +447,48 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 现金分期首页接口
-	queryUsrCashIndexInfo = (code) => {
-		this.props.$fetch.post(API.usrCashIndexInfo).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState(
-					{
-						usrCashIndexInfo: result.data
-					},
-					() => {
-						if (code === '1' && !store.getFQActivity() && this.state.usrCashIndexInfo.indexSts === 'CN0003') {
-							store.setFQActivity(true);
-							this.setState({
-								modalType: 'xianjin',
-								isShowActivityModal: true
-							});
-						}
-					}
-				);
+
+	/**
+	 * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
+	 * @param {type}
+	 * @return:
+	 */
+	bank_card_check = () => {
+		const { homeData } = this.state;
+		this.props.$fetch.get(`${bank_card_check}/${homeData.dcDataInfo.autId}`).then((result) => {
+			if (result && result.code === '000000') {
+				// 有风控且绑信用卡储蓄卡
+				Toast.hide();
+				this.props.navigation.navigate('ConfirmAgency');
+			} else if (result && result.code === '999974') {
+				// 有风控没绑储蓄卡 跳绑储蓄卡页面
+				Toast.show({ message: result.message, code: result.code });
+				setTimeout(() => {
+					this.props.navigation.navigate('Deposit');
+				}, 3000);
+			} else if (result && result.code === '000012') {
+				// 有风控没绑信用卡 跳绑信用卡页面
+				Toast.show({ message: result.message, code: result.code });
+				setTimeout(() => {
+					this.props.navigation.navigate('Credit');
+				}, 3000);
 			} else {
-				this.props.toast.info(result.msgInfo);
+				Toast.show({ message: result.message, code: result.code });
 			}
 		});
 	};
 
-	queryOverdueModal = () => {
-		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-				this.setState({
-					showAgreement: res.data.agreementPopupFlag === '1',
-					overDueModalFlag: res.data.overduePopupFlag === '1',
-					decreaseCoupExpiryDate: res.data.decreaseCoupExpiryDate
-				});
-				const currProgress =
-					res.data &&
-					res.data.processInfo &&
-					res.data.processInfo.length > 0 &&
-					res.data.processInfo.filter((item) => {
-						return item.hasProgress;
-					});
-				this.setState({
-					overDueInf: currProgress && currProgress.length > 0 && currProgress[currProgress.length - 1]
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
-
-	// 从 url 中获取参数，如果有 token 就设置下
+	/**
+	 * @description: 从 url 中获取参数，如果有 token 就设置下
+	 * @param {type}
+	 * @return:
+	 */
 	getTokenFromUrl = () => {
 		const urlParams = qs.parse(location.search, { ignoreQueryPrefix: true });
 		if (urlParams.token) {
 			Cookie.set('FIN-HD-AUTH-TOKEN', urlParams.token, { expires: 365 });
 			store.setToken(urlParams.token);
 		}
-	};
-
-	// 首页进度
-	getPercent = async () => {
-		let data = await getNextStr({ $props: this.props, needReturn: true });
-		this.calculatePercent(data);
-	};
-
-	// 进度计算
-	calculatePercent = (data, isshow) => {
-		const { usrIndexInfo } = this.state;
-		let codes = [];
-		let demo = data.codes;
-		// console.log(demo, 'demo');
-		// let demo = '2224'
-		this.setState({
-			pageCode: demo
-		});
-		let codesCopy = demo.slice(1, 4);
-		codes = codesCopy.split('');
-		// case '0': // 未认证
-		// case '1': // 认证中
-		// case '2': // 认证成功
-		// case '3': // 认证失败
-		// case '4': // 认证过期
-		let newCodes = codes.filter((ele) => {
-			return ele === '0';
-		});
-		let newCodes2 = codes.filter((ele) => {
-			return ele === '1' || ele === '2';
-		});
-		let newCodes3 = codes.filter((ele) => {
-			return ele === '4';
-		});
-		if (codes[codes.length - 1] === '4') {
-			this.setState({
-				CardOverDate: true
-			});
-		}
-		// console.log(newCodes, newCodes2, newCodes3);
-		// 还差 2 步 ：三项认证项，完成任何一项认证项且未失效
-		// 还差 1 步 ：三项认证项，完成任何两项认证项且未失效
-		// 还差 0 步 ：三项认证项，完成任何三项认证项且未失效（不显示）
-		if (newCodes.length === 3) {
-			this.setState({
-				percentSatus: '3',
-				showDiv: '50000',
-				percentBtnText: demo[0] === '0' || demo[0] === '4' ? '' : data.btnText
-			});
-			return;
-		}
-		if (
-			codes.length !== 0 &&
-			newCodes2.length === 0 &&
-			(newCodes3.length === 3 || newCodes3.length === 2 || newCodes3.length === 1)
-		) {
-			//认证过期
-			this.setState({
-				showDiv: 'circle',
-				percentSatus: '3',
-				percentData: 60,
-				percentBtnText: data.btnText
-			});
-			return;
-		}
-		switch (newCodes2.length) {
-			case 0: // 新用户，信用卡未授权
-				this.setState({
-					percentSatus: '3',
-					showDiv: '50000',
-					percentBtnText: data.btnText
-				});
-				break;
-
-			case 1: // 新用户，运营商未授权/基本信息未认证
-				this.setState({
-					percentSatus: '2',
-					percentData: 80,
-					showDiv: 'circle',
-					percentBtnText: data.btnText
-				});
-				break;
-
-			case 2: // 新用户，信用卡未授权
-				this.setState({
-					percentData: 98,
-					percentSatus: isshow ? '1' : '',
-					showDiv: data.btnText === '继续导入信用卡账单' ? 'creditCard' : 'circle', // 针对信用卡提出单独的样式
-					percentBtnText: data.btnText
-				});
-				break;
-			case 3: // 显示信用卡爬取进度
-				// 获取爬取卡的进度
-				if (store.getAutId()) {
-					this.goProgress();
-				} else if (usrIndexInfo && usrIndexInfo.indexSts && usrIndexInfo.indexSts === 'LN0003') {
-					this.setState({
-						showDiv: 'applyCredict'
-					});
-				} else {
-					this.setState({
-						showDiv: '',
-						percentData: '',
-						percentSatus: ''
-					});
-				}
-				break;
-			default:
-		}
-	};
-
-	showFeedbackModal = () => {
-		if (store.getGotoMoxieFlag()) {
-			this.setState({
-				showFeedbackModal: true
-			});
-		}
-	};
-
-	closeFeedbackModal = () => {
-		this.setState({
-			showFeedbackModal: false
-		});
-		store.removeGotoMoxieFlag();
 	};
 
 	// 请求信用卡数量
@@ -1754,42 +1737,6 @@ export default class home_page extends PureComponent {
 		}
 	};
 
-	// 每隔5秒调取接口
-	goProgress() {
-		timerPercent = setInterval(() => {
-			timers = timers + 5;
-			if (timers > 29) {
-				clearInterval(timerPercent);
-				return;
-			}
-			this.queryUsrInfo();
-		}, 5000);
-	}
-
-	//查询用户相关信息
-	queryUsrInfo = () => {
-		const autId = store.getAutId() ? store.getAutId() : '';
-		this.props.$fetch
-			.get(API.CHECK_CARD_AUTH + autId)
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					if (res.data === '02' || res.data === '03') {
-						clearInterval(timerPercent);
-					}
-					this.setState({
-						cardStatus: res.data && res.data.autSts,
-						bizId: res.data && res.data.bizId,
-						showDiv: 'progress'
-					});
-				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
-				}
-			})
-			.catch((err) => {
-				err.msgInfo && this.props.toast.info(err.msgInfo);
-			});
-	};
-
 	componentsAddCards = () => {
 		const { usrIndexInfo } = this.state;
 		let componentsAddCards = null;
@@ -2001,39 +1948,11 @@ export default class home_page extends PureComponent {
 			}
 		);
 	};
-	queryRepayReward = () => {
-		this.props.$fetch
-			.get(API.queryRepayReward, {
-				entrance: 0
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.setState(
-						{
-							modalType: res.data === 15 ? 'reward_result' : 'reward_tip',
-							rewardDate: res.data,
-							isShowActivityModal: true,
-							modalBtnFlag: res.data === 15
-						},
-						() => {
-							if (this.state.modalType === 'reward_result') {
-								buriedPointEvent(activity.rewardResultModalShow, {
-									positon: 'homeModal'
-								});
-							} else if (this.state.modalType === 'reward_tip') {
-								buriedPointEvent(activity.rewardTipModalShow, {
-									positon: 'homeModal'
-								});
-							}
-						}
-					);
-				}
-			});
-	};
 
 	render() {
 		const {
 			bannerList,
+			welfareList,
 			percent,
 			showAgreement,
 			isShowActivityModal,
@@ -2044,11 +1963,11 @@ export default class home_page extends PureComponent {
 			modalType,
 			modalBtnFlag,
 			blackData,
-			showFeedbackModal,
 			isShowWelfareModal,
 			welfareModalInf,
 			rewardDate
 		} = this.state;
+		const { userInfo = {}, msgCount = 0 } = this.props;
 		let componentsDisplay = null;
 		let componentsBlackCard = null;
 		if (JSON.stringify(blackData) !== '{}') {
@@ -2064,22 +1983,16 @@ export default class home_page extends PureComponent {
 		);
 		return (
 			<div className={style.home_new_page}>
-				<MsgTip $fetch={this.props.$fetch} history={this.props.history} />
+				<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
 				<ActivityEntry $fetch={this.props.$fetch} history={this.props.history} />
 				<SwitchCard data={this.getDisPlayData()} />
 				{bannerList.length > 0 && (
 					<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 				)}
-				<Welfare />
+				{welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null}
 				{componentsBlackCard}
 				{componentsDisplay}
 				{this.componentsAddCards()}
-				<FeedbackModal
-					history={this.props.history}
-					toast={this.props.toast}
-					visible={showFeedbackModal}
-					closeModal={this.closeFeedbackModal}
-				/>
 				{/* <Demo globalTask={this.props.globalTask}/> */}
 				<HomeModal
 					showAgreement={showAgreement}
