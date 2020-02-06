@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-06 11:44:02
+ */
 import React from 'react';
 import style from './index.scss';
 import { store } from 'utils/store';
@@ -14,39 +18,21 @@ export default class MsgTip extends React.PureComponent {
 			count: ''
 		};
 	}
-	componentWillMount() {
-		token = Cookie.get('FIN-HD-AUTH-TOKEN');
-		tokenFromStorage = store.getToken();
-		if (token && tokenFromStorage) {
-			this.requestMsgCount();
-		}
-	}
+
 	// 去消息页面
 	jumpToMsg = () => {
 		this.props.history.push('/home/message_page');
 	};
-	// 获取 未读消息条数 列表
-	requestMsgCount = () => {
-		this.props.$fetch.post(API.MSG_COUNT, null, { hideLoading: true }).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					count: result.data.count
-				});
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
-	};
 	render() {
-		const { count } = this.state;
+		const { tokenObj, msgCount } = this.props;
 		return (
 			<section className={style.home_header_wrap}>
 				<div className={style.home_header_main}>
 					<span className={style.home_header_title}>想还·就还到</span>
 					<div>
-						{token && tokenFromStorage && (
+						{tokenObj && (
 							<span onClick={this.jumpToMsg} className={style.messageIcon}>
-								{count ? <i className={style.active} /> : null}
+								{msgCount ? <i className={style.active} /> : null}
 							</span>
 						)}
 					</div>

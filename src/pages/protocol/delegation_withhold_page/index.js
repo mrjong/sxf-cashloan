@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { store } from 'utils/store';
 import dayjs from 'dayjs';
 import IframeProtocol from 'components/IframeProtocol';
 
@@ -11,16 +10,17 @@ export default class delegation_withhold_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		const contractData = store.getProtocolFinancialData();
+		let contractData = {};
+		if (this.props.history.location.state && this.props.history.location.state.contractInf) {
+			contractData = this.props.history.location.state.contractInf;
+		}
 		const formateContractData = {
 			...contractData,
 			dateTime: contractData && dayjs(contractData.dateTime).format('YYYY年MM月DD日')
 		};
 		this.setState({ contractInf: formateContractData });
 	}
-	componentWillUnmount() {
-		store.removeProtocolFinancialData();
-	}
+	componentWillUnmount() {}
 	render() {
 		return <IframeProtocol name="delegation_withhold_page" postData={this.state.contractInf} />;
 	}

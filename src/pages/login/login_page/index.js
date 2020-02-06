@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 16:51:54
+ * @LastEditTime : 2020-02-06 14:53:09
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -214,8 +214,8 @@ export default class login_page extends PureComponent {
 				buriedPointEvent(login.submit);
 				let param = {
 					tokenId: this.state.submitData.relyToken, // 短信流水号
-					osType: 'ios', // 操作系统
-					loginType: '1',
+					osType: osType.toLowerCase(), // 操作系统
+					loginType: '0',
 					smsCode: values.smsCd,
 					imei: '',
 					mac: '',
@@ -394,6 +394,7 @@ export default class login_page extends PureComponent {
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
+			Toast.loading('', 10);
 			this.props.$fetch.get(`${msg_slide}/${base64Encode(this.state.mobilePhone)}`).then((result) => {
 				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({

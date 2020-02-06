@@ -47,7 +47,7 @@ export default class wx_middle_page extends Component {
 						this.jumpRouter(NoLoginUrl);
 					} else if (res.msgCode == 'WX0100') {
 						// 已授权不需要登陆
-						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 }); // 微信授权token
+						Cookie.set('FIN-HD-WECHAT-TOKEN', res.token, { expires: 365 }); // 微信授权token
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.loginToken);
@@ -84,7 +84,7 @@ export default class wx_middle_page extends Component {
 					}
 					if (res.msgCode == 'WX0101') {
 						//没有授权
-						Cookie.set('fin-v-card-token-wechat', res.token, { expires: 365 });
+						Cookie.set('FIN-HD-WECHAT-TOKEN', res.token, { expires: 365 });
 						window.location.href = decodeURIComponent(res.url);
 					} else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
 						//已授权未登录 (静默授权为7天，7天后过期）

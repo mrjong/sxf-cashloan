@@ -11,6 +11,8 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter } from 'utils/analytinsType';
 
+import { question_opinionList } from 'fetch/api.js';
+
 const API = {
 	opinionList: '/question/opinionList' // 意见类型列表接口
 };
@@ -31,10 +33,10 @@ export default class mine_page extends PureComponent {
 
 	getOpinionList = () => {
 		this.props.$fetch
-			.post(API.opinionList)
+			.post(question_opinionList)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					const listsArr = res.data.map((item) => {
+				if (res.code === '000000') {
+					const listsArr = res.data.list.map((item) => {
 						return {
 							label: {
 								name: item.name
@@ -50,7 +52,7 @@ export default class mine_page extends PureComponent {
 					this.setState({
 						isnoData: true
 					});
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			})
 			.catch(() => {
@@ -67,6 +69,7 @@ export default class mine_page extends PureComponent {
 	};
 	render() {
 		const { listsArr = [] } = this.state;
+		console.log(listsArr, 'listsArr');
 		return (
 			<div className={[styles.mine_page].join(' ')}>
 				{this.state.isnoData ? (
@@ -87,7 +90,7 @@ export default class mine_page extends PureComponent {
 							className={[styles.common_margin, styles.mine_list].join(' ')}
 						/>
 
-						<div className={styles.topLine}></div>
+						<div className={styles.topLine} />
 					</div>
 				)}
 			</div>

@@ -5,6 +5,9 @@ import { Modal, Icon } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import styles from './index.scss';
+import { bank_card_list, my_card_unbind } from 'fetch/api.js';
+import { connect } from 'react-redux';
+import { setWithholdCardDataAction, setWithdrawCardDataAction } from 'reduxes/actions/commonActions';
 
 const API = {
 	BANKLIST: '/my/card/list', // 银行卡列表
@@ -15,6 +18,15 @@ const API = {
 let backUrlData = ''; // 从除了我的里面其他页面进去
 
 @fetch.inject()
+@connect(
+	(state) => ({
+		cardType: state.commonState.cardType
+	}),
+	{
+		setWithholdCardDataAction,
+		setWithdrawCardDataAction
+	}
+)
 export default class select_save_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -60,85 +72,32 @@ export default class select_save_page extends PureComponent {
 			store.removeBackUrl(); // 清除session里的backurl的值
 		}
 	}
-	// 获取会员卡的银行列表
-	queryVipBankList = () => {
-		this.props.$fetch
-			.post(API.VIPBANKLIST, {
-				type: '5',
-				corpBusTyp: '31'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						this.setState({
-							cardList: res.data ? res.data : []
-						});
-						this.getSelectedData();
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
-				}
-			);
-	};
-	// 获取选中的银行卡数据
-	getSelectedData = () => {
-		// 进入组件时默认存入选中的一项
-		if (backUrlData) {
-			let cardData = [];
-			if (this.state.cardList.length) {
-				cardData = this.state.cardList.filter((item) => item.agrNoList.includes(this.state.agrNo));
-			}
-			let cardDatas = {};
-			// 如果是首页则多存一个参数为showModal的字段，以便首页弹框
-			if (backUrlData === '/home/home') {
-				cardDatas = { showModal: true, ...cardData[0] };
-			} else {
-				cardDatas = cardData[0];
-			}
-			if (cardDatas) {
-				store.setCardData(cardDatas);
-			}
-		}
-	};
 	// 获取储蓄卡银行卡列表
 	queryBankList = () => {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		// 1为有保费，需要筛选出绑定通联支付的卡 0为不需要，按原有逻辑处理
-		const params =
-			queryData.insuranceFlag === '1'
-				? {
-						// agrNo:query.agrNo,
-						type: '2', //所有储蓄卡列表
-						corpBusTyp: '',
-						supportType: 'ZY' // 筛选出绑定通联支付的卡 JR随行付金融 XD随行付小贷 ZY中元保险
-				  }
-				: {
-						// agrNo:query.agrNo,
-						type: '2', //所有储蓄卡列表
-						corpBusTyp: ''
-				  };
-		this.props.$fetch.post(API.BANKLIST, params).then(
+		const params = {
+			// agrNo:query.agrNo,
+			queryType: '2', //所有储蓄卡列表
+			corpBusType: '01,41',
+			merType: '' // 筛选出绑定通联支付的卡 JR随行付金融 XD随行付小贷 ZY中元保险
+		};
+		this.props.$fetch.post(bank_card_list, params).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({
-						cardList: res.cardList ? res.cardList : []
+						cardList: res.data && res.data.bankCards ? res.data.bankCards : []
 					});
-					this.getSelectedData();
 				} else {
-					if (res.msgCode === 'PTM3021') {
-						this.setState({
-							cardList: []
-						});
-						return;
-					}
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					// if (res.code === 'PTM3021') {
+					// 	this.setState({
+					// 		cardList: []
+					// 	});
+					// 	return;
+					// }
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};
@@ -159,16 +118,16 @@ export default class select_save_page extends PureComponent {
 
 	// 解绑银行卡
 	unbindCard = (cardNo) => {
-		this.props.$fetch.get(`${API.UNBINDCARD}/${cardNo}`).then(
+		this.props.$fetch.get(`${my_card_unbind}/${cardNo}`).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.queryBankList();
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};
@@ -232,15 +191,17 @@ export default class select_save_page extends PureComponent {
 	};
 
 	render() {
+		const { cardType } = this.props;
+		const { cardList } = this.state;
 		return (
 			<div className={styles.select_save_page}>
-				{this.state.cardList.length ? (
+				{cardList.length ? (
 					<div>
 						<p className={styles.card_tit}>已绑定储蓄卡</p>
 						<ul className={styles.card_list}>
-							{this.state.cardList.map((item, index) => {
-								const isSelected = item.agrNoList.includes(this.state.agrNo);
-								if (backUrlData) {
+							{cardList.map((item, index) => {
+								const isSelected = item.coreAgrNos.includes(this.state.agrNo);
+								if (cardType) {
 									return (
 										<li
 											className={isSelected ? styles.active : ''}
@@ -248,7 +209,7 @@ export default class select_save_page extends PureComponent {
 											onClick={() =>
 												this.selectCard({
 													bankName: item.bankName,
-													lastCardNo: item.lastCardNo,
+													lastCardNo: item.cardNoLast,
 													bankCode: item.bankCode,
 													agrNo: item.agrNo
 												})
@@ -256,7 +217,7 @@ export default class select_save_page extends PureComponent {
 										>
 											<span className={`bank_ico bank_ico_${item.bankCode}`} />
 											<span className={styles.bank_name}>{item.bankName}</span>
-											<span>···· {item.lastCardNo}</span>
+											<span>···· {item.cardNoLast}</span>
 											{isSelected ? (
 												<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
 											) : null}
@@ -282,7 +243,7 @@ export default class select_save_page extends PureComponent {
                       </SwipeAction> */}
 										<span className={`bank_ico bank_ico_${item.bankCode}`} />
 										<span className={styles.bank_name}>{item.bankName}</span>
-										<span>···· {item.lastCardNo}</span>
+										<span>···· {item.cardNoLast}</span>
 									</li>
 								);
 							})}

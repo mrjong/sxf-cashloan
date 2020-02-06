@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:42:50
+ * @LastEditTime : 2020-02-06 16:17:11
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';

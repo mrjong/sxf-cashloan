@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:27:08
+ * @LastEditTime : 2020-02-05 17:54:48
  */
 /*
  * @Author: shawn
@@ -11,7 +11,7 @@ import staticReducer from './staticReducer';
 import commonReducer from './commonReducer';
 import specialReducer from './specialReducer';
 //创建导航状态数据商店redux
-let obj = { staticReducer, commonReducer, specialReducer },
+let obj = { staticState: staticReducer, commonState: commonReducer, specialState: specialReducer },
 	_store = null;
 
 let rootReducer = combineReducers(obj);
