@@ -1,14 +1,60 @@
 import { setNextStepStatus } from 'reduxes/actions/commonActions';
 import { store } from 'utils/store';
 import { Toast, Modal } from 'antd-mobile';
+import qs from 'qs';
 import { index_getNextStep, bank_card_check, auth_getTencentFaceData } from 'fetch/api';
 // import { getFaceDetect, goToStageLoan } from '@/utils/CommonUtil';
 import storeRedux from 'reduxes';
 import { handleClickConfirm } from './';
+import { goToStageLoan } from './commonFunc';
+
+/**
+ * @description: 信用卡前置
+ * @param {type}
+ * @return:
+ */
+export const getBindCardStatus = async ({ $props, applyCreditData }) => {
+	let storeData = storeRedux.getState();
+	const { staticState = {} } = storeData;
+	const { authId } = staticState;
+	return new Promise((resolve, reject) => {
+		$props.$fetch
+			.get(`${bank_card_check}/${authId}`)
+			.then((result) => {
+				// 跳转至储蓄卡
+				if (result && (result.code === '999974' || result.code === '000000')) {
+					handleClickConfirm($props, applyCreditData);
+				} else if (result && result.code === '000012') {
+					Toast.info(result.message);
+					setTimeout(() => {
+						$props.history.replace({
+							pathname: '/mine/bind_credit_page',
+							search: `?noBankInfo=true&autId=${authId}&action=handleClickConfirm`
+						});
+					}, 3000);
+
+					resolve('0');
+				} else {
+					Toast.hide();
+					$props.history.push({
+						pathname: '/home/home'
+					});
+				}
+			})
+			.catch(() => {
+				Toast.hide();
+				reject();
+			});
+	});
+};
+
 // 点击退出
 let state = false;
 const showTip = ({ $props, actionType, supTag, actionMsg = '审核' }) => {
 	let ele = null;
+	if (state) {
+		return;
+	}
 	state = true;
 	if (supTag === '1') {
 		ele = `身份证有效期不足30天或已过期!\n重新补充极速${actionMsg}!`;
@@ -146,7 +192,7 @@ export const getNextStatus = ({
 					param = {
 						billNo: nextData.billNo
 					};
-					routeName = 'OrderDesc';
+					routeName = '/order/order_detail_page';
 					break;
 				case 'LOAN':
 					storeRedux.dispatch(setNextStepStatus(false));
@@ -189,48 +235,15 @@ export const getNextStatus = ({
 			}
 			if (routeName) {
 				Toast.hide();
-				$props.history.push({
+				let objRouter = {
 					pathname: routeName
-				});
-				$props.navigation.navigate(routeName, param);
+				};
+				if (param) {
+					objRouter.search = '?' + qs.stringify(param);
+				}
+				$props.history.push(objRouter);
 			}
 		} else {
-			Toast.show({ message: nextStatusResponse.message, code: nextStatusResponse.code });
+			Toast.info(nextStatusResponse.message);
 		}
 	});
-
-/**
- * @description: 信用卡前置
- * @param {type}
- * @return:
- */
-export const getBindCardStatus = async ({ $props, applyCreditData }) => {
-	let storeData = storeRedux.getState();
-	const { staticState = {} } = storeData;
-	const { authId } = staticState;
-	return new Promise((resolve, reject) => {
-		$props.$fetch
-			.get(`${bank_card_check}/${authId}`)
-			.then((result) => {
-				// 跳转至储蓄卡
-				if (result && (result.code === '999974' || result.code === '000000')) {
-					handleClickConfirm($props, applyCreditData);
-				} else if (result && result.code === '000012') {
-					Toast.show({ message: result.message, code: result.code });
-					setTimeout(() => {
-						$props.navigation.replace('Credit', {
-							action: 'handleClickConfirm'
-						});
-					}, 3000);
-					resolve('0');
-				} else {
-					Toast.hide();
-					NavigationUtil.reset($props.navigation, 'Home');
-				}
-			})
-			.catch(() => {
-				Toast.hide();
-				reject();
-			});
-	});
-};

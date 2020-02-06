@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 17:24:40
+ * @LastEditTime : 2020-02-06 17:44:36
  */
 import { Toast } from 'antd-mobile';
 import { loan_queryCashLoanApplInfo } from 'fetch/api';
@@ -111,7 +111,7 @@ export const goToStageLoan = ({ $props }) => {
 				// 	// usageList: usageList.data,
 				// });
 			} else {
-				Toast.show({ message: res.message, code: res.code });
+				Toast.info(res.message);
 				setTimeout(() => {
 					$props.history.push('/home/home');
 				}, 2000);

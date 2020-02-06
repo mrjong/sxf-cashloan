@@ -26,10 +26,7 @@ const fetchInit = () => {
 					return;
 				// 重复请求
 				case '999992':
-					Toast.show({
-						code: response.data.code,
-						message: response.data.message
-					});
+					Toast.info(response.data.message);
 					return;
 				case '999997': // 未登录
 					Raven.captureException(response.config.url, {
