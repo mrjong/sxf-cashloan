@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 11:45:12
+ * @LastEditTime : 2020-02-06 11:49:47
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -100,7 +100,7 @@ let timerPercent; //计时器
 
 @createForm()
 @fetch.inject()
-@setBackGround('#fff')
+@setBackGround('#F0F3F9')
 @connect(
 	(state) => ({
 		userInfo: state.staticState.userInfo,
@@ -1215,7 +1215,9 @@ export default class home_page extends PureComponent {
 			return [basicCardData, plusCardData];
 		}
 
-		const { homeData } = this.state;
+		const { homeData = {} } = this.state;
+		console.log(homeData, 'homeData');
+
 		const { dcDataInfo = {} } = homeData;
 		const { cardRepayDt, bankName, cardNoHid } = dcDataInfo || {};
 
@@ -1953,6 +1955,7 @@ export default class home_page extends PureComponent {
 		const {
 			bannerList,
 			welfareList,
+			activities,
 			percent,
 			showAgreement,
 			isShowActivityModal,
@@ -1986,9 +1989,9 @@ export default class home_page extends PureComponent {
 			<div className={style.home_new_page}>
 				<div className={style.content_top}>
 					<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
-					<ActivityEntry $fetch={this.props.$fetch} history={this.props.history} />
+					<ActivityEntry data={activities} history={this.props.history} />
 				</div>
-				<div className={style.content_main}>
+				<div className={activities && activities.length ? style.content_main_more : style.content_main}>
 					<SwitchCard data={this.getDisPlayData()} />
 					{bannerList.length > 0 && (
 						<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
@@ -1999,7 +2002,6 @@ export default class home_page extends PureComponent {
 					{this.componentsAddCards()}
 				</div>
 
-				{/* <Demo globalTask={this.props.globalTask}/> */}
 				<HomeModal
 					showAgreement={showAgreement}
 					modalType={modalType}
