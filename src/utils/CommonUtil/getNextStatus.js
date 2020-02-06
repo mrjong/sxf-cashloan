@@ -152,7 +152,7 @@ export const getNextStatus = ({
 					storeRedux.dispatch(setNextStepStatus(false));
 					// 代偿
 					if (nextData.prodType === '01') {
-						routeName = 'ConfirmAgency';
+						routeName = '/home/confirm_agency';
 						if (actionType === 'agencyPage') {
 							resolve(nextData.nextStepGramCode);
 						}
