@@ -29,7 +29,9 @@ export default {
 	// 背景
 	bg: {
 		id_card_tip: require('./bg/id_card_tip.png'),
-		navBarBg: require('./bg/navBarBg.png')
+		navBarBg: require('./bg/navBarBg.png'),
+		no_order: require('./bg/no_order.png'),
+		no_network: require('./bg/no_network.png')
 	},
 
 	// 按钮
@@ -37,7 +39,9 @@ export default {
 
 	// 图标类
 	icon: {
-		trigon_right_black: require('./icon/trigon_right_black.png')
+		trigon_right_black: require('./icon/trigon_right_black.png'),
+		checked: require('./icon/selected_black.png'),
+		checked_no: require('./icon/selected_no_black.png')
 	},
 
 	// 标志性的图片

@@ -2,20 +2,16 @@ import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import { List, ListView } from 'antd-mobile';
 import { store } from 'utils/store';
 import { isWXOpen } from 'utils';
-// import SXFButton from 'components/ButtonCustom';
-import { FooterBar } from 'components';
+import { FooterBar, LoadingView } from 'components';
 import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
-
+import { bill_queryBillList } from 'fetch/api';
 import SectionList from './components/SectionList';
 import utils from 'utils/CommonUtil';
 import dayjs from 'dayjs';
 let hasNext = true;
-const Item = List.Item;
-// const Brief = Item.Brief;
 const API = {
 	msgRead: '/my/msgRead',
 	msgCount: '/my/msgCount',
@@ -25,6 +21,18 @@ const API = {
 
 let token = '';
 let tokenFromStorage = '';
+let uploadData = {};
+
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无账单',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
 @fetch.inject()
 @setBackGround('#F0F3F9')
 export default class order_page extends PureComponent {
@@ -33,15 +41,12 @@ export default class order_page extends PureComponent {
 		// 获取token
 		token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		tokenFromStorage = store.getToken();
-		const dataSource = new ListView.DataSource({
-			rowHasChanged: (row1, row2) => row1 !== row2
-		});
-
 		this.state = {
-			dataSource,
+			dataSource: [],
+			isFinishDone: false,
+			isLoadingMore: false,
 			refreshing: true,
 			isLoading: true,
-			useBodyScroll: false,
 			pageIndex: 0,
 			Listlength: 0,
 			rData: [],
@@ -49,8 +54,7 @@ export default class order_page extends PureComponent {
 			msgReadAllState: false,
 			msgType: 0,
 			hasMore: true,
-			limitRow: 10,
-			isFinishDone: true
+			limitRow: 10
 		};
 	}
 	scrollTop = 0;
@@ -69,37 +73,37 @@ export default class order_page extends PureComponent {
 		// 处理详情返回之后
 		let backDatastr = store.getBackData();
 		if (backDatastr && JSON.stringify(backDatastr) !== '{}') {
-			let backData = store.getBackData();
-			hasNext = backData && backData.hasNext;
-			this.setState(
-				{
-					msgType: backData && backData.msgType,
-					rData: backData && backData.rData,
-					pageIndex: backData && backData.pageIndex,
-					hasMore: true,
-					Listlength: backData && backData.rData && backData.rData.length
-				},
-				() => {
-					this.setState({
-						dataSource: this.state.dataSource.cloneWithRows(backData.rData),
-						tabState: true,
-						refreshing: false,
-						isLoading: false
-					});
-				}
-			);
+			// let backData = store.getBackData();
+			// hasNext = backData && backData.hasNext;
+			// this.setState(
+			// 	{
+			// 		msgType: backData && backData.msgType,
+			// 		rData: backData && backData.rData,
+			// 		pageIndex: backData && backData.pageIndex,
+			// 		hasMore: true,
+			// 		Listlength: backData && backData.rData && backData.rData.length
+			// 	},
+			// 	() => {
+			// 		this.setState({
+			// 			dataSource: this.state.dataSource.cloneWithRows(backData.rData),
+			// 			tabState: true,
+			// 			refreshing: false,
+			// 			isLoading: false
+			// 		});
+			// 	}
+			// );
 		} else {
 			hasNext = true;
-			this.couponRedDot();
-			this.getCommonData();
+			// this.couponRedDot();
+			this.getLoanList(1);
 		}
 	}
 	componentDidMount() {
-		// 返回展示数据
-		let backData = store.getBackData();
-		if (backData && backData.scrollTop) {
-			setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
-		}
+		// // 返回展示数据
+		// let backData = store.getBackData();
+		// if (backData && backData.scrollTop) {
+		// 	setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
+		// }
 	}
 	couponRedDot = () => {
 		this.props.$fetch.get(API.couponRedDot).then((result) => {
@@ -108,145 +112,101 @@ export default class order_page extends PureComponent {
 			}
 		});
 	};
-	// 获取每一页数据
-	genData = async (pIndex = 0) => {
-		if (!hasNext) {
-			this.setState({
-				isLoading: false,
-				pageIndex: this.state.pageIndex - 1
-			});
-			return [];
-		}
-		if (pIndex === 0) {
-			this.props.SXFToast.loading('数据加载中...', 10000);
-		}
-		let data = await this.props.$fetch
-			.post(API.billList, {
-				qryType: 0,
-				startRow: pIndex * this.state.limitRow,
-				limitRow: this.state.limitRow
-			})
+
+	/**
+	 * 获取订单信息
+	 */
+	getLoanList = (currentPage) => {
+		//上传数据
+		uploadData = {
+			startPage: currentPage,
+			pageRow: this.pageSize
+		};
+		this.setState({
+			isLoadingMore: currentPage > 1
+		});
+		this.props.$fetch
+			.post(bill_queryBillList, uploadData, { hideLoading: true })
 			.then((res) => {
-				if (pIndex === 0) {
-					setTimeout(() => {
-						this.props.SXFToast.hide();
-					}, 600);
-				}
-				if (res.msgCode === 'PTM0000') {
-					if (pIndex === 0) {
+				if (res.code === '000000') {
+					if (res && res.data && res.data.bills && res.data.bills.length > 0) {
+						if (currentPage === 1) {
+							this.setState({
+								dataSource: res.data.bills
+							});
+							this.viewRef && this.viewRef.showDataView();
+						} else {
+							this.setState({
+								dataSource: this.state.dataSource.concat(res.data.bills)
+							});
+						}
 						this.setState({
-							hasMore: false
+							isFinishDone: this.state.dataSource.length < 5
+						});
+					} else if (currentPage === 1) {
+						this.setState({
+							dataSource: []
+						});
+						this.viewRef && this.viewRef.setEmpty();
+					} else {
+						currentPage--;
+						this.setState({
+							isFinishDone: true
 						});
 					}
-					// 判断是否为最后一页
-					if (res.data.length < this.state.limitRow) {
-						hasNext = false;
-					}
-					let dataArr = [];
-					// dataArr = res.data.msgList
-					// for (let x = 0; x < 10; x++) {
-					for (let i = res.data.length - 1; i >= 0; i--) {
-						dataArr.push({
-							...res.data[i],
-							billDt: `${dayjs(res.data[i].billDt).format('YYYY年MM月DD日')}借款`
-						});
-						// }
-					}
-					return dataArr;
+				} else if (currentPage === 1) {
+					this.setState({
+						dataSource: []
+					});
+					this.viewRef && this.viewRef.setEmpty();
+				} else {
+					currentPage--;
+					this.setState({
+						isFinishDone: true
+					});
 				}
-				return [];
 			})
 			.catch(() => {
-				if (pIndex === 0) {
-					setTimeout(() => {
-						this.setState({
-							isLoading: false,
-							refreshing: false
-						});
-						this.props.SXFToast.hide();
-					}, 600);
-				}
+				currentPage--;
+				this.viewRef && this.viewRef.setEmpty();
+			})
+			.finally(() => {
+				this.setState({
+					isLoadingMore: false
+				});
 			});
-		return data;
 	};
-	// 刷新
-	onRefresh = () => {
-		setTimeout(() => {
-			hasNext = true;
-			this.setState({ refreshing: true, isLoading: true });
-			this.getCommonData();
-		}, 600);
-	};
-	// 公用
-	getCommonData = async () => {
+
+	/**
+	 * @description 重新加载数据
+	 */
+	onReloadData = () => {
 		this.setState({
-			isLoading: true
+			isFinishDone: false
 		});
-		let list = await this.genData(0);
-		this.setState(
-			{
-				rData: list,
-				Listlength: list.length,
-				dataSource: this.state.dataSource.cloneWithRows(list),
-				refreshing: false,
-				isLoading: false,
-				pageIndex: 0
-			},
-			() => {
-				let backData = {
-					rData: this.state.rData
-				};
-				store.setBackData(backData);
-			}
-		);
+		this.getLoanList(1);
 	};
-	// 渲染每一页完成之后
-	onEndReached = async () => {
-		if (this.state.isLoading && !this.state.hasMore) {
-			this.setState({
-				pageIndex: this.state.pageIndex - 1 ? this.state.pageIndex - 1 : 0
-			});
-			return;
-		}
-		this.setState({ isLoading: true });
-		let list = await this.genData(++this.state.pageIndex);
-		if (list.length === 0) {
-			this.setState({ isLoading: false });
-			return;
-		}
-		this.setState(
-			{
-				rData: [...list, ...this.state.rData],
-				dataSource: this.state.dataSource.cloneWithRows([...list, ...this.state.rData]),
-				isLoading: false
-			},
-			() => {}
-		);
-	};
-	// 滚动高度
-	handleScroll = (event) => {
-		this.scrollTop = event.target.scrollTop;
-	};
+
 	// 查看详情
 	gotoDesc = (obj) => {
 		const { billSts } = obj;
-		// 账单状态(0：放款成功,1：已逾期,2：还款中,4：已还清;  已撤销状态专用于免手续费时间限制内的全额退款)， -2: 放款中  -1放款失败
-		// const noDetailsPageArr = ['-2', '-1'];
-		// if (noDetailsPageArr.includes(obj.billSts)) {
-		// 	return;
-		// }
-		if (billSts !== '-1' && billSts !== '-2') {
-			let backData = {
-				scrollTop: this.scrollTop || 0,
-				rData: this.state.rData,
-				billNo: obj.billNo,
-				pageIndex: this.state.pageIndex,
-				hasNext: hasNext
-			};
+		if (billSts !== '0' && billSts !== '2') {
+			// let backData = {
+			// 	scrollTop: this.scrollTop || 0,
+			// 	rData: this.state.rData,
+			// 	billNo: obj.billNo,
+			// 	pageIndex: this.state.pageIndex,
+			// 	hasNext: hasNext
+			// };
 
-			store.setBackData(backData);
-			store.setBillNo(obj.billNo);
-			this.props.history.push(`/order/order_detail_page`);
+			// store.setBackData(backData);
+			// store.setBillNo(obj.billNo);
+			this.props.history.push({
+				pathname: `/order/order_detail_page`,
+				state: {
+					billNo: obj.billNo
+				}
+			});
 		}
 	};
 
@@ -255,9 +215,9 @@ export default class order_page extends PureComponent {
 		this.props.history.push('/login');
 	};
 
-  //加载更多数据
+	//加载更多数据
 	handleLoadMore = () => {
-		// this.genData(++this.currentPage);
+		this.getLoanList(++this.currentPage);
 	};
 
 	/**
@@ -279,11 +239,13 @@ export default class order_page extends PureComponent {
 			<div className={style.listItem} key={index}>
 				<div className={style.listItemLeft}>
 					<span className={style.itemLabel}>
-						借款￥<em>{item.billAmt && utils.thousandFormatNum(item.billAmt)}</em>
+						借款￥<em>{item.loanAmt && utils.thousandFormatNum(item.loanAmt)}</em>
 					</span>
 					<div className={style.itemDesc}>
-						<em>{item.billDt}</em>
-						<span>共12期</span>
+						<em>{dayjs(item.billRegDt).format('YYYY/MM/DD')}</em>
+						<span>
+							共<span>{item.perdCnt}</span>期
+						</span>
 					</div>
 				</div>
 				<div
@@ -322,7 +284,7 @@ export default class order_page extends PureComponent {
 	 * @description 数据格式化 按日期进行分组
 	 */
 	GenerateBillGroupObj() {
-		const { rData: dataSource } = this.state;
+		const { dataSource = [] } = this.state;
 		let billGroupObj = {};
 		dataSource.forEach((item) => {
 			let years = dayjs(item.billRegDt).format('YYYY');
@@ -371,66 +333,6 @@ export default class order_page extends PureComponent {
 	}
 
 	render() {
-		// const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
-		// let index = this.state.rData && this.state.rData.length - 1;
-		// const row = () => {
-		// 	if (index < 0) {
-		// 		index = this.state.rData && this.state.rData.length - 1;
-		// 	}
-		// 	const obj = this.state.rData && this.state.rData[index--];
-		// 	return (
-		// 		<Item
-		// 			className={'iview' + obj.billNo}
-		// 			onClick={() => {
-		// 				this.gotoDesc(obj);
-		// 			}}
-		// 			extra={<span style={{ color: obj.color, fontWeight: 'bold' }}>{obj.billStsNm}</span>}
-		// 			style={{ color: obj.color }}
-		// 			arrow={obj.billSts === '-1' || obj.billSts === '-2' ? 'empty' : 'horizontal'}
-		// 			wrap
-		// 		>
-		// 			{obj.billAmt}
-		// 			<Brief>{obj.billDt}</Brief>
-		// 		</Item>
-		// 	);
-		// };
-		// const item = () => {
-		// 	if (this.state.rData && this.state.rData.length > 0) {
-		// 		return (
-		// 			<ListView
-		// 				initialListSize={this.state.Listlength}
-		// 				onScroll={this.handleScroll}
-		// 				key={this.state.useBodyScroll ? '0' : '1'}
-		// 				ref={(el) => (this.lv = el)}
-		// 				dataSource={this.state.dataSource}
-		// 				renderFooter={() => (
-		// 					<div className={style.has_more}>{this.state.isLoading ? '数据加载中...' : '已无更多账单'}</div>
-		// 				)}
-		// 				renderRow={row}
-		// 				direction="down"
-		// 				renderSeparator={separator}
-		// 				useBodyScroll={this.state.useBodyScroll}
-		// 				className={!this.state.useBodyScroll ? 'heightBody1' : ''}
-		// 				pullToRefresh={
-		// 					<PullToRefresh damping={60} refreshing={this.state.refreshing} onRefresh={this.onRefresh} />
-		// 				}
-		// 				onEndReached={this.onEndReached}
-		// 				pageSize={1}
-		// 			/>
-		// 		);
-		// 	}
-		// 	return (
-		// 		<div className={style.no_data}>
-		// 			<i />
-		// 			暂无账单
-		// 			{isWXOpen() && !tokenFromStorage && !token ? (
-		// 				<SXFButton className={style.noLogin} onClick={this.goLogin}>
-		// 					去登录
-		// 				</SXFButton>
-		// 			) : null}
-		// 		</div>
-		// 	);
-		// };
 		return (
 			<div className={style.orderPage}>
 				<div className={style.orderPageHead}>
@@ -438,17 +340,22 @@ export default class order_page extends PureComponent {
 					<span className={style.orderPageHeadDesc}>还信用卡用还到，有账单就能还</span>
 				</div>
 				<div className={style.orderListCard}>
-					<div className={style.order_page}>
-						{/* {item()} */}
+					<LoadingView
+						ref={(view) => (this.viewRef = view)}
+						noData={noData}
+						errorData={errorData}
+						onReloadData={() => {
+							this.onReloadData();
+						}}
+					>
 						<SectionList
 							renderItem={({ item, index }) => this.renderItem(item, index)}
 							renderSectionHeader={({ section: { title } }) => this.renderGroupTitle(title)}
 							sections={this.handleGenerateBillGroupArr()}
 							// keyExtractor={(item, index) => item + index}
-							// style={styles.listBox}
 							ListFooterComponent={this.renderFooterComponentWrap()}
 						/>
-					</div>
+					</LoadingView>
 				</div>
 				{!this.state.dataSource || !this.state.dataSource.length || this.state.dataSource.length <= 5 ? (
 					<FooterBar />

@@ -7,9 +7,10 @@ import { Card, Button } from 'antd-mobile';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { bill_queryBillDetail } from 'fetch/api';
 import { setBackGround } from 'utils/background';
+import { LoadingView } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
-
 
 const API = {
 	qryDtl: '/bill/qryDtl',
@@ -27,9 +28,10 @@ export default class order_detail_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
+		const { billNo } = this.props.history.location.state;
 		// store.removeCardData();
 		// store.removeCouponData();
-		if (!store.getBillNo()) {
+		if (!billNo) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {
 				this.props.history.goBack();
@@ -38,56 +40,61 @@ export default class order_detail_page extends PureComponent {
 		}
 		this.setState(
 			{
-				billNo: store.getBillNo()
+				billNo
 			},
 			() => {
-				this.getLoanInfo();
+				this.queryBillDetails();
 				// 因为会有直接进到账单的公众号入口，所以在此在调一遍接口
 				// this.getOverdueInfo();
 			}
 		);
 	}
 
-	getOverdueInfo = () => {
-		this.props.$fetch
-			.post(API.procedure_user_sts)
-			.then((res) => {
-				if (res && res.msgCode === 'PTM0000') {
-					// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-					this.setState({
-						overDueModalFlag: res.data.overduePopupFlag
-					});
-					res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			})
-			.catch(() => {
-				this.setState({
-					firstUserInfo: 'error'
-				});
-			});
+	onReloadData = () => {
+		this.queryBillDetails();
 	};
 
+	// getOverdueInfo = () => {
+	// 	this.props.$fetch
+	// 		.post(API.procedure_user_sts)
+	// 		.then((res) => {
+	// 			if (res && res.msgCode === 'PTM0000') {
+	// 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
+	// 				this.setState({
+	// 					overDueModalFlag: res.data.overduePopupFlag
+	// 				});
+	// 				res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
+	// 			} else {
+	// 				this.props.toast.info(res.msgInfo);
+	// 			}
+	// 		})
+	// 		.catch(() => {
+	// 			this.setState({
+	// 				firstUserInfo: 'error'
+	// 			});
+	// 		});
+	// };
+
 	// 获取还款信息
-	getLoanInfo = () => {
+	queryBillDetails = () => {
 		this.props.$fetch
-			.post(API.qryDtl, {
+			.post(bill_queryBillDetail, {
 				billNo: this.state.billNo
 			})
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					const { perdNum, perdList, billOvduDays, billOvduStartDt, billSts, waitRepAmt } = res.data;
-
+				if (!this.viewRef) return;
+				this.viewRef.showDataView();
+				if (res.code === '000000' && res.data) {
+					const { overdueDays, billSts, discRedRepay, waitRepAmt, preds, perdNum } = res.data;
 					this.setState({
+						panelCardList: this.generatePannelCard(res.data),
+						billDesc: res.data, // 详情返回的数据
+						isBillClean: !(billSts === '1' || billSts === '-1'), //总账单是否结清
 						thisPerdNum: perdNum,
-						billDesc: res.data, //账单全部详情
-						isBillClean: billSts === '4' || billSts === '2', //总账单是否结清或处理中
-						perdList, //账单期数列表
-						billOvduDays,
-						billOvduStartDt,
+						overdueDays,
+						discRedRepay,
 						waitRepAmt,
-						panelCardList: this.generatePannelCard(res.data)
+						preds
 					});
 				} else {
 					this.props.toast.info(res.msgInfo);
@@ -95,6 +102,7 @@ export default class order_detail_page extends PureComponent {
 			})
 			.catch((err) => {
 				console.log(err);
+				this.viewRef && this.viewRef.setError();
 			});
 	};
 
@@ -163,7 +171,7 @@ export default class order_detail_page extends PureComponent {
 				actOrderList,
 				isPayAll: true,
 				thisPerdNum,
-				billOvduDays: '',
+				overdueDays: '',
 				totalList: [],
 				totalAmtForShow: waitRepAmt
 			}
@@ -171,39 +179,59 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	goOrderRepayPage = () => {
-		const { billOvduDays, repayPerds } = this.state;
+		const { overdueDays, repayPerds, billNo } = this.state;
 		// buriedPointEvent(order.viewRepayInfoBtn, {
 		// 	entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
-		// 	isOverdue: !!billOvduDays,
+		// 	isOverdue: !!overdueDays,
 		// 	repayPerds: repayPerds.join(',')
 		// });
-		this.props.history.push('/order/order_repay_page');
+		if (billNo) {
+			this.props.history.push({
+				pathname: '/order/order_repay_page',
+				state: {
+					billNo
+				}
+			});
+		} else {
+			this.props.toast.info('未获取账单数据');
+		}
 	};
 	render() {
-		const { panelCardList, isBillClean } = this.state;
+		const { panelCardList, isBillClean, overdueDays } = this.state;
 		return (
-			<div className={styles.orderDetailCard}>
-				<Card className={styles.antCard}>
-					<Card.Header title="借款信息" />
-					<Card.Body>
-						{panelCardList &&
-							panelCardList.map((item, index) => {
-								return (
-									<div key={index} className={styles.cardItem}>
-										<span>{item.label}</span>
-										<span>{item.value}</span>
-									</div>
-								);
-							})}
-					</Card.Body>
-				</Card>
-				<div className={styles.submit_btn}>
-					<Button onClick={this.goOrderRepayPage}>{isBillClean ? '查看还款信息' : '查看还款计划'}</Button>
+			<LoadingView
+				ref={(view) => (this.viewRef = view)}
+				noData={{}}
+				errorData={{}}
+				onReloadData={() => {
+					this.onReloadData();
+				}}
+			>
+				<div className={styles.orderDetailCard}>
+					<Card className={styles.antCard}>
+						<Card.Header title="借款信息" />
+						<Card.Body>
+							{panelCardList &&
+								panelCardList.map((item, index) => {
+									return (
+										<div key={index} className={styles.cardItem}>
+											<span>{item.label}</span>
+											<span>{item.value}</span>
+										</div>
+									);
+								})}
+						</Card.Body>
+					</Card>
+					<div className={styles.submit_btn}>
+						<Button onClick={this.goOrderRepayPage}>{isBillClean ? '查看还款信息' : '查看还款计划'}</Button>
+					</div>
+					{!overdueDays && !isBillClean ? (
+						<span onClick={this.payAllOrder} className={styles.payAllButton}>
+							一键结清
+						</span>
+					) : null}
 				</div>
-				<span onClick={this.payAllOrder} className={styles.payAllButton}>
-					一键结清
-				</span>
-			</div>
+			</LoadingView>
 		);
 	}
 }
