@@ -19,7 +19,8 @@ import {
 	COMMON_HOME_DATA,
 	COMMON_HOME_BANNER_LIST,
 	COMMON_WELFARE_LIST,
-	COMMON_APPLY_CREDIT_DTATA
+	COMMON_APPLY_CREDIT_DTATA,
+	COMMON_BIND_DEPOSIT_INFO
 } from '../constants/commonConstants';
 
 /**
@@ -143,4 +144,13 @@ export const setWelfareList = createAction(COMMON_WELFARE_LIST, (info) => ({ wel
  */
 export const setApplyCreditData = createAction(COMMON_APPLY_CREDIT_DTATA, (info) => ({
 	applyCreditData: info
+}));
+
+/**
+ * @description: 设置绑定储蓄卡页面信息
+ * @param {type}
+ * @return:
+ */
+export const setBindDepositInfoAction = createAction(COMMON_BIND_DEPOSIT_INFO, (info) => ({
+	bindDepositInfo: info
 }));

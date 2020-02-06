@@ -106,3 +106,9 @@ export const COMMON_WELFARE_LIST = 'COMMON_WELFARE_LIST';
  * @return:
  */
 export const COMMON_APPLY_CREDIT_DTATA = 'COMMON_APPLY_CREDIT_DTATA';
+/**
+ * @description: 绑定储蓄卡信息
+ * @param {type}
+ * @return:
+ */
+export const COMMON_BIND_DEPOSIT_INFO = 'COMMON_BIND_DEPOSIT_INFO';

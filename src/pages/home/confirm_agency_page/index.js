@@ -25,6 +25,19 @@ import RepayPlanModal from 'components/RepayPlanModal';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
 import TipModal from 'components/TipModal';
+import {
+	loan_queryLoanApplInfo,
+	loan_loanPlan,
+	loan_queryContractInfo,
+	bank_card_check,
+	loan_contractPreview,
+	bank_card_protocol_sms,
+	bank_card_protocol_bind,
+	loan_loanSub,
+	coup_sendLoanCoup
+} from 'fetch/api.js';
+import { connect } from 'react-redux';
+import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
@@ -62,6 +75,21 @@ let timerOut;
 @fetch.inject()
 @createForm()
 @domListen()
+@connect(
+	(state) => ({
+		userInfo: state.staticState.userInfo,
+		withholdCardData: state.commonState.withholdCardData,
+		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
+		couponData: state.commonState.couponData,
+		cacheContact: state.commonState.cacheContact,
+		saveContact: state.commonState.saveContact,
+		authId: state.staticState.authId
+	}),
+	{
+		setCardTypeAction,
+		setConfirmAgencyInfoAction
+	}
+)
 export default class confirm_agency_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -354,7 +382,8 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 获取代还期限列表 还款日期列表
 	requestGetRepaymentDateList = () => {
-		this.props.$fetch.get(`${API.QUERY_REPAY_INFO}/${indexData && indexData.autId}`).then((result) => {
+		const { authId } = this.props;
+		this.props.$fetch.post(loan_queryLoanApplInfo, { autId: authId || '' }).then((result) => {
 			if (result && result.msgCode === 'PTM0000') {
 				if (result.data && result.data.prdList && result.data.prdList.length === 0) {
 					this.props.toast.info('当前渠道暂不支持提现申请，请进入MPOS代偿');

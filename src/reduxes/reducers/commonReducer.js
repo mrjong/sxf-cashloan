@@ -20,7 +20,8 @@ import {
 	COMMON_HOME_DATA,
 	COMMON_HOME_BANNER_LIST,
 	COMMON_WELFARE_LIST,
-	COMMON_APPLY_CREDIT_DTATA
+	COMMON_APPLY_CREDIT_DTATA,
+	COMMON_BIND_DEPOSIT_INFO
 } from '../constants/commonConstants';
 /**
  * @description: commonState 初始化
@@ -43,7 +44,8 @@ const initState = {
 	overdueModalInfo: {},
 	applyCreditData: {},
 	backRouter: '',
-	msgCount: 0
+	msgCount: 0,
+	bindDepositInfo: {}
 };
 export default handleActions(
 	{
@@ -62,6 +64,7 @@ export default handleActions(
 		[COMMON_WELFARE_LIST]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_OVERDUE_MODAL_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_APPLY_CREDIT_DTATA]: (state, action) => ({ ...state, ...action.payload }),
+		[COMMON_BIND_DEPOSIT_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_CLEAR_STATE]: () => ({})
 	},
 	initState
