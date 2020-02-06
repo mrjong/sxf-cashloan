@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import qs from 'qs';
-import { store } from '../../../utils/store';
+import { store } from 'utils/store';
+import { bank_card_valid } from 'fetch/api.js';
+import { connect } from 'react-redux';
+import { setBindDepositInfoAction } from 'reduxes/actions/commonActions';
 
 const API = {
 	SUPPORTBANKLIST: '/withhold/binkLists' // 银行卡列表
@@ -10,6 +13,14 @@ const API = {
 let queryData = '';
 
 @fetch.inject()
+@connect(
+	(state) => ({
+		bindDepositInfo: state.commonState.bindDepositInfo
+	}),
+	{
+		setBindDepositInfoAction
+	}
+)
 export default class support_save_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -24,37 +35,30 @@ export default class support_save_page extends PureComponent {
 
 	// 获取银行卡列表
 	queryBankList = () => {
-		const insuranceFlag = store.getInsuranceFlag();
-
-		const sendParams = insuranceFlag
-			? {
-					cardTyp: 'D',
-					corpBusTyp: '',
-					supportType: 'ZY' // JR随行付金融 XD随行付小贷 ZY中元保险
-			  }
-			: {
-					cardTyp: 'D',
-					corpBusTyp: ''
-			  };
-		this.props.$fetch.post(API.SUPPORTBANKLIST, sendParams).then(
+		this.props.$fetch.get(`${bank_card_valid}/D`).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({
-						cardList: res.data ? res.data : []
+						cardList: res.data && res.data.validBanks ? res.data.validBanks : []
 					});
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};
 
 	handleItemSelect = (name) => {
+		const { bindDepositInfo } = this.props;
 		if (queryData.isClick !== '0') return;
-		store.setDepositBankName(name);
+		this.props.setBindDepositInfoAction({
+			...bindDepositInfo,
+			bankName: name
+		});
+		// store.setDepositBankName(name);
 		this.props.history.goBack();
 	};
 
@@ -68,11 +72,11 @@ export default class support_save_page extends PureComponent {
 								<li
 									key={index}
 									onClick={() => {
-										this.handleItemSelect(item.corpOrgSnm);
+										this.handleItemSelect(item.bankName);
 									}}
 								>
-									<span className={`bank_ico bank_ico_${item.corpOrgId}`}></span>
-									<span className={styles.bank_name}>{item.corpOrgSnm}</span>
+									<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+									<span className={styles.bank_name}>{item.bankName}</span>
 								</li>
 							);
 						})}

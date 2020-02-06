@@ -21,28 +21,25 @@ const fetchInit = () => {
 			}, 0);
 		},
 		onShowSuccessTip: (response) => {
-			switch (response.data.msgCode) {
-				case 'PTM0000':
+			switch (response.data.code) {
+				case '000000':
 					return;
-				case 'PTM1000': // 用户登录超时
-					// Raven.captureException(response.config.url, { extra: {code: 'PTM1000',msgInfo:'登录超时，请重新登陆'}, level: 'info' });
-					if (pagesIgnore(window.location.pathname)) {
-						return;
-					}
-					Toast.info('登录超时，请重新登陆');
-					setTimeout(() => {
-						window.ReactRouterHistory.replace('/login');
-					}, 3000);
+				// 重复请求
+				case '999992':
+					Toast.show({
+						code: response.data.code,
+						message: response.data.message
+					});
 					return;
-				case 'PTM0100': // 未登录
+				case '999997': // 未登录
 					Raven.captureException(response.config.url, {
-						extra: { code: 'PTM0100', msgInfo: '未登录' },
+						extra: { code: '999997', message: '未登录' },
 						level: 'info'
 					});
 					if (pagesIgnore(window.location.pathname)) {
 						return;
 					}
-					Toast.info('请先登录');
+					Toast.info('未登录或登录超时，请重新登录');
 					setTimeout(() => {
 						window.ReactRouterHistory.replace('/login');
 					}, 3000);
@@ -56,7 +53,7 @@ const fetchInit = () => {
 		(cfg) => {
 			// 非微信去掉 fn-v-card-token-wechat
 			if (!isWXOpen()) {
-				Cookie.remove('fin-v-card-token-wechat');
+				Cookie.remove('FIN-HD-WECHAT-TOKEN');
 			}
 			// const TOKEN = Cookie.get('FIN-HD-AUTH-TOKEN');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
@@ -74,18 +71,6 @@ const fetchInit = () => {
 			if (noLoginToken) {
 				cfg.headers['fin-v-card-token-not-login'] = noLoginToken;
 			}
-			num++;
-			if (!cfg.hideLoading) {
-				// 防止时间短，出现loading 导致闪烁
-				timer = setTimeout(() => {
-					// 处理多个请求，只要一个loading
-					if (timerList.length > 1) {
-						return;
-					}
-					SXFToast.loading('数据加载中...', 10);
-				}, 300);
-				timerList.push(timer);
-			}
 			return cfg;
 		},
 		(error) => {
@@ -95,45 +80,40 @@ const fetchInit = () => {
 	// 拦截响应
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
-			num--;
-			if (num <= 0) {
-				if (timer) {
-					for (let i = 0; i < timerList.length; i++) {
-						clearTimeout(timerList[i]);
-					}
-					timer = null;
-					timerList = [];
-					SXFToast.hide();
-				}
-			} else {
-				SXFToast.loading('数据加载中...', 10);
-			}
 			return response;
 		},
 		(error) => {
-			// 有响应则取status,statusText，超时则取error.message
-			try {
-				console.log('----异常日志----');
-				if (error.response) {
-					Raven.captureException(error, { extra: error.response });
-				} else if (error.config) {
-					Raven.captureException(error, { extra: error.config });
-				}
-			} catch (err) {
-				// console.log(err)
-			}
+			// // 有响应则取status,statusText，超时则取error.message
+			// try {
+			// 	console.log('----异常日志----');
+			// 	if (error.response) {
+			// 		Raven.captureException(error, { extra: error.response });
+			// 	} else if (error.config) {
+			// 		Raven.captureException(error, { extra: error.config });
+			// 	}
+			// } catch (err) {
+			// 	// console.log(err)
+			// }
+			// console.log(error, 'error.response');
+			// let error2 =
+			// 	error && error.message && error.message.canceled ? error : new Error('系统开小差，请稍后重试');
+			// return Promise.reject(error2);
 
-			num--;
-			for (let i = 0; i < timerList.length; i++) {
-				clearTimeout(timerList[i]);
+			const { response = {}, message } = error;
+			if (response && response.status === 401 && response.config) {
+				Toast.info('未登录或登录超时，请重新登录');
+				setTimeout(() => {
+					window.ReactRouterHistory.replace('/login');
+				}, 3000);
+			} else if (message && message.canceled) {
+				console.log('取消请求');
+			} else if (response && response.config && response.config.hideToast) {
+				console.log('hideToast  无需提示错误');
+				return Promise.reject(error);
+			} else {
+				Toast.fail('系统开小差,请稍后重试');
+				return Promise.reject('系统开小差,请稍后重试');
 			}
-			timer = null;
-			timerList = [];
-			SXFToast.hide();
-			console.log(error, 'error.response');
-			let error2 =
-				error && error.message && error.message.canceled ? error : new Error('系统开小差，请稍后重试');
-			return Promise.reject(error2);
 		}
 	);
 };

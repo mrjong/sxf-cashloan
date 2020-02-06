@@ -18,6 +18,19 @@ import styles from './index.scss';
 import qs from 'qs';
 import SelectList from 'components/SelectList';
 import { domListen } from 'utils/domListen';
+import {
+	bank_card_bin,
+	bank_card_protocol_sms,
+	bank_card_protocol_bind,
+	bank_card_protocol_info
+} from 'fetch/api.js';
+import { connect } from 'react-redux';
+import {
+	setWithholdCardDataAction,
+	setWithdrawCardDataAction,
+	setBindDepositInfoAction
+} from 'reduxes/actions/commonActions';
+import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 const API = {
 	GETUSERINF: '/my/getRealInfo', // 获取用户信息
@@ -31,6 +44,20 @@ const API = {
 @createForm()
 @setBackGround('#fff')
 @domListen()
+@connect(
+	(state) => ({
+		cardType: state.commonState.cardType,
+		userInfo: state.staticState.userInfo,
+		nextStepStatus: state.commonState.nextStepStatus,
+		backRouter: state.commonState.backRouter,
+		bindDepositInfo: state.commonState.bindDepositInfo
+	}),
+	{
+		setWithholdCardDataAction,
+		setWithdrawCardDataAction,
+		setBindDepositInfoAction
+	}
+)
 export default class bind_save_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -38,21 +65,21 @@ export default class bind_save_page extends PureComponent {
 			userName: '', // 持卡人姓名
 			enable: true, // 计时器是否可用
 			cardData: {}, // 绑定的卡的数据
-			isProtocolBindCard: false //是否走协议绑卡逻辑
+			isProtocolBindCard: false, //是否走协议绑卡逻辑
+			bankType: '' // 发卡行
 		};
 	}
 
-	componentWillMount() {
-		this.queryUserInf();
-	}
+	componentWillMount() {}
 
 	componentDidMount() {
+		const { bindDepositInfo } = this.props;
 		this.props.form.setFieldsValue({
-			valueInputCarNumber: store.getBindCardNo(),
-			valueInputCarPhone: store.getBindCardPhone()
+			valueInputCarNumber: (bindDepositInfo && bindDepositInfo.cardNo) || '',
+			valueInputCarPhone: (bindDepositInfo && bindDepositInfo.cardPhone) || ''
 		});
 		this.setState({
-			bankType: store.getDepositBankName()
+			bankType: (bindDepositInfo && bindDepositInfo.bankName) || ''
 		});
 	}
 
@@ -62,25 +89,12 @@ export default class bind_save_page extends PureComponent {
 			location.pathname !== '/protocol/delegation_withhold_page'
 		) {
 			store.removeBackUrl(); // 清除session里的backurl的值
-			store.removeBindCardNo();
-			store.removeBindCardPhone();
-			store.removeDepositBankName();
+			this.props.setBindDepositInfoAction({});
+			// store.removeBindCardNo();
+			// store.removeBindCardPhone();
+			// store.removeDepositBankName();
 		}
 	}
-
-	// 获取信用卡信息
-	queryUserInf = () => {
-		this.props.$fetch.get(API.GETUSERINF).then(
-			(result) => {
-				if (result.data) {
-					this.setState({ userName: result.data.usrNm });
-				}
-			},
-			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
-			}
-		);
-	};
 
 	// 校验储蓄卡卡号
 	validateCarNumber = (rule, value, callback) => {
@@ -357,15 +371,19 @@ export default class bind_save_page extends PureComponent {
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
 		const params = {
-			cardNo: formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, ''),
-			isEntry: '01'
+			cardNo: formData.valueInputCarNumber && base64Encode(formData.valueInputCarNumber.replace(/\s*/g, ''))
 		};
-		this.props.$fetch.post(API.contractInfo, params).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				store.setProtocolFinancialData(result.data);
-				this.props.history.push('/protocol/delegation_withhold_page');
+		this.props.$fetch.post(bank_card_protocol_info, params).then((result) => {
+			if (result && result.code === '000000' && result.data !== null) {
+				// store.setProtocolFinancialData(result.data);
+				this.props.history.push({
+					pathname: '/protocol/delegation_withhold_page',
+					state: {
+						contractInf: result.data
+					}
+				});
 			} else {
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 			}
 		});
 	};
@@ -373,11 +391,12 @@ export default class bind_save_page extends PureComponent {
 	render() {
 		const Item = List.Item;
 		const { getFieldProps } = this.props.form;
+		const { userInfo = {}, bindDepositInfo = {} } = this.props;
 		return (
 			<div>
 				<div className={styles.header}>请先绑定还款储蓄卡,再签约借款</div>
 				<div className="bind_save_page_listBox list-extra">
-					<Item extra={this.state.userName}>持卡人</Item>
+					<Item extra={userInfo && userInfo.nameHid}>持卡人</Item>
 					<Item
 						extra={<SelectList selectText={this.state.bankType} defaultText={'请选择发卡银行'} />}
 						onClick={() => {
@@ -419,7 +438,11 @@ export default class bind_save_page extends PureComponent {
 										actId: 'delAll'
 									});
 								}
-								store.setBindCardNo(value);
+								// store.setBindCardNo(value);
+								this.props.setBindDepositInfoAction({
+									...bindDepositInfo,
+									cardNo: value
+								});
 							}
 						})}
 						clear
@@ -465,7 +488,11 @@ export default class bind_save_page extends PureComponent {
 										actId: 'delAll'
 									});
 								}
-								store.setBindCardPhone(value);
+								// store.setBindCardPhone(value);
+								this.props.setBindDepositInfoAction({
+									...bindDepositInfo,
+									cardPhone: value
+								});
 							}
 						})}
 						clear

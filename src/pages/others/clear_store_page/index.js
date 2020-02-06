@@ -4,7 +4,7 @@ import { List, Checkbox, Button, WhiteSpace } from 'antd-mobile';
 const CheckboxItem = Checkbox.CheckboxItem;
 
 const data = [
-	{ value: 'fin-v-card-token-wechat', type: 'cookie', label: '微信token' },
+	{ value: 'FIN-HD-WECHAT-TOKEN', type: 'cookie', label: '微信token' },
 	{ value: 'FIN-HD-AUTH-TOKEN', type: 'cookie', label: '登录token' },
 	{ value: 'sessionStorage', type: 'sessionStorage', label: '所有sessionStorage缓存' },
 	{ value: 'localStorage', type: 'localStorage', label: '所有localStorage缓存' }
