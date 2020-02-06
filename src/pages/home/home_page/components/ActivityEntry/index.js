@@ -15,7 +15,7 @@ export default class ActivityEntry extends React.PureComponent {
 		}
 		return data.map((item, index) => (
 			<div className={style.activityItem} key={index}>
-				<img style={style.itemImg} src={item.img} />
+				<img className={style.itemImg} src={item.img} />
 			</div>
 		));
 	};

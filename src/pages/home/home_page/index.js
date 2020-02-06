@@ -1186,7 +1186,6 @@ export default class home_page extends PureComponent {
 	}
 
 	getDisPlayData() {
-		console.log(this.props.userInfo, 'userInfo');
 		let basicCardData = {
 			cardType: 'basic',
 			cardLabel: '基础版',
@@ -1216,7 +1215,6 @@ export default class home_page extends PureComponent {
 		}
 
 		const { homeData = {} } = this.state;
-		console.log(homeData, 'homeData');
 
 		const { dcDataInfo = {} } = homeData;
 		const { cardRepayDt, bankName, cardNoHid } = dcDataInfo || {};
