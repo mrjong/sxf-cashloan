@@ -342,8 +342,8 @@ export default class order_page extends PureComponent {
 				<div className={style.orderListCard}>
 					<LoadingView
 						ref={(view) => (this.viewRef = view)}
-						noData={noData}
-						errorData={errorData}
+						nodata={noData}
+						errordata={errorData}
 						onReloadData={() => {
 							this.onReloadData();
 						}}

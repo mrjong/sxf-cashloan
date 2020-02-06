@@ -74,7 +74,7 @@ export default class LoadingView extends Component {
 	 */
 	_renderEmpty() {
 		const {
-			noData = {
+			nodata = {
 				width: '100%',
 				height: '100%',
 				img: Image.bg.no_order,
@@ -83,8 +83,8 @@ export default class LoadingView extends Component {
 		} = this.props;
 		return (
 			<div onClick={() => this.reloadData()} style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-				<img src={noData.img} alt="" style={{ width: noData.width, height: noData.height }} />
-				<span className={styles.textNo}>{noData.text}</span>
+				<img src={nodata.img} alt="" style={{ width: nodata.width, height: nodata.height }} />
+				<span className={styles.textNo}>{nodata.text}</span>
 			</div>
 		);
 	}
@@ -93,13 +93,13 @@ export default class LoadingView extends Component {
 	 * 加载 出错页
 	 */
 	_renderError() {
-		const { errorData = { img: Image.bg.no_order, text: '点击重试' } } = this.props;
+		const { errordata = { img: Image.bg.no_order, text: '点击重试' } } = this.props;
 
 		return (
 			<div>
 				<div onClick={this.reloadData}>
-					<img src={errorData.img} alt="" style={{ width: errorData.width, height: errorData.height }} />
-					<span className={styles.textNo}>{errorData.text}</span>
+					<img src={errordata.img} alt="" style={{ width: errordata.width, height: errordata.height }} />
+					<span className={styles.textNo}>{errordata.text}</span>
 				</div>
 			</div>
 		);

@@ -5,6 +5,18 @@ import { Modal, Card } from 'antd-mobile';
 import { bill_queryBillDetail, repay_queryCashRegisterDetail } from 'fetch/api';
 import PerdList from './PerdList';
 import fetch from 'sx-fetch';
+import Image from 'assets/image';
+
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无账单',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
 
 // @setBackGround('#F0F3F9')
 @fetch.inject()
@@ -200,8 +212,8 @@ export default class order_repay_page extends PureComponent {
 		return (
 			<LoadingView
 				ref={(view) => (this.viewRef = view)}
-				// noData={{}}
-				// errorData={{}}
+				nodata={noData}
+				errordata={errorData}
 				// onReloadData={() => {
 				// 	this.onReloadData();
 				// }}
