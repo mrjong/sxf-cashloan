@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 11:49:47
+ * @LastEditTime : 2020-02-06 15:21:38
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
-
 import {
 	isWXOpen,
 	getDeviceType,
@@ -117,7 +116,6 @@ export default class home_page extends PureComponent {
 		super(props);
 		this.state = {
 			bannerList: [],
-			isShowCreditModal: false,
 			usrIndexInfo: '',
 			haselescard: 'true',
 			percentSatus: '',
@@ -137,15 +135,8 @@ export default class home_page extends PureComponent {
 			isShowActivityModal: false, // 是否显示活动弹窗
 			visibleLoading: false, //认证弹窗
 			isNeedExamine: false, // 是否需要人审
-			modal_left2: false,
-			dayPro: {},
-			btnDisabled: true,
 			usrCashIndexInfo: {},
 			percentBtnText: '',
-			overDueInf: {
-				// 逾期弹框中的数据
-			},
-			overDueModalFlag: false, // 信用施压弹框标识
 			blackData: {},
 			cardStatus: '',
 			statusSecond: '', //每隔5秒状态
@@ -295,7 +286,7 @@ export default class home_page extends PureComponent {
 	index_queryBannerList = () => {
 		const params = {
 			type: '1',
-			cilent: 'h5'
+			cilent: 'app'
 		};
 		this.props.$fetch
 			.post(index_queryBannerList, params, { hideToast: true })
@@ -1974,22 +1965,21 @@ export default class home_page extends PureComponent {
 		if (JSON.stringify(blackData) !== '{}') {
 			componentsBlackCard = <BlackCard blackData={blackData} history={this.props.history} />;
 		}
-		componentsDisplay = this.getDCDisPlay() ||
-			this.getFQDisPlay() || (
-				<CarouselHome
-					showData={{
-						demoTip: true
-					}}
-					handleClick={this.handleNeedLogin}
-				/>
-			);
+		componentsDisplay = this.getDCDisPlay() || this.getFQDisPlay() || (
+			<CarouselHome
+				showData={{
+					demoTip: true
+				}}
+				handleClick={this.handleNeedLogin}
+			/>
+		);
 		return (
 			<div className={style.home_new_page}>
 				<div className={style.content_top}>
 					<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
-					<ActivityEntry data={activities} history={this.props.history} />
 				</div>
 				<div className={activities && activities.length ? style.content_main_more : style.content_main}>
+					<ActivityEntry data={activities} history={this.props.history} />
 					<SwitchCard data={this.getDisPlayData()} />
 					{bannerList.length > 0 && (
 						<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
