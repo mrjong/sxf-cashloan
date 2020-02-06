@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 15:32:58
+ * @LastEditTime : 2020-02-06 15:10:11
  */
 import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -15,13 +15,6 @@ import QuestionModal from './components/QuestionModal';
 import qs from 'qs';
 
 import { question_questionInfo } from 'fetch/api.js';
-
-const API = {
-	hotList: '/question/topSeven',
-	categoryList: '/question/questionList',
-	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
-};
-
 const topNavList = [
 	{
 		img: require('./img/msg_icon.png'),
@@ -63,20 +56,7 @@ export default class help_center_page extends PureComponent {
 		this.qryHotListAdnTypes();
 		// this.qryHotList();
 		// this.qryCategoryList();
-		this.qiyu();
 	}
-
-	qiyu = () => {
-		this.props.$fetch.get(API.queryQYOpenId).then((res) => {
-			if (res && res.msgCode === 'PTM0000' && res.data !== null) {
-				this.setState({
-					QYConfig: res.data
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
 
 	/**
 	 * 请求 热门问题 和 问题分类
@@ -97,46 +77,6 @@ export default class help_center_page extends PureComponent {
 				}
 			} else {
 				this.props.toast.info(res.message);
-			}
-		});
-	};
-
-	qryHotList = () => {
-		this.props.$fetch.post(API.hotList).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data) {
-				let arr = res.data.map((v, i) => {
-					return {
-						question: `${i + 1}. ${v.question}`,
-						answer: v.answer,
-						bizId: v.bizId,
-						type: v.type,
-						status: v.status
-					};
-				});
-				this.setState({
-					hotList: arr
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
-
-	qryCategoryList = () => {
-		this.props.$fetch.post(API.categoryList).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data) {
-				let arr = res.data.map((v) => {
-					return {
-						code: v.code,
-						label: v.name,
-						value: v.value
-					};
-				});
-				this.setState({
-					categoryList: arr
-				});
-			} else {
-				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
