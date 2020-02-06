@@ -53,7 +53,7 @@ const fetchInit = () => {
 		(cfg) => {
 			// 非微信去掉 fn-v-card-token-wechat
 			if (!isWXOpen()) {
-				Cookie.remove('fin-v-card-token-wechat');
+				Cookie.remove('FIN-HD-WECHAT-TOKEN');
 			}
 			// const TOKEN = Cookie.get('FIN-HD-AUTH-TOKEN');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
