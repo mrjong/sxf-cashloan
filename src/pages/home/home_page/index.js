@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 16:33:33
+ * @LastEditTime : 2020-02-07 09:50:47
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -31,7 +31,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
-import Carousels from 'components/Carousels';
+import { Carousels, commonPage } from 'components';
 import style from './index.scss';
 // import mockData from './mockData';
 import linkConf from 'config/link.conf';
@@ -80,6 +80,7 @@ let timerPercent; //计时器
 @createForm()
 @fetch.inject()
 @setBackGround('#F0F3F9')
+@commonPage()
 @connect(
 	(state) => ({
 		userInfo: state.staticState.userInfo,

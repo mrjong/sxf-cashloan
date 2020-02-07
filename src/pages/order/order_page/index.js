@@ -4,7 +4,7 @@ import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { isWXOpen } from 'utils';
-import { FooterBar, LoadingView } from 'components';
+import { FooterBar, LoadingView, commonPage } from 'components';
 import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
 import { bill_queryBillList } from 'fetch/api';
@@ -34,6 +34,7 @@ const errorData = {
 	text: '网络错误,点击重试'
 };
 @fetch.inject()
+@commonPage()
 @setBackGround('#F0F3F9')
 export default class order_page extends PureComponent {
 	constructor(props) {

@@ -1,20 +1,18 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 11:06:07
+ * @LastEditTime : 2020-02-07 10:37:55
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-// import avatar from 'assets/images/logo/black_logo.png';
-// import Lists from 'components/Lists';
+import { commonPage } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
 import { isWXOpen, logoutAppHandler } from 'utils';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
-// import fqaImg from 'assets/images/mine/fqa_img.png';
-import { helpCenter } from '../../../utils/analytinsType';
+import { helpCenter } from 'utils/analytinsType';
 import images from 'assets/image';
 
 const API = {
@@ -29,6 +27,7 @@ let token = '';
 let tokenFromStorage = '';
 
 @fetch.inject()
+@commonPage()
 @setBackGround('#f0f3f9')
 export default class mine_page extends PureComponent {
 	constructor(props) {
@@ -48,15 +47,12 @@ export default class mine_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		this.props.globalTask(null);
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
 		// 清除订单缓存
 		store.removeBackData();
-		// 移除会员卡出入口
-		store.removeVipBackUrl();
 		console.log('---------', tokenFromStorage, token);
 		if (tokenFromStorage && token) {
 			// 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
@@ -68,7 +64,6 @@ export default class mine_page extends PureComponent {
 			} else {
 				this.getUsrInfo();
 			}
-			this.couponRedDot();
 			this.couponCount();
 		}
 	}
