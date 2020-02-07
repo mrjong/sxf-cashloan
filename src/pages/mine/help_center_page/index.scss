@@ -57,11 +57,20 @@
 	.hot_icon {
 		position: relative;
 		top: -30px;
-		background-image: url('./img/hot_top.png');
-		background-size: cover;
-		width: 75px;
-		height: 28px;
-		display: inline-block;
+		// background-image: url('./img/hot_top.png');
+		background-color: $colorTipRed;
+    width: 70px;
+    padding: 3px 3px;
+    text-align: center;
+    height: 28px;
+    color: #fff;
+    line-height: 1.4;
+    font-size: 22px;
+    font-weight: normal;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    border-bottom-left-radius: 0;
 	}
 
 	.hotlist_item {

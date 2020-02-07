@@ -1,10 +1,10 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 10:47:08
+ * @LastEditTime : 2020-02-07 14:35:03
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import SXFButton from 'components/ButtonCustom';
+import { ButtonCustom } from 'components';
 import { TextareaItem, ImagePicker } from 'antd-mobile';
 import styles from './index.scss';
 import { setBackGround } from 'utils/background';
@@ -163,7 +163,7 @@ export default class mine_page extends PureComponent {
 	}
 	render() {
 		const { images, textareaVal = '' } = this.state;
-		const btnDisable = !textareaVal || (textareaVal && textareaVal.length < 6);
+		const btnDisable = !textareaVal;
 
 		return (
 			<div className={[styles.mine_page].join(' ')}>
@@ -191,13 +191,13 @@ export default class mine_page extends PureComponent {
 					/>
 				</div>
 				<div>
-					<SXFButton
+					<ButtonCustom
 						className={[styles.submitBtn, btnDisable ? styles.dis : ''].join(' ')}
 						onClick={this.addOpinion}
-						disabled={!!btnDisable}
+						type={btnDisable ? 'gray' : 'yellow'}
 					>
 						提交意见
-					</SXFButton>
+					</ButtonCustom>
 				</div>
 			</div>
 		);

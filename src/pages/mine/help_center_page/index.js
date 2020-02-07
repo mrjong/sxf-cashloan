@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 15:10:11
+ * @LastEditTime : 2020-02-07 14:51:23
  */
 import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
@@ -14,7 +14,7 @@ import { store } from 'utils/store';
 import QuestionModal from './components/QuestionModal';
 import qs from 'qs';
 
-import { question_questionInfo } from 'fetch/api.js';
+import { question_questionInfo } from 'fetch/api';
 const topNavList = [
 	{
 		img: require('./img/msg_icon.png'),
@@ -31,9 +31,6 @@ let queryData = {};
 export default class help_center_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		// // 获取token
-		// token = Cookie.get('FIN-HD-AUTH-TOKEN');
-		// tokenFromStorage = store.getToken();
 		this.state = {
 			hotList: [],
 			categoryList: [],
@@ -54,8 +51,6 @@ export default class help_center_page extends PureComponent {
 			buriedPointEvent(wxTabBar.helpCenterView);
 		}
 		this.qryHotListAdnTypes();
-		// this.qryHotList();
-		// this.qryCategoryList();
 	}
 
 	/**
@@ -179,7 +174,7 @@ export default class help_center_page extends PureComponent {
 	};
 
 	render() {
-		const { showQuestionModal, question } = this.state;
+		const { showQuestionModal, question, hotList, categoryList } = this.state;
 		return (
 			<div className={styles.help_center_page}>
 				{queryData.entry !== 'wxTabBar' ? (
@@ -189,18 +184,26 @@ export default class help_center_page extends PureComponent {
 				) : null}
 				<div className={styles.pannel}>
 					<div className={styles.pannel_title}>
-						<span>热门问题</span>
-						<span className={styles.hot_icon} />
+						{hotList && hotList.length > 0 ? (
+							<div>
+								<span>热门问题</span>
+								<span className={styles.hot_icon}>TOP{hotList.length}</span>
+							</div>
+						) : null}
 					</div>
 					<div className={styles.pannel_list}>{this.renderHotList()}</div>
 				</div>
 				<div className={styles.pannel}>
-					<div className={styles.pannel_title}>
-						<span>问题分类</span>
-					</div>
-					<div className={[styles.pannel_list, styles.category_list].join(' ')}>
-						{this.renderCategoryList()}
-					</div>
+					{categoryList && categoryList.length > 0 ? (
+						<div>
+							<div className={styles.pannel_title}>
+								<span>问题分类</span>
+							</div>
+							<div className={[styles.pannel_list, styles.category_list].join(' ')}>
+								{this.renderCategoryList()}
+							</div>
+						</div>
+					) : null}
 				</div>
 				{store.getToken() ? (
 					<div className={styles.service_box}>

@@ -1,6 +1,12 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-07 14:24:56
+ */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
 import { store } from 'utils/store';
+import { setBackGround } from 'utils/background';
+@setBackGround('#fff')
 export default class message_detail_page extends PureComponent {
 	constructor(props) {
 		super(props);

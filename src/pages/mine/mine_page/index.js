@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 13:52:17
+ * @LastEditTime : 2020-02-07 13:55:59
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -157,7 +157,8 @@ export default class mine_page extends PureComponent {
 	};
 
 	handleGoToFeedbackPage = () => {
-		if (!tokenFromStorage && !token) {
+		const { userInfo } = this.props;
+		if (!userInfo || !userInfo.tokenId) {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push('/login');
 			});
@@ -172,7 +173,11 @@ export default class mine_page extends PureComponent {
 		const isRealName =
 			(userInfo && userInfo.idCheckFlag === '1') || (userInfo && userInfo.idCheckFlag === '2');
 		if (!userInfo || !userInfo.tokenId) {
-			return null;
+			return (
+				<div className={styles.optionListItemAddition}>
+					<span className={styles.optionListItemAdditionArrow} />
+				</div>
+			);
 		}
 		if (isRealName) {
 			return (

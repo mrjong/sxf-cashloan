@@ -340,15 +340,15 @@ export default class order_page extends PureComponent {
 					<strong className={style.orderPageHeadTitle}>账单</strong>
 					<span className={style.orderPageHeadDesc}>还信用卡用还到，有账单就能还</span>
 				</div>
-				<div className={style.orderListCard}>
-					<LoadingView
-						ref={(view) => (this.viewRef = view)}
-						nodata={noData}
-						errordata={errorData}
-						onReloadData={() => {
-							this.onReloadData();
-						}}
-					>
+				<LoadingView
+					ref={(view) => (this.viewRef = view)}
+					nodata={noData}
+					errordata={errorData}
+					onReloadData={() => {
+						this.onReloadData();
+					}}
+				>
+					<div className={style.orderListCard}>
 						<SectionList
 							renderItem={({ item, index }) => this.renderItem(item, index)}
 							renderSectionHeader={({ section: { title } }) => this.renderGroupTitle(title)}
@@ -356,8 +356,9 @@ export default class order_page extends PureComponent {
 							// keyExtractor={(item, index) => item + index}
 							ListFooterComponent={this.renderFooterComponentWrap()}
 						/>
-					</LoadingView>
-				</div>
+					</div>
+				</LoadingView>
+
 				{!this.state.dataSource || !this.state.dataSource.length || this.state.dataSource.length <= 5 ? (
 					<FooterBar />
 				) : null}
