@@ -1,11 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 10:45:04
+ * @LastEditTime : 2020-02-07 13:52:17
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
+import { connect } from 'react-redux';
 import { commonPage } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
 import { isWXOpen, logoutAppHandler } from 'utils';
@@ -14,6 +15,8 @@ import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
 import { helpCenter } from 'utils/analytinsType';
 import images from 'assets/image';
+import { setBackRouter } from 'reduxes/actions/commonActions';
+import { showRedDot } from 'reduxes/actions/specialActions';
 
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
@@ -28,6 +31,17 @@ let tokenFromStorage = '';
 @fetch.inject()
 @commonPage()
 @setBackGround('#f0f3f9')
+@connect(
+	(state) => ({
+		showRedDotNum: state.specialState.showRedDot,
+		userInfo: state.staticState.userInfo,
+		msgCount: state.specialState.msgCount
+	}),
+	{
+		showRedDot,
+		setBackRouter
+	}
+)
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -50,21 +64,6 @@ export default class mine_page extends PureComponent {
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
-		// 清除订单缓存
-		store.removeBackData();
-		console.log('---------', tokenFromStorage, token);
-		if (tokenFromStorage && token) {
-			// 判断session里是否存了用户信息，没有调用接口，有的话直接从session里取
-			if (Cookie.get('authFlag')) {
-				this.setState({
-					mblNoHid: store.getUserPhone(),
-					realNmFlg: Cookie.get('authFlag') === '1' ? true : false
-				});
-			} else {
-				this.getUsrInfo();
-			}
-			this.couponCount();
-		}
 	}
 	couponRedDot = () => {
 		this.props.$fetch.get(API.couponRedDot).then((result) => {
@@ -72,43 +71,6 @@ export default class mine_page extends PureComponent {
 				this.props.globalTask(result.data);
 			}
 		});
-	};
-	couponCount = () => {
-		this.props.$fetch.get(API.couponCount).then((result) => {
-			if (result && result.data) {
-				this.setState({
-					CouponCount: (result.data && result.data.couponCount) || 0
-				});
-			} else {
-				this.setState({
-					CouponCount: 0
-				});
-			}
-		});
-	};
-	// 获取用户信息
-	getUsrInfo = () => {
-		console.log('+++');
-		this.props.$fetch.get(API.USERSTATUS).then(
-			(res) => {
-				if (res.msgCode !== 'PTM0000') {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
-					return;
-				}
-				store.setUserPhone(res.mblNoHid);
-				// store.setAuthFlag(res.realNmFlg);
-				let inOnwMinute = new Date(new Date().getTime() + 1 * 15 * 1000);
-				Cookie.set('authFlag', res.realNmFlg, {
-					expires: inOnwMinute
-				});
-				store.setUserInfo(res);
-				this.setState({ mblNoHid: res.mblNoHid, realNmFlg: res.realNmFlg === '1' ? true : false });
-				//TODO ...
-			},
-			(err) => {
-				err.msgInfo && this.props.toast.info(err.msgInfo);
-			}
-		);
 	};
 
 	logoutHandler = () => {
@@ -146,14 +108,16 @@ export default class mine_page extends PureComponent {
 	};
 
 	handleGoToSelectCardPage = () => {
-		if (!tokenFromStorage && !token) {
+		const { userInfo } = this.props;
+		const { idCheckFlag = '' } = userInfo;
+		if (!userInfo || !userInfo.tokenId) {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push('/login');
 			});
 			return;
 		}
-		const { realNmFlg } = this.state;
-		if (!realNmFlg) {
+		const isRealName = idCheckFlag && (idCheckFlag === '1' || idCheckFlag === '2');
+		if (!isRealName) {
 			this.props.toast.info('请先进行实名认证', 2, () => {
 				this.props.history.push('/home/real_name?type=noRealName');
 			});
@@ -163,25 +127,27 @@ export default class mine_page extends PureComponent {
 	};
 
 	handleGoToCouponPage = () => {
-		if (!tokenFromStorage && !token) {
+		const { userInfo } = this.props;
+		const { idCheckFlag = '' } = userInfo;
+		if (!userInfo || !userInfo.tokenId) {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push('/login');
 			});
 			return;
 		}
-
-		const { mblNoHid, realNmFlg } = this.state;
-		if (!realNmFlg) {
+		const isRealName = idCheckFlag && (idCheckFlag === '1' || idCheckFlag === '2');
+		if (!isRealName) {
 			this.props.toast.info('请先进行实名认证', 2, () => {
 				this.props.history.push({ pathname: '/home/real_name', search: '?type=noRealName' });
 			});
-		} else if (mblNoHid && Cookie.get('VIPFlag') !== '2') {
+		} else {
 			this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
 		}
 	};
 
 	handleGoToRealNamePage = () => {
-		if (!tokenFromStorage && !token) {
+		const { userInfo } = this.props;
+		if (!userInfo || !userInfo.tokenId) {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push('/login');
 			});
@@ -201,8 +167,33 @@ export default class mine_page extends PureComponent {
 		this.props.history.push({ pathname: '/mine/feedback_page' });
 	};
 
+	renderListRowRealNameValue() {
+		const { userInfo = {} } = this.props;
+		const isRealName =
+			(userInfo && userInfo.idCheckFlag === '1') || (userInfo && userInfo.idCheckFlag === '2');
+		if (!userInfo || !userInfo.tokenId) {
+			return null;
+		}
+		if (isRealName) {
+			return (
+				<div className={styles.optionListItemAddition}>
+					<span className={styles.optionListItemAdditionText}>已认证</span>
+					<span className={styles.optionListItemAdditionArrow} />
+				</div>
+			);
+		}
+		return (
+			<div className={styles.optionListItemAddition}>
+				<span className={styles.optionListItemAdditionTextRed}>待完善信息</span>
+				<span className={styles.optionListItemAdditionArrow} />
+			</div>
+		);
+	}
+
 	render() {
 		const { mblNoHid } = this.state;
+		const { userInfo, showRedDotNum, msgCount = 0 } = this.props;
+
 		return (
 			<div className={styles.myPages}>
 				<div className={styles.bannerTop}>
@@ -227,7 +218,6 @@ export default class mine_page extends PureComponent {
 						>
 							<div className={styles.entranceListItemIconWrap}>
 								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_card} alt="" />
-								<span className={styles.entranceListItemMsg}>1</span>
 							</div>
 							<p className={styles.entranceListItemName}>储蓄卡管理</p>
 						</div>
@@ -239,7 +229,11 @@ export default class mine_page extends PureComponent {
 						>
 							<div className={styles.entranceListItemIconWrap}>
 								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_coupon} alt="" />
-								<span className={styles.entranceListItemMsg}>1</span>
+								{showRedDotNum ? (
+									<span className={styles.entranceListItemMsg}>
+										{showRedDotNum && Number(showRedDotNum) > 99 ? '99+' : showRedDotNum}
+									</span>
+								) : null}
 							</div>
 							<p className={styles.entranceListItemName}>优惠券</p>
 						</div>
@@ -251,7 +245,11 @@ export default class mine_page extends PureComponent {
 						>
 							<div className={styles.entranceListItemIconWrap}>
 								<img className={styles.entranceListItemIcon} src={images.tabnav.mine_page_msg} alt="" />
-								<span className={styles.entranceListItemMsg}>99+</span>
+								{msgCount ? (
+									<span className={styles.entranceListItemMsg}>
+										{msgCount && Number(msgCount) > 99 ? '99+' : msgCount}
+									</span>
+								) : null}
 							</div>
 							<p className={styles.entranceListItemName}>消息</p>
 						</div>
@@ -266,24 +264,10 @@ export default class mine_page extends PureComponent {
 							}}
 						>
 							<span className={styles.optionListItemName}>实名认证</span>
-							<div className={styles.optionListItemAddition}>
-								<span className={styles.optionListItemAdditionText}>待完善信息</span>
-								<span className={styles.optionListItemAdditionArrow} />
-							</div>
+							{this.renderListRowRealNameValue()}
 						</div>
 					</div>
 					<div className={styles.optionListWrap}>
-						<div
-							className={styles.optionListItem}
-							onClick={() => {
-								this.handleGoToRealNamePage();
-							}}
-						>
-							<span className={styles.optionListItemName}>修改密码</span>
-							<div className={styles.optionListItemAddition}>
-								<span className={styles.optionListItemAdditionArrow} />
-							</div>
-						</div>
 						<div
 							className={styles.optionListItem}
 							onClick={() => {
