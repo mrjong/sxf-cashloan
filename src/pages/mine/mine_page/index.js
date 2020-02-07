@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 10:37:55
+ * @LastEditTime : 2020-02-07 10:45:04
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -16,7 +16,6 @@ import { helpCenter } from 'utils/analytinsType';
 import images from 'assets/image';
 
 const API = {
-	VIPCARD: '/my/queryUsrMemSts', // 查询用户会员卡状态
 	LOGOUT: '/signup/logout', // 用户退出登陆
 	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
 	couponRedDot: '/index/couponRedDot', // 优惠券红点
