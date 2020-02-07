@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import typeConfig from './typeConfig';
 import { thousandFormatNum } from 'utils/common';
+import ButtonCustom from 'components/ButtonCustom';
 
 import classNM from './SwitchCardItem.scss';
 
@@ -237,9 +238,18 @@ export default class ActivityEntry extends React.PureComponent {
 	renderBtn() {
 		const { btnText, handleClick } = this.props;
 		return (
-			<div className={classNM.myBtn} style={this.buildBtnStyle()} onClick={handleClick}>
+			<ButtonCustom
+				size="lg"
+				className={classNM.myBtn}
+				long={false}
+				style={this.buildBtnStyle()}
+				onClick={handleClick}
+			>
 				{btnText}
-			</div>
+			</ButtonCustom>
+			// <div className={classNM.myBtn} style={this.buildBtnStyle()} onClick={handleClick}>
+			// 	{btnText}
+			// </div>
 		);
 	}
 

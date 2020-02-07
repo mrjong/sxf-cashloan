@@ -927,6 +927,10 @@ export default class home_page extends PureComponent {
 	};
 	// *****************************代偿****************************** //
 
+	handleGoPlusDetail = () => {
+		this.props.history.push('/others/fenqi_landing');
+	};
+
 	getCardBillAmtData() {
 		const homeData = this.state.usrCashIndexInfo;
 		const { dcDataInfo = {} } = homeData;
@@ -1379,6 +1383,7 @@ export default class home_page extends PureComponent {
 				<div className={style.content_top}>
 					<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
 				</div>
+
 				<div className={activities && activities.length ? style.content_main_more : style.content_main}>
 					<ActivityEntry data={activities} history={this.props.history} />
 					<SwitchCard data={this.getDisPlayData()} />
