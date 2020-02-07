@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 17:45:55
+ * @LastEditTime : 2020-02-07 17:52:26
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -688,8 +688,17 @@ export default class home_page extends PureComponent {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
 		}
-		getNextStr({
-			$props: this.props
+		Toast.loading('', 10);
+		getNextStatus({
+			RouterType: 'home',
+			$props: this.props,
+			callBack: (resBackMsg) => {
+				if (this.state.showDiv === 'circle') {
+					buriedPointEvent(home.homeContinueApply, {
+						next_step: resBackMsg
+					});
+				}
+			}
 		});
 	};
 	// 获取首页信息
