@@ -18,11 +18,14 @@ export default class SelectCityTabBar extends Component {
 		);
 	}
 
-	renderTab(name, page, isTabActive, onPressHandler) {
+	renderTab(tab, page, isTabActive, onPressHandler) {
 		const tabStyle = isTabActive ? styles.tab : styles.tab;
+		if (!tab.children) {
+			return null;
+		}
 		return (
 			<div className={tabStyle} key={page} onClick={() => onPressHandler(page)}>
-				<span className={isTabActive ? styles.disActive : styles.tabActive}>{name.value}</span>
+				<span className={isTabActive ? styles.disActive : styles.tabActive}>{tab.name}</span>
 				{isTabActive ? this.renderGradientBar() : null}
 			</div>
 		);
@@ -30,9 +33,9 @@ export default class SelectCityTabBar extends Component {
 
 	renderTabs() {
 		const { tabs, activeTab } = this.props;
-		return tabs.map((name, page) => {
+		return tabs.map((tab, page) => {
 			const isTabActive = activeTab === page;
-			return this.renderTab(name, page, isTabActive, this.props.goToPage);
+			return this.renderTab(tab, page, isTabActive, this.props.goToPage);
 		});
 	}
 

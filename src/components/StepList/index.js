@@ -10,9 +10,9 @@ export default class StepList extends React.PureComponent {
 		};
 	}
 	render() {
-		const { stepList } = this.props;
+		const { stepList, style } = this.props;
 		return (
-			<div className={classNM.stepListWrap}>
+			<div style={style} className={classNM.stepListWrap}>
 				{stepList.map((item, index) => (
 					<div className={classNM.stepListItem} key={index}>
 						<div className={classNM.stepNumWrap}>

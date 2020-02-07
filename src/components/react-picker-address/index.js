@@ -4,12 +4,14 @@ import fetch from 'sx-fetch';
 import { Carousel, Icon } from 'antd-mobile';
 import styles from './index.scss';
 import SelectCityTabBar from './SelectCityTabBar';
+import { msg_area } from 'fetch/api.js';
+
 const API = {
 	rcm_qryArea: '/rcm/qryArea'
 };
 const initObj = {
-	key: null,
-	value: '请选择',
+	code: null,
+	name: '请选择',
 	children: null
 };
 
@@ -28,8 +30,8 @@ export default class AddressSelect extends Component {
 		level: 4,
 		value: [
 			{
-				key: null,
-				value: '请选择'
+				code: null,
+				name: '请选择'
 			}
 		],
 		commitFun() {},
@@ -41,8 +43,8 @@ export default class AddressSelect extends Component {
 		this.state = {
 			selectAddress: [
 				{
-					key: null,
-					value: '请选择',
+					code: null,
+					name: '请选择',
 					children: []
 				}
 			],
@@ -59,32 +61,33 @@ export default class AddressSelect extends Component {
 	}
 
 	async handleGetProvinceData() {
-		const provinceData = await this.props.$fetch.get(`${API.rcm_qryArea}/0`);
+		const provinceData = await this.props.$fetch.get(`${msg_area}/0`);
 		let selectAddressNew = JSON.parse(JSON.stringify(this.state.selectAddress));
-		selectAddressNew[0].children = JSON.parse(JSON.stringify(provinceData.data));
+		selectAddressNew[0].children = JSON.parse(JSON.stringify(provinceData.data.data));
 		this.setState({ selectAddress: selectAddressNew });
 	}
 
 	recoveryData() {
 		const { value, level } = this.props;
+		console.log(value, 'value');
 		let newValue = JSON.parse(JSON.stringify(value));
-		newValue.unshift({ key: '0' });
+		newValue.unshift({ code: '0' });
 		let requestList = newValue.map((item) =>
-			this.props.$fetch.get(`${API.rcm_qryArea}/${item.key}`, {}, { hideLoading: true })
+			this.props.$fetch.get(`${msg_area}/${item.code}`, {}, { hideLoading: true })
 		);
 		requestList = requestList.slice(0, level);
 		let selectAddressNew = JSON.parse(JSON.stringify(this.state.selectAddress));
 		fetch.all(requestList).then((res) => {
 			res
-				.filter((item) => item && item.data && item.data.length)
+				.filter((item) => item && item.data && item.data.data && item.data.data.length)
 				.forEach((item, index) => {
 					if (!selectAddressNew[index]) {
 						selectAddressNew[index] = JSON.parse(JSON.stringify(initObj));
 					}
-					selectAddressNew[index].children = JSON.parse(JSON.stringify(item.data));
+					selectAddressNew[index].children = JSON.parse(JSON.stringify(item.data.data));
 					if (value[index]) {
-						selectAddressNew[index].key = value[index].key;
-						selectAddressNew[index].value = value[index].value;
+						selectAddressNew[index].code = value[index].code;
+						selectAddressNew[index].name = value[index].name;
 					}
 				});
 			this.setState({
@@ -111,16 +114,11 @@ export default class AddressSelect extends Component {
 
 	renderScrollTab() {
 		const { selectAddress } = this.state;
-
 		return selectAddress.map((obj, i) => {
 			let array = selectAddress[i].children;
 			if (array) {
 				return (
-					<div
-						className={styles.areaBox}
-						key={i}
-						// tabLabel={obj.value}
-					>
+					<div className={styles.areaBox} key={i}>
 						{array.map((item) => this.renderListItem(item, i))}
 					</div>
 				);
@@ -138,18 +136,18 @@ export default class AddressSelect extends Component {
 	renderListItem(item, i) {
 		let { selectAddress } = this.state;
 		let textStyle = styles.itemText;
-		const isActive = item.key === selectAddress[i].key;
+		const isActive = item.code === selectAddress[i].code;
 		if (isActive) {
 			textStyle = styles.itemtextactive;
 		}
 		return (
 			<div
 				className={styles.itemStyle}
-				key={i + item.key}
+				key={i + item.code}
 				onClick={this.handleClickListItem.bind(this, item, i)}
 			>
 				{isActive ? <Icon size="xs" className={styles.checkIcon} type="check"></Icon> : null}
-				<span className={textStyle}>{item.value}</span>
+				<span className={textStyle}>{item.name}</span>
 			</div>
 		);
 	}
@@ -165,8 +163,8 @@ export default class AddressSelect extends Component {
 		const isLastItem = i >= level - 1;
 
 		let selectAddressNew = JSON.parse(JSON.stringify(selectAddress));
-		selectAddressNew[i].key = item.key;
-		selectAddressNew[i].value = item.value;
+		selectAddressNew[i].code = item.code;
+		selectAddressNew[i].name = item.name;
 		// 如果当前点击 已经是最后一层 先改变值 隔一定时间 再发射值
 		if (isLastItem) {
 			this.setState({ selectAddress: selectAddressNew }, () => {
@@ -179,7 +177,7 @@ export default class AddressSelect extends Component {
 
 		// 如果当前点击没变化 并且下级有内容 则只切换
 		if (
-			item.key === selectAddress[i].key &&
+			item.code === selectAddress[i].code &&
 			selectAddress[i + 1] &&
 			selectAddress[i + 1].children &&
 			selectAddress[i + 1].children.length
@@ -200,14 +198,14 @@ export default class AddressSelect extends Component {
 		});
 
 		// 请求下一层级的数据
-		const nextData = await this.props.$fetch.get(`${API.rcm_qryArea}/${item.key}`);
+		const nextData = await this.props.$fetch.get(`${msg_area}/${item.code}`);
 
 		// 如果有数据 则设置下一级的值，否则，会认为到达最后一级，然后发射值。
-		if (nextData.data && nextData.data.length) {
+		if (nextData.data && nextData.data.data && nextData.data.data.length) {
 			if (!selectAddressNew[i + 1]) {
 				selectAddressNew[i + 1] = JSON.parse(JSON.stringify(initObj));
 			}
-			selectAddressNew[i + 1].children = JSON.parse(JSON.stringify(nextData.data));
+			selectAddressNew[i + 1].children = JSON.parse(JSON.stringify(nextData.data.data));
 			// selectAddressNew[i + 2] = JSON.parse(JSON.stringify(initObj));
 		} else {
 			this.setState({ selectAddress: selectAddressNew }, () => {
@@ -228,10 +226,12 @@ export default class AddressSelect extends Component {
 
 	handleEmitValue(data = this.state.selectAddress) {
 		const selectAddressFormat = data
-			.filter((item) => item && item.key)
+			.filter((item) => item && item.code)
 			.map((item) => ({
-				key: item.key,
-				value: item.value
+				code: item.code,
+				name: item.name,
+				key: item.code,
+				value: item.name
 			}));
 		this.props.commitFun && this.props.commitFun(selectAddressFormat);
 		this.props.dissmissFun && this.props.dissmissFun();
