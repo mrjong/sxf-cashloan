@@ -25,7 +25,7 @@ import { domListen } from 'utils/domListen';
 import AddressSelect from 'components/react-picker-address';
 import StepTitle from 'components/StepTitle';
 import StepList from 'components/StepList';
-import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { connect } from 'react-redux';
 
@@ -37,15 +37,13 @@ const API = {
 	getRelat: '/rcm/qryRelat',
 	submitData: '/auth/personalData',
 	qryCity: '/rcm/qryCity',
-	queryUsrBasicInfo: '/auth/queryUsrBasicInfo',
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	contractInfo: '/bill/personalDataAuthInfo', // 个人信息授权书数据查询
 	rcm_qryArea: '/rcm/qryArea' // 获取地理位置
 };
 
-import { msg_area, msg_relation, auth_personalData } from 'fetch/api.js';
-// import { auth_queryUsrBasicInfo, msg_relation, msg_area, auth_personalData } from '@/NewAPI';
+import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api.js';
 
 const reducedFilter = (data, keys, fn) =>
 	data.filter(fn).map((el) =>
@@ -269,17 +267,29 @@ export default class essential_information_page extends PureComponent {
 			this.props.form.setFieldsValue({
 				address: store.getAddress() || (res && res.data && res.data.usrDtlAddr) || '',
 				linkman: store.getLinkman() || (res && res.data && res.data.cntUsrNm1) || '',
-				linkphone: store.getLinkphone() || (res && res.data && res.data.mobForOne) || '',
+				linkphone: store.getLinkphone() || (res && res.data && res.data.cntUsrTel1) || '',
 				linkman2: store.getLinkman2() || (res && res.data && res.data.cntUsrNm2) || '',
-				linkphone2: store.getLinkphone2() || (res && res.data && res.data.mobForSec) || ''
+				linkphone2: store.getLinkphone2() || (res && res.data && res.data.cntUsrTel2) || ''
 			});
 		} else {
 			this.props.form.setFieldsValue({
 				address: (res && res.data && res.data.usrDtlAddr) || store.getAddress() || '',
-				linkman: (res && res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-				linkphone: (res && res.data && res.data.mobForOne) || store.getLinkphone() || '',
-				linkman2: (res && res.data && res.data.cntUsrNm2) || store.getLinkman2() || '',
-				linkphone2: (res && res.data && res.data.mobForSec) || store.getLinkphone2() || ''
+				linkman:
+					(res && res.data && res.data.cntUsrNm1 && base64Decode(res.data.cntUsrNm1)) ||
+					store.getLinkman() ||
+					'',
+				linkphone:
+					(res && res.data && res.data.cntUsrTel1 && base64Decode(res.data.cntUsrTel1)) ||
+					store.getLinkphone() ||
+					'',
+				linkman2:
+					(res && res.data && res.data.cntUsrNm2 && base64Decode(res.data.cntUsrNm2)) ||
+					store.getLinkman2() ||
+					'',
+				linkphone2:
+					(res && res.data && res.data.cntUsrTel2 && base64Decode(res.data.cntUsrTel2)) ||
+					store.getLinkphone2() ||
+					''
 			});
 		}
 		if (cacheData) {
@@ -317,8 +327,8 @@ export default class essential_information_page extends PureComponent {
 
 	//获取基本信息
 	queryUsrBasicInfo = (province, city, district, township) => {
-		this.props.$fetch.post(API.queryUsrBasicInfo).then((res) => {
-			if (res.code === 'PTM0000' && res && res.data) {
+		this.props.$fetch.get(auth_queryUsrBasicInfo).then((res) => {
+			if (res.code === '000000' && res && res.data) {
 				this.commonFunc(res, { province, city, district, township });
 			} else {
 				this.commonFunc(null, { province, city, district, township });
