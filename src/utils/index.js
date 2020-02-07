@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 09:58:57
+ * @LastEditTime : 2020-02-07 15:05:29
  */
 /*eslint-disable */
 import React from 'react';
@@ -170,69 +170,8 @@ export const isSomeBrowser = (type) => {
 	const u = navigator.userAgent.toLowerCase();
 	return u.indexOf(type) > -1 && u.indexOf('micromessenger') <= -1;
 };
-//关闭view
-export const closeCurrentWebView = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
-			console.log(response);
-		});
-	});
-};
 // 点击退出
 let state = false;
-
-// 退出功能
-export const logoutApp = () => {
-	fetch.get(API.LOGOUT).then(
-		(result) => {
-			if (result && result.msgCode !== 'PTM0000') {
-				result.msgInfo && Toast.info(result.msgInfo);
-				return;
-			}
-			window.ReactRouterHistory.push('/login');
-			// sessionStorage.clear();
-			// localStorage.clear();
-			// Cookie.remove('FIN-HD-AUTH-TOKEN');
-			Cookie.remove('authFlag');
-			Cookie.remove('VIPFlag');
-			//退出时,删除通付盾script
-			document.getElementById('tonfudunScript') &&
-				document.body.removeChild(document.getElementById('tonfudunScript'));
-			document.getElementById('payegisIfm') &&
-				document.body.removeChild(document.getElementById('payegisIfm'));
-		},
-		(err) => {
-			err.msgInfo && Toast.info(err.msgInfo);
-		}
-	);
-};
-
-export const logoutAppHandler = (that) => {
-	if (isMPOS()) {
-		closeCurrentWebView();
-		return;
-	}
-	if (!state && !store.getGotoMoxieFlag()) {
-		state = true;
-		const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
-		Modal.alert('', ele, [
-			{
-				text: '取消',
-				onPress: () => {
-					state = false;
-				}
-			},
-			{
-				text: '确定',
-				onPress: () => {
-					state = false;
-					logoutApp(that);
-				}
-			}
-		]);
-	}
-};
-
 // 定义需要拦截的路由
 const interceptRouteArr = [
 	'/login',

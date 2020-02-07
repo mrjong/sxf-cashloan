@@ -1,17 +1,18 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-12-04 15:52:42
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-07 15:25:31
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
 // 2、在对应的 page 页面中引入 noRouterBack.js；
 import React from 'react';
-import { logoutAppHandler, changeHistoryState, isWXOpen } from 'utils';
+import { changeHistoryState, isWXOpen } from 'utils';
+import { logoutAppHandler } from 'utils/CommonUtil/commonFunc';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { closeCurrentWebView } from 'utils';
+import { closeCurrentWebView } from 'utils/CommonUtil/commonFunc';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';

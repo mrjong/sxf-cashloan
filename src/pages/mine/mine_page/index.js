@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 13:55:59
+ * @LastEditTime : 2020-02-07 15:13:22
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -9,7 +9,8 @@ import fetch from 'sx-fetch';
 import { connect } from 'react-redux';
 import { commonPage } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
-import { isWXOpen, logoutAppHandler } from 'utils';
+import { isWXOpen } from 'utils';
+import { logoutAppHandler } from 'utils/CommonUtil/commonFunc';
 import styles from './index.scss';
 import { isMPOS } from 'utils/common';
 import { setBackGround } from 'utils/background';
@@ -197,7 +198,7 @@ export default class mine_page extends PureComponent {
 
 	render() {
 		const { mblNoHid } = this.state;
-		const { userInfo, showRedDotNum, msgCount = 0 } = this.props;
+		const { showRedDotNum, msgCount = 0 } = this.props;
 
 		return (
 			<div className={styles.myPages}>
