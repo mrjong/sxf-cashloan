@@ -1,5 +1,80 @@
 .extraWrap {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.perdDetailWrap {
+	background-color: $colorBgText;
+	padding: 32px 40px 20px;
+	box-sizing: border-box;
+}
+
+.detailItem {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.detailItemTotal {
+	border-top: 1px solid $colorLoadingBarBg;
+}
+
+.detailLabel {
+	font-size: 26px;
+	color: $colorInactiveColor;
+}
+
+.detailValue {
+	font-size: 26px;
+	color: $colorInactiveColor;
+	font-weight: 500;
+	font-family: $fontFamilyNumber;
+}
+
+.detailLabelSub {
+	font-size: 24px;
+
+	color: $colorInputPlaceholder;
+}
+
+.red_box {
+	border: 1px solid #fe6666;
+	background-color: #f6e8ea;
+	padding: 0 8px;
+	box-sizing: border-box;
+	color: #fe6666;
+	font-size: 22px;
+}
+.perdTotAmt {
+	font-size: 28px;
+	font-family: $fontFamilyNumber;
+	color: $colorListText;
+}
+
+.antListItem {
+	:global {
+		.am-list-item {
+			.am-list-line {
+				.am-list-content {
+					font-size: 28px;
+					font-weight: 500;
+					color: $colorBlack;
+					padding: 30px 0;
+					.am-list-brief {
+						font-size: 24px;
+            color: $colorInactiveColor;
+            font-weight: normal;
+					}
+        }
+        .am-list-arrow {
+          width: 20px;
+          height: 20px;
+        }
+			}
+			.am-list-extra {
+				padding: 30px 0;
+			}
+		}
+	}
 }

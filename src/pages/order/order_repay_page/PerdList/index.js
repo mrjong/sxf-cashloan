@@ -37,32 +37,31 @@ class PerdList extends Component {
 				{item.feeAmt ? (
 					<div
 						key={index}
-						className={[styles.list_detail_item, index === arr.length - 1 && styles.list_detail_total]}
+						className={[styles.detailItem, index === arr.length - 1 && styles.detailItemTotal].join(' ')}
 					>
-						<div style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+						<div>
 							<span
-							// style={[
-							// 	styles.textDesc,
-							// 	index === arr.length - 1
-							// 		? styles.list_detail_total_text
-							// 		: this.showSubTextDesc(item.feeNm)
-							// 		? { width: px(100) }
-							// 		: {}
-							// ]}
+								// style={[
+								// 	styles.textDesc,
+								// 	index === arr.length - 1
+								// 		? styles.list_detail_total_text
+								// 		: this.showSubTextDesc(item.feeNm)
+								// 		? { width: px(100) }
+								// 		: {}
+								// ]}
+								className={styles.detailLabel}
 							>
 								{item.feeNm}
 							</span>
-							<span style={styles.sub_textDesc}>{this.showSubTextDesc(item.feeNm)}</span>
+							<span className={styles.detailLabelSub}>{this.showSubTextDesc(item.feeNm)}</span>
 						</div>
 
 						{item.feeNm === '优惠金额' || item.feeNm === '减免金额' ? (
-							<div style={styles.red_box}>
-								<span style={[styles.textDesc, styles.red_text]}>-优惠{item.feeAmt.toFixed(2)}</span>
+							<div className={styles.red_box}>
+								<span>-优惠{item.feeAmt.toFixed(2)}</span>
 							</div>
 						) : (
-							<span style={[styles.textDesc, index === arr.length - 1 && styles.list_detail_total_text]}>
-								{item.feeAmt.toFixed(2)}
-							</span>
+							<span className={styles.detailValue}>{item.feeAmt.toFixed(2)}</span>
 						)}
 					</div>
 				) : null}
@@ -71,13 +70,10 @@ class PerdList extends Component {
 	};
 
 	render() {
-		const { perdList, perdLth } = this.props;
-		console.log(perdList, 'perd-item');
-		const iconChecked = <img src={Image.icon.checked} />;
-		const iconCheckedNo = <img src={Image.icon.checked_no} />;
+		const { perdList, perdLth, onCheckboxClick } = this.props;
 
 		return (
-			<List>
+			<List className={styles.antListItem}>
 				{/* 账单列表 */}
 				{perdList &&
 					perdList.map((item, index) => {
@@ -88,18 +84,27 @@ class PerdList extends Component {
 									// 	item.label.className ? styles.hasIcon : isCheckbox ? styles.checkList : null,
 									// 	!item.isShowCheck && styles.nocheckbox_list_desc
 									// ].join(' ')}
-									arrow={'horizontal'}
+									arrow={item.showDetail ? 'up' : 'down'}
 									onClick={() => {
-										// this.props.onCheckboxClick(item);
 										this.togglePerdDetailShow(index);
 									}}
 									extra={
 										<div className={styles.extraWrap}>
-											<span>{item.perdTotAmt.toFixed(2)}</span>
-											<span style={{ color: item.color }}>{item.perdStsNm}</span>
+											<span className={styles.perdTotAmt}>{item.perdTotAmt.toFixed(2)}</span>
+											<span style={{ color: item.color, fontSize: '0.24rem' }}>{item.perdStsNm}</span>
 										</div>
 									}
-									thumb={true ? iconChecked : iconCheckedNo}
+									thumb={
+										item.isShowCheck ? (
+											<img
+												src={item.isChecked ? Image.icon.checked : Image.icon.checked_no}
+												onClick={(e) => {
+													e.stopPropagation();
+													onCheckboxClick(item);
+												}}
+											/>
+										) : null
+									}
 								>
 									{/* {isCheckbox && item.isShowCheck && (
 										<span
@@ -118,7 +123,9 @@ class PerdList extends Component {
 									<List.Item.Brief>{`应支付日：${item.perdDueDt}`}</List.Item.Brief>
 								</List.Item>
 
-								{item.showDetail ? <div>{this.renderPerdDetail()}</div> : null}
+								{item.showDetail ? (
+									<div className={styles.perdDetailWrap}>{this.renderPerdDetail(item.fees)}</div>
+								) : null}
 							</div>
 						);
 					})}
