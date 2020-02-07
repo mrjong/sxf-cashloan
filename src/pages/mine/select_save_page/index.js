@@ -3,20 +3,25 @@ import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import { Modal, Icon } from 'antd-mobile';
 import fetch from 'sx-fetch';
+import { ButtonCustom, LoadingView } from 'components';
 import qs from 'qs';
+import Image from 'assets/image';
 import styles from './index.scss';
-import { bank_card_list, my_card_unbind } from 'fetch/api.js';
+import { bank_card_list, my_card_unbind } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setWithholdCardDataAction, setWithdrawCardDataAction } from 'reduxes/actions/commonActions';
 
-const API = {
-	BANKLIST: '/my/card/list', // 银行卡列表
-	UNBINDCARD: '/my/card/fake/unbind', // 解出银行卡绑定
-	VIPBANKLIST: '/my/quickpay/cardList' // 会员卡的银行卡列表
-};
-
 let backUrlData = ''; // 从除了我的里面其他页面进去
-
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无银行卡',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
 @fetch.inject()
 @connect(
 	(state) => ({
@@ -83,10 +88,16 @@ export default class select_save_page extends PureComponent {
 		this.props.$fetch.post(bank_card_list, params).then(
 			(res) => {
 				if (res.code === '000000') {
+					if (res.data.bankCards && res.data.bankCards.length > 0) {
+						this.viewRef && this.viewRef.showDataView();
+					} else {
+						this.viewRef && this.viewRef.setEmpty();
+					}
 					this.setState({
 						cardList: res.data && res.data.bankCards ? res.data.bankCards : []
 					});
 				} else {
+					this.viewRef && this.viewRef.setEmpty();
 					// if (res.code === 'PTM3021') {
 					// 	this.setState({
 					// 		cardList: []
@@ -97,6 +108,7 @@ export default class select_save_page extends PureComponent {
 				}
 			},
 			(error) => {
+				this.viewRef && this.viewRef.setEmpty();
 				error.message && this.props.toast.info(error.message);
 			}
 		);
@@ -195,65 +207,61 @@ export default class select_save_page extends PureComponent {
 		const { cardList } = this.state;
 		return (
 			<div className={styles.select_save_page}>
-				{cardList.length ? (
-					<div>
-						<p className={styles.card_tit}>已绑定储蓄卡</p>
-						<ul className={styles.card_list}>
-							{cardList.map((item, index) => {
-								const isSelected = item.coreAgrNos.includes(this.state.agrNo);
-								if (cardType) {
+				<LoadingView
+					ref={(view) => (this.viewRef = view)}
+					nodata={noData}
+					errordata={errorData}
+					onReloadData={() => {
+						this.onRefresh();
+					}}
+				>
+					{cardList.length ? (
+						<div>
+							<p className={styles.card_tit}>已绑定储蓄卡</p>
+							<ul className={styles.card_list}>
+								{cardList.map((item, index) => {
+									const isSelected = item.coreAgrNos.includes(this.state.agrNo);
+									if (cardType) {
+										return (
+											<li
+												className={isSelected ? styles.active : ''}
+												key={index}
+												onClick={() =>
+													this.selectCard({
+														bankName: item.bankName,
+														lastCardNo: item.cardNoLast,
+														bankCode: item.bankCode,
+														agrNo: item.agrNo
+													})
+												}
+											>
+												<span className={`bank_ico bank_ico_${item.bankCode}`} />
+												<span className={styles.bank_name}>{item.bankName}</span>
+												<span>···· {item.cardNoLast}</span>
+												{isSelected ? (
+													<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
+												) : null}
+											</li>
+										);
+									}
 									return (
-										<li
-											className={isSelected ? styles.active : ''}
-											key={index}
-											onClick={() =>
-												this.selectCard({
-													bankName: item.bankName,
-													lastCardNo: item.cardNoLast,
-													bankCode: item.bankCode,
-													agrNo: item.agrNo
-												})
-											}
-										>
+										<li key={index}>
 											<span className={`bank_ico bank_ico_${item.bankCode}`} />
 											<span className={styles.bank_name}>{item.bankName}</span>
 											<span>···· {item.cardNoLast}</span>
-											{isSelected ? (
-												<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
-											) : null}
 										</li>
 									);
-								}
-								return (
-									<li key={index}>
-										{/* <SwipeAction
-                      autoClose
-                      right={[
-                        {
-                          text: '解绑',
-                          onPress: () => {
-                            this.unbindHandler(item.cardNo);
-                          },
-                          style: { backgroundColor: '#FF5A5A', color: 'white' }
-                        }
-                      ]}
-                      onOpen={() => {}}
-                      onClose={() => {}}
-                    >
-                      </SwipeAction> */}
-										<span className={`bank_ico bank_ico_${item.bankCode}`} />
-										<span className={styles.bank_name}>{item.bankName}</span>
-										<span>···· {item.cardNoLast}</span>
-									</li>
-								);
-							})}
-						</ul>
-					</div>
-				) : null}
-				<p onClick={this.addCard} className={styles.add_card}>
-					<i className={styles.add_ico} />
-					绑定储蓄卡
-				</p>
+								})}
+							</ul>
+						</div>
+					) : null}
+				</LoadingView>
+				<div className={styles.addCardBox}>
+					<ButtonCustom onClick={this.addCard}>
+						<i className={styles.add_ico} />
+						绑定储蓄卡
+					</ButtonCustom>
+				</div>
 			</div>
 		);
 	}

@@ -1,18 +1,20 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-07 17:48:17
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import qs from 'qs';
 import { store } from 'utils/store';
-import { bank_card_valid } from 'fetch/api.js';
+import { bank_card_valid } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setBindDepositInfoAction } from 'reduxes/actions/commonActions';
+import { setBackGround } from 'utils/background';
 
-const API = {
-	SUPPORTBANKLIST: '/withhold/binkLists' // 银行卡列表
-};
 let queryData = '';
-
 @fetch.inject()
+@setBackGround('#fff')
 @connect(
 	(state) => ({
 		bindDepositInfo: state.commonState.bindDepositInfo

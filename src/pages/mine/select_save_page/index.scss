@@ -49,6 +49,13 @@
 			border-color: transparent;
 		}
 	}
+	.addCardBox {
+		position: fixed;
+    bottom: 0;
+    padding: 20px 40px;
+    box-sizing: border-box;
+		width: 100%;
+	}
 	.add_card {
 		font-size: 32px;
 		color: rgba(235, 222, 116, 1);
