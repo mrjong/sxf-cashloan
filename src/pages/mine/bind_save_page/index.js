@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 17:33:52
+ * @LastEditTime : 2020-02-08 13:50:14
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -29,14 +29,6 @@ import {
 	setBindDepositInfoAction
 } from 'reduxes/actions/commonActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-
-const API = {
-	GETUSERINF: '/my/getRealInfo', // 获取用户信息
-	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
-	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
-	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
-};
 
 @fetch.inject()
 @createForm()

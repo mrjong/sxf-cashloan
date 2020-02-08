@@ -1,12 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 17:48:17
+ * @LastEditTime : 2020-02-08 12:51:00
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import qs from 'qs';
-import { store } from 'utils/store';
 import { bank_card_valid } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setBindDepositInfoAction } from 'reduxes/actions/commonActions';

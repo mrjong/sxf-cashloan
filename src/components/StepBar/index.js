@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2020-02-08 14:25:25
+ */
 import React, { Component } from 'react';
 import style from './index.scss';
 
@@ -28,9 +33,10 @@ export default class StepBar extends Component {
 										<span>+利息{item.perdItrtAmt}</span>
 										{item.perdMngAmt && <span>+服务费{item.perdMngAmt}</span>}
 									</div>
-									{item.perdDeductAmt && item.perdDeductAmt > 0 && (
+									{(item.perdDeductAmt && item.perdDeductAmt > 0 && (
 										<span className={style.step_subDesc}>-优惠{item.perdDeductAmt}</span>
-									)}
+									)) ||
+										null}
 								</div>
 							</li>
 						))}

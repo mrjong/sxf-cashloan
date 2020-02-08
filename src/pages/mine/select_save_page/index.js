@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 // import { SwipeAction } from 'antd-mobile';
-import { store } from 'utils/store';
 import { Modal, Icon } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import { ButtonCustom, LoadingView } from 'components';
@@ -11,7 +10,6 @@ import { bank_card_list, my_card_unbind } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setWithholdCardDataAction, setWithdrawCardDataAction } from 'reduxes/actions/commonActions';
 
-let backUrlData = ''; // 从除了我的里面其他页面进去
 const noData = {
 	img: Image.bg.no_order,
 	text: '暂无银行卡',
@@ -37,24 +35,17 @@ export default class select_save_page extends PureComponent {
 		super(props);
 		this.state = {
 			agrNo: '',
-			cardList: [],
-			isClickAdd: false // 是否点击了添加授权卡
+			cardList: []
 			// unbindData: '', // 解绑卡的数据
 		};
-		backUrlData = store.getBackUrl();
 	}
 	componentWillMount() {
 		// 改变title值
-		if (!backUrlData) {
+		const { cardType } = this.props;
+		if (cardType) {
 			this.props.setTitle('储蓄卡管理');
 		}
-		// 根据不同页面跳转过来查询不同接口
-		if (backUrlData && backUrlData === '/mine/confirm_purchase_page') {
-			this.queryVipBankList();
-			this.props.setTitle('选择银行卡');
-		} else {
-			this.queryBankList();
-		}
+		this.queryBankList();
 		// 设置跳转过来选中的效果
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		if (queryData.agrNo) {
@@ -63,20 +54,8 @@ export default class select_save_page extends PureComponent {
 			});
 		}
 	}
-	componentDidMount() {
-		// 改变body的背景色
-		if (backUrlData) {
-			document.getElementsByTagName('body')[0].className = 'white';
-		} else {
-			document.getElementsByTagName('body')[0].className = '';
-		}
-	}
-	componentWillUnmount() {
-		document.getElementsByTagName('body')[0].className = '';
-		if (!this.state.isClickAdd) {
-			store.removeBackUrl(); // 清除session里的backurl的值
-		}
-	}
+	componentDidMount() {}
+	componentWillUnmount() {}
 	// 获取储蓄卡银行卡列表
 	queryBankList = () => {
 		const params = {
@@ -144,61 +123,31 @@ export default class select_save_page extends PureComponent {
 		);
 	};
 
-	//存储现金分期卡信息
-	storeCashFenQiCardData = (cardDatas) => {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const cashFenQiCardArr = store.getCashFenQiCardArr();
-		//现金分期收、还款银行卡信息
-		if (queryData.cardType === 'resave') {
-			cashFenQiCardArr[0] = cardDatas;
-		} else if (queryData.cardType === 'pay') {
-			cashFenQiCardArr[1] = cardDatas;
-		}
-		store.setCashFenQiCardArr(cashFenQiCardArr);
-	};
-
 	// 选择银行卡
 	selectCard = (obj) => {
-		// if (backUrlData) {
 		this.setState({
-			// bankName: obj.bankName,
-			// lastCardNo: obj.lastCardNo,
-			// bankCode: obj.bankCode,
 			agrNo: obj.agrNo
 		});
-		this.props.history.goBack();
-		let cardDatas = {};
-		// 如果是首页则多存一个参数为showModal的字段，以便首页弹框
-		if (backUrlData === '/home/home') {
-			cardDatas = { showModal: true, ...obj };
-		} else {
-			cardDatas = obj;
+		let cardDatas = obj;
+
+		const { cardType } = this.props;
+		if (cardType === 'withhold') {
+			// 将还款银行卡数据存储到redux中
+			this.props.setWithholdCardDataAction(cardDatas);
+		} else if (cardType === 'withdraw') {
+			this.props.setWithdrawCardDataAction(cardDatas);
 		}
-		this.storeCashFenQiCardData(cardDatas);
-		store.setCardData(cardDatas);
-		let paramVip = store.getParamVip() || {};
-		Object.assign(paramVip, obj);
-		store.setParamVip(paramVip);
-		// }
+		this.props.history.goBack();
 	};
 
 	// 新增授权卡
 	addCard = () => {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (backUrlData) {
-			this.setState({ isClickAdd: true });
-			if (backUrlData === '/mine/confirm_purchase_page') {
-				this.props.history.replace('/mine/bind_bank_card');
-			} else {
-				this.props.history.replace(
-					`/mine/bind_save_page${queryData.cardType ? `?cardType=${queryData.cardType}` : ''}`
-				);
-			}
+		const { cardType } = this.props;
+		if (cardType) {
+			// 如果有cardType则用replace跳转,否则navigate
+			this.props.history.replace('/mine/bind_save_page');
 		} else {
-			this.setState({ isClickAdd: true });
-			this.props.history.push(
-				`/mine/bind_save_page${queryData.cardType ? `?cardType=${queryData.cardType}` : ''}`
-			);
+			this.props.history.push('/mine/bind_save_page');
 		}
 	};
 

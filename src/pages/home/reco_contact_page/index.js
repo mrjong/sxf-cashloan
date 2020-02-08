@@ -1,17 +1,26 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 20:20:06
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2020-02-08 16:05:35
  */
 import React, { PureComponent } from 'react';
-import { store } from 'utils/store';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
-import { setBackGround } from 'utils/background';
+// import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import { connect } from 'react-redux';
+import { setCacheContactAction } from 'reduxes/actions/commonActions';
 
-@setBackGround('#fff')
+// @setBackGround('#fff')
+@connect(
+	(state) => ({
+		confirmAgencyInfo: state.commonState.confirmAgencyInfo
+	}),
+	{
+		setCacheContactAction
+	}
+)
 export default class reco_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -20,10 +29,9 @@ export default class reco_contact_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		const sendContactList =
-			this.props.history.location.state && this.props.history.location.state.contactList;
+		const { confirmAgencyInfo = {} } = this.props;
 		this.setState({
-			contactList: sendContactList
+			contactList: confirmAgencyInfo.repayInfo && confirmAgencyInfo.repayInfo.contacts
 		});
 	}
 	componentDidMount() {}
@@ -56,13 +64,11 @@ export default class reco_contact_page extends PureComponent {
 	confirmHandler = () => {
 		buriedPointEvent(home.reContactConfirmClick);
 
-		const { contactList } = this.state;
 		const selectedList = this.getSeleList();
 		if (selectedList.length < 5) {
 			this.props.toast.info('请勾选满5个指定联系人');
 		} else {
-			store.setSelContactList(selectedList);
-			store.setContactList(contactList);
+			this.props.setCacheContactAction(selectedList);
 			this.props.history.replace('/home/contact_result_page');
 		}
 	};
@@ -71,9 +77,7 @@ export default class reco_contact_page extends PureComponent {
 	getSeleList = () => {
 		let selectedList = [];
 		const { contactList } = this.state;
-		selectedList = contactList.filter((item) => {
-			return item.isMarked;
-		});
+		selectedList = contactList.filter((item) => item.isMarked);
 		return selectedList;
 	};
 
