@@ -10,9 +10,9 @@ export default class StepTitle extends React.PureComponent {
 		};
 	}
 	render() {
-		const { title, titleSub, stepNum } = this.props;
+		const { className, style, title, titleSub, stepNum } = this.props;
 		return (
-			<div className={classNM.stepTitleWrap}>
+			<div style={style} className={[classNM.stepTitleWrap, className].join(' ')}>
 				<div className={classNM.titleWrap}>
 					<div className={classNM.stepNumWrap}>
 						<span className={classNM.stepNumBefore} />
