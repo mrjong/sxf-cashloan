@@ -1,16 +1,12 @@
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Toast } from 'antd-mobile';
-import { SXFToast } from 'utils/SXFToast';
 import { store } from 'utils/store';
 import { isWXOpen, pagesIgnore } from 'utils';
 import Raven from 'raven-js';
 import baseUrl from './baseUrlConf';
 
 const fetchInit = () => {
-	let num = 0;
-	let timer = null;
-	let timerList = [];
 	fetch.init({
 		timeout: 10000, // 默认超时
 		baseURL: baseUrl, // baseurl
@@ -74,32 +70,23 @@ const fetchInit = () => {
 			Promise.reject(error);
 		}
 	);
+	let isGoToLogin = false;
 	// 拦截响应
 	fetch.axiosInstance.interceptors.response.use(
 		(response) => {
 			return response;
 		},
 		(error) => {
-			// // 有响应则取status,statusText，超时则取error.message
-			// try {
-			// 	console.log('----异常日志----');
-			// 	if (error.response) {
-			// 		Raven.captureException(error, { extra: error.response });
-			// 	} else if (error.config) {
-			// 		Raven.captureException(error, { extra: error.config });
-			// 	}
-			// } catch (err) {
-			// 	// console.log(err)
-			// }
-			// console.log(error, 'error.response');
-			// let error2 =
-			// 	error && error.message && error.message.canceled ? error : new Error('系统开小差，请稍后重试');
-			// return Promise.reject(error2);
-
 			const { response = {}, message } = error;
 			if (response && response.status === 401 && response.config) {
+				if (isGoToLogin) {
+					return;
+				}
+				// 防止多个提示
+				isGoToLogin = true;
 				Toast.info('未登录或登录超时，请重新登录');
 				setTimeout(() => {
+					isGoToLogin = false;
 					window.ReactRouterHistory.replace('/login');
 				}, 3000);
 			} else if (message && message.canceled) {

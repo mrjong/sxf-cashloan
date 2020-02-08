@@ -1,28 +1,24 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-25 16:30:31
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-08 14:13:00
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-
-const API = {
-	POP_DONE: '/popup/done' // 首页弹框
-};
+import { msg_popup_done } from 'fetch/api';
+import fetch from 'sx-fetch';
 
 export default class WelfareModal extends PureComponent {
 	constructor(props) {
 		super(props);
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { welfareModalInf } = this.props;
 		this.showWelfareModal(welfareModalInf && welfareModalInf.code);
 	}
-
-	componentDidMount() {}
 
 	/**
 	 * 福利专区弹框显示后台记录
@@ -30,8 +26,7 @@ export default class WelfareModal extends PureComponent {
 	 * @return {void}
 	 */
 	showWelfareModal = (code) => {
-		const { fetch } = this.props;
-		fetch.get(`${API.POP_DONE}/${code}`, {}, { hideLoading: true });
+		fetch.get(`${msg_popup_done}/${code}`, {}, { hideToast: true });
 	};
 
 	render() {
