@@ -3,20 +3,16 @@
  * @LastEditTime : 2020-02-07 11:39:50
  */
 import React, { Component } from 'react';
-import { createForm } from 'rc-form';
-// import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
-import FEZipImage from 'components/FEZIpImage';
-import { InputItem, List, Toast } from 'antd-mobile';
-import { setBackGround } from 'utils/background';
-import ButtonCustom from 'components/ButtonCustom';
-import StepTitle from 'components/StepTitle';
-import style from './index.scss';
-import { connect } from 'react-redux';
 import fetch from 'sx-fetch';
+import qs from 'qs';
+import { createForm } from 'rc-form';
+import { InputItem, List, Toast } from 'antd-mobile';
+import { connect } from 'react-redux';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import {
 	getDeviceType,
@@ -29,10 +25,14 @@ import {
 } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
-import qs from 'qs';
-import Images from 'assets/image';
-
 import { auth_ocrIdChk, auth_idChk, signup_refreshClientUserInfo } from 'fetch/api';
+import ButtonCustom from 'components/ButtonCustom';
+import StepTitle from 'components/StepTitle';
+import FEZipImage from 'components/FEZIpImage';
+import FixedHelpCenter from 'components/FixedHelpCenter';
+
+import style from './index.scss';
+import Images from 'assets/image';
 
 const updateLeftPlaceHolder = Images.adorn.id_card_front;
 const updateLeftSuccessPlaceHolder = Images.adorn.id_card_front_success;
@@ -77,7 +77,7 @@ export default class real_name_page extends Component {
 		}
 
 		urlQuery = qs.parse(location.search, { ignoreQueryPrefix: true });
-		let userInfo = store.getUserInfo();
+		let { userInfo } = this.props;
 		if (urlQuery.newTitle) {
 			// 判断是不是授信来的
 			this.props.setTitle(urlQuery.newTitle);
@@ -499,11 +499,16 @@ export default class real_name_page extends Component {
 		const { disabledupload, leftValue, rightValue } = this.state;
 		return (
 			<div className={[style.real_name_page, 'real_name_page_list'].join(' ')}>
-				<StepTitle title="上传身份证照片" titleSub="请上传身份证照片，仅用于公安网身份核实" stepNum="01" />
-				{/* <StepList stepList={[{ title: '11', stepNum: '03' }, { title: '11', stepNum: '04' }]} /> */}
 				{this.state.showState &&
 				(!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
+						<FixedHelpCenter />
+
+						<StepTitle
+							title="上传身份证照片"
+							titleSub="请上传身份证照片，仅用于公安网身份核实"
+							stepNum="01"
+						/>
 						<div className={style.updateContent}>
 							<div className={style.updateImgWrap}>
 								<div
@@ -634,7 +639,7 @@ export default class real_name_page extends Component {
 				(this.state.userInfo && this.state.userInfo.nameHid && !urlQuery.newTitle) ? (
 					<div>
 						<List className={style.is_true}>
-							<InputItem value={this.state.userInfo && this.state.userInfo.name} editable={false}>
+							<InputItem value={this.state.userInfo && this.state.userInfo.nameHid} editable={false}>
 								姓名
 							</InputItem>
 							<InputItem value={this.state.userInfo && this.state.userInfo.idNoHid} editable={false}>

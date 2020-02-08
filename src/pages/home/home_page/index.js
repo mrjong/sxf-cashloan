@@ -810,7 +810,6 @@ export default class home_page extends PureComponent {
 		const { dcDataInfo = {} } = homeData;
 		const { cardBillAmt, cardBillSts, billRemainAmt } = dcDataInfo || {};
 		let cardBillAmtData = '';
-		console.log(cardBillSts, 'cardBillSts');
 		if (cardBillSts === '00') {
 			cardBillAmtData = '待更新';
 			// 优先取剩余应还，否则去账单金额
