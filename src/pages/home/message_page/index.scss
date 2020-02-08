@@ -11,9 +11,6 @@
 			font-size: 0.28rem;
 			color: #999;
 		}
-		.am-tabs-default-bar-tab-active {
-			color: #ffc601;
-		}
 		.am-pull-to-refresh-indicator {
 			font-size: 26px;
 		}
@@ -80,8 +77,8 @@
 		.msgContainer {
 			padding: 20px 30px 20px;
 			background-color: #fff;
-      margin: 0 40px;
-      border-radius: 10px;
+			margin: 0 40px;
+			border-radius: 10px;
 			.title {
 				color: $colorBlack;
 				word-wrap: break-word;
@@ -108,13 +105,12 @@
 				width: 100%;
 				margin-top: -20px;
 				margin-bottom: 0;
-				border-radius: 10px;
 			}
 			.desc {
 				font-size: 28px;
-				color: #666;
+				color: $colorListText;
 				position: relative;
-				margin-bottom: 60px;
+				margin-bottom: 40px;
 				word-wrap: break-word;
 				word-break: break-all;
 				overflow: hidden;
@@ -127,7 +123,7 @@
 			}
 			.handle {
 				font-size: 28px;
-				color: #666;
+				color: $colorListText;
 				position: relative;
 				&::before {
 					@include setTopLine();
@@ -136,9 +132,12 @@
 				// &:hover {
 				//   opacity: 0.5;
 				// }
-				&::after {
+				i {
 					@include setArrow(right, 15px, #a9aeb6, 1px);
 					position: absolute;
+					right: 10px;
+          top: 50%;
+          margin-top: -7.5px;
 				}
 			}
 		}

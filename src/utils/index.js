@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-10 09:58:57
+ * @LastEditTime : 2020-02-08 15:01:40
  */
 /*eslint-disable */
 import React from 'react';
@@ -12,7 +12,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
-
+import { signup_log } from 'fetch/api';
 // 退出的api
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
@@ -170,69 +170,8 @@ export const isSomeBrowser = (type) => {
 	const u = navigator.userAgent.toLowerCase();
 	return u.indexOf(type) > -1 && u.indexOf('micromessenger') <= -1;
 };
-//关闭view
-export const closeCurrentWebView = () => {
-	window.setupWebViewJavascriptBridge((bridge) => {
-		bridge.callHandler('closeCurrentWebView', '', function(response) {
-			console.log(response);
-		});
-	});
-};
 // 点击退出
 let state = false;
-
-// 退出功能
-export const logoutApp = () => {
-	fetch.get(API.LOGOUT).then(
-		(result) => {
-			if (result && result.msgCode !== 'PTM0000') {
-				result.msgInfo && Toast.info(result.msgInfo);
-				return;
-			}
-			window.ReactRouterHistory.push('/login');
-			// sessionStorage.clear();
-			// localStorage.clear();
-			// Cookie.remove('FIN-HD-AUTH-TOKEN');
-			Cookie.remove('authFlag');
-			Cookie.remove('VIPFlag');
-			//退出时,删除通付盾script
-			document.getElementById('tonfudunScript') &&
-				document.body.removeChild(document.getElementById('tonfudunScript'));
-			document.getElementById('payegisIfm') &&
-				document.body.removeChild(document.getElementById('payegisIfm'));
-		},
-		(err) => {
-			err.msgInfo && Toast.info(err.msgInfo);
-		}
-	);
-};
-
-export const logoutAppHandler = (that) => {
-	if (isMPOS()) {
-		closeCurrentWebView();
-		return;
-	}
-	if (!state && !store.getGotoMoxieFlag()) {
-		state = true;
-		const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
-		Modal.alert('', ele, [
-			{
-				text: '取消',
-				onPress: () => {
-					state = false;
-				}
-			},
-			{
-				text: '确定',
-				onPress: () => {
-					state = false;
-					logoutApp(that);
-				}
-			}
-		]);
-	}
-};
-
 // 定义需要拦截的路由
 const interceptRouteArr = [
 	'/login',
@@ -815,12 +754,14 @@ export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
 	return;
 };
 
-// 协议预览记录功能
-export const recordContract = (params) => {
-	// params中的cardNo为银行卡号，只在协议支付的时候传递
-	// contractType为 协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-	fetch.post(API.contractLog, params, { hideLoading: true }).then(() => {}, () => {});
-};
+/**
+ * @description: 协议预览记录功能
+ * @param {string} cardNo 为银行卡号，只在协议支付的时候传递
+ * @param {string} contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+ * @return:
+ */
+export const recordContract = (params) => fetch.post(signup_log, params, { hideToast: true });
+
 // 神策用户绑定
 export const queryUsrSCOpenId = ({ $props }) => {
 	return new Promise((resolve) => {

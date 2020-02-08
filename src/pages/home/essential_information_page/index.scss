@@ -1,11 +1,15 @@
 @import '../../../assets/styles/scss/base/fn';
 
+.pageContent {
+  padding: 30px 60px 220px;
+}
+
 .nameDiv {
 	.informationMore {
 		position: relative;
 		width: 0.13rem;
 		float: right;
-		right: 0.35rem;
+		right: 0;
 		// margin-top: -0.5rem;
 		margin-top: -0.63rem;
 	}
@@ -36,32 +40,23 @@
 		height: 50px;
 		line-height: 50px;
 		text-align: center;
-		background-color: #ffeeef;
-		font-size: 22px;
-		color: #f66;
-		// &::before {
-		// 	width: 28px;
-		// 	height: 28px;
-		// 	content: '';
-		// 	position: absolute;
-		// 	left: 32%;
-		// 	top: 10px;
-		// 	background-image: url('../../../assets/images/order/warn_ico@2x.png');
-		// 	background-size: cover;
-		// }
+		background-color: #F6F9FD;
+		font-size: 24px;
+		color: #394259;
+		.warning_tip_title {
+      font-weight: bold;
+    }
 	}
 
-	.sureBtn {
-		width: 6.2rem;
-		margin: 50px auto 30px;
-		&:active {
-			opacity: 0.5;
-		}
-		&.dis {
-			background: #dcdfe6;
-			color: #fff;
-		}
-	}
+  .sureBtnWrap {
+    position: fixed;
+    z-index: 99;
+    bottom: 0;
+    width: 100%;
+    padding: 50px 40px;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
 	.adsImg {
 		position: relative;
 		width: 670px;
@@ -107,16 +102,37 @@
 	}
 }
 .titleTop {
-	padding: 35px 30px 0;
-	color: #121c32;
-	font-weight: 800;
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+	color: $colorBlack;
+  font-weight: 600;
+  font-size: 32px;
+  .titleTopNum {
+    display: inline-block;
+    font-family: 'DINMitAlt';
+    font-size: 24px;
+    background-color: $colorGolden;
+    border-radius: 3px;
+    color: #fff;
+    // padding: 6px 3px;
+    padding: 3px 0 0;
+    margin-right: 8px;
+    height: 32px;
+    line-height: 32px;
+  }
 }
 :global {
 	.info_gb {
 		.am-list-item {
 			background: transparent;
-			height: 110px;
-		}
+      height: 110px;
+      padding: 0;
+    }
+    .am-list-item  .am-list-line {
+      padding-right: 0;
+    }
 		.am-list-item .am-list-line .am-list-extra {
 			padding-top: 0.25rem;
       color: #121c32;
@@ -158,7 +174,6 @@
 }
 .step_box_new {
 	position: relative;
-	margin-top: 40px;
 	.content {
 		padding: 45px 0;
 		.item_box {
@@ -240,7 +255,7 @@
 	font-size: 24px;
 	line-height: 40px;
 	color: #868e9e;
-	margin: 20px 58px 30px;
+	margin-top: 40px;
 	.selectStyle {
     display: inline-block;
     position: relative;
@@ -279,24 +294,26 @@
 }
 .listRow {
 	position: relative;
-	padding: 30px 30px;
+	padding: 30px 0;
 	color: #868e9e;
   font-size: 28px;
-  @include ellipsis(610px);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   &:active{
     opacity: .6;
   }
 	.informationMoreNew {
 		position: absolute;
 		width: 0.13rem;
-		right: 0.35rem;
+		right: 0;
 		top: 50%;
 		transform: translate(0, -50%);
 		vertical-align: middle;
 	}
 	&::after {
 		@include setBottomLine(#f0f1f5);
-		left: 30px;
+		left: 0;
 	}
 	.active {
 		color: #121c32;

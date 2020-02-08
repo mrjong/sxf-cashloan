@@ -1,12 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-13 17:43:34
+ * @LastEditTime : 2020-02-08 18:07:11
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
-import { isMPOS, getH5Channel } from 'utils/common';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
@@ -15,11 +14,10 @@ import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
-import { getFirstError, getDeviceType, handleInputBlur, idChkPhoto } from 'utils';
+import { getFirstError, handleInputBlur } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
-import InsuranceModal from './components/InsuranceModal';
 import { domListen } from 'utils/domListen';
 import RepayPlanModal from 'components/RepayPlanModal';
 import CouponAlert from './components/CouponAlert';
@@ -38,6 +36,8 @@ import {
 } from 'fetch/api.js';
 import { connect } from 'react-redux';
 import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
+import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
@@ -66,9 +66,6 @@ const API = {
 	bill_isOpenLoanPopup: '/bill/isOpenLoanPopup' // 判断是否开启放款限制弹窗
 };
 
-let indexData = null; // 首页带过来的信息
-let pageData = null;
-let isSaveAmt = false;
 let timer;
 let timerOut;
 @setBackGround('#F7F8FA')
@@ -93,8 +90,6 @@ let timerOut;
 export default class confirm_agency_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		const queryData = store.getHomeConfirmAgency();
-		indexData = queryData;
 		this.state = {
 			inputClear: false,
 			usageModal: false,
@@ -147,7 +142,6 @@ export default class confirm_agency_page extends PureComponent {
 				}
 			],
 			isShowVIPModal: false,
-			isVIP: false, // 是否有会员卡
 			contractData: [], // 合同和产品id数据
 			isShowSmsModal: false, //是否显示短信验证码弹窗
 			smsCode: '',
@@ -161,27 +155,20 @@ export default class confirm_agency_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		isSaveAmt = store.getSaveAmt();
-		store.removeSaveAmt();
-		store.removeInsuranceFlag();
-
-		let bankInfo = store.getCardData();
-		pageData = store.getRepaymentModalData();
-		store.removeRepaymentModalData();
-		if (pageData) {
-			if (bankInfo && JSON.stringify(bankInfo) !== '{}') {
-				// 如果存在 bankInfo 并且弹框缓存数据崔仔 则更新弹框缓存的数据
-				pageData.repayInfo.bankName = bankInfo.bankName;
-				pageData.repayInfo.cardNoHid = bankInfo.lastCardNo;
-				pageData.repayInfo.withHoldAgrNo = bankInfo.agrNo;
-				pageData.repayInfo.bankCode = bankInfo.bankCode || bankInfo.bankCd;
+		this.props.toast.loading('', 10);
+		const { withholdCardData, confirmAgencyInfo } = this.props;
+		this.checkBtnAble();
+		if (confirmAgencyInfo) {
+			if (withholdCardData && JSON.stringify(withholdCardData) !== '{}') {
+				// 如果存在 bankInfo 并且弹框缓存数据存在 则更新弹框缓存的数据
+				confirmAgencyInfo.repayInfo.withholdBankName = withholdCardData.bankName;
+				confirmAgencyInfo.repayInfo.withholdBankLastNo = withholdCardData.lastCardNo;
+				confirmAgencyInfo.repayInfo.withholdBankAgrNo = withholdCardData.agrNo;
+				confirmAgencyInfo.repayInfo.withholdBankCode = withholdCardData.bankCode || withholdCardData.bankCd;
 			}
-			this.recoveryPageData();
+			this.recoveryPageData(confirmAgencyInfo);
 		} else {
 			this.requestGetRepaymentDateList();
-		}
-		if (isMPOS()) {
-			this.checkUsrMemSts();
 		}
 	}
 
@@ -197,15 +184,18 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 拦截发放优惠券
 	sendCoupon = () => {
-		if (this.state.isShowModal) {
+		const { isShowModal, repayInfo2 } = this.state;
+		if (isShowModal) {
 			this.setState({
 				isShowModal: false
 			});
+		} else if (repayInfo2 && Number(repayInfo2.availableCoupCount)) {
+			this.props.history.push('/home/home');
 		} else {
 			this.props.$fetch
-				.post(API.sendCoupon)
+				.post(coup_sendLoanCoup)
 				.then((result) => {
-					if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+					if (result && result.code === '000000' && result.data !== null) {
 						this.setState({
 							showCouponAlert: true,
 							couponAlertData: {
@@ -223,47 +213,12 @@ export default class confirm_agency_page extends PureComponent {
 		}
 	};
 
-	// 查询用户会员卡状态
-	checkUsrMemSts = () => {
-		this.props.$fetch.get(API.queryUsrMemSts).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				this.setState({
-					isVIP: result.data.memSts === '1' ? true : false
-				});
-			} else {
-				this.props.toast.info(result.msgInfo);
-			}
-		});
-	};
-
-	// 检查是否需要人审或者机器人审核
-	getExamineSts = () => {
-		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				res.data && this.jumpRouter(res.data);
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
-
 	// 数据回显
-	recoveryPageData = () => {
-		this.setState({ ...pageData });
-	};
-
-	// 代扣 Tag 点击事件
-	handleRepaymentTagClick = (data, type) => {
-		console.log(data);
-		this.props.form.setFieldsValue({
-			cardBillAmt: isSaveAmt && type && type === 'first' ? this.state.cardBillAmt : data.value.maxAmt + ''
+	recoveryPageData = (confirmAgencyInfo) => {
+		this.setState({ ...confirmAgencyInfo }, () => {
+			// 初始化数据渲染
+			this.calcLoanMoney(this.state.cardBillAmt);
 		});
-		this.setState({
-			repaymentDate: data.value,
-			repaymentIndex: data.index
-			// cardBillAmt: data.value.cardBillAmt,
-		});
-		// this.handleClickConfirm();
 	};
 
 	// 还款 Tag 点击事件
@@ -288,25 +243,22 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 选择银行卡
 	handleClickChoiseBank = () => {
-		this.setState(
-			{
-				cardBillAmt: this.state.cardBillAmt
-			},
-			() => {
-				const { repayInfo, repayInfo2 } = this.state;
-				store.setSaveAmt(true);
-				store.setRepaymentModalData(this.state);
-				store.setBackUrl('/home/confirm_agency?showModal=true');
-				repayInfo2 && Number(repayInfo2.insurance) && store.setInsuranceFlag(true);
-				// 增加保费标识 insuranceFlag
-				this.props.history.push({
-					pathname: '/mine/select_save_page',
-					search: `?agrNo=${repayInfo.withHoldAgrNo}&insuranceFlag=${
-						repayInfo2 && Number(repayInfo2.insurance) ? '1' : '0'
-					}`
-				});
-			}
-		);
+		const { repayInfo, cardBillAmt, repaymentDate, lendersDate, lendersIndex, checkBox1 } = this.state;
+		// 将页面信息存储到redux中
+		this.props.setConfirmAgencyInfoAction({
+			cardBillAmt,
+			repayInfo,
+			repaymentDate,
+			lendersDate,
+			checkBox1,
+			lendersIndex
+		});
+		// 将选择的卡类型存储到redux中
+		this.props.setCardTypeAction('withhold');
+		this.props.history.push({
+			pathname: '/mine/select_save_page',
+			search: `?agrNo=${repayInfo.withholdBankAgrNo}`
+		});
 	};
 
 	// 确认按钮点击事件
@@ -331,43 +283,27 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 
-	// 储蓄卡是否支持代扣校验接口
-	requestCheckWithHoldCard = () => {
-		const { repayInfo } = this.state;
-		const agrNo = repayInfo.withHoldAgrNo;
-		this.props.$fetch.get(`${API.CHECK_WITH_HOLD_CARD}/${agrNo}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.checkMemSts();
-			} else {
-				// 确认代换信息返回结果失败埋点
-				buriedPointEvent(home.borrowingSubmitResult, {
-					is_success: false,
-					fail_cause: res.msgInfo
-				});
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
-
 	// 获取合同列表和产品id
 	getFundInfo = () => {
 		const { lendersDate, repaymentDate, cardBillAmt, repayInfo } = this.state;
-
+		const { authId } = this.props;
 		this.props.$fetch
-			.post(`${API.queryFundInfo}`, {
-				loanAmount: cardBillAmt,
-				periodCount: repaymentDate.periodCount,
-				periodLth: repaymentDate.periodLth && parseInt(repaymentDate.periodLth),
-				periodUnit: repaymentDate.periodUnit,
-				agrNo: repayInfo.withDrawAgrNo,
+			.post(loan_queryContractInfo, {
+				autId: authId || '',
+				loanAmt: cardBillAmt,
+				prodCount: repaymentDate.prodCount,
+				prodLth: repaymentDate.prodLth,
+				prodUnit: repaymentDate.prodUnit,
+				withholdBankAgrNo: repayInfo.withholdBankAgrNo,
+				withdrawBankAgrNo: repayInfo.withdrawBankAgrNo,
 				wtdwTyp: lendersDate.value,
-				autId: indexData && indexData.autId
+				prodType: '01'
 			})
 			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+				if (result && result.code === '000000' && result.data !== null) {
 					this.setState(
 						{
-							contractData: result.data,
+							contractData: result.data && result.data.contracts,
 							disabledBtn: false
 						},
 						() => {
@@ -375,7 +311,7 @@ export default class confirm_agency_page extends PureComponent {
 						}
 					);
 				} else {
-					this.props.toast.info(result.msgInfo);
+					this.props.toast.info(result.message);
 				}
 			});
 	};
@@ -384,20 +320,94 @@ export default class confirm_agency_page extends PureComponent {
 	requestGetRepaymentDateList = () => {
 		const { authId } = this.props;
 		this.props.$fetch.post(loan_queryLoanApplInfo, { autId: authId || '' }).then((result) => {
-			if (result && result.msgCode === 'PTM0000') {
-				if (result.data && result.data.prdList && result.data.prdList.length === 0) {
+			if (result && result.code === '000000' && result.data !== null) {
+				if (result.data && result.data.prods && result.data.prods.length === 0) {
 					this.props.toast.info('当前渠道暂不支持提现申请，请进入MPOS代偿');
 					return;
 				}
 				// const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
-				const diff = result.data.overDt;
+				const diff = result.data.lastReapyDt;
 				let lendersDateListFormat = this.state.lendersDateList;
 				if (!result.data.cardBillDt || diff <= 4) {
 					lendersDateListFormat[0].disable = true;
 				}
+				// mock数据
+				// result.data.contacts = [
+				// 	{
+				// 		name: '测试',
+				// 		number: '13512345678'
+				// 	},
+				// 	{
+				// 		name: '发放',
+				// 		number: '12345678901'
+				// 	},
+				// 	{
+				// 		name: '反倒是',
+				// 		number: '13456789012'
+				// 	},
+				// 	{
+				// 		name: '史蒂夫',
+				// 		number: '14567890123'
+				// 	},
+				// 	{
+				// 		name: '骨灰盒',
+				// 		number: '15678901234'
+				// 	},
+				// 	{
+				// 		name: '我去玩',
+				// 		number: '16789012345'
+				// 	},
+				// 	{
+				// 		name: '也同样',
+				// 		number: '17890123456'
+				// 	},
+				// 	{
+				// 		name: '是否',
+				// 		number: '18901234567'
+				// 	},
+				// 	{
+				// 		name: '玩儿',
+				// 		number: '19012345678'
+				// 	},
+				// 	{
+				// 		name: '预约',
+				// 		number: '10123456789'
+				// 	}
+				// ];
+				// base64解密
+				if (result.data.contacts && result.data.contacts.length) {
+					// map 改变引用型数组,值类型数组不改变
+					result.data.contacts.map((item, index) => {
+						item.name = base64Decode(item.name);
+						item.number = base64Decode(item.number);
+						if (index < 5) {
+							item.isMarked = true;
+						} else {
+							item.isMarked = false;
+						}
+						item.uniqMark = 'uniq' + index;
+						return item;
+					});
+				}
+				if (result.data.excludedContacts && result.data.excludedContacts.length) {
+					for (let i = 0; i < result.data.excludedContacts.length; i++) {
+						result.data.excludedContacts[i] = base64Decode(result.data.excludedContacts[i]);
+					}
+				}
+				// 初始化数据渲染
+				if (result.data.prods && result.data.prods.length) {
+					// 适用于只有一个产品情况
+					this.setState({
+						cardBillAmt: `${result.data.prods[0].maxAmt}`,
+						repaymentDate: result.data.prods[0]
+					});
+					this.props.form.setFieldsValue({
+						cardBillAmt: `${result.data.prods[0].maxAmt}`
+					});
+				}
 				this.setState({
 					repayInfo: result.data,
-					repaymentDateList: result.data.prdList.map((item) => ({
+					repaymentDateList: result.data.prods.map((item) => ({
 						name: item.prdName,
 						value: item.prdId,
 						minAmt: item.minAmt,
@@ -412,7 +422,7 @@ export default class confirm_agency_page extends PureComponent {
 					lendersDateList: lendersDateListFormat
 				});
 			} else {
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 			}
 		});
 	};
@@ -442,23 +452,23 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 跳转页面
 	jumpRouter = (res) => {
-		if (res.flag === '01') {
+		if (res.loanType === 'M') {
 			this.props.history.push({
 				pathname: '/home/loan_person_succ_page',
-				search: `?creadNo=${res.creadNo}`
+				search: `?creadNo=${res.credApplNo}`
 			});
-		} else if (res.flag === '02') {
+		} else if (res.loanType === 'H') {
 			this.props.history.replace({
 				pathname: '/home/loan_robot_succ_page',
-				search: `?telNo=${res.telNo}`
+				search: `?telNo=${res.rmk}`
 			});
 		} else {
-			const { goData } = this.state;
+			// 预约放款的标识
 			let title =
-				goData.withdrawType === '3'
-					? `${dayjs(goData.reserveDate).format('YYYY年MM月DD日')}完成放款`
+				res.repayType === '1'
+					? `${dayjs(res.repayDate).format('YYYY年MM月DD日')}完成放款`
 					: `预计60秒完成放款`;
-			let desc = goData.withdrawType === '3' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
+			let desc = res.repayType === '1' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 			this.props.history.push({
 				pathname: '/home/loan_apply_succ_page',
 				search: `?title=${title}&desc=${desc}`
@@ -466,62 +476,6 @@ export default class confirm_agency_page extends PureComponent {
 		}
 	};
 
-	// 跳转到会员卡
-	goVIP = () => {
-		this.setState(
-			{
-				cardBillAmt: this.props.form.getFieldValue('cardBillAmt'),
-				isShowVIPModal: false
-			},
-			() => {
-				store.setSaveAmt(true);
-				store.setVipBackUrl('/home/confirm_agency');
-				store.setRepaymentModalData(this.state);
-				this.handleCloseTipModal('isShowVIPModal');
-				this.props.history.push('/mine/membership_card_page');
-			}
-		);
-	};
-
-	// 校验借款产品是否需要会员卡
-	checkMemSts = () => {
-		const { contractData } = this.state;
-		this.props.$fetch
-			.get(`${API.checkApplyProdMemSts}/${contractData[0] && contractData[0].productId}`)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM3014') {
-					this.setState({
-						isShowVIPModal: true
-					});
-				} else if (result && result.msgCode === 'PTM0000') {
-					idChkPhoto({
-						$props: this.props,
-						type: 'agency_page',
-						msg: '放款'
-					}).then((res) => {
-						switch (res) {
-							case '1':
-								// this.requestConfirmRepaymentInfo();
-								this.handleShowTipModal();
-								break;
-							case '3':
-								store.setTencentBackUrl('/home/confirm_agency');
-								// store.setIdChkPhotoBack(-2); //从人脸中间页回退2层到此页面
-								break;
-							default:
-								break;
-						}
-					});
-				} else {
-					// 确认代换信息返回结果失败埋点
-					buriedPointEvent(home.borrowingSubmitResult, {
-						is_success: false,
-						fail_cause: result.msgInfo
-					});
-					this.props.toast.info(result.msgInfo);
-				}
-			});
-	};
 	//计算该显示的还款金额
 	calcLoanMoney = (money) => {
 		const { repaymentDate } = this.state;
@@ -555,52 +509,38 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 获取确认代还信息
 	requestGetRepayInfo = () => {
-		const { contractData, lendersDate, cardBillAmt } = this.state;
-		let couponInfo = store.getCouponData();
+		let { contractData, lendersDate, cardBillAmt } = this.state;
+		const { couponData, authId } = this.props;
 		let params = {
-			prdId: contractData[0].productId,
-			cardId: indexData.autId,
-			billPrcpAmt: cardBillAmt,
-			wtdwTyp: lendersDate.value,
+			prodId: contractData[0] && contractData[0].prodId,
+			autId: authId || '',
+			repayType: lendersDate.value,
+			loanAmt: cardBillAmt,
 			prodType: '01'
 		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
 		// 使用优惠券,coupId传优惠券ID
-		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
+		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
 			// 不使用优惠劵的情况
 			params = {
 				...params
-				// coupId: '-1'
 			};
-		} else if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
+		} else if (couponData && JSON.stringify(couponData) !== '{}') {
 			params = {
 				...params,
-				coupId: couponInfo.usrCoupNo
+				coupId: couponData.coupId
 			};
 		}
 		this.props.$fetch
-			.post(API.REPAY_INFO, params)
+			.post(loan_loanPlan, params)
 			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					let contactList = [];
-					if (result.data.contactList && result.data.contactList.length) {
-						for (var i = 0; i < result.data.contactList.length; i++) {
-							if (i < 5) {
-								result.data.contactList[i].isMarked = true;
-							} else {
-								result.data.contactList[i].isMarked = false;
-							}
-							result.data.contactList[i].uniqMark = 'uniq' + i;
-							contactList.push(result.data.contactList[i]);
-						}
-					}
+				if (result && result.code === '000000' && result.data !== null) {
+					this.props.toast.hide();
 					this.setState({
 						repayInfo2: result.data,
 						deratePrice: result.data.deductAmount,
-						couponInfo,
-						showInterestTotal: result.data.showFlag === '1',
-						contactList
+						showInterestTotal: result.data.showFlag === '1'
 					});
 
 					// if (result.data.data && result.data.data.usrCoupNo) {
@@ -613,7 +553,7 @@ export default class confirm_agency_page extends PureComponent {
 					//   deratePrice: '',
 					//   couponInfo: { coupVal: -1, usrCoupNo: 'null' }
 					// });
-					this.props.toast.info(result.msgInfo);
+					this.props.toast.info(result.message);
 				}
 			})
 			.catch(() => {
@@ -634,65 +574,83 @@ export default class confirm_agency_page extends PureComponent {
 		return (
 			<div className={style.couNumBox}>
 				<i />
-				{repayInfo2 && repayInfo2.availableCoupAmt}个可用
+				{repayInfo2 && repayInfo2.availableCoupCount}个可用
 			</div>
 		);
 	};
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
-		const { contractData } = this.state;
-		if (!this.state.repayInfo2 || !this.state.repayInfo2.perdLth) {
+		const {
+			repayInfo2,
+			contractData,
+			cardBillAmt,
+			repayInfo,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1
+		} = this.state;
+		if (!repayInfo2 || !repayInfo2.perdLth) {
 			this.props.toast.info('请输入借款金额');
 			return;
 		}
-		store.setSaveAmt(true);
-		store.setRepaymentModalData(this.state);
+		this.props.setConfirmAgencyInfoAction({
+			cardBillAmt,
+			repayInfo,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1
+		});
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
 				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
 					this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-				}&prodId=${contractData[0].productId}`,
+				}&prodId=${contractData[0].prodId}`,
 				state: { nouseCoupon: true }
 			});
 			return;
-		}
-		if (this.state.couponInfo && this.state.couponInfo.usrCoupNo) {
-			store.setCouponData(this.state.couponInfo);
 		} else {
-			store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
-			// store.setCouponData(this.state.repayInfo2.data);
+			this.props.history.push({
+				pathname: '/mine/coupon_page',
+				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
+					this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
+				}&prodId=${contractData[0].prodId}`
+			});
 		}
-		this.props.history.push({
-			pathname: '/mine/coupon_page',
-			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
-				this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-			}&prodId=${contractData[0].productId}`
-		});
 	};
 	// 查看借款合同
 	readContract = (item) => {
-		const { repayInfo, contractData } = this.state;
+		const {
+			contractData,
+			repayInfo,
+			cardBillAmt,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1
+		} = this.state;
+		const { userInfo = {} } = this.props;
 		const billPrcpAmt = this.props.form.getFieldValue('cardBillAmt');
-		store.setSaveAmt(true);
-		store.setRepaymentModalData(this.state);
-		console.log(
-			`${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${
-				item.contractNo
-			}&loanAmount=${billPrcpAmt}&productId=${contractData[0].productId}&agreementNo=${
-				repayInfo.withDrawAgrNo
-			}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('FIN-HD-AUTH-TOKEN') ||
-				store.getToken()}`
-		);
+		this.props.setConfirmAgencyInfoAction({
+			cardBillAmt,
+			repayInfo,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1
+		});
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${API.qryContractInfo}?contractTyep=${item.contractTyep}&contractNo=${
+				url: `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${
 					item.contractNo
-				}&loanAmount=${billPrcpAmt}&productId=${contractData[0].productId}&agreementNo=${
-					repayInfo.withDrawAgrNo
-				}&withholdAgrNo=${repayInfo.withHoldAgrNo}&fin-v-card-token=${Cookie.get('FIN-HD-AUTH-TOKEN') ||
-					store.getToken()}`,
+				}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${
+					repayInfo.withholdBankAgrNo
+				}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&FIN-HD-AUTH-TOKEN=${
+					Cookie.get('FIN-HD-AUTH-TOKEN') || (userInfo && userInfo.tokenId) ? userInfo.tokenId : ''
+				}`,
 				name: item.contractMdlName
 			}
 		});
@@ -727,58 +685,45 @@ export default class confirm_agency_page extends PureComponent {
 		);
 	};
 	handleShowTipModal = () => {
+		this.props.toast.hide();
 		this.setState({
 			isShowTipModal: true
 		});
 	};
 	// 确认代还信息
 	requestConfirmRepaymentInfo = () => {
-		const { lendersDate, repayInfo, contractData, couponInfo, cardBillAmt } = this.state;
+		const { lendersDate, repayInfo, contractData, cardBillAmt, repayInfo2 } = this.state;
+		const { couponData, saveContact, authId } = this.props;
 		let couponId = '';
-		if (couponInfo && couponInfo.usrCoupNo) {
-			if (couponInfo.usrCoupNo !== 'null') {
-				couponId = couponInfo.usrCoupNo;
+		if (couponData && couponData.coupId) {
+			if (couponData.coupId !== 'null') {
+				couponId = couponData.coupId;
 			} else {
 				couponId = '';
 			}
 		}
-		let contactParams = '';
-		const selectedList = [];
-		if (store.getSelContactList() && store.getSelContactList().length) {
-			store.getSelContactList().map((item) => {
+
+		// 处理联系人列表
+		let selectedList = [];
+		if (saveContact && saveContact.length) {
+			saveContact.forEach((item) => {
 				selectedList.push({
-					num: item.number,
-					n: item.name
+					num: base64Encode(item.number),
+					n: base64Encode(item.name)
 				});
 			});
-			contactParams = selectedList;
-		} else if (store.getSelEmptyContactList()) {
-			store.getSelEmptyContactList().map((item) => {
-				selectedList.push({
-					num: item.number,
-					n: item.name
-				});
-			});
-			contactParams = selectedList;
 		}
 
-		// else {
-		// 	// if (this.state.repayInfo2.data && this.state.repayInfo2.data.usrCoupNo) {
-		// 	// 	couponId = this.state.repayInfo2.data.usrCoupNo;
-		// 	// }
-		// }
 		const params = {
-			withDrawAgrNo: repayInfo.withDrawAgrNo, // 代还信用卡主键
-			withHoldAgrNo: repayInfo.withHoldAgrNo, // 还款卡号主键
-			prdId: contractData[0].productId, // 产品ID
-			autId: indexData.autId, // 信用卡账单ID
+			withDrawAgrNo: repayInfo.withdrawBankAgrNo, // 代还信用卡主键
+			withHoldAgrNo: repayInfo.withholdBankAgrNo, // 还款卡号主键
+			prodId: contractData[0].prodId, // 产品ID
+			autId: authId || '', // 信用卡账单ID
 			repayType: lendersDate.value, // 还款方式
-			usrBusCnl: '', // 操作渠道
 			coupId: couponId, // 优惠劵id
-			price: cardBillAmt, // 签约金额
-			osType: getDeviceType(), // 操作系统
-			prodType: '01', // 业务线
-			contactList: contactParams
+			loanAmt: cardBillAmt, // 签约金额
+			prodType: '01',
+			contacts: selectedList
 		};
 		timerOut = setTimeout(() => {
 			this.setState(
@@ -796,54 +741,36 @@ export default class confirm_agency_page extends PureComponent {
 		}, 300);
 		// 代还确认-确认借款
 		buriedPointEvent(home.borrowingSubmit, {
-			lenders_date: this.state.repayInfo2.perdCnt
+			lenders_date: repayInfo2.perdCnt
 		});
 		this.props.$fetch
-			.post(API.CONFIRM_REPAYMENT, params, {
+			.post(loan_loanSub, params, {
 				timeout: 100000,
 				hideLoading: true
 			})
 			.then((result) => {
+				this.props.toast.hide();
 				this.setState(
 					{
-						goData: result.data,
 						percent: 100
 					},
 					() => {
-						clearInterval(timer);
-						clearTimeout(timerOut);
+						timer && clearInterval(timer);
+						timerOut && clearTimeout(timerOut);
 						this.setState({
 							progressLoading: false
 						});
-						if (result && result.msgCode === 'PTM0000') {
-							this.getExamineSts(); // 检查是否需要人审
+						if (result && result.code === '000000') {
+							this.jumpRouter(result.data);
 							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: true
 							});
-							// 清除卡信息
-							store.removeCardData();
-							// 清除上个页面中的弹框数据
-							store.removeRepaymentModalData();
-							store.removeSaveAmt();
-							// 清除借款中总的联系人
-							store.removeContactList();
-							// 清除借款选中的五个联系人
-							store.removeSelContactList();
-							store.removeSelEmptyContactList();
-							store.removeSaveContactList();
-							store.removeSaveEmptyContactList();
-							store.removeExcContactList();
-						} else if (result && result.msgCode === 'PTM7001') {
-							this.props.toast.info(result.msgInfo);
-							setTimeout(() => {
-								this.props.history.push('/home/home');
-							}, 3000);
 						} else {
 							buriedPointEvent(home.borrowingSubmitResult, {
 								is_success: false,
-								fail_cause: result.msgInfo
+								fail_cause: result.message
 							});
-							this.props.toast.info(result.msgInfo);
+							this.props.toast.info(result.message);
 						}
 					}
 				);
@@ -859,12 +786,8 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		const { isCheckInsure, repayInfo2, checkBox1 } = this.state;
-		if (repayInfo2 && Number(repayInfo2.insurance) && !isCheckInsure) {
-			this.props.toast.info('请先购买保险');
-			return;
-		}
-		if (!(store.getSaveEmptyContactList() || store.getSaveContactList())) {
+		const { checkBox1, isBtnAble } = this.state;
+		if (!isBtnAble) {
 			this.props.toast.info('请选择指定联系人');
 			return;
 		}
@@ -874,15 +797,15 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
-		this.isShowLoanModal();
-		// this.checkProtocolBindCard();
+		// this.isShowLoanModal();
+		this.checkProtocolBindCard();
 	};
 
 	isShowLoanModal = () => {
 		const { $fetch } = this.props;
 		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
 			// 判断是否开启弹窗 0 打开 1 关闭
-			if (res.msgCode === 'PTM0000' && res.data === '0') {
+			if (res.code === 'PTM0000' && res.data === '0') {
 				this.setState({
 					isShowLoanTipModal: true
 				});
@@ -907,30 +830,36 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 请求用户绑卡状态
 	requestBindCardState = () => {
-		const api = indexData.autId ? `${API.chkCredCard}/${indexData.autId}` : API.CHECK_CARD;
-		this.props.$fetch.get(api).then((result) => {
-			if (result && result.msgCode === 'PTM0000') {
+		const { authId } = this.props;
+		this.props.$fetch.get(`${bank_card_check}/${authId || ''}`).then((result) => {
+			if (result && result.code === '000000') {
 				// 有风控且绑信用卡储蓄卡
-				this.requestCheckWithHoldCard();
-			} else if (result && result.msgCode === 'PTM2003') {
+				getNextStatus({
+					$props: this.props,
+					actionType: 'agencyPage',
+					actionMsg: '放款'
+				}).then((res) => {
+					if (res === 'LOAN') {
+						this.handleShowTipModal();
+					}
+				});
+			} else if (result && result.code === '999974') {
 				// 有风控没绑储蓄卡 跳绑储蓄卡页面
-				store.setBackUrl('/home/agency');
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 				setTimeout(() => {
 					this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
 				}, 3000);
-			} else if (result && result.msgCode === 'PTM2002') {
+			} else if (result && result.code === '000012') {
 				// 有风控没绑信用卡 跳绑信用卡页面
-				store.setBackUrl('/home/agency');
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 				setTimeout(() => {
 					this.props.history.push({
 						pathname: '/mine/bind_credit_page',
-						search: `?noBankInfo=true&autId=${indexData.autId}`
+						search: `?noBankInfo=true&autId=${authId}`
 					});
 				}, 3000);
 			} else {
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 			}
 		});
 	};
@@ -955,100 +884,86 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
-		const { repayInfo } = this.state;
-		if (!this.state.smsCode) {
+		const { repayInfo, smsCode } = this.state;
+		if (!smsCode) {
 			this.props.toast.info('请输入验证码');
 			return;
 		}
-		if (this.state.smsCode.length !== 6) {
+		if (smsCode.length !== 6) {
 			this.props.toast.info('请输入正确的验证码');
 			return;
 		}
 		buriedPointEvent(home.protocolBindBtnClick);
-		this.props.$fetch
-			.post(API.protocolBind, {
-				cardNo: repayInfo && repayInfo.withHoldAgrNo,
-				smsCd: this.state.smsCode,
-				isEntry: '01'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.closeSmsModal();
-				} else if (res.msgCode === 'PTM9901') {
-					this.props.toast.info(res.data);
-					this.setState({ smsCode: '' });
-					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-				} else if (res.msgCode === 'PTM9902') {
-					//该卡完全绑不上
-					this.setState({
-						protocolSmsFailInfo: res.data,
-						protocolSmsFailFlag: true,
-						isShowSmsModal: true
-					});
-					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-				} else {
-					this.props.toast.info('绑卡失败，请换卡或重试');
-					this.setState({
-						smsCode: '',
-						isShowSmsModal: false
-					});
-					buriedPointEvent(home.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-				}
-			});
+		this.props.$fetch.get(`${bank_card_protocol_bind}/${smsCode}`).then((res) => {
+			if (res.code === '000000') {
+				this.closeSmsModal();
+			} else if (res.code === '0000010') {
+				this.props.toast.info(res.message);
+				this.setState({ smsCode: '' });
+				buriedPointEvent(home.protocolBindFail, { reason: `${res.code}-${res.message}` });
+			} else if (res.code === '999999') {
+				//该卡完全绑不上
+				this.setState({
+					protocolSmsFailInfo: res.data,
+					protocolSmsFailFlag: true,
+					isShowSmsModal: true
+				});
+				buriedPointEvent(home.protocolBindFail, { reason: `${res.code}-${res.message}` });
+			} else {
+				this.props.toast.info(res.message);
+				this.setState({
+					smsCode: '',
+					isShowSmsModal: false
+				});
+				buriedPointEvent(home.protocolBindFail, { reason: `${res.code}-${res.message}` });
+			}
+		});
 	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
+		this.props.toast.loading('', 20);
 		const { repayInfo, repayInfo2 } = this.state;
-		const params =
-			repayInfo2 && Number(repayInfo2.insurance)
-				? {
-						cardNo: repayInfo && repayInfo.withHoldAgrNo,
-						bankCd: repayInfo && repayInfo.bankCode,
-						usrSignCnl: getH5Channel(),
-						cardTyp: 'D',
-						isEntry: '01',
-						type: '1', // 0 可以重复 1 不可以重复
-						priorityType: 'ZY' // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
-				  }
-				: {
-						cardNo: repayInfo && repayInfo.withHoldAgrNo,
-						bankCd: repayInfo && repayInfo.bankCode,
-						usrSignCnl: getH5Channel(),
-						cardTyp: 'D',
-						isEntry: '01',
-						type: '1' // 0 可以重复 1 不可以重复
-				  };
-		this.props.$fetch.post(API.protocolSms, params).then((res) => {
-			switch (res.msgCode) {
-				case 'PTM0000':
+		const params = {
+			agrNo: repayInfo && repayInfo.withholdBankAgrNo,
+			bankCode: repayInfo && repayInfo.bankCode,
+			channelFlag: '1', // 0 可以重复 1 不可以重复
+			supportType: repayInfo2 && Number(repayInfo2.insurance) ? '01' : '',
+			merType: repayInfo2 && Number(repayInfo2.insurance) ? 'ZY' : '' // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
+		};
+		this.props.$fetch.post(bank_card_protocol_sms, params).then((res) => {
+			switch (res.code) {
+				case '000000':
+					this.props.toast.hide();
 					//协议绑卡校验成功提示（走协议绑卡逻辑）
 					this.setState({
-						isShowSmsModal: true
+						isShowSmsModal: true,
+						bnkTelNoHid: res.data && res.data.bnkTelNoHid
 					});
 					break;
-				case 'PTM9901':
-					this.props.toast.info(res.data);
-					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-					break;
-				case 'PTM9902':
+				// case '0000010':
+				// 	this.props.toast.info(res.message);
+				// 	buriedPointEvent(home.protocolSmsFail, { reason: `${res.code}-${res.message}` });
+				// 	break;
+				case '999999':
 					//该卡完全绑不上
+					this.props.toast.hide();
 					this.setState({
 						protocolSmsFailInfo: res.data,
 						protocolSmsFailFlag: true,
 						isShowSmsModal: true
 					});
-					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.code}-${res.message}` });
 					break;
-				case '1010': // 银行卡已经绑定 直接继续往下走
+				case '999973': // 银行卡已经绑定 直接继续往下走
 					this.requestBindCardState();
 					break;
-				case 'PBM1010':
-					this.props.toast.info(res.msgInfo);
-					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-					break;
+				// case '999968':
+				// 	this.props.toast.info(res.message);
+				// 	buriedPointEvent(home.protocolSmsFail, { reason: `${res.code}-${res.message}` });
+				// 	break;
 				default:
-					this.props.toast.info('暂不支持该银行卡，请换卡重试');
-					buriedPointEvent(home.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
+					this.props.toast.info(res.message);
+					buriedPointEvent(home.protocolSmsFail, { reason: `${res.code}-${res.message}` });
 					break;
 			}
 		});
@@ -1059,62 +974,57 @@ export default class confirm_agency_page extends PureComponent {
 			smsCode
 		});
 	};
-	// 关闭保险说明弹框
-	closeInsureModal = () => {
-		this.setState({
-			isShowInsureModal: false
-		});
-	};
-	// 选择保费
-	chooseInsure = () => {
-		this.setState({
-			isCheckInsure: !this.state.isCheckInsure
-		});
-	};
-	// 打开保险说明弹框
-	openInsureModal = () => {
-		this.setState({
-			isShowInsureModal: true
-		});
-	};
 	// 选择指定联系人
 	handleClickChooseContact = () => {
-		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
-		const { contactList, repayInfo2 } = this.state;
-		if (!contactList) {
-			return;
-		}
-		store.setSaveAmt(true);
-		store.setRepaymentModalData(this.state);
+		const {
+			isBtnAble,
+			repayInfo,
+			cardBillAmt,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1
+		} = this.state;
+		const { cacheContact } = this.props;
+		this.props.setConfirmAgencyInfoAction({
+			cardBillAmt,
+			repayInfo,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1
+		});
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
-		if (repayInfo2 && repayInfo2.excludedContactList) {
-			store.setExcContactList(repayInfo2.excludedContactList);
-		}
-		if (contactList.length) {
-			if (store.getSelContactList()) {
-				this.props.history.push({
-					pathname: '/home/contact_result_page'
-				});
+		if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
+			if (cacheContact && cacheContact.length) {
+				this.props.history.push('/home/contact_result_page');
 			} else {
-				this.props.history.push({
-					pathname: '/home/reco_contact_page',
-					state: {
-						contactList: contactList
-					}
-				});
+				this.props.history.push('/home/reco_contact_page');
 			}
 		} else {
-			this.props.history.push({
-				pathname: '/home/add_contact_page'
-			});
+			this.props.history.push('/home/add_contact_page');
 		}
 	};
 
 	// 点击勾选协议
 	checkAgreement = () => {
 		this.setState({ checkBox1: !this.state.checkBox1 });
+	};
+
+	// 判断按钮是否可以
+	checkBtnAble = () => {
+		const { saveContact } = this.props;
+		if (saveContact) {
+			this.setState({
+				isBtnAble: true
+			});
+		} else {
+			this.setState({
+				isBtnAble: false
+			});
+		}
 	};
 	render() {
 		const { history, toast } = this.props;
@@ -1123,13 +1033,10 @@ export default class confirm_agency_page extends PureComponent {
 			contractData,
 			repayInfo,
 			progressLoading,
-			isShowVIPModal,
 			disabledBtn,
 			isShowTipModal,
 			repayInfo2,
-			repaymentIndex,
 			repaymentDate,
-			repaymentDateList,
 			lendersDateList,
 			defaultIndex,
 			lendersIndex,
@@ -1137,15 +1044,15 @@ export default class confirm_agency_page extends PureComponent {
 			isShowModal,
 			isShowSmsModal,
 			smsCode,
-			isShowInsureModal,
-			isCheckInsure,
 			showCouponAlert,
 			couponAlertData,
 			showInterestTotal,
 			checkBox1,
-			isShowLoanTipModal
+			isShowLoanTipModal,
+			isBtnAble,
+			cardBillAmt,
+			lendersDate
 		} = this.state;
-		const isBtnAble = store.getSaveEmptyContactList() || store.getSaveContactList();
 		return (
 			<div>
 				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>
@@ -1232,22 +1139,19 @@ export default class confirm_agency_page extends PureComponent {
 						</div>
 						<div>
 							<ul className={style.pannel}>
-								<li style={{ display: 'none' }}>
+								{/* <li style={{ display: 'none' }}>
 									<TabList
 										tagList={repaymentDateList}
 										defaultindex={repaymentIndex}
 										activeindex={repaymentIndex}
 										onClick={this.handleRepaymentTagClick}
 									/>
-								</li>
+								</li> */}
 								<li className={style.listItem}>
 									<label>借多久</label>
 									<span className={style.listValue}>
-										{repayInfo && repayInfo.prdList && repayInfo.prdList[0] && repayInfo.prdList[0].periodLth}
-										{repayInfo &&
-										repayInfo.prdList &&
-										repayInfo.prdList[0] &&
-										repayInfo.prdList[0].periodUnit === 'M'
+										{repayInfo && repayInfo.prods && repayInfo.prods[0] && repayInfo.prods[0].prodLth}
+										{repayInfo && repayInfo.prods && repayInfo.prods[0] && repayInfo.prods[0].prodUnit === 'M'
 											? '个月'
 											: '天'}
 									</span>
@@ -1270,11 +1174,11 @@ export default class confirm_agency_page extends PureComponent {
 								<li
 									className={style.listItem}
 									onClick={() => {
-										this.selectCoupon(!(repayInfo2 && Number(repayInfo2.availableCoupAmt)));
+										this.selectCoupon(!(repayInfo2 && Number(repayInfo2.availableCoupCount)));
 									}}
 								>
 									<label>优惠券</label>
-									{repayInfo2 && Number(repayInfo2.availableCoupAmt) ? (
+									{repayInfo2 && Number(repayInfo2.availableCoupCount) ? (
 										<div className={[style.listValue, style.hasArrow].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
@@ -1349,45 +1253,20 @@ export default class confirm_agency_page extends PureComponent {
 								<li className={style.listItem}>
 									<label>收款信用卡</label>
 									<span className={style.listValue}>
-										{indexData.bankName}({indexData.cardNoHid.slice(-4)})
+										{repayInfo && repayInfo.withdrawBankName ? repayInfo.withdrawBankName : ''}(
+										{repayInfo && repayInfo.withdrawBankLastNo ? repayInfo.withdrawBankLastNo : ''})
 									</span>
 								</li>
 								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
 									<label>还款银行卡</label>
 									<span className={[style.listValue, style.hasArrow].join(' ')}>
-										{repayInfo.bankName}({repayInfo.cardNoHid})
+										{repayInfo && repayInfo.withholdBankName ? repayInfo.withholdBankName : ''}(
+										{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''})
 										<Icon type="right" className={style.icon} />
 									</span>
 								</li>
 							</ul>
-							{repayInfo2 && Number(repayInfo2.insurance) ? (
-								<ul className={style.pannel}>
-									<li className={`${style.listItem} ${style.listItem2}`}>
-										<div className={style.insureLeft}>
-											<i className={style.insureIco} />
-											<div className={style.insureTipsCont}>
-												<p className={style.insureTipsTit} onClick={this.openInsureModal}>
-													借款人意外险
-													<i className={style.insureTips} />
-												</p>
-												<p>保费将在您首期还款时扣除</p>
-											</div>
-										</div>
-										<div className={style.insureRight} onClick={this.chooseInsure}>
-											<span>¥{repayInfo2.insurance}</span>
-											<i
-												className={isCheckInsure ? `${style.unCheckIco} ${style.checkIco}` : style.unCheckIco}
-											/>
-										</div>
-									</li>
-								</ul>
-							) : null}
 							<div className={style.protocolBox}>
-								{repayInfo2 && Number(repayInfo2.insurance) ? (
-									<p className={style.insureDesc}>
-										本保险由中元保险经纪有限公司提供服务，最终结果以保险公司为准
-									</p>
-								) : null}
 								{contractData.length > 0 && (
 									<p className={style.protocolLink} onClick={this.checkAgreement}>
 										<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
@@ -1438,30 +1317,6 @@ export default class confirm_agency_page extends PureComponent {
 						</div>
 					</Modal>
 
-					{/* <Modal
-						wrapClassName="confirm_agency_warp"
-						visible={isShowTipModal}
-						transparent
-						onClose={() => {
-							this.handleCloseTipModal('isShowTipModal');
-						}}
-						footer={[
-							{
-								text: '我知道了',
-								onPress: () => {
-									this.handleCloseTipModal('isShowTipModal');
-								}
-							}
-						]}
-					>
-						<div className={style.modal_tip_content}>
-							<h3 className={style.modl_tip_title}>"还到"将上报央行征信，逾期将影响您的个人信用</h3>
-							<p className={style.modl_tip_text}>
-								若您在使用"还到"过程中出现逾期，信息将被披露到中国互联网金融协会"信用信息共享平台"。
-								这将对您的个人征信产生不利影响。请按时还款，避免出现逾期。
-							</p>
-						</div>
-					</Modal> */}
 					{isShowTipModal ? (
 						<WarningModal
 							history={history}
@@ -1474,46 +1329,21 @@ export default class confirm_agency_page extends PureComponent {
 						/>
 					) : null}
 
-					<Modal
-						wrapClassName="modal_VIPTip_warp"
-						visible={isShowVIPModal}
-						closable
-						transparent
-						onClose={() => {
-							this.handleCloseTipModal('isShowVIPModal');
-						}}
-						footer={[{ text: '立即开通', onPress: this.goVIP }]}
-					>
-						<h2 className={style.modalTitle}>仅限VIP使用</h2>
-						<ul className={style.modalUl}>
-							<li>
-								<i className={style.vipIco1} />
-								极速放款通道
-							</li>
-							<li>
-								<i className={style.vipIco2} />
-								精彩活动优先通知
-							</li>
-							<li>
-								<i className={style.vipIco3} />
-								30天明星产品专享
-							</li>
-							<li>
-								<i className={style.vipIco4} />
-								刷卡优惠超值套餐
-							</li>
-						</ul>
-					</Modal>
-
 					<RepayPlanModal
 						visible={isShowModal}
 						onClose={this.handleCloseModal}
-						data={repayInfo2.perd}
+						data={repayInfo2.perds}
 						loanMoney={this.state.cardBillAmt}
 						history={this.props.history}
 						goPage={() => {
-							store.setSaveAmt(true);
-							store.setRepaymentModalData(this.state);
+							this.props.setConfirmAgencyInfoAction({
+								cardBillAmt,
+								repayInfo,
+								repaymentDate,
+								lendersDate,
+								lendersIndex,
+								checkBox1
+							});
 							this.props.history.push('/home/payment_notes');
 						}}
 					/>
@@ -1574,8 +1404,6 @@ export default class confirm_agency_page extends PureComponent {
 							bankNo={repayInfo && repayInfo.withHoldAgrNo}
 						/>
 					)}
-					{// 保险弹框
-					isShowInsureModal && <InsuranceModal onConfirmCb={this.closeInsureModal} />}
 				</div>
 			</div>
 		);

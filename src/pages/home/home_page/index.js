@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 16:33:33
+ * @LastEditTime : 2020-02-08 14:19:34
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
-import { isWXOpen, getDeviceType, getNextStr, getMoxieData, dateDiffer } from 'utils';
+import { isWXOpen, getDeviceType, getMoxieData, dateDiffer } from 'utils';
 import {
 	index_queryIndexInfo,
 	index_queryBannerList,
@@ -31,7 +31,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
-import Carousels from 'components/Carousels';
+import { Carousels, commonPage } from 'components';
 import style from './index.scss';
 // import mockData from './mockData';
 import linkConf from 'config/link.conf';
@@ -80,6 +80,7 @@ let timerPercent; //计时器
 @createForm()
 @fetch.inject()
 @setBackGround('#F0F3F9')
+@commonPage()
 @connect(
 	(state) => ({
 		userInfo: state.staticState.userInfo,
@@ -181,7 +182,7 @@ export default class home_page extends PureComponent {
 	 * @return:
 	 */
 	index_queryIndexInfo = () => {
-		Toast.loading('', 10);
+		Toast.loading('数据加载中...', 10);
 		this.props.$fetch
 			.get(index_queryIndexInfo)
 			.then((result) => {
@@ -266,7 +267,7 @@ export default class home_page extends PureComponent {
 	index_queryBannerList = () => {
 		const params = {
 			type: '1',
-			cilent: 'app'
+			cilent: 'h5'
 		};
 		this.props.$fetch
 			.post(index_queryBannerList, params, { hideToast: true })
@@ -443,7 +444,7 @@ export default class home_page extends PureComponent {
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { homeData } = this.state;
-		Toast.loading('', 10);
+		Toast.loading('数据加载中...', 10);
 		if (homeData.indexSts !== 'LN0009' && homeData.indexSts !== 'LN0001') {
 			// 首页-点击一键还卡（代偿）
 			buriedPointEvent(home.easyRepay, {
@@ -687,8 +688,17 @@ export default class home_page extends PureComponent {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
 		}
-		getNextStr({
-			$props: this.props
+		Toast.loading('', 10);
+		getNextStatus({
+			RouterType: 'home',
+			$props: this.props,
+			callBack: (resBackMsg) => {
+				if (this.state.showDiv === 'circle') {
+					buriedPointEvent(home.homeContinueApply, {
+						next_step: resBackMsg
+					});
+				}
+			}
 		});
 	};
 	// 获取首页信息
@@ -790,148 +800,17 @@ export default class home_page extends PureComponent {
 				break;
 		}
 	};
-	// *********************************************************** //
-	// 关闭注册协议弹窗
-	readAgreementCb = () => {
-		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					showAgreement: false
-				});
-			}
-		});
+
+	handleGoPlusDetail = () => {
+		this.props.history.push('/others/fenqi_landing');
 	};
-	// 关闭活动弹窗
-	closeActivityModal = (type) => {
-		this.setState({
-			modalBtnFlag: false,
-			isShowActivityModal: !this.state.isShowActivityModal
-		});
-
-		switch (type) {
-			case 'xianjin': // 品牌活动弹框按钮
-				buriedPointEvent(activity.fenqiHomeModalClose);
-				break;
-			case 'mianxi': // 免息活动弹框按钮，如果需要活动只弹一次，那么就加一个case
-				store.setShowActivityModal(true);
-				break;
-			case 'couponNotice': // 安心计划活动弹框按钮
-				buriedPointEvent(activity.anXinActivityCouponCloseClick, {
-					medium: 'H5'
-				});
-				break;
-
-			case 'reward_tip':
-				buriedPointEvent(activity.rewardTipModalClose);
-
-				break;
-
-			default:
-				break;
-		}
-	};
-
-	// 逾期弹窗
-	handleOverDueClick = () => {
-		const { usrIndexInfo, usrCashIndexInfo } = this.state;
-		const billNo =
-			(usrIndexInfo.indexData && usrIndexInfo.indexData.billNo) ||
-			(usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.billNo);
-		if (billNo) {
-			store.setBillNo(billNo);
-			this.props.history.push({
-				pathname: '/order/order_detail_page',
-				search: '?entryFrom=home'
-			});
-		} else {
-			this.props.history.push({
-				pathname: '/order/order_page'
-			});
-		}
-	};
-
-	//处理现金分期额度有效期显示
-	handleAcOverDtShow = () => {
-		const { indexData } = this.state.usrCashIndexInfo;
-		const overDt = Number(indexData.acOverDt);
-		if (overDt > 10) return false;
-		if (overDt === 0 || overDt <= 0) {
-			return '1天后失去资格';
-		}
-		return `${overDt}天后失去资格`;
-	};
-	// *****************************分期****************************** //
-	getFQDisPlay = () => {
-		let componentsDisplay = null;
-		const { usrCashIndexInfo } = this.state;
-		switch (usrCashIndexInfo.indexSts) {
-			case 'CN0001': // 现金分期额度评估中,不可能出现
-				break;
-			case 'CN0002': // (抱歉，暂无申请资格
-				break;
-			case 'CN0003': // 申请通过有额度
-				componentsDisplay = (
-					<MoneyCard
-						handleClick={() => {
-							this.handleCN(usrCashIndexInfo.indexSts);
-						}}
-						showData={{
-							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
-							title: '还到-Plus',
-							topTip: this.handleAcOverDtShow(),
-							subtitle: '可提现金额(元)',
-							money:
-								usrCashIndexInfo &&
-								usrCashIndexInfo.indexData &&
-								usrCashIndexInfo.indexData.curAmt.toFixed(2),
-							desc: '你信用等级良好'
-						}}
-					/>
-				);
-				break;
-			case 'CN0004': // 放款中
-				componentsDisplay = (
-					<MoneyCard
-						handleClick={() => {
-							this.handleCN(usrCashIndexInfo.indexSts);
-						}}
-						showData={{
-							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
-							title: '还到-Plus',
-							subtitle: '借款金额(元)',
-							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.orderAmt,
-							desc: '你信用等级良好'
-						}}
-					/>
-				);
-				break;
-			case 'CN0005': // 去还款
-				componentsDisplay = (
-					<MoneyCard
-						handleClick={() => {
-							this.handleCN(usrCashIndexInfo.indexSts);
-						}}
-						showData={{
-							btnText: usrCashIndexInfo && usrCashIndexInfo.indexMsg,
-							title: '还到-Plus',
-							subtitle: '借款金额(元)',
-							money: usrCashIndexInfo && usrCashIndexInfo.indexData && usrCashIndexInfo.indexData.orderAmt,
-							desc: '你信用等级良好'
-						}}
-					/>
-				);
-				break;
-			default:
-		}
-		return componentsDisplay;
-	};
-	// *****************************代偿****************************** //
 
 	getCardBillAmtData() {
-		const homeData = this.state.usrCashIndexInfo;
+		const { homeData = {} } = this.state;
 		const { dcDataInfo = {} } = homeData;
 		const { cardBillAmt, cardBillSts, billRemainAmt } = dcDataInfo || {};
 		let cardBillAmtData = '';
+		console.log(cardBillSts, 'cardBillSts');
 		if (cardBillSts === '00') {
 			cardBillAmtData = '待更新';
 			// 优先取剩余应还，否则去账单金额
@@ -954,7 +833,7 @@ export default class home_page extends PureComponent {
 
 	// 主要是设置 解锁状态
 	setPlusCardData(plusCardData) {
-		const homeData = this.state.usrCashIndexInfo;
+		const { homeData = {} } = this.state;
 		const { dcDataInfo = {} } = homeData;
 
 		if (homeData.showType === '01' && dcDataInfo.cashAcSts === '00') {
@@ -1356,29 +1235,14 @@ export default class home_page extends PureComponent {
 	};
 
 	render() {
-		const {
-			bannerList,
-			welfareList,
-			activities,
-			percent,
-			showAgreement,
-			isShowActivityModal,
-			visibleLoading,
-			overDueInf,
-			overDueModalFlag,
-			decreaseCoupExpiryDate,
-			modalType,
-			modalBtnFlag,
-			isShowWelfareModal,
-			welfareModalInf,
-			rewardDate
-		} = this.state;
+		const { bannerList, welfareList, activities } = this.state;
 		const { userInfo = {}, msgCount = 0 } = this.props;
 		return (
 			<div className={style.home_new_page}>
 				<div className={style.content_top}>
 					<MsgTip msgCount={msgCount} tokenObj={userInfo && userInfo.tokenId} history={this.props.history} />
 				</div>
+
 				<div className={activities && activities.length ? style.content_main_more : style.content_main}>
 					<ActivityEntry data={activities} history={this.props.history} />
 					<SwitchCard data={this.getDisPlayData()} />
@@ -1389,29 +1253,7 @@ export default class home_page extends PureComponent {
 					{this.componentsAddCards()}
 				</div>
 
-				<HomeModal
-					showAgreement={showAgreement}
-					modalType={modalType}
-					modalBtnFlag={modalBtnFlag}
-					percent={percent}
-					history={this.props.history}
-					toast={this.props.toast}
-					isShowActivityModal={isShowActivityModal}
-					overDueModalFlag={overDueModalFlag}
-					decreaseCoupExpiryDate={decreaseCoupExpiryDate}
-					overDueInf={overDueInf}
-					visibleLoading={visibleLoading}
-					readAgreementCb={this.readAgreementCb}
-					handleOverDueClick={this.handleOverDueClick}
-					activityModalBtn={this.activityModalBtn}
-					closeActivityModal={this.closeActivityModal}
-					fetch={this.props.$fetch}
-					isShowWelfareModal={isShowWelfareModal}
-					welfareModalBtn={this.jumpLand}
-					closeWelfareModal={this.closeWelfareModal}
-					welfareModalInf2={welfareModalInf}
-					rewardDate={rewardDate}
-				/>
+				<HomeModal history={this.props.history} />
 			</div>
 		);
 	}

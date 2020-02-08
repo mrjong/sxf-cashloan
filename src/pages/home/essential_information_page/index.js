@@ -3,28 +3,31 @@
  * @LastEditTime : 2020-01-13 10:43:34
  */
 import React, { PureComponent } from 'react';
+import fetch from 'sx-fetch';
+import qs from 'qs';
+import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
 import { InputItem, List, Modal } from 'antd-mobile';
-import informationMore from './img/back.png';
-import AsyncCascadePicker from 'components/AsyncCascadePicker';
-import ButtonCustom from 'components/ButtonCustom';
-import fetch from 'sx-fetch';
+import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import style from './index.scss';
-import { getFirstError, validators, handleInputBlur, getNextStr } from 'utils';
+import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
-import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import ClockS from 'components/TimeDown/ClockS';
-import adsBg from './img/base_top_img.png';
-import AgreementModal from 'components/AgreementModal';
 import { domListen } from 'utils/domListen';
+import AgreementModal from 'components/AgreementModal';
 import AddressSelect from 'components/react-picker-address';
+import StepTitle from 'components/StepTitle';
+import StepList from 'components/StepList';
+import AsyncCascadePicker from 'components/AsyncCascadePicker';
+import ButtonCustom from 'components/ButtonCustom';
+import LimitTimeJoin from './components/LimitTimeJoin';
+import style from './index.scss';
+import informationMore from './img/back.png';
 
-let timedown = null;
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
 const API = {
@@ -32,12 +35,13 @@ const API = {
 	getRelat: '/rcm/qryRelat',
 	submitData: '/auth/personalData',
 	qryCity: '/rcm/qryCity',
-	queryUsrBasicInfo: '/auth/queryUsrBasicInfo',
 	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
 	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
 	contractInfo: '/bill/personalDataAuthInfo', // 个人信息授权书数据查询
 	rcm_qryArea: '/rcm/qryArea' // 获取地理位置
 };
+
+import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api.js';
 
 const reducedFilter = (data, keys, fn) =>
 	data.filter(fn).map((el) =>
@@ -51,15 +55,17 @@ let urlQuery = '';
 // let isFetching = false;
 @fetch.inject()
 @createForm()
-@setBackGround('#F7F8FA')
+@setBackGround('#fff')
 @domListen()
+@connect((state) => ({
+	userInfo: state.staticState.userInfo,
+	nextStepStatus: state.commonState.nextStepStatus
+}))
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.state = {
-			count: 0,
-			status: 'stopped',
 			relatData: [], // 亲属联系人数据
 			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
@@ -91,8 +97,6 @@ export default class essential_information_page extends PureComponent {
 	}
 
 	componentDidMount() {
-		urlQuery && urlQuery.jumpToBase && this.handleSetCountDown(60 * 60);
-		this.getMillisecond();
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
@@ -102,24 +106,7 @@ export default class essential_information_page extends PureComponent {
 			}
 		});
 	}
-	componentDidUpdate(prevProps, prevState) {
-		if (this.state.status !== prevState.status) {
-			switch (this.state.status) {
-				case 'started':
-					this.startTimer();
-					break;
-				case 'stopped':
-					this.setState({
-						count: 0
-					});
-					break;
-				case 'paused':
-					clearInterval(this.timer);
-					this.timer = null;
-					break;
-			}
-		}
-	}
+
 	componentWillUnmount() {
 		buryingPoints();
 		window.removeEventListener('resize', function() {
@@ -129,20 +116,17 @@ export default class essential_information_page extends PureComponent {
 				}, 0);
 			}
 		});
-		clearInterval(timedown);
-		clearInterval(this.timer);
-		this.timer = null;
 	}
 	// 跳转个人信息授权书
 	readContract = (jumpUrl) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
 		this.props.$fetch.get(API.contractInfo).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+			if (result && result.code === 'PTM0000' && result.data !== null) {
 				store.setProtocolPersonalData(result.data);
 				this.props.history.push(jumpUrl);
 			} else {
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 			}
 		});
 	};
@@ -150,21 +134,6 @@ export default class essential_information_page extends PureComponent {
 		this.setState({
 			selectFlag: !this.state.selectFlag
 		});
-	};
-	getMillisecond = () => {
-		setTimeout(() => {
-			timedown = setInterval(() => {
-				if (Number(this.state.millisecond) > 8) {
-					this.setState({
-						millisecond: 0
-					});
-				} else {
-					this.setState({
-						millisecond: this.state.millisecond + 1
-					});
-				}
-			}, 100);
-		}, 0);
 	};
 
 	buttonDisabled = () => {
@@ -257,17 +226,29 @@ export default class essential_information_page extends PureComponent {
 			this.props.form.setFieldsValue({
 				address: store.getAddress() || (res && res.data && res.data.usrDtlAddr) || '',
 				linkman: store.getLinkman() || (res && res.data && res.data.cntUsrNm1) || '',
-				linkphone: store.getLinkphone() || (res && res.data && res.data.mobForOne) || '',
+				linkphone: store.getLinkphone() || (res && res.data && res.data.cntUsrTel1) || '',
 				linkman2: store.getLinkman2() || (res && res.data && res.data.cntUsrNm2) || '',
-				linkphone2: store.getLinkphone2() || (res && res.data && res.data.mobForSec) || ''
+				linkphone2: store.getLinkphone2() || (res && res.data && res.data.cntUsrTel2) || ''
 			});
 		} else {
 			this.props.form.setFieldsValue({
 				address: (res && res.data && res.data.usrDtlAddr) || store.getAddress() || '',
-				linkman: (res && res.data && res.data.cntUsrNm1) || store.getLinkman() || '',
-				linkphone: (res && res.data && res.data.mobForOne) || store.getLinkphone() || '',
-				linkman2: (res && res.data && res.data.cntUsrNm2) || store.getLinkman2() || '',
-				linkphone2: (res && res.data && res.data.mobForSec) || store.getLinkphone2() || ''
+				linkman:
+					(res && res.data && res.data.cntUsrNm1 && base64Decode(res.data.cntUsrNm1)) ||
+					store.getLinkman() ||
+					'',
+				linkphone:
+					(res && res.data && res.data.cntUsrTel1 && base64Decode(res.data.cntUsrTel1)) ||
+					store.getLinkphone() ||
+					'',
+				linkman2:
+					(res && res.data && res.data.cntUsrNm2 && base64Decode(res.data.cntUsrNm2)) ||
+					store.getLinkman2() ||
+					'',
+				linkphone2:
+					(res && res.data && res.data.cntUsrTel2 && base64Decode(res.data.cntUsrTel2)) ||
+					store.getLinkphone2() ||
+					''
 			});
 		}
 		if (cacheData) {
@@ -305,8 +286,8 @@ export default class essential_information_page extends PureComponent {
 
 	//获取基本信息
 	queryUsrBasicInfo = (province, city, district, township) => {
-		this.props.$fetch.post(API.queryUsrBasicInfo).then((res) => {
-			if (res.msgCode === 'PTM0000' && res && res.data) {
+		this.props.$fetch.get(auth_queryUsrBasicInfo).then((res) => {
+			if (res.code === '000000' && res && res.data) {
 				this.commonFunc(res, { province, city, district, township });
 			} else {
 				this.commonFunc(null, { province, city, district, township });
@@ -333,7 +314,7 @@ export default class essential_information_page extends PureComponent {
 		let cityPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${city}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 		let areaPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${area}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 		let townshipPattern = new RegExp(`^[\\u4E00-\\u9FA5]*${township}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-		let result = await this.props.$fetch.get(`${API.rcm_qryArea}/0`);
+		let result = await this.props.$fetch.get(`${msg_area}/0`);
 
 		if (result && result.data) {
 			let cityItem = [];
@@ -346,7 +327,7 @@ export default class essential_information_page extends PureComponent {
 				}
 			});
 			if (provItem && provItem.length > 0) {
-				let result2 = await this.props.$fetch.get(`${API.rcm_qryArea}/${provItem && provItem[0].key}`);
+				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].key}`);
 				cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
 					let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
@@ -356,7 +337,7 @@ export default class essential_information_page extends PureComponent {
 			}
 
 			if (cityItem && cityItem.length > 0) {
-				let result3 = await this.props.$fetch.get(`${API.rcm_qryArea}/${cityItem && cityItem[0].key}`);
+				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].key}`);
 				areaItem = reducedFilter(result3.data, ['key', 'value'], (item3) => {
 					let areaPattern3 = new RegExp(`^[\\u4E00-\\u9FA5]*${item3.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (areaPattern.test(item3.value) || areaPattern3.test(area)) {
@@ -366,7 +347,7 @@ export default class essential_information_page extends PureComponent {
 			}
 
 			if (areaItem && areaItem.length > 0) {
-				let result4 = await this.props.$fetch.get(`${API.rcm_qryArea}/${areaItem && areaItem[0].key}`);
+				let result4 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].key}`);
 				townshipItem = reducedFilter(result4.data, ['key', 'value'], (item4) => {
 					let townshipPattern4 = new RegExp(`^[\\u4E00-\\u9FA5]*${item4.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (townshipPattern.test(item4.value) || townshipPattern4.test(area)) {
@@ -417,7 +398,7 @@ export default class essential_information_page extends PureComponent {
 
 	// 获取城市标签反显(code匹配)
 	getProCode = async (pro, city, area, street) => {
-		let result = await this.props.$fetch.get(`${API.rcm_qryArea}/0`);
+		let result = await this.props.$fetch.get(`${msg_area}/0`);
 
 		if (result && result.data) {
 			let cityItem = [];
@@ -430,7 +411,7 @@ export default class essential_information_page extends PureComponent {
 				}
 			});
 			if (provItem && provItem.length > 0) {
-				let result2 = await this.props.$fetch.get(`${API.rcm_qryArea}/${provItem && provItem[0].key}`);
+				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].key}`);
 				cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
 					if (item2.key === city) {
 						return item2;
@@ -439,7 +420,7 @@ export default class essential_information_page extends PureComponent {
 			}
 
 			if (cityItem && cityItem.length > 0) {
-				let result3 = await this.props.$fetch.get(`${API.rcm_qryArea}/${cityItem && cityItem[0].key}`);
+				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].key}`);
 				areaItem = reducedFilter(result3.data, ['key', 'value'], (item3) => {
 					if (item3.key === area) {
 						return item3;
@@ -447,7 +428,7 @@ export default class essential_information_page extends PureComponent {
 				});
 			}
 			if (areaItem && areaItem.length > 0) {
-				let result3 = await this.props.$fetch.get(`${API.rcm_qryArea}/${areaItem && areaItem[0].key}`);
+				let result3 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].key}`);
 				streetItem = reducedFilter(result3.data, ['key', 'value'], (item4) => {
 					if (item4.key === street) {
 						return item4;
@@ -537,10 +518,6 @@ export default class essential_information_page extends PureComponent {
 		}
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;
-		let timer = setTimeout(() => {
-			submitButtonLocked = false;
-			clearTimeout(timer);
-		}, 3000);
 		let cityNm = '';
 		let provNm = '';
 		let districtNm = '';
@@ -605,10 +582,10 @@ export default class essential_information_page extends PureComponent {
 							usrDtlAddrLctn: lngLat,
 							cntRelTyp1: values.cntRelTyp1[0],
 							cntRelTyp2: values.cntRelTyp2[0],
-							cntUsrNm1: values.linkman,
-							cntMblNo1: values.linkphone,
-							cntUsrNm2: values.linkman2,
-							cntMblNo2: values.linkphone2,
+							cntUsrNm1: base64Encode(values.linkman),
+							cntMblNo1: base64Encode(values.linkphone),
+							cntUsrNm2: base64Encode(values.linkman2),
+							cntMblNo2: base64Encode(values.linkphone2),
 							credCorpOrg: ''
 						};
 						if (values.linkphone === values.linkphone2) {
@@ -621,44 +598,35 @@ export default class essential_information_page extends PureComponent {
 						// isFetching = true;
 						// values中存放的是经过 getFieldDecorator 包装的表单元素的值
 						this.props.$fetch
-							.post(`${API.submitData}`, params)
+							.post(auth_personalData, params)
 							.then((result) => {
 								submitButtonLocked = false;
-								if (result && result.msgCode === 'PTM0000') {
+								if (result && result.code === '000000') {
 									store.setBackFlag(true);
 									// 埋点-基本信息页-确定按钮
 									this.confirmBuryPoint(true);
 									buriedPointEvent(mine.creditExtensionBack, {
 										current_step: '基本信息认证'
 									});
-									if (store.getNeedNextUrl()) {
+									if (this.props.nextStepStatus) {
 										this.props.toast.info('提交成功', 2);
-										setTimeout(() => {
-											getNextStr({
-												$props: this.props
-											});
-										}, 2000);
-										store.setMoxieBackUrl('/home/home');
-									} else {
-										// this.props.history.replace({
-										// 	pathname: '/mine/credit_extension_page',
-										// 	search: urlQuery
-										// });
+										getNextStatus({
+											RouterType: 'essential_infomation_page',
+											$props: this.props
+										});
 									}
-								} else if (result.msgCode === 'PCC-PRC-9994') {
-									if (store.getNeedNextUrl()) {
+								} else if (result.code === '000030') {
+									if (this.props.nextStepStatus) {
 										this.props.toast.info('提交成功', 2);
-										setTimeout(() => {
-											getNextStr({
-												$props: this.props
-											});
-										}, 2000);
-										store.setMoxieBackUrl('/home/home');
+										getNextStatus({
+											RouterType: 'essential_infomation_page',
+											$props: this.props
+										});
 									}
 								} else {
-									this.confirmBuryPoint(false, result.msgInfo);
+									this.confirmBuryPoint(false, result.message);
 									// isFetching = false;
-									this.props.toast.info(result.msgInfo);
+									this.props.toast.info(result.message);
 								}
 							})
 							.catch(() => {
@@ -755,7 +723,7 @@ export default class essential_information_page extends PureComponent {
 	// 关闭注册协议弹窗
 	readAgreementCb = () => {
 		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === 'PTM0000') {
 				this.setState({
 					showAgreement: false
 				});
@@ -765,42 +733,17 @@ export default class essential_information_page extends PureComponent {
 
 	judgeShowAgree = () => {
 		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === 'PTM0000') {
 				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
 				this.setState({
 					showAgreement: res.data.agreementPopupFlag === '1'
 				});
 			} else {
-				this.props.toast.info(res.msgInfo);
+				this.props.toast.info(res.message);
 			}
 		});
 	};
 
-	handleStatusChange = (newStaus) => {
-		this.setState({
-			status: newStaus
-		});
-	};
-
-	startTimer() {
-		this.timer = setInterval(() => {
-			const newCount = this.state.count - 1;
-			this.setState({
-				count: newCount >= 0 ? newCount : 0
-			});
-			if (newCount === 0) {
-				this.setState({
-					status: 'stopped'
-				});
-			}
-		}, 1000);
-	}
-	handleSetCountDown = (totalSeconds) => {
-		this.setState({
-			count: totalSeconds,
-			status: 'started'
-		});
-	};
 	sxfMD = (type) => {
 		sxfburiedPointEvent(type);
 	};
@@ -837,6 +780,445 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
+				<div className={style.warning_tip}>
+					<span className={style.warning_tip_title}>温馨提示：</span>
+					<span className={style.warning_tip_text}>学生禁止使用还到</span>
+				</div>
+				<div className={style.pageContent}>
+					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin></LimitTimeJoin> : null}
+
+					<StepTitle
+						style={{ marginTop: '0.3rem' }}
+						title="完善个人信息"
+						titleSub="请确保内容真实有效，有利于您的借款审核"
+						stepNum="02"
+					/>
+
+					<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
+						<div className={style.item_box}>
+							<div className={style.titleTop}>居住地址</div>
+							<div
+								className={style.listRow}
+								onClick={() => {
+									this.sxfMD('DC_resident_city');
+									this.setState({
+										visible: true
+									});
+								}}
+							>
+								{ProvincesValue ? (
+									<span className={style.active}>{ProvincesValue}</span>
+								) : (
+									'请选择您的现居住城市'
+								)}
+								<img className={style.informationMoreNew} src={informationMore} />
+							</div>
+							{getFieldDecorator('address', {
+								rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
+								onChange: (value) => {
+									if (!value) {
+										sxfburiedPointEvent('resident_address', {
+											actId: 'delAll'
+										});
+									}
+									// 本地缓存常住地址
+									store.setAddress(value);
+									this.setState({ address: value });
+								}
+							})(
+								<InputItem
+									clear
+									data-sxf-props={JSON.stringify({
+										type: 'input',
+										name: 'resident_address',
+										eventList: [
+											{
+												type: 'focus'
+											},
+											{
+												type: 'delete'
+											},
+											{
+												type: 'blur'
+											},
+											{
+												type: 'paste'
+											}
+										]
+									})}
+									className="hasborder"
+									placeholder="详细地址：如道路、门牌号、小区、楼栋号、单元室等"
+									type="text"
+									onBlur={(v) => {
+										this.inputOnBlur(v, 'resident_address');
+									}}
+									onFocus={(v) => {
+										this.inputOnFocus(v, 'resident_address');
+									}}
+								></InputItem>
+							)}
+						</div>
+
+						<div className={style.item_box}>
+							<div className={style.titleTop}>
+								<span className={style.titleTopNum}>1</span>紧急联系人
+							</div>
+							<div className={style.labelDiv}>
+								{getFieldDecorator('cntRelTyp1', {
+									initialValue: this.state.relatValue,
+									rules: [{ required: true, message: '请选择联系人关系' }],
+									onChange: (value) => {
+										store.setRelationValue(value);
+										this.selectSure({
+											value: JSON.stringify(value),
+											label: 'clan_relation'
+										});
+									}
+								})(
+									<AsyncCascadePicker
+										className="hasborder"
+										title="选择联系人"
+										loadData={[
+											() =>
+												this.props.$fetch.get(`${msg_relation}/2`).then((result) => {
+													const prov =
+														result && result.data && result.data.data && result.data.data.length
+															? result.data.data
+															: [];
+													return prov.map((item) => ({
+														value: item.code,
+														label: item.name
+													}));
+												})
+										]}
+										cols={1}
+										onVisibleChange={(bool) => {
+											if (bool) {
+												this.sxfMD('cntRelTyp1');
+												this.selectClick({
+													value: JSON.stringify(this.state.relatValue),
+													label: 'clan_relation'
+												});
+											} else {
+												this.sxfMD('cntRelTypOut1');
+											}
+										}}
+									>
+										<List.Item className="hasborder"></List.Item>
+									</AsyncCascadePicker>
+								)}
+								<img className={style.informationMore} src={informationMore} />
+							</div>
+							{getFieldDecorator('linkman', {
+								rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+								onChange: (value) => {
+									if (!value) {
+										sxfburiedPointEvent('contact_name_one', {
+											actId: 'delAll'
+										});
+									}
+									store.setLinkman(value);
+									this.setState({ linkman: value });
+								}
+							})(
+								<InputItem
+									clear
+									data-sxf-props={JSON.stringify({
+										type: 'input',
+										notSendValue: true, // 无需上报输入框的值
+										name: 'contact_name_one',
+										eventList: [
+											{
+												type: 'focus'
+											},
+											{
+												type: 'delete'
+											},
+											{
+												type: 'blur'
+											},
+											{
+												type: 'paste'
+											}
+										]
+									})}
+									placeholder="联系人姓名"
+									type="text"
+									onBlur={(v) => {
+										this.inputOnBlur(v, 'contact_name_one');
+									}}
+									onFocus={(v) => {
+										this.inputOnFocus(v, 'contact_name_one');
+									}}
+								></InputItem>
+							)}
+							{getFieldDecorator('linkphone', {
+								rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+								onChange: (value) => {
+									if (!value) {
+										sxfburiedPointEvent('linkphone', {
+											actId: 'delAll'
+										});
+									}
+									store.setLinkphone(value);
+									this.setState({ linkphone: value });
+								}
+							})(
+								<InputItem
+									data-sxf-props={JSON.stringify({
+										type: 'input',
+										notSendValue: true, // 无需上报输入框的值
+										name: 'linkphone',
+										eventList: [
+											{
+												type: 'focus'
+											},
+											{
+												type: 'delete'
+											},
+											{
+												type: 'blur'
+											},
+											{
+												type: 'paste'
+											}
+										]
+									})}
+									clear
+									className="hasborder"
+									type="number"
+									maxLength="11"
+									placeholder="联系人电话"
+									onBlur={(v) => {
+										this.inputOnBlur(v, 'contact_tel_one');
+									}}
+									onFocus={(v) => {
+										this.inputOnFocus(v, 'contact_tel_one');
+									}}
+								></InputItem>
+							)}
+						</div>
+
+						<div className={style.item_box}>
+							<div className={style.titleTop}>
+								<span className={style.titleTopNum}>2</span>紧急联系人
+							</div>
+							<div className={style.labelDiv}>
+								{getFieldDecorator('cntRelTyp2', {
+									initialValue: this.state.relatValue2,
+									rules: [{ required: true, message: '请选择联系人关系' }],
+									onChange: (value) => {
+										store.setRelationValue2(value);
+										this.selectSure({
+											value: JSON.stringify(value),
+											label: 'clan_relation'
+										});
+									}
+								})(
+									<AsyncCascadePicker
+										className="hasborder"
+										title="选择联系人"
+										loadData={[
+											() =>
+												this.props.$fetch.get(`${msg_relation}/1`).then((result) => {
+													const prov =
+														result && result.data && result.data.data && result.data.data.length
+															? result.data.data
+															: [];
+													return prov.map((item) => ({
+														value: item.code,
+														label: item.name
+													}));
+												})
+										]}
+										cols={1}
+										onVisibleChange={(bool) => {
+											if (bool) {
+												this.sxfMD('cntRelTyp2');
+												this.selectClick({
+													value: JSON.stringify(this.state.relatValue2),
+													label: 'clan_relation'
+												});
+											} else {
+												this.sxfMD('cntRelTypOut2');
+											}
+										}}
+									>
+										<List.Item className="hasborder"></List.Item>
+									</AsyncCascadePicker>
+								)}
+								<img className={style.informationMore} src={informationMore} />
+							</div>
+							{getFieldDecorator('linkman2', {
+								rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+								onChange: (value) => {
+									if (!value) {
+										sxfburiedPointEvent('contact_name_two', {
+											actId: 'delAll'
+										});
+									}
+									store.setLinkman2(value);
+									this.setState({ linkman2: value });
+								}
+							})(
+								<InputItem
+									data-sxf-props={JSON.stringify({
+										type: 'input',
+										notSendValue: true, // 无需上报输入框的值
+										name: 'contact_name_two',
+										eventList: [
+											{
+												type: 'focus'
+											},
+											{
+												type: 'delete'
+											},
+											{
+												type: 'blur'
+											},
+											{
+												type: 'paste'
+											}
+										]
+									})}
+									clear
+									placeholder="联系人姓名"
+									type="text"
+									onBlur={(v) => {
+										this.inputOnBlur(v, 'contact_name_two');
+									}}
+									onFocus={(v) => {
+										this.inputOnFocus(v, 'contact_name_two');
+									}}
+								></InputItem>
+							)}
+							{getFieldDecorator('linkphone2', {
+								rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+								onChange: (value) => {
+									if (!value) {
+										sxfburiedPointEvent('linkphone2', {
+											actId: 'delAll'
+										});
+									}
+									store.setLinkphone2(value);
+									this.setState({ linkphone2: value });
+								}
+							})(
+								<InputItem
+									data-sxf-props={JSON.stringify({
+										type: 'input',
+										notSendValue: true, // 无需上报输入框的值
+										name: 'linkphone2',
+										eventList: [
+											{
+												type: 'focus'
+											},
+											{
+												type: 'delete'
+											},
+											{
+												type: 'blur'
+											},
+											{
+												type: 'paste'
+											}
+										]
+									})}
+									clear
+									className="hasborder"
+									type="number"
+									maxLength="11"
+									placeholder="联系人电话"
+									onBlur={(v) => {
+										this.inputOnBlur(v, 'contact_tel_two');
+									}}
+									onFocus={(v) => {
+										this.inputOnFocus(v, 'contact_tel_two');
+									}}
+								></InputItem>
+							)}
+						</div>
+					</div>
+
+					<StepList
+						style={{ marginTop: '20px' }}
+						stepList={[{ title: '填写基本信息', stepNum: '03' }, { title: '认证信用卡', stepNum: '04' }]}
+					></StepList>
+
+					{urlQuery.jumpToBase && (
+						<div className={style.operatorCont}>
+							<div className={style.protocolBox} onClick={this.selectProtocol}>
+								<i
+									className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
+								/>
+								点击按钮即视为同意
+								<em
+									onClick={(e) => {
+										e.stopPropagation();
+										this.readContract('/protocol/personal_auth_page');
+									}}
+									className={style.link}
+								>
+									《个人信息授权书》
+								</em>
+								<em
+									onClick={(e) => {
+										e.stopPropagation();
+										this.readContract('/protocol/user_privacy_page');
+									}}
+									className={style.link}
+								>
+									《用户隐私权政策》
+								</em>
+							</div>
+							<ButtonCustom
+								onClick={this.handleSubmit}
+								className={[style.nextBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}
+							>
+								下一步
+							</ButtonCustom>
+							<div className={style.quitText} onClick={this.quitSubmit}>
+								放弃本次机会
+							</div>
+						</div>
+					)}
+
+					<div className={style.protocolBox} onClick={this.selectProtocol}>
+						<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
+						点击按钮即视为同意
+						<em
+							onClick={(e) => {
+								e.stopPropagation();
+								this.readContract('/protocol/personal_auth_page');
+							}}
+							className={style.link}
+						>
+							《个人信息授权书》
+						</em>
+						<em
+							onClick={(e) => {
+								e.stopPropagation();
+								this.readContract('/protocol/user_privacy_page');
+							}}
+							className={style.link}
+						>
+							《用户隐私权政策》
+						</em>
+					</div>
+				</div>
+
+				<div className={style.sureBtnWrap}>
+					{!urlQuery.jumpToBase && (
+						<ButtonCustom
+							long
+							onClick={this.handleSubmit}
+							type={this.buttonDisabled() ? 'yellow' : 'default'}
+						>
+							{needNextUrl ? '下一步' : '完成'}
+						</ButtonCustom>
+					)}
+				</div>
+
 				<Modal
 					onClose={() => {
 						this.handleSetModal(false);
@@ -855,448 +1237,6 @@ export default class essential_information_page extends PureComponent {
 						dissmissFun={() => this.handleSetModal(false)}
 					/>
 				</Modal>
-				<div className={style.warning_tip}>还到不向学生借款</div>
-				{urlQuery.jumpToBase && (
-					<div className={style.adsImg}>
-						<img src={adsBg} alt="ad" />
-						<div className={style.text}>
-							限时参与&nbsp;
-							<ClockS count={this.state.count} />
-							<span className="jg">:</span>
-							{this.state.millisecond < 9 ? <span className="mins">0</span> : <span className="mins">1</span>}
-							{<span className="mins">{this.state.millisecond}</span>}
-						</div>
-					</div>
-				)}
-				<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
-					<div className={[style.step_item, style.active].join(' ')}>
-						<div className={style.title}>
-							<div className={style.step_circle} />
-							请先完善个人信息
-						</div>
-						<div className={style.line} />
-						<div className={style.content}>
-							<div className={style.item_box}>
-								<div className={style.titleTop}>居住地址</div>
-								<div
-									className={style.listRow}
-									onClick={() => {
-										this.sxfMD('DC_resident_city');
-										this.setState({
-											visible: true
-										});
-									}}
-								>
-									{ProvincesValue ? (
-										<span className={style.active}>{ProvincesValue}</span>
-									) : (
-										'请选择您的现居住城市'
-									)}
-									<img className={style.informationMoreNew} src={informationMore} />
-								</div>
-								{getFieldDecorator('address', {
-									rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
-									onChange: (value) => {
-										if (!value) {
-											sxfburiedPointEvent('resident_address', {
-												actId: 'delAll'
-											});
-										}
-										// 本地缓存常住地址
-										store.setAddress(value);
-										this.setState({ address: value });
-									}
-								})(
-									<InputItem
-										clear
-										data-sxf-props={JSON.stringify({
-											type: 'input',
-											name: 'resident_address',
-											eventList: [
-												{
-													type: 'focus'
-												},
-												{
-													type: 'delete'
-												},
-												{
-													type: 'blur'
-												},
-												{
-													type: 'paste'
-												}
-											]
-										})}
-										className="noBorder"
-										placeholder="详细地址：如道路、门牌号、小区、楼栋号、单元室等"
-										type="text"
-										onBlur={(v) => {
-											this.inputOnBlur(v, 'resident_address');
-										}}
-										onFocus={(v) => {
-											this.inputOnFocus(v, 'resident_address');
-										}}
-									></InputItem>
-								)}
-							</div>
-
-							<div className={style.item_box}>
-								<div className={style.titleTop}>紧急联系人1</div>
-								<div className={style.labelDiv}>
-									{getFieldDecorator('cntRelTyp1', {
-										initialValue: this.state.relatValue,
-										rules: [{ required: true, message: '请选择联系人关系' }],
-										onChange: (value) => {
-											store.setRelationValue(value);
-											this.selectSure({
-												value: JSON.stringify(value),
-												label: 'clan_relation'
-											});
-										}
-									})(
-										<AsyncCascadePicker
-											className="hasborder"
-											title="选择联系人"
-											loadData={[
-												() =>
-													this.props.$fetch.get(`${API.getRelat}/2`).then((result) => {
-														const prov = result && result.data && result.data.length ? result.data : [];
-														return prov.map((item) => ({
-															value: item.key,
-															label: item.value
-														}));
-													})
-											]}
-											cols={1}
-											onVisibleChange={(bool) => {
-												if (bool) {
-													this.sxfMD('cntRelTyp1');
-													this.selectClick({
-														value: JSON.stringify(this.state.relatValue),
-														label: 'clan_relation'
-													});
-												} else {
-													this.sxfMD('cntRelTypOut1');
-												}
-											}}
-										>
-											<List.Item className="hasborder"></List.Item>
-										</AsyncCascadePicker>
-									)}
-									<img className={style.informationMore} src={informationMore} />
-								</div>
-								{getFieldDecorator('linkman', {
-									rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
-									onChange: (value) => {
-										if (!value) {
-											sxfburiedPointEvent('contact_name_one', {
-												actId: 'delAll'
-											});
-										}
-										store.setLinkman(value);
-										this.setState({ linkman: value });
-									}
-								})(
-									<InputItem
-										clear
-										data-sxf-props={JSON.stringify({
-											type: 'input',
-											notSendValue: true, // 无需上报输入框的值
-											name: 'contact_name_one',
-											eventList: [
-												{
-													type: 'focus'
-												},
-												{
-													type: 'delete'
-												},
-												{
-													type: 'blur'
-												},
-												{
-													type: 'paste'
-												}
-											]
-										})}
-										placeholder="联系人姓名"
-										type="text"
-										onBlur={(v) => {
-											this.inputOnBlur(v, 'contact_name_one');
-										}}
-										onFocus={(v) => {
-											this.inputOnFocus(v, 'contact_name_one');
-										}}
-									></InputItem>
-								)}
-								{getFieldDecorator('linkphone', {
-									rules: [
-										{ required: true, message: '请输入联系人手机号' },
-										{ validator: this.validatePhone }
-									],
-									onChange: (value) => {
-										if (!value) {
-											sxfburiedPointEvent('linkphone', {
-												actId: 'delAll'
-											});
-										}
-										store.setLinkphone(value);
-										this.setState({ linkphone: value });
-									}
-								})(
-									<InputItem
-										data-sxf-props={JSON.stringify({
-											type: 'input',
-											notSendValue: true, // 无需上报输入框的值
-											name: 'linkphone',
-											eventList: [
-												{
-													type: 'focus'
-												},
-												{
-													type: 'delete'
-												},
-												{
-													type: 'blur'
-												},
-												{
-													type: 'paste'
-												}
-											]
-										})}
-										clear
-										className="noBorder"
-										type="number"
-										maxLength="11"
-										placeholder="联系人电话"
-										onBlur={(v) => {
-											this.inputOnBlur(v, 'contact_tel_one');
-										}}
-										onFocus={(v) => {
-											this.inputOnFocus(v, 'contact_tel_one');
-										}}
-									></InputItem>
-								)}
-							</div>
-
-							<div className={style.item_box}>
-								<div className={style.titleTop}>紧急联系人2</div>
-								<div className={style.labelDiv}>
-									{getFieldDecorator('cntRelTyp2', {
-										initialValue: this.state.relatValue2,
-										rules: [{ required: true, message: '请选择联系人关系' }],
-										onChange: (value) => {
-											store.setRelationValue2(value);
-											this.selectSure({
-												value: JSON.stringify(value),
-												label: 'clan_relation'
-											});
-										}
-									})(
-										<AsyncCascadePicker
-											className="hasborder"
-											title="选择联系人"
-											loadData={[
-												() =>
-													this.props.$fetch.get(`${API.getRelat}/1`).then((result) => {
-														const prov = result && result.data && result.data.length ? result.data : [];
-														return prov.map((item) => ({
-															value: item.key,
-															label: item.value
-														}));
-													})
-											]}
-											cols={1}
-											onVisibleChange={(bool) => {
-												if (bool) {
-													this.sxfMD('cntRelTyp2');
-													this.selectClick({
-														value: JSON.stringify(this.state.relatValue2),
-														label: 'clan_relation'
-													});
-												} else {
-													this.sxfMD('cntRelTypOut2');
-												}
-											}}
-										>
-											<List.Item className="hasborder"></List.Item>
-										</AsyncCascadePicker>
-									)}
-									<img className={style.informationMore} src={informationMore} />
-								</div>
-								{getFieldDecorator('linkman2', {
-									rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
-									onChange: (value) => {
-										if (!value) {
-											sxfburiedPointEvent('contact_name_two', {
-												actId: 'delAll'
-											});
-										}
-										store.setLinkman2(value);
-										this.setState({ linkman2: value });
-									}
-								})(
-									<InputItem
-										data-sxf-props={JSON.stringify({
-											type: 'input',
-											notSendValue: true, // 无需上报输入框的值
-											name: 'contact_name_two',
-											eventList: [
-												{
-													type: 'focus'
-												},
-												{
-													type: 'delete'
-												},
-												{
-													type: 'blur'
-												},
-												{
-													type: 'paste'
-												}
-											]
-										})}
-										clear
-										placeholder="联系人姓名"
-										type="text"
-										onBlur={(v) => {
-											this.inputOnBlur(v, 'contact_name_two');
-										}}
-										onFocus={(v) => {
-											this.inputOnFocus(v, 'contact_name_two');
-										}}
-									></InputItem>
-								)}
-								{getFieldDecorator('linkphone2', {
-									rules: [
-										{ required: true, message: '请输入联系人手机号' },
-										{ validator: this.validatePhone }
-									],
-									onChange: (value) => {
-										if (!value) {
-											sxfburiedPointEvent('linkphone2', {
-												actId: 'delAll'
-											});
-										}
-										store.setLinkphone2(value);
-										this.setState({ linkphone2: value });
-									}
-								})(
-									<InputItem
-										data-sxf-props={JSON.stringify({
-											type: 'input',
-											notSendValue: true, // 无需上报输入框的值
-											name: 'linkphone2',
-											eventList: [
-												{
-													type: 'focus'
-												},
-												{
-													type: 'delete'
-												},
-												{
-													type: 'blur'
-												},
-												{
-													type: 'paste'
-												}
-											]
-										})}
-										clear
-										className="noBorder"
-										type="number"
-										maxLength="11"
-										placeholder="联系人电话"
-										onBlur={(v) => {
-											this.inputOnBlur(v, 'contact_tel_two');
-										}}
-										onFocus={(v) => {
-											this.inputOnFocus(v, 'contact_tel_two');
-										}}
-									></InputItem>
-								)}
-							</div>
-						</div>
-					</div>
-					<div className={[style.step_item].join(' ')}>
-						<div className={style.title}>
-							<div className={style.step_circle} />
-							继续添加要还款的信用卡
-						</div>
-						<div className={style.line} />
-					</div>
-					<div className={[style.step_item].join(' ')}>
-						<div className={style.title}>
-							<div className={style.step_circle} />
-							获得还款金
-						</div>
-						<div className={style.line} />
-					</div>
-				</div>
-				{urlQuery.jumpToBase && (
-					<div className={style.operatorCont}>
-						<div className={style.protocolBox} onClick={this.selectProtocol}>
-							<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
-							点击按钮即视为同意
-							<em
-								onClick={(e) => {
-									e.stopPropagation();
-									this.readContract('/protocol/personal_auth_page');
-								}}
-								className={style.link}
-							>
-								《个人信息授权书》
-							</em>
-							<em
-								onClick={(e) => {
-									e.stopPropagation();
-									this.readContract('/protocol/user_privacy_page');
-								}}
-								className={style.link}
-							>
-								《用户隐私权政策》
-							</em>
-						</div>
-						<ButtonCustom
-							onClick={this.handleSubmit}
-							className={[style.nextBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}
-						>
-							下一步
-						</ButtonCustom>
-						<div className={style.quitText} onClick={this.quitSubmit}>
-							放弃本次机会
-						</div>
-					</div>
-				)}
-				{!urlQuery.jumpToBase && (
-					<ButtonCustom
-						onClick={this.handleSubmit}
-						className={[style.sureBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}
-					>
-						{needNextUrl ? '下一步' : '完成'}
-					</ButtonCustom>
-				)}
-				<div className={style.protocolBox} onClick={this.selectProtocol}>
-					<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
-					点击按钮即视为同意
-					<em
-						onClick={(e) => {
-							e.stopPropagation();
-							this.readContract('/protocol/personal_auth_page');
-						}}
-						className={style.link}
-					>
-						《个人信息授权书》
-					</em>
-					<em
-						onClick={(e) => {
-							e.stopPropagation();
-							this.readContract('/protocol/user_privacy_page');
-						}}
-						className={style.link}
-					>
-						《用户隐私权政策》
-					</em>
-				</div>
 				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
 			</div>
 		);

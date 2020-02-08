@@ -2,20 +2,34 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import { SXFToast } from 'utils/SXFToast';
-import STabs from 'components/Tab';
+import Image from 'assets/image';
+import { Tab as STabs, commonPage, LoadingView } from 'components';
 import { store } from 'utils/store';
+import { connect } from 'react-redux';
+import { setMsgCount } from 'reduxes/actions/specialActions';
 
 import { PullToRefresh, Badge, ListView } from 'antd-mobile';
 let totalPage = false;
-const API = {
-	msgRead: '/my/msgRead',
-	msgCount: '/my/msgCount',
-	defTable: '/my/defTable',
-	msgInfo: '/my/msgInfo',
-	msgReadAll: '/my/msgReadAll'
+import { msg_news_default_table, msg_news_read, msg_news_list, msg_news_readAll } from 'fetch/api';
+
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无账单',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
 };
 @fetch.inject()
+@commonPage()
+@connect(
+	(state) => ({
+		msgCount: state.specialState.msgCount
+	}),
+	{ setMsgCount }
+)
 export default class message_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -60,7 +74,6 @@ export default class message_page extends PureComponent {
 					Listlength: backData.rData.length
 				},
 				() => {
-					this.msgCount();
 					this.setState(
 						{
 							dataSource: this.state.dataSource.cloneWithRows(backData.rData),
@@ -78,8 +91,6 @@ export default class message_page extends PureComponent {
 		} else {
 			// 获取消息tab
 			this.getTab();
-			// 获取消息条数
-			this.msgCount();
 		}
 	}
 	componentDidUpdate() {
@@ -101,8 +112,8 @@ export default class message_page extends PureComponent {
 	}
 	// 消息 tab
 	getTab = () => {
-		this.props.$fetch.post(API.defTable).then((res) => {
-			if (res.msgCode === 'PTM0000') {
+		this.props.$fetch.get(msg_news_default_table).then((res) => {
+			if (res.code === '000000') {
 				this.setState(
 					{
 						msgType: Number(res.data.type) - 1
@@ -112,19 +123,20 @@ export default class message_page extends PureComponent {
 					}
 				);
 			} else {
-				this.props.toast.info(res.msgInfo);
+				this.viewRef && this.viewRef.setEmpty();
+				this.props.toast.info(res.message);
 			}
 		});
 	};
 	// 单个请求读取
 	msgOneRead = (obj) => {
 		if (obj.sts === '0') {
-			this.props.$fetch.post(API.msgRead, { uuid: obj.uuid }).then((res) => {
-				if (res.msgCode === 'PTM0000') {
+			this.props.$fetch.post(msg_news_read, { uuid: obj.uuid }, { hideToast: true }).then((res) => {
+				if (res.code === '000000') {
 					//   this.msgCount(obj)
 					this.getDesc(obj);
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			});
 		} else {
@@ -181,22 +193,14 @@ export default class message_page extends PureComponent {
 			});
 			return [];
 		}
-		if (pIndex === 1) {
-			SXFToast.loading('数据加载中...', 10000);
-		}
 		let data = await this.props.$fetch
-			.post(API.msgInfo, {
+			.post(msg_news_list, {
 				type: this.state.msgType + 1,
 				curPage: pIndex,
 				loading: true
 			})
 			.then((res) => {
-				if (pIndex === 1) {
-					setTimeout(() => {
-						SXFToast.hide();
-					}, 600);
-				}
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					if (pIndex === 1) {
 						totalPage = res.data.totalPage;
 						this.setState({
@@ -204,23 +208,17 @@ export default class message_page extends PureComponent {
 						});
 					}
 					let dataArr = [];
-					// dataArr = res.data.msgList
-					for (let i = res.data.msgList.length - 1; i >= 0; i--) {
+					// dataArr = res.data.message
+					for (let i = res.data.message.length - 1; i >= 0; i--) {
 						dataArr.push({
-							...res.data.msgList[i]
+							...res.data.message[i]
 						});
 					}
 					return dataArr;
 				}
 				return [];
 			})
-			.catch(() => {
-				if (pIndex === 1) {
-					setTimeout(() => {
-						SXFToast.hide();
-					}, 600);
-				}
-			});
+			.catch(() => {});
 		return data;
 	};
 	// 刷新
@@ -234,7 +232,10 @@ export default class message_page extends PureComponent {
 		this.setState({
 			isLoading: true
 		});
-		let list = await this.genData(1);
+		let list = await this.genData(1).catch(() => {
+			this.viewRef && this.viewRef.setEmpty();
+		});
+		this.viewRef && this.viewRef.showDataView();
 		if (tab === 'tabshow') {
 			this.setState({
 				tabState: true
@@ -268,44 +269,14 @@ export default class message_page extends PureComponent {
 			isLoading: false
 		});
 	};
-	// 获取消息条数
-	msgCount = (obj) => {
-		this.props.$fetch.post(API.msgCount).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				if (res.data && res.data.count && res.data.count > 0) {
-					this.setState({
-						msgReadAllState: true
-					});
-				} else {
-					this.setState({
-						msgReadAllState: false
-					});
-				}
-				if (obj && JSON.stringify(obj) !== '{}') {
-					this[`ids${obj.uuid}`].style.display = 'none';
-				}
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
 	// 一键读取
 	msgReadAll = () => {
-		this.props.$fetch.post(API.msgReadAll).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				this.setState(
-					{
-						msgReadAllState: false
-					},
-					() => {
-						this.setState({
-							showDot: false
-						});
-						this.props.toast.info('已全部读取');
-					}
-				);
+		this.props.$fetch.get(msg_news_readAll).then((res) => {
+			if (res.code === '000000') {
+				this.props.setMsgCount(0);
+				this.props.toast.info('已全部读取');
 			} else {
-				this.props.toast.info(res.msgInfo);
+				this.props.toast.info(res.message);
 			}
 		});
 	};
@@ -330,6 +301,7 @@ export default class message_page extends PureComponent {
 		);
 	};
 	render() {
+		const { msgCount } = this.props;
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
 		const row = (rowData, sectionID, rowID) => {
@@ -348,7 +320,7 @@ export default class message_page extends PureComponent {
 					>
 						{obj.title ? (
 							<div className={style.title}>
-								{obj.sts === '0' ? (
+								{obj.sts !== '1' ? (
 									<i
 										className={!this.state.showDot ? style.displayDot : ''}
 										data-id={'ids' + obj.uuid}
@@ -409,8 +381,16 @@ export default class message_page extends PureComponent {
 			);
 		};
 		return (
+			// <LoadingView
+			// 	ref={(view) => (this.viewRef = view)}
+			// 	nodata={noData}
+			// 	errordata={errorData}
+			// 	onReloadData={() => {
+			// 		this.onRefresh();
+			// 	}}
+			// >
 			<div className={style.message_page} ref={(el) => (this.messageBox = el)}>
-				{this.state.msgReadAllState ? (
+				{msgCount ? (
 					<div onClick={this.msgReadAll} className={style.allRead}>
 						<i className={style.allReadIcon} />
 						一键读取
@@ -431,6 +411,7 @@ export default class message_page extends PureComponent {
 					</STabs>
 				) : null}
 			</div>
+			// </LoadingView>
 		);
 	}
 }

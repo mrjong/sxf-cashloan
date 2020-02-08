@@ -7,6 +7,7 @@ import { createForm } from 'rc-form';
 import { List } from 'antd-mobile';
 import informationMore from './img/back.png';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
+import StepTitle from 'components/StepTitle';
 import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import { getH5Channel } from 'utils/common';
@@ -20,6 +21,9 @@ import style from './index.scss';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
+import { auth_suppleInfo } from 'fetch/api.js';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
+import { connect } from 'react-redux';
 
 let submitButtonLocked = false;
 const API = {
@@ -27,8 +31,15 @@ const API = {
 };
 
 @fetch.inject()
-@createForm()
-@setBackGround('#F7F8FA')
+@connect((state) => ({
+	nextStepStatus: state.commonState.nextStepStatus
+}))
+@createForm({
+	onFieldsChange: (a) => {
+		console.log(a, 'a');
+	}
+})
+@setBackGround('#fff')
 @domListen()
 export default class add_info extends PureComponent {
 	constructor(props) {
@@ -44,18 +55,25 @@ export default class add_info extends PureComponent {
 
 	getsuppleInfo = () => {
 		this.props.$fetch
-			.get(`${API.auth_suppleInfo}`)
+			.get(auth_suppleInfo)
 			.then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '000000') {
 					this.setState({
-						suppleInfo: result.data
+						suppleInfo: result.data.list
 					});
 				} else {
-					this.props.toast.info(result.msgInfo);
+					this.props.toast.info(result.message);
 				}
 			})
 			.catch(() => {});
 	};
+
+	handleValidate = () => {
+		const fieldsValue = this.props.form.getFieldsValue();
+		const valid = Object.keys(fieldsValue).every((key) => !!fieldsValue[key]);
+		return valid;
+	};
+
 	handleSubmit = () => {
 		this.sxfMD('DC_ADDINFO_SUBMIT');
 		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT);
@@ -76,27 +94,18 @@ export default class add_info extends PureComponent {
 					params[key] = values[key][0];
 				}
 				this.props.$fetch
-					.post(API.auth_suppleInfo, params)
+					.post(auth_suppleInfo, params)
 					.then((result) => {
 						submitButtonLocked = false;
-						if (result.msgCode === 'PTM0000') {
+						if (result.code === '000000' || result.code === '000030') {
 							this.props.toast.info('提交成功');
-							setTimeout(() => {
-								getNextStr({
-									RouterType: 'add_info',
-									$props: this.props
-								});
-							}, 2000);
-						} else if (result.msgCode === 'PCC-PRC-9994') {
-							this.props.toast.info('提交成功');
-							setTimeout(() => {
-								getNextStr({
-									RouterType: 'add_info',
-									$props: this.props
-								});
-							}, 2000);
+
+							getNextStatus({
+								RouterType: 'addInfo',
+								$props: this.props
+							});
 						} else {
-							this.props.toast.info(result.msgInfo);
+							this.props.toast.info(result.message);
 						}
 					})
 					.catch(() => {
@@ -117,11 +126,15 @@ export default class add_info extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
-				<div className={style.warning_tip}>还到不向学生借款</div>
-				<div>
+				<div className={style.warning_tip}>
+					<span className={style.warning_tip_title}>温馨提示：</span>
+					<span className={style.warning_tip_text}>学生禁止使用还到</span>
+				</div>
+
+				<div className={style.pageContent}>
+					<StepTitle title="填写基本信息" titleSub="请填写基本信息，有利于您的借款审核" stepNum="03" />
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {
-							console.log('1');
 							return (
 								<div key={index} className={style.labelDiv}>
 									{getFieldDecorator(item.code, {
@@ -160,9 +173,15 @@ export default class add_info extends PureComponent {
 						})}
 					</div>
 				</div>
-				<ButtonCustom onClick={this.handleSubmit} className={[style.sureBtn].join(' ')}>
-					{needNextUrl ? '下一步' : '完成'}
-				</ButtonCustom>
+				<div className={style.sureBtnWrap}>
+					<ButtonCustom
+						type={suppleInfo && suppleInfo.length && this.handleValidate() ? 'yellow' : 'default'}
+						onClick={this.handleSubmit}
+						className={[style.sureBtn].join(' ')}
+					>
+						{needNextUrl ? '下一步' : '完成'}
+					</ButtonCustom>
+				</div>
 			</div>
 		);
 	}

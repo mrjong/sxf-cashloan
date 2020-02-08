@@ -1,14 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-13 17:33:31
+ * @LastEditTime : 2020-02-08 13:50:14
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import { store } from 'utils/store';
-import ButtonCustom from 'components/ButtonCustom';
-import CountDownButton from 'components/CountDownButton';
+import { ButtonCustom, SelectList, CountDownButton } from 'components';
 import { setBackGround } from 'utils/background';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { getH5Channel } from 'utils/common';
@@ -16,7 +15,6 @@ import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
-import SelectList from 'components/SelectList';
 import { domListen } from 'utils/domListen';
 import {
 	bank_card_bin,
@@ -31,14 +29,6 @@ import {
 	setBindDepositInfoAction
 } from 'reduxes/actions/commonActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-
-const API = {
-	GETUSERINF: '/my/getRealInfo', // 获取用户信息
-	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
-	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
-	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
-};
 
 @fetch.inject()
 @createForm()
@@ -273,7 +263,7 @@ export default class bind_save_page extends PureComponent {
 	// 确认绑卡
 	confirmBindCard = () => {
 		const { backRouter } = this.props;
-		if (!this.validateFn()) return;
+		// if (!this.validateFn()) return;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.checkCard(values);
@@ -538,12 +528,14 @@ export default class bind_save_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<ButtonCustom
-					onClick={this.confirmBindCard}
-					className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
-				>
-					确认
-				</ButtonCustom>
+				<div className={styles.confirm_btn_box}>
+					<ButtonCustom
+						onClick={this.confirmBindCard}
+						className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
+					>
+						确认
+					</ButtonCustom>
+				</div>
 				<div className={styles.xieyi}>
 					{' '}
 					请阅读协议内容，点击确认即视为您同意

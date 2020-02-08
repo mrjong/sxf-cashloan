@@ -91,7 +91,7 @@ export default class Carousels extends React.Component {
 						>
 							<div className={style.bannerBox}>
 								<img
-									src={item.src}
+									src={item.src.uri}
 									alt=""
 									style={{ width: '100%', verticalAlign: 'top' }}
 									onLoad={() => {

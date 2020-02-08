@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 14:53:09
+ * @LastEditTime : 2020-02-07 16:55:31
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -226,6 +226,7 @@ export default class login_page extends PureComponent {
 				// if (!this.state.disabledInput) {
 				// 	param.mblNo = values.phoneValue; // 手机号
 				// }
+				Toast.loading('数据加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
 						if (res.code !== '000000') {
@@ -394,7 +395,7 @@ export default class login_page extends PureComponent {
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			Toast.loading('', 10);
+			Toast.loading('数据加载中...', 10);
 			this.props.$fetch.get(`${msg_slide}/${base64Encode(this.state.mobilePhone)}`).then((result) => {
 				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({

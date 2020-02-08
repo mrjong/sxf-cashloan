@@ -1,11 +1,20 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 17:44:36
+ * @LastEditTime : 2020-02-07 15:21:19
  */
-import { Toast } from 'antd-mobile';
-import { loan_queryCashLoanApplInfo } from 'fetch/api';
+import React from 'react';
+
+import { Toast, Modal } from 'antd-mobile';
+import fetch from 'sx-fetch';
+import { loan_queryCashLoanApplInfo, signup_logout } from 'fetch/api';
+import { commonClearState } from 'reduxes/actions/commonActions';
+import { specialClearState } from 'reduxes/actions/specialActions';
+import { setUserInfoAction, staticClearState } from 'reduxes/actions/staticActions';
 import { base64Decode } from './toolUtil';
+import storeRedux from 'reduxes';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { isMPOS } from 'utils/common';
+import { store } from 'utils/store';
 /**
  * @description: 账单需要更新等跳转逻辑
  * @param {type}
@@ -124,4 +133,73 @@ export const goToStageLoan = ({ $props }) => {
 			}, 2000);
 		});
 	// });
+};
+/**
+ * @description: 退出清除数据的方法
+ * @param {type}
+ * @return:
+ */
+export const logoutClearData = (type) => {
+	if (type === 'LoginSms') {
+		storeRedux.dispatch(commonClearState());
+		storeRedux.dispatch(staticClearState());
+		storeRedux.dispatch(specialClearState());
+	}
+	storeRedux.dispatch(setUserInfoAction({}));
+};
+let state = false;
+// 退出功能
+export const logoutApp = () => {
+	fetch.get(signup_logout).then(
+		(result) => {
+			if (result && result.code !== '000000') {
+				result.message && Toast.info(result.message);
+				return;
+			}
+			logoutClearData('LoginSms');
+			window.ReactRouterHistory.push('/login');
+			//退出时,删除通付盾script
+			document.getElementById('tonfudunScript') &&
+				document.body.removeChild(document.getElementById('tonfudunScript'));
+			document.getElementById('payegisIfm') &&
+				document.body.removeChild(document.getElementById('payegisIfm'));
+		},
+		(err) => {
+			err.msgInfo && Toast.info(err.msgInfo);
+		}
+	);
+};
+
+//关闭view
+export const closeCurrentWebView = () => {
+	window.setupWebViewJavascriptBridge((bridge) => {
+		bridge.callHandler('closeCurrentWebView', '', function(response) {
+			console.log(response);
+		});
+	});
+};
+export const logoutAppHandler = (that) => {
+	if (isMPOS()) {
+		closeCurrentWebView();
+		return;
+	}
+	if (!state && !store.getGotoMoxieFlag()) {
+		state = true;
+		const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
+		Modal.alert('', ele, [
+			{
+				text: '取消',
+				onPress: () => {
+					state = false;
+				}
+			},
+			{
+				text: '确定',
+				onPress: () => {
+					state = false;
+					logoutApp(that);
+				}
+			}
+		]);
+	}
 };

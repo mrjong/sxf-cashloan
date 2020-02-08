@@ -1,3 +1,5 @@
+@import '../../../../../assets/styles/scss/base/fn';
+
 :global {
 	.question_feedback_modal {
 		.am-modal-content {
@@ -20,7 +22,9 @@
 	position: relative;
 	text-align: left;
 }
-
+.nozan_text_active{
+  color: $colorTipRed;
+}
 .modalDesc {
 	color: #868e9e;
 	font-size: 30px;

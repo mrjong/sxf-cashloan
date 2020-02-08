@@ -1,26 +1,27 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 11:12:26
+ * @LastEditTime : 2020-02-07 11:39:50
  */
 import React, { Component } from 'react';
-import Cookie from 'js-cookie';
 import { createForm } from 'rc-form';
 // import updateBottomTip from 'assets/images/real_name/bottom_tip.png';
 import FEZipImage from 'components/FEZIpImage';
-import { InputItem, List } from 'antd-mobile';
+import { InputItem, List, Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import ButtonCustom from 'components/ButtonCustom';
 import StepTitle from 'components/StepTitle';
-import StepList from 'components/StepList';
 import style from './index.scss';
+import { connect } from 'react-redux';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
+import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import {
 	getDeviceType,
 	validators,
 	handleInputBlur,
-	getNextStr,
 	handleClickConfirm,
 	idChkPhoto,
 	activeConfigSts,
@@ -31,7 +32,7 @@ import { home, mine } from 'utils/analytinsType';
 import qs from 'qs';
 import Images from 'assets/image';
 
-import { auth_ocrIdChk } from 'fetch/api.js';
+import { auth_ocrIdChk, auth_idChk, signup_refreshClientUserInfo } from 'fetch/api';
 
 const updateLeftPlaceHolder = Images.adorn.id_card_front;
 const updateLeftSuccessPlaceHolder = Images.adorn.id_card_front_success;
@@ -42,16 +43,18 @@ const updateBottomTip = Images.bg.id_card_tip;
 const isEquipment = window.navigator.userAgent.match(
 	/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
 );
-const API = {
-	getImgUrl: '/auth/ocrIdChk',
-	submitName: '/auth/idChk'
-};
-
 let urlQuery = '';
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
 @domListen()
+@connect(
+	(state) => ({
+		userInfo: state.staticState.userInfo,
+		nextStepStatus: state.commonState.nextStepStatus
+	}),
+	{ setUserInfoAction }
+)
 export default class real_name_page extends Component {
 	state = {
 		idName: '',
@@ -109,9 +112,9 @@ export default class real_name_page extends Component {
 	};
 
 	// 上传身份证正面
-	handleChangePositive = ({ base64Data, file }) => {
+	handleChangePositive = ({ base64Data }) => {
 		if (!base64Data) {
-			this.props.SXFToast.hide();
+			Toast.hide();
 			this.setState({
 				disabledupload: 'false'
 			});
@@ -123,10 +126,6 @@ export default class real_name_page extends Component {
 		this.setState({ showFloat: true });
 		buriedPointEvent(home.informationMyselfFrontCard);
 		this.setState({ leftValue: base64Data });
-		const params = {
-			imageBase64: this.state.leftValue, //身份证正面图片信息
-			ocrType: '2'
-		};
 
 		let bytes = window.atob(base64Data.split(',')[1]);
 		let array = [];
@@ -138,18 +137,12 @@ export default class real_name_page extends Component {
 
 		formData.append('image', blob);
 
-		// formData.append('image', {
-		// 	type: 'image/jpeg',
-		// 	uri: file,
-		// 	name: 'imgFront.jpg'
-		// });
-
 		formData.append('ocrType', '2');
-
+		Toast.loading('数据加载中...', 10);
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/2`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((result) => {
-				this.props.SXFToast.hide();
+				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
@@ -165,7 +158,7 @@ export default class real_name_page extends Component {
 				}
 			})
 			.catch(() => {
-				this.props.SXFToast.hide();
+				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
@@ -173,9 +166,9 @@ export default class real_name_page extends Component {
 			});
 	};
 	// 上传身份证反面
-	handleChangeSide = ({ base64Data, file }) => {
+	handleChangeSide = ({ base64Data }) => {
 		if (!base64Data) {
-			this.props.SXFToast.hide();
+			Toast.hide();
 			this.setState({
 				disabledupload: 'false'
 			});
@@ -187,10 +180,7 @@ export default class real_name_page extends Component {
 		this.setState({ showFloat: true });
 		buriedPointEvent(home.informationMyselfBackCard);
 		this.setState({ rightValue: base64Data });
-		const params1 = {
-			imageBase64: this.state.rightValue, //身份证反面图片信息
-			ocrType: '3'
-		};
+
 		let bytes = window.atob(base64Data.split(',')[1]);
 		let array = [];
 		for (let i = 0; i < bytes.length; i++) {
@@ -208,11 +198,11 @@ export default class real_name_page extends Component {
 		// });
 
 		formData.append('ocrType', '2');
-
+		Toast.loading('数据加载中...', 10);
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/3`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((res) => {
-				this.props.SXFToast.hide();
+				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
@@ -226,12 +216,28 @@ export default class real_name_page extends Component {
 				}
 			})
 			.catch(() => {
-				this.props.SXFToast.hide();
+				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
 				this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
 			});
+	};
+
+	isValidate = () => {
+		if (!this.state.leftUploaded) {
+			return false;
+		}
+		if (!this.state.rightUploaded) {
+			return false;
+		}
+		if (!validators.name(this.state.idName)) {
+			return false;
+		}
+		if (!validators.iDCardNumber(this.state.idNo)) {
+			return false;
+		}
+		return true;
 	};
 
 	handleSubmit = () => {
@@ -254,16 +260,21 @@ export default class real_name_page extends Component {
 		const { ocrZhengData = {}, ocrFanData = {}, idName, idNo } = this.state;
 		const osType = getDeviceType();
 		const params = {
+			idNo: base64Encode(idNo.toLocaleUpperCase()),
+			idNoOld: base64Encode(ocrZhengData.idNo.toLocaleUpperCase()),
+			userName: base64Encode(idName),
+			userNameOld: base64Encode(ocrZhengData.idName),
+
 			idCardFrontUrl: ocrZhengData.imgUrl, //正面URL
 			idCardBackUrl: ocrFanData.imgUrl, //反面URL
 			// handCardImgUrl: ocrData, //手持正面URL
-			idNo: idNo.toLocaleUpperCase(), // 证件号码
-			idNoOld: ocrZhengData.idNo && ocrZhengData.idNo.toLocaleUpperCase(), // 修改前证件号码
-			usrNm: idName, //证件姓名
-			usrNmOld: ocrZhengData.idName, //修改前证件姓名
-			usrGender: ocrZhengData.sex, //性别
-			usrNation: ocrZhengData.nation, //民族
-			usrBirthDt: ocrZhengData.birthday, //出生年月日
+			// idNo: idNo.toLocaleUpperCase(), // 证件号码
+			// idNoOld: ocrZhengData.idNo && ocrZhengData.idNo.toLocaleUpperCase(), // 修改前证件号码
+			// idName: idName, //证件姓名
+			// usrNmOld: ocrZhengData.idName, //修改前证件姓名
+			userGender: ocrZhengData.sex, //性别
+			userNation: ocrZhengData.nation, //民族
+			userBirthDate: ocrZhengData.birthday, //出生年月日
 			issuAuth: ocrFanData.signOrg, //签发机关
 			idEffDt: ocrFanData.signTime, //证件有效期起始日期
 			idExpDt: ocrFanData.signEndTime, //证件有效期截止日期
@@ -272,50 +283,51 @@ export default class real_name_page extends Component {
 			idAddrLctn: '', //身份证户籍地经纬度
 			usrBrowInfo: '' //授信浏览器信息
 		};
-		this.props.$fetch.post(`${API.submitName}`, params).then((result) => {
+		this.props.$fetch.post(auth_idChk, params).then((result) => {
 			if (result && result.code === '000000') {
+				this.signup_refreshClientUserInfo();
 				store.setBackFlag(true);
 				buriedPointEvent(mine.creditExtensionBack, {
 					current_step: '实名认证'
 				});
 				this.confirmBuryPoint(true);
-				// store.removeAuthFlag();
-				Cookie.remove('authFlag');
 				// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
 				// 是否需要下一步
-				if (urlQuery.newTitle) {
-					// 需要补身份证的
-					this.nextFunc();
-				} else if (store.getNeedNextUrl()) {
-					// 首页正常流程走实名认证的
-					this.props.SXFToast.loading('数据加载中...', 0);
-					this.nextFunc(() => {
-						getNextStr({
-							$props: this.props
-						});
+				if (this.props.nextStepStatus || (urlQuery && urlQuery.newTitle)) {
+					getNextStatus({
+						RouterType: 'real_name_page',
+						$props: this.props
 					});
 				} else {
-					// 我的页面
-					this.nextFunc(() => {
-						this.props.history.goBack();
-					});
-					// this.props.history.goBack();
+					Toast.hide();
+					this.props.history.goBack();
 				}
-			} else if (result.code === 'URM5016' && !urlQuery.newTitle) {
-				this.nextFunc(() => {
-					if (store.getNeedNextUrl()) {
-						this.props.SXFToast.loading('数据加载中...', 0);
-						getNextStr({
-							$props: this.props
-						});
-					}
-				});
-			} else if (result.code === 'URM5016' && urlQuery.newTitle) {
-				store.setBackFlag(true);
-				this.nextFunc();
+			} else if (result.code === '000038') {
+				if (this.props.nextStepStatus) {
+					getNextStatus({
+						RouterType: 'real_name_page',
+						$props: this.props
+					});
+				} else {
+					Toast.hide();
+					this.props.history.goBack();
+				}
+				this.confirmBuryPoint(false, result.message);
 			} else {
 				this.confirmBuryPoint(false, result.message);
 				this.props.toast.info(result.message);
+			}
+		});
+	};
+	/**
+	 * @description: 刷新用户登录信息
+	 * @param {type}
+	 * @return:
+	 */
+	signup_refreshClientUserInfo = () => {
+		this.props.$fetch.post(signup_refreshClientUserInfo, null, { hideToast: true }).then((res) => {
+			if (res && res.code === '000000' && res.data) {
+				this.props.setUserInfoAction(res.data);
 			}
 		});
 	};
@@ -460,7 +472,7 @@ export default class real_name_page extends Component {
 				disabledupload: 'true'
 			},
 			() => {
-				this.props.SXFToast.loading('压缩图片中...', 0);
+				Toast.loading('压缩图片中...', 0);
 			}
 		);
 	};
@@ -484,7 +496,7 @@ export default class real_name_page extends Component {
 		store.removeDisableBack();
 	};
 	render() {
-		const { disabledupload } = this.state;
+		const { disabledupload, leftValue, rightValue } = this.state;
 		return (
 			<div className={[style.real_name_page, 'real_name_page_list'].join(' ')}>
 				<StepTitle title="上传身份证照片" titleSub="请上传身份证照片，仅用于公安网身份核实" stepNum="01" />
@@ -503,7 +515,7 @@ export default class real_name_page extends Component {
 									<FEZipImage
 										disabledupload={disabledupload}
 										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-										value={this.state.leftValue ? updateLeftSuccessPlaceHolder : updateLeftPlaceHolder}
+										value={leftValue ? updateLeftSuccessPlaceHolder : updateLeftPlaceHolder}
 										onChange={this.handleChangePositive}
 										beforeCompress={this.handleBeforeCompress}
 										afterCompress={() => {
@@ -520,7 +532,7 @@ export default class real_name_page extends Component {
 									<FEZipImage
 										disabledupload={disabledupload}
 										style={{ width: '2.2rem', height: '2rem', borderRadius: '3px', margin: '0 auto' }}
-										value={this.state.rightValue ? updateRightSuccessPlaceHolder : updateRightPlaceHolder}
+										value={rightValue ? updateRightSuccessPlaceHolder : updateRightPlaceHolder}
 										onChange={this.handleChangeSide}
 										beforeCompress={this.handleBeforeCompress}
 										afterCompress={() => {
@@ -607,10 +619,15 @@ export default class real_name_page extends Component {
 							<p className={style.desOne}>*为保障您的借款资金安全与合法性，借款前需要进行身份认证</p>
 							<p className={style.desOne}>*身份信息一旦认证，不可修改</p>
 						</div>
-						<ButtonCustom onClick={this.handleSubmit} className={style.sureBtn}>
-							确定
-						</ButtonCustom>
-						<p className="bottomTip">怕逾期，用还到</p>
+						<div className={style.bottomBtn}>
+							<ButtonCustom
+								onClick={this.handleSubmit}
+								className={style.sureBtn}
+								type={this.isValidate() ? 'yellow' : 'default'}
+							>
+								确定
+							</ButtonCustom>
+						</div>
 					</div>
 				) : null}
 				{this.state.showState &&

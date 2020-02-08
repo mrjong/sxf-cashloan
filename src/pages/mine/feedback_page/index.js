@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 15:33:08
+ * @LastEditTime : 2020-02-07 14:36:00
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,11 +11,7 @@ import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter } from 'utils/analytinsType';
 
-import { question_opinionList } from 'fetch/api.js';
-
-const API = {
-	opinionList: '/question/opinionList' // 意见类型列表接口
-};
+import { question_opinionList } from 'fetch/api';
 
 @fetch.inject()
 @setBackGround('#fff')
