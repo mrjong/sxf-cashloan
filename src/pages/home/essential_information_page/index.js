@@ -3,33 +3,31 @@
  * @LastEditTime : 2020-01-13 10:43:34
  */
 import React, { PureComponent } from 'react';
+import fetch from 'sx-fetch';
+import qs from 'qs';
+import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
 import { InputItem, List, Modal } from 'antd-mobile';
-import informationMore from './img/back.png';
-import AsyncCascadePicker from 'components/AsyncCascadePicker';
-import ButtonCustom from 'components/ButtonCustom';
-import fetch from 'sx-fetch';
+import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import style from './index.scss';
-import { getFirstError, validators, handleInputBlur, getNextStr } from 'utils';
+import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
-import qs from 'qs';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
-import ClockS from 'components/TimeDown/ClockS';
-import adsBg from './img/base_top_img.png';
-import AgreementModal from 'components/AgreementModal';
 import { domListen } from 'utils/domListen';
+import AgreementModal from 'components/AgreementModal';
 import AddressSelect from 'components/react-picker-address';
 import StepTitle from 'components/StepTitle';
 import StepList from 'components/StepList';
-import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
-import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-import { connect } from 'react-redux';
+import AsyncCascadePicker from 'components/AsyncCascadePicker';
+import ButtonCustom from 'components/ButtonCustom';
+import LimitTimeJoin from './components/LimitTimeJoin';
+import style from './index.scss';
+import informationMore from './img/back.png';
 
-let timedown = null;
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
 const API = {
@@ -68,8 +66,6 @@ export default class essential_information_page extends PureComponent {
 		super(props);
 		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.state = {
-			count: 0,
-			status: 'stopped',
 			relatData: [], // 亲属联系人数据
 			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
@@ -101,8 +97,6 @@ export default class essential_information_page extends PureComponent {
 	}
 
 	componentDidMount() {
-		urlQuery && urlQuery.jumpToBase && this.handleSetCountDown(60 * 60);
-		urlQuery && urlQuery.jumpToBase && this.getMillisecond();
 		// 安卓键盘抬起会触发resize事件，ios则不会
 		window.addEventListener('resize', function() {
 			if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
@@ -112,24 +106,7 @@ export default class essential_information_page extends PureComponent {
 			}
 		});
 	}
-	componentDidUpdate(prevProps, prevState) {
-		if (this.state.status !== prevState.status) {
-			switch (this.state.status) {
-				case 'started':
-					this.startTimer();
-					break;
-				case 'stopped':
-					this.setState({
-						count: 0
-					});
-					break;
-				case 'paused':
-					clearInterval(this.timer);
-					this.timer = null;
-					break;
-			}
-		}
-	}
+
 	componentWillUnmount() {
 		buryingPoints();
 		window.removeEventListener('resize', function() {
@@ -139,9 +116,6 @@ export default class essential_information_page extends PureComponent {
 				}, 0);
 			}
 		});
-		clearInterval(timedown);
-		clearInterval(this.timer);
-		this.timer = null;
 	}
 	// 跳转个人信息授权书
 	readContract = (jumpUrl) => {
@@ -160,21 +134,6 @@ export default class essential_information_page extends PureComponent {
 		this.setState({
 			selectFlag: !this.state.selectFlag
 		});
-	};
-	getMillisecond = () => {
-		setTimeout(() => {
-			timedown = setInterval(() => {
-				if (Number(this.state.millisecond) > 8) {
-					this.setState({
-						millisecond: 0
-					});
-				} else {
-					this.setState({
-						millisecond: this.state.millisecond + 1
-					});
-				}
-			}, 100);
-		}, 0);
 	};
 
 	buttonDisabled = () => {
@@ -559,10 +518,6 @@ export default class essential_information_page extends PureComponent {
 		}
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;
-		let timer = setTimeout(() => {
-			submitButtonLocked = false;
-			clearTimeout(timer);
-		}, 3000);
 		let cityNm = '';
 		let provNm = '';
 		let districtNm = '';
@@ -789,31 +744,6 @@ export default class essential_information_page extends PureComponent {
 		});
 	};
 
-	handleStatusChange = (newStaus) => {
-		this.setState({
-			status: newStaus
-		});
-	};
-
-	startTimer() {
-		this.timer = setInterval(() => {
-			const newCount = this.state.count - 1;
-			this.setState({
-				count: newCount >= 0 ? newCount : 0
-			});
-			if (newCount === 0) {
-				this.setState({
-					status: 'stopped'
-				});
-			}
-		}, 1000);
-	}
-	handleSetCountDown = (totalSeconds) => {
-		this.setState({
-			count: totalSeconds,
-			status: 'started'
-		});
-	};
 	sxfMD = (type) => {
 		sxfburiedPointEvent(type);
 	};
@@ -855,24 +785,14 @@ export default class essential_information_page extends PureComponent {
 					<span className={style.warning_tip_text}>学生禁止使用还到</span>
 				</div>
 				<div className={style.pageContent}>
-					{urlQuery.jumpToBase && (
-						<div className={style.adsImg}>
-							<img src={adsBg} alt="ad" />
-							<div className={style.text}>
-								限时参与&nbsp;
-								<ClockS count={this.state.count} />
-								<span className="jg">:</span>
-								{this.state.millisecond < 9 ? (
-									<span className="mins">0</span>
-								) : (
-									<span className="mins">1</span>
-								)}
-								{<span className="mins">{this.state.millisecond}</span>}
-							</div>
-						</div>
-					)}
+					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin></LimitTimeJoin> : null}
 
-					<StepTitle title="完善个人信息" titleSub="请确保内容真实有效，有利于您的借款审核" stepNum="02" />
+					<StepTitle
+						style={{ marginTop: '0.3rem' }}
+						title="完善个人信息"
+						titleSub="请确保内容真实有效，有利于您的借款审核"
+						stepNum="02"
+					/>
 
 					<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
 						<div className={style.item_box}>

@@ -1,0 +1,58 @@
+.limit_time_join_wrap {
+  position: relative;
+  background-color: $colorYellow;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 9px 15px -13px $colorYellow;
+  .cardWrap {
+    padding: 30px 30px 10px;
+    position: relative;
+  }
+  .card_tip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px 20px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: $colorRed;
+    font-size: 24px;
+    color: #fff;
+  }
+  .card_bg1,
+  .card_bg2 {
+    position: absolute;
+    opacity: 0.15;
+    background: #fff;
+    border-radius: 100%;
+  }
+  .card_bg1 {
+    height: 500px;
+    width: 500px;
+    right: -260px;
+    top: -20px;
+  }
+  .card_bg2 {
+    height: 600px;
+    width: 600px;
+    right: -50px;
+    top: 160px;
+  }
+  .card_loan_text {
+    font-size: 28px;
+  }
+  .card_loan_amout {
+    font-size: 110px;
+    line-height: 1;
+    margin-top: 5px;
+    font-family: 'DINMitAlt';
+  }
+  .text {
+    color: $colorBlack;
+    font-size: 24px;
+    left: 38px;
+    font-family: 'PingFangSC-Regular';
+    font-weight: 400;
+    letter-spacing: 2px;
+  }
+}
