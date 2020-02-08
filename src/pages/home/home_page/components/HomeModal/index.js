@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-08 15:03:39
+ * @LastEditTime : 2020-02-08 15:20:57
  */
 import React, { Component } from 'react';
 import { Modal } from 'antd-mobile';
@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { recordContract } from 'utils';
 
 import OverDueModal from '../OverDueModal';
+import style from './index.scss';
 
 @connect(
 	(state) => ({
