@@ -40,19 +40,7 @@ class PerdList extends Component {
 						className={[styles.detailItem, index === arr.length - 1 && styles.detailItemTotal].join(' ')}
 					>
 						<div>
-							<span
-								// style={[
-								// 	styles.textDesc,
-								// 	index === arr.length - 1
-								// 		? styles.list_detail_total_text
-								// 		: this.showSubTextDesc(item.feeNm)
-								// 		? { width: px(100) }
-								// 		: {}
-								// ]}
-								className={styles.detailLabel}
-							>
-								{item.feeNm}
-							</span>
+							<span className={styles.detailLabel}>{item.feeNm}</span>
 							<span className={styles.detailLabelSub}>{this.showSubTextDesc(item.feeNm)}</span>
 						</div>
 
@@ -74,16 +62,11 @@ class PerdList extends Component {
 
 		return (
 			<List className={styles.antListItem}>
-				{/* 账单列表 */}
 				{perdList &&
 					perdList.map((item, index) => {
 						return (
 							<div key={index}>
 								<List.Item
-									// className={[
-									// 	item.label.className ? styles.hasIcon : isCheckbox ? styles.checkList : null,
-									// 	!item.isShowCheck && styles.nocheckbox_list_desc
-									// ].join(' ')}
 									arrow={item.showDetail ? 'up' : 'down'}
 									onClick={() => {
 										this.togglePerdDetailShow(index);
@@ -97,6 +80,7 @@ class PerdList extends Component {
 									thumb={
 										item.isShowCheck ? (
 											<img
+												className={styles.checkboxIcon}
 												src={item.isChecked ? Image.icon.checked : Image.icon.checked_no}
 												onClick={(e) => {
 													e.stopPropagation();
@@ -106,23 +90,9 @@ class PerdList extends Component {
 										) : null
 									}
 								>
-									{/* {isCheckbox && item.isShowCheck && (
-										<span
-											onClick={(e) => {
-												e.stopPropagation();
-												checkClickCb(item);
-											}}
-											className={
-												item.isChecked
-													? `${styles.checkBoxStyle} ${styles.checkBoxActiveStyle}`
-													: styles.checkBoxStyle
-											}
-										/>
-									)} */}
 									{`${item.perdNum}/${perdLth}期`}
 									<List.Item.Brief>{`应支付日：${item.perdDueDt}`}</List.Item.Brief>
 								</List.Item>
-
 								{item.showDetail ? (
 									<div className={styles.perdDetailWrap}>{this.renderPerdDetail(item.fees)}</div>
 								) : null}

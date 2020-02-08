@@ -5,24 +5,30 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import SXFButton from 'components/ButtonCustom';
+import { LoadingView } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
 import { getH5Channel, isMPOS } from 'utils/common';
+import {
+	coup_queryUsrRepayUsbCoup,
+	repay_queryCashRegisterDetail,
+	repay_paySubmit,
+	bank_card_protocol_sms,
+	bank_card_protocol_bind
+} from 'fetch/api';
+import Image from 'assets/image';
+
 import qs from 'qs';
-import { NoticeBar } from 'antd-mobile';
+import { NoticeBar, List, Button, Badge } from 'antd-mobile';
 import SmsModal from '../order_common_page/components/SmsModal';
 import { isWXOpen, isPhone } from 'utils';
 import { setBackGround } from 'utils/background';
 
 const API = {
-	payback: '/bill/paySubmit',
 	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
-	fundPlain: '/fund/plain', // 费率接口
-	queryExtendedPayType: '/bill/queryExtendedPayType', //其他支付方式查询
-	couponList: '/coupon/list'
+	protocolBind: '/withhold/protocolBink' //协议绑卡接口
 };
 let entryFrom = '';
 @fetch.inject()
@@ -42,7 +48,7 @@ export default class order_repay_confirm extends PureComponent {
 			toggleBtn: false, // 是否切换短信验证码弹窗底部按钮
 			totalAmt: '', // 一键结清传给后台的总金额
 			payType: '',
-			payTypes: ['BankPay'],
+			payTypes: ['CardPay'],
 			insureInfo: '',
 			insureFeeInfo: '',
 			isInsureValid: false, // 是否有保费并且为待支付状态
@@ -56,6 +62,10 @@ export default class order_repay_confirm extends PureComponent {
 	componentDidMount() {
 		this.dataInit();
 	}
+
+	onReloadData = () => {
+		this.dataInit();
+	};
 
 	componentWillUnmount() {
 		store.removeCardData();
@@ -74,111 +84,70 @@ export default class order_repay_confirm extends PureComponent {
 			() => {
 				this.queryCouponCount();
 				this.getRepayConfirmInfo();
-				this.queryExtendedPayType();
 			}
 		);
 	};
 
-	//查询支付方式
-	queryExtendedPayType = () => {
-		this.props.$fetch.get(API.queryExtendedPayType).then((res) => {
-			if (res.msgCode === 'PTM0000') {
-				let params = {
-					openIdFlag: (res.data && res.data.openIdFlag) || '0'
-				};
-				if (isWXOpen()) {
-					if (res.data && res.data.openIdFlag === '0') {
-						params.payType = 'BankPay';
-					} else if (res.data && res.data.openIdFlag === '1') {
-						if (res.data && res.data.routeCodes && res.data.routeCodes.includes('WXPay')) {
-							params.payType = store.getPayType() || 'BankPay';
-							params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
-						} else {
-							params.payType = 'BankPay';
-							params.payTypes = ['BankPay'];
-						}
-					} else {
-						params.payType = 'BankPay';
-						params.payTypes = ['BankPay'];
-					}
-				} else {
-					if (
-						isPhone() &&
-						res.data &&
-						res.data.routeCodes &&
-						res.data.routeCodes.includes('WXPay') &&
-						!isMPOS()
-					) {
-						params.payType = store.getPayType() || 'BankPay';
-						params.payTypes = [...this.state.payTypes, ...res.data.routeCodes];
-					} else {
-						params.payType = 'BankPay';
-						params.payTypes = ['BankPay'];
-					}
-				}
-				this.setState(params);
-			} else {
-				this.props.toast.info(res.msgInfo);
-			}
-		});
-	};
-
 	//获取可使用优惠券条数
 	queryCouponCount = () => {
-		const { billNo, billDesc } = this.props.history.location.state;
+		const { billNo, billDesc = {}, repayPerds } = this.props.history.location.state;
 
 		this.props.$fetch
-			.get(
-				API.couponList,
-				{
-					type: '00',
-					pageNo: 1,
-					billNo,
-					prodType: billDesc.prodType
-				},
-				{ hideLoading: true }
-			)
+			.post(coup_queryUsrRepayUsbCoup, {
+				billNo,
+				repayPerd: Number(repayPerds[0]),
+				prodType: billDesc.prodType,
+				coupSts: '00',
+				startPage: 1,
+				pageRow: 1
+			})
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000' && res.data) {
 					this.setState({
-						availableCoupNum: res.data.totalSize
+						availableCoupNum: res.data.totalRow
 					});
 				}
 			});
 	};
 
-	// 获取还款确认信息
+	// 获取弹框明细信息
 	getRepayConfirmInfo = () => {
 		const { billNo, repayPerds, billDesc, isPayAll } = this.props.history.location.state;
-		let couponInfo = store.getCouponData() || {};
-		let params = {
-			ordNo: billNo,
+		const { couponInfo } = this.state;
+
+		let submitParams = {
+			billNo,
 			isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 			prodType: billDesc.prodType,
-			repayPerds
+			repayPerds: isPayAll ? [] : repayPerds
 		};
 		if (couponInfo.coupId) {
-			params.coupId = couponInfo.coupId;
+			submitParams.coupId = couponInfo.coupId;
 		}
 		this.props.$fetch
-			.post(API.fundPlain, params)
+			.post(repay_queryCashRegisterDetail, submitParams)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data) {
-					const { disDisRepayAmt = 0, totalAmt, totalAmtForShow, totalList = [] } = res.data[0] || {};
+				if (!this.viewRef) return;
+				this.viewRef.showDataView();
+				if (res.code === '000000' && res.data) {
+					const { disDisRepayAmt = 0, totalAmt, totalList = [], payTypes } = res.data;
 					this.setState({
 						disDisRepayAmt,
 						totalAmt,
-						totalAmtForShow //剩余应还展示的金额
+						payTypes: this.convertPayTypes(payTypes)
 					});
 					this.getDiscountMoney(totalList);
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			})
 			.catch((err) => {
 				console.log(err);
+				this.viewRef && this.viewRef.setError();
 			});
 	};
+
+	convertPayTypes = (payTypes) => payTypes.map((item) => item.split('_')[0]);
 
 	//获取使用优惠券试算金额
 	getDiscountMoney = (arr = []) => {
@@ -290,9 +259,9 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 立即还款
 	handleClickConfirm = () => {
-		const { billOvduDays, repayPerds, canUseCoupon } = this.props.history.location.state; //逾期的期数
+		const { overdueDays, repayPerds, canUseCoupon } = this.props.history.location.state; //逾期的期数
 		buriedPointEvent(order.repayConfirmSubmitBtn, {
-			isOverdue: !!billOvduDays,
+			isOverdue: !!overdueDays,
 			repayPerds: repayPerds.join(',')
 		});
 		const { availableCoupNum } = this.state;
@@ -309,60 +278,53 @@ export default class order_repay_confirm extends PureComponent {
 
 	//还款确认提交
 	repayConfirmSubmit = () => {
-		const { payType, cardAgrNo } = this.state;
+		const { isPayAll } = this.props.history.location.state;
+		const { payType } = this.state;
+		if (isPayAll || payType === 'WXPay') {
+			this.repay();
+		} else {
+			//调用协议绑卡接口
+			this.checkProtocolBindCard();
+		}
+	};
+
+	//调用还款接口逻辑
+	repay = () => {
+		const {
+			billDesc = {},
+			isPayAll,
+			repayPerds,
+			thisPerdNum,
+			billNo,
+			overdueDays,
+			canUseCoupon
+		} = this.props.history.location.state;
+
+		const { totalAmt, payType, cardAgrNo, bankNo, bankName } = this.state;
+
 		let couponInfo = store.getCouponData() || {};
 
-		const { billDesc = {}, billNo, canUseCoupon, isPayAll } = this.props.history.location.state;
-
 		let couponId = '';
-		if (couponInfo && couponInfo.usrCoupNo) {
-			if (couponInfo.usrCoupNo !== 'null') {
-				couponId = couponInfo.usrCoupNo;
-			} else {
-				couponId = '';
-			}
+		if (couponInfo && couponInfo.coupId && couponInfo.coupId !== 'null') {
+			couponId = couponInfo.coupId;
 		}
+
 		let sendParams = {
 			billNo,
+			thisRepTotAmt: totalAmt,
 			cardAgrNo,
-			usrBusCnl: 'WEB',
-			prodType: billDesc.prodType
+			prodType: billDesc.prodType,
+			isPayOff: isPayAll ? '1' : '0',
+			repayPerds: isPayAll ? [] : repayPerds
 		};
 
-		//如果勾选多期,则不支持优惠券(罚息也不支持优惠券)
+		//如果勾选多期,则不支持优惠券
 		if (canUseCoupon) {
 			sendParams = {
 				...sendParams,
 				coupId: couponId
 			};
 		}
-		//全局设置还款传递后台的参数
-		this.setState(
-			{
-				repayParams: sendParams
-			},
-			() => {
-				if (isPayAll || payType === 'WXPay') {
-					this.repay();
-				} else {
-					//调用协议绑卡接口
-					this.checkProtocolBindCard();
-				}
-			}
-		);
-	};
-
-	//调用还款接口逻辑
-	repay = () => {
-		const { billDesc = {}, isPayAll, repayPerds, thisPerdNum } = this.props.history.location.state;
-		const { repayParams, totalAmt, payType } = this.state;
-		let sendParams = {
-			...repayParams,
-			isPayOff: isPayAll ? '1' : '0',
-			thisRepTotAmt: totalAmt,
-			adapter: '01',
-			repayPerds
-		};
 		// 添加微信新增参数
 		switch (payType) {
 			case 'WXPay': {
@@ -383,14 +345,16 @@ export default class order_repay_confirm extends PureComponent {
 				};
 				break;
 			}
-			case 'BankPay':
+			case 'CardPay':
 			default:
 				break;
 		}
 		this.props.$fetch
-			.post(API.payback, sendParams)
+			.post(repay_paySubmit, sendParams)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000' && res.data) {
+					const { repayOrdNo, rspOtherDate } = res.data;
+
 					buriedPointEvent(order.repaymentFirst, {
 						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
 						is_success: true
@@ -407,7 +371,7 @@ export default class order_repay_confirm extends PureComponent {
 
 					switch (payType) {
 						case 'WXPay': {
-							let wxData = res.data && res.data.rspOtherDate && JSON.parse(res.data.rspOtherDate);
+							let wxData = rspOtherDate && JSON.parse(res.data.rspOtherDate);
 							if (isWXOpen()) {
 								window.WeixinJSBridge.invoke(
 									'getBrandWCPayRequest',
@@ -436,11 +400,8 @@ export default class order_repay_confirm extends PureComponent {
 							}
 							break;
 						}
-						case 'BankPay':
-							if (res.data && res.data.repayOrdNo) {
-								const { billNo, repayPerds, billDesc, billOvduDays } = this.props.history.location.state;
-								const { bankNo, bankName } = this.state;
-
+						case 'CardPay':
+							if (repayOrdNo) {
 								this.props.history.replace({
 									pathname: '/order/order_repay_result',
 									state: {
@@ -453,7 +414,7 @@ export default class order_repay_confirm extends PureComponent {
 										bankName,
 										billDesc,
 										isLastPerd: this.isLastPerd(),
-										billOvduDays
+										overdueDays
 									}
 								});
 							}
@@ -519,7 +480,7 @@ export default class order_repay_confirm extends PureComponent {
 		const { bankInfo } = this.state;
 		let couponInfo = store.getCouponData() || {};
 
-		const { billNo, billDesc, billOvduDays } = this.props.history.location.state;
+		const { billNo, billDesc, overdueDays } = this.props.history.location.state;
 		if (useFlag) {
 			store.removeCouponData(); // 如果是从不可使用进入则清除缓存中的优惠劵数据
 			this.props.history.push({
@@ -538,8 +499,81 @@ export default class order_repay_confirm extends PureComponent {
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
 			search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
-			state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc, isOverdue: !!billOvduDays }
+			state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc, isOverdue: !!overdueDays }
 		});
+	};
+
+	selectPayType = (type) => {
+		this.setState({
+			payType: type
+		});
+		// store.setPayType(type);
+	};
+
+	handleAlertShow = (type) => {
+		this.setState({
+			showCouponAlert: false
+		});
+		if (type === 'submit') {
+			buriedPointEvent(order.couponUseAlert_yes);
+			this.repayConfirmSubmit();
+		} else {
+			buriedPointEvent(order.couponUseAlert_no);
+		}
+	};
+
+	/**
+	 * @description 展示还款明细面板详情
+	 */
+	renderFeeDetail = (list, totalAmt) => (
+		<div className={styles.feeDetail}>
+			{list &&
+				list.map((item, index) => {
+					return item.feeAmt ? (
+						<div className={styles.detailItem} key={index}>
+							<span className={styles.detailLabel}>{item.feeNm}</span>
+							{item.feeNm === '优惠金额' ? (
+								<div className={styles.red_box}>
+									<span>-优惠{item.feeAmt.toFixed(2)}</span>
+								</div>
+							) : (
+								<span className={styles.detailValue}>
+									{item.feeAmt && parseFloat(item.feeAmt).toFixed(2)}
+								</span>
+							)}
+						</div>
+					) : null;
+				})}
+			<div className={[styles.detailItem, styles.detailItemTotal].join(' ')}>
+				<span className={styles.detailLabel}>剩余应还金额</span>
+				<span className={styles.detailValue}>{totalAmt && parseFloat(totalAmt).toFixed(2)}</span>
+			</div>
+		</div>
+	);
+
+	renderCouponIcon = () => {
+		if (this.state.availableCoupNum) {
+			return (
+				<span
+					onClick={() => {
+						this.selectCoupon(false);
+					}}
+					className={styles.value}
+				>
+					{this.renderCoupon()}
+				</span>
+			);
+		}
+		return (
+			<span
+				onClick={() => {
+					this.selectCoupon(true);
+				}}
+				className={styles.value}
+			>
+				无可用优惠券
+			</span>
+		);
 	};
 
 	// 判断优惠劵显示
@@ -559,25 +593,6 @@ export default class order_repay_confirm extends PureComponent {
 		);
 	};
 
-	selectPayType = (type) => {
-		this.setState({
-			payType: type
-		});
-		store.setPayType(type);
-	};
-
-	handleAlertShow = (type) => {
-		this.setState({
-			showCouponAlert: false
-		});
-		if (type === 'submit') {
-			buriedPointEvent(order.couponUseAlert_yes);
-			this.repayConfirmSubmit();
-		} else {
-			buriedPointEvent(order.couponUseAlert_no);
-		}
-	};
-
 	render() {
 		const {
 			isShowSmsModal,
@@ -585,6 +600,7 @@ export default class order_repay_confirm extends PureComponent {
 			toggleBtn,
 			detailList,
 			totalAmtForShow,
+			totalAmt,
 			payType,
 			payTypes,
 			insureFeeInfo,
@@ -610,10 +626,14 @@ export default class order_repay_confirm extends PureComponent {
 			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
 		}
 
-		console.log(detailList, 'list');
-
+		console.log(payType, '9999');
 		return (
-			<div>
+			<LoadingView
+				ref={(view) => (this.viewRef = view)}
+				nodata={{}}
+				errordata={{}}
+				onReloadData={this.onReloadData}
+			>
 				<div className={styles.top_notice}>
 					<NoticeBar
 						marqueeProps={{
@@ -627,98 +647,53 @@ export default class order_repay_confirm extends PureComponent {
 						因银行通道原因，可能出现部分还款成功情况，请留意账单详情
 					</NoticeBar>
 				</div>
-				<div className={styles.repayInfo_box}>
+
+				<div className={styles.cardWrap}>
 					<div className={styles.title}>
 						<span>应还金额</span>
 						<span>{moneyWithCoupon || (totalBillAmt && parseFloat(totalBillAmt).toFixed(2))}元</span>
 					</div>
 					{/* 账单明细展示 */}
-					<div className={styles.feeDetail}>
-						{detailList &&
-							detailList.map((item, index) =>
-								item.feeAmt ? (
-									<div className={styles.item} key={index}>
-										<span>{item.feeNm}</span>
-										{item.feeNm === '优惠金额' ? (
-											<span className={styles.red_box}>-优惠{parseFloat(item.feeAmt)}</span>
-										) : (
-											<span>{parseFloat(item.feeAmt).toFixed(2)}</span>
-										)}
-									</div>
-								) : null
-							)}
-						<div className={`${styles.item} ${styles.sum_total}`}>
-							<span>剩余应还金额</span>
-							<span>{moneyWithCoupon || (totalAmtForShow && parseFloat(totalAmtForShow).toFixed(2))}元</span>
-						</div>
-					</div>
+					{this.renderFeeDetail(detailList, totalAmt)}
+				</div>
 
-					{!payType || payType === 'BankPay' ? (
-						<div className={styles.info_item}>
-							<span>还款银行卡</span>
-							<span onClick={this.selectBank} className={styles.value}>
-								{bankName}({bankNo})
-							</span>
-						</div>
-					) : null}
-
-					{disDisRepayAmt ? (
-						<div className={styles.info_item}>
-							<span>提前结清优惠</span>
-							<span className={`${styles.modal_value_red}`}>-{disDisRepayAmt}元</span>
-						</div>
-					) : null}
-
-					{canUseCoupon && (
-						<div className={styles.info_item}>
-							<span>优惠券</span>
-							{availableCoupNum ? (
-								<span
-									onClick={() => {
-										this.selectCoupon(false);
-									}}
-									className={styles.value}
-								>
-									{this.renderCoupon()}
-								</span>
-							) : (
-								<span
-									onClick={() => {
-										this.selectCoupon(true);
-									}}
-									className={styles.value}
-								>
-									无可用优惠券
-								</span>
-							)}
-						</div>
-					)}
-					{payTypes.length !== 1 ? (
+				<div className={[styles.cardWrap, styles.cardWrap1].join(' ')}>
+					<List className={styles.antListItem}>
+						{(!payType || payType === 'CardPay') && bankName && bankNo && (
+							<List.Item arrow={'horizontal'} onClick={this.selectBank} extra={`${bankName}(${bankNo})`}>
+								还款银行卡
+							</List.Item>
+						)}
+						{true && <List.Item extra={`-${disDisRepayAmt}11元`}>提前结清优惠</List.Item>}
+						{canUseCoupon && (
+							<List.Item arrow={'horizontal'} extra={this.renderCouponIcon()}>
+								优惠券
+							</List.Item>
+						)}
+					</List>
+					{payTypes.length === 1 ? (
 						<div className={styles.modal_weixin}>
-							<div>还款方式</div>
+							<h3>还款方式</h3>
 							<div className={styles.flex_div}>
-								{payTypes.includes('WXPay') && !isInsureValid ? (
-									<div
-										className={payType === 'WXPay' ? [styles.item, styles.active].join(' ') : styles.item}
-										onClick={() => {
-											this.selectPayType('WXPay');
-										}}
-									>
-										<span className={styles.jian} />
-										<i className={styles.wx} />微 信
-									</div>
-								) : null}
-								{payTypes.includes('BankPay') ? (
-									<div
-										onClick={() => {
-											this.selectPayType('BankPay');
-										}}
-										className={payType === 'BankPay' ? [styles.item, styles.active].join(' ') : styles.item}
-									>
-										<i className={styles.bank} />
-										银行卡
-									</div>
-								) : null}
+								<div
+									className={payType === 'WXPay' ? [styles.item, styles.active].join(' ') : styles.item}
+									onClick={() => {
+										this.selectPayType('WXPay');
+									}}
+								>
+									<Badge className={styles.jian} text="荐" />
+									微信快捷支付
+									{payType === 'WXPay' && <img src={Image.adorn.card_select_yellow} alt="" />}
+								</div>
+								<div
+									onClick={() => {
+										this.selectPayType('CardPay');
+									}}
+									className={payType === 'CardPay' ? [styles.item, styles.active].join(' ') : styles.item}
+								>
+									{payType === 'CardPay' && <img src={Image.adorn.card_select_yellow} alt="" />}
+									银行卡支付
+								</div>
 							</div>
 						</div>
 					) : null}
@@ -772,7 +747,7 @@ export default class order_repay_confirm extends PureComponent {
 						bankNo={cardAgrNo}
 					/>
 				)}
-			</div>
+			</LoadingView>
 		);
 	}
 }

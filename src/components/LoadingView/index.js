@@ -82,7 +82,7 @@ export default class LoadingView extends Component {
 			}
 		} = this.props;
 		return (
-			<div onClick={() => this.reloadData()} style={{ width: '100%', height: '100%', textAlign: 'center' }}>
+			<div onClick={this.reloadData} style={{ width: '100%', height: '100%', textAlign: 'center' }}>
 				<img src={nodata.img} alt="" style={{ width: nodata.width, height: nodata.height }} />
 				<span className={styles.textNo}>{nodata.text}</span>
 			</div>
@@ -96,11 +96,9 @@ export default class LoadingView extends Component {
 		const { errordata = { img: Image.bg.no_order, text: '点击重试' } } = this.props;
 
 		return (
-			<div>
-				<div onClick={this.reloadData}>
-					<img src={errordata.img} alt="" style={{ width: errordata.width, height: errordata.height }} />
-					<span className={styles.textNo}>{errordata.text}</span>
-				</div>
+			<div onClick={this.reloadData} style={{ width: '100%', height: '100%', textAlign: 'center' }}>
+				<img src={errordata.img} alt="" style={{ width: errordata.width, height: errordata.height }} />
+				<span className={styles.textNo}>{errordata.text}</span>
 			</div>
 		);
 	}
