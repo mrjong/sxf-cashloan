@@ -1,0 +1,33 @@
+.antModal {
+	:global {
+		.am-modal-content {
+			border-radius: 6px;
+		}
+		.am-modal-button {
+			font-size: 34px;
+			color: $colorBlack;
+		}
+	}
+	.modalWrap {
+		text-align: left;
+	}
+	.modalTitle {
+		font-size: 34px;
+		color: $colorBlack;
+		margin-bottom: 15px;
+	}
+	.modalTitleIcon {
+		width: 34px;
+		height: 34px;
+		margin-right: 15px;
+		margin-bottom: -5px;
+	}
+	.modalDesc {
+		font-size: 28px;
+		color: $colorInactiveColor;
+	}
+	.overdueDate {
+		font-weight: 500;
+		color: #f76c5c;
+	}
+}

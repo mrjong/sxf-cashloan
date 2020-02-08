@@ -3,7 +3,16 @@
 }
 
 .antCard {
-	margin-bottom: 130px;
+  margin-bottom: 130px;
+  .headerExtra {
+    font-size: 30px;
+    color: $colorTipRed;
+  }
+  .headerExtraIcon {
+    width: 24px;
+    height: 24px;
+    vertical-align: top;
+  }
 	:global {
 		.am-card-header {
 			font-size: 32px;

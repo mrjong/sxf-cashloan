@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
-import { LoadingView, Lists } from 'components';
-import { Modal, Card } from 'antd-mobile';
+import { LoadingView } from 'components';
+import { Card } from 'antd-mobile';
 import { bill_queryBillDetail, repay_queryCashRegisterDetail } from 'fetch/api';
 import PerdList from './PerdList';
+import OverdueTipModal from './OverdueTipModal';
+import BottomButton from './BottomButton';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
@@ -34,7 +36,7 @@ export default class order_repay_page extends PureComponent {
 			overdueDays: '',
 			billOvduStartDt: '',
 			buttonDisabled: true,
-			haha: false
+			panelListUpdate: false
 		};
 	}
 	componentDidMount = () => {
@@ -230,6 +232,47 @@ export default class order_repay_page extends PureComponent {
 		);
 	};
 
+	/**
+	 * @description 跳转还款确认页
+	 */
+	goOrderRepayConfirmPage = () => {
+		const {
+			billDesc,
+			repayPerds,
+			canUseCoupon,
+			actPanelListDatas,
+			overdueDays,
+			totalAmt,
+			totalList,
+			billNo
+		} = this.state;
+		// buriedPointEvent(DC_GOTO_REPAYCONFIRM_PAGE, {
+		// 	isOverdue: !!overdueDays,
+		// 	repayPerds: repayPerds.join(',')
+		// });
+		console.log(999);
+		this.props.history.push({
+			pathname: '/order/order_repay_confirm',
+			state: {
+				billNo,
+				billDesc,
+				repayPerds,
+				canUseCoupon,
+				actPanelListDatas,
+				isPayAll: false,
+				overdueDays,
+				totalList,
+				totalAmt
+			}
+		});
+	};
+
+	handleCloseTipModal = () => {
+		this.setState({
+			showOverdueTipModal: !this.state.showOverdueTipModal
+		});
+	};
+
 	render() {
 		const {
 			totalAmt,
@@ -238,8 +281,21 @@ export default class order_repay_page extends PureComponent {
 			billOvduStartDt,
 			panelList,
 			perdLth,
-			buttonDisabled
+			buttonDisabled,
+			showOverdueTipModal
 		} = this.state;
+
+		const overdueTip = (
+			<span
+				onClick={() => {
+					this.handleCloseTipModal();
+				}}
+				className={styles.headerExtra}
+			>
+				已逾期({overdueDays}天)
+				<img src={Image.adorn.mark_question} alt="" className={styles.headerExtraIcon} />
+			</span>
+		);
 		return (
 			<LoadingView
 				ref={(view) => (this.viewRef = view)}
@@ -249,7 +305,7 @@ export default class order_repay_page extends PureComponent {
 			>
 				<div className={styles.orderListWrap}>
 					<Card className={styles.antCard}>
-						<Card.Header title="账单" />
+						<Card.Header title="账单" extra={overdueDays ? overdueTip : ''} />
 						<Card.Body>
 							<PerdList
 								perdList={panelList}
@@ -258,50 +314,24 @@ export default class order_repay_page extends PureComponent {
 								onPerdDetailShow={(list) => {
 									this.setState({
 										panelList: list,
-										haha: !this.state.haha
+										panelListUpdate: !this.state.panelListUpdate
 									});
 								}}
 							/>
 						</Card.Body>
 					</Card>
-					{/* {!isBillClean && (
-						<div className={styles.fixed_button}>
-							<span className={styles.money_show}>
-								共计<em>{totalAmtForShow}</em>元
-							</span>
-							<SXFButton
-								onClick={this.goOrderRepayConfirmPage}
-								className={[styles.sxf_btn, !totalAmtForShow && styles.sxf_btn_disabled].join(' ')}
-							>
-								立即还款
-							</SXFButton>
-						</div>
-					)} */}
-
-					{/* <Modal
-					wrapClassName="order_repay_page"
-					visible={this.state.showTipModal}
-					transparent
-					footer={[
-						{
-							text: '我知道了',
-							onPress: () => {
-								this.handleCloseTipModal();
-							}
-						}
-					]}
-				>
-					<div className={styles.modal_tip_content}>
-						<h3 className={styles.modal_tip_title}>逾期天数说明</h3>
-						<p className={styles.modal_tip_desc}>
-							您的逾期开始日期：<em>{billOvduStartDt}</em>
-						</p>
-						<p className={styles.modal_tip_desc}>
-							任意一期未按时足额还款，视为逾期，计算逾期天数。直至还清全部应还未还款项为止。
-						</p>
-						<p className={styles.modal_tip_desc}>罚息由出借方收取，逾期管理费由平台方收取。</p>
-					</div>
-				</Modal> */}
+					{isShowBottomBtn && (
+						<BottomButton
+							totalAmt={totalAmt}
+							disabled={buttonDisabled}
+							handleClick={this.goOrderRepayConfirmPage}
+						/>
+					)}
+					<OverdueTipModal
+						visible={showOverdueTipModal}
+						billOvduStartDt={billOvduStartDt}
+						handleClick={this.handleCloseTipModal}
+					/>
 				</div>
 			</LoadingView>
 		);

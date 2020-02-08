@@ -1,3 +1,5 @@
+@import '../../../../assets/styles/scss/base/fn';
+
 .extraWrap {
 	display: flex;
 	flex-direction: column;
@@ -17,7 +19,12 @@
 }
 
 .detailItemTotal {
-	border-top: 1px solid $colorLoadingBarBg;
+	position: relative;
+	margin-bottom: 0px;
+	padding-top: 20px;
+	&::after {
+		@include setTopLine($colorLoadingBarBg);
+	}
 }
 
 .detailLabel {
@@ -39,11 +46,11 @@
 }
 
 .red_box {
-	border: 1px solid #fe6666;
+	border: 1px solid $colorTipRed;
 	background-color: #f6e8ea;
 	padding: 0 8px;
 	box-sizing: border-box;
-	color: #fe6666;
+	color: $colorTipRed;
 	font-size: 22px;
 }
 .perdTotAmt {
@@ -53,9 +60,22 @@
 }
 
 .antListItem {
+	.checkboxIcon {
+		width: 34px;
+		height: 34px;
+	}
 	:global {
 		.am-list-item {
+			border-top: 1px solid $colorDivide;
+			padding-left: 0px;
+			.am-list-thumb {
+				margin-right: 5px;
+			}
 			.am-list-line {
+				padding-right: 0px;
+				&::after {
+					height: 0px !important;
+				}
 				.am-list-content {
 					font-size: 28px;
 					font-weight: 500;
@@ -63,14 +83,14 @@
 					padding: 30px 0;
 					.am-list-brief {
 						font-size: 24px;
-            color: $colorInactiveColor;
-            font-weight: normal;
+						color: $colorInactiveColor;
+						font-weight: normal;
 					}
-        }
-        .am-list-arrow {
-          width: 20px;
-          height: 20px;
-        }
+				}
+				.am-list-arrow {
+					width: 20px;
+					height: 20px;
+				}
 			}
 			.am-list-extra {
 				padding: 30px 0;
