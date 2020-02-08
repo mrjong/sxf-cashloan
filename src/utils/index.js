@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 15:05:29
+ * @LastEditTime : 2020-02-08 15:01:40
  */
 /*eslint-disable */
 import React from 'react';
@@ -12,7 +12,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
-
+import { signup_log } from 'fetch/api';
 // 退出的api
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
@@ -754,12 +754,14 @@ export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
 	return;
 };
 
-// 协议预览记录功能
-export const recordContract = (params) => {
-	// params中的cardNo为银行卡号，只在协议支付的时候传递
-	// contractType为 协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-	fetch.post(API.contractLog, params, { hideLoading: true }).then(() => {}, () => {});
-};
+/**
+ * @description: 协议预览记录功能
+ * @param {string} cardNo 为银行卡号，只在协议支付的时候传递
+ * @param {string} contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+ * @return:
+ */
+export const recordContract = (params) => fetch.post(signup_log, params, { hideToast: true });
+
 // 神策用户绑定
 export const queryUsrSCOpenId = ({ $props }) => {
 	return new Promise((resolve) => {

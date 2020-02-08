@@ -41,15 +41,29 @@
 		.am-progress-bar {
 			border: 0.04rem solid #ffda58;
 		}
-  }
-  .welfareModal {
-    width: 100%;
-    .am-modal-content {
-      padding: 0;
-      background: none;
-      .am-modal-body {
-        padding: 0;
-      }
-    }
-  }
+	}
+	.welfareModal {
+		width: 100%;
+		.am-modal-content {
+			padding: 0;
+			background: none;
+			.am-modal-body {
+				padding: 0;
+			}
+		}
+	}
+}
+
+:global {
+	.agreement_modal_warp {
+		.am-modal.am-modal-transparent {
+			width: auto;
+		}
+		.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+			padding: 0;
+		}
+		.am-modal.am-modal-transparent .am-modal-content {
+			padding: 0;
+		}
+	}
 }
