@@ -320,7 +320,7 @@ export default class message_page extends PureComponent {
 					>
 						{obj.title ? (
 							<div className={style.title}>
-								{obj.sts === '0' ? (
+								{obj.sts !== '1' ? (
 									<i
 										className={!this.state.showDot ? style.displayDot : ''}
 										data-id={'ids' + obj.uuid}
@@ -381,37 +381,37 @@ export default class message_page extends PureComponent {
 			);
 		};
 		return (
-			<LoadingView
-				ref={(view) => (this.viewRef = view)}
-				nodata={noData}
-				errordata={errorData}
-				onReloadData={() => {
-					this.onRefresh();
-				}}
-			>
-				<div className={style.message_page} ref={(el) => (this.messageBox = el)}>
-					{msgCount ? (
-						<div onClick={this.msgReadAll} className={style.allRead}>
-							<i className={style.allReadIcon} />
-							一键读取
-						</div>
-					) : null}
-					{this.state.tabState ? (
-						<STabs
-							tabTit={this.state.tabs}
-							initialPage={this.state.msgType}
-							onChange={(tab, index) => {
-								this.changeTab(tab, index);
-							}}
-							ref={(el) => (this.messageTabBox = el)}
-						>
-							{this.state.tabs.map((item2, index2) => (
-								<div key={index2}>{item('iview' + index2)}</div>
-							))}
-						</STabs>
-					) : null}
-				</div>
-			</LoadingView>
+			// <LoadingView
+			// 	ref={(view) => (this.viewRef = view)}
+			// 	nodata={noData}
+			// 	errordata={errorData}
+			// 	onReloadData={() => {
+			// 		this.onRefresh();
+			// 	}}
+			// >
+			<div className={style.message_page} ref={(el) => (this.messageBox = el)}>
+				{msgCount ? (
+					<div onClick={this.msgReadAll} className={style.allRead}>
+						<i className={style.allReadIcon} />
+						一键读取
+					</div>
+				) : null}
+				{this.state.tabState ? (
+					<STabs
+						tabTit={this.state.tabs}
+						initialPage={this.state.msgType}
+						onChange={(tab, index) => {
+							this.changeTab(tab, index);
+						}}
+						ref={(el) => (this.messageTabBox = el)}
+					>
+						{this.state.tabs.map((item2, index2) => (
+							<div key={index2}>{item('iview' + index2)}</div>
+						))}
+					</STabs>
+				) : null}
+			</div>
+			// </LoadingView>
 		);
 	}
 }

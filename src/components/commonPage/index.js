@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 10:00:46
+ * @LastEditTime : 2020-02-08 15:03:24
  */
 /*
  * @Author: shawn
@@ -19,7 +19,8 @@ import {
 	coup_queryUsrCoupBySts,
 	index_queryOLPShowSts,
 	msg_popup_list,
-	msg_news_count
+	msg_news_count,
+	index_queryPLPShowSts
 } from 'fetch/api';
 export default () => (WrappedComponent) => {
 	@connect(
@@ -152,13 +153,36 @@ export default () => (WrappedComponent) => {
 		 * @return:
 		 */
 		getHomeModal = () => {
-			Promise.all([this.queryOverdueModalInfo(), this.msg_popup_list()]).then(([a, b]) => {
-				this.props.setHomeModalAction({
-					DataList: [...a, ...b]
-					// routeName
-				});
-			});
+			Promise.all([this.index_queryPLPShowSts(), this.queryOverdueModalInfo(), this.msg_popup_list()]).then(
+				([a, b, c]) => {
+					this.props.setHomeModalAction({
+						DataList: [...a, ...b, ...c]
+						// routeName
+					});
+				}
+			);
 		};
+
+		/**
+		 * @description: 弹窗列表
+		 * @param {type}
+		 * @return:
+		 */
+		index_queryPLPShowSts = () =>
+			new Promise((resolve) => {
+				this.props.$fetch
+					.get(index_queryPLPShowSts)
+					.then((result) => {
+						if (result && result.code === '000000' && result.data.plpSts === '1') {
+							resolve([result.data]);
+						} else {
+							resolve([]);
+						}
+					})
+					.catch(() => {
+						resolve([]);
+					});
+			});
 		/**
 		 * @description: 查询逾期弹窗相关信息
 		 */
@@ -205,9 +229,8 @@ export default () => (WrappedComponent) => {
 		 * @param {type}
 		 * @return:
 		 */
-		//
 		msg_popup_list = () =>
-			new Promise((resolve, reject) => {
+			new Promise((resolve) => {
 				this.props.$fetch
 					.get(msg_popup_list + '/0')
 					.then((result) => {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 17:34:30
+ * @LastEditTime : 2020-02-08 13:57:14
  */
 import FooterBar from './FooterBar';
 import LoadingView from './LoadingView';
@@ -11,6 +11,9 @@ import Tab from './Tab';
 import ButtonCustom from './ButtonCustom';
 import SelectList from './SelectList';
 import CountDownButton from './CountDownButton';
+import ActivityModal from './ActivityModal';
+import AgreementModal from './AgreementModal';
+import WelfareModal from './WelfareModal';
 export {
 	FooterBar,
 	LoadingView,
@@ -20,5 +23,8 @@ export {
 	Tab,
 	ButtonCustom,
 	CountDownButton,
-	SelectList
+	SelectList,
+	ActivityModal,
+	AgreementModal,
+	WelfareModal
 };

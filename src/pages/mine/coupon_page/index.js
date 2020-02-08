@@ -9,14 +9,22 @@ import { store } from 'utils/store';
 import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView } from 'antd-mobile';
-import HomeBtnClass from 'utils/HomeBtn';
+import { getNextStatus } from 'utils/CommonUtil/commonFunc';
+import { connect } from 'react-redux';
+import { setCouponDataAction } from 'reduxes/actions/commonActions';
+import { coup_queryUsrCoupBySts, coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup } from 'fetch/api';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
 let saveBankData = null; // 还款详情页带过来的银行信息
-const API = {
-	couponList: '/coupon/list'
-};
+@connect(
+	(state) => ({
+		couponData: state.commonState.couponData
+	}),
+	{
+		setCouponDataAction
+	}
+)
 @fetch.inject()
 export default class coupon_page extends PureComponent {
 	constructor(props) {
@@ -51,9 +59,6 @@ export default class coupon_page extends PureComponent {
 			couponSelected: '',
 			HomeBtnShow: false
 		};
-		if (receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine') {
-			this['HomeBtn'] = new HomeBtnClass(this);
-		}
 	}
 	scrollTop = 0;
 	componentWillMount() {
@@ -134,15 +139,15 @@ export default class coupon_page extends PureComponent {
 		let sendParams = '';
 		if (receiveData && receiveData.billNo) {
 			sendParams = {
-				type: `0${this.state.msgType}`,
-				pageNo: pIndex,
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex,
 				billNo: receiveData.billNo
 				// loading: true,
 			};
 		} else if (receiveData && receiveData.price && receiveData.perCont && receiveData.prodId) {
 			sendParams = {
-				type: `0${this.state.msgType}`,
-				pageNo: pIndex,
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex,
 				price: receiveData.price,
 				perCont: receiveData.perCont,
 				prodId: receiveData.prodId
@@ -150,8 +155,8 @@ export default class coupon_page extends PureComponent {
 			};
 		} else {
 			sendParams = {
-				type: `0${this.state.msgType}`,
-				pageNo: pIndex
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex
 				// loading: true,
 			};
 		}
@@ -159,14 +164,14 @@ export default class coupon_page extends PureComponent {
 			Object.assign(sendParams, { prodType: receiveData.transactionType === 'fenqi' ? '11' : '01' });
 		}
 		let data = await this.props.$fetch
-			.get(API.couponList, sendParams)
+			.post(coup_queryUsrCoupBySts, sendParams)
 			.then((res) => {
 				if (pIndex === 1) {
 					setTimeout(() => {
 						SXFToast.hide();
 					}, 600);
 				}
-				if (res.msgCode === 'PTM0000' && res.data) {
+				if (res.code === '000000' && res.data) {
 					let dataArr = [];
 					if (pIndex === 1) {
 						totalPage = Math.ceil(res.data.totalSize / 10);
@@ -174,11 +179,11 @@ export default class coupon_page extends PureComponent {
 							hasMore: false
 						});
 					}
-					for (let i = res.data.data.length - 1; i >= 0; i--) {
+					for (let i = res.data.coups.length - 1; i >= 0; i--) {
 						// 是否出现去使用
 						if (
 							this.state.msgType === 0 &&
-							+new Date(this.getTime(res.data.data[i].validEndTm)) > +new Date() &&
+							+new Date(this.getTime(res.data.coups[i].validEndTm)) > +new Date() &&
 							!this.HomeBtnStatus &&
 							tab === 'tabshow' &&
 							pIndex === 1 &&
@@ -193,9 +198,9 @@ export default class coupon_page extends PureComponent {
 							this.state.msgType !== 0 ||
 							!receiveData ||
 							(!receiveData.billNo && !receiveData.price) ||
-							res.data.data[i].usrCoupNo !== store.getCouponData().usrCoupNo
+							res.data.coups[i].usrCoupNo !== store.getCouponData().usrCoupNo
 						) {
-							dataArr.push(res.data.data[i]);
+							dataArr.push(res.data.coups[i]);
 						}
 					}
 					// 倒叙插入

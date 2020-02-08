@@ -1,13 +1,20 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-13 11:33:00
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2020-02-08 16:04:57
  */
 import React from 'react';
 import { InputItem } from 'antd-mobile';
 import { handleInputBlur, validators } from 'utils';
 import styles from './index.scss';
+import { connect } from 'react-redux';
 
+@connect(
+	(state) => ({
+		cacheContact: state.commonState.cacheContact
+	}),
+	{}
+)
 export default class ContactResultList extends React.Component {
 	constructor(props) {
 		super(props);
@@ -38,54 +45,56 @@ export default class ContactResultList extends React.Component {
 	};
 
 	render() {
-		const { seleContactList, modifyContact, editContactHandler, isCanSelect } = this.props;
+		const { editContactHandler, isCanSelect, changeContact, cacheContact } = this.props;
 		return (
 			<div className={styles.contact_list_box}>
 				<ul className={styles.contact_list}>
-					{seleContactList.map((item, index) => {
-						return (
-							<li key={index}>
-								<InputItem
-									// clear
-									placeholder="输入联系人姓名"
-									type="text"
-									defaultValue={item.name}
-									onBlur={() => {
-										handleInputBlur();
-									}}
-									onChange={(v) => {
-										modifyContact && modifyContact(item, v, 'name', index);
-									}}
-									className={isCanSelect ? 'hasIcon' : ''}
-								/>
-								<InputItem
-									maxLength="13"
-									type="phone"
-									// clear
-									placeholder="输入联系人手机号"
-									defaultValue={this.formatePhone(item.number)}
-									onBlur={() => {
-										handleInputBlur();
-										// this.validatePhone(v);
-									}}
-									onChange={(v) => {
-										const val = v.replace(/\s*/g, '');
-										modifyContact && modifyContact(item, val, 'number', index);
-									}}
-									className={isCanSelect ? 'hasIcon' : ''}
-								/>
-								{/* 选择图标 */}
-								{isCanSelect ? (
-									<div
-										className={styles.telSelectBox}
-										onClick={() => editContactHandler && editContactHandler(item, index)}
-									>
-										<i className={styles.telSelect} />
-									</div>
-								) : null}
-							</li>
-						);
-					})}
+					{cacheContact && cacheContact.length
+						? cacheContact.map((item, index) => {
+								return (
+									<li key={index}>
+										<InputItem
+											// clear
+											placeholder="输入联系人姓名"
+											type="text"
+											defaultValue={item.name}
+											onBlur={() => {
+												handleInputBlur();
+											}}
+											onChange={(v) => {
+												changeContact && changeContact(item, v, 'name', index);
+											}}
+											className={isCanSelect ? 'hasIcon' : ''}
+										/>
+										<InputItem
+											maxLength="13"
+											type="phone"
+											// clear
+											placeholder="输入联系人手机号"
+											defaultValue={this.formatePhone(item.number)}
+											onBlur={() => {
+												handleInputBlur();
+												// this.validatePhone(v);
+											}}
+											onChange={(v) => {
+												const val = v.replace(/\s*/g, '');
+												changeContact && changeContact(item, val, 'number', index);
+											}}
+											className={isCanSelect ? 'hasIcon' : ''}
+										/>
+										{/* 选择图标 */}
+										{isCanSelect ? (
+											<div
+												className={styles.telSelectBox}
+												onClick={() => editContactHandler && editContactHandler(item, index)}
+											>
+												<i className={styles.telSelect} />
+											</div>
+										) : null}
+									</li>
+								);
+						  })
+						: null}
 				</ul>
 			</div>
 		);

@@ -1,17 +1,27 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-13 11:41:45
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2020-02-08 16:06:32
  */
 import React, { PureComponent } from 'react';
-import { store } from 'utils/store';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
-import { setBackGround } from 'utils/background';
+// import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import { connect } from 'react-redux';
+import { setCacheContactAction } from 'reduxes/actions/commonActions';
 
-@setBackGround('#fff')
+// @setBackGround('#fff')
+@connect(
+	(state) => ({
+		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
+		cacheContact: state.commonState.cacheContact
+	}),
+	{
+		setCacheContactAction
+	}
+)
 export default class modify_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -20,15 +30,15 @@ export default class modify_contact_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
-		const contactList = store.getContactList();
-		const selContactList = store.getSelContactList();
+		const { confirmAgencyInfo = {}, cacheContact = [] } = this.props;
+		const contactList = (confirmAgencyInfo.repayInfo && confirmAgencyInfo.repayInfo.contacts) || [];
+		const selContactList = cacheContact;
 		let unSeleContactList = contactList.filter(
 			(item) => !selContactList.some((ele) => ele.number === item.number)
 		);
 		unSeleContactList.map((item) => {
 			item.isMarked = false;
 		});
-
 		this.setState({
 			contactList: unSeleContactList || []
 		});
@@ -56,11 +66,16 @@ export default class modify_contact_page extends PureComponent {
 	confirmHandler = () => {
 		buriedPointEvent(home.speContactSaveClick);
 		const seleContactList = this.getSeleList();
-		const seleAllContactList = store.getSelContactList();
-		const modifyItem = this.props.history.location.state;
-		if (seleContactList.length && modifyItem) {
-			seleAllContactList[modifyItem.ind] = seleContactList[0];
-			store.setSelContactList(seleAllContactList);
+		const { cacheContact = [] } = this.props;
+		const seleAllContactList = cacheContact;
+		const { ind } = this.props.history.location.state;
+		if (seleContactList.length) {
+			const seleContactList2 = [
+				...seleAllContactList.slice(0, ind),
+				{ ...seleContactList[0] },
+				...seleAllContactList.slice(ind + 1)
+			];
+			this.props.setCacheContactAction(seleContactList2);
 		} else {
 			this.props.toast.info('请勾选一个推荐联系人');
 			return;

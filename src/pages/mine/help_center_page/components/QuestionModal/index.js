@@ -1,16 +1,14 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 15:32:21
+ * @LastEditTime : 2020-02-08 16:17:43
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { Modal, Icon } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter } from 'utils/analytinsType';
+import { question_solvedCount } from 'fetch/api';
 
-const API = {
-	solvedQuestion: '/question/solvedCount'
-};
 export default class QuestionModal extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -35,12 +33,12 @@ export default class QuestionModal extends PureComponent {
 		});
 		this.props.onClose();
 		this.props.$fetch
-			.post(`${API.solvedQuestion}/${this.props.question.bizId}/${type === 'resolve' ? 'yes' : 'no'}`)
+			.get(`${question_solvedCount}/${this.props.question.bizId}/${type === 'resolve' ? 'yes' : 'no'}`)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.props.toast.info('感谢您的反馈');
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			});
 		this.buriedPoint(type);
@@ -120,7 +118,7 @@ export default class QuestionModal extends PureComponent {
 						}}
 					>
 						<span className={[styles.zan_icon, resolve && styles.zan_icon_active].join(' ')}></span>
-						<span>已解决</span>
+						<span className={[resolve && styles.nozan_text_active].join(' ')}>已解决</span>
 					</div>
 					<div
 						onClick={() => {
@@ -128,7 +126,7 @@ export default class QuestionModal extends PureComponent {
 						}}
 					>
 						<span className={[styles.nozan_icon, noresolve && styles.nozan_icon_active].join(' ')}></span>
-						<span>未解决</span>
+						<span className={[noresolve && styles.nozan_text_active].join(' ')}>未解决</span>
 					</div>
 				</div>
 			</Modal>

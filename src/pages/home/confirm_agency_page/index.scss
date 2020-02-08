@@ -244,19 +244,22 @@
 	}
 
 	.buttonWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 		width: 100%;
 		padding: 30px 0;
 		position: fixed;
 		bottom: 0;
 		left: 0;
-		background-color: #fff;
+    background-color: #fff;
 
 		.submitBtn {
-			width: 634px;
+      width: 634px;
 		}
 
 		.submitBtnDisabled {
-			width: 634px;
+      width: 634px;
 			background-color: #dcdfe6;
 			color: #fff;
 		}
