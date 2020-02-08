@@ -806,10 +806,11 @@ export default class home_page extends PureComponent {
 	};
 
 	getCardBillAmtData() {
-		const homeData = this.state.usrCashIndexInfo;
+		const { homeData = {} } = this.state;
 		const { dcDataInfo = {} } = homeData;
 		const { cardBillAmt, cardBillSts, billRemainAmt } = dcDataInfo || {};
 		let cardBillAmtData = '';
+		console.log(cardBillSts, 'cardBillSts');
 		if (cardBillSts === '00') {
 			cardBillAmtData = '待更新';
 			// 优先取剩余应还，否则去账单金额
@@ -832,7 +833,7 @@ export default class home_page extends PureComponent {
 
 	// 主要是设置 解锁状态
 	setPlusCardData(plusCardData) {
-		const homeData = this.state.usrCashIndexInfo;
+		const { homeData = {} } = this.state;
 		const { dcDataInfo = {} } = homeData;
 
 		if (homeData.showType === '01' && dcDataInfo.cashAcSts === '00') {
