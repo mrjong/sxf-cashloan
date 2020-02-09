@@ -25,6 +25,8 @@ import StepList from 'components/StepList';
 import AsyncCascadePicker from 'components/AsyncCascadePicker';
 import ButtonCustom from 'components/ButtonCustom';
 import LimitTimeJoin from './components/LimitTimeJoin';
+import FixedHelpCenter from 'components/FixedHelpCenter';
+
 import style from './index.scss';
 import informationMore from './img/back.png';
 
@@ -785,7 +787,9 @@ export default class essential_information_page extends PureComponent {
 					<span className={style.warning_tip_text}>学生禁止使用还到</span>
 				</div>
 				<div className={style.pageContent}>
-					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin></LimitTimeJoin> : null}
+					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin /> : null}
+
+					<FixedHelpCenter />
 
 					<StepTitle
 						style={{ marginTop: '0.3rem' }}

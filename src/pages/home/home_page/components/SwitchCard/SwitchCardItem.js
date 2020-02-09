@@ -83,17 +83,11 @@ export default class ActivityEntry extends React.PureComponent {
 		};
 	}
 
-	buildTipWrapStyle() {
-		const { cardType } = this.props;
-		return {
-			backgroundColor: typeConfig[cardType].colorTipBg
-		};
-	}
-
 	buildTipTextStyle() {
 		const { cardType } = this.props;
 		return {
-			color: typeConfig[cardType].colorTipText
+			color: typeConfig[cardType].colorTipText,
+			backgroundColor: typeConfig[cardType].colorTipBg
 		};
 	}
 
@@ -122,11 +116,9 @@ export default class ActivityEntry extends React.PureComponent {
 		const { topTip } = this.props;
 		if (topTip) {
 			return (
-				<div className={classNM.tipWrap} style={this.buildTipWrapStyle()}>
-					<span className={classNM.tipText} style={this.buildTipTextStyle()}>
-						{topTip}
-					</span>
-				</div>
+				<span className={classNM.tipText} style={this.buildTipTextStyle()}>
+					{topTip}
+				</span>
 			);
 		}
 		return null;

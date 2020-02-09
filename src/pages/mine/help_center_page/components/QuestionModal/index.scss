@@ -6,10 +6,13 @@
 			border-radius: 0;
 			height: auto;
 			box-sizing: border-box;
-			padding-top: 0;
+      padding-top: 0;
+      border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
 			.am-modal-body {
 				padding: 80px 60px 60px;
-				overflow: hidden;
+        overflow: hidden;
+
 			}
 		}
 	}
@@ -33,6 +36,9 @@
   text-align: left;
   white-space: pre-wrap;
   font-family: 'PingFangSC-Regular';
+  &::before {
+    content: '答：';
+  }
 }
 
 .desc_icon {

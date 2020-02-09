@@ -3,32 +3,28 @@
  * @LastEditTime : 2020-01-02 16:37:16
  */
 import React, { PureComponent } from 'react';
-import { createForm } from 'rc-form';
-import { List } from 'antd-mobile';
-import informationMore from './img/back.png';
-import AsyncCascadePicker from 'components/AsyncCascadePicker';
-import StepTitle from 'components/StepTitle';
-import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
+import { List } from 'antd-mobile';
+import { createForm } from 'rc-form';
+import { connect } from 'react-redux';
 import { getH5Channel } from 'utils/common';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { addinfo } from 'utils/analytinsType';
-
 import { getFirstError, getNextStr } from 'utils';
-import style from './index.scss';
-// import { home } from 'utils/analytinsType';
-// import { buryingPoints } from 'utils/buryPointMethods';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
-import { auth_suppleInfo } from 'fetch/api.js';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-import { connect } from 'react-redux';
+import { auth_suppleInfo } from 'fetch/api.js';
+import AsyncCascadePicker from 'components/AsyncCascadePicker';
+import StepTitle from 'components/StepTitle';
+import ButtonCustom from 'components/ButtonCustom';
+import FixedHelpCenter from 'components/FixedHelpCenter';
+
+import style from './index.scss';
+import informationMore from './img/back.png';
 
 let submitButtonLocked = false;
-const API = {
-	auth_suppleInfo: '/auth/suppleInfo'
-};
 
 @fetch.inject()
 @connect((state) => ({
@@ -132,6 +128,7 @@ export default class add_info extends PureComponent {
 				</div>
 
 				<div className={style.pageContent}>
+					<FixedHelpCenter />
 					<StepTitle title="填写基本信息" titleSub="请填写基本信息，有利于您的借款审核" stepNum="03" />
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {
