@@ -161,7 +161,8 @@
 			.am-list-extra {
 				padding: 30px 0;
 				font-size: 28px;
-				color: $colorListText;
+        color: $colorListText;
+        flex-basis: auto;
 			}
 		}
 	}
@@ -179,7 +180,11 @@
 		margin-bottom: 28px;
 		font-size: 30px;
 		font-weight: 500;
-		color: #121c32;
+    color: #121c32;
+
+    .billTotalAmt {
+      font-family: $fontFamilyNumber;
+    }
 	}
 }
 

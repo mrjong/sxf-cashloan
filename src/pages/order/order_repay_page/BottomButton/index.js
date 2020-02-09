@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.scss';
-import { Button } from 'antd-mobile';
+import { ButtonCustom } from 'components';
 class BottomButton extends Component {
 	render() {
 		const { totalAmt, disabled, handleClick } = this.props;
@@ -9,13 +9,13 @@ class BottomButton extends Component {
 				<span className={styles.moneyShow}>
 					共计<em>{totalAmt}</em>元
 				</span>
-				<Button
+				<ButtonCustom
 					onClick={handleClick}
 					loading={!totalAmt || disabled}
-					// className={[styles.sxf_btn, !totalAmtForShow && styles.sxf_btn_disabled].join(' ')}
+					className={[styles.sxf_btn, (!totalAmt || disabled) && styles.sxf_btn_disabled].join(' ')}
 				>
 					立即还款
-				</Button>
+				</ButtonCustom>
 			</div>
 		);
 	}

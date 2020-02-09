@@ -14,6 +14,7 @@ import CountDownButton from './CountDownButton';
 import ActivityModal from './ActivityModal';
 import AgreementModal from './AgreementModal';
 import WelfareModal from './WelfareModal';
+import ProtocolSmsModal from './ProtocolSmsModal';
 export {
 	FooterBar,
 	LoadingView,
@@ -26,5 +27,6 @@ export {
 	SelectList,
 	ActivityModal,
 	AgreementModal,
-	WelfareModal
+	WelfareModal,
+	ProtocolSmsModal
 };

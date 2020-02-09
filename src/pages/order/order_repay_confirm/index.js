@@ -4,13 +4,11 @@
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import SXFButton from 'components/ButtonCustom';
-import { LoadingView } from 'components';
+import { LoadingView, ButtonCustom, ProtocolSmsModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import styles from './index.scss';
-import { getH5Channel, isMPOS } from 'utils/common';
 import {
 	coup_queryUsrRepayUsbCoup,
 	repay_queryCashRegisterDetail,
@@ -19,17 +17,12 @@ import {
 	bank_card_protocol_bind
 } from 'fetch/api';
 import Image from 'assets/image';
-
 import qs from 'qs';
-import { NoticeBar, List, Button, Badge } from 'antd-mobile';
-import SmsModal from '../order_common_page/components/SmsModal';
-import { isWXOpen, isPhone } from 'utils';
+import { NoticeBar, List, Badge } from 'antd-mobile';
+// import SmsModal from '../order_common_page/components/SmsModal';
+import { isWXOpen } from 'utils';
 import { setBackGround } from 'utils/background';
 
-const API = {
-	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink' //协议绑卡接口
-};
 let entryFrom = '';
 @fetch.inject()
 @setBackGround('#F7F8FA')
@@ -49,12 +42,7 @@ export default class order_repay_confirm extends PureComponent {
 			totalAmt: '', // 一键结清传给后台的总金额
 			payType: '',
 			payTypes: ['CardPay'],
-			insureInfo: '',
-			insureFeeInfo: '',
-			isInsureValid: false, // 是否有保费并且为待支付状态
-			totalAmtForShow: '',
-			couponPrice: '', // 优惠劵计算过的金额
-			disDisRepayAmt: 0, // 优惠金额
+			disDisRepayAmt: '', // 优惠金额
 			showCouponAlert: false
 		};
 	}
@@ -130,7 +118,7 @@ export default class order_repay_confirm extends PureComponent {
 				if (!this.viewRef) return;
 				this.viewRef.showDataView();
 				if (res.code === '000000' && res.data) {
-					const { disDisRepayAmt = 0, totalAmt, totalList = [], payTypes } = res.data;
+					const { disDisRepayAmt, totalAmt, totalList = [], payTypes } = res.data;
 					this.setState({
 						disDisRepayAmt,
 						totalAmt,
@@ -195,7 +183,7 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
-		const { cardAgrNo, smsCode } = this.state;
+		const { smsCode } = this.state;
 		if (!smsCode) {
 			this.props.toast.info('请输入验证码');
 			return;
@@ -207,26 +195,20 @@ export default class order_repay_confirm extends PureComponent {
 		this.setState({
 			protocolBindCardCount: this.state.protocolBindCardCount + 1
 		});
-		this.props.$fetch
-			.post(API.protocolBind, {
-				cardNo: cardAgrNo,
-				smsCd: smsCode,
-				isEntry: '01'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.closeSmsModal();
-				} else if (this.state.protocolBindCardCount === 2 && res.msgCode !== 'PTM0000') {
-					this.closeSmsModal();
-				} else {
-					// 切换短信弹窗底部按钮
-					this.setState({
-						toggleBtn: true,
-						smsCode: ''
-					});
-					this.props.toast.info(res.data || res.msgInfo);
-				}
-			});
+		this.props.$fetch.get(`${bank_card_protocol_bind}/${smsCode}`).then((res) => {
+			if (res.code === '000000' || res.code === '999999') {
+				this.closeSmsModal();
+			} else if (this.state.protocolBindCardCount === 2 && res.code !== '000000') {
+				this.closeSmsModal();
+			} else {
+				// 切换短信弹窗底部按钮
+				this.setState({
+					toggleBtn: true,
+					smsCode: ''
+				});
+				this.props.toast.info(res.data || res.msgInfo);
+			}
+		});
 	};
 
 	// 协议绑卡校验接口
@@ -235,16 +217,15 @@ export default class order_repay_confirm extends PureComponent {
 		const { billDesc = {} } = this.props.history.location.state;
 
 		const params = {
-			cardNo: cardAgrNo,
-			bankCd: billDesc.wthdCrdCorpOrg,
-			usrSignCnl: getH5Channel(),
-			cardTyp: 'D',
-			isEntry: '01',
-			type: '0' // 0 可以重复 1 不可以重复
+			agrNo: cardAgrNo,
+			bankCode: billDesc.wthdCrdCorpOrg,
+			channelFlag: '0', // 0 可以重复 1 不可以重复
+			supportType: '',
+			merType: ''
 		};
-		this.props.$fetch.post(API.protocolSms, params).then((res) => {
-			switch (res.msgCode) {
-				case 'PTM0000':
+		this.props.$fetch.post(bank_card_protocol_sms, params).then((res) => {
+			switch (res.code) {
+				case '000000':
 					//协议绑卡校验成功提示（走协议绑卡逻辑）
 					this.setState({
 						isShowSmsModal: true
@@ -466,13 +447,9 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 选择银行卡
 	selectBank = () => {
-		const { isInsureValid, cardAgrNo } = this.state;
-
+		const { cardAgrNo } = this.state;
 		store.setBackUrl('/order/order_detail_page');
-		isInsureValid && store.setInsuranceFlag(true);
-		this.props.history.push(
-			`/mine/select_save_page?agrNo=${cardAgrNo}&insuranceFlag=${isInsureValid ? '1' : '0'}`
-		);
+		this.props.history.push(`/mine/select_save_page?agrNo=${cardAgrNo}&insuranceFlag=0`);
 	};
 
 	// 选择优惠劵
@@ -558,7 +535,6 @@ export default class order_repay_confirm extends PureComponent {
 					onClick={() => {
 						this.selectCoupon(false);
 					}}
-					className={styles.value}
 				>
 					{this.renderCoupon()}
 				</span>
@@ -579,10 +555,8 @@ export default class order_repay_confirm extends PureComponent {
 	// 判断优惠劵显示
 	renderCoupon = () => {
 		const { deratePrice, availableCoupNum } = this.state;
-		let couponInfo = store.getCouponData() || {};
-
-		if (couponInfo.coupId) {
-			return <span>{deratePrice === 0 ? deratePrice : -deratePrice}元</span>;
+		if (deratePrice > 0) {
+			return <span>-{deratePrice}元</span>;
 		}
 		//  可用优惠券数量
 		return (
@@ -599,34 +573,18 @@ export default class order_repay_confirm extends PureComponent {
 			smsCode,
 			toggleBtn,
 			detailList,
-			totalAmtForShow,
 			totalAmt,
 			payType,
 			payTypes,
-			insureFeeInfo,
-			isInsureValid,
-			couponPrice,
 			showCouponAlert,
-			disDisRepayAmt = 0,
+			disDisRepayAmt,
 			bankName,
 			bankNo,
-			cardAgrNo,
-			availableCoupNum
+			cardAgrNo
 		} = this.state;
 
-		const { canUseCoupon, totalAmtForShow: totalBillAmt } = this.props.history.location.state;
+		const { canUseCoupon, totalAmt: billTotalAmt } = this.props.history.location.state;
 
-		let moneyWithCoupon = '';
-
-		if (!canUseCoupon) {
-			moneyWithCoupon = '';
-		} else if (isInsureValid) {
-			moneyWithCoupon = couponPrice ? (parseFloat(couponPrice) + parseFloat(insureFeeInfo)).toFixed(2) : '';
-		} else {
-			moneyWithCoupon = couponPrice ? parseFloat(couponPrice).toFixed(2) : '';
-		}
-
-		console.log(payType, '9999');
 		return (
 			<LoadingView
 				ref={(view) => (this.viewRef = view)}
@@ -651,7 +609,9 @@ export default class order_repay_confirm extends PureComponent {
 				<div className={styles.cardWrap}>
 					<div className={styles.title}>
 						<span>应还金额</span>
-						<span>{moneyWithCoupon || (totalBillAmt && parseFloat(totalBillAmt).toFixed(2))}元</span>
+						<span className={styles.billTotalAmt}>
+							{billTotalAmt && parseFloat(billTotalAmt).toFixed(2)}元
+						</span>
 					</div>
 					{/* 账单明细展示 */}
 					{this.renderFeeDetail(detailList, totalAmt)}
@@ -664,14 +624,14 @@ export default class order_repay_confirm extends PureComponent {
 								还款银行卡
 							</List.Item>
 						)}
-						{true && <List.Item extra={`-${disDisRepayAmt}11元`}>提前结清优惠</List.Item>}
+						{disDisRepayAmt > 0 && <List.Item extra={`-${disDisRepayAmt}元`}>提前结清优惠</List.Item>}
 						{canUseCoupon && (
 							<List.Item arrow={'horizontal'} extra={this.renderCouponIcon()}>
 								优惠券
 							</List.Item>
 						)}
 					</List>
-					{payTypes.length === 1 ? (
+					{payTypes.length > 1 ? (
 						<div className={styles.modal_weixin}>
 							<h3>还款方式</h3>
 							<div className={styles.flex_div}>
@@ -699,9 +659,9 @@ export default class order_repay_confirm extends PureComponent {
 					) : null}
 				</div>
 
-				<SXFButton onClick={this.handleClickConfirm} className={styles.submit_btn}>
+				<ButtonCustom onClick={this.handleClickConfirm} className={styles.submit_btn}>
 					立即还款
-				</SXFButton>
+				</ButtonCustom>
 
 				{showCouponAlert ? (
 					<div className={styles.alert_wrap}>
@@ -734,7 +694,7 @@ export default class order_repay_confirm extends PureComponent {
 				) : null}
 
 				{isShowSmsModal && (
-					<SmsModal
+					<ProtocolSmsModal
 						onCancel={this.skipProtocolBindCard}
 						onConfirm={this.confirmProtocolBindCard}
 						onSmsCodeChange={this.handleSmsCodeChange}

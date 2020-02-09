@@ -250,7 +250,6 @@ export default class order_repay_page extends PureComponent {
 		// 	isOverdue: !!overdueDays,
 		// 	repayPerds: repayPerds.join(',')
 		// });
-		console.log(999);
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',
 			state: {

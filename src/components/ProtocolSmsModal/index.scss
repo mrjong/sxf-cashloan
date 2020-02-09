@@ -1,0 +1,151 @@
+@import '../../assets/styles/scss/base/fn.scss';
+.antModal {
+	width: auto;
+	:global {
+		.am-modal-content {
+			text-align: left;
+			border-radius: 6px;
+			padding: 0px;
+			.am-modal-body {
+				padding: 0px;
+			}
+		}
+	}
+}
+.modalWrap {
+	width: 600px;
+	overflow: hidden;
+}
+.main {
+	position: relative;
+	padding: 65px 40px 0;
+}
+
+.closeIcon {
+	position: absolute;
+	right: 15px;
+	top: 10px;
+}
+
+.head {
+	font-size: 46px;
+	font-weight: bold;
+	color: $colorBlack;
+	margin-bottom: 16px;
+}
+.desc {
+	font-size: 30px;
+	text-align: left;
+	color: $colorSubTitle;
+}
+.phone {
+	font-size: 46px;
+	font-weight: bold;
+	color: $colorBlack;
+}
+.smsCode {
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	font-size: 30px;
+	padding-bottom: 20px;
+	margin-top: 50px;
+	text-align: left;
+	color: $colorInputPlaceholder;
+	&::after {
+		@include setBottomLine($colorDivide);
+	}
+}
+.time {
+	font-size: 24px;
+	color: $colorSubTitle;
+}
+.again {
+	font-size: 24px;
+	color: $colorBlue;
+}
+.tip {
+	font-size: 24px;
+	color: $colorGolden;
+	padding-bottom: 24px;
+	margin: 0 24px;
+}
+
+.bottom {
+	display: flex;
+	justify-content: space-between;
+	margin: 40px 0;
+	.skipButton {
+		width: 300px;
+		box-sizing: border-box;
+		background-color: transparent;
+		border: 1px solid #9d9d9d;
+		color: #9d9d9d;
+		float: left;
+	}
+	.smallButton {
+		width: 180px;
+	}
+	.largeButton {
+		width: 480px;
+		margin: 0 auto;
+	}
+}
+
+.smsModal_error {
+	width: 580px;
+	.smsModal_error_info {
+		padding: 60px 35px;
+		color: #868e9e;
+		font-size: 30px;
+	}
+	.button_box {
+		position: relative;
+		overflow: hidden;
+
+		&::after {
+			position: absolute;
+			left: 0;
+			@include setTopLine(#f0f1f5);
+		}
+	}
+
+	.button_wrap {
+		display: flex;
+		position: relative;
+		margin: 10px 0;
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 50%;
+			@include setRightLine(#f0f1f5);
+			height: 100%;
+			background-color: #f0f1f5;
+		}
+	}
+
+	.button {
+		width: 50%;
+		padding: 15px 0;
+		font-size: 34px;
+		font-weight: 500;
+		color: #121c32;
+	}
+
+	.exit {
+		color: #868e9e;
+	}
+}
+::-webkit-input-placeholder {
+	color: $colorInputPlaceholder;
+}
+:-moz-placeholder {
+	color: $colorInputPlaceholder;
+}
+::-moz-placeholder {
+	color: $colorInputPlaceholder;
+}
+:-ms-input-placeholder {
+	color: $colorInputPlaceholder;
+}

@@ -22,15 +22,16 @@
 	}
 }
 
-// .sxf_btn {
-// 	width: 320px;
-// 	height: 100px;
-// 	font-size: 36px;
-// 	color: #121c32;
-// 	border-radius: 50px;
-// 	margin: 20px 0 40px;
-// }
-// .sxf_btn_disabled {
-// 	background-color: #dcdfe6;
-// 	color: #f7f8fa;
-// }
+.sxf_btn {
+	width: 320px;
+	height: 100px;
+	font-size: 36px;
+	color: #121c32;
+	border-radius: 50px;
+	margin: 20px 0 40px;
+}
+.sxf_btn_disabled {
+	background-color: #dcdfe6;
+  color: #f7f8fa;
+  opacity: .3;
+}

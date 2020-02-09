@@ -57,10 +57,10 @@ export default class ButtonCustom extends React.PureComponent {
 	prePressTime = 0;
 
 	handleClick = (event) => {
-		const { disabled, interval, onClick } = this.props;
+		const { disabled, loading, interval, onClick } = this.props;
 		const now = Date.now();
 
-		if (disabled) return;
+		if (disabled || loading) return;
 
 		if (interval > 0 || this.prePressTime > 0) {
 			if (now - this.prePressTime > interval) {
