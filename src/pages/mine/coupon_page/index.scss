@@ -65,7 +65,9 @@
 .box {
 	position: relative;
 	margin: 20px 30px;
+	border-radius: 15px;
 	background-color: #fff;
+	overflow: hidden;
 	&:first-child {
 		margin-top: 30px;
 	}
@@ -79,9 +81,9 @@
 
 	.leftBox {
 		float: left;
-		width: 2.15rem;
+		width: 2rem;
 		color: #fff;
-		font-size: 0.42rem;
+		font-size: 0.64rem;
 		text-align: center;
 		line-height: 200px;
 		height: 200px;
@@ -122,7 +124,7 @@
 		color: #6c6c6c;
 		.title {
 			font-size: 26px;
-			margin-bottom: 15px;
+			margin-bottom: 10px;
 			color: #333;
 			font-weight: bold;
 		}
@@ -167,7 +169,12 @@
 		@include spriteIcon('../../../assets/images/common/sprite_icon.png', -150px, -468px);
 	}
 	.ellipsis {
-		@include ellipsis(420px);
+		@include ellipsis(320px);
+	}
+	.twoLine {
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		white-space: normal;
 	}
 }
 .box_default {
@@ -180,6 +187,8 @@
 	display: flex;
 	justify-content: start;
 	align-items: center;
+}
+.box_top_copy {
 	position: relative;
 	&::after {
 		display: block;
@@ -216,12 +225,12 @@
 		left: 0;
 	}
 	i.topArrow {
-    @include setArrow(top, 12px, #868E9E, 1px);
-    margin-left: 10px;
-  }
-  i.bottomArrow {
-    @include setArrow(bottom, 12px, #868E9E, 1px);
-    margin-left: 10px;
+		@include setArrow(top, 12px, #868e9e, 1px);
+		margin-left: 10px;
+	}
+	i.bottomArrow {
+		@include setArrow(bottom, 12px, #868e9e, 1px);
+		margin-left: 10px;
 	}
 	.desctitle {
 		margin-bottom: 10px;
@@ -277,7 +286,7 @@
 }
 .goUse {
 	position: absolute;
-	right: 0px;
+	right: -120px;
 	top: 50%;
 	z-index: 10;
 	font-weight: 800;

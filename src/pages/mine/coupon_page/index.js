@@ -183,20 +183,6 @@ export default class coupon_page extends PureComponent {
 						});
 					}
 					for (let i = res.data.coups.length - 1; i >= 0; i--) {
-						// 是否出现去使用
-						if (
-							this.state.msgType === 0 &&
-							+new Date(this.getTime(res.data.coups[i].validEndTm)) > +new Date() &&
-							!this.HomeBtnStatus &&
-							tab === 'tabshow' &&
-							pIndex === 1 &&
-							receiveData &&
-							receiveData.entryFrom &&
-							receiveData.entryFrom === 'mine'
-						) {
-							this.HomeBtnStatus = true;
-							this['HomeBtn'].fetchData();
-						}
 						if (
 							this.state.msgType !== 0 ||
 							!receiveData ||
@@ -327,6 +313,7 @@ export default class coupon_page extends PureComponent {
 				index = this.state.rData && this.state.rData.length - 1;
 			}
 			const obj = this.state.rData && this.state.rData[index--];
+			const isInvalid = obj.useSts === '02' || obj.useSts === '03';
 			return (
 				// "useSts","该优惠券状态 ,默认'00'-未使用，00未使用 01已锁定 02已使用 03已作废 99全部"
 				<div
@@ -345,7 +332,7 @@ export default class coupon_page extends PureComponent {
 					}
 				>
 					<div className={style.box_coupon}>
-						<div className={style.box_top}>
+						<div className={[style.box_top, obj.coupDesc ? style.box_top_copy : ''].join(' ')}>
 							<div className={style.leftBox}>
 								<div className={style.leftBoxLineBox}>
 									{obj && obj.coupCategory === '00' ? (
@@ -363,7 +350,7 @@ export default class coupon_page extends PureComponent {
 											<i>免</i>
 											<i className={style.dayNum}>{obj && obj.coupVal}</i>
 											<br />
-											<span className={style.littleFont}>天息费</span>
+											<span className={style.littleFont}>天</span>
 										</span>
 									) : null}
 								</div>
@@ -398,10 +385,13 @@ export default class coupon_page extends PureComponent {
 										}
 									/>
 								)}
-								<button className={style.goUse}>去使用</button>
+								{receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine' ? (
+									<button className={style.goUse}>去使用</button>
+								) : null}
+
 								<div
 									className={
-										obj.useSts === '02' || obj.useSts === '03'
+										isInvalid
 											? `${style.title} ${style.ellipsis} ${style.textGray}`
 											: `${style.title} ${style.ellipsis}`
 									}
@@ -410,14 +400,14 @@ export default class coupon_page extends PureComponent {
 								</div>
 								<div
 									className={
-										obj.useSts === '02' || obj.useSts === '03'
-											? `${style.ellipsis} ${style.textGray}`
-											: style.ellipsis
+										isInvalid
+											? `${style.ellipsis} ${style.textGray} ${style.twoLine}`
+											: `${style.ellipsis} ${style.twoLine}`
 									}
 								>
-									{(obj && obj.coupDesc) || <div className={style.none}>_</div>}
+									{obj && obj.coupUseScene}
 								</div>
-								<div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>
+								<div className={isInvalid ? `${style.textGray}` : ''}>
 									{this.state.msgType === 0 &&
 									receiveData &&
 									receiveData.entryFrom &&
@@ -451,14 +441,14 @@ export default class coupon_page extends PureComponent {
 								</div>
 							</div>
 						</div>
-						<div className={style.descBox}>
-							<div className={style.desctitle}>
-								查看详情<i className={style.topArrow}></i>
+						{obj && obj.coupDesc ? (
+							<div className={style.descBox}>
+								<div className={style.desctitle}>
+									查看详情<i className={style.topArrow}></i>
+								</div>
+								<div>{obj && obj.coupDesc}</div>
 							</div>
-							<div>
-								本券发放于新手免洗活动，自动领取成功后，有效期7天本券发放于免息活动，自领取本券成功后。
-							</div>
-						</div>
+						) : null}
 					</div>
 				</div>
 			);
