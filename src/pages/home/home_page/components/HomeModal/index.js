@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-08 15:20:57
+ * @LastEditTime : 2020-02-10 10:04:32
  */
 import React, { Component } from 'react';
 import { Modal } from 'antd-mobile';
@@ -169,10 +169,19 @@ export default class HomeModal extends Component {
 								decreaseCoupExpiryDate={DataList[0].decreaseCoupExpiryDate}
 								tokenId={this.tokenId}
 								handleClick={() => {
-									navigation.navigate('OrderDesc', {
-										billNo: this.billNo
-									});
-									this.homeModalRef && this.homeModalRef.close();
+									this.setState(
+										{
+											visible: false
+										},
+										() => {
+											this.props.history.push({
+												pathname: `/order/order_detail_page`,
+												state: {
+													billNo: this.billNo
+												}
+											});
+										}
+									);
 								}}
 								openModal={this.open}
 								closeModal={this.closeOverdueModal}

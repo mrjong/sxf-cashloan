@@ -1,8 +1,13 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-10 10:24:13
+ */
 import React from 'react';
 import fetch from 'sx-fetch';
+import { Toast } from 'antd-mobile';
 import style from './index.scss';
 import overDueImg from 'assets/images/home/overDue_icon.png';
-import { store } from '../../../../../utils/store';
+import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
 import linkConf from 'config/link.conf';
@@ -37,7 +42,7 @@ export default class OverDueModal extends React.PureComponent {
 	};
 
 	copyOperation = () => {
-		this.props.toast.info(
+		Toast.info(
 			'已帮您复制了仲裁委网址，打开浏览器粘贴网址，输入仲裁委短信发送的案件号查看并下载您的仲裁书',
 			5
 		);
