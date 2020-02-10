@@ -8,13 +8,27 @@ import { helpCenter, wxTabBar } from 'utils/analytinsType';
 import styles from './index.scss';
 // import Cookie from 'js-cookie';
 import { setBackGround } from 'utils/background';
-import ButtonCustom from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { ButtonCustom, LoadingView } from 'components';
 import QuestionModal from './components/QuestionModal';
+import Image from 'assets/image';
+
 import qs from 'qs';
 
 import { question_questionInfo } from 'fetch/api';
+
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无内容',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
+
 const topNavList = [
 	{
 		img: require('./img/msg_icon.png'),
@@ -70,8 +84,17 @@ export default class help_center_page extends PureComponent {
 						categoryList: res.data.types.list
 					});
 				}
+				if (
+					(res.data.questions && res.data.questions.list && res.data.questions.list.length) ||
+					(res.data.types && res.data.types.list && res.data.types.list.length)
+				) {
+					this.viewRef && this.viewRef.showDataView();
+				} else {
+					this.viewRef && this.viewRef.setEmpty();
+				}
 			} else {
 				this.props.toast.info(res.message);
+				this.viewRef && this.viewRef.setEmpty();
 			}
 		});
 	};
@@ -182,29 +205,40 @@ export default class help_center_page extends PureComponent {
 						<div className={styles.top_nav}>{this.renderTopNav()}</div>
 					) : null
 				) : null}
-				<div className={styles.pannel}>
-					<div className={styles.pannel_title}>
-						{hotList && hotList.length > 0 ? (
-							<div>
-								<span>热门问题</span>
-								<span className={styles.hot_icon}>TOP{hotList.length}</span>
-							</div>
-						) : null}
-					</div>
-					<div className={styles.pannel_list}>{this.renderHotList()}</div>
-				</div>
-				<div className={styles.pannel}>
-					{categoryList && categoryList.length > 0 ? (
-						<div>
+				<LoadingView
+					ref={(view) => (this.viewRef = view)}
+					nodata={noData}
+					errordata={errorData}
+					onReloadData={() => {
+						this.qryHotListAdnTypes();
+					}}
+				>
+					<div>
+						<div className={styles.pannel}>
 							<div className={styles.pannel_title}>
-								<span>问题分类</span>
+								{hotList && hotList.length > 0 ? (
+									<div>
+										<span>热门问题</span>
+										<span className={styles.hot_icon}>TOP{hotList.length}</span>
+									</div>
+								) : null}
 							</div>
-							<div className={[styles.pannel_list, styles.category_list].join(' ')}>
-								{this.renderCategoryList()}
-							</div>
+							<div className={styles.pannel_list}>{this.renderHotList()}</div>
 						</div>
-					) : null}
-				</div>
+						<div className={styles.pannel}>
+							{categoryList && categoryList.length > 0 ? (
+								<div>
+									<div className={styles.pannel_title}>
+										<span>问题分类</span>
+									</div>
+									<div className={[styles.pannel_list, styles.category_list].join(' ')}>
+										{this.renderCategoryList()}
+									</div>
+								</div>
+							) : null}
+						</div>
+					</div>
+				</LoadingView>
 				{store.getToken() ? (
 					<div className={styles.service_box}>
 						<ButtonCustom onClick={this.goOnline} className={styles.online_btn}>
