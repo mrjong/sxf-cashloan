@@ -1,8 +1,12 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-10 15:36:31
+ */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import styles from './index.scss';
-import { Consumer } from 'pages/common/routerPage/context';
 /*
  * 接收一个配置文件数组
  * parms: {
@@ -16,7 +20,8 @@ import { Consumer } from 'pages/common/routerPage/context';
  * */
 
 function TabItem(props) {
-	const { data } = props;
+	const { data, showRedDot } = props;
+	console.log(showRedDot);
 	return (
 		<NavLink replace to={data.url} key={data.url} className={styles.item}>
 			<i className={window.location.pathname === data.url ? data.icon : data.icon_not} />
@@ -24,19 +29,16 @@ function TabItem(props) {
 				className={styles.title}
 				style={{ color: window.location.pathname === data.url ? '#6A6D70' : '#CECFD3' }}
 			>
-				<Consumer>
-					{({ footerTipIcon }) => {
-						return (
-							footerTipIcon &&
-							footerTipIcon.redDot &&
-							data.title === '我的' && (
-								<span className={styles.icon_top}>
-									<i></i>
-								</span>
-							)
-						);
-					}}
-				</Consumer>
+				{data.url &&
+				data.url === '/mine/mine_page' &&
+				props &&
+				props.showRedDot &&
+				Number(props.showRedDot) > 0 ? (
+					<span className={styles.icon_top}>
+						<i></i>
+					</span>
+				) : null}
+
 				{data.title}
 			</div>
 		</NavLink>
@@ -50,11 +52,13 @@ function TabBarList(props) {
 	}
 	let tabBarBottom = null;
 	tabBarBottom = tabList.map((item) => (
-		<TabItem key={item.url ? item.url : new Date().getTime()} data={item} />
+		<TabItem showRedDot={props.showRedDot} key={item.url ? item.url : new Date().getTime()} data={item} />
 	));
 	return tabBarBottom;
 }
-
+@connect((state) => ({
+	showRedDot: state.specialState.showRedDot
+}))
 export default class Footer extends PureComponent {
 	static propTypes = {
 		data: PropTypes.array,
@@ -67,13 +71,13 @@ export default class Footer extends PureComponent {
 		},
 		data: [
 			{
-				title: '还卡',
+				title: '首页',
 				url: '/home/home',
 				icon: styles.home_active,
 				icon_not: styles.home
 			},
 			{
-				title: '还款',
+				title: '账单',
 				url: '/order/order_page',
 				icon: styles.order_active,
 				icon_not: styles.order
@@ -88,11 +92,11 @@ export default class Footer extends PureComponent {
 	};
 
 	render() {
-		let { data, footerProps } = this.props;
+		let { data, footerProps, showRedDot } = this.props;
 		const { footerHide } = footerProps;
 		return footerHide ? null : (
 			<div className={[styles.footer, 'application_footerbar'].join(' ')}>
-				{<TabBarList tabList={data} />}
+				{<TabBarList showRedDot={showRedDot} tabList={data} />}
 			</div>
 		);
 	}

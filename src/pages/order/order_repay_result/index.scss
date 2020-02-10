@@ -101,17 +101,22 @@
 }
 
 .list_wrap {
-	padding: 40px 30px 0;
+  margin: 100px 40px 0;
+  padding: 30px;
+  box-shadow:0px 0px 41px 0px rgba(226,229,247,0.77);
+  border-radius: 6px;
 	.list_item {
 		display: flex;
 		justify-content: space-between;
-		margin-bottom: 40px;
 		font-size: 30px;
 		color: #121c32;
 		.value {
 			font-weight: 500;
 		}
-	}
+  }
+  .list_item + .list_item {
+		margin-top: 40px;
+  }
 	p {
 		color: #f66;
 		text-align: left;

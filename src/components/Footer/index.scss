@@ -49,22 +49,40 @@
 		height: 44px;
 	}
 	.home {
-		@include spriteSkinIcon('../../assets/images/common/skin_icon.png', 0, -118px);
+		background-image: url(../../assets/image/icon/home@3x.png);
+		background-repeat: no-repeat;
+		background-size: 44px 44px;
+		background-position: 0 0;
 	}
 	.home_active {
-		@include spriteSkinIcon('../../assets/images/common/skin_icon.png', -192px, -118px);
+		background-image: url(../../assets/image/icon/home_active@3x.png);
+		background-repeat: no-repeat;
+		background-size: 44px 44px;
+		background-position: 0 0;
 	}
 	.order {
-		@include spriteSkinIcon('../../assets/images/common/skin_icon.png', -64px, -116px);
+		background-image: url(../../assets/image/icon/bill@3x.png);
+		background-repeat: no-repeat;
+		background-size: 44px 44px;
+		background-position: 0 0;
 	}
 	.order_active {
-		@include spriteSkinIcon('../../assets/images/common/skin_icon.png', -256px, -116px);
+		background-image: url(../../assets/image/icon/bill_active@3x.png);
+		background-repeat: no-repeat;
+		background-size: 44px 44px;
+		background-position: 0 0;
 	}
 	.mine {
-		@include spriteSkinIcon('../../assets/images/common/skin_icon.png', -128px, -118px);
+    background-image: url(../../assets/image/icon/mine@3x.png);
+		background-repeat: no-repeat;
+		background-size: 44px 44px;
+		background-position: 0 0;
 	}
 	.mine_active {
-		@include spriteSkinIcon('../../assets/images/common/skin_icon.png', -320px, -118px);
+    background-image: url(../../assets/image/icon/mine_active@3x.png);
+		background-repeat: no-repeat;
+		background-size: 44px 44px;
+		background-position: 0 0;
 	}
 }
 .icon_top {

@@ -54,9 +54,11 @@ export default class overdue_progress_page extends PureComponent {
 						})}
 					</ul>
 				) : null}
-				<ButtonCustom onClick={this.backOrderDtl} className={styles.back_btn}>
-					立即还款
-				</ButtonCustom>
+				<div className={styles.btnWrap}>
+					<ButtonCustom onClick={this.backOrderDtl} className={styles.back_btn}>
+						立即还款
+					</ButtonCustom>
+				</div>
 			</div>
 		);
 	}

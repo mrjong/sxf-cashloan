@@ -789,7 +789,7 @@ export default class essential_information_page extends PureComponent {
 				<div className={style.pageContent}>
 					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin /> : null}
 
-					<FixedHelpCenter />
+					<FixedHelpCenter history={this.props.history} />
 
 					<StepTitle
 						style={{ marginTop: '0.3rem' }}

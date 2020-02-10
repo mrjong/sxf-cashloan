@@ -16,6 +16,10 @@
     margin-top: 5px;
     font-size: 24px;
   }
+  .icon_wrap {
+    display: flex;
+    align-items: center;
+  }
 	.messageIcon {
     display: inline-block;
 		width: 60px;
@@ -35,5 +39,13 @@
 			height: 16px;
 			background: #fe6666;
 		}
-	}
+  }
+  .help_center_icon_wrap {
+    margin-right: 20px;
+    padding: 10px;
+    font-size: 0;
+  }
+  .help_center_icon {
+    height: 40px;
+  }
 }

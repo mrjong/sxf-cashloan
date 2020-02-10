@@ -7,9 +7,24 @@ import { SXFToast } from 'utils/SXFToast';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import QuestionModal from '../help_center_page/components/QuestionModal';
+import { LoadingView } from 'components';
+
+import { question_questionListByType } from 'fetch/api.js';
+
+import Image from 'assets/image';
 
 let totalPage = false;
-import { question_questionListByType } from 'fetch/api.js';
+
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无内容',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -66,7 +81,7 @@ export default class coupon_page extends PureComponent {
 			return [];
 		}
 		if (pIndex === 1) {
-			SXFToast.loading('数据加载中...', 10000);
+			SXFToast.loading('加载中...', 10000);
 		}
 		let sendParams = {
 			pageSize: 15,
@@ -95,14 +110,10 @@ export default class coupon_page extends PureComponent {
 						res.data.list[i].question = `${startIndex + i + 1}. ${res.data.list[i].question}`;
 						dataArr.push(res.data.list[i]);
 					}
-
-					// dataArr = res.data.list.map((item, i) => ({
-					// 	...item,
-					// 	question: `${startIndex + i + 1}. ${item.question}`
-					// }));
-					console.log(dataArr, 'dataArr');
+					this.viewRef && this.viewRef.showDataView();
 					return dataArr;
 				}
+				this.viewRef && this.viewRef.setEmpty();
 				return [];
 			})
 			.catch(() => {
@@ -111,6 +122,7 @@ export default class coupon_page extends PureComponent {
 						SXFToast.hide();
 					}, 600);
 				}
+				this.viewRef && this.viewRef.setEmpty();
 			});
 		return data;
 	};
@@ -128,7 +140,6 @@ export default class coupon_page extends PureComponent {
 			isLoading: true
 		});
 		let list = await this.genData(1);
-		console.log(list, 'list');
 		this.setState({
 			rData: list,
 			Listlength: list.length,
@@ -238,7 +249,16 @@ export default class coupon_page extends PureComponent {
 		};
 		return (
 			<div className="category_page" ref={(el) => (this.messageBox = el)}>
-				{item()}
+				<LoadingView
+					ref={(view) => (this.viewRef = view)}
+					nodata={noData}
+					errordata={errorData}
+					onReloadData={() => {
+						this.onRefresh();
+					}}
+				>
+					{item()}
+				</LoadingView>
 				<QuestionModal
 					visible={showQuestionModal}
 					question={question}
