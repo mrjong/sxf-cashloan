@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 12:03:32
+ * @LastEditTime : 2020-02-10 14:15:11
  */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
@@ -12,16 +12,11 @@ import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import {
-	signup_refreshClientUserInfo,
-	coup_queryUsrCoupBySts,
-	msg_popup_list,
-	index_queryOLPShowSts
-} from 'fetch/api';
+
 import { commonClearState, setOverDueModalInfo, setHomeModalAction } from 'reduxes/actions/commonActions';
 import { showRedDot, setMsgCount } from 'reduxes/actions/specialActions';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-import { changeHistoryState, pagesIgnore, queryUsrSCOpenId } from 'utils';
+import { changeHistoryState, pagesIgnore } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';

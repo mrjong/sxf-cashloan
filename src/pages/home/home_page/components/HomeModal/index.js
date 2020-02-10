@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 10:04:32
+ * @LastEditTime : 2020-02-10 14:17:01
  */
 import React, { Component } from 'react';
 import { Modal } from 'antd-mobile';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { recordContract } from 'utils';
 
 import OverDueModal from '../OverDueModal';
-import style from './index.scss';
+import './index.scss';
 
 @connect(
 	(state) => ({
@@ -136,7 +136,7 @@ export default class HomeModal extends Component {
 		});
 	};
 	render() {
-		const { fetch, navigation } = this.props;
+		const { fetch } = this.props;
 		const { DataList = [], visible } = this.state;
 		const currProgress =
 			DataList &&

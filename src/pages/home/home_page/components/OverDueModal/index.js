@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 12:00:20
+ * @LastEditTime : 2020-02-10 14:19:18
  */
 import React from 'react';
 import fetch from 'sx-fetch';
@@ -10,10 +10,6 @@ import overDueImg from 'assets/images/home/overDue_icon.png';
 import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
-const API = {
-	downLoadContract: '/procedure/docDownLoad'
-};
 
 @fetch.inject()
 export default class OverDueModal extends React.PureComponent {

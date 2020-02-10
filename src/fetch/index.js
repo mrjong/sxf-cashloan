@@ -73,6 +73,7 @@ const fetchInit = () => {
 		},
 		(error) => {
 			const { response = {}, message } = error;
+			console.log(error.response);
 			if (response && response.status === 401 && response.config) {
 				if (isGoToLogin) {
 					return;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 15:03:24
+ * @LastEditTime : 2020-02-10 14:00:00
  */
 /*
  * @Author: shawn
@@ -129,22 +129,13 @@ export default () => (WrappedComponent) => {
 					if (res && res.data) {
 						if (res.data && res.data.totalRow > 0) {
 							this.props.showRedDot(res.data.totalRow);
-							this.props.navigation.setParams({
-								msgDot: true
-							});
 						}
 					} else {
 						this.props.showRedDot(0);
-						this.props.navigation.setParams({
-							msgDot: false
-						});
 					}
 				})
 				.catch(() => {
 					this.props.showRedDot(0);
-					this.props.navigation.setParams({
-						msgDot: false
-					});
 				});
 		};
 		/**

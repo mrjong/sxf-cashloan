@@ -1,16 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-06 11:44:02
+ * @LastEditTime : 2020-02-10 14:13:20
  */
 import React from 'react';
 import style from './index.scss';
-import { store } from 'utils/store';
-import Cookie from 'js-cookie';
-const API = {
-	MSG_COUNT: '/my/msgCount' // h5-查询未读消息总数
-};
-let token = '';
-let tokenFromStorage = '';
 export default class MsgTip extends React.PureComponent {
 	constructor(props) {
 		super(props);

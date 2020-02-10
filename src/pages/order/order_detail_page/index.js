@@ -1,16 +1,16 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:09:21
+ * @LastEditTime : 2020-02-10 14:14:08
  */
 import React, { PureComponent } from 'react';
 import { Card } from 'antd-mobile';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
-import { store } from 'utils/store';
+// import { store } from 'utils/store';
 import { bill_queryBillDetail } from 'fetch/api';
 import { setBackGround } from 'utils/background';
 import { LoadingView, ButtonCustom } from 'components';
-import { buriedPointEvent } from 'utils/analytins';
+// import { buriedPointEvent } from 'utils/analytins';
 
 @setBackGround('#F0F3F9')
 @fetch.inject()
@@ -176,7 +176,10 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	goOrderRepayPage = () => {
-		const { overdueDays, repayPerds, billNo } = this.state;
+		const {
+			// overdueDays, repayPerds,
+			billNo
+		} = this.state;
 		// buriedPointEvent(order.viewRepayInfoBtn, {
 		// 	entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
 		// 	isOverdue: !!overdueDays,

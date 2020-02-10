@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 18:07:11
+ * @LastEditTime : 2020-02-10 14:12:50
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -611,14 +611,13 @@ export default class confirm_agency_page extends PureComponent {
 				state: { nouseCoupon: true }
 			});
 			return;
-		} else {
-			this.props.history.push({
-				pathname: '/mine/coupon_page',
-				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
-					this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-				}&prodId=${contractData[0].prodId}`
-			});
 		}
+		this.props.history.push({
+			pathname: '/mine/coupon_page',
+			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
+				this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
+			}&prodId=${contractData[0].prodId}`
+		});
 	};
 	// 查看借款合同
 	readContract = (item) => {
@@ -884,7 +883,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
-		const { repayInfo, smsCode } = this.state;
+		const { smsCode } = this.state;
 		if (!smsCode) {
 			this.props.toast.info('请输入验证码');
 			return;

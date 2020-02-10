@@ -1,11 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:11:15
+ * @LastEditTime : 2020-02-10 14:19:31
  */
 import React from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
-import { Modal, Icon } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import { ButtonCustom } from 'components';
 import { handleInputBlur, recordContract } from 'utils';
 

@@ -5,10 +5,6 @@ import { Carousel, Icon } from 'antd-mobile';
 import styles from './index.scss';
 import SelectCityTabBar from './SelectCityTabBar';
 import { msg_area } from 'fetch/api.js';
-
-const API = {
-	rcm_qryArea: '/rcm/qryArea'
-};
 const initObj = {
 	code: null,
 	name: '请选择',

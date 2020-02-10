@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 08:42:29
+ * @LastEditTime : 2020-02-10 14:18:59
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -29,7 +29,7 @@ import qs from 'qs';
 import { updateBillInf } from 'utils/CommonUtil/commonFunc';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, activity, loan_fenqi } from 'utils/analytinsType';
+import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { Carousels, commonPage } from 'components';
 import style from './index.scss';
@@ -39,7 +39,7 @@ import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { TFDLogin } from 'utils/getTongFuDun';
 // console.log(aa)
-import { MsgTip, MoneyCard, HomeModal, AddCards, ActivityEntry, SwitchCard, Welfare } from './components';
+import { MsgTip, HomeModal, AddCards, ActivityEntry, SwitchCard, Welfare } from './components';
 const API = {
 	BANNER: '/my/getBannerList', // 0101-banner
 	qryPerdRate: '/bill/prod',
