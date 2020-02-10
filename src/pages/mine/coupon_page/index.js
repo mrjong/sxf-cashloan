@@ -137,7 +137,7 @@ export default class coupon_page extends PureComponent {
 			return [];
 		}
 		if (pIndex === 1) {
-			SXFToast.loading('数据加载中...', 10000);
+			SXFToast.loading('加载中...', 10000);
 		}
 		let sendParams = '';
 		if (receiveData && receiveData.billNo) {
@@ -547,7 +547,8 @@ export default class coupon_page extends PureComponent {
 						ref={(el) => (this.messageTabBox = el)}
 					>
 						{this.state.tabs.map((item2, index2) => (
-							<div key={index2}>{item(`iview${index2}`)}</div>
+              <
+							// <div key={index2}>{item(`iview${index2}`)}</div>
 						))}
 					</STabs>
 				) : null}

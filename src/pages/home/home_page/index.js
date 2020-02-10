@@ -182,7 +182,7 @@ export default class home_page extends PureComponent {
 	 * @return:
 	 */
 	index_queryIndexInfo = () => {
-		Toast.loading('数据加载中...', 10);
+		Toast.loading('加载中...', 10);
 		this.props.$fetch
 			.get(index_queryIndexInfo)
 			.then((result) => {
@@ -444,7 +444,7 @@ export default class home_page extends PureComponent {
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { homeData } = this.state;
-		Toast.loading('数据加载中...', 10);
+		Toast.loading('加载中...', 10);
 		if (homeData.indexSts !== 'LN0009' && homeData.indexSts !== 'LN0001') {
 			// 首页-点击一键还卡（代偿）
 			buriedPointEvent(home.easyRepay, {
@@ -692,7 +692,7 @@ export default class home_page extends PureComponent {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
 		}
-		Toast.loading('', 10);
+		Toast.loading('加载中...', 10);
 		getNextStatus({
 			RouterType: 'home',
 			$props: this.props,

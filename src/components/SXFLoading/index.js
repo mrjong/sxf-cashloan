@@ -18,7 +18,7 @@ export default class SXFLoading extends Component {
 						<div>
 							<img className="sxf_toast_img" src={loadingImg} />
 						</div>
-						{/* {content ? <div className="sxf_text">数据加载中...</div> : null} */}
+						{/* {content ? <div className="sxf_text">加载中...</div> : null} */}
 					</div>
 				</div>
 			</div>

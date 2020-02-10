@@ -1,152 +1,153 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .myPages {
-  background-color: $colorBg;
-  .bannerTop {
-    padding: 60px 60px 180px;
-    background:linear-gradient(223deg,rgba(255,207,5,1) 0%,rgba(255,207,5,1) 100%);
-    .bannerHaader {
-      margin-bottom: 80px;
-      display: flex;
-      .bannerHaaderTitleWrap {
-        flex: 1;
-      }
-    }
-    .bannerHaaderTitle {
-      color: $colorBlack;
-      font-size: 46px;
-      font-family: 'DINMitAlt';
-      line-height: 1;
-    }
-    .bannerHaaderTitleSub {
-      color: $colorBlack;
-      font-size: 24px;
-      margin-top: 10px;
-    }
-    .bannerHaaderBtn {
+	background-color: $colorBg;
+	.bannerTop {
+		padding: 60px 60px 180px;
+		background: linear-gradient(223deg, rgba(255, 207, 5, 1) 0%, rgba(255, 207, 5, 1) 100%);
+		.bannerHaader {
+			margin-bottom: 80px;
+			display: flex;
+			.bannerHaaderTitleWrap {
+				flex: 1;
+			}
+		}
+		.bannerHaaderTitle {
+			color: $colorBlack;
+			font-size: 46px;
+			font-family: 'DINMitAlt';
+			line-height: 1;
+		}
+		.bannerHaaderTitleSub {
+			color: $colorBlack;
+			font-size: 24px;
+			margin-top: 10px;
+		}
+		.bannerHaaderBtn {
 			width: 230px;
 			height: 75px;
 			line-height: 75px;
 			color: $colorYellow;
 			font-size: 30px;
 			text-align: center;
-      background: $colorBlack;
-      font-weight: 600;
+			background: $colorBlack;
+			font-weight: 600;
 			box-shadow: 0px 3px 10px 0px rgba(253, 205, 0, 0.35);
 			border-radius: 100px;
-    }
-    .entranceList {
-      display: flex;
-      justify-content: space-between;
-    }
-    .entranceListItem {
-      // flex: 1;
-      text-align: center;
-      min-width: 100px;
-    }
-    .entranceListItem1 {
-      padding-right: 10px;
-    }
-    .entranceListItem2 {
-      margin-right: 40px;
-    }
-    .entranceListItem3 {
-      margin-right: 20px;
-    }
-    .entranceListItemName {
-      font-weight:400;
-      color: $colorBlack;
-      font-size: 24px;
-    }
-    .entranceListItemIconWrap {
-      position: relative;
-    }
-    .entranceListItemIcon {
-      height: 40px;
-      width: auto;
-    }
-    .entranceListItemMsg {
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      min-width: 32px;
-      height: 32px;
-      padding: 0 8px;
-      background-color: $colorRed;
-      color: #fff;
-      font-size: 24px;
-      border-radius: 50px;
-      line-height: 32px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-  }
-  .pageContent {
-    margin-top: -65px;
-    padding: 0 40px;
-    .optionListWrap {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow:0px 0px 41px 0px rgba(226,229,247,0.77);
-    }
-    .optionListWrap + .optionListWrap {
-      margin-top: 30px;
-    }
-    .optionListItem {
-      padding: 40px;
-      display: flex;
-      align-items: center;
-    }
-    .optionListItem + .optionListItem {
-      border-top: 1px solid $colorDivide;
-    }
-    .optionListItemName {
-      color: $colorBlack;
-      font-size: 32px;
-      flex: 1;
-    }
-    .optionListItemAddition {
-      display: flex;
-      align-items: center;
-    }
-    .optionListItemAdditionText {
-      font-size: 24px;
-      color: $colorInactiveColor;
-    }
-    .optionListItemAdditionTextRed {
-      font-size: 24px;
-      color: $colorTipRed;
-    }
-    .optionListItemAdditionArrow {
-      margin-left: 16px;
-      width: 0;
-      height: 0;
-      border-top: 6px solid transparent;
-      border-right: 0;
-      border-bottom: 6px solid transparent;
-      border-left: 12px solid $colorListText;
-    }
-  }
+		}
+		.entranceList {
+			display: flex;
+			justify-content: space-between;
+		}
+		.entranceListItem {
+			// flex: 1;
+			text-align: center;
+			min-width: 100px;
+		}
+		.entranceListItem1 {
+			padding-right: 10px;
+		}
+		.entranceListItem2 {
+			margin-right: 40px;
+		}
+		.entranceListItem3 {
+			margin-right: 20px;
+		}
+		.entranceListItemName {
+			font-weight: 400;
+			color: $colorBlack;
+			font-size: 24px;
+		}
+		.entranceListItemIconWrap {
+			position: relative;
+		}
+		.entranceListItemIcon {
+			height: 40px;
+			width: auto;
+		}
+		.entranceListItemMsg {
+			position: absolute;
+			top: -20px;
+			left: 60%;
+			min-width: 32px;
+			height: 32px;
+			padding: 0 8px;
+			background-color: $colorRed;
+			color: #fff;
+			font-size: 24px;
+			border-radius: 50px;
+			border-bottom-left-radius: 0;
+			line-height: 32px;
+			text-align: center;
+			box-sizing: border-box;
+		}
+	}
+	.pageContent {
+		margin-top: -65px;
+		padding: 0 40px;
+		.optionListWrap {
+			background-color: #fff;
+			border-radius: 10px;
+			box-shadow: 0px 0px 41px 0px rgba(226, 229, 247, 0.77);
+		}
+		.optionListWrap + .optionListWrap {
+			margin-top: 30px;
+		}
+		.optionListItem {
+			padding: 40px;
+			display: flex;
+			align-items: center;
+		}
+		.optionListItem + .optionListItem {
+			border-top: 1px solid $colorDivide;
+		}
+		.optionListItemName {
+			color: $colorBlack;
+			font-size: 32px;
+			flex: 1;
+		}
+		.optionListItemAddition {
+			display: flex;
+			align-items: center;
+		}
+		.optionListItemAdditionText {
+			font-size: 24px;
+			color: $colorInactiveColor;
+		}
+		.optionListItemAdditionTextRed {
+			font-size: 24px;
+			color: $colorTipRed;
+		}
+		.optionListItemAdditionArrow {
+			margin-left: 16px;
+			width: 0;
+			height: 0;
+			border-top: 6px solid transparent;
+			border-right: 0;
+			border-bottom: 6px solid transparent;
+			border-left: 12px solid $colorListText;
+		}
+	}
 
-  .logout {
+	.logout {
 		width: 200px;
 		height: 70px;
 		background: #fff;
 		line-height: 70px;
 		border-radius: 35px;
 		font-size: 28px;
-    color: #121c32;
-    font-weight: 400;
-    letter-spacing: 2px;
+		color: #121c32;
+		font-weight: 400;
+		letter-spacing: 2px;
 		text-align: center;
 		// border: 1px solid #868e9e;
 		margin: 61px auto 33px;
-  }
+	}
 
-  .bottomSlogen {
-    font-size: 24px;
-    color: #5E6169;
-    text-align: center;
-  }
+	.bottomSlogen {
+		font-size: 24px;
+		color: #5e6169;
+		text-align: center;
+	}
 }
 
 .mine_pages {
@@ -189,8 +190,8 @@
 			color: #121c32;
 			font-size: 30px;
 			text-align: center;
-      background: #fdcd00;
-      font-weight: 600;
+			background: #fdcd00;
+			font-weight: 600;
 			box-shadow: 0px 3px 10px 0px rgba(253, 205, 0, 0.35);
 			border-radius: 30px;
 		}
@@ -203,8 +204,8 @@
 		// margin-top: 30px;
 	}
 	.mine_list {
-    margin-bottom: 30px;
-    border-radius: 6px;
+		margin-bottom: 30px;
+		border-radius: 6px;
 		:global {
 			.am-list-item {
 				min-height: 110px;
@@ -245,17 +246,17 @@
 		line-height: 70px;
 		border-radius: 35px;
 		font-size: 30px;
-    color: #121c32;
-    font-weight: 600;
-    letter-spacing: 2px;
+		color: #121c32;
+		font-weight: 600;
+		letter-spacing: 2px;
 		text-align: center;
 		// border: 1px solid #868e9e;
 		margin: 45px auto 40px;
 	}
 	i {
 		position: absolute;
-    top: 51%;
-    left: 50px;
+		top: 51%;
+		left: 50px;
 		transform: translate(0, -50%);
 		display: inline-block;
 		width: 40px;

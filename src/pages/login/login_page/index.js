@@ -220,7 +220,7 @@ export default class login_page extends PureComponent {
 				// if (!this.state.disabledInput) {
 				// 	param.mblNo = values.phoneValue; // 手机号
 				// }
-				Toast.loading('数据加载中...', 10);
+				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
 						if (res.code !== '000000') {
@@ -390,7 +390,7 @@ export default class login_page extends PureComponent {
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			Toast.loading('数据加载中...', 10);
+			Toast.loading('加载中...', 10);
 			this.props.$fetch.get(`${msg_slide}/${base64Encode(this.state.mobilePhone)}`).then((result) => {
 				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({

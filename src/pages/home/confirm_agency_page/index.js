@@ -155,7 +155,7 @@ export default class confirm_agency_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		this.props.toast.loading('', 10);
+		this.props.toast.loading('加载中...', 10);
 		const { withholdCardData, confirmAgencyInfo } = this.props;
 		this.checkBtnAble();
 		if (confirmAgencyInfo) {
@@ -920,7 +920,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 协议绑卡校验接口
 	checkProtocolBindCard = () => {
-		this.props.toast.loading('', 20);
+		this.props.toast.loading('加载中...', 20);
 		const { repayInfo, repayInfo2 } = this.state;
 		const params = {
 			agrNo: repayInfo && repayInfo.withholdBankAgrNo,

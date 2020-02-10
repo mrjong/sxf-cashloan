@@ -380,7 +380,7 @@ export const getBindCardStatus = ({ $props }) => {
 };
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = async ($props, repaymentDate, goHome) => {
-	$props.SXFToast.loading('数据加载中...', 0);
+	$props.SXFToast.loading('加载中...', 0);
 	const address = store.getPosition();
 	const params = {
 		location: address,
