@@ -121,7 +121,10 @@
 		}
 	}
 	.money {
-		font-size: 90px;
+		font-size: 64px;
+		color: $colorTipRed;
+		font-family: 'DINMitAlt';
+		font-weight: 500;
 	}
 	.rightBox {
 		width: 475px;
@@ -196,13 +199,20 @@
 	}
 }
 .box_default {
-	.leftBox {
+  padding: 5px;
+	.leftBoxLineBox {
+		border-right: 1px dashed #eee;
 		background: #ddd;
 	}
 }
+.box_coupon {
+	background-color: #fff;
+}
 .box_active {
-	.leftBox {
-		background: linear-gradient(135deg, #ffc601, #ff7b31);
+  padding: 5px;
+	.leftBoxLineBox {
+		border-right: 1px dashed #eee;
+		// background: linear-gradient(135deg, #ffc601, #ff7b31);
 	}
 }
 .noMsg {

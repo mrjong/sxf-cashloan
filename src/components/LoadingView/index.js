@@ -44,7 +44,7 @@ export default class LoadingView extends Component {
 	 */
 	reloadData = () => {
 		this.currentState = LoadingState;
-		this.props.onReloadData();
+		this.props.onReloadData && this.props.onReloadData();
 		this.forceUpdate();
 	};
 
@@ -109,12 +109,11 @@ export default class LoadingView extends Component {
 	 * @private
 	 */
 	_renderView() {
-		return <div {...this.props}>{this.props.children}</div>;
+		return <div>{this.props.children}</div>;
 	}
 
 	//渲染
 	render() {
-		console.log(this.currentState, 'currentState');
 		if (this.currentState === LoadingState) {
 			return this.props.renderLoading || this._renderLoading();
 		} else if (this.currentState === EmptyState) {

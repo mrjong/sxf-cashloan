@@ -132,6 +132,7 @@ export const getNextStatus = ({
 			let routeName = ''; // 路由名字
 			let resBackMsg = ''; // 额外参数 在回调的时候使用
 			let param = null; // 可能需要的路由参数
+			let stateObj = null;
 			switch (nextData.nextStepGramCode) {
 				case 'AUTH001':
 					if (nextData.supTag === '1' || nextData.supTag === '2') {
@@ -189,7 +190,7 @@ export const getNextStatus = ({
 					break;
 				case 'REPAY':
 					storeRedux.dispatch(setNextStepStatus(false));
-					param = {
+					stateObj = {
 						billNo: nextData.billNo
 					};
 					routeName = '/order/order_detail_page';
@@ -240,6 +241,9 @@ export const getNextStatus = ({
 				};
 				if (param) {
 					objRouter.search = '?' + qs.stringify(param);
+				}
+				if (stateObj) {
+					objRouter.state = stateObj;
 				}
 				$props.history.push(objRouter);
 			}

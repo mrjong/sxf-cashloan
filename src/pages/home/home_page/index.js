@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 14:19:34
+ * @LastEditTime : 2020-02-10 08:42:29
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -518,11 +518,13 @@ export default class home_page extends PureComponent {
 				// 埋点-首页-点击查看代还账单
 				Toast.hide();
 				buriedPointEvent(home.viewBill);
-				store.setBillNo(homeData.dcDataInfo.billNo);
 				// entryFrom 给打点使用，区分从哪个页面进入订单页的
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home'
+					search: '?entryFrom=home',
+					state: {
+						billNo: homeData.dcDataInfo.billNo
+					}
 				});
 				break;
 			case 'LN0010': // 账单爬取失败/老用户 无按钮不做处理
@@ -557,10 +559,12 @@ export default class home_page extends PureComponent {
 				this.props.toast.info('正在放款中，马上到账');
 				break;
 			case 'CN0005':
-				store.setBillNo(homeData.cashDataInfo.billNo);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home'
+					search: '?entryFrom=home',
+					state: {
+						billNo: homeData.cashDataInfo.billNo
+					}
 				});
 				break;
 			default:
@@ -768,36 +772,6 @@ export default class home_page extends PureComponent {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
 			});
-		}
-	};
-
-	// 现金分期点击事件
-	handleCN = (code) => {
-		const { usrCashIndexInfo } = this.state;
-		switch (code) {
-			case 'CN0003':
-				// 通付盾 获取设备指纹
-				TFDLogin();
-				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
-				if (usrCashIndexInfo.indexData.downloadFlg === '01') {
-					//需要引导下载app
-					this.props.history.push(`/home/deposit_tip?cashMoney=${usrCashIndexInfo.indexData.curAmt}`);
-				} else {
-					this.props.history.push('/home/loan_fenqi');
-				}
-				break;
-			case 'CN0004':
-				this.props.toast.info('正在放款中，马上到账');
-				break;
-			case 'CN0005':
-				store.setBillNo(usrCashIndexInfo.indexData.billNo);
-				this.props.history.push({
-					pathname: '/order/order_detail_page',
-					search: '?entryFrom=home'
-				});
-				break;
-			default:
-				break;
 		}
 	};
 
