@@ -502,7 +502,7 @@ export default class real_name_page extends Component {
 				{this.state.showState &&
 				(!this.state.userInfo || !this.state.userInfo.nameHid || urlQuery.newTitle) ? (
 					<div>
-						<FixedHelpCenter />
+						<FixedHelpCenter history={this.props.history} />
 
 						<StepTitle
 							title="上传身份证照片"

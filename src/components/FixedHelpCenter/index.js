@@ -5,7 +5,7 @@ import classNM from './index.scss';
 
 export default class FixedHelpCenter extends React.PureComponent {
 	handleGoCustomerService = () => {
-		console.log(1);
+		this.props.history.push('/mine/qiyu_page');
 	};
 
 	render() {

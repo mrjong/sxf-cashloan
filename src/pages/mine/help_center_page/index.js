@@ -241,8 +241,11 @@ export default class help_center_page extends PureComponent {
 				</LoadingView>
 				{store.getToken() ? (
 					<div className={styles.service_box}>
-						<ButtonCustom onClick={this.goOnline} className={styles.online_btn}>
-							<i />
+						<ButtonCustom
+							onClick={this.goOnline}
+							className={styles.online_btn}
+							iconSource={Image.icon.service_ico}
+						>
 							在线咨询
 						</ButtonCustom>
 					</div>

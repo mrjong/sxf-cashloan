@@ -128,7 +128,7 @@ export default class add_info extends PureComponent {
 				</div>
 
 				<div className={style.pageContent}>
-					<FixedHelpCenter />
+					<FixedHelpCenter history={this.props.history} />
 					<StepTitle title="填写基本信息" titleSub="请填写基本信息，有利于您的借款审核" stepNum="03" />
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {

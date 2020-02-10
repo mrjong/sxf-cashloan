@@ -52,7 +52,8 @@ export default {
 		trigon_right_black: require('./icon/trigon_right_black.png'),
 		checked: require('./icon/selected_black.png'),
 		checked_no: require('./icon/selected_no_black.png'),
-		customer_service: require('./icon/icon_customer_service.png')
+		customer_service: require('./icon/icon_customer_service.png'),
+		service_ico: require('./icon/service_ico.png')
 	},
 
 	// 标志性的图片
