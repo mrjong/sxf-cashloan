@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 15:01:40
+ * @LastEditTime : 2020-02-10 13:50:59
  */
 /*eslint-disable */
 import React from 'react';
@@ -148,7 +148,7 @@ export const getDeviceType = () => {
 	const u = navigator.userAgent;
 	const osType =
 		u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
-			? 'ANDRIOD'
+			? 'ANDROID'
 			: u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
 			? 'IOS'
 			: 'PC';
@@ -200,7 +200,7 @@ const interceptRouteArr = [
 export const changeHistoryState = () => {
 	if (interceptRouteArr.includes(window.location.pathname)) {
 		// if (store.getChkPhotoBackNew()) {
-		if (store.getTencentBackUrl() && getDeviceType() === 'ANDRIOD') {
+		if (store.getTencentBackUrl() && getDeviceType() === 'ANDROID') {
 			if (store.getTencentBackUrl() === '/mine/mine_page') {
 				// 解决人脸直接返回不调用接口的问题
 				history.go(-2);
@@ -837,7 +837,7 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 };
 
 export const openNativeApp = () => {
-	if (!(isMPOS() && getDeviceType() === 'ANDRIOD')) {
+	if (!(isMPOS() && getDeviceType() === 'ANDROID')) {
 		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
 	}
 };

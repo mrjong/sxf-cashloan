@@ -59,11 +59,6 @@ const fetchInit = () => {
 			} else {
 				cfg.headers['FIN-HD-AUTH-TOKEN'] = '';
 			}
-			// 设置 图片验证码 noLoginToken
-			let noLoginToken = store.getNoLoginToken();
-			if (noLoginToken) {
-				cfg.headers['fin-v-card-token-not-login'] = noLoginToken;
-			}
 			return cfg;
 		},
 		(error) => {

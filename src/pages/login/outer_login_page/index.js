@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:39:39
+ * @LastEditTime : 2020-02-10 11:25:31
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -85,15 +85,11 @@ export default class login_page extends PureComponent {
 		// 移除cookie
 		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
-		let MessageTagError = store.getMessageTagError();
-		let MessageTagStep = store.getMessageTagStep();
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		sessionStorage.clear();
 		localStorage.clear();
 		// 首页弹窗要用的
-		MessageTagError && store.setMessageTagError(MessageTagError);
-		MessageTagStep && store.setMessageTagStep(MessageTagStep);
 		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
 		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);
 

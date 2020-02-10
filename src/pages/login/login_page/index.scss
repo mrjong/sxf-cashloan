@@ -20,6 +20,9 @@
 		.am-list-item .am-input-clear-active {
 			background-color: #ccc;
 		}
+		.am-list-item .am-input-control input:disabled {
+			background-color: transparent;
+		}
 	}
 
 	.img_wrap {
@@ -110,8 +113,8 @@
 			border-radius: 44px;
 		}
 		.smsCode2 {
-      background-color: #EFF1F2;
-      color: #CECECE;
+			background-color: #eff1f2;
+			color: #cecece;
 		}
 
 		.sureBtn {
@@ -165,7 +168,7 @@
 		}
 
 		.bottom_tip {
-			color: #ff6666;
+			color: #f66;
 			font-size: 22px;
 			text-align: center;
 			margin-top: 20px;

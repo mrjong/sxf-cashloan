@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 16:55:31
+ * @LastEditTime : 2020-02-10 11:47:57
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -23,7 +23,7 @@ import {
 } from 'utils';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
 
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
@@ -80,7 +80,7 @@ export default class login_page extends PureComponent {
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
-			isChecked: true, // 是否勾选协议
+			isChecked: false, // 是否勾选协议
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
@@ -106,9 +106,6 @@ export default class login_page extends PureComponent {
 		// 移除cookie
 		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
-		let MessageTagError = store.getMessageTagError();
-		let MessageTagStep = store.getMessageTagStep();
-		let MessageTagLimitDate = store.getMessageTagLimitDate(); // 额度有效期标识
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		let wenjuan = localStorage.getItem('wenjuan');
@@ -116,9 +113,6 @@ export default class login_page extends PureComponent {
 		localStorage.clear();
 
 		// 首页弹窗要用的
-		MessageTagError && store.setMessageTagError(MessageTagError);
-		MessageTagStep && store.setMessageTagStep(MessageTagStep);
-		MessageTagLimitDate && store.setMessageTagLimitDate(MessageTagLimitDate); // 额度有效期标识
 
 		wenjuan && localStorage.setItem('wenjuan', wenjuan);
 		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
@@ -213,7 +207,7 @@ export default class login_page extends PureComponent {
 				// 埋点-注册登录页一键代还
 				buriedPointEvent(login.submit);
 				let param = {
-					tokenId: this.state.submitData.relyToken, // 短信流水号
+					tokenId: this.state.relyToken, // 短信流水号
 					osType: osType.toLowerCase(), // 操作系统
 					loginType: '0',
 					smsCode: values.smsCd,
@@ -230,6 +224,7 @@ export default class login_page extends PureComponent {
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
 						if (res.code !== '000000') {
+							Toast.hide();
 							this.setState({
 								errMsg: res.message
 							});
@@ -399,8 +394,8 @@ export default class login_page extends PureComponent {
 			this.props.$fetch.get(`${msg_slide}/${base64Encode(this.state.mobilePhone)}`).then((result) => {
 				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({
+						relyToken: (result && result.data && result.data.tokenId) || '',
 						submitData: {
-							relyToken: (result && result.data && result.data.tokenId) || '',
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -423,7 +418,7 @@ export default class login_page extends PureComponent {
 		// });
 		const data = {
 			slideDistance: this.bFlag,
-			tokenId: this.state.submitData.relyToken,
+			tokenId: this.state.relyToken,
 			type: '6'
 		};
 		this.props.$fetch
@@ -588,12 +583,12 @@ export default class login_page extends PureComponent {
 
 	//获取图片验证码
 	getImage = () => {
-		this.props.$fetch.get(API.imageCode).then((res) => {
-			if (res && res.code === 'PTM0000') {
+		this.props.$fetch.get(msg_image).then((res) => {
+			if (res && res.code === '000000') {
 				this.setState({
-					imageCodeUrl: res.image
+					imageCodeUrl: res.data.imageBase64,
+					relyToken: res.data.tokenId
 				});
-				store.setNoLoginToken(res.tokenId);
 			} else {
 				Toast.info(res.message);
 			}

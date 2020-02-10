@@ -1,17 +1,14 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 10:24:13
+ * @LastEditTime : 2020-02-10 12:00:20
  */
 import React from 'react';
 import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import style from './index.scss';
 import overDueImg from 'assets/images/home/overDue_icon.png';
-import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
-import linkConf from 'config/link.conf';
-import Cookie from 'js-cookie';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const API = {
@@ -33,12 +30,7 @@ export default class OverDueModal extends React.PureComponent {
 		if (!downloadUrl) {
 			return;
 		}
-		const href = `${linkConf.PDF_URL}${
-			API.downLoadContract
-		}?relativePath=${downloadUrl}&fin-v-card-token=${Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken()}`; // 创建下载的链接
-		// const href = `http://172.18.30.184:8888/wap/procedure/docDownLoad?relativePath=\\20190419113804123745\\2018）衢仲网字第1117号_孙建坤_裁决书.pdf&fin-v-card-token=4bc51edd8b6949989686dd2aff48dd45`
-
-		window.location.href = href;
+		window.location.href = downloadUrl;
 	};
 
 	copyOperation = () => {
@@ -71,7 +63,7 @@ export default class OverDueModal extends React.PureComponent {
 							<p
 								className={style.download}
 								onClick={() => {
-									this.downloadFile(overDueInf.docDownloadUrl);
+									this.downloadFile(overDueInf.docShowLineUrl);
 								}}
 							>
 								立即下载裁决书

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 17:17:58
+ * @LastEditTime : 2020-02-10 11:25:24
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -76,13 +76,8 @@ export default class login_page extends PureComponent {
 		// 移除cookie
 		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
-		let MessageTagError = store.getMessageTagError();
-		let MessageTagStep = store.getMessageTagStep();
 		sessionStorage.clear();
 		localStorage.clear();
-		// 首页弹窗要用的
-		MessageTagError && store.setMessageTagError(MessageTagError);
-		MessageTagStep && store.setMessageTagStep(MessageTagStep);
 
 		setH5Channel(storeH5Channel);
 
