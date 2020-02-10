@@ -18,14 +18,14 @@ export default class ButtonCustom extends React.PureComponent {
 		iconSource: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.func]),
 		iconStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
 		// icononright: PropTypes.bool,
-		long: PropTypes.bool,
+		long: PropTypes.string,
 		size: PropTypes.oneOf(['xl', 'lg', 'md', 'sm', 'xs']),
 		// outline: PropTypes.bool,
 		outlinecolor: PropTypes.string,
 		outlinewidth: PropTypes.string,
 		outlinetype: PropTypes.oneOf(['solid', 'dotted', 'dashed']),
 		shape: PropTypes.oneOf(['rect', 'radius', 'circle']),
-		borderRadius: PropTypes.string,
+		borderradius: PropTypes.string,
 		disabled: PropTypes.bool,
 		// loading: PropTypes.bool,
 		loadingsize: PropTypes.oneOf(['xl', 'lg', 'md', 'sm', 'xs']),
@@ -39,7 +39,7 @@ export default class ButtonCustom extends React.PureComponent {
 		disabled: false,
 		type: 'yellow',
 		size: 'xl',
-		long: true,
+		long: 'true',
 		// loading: false,
 		loadingsize: 'xl',
 		// icononright: false,
@@ -48,7 +48,7 @@ export default class ButtonCustom extends React.PureComponent {
 		outlinewidth: '1px',
 		outlinetype: 'solid',
 		shape: 'circle',
-		borderRadius: '0.1rem',
+		borderradius: '0.1rem',
 		children: '去申请',
 		interval: 1600,
 		onClick: () => {}
@@ -95,7 +95,7 @@ export default class ButtonCustom extends React.PureComponent {
 		return [
 			classNM.sxp_btn,
 			className,
-			long ? classNM.sxp_btn_long : '',
+			long === 'true' ? classNM.sxp_btn_long : '',
 			classNM[`sxp_btn_${size}`],
 			classNM[`sxp_btn_${type}`],
 			classNM[`sxp_btn_${shape}`]
@@ -108,7 +108,7 @@ export default class ButtonCustom extends React.PureComponent {
 			color,
 			backgroundcolor,
 			shape,
-			borderRadius,
+			borderradius,
 			outline,
 			outlinewidth,
 			outlinetype,
@@ -121,8 +121,8 @@ export default class ButtonCustom extends React.PureComponent {
 		if (backgroundcolor) {
 			btnStyle.backgroundColor = backgroundcolor;
 		}
-		if (shape === 'radius' && borderRadius) {
-			btnStyle.borderRadius = borderRadius;
+		if (shape === 'radius' && borderradius) {
+			btnStyle.borderradius = borderradius;
 		}
 		if (outline) {
 			btnStyle.border = `${outlinewidth} ${outlinetype} ${outlinecolor}`;
@@ -132,7 +132,19 @@ export default class ButtonCustom extends React.PureComponent {
 	};
 
 	render() {
-		let { icononright, children, ...restProps } = this.props;
+		let {
+			style,
+			className,
+			type,
+			long,
+			size,
+			shape,
+			borderradius,
+			icononright,
+			children,
+			onClick,
+			...restProps
+		} = this.props;
 		return (
 			<button
 				onClick={(event) => this.handleClick(event)}

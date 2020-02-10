@@ -233,7 +233,7 @@ export default class ActivityEntry extends React.PureComponent {
 			<ButtonCustom
 				size="lg"
 				className={classNM.myBtn}
-				long={false}
+				long="false"
 				style={this.buildBtnStyle()}
 				onClick={handleClick}
 			>
