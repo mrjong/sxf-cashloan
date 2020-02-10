@@ -77,7 +77,7 @@ export default class withdraw_page extends PureComponent {
 			return [];
 		}
 		if (pIndex === 1) {
-			SXFToast.loading('数据加载中...', 10000);
+			SXFToast.loading('加载中...', 10000);
 		}
 
 		let data = await this.props.$fetch

@@ -223,7 +223,7 @@ export default class bind_save_page extends PureComponent {
 	};
 	// 绑卡之前进行校验
 	checkCard = (values) => {
-		this.props.toast.loading('', 10);
+		this.props.toast.loading('加载中...', 10);
 		const factCardNo = values.valueInputCarNumber.replace(/\s*/g, '');
 		this.props.$fetch.post(bank_card_bin, { cardNoCpt: base64Encode(factCardNo) }).then(
 			(result) => {
@@ -322,7 +322,7 @@ export default class bind_save_page extends PureComponent {
 			this.props.toast.info('请选择发卡行');
 			return;
 		}
-		this.props.toast.loading('', 10);
+		this.props.toast.loading('加载中...', 10);
 		//获取卡号对应的银行代号
 		this.props.$fetch
 			.post(bank_card_bin, { cardNoCpt: base64Encode(formData.valueInputCarNumber) })

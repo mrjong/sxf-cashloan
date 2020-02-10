@@ -138,7 +138,7 @@ export default class real_name_page extends Component {
 		formData.append('image', blob);
 
 		formData.append('ocrType', '2');
-		Toast.loading('数据加载中...', 10);
+		Toast.loading('加载中...', 10);
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/2`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((result) => {
@@ -198,7 +198,7 @@ export default class real_name_page extends Component {
 		// });
 
 		formData.append('ocrType', '2');
-		Toast.loading('数据加载中...', 10);
+		Toast.loading('加载中...', 10);
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/3`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((res) => {
