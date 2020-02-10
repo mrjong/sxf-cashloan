@@ -149,8 +149,8 @@ export const getNextStatus = ({
 					}
 					break;
 				case 'AUTH002':
-					$props.$fetch.post(`${auth_getTencentFaceData}`, {}).then((result) => {
-						if (result.msgCode === '000000' && result.data && result.data.h5Url) {
+					$props.$fetch.get(`${auth_getTencentFaceData}`, {}).then((result) => {
+						if (result.code === '000000' && result.data && result.data.h5Url) {
 							Toast.loading('数据加载中', 10);
 							window.location.href = result.data.h5Url;
 						} else {
