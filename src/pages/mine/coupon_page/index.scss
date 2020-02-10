@@ -65,7 +65,6 @@
 .box {
 	position: relative;
 	margin: 20px 30px;
-	height: 200px;
 	background-color: #fff;
 	&:first-child {
 		margin-top: 30px;
@@ -106,19 +105,6 @@
 				font-size: 108px;
 			}
 		}
-
-		&::after {
-			display: block;
-			content: '';
-			height: 30px;
-			width: 30px;
-			border-radius: 50%;
-			background-color: #f5f5f5;
-			position: absolute;
-			left: 0;
-			top: 50%;
-			transform: translate(-60%, -50%);
-		}
 	}
 	.money {
 		font-size: 64px;
@@ -127,12 +113,10 @@
 		font-weight: 500;
 	}
 	.rightBox {
-		width: 475px;
-		height: 200px;
+		position: relative;
 		display: table-cell;
 		line-height: 1.5;
 		letter-spacing: 1px;
-		padding: 36px 25px;
 		font-size: 24px;
 		margin-left: 25px;
 		color: #6c6c6c;
@@ -144,18 +128,6 @@
 		}
 		.textGray {
 			color: #ddd;
-		}
-		&::after {
-			display: block;
-			content: '';
-			height: 30px;
-			width: 30px;
-			border-radius: 50%;
-			background-color: #f5f5f5;
-			position: absolute;
-			right: 0;
-			top: 50%;
-			transform: translate(60%, -50%);
 		}
 	}
 	.icon_status {
@@ -199,19 +171,73 @@
 	}
 }
 .box_default {
-  padding: 5px;
 	.leftBoxLineBox {
 		border-right: 1px dashed #eee;
 		background: #ddd;
+	}
+}
+.box_top {
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	position: relative;
+	&::after {
+		display: block;
+		content: '';
+		height: 30px;
+		width: 30px;
+		border-radius: 50%;
+		background-color: #f5f5f5;
+		position: absolute;
+		left: 0;
+		bottom: -30px;
+		transform: translate(-50%, -50%);
+	}
+	&::before {
+		display: block;
+		content: '';
+		height: 30px;
+		width: 30px;
+		border-radius: 50%;
+		background-color: #f5f5f5;
+		position: absolute;
+		right: 0;
+		bottom: -30px;
+		transform: translate(50%, -50%);
+	}
+}
+.descBox {
+	position: relative;
+	color: $colorInactiveColor;
+	font-size: 24px;
+	padding: 15px 30px;
+	&::before {
+		@include setTopLine(#f0f1f5);
+		left: 0;
+	}
+	i.topArrow {
+    @include setArrow(top, 12px, #868E9E, 1px);
+    margin-left: 10px;
+  }
+  i.bottomArrow {
+    @include setArrow(bottom, 12px, #868E9E, 1px);
+    margin-left: 10px;
+	}
+	.desctitle {
+		margin-bottom: 10px;
 	}
 }
 .box_coupon {
 	background-color: #fff;
 }
 .box_active {
-  padding: 5px;
 	.leftBoxLineBox {
 		border-right: 1px dashed #eee;
+		span {
+			color: $colorTipRed;
+			font-size: 30px;
+			font-weight: normal;
+		}
 		// background: linear-gradient(135deg, #ffc601, #ff7b31);
 	}
 }
@@ -251,17 +277,17 @@
 }
 .goUse {
 	position: absolute;
-	right: 45px;
+	right: 0px;
 	top: 50%;
 	z-index: 10;
 	font-weight: 800;
 	transform: translate(0%, -50%);
-	color: #ffba0a;
+	color: #fff;
 	font-family: 'PingFangSC';
-	border: 1px solid #ffba0a;
 	border-radius: 25px;
 	padding: 10px 18px;
-	background: #fff;
+	border: none;
+	background: #fe6666;
 	cursor: pointer;
 	&:active {
 		opacity: 0.6;

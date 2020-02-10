@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:18:59
+ * @LastEditTime : 2020-02-10 18:59:43
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
-import { isWXOpen, getDeviceType, getMoxieData, dateDiffer } from 'utils';
+import { isWXOpen, dateDiffer } from 'utils';
 import {
 	index_queryIndexInfo,
 	index_queryBannerList,
@@ -40,42 +40,8 @@ import { setBackGround } from 'utils/background';
 import { TFDLogin } from 'utils/getTongFuDun';
 // console.log(aa)
 import { MsgTip, HomeModal, AddCards, ActivityEntry, SwitchCard, Welfare } from './components';
-const API = {
-	BANNER: '/my/getBannerList', // 0101-banner
-	qryPerdRate: '/bill/prod',
-	USR_INDEX_INFO: '/index/usrIndexInfo', // 0103-首页信息查询接口
-	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
-	CHECK_CARD: '/my/chkCard', // 0410-是否绑定了银行卡
-	AGENT_REPAY_CHECK: '/bill/agentRepayCheck', // 复借风控校验接口
-	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
-	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	checkJoin: '/jjp/checkJoin', // 用户是否参与过拒就赔
-	usrCashIndexInfo: '/index/usrCashIndexInfo', // 现金分期首页接口
-	indexshowType: '/index/showType', // 首页现金分期基本信息查询接口
-	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	CHECK_CARD_AUTH: '/auth/checkCardAuth/', // 查询爬取进度
-	cashShowSwitch: '/my/switchFlag/cashShowSwitchFlag', // 是否渲染现金分期
-	checkKoubei: '/activeConfig/userCheck', //是否参与口碑活动,及新老用户区分
-	couponTest: '/activeConfig/couponTest', //签约测试
-	mxCheckJoin: '/activeConfig/checkJoin', // 免息活动检查是否参与
-	couponNotify: '/activeConfig/couponNotify', // 免息活动检查是否参与
-	bonusSts: 'activeConfig/hundred/sts', // 百元活动用户状态查询
-	couponRedDot: '/index/couponRedDot', // 优惠券红点
-	actiPopupSwitch: '/my/switchFlag/ACTIVITY_POPUP_SWITCH', // 还款优惠劵测试弹框开关
-	popupList: '/popup/list', // 首页弹框
-	thirdCheck: '/activeConfig/thirdCheck', // 三陪一返,首页用户获取优惠券校验 01情况下首页弹框
-	queryRepayReward: '/activeConfig/queryRepayReward'
-};
-let token = '';
-let tokenFromStorage = '';
-
-let timer;
-let timerOut;
 
 //隔5秒调取接口相关变量
-let timerPercent; //计时器
 
 @createForm()
 @fetch.inject()
@@ -98,15 +64,6 @@ export default class home_page extends PureComponent {
 		this.state = {
 			bannerList: [],
 			usrIndexInfo: '',
-			haselescard: 'true',
-			percentSatus: '',
-			percent: 0,
-			showToast: false,
-			modalType: '',
-			modalBtnFlag: false,
-			// handleMoxie: false, // 触发跳转魔蝎方法
-			percentData: 0,
-			showDiv: '',
 			modal_left: false,
 			activeTag: '',
 			perdRateList: [],
@@ -123,16 +80,11 @@ export default class home_page extends PureComponent {
 			statusSecond: '', //每隔5秒状态
 			bizId: '', // 跳转到银行列表的autId
 			userMaxAmt: '', // 最高可申请还款金(元)
-			showFeedbackModal: false,
-			isShowWelfareModal: false, // 福利专区弹框显示
 			welfareModalInf: [] // 首页弹框信息
 		};
 	}
 
 	componentWillMount() {
-		// 获取token
-		token = Cookie.get('FIN-HD-AUTH-TOKEN');
-		tokenFromStorage = store.getToken();
 		const { userInfo } = this.props;
 		// 已经登录
 		if (userInfo && userInfo.tokenId) {
@@ -140,10 +92,6 @@ export default class home_page extends PureComponent {
 			this.index_queryIndexInfo();
 			// 获取福利专区/新手活动信息
 			this.index_queryWelfareList();
-			// 上报我已阅读(针对首次未登录用户上报)
-			// this.readPrivacyProtocol();
-			// 活动弹窗列表
-			// this.msg_popup_list();
 		} else {
 			// this.initData();
 		}
@@ -161,19 +109,6 @@ export default class home_page extends PureComponent {
 	componentWillUnmount() {
 		// 离开首页的时候 将 是否打开过底部弹框标志恢复
 		store.removeHadShowModal();
-		if (timer) {
-			clearInterval(timer);
-		}
-		if (timerOut) {
-			clearTimeout(timerOut);
-		}
-		if (timerPercent) {
-			clearInterval(timerPercent);
-		}
-		// 关闭弹框
-		this.setState({
-			isShowWelfareModal: false
-		});
 	}
 
 	/**
@@ -393,54 +328,6 @@ export default class home_page extends PureComponent {
 		}
 	};
 
-	// 请求信用卡数量
-	requestCredCardCount = (type, callback) => {
-		// 爬取卡进度页特殊处理
-		const { bizId } = this.state;
-		this.props.$fetch
-			.post(API.CRED_CARD_COUNT)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000') {
-					if (type && type === 'progress') {
-						if (result.data.count > 1) {
-							store.setToggleMoxieCard(true);
-							this.props.history.replace(`/mine/credit_list_page?autId=${bizId}`);
-						} else {
-							this.props.history.replace('/home/loan_repay_confirm_page');
-						}
-					} else if (type && type === 'cbFn') {
-						if (result.data.count > 1) {
-							store.setToggleMoxieCard(true);
-							this.props.history.replace(`/mine/credit_list_page?autId=${bizId}`);
-						} else {
-							callback && callback();
-						}
-					} else {
-						this.repayForOtherBank(result.data.count);
-					}
-				} else {
-					this.props.toast.info(result.message);
-				}
-			})
-			.catch((err) => {
-				this.props.toast.info(err.message);
-			});
-	};
-
-	// 代还其他信用卡点击事件
-	repayForOtherBank = (count) => {
-		if (count > 1) {
-			store.setToggleMoxieCard(true);
-			const { usrIndexInfo } = this.state;
-			this.props.history.push({
-				pathname: '/mine/credit_list_page',
-				search: `?autId=${usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId}`
-			});
-		} else {
-			this.goToNewMoXie();
-		}
-	};
-
 	// 智能按钮点击事件
 	handleSmartClick = () => {
 		const { homeData } = this.state;
@@ -572,122 +459,8 @@ export default class home_page extends PureComponent {
 		}
 	};
 
-	// 检查是否需要人审
-	getExamineSts = () => {
-		this.props.$fetch.post(`${API.creditSts}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState(
-					{
-						isNeedExamine: res.data && res.data.flag === '01',
-						examineData: {
-							creadNo: res.data && res.data.creadNo
-						}
-					},
-					() => {
-						this.props.history.push({
-							pathname: '/home/loan_person_succ_page',
-							search: `?creadNo=${this.state.examineData.creadNo}`
-						});
-					}
-				);
-			} else {
-				this.props.toast.info(res.message);
-			}
-		});
-	};
-
-	jumpToUrl = () => {
-		const { usrIndexInfo } = this.state;
-		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
-		if (cardBillSts === '00') {
-			this.requestCredCardCount('cbFn', () => {
-				this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
-					// 跳银行登录页面
-					getMoxieData({
-						$props: this.props,
-						bankCode: bankNo,
-						goMoxieBankList: this.goToNewMoXie
-					});
-				});
-			});
-			return;
-		} else if (cardBillSts === '02') {
-			this.requestCredCardCount('cbFn', () => {
-				this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-					// 跳银行登录页面
-					getMoxieData({
-						$props: this.props,
-						bankCode: bankNo,
-						goMoxieBankList: this.goToNewMoXie
-					});
-				});
-			});
-			return;
-		}
-		this.requestCredCardCount('cbFn', () => {
-			this.props.history.push('/home/loan_repay_confirm_page');
-		});
-	};
-
-	// 复借风控校验接口
-	repayCheck = () => {
-		const osType = getDeviceType();
-		const params = {
-			osTyp: osType
-		};
-		this.props.$fetch
-			.post(API.AGENT_REPAY_CHECK, params)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000') {
-					this.requestBindCardState();
-				} else {
-					// 失败的话刷新首页
-					this.props.toast.info(result.message, 2, () => {
-						this.queryUsrIndexInfo();
-					});
-				}
-				// })
-			})
-			.catch(() => {
-				clearInterval(timer);
-				clearTimeout(timerOut);
-				this.setState(
-					{
-						percent: 100
-					},
-					() => {
-						this.setState({
-							visibleLoading: false
-						});
-					}
-				);
-			});
-	};
-
-	// // 获取 banner 列表
-	// requestGetBannerList = () => {
-	// 	const params = {
-	// 		type: 1,
-	// 		client: 'wap_out'
-	// 	};
-	// 	this.props.$fetch.post(API.BANNER, params, { hideLoading: true }).then((result) => {
-	// 		if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-	// 			const bannerData = result.data.map((item) => ({
-	// 				src: item.ossUrl ? item.ossUrl : `data:image/png;base64,${item.picUrl}`,
-	// 				url: item.gotoFlag !== 0 ? item.gotoUrl : '',
-	// 				title: item.title
-	// 			}));
-	// 			const inFifteenMinutes = new Date(new Date().getTime() + 1000 * 60 * 2);
-	// 			Cookie.set('bannerAble', true, { expires: inFifteenMinutes });
-	// 			store.setBannerData(bannerData);
-	// 			this.setState({
-	// 				bannerList: bannerData
-	// 			});
-	// 		}
-	// 	});
-	// };
-
 	handleApply = () => {
+		// TODONEW
 		if (this.state.showDiv === '50000') {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
@@ -705,76 +478,11 @@ export default class home_page extends PureComponent {
 			}
 		});
 	};
-	// 获取首页信息
-	queryUsrIndexInfo = async () => {
-		this.props.$fetch.post(API.USR_INDEX_INFO).then(async (result) => {
-			// const result = {
-			// 	msgCode: 'PTM0000',
-			// 	msgInfo: '',
-			// 	data: mockData.LN0011
-			// };
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-				if (result.data.indexSts === 'LN0002') {
-					store.getAutId() && store.setAutId2(store.getAutId());
-				}
-				// 从进度页面返回或者卡是爬取中不删除AutId
-				if (!store.getAutId2() || result.data.indexSts !== 'LN0002') {
-					store.removeAutId();
-				}
-				this.setState(
-					{
-						usrIndexInfo: result.data.indexData
-							? result.data
-							: Object.assign({}, result.data, { indexData: {} })
-					},
-					() => {
-						if (
-							result.data.indexSts === 'LN0001' ||
-							result.data.indexSts === 'LN0003' ||
-							result.data.indexSts === 'LN0010'
-						) {
-							this.getPercent();
-						}
-						if (result.data.indexSts === 'LN0006' || result.data.indexSts === 'LN0008') {
-							let maxAmtArr = [];
-							maxAmtArr =
-								(result.data &&
-									result.data.indexData &&
-									result.data.indexData.prodList &&
-									result.data.indexData.prodList.length &&
-									result.data.indexData.prodList.map((item) => {
-										return item.maxAmt;
-									})) ||
-								[];
-							this.setState({
-								userMaxAmt: maxAmtArr.length ? Math.max(...maxAmtArr) : ''
-							});
-						}
-					}
-				);
-				if (store.getBonusActivity()) {
-					store.removeBonusActivity();
-					this.setState({
-						isShowActivityModal: true,
-						modalType: 'getBonus'
-					});
-				} else {
-					this.isInvoking_bonus();
-				}
-			} else {
-				this.props.toast.info(result.message);
-			}
-		});
-	};
-	// 去登陆
-	handleNeedLogin = () => {
-		if (!token || !tokenFromStorage) {
-			this.props.toast.info('请先登录', 2, () => {
-				this.props.history.push({ pathname: '/login', state: { isAllowBack: true } });
-			});
-		}
-	};
-
+	/**
+	 * @description: 现金分期介绍
+	 * @param {type}
+	 * @return:
+	 */
 	handleGoPlusDetail = () => {
 		this.props.history.push('/others/fenqi_landing');
 	};
@@ -1039,29 +747,6 @@ export default class home_page extends PureComponent {
 		}
 		return disPlayData;
 	}
-	// 点击不同进度状态，跳转页面
-	handleProgressApply = (sts) => {
-		const mainAutId = store.getAutId() ? store.getAutId() : '';
-		buriedPointEvent(home.billImport);
-		// ，01：爬取中，02：爬取成功，03：爬取失败
-		switch (sts) {
-			case '00':
-			case '01':
-				store.setAutId(mainAutId);
-				this.props.history.push('/home/crawl_progress_page');
-				break;
-			case '02':
-				store.removeAutId();
-				this.requestCredCardCount('progress');
-				break;
-			case '03':
-				store.removeAutId();
-				this.props.history.push('/home/crawl_fail_page');
-				break;
-			default:
-				break;
-		}
-	};
 
 	componentsAddCards = () => {
 		const { usrIndexInfo } = this.state;
@@ -1074,6 +759,7 @@ export default class home_page extends PureComponent {
 						handleClick={() => {
 							// 埋点-首页-点击代还其他信用卡
 							buriedPointEvent(home.repayOtherCredit);
+							//TODONEW
 							this.goToNewMoXie();
 						}}
 					/>
@@ -1083,128 +769,6 @@ export default class home_page extends PureComponent {
 				break;
 		}
 		return componentsAddCards;
-	};
-
-	// 判断是否参与过与使用过100元利息红包限时领活动
-	isInvoking_bonus = async () => {
-		let mxData = await this.props.$fetch.get(API.bonusSts);
-		if (mxData && mxData.msgCode === 'PTM0000') {
-			if (mxData.data && mxData.data.sts === '00' && !store.getShowActivityModal()) {
-				this.setState(
-					{
-						isShowActivityModal: true,
-						modalType: 'joinBonus'
-					},
-					() => {
-						store.setShowActivityModal(true);
-					}
-				);
-			} else if (mxData.data && mxData.data.sts === '01' && !store.getShowActivityModal3()) {
-				this.setState(
-					{
-						isShowActivityModal: true,
-						modalType: 'notUseBonus'
-					},
-					() => {
-						store.setShowActivityModal3(true);
-					}
-				);
-			}
-		}
-	};
-	/**
-	 * 首页弹框是否显示
-	 * @param 无
-	 * @return {void}
-	 */
-	requestGetHomeModal = () => {
-		// site 0:首页
-		this.props.$fetch.get(`${API.popupList}/0`, {}, { hideLoading: true }).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data && result.data.length) {
-				result.data.map((item) => (item.hadShow = false));
-				this.setState({
-					isShowWelfareModal: true,
-					welfareModalInf: result.data
-					// welfareModalInf: result.data[0],
-				});
-			} else {
-				this.setState({
-					isShowWelfareModal: false,
-					welfareModalInf: []
-				});
-			}
-		});
-	};
-
-	/**
-	 * 点击按钮跳转落地页
-	 * @param 无
-	 * @return {void}
-	 */
-	jumpLand = (modalInf) => {
-		// this.closeWelfareModal();
-		if (modalInf) {
-			const { welfareModalInf } = this.state;
-			let filterModalInf = welfareModalInf.filter((ele) => {
-				return ele.hadShow === false && ele.code === modalInf.code;
-			});
-			if (filterModalInf[0].skipType === '1') {
-				this.setState({
-					isShowWelfareModal: !this.state.isShowWelfareModal
-				});
-				window.location.href = filterModalInf[0].skip;
-			} else if (filterModalInf[0].skipType === '2') {
-				// skip 0 代表跳转首页 1代码跳转优惠券列表页面
-				if (filterModalInf[0].skip === '1') {
-					this.setState({
-						isShowWelfareModal: !this.state.isShowWelfareModal
-					});
-					this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
-				} else {
-					// 暂时不作处理 只关闭弹框
-					this.closeWelfareModal(modalInf);
-				}
-			} else {
-				// 无跳转
-				// 暂时不作处理 只关闭弹框
-				this.closeWelfareModal(modalInf);
-			}
-		}
-	};
-
-	/**
-	 * 关闭首页弹框
-	 * @param 无
-	 * @return {void}
-	 */
-	closeWelfareModal = (modalInf) => {
-		const { welfareModalInf } = this.state;
-		welfareModalInf.length &&
-			welfareModalInf.map((item) => {
-				if (modalInf && item.code === modalInf.code) {
-					return (item.hadShow = true);
-				}
-			});
-		this.setState(
-			{
-				isShowWelfareModal: !this.state.isShowWelfareModal,
-				welfareModalInf
-			},
-			() => {
-				let filterModalInf =
-					welfareModalInf.length &&
-					welfareModalInf.filter((ele) => {
-						return ele.hadShow === false;
-					});
-				if (filterModalInf.length) {
-					setTimeout(() => {
-						this.setState({
-							isShowWelfareModal: !this.state.isShowWelfareModal
-						});
-					}, 200);
-				}
-			}
-		);
 	};
 
 	render() {

@@ -345,7 +345,7 @@ export default class coupon_page extends PureComponent {
 					}
 				>
 					<div className={style.box_coupon}>
-						<div>
+						<div className={style.box_top}>
 							<div className={style.leftBox}>
 								<div className={style.leftBoxLineBox}>
 									{obj && obj.coupCategory === '00' ? (
@@ -398,14 +398,7 @@ export default class coupon_page extends PureComponent {
 										}
 									/>
 								)}
-								<button
-									className={style.goUse}
-									onClick={() => {
-										this['HomeBtn'].getData();
-									}}
-								>
-									去使用
-								</button>
+								<button className={style.goUse}>去使用</button>
 								<div
 									className={
 										obj.useSts === '02' || obj.useSts === '03'
@@ -458,9 +451,9 @@ export default class coupon_page extends PureComponent {
 								</div>
 							</div>
 						</div>
-						<div>
-							<div>
-								查看详情<i></i>
+						<div className={style.descBox}>
+							<div className={style.desctitle}>
+								查看详情<i className={style.topArrow}></i>
 							</div>
 							<div>
 								本券发放于新手免洗活动，自动领取成功后，有效期7天本券发放于免息活动，自领取本券成功后。
