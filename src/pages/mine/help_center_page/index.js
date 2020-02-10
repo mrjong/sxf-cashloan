@@ -244,7 +244,7 @@ export default class help_center_page extends PureComponent {
 						<ButtonCustom
 							onClick={this.goOnline}
 							className={styles.online_btn}
-							iconSource={Image.icon.service_ico}
+							iconSource={Image.icon.customer_service}
 						>
 							在线咨询
 						</ButtonCustom>
