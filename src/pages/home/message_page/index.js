@@ -130,7 +130,7 @@ export default class message_page extends PureComponent {
 	};
 	// 单个请求读取
 	msgOneRead = (obj) => {
-		if (obj.sts === '0') {
+		if (obj.sts !== '1') {
 			this.props.$fetch.post(msg_news_read, { uuid: obj.uuid }, { hideToast: true }).then((res) => {
 				if (res.code === '000000') {
 					//   this.msgCount(obj)
@@ -149,7 +149,7 @@ export default class message_page extends PureComponent {
 		let rData = this.state.rData;
 		rData.forEach((item, index) => {
 			if (item.uuid === obj.uuid) {
-				rData[index].sts = 1;
+				rData[index].sts = '1';
 			}
 		});
 		let backData = {
@@ -300,6 +300,23 @@ export default class message_page extends PureComponent {
 			}
 		);
 	};
+	// 单条消息读取
+	requestMsgReadOne = (obj) => {
+		this.props.$fetch.post(msg_news_read, { uuid: obj.uuid }, { hideLoading: true }).then((res) => {
+			if (res.code === '000000') {
+				this.setState({
+					msgReadedList: this.state.msgReadedList.concat([obj.uuid])
+				});
+				this.goToMsgDetail(obj);
+			} else {
+				Toast.show({
+					message: res.message,
+					code: res.code
+				});
+			}
+		});
+	};
+
 	render() {
 		const { msgCount } = this.props;
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
@@ -342,6 +359,7 @@ export default class message_page extends PureComponent {
 				</div>
 			);
 		};
+
 		const item = (classN) => {
 			if (this.state.rData && this.state.rData.length > 0) {
 				return (

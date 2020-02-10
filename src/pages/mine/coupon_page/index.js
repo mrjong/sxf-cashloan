@@ -317,7 +317,6 @@ export default class coupon_page extends PureComponent {
 		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
 	};
 	render() {
-		const { HomeBtnShow } = this.state;
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
 		const row = (rowData, sectionID, rowID) => {
@@ -342,61 +341,60 @@ export default class coupon_page extends PureComponent {
 							: [style.box, style.box_default].join(' ')
 					}
 				>
-					<div className={style.leftBox}>
-						{obj && obj.coupCategory === '00' ? (
-							<span>
-								￥<i className={style.money}>{obj && obj.coupVal}</i>
-							</span>
-						) : obj && obj.coupCategory === '03' ? (
-							<span className={style.couponType2}>免息券</span>
-						) : obj && obj.coupCategory === '01' ? (
-							<span className={style.couponType3}>
-								<i>{obj && obj.coupVal}</i>折
-							</span>
-						) : obj && obj.coupCategory === '02' ? (
-							<span className={style.couponType4}>
-								<i>免</i>
-								<i className={style.dayNum}>{obj && obj.coupVal}</i>
-								<br />
-								<span className={style.littleFont}>天息费</span>
-							</span>
-						) : null}
-					</div>
-					<div
-						className={
-							receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0
-								? `${style.rightBox} ${style.rightLittleBox}`
-								: style.rightBox
-						}
-					>
-						{receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ? (
-							<i
+					<div className={style.box_coupon}>
+						<div>
+							<div className={style.leftBox}>
+								<div className className={style.leftBoxLineBox}>
+									{obj && obj.coupCategory === '00' ? (
+										<span>
+											<i className={style.money}>{obj && obj.coupVal}</i>元
+										</span>
+									) : obj && obj.coupCategory === '03' ? (
+										<span className={style.couponType2}>免息</span>
+									) : obj && obj.coupCategory === '01' ? (
+										<span className={style.couponType3}>
+											<i>{obj && obj.coupVal}</i>折
+										</span>
+									) : obj && obj.coupCategory === '02' ? (
+										<span className={style.couponType4}>
+											<i>免</i>
+											<i className={style.dayNum}>{obj && obj.coupVal}</i>
+											<br />
+											<span className={style.littleFont}>天息费</span>
+										</span>
+									) : null}
+								</div>
+							</div>
+							<div
 								className={
-									obj && obj.usrCoupNo === this.state.couponSelected
-										? [style.icon_select_status, style.icon_select].join(' ')
-										: [style.icon_select_status, style.icon_select_not].join(' ')
+									receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0
+										? `${style.rightBox} ${style.rightLittleBox}`
+										: style.rightBox
 								}
-							/>
-						) : receiveData &&
-						  (receiveData.billNo || receiveData.price) &&
-						  this.state.msgType === 1 ? null : (
-							<i
-								className={
-									obj && obj.useSts === '00'
-										? ''
-										: obj && obj.useSts === '01'
-										? [style.icon_status, style.icon_useing].join(' ')
-										: obj && obj.useSts === '02'
-										? [style.icon_status, style.icon_used].join(' ')
-										: [style.icon_status, style.icon_use_over].join(' ')
-								}
-							/>
-						)}
-						{receiveData &&
-							receiveData.entryFrom &&
-							receiveData.entryFrom === 'mine' &&
-							this.state.msgType === 0 &&
-							HomeBtnShow && (
+							>
+								{receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ? (
+									<i
+										className={
+											obj && obj.usrCoupNo === this.state.couponSelected
+												? [style.icon_select_status, style.icon_select].join(' ')
+												: [style.icon_select_status, style.icon_select_not].join(' ')
+										}
+									/>
+								) : receiveData &&
+								  (receiveData.billNo || receiveData.price) &&
+								  this.state.msgType === 1 ? null : (
+									<i
+										className={
+											obj && obj.useSts === '00'
+												? ''
+												: obj && obj.useSts === '01'
+												? [style.icon_status, style.icon_useing].join(' ')
+												: obj && obj.useSts === '02'
+												? [style.icon_status, style.icon_used].join(' ')
+												: [style.icon_status, style.icon_use_over].join(' ')
+										}
+									/>
+								)}
 								<button
 									className={style.goUse}
 									onClick={() => {
@@ -405,56 +403,65 @@ export default class coupon_page extends PureComponent {
 								>
 									去使用
 								</button>
-							)}
-						<div
-							className={
-								obj.useSts === '02' || obj.useSts === '03'
-									? `${style.title} ${style.ellipsis} ${style.textGray}`
-									: `${style.title} ${style.ellipsis}`
-							}
-						>
-							{obj && obj.coupNm}
-						</div>
-						<div
-							className={
-								obj.useSts === '02' || obj.useSts === '03'
-									? `${style.ellipsis} ${style.textGray}`
-									: style.ellipsis
-							}
-						>
-							{(obj && obj.coupDesc) || <div className={style.none}>_</div>}
-						</div>
-						<div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>
-							{this.state.msgType === 0 &&
-							receiveData &&
-							receiveData.entryFrom &&
-							receiveData.entryFrom === 'mine' ? (
-								<span>
-									有效期还剩{' '}
-									{obj && obj.validEndTm && (
-										<CountDown
-											endTime={this.getTime(obj.validEndTm)}
-											timeOver={() => {
-												let now = +new Date();
-												let thisTime = +new Date(this.getTime(obj.validEndTm));
-												if (now > thisTime) {
-													return;
-												}
-												this.onRefresh();
-											}}
-											type="day"
-										/>
+								<div
+									className={
+										obj.useSts === '02' || obj.useSts === '03'
+											? `${style.title} ${style.ellipsis} ${style.textGray}`
+											: `${style.title} ${style.ellipsis}`
+									}
+								>
+									{obj && obj.coupNm}
+								</div>
+								<div
+									className={
+										obj.useSts === '02' || obj.useSts === '03'
+											? `${style.ellipsis} ${style.textGray}`
+											: style.ellipsis
+									}
+								>
+									{(obj && obj.coupDesc) || <div className={style.none}>_</div>}
+								</div>
+								<div className={obj.useSts === '02' || obj.useSts === '03' ? `${style.textGray}` : ''}>
+									{this.state.msgType === 0 &&
+									receiveData &&
+									receiveData.entryFrom &&
+									receiveData.entryFrom === 'mine' ? (
+										<span>
+											有效期还剩{' '}
+											{obj && obj.validEndTm && (
+												<CountDown
+													endTime={this.getTime(obj.validEndTm)}
+													timeOver={() => {
+														let now = +new Date();
+														let thisTime = +new Date(this.getTime(obj.validEndTm));
+														if (now > thisTime) {
+															return;
+														}
+														this.onRefresh();
+													}}
+													type="day"
+												/>
+											)}
+										</span>
+									) : (
+										<span>
+											有效期至：{' '}
+											{obj &&
+												obj.validEndTm &&
+												obj.validEndTm.length &&
+												dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}
+										</span>
 									)}
-								</span>
-							) : (
-								<span>
-									有效期至：{' '}
-									{obj &&
-										obj.validEndTm &&
-										obj.validEndTm.length &&
-										dayjs(obj.validEndTm.substring(0, obj.validEndTm.length - 4)).format('YYYY-MM-DD')}
-								</span>
-							)}
+								</div>
+							</div>
+						</div>
+						<div>
+							<div>
+								查看详情<i></i>
+							</div>
+							<div>
+								本券发放于新手免洗活动，自动领取成功后，有效期7天本券发放于免息活动，自领取本券成功后。
+							</div>
 						</div>
 					</div>
 				</div>
