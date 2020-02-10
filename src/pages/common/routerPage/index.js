@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:15:11
+ * @LastEditTime : 2020-02-10 15:33:18
  */
 import React, { PureComponent } from 'react';
 import Routers from 'pages/router';
@@ -12,24 +12,16 @@ import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-
-import { commonClearState, setOverDueModalInfo, setHomeModalAction } from 'reduxes/actions/commonActions';
-import { showRedDot, setMsgCount } from 'reduxes/actions/specialActions';
-import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { changeHistoryState, pagesIgnore } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
-import { Provider } from './context';
 const { PROJECT_ENV } = process.env;
 @fetch.inject()
-@connect(
-	(state) => ({
-		userInfo: state.staticState.userInfo,
-		homeData: state.commonState.homeData
-	}),
-	{ showRedDot, commonClearState, setUserInfoAction, setOverDueModalInfo, setMsgCount, setHomeModalAction }
-)
+@connect((state) => ({
+	userInfo: state.staticState.userInfo,
+	homeData: state.commonState.homeData
+}))
 export default class router_Page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -195,11 +187,9 @@ export default class router_Page extends PureComponent {
 		return showPage ? (
 			<div className="application_view">
 				<div className="application_page">
-					<Provider value={{ footerTipIcon: this.state.footerTipIcon }}>
-						{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
-						{footerHide ? null : <Footer footerProps={route} />}
-						<div className="application_content">{component}</div>
-					</Provider>
+					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
+					{footerHide ? null : <Footer footerProps={route} />}
+					<div className="application_content">{component}</div>
 				</div>
 			</div>
 		) : null;
