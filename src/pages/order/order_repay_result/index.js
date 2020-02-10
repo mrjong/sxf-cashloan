@@ -3,24 +3,23 @@ import styles from './index.scss';
 import { Modal } from 'antd-mobile';
 import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
-import success_icon from './img/success_icon.png';
 import circle_icon from './img/circle_icon.png';
 import reward_loading from './img/reward_loading.png';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order, activity } from 'utils/analytinsType';
+import { repay_payNotify, repay_queryCashRegisterDetail } from 'fetch/api.js';
+import Images from 'assets/image';
 
 const API = {
-	queryPayStatus: '/bill/payNotify',
-	queryRepayReward: '/activeConfig/queryRepayReward',
-	fundPlain: '/fund/plain' // 费率接口
+	queryRepayReward: '/activeConfig/queryRepayReward'
 };
 let timer = null;
 let timer1 = null;
 let isFetching = false;
 @fetch.inject()
-@setBackGround('#F7F8FA')
+@setBackGround('#fff')
 export default class Cashier extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -93,7 +92,8 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	queryRepayReward = () => {
-		const { billDesc, repayPerds, isLastPerd, prodType } = this.props.history.location.state;
+		const { state = {} } = this.props.history.location;
+		const { billDesc, repayPerds, isLastPerd, prodType } = state;
 		this.startRewardLoading();
 		this.props.$fetch
 			.get(API.queryRepayReward, {
@@ -137,9 +137,10 @@ export default class Cashier extends React.PureComponent {
 
 	//查询本期减免金额
 	queryPlain = () => {
-		const { repayOrdNo, ordNo, isSettle, prodType, repayPerds } = this.props.history.location.state;
+		const { state = {} } = this.props.history.location;
+		const { repayOrdNo, ordNo, isSettle, prodType, repayPerds } = state;
 		this.props.$fetch
-			.post(API.fundPlain, {
+			.post(repay_queryCashRegisterDetail, {
 				repayOrdNo,
 				ordNo,
 				isSettle,
@@ -161,12 +162,14 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	queryPayStatus = () => {
-		const { repayOrdNo } = this.props.history.location.state;
+		const { state = {} } = this.props.history.location;
+
+		const { repayOrdNo } = state;
 		isFetching = true;
 		this.props.$fetch
-			.get(API.queryPayStatus + `/${repayOrdNo}`)
+			.get(`${repay_payNotify}/${repayOrdNo}`)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.msgCode === '000000') {
 					isFetching = false;
 					store.removeCouponData();
 
@@ -214,7 +217,9 @@ export default class Cashier extends React.PureComponent {
 	};
 
 	continueRepay = () => {
-		const { repayPerds, billOvduDays } = this.props.history.location.state;
+		const { state = {} } = this.props.history.location;
+
+		const { repayPerds = [], billOvduDays } = state;
 		buriedPointEvent(order.continueRepayBtn, {
 			isOverdue: !!billOvduDays,
 			repayPerds: repayPerds.join(',')
@@ -259,7 +264,8 @@ export default class Cashier extends React.PureComponent {
 			showRewardLoading,
 			percent
 		} = this.state;
-		const { bankName, bankNo, isLastPerd } = this.props.history.location.state;
+		const { state = {} } = this.props.history.location;
+		const { bankName, bankNo, isLastPerd } = state;
 
 		return (
 			<div>
@@ -280,7 +286,7 @@ export default class Cashier extends React.PureComponent {
 						<div>
 							<div className={styles.icon_wrap}>
 								<div className={[styles.success_icon, styles.icon].join(' ')}>
-									<img src={success_icon} />
+									<img src={Images.adorn.success} />
 								</div>
 							</div>
 							<p className={styles.desc}>还款成功</p>
@@ -290,32 +296,39 @@ export default class Cashier extends React.PureComponent {
 					{status === 'timeout' && (
 						<div>
 							<div className={styles.icon_wrap}>
-								<div className={[styles.timeout_icon, styles.icon].join(' ')} />
+								<img
+									className={[styles.timeout_icon, styles.icon].join(' ')}
+									src={Images.adorn.timeout}
+									alt=""
+								/>
 							</div>
-							<p className={styles.desc}>还款超时，请关注账单详情，避免逾期</p>
+							<p className={styles.desc}>处理中</p>
+							<p className={styles.desc_tip}>您正常还款，维护了自身信用</p>
 						</div>
 					)}
+
 					{status === 'fail' && (
 						<div>
 							<div className={styles.icon_wrap}>
-								<div className={[styles.fail_icon, styles.icon].join(' ')} />
+								<img
+									className={[styles.timeout_icon, styles.icon].join(' ')}
+									src={Images.adorn.fail}
+									alt=""
+								/>
 							</div>
 							{orgFnlMsg ? (
-								<p className={styles.desc}>
-									还款失败
-									<br />
-									{bankName}({bankNo}
-									)还款失败: <span>{orgFnlMsg}</span>
-									<br />
-									请选择其他银行卡还款
-								</p>
+								<div>
+									<p className={styles.desc}>还款失败</p>
+									<p className={styles.desc}>{orgFnlMsg}</p>
+									<p className={styles.desc}>请选择其他银行卡还款</p>
+								</div>
 							) : (
-								<p className={styles.desc}>
-									还款失败
-									<br />
-									{bankName}({bankNo}
-									)还款失败，请重试！
-								</p>
+								<div>
+									<p className={styles.desc}>还款失败</p>
+									<p className={styles.desc}>
+										{bankName}({bankNo})还款失败，请重试
+									</p>
+								</div>
 							)}
 						</div>
 					)}
@@ -346,7 +359,7 @@ export default class Cashier extends React.PureComponent {
 				</div>
 				{exceedingAmt ? (
 					<div className={styles.discount_box}>
-						<span>为您剩余账单减免</span>
+						<span>为您下期账单减免</span>
 						<span className={styles.discount}>{exceedingAmt}元</span>
 					</div>
 				) : null}
