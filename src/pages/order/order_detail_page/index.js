@@ -3,20 +3,14 @@
  * @LastEditTime: 2019-09-05 10:09:21
  */
 import React, { PureComponent } from 'react';
-import { Card, Button } from 'antd-mobile';
+import { Card } from 'antd-mobile';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { bill_queryBillDetail } from 'fetch/api';
 import { setBackGround } from 'utils/background';
-import { LoadingView } from 'components';
+import { LoadingView, ButtonCustom } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
-
-const API = {
-	qryDtl: '/bill/qryDtl',
-	fundPlain: '/fund/plain', // 费率接口
-	procedure_user_sts: '/procedure/user/sts' // 判断是否提交授信
-};
 
 @setBackGround('#F0F3F9')
 @fetch.inject()
@@ -83,19 +77,23 @@ export default class order_detail_page extends PureComponent {
 			})
 			.then((res) => {
 				if (!this.viewRef) return;
-				this.viewRef.showDataView();
 				if (res.code === '000000' && res.data) {
 					const { overdueDays, billSts, discRedRepay, waitRepAmt, preds, perdNum } = res.data;
-					this.setState({
-						panelCardList: this.generatePannelCard(res.data),
-						billDesc: res.data, // 详情返回的数据
-						isBillClean: !(billSts === '1' || billSts === '-1'), //总账单是否结清
-						thisPerdNum: perdNum,
-						overdueDays,
-						discRedRepay,
-						waitRepAmt,
-						preds
-					});
+					this.setState(
+						{
+							panelCardList: this.generatePannelCard(res.data),
+							billDesc: res.data, // 详情返回的数据
+							isBillClean: !(billSts === '1' || billSts === '-1'), //总账单是否结清
+							thisPerdNum: perdNum,
+							overdueDays,
+							discRedRepay,
+							waitRepAmt,
+							preds
+						},
+						() => {
+							this.viewRef.showDataView();
+						}
+					);
 				} else {
 					this.props.toast.info(res.msgInfo);
 				}
@@ -148,11 +146,11 @@ export default class order_detail_page extends PureComponent {
 
 	//一键结清
 	payAllOrder = () => {
-		const { billNo, billDesc, actOrderList, thisPerdNum, waitRepAmt } = this.state;
+		const { billNo, billDesc, preds, thisPerdNum, waitRepAmt } = this.state;
 
 		let repayPerds = [];
-		for (let i = 0; i < actOrderList.length; i++) {
-			const item = actOrderList[i];
+		for (let i = 0; i < preds.length; i++) {
+			const item = preds[i];
 			if (item.perdSts === '0') {
 				repayPerds.push(item.perdNum);
 			}
@@ -168,12 +166,11 @@ export default class order_detail_page extends PureComponent {
 				billDesc,
 				repayPerds,
 				canUseCoupon: false,
-				actOrderList,
 				isPayAll: true,
 				thisPerdNum,
 				overdueDays: '',
 				totalList: [],
-				totalAmtForShow: waitRepAmt
+				totalAmt: waitRepAmt
 			}
 		});
 	};
@@ -223,7 +220,9 @@ export default class order_detail_page extends PureComponent {
 						</Card.Body>
 					</Card>
 					<div className={styles.submit_btn}>
-						<Button onClick={this.goOrderRepayPage}>{isBillClean ? '查看还款信息' : '查看还款计划'}</Button>
+						<ButtonCustom onClick={this.goOrderRepayPage}>
+							{isBillClean ? '查看还款信息' : '查看还款计划'}
+						</ButtonCustom>
 					</div>
 					{!overdueDays && !isBillClean ? (
 						<span onClick={this.payAllOrder} className={styles.payAllButton}>

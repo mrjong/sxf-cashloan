@@ -43,7 +43,8 @@ export default class order_repay_confirm extends PureComponent {
 			payType: '',
 			payTypes: ['CardPay'],
 			disDisRepayAmt: '', // 优惠金额
-			showCouponAlert: false
+			showCouponAlert: false,
+			bnkTelNoHid: ''
 		};
 	}
 
@@ -228,7 +229,8 @@ export default class order_repay_confirm extends PureComponent {
 				case '000000':
 					//协议绑卡校验成功提示（走协议绑卡逻辑）
 					this.setState({
-						isShowSmsModal: true
+						isShowSmsModal: true,
+						bnkTelNoHid: (res.data && res.data.bnkTelNoHid) || ''
 					});
 					break;
 				default:
@@ -417,8 +419,8 @@ export default class order_repay_confirm extends PureComponent {
 
 	//获取还款结果
 	getpayResult = (message) => {
-		const { actOrderList, billDesc, isPayAll } = this.props.history.location.state;
-		const lastPerd = actOrderList[actOrderList.length - 1];
+		const { actPanelListDatas, billDesc, isPayAll } = this.props.history.location.state;
+		const lastPerd = actPanelListDatas[actPanelListDatas.length - 1];
 		let isClear = lastPerd.isChecked;
 		store.removeCouponData();
 
@@ -438,8 +440,8 @@ export default class order_repay_confirm extends PureComponent {
 
 	//判断该账单是否最后一期
 	isLastPerd = () => {
-		const { actOrderList, billDesc, isPayAll } = this.props.history.location.state;
-		const lastPerd = actOrderList[actOrderList.length - 1];
+		const { actPanelListDatas, billDesc, isPayAll } = this.props.history.location.state;
+		const lastPerd = actPanelListDatas[actPanelListDatas.length - 1];
 		let isClear = lastPerd.isChecked;
 
 		return billDesc.perdUnit === 'D' || isClear || isPayAll;
@@ -580,7 +582,8 @@ export default class order_repay_confirm extends PureComponent {
 			disDisRepayAmt,
 			bankName,
 			bankNo,
-			cardAgrNo
+			cardAgrNo,
+			bnkTelNoHid
 		} = this.state;
 
 		const { canUseCoupon, totalAmt: billTotalAmt } = this.props.history.location.state;
@@ -705,6 +708,7 @@ export default class order_repay_confirm extends PureComponent {
 						fetch={this.props.$fetch}
 						toast={this.props.toast}
 						bankNo={cardAgrNo}
+						bnkTelNoHid={bnkTelNoHid}
 					/>
 				)}
 			</LoadingView>
