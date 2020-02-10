@@ -1,0 +1,40 @@
+@import '../../../../assets/styles/scss/base/fn.scss';
+.overdueEntryTip {
+	text-align: center;
+	font-size: 30px;
+	padding: 10px;
+	background-color: #f9d45e;
+	span {
+		color: #f66;
+	}
+}
+.overdueEntry {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #ffdfdf;
+	height: 80px;
+	padding: 0 30px;
+	color: #f66;
+	font-size: 30px;
+	.overdueItem {
+		display: flex;
+		align-items: center;
+	}
+	.warningIco {
+		width: 40px;
+		height: 40px;
+		@include bg-image('../../../../assets/images/order/warn_ico');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-right: 19px;
+	}
+	.entryIco {
+		width: 16px;
+		height: 28px;
+		@include bg-image('../../../../assets/images/order/entry_ico');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		margin-left: 19px;
+	}
+}

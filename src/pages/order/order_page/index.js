@@ -10,14 +10,6 @@ import { bill_queryBillList } from 'fetch/api';
 import SectionList from './components/SectionList';
 import utils from 'utils/CommonUtil';
 import dayjs from 'dayjs';
-const API = {
-	msgRead: '/my/msgRead',
-	msgCount: '/my/msgCount',
-	billList: '/bill/list',
-	couponRedDot: '/index/couponRedDot' // 优惠券红点
-};
-
-let uploadData = {};
 
 const noData = {
 	img: Image.bg.no_order,
@@ -52,67 +44,31 @@ export default class order_page extends PureComponent {
 			limitRow: 10
 		};
 	}
-	scrollTop = 0;
-
 	//当前页面
 	currentPage = 1;
 	//每页的size
 	pageSize = 5;
 
 	componentWillMount() {
-		this.props.globalTask(null);
+		const { userInfo = {} } = this.props;
 		// 重新设置HistoryRouter，解决点击两次才能弹出退出框的问题
 		if (isWXOpen()) {
 			store.setHistoryRouter(window.location.pathname);
 		}
-		// 处理详情返回之后
-		let backDatastr = store.getBackData();
-		if (backDatastr && JSON.stringify(backDatastr) !== '{}') {
-			// let backData = store.getBackData();
-			// hasNext = backData && backData.hasNext;
-			// this.setState(
-			// 	{
-			// 		msgType: backData && backData.msgType,
-			// 		rData: backData && backData.rData,
-			// 		pageIndex: backData && backData.pageIndex,
-			// 		hasMore: true,
-			// 		Listlength: backData && backData.rData && backData.rData.length
-			// 	},
-			// 	() => {
-			// 		this.setState({
-			// 			dataSource: this.state.dataSource.cloneWithRows(backData.rData),
-			// 			tabState: true,
-			// 			refreshing: false,
-			// 			isLoading: false
-			// 		});
-			// 	}
-			// );
-		} else {
-			// this.couponRedDot();
+		if (userInfo && userInfo.tokenId) {
 			this.getLoanList(1);
+		} else {
+			setTimeout(() => {
+				this.viewRef && this.viewRef.setEmpty();
+			}, 0);
 		}
 	}
-	componentDidMount() {
-		// // 返回展示数据
-		// let backData = store.getBackData();
-		// if (backData && backData.scrollTop) {
-		// 	setTimeout(() => this.lv.scrollTo(0, backData.scrollTop), 0);
-		// }
-	}
-	couponRedDot = () => {
-		this.props.$fetch.get(API.couponRedDot).then((result) => {
-			if (result && result.data) {
-				this.props.globalTask(result.data);
-			}
-		});
-	};
 
 	/**
 	 * 获取订单信息
 	 */
 	getLoanList = (currentPage) => {
-		//上传数据
-		uploadData = {
+		let uploadData = {
 			startPage: currentPage,
 			pageRow: this.pageSize
 		};
@@ -185,16 +141,6 @@ export default class order_page extends PureComponent {
 	gotoDesc = (obj) => {
 		const { billSts } = obj;
 		if (billSts !== '0' && billSts !== '2') {
-			// let backData = {
-			// 	scrollTop: this.scrollTop || 0,
-			// 	rData: this.state.rData,
-			// 	billNo: obj.billNo,
-			// 	pageIndex: this.state.pageIndex,
-			// 	hasNext: hasNext
-			// };
-
-			// store.setBackData(backData);
-			// store.setBillNo(obj.billNo);
 			this.props.history.push({
 				pathname: `/order/order_detail_page`,
 				state: {
@@ -328,34 +274,34 @@ export default class order_page extends PureComponent {
 
 	render() {
 		return (
-			<div className={style.orderPage}>
-				<div className={style.orderPageHead}>
-					<strong className={style.orderPageHeadTitle}>账单</strong>
-					<span className={style.orderPageHeadDesc}>还信用卡用还到，有账单就能还</span>
-				</div>
-				<LoadingView
-					ref={(view) => (this.viewRef = view)}
-					nodata={noData}
-					errordata={errorData}
-					onReloadData={() => {
-						this.onReloadData();
-					}}
-				>
+			<LoadingView
+				ref={(view) => (this.viewRef = view)}
+				nodata={noData}
+				errordata={errorData}
+				onReloadData={() => {
+					this.onReloadData();
+				}}
+			>
+				<div className={style.orderPage}>
+					<div className={style.orderPageHead}>
+						<strong className={style.orderPageHeadTitle}>账单</strong>
+						<span className={style.orderPageHeadDesc}>还信用卡用还到，有账单就能还</span>
+					</div>
+
 					<div className={style.orderListCard}>
 						<SectionList
 							renderItem={({ item, index }) => this.renderItem(item, index)}
 							renderSectionHeader={({ section: { title } }) => this.renderGroupTitle(title)}
 							sections={this.handleGenerateBillGroupArr()}
-							// keyExtractor={(item, index) => item + index}
 							ListFooterComponent={this.renderFooterComponentWrap()}
 						/>
 					</div>
-				</LoadingView>
 
-				{!this.state.dataSource || !this.state.dataSource.length || this.state.dataSource.length <= 5 ? (
-					<FooterBar />
-				) : null}
-			</div>
+					{!this.state.dataSource || !this.state.dataSource.length || this.state.dataSource.length <= 5 ? (
+						<FooterBar />
+					) : null}
+				</div>
+			</LoadingView>
 		);
 	}
 }

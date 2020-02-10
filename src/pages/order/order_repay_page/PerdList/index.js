@@ -67,6 +67,7 @@ class PerdList extends Component {
 						return (
 							<div key={index}>
 								<List.Item
+									className={!item.isShowCheck && styles.noCheckItem}
 									arrow={item.showDetail ? 'up' : 'down'}
 									onClick={() => {
 										this.togglePerdDetailShow(index);

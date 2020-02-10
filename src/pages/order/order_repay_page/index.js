@@ -3,12 +3,17 @@ import styles from './index.scss';
 import { LoadingView } from 'components';
 import { Card } from 'antd-mobile';
 import { bill_queryBillDetail, repay_queryCashRegisterDetail } from 'fetch/api';
+import { setCouponDataAction } from 'reduxes/actions/commonActions';
+import OverdueEntry from '../components/OverdueEntry';
 import PerdList from './PerdList';
 import OverdueTipModal from './OverdueTipModal';
 import BottomButton from './BottomButton';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
+import { connect } from 'react-redux';
+import { buriedPointEvent } from 'utils/analytins';
+import { order } from 'utils/analytinsType';
 
 const noData = {
 	img: Image.bg.no_order,
@@ -25,6 +30,12 @@ const errorData = {
 
 @setBackGround('#F0F3F9')
 @fetch.inject()
+@connect(
+	(state) => ({
+		overdueModalInfo: state.commonState.overdueModalInfo
+	}),
+	{ setCouponDataAction }
+)
 export default class order_repay_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -49,7 +60,7 @@ export default class order_repay_page extends PureComponent {
 			},
 			() => {
 				this.queryBillDetails();
-				// this.props.setCouponDataAction({});
+				this.props.setCouponDataAction({});
 			}
 		);
 	};
@@ -68,10 +79,6 @@ export default class order_repay_page extends PureComponent {
 				if (!this.viewRef) return;
 				this.viewRef.showDataView();
 				if (res.code === '000000' && res.data) {
-					// buriedPointEvent(DC_ORDER_DETAILS_REPAYMENT, {
-					// 	is_success: true,
-					// 	entry: params && params.entry === '账单' ? '账单' : '首页-查看代偿账单'
-					// });
 					const { billOvduStartDt, billSts, preds, perdNum, overdueDays, perdLth } = res.data;
 					const isShowBottomBtn = billSts === '1' || billSts === '-1'; // 主状态
 					this.setState(
@@ -88,11 +95,7 @@ export default class order_repay_page extends PureComponent {
 						}
 					);
 				} else {
-					// buriedPointEvent(DC_ORDER_DETAILS_REPAYMENT, {
-					// 	fail_cause: res.message,
-					// 	is_success: false,
-					// 	entry: params.entry === '账单' ? '账单' : '首页-查看代偿账单'
-					// });
+					this.props.toast.info(res.message);
 				}
 			})
 			.catch(() => {
@@ -246,10 +249,10 @@ export default class order_repay_page extends PureComponent {
 			totalList,
 			billNo
 		} = this.state;
-		// buriedPointEvent(DC_GOTO_REPAYCONFIRM_PAGE, {
-		// 	isOverdue: !!overdueDays,
-		// 	repayPerds: repayPerds.join(',')
-		// });
+		buriedPointEvent(order.gotoRepayConfirmPage, {
+			isOverdue: !!overdueDays,
+			repayPerds: repayPerds.join(',')
+		});
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',
 			state: {
@@ -283,6 +286,7 @@ export default class order_repay_page extends PureComponent {
 			buttonDisabled,
 			showOverdueTipModal
 		} = this.state;
+		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 
 		const overdueTip = (
 			<span
@@ -302,6 +306,8 @@ export default class order_repay_page extends PureComponent {
 				errordata={errorData}
 				onReloadData={this.onReloadData}
 			>
+				<OverdueEntry isOverdue={isEntryShow} history={this.props.history} overdueDays={overdueDays} />
+
 				<div className={styles.orderListWrap}>
 					<Card className={styles.antCard}>
 						<Card.Header title="账单" extra={overdueDays ? overdueTip : ''} />

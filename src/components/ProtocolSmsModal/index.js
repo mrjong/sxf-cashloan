@@ -7,12 +7,11 @@ import styles from './index.scss';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import { ButtonCustom } from 'components';
+import { bank_card_protocol_info } from 'fetch/api';
 import { handleInputBlur, recordContract } from 'utils';
 
 let timer = null;
-const API = {
-	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
-};
+
 export default class ProtocolSmsModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -71,14 +70,14 @@ export default class ProtocolSmsModal extends React.PureComponent {
 	readProtocol = () => {
 		const { history, fetch, toast } = this.props;
 		const params = {
-			isEntry: '01'
+			cardNoCpt: ''
 		};
-		fetch.post(API.contractInfo, params).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+		fetch.post(bank_card_protocol_info, params).then((result) => {
+			if (result && result.code === '000000' && result.data !== null) {
 				store.setProtocolFinancialData(result.data);
 				history.push('/protocol/delegation_withhold_page');
 			} else {
-				toast.info(result.msgInfo);
+				toast.info(result.message);
 			}
 		});
 	};
