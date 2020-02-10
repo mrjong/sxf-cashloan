@@ -78,13 +78,8 @@ export default class momo_outer_login_page extends PureComponent {
 		// 移除cookie
 		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
-		let MessageTagError = store.getMessageTagError();
-		let MessageTagStep = store.getMessageTagStep();
 		sessionStorage.clear();
 		localStorage.clear();
-		// 首页弹窗要用的
-		MessageTagError && store.setMessageTagError(MessageTagError);
-		MessageTagStep && store.setMessageTagStep(MessageTagStep);
 
 		setH5Channel(storeH5Channel);
 

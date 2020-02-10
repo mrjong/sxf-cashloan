@@ -1,9 +1,8 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 16:37:19
+ * @LastEditTime : 2020-02-10 14:17:32
  */
 import { createAction } from 'redux-actions';
-import { store } from 'utils/store';
 import { STATIC_USER_INFO, STATIC_CLEAR_STATE, STATIC_AUTH_ID } from '../constants/staticConstants';
 
 /**

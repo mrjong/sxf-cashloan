@@ -256,7 +256,7 @@ export default class wxshare_page extends PureComponent {
 				// 	return;
 				// }
 				if (noShowMsg) {
-					if (osType !== 'ANDRIOD') {
+					if (osType !== 'ANDROID') {
 						Toast.info('分享成功');
 					}
 				} else {

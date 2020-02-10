@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:37:16
+ * @LastEditTime : 2020-02-10 14:15:28
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { getH5Channel } from 'utils/common';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { addinfo } from 'utils/analytinsType';
-import { getFirstError, getNextStr } from 'utils';
+import { getFirstError } from 'utils';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';

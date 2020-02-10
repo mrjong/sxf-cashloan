@@ -9,10 +9,13 @@ import { store } from 'utils/store';
 import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView } from 'antd-mobile';
-import { getNextStatus } from 'utils/CommonUtil/commonFunc';
+// import { getNextStatus } from 'utils/CommonUtil/commonFunc';
 import { connect } from 'react-redux';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
-import { coup_queryUsrCoupBySts, coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup } from 'fetch/api';
+import {
+	coup_queryUsrCoupBySts
+	// coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup
+} from 'fetch/api';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
@@ -344,7 +347,7 @@ export default class coupon_page extends PureComponent {
 					<div className={style.box_coupon}>
 						<div>
 							<div className={style.leftBox}>
-								<div className className={style.leftBoxLineBox}>
+								<div className={style.leftBoxLineBox}>
 									{obj && obj.coupCategory === '00' ? (
 										<span>
 											<i className={style.money}>{obj && obj.coupVal}</i>元

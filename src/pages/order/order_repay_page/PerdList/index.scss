@@ -33,6 +33,8 @@
 }
 
 .detailValue {
+	display: flex;
+	align-items: center;
 	font-size: 26px;
 	color: $colorInactiveColor;
 	font-weight: 500;
@@ -41,11 +43,12 @@
 
 .detailLabelSub {
 	font-size: 24px;
-
 	color: $colorInputPlaceholder;
 }
 
 .red_box {
+  display: flex;
+	align-items: center;
 	border: 1px solid $colorTipRed;
 	background-color: #f6e8ea;
 	padding: 0 8px;

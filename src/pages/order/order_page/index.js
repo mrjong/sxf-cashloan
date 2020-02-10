@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import Cookie from 'js-cookie';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -11,7 +10,6 @@ import { bill_queryBillList } from 'fetch/api';
 import SectionList from './components/SectionList';
 import utils from 'utils/CommonUtil';
 import dayjs from 'dayjs';
-let hasNext = true;
 const API = {
 	msgRead: '/my/msgRead',
 	msgCount: '/my/msgCount',
@@ -19,8 +17,6 @@ const API = {
 	couponRedDot: '/index/couponRedDot' // 优惠券红点
 };
 
-let token = '';
-let tokenFromStorage = '';
 let uploadData = {};
 
 const noData = {
@@ -40,8 +36,6 @@ export default class order_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		// 获取token
-		token = Cookie.get('FIN-HD-AUTH-TOKEN');
-		tokenFromStorage = store.getToken();
 		this.state = {
 			dataSource: [],
 			isFinishDone: false,
@@ -94,7 +88,6 @@ export default class order_page extends PureComponent {
 			// 	}
 			// );
 		} else {
-			hasNext = true;
 			// this.couponRedDot();
 			this.getLoanList(1);
 		}

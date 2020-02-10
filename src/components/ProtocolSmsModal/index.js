@@ -1,11 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:11:15
+ * @LastEditTime : 2020-02-10 14:19:31
  */
 import React from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
-import { Modal, Icon } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import { ButtonCustom } from 'components';
 import { handleInputBlur, recordContract } from 'utils';
 
@@ -102,7 +102,8 @@ export default class ProtocolSmsModal extends React.PureComponent {
 			toggleBtn,
 			selectBankCard,
 			protocolSmsFailFlag,
-			protocolSmsFailInfo
+			protocolSmsFailInfo,
+			bnkTelNoHid
 		} = this.props;
 		return (
 			<Modal visible={true} transparent maskClosable={false} className={styles.antModal}>
@@ -138,7 +139,7 @@ export default class ProtocolSmsModal extends React.PureComponent {
 							{/* <Icon type="cross" color="#868E9E" className={styles.closeIcon} /> */}
 							<h3 className={styles.head}>验证手机号</h3>
 							<p className={styles.desc}>已发送短信验证码到手机</p>
-							<p className={styles.phone}>176****0505</p>
+							<p className={styles.phone}>{bnkTelNoHid}</p>
 							<div className={styles.smsCode}>
 								<input
 									type="number"

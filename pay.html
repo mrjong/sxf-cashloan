@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-10-14 18:38:11
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-10 13:51:09
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -77,7 +77,7 @@
           const u = navigator.userAgent;
           const osType =
             u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
-              ? 'ANDRIOD'
+              ? 'ANDROID'
               : u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
               ? 'IOS'
               : 'PC';
@@ -117,7 +117,7 @@
 
         // 微信授权
         function wxAuth(){
-          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : '';
+          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
               type: "POST",
               url: "/wap/wx/authcb",
@@ -149,7 +149,7 @@
 
         // 检查微信授权
         function wxCheckAuth(){
-          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : '';
+          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
               type: "POST",
               url: "/wap/wx/auth",
@@ -224,7 +224,7 @@
         // 获取微信支付需要的参数
         function getWXPayParams() {
           const reqOrdNo = getUrlParam('reqOrdNo');
-          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDRIOD' ? '02' : '';
+          const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
              type: "POST",
              url: "/wap/bill/getPayUrl",
