@@ -11,6 +11,10 @@ import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
+import { connect } from 'react-redux';
+import { setApplyCreditData } from 'reduxes/actions/specialActions';
+import Image from 'assets/image';
+
 import {
 	handleClickConfirm,
 	handleInputBlur,
@@ -22,10 +26,12 @@ import {
 } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import TimeoutPayModal from 'components/TimeoutPayModal';
-import FeedbackModal from 'components/FeedbackModal';
-import SelectList from 'components/SelectList';
+import { TimeoutPayModal, FeedbackModal, SelectList, ButtonCustom } from 'components';
+
 let isinputBlur = false;
+
+import { cred_queryApplPageInfo } from 'fetch/api.js';
+
 const API = {
 	queryBillStatus: '/wap/queryBillStatus', //
 	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
@@ -52,8 +58,14 @@ const tagList = [
 let timer = null;
 @fetch.inject()
 @createForm()
-@setBackGround('#F7F8FA')
+@setBackGround('#eeeff8')
 @domListen()
+@connect(
+	(state) => ({
+		authId: state.staticState.authId
+	}),
+	{ setApplyCreditData }
+)
 export default class loan_repay_confirm_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -87,7 +99,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		store.removeToggleMoxieCard();
 		store.removeAutIdCard(); // 信用卡前置
 		this.queryUsrInfo();
-		this.requestCredCardCount();
 		this.showFeedbackModal();
 		let _this = this;
 		let originClientHeight = document.documentElement.clientHeight;
@@ -110,95 +121,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 		store.removeRealNameNextStep();
 	}
 
-	startInterval = () => {
-		timer = setInterval(() => {
-			this.setState(
-				{
-					percent: this.state.percent + parseInt(Math.random() * (100 / 30) + 1),
-					time: this.state.time + 1
-				},
-				() => {
-					if (this.state.time > 29) {
-						clearInterval(timer);
-						this.queryUsrInfo(true);
-					} else if (this.state.time % 5 === 0) {
-						clearInterval(timer);
-						this.queryUsrInfo();
-					}
-				}
-			);
-		}, 1000);
-	};
-
 	//查询用户相关信息
-	queryUsrInfo = (hideFlag) => {
-		this.props.$fetch
-			.post(API.USR_INDEX_INFO)
-			.then((res) => {
-				// let res = {
-				// 	data: mockData.LN0003,
-				// 	msgCode: 'PTM0000',
-				// 	msgMsg: 'PTM0000'
-				// };
-				this.setState(
-					{
-						usrIndexInfo: res.data.indexData ? res.data : Object.assign({}, res.data, { indexData: {} })
-					},
-					() => {
-						const { indexSts, indexData } = this.state.usrIndexInfo;
-						if (indexSts === 'LN0002' || (indexSts === 'LN0003' && indexData.autSts === '1')) {
-							//更新中
-							if (hideFlag) {
-								this.hideProgress();
-								this.state.retryCount--;
-								this.setState({
-									showAgainUpdateBtn: true // 显示 重新更新按钮
-								});
-							} else {
-								this.showProgress();
-							}
-						} else if (indexSts === 'LN0010' || (indexSts === 'LN0003' && indexData.autSts === '3')) {
-							//更新失败
-							this.hideProgress();
-							this.state.retryCount--;
-							this.setState({
-								showAgainUpdateBtn: false
-							});
-						} else if (indexSts === 'LN0003' && indexData.autSts === '2') {
-							//更新成功
-							this.hideProgress();
-							// this.getQryPerdRate()
-							this.setState(
-								{
-									fetchBillSucc: true,
-									showAgainUpdateBtn: false
-								},
-								() => {
-									this.toggleTag(0);
-								}
-							);
-						}
-					}
-				);
-			})
-			.catch(() => {
-				this.hideProgress();
-				this.state.retryCount--;
+	queryUsrInfo = () => {
+		this.props.$fetch.post(cred_queryApplPageInfo, { autId: this.props.authId }).then((res) => {
+			if (res && res.code === '000000' && res.data) {
 				this.setState({
-					showAgainUpdateBtn: true
+					usrIndexInfo: res.data
 				});
-			});
-	};
-
-	showProgress = () => {
-		this.setState(
-			{
-				isShowProgress: true
-			},
-			() => {
-				this.startInterval();
 			}
-		);
+		});
 	};
 
 	closeCreditModal = () => {
@@ -208,24 +139,24 @@ export default class loan_repay_confirm_page extends PureComponent {
 		});
 	};
 	getQryPerdRate = (money) => {
+		const { usrIndexInfo = {} } = this.state;
+		const { prods } = usrIndexInfo;
 		if (!money) {
 			return;
 		}
-		this.props.$fetch
-			.get(`${API.qryPerdRate}`, {
-				applAmt: money
-			})
-			.then((res) => {
-				const date = res.data && res.data.perdRateList.length ? res.data.perdRateList : [];
-				// const dateCopy =
-				// 	date[0] && date[0].perdLth == 30
-				// 		? date[1]
-				// 		: date[0] && date[0].perdLth == 30 && date.length !== 1 && date[0];
-				this.setState({
-					perdRateList: date,
-					selectedLoanDate: {}
-				});
+
+		let perdRateList = [];
+		if (prods && prods.length) {
+			prods.forEach((item) => {
+				if (money >= Number(item.minAmt) && money <= Number(item.maxAmt)) {
+					perdRateList.push(item);
+				}
 			});
+		}
+		this.setState({
+			perdRateList,
+			selectedLoanDate: {}
+		});
 	};
 	//隐藏进度条
 	hideProgress = () => {
@@ -295,34 +226,11 @@ export default class loan_repay_confirm_page extends PureComponent {
 		}
 	};
 
-	// 请求信用卡数量
-	requestCredCardCount = () => {
-		this.props.$fetch
-			.post(API.CRED_CARD_COUNT)
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000') {
-					this.setState({
-						cardCount: result.data.count
-					});
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			})
-			.catch((err) => {
-				this.props.toast.info(err.message);
-			});
-	};
-
 	handleSubmit = async () => {
 		sxfburiedPointEvent('moneyCreditCardConfirmBtn');
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const { selectedLoanDate = {}, usrIndexInfo, cardCount, btnDisabled, fullMinAmt } = this.state;
-		const { indexData = {} } = usrIndexInfo;
-		const { minApplAmt, maxApplAmt } = indexData;
-		if (!this.state.fetchBillSucc) {
-			this.props.toast.info('账单正在更新中，请耐心等待哦');
-			return;
-		}
+		const { selectedLoanDate = {}, usrIndexInfo = {}, cardCount, btnDisabled, fullMinAmt } = this.state;
+		const { minApplAmt, maxApplAmt } = usrIndexInfo;
 		if (this.updateBillInf()) {
 			return;
 		}
@@ -360,20 +268,20 @@ export default class loan_repay_confirm_page extends PureComponent {
 			return;
 		}
 
-		if (!selectedLoanDate.perdCnt) {
+		if (!selectedLoanDate.prodCnt) {
 			this.props.toast.info('请选择借款期限');
 			return;
 		}
 		if (btnDisabled) {
 			return;
 		}
-		let autId = usrIndexInfo.indexSts === 'LN0010' ? '' : usrIndexInfo.indexData.autId;
+		let autId = this.props.authId;
 		store.setAutIdCard(autId);
 		const params = {
 			...this.state.selectedLoanDate,
 			activeName: tagList[this.state.activeTag].name,
 			autId,
-			rpyAmt: Number(repayMoney)
+			applAmt: Number(repayMoney)
 		};
 		idChkPhoto({
 			$props: this.props,
@@ -417,15 +325,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	//过滤选中的还款期限
 	filterLoanDate = (item) => {
 		let itemCopy = item;
-		console.log(item);
 		this.dateType(itemCopy.perdLth);
-		// if (item && item.perdLth == 30) {
-		// 	this.setState({
-		// 		modal_left: true,
-		// 		dayPro: item
-		// 	});
-		// 	return;
-		// }
 		if (this.updateBillInf()) {
 			return;
 		}
@@ -447,46 +347,36 @@ export default class loan_repay_confirm_page extends PureComponent {
 	//计算该显示的还款金额
 	calcLoanMoney = (money, tag3) => {
 		// isClear为true的时候点击最低还卡或者最高还卡都清除输入框
-		const { usrIndexInfo } = this.state;
-		const { indexData } = usrIndexInfo;
-		if (indexData && indexData.maxApplAmt && Number(money) >= Number(indexData.maxApplAmt)) {
+		const { usrIndexInfo = {} } = this.state;
+		const { maxApplAmt, minApplAmt } = usrIndexInfo;
+		if (maxApplAmt && Number(money) >= Number(maxApplAmt)) {
 			this.props.form.setFieldsValue({
-				loanMoney:
-					(indexData.maxApplAmt &&
-						!isNaN(indexData.maxApplAmt) &&
-						Number(indexData.maxApplAmt) >= 0 &&
-						indexData.maxApplAmt) ||
-					'0'
+				loanMoney: (maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '0'
 			});
-			this.getQryPerdRate(indexData.maxApplAmt, tag3);
-		} else if (indexData && indexData.minApplAmt && Number(money) <= Number(indexData.minApplAmt)) {
+			this.getQryPerdRate(maxApplAmt, tag3);
+		} else if (minApplAmt && Number(money) <= Number(minApplAmt)) {
 			if (money === '') {
 				// 默认最大值
 				this.props.form.setFieldsValue({
-					loanMoney:
-						(indexData.maxApplAmt &&
-							!isNaN(indexData.maxApplAmt) &&
-							Number(indexData.maxApplAmt) >= 0 &&
-							indexData.maxApplAmt) ||
-						'0'
+					loanMoney: (maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '0'
 				});
 			} else {
 				this.props.form.setFieldsValue({
-					loanMoney: indexData.minApplAmt
+					loanMoney: minApplAmt
 				});
 			}
-			this.getQryPerdRate(indexData.minApplAmt, tag3);
+			this.getQryPerdRate(minApplAmt, tag3);
 		} else {
 			if (money) {
 				this.props.form.setFieldsValue({
 					loanMoney: Math.ceil(money / 100) * 100
 				});
 				this.getQryPerdRate(Math.ceil(money / 100) * 100, tag3);
-			} else if (indexData.minApplAmt) {
+			} else if (minApplAmt) {
 				this.props.form.setFieldsValue({
-					loanMoney: indexData.minApplAmt
+					loanMoney: minApplAmt
 				});
-				this.getQryPerdRate(indexData.minApplAmt, tag3);
+				this.getQryPerdRate(minApplAmt, tag3);
 			} else {
 				this.props.form.setFieldsValue({
 					loanMoney: ''
@@ -505,13 +395,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			isinputBlur = false;
 		}, 100);
 		// type为是自动执行该方法，还是点击执行该方法
-		const { usrIndexInfo, fetchBillSucc, cardCount } = this.state;
-		const { indexData = {} } = usrIndexInfo;
-		const { minApplAmt, maxApplAmt } = indexData;
-		if (!fetchBillSucc) {
-			this.props.toast.info('账单更新成功方可选择，请耐心等待哦');
-			return;
-		}
+		const { usrIndexInfo = {}, cardCount } = this.state;
+		const { minApplAmt, maxApplAmt } = usrIndexInfo;
 		if (type && type === 'click') {
 			if (this.updateBillInf()) {
 				return;
@@ -591,8 +476,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 		store.removeGotoMoxieFlag();
 	};
 	updateBillInf = () => {
-		const { usrIndexInfo } = this.state;
-		const { cardBillSts, bankNo } = usrIndexInfo.indexData;
+		const { usrIndexInfo = {} } = this.state;
+		const { cardBillSts, bankNo } = usrIndexInfo;
 		if (cardBillSts === '00') {
 			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
 				// 跳银行登录页面
@@ -651,69 +536,49 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 	render() {
 		const {
-			usrIndexInfo,
+			usrIndexInfo = {},
 			selectedLoanDate,
 			perdRateList,
 			btnDisabled,
 			cardCount,
-			fetchBillSucc,
 			fullMinAmt,
 			showTimeoutPayModal,
 			showFeedbackModal
 		} = this.state;
-		const { indexData = {} } = usrIndexInfo;
-		const {
-			cardBillAmt,
-			cardNoHid,
-			bankNo,
-			bankName,
-			cardBillSts,
-			billRemainAmt,
-			cardBillDt,
-			minApplAmt,
-			maxApplAmt
-		} = indexData;
+		const { cardBillAmt, bankNo, bankName, cardBillSts, minApplAmt, maxApplAmt, lastNo } = usrIndexInfo;
+
 		const { getFieldProps } = this.props.form;
 		const iconClass = bankNo ? `bank_ico_${bankNo}` : 'logo_ico';
-		const cardBillDtData = !cardBillDt ? '----/--/--' : dayjs(cardBillDt).format('YYYY/MM/DD');
 
 		let cardBillAmtData = '';
 		if (cardBillSts === '02' || cardBillSts === '00') {
-			cardBillAmtData = '需更新账单';
-		} else {
+			cardBillAmtData = '待更新';
+		} else if (cardBillAmt && Number(cardBillAmt) > 0) {
 			// 优先取剩余应还，否则去账单金额
-			if (billRemainAmt && Number(billRemainAmt) > 0) {
-				cardBillAmtData = parseFloat(billRemainAmt, 10).toFixed(2);
-			} else if (!cardBillAmt && cardBillAmt !== 0) {
-				cardBillAmtData = '----.--';
-			} else if (
-				cardBillSts === '01' &&
-				(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
-			) {
-				cardBillAmtData = '已结清';
-			} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
-				cardBillAmtData = '已结清';
-			} else {
-				cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
-			}
+			cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
+		} else if (!cardBillAmt && cardBillAmt !== 0) {
+			cardBillAmtData = '----.--';
+		} else if (cardBillSts === '01' && (cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))) {
+			cardBillAmtData = '已结清';
+		} else {
+			cardBillAmtData = parseFloat(cardBillAmt, 10).toFixed(2);
 		}
 
-		let placeholderText = '';
-		if (fetchBillSucc) {
-			placeholderText = `可申请 ${indexData.minApplAmt || ''}~${indexData.maxApplAmt || ''}`;
-		} else {
-			placeholderText = ``;
-		}
+		let placeholderText = `可申请 ${usrIndexInfo.minApplAmt || ''}~${usrIndexInfo.maxApplAmt || ''}`;
+
 		let repayMoney = this.props.form.getFieldValue('loanMoney')
 			? this.props.form.getFieldValue('loanMoney')
 			: fullMinAmt;
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
-				<div className={style.warning_tip}>还到不向学生借款</div>
-				<div className={[style.page_inner_wrap, 'modal_l_r2'].join(' ')}>
+				<div className={style.warning_tip}>
+					<span className={style.warning_tip_title}>温馨提示：</span>
+					<span className={style.warning_tip_text}>学生禁止使用还到</span>
+				</div>
+				<div className={[style.page_inner_wrap].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.titleBg}>收款信用卡</div>
-						{cardCount && cardCount > 0 ? (
+						{usrIndexInfo && usrIndexInfo.credCardCount > 0 ? (
 							<div
 								className={style.cardNumBox}
 								onClick={() => {
@@ -728,7 +593,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<div className={style.bankBox}>
 								<span className={['bank_ico', iconClass, `${style.bankLogo}`].join(' ')} />
 								<span className={style.name}>{!bankName ? '****' : bankName}</span>
-								<span className={style.lastNo}>({!cardNoHid ? '****' : cardNoHid.slice(-4)})</span>
+								<span className={style.lastNo}>({!lastNo ? '****' : lastNo.slice(-4)})</span>
 							</div>
 						</div>
 						<div className={style.center}>
@@ -741,13 +606,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<p className={`${style.name} ${style.moneyTit}`}>账单金额(元)</p>
 								</div>
 								<div className={style.item}>
-									<span className={style.name}>还款日：{cardBillDtData}</span>
+									<span className={style.name}>还款日：{usrIndexInfo.cardRepayDt || '------------'}</span>
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<div className={[style.bankCard, style.heightMoney].join(' ')}>
+					<div className={[style.bankCard, style.heightMoney, 'modal_l_r2'].join(' ')}>
 						<div>
 							<div className={style.titleBg}>借多少钱</div>
 						</div>
@@ -813,7 +678,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 						</div>
 						<div className={style.repayTypeBox}>
 							<div
-								className={style.item}
+								className={[style.item, style.item1].join(' ')}
 								onClick={() => {
 									this.toggleTag(2, 'click');
 								}}
@@ -833,12 +698,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 										¥{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '-.--'}
 									</span>
 								</div>
-								<div className={style.desc} style={{ paddingLeft: 0 }}>
-									一键结清账单，释放卡额度
-								</div>
+								<div className={style.desc}>一键结清账单，释放卡额度</div>
 							</div>
 							<div
-								className={style.item}
+								className={[style.item, style.item2].join(' ')}
 								data-sxf-props={JSON.stringify({
 									type: 'btn',
 									name: 'minApplAmt',
@@ -858,9 +721,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										¥{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) || '-.--'}
 									</span>
 								</div>
-								<div className={style.desc} style={{ paddingRight: 0 }}>
-									信用卡免逾期，还款无压力
-								</div>
+								<div className={style.desc}>信用卡免逾期，还款无压力</div>
 							</div>
 						</div>
 					</div>
@@ -888,10 +749,10 @@ export default class loan_repay_confirm_page extends PureComponent {
 									}
 									if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
 										if (
-											this.state.perdRateList.length === 1 &&
-											this.state.perdRateList[0].perdLth == 30 &&
-											(this.state.perdRateList[0].factLmtLow > Number(repayMoney) ||
-												Number(repayMoney) > this.state.perdRateList[0].factAmtHigh)
+											perdRateList.length === 1 &&
+											perdRateList[0].prodLth === 30 &&
+											(perdRateList[0].minAmt > Number(repayMoney) ||
+												Number(repayMoney) > perdRateList[0].maxAmt)
 										) {
 											this.props.toast.info('暂无可借产品');
 										} else {
@@ -906,9 +767,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}}
 								extra={
 									<SelectList
-										selectText={
-											(selectedLoanDate && selectedLoanDate.perdPageNm && selectedLoanDate.perdPageNm) || ''
-										}
+										selectText={(selectedLoanDate && selectedLoanDate.prodName) || ''}
 										defaultText={'请选择'}
 									/>
 								}
@@ -933,14 +792,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 						<div className={style.desc}>50元免息券</div>
 					</div>
 				</div>
-				<div className={this.state.inputFocus ? style.handle_authority_relative : style.handle_authority}>
-					<div
-						className={[style.button, !btnDisabled ? '' : style.disabledBtn].join(' ')}
-						onClick={this.handleSubmit}
-					>
+				<div className={style.buttonWrap}>
+					<ButtonCustom type={btnDisabled ? 'default' : 'yellow'} onClick={this.handleSubmit}>
 						提交申请
-					</div>
+					</ButtonCustom>
 				</div>
+
 				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
 					<div className={style.modal_box}>
 						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
@@ -955,35 +812,33 @@ export default class loan_repay_confirm_page extends PureComponent {
 								/>
 							</div>
 							<div className={style.modal_content}>
-								<div className={style.labelDiv}>
-									<div className={style.trendBox}>
-										<i />
-										<div className={style.trendDesc}>
-											<span>月还款金额大，费用低</span>
-											<span>月还款金额小，费用高</span>
-										</div>
-									</div>
-									<div className={style.limitBox}>
-										{perdRateList.map((item, index) => {
-											return (item.perdLth == 30 &&
-												item.factLmtLow <= Number(repayMoney) &&
-												Number(repayMoney) <= item.factAmtHigh) ||
-												item.perdLth != 30 ? (
-												<div
-													key={index}
-													className={
-														selectedLoanDate.perdCnt === item.perdCnt
-															? `${style.listitem} ${style.listActiveItem}`
-															: style.listitem
-													}
-													onClick={() => {
-														this.filterLoanDate(item);
-													}}
-												>
-													<span>{item.perdPageNm}</span>
-												</div>
-											) : null;
-										})}
+								<div className={style.limitBox}>
+									{perdRateList.map((item, index) => {
+										return (item.perdLth == 30 &&
+											item.factLmtLow <= Number(repayMoney) &&
+											Number(repayMoney) <= item.factAmtHigh) ||
+											item.perdLth != 30 ? (
+											<ButtonCustom
+												className={style.listBtn}
+												key={index}
+												size="md"
+												long="false"
+												type={selectedLoanDate.prodCnt === item.prodCnt ? 'yellow' : 'default'}
+												onClick={() => {
+													this.filterLoanDate(item);
+												}}
+											>
+												{item.prodName}
+											</ButtonCustom>
+										) : null;
+									})}
+								</div>
+								<div className={style.trendBox}>
+									<i />
+									<img className={style.trendArrow} src={Image.adorn.line_arrow} alt="" />
+									<div className={style.trendDesc}>
+										<span>月还款金额大，费用低</span>
+										<span>月还款金额小，费用高</span>
 									</div>
 								</div>
 							</div>

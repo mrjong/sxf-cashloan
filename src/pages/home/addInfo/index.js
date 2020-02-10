@@ -35,7 +35,7 @@ let submitButtonLocked = false;
 		console.log(a, 'a');
 	}
 })
-@setBackGround('#fff')
+@setBackGround('#eeeff8')
 @domListen()
 export default class add_info extends PureComponent {
 	constructor(props) {
