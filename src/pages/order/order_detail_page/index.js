@@ -6,25 +6,45 @@ import React, { PureComponent } from 'react';
 import { Card } from 'antd-mobile';
 import styles from './index.scss';
 import fetch from 'sx-fetch';
-// import { store } from 'utils/store';
+import qs from 'qs';
 import { bill_queryBillDetail } from 'fetch/api';
 import { setBackGround } from 'utils/background';
 import { LoadingView, ButtonCustom } from 'components';
-// import { buriedPointEvent } from 'utils/analytins';
+import OverdueEntry from '../components/OverdueEntry';
+import { connect } from 'react-redux';
+import { buriedPointEvent } from 'utils/analytins';
+import { order } from 'utils/analytinsType';
+
+// const noData = {
+// 	img: Image.bg.no_order,
+// 	text: '暂无账单',
+// 	width: '100%',
+// 	height: '100%'
+// };
+// const errorData = {
+// 	img: Image.bg.no_network,
+// 	text: '网络错误,点击重试',
+// 	width: '100%',
+// 	height: '100%'
+// };
+let entryFrom = '';
 
 @setBackGround('#F0F3F9')
 @fetch.inject()
+@connect((state) => ({
+	overdueModalInfo: state.commonState.overdueModalInfo
+}))
 export default class order_detail_page extends PureComponent {
 	constructor(props) {
 		super(props);
+		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		entryFrom = queryData.entryFrom;
 		this.state = {
 			panelCardList: []
 		};
 	}
 	componentWillMount() {
 		const { billNo } = this.props.history.location.state;
-		// store.removeCardData();
-		// store.removeCouponData();
 		if (!billNo) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {
@@ -38,8 +58,6 @@ export default class order_detail_page extends PureComponent {
 			},
 			() => {
 				this.queryBillDetails();
-				// 因为会有直接进到账单的公众号入口，所以在此在调一遍接口
-				// this.getOverdueInfo();
 			}
 		);
 	}
@@ -47,27 +65,6 @@ export default class order_detail_page extends PureComponent {
 	onReloadData = () => {
 		this.queryBillDetails();
 	};
-
-	// getOverdueInfo = () => {
-	// 	this.props.$fetch
-	// 		.post(API.procedure_user_sts)
-	// 		.then((res) => {
-	// 			if (res && res.msgCode === 'PTM0000') {
-	// 				// overduePopupFlag信用施压弹框，1为显示，0为隐藏
-	// 				this.setState({
-	// 					overDueModalFlag: res.data.overduePopupFlag
-	// 				});
-	// 				res.data && res.data.processInfo && store.setOverdueInf(res.data.processInfo);
-	// 			} else {
-	// 				this.props.toast.info(res.msgInfo);
-	// 			}
-	// 		})
-	// 		.catch(() => {
-	// 			this.setState({
-	// 				firstUserInfo: 'error'
-	// 			});
-	// 		});
-	// };
 
 	// 获取还款信息
 	queryBillDetails = () => {
@@ -147,7 +144,6 @@ export default class order_detail_page extends PureComponent {
 	//一键结清
 	payAllOrder = () => {
 		const { billNo, billDesc, preds, thisPerdNum, waitRepAmt } = this.state;
-
 		let repayPerds = [];
 		for (let i = 0; i < preds.length; i++) {
 			const item = preds[i];
@@ -155,10 +151,10 @@ export default class order_detail_page extends PureComponent {
 				repayPerds.push(item.perdNum);
 			}
 		}
-		// buriedPointEvent(order.payAllOrderBtnClick, {
-		// 	isOverdue: false,
-		// 	repayPerds: repayPerds.join(',')
-		// });
+		buriedPointEvent(order.payAllOrderBtnClick, {
+			isOverdue: false,
+			repayPerds: repayPerds.join(',')
+		});
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',
 			state: {
@@ -176,28 +172,22 @@ export default class order_detail_page extends PureComponent {
 	};
 
 	goOrderRepayPage = () => {
-		const {
-			// overdueDays, repayPerds,
-			billNo
-		} = this.state;
-		// buriedPointEvent(order.viewRepayInfoBtn, {
-		// 	entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
-		// 	isOverdue: !!overdueDays,
-		// 	repayPerds: repayPerds.join(',')
-		// });
-		if (billNo) {
-			this.props.history.push({
-				pathname: '/order/order_repay_page',
-				state: {
-					billNo
-				}
-			});
-		} else {
-			this.props.toast.info('未获取账单数据');
-		}
+		const { overdueDays, repayPerds = [], billNo } = this.state;
+		buriedPointEvent(order.viewRepayInfoBtn, {
+			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
+			isOverdue: !!overdueDays,
+			repayPerds: repayPerds.join(',')
+		});
+		this.props.history.push({
+			pathname: '/order/order_repay_page',
+			state: {
+				billNo
+			}
+		});
 	};
 	render() {
 		const { panelCardList, isBillClean, overdueDays } = this.state;
+		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 		return (
 			<LoadingView
 				ref={(view) => (this.viewRef = view)}
@@ -207,6 +197,7 @@ export default class order_detail_page extends PureComponent {
 					this.onReloadData();
 				}}
 			>
+				<OverdueEntry isOverdue={isEntryShow} history={this.props.history} overdueDays={overdueDays} />
 				<div className={styles.orderDetailCard}>
 					<Card className={styles.antCard}>
 						<Card.Header title="借款信息" />

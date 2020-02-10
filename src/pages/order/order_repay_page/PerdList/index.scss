@@ -9,7 +9,8 @@
 .perdDetailWrap {
 	background-color: $colorBgText;
 	padding: 32px 40px 20px;
-	box-sizing: border-box;
+  box-sizing: border-box;
+  margin-left: 40px;
 }
 
 .detailItem {
@@ -47,7 +48,7 @@
 }
 
 .red_box {
-  display: flex;
+	display: flex;
 	align-items: center;
 	border: 1px solid $colorTipRed;
 	background-color: #f6e8ea;
@@ -55,6 +56,7 @@
 	box-sizing: border-box;
 	color: $colorTipRed;
 	font-size: 22px;
+	height: 40px;
 }
 .perdTotAmt {
 	font-size: 28px;
@@ -67,15 +69,18 @@
 		width: 34px;
 		height: 34px;
 	}
+	.noCheckItem {
+		margin-left: 40px;
+	}
 	:global {
 		.am-list-item {
-			border-top: 1px solid $colorDivide;
 			padding-left: 0px;
 			.am-list-thumb {
 				margin-right: 5px;
 			}
 			.am-list-line {
 				padding-right: 0px;
+				border-top: 1px solid $colorDivide;
 				&::after {
 					height: 0px !important;
 				}

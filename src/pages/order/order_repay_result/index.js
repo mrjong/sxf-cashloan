@@ -29,7 +29,7 @@ export default class Cashier extends React.PureComponent {
 			remainAmt: 0,
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
-			orgFnlMsg: '',
+			failMsg: '',
 			tip_modal: false,
 			reward_modal: false,
 			showRewardLoading: false,
@@ -138,22 +138,13 @@ export default class Cashier extends React.PureComponent {
 	//查询本期减免金额
 	queryPlain = () => {
 		const { state = {} } = this.props.history.location;
-		const { repayOrdNo, ordNo, isSettle, prodType, repayPerds } = state;
 		this.props.$fetch
-			.post(repay_queryCashRegisterDetail, {
-				repayOrdNo,
-				ordNo,
-				isSettle,
-				prodType,
-				repayPerds
-			})
+			.post(repay_queryCashRegisterDetail, state)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					if (res.data) {
-						this.setState({
-							exceedingAmt: res.data[0].exceedingAmt
-						});
-					}
+				if (res.msgCode === '000000' && res.data) {
+					this.setState({
+						exceedingAmt: res.data[0].exceedingAmt
+					});
 				}
 			})
 			.catch((err) => {
@@ -163,25 +154,22 @@ export default class Cashier extends React.PureComponent {
 
 	queryPayStatus = () => {
 		const { state = {} } = this.props.history.location;
-
 		const { repayOrdNo } = state;
 		isFetching = true;
 		this.props.$fetch
 			.get(`${repay_payNotify}/${repayOrdNo}`)
 			.then((res) => {
-				if (res.msgCode === '000000') {
+				if (res.code === '000000' && res.data) {
 					isFetching = false;
-					store.removeCouponData();
-
-					const { resultMark, repayOrdAmt, crdOrdAmt, orgFnlMsg } = res.data || {};
-					if (resultMark === '01') {
+					const { payResultCode, repayOrdAmt, crdOrdAmt, failMsg } = res.data || {};
+					if (payResultCode === '00') {
 						this.setState(
 							{
 								status: Number(repayOrdAmt) === Number(crdOrdAmt) ? 'success' : 'part',
 								repayOrdAmt: Number(repayOrdAmt).toFixed(2),
 								crdOrdAmt: Number(crdOrdAmt).toFixed(2),
 								remainAmt: (Number(crdOrdAmt) - Number(repayOrdAmt)).toFixed(2),
-								orgFnlMsg
+								failMsg
 							},
 							() => {
 								buriedPointEvent(order.repayResultStatus, {
@@ -194,11 +182,11 @@ export default class Cashier extends React.PureComponent {
 								}
 							}
 						);
-					} else if (resultMark === '00') {
+					} else if (payResultCode === '01') {
 						this.setState(
 							{
 								status: 'fail',
-								orgFnlMsg
+								failMsg
 							},
 							() => {
 								buriedPointEvent(order.repayResultStatus, {
@@ -256,7 +244,7 @@ export default class Cashier extends React.PureComponent {
 			remainAmt,
 			repayOrdAmt,
 			crdOrdAmt,
-			orgFnlMsg,
+			failMsg,
 			exceedingAmt,
 			tip_modal,
 			reward_modal,
@@ -316,10 +304,10 @@ export default class Cashier extends React.PureComponent {
 									alt=""
 								/>
 							</div>
-							{orgFnlMsg ? (
+							{failMsg ? (
 								<div>
 									<p className={styles.desc}>还款失败</p>
-									<p className={styles.desc}>{orgFnlMsg}</p>
+									<p className={styles.desc}>{failMsg}</p>
 									<p className={styles.desc}>请选择其他银行卡还款</p>
 								</div>
 							) : (
@@ -348,10 +336,10 @@ export default class Cashier extends React.PureComponent {
 									<span className={styles.value}>{remainAmt}元</span>
 								</li>
 							</ul>
-							{orgFnlMsg && (
+							{failMsg && (
 								<p>
 									失败原因：
-									{orgFnlMsg}
+									{failMsg}
 								</p>
 							)}
 						</div>

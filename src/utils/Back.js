@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-07 15:25:31
+ * @LastEditTime : 2020-02-10 18:41:58
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -12,6 +12,7 @@ import { logoutAppHandler } from 'utils/CommonUtil/commonFunc';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
+import storeRedux from '../reduxes';
 import { closeCurrentWebView } from 'utils/CommonUtil/commonFunc';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
@@ -81,7 +82,10 @@ let initDialog = () => {
 							break;
 					}
 					if (!res) {
-						if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+						let storeData = storeRedux.getState();
+						const { commonState = {} } = storeData;
+						const { nextStepStatus } = commonState;
+						if (nextStepStatus && !store.getToggleMoxieCard()) {
 							obj.close();
 							window.ReactRouterHistory.push('/home/home');
 						} else {
@@ -114,7 +118,9 @@ if (window.history && window.history.pushState) {
 			let tokenFromStorage = '';
 			tokenFromStorage = store.getToken();
 			// 返回拦截弹窗
-			let userInfo = store.getUserInfo();
+			let storeData = storeRedux.getState();
+			const { staticState = {} } = storeData;
+			const { userInfo } = staticState;
 			let backFlag = store.getBackFlag();
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
@@ -202,9 +208,10 @@ if (window.history && window.history.pushState) {
 				}
 				return;
 			}
-
+			const { commonState = {} } = storeData;
+			const { nextStepStatus } = commonState;
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
-			if (store.getNeedNextUrl() && !store.getToggleMoxieCard()) {
+			if (nextStepStatus && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
