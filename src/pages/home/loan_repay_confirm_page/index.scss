@@ -160,8 +160,8 @@
 		position: absolute;
 		right: 30px;
 		align-items: center;
-		font-size: 30px;
-		font-weight: 500;
+		font-size: 28px;
+		font-weight: normal;
 		padding-right: 30px;
 		color: #121c32;
 		.rightArrow {
@@ -290,7 +290,7 @@
 		margin-left: 10px;
 	}
 	.desc {
-		color: #868e9e;
+		color: $colorInputPlaceholder;
 		font-size: 22px;
 		// padding: 0 0.1rem;
 		font-family: 'PingFangSC-Regular';
@@ -566,8 +566,9 @@
 		}
 	}
 	.desc {
-		font-size: 30px;
-		font-family: 'PingFangSC-Medium';
-		font-weight: 500;
+    color: $colorTipRed;
+		font-size: 28px;
+    font-family: 'PingFangSC-Regular';
+		font-weight: normal;
 	}
 }

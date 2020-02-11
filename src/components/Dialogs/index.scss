@@ -22,7 +22,7 @@
 	overflow: hidden;
 	background: #fff;
 	box-sizing: border-box;
-	padding: 50px 54px 20px;
+	padding: 50px 54px 150px;
 }
 
 .weui_dialog_default {
@@ -87,30 +87,40 @@
 }
 
 .header_title {
-	font-size: 50px;
+	font-size: 46px;
 	font-weight: 600;
 	text-align: left;
-	color: #121c32;
+	color: $colorBlack;
 }
 
 .header_subtitle {
-	font-size: 30px;
+	font-size: 28px;
 	text-align: left;
-	color: #121c32;
+	color: $colorSubTitle;
 	margin-bottom: 50px;
 }
 
 .button_item {
 	width: 542px;
-	height: 94px;
-	line-height: 94px;
+	height: 80px;
+	line-height: 80px;
 	border-radius: 45px;
-	border: 1px solid #c9cdd5;
-	margin-bottom: 30px;
+	border: 1px solid $colorDivide;
+  margin-bottom: 20px;
+  color: $colorBlack;
 }
 
 .blue_text {
-	color: #397be6;
+  color: $colorBlue;
+  background-color: #F7F8FA;
+  position: absolute;
+  bottom: -21px;
+  border: none;
+  width: 100%;
+  left: -0px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 0;
 }
 
 .arrow_icon {

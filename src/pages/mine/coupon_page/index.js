@@ -128,7 +128,7 @@ export default class coupon_page extends PureComponent {
 		this.getCommonData('tabshow');
 	};
 	// 获取每一页数据
-	genData = async (pIndex = 1, tab) => {
+	genData = async (pIndex = 1) => {
 		if (totalPage && totalPage < pIndex) {
 			this.setState({
 				isLoading: false,

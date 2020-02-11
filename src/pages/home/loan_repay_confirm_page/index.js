@@ -1,12 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 13:55:21
+ * @LastEditTime : 2020-02-11 16:46:06
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal } from 'antd-mobile';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
@@ -31,15 +30,6 @@ import { TimeoutPayModal, FeedbackModal, SelectList, ButtonCustom, FixedTopTip }
 let isinputBlur = false;
 
 import { cred_queryApplPageInfo } from 'fetch/api.js';
-
-const API = {
-	queryBillStatus: '/wap/queryBillStatus', //
-	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
-	qryPerdRate: '/bill/prod',
-	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
-	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
-};
 const tagList = [
 	{
 		name: '部分还款',
@@ -90,7 +80,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			repayType: '', // 还款方式
 			fullMinAmt: '', // 全额或者最低还卡金额
 			showTimeoutPayModal: false,
-			showFeedbackModal: false,
 			inputFocus: false
 		};
 	}
@@ -99,7 +88,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		store.removeToggleMoxieCard();
 		store.removeAutIdCard(); // 信用卡前置
 		this.queryUsrInfo();
-		this.showFeedbackModal();
 		let _this = this;
 		let originClientHeight = document.documentElement.clientHeight;
 		// 安卓键盘抬起会触发resize事件，ios则不会
@@ -461,20 +449,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	showFeedbackModal = () => {
-		if (store.getGotoMoxieFlag()) {
-			this.setState({
-				showFeedbackModal: true
-			});
-		}
-	};
-
-	closeFeedbackModal = () => {
-		this.setState({
-			showFeedbackModal: false
-		});
-		store.removeGotoMoxieFlag();
-	};
 	updateBillInf = () => {
 		const { usrIndexInfo = {} } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo;
@@ -542,8 +516,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			btnDisabled,
 			cardCount,
 			fullMinAmt,
-			showTimeoutPayModal,
-			showFeedbackModal
+			showTimeoutPayModal
 		} = this.state;
 		const { cardBillAmt, bankNo, bankName, cardBillSts, minApplAmt, maxApplAmt, lastNo } = usrIndexInfo;
 
@@ -850,12 +823,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 							showTimeoutPayModal: false
 						});
 					}}
-				/>
-				<FeedbackModal
-					history={this.props.history}
-					toast={this.props.toast}
-					visible={showFeedbackModal}
-					closeModal={this.closeFeedbackModal}
 				/>
 			</div>
 		);

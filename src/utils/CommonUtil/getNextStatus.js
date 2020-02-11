@@ -182,7 +182,6 @@ export const getNextStatus = ({
 							getBindCardStatus({ $props, applyCreditData });
 							return;
 						} else if (nextData.credCardCount > 1) {
-							// routeName = 'SelectAuthCard';
 							routeName = '/mine/credit_list_page';
 						} else {
 							routeName = '/home/loan_repay_confirm_page';
