@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 18:59:43
+ * @LastEditTime : 2020-02-11 11:27:59
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -62,25 +62,10 @@ export default class home_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			bannerList: [],
-			usrIndexInfo: '',
-			modal_left: false,
-			activeTag: '',
-			perdRateList: [],
-			CardOverDate: false,
-			pageCode: '',
-			showAgreement: false, // 显示协议弹窗
-			isShowActivityModal: false, // 是否显示活动弹窗
-			visibleLoading: false, //认证弹窗
-			isNeedExamine: false, // 是否需要人审
-			usrCashIndexInfo: {},
-			percentBtnText: '',
-			blackData: {},
-			cardStatus: '',
-			statusSecond: '', //每隔5秒状态
-			bizId: '', // 跳转到银行列表的autId
-			userMaxAmt: '', // 最高可申请还款金(元)
-			welfareModalInf: [] // 首页弹框信息
+			homeData: this.props.homeData || {},
+			bannerList: this.props.bannerList || [],
+			welfareList: (this.props.welfareList && this.props.welfareList.welfares) || [],
+			activities: (this.props.welfareList && this.props.welfareList.activities) || []
 		};
 	}
 
@@ -748,18 +733,28 @@ export default class home_page extends PureComponent {
 		return disPlayData;
 	}
 
+	goToNewMoXie = async () => {
+		// this.props.history.push('/home/c', {
+		//   RouterType: 'home',
+		// });
+	};
+
+	/**
+	 * @description: 是否展示添加银行卡按钮
+	 * @param {type}
+	 * @return:
+	 */
 	componentsAddCards = () => {
-		const { usrIndexInfo } = this.state;
+		const { homeData } = this.state;
 		let componentsAddCards = null;
-		const { indexSts } = usrIndexInfo;
+		const { indexSts } = homeData;
 		switch (indexSts) {
 			case 'LN0003': // 新用户，信用卡未授权
 				componentsAddCards = (
 					<AddCards
 						handleClick={() => {
-							// 埋点-首页-点击代还其他信用卡
+							// 埋点-首页-点击代偿其他信用卡
 							buriedPointEvent(home.repayOtherCredit);
-							//TODONEW
 							this.goToNewMoXie();
 						}}
 					/>
