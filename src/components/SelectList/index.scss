@@ -1,9 +1,9 @@
 @import '../../assets/styles/scss/base/fn';
 .noselect {
-	color: #868e9e;
-	font-size: 30px;
-	font-family: 'PingFangSC-Medium';
-	font-weight: 500;
+	color: $colorInputPlaceholder;
+	font-size: 28px;
+  font-family: 'PingFangSC-Regular';
+	font-weight: 400;
 	position: relative;
 	line-height: 1.4;
 	right: 30px;

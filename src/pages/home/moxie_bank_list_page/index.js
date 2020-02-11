@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-06 17:45:33
+ * @LastEditTime : 2020-02-11 16:47:26
  */
 import React, { Component } from 'react';
 import style from './index.scss';
@@ -12,7 +12,6 @@ import { moxie_bank_list } from 'utils/analytinsType';
 import ButtonCustom from 'components/ButtonCustom';
 import linkConf from 'config/link.conf';
 import bankCode from 'config/bankCode';
-import FeedbackModal from 'components/FeedbackModal';
 import recommend_icon from './img/recommend_icon.png';
 
 const API = {
@@ -29,8 +28,7 @@ export default class moxie_bank_list_page extends Component {
 		showAll: true,
 		lengthNum: 7,
 		bankList: [],
-		isnoData: false,
-		showFeedbackModal: false
+		isnoData: false
 	};
 	componentWillMount() {
 		// 信用卡直接返回的问题
@@ -51,21 +49,6 @@ export default class moxie_bank_list_page extends Component {
 		store.removeBackUrl2();
 		store.removeMoxieBackUrl2();
 	}
-
-	showFeedbackModal = () => {
-		if (store.getGotoMoxieFlag()) {
-			this.setState({
-				showFeedbackModal: true
-			});
-		}
-	};
-
-	closeFeedbackModal = () => {
-		this.setState({
-			showFeedbackModal: false
-		});
-		store.removeGotoMoxieFlag();
-	};
 
 	getBackUrl = () => {
 		backUrlData = store.getBackUrl();
@@ -215,12 +198,6 @@ export default class moxie_bank_list_page extends Component {
 						</div>
 					</div>
 				) : null}
-				<FeedbackModal
-					history={this.props.history}
-					toast={this.props.toast}
-					visible={this.state.showFeedbackModal}
-					closeModal={this.closeFeedbackModal}
-				/>
 			</div>
 		);
 	}

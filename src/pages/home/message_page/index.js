@@ -308,10 +308,7 @@ export default class message_page extends PureComponent {
 				});
 				this.goToMsgDetail(obj);
 			} else {
-				Toast.show({
-					message: res.message,
-					code: res.code
-				});
+				Toast.info(res.message);
 			}
 		});
 	};

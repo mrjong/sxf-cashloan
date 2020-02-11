@@ -6,10 +6,10 @@ import STabs from 'components/Tab';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
-import { PullToRefresh, ListView } from 'antd-mobile';
-// import { getNextStatus } from 'utils/CommonUtil/commonFunc';
+import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
 import {
@@ -128,7 +128,7 @@ export default class coupon_page extends PureComponent {
 		this.getCommonData('tabshow');
 	};
 	// 获取每一页数据
-	genData = async (pIndex = 1, tab) => {
+	genData = async (pIndex = 1) => {
 		if (totalPage && totalPage < pIndex) {
 			this.setState({
 				isLoading: false,
@@ -386,7 +386,19 @@ export default class coupon_page extends PureComponent {
 									/>
 								)}
 								{receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine' ? (
-									<button className={style.goUse}>去使用</button>
+									<button
+										className={style.goUse}
+										onClick={
+											this.state.msgType === 0
+												? () => {
+														Toast.loading('加载中...');
+														getNextStatus({ $props: this.props });
+												  }
+												: () => {}
+										}
+									>
+										去使用
+									</button>
 								) : null}
 
 								<div
