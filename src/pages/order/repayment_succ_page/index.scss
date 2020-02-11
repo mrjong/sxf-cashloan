@@ -7,8 +7,6 @@
 		background: #fff;
 		margin-bottom: 20px;
 		.success_ico {
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png', 0, -88px);
-			display: inline-block;
 			width: 128px;
 			height: 128px;
 		}

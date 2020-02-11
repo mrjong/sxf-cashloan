@@ -14,6 +14,7 @@ import { msg_popup_list } from 'fetch/api.js';
 import { setHomeModalAction } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
 import HomeModal from '../../home/home_page/components/HomeModal';
+import Images from 'assets/image';
 
 @connect(
 	() => ({}),
@@ -68,7 +69,7 @@ export default class repayment_succ_page extends PureComponent {
 		return (
 			<div className={styles.repayment_succ_page}>
 				<div className={styles.tips}>
-					<i className={styles.success_ico} />
+					<img className={styles.success_ico} src={Images.adorn.success} />
 					<p>还款成功</p>
 				</div>
 				<div className={styles.details}>

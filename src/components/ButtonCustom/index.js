@@ -145,6 +145,7 @@ export default class ButtonCustom extends React.PureComponent {
 			children,
       onClick,
       iconsource,
+      loading,
 			...restProps
 		} = this.props;
 		return (
