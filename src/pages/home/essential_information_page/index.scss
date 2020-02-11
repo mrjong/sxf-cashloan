@@ -1,7 +1,7 @@
 @import '../../../assets/styles/scss/base/fn';
 
 .pageContent {
-  padding: 30px 60px 220px;
+  padding: 100px 60px 220px;
 }
 
 .nameDiv {
@@ -33,19 +33,6 @@
 
 	.clear {
 		clear: both;
-	}
-
-	.warning_tip {
-		position: relative;
-		height: 50px;
-		line-height: 50px;
-		text-align: center;
-		background-color: #F6F9FD;
-		font-size: 24px;
-		color: #394259;
-		.warning_tip_title {
-      font-weight: bold;
-    }
 	}
 
   .sureBtnWrap {

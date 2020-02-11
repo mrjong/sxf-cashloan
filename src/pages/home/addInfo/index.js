@@ -16,10 +16,8 @@ import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { auth_suppleInfo } from 'fetch/api.js';
-import AsyncCascadePicker from 'components/AsyncCascadePicker';
-import StepTitle from 'components/StepTitle';
-import ButtonCustom from 'components/ButtonCustom';
-import FixedHelpCenter from 'components/FixedHelpCenter';
+
+import { StepTitle, AsyncCascadePicker, ButtonCustom, FixedHelpCenter, FixedTopTip } from 'components';
 
 import style from './index.scss';
 import informationMore from './img/back.png';
@@ -30,12 +28,8 @@ let submitButtonLocked = false;
 @connect((state) => ({
 	nextStepStatus: state.commonState.nextStepStatus
 }))
-@createForm({
-	onFieldsChange: (a) => {
-		console.log(a, 'a');
-	}
-})
-@setBackGround('#eeeff8')
+@createForm()
+@setBackGround('#fff')
 @domListen()
 export default class add_info extends PureComponent {
 	constructor(props) {
@@ -122,11 +116,7 @@ export default class add_info extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
-				<div className={style.warning_tip}>
-					<span className={style.warning_tip_title}>温馨提示：</span>
-					<span className={style.warning_tip_text}>学生禁止使用还到</span>
-				</div>
-
+				<FixedTopTip />
 				<div className={style.pageContent}>
 					<FixedHelpCenter history={this.props.history} />
 					<StepTitle title="填写基本信息" titleSub="请填写基本信息，有利于您的借款审核" stepNum="03" />

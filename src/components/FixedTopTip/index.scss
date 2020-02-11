@@ -1,0 +1,17 @@
+.fixed_top_tip_wrap {
+  position: fixed;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 24px;
+  color: #394259;
+  background-color: #F6F9FD;
+  .top_tip_title {
+    font-weight: bold;
+  }
+}

@@ -26,7 +26,8 @@ import {
 	StepList,
 	AddressSelect,
 	AsyncCascadePicker,
-	ButtonCustom
+	ButtonCustom,
+	FixedTopTip
 } from 'components';
 
 import LimitTimeJoin from './components/LimitTimeJoin';
@@ -788,21 +789,13 @@ export default class essential_information_page extends PureComponent {
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
-				<div className={style.warning_tip}>
-					<span className={style.warning_tip_title}>温馨提示：</span>
-					<span className={style.warning_tip_text}>学生禁止使用还到</span>
-				</div>
+				<FixedTopTip />
 				<div className={style.pageContent}>
 					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin /> : null}
 
 					<FixedHelpCenter history={this.props.history} />
 
-					<StepTitle
-						style={{ marginTop: '0.3rem' }}
-						title="完善个人信息"
-						titleSub="请确保内容真实有效，有利于您的借款审核"
-						stepNum="02"
-					/>
+					<StepTitle title="完善个人信息" titleSub="请确保内容真实有效，有利于您的借款审核" stepNum="02" />
 
 					<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
 						<div className={style.item_box}>

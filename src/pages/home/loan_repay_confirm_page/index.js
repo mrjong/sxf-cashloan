@@ -26,7 +26,7 @@ import {
 } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import { TimeoutPayModal, FeedbackModal, SelectList, ButtonCustom } from 'components';
+import { TimeoutPayModal, FeedbackModal, SelectList, ButtonCustom, FixedTopTip } from 'components';
 
 let isinputBlur = false;
 
@@ -571,10 +571,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 			: fullMinAmt;
 		return (
 			<div className={[style.pageWrapper, 'loan_repay_confirm'].join(' ')}>
-				<div className={style.warning_tip}>
-					<span className={style.warning_tip_title}>温馨提示：</span>
-					<span className={style.warning_tip_text}>学生禁止使用还到</span>
-				</div>
+				<FixedTopTip />
 				<div className={[style.page_inner_wrap].join(' ')}>
 					<div className={style.bankCard}>
 						<div className={style.titleBg}>收款信用卡</div>
