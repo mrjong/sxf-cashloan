@@ -1,17 +1,15 @@
 .sxp_tag {
-	padding: 0.1rem 0.18rem;
-	font-size: 0.26rem;
+	padding: 20px 18px;
+	font-size: 0.24rem;
 	line-height: 1;
-	// height: 0.5rem;
-	color: #868e9e;
-	border: 1px solid #c9cdd5;
+	color: $colorInactiveColor;
+	border: 0;
 	border-radius: 0.4rem;
-	background-color: #fff;
+	background-color: $colorBgText;
 	margin-right: 20px;
 	&_active {
-		color: #397be6;
-		border: 1px solid #397be6;
-		background-color: #fff;
+		color: $colorBlack;
+		background-color: $colorYellow;
 	}
 }
 .sxp_tag:last-child {
@@ -19,7 +17,7 @@
 }
 .specail_tag_active {
 	position: relative;
-	padding: 0.1rem 0.15rem;
+	// padding: 0.1rem 0.15rem;
 	i {
 		position: absolute;
 		right: -30px;

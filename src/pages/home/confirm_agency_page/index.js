@@ -68,7 +68,7 @@ const API = {
 
 let timer;
 let timerOut;
-@setBackGround('#F7F8FA')
+@setBackGround('#f0f4f9')
 @fetch.inject()
 @createForm()
 @domListen()
@@ -137,7 +137,7 @@ export default class confirm_agency_page extends PureComponent {
 					name: '立即放款',
 					value: '0',
 					style: {
-						width: '2.07rem'
+						width: '1.9rem'
 					}
 				}
 			],
@@ -1135,6 +1135,7 @@ export default class confirm_agency_page extends PureComponent {
 									moneykeyboardwrapprops={moneyKeyboardWrapProps}
 								/>
 							</div>
+							<p className={style.billInpBoxTip}>建议全部借出，借款后剩余额度将不可用</p>
 						</div>
 						<div>
 							<ul className={style.pannel}>
@@ -1158,8 +1159,10 @@ export default class confirm_agency_page extends PureComponent {
 							</ul>
 							<ul className={style.pannel}>
 								<li className={style.listItem}>
-									<label>放款日期</label>
-									<span className={style.tagList}>
+									<div>
+										<label>放款日期</label>
+									</div>
+									<div className={style.TabListWrap}>
 										<TabList
 											burientype="lenders"
 											tagType="lenders"
@@ -1168,7 +1171,7 @@ export default class confirm_agency_page extends PureComponent {
 											activeindex={lendersIndex}
 											onClick={this.handleLendersTagClick}
 										/>
-									</span>
+									</div>
 								</li>
 								<li
 									className={style.listItem}
@@ -1293,10 +1296,10 @@ export default class confirm_agency_page extends PureComponent {
 									? this.handleButtonClick
 									: () => {}
 							}
-							className={
+							type={
 								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && isBtnAble && checkBox1
-									? style.submitBtn
-									: style.submitBtnDisabled
+									? 'yellow'
+									: 'default'
 							}
 						>
 							确定签约
