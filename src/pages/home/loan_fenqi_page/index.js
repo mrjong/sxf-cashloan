@@ -33,7 +33,7 @@ const API = {
 let isFetching = false;
 
 @fetch.inject()
-@setBackGround('#fff')
+@setBackGround('#f0f4f9')
 export default class loan_fenqi_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -814,7 +814,7 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowLoanTipModal
 		} = this.state;
 		return (
-			<div className={style.fenqi_page}>
+			<div className={[style.fenqi_page, 'loan_fenqi_page'].join(' ')}>
 				<div className={style.scrollWrap}>
 					<div className={style.inputWrap}>
 						<div className={style.billInpBox}>
@@ -987,7 +987,7 @@ export default class loan_fenqi_page extends PureComponent {
 				<div className={style.buttonWrap}>
 					<SXFButton
 						onClick={this.loanApplySubmit}
-						className={this.validateFn() && checkBox1 ? style.submitBtn : style.submitBtnDisabled}
+						type={this.validateFn() && checkBox1 ? 'yellow' : 'default'}
 					>
 						签约借款
 					</SXFButton>

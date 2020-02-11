@@ -1,6 +1,6 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .fenqi_page {
-	padding: 70px 60px 0;
+	padding: 70px 40px 0;
 
 	.scrollWrap {
 		padding-bottom: 160px;
@@ -23,7 +23,9 @@
 		}
 	}
 	.billInput {
-		width: 583px;
+    // width: 583px;
+    width: 100%;
+    background-color: transparent;
 		input {
 			text-align: left;
 			font-size: 56px;
@@ -38,7 +40,9 @@
 	}
 
 	.pannel {
-		overflow: hidden;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 10px;
 		.listItem {
 			position: relative;
 			display: flex;
@@ -47,12 +51,17 @@
 			align-items: center;
 			box-sizing: border-box;
 			font-size: 30px;
-			color: #121c32;
-			&::after {
-				@include setBottomLine(#f0f1f5);
-				left: 0;
+      color: #121c32;
+      padding: 0 40px;
+
+    }
+    .listItem + .listItem {
+      &::after {
+				@include setTopLine(#f0f1f5);
+        left: 40px;
+        right: 40px;
 			}
-		}
+    }
 
 		.listValue {
 			font-weight: 700;
@@ -129,21 +138,12 @@
 
 	.buttonWrap {
 		width: 100%;
-		padding: 30px 0;
+		padding: 30px 40px;
 		position: fixed;
 		bottom: 0;
-		left: 0;
-		background-color: #fff;
-
-		.submitBtn {
-			width: 634px;
-		}
-
-		.submitBtnDisabled {
-			width: 634px;
-			background-color: #d8d8d8;
-			color: #fff;
-		}
+    left: 0;
+    box-sizing: border-box;
+    // background-color: #fff;
 	}
 	// 优惠劵金额展示
 	.couponListValue {
@@ -190,11 +190,17 @@
 }
 
 :global {
-	.purpose_modal {
-		.am-modal-body {
-			padding: 50px 60px 0;
-		}
-	}
+  .loan_fenqi_page{
+    .am-list-line {
+      padding-right: 0;
+    }
+
+    .purpose_modal {
+      .am-modal-body {
+        padding: 50px 60px 0;
+      }
+    }
+  }
 }
 
 .modalTitle {

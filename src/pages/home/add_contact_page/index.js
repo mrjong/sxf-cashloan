@@ -97,9 +97,7 @@ export default class add_contact_page extends PureComponent {
 			<div className={styles.contact_result_page}>
 				<ContactResultList isCanSelect={false} changeContact={this.changeContact} toast={this.props.toast} />
 				<div className={styles.confirm_btn_box}>
-					<ButtonCustom onClick={this.confirmHandler} className={styles.confirm_btn}>
-						确认
-					</ButtonCustom>
+					<ButtonCustom onClick={this.confirmHandler}>确认</ButtonCustom>
 				</div>
 			</div>
 		);
