@@ -6,7 +6,7 @@ import fetch from 'sx-fetch';
 import circle_icon from './img/circle_icon.png';
 import reward_loading from './img/reward_loading.png';
 import { setBackGround } from 'utils/background';
-import { store } from 'utils/store';
+// import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order, activity } from 'utils/analytinsType';
 import { repay_payNotify, repay_queryCashRegisterDetail } from 'fetch/api.js';
@@ -125,13 +125,18 @@ export default class Cashier extends React.PureComponent {
 				} else if (isLastPerd) {
 					//如果还的是最后一期
 					setTimeout(() => {
-						store.removeBackData();
 						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
 					}, 2000);
 				}
 			})
 			.catch(() => {
 				this.stopRewardLoading();
+				if (isLastPerd) {
+					//如果还的是最后一期
+					setTimeout(() => {
+						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
+					}, 2000);
+				}
 			});
 	};
 
@@ -212,7 +217,12 @@ export default class Cashier extends React.PureComponent {
 			isOverdue: !!billOvduDays,
 			repayPerds: repayPerds.join(',')
 		});
-		this.props.history.replace('/order/order_repay_page');
+		this.props.history.replace({
+			pathname: '/order/order_repay_page',
+			state: {
+				billNo: state.billNo
+			}
+		});
 	};
 
 	renderContinueButton = (isLastPerd, status) => {

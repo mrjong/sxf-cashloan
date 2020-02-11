@@ -440,7 +440,10 @@ export default class order_repay_confirm extends PureComponent {
 	//判断该账单是否最后一期
 	isLastPerd = () => {
 		const { actPanelListDatas, billDesc, isPayAll } = this.props.history.location.state;
-		const lastPerd = actPanelListDatas[actPanelListDatas.length - 1];
+		let lastPerd = [];
+		if (actPanelListDatas) {
+			lastPerd = actPanelListDatas[actPanelListDatas.length - 1];
+		}
 		let isClear = lastPerd.isChecked;
 
 		return billDesc.perdUnit === 'D' || isClear || isPayAll;

@@ -32,49 +32,8 @@
 		}
 	}
 	.back_btn {
-		width: 620px;
-		margin-top: 108px;
-	}
-}
-.success_modal_warp {
-	:global {
-		.am-modal {
-			width: 750px;
-			.am-modal-content {
-				padding-top: 0;
-				background-color: transparent;
-				// height: 900px;
-				.am-modal-body {
-					padding: 0;
-				}
-			}
-		}
-	}
-	// .modal_tip_content {
-	// 	background-image: url('../../../assets/images/order/modal_bg.png');
-	// 	background-repeat: no-repeat;
-	// 	background-size: 100% 100%;
-	// 	margin-top: 50px;
-	// 	width: 750px;
-	// 	height: 750px;
-	// 	.modal_btn {
-	// 		position: relative;
-	// 		margin: 0 auto;
-	// 		top: 610px;
-	// 		width: 490px;
-	// 		height: 105px;
-	// 		background-image: url('../../../assets/images/order/modal_btn.png');
-	// 		background-size: 100% 100%;
-	// 	}
-	// }
-	div.wrapperStyle {
-		padding-top: 50px;
-	}
-	div.close_btn {
-		position: absolute;
-		right: 35px;
-		top: 0;
-		z-index: 1;
-		margin-top: 0;
+		width: 670px;
+    margin: 100px auto;
+    display: block;
 	}
 }
