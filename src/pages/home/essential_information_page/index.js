@@ -18,15 +18,18 @@ import { buryingPoints } from 'utils/buryPointMethods';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
-import AgreementModal from 'components/AgreementModal';
-import AddressSelect from 'components/react-picker-address';
-import StepTitle from 'components/StepTitle';
-import StepList from 'components/StepList';
-import AsyncCascadePicker from 'components/AsyncCascadePicker';
-import ButtonCustom from 'components/ButtonCustom';
-import LimitTimeJoin from './components/LimitTimeJoin';
-import FixedHelpCenter from 'components/FixedHelpCenter';
+import dayjs from 'dayjs';
+import {
+	FixedHelpCenter,
+	AgreementModal,
+	StepTitle,
+	StepList,
+	AddressSelect,
+	AsyncCascadePicker,
+	ButtonCustom
+} from 'components';
 
+import LimitTimeJoin from './components/LimitTimeJoin';
 import style from './index.scss';
 import informationMore from './img/back.png';
 
@@ -45,13 +48,14 @@ const API = {
 
 import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api.js';
 
-const reducedFilter = (data, keys, fn) =>
-	data.filter(fn).map((el) =>
+const reducedFilter = (data, keys, fn) => {
+	return data.filter(fn).map((el) =>
 		keys.reduce((acc, key) => {
 			acc[key] = el[key];
 			return acc;
 		}, {})
 	);
+};
 
 let urlQuery = '';
 // let isFetching = false;
@@ -123,14 +127,15 @@ export default class essential_information_page extends PureComponent {
 	readContract = (jumpUrl) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
-		this.props.$fetch.get(API.contractInfo).then((result) => {
-			if (result && result.code === 'PTM0000' && result.data !== null) {
-				store.setProtocolPersonalData(result.data);
-				this.props.history.push(jumpUrl);
-			} else {
-				this.props.toast.info(result.message);
-			}
-		});
+
+		const { userInfo = {} } = this.props;
+		const pageData = {
+			name: userInfo.nameHid,
+			idNo: userInfo.idNoHid,
+			dateTime: dayjs().format('YYYY年MM月DD日')
+		};
+		store.setProtocolPersonalData(pageData);
+		this.props.history.push(jumpUrl);
 	};
 	selectProtocol = () => {
 		this.setState({
@@ -322,7 +327,7 @@ export default class essential_information_page extends PureComponent {
 			let cityItem = [];
 			let areaItem = [];
 			let townshipItem = [];
-			const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
+			const provItem = reducedFilter(result.data.data, ['key', 'value'], (item) => {
 				let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 				if (proPattern.test(item.value) || proPattern2.test(pro)) {
 					return item;
@@ -330,7 +335,7 @@ export default class essential_information_page extends PureComponent {
 			});
 			if (provItem && provItem.length > 0) {
 				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].key}`);
-				cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
+				cityItem = reducedFilter(result2.data.data, ['key', 'value'], (item2) => {
 					let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
 						return item2;
@@ -340,7 +345,7 @@ export default class essential_information_page extends PureComponent {
 
 			if (cityItem && cityItem.length > 0) {
 				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].key}`);
-				areaItem = reducedFilter(result3.data, ['key', 'value'], (item3) => {
+				areaItem = reducedFilter(result3.data.data, ['key', 'value'], (item3) => {
 					let areaPattern3 = new RegExp(`^[\\u4E00-\\u9FA5]*${item3.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (areaPattern.test(item3.value) || areaPattern3.test(area)) {
 						return item3;
@@ -350,7 +355,7 @@ export default class essential_information_page extends PureComponent {
 
 			if (areaItem && areaItem.length > 0) {
 				let result4 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].key}`);
-				townshipItem = reducedFilter(result4.data, ['key', 'value'], (item4) => {
+				townshipItem = reducedFilter(result4.data.data, ['key', 'value'], (item4) => {
 					let townshipPattern4 = new RegExp(`^[\\u4E00-\\u9FA5]*${item4.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
 					if (townshipPattern.test(item4.value) || townshipPattern4.test(area)) {
 						return item4;
@@ -407,14 +412,14 @@ export default class essential_information_page extends PureComponent {
 			let areaItem = [];
 			let streetItem = [];
 
-			const provItem = reducedFilter(result.data, ['key', 'value'], (item) => {
+			const provItem = reducedFilter(result.data.data, ['key', 'value'], (item) => {
 				if (item.key === pro) {
 					return item;
 				}
 			});
 			if (provItem && provItem.length > 0) {
 				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].key}`);
-				cityItem = reducedFilter(result2.data, ['key', 'value'], (item2) => {
+				cityItem = reducedFilter(result2.data.data, ['key', 'value'], (item2) => {
 					if (item2.key === city) {
 						return item2;
 					}
@@ -423,7 +428,7 @@ export default class essential_information_page extends PureComponent {
 
 			if (cityItem && cityItem.length > 0) {
 				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].key}`);
-				areaItem = reducedFilter(result3.data, ['key', 'value'], (item3) => {
+				areaItem = reducedFilter(result3.data.data, ['key', 'value'], (item3) => {
 					if (item3.key === area) {
 						return item3;
 					}
@@ -431,7 +436,7 @@ export default class essential_information_page extends PureComponent {
 			}
 			if (areaItem && areaItem.length > 0) {
 				let result3 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].key}`);
-				streetItem = reducedFilter(result3.data, ['key', 'value'], (item4) => {
+				streetItem = reducedFilter(result3.data.data, ['key', 'value'], (item4) => {
 					if (item4.key === street) {
 						return item4;
 					}
@@ -779,6 +784,7 @@ export default class essential_information_page extends PureComponent {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { showAgreement, selectFlag, addressList, visible, ProvincesValue } = this.state;
+		console.log(showAgreement, 'showAgreement');
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
@@ -851,7 +857,7 @@ export default class essential_information_page extends PureComponent {
 										]
 									})}
 									className="hasborder"
-									placeholder="详细地址：如道路、门牌号、小区、楼栋号、单元室等"
+									placeholder="请输入您的现居住详细地址"
 									type="text"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'resident_address');
@@ -1149,44 +1155,6 @@ export default class essential_information_page extends PureComponent {
 						stepList={[{ title: '填写基本信息', stepNum: '03' }, { title: '认证信用卡', stepNum: '04' }]}
 					></StepList>
 
-					{urlQuery.jumpToBase && (
-						<div className={style.operatorCont}>
-							<div className={style.protocolBox} onClick={this.selectProtocol}>
-								<i
-									className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`}
-								/>
-								点击按钮即视为同意
-								<em
-									onClick={(e) => {
-										e.stopPropagation();
-										this.readContract('/protocol/personal_auth_page');
-									}}
-									className={style.link}
-								>
-									《个人信息授权书》
-								</em>
-								<em
-									onClick={(e) => {
-										e.stopPropagation();
-										this.readContract('/protocol/user_privacy_page');
-									}}
-									className={style.link}
-								>
-									《用户隐私权政策》
-								</em>
-							</div>
-							<ButtonCustom
-								onClick={this.handleSubmit}
-								className={[style.nextBtn, !this.buttonDisabled() ? style.dis : ''].join(' ')}
-							>
-								下一步
-							</ButtonCustom>
-							<div className={style.quitText} onClick={this.quitSubmit}>
-								放弃本次机会
-							</div>
-						</div>
-					)}
-
 					<div className={style.protocolBox} onClick={this.selectProtocol}>
 						<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
 						点击按钮即视为同意
@@ -1212,15 +1180,14 @@ export default class essential_information_page extends PureComponent {
 				</div>
 
 				<div className={style.sureBtnWrap}>
-					{!urlQuery.jumpToBase && (
-						<ButtonCustom
-							long
-							onClick={this.handleSubmit}
-							type={this.buttonDisabled() ? 'yellow' : 'default'}
-						>
-							{needNextUrl ? '下一步' : '完成'}
-						</ButtonCustom>
-					)}
+					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'yellow' : 'default'}>
+						{needNextUrl ? '下一步' : '完成'}
+					</ButtonCustom>
+					{urlQuery.jumpToBase ? (
+						<div className={style.quitText} onClick={this.quitSubmit}>
+							放弃本次机会
+						</div>
+					) : null}
 				</div>
 
 				<Modal

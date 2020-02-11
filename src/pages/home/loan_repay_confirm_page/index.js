@@ -606,7 +606,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 									<p className={`${style.name} ${style.moneyTit}`}>账单金额(元)</p>
 								</div>
 								<div className={style.item}>
-									<span className={style.name}>还款日：{usrIndexInfo.cardRepayDt || '------------'}</span>
+									<span className={style.name}>还款日：{usrIndexInfo.cardRepayDt || '----/--/--'}</span>
 								</div>
 							</div>
 						</div>

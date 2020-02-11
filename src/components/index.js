@@ -17,6 +17,12 @@ import WelfareModal from './WelfareModal';
 import ProtocolSmsModal from './ProtocolSmsModal';
 import FeedbackModal from './FeedbackModal';
 import TimeoutPayModal from './TimeoutPayModal';
+import AsyncCascadePicker from './AsyncCascadePicker';
+import StepTitle from './StepTitle';
+import StepList from './StepList';
+import AddressSelect from './react-picker-address';
+import FixedHelpCenter from './FixedHelpCenter';
+
 export {
 	FooterBar,
 	LoadingView,
@@ -32,5 +38,10 @@ export {
 	WelfareModal,
 	ProtocolSmsModal,
 	FeedbackModal,
-	TimeoutPayModal
+	TimeoutPayModal,
+	AsyncCascadePicker,
+	StepTitle,
+	StepList,
+	AddressSelect,
+	FixedHelpCenter
 };
