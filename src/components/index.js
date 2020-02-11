@@ -15,6 +15,8 @@ import ActivityModal from './ActivityModal';
 import AgreementModal from './AgreementModal';
 import WelfareModal from './WelfareModal';
 import ProtocolSmsModal from './ProtocolSmsModal';
+import FeedbackModal from './FeedbackModal';
+import TimeoutPayModal from './TimeoutPayModal';
 export {
 	FooterBar,
 	LoadingView,
@@ -28,5 +30,7 @@ export {
 	ActivityModal,
 	AgreementModal,
 	WelfareModal,
-	ProtocolSmsModal
+	ProtocolSmsModal,
+	FeedbackModal,
+	TimeoutPayModal
 };

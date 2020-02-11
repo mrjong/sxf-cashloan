@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 11:39:50
+ * @LastEditTime : 2020-02-10 18:42:22
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -14,15 +14,7 @@ import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-import {
-	getDeviceType,
-	validators,
-	handleInputBlur,
-	handleClickConfirm,
-	idChkPhoto,
-	activeConfigSts,
-	getBindCardStatus
-} from 'utils';
+import { getDeviceType, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { auth_ocrIdChk, auth_idChk, signup_refreshClientUserInfo } from 'fetch/api';
@@ -330,133 +322,6 @@ export default class real_name_page extends Component {
 				this.props.setUserInfoAction(res.data);
 			}
 		});
-	};
-	nextFunc = (callBack) => {
-		// 新用户
-		switch (urlQuery.type) {
-			// 新用户授信来的
-			case 'noRealName':
-				idChkPhoto({
-					$props: this.props,
-					type: 'noRealName',
-					msg: '审核'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							callBack && callBack();
-							break;
-						case '3':
-							if (urlQuery.fromRouter === 'home') {
-								store.setRealNameNextStep('home');
-								store.setTencentBackUrl('/home/home');
-							} else {
-								store.setRealNameNextStep('other');
-								store.setTencentBackUrl('/mine/mine_page');
-							}
-							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							// store.setChkPhotoBackNew(-2); //活体直接返回
-							break;
-						default:
-							break;
-					}
-				});
-				break;
-			// 新用户授信来的
-			case 'creditExtension':
-				idChkPhoto({
-					$props: this.props,
-					type: 'creditExtension',
-					msg: '审核'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							this.props.toast.info('实名照片补充成功!');
-							store.removeToggleMoxieCard();
-							setTimeout(() => {
-								getBindCardStatus({ $props: this.props }).then((res) => {
-									if (res === '1') {
-										activeConfigSts({
-											$props: this.props,
-											type: 'B',
-											callback: () => {
-												handleClickConfirm(
-													this.props,
-													{
-														...store.getLoanAspirationHome()
-													},
-													'goHome'
-												);
-											}
-										});
-									}
-								});
-							}, 1000);
-							break;
-						case '3':
-							store.setTencentBackUrl('/home/loan_repay_confirm_page');
-							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							// store.setChkPhotoBackNew(-2); //活体直接返回
-							break;
-						default:
-							break;
-					}
-				});
-				break;
-			// case 'historyCreditExtension':
-			// 	store.removeToggleMoxieCard();
-
-			// 	// 实名之后
-			// 	idChkPhoto({
-			// 		$props: this.props,
-			// 		type: 'historyCreditExtension',
-			// 		msg: '认证'
-			// 	}).then((res) => {
-			// 		switch (res) {
-			// 			case '1':
-			// 				this.props.toast.info('实名照片补充成功!');
-			// 				store.removeToggleMoxieCard();
-			// 				setTimeout(() => {
-			// 					getNextStr({
-			// 						$props: this.props
-			// 					});
-			// 				}, 2000);
-			// 				break;
-			// 			case '3':
-			// 				store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-			// 				store.setChkPhotoBackNew(-2); //活体直接返回
-			// 				break;
-			// 			default:
-			// 				break;
-			// 		}
-			// 	});
-			// 	break;
-			case 'agency_page':
-				idChkPhoto({
-					$props: this.props,
-					type: 'agency_page',
-					msg: '放款'
-				}).then((res) => {
-					switch (res) {
-						case '1':
-							this.props.toast.info('实名照片补充成功!');
-							store.removeToggleMoxieCard();
-							setTimeout(() => {
-								history.go(-2);
-							}, 3000);
-							break;
-						case '3':
-							store.setTencentBackUrl('/home/confirm_agency');
-							// store.setIdChkPhotoBack(-3); //从人脸中间页回退3层到此页面
-							// store.setChkPhotoBackNew(-2); //活体直接返回
-							break;
-						default:
-							break;
-					}
-				});
-				break;
-			default:
-				break;
-		}
 	};
 	cardMD = (type) => {
 		if (type === 'z') {

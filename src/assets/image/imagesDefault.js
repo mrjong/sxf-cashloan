@@ -27,7 +27,8 @@ export default {
 		card_select_yellow: require('./adorn/card_select_yellow.png'),
 		success: require('./adorn/status_success.png'),
 		timeout: require('./adorn/status_timeout.png'),
-		fail: require('./adorn/status_fail.png')
+		fail: require('./adorn/status_fail.png'),
+		line_arrow: require('./adorn/line_arrow.png')
 	},
 
 	// 银行图标 单独放这
