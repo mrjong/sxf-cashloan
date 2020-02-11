@@ -5,7 +5,8 @@ import qs from 'qs';
 import { index_getNextStep, bank_card_check, auth_getTencentFaceData } from 'fetch/api';
 // import { getFaceDetect, goToStageLoan } from '@/utils/CommonUtil';
 import storeRedux from 'reduxes';
-import { handleClickConfirm } from './';
+import { activeConfigSts } from 'utils';
+
 import { goToStageLoan } from './commonFunc';
 
 /**
@@ -23,7 +24,11 @@ export const getBindCardStatus = async ({ $props, applyCreditData }) => {
 			.then((result) => {
 				// 跳转至储蓄卡
 				if (result && (result.code === '999974' || result.code === '000000')) {
-					handleClickConfirm($props, applyCreditData);
+					Toast.hide();
+					activeConfigSts({
+						$props,
+						type: 'B'
+					});
 				} else if (result && result.code === '000012') {
 					Toast.info(result.message);
 					setTimeout(() => {
@@ -171,8 +176,12 @@ export const getNextStatus = ({
 					break;
 				case 'AUTH005':
 					resBackMsg = '银行列表';
-					routeName = 'CreditAuth';
-					break;
+					activeConfigSts({
+						$props,
+						type: 'B'
+					});
+					return;
+				// routeName = 'CreditAuth';
 				case 'APPL':
 					{
 						let storeData = storeRedux.getState();

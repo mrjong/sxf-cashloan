@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 16:47:05
+ * @LastEditTime : 2020-02-11 17:19:33
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -23,7 +23,7 @@ import card_select_yellow from './img/card_select_yellow.png';
 @setBackGround('#F7F8FA')
 @fetch.inject()
 @connect(
-	(state) => ({}),
+	() => ({}),
 	{ setAuthId }
 )
 export default class credit_list_page extends PureComponent {

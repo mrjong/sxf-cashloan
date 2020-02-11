@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 11:27:59
+ * @LastEditTime : 2020-02-11 17:51:26
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
-import { isWXOpen, dateDiffer } from 'utils';
+import { isWXOpen, dateDiffer, activeConfigSts } from 'utils';
 import {
 	index_queryIndexInfo,
 	index_queryBannerList,
@@ -734,9 +734,10 @@ export default class home_page extends PureComponent {
 	}
 
 	goToNewMoXie = async () => {
-		// this.props.history.push('/home/c', {
-		//   RouterType: 'home',
-		// });
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 
 	/**

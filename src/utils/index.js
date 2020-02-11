@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 13:50:59
+ * @LastEditTime : 2020-02-11 17:32:58
  */
 /*eslint-disable */
 import React from 'react';
@@ -237,112 +237,6 @@ export const closePage = () => {
 	if (window.passValue) {
 		return window.passValue();
 	}
-};
-export const idChkPhoto = ({ $props, type, msg = '审核' }) => {
-	return new Promise((resolve, reject) => {
-		$props.$fetch.get(API.idChkPhoto).then((res) => {
-			// let res = {
-			// 	msgCode: 'PTM0008',
-			// 	msgInfo: '用户已实名，未上传身份证照片',
-			// 	data: {}
-			// };
-
-			switch (res.msgCode) {
-				case 'PTM0000':
-					resolve('1');
-					break;
-				case 'PTM0011':
-					resolve('3');
-					$props.toast.info('请先人脸识别认证');
-					setTimeout(() => {
-						$props.$fetch.post(`${API.getFace}`, {}).then((result) => {
-							if (result.msgCode === 'PTM0000' && result.data) {
-								$props.SXFToast.loading('加载中...', 0);
-								window.location.href = result.data;
-							} else {
-								$props.toast.info(result.msgInfo);
-							}
-						});
-					}, 2000);
-					break;
-				case 'PTM0006':
-					store.setToggleMoxieCard(true);
-					$props.history.push({ pathname: '/home/real_name' });
-					resolve('2');
-					break;
-				case 'PTM0008':
-					if (!state) {
-						state = true;
-						const ele = (
-							<div>
-								身份证照片找不到了!
-								<br />
-								补充照片极速{msg}!
-							</div>
-						);
-						Modal.alert('', ele, [
-							{
-								text: '关闭',
-								onPress: () => {
-									state = false;
-								}
-							},
-							{
-								text: '前往添加',
-								onPress: () => {
-									store.setToggleMoxieCard(true);
-									state = false;
-									$props.history.push({
-										pathname: '/home/real_name',
-										search: `?newTitle=实名照片补充&type=${type}`
-									});
-								}
-							}
-						]);
-					}
-					resolve('2');
-					break;
-
-				case 'PTM0009':
-					if (!state) {
-						state = true;
-						const ele = (
-							<div>
-								身份证有效期不足30天或已过期!
-								<br />
-								重新补充极速{msg}!
-							</div>
-						);
-						Modal.alert('', ele, [
-							{
-								text: '关闭',
-								onPress: () => {
-									state = false;
-								}
-							},
-							{
-								text: '前往添加',
-								onPress: () => {
-									state = false;
-									store.setToggleMoxieCard(true);
-									$props.history.push({
-										pathname: '/home/real_name',
-										search: `?newTitle=实名照片补充&type=${type}`
-									});
-								}
-							}
-						]);
-					}
-					resolve('2');
-					break;
-
-				default:
-					$props.toast.info(res.msgInfo);
-					reject();
-					break;
-			}
-		});
-	});
 };
 /**
  * @description: 信用卡前置
