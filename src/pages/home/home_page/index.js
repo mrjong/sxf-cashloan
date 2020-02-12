@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 10:22:54
+ * @LastEditTime : 2020-02-12 16:11:44
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -187,7 +187,7 @@ export default class home_page extends PureComponent {
 	index_queryBannerList = () => {
 		const params = {
 			type: '1',
-			cilent: 'h5'
+			cilent: 'wap_out'
 		};
 		this.props.$fetch
 			.post(index_queryBannerList, params, { hideToast: true })

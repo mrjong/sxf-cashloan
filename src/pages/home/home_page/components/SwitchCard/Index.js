@@ -21,7 +21,9 @@ export default class SwitchCard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			activeIndex: 0
+			activeIndex: 0,
+			showLeft: false,
+			showRight: true
 		};
 	}
 
@@ -30,7 +32,25 @@ export default class SwitchCard extends Component {
 			activeIndex: index
 		});
 	};
-
+	onClick = false;
+	beforeChange = () => {
+		if (this.onClick) {
+			return;
+		}
+		setTimeout(() => {
+			if (this.state.activeIndex === 0) {
+				this.setState({
+					showLeft: false,
+					showRight: true
+				});
+			} else if (this.state.activeIndex === 1) {
+				this.setState({
+					showLeft: true,
+					showRight: false
+				});
+			}
+		});
+	};
 	renderPlaceHolderPrev(index) {
 		const dataSource = this.props.data;
 		if (!dataSource[index - 1]) {
@@ -68,9 +88,18 @@ export default class SwitchCard extends Component {
 				className={classNM.placeHolderBtn}
 				style={placeHolderStyle}
 				onClick={() => {
-					this.setState({
-						activeIndex: this.state.activeIndex - 1
-					});
+					this.onClick = true;
+					this.setState(
+						{
+							showLeft: true,
+							showRight: false,
+							activeIndex: this.state.activeIndex - 1
+						},
+						() => {
+							this.onClick = false;
+							// this.beforeChange();
+						}
+					);
 				}}
 			>
 				{textArr}
@@ -123,9 +152,18 @@ export default class SwitchCard extends Component {
 				className={classNM.placeHolderBtn}
 				style={placeHolderStyle}
 				onClick={() => {
-					this.setState({
-						activeIndex: this.state.activeIndex + 1
-					});
+					this.onClick = true;
+					this.setState(
+						{
+							showLeft: false,
+							showRight: true,
+							activeIndex: this.state.activeIndex + 1
+						},
+						() => {
+							this.onClick = false;
+							// this.beforeChange();
+						}
+					);
 				}}
 			>
 				{textArr}
@@ -142,6 +180,7 @@ export default class SwitchCard extends Component {
 
 	renderSwitchItem() {
 		const { data } = this.props;
+		const { showRight, showLeft } = this.state;
 		if (!data || !data.length) {
 			return null;
 		}
@@ -157,11 +196,11 @@ export default class SwitchCard extends Component {
 			}
 			return (
 				<div className={classNM.itemWrap} key={index}>
-					{prevPlaceHolder}
+					{showLeft ? prevPlaceHolder : null}
 					<div className={classNM.itemContainer} style={itemContainerFinal}>
 						<SwitchCardItem {...item} />
 					</div>
-					{nextPlaceHolder}
+					{showRight ? nextPlaceHolder : null}
 				</div>
 			);
 		});
@@ -175,6 +214,7 @@ export default class SwitchCard extends Component {
 				className={classNM.carouselWrap}
 				selectedIndex={activeIndex}
 				dots={false}
+				beforeChange={this.beforeChange}
 				afterChange={this.carouselChange}
 			>
 				{this.renderSwitchItem()}

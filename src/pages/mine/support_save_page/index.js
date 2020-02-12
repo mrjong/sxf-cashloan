@@ -1,16 +1,28 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 12:51:00
+ * @LastEditTime : 2020-02-12 15:35:46
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
 import qs from 'qs';
+import Image from 'assets/image';
 import { bank_card_valid } from 'fetch/api';
+import { LoadingView } from 'components';
+
 import { connect } from 'react-redux';
 import { setBindDepositInfoAction } from 'reduxes/actions/commonActions';
 import { setBackGround } from 'utils/background';
-
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无账单',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
 let queryData = '';
 @fetch.inject()
 @setBackGround('#fff')
@@ -39,14 +51,17 @@ export default class support_save_page extends PureComponent {
 		this.props.$fetch.get(`${bank_card_valid}/D`).then(
 			(res) => {
 				if (res.code === '000000') {
+					this.viewRef && this.viewRef.showDataView();
 					this.setState({
 						cardList: res.data && res.data.validBanks ? res.data.validBanks : []
 					});
 				} else {
+					this.viewRef && this.viewRef.setEmpty();
 					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
+				this.viewRef && this.viewRef.setEmpty();
 				error.message && this.props.toast.info(error.message);
 			}
 		);
@@ -65,25 +80,34 @@ export default class support_save_page extends PureComponent {
 
 	render() {
 		return (
-			<div className={styles.support_save_page}>
-				{this.state.cardList.length ? (
-					<ul className={styles.card_list}>
-						{this.state.cardList.map((item, index) => {
-							return (
-								<li
-									key={index}
-									onClick={() => {
-										this.handleItemSelect(item.bankName);
-									}}
-								>
-									<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
-									<span className={styles.bank_name}>{item.bankName}</span>
-								</li>
-							);
-						})}
-					</ul>
-				) : null}
-			</div>
+			<LoadingView
+				ref={(view) => (this.viewRef = view)}
+				nodata={noData}
+				errordata={errorData}
+				onReloadData={() => {
+					this.onRefresh();
+				}}
+			>
+				<div className={styles.support_save_page}>
+					{this.state.cardList.length ? (
+						<ul className={styles.card_list}>
+							{this.state.cardList.map((item, index) => {
+								return (
+									<li
+										key={index}
+										onClick={() => {
+											this.handleItemSelect(item.bankName);
+										}}
+									>
+										<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+										<span className={styles.bank_name}>{item.bankName}</span>
+									</li>
+								);
+							})}
+						</ul>
+					) : null}
+				</div>
+			</LoadingView>
 		);
 	}
 }
