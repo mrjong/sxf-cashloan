@@ -35,7 +35,7 @@
 	}
 	.inputTip {
 		font-size: 24px;
-		color: #868e9e;
+		color: $colorInactiveColor;
 		margin: 20px 0 30px;
 	}
 
@@ -45,14 +45,15 @@
     border-radius: 10px;
 		.listItem {
 			position: relative;
-			display: flex;
-			min-height: 110px;
+      display: flex;
+      flex-wrap: wrap;
+			min-height: 100px;
 			justify-content: space-between;
 			align-items: center;
 			box-sizing: border-box;
 			font-size: 30px;
       color: #121c32;
-      padding: 0 40px;
+      padding: 30px 30px;
 
     }
     .listItem + .listItem {
@@ -64,7 +65,9 @@
     }
 
 		.listValue {
-			font-weight: 700;
+      // font-weight: 700;
+      flex: 1;
+      text-align: right;
 		}
 
 		.icon {
@@ -78,14 +81,15 @@
 	.protocolLink {
 		font-size: 24px;
 		color: #8e8d7b;
-		margin: 24px 0 24px;
+    margin: 24px 0 24px;
+    text-align: justify;
 		em {
-			color: #121c32;
+			color: #868E9E;
 		}
 	}
 
 	.greyText {
-		color: #868e9e;
+		color: $colorInactiveColor;
 		font-weight: 700;
 	}
 
@@ -95,8 +99,7 @@
 	}
 
 	.highlightText {
-		color: #397be6;
-		font-weight: 700;
+		// font-weight: 700;
 	}
 
 	.addIcon {
@@ -106,30 +109,16 @@
 	}
 
 	.tagListWrap {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: flex-end;
-		width: 490px;
+    margin-top: 10px;
+    width: 100%;
 	}
 
 	.tagButton {
-		display: inline-block;
-		width: 140px;
-		height: 50px;
-		line-height: 48px;
-		text-align: center;
-		border-radius: 25px;
-		font-size: 30px;
-		background: #fff;
-		color: #868e9e;
-		border: 1px solid #868e9e;
-		box-sizing: border-box;
-		margin-bottom: 20px;
-		margin-left: 35px;
-		&:nth-child(3n + 1) {
-			margin-left: 0;
-		}
-	}
+		min-width: 120px;
+  }
+  .tagButton + .tagButton {
+    margin-left: 30px
+  }
 
 	.tagButtonActive {
 		color: #fe6666;
@@ -147,12 +136,19 @@
 	}
 	// 优惠劵金额展示
 	.couponListValue {
-		display: flex;
-		align-items: center;
 		.icon {
 			margin-bottom: 0;
 		}
-	}
+  }
+
+  .repayPlan {
+    font-size: 30px;
+    color: $colorSubTitle;
+  }
+  .couponBtn {
+    background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		color: #fff;
+  }
 	.couNumBox {
 		display: flex;
 		height: 42px;
@@ -204,16 +200,16 @@
 }
 
 .modalTitle {
-	font-size: 50px;
-	color: #121c32;
+	font-size: 36px;
+	color: $colorBlack;
 	text-align: left;
 }
 
 .modalDesc {
-	font-size: 26px;
-	color: #868e9e;
+	font-size: 24px;
+	color: $colorInactiveColor;
 	text-align: left;
-	margin: 32px 0 64px;
+	margin: 0 0 64px;
 }
 
 .modalItem {
@@ -222,11 +218,14 @@
 	line-height: 110px;
 	width: 100%;
 	font-size: 32px;
-	color: #121c32;
+  color: #121c32;
 	&::after {
 		@include setBottomLine(#f0f1f5);
 		left: 0;
 	}
+}
+.modalItemActive {
+  color: $colorGolden;
 }
 
 .modal_content {

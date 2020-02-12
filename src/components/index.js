@@ -23,6 +23,8 @@ import StepList from './StepList';
 import AddressSelect from './react-picker-address';
 import FixedHelpCenter from './FixedHelpCenter';
 import FixedTopTip from './FixedTopTip';
+import TipModal from './TipModal';
+import RepayPlanModal from './RepayPlanModal';
 
 export {
 	FooterBar,
@@ -45,5 +47,7 @@ export {
 	StepList,
 	AddressSelect,
 	FixedHelpCenter,
-	FixedTopTip
+	FixedTopTip,
+	TipModal,
+	RepayPlanModal
 };

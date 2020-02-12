@@ -130,7 +130,7 @@ export default class ButtonCustom extends React.PureComponent {
 			btnStyle.backgroundColor = backgroundcolor;
 		}
 		if (shape === 'radius' && borderradius) {
-			btnStyle.borderradius = borderradius;
+			btnStyle.borderRadius = borderradius;
 		}
 		if (outline) {
 			btnStyle.border = `${outlinewidth} ${outlinetype} ${outlinecolor}`;

@@ -28,7 +28,8 @@ export default {
 		success: require('./adorn/status_success.png'),
 		timeout: require('./adorn/status_timeout.png'),
 		fail: require('./adorn/status_fail.png'),
-		line_arrow: require('./adorn/line_arrow.png')
+		line_arrow: require('./adorn/line_arrow.png'),
+		coupon: require('./adorn/coupon.png')
 	},
 
 	// 银行图标 单独放这
