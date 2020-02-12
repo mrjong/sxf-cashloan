@@ -10,11 +10,44 @@ import { activeConfigSts } from 'utils';
 import { goToStageLoan } from './commonFunc';
 
 /**
+ * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
+ * @param {type}
+ * @return:
+ */
+export const bank_card_check_func = ({ $props, autId }) => {
+	return new Promise((resolve) => {
+		$props.$fetch.get(`${bank_card_check}/${autId}`).then((result) => {
+			if (result && result.code === '000000') {
+				Toast.hide();
+				resolve('1');
+			} else if (result && result.code === '999974') {
+				Toast.info(result.message);
+				setTimeout(() => {
+					$props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
+				}, 3000);
+				resolve('0');
+			} else if (result && result.code === '000012') {
+				Toast.info(result.message);
+				setTimeout(() => {
+					$props.history.push({
+						pathname: '/mine/bind_credit_page',
+						search: `?noBankInfo=true&autId=${autId}`
+					});
+				}, 3000);
+				resolve('0');
+			} else {
+				Toast.info(result.message);
+				resolve('0');
+			}
+		});
+	});
+};
+/**
  * @description: 信用卡前置
  * @param {type}
  * @return:
  */
-export const getBindCardStatus = async ({ $props, applyCreditData }) => {
+export const getBindCardStatus = async ({ $props }) => {
 	let storeData = storeRedux.getState();
 	const { staticState = {} } = storeData;
 	const { authId } = staticState;
@@ -208,9 +241,14 @@ export const getNextStatus = ({
 					storeRedux.dispatch(setNextStepStatus(false));
 					// 代偿
 					if (nextData.prodType === '01') {
-						routeName = '/home/confirm_agency';
-						if (actionType === 'agencyPage') {
-							resolve(nextData.nextStepGramCode);
+						let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
+						if (bank_card_check_res === '1') {
+							routeName = '/home/confirm_agency';
+							if (actionType === 'agencyPage') {
+								resolve(nextData.nextStepGramCode);
+							}
+						} else {
+							return;
 						}
 					}
 					// 现金分期

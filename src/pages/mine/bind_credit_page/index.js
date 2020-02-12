@@ -1,12 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-13 17:56:07
+ * @LastEditTime : 2020-02-12 15:12:26
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/ButtonCustom';
+import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { validators, handleInputBlur, getFirstError, activeConfigSts, handleClickConfirm } from 'utils';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
@@ -14,14 +15,8 @@ import { mine } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import styles from './index.scss';
 import qs from 'qs';
-
-const API = {
-	GETUSERINF: '/my/getRealInfo', // 获取用户信息
-	GECARDINF: '/cmm/qrycardbin', // 绑定银行卡前,卡片信息查
-	BINDCARD: '/withhold/card/bindConfirm', // 绑定银行卡
-	CHECKCARD: '/my/chkCard', // 是否绑定了一张信用卡一张储蓄卡
-	queryCardInfo: '/withhold/getLast4No' // 获取银行名称/后四位
-};
+import { connect } from 'react-redux';
+import { cred_queryCredCardById, bank_card_check, bank_card_bind_credit, bank_card_bin } from 'fetch/api';
 
 // let isFetching = false;
 let backUrlData = ''; // 从除了我的里面其他页面进去
@@ -30,6 +25,13 @@ let query = {};
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@connect((state) => ({
+	userInfo: state.staticState.userInfo,
+	cardData: state.commonState.cardData,
+	nextStepStatus: state.commonState.nextStepStatus,
+	authId: state.staticState.authId,
+	backRouter: state.commonState.backRouter
+}))
 export default class bind_credit_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -47,7 +49,6 @@ export default class bind_credit_page extends PureComponent {
 		console.log(autId, '------------');
 		// isFetching = false;
 		store.removeBackUrl();
-		this.queryUserInf();
 		this.queryCardInfo();
 	}
 
@@ -65,36 +66,24 @@ export default class bind_credit_page extends PureComponent {
 		}
 	}
 
-	// 获取信用卡信息
-	queryUserInf = () => {
-		this.props.$fetch.get(API.GETUSERINF).then(
-			(result) => {
-				if (result.data) {
-					this.setState({ userName: result.data.usrNm });
-				}
-			},
-			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
-			}
-		);
-	};
-
 	// 获取信用卡后四位,发卡行
 	queryCardInfo = () => {
-		this.props.$fetch.get(`${API.queryCardInfo}/${autId ? autId : ''}`).then(
-			(result) => {
-				console.log(result);
-				if (result.msgCode === 'PTM0000' && result.data) {
-					this.setState({
-						bankNm: result.data.bankNm,
-						cardLastNo: result.data.cardLastNo
-					});
+		this.props.$fetch
+			.post(`${cred_queryCredCardById}`, { autId: (this.props.authId && this.props.authId) || '' })
+			.then(
+				(result) => {
+					console.log(result);
+					if (result.code === '000000' && result.data) {
+						this.setState({
+							bankName: result.data.bankName,
+							lastNo: result.data.lastNo
+						});
+					}
+				},
+				(error) => {
+					error.message && this.props.toast.info(error.message);
 				}
-			},
-			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
-			}
-		);
+			);
 	};
 
 	// 校验信用卡卡号
@@ -108,12 +97,8 @@ export default class bind_credit_page extends PureComponent {
 
 	// 绑定银行卡
 	bindConfirm = (params1) => {
-		this.props.$fetch.post(API.BINDCARD, params1).then((result) => {
-			if (
-				result.msgCode === 'PTM0000' ||
-				(backUrlData && result.msgCode === 'PTM0010') ||
-				(backUrlData && result.msgCode === 'PBM1010')
-			) {
+		this.props.$fetch.post(bank_card_bind_credit, params1).then((result) => {
+			if (result.code === '000000' || (backUrlData && result.code === '999968')) {
 				buriedPointEvent(mine.creditConfirm, {
 					entry: backUrlData ? '绑定信用卡' : '信用卡管理',
 					is_success: true
@@ -144,35 +129,37 @@ export default class bind_credit_page extends PureComponent {
 						return;
 					}
 					// 提交申请 判断是否绑定信用卡和储蓄卡
-					this.props.$fetch.get(API.CHECKCARD).then((result) => {
-						if (result.msgCode === 'PTM2003') {
-							// 进入绑定储蓄卡页面，如何不需要存银行卡（防止弹窗出现）则加一个noBankInfo
-							store.setBackUrl(backUrlData);
-							if (query && query.noBankInfo) {
-								this.props.history.replace({
-									pathname: '/mine/bind_save_page',
-									search: '?noBankInfo=true'
-								});
+					this.props.$fetch
+						.get(`${bank_card_check}/${(this.props.authId && this.props.authId) || ''}`)
+						.then((result) => {
+							if (result.code === '999974') {
+								// 进入绑定储蓄卡页面，如何不需要存银行卡（防止弹窗出现）则加一个noBankInfo
+								store.setBackUrl(backUrlData);
+								if (query && query.noBankInfo) {
+									this.props.history.replace({
+										pathname: '/mine/bind_save_page',
+										search: '?noBankInfo=true'
+									});
+								} else {
+									this.props.history.replace('/mine/bind_save_page');
+								}
 							} else {
-								this.props.history.replace('/mine/bind_save_page');
+								// 首页不需要存储银行卡的情况，防止弹窗出现
+								if (query && query.noBankInfo) {
+									store.removeCardData();
+								} else {
+									store.setCardData(cardDatas);
+								}
+								store.removeBackUrl();
+								// this.props.history.push(backUrlData);
+								// 如果是从四项认证进入，绑卡成功则回到首页
+								if (store.getCheckCardRouter() === 'checkCardRouter') {
+									this.props.history.push('/home/home');
+								} else {
+									this.props.history.goBack();
+								}
 							}
-						} else {
-							// 首页不需要存储银行卡的情况，防止弹窗出现
-							if (query && query.noBankInfo) {
-								store.removeCardData();
-							} else {
-								store.setCardData(cardDatas);
-							}
-							store.removeBackUrl();
-							// this.props.history.push(backUrlData);
-							// 如果是从四项认证进入，绑卡成功则回到首页
-							if (store.getCheckCardRouter() === 'checkCardRouter') {
-								this.props.history.push('/home/home');
-							} else {
-								this.props.history.goBack();
-							}
-						}
-					});
+						});
 				} else {
 					// this.props.history.replace('/mine/select_credit_page');
 					this.props.history.goBack();
@@ -182,16 +169,16 @@ export default class bind_credit_page extends PureComponent {
 				buriedPointEvent(mine.creditConfirm, {
 					entry: backUrlData ? '绑定信用卡' : '信用卡管理',
 					is_success: false,
-					fail_cause: result.msgInfo
+					fail_cause: result.message
 				});
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 			}
 		});
 	};
 	// 通过输入的银行卡号 查出查到卡banCd
 	checkCard = (values) => {
 		values.valueInputCarNumber = values.valueInputCarNumber.replace(/\s*/g, '');
-		this.props.$fetch.post(API.GECARDINF, { cardNo: values.valueInputCarNumber }).then(
+		this.props.$fetch.post(bank_card_bin, { cardNoCpt: base64Encode(values.valueInputCarNumber) }).then(
 			(result) => {
 				this.setState({
 					cardData: {
@@ -200,31 +187,25 @@ export default class bind_credit_page extends PureComponent {
 						...result.data
 					}
 				});
-				if (
-					result.msgCode === 'PTM0000' &&
-					result.data &&
-					result.data.bankCd &&
-					result.data.cardTyp !== 'D'
-				) {
+				if (result.code === '000000' && result.data && result.data.bankCode && result.data.cardType !== 'D') {
 					const params1 = {
-						bankCd: result.data.bankCd,
-						cardTyp: 'C', //卡类型。
-						cardNo: values.valueInputCarNumber, //持卡人卡号
-						autId: autId ? autId : '' // autId
+						bankCode: result.data.bankCode,
+						cardNoCpt: base64Encode(values.valueInputCarNumber), //持卡人卡号
+						autId: (this.props.authId && this.props.authId) || '' // autId
 					};
 					this.bindConfirm(params1);
 				} else {
 					// isFetching = false;
-					this.props.toast.info('请输入有效银行卡号');
+					this.props.toast.info(`请输入有效银行卡号${result.code}`);
 					buriedPointEvent(mine.creditConfirm, {
 						entry: backUrlData ? '绑定信用卡' : '信用卡管理',
 						is_success: false,
-						fail_cause: result.msgInfo
+						fail_cause: result.message
 					});
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};
@@ -250,9 +231,8 @@ export default class bind_credit_page extends PureComponent {
 
 	//	校验必填项
 	validateFn = () => {
-		const { userName } = this.state;
 		const formData = this.props.form.getFieldsValue();
-		if (userName && formData.valueInputCarNumber) {
+		if (formData.valueInputCarNumber) {
 			return true;
 		}
 		return false;
@@ -276,12 +256,15 @@ export default class bind_credit_page extends PureComponent {
 	render() {
 		const Item = List.Item;
 		const { getFieldProps } = this.props.form;
+		const { userInfo = {} } = this.props;
+		const { lastNo } = this.state;
 		return (
-			<div>
+			<div className={styles.container}>
 				<div className={styles.header}>请确认需要还款的信用卡信息</div>
+				{lastNo ? <span className={styles.tipText}>请补足尾号为{lastNo}的信用卡</span> : null}
 				<div className="bind_credit_page_listBox">
-					<Item extra={this.state.userName}>持卡人</Item>
-					<Item extra={this.state.bankNm}>发卡行</Item>
+					<Item extra={userInfo && userInfo.nameHid}>持卡人</Item>
+					<Item extra={this.state.bankName}>发卡行</Item>
 					<InputItem
 						maxLength="29"
 						type="bankCard"
@@ -294,7 +277,7 @@ export default class bind_credit_page extends PureComponent {
 								store.setBindCreditCardNo(value);
 							}
 						})}
-						placeholder={`请补足尾号为${this.state.cardLastNo || 'xxxx'}的信用卡`}
+						placeholder={`请补足尾号为${lastNo || 'xxxx'}的信用卡`}
 						onBlur={() => {
 							handleInputBlur();
 						}}
@@ -306,12 +289,11 @@ export default class bind_credit_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<ButtonCustom
-					onClick={this.confirmBuy}
-					className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
-				>
-					确认
-				</ButtonCustom>
+				<div className={styles.btn_box}>
+					<ButtonCustom type={!this.validateFn() ? 'gray' : 'yellow'} onClick={this.confirmBuy}>
+						确认
+					</ButtonCustom>
+				</div>
 			</div>
 		);
 	}
