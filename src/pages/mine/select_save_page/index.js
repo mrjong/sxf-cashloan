@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 // import { SwipeAction } from 'antd-mobile';
-import { Modal, Icon } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import { ButtonCustom, LoadingView } from 'components';
 import qs from 'qs';
