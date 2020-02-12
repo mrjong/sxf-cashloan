@@ -1,19 +1,19 @@
 @import '../../../assets/styles/scss/base/fn';
 
 .select_save_page {
+	padding: 54px 40px 180px;
 	.card_tit {
-		margin-top: 59px;
-		font-size: 28px;
-		color: rgba(157, 157, 157, 1);
-		text-align: center;
+		font-size: 46px;
+		font-weight: 500;
+		text-align: left;
+		color: $colorBlack;
+		font-family: 'PingFangSC-Medium';
 	}
 	.card_list {
 		li {
 			position: relative;
-			width: 660px;
 			margin: 30px auto 0;
 			background: #fff;
-			border: 2px solid #f2f4f5;
 			border-radius: 10px;
 			height: 140px;
 			line-height: 140px;
@@ -37,40 +37,43 @@
 			}
 			.selected_ico {
 				position: absolute;
-				top: 50%;
-				right: 30px;
+        right: 0;
+        bottom: 0;
 				width: 50px;
 				height: 50px;
-				margin-top: -25px;
 			}
 		}
 		li.active {
-			box-shadow: 2px 0 20px rgba(207, 207, 207, 0.6);
-			border-color: transparent;
+			border:1px solid $colorYellow;
 		}
 	}
 	.addCardBox {
 		position: fixed;
+		z-index: 99;
     bottom: 0;
-    padding: 20px 40px;
-    box-sizing: border-box;
+    left: 0;
 		width: 100%;
+		padding: 50px 40px 20px;
+		box-sizing: border-box;
 	}
-	.add_card {
-		font-size: 32px;
-		color: rgba(235, 222, 116, 1);
-		text-align: center;
-		padding: 60px 0 30px 0;
-		.add_ico {
-			position: relative;
-			width: 32px;
-			height: 32px;
-			margin-right: 10px;
-			top: 5px;
-			display: inline-block;
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -312px, -36px);
-		}
-	}
+	.add_ico {
+    // position: relative;
+    // width: 32px;
+    // height: 32px;
+    // margin-right: 10px;
+    // top: 5px;
+    // display: inline-block;
+
+    // @include spriteIcon('../../../assets/images/common/sprite_icon.png', -312px, -36px);
+
+    width: 26px;
+    height: 26px;
+    margin-right: 12px;
+    // display: inline-block;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-image: url(./img/add_ico.png);
+  }
 }
 // modal样式覆盖
 :global {
