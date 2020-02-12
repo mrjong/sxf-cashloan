@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 // import { SwipeAction } from 'antd-mobile';
-import { Modal, Icon } from 'antd-mobile';
+import { Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import { ButtonCustom, LoadingView } from 'components';
 import qs from 'qs';
@@ -9,7 +9,7 @@ import styles from './index.scss';
 import { bank_card_list, my_card_unbind } from 'fetch/api';
 import { connect } from 'react-redux';
 import { setWithholdCardDataAction, setWithdrawCardDataAction } from 'reduxes/actions/commonActions';
-
+import card_select_yellow from './img/card_select_yellow.png';
 const noData = {
 	img: Image.bg.no_order,
 	text: '暂无银行卡',
@@ -188,7 +188,7 @@ export default class select_save_page extends PureComponent {
 												<span className={styles.bank_name}>{item.bankName}</span>
 												<span>···· {item.cardNoLast}</span>
 												{isSelected ? (
-													<Icon type="check-circle-o" color="#5CE492" className={styles.selected_ico} />
+													<img src={card_select_yellow} className={styles.selected_ico}></img>
 												) : null}
 											</li>
 										);

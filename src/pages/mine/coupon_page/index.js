@@ -12,10 +12,7 @@ import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
-import {
-	coup_queryUsrCoupBySts
-	// coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup
-} from 'fetch/api';
+import { coup_queryUsrCoupBySts, coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup } from 'fetch/api';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
@@ -93,6 +90,7 @@ export default class coupon_page extends PureComponent {
 	}
 	// 消息 tab
 	getTab = () => {
+		const { couponData = {} } = this.props;
 		if (receiveData && (receiveData.billNo || receiveData.price)) {
 			this.setState({
 				tabs: [
@@ -105,7 +103,7 @@ export default class coupon_page extends PureComponent {
 						value: 1
 					}
 				],
-				couponSelected: store.getCouponData() && store.getCouponData().usrCoupNo
+				couponSelected: couponData.coupId || 'null'
 			});
 		} else {
 			this.setState({
@@ -129,6 +127,7 @@ export default class coupon_page extends PureComponent {
 	};
 	// 获取每一页数据
 	genData = async (pIndex = 1) => {
+		const { couponData = {} } = this.props;
 		if (totalPage && totalPage < pIndex) {
 			this.setState({
 				isLoading: false,
@@ -139,35 +138,9 @@ export default class coupon_page extends PureComponent {
 		if (pIndex === 1) {
 			SXFToast.loading('数据加载中...', 10000);
 		}
-		let sendParams = '';
-		if (receiveData && receiveData.billNo) {
-			sendParams = {
-				coupSts: `0${this.state.msgType}`,
-				startPage: pIndex,
-				billNo: receiveData.billNo
-				// loading: true,
-			};
-		} else if (receiveData && receiveData.price && receiveData.perCont && receiveData.prodId) {
-			sendParams = {
-				coupSts: `0${this.state.msgType}`,
-				startPage: pIndex,
-				price: receiveData.price,
-				perCont: receiveData.perCont,
-				prodId: receiveData.prodId
-				// loading: true,
-			};
-		} else {
-			sendParams = {
-				coupSts: `0${this.state.msgType}`,
-				startPage: pIndex
-				// loading: true,
-			};
-		}
-		if (receiveData.transactionType) {
-			Object.assign(sendParams, { prodType: receiveData.transactionType === 'fenqi' ? '11' : '01' });
-		}
+		const apiAndSendData = this.getApiAndSendData(pIndex);
 		let data = await this.props.$fetch
-			.post(coup_queryUsrCoupBySts, sendParams)
+			.post(apiAndSendData.url, apiAndSendData.sendParams)
 			.then((res) => {
 				if (pIndex === 1) {
 					setTimeout(() => {
@@ -177,7 +150,7 @@ export default class coupon_page extends PureComponent {
 				if (res.code === '000000' && res.data) {
 					let dataArr = [];
 					if (pIndex === 1) {
-						totalPage = Math.ceil(res.data.totalSize / 10);
+						totalPage = res.data.totalPage;
 						this.setState({
 							hasMore: false
 						});
@@ -187,7 +160,7 @@ export default class coupon_page extends PureComponent {
 							this.state.msgType !== 0 ||
 							!receiveData ||
 							(!receiveData.billNo && !receiveData.price) ||
-							res.data.coups[i].usrCoupNo !== store.getCouponData().usrCoupNo
+							res.data.coups[i].coupId !== couponData.coupId
 						) {
 							dataArr.push(res.data.coups[i]);
 						}
@@ -198,10 +171,10 @@ export default class coupon_page extends PureComponent {
 							receiveData &&
 							(receiveData.billNo || receiveData.price) &&
 							this.state.msgType === 0 &&
-							store.getCouponData() &&
-							store.getCouponData().usrCoupNo !== 'null'
+							couponData.coupId &&
+							couponData.coupId !== 'null'
 						) {
-							dataArr.push(store.getCouponData());
+							dataArr.push(couponData);
 						}
 					}
 					return dataArr;
@@ -216,6 +189,46 @@ export default class coupon_page extends PureComponent {
 				}
 			});
 		return data;
+	};
+
+	/**
+	 * @description 生成 接口 和上传参数
+	 */
+	getApiAndSendData = (pIndex) => {
+		let sendParams = '';
+		let url = '';
+		if (receiveData && receiveData.billNo) {
+			sendParams = {
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex,
+				billNo: receiveData.billNo,
+				repayPerd: receiveData.perCont,
+				prodType: receiveData.prodType
+				// loading: true,
+			};
+			url = coup_queryUsrRepayUsbCoup;
+		} else if (receiveData && receiveData.price && receiveData.prodType && receiveData.prodId) {
+			sendParams = {
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex,
+				loanAmt: receiveData.price,
+				prodId: receiveData.prodId,
+				prodType: receiveData.prodType
+				// loading: true,
+			};
+			url = coup_queyUsrLoanUsbCoup;
+		} else {
+			sendParams = {
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex
+				// loading: true,
+			};
+			url = coup_queryUsrCoupBySts;
+		}
+		return {
+			url,
+			sendParams
+		};
 	};
 
 	// 刷新
@@ -271,13 +284,10 @@ export default class coupon_page extends PureComponent {
 			return;
 		}
 		this.setState({
-			couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
+			couponSelected: obj === 'null' ? 'null' : obj.coupId
 		});
-		const couponData = obj === 'null' ? { coupVal: -1, usrCoupNo: 'null' } : obj;
-		store.setCouponData(couponData);
-		if (saveBankData) {
-			store.setCardData(saveBankData);
-		}
+		const couponData = obj === 'null' ? { coupVal: -1, coupId: 'null' } : obj;
+		this.props.setCouponDataAction(couponData);
 		// 跳转回详情页
 		this.props.history.goBack();
 	};
@@ -365,7 +375,7 @@ export default class coupon_page extends PureComponent {
 								{receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ? (
 									<i
 										className={
-											obj && obj.usrCoupNo === this.state.couponSelected
+											obj && obj.coupId === this.state.couponSelected
 												? [style.icon_select_status, style.icon_select].join(' ')
 												: [style.icon_select_status, style.icon_select_not].join(' ')
 										}
