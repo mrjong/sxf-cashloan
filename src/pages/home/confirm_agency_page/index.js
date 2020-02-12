@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 10:11:26
+ * @LastEditTime : 2020-02-12 15:09:27
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -542,25 +542,14 @@ export default class confirm_agency_page extends PureComponent {
 						deratePrice: result.data.deductAmount,
 						showInterestTotal: result.data.showFlag === '1'
 					});
-
-					// if (result.data.data && result.data.data.usrCoupNo) {
-					// 	this.dealMoney(result.data);
-					// }
 					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
 				} else {
-					// store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
-					// this.setState({
-					//   deratePrice: '',
-					//   couponInfo: { coupVal: -1, usrCoupNo: 'null' }
-					// });
 					this.props.toast.info(result.message);
 				}
 			})
 			.catch(() => {
-				store.setCouponData({ coupVal: -1, usrCoupNo: 'null' });
 				this.setState({
-					deratePrice: '',
-					couponInfo: { coupVal: -1, usrCoupNo: 'null' }
+					deratePrice: ''
 				});
 			});
 	};
@@ -605,18 +594,14 @@ export default class confirm_agency_page extends PureComponent {
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
-				search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
-					this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-				}&prodId=${contractData[0].prodId}`,
+				search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}`,
 				state: { nouseCoupon: true }
 			});
 			return;
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?transactionType=DC&price=${this.state.cardBillAmt}&perCont=${
-				this.state.repayInfo2.perdUnit === 'M' ? this.state.repayInfo2.perdLth : 1
-			}&prodId=${contractData[0].prodId}`
+			search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}`
 		});
 	};
 	// 查看借款合同
@@ -1245,7 +1230,7 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 								<li className={style.listItem} onClick={this.handleClickChooseContact}>
 									<label>指定联系人</label>
-									<span className={[style.listValue, style.greyText, style.hasArrow].join(' ')}>
+									<span className={[style.listValue, style.grayText2, style.hasArrow].join(' ')}>
 										{isBtnAble ? '去修改' : '请选择'}
 										<Icon type="right" className={style.icon} />
 									</span>
