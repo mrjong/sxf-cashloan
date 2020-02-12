@@ -54,7 +54,8 @@ export default {
 		checked: require('./icon/selected_black.png'),
 		checked_no: require('./icon/selected_no_black.png'),
 		customer_service: require('./icon/icon_customer_service.png'),
-		service_ico: require('./icon/service_ico.png')
+		service_ico: require('./icon/service_ico.png'),
+		add_ico: require('./icon/add_ico.png')
 	},
 
 	// 标志性的图片

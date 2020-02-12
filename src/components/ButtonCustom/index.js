@@ -17,6 +17,7 @@ export default class ButtonCustom extends React.PureComponent {
 		backgroundcolor: PropTypes.string,
 		iconsource: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.func, PropTypes.string]),
 		iconStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+		iconClassName: PropTypes.string,
 		// icononright: PropTypes.bool,
 		long: PropTypes.string,
 		size: PropTypes.oneOf(['xl', 'lg', 'md', 'sm', 'xs']),
@@ -74,18 +75,25 @@ export default class ButtonCustom extends React.PureComponent {
 
 	// 生成按钮图标
 	renderIcon() {
-		const { iconsource, loading, icononright } = this.props;
+		const { iconStyle, iconClassName, iconsource, loading, icononright } = this.props;
 		let iconStyleFinaly = {};
 		if (icononright) {
 			iconStyleFinaly.marginLeft = '10px';
 		} else {
 			iconStyleFinaly.marginRight = '10px';
 		}
+		iconStyleFinaly = { ...iconStyleFinaly, ...iconStyle };
 		if (loading) {
 			return <img src={Images.gif.btn_loading} className={classNM.sxp_btn_icon} style={iconStyleFinaly} />;
 		}
 		if (iconsource) {
-			return <img src={iconsource} className={classNM.sxp_btn_icon} style={iconStyleFinaly} />;
+			return (
+				<img
+					src={iconsource}
+					className={[classNM.sxp_btn_icon, iconClassName].join(' ')}
+					style={iconStyleFinaly}
+				/>
+			);
 		}
 		return null;
 	}
@@ -145,6 +153,8 @@ export default class ButtonCustom extends React.PureComponent {
 			children,
       onClick,
       iconsource,
+      iconStyle,
+      iconClassName,
       loading,
 			...restProps
 		} = this.props;
