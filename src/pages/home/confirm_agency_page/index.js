@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:12:50
+ * @LastEditTime : 2020-02-12 10:11:26
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -1187,7 +1187,7 @@ export default class confirm_agency_page extends PureComponent {
 										</div>
 									) : (
 										(repayInfo2 && (
-											<span className={[style.listValue, style.redText, style.hasArrow].join(' ')}>
+											<span className={[style.listValue, style.grayText2, style.hasArrow].join(' ')}>
 												无可用优惠券
 												<Icon type="right" className={style.icon} />
 											</span>
