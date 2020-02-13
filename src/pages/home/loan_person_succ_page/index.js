@@ -204,7 +204,43 @@ export default class remit_ing_page extends PureComponent {
 			applyTime,
 			today,
 			tomorrow,
-			scheduledTime,
+			scheduledTime = [
+				{
+					name: '上午',
+					timeItems: [
+						{
+							time: '09:76',
+							code: '11',
+							availiable: true
+						}
+					]
+				},
+				{
+					name: '上午2',
+					timeItems: [
+						{
+							time: '09:76',
+							code: '21',
+							availiable: true
+						},
+						{
+							time: '09:46',
+							code: '22',
+							availiable: false
+						}
+					]
+				},
+				{
+					name: '上午3',
+					timeItems: [
+						{
+							time: '09:76',
+							code: '31',
+							availiable: true
+						}
+					]
+				}
+			],
 			daySelectedItem,
 			timeSelectedItem
 		} = this.state;
@@ -229,11 +265,7 @@ export default class remit_ing_page extends PureComponent {
 				</div>
 				<div className={style.topBox}>
 					<div className={style.title}>需要人工审核，耐心等待</div>
-					<div className={style.subtitle}>
-						{/* <a>0532-5808XXXX</a>的审核电话 */}
-						<br />
-						至少会拨打3次，最长不超过3个工作日
-					</div>
+					<div className={style.subtitle}>至少会拨打3次，最长不超过3个工作日</div>
 				</div>
 				<div className={style.step_box_new}>
 					<div className={[style.step_item, style.active].join(' ')}>
@@ -285,14 +317,15 @@ export default class remit_ing_page extends PureComponent {
 					<div className={style.title_wrap}>
 						<h3 className={style.modalTitle}>
 							{showRulesPannel ? '人工审核的预约须知' : '请预约电话审核时间'}
+							{!showRulesPannel && (
+								<img
+									src={Images.icon.icon_question}
+									className={style.question_icon}
+									onClick={this.showRulesPannel}
+								/>
+							)}
 						</h3>
-						{!showRulesPannel && (
-							<img
-								src={Images.icon.icon_question}
-								className={style.question_icon}
-								onClick={this.showRulesPannel}
-							/>
-						)}
+						<p className={style.modalTitleSub}>预约时间到达前2小时则不能修改预约时间</p>
 					</div>
 					{showRulesPannel ? (
 						<ul className={style.rule_wrap}>
@@ -315,10 +348,13 @@ export default class remit_ing_page extends PureComponent {
 								<div className={style.options_day}>
 									{dayList.map((item) => (
 										<SXFButton
+											outline="true"
+											outlinecolor={item.code === daySelectedItem.code ? '#3A7AE5' : '#B2B6BF'}
+											color={item.code === daySelectedItem.code ? '#3A7AE5' : '#394259'}
+											backgroundcolor={item.code === daySelectedItem.code ? 'rgba(241,246,255,1)' : ''}
 											key={item.code}
 											className={style.opts_button_day}
 											size="md"
-											type={item.code === daySelectedItem.code ? 'yellow' : 'gray'}
 											onClick={() => {
 												this.handleButtonClick('day', item);
 											}}
@@ -338,8 +374,14 @@ export default class remit_ing_page extends PureComponent {
 														<SXFButton
 															key={item.code}
 															className={style.opts_button}
+															shape="radius"
+															outline="true"
+															outlinecolor={item.code === timeSelectedItem.code ? '#3A7AE5' : '#B2B6BF'}
+															color={item.code === timeSelectedItem.code ? '#3A7AE5' : '#394259'}
+															backgroundcolor={
+																item.code === timeSelectedItem.code ? 'rgba(241,246,255,1)' : ''
+															}
 															size="md"
-															type={item.code === timeSelectedItem.code ? 'yellow' : 'gray'}
 															disabled={daySelectedItem.code === '0' && !item.availiable}
 															onClick={() => {
 																this.handleButtonClick('time', item);

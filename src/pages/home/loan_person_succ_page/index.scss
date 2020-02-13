@@ -13,7 +13,7 @@
 		text-align: center;
 		color: #868e9e;
 		a {
-			color: #397be6;
+			color: #3A7AE5;
 			font-weight: bold;
 		}
 	}
@@ -49,8 +49,7 @@
 			line-height: 1.4;
 			color: #868e9e;
 			position: relative;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
+			// font-weight: 600;
 			.step_circle {
 				background-image: url(./img/circle_not.png);
 				background-repeat: no-repeat;
@@ -64,14 +63,13 @@
 				height: 14px;
 			}
 			&.blue {
-				color: #397be6;
+				color: #3A7AE5;
 			}
 		}
 		&.active .title {
 			font-size: 30px;
 			color: #121c32;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
+			// font-weight: 600;
 			.step_circle {
 				top: 15px;
 				z-index: 100;
@@ -112,9 +110,9 @@
 		text-align: center;
 		background-color: #fff;
 		border-radius: 28px;
-		border: 2px solid #397be6;
-		color: #397be6;
-		font-size: 30;
+		border: 2px solid #3A7AE5;
+		color: #3A7AE5;
+		font-size: 30px;
 		font-weight: 400;
 		margin-right: 10px;
 	}
@@ -132,11 +130,10 @@
 }
 .desctext {
 	color: #868e9e;
-	font-size: 24px;
-	font-family: 'PingFangSC-Regular';
+	font-size: 26px;
 	font-weight: 400;
 	text-align: center;
-	padding: 5px;
+  margin-top: 20px;
 }
 
 .title_wrap {
@@ -144,19 +141,25 @@
 }
 
 .question_icon {
-	position: absolute;
-	right: 200px;
-	top: 20px;
+	// position: absolute;
+	// right: 200px;
+	// top: 20px;
 	display: inline-block;
 	width: 28px;
-	height: 28px;
+  height: 28px;
+  margin-left: 20px;
 }
 
 .modalTitle {
-	font-size: 46px;
+	font-size: 36px;
 	color: #121c32;
 	text-align: left;
-	font-weight: 500;
+}
+.modalTitleSub {
+  font-size: 24px;
+  margin-top: 10px;
+  color: #868E9E;
+	text-align: left;
 }
 
 .modalDesc {
@@ -165,7 +168,7 @@
 	text-align: left;
 	margin-bottom: 64px;
 	span {
-		color: #397be6;
+		color: #3A7AE5;
 	}
 }
 
@@ -199,8 +202,8 @@
 }
 
 .opts_button_active {
-	border: 1px solid #397be6;
-	color: #397be6;
+	border: 1px solid #3A7AE5;
+	color: #3A7AE5;
 	background-color: #f0f6ff;
 	font-weight: bold;
 }

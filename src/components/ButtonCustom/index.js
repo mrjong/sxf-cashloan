@@ -120,21 +120,25 @@ export default class ButtonCustom extends React.PureComponent {
 			outline,
 			outlinewidth,
 			outlinetype,
-			outlinecolor
+			outlinecolor,
+			disabled
 		} = this.props;
 		let btnStyle = { ...style };
-		if (color) {
-			btnStyle.color = color;
-		}
-		if (backgroundcolor) {
-			btnStyle.backgroundColor = backgroundcolor;
-		}
 		if (shape === 'radius' && borderradius) {
 			btnStyle.borderRadius = borderradius;
+		}
+		if (disabled) {
+			return btnStyle;
+		}
+		if (color) {
+			btnStyle.color = color;
 		}
 		if (outline) {
 			btnStyle.border = `${outlinewidth} ${outlinetype} ${outlinecolor}`;
 			btnStyle.backgroundColor = 'transparent';
+		}
+		if (backgroundcolor) {
+			btnStyle.backgroundColor = backgroundcolor;
 		}
 		return btnStyle;
 	};
