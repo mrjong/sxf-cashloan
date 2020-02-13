@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-13 16:59:16
+ * @LastEditTime : 2020-02-13 17:17:49
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -326,6 +326,7 @@ export default class login_page extends PureComponent {
 		});
 	}
 
+	/**华丽的分割线 */
 	// 获取滑动验证码token并发短信
 	handleTokenAndSms = () => {
 		this.refreshSlideToken().then(() => {
@@ -335,9 +336,7 @@ export default class login_page extends PureComponent {
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then(() => {
-			this.reloadSlideImage();
-		});
+		this.refreshSlideToken();
 	};
 
 	// 刷新滑动验证码token
@@ -383,10 +382,6 @@ export default class login_page extends PureComponent {
 
 	// 获取短信(滑动验证码)
 	sendSlideVerifySmsCode = (xOffset = '', cb) => {
-		// let data = Object.assign({}, this.state.submitData, {
-		// 	bFlag: xOffset,
-		// 	aFlag: (this.state.yOffset * 2) / 3
-		// });
 		const data = {
 			slideDistance: xOffset,
 			tokenId: this.state.relyToken,
@@ -413,7 +408,7 @@ export default class login_page extends PureComponent {
 					this.startCountDownTime();
 				} else if (result.code === '000006') {
 					// 弹窗不存在时请求大图
-					!this.state.showSlideModal && this.reloadSlideImage();
+					!this.state.showSlideModal && this.handleTokenAndImage();
 					cb && cb('error');
 				} else if (result.code === '000004') {
 					//重新刷新relyToken
@@ -438,23 +433,6 @@ export default class login_page extends PureComponent {
 			});
 	};
 
-	// 重新加载大图
-	reloadSlideImage = () => {
-		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.code === 'PTM0000') {
-				this.setState({
-					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
-					yOffset: res.data.sy, // 小图距离大图顶部距离
-					bigImageH: res.data.bh, // 大图实际高度
-					showSlideModal: true
-				});
-			} else {
-				Toast.info(res.message);
-			}
-		});
-	};
-
 	showSlideModal = () => {
 		this.setState({ showSlideModal: true });
 	};
@@ -462,7 +440,7 @@ export default class login_page extends PureComponent {
 	closeSlideModal = () => {
 		this.setState({ showSlideModal: false });
 	};
-
+	/**华丽的分割线 */
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
@@ -519,37 +497,7 @@ export default class login_page extends PureComponent {
 	};
 	// 获取授信列表状态
 	requestGetStatus = () => {
-		this.props.$fetch
-			.get(`${API.getStw}`)
-			.then((result) => {
-				if (result && result.data !== null && result.code === 'PTM0000') {
-					const stswData =
-						result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
-					if (stswData && stswData.length) {
-						// case '0': // 未认证
-						// case '1': // 认证中
-						// case '2': // 认证成功
-						// case '3': // 认证失败
-						// case '4': // 认证过期
-						if (stswData[0].stsw.dicDetailCd === '0') {
-							this.props.history.replace({
-								pathname: '/home/essential_information',
-								search: '?jumpToBase=true&entry=fail'
-							});
-						} else {
-							this.goHome();
-						}
-					}
-				} else {
-					this.props.toast.info(result.message, 2, () => {
-						this.goHome();
-					});
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				this.goHome();
-			});
+		this.goHome();
 	};
 
 	//获取图片验证码
