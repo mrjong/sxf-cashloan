@@ -13,7 +13,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { buriedPointEvent } from 'utils/analytins';
 import { manualAudit } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
-import q_icon from '../../../assets/images/home/tip_ico.png';
+import Images from 'assets/image';
 import qs from 'qs';
 import { store } from '../../../utils/store';
 
@@ -287,7 +287,11 @@ export default class remit_ing_page extends PureComponent {
 							{showRulesPannel ? '人工审核的预约须知' : '请预约电话审核时间'}
 						</h3>
 						{!showRulesPannel && (
-							<img src={q_icon} className={style.question_icon} onClick={this.showRulesPannel} />
+							<img
+								src={Images.icon.icon_question}
+								className={style.question_icon}
+								onClick={this.showRulesPannel}
+							/>
 						)}
 					</div>
 					{showRulesPannel ? (
@@ -310,18 +314,18 @@ export default class remit_ing_page extends PureComponent {
 							<div>
 								<div className={style.options_day}>
 									{dayList.map((item) => (
-										<span
-											className={[
-												style.opts_button_day,
-												item.code === daySelectedItem.code && style.opts_button_active
-											].join(' ')}
+										<SXFButton
+											key={item.code}
+											className={style.opts_button_day}
+											size="md"
+											type={item.code === daySelectedItem.code ? 'yellow' : 'gray'}
 											onClick={() => {
 												this.handleButtonClick('day', item);
 											}}
-											key={item.code}
+											long="false"
 										>
 											{item.day}
-										</span>
+										</SXFButton>
 									))}
 								</div>
 								<div className={style.options_time}>
@@ -331,19 +335,19 @@ export default class remit_ing_page extends PureComponent {
 												<h3 className={style.opts_title}>{item.name}</h3>
 												<div className={style.opts_button_wrap}>
 													{item.timeItems.map((item) => (
-														<span
-															className={[
-																style.opts_button,
-																item.code === timeSelectedItem.code && style.opts_button_active,
-																daySelectedItem.code === '0' && !item.availiable && style.opts_button_disabled
-															].join(' ')}
+														<SXFButton
+															key={item.code}
+															className={style.opts_button}
+															size="md"
+															type={item.code === timeSelectedItem.code ? 'yellow' : 'gray'}
+															disabled={daySelectedItem.code === '0' && !item.availiable}
 															onClick={() => {
 																this.handleButtonClick('time', item);
 															}}
-															key={item.code}
+															long="false"
 														>
 															{item.time}
-														</span>
+														</SXFButton>
 													))}
 												</div>
 											</div>
@@ -363,7 +367,9 @@ export default class remit_ing_page extends PureComponent {
 				</Modal>
 
 				<CopyToClipboard text={this.state.copyText} onCopy={() => this.copyOperation()}>
-					<ZButton className={style.submitBtn}>关注“还到”公众号</ZButton>
+					<div className={style.submitBtnWrap}>
+						<ZButton className={style.submitBtn}>关注“还到”公众号</ZButton>
+					</div>
 				</CopyToClipboard>
 				<div className={style.desctext}>关注还到公众号 实时查看审核进度</div>
 			</div>

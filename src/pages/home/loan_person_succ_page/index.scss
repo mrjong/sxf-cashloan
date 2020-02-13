@@ -123,8 +123,10 @@
 		border: 2px solid #ff6666;
 	}
 }
+.submitBtnWrap {
+  padding: 0 70px;
+}
 .submitBtn {
-	width: 670px;
 	font-family: 'PingFangSC-Medium';
 	font-weight: 500;
 }
@@ -181,36 +183,19 @@
 }
 
 .opts_button_day {
-	display: inline-block;
-	width: 230px;
-	height: 70px;
-	line-height: 70px;
-	box-sizing: border-box;
-	border-radius: 35px;
-	text-align: center;
-	margin-right: 36px;
-	font-size: 28px;
-	font-weight: 400;
-	color: #121c32;
-	border: 1px solid #dcdfe6;
+  min-height: 70px;
+  min-width: 230px;
+}
+.opts_button_day + .opts_button_day {
+  margin-left: 35px;
 }
 
 .opts_button {
-	display: inline-block;
 	height: 60px;
-	line-height: 60px;
-	width: 210px;
-	text-align: center;
-	border: 1px solid #dcdfe6;
-	font-size: 28px;
-	font-weight: bold;
-	color: #121c32;
-	border-radius: 6px;
-	margin-right: 14px;
-
-	&:last-child {
-		margin-right: 0;
-	}
+	min-width: 210px;
+}
+.opts_button + .opts_button {
+  margin-left: 14px;
 }
 
 .opts_button_active {

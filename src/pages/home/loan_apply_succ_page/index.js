@@ -216,6 +216,7 @@ export default class remit_ing_page extends PureComponent {
 				>
 					我知道了
 				</ZButton>
+				<p className={style.bottom_tip}>关注“还到”公众号查看授信进度</p>
 			</div>
 		);
 	}

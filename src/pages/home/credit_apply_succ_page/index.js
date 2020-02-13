@@ -9,6 +9,7 @@ import TimeoutPayModal from 'components/TimeoutPayModal';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { NoticeBar } from 'antd-mobile';
+import Image from 'assets/image';
 let query = {};
 let autId = '';
 const API = {
@@ -152,7 +153,7 @@ export default class credit_apply_succ_page extends PureComponent {
 									});
 								}}
 							>
-								<i />
+								<img src={Image.icon.icon_question} alt="" />
 							</span>
 						</div>
 					</div>
@@ -166,12 +167,13 @@ export default class credit_apply_succ_page extends PureComponent {
 					}}
 				/>
 				<div className={style.fix_bottom}>
+					<p className={style.fix_bottom_tip}>关注“还到”公众号查看授信进度</p>
 					<NoticeBar
 						marqueeProps={{
 							loop: true,
 							leading: 1000,
 							trailing: 1000,
-							style: { color: '#C9CDD5', fontSize: '0.22rem' }
+							style: { color: '#B69254', fontSize: '0.22rem' }
 						}}
 						icon={null}
 					>

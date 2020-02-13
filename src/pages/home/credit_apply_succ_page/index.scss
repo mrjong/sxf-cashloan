@@ -1,6 +1,7 @@
 .topBox {
 	margin-top: -60px;
 	.title {
+    color: $colorBlack;
 		font-size: 46px;
 		font-family: 'PingFangSC-Medium';
 		font-weight: 500;
@@ -11,9 +12,9 @@
 		font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		text-align: center;
-		color: #868e9e;
+		color: #B2B6BF;
 		a {
-			color: #397be6;
+			color: #3A7AE5;
 			font-weight: bold;
 		}
 	}
@@ -26,7 +27,14 @@
 	top: 0;
 }
 .wenhao {
-	padding: 15px;
+  display: inline-block;
+  padding: 15px;
+  font-size: 0;
+  vertical-align: middle;
+  img {
+    width: 24px;
+    height: 24px;
+  }
 }
 .step_box_new {
 	position: relative;
@@ -52,10 +60,9 @@
 		.title {
 			font-size: 30px;
 			line-height: 1.4;
-			color: #868e9e;
+			color: #B2B6BF;
 			position: relative;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
+			// font-weight: 600;
 			.step_circle {
 				background-image: url(./img/circle_not.png);
 				background-repeat: no-repeat;
@@ -69,20 +76,19 @@
 				height: 14px;
 			}
 			a {
-				color: #397be6;
+				color: #3A7AE5;
 				font-size: 30px;
 				margin-left: 15px;
 				text-decoration: underline;
 			}
 			&.blue {
-				color: #397be6;
+				color: #3A7AE5;
 			}
 		}
 		&.active .title {
 			font-size: 30px;
 			color: #121c32;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
+			// font-weight: 600;
 			.step_circle {
 				top: 15px;
 				z-index: 100;
@@ -125,18 +131,8 @@
 				border-left: 1px dashed #e0e2e6;
 			}
 		}
-		i {
-			display: inline-block;
-			width: 24px;
-			height: 24px;
-			background-image: url(./img/wh.png);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-			position: relative;
-			left: 0;
-		}
 		.desc {
-			color: #868e9e;
+			color: #B2B6BF;
 			font-size: 22px;
 			font-family: 'PingFangSC-Regular';
 			font-weight: 400;
@@ -152,7 +148,12 @@
   z-index: 100;
   text-align: center;
 }
-
+.fix_bottom_tip {
+  font-size: 32px;
+  color: #868E9E;
+  text-align: center;
+  margin-bottom: 40px;
+}
 .fix_bottom {
 	:global {
 		.am-notice-bar {
