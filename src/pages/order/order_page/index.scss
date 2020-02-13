@@ -32,7 +32,7 @@
 	border-radius: 10px;
 	background-color: #fff;
 	margin-top: 34px;
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 .groupTitleWrap {
 	padding-left: 45px;
@@ -50,7 +50,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 40px;
+  padding: 40px;
+  border-radius: 6px;
 	box-sizing: border-box;
 	border-bottom: 1px solid $colorDivide;
 }

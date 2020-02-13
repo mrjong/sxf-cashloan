@@ -29,6 +29,7 @@ export default {
 		timeout: require('./adorn/status_timeout.png'),
 		fail: require('./adorn/status_fail.png'),
 		line_arrow: require('./adorn/line_arrow.png'),
+		youhui: require('./adorn/youhui.png'),
 		coupon: require('./adorn/coupon.png')
 	},
 
