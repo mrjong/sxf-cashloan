@@ -4,10 +4,10 @@
 .contact_list {
 	li {
 		position: relative;
-		border: 1px solid rgba(240, 241, 245, 1);
-		box-shadow: 0px 2px 16px 0px rgba(9, 36, 96, 0.13);
-		border-radius: 4px;
-		margin-bottom: 30px;
+    box-shadow:0px 0px 41px 0px rgba(226,229,247,0.77);
+		border-radius: 10px;
+    margin-bottom: 30px;
+    overflow: hidden;
 		.telSelectBox {
 			position: absolute;
 			top: 18px;
@@ -38,9 +38,9 @@
       padding-right: 50px;
     }
     .am-list-item .am-input-control input {
-      font-weight: 600;
+      // font-weight: 600;
       color: #121c32;
-      font-size: 32px;
+      font-size: 28px;
     }
   }
 }

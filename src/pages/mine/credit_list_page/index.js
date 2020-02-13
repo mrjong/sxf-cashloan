@@ -1,43 +1,42 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 16:17:11
+ * @LastEditTime : 2020-02-11 17:19:33
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
-import dayjs from 'dayjs';
 import fetch from 'sx-fetch';
-import qs from 'qs';
+import { Toast } from 'antd-mobile';
+// import qs from 'qs';
 import styles from './index.scss';
-import { Popover } from 'antd-mobile';
-import select from './img/select.png';
-import not_select from './img/not_select.png';
+import { ButtonCustom } from 'components';
+import { connect } from 'react-redux';
+import { setAuthId } from 'reduxes/actions/staticActions';
+// import { Popover } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import arrow from './img/arrow.png';
-import { getMoxieData, activeConfigSts } from 'utils';
-import FeedbackModal from 'components/FeedbackModal';
-const API = {
-	CREDCARDLIST: '/index/usrCredCardList', // 银行卡列表
-	CARDAUTH: '/auth/cardAuth', // 0404-信用卡授信
-	CACHECREDCARD: '/index/cacheCredCard' // 后台缓存信用卡
-};
+import { activeConfigSts } from 'utils';
+import { cred_queryCredCard, cred_cacheCredCard } from 'fetch/api';
+import mark_question from './img/mark_question@3x.png';
+import card_select_yellow from './img/card_select_yellow.png';
 
 @setBackGround('#F7F8FA')
 @fetch.inject()
+@connect(
+	() => ({}),
+	{ setAuthId }
+)
 export default class credit_list_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
 			autId: '', // 账单id
 			cardList: [],
-			resultLength: '',
-			showFeedbackModal: false
+			resultLength: ''
 		};
 	}
 	componentWillMount() {
 		this.queryBankList();
-		this.showFeedbackModal();
 	}
 	componentWillUnmount() {
 		store.removeBackUrl();
@@ -45,67 +44,69 @@ export default class credit_list_page extends PureComponent {
 
 	// 获取信用卡银行卡列表
 	queryBankList = () => {
-		this.props.$fetch
-			.post(API.CREDCARDLIST, {
-				type: '01'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
+		this.props.$fetch.post(cred_queryCredCard).then(
+			(res) => {
+				if (res.code === '000000') {
+					this.setState({
+						cardList: res.data && res.data.cards ? res.data.cards : [],
+						resultLength: (res.data && res.data.resultLength) || 0
+					});
+				} else {
+					if (res.code === 'PTM3021') {
 						this.setState({
-							cardList: res.data && res.data.result ? res.data.result : [],
-							resultLength: (res.data && res.data.resultLength) || 0
+							cardList: []
 						});
-					} else {
-						if (res.msgCode === 'PTM3021') {
-							this.setState({
-								cardList: []
-							});
-							return;
-						}
-						res.msgInfo && this.props.toast.info(res.msgInfo);
+						return;
 					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
-			);
+			},
+			(error) => {
+				error.message && this.props.toast.info(error.message);
+			}
+		);
 	};
 
-	// 选择银行卡
-	selectCard = (obj) => {
-		this.setState({
-			autId: obj.autId
-		});
-		// 如果选择的是同一张卡则不清除session里的RepaymentModalData
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		if (queryData.autId && queryData.autId !== obj.autId) {
-			store.removeRepaymentModalData();
-		}
-	};
+	// // 选择银行卡
+	// selectCard = (obj) => {
+	// 	this.setState({
+	// 		autId: obj.autId
+	// 	});
+	// 	// 如果选择的是同一张卡则不清除session里的RepaymentModalData
+	// 	const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+	// 	if (queryData.autId && queryData.autId !== obj.autId) {
+	// 		store.removeRepaymentModalData();
+	// 	}
+	// };
 	handleVisibleChange = (visible) => {
 		this.setState({
 			visible
 		});
 	};
 	// 告诉后台选中的是哪张卡
-	sendSelectedCard = (autId) => {
+	sendSelectedCard = async (autId) => {
 		if (!autId) {
-			this.props.toast.info('请选择一张你需要还款的信用卡');
+			Toast.info('请选择一张你需要还款的信用卡');
 			return;
 		}
-		this.props.$fetch.get(`${API.CACHECREDCARD}/${autId}`).then(
-			(res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.props.history.replace('/home/loan_repay_confirm_page');
-				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+		this.props.$fetch
+			.post(`${cred_cacheCredCard}`, {
+				autId
+			})
+			.then(
+				(res) => {
+					if (res.code === '000000') {
+						// 更换authid
+						this.props.setAuthId(autId);
+						this.props.history.push('/home/loan_repay_confirm_page');
+					} else {
+						res.message && Toast.info(res.message);
+					}
+				},
+				(error) => {
+					error.message && Toast.info(error.message);
 				}
-			},
-			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
-			}
-		);
+			);
 	};
 	// 新增授权卡
 	goToNewMoXie = async (type) => {
@@ -121,58 +122,121 @@ export default class credit_list_page extends PureComponent {
 			type: 'B'
 		});
 	};
-
-	showFeedbackModal = () => {
-		if (store.getGotoMoxieFlag()) {
-			this.setState({
-				showFeedbackModal: true
-			});
+	// 选择银行卡
+	selectCard = (obj) => {
+		if (obj.persionCheck === '00' || obj.cardBinSupport === '00' || obj.cardBillSts !== '01') {
+			return;
 		}
-	};
-
-	closeFeedbackModal = () => {
 		this.setState({
-			showFeedbackModal: false
+			autId: obj.autId
 		});
-		store.removeGotoMoxieFlag();
+	};
+	renderItem = (item, index) => {
+		let tipText = '';
+		let tipDesc = '';
+		if (item.persionCheck === '00') {
+			tipText = '非本人卡';
+			tipDesc = '仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。';
+		} else if (item.cardBinSupport === '00') {
+			tipText = '暂不支持该信用卡';
+			tipDesc = '暂不支持该类型信用卡，请添加其他收款信用卡。';
+		}
+		let cardBillSts = item.cardBillSts === '01'; // 00 || 02 需要更新，01:无需更新
+		const icoClass = item.autSts === '2' ? `bank_ico bank_ico_${item.bankNo}` : `bank_ico black_logo`;
+		const isSelected = this.state.autId === item.autId;
+		const isDisable = tipText || !cardBillSts;
+		return (
+			<div
+				className={[styles.newCardBoxContainer, isSelected ? styles.selectedLine : ''].join(' ')}
+				onClick={() => {
+					this.selectCard(item);
+				}}
+			>
+				<div className={styles.newCardBox}>
+					<div className={styles.newCardLeftBox}>
+						<span className={`${icoClass} ${styles.bank_icon}`} />
+						<div className={styles.leftTextBox}>
+							<span className={[styles.leftTextTop, isDisable ? styles.isDisable : ''].join(' ')}>
+								{item.bankName}(<span className={styles.leftTextTopNum}>{item.lastNo}</span>)
+							</span>
+							<span className={[styles.leftTextBottom, isDisable ? styles.isDisable : ''].join(' ')}>
+								{!cardBillSts
+									? '需更新账单'
+									: (item.cardBillAmt && `信用卡剩余应还${item.cardBillAmt.toFixed(2)}`) || '----.--'}
+							</span>
+						</div>
+					</div>
+					{tipText ? (
+						<div className={styles.newCardRightBox}>
+							<span className={styles.RightText}>{tipText}</span>
+							<div
+								onPress={() => {
+									this[`btnA${index}`].measure((fx, fy, width, height, px, py) => {
+										this.setState({
+											offsetX: px + 40,
+											offsetY: py - 30,
+											tipDesc
+										});
+										this._popoverA.open().catch((e) => {
+											console.log(e);
+										});
+									});
+								}}
+								ref={(c) => {
+									this[`btnA${index}`] = c;
+								}}
+							>
+								<img src={mark_question} className={[styles.RightIcon]} />
+							</div>
+						</div>
+					) : (
+						!cardBillSts && (
+							<div className={styles.newCardRightBox}>
+								<ButtonCustom
+									label="更新账单"
+									size="md"
+									onPress={
+										// 跳银行登录页面
+										() => {
+											// buidSts 01 绑定成功 可以直接更新
+											let param = {};
+											if (item.buidSts === '01') {
+												param.autId = item.autId;
+												param.cardNoHid = item.cardNoHid;
+											}
+											this.props.navigation.navigate('CreditAuth', {
+												RouterType: 'selectAuthCard',
+												...param
+											});
+										}
+									}
+								/>
+							</div>
+						)
+					)}
+				</div>
+				{isSelected ? <img src={card_select_yellow} className={[styles.selectedIco]} /> : null}
+			</div>
+		);
 	};
 
 	render() {
-		let { autId, showFeedbackModal } = this.state;
+		let { autId } = this.state;
 		console.log(autId, 'autId');
 		return (
 			<div className={styles.credit_list_page}>
 				{this.state.cardList.length ? (
 					<div>
-						{this.state.resultLength === 0 ? (
-							<div
-								className={styles.noCardTip}
-								onClick={() => {
-									this.setState({
-										resultLength: 1
-									});
-								}}
-							/>
-						) : null}
-
-						<div className={[styles.card_tit].join(' ')}>
-							选择收款信用卡
+						<div className={styles.top_box}>
+							<div className={[styles.card_tit].join(' ')}>选择收款信用卡</div>
 							<div
 								onClick={() => {
 									this.goToNewMoXie('add');
 								}}
-								className={[styles.addCard, `${this.state.resultLength === 0 ? styles.noCardTip_ : ''}`].join(
-									' '
-								)}
+								className={[styles.addCard].join(' ')}
 							>
 								<i />
-								添加信用卡
-								{this.state.resultLength === 0 ? (
-									<div className={styles.imgbox}>
-										<img src={arrow} />
-										<span className={styles.text}>当前卡片均不支持，请添加其他信用卡</span>
-									</div>
-								) : null}
+								<span>添加信用卡</span>
 							</div>
 						</div>
 						<ul
@@ -180,169 +244,22 @@ export default class credit_list_page extends PureComponent {
 							style={this.state.cardList.length > 2 ? { paddingBottom: '2.5rem' } : {}}
 						>
 							{this.state.cardList.map((item, index) => {
-								const isSelected = this.state.autId === item.autId;
-								const icoClass =
-									item.autSts === '2' ? `bank_ico bank_ico_${item.bankNo}` : `bank_ico black_logo`;
-								return (
-									<li
-										className={` ${styles.bank_item}`}
-										key={index}
-										onClick={() => {
-											item.operationMark === '01' ? this.selectCard(item) : () => {};
-										}}
-									>
-										<div className={styles.cardContainer}>
-											<div
-												className={`${item.operationMark === '00' ? styles.dis : ''} ${
-													isSelected ? styles.active : ''
-												} ${styles.cardBox} `}
-											>
-												<div className={styles.bankNameBox}>
-													<span className={`${icoClass} ${styles.bank_icon}`} />
-													<span className={styles.bank_name}>{item.bankName}</span>
-													<div className={styles.subTitle}>
-														{item.operationMark === '00' &&
-															((item.persionCheck === '00' && '非本人卡') ||
-																(item.cardBinSupport === '00' && '暂不支持该信用卡') ||
-																(item.cardBillCheck === '00' && '新卡未生成账单') ||
-																(item.moneyCheck === '00' && `账单小于${item.minProd}元`))}
-														{item.operationMark === '00' ? (
-															<Popover
-																placement="bottomRight"
-																overlayClassName="credit_list_pagePopover"
-																visible={false}
-																overlay={[
-																	<p className={styles.Popover} key="0">
-																		{(item.persionCheck === '00' &&
-																			'仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。') ||
-																			(item.cardBinSupport === '00' &&
-																				'暂不支持该类型信用卡，请添加其他收款信用卡。') ||
-																			(item.cardBillCheck === '00' &&
-																				'该信用卡暂未生成账单，请添加其他信用卡或生成账单后使用还到。') ||
-																			(item.moneyCheck === '00' &&
-																				`账单小于最低可借金额${item.minProd}元，请添加其他收款信用卡。`)}
-																	</p>
-																]}
-															>
-																<span className={styles.wenhao}>
-																	<i />
-																</span>
-															</Popover>
-														) : null}
-													</div>
-												</div>
-												<div className={styles.surplus_desc}>信用卡账单金额(元)</div>
-												<div className={styles.bill_remain_amt}>
-													{(item.autSts !== '2' && item.operationMark === '01') ||
-													(item.operationMark === '01' && item.cardBillSts === '02') ||
-													(item.operationMark === '01' && item.cardBillSts === '00') ? (
-														<span style={{ fontSize: '.6rem' }}>需更新账单</span>
-													) : item.cardBillCheck === '00' &&
-													  item.operationMark === '00' &&
-													  item.persionCheck !== '00' &&
-													  item.cardBinSupport !== '00' ? (
-														<span style={{ fontSize: '.6rem' }}>----.--</span>
-													) : item.billRemainAmt && !isNaN(item.billRemainAmt) ? (
-														(item.billRemainAmt > 0 &&
-															parseFloat((Number(item.billRemainAmt) * 100) / 100).toFixed(2)) || (
-															<span style={{ fontSize: '.6rem' }}>已结清</span>
-														)
-													) : item.billRemainAmt === 0 ? (
-														<span style={{ fontSize: '.6rem' }}>已结清</span>
-													) : !isNaN(item.cardBillAmt) ? (
-														(item.cardBillAmt > 0 &&
-															parseFloat((Number(item.cardBillAmt) * 100) / 100).toFixed(2)) || (
-															<span style={{ fontSize: '.6rem' }}>已结清</span>
-														)
-													) : (
-														item.cardBillAmt
-													)}
-												</div>
-												{(item.autSts !== '2' && item.operationMark === '01') ||
-												(item.cardBillSts === '02' && item.operationMark === '01') ||
-												(item.cardBillSts === '00' && item.operationMark === '01') ? (
-													<div
-														onClick={
-															// 跳银行登录页面
-															() => {
-																getMoxieData({
-																	bankCode: item.bankNo,
-																	$props: this.props,
-																	goMoxieBankList: this.goToNewMoXie
-																});
-															}
-														}
-														className={styles.updateBtn}
-													>
-														更新账单
-													</div>
-												) : null}
-
-												<span>
-													<span className={styles.bank_number}>
-														{item.beforeCard4No ? (
-															<span style={{ marginRight: '.2rem' }}>{item.beforeCard4No}</span>
-														) : (
-															<span style={{ marginRight: '.2rem' }}>****</span>
-														)}
-
-														<span style={{ marginRight: '.2rem' }}>****</span>
-														<span style={{ marginRight: '.2rem' }}>****</span>
-
-														{item.last ? <span>{item.last}</span> : <span>****</span>}
-													</span>
-													<span className={styles.bank_date}>
-														还款日：
-														{(item.autSts !== '2' && item.operationMark === '01') ||
-														(item.cardBillSts === '02' && item.operationMark === '01') ||
-														(item.cardBillSts === '00' && item.operationMark === '01')
-															? '待更新'
-															: item.cardBillCheck === '00' &&
-															  item.operationMark === '00' &&
-															  item.persionCheck !== '00' &&
-															  item.cardBinSupport !== '00'
-															? '----/--/--'
-															: (item.cardBillDt && dayjs(item.cardBillDt).format('YYYY/MM/DD')) ||
-															  '----/--/--'}
-													</span>
-												</span>
-												{item.operationMark === '01' && isSelected ? (
-													<img src={select} className={styles.select_icon} />
-												) : null}
-												{item.operationMark === '01' && !isSelected ? (
-													<img src={not_select} className={styles.select_icon} />
-												) : null}
-											</div>
-											{(item.autSts !== '2' && item.operationMark === '01') ||
-											(item.cardBillSts === '02' && item.operationMark === '01') ||
-											(item.cardBillSts === '00' && item.operationMark === '01') ? (
-												<div className={styles.desc}>
-													部分银行存在账单日当天无法更新账单情况，可选择其他信用卡或次日重新更新。
-												</div>
-											) : null}
-										</div>
-									</li>
-								);
+								return <div key={item.autId}>{this.renderItem(item, index)}</div>;
 							})}
 						</ul>
 					</div>
 				) : null}
 				<div className={styles.handle_authority}>
-					<div
+					<ButtonCustom
+						label=""
 						className={styles.button}
 						onClick={() => {
-							this.sendSelectedCard(autId, true);
+							this.sendSelectedCard(autId);
 						}}
 					>
 						确认
-					</div>
+					</ButtonCustom>
 				</div>
-				<FeedbackModal
-					history={this.props.history}
-					toast={this.props.toast}
-					visible={showFeedbackModal}
-					closeModal={this.closeFeedbackModal}
-				/>
 			</div>
 		);
 	}

@@ -29,7 +29,8 @@ export default {
 		timeout: require('./adorn/status_timeout.png'),
 		fail: require('./adorn/status_fail.png'),
 		line_arrow: require('./adorn/line_arrow.png'),
-		youhui: require('./adorn/youhui.png')
+		youhui: require('./adorn/youhui.png'),
+		coupon: require('./adorn/coupon.png')
 	},
 
 	// 银行图标 单独放这
@@ -55,7 +56,8 @@ export default {
 		checked: require('./icon/selected_black.png'),
 		checked_no: require('./icon/selected_no_black.png'),
 		customer_service: require('./icon/icon_customer_service.png'),
-		service_ico: require('./icon/service_ico.png')
+		service_ico: require('./icon/service_ico.png'),
+		add_ico: require('./icon/add_ico.png')
 	},
 
 	// 标志性的图片

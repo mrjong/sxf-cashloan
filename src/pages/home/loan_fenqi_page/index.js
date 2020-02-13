@@ -1,19 +1,30 @@
 import React, { PureComponent } from 'react';
+import fetch from 'sx-fetch';
+import Cookie from 'js-cookie';
 import { Modal, InputItem, Icon } from 'antd-mobile';
+import { ButtonCustom, RepayPlanModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
-import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
-import { getDeviceType } from 'utils';
-import SXFButton from 'components/ButtonCustom';
-import RepayPlanModal from 'components/RepayPlanModal';
-import TipModal from 'components/TipModal';
-import style from './index.scss';
-import linkConf from 'config/link.conf';
-import Cookie from 'js-cookie';
 import { getH5Channel } from 'utils/common';
+import { base64Decode } from 'utils/CommonUtil/toolUtil';
+import { connect } from 'react-redux';
+import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
+import linkConf from 'config/link.conf';
+import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
+import Images from 'assets/image';
+import style from './index.scss';
+import {
+	loan_loanPlan,
+	loan_queryContractInfo,
+	loan_contractPreview,
+	bank_card_protocol_sms,
+	bank_card_protocol_bind,
+	loan_loanSub,
+	loan_queryCashLoanApplInfo
+} from 'fetch/api.js';
 
 const API = {
 	prodInfo: '/cash/prodList', //产品列表基本信息查询
@@ -33,7 +44,20 @@ const API = {
 let isFetching = false;
 
 @fetch.inject()
-@setBackGround('#fff')
+@setBackGround('#f0f4f9')
+@connect(
+	(state) => ({
+		userInfo: state.staticState.userInfo,
+		withholdCardData: state.commonState.withholdCardData,
+		withdrawCardData: state.commonState.withdrawCardData,
+		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
+		couponData: state.commonState.couponData
+	}),
+	{
+		setCardTypeAction,
+		setConfirmAgencyInfoAction
+	}
+)
 export default class loan_fenqi_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -42,20 +66,15 @@ export default class loan_fenqi_page extends PureComponent {
 			usageModal: false,
 			planModal: false,
 			prdId: '',
-			loanDate: '',
+			loanDate: null,
 			loanMoney: '',
 			usageList: [],
 			couponInfo: {},
-			resaveBankCardAgrNo: '',
-			resaveBankCardLastNo: '',
-			resaveBankCardName: '',
-			payBankCardAgrNo: '',
-			payBankCardLastNo: '',
-			payBankCardName: '',
 			perdRateList: [],
+			productList: [],
 			contractList: [],
 			repayPlanInfo: {
-				perd: []
+				perds: []
 			},
 			couponData: {}, // 优惠劵的信息
 			isShowSmsModal: false, //是否显示短信验证码弹窗
@@ -63,246 +82,284 @@ export default class loan_fenqi_page extends PureComponent {
 			payBankCode: '',
 			resaveBankCode: '',
 			checkBox1: false,
-			isShowLoanTipModal: false
+			loanUsage: {},
+			repayCardNo: '', //借款银行卡卡号
+			repayCardLast: '', //借款银行卡后四位
+			repayCardName: '', //借款银行卡银行
+			resaveCardNo: '', //还款银行卡卡号
+			resaveCardLast: '', //还款银行卡后四位
+			resaveCardName: '' //还款银行卡银行
 		};
 	}
 
 	componentWillMount() {
+		console.log(this.props, 'props1122121');
+		this.queryCashLoanApplInfo();
+
 		let storeData = store.getCashFenQiStoreData(); // 代提交的借款信息
 		let cashFenQiCardArr = store.getCashFenQiCardArr(); // 收、还款卡信息
-		let couponInfo = store.getCouponData(); //优惠券数据
 
 		if (storeData && cashFenQiCardArr) {
 			this.handleDataDisplay(storeData, cashFenQiCardArr);
+		}
+	}
+
+	//处理数据反显
+	handleDataDisplay = (storeData = {}, cardArr = []) => {
+		let tempResaveCard = cardArr[0] || {};
+		let tempPayCard = cardArr[1] || {};
+		let perdRateList = [];
+		let usageList = [];
+
+		let { agrNo: repayCardNo, bankName: repayCardName, lastCardNo: repayCardLast } = tempResaveCard;
+		let resaveBankCode = tempResaveCard && (tempResaveCard.bankCode || tempResaveCard.bankCd);
+		let { agrNo: resaveCardNo, bankName: resaveCardName, lastCardNo: resaveCardLast } = tempPayCard;
+		let payBankCode = tempPayCard && (tempPayCard.bankCode || tempPayCard.bankCd);
+		if (!repayCardNo) {
+			//处理用户无卡,去绑定的反显问题
+			repayCardNo = resaveCardNo;
+			repayCardName = resaveCardName;
+			repayCardLast = resaveCardLast;
+			resaveBankCode = payBankCode;
+		} else if (!resaveCardNo) {
+			resaveCardNo = repayCardNo;
+			resaveCardName = repayCardName;
+			resaveCardLast = repayCardLast;
+			payBankCode = resaveBankCode;
+		}
+		if (this.state.inputClear || !storeData.perdRateList || !storeData.usageList) {
+			perdRateList = this.state.perdRateList;
+			usageList = this.state.usageList;
 		} else {
-			this.queryProdInfo();
-			this.queryLoanUsageList();
+			perdRateList = storeData.perdRateList;
+			usageList = storeData.usageList;
 		}
+		let data = Object.assign({}, storeData, {
+			repayCardNo,
+			repayCardName,
+			repayCardLast,
+			resaveCardNo,
+			resaveCardName,
+			resaveCardLast,
+			perdRateList,
+			usageList,
+			payBankCode,
+			resaveBankCode
+		});
+		this.setState({ ...data });
+	};
 
-		if (couponInfo && couponInfo.coupVal === -1) {
-			this.setState({
-				couponInfo,
-				deratePrice: ''
+	// 获取页面数据
+	queryCashLoanApplInfo() {
+		this.props.$fetch
+			.post(loan_queryCashLoanApplInfo)
+			.then((res) => {
+				this.props.toast.hide();
+				if (res.code === '000000') {
+					if (!(res.data && res.data.prods && res.data.prods.length)) {
+						this.props.toast.info('无借款产品，请联系客服');
+						return;
+					}
+					if (res.data && res.data.contacts && res.data.contacts.length) {
+						res.data.contacts.map((item, index) => {
+							item.name = base64Decode(item.name);
+							item.number = base64Decode(item.number);
+							if (index < 5) {
+								item.isMarked = true;
+							} else {
+								item.isMarked = false;
+							}
+							item.uniqMark = 'uniq' + index;
+							return item;
+						});
+					}
+					if (res.data && res.data.excludedContacts && res.data.excludedContacts.length) {
+						for (let i = 0; i < res.data.excludedContacts.length; i++) {
+							res.data.excludedContacts[i] = base64Decode(res.data.excludedContacts[i]);
+						}
+					}
+					this.setState(
+						{
+							pageInfo: res.data
+						},
+						() => {
+							this.dataInit();
+						}
+					);
+				} else {
+					this.props.toast.info(res.message);
+					// setTimeout(() => {
+					// 	this.props.history.push('/home/home');
+					// }, 2000);
+				}
+			})
+			.catch(() => {
+				this.props.toast.info('系统开小差,请稍后重试');
+				// setTimeout(() => {
+				// 	this.props.history.push('/home/home');
+				// }, 2000);
 			});
-		}
-
-		if (couponInfo && storeData && couponInfo.coupVal !== -1) {
-			this.dealMoney(couponInfo, storeData.prdId);
-		}
 	}
 
-	componentDidUpdate(prevProps, prevState) {
-		this.shouldQueryContractList(prevState, this.state);
-	}
-
-	//是否需要重新请求合同产品
-	shouldQueryContractList = (prevState, curState) => {
-		const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo } = curState;
-		if (
-			loanMoney &&
-			loanDate &&
-			resaveBankCardAgrNo &&
-			(loanMoney !== prevState.loanMoney ||
-				loanDate.perdCnt !== prevState.loanDate.perdCnt ||
-				payBankCardAgrNo !== prevState.payBankCardAgrNo ||
-				resaveBankCardAgrNo !== prevState.resaveBankCardAgrNo)
-		) {
-			this.queryContractList();
+	//产品数据初始化
+	dataInit = () => {
+		const { pageInfo = {} } = this.state;
+		const { withdrawCardData, withholdCardData } = this.props;
+		let withdrawCardInf = {};
+		let withholdCardInf = {};
+		if (withdrawCardData) {
+			withdrawCardInf = {
+				repayCardNo: withdrawCardData.agrNo,
+				repayCardLast: withdrawCardData.lastCardNo,
+				repayCardName: withdrawCardData.bankName
+			};
+		} else {
+			withdrawCardInf = {
+				repayCardNo: pageInfo.withdrawBankAgrNo,
+				repayCardLast: pageInfo.withdrawBankLastNo,
+				repayCardName: pageInfo.withdrawBankName
+			};
 		}
+
+		if (withholdCardData) {
+			withholdCardInf = {
+				resaveCardNo: withholdCardData.agrNo,
+				resaveCardLast: withholdCardData.lastCardNo,
+				resaveCardName: withholdCardData.bankName,
+				resaveBankCode: withholdCardData.bankCode
+			};
+		} else {
+			withholdCardInf = {
+				resaveCardNo: pageInfo.withholdBankAgrNo,
+				resaveCardLast: pageInfo.withholdBankLastNo,
+				resaveCardName: pageInfo.withholdBankName,
+				resaveBankCode: pageInfo.withholdBankCode
+			};
+		}
+		this.setState(
+			{
+				productList: this.state.loanMoney ? this.filterProdList() : pageInfo.prods || [],
+				usageList: pageInfo.loanUsages || [],
+				...withdrawCardInf,
+				...withholdCardInf,
+				priceMax: pageInfo.maxAmt,
+				priceMin: pageInfo.minAmt
+			},
+			() => {
+				this.selectLoanUsage(this.state.usageList[0]);
+				this.requestProtocolCoupon();
+			}
+		);
 	};
 
-	//查询产品基本信息
-	queryProdInfo = () => {
-		this.props.$fetch
-			.get(API.prodInfo, {
-				channelType: 'h5'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data !== null) {
-					const {
-						resaveBankCardAgrNo,
-						resaveBankCardLastNo,
-						resaveBankCardName,
-						payBankCardAgrNo,
-						payBankCardLastNo,
-						payBankCardName,
-						perdRateList,
-						priceMax,
-						priceMin,
-						payBankCode,
-						resaveBankCode
-					} = res.data;
+	/**
+	 * 根据金额获取产品信息
+	 */
+	requestProdInfo = () => {
+		const { loanMoney } = this.state;
+		if (!loanMoney) {
+			return;
+		}
+		const prodList = this.filterProdList();
+		this.setState({
+			productList: prodList,
+			loanDate: null
+		});
+	};
 
-					this.setState({
-						resaveBankCardAgrNo,
-						resaveBankCardLastNo,
-						resaveBankCardName,
-						payBankCardAgrNo,
-						payBankCardLastNo,
-						payBankCardName,
-						perdRateList,
-						priceMax,
-						priceMin,
-						payBankCode,
-						resaveBankCode
-					});
-				} else {
-					this.props.toast.info(res.msgInfo);
+	// 筛选产品列表
+	filterProdList = () => {
+		const { loanMoney, pageInfo } = this.state;
+		let prodList = [];
+		if (pageInfo.prods && pageInfo.prods.length) {
+			prodList = pageInfo.prods.filter((item) => loanMoney <= item.maxAmt && loanMoney >= item.minAmt);
+		}
+		return prodList;
+	};
+
+	/**
+	 * 获取借款合同与优惠券，注意请求报错则清空选中期数termSelected=null
+	 */
+	requestProtocolCoupon = async () => {
+		if (!parseFloat(this.state.loanMoney) > 0 || !this.state.repayCardLast.length > 0) {
+			return;
+		}
+		const { loanDate = {}, loanMoney, repayCardNo, resaveCardNo } = this.state;
+		//借款相关协议传参
+		const protocolParams = {
+			loanAmt: loanMoney,
+			prodLth: loanDate.prodLth,
+			prodCount: loanDate.prodCount,
+			prodUnit: loanDate.prodUnit,
+			withdrawBankAgrNo: repayCardNo,
+			withholdBankAgrNo: resaveCardNo,
+			prodType: '11', //现金分期业务Type
+			wtdwTyp: '0' //还款时间
+		};
+
+		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((protocolRes) => {
+			if (protocolRes.code === '000000') {
+				// 试算传参
+				let couponParams = {
+					loanAmt: loanMoney,
+					prodType: '11',
+					repayType: '0',
+					prodId:
+						protocolRes &&
+						protocolRes.data &&
+						protocolRes.data.contracts &&
+						protocolRes.data.contracts[0] &&
+						protocolRes.data.contracts[0].prodId
+				};
+				const { couponData } = this.props;
+				// 不使用优惠券,不传coupId,
+				// 使用优惠券,coupId传优惠券ID
+				if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
+					// 不使用优惠劵的情况
+					couponParams = {
+						...couponParams
+					};
+				} else if (couponData && JSON.stringify(couponData) !== '{}') {
+					couponParams = {
+						...couponParams,
+						coupId: couponData.coupId
+					};
 				}
-			});
-	};
-
-	//根据用户金额获取产品信息
-	queryProdInfoByMoney = () => {
-		isFetching = true;
-		this.props.$fetch
-			.get(API.prodInfoByMoney, {
-				price: this.state.loanMoney
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data !== null) {
-					isFetching = false;
-					this.setState({
-						perdRateList: res.data,
-						loanDate: ''
-					});
-				} else {
-					this.props.toast.info(res.msgInfo);
-				}
-			});
-	};
-
-	//查询借款用途列表
-	queryLoanUsageList = () => {
-		this.props.$fetch.get(API.loanUsage).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data !== null) {
+				this.requestLoanPlan(couponParams, protocolRes);
+			} else {
 				this.setState(
 					{
-						usageList: res.data
+						protocolList: [],
+						repayPlanInfo: { perds: [] }
 					},
 					() => {
-						this.selectLoanUsage(this.state.usageList[0]);
+						this.props.toast.info(protocolRes.message);
 					}
 				);
-			} else {
-				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
 
-	//查询合同列表
-	queryContractList = () => {
-		const { loanMoney, resaveBankCardAgrNo, loanDate } = this.state;
-		const { perdCnt, perdLth, perdUnit } = loanDate;
-		this.props.$fetch
-			.post(API.contractList, {
-				loanAmount: loanMoney,
-				periodLth: perdLth,
-				periodCount: perdCnt,
-				periodUnit: perdUnit,
-				prodType: '11',
-				wtdwTyp: '0',
-				agrNo: resaveBankCardAgrNo
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data !== null) {
-					this.setState(
-						{
-							contractList: res.data,
-							prdId: res.data[0].productId //产品ID
-						},
-						() => {
-							this.queryCouponInfo();
-						}
-					);
-				} else {
-					this.setState({
-						contractList: [],
-						prdId: ''
-					});
-					this.props.toast.info(res.msgInfo);
-				}
-			})
-			.catch(() => {
-				this.removeTempData();
-			});
-	};
-
-	//查询优惠券
-	queryCouponInfo = () => {
-		const { loanMoney, loanDate, prdId } = this.state;
-		this.props.$fetch
-			.post(API.couponSupport, {
-				price: loanMoney,
-				type: 'LOAN',
-				prodType: '11',
-				periodCount: loanDate.perdCnt,
-				prdId: prdId
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000' && res.data !== null) {
-					this.setState(
-						{
-							// couponInfo: res.data
-							couponData: res.data,
-							couponInfo: {
-								coupVal: -1,
-								usrCoupNo: 'null'
-							},
-							deratePrice: ''
-						}
-						// () => {
-						// 	this.dealMoney(res.data, prdId);
-						// }
-					);
-				} else {
-					this.setState({
-						couponInfo: {}
-					});
-				}
-			})
-			.catch(() => {
-				this.removeTempData();
-			});
-	};
-
-	//查询还款计划
-	queryRepayPlan = () => {
-		let couponInfo = store.getCouponData();
-		const { loanMoney, prdId } = this.state;
-		if (!prdId || !loanMoney) return;
-
-		let params = {
-			billPrcpAmt: loanMoney,
-			prdId,
-			wtdwTyp: '0',
-			prodType: '11'
-		};
-		if (couponInfo && (couponInfo.usrCoupNo === 'null' || couponInfo.coupVal === -1)) {
-			// 不使用优惠劵的情况
-			params = {
-				...params
-				// coupId: '-1'
-			};
-		} else if (couponInfo && JSON.stringify(couponInfo) !== '{}') {
-			params = {
-				...params,
-				coupId: couponInfo.usrCoupNo
-			};
-		}
-		this.props.$fetch.post(API.repayPlan, params).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data !== null) {
+	// 借款试算
+	requestLoanPlan = (planParam, protocolRes) => {
+		this.props.$fetch.post(loan_loanPlan, planParam).then((planRes) => {
+			if (planRes.code === '000000') {
+				this.props.toast.hide();
+				this.setState({
+					protocolList: (protocolRes.data && protocolRes.data.contracts) || [],
+					repayPlanInfo: planRes.data
+				});
+				buriedPointEvent(loan_fenqi.repayPlan);
+			} else {
 				this.setState(
 					{
-						repayPlanInfo: res.data
+						protocolList: [],
+						repayPlanInfo: { perds: [] }
 					},
 					() => {
-						buriedPointEvent(loan_fenqi.repayPlan);
-						this.openModal('plan');
+						this.props.toast.info(planRes.message);
 					}
 				);
-			} else {
-				this.props.toast.info(res.msgInfo);
 			}
 		});
 	};
@@ -311,14 +368,14 @@ export default class loan_fenqi_page extends PureComponent {
 	selectCoupon = () => {
 		const { prdId, couponData } = this.state;
 		this.storeTempData();
-		const { couponInfo, loanMoney, loanDate } = this.state;
+		const { couponInfo, loanMoney, loanDate = {} } = this.state;
 		if (couponInfo && couponInfo.usrCoupNo) {
 			store.setCouponData(couponInfo);
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
 			search: `?transactionType=fenqi&price=${loanMoney}&perCont=${
-				loanDate.perdUnit === 'M' ? loanDate.perdLth : 1
+				loanDate.prodUnit === 'M' ? loanDate.prodLth : 1
 			}&prodId=${prdId}`,
 			state: { nouseCoupon: !(couponData && couponData.availableCoupAmt) }
 		});
@@ -328,11 +385,12 @@ export default class loan_fenqi_page extends PureComponent {
 	selectBankCard = (agrNo, cardType) => {
 		store.setBackUrl('/home/loan_fenqi');
 		this.storeTempData();
+		this.props.setCardTypeAction(cardType);
 		this.props.history.push({
 			pathname: '/mine/select_save_page',
 			search: `?agrNo=${agrNo}&cardType=${cardType}`
 		});
-		if (cardType === 'resave') {
+		if (cardType === 'withdraw') {
 			buriedPointEvent(loan_fenqi.resaveCard);
 		} else {
 			buriedPointEvent(loan_fenqi.payCard);
@@ -343,18 +401,31 @@ export default class loan_fenqi_page extends PureComponent {
 	bindBankCard = (cardType) => {
 		store.setBackUrl('/home/loan_fenqi');
 		this.storeTempData();
+		this.props.setCardTypeAction(cardType);
 		this.props.history.push({
 			pathname: '/mine/bind_save_page',
 			search: `?cardType=${cardType}`
 		});
 	};
 
+	// 选择分期期限
 	selectLoanDate = (item) => {
 		if (isFetching) return;
-		this.setState({
-			loanDate: item
-		});
-		switch (item.perdCnt) {
+		this.setState(
+			{
+				loanDate: item
+			},
+			() => {
+				if (
+					parseFloat(this.state.loanMoney) > 0 &&
+					this.state.repayCardLast &&
+					this.state.repayCardLast.length > 0
+				) {
+					this.requestProtocolCoupon();
+				}
+			}
+		);
+		switch (item.prodCount) {
 			case '30':
 				buriedPointEvent(loan_fenqi.day30);
 				break;
@@ -401,16 +472,16 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//阅读合同详情
 	readContract = (item) => {
-		const { loanMoney, payBankCardAgrNo, resaveBankCardAgrNo, loanUsage } = this.state;
+		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
 		this.storeTempData();
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${API.qryContractInfo}?loanUsage=${loanUsage.value}&contractTyep=${
+				url: `${linkConf.PDF_URL}${API.qryContractInfo}?loanUsage=${loanUsage.usageCd}&contractTyep=${
 					item.contractTyep
 				}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&productId=${
 					item.productId
-				}&agreementNo=${resaveBankCardAgrNo}&withholdAgrNo=${payBankCardAgrNo}&fin-v-card-token=${Cookie.get(
+				}&agreementNo=${repayCardNo}&withholdAgrNo=${resaveCardNo}&fin-v-card-token=${Cookie.get(
 					'FIN-HD-AUTH-TOKEN'
 				) || store.getToken()}`,
 				name: item.contractMdlName
@@ -429,12 +500,12 @@ export default class loan_fenqi_page extends PureComponent {
 			priceMax,
 			priceMin,
 			couponInfo,
-			resaveBankCardAgrNo,
-			resaveBankCardLastNo,
-			resaveBankCardName,
-			payBankCardAgrNo,
-			payBankCardLastNo,
-			payBankCardName,
+			repayCardNo,
+			repayCardLast,
+			repayCardName,
+			resaveCardNo,
+			resaveCardLast,
+			resaveCardName,
 			perdRateList,
 			contractList,
 			usageList,
@@ -445,15 +516,15 @@ export default class loan_fenqi_page extends PureComponent {
 			checkBox1
 		} = this.state;
 		const resaveCard = {
-			agrNo: resaveBankCardAgrNo,
-			lastCardNo: resaveBankCardLastNo,
-			bankName: resaveBankCardName,
+			agrNo: repayCardNo,
+			lastCardNo: repayCardLast,
+			bankName: repayCardName,
 			bankCode: resaveBankCode
 		};
 		const payCard = {
-			agrNo: payBankCardAgrNo,
-			lastCardNo: payBankCardLastNo,
-			bankName: payBankCardName,
+			agrNo: resaveCardNo,
+			lastCardNo: resaveCardLast,
+			bankName: resaveCardName,
 			bankCode: payBankCode
 		};
 		store.setCashFenQiStoreData({
@@ -468,8 +539,8 @@ export default class loan_fenqi_page extends PureComponent {
 			usageList,
 			couponInfo,
 			deratePrice,
-			resaveBankCardAgrNo,
-			payBankCardAgrNo,
+			repayCardNo,
+			resaveCardNo,
 			couponData,
 			payBankCode,
 			resaveBankCode,
@@ -487,91 +558,6 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
-	//处理数据反显
-	handleDataDisplay = (storeData = {}, cardArr = []) => {
-		let tempResaveCard = cardArr[0] || {};
-		let tempPayCard = cardArr[1] || {};
-		let perdRateList = [];
-		let usageList = [];
-		let {
-			agrNo: resaveBankCardAgrNo,
-			bankName: resaveBankCardName,
-			lastCardNo: resaveBankCardLastNo
-		} = tempResaveCard;
-		let resaveBankCode = tempResaveCard && (tempResaveCard.bankCode || tempResaveCard.bankCd);
-		let { agrNo: payBankCardAgrNo, bankName: payBankCardName, lastCardNo: payBankCardLastNo } = tempPayCard;
-		let payBankCode = tempPayCard && (tempPayCard.bankCode || tempPayCard.bankCd);
-		if (!resaveBankCardAgrNo) {
-			//处理用户无卡,去绑定的反显问题
-			resaveBankCardAgrNo = payBankCardAgrNo;
-			resaveBankCardName = payBankCardName;
-			resaveBankCardLastNo = payBankCardLastNo;
-			resaveBankCode = payBankCode;
-		} else if (!payBankCardAgrNo) {
-			payBankCardAgrNo = resaveBankCardAgrNo;
-			payBankCardName = resaveBankCardName;
-			payBankCardLastNo = resaveBankCardLastNo;
-			payBankCode = resaveBankCode;
-		}
-		if (this.state.inputClear || !storeData.perdRateList || !storeData.usageList) {
-			perdRateList = this.state.perdRateList;
-			usageList = this.state.usageList;
-		} else {
-			perdRateList = storeData.perdRateList;
-			usageList = storeData.usageList;
-		}
-		let data = Object.assign({}, storeData, {
-			resaveBankCardAgrNo,
-			resaveBankCardName,
-			resaveBankCardLastNo,
-			payBankCardAgrNo,
-			payBankCardName,
-			payBankCardLastNo,
-			perdRateList,
-			usageList,
-			payBankCode,
-			resaveBankCode
-		});
-		this.setState({ ...data }, () => {
-			this.shouldQueryContractList(storeData, this.state);
-		});
-	};
-
-	//验证信息是否填写完整
-	validateFn = () => {
-		const { loanMoney, loanDate, resaveBankCardAgrNo, payBankCardAgrNo, prdId } = this.state;
-		if (loanMoney && loanDate && resaveBankCardAgrNo && payBankCardAgrNo && prdId) {
-			return true;
-		}
-		return false;
-	};
-
-	// 处理优惠券金额显示
-	dealMoney = (couponInfo, prdId) => {
-		let storeData = store.getCashFenQiStoreData() || {}; // 代提交的借款信息
-		this.props.$fetch
-			.get(API.doCouponCount, {
-				prodId: prdId,
-				couponId: couponInfo.usrCoupNo,
-				type: '00', // 00为借款 01为还款
-				price: this.state.loanMoney || storeData.loanMoney,
-				prodType: '11'
-			})
-			.then((result) => {
-				if (result && result.msgCode === 'PTM0000' && result.data !== null) {
-					this.setState({
-						couponInfo, // 计算之后更新state的优惠券信息
-						deratePrice: result.data.deratePrice
-					});
-				} else {
-					this.props.toast.info(result.msgInfo);
-				}
-			})
-			.catch(() => {
-				this.removeTempData();
-			});
-	};
-
 	//计算待提交的金额
 	calcLoanMoney = (m) => {
 		if (this.state.loanMoney === m) return;
@@ -585,72 +571,126 @@ export default class loan_fenqi_page extends PureComponent {
 			loanMoney = Math.ceil(Number(m) / 100) * 100; //金额向上100取整
 		}
 		this.setState({ loanMoney }, () => {
-			this.queryProdInfoByMoney();
+			this.requestProdInfo();
 			buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney });
 		});
 	};
 
+	//验证信息是否填写完整
+	validateFn = () => {
+		const { loanMoney, loanDate, loanUsage, repayCardNo, resaveCardNo } = this.state;
+		// if (loanMoney && loanDate && loanDate.prodCount && loanUsage && repayCardNo && resaveCardNo) {
+		if (loanMoney && loanDate && loanDate.prodCount && loanUsage) {
+			return true;
+		}
+		return false;
+	};
+
 	//借款申请提交
 	loanApplySubmit = () => {
-		const { loanMoney, loanDate, checkBox1 } = this.state;
-		if (this.validateFn()) {
-			buriedPointEvent(loan_fenqi.clickSubmit, {
-				loanMoney,
-				loanDate: loanDate.perdCnt
-			});
-			if (!checkBox1) {
-				this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
-				return;
-			}
-			this.isShowLoanModal();
-			// this.checkProtocolBindCard();
+		const { loanMoney, loanDate, loanUsage, checkBox1 } = this.state;
+		if (!loanMoney) {
+			this.props.toast.info('请输入借款金额');
+			return;
 		}
+		if (!loanDate) {
+			this.props.toast.info('请选择借款期限');
+			return;
+		}
+		if (!loanUsage) {
+			this.props.toast.info('请选择借款用途');
+			return;
+		}
+		if (!checkBox1) {
+			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
+			return;
+		}
+
+		buriedPointEvent(loan_fenqi.clickSubmit, {
+			loanMoney,
+			loanDate: loanDate.prodCount
+		});
+		this.checkProtocolBindCard();
 	};
 
-	isShowLoanModal = () => {
-		const { $fetch } = this.props;
-		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
-			// 判断是否开启弹窗 0 打开 1 关闭
-			if (res.msgCode === 'PTM0000' && res.data === '0') {
-				this.setState({
-					isShowLoanTipModal: true
-				});
-			} else {
-				this.checkProtocolBindCard();
+	// 协议绑卡校验接口
+	checkProtocolBindCard = () => {
+		const { resaveCardNo, resaveBankCode } = this.state;
+		let params = {
+			agrNo: resaveCardNo,
+			bankCode: resaveBankCode,
+			channelFlag: '1', // 0 可以重复 1 不可以重复
+			supportType: '',
+			merType: '', // * 优先绑定标识 * 标识该次绑卡是否要求优先绑定某类型卡, * JR随行付金融 XD随行付小贷 ZY中元保险  其他情况:无优先级
+			usrSignCnl: getH5Channel()
+		};
+
+		this.props.$fetch.post(bank_card_protocol_sms, params).then((res) => {
+			switch (res.code) {
+				case '000000':
+					//协议绑卡校验成功提示（走协议绑卡逻辑）
+					this.setState({
+						isShowSmsModal: true
+					});
+					break;
+				case '0000010':
+					this.props.toast.info(res.message);
+					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.code}-${res.message}` });
+					break;
+				case '999999':
+					//该卡完全绑不上
+					this.setState({
+						protocolSmsFailInfo: res.data,
+						protocolSmsFailFlag: true,
+						isShowSmsModal: true
+					});
+					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.code}-${res.message}` });
+					break;
+				case '999973': // 银行卡已经绑定 直接继续往下走
+					this.handleShowTipModal();
+					break;
+				case '999968':
+					this.props.toast.info(res.message);
+					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.code}-${res.message}` });
+					break;
+				default:
+					this.props.toast.info('暂不支持该银行卡，请换卡重试');
+					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.code}-${res.message}` });
+					break;
 			}
 		});
-	};
-
-	// 关闭春节放款策略弹框
-	closeTipModal = () => {
-		this.setState({
-			isShowLoanTipModal: false
-		});
-	};
-
-	// 点击稍后申请
-	cancelHandler = () => {
-		buriedPointEvent(home.loanTipGetLaterClick);
-		this.closeTipModal();
 	};
 
 	submitHandler = () => {
-		const { loanMoney, loanUsage, resaveBankCardAgrNo, payBankCardAgrNo, prdId, couponInfo } = this.state;
+		const { couponData } = this.props;
+		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
+
+		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList } = this.state;
+
+		let couponId = '';
+		if (couponData && couponData.coupId) {
+			if (couponData.coupId !== 'null') {
+				couponId = couponData.coupId;
+			} else {
+				couponId = '';
+			}
+		}
+
+		const params = {
+			loanAmt: loanMoney, //签约金额
+			withDrawAgrNo: repayCardNo, //代偿信用卡主键
+			withHoldAgrNo: resaveCardNo, //还款卡号主键
+			prodId: protocolList && protocolList[0] && protocolList[0].prodId, //产品ID 合同的productId
+			repayType: '0', //还款方式
+			coupId: couponId, //优惠劵id
+			loanUsage: loanUsage.usageCd, //借款用途
+			prodType: '11'
+		};
+
 		this.props.$fetch
-			.post(API.agentRepay, {
-				withDrawAgrNo: resaveBankCardAgrNo, // 代还信用卡主键
-				withHoldAgrNo: payBankCardAgrNo, // 还款卡号主键
-				prdId, // 产品ID
-				repayType: '0', // 还款方式
-				coupId: couponInfo.coupId || '', // 优惠劵id
-				price: loanMoney, // 签约金额
-				osType: getDeviceType(), // 操作系统
-				prodType: '11',
-				channelType: 'h5',
-				loanUsage: loanUsage.value
-			})
+			.post(loan_loanSub, params)
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					// 清除卡信息
 					store.removeCardData();
 					this.props.toast.info('签约成功，请留意放款通知！');
@@ -676,18 +716,9 @@ export default class loan_fenqi_page extends PureComponent {
 			});
 	};
 
-	// 关闭短信弹窗并还款
-	closeSmsModal = () => {
-		this.setState({
-			isShowSmsModal: false,
-			smsCode: ''
-		});
-		this.submitHandler();
-	};
-
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
-		const { payBankCardAgrNo } = this.state;
+		const { resaveCardNo } = this.state;
 		if (!this.state.smsCode) {
 			this.props.toast.info('请输入验证码');
 			return;
@@ -697,83 +728,45 @@ export default class loan_fenqi_page extends PureComponent {
 			return;
 		}
 		buriedPointEvent(loan_fenqi.protocolBindBtnClick);
-		this.props.$fetch
-			.post(API.protocolBind, {
-				cardNo: payBankCardAgrNo,
-				smsCd: this.state.smsCode,
-				isEntry: '01'
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					this.closeSmsModal();
-				} else if (res.msgCode === 'PTM9901') {
-					this.props.toast.info(res.data);
-					this.setState({ smsCode: '' });
-					buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-				} else if (res.msgCode === 'PTM9902') {
-					//该卡完全绑不上
-					this.setState({
-						protocolSmsFailInfo: res.data,
-						protocolSmsFailFlag: true,
-						isShowSmsModal: true
-					});
-					buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-				} else {
-					this.props.toast.info('绑卡失败，请换卡或重试');
-					this.setState({
-						smsCode: '',
-						isShowSmsModal: false
-					});
-					buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-				}
-			});
-	};
-	// 协议绑卡校验接口
-	checkProtocolBindCard = () => {
-		const { payBankCardAgrNo, payBankCode } = this.state;
-		const params = {
-			cardNo: payBankCardAgrNo,
-			bankCd: payBankCode,
-			usrSignCnl: getH5Channel(),
-			cardTyp: 'D',
-			isEntry: '01',
-			type: '1' // 0 可以重复 1 不可以重复
-		};
-		this.props.$fetch.post(API.protocolSms, params).then((res) => {
-			switch (res.msgCode) {
-				case 'PTM0000':
-					//协议绑卡校验成功提示（走协议绑卡逻辑）
-					this.setState({
-						isShowSmsModal: true
-					});
-					break;
-				case 'PTM9901':
-					this.props.toast.info(res.data);
-					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-					break;
-				case 'PTM9902':
-					//该卡完全绑不上
-					this.setState({
-						protocolSmsFailInfo: res.data,
-						protocolSmsFailFlag: true,
-						isShowSmsModal: true
-					});
-					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-					break;
-				case '1010': // 银行卡已经绑定 直接继续往下走
-					this.submitHandler();
-					break;
-				case 'PBM1010':
-					this.props.toast.info(res.msgInfo);
-					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-					break;
-				default:
-					this.props.toast.info('暂不支持该银行卡，请换卡重试');
-					buriedPointEvent(loan_fenqi.protocolSmsFail, { reason: `${res.msgCode}-${res.msgInfo}` });
-					break;
+		this.props.$fetch.post(`${bank_card_protocol_bind}/${this.state.smsCode}`).then((res) => {
+			if (res.code === '000000') {
+				this.closeSmsModal();
+			} else if (res.code === '0000010') {
+				this.props.toast.info(res.data);
+				this.setState({ smsCode: '' });
+				buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.code}-${res.message}` });
+			} else if (res.code === '999999') {
+				//该卡完全绑不上
+				this.setState({
+					protocolSmsFailInfo: res.data,
+					protocolSmsFailFlag: true,
+					isShowSmsModal: true
+				});
+				buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.code}-${res.message}` });
+			} else {
+				this.props.toast.info('绑卡失败，请换卡或重试');
+				this.setState({
+					smsCode: '',
+					isShowSmsModal: false
+				});
+				buriedPointEvent(loan_fenqi.protocolBindFail, { reason: `${res.code}-${res.message}` });
 			}
 		});
 	};
+
+	// 关闭短信弹窗并还款
+	closeSmsModal = () => {
+		this.setState(
+			{
+				isShowSmsModal: false,
+				smsCode: ''
+			},
+			() => {
+				this.handleShowTipModal();
+			}
+		);
+	};
+
 	// 处理输入的验证码
 	handleSmsCodeChange = (smsCode) => {
 		this.setState({
@@ -786,21 +779,100 @@ export default class loan_fenqi_page extends PureComponent {
 		this.setState({ checkBox1: !this.state.checkBox1 });
 	};
 
+	handleShowTipModal = () => {
+		this.props.toast.hide();
+		this.setState({
+			isShowTipModal: true
+		});
+	};
+
+	// 关闭弹框
+	handleCloseTipModal = (type) => {
+		this.setState({
+			[type]: false
+		});
+	};
+
+	renderProductListDom = () => {
+		const { productList, loanDate } = this.state;
+		if (productList && productList.length) {
+			return (
+				<div className={style.tagListWrap}>
+					{productList.map((item, index) => (
+						<ButtonCustom
+							long="false"
+							key={index}
+							size="sm"
+							className={style.tagButton}
+							type={loanDate && loanDate.prodCount === item.prodCount ? 'yellow' : 'gray'}
+							onClick={() => {
+								this.selectLoanDate(item);
+							}}
+						>
+							{item.prodName}
+						</ButtonCustom>
+					))}
+				</div>
+			);
+		}
+		return null;
+	};
+
+	renderListRowCouponValue() {
+		const { repayPlanInfo = {} } = this.state;
+		if (repayPlanInfo && repayPlanInfo.availableCoupCount && Number(repayPlanInfo.availableCoupCount)) {
+			if (repayPlanInfo.deductAmount) {
+				return (
+					<span className={style.repayPlan} style={{ color: '#FE6666' }}>
+						{repayPlanInfo.deductAmount}元
+					</span>
+				);
+			}
+			return (
+				<ButtonCustom
+					long="false"
+					className={style.couponBtn}
+					size="sm"
+					shape="radius"
+					iconsource={Images.adorn.coupon}
+					onClick={this.goSelectCoupon}
+				>
+					{repayPlanInfo.availableCoupCount}个可用
+				</ButtonCustom>
+			);
+		}
+		return <span className={style.repayPlan}>无可用优惠券</span>;
+	}
+
+	/**
+	 * 渲染协议
+	 */
+	renderProtocol = () => {
+		const { protocolList } = this.state;
+		return protocolList.map((item, index) => (
+			<em
+				key={index}
+				onClick={(e) => {
+					e.stopPropagation();
+					this.readContract(item);
+				}}
+			>
+				{`《${item.contractMdlName}》`}
+			</em>
+		));
+	};
+
 	render() {
 		const {
 			usageModal,
 			prdId,
-			loanUsage: loanUsageObj,
+			loanUsage,
 			usageList,
 			loanDate,
 			loanMoney,
 			planModal,
-			resaveBankCardAgrNo,
-			resaveBankCardLastNo,
-			resaveBankCardName,
-			payBankCardAgrNo,
-			payBankCardLastNo,
-			payBankCardName,
+			repayCardNo,
+			resaveCardNo,
 			perdRateList,
 			priceMax = '',
 			priceMin = '',
@@ -811,17 +883,28 @@ export default class loan_fenqi_page extends PureComponent {
 			isShowSmsModal,
 			smsCode,
 			checkBox1,
-			isShowLoanTipModal
+			productList,
+			repayCardLast,
+			repayCardName,
+			resaveCardLast,
+			resaveCardName,
+			protocolList,
+			isShowTipModal
 		} = this.state;
+
+		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
+		const replayPlanLength =
+			repayPlanInfo && repayPlanInfo.perds && repayPlanInfo.perds.length ? repayPlanInfo.perds.length : 0;
+
 		return (
-			<div className={style.fenqi_page}>
+			<div className={[style.fenqi_page, 'loan_fenqi_page'].join(' ')}>
 				<div className={style.scrollWrap}>
 					<div className={style.inputWrap}>
 						<div className={style.billInpBox}>
 							<i className={style.moneyUnit}>¥</i>
 							<InputItem
 								className={style.billInput}
-								placeholder={`可借金额${priceMin}～${priceMax}`}
+								placeholder={placeholderText}
 								clear={true}
 								type="number"
 								value={loanMoney}
@@ -839,7 +922,7 @@ export default class loan_fenqi_page extends PureComponent {
 									}
 									this.setState({
 										loanMoney: v,
-										loanDate: ''
+										loanDate: null
 									});
 								}}
 								onBlur={(v) => {
@@ -854,40 +937,30 @@ export default class loan_fenqi_page extends PureComponent {
 						<ul>
 							<li className={style.listItem}>
 								<label>借多久</label>
-								<span className={style.tagListWrap}>
-									{perdRateList.map((item) => (
-										<span
-											key={item.perdCnt}
-											className={[
-												style.tagButton,
-												loanDate.perdCnt === item.perdCnt && style.tagButtonActive
-											].join(' ')}
-											onClick={() => {
-												this.selectLoanDate(item);
-											}}
-										>
-											{item.perdPageNm}
-										</span>
-									))}
-								</span>
+								{this.renderProductListDom()}
 							</li>
 							<li className={style.listItem}>
 								<label>借款用途</label>
-								<span
+								<div
 									onClick={() => {
 										this.openModal('usage');
 									}}
 									className={style.listValue}
 								>
-									{loanUsageObj && loanUsageObj.loanUsage}
+									{loanUsage && loanUsage.loanUseRmk}
 									<Icon type="right" className={style.icon} />
-								</span>
+								</div>
 							</li>
 							<li className={style.listItem}>
 								<label>还款计划</label>
 								<span>
-									{loanMoney && loanDate && prdId ? (
-										<span className={style.listValue} onClick={this.queryRepayPlan}>
+									{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
+										<span
+											className={style.listValue}
+											onClick={() => {
+												this.openModal('plan');
+											}}
+										>
 											点击查看
 											<Icon type="right" className={style.icon} />
 										</span>
@@ -896,45 +969,32 @@ export default class loan_fenqi_page extends PureComponent {
 									)}
 								</span>
 							</li>
-							{loanMoney && loanDate && prdId && (
+							{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
 								<li className={style.listItem}>
 									<label>优惠券</label>
 									<div className={`${style.listValue} ${style.couponListValue}`} onClick={this.selectCoupon}>
-										{couponData && Number(couponData.availableCoupAmt) ? (
-											<div className={style.redText}>
-												{deratePrice ? (
-													`${deratePrice}`
-												) : (
-													<span className={style.couNumBox}>
-														<i />
-														{couponData.availableCoupAmt}个可用
-													</span>
-												)}
-											</div>
-										) : (
-											<span className={style.greyText}>无可用优惠券</span>
-										)}
+										{this.renderListRowCouponValue()}
 										<Icon type="right" className={style.icon} />
 									</div>
 								</li>
-							)}
+							) : null}
 							<li className={style.listItem}>
 								<label>收款银行卡</label>
-								{resaveBankCardAgrNo ? (
+								{repayCardLast.length > 0 ? (
 									<span
 										className={style.listValue}
 										onClick={() => {
-											this.selectBankCard(resaveBankCardAgrNo, 'resave');
+											this.selectBankCard(repayCardNo, 'withdraw');
 										}}
 									>
-										{resaveBankCardName}({resaveBankCardLastNo})
+										{`${repayCardName}(${repayCardLast})`}
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
 									<span
 										className={style.highlightText}
 										onClick={() => {
-											this.bindBankCard('resave');
+											this.bindBankCard('withdraw');
 										}}
 									>
 										绑定储蓄卡 <i className={style.addIcon}>+</i>
@@ -943,21 +1003,21 @@ export default class loan_fenqi_page extends PureComponent {
 							</li>
 							<li className={style.listItem}>
 								<label>还款银行卡</label>
-								{payBankCardAgrNo ? (
+								{resaveCardLast.length > 0 ? (
 									<span
 										className={style.listValue}
 										onClick={() => {
-											this.selectBankCard(payBankCardAgrNo, 'pay');
+											this.selectBankCard(resaveCardNo, 'withhold');
 										}}
 									>
-										{payBankCardName}({payBankCardLastNo})
+										{`${resaveCardName}(${resaveCardLast})`}
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
 									<span
 										className={style.highlightText}
 										onClick={() => {
-											this.bindBankCard('pay');
+											this.bindBankCard('withhold');
 										}}
 									>
 										绑定储蓄卡 <i className={style.addIcon}>+</i>
@@ -965,32 +1025,26 @@ export default class loan_fenqi_page extends PureComponent {
 								)}
 							</li>
 						</ul>
-						{loanMoney && loanDate && contractList.length > 0 && (
-							<p className={style.protocolLink} onClick={this.checkAgreement}>
-								<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
-								点击“签约借款”，表示同意{' '}
-								{contractList.map((item, idx) => (
-									<em
-										onClick={(e) => {
-											e.stopPropagation();
-											this.readContract(item);
-										}}
-										key={idx}
-									>
-										《{item.contractMdlName}》
-									</em>
-								))}
-							</p>
-						)}
 					</div>
+					{loanMoney &&
+					loanDate &&
+					loanDate.prodCount &&
+					replayPlanLength &&
+					protocolList &&
+					protocolList.length ? (
+						<p className={style.protocolLink} onClick={this.checkAgreement}>
+							<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
+							点击“签约借款”，表示同意 {this.renderProtocol()}
+						</p>
+					) : null}
 				</div>
 				<div className={style.buttonWrap}>
-					<SXFButton
+					<ButtonCustom
 						onClick={this.loanApplySubmit}
-						className={this.validateFn() && checkBox1 ? style.submitBtn : style.submitBtnDisabled}
+						type={this.validateFn() && checkBox1 ? 'yellow' : 'default'}
 					>
 						签约借款
-					</SXFButton>
+					</ButtonCustom>
 				</div>
 				<Modal
 					popup
@@ -1007,13 +1061,16 @@ export default class loan_fenqi_page extends PureComponent {
 					<ul>
 						{usageList.map((item) => (
 							<li
-								className={style.modalItem}
-								key={item.value}
+								className={[
+									style.modalItem,
+									item.usageCd === loanUsage.usageCd ? style.modalItemActive : ''
+								].join(' ')}
+								key={item.usageCd}
 								onClick={() => {
 									this.selectLoanUsage(item);
 								}}
 							>
-								{item.loanUsage}
+								{item.loanUseRmk}
 							</li>
 						))}
 					</ul>
@@ -1024,7 +1081,7 @@ export default class loan_fenqi_page extends PureComponent {
 					onClose={() => {
 						this.closeModal('plan');
 					}}
-					data={repayPlanInfo.perd}
+					data={repayPlanInfo.perds}
 					loanMoney={loanMoney}
 					history={this.props.history}
 					goPage={() => {
@@ -1032,16 +1089,17 @@ export default class loan_fenqi_page extends PureComponent {
 					}}
 				/>
 
-				{/* 春节放款策略弹框 */}
-				<TipModal
-					visible={isShowLoanTipModal}
-					onCancel={this.cancelHandler}
-					closeHandler={this.closeTipModal}
-					onConfirm={() => {
-						buriedPointEvent(home.loanTipGetNowClick);
-						this.checkProtocolBindCard();
-					}}
-				/>
+				{isShowTipModal ? (
+					<WarningModal
+						history={this.props.history}
+						handleConfirm={this.submitHandler}
+						closeWarningModal={() => {
+							this.handleCloseTipModal('isShowTipModal');
+						}}
+						prodType="现金分期"
+						toast={this.props.toast}
+					/>
+				) : null}
 
 				{isShowSmsModal && (
 					<SmsModal
@@ -1061,7 +1119,7 @@ export default class loan_fenqi_page extends PureComponent {
 						toggleBtn={false}
 						selectBankCard={() => {
 							buriedPointEvent(home.protocolAlertChange);
-							this.selectBankCard(payBankCardAgrNo, 'pay');
+							this.selectBankCard(resaveCardNo, 'withhold');
 							this.setState({
 								isShowSmsModal: false,
 								protocolSmsFailFlag: false
@@ -1073,7 +1131,7 @@ export default class loan_fenqi_page extends PureComponent {
 						history={this.props.history}
 						fetch={this.props.$fetch}
 						toast={this.props.toast}
-						bankNo={payBankCardAgrNo}
+						bankNo={resaveCardNo}
 					/>
 				)}
 			</div>

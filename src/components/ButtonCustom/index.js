@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNM from './index.scss';
@@ -16,8 +15,9 @@ export default class ButtonCustom extends React.PureComponent {
 		color: PropTypes.string,
 		type: PropTypes.oneOf(['default', 'yellow', 'gray', 'golden', 'error']),
 		backgroundcolor: PropTypes.string,
-		iconSource: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.func]),
+		iconsource: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.func, PropTypes.string]),
 		iconStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
+		iconClassName: PropTypes.string,
 		// icononright: PropTypes.bool,
 		long: PropTypes.string,
 		size: PropTypes.oneOf(['xl', 'lg', 'md', 'sm', 'xs']),
@@ -75,18 +75,25 @@ export default class ButtonCustom extends React.PureComponent {
 
 	// 生成按钮图标
 	renderIcon() {
-		const { iconSource, loading, icononright } = this.props;
+		const { iconStyle, iconClassName, iconsource, loading, icononright } = this.props;
 		let iconStyleFinaly = {};
 		if (icononright) {
 			iconStyleFinaly.marginLeft = '10px';
 		} else {
 			iconStyleFinaly.marginRight = '10px';
 		}
+		iconStyleFinaly = { ...iconStyleFinaly, ...iconStyle };
 		if (loading) {
 			return <img src={Images.gif.btn_loading} className={classNM.sxp_btn_icon} style={iconStyleFinaly} />;
 		}
-		if (iconSource) {
-			return <img src={iconSource} className={classNM.sxp_btn_icon} style={iconStyleFinaly} />;
+		if (iconsource) {
+			return (
+				<img
+					src={iconsource}
+					className={[classNM.sxp_btn_icon, iconClassName].join(' ')}
+					style={iconStyleFinaly}
+				/>
+			);
 		}
 		return null;
 	}
@@ -123,7 +130,7 @@ export default class ButtonCustom extends React.PureComponent {
 			btnStyle.backgroundColor = backgroundcolor;
 		}
 		if (shape === 'radius' && borderradius) {
-			btnStyle.borderradius = borderradius;
+			btnStyle.borderRadius = borderradius;
 		}
 		if (outline) {
 			btnStyle.border = `${outlinewidth} ${outlinetype} ${outlinecolor}`;
@@ -133,6 +140,7 @@ export default class ButtonCustom extends React.PureComponent {
 	};
 
 	render() {
+		/*eslint-disable*/
 		let {
 			style,
 			className,
@@ -143,7 +151,11 @@ export default class ButtonCustom extends React.PureComponent {
 			borderradius,
 			icononright,
 			children,
-			onClick,
+      onClick,
+      iconsource,
+      iconStyle,
+      iconClassName,
+      loading,
 			...restProps
 		} = this.props;
 		return (

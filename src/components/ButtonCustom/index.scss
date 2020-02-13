@@ -1,9 +1,11 @@
 $btn_color_text_black: $colorBlack;
+$btn_color_text_gray: #868E9E;
 $btn_color_text_white: #fff;
 $btn_color_default: $colorGrey;
 $btn_color_yellow: $colorYellow;
 $btn_color_golden: $colorGolden;
 $btn_color_error: $colorTipRed;
+$btn_color_gray: #F7F8FA;
 
 .sxp_btn {
   display: inline-block;
@@ -89,8 +91,8 @@ $btn_color_error: $colorTipRed;
     color: $btn_color_text_black;
   }
   &_gray {
-    background-color: $btn_color_default;
-    color: $btn_color_text_white;
+    background-color: $btn_color_gray;
+    color: $btn_color_text_gray;
   }
   &_golden {
     background-color: $btn_color_golden;

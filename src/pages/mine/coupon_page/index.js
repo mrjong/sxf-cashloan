@@ -6,16 +6,13 @@ import STabs from 'components/Tab';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
-import { PullToRefresh, ListView } from 'antd-mobile';
-// import { getNextStatus } from 'utils/CommonUtil/commonFunc';
+import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
-import {
-	coup_queryUsrCoupBySts
-	// coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup
-} from 'fetch/api';
+import { coup_queryUsrCoupBySts, coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup } from 'fetch/api';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
@@ -93,6 +90,7 @@ export default class coupon_page extends PureComponent {
 	}
 	// 消息 tab
 	getTab = () => {
+		const { couponData = {} } = this.props;
 		if (receiveData && (receiveData.billNo || receiveData.price)) {
 			this.setState({
 				tabs: [
@@ -105,7 +103,7 @@ export default class coupon_page extends PureComponent {
 						value: 1
 					}
 				],
-				couponSelected: store.getCouponData() && store.getCouponData().usrCoupNo
+				couponSelected: couponData.coupId || 'null'
 			});
 		} else {
 			this.setState({
@@ -128,7 +126,8 @@ export default class coupon_page extends PureComponent {
 		this.getCommonData('tabshow');
 	};
 	// 获取每一页数据
-	genData = async (pIndex = 1, tab) => {
+	genData = async (pIndex = 1) => {
+		const { couponData = {} } = this.props;
 		if (totalPage && totalPage < pIndex) {
 			this.setState({
 				isLoading: false,
@@ -139,35 +138,9 @@ export default class coupon_page extends PureComponent {
 		if (pIndex === 1) {
 			SXFToast.loading('数据加载中...', 10000);
 		}
-		let sendParams = '';
-		if (receiveData && receiveData.billNo) {
-			sendParams = {
-				coupSts: `0${this.state.msgType}`,
-				startPage: pIndex,
-				billNo: receiveData.billNo
-				// loading: true,
-			};
-		} else if (receiveData && receiveData.price && receiveData.perCont && receiveData.prodId) {
-			sendParams = {
-				coupSts: `0${this.state.msgType}`,
-				startPage: pIndex,
-				price: receiveData.price,
-				perCont: receiveData.perCont,
-				prodId: receiveData.prodId
-				// loading: true,
-			};
-		} else {
-			sendParams = {
-				coupSts: `0${this.state.msgType}`,
-				startPage: pIndex
-				// loading: true,
-			};
-		}
-		if (receiveData.transactionType) {
-			Object.assign(sendParams, { prodType: receiveData.transactionType === 'fenqi' ? '11' : '01' });
-		}
+		const apiAndSendData = this.getApiAndSendData(pIndex);
 		let data = await this.props.$fetch
-			.post(coup_queryUsrCoupBySts, sendParams)
+			.post(apiAndSendData.url, apiAndSendData.sendParams)
 			.then((res) => {
 				if (pIndex === 1) {
 					setTimeout(() => {
@@ -177,7 +150,7 @@ export default class coupon_page extends PureComponent {
 				if (res.code === '000000' && res.data) {
 					let dataArr = [];
 					if (pIndex === 1) {
-						totalPage = Math.ceil(res.data.totalSize / 10);
+						totalPage = res.data.totalPage;
 						this.setState({
 							hasMore: false
 						});
@@ -187,7 +160,7 @@ export default class coupon_page extends PureComponent {
 							this.state.msgType !== 0 ||
 							!receiveData ||
 							(!receiveData.billNo && !receiveData.price) ||
-							res.data.coups[i].usrCoupNo !== store.getCouponData().usrCoupNo
+							res.data.coups[i].coupId !== couponData.coupId
 						) {
 							dataArr.push(res.data.coups[i]);
 						}
@@ -198,10 +171,10 @@ export default class coupon_page extends PureComponent {
 							receiveData &&
 							(receiveData.billNo || receiveData.price) &&
 							this.state.msgType === 0 &&
-							store.getCouponData() &&
-							store.getCouponData().usrCoupNo !== 'null'
+							couponData.coupId &&
+							couponData.coupId !== 'null'
 						) {
-							dataArr.push(store.getCouponData());
+							dataArr.push(couponData);
 						}
 					}
 					return dataArr;
@@ -216,6 +189,46 @@ export default class coupon_page extends PureComponent {
 				}
 			});
 		return data;
+	};
+
+	/**
+	 * @description 生成 接口 和上传参数
+	 */
+	getApiAndSendData = (pIndex) => {
+		let sendParams = '';
+		let url = '';
+		if (receiveData && receiveData.billNo) {
+			sendParams = {
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex,
+				billNo: receiveData.billNo,
+				repayPerd: receiveData.perCont,
+				prodType: receiveData.prodType
+				// loading: true,
+			};
+			url = coup_queryUsrRepayUsbCoup;
+		} else if (receiveData && receiveData.price && receiveData.prodType && receiveData.prodId) {
+			sendParams = {
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex,
+				loanAmt: receiveData.price,
+				prodId: receiveData.prodId,
+				prodType: receiveData.prodType
+				// loading: true,
+			};
+			url = coup_queyUsrLoanUsbCoup;
+		} else {
+			sendParams = {
+				coupSts: `0${this.state.msgType}`,
+				startPage: pIndex
+				// loading: true,
+			};
+			url = coup_queryUsrCoupBySts;
+		}
+		return {
+			url,
+			sendParams
+		};
 	};
 
 	// 刷新
@@ -271,13 +284,10 @@ export default class coupon_page extends PureComponent {
 			return;
 		}
 		this.setState({
-			couponSelected: obj === 'null' ? 'null' : obj.usrCoupNo
+			couponSelected: obj === 'null' ? 'null' : obj.coupId
 		});
-		const couponData = obj === 'null' ? { coupVal: -1, usrCoupNo: 'null' } : obj;
-		store.setCouponData(couponData);
-		if (saveBankData) {
-			store.setCardData(saveBankData);
-		}
+		const couponData = obj === 'null' ? { coupVal: -1, coupId: 'null' } : obj;
+		this.props.setCouponDataAction(couponData);
 		// 跳转回详情页
 		this.props.history.goBack();
 	};
@@ -305,6 +315,47 @@ export default class coupon_page extends PureComponent {
 		const s = time.substring(12, 14);
 		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
 	};
+
+	// 判断使用场景 + 优惠券类型
+	renderCouponType = (item) => {
+		const { useScene, coupTyp } = item;
+		let useSceneStr = '';
+		let coupTypStr = '';
+		switch (useScene) {
+			// 使用场景
+			// 00借款 01还款 02不限
+			case '00':
+				useSceneStr = '借款';
+				break;
+			case '01':
+				useSceneStr = '还款';
+				break;
+			default:
+				break;
+		}
+		switch (coupTyp) {
+			// 优惠券类型:
+			// 00-抵息券 01-信用审核费券 02-分期服务费券 03-逾期费券 04-滞纳金券
+			case '00':
+				coupTypStr = '抵息券';
+				break;
+			case '01':
+				coupTypStr = '信用审\n核费券';
+				break;
+			case '02':
+				coupTypStr = '抵费券';
+				break;
+			case '03':
+				coupTypStr = '逾期费券';
+				break;
+			case '04':
+				coupTypStr = '滞纳金券';
+				break;
+			default:
+				break;
+		}
+		return useSceneStr + coupTypStr;
+	};
 	render() {
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
 		let index = this.state.rData && this.state.rData.length - 1;
@@ -326,9 +377,9 @@ export default class coupon_page extends PureComponent {
 					}
 					key={rowID}
 					className={
-						(obj && obj.useSts === '00') || (obj && obj.useSts === '01')
-							? [style.box, style.box_active].join(' ')
-							: [style.box, style.box_default].join(' ')
+						(obj && obj.useSts === '02') || (obj && obj.useSts === '03')
+							? [style.box, style.box_default].join(' ')
+							: [style.box, style.box_active].join(' ')
 					}
 				>
 					<div className={style.box_coupon}>
@@ -336,9 +387,10 @@ export default class coupon_page extends PureComponent {
 							<div className={style.leftBox}>
 								<div className={style.leftBoxLineBox}>
 									{obj && obj.coupCategory === '00' ? (
-										<span>
+										<div className={style.leftCont}>
 											<i className={style.money}>{obj && obj.coupVal}</i>元
-										</span>
+                      <p className={style.leftDesc}>{this.renderCouponType(obj)}</p>
+										</div>
 									) : obj && obj.coupCategory === '03' ? (
 										<span className={style.couponType2}>免息</span>
 									) : obj && obj.coupCategory === '01' ? (
@@ -355,38 +407,21 @@ export default class coupon_page extends PureComponent {
 									) : null}
 								</div>
 							</div>
-							<div
-								className={
-									receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0
-										? `${style.rightBox} ${style.rightLittleBox}`
-										: style.rightBox
-								}
-							>
-								{receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ? (
-									<i
-										className={
-											obj && obj.usrCoupNo === this.state.couponSelected
-												? [style.icon_select_status, style.icon_select].join(' ')
-												: [style.icon_select_status, style.icon_select_not].join(' ')
-										}
-									/>
-								) : receiveData &&
-								  (receiveData.billNo || receiveData.price) &&
-								  this.state.msgType === 1 ? null : (
-									<i
-										className={
-											obj && obj.useSts === '00'
-												? ''
-												: obj && obj.useSts === '01'
-												? [style.icon_status, style.icon_useing].join(' ')
-												: obj && obj.useSts === '02'
-												? [style.icon_status, style.icon_used].join(' ')
-												: [style.icon_status, style.icon_use_over].join(' ')
-										}
-									/>
-								)}
+							<div className={style.rightBox}>
 								{receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine' ? (
-									<button className={style.goUse}>去使用</button>
+									<button
+										className={style.goUse}
+										onClick={
+											this.state.msgType === 0
+												? () => {
+														Toast.loading('加载中...');
+														getNextStatus({ $props: this.props });
+												  }
+												: () => {}
+										}
+									>
+										去使用
+									</button>
 								) : null}
 
 								<div
@@ -440,6 +475,15 @@ export default class coupon_page extends PureComponent {
 									)}
 								</div>
 							</div>
+							{receiveData && (receiveData.billNo || receiveData.price) && this.state.msgType === 0 ? (
+								<i
+									className={
+										obj && obj.coupId === this.state.couponSelected
+											? [style.icon_select_status, style.icon_select].join(' ')
+											: [style.icon_select_status, style.icon_select_not].join(' ')
+									}
+								/>
+							) : null}
 						</div>
 						{obj && obj.coupDesc ? (
 							<div className={style.descBox}>

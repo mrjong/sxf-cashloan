@@ -1,5 +1,6 @@
+@import '../../../assets/styles/scss/base/fn.scss';
 .header {
-	margin: 60px 10px 60px 60px;
+	margin: 50px 10px 50px 50px;
 	color: #121c32;
 	font-size: 46px;
 	font-family: 'PingFangSC-Semibold';
@@ -9,7 +10,7 @@
 	display: inline-block;
 	margin: 20px 60px;
 	font-size: 26px;
-	color: #397be6;
+	color: $colorBlue;
 }
 .confirm_btn {
 	margin-top: 170px;
@@ -29,11 +30,12 @@
 
 	.CountDownButton {
 		background-color: #fff;
-		color: #397be6;
+		color: $colorBlue;
 		min-height: 60px;
-		line-height: 60px;
+    line-height: 60px;
+
 		border-radius: 0.1rem;
-		border: 1px solid #397be6 !important;
+		border: none
 	}
 	.count_btn {
 		position: absolute;
@@ -58,12 +60,6 @@
 }
 :global {
 	.bind_save_page_listBox {
-		input::placeholder {
-			color: #868e9e;
-			font-size: 30px;
-			font-family: 'PingFangSC-Medium';
-			font-weight: 500;
-		}
 		margin: 0 60px 0 30px;
 		.am-list-item {
 			min-height: 1.2rem;
@@ -97,8 +93,7 @@
 		}
 		.am-list-item .am-input-control input {
 			color: #121c32;
-			font-family: 'PingFangSC-Semibold';
-			font-weight: 600;
+			font-weight: normal;
 			font-size: 0.3rem;
 		}
 		.sms .am-list-item .am-input-control input {

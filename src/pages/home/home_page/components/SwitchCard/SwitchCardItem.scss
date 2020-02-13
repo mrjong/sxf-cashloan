@@ -74,6 +74,7 @@
   right: 0;
   left: 0;
   padding: 4px 40px;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   // borderWidth: 1;
@@ -102,13 +103,13 @@
 }
 .statusTitle {
   font-size: 32px;
-  color: '#EB4747';
+  color: $colorRed;
   font-weight: bold;
 }
 .statusTitleSub {
   margin-top: 13px;
   font-size: 24px;
-  color: '#EB4747';
+  color: $colorRed;
 }
 
 .shadowPosition {

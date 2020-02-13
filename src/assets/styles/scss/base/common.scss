@@ -1,3 +1,4 @@
+@import './fn.scss';
 :global {
 	.protocol_tip {
 		margin-top: 0.3rem;
@@ -25,7 +26,7 @@
 :global {
 	.am-picker-popup-header .am-picker-popup-header-right.am-picker-popup-item,
 	.am-modal-button-group-h a.am-modal-button {
-		color: #ffc601;
+		color: $colorYellow;
 	}
 	.am-picker-popup-header .am-picker-popup-item,
 	.am-modal-button-group-h a.am-modal-button:first-child {

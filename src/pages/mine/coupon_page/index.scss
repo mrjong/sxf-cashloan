@@ -1,4 +1,5 @@
 @import '../../../assets/styles/scss/base/fn';
+
 .heightBody {
 	height: calc(100vh - 1.88rem);
 }
@@ -55,10 +56,10 @@
 			background-size: 100% 100%;
 		}
 		.icon_select {
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -223px, -468px);
+			background-image: url(../../../assets/image/icon/checkbox_yellow_active@3x.png);
 		}
 		.icon_select_not {
-			@include spriteIcon('../../../assets/images/common/sprite_icon.png', -150px, -468px);
+			background-image: url(../../../assets/image/icon/checkbox_yellow@3x.png);
 		}
 	}
 }
@@ -80,13 +81,10 @@
 	}
 
 	.leftBox {
-		float: left;
 		width: 2rem;
-		color: #fff;
 		font-size: 0.64rem;
-		text-align: center;
-		line-height: 200px;
-		height: 200px;
+		height: 190px;
+		padding: 10px 0;
 		.couponType2 {
 			font-size: 48px;
 		}
@@ -107,16 +105,34 @@
 				font-size: 108px;
 			}
 		}
+  }
+
+  .leftBoxLineBox {
+		display: flex;
+		border-right: 1px dashed #eee;
+		height: 170px;
+		align-items: center;
+    justify-content: center;
+		font-size: 30px;
+  }
+  .leftCont {
+    text-align: center;
+    margin-top: -10px;
+  }
+	.leftDesc {
+		font-size: 24px;
+    color: $colorInactiveColor;
+    margin-top: -30px;
 	}
 	.money {
 		font-size: 64px;
 		color: $colorTipRed;
 		font-family: 'DINMitAlt';
-		font-weight: 500;
+    font-weight: 500;
 	}
 	.rightBox {
 		position: relative;
-		display: table-cell;
+		// display: table-cell;
 		line-height: 1.5;
 		letter-spacing: 1px;
 		font-size: 24px;
@@ -161,12 +177,14 @@
 		top: 50%;
 		margin-top: -18px;
 		vertical-align: middle;
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 	}
 	.icon_select {
-		@include spriteIcon('../../../assets/images/common/sprite_icon.png', -223px, -468px);
+		background-image: url(../../../assets/image/icon/checkbox_yellow_active@3x.png);
 	}
 	.icon_select_not {
-		@include spriteIcon('../../../assets/images/common/sprite_icon.png', -150px, -468px);
+		background-image: url(../../../assets/image/icon/checkbox_yellow@3x.png);
 	}
 	.ellipsis {
 		@include ellipsis(320px);
@@ -178,10 +196,7 @@
 	}
 }
 .box_default {
-	.leftBoxLineBox {
-		border-right: 1px dashed #eee;
-		background: #ddd;
-	}
+
 }
 .box_top {
 	display: flex;
@@ -241,14 +256,8 @@
 }
 .box_active {
 	.leftBoxLineBox {
-		border-right: 1px dashed #eee;
-		span {
-			color: $colorTipRed;
-			font-size: 30px;
-			font-weight: normal;
-		}
-		// background: linear-gradient(135deg, #ffc601, #ff7b31);
-	}
+		color: $colorTipRed;
+  }
 }
 .noMsg {
 	position: relative;
@@ -274,13 +283,7 @@
 		box-sizing: border-box;
 	}
 }
-.box {
-	.rightLittleBox {
-		.ellipsis {
-			@include ellipsis(375px);
-		}
-	}
-}
+
 .none {
 	opacity: 0;
 }

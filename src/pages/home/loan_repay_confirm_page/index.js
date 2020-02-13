@@ -1,45 +1,29 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 13:55:21
+ * @LastEditTime : 2020-02-11 17:48:35
  */
 import React, { PureComponent } from 'react';
-import { Icon, InputItem, List, Modal } from 'antd-mobile';
+import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
 import style from './index.scss';
 import fetch from 'sx-fetch';
-import dayjs from 'dayjs';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import { connect } from 'react-redux';
-import { setApplyCreditData } from 'reduxes/actions/specialActions';
+import { updateBillInf } from 'utils/CommonUtil/commonFunc';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
+import { setApplyCreditData } from 'reduxes/actions/commonActions';
 import Image from 'assets/image';
 
-import {
-	handleClickConfirm,
-	handleInputBlur,
-	idChkPhoto,
-	isCanLoan,
-	getMoxieData,
-	activeConfigSts,
-	getBindCardStatus
-} from 'utils';
+import { handleInputBlur, getMoxieData, activeConfigSts } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
-import { TimeoutPayModal, FeedbackModal, SelectList, ButtonCustom, FixedTopTip } from 'components';
+import { TimeoutPayModal, SelectList, ButtonCustom, FixedTopTip } from 'components';
 
 let isinputBlur = false;
 
 import { cred_queryApplPageInfo } from 'fetch/api.js';
-
-const API = {
-	queryBillStatus: '/wap/queryBillStatus', //
-	// qryPerdRate: '/bill/qryperdrate', // 0105-确认代还信息查询接口
-	qryPerdRate: '/bill/prod',
-	CARD_AUTH: '/auth/cardAuth', // 0404-信用卡授信
-	CRED_CARD_COUNT: '/index/usrCredCardCount', // 授信信用卡数量查询
-	USR_INDEX_INFO: '/index/usrIndexInfo' // 0103-首页信息查询接口
-};
 const tagList = [
 	{
 		name: '部分还款',
@@ -90,7 +74,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 			repayType: '', // 还款方式
 			fullMinAmt: '', // 全额或者最低还卡金额
 			showTimeoutPayModal: false,
-			showFeedbackModal: false,
 			inputFocus: false
 		};
 	}
@@ -99,7 +82,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		store.removeToggleMoxieCard();
 		store.removeAutIdCard(); // 信用卡前置
 		this.queryUsrInfo();
-		this.showFeedbackModal();
 		let _this = this;
 		let originClientHeight = document.documentElement.clientHeight;
 		// 安卓键盘抬起会触发resize事件，ios则不会
@@ -193,54 +175,25 @@ export default class loan_repay_confirm_page extends PureComponent {
 		});
 	};
 	// 代还其他信用卡点击事件
-	repayForOtherBank = (count, type) => {
+	repayForOtherBank = () => {
 		buriedPointEvent(home.replaceCard);
 		// type针对一张卡也可以跳到银行列表页的情况
 		store.setToggleMoxieCard(true);
-		if (type && type === 'switch') {
-			store.setBackUrl('/home/loan_repay_confirm_page');
-			const { usrIndexInfo } = this.state;
-			this.props.history.push({
-				pathname: '/mine/credit_list_page',
-				search: `?autId=${
-					usrIndexInfo.indexSts === 'LN0010'
-						? ''
-						: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''
-				}`
-			});
-		} else {
-			if (count > 1) {
-				store.setBackUrl('/home/loan_repay_confirm_page');
-				const { usrIndexInfo } = this.state;
-				this.props.history.push({
-					pathname: '/mine/credit_list_page',
-					search: `?autId=${
-						usrIndexInfo.indexSts === 'LN0010'
-							? ''
-							: (usrIndexInfo && usrIndexInfo.indexData && usrIndexInfo.indexData.autId) || ''
-					}`
-				});
-			} else {
-				this.goMoxieBankList();
-			}
-		}
+		this.props.history.push({
+			pathname: '/mine/credit_list_page'
+		});
 	};
 
 	handleSubmit = async () => {
 		sxfburiedPointEvent('moneyCreditCardConfirmBtn');
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
-		const { selectedLoanDate = {}, usrIndexInfo = {}, cardCount, btnDisabled, fullMinAmt } = this.state;
+		const { selectedLoanDate = {}, usrIndexInfo = {}, btnDisabled, fullMinAmt } = this.state;
 		const { minApplAmt, maxApplAmt } = usrIndexInfo;
-		if (this.updateBillInf()) {
-			return;
-		}
 		if (
-			!isCanLoan({
+			updateBillInf({
 				$props: this.props,
-				goMoxieBankList: () => {
-					this.repayForOtherBank(cardCount);
-				},
-				usrIndexInfo: this.state.usrIndexInfo
+				usrIndexInfo: this.state.usrIndexInfo,
+				type: 'LoanRepayConfirm'
 			})
 		) {
 			return;
@@ -275,50 +228,18 @@ export default class loan_repay_confirm_page extends PureComponent {
 		if (btnDisabled) {
 			return;
 		}
-		let autId = this.props.authId;
-		store.setAutIdCard(autId);
 		const params = {
-			...this.state.selectedLoanDate,
+			...selectedLoanDate,
 			activeName: tagList[this.state.activeTag].name,
-			autId,
+			autId: this.props.authId,
 			applAmt: Number(repayMoney)
 		};
-		idChkPhoto({
+		this.props.setApplyCreditData(params);
+		Toast.loading('加载中...', 20);
+		getNextStatus({
 			$props: this.props,
-			type: 'creditExtension',
-			msg: '审核'
-		}).then((res) => {
-			switch (res) {
-				case '1':
-					store.setLoanAspirationHome(params);
-					// 成功
-					getBindCardStatus({
-						$props: this.props
-					}).then((res) => {
-						if (res === '1') {
-							//调用授信接口
-							activeConfigSts({
-								$props: this.props,
-								type: 'B',
-								callback: () => {
-									handleClickConfirm(this.props, params);
-								}
-							});
-						}
-					});
-
-					break;
-				case '2':
-					store.setLoanAspirationHome(params);
-					break;
-				case '3':
-					store.setTencentBackUrl('/home/loan_repay_confirm_page');
-					// store.setIdChkPhotoBack(-2); //从人脸中间页回退3层到此页面
-					store.setLoanAspirationHome(params);
-					break;
-				default:
-					break;
-			}
+			actionType: 'creditExtension',
+			actionMsg: '审核'
 		});
 	};
 
@@ -395,10 +316,16 @@ export default class loan_repay_confirm_page extends PureComponent {
 			isinputBlur = false;
 		}, 100);
 		// type为是自动执行该方法，还是点击执行该方法
-		const { usrIndexInfo = {}, cardCount } = this.state;
+		const { usrIndexInfo = {} } = this.state;
 		const { minApplAmt, maxApplAmt } = usrIndexInfo;
 		if (type && type === 'click') {
-			if (this.updateBillInf()) {
+			if (
+				updateBillInf({
+					$props: this.props,
+					usrIndexInfo: this.state.usrIndexInfo,
+					type: 'LoanRepayConfirm'
+				})
+			) {
 				return;
 			}
 		}
@@ -421,19 +348,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 				break;
 			default:
 				break;
-		}
-		if (
-			type &&
-			type === 'click' &&
-			!isCanLoan({
-				$props: this.props,
-				goMoxieBankList: () => {
-					this.repayForOtherBank(cardCount);
-				},
-				usrIndexInfo: this.state.usrIndexInfo
-			})
-		) {
-			return;
 		}
 		this.setState(
 			{
@@ -461,20 +375,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	showFeedbackModal = () => {
-		if (store.getGotoMoxieFlag()) {
-			this.setState({
-				showFeedbackModal: true
-			});
-		}
-	};
-
-	closeFeedbackModal = () => {
-		this.setState({
-			showFeedbackModal: false
-		});
-		store.removeGotoMoxieFlag();
-	};
 	updateBillInf = () => {
 		const { usrIndexInfo = {} } = this.state;
 		const { cardBillSts, bankNo } = usrIndexInfo;
@@ -540,10 +440,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 			selectedLoanDate,
 			perdRateList,
 			btnDisabled,
-			cardCount,
 			fullMinAmt,
-			showTimeoutPayModal,
-			showFeedbackModal
+			showTimeoutPayModal
 		} = this.state;
 		const { cardBillAmt, bankNo, bankName, cardBillSts, minApplAmt, maxApplAmt, lastNo } = usrIndexInfo;
 
@@ -579,7 +477,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<div
 								className={style.cardNumBox}
 								onClick={() => {
-									this.repayForOtherBank(cardCount, 'switch');
+									this.repayForOtherBank();
 								}}
 							>
 								<span>更换信用卡</span>
@@ -731,17 +629,12 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<List.Item
 								onClick={() => {
 									if (
-										!isCanLoan({
+										updateBillInf({
 											$props: this.props,
-											goMoxieBankList: () => {
-												this.repayForOtherBank(cardCount);
-											},
-											usrIndexInfo: this.state.usrIndexInfo
+											usrIndexInfo: this.state.usrIndexInfo,
+											type: 'LoanRepayConfirm'
 										})
 									) {
-										return;
-									}
-									if (this.updateBillInf()) {
 										return;
 									}
 									if (this.state.perdRateList && this.state.perdRateList.length !== 0) {
@@ -795,7 +688,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</ButtonCustom>
 				</div>
 
-				<Modal popup visible={this.state.isShowCreditModal} animationType="slide-up" maskClosable={false}>
+				<Modal
+					className="question_feedback_modal"
+					popup
+					visible={this.state.isShowCreditModal}
+					animationType="slide-up"
+					maskClosable={false}
+				>
 					<div className={style.modal_box}>
 						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
 							<div className={style.modal_header}>
@@ -850,12 +749,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 							showTimeoutPayModal: false
 						});
 					}}
-				/>
-				<FeedbackModal
-					history={this.props.history}
-					toast={this.props.toast}
-					visible={showFeedbackModal}
-					closeModal={this.closeFeedbackModal}
 				/>
 			</div>
 		);

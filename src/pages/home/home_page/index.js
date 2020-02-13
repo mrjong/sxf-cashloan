@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 11:27:59
+ * @LastEditTime : 2020-02-12 16:11:44
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
-import { isWXOpen, dateDiffer } from 'utils';
+import { isWXOpen, dateDiffer, activeConfigSts } from 'utils';
 import {
 	index_queryIndexInfo,
 	index_queryBannerList,
@@ -187,7 +187,7 @@ export default class home_page extends PureComponent {
 	index_queryBannerList = () => {
 		const params = {
 			type: '1',
-			cilent: 'h5'
+			cilent: 'wap_out'
 		};
 		this.props.$fetch
 			.post(index_queryBannerList, params, { hideToast: true })
@@ -268,39 +268,6 @@ export default class home_page extends PureComponent {
 	};
 
 	/**
-	 * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
-	 * @param {type}
-	 * @return:
-	 */
-	bank_card_check = () => {
-		const { homeData } = this.state;
-		this.props.$fetch.get(`${bank_card_check}/${homeData.dcDataInfo.autId}`).then((result) => {
-			if (result && result.code === '000000') {
-				Toast.hide();
-				// 有风控且绑信用卡储蓄卡
-				this.props.history.push({
-					pathname: '/home/confirm_agency'
-				});
-			} else if (result && result.code === '999974') {
-				this.props.toast.info(result.message);
-				setTimeout(() => {
-					this.props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-				}, 3000);
-			} else if (result && result.code === '000012') {
-				this.props.toast.info(result.message);
-				setTimeout(() => {
-					this.props.history.push({
-						pathname: '/mine/bind_credit_page',
-						search: `?noBankInfo=true&autId=${homeData.dcDataInfo.autId}`
-					});
-				}, 3000);
-			} else {
-				this.props.toast.info(result.message);
-			}
-		});
-	};
-
-	/**
 	 * @description: 从 url 中获取参数，如果有 token 就设置下
 	 * @param {type}
 	 * @return:
@@ -364,7 +331,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'LN0006': // 风控审核通过
 				buriedPointEvent(home.signedLoan);
-				this.bank_card_check();
+				getNextStatus({ $props: this.props });
 				break;
 			case 'LN0007': {
 				// 放款中
@@ -384,7 +351,8 @@ export default class home_page extends PureComponent {
 			}
 			case 'LN0008': // 放款失败
 				buriedPointEvent(home.signedLoan);
-				this.bank_card_check();
+				getNextStatus({ $props: this.props });
+				// this.bank_card_check();
 				break;
 			case 'LN0009': // 放款成功
 				// 埋点-首页-点击查看代还账单
@@ -734,9 +702,10 @@ export default class home_page extends PureComponent {
 	}
 
 	goToNewMoXie = async () => {
-		// this.props.history.push('/home/c', {
-		//   RouterType: 'home',
-		// });
+		activeConfigSts({
+			$props: this.props,
+			type: 'B'
+		});
 	};
 
 	/**
