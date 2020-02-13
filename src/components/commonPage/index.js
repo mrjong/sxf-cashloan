@@ -1,16 +1,17 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:00:00
+ * @LastEditTime : 2020-02-13 12:02:17
  */
 /*
  * @Author: shawn
  * @LastEditTime : 2019-12-19 11:34:19
  */
 import React from 'react';
+import Cookie from 'js-cookie';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import { connect } from 'react-redux';
 import fetch from 'sx-fetch';
-
+import { store } from 'utils/store';
 import { commonClearState, setOverDueModalInfo, setHomeModalAction } from 'reduxes/actions/commonActions';
 import { showRedDot, setMsgCount } from 'reduxes/actions/specialActions';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
@@ -108,6 +109,9 @@ export default () => (WrappedComponent) => {
 			this.props.$fetch.post(signup_refreshClientUserInfo, null, { hideToast: true }).then((res) => {
 				if (res && res.code === '000000' && res.data) {
 					this.props.setUserInfoAction(res.data);
+					Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+					// TODO: 根据设备类型存储token
+					store.setToken(res.data.tokenId);
 				}
 			});
 		};

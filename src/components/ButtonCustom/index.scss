@@ -8,79 +8,79 @@ $btn_color_error: $colorTipRed;
 $btn_color_gray: #F7F8FA;
 
 .sxp_btn {
-  display: inline-block;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0;
-  font-weight: 400;
-  text-align: center;
-  touch-action: manipulation;
-  cursor: pointer;
-  white-space: nowrap;
-  padding: 0 15px;
-  font-size: 14px;
-  transition: color .2s linear,background-color .2s linear,border .2s linear,box-shadow .2s linear;
-  color: #515a6e;
-  background-color: #fff;
-  user-select: none;
-  outline: none;
-  border: 0;
-  line-height: 1.5;
-  vertical-align: middle;
-  box-sizing: border-box;
-  opacity: 1;
-  &:active {
-    opacity: 0.5;
-  }
+	display: inline-block;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 0;
+	font-weight: 400;
+	text-align: center;
+	touch-action: manipulation;
+	cursor: pointer;
+	white-space: nowrap;
+	padding: 0 15px;
+	font-size: 14px;
+	transition: color 0.2s linear, background-color 0.2s linear, border 0.2s linear, box-shadow 0.2s linear;
+	color: #515a6e;
+	background-color: #fff;
+	user-select: none;
+	outline: none;
+	border: 0;
+	line-height: 1.5;
+	vertical-align: middle;
+	box-sizing: border-box;
+	opacity: 1;
+	&:active {
+		opacity: 0.5;
+	}
 
-  &_long {
-    width: 100%;
-  }
+	&_long {
+		width: 100%;
+	}
 
-  &_icon {
-    vertical-align: middle;
-    margin-top: -2px;
-  }
+	&_icon {
+		vertical-align: middle;
+		margin-top: -2px;
+	}
 
-  &_xl {
-    min-height: 100px;
-    font-size: 36px;
-    font-weight: 600;
-    .sxp_btn_icon {
-      height: 45px;
-    }
-  }
-  &_lg {
-    min-height: 80px;
-    font-size: 30px;
-    font-weight: 500;
-    .sxp_btn_icon {
-      height: 40px;
-    }
-  }
-  &_md {
-    min-height: 64px;
-    font-size: 24px;
-    font-weight: 500;
-    .sxp_btn_icon {
-      height: 30px;
-    }
-  }
-  &_sm {
-    min-height: 50px;
-    font-size: 24px;
-    .sxp_btn_icon {
-      height: 30px;
-    }
-  }
-  &_xs {
-    min-height: 40px;
-    font-size: 24px;
-    .sxp_btn_icon {
-      height: 20px;
-    }
-  }
+	&_xl {
+		min-height: 100px;
+		font-size: 36px;
+		font-weight: 600;
+		.sxp_btn_icon {
+			height: 45px;
+		}
+	}
+	&_lg {
+		min-height: 80px;
+		font-size: 30px;
+		font-weight: 500;
+		.sxp_btn_icon {
+			height: 40px;
+		}
+	}
+	&_md {
+		min-height: 64px;
+		font-size: 24px;
+		font-weight: 500;
+		.sxp_btn_icon {
+			height: 30px;
+		}
+	}
+	&_sm {
+		min-height: 50px;
+		font-size: 24px;
+		.sxp_btn_icon {
+			height: 30px;
+		}
+	}
+	&_xs {
+		min-height: 40px;
+		font-size: 24px;
+		.sxp_btn_icon {
+			height: 20px;
+		}
+	}
 
   &_default {
     background-color: $btn_color_default;
@@ -102,16 +102,33 @@ $btn_color_gray: #F7F8FA;
     background-color: $btn_color_error;
     color: $btn_color_text_white;
   }
+  &_blue {
+		background-color: $colorBlue;
+		color: $btn_color_text_white;
+	}
 
-  &_rect {
-    border-radius: 0;
-  }
-  &_circle {
-    border-radius: 1000px;
-  }
+	&_gray {
+		background-color: $btn_color_default;
+		color: $btn_color_text_white;
+	}
+	&_golden {
+		background-color: $btn_color_golden;
+		color: $btn_color_text_black;
+	}
+	&_error {
+		background-color: $btn_color_error;
+		color: $btn_color_text_white;
+	}
+
+	&_rect {
+		border-radius: 0;
+	}
+	&_circle {
+		border-radius: 1000px;
+	}
 }
 .sxp_btn[disabled] {
-  opacity: 0.8;
-  background-color: $btn_color_default;
-  color: $btn_color_text_white;
+	opacity: 0.8;
+	background-color: $btn_color_default;
+	color: $btn_color_text_white;
 }

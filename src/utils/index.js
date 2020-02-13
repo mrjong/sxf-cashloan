@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 17:32:58
+ * @LastEditTime : 2020-02-12 17:38:58
  */
 /*eslint-disable */
 import React from 'react';
@@ -90,8 +90,11 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		} else {
-			let pageListCommon = [];
-			pageList = pageList.concat(pageListCommon);
+      // let pageListCommon = [];
+      // pageList = pageList.concat(pageListCommon);
+      // TODONEW
+      let pageListMpos = ['/mpos/'];
+			pageList = pageList.concat(pageListMpos);
 		}
 		return pageList.some((item) => item && pathname.indexOf(item) > -1);
 	}
