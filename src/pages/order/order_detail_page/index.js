@@ -14,6 +14,7 @@ import OverdueEntry from '../components/OverdueEntry';
 import { connect } from 'react-redux';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
+import Image from 'assets/image';
 
 // const noData = {
 // 	img: Image.bg.no_order,
@@ -186,7 +187,7 @@ export default class order_detail_page extends PureComponent {
 		});
 	};
 	render() {
-		const { panelCardList, isBillClean, overdueDays } = this.state;
+		const { panelCardList, isBillClean, overdueDays, discRedRepay } = this.state;
 		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 		return (
 			<LoadingView
@@ -221,6 +222,7 @@ export default class order_detail_page extends PureComponent {
 					{!overdueDays && !isBillClean ? (
 						<span onClick={this.payAllOrder} className={styles.payAllButton}>
 							一键结清
+							{discRedRepay && <img src={Image.adorn.youhui} alt="" className={styles.youhuiIcon} />}
 						</span>
 					) : null}
 				</div>

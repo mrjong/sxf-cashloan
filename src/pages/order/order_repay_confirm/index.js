@@ -599,12 +599,11 @@ export default class order_repay_confirm extends PureComponent {
 				</div>
 
 				<div className={styles.cardWrap}>
-					<div className={styles.title}>
-						<span>应还金额</span>
-						<span className={styles.billTotalAmt}>
-							{billTotalAmt && parseFloat(billTotalAmt).toFixed(2)}元
-						</span>
-					</div>
+					<p className={styles.title}>应还金额</p>
+					<p>
+						<span className={styles.unit}>¥</span>
+						<span className={styles.billTotalAmt}>{billTotalAmt && parseFloat(billTotalAmt).toFixed(2)}</span>
+					</p>
 					{/* 账单明细展示 */}
 					{this.renderFeeDetail(detailList, totalAmt)}
 				</div>
