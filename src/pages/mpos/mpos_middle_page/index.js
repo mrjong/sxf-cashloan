@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-11 19:22:54
+ * @LastEditTime : 2020-02-13 16:16:23
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -16,13 +16,16 @@ import { address } from 'utils/Address';
 import Alert_mpos from '../mpos_no_realname_alert_page';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { signup_mpos_validate, signup_mpos_check } from 'fetch/api';
+import { connect } from 'react-redux';
 
-const API = {
-	validateMposRelSts: '/authorize/validateMposRelSts',
-	chkAuth: '/authorize/chkAuth'
-};
 let query = {};
 @fetch.inject()
+@connect(
+	(state) => state,
+	{ setUserInfoAction }
+)
 export default class mpos_middle_page extends Component {
 	constructor(props) {
 		super(props);
@@ -44,23 +47,29 @@ export default class mpos_middle_page extends Component {
 				h5Channel: query.h5Channel
 			});
 		}
+		const osType = getDeviceType();
 		if (query.appId && query.token) {
 			this.props.$fetch
-				.post(API.validateMposRelSts, {
-					appid: query.appId,
-					token: query.token
+				.post(signup_mpos_validate, {
+					appId: query.appId,
+					token: query.token,
+					location: store.getPosition(),
+					loginType: '0',
+					mac: '',
+					imei: '',
+					osType: osType.toLowerCase(), // 操作系统
+					registrationId: '',
+					userChannel: getH5Channel()
 				})
 				.then((res) => {
-					if (res.msgCode === 'URM0000') {
+					if (res.code === '000000') {
 						// entryType为入口类型，DC为贷款超市进入
 						if (query && query.entryType === 'DC') {
 							window.location.href = `${linkConf.DC_URL}&appId=${query.appId}&token=${query.token}`;
 						} else {
 							this.transition();
 						}
-					} else if (res.msgCode === 'URM9999') {
-						this.props.toast.info(res.msgInfo);
-					} else if (res.msgCode === 'PTM9000') {
+					} else if (res.code === '999999') {
 						if (window.globalConfig && window.globalConfig.wxTest) {
 							this.props.history.replace('/outer_mpos_login?wxTestFrom=mpos&h5Channel=MPOS-fjj');
 						} else {
@@ -85,34 +94,38 @@ export default class mpos_middle_page extends Component {
 	};
 	transition = () => {
 		this.props.$fetch
-			.post(API.chkAuth, {
-				mblNo: query.telNo,
+			.post(signup_mpos_check, {
+				telNoCpt: query.telNo || '1',
+				imei: '',
+				mac: '',
+				loginType: '0',
 				appId: query.appId,
 				token: query.token,
 				location: store.getPosition(), // 定位地址 TODO 从session取,
-				osType: getDeviceType(),
-				province: '',
-				usrCnl: getH5Channel()
+				osType: getDeviceType().toLowerCase(),
+				userChannel: getH5Channel()
 			})
 			.then(
 				(res) => {
-					if (res.authFlag === '0') {
-						this.props.history.replace(
-							`/mpos/mpos_service_authorization_page?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`
-						);
-					} else if (res.authFlag === '1') {
-						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.loginToken);
-						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
-						TFDLogin();
-						activeConfigSts({
-							$props: this.props,
-							type: 'A',
-							callback: this.goHome
-						});
+					if (res.code === '000000') {
+						if (res.data.authFlag === '1') {
+							this.props.setUserInfoAction(res.data);
+							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+							// TODO: 根据设备类型存储token
+							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
+							activeConfigSts({
+								$props: this.props,
+								type: 'A',
+								callback: this.goHome
+							});
+						} else if (res.data.authFlag === '0')
+							this.props.history.replace(
+								`/mpos/mpos_service_authorization_page?tokenId=${res.data.tokenId}&mblNoHid=${res.data.telNoHid}`
+							);
 					} else {
-						this.props.history.replace(`/login?tokenId=${res.tokenId}&mblNoHid=${res.mblNoHid}`);
+						this.props.history.replace(`/login?tokenId=${res.data.tokenId}&mblNoHid=${res.data.telNoHid}`);
 					}
 				},
 				(err) => {

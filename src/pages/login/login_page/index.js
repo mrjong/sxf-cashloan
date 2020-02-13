@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 11:47:57
+ * @LastEditTime : 2020-02-13 16:59:16
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -131,7 +131,6 @@ export default class login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
-			this.getImage();
 		}
 		sxfDataPv({ pId: 'dl' });
 		sxfburiedPointEvent('DC_chkBox');
@@ -217,9 +216,6 @@ export default class login_page extends PureComponent {
 					userChannel: getH5Channel(), // 用户渠道
 					location: store.getPosition() // 定位地址 TODO 从session取
 				};
-				// if (!this.state.disabledInput) {
-				// 	param.mblNo = values.phoneValue; // 手机号
-				// }
 				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
@@ -258,14 +254,9 @@ export default class login_page extends PureComponent {
 							fail_cause: error.message
 						});
 						error.message &&
-							this.setState(
-								{
-									errMsg: error.message
-								},
-								() => {
-									this.state.disabledInput && this.getImage();
-								}
-							);
+							this.setState({
+								errMsg: error.message
+							});
 					}
 				);
 			} else {
@@ -275,30 +266,6 @@ export default class login_page extends PureComponent {
 			}
 		});
 	};
-
-	// 老的获取短信验证码(mpos)
-	sendSmsCode = (param) => {
-		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.code === 'PTM0000') {
-				this.setState({
-					errMsg: ''
-				});
-				Toast.info('发送成功，请注意查收！');
-				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-				this.startCountDownTime();
-			} else {
-				this.setState(
-					{
-						errMsg: result.message
-					},
-					() => {
-						this.getImage();
-					}
-				);
-			}
-		});
-	};
-
 	// 开始倒计时
 	startCountDownTime = () => {
 		clearInterval(timmer);
@@ -332,8 +299,6 @@ export default class login_page extends PureComponent {
 
 	// 获得手机验证码
 	getSmsCode() {
-		const { queryData } = this.state;
-		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
@@ -344,25 +309,14 @@ export default class login_page extends PureComponent {
 				});
 				// 埋点-登录页获取验证码
 				buriedPointEvent(login.getCode);
-				let param = {};
-				if (this.state.disabledInput) {
-					param = {
-						type: '6',
-						authToken: queryData && queryData.tokenId,
-						osType,
-						imgCode: values.imgCd
-					};
-					this.sendSmsCode(param);
-				} else {
-					this.setState(
-						{
-							mobilePhone: values.phoneValue
-						},
-						() => {
-							this.handleTokenAndSms();
-						}
-					);
-				}
+				this.setState(
+					{
+						mobilePhone: values.phoneValue
+					},
+					() => {
+						this.handleTokenAndSms();
+					}
+				);
 			} else {
 				this.setState({
 					errMsg: getFirstError(err)
@@ -390,8 +344,15 @@ export default class login_page extends PureComponent {
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
+			const { queryData } = this.state;
 			Toast.loading('加载中...', 10);
-			this.props.$fetch.get(`${msg_slide}/${base64Encode(this.state.mobilePhone)}`).then((result) => {
+			let mobilePhone = '';
+			if (this.state.disabledInput) {
+				mobilePhone = queryData.tokenId;
+			} else {
+				mobilePhone = base64Encode(this.state.mobilePhone);
+			}
+			this.props.$fetch.get(`${msg_slide}/${mobilePhone}`).then((result) => {
 				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({
 						relyToken: (result && result.data && result.data.tokenId) || '',
@@ -403,6 +364,16 @@ export default class login_page extends PureComponent {
 						}
 					});
 					resolve();
+				} else if (result.code === '000000') {
+					Toast.hide();
+					this.setState({
+						relyToken: result.data.tokenId,
+						slideImageUrl: result.data.backImage,
+						smallImageUrl: result.data.sliderImage,
+						yOffset: result.data.sliderHeight, // 小图距离大图顶部距离
+						bigImageH: result.data.backHeight, // 大图实际高度
+						showSlideModal: true
+					});
 				} else {
 					Toast.info(result.message);
 				}
@@ -417,7 +388,7 @@ export default class login_page extends PureComponent {
 		// 	aFlag: (this.state.yOffset * 2) / 3
 		// });
 		const data = {
-			slideDistance: this.bFlag,
+			slideDistance: xOffset,
 			tokenId: this.state.relyToken,
 			type: '6'
 		};

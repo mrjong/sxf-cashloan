@@ -1,21 +1,24 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 11:52:38
+ * @LastEditTime : 2020-02-13 16:24:15
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import { store } from 'utils/store';
 import Cookie from 'js-cookie';
 import qs from 'qs';
+import { getH5Channel } from 'utils/common';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType, activeConfigSts, recordContract } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
-import SXFButton from 'components/ButtonCustom';
+import { ButtonCustom } from 'components';
 import { mpos_service_authorization } from 'utils/analytinsType';
 import { Checkbox } from 'antd-mobile';
 import { TFDLogin } from 'utils/getTongFuDun';
-
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { connect } from 'react-redux';
+import { signup_mpos_auth } from 'fetch/api';
 import logo from './img/logo.png';
 const AgreeItem = Checkbox.AgreeItem;
 const needDisplayOptions = ['basicInf'];
@@ -26,6 +29,10 @@ const API = {
 let query = '';
 @setBackGround('#fff')
 @fetch.inject()
+@connect(
+	(state) => state,
+	{ setUserInfoAction }
+)
 export default class mpos_service_authorization_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -41,30 +48,39 @@ export default class mpos_service_authorization_page extends PureComponent {
 
 	goSubmit = () => {
 		this.props.$fetch
-			.post(API.doAuth, {
+			.post(signup_mpos_auth, {
+				imei: '',
 				location: store.getPosition(), // 定位地址 TODO 从session取,
-				osType: getDeviceType(),
-				authToken: query.tokenId
+				loginType: '0',
+				mac: '',
+				osType: getDeviceType().toLowerCase(),
+				registrationId: '',
+				smsCode: '',
+				smsFlag: '',
+				tokenId: query.tokenId,
+				userChannel: getH5Channel()
 			})
 			.then(
 				(res) => {
-					buriedPointEvent(mpos_service_authorization.auth_btn);
-					// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-					recordContract({
-						contractType: '01,02'
-					});
-					if (res.authSts === '01') {
-						console.log('发验证码');
-						this.props.history.replace(
-							`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${res.mblNoHid}`
-						);
-					} else if (res.authSts === '00') {
-						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.loginToken);
-						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
-						TFDLogin();
-						this.goHome();
+					if (res.code === '000000') {
+						buriedPointEvent(mpos_service_authorization.auth_btn);
+						if (res.data.authSts === '1') {
+							this.props.history.replace(
+								`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`
+							);
+						} else if (res.data.authSts === '0') {
+							// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+							recordContract({
+								contractType: '01,02'
+							});
+							this.props.setUserInfoAction(res.data);
+							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+							// TODO: 根据设备类型存储token
+							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
+							this.goHome();
+						}
 					} else {
 						this.props.toast.info('授权失败', 3, () => {
 							// token和手机号取chkAuth的
@@ -132,13 +148,15 @@ export default class mpos_service_authorization_page extends PureComponent {
 					随行付金融提供 <em className={styles.highlight}>借钱还信用卡</em>服务 <br /> 众多信用卡用户新选择{' '}
 				</p>
 				<div className={styles.btn_fixed}>
-					<SXFButton
-						className={selectFlag ? styles.smart_button : [styles.smart_button, styles.dis].join(' ')}
-						onClick={selectFlag ? () => this.goSubmit() : null}
-					>
-						授权并登录
-					</SXFButton>
-					{query.mblNoHid && query.mblNoHid.substr(-4) && (
+					<div className={styles.btn_box}>
+						<ButtonCustom
+							type={selectFlag ? 'blue' : 'default'}
+							onClick={selectFlag ? () => this.goSubmit() : null}
+						>
+							授权并登录
+						</ButtonCustom>
+					</div>
+					{query.mblNoHid && query.mblNoHid !== 'undefined' && query.mblNoHid.substr(-4) && (
 						<p className={styles.bold_text}>
 							还到将获取您尾号{query.mblNoHid && query.mblNoHid.substr(-4)}的手机号用于登录
 						</p>

@@ -13,7 +13,7 @@ export default class ButtonCustom extends React.PureComponent {
 		style: PropTypes.object,
 		className: PropTypes.string,
 		color: PropTypes.string,
-		type: PropTypes.oneOf(['default', 'yellow', 'gray', 'golden', 'error']),
+		type: PropTypes.oneOf(['default', 'yellow', 'gray', 'golden', 'error', 'blue']),
 		backgroundcolor: PropTypes.string,
 		iconsource: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.func, PropTypes.string]),
 		iconStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.array]),
@@ -151,11 +151,11 @@ export default class ButtonCustom extends React.PureComponent {
 			borderradius,
 			icononright,
 			children,
-      onClick,
-      iconsource,
-      iconStyle,
-      iconClassName,
-      loading,
+			onClick,
+			iconsource,
+			iconStyle,
+			iconClassName,
+			loading,
 			...restProps
 		} = this.props;
 		return (
