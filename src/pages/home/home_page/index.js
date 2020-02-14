@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 16:11:44
+ * @LastEditTime : 2020-02-14 11:25:38
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -9,12 +9,7 @@ import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { Toast } from 'antd-mobile';
 import { isWXOpen, dateDiffer, activeConfigSts } from 'utils';
-import {
-	index_queryIndexInfo,
-	index_queryBannerList,
-	index_queryWelfareList,
-	bank_card_check
-} from 'fetch/api';
+import { index_queryIndexInfo, index_queryBannerList, index_queryWelfareList } from 'fetch/api';
 
 import { showRedDot } from 'reduxes/actions/specialActions';
 import { setAuthId } from 'reduxes/actions/staticActions';

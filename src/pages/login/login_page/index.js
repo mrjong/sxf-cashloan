@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-13 17:17:49
+ * @LastEditTime : 2020-02-14 11:32:57
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -50,7 +50,6 @@ import closeIco from './img/close_ico.png';
 let timmer;
 let modalTimer = null;
 let entryPageTime = '';
-const needDisplayOptions = ['basicInf'];
 const API = {
 	smsForLogin: '/signup/smsForLogin',
 	sendsms: '/cmm/sendsms',

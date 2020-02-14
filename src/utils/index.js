@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 17:38:58
+ * @LastEditTime : 2020-02-14 11:39:41
  */
 /*eslint-disable */
 import React from 'react';
@@ -12,7 +12,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
-import { signup_log } from 'fetch/api';
+import { signup_log, abt_mpos } from 'fetch/api';
 // 退出的api
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
@@ -90,10 +90,10 @@ export const pagesIgnore = (pathname = window.location.pathname) => {
 			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		} else {
-      // let pageListCommon = [];
-      // pageList = pageList.concat(pageListCommon);
-      // TODONEW
-      let pageListMpos = ['/mpos/'];
+			// let pageListCommon = [];
+			// pageList = pageList.concat(pageListCommon);
+			// TODONEW
+			let pageListMpos = ['/mpos/'];
 			pageList = pageList.concat(pageListMpos);
 		}
 		return pageList.some((item) => item && pathname.indexOf(item) > -1);
@@ -697,18 +697,21 @@ export const queryUsrSCOpenId = ({ $props }) => {
  */
 export const activeConfigSts = ({ $props, callback, type }) => {
 	if (type === 'B') {
+		Toast.hide();
 		$props.history.push('/others/mpos_testB_download_page');
 		return;
 	}
 	$props.$fetch
-		.get(API.activeConfigSts)
+		.get(abt_mpos)
 		.then((res) => {
-			if (res && res.msgCode === 'PTM0000' && res.data && res.data.sts) {
+			if (res && res.code === '000000' && res.data && res.data.sts) {
 				switch (res.data.sts) {
 					case '00':
 						callback();
 						break;
 					case '01':
+						Toast.hide();
+
 						store.setTestABTag('A');
 						//下载页面
 						$props.history.replace('/others/mpos_testA_download_page');
