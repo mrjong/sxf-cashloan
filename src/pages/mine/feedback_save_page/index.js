@@ -12,9 +12,8 @@ import qs from 'qs';
 import { buriedPointEvent } from 'utils/analytins';
 import { helpCenter } from 'utils/analytinsType';
 import lrz from 'lrz';
-const API = {
-	addOpinion: '/question/addOpinion'
-};
+import { question_addOpinion } from 'fetch/api.js';
+
 let queryData = {};
 let isFetching = false;
 @fetch.inject()
@@ -138,11 +137,12 @@ export default class mine_page extends PureComponent {
 		imagesStream.append('content', textareaVal);
 		imagesStream.append('type', queryData.type);
 		isFetching = true;
+		this.props.toast.loading('加载中...', 10);
 		this.props.$fetch
-			.post(API.addOpinion, imagesStream)
+			.post(question_addOpinion, imagesStream)
 			.then((res) => {
 				isFetching = false;
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.props.toast.info('提交成功', 2, () => {
 						this.props.history.push('/mine/mine_page');
 					});
@@ -151,10 +151,11 @@ export default class mine_page extends PureComponent {
 						type_name: queryData.type
 					});
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			})
 			.catch(() => {
+				this.props.toast.hide();
 				isFetching = false;
 			});
 	};
