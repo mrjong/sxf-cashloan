@@ -297,3 +297,5 @@ export const account_merge = '/account/merge';
 export const calllog_isStoraged = '/calllog/isStoraged';
 // 上传数据
 export const calllog_uploadData = '/calllog/uploadData';
+// 安卓下载地址获取
+export const download_queryDownloadUrl = 'download/queryDownloadUrl';

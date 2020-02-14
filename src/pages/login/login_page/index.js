@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 11:32:57
+ * @LastEditTime : 2020-02-14 17:02:25
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -23,7 +23,7 @@ import {
 } from 'utils';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
 
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
@@ -540,7 +540,7 @@ export default class login_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
 		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
 					if (res.code === 'PTM0000') {
 						Toast.info('安全下载中');

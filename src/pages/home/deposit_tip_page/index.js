@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 15:29:23
+ * @LastEditTime : 2020-02-14 17:01:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -12,10 +12,8 @@ import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi } from 'utils/analytinsType';
 import qs from 'qs';
+import { download_queryDownloadUrl } from 'fetch/api';
 import linkConf from 'config/link.conf';
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
 
 @fetch.inject()
 @setBackGround('#fff')
@@ -30,24 +28,20 @@ export default class login_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch
-			.get(API.DOWNLOADURL, {
-				type: '01'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						this.setState({
-							downloadUrl: res.data
-						});
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+		this.props.$fetch.get(`${download_queryDownloadUrl}/01`).then(
+			(res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState({
+						downloadUrl: res.data
+					});
+				} else {
+					res.msgInfo && this.props.toast.info(res.msgInfo);
 				}
-			);
+			},
+			(error) => {
+				error.msgInfo && this.props.toast.info(error.msgInfo);
+			}
+		);
 	};
 
 	downloadClick = () => {

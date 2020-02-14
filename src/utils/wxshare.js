@@ -1,6 +1,10 @@
+/*
+ * @Author: shawn
+ * @LastEditTime : 2020-02-14 17:07:17
+ */
 import { isWXOpen } from 'utils';
 import { Toast } from 'antd-mobile';
-
+import { signup_wx_jscfg } from 'fetch/api';
 export default ({ $props, shareData }) => {
 	if (isWXOpen() && wx) {
 		const params = {
@@ -8,8 +12,8 @@ export default ({ $props, shareData }) => {
 			redirectUrl: window.location.href
 		};
 		// 获取 微信 sdk
-		$props.$fetch.post(`/wx/jscfg`, params).then((result) => {
-			if (result) {
+		$props.$fetch.post(signup_wx_jscfg, params).then((result) => {
+			if (result.code === '000000') {
 				const { appId, timestamp, nonceStr, signature } = result;
 
 				wx.config({
@@ -37,6 +41,8 @@ export default ({ $props, shareData }) => {
 				wx.error(function(res) {
 					Toast.info('error: ' + res.errMsg);
 				});
+			} else {
+				this.props.toast.info(result.message);
 			}
 		});
 	}
