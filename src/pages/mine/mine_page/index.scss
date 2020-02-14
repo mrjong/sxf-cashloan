@@ -98,7 +98,11 @@
 			align-items: center;
 		}
 		.optionListItem + .optionListItem {
-			border-top: 1px solid $colorDivide;
+      position: relative;
+      &::after {
+        @include setTopLine($colorDivide);
+        left: 0;
+      }
 		}
 		.optionListItemName {
 			color: $colorBlack;

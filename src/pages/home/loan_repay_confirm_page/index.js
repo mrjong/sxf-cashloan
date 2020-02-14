@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 17:48:35
+ * @LastEditTime : 2020-02-14 15:29:04
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -107,9 +107,14 @@ export default class loan_repay_confirm_page extends PureComponent {
 	queryUsrInfo = () => {
 		this.props.$fetch.post(cred_queryApplPageInfo, { autId: this.props.authId }).then((res) => {
 			if (res && res.code === '000000' && res.data) {
-				this.setState({
-					usrIndexInfo: res.data
-				});
+				this.setState(
+					{
+						usrIndexInfo: res.data
+					},
+					() => {
+						this.toggleTag(0);
+					}
+				);
 			}
 		});
 	};

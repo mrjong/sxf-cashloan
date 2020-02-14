@@ -1,17 +1,9 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2019-10-11 15:29:04
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-14 16:23:12
  */
 export default [
-	{
-		path: '/common/middle_page',
-		zhName: 'mxzz',
-		title: '',
-		arrowHide: 'empty',
-		headerHide: true,
-		component: () => import('pages/common/middle_page')
-	},
 	{
 		path: '/common/auth_page',
 		zhName: 'rzzz',
