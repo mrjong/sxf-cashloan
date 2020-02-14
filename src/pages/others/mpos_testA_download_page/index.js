@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:39:17
+ * @LastEditTime : 2020-02-14 18:15:09
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -13,10 +13,8 @@ import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
 import button_img from './img/button_img.png';
 import cover_img from './img/cover_img.png';
+import { download_queryDownloadUrl } from 'fetch/api';
 
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
@@ -37,22 +35,18 @@ export default class mpos_download_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch
-			.get(API.DOWNLOADURL, {
-				type: '03'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						window.location.href = res.data;
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+		this.props.$fetch.get(`${download_queryDownloadUrl}/03`).then(
+			(res) => {
+				if (res.code === '000000') {
+					window.location.href = res.data.downloadUrl;
+				} else {
+					res.message && this.props.toast.info(res.message);
 				}
-			);
+			},
+			(error) => {
+				error.message && this.props.toast.info(error.message);
+			}
+		);
 	};
 
 	downloadClickFun = () => {
@@ -78,17 +72,17 @@ export default class mpos_download_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
-					if (res.msgCode === 'PTM0000') {
+					if (res.msgCode === '000000') {
 						Toast.info('安全下载中');
-						window.location.href = res.data;
+						window.location.href = res.data.downloadUrl;
 					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
+						res.message && Toast.info(res.message);
 					}
 				},
 				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
+					error.message && Toast.info(error.message);
 				}
 			);
 		}

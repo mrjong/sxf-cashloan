@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:01:33
+ * @LastEditTime : 2020-02-14 18:05:08
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -30,16 +30,16 @@ export default class login_page extends PureComponent {
 	getDownloadUrl = () => {
 		this.props.$fetch.get(`${download_queryDownloadUrl}/01`).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({
-						downloadUrl: res.data
+						downloadUrl: res.data.downloadUrl
 					});
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};
