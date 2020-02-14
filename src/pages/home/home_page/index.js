@@ -31,7 +31,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
-import { Carousels, commonPage } from 'components';
+import { Carousels, commonPage, FooterBar } from 'components';
 import style from './index.scss';
 // import mockData from './mockData';
 import linkConf from 'config/link.conf';
@@ -752,6 +752,9 @@ export default class home_page extends PureComponent {
 					)}
 					{welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null}
 					{this.componentsAddCards()}
+					<div className={style.bottomSlogen}>
+						<FooterBar />
+					</div>
 				</div>
 
 				<HomeModal history={this.props.history} />

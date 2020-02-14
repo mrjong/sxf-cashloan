@@ -83,6 +83,7 @@ export default class add_info extends PureComponent {
 				for (const key in values) {
 					params[key] = values[key][0];
 				}
+				this.props.toast.loading('加载中...', 10);
 				this.props.$fetch
 					.post(auth_suppleInfo, params)
 					.then((result) => {
@@ -99,6 +100,7 @@ export default class add_info extends PureComponent {
 						}
 					})
 					.catch(() => {
+						this.props.toast.hide();
 						submitButtonLocked = false;
 					});
 			} else {

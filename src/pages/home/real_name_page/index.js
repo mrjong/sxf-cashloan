@@ -112,7 +112,7 @@ export default class real_name_page extends Component {
 			});
 		}
 		if (!isEquipment) {
-			this.props.toast.info('请使用手机设备');
+			Toast.info('请使用手机设备');
 			return;
 		}
 		this.setState({ showFloat: true });
@@ -134,27 +134,27 @@ export default class real_name_page extends Component {
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/2`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((result) => {
-				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
 				if (result.code === '000000') {
+					Toast.hide();
 					this.setState({ ocrZhengData: result.data });
 					this.setState({ idName: result.data.idName || '' });
 					this.setState({ idNo: result.data.idNo || '' });
 					this.setState({ showFloat: false });
 					this.setState({ leftUploaded: true });
 				} else {
-					this.props.toast.info(result.message);
+					Toast.info(result.message);
 					this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
 				}
 			})
 			.catch(() => {
-				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
 				this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
+				Toast.hide();
 			});
 	};
 	// 上传身份证反面
@@ -166,7 +166,7 @@ export default class real_name_page extends Component {
 			});
 		}
 		if (!isEquipment) {
-			this.props.toast.info('请使用手机设备');
+			Toast.info('请使用手机设备');
 			return;
 		}
 		this.setState({ showFloat: true });
@@ -194,7 +194,6 @@ export default class real_name_page extends Component {
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/3`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
 			.then((res) => {
-				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
@@ -202,17 +201,18 @@ export default class real_name_page extends Component {
 					this.setState({ ocrFanData: res.data });
 					this.setState({ rightUploaded: true });
 					this.setState({ showFloat: false });
+					Toast.hide();
 				} else {
-					this.props.toast.info(res.message);
+					Toast.info(res.message);
 					this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
 				}
 			})
 			.catch(() => {
-				Toast.hide();
 				this.setState({
 					disabledupload: 'false'
 				});
 				this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
+				Toast.hide();
 			});
 	};
 
@@ -234,19 +234,19 @@ export default class real_name_page extends Component {
 
 	handleSubmit = () => {
 		if (!this.state.leftUploaded) {
-			this.props.toast.info('请上传身份证正面');
+			Toast.info('请上传身份证正面');
 			return false;
 		}
 		if (!this.state.rightUploaded) {
-			this.props.toast.info('请上传身份证反面');
+			Toast.info('请上传身份证反面');
 			return false;
 		}
 		if (!validators.name(this.state.idName)) {
-			this.props.toast.info('请输入正确的姓名');
+			Toast.info('请输入正确的姓名');
 			return false;
 		}
 		if (!validators.iDCardNumber(this.state.idNo)) {
-			this.props.toast.info('请输入正确的身份证号');
+			Toast.info('请输入正确的身份证号');
 			return false;
 		}
 		const { ocrZhengData = {}, ocrFanData = {}, idName, idNo } = this.state;
@@ -275,41 +275,47 @@ export default class real_name_page extends Component {
 			idAddrLctn: '', //身份证户籍地经纬度
 			usrBrowInfo: '' //授信浏览器信息
 		};
-		this.props.$fetch.post(auth_idChk, params).then((result) => {
-			if (result && result.code === '000000') {
-				this.signup_refreshClientUserInfo();
-				store.setBackFlag(true);
-				buriedPointEvent(mine.creditExtensionBack, {
-					current_step: '实名认证'
-				});
-				this.confirmBuryPoint(true);
-				// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
-				// 是否需要下一步
-				if (this.props.nextStepStatus || (urlQuery && urlQuery.newTitle)) {
-					getNextStatus({
-						RouterType: 'real_name_page',
-						$props: this.props
-					});
-				} else {
+		Toast.loading('加载中...', 10);
+		this.props.$fetch
+			.post(auth_idChk, params)
+			.then((result) => {
+				if (result && result.code === '000000') {
 					Toast.hide();
-					this.props.history.goBack();
-				}
-			} else if (result.code === '000038') {
-				if (this.props.nextStepStatus) {
-					getNextStatus({
-						RouterType: 'real_name_page',
-						$props: this.props
+					this.signup_refreshClientUserInfo();
+					store.setBackFlag(true);
+					buriedPointEvent(mine.creditExtensionBack, {
+						current_step: '实名认证'
 					});
-				} else {
+					this.confirmBuryPoint(true);
+					// TODO: 这里成功之后有两个地方去，一个是我的页面 一个是四项认证页。直接 goBack 应该能带上参数吧
+					// 是否需要下一步
+					if (this.props.nextStepStatus || (urlQuery && urlQuery.newTitle)) {
+						getNextStatus({
+							RouterType: 'real_name_page',
+							$props: this.props
+						});
+					} else {
+						this.props.history.goBack();
+					}
+				} else if (result.code === '000038') {
 					Toast.hide();
-					this.props.history.goBack();
+					if (this.props.nextStepStatus) {
+						getNextStatus({
+							RouterType: 'real_name_page',
+							$props: this.props
+						});
+					} else {
+						this.props.history.goBack();
+					}
+					this.confirmBuryPoint(false, result.message);
+				} else {
+					this.confirmBuryPoint(false, result.message);
+					Toast.info(result.message);
 				}
-				this.confirmBuryPoint(false, result.message);
-			} else {
-				this.confirmBuryPoint(false, result.message);
-				this.props.toast.info(result.message);
-			}
-		});
+			})
+			.catch(() => {
+				Toast.hide();
+			});
 	};
 	/**
 	 * @description: 刷新用户登录信息
@@ -360,6 +366,11 @@ export default class real_name_page extends Component {
 		}
 		store.removeDisableBack();
 	};
+
+	handleGoBack = () => {
+		this.props.history.goBack();
+	};
+
 	render() {
 		const { disabledupload, leftValue, rightValue } = this.state;
 		return (
@@ -503,6 +514,7 @@ export default class real_name_page extends Component {
 				{this.state.showState &&
 				(this.state.userInfo && this.state.userInfo.nameHid && !urlQuery.newTitle) ? (
 					<div>
+						<p className={style.pageTitle}>您已完成实名认证！</p>
 						<List className={style.is_true}>
 							<InputItem value={this.state.userInfo && this.state.userInfo.nameHid} editable={false}>
 								姓名
@@ -511,6 +523,9 @@ export default class real_name_page extends Component {
 								身份证号
 							</InputItem>
 						</List>
+						<ButtonCustom className={style.bottomBtnSuccess} onClick={this.handleGoBack}>
+							返回
+						</ButtonCustom>
 					</div>
 				) : null}
 			</div>

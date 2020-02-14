@@ -93,7 +93,6 @@ export default class loan_fenqi_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		console.log(this.props, 'props1122121');
 		this.queryCashLoanApplInfo();
 
 		let storeData = store.getCashFenQiStoreData(); // 代提交的借款信息
