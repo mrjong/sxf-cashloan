@@ -12,7 +12,12 @@ import hoistNonReactStatic from 'hoist-non-react-statics';
 import { connect } from 'react-redux';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { commonClearState, setOverDueModalInfo, setHomeModalAction } from 'reduxes/actions/commonActions';
+import {
+	commonClearState,
+	setOverDueModalInfo,
+	setHomeModalAction,
+	setProtocolPreviewInfo
+} from 'reduxes/actions/commonActions';
 import { showRedDot, setMsgCount } from 'reduxes/actions/specialActions';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import {
@@ -21,15 +26,26 @@ import {
 	index_queryOLPShowSts,
 	msg_popup_list,
 	msg_news_count,
-	index_queryPLPShowSts
+	index_queryPLPShowSts,
+	bank_card_contract_info
 } from 'fetch/api';
+import { base64Decode } from 'utils/CommonUtil/toolUtil';
+
 export default () => (WrappedComponent) => {
 	@connect(
 		(state) => ({
 			userInfo: state.staticState.userInfo,
 			homeData: state.commonState.homeData
 		}),
-		{ showRedDot, commonClearState, setUserInfoAction, setOverDueModalInfo, setMsgCount, setHomeModalAction }
+		{
+			showRedDot,
+			commonClearState,
+			setUserInfoAction,
+			setOverDueModalInfo,
+			setMsgCount,
+			setHomeModalAction,
+			setProtocolPreviewInfo
+		}
 	)
 	@fetch.inject()
 	class commonPageView extends React.Component {
@@ -234,6 +250,24 @@ export default () => (WrappedComponent) => {
 					resolve([]);
 				}
 			});
+		};
+
+		/**
+		 * @description: 查询协议预览相关数据
+		 */
+		queryProtocolPreviewInfo = () => {
+			this.props.$fetch
+				.get(bank_card_contract_info, null, { hideToast: true })
+				.then((result) => {
+					if (result && result.code === '000000' && result.data) {
+						const { name, idNo } = result.data;
+						this.props.setProtocolPreviewInfo({
+							name: base64Decode(name),
+							idNo: base64Decode(idNo)
+						});
+					}
+				})
+				.catch(() => {});
 		};
 
 		/**

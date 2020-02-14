@@ -63,7 +63,8 @@ let urlQuery = '';
 @domListen()
 @connect((state) => ({
 	userInfo: state.staticState.userInfo,
-	nextStepStatus: state.commonState.nextStepStatus
+	nextStepStatus: state.commonState.nextStepStatus,
+	protocolPreviewInfo: state.staticState.protocolPreviewInfo
 }))
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
@@ -125,11 +126,10 @@ export default class essential_information_page extends PureComponent {
 	readContract = (jumpUrl) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
-
-		const { userInfo = {} } = this.props;
+		const { protocolPreviewInfo = {} } = this.props;
 		const pageData = {
-			name: userInfo.nameHid,
-			idNo: userInfo.idNoHid,
+			name: protocolPreviewInfo.name,
+			idNo: protocolPreviewInfo.idNo,
 			dateTime: dayjs().format('YYYY年MM月DD日')
 		};
 		store.setProtocolPersonalData(pageData);

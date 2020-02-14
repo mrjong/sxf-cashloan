@@ -28,7 +28,7 @@ import {
 	setWithdrawCardDataAction,
 	setBindDepositInfoAction
 } from 'reduxes/actions/commonActions';
-import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 
 @fetch.inject()
 @createForm()
@@ -349,11 +349,21 @@ export default class bind_save_page extends PureComponent {
 		};
 		this.props.$fetch.post(bank_card_protocol_info, params).then((result) => {
 			if (result && result.code === '000000' && result.data !== null) {
-				// store.setProtocolFinancialData(result.data);
+				//敏感信息密文改明文
+				const list = result.data.bankList.map((item) => ({
+					cardNo: base64Decode(item.cardNo),
+					bankName: item.bankName
+				}));
+				const data = {
+					...result.data,
+					name: base64Decode(result.data.name),
+					idNo: base64Decode(result.data.idNo),
+					bankList: list
+				};
 				this.props.history.push({
 					pathname: '/protocol/delegation_withhold_page',
 					state: {
-						contractInf: result.data
+						contractInf: data
 					}
 				});
 			} else {
