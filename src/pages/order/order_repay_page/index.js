@@ -15,19 +15,6 @@ import { connect } from 'react-redux';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 
-const noData = {
-	img: Image.bg.no_order,
-	text: '暂无账单',
-	width: '100%',
-	height: '100%'
-};
-const errorData = {
-	img: Image.bg.no_network,
-	text: '网络错误,点击重试',
-	width: '100%',
-	height: '100%'
-};
-
 @setBackGround('#F0F3F9')
 @fetch.inject()
 @connect(
@@ -300,12 +287,7 @@ export default class order_repay_page extends PureComponent {
 			</span>
 		);
 		return (
-			<LoadingView
-				ref={(view) => (this.viewRef = view)}
-				nodata={noData}
-				errordata={errorData}
-				onReloadData={this.onReloadData}
-			>
+			<LoadingView ref={(view) => (this.viewRef = view)} onReloadData={this.onReloadData}>
 				<OverdueEntry isOverdue={isEntryShow} history={this.props.history} overdueDays={overdueDays} />
 
 				<div className={styles.orderListWrap}>

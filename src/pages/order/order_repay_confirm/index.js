@@ -578,12 +578,7 @@ export default class order_repay_confirm extends PureComponent {
 		const { canUseCoupon, totalAmt: billTotalAmt } = this.props.history.location.state;
 
 		return (
-			<LoadingView
-				ref={(view) => (this.viewRef = view)}
-				nodata={{}}
-				errordata={{}}
-				onReloadData={this.onReloadData}
-			>
+			<LoadingView ref={(view) => (this.viewRef = view)} onReloadData={this.onReloadData}>
 				<div className={styles.top_notice}>
 					<NoticeBar
 						marqueeProps={{
