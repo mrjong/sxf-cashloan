@@ -13,7 +13,6 @@ import fetch from 'sx-fetch';
 import { msg_popup_list } from 'fetch/api.js';
 import { setHomeModalAction } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
-import HomeModal from '../../home/home_page/components/HomeModal';
 import Images from 'assets/image';
 
 @connect(
@@ -59,7 +58,8 @@ export default class repayment_succ_page extends PureComponent {
 		this.props.$fetch.get(`${msg_popup_list}/1`, {}, { hideLoading: true }).then((res) => {
 			if (res.code === '000000' && res.data && res.data.popups && res.data.popups.length > 0) {
 				this.props.setHomeModalAction({
-					DataList: res.data.popups
+					DataList: res.data.popups,
+					mPosition: '账单结清页'
 				});
 			}
 		});
@@ -88,7 +88,6 @@ export default class repayment_succ_page extends PureComponent {
 				>
 					返回首页
 				</ButtonCustom>
-				<HomeModal fetch={this.props.$fetch} history={this.props.history} goHome={true} />
 			</div>
 		);
 	}

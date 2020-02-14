@@ -16,6 +16,8 @@ import { changeHistoryState, pagesIgnore } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
+import { HomeModal } from '../../home/home_page/components';
+
 const { PROJECT_ENV } = process.env;
 @fetch.inject()
 @connect((state) => ({
@@ -190,6 +192,7 @@ export default class router_Page extends PureComponent {
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
 					{footerHide ? null : <Footer footerProps={route} />}
 					<div className="application_content">{component}</div>
+					<HomeModal fetch={this.props.$fetch} history={this.props.history} />
 				</div>
 			</div>
 		) : null;

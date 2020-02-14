@@ -283,7 +283,7 @@ export default class order_page extends PureComponent {
 				}}
 			>
 				<div className={style.orderPage}>
-					<div className={style.orderPageHead}>
+					<div>
 						<strong className={style.orderPageHeadTitle}>账单</strong>
 						<span className={style.orderPageHeadDesc}>还信用卡用还到，有账单就能还</span>
 					</div>

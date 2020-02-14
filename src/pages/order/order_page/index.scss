@@ -14,9 +14,8 @@
 }
 .orderPage {
 	width: 670px;
-	margin: 0 auto;
-}
-.orderPageHead {
+  margin: 0 auto;
+  padding-top: 10px;
 }
 .orderPageHeadTitle {
 	font-size: 46px;
@@ -30,8 +29,7 @@
 }
 .orderListCard {
 	border-radius: 10px;
-	background-color: #fff;
-	margin-top: 34px;
+	margin-top: 20px;
 	margin-bottom: 30px;
 }
 .groupTitleWrap {
@@ -40,6 +38,8 @@
 	height: 100px;
 	line-height: 100px;
 	border-bottom: 1px solid $colorDivide;
+	border-radius: 10px 10px 0 0;
+	background-color: #fff;
 }
 .groupTitle {
 	font-size: 30px;
@@ -50,10 +50,11 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-  padding: 40px;
-  border-radius: 6px;
+	padding: 40px;
+	border-radius: 10px;
 	box-sizing: border-box;
 	border-bottom: 1px solid $colorDivide;
+	background-color: #fff;
 }
 .listBottomText {
 	height: 76px;
@@ -61,6 +62,8 @@
 	color: $colorListText;
 	text-align: center;
 	font-size: 24px;
+	border-radius: 0 0 10px 10px;
+	background-color: #fff;
 }
 .itemLabel {
 	font-size: 28px;

@@ -1,36 +1,47 @@
 @import '../../assets/styles/scss/base/fn.scss';
 .modalWrapper {
-  .content {
-    position: relative;
-  }
-  img{
-    vertical-align: top;
-  }
-  .btn_container {
-    width: 750px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    bottom: 0;
-  }
-  .activityBg {
-    width: 750px;
-    height: 750px;
-  }
+	.content {
+		position: relative;
+	}
+	img {
+		vertical-align: top;
+	}
+	.btn_container {
+		width: 750px;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		bottom: 0;
+	}
+	.activityBg {
+		width: 750px;
+		height: 750px;
+	}
 
-  .activityBtnBg {
-    width: 750px;
-  }
+	.activityBtnBg {
+		width: 750px;
+	}
 
-  .closeBtn {
-    text-align: center;
-    width: 70px;
-    height: 70px;
-    vertical-align: middle;
-    margin: 20px auto 0;
-    @include spriteIcon('../../assets/images/common/sprite_icon.png', 0, 0);
-  }
+	.closeBtn {
+		text-align: center;
+		width: 70px;
+		height: 70px;
+		vertical-align: middle;
+		margin: 20px auto 0;
+		@include spriteIcon('../../assets/images/common/sprite_icon.png', 0, 0);
+	}
+
+	.fudai_rewardDay {
+		font-size: 70px;
+		color: #fff3e7;
+		font-weight: 500;
+		text-shadow: 5px 5px 5px #a92900;
+		position: relative;
+		top: '50%';
+		left: '45%';
+		animation: fadeIn 0.8s linear;
+	}
 }
 
 :global {
@@ -42,7 +53,18 @@
 			padding: 0;
 		}
 		.am-modal.am-modal-transparent .am-modal-content {
-      padding: 0;
+			padding: 0;
 		}
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		transform: scale(0.3);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
 	}
 }

@@ -69,9 +69,15 @@ export default () => (WrappedComponent) => {
 				}
 			}
 
-			if (location.pathname === '/home/home' || location.pathname === '/order/order_page') {
+			if (location.pathname === '/home/home') {
 				if (userInfo && userInfo.tokenId) {
 					this.getHomeModal();
+				}
+			}
+
+			if (location.pathname === '/order/order_page') {
+				if (userInfo && userInfo.tokenId) {
+					this.queryOverdueModalInfo(true);
 				}
 			}
 
@@ -181,7 +187,7 @@ export default () => (WrappedComponent) => {
 		/**
 		 * @description: 查询逾期弹窗相关信息
 		 */
-		queryOverdueModalInfo = () => {
+		queryOverdueModalInfo = (flag) => {
 			const { homeData = {} } = this.props;
 			return new Promise((resolve) => {
 				if (
@@ -201,6 +207,17 @@ export default () => (WrappedComponent) => {
 										progressInfos
 									}
 								]);
+								if (flag) {
+									this.props.setHomeModalAction({
+										DataList: [
+											{
+												olpSts,
+												decreaseCoupExpiryDate,
+												progressInfos
+											}
+										]
+									});
+								}
 								this.props.setOverDueModalInfo({
 									olpSts,
 									decreaseCoupExpiryDate,

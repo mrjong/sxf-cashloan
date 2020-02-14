@@ -38,8 +38,7 @@ import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { TFDLogin } from 'utils/getTongFuDun';
-// console.log(aa)
-import { MsgTip, HomeModal, AddCards, ActivityEntry, SwitchCard, Welfare } from './components';
+import { MsgTip, AddCards, ActivityEntry, SwitchCard, Welfare } from './components';
 
 //隔5秒调取接口相关变量
 
@@ -753,8 +752,6 @@ export default class home_page extends PureComponent {
 					{welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null}
 					{this.componentsAddCards()}
 				</div>
-
-				<HomeModal history={this.props.history} />
 			</div>
 		);
 	}

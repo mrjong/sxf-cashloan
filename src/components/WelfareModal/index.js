@@ -17,6 +17,9 @@ export default class WelfareModal extends PureComponent {
 
 	componentDidMount() {
 		const { welfareModalInf } = this.props;
+		buriedPointEvent(home.configModalShow, {
+			adsName: welfareModalInf.name
+		});
 		this.showWelfareModal(welfareModalInf && welfareModalInf.code);
 	}
 
@@ -37,7 +40,16 @@ export default class WelfareModal extends PureComponent {
 					{welfareModalInf.backImgUrl && (
 						<img src={welfareModalInf.backImgUrl} className={styles.activityBg} />
 					)}
-					{/* {welfareModalInf.skipType === '1' ? ( */}
+					{welfareModalInf && welfareModalInf.extensionData && welfareModalInf.extensionData.rewardDays && (
+						<span
+							className={[
+								styles.fudai_rewardDay,
+								welfareModalInf.extensionData.rewardDays > 9 && styles.fudai_rewardDay1
+							].join(' ')}
+						>
+							{welfareModalInf.extensionData.rewardDays}天
+						</span>
+					)}
 					<div
 						onClick={() => {
 							buriedPointEvent(home.configModalJoinClick, {
@@ -51,7 +63,6 @@ export default class WelfareModal extends PureComponent {
 							<img src={welfareModalInf.btnImgUrl} className={styles.activityBtnBg} />
 						)}
 					</div>
-					{/* ) : null} */}
 				</div>
 				{welfareModalInf.closeFlag === '0' ? (
 					<div

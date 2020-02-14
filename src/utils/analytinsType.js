@@ -102,6 +102,7 @@ const home = {
 	protocolAlertChange: `${prefix}_PROTOCOL_ALERT_CHANGE`,
 	protocolAlertClose: `${prefix}_PROTOCOL_ALERT_CLOSE`,
 	landingImgClick: `${prefix}_HOME_LANDING_IMG_CLICK`, // 落地页图片交互点击
+	configModalShow: `${prefix}_HOME_CONFIG_MODAL_SHOW`, //活动配置弹窗show事件
 	configModalJoinClick: `${prefix}_HOME_CONFIG_MODAL_JOIN_CLICK`, // 首页配置化弹框点击参与按钮
 	configModalCloseClick: `${prefix}_HOME_CONFIG_MODAL_CLOSE_CLICK`, // 首页配置化弹框点击关闭按钮
 

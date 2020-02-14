@@ -9,7 +9,6 @@ import { AgreementModal, WelfareModal } from 'components';
 import { setHomeModalAction } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
 import { recordContract } from 'utils';
-
 import OverDueModal from '../OverDueModal';
 import './index.scss';
 
@@ -50,7 +49,6 @@ export default class HomeModal extends Component {
 	 */
 	jumpLand = (item) => {
 		if (item) {
-			const { goHome } = this.props;
 			switch (item.skipType) {
 				case '1':
 					this.setState(
@@ -65,18 +63,29 @@ export default class HomeModal extends Component {
 					break;
 				case '2':
 					if (item.skip === '1') {
-						this.setState(
-							{
-								visible: false
-							},
-							() => {
-								this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
-							}
-						);
+						if (this.props.homeModal && this.props.homeModal.mPosition === '还款结果页') {
+							this.setState(
+								{
+									visible: false
+								},
+								() => {
+									this.props.history.replace({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
+								}
+							);
+						} else {
+							this.setState(
+								{
+									visible: false
+								},
+								() => {
+									this.props.history.push({ pathname: '/mine/coupon_page', search: '?entryFrom=mine' });
+								}
+							);
+						}
 					} else {
 						// 暂时不作处理 只关闭弹框
 						this.closeWelfareModal();
-						if (goHome) {
+						if (this.props.homeModal && this.props.homeModal.mPosition === '账单结清页') {
 							this.props.history.push('/home/home');
 						}
 					}

@@ -1,25 +1,26 @@
 import React from 'react';
 import styles from './index.scss';
-import { Modal } from 'antd-mobile';
 import SXFButton from 'components/ButtonCustom';
 import fetch from 'sx-fetch';
 import circle_icon from './img/circle_icon.png';
 import reward_loading from './img/reward_loading.png';
 import { setBackGround } from 'utils/background';
-// import { store } from 'utils/store';
+import { setHomeModalAction } from 'reduxes/actions/commonActions';
+import { connect } from 'react-redux';
 import { buriedPointEvent } from 'utils/analytins';
-import { order, activity } from 'utils/analytinsType';
-import { repay_payNotify, repay_queryCashRegisterDetail } from 'fetch/api.js';
+import { order } from 'utils/analytinsType';
+import { repay_payNotify, repay_queryCashRegisterDetail, msg_popup_list } from 'fetch/api.js';
 import Images from 'assets/image';
 
-const API = {
-	queryRepayReward: '/activeConfig/queryRepayReward'
-};
 let timer = null;
 let timer1 = null;
 let isFetching = false;
 @fetch.inject()
 @setBackGround('#fff')
+@connect(
+	() => ({}),
+	{ setHomeModalAction }
+)
 export default class Cashier extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -30,10 +31,7 @@ export default class Cashier extends React.PureComponent {
 			repayOrdAmt: 0,
 			crdOrdAmt: 0,
 			failMsg: '',
-			tip_modal: false,
-			reward_modal: false,
 			showRewardLoading: false,
-			rewardDate: '',
 			percent: 0
 		};
 	}
@@ -91,37 +89,41 @@ export default class Cashier extends React.PureComponent {
 		});
 	};
 
-	queryRepayReward = () => {
+	/**
+	 * 复贷活动奖励提示弹框
+	 *
+	 */
+	queryFudaiReward = () => {
 		const { state = {} } = this.props.history.location;
-		const { billDesc, repayPerds, isLastPerd, prodType } = state;
+		const { isLastPerd, prodType } = state;
 		this.startRewardLoading();
 		this.props.$fetch
-			.get(API.queryRepayReward, {
-				totalPerds: billDesc.perdCnt,
-				perdNum: repayPerds[repayPerds.length - 1],
-				entrance: 1
-			})
+			.get(`${msg_popup_list}/2`)
 			.then((res) => {
 				this.stopRewardLoading();
-				if (res.msgCode === 'PTM0000') {
-					this.setState({
-						rewardDate: res.data
+				this.props.setHomeModalAction({
+					DataList: [
+						{
+							code: '999',
+							name: '',
+							backType: '0',
+							backImgUrl: '',
+							btnImgUrl: '',
+							skipType: '0',
+							skip: null,
+							closeFlag: '0',
+							extensionData: {
+								rewardDays: 5
+							}
+						}
+					],
+					mPosition: '还款结果页'
+				});
+				if (res.code === '000000' && res.data && res.data.popups && res.data.popups.length > 0) {
+					this.props.setHomeModalAction({
+						DataList: res.data.popups,
+						mPosition: '还款结果页'
 					});
-					if (res.data === 15) {
-						this.setState({
-							reward_modal: true
-						});
-						buriedPointEvent(activity.rewardResultModalShow, {
-							positon: 'orderRepayResult'
-						});
-					} else {
-						this.setState({
-							tip_modal: true
-						});
-						buriedPointEvent(activity.rewardTipModalShow, {
-							positon: 'orderRepayResult'
-						});
-					}
 				} else if (isLastPerd) {
 					//如果还的是最后一期
 					setTimeout(() => {
@@ -181,7 +183,7 @@ export default class Cashier extends React.PureComponent {
 									repayStatus: this.state.status
 								});
 								if (this.state.status === 'success') {
-									this.queryRepayReward();
+									this.queryFudaiReward();
 									this.queryPlain();
 									clearInterval(timer);
 								}
@@ -256,9 +258,6 @@ export default class Cashier extends React.PureComponent {
 			crdOrdAmt,
 			failMsg,
 			exceedingAmt,
-			tip_modal,
-			reward_modal,
-			rewardDate,
 			showRewardLoading,
 			percent
 		} = this.state;
@@ -301,7 +300,7 @@ export default class Cashier extends React.PureComponent {
 								/>
 							</div>
 							<p className={styles.desc}>处理中</p>
-							<p className={styles.desc_tip}>您正常还款，维护了自身信用</p>
+							<p className={styles.sub_desc}>您正常还款，维护了自身信用</p>
 						</div>
 					)}
 
@@ -358,7 +357,9 @@ export default class Cashier extends React.PureComponent {
 				{exceedingAmt ? (
 					<div className={styles.discount_box}>
 						<span>为您下期账单减免</span>
-						<span className={styles.discount}>{exceedingAmt}元</span>
+						<span className={styles.discount}>
+							<em>{exceedingAmt}</em>元
+						</span>
 					</div>
 				) : null}
 				{showRewardLoading ? (
@@ -368,40 +369,6 @@ export default class Cashier extends React.PureComponent {
 					</div>
 				) : null}
 				{this.renderContinueButton(isLastPerd, status)}
-
-				<Modal wrapClassName={styles.modal_tip} visible={tip_modal} transparent>
-					<i
-						className={styles.close_btn}
-						onClick={() => {
-							this.setState({
-								tip_modal: false
-							});
-							buriedPointEvent(activity.rewardTipModalClose, {
-								positon: 'orderRepayResult'
-							});
-						}}
-					/>
-					<div className={styles.modal_tip_content}>
-						<span className={styles.date}>{rewardDate}天</span>
-					</div>
-				</Modal>
-
-				<Modal wrapClassName={styles.modal_tip} visible={reward_modal} transparent>
-					<div className={styles.modal_tip_content1}>
-						<div
-							onClick={() => {
-								this.props.history.replace({
-									pathname: '/mine/coupon_page',
-									search: '?entryFrom=orderRepayResult'
-								});
-								buriedPointEvent(activity.rewardResultModalClick, {
-									positon: 'orderRepayResult'
-								});
-							}}
-							className={styles.modal_btn}
-						/>
-					</div>
-				</Modal>
 			</div>
 		);
 	}
