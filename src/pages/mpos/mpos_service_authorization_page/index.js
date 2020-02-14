@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-13 16:24:15
+ * @LastEditTime : 2020-02-13 19:24:35
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -69,14 +69,14 @@ export default class mpos_service_authorization_page extends PureComponent {
 								`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`
 							);
 						} else if (res.data.authSts === '0') {
-							// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-							recordContract({
-								contractType: '01,02'
-							});
 							this.props.setUserInfoAction(res.data);
 							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
+							// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+							recordContract({
+								contractType: '01,02'
+							});
 							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 							TFDLogin();
 							this.goHome();

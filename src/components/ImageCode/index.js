@@ -83,21 +83,26 @@ class ImageCode extends React.Component {
 		// 将旧的固定坐标x更新
 		this.setState((pre) => ({ isMovable: false, oldX: pre.currX }));
 		const xAxis = (this.state.currX * this.state.scale).toFixed(2);
-		this.props.onMoveEnd(xAxis, (type) => {
-			if (type === 'success') {
-				this.setState((pre) => ({ status: STATUS_MATCH, currX: pre.offsetX }));
-			} else if (type === 'error') {
-				this.setState({ status: STATUS_ERROR }, () => {
-					this.onReset();
-					this.onShowTips();
-				});
-				// this.props.onError();
-			} else {
-				this.setState({ status: STATUS_ERROR }, () => {
-					this.onShowTips();
-				});
-			}
-		});
+		if (isNaN(xAxis)) {
+			this.callBack('error');
+			return;
+		}
+		this.props.onMoveEnd(xAxis, (type) => this.callBack(type));
+	};
+	callBack = (type) => {
+		if (type === 'success') {
+			this.setState((pre) => ({ status: STATUS_MATCH, currX: pre.offsetX }));
+		} else if (type === 'error') {
+			this.setState({ status: STATUS_ERROR }, () => {
+				this.onReset();
+				this.onShowTips();
+			});
+			// this.props.onError();
+		} else {
+			this.setState({ status: STATUS_ERROR }, () => {
+				this.onShowTips();
+			});
+		}
 	};
 
 	onReset = () => {

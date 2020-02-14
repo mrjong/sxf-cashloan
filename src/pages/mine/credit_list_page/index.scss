@@ -1,8 +1,8 @@
 @import '../../../assets/styles/scss/base/fn';
 
 .credit_list_page {
-  padding: 54px 40px;
-  padding-bottom: 160px;
+	padding: 54px 40px;
+	padding-bottom: 160px;
 	.top_box {
 		display: flex;
 		justify-content: space-between;
@@ -14,14 +14,14 @@
 		font-family: 'PingFangSC-Semibold';
 		font-weight: 600;
 		color: #121c32;
-  }
-  .selectedIco {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 50px;
-    height: 50px;
-  }
+	}
+	.selectedIco {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 50px;
+		height: 50px;
+	}
 	.addCard {
 		display: flex;
 		justify-content: start;
@@ -68,15 +68,43 @@
 		height: 80px;
 		margin-top: 0;
 	}
+	.isDisable {
+		opacity: 0.6;
+	}
+	.newCardBox {
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row;
+		align-items: center;
+	}
 	.lefttexttopnum {
 		font-family: $fontFamilyNumber;
 	}
+	.newCardRightBox {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: row;
+	}
 	.leftTextBottom {
+		letter-spacing: 1px;
 		margin-top: 8px;
 		color: $colorInactiveColor;
 		font-size: 24px;
+  }
+  .popBoxTip{
+    background-color: red;
+    height: 300px;
+    width: 800px;
+  }
+	.popBox {
+		height: 100%;
+		padding: 0 15px;
+		margin-right: -15px;
+		display: flex;
+		align-items: center;
 	}
-	.righticon {
+	.RightIcon {
 		width: 28px;
 		height: 28px;
 		margin-left: 6px;
@@ -102,8 +130,8 @@
 	}
 	.handle_authority {
 		position: fixed;
-    z-index: 99;
-    left: 0;
+		z-index: 99;
+		left: 0;
 		bottom: 0;
 		width: 100%;
 		padding: 20px 40px;

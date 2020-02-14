@@ -292,6 +292,7 @@ export const getNextStatus = ({
 				if (stateObj) {
 					objRouter.state = stateObj;
 				}
+				Toast.hide();
 				$props.history.push(objRouter);
 			}
 		} else {
