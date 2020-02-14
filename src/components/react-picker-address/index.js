@@ -4,7 +4,7 @@ import fetch from 'sx-fetch';
 import { Carousel, Icon } from 'antd-mobile';
 import styles from './index.scss';
 import SelectCityTabBar from './SelectCityTabBar';
-import { msg_area } from 'fetch/api.js';
+import { msg_area } from 'fetch/api';
 const initObj = {
 	code: null,
 	name: '请选择',

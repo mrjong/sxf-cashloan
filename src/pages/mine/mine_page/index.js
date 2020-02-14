@@ -7,7 +7,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import { connect } from 'react-redux';
-import { commonPage } from 'components';
+import { commonPage, FooterBar } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
 import { isWXOpen } from 'utils';
 import { logoutAppHandler } from 'utils/CommonUtil/commonFunc';
@@ -303,7 +303,9 @@ export default class mine_page extends PureComponent {
 							退出登录
 						</div>
 					)}
-					<p className={styles.bottomSlogen}>随行付金融旗下信贷服务</p>
+					<div className={styles.bottomSlogen}>
+						<FooterBar />
+					</div>
 				</div>
 			</div>
 		);

@@ -95,9 +95,9 @@ export default class loan_robot_succ_page extends PureComponent {
 					</div>
 				</div>
 
-				<ZButton className={style.submitBtn} onClick={this.handleButtonClick}>
-					我知道了
-				</ZButton>
+				<div className={style.submitBtnWrap}>
+					<ZButton onClick={this.handleButtonClick}>我知道了</ZButton>
+				</div>
 			</div>
 		);
 	}

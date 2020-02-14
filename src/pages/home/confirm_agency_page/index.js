@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 15:09:27
+ * @LastEditTime : 2020-02-14 16:03:53
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -781,24 +781,8 @@ export default class confirm_agency_page extends PureComponent {
 		}
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
-		// this.isShowLoanModal();
 		this.checkProtocolBindCard();
 	};
-
-	isShowLoanModal = () => {
-		const { $fetch } = this.props;
-		$fetch.get(API.bill_isOpenLoanPopup).then((res) => {
-			// 判断是否开启弹窗 0 打开 1 关闭
-			if (res.code === 'PTM0000' && res.data === '0') {
-				this.setState({
-					isShowLoanTipModal: true
-				});
-			} else {
-				this.checkProtocolBindCard();
-			}
-		});
-	};
-
 	// 关闭春节放款策略弹框
 	closeTipModal = () => {
 		this.setState({

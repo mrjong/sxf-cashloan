@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 13:57:14
+ * @LastEditTime : 2020-02-14 15:39:52
  */
 import FooterBar from './FooterBar';
 import LoadingView from './LoadingView';
@@ -15,7 +15,6 @@ import ActivityModal from './ActivityModal';
 import AgreementModal from './AgreementModal';
 import WelfareModal from './WelfareModal';
 import ProtocolSmsModal from './ProtocolSmsModal';
-import FeedbackModal from './FeedbackModal';
 import TimeoutPayModal from './TimeoutPayModal';
 import AsyncCascadePicker from './AsyncCascadePicker';
 import StepTitle from './StepTitle';
@@ -40,7 +39,6 @@ export {
 	AgreementModal,
 	WelfareModal,
 	ProtocolSmsModal,
-	FeedbackModal,
 	TimeoutPayModal,
 	AsyncCascadePicker,
 	StepTitle,

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-02 16:37:50
+ * @LastEditTime : 2020-02-14 17:01:15
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,7 +11,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
-
+import { download_queryDownloadUrl } from 'fetch/api';
 import {
 	getDeviceType,
 	getFirstError,
@@ -48,8 +48,7 @@ const API = {
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
 	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
-	DOWNLOADURL: 'download/getDownloadUrl'
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 let modalTimer = null;
 
@@ -460,7 +459,7 @@ export default class login_common_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
 		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
 					if (res.msgCode === 'PTM0000') {
 						Toast.info('安全下载中');

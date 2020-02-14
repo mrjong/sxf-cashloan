@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-23 11:12:49
+ * @LastEditTime : 2020-02-14 16:00:20
  */
 export default [
 	{
@@ -42,13 +42,6 @@ export default [
 		component: () => import('pages/mine/select_save_page')
 	},
 	{
-		path: '/mine/membership_card_page',
-		zhName: 'hykgm',
-		title: '会员卡购买',
-		// arrowHide: true,
-		component: () => import('pages/mine/membership_card_page')
-	},
-	{
 		path: '/mine/confirm_purchase_page',
 		zhName: 'qrgm',
 		title: '确认购买',
@@ -83,42 +76,6 @@ export default [
 		zhName: 'yhq',
 		title: '优惠劵',
 		component: () => import('pages/mine/coupon_page')
-	},
-	{
-		path: '/mine/wallet_page',
-		zhName: 'wdqbzh',
-		title: '我的钱包账户',
-		component: () => import('pages/mine/wallet_page')
-	},
-	{
-		path: '/mine/income_page',
-		zhName: 'sr',
-		title: '收入',
-		component: () => import('pages/mine/income_page')
-	},
-	{
-		path: '/mine/withdraw_page',
-		zhName: 'tx',
-		title: '提现',
-		component: () => import('pages/mine/withdraw_page')
-	},
-	{
-		path: '/mine/withdraw_succ_page',
-		zhName: 'txcg',
-		title: '提现成功',
-		component: () => import('pages/mine/withdraw_succ_page')
-	},
-	{
-		path: '/mine/withdraw_fail_page',
-		zhName: 'txsb',
-		title: '提现失败',
-		component: () => import('pages/mine/withdraw_fail_page')
-	},
-	{
-		path: '/mine/withdrawing_page',
-		zhName: 'txz',
-		title: '提现中',
-		component: () => import('pages/mine/withdrawing_page')
 	},
 	{
 		path: '/mine/qiyu_page',

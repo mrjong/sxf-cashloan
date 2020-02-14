@@ -1,7 +1,11 @@
+@import '../../../../../assets/styles/scss/base/fn';
+
 .home_header_wrap {
   padding: 34px 40px 20px;
   background-color: #fff;
-  border-bottom: 1px solid #EBEBEB;
+  &::after {
+		@include setBottomLine($colorDivide);
+	}
   .home_header_main {
     display: flex;
     .home_header_title {

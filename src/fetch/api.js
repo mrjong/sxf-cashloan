@@ -42,7 +42,8 @@ export const pwd_getFaceData = '/pwd/getFaceData';
 export const pwd_updateLoginPwdByFace = '/pwd/updateLoginPwdByFace';
 // 刷新前端用户信息
 export const signup_refreshClientUserInfo = '/signup/refreshClientUserInfo';
-
+// mpos-ab测试标记查询
+export const abt_mpos = '/abt/mpos';
 /**
  * @description: 消息短信相关
  * @param {type}
@@ -77,6 +78,8 @@ export const msg_slide = '/msg/slide';
 export const msg_sms = '/msg/sms';
 // 获取开关  RAS_POINT_SWITCH 埋点开关字典表
 export const msg_switch = '/msg/switch';
+// 获取落地页参数
+export const msg_landingPage = '/msg/landingPage';
 
 /**
  * @description: 首页相关
@@ -294,3 +297,5 @@ export const account_merge = '/account/merge';
 export const calllog_isStoraged = '/calllog/isStoraged';
 // 上传数据
 export const calllog_uploadData = '/calllog/uploadData';
+// 安卓下载地址获取
+export const download_queryDownloadUrl = 'download/queryDownloadUrl';

@@ -12,7 +12,7 @@ $btn_color_gray: #F7F8FA;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	margin-bottom: 0;
+  margin-bottom: 0;
 	font-weight: 400;
 	text-align: center;
 	touch-action: manipulation;
@@ -29,7 +29,7 @@ $btn_color_gray: #F7F8FA;
 	line-height: 1.5;
 	vertical-align: middle;
 	box-sizing: border-box;
-	opacity: 1;
+  opacity: 1;
 	&:active {
 		opacity: 0.5;
 	}

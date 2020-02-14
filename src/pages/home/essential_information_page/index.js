@@ -1,17 +1,17 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-13 10:43:34
+ * @LastEditTime : 2020-02-14 17:27:01
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
 import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
-import { InputItem, List, Modal } from 'antd-mobile';
+import { InputItem, List, Modal, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import { getFirstError, validators, handleInputBlur } from 'utils';
+import { getFirstError, validators, handleInputBlur, recordContract } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
@@ -19,6 +19,7 @@ import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import dayjs from 'dayjs';
+
 import {
 	FixedHelpCenter,
 	AgreementModal,
@@ -36,18 +37,14 @@ import informationMore from './img/back.png';
 
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
-const API = {
-	getProv: '/rcm/qryProv',
-	getRelat: '/rcm/qryRelat',
-	submitData: '/auth/personalData',
-	qryCity: '/rcm/qryCity',
-	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	contractInfo: '/bill/personalDataAuthInfo', // 个人信息授权书数据查询
-	rcm_qryArea: '/rcm/qryArea' // 获取地理位置
-};
 
-import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api.js';
+import {
+	auth_queryUsrBasicInfo,
+	msg_area,
+	msg_relation,
+	auth_personalData,
+	index_queryPLPShowSts
+} from 'fetch/api';
 
 const reducedFilter = (data, keys, fn) => {
 	return data.filter(fn).map((el) =>
@@ -165,7 +162,6 @@ export default class essential_information_page extends PureComponent {
 	};
 	// 回显地址
 	commonFunc = (res, { province, city, district, township }) => {
-		console.log(province, city, district, township);
 		const provCity = store.getProvCity() || [];
 		const cacheData = store.getCacheBaseInfo();
 		store.removeCacheBaseInfo();
@@ -328,37 +324,37 @@ export default class essential_information_page extends PureComponent {
 			let cityItem = [];
 			let areaItem = [];
 			let townshipItem = [];
-			const provItem = reducedFilter(result.data.data, ['key', 'value'], (item) => {
-				let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-				if (proPattern.test(item.value) || proPattern2.test(pro)) {
+			const provItem = reducedFilter(result.data.data, ['code', 'name'], (item) => {
+				let proPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item.name}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+				if (proPattern.test(item.name) || proPattern2.test(pro)) {
 					return item;
 				}
 			});
 			if (provItem && provItem.length > 0) {
-				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].key}`);
-				cityItem = reducedFilter(result2.data.data, ['key', 'value'], (item2) => {
-					let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-					if (cityPattern.test(item2.value) || cityPattern2.test(city)) {
+				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].code}`);
+				cityItem = reducedFilter(result2.data.data, ['code', 'name'], (item2) => {
+					let cityPattern2 = new RegExp(`^[\\u4E00-\\u9FA5]*${item2.name}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+					if (cityPattern.test(item2.name) || cityPattern2.test(city)) {
 						return item2;
 					}
 				});
 			}
 
 			if (cityItem && cityItem.length > 0) {
-				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].key}`);
-				areaItem = reducedFilter(result3.data.data, ['key', 'value'], (item3) => {
-					let areaPattern3 = new RegExp(`^[\\u4E00-\\u9FA5]*${item3.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-					if (areaPattern.test(item3.value) || areaPattern3.test(area)) {
+				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].code}`);
+				areaItem = reducedFilter(result3.data.data, ['code', 'name'], (item3) => {
+					let areaPattern3 = new RegExp(`^[\\u4E00-\\u9FA5]*${item3.name}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+					if (areaPattern.test(item3.name) || areaPattern3.test(area)) {
 						return item3;
 					}
 				});
 			}
 
 			if (areaItem && areaItem.length > 0) {
-				let result4 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].key}`);
-				townshipItem = reducedFilter(result4.data.data, ['key', 'value'], (item4) => {
-					let townshipPattern4 = new RegExp(`^[\\u4E00-\\u9FA5]*${item4.value}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
-					if (townshipPattern.test(item4.value) || townshipPattern4.test(area)) {
+				let result4 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].code}`);
+				townshipItem = reducedFilter(result4.data.data, ['code', 'name'], (item4) => {
+					let townshipPattern4 = new RegExp(`^[\\u4E00-\\u9FA5]*${item4.name}[a-zA-Z0-9\\u4E00-\\u9FA5]*$`);
+					if (townshipPattern.test(item4.name) || townshipPattern4.test(area)) {
 						return item4;
 					}
 				});
@@ -413,38 +409,40 @@ export default class essential_information_page extends PureComponent {
 			let areaItem = [];
 			let streetItem = [];
 
-			const provItem = reducedFilter(result.data.data, ['key', 'value'], (item) => {
-				if (item.key === pro) {
+			const provItem = reducedFilter(result.data.data, ['code', 'name'], (item) => {
+				if (item.code === pro) {
 					return item;
 				}
 			});
+
 			if (provItem && provItem.length > 0) {
-				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].key}`);
-				cityItem = reducedFilter(result2.data.data, ['key', 'value'], (item2) => {
-					if (item2.key === city) {
+				let result2 = await this.props.$fetch.get(`${msg_area}/${provItem && provItem[0].code}`);
+				cityItem = reducedFilter(result2.data.data, ['code', 'name'], (item2) => {
+					if (item2.code === city) {
 						return item2;
 					}
 				});
 			}
 
 			if (cityItem && cityItem.length > 0) {
-				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].key}`);
-				areaItem = reducedFilter(result3.data.data, ['key', 'value'], (item3) => {
-					if (item3.key === area) {
+				let result3 = await this.props.$fetch.get(`${msg_area}/${cityItem && cityItem[0].code}`);
+				areaItem = reducedFilter(result3.data.data, ['code', 'name'], (item3) => {
+					if (item3.code === area) {
 						return item3;
 					}
 				});
 			}
 			if (areaItem && areaItem.length > 0) {
-				let result3 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].key}`);
-				streetItem = reducedFilter(result3.data.data, ['key', 'value'], (item4) => {
-					if (item4.key === street) {
+				let result3 = await this.props.$fetch.get(`${msg_area}/${areaItem && areaItem[0].code}`);
+				streetItem = reducedFilter(result3.data.data, ['code', 'name'], (item4) => {
+					if (item4.code === street) {
 						return item4;
 					}
 				});
 			}
 
 			let addressList = [];
+
 			/**
 			 * @description: 省、市、区
 			 * @param {type}
@@ -463,7 +461,7 @@ export default class essential_information_page extends PureComponent {
 				addressList = [provItem[0], cityItem[0], areaItem[0], streetItem[0]];
 				let areaStr = '';
 				addressList.forEach((element) => {
-					areaStr += element.value + ',';
+					areaStr += element.name + ',';
 				});
 				areaStr = areaStr.substring(0, areaStr.length - 1);
 				this.setState({
@@ -521,7 +519,7 @@ export default class essential_information_page extends PureComponent {
 	handleSubmit = () => {
 		const { ProvincesValue, addressList, selectFlag } = this.state;
 		if (!selectFlag) {
-			this.props.toast.info('请先阅读并勾选相关协议');
+			Toast.info('请先阅读并勾选相关协议');
 			return;
 		}
 		if (submitButtonLocked) return;
@@ -552,22 +550,23 @@ export default class essential_information_page extends PureComponent {
 		let streetCd = '';
 		if (addressList && addressList.length > 0) {
 			if (addressList[0]) {
-				provCd = addressList[0].key;
+				provCd = addressList[0].code;
 			}
 			if (addressList[1]) {
-				cityCd = addressList[1].key;
+				cityCd = addressList[1].code;
 			}
 			if (addressList[2]) {
-				districtCd = addressList[2].key;
+				districtCd = addressList[2].code;
 			}
 
 			if (addressList[3]) {
-				streetCd = addressList[3].key;
+				streetCd = addressList[3].code;
 			}
 		}
+		console.log(streetNm, streetCd, '909090909999999');
 		if (!(streetNm && streetCd)) {
 			submitButtonLocked = false;
-			this.props.toast.info('请选择完整的居住地址');
+			Toast.info('请选择完整的居住地址');
 			return;
 		}
 		// 调基本信息接口
@@ -597,7 +596,7 @@ export default class essential_information_page extends PureComponent {
 							credCorpOrg: ''
 						};
 						if (values.linkphone === values.linkphone2) {
-							this.props.toast.info('联系人手机号重复，请重新填写');
+							Toast.info('联系人手机号重复，请重新填写');
 							// isFetching = false;
 							submitButtonLocked = false;
 							return;
@@ -605,10 +604,12 @@ export default class essential_information_page extends PureComponent {
 
 						// isFetching = true;
 						// values中存放的是经过 getFieldDecorator 包装的表单元素的值
+						Toast.loading('加载中...', 10);
 						this.props.$fetch
 							.post(auth_personalData, params)
 							.then((result) => {
 								submitButtonLocked = false;
+								Toast.hide();
 								if (result && result.code === '000000') {
 									store.setBackFlag(true);
 									// 埋点-基本信息页-确定按钮
@@ -617,7 +618,7 @@ export default class essential_information_page extends PureComponent {
 										current_step: '基本信息认证'
 									});
 									if (this.props.nextStepStatus) {
-										this.props.toast.info('提交成功', 2);
+										Toast.info('提交成功', 2);
 										getNextStatus({
 											RouterType: 'essential_infomation_page',
 											$props: this.props
@@ -625,7 +626,7 @@ export default class essential_information_page extends PureComponent {
 									}
 								} else if (result.code === '000030') {
 									if (this.props.nextStepStatus) {
-										this.props.toast.info('提交成功', 2);
+										Toast.info('提交成功', 2);
 										getNextStatus({
 											RouterType: 'essential_infomation_page',
 											$props: this.props
@@ -634,7 +635,7 @@ export default class essential_information_page extends PureComponent {
 								} else {
 									this.confirmBuryPoint(false, result.message);
 									// isFetching = false;
-									this.props.toast.info(result.message);
+									Toast.info(result.message);
 								}
 							})
 							.catch(() => {
@@ -646,7 +647,7 @@ export default class essential_information_page extends PureComponent {
 					});
 			} else {
 				submitButtonLocked = false;
-				this.props.toast.info(getFirstError(err));
+				Toast.info(getFirstError(err));
 			}
 		});
 	};
@@ -727,27 +728,15 @@ export default class essential_information_page extends PureComponent {
 	quitSubmit = () => {
 		this.props.history.goBack();
 	};
-
-	// 关闭注册协议弹窗
-	readAgreementCb = () => {
-		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
-			if (res && res.code === 'PTM0000') {
-				this.setState({
-					showAgreement: false
-				});
-			}
-		});
-	};
-
 	judgeShowAgree = () => {
-		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
-			if (res && res.code === 'PTM0000') {
+		this.props.$fetch.post(index_queryPLPShowSts).then(async (res) => {
+			if (res && res.code === '000000') {
 				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
 				this.setState({
-					showAgreement: res.data.agreementPopupFlag === '1'
+					showAgreement: res.data.plpSts === '1'
 				});
 			} else {
-				this.props.toast.info(res.message);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -785,7 +774,6 @@ export default class essential_information_page extends PureComponent {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { showAgreement, selectFlag, addressList, visible, ProvincesValue } = this.state;
-		console.log(showAgreement, 'showAgreement');
 		const needNextUrl = store.getNeedNextUrl();
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
@@ -879,7 +867,6 @@ export default class essential_information_page extends PureComponent {
 									}
 								})(
 									<AsyncCascadePicker
-										className="hasborder"
 										title="选择联系人"
 										loadData={[
 											() =>
@@ -1201,7 +1188,17 @@ export default class essential_information_page extends PureComponent {
 						dissmissFun={() => this.handleSetModal(false)}
 					/>
 				</Modal>
-				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
+				<Modal visible={showAgreement} transparent wrapClassName="agreement_modal_warp" maskClosable={false}>
+					<AgreementModal
+						visible={showAgreement}
+						handleClick={() => {
+							this.closeWelfareModal();
+							recordContract({
+								contractType: '02'
+							});
+						}}
+					/>
+				</Modal>
 			</div>
 		);
 	}

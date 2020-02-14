@@ -9,6 +9,7 @@ import TimeoutPayModal from 'components/TimeoutPayModal';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { NoticeBar } from 'antd-mobile';
+import { bank_card_check_func } from 'utils/CommonUtil/getNextStatus';
 import Image from 'assets/image';
 let query = {};
 let autId = '';
@@ -65,30 +66,10 @@ export default class credit_apply_succ_page extends PureComponent {
 			}, 0);
 			return;
 		}
-		const api = autId ? `${API.chkCredCard}/${autId}` : API.isBankCard;
-		this.props.$fetch.get(api).then((result) => {
-			// 跳转至储蓄卡
-			if (result && result.msgCode === 'PTM2003') {
-				store.setCheckCardRouter('checkCardRouter');
-				this.props.toast.info(result.msgInfo);
-				store.setBackUrl('/home/home');
-				setTimeout(() => {
-					this.props.history.replace({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-				}, 3000);
-			} else if (result && result.msgCode === 'PTM2002') {
-				store.setCheckCardRouter('checkCardRouter');
-				this.props.toast.info(result.msgInfo);
-				store.setBackUrl('/home/home');
-				setTimeout(() => {
-					this.props.history.replace({
-						pathname: '/mine/bind_credit_page',
-						search: `?noBankInfo=true&autId=${autId}`
-					});
-				}, 3000);
-			} else {
-				this.props.history.push('/home/home');
-			}
-		});
+		// const api = autId ? `${API.chkCredCard}/${autId}` : API.isBankCard;
+		let query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+		let autId = query && query.autId;
+		bank_card_check_func({ $props: this.props, autId });
 	};
 	// 检查是否是app webview打开
 	checkAppOpen = (e) => {

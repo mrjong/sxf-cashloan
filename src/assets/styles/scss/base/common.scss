@@ -24,14 +24,50 @@
 
 // 覆盖 antd mobile picke和modal样式
 :global {
-	.am-picker-popup-header .am-picker-popup-header-right.am-picker-popup-item,
-	.am-modal-button-group-h a.am-modal-button {
-		color: $colorYellow;
-	}
-	.am-picker-popup-header .am-picker-popup-item,
-	.am-modal-button-group-h a.am-modal-button:first-child {
-		color: #666;
-	}
+  .am-picker-popup {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+  }
+  .am-picker-popup-header {
+    background-image: none !important;
+    background-color: #F7F8FA !important;
+  }
+  .am-picker-popup-header::after {
+    display: none !important;
+  }
+  .am-picker-popup-header .am-picker-popup-header-right,
+  .am-picker-popup-header .am-picker-popup-header-left {
+		color: $colorListText;
+  }
+  .am-picker-popup-header .am-picker-popup-title {
+    color: $colorBlack;
+    font-weight: 500;
+  }
+
+  .am-picker-col-indicator::before,
+  .am-picker-col-indicator::after {
+    background-color: #E0E2E7 !important;
+  }
+  .am-picker-col-item {
+    color: $colorBlack;
+    font-size: 32px;
+  }
+
+  .am-picker-col-mask {
+    background-size: 100% 200px !important;
+  }
+  .am-picker-col-indicator  {
+    top: 200px !important;
+  }
+  .am-picker-col-content {
+    padding: 200px 0 !important;
+  }
+  .am-picker-col-item,
+  .am-picker-col-indicator {
+    height: 80px !important;
+    line-height: 80px !important;
+  }
 }
 //  去掉数字键盘的点
 :global {

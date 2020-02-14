@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-02 15:29:23
+ * @LastEditTime : 2020-02-14 17:01:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -12,10 +12,8 @@ import ButtonCustom from 'components/ButtonCustom';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi } from 'utils/analytinsType';
 import qs from 'qs';
+import { download_queryDownloadUrl } from 'fetch/api';
 import linkConf from 'config/link.conf';
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
 
 @fetch.inject()
 @setBackGround('#fff')
@@ -30,24 +28,20 @@ export default class login_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch
-			.get(API.DOWNLOADURL, {
-				type: '01'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						this.setState({
-							downloadUrl: res.data
-						});
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+		this.props.$fetch.get(`${download_queryDownloadUrl}/01`).then(
+			(res) => {
+				if (res.msgCode === 'PTM0000') {
+					this.setState({
+						downloadUrl: res.data
+					});
+				} else {
+					res.msgInfo && this.props.toast.info(res.msgInfo);
 				}
-			);
+			},
+			(error) => {
+				error.msgInfo && this.props.toast.info(error.msgInfo);
+			}
+		);
 	};
 
 	downloadClick = () => {
@@ -72,9 +66,9 @@ export default class login_page extends PureComponent {
 					<div className={styles.top_title}>还到Plus用户专享</div>
 					<div className={styles.sub_title}>{queryData.cashMoney}额度已到账</div>
 				</div>
-				<ButtonCustom className={styles.joinBtn} onClick={this.downloadClick}>
-					下载APP使用
-				</ButtonCustom>
+				<div className={styles.joinBtnWrap}>
+					<ButtonCustom onClick={this.downloadClick}>下载APP使用</ButtonCustom>
+				</div>
 				<div>
 					<ul className={styles.boxs}>
 						<li className={styles.item}>

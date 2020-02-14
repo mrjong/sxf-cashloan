@@ -1,14 +1,14 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-11 17:19:33
+ * @LastEditTime : 2020-02-14 15:20:46
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import { Toast } from 'antd-mobile';
+import { Toast, Popover } from 'antd-mobile';
 // import qs from 'qs';
 import styles from './index.scss';
-import { ButtonCustom } from 'components';
+import { ButtonCustom, LoadingView } from 'components';
 import { connect } from 'react-redux';
 import { setAuthId } from 'reduxes/actions/staticActions';
 // import { Popover } from 'antd-mobile';
@@ -19,7 +19,18 @@ import { activeConfigSts } from 'utils';
 import { cred_queryCredCard, cred_cacheCredCard } from 'fetch/api';
 import mark_question from './img/mark_question@3x.png';
 import card_select_yellow from './img/card_select_yellow.png';
+import Image from 'assets/image';
 
+const noData = {
+	img: Image.bg.no_order,
+	text: '暂无银行卡',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Image.bg.no_network,
+	text: '网络错误,点击重试'
+};
 @setBackGround('#F7F8FA')
 @fetch.inject()
 @connect(
@@ -47,21 +58,25 @@ export default class credit_list_page extends PureComponent {
 		this.props.$fetch.post(cred_queryCredCard).then(
 			(res) => {
 				if (res.code === '000000') {
-					this.setState({
-						cardList: res.data && res.data.cards ? res.data.cards : [],
-						resultLength: (res.data && res.data.resultLength) || 0
-					});
+					this.setState(
+						{
+							cardList: res.data && res.data.cards ? res.data.cards : [],
+							resultLength: (res.data && res.data.count) || 0
+						},
+						() => {
+							if (res.data && res.data.cards && res.data && res.data.cards.length > 0) {
+								this.viewRef && this.viewRef.showDataView();
+							} else {
+								this.viewRef && this.viewRef.setEmpty();
+							}
+						}
+					);
 				} else {
-					if (res.code === 'PTM3021') {
-						this.setState({
-							cardList: []
-						});
-						return;
-					}
-					res.message && this.props.toast.info(res.message);
+					this.viewRef && this.viewRef.setEmpty();
 				}
 			},
 			(error) => {
+				this.viewRef && this.viewRef.setEmpty();
 				error.message && this.props.toast.info(error.message);
 			}
 		);
@@ -110,13 +125,10 @@ export default class credit_list_page extends PureComponent {
 	};
 	// 新增授权卡
 	goToNewMoXie = async (type) => {
+		store.setGotoMoxieFlag(true);
 		if (type === 'add') {
-			store.setGotoMoxieFlag(true);
 			buriedPointEvent(home.addCreditCard);
-		} else {
-			store.setToggleMoxieCard(true);
 		}
-		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		activeConfigSts({
 			$props: this.props,
 			type: 'B'
@@ -142,7 +154,7 @@ export default class credit_list_page extends PureComponent {
 			tipDesc = '暂不支持该类型信用卡，请添加其他收款信用卡。';
 		}
 		let cardBillSts = item.cardBillSts === '01'; // 00 || 02 需要更新，01:无需更新
-		const icoClass = item.autSts === '2' ? `bank_ico bank_ico_${item.bankNo}` : `bank_ico black_logo`;
+		const icoClass = `bank_ico bank_ico_${item.bankNo}`;
 		const isSelected = this.state.autId === item.autId;
 		const isDisable = tipText || !cardBillSts;
 		return (
@@ -154,7 +166,7 @@ export default class credit_list_page extends PureComponent {
 			>
 				<div className={styles.newCardBox}>
 					<div className={styles.newCardLeftBox}>
-						<span className={`${icoClass} ${styles.bank_icon}`} />
+						<span className={`${icoClass} ${styles.bank_icon} ${isDisable ? styles.isDisable : ''}`} />
 						<div className={styles.leftTextBox}>
 							<span className={[styles.leftTextTop, isDisable ? styles.isDisable : ''].join(' ')}>
 								{item.bankName}(<span className={styles.leftTextTopNum}>{item.lastNo}</span>)
@@ -169,33 +181,26 @@ export default class credit_list_page extends PureComponent {
 					{tipText ? (
 						<div className={styles.newCardRightBox}>
 							<span className={styles.RightText}>{tipText}</span>
-							<div
-								onPress={() => {
-									this[`btnA${index}`].measure((fx, fy, width, height, px, py) => {
-										this.setState({
-											offsetX: px + 40,
-											offsetY: py - 30,
-											tipDesc
-										});
-										this._popoverA.open().catch((e) => {
-											console.log(e);
-										});
-									});
-								}}
-								ref={(c) => {
-									this[`btnA${index}`] = c;
-								}}
+
+							<Popover
+								placement="bottomRight"
+								overlayClassName="credit_list_pagePopover"
+								visible={false}
+								overlay={[
+									<p className={styles.Popover} key="0">
+										{tipDesc}
+									</p>
+								]}
 							>
-								<img src={mark_question} className={[styles.RightIcon]} />
-							</div>
+								<img src={mark_question} className={styles.RightIcon} />
+							</Popover>
 						</div>
 					) : (
 						!cardBillSts && (
 							<div className={styles.newCardRightBox}>
 								<ButtonCustom
-									label="更新账单"
 									size="md"
-									onPress={
+									onClick={
 										// 跳银行登录页面
 										() => {
 											// buidSts 01 绑定成功 可以直接更新
@@ -204,13 +209,15 @@ export default class credit_list_page extends PureComponent {
 												param.autId = item.autId;
 												param.cardNoHid = item.cardNoHid;
 											}
-											this.props.navigation.navigate('CreditAuth', {
-												RouterType: 'selectAuthCard',
-												...param
+											activeConfigSts({
+												$props: this.props,
+												type: 'B'
 											});
 										}
 									}
-								/>
+								>
+									更新账单
+								</ButtonCustom>
 							</div>
 						)
 					)}
@@ -239,19 +246,28 @@ export default class credit_list_page extends PureComponent {
 								<span>添加信用卡</span>
 							</div>
 						</div>
-						<ul
-							className={styles.card_list}
-							style={this.state.cardList.length > 2 ? { paddingBottom: '2.5rem' } : {}}
+						<LoadingView
+							ref={(view) => (this.viewRef = view)}
+							nodata={noData}
+							errordata={errorData}
+							onReloadData={() => {
+								this.queryBankList();
+							}}
 						>
-							{this.state.cardList.map((item, index) => {
-								return <div key={item.autId}>{this.renderItem(item, index)}</div>;
-							})}
-						</ul>
+							<ul
+								className={styles.card_list}
+								style={this.state.cardList.length > 2 ? { paddingBottom: '2.5rem' } : {}}
+							>
+								{this.state.cardList.map((item, index) => {
+									return <div key={item.autId}>{this.renderItem(item, index)}</div>;
+								})}
+							</ul>
+						</LoadingView>
 					</div>
 				) : null}
 				<div className={styles.handle_authority}>
 					<ButtonCustom
-						label=""
+						type={autId ? 'yellow' : 'default'}
 						className={styles.button}
 						onClick={() => {
 							this.sendSelectedCard(autId);

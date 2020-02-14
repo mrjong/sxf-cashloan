@@ -20,7 +20,7 @@ export default class MsgTip extends React.PureComponent {
 	};
 
 	handleGoCustomCenter = () => {
-		this.props.history.push('/mine/qiyu_page');
+		this.props.history.push('/mine/help_center_page');
 	};
 	render() {
 		const { tokenObj, msgCount } = this.props;

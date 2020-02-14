@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2019-12-19 09:43:59
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-14 16:09:44
  */
 export default [
 	{
@@ -51,12 +51,6 @@ export default [
 		component: () => import('pages/home/confirm_agency_page')
 	},
 	{
-		path: '/home/moxie_bank_list_page',
-		zhName: 'tjxyk',
-		title: '添加信用卡',
-		component: () => import('pages/home/moxie_bank_list_page')
-	},
-	{
 		path: '/home/loan_repay_confirm_page',
 		zhName: 'sqjqhk',
 		title: '申请借钱还卡',
@@ -85,18 +79,6 @@ export default [
 		zhName: 'txtx',
 		title: '提现提醒',
 		component: () => import('pages/home/deposit_tip_page')
-	},
-	{
-		path: '/home/crawl_progress_page',
-		zhName: 'tjjd',
-		title: '添加进度',
-		component: () => import('pages/home/crawl_progress_page')
-	},
-	{
-		path: '/home/crawl_fail_page',
-		zhName: 'tjjd2',
-		title: '添加进度',
-		component: () => import('pages/home/crawl_fail_page')
 	},
 	{
 		path: '/home/loan_person_succ_page',
