@@ -72,9 +72,9 @@ export default class login_page extends PureComponent {
 					<div className={styles.top_title}>还到Plus用户专享</div>
 					<div className={styles.sub_title}>{queryData.cashMoney}额度已到账</div>
 				</div>
-				<ButtonCustom className={styles.joinBtn} onClick={this.downloadClick}>
-					下载APP使用
-				</ButtonCustom>
+				<div className={styles.joinBtnWrap}>
+					<ButtonCustom onClick={this.downloadClick}>下载APP使用</ButtonCustom>
+				</div>
 				<div>
 					<ul className={styles.boxs}>
 						<li className={styles.item}>
