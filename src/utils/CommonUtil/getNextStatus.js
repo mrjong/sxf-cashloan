@@ -269,7 +269,7 @@ export const getNextStatus = ({
 				// case 'AUTH011':
 				//   break;
 				case 'AUTH015':
-					routeName = `/home/addInfo?RouterType=${actionType}`;
+					routeName = `/home/addInfo`;
 					break;
 				default:
 					routeName = '/home/home';

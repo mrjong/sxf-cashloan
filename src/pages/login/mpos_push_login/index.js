@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 11:25:24
+ * @LastEditTime : 2020-02-14 18:10:16
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -18,6 +18,7 @@ import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
+
 // import loginModalBg from './img/login_modal.png';
 // import loginModalBtn from './img/login_modal_btn.png';
 import tooltip from './img/tooltip.png';
@@ -33,8 +34,7 @@ const API = {
 	imageCode: '/signup/sendImg',
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	DOWNLOADURL: 'download/getDownloadUrl'
+	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
 };
 
 @setBackGround('#fff')

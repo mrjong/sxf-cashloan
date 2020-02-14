@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 11:25:17
+ * @LastEditTime : 2020-02-14 18:09:41
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -38,7 +38,7 @@ import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { domListen } from 'utils/domListen';
-
+import { download_queryDownloadUrl } from 'fetch/api';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -47,8 +47,7 @@ const API = {
 	createImg: '/cmm/createImg', // 获取滑动大图
 	getRelyToken: '/cmm/getRelyToken', //图片token获取
 	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId', // 用户标识
-	DOWNLOADURL: 'download/getDownloadUrl'
+	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
 };
 
 let entryPageTime = '';
@@ -450,17 +449,17 @@ export default class momo_outer_login_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
-			this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
-					if (res.msgCode === 'PTM0000') {
+					if (res.code === '000000') {
 						Toast.info('安全下载中');
-						window.location.href = res.data;
+						window.location.href = res.data.downloadUrl;
 					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
+						res.message && Toast.info(res.message);
 					}
 				},
 				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
+					error.message && Toast.info(error.message);
 				}
 			);
 		}

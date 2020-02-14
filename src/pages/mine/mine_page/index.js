@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 18:34:11
+ * @LastEditTime : 2020-02-14 18:20:09
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -18,13 +18,6 @@ import { helpCenter } from 'utils/analytinsType';
 import images from 'assets/image';
 import { setBackRouter } from 'reduxes/actions/commonActions';
 import { showRedDot } from 'reduxes/actions/specialActions';
-
-const API = {
-	LOGOUT: '/signup/logout', // 用户退出登陆
-	USERSTATUS: '/signup/getUsrSts', // 用户状态获取
-	couponRedDot: '/index/couponRedDot', // 优惠券红点
-	couponCount: '/index/couponCount' // 优惠券红点
-};
 
 let token = '';
 let tokenFromStorage = '';
@@ -66,14 +59,6 @@ export default class mine_page extends PureComponent {
 			store.setHistoryRouter(window.location.pathname);
 		}
 	}
-	couponRedDot = () => {
-		this.props.$fetch.get(API.couponRedDot).then((result) => {
-			if (result && result.data) {
-				this.props.globalTask(result.data);
-			}
-		});
-	};
-
 	logoutHandler = () => {
 		logoutAppHandler();
 	};

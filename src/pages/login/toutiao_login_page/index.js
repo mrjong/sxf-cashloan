@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-25 18:07:37
+ * @LastEditTime : 2020-02-14 18:10:56
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -27,14 +27,14 @@ import feature_img3 from './img/feature_img3.png';
 import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { download_queryDownloadUrl } from 'fetch/api';
 
 let timmer;
 const API = {
 	smsForLogin: '/passport/loginBySms',
 	createImg: '/passport/createImg', // 获取滑动大图
 	getRelyToken: '/passport/getRelyToken', //图片token获取
-	sendImgSms: '/passport/sendImgSms', //新的验证码获取接口
-	DOWNLOADURL: '/download/getDownloadUrl'
+	sendImgSms: '/passport/sendImgSms' //新的验证码获取接口
 };
 
 let entryPageTime = '';
@@ -375,9 +375,9 @@ export default class momo_outer_login_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
-			this.props.$fetch.get(API.DOWNLOADURL).then(
+			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
-					if (res.code === '0000') {
+					if (res.code === '000000') {
 						Toast.info('安全下载中');
 						window.location.href = res.data.downUrl;
 					} else {

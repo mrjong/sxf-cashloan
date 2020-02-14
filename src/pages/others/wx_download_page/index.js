@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:39:36
+ * @LastEditTime : 2020-02-14 18:04:37
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -12,13 +12,10 @@ import DownloadTip from 'components/DownloadTip';
 import { getDeviceType, isWXOpen } from 'utils';
 import linkConf from 'config/link.conf';
 import { other } from 'utils/analytinsType';
+import { download_queryDownloadUrl } from 'fetch/api';
 // import qs from 'qs';
 import hegui_bg from './img/hegui_bg.png';
 import top_bg from './img/top_bg.png';
-
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -36,18 +33,18 @@ export default class wx_download_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+		this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({
-						downloadUrl: res.data
+						downloadUrl: res.data.downloadUrl
 					});
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};
