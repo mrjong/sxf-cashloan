@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-13 10:43:34
+ * @LastEditTime : 2020-02-14 17:27:01
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,7 +11,7 @@ import { InputItem, List, Modal, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import { getFirstError, validators, handleInputBlur } from 'utils';
+import { getFirstError, validators, handleInputBlur, recordContract } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
@@ -19,6 +19,7 @@ import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import dayjs from 'dayjs';
+
 import {
 	FixedHelpCenter,
 	AgreementModal,
@@ -36,18 +37,14 @@ import informationMore from './img/back.png';
 
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
-const API = {
-	getProv: '/rcm/qryProv',
-	getRelat: '/rcm/qryRelat',
-	submitData: '/auth/personalData',
-	qryCity: '/rcm/qryCity',
-	procedure_user_sts: '/procedure/user/sts', // 判断是否提交授信
-	readAgreement: '/index/saveAgreementViewRecord', // 上报我已阅读协议
-	contractInfo: '/bill/personalDataAuthInfo', // 个人信息授权书数据查询
-	rcm_qryArea: '/rcm/qryArea' // 获取地理位置
-};
 
-import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api.js';
+import {
+	auth_queryUsrBasicInfo,
+	msg_area,
+	msg_relation,
+	auth_personalData,
+	index_queryPLPShowSts
+} from 'fetch/api';
 
 const reducedFilter = (data, keys, fn) => {
 	return data.filter(fn).map((el) =>
@@ -731,24 +728,12 @@ export default class essential_information_page extends PureComponent {
 	quitSubmit = () => {
 		this.props.history.goBack();
 	};
-
-	// 关闭注册协议弹窗
-	readAgreementCb = () => {
-		this.props.$fetch.post(`${API.readAgreement}`).then((res) => {
-			if (res && res.code === 'PTM0000') {
-				this.setState({
-					showAgreement: false
-				});
-			}
-		});
-	};
-
 	judgeShowAgree = () => {
-		this.props.$fetch.post(API.procedure_user_sts).then(async (res) => {
-			if (res && res.code === 'PTM0000') {
+		this.props.$fetch.post(index_queryPLPShowSts).then(async (res) => {
+			if (res && res.code === '000000') {
 				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
 				this.setState({
-					showAgreement: res.data.agreementPopupFlag === '1'
+					showAgreement: res.data.plpSts === '1'
 				});
 			} else {
 				Toast.info(res.message);
@@ -1203,7 +1188,17 @@ export default class essential_information_page extends PureComponent {
 						dissmissFun={() => this.handleSetModal(false)}
 					/>
 				</Modal>
-				<AgreementModal visible={showAgreement} readAgreementCb={this.readAgreementCb} />
+				<Modal visible={showAgreement} transparent wrapClassName="agreement_modal_warp" maskClosable={false}>
+					<AgreementModal
+						visible={showAgreement}
+						handleClick={() => {
+							this.closeWelfareModal();
+							recordContract({
+								contractType: '02'
+							});
+						}}
+					/>
+				</Modal>
 			</div>
 		);
 	}
