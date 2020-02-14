@@ -78,6 +78,8 @@ export const msg_slide = '/msg/slide';
 export const msg_sms = '/msg/sms';
 // 获取开关  RAS_POINT_SWITCH 埋点开关字典表
 export const msg_switch = '/msg/switch';
+// 获取落地页参数
+export const msg_landingPage = '/msg/landingPage';
 
 /**
  * @description: 首页相关

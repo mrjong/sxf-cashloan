@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-21 22:29:59
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-14 16:21:44
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -14,9 +14,8 @@ import { getH5Channel } from 'utils/common';
 import Cookie from 'js-cookie';
 import invalidImg from './img/invalid_img.png';
 import { Modal } from 'antd-mobile';
-
+import { msg_landingPage } from 'fetch/api';
 const API = {
-	LANDING_IMG_URL: '/my/getLandingPage', // 获取落地页配置数据
 	userCount: '/activeConfig/count', // 用户抽奖次数查询
 	userDraw: '/activeConfig/draw' // 用户抽奖
 };
@@ -62,7 +61,7 @@ export default class landing_page extends PureComponent {
 	getLandingImgByUrl() {
 		const searchParams = qs.parse(decodeURI(window.location.search), { ignoreQueryPrefix: true });
 		const landingId = searchParams.landingId || '';
-		this.props.$fetch.get(`${API.LANDING_IMG_URL}/${landingId}`).then((res) => {
+		this.props.$fetch.get(`${msg_landingPage}/${landingId}`).then((res) => {
 			if (res.msgCode === 'PTM0000' && res.data !== null) {
 				if (res.data.landingTitle) {
 					this.props.setTitle(res.data.landingTitle);
