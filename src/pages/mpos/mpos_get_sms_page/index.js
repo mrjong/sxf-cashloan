@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-13 16:38:51
+ * @LastEditTime : 2020-02-14 09:11:24
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -31,8 +31,8 @@ export default class mpos_get_sms_page extends PureComponent {
 			smsText: '获取验证码',
 			timeflag: true,
 			codeInput: '',
-      smsJrnNo: '',
-      showSlideModal: false,
+			smsJrnNo: '',
+			showSlideModal: false,
 			relyToken: ''
 		};
 	}
@@ -277,7 +277,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			});
 	};
 	render() {
-		const { timeflag, smsText, codeInput,showSlideModal } = this.state;
+		const { timeflag, smsText, codeInput, showSlideModal } = this.state;
 
 		return (
 			<div className={styles.allContainer}>
@@ -307,7 +307,7 @@ export default class mpos_get_sms_page extends PureComponent {
 					<img src={click} className={styles.icon} />
 					<div className={styles.agreen}>登录</div>
 				</div>
-        {showSlideModal && (
+				{showSlideModal && (
 					<ImageCode
 						imageUrl={slideImageUrl}
 						smallImageUrl={smallImageUrl}
@@ -344,9 +344,6 @@ export default class mpos_get_sms_page extends PureComponent {
 						</div>
 					</Modal>
 				)}
-			</div>
-		);
-	}
 			</div>
 		);
 	}
