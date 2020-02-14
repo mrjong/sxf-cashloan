@@ -34,6 +34,8 @@ import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { domListen } from 'utils/domListen';
+import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
+import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
 const API = {
@@ -183,9 +185,9 @@ export default class login_page extends PureComponent {
 				if (!this.state.disabledInput) {
 					param.mblNo = values.phoneValue; // 手机号
 				}
-				this.props.$fetch.post(API.smsForLogin, param).then(
+				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
-						if (res.msgCode !== 'PTM0000') {
+						if (res.code !== '000000') {
 							res.msgInfo && Toast.info(res.msgInfo);
 							return;
 						}
@@ -224,32 +226,19 @@ export default class login_page extends PureComponent {
 
 	// 获得手机验证码
 	getSmsCode() {
-		const { queryData } = this.state;
-		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
-				let param = {};
-				if (this.state.disabledInput) {
-					param = {
-						type: '6',
-						authToken: queryData && queryData.tokenId,
-						osType,
-						imgCode: values.imgCd
-					};
-					this.sendSmsCode(param);
-				} else {
-					this.setState(
-						{
-							mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
-						},
-						() => {
-							this.handleTokenAndSms();
-						}
-					);
-				}
+				this.setState(
+					{
+						mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
+					},
+					() => {
+						this.handleTokenAndSms();
+					}
+				);
 			} else {
 				Toast.info(getFirstError(err));
 			}
@@ -265,20 +254,25 @@ export default class login_page extends PureComponent {
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then(() => {
-			this.reloadSlideImage();
-		});
+		this.refreshSlideToken();
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
-				if (result.msgCode === 'PTM0000') {
+			const { queryData } = this.state;
+			let mobilePhone = '';
+			if (this.state.disabledInput) {
+				mobilePhone = queryData.tokenId;
+			} else {
+				mobilePhone = base64Encode(this.state.mobilePhone);
+			}
+			this.props.$fetch.get(`${msg_slide}/${mobilePhone}`).then((result) => {
+				if (result.code === '000003' && result.data && result.data.tokenId) {
 					this.setState({
+						relyToken: (result && result.data && result.data.tokenId) || '',
 						submitData: {
-							relyToken: result.data.relyToken,
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -286,8 +280,18 @@ export default class login_page extends PureComponent {
 						}
 					});
 					resolve();
+				} else if (result.code === '000000') {
+					Toast.hide();
+					this.setState({
+						relyToken: result.data.tokenId,
+						slideImageUrl: result.data.backImage,
+						smallImageUrl: result.data.sliderImage,
+						yOffset: result.data.sliderHeight, // 小图距离大图顶部距离
+						bigImageH: result.data.backHeight, // 大图实际高度
+						showSlideModal: true
+					});
 				} else {
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 				}
 			});
 		});
@@ -295,15 +299,19 @@ export default class login_page extends PureComponent {
 
 	// 获取短信(滑动验证码)
 	sendSlideVerifySmsCode = (xOffset = '', cb) => {
-		let data = Object.assign({}, this.state.submitData, { bFlag: xOffset });
+		const data = {
+			slideDistance: xOffset,
+			tokenId: this.state.relyToken,
+			type: '6'
+		};
 		this.props.$fetch
-			.post(API.sendImgSms, data)
+			.post(msg_sms, data)
 			.then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '000000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
-						smsJrnNo: result.data.smsJrnNo
+						smsJrnNo: result.data.tokenId
 					});
 					cb && cb('success');
 					setTimeout(() => {
@@ -311,17 +319,17 @@ export default class login_page extends PureComponent {
 					}, 1500);
 
 					this.startCountDownTime();
-				} else if (result.msgCode === 'PTM3019') {
+				} else if (result.code === '000006') {
 					// 弹窗不存在时请求大图
-					!this.state.showSlideModal && this.reloadSlideImage();
+					!this.state.showSlideModal && this.handleTokenAndImage();
 					cb && cb('error');
-				} else if (result.msgCode === 'PTM3020') {
+				} else if (result.code === '000004') {
 					//重新刷新relyToken
 					this.handleTokenAndImage();
 					cb && cb('refresh');
 				} else {
 					// 达到短信次数限制
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 					cb && cb('error');
 					this.closeSlideModal();
 				}
@@ -410,12 +418,13 @@ export default class login_page extends PureComponent {
 
 	//获取图片验证码
 	getImage = () => {
-		this.props.$fetch.get(API.imageCode).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+		this.props.$fetch.get(msg_image).then((res) => {
+			if (res && res.code === '000000') {
 				this.setState({
-					imageCodeUrl: res.image
+					imageCodeUrl: res.data.imageBase64,
+					relyToken: res.data.tokenId
 				});
-				store.setNoLoginToken(res.tokenId);
+				// store.setNoLoginToken(res.tokenId);
 			} else {
 				Toast.info(res.msgInfo);
 			}
