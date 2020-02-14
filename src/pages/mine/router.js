@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:39:08
+ * @LastEditTime : 2020-02-14 18:21:19
  */
 export default [
 	{
@@ -22,12 +22,6 @@ export default [
 		zhName: 'bdcxk',
 		title: '绑定储蓄卡',
 		component: () => import('pages/mine/bind_save_page')
-	},
-	{
-		path: '/mine/select_credit_page',
-		zhName: 'xzxyk',
-		title: '选择信用卡',
-		component: () => import('pages/mine/select_credit_page')
 	},
 	{
 		path: '/mine/select_save_page',
