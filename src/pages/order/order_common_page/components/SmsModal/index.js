@@ -7,11 +7,10 @@ import styles from './index.scss';
 import { store } from 'utils/store';
 import { Modal } from 'antd-mobile';
 import { handleInputBlur, recordContract } from '../../../../../utils';
+import { bank_card_protocol_info } from 'fetch/api.js';
+import { ButtonCustom } from 'components';
 
 let timer = null;
-const API = {
-	contractInfo: '/withhold/protocolInfo' // 委托扣款协议数据查询
-};
 export default class SmsModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -70,14 +69,15 @@ export default class SmsModal extends React.PureComponent {
 	readProtocol = () => {
 		const { history, fetch, toast } = this.props;
 		const params = {
-			isEntry: '01'
+			isEntry: '01',
+			cardNoCpt: ''
 		};
-		fetch.post(API.contractInfo, params).then((result) => {
-			if (result && result.msgCode === 'PTM0000' && result.data !== null) {
+		fetch.post(bank_card_protocol_info, params).then((result) => {
+			if (result && result.code === '000000' && result.data !== null) {
 				store.setProtocolFinancialData(result.data);
 				history.push('/protocol/delegation_withhold_page');
 			} else {
-				toast.info(result.msgInfo);
+				toast.info(result.message);
 			}
 		});
 	};
@@ -101,7 +101,9 @@ export default class SmsModal extends React.PureComponent {
 			toggleBtn,
 			selectBankCard,
 			protocolSmsFailFlag,
-			protocolSmsFailInfo
+			protocolSmsFailInfo,
+			buttonDisabled,
+			userInfo
 		} = this.props;
 		return (
 			<Modal visible={true} transparent maskClosable={false} className="smsModal">
@@ -134,51 +136,59 @@ export default class SmsModal extends React.PureComponent {
 				) : (
 					<div className={styles.smsModal}>
 						<div className={styles.main}>
-							<div className={styles.head}>验证码</div>
-							<div className={styles.body}>
-								<div className={styles.desc}>
-									请输入短信验证码，短信已发送到您的手机：{store.getUserPhone()}
-								</div>
-								<div className={styles.smsCode}>
-									<input
-										type="number"
-										placeholder="请输入短信验证码"
-										value={smsCode}
-										onChange={this.handleChange}
-										onBlur={() => {
-											handleInputBlur();
-										}}
-										pattern="[0-9]*"
-									/>
-									{times ? (
-										<span>{times + 's'}</span>
-									) : (
-										<span onClick={this.smsCodeAgain} className={styles.button}>
-											重新获取验证码
-										</span>
-									)}
-								</div>
-								<div className={styles.bottom}>
-									{toggleBtn ? (
-										[
-											<button onClick={onCancel} key="1" className={styles.skipButton}>
-												跳过,直接还款
-											</button>,
-											<button onClick={this.confirmHandler} key="2" className={styles.smallButton}>
-												确定
-											</button>
-										]
-									) : (
-										<button onClick={this.confirmHandler} className={styles.largeButton}>
-											确定
-										</button>
-									)}
-								</div>
-								<p className={styles.tip}>
-									温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意
-									<span onClick={this.readProtocol}>《用户授权扣款委托书》</span>约定扣款
-								</p>
+							<div className={styles.head}>验证手机号</div>
+							<div className={styles.desc}>已发送短信验证码到手机</div>
+							<div className={styles.tel}>{userInfo && userInfo.telNoHid ? userInfo.telNoHid : ''}</div>
+							<div className={styles.smsCode}>
+								<input
+									type="number"
+									placeholder="请输入短信验证码"
+									value={smsCode}
+									onChange={this.handleChange}
+									onBlur={() => {
+										handleInputBlur();
+									}}
+									pattern="[0-9]*"
+								/>
+								{times ? (
+									<span>{times + 's'}</span>
+								) : (
+									<span onClick={this.smsCodeAgain} className={styles.button}>
+										重新获取验证码
+									</span>
+								)}
 							</div>
+							<div className={styles.bottom}>
+								{toggleBtn ? (
+									[
+										<ButtonCustom
+											outline="true"
+											outlinecolor="#9d9d9d"
+											onClick={onCancel}
+											key="1"
+											className={styles.skipButton}
+										>
+											跳过,直接还款
+										</ButtonCustom>,
+										<ButtonCustom
+											type={buttonDisabled ? 'default' : 'yellow'}
+											onClick={this.confirmHandler}
+											key="2"
+											className={styles.smallButton}
+										>
+											确定
+										</ButtonCustom>
+									]
+								) : (
+									<ButtonCustom type={buttonDisabled ? 'default' : 'yellow'} onClick={this.confirmHandler}>
+										确定
+									</ButtonCustom>
+								)}
+							</div>
+							<p className={styles.tip}>
+								温馨提示：为资金安全考虑需进行短信校验，验证完成即视为同意
+								<span onClick={this.readProtocol}>《用户授权扣款委托书》</span>约定扣款
+							</p>
 						</div>
 					</div>
 				)}
