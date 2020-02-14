@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 11:25:38
+ * @LastEditTime : 2020-02-14 20:48:19
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -328,6 +328,7 @@ export default class home_page extends PureComponent {
 				getNextStatus({ $props: this.props });
 				break;
 			case 'LN0007': {
+				Toast.hide();
 				// 放款中
 				let title =
 					homeData && homeData.dcDataInfo && homeData.dcDataInfo.repayType === '0'

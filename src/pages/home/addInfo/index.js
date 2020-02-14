@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:15:28
+ * @LastEditTime : 2020-02-14 21:15:11
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -12,7 +12,6 @@ import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { addinfo } from 'utils/analytinsType';
 import { getFirstError } from 'utils';
 import { setBackGround } from 'utils/background';
-import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { auth_suppleInfo } from 'fetch/api.js';
@@ -115,7 +114,7 @@ export default class add_info extends PureComponent {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { suppleInfo } = this.state;
-		const needNextUrl = store.getNeedNextUrl();
+		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
 				<FixedTopTip />
@@ -168,7 +167,7 @@ export default class add_info extends PureComponent {
 						onClick={this.handleSubmit}
 						className={[style.sureBtn].join(' ')}
 					>
-						{needNextUrl ? '下一步' : '完成'}
+						{nextStepStatus ? '下一步' : '完成'}
 					</ButtonCustom>
 				</div>
 			</div>

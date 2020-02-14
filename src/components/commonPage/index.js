@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-13 12:02:17
+ * @LastEditTime : 2020-02-14 20:03:30
  */
 /*
  * @Author: shawn
@@ -212,7 +212,7 @@ export default () => (WrappedComponent) => {
 					(homeData && (homeData.indexSts === 'LN0009' || homeData.indexSts === 'CN0005'))
 				) {
 					this.props.$fetch
-						.get(index_queryOLPShowSts)
+						.get(index_queryOLPShowSts, null, { hideToast: true })
 						.then((result) => {
 							if (result && result.code === '000000' && result.data && result.data.olpSts === '1') {
 								const { olpSts, decreaseCoupExpiryDate = '', progressInfos = [] } = result.data;
