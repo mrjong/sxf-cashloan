@@ -389,7 +389,7 @@ export default class coupon_page extends PureComponent {
 									{obj && obj.coupCategory === '00' ? (
 										<div className={style.leftCont}>
 											<i className={style.money}>{obj && obj.coupVal}</i>元
-                      <p className={style.leftDesc}>{this.renderCouponType(obj)}</p>
+											<p className={style.leftDesc}>{this.renderCouponType(obj)}</p>
 										</div>
 									) : obj && obj.coupCategory === '03' ? (
 										<span className={style.couponType2}>免息</span>
