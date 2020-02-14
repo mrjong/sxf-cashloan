@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 16:00:20
+ * @LastEditTime : 2020-02-14 17:39:08
  */
 export default [
 	{
@@ -10,12 +10,6 @@ export default [
 		arrowHide: 'empty',
 		component: () => import('pages/mine/mine_page'),
 		footerHide: false
-	},
-	{
-		path: '/mine/bind_bank_card',
-		zhName: 'bdyhk',
-		title: '绑定银行卡',
-		component: () => import('pages/mine/bind_bank_card_page')
 	},
 	{
 		path: '/mine/bind_credit_page',
@@ -41,12 +35,7 @@ export default [
 		title: '选择储蓄卡',
 		component: () => import('pages/mine/select_save_page')
 	},
-	{
-		path: '/mine/confirm_purchase_page',
-		zhName: 'qrgm',
-		title: '确认购买',
-		component: () => import('pages/mine/confirm_purchase_page')
-	},
+
 	{
 		path: '/mine/support_credit_page',
 		zhName: 'xykzcyhklx',
