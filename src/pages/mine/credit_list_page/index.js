@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 15:05:59
+ * @LastEditTime : 2020-02-14 15:20:46
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -146,7 +146,7 @@ export default class credit_list_page extends PureComponent {
 	renderItem = (item, index) => {
 		let tipText = '';
 		let tipDesc = '';
-		if (item.persionCheck === '01') {
+		if (item.persionCheck === '00') {
 			tipText = '非本人卡';
 			tipDesc = '仅支持本人名下信用卡借款，请更换其他信用卡或添加本人名下其他收款信用卡。';
 		} else if (item.cardBinSupport === '00') {
@@ -183,39 +183,17 @@ export default class credit_list_page extends PureComponent {
 							<span className={styles.RightText}>{tipText}</span>
 
 							<Popover
-								overlayClassName="fortest"
-								overlayStyle={{ color: 'currentColor' }}
-								visible={this.state.visible}
-								overlay={[<div className={styles.popBoxTip}>111</div>]}
-								align={{
-									overflow: { adjustY: 0, adjustX: 0 },
-									offset: [-10, 0]
-								}}
-								onVisibleChange={this.handleVisibleChange}
+								placement="bottomRight"
+								overlayClassName="credit_list_pagePopover"
+								visible={false}
+								overlay={[
+									<p className={styles.Popover} key="0">
+										{tipDesc}
+									</p>
+								]}
 							>
-								<div className={styles.popBox}>
-									<img src={mark_question} className={styles.RightIcon} />
-								</div>
+								<img src={mark_question} className={styles.RightIcon} />
 							</Popover>
-							{/* <div
-								onClick={() => {
-									this[`btnA${index}`].measure((fx, fy, width, height, px, py) => {
-										this.setState({
-											offsetX: px + 40,
-											offsetY: py - 30,
-											tipDesc
-										});
-										this._popoverA.open().catch((e) => {
-											console.log(e);
-										});
-									});
-								}}
-								ref={(c) => {
-									this[`btnA${index}`] = c;
-								}}
-							>
-
-							</div> */}
 						</div>
 					) : (
 						!cardBillSts && (
