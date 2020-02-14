@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:38:36
+ * @LastEditTime : 2020-02-14 18:12:51
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -13,10 +13,6 @@ import { getDeviceType, isWXOpen } from 'utils';
 import linkConf from 'config/link.conf';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
-
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
 
 let urlParams = {};
 let entryPageTime = '';
@@ -52,18 +48,18 @@ export default class mpos_download_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+		this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({
-						downloadUrl: res.data
+						downloadUrl: res.data.downloadUrl
 					});
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};

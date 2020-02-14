@@ -75,15 +75,19 @@ export default class LoadingView extends Component {
 	_renderEmpty() {
 		const {
 			nodata = {
-				width: '100%',
-				height: '100%',
+				width: '80%',
+				height: '',
 				img: Image.bg.no_order,
 				text: '暂无数据,点击重试'
 			}
 		} = this.props;
 		return (
-			<div onClick={this.reloadData} style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-				<img src={nodata.img} alt="" style={{ width: nodata.width, height: nodata.height }} />
+			<div onClick={this.reloadData} className={styles.bgWrap}>
+				<img
+					src={nodata.img}
+					className={styles.imgIcon}
+					style={{ width: nodata.width, height: nodata.height }}
+				/>
 				<span className={styles.textNo}>{nodata.text}</span>
 			</div>
 		);
@@ -93,11 +97,15 @@ export default class LoadingView extends Component {
 	 * 加载 出错页
 	 */
 	_renderError() {
-		const { errordata = { img: Image.bg.no_order, text: '点击重试' } } = this.props;
+		const { errordata = { img: Image.bg.no_order, text: '点击重试', width: '80%', height: '' } } = this.props;
 
 		return (
-			<div onClick={this.reloadData} style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-				<img src={errordata.img} alt="" style={{ width: errordata.width, height: errordata.height }} />
+			<div onClick={this.reloadData} className={styles.bgWrap}>
+				<img
+					src={errordata.img}
+					className={styles.imgIcon}
+					style={{ width: errordata.width, height: errordata.height }}
+				/>
 				<span className={styles.textNo}>{errordata.text}</span>
 			</div>
 		);

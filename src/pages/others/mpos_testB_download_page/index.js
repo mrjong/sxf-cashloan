@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-31 10:53:49
+ * @LastEditTime : 2020-02-14 18:17:24
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -12,10 +12,8 @@ import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
 import check_img from './img/check_img.png';
 import SXFButton from 'components/ButtonCustom';
+import { download_queryDownloadUrl } from 'fetch/api';
 
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
@@ -33,22 +31,18 @@ export default class mpos_download_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch
-			.get(API.DOWNLOADURL, {
-				type: '03'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						window.location.href = res.data;
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+		this.props.$fetch.get(`${download_queryDownloadUrl}/03`).then(
+			(res) => {
+				if (res.code === '000000') {
+					window.location.href = res.data.downloadUrl;
+				} else {
+					res.message && this.props.toast.info(res.message);
 				}
-			);
+			},
+			(error) => {
+				error.message && this.props.toast.info(error.message);
+			}
+		);
 	};
 
 	downloadClickFun = () => {

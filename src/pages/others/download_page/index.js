@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:38:05
+ * @LastEditTime : 2020-02-14 18:12:15
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,9 +11,7 @@ import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
 
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
+import { download_queryDownloadUrl } from 'fetch/api';
 
 let entryPageTime = '';
 
@@ -43,18 +41,18 @@ export default class download_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
+		this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 			(res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					this.setState({
-						downloadUrl: res.data
+						downloadUrl: res.data.downloadUrl
 					});
 				} else {
-					res.msgInfo && this.props.toast.info(res.msgInfo);
+					res.message && this.props.toast.info(res.message);
 				}
 			},
 			(error) => {
-				error.msgInfo && this.props.toast.info(error.msgInfo);
+				error.message && this.props.toast.info(error.message);
 			}
 		);
 	};

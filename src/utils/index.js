@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 11:39:41
+ * @LastEditTime : 2020-02-14 17:55:33
  */
 /*eslint-disable */
 import React from 'react';
@@ -240,40 +240,6 @@ export const closePage = () => {
 	if (window.passValue) {
 		return window.passValue();
 	}
-};
-/**
- * @description: 信用卡前置
- * @param {type}
- * @return:
- */
-export const getBindCardStatus = ({ $props }) => {
-	return new Promise((resolve, reject) => {
-		let autIdCopy = store.getAutIdCard();
-		$props.$fetch
-			.get(`${API.chkCredCard}/${autIdCopy}`)
-			.then((result) => {
-				// 跳转至储蓄卡
-				if (result && (result.msgCode === 'PTM2003' || result.msgCode === 'PTM0000')) {
-					resolve('1');
-				} else if (result && result.msgCode === 'PTM2002') {
-					store.setCheckCardRouter('loan_repay_confirm_page');
-					$props.toast.info(result.msgInfo);
-					store.setBackUrl('/home/loan_repay_confirm_page');
-					setTimeout(() => {
-						$props.history.replace({
-							pathname: '/mine/bind_credit_page',
-							search: `?noBankInfo=true&autId=${autIdCopy}&action=handleClickConfirm`
-						});
-					}, 3000);
-					resolve('0');
-				} else {
-					$props.history.push('/home/home');
-				}
-			})
-			.catch(() => {
-				reject();
-			});
-	});
 };
 // 确认按钮点击事件 提交到风控
 export const handleClickConfirm = async ($props, repaymentDate, goHome) => {

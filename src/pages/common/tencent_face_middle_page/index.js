@@ -1,12 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-17 13:57:34
+ * @LastEditTime : 2020-02-14 17:56:30
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import { getNextStr, getDeviceType, handleClickConfirm, activeConfigSts, getBindCardStatus } from 'utils';
+import { getNextStr, getDeviceType, handleClickConfirm, activeConfigSts } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
+import { getBindCardStatus } from 'utils/CommonUtil/getNextStatus';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
 import faceImg from './face.png';

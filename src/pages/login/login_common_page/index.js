@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:01:15
+ * @LastEditTime : 2020-02-14 18:06:00
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -207,8 +207,8 @@ export default class login_common_page extends PureComponent {
 					}
 					this.props.$fetch.post(API.smsForLogin, param).then(
 						(res) => {
-							if (res.msgCode !== 'PTM0000') {
-								res.msgInfo && Toast.info(res.msgInfo);
+							if (res.code !== 'PTM0000') {
+								res.message && Toast.info(res.message);
 								return;
 							}
 							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
@@ -232,8 +232,8 @@ export default class login_common_page extends PureComponent {
 							});
 						},
 						(error) => {
-							error.msgInfo &&
-								Toast.info(error.msgInfo, 3, () => {
+							error.message &&
+								Toast.info(error.message, 3, () => {
 									this.state.disabledInput && this.getImage();
 								});
 						}
@@ -306,7 +306,7 @@ export default class login_common_page extends PureComponent {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === 'PTM0000') {
 					this.setState({
 						submitData: {
 							relyToken: result.data.relyToken,
@@ -318,7 +318,7 @@ export default class login_common_page extends PureComponent {
 					});
 					resolve();
 				} else {
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 				}
 			});
 		});
@@ -330,7 +330,7 @@ export default class login_common_page extends PureComponent {
 		this.props.$fetch
 			.post(API.sendImgSms, data)
 			.then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === 'PTM0000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
@@ -342,17 +342,17 @@ export default class login_common_page extends PureComponent {
 					}, 1500);
 
 					this.startCountDownTime();
-				} else if (result.msgCode === 'PTM3019') {
+				} else if (result.code === 'PTM3019') {
 					// 弹窗不存在时请求大图
 					!this.state.showSlideModal && this.reloadSlideImage();
 					cb && cb('error');
-				} else if (result.msgCode === 'PTM3020') {
+				} else if (result.code === 'PTM3020') {
 					//重新刷新relyToken
 					this.handleTokenAndImage();
 					cb && cb('refresh');
 				} else {
 					// 达到短信次数限制
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 					cb && cb('error');
 					this.closeSlideModal();
 				}
@@ -365,7 +365,7 @@ export default class login_common_page extends PureComponent {
 
 	reloadSlideImage = () => {
 		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === 'PTM0000') {
 				this.setState({
 					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
 					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
@@ -374,7 +374,7 @@ export default class login_common_page extends PureComponent {
 					showSlideModal: true
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -390,12 +390,12 @@ export default class login_common_page extends PureComponent {
 	// 老的获取短信验证码(mpos)
 	sendSmsCode = (param) => {
 		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
+			if (result.code === 'PTM0000') {
 				Toast.info('发送成功，请注意查收！');
 				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 				this.startCountDownTime();
 			} else {
-				Toast.info(result.msgInfo, 3, () => {
+				Toast.info(result.message, 3, () => {
 					this.getImage();
 				});
 			}
@@ -441,13 +441,13 @@ export default class login_common_page extends PureComponent {
 	//获取图片验证码
 	getImage = () => {
 		this.props.$fetch.get(API.imageCode).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+			if (res && res.code === 'PTM0000') {
 				this.setState({
 					imageCodeUrl: res.image
 				});
 				store.setNoLoginToken(res.tokenId);
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -461,15 +461,15 @@ export default class login_common_page extends PureComponent {
 		} else {
 			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
-					if (res.msgCode === 'PTM0000') {
+					if (res.code === '000000') {
 						Toast.info('安全下载中');
-						window.location.href = res.data;
+						window.location.href = res.data.downloadUrl;
 					} else {
-						res.msgInfo && Toast.info(res.msgInfo);
+						res.message && Toast.info(res.message);
 					}
 				},
 				(error) => {
-					error.msgInfo && Toast.info(error.msgInfo);
+					error.message && Toast.info(error.message);
 				}
 			);
 		}

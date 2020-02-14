@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-05 14:39:27
+ * @LastEditTime : 2020-02-14 18:18:05
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -14,9 +14,7 @@ import { other } from 'utils/analytinsType';
 import logo from './img/logo.png';
 import cardBg from './img/card_bg.png';
 
-const API = {
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
+import { download_queryDownloadUrl } from 'fetch/api';
 
 @fetch.inject()
 @setBackGround('#fff')
@@ -27,22 +25,18 @@ export default class outer_download_page extends PureComponent {
 	}
 
 	getDownloadUrl = () => {
-		this.props.$fetch
-			.get(API.DOWNLOADURL, {
-				type: '03'
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						window.location.href = res.data;
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+		this.props.$fetch.get(`${download_queryDownloadUrl}/03`).then(
+			(res) => {
+				if (res.code === '000000') {
+					window.location.href = res.data.downloadUrl;
+				} else {
+					res.message && this.props.toast.info(res.message);
 				}
-			);
+			},
+			(error) => {
+				error.message && this.props.toast.info(error.message);
+			}
+		);
 	};
 
 	downloadClick = () => {

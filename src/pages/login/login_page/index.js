@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:02:25
+ * @LastEditTime : 2020-02-14 18:07:55
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -50,16 +50,7 @@ import closeIco from './img/close_ico.png';
 let timmer;
 let modalTimer = null;
 let entryPageTime = '';
-const API = {
-	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
-	getStw: '/my/getStsw', // 获取4个认证项的状态(看基本信息是否认证)
-	imageCode: '/signup/sendImg',
-	createImg: '/cmm/createImg', // 获取滑动大图
-	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	DOWNLOADURL: 'download/getDownloadUrl'
-};
+
 @fetch.inject()
 @createForm()
 @domListen()
@@ -542,9 +533,9 @@ export default class login_page extends PureComponent {
 		} else {
 			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
-					if (res.code === 'PTM0000') {
+					if (res.code === '000000') {
 						Toast.info('安全下载中');
-						window.location.href = res.data;
+						window.location.href = res.data.downloadUrl;
 					} else {
 						res.message && Toast.info(res.message);
 					}
