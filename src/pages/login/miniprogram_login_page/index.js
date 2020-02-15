@@ -20,6 +20,11 @@ import ImageCode from 'components/ImageCode';
 import { miniprogram } from '../../../utils/analytinsType';
 import CopyModal from 'components/CopyModal';
 
+import { connect } from 'react-redux';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { base64Encode } from 'utils/CommonUtil/toolUtil';
+
 let timmer;
 
 const API = {
@@ -34,6 +39,10 @@ const API = {
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
+@connect(
+	(state) => state,
+	{ setUserInfoAction }
+)
 export default class miniprogram_login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -157,21 +166,27 @@ export default class miniprogram_login_page extends PureComponent {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				let param = {
-					smsJrnNo: this.state.smsJrnNo, // 短信流水号
-					osType, // 操作系统
-					smsCd: values.smsCd,
-					usrCnl: getH5Channel(), // 用户渠道
-					location: (queryData && queryData.location) || '-1,-1' // 定位地址 TODO 从session取
+					tokenId: this.state.relyToken, // 短信流水号
+					osType: osType.toLowerCase(), // 操作系统
+					loginType: '0',
+					smsCode: values.smsCd,
+					imei: '',
+					mac: '',
+					registrationId: '',
+					userChannel: getH5Channel(), // 用户渠道
+					location: store.getPosition() // 定位地址 TODO 从session取
 				};
 				if (!this.state.disabledInput) {
 					param.mblNo = values.phoneValue; // 手机号
 				}
-				this.props.$fetch.post(API.smsForLogin, param).then(
+				Toast.loading('加载中...', 10);
+				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
-						if (res.msgCode !== 'PTM0000') {
-							res.msgInfo && Toast.info(res.msgInfo);
+						if (res.code !== '000000') {
+							res.message && Toast.info(res.message);
 							return;
 						}
+						this.props.setUserInfoAction(res.data);
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
@@ -188,8 +203,8 @@ export default class miniprogram_login_page extends PureComponent {
 						});
 					},
 					(error) => {
-						error.msgInfo &&
-							Toast.info(error.msgInfo, 3, () => {
+						error.message &&
+							Toast.info(error.message, 3, () => {
 								this.state.disabledInput && this.getImage();
 							});
 					}
@@ -249,20 +264,26 @@ export default class miniprogram_login_page extends PureComponent {
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken().then(() => {
-			this.reloadSlideImage();
-		});
+		this.refreshSlideToken();
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			this.props.$fetch.post(API.getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
-				if (result.msgCode === 'PTM0000') {
+			const { queryData } = this.state;
+			let mobilePhone = '';
+			if (this.state.disabledInput) {
+				mobilePhone = queryData.tokenId;
+			} else {
+				mobilePhone = base64Encode(this.state.mobilePhone);
+			}
+			Toast.loading('加载中...', 10);
+			this.props.$fetch.get(`${msg_slide}/${mobilePhone}`).then((result) => {
+				if (result.code === '000003') {
 					this.setState({
+						relyToken: (result && result.data && result.data.tokenId) || '',
 						submitData: {
-							relyToken: result.data.relyToken,
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -270,8 +291,18 @@ export default class miniprogram_login_page extends PureComponent {
 						}
 					});
 					resolve();
+				} else if (result.code === '000000') {
+					Toast.hide();
+					this.setState({
+						relyToken: result.data.tokenId,
+						slideImageUrl: result.data.backImage,
+						smallImageUrl: result.data.sliderImage,
+						yOffset: result.data.sliderHeight, // 小图距离大图顶部距离
+						bigImageH: result.data.backHeight, // 大图实际高度
+						showSlideModal: true
+					});
 				} else {
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 				}
 			});
 		});
@@ -283,11 +314,11 @@ export default class miniprogram_login_page extends PureComponent {
 		this.props.$fetch
 			.post(API.sendImgSms, data)
 			.then((result) => {
-				if (result.msgCode === 'PTM0000') {
+				if (result.code === '000000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
-						smsJrnNo: result.data.smsJrnNo
+						smsJrnNo: result.data.tokenId
 					});
 					cb && cb('success');
 					setTimeout(() => {
@@ -295,17 +326,17 @@ export default class miniprogram_login_page extends PureComponent {
 					}, 1500);
 
 					this.startCountDownTime();
-				} else if (result.msgCode === 'PTM3019') {
+				} else if (result.code === 'PTM3019') {
 					// 弹窗不存在时请求大图
-					!this.state.showSlideModal && this.reloadSlideImage();
+					!this.state.showSlideModal && this.handleTokenAndImage();
 					cb && cb('error');
-				} else if (result.msgCode === 'PTM3020') {
+				} else if (result.code === 'PTM3020') {
 					//重新刷新relyToken
 					this.handleTokenAndImage();
 					cb && cb('refresh');
 				} else {
 					// 达到短信次数限制
-					Toast.info(result.msgInfo);
+					Toast.info(result.message);
 					cb && cb('error');
 					this.closeSlideModal();
 				}
@@ -385,14 +416,15 @@ export default class miniprogram_login_page extends PureComponent {
 
 	//获取图片验证码
 	getImage = () => {
-		this.props.$fetch.get(API.imageCode).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+		this.props.$fetch.get(msg_image).then((res) => {
+			if (res && res.code === '000000') {
 				this.setState({
-					imageCodeUrl: res.image
+					imageCodeUrl: res.data.imageBase64,
+					relyToken: res.data.tokenId
 				});
 				store.setNoLoginToken(res.tokenId);
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};

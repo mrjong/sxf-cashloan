@@ -34,6 +34,8 @@ import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { domListen } from 'utils/domListen';
+import { connect } from 'react-redux';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
@@ -45,6 +47,10 @@ let entryPageTime = '';
 @fetch.inject()
 @createForm()
 @domListen()
+@connect(
+	(state) => state,
+	{ setUserInfoAction }
+)
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -188,6 +194,7 @@ export default class login_page extends PureComponent {
 							return;
 						}
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+						this.props.setUserInfoAction(res.data);
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke

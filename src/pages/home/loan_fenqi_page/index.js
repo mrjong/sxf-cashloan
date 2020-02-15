@@ -475,16 +475,11 @@ export default class loan_fenqi_page extends PureComponent {
 	readContract = (item) => {
 		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
 		this.storeTempData();
+		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${
-					item.contractType
-				}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${
-					item.prodId
-				}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&fin-v-card-token=${Cookie.get(
-					'FIN-HD-AUTH-TOKEN'
-				) || store.getToken()}`,
+				url: `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId${tokenId}=&fin-v-card-token=${tokenId}`,
 				name: item.contractMdlName
 			}
 		});
