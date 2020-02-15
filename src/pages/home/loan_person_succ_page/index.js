@@ -17,6 +17,8 @@ import Images from 'assets/image';
 import qs from 'qs';
 import { store } from '../../../utils/store';
 
+import { person_appointment_info, person_appointment_sub } from 'fetch/api.js';
+
 let queryData = null;
 
 @setBackGround('#fff')
@@ -55,8 +57,8 @@ export default class remit_ing_page extends PureComponent {
 	}
 
 	querySubscribeInfo = () => {
-		this.props.$fetch.get(`/bill/querySubscribeInfo/${queryData.creadNo}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
+		this.props.$fetch.get(`${person_appointment_info}/${queryData.creadNo}`).then((res) => {
+			if (res && res.code === '000000') {
 				const { applyDate, applyTime, today, tomorrow, scheduledTime } = res.data || {};
 				if (res.data.existFlag === '1') {
 					this.setState({
@@ -76,7 +78,7 @@ export default class remit_ing_page extends PureComponent {
 					);
 				}
 			} else {
-				this.props.toast.info(res.msgInfo);
+				this.props.toast.info(res.message);
 			}
 		});
 	};
@@ -88,13 +90,13 @@ export default class remit_ing_page extends PureComponent {
 			return;
 		}
 		this.props.$fetch
-			.post(`/bill/submitSubscribe`, {
+			.post(person_appointment_sub, {
 				applyDateCode: daySelectedItem.code,
 				applyTimeCode: timeSelectedItem.code,
 				credApplNo: queryData.creadNo
 			})
 			.then((res) => {
-				if (res && res.msgCode === 'PTM0000') {
+				if (res && res.code === '000000') {
 					buriedPointEvent(manualAudit.order_submit, {
 						s_day: daySelectedItem.day,
 						s_time: timeSelectedItem.time,
@@ -107,7 +109,7 @@ export default class remit_ing_page extends PureComponent {
 						clearTimeout(timer);
 					}, 2000);
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			});
 	};
@@ -204,43 +206,7 @@ export default class remit_ing_page extends PureComponent {
 			applyTime,
 			today,
 			tomorrow,
-			scheduledTime = [
-				{
-					name: '上午',
-					timeItems: [
-						{
-							time: '09:76',
-							code: '11',
-							availiable: true
-						}
-					]
-				},
-				{
-					name: '上午2',
-					timeItems: [
-						{
-							time: '09:76',
-							code: '21',
-							availiable: true
-						},
-						{
-							time: '09:46',
-							code: '22',
-							availiable: false
-						}
-					]
-				},
-				{
-					name: '上午3',
-					timeItems: [
-						{
-							time: '09:76',
-							code: '31',
-							availiable: true
-						}
-					]
-				}
-			],
+			scheduledTime,
 			daySelectedItem,
 			timeSelectedItem
 		} = this.state;

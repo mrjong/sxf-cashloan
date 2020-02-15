@@ -302,3 +302,9 @@ export const calllog_isStoraged = '/calllog/isStoraged';
 export const calllog_uploadData = '/calllog/uploadData';
 // 安卓下载地址获取
 export const download_queryDownloadUrl = 'download/queryDownloadUrl';
+
+// 人审预约查询接口
+export const person_appointment_info = '/peap/queryPersonAppointmentInfo';
+
+// 人神提交预约记录
+export const person_appointment_sub = '/peap/personAppointment';
