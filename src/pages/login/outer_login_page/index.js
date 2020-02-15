@@ -38,14 +38,6 @@ import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
-const API = {
-	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
-	imageCode: '/signup/sendImg',
-	createImg: '/cmm/createImg', // 获取滑动大图
-	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
-};
 
 let entryPageTime = '';
 
@@ -176,10 +168,14 @@ export default class login_page extends PureComponent {
 			if (!err) {
 				buriedPointEvent(daicao.loginBtn);
 				let param = {
-					smsJrnNo: this.state.smsJrnNo, // 短信流水号
-					osType, // 操作系统
-					smsCd: values.smsCd,
-					usrCnl: getH5Channel(), // 用户渠道
+					tokenId: this.state.relyToken, // 短信流水号
+					osType: osType.toLowerCase(), // 操作系统
+					loginType: '0',
+					smsCode: values.smsCd,
+					imei: '',
+					mac: '',
+					registrationId: '',
+					userChannel: getH5Channel(), // 用户渠道
 					location: store.getPosition() // 定位地址 TODO 从session取
 				};
 				if (!this.state.disabledInput) {
@@ -262,6 +258,7 @@ export default class login_page extends PureComponent {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
 			const { queryData } = this.state;
+			Toast.loading('加载中...', 10);
 			let mobilePhone = '';
 			if (this.state.disabledInput) {
 				mobilePhone = queryData.tokenId;
@@ -340,43 +337,12 @@ export default class login_page extends PureComponent {
 			});
 	};
 
-	reloadSlideImage = () => {
-		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
-					yOffset: res.data.sy, // 小图距离大图顶部距离
-					bigImageH: res.data.bh, // 大图实际高度
-					showSlideModal: true
-				});
-			} else {
-				Toast.info(res.msgInfo);
-			}
-		});
-	};
-
 	showSlideModal = () => {
 		this.setState({ showSlideModal: true });
 	};
 
 	closeSlideModal = () => {
 		this.setState({ showSlideModal: false });
-	};
-
-	// 老的获取短信验证码(mpos)
-	sendSmsCode = (param) => {
-		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
-				Toast.info('发送成功，请注意查收！');
-				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-				this.startCountDownTime();
-			} else {
-				Toast.info(result.msgInfo, 3, () => {
-					this.getImage();
-				});
-			}
-		});
 	};
 
 	startCountDownTime = () => {
