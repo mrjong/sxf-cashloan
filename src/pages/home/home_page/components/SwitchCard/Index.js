@@ -198,7 +198,7 @@ export default class SwitchCard extends Component {
 				<div className={classNM.itemWrap} key={index}>
 					{showLeft ? prevPlaceHolder : null}
 					<div className={classNM.itemContainer} style={itemContainerFinal}>
-						<SwitchCardItem {...item} />
+						<SwitchCardItem myIndex={index} activeIndex={this.state.activeIndex} {...item} />
 					</div>
 					{showRight ? nextPlaceHolder : null}
 				</div>

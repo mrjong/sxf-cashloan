@@ -246,9 +246,17 @@ export default class ActivityEntry extends React.PureComponent {
 	}
 
 	render() {
-		const { title, titleSub } = this.props;
+		const { myIndex, activeIndex, title, titleSub } = this.props;
 		return (
-			<div className={classNM.cardWrap} style={this.buildCardWrapStyle()}>
+			<div
+				className={[
+					classNM.cardWrap,
+					myIndex === activeIndex && classNM.cardWrapActive,
+					myIndex < activeIndex && classNM.cardWrapBehidInLeft,
+					myIndex > activeIndex && classNM.cardWrapBehidInRight
+				].join(' ')}
+				style={this.buildCardWrapStyle()}
+			>
 				<div className={classNM.header} style={this.buildHeaderStyle()}>
 					<div className={classNM.cardNameWrap}>
 						<span className={classNM.cardName} style={this.buildCardNameStyle()}>

@@ -5,7 +5,8 @@
 .itemWrap {
   display: flex;
   flex-direction: row;
-  height: 360px;
+  // height: 360px;
+  padding-bottom: 30px;
 }
 .itemContainer {
   flex: 1
