@@ -9,6 +9,7 @@ import { Modal } from 'antd-mobile';
 import { ButtonCustom } from 'components';
 import { bank_card_protocol_info } from 'fetch/api';
 import { handleInputBlur, recordContract } from 'utils';
+import { base64Decode } from 'utils/CommonUtil/toolUtil';
 
 let timer = null;
 
@@ -74,7 +75,18 @@ export default class ProtocolSmsModal extends React.PureComponent {
 		};
 		fetch.post(bank_card_protocol_info, params).then((result) => {
 			if (result && result.code === '000000' && result.data !== null) {
-				store.setProtocolFinancialData(result.data);
+				//敏感信息密文改明文
+				const list = result.data.bankList.map((item) => ({
+					cardNo: base64Decode(item.cardNo),
+					bankName: item.bankName
+				}));
+				const data = {
+					...result.data,
+					name: base64Decode(result.data.name),
+					idNo: base64Decode(result.data.idNo),
+					bankList: list
+				};
+				store.setProtocolFinancialData(data);
 				history.push('/protocol/delegation_withhold_page');
 			} else {
 				toast.info(result.message);

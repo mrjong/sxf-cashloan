@@ -11,6 +11,12 @@
  */
 export const STATIC_USER_INFO = 'STATIC_USER_INFO';
 /**
+ * @description: 协议预览敏感信息
+ * @param {type}
+ * @return:
+ */
+export const STATIC_PROTOCOL_PREVIEW_INFO = 'STATIC_PROTOCOL_PREVIEW_INFO';
+/**
  * @description:  清除所有static
  * @param {type}
  * @return:

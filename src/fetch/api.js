@@ -224,6 +224,9 @@ export const bank_card_protocol_sms = '/bank/card/protocol/sms';
 export const bank_card_protocol_bind = '/bank/card/protocol/bind';
 // 用户协议支付合同预览信息查询接口
 export const bank_card_protocol_info = '/bank/card/protocol/info';
+// 所有协议通用的预览回显数据
+export const bank_card_contract_info = '/bank/card/contract/info';
+
 /**
  * @description: // 红包账户相关
  * @param {type}
