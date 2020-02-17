@@ -1,10 +1,7 @@
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import styles from './index.scss';
-
-const API = {
-	SUPPORTBANKLIST: '/rcm/qrySurportBank' // 银行卡列表
-};
+import { bank_card_valid } from 'fetch/api.js';
 
 @fetch.inject()
 export default class support_credit_page extends PureComponent {
@@ -20,25 +17,20 @@ export default class support_credit_page extends PureComponent {
 
 	// 获取银行卡列表
 	queryBankList = () => {
-		this.props.$fetch
-			.post(API.SUPPORTBANKLIST, {
-				cardTyp: 'C',
-				corpBusTyp: ''
-			})
-			.then(
-				(res) => {
-					if (res.msgCode === 'PTM0000') {
-						this.setState({
-							cardList: res.data ? res.data : []
-						});
-					} else {
-						res.msgInfo && this.props.toast.info(res.msgInfo);
-					}
-				},
-				(error) => {
-					error.msgInfo && this.props.toast.info(error.msgInfo);
+		this.props.$fetch.get(`${bank_card_valid}/C`).then(
+			(res) => {
+				if (res.code === '000000') {
+					this.setState({
+						cardList: res.data && res.data.validBanks ? res.data.validBanks : []
+					});
+				} else {
+					res.message && this.props.toast.info(res.message);
 				}
-			);
+			},
+			(error) => {
+				error.message && this.props.toast.info(error.message);
+			}
+		);
 	};
 
 	render() {
@@ -49,8 +41,8 @@ export default class support_credit_page extends PureComponent {
 						{this.state.cardList.map((item, index) => {
 							return (
 								<li key={index}>
-									<span className={`bank_ico bank_ico_${item.bankCd}`}></span>
-									<span className={styles.bank_name}>{item.bankNm}</span>
+									<span className={`bank_ico bank_ico_${item.bankCode}`}></span>
+									<span className={styles.bank_name}>{item.bankName}</span>
 								</li>
 							);
 						})}

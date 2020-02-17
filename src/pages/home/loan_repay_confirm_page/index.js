@@ -724,7 +724,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 												key={index}
 												size="md"
 												long="false"
-												type={selectedLoanDate.prodCnt === item.prodCnt ? 'yellow' : 'default'}
+												type={selectedLoanDate.prodCnt === item.prodCnt ? 'yellow' : 'gray'}
 												onClick={() => {
 													this.filterLoanDate(item);
 												}}

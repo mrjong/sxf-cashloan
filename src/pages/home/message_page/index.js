@@ -12,7 +12,7 @@ let totalPage = false;
 import { msg_news_default_table, msg_news_read, msg_news_list, msg_news_readAll } from 'fetch/api';
 
 const noData = {
-	img: Image.bg.no_order,
+	img: Image.bg.no_message,
 	text: '暂无账单',
 	width: '100%',
 	height: '100%'
@@ -62,6 +62,9 @@ export default class message_page extends PureComponent {
 		// 处理详情返回之后
 		let backData = store.getMsgBackData();
 		if (backData && JSON.stringify(backData) !== '{}') {
+			setTimeout(() => {
+				this.viewRef && this.viewRef.showDataView();
+			}, 0);
 			totalPage = backData.totalPage;
 
 			this.setState(
@@ -81,7 +84,9 @@ export default class message_page extends PureComponent {
 							isLoading: false
 						},
 						() => {
-							document.getElementsByClassName('iview' + backData.msgType)[0].scrollTop = backData.scrollTop;
+							if (document.getElementsByClassName('iview' + backData.msgType)[0]) {
+								document.getElementsByClassName('iview' + backData.msgType)[0].scrollTop = backData.scrollTop;
+							}
 						}
 					);
 					store.removeMsgBackData();
@@ -98,11 +103,14 @@ export default class message_page extends PureComponent {
 		}
 	}
 	calcHeight() {
-		const HeaderHeight = ReactDOM.findDOMNode(this.messageBox).offsetTop;
+		const HeaderHeight = this.messageBox
+			? ReactDOM.findDOMNode(this.messageBox).offsetTop
+			: document.documentElement.clientHeight;
 		setTimeout(() => {
-			const tabBarHeight = ReactDOM.findDOMNode(this.messageTabBox).getElementsByClassName(
-				'am-tabs-tab-bar-wrap'
-			)[0].offsetHeight;
+			let tabBarHeight = 50;
+			if (document.getElementsByClassName('am-tabs-tab-bar-wrap')[0]) {
+				tabBarHeight = document.getElementsByClassName('am-tabs-tab-bar-wrap')[0].offsetHeight;
+			}
 			const hei = document.documentElement.clientHeight - tabBarHeight - HeaderHeight;
 			this.setState({
 				height: hei
@@ -242,8 +250,11 @@ export default class message_page extends PureComponent {
 		}
 		this.setState({
 			rData: list,
-			Listlength: list.length,
-			dataSource: this.state.dataSource.cloneWithRows(list),
+			Listlength: list && list.length ? list.length : [],
+			dataSource:
+				list && list.length
+					? this.state.dataSource.cloneWithRows(list)
+					: this.state.dataSource.cloneWithRows([]),
 			refreshing: false,
 			isLoading: false,
 			pageIndex: 1
@@ -389,7 +400,7 @@ export default class message_page extends PureComponent {
 			}
 			return (
 				<div className={style.noMsg}>
-					<i />
+					<img className={style.noMsgImg} src={Image.bg.no_message} alt="" />
 					暂无消息
 				</div>
 			);

@@ -44,7 +44,11 @@ export default {
 		id_card_tip: require('./bg/id_card_tip.png'),
 		navBarBg: require('./bg/navBarBg.png'),
 		no_order: require('./bg/no_order.png'),
-		no_network: require('./bg/no_network.png')
+		no_network: require('./bg/no_network.png'),
+		no_card: require('./bg/no_card.png'),
+		no_coupon: require('./bg/no_coupon.png'),
+		no_message: require('./bg/no_message.png'),
+		no_money: require('./bg/no_money.png')
 	},
 
 	// 按钮

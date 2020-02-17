@@ -13,8 +13,8 @@ import card_select_yellow from './img/card_select_yellow.png';
 const noData = {
 	img: Image.bg.no_order,
 	text: '暂无银行卡',
-	width: '100%',
-	height: '100%'
+	width: '80%'
+	// height: '100%'
 };
 const errorData = {
 	img: Image.bg.no_network,

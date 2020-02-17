@@ -13,10 +13,12 @@ import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
 import { coup_queryUsrCoupBySts, coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup } from 'fetch/api';
+import Images from 'assets/image';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
 let saveBankData = null; // 还款详情页带过来的银行信息
+
 @connect(
 	(state) => ({
 		couponData: state.commonState.couponData
@@ -251,8 +253,11 @@ export default class coupon_page extends PureComponent {
 		}
 		this.setState({
 			rData: list,
-			Listlength: list.length,
-			dataSource: this.state.dataSource.cloneWithRows(list),
+			Listlength: list && list.length ? list.length : 0,
+			dataSource:
+				list && list.length
+					? this.state.dataSource.cloneWithRows(list)
+					: this.state.dataSource.cloneWithRows([]),
 			refreshing: false,
 			isLoading: false,
 			pageIndex: 1
@@ -556,7 +561,7 @@ export default class coupon_page extends PureComponent {
 			}
 			return (
 				<div className={style.noMsg}>
-					<i />
+					<img className={style.noMsgImg} src={Images.bg.no_coupon} alt="" />
 					还没有券哦～
 				</div>
 			);

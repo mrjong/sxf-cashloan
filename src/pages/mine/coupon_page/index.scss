@@ -264,10 +264,12 @@
 	height: 100%;
 	width: 100%;
 	color: #999;
-	margin-top: 500px;
 	font-size: 36px;
-	text-align: center;
-	padding-top: 90px;
+  text-align: center;
+  padding: 80px 80px 0;
+  .noMsgImg {
+    width: 100%;
+  }
 	i {
 		width: 320px;
 		display: inline-block;
