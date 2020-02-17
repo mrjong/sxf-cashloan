@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 11:25:08
+ * @LastEditTime : 2020-02-17 11:16:13
  */
 import qs from 'qs';
 // import { address } from 'utils/Address';
@@ -22,7 +22,8 @@ import CopyModal from 'components/CopyModal';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+// import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { msg_slide, signup_sms, msg_image } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
