@@ -122,6 +122,12 @@ if (window.history && window.history.pushState) {
 			const { staticState = {} } = storeData;
 			const { userInfo } = staticState;
 			let backFlag = store.getBackFlag();
+
+			if (window.location.pathname === '/home/addInfo') {
+				window.ReactRouterHistory.push('/home/home');
+				return;
+			}
+
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
 				return;

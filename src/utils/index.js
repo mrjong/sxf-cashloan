@@ -195,6 +195,7 @@ const interceptRouteArr = [
 	'/order/wx_pay_success_page',
 	// '/protocol/pdf_page',
 	'/home/loan_fenqi',
+	'/home/addInfo',
 	'/common/crash_page',
 	'/others/mpos_testB_download_page'
 ];
