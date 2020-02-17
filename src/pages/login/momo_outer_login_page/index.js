@@ -41,7 +41,7 @@ import { domListen } from 'utils/domListen';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
@@ -119,7 +119,6 @@ export default class momo_outer_login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
-			this.getImage();
 		}
 	}
 	componentDidMount() {
@@ -207,9 +206,6 @@ export default class momo_outer_login_page extends PureComponent {
 					userChannel: getH5Channel(), // 用户渠道
 					location: store.getPosition() // 定位地址 TODO 从session取
 				};
-				if (!this.state.disabledInput) {
-					param.mblNo = values.phoneValue; // 手机号
-				}
 				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
@@ -239,10 +235,7 @@ export default class momo_outer_login_page extends PureComponent {
 						});
 					},
 					(error) => {
-						error.message &&
-							Toast.info(error.message, 3, () => {
-								this.state.disabledInput && this.getImage();
-							});
+						error.message && Toast.info(error.message, 3);
 					}
 				);
 			} else {
@@ -259,33 +252,20 @@ export default class momo_outer_login_page extends PureComponent {
 
 	// 获得手机验证码
 	getSmsCode() {
-		const { queryData } = this.state;
-		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
 				buriedPointEvent(daicao.smsCodeBtnClick);
-				let param = {};
-				if (this.state.disabledInput) {
-					param = {
-						type: '6',
-						authToken: queryData && queryData.tokenId,
-						osType,
-						imgCode: values.imgCd
-					};
-					this.sendSmsCode(param);
-				} else {
-					this.setState(
-						{
-							mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
-						},
-						() => {
-							this.handleTokenAndSms();
-						}
-					);
-				}
+				this.setState(
+					{
+						mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
+					},
+					() => {
+						this.handleTokenAndSms();
+					}
+				);
 			} else {
 				Toast.info(getFirstError(err));
 			}
@@ -308,7 +288,13 @@ export default class momo_outer_login_page extends PureComponent {
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			let mobilePhone = base64Encode(this.state.mobilePhone);
+			const { queryData } = this.state;
+			let mobilePhone = '';
+			if (this.state.disabledInput) {
+				mobilePhone = queryData.tokenId;
+			} else {
+				mobilePhone = base64Encode(this.state.mobilePhone);
+			}
 			this.props.$fetch.get(`${msg_slide}/${mobilePhone}`).then((result) => {
 				if (result.code === '000003') {
 					this.setState({
@@ -405,21 +391,6 @@ export default class momo_outer_login_page extends PureComponent {
 		this.setState({ showSlideModal: false });
 	};
 
-	// 老的获取短信验证码(mpos)
-	sendSmsCode = (param) => {
-		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
-				Toast.info('发送成功，请注意查收！');
-				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-				this.startCountDownTime();
-			} else {
-				Toast.info(result.msgInfo, 3, () => {
-					this.getImage();
-				});
-			}
-		});
-	};
-
 	startCountDownTime = () => {
 		clearInterval(timmer);
 		let { countDownTime } = this.state;
@@ -454,21 +425,6 @@ export default class momo_outer_login_page extends PureComponent {
 				sxfburiedPointEvent('dl_chkBox');
 			}
 		);
-	};
-
-	//获取图片验证码
-	getImage = () => {
-		this.props.$fetch.get(msg_image).then((res) => {
-			if (res && res.code === '000000') {
-				this.setState({
-					imageCodeUrl: res.data.imageBase64,
-					relyToken: res.data.tokenId
-				});
-				store.setNoLoginToken(res.tokenId);
-			} else {
-				Toast.info(res.message);
-			}
-		});
 	};
 
 	// 下载app
@@ -528,7 +484,6 @@ export default class momo_outer_login_page extends PureComponent {
 
 	render() {
 		const {
-			imageCodeUrl,
 			slideImageUrl,
 			smallImageUrl,
 			showSlideModal,
@@ -591,39 +546,6 @@ export default class momo_outer_login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						{disabledInput && (
-							<div className={styles.smsBox}>
-								<InputItem
-									id="imgCode"
-									maxLength="4"
-									className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-									placeholder="请输入图形验证码"
-									{...getFieldProps('imgCd', {
-										rules: [{ required: true, message: '请输入正确图形验证码' }]
-									})}
-									onBlur={() => {
-										this.setState({
-											inputFocus: false
-										});
-										handleInputBlur();
-									}}
-								/>
-								<div
-									className={
-										this.state.timers.indexOf('s') === -1
-											? styles.smsCode
-											: [styles.smsCode, styles.smsCode2].join(' ')
-									}
-									onClick={() => {
-										this.getImage();
-									}}
-								>
-									<div className={styles.getCodeBox}>
-										<img className={styles.getCode} src={imageCodeUrl} />
-									</div>
-								</div>
-							</div>
-						)}
 
 						<div className={styles.smsBox}>
 							<InputItem

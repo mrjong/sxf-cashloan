@@ -106,7 +106,6 @@ export default class login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
-			this.getImage();
 		}
 		sxfDataPv({ pId: 'dwdl' });
 		sxfburiedPointEvent('dl_chkBox');
@@ -184,9 +183,6 @@ export default class login_page extends PureComponent {
 					userChannel: getH5Channel(), // 用户渠道
 					location: store.getPosition() // 定位地址 TODO 从session取
 				};
-				if (!this.state.disabledInput) {
-					param.mblNo = values.phoneValue; // 手机号
-				}
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
 						if (res.code !== '000000') {
@@ -208,10 +204,7 @@ export default class login_page extends PureComponent {
 						});
 					},
 					(error) => {
-						error.msgInfo &&
-							Toast.info(error.msgInfo, 3, () => {
-								this.state.disabledInput && this.getImage();
-							});
+						error.msgInfo && Toast.info(error.msgInfo, 3);
 					}
 				);
 			} else {
@@ -405,15 +398,7 @@ export default class login_page extends PureComponent {
 	};
 
 	render() {
-		const {
-			imageCodeUrl,
-			slideImageUrl,
-			smallImageUrl,
-			showSlideModal,
-			yOffset,
-			bigImageH,
-			disabledInput
-		} = this.state;
+		const { slideImageUrl, smallImageUrl, showSlideModal, yOffset, bigImageH, disabledInput } = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page}>
@@ -468,39 +453,6 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						{disabledInput && (
-							<div className={styles.smsBox}>
-								<InputItem
-									id="imgCode"
-									maxLength="4"
-									className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-									placeholder="请输入图形验证码"
-									{...getFieldProps('imgCd', {
-										rules: [{ required: true, message: '请输入正确图形验证码' }]
-									})}
-									onBlur={() => {
-										this.setState({
-											inputFocus: false
-										});
-										handleInputBlur();
-									}}
-								/>
-								<div
-									className={
-										this.state.timers.indexOf('s') === -1
-											? styles.smsCode
-											: [styles.smsCode, styles.smsCode2].join(' ')
-									}
-									onClick={() => {
-										this.getImage();
-									}}
-								>
-									<div className={styles.getCodeBox}>
-										<img className={styles.getCode} src={imageCodeUrl} />
-									</div>
-								</div>
-							</div>
-						)}
 
 						<div className={styles.smsBox}>
 							<InputItem

@@ -23,7 +23,7 @@ import {
 } from 'utils';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
 
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
@@ -452,18 +452,14 @@ export default class login_page extends PureComponent {
 
 	//	校验必填项 按钮是否可以点击
 	validateFn = () => {
-		const { disabledInput, isChecked } = this.state;
+		const { isChecked } = this.state;
 		const formData = this.props.form.getFieldsValue();
 		if (formData.phoneValue && formData.smsCd && isChecked) {
-			if (disabledInput && formData.imgCd) {
-				return true;
-			} else if (disabledInput && !formData.imgCd) {
-				return false;
-			}
 			return true;
 		}
 		return false;
 	};
+
 	goHome = () => {
 		const { queryData = {} } = this.state;
 		if (queryData && queryData.wxTestFrom) {
@@ -488,20 +484,6 @@ export default class login_page extends PureComponent {
 	// 获取授信列表状态
 	requestGetStatus = () => {
 		this.goHome();
-	};
-
-	//获取图片验证码
-	getImage = () => {
-		this.props.$fetch.get(msg_image).then((res) => {
-			if (res && res.code === '000000') {
-				this.setState({
-					imageCodeUrl: res.data.imageBase64,
-					relyToken: res.data.tokenId
-				});
-			} else {
-				Toast.info(res.message);
-			}
-		});
 	};
 
 	// 弹框里的倒计时
@@ -575,7 +557,6 @@ export default class login_page extends PureComponent {
 
 	render() {
 		const {
-			imageCodeUrl,
 			slideImageUrl,
 			smallImageUrl,
 			showSlideModal,
@@ -641,30 +622,6 @@ export default class login_page extends PureComponent {
 								]
 							})}
 						/>
-						{disabledInput && (
-							<div className={styles.imgCodeBox}>
-								<InputItem
-									id="imgCode"
-									maxLength="4"
-									className={styles.loginInput}
-									placeholder="请输入图形验证码"
-									{...getFieldProps('imgCd', {
-										rules: [{ required: true, message: '请输入正确的图形验证码' }]
-									})}
-									onBlur={() => {
-										handleInputBlur();
-									}}
-								/>
-								<div
-									className={styles.imgCode}
-									onClick={() => {
-										this.getImage();
-									}}
-								>
-									<img className={styles.getCode} src={imageCodeUrl} />
-								</div>
-							</div>
-						)}
 
 						<div className={styles.smsBox}>
 							<InputItem

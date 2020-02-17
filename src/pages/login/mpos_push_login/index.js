@@ -19,16 +19,12 @@ import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
 
-// import loginModalBg from './img/login_modal.png';
-// import loginModalBtn from './img/login_modal_btn.png';
 import tooltip from './img/tooltip.png';
-// import closeIco from './img/close_btn.png';
 import { daicao } from '../../../utils/analytinsType';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-// import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
-import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
@@ -102,7 +98,6 @@ export default class login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
-			this.getImage();
 		}
 	}
 	componentDidMount() {
@@ -215,10 +210,7 @@ export default class login_page extends PureComponent {
 						});
 					},
 					(error) => {
-						error.message &&
-							Toast.info(error.message, 3, () => {
-								this.state.disabledInput && this.getImage();
-							});
+						error.message && Toast.info(error.message, 3);
 					}
 				);
 			} else {
@@ -235,32 +227,19 @@ export default class login_page extends PureComponent {
 
 	// 获得手机验证码
 	getSmsCode() {
-		const { queryData } = this.state;
-		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
-				let param = {};
-				if (this.state.disabledInput) {
-					param = {
-						type: '6',
-						authToken: queryData && queryData.tokenId,
-						osType,
-						imgCode: values.imgCd
-					};
-					this.sendSmsCode(param);
-				} else {
-					this.setState(
-						{
-							mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
-						},
-						() => {
-							this.handleTokenAndSms();
-						}
-					);
-				}
+				this.setState(
+					{
+						mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
+					},
+					() => {
+						this.handleTokenAndSms();
+					}
+				);
 			} else {
 				Toast.info(getFirstError(err));
 			}
@@ -395,9 +374,7 @@ export default class login_page extends PureComponent {
 				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 				this.startCountDownTime();
 			} else {
-				Toast.info(result.msgInfo, 3, () => {
-					this.getImage();
-				});
+				Toast.info(result.msgInfo, 3);
 			}
 		});
 	};
@@ -427,21 +404,6 @@ export default class login_page extends PureComponent {
 	checkAgreement = () => {
 		this.setState({
 			isChecked: !this.state.isChecked
-		});
-	};
-
-	//获取图片验证码
-	getImage = () => {
-		this.props.$fetch.get(msg_image).then((res) => {
-			if (res && res.code === '000000') {
-				this.setState({
-					imageCodeUrl: res.data.imageBase64,
-					relyToken: res.data.tokenId
-				});
-				store.setNoLoginToken(res.tokenId);
-			} else {
-				Toast.info(res.message);
-			}
 		});
 	};
 
@@ -517,7 +479,6 @@ export default class login_page extends PureComponent {
 
 	render() {
 		const {
-			imageCodeUrl,
 			slideImageUrl,
 			smallImageUrl,
 			showSlideModal,
@@ -554,39 +515,6 @@ export default class login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						{disabledInput && (
-							<div className={styles.smsBox}>
-								<InputItem
-									id="imgCode"
-									maxLength="4"
-									className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-									placeholder="请输入图形验证码"
-									{...getFieldProps('imgCd', {
-										rules: [{ required: true, message: '请输入正确图形验证码' }]
-									})}
-									onBlur={() => {
-										this.setState({
-											inputFocus: false
-										});
-										handleInputBlur();
-									}}
-								/>
-								<div
-									className={
-										this.state.timers.indexOf('s') === -1
-											? styles.smsCode
-											: [styles.smsCode, styles.smsCode2].join(' ')
-									}
-									onClick={() => {
-										this.getImage();
-									}}
-								>
-									<div className={styles.getCodeBox}>
-										<img className={styles.getCode} src={imageCodeUrl} />
-									</div>
-								</div>
-							</div>
-						)}
 
 						<div className={styles.smsBox}>
 							<InputItem

@@ -14,7 +14,6 @@
 		top: -86px;
 		text-align: center;
 		width: 666px;
-		height: 679px;
 		background: #fff;
 		box-shadow: 0 8px 35px 0 rgba(0, 0, 0, 0.13);
 		border-radius: 10px;
@@ -248,6 +247,10 @@
 		}
 		.am-modal-content {
 			background: transparent;
+    }
+    .am-list-item .am-input-control input:disabled {
+      background-color: transparent;
+      color: #bbb;
 		}
 	}
 }

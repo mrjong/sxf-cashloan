@@ -3,7 +3,6 @@
  * @LastEditTime : 2020-02-17 11:18:55
  */
 import qs from 'qs';
-// import { address } from 'utils/Address';
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
@@ -22,20 +21,10 @@ import CopyModal from 'components/CopyModal';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-// import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
-import { msg_slide, signup_sms, msg_image } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
-
-const API = {
-	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
-	imageCode: '/signup/sendImg',
-	createImg: '/cmm/createImg', // 获取滑动大图
-	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
-};
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -95,7 +84,6 @@ export default class miniprogram_login_page extends PureComponent {
 			this.setState({
 				disabledInput: true
 			});
-			this.getImage();
 		}
 	}
 	componentDidMount() {
@@ -177,9 +165,6 @@ export default class miniprogram_login_page extends PureComponent {
 					userChannel: getH5Channel(), // 用户渠道
 					location: (queryData && queryData.location) || '-1,-1' // 从小程序中传入
 				};
-				if (!this.state.disabledInput) {
-					param.mblNo = values.phoneValue; // 手机号
-				}
 				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
@@ -204,10 +189,7 @@ export default class miniprogram_login_page extends PureComponent {
 						});
 					},
 					(error) => {
-						error.message &&
-							Toast.info(error.message, 3, () => {
-								this.state.disabledInput && this.getImage();
-							});
+						error.message && Toast.info(error.message, 3);
 					}
 				);
 			} else {
@@ -224,32 +206,19 @@ export default class miniprogram_login_page extends PureComponent {
 
 	// 获得手机验证码
 	getSmsCode() {
-		const { queryData } = this.state;
-		const osType = getDeviceType();
 		this.props.form.validateFields((err, values) => {
 			if (err && err.smsCd) {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
-				let param = {};
-				if (this.state.disabledInput) {
-					param = {
-						type: '6',
-						authToken: queryData && queryData.tokenId,
-						osType,
-						imgCode: values.imgCd
-					};
-					this.sendSmsCode(param);
-				} else {
-					this.setState(
-						{
-							mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
-						},
-						() => {
-							this.handleTokenAndSms();
-						}
-					);
-				}
+				this.setState(
+					{
+						mobilePhone: values.phoneValue && values.phoneValue.replace(/\s*/g, '')
+					},
+					() => {
+						this.handleTokenAndSms();
+					}
+				);
 			} else {
 				Toast.info(getFirstError(err));
 			}
@@ -311,9 +280,13 @@ export default class miniprogram_login_page extends PureComponent {
 
 	// 获取短信(滑动验证码)
 	sendSlideVerifySmsCode = (xOffset = '', cb) => {
-		let data = Object.assign({}, this.state.submitData, { bFlag: xOffset });
+		const data = {
+			slideDistance: xOffset,
+			tokenId: this.state.relyToken,
+			type: '6'
+		};
 		this.props.$fetch
-			.post(API.sendImgSms, data)
+			.post(msg_sms, data)
 			.then((result) => {
 				if (result.code === '000000') {
 					Toast.info('发送成功，请注意查收！');
@@ -348,43 +321,12 @@ export default class miniprogram_login_page extends PureComponent {
 			});
 	};
 
-	reloadSlideImage = () => {
-		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
-					yOffset: res.data.sy, // 小图距离大图顶部距离
-					bigImageH: res.data.bh, // 大图实际高度
-					showSlideModal: true
-				});
-			} else {
-				Toast.info(res.msgInfo);
-			}
-		});
-	};
-
 	showSlideModal = () => {
 		this.setState({ showSlideModal: true });
 	};
 
 	closeSlideModal = () => {
 		this.setState({ showSlideModal: false });
-	};
-
-	// 老的获取短信验证码(mpos)
-	sendSmsCode = (param) => {
-		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
-				Toast.info('发送成功，请注意查收！');
-				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-				this.startCountDownTime();
-			} else {
-				Toast.info(result.msgInfo, 3, () => {
-					this.getImage();
-				});
-			}
-		});
 	};
 
 	startCountDownTime = () => {
@@ -415,21 +357,6 @@ export default class miniprogram_login_page extends PureComponent {
 		});
 	};
 
-	//获取图片验证码
-	getImage = () => {
-		this.props.$fetch.get(msg_image).then((res) => {
-			if (res && res.code === '000000') {
-				this.setState({
-					imageCodeUrl: res.data.imageBase64,
-					relyToken: res.data.tokenId
-				});
-				store.setNoLoginToken(res.tokenId);
-			} else {
-				Toast.info(res.message);
-			}
-		});
-	};
-
 	// 关闭弹框
 	closeModal = () => {
 		this.setState({
@@ -439,14 +366,9 @@ export default class miniprogram_login_page extends PureComponent {
 
 	//	校验必填项 按钮是否可以点击
 	validateFn = () => {
-		const { disabledInput, isChecked } = this.state;
+		const { isChecked } = this.state;
 		const formData = this.props.form.getFieldsValue();
 		if (formData.phoneValue && formData.smsCd && isChecked) {
-			if (disabledInput && formData.imgCd) {
-				return true;
-			} else if (disabledInput && !formData.imgCd) {
-				return false;
-			}
 			return true;
 		}
 		return false;
@@ -458,7 +380,6 @@ export default class miniprogram_login_page extends PureComponent {
 
 	render() {
 		const {
-			imageCodeUrl,
 			slideImageUrl,
 			smallImageUrl,
 			showSlideModal,
@@ -495,39 +416,6 @@ export default class miniprogram_login_page extends PureComponent {
 								handleInputBlur();
 							}}
 						/>
-						{disabledInput && (
-							<div className={styles.smsBox}>
-								<InputItem
-									id="imgCode"
-									maxLength="4"
-									className={[styles.loginInput, styles.smsCodeInput].join(' ')}
-									placeholder="请输入图形验证码"
-									{...getFieldProps('imgCd', {
-										rules: [{ required: true, message: '请输入正确图形验证码' }]
-									})}
-									onBlur={() => {
-										this.setState({
-											inputFocus: false
-										});
-										handleInputBlur();
-									}}
-								/>
-								<div
-									className={
-										this.state.timers.indexOf('s') === -1
-											? styles.smsCode
-											: [styles.smsCode, styles.smsCode2].join(' ')
-									}
-									onClick={() => {
-										this.getImage();
-									}}
-								>
-									<div className={styles.getCodeBox}>
-										<img className={styles.getCode} src={imageCodeUrl} />
-									</div>
-								</div>
-							</div>
-						)}
 
 						<div className={styles.smsBox}>
 							<InputItem

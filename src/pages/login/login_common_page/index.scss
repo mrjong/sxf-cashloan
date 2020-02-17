@@ -228,6 +228,11 @@
 			padding: 0.16rem 0;
 			color: #121c32;
 			font-weight: bold;
+    }
+
+    .am-list-item .am-input-control input:disabled {
+      background-color: transparent;
+      color: #bbb;
 		}
 
 		// .am-list-item .am-checkbox .am-checkbox-inner {
