@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:10:56
+ * @LastEditTime : 2020-02-17 11:22:03
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -30,7 +30,8 @@ import { TFDLogin } from 'utils/getTongFuDun';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+// import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
@@ -144,7 +145,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		const { queryData } = this.state;
+		// const { queryData } = this.state;
 		// 防止用户关闭弹框,继续点击进行登录
 		if (store.getToken() || Cookie.get('FIN-HD-AUTH-TOKEN')) {
 			this.setState(

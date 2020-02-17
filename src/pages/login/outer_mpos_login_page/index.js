@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 11:25:39
+ * @LastEditTime : 2020-02-17 11:19:43
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -30,7 +30,8 @@ import { TFDLogin } from 'utils/getTongFuDun';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+// import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;

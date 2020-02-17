@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:16:13
+ * @LastEditTime : 2020-02-17 11:18:55
  */
 import qs from 'qs';
 // import { address } from 'utils/Address';
@@ -175,7 +175,7 @@ export default class miniprogram_login_page extends PureComponent {
 					mac: '',
 					registrationId: '',
 					userChannel: getH5Channel(), // 用户渠道
-					location: store.getPosition() // 定位地址 TODO 从session取
+					location: (queryData && queryData.location) || '-1,-1' // 从小程序中传入
 				};
 				if (!this.state.disabledInput) {
 					param.mblNo = values.phoneValue; // 手机号
