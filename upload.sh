@@ -1,14 +1,14 @@
 ###
 # @Author: sunjiankun
- # @LastEditors: sunjiankun
- # @LastEditTime: 2019-10-25 14:59:33
+ # @LastEditors  : sunjiankun
+ # @LastEditTime : 2020-02-17 11:04:20
  ###
 #!/usr/bin/env bash
 
 remote_path=/home/app/nginx/html
 remote_path2=/home/app/nginx/html/www
 remote_user=app
-remote_ip=172.16.174.105
+remote_ip=172.16.175.23
 
 tar czvf dist.tar ./*
 echo -e "\033[41;37m 请输入远程服务器密码开始上传文件 \033[0m"

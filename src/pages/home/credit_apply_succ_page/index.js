@@ -4,7 +4,6 @@ import fetch from 'sx-fetch';
 import ExamineComponents from 'components/ExamineComponents';
 import { setBackGround } from 'utils/background';
 import qs from 'qs';
-import { store } from 'utils/store';
 import TimeoutPayModal from 'components/TimeoutPayModal';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
@@ -12,11 +11,7 @@ import { NoticeBar } from 'antd-mobile';
 import { bank_card_check_func } from 'utils/CommonUtil/getNextStatus';
 import Image from 'assets/image';
 let query = {};
-let autId = '';
-const API = {
-	isBankCard: '/my/chkCard', // 是否绑定了银行卡
-	chkCredCard: '/my/chkCredCard' // 查询信用卡列表中是否有授权卡
-};
+
 @fetch.inject()
 @setBackGround('#fff')
 export default class credit_apply_succ_page extends PureComponent {
@@ -30,7 +25,6 @@ export default class credit_apply_succ_page extends PureComponent {
 	}
 	componentWillMount() {
 		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		autId = query && query.autId;
 		const that = this;
 		if (query && query.isPlus) {
 			this.setState({

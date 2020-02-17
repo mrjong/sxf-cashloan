@@ -26,21 +26,6 @@ import {
 	loan_queryCashLoanApplInfo
 } from 'fetch/api.js';
 
-const API = {
-	prodInfo: '/cash/prodList', //产品列表基本信息查询
-	prodInfoByMoney: '/cash/prodInfo', //根据用户金额获取产品信息
-	loanUsage: '/cash/loanUsage', //借款用途
-	couponSupport: '/cash/couponSupport', //最佳优惠券获取
-	contractList: '/fund/info', //合同列表
-	repayPlan: '/bill/prebill', //还款计划查询
-	agentRepay: '/bill/agentRepay', // 借款申请接口
-	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
-	doCouponCount: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
-	bill_isOpenLoanPopup: '/bill/isOpenLoanPopup' // 判断是否开启放款限制弹窗
-};
-
 let isFetching = false;
 
 @fetch.inject()
@@ -572,7 +557,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//验证信息是否填写完整
 	validateFn = () => {
-		const { loanMoney, loanDate, loanUsage, repayCardNo, resaveCardNo } = this.state;
+		const { loanMoney, loanDate, loanUsage } = this.state;
 		// if (loanMoney && loanDate && loanDate.prodCount && loanUsage && repayCardNo && resaveCardNo) {
 		if (loanMoney && loanDate && loanDate.prodCount && loanUsage) {
 			return true;
@@ -712,7 +697,6 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 确认协议绑卡
 	confirmProtocolBindCard = () => {
-		const { resaveCardNo } = this.state;
 		if (!this.state.smsCode) {
 			this.props.toast.info('请输入验证码');
 			return;
@@ -860,7 +844,6 @@ export default class loan_fenqi_page extends PureComponent {
 	render() {
 		const {
 			usageModal,
-			prdId,
 			loanUsage,
 			usageList,
 			loanDate,
@@ -868,16 +851,12 @@ export default class loan_fenqi_page extends PureComponent {
 			planModal,
 			repayCardNo,
 			resaveCardNo,
-			perdRateList,
 			priceMax = '',
 			priceMin = '',
-			contractList,
 			repayPlanInfo,
-			deratePrice,
 			isShowSmsModal,
 			smsCode,
 			checkBox1,
-			productList,
 			repayCardLast,
 			repayCardName,
 			resaveCardLast,

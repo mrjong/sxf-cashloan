@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 15:20:46
+ * @LastEditTime : 2020-02-17 11:09:26
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -143,7 +143,7 @@ export default class credit_list_page extends PureComponent {
 			autId: obj.autId
 		});
 	};
-	renderItem = (item, index) => {
+	renderItem = (item) => {
 		let tipText = '';
 		let tipDesc = '';
 		if (item.persionCheck === '00') {

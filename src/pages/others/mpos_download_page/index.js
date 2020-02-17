@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:12:51
+ * @LastEditTime : 2020-02-17 11:13:42
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -13,6 +13,7 @@ import { getDeviceType, isWXOpen } from 'utils';
 import linkConf from 'config/link.conf';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
+import { download_queryDownloadUrl } from 'fetch/api';
 
 let urlParams = {};
 let entryPageTime = '';

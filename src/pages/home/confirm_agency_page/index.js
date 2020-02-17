@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 16:03:53
+ * @LastEditTime : 2020-02-17 11:12:34
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -47,24 +47,6 @@ if (isIPhone) {
 	};
 }
 let closeBtn = true;
-const API = {
-	REPAY_INFO: '/bill/prebill', // 代还确认页面
-	CONFIRM_REPAYMENT: '/bill/agentRepay', // 代还申请接口
-	QUERY_REPAY_INFO: '/bill/queryRepayInfo', // 确认代还信息查询接口
-	CHECK_WITH_HOLD_CARD: '/bill/checkWithHoldCard', // 储蓄卡是否支持代扣校验接口
-	CHECK_CARD: '/my/chkCard', // 是否绑定了银行卡
-	checkApplyProdMemSts: '/bill/checkApplyProdMemSts', // 校验借款产品是否需要会员卡
-	queryUsrMemSts: '/my/queryUsrMemSts', // 查询用户会员卡状态
-	queryFundInfo: '/fund/info', // 获取资金code,合同code
-	chkCredCard: '/my/chkCredCard', // 查询信用卡列表中是否有授权卡
-	COUPON_COUNT: '/bill/doCouponCount', // 后台处理优惠劵抵扣金额
-	creditSts: '/bill/credit/sts', // 用户是否过人审接口
-	qryContractInfo: '/fund/qryContractInfo', // 合同数据流获取
-	protocolSms: '/withhold/protocolSms', // 校验协议绑卡
-	protocolBind: '/withhold/protocolBink', //协议绑卡接口
-	sendCoupon: '/activeConfig/issueCoup', //拦截发放优惠券
-	bill_isOpenLoanPopup: '/bill/isOpenLoanPopup' // 判断是否开启放款限制弹窗
-};
 
 let timer;
 let timerOut;
