@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:12:34
+ * @LastEditTime : 2020-02-18 14:55:43
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -12,17 +12,15 @@ import { setBackGround } from 'utils/background';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
-import SXFButton from 'components/ButtonCustom';
 import { createForm } from 'rc-form';
 import { getFirstError, handleInputBlur } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
 import { domListen } from 'utils/domListen';
-import RepayPlanModal from 'components/RepayPlanModal';
+import { RepayPlanModal, CheckRadio, ButtonCustom, TipModal } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
-import TipModal from 'components/TipModal';
 import {
 	loan_queryLoanApplInfo,
 	loan_loanPlan,
@@ -597,7 +595,7 @@ export default class confirm_agency_page extends PureComponent {
 			lendersIndex,
 			checkBox1
 		} = this.state;
-		const { userInfo = {} } = this.props;
+		// const { userInfo = {} } = this.props;
 		const billPrcpAmt = this.props.form.getFieldValue('cardBillAmt');
 		this.props.setConfirmAgencyInfoAction({
 			cardBillAmt,
@@ -1217,7 +1215,7 @@ export default class confirm_agency_page extends PureComponent {
 							<div className={style.protocolBox}>
 								{contractData.length > 0 && (
 									<p className={style.protocolLink} onClick={this.checkAgreement}>
-										<i className={checkBox1 ? style.checked : [style.checked, style.nochecked].join(' ')} />
+										<CheckRadio selectFlag={checkBox1} />
 										点击“确定签约”，表示同意{' '}
 										{contractData.map((item, idx) => (
 											<em
@@ -1236,7 +1234,7 @@ export default class confirm_agency_page extends PureComponent {
 						</div>
 					</div>
 					<div className={style.buttonWrap}>
-						<SXFButton
+						<ButtonCustom
 							onClick={
 								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn
 									? this.handleButtonClick
@@ -1249,7 +1247,7 @@ export default class confirm_agency_page extends PureComponent {
 							}
 						>
 							确定签约
-						</SXFButton>
+						</ButtonCustom>
 					</div>
 					<Modal
 						wrapClassName={style.modalLoading}

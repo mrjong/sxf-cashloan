@@ -1,14 +1,14 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-10 10:24:50
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2020-02-18 14:50:37
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import styles from './index.scss';
-import ButtonCustom from 'components/ButtonCustom';
+import { ButtonCustom, CheckRadio } from 'components';
 
 export default class InsuranceModal extends React.PureComponent {
 	constructor(props) {
@@ -111,6 +111,28 @@ export default class InsuranceModal extends React.PureComponent {
 							</p>
 						</div>
 					</div>
+					{/* 底部合同 */}
+					<div className={styles.agreement} onClick={this.checkAgreement}>
+						<CheckRadio selectFlag={checkBox1} />
+						您已悉知并同意
+						<span
+							onClick={(e) => {
+								e.stopPropagation();
+								this.go('credit_query_page');
+							}}
+						>
+							《个人信用信息查询授权书》
+						</span>
+						<span
+							onClick={(e) => {
+								e.stopPropagation();
+								this.go('overdue_effect_page');
+							}}
+						>
+							《个人信用逾期影响告知书》
+						</span>
+						<span>及以上内容</span>
+					</div>
 					{/* 继续申请借款按钮 */}
 					<ButtonCustom
 						onClick={this.handleButtonClick}
@@ -118,31 +140,6 @@ export default class InsuranceModal extends React.PureComponent {
 					>
 						继续申请借款
 					</ButtonCustom>
-					{/* 底部合同 */}
-					<div className={styles.agreement}>
-						<i
-							className={checkBox1 ? styles.checked : [styles.checked, styles.nochecked].join(' ')}
-							onClick={this.checkAgreement}
-						/>
-						<div className={styles.agreementCont}>
-							您已悉知并同意
-							<span
-								onClick={() => {
-									this.go('credit_query_page');
-								}}
-							>
-								《个人信用信息查询授权书》
-							</span>
-							<span
-								onClick={() => {
-									this.go('overdue_effect_page');
-								}}
-							>
-								《个人信用逾期影响告知书》
-							</span>
-							<span>及以上内容</span>
-						</div>
-					</div>
 				</div>
 			</Modal>
 		);
