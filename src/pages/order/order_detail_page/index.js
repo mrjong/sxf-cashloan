@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 14:14:08
+ * @LastEditTime : 2020-02-18 15:56:49
  */
 import React, { PureComponent } from 'react';
 import { Card } from 'antd-mobile';
@@ -81,7 +81,7 @@ export default class order_detail_page extends PureComponent {
 						}
 					);
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			})
 			.catch((err) => {

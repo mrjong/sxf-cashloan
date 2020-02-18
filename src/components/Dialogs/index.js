@@ -126,27 +126,23 @@ class Dialog extends Component {
 					stepText: '仅2步操作'
 				});
 				break;
-			case '/home/moxie_bank_list_page':
+			case '/home/addInfo':
 				this.setState({
 					menuList: [
 						{
-							name: '没有支持银行',
+							name: '现在比较忙,不方便填写',
 							type: ''
 						},
 						{
-							name: '没有开通网银',
+							name: '担心信息泄露,不想填写',
 							type: ''
 						},
 						{
-							name: '已开通网银不知道密码',
+							name: '最高5万额度,都不够用',
 							type: ''
 						},
 						{
-							name: '想借款,但操作太复杂,没有耐心了',
-							type: ''
-						},
-						{
-							name: '已经提交过资料,不想再次填写',
+							name: '暂时没有借款需求',
 							type: ''
 						},
 						{

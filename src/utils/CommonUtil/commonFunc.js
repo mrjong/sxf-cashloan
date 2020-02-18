@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 13:05:52
+ * @LastEditTime : 2020-02-18 14:33:58
  */
 import React from 'react';
 
@@ -188,23 +188,21 @@ export const logoutAppHandler = (that) => {
 		closeCurrentWebView();
 		return;
 	}
-	if (!state && !store.getGotoMoxieFlag()) {
-		state = true;
-		const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
-		Modal.alert('', ele, [
-			{
-				text: '取消',
-				onPress: () => {
-					state = false;
-				}
-			},
-			{
-				text: '确定',
-				onPress: () => {
-					state = false;
-					logoutApp(that);
-				}
+	state = true;
+	const ele = <div style={{ lineHeight: 3 }}>确认退出登录？</div>;
+	Modal.alert('', ele, [
+		{
+			text: '取消',
+			onPress: () => {
+				state = false;
 			}
-		]);
-	}
+		},
+		{
+			text: '确定',
+			onPress: () => {
+				state = false;
+				logoutApp(that);
+			}
+		}
+	]);
 };

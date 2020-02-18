@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-18 13:09:46
+ * @LastEditTime : 2020-02-18 14:50:30
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -59,25 +59,6 @@ let initDialog = () => {
 									break;
 							}
 							break;
-						case '/home/moxie_bank_list_page':
-							switch (questionName) {
-								case '再等等':
-									buriedPointEvent(home.dialogMoxieBank_wait, {
-										questionName
-									});
-									break;
-								case '关闭':
-									buriedPointEvent(home.dialogMoxieBank_close, {
-										questionName
-									});
-									break;
-								default:
-									buriedPointEvent(home.dialogMoxieBank, {
-										questionName
-									});
-									break;
-							}
-							break;
 						default:
 							break;
 					}
@@ -124,7 +105,8 @@ if (window.history && window.history.pushState) {
 			let backFlag = store.getBackFlag();
 
 			if (window.location.pathname === '/home/addInfo') {
-				window.ReactRouterHistory.push('/home/home');
+				document.activeElement.blur();
+				obj.show();
 				return;
 			}
 
@@ -174,13 +156,7 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
-				if (store.getBankMoxie()) {
-					// 针对魔蝎银行登录页返回，连点直接返回到基本信息页的问题
-					// 银行卡直接返回的问题
-					store.removeBankMoxie();
-					window.ReactRouterHistory.push('/home/home');
-					return;
-				} else if (store.getProtocolPersonalData()) {
+				if (store.getProtocolPersonalData()) {
 					return;
 				}
 				document.activeElement.blur();
@@ -195,9 +171,7 @@ if (window.history && window.history.pushState) {
 					return;
 				}
 				document.activeElement.blur();
-				if (!store.getGotoMoxieFlag()) {
-					obj.show();
-				}
+				obj.show();
 				return;
 			}
 
@@ -209,9 +183,7 @@ if (window.history && window.history.pushState) {
 					return;
 				}
 				document.activeElement.blur();
-				if (!store.getGotoMoxieFlag()) {
-					obj.show();
-				}
+				obj.show();
 				return;
 			}
 			const { commonState = {} } = storeData;

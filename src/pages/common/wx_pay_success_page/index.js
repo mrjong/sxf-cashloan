@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-18 15:53:47
+ */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
@@ -23,7 +27,7 @@ export default class wx_middle_page extends Component {
 				billNo: store.getBillNo()
 			})
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === 'PTM0000') {
 					for (let index = 0; index < res.data.perdList.length; index++) {
 						const element = res.data.perdList[index];
 						if (res.data.perdNum == element.perdNum) {
@@ -40,7 +44,7 @@ export default class wx_middle_page extends Component {
 						store.setWxPayEnd(false);
 					}
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			});
 	};

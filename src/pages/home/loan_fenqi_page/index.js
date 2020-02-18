@@ -680,10 +680,10 @@ export default class loan_fenqi_page extends PureComponent {
 						is_success: true
 					});
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 					buriedPointEvent(loan_fenqi.submitResult, {
 						is_success: false,
-						fail_cause: res.msgInfo
+						fail_cause: res.message
 					});
 				}
 			})

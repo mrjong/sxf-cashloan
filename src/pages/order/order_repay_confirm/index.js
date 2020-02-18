@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:15:29
+ * @LastEditTime : 2020-02-18 15:58:00
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -213,7 +213,7 @@ export default class order_repay_confirm extends PureComponent {
 					toggleBtn: true,
 					smsCode: ''
 				});
-				this.props.toast.info(res.data || res.msgInfo);
+				this.props.toast.info(res.data || res.message);
 			}
 		});
 	};
@@ -411,9 +411,9 @@ export default class order_repay_confirm extends PureComponent {
 					buriedPointEvent(order.repaymentFirst, {
 						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
 						is_success: false,
-						fail_cause: res.msgInfo
+						fail_cause: res.message
 					});
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			})
 			.catch(() => {});

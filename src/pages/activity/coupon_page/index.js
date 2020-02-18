@@ -151,7 +151,7 @@ export default class coupon_activity_page extends PureComponent {
 				} else {
 					this.setState({
 						tipOne: '很抱歉',
-						tipTwo: res.msgInfo,
+						tipTwo: res.message,
 						showTipInfo: true
 					});
 				}
