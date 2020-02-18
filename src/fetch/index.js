@@ -52,7 +52,9 @@ const fetchInit = () => {
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStorage = '';
 			tokenFromStorage = store.getToken();
-			if (tokenFromStorage && !location.pathname.indexOf('activity') > -1) {
+			if (cfg['FIN-HD-AUTH-TOKEN']) {
+				cfg.headers['FIN-HD-AUTH-TOKEN'] = cfg['FIN-HD-AUTH-TOKEN'];
+			} else if (tokenFromStorage && !location.pathname.indexOf('activity') > -1) {
 				cfg.headers['FIN-HD-AUTH-TOKEN'] = tokenFromStorage;
 			} else if (location.pathname.indexOf('activity') > -1) {
 				cfg.headers['FIN-HD-AUTH-TOKEN'] = Cookie.get('FIN-HD-AUTH-TOKEN');

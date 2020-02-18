@@ -20,6 +20,7 @@ import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { HomeModal } from '../../home/home_page/components';
+import { signup_refreshClientUserInfo } from 'fetch/api.js';
 
 const { PROJECT_ENV } = process.env;
 @fetch.inject()
@@ -58,88 +59,17 @@ export default class router_Page extends PureComponent {
 		console.log('+++++++++++++++++++++++');
 		this.acRouter(this.props);
 	}
+
 	async componentWillReceiveProps(nextProps) {
-		console.log(this.props, nextProps, '000000');
 		this.acRouter(nextProps);
 		store.setHistoryRouter(location.pathname);
-
-		const queryData = qs.parse(this.props.history.location.search, {
-			ignoreQueryPrefix: true
-		});
-
-		if (queryData.tokenId) {
-			if (this.props.userInfo && this.props.userInfo.tokenId) {
-				// if (queryData.tokenId !== this.props.userInfo.tokenId) {
-				// 	const newUserInfo = await this.getUserInfo(true);
-				// 	console.log('00');
-				// 	this.props.setUserInfoAction(newUserInfo);
-				// }
-
-				const isUserInfoEqual = this.compare(this.props.userInfo, nextProps.userInfo);
-				console.log(isUserInfoEqual, 'isUserInfoEqual');
-
-				if (!isUserInfoEqual) {
-					const newUserInfo = await this.getUserInfo(true);
-					console.log('11');
-					this.props.setUserInfoAction(newUserInfo);
-				}
-			} else {
-				const newUserInfo = await this.getUserInfo(true);
-				console.log('22');
-				this.props.setUserInfoAction(newUserInfo);
-			}
-		}
 	}
 
-	getUserInfo(flag) {
-		return new Promise((resolve, reject) => {
-			if (flag) {
-				setTimeout(() => {
-					console.log('flag true');
-					resolve({
-						faceFlag: '1',
-						idCheckFlag: '2',
-						idNoHid: '411522********3630',
-						nameHid: '**佩',
-						qyGroupId: '397748875',
-						qyOpenId: '79f44d9f982f418093721351d7aee23d',
-						qyRobotId: '3411295',
-						qyTemplateId: '10317938',
-						regChannel: 'OTHER',
-						scOpenId: 'ee10d77d5ec248b3bf34ba4606d74872',
-						telNoHid: '182****04621111',
-						tokenId: '9d672c458de8f665de0242ce06747d85'
-					});
-				}, 1000);
-			} else {
-				setTimeout(() => {
-					console.log('flag false');
-					reject();
-				}, 1000);
-			}
+	getUserInfo(apptoken) {
+		return this.props.$fetch.post(signup_refreshClientUserInfo, null, {
+			'FIN-HD-AUTH-TOKEN': apptoken || '121212',
+			hideToast: true
 		});
-	}
-
-	compare(origin, target) {
-		if (typeof target !== 'object') {
-			//target不是对象/数组
-			return origin === target; //直接返回全等的比较结果
-		}
-
-		if (typeof origin !== 'object') {
-			//origin不是对象/数组
-			return false; //直接返回false
-		}
-		for (let key of Object.keys(target)) {
-			//遍历target的所有自身属性的key
-			if (!this.compare(origin[key], target[key])) {
-				//递归比较key对应的value，
-				//value不等，则两对象不等，结束循环，退出函数，返回false
-				return false;
-			}
-		}
-		//遍历结束，所有value都深度比较相等，则两对象相等
-		return true;
 	}
 
 	getTip = () => {
@@ -193,6 +123,19 @@ export default class router_Page extends PureComponent {
 		this.loadComponent(Props);
 	};
 	loadComponent = async (props) => {
+		const queryData = qs.parse(this.props.history.location.search, {
+			ignoreQueryPrefix: true
+		});
+		// 如果是从 app 跳过来的
+		if (queryData.apptoken) {
+			// 第二次循环 就有userinfo 了
+			// 这个判断 有必要 因为 从 app 跳 h5，后续的操作 有可能都是在 嵌在 app 中的 h5上进行的，apptoken 会一直都在应该。
+			if (!props.userInfo || !props.userInfo.tokenId) {
+				const newUserInfo = await this.getUserInfo(queryData.apptoken);
+				this.props.setUserInfoAction(newUserInfo.data);
+			}
+		}
+
 		const token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		let tokenFromStorage = '';
 		tokenFromStorage = store.getToken();
