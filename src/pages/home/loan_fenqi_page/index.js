@@ -1007,7 +1007,7 @@ export default class loan_fenqi_page extends PureComponent {
 					protocolList &&
 					protocolList.length ? (
 						<p className={style.protocolLink} onClick={this.checkAgreement}>
-							<CheckRadio selectFlag={checkBox1} />
+							<CheckRadio isSelect={checkBox1} />
 							点击“签约借款”，表示同意 {this.renderProtocol()}
 						</p>
 					) : null}

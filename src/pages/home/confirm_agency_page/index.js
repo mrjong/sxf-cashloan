@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 15:56:31
+ * @LastEditTime : 2020-02-18 17:01:17
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -1195,7 +1195,7 @@ export default class confirm_agency_page extends PureComponent {
 							<div className={style.protocolBox}>
 								{contractData.length > 0 && (
 									<p className={style.protocolLink} onClick={this.checkAgreement}>
-										<CheckRadio selectFlag={checkBox1} />
+										<CheckRadio isSelect={checkBox1} />
 										点击“确定签约”，表示同意{' '}
 										{contractData.map((item, idx) => (
 											<em

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 15:52:35
+ * @LastEditTime : 2020-02-18 16:58:54
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -9,7 +9,17 @@ import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 import { ButtonCustom, CheckRadio } from 'components';
+import { connect } from 'react-redux';
+import { setProtocolSelFlagAction } from 'reduxes/actions/commonActions';
 
+@connect(
+	(state) => ({
+		protocolSelFlag: state.commonState.protocolSelFlag
+	}),
+	{
+		setProtocolSelFlagAction
+	}
+)
 export default class InsuranceModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -20,6 +30,7 @@ export default class InsuranceModal extends React.PureComponent {
 	// 跳转协议
 	go = (url) => {
 		const { cacheData } = this.props;
+		// 缓存弹框展示
 		cacheData && cacheData();
 		this.props.history.push(`/protocol/${url}`);
 	};
@@ -56,11 +67,12 @@ export default class InsuranceModal extends React.PureComponent {
 			isSelected: checkBox1,
 			prodType
 		});
-		this.setState({ checkBox1: !this.state.checkBox1 });
+		this.setState({ checkBox1: !this.state.checkBox1 }, () => {
+			this.props.setProtocolSelFlagAction(this.state.checkBox1);
+		});
 	};
 	render() {
-		// const { prodType } = this.props;
-		const { checkBox1 } = this.state;
+		const { protocolSelFlag } = this.props;
 		return (
 			<Modal popup className="warningModal" visible={true} animationType="slide-up" maskClosable={false}>
 				<div className={styles.warningModalCont}>
@@ -114,7 +126,7 @@ export default class InsuranceModal extends React.PureComponent {
 					</div>
 					{/* 底部合同 */}
 					<div className={styles.agreement} onClick={this.checkAgreement}>
-						<CheckRadio selectFlag={checkBox1} />
+						<CheckRadio isSelect={protocolSelFlag} />
 						您已悉知并同意
 						<span
 							onClick={(e) => {
@@ -137,7 +149,7 @@ export default class InsuranceModal extends React.PureComponent {
 					{/* 继续申请借款按钮 */}
 					<ButtonCustom
 						onClick={this.handleButtonClick}
-						className={[styles.confirm_btn, checkBox1 ? '' : styles.confirm_disable_btn].join(' ')}
+						className={[styles.confirm_btn, protocolSelFlag ? '' : styles.confirm_disable_btn].join(' ')}
 					>
 						继续申请借款
 					</ButtonCustom>

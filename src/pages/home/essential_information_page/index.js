@@ -1131,7 +1131,7 @@ export default class essential_information_page extends PureComponent {
 					</div>
 
 					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<CheckRadio selectFlag={selectFlag} />
+						<CheckRadio isSelect={selectFlag} />
 						点击按钮即视为同意
 						<em
 							onClick={(e) => {
