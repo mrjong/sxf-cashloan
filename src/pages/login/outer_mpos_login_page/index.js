@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:19:43
+ * @LastEditTime : 2020-02-18 10:38:54
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -57,7 +57,6 @@ export default class login_page extends PureComponent {
 			queryData: {},
 			isChecked: true, // 是否勾选协议
 			inputFocus: false,
-			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
 			slideImageUrl: '',
 			mobilePhone: ''
@@ -378,15 +377,7 @@ export default class login_page extends PureComponent {
 	};
 
 	render() {
-		const {
-			imageCodeUrl,
-			slideImageUrl,
-			smallImageUrl,
-			showSlideModal,
-			yOffset,
-			bigImageH,
-			disabledInput
-		} = this.state;
+		const { slideImageUrl, smallImageUrl, showSlideModal, yOffset, bigImageH, disabledInput } = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page}>
