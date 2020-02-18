@@ -6,7 +6,6 @@ import STabs from 'components/Tab';
 import { LoadingView } from 'components';
 import qs from 'qs';
 import dayjs from 'dayjs';
-import { store } from 'utils/store';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { SXFToast } from 'utils/SXFToast';
 import CountDown from './component/CountDown/index.js';
@@ -18,7 +17,6 @@ import Images from 'assets/image';
 let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
-let saveBankData = null; // 还款详情页带过来的银行信息
 const noData = {
 	img: Images.bg.no_message,
 	text: '暂无账单',
@@ -43,9 +41,6 @@ export default class coupon_page extends PureComponent {
 		super(props);
 		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		receiveData = queryData;
-		if (this.props.history.location.state && this.props.history.location.state.cardData) {
-			saveBankData = this.props.history.location.state.cardData;
-		}
 		if (this.props.history.location.state && this.props.history.location.state.nouseCoupon) {
 			nouseFlag = true;
 		} else {
@@ -76,15 +71,7 @@ export default class coupon_page extends PureComponent {
 	componentWillMount() {
 		this.getTab();
 	}
-	componentWillUnmount() {
-		this.HomeBtnStatus = false;
-		// 从不可使用的优惠劵点进来，显示弹框
-		if (nouseFlag) {
-			if (saveBankData) {
-				store.setCardData(saveBankData);
-			}
-		}
-	}
+	componentWillUnmount() {}
 	componentDidMount() {
 		this.calcHeight();
 	}

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-14 16:21:44
+ * @LastEditTime : 2020-02-18 16:23:22
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -89,7 +89,6 @@ export default class landing_page extends PureComponent {
 				// buriedPointEvent(home.landingPage, {
 				// 	landingPoint: res.data.landingPoint
 				// });
-				// store.setLandingPageImgUrl(`data:image/png;base64,${res.data.landingImage}`);
 				// this.setState({
 				// 	imgUrl: res.data.landingImage
 				// });

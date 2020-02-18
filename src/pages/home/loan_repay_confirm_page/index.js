@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 19:42:04
+ * @LastEditTime : 2020-02-18 16:16:11
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -173,7 +173,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	goMoxieBankList = async () => {
 		store.setToggleMoxieCard(true);
-		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		activeConfigSts({
 			$props: this.props,
 			type: 'B'

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-18 14:50:30
+ * @LastEditTime : 2020-02-18 16:21:48
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -112,20 +112,6 @@ if (window.history && window.history.pushState) {
 
 			/* 实名上传图片时 不允许返回 */
 			if (store.getDisableBack()) {
-				return;
-			}
-			/* 实名上传图片时 不允许返回 */
-			// 如果当前是从首页到绑卡页面，返回直接回到首页
-			if (
-				store.getCheckCardRouter() &&
-				(store.getHistoryRouter() === '/mine/bind_credit_page' ||
-					store.getHistoryRouter() === '/mine/bind_save_page')
-			) {
-				if (store.getCheckCardRouter() === 'loan_repay_confirm_page') {
-					window.ReactRouterHistory.push('/home/loan_repay_confirm_page');
-				} else {
-					window.ReactRouterHistory.push('/home/home');
-				}
 				return;
 			}
 			// 人脸中间页物理返回
@@ -259,11 +245,6 @@ if (window.history && window.history.pushState) {
 			if (historyRouter === '/order/wx_pay_success_page') {
 				window.ReactRouterHistory.replace('/order/order_page');
 				return;
-			}
-			// 如果跳第三方 然后立马返回，则判断 MoxieBackUrl 有没有值
-			if (store.getMoxieBackUrl()) {
-				store.removeMoxieBackUrl();
-				return; // 当时为什么去掉？
 			}
 
 			// 如果从banner跳到外链 则不处理

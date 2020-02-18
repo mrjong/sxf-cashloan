@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 15:56:31
+ * @LastEditTime : 2020-02-18 17:00:52
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -1052,9 +1052,6 @@ export default class confirm_agency_page extends PureComponent {
 												return;
 											}
 											handleInputBlur();
-											if (v !== this.state.cardBillAmt) {
-												store.removeCouponData();
-											}
 											this.calcLoanMoney(v);
 										}, 10);
 									}}
