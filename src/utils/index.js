@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:23:00
+ * @LastEditTime : 2020-02-18 17:57:07
  */
 /*eslint-disable */
 import React from 'react';
@@ -199,7 +199,9 @@ const interceptRouteArr = [
 
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
-	window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+	if (interceptRouteArr.includes(window.location.pathname)) {
+		window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
+	}
 };
 
 function S4() {

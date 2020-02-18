@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-18 17:23:13
+ * @LastEditTime : 2020-02-18 17:53:41
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -154,12 +154,6 @@ if (window.history && window.history.pushState) {
 			const { nextStepStatus } = commonState;
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (nextStepStatus && !store.getToggleMoxieCard()) {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-			}
-
-			// 进度失败页面物理返回
-			if (window.location.pathname === '/home/crawl_fail_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}

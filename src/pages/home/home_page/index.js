@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:25:35
+ * @LastEditTime : 2020-02-18 17:36:30
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -219,8 +219,6 @@ export default class home_page extends PureComponent {
 	};
 	// 移除store
 	removeStore = () => {
-		// 去除支付方式默认选中
-		store.removePayType();
 		// 清除返回的flag
 		store.removeBackFlag();
 		// 运营商直接返回的问题

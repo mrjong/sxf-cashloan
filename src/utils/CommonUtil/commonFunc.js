@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:33:27
+ * @LastEditTime : 2020-02-18 17:46:37
  */
 import React from 'react';
 
@@ -117,7 +117,7 @@ export const goToStageLoan = ({ $props }) => {
 						res.data.excludedContacts[i] = base64Decode(res.data.excludedContacts[i]);
 					}
 				}
-				this.props.history.push('/home/loan_fenqi');
+				$props.history.push('/home/loan_fenqi');
 				// TODONEW
 				// $props.history.navigate('StageLoan', {
 				// 	pageInfo: res.data
