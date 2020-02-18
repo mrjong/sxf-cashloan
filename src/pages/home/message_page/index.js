@@ -47,7 +47,6 @@ export default class message_page extends PureComponent {
 			Listlength: 0,
 			rData: [],
 			tabState: false,
-			msgReadAllState: false,
 			msgType: 0,
 			hasMore: true,
 			tabs: [
@@ -344,7 +343,7 @@ export default class message_page extends PureComponent {
 					>
 						{obj.title ? (
 							<div className={style.title}>
-								{obj.sts !== '1' ? (
+								{obj.sts !== '1' && msgCount ? (
 									<i
 										className={!this.state.showDot ? style.displayDot : ''}
 										data-id={'ids' + obj.uuid}
