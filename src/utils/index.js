@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:55:33
+ * @LastEditTime : 2020-02-18 16:07:13
  */
 /*eslint-disable */
 import React from 'react';
@@ -242,169 +242,6 @@ export const closePage = () => {
 		return window.passValue();
 	}
 };
-// 确认按钮点击事件 提交到风控
-export const handleClickConfirm = async ($props, repaymentDate, goHome) => {
-	$props.SXFToast.loading('加载中...', 0);
-	const address = store.getPosition();
-	const params = {
-		location: address,
-		prdId: repaymentDate.prdId,
-		perdLth: repaymentDate.perdLth,
-		perdUnit: repaymentDate.perdUnit,
-		perdCnt: repaymentDate.perdCnt,
-		rpyAmt: Number(repaymentDate.rpyAmt),
-		autId: repaymentDate && repaymentDate.autId
-	};
-	if (isMPOS()) {
-		getAppsList();
-		getContactsList();
-	}
-	$props.$fetch
-		.post(`${API.submitState}`, params, { hideLoading: true })
-		.then((res) => {
-			$props.SXFToast.hide();
-			// 提交风控返回成功
-			if (res && res.msgCode === 'PTM0000') {
-				buriedPointEvent(home.moneyCreditCardConfirm, {
-					is_success: true,
-					fail_cause: '提交成功',
-					perdLth: repaymentDate.perdLth,
-					rpyAmt: Number(repaymentDate.rpyAmt),
-					activeName: repaymentDate.activeName
-				});
-				$props.toast.info(res.msgInfo);
-				store.removeLoanAspirationHome();
-				store.removeToggleMoxieCard();
-				setTimeout(() => {
-					$props.history.push({
-						pathname: '/home/credit_apply_succ_page',
-						search: `?noBankInfo=true&autId=${repaymentDate && repaymentDate.autId}`
-					});
-				}, 3000);
-			} else {
-				buriedPointEvent(home.moneyCreditCardConfirm, {
-					is_success: false,
-					fail_cause: res.msgInfo,
-					perdLth: repaymentDate.perdLth,
-					rpyAmt: Number(repaymentDate.rpyAmt),
-					activeName: repaymentDate.activeName
-				});
-				$props.toast.info(res.msgInfo);
-				if (goHome) {
-					setTimeout(() => {
-						$props.history.push('/home/home');
-					});
-				}
-			}
-		})
-		.catch(() => {
-			buriedPointEvent(home.moneyCreditCardConfirm, {
-				is_success: false,
-				fail_cause: '未知错误',
-				perdLth: repaymentDate.perdLth,
-				rpyAmt: Number(repaymentDate.rpyAmt),
-				activeName: repaymentDate.activeName
-			});
-			$props.SXFToast.hide();
-			$props.toast.info('网络开小差，请稍后重试');
-			setTimeout(() => {
-				$props.history.push('/home/home');
-			}, 2000);
-		});
-};
-const needDisplayOptions = ['idCheck', 'basicInf', 'supple', 'card'];
-export const getNextStr = async ({ $props, needReturn = false, callBack }) => {
-	let codes = '';
-	let codesArray = [];
-	let res = await $props.$fetch.post(API.GETSTSW);
-	let resBackMsg = '';
-	let btnText = '';
-	let orderText = 0;
-	let btnArry = ['继续完善个人信息', '继续确认身份信息', '继续导入信用卡账单'];
-	if (res && res.msgCode === 'PTM0000') {
-		for (let index = 0; index < needDisplayOptions.length; index++) {
-			res.data.forEach((item) => {
-				if (needDisplayOptions[index] === item.code) {
-					orderText = ++orderText;
-					if (item.stsw.dicDetailCd !== '2' && item.stsw.dicDetailCd !== '1' && !btnText) {
-						btnText = btnArry[orderText - 2];
-					}
-					codes += item.stsw.dicDetailCd;
-					codesArray.push(item.stsw.dicDetailCd);
-				}
-			});
-		}
-		if (!needReturn) {
-			if (btnText === '继续确认身份信息') {
-				buriedPointEvent(home.continueRealInfo);
-			} else if (btnText === '继续导入信用卡账单') {
-				buriedPointEvent(home.billContinueImport);
-			}
-			store.setNeedNextUrl(true);
-			// 实名
-			if (codesArray[0] !== '2' && codesArray[0] !== '1') {
-				$props.SXFToast.hide();
-				$props.history.push({
-					pathname: '/home/real_name',
-					search: '?type=noRealName&fromRouter=home'
-				});
-				return;
-			}
-			// 基本信息
-			if (codesArray[1] !== '2' && codesArray[1] !== '1') {
-				$props.SXFToast.hide();
-				resBackMsg = '基本信息认证';
-				$props.history.replace({ pathname: '/home/essential_information' });
-				if (callBack) {
-					callBack(resBackMsg);
-				}
-				return;
-			}
-
-			// 运营商前一步是成功或者审核中,可直接返回url链接
-			if (codesArray[2] !== '1' && codesArray[2] !== '2') {
-				let mxQuery = location.pathname.split('/');
-				let RouterType = (mxQuery && mxQuery[2]) || '';
-				$props.history.push(`/home/addInfo?RouterType=${RouterType}`);
-				return;
-			}
-			// 信用卡
-			if (codesArray[3] !== '1' && codesArray[3] !== '2') {
-				activeConfigSts({
-					$props,
-					type: 'B'
-				});
-				return;
-			}
-			// 如果是银行卡则跳转到进度否则是确认借款页
-			if (store.getCreditSuccessBack()) {
-				// 信用卡返回跳转到进度页
-				store.setToggleMoxieCard(true);
-				$props.history.push('/home/crawl_progress_page');
-			} else {
-				$props.history.replace('/home/loan_repay_confirm_page');
-			}
-		}
-	} else {
-		Toast.info(res.msgInfo);
-	}
-	return {
-		data: res.data,
-		codes,
-		codesArray,
-		resBackMsg,
-		btnText
-	};
-};
-
-export const getNowDate = () => {
-	var now = new Date();
-	var year = now.getFullYear(); //得到年份
-	var month = now.getMonth(); //得到月份
-	var date = now.getDate(); //得到日期
-	return `${year}${month}${date}`;
-};
-
 // 正则校验表达式
 export const verifyReg = {
 	phoneReg: /^[1][3,4,5,7,8][0-9]{9}$/,
@@ -458,94 +295,6 @@ export const validators = {
 		let chReg = new RegExp(`^(([\u4e00-\u9fa5])|(\\.)|(\\·)){${minNum},${maxNum}}$`);
 		return chReg.test(val);
 	}
-};
-
-// 是否可以借款
-export const isCanLoan = ({ $props, usrIndexInfo, goMoxieBankList }) => {
-	let state = true;
-	const { indexData = {} } = usrIndexInfo;
-	const { cardBillSts, cardBillAmt, billRemainAmt } = indexData;
-	if (indexData && indexData.persionCheck && indexData.persionCheck === '00') {
-		$props.toast.info(`非本人信用卡，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		return;
-	} else if (
-		(indexData && indexData.buidSts && indexData.buidSts === '02') ||
-		(indexData && indexData.cardBinSupport && indexData.cardBinSupport === '00')
-	) {
-		$props.toast.info(`暂不支持当前信用卡，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		return;
-	} else if (indexData && indexData.cardBillCheck && indexData.cardBillCheck === '00') {
-		$props.toast.info(`未生成账单，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		return;
-	} else if (
-		indexData &&
-		cardBillSts === '01' &&
-		(billRemainAmt === 0 || (billRemainAmt && Number(billRemainAmt) <= 0))
-	) {
-		$props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		state = false;
-	} else if (
-		indexData &&
-		cardBillSts === '01' &&
-		(cardBillAmt === 0 || (cardBillAmt && Number(cardBillAmt) <= 0))
-	) {
-		$props.toast.info(`账单已结清，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		state = false;
-	} else if (
-		cardBillSts === '01' &&
-		indexData &&
-		(billRemainAmt !== 0 && billRemainAmt !== '0') &&
-		billRemainAmt &&
-		Number(indexData.minApplAmt) > Number(billRemainAmt)
-	) {
-		$props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		state = false;
-	} else if (
-		cardBillSts === '01' &&
-		indexData &&
-		!billRemainAmt &&
-		cardBillAmt &&
-		cardBillAmt !== 0 &&
-		Number(indexData.minApplAmt) > Number(cardBillAmt)
-	) {
-		$props.toast.info(`账单低于最低可借金额：${indexData.minApplAmt}元，请代偿其他信用卡`, 2, () => {
-			// 跳新版魔蝎
-			goMoxieBankList();
-		});
-		state = false;
-	}
-	if (state) {
-		//卡可以提交埋点
-		buriedPointEvent(home.selectCreditCardResult, {
-			is_success: true,
-			bank_name: indexData.bankName
-		});
-	} else {
-		//卡不可以提交埋点
-		buriedPointEvent(home.selectCreditCardResult, {
-			is_success: false,
-			bank_name: indexData.bankName
-		});
-	}
-	return state;
 };
 
 export const generateRandomPhone = () => {
@@ -626,35 +375,6 @@ export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
  */
 export const recordContract = (params) => fetch.post(signup_log, params, { hideToast: true });
 
-// 神策用户绑定
-export const queryUsrSCOpenId = ({ $props }) => {
-	return new Promise((resolve) => {
-		// 获取token
-		let token = Cookie.get('FIN-HD-AUTH-TOKEN');
-		let tokenFromStorage = store.getToken();
-		if (token && tokenFromStorage) {
-			if (!store.getQueryUsrSCOpenId()) {
-				$props.$fetch
-					.get(API.queryUsrSCOpenId)
-					.then((res) => {
-						if (res.msgCode === 'PTM0000') {
-							window.sa.login(res.data);
-							sxfDataLogin(res.data);
-							store.setQueryUsrSCOpenId(res.data);
-						}
-						resolve(true);
-					})
-					.catch(() => {
-						resolve(true);
-					});
-			} else {
-				resolve(true);
-			}
-		} else {
-			resolve(true);
-		}
-	});
-};
 /**
  * @description: AB测试
  * @param {$props} this.props
@@ -701,12 +421,6 @@ export const activeConfigSts = ({ $props, callback, type }) => {
 		.catch(() => {
 			$props.toast.info('系统开小差，请稍后重试');
 		});
-};
-
-export const openNativeApp = () => {
-	if (!(isMPOS() && getDeviceType() === 'ANDROID')) {
-		window.location.href = 'cashloan://sxfcashloan.app/openwith?name=qwer';
-	}
 };
 
 // 引用类型数组校验是否存在重复项

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-12-04 14:43:24
+ * @LastEditTime : 2020-02-18 16:04:23
  */
 import { store } from 'utils/store';
 import { getDeviceType, getNextStr, isCanLoan, getMoxieData, activeConfigSts } from 'utils';
@@ -151,10 +151,7 @@ class HomeBtn {
 	};
 
 	// 首页进度
-	getPercent = async () => {
-		let data = await getNextStr({ $props: this.instance.props, needReturn: true });
-		this.calculatePercent(data);
-	};
+	getPercent = async () => {};
 
 	// 进度计算
 	calculatePercent = (data) => {
@@ -283,15 +280,6 @@ class HomeBtn {
 						this.goToNewMoXie();
 					}, 2000);
 				} else if (usrIndexInfo.indexData.autSts === '2') {
-					if (
-						!isCanLoan({
-							$props: this.instance.props,
-							usrIndexInfo: this.instance.state.usrIndexInfo,
-							goMoxieBankList: this.requestCredCardCount
-						})
-					) {
-						return;
-					}
 					this.jumpToUrl();
 				}
 				break;
@@ -543,9 +531,6 @@ class HomeBtn {
 			// 埋点-首页-点击申请信用卡代还按钮
 			buriedPointEvent(home.applyCreditRepayment);
 		}
-		getNextStr({
-			$props: this.instance.props
-		});
 	};
 	getDCDisPlay = () => {
 		const { usrIndexInfo = {}, showDiv } = this.instance.state;

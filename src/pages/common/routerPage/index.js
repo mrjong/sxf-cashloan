@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 15:33:18
+ * @LastEditTime : 2020-02-18 16:10:52
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -10,14 +10,13 @@ import Header from 'components/Header';
 import fetch from 'sx-fetch';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-
 import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { changeHistoryState, pagesIgnore } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
-import { pageView, sxfDataPv } from 'utils/analytins';
+import { pageView, sxfDataPv, sxfDataLogin } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { HomeModal } from '../../home/home_page/components';
 
@@ -192,6 +191,15 @@ export default class router_Page extends PureComponent {
 		// }
 		this.loadComponent(Props);
 	};
+	// 神策用户绑定
+	queryUsrSCOpenId = () => {
+		if (!store.getQueryUsrSCOpenId()) {
+			const { userInfo } = this.props;
+			window.sa.login(userInfo.scOpenId);
+			sxfDataLogin(userInfo.scOpenId);
+			store.setQueryUsrSCOpenId(userInfo.scOpenId);
+		}
+	};
 	loadComponent = async (props) => {
 		const token = Cookie.get('FIN-HD-AUTH-TOKEN');
 		let tokenFromStorage = '';
@@ -207,6 +215,7 @@ export default class router_Page extends PureComponent {
 		try {
 			let route;
 			// 看条件自动触发通付盾
+			this.queryUsrSCOpenId();
 			TFDInit();
 			for (let i = 0; i < Routers.length; i++) {
 				if (match.url === Routers[i].path) {
