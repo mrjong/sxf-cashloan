@@ -80,7 +80,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 	componentDidMount() {
 		store.removeToggleMoxieCard();
-		store.removeAutIdCard(); // 信用卡前置
 		this.queryUsrInfo();
 		let _this = this;
 		let originClientHeight = document.documentElement.clientHeight;

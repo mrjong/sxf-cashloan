@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 14:33:58
+ * @LastEditTime : 2020-02-18 17:33:27
  */
 import React from 'react';
 
@@ -14,7 +14,7 @@ import { base64Decode } from './toolUtil';
 import storeRedux from 'reduxes';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { isMPOS } from 'utils/common';
-import { store } from 'utils/store';
+
 /**
  * @description: 账单需要更新等跳转逻辑
  * @param {type}
@@ -151,7 +151,6 @@ export const logoutClearData = (type) => {
 	}
 	storeRedux.dispatch(setUserInfoAction({}));
 };
-let state = false;
 // 退出功能
 export const logoutApp = () => {
 	fetch.get(signup_logout).then(
@@ -182,9 +181,14 @@ export const closeCurrentWebView = () => {
 		});
 	});
 };
+let state = false;
+
 export const logoutAppHandler = (that) => {
 	if (isMPOS()) {
 		closeCurrentWebView();
+		return;
+	}
+	if (state) {
 		return;
 	}
 	state = true;

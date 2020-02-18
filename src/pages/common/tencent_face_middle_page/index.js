@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 14:11:22
+ * @LastEditTime : 2020-02-18 17:22:34
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -28,8 +28,6 @@ export default class tencent_face_middle_page extends Component {
 		};
 	}
 	componentWillMount() {
-		// window.tencent_face_middle_page = null;
-		store.removeChkPhotoBackNew();
 		const osType = getDeviceType();
 		const { nextStepStatus } = this.props;
 		//人脸识别的回调
@@ -56,22 +54,15 @@ export default class tencent_face_middle_page extends Component {
 					is_success: true,
 					fail_cause: ''
 				});
-				const tencentBackUrl = store.getTencentBackUrl();
 				// 借钱还信用卡页进入
 				// if (!store.getRealNameNextStep()) {
 				if (nextStepStatus) {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
-					store.removeIdChkPhotoBack();
 					store.removeTencentBackUrl();
 					getNextStatus({
 						$props: this.props
 					});
-				} else if (tencentBackUrl) {
-					store.removeTencentBackUrl();
-					store.removeIdChkPhotoBack();
-					store.removeRealNameNextStep();
-					this.props.history.replace(tencentBackUrl);
 				} else {
 					this.props.history.replace('/home/home');
 				}
@@ -106,14 +97,7 @@ export default class tencent_face_middle_page extends Component {
 	};
 
 	goRouter = () => {
-		const tencentBackUrl = store.getTencentBackUrl();
-		if (tencentBackUrl) {
-			store.removeTencentBackUrl();
-			this.props.history.replace(tencentBackUrl);
-		} else {
-			this.props.history.replace('/home/home');
-		}
-		store.removeIdChkPhotoBack();
+		this.props.history.replace('/home/home');
 		store.removeRealNameNextStep();
 	};
 

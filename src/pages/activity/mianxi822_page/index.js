@@ -124,7 +124,6 @@ export default class mianxi822_page extends PureComponent {
 		this.props.$fetch.get(API.joinActivity).then((res) => {
 			if (res && res.msgCode === 'PTM0000') {
 				if (res.data && res.data.sts === '00') {
-					store.setBonusActivity(true);
 					this.jumpToHome(true);
 				} else if (res.data && res.data.sts === '04') {
 					this.props.toast.info('不符合领取条件', 2, () => {

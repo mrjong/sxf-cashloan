@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:56:27
+ * @LastEditTime : 2020-02-18 17:29:02
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -48,7 +48,7 @@ export default class router_Page extends PureComponent {
 			this.getTip();
 		}
 		// 为跳转到协议添加loading
-		store.setFromPage('wap');
+		// store.setFromPage('wap');
 		if (!store.getHistoryRouter()) {
 			store.setHistoryRouter('first-come-in');
 		}
@@ -115,9 +115,11 @@ export default class router_Page extends PureComponent {
 	queryUsrSCOpenId = () => {
 		if (!store.getQueryUsrSCOpenId()) {
 			const { userInfo } = this.props;
-			window.sa.login(userInfo.scOpenId);
-			sxfDataLogin(userInfo.scOpenId);
-			store.setQueryUsrSCOpenId(userInfo.scOpenId);
+			if (userInfo && userInfo.tokenId) {
+				window.sa.login(userInfo.scOpenId);
+				sxfDataLogin(userInfo.scOpenId);
+				store.setQueryUsrSCOpenId(userInfo.scOpenId);
+			}
 		}
 	};
 	loadComponent = async (props) => {

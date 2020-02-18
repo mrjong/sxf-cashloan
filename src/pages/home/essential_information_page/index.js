@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:15:39
+ * @LastEditTime : 2020-02-18 17:10:18
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -87,7 +87,6 @@ export default class essential_information_page extends PureComponent {
 
 	componentWillMount() {
 		// mpos中从授权页进入基本信息
-		urlQuery && urlQuery.jumpToBase && store.setNeedNextUrl(true);
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
 		}

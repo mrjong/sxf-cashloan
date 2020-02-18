@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:07:13
+ * @LastEditTime : 2020-02-18 17:23:00
  */
 /*eslint-disable */
 import React from 'react';
@@ -186,12 +186,9 @@ const interceptRouteArr = [
 	'/home/essential_information',
 	'/home/real_name',
 	'/home/confirm_agency',
-	'/home/moxie_bank_list_page',
 	'/home/loan_repay_confirm_page',
 	'/home/credit_apply_succ_page',
 	'/home/loan_apply_succ_page',
-	'/home/crawl_progress_page',
-	'/home/crawl_fail_page',
 	'/order/wx_pay_success_page',
 	// '/protocol/pdf_page',
 	'/home/loan_fenqi',
@@ -202,26 +199,7 @@ const interceptRouteArr = [
 
 // 在需要路由拦截的页面 pushState
 export const changeHistoryState = () => {
-	if (interceptRouteArr.includes(window.location.pathname)) {
-		// if (store.getChkPhotoBackNew()) {
-		if (store.getTencentBackUrl() && getDeviceType() === 'ANDROID') {
-			if (store.getTencentBackUrl() === '/mine/mine_page') {
-				// 解决人脸直接返回不调用接口的问题
-				history.go(-2);
-			} else {
-				window.ReactRouterHistory.replace(store.getTencentBackUrl());
-			}
-			// history.go(Number(store.getChkPhotoBackNew()));
-			store.removeTencentBackUrl();
-			store.removeIdChkPhotoBack();
-			store.removeChkPhotoBackNew();
-		} else if (store.getGoMoxie()) {
-			history.go(-1);
-			store.removeGoMoxie();
-		} else {
-			window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
-		}
-	}
+	window.history.pushState(null, null, document.URL); //在IE中必须得有这两行
 };
 
 function S4() {

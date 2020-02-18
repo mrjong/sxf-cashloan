@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:22:03
+ * @LastEditTime : 2020-02-18 17:31:58
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -13,7 +13,7 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView, sxfDataLogin } from 'utils/analytins';
+import { buriedPointEvent, pageView } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
@@ -194,12 +194,6 @@ export default class momo_outer_login_page extends PureComponent {
 						store.setToken(res.data.tokenId);
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
-						// 神策用户绑定
-						if (!store.getQueryUsrSCOpenId() && res.data.openId) {
-							window.sa.login(res.data.openId);
-							sxfDataLogin(res.data.openId);
-							store.setQueryUsrSCOpenId(res.data.openId);
-						}
 						this.setState(
 							{
 								showDownloadModal: true

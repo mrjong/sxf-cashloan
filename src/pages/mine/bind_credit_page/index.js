@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:25:26
+ * @LastEditTime : 2020-02-18 17:31:39
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -103,10 +103,6 @@ export default class bind_credit_page extends PureComponent {
 					entry: backUrlData ? '绑定信用卡' : '信用卡管理',
 					is_success: true
 				});
-				const cardDatas = {
-					agrNo: result.data && result.data.agrNo ? result.data.agrNo : '',
-					...this.state.cardData
-				};
 				if (backUrlData) {
 					// 提交申请 判断是否绑定信用卡和储蓄卡
 					this.props.$fetch

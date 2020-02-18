@@ -168,7 +168,6 @@ export default class LoginAlert extends Component {
 				this.setState({
 					imageCodeUrl: res.image
 				});
-				store.setNoLoginToken(res.tokenId);
 			} else {
 				Toast.info(res.msgInfo);
 			}

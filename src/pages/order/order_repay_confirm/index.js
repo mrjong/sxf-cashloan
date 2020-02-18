@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 15:58:00
+ * @LastEditTime : 2020-02-18 17:20:27
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -475,7 +475,6 @@ export default class order_repay_confirm extends PureComponent {
 		this.setState({
 			payType: type
 		});
-		// store.setPayType(type);
 	};
 
 	handleAlertShow = (type) => {

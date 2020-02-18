@@ -1,6 +1,7 @@
 // 本地存储
 import { storeTypes } from './storeTypes';
 import { isPhone } from 'utils';
+const prefix = 'sxfStoreHd';
 
 const { localStorage, sessionStorage } = window;
 // 默认使用sessionstorage
@@ -70,7 +71,7 @@ const storeFactory = (funcName, key) => {
 
 // 循环添加存储方法(包括local session)
 for (let funName in storeTypes) {
-	storeFactory(funName, storeTypes[funName]);
+	storeFactory(funName, prefix + storeTypes[funName]);
 }
 
 export { store };

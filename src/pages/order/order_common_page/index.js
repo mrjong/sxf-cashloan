@@ -44,7 +44,6 @@ export default class order_detail_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		store.removeInsuranceFlag();
 		if (!store.getBillNo()) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {

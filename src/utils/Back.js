@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-18 16:21:48
+ * @LastEditTime : 2020-02-18 17:23:13
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -114,16 +114,6 @@ if (window.history && window.history.pushState) {
 			if (store.getDisableBack()) {
 				return;
 			}
-			// 人脸中间页物理返回
-			const tencentBackUrl = store.getTencentBackUrl();
-			// if (!window.tencent_face_middle_page && store.getIdChkPhotoBack()) {
-			if (!window.tencent_face_middle_page && tencentBackUrl) {
-				// history.go(Number(store.getIdChkPhotoBack()));
-				store.removeTencentBackUrl();
-				window.ReactRouterHistory.replace(tencentBackUrl);
-				// store.removeIdChkPhotoBack();
-				return;
-			}
 			if (window.location.pathname === '/others/mpos_testB_download_page') {
 				window.ReactRouterHistory.push('/home/home');
 				return;
@@ -160,30 +150,10 @@ if (window.history && window.history.pushState) {
 				obj.show();
 				return;
 			}
-
-			/* 魔蝎银行卡列表 */
-			if (window.location.pathname === '/home/moxie_bank_list_page') {
-				if (store.getBankMoxie()) {
-					// 银行卡直接返回的问题
-					store.removeBankMoxie();
-					return;
-				}
-				document.activeElement.blur();
-				obj.show();
-				return;
-			}
 			const { commonState = {} } = storeData;
 			const { nextStepStatus } = commonState;
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (nextStepStatus && !store.getToggleMoxieCard()) {
-				window.ReactRouterHistory.push('/home/home');
-				return;
-			}
-
-			// 进度页面物理返回
-			if (window.location.pathname === '/home/crawl_progress_page') {
-				let mainAutId = store.getAutId();
-				store.setAutId2(mainAutId);
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:56:11
+ * @LastEditTime : 2020-02-18 17:35:20
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -81,8 +81,6 @@ export default class bind_save_page extends PureComponent {
 			store.removeBackUrl(); // 清除session里的backurl的值
 			this.props.setBindDepositInfoAction({});
 			// store.removeBindCardNo();
-			// store.removeBindCardPhone();
-			// store.removeDepositBankName();
 		}
 	}
 
@@ -436,7 +434,6 @@ export default class bind_save_page extends PureComponent {
 										actId: 'delAll'
 									});
 								}
-								// store.setBindCardNo(value);
 								this.props.setBindDepositInfoAction({
 									...bindDepositInfo,
 									cardNo: value
@@ -486,7 +483,6 @@ export default class bind_save_page extends PureComponent {
 										actId: 'delAll'
 									});
 								}
-								// store.setBindCardPhone(value);
 								this.props.setBindDepositInfoAction({
 									...bindDepositInfo,
 									cardPhone: value

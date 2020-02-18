@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-18 15:53:47
+ * @LastEditTime : 2020-02-18 17:20:52
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -37,11 +37,6 @@ export default class wx_middle_page extends Component {
 
 							break;
 						}
-					}
-					if (res.data.perdList[res.data.perdList.length - 1].perdSts === '4') {
-						store.setWxPayEnd(true);
-					} else {
-						store.setWxPayEnd(false);
 					}
 				} else {
 					this.props.toast.info(res.message);

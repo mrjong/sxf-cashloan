@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 15:35:46
+ * @LastEditTime : 2020-02-18 17:19:48
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -74,7 +74,6 @@ export default class support_save_page extends PureComponent {
 			...bindDepositInfo,
 			bankName: name
 		});
-		// store.setDepositBankName(name);
 		this.props.history.goBack();
 	};
 

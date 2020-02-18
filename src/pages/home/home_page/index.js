@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:00:07
+ * @LastEditTime : 2020-02-18 17:25:35
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -221,37 +221,13 @@ export default class home_page extends PureComponent {
 	removeStore = () => {
 		// 去除支付方式默认选中
 		store.removePayType();
-		// 去除借款页面参数
-		store.removeHomeConfirmAgency();
-		// 删除授信弹窗信息
-		store.removeLoanAspirationHome();
 		// 清除返回的flag
 		store.removeBackFlag();
-		// 信用卡前置
-		store.removeAutIdCard();
 		// 运营商直接返回的问题
 		// store.removeCarrierMoxie();
-		// 信用卡绑卡之后立即去提交页需要提示
-		store.removeCreditSuccessBack();
-		// 未提交授信用户
-		store.removeCreditExtensionNot();
-		// 去除需要调用获取下一步url方法
-		store.removeNeedNextUrl();
-		// 活体直接返回
-		store.removeChkPhotoBackNew();
-		// 结清页去活动页
-		store.removeSuccessPay();
 		//删除现金分期相关数据
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
-		// 清除借款中总的联系人
-		store.removeContactList();
-		// 清除借款选中的五个联系人
-		store.removeSelContactList();
-		store.removeSelEmptyContactList();
-		store.removeSaveContactList();
-		store.removeSaveEmptyContactList();
-		store.removeExcContactList();
 	};
 
 	/**

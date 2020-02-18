@@ -390,7 +390,6 @@ export default class login_page extends PureComponent {
 					imageCodeUrl: res.data.imageBase64,
 					relyToken: res.data.tokenId
 				});
-				// store.setNoLoginToken(res.tokenId);
 			} else {
 				Toast.info(res.message);
 			}

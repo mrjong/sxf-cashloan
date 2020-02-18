@@ -1,9 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:04:23
+ * @LastEditTime : 2020-02-18 17:33:43
  */
 import { store } from 'utils/store';
-import { getDeviceType, getNextStr, isCanLoan, getMoxieData, activeConfigSts } from 'utils';
+import { getDeviceType, getMoxieData, activeConfigSts } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import { TFDLogin } from 'utils/getTongFuDun';
