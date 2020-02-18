@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import style from './index.scss';
 import fetch from 'sx-fetch';
 import STabs from 'components/Tab';
+import { LoadingView } from 'components';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { store } from 'utils/store';
@@ -18,7 +19,16 @@ let totalPage = false;
 let receiveData = null;
 let nouseFlag = false; //是否有可用优惠券的标识
 let saveBankData = null; // 还款详情页带过来的银行信息
-
+const noData = {
+	img: Images.bg.no_message,
+	text: '暂无账单',
+	width: '100%',
+	height: '100%'
+};
+const errorData = {
+	img: Images.bg.no_network,
+	text: '网络错误,点击重试'
+};
 @connect(
 	(state) => ({
 		couponData: state.commonState.couponData
@@ -245,7 +255,10 @@ export default class coupon_page extends PureComponent {
 		this.setState({
 			isLoading: true
 		});
-		let list = await this.genData(1, tab);
+		let list = await this.genData(1, tab).catch(() => {
+			this.viewRef && this.viewRef.setEmpty();
+		});
+		this.viewRef && this.viewRef.showDataView();
 		if (tab === 'tabshow') {
 			this.setState({
 				tabState: true
@@ -360,6 +373,18 @@ export default class coupon_page extends PureComponent {
 				break;
 		}
 		return useSceneStr + coupTypStr;
+	};
+	/**
+	 * 点击显示隐藏详情
+	 * @param  无
+	 * @return {void}
+	 */
+	showDetail = (info) => {
+		this.setState({
+			[`isShowCouponDesc${this.state.msgType}${info.coupId}`]: !this.state[
+				`isShowCouponDesc${this.state.msgType}${info.coupId}`
+			]
+		});
 	};
 	render() {
 		const separator = (sectionID, rowID) => <div key={`${sectionID}-${rowID}`} />;
@@ -492,10 +517,19 @@ export default class coupon_page extends PureComponent {
 						</div>
 						{obj && obj.coupDesc ? (
 							<div className={style.descBox}>
-								<div className={style.desctitle}>
-									查看详情<i className={style.topArrow}></i>
+								<div className={style.desctitle} onClick={() => this.showDetail(obj)}>
+									查看详情
+									<i
+										className={
+											this.state[`isShowCouponDesc${this.state.msgType}${obj.coupId}`]
+												? style.topArrow
+												: style.bottomArrow
+										}
+									></i>
 								</div>
-								<div>{obj && obj.coupDesc}</div>
+								{this.state[`isShowCouponDesc${this.state.msgType}${obj.coupId}`] ? (
+									<div>{obj && obj.coupDesc}</div>
+								) : null}
 							</div>
 						) : null}
 					</div>
@@ -568,21 +602,30 @@ export default class coupon_page extends PureComponent {
 		};
 		return (
 			<div className="coupon_page" ref={(el) => (this.messageBox = el)}>
-				{this.state.tabState ? (
-					<STabs
-						tabTit={this.state.tabs}
-						initialPage={this.state.msgType}
-						onChange={(tab, index) => {
-							this.changeTab(tab, index);
-						}}
-						swipeable={false}
-						ref={(el) => (this.messageTabBox = el)}
-					>
-						{this.state.tabs.map((item2, index2) => (
-							<div key={index2}>{item(`iview${index2}`)}</div>
-						))}
-					</STabs>
-				) : null}
+				<LoadingView
+					ref={(view) => (this.viewRef = view)}
+					nodata={noData}
+					errordata={errorData}
+					onReloadData={() => {
+						this.onRefresh();
+					}}
+				>
+					{this.state.tabState ? (
+						<STabs
+							tabTit={this.state.tabs}
+							initialPage={this.state.msgType}
+							onChange={(tab, index) => {
+								this.changeTab(tab, index);
+							}}
+							swipeable={false}
+							ref={(el) => (this.messageTabBox = el)}
+						>
+							{this.state.tabs.map((item2, index2) => (
+								<div key={index2}>{item(`iview${index2}`)}</div>
+							))}
+						</STabs>
+					) : null}
+				</LoadingView>
 			</div>
 		);
 	}

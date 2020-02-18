@@ -242,9 +242,9 @@
 	i.topArrow {
 		@include setArrow(top, 12px, #868e9e, 1px);
 		margin-left: 10px;
-	}
-	i.bottomArrow {
-		@include setArrow(bottom, 12px, #868e9e, 1px);
+  }
+  i.bottomArrow {
+		@include setArrow(down, 12px, #868e9e, 1px);
 		margin-left: 10px;
 	}
 	.desctitle {

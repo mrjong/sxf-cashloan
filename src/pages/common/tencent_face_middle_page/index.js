@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 21:15:03
+ * @LastEditTime : 2020-02-18 13:59:43
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -34,8 +34,8 @@ export default class tencent_face_middle_page extends Component {
 		const { nextStepStatus } = this.props;
 		//人脸识别的回调
 		this.props.$fetch
-			.post(`${auth_faceDetect}`, {
-				osType
+			.get(`${auth_faceDetect}`, {
+				osType: osType.toLowerCase()
 			})
 			.then((res) => {
 				if (res.code !== '000000') {
@@ -59,13 +59,7 @@ export default class tencent_face_middle_page extends Component {
 				const tencentBackUrl = store.getTencentBackUrl();
 				// 借钱还信用卡页进入
 				// if (!store.getRealNameNextStep()) {
-				if (store.getLoanAspirationHome()) {
-					activeConfigSts({
-						$props: this.props,
-						type: 'B',
-						callback: () => {}
-					});
-				} else if (nextStepStatus && store.getRealNameNextStep() === 'home') {
+				if (nextStepStatus) {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
@@ -81,14 +75,6 @@ export default class tencent_face_middle_page extends Component {
 				} else {
 					this.props.history.replace('/home/home');
 				}
-				//  else if (store.getIdChkPhotoBack()) {
-				// 	// 我的  借款确认页
-				// 	history.go(Number(store.getIdChkPhotoBack()));
-				// 	store.removeIdChkPhotoBack();
-				// 	store.removeRealNameNextStep();
-				// } else {
-				// 	this.props.history.push('/home/home');
-				// }
 			})
 			.catch(() => {
 				this.setState({
@@ -101,16 +87,18 @@ export default class tencent_face_middle_page extends Component {
 		if (isFetching) return;
 		isFetching = true;
 		Toast.loading('加载中...', 0);
-		this.props.$fetch.post(`${auth_getTencentFaceData}`, {}).then((result) => {
-			if (result.code === '000000' && result.data) {
-				setTimeout(() => {
-					// 人脸识别第三方直接返回的问题
-					Toast.hide();
-					isFetching = false;
-					window.location.href = result.data;
-				}, 3000);
-			}
-		});
+		this.props.$fetch
+			.get(`${auth_getTencentFaceData}?callBackUrl=http://172.16.175.23/common/tencent_face_middle_page`, {})
+			.then((result) => {
+				if (result.code === '000000' && result.data) {
+					setTimeout(() => {
+						// 人脸识别第三方直接返回的问题
+						Toast.hide();
+						isFetching = false;
+						window.location.href = result.data.h5Url;
+					}, 3000);
+				}
+			});
 	};
 
 	goBack = () => {

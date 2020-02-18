@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 19:46:05
+ * @LastEditTime : 2020-02-18 13:05:52
  */
 import React from 'react';
 
@@ -40,7 +40,7 @@ export const updateBillInf = ({ $props, type = '', usrIndexInfo }) => {
 				param.autId = usrIndexInfo.autId;
 				param.cardNoHid = usrIndexInfo.cardNoHid;
 			}
-			$props.history.push('/others/mpos_testB_download_page', {
+			$props.history.push(credCardCount > 1 ? '/mine/credit_list_page' : '/others/mpos_testB_download_page', {
 				RouterType: 'selectAuthCard',
 				...param
 			});
@@ -59,10 +59,13 @@ export const updateBillInf = ({ $props, type = '', usrIndexInfo }) => {
 					param.cardNoHid = usrIndexInfo.cardNoHid;
 				}
 				// 跳银行登录页面
-				$props.history.push('/others/mpos_testB_download_page', {
-					RouterType: 'selectAuthCard',
-					...param
-				});
+				$props.history.push(
+					credCardCount > 1 ? '/mine/credit_list_page' : '/others/mpos_testB_download_page',
+					{
+						RouterType: 'selectAuthCard',
+						...param
+					}
+				);
 			}
 		});
 		return true;
