@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 19:49:10
+ * @LastEditTime : 2020-02-18 16:25:26
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -124,20 +124,8 @@ export default class bind_credit_page extends PureComponent {
 									this.props.history.replace('/mine/bind_save_page');
 								}
 							} else {
-								// 首页不需要存储银行卡的情况，防止弹窗出现
-								if (query && query.noBankInfo) {
-									store.removeCardData();
-								} else {
-									store.setCardData(cardDatas);
-								}
 								store.removeBackUrl();
-								// this.props.history.push(backUrlData);
-								// 如果是从四项认证进入，绑卡成功则回到首页
-								if (store.getCheckCardRouter() === 'checkCardRouter') {
-									this.props.history.push('/home/home');
-								} else {
-									this.props.history.goBack();
-								}
+								this.props.history.goBack();
 							}
 						});
 				} else {

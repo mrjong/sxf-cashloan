@@ -353,10 +353,7 @@ export default class loan_fenqi_page extends PureComponent {
 		const { protocolList } = this.state;
 		const { couponData } = this.props;
 		this.storeTempData();
-		const { couponInfo, loanMoney, loanDate = {} } = this.state;
-		if (couponInfo && couponInfo.usrCoupNo) {
-			store.setCouponData(couponInfo);
-		}
+		const { loanMoney, loanDate = {} } = this.state;
 		let prdId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
@@ -670,8 +667,6 @@ export default class loan_fenqi_page extends PureComponent {
 			.post(loan_loanSub, params)
 			.then((res) => {
 				if (res.code === '000000') {
-					// 清除卡信息
-					store.removeCardData();
 					this.props.toast.info('签约成功，请留意放款通知！');
 					setTimeout(() => {
 						this.props.history.push('/home/home');
@@ -680,10 +675,10 @@ export default class loan_fenqi_page extends PureComponent {
 						is_success: true
 					});
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 					buriedPointEvent(loan_fenqi.submitResult, {
 						is_success: false,
-						fail_cause: res.msgInfo
+						fail_cause: res.message
 					});
 				}
 			})
@@ -1007,7 +1002,7 @@ export default class loan_fenqi_page extends PureComponent {
 					protocolList &&
 					protocolList.length ? (
 						<p className={style.protocolLink} onClick={this.checkAgreement}>
-							<CheckRadio selectFlag={checkBox1} />
+							<CheckRadio isSelect={checkBox1} />
 							点击“签约借款”，表示同意 {this.renderProtocol()}
 						</p>
 					) : null}

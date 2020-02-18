@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 13:58:46
+ * @LastEditTime : 2020-02-18 16:15:39
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -90,10 +90,6 @@ export default class essential_information_page extends PureComponent {
 		urlQuery && urlQuery.jumpToBase && store.setNeedNextUrl(true);
 		if (store.getBackFlag()) {
 			store.removeBackFlag(); // 清除返回的flag
-		}
-		if (store.getMoxieBackUrl()) {
-			store.removeMoxieBackUrl();
-			this.props.history.push(`/home/home`);
 		}
 		buryingPoints();
 		this.initBasicInfo();
@@ -1131,7 +1127,7 @@ export default class essential_information_page extends PureComponent {
 					</div>
 
 					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<CheckRadio selectFlag={selectFlag} />
+						<CheckRadio isSelect={selectFlag} />
 						点击按钮即视为同意
 						<em
 							onClick={(e) => {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:22:30
+ * @LastEditTime : 2020-02-18 15:56:11
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -353,7 +353,7 @@ export default class login_page extends PureComponent {
 					showSlideModal: true
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};
@@ -374,7 +374,7 @@ export default class login_page extends PureComponent {
 				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
 				this.startCountDownTime();
 			} else {
-				Toast.info(result.msgInfo, 3);
+				Toast.info(result.message, 3);
 			}
 		});
 	};
@@ -439,11 +439,11 @@ export default class login_page extends PureComponent {
 	// 					Toast.info('安全下载中');
 	// 					window.location.href = res.data;
 	// 				} else {
-	// 					res.msgInfo && Toast.info(res.msgInfo);
+	// 					res.message && Toast.info(res.message);
 	// 				}
 	// 			},
 	// 			(error) => {
-	// 				error.msgInfo && Toast.info(error.msgInfo);
+	// 				error.message && Toast.info(error.message);
 	// 			}
 	// 		);
 	// 	}

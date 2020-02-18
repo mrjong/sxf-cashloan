@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-05 10:15:29
+ * @LastEditTime : 2020-02-18 16:46:03
  */
 import React, { PureComponent } from 'react';
 import Lists from 'components/Lists';
@@ -45,8 +45,6 @@ export default class order_detail_page extends PureComponent {
 
 	componentWillMount() {
 		store.removeInsuranceFlag();
-		store.removeCardData();
-		store.removeCouponData();
 		if (!store.getBillNo()) {
 			this.props.toast.info('订单号不能为空');
 			setTimeout(() => {

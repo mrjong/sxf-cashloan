@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 13:10:17
+ * @LastEditTime : 2020-02-18 16:54:21
  */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -11,18 +11,18 @@ export default class CheckRadio extends React.PureComponent {
 	static propTypes = {
 		style: PropTypes.object,
 		className: PropTypes.string,
-		selectFlag: PropTypes.bool
+		isSelect: PropTypes.bool
 	};
 
 	static defaultProps = {
 		style: {},
 		className: '',
-		selectFlag: false
+		isSelect: false
 	};
 
 	buildClassNames = () => {
-		const { className, selectFlag } = this.props;
-		return [classNM.selectStyle, selectFlag ? '' : classNM.unselectStyle, className].join(' ');
+		const { className, isSelect } = this.props;
+		return [classNM.selectStyle, isSelect ? '' : classNM.unselectStyle, className].join(' ');
 	};
 
 	buildStyles = () => {

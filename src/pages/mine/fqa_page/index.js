@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-18 15:56:30
+ */
 import React, { PureComponent } from 'react';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
@@ -26,7 +30,7 @@ export default class fqa_page extends PureComponent {
 					QYConfig: result.data
 				});
 			} else {
-				this.props.toast.info(result.msgInfo);
+				this.props.toast.info(result.message);
 			}
 		});
 	}

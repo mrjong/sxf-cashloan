@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:09:41
+ * @LastEditTime : 2020-02-18 15:55:58
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -378,7 +378,7 @@ export default class momo_outer_login_page extends PureComponent {
 					showSlideModal: true
 				});
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};

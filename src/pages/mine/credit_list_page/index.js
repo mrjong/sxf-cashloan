@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:09:26
+ * @LastEditTime : 2020-02-18 16:24:44
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
@@ -90,7 +90,6 @@ export default class credit_list_page extends PureComponent {
 	// 	// 如果选择的是同一张卡则不清除session里的RepaymentModalData
 	// 	const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 	// 	if (queryData.autId && queryData.autId !== obj.autId) {
-	// 		store.removeRepaymentModalData();
 	// 	}
 	// };
 	handleVisibleChange = (visible) => {
@@ -125,7 +124,6 @@ export default class credit_list_page extends PureComponent {
 	};
 	// 新增授权卡
 	goToNewMoXie = async (type) => {
-		store.setGotoMoxieFlag(true);
 		if (type === 'add') {
 			buriedPointEvent(home.addCreditCard);
 		}

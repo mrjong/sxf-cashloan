@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 13:54:39
+ * @LastEditTime : 2020-02-18 16:56:11
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -554,7 +554,7 @@ export default class bind_save_page extends PureComponent {
 				</span>
 				<div className={styles.buttonWrap}>
 					<div className={styles.xieyi} onClick={this.selectProtocol}>
-						<CheckRadio selectFlag={selectFlag} />
+						<CheckRadio isSelect={selectFlag} />
 						请阅读协议内容，点击确认即视为您同意
 						<a
 							onClick={(e) => {

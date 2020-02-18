@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-01-06 17:18:28
+ * @LastEditors  : sunjiankun
+ * @LastEditTime : 2020-02-18 16:29:52
  */
 // 这些要求这种备注，方便reducer直接查看
 /**
@@ -112,3 +112,9 @@ export const COMMON_APPLY_CREDIT_DTATA = 'COMMON_APPLY_CREDIT_DTATA';
  * @return:
  */
 export const COMMON_BIND_DEPOSIT_INFO = 'COMMON_BIND_DEPOSIT_INFO';
+/**
+ * @description: 缓存协议勾选
+ * @param {type}
+ * @return:
+ */
+export const COMMON_PROTOCOL_SELECT_FLAG = 'COMMON_PROTOCOL_SELECT_FLAG';

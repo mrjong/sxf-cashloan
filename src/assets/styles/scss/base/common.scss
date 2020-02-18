@@ -100,6 +100,9 @@
 	}
 }
 :global {
+  .am-modal-button-group-h .am-modal-button{
+    color: $colorYellow;
+  }
 	.mins {
 		color: $colorYellow;
 		background-color: $colorBlack;

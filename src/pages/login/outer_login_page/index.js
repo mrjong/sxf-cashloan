@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 11:25:31
+ * @LastEditTime : 2020-02-18 15:56:21
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -186,7 +186,7 @@ export default class login_page extends PureComponent {
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
 						if (res.code !== '000000') {
-							res.msgInfo && Toast.info(res.msgInfo);
+							res.message && Toast.info(res.message);
 							return;
 						}
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
@@ -204,7 +204,7 @@ export default class login_page extends PureComponent {
 						});
 					},
 					(error) => {
-						error.msgInfo && Toast.info(error.msgInfo, 3);
+						error.message && Toast.info(error.message, 3);
 					}
 				);
 			} else {
@@ -392,7 +392,7 @@ export default class login_page extends PureComponent {
 				});
 				// store.setNoLoginToken(res.tokenId);
 			} else {
-				Toast.info(res.msgInfo);
+				Toast.info(res.message);
 			}
 		});
 	};

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 14:55:43
+ * @LastEditTime : 2020-02-18 17:02:20
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
@@ -18,7 +18,7 @@ import TabList from './components/TagList';
 import style from './index.scss';
 import SmsModal from '../../order/order_common_page/components/SmsModal';
 import { domListen } from 'utils/domListen';
-import { RepayPlanModal, CheckRadio, ButtonCustom, TipModal } from 'components';
+import { RepayPlanModal, CheckRadio, ButtonCustom } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
 import {
@@ -129,8 +129,7 @@ export default class confirm_agency_page extends PureComponent {
 			isCheckInsure: false, // 是否选择了保费
 			showCouponAlert: false, // 是否显示优惠券拦截弹窗
 			contactList: null,
-			checkBox1: false,
-			isShowLoanTipModal: false
+			checkBox1: false
 		};
 	}
 
@@ -745,11 +744,7 @@ export default class confirm_agency_page extends PureComponent {
 			});
 	};
 	handleButtonClick = () => {
-		const { checkBox1, isBtnAble } = this.state;
-		if (!isBtnAble) {
-			this.props.toast.info('请选择指定联系人');
-			return;
-		}
+		const { checkBox1 } = this.state;
 		if (!checkBox1) {
 			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
 			return;
@@ -757,18 +752,6 @@ export default class confirm_agency_page extends PureComponent {
 		// 埋点
 		buriedPointEvent(home.loanBtnClick);
 		this.checkProtocolBindCard();
-	};
-	// 关闭春节放款策略弹框
-	closeTipModal = () => {
-		this.setState({
-			isShowLoanTipModal: false
-		});
-	};
-
-	// 点击稍后申请
-	cancelHandler = () => {
-		buriedPointEvent(home.loanTipGetLaterClick);
-		this.closeTipModal();
 	};
 
 	// 请求用户绑卡状态
@@ -919,24 +902,9 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 选择指定联系人
 	handleClickChooseContact = () => {
-		const {
-			isBtnAble,
-			repayInfo,
-			cardBillAmt,
-			repaymentDate,
-			lendersDate,
-			lendersIndex,
-			checkBox1
-		} = this.state;
+		const { isBtnAble, repayInfo } = this.state;
 		const { cacheContact } = this.props;
-		this.props.setConfirmAgencyInfoAction({
-			cardBillAmt,
-			repayInfo,
-			repaymentDate,
-			lendersDate,
-			lendersIndex,
-			checkBox1
-		});
+		this.cacheDataHandler();
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
@@ -969,6 +937,27 @@ export default class confirm_agency_page extends PureComponent {
 			});
 		}
 	};
+	// 缓存页面信息
+	cacheDataHandler = () => {
+		const {
+			repayInfo,
+			cardBillAmt,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1,
+			isShowTipModal
+		} = this.state;
+		this.props.setConfirmAgencyInfoAction({
+			cardBillAmt,
+			repayInfo,
+			repaymentDate,
+			lendersDate,
+			lendersIndex,
+			checkBox1,
+			isShowTipModal
+		});
+	};
 	render() {
 		const { history, toast } = this.props;
 		const { getFieldProps } = this.props.form;
@@ -991,8 +980,6 @@ export default class confirm_agency_page extends PureComponent {
 			couponAlertData,
 			showInterestTotal,
 			checkBox1,
-			isShowLoanTipModal,
-			isBtnAble,
 			cardBillAmt,
 			lendersDate
 		} = this.state;
@@ -1065,9 +1052,6 @@ export default class confirm_agency_page extends PureComponent {
 												return;
 											}
 											handleInputBlur();
-											if (v !== this.state.cardBillAmt) {
-												store.removeCouponData();
-											}
 											this.calcLoanMoney(v);
 										}, 10);
 									}}
@@ -1187,13 +1171,6 @@ export default class confirm_agency_page extends PureComponent {
 										)}
 									</div>
 								</li>
-								<li className={style.listItem} onClick={this.handleClickChooseContact}>
-									<label>指定联系人</label>
-									<span className={[style.listValue, style.grayText2, style.hasArrow].join(' ')}>
-										{isBtnAble ? '去修改' : '请选择'}
-										<Icon type="right" className={style.icon} />
-									</span>
-								</li>
 							</ul>
 							<ul className={style.pannel}>
 								<li className={style.listItem}>
@@ -1215,7 +1192,7 @@ export default class confirm_agency_page extends PureComponent {
 							<div className={style.protocolBox}>
 								{contractData.length > 0 && (
 									<p className={style.protocolLink} onClick={this.checkAgreement}>
-										<CheckRadio selectFlag={checkBox1} />
+										<CheckRadio isSelect={checkBox1} />
 										点击“确定签约”，表示同意{' '}
 										{contractData.map((item, idx) => (
 											<em
@@ -1241,7 +1218,7 @@ export default class confirm_agency_page extends PureComponent {
 									: () => {}
 							}
 							type={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && isBtnAble && checkBox1
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && checkBox1
 									? 'yellow'
 									: 'default'
 							}
@@ -1266,12 +1243,13 @@ export default class confirm_agency_page extends PureComponent {
 					{isShowTipModal ? (
 						<WarningModal
 							history={history}
-							handleConfirm={this.requestConfirmRepaymentInfo}
+							handleConfirm={this.handleClickChooseContact}
 							closeWarningModal={() => {
 								this.handleCloseTipModal('isShowTipModal');
 							}}
 							prodType="代偿"
 							toast={toast}
+							cacheData={this.cacheDataHandler}
 						/>
 					) : null}
 
@@ -1303,17 +1281,6 @@ export default class confirm_agency_page extends PureComponent {
 								showCouponAlert: false
 							});
 							this.requestGetRepayInfo();
-						}}
-					/>
-
-					{/* 春节放款策略弹框 */}
-					<TipModal
-						visible={isShowLoanTipModal}
-						onCancel={this.cancelHandler}
-						closeHandler={this.closeTipModal}
-						onConfirm={() => {
-							buriedPointEvent(home.loanTipGetNowClick);
-							this.checkProtocolBindCard();
 						}}
 					/>
 

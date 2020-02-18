@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 13:40:50
+ * @LastEditTime : 2020-02-18 16:31:47
  */
 import { createAction } from 'redux-actions';
 import {
@@ -20,7 +20,8 @@ import {
 	COMMON_HOME_BANNER_LIST,
 	COMMON_WELFARE_LIST,
 	COMMON_APPLY_CREDIT_DTATA,
-	COMMON_BIND_DEPOSIT_INFO
+	COMMON_BIND_DEPOSIT_INFO,
+	COMMON_PROTOCOL_SELECT_FLAG
 } from '../constants/commonConstants';
 
 /**
@@ -153,4 +154,13 @@ export const setApplyCreditData = createAction(COMMON_APPLY_CREDIT_DTATA, (info)
  */
 export const setBindDepositInfoAction = createAction(COMMON_BIND_DEPOSIT_INFO, (info) => ({
 	bindDepositInfo: info
+}));
+
+/**
+ * @description: 设置协议勾选缓存
+ * @param {type}
+ * @return:
+ */
+export const setProtocolSelFlagAction = createAction(COMMON_PROTOCOL_SELECT_FLAG, (info) => ({
+	protocolSelFlag: info
 }));

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:09:15
+ * @LastEditTime : 2020-02-18 16:32:22
  */
 import { handleActions } from 'redux-actions';
 
@@ -21,7 +21,8 @@ import {
 	COMMON_HOME_BANNER_LIST,
 	COMMON_WELFARE_LIST,
 	COMMON_APPLY_CREDIT_DTATA,
-	COMMON_BIND_DEPOSIT_INFO
+	COMMON_BIND_DEPOSIT_INFO,
+	COMMON_PROTOCOL_SELECT_FLAG
 } from '../constants/commonConstants';
 /**
  * @description: commonState 初始化
@@ -65,6 +66,7 @@ export default handleActions(
 		[COMMON_OVERDUE_MODAL_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_APPLY_CREDIT_DTATA]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_BIND_DEPOSIT_INFO]: (state, action) => ({ ...state, ...action.payload }),
+		[COMMON_PROTOCOL_SELECT_FLAG]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_CLEAR_STATE]: () => ({})
 	},
 	initState
