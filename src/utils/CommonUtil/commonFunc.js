@@ -85,7 +85,6 @@ export const updateBillInf = ({ $props, type = '', usrIndexInfo }) => {
  */
 export const goToStageLoan = ({ $props }) => {
 	//传设备指纹，不需接口成功即跳转现金分期
-	// store.getUserPhone().then(phoneNo => {
 	const { $fetch } = $props;
 	TFDLogin();
 	// const params = { channelType: 'app' };

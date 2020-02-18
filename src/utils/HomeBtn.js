@@ -241,7 +241,6 @@ class HomeBtn {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = async () => {
-		store.setMoxieBackUrl(`/home/crawl_progress_page`);
 		store.setBackUrl('/home/loan_repay_confirm_page');
 		activeConfigSts({
 			$props: this.props,

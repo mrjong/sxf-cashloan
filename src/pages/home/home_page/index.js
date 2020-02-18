@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 10:57:02
+ * @LastEditTime : 2020-02-18 17:00:07
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -219,8 +219,6 @@ export default class home_page extends PureComponent {
 	};
 	// 移除store
 	removeStore = () => {
-		// 清除卡信息
-		store.removeCardData();
 		// 去除支付方式默认选中
 		store.removePayType();
 		// 去除借款页面参数
@@ -241,16 +239,11 @@ export default class home_page extends PureComponent {
 		store.removeNeedNextUrl();
 		// 活体直接返回
 		store.removeChkPhotoBackNew();
-		// 清除订单缓存
-		store.removeBackData();
 		// 结清页去活动页
 		store.removeSuccessPay();
-		// 清除四项认证进入绑卡页的标识
-		store.removeCheckCardRouter();
 		//删除现金分期相关数据
 		store.removeCashFenQiStoreData();
 		store.removeCashFenQiCardArr();
-		store.removeCouponData();
 		// 清除借款中总的联系人
 		store.removeContactList();
 		// 清除借款选中的五个联系人

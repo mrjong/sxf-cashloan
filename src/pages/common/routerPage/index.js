@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:10:52
+ * @LastEditTime : 2020-02-18 16:56:27
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -179,16 +179,6 @@ export default class router_Page extends PureComponent {
 		arrayCnt(arr);
 	};
 	acRouter = (Props) => {
-		// if (location.pathname === '/home/home') {
-		// 	activeConfigSts({
-		// 		$props: this.props,
-		// 		type: 'A',
-		// 		callback: () => {
-		// 			this.loadComponent(Props);
-		// 		}
-		// 	});
-		// 	return;
-		// }
 		this.loadComponent(Props);
 	};
 	// 神策用户绑定
@@ -228,11 +218,11 @@ export default class router_Page extends PureComponent {
 			if (route) {
 				changeHistoryState('22222222222');
 				let component = await route.component();
+
 				this.setState({
 					showPage: true,
 					route: { ...route },
 					component: React.createElement(component.default, {
-						globalTask: this.globalTask,
 						match,
 						history,
 						params: location.state,
@@ -274,11 +264,6 @@ export default class router_Page extends PureComponent {
 				})
 			});
 		}
-	};
-	globalTask = (obj) => {
-		this.setState({
-			footerTipIcon: obj
-		});
 	};
 	render() {
 		const { component, route, newTitle, showPage = false } = this.state;
