@@ -182,7 +182,6 @@ export default class mine_page extends PureComponent {
 	}
 
 	render() {
-		const { mblNoHid } = this.state;
 		const { showRedDotNum, msgCount = 0 } = this.props;
 
 		return (
@@ -192,7 +191,7 @@ export default class mine_page extends PureComponent {
 						<div className={styles.bannerHaaderTitleWrap}>
 							<p className={styles.bannerHaaderTitle}>
 								Hi,
-								{mblNoHid || '欢迎使用还到'}
+								{this.props.userInfo.telNoHid || '欢迎使用还到'}
 							</p>
 							<p className={styles.bannerHaaderTitleSub}>随行付金融旗下信贷服务</p>
 						</div>
