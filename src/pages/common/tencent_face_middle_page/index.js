@@ -1,11 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 13:59:43
+ * @LastEditTime : 2020-02-18 14:11:22
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import { getDeviceType, activeConfigSts } from 'utils';
+import { getDeviceType } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
