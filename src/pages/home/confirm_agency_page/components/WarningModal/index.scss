@@ -63,38 +63,20 @@
 	line-height: 100px;
 	height: 100px;
 	border-radius: 50px;
-	margin-top: 52px;
+	margin: 20px 0;
 }
 .confirm_disable_btn {
 	background-color: #dcdfe6;
 	color: #fff;
 }
 .agreement {
-	display: flex;
 	text-align: left;
-	margin: 18px 60px;
+	margin: 52px 60px 0;
 	font-size: 24px;
 	line-height: 40px;
-	color: #868e9e;
-}
-.agreementCont {
-	span {
+  color: #868e9e;
+  span {
 		color: #121c32;
 	}
 }
-.checked {
-	position: relative;
-	top: 5px;
-	vertical-align: middle;
-	display: inline-block;
-	width: 48px;
-	height: 48px;
-	line-height: 48px;
-	margin-right: 11px;
-	background: url(../../../../login/login_page/img/selected_ico.png) no-repeat;
-	background-size: 100%;
-}
-.nochecked {
-	background: url(../../../../login/login_page/img/unselected_ico.png) no-repeat;
-	background-size: 100%;
-}
+

@@ -212,7 +212,7 @@
 	}
 	.protocolLink {
 		font-size: 24px;
-		color: #8e8d7b;
+		color: #868e9e;
 		margin: 24px 0 24px;
 		em {
 			color: #121c32;
@@ -294,21 +294,6 @@
 			background-size: 100%;
 			margin-right: 10px;
 		}
-  }
-
-  .checked {
-    position: relative;
-    top: 6px;
-    display: inline-block;
-    width: 28px;
-    height: 28px;
-    margin-right: 11px;
-    background: url(../../login/login_page/img/selected_ico.png) no-repeat;
-    background-size: 100%;
-  }
-  .nochecked {
-    background: url(../../login/login_page/img/unselected_ico.png) no-repeat;
-    background-size: 100%;
   }
 }
 .closeIcon {
