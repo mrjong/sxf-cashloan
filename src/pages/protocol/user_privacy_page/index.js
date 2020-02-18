@@ -1,11 +1,10 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-01-11 10:41:56
+ * @LastEditTime : 2020-02-18 11:16:59
  */
 import React, { PureComponent } from 'react';
 import { store } from 'utils/store';
-import dayjs from 'dayjs';
 import IframeProtocol from 'components/IframeProtocol';
 
 export default class user_privacy_page extends PureComponent {
@@ -18,8 +17,7 @@ export default class user_privacy_page extends PureComponent {
 	componentWillMount() {
 		const contractData = store.getProtocolPersonalData();
 		const formateContractData = {
-			...contractData,
-			dateTime: contractData && dayjs(contractData.dateTime).format('YYYY年MM月DD日')
+			...contractData
 		};
 		this.setState({ contractInf: formateContractData });
 	}

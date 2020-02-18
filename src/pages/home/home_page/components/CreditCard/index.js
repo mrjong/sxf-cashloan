@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2019-12-24 17:45:21
+ * @LastEditTime : 2020-02-18 10:55:43
  */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -24,7 +24,7 @@ export default class CreditCard extends React.Component {
 	render() {
 		const { handleClick, btnText, percentData } = this.props;
 		const showData = {
-			title: '还到-基础版',
+			title: '还到-新手版',
 			bankNo: '',
 			subtitle: '预审额度(元)',
 			money: '36000.00',
