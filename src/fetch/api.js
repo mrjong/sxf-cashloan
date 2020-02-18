@@ -173,7 +173,7 @@ export const loan_queryContractInfo = '/loan/queryContractInfo';
 // 借款试算
 export const loan_loanPlan = '/loan/loanPlan';
 // 合同文件流获取接口
-export const loan_contractPreview = '/loan/contractPreview';
+export const loan_contractPreview = '/loan/contractPreviewH5';
 // 借款提交
 export const loan_loanSub = '/loan/loanSub';
 /**
