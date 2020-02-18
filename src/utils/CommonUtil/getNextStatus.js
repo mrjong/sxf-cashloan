@@ -221,7 +221,10 @@ export const getNextStatus = ({
 						const { commonState = {} } = storeData;
 						const { applyCreditData } = commonState;
 						if (applyCreditData) {
-							getBindCardStatus({ $props, applyCreditData });
+							activeConfigSts({
+								$props,
+								type: 'B'
+							});
 							return;
 						} else if (nextData.credCardCount > 1) {
 							routeName = '/mine/credit_list_page';

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 11:25:38
+ * @LastEditTime : 2020-02-18 10:57:02
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -328,6 +328,7 @@ export default class home_page extends PureComponent {
 				getNextStatus({ $props: this.props });
 				break;
 			case 'LN0007': {
+				Toast.hide();
 				// 放款中
 				let title =
 					homeData && homeData.dcDataInfo && homeData.dcDataInfo.repayType === '0'
@@ -474,8 +475,8 @@ export default class home_page extends PureComponent {
 	getDisPlayData() {
 		let basicCardData = {
 			cardType: 'basic',
-			cardLabel: '基础版',
-			title: '基础版',
+			cardLabel: '新手版',
+			title: '新手版',
 			titleSub: '快速审批',
 			loanText: '最高可申请还款金(元)',
 			loanAmont: '50000',
@@ -530,6 +531,7 @@ export default class home_page extends PureComponent {
 					basicCardData.loanAmont = '36000';
 					basicCardData.bottomTip = '预审通过，添加收款信用卡';
 					basicCardData.btnText = homeData.dcDataInfo.credRateShow;
+					basicCardData.progress = homeData.dcDataInfo.credRate;
 					basicCardData.handleClick = this.handleSmartClick;
 				} else if (homeData && homeData.dcDataInfo.credRate === 0) {
 					basicCardData.btnText = homeData.dcDataInfo.credRateShow;

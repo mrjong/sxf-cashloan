@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:27:01
+ * @LastEditTime : 2020-02-18 11:32:26
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -24,7 +24,6 @@ import {
 	FixedHelpCenter,
 	AgreementModal,
 	StepTitle,
-	StepList,
 	AddressSelect,
 	AsyncCascadePicker,
 	ButtonCustom,
@@ -229,10 +228,10 @@ export default class essential_information_page extends PureComponent {
 		if (cacheData) {
 			this.props.form.setFieldsValue({
 				address: store.getAddress() || (res && res.data && res.data.usrDtlAddr) || '',
-				linkman: store.getLinkman() || (res && res.data && res.data.cntUsrNm1) || '',
-				linkphone: store.getLinkphone() || (res && res.data && res.data.cntUsrTel1) || '',
-				linkman2: store.getLinkman2() || (res && res.data && res.data.cntUsrNm2) || '',
-				linkphone2: store.getLinkphone2() || (res && res.data && res.data.cntUsrTel2) || ''
+				linkman: store.getLinkman() || (res && res.data && base64Decode(res.data.cntUsrNm1)) || '',
+				linkphone: store.getLinkphone() || (res && res.data && base64Decode(res.data.cntUsrTel1)) || '',
+				linkman2: store.getLinkman2() || (res && res.data && base64Decode(res.data.cntUsrNm2)) || '',
+				linkphone2: store.getLinkphone2() || (res && res.data && base64Decode(res.data.cntUsrTel2)) || ''
 			});
 		} else {
 			this.props.form.setFieldsValue({
@@ -774,7 +773,7 @@ export default class essential_information_page extends PureComponent {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { showAgreement, selectFlag, addressList, visible, ProvincesValue } = this.state;
-		const needNextUrl = store.getNeedNextUrl();
+		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<FixedTopTip />
@@ -1130,11 +1129,6 @@ export default class essential_information_page extends PureComponent {
 						</div>
 					</div>
 
-					<StepList
-						style={{ marginTop: '20px' }}
-						stepList={[{ title: '填写基本信息', stepNum: '03' }, { title: '认证信用卡', stepNum: '04' }]}
-					></StepList>
-
 					<div className={style.protocolBox} onClick={this.selectProtocol}>
 						<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
 						点击按钮即视为同意
@@ -1161,7 +1155,7 @@ export default class essential_information_page extends PureComponent {
 
 				<div className={style.sureBtnWrap}>
 					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'yellow' : 'default'}>
-						{needNextUrl ? '下一步' : '完成'}
+						{nextStepStatus ? '下一步' : '完成'}
 					</ButtonCustom>
 					{urlQuery.jumpToBase ? (
 						<div className={style.quitText} onClick={this.quitSubmit}>

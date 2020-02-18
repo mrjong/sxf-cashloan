@@ -44,7 +44,7 @@ export default class carouselHome extends React.Component {
 	render() {
 		const { handleClick, btnText } = this.props;
 		const showData = {
-			title: '还到-基础版',
+			title: '还到-新手版',
 			bankNo: '',
 			subtitle: '最高可申请还款金(元)',
 			money: '50000.00',

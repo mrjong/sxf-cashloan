@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 15:29:04
+ * @LastEditTime : 2020-02-14 19:42:04
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -16,7 +16,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { setApplyCreditData } from 'reduxes/actions/commonActions';
 import Image from 'assets/image';
 
-import { handleInputBlur, getMoxieData, activeConfigSts } from 'utils';
+import { handleInputBlur, activeConfigSts } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { TimeoutPayModal, SelectList, ButtonCustom, FixedTopTip } from 'components';
@@ -252,7 +252,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 	filterLoanDate = (item) => {
 		let itemCopy = item;
 		this.dateType(itemCopy.perdLth);
-		if (this.updateBillInf()) {
+		if (
+			updateBillInf({
+				$props: this.props,
+				usrIndexInfo: this.state.usrIndexInfo,
+				type: 'LoanRepayConfirm'
+			})
+		) {
 			return;
 		}
 		this.setState(
@@ -380,32 +386,6 @@ export default class loan_repay_confirm_page extends PureComponent {
 		);
 	};
 
-	updateBillInf = () => {
-		const { usrIndexInfo = {} } = this.state;
-		const { cardBillSts, bankNo } = usrIndexInfo;
-		if (cardBillSts === '00') {
-			this.props.toast.info('还款日已到期，请更新账单获取最新账单信息', 2, () => {
-				// 跳银行登录页面
-				getMoxieData({
-					bankCode: bankNo,
-					$props: this.props,
-					goMoxieBankList: this.goMoxieBankList
-				});
-			});
-			return true;
-		} else if (cardBillSts === '02') {
-			this.props.toast.info('已产生新账单，请更新账单或代偿其他信用卡', 2, () => {
-				// 跳银行登录页面
-				getMoxieData({
-					bankCode: bankNo,
-					$props: this.props,
-					goMoxieBankList: this.goMoxieBankList
-				});
-			});
-			return true;
-		}
-		return false;
-	};
 	dateType = (value) => {
 		console.log(value, '---------');
 		// 埋点
@@ -561,7 +541,13 @@ export default class loan_repay_confirm_page extends PureComponent {
 										btnDisabled: true,
 										fullMinAmt: ''
 									});
-									if (this.updateBillInf()) {
+									if (
+										updateBillInf({
+											$props: this.props,
+											usrIndexInfo: this.state.usrIndexInfo,
+											type: 'LoanRepayConfirm'
+										})
+									) {
 										return;
 									}
 									this.props.form.setFieldsValue({

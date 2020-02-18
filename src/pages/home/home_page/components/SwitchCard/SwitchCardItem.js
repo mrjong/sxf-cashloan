@@ -13,7 +13,7 @@ export default class ActivityEntry extends React.PureComponent {
 	}
 
 	static propTypes = {
-		cardType: PropTypes.string // 卡片类型 是基础版 还是 plus 版 或者是其他版本
+		cardType: PropTypes.string // 卡片类型 是新手版 还是 plus 版 或者是其他版本
 	};
 
 	static defaultProps = {

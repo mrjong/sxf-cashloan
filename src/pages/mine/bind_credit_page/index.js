@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 15:12:26
+ * @LastEditTime : 2020-02-14 19:49:10
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -8,7 +8,7 @@ import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import ButtonCustom from 'components/ButtonCustom';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-import { validators, handleInputBlur, getFirstError, activeConfigSts, handleClickConfirm } from 'utils';
+import { validators, handleInputBlur, getFirstError } from 'utils';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
@@ -108,26 +108,6 @@ export default class bind_credit_page extends PureComponent {
 					...this.state.cardData
 				};
 				if (backUrlData) {
-					if (query && query.action === 'handleClickConfirm') {
-						store.removeAutIdCard(); // 信用卡前置
-						activeConfigSts({
-							$props: this.props,
-							type: 'B',
-							callback: () => {
-								handleClickConfirm(
-									this.props,
-									{
-										...store.getLoanAspirationHome()
-									},
-									'goHome'
-								);
-								store.removeRealNameNextStep();
-								store.removeIdChkPhotoBack();
-								store.removeTencentBackUrl();
-							}
-						});
-						return;
-					}
 					// 提交申请 判断是否绑定信用卡和储蓄卡
 					this.props.$fetch
 						.get(`${bank_card_check}/${(this.props.authId && this.props.authId) || ''}`)

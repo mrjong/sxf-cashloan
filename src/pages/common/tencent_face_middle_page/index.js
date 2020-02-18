@@ -1,23 +1,24 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:56:30
+ * @LastEditTime : 2020-02-14 21:15:03
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-import { getNextStr, getDeviceType, handleClickConfirm, activeConfigSts } from 'utils';
+import { getDeviceType, activeConfigSts } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
-import { getBindCardStatus } from 'utils/CommonUtil/getNextStatus';
 import { home } from 'utils/analytinsType';
 import style from './index.scss';
-import faceImg from './face.png';
-import { SXFToast } from 'utils/SXFToast';
+import { connect } from 'react-redux';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
-const API = {
-	getFaceDetect: '/auth/faceDetect', // 人脸认证之后的回调状态
-	getFace: '/auth/getTencentFaceidData' // 人脸识别认证跳转URL
-};
+import faceImg from './face.png';
+import { auth_faceDetect, auth_getTencentFaceData } from 'fetch/api';
+import { Toast } from 'antd-mobile';
 let isFetching = false;
+@connect((state) => ({
+	nextStepStatus: state.commonState.nextStepStatus
+}))
 @fetch.inject()
 export default class tencent_face_middle_page extends Component {
 	constructor(props) {
@@ -30,17 +31,18 @@ export default class tencent_face_middle_page extends Component {
 		// window.tencent_face_middle_page = null;
 		store.removeChkPhotoBackNew();
 		const osType = getDeviceType();
+		const { nextStepStatus } = this.props;
 		//人脸识别的回调
 		this.props.$fetch
-			.post(`${API.getFaceDetect}`, {
+			.post(`${auth_faceDetect}`, {
 				osType
 			})
 			.then((res) => {
-				if (res.msgCode !== 'PTM0000') {
-					this.props.toast.info(res.msgInfo);
+				if (res.code !== '000000') {
+					this.props.toast.info(res.message);
 					buriedPointEvent(home.faceAuthResult, {
 						is_success: false,
-						fail_cause: res.msgInfo
+						fail_cause: res.message
 					});
 					this.setState({
 						authStatus: false
@@ -58,32 +60,17 @@ export default class tencent_face_middle_page extends Component {
 				// 借钱还信用卡页进入
 				// if (!store.getRealNameNextStep()) {
 				if (store.getLoanAspirationHome()) {
-					getBindCardStatus({ $props: this.props }).then((res) => {
-						if (res === '1') {
-							activeConfigSts({
-								$props: this.props,
-								type: 'B',
-								callback: () => {
-									handleClickConfirm(
-										this.props,
-										{
-											...store.getLoanAspirationHome()
-										},
-										'goHome'
-									);
-									store.removeRealNameNextStep();
-									store.removeIdChkPhotoBack();
-									store.removeTencentBackUrl();
-								}
-							});
-						}
+					activeConfigSts({
+						$props: this.props,
+						type: 'B',
+						callback: () => {}
 					});
-				} else if (store.getNeedNextUrl() && store.getRealNameNextStep() === 'home') {
+				} else if (nextStepStatus && store.getRealNameNextStep() === 'home') {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
 					store.removeIdChkPhotoBack();
 					store.removeTencentBackUrl();
-					getNextStr({
+					getNextStatus({
 						$props: this.props
 					});
 				} else if (tencentBackUrl) {
@@ -113,12 +100,12 @@ export default class tencent_face_middle_page extends Component {
 	goFaceAuth = () => {
 		if (isFetching) return;
 		isFetching = true;
-		SXFToast.loading('加载中...', 0);
-		this.props.$fetch.post(`${API.getFace}`, {}).then((result) => {
-			if (result.msgCode === 'PTM0000' && result.data) {
+		Toast.loading('加载中...', 0);
+		this.props.$fetch.post(`${auth_getTencentFaceData}`, {}).then((result) => {
+			if (result.code === '000000' && result.data) {
 				setTimeout(() => {
 					// 人脸识别第三方直接返回的问题
-					SXFToast.hide();
+					Toast.hide();
 					isFetching = false;
 					window.location.href = result.data;
 				}, 3000);
@@ -140,29 +127,6 @@ export default class tencent_face_middle_page extends Component {
 		}
 		store.removeIdChkPhotoBack();
 		store.removeRealNameNextStep();
-		// 首页进入然后返回
-		// if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'home') {
-		// 	store.removeRealNameNextStep();
-		// 	store.removeIdChkPhotoBack();
-		// 	this.props.history.push('/home/home');
-		// } else if (store.getRealNameNextStep() && store.getRealNameNextStep() === 'other') {
-		// 	// 我的页面进入然后返回
-		// 	store.removeRealNameNextStep();
-		// 	store.removeIdChkPhotoBack();
-		// 	this.props.history.push('/mine/mine_page');
-		// } else if (store.getIdChkPhotoBack()) {
-		// 	window.tencent_face_middle_page = true;
-		// 	// history.go(Number(store.getIdChkPhotoBack()));
-		// 	const tencentBackUrl = store.getTencentBackUrl();
-		// 	if (tencentBackUrl) {
-		// 		store.removeTencentBackUrl();
-		// 		this.props.history.replace(tencentBackUrl);
-		// 	} else {
-		// 		this.props.history.replace('/home/home');
-		// 	}
-		// 	store.removeIdChkPhotoBack();
-		// 	store.removeRealNameNextStep();
-		// }
 	};
 
 	render() {
