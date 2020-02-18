@@ -1,10 +1,11 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .header {
-	margin: 50px 10px 50px 50px;
+	margin: 0 10px 50px 50px;
 	color: #121c32;
 	font-size: 46px;
 	font-family: 'PingFangSC-Semibold';
-	font-weight: 600;
+  font-weight: 600;
+  padding-top: 50px;
 }
 .support_type {
 	display: inline-block;
@@ -12,18 +13,9 @@
 	font-size: 26px;
 	color: $colorBlue;
 }
-.confirm_btn {
-	margin-top: 170px;
-  margin-bottom: 10px;
-}
+
 .confirm_btn_box{
-  padding: 0 40px;
-}
-.confirm_disable_btn {
-	margin-top: 170px;
-	margin-bottom: 10px;
-	background-color: #dcdfe6;
-	color: #fff;
+  padding: 0 40px 20px 40px;
 }
 .time_container {
 	position: relative;
@@ -57,6 +49,12 @@
 }
 .top20 {
 	margin-top: 30px;
+}
+.buttonWrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 :global {
 	.bind_save_page_listBox {

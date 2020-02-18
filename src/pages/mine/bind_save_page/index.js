@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 13:17:03
+ * @LastEditTime : 2020-02-18 13:54:39
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -55,7 +55,8 @@ export default class bind_save_page extends PureComponent {
 			enable: true, // 计时器是否可用
 			cardData: {}, // 绑定的卡的数据
 			isProtocolBindCard: false, //是否走协议绑卡逻辑
-			bankType: '' // 发卡行
+			bankType: '', // 发卡行
+			selectFlag: false // 协议是否选中
 		};
 	}
 
@@ -262,9 +263,14 @@ export default class bind_save_page extends PureComponent {
 
 	// 确认绑卡
 	confirmBindCard = () => {
+		const { selectFlag } = this.state;
 		const { backRouter } = this.props;
 		// if (!this.validateFn()) return;
 		this.props.form.validateFields((err, values) => {
+			if (!selectFlag) {
+				this.props.toast.info('请先阅读并勾选相关协议');
+				return;
+			}
 			if (!err) {
 				this.checkCard(values);
 			} else {
@@ -283,13 +289,14 @@ export default class bind_save_page extends PureComponent {
 
 	//	校验必填项
 	validateFn = () => {
-		const { bankType } = this.state;
+		const { bankType, selectFlag } = this.state;
 		const formData = this.props.form.getFieldsValue();
 		if (
 			bankType &&
 			formData.valueInputCarNumber &&
 			formData.valueInputCarPhone &&
-			formData.valueInputCarSms
+			formData.valueInputCarSms &&
+			selectFlag
 		) {
 			return true;
 		}
@@ -372,10 +379,17 @@ export default class bind_save_page extends PureComponent {
 		});
 	};
 
+	selectProtocol = () => {
+		this.setState({
+			selectFlag: !this.state.selectFlag
+		});
+	};
+
 	render() {
 		const Item = List.Item;
 		const { getFieldProps } = this.props.form;
 		const { userInfo = {}, bindDepositInfo = {} } = this.props;
+		const { selectFlag } = this.state;
 		return (
 			<div>
 				<div className={styles.header}>请先绑定还款储蓄卡,再签约借款</div>
@@ -538,27 +552,26 @@ export default class bind_save_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<div className={styles.xieyi}>
-					<CheckRadio selectFlag={true} />
-					请阅读协议内容，点击确认即视为您同意
-					<a
-						onClick={() => {
-							this.readContract('delegation_withhold_page');
-						}}
-						className={styles.link}
-					>
-						《用户收款扣款委托书》
-					</a>
-					并确认授权
-				</div>
-				<div className={styles.confirm_btn_box}>
-					<ButtonCustom
-						onClick={this.confirmBindCard}
-						type={this.validateFn() ? 'yellow' : 'default'}
-						// className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
-					>
-						确认
-					</ButtonCustom>
+				<div className={styles.buttonWrap}>
+					<div className={styles.xieyi} onClick={this.selectProtocol}>
+						<CheckRadio selectFlag={selectFlag} />
+						请阅读协议内容，点击确认即视为您同意
+						<a
+							onClick={(e) => {
+								e.stopPropagation();
+								this.readContract('delegation_withhold_page');
+							}}
+							className={styles.link}
+						>
+							《用户收款扣款委托书》
+						</a>
+						并确认授权
+					</div>
+					<div className={styles.confirm_btn_box}>
+						<ButtonCustom onClick={this.confirmBindCard} type={this.validateFn() ? 'yellow' : 'default'}>
+							确认
+						</ButtonCustom>
+					</div>
 				</div>
 			</div>
 		);

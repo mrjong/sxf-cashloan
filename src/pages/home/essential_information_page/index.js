@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 11:32:26
+ * @LastEditTime : 2020-02-18 13:58:46
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -27,7 +27,8 @@ import {
 	AddressSelect,
 	AsyncCascadePicker,
 	ButtonCustom,
-	FixedTopTip
+	FixedTopTip,
+	CheckRadio
 } from 'components';
 
 import LimitTimeJoin from './components/LimitTimeJoin';
@@ -1130,7 +1131,7 @@ export default class essential_information_page extends PureComponent {
 					</div>
 
 					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<i className={selectFlag ? style.selectStyle : `${style.selectStyle} ${style.unselectStyle}`} />
+						<CheckRadio selectFlag={selectFlag} />
 						点击按钮即视为同意
 						<em
 							onClick={(e) => {
