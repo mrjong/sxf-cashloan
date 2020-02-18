@@ -1,13 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 13:50:14
+ * @LastEditTime : 2020-02-18 13:17:03
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
 import { store } from 'utils/store';
-import { ButtonCustom, SelectList, CountDownButton } from 'components';
+import { ButtonCustom, SelectList, CountDownButton, CheckRadio } from 'components';
 import { setBackGround } from 'utils/background';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { getH5Channel } from 'utils/common';
@@ -538,16 +538,8 @@ export default class bind_save_page extends PureComponent {
 				<span className={styles.support_type} onClick={this.supporBank}>
 					支持绑定卡的银行
 				</span>
-				<div className={styles.confirm_btn_box}>
-					<ButtonCustom
-						onClick={this.confirmBindCard}
-						className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
-					>
-						确认
-					</ButtonCustom>
-				</div>
 				<div className={styles.xieyi}>
-					{' '}
+					<CheckRadio selectFlag={true} />
 					请阅读协议内容，点击确认即视为您同意
 					<a
 						onClick={() => {
@@ -558,6 +550,15 @@ export default class bind_save_page extends PureComponent {
 						《用户收款扣款委托书》
 					</a>
 					并确认授权
+				</div>
+				<div className={styles.confirm_btn_box}>
+					<ButtonCustom
+						onClick={this.confirmBindCard}
+						type={this.validateFn() ? 'yellow' : 'default'}
+						// className={[styles.confirm_btn, this.validateFn() ? '' : styles.confirm_disable_btn].join(' ')}
+					>
+						确认
+					</ButtonCustom>
 				</div>
 			</div>
 		);

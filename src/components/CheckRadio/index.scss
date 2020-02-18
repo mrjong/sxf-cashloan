@@ -1,0 +1,14 @@
+.selectStyle {
+  display: inline-block;
+  position: relative;
+  top: 6px;
+  width: 30px;
+  height: 30px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-image: url(./img/selected_ico.png);
+  margin-right: 10px;
+}
+.unselectStyle {
+  background-image: url(./img/unselected_ico.png);
+}
