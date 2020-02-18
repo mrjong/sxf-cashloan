@@ -607,16 +607,11 @@ export default class confirm_agency_page extends PureComponent {
 			lendersIndex,
 			checkBox1
 		});
+		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${
-					item.contractNo
-				}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${
-					repayInfo.withholdBankAgrNo
-				}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&FIN-HD-AUTH-TOKEN=${
-					Cookie.get('FIN-HD-AUTH-TOKEN') || (userInfo && userInfo.tokenId) ? userInfo.tokenId : ''
-				}`,
+				url: `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${repayInfo.withholdBankAgrNo}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&tokenId=${tokenId}`,
 				name: item.contractMdlName
 			}
 		});

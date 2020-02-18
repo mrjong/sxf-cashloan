@@ -464,7 +464,7 @@ export default class loan_fenqi_page extends PureComponent {
 		this.props.history.push({
 			pathname: '/protocol/pdf_page',
 			state: {
-				url: `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId${tokenId}=&fin-v-card-token=${tokenId}`,
+				url: `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`,
 				name: item.contractMdlName
 			}
 		});
