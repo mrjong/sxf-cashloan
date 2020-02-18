@@ -353,7 +353,7 @@ export default class loan_fenqi_page extends PureComponent {
 		const { protocolList } = this.state;
 		const { couponData } = this.props;
 		this.storeTempData();
-		const { couponInfo, loanMoney, loanDate = {} } = this.state;
+		const { loanMoney, loanDate = {} } = this.state;
 		let prdId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
