@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 14:50:37
+ * @LastEditTime : 2020-02-18 15:52:35
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -19,6 +19,8 @@ export default class InsuranceModal extends React.PureComponent {
 	}
 	// 跳转协议
 	go = (url) => {
+		const { cacheData } = this.props;
+		cacheData && cacheData();
 		this.props.history.push(`/protocol/${url}`);
 	};
 
@@ -34,10 +36,9 @@ export default class InsuranceModal extends React.PureComponent {
 	// 点击继续申请
 	handleButtonClick = () => {
 		const { checkBox1 } = this.state;
-		const { closeWarningModal, handleConfirm, prodType, toast } = this.props;
+		const { handleConfirm, prodType, toast } = this.props;
 
 		if (checkBox1) {
-			closeWarningModal && closeWarningModal();
 			handleConfirm && handleConfirm();
 		} else {
 			// 签约借款-警示-继续申请借款-提示 埋点
