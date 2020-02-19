@@ -62,7 +62,8 @@ export default {
 		customer_service: require('./icon/icon_customer_service.png'),
 		service_ico: require('./icon/service_ico.png'),
 		add_ico: require('./icon/add_ico.png'),
-		icon_question: require('./icon/icon_question.png')
+		icon_question: require('./icon/icon_question.png'),
+		icon_close: require('./icon/icon_close.png')
 	},
 
 	// 标志性的图片

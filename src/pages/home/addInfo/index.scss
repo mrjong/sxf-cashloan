@@ -110,10 +110,15 @@
     }
 		.am-list-item .am-list-line .am-list-extra {
 			padding-top: 0.25rem;
-			color: #121c32;
+			color: #B2B6BF;
 			margin-right: 0.35rem;
 			font-size: 0.28rem;
-		}
+    }
+    .item_box_has_value {
+      .am-list-item .am-list-line .am-list-extra {
+			  color: $colorBlack;
+      }
+    }
 		.am-list-item.am-list-item-active {
 			background-color: #fff;
 		}
@@ -127,9 +132,9 @@
 
 		.am-list-item .am-list-line .am-list-content,
 		.am-list-item .am-input-label {
-			color: #121c32;
-			font-weight: 600;
-			font-family: 'PingFangSC-Semibold';
+			color: #394259;
+			font-weight: normal;
+			// font-family: 'PingFangSC-Semibold';
 			font-size: 0.3rem;
 		}
 		.hasborder.am-list-item.am-list-item-middle .am-list-line {
@@ -150,6 +155,7 @@
 .item_box {
   margin-top: 20px;
 }
+
 .step_box_space {
 	padding-bottom: 220px;
 }

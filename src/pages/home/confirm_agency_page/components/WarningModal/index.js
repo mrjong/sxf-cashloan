@@ -11,6 +11,7 @@ import styles from './index.scss';
 import { ButtonCustom, CheckRadio } from 'components';
 import { connect } from 'react-redux';
 import { setProtocolSelFlagAction } from 'reduxes/actions/commonActions';
+import Image from 'assets/image';
 
 @connect(
 	(state) => ({
@@ -75,11 +76,11 @@ export default class InsuranceModal extends React.PureComponent {
 		return (
 			<Modal popup className="warningModal" visible={true} animationType="slide-up" maskClosable={false}>
 				<div className={styles.warningModalCont}>
-					<h1 className={styles.closeBox}>
-						<i onClick={this.closeModal} className={styles.closeBtn} />
-					</h1>
+					<img onClick={this.closeModal} className={styles.closeBtn} src={Image.icon.icon_close} alt="关闭" />
+
+					<h2 className={styles.mainTit}>尊敬的还到用户：</h2>
+
 					<div className={styles.warningCont}>
-						<h2 className={styles.mainTit}>尊敬的还到用户：</h2>
 						<h3 className={styles.subTit}>一、请您保持良好的还款记录。</h3>
 						<p className={[styles.subCont, styles.redText].join(' ')}>
 							如果逾期将会上报您的逾期记录至人行征信，百行征信、互金信息共享平台。
@@ -123,35 +124,36 @@ export default class InsuranceModal extends React.PureComponent {
 							</p>
 						</div>
 					</div>
-					{/* 底部合同 */}
-					<div className={styles.agreement} onClick={this.checkAgreement}>
-						<CheckRadio isSelect={protocolSelFlag} />
-						您已悉知并同意
-						<span
-							onClick={(e) => {
-								e.stopPropagation();
-								this.go('credit_query_page');
-							}}
-						>
-							《个人信用信息查询授权书》
-						</span>
-						<span
-							onClick={(e) => {
-								e.stopPropagation();
-								this.go('overdue_effect_page');
-							}}
-						>
-							《个人信用逾期影响告知书》
-						</span>
-						<span>及以上内容</span>
+
+					<div className={styles.fixedBottomWrap}>
+						{/* 底部合同 */}
+						<div className={styles.agreement} onClick={this.checkAgreement}>
+							<CheckRadio isSelect={protocolSelFlag} />
+							您已悉知并同意
+							<span
+								onClick={(e) => {
+									e.stopPropagation();
+									this.go('credit_query_page');
+								}}
+							>
+								《个人信用信息查询授权书》
+							</span>
+							<span
+								onClick={(e) => {
+									e.stopPropagation();
+									this.go('overdue_effect_page');
+								}}
+							>
+								《个人信用逾期影响告知书》
+							</span>
+							<span>及以上内容</span>
+						</div>
+
+						{/* 继续申请借款按钮 */}
+						<ButtonCustom onClick={this.handleButtonClick} type={protocolSelFlag ? 'yellow' : 'default'}>
+							继续申请借款
+						</ButtonCustom>
 					</div>
-					{/* 继续申请借款按钮 */}
-					<ButtonCustom
-						onClick={this.handleButtonClick}
-						className={[styles.confirm_btn, protocolSelFlag ? '' : styles.confirm_disable_btn].join(' ')}
-					>
-						继续申请借款
-					</ButtonCustom>
 				</div>
 			</Modal>
 		);

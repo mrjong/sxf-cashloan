@@ -1,6 +1,6 @@
 @import '../../../assets/styles/scss/base/fn';
 .home_new_page {
-  padding-bottom: 150px;
+  padding-bottom: 30px;
   background-color: #F0F3F9;
   .content_top {
     position: fixed;
@@ -18,9 +18,11 @@
 	.home_banner {
     margin-bottom: 30px;
     margin-top: 10px;
-    height: 180px;
+    height: 180px !important;
 		img {
-			border-radius: 16px;
+      border-radius: 10px;
+      height: 180px;
+      width: 100%;
 		}
   }
   .bottomSlogen {

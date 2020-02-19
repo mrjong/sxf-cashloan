@@ -1,48 +1,53 @@
 :global {
 	.warningModal.am-modal {
-    height: 94%;
+    // height: 94%;
 		.am-modal-content {
 			border-radius: 20px 20px 0px 0px;
 		}
 	}
 }
-.closeBox {
-  height: 70px;
-  text-align: right;
-  line-height: 80px;
-	.closeBtn {
+.warningModalCont {
+  padding-top: 80px;
+  padding-bottom: 240px;
+
+  .closeBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 20px;
 		display: inline-block;
 		width: 34px;
 		height: 34px;
-		background: url(./img/icon_close.png) no-repeat;
-    background-size: 100%;
-    margin-right: 30px;
+  }
+
+  .mainTit {
+    text-align: left;
+    color: $colorBlack;
+		font-size: 36px;
+    margin-bottom: 28px;
+    padding: 0 60px;
+    font-weight: normal;
 	}
-}
-.warningModalCont {
-  // padding-bottom: 30px;
 }
 .warningCont {
 	text-align: left;
-	color: #121c32;
-	padding: 0 81px 0 41px;
-	.mainTit {
-		font-size: 50px;
-		font-weight: 600;
-		margin-bottom: 40px;
-	}
+	color: $colorBlack;
+  padding: 0 60px;
+  max-height: 600px;
+  overflow: auto;
+
 	.subTit {
-		font-size: 30px;
+		font-size: 28px;
 		line-height: 46px;
 		padding-bottom: 12px;
 	}
 	.subCont {
-		font-size: 30px;
-		font-weight: 600;
+		font-size: 28px;
+		font-weight: 500;
 		line-height: 46px;
 	}
 	.redText {
-		color: #ff6666;
+		color: $colorTipRed;
 		margin-bottom: 32px;
 	}
 	.underlineText {
@@ -58,6 +63,13 @@
 		margin-top: 44px;
 	}
 }
+.fixedBottomWrap {
+  position: fixed;
+  bottom: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px 60px;
+}
 .confirm_btn {
 	width: 634px;
 	line-height: 100px;
@@ -71,7 +83,7 @@
 }
 .agreement {
 	text-align: left;
-	margin: 52px 60px 0;
+  margin-bottom: 20px;
 	font-size: 24px;
 	line-height: 40px;
   color: #868e9e;
