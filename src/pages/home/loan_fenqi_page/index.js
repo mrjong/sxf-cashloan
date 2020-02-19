@@ -349,8 +349,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择优惠劵
 	selectCoupon = () => {
-		const { protocolList } = this.state;
-		const { couponData } = this.props;
+		const { protocolList, repayPlanInfo } = this.state;
 		this.storeTempData();
 		const { loanMoney, loanDate = {} } = this.state;
 		let prodId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
@@ -359,7 +358,7 @@ export default class loan_fenqi_page extends PureComponent {
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
 			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
-			state: { nouseCoupon: !(couponData && couponData.availableCoupAmt) }
+			state: { nouseCoupon: !(repayPlanInfo && repayPlanInfo.availableCoupCount) }
 		});
 	};
 
