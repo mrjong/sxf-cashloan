@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-19 09:56:23
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-19 10:28:33
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';

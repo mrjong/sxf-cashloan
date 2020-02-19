@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 17:28:17
+ * @LastEditTime : 2020-02-19 11:45:06
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -28,6 +28,10 @@ export default class InsuranceModal extends React.PureComponent {
 			checkBox1: false
 		};
 	}
+	componentWillMount() {
+		const { protocolSelFlag } = this.props;
+		protocolSelFlag && this.setState({ checkBox1: protocolSelFlag });
+	}
 	// 跳转协议
 	go = (url) => {
 		const { cacheData } = this.props;
@@ -40,6 +44,7 @@ export default class InsuranceModal extends React.PureComponent {
 	closeModal = () => {
 		const { closeWarningModal, prodType } = this.props;
 		closeWarningModal && closeWarningModal();
+		this.props.setProtocolSelFlagAction(false);
 		buriedPointEvent(home.warningModalClose, {
 			prodType
 		});
