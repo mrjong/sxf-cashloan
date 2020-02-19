@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:17:07
+ * @LastEditTime : 2020-02-19 16:09:37
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -48,6 +48,7 @@ import login_bg4 from './img/login_bg4.png';
 import loginModalBg from './img/login_modal.png';
 import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
+import { inputPhoneRiskBury } from './riskBuryConfig';
 
 let timmer;
 let modalTimer = null;
@@ -604,7 +605,7 @@ export default class login_page extends PureComponent {
 							clear
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								name: 'inputPhone',
+								name: inputPhoneRiskBury.key,
 								notSendValue: true, // 无需上报输入框的值
 								eventList: [
 									{

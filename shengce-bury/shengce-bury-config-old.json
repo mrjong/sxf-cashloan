@@ -1,0 +1,618 @@
+[
+  {
+    "remark": "内/外-问题反馈（申请借钱还卡）",
+    "key": "'DC_QUESTION_FEEDBACK_APPLY';"
+  },
+  {
+    "remark": "内/外-问题反馈（基本信息）",
+    "key": "'DC_QUESTION_FEEDBACK_BASIC_INFORMATION';"
+  },
+  {
+    "remark": "内/外-问题反馈（银行列表）",
+    "key": "'DC_QUESTION_FEEDBACK_BANK';"
+  },
+  {
+    "remark": "内/外-提示（遇到困难）-选择问题",
+    "key": "'DC_TIPS_RISSUES';"
+  },
+  {
+    "remark": "内/外-提示（其他）-找回信用卡密码",
+    "key": "'DC_TIPS_OTHERISSUES';"
+  },
+  {
+    "remark": "内/外-审核-审核结果-尝试",
+    "key": "'DC_EXAMINE_RESULT_ATTEMPT';"
+  },
+  {
+    "remark": "内/外-审核结果-弹窗-再想想",
+    "key": "'DC_EXAMINE_RESULT_POPUP_THINKAGAIN';"
+  },
+  {
+    "remark": "内/外-审核-审核结果-返回首页",
+    "key": "'DC_EXAMINE_RESULT_RETURN';"
+  },
+  {
+    "remark": "内/外-审核结果-弹窗-授权",
+    "key": "'DC_EXAMINE_RESULT_POPUP_AUTHORIZATION';"
+  },
+  {
+    "remark": "内/外-问题反馈（基本信息）-再等等",
+    "key": "'DC_QUESTION_FEEDBACK_BASIC_INFORMATION_CONTINUE';"
+  },
+  {
+    "remark": "基本信息提交成功",
+    "key": "'DC_MINE_CREDIT_EXTENSION_BACK';"
+  },
+  {
+    "remark": "内/外-信用认证-运营商认证",
+    "key": "'DC_HOME_BASICINFO_COMPLETE';"
+  },
+  {
+    "remark": "内/外-确认代还信息-立即放款",
+    "key": "'DC_HOME_LENDERS';"
+  },
+  {
+    "remark": "代-还卡-banner点击",
+    "key": "'DC_HOME_BANNER_CLICK';"
+  },
+  {
+    "remark": "内/外-代还确认-确认借款成功",
+    "key": "'DC_HOME_BORROWING_PRE_SUBMIT_RESULT';"
+  },
+  {
+    "remark": "协议绑卡弹窗关闭",
+    "key": "'DC_PROTOCOL_ALERT_CLOSE';"
+  },
+  {
+    "remark": "内/外-确认代还信息-确定",
+    "key": "'DC_HOME_BORROWING_PRE_SUBMIT';"
+  },
+  {
+    "remark": "确认协议绑卡",
+    "key": "'DC_HOME_PROTOCOL_MODAL_BTN_CLICK';"
+  },
+  {
+    "remark": "代偿签约协议绑卡失败",
+    "key": "'DC_HOME_PROTOCOL_BIND_FAIL';"
+  },
+  {
+    "remark": "代偿签约协议绑卡获取验证码失败",
+    "key": "'DC_HOME_PROTOCOL_SMS_FAIL';"
+  },
+  {
+    "remark": "代偿签约协议绑卡失败-切换银行卡",
+    "key": "'DC_PROTOCOL_ALERT_CHANGE';"
+  },
+  {
+    "remark": "福利专区-跳转",
+    "key": "'DC_HOME_WELFARE_AREA';"
+  },
+  {
+    "remark": "埋点-首页-点击代偿其他信用卡",
+    "key": "'DC_HOME_REPAY_OTHER_CREDIT';"
+  },
+  {
+    "remark": "代-还卡-查看代还账单",
+    "key": "'DC_HOME_VIEW_BILL';"
+  },
+  {
+    "remark": "首页-点击一键还卡（代偿）",
+    "key": "'DC_HOME_EASY_REPAYMENT';"
+  },
+  {
+    "remark": "内/外-还卡-查看进度（机审）",
+    "key": "'DC_RETURN_CARD_VIEWING_PROGRESS_MACHINE';"
+  },
+  {
+    "remark": "还卡",
+    "key": "'DC_HOME_GOTO_LOAN_SUPERMARKET';"
+  },
+  {
+    "remark": "代-还卡-一键代还（借款）",
+    "key": "'DC_HOME_CLICK_REPAYMENT6';"
+  },
+  {
+    "remark": "代-还卡-一键代还放款失败",
+    "key": "'DC_HOME_CLICK_REPAYMENT8';"
+  },
+  {
+    "remark": "内/外-还卡-申请信用卡代还",
+    "key": "'DC_HOME_APPLY_CREDIT_REPAYMENT';"
+  },
+  {
+    "remark": "内/外-还卡-继续申请",
+    "key": "'DC_HOME_CONTINUE_APPLY';"
+  },
+  {
+    "remark": "现金分期申请按钮",
+    "key": "'FENQI_HOME_APPLY_BTN';"
+  },
+  {
+    "remark": "借钱换信用卡-拦截弹窗-继续申请",
+    "key": "'DC_QUESTION_FEEDBACK_APPLY_CONTINUE';"
+  },
+  {
+    "remark": "内/外-申请金额和期限确认-30天",
+    "key": "'DC_MINE_CREDIT_EXTENSION_DURATION_DAY_30';"
+  },
+  {
+    "remark": "内/外-申请金额和期限确认-3期",
+    "key": "'DC_MINE_CREDIT_EXTENSION_DURATION_MONTH_3';"
+  },
+  {
+    "remark": "内/外-申请金额和期限确认-6期",
+    "key": "'DC_MINE_CREDIT_EXTENSION_DURATION_MONTH_6';"
+  },
+  {
+    "remark": "内/外-申请金额和期限确认-9期",
+    "key": "'DC_MINE_CREDIT_EXTENSION_DURATION_MONTH_9';"
+  },
+  {
+    "remark": "内/外-申请金额和期限确认-12期",
+    "key": "'DC_MINE_CREDIT_EXTENSION_DURATION_MONTH_12';"
+  },
+  {
+    "remark": "内/外-借钱还信用卡-提交申请",
+    "key": "'DC_MONEY_CREDIT_CARD_CONFIRM_BTN';"
+  },
+  {
+    "remark": "内/外-还款意愿-全额还款",
+    "key": "'DC_REPAYMENT_INTENTION_ALL';"
+  },
+  {
+    "remark": "内/外-还款意愿-最低还款",
+    "key": "'DC_REPAYMENT_INTENTION_LOWEST';"
+  },
+  {
+    "remark": "内/外-还款意愿-部分还款",
+    "key": "'DC_REPAYMENT_INTENTION_PART';"
+  },
+  {
+    "remark": "内/外-问题反馈（银行列表）-再等等",
+    "key": "'DC_QUESTION_FEEDBACK_BANK_CONTINUE';"
+  },
+  {
+    "remark": "现金分期展示还款计划",
+    "key": "'FENQI_REPAY_PLAN';"
+  },
+  {
+    "remark": "现金分期-收款银行卡",
+    "key": "'FENQI_RESAVECARD';"
+  },
+  {
+    "remark": "现金分期-还款银行卡",
+    "key": "'FENQI_PAYCARD';"
+  },
+  {
+    "remark": "现金分期-获取合同",
+    "key": "'FENQI_CONTRACT';"
+  },
+  {
+    "remark": "现金分期-签约借款",
+    "key": "'FENQI_CLICK_SUBMIT';"
+  },
+  {
+    "remark": "",
+    "key": "'FENQI_SUBMIT_RESULT';"
+  },
+  {
+    "remark": "现金分期-协议绑卡弹窗按钮",
+    "key": "'FENQI_PROTOCOL_MODAL_BTN_CLICK';"
+  },
+  {
+    "remark": "现金分期-协议绑卡失败",
+    "key": "'FENQI_PROTOCOL_BIND_FAIL';"
+  },
+  {
+    "remark": "现金分期-协议绑卡失败",
+    "key": "'FENQI_MONEY_BLUR';"
+  },
+  {
+    "remark": "现金分期-协议绑卡弹窗关闭",
+    "key": "'FENQI_PROTOCOL_ALERT_CLOSE';"
+  },
+  {
+    "remark": "现金分期-协议绑卡-切换银行卡",
+    "key": "'FENQI_PROTOCOL_ALERT_CHANGE';"
+  },
+  {
+    "remark": "现金分期-协议绑卡-获取验证码失败",
+    "key": "'FENQI_PROTOCOL_SMS_FAIL';"
+  },
+  {
+    "remark": "手机变更返回",
+    "key": "'DC_INPHONEUPDATE_BACK';"
+  },
+  {
+    "remark": "手机变更-确认按钮",
+    "key": "'DC_INPHONEUPDATE_CONFIRM';"
+  },
+  {
+    "remark": "修改手机号-弹窗-取消",
+    "key": "'DC_INPHONEUPDATE_CANCLE';"
+  },
+  {
+    "remark": "修改手机号-弹窗-确认",
+    "key": "'DC_INPHONEUPDATE_SURE';"
+  },
+  {
+    "remark": "修改手机号-弹窗-发送验证码",
+    "key": "'DC_INPHONEUPDATE_SMSCODE';"
+  },
+  {
+    "remark": "DCapp_重置密码页-获取验证码按钮",
+    "key": "'DC_LOGIN_RESET_PASSWORD_GET_CODE';"
+  },
+  {
+    "remark": "DCapp_重置密码页-设置密码输入框-丢失",
+    "key": "'DC_LOGIN_RESET_PASSWORD_PW_INPUT';"
+  },
+  {
+    "remark": "DCapp_修改手机号页-获取验证码按钮成功",
+    "key": "'DC_INPHONEUPDATE_GET_CODE';"
+  },
+  {
+    "remark": "确认修改登录密码",
+    "key": "'DC_LOGIN_RESET_PASSWORD_CONFIRM_BTN';"
+  },
+  {
+    "remark": "刷脸变更密码-按钮",
+    "key": "'DC_FORGETPWDFACE_CONFIRM';"
+  },
+  {
+    "remark": "密码登录按钮",
+    "key": "'DC_LOGIN_PASSWORD_LOGIN';"
+  },
+  {
+    "remark": "DCapp_验证码登录页/登录页-忘记密码",
+    "key": "'DC_LOGIN_FORGET_PASSWORD';"
+  },
+  {
+    "remark": "跳转到验证码登录",
+    "key": "'DC_LOGIN_TO_VCODE';"
+  },
+  {
+    "remark": "密码登录-注册手机号聚焦",
+    "key": "'DC_LOGIN_PASSWORD_MOBILE_INPUT';"
+  },
+  {
+    "remark": "密码登录-密码输入框聚焦",
+    "key": "'DC_LOGIN_PASSWORD_PW_INPUT';"
+  },
+  {
+    "remark": "验证码登录页-获取验证码按钮",
+    "key": "'DC_LOGIN_VCODE_GET_CODE';"
+  },
+  {
+    "remark": "验证码登录页-立即登录按钮",
+    "key": "'DC_LOGIN_VCODE_LOGIN';"
+  },
+  {
+    "remark": "验证码登录页",
+    "key": "'DC_LOGIN_TO_PASSWORD';"
+  },
+  {
+    "remark": "短信登录-点击弃用手机按钮",
+    "key": "'DC_TelEdit';"
+  },
+  {
+    "remark": "DCapp_验证码登录页-手机号码输入框",
+    "key": "'DC_LOGIN_VCODE_MOBILE_INPUT';"
+  },
+  {
+    "remark": "DCapp_验证码登录页-验证码输入框",
+    "key": "'DC_LOGIN_VCODE_CODE_INPUT';"
+  },
+  {
+    "remark": "修改手机号返回按钮",
+    "key": "'DC_TELEDIT_BACK';"
+  },
+  {
+    "remark": "确认修改手机号按钮",
+    "key": "'DC_TELEDIT_CONFIRM';"
+  },
+  {
+    "remark": "M-绑定信用卡-确认",
+    "key": "'DC_MINE_CREDIT_CONFIRM';"
+  },
+  {
+    "remark": "注销账户-调起弹窗按钮",
+    "key": "'DC_DELUSER_BTN';"
+  },
+  {
+    "remark": "注销账户-弹窗取消按钮",
+    "key": "'DC_DELUSER_CANCLE';"
+  },
+  {
+    "remark": "注销账户-弹窗确认按钮",
+    "key": "'DC_DELUSERSMS_BTN';"
+  },
+  {
+    "remark": "注销账户-发送验证码",
+    "key": "'DC_DELUSER_SMSCODE';"
+  },
+  {
+    "remark": "协议绑卡验证码失败",
+    "key": "'DC_MINE_PROTOCOL_SMS_FAIL';"
+  },
+  {
+    "remark": "绑定储蓄卡页-确定",
+    "key": "'DC_MINE_SAVE_CONFIRM';"
+  },
+  {
+    "remark": "绑定储蓄卡页-确定",
+    "key": "'DC_MINE_PROTOCOL_BIND_FAIL';"
+  },
+  {
+    "remark": "协议绑卡失败",
+    "key": "'DC_MINE_CLASSIFICATION_CHOICE';"
+  },
+  {
+    "remark": "意见反馈保存成功",
+    "key": "'DC_CLASSIFICATION_SUCCESSFUL_SUBMISSION';"
+  },
+  {
+    "remark": "内/外-实名认证-点击问题",
+    "key": "'DC_REALNAME_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-实名认证-点击问题",
+    "key": "'DC_BASIC_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-运营商-点击问题",
+    "key": "'DC_OPERATORS_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-信用卡-点击问题",
+    "key": "'DC_CREDIT_CARD_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-提交申请-点击问题",
+    "key": "'DC_SUBMISSION_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-审核问题-点击问题",
+    "key": "'DC_TOEXAMINE_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-额度问题-点击问题",
+    "key": "'DC_QUOTA_CLICKQUESTION';"
+  },
+  {
+    "remark": "内/外-还款问题-点击问题",
+    "key": "'DC_REPAYMENT_CLICKQUESTION';"
+  },
+  {
+    "remark": "帮助中心上方点击",
+    "key": "'DC_HELPCENTER_FASTENTRY';"
+  },
+  {
+    "remark": "帮助中心-问题分类点击事件",
+    "key": "'DC_HELPCENTER_CLASSIFICATION';"
+  },
+  {
+    "remark": "热门问题列表点击事件",
+    "key": "'DC_HELPCENTER_HOTISSUES';"
+  },
+  {
+    "remark": "在线咨询点击事件",
+    "key": "'DC_HELPCENTER_CONSULTATION';"
+  },
+  {
+    "remark": "我的",
+    "key": "'DC_MINE_TO_LOGIN';"
+  },
+  {
+    "remark": "我的页面-点击帮助中心",
+    "key": "'DC_MINE_CREDIT_FEEDBACK';"
+  },
+  {
+    "remark": "实名认证点击身份证正面",
+    "key": "'DC_HOME_BASE_INFO_FRONT_CARD';"
+  },
+  {
+    "remark": "实名认证点击身份证反面",
+    "key": "'DC_HOME_BASE_INFO_BACK_CARD';"
+  },
+  {
+    "remark": "实名认证-提交结果",
+    "key": "'DC_HOME_BASE_INFO_CONFIRM';"
+  },
+  {
+    "remark": "实名认证-姓名输入框聚焦",
+    "key": "'DC_HOME_BASE_INFO_USERNAME';"
+  },
+  {
+    "remark": "实名认证-身份证输入框聚焦",
+    "key": "'DC_HOME_BASE_INFO_IDCARD';"
+  },
+  {
+    "remark": "提交授信结果",
+    "key": "'DC_MONEY_CREDIT_CARD_CONFIRM';"
+  },
+  {
+    "remark": "代-还卡-一键代还（提交授信）",
+    "key": "'DC_HOME_CLICK_REPAYMENT3';"
+  },
+  {
+    "remark": "代-还卡-一键代还（提交授信）",
+    "key": "'DC_MINE_CREDIT_EXTENSION';"
+  },
+  {
+    "remark": "选择修改密码方式",
+    "key": "'DC_FORGETPASSWORD';"
+  },
+  {
+    "remark": "修改密码-确认刷脸变更",
+    "key": "'DC_FORGETPWDFACE';"
+  },
+  {
+    "remark": "补充信息提交按钮",
+    "key": "'DC_ADDINFO_SUBMIT';"
+  },
+  {
+    "remark": "福利专区-去参与",
+    "key": "'DC_HOME_CONFIG_MODAL_JOIN_CLICK';"
+  },
+  {
+    "remark": "福利专区关闭",
+    "key": "'DC_HOME_CONFIG_MODAL_CLOSE_CLICK';"
+  },
+  {
+    "remark": "签约借款-协议弹窗",
+    "key": "'DC_HOME_WARNING_MODAL_CLOSE';"
+  },
+  {
+    "remark": "签约借款-警示-继续申请借款-提示",
+    "key": "'DC_HOME_WARNING_TIPS';"
+  },
+  {
+    "remark": "代偿签约确定按钮",
+    "key": "'DC_HOME_BORROWING_SUBMIT_BTN_CLICK';"
+  },
+  {
+    "remark": "信用卡认证页-提交按钮",
+    "key": "'DC_CREDITAUTH_SUBMIT';"
+  },
+  {
+    "remark": "福利专区点击事件",
+    "key": "'DC_HOME_NEWUSERENTRY_CLICK';"
+  },
+  {
+    "remark": "我的页面",
+    "key": "'DC_MINE_COUPON';"
+  },
+  {
+    "remark": "我的页面",
+    "key": "'DC_MINE_REAL_NAME';"
+  },
+  {
+    "remark": "我的页面",
+    "key": "'DC_MINE_EDIT_PASSWORD';"
+  },
+  {
+    "remark": "我的页面",
+    "key": "'DC_MINE_EDIT_FEEDBACK';"
+  },
+  {
+    "remark": "我的页面",
+    "key": "'DC_MINE_DEPOSIT_MANAGE';"
+  },
+  {
+    "remark": "签约借款协议弹窗选择框",
+    "key": "'DC_HOME_WARNING_PROTOCOL_CLICK';"
+  },
+  {
+    "remark": "codepush",
+    "key": "'CodePushError';"
+  },
+  {
+    "remark": "还款结果状态(成功、失败、超时)",
+    "key": "'DC_REPAYRESULT_STATUS';"
+  },
+  {
+    "remark": "账单继续还款按钮",
+    "key": "'DC_CONTINUEREPAY_BTN';"
+  },
+  {
+    "remark": "一键结清按钮",
+    "key": "'DC_PAYALL_BTN_CLICK';"
+  },
+  {
+    "remark": "查看还款信息(计划)按钮",
+    "key": "'DC_VIEW_REPAYINFO_BTN';"
+  },
+  {
+    "remark": "查询账单详情",
+    "key": "'DC_ORDER_DETAILS_REPAYMENT';"
+  },
+  {
+    "remark": "点击(勾选页)立即还款按钮",
+    "key": "'DC_GOTO_REPAYCONFIRM_PAGE';"
+  },
+  {
+    "remark": "优惠券使用提示弹窗(确认)",
+    "key": "'DC_COUPONUSEALERT_YES';"
+  },
+  {
+    "remark": "优惠券使用提示弹窗(取消)",
+    "key": "'DC_COUPONUSEALERT_NO';"
+  },
+  {
+    "remark": "提交成功、失败",
+    "key": "'DC_ORDER_DETAILS_REPAYMENT_FIRST';"
+  },
+  {
+    "remark": "提交还款按钮点击",
+    "key": "'DC_REPAYCONFIRM_SUBMITBTN';"
+  },
+  {
+    "remark": "获取短信报错",
+    "key": "'DC_GET_ALL_SMS_REJECT_ERROR';"
+  },
+  {
+    "remark": "获取短信报错",
+    "key": "'DC_GET_ALL_SMS_CATCH_ERROR';"
+  },
+  {
+    "remark": "获取短信报错",
+    "key": "'DC_GET_SOME_SMS_CATCH_ERROR';"
+  },
+  {
+    "remark": "上报短信报错",
+    "key": "'DC_SUBMIT_SMS_ERROR';"
+  },
+  {
+    "remark": "上报短信报错",
+    "key": "'DC_SUBMIT_SMS_CATCH_ERROR';"
+  },
+  {
+    "remark": "启动页-隐私协议弹窗确认",
+    "key": "'DC_PRIVACYPROTOCOL_ALERT_YES';"
+  },
+  {
+    "remark": "启动页-隐私协议弹窗取消",
+    "key": "'DC_PRIVACYPROTOCOL_ALERT_NO';"
+  },
+  {
+    "remark": "启动页-隐私协议同意",
+    "key": "'DC_PRIVACYPROTOCOL_YES';"
+  },
+  {
+    "remark": "启动页-隐私协议拒绝",
+    "key": "'DC_PRIVACYPROTOCOL_NO';"
+  },
+  {
+    "remark": "签约借款-指定联系人-请选择/修改",
+    "key": "'DC_HOME_SELECT_CONTACT_CLICK';"
+  },
+  {
+    "remark": "推荐联系人-确认按钮点击",
+    "key": "'DC_HOME_RECOM_CONTACT_CONFIRM';"
+  },
+  {
+    "remark": "联系人列表不为空时,指定联系人确认按钮",
+    "key": "'DC_HOME_RECOM_CONTACT_SAVE';"
+  },
+  {
+    "remark": "联系人列表为空时,指定联系人确认按钮",
+    "key": "'DC_HOME_SPECIFY_CONTACT_CONFIRM';"
+  },
+  {
+    "remark": "修改联系人-保存",
+    "key": "'DC_HOME_SPECIFY_CONTACT_SAVE';"
+  },
+  {
+    "remark": "联系人列表不为空时,指定联系人-修改",
+    "key": "'DC_HOME_RECOM_CONTACT_MODIFY';"
+  },
+  {
+    "remark": "联系人列表为空时,指定联系人修改",
+    "key": "'DC_HOME_SPECIFY_CONTACT_MODIFY';"
+  },
+  {
+    "remark": "联系人列表为空时,指定联系人添加",
+    "key": "'DC_HOME_SPECIFY_CONTACT_ADD';"
+  }
+]
