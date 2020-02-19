@@ -1,3 +1,8 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-19 09:56:23
+ */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import style from './index.scss';
@@ -7,9 +12,6 @@ import { buriedPointEvent } from 'utils/analytins';
 import { wxTabBar } from 'utils/analytinsType';
 import { connect } from 'react-redux';
 
-const API = {
-	queryQYOpenId: '/my/queryUsrQYOpenId' // 七鱼用户标识
-};
 (function(w, d, n, a, j) {
 	w[n] =
 		w[n] ||
