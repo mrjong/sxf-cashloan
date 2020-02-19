@@ -16,3 +16,17 @@
 		color: #fff;
 	}
 }
+
+.modalLoading {
+	color: #666;
+	margin-bottom: 15px;
+	font-size: 32px;
+}
+
+:global {
+	.confirm_agency_progress {
+		.am-progress-bar {
+			border: 0.04rem solid #121b33;
+		}
+	}
+}
