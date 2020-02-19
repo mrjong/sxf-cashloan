@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 17:28:17
+ * @LastEditTime : 2020-02-19 10:18:14
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -26,6 +26,10 @@ export default class InsuranceModal extends React.PureComponent {
 		this.state = {
 			checkBox1: false
 		};
+	}
+	componentWillMount() {
+		const { protocolSelFlag } = this.props;
+		protocolSelFlag && this.setState({ checkBox1: protocolSelFlag });
 	}
 	// 跳转协议
 	go = (url) => {
