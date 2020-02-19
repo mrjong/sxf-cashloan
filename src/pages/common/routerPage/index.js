@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:54:59
+ * @LastEditTime : 2020-02-19 10:03:26
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -161,7 +161,7 @@ export default class router_Page extends PureComponent {
 				}
 			}
 			if (route) {
-				// changeHistoryState('22222222222');
+				changeHistoryState('22222222222');
 				let component = await route.component();
 
 				this.setState({
