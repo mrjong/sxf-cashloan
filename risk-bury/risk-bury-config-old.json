@@ -1,0 +1,422 @@
+[
+  {
+    "title": "完善补充信息",
+    "pId": "wsbcxx",
+    "bury": [
+      {
+        "key": "marriageIn1",
+        "remark": "婚姻打开"
+      },
+      {
+        "key": "marriageOut",
+        "remark": "婚姻关闭"
+      },
+      {
+        "key": "childrenIn",
+        "remark": "有无子女打开"
+      },
+      {
+        "key": "childrenOut",
+        "remark": "有无子女关闭"
+      },
+      {
+        "key": "incomeIn",
+        "remark": "收入区间打开"
+      },
+      {
+        "key": "incomeOut",
+        "remark": "收入区间关闭"
+      },
+      {
+        "key": "workTypeIn",
+        "remark": "工作类型打开"
+      },
+      {
+        "key": "workTypeOut",
+        "remark": "工作类型关闭"
+      },
+      {
+        "key": "educationIn",
+        "remark": "学历打开"
+      },
+      {
+        "key": "educationOut",
+        "remark": "学历关闭"
+      },
+      {
+        "key": "DC_ADDINFO_SUBMIT",
+        "remark": "下一步"
+      }
+    ]
+  },
+  {
+    "title": "完善信息",
+    "pId": "wsxx",
+    "bury": [
+      {
+        "key": "resident_address",
+        "remark": "常住地址",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "contact_name_one",
+        "remark": "联系人1姓名",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "contact_name_two",
+        "remark": "联系人2姓名",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "linkphone",
+        "remark": "联系人1手机号",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "linkphone2",
+        "remark": "联系人2手机号",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "DC_resident_city",
+        "remark": "居住地址打开"
+      },
+      {
+        "key": "resident_cityOut",
+        "remark": "居住地址关闭"
+      },
+      {
+        "key": "cntRelTyp1",
+        "remark": "联系人1关系打开"
+      },
+      {
+        "key": "cntRelTypOut1",
+        "remark": "联系人1关系关闭"
+      },
+      {
+        "key": "cntRelTyp2",
+        "remark": "联系人2关系打开"
+      },
+      {
+        "key": "cntRelTypOut2",
+        "remark": "联系人2关系关闭"
+      },
+      {
+        "key": "grxxsqs",
+        "remark": "个人信息授权书"
+      },
+      {
+        "key": "yhysqzc",
+        "remark": "用户隐私权政策"
+      }
+    ]
+  },
+  {
+    "title": "签约借款",
+    "pId": "qyjk",
+    "bury": [
+      {
+        "key": "cardBillAmt",
+        "remark": "借款金融输入框",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "DC_HOME_LENDERS_ORDER",
+        "remark": "放款日期-还款日前一天"
+      },
+      {
+        "key": "DC_HOME_LENDERS",
+        "remark": "放款日期-立即放款"
+      },
+      {
+        "key": "ShowModal_planOut",
+        "remark": "签约借款_还款计划_按钮"
+      },
+      {
+        "key": "ShowModal_plan",
+        "remark": "签约借款_还款计划_按钮"
+      },
+      {
+        "key": "jkht",
+        "remark": "借款合同"
+      },
+      {
+        "key": "grxyxxcxsqs",
+        "remark": "个人信用信息查询授权书"
+      },
+      {
+        "key": "grxyyqyxgzs",
+        "remark": "个人信用逾期影响告知书"
+      }
+    ]
+  },
+  {
+    "title": "信用卡认证",
+    "pId": "xykrz",
+    "bury": [
+      {
+        "key": "credit_card_num",
+        "remark": "信用卡卡号",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "credit_card_time1",
+        "remark": "本期账单日期"
+      },
+      {
+        "key": "credit_card_time1out",
+        "remark": "本期账单日期"
+      },
+      {
+        "key": "credit_card_time2",
+        "remark": "本期还款日期"
+      },
+      {
+        "key": "credit_card_time2out",
+        "remark": "本期还款日期"
+      },
+      {
+        "key": "credit_card_money",
+        "remark": "本期账单金额",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "credit_card_phone",
+        "remark": "预留手机号",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "credit_card_smscode",
+        "remark": "验证码输入框",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "credit_card_sendcode",
+        "remark": "获取验证码按钮"
+      },
+      {
+        "key": "credit_card_next",
+        "remark": "下一步"
+      }
+    ]
+  },
+  {
+    "title": "主页",
+    "pId": "zy",
+    "bury": [
+      {
+        "key": "zytc_app_exit",
+        "remark": "Android退出框"
+      },
+      {
+        "key": "zytc_app_dissmis",
+        "remark": "Android退出框消失"
+      },
+      {
+        "key": "zytc_app_ok",
+        "remark": "Android确认退出"
+      },
+      {
+        "key": "zytc_app_cancle",
+        "remark": "Android取消退出"
+      }
+    ]
+  },
+  {
+    "title": "借款信息确认",
+    "pId": "jkxxqr",
+    "bury": [
+      {
+        "key": "jkht",
+        "remark": "借款合同"
+      }
+    ]
+  },
+  {
+    "title": "验证码登录",
+    "pId": "yzmdl",
+    "bury": [
+      {
+        "key": "clickCode",
+        "remark": "获取验证码按钮",
+        "actContain": []
+      },
+      {
+        "key": "inputPhone",
+        "remark": "手机号输入框",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "inputCode",
+        "remark": "验证码输入框",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "loginBtn",
+        "remark": "注册/登录"
+      },
+      {
+        "key": "DC_chkBox",
+        "remark": "注册协议勾选"
+      },
+      {
+        "key": "yhzcxy",
+        "remark": "用户注册协议"
+      },
+      {
+        "key": "yhysxy",
+        "remark": "用户隐私权政策"
+      }
+    ]
+  },
+  {
+    "title": "绑定储蓄卡",
+    "pId": "bdcxk",
+    "bury": [
+      {
+        "key": "valueInputCarNumber",
+        "remark": "信用卡卡号",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "valueInputCarPhone",
+        "remark": "手机号输入框",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "valueInputCarSms",
+        "remark": "验证码输入框",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste",
+          "value"
+        ]
+      },
+      {
+        "key": "wtkkxy",
+        "remark": "用户授权扣款委托书"
+      }
+    ]
+  },
+  {
+    "title": "实名认证",
+    "pId": "smrz",
+    "bury": [
+      {
+        "key": "DC_idCardF",
+        "remark": "拍摄身份证正面"
+      },
+      {
+        "key": "DC_idCardOutF",
+        "remark": "拍摄身份证正面"
+      },
+      {
+        "key": "DC_idCardB",
+        "remark": "拍摄身份证反面"
+      },
+      {
+        "key": "DC_idCardOutB",
+        "remark": "拍摄身份证反面"
+      },
+      {
+        "key": "idName",
+        "remark": "姓名",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      },
+      {
+        "key": "idNo",
+        "remark": "身份证号",
+        "actContain": [
+          "focus",
+          "blur",
+          "delete",
+          "paste"
+        ]
+      }
+    ]
+  }
+]

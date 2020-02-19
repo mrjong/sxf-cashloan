@@ -59,6 +59,7 @@
 		"cross-env": "^5.1.6",
 		"css-loader": "^0.28.11",
 		"cssnano": "^3.10.0",
+		"diff-arrays-of-objects": "^1.1.5",
 		"eslint": "^6.1.0",
 		"eslint-config-airbnb": "^16.1.0",
 		"eslint-config-prettier": "^6.0.0",
@@ -68,6 +69,7 @@
 		"eslint-plugin-jsx-a11y": "^6.0.3",
 		"eslint-plugin-prettier": "^3.1.0",
 		"eslint-plugin-react": "^7.8.2",
+		"exceljs": "^3.8.0",
 		"extract-text-webpack-plugin": "^4.0.0-beta.0",
 		"fastclick": "^1.0.6",
 		"file-loader": "^1.1.11",
@@ -113,7 +115,11 @@
 		"push-rc": "npm run rc && cp -rf ./upload-rc.sh ./dist && cd dist && sh upload-rc.sh",
 		"push-test": "npm run test && cp -rf ./upload.sh ./dist && cd dist && npm run clearApk && sh upload.sh",
 		"clearMap": "rimraf ./dist/*.map",
-		"clearApk": "rimraf ./dist/*.apk"
+		"clearApk": "rimraf ./dist/*.apk",
+		"risk-json": "node risk-bury/export-risk-bury-json.js",
+		"risk-excel": "node risk-bury/export-risk-bury-json.js",
+		"shengce-json": "node shengce-bury/export-bury-json.js",
+		"shengce-excel": "node shengce-bury/export-bury-excel.js"
 	},
 	"lint-staged": {
 		"src/**/*.{js,jsx}": [
