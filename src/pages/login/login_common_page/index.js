@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:06:00
+ * @LastEditTime : 2020-02-19 15:16:42
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,6 +11,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import {
 	getDeviceType,
 	getFirstError,
@@ -94,10 +95,7 @@ export default class login_common_page extends PureComponent {
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
 		// 移除cookie
-		Cookie.remove('FIN-HD-AUTH-TOKEN');
-
-		sessionStorage.clear();
-		localStorage.clear();
+		logoutClearData();
 
 		setH5Channel(storeH5Channel);
 

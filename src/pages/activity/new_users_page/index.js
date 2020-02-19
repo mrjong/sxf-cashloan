@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2019-12-26 11:43:27
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-19 10:48:04
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -37,8 +37,7 @@ export default class new_users_page extends PureComponent {
 			validEndTm: '', // 优惠劵有效期
 			isOpen: false,
 			isAppOpen: false, // 是否是app webview打开
-			registerChannel: '', // 注册渠道
-			isPlus: false
+			registerChannel: '' // 注册渠道
 		};
 	}
 
@@ -47,8 +46,7 @@ export default class new_users_page extends PureComponent {
 		if (queryData.fromApp) {
 			this.setState(
 				{
-					isAppOpen: true,
-					isPlus: queryData.isPlus
+					isAppOpen: true
 				},
 				() => {
 					this.checkUserStatus();
@@ -86,7 +84,7 @@ export default class new_users_page extends PureComponent {
 		const nowTime = Date.now();
 		if (nowTime - this.prePressTime2 > 1600 || !this.prePressTime2) {
 			this.prePressTime2 = nowTime;
-			const { userStsCode, isAppOpen, registerChannel, isPlus } = this.state;
+			const { userStsCode, isAppOpen, registerChannel } = this.state;
 
 			if (isAppOpen && Cookie.get('FIN-HD-AUTH-TOKEN')) {
 				if (userStsCode === '00') {
@@ -105,11 +103,7 @@ export default class new_users_page extends PureComponent {
 						operation: 'useCoupon'
 					};
 					setTimeout(() => {
-						if (isPlus) {
-							window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
-						} else {
-							window.postMessage(JSON.stringify(activityInf), () => {});
-						}
+						window.ReactNativeWebView.postMessage(JSON.stringify(activityInf));
 					}, 0);
 				} else {
 					buriedPointEvent(activity.newUserActivityGetNow, {

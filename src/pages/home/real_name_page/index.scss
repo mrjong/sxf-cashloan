@@ -122,10 +122,19 @@
 		letter-spacing: 1.5px;
 		line-height: 17px;
 		.desOne {
+      position: relative;
 			line-height: 36px;
 			margin-bottom: 15px;
-			font-size: 0.24rem;
-		}
+      font-size: 0.24rem;
+      padding-left: 10px;
+
+    }
+    .desOne::before {
+      content: '*';
+      position: absolute;
+      left: 0;
+      top: 5px;
+    }
   }
   .bottomBtn {
     position: fixed;
@@ -152,7 +161,7 @@
 	.real_name_page_list {
 		.am-list-item .am-input-label {
 			color: #333;
-			font-size: 0.3rem;
+			font-size: 0.28rem;;
 		}
 		.am-list-item.am-input-item {
 			padding-left: 0;
@@ -161,7 +170,22 @@
       padding-right: 0;
     }
 		.am-list-item .am-input-control input {
-			text-align: right;
-		}
+      text-align: right;
+      font-size: 0.28rem;
+      color: $colorBlack;
+    }
+
+    .am-list-item .am-input-control input::-webkit-input-placeholder{
+      color:#B2B6BF;
+    }
+    .am-list-item .am-input-control input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+        color:#B2B6BF;
+    }
+    .am-list-item .am-input-control input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+        color:#B2B6BF;
+    }
+    .am-list-item .am-input-control input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
+        color:#B2B6BF;
+    }
 	}
 }

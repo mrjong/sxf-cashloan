@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-09-03 15:01:06
+ * @LastEditTime : 2020-02-19 15:15:47
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -23,6 +23,7 @@ import { isMPOS } from 'utils/common';
 import LoginAlert from './components/LoginAlert';
 import PrizeModal from './components/PrizeModal';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 
 const API = {
 	joinActivity: '/activeConfig/join' // 参加活动 里面会判断用户有没有资格
@@ -127,9 +128,7 @@ export default class wuyuekh_page extends PureComponent {
 				});
 			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
 				this.props.toast.info(res.msgInfo, 2, () => {
-					Cookie.remove('FIN-HD-AUTH-TOKEN');
-					sessionStorage.clear();
-					localStorage.clear();
+					logoutClearData();
 					this.goTo(clickType);
 				});
 			} else {

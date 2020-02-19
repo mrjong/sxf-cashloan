@@ -87,7 +87,6 @@ export default class Carousels extends React.Component {
 							onClick={() => {
 								this.handleLinkClick(item, index);
 							}}
-							style={{ width: '100%', height: this.state.imgHeight }}
 						>
 							<div className={style.bannerBox}>
 								<img

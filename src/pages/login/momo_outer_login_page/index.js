@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 15:55:58
+ * @LastEditTime : 2020-02-19 15:17:32
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,6 +11,8 @@ import { Toast, InputItem, Modal } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
+
 import {
 	getDeviceType,
 	getFirstError,
@@ -101,11 +103,7 @@ export default class momo_outer_login_page extends PureComponent {
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
-		// 移除cookie
-		Cookie.remove('FIN-HD-AUTH-TOKEN');
-
-		sessionStorage.clear();
-		localStorage.clear();
+		logoutClearData();
 		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:22:34
+ * @LastEditTime : 2020-02-19 13:53:48
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -59,7 +59,6 @@ export default class tencent_face_middle_page extends Component {
 				if (nextStepStatus) {
 					// 首页下一步进入
 					store.removeRealNameNextStep();
-					store.removeTencentBackUrl();
 					getNextStatus({
 						$props: this.props
 					});

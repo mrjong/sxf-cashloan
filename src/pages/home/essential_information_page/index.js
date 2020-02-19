@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:10:18
+ * @LastEditTime : 2020-02-19 12:14:59
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -782,7 +782,7 @@ export default class essential_information_page extends PureComponent {
 
 					<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
 						<div className={style.item_box}>
-							<div className={style.titleTop}>居住地址</div>
+							<div className={style.titleTop}>常住地址</div>
 							<div
 								className={style.listRow}
 								onClick={() => {
@@ -793,14 +793,23 @@ export default class essential_information_page extends PureComponent {
 								}}
 							>
 								{ProvincesValue ? (
-									<span className={style.active}>{ProvincesValue}</span>
+									<div className={style.lableTipWrap}>
+										<span className={style.labelTipText}>居住地址</span>
+										<span className={style.active}>{ProvincesValue}</span>
+									</div>
 								) : (
 									'请选择您的现居住城市'
 								)}
 								<img className={style.informationMoreNew} src={informationMore} />
 							</div>
+
+							{store.getAddress || this.state.address ? (
+								<div className={[style.lableTipWrap, style.lableTipWrap_address].join(' ')}>
+									<span className={style.labelTipText}>详细地址</span>
+								</div>
+							) : null}
 							{getFieldDecorator('address', {
-								rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
+								rules: [{ required: true, message: '请输入详细地址' }, { validator: this.validateAddress }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('resident_address', {
@@ -849,11 +858,23 @@ export default class essential_information_page extends PureComponent {
 							<div className={style.titleTop}>
 								<span className={style.titleTopNum}>1</span>紧急联系人
 							</div>
-							<div className={style.labelDiv}>
+							<div
+								className={[
+									this.state.relatValue || this.state.isCntRelTyp1Value ? 'hasSelectValue' : ''
+								].join(' ')}
+							>
+								{this.state.relatValue || this.state.isCntRelTyp1Value ? (
+									<div className={[style.lableTipWrap, style.lableTipWrap_cntRelTyp1].join(' ')}>
+										<span className={style.labelTipText}>所属关系</span>
+									</div>
+								) : null}
 								{getFieldDecorator('cntRelTyp1', {
 									initialValue: this.state.relatValue,
-									rules: [{ required: true, message: '请选择联系人关系' }],
+									rules: [{ required: true, message: '请选择联系人1关系' }],
 									onChange: (value) => {
+										this.setState({
+											isCntRelTyp1Value: true
+										});
 										store.setRelationValue(value);
 										this.selectSure({
 											value: JSON.stringify(value),
@@ -894,8 +915,13 @@ export default class essential_information_page extends PureComponent {
 								)}
 								<img className={style.informationMore} src={informationMore} />
 							</div>
+							{this.state.linkman || store.getLinkman() ? (
+								<div className={[style.lableTipWrap, style.lableTipWrap_linkman].join(' ')}>
+									<span className={style.labelTipText}>真实姓名</span>
+								</div>
+							) : null}
 							{getFieldDecorator('linkman', {
-								rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+								rules: [{ required: true, message: '请输入联系人1姓名' }, { validator: this.validateName }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('contact_name_one', {
@@ -927,7 +953,7 @@ export default class essential_information_page extends PureComponent {
 											}
 										]
 									})}
-									placeholder="联系人姓名"
+									placeholder="真实姓名"
 									type="text"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_name_one');
@@ -937,8 +963,16 @@ export default class essential_information_page extends PureComponent {
 									}}
 								></InputItem>
 							)}
+							{this.state.linkphone || store.getLinkphone() ? (
+								<div className={[style.lableTipWrap, style.lableTipWrap_linkphone].join(' ')}>
+									<span className={style.labelTipText}>手机号</span>
+								</div>
+							) : null}
 							{getFieldDecorator('linkphone', {
-								rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+								rules: [
+									{ required: true, message: '请输入联系人1手机号' },
+									{ validator: this.validatePhone }
+								],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('linkphone', {
@@ -973,7 +1007,7 @@ export default class essential_information_page extends PureComponent {
 									className="hasborder"
 									type="number"
 									maxLength="11"
-									placeholder="联系人电话"
+									placeholder="手机号"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_tel_one');
 									}}
@@ -988,11 +1022,23 @@ export default class essential_information_page extends PureComponent {
 							<div className={style.titleTop}>
 								<span className={style.titleTopNum}>2</span>紧急联系人
 							</div>
-							<div className={style.labelDiv}>
+							<div
+								className={[
+									this.state.relatValue2 || this.state.isCntRelTyp1Value2 ? 'hasSelectValue' : ''
+								].join(' ')}
+							>
+								{this.state.relatValue2 || this.state.isCntRelTyp1Value2 ? (
+									<div className={[style.lableTipWrap, style.lableTipWrap_cntRelTyp1].join(' ')}>
+										<span className={style.labelTipText}>所属关系</span>
+									</div>
+								) : null}
 								{getFieldDecorator('cntRelTyp2', {
 									initialValue: this.state.relatValue2,
-									rules: [{ required: true, message: '请选择联系人关系' }],
+									rules: [{ required: true, message: '请选择联系人2关系' }],
 									onChange: (value) => {
+										this.setState({
+											isCntRelTyp1Value2: true
+										});
 										store.setRelationValue2(value);
 										this.selectSure({
 											value: JSON.stringify(value),
@@ -1034,8 +1080,13 @@ export default class essential_information_page extends PureComponent {
 								)}
 								<img className={style.informationMore} src={informationMore} />
 							</div>
+							{this.state.linkman2 || store.getLinkman2() ? (
+								<div className={[style.lableTipWrap, style.lableTipWrap_linkman].join(' ')}>
+									<span className={style.labelTipText}>真实姓名</span>
+								</div>
+							) : null}
 							{getFieldDecorator('linkman2', {
-								rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+								rules: [{ required: true, message: '请输入联系人2姓名' }, { validator: this.validateName }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('contact_name_two', {
@@ -1067,7 +1118,7 @@ export default class essential_information_page extends PureComponent {
 										]
 									})}
 									clear
-									placeholder="联系人姓名"
+									placeholder="真实姓名"
 									type="text"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_name_two');
@@ -1077,8 +1128,16 @@ export default class essential_information_page extends PureComponent {
 									}}
 								></InputItem>
 							)}
+							{this.state.linkphone2 || store.getLinkphone2() ? (
+								<div className={[style.lableTipWrap, style.lableTipWrap_linkphone].join(' ')}>
+									<span className={style.labelTipText}>手机号</span>
+								</div>
+							) : null}
 							{getFieldDecorator('linkphone2', {
-								rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+								rules: [
+									{ required: true, message: '请输入联系人2手机号' },
+									{ validator: this.validatePhone }
+								],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('linkphone2', {
@@ -1113,7 +1172,7 @@ export default class essential_information_page extends PureComponent {
 									className="hasborder"
 									type="number"
 									maxLength="11"
-									placeholder="联系人电话"
+									placeholder="手机号"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_tel_two');
 									}}

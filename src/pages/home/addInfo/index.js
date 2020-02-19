@@ -124,7 +124,10 @@ export default class add_info extends PureComponent {
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {
 							return (
-								<div key={index} className={style.labelDiv}>
+								<div
+									key={index}
+									className={[this.props.form.getFieldValue(item.code) ? 'item_box_has_value' : ''].join(' ')}
+								>
 									{getFieldDecorator(item.code, {
 										initialValue: this.state.relatValue,
 										rules: [{ required: true, message: `请选择${item.name}` }]

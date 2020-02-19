@@ -8,8 +8,8 @@
 		height: 160px;
 		box-sizing: border-box;
 		padding: 30px 58px;
-    background: #fff;
-    z-index: 1;
+		background: #fff;
+		z-index: 1;
 	}
 	.confirm_btn {
 		height: 100px;
@@ -19,5 +19,19 @@
 	.disabled_confirm_btn {
 		background: #dcdfe6;
 		color: #fff;
+	}
+}
+
+.modalLoading {
+	color: #666;
+	margin-bottom: 15px;
+	font-size: 32px;
+}
+
+:global {
+	.confirm_agency_progress {
+		.am-progress-bar {
+			border: 0.04rem solid #121b33;
+		}
 	}
 }
