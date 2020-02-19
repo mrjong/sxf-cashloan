@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:31:58
+ * @LastEditTime : 2020-02-19 15:18:30
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -27,6 +27,7 @@ import feature_img3 from './img/feature_img3.png';
 import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
@@ -84,11 +85,7 @@ export default class momo_outer_login_page extends PureComponent {
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
-		// 移除cookie
-		Cookie.remove('FIN-HD-AUTH-TOKEN');
-
-		sessionStorage.clear();
-		localStorage.clear();
+		logoutClearData();
 
 		setH5Channel(storeH5Channel);
 

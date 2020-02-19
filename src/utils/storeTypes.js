@@ -1,11 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:25:51
+ * @LastEditTime : 2020-02-19 13:53:03
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
-	BackUrl: 'BackUrl', // 保存跳转的url
-	BackUrl2: 'BackUrl2', // 临时缓存
 	Position: 'sxf_Position', // 定位信息
 	ProtocolFinancialData: 'ProtocolFinancialData', // 协议绑卡信息缓存
 	OrderSuccess: 'OrderSuccess', // 付款成功信息

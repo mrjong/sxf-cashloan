@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 15:56:21
+ * @LastEditTime : 2020-02-19 15:18:03
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,6 +11,8 @@ import { Toast, InputItem } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
+
 import {
 	getDeviceType,
 	getFirstError,
@@ -82,13 +84,12 @@ export default class login_page extends PureComponent {
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
-		// 移除cookie
-		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
-		sessionStorage.clear();
-		localStorage.clear();
+		// 移除cookie
+		logoutClearData();
+
 		// 首页弹窗要用的
 		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
 		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);

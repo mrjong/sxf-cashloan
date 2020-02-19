@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:31:39
+ * @LastEditTime : 2020-02-19 13:53:20
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -14,14 +14,9 @@ import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import styles from './index.scss';
-import qs from 'qs';
 import { connect } from 'react-redux';
 import { cred_queryCredCardById, bank_card_check, bank_card_bind_credit, bank_card_bin } from 'fetch/api';
 
-// let isFetching = false;
-let backUrlData = ''; // 从除了我的里面其他页面进去
-let autId = '';
-let query = {};
 @setBackGround('#fff')
 @fetch.inject()
 @createForm()
@@ -40,15 +35,9 @@ export default class bind_credit_page extends PureComponent {
 			userName: '', // 持卡人姓名
 			cardData: {} // 绑定的卡的数据
 		};
-		backUrlData = store.getBackUrl();
 	}
 
 	componentWillMount() {
-		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		autId = query && query.autId;
-		console.log(autId, '------------');
-		// isFetching = false;
-		store.removeBackUrl();
 		this.queryCardInfo();
 	}
 
@@ -98,29 +87,20 @@ export default class bind_credit_page extends PureComponent {
 	// 绑定银行卡
 	bindConfirm = (params1) => {
 		this.props.$fetch.post(bank_card_bind_credit, params1).then((result) => {
-			if (result.code === '000000' || (backUrlData && result.code === '999968')) {
+			if (result.code === '000000' || (this.props.backRouter !== 'Mine' && result.code === '999968')) {
 				buriedPointEvent(mine.creditConfirm, {
-					entry: backUrlData ? '绑定信用卡' : '信用卡管理',
+					entry: this.props.backRouter === 'Mine' ? '绑定信用卡' : '信用卡管理',
 					is_success: true
 				});
-				if (backUrlData) {
+				if (this.props.backRouter !== 'Mine') {
 					// 提交申请 判断是否绑定信用卡和储蓄卡
 					this.props.$fetch
 						.get(`${bank_card_check}/${(this.props.authId && this.props.authId) || ''}`)
 						.then((result) => {
 							if (result.code === '999974') {
 								// 进入绑定储蓄卡页面，如何不需要存银行卡（防止弹窗出现）则加一个noBankInfo
-								store.setBackUrl(backUrlData);
-								if (query && query.noBankInfo) {
-									this.props.history.replace({
-										pathname: '/mine/bind_save_page',
-										search: '?noBankInfo=true'
-									});
-								} else {
-									this.props.history.replace('/mine/bind_save_page');
-								}
+								this.props.history.replace('/mine/bind_save_page');
 							} else {
-								store.removeBackUrl();
 								this.props.history.goBack();
 							}
 						});
@@ -131,7 +111,7 @@ export default class bind_credit_page extends PureComponent {
 			} else {
 				// isFetching = false;
 				buriedPointEvent(mine.creditConfirm, {
-					entry: backUrlData ? '绑定信用卡' : '信用卡管理',
+					entry: this.props.backRouter === 'Mine' ? '绑定信用卡' : '信用卡管理',
 					is_success: false,
 					fail_cause: result.message
 				});
@@ -162,7 +142,7 @@ export default class bind_credit_page extends PureComponent {
 					// isFetching = false;
 					this.props.toast.info(`请输入有效银行卡号${result.code}`);
 					buriedPointEvent(mine.creditConfirm, {
-						entry: backUrlData ? '绑定信用卡' : '信用卡管理',
+						entry: this.props.backRouter === 'Mine' ? '绑定信用卡' : '信用卡管理',
 						is_success: false,
 						fail_cause: result.message
 					});
@@ -175,7 +155,7 @@ export default class bind_credit_page extends PureComponent {
 	};
 	// 确认购买
 	confirmBuy = () => {
-		if (!this.validateFn()) return;
+		// if (!this.validateFn()) return;
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.checkCard(values);
@@ -183,7 +163,7 @@ export default class bind_credit_page extends PureComponent {
 			} else {
 				if (!this.jsonIsNull(values)) {
 					buriedPointEvent(mine.creditConfirm, {
-						entry: backUrlData ? '绑定信用卡' : '信用卡管理',
+						entry: this.props.backRouter === 'Mine' ? '绑定信用卡' : '信用卡管理',
 						is_success: false,
 						fail_cause: getFirstError(err)
 					});
@@ -254,7 +234,7 @@ export default class bind_credit_page extends PureComponent {
 					支持绑定卡的银行
 				</span>
 				<div className={styles.btn_box}>
-					<ButtonCustom type={!this.validateFn() ? 'gray' : 'yellow'} onClick={this.confirmBuy}>
+					<ButtonCustom type={!this.validateFn() ? 'default' : 'yellow'} onClick={this.confirmBuy}>
 						确认
 					</ButtonCustom>
 				</div>

@@ -1,9 +1,8 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:24:44
+ * @LastEditTime : 2020-02-19 15:18:55
  */
 import React, { PureComponent } from 'react';
-import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import { Toast, Popover } from 'antd-mobile';
 // import qs from 'qs';
@@ -48,9 +47,6 @@ export default class credit_list_page extends PureComponent {
 	}
 	componentWillMount() {
 		this.queryBankList();
-	}
-	componentWillUnmount() {
-		store.removeBackUrl();
 	}
 
 	// 获取信用卡银行卡列表

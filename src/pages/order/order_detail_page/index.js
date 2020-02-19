@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 15:56:49
+ * @LastEditTime : 2020-02-19 14:15:40
  */
 import React, { PureComponent } from 'react';
 import { Card } from 'antd-mobile';
@@ -104,7 +104,7 @@ export default class order_detail_page extends PureComponent {
 		let pannelCard = [
 			{
 				label: '借款本金(元)',
-				value: billPrcpAmt
+				value: '￥' + billPrcpAmt
 			},
 			{
 				label: '借款期限',

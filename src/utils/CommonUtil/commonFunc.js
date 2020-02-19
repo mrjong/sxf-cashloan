@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:46:37
+ * @LastEditTime : 2020-02-19 15:13:57
  */
 import React from 'react';
 
@@ -14,6 +14,22 @@ import { base64Decode } from './toolUtil';
 import storeRedux from 'reduxes';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { isMPOS } from 'utils/common';
+import Cookie from 'js-cookie';
+
+/**
+ * @description: 退出清除数据的方法
+ * @param {type}
+ * @return:
+ */
+export const logoutClearData = () => {
+	storeRedux.dispatch(commonClearState());
+	storeRedux.dispatch(staticClearState());
+	storeRedux.dispatch(specialClearState());
+	storeRedux.dispatch(setUserInfoAction({}));
+	Cookie.remove('FIN-HD-AUTH-TOKEN');
+	sessionStorage.clear();
+	localStorage.clear();
+};
 
 /**
  * @description: 账单需要更新等跳转逻辑
@@ -137,19 +153,6 @@ export const goToStageLoan = ({ $props }) => {
 			}, 2000);
 		});
 	// });
-};
-/**
- * @description: 退出清除数据的方法
- * @param {type}
- * @return:
- */
-export const logoutClearData = (type) => {
-	if (type === 'LoginSms') {
-		storeRedux.dispatch(commonClearState());
-		storeRedux.dispatch(staticClearState());
-		storeRedux.dispatch(specialClearState());
-	}
-	storeRedux.dispatch(setUserInfoAction({}));
 };
 // 退出功能
 export const logoutApp = () => {

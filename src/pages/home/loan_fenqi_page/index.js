@@ -366,7 +366,6 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择银行卡
 	selectBankCard = (agrNo, cardType) => {
-		store.setBackUrl('/home/loan_fenqi');
 		this.storeTempData();
 		this.props.setCardTypeAction(cardType);
 		this.props.history.push({
@@ -382,7 +381,6 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//绑定银行卡
 	bindBankCard = (cardType) => {
-		store.setBackUrl('/home/loan_fenqi');
 		this.storeTempData();
 		this.props.setCardTypeAction(cardType);
 		this.props.history.push({
