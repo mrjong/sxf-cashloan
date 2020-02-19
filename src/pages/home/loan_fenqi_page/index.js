@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Modal, InputItem, Icon } from 'antd-mobile';
-import { ButtonCustom, RepayPlanModal, CheckRadio } from 'components';
+import { ButtonCustom, RepayPlanModal, CheckRadio, ProtocolSmsModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
 import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
-import SmsModal from '../../order/order_common_page/components/SmsModal';
 import Images from 'assets/image';
 import style from './index.scss';
 import {
@@ -837,6 +836,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	render() {
+		const { userInfo = {} } = this.props;
 		const {
 			usageModal,
 			loanUsage,
@@ -1071,7 +1071,7 @@ export default class loan_fenqi_page extends PureComponent {
 				) : null}
 
 				{isShowSmsModal && (
-					<SmsModal
+					<ProtocolSmsModal
 						onCancel={() => {
 							buriedPointEvent(home.protocolAlertClose);
 							this.setState({
@@ -1102,7 +1102,7 @@ export default class loan_fenqi_page extends PureComponent {
 						toast={this.props.toast}
 						bankNo={resaveCardNo}
 						buttonDisabled={buttonDisabled}
-						userInfo={this.props.userInfo}
+						bnkTelNoHid={userInfo && userInfo.telNoHid ? userInfo.telNoHid : ''}
 					/>
 				)}
 			</div>

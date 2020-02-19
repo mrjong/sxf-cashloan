@@ -803,7 +803,7 @@ export default class essential_information_page extends PureComponent {
 								<img className={style.informationMoreNew} src={informationMore} />
 							</div>
 
-							{store.getAddress || this.state.address ? (
+							{this.props.form.getFieldValue('address') || this.state.address ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_address].join(' ')}>
 									<span className={style.labelTipText}>详细地址</span>
 								</div>
@@ -860,10 +860,10 @@ export default class essential_information_page extends PureComponent {
 							</div>
 							<div
 								className={[
-									this.state.relatValue || this.state.isCntRelTyp1Value ? 'hasSelectValue' : ''
+									this.state.relatValue || this.props.form.getFieldValue('cntRelTyp1') ? 'hasSelectValue' : ''
 								].join(' ')}
 							>
-								{this.state.relatValue || this.state.isCntRelTyp1Value ? (
+								{this.state.relatValue || this.props.form.getFieldValue('cntRelTyp1') ? (
 									<div className={[style.lableTipWrap, style.lableTipWrap_cntRelTyp1].join(' ')}>
 										<span className={style.labelTipText}>所属关系</span>
 									</div>
@@ -915,7 +915,7 @@ export default class essential_information_page extends PureComponent {
 								)}
 								<img className={style.informationMore} src={informationMore} />
 							</div>
-							{this.state.linkman || store.getLinkman() ? (
+							{this.state.linkman || this.props.form.getFieldValue('linkman') ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_linkman].join(' ')}>
 									<span className={style.labelTipText}>真实姓名</span>
 								</div>
@@ -963,7 +963,7 @@ export default class essential_information_page extends PureComponent {
 									}}
 								></InputItem>
 							)}
-							{this.state.linkphone || store.getLinkphone() ? (
+							{this.state.linkphone || this.props.form.getFieldValue('linkphone') ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_linkphone].join(' ')}>
 									<span className={style.labelTipText}>手机号</span>
 								</div>
@@ -1024,10 +1024,12 @@ export default class essential_information_page extends PureComponent {
 							</div>
 							<div
 								className={[
-									this.state.relatValue2 || this.state.isCntRelTyp1Value2 ? 'hasSelectValue' : ''
+									this.state.relatValue2 || this.props.form.getFieldValue('cntRelTyp2')
+										? 'hasSelectValue'
+										: ''
 								].join(' ')}
 							>
-								{this.state.relatValue2 || this.state.isCntRelTyp1Value2 ? (
+								{this.state.relatValue2 || this.props.form.getFieldValue('cntRelTyp2') ? (
 									<div className={[style.lableTipWrap, style.lableTipWrap_cntRelTyp1].join(' ')}>
 										<span className={style.labelTipText}>所属关系</span>
 									</div>
@@ -1036,9 +1038,6 @@ export default class essential_information_page extends PureComponent {
 									initialValue: this.state.relatValue2,
 									rules: [{ required: true, message: '请选择联系人2关系' }],
 									onChange: (value) => {
-										this.setState({
-											isCntRelTyp1Value2: true
-										});
 										store.setRelationValue2(value);
 										this.selectSure({
 											value: JSON.stringify(value),
@@ -1080,7 +1079,7 @@ export default class essential_information_page extends PureComponent {
 								)}
 								<img className={style.informationMore} src={informationMore} />
 							</div>
-							{this.state.linkman2 || store.getLinkman2() ? (
+							{this.state.linkman2 || this.props.form.getFieldValue('linkman2') ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_linkman].join(' ')}>
 									<span className={style.labelTipText}>真实姓名</span>
 								</div>
@@ -1128,7 +1127,7 @@ export default class essential_information_page extends PureComponent {
 									}}
 								></InputItem>
 							)}
-							{this.state.linkphone2 || store.getLinkphone2() ? (
+							{this.state.linkphone2 || this.props.form.getFieldValue('linkphone2') ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_linkphone].join(' ')}>
 									<span className={style.labelTipText}>手机号</span>
 								</div>

@@ -15,9 +15,8 @@ import { createForm } from 'rc-form';
 import { getFirstError, handleInputBlur } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
-import SmsModal from '../../order/order_common_page/components/SmsModal';
 import { domListen } from 'utils/domListen';
-import { RepayPlanModal, CheckRadio, ButtonCustom } from 'components';
+import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
 import {
@@ -831,7 +830,7 @@ export default class confirm_agency_page extends PureComponent {
 		});
 	};
 	render() {
-		const { history, toast } = this.props;
+		const { history, toast, userInfo } = this.props;
 		const { getFieldProps } = this.props.form;
 		const {
 			contractData,
@@ -1142,7 +1141,7 @@ export default class confirm_agency_page extends PureComponent {
 					/>
 
 					{isShowSmsModal && (
-						<SmsModal
+						<ProtocolSmsModal
 							onCancel={() => {
 								buriedPointEvent(home.protocolAlertClose);
 								this.setState({
@@ -1172,6 +1171,7 @@ export default class confirm_agency_page extends PureComponent {
 							fetch={this.props.$fetch}
 							toast={this.props.toast}
 							bankNo={repayInfo && repayInfo.withHoldAgrNo}
+							bnkTelNoHid={userInfo && userInfo.telNoHid ? userInfo.telNoHid : ''}
 						/>
 					)}
 				</div>
