@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 16:58:54
+ * @LastEditTime : 2020-02-18 17:28:17
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -46,10 +46,9 @@ export default class InsuranceModal extends React.PureComponent {
 
 	// 点击继续申请
 	handleButtonClick = () => {
-		const { checkBox1 } = this.state;
-		const { handleConfirm, prodType, toast } = this.props;
+		const { handleConfirm, prodType, toast, protocolSelFlag } = this.props;
 
-		if (checkBox1) {
+		if (protocolSelFlag) {
 			handleConfirm && handleConfirm();
 		} else {
 			// 签约借款-警示-继续申请借款-提示 埋点

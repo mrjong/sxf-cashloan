@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:02:20
+ * @LastEditTime : 2020-02-18 17:24:39
  */
 import React, { PureComponent } from 'react';
 import { Modal, Progress, InputItem, Icon } from 'antd-mobile';
