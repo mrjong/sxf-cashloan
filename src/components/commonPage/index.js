@@ -12,14 +12,9 @@ import hoistNonReactStatic from 'hoist-non-react-statics';
 import { connect } from 'react-redux';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import {
-	commonClearState,
-	setOverDueModalInfo,
-	setHomeModalAction,
-	setProtocolPreviewInfo
-} from 'reduxes/actions/commonActions';
+import { commonClearState, setOverDueModalInfo, setHomeModalAction } from 'reduxes/actions/commonActions';
 import { showRedDot, setMsgCount } from 'reduxes/actions/specialActions';
-import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setUserInfoAction, setProtocolPreviewInfo } from 'reduxes/actions/staticActions';
 import {
 	signup_refreshClientUserInfo,
 	coup_queryUsrCoupBySts,
@@ -82,6 +77,7 @@ export default () => (WrappedComponent) => {
 				if (userInfo && userInfo.tokenId) {
 					this.signup_refreshClientUserInfo();
 					this.couponCount();
+					this.queryProtocolPreviewInfo();
 				}
 			}
 

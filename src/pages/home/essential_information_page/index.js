@@ -125,7 +125,7 @@ export default class essential_information_page extends PureComponent {
 		const pageData = {
 			name: protocolPreviewInfo.name,
 			idNo: protocolPreviewInfo.idNo,
-			dateTime: dayjs().format('YYYY年MM月DD日')
+			dateTime: dayjs(new Date()).format('YYYY/MM/DD')
 		};
 		store.setProtocolPersonalData(pageData);
 		this.props.history.push(jumpUrl);

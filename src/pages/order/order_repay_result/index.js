@@ -101,24 +101,24 @@ export default class Cashier extends React.PureComponent {
 			.get(`${msg_popup_list}/2`)
 			.then((res) => {
 				this.stopRewardLoading();
-				this.props.setHomeModalAction({
-					DataList: [
-						{
-							code: '999',
-							name: '',
-							backType: '0',
-							backImgUrl: '',
-							btnImgUrl: '',
-							skipType: '0',
-							skip: null,
-							closeFlag: '0',
-							extensionData: {
-								rewardDays: 5
-							}
-						}
-					],
-					mPosition: '还款结果页'
-				});
+				// this.props.setHomeModalAction({
+				// 	DataList: [
+				// 		{
+				// 			code: '999',
+				// 			name: '',
+				// 			backType: '0',
+				// 			backImgUrl: '',
+				// 			btnImgUrl: '',
+				// 			skipType: '0',
+				// 			skip: null,
+				// 			closeFlag: '0',
+				// 			extensionData: {
+				// 				rewardDays: 5
+				// 			}
+				// 		}
+				// 	],
+				// 	mPosition: '还款结果页'
+				// });
 				if (res.code === '000000' && res.data && res.data.popups && res.data.popups.length > 0) {
 					this.props.setHomeModalAction({
 						DataList: res.data.popups,

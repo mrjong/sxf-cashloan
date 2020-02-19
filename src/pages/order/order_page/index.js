@@ -17,21 +17,10 @@ import dayjs from 'dayjs';
 export default class order_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		// 获取token
 		this.state = {
 			dataSource: [],
 			isFinishDone: false,
-			isLoadingMore: false,
-			refreshing: true,
-			isLoading: true,
-			pageIndex: 0,
-			Listlength: 0,
-			rData: [],
-			tabState: false,
-			msgReadAllState: false,
-			msgType: 0,
-			hasMore: true,
-			limitRow: 10
+			isLoadingMore: false
 		};
 	}
 	//当前页面
@@ -186,7 +175,9 @@ export default class order_page extends PureComponent {
 					}}
 				>
 					<span>{item.billStsNm}</span>
-					<img src={Image.icon.trigon_right_black} className={style.trigon_right_black} />
+					{!(item.billSts === '0' || item.billSts === '2') && (
+						<img src={Image.icon.trigon_right_black} className={style.trigon_right_black} />
+					)}
 				</div>
 			</div>
 		);
@@ -235,7 +226,7 @@ export default class order_page extends PureComponent {
 		return (
 			<div>
 				{this.renderFooterComponent()}
-				{/* {this.state.rData.length > 5 ? <FooterBar /> : null} */}
+				{this.state.dataSource.length > 5 ? <FooterBar /> : null}
 			</div>
 		);
 	}
@@ -286,7 +277,9 @@ export default class order_page extends PureComponent {
 					</div>
 
 					{!this.state.dataSource || !this.state.dataSource.length || this.state.dataSource.length <= 5 ? (
-						<FooterBar />
+						<div>
+							<FooterBar />
+						</div>
 					) : null}
 				</div>
 			</LoadingView>
