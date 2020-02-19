@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-07 14:35:03
+ * @LastEditTime : 2020-02-19 11:42:27
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -144,7 +144,7 @@ export default class mine_page extends PureComponent {
 				isFetching = false;
 				if (res.code === '000000') {
 					this.props.toast.info('提交成功', 2, () => {
-						this.props.history.push('/mine/mine_page');
+						this.props.history.goBack();
 					});
 					buriedPointEvent(helpCenter.submit_succ, {
 						img_count: images.length,

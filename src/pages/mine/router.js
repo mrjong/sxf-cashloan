@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:21:19
+ * @LastEditTime : 2020-02-19 10:33:12
  */
 export default [
 	{
@@ -47,12 +47,6 @@ export default [
 		zhName: 'xk',
 		title: '选卡',
 		component: () => import('pages/mine/credit_list_page')
-	},
-	{
-		path: '/mine/fqa_page',
-		zhName: 'cjwt',
-		title: '常见问题',
-		component: () => import('pages/mine/fqa_page')
 	},
 	{
 		path: '/mine/coupon_page',

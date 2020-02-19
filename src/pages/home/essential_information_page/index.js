@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:10:18
+ * @LastEditTime : 2020-02-19 12:14:59
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -800,7 +800,7 @@ export default class essential_information_page extends PureComponent {
 								<img className={style.informationMoreNew} src={informationMore} />
 							</div>
 							{getFieldDecorator('address', {
-								rules: [{ required: true, message: '请输入常住地址' }, { validator: this.validateAddress }],
+								rules: [{ required: true, message: '请输入详细地址' }, { validator: this.validateAddress }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('resident_address', {
@@ -852,7 +852,7 @@ export default class essential_information_page extends PureComponent {
 							<div className={style.labelDiv}>
 								{getFieldDecorator('cntRelTyp1', {
 									initialValue: this.state.relatValue,
-									rules: [{ required: true, message: '请选择联系人关系' }],
+									rules: [{ required: true, message: '请选择联系人1关系' }],
 									onChange: (value) => {
 										store.setRelationValue(value);
 										this.selectSure({
@@ -895,7 +895,7 @@ export default class essential_information_page extends PureComponent {
 								<img className={style.informationMore} src={informationMore} />
 							</div>
 							{getFieldDecorator('linkman', {
-								rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+								rules: [{ required: true, message: '请输入联系人1姓名' }, { validator: this.validateName }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('contact_name_one', {
@@ -927,7 +927,7 @@ export default class essential_information_page extends PureComponent {
 											}
 										]
 									})}
-									placeholder="联系人姓名"
+									placeholder="真实姓名"
 									type="text"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_name_one');
@@ -938,7 +938,10 @@ export default class essential_information_page extends PureComponent {
 								></InputItem>
 							)}
 							{getFieldDecorator('linkphone', {
-								rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+								rules: [
+									{ required: true, message: '请输入联系人1手机号' },
+									{ validator: this.validatePhone }
+								],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('linkphone', {
@@ -973,7 +976,7 @@ export default class essential_information_page extends PureComponent {
 									className="hasborder"
 									type="number"
 									maxLength="11"
-									placeholder="联系人电话"
+									placeholder="手机号"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_tel_one');
 									}}
@@ -991,7 +994,7 @@ export default class essential_information_page extends PureComponent {
 							<div className={style.labelDiv}>
 								{getFieldDecorator('cntRelTyp2', {
 									initialValue: this.state.relatValue2,
-									rules: [{ required: true, message: '请选择联系人关系' }],
+									rules: [{ required: true, message: '请选择联系人2关系' }],
 									onChange: (value) => {
 										store.setRelationValue2(value);
 										this.selectSure({
@@ -1035,7 +1038,7 @@ export default class essential_information_page extends PureComponent {
 								<img className={style.informationMore} src={informationMore} />
 							</div>
 							{getFieldDecorator('linkman2', {
-								rules: [{ required: true, message: '请输入联系人姓名' }, { validator: this.validateName }],
+								rules: [{ required: true, message: '请输入联系人2姓名' }, { validator: this.validateName }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('contact_name_two', {
@@ -1067,7 +1070,7 @@ export default class essential_information_page extends PureComponent {
 										]
 									})}
 									clear
-									placeholder="联系人姓名"
+									placeholder="真实姓名"
 									type="text"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_name_two');
@@ -1078,7 +1081,10 @@ export default class essential_information_page extends PureComponent {
 								></InputItem>
 							)}
 							{getFieldDecorator('linkphone2', {
-								rules: [{ required: true, message: '请输入联系人手机号' }, { validator: this.validatePhone }],
+								rules: [
+									{ required: true, message: '请输入联系人2手机号' },
+									{ validator: this.validatePhone }
+								],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('linkphone2', {
@@ -1113,7 +1119,7 @@ export default class essential_information_page extends PureComponent {
 									className="hasborder"
 									type="number"
 									maxLength="11"
-									placeholder="联系人电话"
+									placeholder="手机号"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_tel_two');
 									}}
