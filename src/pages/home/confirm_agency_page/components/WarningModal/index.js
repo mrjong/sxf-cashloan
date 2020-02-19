@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-19 10:18:14
+ * @LastEditTime : 2020-02-19 11:45:06
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
@@ -43,6 +43,7 @@ export default class InsuranceModal extends React.PureComponent {
 	closeModal = () => {
 		const { closeWarningModal, prodType } = this.props;
 		closeWarningModal && closeWarningModal();
+		this.props.setProtocolSelFlagAction(false);
 		buriedPointEvent(home.warningModalClose, {
 			prodType
 		});
