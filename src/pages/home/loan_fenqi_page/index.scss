@@ -176,11 +176,10 @@
     .am-list-line {
       padding-right: 0;
     }
-
-    .purpose_modal {
-      .am-modal-body {
-        padding: 50px 60px 0;
-      }
+  }
+  .purpose_modal {
+    .am-modal-content {
+      border-radius: 10px 10px 0 0;
     }
   }
 }

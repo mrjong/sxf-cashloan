@@ -353,12 +353,12 @@ export default class loan_fenqi_page extends PureComponent {
 		const { couponData } = this.props;
 		this.storeTempData();
 		const { loanMoney, loanDate = {} } = this.state;
-		let prdId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
+		let prodId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
+		let perCont = loanDate.prodUnit === 'M' ? loanDate.prodLth : 1;
+
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?transactionType=fenqi&price=${loanMoney}&perCont=${
-				loanDate.prodUnit === 'M' ? loanDate.prodLth : 1
-			}&prodId=${prdId}`,
+			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
 			state: { nouseCoupon: !(couponData && couponData.availableCoupAmt) }
 		});
 	};
