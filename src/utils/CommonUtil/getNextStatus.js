@@ -266,7 +266,7 @@ export const getNextStatus = ({
 					}
 					break;
 				case 'LOANING':
-					routeName = 'Home';
+					routeName = '/home/home';
 					break;
 				// case 'AUTH04':
 				// case 'AUTH06':

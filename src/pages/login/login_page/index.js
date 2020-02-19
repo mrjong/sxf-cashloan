@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:07:55
+ * @LastEditTime : 2020-02-19 15:17:07
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -12,6 +12,8 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { TFDLogin } from 'utils/getTongFuDun';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
+
 import {
 	getDeviceType,
 	getFirstError,
@@ -93,14 +95,12 @@ export default class login_page extends PureComponent {
 		document.title = '登录和注册';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
 		const storeH5Channel = getH5Channel();
-		// 移除cookie
-		Cookie.remove('FIN-HD-AUTH-TOKEN');
 
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		let wenjuan = localStorage.getItem('wenjuan');
-		sessionStorage.clear();
-		localStorage.clear();
+
+		logoutClearData();
 
 		// 首页弹窗要用的
 

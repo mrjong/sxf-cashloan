@@ -63,7 +63,8 @@
 	text-align: center;
 	font-size: 24px;
 	border-radius: 0 0 10px 10px;
-	background-color: #fff;
+  background-color: #fff;
+  margin-bottom: 20px;
 }
 .itemLabel {
 	font-size: 28px;
@@ -84,7 +85,9 @@
 }
 .listItemRight {
 	font-weight: bold;
-	font-size: 24px;
+  font-size: 24px;
+  padding: 20px 0 20px 20px;
+  box-sizing: border-box;
 }
 .trigon_right_black {
 	width: 11px;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:33:43
+ * @LastEditTime : 2020-02-19 13:52:42
  */
 import { store } from 'utils/store';
 import { getDeviceType, getMoxieData, activeConfigSts } from 'utils';
@@ -241,7 +241,6 @@ class HomeBtn {
 	};
 	// 跳新版魔蝎
 	goToNewMoXie = async () => {
-		store.setBackUrl('/home/loan_repay_confirm_page');
 		activeConfigSts({
 			$props: this.props,
 			type: 'B'
@@ -349,7 +348,6 @@ class HomeBtn {
 					});
 				} else if (result && result.msgCode === 'PTM2003') {
 					// 有风控没绑储蓄卡 跳绑储蓄卡页面
-					store.setBackUrl('/home/home');
 					store.setCheckCardRouter(true);
 					this.instance.props.toast.info(result.msgInfo);
 					setTimeout(() => {
@@ -360,7 +358,6 @@ class HomeBtn {
 					}, 3000);
 				} else if (result && result.msgCode === 'PTM2002') {
 					// 有风控没绑信用卡 跳绑信用卡页面
-					store.setBackUrl('/home/home');
 					store.setCheckCardRouter(true);
 					this.instance.props.toast.info(result.msgInfo);
 					setTimeout(() => {

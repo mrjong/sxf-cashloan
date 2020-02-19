@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:35:20
+ * @LastEditTime : 2020-02-19 13:53:28
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -78,7 +78,6 @@ export default class bind_save_page extends PureComponent {
 			location.pathname !== '/mine/support_save_page' &&
 			location.pathname !== '/protocol/delegation_withhold_page'
 		) {
-			store.removeBackUrl(); // 清除session里的backurl的值
 			this.props.setBindDepositInfoAction({});
 			// store.removeBindCardNo();
 		}

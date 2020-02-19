@@ -13,6 +13,7 @@ import SmsAlert from '../components/SmsAlert';
 import Cookie from 'js-cookie';
 import LoginAlert from './components/LoginAlert';
 import { store } from 'utils/store';
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
 
 const API = {
@@ -101,9 +102,7 @@ export default class juPei_page extends PureComponent {
 				});
 			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
 				this.props.toast.info(res.msgInfo, 2, () => {
-					Cookie.remove('FIN-HD-AUTH-TOKEN');
-					sessionStorage.clear();
-					localStorage.clear();
+					logoutClearData();
 					this.goTo();
 				});
 			}

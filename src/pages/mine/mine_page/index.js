@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:20:09
+ * @LastEditTime : 2020-02-19 13:48:20
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -107,6 +107,7 @@ export default class mine_page extends PureComponent {
 				this.props.history.push('/home/real_name?type=noRealName');
 			});
 		} else {
+			this.props.setBackRouter('Mine');
 			this.props.history.push({ pathname: '/mine/select_save_page' });
 		}
 	};

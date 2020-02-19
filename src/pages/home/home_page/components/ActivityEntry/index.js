@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-06 11:53:13
+ * @LastEditTime : 2020-02-19 14:34:02
  */
 import React from 'react';
 import { Carousel } from 'antd-mobile';
@@ -14,10 +14,22 @@ export default class ActivityEntry extends React.PureComponent {
 			return null;
 		}
 		return data.map((item, index) => (
-			<div className={style.activityItem} key={index}>
+			<div
+				className={style.activityItem}
+				key={index}
+				onClick={() => {
+					this.handleGoJump(item);
+				}}
+			>
 				<img className={style.itemImg} src={item.img} />
 			</div>
 		));
+	};
+	handleGoJump = (item) => {
+		if (!item.link) {
+			return;
+		}
+		window.location.href = item.link;
 	};
 	render() {
 		const { data } = this.props;

@@ -1,46 +1,5 @@
 @import '../../../assets/styles/scss/base/fn';
 
-.overdueEntryTip {
-	text-align: center;
-	font-size: 30px;
-	padding: 10px;
-	background-color: #f9d45e;
-	span {
-		color: #f66;
-	}
-}
-
-.overdueEntry {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background: #ffdfdf;
-	height: 80px;
-	padding: 0 30px;
-	color: #f66;
-	font-size: 30px;
-	.overdueItem {
-		display: flex;
-		align-items: center;
-	}
-	.warningIco {
-		width: 40px;
-		height: 40px;
-		@include bg-image('../../../assets/images/order/warn_ico');
-		background-repeat: no-repeat;
-		background-size: 100% 100%;
-		margin-right: 19px;
-	}
-	.entryIco {
-		width: 16px;
-		height: 28px;
-		@include bg-image('../../../assets/images/order/entry_ico');
-		background-repeat: no-repeat;
-		background-size: 100% 100%;
-		margin-left: 19px;
-	}
-}
-
 .alert_wrap {
 	position: fixed;
 	top: 0;
@@ -109,18 +68,17 @@
 	}
 }
 
-//================
 .top_notice {
 	margin-bottom: 40px;
 	:global {
 		.am-notice-bar {
-			height: 80px;
-			line-height: 80px;
-			background-color: #ffdfdf;
+			height: 60px;
+			line-height: 60px;
+			background-color: $colorBgText;
 			box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1) inset;
 		}
 		.am-notice-bar-content {
-			margin: 0 30px;
+			margin: 0 20px;
 		}
 	}
 }
@@ -195,6 +153,7 @@
 
 .cardWrap1 {
 	padding-top: 0px;
+	padding-bottom: 0px;
 }
 
 .feeDetail {

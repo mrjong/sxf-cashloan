@@ -13,7 +13,7 @@ import Cookie from 'js-cookie';
 import { isMPOS } from 'utils/common';
 import LoginAlert from './components/LoginAlert';
 import Alert_mpos from 'pages/mpos/mpos_no_realname_alert_page';
-
+import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 const API = {
 	joinActivity: 'activeConfig/hundred/draw' // 参加活动 里面会判断用户有没有资格
 };
@@ -134,9 +134,7 @@ export default class mianxi822_page extends PureComponent {
 				}
 			} else if (res && (res.msgCode === 'PTM0100' || res.msgCode === 'PTM1000')) {
 				this.props.toast.info(res.msgInfo, 2, () => {
-					Cookie.remove('FIN-HD-AUTH-TOKEN');
-					sessionStorage.clear();
-					localStorage.clear();
+					logoutClearData();
 					this.goTo();
 				});
 			} else {

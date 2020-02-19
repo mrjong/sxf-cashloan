@@ -26,7 +26,7 @@ import { setBackGround } from 'utils/background';
 
 let entryFrom = '';
 @fetch.inject()
-@setBackGround('#F7F8FA')
+@setBackGround('#F0F3F9')
 @connect(
 	(state) => ({
 		withholdCardData: state.commonState.withholdCardData,
@@ -458,16 +458,16 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 选择优惠劵
 	selectCoupon = () => {
-		const { bankInfo, availableCoupNum } = this.state;
-		const { billNo, billDesc } = this.props.history.location.state;
-		let params = { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc };
+		const { availableCoupNum } = this.state;
+		const { billNo, billDesc, repayPerds } = this.props.history.location.state;
+		let params = {};
 		if (!availableCoupNum) {
 			params.nouseCoupon = true;
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?transactionType=${billDesc.prodType === '11' ? 'fenqi' : 'DC'}&billNo=${billNo}`,
-			state: { cardData: bankInfo && bankInfo.bankName ? bankInfo : billDesc }
+			search: `?billNo=${billNo}&perCont=${repayPerds[0]}&prodType=${billDesc.prodType}`,
+			state: params
 		});
 	};
 
@@ -584,7 +584,7 @@ export default class order_repay_confirm extends PureComponent {
 							loop: true,
 							leading: 1000,
 							trailing: 1000,
-							style: { color: '#f66', fontSize: '0.3rem' }
+							style: { color: '#868f9e', fontSize: '0.24rem' }
 						}}
 						icon={null}
 					>

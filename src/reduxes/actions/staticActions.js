@@ -22,6 +22,7 @@ export const setUserInfoAction = createAction(STATIC_USER_INFO, (info) => {
  * 设置协议预览敏感数据
  */
 export const setProtocolPreviewInfo = createAction(STATIC_PROTOCOL_PREVIEW_INFO, (info) => {
+	console.log(info, 'info');
 	return { protocolPreviewInfo: info || {} };
 });
 /**
