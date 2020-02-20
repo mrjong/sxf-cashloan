@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 15:36:25
+ * @LastEditTime: 2020-02-20 17:41:46
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -17,6 +17,12 @@ import styles from './index.scss';
 import qs from 'qs';
 import dayjs from 'dayjs';
 import { domListen } from 'utils/domListen';
+import {
+	valueInputCarNumberRiskBury,
+	valueInputCarPhoneRiskBury,
+	valueInputCarSmsRiskBury
+} from './riskBuryConfig';
+
 import {
 	bank_card_bin,
 	bank_card_protocol_sms,
@@ -424,22 +430,8 @@ export default class bind_save_page extends PureComponent {
 					<InputItem
 						data-sxf-props={JSON.stringify({
 							type: 'input',
-							notSendValue: true, // 无需上报输入框的值
-							name: 'valueInputCarNumber',
-							actContain: [
-								{
-									type: 'focus'
-								},
-								{
-									type: 'delete'
-								},
-								{
-									type: 'blur'
-								},
-								{
-									type: 'paste'
-								}
-							]
+							name: valueInputCarNumberRiskBury.key,
+							actContain: valueInputCarNumberRiskBury.actContain
 						})}
 						maxLength="29"
 						{...getFieldProps('valueInputCarNumber', {
@@ -469,22 +461,8 @@ export default class bind_save_page extends PureComponent {
 						type="number"
 						data-sxf-props={JSON.stringify({
 							type: 'input',
-							notSendValue: true, // 无需上报输入框的值
-							name: 'valueInputCarPhone',
-							actContain: [
-								{
-									type: 'focus'
-								},
-								{
-									type: 'delete'
-								},
-								{
-									type: 'blur'
-								},
-								{
-									type: 'paste'
-								}
-							]
+							name: valueInputCarPhoneRiskBury.key,
+							actContain: valueInputCarPhoneRiskBury.actContain
 						})}
 						{...getFieldProps('valueInputCarPhone', {
 							initialValue: this.state.bindCardPhone,
@@ -511,21 +489,8 @@ export default class bind_save_page extends PureComponent {
 						<InputItem
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								name: 'valueInputCarSms',
-								actContain: [
-									{
-										type: 'focus'
-									},
-									{
-										type: 'delete'
-									},
-									{
-										type: 'blur'
-									},
-									{
-										type: 'paste'
-									}
-								]
+								name: valueInputCarSmsRiskBury.key,
+								actContain: valueInputCarSmsRiskBury.actContain
 							})}
 							maxLength="6"
 							{...getFieldProps('valueInputCarSms', {

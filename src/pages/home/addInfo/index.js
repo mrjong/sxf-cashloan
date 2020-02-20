@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 21:15:11
+ * @LastEditTime: 2020-02-20 17:44:06
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -17,6 +17,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { auth_suppleInfo } from 'fetch/api.js';
 
 import { StepTitle, AsyncCascadePicker, ButtonCustom, FixedHelpCenter, FixedTopTip } from 'components';
+import { add_info_submit } from './riskBuryConfig';
 
 import style from './index.scss';
 import informationMore from './img/back.png';
@@ -64,7 +65,7 @@ export default class add_info extends PureComponent {
 	};
 
 	handleSubmit = () => {
-		this.sxfMD('DC_ADDINFO_SUBMIT');
+		this.sxfMD(add_info_submit.key);
 		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT);
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-17 11:13:42
+ * @LastEditTime: 2020-02-20 17:48:14
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -14,7 +14,7 @@ import linkConf from 'config/link.conf';
 import { other, wxTest } from 'utils/analytinsType';
 import qs from 'qs';
 import { download_queryDownloadUrl } from 'fetch/api';
-
+import { xzyBtn } from '../riskBuryConfig';
 let urlParams = {};
 let entryPageTime = '';
 @setBackGround('#fff')
@@ -66,7 +66,7 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
-		sxfburiedPointEvent('xzyBtn');
+		sxfburiedPointEvent(xzyBtn);
 		if (urlParams && urlParams.wxTestFrom) {
 			buriedPointEvent(wxTest.btnClick_download, {
 				entry: urlParams.wxTestFrom

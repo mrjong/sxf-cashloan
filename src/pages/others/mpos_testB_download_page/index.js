@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:17:24
+ * @LastEditTime: 2020-02-20 17:48:08
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -13,7 +13,7 @@ import linkConf from 'config/link.conf';
 import check_img from './img/check_img.png';
 import SXFButton from 'components/ButtonCustom';
 import { download_queryDownloadUrl } from 'fetch/api';
-
+import { xzyBtn } from '../riskBuryConfig';
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
@@ -46,7 +46,7 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClickFun = () => {
-		sxfburiedPointEvent('xzyBtn');
+		sxfburiedPointEvent(xzyBtn);
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {

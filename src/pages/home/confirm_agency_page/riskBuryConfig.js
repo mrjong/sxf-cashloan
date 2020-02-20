@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 16:25:30
+ * @LastEditTime: 2020-02-20 17:38:24
  */
 exports.common = {
 	title: '签约借款',
@@ -11,7 +11,7 @@ exports.cardBillAmtRiskBury = {
 	type: 'input',
 	key: 'cardBillAmt',
 	remark: '借款金融输入框',
-	actContain: ['focus', 'blur', 'delete', 'paste']
+	actContain: ['focus', 'blur', 'delete', 'paste', 'value']
 };
 
 exports.homeLendersOrderRiskBury = {

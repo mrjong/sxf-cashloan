@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 15:34:41
+ * @LastEditTime: 2020-02-20 17:20:05
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -45,7 +45,13 @@ import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-
+import {
+	dlinputPhoneRiskBury,
+	dlinputCodeRiskBury,
+	dl_chkBoxRiskBury,
+	dlgoLoginRiskBury,
+	dlsmsCodeBtnRiskBury
+} from '../riskBuryConfig';
 let timmer;
 const API = {
 	smsForLogin: '/signup/smsForLogin',
@@ -91,7 +97,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	componentWillMount() {
 		sxfDataPv({ pId: 'dwdl' });
-		sxfburiedPointEvent('dl_chkBox');
+		sxfburiedPointEvent(dl_chkBoxRiskBury.key);
 		const queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
 		});
@@ -168,7 +174,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		sxfburiedPointEvent('dlgoLogin');
+		sxfburiedPointEvent(dlgoLoginRiskBury.key);
 		// 防止用户关闭弹框,继续点击进行登录
 		if (store.getToken() || Cookie.get('FIN-HD-AUTH-TOKEN')) {
 			this.setState(
@@ -420,7 +426,7 @@ export default class momo_outer_login_page extends PureComponent {
 				isChecked: !this.state.isChecked
 			},
 			() => {
-				sxfburiedPointEvent('dl_chkBox');
+				sxfburiedPointEvent(dl_chkBoxRiskBury.key);
 			}
 		);
 	};
@@ -505,22 +511,8 @@ export default class momo_outer_login_page extends PureComponent {
 							type="phone"
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								name: 'dlinputPhone',
-								notSendValue: true, // 无需上报输入框的值
-								actContain: [
-									{
-										type: 'focus'
-									},
-									{
-										type: 'delete'
-									},
-									{
-										type: 'blur'
-									},
-									{
-										type: 'paste'
-									}
-								]
+								name: dlinputPhoneRiskBury.key,
+								actContain: dlinputPhoneRiskBury.actContain
 							})}
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
@@ -545,21 +537,8 @@ export default class momo_outer_login_page extends PureComponent {
 								maxLength="6"
 								data-sxf-props={JSON.stringify({
 									type: 'input',
-									name: 'dlinputCode',
-									actContain: [
-										{
-											type: 'focus'
-										},
-										{
-											type: 'delete'
-										},
-										{
-											type: 'blur'
-										},
-										{
-											type: 'paste'
-										}
-									]
+									name: dlinputCodeRiskBury.key,
+									actContain: dlinputCodeRiskBury.actContain
 								})}
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
@@ -580,7 +559,7 @@ export default class momo_outer_login_page extends PureComponent {
 										: [styles.smsCode, styles.smsCode2].join(' ')
 								}
 								onClick={() => {
-									sxfburiedPointEvent('dlsmsCodeBtn');
+									sxfburiedPointEvent(dlsmsCodeBtnRiskBury.key);
 									this.handleSmsCodeClick();
 								}}
 							>

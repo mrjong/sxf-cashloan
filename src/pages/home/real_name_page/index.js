@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 16:40:20
+ * @LastEditTime: 2020-02-20 17:41:21
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -444,7 +444,6 @@ export default class real_name_page extends Component {
 							clear
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								notSendValue: true, // 无需上报输入框的值
 								name: idNameRiskBury.key,
 								actContain: idNameRiskBury.actContain
 							})}
@@ -457,7 +456,6 @@ export default class real_name_page extends Component {
 						<InputItem
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								notSendValue: true, // 无需上报输入框的值
 								name: idNoRiskBury.key,
 								actContain: idNoRiskBury.actContain
 							})}

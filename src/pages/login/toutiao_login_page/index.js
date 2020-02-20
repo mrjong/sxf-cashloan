@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:18:30
+ * @LastEditTime: 2020-02-20 17:32:08
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -13,7 +13,13 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
-import { buriedPointEvent, pageView } from 'utils/analytins';
+import {
+	buriedPointEvent,
+	pageView,
+	SxfDataRegisterEventSuperPropertiesOnce,
+	sxfDataPv,
+	sxfburiedPointEvent
+} from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
@@ -35,6 +41,13 @@ import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
+import {
+	dlinputPhoneRiskBury,
+	dlinputCodeRiskBury,
+	dl_chkBoxRiskBury,
+	dlgoLoginRiskBury,
+	dlsmsCodeBtnRiskBury
+} from '../riskBuryConfig';
 let timmer;
 const API = {
 	smsForLogin: '/passport/loginBySms',
@@ -74,6 +87,8 @@ export default class momo_outer_login_page extends PureComponent {
 	}
 
 	componentWillMount() {
+		sxfDataPv({ pId: 'dwdl' });
+		sxfburiedPointEvent(dl_chkBoxRiskBury.key);
 		const queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
 		});
@@ -142,6 +157,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		sxfburiedPointEvent(dlgoLoginRiskBury.key);
 		// const { queryData } = this.state;
 		// 防止用户关闭弹框,继续点击进行登录
 		if (store.getToken() || Cookie.get('FIN-HD-AUTH-TOKEN')) {
@@ -189,6 +205,7 @@ export default class momo_outer_login_page extends PureComponent {
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
 						store.setToken(res.data.tokenId);
+						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
 						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 						TFDLogin();
 						this.setState(
@@ -212,6 +229,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
+		sxfburiedPointEvent(dlsmsCodeBtnRiskBury.key);
 		if (!this.state.timeflag) return;
 		this.getSmsCode();
 	};
@@ -378,9 +396,14 @@ export default class momo_outer_login_page extends PureComponent {
 
 	checkAgreement = () => {
 		buriedPointEvent(daicao.selectProtocol);
-		this.setState({
-			isChecked: !this.state.isChecked
-		});
+		this.setState(
+			{
+				isChecked: !this.state.isChecked
+			},
+			() => {
+				sxfburiedPointEvent(dl_chkBoxRiskBury.key);
+			}
+		);
 	};
 
 	// 下载app
@@ -472,6 +495,11 @@ export default class momo_outer_login_page extends PureComponent {
 							id="inputPhone"
 							maxLength="13"
 							type="phone"
+							data-sxf-props={JSON.stringify({
+								type: 'input',
+								name: dlinputPhoneRiskBury.key,
+								actContain: dlinputPhoneRiskBury.actContain
+							})}
 							className={styles.loginInput}
 							placeholder="请输入常用手机号"
 							{...getFieldProps('phoneValue', {
@@ -489,6 +517,11 @@ export default class momo_outer_login_page extends PureComponent {
 							<InputItem
 								id="inputCode"
 								type="number"
+								data-sxf-props={JSON.stringify({
+									type: 'input',
+									name: dlinputCodeRiskBury.key,
+									actContain: dlinputCodeRiskBury.actContain
+								})}
 								maxLength="6"
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入验证码"

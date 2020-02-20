@@ -1,55 +1,5 @@
 [
   {
-    "title": "完善补充信息",
-    "pId": "wsbcxx",
-    "bury": [
-      {
-        "key": "marriageIn",
-        "remark": "婚姻打开"
-      },
-      {
-        "key": "marriageOut",
-        "remark": "婚姻关闭"
-      },
-      {
-        "key": "childrenIn",
-        "remark": "有无子女打开"
-      },
-      {
-        "key": "childrenOut",
-        "remark": "有无子女关闭"
-      },
-      {
-        "key": "incomeIn",
-        "remark": "收入区间打开"
-      },
-      {
-        "key": "incomeOut",
-        "remark": "收入区间关闭"
-      },
-      {
-        "key": "workTypeIn",
-        "remark": "工作类型打开"
-      },
-      {
-        "key": "workTypeOut",
-        "remark": "工作类型关闭"
-      },
-      {
-        "key": "educationIn",
-        "remark": "学历打开"
-      },
-      {
-        "key": "educationOut",
-        "remark": "学历关闭"
-      },
-      {
-        "key": "DC_ADDINFO_SUBMIT",
-        "remark": "下一步"
-      }
-    ]
-  },
-  {
     "title": "签约借款",
     "pId": "qyjk",
     "bury": [
@@ -61,8 +11,7 @@
           "focus",
           "blur",
           "delete",
-          "paste",
-          "value"
+          "paste"
         ]
       },
       {
@@ -332,16 +281,6 @@
           "paste",
           "value"
         ]
-      }
-    ]
-  },
-  {
-    "title": "下载页",
-    "pId": "xzy",
-    "bury": [
-      {
-        "key": "xzyBtn",
-        "remark": "下载页下载按钮"
       }
     ]
   }

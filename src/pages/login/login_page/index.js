@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 16:02:04
+ * @LastEditTime: 2020-02-20 17:39:24
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -456,7 +456,7 @@ export default class login_page extends PureComponent {
 			},
 			() => {
 				if (this.state.isChecked) {
-					sxfburiedPointEvent(DC_chkBoxRiskBury.name);
+					sxfburiedPointEvent(DC_chkBoxRiskBury.key);
 				}
 			}
 		);
