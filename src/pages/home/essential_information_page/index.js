@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 12:14:59
+ * @LastEditTime: 2020-02-20 16:24:08
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -30,7 +30,19 @@ import {
 	FixedTopTip,
 	CheckRadio
 } from 'components';
-
+import {
+	resident_addressRiskBury,
+	resident_address_click,
+	resident_address_close,
+	contact_relationship_click,
+	contact_relationship_close,
+	contact_relationship2_click,
+	contact_relationship2_close,
+	contact_name_oneRiskBury,
+	contact_name_twoRiskBury,
+	contact_name_onePhoneNo,
+	contact_name_twoPhoneNo
+} from './riskBuryConfig';
 import LimitTimeJoin from './components/LimitTimeJoin';
 import style from './index.scss';
 import informationMore from './img/back.png';
@@ -136,20 +148,78 @@ export default class essential_information_page extends PureComponent {
 		});
 	};
 
-	buttonDisabled = () => {
+	buttonDisabled = (showToast) => {
 		const formData = this.props.form.getFieldsValue();
 		const { ProvincesValue, selectFlag } = this.state;
 		const { address, linkman, linkman2, linkphone, linkphone2, cntRelTyp1, cntRelTyp2 } = formData;
+		if (showToast) {
+			if (!ProvincesValue) {
+				Toast.info('请选择居住地址');
+				return true;
+			}
+			if (!address) {
+				Toast.info('请填写详细地址');
+				return true;
+			}
+			if (address.length > 50) {
+				Toast.info('请填写正确的详细地址');
+				return true;
+			}
+			if (!cntRelTyp1[0]) {
+				Toast.info('请选择联系人1关系');
+				return true;
+			}
+			if (!linkman) {
+				Toast.info('请填写联系人1姓名');
+				return true;
+			}
+			if (!validators.name(linkman)) {
+				Toast.info('请填写正确的联系人1姓名');
+				return true;
+			}
+			if (!linkphone) {
+				Toast.info('请填写联系人1手机号');
+				return true;
+			}
+			if (!validators.phone(linkphone)) {
+				Toast.info('请填写正确的联系人1手机号');
+				return true;
+			}
+			if (!cntRelTyp2[0]) {
+				Toast.info('请选择联系人2关系');
+				return true;
+			}
+			if (!linkman2) {
+				Toast.info('请填写联系人2姓名');
+				return true;
+			}
+			if (!validators.name(linkman2)) {
+				Toast.info('请填写正确的联系人2姓名');
+				return true;
+			}
+			if (!linkphone2) {
+				Toast.info('请填写联系人2手机号');
+				return true;
+			}
+			if (!validators.phone(linkphone2)) {
+				Toast.info('请填写正确的联系人2手机号');
+				return true;
+			}
+			if (!selectFlag) {
+				Toast.info('请先阅读并勾选相关协议');
+				return true;
+			}
+		}
 		if (
-			ProvincesValue &&
-			address &&
-			cntRelTyp2 &&
-			linkman &&
-			linkphone2 &&
-			cntRelTyp1 &&
-			linkman2 &&
-			linkphone &&
-			selectFlag
+			!ProvincesValue ||
+			!address ||
+			!cntRelTyp2[0] ||
+			!linkman ||
+			!linkphone2 ||
+			!cntRelTyp1[0] ||
+			!linkman2 ||
+			!linkphone ||
+			!selectFlag
 		) {
 			return true;
 		}
@@ -512,13 +582,12 @@ export default class essential_information_page extends PureComponent {
 	};
 
 	handleSubmit = () => {
-		const { ProvincesValue, addressList, selectFlag } = this.state;
-		if (!selectFlag) {
-			Toast.info('请先阅读并勾选相关协议');
-			return;
-		}
+		const { ProvincesValue, addressList } = this.state;
+		if (this.buttonDisabled(true)) return;
+
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;
+
 		let cityNm = '';
 		let provNm = '';
 		let districtNm = '';
@@ -558,7 +627,6 @@ export default class essential_information_page extends PureComponent {
 				streetCd = addressList[3].code;
 			}
 		}
-		console.log(streetNm, streetCd, '909090909999999');
 		if (!(streetNm && streetCd)) {
 			submitButtonLocked = false;
 			Toast.info('请选择完整的居住地址');
@@ -661,28 +729,28 @@ export default class essential_information_page extends PureComponent {
 	};
 
 	// 校验手机号
-	validatePhone = (rule, value, callback) => {
-		if (!validators.phone(value)) {
-			callback('请输入正确的联系人手机号');
-		} else {
-			callback();
-		}
-	};
+	// validatePhone = (rule, value, callback) => {
+	// 	if (!validators.phone(value)) {
+	// 		callback('请输入正确的联系人手机号');
+	// 	} else {
+	// 		callback();
+	// 	}
+	// };
 	// 校验姓名
-	validateName = (rule, value, callback) => {
-		if (!validators.name(value)) {
-			callback('请输入正确的联系人的姓名');
-		} else {
-			callback();
-		}
-	};
-	validateAddress = (rule, value, callback) => {
-		if (value && value.length > 50) {
-			callback('请输入正确的常住地址');
-		} else {
-			callback();
-		}
-	};
+	// validateName = (rule, value, callback) => {
+	// 	if (!validators.name(value)) {
+	// 		callback('请填写正确的联系人1姓名');
+	// 	} else {
+	// 		callback();
+	// 	}
+	// };
+	// validateAddress = (rule, value, callback) => {
+	// 	if (value && value.length > 50) {
+	// 		callback('请填写正确的详细地址');
+	// 	} else {
+	// 		callback();
+	// 	}
+	// };
 
 	//input 获取焦点 width: 100%
 	inputOnFocus(val, lab) {
@@ -759,7 +827,7 @@ export default class essential_information_page extends PureComponent {
 
 	handleSetModal(value) {
 		if (!value) {
-			this.sxfMD('resident_cityOut');
+			this.sxfMD(resident_address_close.key);
 		}
 		this.setState({
 			visible: value
@@ -786,7 +854,7 @@ export default class essential_information_page extends PureComponent {
 							<div
 								className={style.listRow}
 								onClick={() => {
-									this.sxfMD('DC_resident_city');
+									this.sxfMD(resident_address_click.key);
 									this.setState({
 										visible: true
 									});
@@ -809,13 +877,8 @@ export default class essential_information_page extends PureComponent {
 								</div>
 							) : null}
 							{getFieldDecorator('address', {
-								rules: [{ required: true, message: '请输入详细地址' }, { validator: this.validateAddress }],
+								// rules: [{ required: true, message: '请填写详细地址' }, { validator: this.validateAddress }],
 								onChange: (value) => {
-									if (!value) {
-										sxfburiedPointEvent('resident_address', {
-											actId: 'delAll'
-										});
-									}
 									// 本地缓存常住地址
 									store.setAddress(value);
 									this.setState({ address: value });
@@ -824,22 +887,9 @@ export default class essential_information_page extends PureComponent {
 								<InputItem
 									clear
 									data-sxf-props={JSON.stringify({
-										type: 'input',
-										name: 'resident_address',
-										eventList: [
-											{
-												type: 'focus'
-											},
-											{
-												type: 'delete'
-											},
-											{
-												type: 'blur'
-											},
-											{
-												type: 'paste'
-											}
-										]
+										type: resident_addressRiskBury.type,
+										name: resident_addressRiskBury.key,
+										actContain: resident_addressRiskBury.actContain
 									})}
 									className="hasborder"
 									placeholder="请输入您的现居住详细地址"
@@ -870,7 +920,7 @@ export default class essential_information_page extends PureComponent {
 								) : null}
 								{getFieldDecorator('cntRelTyp1', {
 									initialValue: this.state.relatValue,
-									rules: [{ required: true, message: '请选择联系人1关系' }],
+									// rules: [{ required: true, message: '请选择联系人1关系' }],
 									onChange: (value) => {
 										this.setState({
 											isCntRelTyp1Value: true
@@ -900,13 +950,13 @@ export default class essential_information_page extends PureComponent {
 										cols={1}
 										onVisibleChange={(bool) => {
 											if (bool) {
-												this.sxfMD('cntRelTyp1');
+												this.sxfMD(contact_relationship_click.key);
 												this.selectClick({
 													value: JSON.stringify(this.state.relatValue),
 													label: 'clan_relation'
 												});
 											} else {
-												this.sxfMD('cntRelTypOut1');
+												this.sxfMD(contact_relationship_close.key);
 											}
 										}}
 									>
@@ -921,13 +971,8 @@ export default class essential_information_page extends PureComponent {
 								</div>
 							) : null}
 							{getFieldDecorator('linkman', {
-								rules: [{ required: true, message: '请输入联系人1姓名' }, { validator: this.validateName }],
+								// rules: [{ required: true, message: '请填写联系人1姓名' }, { validator: this.validateName }],
 								onChange: (value) => {
-									if (!value) {
-										sxfburiedPointEvent('contact_name_one', {
-											actId: 'delAll'
-										});
-									}
 									store.setLinkman(value);
 									this.setState({ linkman: value });
 								}
@@ -935,23 +980,9 @@ export default class essential_information_page extends PureComponent {
 								<InputItem
 									clear
 									data-sxf-props={JSON.stringify({
-										type: 'input',
-										notSendValue: true, // 无需上报输入框的值
-										name: 'contact_name_one',
-										eventList: [
-											{
-												type: 'focus'
-											},
-											{
-												type: 'delete'
-											},
-											{
-												type: 'blur'
-											},
-											{
-												type: 'paste'
-											}
-										]
+										type: contact_name_oneRiskBury.type,
+										name: contact_name_oneRiskBury.key,
+										actContain: contact_name_oneRiskBury.actContain
 									})}
 									placeholder="真实姓名"
 									type="text"
@@ -969,39 +1000,20 @@ export default class essential_information_page extends PureComponent {
 								</div>
 							) : null}
 							{getFieldDecorator('linkphone', {
-								rules: [
-									{ required: true, message: '请输入联系人1手机号' },
-									{ validator: this.validatePhone }
-								],
+								// rules: [
+								// 	{ required: true, message: '请输入联系人1手机号' },
+								// 	{ validator: this.validatePhone }
+								// ],
 								onChange: (value) => {
-									if (!value) {
-										sxfburiedPointEvent('linkphone', {
-											actId: 'delAll'
-										});
-									}
 									store.setLinkphone(value);
 									this.setState({ linkphone: value });
 								}
 							})(
 								<InputItem
 									data-sxf-props={JSON.stringify({
-										type: 'input',
-										notSendValue: true, // 无需上报输入框的值
-										name: 'linkphone',
-										eventList: [
-											{
-												type: 'focus'
-											},
-											{
-												type: 'delete'
-											},
-											{
-												type: 'blur'
-											},
-											{
-												type: 'paste'
-											}
-										]
+										type: contact_name_onePhoneNo.type,
+										name: contact_name_onePhoneNo.key,
+										actContain: contact_name_onePhoneNo.actContain
 									})}
 									clear
 									className="hasborder"
@@ -1036,7 +1048,7 @@ export default class essential_information_page extends PureComponent {
 								) : null}
 								{getFieldDecorator('cntRelTyp2', {
 									initialValue: this.state.relatValue2,
-									rules: [{ required: true, message: '请选择联系人2关系' }],
+									// rules: [{ required: true, message: '请选择联系人2关系' }],
 									onChange: (value) => {
 										store.setRelationValue2(value);
 										this.selectSure({
@@ -1064,13 +1076,13 @@ export default class essential_information_page extends PureComponent {
 										cols={1}
 										onVisibleChange={(bool) => {
 											if (bool) {
-												this.sxfMD('cntRelTyp2');
+												this.sxfMD(contact_relationship2_click.key);
 												this.selectClick({
 													value: JSON.stringify(this.state.relatValue2),
 													label: 'clan_relation'
 												});
 											} else {
-												this.sxfMD('cntRelTypOut2');
+												this.sxfMD(contact_relationship2_close.key);
 											}
 										}}
 									>
@@ -1085,36 +1097,17 @@ export default class essential_information_page extends PureComponent {
 								</div>
 							) : null}
 							{getFieldDecorator('linkman2', {
-								rules: [{ required: true, message: '请输入联系人2姓名' }, { validator: this.validateName }],
+								// rules: [{ required: true, message: '请输入联系人2姓名' }, { validator: this.validateName }],
 								onChange: (value) => {
-									if (!value) {
-										sxfburiedPointEvent('contact_name_two', {
-											actId: 'delAll'
-										});
-									}
 									store.setLinkman2(value);
 									this.setState({ linkman2: value });
 								}
 							})(
 								<InputItem
 									data-sxf-props={JSON.stringify({
-										type: 'input',
-										notSendValue: true, // 无需上报输入框的值
-										name: 'contact_name_two',
-										eventList: [
-											{
-												type: 'focus'
-											},
-											{
-												type: 'delete'
-											},
-											{
-												type: 'blur'
-											},
-											{
-												type: 'paste'
-											}
-										]
+										type: contact_name_twoRiskBury.type,
+										name: contact_name_twoRiskBury.key,
+										actContain: contact_name_twoRiskBury.actContain
 									})}
 									clear
 									placeholder="真实姓名"
@@ -1133,39 +1126,20 @@ export default class essential_information_page extends PureComponent {
 								</div>
 							) : null}
 							{getFieldDecorator('linkphone2', {
-								rules: [
-									{ required: true, message: '请输入联系人2手机号' },
-									{ validator: this.validatePhone }
-								],
+								// rules: [
+								// 	{ required: true, message: '请输入联系人2手机号' },
+								// 	{ validator: this.validatePhone }
+								// ],
 								onChange: (value) => {
-									if (!value) {
-										sxfburiedPointEvent('linkphone2', {
-											actId: 'delAll'
-										});
-									}
 									store.setLinkphone2(value);
 									this.setState({ linkphone2: value });
 								}
 							})(
 								<InputItem
 									data-sxf-props={JSON.stringify({
-										type: 'input',
-										notSendValue: true, // 无需上报输入框的值
-										name: 'linkphone2',
-										eventList: [
-											{
-												type: 'focus'
-											},
-											{
-												type: 'delete'
-											},
-											{
-												type: 'blur'
-											},
-											{
-												type: 'paste'
-											}
-										]
+										type: contact_name_twoPhoneNo.type,
+										name: contact_name_twoPhoneNo.key,
+										actContain: contact_name_twoPhoneNo.actContain
 									})}
 									clear
 									className="hasborder"
@@ -1208,7 +1182,7 @@ export default class essential_information_page extends PureComponent {
 				</div>
 
 				<div className={style.sureBtnWrap}>
-					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'yellow' : 'default'}>
+					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'default' : 'yellow'}>
 						{nextStepStatus ? '下一步' : '完成'}
 					</ButtonCustom>
 					{urlQuery.jumpToBase ? (

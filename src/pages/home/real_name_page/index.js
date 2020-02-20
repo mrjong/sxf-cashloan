@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-10 18:42:22
+ * @LastEditTime: 2020-02-20 17:41:21
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -22,6 +22,14 @@ import ButtonCustom from 'components/ButtonCustom';
 import StepTitle from 'components/StepTitle';
 import FEZipImage from 'components/FEZIpImage';
 import FixedHelpCenter from 'components/FixedHelpCenter';
+import {
+	idCardFRiskBury,
+	idCardOutFRiskBury,
+	idCardBRiskBury,
+	idCardOutBRiskBury,
+	idNameRiskBury,
+	idNoRiskBury
+} from './riskBuryConfig';
 
 import style from './index.scss';
 import Images from 'assets/image';
@@ -87,19 +95,9 @@ export default class real_name_page extends Component {
 	}
 
 	handleNameChange = (value) => {
-		if (!value) {
-			sxfburiedPointEvent('idName', {
-				actId: 'delAll'
-			});
-		}
 		this.setState({ idName: value });
 	};
 	handleNumberChange = (value) => {
-		if (!value) {
-			sxfburiedPointEvent('idNo', {
-				actId: 'delAll'
-			});
-		}
 		this.setState({ idNo: value });
 	};
 
@@ -233,23 +231,31 @@ export default class real_name_page extends Component {
 	};
 
 	handleSubmit = () => {
-		if (!this.state.leftUploaded) {
+		const { leftUploaded, rightUploaded, idName, idNo, ocrZhengData = {}, ocrFanData = {} } = this.state;
+		if (!leftUploaded) {
 			Toast.info('请上传身份证正面');
 			return false;
 		}
-		if (!this.state.rightUploaded) {
+		if (!rightUploaded) {
 			Toast.info('请上传身份证反面');
 			return false;
 		}
-		if (!validators.name(this.state.idName)) {
-			Toast.info('请输入正确的姓名');
+		if (!idName) {
+			Toast.info('请输入中文姓名');
 			return false;
 		}
-		if (!validators.iDCardNumber(this.state.idNo)) {
-			Toast.info('请输入正确的身份证号');
+		if (!validators.name(idName)) {
+			Toast.info('请输入有效的中文姓名');
 			return false;
 		}
-		const { ocrZhengData = {}, ocrFanData = {}, idName, idNo } = this.state;
+		if (!idNo) {
+			Toast.info('请输入身份证号');
+			return false;
+		}
+		if (!validators.iDCardNumber(idNo)) {
+			Toast.info('请输入有效的身份证号');
+			return false;
+		}
 		const osType = getDeviceType();
 		const params = {
 			idNo: base64Encode(idNo.toLocaleUpperCase()),
@@ -331,9 +337,9 @@ export default class real_name_page extends Component {
 	};
 	cardMD = (type) => {
 		if (type === 'z') {
-			sxfburiedPointEvent('DC_idCardF');
+			sxfburiedPointEvent(idCardFRiskBury.key);
 		} else {
-			sxfburiedPointEvent('DC_idCardB');
+			sxfburiedPointEvent(idCardBRiskBury.key);
 		}
 	};
 	handleBeforeCompress = () => {
@@ -360,9 +366,9 @@ export default class real_name_page extends Component {
 	};
 	handleAfterCompress = (type) => {
 		if (type === 'z') {
-			sxfburiedPointEvent('DC_idCardOutF');
+			sxfburiedPointEvent(idCardOutFRiskBury.key);
 		} else {
-			sxfburiedPointEvent('DC_idCardOutB');
+			sxfburiedPointEvent(idCardOutBRiskBury.key);
 		}
 		store.removeDisableBack();
 	};
@@ -438,22 +444,8 @@ export default class real_name_page extends Component {
 							clear
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								notSendValue: true, // 无需上报输入框的值
-								name: 'idName',
-								eventList: [
-									{
-										type: 'focus'
-									},
-									{
-										type: 'delete'
-									},
-									{
-										type: 'blur'
-									},
-									{
-										type: 'paste'
-									}
-								]
+								name: idNameRiskBury.key,
+								actContain: idNameRiskBury.actContain
 							})}
 							onBlur={() => {
 								handleInputBlur();
@@ -464,22 +456,8 @@ export default class real_name_page extends Component {
 						<InputItem
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								notSendValue: true, // 无需上报输入框的值
-								name: 'idNo',
-								eventList: [
-									{
-										type: 'focus'
-									},
-									{
-										type: 'delete'
-									},
-									{
-										type: 'blur'
-									},
-									{
-										type: 'paste'
-									}
-								]
+								name: idNoRiskBury.key,
+								actContain: idNoRiskBury.actContain
 							})}
 							clear
 							onChange={this.handleNumberChange}

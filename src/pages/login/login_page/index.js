@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 16:09:37
+ * @LastEditTime: 2020-02-20 17:39:24
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -48,7 +48,13 @@ import login_bg4 from './img/login_bg4.png';
 import loginModalBg from './img/login_modal.png';
 import loginModalBtn from './img/login_modal_btn.png';
 import closeIco from './img/close_ico.png';
-import { inputPhoneRiskBury } from './riskBuryConfig';
+import {
+	clickCodeRiskBury,
+	inputPhoneRiskBury,
+	inputCodeRiskBury,
+	loginBtnRiskBury,
+	DC_chkBoxRiskBury
+} from './riskBuryConfig';
 
 let timmer;
 let modalTimer = null;
@@ -124,7 +130,7 @@ export default class login_page extends PureComponent {
 			});
 		}
 		sxfDataPv({ pId: 'dl' });
-		sxfburiedPointEvent('DC_chkBox');
+		sxfburiedPointEvent(DC_chkBoxRiskBury.key);
 	}
 	componentDidMount() {
 		// 获取地址
@@ -172,7 +178,7 @@ export default class login_page extends PureComponent {
 	};
 	//去登陆按钮
 	goLogin = () => {
-		const { queryData = {} } = this.state;
+		const { queryData = {}, isChecked } = this.state;
 		if (queryData && queryData.wxTestFrom) {
 			buriedPointEvent(wxTest.wxTestLoginBtnClick, {
 				entry: queryData.wxTestFrom
@@ -181,6 +187,11 @@ export default class login_page extends PureComponent {
 		if (!this.validateFn()) {
 			return;
 		}
+		if (!isChecked) {
+			Toast.info('请先阅读并勾选相关协议，登录、注册还到');
+			return;
+		}
+
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			// Toast.info('请先获取短信验证码');
@@ -445,7 +456,7 @@ export default class login_page extends PureComponent {
 			},
 			() => {
 				if (this.state.isChecked) {
-					sxfburiedPointEvent('DC_chkBox');
+					sxfburiedPointEvent(DC_chkBoxRiskBury.key);
 				}
 			}
 		);
@@ -453,9 +464,8 @@ export default class login_page extends PureComponent {
 
 	//	校验必填项 按钮是否可以点击
 	validateFn = () => {
-		const { isChecked } = this.state;
 		const formData = this.props.form.getFieldsValue();
-		if (formData.phoneValue && formData.smsCd && isChecked) {
+		if (formData.phoneValue && formData.smsCd) {
 			return true;
 		}
 		return false;
@@ -587,13 +597,6 @@ export default class login_page extends PureComponent {
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
-								onChange(value) {
-									if (value === '') {
-										sxfburiedPointEvent('inputPhone', {
-											actId: 'delAll'
-										});
-									}
-								},
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !disabledInput && this.validatePhone }
@@ -604,23 +607,9 @@ export default class login_page extends PureComponent {
 							}}
 							clear
 							data-sxf-props={JSON.stringify({
-								type: 'input',
+								type: inputPhoneRiskBury.type,
 								name: inputPhoneRiskBury.key,
-								notSendValue: true, // 无需上报输入框的值
-								eventList: [
-									{
-										type: 'focus'
-									},
-									{
-										type: 'delete'
-									},
-									{
-										type: 'blur'
-									},
-									{
-										type: 'paste'
-									}
-								]
+								actContain: inputPhoneRiskBury.actContain
 							})}
 						/>
 
@@ -632,35 +621,15 @@ export default class login_page extends PureComponent {
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									onChange(value) {
-										if (value === '') {
-											sxfburiedPointEvent('inputCode', {
-												actId: 'delAll'
-											});
-										}
-									},
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
 									handleInputBlur();
 								}}
 								data-sxf-props={JSON.stringify({
-									type: 'input',
-									name: 'inputCode',
-									eventList: [
-										{
-											type: 'focus'
-										},
-										{
-											type: 'delete'
-										},
-										{
-											type: 'blur'
-										},
-										{
-											type: 'paste'
-										}
-									]
+									type: inputCodeRiskBury.type,
+									name: inputCodeRiskBury.key,
+									actContain: inputCodeRiskBury.actContain
 								})}
 							/>
 							<div
@@ -670,13 +639,9 @@ export default class login_page extends PureComponent {
 										: styles.smsCode
 								}
 								data-sxf-props={JSON.stringify({
-									type: 'btn',
-									name: 'clickCode',
-									eventList: [
-										{
-											type: 'click'
-										}
-									]
+									type: clickCodeRiskBury.type,
+									name: clickCodeRiskBury.key,
+									actContain: clickCodeRiskBury.actContain
 								})}
 								onClick={() => {
 									this.handleSmsCodeClick();
@@ -691,13 +656,9 @@ export default class login_page extends PureComponent {
 								className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
 								onClick={this.goLogin}
 								data-sxf-props={JSON.stringify({
-									type: 'btn',
-									name: 'loginBtn',
-									eventList: [
-										{
-											type: 'click'
-										}
-									]
+									type: loginBtnRiskBury.type,
+									name: loginBtnRiskBury.key,
+									actContain: loginBtnRiskBury.actContain
 								})}
 							>
 								<span>立即申请</span>

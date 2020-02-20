@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:18:05
+ * @LastEditTime: 2020-02-20 17:47:29
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -15,7 +15,7 @@ import logo from './img/logo.png';
 import cardBg from './img/card_bg.png';
 
 import { download_queryDownloadUrl } from 'fetch/api';
-
+import { xzyBtn } from '../riskBuryConfig';
 @fetch.inject()
 @setBackGround('#fff')
 export default class outer_download_page extends PureComponent {
@@ -40,7 +40,7 @@ export default class outer_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
-		sxfburiedPointEvent('xzyBtn');
+		sxfburiedPointEvent(xzyBtn);
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.outerDownloadBtnClick, {

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:04:37
+ * @LastEditTime: 2020-02-20 17:47:05
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -16,7 +16,7 @@ import { download_queryDownloadUrl } from 'fetch/api';
 // import qs from 'qs';
 import hegui_bg from './img/hegui_bg.png';
 import top_bg from './img/top_bg.png';
-
+import { xzyBtn } from '../riskBuryConfig';
 @setBackGround('#fff')
 @fetch.inject()
 export default class wx_download_page extends PureComponent {
@@ -50,7 +50,7 @@ export default class wx_download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
-		sxfburiedPointEvent('xzyBtn');
+		sxfburiedPointEvent(xzyBtn);
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.weixinDownloadBtnClick, {

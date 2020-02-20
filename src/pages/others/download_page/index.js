@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:12:15
+ * @LastEditTime: 2020-02-20 17:48:21
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -10,7 +10,7 @@ import downloadBtn from './img/download_btn.jpg';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { daicao } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
-
+import { xzyBtn } from '../riskBuryConfig';
 import { download_queryDownloadUrl } from 'fetch/api';
 
 let entryPageTime = '';
@@ -58,7 +58,7 @@ export default class download_page extends PureComponent {
 	};
 
 	downloadClick = () => {
-		sxfburiedPointEvent('xzyBtn');
+		sxfburiedPointEvent(xzyBtn);
 		const { downloadUrl } = this.state;
 		const phoneType = getDeviceType();
 		buriedPointEvent(daicao.downloadBtnClick, {

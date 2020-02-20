@@ -14,7 +14,7 @@ import linkConf from 'config/link.conf';
 import button_img from './img/button_img.png';
 import cover_img from './img/cover_img.png';
 import { download_queryDownloadUrl } from 'fetch/api';
-
+import { xzyBtn } from '../riskBuryConfig';
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
@@ -50,7 +50,7 @@ export default class mpos_download_page extends PureComponent {
 	};
 
 	downloadClickFun = () => {
-		sxfburiedPointEvent('xzyBtn');
+		sxfburiedPointEvent(xzyBtn);
 		const phoneType = getDeviceType();
 		if (phoneType === 'IOS') {
 			buriedPointEvent(other.mposDownloadBtnClick, {

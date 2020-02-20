@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:18:03
+ * @LastEditTime: 2020-02-20 17:22:21
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -40,7 +40,13 @@ import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
-
+import {
+	dlinputPhoneRiskBury,
+	dlinputCodeRiskBury,
+	dl_chkBoxRiskBury,
+	dlgoLoginRiskBury,
+	dlsmsCodeBtnRiskBury
+} from '../riskBuryConfig';
 let timmer;
 
 let entryPageTime = '';
@@ -109,7 +115,7 @@ export default class login_page extends PureComponent {
 			});
 		}
 		sxfDataPv({ pId: 'dwdl' });
-		sxfburiedPointEvent('dl_chkBox');
+		sxfburiedPointEvent(dl_chkBoxRiskBury.key);
 	}
 	componentDidMount() {
 		let _this = this;
@@ -160,7 +166,7 @@ export default class login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
-		sxfburiedPointEvent('dlgoLogin');
+		sxfburiedPointEvent(dlgoLoginRiskBury.key);
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
@@ -216,7 +222,7 @@ export default class login_page extends PureComponent {
 
 	// 处理获取验证码按钮点击事件
 	handleSmsCodeClick = () => {
-		sxfburiedPointEvent('dlsmsCodeBtn');
+		sxfburiedPointEvent(dlsmsCodeBtnRiskBury.key);
 		if (!this.state.timeflag) return;
 		this.getSmsCode();
 	};
@@ -377,7 +383,7 @@ export default class login_page extends PureComponent {
 			},
 			() => {
 				if (this.state.isChecked) {
-					sxfburiedPointEvent('dl_chkBox');
+					sxfburiedPointEvent(dl_chkBoxRiskBury.key);
 				}
 			}
 		);
@@ -412,35 +418,14 @@ export default class login_page extends PureComponent {
 							id="inputPhone"
 							data-sxf-props={JSON.stringify({
 								type: 'input',
-								name: 'dlinputPhone',
-								notSendValue: true, // 无需上报输入框的值
-								eventList: [
-									{
-										type: 'focus'
-									},
-									{
-										type: 'delete'
-									},
-									{
-										type: 'blur'
-									},
-									{
-										type: 'paste'
-									}
-								]
+								name: dlinputPhoneRiskBury.key,
+								actContain: dlinputPhoneRiskBury.actContain
 							})}
 							maxLength="13"
 							type="phone"
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
-								onChange(value) {
-									if (value === '') {
-										sxfburiedPointEvent('dlinputPhone', {
-											actId: 'delAll'
-										});
-									}
-								},
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !disabledInput && this.validatePhone }
@@ -461,32 +446,12 @@ export default class login_page extends PureComponent {
 								maxLength="6"
 								data-sxf-props={JSON.stringify({
 									type: 'input',
-									name: 'dlinputCode',
-									eventList: [
-										{
-											type: 'focus'
-										},
-										{
-											type: 'delete'
-										},
-										{
-											type: 'blur'
-										},
-										{
-											type: 'paste'
-										}
-									]
+									name: dlinputCodeRiskBury.key,
+									actContain: dlinputCodeRiskBury.key
 								})}
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									onChange(value) {
-										if (value === '') {
-											sxfburiedPointEvent('dlinputCode', {
-												actId: 'delAll'
-											});
-										}
-									},
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {
