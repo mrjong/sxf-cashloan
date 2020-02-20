@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-25 15:36:19
+ * @LastEditTime: 2020-02-20 11:25:48
  */
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/ButtonCustom';
@@ -14,12 +14,14 @@ import { msg_popup_list } from 'fetch/api.js';
 import { setHomeModalAction } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
 import Images from 'assets/image';
+import { setBackGround } from 'utils/background';
 
 @connect(
 	() => ({}),
 	{ setHomeModalAction }
 )
 @fetch.inject()
+@setBackGround('#fff')
 export default class repayment_succ_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -70,7 +72,8 @@ export default class repayment_succ_page extends PureComponent {
 			<div className={styles.repayment_succ_page}>
 				<div className={styles.tips}>
 					<img className={styles.success_ico} src={Images.adorn.success} />
-					<p>还款成功</p>
+					<p className={styles.success_tips}>还款成功</p>
+					<p className={styles.success_sub_tips}>您的账单已全部结清</p>
 				</div>
 				<div className={styles.details}>
 					<p>借款金额：{this.state.orderSuccess.billPrcpAmt}元</p>

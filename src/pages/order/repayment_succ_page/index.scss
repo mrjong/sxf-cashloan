@@ -3,35 +3,46 @@
 .repayment_succ_page {
 	.tips {
 		text-align: center;
-		padding: 61px 0 71px 0;
-		background: #fff;
-		margin-bottom: 20px;
+		padding-top: 50px;
 		.success_ico {
-			width: 128px;
-			height: 128px;
+			width: 150px;
+			height: 150px;
+			vertical-align: top;
 		}
-		p {
+		.success_tips {
+			font-size: 34px;
+			font-family: PingFangSC-Medium, PingFang SC;
+			font-weight: 500;
+			color: #121c32;
+			line-height: 48px;
+			margin-top: 20px;
+		}
+		.success_sub_tips {
 			font-size: 30px;
-			color: rgba(51, 51, 51, 1);
-			margin-top: 25px;
-			font-weight: 600;
+			color: #868e9e;
+			line-height: 42px;
+			margin-top: 40px;
 		}
 	}
 	.details {
-		padding: 45px 30px;
-		background: #fff;
+		padding: 30px;
+		background: #f7f8fa;
+		margin: 70px 40px 0;
+		border-radius: 10px;
 		p {
-			margin-bottom: 39px;
-			font-size: 30px;
-			color: rgba(51, 51, 51, 1);
+			margin-bottom: 20px;
+			font-size: 28px;
+			color: #394259;
+			line-height: 40px;
 		}
 		p:last-child {
 			margin-bottom: 0;
 		}
 	}
 	.back_btn {
+		position: absolute;
 		width: 670px;
-    margin: 100px auto;
-    display: block;
+		top: 730px;
+		left: 40px;
 	}
 }
