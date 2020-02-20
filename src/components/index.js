@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 13:14:25
+ * @LastEditTime: 2020-02-20 18:05:01
  */
 import FooterBar from './FooterBar';
 import LoadingView from './LoadingView';
@@ -25,6 +25,7 @@ import FixedTopTip from './FixedTopTip';
 import TipModal from './TipModal';
 import RepayPlanModal from './RepayPlanModal';
 import CheckRadio from './CheckRadio';
+import CouponModal from './CouponModal';
 
 export {
 	FooterBar,
@@ -49,5 +50,6 @@ export {
 	FixedTopTip,
 	TipModal,
 	RepayPlanModal,
-	CheckRadio
+	CheckRadio,
+	CouponModal
 };

@@ -10,7 +10,11 @@ import { setBackGround } from 'utils/background';
 import { getH5Channel } from 'utils/common';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { connect } from 'react-redux';
-import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
+import {
+	setCardTypeAction,
+	setConfirmAgencyInfoAction,
+	setCouponDataAction
+} from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
 import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
 import Images from 'assets/image';
@@ -39,7 +43,8 @@ let isFetching = false;
 	}),
 	{
 		setCardTypeAction,
-		setConfirmAgencyInfoAction
+		setConfirmAgencyInfoAction,
+		setCouponDataAction
 	}
 )
 export default class loan_fenqi_page extends PureComponent {
@@ -53,8 +58,6 @@ export default class loan_fenqi_page extends PureComponent {
 			loanDate: null,
 			loanMoney: '',
 			usageList: [],
-			couponInfo: {},
-			perdRateList: [],
 			productList: [],
 			contractList: [],
 			buttonDisabled: true,
@@ -72,68 +75,41 @@ export default class loan_fenqi_page extends PureComponent {
 			repayCardName: '', //借款银行卡银行
 			resaveCardNo: '', //还款银行卡卡号
 			resaveCardLast: '', //还款银行卡后四位
-			resaveCardName: '' //还款银行卡银行
+			resaveCardName: '', //还款银行卡银行
+			isShowDetail: false // 是否展示产品列表
 		};
 	}
 
 	componentWillMount() {
-		this.queryCashLoanApplInfo();
-
-		let storeData = store.getCashFenQiStoreData(); // 代提交的借款信息
-		let cashFenQiCardArr = store.getCashFenQiCardArr(); // 收、还款卡信息
-
-		if (storeData && cashFenQiCardArr) {
-			this.handleDataDisplay(storeData, cashFenQiCardArr);
+		const { withholdCardData, withdrawCardData, confirmAgencyInfo } = this.props;
+		if (confirmAgencyInfo) {
+			if (withdrawCardData) {
+				confirmAgencyInfo.repayCardNo = withdrawCardData.agrNo;
+				confirmAgencyInfo.repayCardLast = withdrawCardData.lastCardNo;
+				confirmAgencyInfo.repayCardName = withdrawCardData.bankName;
+			}
+			if (withholdCardData) {
+				confirmAgencyInfo.resaveCardNo = withholdCardData.agrNo;
+				confirmAgencyInfo.resaveCardLast = withholdCardData.lastCardNo;
+				confirmAgencyInfo.resaveCardName = withholdCardData.bankName;
+				confirmAgencyInfo.resaveBankCode = withholdCardData.bankCode;
+			}
+			this.handleDataDisplay(confirmAgencyInfo);
+		} else {
+			this.queryCashLoanApplInfo();
 		}
 	}
 
 	//处理数据反显
-	handleDataDisplay = (storeData = {}, cardArr = []) => {
-		let tempResaveCard = cardArr[0] || {};
-		let tempPayCard = cardArr[1] || {};
-		let perdRateList = [];
-		let usageList = [];
-
-		let { agrNo: repayCardNo, bankName: repayCardName, lastCardNo: repayCardLast } = tempResaveCard;
-		let resaveBankCode = tempResaveCard && (tempResaveCard.bankCode || tempResaveCard.bankCd);
-		let { agrNo: resaveCardNo, bankName: resaveCardName, lastCardNo: resaveCardLast } = tempPayCard;
-		let payBankCode = tempPayCard && (tempPayCard.bankCode || tempPayCard.bankCd);
-		if (!repayCardNo) {
-			//处理用户无卡,去绑定的反显问题
-			repayCardNo = resaveCardNo;
-			repayCardName = resaveCardName;
-			repayCardLast = resaveCardLast;
-			resaveBankCode = payBankCode;
-		} else if (!resaveCardNo) {
-			resaveCardNo = repayCardNo;
-			resaveCardName = repayCardName;
-			resaveCardLast = repayCardLast;
-			payBankCode = resaveBankCode;
-		}
-		if (this.state.inputClear || !storeData.perdRateList || !storeData.usageList) {
-			perdRateList = this.state.perdRateList;
-			usageList = this.state.usageList;
-		} else {
-			perdRateList = storeData.perdRateList;
-			usageList = storeData.usageList;
-		}
-		let data = Object.assign({}, storeData, {
-			repayCardNo,
-			repayCardName,
-			repayCardLast,
-			resaveCardNo,
-			resaveCardName,
-			resaveCardLast,
-			perdRateList,
-			usageList,
-			payBankCode,
-			resaveBankCode
+	handleDataDisplay = (confirmAgencyInfo = {}) => {
+		this.setState({ ...confirmAgencyInfo }, () => {
+			// 初始化数据渲染
+			this.selectMax();
 		});
-		this.setState({ ...data });
 	};
 
 	// 获取页面数据
-	queryCashLoanApplInfo() {
+	queryCashLoanApplInfo = () => {
 		this.props.$fetch
 			.post(loan_queryCashLoanApplInfo)
 			.then((res) => {
@@ -182,43 +158,24 @@ export default class loan_fenqi_page extends PureComponent {
 				// 	this.props.history.push('/home/home');
 				// }, 2000);
 			});
-	}
+	};
 
 	//产品数据初始化
 	dataInit = () => {
 		const { pageInfo = {} } = this.state;
-		const { withdrawCardData, withholdCardData } = this.props;
 		let withdrawCardInf = {};
 		let withholdCardInf = {};
-		if (withdrawCardData) {
-			withdrawCardInf = {
-				repayCardNo: withdrawCardData.agrNo,
-				repayCardLast: withdrawCardData.lastCardNo,
-				repayCardName: withdrawCardData.bankName
-			};
-		} else {
-			withdrawCardInf = {
-				repayCardNo: pageInfo.withdrawBankAgrNo,
-				repayCardLast: pageInfo.withdrawBankLastNo,
-				repayCardName: pageInfo.withdrawBankName
-			};
-		}
-
-		if (withholdCardData) {
-			withholdCardInf = {
-				resaveCardNo: withholdCardData.agrNo,
-				resaveCardLast: withholdCardData.lastCardNo,
-				resaveCardName: withholdCardData.bankName,
-				resaveBankCode: withholdCardData.bankCode
-			};
-		} else {
-			withholdCardInf = {
-				resaveCardNo: pageInfo.withholdBankAgrNo,
-				resaveCardLast: pageInfo.withholdBankLastNo,
-				resaveCardName: pageInfo.withholdBankName,
-				resaveBankCode: pageInfo.withholdBankCode
-			};
-		}
+		withdrawCardInf = {
+			repayCardNo: pageInfo.withdrawBankAgrNo,
+			repayCardLast: pageInfo.withdrawBankLastNo,
+			repayCardName: pageInfo.withdrawBankName
+		};
+		withholdCardInf = {
+			resaveCardNo: pageInfo.withholdBankAgrNo,
+			resaveCardLast: pageInfo.withholdBankLastNo,
+			resaveCardName: pageInfo.withholdBankName,
+			resaveBankCode: pageInfo.withholdBankCode
+		};
 		this.setState(
 			{
 				productList: this.state.loanMoney ? this.filterProdList() : pageInfo.prods || [],
@@ -230,7 +187,7 @@ export default class loan_fenqi_page extends PureComponent {
 			},
 			() => {
 				this.selectLoanUsage(this.state.usageList[0]);
-				this.requestProtocolCoupon();
+				this.selectMax();
 			}
 		);
 	};
@@ -244,20 +201,42 @@ export default class loan_fenqi_page extends PureComponent {
 			return;
 		}
 		const prodList = this.filterProdList();
-		this.setState({
-			productList: prodList,
-			loanDate: null
-		});
+		this.setState(
+			{
+				productList: prodList
+				// loanDate: null
+			},
+			() => {
+				this.selectMax();
+			}
+		);
 	};
 
 	// 筛选产品列表
 	filterProdList = () => {
-		const { loanMoney, pageInfo } = this.state;
+		const { loanMoney, pageInfo, productList } = this.state;
 		let prodList = [];
-		if (pageInfo.prods && pageInfo.prods.length) {
+		if (pageInfo && pageInfo.prods && pageInfo.prods.length) {
 			prodList = pageInfo.prods.filter((item) => loanMoney <= item.maxAmt && loanMoney >= item.minAmt);
+		} else {
+			prodList = productList.filter((item) => loanMoney <= item.maxAmt && loanMoney >= item.minAmt);
 		}
 		return prodList;
+	};
+
+	selectMax = () => {
+		const { productList = [], loanDate } = this.state;
+		// 找出prodCount最大对象所在的索引
+		let maxItem = null;
+		let indexOfMax = 0;
+		console.log(loanDate, 'aw');
+		if (loanDate) {
+			maxItem = loanDate;
+		} else {
+			productList.reduce((a, c, i) => (c.prodCount > a ? ((indexOfMax = i), c.prodCount) : a), 0);
+			maxItem = productList[indexOfMax];
+		}
+		this.selectLoanDate(maxItem);
 	};
 
 	/**
@@ -267,6 +246,7 @@ export default class loan_fenqi_page extends PureComponent {
 		if (!parseFloat(this.state.loanMoney) > 0 || !this.state.repayCardLast.length > 0) {
 			return;
 		}
+		this.props.toast.loading('', 10);
 		const { loanDate = {}, loanMoney, repayCardNo, resaveCardNo } = this.state;
 		//借款相关协议传参
 		const protocolParams = {
@@ -326,6 +306,7 @@ export default class loan_fenqi_page extends PureComponent {
 	// 借款试算
 	requestLoanPlan = (planParam, protocolRes) => {
 		this.props.$fetch.post(loan_loanPlan, planParam).then((planRes) => {
+			this.props.toast.hide();
 			if (planRes.code === '000000') {
 				this.props.toast.hide();
 				this.setState({
@@ -473,60 +454,40 @@ export default class loan_fenqi_page extends PureComponent {
 			prdId,
 			priceMax,
 			priceMin,
-			couponInfo,
 			repayCardNo,
 			repayCardLast,
 			repayCardName,
 			resaveCardNo,
 			resaveCardLast,
 			resaveCardName,
-			perdRateList,
-			contractList,
+			protocolList,
 			usageList,
-			deratePrice,
 			payBankCode,
 			resaveBankCode,
-			checkBox1
+			checkBox1,
+			productList,
+			isShowTipModal
 		} = this.state;
-		const resaveCard = {
-			agrNo: repayCardNo,
-			lastCardNo: repayCardLast,
-			bankName: repayCardName,
-			bankCode: resaveBankCode
-		};
-		const payCard = {
-			agrNo: resaveCardNo,
-			lastCardNo: resaveCardLast,
-			bankName: resaveCardName,
-			bankCode: payBankCode
-		};
-		store.setCashFenQiStoreData({
+		this.props.setConfirmAgencyInfoAction({
 			loanMoney,
 			loanDate,
 			loanUsage,
 			prdId,
 			priceMax,
 			priceMin,
-			perdRateList,
-			contractList,
-			usageList,
-			couponInfo,
-			deratePrice,
 			repayCardNo,
+			repayCardLast,
+			repayCardName,
 			resaveCardNo,
+			resaveCardLast,
+			resaveCardName,
+			protocolList,
+			usageList,
 			payBankCode,
 			resaveBankCode,
-			checkBox1
-		});
-		store.setCashFenQiCardArr([resaveCard, payCard]);
-	};
-
-	// 清空暂存数据,但不清除选择的银行卡
-	removeTempData = () => {
-		store.removeCashFenQiStoreData();
-		console.log(this.state.perdRateList);
-		this.setState({
-			perdRateList: this.state.perdRateList
+			checkBox1,
+			productList,
+			isShowTipModal
 		});
 	};
 
@@ -832,6 +793,13 @@ export default class loan_fenqi_page extends PureComponent {
 		));
 	};
 
+	// 展示产品
+	showDetail = () => {
+		this.setState({
+			isShowDetail: !this.state.isShowDetail
+		});
+	};
+
 	render() {
 		const { userInfo = {} } = this.props;
 		const {
@@ -855,7 +823,8 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveCardName,
 			protocolList,
 			isShowTipModal,
-			buttonDisabled
+			buttonDisabled,
+			isShowDetail
 		} = this.state;
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
@@ -882,16 +851,18 @@ export default class loan_fenqi_page extends PureComponent {
 												inputClear: true
 											},
 											() => {
-												this.removeTempData();
+												// this.removeTempData();
 											}
 										);
 									}
 									this.setState({
-										loanMoney: v,
-										loanDate: null
+										loanMoney: v
+										// loanDate: null
 									});
 								}}
 								onBlur={(v) => {
+									// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
+									this.props.setCouponDataAction({});
 									v && this.calcLoanMoney(Number(v));
 								}}
 							/>
@@ -901,9 +872,18 @@ export default class loan_fenqi_page extends PureComponent {
 
 					<div className={style.pannel}>
 						<ul>
-							<li className={style.listItem}>
+							<li
+								className={style.listItem}
+								onClick={() => {
+									this.showDetail();
+								}}
+							>
 								<label>借多久</label>
-								{this.renderProductListDom()}
+								<div className={style.listValue}>
+									{(!isShowDetail && loanDate && loanDate.prodName) || null}
+									<Icon type={isShowDetail ? 'up' : 'down'} className={style.icon} />
+								</div>
+								{(isShowDetail && this.renderProductListDom()) || null}
 							</li>
 							<li className={style.listItem}>
 								<label>借款用途</label>
@@ -1064,6 +1044,7 @@ export default class loan_fenqi_page extends PureComponent {
 						}}
 						prodType="现金分期"
 						toast={this.props.toast}
+						cacheData={this.storeTempData}
 					/>
 				) : null}
 

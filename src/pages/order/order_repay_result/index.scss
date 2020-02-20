@@ -10,10 +10,12 @@
 }
 
 .desc {
+	font-size: 34px;
+	font-family: PingFangSC-Medium, PingFang SC;
+	font-weight: 500;
 	color: #121c32;
-	font-size: 36px;
-	line-height: 1;
-	margin-top: 30px;
+	line-height: 48px;
+	margin-top: 20px;
 	span {
 		color: #f66;
 	}
@@ -22,7 +24,8 @@
 .sub_desc {
 	font-size: 30px;
 	color: #868e9e;
-	margin-top: 30px;
+	line-height: 42px;
+	margin-top: 40px;
 }
 
 .icon {
@@ -95,7 +98,7 @@
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	bottom: 260px;
+	top: 730px;
 	width: 670px;
 	font-weight: 500;
 }
@@ -109,10 +112,10 @@
 	margin: 40px auto 0;
 	padding: 0 30px;
 	box-sizing: border-box;
-	border-radius: 6px;
+	border-radius: 10px;
 	font-size: 28px;
-	box-shadow: 0px 0px 40px 0px #e2e5f7;
-	color: $colorBlack;
+	color: #394259;
+	background-color: #f7f8fa;
 
 	em {
 		font-family: $fontFamilyNumber;
@@ -120,7 +123,7 @@
 }
 
 .discount {
-	color: $colorTipRed;
+	color: #EB4747;
 }
 
 @keyframes del_line {
@@ -162,7 +165,7 @@
 	margin: 0 auto;
 	line-height: 180px;
 	text-align: center;
-	margin-top: 60px;
+	margin-top: 20px;
 	color: #2a71f5;
 	font-size: 40px;
 	font-weight: 500;

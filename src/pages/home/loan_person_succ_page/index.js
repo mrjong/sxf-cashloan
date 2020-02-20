@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-11-21 22:28:53
+ * @LastEditTime: 2020-02-20 18:12:07
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -15,7 +15,9 @@ import { manualAudit } from 'utils/analytinsType';
 import SXFButton from 'components/ButtonCustom';
 import Images from 'assets/image';
 import qs from 'qs';
-import { store } from '../../../utils/store';
+import { store } from 'utils/store';
+import CouponModal from 'components/CouponModal';
+import { isShowCouponModal, closeCouponModal } from '../loan_apply_succ_page/common';
 
 import { person_appointment_info, person_appointment_sub } from 'fetch/api.js';
 
@@ -35,8 +37,13 @@ export default class remit_ing_page extends PureComponent {
 				code: '0',
 				day: '今日'
 			},
-			isPlus: false
+			isPlus: false,
+			couponModalShow: false
 		};
+	}
+
+	componentWillMount() {
+		isShowCouponModal(this);
 	}
 
 	componentDidMount() {
@@ -57,6 +64,7 @@ export default class remit_ing_page extends PureComponent {
 	}
 
 	querySubscribeInfo = () => {
+		const { couponModalShow } = this.state;
 		this.props.$fetch.get(`${person_appointment_info}/${queryData.creadNo}`).then((res) => {
 			if (res && res.code === '000000') {
 				const { applyDate, applyTime, today, tomorrow, scheduledTime } = res.data || {};
@@ -73,7 +81,7 @@ export default class remit_ing_page extends PureComponent {
 							scheduledTime
 						},
 						() => {
-							this.handleClosePannel();
+							!couponModalShow && this.handleClosePannel();
 						}
 					);
 				}
@@ -208,7 +216,8 @@ export default class remit_ing_page extends PureComponent {
 			tomorrow,
 			scheduledTime,
 			daySelectedItem,
-			timeSelectedItem
+			timeSelectedItem,
+			couponModalShow
 		} = this.state;
 
 		const dayList = [
@@ -380,6 +389,15 @@ export default class remit_ing_page extends PureComponent {
 					</div>
 				</CopyToClipboard>
 				<div className={style.desctext}>关注还到公众号 实时查看审核进度</div>
+				{/* 首贷首期用户-还款券测试 */}
+				<CouponModal
+					visible={couponModalShow}
+					onConfirm={() => {
+						closeCouponModal(this);
+						this.handleClosePannel();
+					}}
+					couponData={queryData && queryData.couponInfo}
+				/>
 			</div>
 		);
 	}
