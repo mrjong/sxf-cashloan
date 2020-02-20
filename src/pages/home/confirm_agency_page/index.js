@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 11:20:23
+ * @LastEditTime: 2020-02-20 11:06:20
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -773,17 +773,15 @@ export default class confirm_agency_page extends PureComponent {
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
-		console.log(cacheContact, repayInfo);
-		this.props.history.push('/home/add_contact_page');
-		// if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
-		// 	if (cacheContact && cacheContact.length) {
-		// 		this.props.history.push('/home/contact_result_page');
-		// 	} else {
-		// 		this.props.history.push('/home/reco_contact_page');
-		// 	}
-		// } else {
-		// 	this.props.history.push('/home/add_contact_page');
-		// }
+		if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
+			if (cacheContact && cacheContact.length) {
+				this.props.history.push('/home/contact_result_page');
+			} else {
+				this.props.history.push('/home/reco_contact_page');
+			}
+		} else {
+			this.props.history.push('/home/add_contact_page');
+		}
 	};
 
 	// 点击勾选协议

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:36:30
+ * @LastEditTime: 2020-02-20 10:29:21
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -26,14 +26,14 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
-import { Carousels, commonPage, FooterBar } from 'components';
+import { Carousels, commonPage } from 'components';
 import style from './index.scss';
 // import mockData from './mockData';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { TFDLogin } from 'utils/getTongFuDun';
-import { MsgTip, AddCards, ActivityEntry, SwitchCard, Welfare } from './components';
+import { MsgTip, AddCards, ActivityEntry, SwitchCard, Introduce } from './components';
 
 //隔5秒调取接口相关变量
 
@@ -699,7 +699,7 @@ export default class home_page extends PureComponent {
 	};
 
 	render() {
-		const { bannerList, welfareList, activities } = this.state;
+		const { bannerList, activities } = this.state;
 		const { userInfo = {}, msgCount = 0 } = this.props;
 		return (
 			<div className={style.home_new_page}>
@@ -713,11 +713,12 @@ export default class home_page extends PureComponent {
 					{bannerList.length > 0 && (
 						<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />
 					)}
-					{welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null}
+					{/* {welfareList && welfareList.length > 0 ? <Welfare welfareList={welfareList} /> : null} */}
+					<Introduce />
 					{this.componentsAddCards()}
-					<div className={style.bottomSlogen}>
+					{/* <div className={style.bottomSlogen}>
 						<FooterBar />
-					</div>
+					</div> */}
 				</div>
 			</div>
 		);

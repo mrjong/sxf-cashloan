@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-24 17:09:11
+ * @LastEditTime: 2020-02-20 10:28:01
  */
 import CarouselHome from './CarouselHome';
 import BlackCard from './BlackCard';
@@ -18,6 +18,8 @@ import CreditCard from './CreditCard';
 import ActivityEntry from './ActivityEntry';
 import SwitchCard from './SwitchCard';
 import Welfare from './Welfare';
+import Introduce from './Introduce';
+
 export {
 	CarouselHome,
 	BlackCard,
@@ -33,5 +35,6 @@ export {
 	CreditCard,
 	ActivityEntry,
 	SwitchCard,
-	Welfare
+	Welfare,
+	Introduce
 };
