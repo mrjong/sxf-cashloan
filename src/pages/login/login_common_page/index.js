@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:16:42
+ * @LastEditTime: 2020-02-20 15:34:58
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -500,7 +500,7 @@ export default class login_common_page extends PureComponent {
 								type: 'input',
 								name: 'dlinputPhone',
 								notSendValue: true, // 无需上报输入框的值
-								eventList: [
+								actContain: [
 									{
 										type: 'focus'
 									},
@@ -518,13 +518,6 @@ export default class login_common_page extends PureComponent {
 							className={styles.loginInput}
 							placeholder="请输入您的手机号"
 							{...getFieldProps('phoneValue', {
-								onChange(value) {
-									if (value === '') {
-										sxfburiedPointEvent('dlinputPhone', {
-											actId: 'delAll'
-										});
-									}
-								},
 								rules: [
 									{ required: true, message: '请输入正确手机号' },
 									{ validator: !disabledInput && this.validatePhone }
@@ -547,7 +540,7 @@ export default class login_common_page extends PureComponent {
 									type: 'input',
 									name: 'dlinputCode',
 									notSendValue: true, // 无需上报输入框的值
-									eventList: [
+									actContain: [
 										{
 											type: 'focus'
 										},
@@ -565,13 +558,6 @@ export default class login_common_page extends PureComponent {
 								className={[styles.loginInput, styles.smsCodeInput].join(' ')}
 								placeholder="请输入短信验证码"
 								{...getFieldProps('smsCd', {
-									onChange(value) {
-										if (value === '') {
-											sxfburiedPointEvent('dlinputCode', {
-												actId: 'delAll'
-											});
-										}
-									},
 									rules: [{ required: true, message: '请输入正确验证码' }]
 								})}
 								onBlur={() => {

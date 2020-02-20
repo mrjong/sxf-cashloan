@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "title": "登录",
+    "pId": "dl",
+    "bury": [
+      {
+        "key": "inputPhone",
+        "remark": "手机号输入框",
+        "actContain": [
+          "focus",
+          "delete",
+          "blur",
+          "paste"
+        ]
+      }
+    ]
+  }
+]

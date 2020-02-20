@@ -38,9 +38,7 @@ function fileDisplay(filePath) {
 		// 如果是文件
 		if (fileType.isFile()) {
 			// 如果文件名是 riskBuryConfig.js
-			console.log(filename);
 			if (filename === 'riskBuryConfig.js') {
-				console.log('1111111111111111111');
 				const { common, ...otherModule } = require(localdir);
 
 				const bury = Object.keys(otherModule).map((key) => otherModule[key]);

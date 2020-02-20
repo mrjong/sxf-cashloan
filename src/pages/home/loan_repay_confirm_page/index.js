@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:16:11
+ * @LastEditTime: 2020-02-20 16:36:38
  */
 import React, { PureComponent } from 'react';
 import { Icon, InputItem, List, Modal, Toast } from 'antd-mobile';
@@ -19,6 +19,16 @@ import { activeConfigSts } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { TimeoutPayModal, SelectList, ButtonCustom, FixedTopTip } from 'components';
+import {
+	loanMoneyRiskBury,
+	maxApplAmtRiskBury,
+	minApplAmtRiskBury,
+	isShowCreditModalInRiskBury,
+	isShowCreditModalOutRiskBury,
+	freeServiceInRiskBury,
+	freeServiceOutRiskBury,
+	moneyCreditCardConfirmBtnRiskBury
+} from './riskBuryconfig';
 
 import { cred_queryApplPageInfo } from 'fetch/api.js';
 const tagList = [
@@ -115,7 +125,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	closeCreditModal = () => {
-		sxfburiedPointEvent('isShowCreditModal_out');
+		sxfburiedPointEvent(isShowCreditModalOutRiskBury.key);
 		this.setState({
 			isShowCreditModal: false
 		});
@@ -192,7 +202,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 	};
 
 	handleSubmit = async () => {
-		sxfburiedPointEvent('moneyCreditCardConfirmBtn');
+		sxfburiedPointEvent(moneyCreditCardConfirmBtnRiskBury.key);
 		buriedPointEvent(home.moneyCreditCardConfirmBtn);
 		const { selectedLoanDate = {}, usrIndexInfo = {} } = this.state;
 		const { minApplAmt, maxApplAmt } = usrIndexInfo;
@@ -262,7 +272,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				isShowCreditModal: false
 			},
 			() => {
-				sxfburiedPointEvent('isShowCreditModal_out');
+				sxfburiedPointEvent(isShowCreditModalOutRiskBury.key);
 				this.setState({
 					modal_left: false
 				});
@@ -479,21 +489,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 							<InputItem
 								data-sxf-props={JSON.stringify({
 									type: 'input',
-									name: 'loanMoney',
-									eventList: [
-										{
-											type: 'focus'
-										},
-										{
-											type: 'delete'
-										},
-										{
-											type: 'blur'
-										},
-										{
-											type: 'paste'
-										}
-									]
+									name: loanMoneyRiskBury.key,
+									actContain: loanMoneyRiskBury.actContain
 								})}
 								maxLength={15}
 								{...getFieldProps('loanMoney', {
@@ -540,12 +537,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}}
 								data-sxf-props={JSON.stringify({
 									type: 'btn',
-									name: 'maxApplAmt',
-									eventList: [
-										{
-											type: 'click'
-										}
-									]
+									name: maxApplAmtRiskBury.key,
+									actContain: []
 								})}
 							>
 								<div>
@@ -560,12 +553,8 @@ export default class loan_repay_confirm_page extends PureComponent {
 								className={[style.item, style.item2].join(' ')}
 								data-sxf-props={JSON.stringify({
 									type: 'btn',
-									name: 'minApplAmt',
-									eventList: [
-										{
-											type: 'click'
-										}
-									]
+									name: minApplAmtRiskBury.key,
+									actContain: []
 								})}
 								onClick={() => {
 									this.toggleTag(1, 'click');
@@ -611,7 +600,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 										) {
 											this.props.toast.info('暂无可借产品');
 										} else {
-											sxfburiedPointEvent('isShowCreditModal_in');
+											sxfburiedPointEvent(isShowCreditModalInRiskBury.key);
 											this.setState({
 												isShowCreditModal: true
 											});
@@ -633,7 +622,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 					</div>
 					<div
 						onClick={() => {
-							sxfburiedPointEvent('freeServiceIn');
+							sxfburiedPointEvent(freeServiceInRiskBury.key);
 							this.setState({
 								showTimeoutPayModal: true
 							});
@@ -709,7 +698,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 				<TimeoutPayModal
 					visible={showTimeoutPayModal}
 					closeModal={() => {
-						sxfburiedPointEvent('freeServiceOut');
+						sxfburiedPointEvent(freeServiceOutRiskBury.key);
 						this.setState({
 							showTimeoutPayModal: false
 						});

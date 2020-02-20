@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-19 10:48:04
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-02-20 11:35:50
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -20,12 +20,8 @@ import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
+import { novice_judge, novice_receive } from 'fetch/api';
 import CountDown from '../../mine/coupon_page/component/CountDown';
-
-const API = {
-	noviceJudge: '/novice/judge', // 判断用户是否满足领取条件接口
-	noviceReceive: '/novice/receive' // 领取新手优惠券接口
-};
 
 @setBackGround('#F64C46')
 @fetch.inject()
@@ -159,8 +155,8 @@ export default class new_users_page extends PureComponent {
 
 	// 查询用户领取的状态
 	checkUserStatus = () => {
-		this.props.$fetch.post(API.noviceJudge).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data) {
+		this.props.$fetch.post(novice_judge).then((res) => {
+			if (res.code === '000000' && res.data) {
 				if (res.data.status === '04' || res.data.status === '03') {
 					this.setState({
 						isOpen: true
@@ -171,22 +167,22 @@ export default class new_users_page extends PureComponent {
 					validEndTm: res.data.validTm
 				});
 			} else {
-				this.props.toast.info(res.msgInfo);
+				this.props.toast.info(res.message);
 			}
 		});
 	};
 
 	// 用户领取优惠劵
 	getCoupon = () => {
-		this.props.$fetch.post(API.noviceReceive).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data) {
+		this.props.$fetch.post(novice_receive).then((res) => {
+			if (res.code === '000000' && res.data) {
 				this.setState({
 					isOpen: true,
 					userStsCode: res.data.status,
 					validEndTm: res.data.validTm
 				});
 			} else {
-				this.props.toast.info(res.msgInfo);
+				this.props.toast.info(res.message);
 			}
 		});
 	};

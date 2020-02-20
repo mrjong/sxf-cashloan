@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 11:20:23
+ * @LastEditTime: 2020-02-20 16:00:54
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -29,11 +29,12 @@ import {
 	bank_card_protocol_bind,
 	coup_sendLoanCoup
 } from 'fetch/api.js';
+import { showModalPlanOutRiskBury, showModalPlanRiskBury } from './riskBuryConfig';
 import { connect } from 'react-redux';
 import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-
+import { cardBillAmtRiskBury } from './riskBuryConfig';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -595,7 +596,7 @@ export default class confirm_agency_page extends PureComponent {
 				isShowModal: true
 			},
 			() => {
-				sxfburiedPointEvent('ShowModal_plan');
+				sxfburiedPointEvent(showModalPlanRiskBury.key);
 			}
 		);
 	};
@@ -606,7 +607,7 @@ export default class confirm_agency_page extends PureComponent {
 				isShowModal: false
 			},
 			() => {
-				sxfburiedPointEvent('ShowModal_planOut');
+				sxfburiedPointEvent(showModalPlanOutRiskBury.key);
 			}
 		);
 	};
@@ -773,17 +774,15 @@ export default class confirm_agency_page extends PureComponent {
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
-		console.log(cacheContact, repayInfo);
-		this.props.history.push('/home/add_contact_page');
-		// if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
-		// 	if (cacheContact && cacheContact.length) {
-		// 		this.props.history.push('/home/contact_result_page');
-		// 	} else {
-		// 		this.props.history.push('/home/reco_contact_page');
-		// 	}
-		// } else {
-		// 	this.props.history.push('/home/add_contact_page');
-		// }
+		if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
+			if (cacheContact && cacheContact.length) {
+				this.props.history.push('/home/contact_result_page');
+			} else {
+				this.props.history.push('/home/reco_contact_page');
+			}
+		} else {
+			this.props.history.push('/home/add_contact_page');
+		}
 	};
 
 	// 点击勾选协议
@@ -859,25 +858,11 @@ export default class confirm_agency_page extends PureComponent {
 						<div className={style.inputWrap}>
 							<div className={style.billInpBox}>
 								<i className={style.moneyUnit}>¥</i>
-
 								<InputItem
 									data-sxf-props={JSON.stringify({
-										type: 'input',
-										name: 'cardBillAmt',
-										eventList: [
-											{
-												type: 'focus'
-											},
-											{
-												type: 'delete'
-											},
-											{
-												type: 'blur'
-											},
-											{
-												type: 'paste'
-											}
-										]
+										type: cardBillAmtRiskBury.type,
+										name: cardBillAmtRiskBury.name,
+										actContain: cardBillAmtRiskBury.actContain
 									})}
 									className={style.billInput}
 									clear
@@ -898,9 +883,6 @@ export default class confirm_agency_page extends PureComponent {
 												});
 												this.props.form.setFieldsValue({
 													cardBillAmt: ''
-												});
-												sxfburiedPointEvent('cardBillAmt', {
-													actId: 'delAll'
 												});
 											} else {
 												closeBtn = true;
