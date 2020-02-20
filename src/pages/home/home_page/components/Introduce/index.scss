@@ -1,0 +1,57 @@
+.introduce_container {
+	margin-top: 50px;
+	padding: 0 40px;
+	.intro_tit {
+		font-size: 34px;
+		color: #121c32;
+		line-height: 48px;
+	}
+	.intro_content_wrap {
+		display: flex;
+		margin-right: -20px;
+		margin-top: 30px;
+	}
+	.intro_content {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		margin-right: 20px;
+		height: 220px;
+		align-items: center;
+		background-color: #fff;
+		border-radius: 6px;
+		justify-content: center;
+	}
+	.icon_style {
+		height: 60px;
+		width: 60px;
+	}
+	.intro_desc_wrap {
+		display: flex;
+		font-size: 24px;
+		color: #868e9e;
+		line-height: 33px;
+		justify-content: center;
+		align-items: center;
+		margin-top: 30px;
+	}
+	.lock_style {
+		width: 28px;
+		height: 31px;
+		margin-right: 8px;
+	}
+	.title_style {
+		font-size: 26px;
+		font-family: PingFangSC-Medium, PingFang SC;
+		font-weight: 500;
+		color: #121c32;
+    line-height: 26px;
+    margin-top: 30px;
+	}
+	.sub_tit_style {
+		font-size: 20px;
+		color: #868e9e;
+    line-height: 22px;
+    margin-top: 16px;
+	}
+}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-13 17:26:41
+ * @LastEditTime: 2020-02-20 10:46:38
  */
 export default {
 	/* 先按照不同功能划分 */
@@ -30,7 +30,11 @@ export default {
 		fail: require('./adorn/status_fail.png'),
 		line_arrow: require('./adorn/line_arrow.png'),
 		youhui: require('./adorn/youhui.png'),
-		coupon: require('./adorn/coupon.png')
+		coupon: require('./adorn/coupon.png'),
+		intro_ico: require('./adorn/intro_ico.png'),
+		intro_ico2: require('./adorn/intro_ico2.png'),
+		intro_ico3: require('./adorn/intro_ico3.png'),
+		lock_black: require('./adorn/lock_black.png')
 	},
 
 	// 银行图标 单独放这
