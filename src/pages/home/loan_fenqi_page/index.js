@@ -98,7 +98,7 @@ export default class loan_fenqi_page extends PureComponent {
 	handleDataDisplay = (confirmAgencyInfo = {}) => {
 		this.setState({ ...confirmAgencyInfo }, () => {
 			// 初始化数据渲染
-			this.requestProtocolCoupon();
+			this.selectMax();
 		});
 	};
 
@@ -181,7 +181,7 @@ export default class loan_fenqi_page extends PureComponent {
 			},
 			() => {
 				this.selectLoanUsage(this.state.usageList[0]);
-				this.requestProtocolCoupon();
+				this.selectMax();
 			}
 		);
 	};
@@ -195,10 +195,15 @@ export default class loan_fenqi_page extends PureComponent {
 			return;
 		}
 		const prodList = this.filterProdList();
-		this.setState({
-			productList: prodList,
-			loanDate: null
-		});
+		this.setState(
+			{
+				productList: prodList,
+				loanDate: null
+			},
+			() => {
+				this.selectMax();
+			}
+		);
 	};
 
 	// 筛选产品列表
@@ -209,6 +214,19 @@ export default class loan_fenqi_page extends PureComponent {
 			prodList = pageInfo.prods.filter((item) => loanMoney <= item.maxAmt && loanMoney >= item.minAmt);
 		}
 		return prodList;
+	};
+
+	selectMax = () => {
+		const { productList = [], termSelected } = this.state;
+		// 找出prodCount最大对象所在的索引
+		let indexOfMax = 0;
+		if (termSelected === null) {
+			productList.reduce((a, c, i) => (c.prodCount > a ? ((indexOfMax = i), c.prodCount) : a), 0);
+		} else {
+			indexOfMax = termSelected;
+		}
+
+		this.selectLoanDate(indexOfMax);
 	};
 
 	/**
@@ -825,6 +843,8 @@ export default class loan_fenqi_page extends PureComponent {
 									});
 								}}
 								onBlur={(v) => {
+									// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
+									this.props.setCouponDataAction({});
 									v && this.calcLoanMoney(Number(v));
 								}}
 							/>
