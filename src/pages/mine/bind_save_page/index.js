@@ -261,14 +261,9 @@ export default class bind_save_page extends PureComponent {
 
 	// 确认绑卡
 	confirmBindCard = () => {
-		const { selectFlag } = this.state;
 		const { backRouter } = this.props;
-		// if (!this.validateFn()) return;
+		if (this.validateToast()) return;
 		this.props.form.validateFields((err, values) => {
-			if (!selectFlag) {
-				this.props.toast.info('请先阅读并勾选相关协议');
-				return;
-			}
 			if (!err) {
 				this.checkCard(values);
 			} else {
@@ -283,6 +278,42 @@ export default class bind_save_page extends PureComponent {
 				this.props.toast.info(getFirstError(err));
 			}
 		});
+	};
+
+	validateToast = (type) => {
+		const formData = this.props.form.getFieldsValue();
+		formData.valueInputCarNumber =
+			formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, '');
+		if (!this.state.bankType) {
+			this.props.toast.info('请选择发卡行');
+			return true;
+		}
+
+		if (!formData.valueInputCarNumber) {
+			this.props.toast.info('请输入储蓄卡卡号');
+			return true;
+		}
+		if (!validators.number(formData.valueInputCarNumber)) {
+			this.props.toast.info('请输入有效储蓄卡卡号');
+			return true;
+		}
+		if (!formData.valueInputCarPhone) {
+			this.props.toast.info('请输入银行卡预留手机号');
+			return true;
+		}
+		if (!validators.phone(formData.valueInputCarPhone)) {
+			this.props.toast.info('请输入有效手机号');
+			return true;
+		}
+		if (!formData.valueInputCarSms && type !== 'sms') {
+			this.props.toast.info('请输入验证码');
+			return true;
+		}
+		if (!this.state.selectFlag && type !== 'sms') {
+			this.props.toast.info('请先阅读并勾选相关协议');
+			return true;
+		}
+		return false;
 	};
 
 	//	校验必填项
@@ -315,18 +346,7 @@ export default class bind_save_page extends PureComponent {
 		const formData = this.props.form.getFieldsValue();
 		formData.valueInputCarNumber =
 			formData.valueInputCarNumber && formData.valueInputCarNumber.replace(/\s*/g, '');
-		if (!formData.valueInputCarNumber || !validators.number(formData.valueInputCarNumber)) {
-			this.props.toast.info('请输入有效银行卡号');
-			return;
-		}
-		if (!validators.phone(formData.valueInputCarPhone)) {
-			this.props.toast.info('请输入银行卡绑定的有效手机号');
-			return;
-		}
-		if (!this.state.bankType) {
-			this.props.toast.info('请选择发卡行');
-			return;
-		}
+		if (this.validateToast('sms')) return;
 		this.props.toast.loading('加载中...', 10);
 		//获取卡号对应的银行代号
 		this.props.$fetch
@@ -424,10 +444,10 @@ export default class bind_save_page extends PureComponent {
 						maxLength="29"
 						{...getFieldProps('valueInputCarNumber', {
 							initialValue: this.state.bindCardNo,
-							rules: [
-								{ required: true, message: '请输入有效银行卡号' },
-								{ validator: this.validateCarNumber }
-							],
+							// rules: [
+							// 	{ required: true, message: '请输入有效银行卡号' },
+							// 	{ validator: this.validateCarNumber }
+							// ],
 							onChange: (value) => {
 								if (!value) {
 									sxfburiedPointEvent('valueInputCarNumber', {
@@ -473,10 +493,10 @@ export default class bind_save_page extends PureComponent {
 						})}
 						{...getFieldProps('valueInputCarPhone', {
 							initialValue: this.state.bindCardPhone,
-							rules: [
-								{ required: true, message: '请输入银行卡绑定的有效手机号' },
-								{ validator: this.validateCarPhone }
-							],
+							// rules: [
+							// 	{ required: true, message: '请输入银行卡绑定的有效手机号' },
+							// 	{ validator: this.validateCarPhone }
+							// ],
 							onChange: (value) => {
 								if (!value) {
 									sxfburiedPointEvent('valueInputCarPhone', {
@@ -519,7 +539,7 @@ export default class bind_save_page extends PureComponent {
 							})}
 							maxLength="6"
 							{...getFieldProps('valueInputCarSms', {
-								rules: [{ required: true, message: '请输入验证码' }],
+								// rules: [{ required: true, message: '请输入验证码' }],
 								onChange: (value) => {
 									if (!value) {
 										sxfburiedPointEvent('valueInputCarSms', {

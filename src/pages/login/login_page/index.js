@@ -172,7 +172,7 @@ export default class login_page extends PureComponent {
 	};
 	//去登陆按钮
 	goLogin = () => {
-		const { queryData = {} } = this.state;
+		const { queryData = {}, isChecked } = this.state;
 		if (queryData && queryData.wxTestFrom) {
 			buriedPointEvent(wxTest.wxTestLoginBtnClick, {
 				entry: queryData.wxTestFrom
@@ -181,6 +181,11 @@ export default class login_page extends PureComponent {
 		if (!this.validateFn()) {
 			return;
 		}
+		if (!isChecked) {
+			Toast.info('请先阅读并勾选相关协议，登录、注册还到');
+			return;
+		}
+
 		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			// Toast.info('请先获取短信验证码');
@@ -453,9 +458,8 @@ export default class login_page extends PureComponent {
 
 	//	校验必填项 按钮是否可以点击
 	validateFn = () => {
-		const { isChecked } = this.state;
 		const formData = this.props.form.getFieldsValue();
-		if (formData.phoneValue && formData.smsCd && isChecked) {
+		if (formData.phoneValue && formData.smsCd) {
 			return true;
 		}
 		return false;

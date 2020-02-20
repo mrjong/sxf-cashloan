@@ -233,23 +233,31 @@ export default class real_name_page extends Component {
 	};
 
 	handleSubmit = () => {
-		if (!this.state.leftUploaded) {
+		const { leftUploaded, rightUploaded, idName, idNo, ocrZhengData = {}, ocrFanData = {} } = this.state;
+		if (!leftUploaded) {
 			Toast.info('请上传身份证正面');
 			return false;
 		}
-		if (!this.state.rightUploaded) {
+		if (!rightUploaded) {
 			Toast.info('请上传身份证反面');
 			return false;
 		}
-		if (!validators.name(this.state.idName)) {
-			Toast.info('请输入正确的姓名');
+		if (!idName) {
+			Toast.info('请输入中文姓名');
 			return false;
 		}
-		if (!validators.iDCardNumber(this.state.idNo)) {
-			Toast.info('请输入正确的身份证号');
+		if (!validators.name(idName)) {
+			Toast.info('请输入有效的中文姓名');
 			return false;
 		}
-		const { ocrZhengData = {}, ocrFanData = {}, idName, idNo } = this.state;
+		if (!idNo) {
+			Toast.info('请输入身份证号');
+			return false;
+		}
+		if (!validators.iDCardNumber(idNo)) {
+			Toast.info('请输入有效的身份证号');
+			return false;
+		}
 		const osType = getDeviceType();
 		const params = {
 			idNo: base64Encode(idNo.toLocaleUpperCase()),
