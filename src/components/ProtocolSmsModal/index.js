@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import styles from './index.scss';
-import { store } from 'utils/store';
+import dayjs from 'dayjs';
 import { Modal } from 'antd-mobile';
 import { ButtonCustom } from 'components';
 import { bank_card_protocol_info } from 'fetch/api';
@@ -81,13 +81,19 @@ export default class ProtocolSmsModal extends React.PureComponent {
 					bankName: item.bankName
 				}));
 				const data = {
-					...result.data,
 					name: base64Decode(result.data.name),
 					idNo: base64Decode(result.data.idNo),
-					bankList: list
+					bankList: list,
+					dateTime: dayjs(result.data.dateTime).format('YYYY年MM月DD日')
 				};
-				store.setProtocolFinancialData(data);
-				history.push('/protocol/delegation_withhold_page');
+				history.push({
+					pathname: '/protocol/delegation_withhold_page',
+					state: {
+						contractInf: {
+							...data
+						}
+					}
+				});
 			} else {
 				toast.info(result.message);
 			}

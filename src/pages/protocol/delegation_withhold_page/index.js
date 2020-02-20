@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import dayjs from 'dayjs';
 import IframeProtocol from 'components/IframeProtocol';
 
 export default class delegation_withhold_page extends PureComponent {
@@ -14,11 +13,8 @@ export default class delegation_withhold_page extends PureComponent {
 		if (this.props.history.location.state && this.props.history.location.state.contractInf) {
 			contractData = this.props.history.location.state.contractInf;
 		}
-		const formateContractData = {
-			...contractData,
-			dateTime: contractData && dayjs(contractData.dateTime).format('YYYY年MM月DD日')
-		};
-		this.setState({ contractInf: formateContractData });
+
+		this.setState({ contractInf: { ...contractData } });
 	}
 	componentWillUnmount() {}
 	render() {

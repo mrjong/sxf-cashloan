@@ -15,6 +15,7 @@ import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
+import dayjs from 'dayjs';
 import { domListen } from 'utils/domListen';
 import {
 	bank_card_bin,
@@ -359,10 +360,10 @@ export default class bind_save_page extends PureComponent {
 					bankName: item.bankName
 				}));
 				const data = {
-					...result.data,
 					name: base64Decode(result.data.name),
 					idNo: base64Decode(result.data.idNo),
-					bankList: list
+					bankList: list,
+					dateTime: dayjs(result.data.dateTime).format('YYYY年MM月DD日')
 				};
 				this.props.history.push({
 					pathname: '/protocol/delegation_withhold_page',
