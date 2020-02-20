@@ -35,6 +35,9 @@
 				box-sizing: border-box;
 				margin-right: 16px;
 			}
+			.contact_name {
+				@include ellipsis(320px);
+			}
 		}
 		li.activeStyle {
 			font-weight: 600;
