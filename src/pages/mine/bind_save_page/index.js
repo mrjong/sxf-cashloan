@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 13:53:28
+ * @LastEditTime: 2020-02-20 15:36:25
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,7 +11,7 @@ import { ButtonCustom, SelectList, CountDownButton, CheckRadio } from 'component
 import { setBackGround } from 'utils/background';
 import { validators, handleInputBlur, getFirstError } from 'utils';
 import { getH5Channel } from 'utils/common';
-import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
+import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
 import qs from 'qs';
@@ -406,7 +406,7 @@ export default class bind_save_page extends PureComponent {
 							type: 'input',
 							notSendValue: true, // 无需上报输入框的值
 							name: 'valueInputCarNumber',
-							eventList: [
+							actContain: [
 								{
 									type: 'focus'
 								},
@@ -429,11 +429,6 @@ export default class bind_save_page extends PureComponent {
 								{ validator: this.validateCarNumber }
 							],
 							onChange: (value) => {
-								if (!value) {
-									sxfburiedPointEvent('valueInputCarNumber', {
-										actId: 'delAll'
-									});
-								}
 								this.props.setBindDepositInfoAction({
 									...bindDepositInfo,
 									cardNo: value
@@ -456,7 +451,7 @@ export default class bind_save_page extends PureComponent {
 							type: 'input',
 							notSendValue: true, // 无需上报输入框的值
 							name: 'valueInputCarPhone',
-							eventList: [
+							actContain: [
 								{
 									type: 'focus'
 								},
@@ -478,11 +473,6 @@ export default class bind_save_page extends PureComponent {
 								{ validator: this.validateCarPhone }
 							],
 							onChange: (value) => {
-								if (!value) {
-									sxfburiedPointEvent('valueInputCarPhone', {
-										actId: 'delAll'
-									});
-								}
 								this.props.setBindDepositInfoAction({
 									...bindDepositInfo,
 									cardPhone: value
@@ -502,7 +492,7 @@ export default class bind_save_page extends PureComponent {
 							data-sxf-props={JSON.stringify({
 								type: 'input',
 								name: 'valueInputCarSms',
-								eventList: [
+								actContain: [
 									{
 										type: 'focus'
 									},
@@ -519,14 +509,7 @@ export default class bind_save_page extends PureComponent {
 							})}
 							maxLength="6"
 							{...getFieldProps('valueInputCarSms', {
-								rules: [{ required: true, message: '请输入验证码' }],
-								onChange: (value) => {
-									if (!value) {
-										sxfburiedPointEvent('valueInputCarSms', {
-											actId: 'delAll'
-										});
-									}
-								}
+								rules: [{ required: true, message: '请输入验证码' }]
 							})}
 							onBlur={() => {
 								handleInputBlur();

@@ -181,8 +181,8 @@ function flatten(data) {
 	data.forEach((page) => {
 		if (page.bury && page.bury.length) {
 			page.bury.forEach((item) => {
-				if (item.actContain && item.actContain.length) {
-					item.actContain.forEach((event) => {
+				if (item.actContain: && item.actContain:.length) {
+					item.actContain:.forEach((event) => {
 						flattenData.push({
 							title: page.title,
 							pId: page.pId,
