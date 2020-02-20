@@ -852,7 +852,7 @@ export default class confirm_agency_page extends PureComponent {
 		} = this.state;
 		return (
 			<div>
-				<div className={[style.confirm_agency, 'confirm_agency'].join(' ')}>
+				<div className={[style.confirm_agency, 'confirm_agency_wrap'].join(' ')}>
 					<div className={style.scrollWrap}>
 						<div className={style.inputWrap}>
 							<div className={style.billInpBox}>

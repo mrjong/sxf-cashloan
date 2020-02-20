@@ -51,8 +51,8 @@
 			justify-content: space-between;
 			align-items: center;
 			box-sizing: border-box;
-			font-size: 30px;
-      color: #121c32;
+			font-size: 28px;
+      color: #394259;
       padding: 30px 30px;
 
     }
@@ -90,7 +90,7 @@
 
 	.greyText {
 		color: $colorInactiveColor;
-		font-weight: 700;
+		// font-weight: 700;
 	}
 
 	.redText {
@@ -114,7 +114,7 @@
 	}
 
 	.tagButton {
-		min-width: 120px;
+		min-width: 150px;
   }
   .tagButton + .tagButton {
     margin-left: 30px

@@ -309,15 +309,19 @@
 		.am-modal-button-group-v .am-modal-button {
 			color: #ebde74;
 		}
-	}
-	.confirm_agency_warp {
+  }
+	.confirm_agency_wrap {
 		:global {
 			.am-modal-button-group-v .am-modal-button {
 				color: #121c32;
 				font-size: 34px;
 				font-family: 'PingFangSC-Medium';
 				font-weight: 500;
-			}
+      }
+      .am-list-item .am-input-control input:disabled {
+        background-color: transparent;
+        color: #121c32;
+      }
 			.am-modal-transparent {
 				width: 580px;
 			}

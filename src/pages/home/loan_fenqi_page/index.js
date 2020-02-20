@@ -772,7 +772,7 @@ export default class loan_fenqi_page extends PureComponent {
 						<ButtonCustom
 							long="false"
 							key={index}
-							size="sm"
+							size="md"
 							className={style.tagButton}
 							type={loanDate && loanDate.prodCount === item.prodCount ? 'yellow' : 'gray'}
 							onClick={() => {
