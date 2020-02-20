@@ -308,3 +308,14 @@ export const person_appointment_info = '/peap/queryPersonAppointmentInfo';
 
 // 人神提交预约记录
 export const person_appointment_sub = '/peap/personAppointment';
+
+/**
+ * @description: // 活动相关
+ * @param {type}
+ * @return:
+ */
+// 领取新手优惠券
+export const novice_receive = '/novice/receive';
+
+// 判断用户是否满足领取条件
+export const novice_judge = '/novice/judge';
