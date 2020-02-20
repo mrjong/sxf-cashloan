@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 11:06:20
+ * @LastEditTime: 2020-02-20 17:16:36
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -30,7 +30,11 @@ import {
 	coup_sendLoanCoup
 } from 'fetch/api.js';
 import { connect } from 'react-redux';
-import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
+import {
+	setCardTypeAction,
+	setConfirmAgencyInfoAction,
+	setCouponDataAction
+} from 'reduxes/actions/commonActions';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
@@ -59,7 +63,8 @@ let closeBtn = true;
 	}),
 	{
 		setCardTypeAction,
-		setConfirmAgencyInfoAction
+		setConfirmAgencyInfoAction,
+		setCouponDataAction
 	}
 )
 export default class confirm_agency_page extends PureComponent {
@@ -915,6 +920,8 @@ export default class confirm_agency_page extends PureComponent {
 									}
 									onBlur={(v) => {
 										setTimeout(() => {
+											// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
+											this.props.setCouponDataAction({});
 											if (!closeBtn) {
 												return;
 											}

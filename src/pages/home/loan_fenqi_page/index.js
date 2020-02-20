@@ -10,7 +10,11 @@ import { setBackGround } from 'utils/background';
 import { getH5Channel } from 'utils/common';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { connect } from 'react-redux';
-import { setCardTypeAction, setConfirmAgencyInfoAction } from 'reduxes/actions/commonActions';
+import {
+	setCardTypeAction,
+	setConfirmAgencyInfoAction,
+	setCouponDataAction
+} from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
 import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
 import Images from 'assets/image';
@@ -39,7 +43,8 @@ let isFetching = false;
 	}),
 	{
 		setCardTypeAction,
-		setConfirmAgencyInfoAction
+		setConfirmAgencyInfoAction,
+		setCouponDataAction
 	}
 )
 export default class loan_fenqi_page extends PureComponent {
@@ -70,7 +75,8 @@ export default class loan_fenqi_page extends PureComponent {
 			repayCardName: '', //借款银行卡银行
 			resaveCardNo: '', //还款银行卡卡号
 			resaveCardLast: '', //还款银行卡后四位
-			resaveCardName: '' //还款银行卡银行
+			resaveCardName: '', //还款银行卡银行
+			isShowDetail: false // 是否展示产品列表
 		};
 	}
 
@@ -197,8 +203,8 @@ export default class loan_fenqi_page extends PureComponent {
 		const prodList = this.filterProdList();
 		this.setState(
 			{
-				productList: prodList,
-				loanDate: null
+				productList: prodList
+				// loanDate: null
 			},
 			() => {
 				this.selectMax();
@@ -208,25 +214,29 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 筛选产品列表
 	filterProdList = () => {
-		const { loanMoney, pageInfo } = this.state;
+		const { loanMoney, pageInfo, productList } = this.state;
 		let prodList = [];
-		if (pageInfo.prods && pageInfo.prods.length) {
+		if (pageInfo && pageInfo.prods && pageInfo.prods.length) {
 			prodList = pageInfo.prods.filter((item) => loanMoney <= item.maxAmt && loanMoney >= item.minAmt);
+		} else {
+			prodList = productList.filter((item) => loanMoney <= item.maxAmt && loanMoney >= item.minAmt);
 		}
 		return prodList;
 	};
 
 	selectMax = () => {
-		const { productList = [], termSelected } = this.state;
+		const { productList = [], loanDate } = this.state;
 		// 找出prodCount最大对象所在的索引
+		let maxItem = null;
 		let indexOfMax = 0;
-		if (termSelected === null) {
-			productList.reduce((a, c, i) => (c.prodCount > a ? ((indexOfMax = i), c.prodCount) : a), 0);
+		console.log(loanDate, 'aw');
+		if (loanDate) {
+			maxItem = loanDate;
 		} else {
-			indexOfMax = termSelected;
+			productList.reduce((a, c, i) => (c.prodCount > a ? ((indexOfMax = i), c.prodCount) : a), 0);
+			maxItem = productList[indexOfMax];
 		}
-
-		this.selectLoanDate(indexOfMax);
+		this.selectLoanDate(maxItem);
 	};
 
 	/**
@@ -783,6 +793,13 @@ export default class loan_fenqi_page extends PureComponent {
 		));
 	};
 
+	// 展示产品
+	showDetail = () => {
+		this.setState({
+			isShowDetail: !this.state.isShowDetail
+		});
+	};
+
 	render() {
 		const { userInfo = {} } = this.props;
 		const {
@@ -806,7 +823,8 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveCardName,
 			protocolList,
 			isShowTipModal,
-			buttonDisabled
+			buttonDisabled,
+			isShowDetail
 		} = this.state;
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
@@ -838,8 +856,8 @@ export default class loan_fenqi_page extends PureComponent {
 										);
 									}
 									this.setState({
-										loanMoney: v,
-										loanDate: null
+										loanMoney: v
+										// loanDate: null
 									});
 								}}
 								onBlur={(v) => {
@@ -854,9 +872,18 @@ export default class loan_fenqi_page extends PureComponent {
 
 					<div className={style.pannel}>
 						<ul>
-							<li className={style.listItem}>
+							<li
+								className={style.listItem}
+								onClick={() => {
+									this.showDetail();
+								}}
+							>
 								<label>借多久</label>
-								{this.renderProductListDom()}
+								<div className={style.listValue}>
+									{(!isShowDetail && loanDate && loanDate.prodName) || null}
+									<Icon type={isShowDetail ? 'up' : 'down'} className={style.icon} />
+								</div>
+								{(isShowDetail && this.renderProductListDom()) || null}
 							</li>
 							<li className={style.listItem}>
 								<label>借款用途</label>
