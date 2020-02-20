@@ -12,6 +12,8 @@ import btnImg from './img/btn.png';
 import ACTipAlert from 'components/ACTipAlert';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity, home } from 'utils/analytinsType';
+import CouponModal from 'components/CouponModal';
+import { isShowCouponModal, closeCouponModal } from './common';
 let queryData = {};
 @setBackGround('#fff')
 @fetch.inject()
@@ -25,10 +27,12 @@ export default class remit_ing_page extends PureComponent {
 			failModalShow: false,
 			time: 0,
 			isAppOpen: false,
-			isPlus: false
+			isPlus: false,
+			couponModalShow: false
 		};
 	}
 	componentWillMount() {
+		isShowCouponModal(this);
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.setState({
 			queryData
@@ -108,7 +112,8 @@ export default class remit_ing_page extends PureComponent {
 			failModalShow,
 			time,
 			isAppOpen,
-			isPlus
+			isPlus,
+			couponModalShow
 		} = this.state;
 		return (
 			<div className={style.remit_ing_page}>
@@ -195,6 +200,15 @@ export default class remit_ing_page extends PureComponent {
 							this.closeBtnFunc('fail');
 						}
 					}}
+				/>
+
+				{/* 首贷首期用户-还款券测试 */}
+				<CouponModal
+					visible={couponModalShow}
+					onConfirm={() => {
+						closeCouponModal(this);
+					}}
+					couponData={queryData && queryData.couponInfo}
 				/>
 
 				<ZButton

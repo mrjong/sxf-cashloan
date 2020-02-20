@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-19 11:31:27
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-20 18:28:57
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -220,15 +220,16 @@ export default class add_contact_page extends PureComponent {
 	};
 	// 跳转页面
 	jumpRouter = (res) => {
+		const couponInfo = res && res.popupInfo ? res.popupInfo : '';
 		if (res.loanType === 'M') {
 			this.props.history.push({
 				pathname: '/home/loan_person_succ_page',
-				search: `?creadNo=${res.credApplNo}`
+				search: `?creadNo=${res.credApplNo}&couponInfo=${JSON.stringify(couponInfo)}`
 			});
 		} else if (res.loanType === 'H') {
 			this.props.history.replace({
 				pathname: '/home/loan_robot_succ_page',
-				search: `?telNo=${res.rmk}`
+				search: `?telNo=${res.rmk}&couponInfo=${JSON.stringify(couponInfo)}`
 			});
 		} else {
 			// 预约放款的标识
@@ -239,7 +240,7 @@ export default class add_contact_page extends PureComponent {
 			let desc = res.repayType === '1' ? '如有疑问，可' : `超过2个工作日没有放款成功，可`;
 			this.props.history.push({
 				pathname: '/home/loan_apply_succ_page',
-				search: `?title=${title}&desc=${desc}`
+				search: `?title=${title}&desc=${desc}&couponInfo=${JSON.stringify(couponInfo)}`
 			});
 		}
 	};
