@@ -13,7 +13,6 @@ import { store } from 'utils/store';
 import { connect } from 'react-redux';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
-
 import {
 	getDeviceType,
 	getFirstError,
@@ -24,9 +23,9 @@ import {
 	recordContract
 } from 'utils';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
-
 import { setH5Channel, getH5Channel } from 'utils/common';
 import {
 	buriedPointEvent,
@@ -55,7 +54,6 @@ import {
 	loginBtnRiskBury,
 	DC_chkBoxRiskBury
 } from './riskBuryConfig';
-
 let timmer;
 let modalTimer = null;
 let entryPageTime = '';
@@ -66,9 +64,8 @@ let entryPageTime = '';
 @setBackGround('#50C5FC')
 @connect(
 	(state) => state,
-	{ setUserInfoAction }
+	{ setUserInfoAction, setIframeProtocolShow }
 )
-// @connect()
 export default class login_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -446,7 +443,7 @@ export default class login_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow(url);
 	};
 
 	checkAgreement = () => {

@@ -1,11 +1,24 @@
 @import '../../../../../assets/styles/scss/base/fn';
 
+.overDueModalWrap {
+	position: relative;
+	padding-top: 100px;
+}
+
+.overDueModalBox {
+	width: 580px;
+	background-color: #fff;
+	margin: 0 auto;
+	border-radius: 10px;
+	padding-top: 200px;
+	box-sizing: border-box;
+}
+
 .overDueTit {
 	font-size: 36px;
 	font-weight: 500;
 	color: rgba(51, 51, 51, 1);
 	line-height: 50px;
-	padding-top: 199px;
 }
 
 .overDueDesc {
@@ -23,13 +36,14 @@
 .warningImg {
 	position: absolute;
 	width: 580px;
-	left: 0;
-	top: -65px;
+	left: 50%;
+	top: 10px;
+	transform: translateX(-50%);
 }
 
 .download {
 	margin: 20px 0 15px;
-	color: #ff6666;
+	color: #f66;
 	font-size: 28px;
 }
 
@@ -50,9 +64,9 @@
 	.value {
 		position: relative;
 		&::after {
-      content: '';
-      @include setArrow(right, 12px, #fff, 1px);
-      top: -3px;
+			content: '';
+			@include setArrow(right, 12px, #fff, 1px);
+			top: -3px;
 		}
 	}
 }
@@ -67,17 +81,5 @@
 	line-height: 100px;
 	&::after {
 		@include setTopLine(#f0f1f5);
-	}
-}
-
-:global {
-	.overDueModalBox.am-modal-transparent {
-		width: 580px;
-	}
-	.overDueModalBox.am-modal-transparent .am-modal-content {
-		overflow: initial;
-	}
-	.overDueModalBox.am-modal-transparent .am-modal-content .am-modal-body {
-		padding: 0;
 	}
 }

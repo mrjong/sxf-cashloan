@@ -14,6 +14,7 @@ import { initAnalytics, initSxfData } from './utils/analytins';
 import { isMPOS } from 'utils/common';
 import { isWXOpen } from 'utils';
 import fastClick from 'fastclick';
+import { IframeProtocol } from 'components';
 import Raven from 'raven-js';
 import { Provider } from 'react-redux';
 import { store } from 'utils/store';
@@ -55,6 +56,7 @@ const renders = (Component) =>
 			<BrowserRouter>
 				<Component />
 			</BrowserRouter>
+			<IframeProtocol />
 		</Provider>,
 		document.getElementById('root')
 	);

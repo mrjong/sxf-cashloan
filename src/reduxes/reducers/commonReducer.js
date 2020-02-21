@@ -22,7 +22,9 @@ import {
 	COMMON_WELFARE_LIST,
 	COMMON_APPLY_CREDIT_DTATA,
 	COMMON_BIND_DEPOSIT_INFO,
-	COMMON_PROTOCOL_SELECT_FLAG
+	COMMON_PROTOCOL_SELECT_FLAG,
+	COMMON_IFRAME_PROTOCOL_SHOW,
+	COMMON_IFRAME_PROTOCOL_HIDE
 } from '../constants/commonConstants';
 /**
  * @description: commonState 初始化
@@ -46,7 +48,8 @@ const initState = {
 	applyCreditData: {},
 	backRouter: '',
 	msgCount: 0,
-	bindDepositInfo: {}
+	bindDepositInfo: {},
+	iframeProtocolUrl: ''
 };
 export default handleActions(
 	{
@@ -67,6 +70,8 @@ export default handleActions(
 		[COMMON_APPLY_CREDIT_DTATA]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_BIND_DEPOSIT_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_PROTOCOL_SELECT_FLAG]: (state, action) => ({ ...state, ...action.payload }),
+		[COMMON_IFRAME_PROTOCOL_SHOW]: (state, action) => ({ ...state, ...action.payload }),
+		[COMMON_IFRAME_PROTOCOL_HIDE]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_CLEAR_STATE]: () => ({})
 	},
 	initState
