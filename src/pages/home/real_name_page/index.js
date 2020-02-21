@@ -113,9 +113,7 @@ export default class real_name_page extends Component {
 			Toast.info('请使用手机设备');
 			return;
 		}
-		this.setState({ showFloat: true });
 		buriedPointEvent(home.informationMyselfFrontCard);
-		this.setState({ leftValue: base64Data });
 
 		let bytes = window.atob(base64Data.split(',')[1]);
 		let array = [];
@@ -126,8 +124,8 @@ export default class real_name_page extends Component {
 		const formData = new FormData();
 
 		formData.append('image', blob);
-
 		formData.append('ocrType', '2');
+
 		Toast.loading('加载中...', 10);
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/2`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
@@ -137,21 +135,23 @@ export default class real_name_page extends Component {
 				});
 				if (result.code === '000000') {
 					Toast.hide();
-					this.setState({ ocrZhengData: result.data });
-					this.setState({ idName: result.data.idName || '' });
-					this.setState({ idNo: result.data.idNo || '' });
-					this.setState({ showFloat: false });
-					this.setState({ leftUploaded: true });
+					this.setState({
+						ocrZhengData: result.data,
+						idName: result.data.idName || '',
+						idNo: result.data.idNo || '',
+						leftUploaded: true,
+						leftValue: base64Data
+					});
 				} else {
 					Toast.info(result.message);
-					this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
+					this.setState({ leftUploaded: false, leftValue: '' });
 				}
 			})
 			.catch(() => {
 				this.setState({
 					disabledupload: 'false'
 				});
-				this.setState({ leftUploaded: false, leftValue: '', showFloat: false });
+				this.setState({ leftUploaded: false, leftValue: '' });
 				Toast.hide();
 			});
 	};
@@ -167,9 +167,7 @@ export default class real_name_page extends Component {
 			Toast.info('请使用手机设备');
 			return;
 		}
-		this.setState({ showFloat: true });
 		buriedPointEvent(home.informationMyselfBackCard);
-		this.setState({ rightValue: base64Data });
 
 		let bytes = window.atob(base64Data.split(',')[1]);
 		let array = [];
@@ -180,14 +178,8 @@ export default class real_name_page extends Component {
 		const formData = new FormData();
 
 		formData.append('image', blob);
-
-		// formData.append('image', {
-		// 	type: 'image/jpeg',
-		// 	uri: file,
-		// 	name: 'imgFront.jpg'
-		// });
-
 		formData.append('ocrType', '2');
+
 		Toast.loading('加载中...', 10);
 		this.props.$fetch
 			.post(`${auth_ocrIdChk}/3`, formData, { 'Content-Type': 'multipart/form-data', timeout: 30000 })
@@ -196,20 +188,23 @@ export default class real_name_page extends Component {
 					disabledupload: 'false'
 				});
 				if (res.code === '000000') {
-					this.setState({ ocrFanData: res.data });
-					this.setState({ rightUploaded: true });
-					this.setState({ showFloat: false });
+					this.setState({
+						ocrFanData: res.data,
+						rightUploaded: true,
+						rightValue: base64Data
+					});
+
 					Toast.hide();
 				} else {
 					Toast.info(res.message);
-					this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
+					this.setState({ rightUploaded: false, rightValue: '' });
 				}
 			})
 			.catch(() => {
 				this.setState({
 					disabledupload: 'false'
 				});
-				this.setState({ rightUploaded: false, rightValue: '', showFloat: false });
+				this.setState({ rightUploaded: false, rightValue: '' });
 				Toast.hide();
 			});
 	};
