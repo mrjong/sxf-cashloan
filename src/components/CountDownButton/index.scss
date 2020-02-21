@@ -9,6 +9,12 @@
   padding: 0;
 }
 :global {
+  .CountDownButton{
+    .am-button-primary.am-button-disabled{
+      color: #97929e !important;
+    }
+  }
+
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
     html:not([data-scale]) .am-button-primary::before {
       border-color: transparent;

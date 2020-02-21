@@ -117,7 +117,7 @@
 		"clearMap": "rimraf ./dist/*.map",
 		"clearApk": "rimraf ./dist/*.apk",
 		"risk-json": "node risk-bury/export-risk-bury-json.js",
-		"risk-excel": "node risk-bury/export-risk-bury-json.js",
+		"risk-excel": "node risk-bury/export-risk-bury-excel.js",
 		"shengce-json": "node shengce-bury/export-bury-json.js",
 		"shengce-excel": "node shengce-bury/export-bury-excel.js"
 	},
