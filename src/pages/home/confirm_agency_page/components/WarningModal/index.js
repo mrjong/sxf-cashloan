@@ -10,7 +10,8 @@ import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 import { ButtonCustom, CheckRadio } from 'components';
 import { connect } from 'react-redux';
-import { setProtocolSelFlagAction } from 'reduxes/actions/commonActions';
+import { setProtocolSelFlagAction, setIframeProtocolShow } from 'reduxes/actions/commonActions';
+
 import Image from 'assets/image';
 
 @connect(
@@ -18,7 +19,8 @@ import Image from 'assets/image';
 		protocolSelFlag: state.commonState.protocolSelFlag
 	}),
 	{
-		setProtocolSelFlagAction
+		setProtocolSelFlagAction,
+		setIframeProtocolShow
 	}
 )
 export default class InsuranceModal extends React.PureComponent {
@@ -37,7 +39,9 @@ export default class InsuranceModal extends React.PureComponent {
 		const { cacheData } = this.props;
 		// 缓存弹框展示
 		cacheData && cacheData();
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 
 	// 关闭弹框

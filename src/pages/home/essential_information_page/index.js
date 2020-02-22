@@ -19,7 +19,7 @@ import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import dayjs from 'dayjs';
-
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import {
 	FixedHelpCenter,
 	AgreementModal,
@@ -73,11 +73,16 @@ let urlQuery = '';
 @createForm()
 @setBackGround('#fff')
 @domListen()
-@connect((state) => ({
-	userInfo: state.staticState.userInfo,
-	nextStepStatus: state.commonState.nextStepStatus,
-	protocolPreviewInfo: state.staticState.protocolPreviewInfo
-}))
+@connect(
+	(state) => ({
+		userInfo: state.staticState.userInfo,
+		nextStepStatus: state.commonState.nextStepStatus,
+		protocolPreviewInfo: state.staticState.protocolPreviewInfo
+	}),
+	{
+		setIframeProtocolShow
+	}
+)
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -139,8 +144,10 @@ export default class essential_information_page extends PureComponent {
 			idNo: protocolPreviewInfo.idNo,
 			dateTime: dayjs(new Date()).format('YYYY/MM/DD')
 		};
-		store.setProtocolPersonalData(pageData);
-		this.props.history.push(jumpUrl);
+		this.props.setIframeProtocolShow({
+			url: jumpUrl,
+			contractInf: pageData
+		});
 	};
 	selectProtocol = () => {
 		this.setState({
@@ -1163,7 +1170,7 @@ export default class essential_information_page extends PureComponent {
 						<em
 							onClick={(e) => {
 								e.stopPropagation();
-								this.readContract('/protocol/personal_auth_page');
+								this.readContract('personal_auth_page');
 							}}
 							className={style.link}
 						>
@@ -1172,7 +1179,7 @@ export default class essential_information_page extends PureComponent {
 						<em
 							onClick={(e) => {
 								e.stopPropagation();
-								this.readContract('/protocol/user_privacy_page');
+								this.readContract('user_privacy_page');
 							}}
 							className={style.link}
 						>

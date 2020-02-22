@@ -49,7 +49,7 @@ const initState = {
 	backRouter: '',
 	msgCount: 0,
 	bindDepositInfo: {},
-	iframeProtocolUrl: ''
+	iframeProtocolData: {}
 };
 export default handleActions(
 	{

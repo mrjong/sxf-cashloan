@@ -33,7 +33,8 @@ import { connect } from 'react-redux';
 import {
 	setWithholdCardDataAction,
 	setWithdrawCardDataAction,
-	setBindDepositInfoAction
+	setBindDepositInfoAction,
+	setIframeProtocolShow
 } from 'reduxes/actions/commonActions';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 
@@ -52,7 +53,8 @@ import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 	{
 		setWithholdCardDataAction,
 		setWithdrawCardDataAction,
-		setBindDepositInfoAction
+		setBindDepositInfoAction,
+		setIframeProtocolShow
 	}
 )
 export default class bind_save_page extends PureComponent {
@@ -391,12 +393,9 @@ export default class bind_save_page extends PureComponent {
 					bankList: list,
 					dateTime: dayjs(result.data.dateTime).format('YYYY年MM月DD日')
 				};
-				console.log(data);
-				this.props.history.push({
-					pathname: '/protocol/delegation_withhold_page',
-					state: {
-						contractInf: data
-					}
+				this.props.setIframeProtocolShow({
+					url: 'delegation_withhold_page',
+					contractInf: data
 				});
 			} else {
 				this.props.toast.info(result.message);

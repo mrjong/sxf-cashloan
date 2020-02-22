@@ -78,7 +78,7 @@ export default class LoadingView extends Component {
 				width: '80%',
 				height: '',
 				img: Image.bg.no_order,
-				text: '暂无数据,点击重试'
+				text: '暂无数据'
 			}
 		} = this.props;
 		return (

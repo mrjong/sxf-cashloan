@@ -10,9 +10,14 @@ import { ButtonCustom } from 'components';
 import { bank_card_protocol_info } from 'fetch/api';
 import { handleInputBlur, recordContract } from 'utils';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+import { connect } from 'react-redux';
 
 let timer = null;
-
+@connect(
+	(state) => state,
+	{ setIframeProtocolShow }
+)
 export default class ProtocolSmsModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
@@ -86,13 +91,9 @@ export default class ProtocolSmsModal extends React.PureComponent {
 					bankList: list,
 					dateTime: dayjs(result.data.dateTime).format('YYYY年MM月DD日')
 				};
-				history.push({
-					pathname: '/protocol/delegation_withhold_page',
-					state: {
-						contractInf: {
-							...data
-						}
-					}
+				this.props.setIframeProtocolShow({
+					url: 'delegation_withhold_page',
+					contractInf: data
 				});
 			} else {
 				toast.info(result.message);
