@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 18:12:07
+ * @LastEditTime: 2020-02-22 12:07:52
  */
 import React, { PureComponent } from 'react';
 import style from './index.scss';
@@ -158,6 +158,19 @@ export default class remit_ing_page extends PureComponent {
 		}
 	};
 
+	/**
+	 * @description: 处理后台返回的时间
+	 * @param {type}
+	 * @return:
+	 */
+	getNowTime = () => {
+		const date = new Date();
+		const y = date.getFullYear();
+		const m = date.getMonth() + 1 <= 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+		const d = date.getDate() <= 9 ? '0' + date.getDate() : date.getDate();
+		console.log(`${y}${m}${d}`);
+		return `${y}${m}${d}`;
+	};
 	handleButtonClick = (type, item) => {
 		if (this.state.daySelectedItem.code === '0' && !item.availiable) return; //为今日且不可用时
 		if (type === 'day') {
@@ -270,7 +283,7 @@ export default class remit_ing_page extends PureComponent {
 							) : (
 								<p style={{ display: 'flex', alignItems: 'center' }}>
 									<span className={[style.order_button, style.order_active_button].join(' ')}>
-										{applyDate === '0' ? '今天' : applyDate} {applyTime}
+										{applyDate === this.getNowTime() ? '今天' : applyDate} {applyTime}
 									</span>
 									<span>人工电话审核</span>
 								</p>
@@ -300,7 +313,7 @@ export default class remit_ing_page extends PureComponent {
 								/>
 							)}
 						</h3>
-						<p className={style.modalTitleSub}>预约时间到达前2小时则不能修改预约时间</p>
+						{/* <p className={style.modalTitleSub}>预约时间到达前2小时则不能修改预约时间</p> */}
 					</div>
 					{showRulesPannel ? (
 						<ul className={style.rule_wrap}>
