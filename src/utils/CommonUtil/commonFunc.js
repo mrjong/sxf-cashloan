@@ -3,7 +3,6 @@
  * @LastEditTime : 2020-02-19 15:13:57
  */
 import React from 'react';
-
 import { Toast, Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import { loan_queryCashLoanApplInfo, signup_logout } from 'fetch/api';
@@ -15,6 +14,7 @@ import storeRedux from 'reduxes';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
+import { isWXOpen } from 'utils';
 
 /**
  * @description: 退出清除数据的方法
@@ -163,7 +163,16 @@ export const logoutApp = () => {
 				return;
 			}
 			logoutClearData('LoginSms');
-			window.ReactRouterHistory.push('/login');
+			if (
+				window.ReactRouterHistory.location &&
+				window.ReactRouterHistory.location.pathname === '/order/order_page' &&
+				isWXOpen()
+			) {
+				//兼容微信公众号里退出再登录不能到目标页面的问题
+				window.ReactRouterHistory.push('/login?jumpUrl=/order/order_page&wxTestFrom=wx_middle_page');
+			} else {
+				window.ReactRouterHistory.push('/login');
+			}
 			//退出时,删除通付盾script
 			document.getElementById('tonfudunScript') &&
 				document.body.removeChild(document.getElementById('tonfudunScript'));

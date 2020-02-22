@@ -14,6 +14,7 @@ import Image from 'assets/image';
 import { connect } from 'react-redux';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
+import { isWXOpen } from 'utils';
 
 @setBackGround('#F0F3F9')
 @fetch.inject()
@@ -238,7 +239,8 @@ export default class order_repay_page extends PureComponent {
 		} = this.state;
 		buriedPointEvent(order.gotoRepayConfirmPage, {
 			isOverdue: !!overdueDays,
-			repayPerds: repayPerds.join(',')
+			repayPerds: repayPerds.join(','),
+			isWXOpen: isWXOpen()
 		});
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',

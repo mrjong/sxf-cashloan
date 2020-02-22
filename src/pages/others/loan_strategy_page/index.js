@@ -4,23 +4,24 @@ import guide1 from './img/guide1.png';
 import guide2 from './img/guide2.png';
 import guide3 from './img/guide3.png';
 import guide4 from './img/guide4.png';
-import pwd_guide from './img/pwd_guide.png';
 import { setBackGround } from '../../../utils/background';
 
 @setBackGround('#fff')
-export default class loan_introduce_page extends PureComponent {
+export default class loan_strategy_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showFixedTab: true,
+			showFixedTab: false,
 			activeTab: 0
 		};
 	}
 	componentDidMount() {
 		let boxshadowOffsetTop = this.boxshadow.offsetTop;
 		window.addEventListener('scroll', () => {
+			let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
 			this.setState({
-				showFixedTab: boxshadowOffsetTop < document.documentElement.scrollTop
+				showFixedTab: boxshadowOffsetTop < scrollTop
 			});
 		});
 	}
@@ -49,7 +50,7 @@ export default class loan_introduce_page extends PureComponent {
 	render() {
 		const { activeTab, showFixedTab } = this.state;
 		return (
-			<div className={styles.loan_introduce_page}>
+			<div>
 				{showFixedTab ? (
 					<div className={styles.fixed_tab}>
 						{['获取额度', '如何操作'].map((item, index) => (
@@ -103,14 +104,6 @@ export default class loan_introduce_page extends PureComponent {
 					</h3>
 					<div className={styles.img1_wrap}>
 						<img src={guide1} alt="" className={styles.img1} />
-						<img
-							src={pwd_guide}
-							alt=""
-							className={styles.pwd_guide}
-							onClick={() => {
-								this.props.history.push('/others/service_pwd_guide');
-							}}
-						/>
 					</div>
 				</div>
 

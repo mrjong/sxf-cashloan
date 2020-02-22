@@ -21,7 +21,8 @@ export default class pdf_page extends PureComponent {
 			// ios暂定mpos和微信打开是直接打开pdf
 			// if (osType === 'IOS' && (isWXOpen() || isMPOS())) {
 			if (osType === 'IOS') {
-				window.location.href = params.url;
+        // window.open(params.url)
+        // window.location.href = params.url;
 				// window.location.replace(params.url);
 			} else {
 				this.setState({ contractUrl: params.url });

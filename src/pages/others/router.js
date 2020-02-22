@@ -71,11 +71,18 @@ export default [
 		component: () => import('pages/others/mpos_testB_download_page')
 	},
 	{
-		path: '/others/loan_introduce_page',
+		path: '/others/product_introduce_page',
+		zhName: 'cpjs',
+		title: '产品介绍',
+		arrowHide: 'empty',
+		component: () => import('pages/others/product_introduce_page')
+	},
+	{
+		path: '/others/loan_strategy_page',
 		zhName: 'jkgl',
 		title: '借款攻略',
 		arrowHide: 'empty',
-		component: () => import('pages/others/loan_introduce_page')
+		component: () => import('pages/others/loan_strategy_page')
 	},
 	{
 		path: '/others/service_pwd_guide',
