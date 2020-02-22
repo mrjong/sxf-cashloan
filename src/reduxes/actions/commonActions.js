@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:31:47
+ * @LastEditTime: 2020-02-22 15:31:38
  */
 import { createAction } from 'redux-actions';
 import {
@@ -173,14 +173,5 @@ export const setProtocolSelFlagAction = createAction(COMMON_PROTOCOL_SELECT_FLAG
  * @return:
  */
 export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (info) => ({
-	iframeProtocolData: info
-}));
-
-/**
- * @description: 隐藏全局协议弹窗
- * @param {type}
- * @return:
- */
-export const setIframeProtocolHide = createAction(COMMON_IFRAME_PROTOCOL_HIDE, (info) => ({
 	iframeProtocolData: info
 }));
