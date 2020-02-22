@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2019-11-21 22:27:33
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-02-22 10:25:13
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -23,6 +23,7 @@ import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
 import CountDown from '../../mine/coupon_page/component/CountDown';
 import HomeBtnClass from 'utils/HomeBtn';
+import { getTimeStr } from 'utils/CommonUtil/commonFunc';
 
 const API = {
 	couponJudge: '/couponTest/judge' // 判断用户是否满足领取条件接口
@@ -197,20 +198,6 @@ export default class coupon_test_page extends PureComponent {
 		});
 	};
 
-	// 处理后台返回的时间
-	getTime = (time) => {
-		if (!time) {
-			return '';
-		}
-		const y = time.substring(0, 4);
-		const m = time.substring(4, 6);
-		const d = time.substring(6, 8);
-		const h = time.substring(8, 10);
-		const m1 = time.substring(10, 12);
-		const s = time.substring(12, 14);
-		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
-	};
-
 	render() {
 		const { userStsCode, validEndTm, couponNm } = this.state;
 		const submitBtnBg = userStsCode === '01' ? submit_btn2 : submit_btn1;
@@ -251,10 +238,10 @@ export default class coupon_test_page extends PureComponent {
 											有效期还剩：
 											{validEndTm && (
 												<CountDown
-													endTime={this.getTime(validEndTm)}
+													endTime={getTimeStr(validEndTm)}
 													timeOver={() => {
 														let now = +new Date();
-														let thisTime = +new Date(this.getTime(validEndTm));
+														let thisTime = +new Date(getTimeStr(validEndTm));
 														if (now > thisTime) {
 															return;
 														}

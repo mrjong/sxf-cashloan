@@ -1,11 +1,12 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-20 11:35:50
+ * @LastEditTime: 2020-02-22 10:25:58
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import qs from 'qs';
+import { getTimeStr } from 'utils/CommonUtil/commonFunc';
 import styles from './index.scss';
 import activity_bg from './img/activityBg.png';
 import submit_btn1 from './img/btn_bg.png';
@@ -187,20 +188,6 @@ export default class new_users_page extends PureComponent {
 		});
 	};
 
-	// 处理后台返回的时间
-	getTime = (time) => {
-		if (!time) {
-			return '';
-		}
-		const y = time.substring(0, 4);
-		const m = time.substring(4, 6);
-		const d = time.substring(6, 8);
-		const h = time.substring(8, 10);
-		const m1 = time.substring(10, 12);
-		const s = time.substring(12, 14);
-		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
-	};
-
 	render() {
 		const { isOpen, userStsCode, validEndTm } = this.state;
 		const submitBtnBg = userStsCode === '04' ? submit_btn2 : submit_btn1;
@@ -223,10 +210,10 @@ export default class new_users_page extends PureComponent {
 								有效期还剩{' '}
 								{validEndTm && (
 									<CountDown
-										endTime={this.getTime(validEndTm)}
+										endTime={getTimeStr(validEndTm)}
 										timeOver={() => {
 											let now = +new Date();
-											let thisTime = +new Date(this.getTime(validEndTm));
+											let thisTime = +new Date(getTimeStr(validEndTm));
 											if (now > thisTime) {
 												return;
 											}

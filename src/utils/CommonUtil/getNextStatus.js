@@ -14,26 +14,26 @@ import { goToStageLoan } from './commonFunc';
  * @param {type}
  * @return:
  */
-export const bank_card_check_func = ({ $props, autId }) => {
+export const bank_card_check_func = ({ $props, autId, hideToast }) => {
 	return new Promise((resolve) => {
 		$props.$fetch.get(`${bank_card_check}/${autId}`).then((result) => {
 			if (result && result.code === '000000') {
 				Toast.hide();
 				resolve('1');
 			} else if (result && result.code === '999974') {
-				Toast.info(result.message);
+				!hideToast && Toast.info(result.message);
 				setTimeout(() => {
 					$props.history.push({ pathname: '/mine/bind_save_page', search: '?noBankInfo=true' });
-				}, 3000);
+				}, (!hideToast && 3000) || 0);
 				resolve('0');
 			} else if (result && result.code === '000012') {
-				Toast.info(result.message);
+				!hideToast && Toast.info(result.message);
 				setTimeout(() => {
 					$props.history.push({
 						pathname: '/mine/bind_credit_page',
 						search: `?noBankInfo=true&autId=${autId}`
 					});
-				}, 3000);
+				}, (!hideToast && 3000) || 0);
 				resolve('0');
 			} else {
 				Toast.info(result.message);

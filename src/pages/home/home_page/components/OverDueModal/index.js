@@ -7,7 +7,6 @@ import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import style from './index.scss';
 import overDueImg from 'assets/images/home/overDue_icon.png';
-import { Modal } from 'antd-mobile';
 import { getDeviceType } from 'utils';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -41,9 +40,9 @@ export default class OverDueModal extends React.PureComponent {
 		const { downloadUrl } = this.state;
 		const osType = getDeviceType();
 		return (
-			<Modal className="overDueModalBox" visible={true} transparent maskClosable={false}>
-				<div>
-					<img className={style.warningImg} src={overDueImg} />
+			<div className={style.overDueModalWrap}>
+				<img className={style.warningImg} src={overDueImg} />
+				<div className={style.overDueModalBox}>
 					<h3 className={style.overDueTit}>{overDueInf && overDueInf.progressDesc}</h3>
 					<p className={style.overDueDesc}>{overDueInf && overDueInf.progressContent}</p>
 					{decreaseCoupExpiryDate ? (
@@ -52,7 +51,6 @@ export default class OverDueModal extends React.PureComponent {
 							<span className={style.value}>有效期{decreaseCoupExpiryDate}</span>
 						</div>
 					) : null}
-
 					{overDueInf &&
 						(overDueInf.progressOrder === 8 || overDueInf.progressOrder === 9) &&
 						osType !== 'IOS' && (
@@ -65,7 +63,6 @@ export default class OverDueModal extends React.PureComponent {
 								立即下载裁决书
 							</p>
 						)}
-
 					{overDueInf &&
 						(overDueInf.progressOrder === 8 || overDueInf.progressOrder === 9) &&
 						osType === 'IOS' && (
@@ -73,13 +70,12 @@ export default class OverDueModal extends React.PureComponent {
 								<p className={style.download}>立即下载裁决书</p>
 							</CopyToClipboard>
 						)}
-
 					{/* <a href="http://172.18.30.184:8888/wap/procedure/docDownLoad/LzIwMTkwNDE5L+ijgeWGs+S5pi5wZGY=?fin-v-card-token=a6d11943acb04d09af5ebfe0231346e0" target="_parent" download="裁决书.pdf">立即下载裁决书</a> */}
+					<div onClick={handleClick} className={style.button}>
+						我知道了，前去还款
+					</div>
 				</div>
-				<div onClick={handleClick} className={style.button}>
-					我知道了，前去还款
-				</div>
-			</Modal>
+			</div>
 		);
 	}
 }

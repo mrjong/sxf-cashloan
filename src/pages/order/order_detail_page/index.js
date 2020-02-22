@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import Image from 'assets/image';
+import { isWXOpen } from 'utils';
 
 let entryFrom = '';
 
@@ -142,7 +143,8 @@ export default class order_detail_page extends PureComponent {
 		}
 		buriedPointEvent(order.payAllOrderBtnClick, {
 			isOverdue: false,
-			repayPerds: repayPerds.join(',')
+			repayPerds: repayPerds.join(','),
+			isWXOpen: isWXOpen()
 		});
 		this.props.history.push({
 			pathname: '/order/order_repay_confirm',
@@ -165,7 +167,8 @@ export default class order_detail_page extends PureComponent {
 		buriedPointEvent(order.viewRepayInfoBtn, {
 			entry: entryFrom && entryFrom === 'home' ? '首页-查看代还账单' : '账单',
 			isOverdue: !!overdueDays,
-			repayPerds: repayPerds.join(',')
+			repayPerds: repayPerds.join(','),
+			isWXOpen: isWXOpen()
 		});
 		this.props.history.push({
 			pathname: '/order/order_repay_page',

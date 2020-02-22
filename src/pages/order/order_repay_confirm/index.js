@@ -252,7 +252,8 @@ export default class order_repay_confirm extends PureComponent {
 		const { availableCoupNum, couponInfo } = this.state;
 		buriedPointEvent(order.repayConfirmSubmitBtn, {
 			isOverdue: !!overdueDays,
-			repayPerds: repayPerds.join(',')
+			repayPerds: repayPerds.join(','),
+			isWXOpen: isWXOpen()
 		});
 		if (canUseCoupon && availableCoupNum && !couponInfo.coupId) {
 			this.setState({
@@ -342,7 +343,8 @@ export default class order_repay_confirm extends PureComponent {
 
 					buriedPointEvent(order.repaymentFirst, {
 						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
-						is_success: true
+						is_success: true,
+						isWXOpen: isWXOpen()
 					});
 					store.setOrderSuccess({
 						isPayAll,
@@ -411,7 +413,8 @@ export default class order_repay_confirm extends PureComponent {
 					buriedPointEvent(order.repaymentFirst, {
 						entry: entryFrom && entryFrom === 'home' ? '首页-查看代偿账单' : '账单',
 						is_success: false,
-						fail_cause: res.message
+						fail_cause: res.message,
+						isWXOpen: isWXOpen()
 					});
 					this.props.toast.info(res.message);
 				}

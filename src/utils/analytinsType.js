@@ -287,7 +287,8 @@ const other = {
 	outerDownloadBtnClick: `${prefix}_OUTER_DOWNLOAD_BUTTON_CLICK`, //外部下载页按钮点击事件
 	previewMaintenance: `${prefix}_MAINTENANCE_PAGE`, //进入系统维护页面
 	weixinDownloadPage: `${prefix}_WEIXIN_DOWNLOAD_PAGE`, //微信下载页pv
-	weixinDownloadBtnClick: `${prefix}_WEIXIN_DOWNLOAD_BTN_CLICK` //微信下载页按钮点击事件
+	weixinDownloadBtnClick: `${prefix}_WEIXIN_DOWNLOAD_BTN_CLICK`, //微信下载页按钮点击事件
+	productIntroduceBtnClick: `${prefix}_PRODUCT_INTRODUCE_BTN_CLICK` //产品介绍页按钮点击事件
 };
 
 const daicao = {

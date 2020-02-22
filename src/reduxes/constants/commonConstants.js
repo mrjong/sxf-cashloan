@@ -118,3 +118,16 @@ export const COMMON_BIND_DEPOSIT_INFO = 'COMMON_BIND_DEPOSIT_INFO';
  * @return:
  */
 export const COMMON_PROTOCOL_SELECT_FLAG = 'COMMON_PROTOCOL_SELECT_FLAG';
+
+/**
+ * @description: 展示全局协议弹窗
+ * @param {type}
+ * @return:
+ */
+export const COMMON_IFRAME_PROTOCOL_SHOW = 'COMMON_IFRAME_PROTOCOL_SHOW';
+/**
+ * @description: 隐藏全局协议弹窗
+ * @param {type}
+ * @return:
+ */
+export const COMMON_IFRAME_PROTOCOL_HIDE = 'COMMON_IFRAME_PROTOCOL_HIDE';

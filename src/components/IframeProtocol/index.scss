@@ -1,7 +1,24 @@
-.container2 {
+.iframeContainer {
+	height: 500px;
+	padding-top: 30px;
+	box-sizing: border-box;
+}
+
+.closeIcon {
 	position: absolute;
-	width: 100%;
-	top: 0;
-	min-height: 100vh;
-	left: 0;
+	right: 10px;
+	top: 10px;
+	padding: 10px;
+}
+
+.antModal {
+	:global {
+		.am-modal-content {
+			border-radius: 20px 20px 0 0;
+		}
+	}
+}
+.scrollModal {
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
 }

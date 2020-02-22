@@ -11,6 +11,7 @@ import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
 import { repay_payNotify, repay_queryCashRegisterDetail, msg_popup_list } from 'fetch/api.js';
 import Images from 'assets/image';
+import { isWXOpen } from 'utils';
 
 let timer = null;
 let timer1 = null;
@@ -120,15 +121,22 @@ export default class Cashier extends React.PureComponent {
 				// 	mPosition: '还款结果页'
 				// });
 				if (res.code === '000000' && res.data && res.data.popups && res.data.popups.length > 0) {
-					this.props.setHomeModalAction({
-						DataList: res.data.popups,
-						mPosition: '还款结果页'
-					});
+					if (!isWXOpen()) {
+						this.props.setHomeModalAction({
+							DataList: res.data.popups,
+							mPosition: '还款结果页'
+						});
+					}
 				} else if (isLastPerd) {
 					//如果还的是最后一期
-					setTimeout(() => {
-						this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
-					}, 2000);
+					if (isWXOpen()) {
+						//微信菜单栏过来的
+						this.props.history.replace(`/order/order_page`);
+					} else {
+						setTimeout(() => {
+							this.props.history.replace(`/order/repayment_succ_page?prodType=${prodType}`);
+						}, 2000);
+					}
 				}
 			})
 			.catch(() => {
@@ -180,7 +188,8 @@ export default class Cashier extends React.PureComponent {
 							},
 							() => {
 								buriedPointEvent(order.repayResultStatus, {
-									repayStatus: this.state.status
+									repayStatus: this.state.status,
+									isWXOpen: isWXOpen()
 								});
 								if (this.state.status === 'success') {
 									this.queryFudaiReward();
@@ -197,7 +206,8 @@ export default class Cashier extends React.PureComponent {
 							},
 							() => {
 								buriedPointEvent(order.repayResultStatus, {
-									repayStatus: this.state.status
+									repayStatus: this.state.status,
+									isWXOpen: isWXOpen()
 								});
 							}
 						);
@@ -217,7 +227,8 @@ export default class Cashier extends React.PureComponent {
 		const { repayPerds = [], billOvduDays } = state;
 		buriedPointEvent(order.continueRepayBtn, {
 			isOverdue: !!billOvduDays,
-			repayPerds: repayPerds.join(',')
+			repayPerds: repayPerds.join(','),
+			isWXOpen: isWXOpen()
 		});
 		this.props.history.replace({
 			pathname: '/order/order_repay_page',

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 18:30:58
+ * @LastEditTime: 2020-02-22 10:38:36
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -307,7 +307,7 @@ export default class confirm_agency_page extends PureComponent {
 				// const diff = dayjs(result.data.cardBillDt).diff(dayjs(), 'day');
 				const diff = result.data.lastReapyDt;
 				let lendersDateListFormat = this.state.lendersDateList;
-				if (!result.data.cardBillDt || diff <= 4) {
+				if (diff <= 4) {
 					lendersDateListFormat[0].disable = true;
 				}
 				// mock数据

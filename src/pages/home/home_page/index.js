@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 10:29:21
+ * @LastEditTime: 2020-02-21 14:53:46
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -33,7 +33,13 @@ import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
 import { TFDLogin } from 'utils/getTongFuDun';
-import { MsgTip, AddCards, ActivityEntry, SwitchCard, Introduce } from './components';
+import {
+	MsgTip,
+	AddCards,
+	// ActivityEntry,
+	SwitchCard,
+	Introduce
+} from './components';
 
 //隔5秒调取接口相关变量
 
@@ -708,7 +714,7 @@ export default class home_page extends PureComponent {
 				</div>
 
 				<div className={activities && activities.length ? style.content_main_more : style.content_main}>
-					<ActivityEntry data={activities} history={this.props.history} />
+					{/* <ActivityEntry data={activities} history={this.props.history} /> */}
 					<SwitchCard data={this.getDisPlayData()} />
 					{bannerList.length > 0 && (
 						<Carousels className={style.home_banner} data={bannerList} entryFrom="banner" />

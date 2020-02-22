@@ -1,9 +1,8 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:13:57
+ * @LastEditTime: 2020-02-22 10:26:31
  */
 import React from 'react';
-
 import { Toast, Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
 import { loan_queryCashLoanApplInfo, signup_logout } from 'fetch/api';
@@ -15,6 +14,7 @@ import storeRedux from 'reduxes';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { isMPOS } from 'utils/common';
 import Cookie from 'js-cookie';
+import { isWXOpen } from 'utils';
 
 /**
  * @description: 退出清除数据的方法
@@ -31,6 +31,23 @@ export const logoutClearData = () => {
 	localStorage.clear();
 };
 
+/**
+ * @description: 处理后台返回的时间
+ * @param {type}
+ * @return:
+ */
+export const getTimeStr = (time) => {
+	if (!time) {
+		return '';
+	}
+	const y = time.substring(0, 4);
+	const m = time.substring(4, 6);
+	const d = time.substring(6, 8);
+	const h = time.substring(8, 10);
+	const m1 = time.substring(10, 12);
+	const s = time.substring(12, 14);
+	return `${y}/${m}/${d} ${h}:${m1}:${s}`;
+};
 /**
  * @description: 账单需要更新等跳转逻辑
  * @param {type}
@@ -163,7 +180,16 @@ export const logoutApp = () => {
 				return;
 			}
 			logoutClearData('LoginSms');
-			window.ReactRouterHistory.push('/login');
+			if (
+				window.ReactRouterHistory.location &&
+				window.ReactRouterHistory.location.pathname === '/order/order_page' &&
+				isWXOpen()
+			) {
+				//兼容微信公众号里退出再登录不能到目标页面的问题
+				window.ReactRouterHistory.push('/login?jumpUrl=/order/order_page&wxTestFrom=wx_middle_page');
+			} else {
+				window.ReactRouterHistory.push('/login');
+			}
 			//退出时,删除通付盾script
 			document.getElementById('tonfudunScript') &&
 				document.body.removeChild(document.getElementById('tonfudunScript'));

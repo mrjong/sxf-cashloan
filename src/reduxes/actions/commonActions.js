@@ -21,7 +21,9 @@ import {
 	COMMON_WELFARE_LIST,
 	COMMON_APPLY_CREDIT_DTATA,
 	COMMON_BIND_DEPOSIT_INFO,
-	COMMON_PROTOCOL_SELECT_FLAG
+	COMMON_PROTOCOL_SELECT_FLAG,
+	COMMON_IFRAME_PROTOCOL_SHOW,
+	COMMON_IFRAME_PROTOCOL_HIDE
 } from '../constants/commonConstants';
 
 /**
@@ -163,4 +165,22 @@ export const setBindDepositInfoAction = createAction(COMMON_BIND_DEPOSIT_INFO, (
  */
 export const setProtocolSelFlagAction = createAction(COMMON_PROTOCOL_SELECT_FLAG, (info) => ({
 	protocolSelFlag: info
+}));
+
+/**
+ * @description: 展示全局协议弹窗
+ * @param {type}
+ * @return:
+ */
+export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (info) => ({
+	iframeProtocolUrl: info
+}));
+
+/**
+ * @description: 隐藏全局协议弹窗
+ * @param {type}
+ * @return:
+ */
+export const setIframeProtocolHide = createAction(COMMON_IFRAME_PROTOCOL_HIDE, (info) => ({
+	iframeProtocolUrl: info
 }));

@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-21 11:13:35
+ */
 import React from 'react';
 import styles from './index.scss';
 
@@ -73,20 +77,22 @@ export default class CountDownButton extends React.Component {
 		const { enable, className } = this.props;
 		const { counting, startTitle, selfEnable } = this.state;
 		return (
-			<Button
-				size="small"
-				type="primary"
-				disabled={counting}
-				onClick={() => {
-					if (!counting && enable && selfEnable) {
-						// this.setState({ selfEnable: false });
-						this.props.onClick(this.shouldStartCountting);
-					}
-				}}
-				className={`${styles.count_container} ${className}`}
-			>
-				<span>{startTitle}</span>
-			</Button>
+			<div className="CountDownButton">
+				<Button
+					size="small"
+					type="primary"
+					disabled={counting}
+					onClick={() => {
+						if (!counting && enable && selfEnable) {
+							// this.setState({ selfEnable: false });
+							this.props.onClick(this.shouldStartCountting);
+						}
+					}}
+					className={`${styles.count_container} ${className}`}
+				>
+					<span>{startTitle}</span>
+				</Button>
+			</div>
 		);
 	}
 }
