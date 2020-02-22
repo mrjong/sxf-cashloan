@@ -48,22 +48,22 @@ export default class credit_apply_succ_page extends PureComponent {
 	}
 	// 判断是否绑卡
 	checkIsBandCard = () => {
-		const { isAppOpen, isPlus } = this.state;
+		const { isAppOpen } = this.state;
 		buriedPointEvent(home.assessingBindCard);
 		if (isAppOpen) {
 			setTimeout(() => {
-				if (isPlus) {
-					window.ReactNativeWebView.postMessage('判断是否绑卡');
-				} else {
-					window.postMessage('判断是否绑卡', () => {});
-				}
+				window.ReactNativeWebView.postMessage('判断是否绑卡');
 			}, 0);
 			return;
 		}
 		// const api = autId ? `${API.chkCredCard}/${autId}` : API.isBankCard;
 		let query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		let autId = query && query.autId;
-		bank_card_check_func({ $props: this.props, autId, hideToast: true });
+		bank_card_check_func({ $props: this.props, autId, hideToast: true }).then((res) => {
+			if (res === '1') {
+				this.props.history.push('/home/home');
+			}
+		});
 	};
 	// 检查是否是app webview打开
 	checkAppOpen = (e) => {
