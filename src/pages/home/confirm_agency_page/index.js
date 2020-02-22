@@ -870,7 +870,6 @@ export default class confirm_agency_page extends PureComponent {
 										actContain: cardBillAmtRiskBury.actContain
 									})}
 									className={style.billInput}
-									clear
 									disabled={
 										repaymentDate.minAmt &&
 										repaymentDate.maxAmt &&
@@ -1051,7 +1050,7 @@ export default class confirm_agency_page extends PureComponent {
 								{contractData.length > 0 && (
 									<p className={style.protocolLink} onClick={this.checkAgreement}>
 										<CheckRadio isSelect={checkBox1} />
-										点击“确定签约”，表示同意{' '}
+										点击“确定签约”，表示同意
 										{contractData.map((item, idx) => (
 											<em
 												onClick={(e) => {

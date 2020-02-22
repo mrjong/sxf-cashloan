@@ -73,7 +73,7 @@ export default class RepayPlanModal extends React.PureComponent {
 				<div className={style.money_box}>
 					<span className={style.label}>借款金额</span>
 					<span className={style.money}>
-						<i>¥ </i>
+						<i className={style.moneyUnit}>¥ </i>
 						<i className={style.value}>{loanMoney}</i>
 					</span>
 				</div>
@@ -119,7 +119,7 @@ export default class RepayPlanModal extends React.PureComponent {
 					<div className={style.money_box}>
 						<span className={style.label}>借款金额</span>
 						<span className={style.money}>
-							<i>¥ </i>
+							<i className={style.moneyUnit}>¥</i>
 							<i className={style.value}>{loanMoney}</i>
 						</span>
 					</div>

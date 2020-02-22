@@ -24,6 +24,9 @@
 
 // 覆盖 antd mobile picke和modal样式
 :global {
+  .am-modal-mask {
+    background-color: rgba(0,0,0,.7);
+  }
   .am-picker-popup {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;

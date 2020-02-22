@@ -25,6 +25,7 @@
 		font-weight: bold;
 	}
 }
+
 .titleBg {
 	// background-image: url(./img/titleBg.png);
 	background-repeat: no-repeat;
@@ -34,11 +35,14 @@
 	top: 20px;
 	height: 50px;
 	font-size: 32px;
-	font-family: 'PingFangSC-Medium';
-	font-weight: 500;
 	// text-align: center;
 	color: $colorBlack;
-	line-height: 50px;
+  line-height: 50px;
+  font-weight: 600;
+}
+.titleBgLong {
+  font-size: 28px;
+  font-weight: normal;
 }
 .bankCard {
 	&.heightSelect {
@@ -63,7 +67,7 @@
 	border-radius: 10px;
 	box-sizing: border-box;
 	padding: 30px 30px 10px;
-	margin-top: 30px;
+	margin-top: 20px;
 
 	.top {
 		position: relative;
@@ -84,7 +88,7 @@
 		display: block;
 		font-weight: normal;
 		font-size: 80px;
-		color: #121c32;
+		color: #394259;
 		line-height: 1.3;
 		margin-top: 10px;
 	}
@@ -108,7 +112,8 @@
 			.name {
 				font-size: 24px;
 				color: #868e9e;
-				line-height: 1.4;
+        line-height: 1.4;
+				font-family: 'DINMitAlt';
 			}
 			.moneyTit {
 				color: #868e9e;
@@ -126,7 +131,10 @@
 		color: #121c32;
 		.lastNo {
 			margin-left: 15px;
-			font-size: 30px;
+      font-size: 30px;
+      font-family: 'DINMitAlt';
+      line-height: 1;
+      margin-top: 5px;
 		}
 	}
 	.inputBox {
@@ -172,9 +180,11 @@
 			color: #121c32;
 		}
 		span {
-			font-size: 30px;
-			font-family: 'PingFangSC-Medium';
-			font-weight: 500;
+      display: inline-block;
+      margin-top: 2px;
+			font-size: 28px;
+			// font-family: 'PingFangSC-Medium';
+			// font-weight: 500;
 			&:active {
 				opacity: 0.6;
 			}
@@ -285,9 +295,8 @@
 	.money {
 		color: $colorGolden;
 		font-size: 26px;
-		font-family: 'PingFangSC-Regular';
-		font-weight: 400;
-		margin-left: 10px;
+		font-family: 'DINMitAlt';
+		font-weight: 600;
 	}
 	.desc {
 		color: $colorInputPlaceholder;
@@ -300,7 +309,7 @@
 		color: $colorGolden;
 		font-size: 26px;
 		font-family: 'PingFangSC-Regular';
-		font-weight: 400;
+		font-weight: 600;
 	}
 }
 .money_input {
@@ -397,10 +406,10 @@
 
 		.am-list-item .am-input-control input {
 			font-family: 'DINMitAlt';
-			color: #121c32;
+			color: #394259;
 			font-size: 50px;
 			line-height: 1.4;
-			padding-left: 50px;
+			padding-left: 40px;
 		}
 
 		.am-list-item.am-list-item-middle.blackColor .am-list-line {
@@ -429,13 +438,12 @@
 
 .modal_header {
 	position: relative;
-	font-size: 36px;
+	font-size: 34px;
 	color: #333;
 	font-weight: 600;
-	padding: 15px 0;
-	&::after {
-		@include setBottomLine();
-	}
+  padding: 23px 0;
+  background-color: #F7F8FA;
+
 
 	.modal_leftIcon {
 		position: absolute;
@@ -446,7 +454,7 @@
 	.close {
 		position: absolute;
 		right: 0;
-		padding: 20px;
+		padding: 28px;
 		top: 0;
 	}
 }
@@ -543,14 +551,14 @@
 }
 .freeService {
 	background-color: #fff;
-	margin-top: 30px;
+	margin-top: 20px;
 	border-radius: 10px;
 	display: flex;
 	padding: 30px;
 	justify-content: space-between;
 	.title {
 		font-size: 30px;
-		font-family: 'PingFangSC-Regular';
+		// font-family: 'PingFangSC-Regular';
 		font-weight: 400;
 		position: relative;
 		i {

@@ -6,8 +6,9 @@
 	border: 0;
 	border-radius: 0.4rem;
 	background-color: $colorBgText;
-	margin-right: 20px;
+	margin-right: 40px;
 	&_active {
+    font-weight: bold;
 		color: $colorBlack;
 		background-color: $colorYellow;
 	}
@@ -20,8 +21,8 @@
 	// padding: 0.1rem 0.15rem;
 	i {
 		position: absolute;
-		right: -30px;
-		top: -24px;
+		right: -25px;
+		top: -20px;
 		width: 34px;
 		height: 28px;
 		z-index: 100;
