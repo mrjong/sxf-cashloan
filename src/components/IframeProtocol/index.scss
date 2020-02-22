@@ -1,7 +1,7 @@
 .iframeContainer {
-	height: 90vh;
-	padding-top: 30px;
-	box-sizing: border-box;
+	height: 85vh;
+  overflow: scroll;
+  margin-top: 50px;
 }
 
 .closeIcon {
@@ -9,16 +9,15 @@
 	right: 10px;
 	top: 10px;
 	padding: 10px;
+	z-index: 100;
 }
 
 .antModal {
 	:global {
 		.am-modal-content {
 			border-radius: 20px 20px 0 0;
+			position: relative;
+			box-sizing: border-box;
 		}
 	}
-}
-.scrollModal {
-	overflow: scroll;
-	-webkit-overflow-scrolling: touch;
 }

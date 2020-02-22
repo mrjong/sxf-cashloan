@@ -17,6 +17,8 @@ import { mpos_service_authorization } from 'utils/analytinsType';
 import { Checkbox } from 'antd-mobile';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+
 import { connect } from 'react-redux';
 import { signup_mpos_auth } from 'fetch/api';
 import logo from './img/logo.png';
@@ -31,7 +33,7 @@ let query = '';
 @fetch.inject()
 @connect(
 	(state) => state,
-	{ setUserInfoAction }
+	{ setUserInfoAction, setIframeProtocolShow }
 )
 export default class mpos_service_authorization_page extends PureComponent {
 	constructor(props) {
@@ -137,7 +139,9 @@ export default class mpos_service_authorization_page extends PureComponent {
 
 	// 跳转协议
 	go = (url) => {
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 	render() {
 		const { selectFlag } = this.state;

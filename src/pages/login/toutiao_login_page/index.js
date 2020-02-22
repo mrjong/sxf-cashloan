@@ -34,10 +34,9 @@ import closeIco from '../login_common_page/img/close_ico.png';
 import linkConf from 'config/link.conf';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
-
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-// import { msg_slide, msg_sms, signup_sms, msg_image, download_queryDownloadUrl } from 'fetch/api';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
@@ -64,7 +63,7 @@ let modalTimer = null;
 @createForm()
 @connect(
 	(state) => state,
-	{ setUserInfoAction }
+	{ setUserInfoAction, setIframeProtocolShow }
 )
 export default class momo_outer_login_page extends PureComponent {
 	constructor(props) {
@@ -391,7 +390,9 @@ export default class momo_outer_login_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 
 	checkAgreement = () => {

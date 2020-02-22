@@ -14,8 +14,14 @@ import { getH5Channel } from 'utils/common';
 import Cookie from 'js-cookie';
 import { signup_wx_auth } from 'fetch/api.js';
 import { store } from 'utils/store';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+import { connect } from 'react-redux';
 
 @fetch.inject()
+@connect(
+	(state) => state,
+	{ setIframeProtocolShow }
+)
 class product_introduce_page extends Component {
 	constructor(props) {
 		super(props);
@@ -87,6 +93,12 @@ class product_introduce_page extends Component {
 			});
 	};
 
+	go = (url) => {
+		this.props.setIframeProtocolShow({
+			url
+		});
+	};
+
 	render() {
 		return (
 			<div className={styles.product_introduce_page}>
@@ -95,14 +107,14 @@ class product_introduce_page extends Component {
 						同意并接受还到平台的
 						<em
 							onClick={() => {
-								this.props.history.push(`/protocol/register_agreement_page`);
+								this.go('register_agreement_page');
 							}}
 						>
 							《用户注册协议》
 						</em>
 						<em
 							onClick={() => {
-								this.props.history.push(`/protocol/privacy_agreement_page`);
+								this.go('privacy_agreement_page');
 							}}
 						>
 							《用户隐私协议》

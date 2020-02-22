@@ -13,7 +13,6 @@ import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur, queryUsrSCOpenId } from 'utils';
 import { setH5Channel, getH5Channel } from 'utils/common';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
-
 import {
 	buriedPointEvent,
 	pageView,
@@ -22,16 +21,15 @@ import {
 	sxfburiedPointEvent
 } from 'utils/analytins';
 import { domListen } from 'utils/domListen';
-
 import { wxTest } from 'utils/analytinsType';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
 import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { TFDLogin } from 'utils/getTongFuDun';
-
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import {
@@ -51,7 +49,7 @@ let entryPageTime = '';
 @domListen()
 @connect(
 	(state) => state,
-	{ setUserInfoAction }
+	{ setUserInfoAction, setIframeProtocolShow }
 )
 export default class login_page extends PureComponent {
 	constructor(props) {
@@ -369,7 +367,9 @@ export default class login_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 	checkAgreement = () => {
 		this.setState(

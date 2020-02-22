@@ -523,7 +523,7 @@ export default class bind_save_page extends PureComponent {
 						<a
 							onClick={(e) => {
 								e.stopPropagation();
-								this.readContract('delegation_withhold_page');
+								this.readContract();
 							}}
 							className={styles.link}
 						>

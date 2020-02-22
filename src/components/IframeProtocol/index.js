@@ -6,13 +6,13 @@ import React from 'react';
 import { Modal, Icon } from 'antd-mobile';
 import { connect } from 'react-redux';
 import styles from './index.scss';
-import { setIframeProtocolHide } from 'reduxes/actions/commonActions';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 @connect(
 	(state) => ({
 		iframeProtocolData: state.commonState.iframeProtocolData
 	}),
 	{
-		setIframeProtocolHide
+		setIframeProtocolShow
 	}
 )
 export default class IframeProtocol extends React.Component {
@@ -27,16 +27,11 @@ export default class IframeProtocol extends React.Component {
 			document.body.style.overflow = 'scroll';
 			document.body.style.position = 'relative';
 		}
-		// this.modal.addEventListener(
-		// 	'touchmove',
-		// 	function(e) {
-		// 		e.preventDefault();
-		// 	},
-		// 	false
-		// );
 	}
 	onClose = () => {
-		this.props.setIframeProtocolHide('');
+		this.props.setIframeProtocolShow({
+			url: ''
+		});
 	};
 
 	render() {
@@ -45,15 +40,13 @@ export default class IframeProtocol extends React.Component {
 			<Modal
 				popup
 				visible={iframeProtocolData.url ? true : false}
-				className={[styles.antModal, styles.scrollModal].join(' ')}
+				className={styles.antModal}
 				onClose={this.onClose}
 				animationType="slide-up"
-				// ref={(m) => (this.modal = m)}
 			>
 				<Icon type="cross" className={styles.closeIcon} onClick={this.onClose} />
-				<div>
+				<div className={styles.iframeContainer}>
 					<iframe
-						className={styles.iframeContainer}
 						src={`/disting/#/${iframeProtocolData.url}`}
 						name={iframeProtocolData.url}
 						id={iframeProtocolData.url}

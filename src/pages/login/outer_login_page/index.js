@@ -4,7 +4,6 @@
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
-
 import React, { PureComponent } from 'react';
 import { createForm } from 'rc-form';
 import { Toast, InputItem } from 'antd-mobile';
@@ -12,7 +11,6 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
-
 import {
 	getDeviceType,
 	getFirstError,
@@ -38,6 +36,7 @@ import { TFDLogin } from 'utils/getTongFuDun';
 import { domListen } from 'utils/domListen';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms, msg_image } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import {
@@ -57,7 +56,7 @@ let entryPageTime = '';
 @domListen()
 @connect(
 	(state) => state,
-	{ setUserInfoAction }
+	{ setUserInfoAction, setIframeProtocolShow }
 )
 export default class login_page extends PureComponent {
 	constructor(props) {
@@ -69,7 +68,7 @@ export default class login_page extends PureComponent {
 			smsJrnNo: '', // 短信流水号
 			disabledInput: false,
 			queryData: {},
-			isChecked: true, // 是否勾选协议
+			isChecked: false, // 是否勾选协议
 			inputFocus: false,
 			imageCodeUrl: '', // 图片验证码url
 			showSlideModal: false,
@@ -162,6 +161,15 @@ export default class login_page extends PureComponent {
 		} else {
 			callback();
 		}
+	};
+
+	//	校验必填项 按钮是否可以点击
+	validateFn = () => {
+		const formData = this.props.form.getFieldsValue();
+		if (formData.phoneValue && formData.smsCd) {
+			return true;
+		}
+		return false;
 	};
 
 	//去登陆按钮
@@ -373,7 +381,9 @@ export default class login_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 
 	checkAgreement = () => {
@@ -475,7 +485,10 @@ export default class login_page extends PureComponent {
 								<i className={styles.leftBorder} />
 							</div>
 						</div>
-						<div className={styles.sureBtn} onClick={this.goLogin}>
+						<div
+							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
+							onClick={this.goLogin}
+						>
 							<span>查看额度</span>
 						</div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />

@@ -125,9 +125,3 @@ export const COMMON_PROTOCOL_SELECT_FLAG = 'COMMON_PROTOCOL_SELECT_FLAG';
  * @return:
  */
 export const COMMON_IFRAME_PROTOCOL_SHOW = 'COMMON_IFRAME_PROTOCOL_SHOW';
-/**
- * @description: 隐藏全局协议弹窗
- * @param {type}
- * @return:
- */
-export const COMMON_IFRAME_PROTOCOL_HIDE = 'COMMON_IFRAME_PROTOCOL_HIDE';

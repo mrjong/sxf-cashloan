@@ -18,9 +18,9 @@ import { setBackGround } from 'utils/background';
 import ImageCode from 'components/ImageCode';
 import { miniprogram } from '../../../utils/analytinsType';
 import CopyModal from 'components/CopyModal';
-
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
@@ -32,7 +32,7 @@ let timmer;
 @createForm()
 @connect(
 	(state) => state,
-	{ setUserInfoAction }
+	{ setUserInfoAction, setIframeProtocolShow }
 )
 export default class miniprogram_login_page extends PureComponent {
 	constructor(props) {
@@ -347,7 +347,9 @@ export default class miniprogram_login_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
-		this.props.history.push(`/protocol/${url}`);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 	checkAgreement = () => {
 		this.setState({

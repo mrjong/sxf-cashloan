@@ -97,14 +97,8 @@
 		input:-webkit-autofill {
 			box-shadow: 0 0 0 1000px white inset !important;
 		}
-		// .smsCodeInput {
-		// 	// flex: 1;
-		// 	// margin-right: 20px;
-		// }
 		.smsBox {
 			position: relative;
-			// display: flex;
-			// justify-content: space-between;
 		}
 		.smsCode {
 			position: absolute;
@@ -128,16 +122,6 @@
 		.smsCode2 {
 			color: #c9cdd5;
 		}
-		// .smsCodeNumber {
-		// 	color: #fff;
-		// 	font-size: 32px;
-		// 	width: 270px;
-		// 	height: 100px;
-		// 	line-height: 100px;
-		// 	text-align: center;
-		// 	background-color: #FE4D2A;
-		// 	border-radius: 12px;
-		// }
 		.sureBtn {
 			display: block;
 			width: 444px;
@@ -146,17 +130,16 @@
 			background: #fec933;
 			border-radius: 44px;
 			font-size: 30px;
-			// font-weight: bold;
 			color: #fff;
 			margin: 53px auto 30px;
 			span {
 				display: inline-block;
 				width: 100%;
 			}
-			// &:hover,
-			// &:active {
-			// 	background-color: #FE4D2A;
-			// }
+    }
+    .sureDisableBtn {
+			background-color: #f0f3f9;
+			color: #fff;
 		}
 		// 图片验证码
 		.getCodeBox {

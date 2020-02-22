@@ -173,6 +173,16 @@ export default class login_page extends PureComponent {
 			callback: this.requestGetStatus
 		});
 	};
+
+	//	校验必填项 按钮是否可以点击
+	validateFn = () => {
+		const formData = this.props.form.getFieldsValue();
+		if (formData.phoneValue && formData.smsCd) {
+			return true;
+		}
+		return false;
+	};
+
 	//去登陆按钮
 	goLogin = () => {
 		const { queryData = {}, isChecked } = this.state;
@@ -181,15 +191,6 @@ export default class login_page extends PureComponent {
 				entry: queryData.wxTestFrom
 			});
 		}
-		if (!this.validateFn()) {
-			return;
-		}
-		if (!isChecked) {
-			Toast.info('请先阅读并勾选相关协议，登录、注册还到');
-			return;
-		}
-
-		const osType = getDeviceType();
 		if (!this.state.smsJrnNo) {
 			// Toast.info('请先获取短信验证码');
 			this.setState({
@@ -197,6 +198,12 @@ export default class login_page extends PureComponent {
 			});
 			return;
 		}
+		if (!isChecked) {
+			Toast.info('请先阅读并勾选相关协议，登录、注册还到');
+			return;
+		}
+		const osType = getDeviceType();
+
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				this.setState({
@@ -459,15 +466,6 @@ export default class login_page extends PureComponent {
 				}
 			}
 		);
-	};
-
-	//	校验必填项 按钮是否可以点击
-	validateFn = () => {
-		const formData = this.props.form.getFieldsValue();
-		if (formData.phoneValue && formData.smsCd) {
-			return true;
-		}
-		return false;
 	};
 
 	goHome = () => {
