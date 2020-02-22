@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-08 16:05:35
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-22 15:24:38
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -105,7 +105,7 @@ export default class reco_contact_page extends PureComponent {
 					<div className={styles.contact_list_box}>
 						<p className={styles.contact_tit}>请勾选5个联系人</p>
 						<p className={styles.contact_desc}>
-							勾选联系人授权于我们，在紧急联系人无法接通时，用于与您取得联系
+							签约前请勾选联系人授权于我们，当紧急联系人无法接通时，我们将通过下方选择的授权联系人与您取得联系
 						</p>
 						<ul className={styles.contact_list}>
 							{contactList.map((item, index) => {

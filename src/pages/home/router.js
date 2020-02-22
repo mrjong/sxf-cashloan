@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-14 16:09:44
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-22 15:23:16
  */
 export default [
 	{
@@ -107,13 +107,13 @@ export default [
 	{
 		path: '/home/reco_contact_page',
 		zhName: 'tjlxr',
-		title: '推荐联系人',
+		title: '补充联系人',
 		component: () => import('pages/home/reco_contact_page')
 	},
 	{
 		path: '/home/contact_result_page',
 		zhName: 'zdlxr',
-		title: '指定联系人',
+		title: '确认联系人',
 		component: () => import('pages/home/contact_result_page')
 	},
 	{
@@ -125,7 +125,7 @@ export default [
 	{
 		path: '/home/add_contact_page',
 		zhName: 'kzdlxr',
-		title: '指定联系人',
+		title: '补充联系人',
 		component: () => import('pages/home/add_contact_page')
 	}
 ];

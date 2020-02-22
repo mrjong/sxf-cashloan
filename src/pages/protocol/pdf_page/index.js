@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2019-08-30 15:45:58
+ * @LastEditTime: 2020-02-22 15:24:56
  */
 import React, { PureComponent } from 'react';
 import { getDeviceType } from 'utils';
@@ -21,8 +21,8 @@ export default class pdf_page extends PureComponent {
 			// ios暂定mpos和微信打开是直接打开pdf
 			// if (osType === 'IOS' && (isWXOpen() || isMPOS())) {
 			if (osType === 'IOS') {
-        // window.open(params.url)
-        // window.location.href = params.url;
+				// window.open(params.url)
+				// window.location.href = params.url;
 				// window.location.replace(params.url);
 			} else {
 				this.setState({ contractUrl: params.url });
