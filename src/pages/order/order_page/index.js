@@ -260,6 +260,9 @@ export default class order_page extends PureComponent {
 				onReloadData={() => {
 					this.onReloadData();
 				}}
+				nodata={{
+					text: '暂无账单'
+				}}
 			>
 				<div className={style.orderPage}>
 					<div>

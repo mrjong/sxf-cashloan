@@ -173,7 +173,7 @@ export const setProtocolSelFlagAction = createAction(COMMON_PROTOCOL_SELECT_FLAG
  * @return:
  */
 export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (info) => ({
-	iframeProtocolUrl: info
+	iframeProtocolData: info
 }));
 
 /**
@@ -182,5 +182,5 @@ export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (
  * @return:
  */
 export const setIframeProtocolHide = createAction(COMMON_IFRAME_PROTOCOL_HIDE, (info) => ({
-	iframeProtocolUrl: info
+	iframeProtocolData: info
 }));

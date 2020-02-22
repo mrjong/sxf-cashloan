@@ -443,7 +443,9 @@ export default class login_page extends PureComponent {
 	// 跳转协议
 	go = (url) => {
 		store.setLoginBack(true);
-		this.props.setIframeProtocolShow(url);
+		this.props.setIframeProtocolShow({
+			url
+		});
 	};
 
 	checkAgreement = () => {

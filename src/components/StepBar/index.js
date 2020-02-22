@@ -20,7 +20,7 @@ export default class StepBar extends Component {
 						data.map((item) => (
 							<li key={item.perdNum} className={style.item_wrap}>
 								<div className={style.top_line}>
-									<span className={style.step_index}>{item.perdNum === '1' ? '首' : item.perdNum}期</span>
+									<span className={style.step_index}>{item.perdNum === 1 ? '首' : item.perdNum}期</span>
 									<span className={style.circle_dot}></span>
 									<span className={style.step_title}>
 										<i>¥ </i>

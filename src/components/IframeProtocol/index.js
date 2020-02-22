@@ -9,7 +9,7 @@ import styles from './index.scss';
 import { setIframeProtocolHide } from 'reduxes/actions/commonActions';
 @connect(
 	(state) => ({
-		iframeProtocolUrl: state.commonState.iframeProtocolUrl
+		iframeProtocolData: state.commonState.iframeProtocolData
 	}),
 	{
 		setIframeProtocolHide
@@ -18,12 +18,9 @@ import { setIframeProtocolHide } from 'reduxes/actions/commonActions';
 export default class IframeProtocol extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			prefix: '/disting/#/'
-		};
 	}
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.iframeProtocolUrl) {
+		if (nextProps.iframeProtocolData && nextProps.iframeProtocolData.url) {
 			document.body.style.overflow = 'hidden';
 			document.body.style.position = 'fixed';
 		} else {
@@ -43,29 +40,32 @@ export default class IframeProtocol extends React.Component {
 	};
 
 	render() {
-		const { postData, iframeProtocolUrl } = this.props;
+		const { iframeProtocolData = {} } = this.props;
 		return (
 			<Modal
 				popup
-				visible={iframeProtocolUrl ? true : false}
+				visible={iframeProtocolData.url ? true : false}
 				className={[styles.antModal, styles.scrollModal].join(' ')}
 				onClose={this.onClose}
 				animationType="slide-up"
 				// ref={(m) => (this.modal = m)}
 			>
 				<Icon type="cross" className={styles.closeIcon} onClick={this.onClose} />
-				<iframe
-					className={styles.iframeContainer}
-					src={`${this.state.prefix}${iframeProtocolUrl}`}
-					name={iframeProtocolUrl}
-					id={iframeProtocolUrl}
-					onLoad={() => {
-						postData && window.frames[iframeProtocolUrl].setData(postData);
-					}}
-					width="100%"
-					height="100%"
-					frameBorder="0"
-				/>
+				<div>
+					<iframe
+						className={styles.iframeContainer}
+						src={`/disting/#/${iframeProtocolData.url}`}
+						name={iframeProtocolData.url}
+						id={iframeProtocolData.url}
+						onLoad={() => {
+							iframeProtocolData.contractInf &&
+								window.frames[iframeProtocolData.url].setData(iframeProtocolData.contractInf);
+						}}
+						width="100%"
+						height="100%"
+						frameBorder="0"
+					/>
+				</div>
 			</Modal>
 		);
 	}
