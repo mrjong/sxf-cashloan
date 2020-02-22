@@ -542,9 +542,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 								})}
 							>
 								<div>
-									<span className={style.title}>借全额</span>
+									<span className={style.title}>借全额 ¥</span>
 									<span className={style.money}>
-										¥{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '-.--'}
+										{(maxApplAmt && !isNaN(maxApplAmt) && Number(maxApplAmt) >= 0 && maxApplAmt) || '-.--'}
 									</span>
 								</div>
 								<div className={style.desc}>一键结清账单，释放卡额度</div>
@@ -561,9 +561,9 @@ export default class loan_repay_confirm_page extends PureComponent {
 								}}
 							>
 								<div>
-									<span className={style.title}>借最低</span>
+									<span className={style.title}>借最低 ¥</span>
 									<span className={style.money}>
-										¥{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) || '-.--'}
+										{(minApplAmt && !isNaN(minApplAmt) && Number(minApplAmt) >= 0 && minApplAmt) || '-.--'}
 									</span>
 								</div>
 								<div className={style.desc}>信用卡免逾期，还款无压力</div>
@@ -573,7 +573,7 @@ export default class loan_repay_confirm_page extends PureComponent {
 
 					<div className={[style.bankCard, style.heightSelect].join(' ')}>
 						<div>
-							<div className={style.titleBg}>借多久</div>
+							<div className={[style.titleBg, style.titleBgLong].join(' ')}>借多久</div>
 						</div>
 						<div className={style.border_bottom}>
 							<List.Item
@@ -652,13 +652,15 @@ export default class loan_repay_confirm_page extends PureComponent {
 					<div className={style.modal_box}>
 						<div className={[style.modal_left, this.state.modal_left ? style.modal_left1 : ''].join(' ')}>
 							<div className={style.modal_header}>
-								选择期限
+								请选期限
 								<Icon
 									onClick={() => {
 										this.closeCreditModal();
 									}}
+									size="30"
 									className={style.close}
 									type="cross"
+									color="#868E9E"
 								/>
 							</div>
 							<div className={style.modal_content}>

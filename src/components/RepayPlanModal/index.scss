@@ -25,7 +25,7 @@
 	line-height: 100px;
 	text-align: center;
 	background-color: #f7f8fa;
-	font-size: 36px;
+	font-size: 34px;
 	font-weight: 500;
 	color: #121c32;
 	position: relative;
@@ -51,11 +51,15 @@
 	margin: 40px auto 45px;
 	.label {
 		color: #414a53;
-		font-size: 30px;
+		font-size: 28px;
 	}
 	.money {
 		font-size: 68px;
-		color: #121c32;
+    color: #121c32;
+    .moneyUnit {
+      font-size: 36px;
+      margin-right: 10px;
+    }
 
 		.value {
 			font-family: 'DINMitAlt';
