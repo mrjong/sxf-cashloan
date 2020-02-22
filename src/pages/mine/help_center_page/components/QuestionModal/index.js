@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-08 16:17:43
+ * @LastEditTime: 2020-02-22 11:03:28
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -114,19 +114,19 @@ export default class QuestionModal extends PureComponent {
 				<div className={styles.zan_wrap}>
 					<div
 						onClick={() => {
-							this.dianzanClick('resolve');
-						}}
-					>
-						<span className={[styles.zan_icon, resolve && styles.zan_icon_active].join(' ')}></span>
-						<span className={[resolve && styles.nozan_text_active].join(' ')}>已解决</span>
-					</div>
-					<div
-						onClick={() => {
 							this.dianzanClick('noresolve');
 						}}
 					>
 						<span className={[styles.nozan_icon, noresolve && styles.nozan_icon_active].join(' ')}></span>
 						<span className={[noresolve && styles.nozan_text_active].join(' ')}>未解决</span>
+					</div>
+					<div
+						onClick={() => {
+							this.dianzanClick('resolve');
+						}}
+					>
+						<span className={[styles.zan_icon, resolve && styles.zan_icon_active].join(' ')}></span>
+						<span className={[resolve && styles.nozan_text_active].join(' ')}>已解决</span>
 					</div>
 				</div>
 			</Modal>

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:41:46
+ * @LastEditTime: 2020-02-22 11:50:18
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -391,6 +391,7 @@ export default class bind_save_page extends PureComponent {
 					bankList: list,
 					dateTime: dayjs(result.data.dateTime).format('YYYY年MM月DD日')
 				};
+				console.log(data);
 				this.props.history.push({
 					pathname: '/protocol/delegation_withhold_page',
 					state: {

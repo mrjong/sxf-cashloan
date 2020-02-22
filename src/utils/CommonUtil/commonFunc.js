@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:13:57
+ * @LastEditTime: 2020-02-22 10:26:31
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -31,6 +31,23 @@ export const logoutClearData = () => {
 	localStorage.clear();
 };
 
+/**
+ * @description: 处理后台返回的时间
+ * @param {type}
+ * @return:
+ */
+export const getTimeStr = (time) => {
+	if (!time) {
+		return '';
+	}
+	const y = time.substring(0, 4);
+	const m = time.substring(4, 6);
+	const d = time.substring(6, 8);
+	const h = time.substring(8, 10);
+	const m1 = time.substring(10, 12);
+	const s = time.substring(12, 14);
+	return `${y}/${m}/${d} ${h}:${m1}:${s}`;
+};
 /**
  * @description: 账单需要更新等跳转逻辑
  * @param {type}

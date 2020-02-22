@@ -12,6 +12,7 @@ import CountDown from './component/CountDown/index.js';
 import { PullToRefresh, ListView, Toast } from 'antd-mobile';
 import { connect } from 'react-redux';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
+import { getTimeStr } from 'utils/CommonUtil/commonFunc';
 import { coup_queryUsrCoupBySts, coup_queyUsrLoanUsbCoup, coup_queryUsrRepayUsbCoup } from 'fetch/api';
 import Images from 'assets/image';
 let totalPage = false;
@@ -308,18 +309,6 @@ export default class coupon_page extends PureComponent {
 			}
 		);
 	};
-	getTime = (time) => {
-		if (!time) {
-			return '';
-		}
-		const y = time.substring(0, 4);
-		const m = time.substring(4, 6);
-		const d = time.substring(6, 8);
-		const h = time.substring(8, 10);
-		const m1 = time.substring(10, 12);
-		const s = time.substring(12, 14);
-		return `${y}/${m}/${d} ${h}:${m1}:${s}`;
-	};
 
 	// 判断使用场景 + 优惠券类型
 	renderCouponType = (item) => {
@@ -469,10 +458,10 @@ export default class coupon_page extends PureComponent {
 											有效期还剩{' '}
 											{obj && obj.validEndTm && (
 												<CountDown
-													endTime={this.getTime(obj.validEndTm)}
+													endTime={getTimeStr(obj.validEndTm)}
 													timeOver={() => {
 														let now = +new Date();
-														let thisTime = +new Date(this.getTime(obj.validEndTm));
+														let thisTime = +new Date(getTimeStr(obj.validEndTm));
 														if (now > thisTime) {
 															return;
 														}
