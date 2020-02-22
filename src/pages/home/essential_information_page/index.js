@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 16:24:08
+ * @LastEditTime: 2020-02-22 10:15:16
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -936,7 +936,7 @@ export default class essential_information_page extends PureComponent {
 										title="选择联系人"
 										loadData={[
 											() =>
-												this.props.$fetch.get(`${msg_relation}/2`).then((result) => {
+												this.props.$fetch.get(`${msg_relation}/1`).then((result) => {
 													const prov =
 														result && result.data && result.data.data && result.data.data.length
 															? result.data.data
@@ -1062,7 +1062,7 @@ export default class essential_information_page extends PureComponent {
 										title="选择联系人"
 										loadData={[
 											() =>
-												this.props.$fetch.get(`${msg_relation}/1`).then((result) => {
+												this.props.$fetch.get(`${msg_relation}/2`).then((result) => {
 													const prov =
 														result && result.data && result.data.data && result.data.data.length
 															? result.data.data
