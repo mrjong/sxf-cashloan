@@ -156,9 +156,9 @@ export default class Cashier extends React.PureComponent {
 		this.props.$fetch
 			.post(repay_queryCashRegisterDetail, state)
 			.then((res) => {
-				if (res.msgCode === '000000' && res.data) {
+				if (res.code === '000000' && res.data) {
 					this.setState({
-						exceedingAmt: res.data[0].exceedingAmt
+						exceedingAmt: res.data.exceedingAmt
 					});
 				}
 			})
