@@ -393,9 +393,14 @@ export default class coupon_page extends PureComponent {
 							<div className={style.leftBox}>
 								<div className={style.leftBoxLineBox}>
 									{obj && obj.coupCategory === '00' ? (
-										<div className={style.leftCont}>
-											<i className={style.money}>{obj && obj.coupVal}</i>元
-											<p className={style.leftDesc}>{this.renderCouponType(obj)}</p>
+										<div className={isInvalid ? [style.leftCont, style.textGray].join(' ') : style.leftCont}>
+											<i className={isInvalid ? [style.money, style.textGray].join(' ') : style.money}>
+												{obj && obj.coupVal}
+											</i>
+											元
+											<p className={isInvalid ? [style.leftDesc, style.textGray].join(' ') : style.leftDesc}>
+												{this.renderCouponType(obj)}
+											</p>
 										</div>
 									) : obj && obj.coupCategory === '03' ? (
 										<span className={style.couponType2}>免息</span>
@@ -415,7 +420,7 @@ export default class coupon_page extends PureComponent {
 							<div className={style.rightBox}>
 								{receiveData && receiveData.entryFrom && receiveData.entryFrom === 'mine' ? (
 									<button
-										className={style.goUse}
+										className={this.state.msgType === 0 ? style.goUse : [style.goUse, style.disBtn].join(' ')}
 										onClick={
 											this.state.msgType === 0
 												? () => {
@@ -425,7 +430,7 @@ export default class coupon_page extends PureComponent {
 												: () => {}
 										}
 									>
-										去使用
+										{obj && obj.useSts === '01' ? '使用中' : '去使用'}
 									</button>
 								) : null}
 
