@@ -74,7 +74,7 @@ export default class ProtocolSmsModal extends React.PureComponent {
 
 	// 协议支付协议预览
 	readProtocol = () => {
-		const { history, fetch, toast } = this.props;
+		const { fetch, toast } = this.props;
 		const params = {
 			cardNoCpt: ''
 		};

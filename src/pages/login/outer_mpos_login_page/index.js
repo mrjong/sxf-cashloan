@@ -156,6 +156,15 @@ export default class login_page extends PureComponent {
 		}
 	};
 
+	//	校验必填项 按钮是否可以点击
+	validateFn = () => {
+		const formData = this.props.form.getFieldsValue();
+		if (formData.phoneValue && formData.smsCd) {
+			return true;
+		}
+		return false;
+	};
+
 	//去登陆按钮
 	goLogin = () => {
 		sxfburiedPointEvent(dlgoLoginRiskBury.key);
@@ -454,7 +463,10 @@ export default class login_page extends PureComponent {
 								<i className={styles.leftBorder} />
 							</div>
 						</div>
-						<div className={styles.sureBtn} onClick={this.goLogin}>
+						<div
+							className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}
+							onClick={this.goLogin}
+						>
 							<span>查看额度</span>
 						</div>
 						<i className={[styles.commonLine, styles.leftTopLine].join(' ')} />

@@ -82,8 +82,7 @@ export default class login_page extends PureComponent {
 			slideImageUrl: '',
 			mobilePhone: '',
 			times: 3, // 弹框里的倒计时
-			showDownloadModal: false,
-			errMsg: '' // 错误信息
+			showDownloadModal: false
 		};
 	}
 
@@ -192,10 +191,7 @@ export default class login_page extends PureComponent {
 			});
 		}
 		if (!this.state.smsJrnNo) {
-			// Toast.info('请先获取短信验证码');
-			this.setState({
-				errMsg: '请先获取短信验证码'
-			});
+			Toast.info('请先获取短信验证码');
 			return;
 		}
 		if (!isChecked) {
@@ -206,9 +202,6 @@ export default class login_page extends PureComponent {
 
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				this.setState({
-					errMsg: ''
-				});
 				// 埋点-注册登录页一键代还
 				buriedPointEvent(login.submit);
 				let param = {
@@ -227,17 +220,12 @@ export default class login_page extends PureComponent {
 					(res) => {
 						if (res.code !== '000000') {
 							Toast.hide();
-							this.setState({
-								errMsg: res.message
-							});
+							Toast.info(res.message);
 							buriedPointEvent(login.submitFail, {
 								fail_cause: res.message
 							});
 							return;
 						}
-						this.setState({
-							errMsg: ''
-						});
 						this.props.setUserInfoAction(res.data);
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
 						// TODO: 根据设备类型存储token
@@ -259,16 +247,11 @@ export default class login_page extends PureComponent {
 						buriedPointEvent(login.submitFail, {
 							fail_cause: error.message
 						});
-						error.message &&
-							this.setState({
-								errMsg: error.message
-							});
+						error.message && Toast.info(error.message);
 					}
 				);
 			} else {
-				this.setState({
-					errMsg: getFirstError(err)
-				});
+				Toast.info(getFirstError(err));
 			}
 		});
 	};
@@ -310,9 +293,6 @@ export default class login_page extends PureComponent {
 				delete err.smsCd;
 			}
 			if (!err || JSON.stringify(err) === '{}') {
-				this.setState({
-					errMsg: ''
-				});
 				// 埋点-登录页获取验证码
 				buriedPointEvent(login.getCode);
 				this.setState(
@@ -324,10 +304,7 @@ export default class login_page extends PureComponent {
 					}
 				);
 			} else {
-				this.setState({
-					errMsg: getFirstError(err)
-				});
-				// Toast.info(getFirstError(err));
+				Toast.info(getFirstError(err));
 			}
 		});
 	}
@@ -396,10 +373,6 @@ export default class login_page extends PureComponent {
 		this.props.$fetch
 			.post(msg_sms, data)
 			.then((result) => {
-				this.setState({
-					// 去掉错误显示
-					errMsg: ''
-				});
 				if (result.code === '000000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
@@ -425,9 +398,7 @@ export default class login_page extends PureComponent {
 					if (xOffset) {
 						Toast.info(result.message);
 					} else {
-						this.setState({
-							errMsg: result.message
-						});
+						Toast.info(result.message);
 					}
 					cb && cb('error');
 					this.closeSlideModal();
@@ -571,7 +542,6 @@ export default class login_page extends PureComponent {
 			yOffset,
 			bigImageH,
 			disabledInput,
-			errMsg,
 			showDownloadModal
 		} = this.state;
 		const { getFieldProps } = this.props.form;
@@ -647,7 +617,6 @@ export default class login_page extends PureComponent {
 								{this.state.timers}
 							</div>
 						</div>
-						{errMsg ? <p className={styles.errMsgBox}>{errMsg}</p> : null}
 						<div className={styles.operateBox}>
 							<div
 								className={!this.validateFn() ? `${styles.sureBtn} ${styles.sureDisableBtn}` : styles.sureBtn}

@@ -1,25 +1,15 @@
 import React, { PureComponent } from 'react';
 import ButtonCustom from 'components/ButtonCustom';
-import { store } from 'utils/store';
+import { connect } from 'react-redux';
 import styles from './index.scss';
 
+@connect((state) => ({
+	overdueModalInfo: state.commonState.overdueModalInfo
+}))
 export default class overdue_progress_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		this.state = {
-			progressList: []
-		};
 	}
-	componentWillMount() {
-		let progressList = store.getOverdueInf();
-		if (progressList) {
-			this.setState({
-				progressList
-			});
-		}
-	}
-
-	componentWillUnmount() {}
 
 	// 返回账单详情
 	backOrderDtl = () => {
@@ -27,7 +17,7 @@ export default class overdue_progress_page extends PureComponent {
 	};
 
 	render() {
-		const { progressList } = this.state;
+		const { progressInfos: progressList } = this.props.overdueModalInfo;
 		return (
 			<div className={styles.overdue_progress_page}>
 				{progressList && progressList.length ? (
