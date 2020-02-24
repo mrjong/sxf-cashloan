@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-13 19:24:35
+ * @LastEditTime: 2020-02-24 16:46:45
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -18,16 +18,13 @@ import { Checkbox } from 'antd-mobile';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
 import { connect } from 'react-redux';
 import { signup_mpos_auth } from 'fetch/api';
 import logo from './img/logo.png';
 const AgreeItem = Checkbox.AgreeItem;
-const needDisplayOptions = ['basicInf'];
-const API = {
-	doAuth: '/authorize/doAuth',
-	getStw: '/my/getStsw' // 获取4个认证项的状态(看基本信息是否认证)
-};
+
 let query = '';
 @setBackGround('#fff')
 @fetch.inject()
@@ -100,41 +97,13 @@ export default class mpos_service_authorization_page extends PureComponent {
 		activeConfigSts({
 			$props: this.props,
 			type: 'A',
-			callback: this.requestGetStatus
+			callback: () => {
+				getNextStatus({
+					$props: this.props,
+					actionType: 'mpos'
+				});
+			}
 		});
-	};
-	// 获取授信列表状态
-	requestGetStatus = () => {
-		this.props.$fetch
-			.get(`${API.getStw}`)
-			.then((result) => {
-				if (result && result.data !== null && result.msgCode === 'PTM0000') {
-					const stswData =
-						result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
-					if (stswData && stswData.length) {
-						// case '0': // 未认证
-						// case '1': // 认证中
-						// case '2': // 认证成功
-						// case '3': // 认证失败
-						// case '4': // 认证过期
-						if (stswData[0].stsw.dicDetailCd === '0') {
-							this.props.history.replace({
-								pathname: '/home/essential_information',
-								search: '?jumpToBase=true&entry=authorize'
-							});
-						} else {
-							this.props.history.replace('/home/home');
-						}
-					}
-				} else {
-					this.props.toast.info(result.msgInfo, 2, () => {
-						this.props.history.replace('/home/home');
-					});
-				}
-			})
-			.catch(() => {
-				this.props.history.replace('/home/home');
-			});
 	};
 
 	// 跳转协议

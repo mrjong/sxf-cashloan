@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 14:19:47
+ * @LastEditTime: 2020-02-24 16:45:47
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -71,7 +71,7 @@ export default class mpos_download_page extends PureComponent {
 		} else {
 			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
 				(res) => {
-					if (res.msgCode === '000000') {
+					if (res.code === '000000') {
 						Toast.info('安全下载中');
 						window.location.href = res.data.downloadUrl;
 					} else {
