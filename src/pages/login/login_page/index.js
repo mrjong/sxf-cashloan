@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:39:24
+ * @LastEditTime: 2020-02-24 15:00:14
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -218,8 +218,8 @@ export default class login_page extends PureComponent {
 				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
+						Toast.hide();
 						if (res.code !== '000000') {
-							Toast.hide();
 							Toast.info(res.message);
 							buriedPointEvent(login.submitFail, {
 								fail_cause: res.message

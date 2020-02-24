@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 10:03:26
+ * @LastEditTime: 2020-02-24 14:50:34
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -14,9 +14,9 @@ import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { changeHistoryState, pagesIgnore } from 'utils';
+import { changeHistoryState, pagesIgnore, queryUsrSCOpenId } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
-import { pageView, sxfDataPv, sxfDataLogin } from 'utils/analytins';
+import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
 import { HomeModal } from '../../home/home_page/components';
 import { signup_refreshClientUserInfo } from 'fetch/api.js';
@@ -111,17 +111,6 @@ export default class router_Page extends PureComponent {
 	acRouter = (Props) => {
 		this.loadComponent(Props);
 	};
-	// 神策用户绑定
-	queryUsrSCOpenId = () => {
-		if (!store.getQueryUsrSCOpenId()) {
-			const { userInfo } = this.props;
-			if (userInfo && userInfo.tokenId) {
-				window.sa.login(userInfo.scOpenId);
-				sxfDataLogin(userInfo.scOpenId);
-				store.setQueryUsrSCOpenId(userInfo.scOpenId);
-			}
-		}
-	};
 	loadComponent = async (props) => {
 		const queryData = qs.parse(this.props.history.location.search, {
 			ignoreQueryPrefix: true
@@ -150,7 +139,7 @@ export default class router_Page extends PureComponent {
 		try {
 			let route;
 			// 看条件自动触发通付盾
-			this.queryUsrSCOpenId();
+			queryUsrSCOpenId();
 			TFDInit();
 			for (let i = 0; i < Routers.length; i++) {
 				if (match.url === Routers[i].path) {

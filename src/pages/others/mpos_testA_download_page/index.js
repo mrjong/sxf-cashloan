@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 18:15:09
+ * @LastEditTime: 2020-02-24 14:19:47
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -8,7 +8,7 @@ import fetch from 'sx-fetch';
 import { Toast } from 'antd-mobile';
 import { setBackGround } from 'utils/background';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
-import { getDeviceType, queryUsrSCOpenId } from 'utils';
+import { getDeviceType } from 'utils';
 import { other } from 'utils/analytinsType';
 import linkConf from 'config/link.conf';
 import button_img from './img/button_img.png';
@@ -28,9 +28,6 @@ export default class mpos_download_page extends PureComponent {
 		});
 		buriedPointEvent(other.mposDownloadPageAB, {
 			position: 'testA_download'
-		});
-		queryUsrSCOpenId({
-			$props: this.props
 		});
 	}
 
