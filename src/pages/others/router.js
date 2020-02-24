@@ -1,16 +1,8 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-01-09 10:35:08
+ * @LastEditTime: 2020-02-24 17:11:05
  */
 export default [
-	{
-		path: '/others/dc_landing_page',
-		zhName: 'dcldy',
-		title: '贷超落地页',
-		arrowHide: 'empty',
-		headerHide: true,
-		component: () => import('pages/others/dc_landing_page')
-	},
 	{
 		path: '/others/download_page',
 		zhName: 'xzy',
