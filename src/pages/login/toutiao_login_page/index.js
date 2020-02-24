@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 13:17:47
+ * @LastEditTime: 2020-02-24 14:07:14
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -197,6 +197,7 @@ export default class momo_outer_login_page extends PureComponent {
 				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(passport_loginBySms, param).then(
 					(res) => {
+						Toast.hide();
 						if (res.code !== '0000') {
 							res.message && Toast.info(res.message);
 							return;

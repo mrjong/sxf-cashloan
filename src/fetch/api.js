@@ -326,3 +326,4 @@ export const passport_createImg = '/passport/createImg';
 export const passport_getRelyToken = '/passport/getRelyToken';
 export const passport_sendImgSms = '/passport/sendImgSms';
 export const download_getDownloadUrl = '/download/getDownloadUrl';
+export const signup_getUsrRqpInf = '/signup/getUsrRqpInf';

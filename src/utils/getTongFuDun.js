@@ -1,11 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 17:10:03
+ * @LastEditTime: 2020-02-24 14:05:53
  */
 import { guid } from 'utils';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
-import { signup_device } from 'fetch/api';
+import { signup_device, signup_getUsrRqpInf } from 'fetch/api';
+import qs from 'qs';
 const { PROJECT_ENV } = process.env;
 let elementId, sessionId;
 let timer = null;
@@ -29,6 +30,14 @@ function getTongFuDun() {
 
 // 通付盾验证成功后向后端报备下
 function requestBackReport() {
+	const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+	let url = '';
+	// baseMark 00 为信息流url请求前缀
+	if (query && query.baseMark === '00') {
+		url = signup_getUsrRqpInf;
+	} else {
+		url = signup_device;
+	}
 	if (isFetch) {
 		return;
 	}
@@ -39,7 +48,7 @@ function requestBackReport() {
 		return;
 	}
 	fetch
-		.get(`${signup_device}/${sessionId}`, null, {
+		.get(`${url}/${sessionId}`, null, {
 			hideToast: true
 		})
 		.then(() => {
