@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 13:51:09
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-24 16:33:33
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -90,6 +90,22 @@
           var expires = "expires="+d.toGMTString();
           document.cookie = cname + "=" + cvalue + "; " + expires;
         }
+        // 获取cookie
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
         // 页面加载完成
         $(function(){
           // 物理返回
@@ -120,28 +136,29 @@
           const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
               type: "POST",
-              url: "/wap/wx/authcb",
+              url: "/wap/signup/wx/authcb",
               data: JSON.stringify({
                 state: getUrlParam('state'),
                 code: getUrlParam('code'),
                 // channelCode: getH5Channel(),
-                osType: getDeviceType()
+                osType: getDeviceType().toLowerCase(),
+                loginType: '0',
               }),
              contentType: "application/json",
              dataType: "json",
              success: function(res){
-              if (res.msgCode == 'WX0000' || res.msgCode == 'URM0100') {
+              if (res.code == 'WX0000' || res.code == 'URM0100') {
                 //请求成功,跳到登录页(前提是不存在已登录未注册的情况)
                 console.log(res);
                 // this.props.history.replace('/login')
                 getWXPayParams();
-              } else if (res.msgCode == 'WX0100') {
+              } else if (res.code == 'WX0100') {
                 // 已授权不需要登陆
                 setCookie('fin-v-card-token-wechat', res.token, 365); // 微信授权token
                 setCookie('fin-v-card-token', res.loginToken, 365);
                 getWXPayParams();
               } else {
-                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.msgInfo+'</p>');
+                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.message+'</p>');
               }
             }
           });
@@ -155,27 +172,27 @@
               url: "/wap/wx/auth",
               data: JSON.stringify({
                 redirectUrl: encodeURIComponent(window.location.href),
-                osType: getDeviceType()
+                osType: getDeviceType().toLowerCase()
               }),
              contentType: "application/json",
              dataType: "json",
              success: function(res){
-              if (res.msgCode == 'WX0101') {
+              if (res.code == 'WX0101') {
                 //没有授权
                 setCookie('fin-v-card-token-wechat', res.token, 365);
                 window.location.href = decodeURIComponent(res.url);
-              } else if (res.msgCode == 'WX0102' || res.msgCode == 'URM0100') {
+              } else if (res.code == 'WX0102' || res.code == 'URM0100') {
                 //已授权未登录 (静默授权为7天，7天后过期）
                 // this.props.history.replace('/home/home')
                 // this.props.history.replace('/login')
                 getWXPayParams();
-              } else if (res.msgCode == 'WX0100') {
+              } else if (res.code == 'WX0100') {
                 //已授权已登录
                 setCookie('fin-v-card-token', res.loginToken, { expires: 365 });
                 // localStorage.setItem('authorizedNotLoginStats', 'true')
                 getWXPayParams();
               } else {
-                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.msgInfo+'</p>');
+                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.message+'</p>');
               }
             }
           });
@@ -227,16 +244,17 @@
           const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
              type: "POST",
-             url: "/wap/bill/getPayUrl",
+             url: "/wap/repay/getQrPayUrl",
              data: JSON.stringify({"reqOrdNo": reqOrdNo, "osName": osName}),
              contentType: "application/json",
              dataType: "json",
+             headers:{"FIN-HD-WECHAT-TOKEN": getCookie('FIN-HD-WECHAT-TOKEN')},
              success: function(res){
-              if (res.msgCode === 'PTM0000') {
-					      let wxData = res.data && JSON.parse(res.data);
+              if (res.code === '000000') {
+					      let wxData = res.data && res.data.phonePayStr && JSON.parse(res.data.phonePayStr);
                 wxPay(wxData);
               } else {
-                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.msgInfo+'</p>');
+                $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.message+'</p>');
               }
             }
           });
