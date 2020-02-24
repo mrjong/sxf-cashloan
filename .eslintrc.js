@@ -33,6 +33,7 @@ const eslintrc = {
 		'space-before-function-paren': 0,
 		'no-param-reassign': 0,
 		'func-names': 0,
+		'no-debugger': 0,
 		'arrow-parens': 0,
 		'jsx-a11y/click-events-have-key-events': 0,
 		'prefer-template': 0,
@@ -80,22 +81,19 @@ const eslintrc = {
 		'import/no-duplicates': 0, //此规则要求从单个模块进行的所有导入都以单一import语句存在
 		'import/no-extraneous-dependencies': 0,
 		'import/no-named-as-default': 0,
-    'import/no-named-as-default-member': 0,
-    'import/newline-after-import': 0,
+		'import/no-named-as-default-member': 0,
+		'import/newline-after-import': 0,
 		'import/no-dynamic-require': 0,
 
 		'react/jsx-indent-props': [0, 2],
 		'react/no-array-index-key': 0,
 		'react/no-danger': 0,
-		'react/sort-comp': [0, {
-      'order': [
-        'static-methods',
-        'lifecycle',
-        '/^on.+$/',
-        'everything-else',
-        'render'
-      ]
-    }],
+		'react/sort-comp': [
+			0,
+			{
+				order: ['static-methods', 'lifecycle', '/^on.+$/', 'everything-else', 'render']
+			}
+		],
 		'react/jsx-indent': 0,
 		'react/no-string-refs': 2,
 		'react/no-unused-prop-types': 0,

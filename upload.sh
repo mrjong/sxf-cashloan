@@ -1,14 +1,15 @@
 ###
 # @Author: sunjiankun
  # @LastEditors: Please set LastEditors
- # @LastEditTime: 2020-02-24 13:01:01
+ # @LastEditTime: 2020-02-24 15:56:55
  ###
 #!/usr/bin/env bash
 
 remote_path=/home/app/nginx/html
 remote_path2=/home/app/nginx/html/www
 remote_user=app
-remote_ip=172.16.175.23
+# remote_ip=172.16.175.23
+remote_ip=172.16.174.105
 
 tar czvf dist.tar ./*
 echo -e "\033[41;37m 请输入远程服务器密码开始上传文件 \033[0m"
