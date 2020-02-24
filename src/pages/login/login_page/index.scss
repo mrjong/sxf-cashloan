@@ -21,9 +21,12 @@
 			background-color: #ccc;
 		}
 		.am-list-item .am-input-control input:disabled {
-      background-color: transparent;
-      color: #000;
-      opacity: .6;
+			background-color: transparent;
+			color: #000;
+			opacity: 0.6;
+		}
+		.am-list-item .am-input-control input:-webkit-autofill {
+			@include clearFillStyle(#eff1f2);
 		}
 	}
 
