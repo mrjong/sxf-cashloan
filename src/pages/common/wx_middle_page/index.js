@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 17:05:18
+ * @LastEditTime: 2020-02-24 13:58:46
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -42,7 +42,7 @@ export default class wx_middle_page extends Component {
 					location: store.getPosition(),
 					loginType: '0',
 					mac: '',
-					wxToken: Cookie.get('FIN-HD-WECHAT-TOKEN'),
+					// wxToken: Cookie.get('FIN-HD-WECHAT-TOKEN'),
 					osType: osType.toLowerCase(),
 					redirectUrl: '',
 					registrationId: '',
