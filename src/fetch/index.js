@@ -47,13 +47,15 @@ const fetchInit = () => {
 			// 非微信去掉 fn-v-card-token-wechat
 			if (!isWXOpen()) {
 				Cookie.remove('FIN-HD-WECHAT-TOKEN');
-			} else if (isWXOpen() && Cookie.get('FIN-HD-WECHAT-TOKEN')) {
-				cfg.headers['FIN-HD-WECHAT-TOKEN'] = Cookie.get('FIN-HD-WECHAT-TOKEN');
 			}
+			console.log(cfg, '-------');
 			// const TOKEN = Cookie.get('FIN-HD-AUTH-TOKEN');
 			// TODO: 这里tocken 不能从 cookie 取值 因为目前它永远有效
 			let tokenFromStorage = '';
 			tokenFromStorage = store.getToken();
+			if (cfg['FIN-HD-WECHAT-TOKEN']) {
+				cfg.headers['FIN-HD-WECHAT-TOKEN'] = cfg['FIN-HD-WECHAT-TOKEN'];
+			}
 			if (cfg['FIN-HD-AUTH-TOKEN']) {
 				cfg.headers['FIN-HD-AUTH-TOKEN'] = cfg['FIN-HD-AUTH-TOKEN'];
 			} else if (tokenFromStorage && !location.pathname.indexOf('activity') > -1) {

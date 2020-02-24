@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:41:28
+ * @LastEditTime: 2020-02-24 15:10:00
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -213,6 +213,7 @@ export default class login_common_page extends PureComponent {
 					Toast.loading('加载中...', 10);
 					this.props.$fetch.post(signup_sms, param).then(
 						(res) => {
+							Toast.hide();
 							if (res.code !== '000000') {
 								res.message && Toast.info(res.message);
 								return;

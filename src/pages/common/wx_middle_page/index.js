@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 13:58:46
+ * @LastEditTime: 2020-02-24 16:19:52
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -36,20 +36,27 @@ export default class wx_middle_page extends Component {
 		setH5Channel();
 		if (query && query.code) {
 			this.props.$fetch
-				.post(signup_wx_authcb, {
-					code: query.code,
-					imei: '',
-					location: store.getPosition(),
-					loginType: '0',
-					mac: '',
-					// wxToken: Cookie.get('FIN-HD-WECHAT-TOKEN'),
-					osType: osType.toLowerCase(),
-					redirectUrl: '',
-					registrationId: '',
-					state: query.state,
-					userChannel: getH5Channel()
-				})
+				.post(
+					signup_wx_authcb,
+					{
+						code: query.code,
+						imei: '',
+						location: store.getPosition(),
+						loginType: '0',
+						mac: '',
+						// wxToken: Cookie.get('FIN-HD-WECHAT-TOKEN'),
+						osType: osType.toLowerCase(),
+						redirectUrl: '',
+						registrationId: '',
+						state: query.state,
+						userChannel: getH5Channel()
+					},
+					{
+						'FIN-HD-WECHAT-TOKEN': Cookie.get('FIN-HD-WECHAT-TOKEN')
+					}
+				)
 				.then((res) => {
+					debugger;
 					if (res.code == '000000' && res.data.wxFlag === '0') {
 						//请求成功,跳到登录页(前提是不存在已登录未注册的情况)
 						let NoLoginUrl = store.getNoLoginUrl();
@@ -86,7 +93,7 @@ export default class wx_middle_page extends Component {
 					osType: osType.toLowerCase(),
 					redirectUrl: encodeURIComponent(window.location.href),
 					registrationId: '',
-					state: '',
+					state: '111',
 					userChannel: getH5Channel()
 				})
 				.then((res) => {
@@ -103,6 +110,7 @@ export default class wx_middle_page extends Component {
 					if (res.code == '000000' && res.data.wxFlag === '1') {
 						//没有授权
 						Cookie.set('FIN-HD-WECHAT-TOKEN', res.data.wxToken, { expires: 365 });
+						debugger;
 						window.location.href = decodeURIComponent(res.data.wxUrl);
 					} else if (res.code == '000000' && res.data.wxFlag === '2') {
 						//已授权未登录 (静默授权为7天，7天后过期）

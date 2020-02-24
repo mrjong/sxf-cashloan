@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 17:57:07
+ * @LastEditTime: 2020-02-24 14:57:34
  */
 /*eslint-disable */
 import React from 'react';
@@ -13,6 +13,7 @@ import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
 import { signup_log, abt_mpos } from 'fetch/api';
+import storeRedux from '../reduxes';
 // 退出的api
 const API = {
 	LOGOUT: '/signup/logout', // 用户退出登陆
@@ -419,4 +420,25 @@ export const arrCheckDup = (arr, key) => {
 		}
 	}
 	return true;
+};
+
+// 神策用户绑定
+export const queryUsrSCOpenId = () => {
+	let storeData = storeRedux.getState();
+	const { staticState = {} } = storeData;
+	const { userInfo } = staticState;
+	return new Promise((resolve) => {
+		if (!store.getQueryUsrSCOpenId()) {
+			if (userInfo && userInfo.tokenId) {
+				window.sa.login(userInfo.scOpenId);
+				sxfDataLogin(userInfo.scOpenId);
+				store.setQueryUsrSCOpenId(userInfo.scOpenId);
+				resolve(true);
+			} else {
+				resolve(true);
+			}
+		} else {
+			resolve(true);
+		}
+	});
 };
