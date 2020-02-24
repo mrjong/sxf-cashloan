@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:47:05
+ * @LastEditTime: 2020-02-24 16:21:49
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -76,9 +76,11 @@ export default class wx_download_page extends PureComponent {
 			<div>
 				<DownloadTip visible={visible}></DownloadTip>
 				<img src={top_bg} alt="" className={styles.top_bg} />
-				<SXFButton className={styles.smart_button} onClick={this.downloadClick}>
-					安全下载
-				</SXFButton>
+				<div className={styles.btn_box}>
+					<SXFButton className={styles.smart_button} onClick={this.downloadClick}>
+						安全下载
+					</SXFButton>
+				</div>
 				<p className={styles.desc}>如果您是老用户，请前往还到APP操作并还款</p>
 				<img src={hegui_bg} alt="" className={styles.hegui_bg} />
 			</div>

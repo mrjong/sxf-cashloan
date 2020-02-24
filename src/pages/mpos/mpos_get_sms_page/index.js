@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 15:11:13
+ * @LastEditTime: 2020-02-24 16:46:34
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -19,15 +19,8 @@ import click from '../mpos_service_authorization_page/img/Button.png';
 
 import { TFDLogin } from 'utils/getTongFuDun';
 import { msg_slide, msg_sms, signup_sms, signup_mpos_auth } from 'fetch/api';
-
-const needDisplayOptions = ['basicInf'];
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getH5Channel } from 'utils/common';
-
-const API = {
-	sendsms: '/cmm/sendsms',
-	doAuth: '/authorize/doAuth',
-	getStw: '/my/getStsw' // 获取4个认证项的状态(看基本信息是否认证)
-};
 let timmer = '';
 let query = {};
 @setBackGround('#fff')
@@ -343,87 +336,20 @@ export default class mpos_get_sms_page extends PureComponent {
 			}
 		});
 	}
-	//登录判断
-	goSubmit() {
-		let { codeInput } = this.state;
-		if (!codeInput) {
-			this.props.toast.info('请输入验证码');
-			return;
-		}
-		if (!/^\d{6}$/.test(codeInput)) {
-			this.props.toast.info('验证码输入不正确');
-			return;
-		}
-		this.props.$fetch
-			.post(API.doAuth, {
-				authToken: this.state.query.tokenId,
-				location: store.getPosition(), // 定位地址 TODO 从session取,
-				osType: getDeviceType(),
-				smsCd: codeInput,
-				smsJrnNo: this.state.smsJrnNo,
-				smsFlg: 'Y'
-			})
-			.then(
-				(res) => {
-					if (res.authSts === '00') {
-						Cookie.set('FIN-HD-AUTH-TOKEN', res.loginToken, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.loginToken);
-						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
-						TFDLogin();
-						this.goHome();
-					} else {
-						this.props.toast.info('授权失败', 3, () => {
-							this.props.history.replace(`/login?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`);
-						});
-					}
-				},
-				(err) => {
-					this.props.toast.info(err.msgInfo);
-				}
-			);
-	}
 	// AB 测试
 	goHome = () => {
 		activeConfigSts({
 			$props: this.props,
 			type: 'A',
-			callback: this.requestGetStatus
+			callback: () => {
+				getNextStatus({
+					$props: this.props,
+					actionType: 'mpos'
+				});
+			}
 		});
 	};
-	// 获取授信列表状态
-	requestGetStatus = () => {
-		this.props.$fetch
-			.get(`${API.getStw}`)
-			.then((result) => {
-				if (result && result.data !== null && result.msgCode === 'PTM0000') {
-					const stswData =
-						result.data.length && result.data.filter((item) => needDisplayOptions.includes(item.code));
-					if (stswData && stswData.length) {
-						// case '0': // 未认证
-						// case '1': // 认证中
-						// case '2': // 认证成功
-						// case '3': // 认证失败
-						// case '4': // 认证过期
-						if (stswData[0].stsw.dicDetailCd === '0') {
-							this.props.history.replace({
-								pathname: '/home/essential_information',
-								search: '?jumpToBase=true&entry=sms'
-							});
-						} else {
-							this.props.history.replace('/home/home');
-						}
-					}
-				} else {
-					this.props.toast.info(result.msgInfo, 2, () => {
-						this.props.history.replace('/home/home');
-					});
-				}
-			})
-			.catch(() => {
-				this.props.history.replace('/home/home');
-			});
-	};
+
 	render() {
 		const {
 			slideImageUrl,

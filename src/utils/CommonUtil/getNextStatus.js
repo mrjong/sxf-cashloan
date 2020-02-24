@@ -171,6 +171,18 @@ export const getNextStatus = ({
 			let resBackMsg = ''; // 额外参数 在回调的时候使用
 			let param = null; // 可能需要的路由参数
 			let stateObj = null;
+			// 处理mpos直接跳转到基本信息的特殊情况
+			if (actionType === 'mpos') {
+				if (nextData.nextStepGramCode === 'AUTH003') {
+					$props.history.replace({
+						pathname: '/home/essential_information',
+						search: '?jumpToBase=true&entry=authorize'
+					});
+				} else {
+					$props.history.replace('/home/home');
+				}
+				return;
+			}
 			switch (nextData.nextStepGramCode) {
 				case 'AUTH001':
 					if (nextData.supTag === '1' || nextData.supTag === '2') {
@@ -200,13 +212,6 @@ export const getNextStatus = ({
 								Toast.info(result.message);
 							}
 						});
-					// getFaceDetect($props, (isValid) => {
-					// 	Toast.hide();
-					// 	if (isValid) {
-					// 		getNextStatus({ $props });
-					// 	}
-					// });
-
 					break;
 				case 'AUTH003':
 					resBackMsg = '基本信息认证';
@@ -304,6 +309,11 @@ export const getNextStatus = ({
 				$props.history.push(objRouter);
 			}
 		} else {
-			Toast.info(nextStatusResponse.message);
+			// 处理mpos直接跳转到基本信息的特殊情况
+			if (actionType === 'mpos') {
+				$props.history.replace('/home/home');
+			} else {
+				Toast.info(nextStatusResponse.message);
+			}
 		}
 	});

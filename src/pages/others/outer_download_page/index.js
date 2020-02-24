@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:47:29
+ * @LastEditTime: 2020-02-24 16:29:48
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -69,9 +69,11 @@ export default class outer_download_page extends PureComponent {
 					<em>1.2%</em> <del>1.5%</del>
 					<i />
 				</p>
-				<ButtonCustom className={styles.button} onClick={this.downloadClick}>
-					下载APP使用
-				</ButtonCustom>
+				<div className={styles.btn_box}>
+					<ButtonCustom className={styles.button} onClick={this.downloadClick}>
+						下载APP使用
+					</ButtonCustom>
+				</div>
 				<p className={styles.desc}>打开还到APP首页,查看是否获得VIP资格，或拨打客服电话400-088-7626</p>
 			</div>
 		);

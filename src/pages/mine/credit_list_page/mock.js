@@ -1,6 +1,6 @@
 export default {
-	msgCode: 'PTM0000',
-	msgInfo: 'SUCCESS',
+	code: '000000',
+	message: 'SUCCESS',
 	data: {
 		resultLength: 0,
 		result: [
