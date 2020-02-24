@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:20:05
+ * @LastEditTime: 2020-02-24 17:09:58
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -211,6 +211,7 @@ export default class momo_outer_login_page extends PureComponent {
 				Toast.loading('加载中...', 10);
 				this.props.$fetch.post(signup_sms, param).then(
 					(res) => {
+						Toast.hide();
 						if (res.code !== '000000') {
 							res.message && Toast.info(res.message);
 							return;
@@ -367,22 +368,6 @@ export default class momo_outer_login_page extends PureComponent {
 				cb && cb('error');
 				this.closeSlideModal();
 			});
-	};
-
-	reloadSlideImage = () => {
-		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
-					yOffset: res.data.sy, // 小图距离大图顶部距离
-					bigImageH: res.data.bh, // 大图实际高度
-					showSlideModal: true
-				});
-			} else {
-				Toast.info(res.message);
-			}
-		});
 	};
 
 	showSlideModal = () => {
