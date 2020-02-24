@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:32:08
+ * @LastEditTime: 2020-02-24 13:17:47
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -37,8 +37,13 @@ import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
-import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
-import { base64Encode } from 'utils/CommonUtil/toolUtil';
+import {
+	passport_loginBySms,
+	passport_createImg,
+	passport_getRelyToken,
+	passport_sendImgSms,
+	download_getDownloadUrl
+} from 'fetch/api';
 
 import {
 	dlinputPhoneRiskBury,
@@ -48,12 +53,6 @@ import {
 	dlsmsCodeBtnRiskBury
 } from '../riskBuryConfig';
 let timmer;
-const API = {
-	smsForLogin: '/passport/loginBySms',
-	createImg: '/passport/createImg', // 获取滑动大图
-	getRelyToken: '/passport/getRelyToken', //图片token获取
-	sendImgSms: '/passport/sendImgSms' //新的验证码获取接口
-};
 
 let entryPageTime = '';
 let modalTimer = null;
@@ -156,6 +155,7 @@ export default class momo_outer_login_page extends PureComponent {
 
 	//去登陆按钮
 	goLogin = () => {
+		const { queryData } = this.state;
 		sxfburiedPointEvent(dlgoLoginRiskBury.key);
 		// const { queryData } = this.state;
 		// 防止用户关闭弹框,继续点击进行登录
@@ -183,20 +183,21 @@ export default class momo_outer_login_page extends PureComponent {
 			if (!err) {
 				buriedPointEvent(daicao.loginBtn);
 				let param = {
-					tokenId: this.state.relyToken, // 短信流水号
-					osType: osType.toLowerCase(), // 操作系统
-					loginType: '0',
-					smsCode: values.smsCd,
-					imei: '',
-					mac: '',
-					registrationId: '',
-					userChannel: getH5Channel(), // 用户渠道
-					location: store.getPosition() // 定位地址 TODO 从session取
+					smsJrnNo: this.state.smsJrnNo, // 短信流水号
+					osType, // 操作系统
+					smsCd: values.smsCd,
+					usrCnl: getH5Channel(), // 用户渠道
+					location: store.getPosition(), // 定位地址 TODO 从session取
+					mblNo: values.phoneValue && values.phoneValue.replace(/\s*/g, ''), // 手机号
+					userContract: { contractType: '01,02' },
+					queryUsrSCOpenId: true,
+					sourceData: window.location.href,
+					sourceId: queryData.clickid || ''
 				};
 				Toast.loading('加载中...', 10);
-				this.props.$fetch.post(signup_sms, param).then(
+				this.props.$fetch.post(passport_loginBySms, param).then(
 					(res) => {
-						if (res.code !== '000000') {
+						if (res.code !== '0000') {
 							res.message && Toast.info(res.message);
 							return;
 						}
@@ -264,20 +265,20 @@ export default class momo_outer_login_page extends PureComponent {
 
 	// 获取滑动验证码token并获取大图
 	handleTokenAndImage = () => {
-		this.refreshSlideToken();
+		this.refreshSlideToken().then(() => {
+			this.reloadSlideImage();
+		});
 	};
 
 	// 刷新滑动验证码token
 	refreshSlideToken = () => {
 		return new Promise((resolve) => {
 			const osType = getDeviceType();
-			let mobilePhone = base64Encode(this.state.mobilePhone);
-			Toast.loading('加载中...', 10);
-			this.props.$fetch.get(`${msg_slide}/${mobilePhone}`).then((result) => {
-				if (result.code === '000003') {
+			this.props.$fetch.post(passport_getRelyToken, { mblNo: this.state.mobilePhone }).then((result) => {
+				if (result.code === '0000') {
 					this.setState({
-						relyToken: (result && result.data && result.data.tokenId) || '',
 						submitData: {
+							relyToken: result.data.relyToken,
 							mblNo: this.state.mobilePhone,
 							osType,
 							bFlag: '',
@@ -285,16 +286,6 @@ export default class momo_outer_login_page extends PureComponent {
 						}
 					});
 					resolve();
-				} else if (result.code === '000000') {
-					Toast.hide();
-					this.setState({
-						relyToken: result.data.tokenId,
-						slideImageUrl: result.data.backImage,
-						smallImageUrl: result.data.sliderImage,
-						yOffset: result.data.sliderHeight, // 小图距离大图顶部距离
-						bigImageH: result.data.backHeight, // 大图实际高度
-						showSlideModal: true
-					});
 				} else {
 					Toast.info(result.message);
 				}
@@ -304,19 +295,15 @@ export default class momo_outer_login_page extends PureComponent {
 
 	// 获取短信(滑动验证码)
 	sendSlideVerifySmsCode = (xOffset = '', cb) => {
-		const data = {
-			slideDistance: xOffset,
-			tokenId: this.state.relyToken,
-			type: '6'
-		};
+		let data = Object.assign({}, this.state.submitData, { bFlag: xOffset });
 		this.props.$fetch
-			.post(msg_sms, data)
+			.post(passport_sendImgSms, data)
 			.then((result) => {
-				if (result.code === '000000') {
+				if (result.code === '0000') {
 					Toast.info('发送成功，请注意查收！');
 					this.setState({
 						timeflag: false,
-						smsJrnNo: result.data.tokenId
+						smsJrnNo: result.data.smsJrnNo
 					});
 					cb && cb('success');
 					setTimeout(() => {
@@ -324,11 +311,11 @@ export default class momo_outer_login_page extends PureComponent {
 					}, 1500);
 
 					this.startCountDownTime();
-				} else if (result.code === '000006') {
+				} else if (result.code === '3019') {
 					// 弹窗不存在时请求大图
-					!this.state.showSlideModal && this.handleTokenAndImage();
+					!this.state.showSlideModal && this.reloadSlideImage();
 					cb && cb('error');
-				} else if (result.code === '000004') {
+				} else if (result.code === '3020') {
 					//重新刷新relyToken
 					this.handleTokenAndImage();
 					cb && cb('refresh');
@@ -346,7 +333,7 @@ export default class momo_outer_login_page extends PureComponent {
 	};
 
 	reloadSlideImage = () => {
-		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
+		this.props.$fetch.get(`${passport_createImg}/${this.state.mobilePhone}`).then((res) => {
 			if (res && res.code === '0000') {
 				this.setState({
 					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
@@ -414,9 +401,9 @@ export default class momo_outer_login_page extends PureComponent {
 		if (phoneType === 'IOS') {
 			window.location.href = linkConf.APPSTORE_URL;
 		} else {
-			this.props.$fetch.get(`${download_queryDownloadUrl}/02`).then(
+			this.props.$fetch.get(download_getDownloadUrl).then(
 				(res) => {
-					if (res.code === '000000') {
+					if (res.code === '0000') {
 						Toast.info('安全下载中');
 						window.location.href = res.data.downUrl;
 					} else {

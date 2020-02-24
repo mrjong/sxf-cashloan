@@ -319,3 +319,10 @@ export const novice_receive = '/novice/receive';
 
 // 判断用户是否满足领取条件
 export const novice_judge = '/novice/judge';
+
+// 后端platform项目相关接口,头条信息流需求相关
+export const passport_loginBySms = '/passport/loginBySms';
+export const passport_createImg = '/passport/createImg';
+export const passport_getRelyToken = '/passport/getRelyToken';
+export const passport_sendImgSms = '/passport/sendImgSms';
+export const download_getDownloadUrl = '/download/getDownloadUrl';
