@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 13:58:46
+ * @LastEditTime: 2020-02-24 14:45:20
  */
 import React, { Component } from 'react';
 import qs from 'qs';
@@ -86,7 +86,7 @@ export default class wx_middle_page extends Component {
 					osType: osType.toLowerCase(),
 					redirectUrl: encodeURIComponent(window.location.href),
 					registrationId: '',
-					state: '',
+					state: '111',
 					userChannel: getH5Channel()
 				})
 				.then((res) => {

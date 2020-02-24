@@ -21,7 +21,9 @@
 			background-color: #ccc;
 		}
 		.am-list-item .am-input-control input:disabled {
-			background-color: transparent;
+      background-color: transparent;
+      color: #000;
+      opacity: .6;
 		}
 	}
 
