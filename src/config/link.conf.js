@@ -14,7 +14,7 @@ const envMap = {
 		DC_URL: 'https://ffp-test.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP', // 开发环境 MPOS_APP与MPOS_CM渠道不同
 		PDF_URL: 'https://lns-api-test.vbillbank.com/wap', // pdf预览的接口url
 		BASE_URL: 'https://lns-api-test.vbillbank.com',
-		MARKET_URL: 'https://fuf-front.vbillbank.com/static/ls/page/home.html?c1=1000022&c2=1000023', //外部代超页
+		MARKET_URL: 'https://fuf-test.vbillbank.com/static/ls/page/home.html?c1=1000022&c2=1000023', //外部代超页
 		APPSTORE_URL: 'https://itunes.apple.com/cn/app/id1439290777?mt=8'
 	},
 	test: {
@@ -22,7 +22,7 @@ const envMap = {
 		DC_URL: 'https://ffp-test.vbillbank.com/lender/common/ServiceAuthorization?MPOS_APP', // 测试环境 MPOS_APP与MPOS_CM渠道不同
 		PDF_URL: 'https://lns-api-test.vbillbank.com/wap', // pdf预览的接口url
 		BASE_URL: 'https://lns-api-test.vbillbank.com',
-		MARKET_URL: 'https://fuf-front.vbillbank.com/static/ls/page/home.html?c1=1000022&c2=1000023', //外部代超页
+		MARKET_URL: 'https://fuf-test.vbillbank.com/static/ls/page/home.html?c1=1000022&c2=1000023', //外部代超页
 		APPSTORE_URL: 'https://itunes.apple.com/cn/app/id1439290777?mt=8'
 	},
 	pro: {

@@ -294,7 +294,7 @@ export default class home_page extends PureComponent {
 					medium: 'H5'
 				});
 				store.setCarrierMoxie(true); // 设置去到第三方标示
-				window.location.href = linkConf.MARKET_URL;
+				window.location.href = linkConf.MARKET_URL + `&SCOpenId=${store.getQueryUsrSCOpenId()}`;
 				break;
 			case 'LN0006': // 风控审核通过
 				buriedPointEvent(home.signedLoan);
