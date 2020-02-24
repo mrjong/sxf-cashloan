@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import fetch from 'sx-fetch';
 import ButtonCustom from 'components/ButtonCustom';
 import { store } from 'utils/store';
+import { bill_queryBillDetail } from 'fetch/api';
+import qs from 'qs';
 import styles from './index.scss';
-const API = {
-	qryDtl: '/bill/qryDtl'
-};
+
+let queryData = null;
 @fetch.inject()
 export default class wx_pay_success_page extends Component {
 	constructor(props) {
@@ -15,40 +16,36 @@ export default class wx_pay_success_page extends Component {
 		};
 	}
 	componentWillMount() {
+		queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		store.setHistoryRouter(window.location.pathname);
 		this.getLoanInfo();
 	}
 	// 获取还款信息
 	getLoanInfo = () => {
 		let test = store.getOrderSuccess();
-		this.props.$fetch
-			.post(API.qryDtl, {
-				billNo: store.getBillNo()
-			})
-			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
-					if (test && !test.isPayAll) {
-						for (let index = 0; index < res.data.perdList.length; index++) {
-							const element = res.data.perdList[index];
-							if (test.thisPerdNum == element.perdNum) {
-								this.setState({
-									orderData: element,
-									thisRepTotAmt: (test && test.thisRepTotAmt) || ''
-								});
-								break;
-							}
+		this.props.$fetch.post(bill_queryBillDetail, { billNo: queryData.billNo }).then((res) => {
+			if (res.code === '000000' && res.data) {
+				if (test && !test.isPayAll) {
+					for (let index = 0; index < res.data.preds.length; index++) {
+						const element = res.data.preds[index];
+						if (test.thisPerdNum == element.perdNum) {
+							this.setState({
+								orderData: element,
+								thisRepTotAmt: (test && test.thisRepTotAmt) || ''
+							});
+							break;
 						}
-					} else {
-						this.setState({
-							orderData:
-								(res.data && res.data.perdList && res.data.perdList[res.data.perdList.length - 1]) || {},
-							thisRepTotAmt: (test && test.thisRepTotAmt) || ''
-						});
 					}
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.setState({
+						orderData: (res.data && res.data.preds && res.data.preds[res.data.preds.length - 1]) || {},
+						thisRepTotAmt: (test && test.thisRepTotAmt) || ''
+					});
 				}
-			});
+			} else {
+				this.props.toast.info(res.message);
+			}
+		});
 	};
 	backHome = () => {
 		this.props.history.push('/order/order_page');

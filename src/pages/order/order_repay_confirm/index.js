@@ -317,6 +317,7 @@ export default class order_repay_confirm extends PureComponent {
 				// 微信外 02  微信内  03
 				const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 				queryData.backType = 'wxPay';
+				queryData.billNo = billNo;
 				const callbackUrl = location.origin + '/order/wx_pay_success_page?' + qs.stringify(queryData);
 				sendParams = {
 					...sendParams,
