@@ -28,16 +28,6 @@ import { msg_slide, msg_sms, signup_sms } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
-let modalTimer = null;
-
-const API = {
-	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
-	imageCode: '/signup/sendImg',
-	createImg: '/cmm/createImg', // 获取滑动大图
-	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms' //新的验证码获取接口
-};
 
 @setBackGround('#fff')
 @fetch.inject()
@@ -62,8 +52,6 @@ export default class login_page extends PureComponent {
 			showSlideModal: false,
 			slideImageUrl: '',
 			mobilePhone: ''
-			// showDownloadModal: false,
-			// times: 3
 		};
 	}
 
@@ -126,7 +114,6 @@ export default class login_page extends PureComponent {
 			}
 		});
 		clearInterval(timmer);
-		this.clearCountDown();
 	}
 
 	// 校验手机号
@@ -143,18 +130,6 @@ export default class login_page extends PureComponent {
 	goLogin = () => {
 		buriedPointEvent(daicao.mpos_push_loginBtn);
 		const osType = getDeviceType();
-		// 防止用户关闭弹框,继续点击进行登录
-		// if (store.getToken() || Cookie.get('FIN-HD-AUTH-TOKEN')) {
-		// 	this.setState(
-		// 		{
-		// 			showDownloadModal: true
-		// 		},
-		// 		() => {
-		// 			this.startCountDown();
-		// 		}
-		// 	);
-		// 	return;
-		// }
 		if (!this.state.smsJrnNo) {
 			Toast.info('请先获取短信验证码');
 			return;
@@ -194,16 +169,6 @@ export default class login_page extends PureComponent {
 						TFDLogin();
 						queryUsrSCOpenId({ $props: this.props }).then(() => {
 							this.props.history.replace('/home/home');
-
-							// this.setState(
-							// 	{
-							// 		showDownloadModal: true
-							// 	},
-							// 	() => {
-							// 		buriedPointEvent(daicao.mpos_push_modalshow);
-							// 		this.startCountDown();
-							// 	}
-							// );
 						});
 					},
 					(error) => {
@@ -339,41 +304,12 @@ export default class login_page extends PureComponent {
 			});
 	};
 
-	reloadSlideImage = () => {
-		this.props.$fetch.get(`${API.createImg}/${this.state.mobilePhone}`).then((res) => {
-			if (res && res.msgCode === 'PTM0000') {
-				this.setState({
-					slideImageUrl: res.data.ossImgBig ? res.data.ossImgBig : `data:image/png;base64,${res.data.b}`,
-					smallImageUrl: res.data.ossImgSm ? res.data.ossImgSm : `data:image/png;base64,${res.data.s}`,
-					yOffset: res.data.sy, // 小图距离大图顶部距离
-					bigImageH: res.data.bh, // 大图实际高度
-					showSlideModal: true
-				});
-			} else {
-				Toast.info(res.message);
-			}
-		});
-	};
-
 	showSlideModal = () => {
 		this.setState({ showSlideModal: true });
 	};
 
 	closeSlideModal = () => {
 		this.setState({ showSlideModal: false });
-	};
-
-	// 老的获取短信验证码(mpos)
-	sendSmsCode = (param) => {
-		this.props.$fetch.post(API.sendsms, param).then((result) => {
-			if (result.msgCode === 'PTM0000') {
-				Toast.info('发送成功，请注意查收！');
-				this.setState({ timeflag: false, smsJrnNo: result.data.smsJrnNo });
-				this.startCountDownTime();
-			} else {
-				Toast.info(result.message, 3);
-			}
-		});
 	};
 
 	startCountDownTime = () => {
@@ -406,61 +342,6 @@ export default class login_page extends PureComponent {
 		});
 	};
 
-	// 弹框里的倒计时
-	// startCountDown = () => {
-	// 	let times = this.state.times;
-	// 	this.clearCountDown();
-	// 	modalTimer = setInterval(() => {
-	// 		this.setState({
-	// 			times: times--
-	// 		});
-	// 		if (times <= -1) {
-	// 			this.clearCountDown();
-	// 			this.downloadApp();
-	// 		}
-	// 	}, 1000);
-	// };
-
-	clearCountDown = () => {
-		clearInterval(modalTimer);
-	};
-
-	// 下载app
-	// downloadApp = () => {
-	// 	this.closeModal();
-	// 	const phoneType = getDeviceType();
-	// 	if (phoneType === 'IOS') {
-	// 		window.location.href = 'https://itunes.apple.com/cn/app/id1439290777?mt=8';
-	// 	} else {
-	// 		this.props.$fetch.get(API.DOWNLOADURL, {}).then(
-	// 			(res) => {
-	// 				if (res.msgCode === 'PTM0000') {
-	// 					Toast.info('安全下载中');
-	// 					window.location.href = res.data;
-	// 				} else {
-	// 					res.message && Toast.info(res.message);
-	// 				}
-	// 			},
-	// 			(error) => {
-	// 				error.message && Toast.info(error.message);
-	// 			}
-	// 		);
-	// 	}
-	// };
-
-	// 关闭弹框
-	// closeModal = () => {
-	// 	this.setState(
-	// 		{
-	// 			showDownloadModal: false,
-	// 			times: 3
-	// 		},
-	// 		() => {
-	// 			this.clearCountDown();
-	// 		}
-	// 	);
-	// };
-
 	//	校验必填项 按钮是否可以点击
 	validateFn = () => {
 		const { disabledInput, isChecked } = this.state;
@@ -477,15 +358,7 @@ export default class login_page extends PureComponent {
 	};
 
 	render() {
-		const {
-			slideImageUrl,
-			smallImageUrl,
-			showSlideModal,
-			yOffset,
-			bigImageH,
-			disabledInput
-			// showDownloadModal
-		} = this.state;
+		const { slideImageUrl, smallImageUrl, showSlideModal, yOffset, bigImageH, disabledInput } = this.state;
 		const { getFieldProps } = this.props.form;
 		return (
 			<div className={styles.dc_landing_page}>
@@ -595,23 +468,6 @@ export default class login_page extends PureComponent {
 						onClose={this.closeSlideModal}
 					/>
 				)}
-				{/* {showDownloadModal && (
-					<Modal wrapClassName="loginModalBox" visible={true} transparent maskClosable={false}>
-						<div className={styles.loginModalContainer}>
-							<img className={styles.loginModalBg} src={loginModalBg} alt="背景" />
-							<img
-								className={styles.loginModalBtn}
-								src={loginModalBtn}
-								onClick={() => {
-									buriedPointEvent(daicao.mpos_push_modalBtnClick);
-									this.downloadApp();
-								}}
-								alt="按钮"
-							/>
-							<img className={styles.closeIcoStyle} src={closeIco} onClick={this.closeModal} alt="关闭" />
-						</div>
-					</Modal>
-				)} */}
 			</div>
 		);
 	}
