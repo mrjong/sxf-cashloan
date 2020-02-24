@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import dayjs from 'dayjs';
 import style from './index.scss';
 
 export default class CouponAlert extends PureComponent {
@@ -26,7 +27,11 @@ export default class CouponAlert extends PureComponent {
 								<h3>今日借款可享受以下优惠</h3>
 								<p>确定退出吗？</p>
 								<div className={style.coupon_box}>
-									<div className={style.coupon_time}>有效期至{data.validEndTm}</div>
+									<div className={style.coupon_time}>
+										有效期至
+										{data.validEndTm.length &&
+											dayjs(data.validEndTm.substring(0, data.validEndTm.length - 4)).format('YYYY-MM-DD')}
+									</div>
 									<div className={style.coupon_value}>{data.coupVal}元</div>
 								</div>
 							</div>
