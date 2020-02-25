@@ -1221,7 +1221,9 @@ export default class essential_information_page extends PureComponent {
 					<AgreementModal
 						visible={showAgreement}
 						handleClick={() => {
-							this.closeWelfareModal();
+							this.setState({
+								showAgreement: false
+							});
 							recordContract({
 								contractType: '02'
 							});
