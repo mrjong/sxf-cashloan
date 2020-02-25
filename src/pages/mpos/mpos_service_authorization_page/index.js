@@ -21,7 +21,7 @@ import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
 import { connect } from 'react-redux';
-import { signup_mpos_auth } from 'fetch/api';
+import { signup_mpos_auth, index_queryPLPShowSts } from 'fetch/api';
 import logo from './img/logo.png';
 const AgreeItem = Checkbox.AgreeItem;
 
@@ -73,8 +73,16 @@ export default class mpos_service_authorization_page extends PureComponent {
 							// TODO: 根据设备类型存储token
 							store.setToken(res.data.tokenId);
 							// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-							recordContract({
-								contractType: '01,02'
+							this.props.$fetch.get(index_queryPLPShowSts).then((res) => {
+								if (res.code === '000000' && res.data && res.data.plpSts === '1') {
+									recordContract({
+										contractType: '01'
+									});
+								} else {
+									recordContract({
+										contractType: '01,02'
+									});
+								}
 							});
 							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 							TFDLogin();

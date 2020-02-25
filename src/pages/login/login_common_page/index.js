@@ -49,7 +49,7 @@ import {
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
-import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl, index_queryPLPShowSts } from 'fetch/api';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 
 let timmer;
@@ -225,9 +225,18 @@ export default class login_common_page extends PureComponent {
 							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
 							TFDLogin();
 							SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
-							recordContract({
-								contractType: '01,02'
+							this.props.$fetch.get(index_queryPLPShowSts).then((res) => {
+								if (res.code === '000000' && res.data && res.data.plpSts === '1') {
+									recordContract({
+										contractType: '01'
+									});
+								} else {
+									recordContract({
+										contractType: '01,02'
+									});
+								}
 							});
+
 							queryUsrSCOpenId({ $props: this.props }).then(() => {
 								this.setState(
 									{

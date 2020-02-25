@@ -799,7 +799,7 @@ export default class essential_information_page extends PureComponent {
 		this.props.history.goBack();
 	};
 	judgeShowAgree = () => {
-		this.props.$fetch.post(index_queryPLPShowSts).then(async (res) => {
+		this.props.$fetch.get(index_queryPLPShowSts).then(async (res) => {
 			if (res && res.code === '000000') {
 				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
 				this.setState({
