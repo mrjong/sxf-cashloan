@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 15:00:14
+ * @LastEditTime: 2020-02-25 10:51:12
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -169,7 +169,7 @@ export default class login_page extends PureComponent {
 		activeConfigSts({
 			$props: this.props,
 			type: 'A',
-			callback: this.requestGetStatus
+			callback: this.goHome
 		});
 	};
 
@@ -445,12 +445,14 @@ export default class login_page extends PureComponent {
 			queryUsrSCOpenId({ $props: this.props })
 				.then(() => {
 					buriedPointEvent(login.goDownLoad);
-					if (queryData.jumpUrl) {
-						//如果登录页链接存在jumpUrl,则登录后直接跳转至目标页
-						this.props.history.replace(queryData.jumpUrl);
-					} else {
-						this.showDownLoadModal();
-					}
+					// TODONEW
+					// if (queryData.jumpUrl) {
+					// 	//如果登录页链接存在jumpUrl,则登录后直接跳转至目标页
+					// 	this.props.history.replace(queryData.jumpUrl);
+					// } else {
+					// 	this.showDownLoadModal();
+					// }
+					this.props.history.replace('/home/home');
 				})
 				.catch(() => {
 					buriedPointEvent(login.queryUsrSCOpenIdFail);
@@ -459,10 +461,6 @@ export default class login_page extends PureComponent {
 			buriedPointEvent(login.goHome);
 			this.props.history.replace('/home/home');
 		}
-	};
-	// 获取授信列表状态
-	requestGetStatus = () => {
-		this.goHome();
 	};
 
 	// 弹框里的倒计时
