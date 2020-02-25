@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-21 14:53:46
+ * @LastEditTime: 2020-02-25 10:55:33
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -381,22 +381,10 @@ export default class home_page extends PureComponent {
 	};
 
 	handleApply = () => {
-		// TODONEW
-		if (this.state.showDiv === '50000') {
-			// 埋点-首页-点击申请信用卡代还按钮
-			buriedPointEvent(home.applyCreditRepayment);
-		}
 		Toast.loading('加载中...', 10);
 		getNextStatus({
 			RouterType: 'home',
-			$props: this.props,
-			callBack: (resBackMsg) => {
-				if (this.state.showDiv === 'circle') {
-					buriedPointEvent(home.homeContinueApply, {
-						next_step: resBackMsg
-					});
-				}
-			}
+			$props: this.props
 		});
 	};
 	/**

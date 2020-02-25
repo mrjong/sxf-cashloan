@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 10:26:31
+ * @LastEditTime: 2020-02-25 10:51:56
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -151,11 +151,6 @@ export const goToStageLoan = ({ $props }) => {
 					}
 				}
 				$props.history.push('/home/loan_fenqi');
-				// TODONEW
-				// $props.history.navigate('StageLoan', {
-				// 	pageInfo: res.data
-				// 	// usageList: usageList.data,
-				// });
 			} else {
 				Toast.info(res.message);
 				setTimeout(() => {

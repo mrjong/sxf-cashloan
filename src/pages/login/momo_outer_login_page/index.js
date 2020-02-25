@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 17:09:58
+ * @LastEditTime: 2020-02-25 09:55:15
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -51,15 +51,6 @@ import {
 	dlsmsCodeBtnRiskBury
 } from '../riskBuryConfig';
 let timmer;
-const API = {
-	smsForLogin: '/signup/smsForLogin',
-	sendsms: '/cmm/sendsms',
-	imageCode: '/signup/sendImg',
-	createImg: '/cmm/createImg', // 获取滑动大图
-	getRelyToken: '/cmm/getRelyToken', //图片token获取
-	sendImgSms: '/cmm/sendImgSms', //新的验证码获取接口
-	queryUsrSCOpenId: '/my/queryUsrSCOpenId' // 用户标识
-};
 
 let entryPageTime = '';
 let modalTimer = null;
