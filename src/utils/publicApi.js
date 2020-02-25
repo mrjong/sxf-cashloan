@@ -1,8 +1,10 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-25 10:48:39
+ */
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
-const API = {
-	saveAppOrContactInfo: '/auth/saveAppOrContactInfo'
-};
+import { auth_saveAppOrContactInfo } from 'fetch/api';
 //获取MPOS地理位置
 const getLocation = () => {
 	window.setupWebViewJavascriptBridge((bridge) => {
@@ -34,7 +36,7 @@ const getAppsList = () => {
 			if (responseData.STATUS === '01') {
 				console.log(responseData.appsList);
 				fetch
-					.post(API.saveAppOrContactInfo, {
+					.post(auth_saveAppOrContactInfo, {
 						type: '1',
 						appList: responseData.appsList
 					})
@@ -56,7 +58,7 @@ const getContactsList = () => {
 			}
 			if (responseData.STATUS === '01') {
 				fetch
-					.post(API.saveAppOrContactInfo, {
+					.post(auth_saveAppOrContactInfo, {
 						type: '2',
 						contactList: responseData.contactsList
 					})
