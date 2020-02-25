@@ -18,7 +18,7 @@ import { setBackGround } from 'utils/background';
 import click from '../mpos_service_authorization_page/img/Button.png';
 
 import { TFDLogin } from 'utils/getTongFuDun';
-import { msg_slide, msg_sms, signup_sms, signup_mpos_auth } from 'fetch/api';
+import { msg_slide, msg_sms, signup_sms, signup_mpos_auth, index_queryPLPShowSts } from 'fetch/api';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getH5Channel } from 'utils/common';
 let timmer = '';
@@ -261,8 +261,16 @@ export default class mpos_get_sms_page extends PureComponent {
 						TFDLogin();
 						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
 						// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-						recordContract({
-							contractType: '01,02'
+						this.props.$fetch.get(index_queryPLPShowSts).then((res) => {
+							if (res.code === '000000' && res.data && res.data.plpSts === '1') {
+								recordContract({
+									contractType: '01'
+								});
+							} else {
+								recordContract({
+									contractType: '01,02'
+								});
+							}
 						});
 						if (this.state.disabledInput) {
 							this.goFLHome();

@@ -10,6 +10,7 @@ import { setBackGround } from 'utils/background';
 import { getH5Channel } from 'utils/common';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { connect } from 'react-redux';
+import { getDeviceType } from 'utils';
 import {
 	setCardTypeAction,
 	setConfirmAgencyInfoAction,
@@ -435,13 +436,21 @@ export default class loan_fenqi_page extends PureComponent {
 		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
 		this.storeTempData();
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
-		this.props.history.push({
-			pathname: '/protocol/pdf_page',
-			state: {
-				url: `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`,
-				name: item.contractMdlName
-			}
-		});
+
+		const osType = getDeviceType();
+		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`;
+		if (osType === 'IOS') {
+			store.setHrefFlag(true);
+			window.location.href = pathUrl;
+		} else {
+			this.props.history.push({
+				pathname: '/protocol/pdf_page',
+				state: {
+					url: pathUrl,
+					name: item.contractMdlName
+				}
+			});
+		}
 		buriedPointEvent(loan_fenqi.contract, { contractName: item.contractMdlName });
 	};
 

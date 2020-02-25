@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-18 16:23:22
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-25 10:56:37
  */
 import React, { PureComponent } from 'react';
 import qs from 'qs';
@@ -62,7 +62,7 @@ export default class landing_page extends PureComponent {
 		const searchParams = qs.parse(decodeURI(window.location.search), { ignoreQueryPrefix: true });
 		const landingId = searchParams.landingId || '';
 		this.props.$fetch.get(`${msg_landingPage}/${landingId}`).then((res) => {
-			if (res.msgCode === 'PTM0000' && res.data !== null) {
+			if (res.code === '000000' && res.data !== null) {
 				if (res.data.landingTitle) {
 					this.props.setTitle(res.data.landingTitle);
 					this.setState({
@@ -93,13 +93,13 @@ export default class landing_page extends PureComponent {
 				// 	imgUrl: res.data.landingImage
 				// });
 			} else {
-				if (res.msgCode === 'PCC-MARKET-0001' && res.data) {
+				if (res.code === '999966' && res.data) {
 					this.setState({
 						invalidTxt: res.data.landingError,
 						invalidModalShow: true
 					});
 				} else {
-					this.props.toast.info(res.msgInfo);
+					this.props.toast.info(res.message);
 				}
 			}
 		});
@@ -267,7 +267,7 @@ export default class landing_page extends PureComponent {
 		this.props.$fetch
 			.post(API.userCount, { activeId: item.activeBizId }, { noLginRouter: true })
 			.then((res) => {
-				if (res.msgCode === 'PTM0000') {
+				if (res.code === '000000') {
 					if (res.data.data.count && Number(res.data.data.count) > 0) {
 						this.getDraw(item);
 					} else {
@@ -287,7 +287,7 @@ export default class landing_page extends PureComponent {
 			channel: getH5Channel() // 用户渠道
 		};
 		this.props.$fetch.post(API.userDraw, params).then((res) => {
-			if (res.msgCode === 'PTM0000') {
+			if (res.code === '000000') {
 				const successTip = item.activeResult ? item.activeResult : '领取成功';
 				const failTip = item.activeError ? item.activeError : '领取失败';
 				// type 00 优惠券  01 积分  02 红包 03 实物   04 谢谢惠顾

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 10:38:36
+ * @LastEditTime: 2020-02-25 15:53:36
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -12,13 +12,14 @@ import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
-import { getFirstError, handleInputBlur } from 'utils';
+import { getFirstError, handleInputBlur, getDeviceType } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
 import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
+
 import {
 	loan_queryLoanApplInfo,
 	loan_loanPlan,
@@ -579,13 +580,20 @@ export default class confirm_agency_page extends PureComponent {
 			checkBox1
 		});
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
-		this.props.history.push({
-			pathname: '/protocol/pdf_page',
-			state: {
-				url: `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${repayInfo.withholdBankAgrNo}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&tokenId=${tokenId}`,
-				name: item.contractMdlName
-			}
-		});
+		const osType = getDeviceType();
+		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${repayInfo.withholdBankAgrNo}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&tokenId=${tokenId}`;
+		if (osType === 'IOS') {
+			store.setHrefFlag(true);
+			window.location.href = pathUrl;
+		} else {
+			this.props.history.push({
+				pathname: '/protocol/pdf_page',
+				state: {
+					url: pathUrl,
+					name: item.contractMdlName
+				}
+			});
+		}
 	};
 	handleShowModal = () => {
 		if (!this.state.repayInfo2 || !this.state.repayInfo2.perdLth) {
