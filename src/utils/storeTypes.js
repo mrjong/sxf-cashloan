@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 13:53:03
+ * @LastEditTime: 2020-02-25 15:22:45
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -44,5 +44,6 @@ export const storeTypes = {
 	TFDBack1: 'TFDBack1', // call通付盾成功
 	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
 	TestABTag: 'TestABTag', // 全局AB测试标志
-	CacheBaseInfo: 'CacheBaseInfo' // 缓存基本信息中的数据
+	CacheBaseInfo: 'CacheBaseInfo', // 缓存基本信息中的数据
+	HrefFlag: 'HrefFlag'
 };

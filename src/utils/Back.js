@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-18 17:53:41
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-02-25 15:54:02
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -166,6 +166,15 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
+			if (window.location.pathname === '/home/loan_fenqi') {
+				if (!store.getHrefFlag()) {
+					window.ReactRouterHistory.replace('/home/home');
+				} else {
+					store.removeHrefFlag();
+				}
+				return;
+			}
+
 			/**首页拦截 */
 			if (window.location.pathname === '/') {
 				window.history.pushState(null, null, document.URL);
@@ -248,11 +257,14 @@ if (window.history && window.history.pushState) {
 					logoutAppHandler();
 					break;
 				case '/home/confirm_agency':
+					if (store.getHrefFlag()) {
+						store.removeHrefFlag();
+						return;
+					}
 					store.setConfirmAgencyBackHome(true);
 					break;
 				case '/order/repayment_succ_page':
 				case '/home/loan_apply_succ_page':
-				case '/home/loan_fenqi':
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				case '/mine/credit_list_page':
