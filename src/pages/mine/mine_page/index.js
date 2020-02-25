@@ -1,9 +1,8 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 13:48:20
+ * @LastEditTime: 2020-02-25 17:51:33
  */
 import React, { PureComponent } from 'react';
-import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import fetch from 'sx-fetch';
 import { connect } from 'react-redux';
@@ -18,9 +17,6 @@ import { helpCenter } from 'utils/analytinsType';
 import images from 'assets/image';
 import { setBackRouter } from 'reduxes/actions/commonActions';
 import { showRedDot } from 'reduxes/actions/specialActions';
-
-let token = '';
-let tokenFromStorage = '';
 
 @fetch.inject()
 @commonPage()
@@ -39,9 +35,6 @@ let tokenFromStorage = '';
 export default class mine_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		// 获取token
-		token = Cookie.get('FIN-HD-AUTH-TOKEN');
-		tokenFromStorage = store.getToken();
 		this.state = {
 			realNmFlg: false, // 用户是否实名
 			mblNoHid: '',
@@ -64,7 +57,8 @@ export default class mine_page extends PureComponent {
 	};
 
 	goPage = () => {
-		if (tokenFromStorage && token) {
+		const { userInfo } = this.props;
+		if (userInfo && userInfo.tokenId) {
 			this.props.history.push('/mpos/mpos_ioscontrol_page?entryType=mine');
 		} else {
 			this.props.history.push('/login');
@@ -73,7 +67,8 @@ export default class mine_page extends PureComponent {
 
 	// 常见问题跳转
 	jumpToFqa = () => {
-		if (!tokenFromStorage && !token) {
+		const { userInfo } = this.props;
+		if (!userInfo || !userInfo.tokenId) {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push('/login');
 			});
@@ -83,7 +78,8 @@ export default class mine_page extends PureComponent {
 	};
 
 	handleGoToPage = (url) => {
-		if (!tokenFromStorage && !token) {
+		const { userInfo } = this.props;
+		if (!userInfo || !userInfo.tokenId) {
 			this.props.toast.info('请先登录', 2, () => {
 				this.props.history.push('/login');
 			});
@@ -197,7 +193,7 @@ export default class mine_page extends PureComponent {
 							<p className={styles.bannerHaaderTitleSub}>随行付金融旗下信贷服务</p>
 						</div>
 						<div className={styles.bannerHaaderBtn} onClick={this.goPage}>
-							{tokenFromStorage && token ? '关注得免息' : '登录'}
+							{telNoHid ? '关注得免息' : '登录'}
 						</div>
 					</div>
 					<div className={styles.entranceList}>
@@ -283,7 +279,7 @@ export default class mine_page extends PureComponent {
 						</div>
 					</div>
 
-					{tokenFromStorage && token && !isMPOS() && (
+					{telNoHid && !isMPOS() && (
 						<div onClick={this.logoutHandler} className={styles.logout}>
 							退出登录
 						</div>
