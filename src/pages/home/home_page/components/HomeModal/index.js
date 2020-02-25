@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 14:17:01
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-02-25 16:02:46
  */
 import React, { Component } from 'react';
 import { Modal } from 'antd-mobile';
@@ -9,6 +9,7 @@ import { AgreementModal, WelfareModal } from 'components';
 import { setHomeModalAction } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
 import { recordContract } from 'utils';
+import { store } from 'utils/store';
 import OverDueModal from '../OverDueModal';
 import './index.scss';
 
@@ -56,6 +57,7 @@ export default class HomeModal extends Component {
 							visible: false
 						},
 						() => {
+							store.setOutLinkUrl(item.skip);
 							window.location.href = item.skip;
 						}
 					);

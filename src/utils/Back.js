@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-25 15:54:02
+ * @LastEditTime: 2020-02-25 16:17:37
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -157,12 +157,9 @@ if (window.history && window.history.pushState) {
 				window.ReactRouterHistory.push('/home/home');
 				return;
 			}
-			if (window.location.pathname === '/protocol/pdf_page') {
-				if (store.getCashFenQiStoreData()) {
-					window.ReactRouterHistory.replace('/home/loan_fenqi');
-				} else {
-					window.ReactRouterHistory.replace('/home/confirm_agency');
-				}
+			// 如果从banner跳到外链 则不处理
+			if (store.getOutLinkUrl()) {
+				store.removeOutLinkUrl();
 				return;
 			}
 
@@ -217,12 +214,6 @@ if (window.history && window.history.pushState) {
 			let historyRouter = store.getHistoryRouter();
 			if (historyRouter === '/order/wx_pay_success_page') {
 				window.ReactRouterHistory.replace('/order/order_page');
-				return;
-			}
-
-			// 如果从banner跳到外链 则不处理
-			if (store.getOutLinkUrl()) {
-				store.removeOutLinkUrl();
 				return;
 			}
 			if (window.location.pathname === '/') {

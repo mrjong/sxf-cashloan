@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 10:51:12
+ * @LastEditTime: 2020-02-25 16:57:53
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -216,48 +216,52 @@ export default class login_page extends PureComponent {
 					location: store.getPosition() // 定位地址 TODO 从session取
 				};
 				Toast.loading('加载中...', 10);
-				this.props.$fetch.post(signup_sms, param).then(
-					(res) => {
-						Toast.hide();
-						if (res.code !== '000000') {
-							Toast.info(res.message);
-							buriedPointEvent(login.submitFail, {
-								fail_cause: res.message
-							});
-							return;
-						}
-						this.props.setUserInfoAction(res.data);
-						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.data.tokenId);
-						// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
-						TFDLogin();
-						SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
-						// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
-						this.props.$fetch.get(index_queryPLPShowSts).then((res) => {
-							if (res.code === '000000' && res.data && res.data.plpSts === '1') {
-								recordContract({
-									contractType: '01'
+				this.props.$fetch
+					.post(signup_sms, param, {
+						'FIN-HD-WECHAT-TOKEN': Cookie.get('FIN-HD-WECHAT-TOKEN')
+					})
+					.then(
+						(res) => {
+							Toast.hide();
+							if (res.code !== '000000') {
+								Toast.info(res.message);
+								buriedPointEvent(login.submitFail, {
+									fail_cause: res.message
 								});
-							} else {
-								recordContract({
-									contractType: '01,02'
-								});
+								return;
 							}
-						});
-						if (this.state.disabledInput) {
-							this.goFLHome();
-						} else {
-							this.goHome();
+							this.props.setUserInfoAction(res.data);
+							Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+							// TODO: 根据设备类型存储token
+							store.setToken(res.data.tokenId);
+							// 登录之后手动触发通付盾 需要保存cookie 和session fin-v-card-toke
+							TFDLogin();
+							SxfDataRegisterEventSuperPropertiesOnce({ gps: store.getPosition() });
+							// contractType 为协议类型 01为用户注册协议 02为用户隐私协议 03为用户协议绑卡,用户扣款委托书
+							this.props.$fetch.get(index_queryPLPShowSts).then((res) => {
+								if (res.code === '000000' && res.data && res.data.plpSts === '1') {
+									recordContract({
+										contractType: '01'
+									});
+								} else {
+									recordContract({
+										contractType: '01,02'
+									});
+								}
+							});
+							if (this.state.disabledInput) {
+								this.goFLHome();
+							} else {
+								this.goHome();
+							}
+						},
+						(error) => {
+							buriedPointEvent(login.submitFail, {
+								fail_cause: error.message
+							});
+							error.message && Toast.info(error.message);
 						}
-					},
-					(error) => {
-						buriedPointEvent(login.submitFail, {
-							fail_cause: error.message
-						});
-						error.message && Toast.info(error.message);
-					}
-				);
+					);
 			} else {
 				Toast.info(getFirstError(err));
 			}
