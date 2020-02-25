@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-05 18:13:40
+ * @LastEditTime: 2020-02-25 11:35:37
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -14,7 +14,7 @@ import Cookie from 'js-cookie';
 import { buriedPointEvent } from 'utils/analytins';
 import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
-import HomeBtnClass from 'utils/HomeBtn';
+// import HomeBtnClass from 'utils/HomeBtn';
 import linkConf from 'config/link.conf';
 
 const API = {
@@ -31,7 +31,7 @@ export default class manpei_page extends PureComponent {
 			isAppOpen: false, // 是否是app webview打开
 			registerChannel: '' // 注册渠道
 		};
-		this['HomeBtn'] = new HomeBtnClass(this);
+		// this['HomeBtn'] = new HomeBtnClass(this);
 	}
 
 	componentWillMount() {
@@ -44,7 +44,7 @@ export default class manpei_page extends PureComponent {
 				isAppOpen: true
 			});
 		} else if (Cookie.get('FIN-HD-AUTH-TOKEN')) {
-			this['HomeBtn'].fetchData();
+			// this['HomeBtn'].fetchData();
 		}
 		if (queryData.regChannel) {
 			this.setState({
@@ -120,7 +120,7 @@ export default class manpei_page extends PureComponent {
 					}, 0);
 				} else {
 					// mpos或者h5中跳转对应节点
-					this['HomeBtn'].getData();
+					// this['HomeBtn'].getData();
 				}
 			} else {
 				this.props.toast.info(res.msgInfo);

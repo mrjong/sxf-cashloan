@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-22 10:25:13
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-02-25 11:34:45
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -22,7 +22,7 @@ import { activity } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import AwardShow from './components/AwardShow';
 import CountDown from '../../mine/coupon_page/component/CountDown';
-import HomeBtnClass from 'utils/HomeBtn';
+// import HomeBtnClass from 'utils/HomeBtn';
 import { getTimeStr } from 'utils/CommonUtil/commonFunc';
 
 const API = {
@@ -42,7 +42,7 @@ export default class coupon_test_page extends PureComponent {
 			registerChannel: '', // 注册渠道
 			isPlus: false
 		};
-		this['HomeBtn'] = new HomeBtnClass(this);
+		// this['HomeBtn'] = new HomeBtnClass(this);
 	}
 
 	componentWillMount() {
@@ -65,7 +65,7 @@ export default class coupon_test_page extends PureComponent {
 				registerChannel: queryData.regChannel
 			});
 		}
-		this['HomeBtn'].fetchData();
+		// this['HomeBtn'].fetchData();
 	}
 
 	componentDidMount() {
@@ -137,7 +137,7 @@ export default class coupon_test_page extends PureComponent {
 						// 	pathname: '/order/order_detail_page',
 						// 	search: '?entryFrom=home'
 						// });
-						this['HomeBtn'].getData();
+						// this['HomeBtn'].getData();
 					}
 				} else {
 					buriedPointEvent(activity.couponTestActivityUseNow, {
