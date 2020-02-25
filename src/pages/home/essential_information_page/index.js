@@ -917,10 +917,16 @@ export default class essential_information_page extends PureComponent {
 							</div>
 							<div
 								className={[
-									this.state.relatValue || this.props.form.getFieldValue('cntRelTyp1') ? 'hasSelectValue' : ''
+									(this.state.relatValue && this.state.relatValue.length) ||
+									(this.props.form.getFieldValue('cntRelTyp1') &&
+										this.props.form.getFieldValue('cntRelTyp1').length)
+										? 'hasSelectValue'
+										: ''
 								].join(' ')}
 							>
-								{this.state.relatValue || this.props.form.getFieldValue('cntRelTyp1') ? (
+								{(this.state.relatValue && this.state.relatValue.length) ||
+								(this.props.form.getFieldValue('cntRelTyp1') &&
+									this.props.form.getFieldValue('cntRelTyp1').length) ? (
 									<div className={[style.lableTipWrap, style.lableTipWrap_cntRelTyp1].join(' ')}>
 										<span className={style.labelTipText}>所属关系</span>
 									</div>
@@ -1043,12 +1049,16 @@ export default class essential_information_page extends PureComponent {
 							</div>
 							<div
 								className={[
-									this.state.relatValue2 || this.props.form.getFieldValue('cntRelTyp2')
+									(this.state.relatValue2 && this.state.relatValue2.length) ||
+									(this.props.form.getFieldValue('cntRelTyp2') &&
+										this.props.form.getFieldValue('cntRelTyp2').length)
 										? 'hasSelectValue'
 										: ''
 								].join(' ')}
 							>
-								{this.state.relatValue2 || this.props.form.getFieldValue('cntRelTyp2') ? (
+								{(this.state.relatValue2 && this.state.relatValue2.length) ||
+								(this.props.form.getFieldValue('cntRelTyp2') &&
+									this.props.form.getFieldValue('cntRelTyp2').length) ? (
 									<div className={[style.lableTipWrap, style.lableTipWrap_cntRelTyp1].join(' ')}>
 										<span className={style.labelTipText}>所属关系</span>
 									</div>
