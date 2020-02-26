@@ -100,6 +100,9 @@ export default class loan_fenqi_page extends PureComponent {
 			this.queryCashLoanApplInfo();
 		}
 	}
+	componentWillUnmount() {
+		store.setHrefFlag(true);
+	}
 
 	//处理数据反显
 	handleDataDisplay = (confirmAgencyInfo = {}) => {
@@ -933,6 +936,10 @@ export default class loan_fenqi_page extends PureComponent {
 									</div>
 								</li>
 							) : null}
+						</ul>
+					</div>
+					<div className={style.pannel}>
+						<ul>
 							<li className={style.listItem}>
 								<label>收款银行卡</label>
 								{repayCardLast.length > 0 ? (
@@ -981,6 +988,7 @@ export default class loan_fenqi_page extends PureComponent {
 							</li>
 						</ul>
 					</div>
+
 					{loanMoney &&
 					loanDate &&
 					loanDate.prodCount &&

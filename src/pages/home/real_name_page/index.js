@@ -424,7 +424,9 @@ export default class real_name_page extends Component {
 								</div>
 							</div>
 
-							<img src={updateBottomTip} className={style.updateImgTip} />
+							<div className={style.updateImgTipWrap}>
+								<img src={updateBottomTip} className={style.updateImgTip} />
+							</div>
 						</div>
 
 						<p className={style.sectionTitle}>确认信息</p>

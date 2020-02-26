@@ -47,6 +47,8 @@ import LimitTimeJoin from './components/LimitTimeJoin';
 import style from './index.scss';
 import informationMore from './img/back.png';
 
+import Images from 'assets/image';
+
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
 
@@ -875,7 +877,7 @@ export default class essential_information_page extends PureComponent {
 								) : (
 									'请选择您的现居住城市'
 								)}
-								<img className={style.informationMoreNew} src={informationMore} />
+								<img className={style.informationMoreNew} src={Images.icon.icon_arrow_right} />
 							</div>
 
 							{this.props.form.getFieldValue('address') || this.state.address ? (
@@ -976,7 +978,7 @@ export default class essential_information_page extends PureComponent {
 										<List.Item className="hasborder"></List.Item>
 									</AsyncCascadePicker>
 								)}
-								<img className={style.informationMore} src={informationMore} />
+								<img className={style.informationMore} src={Images.icon.icon_arrow_right} />
 							</div>
 							{this.state.linkman || this.props.form.getFieldValue('linkman') ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_linkman].join(' ')}>
@@ -1106,7 +1108,7 @@ export default class essential_information_page extends PureComponent {
 										<List.Item className="hasborder"></List.Item>
 									</AsyncCascadePicker>
 								)}
-								<img className={style.informationMore} src={informationMore} />
+								<img className={style.informationMore} src={Images.icon.icon_arrow_right} />
 							</div>
 							{this.state.linkman2 || this.props.form.getFieldValue('linkman2') ? (
 								<div className={[style.lableTipWrap, style.lableTipWrap_linkman].join(' ')}>

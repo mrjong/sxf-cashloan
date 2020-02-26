@@ -55,7 +55,8 @@
 		.entranceListItemName {
 			font-weight: 400;
 			color: $colorBlack;
-			font-size: 24px;
+      font-size: 24px;
+      line-height: 1;
 		}
 		.entranceListItemIconWrap {
 			position: relative;
@@ -71,7 +72,7 @@
 			min-width: 32px;
 			height: 32px;
 			padding: 0 8px;
-			background-color: $colorRed;
+			background-color: #FE0200;
 			color: #fff;
 			font-size: 24px;
 			border-radius: 50px;

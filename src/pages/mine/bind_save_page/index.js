@@ -416,7 +416,7 @@ export default class bind_save_page extends PureComponent {
 		const { selectFlag } = this.state;
 		return (
 			<div className={styles.bindSavePage}>
-				<div className={styles.header}>请先绑定还款储蓄卡,再签约借款</div>
+				<div className={styles.header}>请绑定还款储蓄卡</div>
 				<div className="bind_save_page_listBox list-extra">
 					<Item extra={userInfo && userInfo.nameHid}>持卡人</Item>
 					<Item
