@@ -34,3 +34,22 @@
   font-size: 28px;
   line-height: 32px;
 }
+
+
+.additionArrow {
+  margin-top: 10px;
+  width: 0;
+  height: 0;
+}
+.additionArrowLeft {
+  border-top: 6px solid transparent;
+  border-right: 0;
+  border-bottom: 6px solid transparent;
+  border-left: 12px solid red;
+}
+.additionArrowRight {
+  border-top: 6px solid transparent;
+  border-right: 12px solid blue;
+  border-bottom: 6px solid transparent;
+  border-left: 0;
+}

@@ -34,11 +34,8 @@ function TabItem(props) {
 				props &&
 				props.showRedDot &&
 				Number(props.showRedDot) > 0 ? (
-					<span className={styles.icon_top}>
-						<i></i>
-					</span>
+					<span className={styles.icon_top}></span>
 				) : null}
-
 				{data.title}
 			</div>
 		</NavLink>

@@ -163,18 +163,18 @@ export default class ActivityEntry extends React.PureComponent {
 	}
 
 	renderDetailLink() {
-		const { isShowDetailLink, handleDetailClick } = this.props;
+		const { cardType, isShowDetailLink, handleDetailClick } = this.props;
+
 		if (isShowDetailLink) {
 			return (
 				<div className={classNM.detailLinkWrap} onClick={handleDetailClick}>
 					<span className={classNM.detailLinkText} style={this.buildDetailLinkTextStyle()}>
 						了解详情
 					</span>
-					{/* <img
-						className={classNM.detailLinkArrow}
-						style={this.buildDetailLinkArrowStyle()}
-						src={Images.icon.trigon_right_black}
-					/> */}
+					<span
+						className={classNM.additionArrow}
+						style={{ borderLeftColor: typeConfig[cardType].colorTextSub }}
+					></span>
 				</div>
 			);
 		}

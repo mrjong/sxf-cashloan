@@ -103,14 +103,10 @@ export default class SwitchCard extends Component {
 				}}
 			>
 				{textArr}
-				{/* <img
-					style={[
-						styles.placeHolderTextArrow,
-						styles.placeHolderTextArrowReversal,
-						{ tintColor: typeConfig[dataSource[index].cardType].colorMain }
-					]}
-					source={Images.icon.trigon_right_black}
-				/> */}
+				<span
+					className={[classNM.additionArrow, classNM.additionArrowRight].join(' ')}
+					style={{ borderRightColor: typeConfig[dataSource[index].cardType].colorMain }}
+				></span>
 			</div>
 		);
 	}
@@ -167,13 +163,10 @@ export default class SwitchCard extends Component {
 				}}
 			>
 				{textArr}
-				{/* <img
-					style={[
-						styles.placeHolderTextArrow,
-						{ tintColor: typeConfig[dataSource[index].cardType].colorMain }
-					]}
-					source={Images.icon.trigon_right_black}
-				/> */}
+				<span
+					className={[classNM.additionArrow, classNM.additionArrowLeft].join(' ')}
+					style={{ borderLeftColor: typeConfig[dataSource[index].cardType].colorMain }}
+				></span>
 			</div>
 		);
 	}

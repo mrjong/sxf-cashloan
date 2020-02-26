@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-25 16:17:37
+ * @LastEditTime: 2020-02-26 16:34:08
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -165,7 +165,8 @@ if (window.history && window.history.pushState) {
 
 			if (window.location.pathname === '/home/loan_fenqi') {
 				if (!store.getHrefFlag()) {
-					window.ReactRouterHistory.replace('/home/home');
+					history.go(-2);
+					// window.ReactRouterHistory.replace('/home/home');
 				} else {
 					store.removeHrefFlag();
 				}
