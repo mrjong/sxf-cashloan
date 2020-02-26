@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 10:55:33
+ * @LastEditTime: 2020-02-26 17:09:52
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -225,6 +225,7 @@ export default class home_page extends PureComponent {
 	};
 	// 移除store
 	removeStore = () => {
+		store.removeHrefFlag();
 		// 清除返回的flag
 		store.removeBackFlag();
 		// 运营商直接返回的问题
