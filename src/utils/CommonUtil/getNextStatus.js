@@ -199,19 +199,14 @@ export const getNextStatus = ({
 					}
 					break;
 				case 'AUTH002':
-					$props.$fetch
-						.get(
-							`${auth_getTencentFaceData}?callBackUrl=http://172.16.175.23/common/tencent_face_middle_page`,
-							{}
-						)
-						.then((result) => {
-							if (result.code === '000000' && result.data && result.data.h5Url) {
-								Toast.loading('加载中...', 10);
-								window.location.href = result.data.h5Url;
-							} else {
-								Toast.info(result.message);
-							}
-						});
+					$props.$fetch.get(`${auth_getTencentFaceData}`, {}).then((result) => {
+						if (result.code === '000000' && result.data && result.data.h5Url) {
+							Toast.loading('加载中...', 10);
+							window.location.href = result.data.h5Url;
+						} else {
+							Toast.info(result.message);
+						}
+					});
 					break;
 				case 'AUTH003':
 					resBackMsg = '基本信息认证';

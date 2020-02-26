@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 13:53:48
+ * @LastEditTime: 2020-02-26 13:42:49
  */
 import React, { Component } from 'react';
 import { store } from 'utils/store';
@@ -77,18 +77,16 @@ export default class tencent_face_middle_page extends Component {
 		if (isFetching) return;
 		isFetching = true;
 		Toast.loading('加载中...', 0);
-		this.props.$fetch
-			.get(`${auth_getTencentFaceData}?callBackUrl=http://172.16.175.23/common/tencent_face_middle_page`, {})
-			.then((result) => {
-				if (result.code === '000000' && result.data) {
-					setTimeout(() => {
-						// 人脸识别第三方直接返回的问题
-						Toast.hide();
-						isFetching = false;
-						window.location.href = result.data.h5Url;
-					}, 3000);
-				}
-			});
+		this.props.$fetch.get(`${auth_getTencentFaceData}`, {}).then((result) => {
+			if (result.code === '000000' && result.data) {
+				setTimeout(() => {
+					// 人脸识别第三方直接返回的问题
+					Toast.hide();
+					isFetching = false;
+					window.location.href = result.data.h5Url;
+				}, 3000);
+			}
+		});
 	};
 
 	goBack = () => {
