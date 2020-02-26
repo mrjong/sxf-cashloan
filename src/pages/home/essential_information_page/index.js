@@ -45,7 +45,6 @@ import {
 } from './riskBuryConfig';
 import LimitTimeJoin from './components/LimitTimeJoin';
 import style from './index.scss';
-import informationMore from './img/back.png';
 
 import Images from 'assets/image';
 
