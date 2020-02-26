@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-26 10:52:08
+ * @LastEditTime: 2020-02-26 11:10:11
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -149,7 +149,7 @@
                 // wxToken: Cookie.get('FIN-HD-WECHAT-TOKEN'),
                 redirectUrl: '',
                 registrationId: '',
-                userChannel: ''
+                userChannel: 'others'
               }),
              contentType: "application/json",
              beforeSend: function (XMLHttpRequest) {
@@ -170,7 +170,10 @@
               } else {
                 $('#QRPay').html('<img src="/assets/lib/loading_error.png" class="err_img" /><p>'+res.message+'</p>');
               }
-            }
+            },
+            error: function(res){
+              //  alert(JSON.stringify(res))
+             },
           });
         }
 
