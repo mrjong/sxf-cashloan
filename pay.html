@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-25 13:28:50
+ * @LastEditTime: 2020-02-26 10:52:08
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -143,9 +143,18 @@
                 // channelCode: getH5Channel(),
                 osType: getDeviceType().toLowerCase(),
                 loginType: '0',
+                imei: '',
+                location: '-1,-1',
+                mac: '',
+                // wxToken: Cookie.get('FIN-HD-WECHAT-TOKEN'),
+                redirectUrl: '',
+                registrationId: '',
+                userChannel: ''
               }),
              contentType: "application/json",
-             headers:{"FIN-HD-WECHAT-TOKEN": getCookie('FIN-HD-WECHAT-TOKEN')},
+             beforeSend: function (XMLHttpRequest) {
+               XMLHttpRequest.setRequestHeader("FIN-HD-WECHAT-TOKEN", getCookie('FIN-HD-WECHAT-TOKEN'));
+             },
              dataType: "json",
              success: function(res){
               if (res.code == '000000' && res.data.wxFlag === '0') {
@@ -175,6 +184,13 @@
                 redirectUrl: encodeURIComponent(window.location.href),
                 osType: getDeviceType().toLowerCase(),
                 loginType: '0',
+                code: '',
+                imei: '',
+                location: '-1,-1',
+                mac: '',
+                registrationId: '',
+                state: '111',
+                userChannel: ''
               }),
              contentType: "application/json",
              dataType: "json",
@@ -250,7 +266,9 @@
              data: JSON.stringify({"reqOrdNo": reqOrdNo, "osName": osName}),
              contentType: "application/json",
              dataType: "json",
-             headers:{"FIN-HD-WECHAT-TOKEN": getCookie('FIN-HD-WECHAT-TOKEN')},
+             beforeSend: function (XMLHttpRequest) {
+               XMLHttpRequest.setRequestHeader("FIN-HD-WECHAT-TOKEN", getCookie('FIN-HD-WECHAT-TOKEN'));
+             },
              success: function(res){
               if (res.code === '000000') {
 					      let wxData = res.data && res.data.phonePayStr && JSON.parse(res.data.phonePayStr);
