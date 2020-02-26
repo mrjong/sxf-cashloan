@@ -403,16 +403,36 @@ export default class coupon_page extends PureComponent {
 											</p>
 										</div>
 									) : obj && obj.coupCategory === '03' ? (
-										<span className={style.couponType2}>免息</span>
+										<span
+											className={
+												isInvalid ? [style.couponType2, style.textGray].join(' ') : style.couponType2
+											}
+										>
+											免息
+										</span>
 									) : obj && obj.coupCategory === '01' ? (
-										<span className={style.couponType3}>
+										<span
+											className={
+												isInvalid ? [style.couponType3, style.textGray].join(' ') : style.couponType3
+											}
+										>
 											<i>{obj && obj.coupVal}</i>折
 										</span>
 									) : obj && obj.coupCategory === '02' ? (
-										<span className={style.couponType4}>
+										<span
+											className={
+												isInvalid ? [style.couponType4, style.textGray].join(' ') : style.couponType4
+											}
+										>
 											<i className={style.dayNum}>{obj && obj.coupVal}</i>
 											<span className={style.littleFont}>天</span>
-											<p className={style.coupon_type}>{this.renderCouponType(obj)}</p>
+											<p
+												className={
+													isInvalid ? [style.coupon_type, style.textGray].join(' ') : style.coupon_type
+												}
+											>
+												{this.renderCouponType(obj)}
+											</p>
 										</span>
 									) : null}
 								</div>
