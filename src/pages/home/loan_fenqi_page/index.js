@@ -100,6 +100,9 @@ export default class loan_fenqi_page extends PureComponent {
 			this.queryCashLoanApplInfo();
 		}
 	}
+	componentWillUnmount() {
+		store.setHrefFlag(true);
+	}
 
 	//处理数据反显
 	handleDataDisplay = (confirmAgencyInfo = {}) => {
