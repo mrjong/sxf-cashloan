@@ -69,7 +69,7 @@
 			align-items: center;
 			box-sizing: border-box;
 			font-size: 30px;
-      color: #121c32;
+      color: $colorBlack;
       flex-wrap: wrap;
       padding: 20px 0;
 			// &::after {
@@ -99,8 +99,9 @@
 		.listValue {
 			font-weight: normal;
 			font-size: 28px;
-      line-height: 2;
+      // line-height: 2;
       font-family: 'DINMitAlt';
+      margin-top: 3px;
 		}
 		.listValue2 {
 			font-weight: 500;
@@ -113,7 +114,7 @@
 			display: block;
 			position: relative;
 			line-height: normal;
-			margin-bottom: 14px;
+			// margin-bottom: 14px;
 		}
 		.hasArrow {
 			padding-right: 24px;

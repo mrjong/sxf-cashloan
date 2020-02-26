@@ -1,3 +1,5 @@
+@import '../../../assets/styles/scss/base/fn';
+
 .real_name_page {
   padding: 54px 60px 160px;
 	.updateTitle {
@@ -65,10 +67,15 @@
 			margin-top: 10px;
 		}
   }
-  .updateImgTip {
+  .updateImgTipWrap {
+    position: relative;
     padding-top: 50px;
     margin-top: 50px;
-    border-top: 1px solid $colorDivide;
+    &:after {
+      @include setTopLine(#f0f1f5);
+    }
+  }
+  .updateImgTip {
     width: 100%;
   }
   .sectionTitle {
@@ -160,7 +167,7 @@
 :global {
 	.real_name_page_list {
 		.am-list-item .am-input-label {
-			color: #333;
+			color: #394259;
 			font-size: 0.28rem;;
 		}
 		.am-list-item.am-input-item {
@@ -168,6 +175,14 @@
     }
     .am-list-line {
       padding-right: 0;
+    }
+
+    .am-list-item.am-input-focus .am-input-clear {
+      width: 30px;
+      height: 30px;
+      background-size: 28px auto;
+      margin-left: 10px;
+      background-color: #CDD0D8;
     }
 		.am-list-item .am-input-control input {
       text-align: right;

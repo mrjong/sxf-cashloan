@@ -7,7 +7,7 @@
 .nameDiv {
 	.informationMore {
 		position: relative;
-		width: 0.13rem;
+		width: 20px;
 		float: right;
 		right: 0;
 		// margin-top: -0.5rem;
@@ -127,6 +127,15 @@
 			margin-right: 0.35rem;
 			font-size: 0.28rem;
     }
+
+    .am-list-item.am-input-focus .am-input-clear {
+      width: 30px;
+      height: 30px;
+      background-size: 28px auto;
+      margin-left: 10px;
+      background-color: #CDD0D8;
+    }
+
     .hasSelectValue {
       .am-list-item .am-list-line .am-list-extra {
         color: $colorBlack;
@@ -267,7 +276,7 @@
 		}
 		.am-modal-close {
 			padding: 30px 40px;
-		}
+    }
 	}
 }
 .lableTipWrap {
@@ -303,7 +312,7 @@
   }
 	.informationMoreNew {
 		position: absolute;
-		width: 0.13rem;
+		width: 20px;
 		right: 0;
 		top: 50%;
 		transform: translate(0, -50%);

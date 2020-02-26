@@ -35,17 +35,26 @@
   .am-picker-popup-header {
     background-image: none !important;
     background-color: #F7F8FA !important;
+    height: 100px;
   }
   .am-picker-popup-header::after {
     display: none !important;
   }
   .am-picker-popup-header .am-picker-popup-header-right,
+  .am-picker-popup-header .am-picker-popup-header-left,
+  .am-picker-popup-header .am-picker-popup-title {
+    height: 100px;
+  }
+
+  .am-picker-popup-header .am-picker-popup-header-right,
   .am-picker-popup-header .am-picker-popup-header-left {
-		color: $colorListText;
+    color: $colorListText;
+    font-size: 30px;
   }
   .am-picker-popup-header .am-picker-popup-title {
     color: $colorBlack;
     font-weight: 500;
+    font-size: 34px;
   }
 
   .am-picker-col-indicator::before,

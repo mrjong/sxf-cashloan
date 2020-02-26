@@ -6,7 +6,7 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
 import ButtonCustom from 'components/ButtonCustom';
-// import { setBackGround } from 'utils/background';
+import { setBackGround } from 'utils/background';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { connect } from 'react-redux';
@@ -21,6 +21,7 @@ import { setCacheContactAction } from 'reduxes/actions/commonActions';
 		setCacheContactAction
 	}
 )
+@setBackGround('#fff')
 export default class reco_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);

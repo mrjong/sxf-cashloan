@@ -458,6 +458,7 @@ export default class home_page extends PureComponent {
 			isShowDetailLink: false
 		};
 		this.setPlusCardData(plusCardData);
+
 		if (!this.props.userInfo || !this.props.userInfo.tokenId) {
 			return [basicCardData, plusCardData];
 		}

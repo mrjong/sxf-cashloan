@@ -19,12 +19,13 @@
 	.contact_list {
 		padding-top: 60px;
 		li {
+      position: relative;
 			display: flex;
-			height: 106px;
+			height: 100px;
 			align-items: center;
 			justify-content: space-between;
-			border-bottom: 1px solid #f0f1f5;
-			font-size: 32px;
+			// border-bottom: 1px solid #f0f1f5;
+			font-size: 28px;
 			font-weight: normal;
 			color: #868e9e;
 			.left_part {
@@ -46,16 +47,21 @@
 		}
 		li.activeStyle {
 			font-weight: 600;
-			color: #121c32;
+			color: $colorGolden;
 			.select_ico {
-				background: url(./img/selected_ico.png) no-repeat;
+				background: url(../../../assets/image/icon/icon_select_golden.png) no-repeat;
 				background-size: 100%;
 				border: none;
 			}
 		}
 		li:last-child {
 			border-bottom: none;
-		}
+    }
+    li + li {
+      &:after {
+        @include setTopLine(#f0f1f5);
+      }
+    }
 	}
 	.confirm_btn_box {
 		position: fixed;
