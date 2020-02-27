@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 13:20:52
+ * @LastEditTime: 2020-02-27 21:08:46
  */
 const antdTheme = require('../antd-theme.json');
 const path = require('path');
@@ -139,10 +139,10 @@ module.exports = function(options) {
 			},
 			disableHostCheck: true,
 			proxy: {
-				'/wap': {
+				'/front': {
 					target: 'https://lns-api-test.vbillbank.com/wap', //目标接口域名
 					// target: 'http://172.18.40.146:8080/wap',
-					pathRewrite: { '^/wap': '' }, //重写接口
+					pathRewrite: { '^/front': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},
 				'/web/api/v09': {
