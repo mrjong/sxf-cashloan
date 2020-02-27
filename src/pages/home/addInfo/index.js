@@ -20,7 +20,7 @@ import { StepTitle, AsyncCascadePicker, ButtonCustom, FixedHelpCenter, FixedTopT
 import { add_info_submit } from './riskBuryConfig';
 
 import style from './index.scss';
-import informationMore from './img/back.png';
+import Images from 'assets/image';
 
 let submitButtonLocked = false;
 
@@ -159,7 +159,7 @@ export default class add_info extends PureComponent {
 											<List.Item className="hasborder">{item.name}</List.Item>
 										</AsyncCascadePicker>
 									)}
-									<img className={style.informationMore} src={informationMore} />
+									<img className={style.informationMore} src={Images.icon.icon_arrow_right} />
 								</div>
 							);
 						})}
