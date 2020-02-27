@@ -17,11 +17,12 @@ import { signup_wx_auth, signup_wx_authcb } from 'fetch/api.js';
 import { store } from 'utils/store';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
 
 @fetch.inject()
 @connect(
 	(state) => state,
-	{ setIframeProtocolShow }
+	{ setIframeProtocolShow, setUserInfoAction }
 )
 class product_introduce_page extends Component {
 	constructor(props) {
@@ -88,6 +89,9 @@ class product_introduce_page extends Component {
 						// 已授权不需要登陆
 						Cookie.set('FIN-HD-WECHAT-TOKEN', res.data.wxToken, { expires: 365 }); // 微信授权token
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.data.tokenId);
+						this.props.setUserInfoAction(res.data);
 						this.props.history.push({
 							pathname: '/others/wx_download_page',
 							search: `?wxTestFrom=wx_middle_page`
@@ -127,6 +131,9 @@ class product_introduce_page extends Component {
 					} else if (res.code == '000000' && res.data.wxFlag === '3') {
 						//已授权已登录(跳转下载页)
 						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
+						// TODO: 根据设备类型存储token
+						store.setToken(res.data.tokenId);
+						this.props.setUserInfoAction(res.data);
 						this.props.history.push({
 							pathname: '/others/wx_download_page',
 							search: `?wxTestFrom=wx_middle_page`
