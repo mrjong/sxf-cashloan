@@ -14,7 +14,7 @@ import Footer from 'components/Footer';
 import { Toast } from 'antd-mobile';
 import Cookie from 'js-cookie';
 import { store } from 'utils/store';
-import { changeHistoryState, pagesIgnore, queryUsrSCOpenId } from 'utils';
+import { changeHistoryState, pagesIgnore, queryUsrSCOpenId, isWXOpen } from 'utils';
 import { TFDInit } from 'utils/getTongFuDun';
 import { pageView, sxfDataPv } from 'utils/analytins';
 import { SXFToast } from 'utils/SXFToast';
@@ -206,7 +206,7 @@ export default class router_Page extends PureComponent {
 			<div className="application_view">
 				<div className="application_page">
 					{headerHide ? null : <Header {...this.props} headerProps={route} newTitle={newTitle} />}
-					{footerHide ? null : <Footer footerProps={route} />}
+					{isWXOpen() || footerHide ? null : <Footer footerProps={route} />}
 					<div className="application_content">{component}</div>
 					<HomeModal fetch={this.props.$fetch} history={this.props.history} />
 				</div>
