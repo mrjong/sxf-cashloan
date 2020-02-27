@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2019-12-16 10:48:13
+ * @LastEditTime: 2020-02-27 18:33:06
  */
 import qs from 'qs';
 
@@ -11,7 +11,7 @@ let baseUrl = '';
 if (query && query.baseMark === '00') {
 	baseUrl = '/web/api/v09';
 } else {
-	baseUrl = '/wap';
+	baseUrl = '/front';
 }
 
 export default baseUrl;
