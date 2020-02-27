@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 16:57:53
+ * @LastEditTime: 2020-02-27 16:45:54
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -457,14 +457,12 @@ export default class login_page extends PureComponent {
 			queryUsrSCOpenId({ $props: this.props })
 				.then(() => {
 					buriedPointEvent(login.goDownLoad);
-					// TODONEW
-					// if (queryData.jumpUrl) {
-					// 	//如果登录页链接存在jumpUrl,则登录后直接跳转至目标页
-					// 	this.props.history.replace(queryData.jumpUrl);
-					// } else {
-					// 	this.showDownLoadModal();
-					// }
-					this.props.history.replace('/home/home');
+					if (queryData.jumpUrl) {
+						//如果登录页链接存在jumpUrl,则登录后直接跳转至目标页
+						this.props.history.replace(queryData.jumpUrl);
+					} else {
+						this.showDownLoadModal();
+					}
 				})
 				.catch(() => {
 					buriedPointEvent(login.queryUsrSCOpenIdFail);
