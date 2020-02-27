@@ -1,5 +1,8 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-02-27 21:47:52
+ */
 import React, { Component } from 'react';
-import qs from 'qs';
 import img1 from './img/img1.png';
 import img2 from './img/img2.png';
 import img3 from './img/img3.png';
@@ -11,18 +14,13 @@ import { buriedPointEvent } from 'utils/analytins';
 import { other } from 'utils/analytinsType';
 import { getDeviceType } from 'utils';
 import fetch from 'sx-fetch';
-import { getH5Channel, setH5Channel } from 'utils/common';
-import Cookie from 'js-cookie';
-import { signup_wx_auth, signup_wx_authcb } from 'fetch/api.js';
-import { store } from 'utils/store';
+import { setH5Channel } from 'utils/common';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
-import { setUserInfoAction } from 'reduxes/actions/staticActions';
-let query = {};
 @fetch.inject()
 @connect(
 	(state) => state,
-	{ setIframeProtocolShow, setUserInfoAction }
+	{ setIframeProtocolShow }
 )
 class product_introduce_page extends Component {
 	constructor(props) {
@@ -38,11 +36,6 @@ class product_introduce_page extends Component {
 				showFixedBtn: 600 < scrollTop
 			});
 		});
-		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-
-		if (query && query.code) {
-			this.checkWxAuth();
-		}
 	}
 
 	downloadClick = () => {
@@ -56,105 +49,9 @@ class product_introduce_page extends Component {
 				device_type: 'ANDROID'
 			});
 		}
-		this.checkWxAuth();
-	};
-
-	checkWxAuth = () => {
-		// 移除cookie中的token
-		Cookie.remove('FIN-HD-AUTH-TOKEN');
-		// 从url截取数据
-		const osType = getDeviceType();
 		setH5Channel();
-		if (query && query.code) {
-			this.props.$fetch
-				.post(
-					signup_wx_authcb,
-					{
-						code: query.code,
-						imei: '',
-						location: store.getPosition(),
-						loginType: '0',
-						mac: '',
-						osType: osType.toLowerCase(),
-						redirectUrl: '',
-						registrationId: '',
-						state: query.state,
-						userChannel: getH5Channel()
-					},
-					{
-						'FIN-HD-WECHAT-TOKEN': Cookie.get('FIN-HD-WECHAT-TOKEN')
-					}
-				)
-				.then((res) => {
-					if (res.code == '000000' && res.data.wxFlag === '0') {
-						//请求成功,跳到登录页(前提是不存在已登录未注册的情况)
-						this.props.history.replace('/login?wxTestFrom=wx_middle_page');
-					} else if (res.code == '000000' && res.data.wxFlag === '3') {
-						// 已授权不需要登陆
-						Cookie.set('FIN-HD-WECHAT-TOKEN', res.data.wxToken, { expires: 365 }); // 微信授权token
-						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.data.tokenId);
-						this.props.setUserInfoAction(res.data);
-						this.props.history.push({
-							pathname: '/others/wx_download_page',
-							search: `?wxTestFrom=wx_middle_page`
-						});
-					} else {
-						this.props.toast.info(res.message); //请求失败,弹出请求失败信息
-					}
-				})
-				.catch(() => {
-					this.setState({
-						errorInf:
-							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-					});
-				});
-		} else {
-			this.props.$fetch
-				.post(signup_wx_auth, {
-					code: '',
-					imei: '',
-					location: store.getPosition(),
-					loginType: '0',
-					mac: '',
-					osType: getDeviceType().toLowerCase(),
-					redirectUrl: encodeURIComponent(window.location.href),
-					registrationId: '',
-					state: '',
-					userChannel: getH5Channel()
-				})
-				.then((res) => {
-					if (res.code == '000000' && res.data.wxFlag === '1') {
-						//没有授权
-						Cookie.set('FIN-HD-WECHAT-TOKEN', res.data.wxToken, { expires: 365 });
-						window.location.href = decodeURIComponent(res.data.wxUrl);
-					} else if (res.code == '000000' && res.data.wxFlag === '2') {
-						//已授权未登录 (静默授权为7天，7天后过期）
-						this.props.history.replace('/login?wxTestFrom=wx_middle_page');
-					} else if (res.code == '000000' && res.data.wxFlag === '3') {
-						//已授权已登录(跳转下载页)
-						Cookie.set('FIN-HD-AUTH-TOKEN', res.data.tokenId, { expires: 365 });
-						// TODO: 根据设备类型存储token
-						store.setToken(res.data.tokenId);
-						this.props.setUserInfoAction(res.data);
-						this.props.history.push({
-							pathname: '/others/wx_download_page',
-							search: `?wxTestFrom=wx_middle_page`
-						});
-					} else {
-						this.props.toast.info(res.message);
-					}
-				})
-				.catch(() => {
-					this.setState({
-						errorInf:
-							'加载失败,请点击<a href="javascript:void(0);" onclick="window.location.reload()">重新加载</a>'
-					});
-				});
-		}
+		this.props.history.push('/common/wx_middle_page?NoLoginUrl=/login&jumpUrl=/others/wx_download_page');
 	};
-
 	go = (url) => {
 		this.props.setIframeProtocolShow({
 			url
