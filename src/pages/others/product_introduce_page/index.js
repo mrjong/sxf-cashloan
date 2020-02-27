@@ -18,7 +18,7 @@ import { store } from 'utils/store';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { connect } from 'react-redux';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
-
+let query = {};
 @fetch.inject()
 @connect(
 	(state) => state,
@@ -38,6 +38,11 @@ class product_introduce_page extends Component {
 				showFixedBtn: 600 < scrollTop
 			});
 		});
+		query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
+
+		if (query && query.code) {
+			this.checkWxAuth();
+		}
 	}
 
 	downloadClick = () => {
@@ -58,7 +63,6 @@ class product_introduce_page extends Component {
 		// 移除cookie中的token
 		Cookie.remove('FIN-HD-AUTH-TOKEN');
 		// 从url截取数据
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		const osType = getDeviceType();
 		setH5Channel();
 		if (query && query.code) {
