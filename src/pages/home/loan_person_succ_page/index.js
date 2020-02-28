@@ -97,9 +97,10 @@ export default class remit_ing_page extends PureComponent {
 			this.props.toast.info('请选择时间');
 			return;
 		}
+
 		this.props.$fetch
 			.post(person_appointment_sub, {
-				applyDateCode: daySelectedItem.code,
+				applyDateCode: daySelectedItem.code === '0' ? '00' : '01',
 				applyTimeCode: timeSelectedItem.code,
 				credApplNo: queryData.creadNo
 			})
