@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 10:15:16
+ * @LastEditTime: 2020-02-28 10:18:29
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -1033,7 +1033,7 @@ export default class essential_information_page extends PureComponent {
 									className="hasborder"
 									type="number"
 									maxLength="11"
-									placeholder="手机号"
+									placeholder="手机号（仅在紧急情况下联系）"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_tel_one');
 									}}
@@ -1163,7 +1163,7 @@ export default class essential_information_page extends PureComponent {
 									className="hasborder"
 									type="number"
 									maxLength="11"
-									placeholder="手机号"
+									placeholder="手机号（仅在紧急情况下联系）"
 									onBlur={(v) => {
 										this.inputOnBlur(v, 'contact_tel_two');
 									}}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:44:06
+ * @LastEditTime: 2020-02-28 10:26:45
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -121,7 +121,7 @@ export default class add_info extends PureComponent {
 				<FixedTopTip />
 				<div className={style.pageContent}>
 					<FixedHelpCenter history={this.props.history} />
-					<StepTitle title="填写基本信息" titleSub="请填写基本信息，有利于您的借款审核" stepNum="03" />
+					<StepTitle title="填写补充信息" titleSub="信息加密传输，仅用于申请还到" stepNum="03" />
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {
 							return (

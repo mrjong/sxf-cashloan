@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:41:21
+ * @LastEditTime: 2020-02-28 10:24:15
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -381,11 +381,7 @@ export default class real_name_page extends Component {
 					<div>
 						<FixedHelpCenter history={this.props.history} />
 
-						<StepTitle
-							title="上传身份证照片"
-							titleSub="请上传身份证照片，仅用于公安网身份核实"
-							stepNum="01"
-						/>
+						<StepTitle title="上传身份证照片" titleSub="信息加密传输，仅用于公安网身份核实" stepNum="01" />
 						<div className={style.updateContent}>
 							<div className={style.updateImgWrap}>
 								<div
