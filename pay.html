@@ -1,7 +1,7 @@
 <!--
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-26 11:10:11
+ * @LastEditTime: 2020-02-28 13:19:09
  -->
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
@@ -136,7 +136,7 @@
           const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
               type: "POST",
-              url: "/wap/signup/wx/authcb",
+              url: "/front/signup/wx/authcb",
               data: JSON.stringify({
                 state: getUrlParam('state'),
                 code: getUrlParam('code'),
@@ -182,7 +182,7 @@
           const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
               type: "POST",
-              url: "/wap/signup/wx/auth",
+              url: "/front/signup/wx/auth",
               data: JSON.stringify({
                 redirectUrl: encodeURIComponent(window.location.href),
                 osType: getDeviceType().toLowerCase(),
@@ -265,7 +265,7 @@
           const osName = getDeviceType() === 'IOS' ? '01' : getDeviceType() === 'ANDROID' ? '02' : '';
           $.ajax({
              type: "POST",
-             url: "/wap/repay/getQrPayUrl",
+             url: "/front/repay/getQrPayUrl",
              data: JSON.stringify({"reqOrdNo": reqOrdNo, "osName": osName}),
              contentType: "application/json",
              dataType: "json",
