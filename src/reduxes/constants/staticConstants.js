@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 10:56:20
+ * @LastEditTime: 2020-03-02 09:15:54
  */
 // 这些要求这种备注，方便reducer直接查看
 
@@ -10,12 +10,6 @@
  * @return:
  */
 export const STATIC_USER_INFO = 'STATIC_USER_INFO';
-/**
- * @description: 协议预览敏感信息
- * @param {type}
- * @return:
- */
-export const STATIC_PROTOCOL_PREVIEW_INFO = 'STATIC_PROTOCOL_PREVIEW_INFO';
 /**
  * @description:  清除所有static
  * @param {type}

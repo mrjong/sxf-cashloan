@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 10:15:16
+ * @LastEditTime: 2020-03-02 09:29:22
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -19,6 +19,7 @@ import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import dayjs from 'dayjs';
+import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import {
 	FixedHelpCenter,
@@ -77,8 +78,7 @@ let urlQuery = '';
 @connect(
 	(state) => ({
 		userInfo: state.staticState.userInfo,
-		nextStepStatus: state.commonState.nextStepStatus,
-		protocolPreviewInfo: state.staticState.protocolPreviewInfo
+		nextStepStatus: state.commonState.nextStepStatus
 	}),
 	{
 		setIframeProtocolShow
@@ -136,19 +136,27 @@ export default class essential_information_page extends PureComponent {
 		});
 	}
 	// 跳转个人信息授权书
-	readContract = (jumpUrl) => {
+	readContract = async (jumpUrl) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
-		const { protocolPreviewInfo = {} } = this.props;
-		const pageData = {
-			name: protocolPreviewInfo.name,
-			idNo: protocolPreviewInfo.idNo,
-			dateTime: dayjs(new Date()).format('YYYY/MM/DD')
-		};
-		this.props.setIframeProtocolShow({
-			url: jumpUrl,
-			contractInf: pageData
-		});
+		if (jumpUrl === 'personal_auth_page') {
+			let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
+			if (protocolPreviewInfo) {
+				const pageData = {
+					name: protocolPreviewInfo.name,
+					idNo: protocolPreviewInfo.idNo,
+					dateTime: dayjs(new Date()).format('YYYY/MM/DD')
+				};
+				this.props.setIframeProtocolShow({
+					url: jumpUrl,
+					contractInf: pageData
+				});
+			}
+		} else {
+			this.props.setIframeProtocolShow({
+				url: jumpUrl
+			});
+		}
 	};
 	selectProtocol = () => {
 		this.setState({

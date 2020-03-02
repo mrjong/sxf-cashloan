@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 15:22:45
+ * @LastEditTime: 2020-03-02 09:29:35
  */
 // 本地local存储 方法名与key值对应表
 export const storeTypes = {
@@ -39,7 +39,6 @@ export const storeTypes = {
 	RealNameNextStep: 'RealNameNextStep', // 需要下一步
 	CashFenQiStoreData: 'CashFenQiStoreData', //现金分期反显的数据
 	CashFenQiCardArr: 'CashFenQiCardArr', //现金分期收、还卡数组
-	ProtocolPersonalData: 'ProtocolPersonalData', // 个人信息授权书数据
 	ConfirmAgencyBackHome: 'ConfirmAgencyBackHome', // 签约页控制物理返回到首页标识
 	TFDBack1: 'TFDBack1', // call通付盾成功
 	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
