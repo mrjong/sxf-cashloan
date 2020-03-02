@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-02 08:45:58
+ * @LastEditTime: 2020-03-02 10:24:44
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -139,8 +139,8 @@ export default class mpos_service_authorization_page extends PureComponent {
 				<div className={styles.btn_fixed}>
 					<div className={styles.btn_box}>
 						<ButtonCustom
-							type={selectFlag ? 'blue' : 'default'}
-							onClick={selectFlag ? () => this.goSubmit() : null}
+							type={selectFlag && !BtnDisabled ? 'blue' : 'default'}
+							onClick={selectFlag && !BtnDisabled ? () => this.goSubmit() : null}
 						>
 							授权并登录
 						</ButtonCustom>
