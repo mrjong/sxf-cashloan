@@ -174,11 +174,13 @@ export const getNextStatus = ({
 			// 处理mpos直接跳转到基本信息的特殊情况
 			if (actionType === 'mpos') {
 				if (nextData.nextStepGramCode === 'AUTH003') {
+					Toast.hide();
 					$props.history.replace({
 						pathname: '/home/essential_information',
 						search: '?jumpToBase=true&entry=authorize'
 					});
 				} else {
+					Toast.hide();
 					$props.history.replace('/home/home');
 				}
 				return;

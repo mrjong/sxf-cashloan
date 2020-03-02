@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 16:46:45
+ * @LastEditTime: 2020-03-02 08:45:58
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -14,7 +14,7 @@ import { getDeviceType, activeConfigSts, recordContract } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { ButtonCustom } from 'components';
 import { mpos_service_authorization } from 'utils/analytinsType';
-import { Checkbox } from 'antd-mobile';
+import { Checkbox, Toast } from 'antd-mobile';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { signup_mpos_auth, index_queryPLPShowSts } from 'fetch/api';
 import logo from './img/logo.png';
 const AgreeItem = Checkbox.AgreeItem;
-
+let BtnDisabled = false;
 let query = '';
 @setBackGround('#fff')
 @fetch.inject()
@@ -46,6 +46,8 @@ export default class mpos_service_authorization_page extends PureComponent {
 	}
 
 	goSubmit = () => {
+		BtnDisabled = true;
+		Toast.loading('加载中...', 10);
 		this.props.$fetch
 			.post(signup_mpos_auth, {
 				imei: '',
@@ -64,6 +66,8 @@ export default class mpos_service_authorization_page extends PureComponent {
 					if (res.code === '000000') {
 						buriedPointEvent(mpos_service_authorization.auth_btn);
 						if (res.data.authSts === '1') {
+							BtnDisabled = false;
+							Toast.hide();
 							this.props.history.replace(
 								`/mpos/mpos_get_sms_page?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`
 							);
@@ -98,7 +102,10 @@ export default class mpos_service_authorization_page extends PureComponent {
 				(err) => {
 					this.props.toast.info(err.msgInfo);
 				}
-			);
+			)
+			.catch(() => {
+				BtnDisabled = false;
+			});
 	};
 	// AB 测试
 	goHome = () => {
@@ -106,6 +113,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 			$props: this.props,
 			type: 'A',
 			callback: () => {
+				BtnDisabled = false;
 				getNextStatus({
 					$props: this.props,
 					actionType: 'mpos'
