@@ -35,7 +35,16 @@ export default class PopUp {
 		if (this.container) {
 			return this.container;
 		}
-		this.container = document.createElement('div');
+		const myDiv = document.createElement('div');
+		myDiv.style.position = 'fixed';
+		myDiv.style.top = '0';
+		myDiv.style.bottom = '0';
+		myDiv.style.left = '0';
+		myDiv.style.right = '0';
+		myDiv.style.zIndex = '9999';
+		myDiv.style.transform = 'translateZ(1px)';
+
+		this.container = myDiv;
 		document.body.appendChild(this.container);
 		return this.container;
 	};
