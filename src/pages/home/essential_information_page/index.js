@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-03 17:48:31
+ * @LastEditTime: 2020-03-03 17:50:40
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -144,7 +144,7 @@ export default class essential_information_page extends PureComponent {
 			const pageData = {
 				name: protocolPreviewInfo.name,
 				idNo: protocolPreviewInfo.idNo,
-				dateTime: dayjs(new Date()).format('YYYY/MM/DD')
+				dateTime: dayjs(new Date()).format('YYYY年MM月DD日')
 			};
 			this.props.setIframeProtocolShow({
 				url: jumpUrl,
