@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-05 14:08:56
+ * @LastEditTime: 2020-03-02 09:16:04
  */
 /*
  * @Author: shawn
@@ -8,17 +8,11 @@
  */
 import { handleActions } from 'redux-actions';
 
-import {
-	STATIC_USER_INFO,
-	STATIC_PROTOCOL_PREVIEW_INFO,
-	STATIC_CLEAR_STATE,
-	STATIC_AUTH_ID
-} from '../constants/staticConstants';
+import { STATIC_USER_INFO, STATIC_CLEAR_STATE, STATIC_AUTH_ID } from '../constants/staticConstants';
 const initState = { userInfo: {} };
 export default handleActions(
 	{
 		[STATIC_USER_INFO]: (state, action) => ({ ...state, ...action.payload }),
-		[STATIC_PROTOCOL_PREVIEW_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[STATIC_AUTH_ID]: (state, action) => ({ ...state, ...action.payload }),
 		[STATIC_CLEAR_STATE]: () => ({})
 	},

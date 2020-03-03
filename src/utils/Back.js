@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-26 17:00:27
+ * @LastEditTime: 2020-03-02 09:30:03
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -132,9 +132,6 @@ if (window.history && window.history.pushState) {
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 
 			if (window.location.pathname === '/home/essential_information') {
-				if (store.getProtocolPersonalData()) {
-					return;
-				}
 				document.activeElement.blur();
 				obj.show();
 				return;

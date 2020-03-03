@@ -1,11 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 10:51:56
+ * @LastEditTime: 2020-03-02 09:14:36
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
-import { loan_queryCashLoanApplInfo, signup_logout } from 'fetch/api';
+import { loan_queryCashLoanApplInfo, signup_logout, bank_card_contract_info } from 'fetch/api';
 import { commonClearState } from 'reduxes/actions/commonActions';
 import { specialClearState } from 'reduxes/actions/specialActions';
 import { setUserInfoAction, staticClearState } from 'reduxes/actions/staticActions';
@@ -232,4 +232,30 @@ export const logoutAppHandler = (that) => {
 			}
 		}
 	]);
+};
+
+/**
+ * @description: 查询协议预览相关数据
+ */
+export const queryProtocolPreviewInfo = ({ $props }) => {
+	return new Promise((resolve, reject) => {
+		$props.$fetch
+			.get(bank_card_contract_info, null, { hideToast: true })
+			.then((result) => {
+				if (result && result.code === '000000' && result.data) {
+					const { name, idNo } = result.data;
+
+					resolve({
+						name: base64Decode(name),
+						idNo: base64Decode(idNo)
+					});
+				} else {
+					Toast.info(result.message);
+					reject();
+				}
+			})
+			.catch(() => {
+				reject();
+			});
+	});
 };

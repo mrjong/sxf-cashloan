@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-14 20:03:30
+ * @LastEditTime: 2020-03-02 09:15:11
  */
 /*
  * @Author: shawn
@@ -14,17 +14,15 @@ import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { commonClearState, setOverDueModalInfo, setHomeModalAction } from 'reduxes/actions/commonActions';
 import { showRedDot, setMsgCount } from 'reduxes/actions/specialActions';
-import { setUserInfoAction, setProtocolPreviewInfo } from 'reduxes/actions/staticActions';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import {
 	signup_refreshClientUserInfo,
 	coup_queryUsrCoupBySts,
 	index_queryOLPShowSts,
 	msg_popup_list,
 	msg_news_count,
-	index_queryPLPShowSts,
-	bank_card_contract_info
+	index_queryPLPShowSts
 } from 'fetch/api';
-import { base64Decode } from 'utils/CommonUtil/toolUtil';
 
 export default () => (WrappedComponent) => {
 	@connect(
@@ -38,8 +36,7 @@ export default () => (WrappedComponent) => {
 			setUserInfoAction,
 			setOverDueModalInfo,
 			setMsgCount,
-			setHomeModalAction,
-			setProtocolPreviewInfo
+			setHomeModalAction
 		}
 	)
 	@fetch.inject()
@@ -77,7 +74,6 @@ export default () => (WrappedComponent) => {
 				if (userInfo && userInfo.tokenId) {
 					this.signup_refreshClientUserInfo();
 					this.couponCount();
-					this.queryProtocolPreviewInfo();
 				}
 			}
 
@@ -246,24 +242,6 @@ export default () => (WrappedComponent) => {
 					resolve([]);
 				}
 			});
-		};
-
-		/**
-		 * @description: 查询协议预览相关数据
-		 */
-		queryProtocolPreviewInfo = () => {
-			this.props.$fetch
-				.get(bank_card_contract_info, null, { hideToast: true })
-				.then((result) => {
-					if (result && result.code === '000000' && result.data) {
-						const { name, idNo } = result.data;
-						this.props.setProtocolPreviewInfo({
-							name: base64Decode(name),
-							idNo: base64Decode(idNo)
-						});
-					}
-				})
-				.catch(() => {});
 		};
 
 		/**

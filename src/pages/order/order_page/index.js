@@ -226,7 +226,11 @@ export default class order_page extends PureComponent {
 		return (
 			<div>
 				{this.renderFooterComponent()}
-				{this.state.dataSource.length > 5 ? <FooterBar /> : null}
+				{this.state.dataSource.length > 5 ? (
+					<div className={style.FooterBar}>
+						<FooterBar />
+					</div>
+				) : null}
 			</div>
 		);
 	}
