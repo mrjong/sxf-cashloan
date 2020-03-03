@@ -523,10 +523,10 @@ export default class home_page extends PureComponent {
 				disPlayData.push(plusCardData);
 				break;
 			case 'LN0005': // 暂无代还资格
-				basicCardData.tipText =
+				basicCardData.topTip =
 					homeData.dcDataInfo.netAppyDate &&
 					differDays <= 60 &&
-					`${dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')}`;
+					`${dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')}可再次申请`;
 				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
 				basicCardData.statusTitleSub = '去试试其他借款平台';
 				basicCardData.btnText = '去试试';
