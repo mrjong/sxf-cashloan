@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-28 10:26:45
+ * @LastEditTime: 2020-03-03 17:34:09
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -15,8 +15,18 @@ import { setBackGround } from 'utils/background';
 import { domListen } from 'utils/domListen';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { auth_suppleInfo } from 'fetch/api.js';
+import dayjs from 'dayjs';
+import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
+import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 
-import { StepTitle, AsyncCascadePicker, ButtonCustom, FixedHelpCenter, FixedTopTip } from 'components';
+import {
+	StepTitle,
+	AsyncCascadePicker,
+	ButtonCustom,
+	FixedHelpCenter,
+	FixedTopTip,
+	CheckRadio
+} from 'components';
 import { add_info_submit } from './riskBuryConfig';
 
 import style from './index.scss';
@@ -25,9 +35,14 @@ import Images from 'assets/image';
 let submitButtonLocked = false;
 
 @fetch.inject()
-@connect((state) => ({
-	nextStepStatus: state.commonState.nextStepStatus
-}))
+@connect(
+	(state) => ({
+		nextStepStatus: state.commonState.nextStepStatus
+	}),
+	{
+		setIframeProtocolShow
+	}
+)
 @createForm()
 @setBackGround('#fff')
 @domListen()
@@ -35,7 +50,8 @@ export default class add_info extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			suppleInfo: []
+			suppleInfo: [],
+			selectFlag: false
 		};
 	}
 
@@ -59,12 +75,17 @@ export default class add_info extends PureComponent {
 	};
 
 	handleValidate = () => {
+		const { selectFlag } = this.state;
 		const fieldsValue = this.props.form.getFieldsValue();
-		const valid = Object.keys(fieldsValue).every((key) => !!fieldsValue[key]);
+		let valid = Object.keys(fieldsValue).every((key) => !!fieldsValue[key]);
+		if (!selectFlag) {
+			valid = false;
+		}
 		return valid;
 	};
 
 	handleSubmit = () => {
+		const { selectFlag } = this.state;
 		this.sxfMD(add_info_submit.key);
 		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT);
 		if (submitButtonLocked) return;
@@ -76,6 +97,10 @@ export default class add_info extends PureComponent {
 		// 调基本信息接口
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
+				if (!selectFlag) {
+					this.props.toast.info('请先阅读并勾选相关协议');
+					return;
+				}
 				let params = {
 					osType: getH5Channel(),
 					usrBusCnl: ''
@@ -112,9 +137,39 @@ export default class add_info extends PureComponent {
 		sxfburiedPointEvent(type);
 	};
 
+	selectProtocol = () => {
+		this.setState({
+			selectFlag: !this.state.selectFlag
+		});
+	};
+
+	// 跳转个人信息授权书
+	readContract = async (jumpUrl) => {
+		// const { selectFlag } = this.state;
+		// store.setCacheBaseInfo({ selectFlag });
+		if (jumpUrl === 'personal_auth_page') {
+			let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
+			if (protocolPreviewInfo) {
+				const pageData = {
+					name: protocolPreviewInfo.name,
+					idNo: protocolPreviewInfo.idNo,
+					dateTime: dayjs(new Date()).format('YYYY/MM/DD')
+				};
+				this.props.setIframeProtocolShow({
+					url: jumpUrl,
+					contractInf: pageData
+				});
+			}
+		} else {
+			this.props.setIframeProtocolShow({
+				url: jumpUrl
+			});
+		}
+	};
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { suppleInfo } = this.state;
+		const { suppleInfo, selectFlag } = this.state;
 		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
@@ -163,6 +218,28 @@ export default class add_info extends PureComponent {
 								</div>
 							);
 						})}
+					</div>
+					<div className={style.protocolBox} onClick={this.selectProtocol}>
+						<CheckRadio isSelect={selectFlag} />
+						点击按钮即视为同意
+						<em
+							onClick={(e) => {
+								e.stopPropagation();
+								this.readContract('personal_auth_page');
+							}}
+							className={style.link}
+						>
+							《个人信息授权书》
+						</em>
+						<em
+							onClick={(e) => {
+								e.stopPropagation();
+								this.readContract('user_privacy_page');
+							}}
+							className={style.link}
+						>
+							《用户隐私权政策》
+						</em>
 					</div>
 				</div>
 				<div className={style.sureBtnWrap}>

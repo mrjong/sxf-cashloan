@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-03 15:23:07
+ * @LastEditTime: 2020-03-03 17:34:19
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -18,9 +18,6 @@ import { buryingPoints } from 'utils/buryPointMethods';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
-import dayjs from 'dayjs';
-import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
-import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import {
 	FixedHelpCenter,
 	AgreementModal,
@@ -28,8 +25,7 @@ import {
 	AddressSelect,
 	AsyncCascadePicker,
 	ButtonCustom,
-	FixedTopTip,
-	CheckRadio
+	FixedTopTip
 } from 'components';
 import {
 	resident_addressRiskBury,
@@ -75,15 +71,10 @@ let urlQuery = '';
 @createForm()
 @setBackGround('#fff')
 @domListen()
-@connect(
-	(state) => ({
-		userInfo: state.staticState.userInfo,
-		nextStepStatus: state.commonState.nextStepStatus
-	}),
-	{
-		setIframeProtocolShow
-	}
-)
+@connect((state) => ({
+	userInfo: state.staticState.userInfo,
+	nextStepStatus: state.commonState.nextStepStatus
+}))
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -96,7 +87,6 @@ export default class essential_information_page extends PureComponent {
 			provLabel: [],
 			showAgreement: false, // 显示协议弹窗
 			millisecond: 0,
-			selectFlag: false,
 			addressList: [],
 			relatValue2: [],
 			ProvincesValue: ''
@@ -135,38 +125,10 @@ export default class essential_information_page extends PureComponent {
 			}
 		});
 	}
-	// 跳转个人信息授权书
-	readContract = async (jumpUrl) => {
-		const { selectFlag } = this.state;
-		store.setCacheBaseInfo({ selectFlag });
-		if (jumpUrl === 'personal_auth_page') {
-			let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
-			if (protocolPreviewInfo) {
-				const pageData = {
-					name: protocolPreviewInfo.name,
-					idNo: protocolPreviewInfo.idNo,
-					dateTime: dayjs(new Date()).format('YYYY/MM/DD')
-				};
-				this.props.setIframeProtocolShow({
-					url: jumpUrl,
-					contractInf: pageData
-				});
-			}
-		} else {
-			this.props.setIframeProtocolShow({
-				url: jumpUrl
-			});
-		}
-	};
-	selectProtocol = () => {
-		this.setState({
-			selectFlag: !this.state.selectFlag
-		});
-	};
 
 	buttonDisabled = (showToast) => {
 		const formData = this.props.form.getFieldsValue();
-		const { ProvincesValue, selectFlag } = this.state;
+		const { ProvincesValue } = this.state;
 		const { address, linkman, linkman2, linkphone, linkphone2, cntRelTyp1, cntRelTyp2 } = formData;
 		if (showToast) {
 			if (!ProvincesValue) {
@@ -221,10 +183,6 @@ export default class essential_information_page extends PureComponent {
 				Toast.info('请填写正确的联系人2手机号');
 				return true;
 			}
-			if (!selectFlag) {
-				Toast.info('请先阅读并勾选相关协议');
-				return true;
-			}
 		}
 		if (
 			!ProvincesValue ||
@@ -234,8 +192,7 @@ export default class essential_information_page extends PureComponent {
 			!linkphone2 ||
 			!cntRelTyp1[0] ||
 			!linkman2 ||
-			!linkphone ||
-			!selectFlag
+			!linkphone
 		) {
 			return true;
 		}
@@ -347,8 +304,7 @@ export default class essential_information_page extends PureComponent {
 					? store.getRelationValue2()
 					: res && res.data && res.data.cntRelTyp2
 					? [`${res.data.cntRelTyp2}`]
-					: [],
-				selectFlag: cacheData.selectFlag || false
+					: []
 			});
 		} else {
 			this.setState({
@@ -363,8 +319,7 @@ export default class essential_information_page extends PureComponent {
 						? [`${res.data.cntRelTyp2}`]
 						: store.getRelationValue2()
 						? store.getRelationValue2()
-						: [],
-				selectFlag: (cacheData && cacheData.selectFlag) || false
+						: []
 			});
 		}
 	};
@@ -852,7 +807,7 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement, selectFlag, addressList, visible, ProvincesValue } = this.state;
+		const { showAgreement, addressList, visible, ProvincesValue } = this.state;
 		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
@@ -1181,29 +1136,6 @@ export default class essential_information_page extends PureComponent {
 								></InputItem>
 							)}
 						</div>
-					</div>
-
-					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<CheckRadio isSelect={selectFlag} />
-						点击按钮即视为同意
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract('personal_auth_page');
-							}}
-							className={style.link}
-						>
-							《个人信息授权书》
-						</em>
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract('user_privacy_page');
-							}}
-							className={style.link}
-						>
-							《用户隐私权政策》
-						</em>
 					</div>
 				</div>
 
