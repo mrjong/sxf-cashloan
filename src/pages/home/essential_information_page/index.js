@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-02 09:29:22
+ * @LastEditTime: 2020-03-03 17:48:31
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -139,22 +139,16 @@ export default class essential_information_page extends PureComponent {
 	readContract = async (jumpUrl) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
-		if (jumpUrl === 'personal_auth_page') {
-			let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
-			if (protocolPreviewInfo) {
-				const pageData = {
-					name: protocolPreviewInfo.name,
-					idNo: protocolPreviewInfo.idNo,
-					dateTime: dayjs(new Date()).format('YYYY/MM/DD')
-				};
-				this.props.setIframeProtocolShow({
-					url: jumpUrl,
-					contractInf: pageData
-				});
-			}
-		} else {
+		let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
+		if (protocolPreviewInfo) {
+			const pageData = {
+				name: protocolPreviewInfo.name,
+				idNo: protocolPreviewInfo.idNo,
+				dateTime: dayjs(new Date()).format('YYYY/MM/DD')
+			};
 			this.props.setIframeProtocolShow({
-				url: jumpUrl
+				url: jumpUrl,
+				contractInf: pageData
 			});
 		}
 	};
