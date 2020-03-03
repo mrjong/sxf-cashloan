@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-03 17:55:19
+ * @LastEditTime: 2020-03-03 18:20:14
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -139,8 +139,8 @@ export default class add_info extends PureComponent {
 
 	// 跳转个人信息授权书
 	readContract = async (jumpUrl) => {
-		const { selectFlag } = this.state;
-		store.setCacheBaseInfo({ selectFlag });
+		// const { selectFlag } = this.state;
+		// store.setCacheBaseInfo({ selectFlag });
 		let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
 		if (protocolPreviewInfo) {
 			const pageData = {
