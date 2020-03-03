@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 15:08:03
+ * @LastEditTime: 2020-03-03 16:12:20
  */
 import React from 'react';
 import { Modal, Icon } from 'antd-mobile';
@@ -37,29 +37,33 @@ export default class IframeProtocol extends React.Component {
 	render() {
 		const { iframeProtocolData = {} } = this.props;
 		return (
-			<Modal
-				popup
-				visible={iframeProtocolData.url ? true : false}
-				className={styles.antModal}
-				onClose={this.onClose}
-				animationType="slide-up"
-			>
-				<Icon type="cross" className={styles.closeIcon} onClick={this.onClose} />
-				<div className={styles.iframeContainer}>
-					<iframe
-						src={`/disting/#/${iframeProtocolData.url}`}
-						name={iframeProtocolData.url}
-						id={iframeProtocolData.url}
-						onLoad={() => {
-							iframeProtocolData.contractInf &&
-								window.frames[iframeProtocolData.url].setData(iframeProtocolData.contractInf);
-						}}
-						width="100%"
-						height="100%"
-						frameBorder="0"
-					/>
-				</div>
-			</Modal>
+			<div>
+				{iframeProtocolData.url ? (
+					<Modal
+						popup
+						visible={iframeProtocolData.url ? true : false}
+						className={styles.antModal}
+						onClose={this.onClose}
+						animationType="slide-up"
+					>
+						<Icon type="cross" className={styles.closeIcon} onClick={this.onClose} />
+						<div className={styles.iframeContainer}>
+							<iframe
+								src={`/disting/#/${iframeProtocolData.url}`}
+								name={iframeProtocolData.url}
+								id={iframeProtocolData.url}
+								onLoad={() => {
+									iframeProtocolData.contractInf &&
+										window.frames[iframeProtocolData.url].setData(iframeProtocolData.contractInf);
+								}}
+								width="100%"
+								height="100%"
+								frameBorder="0"
+							/>
+						</div>
+					</Modal>
+				) : null}
+			</div>
 		);
 	}
 }
