@@ -20,6 +20,26 @@
     font-size: 24px;
     color: #fff;
   }
+  .card_tip_pink{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0px 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 20px;
+    background-color: #E33DFF;
+    font-size: 20px;
+    color: #fff;
+    font-weight: normal;
+    .f18{
+      font-size: 32px;
+      font-weight: 500;
+      padding: 0 2px;
+    }
+    .f36{
+      text-decoration: line-through;
+    }
+  }
   .card_bg1,
   .card_bg2 {
     position: absolute;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 10:52:14
+ * @LastEditTime: 2020-03-04 17:50:52
  */
 /*eslint-disable */
 import React from 'react';
@@ -12,7 +12,7 @@ import Cookie from 'js-cookie';
 import { store } from 'utils/store';
 import { isMPOS } from 'utils/common';
 import { getAppsList, getContactsList } from 'utils/publicApi';
-import { signup_log, abt_mpos } from 'fetch/api';
+import { signup_log, abt_mpos, abt_baseInfo } from 'fetch/api';
 import storeRedux from '../reduxes';
 // 退出的api
 const API = {
@@ -353,6 +353,42 @@ export const getMoxieData = async ({ $props, bankCode, goMoxieBankList }) => {
  */
 export const recordContract = (params) => fetch.post(signup_log, params, { hideToast: true });
 
+/**
+ * @description: 基本信息AB测试
+ * @param {$props} this.props
+ * @param {callback} 回调函数
+ * @param {type} 类型 A/B
+ * @return:
+ */
+export const activeConfigSts_baseInfo = ({ $props }) => {
+	return new Promise((resolve, reject) => {
+		$props.$fetch
+			.get(abt_baseInfo)
+			.then((res) => {
+				if (res && res.code === '000000' && res.data && res.data.sts) {
+					switch (res.data.sts) {
+						case '00':
+							resolve();
+							break;
+						case '01':
+							resolve('A');
+							break;
+						case '02':
+							resolve('B');
+							break;
+
+						default:
+							break;
+					}
+				} else {
+					$props.toast.info('系统开小差，请稍后重试');
+				}
+			})
+			.catch(() => {
+				$props.toast.info('系统开小差，请稍后重试');
+			});
+	});
+};
 /**
  * @description: AB测试
  * @param {$props} this.props

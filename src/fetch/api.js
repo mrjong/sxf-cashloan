@@ -44,6 +44,8 @@ export const pwd_updateLoginPwdByFace = '/pwd/updateLoginPwdByFace';
 export const signup_refreshClientUserInfo = '/signup/refreshClientUserInfo';
 // mpos-ab测试标记查询
 export const abt_mpos = '/abt/mpos';
+// 基本信息-ab测试标记查询
+export const abt_baseInfo = '/abt/baseInfo';
 /**
  * @description: 消息短信相关
  * @param {type}

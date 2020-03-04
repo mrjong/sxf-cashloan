@@ -1,3 +1,7 @@
+/*
+ * @Author: shawn
+ * @LastEditTime: 2020-03-04 17:55:33
+ */
 import React from 'react';
 import ClockS from 'components/TimeDown/ClockS';
 import { thousandFormatNum } from 'utils/common';
@@ -65,12 +69,18 @@ export default class LimitTimeJoin extends React.PureComponent {
 	}
 
 	render() {
+		const { type } = this.props;
 		return (
 			<div className={classNM.limit_time_join_wrap}>
 				<span className={classNM.card_bg1} />
 				<span className={classNM.card_bg2} />
 				<div className={classNM.cardWrap}>
-					<span className={classNM.card_tip}>立即参与，成功率高</span>
+					{type && type === 'A' ? (
+						<span className={classNM.card_tip_pink}>
+							综合年化费率低至<span className={classNM.f18}>18%</span>
+							<span className={classNM.f36}>36%</span>
+						</span>
+					) : null}
 					<p className={classNM.card_loan_text}>最高可借金额（元）</p>
 					<p className={classNM.card_loan_amout}>{thousandFormatNum(50000)}</p>
 					<div className={classNM.text}>
