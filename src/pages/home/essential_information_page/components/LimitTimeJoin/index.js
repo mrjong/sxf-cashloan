@@ -1,10 +1,9 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 11:09:50
+ * @LastEditTime: 2020-03-05 11:11:42
  */
 import React from 'react';
 import ClockS from 'components/TimeDown/ClockS';
-import { thousandFormatNum } from 'utils/common';
 import bg2 from './bg2.png';
 import bg from './bg.png';
 import classNM from './index.scss';
@@ -72,29 +71,6 @@ export default class LimitTimeJoin extends React.PureComponent {
 	render() {
 		const { type } = this.props;
 		return (
-			// <div className={classNM.limit_time_join_wrap}>
-			// 	{/* <span className={classNM.card_bg1} />
-			// 	<span className={classNM.card_bg2} /> */}
-
-			// 	<div className={classNM.cardWrap}>
-			// 		<img className={classNM.bg} src={bg}></img>
-			// 		{type && type === 'A' ? (
-			// 			<span className={classNM.card_tip_pink}>
-			// 				综合年化费率低至<span className={classNM.f18}>18%</span>
-			// 				<span className={classNM.f36}>36%</span>
-			// 			</span>
-			// 		) : null}
-			// 		<p className={classNM.card_loan_text}>最高可借金额（元）</p>
-			// 		<p className={classNM.card_loan_amout}>{thousandFormatNum(50000)}</p>
-			// 		<div className={classNM.text}>
-			// 			限时参与&nbsp;
-			// 			<ClockS count={this.state.count} />
-			// 			<span className="jg">:</span>
-			// 			{this.state.millisecond < 9 ? <span className="mins">0</span> : <span className="mins">1</span>}
-			// 			<span className="mins">{this.state.millisecond}</span>
-			// 		</div>
-			// 	</div>
-			// </div>
 			<div className={classNM.box}>
 				{type && type === 'A' ? (
 					<img className={classNM.bg} src={bg}></img>
