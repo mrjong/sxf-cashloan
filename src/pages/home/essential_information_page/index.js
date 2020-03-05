@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-04 17:52:59
+ * @LastEditTime: 2020-03-05 11:08:31
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,7 +11,7 @@ import { InputItem, List, Modal, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import { getFirstError, validators, handleInputBlur, recordContract, activeConfigSts_baseInfo } from 'utils';
+import { getFirstError, validators, handleInputBlur, recordContract } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
@@ -99,8 +99,7 @@ export default class essential_information_page extends PureComponent {
 			selectFlag: false,
 			addressList: [],
 			relatValue2: [],
-			ProvincesValue: '',
-			abTest: ''
+			ProvincesValue: ''
 		};
 	}
 
@@ -113,20 +112,6 @@ export default class essential_information_page extends PureComponent {
 		this.initBasicInfo();
 		// mpos中从授权页进入基本信息，判断是否显示协议
 		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
-		urlQuery &&
-			urlQuery.jumpToBase &&
-			activeConfigSts_baseInfo({ $props: this.props }).then((res) => {
-				if (res) {
-					if (res === 'A') {
-						buriedPointEvent(home.abTestbasicInfoA);
-					} else {
-						buriedPointEvent(home.abTestbasicInfoB);
-					}
-					this.setState({
-						abTest: res
-					});
-				}
-			});
 	}
 
 	componentDidMount() {
@@ -154,16 +139,22 @@ export default class essential_information_page extends PureComponent {
 	readContract = async (jumpUrl) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
-		let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
-		if (protocolPreviewInfo) {
-			const pageData = {
-				name: protocolPreviewInfo.name,
-				idNo: protocolPreviewInfo.idNo,
-				dateTime: dayjs(new Date()).format('YYYY年MM月DD日')
-			};
+		if (jumpUrl === 'personal_auth_page') {
+			let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
+			if (protocolPreviewInfo) {
+				const pageData = {
+					name: protocolPreviewInfo.name,
+					idNo: protocolPreviewInfo.idNo,
+					dateTime: dayjs(new Date()).format('YYYY/MM/DD')
+				};
+				this.props.setIframeProtocolShow({
+					url: jumpUrl,
+					contractInf: pageData
+				});
+			}
+		} else {
 			this.props.setIframeProtocolShow({
-				url: jumpUrl,
-				contractInf: pageData
+				url: jumpUrl
 			});
 		}
 	};
@@ -861,13 +852,13 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement, selectFlag, addressList, visible, ProvincesValue, abTest } = this.state;
+		const { showAgreement, selectFlag, addressList, visible, ProvincesValue } = this.state;
 		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<FixedTopTip />
 				<div className={style.pageContent}>
-					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin type={abTest} /> : null}
+					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin /> : null}
 
 					<FixedHelpCenter history={this.props.history} />
 
