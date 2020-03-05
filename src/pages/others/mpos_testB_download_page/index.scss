@@ -2,7 +2,7 @@
 	// overflow: auto;
 	// -webkit-overflow-scrolling: touch;
 	// height: 100%;
-	padding-top: 80px;
+	padding-top: 65px;
 	background: #fff;
 	text-align: center;
 	.banner {
@@ -10,7 +10,7 @@
 		vertical-align: top;
 	}
 	.content {
-		padding-top: 76px;
+		padding-top: 90px;
 		.title {
 			font-size: 36px;
 			font-family: PingFangSC-Medium, PingFang SC;
@@ -25,24 +25,34 @@
 			line-height: 50px;
 			font-weight: 500;
 			span {
-				color: #f76c5c;
+				color: #EB4747;
 				margin-left: 10px;
 			}
 		}
 		.download_button {
-			margin-top: 15px;
+      position: relative;
+			margin-top: 141px;
 			width: 634px;
 			height: 100px;
 			line-height: 100px;
 			border-radius: 50px;
 			color: #121c32;
-			font-weight: bold;
+      font-weight: bold;
+      .lable_style {
+        position: absolute;
+        width: 100px;
+        height: 41px;
+        right: 0;
+      }
 		}
 		.tipsText {
-			margin-top: 85px;
+			margin-top: 20px;
 			font-size: 24px;
 			color: #868e9e;
-			line-height: 33px;
+      line-height: 33px;
+      span {
+        color: #394259;
+      }
 		}
 		.tipsText2 {
 			margin-top: 16px;
@@ -50,12 +60,12 @@
 			color: #868e9e;
 			line-height: 37px;
 			span {
-				color: #f76c5c;
+				color: #EB4747;
 			}
 		}
 		.descText {
 			position: fixed;
-			bottom: 40px;
+			bottom: 30px;
 			left: 0;
 			width: 100%;
 			font-size: 24px;

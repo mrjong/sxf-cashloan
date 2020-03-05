@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 10:34:59
+ * @LastEditTime: 2020-03-05 10:42:54
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -14,7 +14,7 @@ import { getFirstError, recordContract } from 'utils';
 import { setBackGround } from 'utils/background';
 import { domListen } from 'utils/domListen';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-import { auth_suppleInfo, index_queryPLPShowSts } from 'fetch/api.js';
+import { auth_suppleInfo, index_queryPLPShowSts, auth_userShunt } from 'fetch/api.js';
 import dayjs from 'dayjs';
 import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
@@ -56,7 +56,8 @@ export default class add_info extends PureComponent {
 		this.state = {
 			suppleInfo: [],
 			selectFlag: false,
-			showAgreement: false // 显示协议弹窗
+			showAgreement: false, // 显示协议弹窗
+			shuntFlag: '' // 用户分流标识,展示哪种方案
 		};
 	}
 
@@ -79,6 +80,19 @@ export default class add_info extends PureComponent {
 				}
 			})
 			.catch(() => {});
+	};
+
+	// 用户分流
+	getUserShuntInfo = () => {
+		this.props.$fetch.post(auth_userShunt).then((result) => {
+			if (result.code === '000000') {
+				// this.setState({
+				// 	suppleInfo: result.data.list
+				// });
+			} else {
+				this.props.toast.info(result.message);
+			}
+		});
 	};
 
 	handleValidate = () => {
