@@ -1,23 +1,24 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-03 18:20:14
+ * @LastEditTime: 2020-03-05 10:34:59
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import { List } from 'antd-mobile';
+import { List, Modal } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { connect } from 'react-redux';
 import { getH5Channel } from 'utils/common';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { addinfo } from 'utils/analytinsType';
-import { getFirstError } from 'utils';
+import { getFirstError, recordContract } from 'utils';
 import { setBackGround } from 'utils/background';
 import { domListen } from 'utils/domListen';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-import { auth_suppleInfo } from 'fetch/api.js';
+import { auth_suppleInfo, index_queryPLPShowSts } from 'fetch/api.js';
 import dayjs from 'dayjs';
 import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+import qs from 'qs';
 
 import {
 	StepTitle,
@@ -25,7 +26,8 @@ import {
 	ButtonCustom,
 	FixedHelpCenter,
 	FixedTopTip,
-	CheckRadio
+	CheckRadio,
+	AgreementModal
 } from 'components';
 import { add_info_submit } from './riskBuryConfig';
 
@@ -33,6 +35,7 @@ import style from './index.scss';
 import Images from 'assets/image';
 
 let submitButtonLocked = false;
+let urlQuery = '';
 
 @fetch.inject()
 @connect(
@@ -49,14 +52,18 @@ let submitButtonLocked = false;
 export default class add_info extends PureComponent {
 	constructor(props) {
 		super(props);
+		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.state = {
 			suppleInfo: [],
-			selectFlag: false
+			selectFlag: false,
+			showAgreement: false // 显示协议弹窗
 		};
 	}
 
 	componentWillMount() {
 		this.getsuppleInfo();
+		// mpos中从授权页进入基本信息，判断是否显示协议
+		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
 	}
 
 	getsuppleInfo = () => {
@@ -161,16 +168,29 @@ export default class add_info extends PureComponent {
 		});
 	};
 
+	judgeShowAgree = () => {
+		this.props.$fetch.get(index_queryPLPShowSts).then(async (res) => {
+			if (res && res.code === '000000') {
+				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
+				this.setState({
+					showAgreement: res.data.plpSts === '1'
+				});
+			} else {
+				this.props.toast.info(res.message);
+			}
+		});
+	};
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { suppleInfo, selectFlag } = this.state;
+		const { suppleInfo, selectFlag, showAgreement } = this.state;
 		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
 				<FixedTopTip />
 				<div className={style.pageContent}>
 					<FixedHelpCenter history={this.props.history} />
-					<StepTitle title="填写补充信息" titleSub="信息加密传输，仅用于申请还到" stepNum="03" />
+					<StepTitle title="填写补充信息" titleSub="信息加密传输，仅用于申请还到" stepNum="02" />
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {
 							return (
@@ -245,6 +265,20 @@ export default class add_info extends PureComponent {
 						{nextStepStatus ? '下一步' : '完成'}
 					</ButtonCustom>
 				</div>
+				{/* 隐私协议弹框 */}
+				<Modal visible={showAgreement} transparent wrapClassName="agreement_modal_warp" maskClosable={false}>
+					<AgreementModal
+						visible={showAgreement}
+						handleClick={() => {
+							this.setState({
+								showAgreement: false
+							});
+							recordContract({
+								contractType: '02'
+							});
+						}}
+					/>
+				</Modal>
 			</div>
 		);
 	}

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-03 17:55:01
+ * @LastEditTime: 2020-03-04 13:26:29
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,7 +11,7 @@ import { InputItem, List, Modal, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import { getFirstError, validators, handleInputBlur, recordContract } from 'utils';
+import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
@@ -20,7 +20,6 @@ import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
 import {
 	FixedHelpCenter,
-	AgreementModal,
 	StepTitle,
 	AddressSelect,
 	AsyncCascadePicker,
@@ -40,7 +39,6 @@ import {
 	contact_name_onePhoneNo,
 	contact_name_twoPhoneNo
 } from './riskBuryConfig';
-import LimitTimeJoin from './components/LimitTimeJoin';
 import style from './index.scss';
 
 import Images from 'assets/image';
@@ -48,13 +46,7 @@ import Images from 'assets/image';
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
 
-import {
-	auth_queryUsrBasicInfo,
-	msg_area,
-	msg_relation,
-	auth_personalData,
-	index_queryPLPShowSts
-} from 'fetch/api';
+import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api';
 
 const reducedFilter = (data, keys, fn) => {
 	return data.filter(fn).map((el) =>
@@ -65,7 +57,6 @@ const reducedFilter = (data, keys, fn) => {
 	);
 };
 
-let urlQuery = '';
 // let isFetching = false;
 @fetch.inject()
 @createForm()
@@ -78,14 +69,12 @@ let urlQuery = '';
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.state = {
 			relatData: [], // 亲属联系人数据
 			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
 			provValue: [], // 选中的省市区
 			provLabel: [],
-			showAgreement: false, // 显示协议弹窗
 			millisecond: 0,
 			addressList: [],
 			relatValue2: [],
@@ -100,8 +89,6 @@ export default class essential_information_page extends PureComponent {
 		}
 		buryingPoints();
 		this.initBasicInfo();
-		// mpos中从授权页进入基本信息，判断是否显示协议
-		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
 	}
 
 	componentDidMount() {
@@ -762,18 +749,6 @@ export default class essential_information_page extends PureComponent {
 	quitSubmit = () => {
 		this.props.history.goBack();
 	};
-	judgeShowAgree = () => {
-		this.props.$fetch.get(index_queryPLPShowSts).then(async (res) => {
-			if (res && res.code === '000000') {
-				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
-				this.setState({
-					showAgreement: res.data.plpSts === '1'
-				});
-			} else {
-				Toast.info(res.message);
-			}
-		});
-	};
 
 	sxfMD = (type) => {
 		sxfburiedPointEvent(type);
@@ -807,19 +782,17 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement, addressList, visible, ProvincesValue } = this.state;
+		const { addressList, visible, ProvincesValue } = this.state;
 		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<FixedTopTip />
 				<div className={style.pageContent}>
-					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin /> : null}
-
 					<FixedHelpCenter history={this.props.history} />
 
-					<StepTitle title="完善个人信息" titleSub="请确保内容真实有效，有利于您的借款审核" stepNum="02" />
+					<StepTitle title="完善个人信息" titleSub="请确保内容真实有效，有利于您的借款审核" stepNum="03" />
 
-					<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
+					<div className={[style.step_box_new].join(' ')}>
 						<div className={style.item_box}>
 							<div className={style.titleTop}>常住地址</div>
 							<div
@@ -1143,11 +1116,11 @@ export default class essential_information_page extends PureComponent {
 					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'default' : 'yellow'}>
 						{nextStepStatus ? '下一步' : '完成'}
 					</ButtonCustom>
-					{urlQuery.jumpToBase ? (
+					{/* {urlQuery.jumpToBase ? (
 						<div className={style.quitText} onClick={this.quitSubmit}>
 							放弃本次机会
 						</div>
-					) : null}
+					) : null} */}
 				</div>
 
 				<Modal
@@ -1166,19 +1139,6 @@ export default class essential_information_page extends PureComponent {
 						value={addressList}
 						commitFun={(area) => this.onSelectArea(area)}
 						dissmissFun={() => this.handleSetModal(false)}
-					/>
-				</Modal>
-				<Modal visible={showAgreement} transparent wrapClassName="agreement_modal_warp" maskClosable={false}>
-					<AgreementModal
-						visible={showAgreement}
-						handleClick={() => {
-							this.setState({
-								showAgreement: false
-							});
-							recordContract({
-								contractType: '02'
-							});
-						}}
 					/>
 				</Modal>
 			</div>

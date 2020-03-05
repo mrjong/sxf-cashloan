@@ -327,3 +327,6 @@ export const passport_getRelyToken = '/passport/getRelyToken';
 export const passport_sendImgSms = '/passport/sendImgSms';
 export const download_getDownloadUrl = '/download/getDownloadUrl';
 export const signup_getUsrRqpInf = '/signup/getUsrRqpInf';
+
+// 补充信息页面——用户分流接口
+export const auth_userShunt = '/auth/userShunt';

@@ -173,10 +173,17 @@ export const getNextStatus = ({
 			let stateObj = null;
 			// 处理mpos直接跳转到基本信息的特殊情况
 			if (actionType === 'mpos') {
-				if (nextData.nextStepGramCode === 'AUTH003') {
+				// if (nextData.nextStepGramCode === 'AUTH003') {
+				// 	Toast.hide();
+				// 	$props.history.replace({
+				// 		pathname: '/home/essential_information',
+				// 		search: '?jumpToBase=true&entry=authorize'
+				// 	});
+				// }
+				if (nextData.nextStepGramCode === 'AUTH015') {
 					Toast.hide();
 					$props.history.replace({
-						pathname: '/home/essential_information',
+						pathname: '/home/addInfo',
 						search: '?jumpToBase=true&entry=authorize'
 					});
 				} else {
