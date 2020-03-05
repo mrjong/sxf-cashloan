@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 10:42:54
+ * @LastEditTime: 2020-03-05 13:13:14
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -106,9 +106,11 @@ export default class add_info extends PureComponent {
 	};
 
 	handleSubmit = () => {
-		const { selectFlag } = this.state;
+		const { selectFlag, shuntFlag } = this.state;
 		this.sxfMD(add_info_submit.key);
-		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT);
+		buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT, {
+			planNum: shuntFlag + 1
+		});
 		if (submitButtonLocked) return;
 		submitButtonLocked = true;
 		let timer = setTimeout(() => {
@@ -134,6 +136,10 @@ export default class add_info extends PureComponent {
 					.post(auth_suppleInfo, params)
 					.then((result) => {
 						submitButtonLocked = false;
+						buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT_RESULT, {
+							planNum: shuntFlag + 1,
+							isSuccess: result.code === '000000' || result.code === '000030' ? '1' : '0'
+						});
 						if (result.code === '000000' || result.code === '000030') {
 							this.props.toast.info('提交成功');
 
