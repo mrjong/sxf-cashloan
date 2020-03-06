@@ -1,0 +1,111 @@
+.limit_time_join_wrap {
+	position: relative;
+	overflow: hidden;
+	background-image: url('./img/activity_bg.png');
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	width: 100%;
+	height: 300px;
+	.cardWrap {
+		padding: 51px 0 0 36px;
+		position: relative;
+	}
+	.card_tip_box {
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 39px;
+		line-height: 39px;
+		display: flex;
+		.leftPartStyle {
+			width: 23px;
+			height: 39px;
+		}
+	}
+	.card_tip {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: $colorRed;
+		font-size: 24px;
+		color: #fff;
+		height: 39px;
+		padding-right: 20px;
+		border-top-right-radius: 10px;
+	}
+	.loan_cont {
+		color: #121b33;
+		margin-bottom: -12px;
+	}
+	.loan_cont2 {
+		color: #121b33;
+		margin-bottom: 22px;
+	}
+	.loan_cont3 {
+		color: #121b33;
+		margin-top: 32px;
+		margin-bottom: 35px;
+	}
+	.card_loan_text {
+		font-size: 28px;
+	}
+	.card_loan_text2 {
+		font-size: 40px;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		text-shadow: 0px 2px 4px rgba(178, 146, 5, 0.73);
+		margin-top: 4px;
+		line-height: 56px;
+	}
+	.card_loan_text3 {
+		font-size: 44px;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		text-shadow: 0px 2px 4px rgba(178, 146, 5, 0.73);
+	}
+	.card_loan_amout {
+		font-size: 100px;
+		line-height: 1;
+		margin-top: 5px;
+		font-family: 'DINMitAlt';
+		text-shadow: 0px 2px 4px rgba(178, 146, 5, 0.73);
+	}
+	.text {
+		font-size: 24px;
+		color: #121b33;
+    line-height: 33px;
+  }
+  .textCont {
+    margin-top: 12px;
+  }
+	.descWrap {
+		position: relative;
+		display: flex;
+		align-items: center;
+		height: 54px;
+		margin-top: 12px;
+		border-top: 1px dashed #af6d00;
+		padding-left: 36px;
+		font-size: 24px;
+		color: #af6d00;
+		i {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			width: 44px;
+      height: 44px;
+      line-height: 50px;
+			background: #ffc700;
+			border-top-left-radius: 44px;
+			border-bottom-right-radius: 10px;
+			font-size: 22px;
+      color: #fff;
+      padding-left: 23px;
+      box-sizing: border-box;
+    }
+    .doubleNum {
+      padding-left: 15px;
+    }
+    // background: red;
+	}
+}

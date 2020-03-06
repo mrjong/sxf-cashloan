@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 13:28:15
+ * @LastEditTime: 2020-03-06 11:59:48
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -19,6 +19,7 @@ import dayjs from 'dayjs';
 import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import qs from 'qs';
+import LimitTimeJoin from './components/LimitTimeJoin';
 
 import {
 	StepTitle,
@@ -206,10 +207,14 @@ export default class add_info extends PureComponent {
 		const { getFieldDecorator } = this.props.form;
 		const { suppleInfo, selectFlag, showAgreement, shuntFlag } = this.state;
 		const { nextStepStatus } = this.props;
-		console.log(shuntFlag, 'shuntFlag');
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
 				<FixedTopTip />
+				{shuntFlag ? (
+					<div className={style.activityBox}>
+						<LimitTimeJoin shuntNum={shuntFlag} />
+					</div>
+				) : null}
 				<div className={style.pageContent}>
 					<FixedHelpCenter history={this.props.history} />
 					<StepTitle title="填写补充信息" titleSub="信息加密传输，仅用于申请还到" stepNum="02" />
