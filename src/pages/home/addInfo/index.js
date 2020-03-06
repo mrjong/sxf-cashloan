@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-06 11:59:48
+ * @LastEditTime: 2020-03-06 14:42:15
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -140,7 +140,7 @@ export default class add_info extends PureComponent {
 						submitButtonLocked = false;
 						buriedPointEvent(addinfo.DC_ADDINFO_SUBMIT_RESULT, {
 							planNum: shuntFlag,
-							isSuccess: result.code === '000000' || result.code === '000030' ? '1' : '0'
+							successFlag: result.code === '000000' || result.code === '000030' ? '1' : '0'
 						});
 						if (result.code === '000000' || result.code === '000030') {
 							this.props.toast.info('提交成功');
