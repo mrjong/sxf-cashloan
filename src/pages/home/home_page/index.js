@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-09 13:16:52
+ * @LastEditTime: 2020-03-09 15:56:02
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -116,13 +116,13 @@ export default class home_page extends PureComponent {
 					}
 					this.setState(
 						{
-							// homeData: result.data
-							homeData: {
-								...result.data,
-								...{
-									indexSts: 'PR0003'
-								}
-							}
+							homeData: result.data
+							// homeData: {
+							// 	...result.data,
+							// 	...{
+							// 		indexSts: 'PR0003'
+							// 	}
+							// }
 						},
 						() => {
 							this.props.setHomeData(result.data);
@@ -363,6 +363,7 @@ export default class home_page extends PureComponent {
 				// 通付盾 获取设备指纹
 				TFDLogin();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
+				Toast.hide();
 				if (homeData.cashDataInfo.downloadFlg === '01') {
 					//需要引导下载app
 					this.props.history.push(`/home/deposit_tip?cashMoney=${homeData.cashDataInfo.curAmt}`);
