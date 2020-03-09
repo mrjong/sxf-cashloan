@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-26 17:09:52
+ * @LastEditTime: 2020-03-09 13:16:52
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -21,7 +21,7 @@ import {
 } from 'reduxes/actions/commonActions';
 
 import qs from 'qs';
-import { updateBillInf } from 'utils/CommonUtil/commonFunc';
+import { updateBillInf, goToPreLoan } from 'utils/CommonUtil/commonFunc';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
 import { home, mine, loan_fenqi } from 'utils/analytinsType';
@@ -116,7 +116,13 @@ export default class home_page extends PureComponent {
 					}
 					this.setState(
 						{
-							homeData: result.data
+							// homeData: result.data
+							homeData: {
+								...result.data,
+								...{
+									indexSts: 'PR0003'
+								}
+							}
 						},
 						() => {
 							this.props.setHomeData(result.data);
@@ -375,6 +381,10 @@ export default class home_page extends PureComponent {
 						billNo: homeData.cashDataInfo.billNo
 					}
 				});
+				break;
+			case 'PR0003':
+				// buriedPointEvent(FENQI_HOME_APPLY_BTN);
+				goToPreLoan({ $props: this.props });
 				break;
 			default:
 				Toast.hide();
@@ -647,6 +657,24 @@ export default class home_page extends PureComponent {
 					homeData.cashDataInfo &&
 					homeData.cashDataInfo.orderAmt &&
 					parseFloat(homeData.cashDataInfo.orderAmt, 10);
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.handleClick = this.handleSmartClick;
+				plusCardData.handleDetailClick = this.handleGoPlusDetail;
+				disPlayData.push(plusCardData);
+				break;
+			case 'PR0003': // 申请通过有额度
+				plusCardData.isShowDetailLink = true;
+				// plusCardData.topTip =
+				// 	homeData &&
+				// 	homeData.cashDataInfo &&
+				// 	homeData.cashDataInfo.acOverDt &&
+				// 	homeData.cashDataInfo.acOverDt <= 10
+				// 		? `${homeData.cashDataInfo.acOverDt}天后失去资格`
+				// 		: '';
+				plusCardData.topTip = `30天后失去资格`;
+				plusCardData.loanText = '可提现金额(元)';
+				plusCardData.loanAmont =
+					(homeData.cashDataInfo.curAmt && parseFloat(homeData.cashDataInfo.curAmt, 10)) || '';
 				plusCardData.btnText = homeData && homeData.indexMsg;
 				plusCardData.handleClick = this.handleSmartClick;
 				plusCardData.handleDetailClick = this.handleGoPlusDetail;

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-02 09:14:36
+ * @LastEditTime: 2020-03-09 13:18:21
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -165,6 +165,19 @@ export const goToStageLoan = ({ $props }) => {
 			}, 2000);
 		});
 	// });
+};
+
+/**
+ * @description: 跳转预授信签约借款页面
+ * @param {type}
+ * @return:
+ */
+export const goToPreLoan = ({ $props }) => {
+	//传设备指纹，不需接口成功即跳转预授信
+	TFDLogin();
+
+	// Toast.loading('', 10);
+	$props.history.push('/home/pre_loan');
 };
 // 退出功能
 export const logoutApp = () => {

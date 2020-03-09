@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-22 15:23:16
+ * @LastEditTime: 2020-03-09 13:19:07
  */
 export default [
 	{
@@ -127,5 +127,11 @@ export default [
 		zhName: 'kzdlxr',
 		title: '补充联系人',
 		component: () => import('pages/home/add_contact_page')
+	},
+	{
+		path: '/home/pre_loan',
+		zhName: 'jkxxqr',
+		title: '借款信息确认',
+		component: () => import('pages/home/pre_loan_page')
 	}
 ];

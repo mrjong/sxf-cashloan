@@ -1,0 +1,256 @@
+@import '../../../assets/styles/scss/base/fn.scss';
+.fenqi_page {
+	padding: 70px 40px 0;
+
+	.scrollWrap {
+		padding-bottom: 160px;
+	}
+
+	.billInpBox {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		overflow: hidden;
+		color: #484747;
+		.moneyUnit {
+			line-height: 80px;
+			font-size: 40px;
+			color: #333;
+		}
+		&::after {
+			@include setBottomLine(#333);
+			left: 0;
+		}
+	}
+	.billInput {
+    // width: 583px;
+    width: 100%;
+    background-color: transparent;
+		input {
+			text-align: left;
+			font-size: 56px;
+			font-family: 'DINMitAlt';
+			padding-top: 15px;
+		}
+	}
+	.inputTip {
+		font-size: 24px;
+		color: $colorInactiveColor;
+		margin: 20px 0 30px;
+	}
+
+	.pannel {
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 10px;
+		.listItem {
+			position: relative;
+      display: flex;
+      flex-wrap: wrap;
+			min-height: 100px;
+			justify-content: space-between;
+			align-items: center;
+			box-sizing: border-box;
+			font-size: 28px;
+      color: #394259;
+      padding: 30px 30px;
+
+    }
+    .listItem + .listItem {
+      &::after {
+				@include setTopLine(#f0f1f5);
+        left: 40px;
+        right: 40px;
+			}
+    }
+
+		.listValue {
+      // font-weight: 700;
+      flex: 1;
+      text-align: right;
+		}
+
+		.icon {
+			vertical-align: middle;
+			width: 40px;
+			height: 50px;
+			margin-bottom: 5px;
+		}
+  }
+  .pannel + .pannel {
+    margin-top: 30px;
+  }
+
+	.protocolLink {
+		font-size: 24px;
+		color: #868e9e;
+    margin: 24px 0 24px;
+    text-align: justify;
+		em {
+			color: #121c32;
+		}
+	}
+
+	.greyText {
+		color: $colorInactiveColor;
+		// font-weight: 700;
+	}
+
+	.redText {
+		color: #fe6666;
+		font-weight: 700;
+	}
+
+	.highlightText {
+		// font-weight: 700;
+	}
+
+	.addIcon {
+		font-size: 35px;
+		color: #333;
+		margin-left: 10px;
+	}
+
+	.tagListWrap {
+    margin-top: 20px;
+    width: 100%;
+	}
+
+	.tagButton {
+		min-width: 150px;
+  }
+  .tagButton + .tagButton {
+    margin-left: 30px
+  }
+
+	.tagButtonActive {
+		color: #fe6666;
+		border: 1px solid #fe6666;
+	}
+
+	.buttonWrap {
+		width: 100%;
+		padding: 30px 40px;
+		position: fixed;
+		bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    background-color: $colorBg;
+	}
+	// 优惠劵金额展示
+	.couponListValue {
+		.icon {
+			margin-bottom: 0;
+		}
+  }
+
+  .repayPlan {
+    font-size: 30px;
+    color: #B2B6BF;
+  }
+  .couponBtn {
+    background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		color: #fff;
+  }
+	.couNumBox {
+		display: flex;
+		height: 42px;
+		background: linear-gradient(90deg, rgba(254, 115, 23, 1) 0%, rgba(255, 61, 20, 1) 100%);
+		border-radius: 3px;
+		padding: 0 10px;
+		align-items: center;
+		font-size: 22px;
+		color: #fff;
+		font-weight: normal;
+		font-family: 'PingFangSC-Regular';
+		i {
+			display: block;
+			width: 20px;
+			height: 22px;
+			background: url('../../../assets/images/home/coupon_ico_img.png') no-repeat center;
+			background-size: 100%;
+			margin-right: 10px;
+		}
+  }
+}
+
+:global {
+  .loan_fenqi_page{
+    .am-list-line {
+      padding-right: 0;
+    }
+  }
+  .purpose_modal {
+    .am-modal-content {
+      border-radius: 10px 10px 0 0;
+    }
+  }
+}
+
+.modalTitle {
+	font-size: 36px;
+	color: $colorBlack;
+	text-align: left;
+}
+
+.modalDesc {
+	font-size: 24px;
+	color: $colorInactiveColor;
+	text-align: left;
+	margin: 0 0 64px;
+}
+
+.modalItem {
+	position: relative;
+	height: 110px;
+	line-height: 110px;
+	width: 100%;
+	font-size: 32px;
+  color: #121c32;
+	&::after {
+		@include setBottomLine(#f0f1f5);
+		left: 0;
+	}
+}
+.modalItemActive {
+  color: $colorGolden;
+}
+
+.modal_content {
+	position: relative;
+	.modal_close_btn {
+		position: absolute;
+		top: -5px;
+		right: 0;
+	}
+
+	.modal_title {
+		font-size: 0.36rem;
+		color: #333;
+		border-bottom: 1px solid #e5e5e5;
+		padding-bottom: 0.3rem;
+	}
+
+	.bill_list {
+		padding: 0.1rem;
+		max-height: 500px;
+		overflow: scroll;
+	}
+
+	.list_item {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.13rem 0;
+	}
+
+	.item_name {
+		font-size: 0.3rem;
+		color: #333;
+	}
+
+	.item_value {
+		font-size: 0.3rem;
+		color: #333;
+		font-weight: bold;
+	}
+}
