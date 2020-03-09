@@ -1,12 +1,11 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 11:50:18
+ * @LastEditTime: 2020-03-09 15:17:51
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import { createForm } from 'rc-form';
 import { List, InputItem } from 'antd-mobile';
-import { store } from 'utils/store';
 import { ButtonCustom, SelectList, CountDownButton, CheckRadio } from 'components';
 import { setBackGround } from 'utils/background';
 import { validators, handleInputBlur, getFirstError } from 'utils';
@@ -14,7 +13,6 @@ import { getH5Channel } from 'utils/common';
 import { buriedPointEvent } from 'utils/analytins';
 import { mine } from 'utils/analytinsType';
 import styles from './index.scss';
-import qs from 'qs';
 import dayjs from 'dayjs';
 import { domListen } from 'utils/domListen';
 import {
@@ -162,19 +160,6 @@ export default class bind_save_page extends PureComponent {
 			});
 	};
 
-	//存储现金分期卡信息
-	storeCashFenQiCardData = (cardDatas) => {
-		const queryData = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		const cashFenQiCardArr = store.getCashFenQiCardArr();
-		//现金分期收、还款银行卡信息
-		if (queryData.cardType === 'resave') {
-			cashFenQiCardArr[0] = cardDatas;
-		} else if (queryData.cardType === 'pay') {
-			cashFenQiCardArr[1] = cardDatas;
-		}
-		store.setCashFenQiCardArr(cashFenQiCardArr);
-	};
-
 	// 协议绑卡(新的绑卡流程)
 	doProtocolBindCard = (params) => {
 		this.props.$fetch.get(`${bank_card_protocol_bind}/${params.smsCd}`).then((res) => {
@@ -193,6 +178,9 @@ export default class bind_save_page extends PureComponent {
 						// 将还款银行卡数据存储到redux中
 						this.props.setWithholdCardDataAction(cardDatas);
 					} else if (cardType === 'withdraw') {
+						this.props.setWithdrawCardDataAction(cardDatas);
+					} else if (cardType === 'both') {
+						this.props.setWithholdCardDataAction(cardDatas);
 						this.props.setWithdrawCardDataAction(cardDatas);
 					}
 				}

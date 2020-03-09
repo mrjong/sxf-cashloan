@@ -1,11 +1,11 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 16:29:52
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-09 15:01:14
  */
 // 这些要求这种备注，方便reducer直接查看
 /**
- * @description: 选择银行卡的类型 withdraw:收款银行卡 withhold:还款银行卡
+ * @description: 选择银行卡的类型 withdraw:收款银行卡 withhold:还款银行卡 both:收款银行卡&还款银行卡
  * @param {type}
  * @return:
  */

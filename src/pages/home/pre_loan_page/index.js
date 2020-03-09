@@ -363,12 +363,11 @@ export default class pre_loan_page extends PureComponent {
 	};
 
 	//绑定银行卡
-	bindBankCard = (cardType) => {
+	bindBankCard = () => {
 		this.storeTempData();
-		this.props.setCardTypeAction(cardType);
+		this.props.setCardTypeAction('both');
 		this.props.history.push({
-			pathname: '/mine/bind_save_page',
-			search: `?cardType=${cardType}`
+			pathname: '/mine/bind_save_page'
 		});
 	};
 
@@ -972,12 +971,7 @@ export default class pre_loan_page extends PureComponent {
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
-									<span
-										className={style.highlightText}
-										onClick={() => {
-											this.bindBankCard('withdraw');
-										}}
-									>
+									<span className={style.highlightText} onClick={this.bindBankCard}>
 										绑定储蓄卡 <i className={style.addIcon}>+</i>
 									</span>
 								)}
@@ -995,12 +989,7 @@ export default class pre_loan_page extends PureComponent {
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
-									<span
-										className={style.highlightText}
-										onClick={() => {
-											this.bindBankCard('withhold');
-										}}
-									>
+									<span className={style.highlightText} onClick={this.bindBankCard}>
 										绑定储蓄卡 <i className={style.addIcon}>+</i>
 									</span>
 								)}
