@@ -372,6 +372,10 @@ const miniprogram = {
 	copyModalBtnClick: `${prefix}_COPY_MODAL_BTN_CLICK` // 弹窗按钮点击数
 };
 
+const preApproval = {
+	addContractSubmit: `${prefix}_PREAPPROVAL_ADDCONTRACT_SUBMIT_CLICK` // 基本信息页-确定按钮
+};
+
 export {
 	login,
 	home,
@@ -391,5 +395,6 @@ export {
 	helpCenter,
 	wxTabBar,
 	addinfo,
-	miniprogram
+	miniprogram,
+	preApproval
 };
