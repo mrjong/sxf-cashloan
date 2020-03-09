@@ -30,8 +30,6 @@ import {
 	loan_queryCashLoanApplInfo
 } from 'fetch/api.js';
 
-let isFetching = false;
-
 @fetch.inject()
 @setBackGround('#f0f4f9')
 @connect(
@@ -77,7 +75,8 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveCardNo: '', //还款银行卡卡号
 			resaveCardLast: '', //还款银行卡后四位
 			resaveCardName: '', //还款银行卡银行
-			isShowDetail: false // 是否展示产品列表
+			isShowDetail: false, // 是否展示产品列表
+			productListCopy: []
 		};
 	}
 
@@ -182,6 +181,7 @@ export default class loan_fenqi_page extends PureComponent {
 		};
 		this.setState(
 			{
+				productListCopy: pageInfo.prods || [],
 				productList: this.state.loanMoney ? this.filterProdList() : pageInfo.prods || [],
 				usageList: pageInfo.loanUsages || [],
 				...withdrawCardInf,
@@ -374,7 +374,6 @@ export default class loan_fenqi_page extends PureComponent {
 
 	// 选择分期期限
 	selectLoanDate = (item) => {
-		if (isFetching) return;
 		this.setState(
 			{
 				loanDate: item
@@ -860,22 +859,42 @@ export default class loan_fenqi_page extends PureComponent {
 									if (!v) {
 										this.setState(
 											{
-												inputClear: true
+												isShowDetail: false,
+												loanMoney: v,
+												inputClear: true,
+												loanDate: null,
+												productList: this.state.productListCopy
 											},
 											() => {
+												this.selectMax();
 												// this.removeTempData();
 											}
 										);
+										return;
 									}
 									this.setState({
 										loanMoney: v
-										// loanDate: null
 									});
 								}}
 								onBlur={(v) => {
-									// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
-									this.props.setCouponDataAction({});
-									v && this.calcLoanMoney(Number(v));
+									if (!v) {
+										// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
+										this.props.setCouponDataAction({});
+										v && this.calcLoanMoney(Number(v));
+										return;
+									}
+									this.setState(
+										{
+											loanMoney: v,
+											loanDate: null,
+											productList: this.state.productListCopy
+										},
+										() => {
+											// 每次改变金额需要重新选择优惠劵, 清空优惠劵数据
+											this.props.setCouponDataAction({});
+											v && this.calcLoanMoney(Number(v));
+										}
+									);
 								}}
 							/>
 						</div>
