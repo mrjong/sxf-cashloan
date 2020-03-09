@@ -972,7 +972,8 @@ export default class pre_loan_page extends PureComponent {
 									</span>
 								) : (
 									<span className={style.highlightText} onClick={this.bindBankCard}>
-										绑定储蓄卡 <i className={style.addIcon}>+</i>
+										请绑定银行卡
+										<Icon type="right" className={style.icon} />
 									</span>
 								)}
 							</li>
@@ -990,7 +991,8 @@ export default class pre_loan_page extends PureComponent {
 									</span>
 								) : (
 									<span className={style.highlightText} onClick={this.bindBankCard}>
-										绑定储蓄卡 <i className={style.addIcon}>+</i>
+										请绑定银行卡
+										<Icon type="right" className={style.icon} />
 									</span>
 								)}
 							</li>
