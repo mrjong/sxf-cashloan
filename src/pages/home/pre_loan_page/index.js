@@ -549,6 +549,11 @@ export default class pre_loan_page extends PureComponent {
 			return;
 		}
 
+		if (!store.getPosition()) {
+			this.props.toast.info('定位失败，请确认位置信息权限已打开！');
+			return;
+		}
+
 		buriedPointEvent(loan_fenqi.clickSubmit, {
 			loanMoney,
 			loanDate: loanDate.prodCount
