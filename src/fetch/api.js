@@ -134,6 +134,8 @@ export const auth_getOcToggle = '/auth/getOcToggle';
 export const auth_suppleInfo = '/auth/suppleInfo';
 //  保存腾讯人脸识别返回码信息接口
 export const auth_tencentFaceResultRec = '/auth/tencentFaceResultRec';
+// 预授信紧急联系人提交接口
+export const auth_prePersonalData = '/auth/prePersonalData';
 /**
  * @description: 授信申请相关
  * @param {type}

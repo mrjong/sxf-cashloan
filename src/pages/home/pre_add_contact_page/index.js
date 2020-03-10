@@ -11,7 +11,7 @@ import { InputItem, List, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import { getFirstError, validators, handleInputBlur, recordContract, activeConfigSts_baseInfo } from 'utils';
+import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine, preApproval } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
@@ -37,17 +37,15 @@ import {
 	contact_name_oneRiskBury,
 	contact_name_twoRiskBury,
 	contact_name_onePhoneNo,
-	contact_name_twoPhoneNo
+	contact_name_twoPhoneNo,
+	protocol_checkbox_click,
+	submit_button_click,
+	grxxsqsRiskBury,
+	yhysqzcRiskBury
 } from './riskBuryConfig';
 import style from './index.scss';
 import Images from 'assets/image';
-import {
-	auth_queryUsrBasicInfo,
-	msg_area,
-	msg_relation,
-	auth_personalData,
-	index_queryPLPShowSts
-} from 'fetch/api';
+import { auth_queryUsrBasicInfo, msg_relation, auth_prePersonalData } from 'fetch/api';
 
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
@@ -69,18 +67,9 @@ export default class pre_add_contact_page extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			relatData: [], // 亲属联系人数据
-			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
-			provValue: [], // 选中的省市区
-			provLabel: [],
-			showAgreement: false, // 显示协议弹窗
-			millisecond: 0,
-			selectFlag: false,
-			addressList: [],
 			relatValue2: [],
-			ProvincesValue: '',
-			abTest: ''
+			selectFlag: false
 		};
 	}
 
@@ -115,7 +104,7 @@ export default class pre_add_contact_page extends PureComponent {
 	}
 
 	// 跳转个人信息授权书
-	readContract = async (jumpUrl) => {
+	readContract = async (obj) => {
 		const { selectFlag } = this.state;
 		store.setCacheBaseInfo({ selectFlag });
 		let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
@@ -126,8 +115,9 @@ export default class pre_add_contact_page extends PureComponent {
 				dateTime: dayjs(new Date()).format('YYYY年MM月DD日')
 			};
 			this.props.setIframeProtocolShow({
-				url: jumpUrl,
-				contractInf: pageData
+				url: obj.jumpUrl,
+				contractInf: pageData,
+				pId: obj.pId
 			});
 		}
 	};
@@ -136,6 +126,7 @@ export default class pre_add_contact_page extends PureComponent {
 		this.setState({
 			selectFlag: !this.state.selectFlag
 		});
+		this.sxfMD(protocol_checkbox_click.key);
 	};
 
 	buttonDisabled = (showToast) => {
@@ -279,93 +270,67 @@ export default class pre_add_contact_page extends PureComponent {
 	};
 
 	handleSubmit = () => {
-		const { ProvincesValue, addressList } = this.state;
-		if (this.buttonDisabled(true)) return;
-
 		if (submitButtonLocked) return;
+		if (this.buttonDisabled(true)) return;
+		this.sxfMD(submit_button_click.key);
 		submitButtonLocked = true;
-
 		// 调基本信息接口
-		// this.props.form.validateFields((err, values) => {
-		// 	if (!err) {
-		// 		const data = `${provNm}${cityNm}${districtNm}${values.address}`;
-		// 		getLngLat(data)
-		// 			.then((lngLat) => {
-		// 				submitButtonLocked = false;
-		// 				const params = {
-		// 					provNm,
-		// 					cityNm,
-		// 					districtNm,
-		// 					streetNm,
-		// 					provCd,
-		// 					cityCd,
-		// 					districtCd,
-		// 					streetCd,
-		// 					usrDtlAddr: values.address,
-		// 					usrDtlAddrLctn: lngLat,
-		// 					cntRelTyp1: values.cntRelTyp1[0],
-		// 					cntRelTyp2: values.cntRelTyp2[0],
-		// 					cntUsrNm1: base64Encode(values.linkman),
-		// 					cntMblNo1: base64Encode(values.linkphone),
-		// 					cntUsrNm2: base64Encode(values.linkman2),
-		// 					cntMblNo2: base64Encode(values.linkphone2),
-		// 					credCorpOrg: ''
-		// 				};
-		// 				if (values.linkphone === values.linkphone2) {
-		// 					Toast.info('联系人手机号重复，请重新填写');
-		// 					// isFetching = false;
-		// 					submitButtonLocked = false;
-		// 					return;
-		// 				}
-
-		// 				// isFetching = true;
-		// 				// values中存放的是经过 getFieldDecorator 包装的表单元素的值
-		// 				Toast.loading('加载中...', 10);
-		// 				this.props.$fetch
-		// 					.post(auth_personalData, params)
-		// 					.then((result) => {
-		// 						submitButtonLocked = false;
-		// 						Toast.hide();
-		// 						if (result && result.code === '000000') {
-		// 							store.setBackFlag(true);
-		// 							// 埋点-基本信息页-确定按钮
-		// 							this.confirmBuryPoint(true);
-		// 							buriedPointEvent(mine.creditExtensionBack, {
-		// 								current_step: '基本信息认证'
-		// 							});
-		// 							if (this.props.nextStepStatus) {
-		// 								Toast.info('提交成功', 2);
-		// 								getNextStatus({
-		// 									RouterType: 'essential_infomation_page',
-		// 									$props: this.props
-		// 								});
-		// 							}
-		// 						} else if (result.code === '000030') {
-		// 							if (this.props.nextStepStatus) {
-		// 								Toast.info('提交成功', 2);
-		// 								getNextStatus({
-		// 									RouterType: 'essential_infomation_page',
-		// 									$props: this.props
-		// 								});
-		// 							}
-		// 						} else {
-		// 							this.confirmBuryPoint(false, result.message);
-		// 							// isFetching = false;
-		// 							Toast.info(result.message);
-		// 						}
-		// 					})
-		// 					.catch(() => {
-		// 						submitButtonLocked = false;
-		// 					});
-		// 			})
-		// 			.catch(() => {
-		// 				submitButtonLocked = false;
-		// 			});
-		// 	} else {
-		// 		submitButtonLocked = false;
-		// 		Toast.info(getFirstError(err));
-		// 	}
-		// });
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				const params = {
+					cntRelTyp1: values.cntRelTyp1[0],
+					cntRelTyp2: values.cntRelTyp2[0],
+					cntUsrNm1: base64Encode(values.linkman),
+					cntMblNo1: base64Encode(values.linkphone),
+					cntUsrNm2: base64Encode(values.linkman2),
+					cntMblNo2: base64Encode(values.linkphone2)
+				};
+				if (values.linkphone === values.linkphone2) {
+					Toast.info('联系人手机号重复，请重新填写');
+					submitButtonLocked = false;
+					return;
+				}
+				Toast.loading('加载中...', 10);
+				this.props.$fetch
+					.post(auth_prePersonalData, params)
+					.then((result) => {
+						submitButtonLocked = false;
+						Toast.hide();
+						if (result && result.code === '000000') {
+							store.setBackFlag(true);
+							// 埋点-基本信息页-确定按钮
+							this.confirmBuryPoint(true);
+							buriedPointEvent(mine.creditExtensionBack, {
+								current_step: '基本信息认证'
+							});
+							if (this.props.nextStepStatus) {
+								Toast.info('提交成功', 2);
+								// getNextStatus({
+								// 	RouterType: 'essential_infomation_page',
+								// 	$props: this.props
+								// });
+							}
+						} else if (result.code === '000030') {
+							if (this.props.nextStepStatus) {
+								Toast.info('提交成功', 2);
+								// getNextStatus({
+								// 	RouterType: 'essential_infomation_page',
+								// 	$props: this.props
+								// });
+							}
+						} else {
+							this.confirmBuryPoint(false, result.message);
+							Toast.info(result.message);
+						}
+					})
+					.catch(() => {
+						submitButtonLocked = false;
+					});
+			} else {
+				submitButtonLocked = false;
+				Toast.info(getFirstError(err));
+			}
+		});
 	};
 
 	// 点击确定按钮埋点
@@ -690,7 +655,10 @@ export default class pre_add_contact_page extends PureComponent {
 						<em
 							onClick={(e) => {
 								e.stopPropagation();
-								this.readContract('personal_auth_page');
+								this.readContract({
+									pId: grxxsqsRiskBury.key,
+									jumpUrl: 'personal_auth_page'
+								});
 							}}
 							className={style.link}
 						>
@@ -699,7 +667,10 @@ export default class pre_add_contact_page extends PureComponent {
 						<em
 							onClick={(e) => {
 								e.stopPropagation();
-								this.readContract('user_privacy_page');
+								this.readContract({
+									pId: yhysqzcRiskBury.key,
+									jumpUrl: 'user_privacy_page'
+								});
 							}}
 							className={style.link}
 						>
