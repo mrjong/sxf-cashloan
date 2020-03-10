@@ -329,3 +329,6 @@ export const passport_getRelyToken = '/passport/getRelyToken';
 export const passport_sendImgSms = '/passport/sendImgSms';
 export const download_getDownloadUrl = '/download/getDownloadUrl';
 export const signup_getUsrRqpInf = '/signup/getUsrRqpInf';
+
+// 查询预授信借款申请页信息接口
+export const loan_queryPreLoanApplInfo = '/loan/queryPreLoanApplInfo';

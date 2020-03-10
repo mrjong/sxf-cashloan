@@ -4,7 +4,7 @@ import Cookie from 'js-cookie';
 import { Modal, InputItem, Icon } from 'antd-mobile';
 import { ButtonCustom, RepayPlanModal, CheckRadio, ProtocolSmsModal } from 'components';
 import { store } from 'utils/store';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import { getH5Channel } from 'utils/common';
@@ -27,8 +27,17 @@ import {
 	bank_card_protocol_sms,
 	bank_card_protocol_bind,
 	loan_loanSub,
-	loan_queryCashLoanApplInfo
+	loan_queryPreLoanApplInfo
 } from 'fetch/api.js';
+import {
+	cardBillAmtRiskBury,
+	preLoanUsageInRiskBury,
+	preLoanUsageOutRiskBury,
+	prePayPlanInRiskBury,
+	prePayPlanOutRiskBury,
+	preLoanSubmitRiskBury,
+	preCheckboxClickRiskBury
+} from './riskBuryConfig';
 
 @fetch.inject()
 @setBackGround('#f0f4f9')
@@ -114,7 +123,7 @@ export default class pre_loan_page extends PureComponent {
 	// 获取页面数据
 	queryCashLoanApplInfo = () => {
 		this.props.$fetch
-			.post(loan_queryCashLoanApplInfo)
+			.post(loan_queryPreLoanApplInfo)
 			.then((res) => {
 				this.props.toast.hide();
 				if (res.code === '000000') {
@@ -390,18 +399,23 @@ export default class pre_loan_page extends PureComponent {
 		switch (item.prodCount) {
 			case '30':
 				buriedPointEvent(loan_fenqi.day30);
+				sxfburiedPointEvent('preProdTerm1');
 				break;
 			case '3':
 				buriedPointEvent(loan_fenqi.month3);
+				sxfburiedPointEvent('preProdTerm3');
 				break;
 			case '6':
 				buriedPointEvent(loan_fenqi.month6);
+				sxfburiedPointEvent('preProdTerm6');
 				break;
 			case '9':
 				buriedPointEvent(loan_fenqi.month9);
+				sxfburiedPointEvent('preProdTerm9');
 				break;
 			case '12':
 				buriedPointEvent(loan_fenqi.month12);
+				sxfburiedPointEvent('preProdTerm12');
 				break;
 			default:
 				break;
@@ -421,15 +435,33 @@ export default class pre_loan_page extends PureComponent {
 	};
 
 	openModal = (type) => {
-		this.setState({
-			[type + 'Modal']: true
-		});
+		this.setState(
+			{
+				[type + 'Modal']: true
+			},
+			() => {
+				if (type === 'usage') {
+					sxfburiedPointEvent(preLoanUsageInRiskBury.key);
+				} else if (type === 'plan') {
+					sxfburiedPointEvent(prePayPlanInRiskBury.key);
+				}
+			}
+		);
 	};
 
 	closeModal = (type) => {
-		this.setState({
-			[type + 'Modal']: false
-		});
+		this.setState(
+			{
+				[type + 'Modal']: false
+			},
+			() => {
+				if (type === 'usage') {
+					sxfburiedPointEvent(preLoanUsageOutRiskBury.key);
+				} else if (type === 'plan') {
+					sxfburiedPointEvent(prePayPlanOutRiskBury.key);
+				}
+			}
+		);
 	};
 
 	//阅读合同详情
@@ -531,6 +563,7 @@ export default class pre_loan_page extends PureComponent {
 
 	//借款申请提交
 	loanApplySubmit = () => {
+		sxfburiedPointEvent(preLoanSubmitRiskBury.key);
 		const { loanMoney, loanDate, loanUsage, checkBox1 } = this.state;
 		if (!loanMoney) {
 			this.props.toast.info('请输入借款金额');
@@ -722,6 +755,7 @@ export default class pre_loan_page extends PureComponent {
 
 	// 点击勾选协议
 	checkAgreement = () => {
+		sxfburiedPointEvent(preCheckboxClickRiskBury.key);
 		this.setState({ checkBox1: !this.state.checkBox1 });
 	};
 
@@ -900,6 +934,11 @@ export default class pre_loan_page extends PureComponent {
 										}
 									);
 								}}
+								data-sxf-props={JSON.stringify({
+									type: cardBillAmtRiskBury.type,
+									name: cardBillAmtRiskBury.key,
+									actContain: cardBillAmtRiskBury.actContain
+								})}
 							/>
 						</div>
 						<p className={style.inputTip}>建议全部借出，借款后剩余额度将不可用</p>
@@ -1063,6 +1102,7 @@ export default class pre_loan_page extends PureComponent {
 					loanMoney={loanMoney}
 					history={this.props.history}
 					goPage={() => {
+						sxfburiedPointEvent(prePayPlanOutRiskBury.key);
 						this.props.history.push('/home/payment_notes');
 					}}
 				/>

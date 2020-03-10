@@ -1,11 +1,11 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-19 11:45:06
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-10 17:07:30
  */
 import React from 'react';
 import { Modal } from 'antd-mobile';
-import { buriedPointEvent } from 'utils/analytins';
+import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 import { ButtonCustom, CheckRadio } from 'components';
@@ -13,6 +13,12 @@ import { connect } from 'react-redux';
 import { setProtocolSelFlagAction, setIframeProtocolShow } from 'reduxes/actions/commonActions';
 
 import Image from 'assets/image';
+import {
+	preWarningModalInRiskBury,
+	preWarningModalOutRiskBury,
+	preWarningModalCloseRiskBury,
+	preContinueLoanRiskBury
+} from '../../../pre_loan_page/riskBuryConfig';
 
 @connect(
 	(state) => ({
@@ -33,14 +39,15 @@ export default class InsuranceModal extends React.PureComponent {
 	componentWillMount() {
 		const { protocolSelFlag } = this.props;
 		protocolSelFlag && this.setState({ checkBox1: protocolSelFlag });
+		sxfburiedPointEvent(preWarningModalInRiskBury.key);
 	}
 	// 跳转协议
-	go = (url) => {
+	go = (params) => {
 		const { cacheData } = this.props;
 		// 缓存弹框展示
 		cacheData && cacheData();
 		this.props.setIframeProtocolShow({
-			url
+			...params
 		});
 	};
 
@@ -49,6 +56,7 @@ export default class InsuranceModal extends React.PureComponent {
 		const { closeWarningModal, prodType } = this.props;
 		closeWarningModal && closeWarningModal();
 		this.props.setProtocolSelFlagAction(false);
+		sxfburiedPointEvent(preWarningModalCloseRiskBury.key);
 		buriedPointEvent(home.warningModalClose, {
 			prodType
 		});
@@ -56,10 +64,12 @@ export default class InsuranceModal extends React.PureComponent {
 
 	// 点击继续申请
 	handleButtonClick = () => {
+		sxfburiedPointEvent(preContinueLoanRiskBury.key);
 		const { handleConfirm, prodType, toast, protocolSelFlag } = this.props;
 
 		if (protocolSelFlag) {
 			handleConfirm && handleConfirm();
+			sxfburiedPointEvent(preWarningModalOutRiskBury.key);
 		} else {
 			// 签约借款-警示-继续申请借款-提示 埋点
 			buriedPointEvent(home.warningTips, {
@@ -100,7 +110,7 @@ export default class InsuranceModal extends React.PureComponent {
 							<span
 								className={styles.underlineText}
 								onClick={() => {
-									this.go('credit_query_page');
+									this.go({ url: 'credit_query_page', pId: 'grxyxxcxsqs' });
 								}}
 							>
 								个人信用信息查询授权书
@@ -111,7 +121,7 @@ export default class InsuranceModal extends React.PureComponent {
 							<span
 								className={styles.underlineText}
 								onClick={() => {
-									this.go('overdue_effect_page');
+									this.go({ url: 'overdue_effect_page', pId: 'grxyyqyxgzs' });
 								}}
 							>
 								个人信用逾期影响告知书
@@ -142,7 +152,7 @@ export default class InsuranceModal extends React.PureComponent {
 							<span
 								onClick={(e) => {
 									e.stopPropagation();
-									this.go('credit_query_page');
+									this.go({ url: 'credit_query_page', pId: 'grxyxxcxsqs' });
 								}}
 							>
 								《个人信用信息查询授权书》
@@ -150,7 +160,7 @@ export default class InsuranceModal extends React.PureComponent {
 							<span
 								onClick={(e) => {
 									e.stopPropagation();
-									this.go('overdue_effect_page');
+									this.go({ url: 'overdue_effect_page', pId: 'grxyyqyxgzs' });
 								}}
 							>
 								《个人信用逾期影响告知书》
