@@ -2,7 +2,7 @@
 
 .nameDiv {
   .pageContent {
-    padding: 100px 60px 50px;
+    padding: 100px 60px 160px;
   }
 	.informationMore {
 		position: relative;
@@ -110,7 +110,9 @@
     }
   }
   .activityBox {
-    margin: 80px 40px -45px;
+    // padding: 80px 40px;
+    margin-top: -30px;
+    margin-bottom: 40px;
   }
 }
 :global {

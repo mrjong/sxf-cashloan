@@ -210,13 +210,13 @@ export default class add_info extends PureComponent {
 		return (
 			<div className={[style.nameDiv, 'info_addinfo'].join(' ')}>
 				<FixedTopTip />
-				{shuntFlag ? (
-					<div className={style.activityBox}>
-						<LimitTimeJoin shuntNum={shuntFlag} />
-					</div>
-				) : null}
 				<div className={style.pageContent}>
 					<FixedHelpCenter history={this.props.history} />
+					{shuntFlag ? (
+						<div className={style.activityBox}>
+							<LimitTimeJoin shuntNum={shuntFlag} />
+						</div>
+					) : null}
 					<StepTitle title="填写补充信息" titleSub="信息加密传输，仅用于申请还到" stepNum="02" />
 					<div className={style.item_box}>
 						{suppleInfo.map((item, index) => {
