@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-10 17:32:37
+ * @LastEditTime: 2020-03-10 17:39:43
  */
 import React from 'react';
 import { Modal, Icon } from 'antd-mobile';
@@ -25,7 +25,9 @@ export default class IframeProtocol extends React.Component {
 			document.body.style.overflow = 'hidden';
 			document.body.style.position = 'fixed';
 			nextProps.iframeProtocolData.pId &&
-				sxfburiedPointEvent(`protocolModalOpen_${nextProps.iframeProtocolData.pId}`);
+				sxfburiedPointEvent(`protocolModalOpen`, {
+					pageCode: nextProps.iframeProtocolData.pId
+				});
 		} else {
 			document.body.style.overflow = 'scroll';
 			document.body.style.position = 'relative';
@@ -35,7 +37,9 @@ export default class IframeProtocol extends React.Component {
 		const { iframeProtocolData = {} } = this.props;
 		iframeProtocolData &&
 			iframeProtocolData.pId &&
-			sxfburiedPointEvent(`protocolModalClose_${iframeProtocolData.pId}`);
+			sxfburiedPointEvent(`protocolModalClose`, {
+				pageCode: iframeProtocolData.pId
+			});
 		this.props.setIframeProtocolShow({
 			url: ''
 		});
