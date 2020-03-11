@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-09 15:56:02
+ * @LastEditTime: 2020-03-11 13:54:26
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -120,7 +120,16 @@ export default class home_page extends PureComponent {
 							// homeData: {
 							// 	...result.data,
 							// 	...{
-							// 		indexSts: 'PR0003'
+							// 		indexMsg: '去还款',
+							// 		indexSts: 'PA0001',
+							// 		preApprDataInfo: {
+							// 			credAmt: '8000',
+							// 			curAmt: '8000',
+							// 			orderAmt: '5000',
+							// 			acOverDt: '12',
+							// 			netAppyDate: '20200405',
+							// 			billNo: '账单号'
+							// 		}
 							// 	}
 							// }
 						},
@@ -383,9 +392,26 @@ export default class home_page extends PureComponent {
 					}
 				});
 				break;
-			case 'PR0003':
+			case 'PA0001':
 				// buriedPointEvent(FENQI_HOME_APPLY_BTN);
 				goToPreLoan({ $props: this.props });
+				break;
+			case 'PA0003': // 预授信 放款成功
+				this.props.history.push({
+					pathname: '/order/order_detail_page',
+					search: '?entryFrom=home',
+					state: {
+						billNo: homeData.preApprDataInfo.billNo
+					}
+				});
+				break;
+			case 'PA0004': // 预授信 放款失败
+				Toast.hide();
+				buriedPointEvent(home.goSuperMarket, {
+					medium: 'H5'
+				});
+				store.setCarrierMoxie(true); // 设置去到第三方标示
+				window.location.href = linkConf.MARKET_URL + `&SCOpenId=${store.getQueryUsrSCOpenId()}`;
 				break;
 			default:
 				Toast.hide();
@@ -663,8 +689,7 @@ export default class home_page extends PureComponent {
 				plusCardData.handleDetailClick = this.handleGoPlusDetail;
 				disPlayData.push(plusCardData);
 				break;
-			case 'PR0003': // 申请通过有额度
-				plusCardData.isShowDetailLink = true;
+			case 'PA0001': // 预授信 申请通过有额度
 				// plusCardData.topTip =
 				// 	homeData &&
 				// 	homeData.cashDataInfo &&
@@ -672,13 +697,65 @@ export default class home_page extends PureComponent {
 				// 	homeData.cashDataInfo.acOverDt <= 10
 				// 		? `${homeData.cashDataInfo.acOverDt}天后失去资格`
 				// 		: '';
-				plusCardData.topTip = `30天后失去资格`;
-				plusCardData.loanText = '可提现金额(元)';
+				plusCardData.topTip =
+					homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.acOverDt
+						? `${homeData.preApprDataInfo.acOverDt}天后失去资格`
+						: '';
 				plusCardData.loanAmont =
-					(homeData.cashDataInfo.curAmt && parseFloat(homeData.cashDataInfo.curAmt, 10)) || '';
-				plusCardData.btnText = homeData && homeData.indexMsg;
+					(homeData.preApprDataInfo.curAmt && parseFloat(homeData.preApprDataInfo.curAmt, 10)) || '';
+
 				plusCardData.handleClick = this.handleSmartClick;
-				plusCardData.handleDetailClick = this.handleGoPlusDetail;
+				plusCardData.titleSub = '直接提现';
+				plusCardData.loanText = '可用额度(元)';
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.detailText = '仅1%用户获得';
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0002': // 预授信 放款中
+				// plusCardData.topTip =
+				// 	homeData &&
+				// 	homeData.cashDataInfo &&
+				// 	homeData.cashDataInfo.acOverDt &&
+				// 	homeData.cashDataInfo.acOverDt <= 10
+				// 		? `${homeData.cashDataInfo.acOverDt}天后失去资格`
+				// 		: '';
+				plusCardData.topTip =
+					homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.acOverDt
+						? `${homeData.preApprDataInfo.acOverDt}天后失去资格`
+						: '';
+				plusCardData.loanAmont =
+					(homeData.preApprDataInfo.curAmt && parseFloat(homeData.preApprDataInfo.curAmt, 10)) || '';
+				plusCardData.titleSub = '直接提现';
+				plusCardData.specialText = '放款中…';
+				plusCardData.specialTextStyle = style.loaningTextStyle;
+				plusCardData.hideBtn = true;
+				plusCardData.detailText = '仅1%用户获得';
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0003': // 预授信放款成功 去还款
+				plusCardData.loanText = '借款金额(元)';
+				plusCardData.loanAmont =
+					homeData &&
+					homeData.preApprDataInfo &&
+					homeData.preApprDataInfo.orderAmt &&
+					parseFloat(homeData.preApprDataInfo.orderAmt, 10);
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.titleSub = '直接提现';
+				plusCardData.detailText = '仅1%用户获得';
+				plusCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0004': // 预授信放款失败 同 LN0005
+				basicCardData.topTip =
+					homeData.preApprDataInfo.netAppyDate &&
+					differDays <= 60 &&
+					`${dayjs(homeData.preApprDataInfo.netAppyDate).format('YYYY/MM/DD')}可再次申请`;
+				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
+				basicCardData.statusTitleSub = '去试试其他借款平台';
+				basicCardData.btnText = '去试试';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
 				disPlayData.push(plusCardData);
 				break;
 			default:

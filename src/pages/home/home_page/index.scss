@@ -1,31 +1,38 @@
 @import '../../../assets/styles/scss/base/fn';
 .home_new_page {
-  padding-bottom: 30px;
-  background-color: #F0F3F9;
-  .content_top {
-    position: fixed;
-    z-index: 99;
-    top: 0;
-    width: 100%;
-  }
-  .content_main_more {
-    padding-top: 170px;
-  }
-  .content_main {
-    padding-top: 170px;
-  }
-  // 代偿
+	padding-bottom: 30px;
+	background-color: #f0f3f9;
+	.content_top {
+		position: fixed;
+		z-index: 99;
+		top: 0;
+		width: 100%;
+	}
+	.content_main_more {
+		padding-top: 170px;
+	}
+	.content_main {
+		padding-top: 170px;
+	}
+	// 代偿
 	.home_banner {
-    margin-bottom: 30px;
-    margin-top: 10px;
-    height: 180px !important;
+		margin-bottom: 30px;
+		margin-top: 10px;
+		height: 180px !important;
 		img {
-      border-radius: 10px;
-      height: 180px;
-      width: 100%;
+			border-radius: 10px;
+			height: 180px;
+			width: 100%;
 		}
-  }
-  .bottomSlogen {
-    margin-top: 100px;
-  }
+	}
+	.bottomSlogen {
+		margin-top: 100px;
+	}
+	.loaningTextStyle {
+		font-size: 48px;
+		font-family: PingFangSC-Semibold, PingFang SC;
+		font-weight: 600;
+		color: #e4c585;
+		margin-top: 69px;
+	}
 }

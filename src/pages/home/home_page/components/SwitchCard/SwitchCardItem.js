@@ -163,7 +163,7 @@ export default class ActivityEntry extends React.PureComponent {
 	}
 
 	renderDetailLink() {
-		const { cardType, isShowDetailLink, handleDetailClick } = this.props;
+		const { cardType, isShowDetailLink, handleDetailClick, detailText } = this.props;
 
 		if (isShowDetailLink) {
 			return (
@@ -175,6 +175,14 @@ export default class ActivityEntry extends React.PureComponent {
 						className={classNM.additionArrow}
 						style={{ borderLeftColor: typeConfig[cardType].colorTextSub }}
 					></span>
+				</div>
+			);
+		} else if (detailText) {
+			return (
+				<div className={classNM.detailLinkWrap}>
+					<span className={classNM.detailLinkText} style={this.buildDetailLinkTextStyle()}>
+						{detailText}
+					</span>
 				</div>
 			);
 		}
@@ -198,6 +206,19 @@ export default class ActivityEntry extends React.PureComponent {
 						{thousandFormatNum(loanAmont)}
 						{loanAmontUnit ? <span style={{ fontSize: '.3rem' }}>{loanAmontUnit}</span> : null}
 					</p>
+				</div>
+			);
+		}
+		return null;
+	}
+
+	// 只显示文字的卡片内容
+	renderSpecailContent() {
+		const { specialText, specialTextStyle } = this.props;
+		if (specialText) {
+			return (
+				<div className={classNM.specailWrap}>
+					<p className={specialTextStyle}>{specialText}</p>
 				</div>
 			);
 		}
@@ -246,7 +267,7 @@ export default class ActivityEntry extends React.PureComponent {
 	}
 
 	render() {
-		const { myIndex, activeIndex, title, titleSub } = this.props;
+		const { myIndex, activeIndex, title, titleSub, hideBtn } = this.props;
 		return (
 			<div
 				className={[
@@ -272,11 +293,11 @@ export default class ActivityEntry extends React.PureComponent {
 
 				{this.renderTopTip()}
 
-				{this.renderStatusContent() || this.renderLoanContent()}
+				{this.renderSpecailContent() || this.renderStatusContent() || this.renderLoanContent()}
 
 				{this.renderBottomTip()}
 
-				{this.renderBtn()}
+				{!hideBtn && this.renderBtn()}
 			</div>
 		);
 	}
