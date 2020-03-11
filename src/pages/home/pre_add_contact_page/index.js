@@ -4,7 +4,6 @@
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import qs from 'qs';
 import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
 import { InputItem, List, Toast } from 'antd-mobile';
@@ -12,7 +11,7 @@ import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 // import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
-import { home, mine, preApproval } from 'utils/analytinsType';
+import { home, preApproval } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
@@ -126,6 +125,7 @@ export default class pre_add_contact_page extends PureComponent {
 			selectFlag: !this.state.selectFlag
 		});
 		this.sxfMD(protocol_checkbox_click.key);
+		buriedPointEvent(preApproval.addContractCheckbox);
 	};
 
 	buttonDisabled = (showToast) => {
@@ -269,9 +269,10 @@ export default class pre_add_contact_page extends PureComponent {
 	};
 
 	handleSubmit = () => {
+		this.sxfMD(submit_button_click.key);
+		buriedPointEvent(preApproval.addContractSubmit);
 		if (submitButtonLocked) return;
 		if (this.buttonDisabled(true)) return;
-		this.sxfMD(submit_button_click.key);
 		submitButtonLocked = true;
 		// 调基本信息接口
 		this.props.form.validateFields((err, values) => {
@@ -297,11 +298,7 @@ export default class pre_add_contact_page extends PureComponent {
 						Toast.hide();
 						if (result && result.code === '000000') {
 							store.setBackFlag(true);
-							// 埋点-基本信息页-确定按钮
 							this.confirmBuryPoint(true);
-							buriedPointEvent(mine.creditExtensionBack, {
-								current_step: '基本信息认证'
-							});
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
 								// getNextStatus({
@@ -317,6 +314,7 @@ export default class pre_add_contact_page extends PureComponent {
 								// 	$props: this.props
 								// });
 							}
+							this.confirmBuryPoint(false, result.message);
 						} else {
 							this.confirmBuryPoint(false, result.message);
 							Toast.info(result.message);
@@ -334,14 +332,9 @@ export default class pre_add_contact_page extends PureComponent {
 
 	// 点击确定按钮埋点
 	confirmBuryPoint = (isSucc, failInf) => {
-		const query = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
-		// 是否是从我的里面进入
-		const isFromMine = query.isShowCommit;
-		buriedPointEvent(preApproval.addContractSubmit, {
-			entry: !isFromMine || isFromMine === 'false' ? '我的' : '风控授信项',
+		buriedPointEvent(preApproval.addContractSubmitResult, {
 			is_success: isSucc,
-			fail_cause: failInf,
-			comeFrom: query.entry // 是从确认授权页面、获取验证码页面，还是首页进入
+			fail_cause: failInf
 		});
 	};
 
@@ -449,6 +442,7 @@ export default class pre_add_contact_page extends PureComponent {
 										onVisibleChange={(bool) => {
 											if (bool) {
 												this.sxfMD(contact_relationship_click.key);
+												buriedPointEvent(preApproval.addContractRelation1);
 												this.selectClick({
 													value: JSON.stringify(this.state.relatValue),
 													label: 'clan_relation'
@@ -573,6 +567,8 @@ export default class pre_add_contact_page extends PureComponent {
 										onVisibleChange={(bool) => {
 											if (bool) {
 												this.sxfMD(contact_relationship2_click.key);
+												buriedPointEvent(preApproval.addContractRelation2);
+
 												this.selectClick({
 													value: JSON.stringify(this.state.relatValue2),
 													label: 'clan_relation'

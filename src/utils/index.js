@@ -192,7 +192,9 @@ const interceptRouteArr = [
 	'/home/loan_fenqi',
 	'/home/addInfo',
 	'/common/crash_page',
-	'/others/mpos_testB_download_page'
+  '/others/mpos_testB_download_page',
+	'/home/pre_add_contact_page',
+
 ];
 
 // 在需要路由拦截的页面 pushState

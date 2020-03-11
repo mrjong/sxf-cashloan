@@ -373,7 +373,18 @@ const miniprogram = {
 };
 
 const preApproval = {
-	addContractSubmit: `${prefix}_PREAPPROVAL_ADDCONTRACT_SUBMIT_CLICK` // 基本信息页-确定按钮
+	// 预授信补充联系人返回
+	addContractBack: `${prefix}_YSX_ADDCONTRACT_BACK`,
+	// 预授信补充联系人选择关系1
+	addContractRelation1: `${prefix}_YSX_ADDCONTRACT_RELATION1`,
+	// 预授信补充联系人选择关系2
+	addContractRelation2: `${prefix}_YSX_ADDCONTRACT_RELATION2`,
+	// 预授信补充联系人协议勾选
+	addContractCheckbox: `${prefix}_YSX_ADDCONTRACT_CHECKBOX`,
+	// 预授信补充联系人提交
+	addContractSubmit: `${prefix}_YSX_ADDCONTRACT_SUBMIT`,
+	// 预授信补充联系人提交结果
+	addContractSubmitResult: `${prefix}_YSX_ADDCONTRACT_SUBMIT_RESULT`
 };
 
 export {

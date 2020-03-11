@@ -17,7 +17,7 @@ import { closeCurrentWebView } from 'utils/CommonUtil/commonFunc';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { home, preApproval } from 'utils/analytinsType';
 let initDialog = () => {
 	let obj = new PopUp(
 		(
@@ -168,7 +168,11 @@ if (window.history && window.history.pushState) {
 				}
 				return;
 			}
-
+			if (window.location.pathname === '/home/pre_add_contact_page') {
+				buriedPointEvent(preApproval.addContractBack);
+				history.go(-1);
+				return;
+			}
 			/**首页拦截 */
 			if (window.location.pathname === '/') {
 				window.history.pushState(null, null, document.URL);
