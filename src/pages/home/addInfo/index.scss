@@ -132,7 +132,8 @@
     }
     .item_box_has_value {
       .am-list-item .am-list-line .am-list-extra {
-			  color: $colorBlack;
+        color: $colorBlack;
+        flex: 2;
       }
     }
 		.am-list-item.am-list-item-active {

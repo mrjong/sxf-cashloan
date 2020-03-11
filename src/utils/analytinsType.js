@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 13:06:43
+ * @LastEditTime: 2020-03-11 10:28:53
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -362,7 +362,8 @@ const helpCenter = {
 };
 const addinfo = {
 	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT`, // 补充信息下一步
-	DC_ADDINFO_SUBMIT_RESULT: `${prefix}_ADDINFO_SUBMIT_RESULT` // 补充信息下一步
+	DC_ADDINFO_SUBMIT_RESULT: `${prefix}_ADDINFO_SUBMIT_RESULT`, // 补充信息下一步
+	DC_ADDINFO_LOAD_YELLOW_CARD: `${prefix}_ADDINFO_LOAD_YELLOW_CARD` // 加载黄卡成功
 };
 
 const miniprogram = {

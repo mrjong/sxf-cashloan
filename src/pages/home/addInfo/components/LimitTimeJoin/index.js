@@ -1,11 +1,14 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-06 11:56:12
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-03-11 10:28:16
  */
 import React from 'react';
 import ClockS from 'components/TimeDown/ClockS';
 import { thousandFormatNum } from 'utils/common';
+import { buriedPointEvent } from 'utils/analytins';
+import { addinfo } from 'utils/analytinsType';
+
 import left_bg from './img/left_bg.png';
 
 import classNM from './index.scss';
@@ -24,6 +27,9 @@ export default class LimitTimeJoin extends React.PureComponent {
 
 	componentDidMount() {
 		const { shuntNum } = this.props;
+		buriedPointEvent(addinfo.DC_ADDINFO_LOAD_YELLOW_CARD, {
+			planNum: shuntNum
+		});
 		if (shuntNum !== 1) {
 			this.handleSetCountDown(60 * 60);
 			this.getMillisecond();
