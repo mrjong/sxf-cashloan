@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 11:32:52
+ * @LastEditTime: 2020-03-11 10:14:29
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -9,8 +9,7 @@ import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
 import { InputItem, List, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
-import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
-import { getLngLat, getAddress } from 'utils/Address.js';
+// import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine, preApproval } from 'utils/analytinsType';
