@@ -11,7 +11,7 @@ import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 // import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
-import { home, preApproval } from 'utils/analytinsType';
+import { preApproval } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
@@ -45,7 +45,7 @@ import style from './index.scss';
 import Images from 'assets/image';
 import { auth_queryUsrBasicInfo, msg_relation, auth_prePersonalData } from 'fetch/api';
 
-const pageKey = home.basicInfoBury;
+const pageKey = preApproval.addContractBury;
 let submitButtonLocked = false;
 // let isFetching = false;
 @fetch.inject()

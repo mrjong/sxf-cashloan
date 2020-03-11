@@ -384,7 +384,9 @@ const preApproval = {
 	// 预授信补充联系人提交
 	addContractSubmit: `${prefix}_YSX_ADDCONTRACT_SUBMIT`,
 	// 预授信补充联系人提交结果
-	addContractSubmitResult: `${prefix}_YSX_ADDCONTRACT_SUBMIT_RESULT`
+	addContractSubmitResult: `${prefix}_YSX_ADDCONTRACT_SUBMIT_RESULT`,
+	// 预授信补充联系人输入框下拉框埋点
+	addContractBury: `${prefix}_YSX_ADDCONTRACT_BURY`
 };
 
 export {
