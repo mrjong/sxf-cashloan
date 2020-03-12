@@ -8,7 +8,6 @@ import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { preLoan, home, loan_fenqi } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import { getH5Channel } from 'utils/common';
-import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { connect } from 'react-redux';
 import { getDeviceType } from 'utils';
 import {
@@ -133,24 +132,6 @@ export default class pre_loan_page extends PureComponent {
 						this.props.toast.info('无借款产品，请联系客服');
 						return;
 					}
-					if (res.data && res.data.contacts && res.data.contacts.length) {
-						res.data.contacts.map((item, index) => {
-							item.name = base64Decode(item.name);
-							item.number = base64Decode(item.number);
-							if (index < 5) {
-								item.isMarked = true;
-							} else {
-								item.isMarked = false;
-							}
-							item.uniqMark = 'uniq' + index;
-							return item;
-						});
-					}
-					if (res.data && res.data.excludedContacts && res.data.excludedContacts.length) {
-						for (let i = 0; i < res.data.excludedContacts.length; i++) {
-							res.data.excludedContacts[i] = base64Decode(res.data.excludedContacts[i]);
-						}
-					}
 					this.setState(
 						{
 							pageInfo: res.data
@@ -258,7 +239,7 @@ export default class pre_loan_page extends PureComponent {
 	 * 获取借款合同与优惠券，注意请求报错则清空选中期数termSelected=null
 	 */
 	requestProtocolCoupon = async () => {
-		if (!parseFloat(this.state.loanMoney) > 0 || !this.state.repayCardLast.length > 0) {
+		if (!parseFloat(this.state.loanMoney) > 0 || !(this.state.repayCardLast.length > 0)) {
 			return;
 		}
 		this.props.toast.loading('', 10);
@@ -578,7 +559,7 @@ export default class pre_loan_page extends PureComponent {
 	//借款申请提交
 	loanApplySubmit = () => {
 		sxfburiedPointEvent(preLoanSubmitRiskBury.key);
-		const { loanMoney, loanDate, loanUsage, checkBox1 } = this.state;
+		const { loanMoney, loanDate, loanUsage, checkBox1, repayCardLast, resaveCardLast } = this.state;
 		if (!loanMoney) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -589,6 +570,14 @@ export default class pre_loan_page extends PureComponent {
 		}
 		if (!loanUsage) {
 			this.props.toast.info('请选择借款用途');
+			return;
+		}
+		if (!repayCardLast || !(repayCardLast.length > 0)) {
+			this.props.toast.info('请绑定收款银行卡');
+			return;
+		}
+		if (!resaveCardLast || !(resaveCardLast.length > 0)) {
+			this.props.toast.info('请绑定还款银行卡');
 			return;
 		}
 		if (!checkBox1) {
@@ -1000,7 +989,7 @@ export default class pre_loan_page extends PureComponent {
 						<ul>
 							<li className={style.listItem}>
 								<label>收款银行卡</label>
-								{repayCardLast.length > 0 ? (
+								{repayCardLast && repayCardLast.length > 0 ? (
 									<span
 										className={style.listValue}
 										onClick={() => {
@@ -1024,7 +1013,7 @@ export default class pre_loan_page extends PureComponent {
 							</li>
 							<li className={style.listItem}>
 								<label>还款银行卡</label>
-								{resaveCardLast.length > 0 ? (
+								{resaveCardLast && resaveCardLast.length > 0 ? (
 									<span
 										className={style.listValue}
 										onClick={() => {

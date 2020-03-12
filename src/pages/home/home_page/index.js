@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 15:47:32
+ * @LastEditTime: 2020-03-12 16:33:46
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -117,21 +117,6 @@ export default class home_page extends PureComponent {
 					this.setState(
 						{
 							homeData: result.data
-							// homeData: {
-							// 	...result.data,
-							// 	...{
-							// 		indexMsg: '去还款',
-							// 		indexSts: 'PA0001',
-							// 		preApprDataInfo: {
-							// 			credAmt: '8000',
-							// 			curAmt: '8000',
-							// 			orderAmt: '5000',
-							// 			acOverDt: '12',
-							// 			netAppyDate: '20200405',
-							// 			billNo: '账单号'
-							// 		}
-							// 	}
-							// }
 						},
 						() => {
 							this.props.setHomeData(result.data);
