@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 11:32:52
+ * @LastEditTime: 2020-03-12 15:06:31
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -11,25 +11,20 @@ import { InputItem, List, Modal, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getLngLat, getAddress } from 'utils/Address.js';
-import { getFirstError, validators, handleInputBlur, recordContract, activeConfigSts_baseInfo } from 'utils';
+import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { home, mine } from 'utils/analytinsType';
 import { buryingPoints } from 'utils/buryPointMethods';
 import { setBackGround } from 'utils/background';
 import { store } from 'utils/store';
 import { domListen } from 'utils/domListen';
-import dayjs from 'dayjs';
-import { queryProtocolPreviewInfo } from 'utils/CommonUtil/commonFunc';
-import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import {
 	FixedHelpCenter,
-	AgreementModal,
 	StepTitle,
 	AddressSelect,
 	AsyncCascadePicker,
 	ButtonCustom,
-	FixedTopTip,
-	CheckRadio
+	FixedTopTip
 } from 'components';
 import {
 	resident_addressRiskBury,
@@ -44,7 +39,6 @@ import {
 	contact_name_onePhoneNo,
 	contact_name_twoPhoneNo
 } from './riskBuryConfig';
-import LimitTimeJoin from './components/LimitTimeJoin';
 import style from './index.scss';
 
 import Images from 'assets/image';
@@ -52,13 +46,7 @@ import Images from 'assets/image';
 const pageKey = home.basicInfoBury;
 let submitButtonLocked = false;
 
-import {
-	auth_queryUsrBasicInfo,
-	msg_area,
-	msg_relation,
-	auth_personalData,
-	index_queryPLPShowSts
-} from 'fetch/api';
+import { auth_queryUsrBasicInfo, msg_area, msg_relation, auth_personalData } from 'fetch/api';
 
 const reducedFilter = (data, keys, fn) => {
 	return data.filter(fn).map((el) =>
@@ -69,34 +57,25 @@ const reducedFilter = (data, keys, fn) => {
 	);
 };
 
-let urlQuery = '';
 // let isFetching = false;
 @fetch.inject()
 @createForm()
 @setBackGround('#fff')
 @domListen()
-@connect(
-	(state) => ({
-		userInfo: state.staticState.userInfo,
-		nextStepStatus: state.commonState.nextStepStatus
-	}),
-	{
-		setIframeProtocolShow
-	}
-)
+@connect((state) => ({
+	userInfo: state.staticState.userInfo,
+	nextStepStatus: state.commonState.nextStepStatus
+}))
 export default class essential_information_page extends PureComponent {
 	constructor(props) {
 		super(props);
-		urlQuery = qs.parse(this.props.history.location.search, { ignoreQueryPrefix: true });
 		this.state = {
 			relatData: [], // 亲属联系人数据
 			relatVisible: false, // 联系人是否显示
 			relatValue: [], // 选中的联系人
 			provValue: [], // 选中的省市区
 			provLabel: [],
-			showAgreement: false, // 显示协议弹窗
 			millisecond: 0,
-			selectFlag: false,
 			addressList: [],
 			relatValue2: [],
 			ProvincesValue: '',
@@ -111,22 +90,6 @@ export default class essential_information_page extends PureComponent {
 		}
 		buryingPoints();
 		this.initBasicInfo();
-		// mpos中从授权页进入基本信息，判断是否显示协议
-		urlQuery && urlQuery.jumpToBase && this.judgeShowAgree();
-		urlQuery &&
-			urlQuery.jumpToBase &&
-			activeConfigSts_baseInfo({ $props: this.props }).then((res) => {
-				if (res) {
-					if (res === 'A') {
-						buriedPointEvent(home.abTestbasicInfoA);
-					} else {
-						buriedPointEvent(home.abTestbasicInfoB);
-					}
-					this.setState({
-						abTest: res
-					});
-				}
-			});
 	}
 
 	componentDidMount() {
@@ -150,32 +113,10 @@ export default class essential_information_page extends PureComponent {
 			}
 		});
 	}
-	// 跳转个人信息授权书
-	readContract = async (jumpUrl) => {
-		const { selectFlag } = this.state;
-		store.setCacheBaseInfo({ selectFlag });
-		let protocolPreviewInfo = await queryProtocolPreviewInfo({ $props: this.props });
-		if (protocolPreviewInfo) {
-			const pageData = {
-				name: protocolPreviewInfo.name,
-				idNo: protocolPreviewInfo.idNo,
-				dateTime: dayjs(new Date()).format('YYYY年MM月DD日')
-			};
-			this.props.setIframeProtocolShow({
-				url: jumpUrl,
-				contractInf: pageData
-			});
-		}
-	};
-	selectProtocol = () => {
-		this.setState({
-			selectFlag: !this.state.selectFlag
-		});
-	};
 
 	buttonDisabled = (showToast) => {
 		const formData = this.props.form.getFieldsValue();
-		const { ProvincesValue, selectFlag } = this.state;
+		const { ProvincesValue } = this.state;
 		const { address, linkman, linkman2, linkphone, linkphone2, cntRelTyp1, cntRelTyp2 } = formData;
 		if (showToast) {
 			if (!ProvincesValue) {
@@ -230,10 +171,6 @@ export default class essential_information_page extends PureComponent {
 				Toast.info('请填写正确的联系人2手机号');
 				return true;
 			}
-			if (!selectFlag) {
-				Toast.info('请先阅读并勾选相关协议');
-				return true;
-			}
 		}
 		if (
 			!ProvincesValue ||
@@ -243,8 +180,7 @@ export default class essential_information_page extends PureComponent {
 			!linkphone2 ||
 			!cntRelTyp1[0] ||
 			!linkman2 ||
-			!linkphone ||
-			!selectFlag
+			!linkphone
 		) {
 			return true;
 		}
@@ -356,8 +292,7 @@ export default class essential_information_page extends PureComponent {
 					? store.getRelationValue2()
 					: res && res.data && res.data.cntRelTyp2
 					? [`${res.data.cntRelTyp2}`]
-					: [],
-				selectFlag: cacheData.selectFlag || false
+					: []
 			});
 		} else {
 			this.setState({
@@ -372,8 +307,7 @@ export default class essential_information_page extends PureComponent {
 						? [`${res.data.cntRelTyp2}`]
 						: store.getRelationValue2()
 						? store.getRelationValue2()
-						: [],
-				selectFlag: (cacheData && cacheData.selectFlag) || false
+						: []
 			});
 		}
 	};
@@ -816,18 +750,6 @@ export default class essential_information_page extends PureComponent {
 	quitSubmit = () => {
 		this.props.history.goBack();
 	};
-	judgeShowAgree = () => {
-		this.props.$fetch.get(index_queryPLPShowSts).then(async (res) => {
-			if (res && res.code === '000000') {
-				// agreementPopupFlag协议弹框是否显示，1为显示，0为隐藏
-				this.setState({
-					showAgreement: res.data.plpSts === '1'
-				});
-			} else {
-				Toast.info(res.message);
-			}
-		});
-	};
 
 	sxfMD = (type) => {
 		sxfburiedPointEvent(type);
@@ -861,19 +783,17 @@ export default class essential_information_page extends PureComponent {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const { showAgreement, selectFlag, addressList, visible, ProvincesValue, abTest } = this.state;
+		const { addressList, visible, ProvincesValue } = this.state;
 		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<FixedTopTip />
 				<div className={style.pageContent}>
-					{urlQuery && urlQuery.jumpToBase ? <LimitTimeJoin type={abTest} /> : null}
-
 					<FixedHelpCenter history={this.props.history} />
 
-					<StepTitle title="完善个人信息" titleSub="请确保内容真实有效，有利于您的借款审核" stepNum="02" />
+					<StepTitle title="完善个人信息" titleSub="请确保内容真实有效，有利于您的借款审核" stepNum="03" />
 
-					<div className={[style.step_box_new, urlQuery.jumpToBase ? style.step_box_space : ''].join(' ')}>
+					<div className={[style.step_box_new].join(' ')}>
 						<div className={style.item_box}>
 							<div className={style.titleTop}>常住地址</div>
 							<div
@@ -1191,40 +1111,17 @@ export default class essential_information_page extends PureComponent {
 							)}
 						</div>
 					</div>
-
-					<div className={style.protocolBox} onClick={this.selectProtocol}>
-						<CheckRadio isSelect={selectFlag} />
-						点击按钮即视为同意
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract('personal_auth_page');
-							}}
-							className={style.link}
-						>
-							《个人信息授权书》
-						</em>
-						<em
-							onClick={(e) => {
-								e.stopPropagation();
-								this.readContract('user_privacy_page');
-							}}
-							className={style.link}
-						>
-							《用户隐私权政策》
-						</em>
-					</div>
 				</div>
 
 				<div className={style.sureBtnWrap}>
 					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'default' : 'yellow'}>
 						{nextStepStatus ? '下一步' : '完成'}
 					</ButtonCustom>
-					{urlQuery.jumpToBase ? (
+					{/* {urlQuery.jumpToBase ? (
 						<div className={style.quitText} onClick={this.quitSubmit}>
 							放弃本次机会
 						</div>
-					) : null}
+					) : null} */}
 				</div>
 
 				<Modal
@@ -1243,19 +1140,6 @@ export default class essential_information_page extends PureComponent {
 						value={addressList}
 						commitFun={(area) => this.onSelectArea(area)}
 						dissmissFun={() => this.handleSetModal(false)}
-					/>
-				</Modal>
-				<Modal visible={showAgreement} transparent wrapClassName="agreement_modal_warp" maskClosable={false}>
-					<AgreementModal
-						visible={showAgreement}
-						handleClick={() => {
-							this.setState({
-								showAgreement: false
-							});
-							recordContract({
-								contractType: '02'
-							});
-						}}
 					/>
 				</Modal>
 			</div>

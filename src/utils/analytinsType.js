@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-04 17:53:54
+ * @LastEditTime: 2020-03-12 15:06:03
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -363,7 +363,9 @@ const helpCenter = {
 	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
 };
 const addinfo = {
-	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT` // 补充信息下一步
+	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT`, // 补充信息下一步
+	DC_ADDINFO_SUBMIT_RESULT: `${prefix}_ADDINFO_SUBMIT_RESULT`, // 补充信息下一步
+	DC_ADDINFO_LOAD_YELLOW_CARD: `${prefix}_ADDINFO_LOAD_YELLOW_CARD` // 加载黄卡成功
 };
 
 const miniprogram = {

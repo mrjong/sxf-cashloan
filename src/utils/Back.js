@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-03-02 09:30:03
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-03 15:44:31
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -100,13 +100,20 @@ if (window.history && window.history.pushState) {
 			tokenFromStorage = store.getToken();
 			// 返回拦截弹窗
 			let storeData = storeRedux.getState();
-			const { staticState = {} } = storeData;
-			const { userInfo } = staticState;
-			let backFlag = store.getBackFlag();
+			// const { staticState = {} } = storeData;
+			// const { userInfo } = staticState;
+			const { commonState = {} } = storeData;
+			const { nextStepStatus } = commonState;
+			// let backFlag = store.getBackFlag();
 
 			if (window.location.pathname === '/home/addInfo') {
-				document.activeElement.blur();
-				obj.show();
+				if (nextStepStatus && !store.getToggleMoxieCard()) {
+					window.ReactRouterHistory.push('/home/home');
+				} else {
+					history.go(-2);
+				}
+				// document.activeElement.blur();
+				// obj.show();
 				return;
 			}
 
@@ -120,20 +127,29 @@ if (window.history && window.history.pushState) {
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
-				if (!store.getToggleMoxieCard() && ((userInfo && userInfo.nameHid) || backFlag)) {
-					history.go(-2);
+				if (nextStepStatus && !store.getToggleMoxieCard()) {
+					window.ReactRouterHistory.push('/home/home');
 				} else {
-					document.activeElement.blur();
-					obj.show();
+					history.go(-2);
 				}
+				// if (!store.getToggleMoxieCard() && ((userInfo && userInfo.nameHid) || backFlag)) {
+				// 	history.go(-2);
+				// } else {
+				// 	document.activeElement.blur();
+				// 	obj.show();
+				// }
 				return;
 			}
 
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
-
 			if (window.location.pathname === '/home/essential_information') {
-				document.activeElement.blur();
-				obj.show();
+				if (nextStepStatus && !store.getToggleMoxieCard()) {
+					window.ReactRouterHistory.push('/home/home');
+				} else {
+					history.go(-2);
+				}
+				// document.activeElement.blur();
+				// obj.show();
 				return;
 			}
 
@@ -143,12 +159,11 @@ if (window.history && window.history.pushState) {
 					store.removeToggleMoxieCard();
 					return;
 				}
-				document.activeElement.blur();
-				obj.show();
+				window.ReactRouterHistory.push('/home/home');
+				// document.activeElement.blur();
+				// obj.show();
 				return;
 			}
-			const { commonState = {} } = storeData;
-			const { nextStepStatus } = commonState;
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (nextStepStatus && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
