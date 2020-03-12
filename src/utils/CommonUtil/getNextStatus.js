@@ -7,7 +7,7 @@ import { index_getNextStep, bank_card_check, auth_getTencentFaceData } from 'fet
 import storeRedux from 'reduxes';
 import { activeConfigSts } from 'utils';
 
-import { goToStageLoan } from './commonFunc';
+import { goToStageLoan, handleClickPreLoanSubmit, goToPreLoan } from './commonFunc';
 
 /**
  * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
@@ -150,7 +150,8 @@ export const getNextStatus = ({
 	hideLoading,
 	callBack,
 	actionType = '',
-	actionMsg
+	actionMsg,
+	goBack
 }) =>
 	new Promise(async (resolve) => {
 		const nextStatusResponse = await $props.$fetch
@@ -173,7 +174,7 @@ export const getNextStatus = ({
 			let stateObj = null;
 			// 处理mpos直接跳转到基本信息的特殊情况
 			if (actionType === 'mpos') {
-				if (nextData.nextStepGramCode === 'AUTH003') {
+				if (nextData.nextStepGramCode === 'AUTH003' && nextData.prodType !== '21') {
 					Toast.hide();
 					$props.history.replace({
 						pathname: '/home/essential_information',
@@ -211,8 +212,14 @@ export const getNextStatus = ({
 					});
 					break;
 				case 'AUTH003':
-					resBackMsg = '基本信息认证';
-					routeName = '/home/essential_information';
+					// 预授信
+					if (nextData.prodType === '21') {
+						resBackMsg = '补充联系人';
+						routeName = '/home/pre_add_contact_page';
+					} else {
+						resBackMsg = '基本信息认证';
+						routeName = '/home/essential_information';
+					}
 					break;
 				case 'AUTH005':
 					resBackMsg = '银行列表';
@@ -226,17 +233,24 @@ export const getNextStatus = ({
 					{
 						let storeData = storeRedux.getState();
 						const { commonState = {} } = storeData;
-						const { applyCreditData } = commonState;
-						if (applyCreditData) {
-							activeConfigSts({
-								$props,
-								type: 'B'
-							});
-							return;
-						} else if (nextData.credCardCount > 1) {
-							routeName = '/mine/credit_list_page';
+						const { preLoanData, applyCreditData } = commonState;
+						// APPL与LOAN在预授信里面是一个
+						if (nextData.prodType === '21') {
+							if (preLoanData) {
+								handleClickPreLoanSubmit($props, preLoanData, goBack);
+							}
 						} else {
-							routeName = '/home/loan_repay_confirm_page';
+							if (applyCreditData) {
+								activeConfigSts({
+									$props,
+									type: 'B'
+								});
+								return;
+							} else if (nextData.credCardCount > 1) {
+								routeName = '/mine/credit_list_page';
+							} else {
+								routeName = '/home/loan_repay_confirm_page';
+							}
 						}
 					}
 					break;
@@ -246,6 +260,13 @@ export const getNextStatus = ({
 						billNo: nextData.billNo
 					};
 					routeName = '/order/order_detail_page';
+					break;
+				case 'TO-LOAN':
+					// 跳转预授信借款页面
+					if (nextData.prodType === '21') {
+						goToPreLoan({ $props });
+						return;
+					}
 					break;
 				case 'LOAN':
 					storeRedux.dispatch(setNextStepStatus(false));
@@ -264,6 +285,16 @@ export const getNextStatus = ({
 					// 现金分期
 					if (nextData.prodType === '11') {
 						goToStageLoan({ $props });
+						return;
+					}
+					// 提交预授信借款
+					if (nextData.prodType === '21') {
+						let storeData = storeRedux.getState();
+						const { commonState = {} } = storeData;
+						const { preLoanData } = commonState;
+						if (preLoanData) {
+							handleClickPreLoanSubmit($props, preLoanData, goBack);
+						}
 						return;
 					}
 					break;

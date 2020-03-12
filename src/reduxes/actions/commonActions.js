@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 15:31:38
+ * @LastEditTime: 2020-03-12 15:22:01
  */
 import { createAction } from 'redux-actions';
 import {
@@ -22,7 +22,8 @@ import {
 	COMMON_APPLY_CREDIT_DTATA,
 	COMMON_BIND_DEPOSIT_INFO,
 	COMMON_PROTOCOL_SELECT_FLAG,
-	COMMON_IFRAME_PROTOCOL_SHOW
+	COMMON_IFRAME_PROTOCOL_SHOW,
+	COMMON_PRE_LOAN_DATA
 } from '../constants/commonConstants';
 
 /**
@@ -174,3 +175,10 @@ export const setProtocolSelFlagAction = createAction(COMMON_PROTOCOL_SELECT_FLAG
 export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (info) => ({
 	iframeProtocolData: info
 }));
+
+/**
+ * @description: 用户提交预授信借款的信息
+ * @param {type}
+ * @return:
+ */
+export const setPreLoanDataAction = createAction(COMMON_PRE_LOAN_DATA, (info) => ({ preLoanData: info }));

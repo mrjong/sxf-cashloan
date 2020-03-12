@@ -14,7 +14,8 @@ import { getDeviceType } from 'utils';
 import {
 	setCardTypeAction,
 	setConfirmAgencyInfoAction,
-	setCouponDataAction
+	setCouponDataAction,
+	setPreLoanDataAction
 } from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
 import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
@@ -26,7 +27,6 @@ import {
 	loan_contractPreview,
 	bank_card_protocol_sms,
 	bank_card_protocol_bind,
-	loan_loanSub,
 	loan_queryPreLoanApplInfo
 } from 'fetch/api.js';
 import {
@@ -38,6 +38,7 @@ import {
 	preLoanSubmitRiskBury,
 	preCheckboxClickRiskBury
 } from './riskBuryConfig';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
 @fetch.inject()
 @setBackGround('#f0f4f9')
@@ -52,7 +53,8 @@ import {
 	{
 		setCardTypeAction,
 		setConfirmAgencyInfoAction,
-		setCouponDataAction
+		setCouponDataAction,
+		setPreLoanDataAction
 	}
 )
 export default class pre_loan_page extends PureComponent {
@@ -269,7 +271,7 @@ export default class pre_loan_page extends PureComponent {
 			prodUnit: loanDate.prodUnit,
 			withdrawBankAgrNo: repayCardNo,
 			withholdBankAgrNo: resaveCardNo,
-			prodType: '11', //现金分期业务Type
+			prodType: '21', //现金分期业务Type
 			wtdwTyp: '0' //还款时间
 		};
 
@@ -278,7 +280,7 @@ export default class pre_loan_page extends PureComponent {
 				// 试算传参
 				let couponParams = {
 					loanAmt: loanMoney,
-					prodType: '11',
+					prodType: '21',
 					repayType: '0',
 					prodId:
 						protocolRes &&
@@ -350,7 +352,7 @@ export default class pre_loan_page extends PureComponent {
 
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
+			search: `?prodType=21&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
 			state: { nouseCoupon: !(repayPlanInfo && repayPlanInfo.availableCoupCount) }
 		});
 	};
@@ -658,7 +660,7 @@ export default class pre_loan_page extends PureComponent {
 		const { couponData } = this.props;
 		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
 
-		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList } = this.state;
+		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList, loanDate } = this.state;
 
 		let couponId = '';
 		if (couponData && couponData.coupId) {
@@ -677,34 +679,14 @@ export default class pre_loan_page extends PureComponent {
 			repayType: '0', //还款方式
 			coupId: couponId, //优惠劵id
 			loanUsage: loanUsage.usageCd, //借款用途
-			prodType: '11'
+			prodType: '21'
 		};
-
-		this.props.$fetch
-			.post(loan_loanSub, params)
-			.then((res) => {
-				if (res.code === '000000') {
-					this.props.toast.info('签约成功，请留意放款通知！');
-					setTimeout(() => {
-						this.props.history.push('/home/home');
-					}, 2000);
-					buriedPointEvent(preLoan.loanSignResult, {
-						is_success: true
-					});
-				} else {
-					this.props.toast.info(res.message);
-					buriedPointEvent(preLoan.loanSignResult, {
-						is_success: false,
-						fail_cause: res.message
-					});
-				}
-			})
-			.catch((err) => {
-				buriedPointEvent(preLoan.loanSignResult, {
-					is_success: false,
-					fail_cause: err
-				});
-			});
+		this.props.setPreLoanDataAction({ sendParams: params, selProduct: loanDate });
+		getNextStatus({
+			$props: this.props,
+			actionType: 'preLoanPage',
+			actionMsg: '放款'
+		});
 	};
 
 	// 确认协议绑卡
