@@ -337,3 +337,6 @@ export const loan_queryPreLoanApplInfo = '/loan/queryPreLoanApplInfo';
 
 // 预授信借款申请页提交接口
 export const loan_loanSubPreAppr = '/loan/loanSubPreAppr';
+
+// 补充信息页面——用户分流接口
+export const auth_userShunt = '/auth/userShunt';

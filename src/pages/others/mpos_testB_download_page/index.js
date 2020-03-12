@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:48:08
+ * @LastEditTime: 2020-03-05 11:29:05
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -14,6 +14,8 @@ import check_img from './img/check_img.png';
 import SXFButton from 'components/ButtonCustom';
 import { download_queryDownloadUrl } from 'fetch/api';
 import { xzyBtn } from '../riskBuryConfig';
+import Images from 'assets/image';
+
 @setBackGround('#fff')
 @fetch.inject()
 export default class mpos_download_page extends PureComponent {
@@ -75,10 +77,14 @@ export default class mpos_download_page extends PureComponent {
 					<p className={styles.tipsText2}>
 						已领先<span>95%</span>的申请用户
 					</p>
-					<p className={styles.tipsText}>首次登陆APP用户，可领取新手礼</p>
+
 					<SXFButton className={styles.download_button} onClick={this.downloadClickFun}>
 						下载APP，查看额度
+						<img alt="lable" src={Images.adorn.lable_ico} className={styles.lable_style} />
 					</SXFButton>
+					<p className={styles.tipsText}>
+						首次登陆APP，领取<span>10天免息</span>新手礼
+					</p>
 					<p className={styles.descText}>最终以实际审批额度为准</p>
 				</div>
 			</div>

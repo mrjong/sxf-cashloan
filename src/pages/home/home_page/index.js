@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 13:25:44
+ * @LastEditTime: 2020-03-12 15:47:32
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -490,7 +490,7 @@ export default class home_page extends PureComponent {
 			title: 'PLUS版',
 			titleSub: '灵活借款',
 			loanText: '最高可借额度(元)',
-			loanAmont: '300000',
+			loanAmont: '200000',
 			btnText: '查看额度',
 			handleClick: this.handleGoPlusDetail,
 			handleDetailClick: this.handleGoPlusDetail,
