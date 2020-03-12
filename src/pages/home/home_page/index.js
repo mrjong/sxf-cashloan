@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-11 13:54:26
+ * @LastEditTime: 2020-03-12 13:25:44
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -24,7 +24,7 @@ import qs from 'qs';
 import { updateBillInf, goToPreLoan } from 'utils/CommonUtil/commonFunc';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, loan_fenqi } from 'utils/analytinsType';
+import { home, mine, loan_fenqi, preLoan } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { Carousels, commonPage } from 'components';
 import style from './index.scss';
@@ -393,10 +393,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'PA0001':
-				// buriedPointEvent(FENQI_HOME_APPLY_BTN);
+				buriedPointEvent(preLoan.homeLoanBtn);
 				goToPreLoan({ $props: this.props });
 				break;
 			case 'PA0003': // 预授信 放款成功
+				buriedPointEvent(preLoan.homePrePayBtn);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
 					search: '?entryFrom=home',
@@ -407,7 +408,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'PA0004': // 预授信 放款失败
 				Toast.hide();
-				buriedPointEvent(home.goSuperMarket, {
+				buriedPointEvent(preLoan.homePreRefuseBtn, {
 					medium: 'H5'
 				});
 				store.setCarrierMoxie(true); // 设置去到第三方标示

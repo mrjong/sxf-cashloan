@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-04 17:50:52
+ * @LastEditTime: 2020-03-12 13:31:43
  */
 /*eslint-disable */
 import React from 'react';
@@ -194,7 +194,7 @@ const interceptRouteArr = [
 	'/common/crash_page',
   '/others/mpos_testB_download_page',
 	'/home/pre_add_contact_page',
-
+  '/home/pre_loan',
 ];
 
 // 在需要路由拦截的页面 pushState
