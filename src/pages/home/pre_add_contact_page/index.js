@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-11 10:14:29
+ * @LastEditTime: 2020-03-12 16:16:19
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
 import { InputItem, List, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
-// import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { preApproval } from 'utils/analytinsType';
@@ -301,18 +301,20 @@ export default class pre_add_contact_page extends PureComponent {
 							this.confirmBuryPoint(true);
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
-								// getNextStatus({
-								// 	RouterType: 'essential_infomation_page',
-								// 	$props: this.props
-								// });
+								getNextStatus({
+									RouterType: 'pre_add_contact_page',
+									$props: this.props,
+									goBack: true
+								});
 							}
 						} else if (result.code === '000030') {
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
-								// getNextStatus({
-								// 	RouterType: 'essential_infomation_page',
-								// 	$props: this.props
-								// });
+								getNextStatus({
+									RouterType: 'pre_add_contact_page',
+									$props: this.props,
+									goBack: true
+								});
 							}
 							this.confirmBuryPoint(false, result.message);
 						} else {
