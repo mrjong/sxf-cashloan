@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-13 13:55:07
+ * @LastEditTime: 2020-03-13 16:35:28
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -199,7 +199,12 @@ export const handleClickPreLoanSubmit = ($props, repaymentData, goBack) =>
 				if (res1 && res1.code === '000000') {
 					Toast.info('签约成功，请留意放款通知！');
 					setTimeout(() => {
-						$props.history.push('/home/home');
+						let title = `预计60秒完成放款`;
+						let desc = `超过2个工作日没有放款成功，可`;
+						$props.history.push({
+							pathname: '/home/loan_apply_succ_page',
+							search: `?title=${title}&desc=${desc}&prodType=21`
+						});
 					}, 2000);
 					buriedPointEvent(preLoan.loanSignResult, {
 						is_success: true,

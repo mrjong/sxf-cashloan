@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 16:33:46
+ * @LastEditTime: 2020-03-13 16:33:29
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -117,6 +117,21 @@ export default class home_page extends PureComponent {
 					this.setState(
 						{
 							homeData: result.data
+							// homeData: {
+							// 	...result.data,
+							// 	...{
+							// 		indexMsg: '去还款',
+							// 		indexSts: 'PA0002',
+							// 		preApprDataInfo: {
+							// 			credAmt: '8000',
+							// 			curAmt: '8000',
+							// 			orderAmt: '5000',
+							// 			acOverDt: '12',
+							// 			netAppyDate: '20200405',
+							// 			billNo: '账单号'
+							// 		}
+							// 	}
+							// }
 						},
 						() => {
 							this.props.setHomeData(result.data);
@@ -381,6 +396,18 @@ export default class home_page extends PureComponent {
 				buriedPointEvent(preLoan.homeLoanBtn);
 				goToPreLoan({ $props: this.props });
 				break;
+			case 'PA0002': {
+				buriedPointEvent(preLoan.homeLoaningBtn);
+				Toast.hide();
+				// 放款中
+				let title = `预计60秒完成放款`;
+				let desc = `超过2个工作日没有放款成功，可`;
+				this.props.history.push({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?title=${title}&desc=${desc}&prodType=21`
+				});
+				break;
+			}
 			case 'PA0003': // 预授信 放款成功
 				buriedPointEvent(preLoan.homePrePayBtn);
 				this.props.history.push({
@@ -714,8 +741,9 @@ export default class home_page extends PureComponent {
 				plusCardData.titleSub = '直接提现';
 				plusCardData.specialText = '放款中…';
 				plusCardData.specialTextStyle = style.loaningTextStyle;
-				plusCardData.hideBtn = true;
+				plusCardData.btnText = '查看进度';
 				plusCardData.detailText = '仅1%用户获得';
+				plusCardData.handleClick = this.handleSmartClick;
 				disPlayData.push(plusCardData);
 				break;
 			case 'PA0003': // 预授信放款成功 去还款

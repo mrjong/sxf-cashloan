@@ -207,6 +207,7 @@ export const getNextStatus = ({
 						param = { newTitle: '实名认证' };
 						routeName = '/home/real_name';
 					}
+					nextData.prodType === '21' && store.setToggleMoxieCard(true);
 					break;
 				case 'AUTH002':
 					$props.$fetch.get(`${auth_getTencentFaceData}`, {}).then((result) => {

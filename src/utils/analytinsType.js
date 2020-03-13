@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 15:47:39
+ * @LastEditTime: 2020-03-13 16:13:46
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -394,6 +394,8 @@ const preApproval = {
 const preLoan = {
 	// 内/外-预授信-首页-去借钱
 	homeLoanBtn: `${prefix}_YSX_HOME_LOAN_BTN`,
+	// 内/外-预授信-首页-放款中
+	homeLoaningBtn: `${prefix}_YSX_HOME_LOANING_BTN`,
 	// 内/外-预授信-首页-去还款
 	homePrePayBtn: `${prefix}_YSX_HOME_PAY_BTN`,
 	// 内/外-预授信-首页-被拒绝
