@@ -115,13 +115,15 @@
 	.tagListWrap {
     margin-top: 20px;
     width: 100%;
+    margin-bottom: -20px;
 	}
 
 	.tagButton {
 		min-width: 150px;
   }
-  .tagButton + .tagButton {
-    margin-left: 30px
+  .tagButton {
+    margin-right: 30px;
+    margin-bottom: 20px;
   }
 
 	.tagButtonActive {

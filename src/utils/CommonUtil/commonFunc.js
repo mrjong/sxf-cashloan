@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 15:18:10
+ * @LastEditTime: 2020-03-13 13:55:07
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -213,10 +213,7 @@ export const handleClickPreLoanSubmit = ($props, repaymentData, goBack) =>
 						amount_value: sendParams.loanAmt,
 						perd_length: selProduct.prodLth
 					});
-					Toast.show({
-						message: res1.message,
-						code: res1.code
-					});
+					Toast.info(res1.message);
 					if (goBack) {
 						Toast.hide();
 						setTimeout(() => {
