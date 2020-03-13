@@ -646,6 +646,8 @@ export default class pre_loan_page extends PureComponent {
 	};
 
 	submitHandler = () => {
+		this.props.toast.loading('', 10);
+		this.storeTempData();
 		const { couponData } = this.props;
 		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
 

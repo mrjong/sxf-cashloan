@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-12 13:41:47
+ * @LastEditTime: 2020-03-13 11:02:31
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -141,6 +141,14 @@ if (window.history && window.history.pushState) {
 				return;
 			}
 
+			// 预授信补充联系人返回
+			if (window.location.pathname === '/home/pre_add_contact_page') {
+				buriedPointEvent(preApproval.addContractBack);
+				window.ReactRouterHistory.push('/home/pre_loan');
+				// history.go(-1);
+				return;
+			}
+
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/essential_information') {
 				if (nextStepStatus && !store.getToggleMoxieCard()) {
@@ -183,12 +191,7 @@ if (window.history && window.history.pushState) {
 				}
 				return;
 			}
-			if (window.location.pathname === '/home/pre_add_contact_page') {
-				buriedPointEvent(preApproval.addContractBack);
-				window.ReactRouterHistory.push('/home/pre_loan');
-				// history.go(-1);
-				return;
-			}
+
 			/**首页拦截 */
 			if (window.location.pathname === '/') {
 				window.history.pushState(null, null, document.URL);
