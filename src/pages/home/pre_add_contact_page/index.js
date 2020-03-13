@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { createForm } from 'rc-form';
 import { InputItem, List, Toast } from 'antd-mobile';
 import { base64Encode, base64Decode } from 'utils/CommonUtil/toolUtil';
-// import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getFirstError, validators, handleInputBlur } from 'utils';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
 import { preApproval } from 'utils/analytinsType';
@@ -72,9 +72,9 @@ export default class pre_add_contact_page extends PureComponent {
 	}
 
 	componentWillMount() {
-		if (store.getBackFlag()) {
-			store.removeBackFlag(); // 清除返回的flag
-		}
+		// if (store.getBackFlag()) {
+		// 	store.removeBackFlag(); // 清除返回的flag
+		// }
 		buryingPoints();
 		this.queryUsrBasicInfo();
 	}
@@ -297,24 +297,22 @@ export default class pre_add_contact_page extends PureComponent {
 						submitButtonLocked = false;
 						Toast.hide();
 						if (result && result.code === '000000') {
-							store.setBackFlag(true);
+							// store.setBackFlag(true);
 							this.confirmBuryPoint(true);
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
-								// getNextStatus({
-								// 	RouterType: 'essential_infomation_page',
-								// 	$props: this.props
-								// });
+								getNextStatus({
+									$props: this.props
+								});
 							}
 						} else if (result.code === '000030') {
+							this.confirmBuryPoint(false, result.message);
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
-								// getNextStatus({
-								// 	RouterType: 'essential_infomation_page',
-								// 	$props: this.props
-								// });
+								getNextStatus({
+									$props: this.props
+								});
 							}
-							this.confirmBuryPoint(false, result.message);
 						} else {
 							this.confirmBuryPoint(false, result.message);
 							Toast.info(result.message);
