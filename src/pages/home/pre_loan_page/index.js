@@ -5,16 +5,16 @@ import { Modal, InputItem, Icon } from 'antd-mobile';
 import { ButtonCustom, RepayPlanModal, CheckRadio, ProtocolSmsModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
-import { loan_fenqi, home } from 'utils/analytinsType';
+import { preLoan, home, loan_fenqi } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import { getH5Channel } from 'utils/common';
-import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { connect } from 'react-redux';
 import { getDeviceType } from 'utils';
 import {
 	setCardTypeAction,
 	setConfirmAgencyInfoAction,
-	setCouponDataAction
+	setCouponDataAction,
+	setPreLoanDataAction
 } from 'reduxes/actions/commonActions';
 import linkConf from 'config/link.conf';
 import WarningModal from 'pages/home/confirm_agency_page/components/WarningModal';
@@ -26,7 +26,6 @@ import {
 	loan_contractPreview,
 	bank_card_protocol_sms,
 	bank_card_protocol_bind,
-	loan_loanSub,
 	loan_queryPreLoanApplInfo
 } from 'fetch/api.js';
 import {
@@ -38,6 +37,7 @@ import {
 	preLoanSubmitRiskBury,
 	preCheckboxClickRiskBury
 } from './riskBuryConfig';
+import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 
 @fetch.inject()
 @setBackGround('#f0f4f9')
@@ -52,7 +52,8 @@ import {
 	{
 		setCardTypeAction,
 		setConfirmAgencyInfoAction,
-		setCouponDataAction
+		setCouponDataAction,
+		setPreLoanDataAction
 	}
 )
 export default class pre_loan_page extends PureComponent {
@@ -130,24 +131,6 @@ export default class pre_loan_page extends PureComponent {
 					if (!(res.data && res.data.prods && res.data.prods.length)) {
 						this.props.toast.info('无借款产品，请联系客服');
 						return;
-					}
-					if (res.data && res.data.contacts && res.data.contacts.length) {
-						res.data.contacts.map((item, index) => {
-							item.name = base64Decode(item.name);
-							item.number = base64Decode(item.number);
-							if (index < 5) {
-								item.isMarked = true;
-							} else {
-								item.isMarked = false;
-							}
-							item.uniqMark = 'uniq' + index;
-							return item;
-						});
-					}
-					if (res.data && res.data.excludedContacts && res.data.excludedContacts.length) {
-						for (let i = 0; i < res.data.excludedContacts.length; i++) {
-							res.data.excludedContacts[i] = base64Decode(res.data.excludedContacts[i]);
-						}
 					}
 					this.setState(
 						{
@@ -256,7 +239,7 @@ export default class pre_loan_page extends PureComponent {
 	 * 获取借款合同与优惠券，注意请求报错则清空选中期数termSelected=null
 	 */
 	requestProtocolCoupon = async () => {
-		if (!parseFloat(this.state.loanMoney) > 0 || !this.state.repayCardLast.length > 0) {
+		if (!parseFloat(this.state.loanMoney) > 0 || !(this.state.repayCardLast.length > 0)) {
 			return;
 		}
 		this.props.toast.loading('', 10);
@@ -269,7 +252,7 @@ export default class pre_loan_page extends PureComponent {
 			prodUnit: loanDate.prodUnit,
 			withdrawBankAgrNo: repayCardNo,
 			withholdBankAgrNo: resaveCardNo,
-			prodType: '11', //现金分期业务Type
+			prodType: '21', //现金分期业务Type
 			wtdwTyp: '0' //还款时间
 		};
 
@@ -278,7 +261,7 @@ export default class pre_loan_page extends PureComponent {
 				// 试算传参
 				let couponParams = {
 					loanAmt: loanMoney,
-					prodType: '11',
+					prodType: '21',
 					repayType: '0',
 					prodId:
 						protocolRes &&
@@ -326,7 +309,6 @@ export default class pre_loan_page extends PureComponent {
 					protocolList: (protocolRes.data && protocolRes.data.contracts) || [],
 					repayPlanInfo: planRes.data
 				});
-				buriedPointEvent(loan_fenqi.repayPlan);
 			} else {
 				this.setState(
 					{
@@ -351,7 +333,7 @@ export default class pre_loan_page extends PureComponent {
 
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
+			search: `?prodType=21&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
 			state: { nouseCoupon: !(repayPlanInfo && repayPlanInfo.availableCoupCount) }
 		});
 	};
@@ -365,14 +347,27 @@ export default class pre_loan_page extends PureComponent {
 			search: `?agrNo=${agrNo}&cardType=${cardType}`
 		});
 		if (cardType === 'withdraw') {
-			buriedPointEvent(loan_fenqi.resaveCard);
+			buriedPointEvent(preLoan.loanResaveCard, {
+				clickType: 'select'
+			});
 		} else {
-			buriedPointEvent(loan_fenqi.payCard);
+			buriedPointEvent(preLoan.loanPayCard, {
+				clickType: 'select'
+			});
 		}
 	};
 
 	//绑定银行卡
-	bindBankCard = () => {
+	bindBankCard = (cardType) => {
+		if (cardType === 'withdraw') {
+			buriedPointEvent(preLoan.loanResaveCard, {
+				clickType: 'bind'
+			});
+		} else {
+			buriedPointEvent(preLoan.loanPayCard, {
+				clickType: 'bind'
+			});
+		}
 		this.storeTempData();
 		this.props.setCardTypeAction('both');
 		this.props.history.push({
@@ -398,23 +393,23 @@ export default class pre_loan_page extends PureComponent {
 		);
 		switch (item.prodCount) {
 			case '30':
-				buriedPointEvent(loan_fenqi.day30);
+				buriedPointEvent(preLoan.loanDateMonth1);
 				sxfburiedPointEvent('preProdTerm1');
 				break;
 			case '3':
-				buriedPointEvent(loan_fenqi.month3);
+				buriedPointEvent(preLoan.loanDateMonth3);
 				sxfburiedPointEvent('preProdTerm3');
 				break;
 			case '6':
-				buriedPointEvent(loan_fenqi.month6);
+				buriedPointEvent(preLoan.loanDateMonth6);
 				sxfburiedPointEvent('preProdTerm6');
 				break;
 			case '9':
-				buriedPointEvent(loan_fenqi.month9);
+				buriedPointEvent(preLoan.loanDateMonth9);
 				sxfburiedPointEvent('preProdTerm9');
 				break;
 			case '12':
-				buriedPointEvent(loan_fenqi.month12);
+				buriedPointEvent(preLoan.loanDateMonth12);
 				sxfburiedPointEvent('preProdTerm12');
 				break;
 			default:
@@ -443,6 +438,7 @@ export default class pre_loan_page extends PureComponent {
 				if (type === 'usage') {
 					sxfburiedPointEvent(preLoanUsageInRiskBury.key);
 				} else if (type === 'plan') {
+					buriedPointEvent(preLoan.loanRepayPlan);
 					sxfburiedPointEvent(prePayPlanInRiskBury.key);
 				}
 			}
@@ -484,7 +480,6 @@ export default class pre_loan_page extends PureComponent {
 				}
 			});
 		}
-		buriedPointEvent(loan_fenqi.contract, { contractName: item.contractMdlName });
 	};
 
 	//暂存页面反显的临时数据
@@ -547,7 +542,7 @@ export default class pre_loan_page extends PureComponent {
 		}
 		this.setState({ loanMoney }, () => {
 			this.requestProdInfo();
-			buriedPointEvent(loan_fenqi.moneyBlur, { loanMoney });
+			buriedPointEvent(preLoan.loanAmtInputBlur, { amount_value: loanMoney });
 		});
 	};
 
@@ -564,7 +559,7 @@ export default class pre_loan_page extends PureComponent {
 	//借款申请提交
 	loanApplySubmit = () => {
 		sxfburiedPointEvent(preLoanSubmitRiskBury.key);
-		const { loanMoney, loanDate, loanUsage, checkBox1 } = this.state;
+		const { loanMoney, loanDate, loanUsage, checkBox1, repayCardLast, resaveCardLast } = this.state;
 		if (!loanMoney) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -577,6 +572,14 @@ export default class pre_loan_page extends PureComponent {
 			this.props.toast.info('请选择借款用途');
 			return;
 		}
+		if (!repayCardLast || !(repayCardLast.length > 0)) {
+			this.props.toast.info('请绑定收款银行卡');
+			return;
+		}
+		if (!resaveCardLast || !(resaveCardLast.length > 0)) {
+			this.props.toast.info('请绑定还款银行卡');
+			return;
+		}
 		if (!checkBox1) {
 			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
 			return;
@@ -587,7 +590,7 @@ export default class pre_loan_page extends PureComponent {
 			return;
 		}
 
-		buriedPointEvent(loan_fenqi.clickSubmit, {
+		buriedPointEvent(preLoan.loanSignBtn, {
 			loanMoney,
 			loanDate: loanDate.prodCount
 		});
@@ -646,7 +649,7 @@ export default class pre_loan_page extends PureComponent {
 		const { couponData } = this.props;
 		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
 
-		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList } = this.state;
+		const { loanMoney, repayCardNo, resaveCardNo, loanUsage, protocolList, loanDate } = this.state;
 
 		let couponId = '';
 		if (couponData && couponData.coupId) {
@@ -665,34 +668,14 @@ export default class pre_loan_page extends PureComponent {
 			repayType: '0', //还款方式
 			coupId: couponId, //优惠劵id
 			loanUsage: loanUsage.usageCd, //借款用途
-			prodType: '11'
+			prodType: '21'
 		};
-
-		this.props.$fetch
-			.post(loan_loanSub, params)
-			.then((res) => {
-				if (res.code === '000000') {
-					this.props.toast.info('签约成功，请留意放款通知！');
-					setTimeout(() => {
-						this.props.history.push('/home/home');
-					}, 2000);
-					buriedPointEvent(loan_fenqi.submitResult, {
-						is_success: true
-					});
-				} else {
-					this.props.toast.info(res.message);
-					buriedPointEvent(loan_fenqi.submitResult, {
-						is_success: false,
-						fail_cause: res.message
-					});
-				}
-			})
-			.catch((err) => {
-				buriedPointEvent(loan_fenqi.submitResult, {
-					is_success: false,
-					fail_cause: err
-				});
-			});
+		this.props.setPreLoanDataAction({ sendParams: params, selProduct: loanDate });
+		getNextStatus({
+			$props: this.props,
+			actionType: 'preLoanPage',
+			actionMsg: '放款'
+		});
 	};
 
 	// 确认协议绑卡
@@ -755,6 +738,7 @@ export default class pre_loan_page extends PureComponent {
 
 	// 点击勾选协议
 	checkAgreement = () => {
+		buriedPointEvent(preLoan.loanProtocolSelect);
 		sxfburiedPointEvent(preCheckboxClickRiskBury.key);
 		this.setState({ checkBox1: !this.state.checkBox1 });
 	};
@@ -844,6 +828,7 @@ export default class pre_loan_page extends PureComponent {
 
 	// 展示产品
 	showDetail = () => {
+		buriedPointEvent(preLoan.loanTermClick);
 		this.setState({
 			isShowDetail: !this.state.isShowDetail
 		});
@@ -1004,7 +989,7 @@ export default class pre_loan_page extends PureComponent {
 						<ul>
 							<li className={style.listItem}>
 								<label>收款银行卡</label>
-								{repayCardLast.length > 0 ? (
+								{repayCardLast && repayCardLast.length > 0 ? (
 									<span
 										className={style.listValue}
 										onClick={() => {
@@ -1015,7 +1000,12 @@ export default class pre_loan_page extends PureComponent {
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
-									<span className={style.highlightText} onClick={this.bindBankCard}>
+									<span
+										className={style.highlightText}
+										onClick={() => {
+											this.bindBankCard('withdraw');
+										}}
+									>
 										请绑定银行卡
 										<Icon type="right" className={style.icon} />
 									</span>
@@ -1023,7 +1013,7 @@ export default class pre_loan_page extends PureComponent {
 							</li>
 							<li className={style.listItem}>
 								<label>还款银行卡</label>
-								{resaveCardLast.length > 0 ? (
+								{resaveCardLast && resaveCardLast.length > 0 ? (
 									<span
 										className={style.listValue}
 										onClick={() => {
@@ -1034,7 +1024,12 @@ export default class pre_loan_page extends PureComponent {
 										<Icon type="right" className={style.icon} />
 									</span>
 								) : (
-									<span className={style.highlightText} onClick={this.bindBankCard}>
+									<span
+										className={style.highlightText}
+										onClick={() => {
+											this.bindBankCard('withhold');
+										}}
+									>
 										请绑定银行卡
 										<Icon type="right" className={style.icon} />
 									</span>
@@ -1114,7 +1109,7 @@ export default class pre_loan_page extends PureComponent {
 						closeWarningModal={() => {
 							this.handleCloseTipModal('isShowTipModal');
 						}}
-						prodType="现金分期"
+						prodType="预授信"
 						toast={this.props.toast}
 						cacheData={this.storeTempData}
 					/>

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-03-02 09:30:03
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-12 13:41:47
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -17,7 +17,7 @@ import { closeCurrentWebView } from 'utils/CommonUtil/commonFunc';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, preApproval } from 'utils/analytinsType';
+import { home, preApproval, preLoan } from 'utils/analytinsType';
 let initDialog = () => {
 	let obj = new PopUp(
 		(
@@ -100,13 +100,20 @@ if (window.history && window.history.pushState) {
 			tokenFromStorage = store.getToken();
 			// 返回拦截弹窗
 			let storeData = storeRedux.getState();
-			const { staticState = {} } = storeData;
-			const { userInfo } = staticState;
-			let backFlag = store.getBackFlag();
+			// const { staticState = {} } = storeData;
+			// const { userInfo } = staticState;
+			const { commonState = {} } = storeData;
+			const { nextStepStatus } = commonState;
+			// let backFlag = store.getBackFlag();
 
 			if (window.location.pathname === '/home/addInfo') {
-				document.activeElement.blur();
-				obj.show();
+				if (nextStepStatus && !store.getToggleMoxieCard()) {
+					window.ReactRouterHistory.push('/home/home');
+				} else {
+					history.go(-2);
+				}
+				// document.activeElement.blur();
+				// obj.show();
 				return;
 			}
 
@@ -120,20 +127,29 @@ if (window.history && window.history.pushState) {
 			}
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
 			if (window.location.pathname === '/home/real_name') {
-				if (!store.getToggleMoxieCard() && ((userInfo && userInfo.nameHid) || backFlag)) {
-					history.go(-2);
+				if (nextStepStatus && !store.getToggleMoxieCard()) {
+					window.ReactRouterHistory.push('/home/home');
 				} else {
-					document.activeElement.blur();
-					obj.show();
+					history.go(-2);
 				}
+				// if (!store.getToggleMoxieCard() && ((userInfo && userInfo.nameHid) || backFlag)) {
+				// 	history.go(-2);
+				// } else {
+				// 	document.activeElement.blur();
+				// 	obj.show();
+				// }
 				return;
 			}
 
 			/* 基本信息  需要实名 物理返回弹出弹窗 */
-
 			if (window.location.pathname === '/home/essential_information') {
-				document.activeElement.blur();
-				obj.show();
+				if (nextStepStatus && !store.getToggleMoxieCard()) {
+					window.ReactRouterHistory.push('/home/home');
+				} else {
+					history.go(-2);
+				}
+				// document.activeElement.blur();
+				// obj.show();
 				return;
 			}
 
@@ -143,12 +159,11 @@ if (window.history && window.history.pushState) {
 					store.removeToggleMoxieCard();
 					return;
 				}
-				document.activeElement.blur();
-				obj.show();
+				window.ReactRouterHistory.push('/home/home');
+				// document.activeElement.blur();
+				// obj.show();
 				return;
 			}
-			const { commonState = {} } = storeData;
-			const { nextStepStatus } = commonState;
 			/* 新版流程物理返回  借钱还信用卡 切换卡*/
 			if (nextStepStatus && !store.getToggleMoxieCard()) {
 				window.ReactRouterHistory.push('/home/home');
@@ -170,7 +185,8 @@ if (window.history && window.history.pushState) {
 			}
 			if (window.location.pathname === '/home/pre_add_contact_page') {
 				buriedPointEvent(preApproval.addContractBack);
-				history.go(-1);
+				window.ReactRouterHistory.push('/home/pre_loan');
+				// history.go(-1);
 				return;
 			}
 			/**首页拦截 */
@@ -267,6 +283,10 @@ if (window.history && window.history.pushState) {
 					break;
 				case '/home/loan_person_succ_page':
 				case '/home/loan_robot_succ_page':
+					window.ReactRouterHistory.push('/home/home');
+					break;
+				case '/home/pre_loan':
+					buriedPointEvent(preLoan.loanPageBack);
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				default:

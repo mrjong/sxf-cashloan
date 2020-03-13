@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-11 13:54:26
+ * @LastEditTime: 2020-03-12 16:33:46
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -24,7 +24,7 @@ import qs from 'qs';
 import { updateBillInf, goToPreLoan } from 'utils/CommonUtil/commonFunc';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, loan_fenqi } from 'utils/analytinsType';
+import { home, mine, loan_fenqi, preLoan } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { Carousels, commonPage } from 'components';
 import style from './index.scss';
@@ -117,21 +117,6 @@ export default class home_page extends PureComponent {
 					this.setState(
 						{
 							homeData: result.data
-							// homeData: {
-							// 	...result.data,
-							// 	...{
-							// 		indexMsg: '去还款',
-							// 		indexSts: 'PA0001',
-							// 		preApprDataInfo: {
-							// 			credAmt: '8000',
-							// 			curAmt: '8000',
-							// 			orderAmt: '5000',
-							// 			acOverDt: '12',
-							// 			netAppyDate: '20200405',
-							// 			billNo: '账单号'
-							// 		}
-							// 	}
-							// }
 						},
 						() => {
 							this.props.setHomeData(result.data);
@@ -393,10 +378,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'PA0001':
-				// buriedPointEvent(FENQI_HOME_APPLY_BTN);
+				buriedPointEvent(preLoan.homeLoanBtn);
 				goToPreLoan({ $props: this.props });
 				break;
 			case 'PA0003': // 预授信 放款成功
+				buriedPointEvent(preLoan.homePrePayBtn);
 				this.props.history.push({
 					pathname: '/order/order_detail_page',
 					search: '?entryFrom=home',
@@ -407,7 +393,7 @@ export default class home_page extends PureComponent {
 				break;
 			case 'PA0004': // 预授信 放款失败
 				Toast.hide();
-				buriedPointEvent(home.goSuperMarket, {
+				buriedPointEvent(preLoan.homePreRefuseBtn, {
 					medium: 'H5'
 				});
 				store.setCarrierMoxie(true); // 设置去到第三方标示
@@ -489,7 +475,7 @@ export default class home_page extends PureComponent {
 			title: 'PLUS版',
 			titleSub: '灵活借款',
 			loanText: '最高可借额度(元)',
-			loanAmont: '300000',
+			loanAmont: '200000',
 			btnText: '查看额度',
 			handleClick: this.handleGoPlusDetail,
 			handleDetailClick: this.handleGoPlusDetail,

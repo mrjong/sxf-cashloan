@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-09 15:01:14
+ * @LastEditTime: 2020-03-12 15:21:17
  */
 // 这些要求这种备注，方便reducer直接查看
 /**
@@ -125,3 +125,10 @@ export const COMMON_PROTOCOL_SELECT_FLAG = 'COMMON_PROTOCOL_SELECT_FLAG';
  * @return:
  */
 export const COMMON_IFRAME_PROTOCOL_SHOW = 'COMMON_IFRAME_PROTOCOL_SHOW';
+
+/**
+ * @description: 用户提交预授信借款的信息
+ * @param {type}
+ * @return:
+ */
+export const COMMON_PRE_LOAN_DATA = 'COMMON_PRE_LOAN_DATA';

@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-04 17:53:54
+ * @LastEditTime: 2020-03-12 15:47:39
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -363,7 +363,9 @@ const helpCenter = {
 	repayment: `${prefix}_REPAYMENT_CLICKQUESTION`
 };
 const addinfo = {
-	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT` // 补充信息下一步
+	DC_ADDINFO_SUBMIT: `${prefix}_ADDINFO_SUBMIT`, // 补充信息下一步
+	DC_ADDINFO_SUBMIT_RESULT: `${prefix}_ADDINFO_SUBMIT_RESULT`, // 补充信息下一步
+	DC_ADDINFO_LOAD_YELLOW_CARD: `${prefix}_ADDINFO_LOAD_YELLOW_CARD` // 加载黄卡成功
 };
 
 const miniprogram = {
@@ -389,6 +391,39 @@ const preApproval = {
 	addContractBury: `${prefix}_YSX_ADDCONTRACT_BURY`
 };
 
+const preLoan = {
+	// 内/外-预授信-首页-去借钱
+	homeLoanBtn: `${prefix}_YSX_HOME_LOAN_BTN`,
+	// 内/外-预授信-首页-去还款
+	homePrePayBtn: `${prefix}_YSX_HOME_PAY_BTN`,
+	// 内/外-预授信-首页-被拒绝
+	homePreRefuseBtn: `${prefix}_YSX_HOME_REFUSE_BTN`,
+	// 内/外-预授信-签约借款-返回
+	loanPageBack: `${prefix}_YSX_LOAN_PAGE_BACK`,
+	// 内/外-预授信-签约借款-借款金额 失焦后上报借款金额
+	loanAmtInputBlur: `${prefix}_YSX_LOAN_AMT_INPUT_BLUR`,
+	// 内/外-预授信-签约借款-借多久
+	loanTermClick: `${prefix}_YSX_LOAN_TERM_CLICK`,
+	// 内/外-预授信-签约借款- 1期 3期 6期 9期 12期
+	loanDateMonth1: `${prefix}_YSX_LOAN_DATE_MONTH_1`,
+	loanDateMonth3: `${prefix}_YSX_LOAN_DATE_MONTH_3`,
+	loanDateMonth6: `${prefix}_YSX_LOAN_DATE_MONTH_6`,
+	loanDateMonth9: `${prefix}_YSX_LOAN_DATE_MONTH_9`,
+	loanDateMonth12: `${prefix}_YSX_LOAN_DATE_MONTH_12`,
+	// 内/外-预授信-签约借款-还款计划
+	loanRepayPlan: `${prefix}_YSX_LOAN_REPAY_PLAN`,
+	// 内/外-预授信-签约借款-收款银行卡
+	loanResaveCard: `${prefix}_YSX_LOAN_RESAVE_CARD`,
+	// 内/外-预授信-签约借款-还款银行卡
+	loanPayCard: `${prefix}_YSX_LOAN_PAY_CARD`,
+	// 内/外-预授信-签约借款-协议勾选
+	loanProtocolSelect: `${prefix}_YSX_LOAN_PROTOCOL_SELECT`,
+	// 内/外-预授信-签约借款-签约借款按钮点击
+	loanSignBtn: `${prefix}_YSX_LOAN_SIGN_BTN`,
+	// 内/外-预授信-签约结果
+	loanSignResult: `${prefix}_YSX_LOAN_SIGN_RESULT`
+};
+
 export {
 	login,
 	home,
@@ -409,5 +444,6 @@ export {
 	wxTabBar,
 	addinfo,
 	miniprogram,
-	preApproval
+	preApproval,
+	preLoan
 };

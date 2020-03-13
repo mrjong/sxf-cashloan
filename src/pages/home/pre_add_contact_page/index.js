@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-11 10:14:29
+ * @LastEditTime: 2020-03-12 16:16:19
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -302,7 +302,8 @@ export default class pre_add_contact_page extends PureComponent {
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
 								getNextStatus({
-									$props: this.props
+									$props: this.props,
+									goBack: true
 								});
 							}
 						} else if (result.code === '000030') {
@@ -310,7 +311,8 @@ export default class pre_add_contact_page extends PureComponent {
 							if (this.props.nextStepStatus) {
 								Toast.info('提交成功', 2);
 								getNextStatus({
-									$props: this.props
+									$props: this.props,
+									goBack: true
 								});
 							}
 						} else {
