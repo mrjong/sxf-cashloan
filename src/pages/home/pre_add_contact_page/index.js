@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 16:16:19
+ * @LastEditTime: 2020-03-14 13:32:49
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -300,19 +300,23 @@ export default class pre_add_contact_page extends PureComponent {
 							// store.setBackFlag(true);
 							this.confirmBuryPoint(true);
 							if (this.props.nextStepStatus) {
-								Toast.info('提交成功', 2);
-								getNextStatus({
-									$props: this.props,
-									goBack: true
+								Toast.info('提交成功', 2, () => {
+									Toast.loading('加载中...', 10);
+									getNextStatus({
+										$props: this.props,
+										goBack: true
+									});
 								});
 							}
 						} else if (result.code === '000030') {
 							this.confirmBuryPoint(false, result.message);
 							if (this.props.nextStepStatus) {
-								Toast.info('提交成功', 2);
-								getNextStatus({
-									$props: this.props,
-									goBack: true
+								Toast.info('提交成功', 2, () => {
+									Toast.loading('加载中...', 10);
+									getNextStatus({
+										$props: this.props,
+										goBack: true
+									});
 								});
 							}
 						} else {

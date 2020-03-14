@@ -585,11 +585,6 @@ export default class pre_loan_page extends PureComponent {
 			return;
 		}
 
-		if (!store.getPosition()) {
-			this.props.toast.info('定位失败，请确认位置信息权限已打开！');
-			return;
-		}
-
 		buriedPointEvent(preLoan.loanSignBtn, {
 			loanMoney,
 			loanDate: loanDate.prodCount
@@ -670,7 +665,8 @@ export default class pre_loan_page extends PureComponent {
 			repayType: '0', //还款方式
 			coupId: couponId, //优惠劵id
 			loanUsage: loanUsage.usageCd, //借款用途
-			prodType: '21'
+			prodType: '21',
+			location: store.getPosition() || '-1,-1'
 		};
 		this.props.setPreLoanDataAction({ sendParams: params, selProduct: loanDate });
 		getNextStatus({

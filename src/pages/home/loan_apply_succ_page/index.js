@@ -156,7 +156,7 @@ export default class remit_ing_page extends PureComponent {
 						<div className={style.title}>
 							<div className={style.step_circle} />
 							{queryData && queryData.prodType && queryData.prodType === '21'
-								? '借款打入储蓄卡'
+								? '借款打入银行卡'
 								: '借款打入信用卡'}
 						</div>
 						<div className={style.line} />

@@ -445,7 +445,7 @@ export default class coupon_page extends PureComponent {
 											this.state.msgType === 0
 												? () => {
 														Toast.loading('加载中...');
-														getNextStatus({ $props: this.props });
+														getNextStatus({ $props: this.props, pageParam: '01' });
 												  }
 												: () => {}
 										}

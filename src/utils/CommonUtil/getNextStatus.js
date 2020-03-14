@@ -151,11 +151,12 @@ export const getNextStatus = ({
 	callBack,
 	actionType = '',
 	actionMsg,
-	goBack
+	goBack,
+	pageParam
 }) =>
 	new Promise(async (resolve) => {
 		const nextStatusResponse = await $props.$fetch
-			.post(index_getNextStep, {}, { hideToast: !!hideLoading })
+			.post(index_getNextStep, { page: pageParam || '' }, { hideToast: !!hideLoading })
 			.catch(() => {
 				Toast.hide();
 			});
