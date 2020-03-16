@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-14 13:32:49
+ * @LastEditTime: 2020-03-16 13:29:08
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -386,7 +386,6 @@ export default class pre_add_contact_page extends PureComponent {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { selectFlag } = this.state;
-		const { nextStepStatus } = this.props;
 		return (
 			<div className={[style.nameDiv, 'info_gb'].join(' ')}>
 				<FixedTopTip />
@@ -679,7 +678,7 @@ export default class pre_add_contact_page extends PureComponent {
 				</div>
 				<div className={style.sureBtnWrap}>
 					<ButtonCustom onClick={this.handleSubmit} type={this.buttonDisabled() ? 'default' : 'yellow'}>
-						{nextStepStatus ? '下一步' : '完成'}
+						完成
 					</ButtonCustom>
 				</div>
 			</div>
