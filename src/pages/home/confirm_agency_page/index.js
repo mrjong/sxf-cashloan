@@ -1,12 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 15:53:36
+ * @LastEditTime: 2020-03-16 10:59:47
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { home, DC_PAYCARD } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
@@ -235,10 +235,23 @@ export default class confirm_agency_page extends PureComponent {
 		});
 		// 将选择的卡类型存储到redux中
 		this.props.setCardTypeAction('withhold');
-		this.props.history.push({
-			pathname: '/mine/select_save_page',
-			search: `?agrNo=${repayInfo.withholdBankAgrNo}`
-		});
+		if (repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0) {
+			buriedPointEvent(DC_PAYCARD, {
+				paycard_type: 'select'
+			});
+			this.props.history.push({
+				pathname: '/mine/select_save_page',
+				search: `?agrNo=${repayInfo.withholdBankAgrNo}`
+			});
+		} else {
+			buriedPointEvent(DC_PAYCARD, {
+				paycard_type: 'add'
+			});
+			this.props.history.push({
+				pathname: '/mine/bind_save_page',
+				search: `?cardType=withhold`
+			});
+		}
 	};
 
 	// 确认按钮点击事件
@@ -274,8 +287,8 @@ export default class confirm_agency_page extends PureComponent {
 				prodCount: repaymentDate.prodCount,
 				prodLth: repaymentDate.prodLth,
 				prodUnit: repaymentDate.prodUnit,
-				withholdBankAgrNo: repayInfo.withholdBankAgrNo,
-				withdrawBankAgrNo: repayInfo.withdrawBankAgrNo,
+				withholdBankAgrNo: repayInfo.withholdBankAgrNo || '',
+				withdrawBankAgrNo: repayInfo.withdrawBankAgrNo || '',
 				wtdwTyp: lendersDate.value,
 				prodType: '01'
 			})
@@ -311,49 +324,6 @@ export default class confirm_agency_page extends PureComponent {
 				if (diff <= 4) {
 					lendersDateListFormat[0].disable = true;
 				}
-				// mock数据
-				// result.data.contacts = [
-				// 	{
-				// 		name: '测试',
-				// 		number: '13512345678'
-				// 	},
-				// 	{
-				// 		name: '发放',
-				// 		number: '12345678901'
-				// 	},
-				// 	{
-				// 		name: '反倒是',
-				// 		number: '13456789012'
-				// 	},
-				// 	{
-				// 		name: '史蒂夫',
-				// 		number: '14567890123'
-				// 	},
-				// 	{
-				// 		name: '骨灰盒',
-				// 		number: '15678901234'
-				// 	},
-				// 	{
-				// 		name: '我去玩',
-				// 		number: '16789012345'
-				// 	},
-				// 	{
-				// 		name: '也同样',
-				// 		number: '17890123456'
-				// 	},
-				// 	{
-				// 		name: '是否',
-				// 		number: '18901234567'
-				// 	},
-				// 	{
-				// 		name: '玩儿',
-				// 		number: '19012345678'
-				// 	},
-				// 	{
-				// 		name: '预约',
-				// 		number: '10123456789'
-				// 	}
-				// ];
 				// base64解密
 				if (result.data.contacts && result.data.contacts.length) {
 					// map 改变引用型数组,值类型数组不改变
@@ -632,7 +602,11 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	handleButtonClick = () => {
-		const { checkBox1 } = this.state;
+		const { checkBox1, repayInfo } = this.state;
+		if (!(repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0)) {
+			this.props.toast.info('请先绑定还款储蓄卡');
+			return;
+		}
 		if (!checkBox1) {
 			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
 			return;
@@ -1047,11 +1021,19 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
 									<label>还款银行卡</label>
-									<span className={[style.listValue, style.hasArrow].join(' ')}>
-										{repayInfo && repayInfo.withholdBankName ? repayInfo.withholdBankName : ''}(
-										{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''})
-										<Icon type="right" className={style.icon} />
-									</span>
+
+									{repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0 ? (
+										<span className={[style.listValue, style.hasArrow].join(' ')}>
+											{repayInfo && repayInfo.withholdBankName ? repayInfo.withholdBankName : ''}(
+											{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''})
+											<Icon type="right" className={style.icon} />
+										</span>
+									) : (
+										<span className={style.highlightText}>
+											绑定储蓄卡
+											<Icon type="right" className={style.icon} />
+										</span>
+									)}
 								</li>
 							</ul>
 							<div className={style.protocolBox}>

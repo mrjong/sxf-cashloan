@@ -258,15 +258,15 @@ export const getNextStatus = ({
 					storeRedux.dispatch(setNextStepStatus(false));
 					// 代偿
 					if (nextData.prodType === '01') {
-						let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
-						if (bank_card_check_res === '1') {
-							routeName = '/home/confirm_agency';
-							if (actionType === 'agencyPage') {
-								resolve(nextData.nextStepGramCode);
-							}
-						} else {
-							return;
+						// let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
+						// if (bank_card_check_res === '1') {
+						routeName = '/home/confirm_agency';
+						if (actionType === 'agencyPage') {
+							resolve(nextData.nextStepGramCode);
 						}
+						// } else {
+						// 	return;
+						// }
 					}
 					// 现金分期
 					if (nextData.prodType === '11') {

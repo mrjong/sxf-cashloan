@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 15:06:03
+ * @LastEditTime: 2020-03-16 08:18:24
  */
 // DC 对外
 // XDC mpos入口=>对内
@@ -395,3 +395,5 @@ export {
 	addinfo,
 	miniprogram
 };
+
+export const DC_PAYCARD = `${prefix}_PAYCARD`; // 代偿-还款银行卡
