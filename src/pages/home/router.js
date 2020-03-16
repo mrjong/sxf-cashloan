@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-09 13:19:07
+ * @LastEditTime: 2020-03-16 13:56:24
  */
 export default [
 	{
@@ -130,8 +130,8 @@ export default [
 	},
 	{
 		path: '/home/pre_loan',
-		zhName: 'jkxxqr',
-		title: '借款信息确认',
+		zhName: 'ysxqyjk',
+		title: '签约借款',
 		component: () => import('pages/home/pre_loan_page')
 	},
 	{

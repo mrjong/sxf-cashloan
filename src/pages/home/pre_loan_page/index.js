@@ -94,12 +94,12 @@ export default class pre_loan_page extends PureComponent {
 		const { withholdCardData, withdrawCardData, confirmAgencyInfo } = this.props;
 		if (confirmAgencyInfo) {
 			if (withdrawCardData) {
-				confirmAgencyInfo.repayCardNo = withdrawCardData.agrNo;
+				confirmAgencyInfo.repayCardNo = withdrawCardData.agrNo || '';
 				confirmAgencyInfo.repayCardLast = withdrawCardData.lastCardNo;
 				confirmAgencyInfo.repayCardName = withdrawCardData.bankName;
 			}
 			if (withholdCardData) {
-				confirmAgencyInfo.resaveCardNo = withholdCardData.agrNo;
+				confirmAgencyInfo.resaveCardNo = withholdCardData.agrNo || '';
 				confirmAgencyInfo.resaveCardLast = withholdCardData.lastCardNo;
 				confirmAgencyInfo.resaveCardName = withholdCardData.bankName;
 				confirmAgencyInfo.resaveBankCode = withholdCardData.bankCode;
@@ -239,7 +239,7 @@ export default class pre_loan_page extends PureComponent {
 	 * 获取借款合同与优惠券，注意请求报错则清空选中期数termSelected=null
 	 */
 	requestProtocolCoupon = async () => {
-		if (!parseFloat(this.state.loanMoney) > 0 || !(this.state.repayCardLast.length > 0)) {
+		if (!parseFloat(this.state.loanMoney) > 0) {
 			return;
 		}
 		this.props.toast.loading('', 10);
@@ -382,11 +382,7 @@ export default class pre_loan_page extends PureComponent {
 				loanDate: item
 			},
 			() => {
-				if (
-					parseFloat(this.state.loanMoney) > 0 &&
-					this.state.repayCardLast &&
-					this.state.repayCardLast.length > 0
-				) {
+				if (parseFloat(this.state.loanMoney) > 0) {
 					this.requestProtocolCoupon();
 				}
 			}
@@ -1096,6 +1092,7 @@ export default class pre_loan_page extends PureComponent {
 					history={this.props.history}
 					goPage={() => {
 						sxfburiedPointEvent(prePayPlanOutRiskBury.key);
+						this.storeTempData();
 						this.props.history.push('/home/payment_notes');
 					}}
 				/>

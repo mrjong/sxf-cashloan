@@ -688,13 +688,6 @@ export default class home_page extends PureComponent {
 				disPlayData.push(plusCardData);
 				break;
 			case 'PA0001': // 预授信 申请通过有额度
-				// plusCardData.topTip =
-				// 	homeData &&
-				// 	homeData.cashDataInfo &&
-				// 	homeData.cashDataInfo.acOverDt &&
-				// 	homeData.cashDataInfo.acOverDt <= 10
-				// 		? `${homeData.cashDataInfo.acOverDt}天后失去资格`
-				// 		: '';
 				plusCardData.topTip =
 					homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.acOverDt
 						? `${homeData.preApprDataInfo.acOverDt}天后失去资格`
