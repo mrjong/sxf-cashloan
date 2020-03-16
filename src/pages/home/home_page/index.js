@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-13 16:33:29
+ * @LastEditTime: 2020-03-16 13:12:51
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -117,21 +117,6 @@ export default class home_page extends PureComponent {
 					this.setState(
 						{
 							homeData: result.data
-							// homeData: {
-							// 	...result.data,
-							// 	...{
-							// 		indexMsg: '去还款',
-							// 		indexSts: 'PA0002',
-							// 		preApprDataInfo: {
-							// 			credAmt: '8000',
-							// 			curAmt: '8000',
-							// 			orderAmt: '5000',
-							// 			acOverDt: '12',
-							// 			netAppyDate: '20200405',
-							// 			billNo: '账单号'
-							// 		}
-							// 	}
-							// }
 						},
 						() => {
 							this.props.setHomeData(result.data);
@@ -725,17 +710,6 @@ export default class home_page extends PureComponent {
 				disPlayData.push(plusCardData);
 				break;
 			case 'PA0002': // 预授信 放款中
-				// plusCardData.topTip =
-				// 	homeData &&
-				// 	homeData.cashDataInfo &&
-				// 	homeData.cashDataInfo.acOverDt &&
-				// 	homeData.cashDataInfo.acOverDt <= 10
-				// 		? `${homeData.cashDataInfo.acOverDt}天后失去资格`
-				// 		: '';
-				plusCardData.topTip =
-					homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.acOverDt
-						? `${homeData.preApprDataInfo.acOverDt}天后失去资格`
-						: '';
 				plusCardData.loanAmont =
 					(homeData.preApprDataInfo.curAmt && parseFloat(homeData.preApprDataInfo.curAmt, 10)) || '';
 				plusCardData.titleSub = '直接提现';
