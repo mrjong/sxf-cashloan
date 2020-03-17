@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-16 15:57:19
+ * @LastEditTime: 2020-03-17 10:04:48
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -378,7 +378,8 @@ export default class bind_save_page extends PureComponent {
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
 		const params = {
-			cardNo: formData.valueInputCarNumber && base64Encode(formData.valueInputCarNumber.replace(/\s*/g, ''))
+			cardNoCpt:
+				formData.valueInputCarNumber && base64Encode(formData.valueInputCarNumber.replace(/\s*/g, ''))
 		};
 		this.props.$fetch.post(bank_card_protocol_info, params).then((result) => {
 			if (result && result.code === '000000' && result.data !== null) {
