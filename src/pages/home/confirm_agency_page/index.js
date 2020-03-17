@@ -16,10 +16,10 @@ import { getFirstError, handleInputBlur, getDeviceType } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
-import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal } from 'components';
+import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal, InsuranceModal } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
-
+import qs from 'qs';
 import {
 	loan_queryLoanApplInfo,
 	loan_loanPlan,
@@ -130,11 +130,15 @@ export default class confirm_agency_page extends PureComponent {
 			isCheckInsure: false, // 是否选择了保费
 			showCouponAlert: false, // 是否显示优惠券拦截弹窗
 			contactList: null,
-			checkBox1: false
+			checkBox1: false,
+			isJoinInsurancePlan: false, // 是否加入风险保障计划
+			insurancePlanText: '',
+			showInsuranceModal: false // 是否展示保险弹窗
 		};
 	}
 
 	componentWillMount() {
+		const queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 		this.props.toast.loading('加载中...', 10);
 		const { withholdCardData, confirmAgencyInfo } = this.props;
 		this.checkBtnAble();
@@ -149,6 +153,9 @@ export default class confirm_agency_page extends PureComponent {
 			this.recoveryPageData(confirmAgencyInfo);
 		} else {
 			this.requestGetRepaymentDateList();
+		}
+		if (queryData.showInsuranceModal) {
+			this.handleInsuranceModal();
 		}
 	}
 
@@ -632,9 +639,17 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	handleButtonClick = () => {
-		const { checkBox1 } = this.state;
+		const { checkBox1, insurancePlanText } = this.state;
+		if (!insurancePlanText) {
+			this.props.toast.info('请选择是否参与风险保障计划');
+			return;
+		}
 		if (!checkBox1) {
 			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
+			return;
+		}
+		if (insurancePlanText === '暂不考虑') {
+			this.props.history.push('/home/insurance_result_page');
 			return;
 		}
 		// 埋点
@@ -841,6 +856,22 @@ export default class confirm_agency_page extends PureComponent {
 			contractData
 		});
 	};
+
+	//风险保障计划弹窗
+	handleInsuranceModal = () => {
+		this.setState({
+			showInsuranceModal: true
+		});
+	};
+
+	handleInsuranceModalClick = (type) => {
+		this.setState({
+			showInsuranceModal: false,
+			insurancePlanText: type === 'submit' ? '已授权并参与' : '暂不考虑',
+			isJoinInsurancePlan: type === 'submit' ? true : false
+		});
+	};
+
 	render() {
 		const { history, toast, userInfo } = this.props;
 		const { getFieldProps } = this.props.form;
@@ -862,7 +893,10 @@ export default class confirm_agency_page extends PureComponent {
 			showInterestTotal,
 			checkBox1,
 			cardBillAmt,
-			lendersDate
+			lendersDate,
+			isJoinInsurancePlan,
+			insurancePlanText,
+			showInsuranceModal
 		} = this.state;
 		return (
 			<div>
@@ -992,6 +1026,25 @@ export default class confirm_agency_page extends PureComponent {
 										)
 									)}
 								</li>
+							</ul>
+							<ul className={style.pannel}>
+								<li className={style.listItem} onClick={this.handleInsuranceModal}>
+									<div className={style.labelBox}>
+										<label>风险保障计划</label>
+										<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
+									</div>
+
+									<span
+										className={[
+											style.listValue,
+											style.hasArrow,
+											!isJoinInsurancePlan && style.grayText2
+										].join(' ')}
+									>
+										{insurancePlanText ? insurancePlanText : '请选择'}
+										<Icon type="right" className={style.icon} />
+									</span>
+								</li>
 								<li
 									className={
 										repayInfo2 && showInterestTotal ? `${style.listItem} ${style.listItem3}` : style.listItem
@@ -1083,7 +1136,7 @@ export default class confirm_agency_page extends PureComponent {
 									: () => {}
 							}
 							type={
-								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && checkBox1
+								this.props.form.getFieldProps('cardBillAmt') && !disabledBtn && checkBox1 && insurancePlanText
 									? 'yellow'
 									: 'default'
 							}
@@ -1122,6 +1175,62 @@ export default class confirm_agency_page extends PureComponent {
 							});
 							this.props.history.push('/home/payment_notes');
 						}}
+					/>
+
+					<InsuranceModal
+						visible={showInsuranceModal}
+						onButtonClick={(type) => {
+							this.handleInsuranceModalClick(type);
+						}}
+						onClose={() => {
+							this.setState({
+								showInsuranceModal: false
+							});
+						}}
+						data={[
+							{
+								tokenId: null,
+								perdNum: 2,
+								perdTotAmt: 1547.21,
+								perdItrtAmt: 107.29,
+								perdPrcpAmt: 1071.54,
+								perdMngAmt: 368.38,
+								perdDeductAmt: 0,
+								perdPrcpAndIntr: 1178.83
+							},
+							{
+								tokenId: null,
+								perdNum: 2,
+								perdTotAmt: 1547.21,
+								perdItrtAmt: 107.29,
+								perdPrcpAmt: 1071.54,
+								perdMngAmt: 368.38,
+								perdDeductAmt: 0,
+								perdPrcpAndIntr: 1178.83
+							},
+							{
+								tokenId: null,
+								perdNum: 2,
+								perdTotAmt: 1547.21,
+								perdItrtAmt: 107.29,
+								perdPrcpAmt: 1071.54,
+								perdMngAmt: 368.38,
+								perdDeductAmt: 0,
+								perdPrcpAndIntr: 1178.83
+							},
+							{
+								tokenId: null,
+								perdNum: 2,
+								perdTotAmt: 1547.21,
+								perdItrtAmt: 107.29,
+								perdPrcpAmt: 1071.54,
+								perdMngAmt: 368.38,
+								perdDeductAmt: 0,
+								perdPrcpAndIntr: 1178.83
+							}
+						]}
+						history={this.props.history}
+						toast={this.props.toast}
 					/>
 
 					<CouponAlert

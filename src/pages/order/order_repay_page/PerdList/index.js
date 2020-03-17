@@ -58,8 +58,7 @@ class PerdList extends Component {
 	};
 
 	render() {
-		const { perdList, perdLth, onCheckboxClick } = this.props;
-
+		const { perdList, perdLth, onCheckboxClick, onFeesClick } = this.props;
 		return (
 			<List className={styles.antListItem}>
 				{perdList &&
@@ -95,7 +94,46 @@ class PerdList extends Component {
 									<List.Item.Brief>{`应支付日：${item.perdDueDt}`}</List.Item.Brief>
 								</List.Item>
 								{item.showDetail ? (
-									<div className={styles.perdDetailWrap}>{this.renderPerdDetail(item.fees)}</div>
+									<div>
+										<div
+											className={styles.perdDetailWrap}
+											onClick={() => {
+												onFeesClick({
+													...item,
+													feesChecked: !item.feesChecked
+												});
+											}}
+										>
+											<img
+												className={styles.perdDetailCheckedIcon}
+												src={
+													item.feesChecked
+														? Image.icon.order_detail_checked
+														: Image.icon.order_detail_checked_no
+												}
+											/>
+											{this.renderPerdDetail(item.fees)}
+										</div>
+										<div
+											className={styles.perdDetailWrap}
+											onClick={() => {
+												onFeesClick({
+													...item,
+													riskFeesChecked: !item.riskFeesChecked
+												});
+											}}
+										>
+											<img
+												className={styles.perdDetailCheckedIcon}
+												src={
+													item.riskFeesChecked
+														? Image.icon.order_detail_checked
+														: Image.icon.order_detail_checked_no
+												}
+											/>
+											{this.renderPerdDetail(item.fees)}
+										</div>
+									</div>
 								) : null}
 							</div>
 						);

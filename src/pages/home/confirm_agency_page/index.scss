@@ -27,25 +27,25 @@
 		}
 		&::after {
 			@include setBottomLine(#333);
-      left: 40px;
-      right: 40px;
-      bottom: 0;
+			left: 40px;
+			right: 40px;
+			bottom: 0;
 		}
-  }
-  .billInpBoxTip {
-    margin: 0 40px;
-    font-size: 24px;
-    color: $colorInactiveColor;
-    margin-top: 20px;
-  }
+	}
+	.billInpBoxTip {
+		margin: 0 40px;
+		font-size: 24px;
+		color: $colorInactiveColor;
+		margin-top: 20px;
+	}
 	.billInput {
-    background-color: transparent;
+		background-color: transparent;
 		input {
 			text-align: left;
 			font-size: 90px;
-      font-family: 'DINMitAlt';
-      color: #394259
-      // background-color: transparent;
+			font-family: 'DINMitAlt';
+			color: #394259;
+			// background-color: transparent;
 		}
 	}
 	.inputTip {
@@ -60,7 +60,7 @@
 		background: #fff;
 		border-radius: 10px;
 		border: 1px solid #f0f1f5;
-    padding: 0 30px;
+		padding: 0 30px;
 		.listItem {
 			position: relative;
 			display: flex;
@@ -69,20 +69,28 @@
 			align-items: center;
 			box-sizing: border-box;
 			font-size: 30px;
-      color: $colorBlack;
-      flex-wrap: wrap;
-      padding: 20px 0;
+			color: $colorBlack;
+			flex-wrap: wrap;
+			padding: 20px 0;
 			// &::after {
 			// 	@include setBottomLine(#f0f1f5);
 			// 	left: 0;
 			// }
-    }
-    .listItem + .listItem {
-      &::after {
+			.labelBox {
+				display: flex;
+				flex-direction: column;
+			}
+			.labelSub {
+				font-size: 20px;
+				color: #f76c5c;
+			}
+		}
+		.listItem + .listItem {
+			&::after {
 				@include setTopLine(#f0f1f5);
 				left: 0;
 			}
-    }
+		}
 		.listItem2 {
 			min-height: 140px;
 		}
@@ -90,18 +98,18 @@
 			align-items: flex-start;
 			min-height: 155px;
 			padding-top: 30px;
-    }
-    .TabListWrap {
-      width: 100%;
-      margin-top: 20px;
-    }
+		}
+		.TabListWrap {
+			width: 100%;
+			margin-top: 20px;
+		}
 
 		.listValue {
 			font-weight: normal;
 			font-size: 28px;
-      // line-height: 2;
-      font-family: 'DINMitAlt';
-      margin-top: 3px;
+			// line-height: 2;
+			font-family: 'DINMitAlt';
+			margin-top: 3px;
 		}
 		.listValue2 {
 			font-weight: 500;
@@ -121,8 +129,8 @@
 		}
 		// 息费合计
 		.derateMoney {
-      margin-left: 20px;
-      font-family: 'DINMitAlt';
+			margin-left: 20px;
+			font-family: 'DINMitAlt';
 		}
 		.allMoneyBox {
 			display: flex;
@@ -136,8 +144,8 @@
 			text-align: right;
 		}
 		.allMoney {
-      text-decoration: line-through;
-      font-family: 'DINMitAlt';
+			text-decoration: line-through;
+			font-family: 'DINMitAlt';
 		}
 
 		.icon {
@@ -218,20 +226,20 @@
 	.protocolLink {
 		font-size: 24px;
 		color: #868e9e;
-    margin: 24px 0 24px;
-    text-align: justify;
+		margin: 24px 0 24px;
+		text-align: justify;
 		em {
 			color: #121c32;
 		}
 	}
 
 	.greyText {
-    color: #868e9e;
-  }
+		color: #868e9e;
+	}
 
-  .grayText2 {
-    color: #B2B6BF;
-  }
+	.grayText2 {
+		color: #b2b6bf;
+	}
 
 	.redText {
 		color: #fe6666;
@@ -276,9 +284,9 @@
 		padding: 30px 40px;
 		position: fixed;
 		bottom: 0;
-    left: 0;
-    box-sizing: border-box;
-    background-color: $colorBg;
+		left: 0;
+		box-sizing: border-box;
+		background-color: $colorBg;
 	}
 	// 优惠劵金额展示
 	.couNumBox {
@@ -300,7 +308,7 @@
 			background-size: 100%;
 			margin-right: 10px;
 		}
-  }
+	}
 }
 .closeIcon {
 	position: absolute;
@@ -315,7 +323,7 @@
 		.am-modal-button-group-v .am-modal-button {
 			color: #ebde74;
 		}
-  }
+	}
 	.confirm_agency_wrap {
 		:global {
 			.am-modal-button-group-v .am-modal-button {
@@ -323,17 +331,17 @@
 				font-size: 34px;
 				font-family: 'PingFangSC-Medium';
 				font-weight: 500;
-      }
-      .am-list-item .am-input-control input:disabled {
-        background-color: transparent;
-        color: #121c32;
-      }
+			}
+			.am-list-item .am-input-control input:disabled {
+				background-color: transparent;
+				color: #121c32;
+			}
 			.am-modal-transparent {
 				width: 580px;
 			}
 			.am-modal-transparent .am-modal-content {
 				padding-top: 60px;
-        border-radius: 6px;
+				border-radius: 6px;
 			}
 			.am-modal-transparent .am-modal-content .am-modal-body {
 				padding: 0 35px 60px;

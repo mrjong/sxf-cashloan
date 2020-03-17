@@ -8,6 +8,7 @@ import OverdueEntry from '../components/OverdueEntry';
 import PerdList from './PerdList';
 import OverdueTipModal from './OverdueTipModal';
 import BottomButton from './BottomButton';
+import SplitOrderTip from './SplitOrderTip';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
@@ -35,7 +36,8 @@ export default class order_repay_page extends PureComponent {
 			overdueDays: '',
 			billOvduStartDt: '',
 			buttonDisabled: true,
-			panelListUpdate: false
+			panelListUpdate: false,
+			splitOrderTip: false
 		};
 	}
 	componentDidMount = () => {
@@ -100,7 +102,10 @@ export default class order_repay_page extends PureComponent {
 			for (let i = 0; i < perdList.length; i++) {
 				// 总账单的状态是否有逾期
 				perdList[i].isChecked = perdList[i].perdSts === '1' || perdNum === i + 1;
-
+				if (perdList[i].isChecked) {
+					perdList[i].feesChecked = true;
+					perdList[i].riskFeesChecked = true;
+				}
 				// 已还清、已支付的状态的栏位不显示勾选框
 				// perdSts 0：未到期;1：已逾期;2：处理中;3：已撤销;4：已还清
 				if (!isShowBottomBtn) {
@@ -190,7 +195,9 @@ export default class order_repay_page extends PureComponent {
 	handleCheckboxClick = (item) => {
 		item = {
 			...item,
-			isChecked: !item.isChecked
+			isChecked: !item.isChecked,
+			feesChecked: !item.feesChecked,
+			riskFeesChecked: !item.riskFeesChecked
 		};
 		this.orderListCheckClick(item);
 	};
@@ -204,9 +211,13 @@ export default class order_repay_page extends PureComponent {
 			let item = panelList[i];
 			if (item.perdNum <= clickedItem.perdNum && item.isShowCheck) {
 				item.isChecked = true;
+				item.feesChecked = true;
+				item.riskFeesChecked = true;
 				actPanelListDatas[i].isChecked = true;
 			} else {
 				item.isChecked = false;
+				item.feesChecked = false;
+				item.riskFeesChecked = false;
 				actPanelListDatas[i].isChecked = false;
 			}
 		}
@@ -264,6 +275,43 @@ export default class order_repay_page extends PureComponent {
 		});
 	};
 
+	//处理每期账单子部分金额勾选
+	handleFeesClick = (item) => {
+		if (this.state.repayPerds.length > 1) {
+			this.props.toast.info('多期还款不支持分单还款');
+			return;
+		}
+		if (!item.feesChecked || !item.riskFeesChecked) {
+			this.setState({
+				splitOrderTip: true,
+				clickedPerdItem: item
+			});
+		} else {
+			this.updateFeesCheckedStatus(item);
+		}
+	};
+
+	updateFeesCheckedStatus = (item) => {
+		const { panelList } = this.state;
+		for (let i = 0; i < panelList.length; i++) {
+			if (panelList[i].perdNum === item.perdNum) {
+				panelList[i] = item;
+			}
+		}
+		this.setState({
+			panelList: [...this.state.panelList]
+		});
+	};
+
+	handleSplitOrderTipClick = (type) => {
+		if (type === 'exit') {
+			this.updateFeesCheckedStatus(this.state.clickedPerdItem);
+		}
+		this.setState({
+			splitOrderTip: false
+		});
+	};
+
 	render() {
 		const {
 			totalAmt,
@@ -273,7 +321,10 @@ export default class order_repay_page extends PureComponent {
 			panelList,
 			perdLth,
 			buttonDisabled,
-			showOverdueTipModal
+			showOverdueTipModal,
+			feesChecked,
+			riskFeesChecked,
+			splitOrderTip
 		} = this.state;
 		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 
@@ -306,6 +357,9 @@ export default class order_repay_page extends PureComponent {
 										panelListUpdate: !this.state.panelListUpdate
 									});
 								}}
+								onFeesClick={this.handleFeesClick}
+								feesChecked={feesChecked}
+								riskFeesChecked={riskFeesChecked}
 							/>
 						</Card.Body>
 					</Card>
@@ -316,6 +370,12 @@ export default class order_repay_page extends PureComponent {
 							handleClick={this.goOrderRepayConfirmPage}
 						/>
 					)}
+					<SplitOrderTip
+						visible={splitOrderTip}
+						onClick={(type) => {
+							this.handleSplitOrderTipClick(type);
+						}}
+					/>
 					<OverdueTipModal
 						visible={showOverdueTipModal}
 						billOvduStartDt={billOvduStartDt}

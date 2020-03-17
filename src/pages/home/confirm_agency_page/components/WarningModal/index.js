@@ -23,7 +23,7 @@ import Image from 'assets/image';
 		setIframeProtocolShow
 	}
 )
-export default class InsuranceModal extends React.PureComponent {
+export default class WarningModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

@@ -18,6 +18,7 @@ import ProtocolSmsModal from './ProtocolSmsModal';
 import TimeoutPayModal from './TimeoutPayModal';
 import AsyncCascadePicker from './AsyncCascadePicker';
 import StepTitle from './StepTitle';
+import StepBar from './StepBar';
 import StepList from './StepList';
 import AddressSelect from './react-picker-address';
 import FixedHelpCenter from './FixedHelpCenter';
@@ -27,6 +28,7 @@ import RepayPlanModal from './RepayPlanModal';
 import CheckRadio from './CheckRadio';
 import CouponModal from './CouponModal';
 import IframeProtocol from './IframeProtocol';
+import InsuranceModal from './InsuranceModal';
 
 export {
 	FooterBar,
@@ -46,6 +48,7 @@ export {
 	AsyncCascadePicker,
 	StepTitle,
 	StepList,
+	StepBar,
 	AddressSelect,
 	FixedHelpCenter,
 	FixedTopTip,
@@ -53,5 +56,6 @@ export {
 	RepayPlanModal,
 	CheckRadio,
 	CouponModal,
-	IframeProtocol
+	IframeProtocol,
+	InsuranceModal
 };

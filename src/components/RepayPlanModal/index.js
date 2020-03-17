@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Icon, Drawer, NoticeBar } from 'antd-mobile';
 import style from './index.scss';
-import StepBar from 'components/StepBar';
+import { StepBar } from 'components';
 
 export default class RepayPlanModal extends React.PureComponent {
 	constructor(props) {
@@ -139,7 +139,7 @@ export default class RepayPlanModal extends React.PureComponent {
 						<StepBar data={data1} />
 					</div>
 				</Drawer>
-				<div className={style.fix_bottom}>
+				{/* <div className={style.fix_bottom}>
 					<NoticeBar
 						marqueeProps={{
 							loop: true,
@@ -156,7 +156,7 @@ export default class RepayPlanModal extends React.PureComponent {
 									12
 							  ).toFixed(2) * 100}%/年`}
 					</NoticeBar>
-				</div>
+				</div> */}
 			</Modal>
 		);
 	}
