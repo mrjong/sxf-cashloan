@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-16 13:12:51
+ * @LastEditTime: 2020-03-17 10:09:03
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -509,10 +509,17 @@ export default class home_page extends PureComponent {
 		const bankNm = !bankName ? '****' : bankName;
 
 		let differDays = '';
+		let differDays2 = '';
 		if (homeData && homeData.dcDataInfo && homeData.dcDataInfo.netAppyDate) {
 			differDays = dateDiffer(
 				dayjs(new Date()).format('YYYY/MM/DD'),
 				dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')
+			);
+		}
+		if (homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.netAppyDate) {
+			differDays2 = dateDiffer(
+				dayjs(new Date()).format('YYYY/MM/DD'),
+				dayjs(homeData.preApprDataInfo.netAppyDate).format('YYYY/MM/DD')
 			);
 		}
 
@@ -729,7 +736,7 @@ export default class home_page extends PureComponent {
 			case 'PA0004': // 预授信放款失败 同 LN0005
 				basicCardData.topTip =
 					homeData.preApprDataInfo.netAppyDate &&
-					differDays <= 60 &&
+					differDays2 <= 60 &&
 					`${dayjs(homeData.preApprDataInfo.netAppyDate).format('YYYY/MM/DD')}可再次申请`;
 				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
 				basicCardData.statusTitleSub = '去试试其他借款平台';
