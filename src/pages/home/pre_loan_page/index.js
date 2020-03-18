@@ -38,9 +38,11 @@ import {
 	preCheckboxClickRiskBury
 } from './riskBuryConfig';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
+import { domListen } from 'utils/domListen';
 
 @fetch.inject()
 @setBackGround('#f0f4f9')
+@domListen()
 @connect(
 	(state) => ({
 		userInfo: state.staticState.userInfo,
@@ -387,24 +389,24 @@ export default class pre_loan_page extends PureComponent {
 				}
 			}
 		);
-		switch (item.prodCount) {
-			case '30':
+		switch (Number(item.prodCount)) {
+			case 30:
 				buriedPointEvent(preLoan.loanDateMonth1);
 				sxfburiedPointEvent('preProdTerm1');
 				break;
-			case '3':
+			case 3:
 				buriedPointEvent(preLoan.loanDateMonth3);
 				sxfburiedPointEvent('preProdTerm3');
 				break;
-			case '6':
+			case 6:
 				buriedPointEvent(preLoan.loanDateMonth6);
 				sxfburiedPointEvent('preProdTerm6');
 				break;
-			case '9':
+			case 9:
 				buriedPointEvent(preLoan.loanDateMonth9);
 				sxfburiedPointEvent('preProdTerm9');
 				break;
-			case '12':
+			case 12:
 				buriedPointEvent(preLoan.loanDateMonth12);
 				sxfburiedPointEvent('preProdTerm12');
 				break;
