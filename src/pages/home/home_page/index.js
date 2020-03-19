@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-17 10:09:03
+ * @LastEditTime: 2020-03-19 15:23:35
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -420,7 +420,8 @@ export default class home_page extends PureComponent {
 		Toast.loading('加载中...', 10);
 		getNextStatus({
 			RouterType: 'home',
-			$props: this.props
+			$props: this.props,
+			pageParam: '01'
 		});
 	};
 	/**
