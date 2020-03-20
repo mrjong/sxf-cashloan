@@ -223,6 +223,9 @@ export const getNextStatus = ({
 				case 'AUTH003':
 					// 预授信
 					if (nextData.prodType === '21') {
+						// 防止返回到签约借款页面,
+						// 选卡的时候返回首页,back js里nextStepStatus
+						store.setToggleMoxieCard(true);
 						resBackMsg = '补充联系人';
 						routeName = '/home/pre_add_contact_page';
 					} else {
