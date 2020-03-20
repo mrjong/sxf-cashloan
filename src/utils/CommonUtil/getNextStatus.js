@@ -271,8 +271,8 @@ export const getNextStatus = ({
 					routeName = '/order/order_detail_page';
 					break;
 				case 'TO-LOAN':
-          // 跳转预授信借款页面
-          storeRedux.dispatch(setNextStepStatus(false));
+					// 跳转预授信借款页面
+					storeRedux.dispatch(setNextStepStatus(false));
 					if (nextData.prodType === '21') {
 						goToPreLoan({ $props });
 						return;
