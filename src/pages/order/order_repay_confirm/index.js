@@ -4,7 +4,7 @@
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
-import { LoadingView, ButtonCustom, ProtocolSmsModal } from 'components';
+import { LoadingView, ButtonCustom, ProtocolSmsModal, TipConfirmModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { order } from 'utils/analytinsType';
@@ -656,35 +656,16 @@ export default class order_repay_confirm extends PureComponent {
 					立即还款
 				</ButtonCustom>
 
-				{showCouponAlert ? (
-					<div className={styles.alert_wrap}>
-						<div className={styles.alert_body}>
-							<div className={styles.alert_body_box}>
-								<p>还有优惠券未使用确定提交吗？</p>
-							</div>
-							<div className={styles.button_box}>
-								<div className={styles.button_wrap}>
-									<span
-										className={[styles.button, styles.exit].join(' ')}
-										onClick={() => {
-											this.handleAlertShow('exit');
-										}}
-									>
-										再等等
-									</span>
-									<span
-										className={styles.button}
-										onClick={() => {
-											this.handleAlertShow('submit');
-										}}
-									>
-										提交
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				) : null}
+				<TipConfirmModal
+					visible={showCouponAlert}
+					onButtonClick={(type) => {
+						this.handleAlertShow(type);
+					}}
+					title=""
+					desc="还有优惠券未使用确定提交吗？"
+					cancelButtonText="再等等"
+					okButtonText="提交"
+				/>
 
 				{isShowSmsModal && (
 					<ProtocolSmsModal

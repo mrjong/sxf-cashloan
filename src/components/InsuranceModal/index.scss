@@ -6,8 +6,8 @@
 
 .subTitle {
 	color: #868f9e;
-  font-size: 28px;
-  margin-top: 10px;
+	font-size: 28px;
+	margin-top: 10px;
 }
 
 .link_bar {
@@ -56,21 +56,16 @@
 	color: #394259;
 }
 
-.bottomText {
-	position: fixed;
-	bottom: 0;
-	background-color: #fff;
-	font-size: 22px;
-	color: #bec2cc;
-	border-top: 1px solid #f0f1f5;
-	height: 50px;
-	line-height: 50px;
-	width: 100%;
-	text-align: center;
-}
-
 .modalInner {
 	padding: 55px 40px 80px;
+}
+
+.fix_bottom {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	z-index: 100;
 }
 
 .antModal {
@@ -80,6 +75,20 @@
 			position: relative;
 			box-sizing: border-box;
 			text-align: left;
+		}
+	}
+}
+
+.fix_bottom {
+	:global {
+		.am-notice-bar {
+			height: 50px;
+			line-height: 50px;
+			background-color: #fff;
+			box-shadow: 0px 1px 0px 0px rgba(240, 241, 245, 1) inset;
+		}
+		.am-notice-bar-content {
+			margin: 0 15px;
 		}
 	}
 }

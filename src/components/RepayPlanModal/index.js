@@ -13,14 +13,22 @@ export default class RepayPlanModal extends React.PureComponent {
 
 	render() {
 		const { openDrawer } = this.state;
-		const { visible, onClose, data, loanMoney, goPage } = this.props;
+		const { visible, onClose, data, loanMoney, goPage, isJoinInsurancePlan } = this.props;
 		let totalMoney = 0,
 			totalPrincipal = 0,
 			periods = data && data.length;
 		const data1 =
 			data &&
 			data.map((item) => {
-				let { perdPrcpAmt, perdItrtAmt, perdNum, perdTotAmt, perdMngAmt, perdDeductAmt } = item;
+				let {
+					perdPrcpAmt,
+					perdItrtAmt,
+					perdNum,
+					perdTotAmt,
+					perdMngAmt,
+					perdDeductAmt,
+					riskGuaranteeAmt
+				} = item;
 				totalMoney = totalMoney + Number(perdTotAmt); //总金额
 				totalPrincipal = totalPrincipal + Number(perdPrcpAmt); //总本金
 				return {
@@ -29,18 +37,20 @@ export default class RepayPlanModal extends React.PureComponent {
 					perdPrcpAmt,
 					perdItrtAmt,
 					perdMngAmt,
-					perdDeductAmt
+					perdDeductAmt,
+					riskGuaranteeAmt: isJoinInsurancePlan ? riskGuaranteeAmt : 0
 				};
 			});
 		const data2 =
 			data &&
 			data.map((item) => {
-				let { perdPrcpAmt, perdItrtAmt, perdNum, perdPrcpAndIntr } = item;
+				let { perdPrcpAmt, perdItrtAmt, perdNum, perdPrcpAndIntr, riskGuaranteeAmt } = item;
 				return {
 					perdNum,
 					perdTotalMoney: perdPrcpAndIntr,
 					perdPrcpAmt,
-					perdItrtAmt
+					perdItrtAmt,
+					riskGuaranteeAmt: isJoinInsurancePlan ? riskGuaranteeAmt : 0
 				};
 			});
 		const sidebar = (

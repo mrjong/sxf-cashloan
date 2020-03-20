@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
-import { LoadingView } from 'components';
+import { LoadingView, TipConfirmModal } from 'components';
 import { Card } from 'antd-mobile';
 import { bill_queryBillDetail, repay_queryCashRegisterDetail } from 'fetch/api';
 import { setCouponDataAction } from 'reduxes/actions/commonActions';
@@ -8,7 +8,6 @@ import OverdueEntry from '../components/OverdueEntry';
 import PerdList from './PerdList';
 import OverdueTipModal from './OverdueTipModal';
 import BottomButton from './BottomButton';
-import SplitOrderTip from './SplitOrderTip';
 import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import Image from 'assets/image';
@@ -37,7 +36,7 @@ export default class order_repay_page extends PureComponent {
 			billOvduStartDt: '',
 			buttonDisabled: true,
 			panelListUpdate: false,
-			splitOrderTip: false
+			isShowSplitOrderTip: false
 		};
 	}
 	componentDidMount = () => {
@@ -71,14 +70,113 @@ export default class order_repay_page extends PureComponent {
 				if (res.code === '000000' && res.data) {
 					const { billOvduStartDt, billSts, preds, perdNum, overdueDays, perdLth } = res.data;
 					const isShowBottomBtn = billSts === '1' || billSts === '-1'; // 主状态
+					const test = [
+						{
+							perdNum: 1,
+							perdTotAmt: 2126.37,
+							perdPrcpAmt: 1617.37,
+							perdMngAmt: 389,
+							perdAprAmt: 0,
+							perdItrtAmt: 120,
+							perdWtdwAmt: 0,
+							perdFineAmt: 0,
+							perdOvduAmt: 0,
+							perdTotRepAmt: 2126.37,
+							perdWaitRepAmt: 0,
+							derateFineAmt: 0,
+							deductionAmt: 0,
+							discRedRepayAmt: null,
+							perdActualRepAmt: 2126.37,
+							perdDueDt: '2020年04月18日',
+							perdSts: '4',
+							perdStsNm: '已结清',
+							color: '#868F9E',
+							clearState: '03',
+							fees: [
+								{ feeNm: '本金', feeAmt: 1636.77 },
+								{ feeNm: '利息', feeAmt: 100.59 },
+								{ feeNm: '服务费', feeAmt: 326.08 },
+
+								{ feeNm: '罚息', feeAmt: 0 },
+								{ feeNm: '提现手续费', feeAmt: 0 },
+								{ feeNm: '其他', feeAmt: 0 },
+								{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
+							]
+						},
+						{
+							perdNum: 2,
+							perdTotAmt: 2126.37,
+							perdPrcpAmt: 1617.37,
+							perdMngAmt: 389,
+							perdAprAmt: 0,
+							perdItrtAmt: 120,
+							perdWtdwAmt: 0,
+							perdFineAmt: 0,
+							perdOvduAmt: 0,
+							perdTotRepAmt: 2126.37,
+							perdWaitRepAmt: 0,
+							derateFineAmt: 0,
+							deductionAmt: 0,
+							discRedRepayAmt: null,
+							perdActualRepAmt: 2126.37,
+							perdDueDt: '2020年04月18日',
+							perdSts: '0',
+							perdStsNm: '待还款',
+							color: '#3A7AE5',
+							clearState: '00',
+							fees: [
+								{ feeNm: '本金', feeAmt: 1636.77 },
+								{ feeNm: '利息', feeAmt: 100.59 },
+								{ feeNm: '服务费', feeAmt: 326.08 },
+
+								{ feeNm: '罚息', feeAmt: 0 },
+								{ feeNm: '提现手续费', feeAmt: 0 },
+								{ feeNm: '其他', feeAmt: 0 },
+								{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
+							]
+						},
+						{
+							perdNum: 3,
+							perdTotAmt: 2126.37,
+							perdPrcpAmt: 1617.37,
+							perdMngAmt: 389,
+							perdAprAmt: 0,
+							perdItrtAmt: 120,
+							perdWtdwAmt: 0,
+							perdFineAmt: 0,
+							perdOvduAmt: 0,
+							perdTotRepAmt: 2126.37,
+							perdWaitRepAmt: 0,
+							derateFineAmt: 0,
+							deductionAmt: 0,
+							discRedRepayAmt: null,
+							perdActualRepAmt: 2126.37,
+							perdDueDt: '2020年04月18日',
+							perdSts: '0',
+							perdStsNm: '待还款',
+							color: '#3A7AE5',
+							clearState: '01',
+							fees: [
+								{ feeNm: '本金', feeAmt: 1636.77 },
+								{ feeNm: '利息', feeAmt: 100.59 },
+								{ feeNm: '服务费', feeAmt: 326.08 },
+
+								{ feeNm: '罚息', feeAmt: 0 },
+								{ feeNm: '提现手续费', feeAmt: 0 },
+								{ feeNm: '其他', feeAmt: 0 },
+								{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
+							]
+						}
+					];
 					this.setState(
 						{
 							perdLth, //分期期数
-							panelList: this.generatePerdList(preds, perdNum, overdueDays, isShowBottomBtn), //被截取逾期的子账单列表
+							panelList: this.generatePerdList(test, perdNum, overdueDays, isShowBottomBtn), //被截取逾期的子账单列表
 							billDesc: res.data, // 详情返回的数据
 							isShowBottomBtn,
 							overdueDays,
-							billOvduStartDt
+							billOvduStartDt,
+							test
 						},
 						() => {
 							this.calcPayTotalMoney();
@@ -103,8 +201,7 @@ export default class order_repay_page extends PureComponent {
 				// 总账单的状态是否有逾期
 				perdList[i].isChecked = perdList[i].perdSts === '1' || perdNum === i + 1;
 				if (perdList[i].isChecked) {
-					perdList[i].feesChecked = true;
-					perdList[i].riskFeesChecked = true;
+					perdList[i].feesStatus = this.handleFeesCheckedStatus(perdList[i].clearState);
 				}
 				// 已还清、已支付的状态的栏位不显示勾选框
 				// perdSts 0：未到期;1：已逾期;2：处理中;3：已撤销;4：已还清
@@ -134,13 +231,14 @@ export default class order_repay_page extends PureComponent {
 	 * @description 还款金额试算
 	 */
 	getFundPlainInfo = (isPayAll) => {
-		const { billDesc, repayPerds, billNo } = this.state;
+		const { billDesc, repayPerds, billNo, repayPerdsType } = this.state;
 		this.props.$fetch
 			.post(repay_queryCashRegisterDetail, {
 				billNo,
 				isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 				prodType: billDesc.prodType,
-				repayPerds: isPayAll ? [] : repayPerds
+				repayPerds: isPayAll ? [] : repayPerds,
+				repayPerdsType
 			})
 			.then((res) => {
 				if (res.code === '000000' && res.data) {
@@ -165,14 +263,20 @@ export default class order_repay_page extends PureComponent {
 	calcPayTotalMoney = () => {
 		const { panelList } = this.state;
 		let repayPerds = [];
+		let repayPerdsType = [];
 		let checkedArr = panelList.filter((v) => v.isChecked);
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].perdNum);
+			repayPerdsType.push({
+				perdNum: checkedArr[i].perdNum,
+				perdType: this.handleValueByFeesStatus(checkedArr[i].feesStatus)
+			});
 		}
 
 		this.setState(
 			{
 				repayPerds,
+				repayPerdsType,
 				canUseCoupon: repayPerds.length === 1,
 				buttonDisabled: true
 			},
@@ -196,8 +300,7 @@ export default class order_repay_page extends PureComponent {
 		item = {
 			...item,
 			isChecked: !item.isChecked,
-			feesChecked: !item.feesChecked,
-			riskFeesChecked: !item.riskFeesChecked
+			feesStatus: this.handleFeesCheckedStatus(item.clearState)
 		};
 		this.orderListCheckClick(item);
 	};
@@ -211,14 +314,12 @@ export default class order_repay_page extends PureComponent {
 			let item = panelList[i];
 			if (item.perdNum <= clickedItem.perdNum && item.isShowCheck) {
 				item.isChecked = true;
-				item.feesChecked = true;
-				item.riskFeesChecked = true;
 				actPanelListDatas[i].isChecked = true;
+				item.feesStatus = this.handleFeesCheckedStatus(item.clearState);
 			} else {
 				item.isChecked = false;
-				item.feesChecked = false;
-				item.riskFeesChecked = false;
 				actPanelListDatas[i].isChecked = false;
+				item.feesStatus = this.handleFeesCheckedStatus('03');
 			}
 		}
 		let arr = panelList.map((v) => (v.perdNum === clickedItem.perdNum ? clickedItem : v));
@@ -230,6 +331,7 @@ export default class order_repay_page extends PureComponent {
 			},
 			() => {
 				this.calcPayTotalMoney();
+				console.log(this.state.panelList, '--------');
 			}
 		);
 	};
@@ -275,40 +377,113 @@ export default class order_repay_page extends PureComponent {
 		});
 	};
 
-	//处理每期账单子部分金额勾选
-	handleFeesClick = (item) => {
+	handleFeesCheckedStatus = (clearState) => {
+		let arr = [];
+		switch (clearState) {
+			case '00':
+				arr = [true, true];
+				break;
+			case '01':
+				arr = [true, false];
+				break;
+			case '02':
+				arr = [false, true];
+				break;
+			default:
+				arr = [false, false];
+				break;
+		}
+		return arr;
+	};
+
+	handleValueByFeesStatus = (feesStatus) => {
+		let str = '';
+		if (feesStatus[0] && feesStatus[1]) {
+			str = '00';
+		} else if (feesStatus[0]) {
+			str = '01';
+		} else if (feesStatus[1]) {
+			str = '02';
+		} else {
+			str = '03';
+		}
+		return str;
+	};
+
+	//处理每期账单明细部分勾选事件回调
+	handleFeesClick = (item, type) => {
+		if (!item.isShowCheck || (item.isShowCheck && !item.isChecked)) {
+			return;
+		}
 		if (this.state.repayPerds.length > 1) {
 			this.props.toast.info('多期还款不支持分单还款');
 			return;
 		}
-		if (!item.feesChecked || !item.riskFeesChecked) {
-			this.setState({
-				splitOrderTip: true,
-				clickedPerdItem: item
+		const allChecked = item.feesStatus.every((v) => v);
+		if (allChecked) {
+			this.handleShowSplitOrderTip(item, type);
+		} else if (type === 'fees') {
+			if (item.clearState === '02') return;
+
+			this.updateFeesCheckedStatus({
+				...item,
+				feesStatus: [!item.feesStatus[0], item.feesStatus[1]]
 			});
-		} else {
-			this.updateFeesCheckedStatus(item);
+		} else if (type === 'riskFees') {
+			if (item.clearState === '01') return;
+
+			this.updateFeesCheckedStatus({
+				...item,
+				feesStatus: [item.feesStatus[0], !item.feesStatus[1]]
+			});
 		}
 	};
 
-	updateFeesCheckedStatus = (item) => {
-		const { panelList } = this.state;
-		for (let i = 0; i < panelList.length; i++) {
-			if (panelList[i].perdNum === item.perdNum) {
-				panelList[i] = item;
-			}
-		}
+	// 显示分单还款温馨提示弹窗
+	handleShowSplitOrderTip = (item, type) => {
 		this.setState({
-			panelList: [...this.state.panelList]
+			isShowSplitOrderTip: true,
+			clickedPerdItem: item,
+			clickedPerdFeesType: type
 		});
 	};
 
-	handleSplitOrderTipClick = (type) => {
+	// 更新账单明细勾选态,并动态计算金额
+	updateFeesCheckedStatus = (item) => {
+		const { panelList, actPanelListDatas } = this.state;
+		for (let i = 0; i < panelList.length; i++) {
+			if (item.perdNum === panelList[i].perdNum) {
+				panelList[i] = item;
+			}
+		}
+		this.setState(
+			{
+				actPanelListDatas: [...actPanelListDatas],
+				panelList: [...panelList]
+			},
+			() => {
+				this.calcPayTotalMoney();
+			}
+		);
+	};
+
+	// 处理温馨提示弹窗按钮点击事件
+	handleSplitOrderTipButtonClick = (type) => {
 		if (type === 'exit') {
-			this.updateFeesCheckedStatus(this.state.clickedPerdItem);
+			const { clickedPerdItem, clickedPerdFeesType } = this.state;
+			let arr = [];
+			if (clickedPerdFeesType === 'fees') {
+				arr = [false, true];
+			} else {
+				arr = [true, false];
+			}
+			this.updateFeesCheckedStatus({
+				...clickedPerdItem,
+				feesStatus: arr
+			});
 		}
 		this.setState({
-			splitOrderTip: false
+			isShowSplitOrderTip: false
 		});
 	};
 
@@ -322,9 +497,7 @@ export default class order_repay_page extends PureComponent {
 			perdLth,
 			buttonDisabled,
 			showOverdueTipModal,
-			feesChecked,
-			riskFeesChecked,
-			splitOrderTip
+			isShowSplitOrderTip
 		} = this.state;
 		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 
@@ -358,8 +531,6 @@ export default class order_repay_page extends PureComponent {
 									});
 								}}
 								onFeesClick={this.handleFeesClick}
-								feesChecked={feesChecked}
-								riskFeesChecked={riskFeesChecked}
 							/>
 						</Card.Body>
 					</Card>
@@ -370,11 +541,15 @@ export default class order_repay_page extends PureComponent {
 							handleClick={this.goOrderRepayConfirmPage}
 						/>
 					)}
-					<SplitOrderTip
-						visible={splitOrderTip}
-						onClick={(type) => {
-							this.handleSplitOrderTipClick(type);
+					<TipConfirmModal
+						visible={isShowSplitOrderTip}
+						onButtonClick={(type) => {
+							this.handleSplitOrderTipButtonClick(type);
 						}}
+						title="温馨提示"
+						desc="分单还款不慎容易造成逾期，建议您合并还款！"
+						cancelButtonText="分单还款"
+						okButtonText="合并还款"
 					/>
 					<OverdueTipModal
 						visible={showOverdueTipModal}

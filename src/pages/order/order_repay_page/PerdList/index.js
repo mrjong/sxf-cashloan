@@ -4,6 +4,9 @@ import styles from './index.scss';
 import Image from 'assets/image';
 
 class PerdList extends Component {
+	// UNSAFE_componentWillReceiveProps(nextProps) {
+	// 	console.log(nextProps, 999);
+	// }
 	/**
 	 * @description 切换子账单详情展示
 	 */
@@ -63,6 +66,18 @@ class PerdList extends Component {
 			<List className={styles.antListItem}>
 				{perdList &&
 					perdList.map((item, index) => {
+						// let feesChecked = false;
+						// let riskFeesChecked = false;
+						// if (item.isChecked) {
+						// 	//该期已经勾选时
+						// 	if (item.outerControlFeesChecked) {
+						// 		// 由外部控制勾选状态时
+						// 		(feesChecked = item.feesChecked), (riskFeesChecked = item.riskFeesChecked);
+						// 	} else {
+						// 		(feesChecked = item.clearState === '00' || item.clearState === '01'),
+						// 			(riskFeesChecked = item.clearState === '00' || item.clearState === '02');
+						// 	}
+						// }
 						return (
 							<div key={index}>
 								<List.Item
@@ -98,16 +113,13 @@ class PerdList extends Component {
 										<div
 											className={styles.perdDetailWrap}
 											onClick={() => {
-												onFeesClick({
-													...item,
-													feesChecked: !item.feesChecked
-												});
+												onFeesClick(item, 'fees');
 											}}
 										>
 											<img
 												className={styles.perdDetailCheckedIcon}
 												src={
-													item.feesChecked
+													item.feesStatus && item.feesStatus[0]
 														? Image.icon.order_detail_checked
 														: Image.icon.order_detail_checked_no
 												}
@@ -117,16 +129,13 @@ class PerdList extends Component {
 										<div
 											className={styles.perdDetailWrap}
 											onClick={() => {
-												onFeesClick({
-													...item,
-													riskFeesChecked: !item.riskFeesChecked
-												});
+												onFeesClick(item, 'riskFees');
 											}}
 										>
 											<img
 												className={styles.perdDetailCheckedIcon}
 												src={
-													item.riskFeesChecked
+													item.feesStatus && item.feesStatus[1]
 														? Image.icon.order_detail_checked
 														: Image.icon.order_detail_checked_no
 												}

@@ -252,7 +252,6 @@ export default class confirm_agency_page extends PureComponent {
 	handleClickConfirm = () => {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				console.log(values);
 				this.setState(
 					{
 						cardBillAmt: values.cardBillAmt
@@ -288,10 +287,18 @@ export default class confirm_agency_page extends PureComponent {
 			})
 			.then((result) => {
 				if (result && result.code === '000000' && result.data !== null) {
+					let { contracts = [] } = result.data;
+					let FXBZ_contract = {};
+					contracts.forEach((v, i) => {
+						if (v.contractType === 'FXBZ') {
+							FXBZ_contract = contracts.splice(i, 1);
+						}
+					});
 					this.setState(
 						{
 							contractData: result.data && result.data.contracts,
-							disabledBtn: false
+							disabledBtn: false,
+							FXBZ_contract
 						},
 						() => {
 							this.requestGetRepayInfo();
@@ -450,8 +457,6 @@ export default class confirm_agency_page extends PureComponent {
 			});
 		} else {
 			if (money) {
-				console.log(repaymentDate);
-
 				this.props.form.setFieldsValue({
 					cardBillAmt: Math.ceil(money / 100) * 100 + ''
 				});
@@ -477,7 +482,8 @@ export default class confirm_agency_page extends PureComponent {
 			autId: authId || '',
 			repayType: lendersDate.value,
 			loanAmt: cardBillAmt,
-			prodType: '01'
+			prodType: '01',
+			riskGuarantee: '1'
 		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
@@ -500,7 +506,7 @@ export default class confirm_agency_page extends PureComponent {
 					this.props.toast.hide();
 					this.setState({
 						repayInfo2: result.data,
-						deratePrice: result.data.deductAmount,
+						deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
 						showInterestTotal: result.data.showFlag === '1'
 					});
 					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
@@ -859,6 +865,14 @@ export default class confirm_agency_page extends PureComponent {
 
 	//风险保障计划弹窗
 	handleInsuranceModal = () => {
+		const { repayInfo2 } = this.state;
+		if (!repayInfo2 || !repayInfo2.perdLth) {
+			this.props.toast.info('请输入借款金额');
+			return;
+		}
+		if (repayInfo2 && repayInfo2.perdUnit === 'D') {
+			return;
+		}
 		this.setState({
 			showInsuranceModal: true
 		});
@@ -896,8 +910,10 @@ export default class confirm_agency_page extends PureComponent {
 			lendersDate,
 			isJoinInsurancePlan,
 			insurancePlanText,
-			showInsuranceModal
+			showInsuranceModal,
+			FXBZ_contract = []
 		} = this.state;
+
 		return (
 			<div>
 				<div className={[style.confirm_agency, 'confirm_agency_wrap'].join(' ')}>
@@ -1041,7 +1057,7 @@ export default class confirm_agency_page extends PureComponent {
 											!isJoinInsurancePlan && style.grayText2
 										].join(' ')}
 									>
-										{insurancePlanText ? insurancePlanText : '请选择'}
+										{insurancePlanText || '请选择'}
 										<Icon type="right" className={style.icon} />
 									</span>
 								</li>
@@ -1164,6 +1180,7 @@ export default class confirm_agency_page extends PureComponent {
 						data={repayInfo2.perds}
 						loanMoney={this.state.cardBillAmt}
 						history={this.props.history}
+						isJoinInsurancePlan={isJoinInsurancePlan}
 						goPage={() => {
 							this.props.setConfirmAgencyInfoAction({
 								cardBillAmt,
@@ -1187,50 +1204,15 @@ export default class confirm_agency_page extends PureComponent {
 								showInsuranceModal: false
 							});
 						}}
-						data={[
-							{
-								tokenId: null,
-								perdNum: 2,
-								perdTotAmt: 1547.21,
-								perdItrtAmt: 107.29,
-								perdPrcpAmt: 1071.54,
-								perdMngAmt: 368.38,
-								perdDeductAmt: 0,
-								perdPrcpAndIntr: 1178.83
-							},
-							{
-								tokenId: null,
-								perdNum: 2,
-								perdTotAmt: 1547.21,
-								perdItrtAmt: 107.29,
-								perdPrcpAmt: 1071.54,
-								perdMngAmt: 368.38,
-								perdDeductAmt: 0,
-								perdPrcpAndIntr: 1178.83
-							},
-							{
-								tokenId: null,
-								perdNum: 2,
-								perdTotAmt: 1547.21,
-								perdItrtAmt: 107.29,
-								perdPrcpAmt: 1071.54,
-								perdMngAmt: 368.38,
-								perdDeductAmt: 0,
-								perdPrcpAndIntr: 1178.83
-							},
-							{
-								tokenId: null,
-								perdNum: 2,
-								perdTotAmt: 1547.21,
-								perdItrtAmt: 107.29,
-								perdPrcpAmt: 1071.54,
-								perdMngAmt: 368.38,
-								perdDeductAmt: 0,
-								perdPrcpAndIntr: 1178.83
-							}
-						]}
+						data={repayInfo2.perds}
 						history={this.props.history}
 						toast={this.props.toast}
+						guaranteeCompany={repayInfo2.guaranteeCompany}
+						contact={FXBZ_contract[0]}
+						handleContractClick={(e) => {
+							e.stopPropagation();
+							this.readContract(FXBZ_contract[0]);
+						}}
 					/>
 
 					<CouponAlert

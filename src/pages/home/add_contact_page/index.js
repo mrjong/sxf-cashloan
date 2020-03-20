@@ -146,7 +146,8 @@ export default class add_contact_page extends PureComponent {
 			coupId: couponId, // 优惠劵id
 			loanAmt: cardBillAmt, // 签约金额
 			prodType: '01',
-			contacts: selectedList
+			contacts: selectedList,
+			riskGuarantee: '1' //参与风险保障计划
 		};
 		timerOut = setTimeout(() => {
 			this.setState(

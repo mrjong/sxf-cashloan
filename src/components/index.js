@@ -29,6 +29,7 @@ import CheckRadio from './CheckRadio';
 import CouponModal from './CouponModal';
 import IframeProtocol from './IframeProtocol';
 import InsuranceModal from './InsuranceModal';
+import TipConfirmModal from './TipConfirmModal';
 
 export {
 	FooterBar,
@@ -57,5 +58,6 @@ export {
 	CheckRadio,
 	CouponModal,
 	IframeProtocol,
-	InsuranceModal
+	InsuranceModal,
+	TipConfirmModal
 };

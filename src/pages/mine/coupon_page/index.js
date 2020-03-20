@@ -213,7 +213,8 @@ export default class coupon_page extends PureComponent {
 				startPage: pIndex,
 				loanAmt: receiveData.price,
 				prodId: receiveData.prodId,
-				prodType: receiveData.prodType
+				prodType: receiveData.prodType,
+				riskGuarantee: '1' //参与风险保障计划
 				// loading: true,
 			};
 			url = coup_queyUsrLoanUsbCoup;
