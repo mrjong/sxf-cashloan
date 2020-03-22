@@ -70,113 +70,113 @@ export default class order_repay_page extends PureComponent {
 				if (res.code === '000000' && res.data) {
 					const { billOvduStartDt, billSts, preds, perdNum, overdueDays, perdLth } = res.data;
 					const isShowBottomBtn = billSts === '1' || billSts === '-1'; // 主状态
-					const test = [
-						{
-							perdNum: 1,
-							perdTotAmt: 2126.37,
-							perdPrcpAmt: 1617.37,
-							perdMngAmt: 389,
-							perdAprAmt: 0,
-							perdItrtAmt: 120,
-							perdWtdwAmt: 0,
-							perdFineAmt: 0,
-							perdOvduAmt: 0,
-							perdTotRepAmt: 2126.37,
-							perdWaitRepAmt: 0,
-							derateFineAmt: 0,
-							deductionAmt: 0,
-							discRedRepayAmt: null,
-							perdActualRepAmt: 2126.37,
-							perdDueDt: '2020年04月18日',
-							perdSts: '4',
-							perdStsNm: '已结清',
-							color: '#868F9E',
-							clearState: '03',
-							fees: [
-								{ feeNm: '本金', feeAmt: 1636.77 },
-								{ feeNm: '利息', feeAmt: 100.59 },
-								{ feeNm: '服务费', feeAmt: 326.08 },
+					// const test = [
+					// 	{
+					// 		perdNum: 1,
+					// 		perdTotAmt: 2126.37,
+					// 		perdPrcpAmt: 1617.37,
+					// 		perdMngAmt: 389,
+					// 		perdAprAmt: 0,
+					// 		perdItrtAmt: 120,
+					// 		perdWtdwAmt: 0,
+					// 		perdFineAmt: 0,
+					// 		perdOvduAmt: 0,
+					// 		perdTotRepAmt: 2126.37,
+					// 		perdWaitRepAmt: 0,
+					// 		derateFineAmt: 0,
+					// 		deductionAmt: 0,
+					// 		discRedRepayAmt: null,
+					// 		perdActualRepAmt: 2126.37,
+					// 		perdDueDt: '2020年04月18日',
+					// 		perdSts: '4',
+					// 		perdStsNm: '已结清',
+					// 		color: '#868F9E',
+					// 		clearState: '03',
+					// 		fees: [
+					// 			{ feeNm: '本金', feeAmt: 1636.77 },
+					// 			{ feeNm: '利息', feeAmt: 100.59 },
+					// 			{ feeNm: '服务费', feeAmt: 326.08 },
 
-								{ feeNm: '罚息', feeAmt: 0 },
-								{ feeNm: '提现手续费', feeAmt: 0 },
-								{ feeNm: '其他', feeAmt: 0 },
-								{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
-							]
-						},
-						{
-							perdNum: 2,
-							perdTotAmt: 2126.37,
-							perdPrcpAmt: 1617.37,
-							perdMngAmt: 389,
-							perdAprAmt: 0,
-							perdItrtAmt: 120,
-							perdWtdwAmt: 0,
-							perdFineAmt: 0,
-							perdOvduAmt: 0,
-							perdTotRepAmt: 2126.37,
-							perdWaitRepAmt: 0,
-							derateFineAmt: 0,
-							deductionAmt: 0,
-							discRedRepayAmt: null,
-							perdActualRepAmt: 2126.37,
-							perdDueDt: '2020年04月18日',
-							perdSts: '0',
-							perdStsNm: '待还款',
-							color: '#3A7AE5',
-							clearState: '00',
-							fees: [
-								{ feeNm: '本金', feeAmt: 1636.77 },
-								{ feeNm: '利息', feeAmt: 100.59 },
-								{ feeNm: '服务费', feeAmt: 326.08 },
+					// 			{ feeNm: '罚息', feeAmt: 0 },
+					// 			{ feeNm: '提现手续费', feeAmt: 0 },
+					// 			{ feeNm: '其他', feeAmt: 0 },
+					// 			{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
+					// 		]
+					// 	},
+					// 	{
+					// 		perdNum: 2,
+					// 		perdTotAmt: 2126.37,
+					// 		perdPrcpAmt: 1617.37,
+					// 		perdMngAmt: 389,
+					// 		perdAprAmt: 0,
+					// 		perdItrtAmt: 120,
+					// 		perdWtdwAmt: 0,
+					// 		perdFineAmt: 0,
+					// 		perdOvduAmt: 0,
+					// 		perdTotRepAmt: 2126.37,
+					// 		perdWaitRepAmt: 0,
+					// 		derateFineAmt: 0,
+					// 		deductionAmt: 0,
+					// 		discRedRepayAmt: null,
+					// 		perdActualRepAmt: 2126.37,
+					// 		perdDueDt: '2020年04月18日',
+					// 		perdSts: '0',
+					// 		perdStsNm: '待还款',
+					// 		color: '#3A7AE5',
+					// 		clearState: '00',
+					// 		fees: [
+					// 			{ feeNm: '本金', feeAmt: 1636.77 },
+					// 			{ feeNm: '利息', feeAmt: 100.59 },
+					// 			{ feeNm: '服务费', feeAmt: 326.08 },
 
-								{ feeNm: '罚息', feeAmt: 0 },
-								{ feeNm: '提现手续费', feeAmt: 0 },
-								{ feeNm: '其他', feeAmt: 0 },
-								{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
-							]
-						},
-						{
-							perdNum: 3,
-							perdTotAmt: 2126.37,
-							perdPrcpAmt: 1617.37,
-							perdMngAmt: 389,
-							perdAprAmt: 0,
-							perdItrtAmt: 120,
-							perdWtdwAmt: 0,
-							perdFineAmt: 0,
-							perdOvduAmt: 0,
-							perdTotRepAmt: 2126.37,
-							perdWaitRepAmt: 0,
-							derateFineAmt: 0,
-							deductionAmt: 0,
-							discRedRepayAmt: null,
-							perdActualRepAmt: 2126.37,
-							perdDueDt: '2020年04月18日',
-							perdSts: '0',
-							perdStsNm: '待还款',
-							color: '#3A7AE5',
-							clearState: '01',
-							fees: [
-								{ feeNm: '本金', feeAmt: 1636.77 },
-								{ feeNm: '利息', feeAmt: 100.59 },
-								{ feeNm: '服务费', feeAmt: 326.08 },
+					// 			{ feeNm: '罚息', feeAmt: 0 },
+					// 			{ feeNm: '提现手续费', feeAmt: 0 },
+					// 			{ feeNm: '其他', feeAmt: 0 },
+					// 			{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
+					// 		]
+					// 	},
+					// 	{
+					// 		perdNum: 3,
+					// 		perdTotAmt: 2126.37,
+					// 		perdPrcpAmt: 1617.37,
+					// 		perdMngAmt: 389,
+					// 		perdAprAmt: 0,
+					// 		perdItrtAmt: 120,
+					// 		perdWtdwAmt: 0,
+					// 		perdFineAmt: 0,
+					// 		perdOvduAmt: 0,
+					// 		perdTotRepAmt: 2126.37,
+					// 		perdWaitRepAmt: 0,
+					// 		derateFineAmt: 0,
+					// 		deductionAmt: 0,
+					// 		discRedRepayAmt: null,
+					// 		perdActualRepAmt: 2126.37,
+					// 		perdDueDt: '2020年04月18日',
+					// 		perdSts: '0',
+					// 		perdStsNm: '待还款',
+					// 		color: '#3A7AE5',
+					// 		clearState: '01',
+					// 		fees: [
+					// 			{ feeNm: '本金', feeAmt: 1636.77 },
+					// 			{ feeNm: '利息', feeAmt: 100.59 },
+					// 			{ feeNm: '服务费', feeAmt: 326.08 },
 
-								{ feeNm: '罚息', feeAmt: 0 },
-								{ feeNm: '提现手续费', feeAmt: 0 },
-								{ feeNm: '其他', feeAmt: 0 },
-								{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
-							]
-						}
-					];
+					// 			{ feeNm: '罚息', feeAmt: 0 },
+					// 			{ feeNm: '提现手续费', feeAmt: 0 },
+					// 			{ feeNm: '其他', feeAmt: 0 },
+					// 			{ feeNm: '剩余应还金额', feeAmt: 2063.44 }
+					// 		]
+					// 	}
+					// ];
 					this.setState(
 						{
 							perdLth, //分期期数
-							panelList: this.generatePerdList(test, perdNum, overdueDays, isShowBottomBtn), //被截取逾期的子账单列表
+							panelList: this.generatePerdList(preds, perdNum, overdueDays, isShowBottomBtn), //被截取逾期的子账单列表
 							billDesc: res.data, // 详情返回的数据
 							isShowBottomBtn,
 							overdueDays,
-							billOvduStartDt,
-							test
+							billOvduStartDt
+							// test
 						},
 						() => {
 							this.calcPayTotalMoney();
@@ -231,14 +231,14 @@ export default class order_repay_page extends PureComponent {
 	 * @description 还款金额试算
 	 */
 	getFundPlainInfo = (isPayAll) => {
-		const { billDesc, repayPerds, billNo, repayPerdsType } = this.state;
+		const { billDesc, repayPerds, billNo, repayPerdsTypes } = this.state;
 		this.props.$fetch
 			.post(repay_queryCashRegisterDetail, {
 				billNo,
 				isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 				prodType: billDesc.prodType,
 				repayPerds: isPayAll ? [] : repayPerds,
-				repayPerdsType
+				repayPerdsTypes
 			})
 			.then((res) => {
 				if (res.code === '000000' && res.data) {
@@ -263,11 +263,11 @@ export default class order_repay_page extends PureComponent {
 	calcPayTotalMoney = () => {
 		const { panelList } = this.state;
 		let repayPerds = [];
-		let repayPerdsType = [];
+		let repayPerdsTypes = [];
 		let checkedArr = panelList.filter((v) => v.isChecked);
 		for (let i = 0; i < checkedArr.length; i++) {
 			repayPerds.push(checkedArr[i].perdNum);
-			repayPerdsType.push({
+			repayPerdsTypes.push({
 				perdNum: checkedArr[i].perdNum,
 				perdType: this.handleValueByFeesStatus(checkedArr[i].feesStatus)
 			});
@@ -276,7 +276,7 @@ export default class order_repay_page extends PureComponent {
 		this.setState(
 			{
 				repayPerds,
-				repayPerdsType,
+				repayPerdsTypes,
 				canUseCoupon: repayPerds.length === 1,
 				buttonDisabled: true
 			},
@@ -300,8 +300,9 @@ export default class order_repay_page extends PureComponent {
 		item = {
 			...item,
 			isChecked: !item.isChecked,
-			feesStatus: this.handleFeesCheckedStatus(item.clearState)
+			feesStatus: this.handleFeesCheckedStatus(item.isChecked ? '03' : item.clearState)
 		};
+
 		this.orderListCheckClick(item);
 	};
 

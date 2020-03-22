@@ -28,6 +28,8 @@ class PerdList extends Component {
 			return '（由平台方收取）';
 		} else if (name === '本金' || name === '利息') {
 			return '（由出借方收取）';
+		} else if (name === '风险保障金') {
+			return '（由担保公司收取）';
 		}
 	};
 
@@ -140,7 +142,7 @@ class PerdList extends Component {
 														: Image.icon.order_detail_checked_no
 												}
 											/>
-											{this.renderPerdDetail(item.fees)}
+											{this.renderPerdDetail(item.fees2)}
 										</div>
 									</div>
 								) : null}
