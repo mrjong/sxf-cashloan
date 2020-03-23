@@ -3,11 +3,9 @@ import { store } from 'utils/store';
 import { Toast, Modal } from 'antd-mobile';
 import qs from 'qs';
 import { index_getNextStep, bank_card_check, auth_getTencentFaceData } from 'fetch/api';
-// import { getFaceDetect, goToStageLoan } from '@/utils/CommonUtil';
 import storeRedux from 'reduxes';
 import { activeConfigSts } from 'utils';
-
-import { goToStageLoan } from './commonFunc';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 /**
  * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
@@ -270,8 +268,9 @@ export const getNextStatus = ({
 					}
 					// 现金分期
 					if (nextData.prodType === '11') {
-						goToStageLoan({ $props });
-						return;
+						// 通付盾 获取设备指纹
+						TFDLogin();
+						routeName = '/home/loan_fenqi';
 					}
 					break;
 				case 'LOANING':
@@ -287,6 +286,9 @@ export const getNextStatus = ({
 				//   break;
 				case 'AUTH015':
 					routeName = `/home/addInfo`;
+					break;
+				case 'DOWNLOAN':
+					routeName = `/home/deposit_tip?cashMoney=${nextData.curAmt}`;
 					break;
 				default:
 					routeName = '/home/home';

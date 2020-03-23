@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-23 11:29:12
+ * @LastEditTime: 2020-03-23 17:49:19
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -32,7 +32,6 @@ import style from './index.scss';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
-import { TFDLogin } from 'utils/getTongFuDun';
 import {
 	MsgTip,
 	AddCards,
@@ -354,15 +353,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'CN0003':
-				// 通付盾 获取设备指纹
-				TFDLogin();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
-				if (homeData.cashDataInfo.downloadFlg === '01') {
-					//需要引导下载app
-					this.props.history.push(`/home/deposit_tip?cashMoney=${homeData.cashDataInfo.curAmt}`);
-				} else {
-					this.props.history.push('/home/loan_fenqi');
-				}
+				getNextStatus({
+					RouterType: 'home',
+					$props: this.props
+				});
 				break;
 			case 'CN0004':
 				this.props.toast.info('正在放款中，马上到账');
