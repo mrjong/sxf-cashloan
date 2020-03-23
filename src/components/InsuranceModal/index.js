@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, Icon, NoticeBar } from 'antd-mobile';
 import { StepBar, ButtonCustom, CheckRadio } from 'components';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 
 export default class InsuranceModal extends React.PureComponent {
@@ -11,6 +13,7 @@ export default class InsuranceModal extends React.PureComponent {
 		};
 	}
 	toggleCheckbox = () => {
+		buriedPointEvent(home.riskGuaranteeModalChecked);
 		this.setState({
 			isChecked: !this.state.isChecked
 		});
@@ -44,6 +47,7 @@ export default class InsuranceModal extends React.PureComponent {
 					<a
 						className={styles.link_bar}
 						onClick={() => {
+							buriedPointEvent(home.riskGuaranteeModalPlanClick);
 							this.props.history.push('/home/insurance_introduce_page');
 						}}
 					>

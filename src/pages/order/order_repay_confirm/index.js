@@ -107,14 +107,15 @@ export default class order_repay_confirm extends PureComponent {
 
 	// 获取弹框明细信息
 	getRepayConfirmInfo = () => {
-		const { billNo, repayPerds, billDesc, isPayAll } = this.props.history.location.state;
+		const { billNo, repayPerds, repayPerdsTypes, billDesc, isPayAll } = this.props.history.location.state;
 		const { couponInfo } = this.state;
 
 		let submitParams = {
 			billNo,
 			isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 			prodType: billDesc.prodType,
-			repayPerds: isPayAll ? [] : repayPerds
+			repayPerds: isPayAll ? [] : repayPerds,
+			repayPerdsTypes
 		};
 		if (couponInfo.coupId) {
 			submitParams.coupId = couponInfo.coupId;
@@ -282,6 +283,7 @@ export default class order_repay_confirm extends PureComponent {
 			billDesc = {},
 			isPayAll,
 			repayPerds,
+			repayPerdsTypes,
 			thisPerdNum,
 			billNo,
 			overdueDays,
@@ -301,7 +303,8 @@ export default class order_repay_confirm extends PureComponent {
 			cardAgrNo,
 			prodType: billDesc.prodType,
 			isPayOff: isPayAll ? '1' : '0',
-			repayPerds: isPayAll ? [] : repayPerds
+			repayPerds: isPayAll ? [] : repayPerds,
+			repayPerdsTypes
 		};
 
 		//如果勾选多期,则不支持优惠券

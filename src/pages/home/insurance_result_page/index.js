@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { setBackGround } from 'utils/background';
 import Images from 'assets/image';
 import { ButtonCustom } from 'components';
+import { buriedPointEvent } from 'utils/analytins';
+import { home } from 'utils/analytinsType';
 import styles from './index.scss';
 
 let timer = null;
@@ -40,11 +42,13 @@ class insurance_result_page extends Component {
 	}
 
 	goHome = () => {
+		buriedPointEvent(home.riskGuaranteeResultBackHome);
 		this.props.history.replace('/home/home');
 	};
 
 	goBack = () => {
 		// this.props.history.goBack();
+		buriedPointEvent(home.riskGuaranteeResultTry);
 		this.props.history.replace('/home/confirm_agency?showInsuranceModal=true');
 	};
 

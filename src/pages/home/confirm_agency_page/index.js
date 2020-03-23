@@ -622,6 +622,9 @@ export default class confirm_agency_page extends PureComponent {
 				isShowModal: true
 			},
 			() => {
+				buriedPointEvent(home.repayPlanClick, {
+					isJoinInsurancePlan: this.state.isJoinInsurancePlan
+				});
 				sxfburiedPointEvent(showModalPlanRiskBury.key);
 			}
 		);
@@ -865,6 +868,7 @@ export default class confirm_agency_page extends PureComponent {
 
 	//风险保障计划弹窗
 	handleInsuranceModal = () => {
+		buriedPointEvent(home.riskGuaranteePlanClick);
 		const { repayInfo2 } = this.state;
 		if (!repayInfo2 || !repayInfo2.perdLth) {
 			this.props.toast.info('请输入借款金额');
@@ -879,11 +883,23 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	handleInsuranceModalClick = (type) => {
-		this.setState({
-			showInsuranceModal: false,
-			insurancePlanText: type === 'submit' ? '已授权并参与' : '暂不考虑',
-			isJoinInsurancePlan: type === 'submit' ? true : false
-		});
+		if (type === 'submit') {
+			buriedPointEvent(home.riskGuaranteeModalOk);
+		} else {
+			buriedPointEvent(home.riskGuaranteeModalCancel);
+		}
+		this.setState(
+			{
+				showInsuranceModal: false,
+				insurancePlanText: type === 'submit' ? '已授权并参与' : '暂不考虑',
+				isJoinInsurancePlan: type === 'submit' ? true : false
+			},
+			() => {
+				buriedPointEvent(home.riskGuaranteeChangePlanText, {
+					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
+				});
+			}
+		);
 	};
 
 	render() {

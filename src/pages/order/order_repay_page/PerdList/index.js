@@ -4,9 +4,6 @@ import styles from './index.scss';
 import Image from 'assets/image';
 
 class PerdList extends Component {
-	// UNSAFE_componentWillReceiveProps(nextProps) {
-	// 	console.log(nextProps, 999);
-	// }
 	/**
 	 * @description 切换子账单详情展示
 	 */
@@ -36,7 +33,7 @@ class PerdList extends Component {
 	/**
 	 * @description 渲染子账单详情面板
 	 */
-	renderPerdDetail = (arr) => {
+	renderPerdDetail = (arr = []) => {
 		return arr.map((item, index) => (
 			<div key={index}>
 				{item.feeAmt ? (
@@ -68,18 +65,6 @@ class PerdList extends Component {
 			<List className={styles.antListItem}>
 				{perdList &&
 					perdList.map((item, index) => {
-						// let feesChecked = false;
-						// let riskFeesChecked = false;
-						// if (item.isChecked) {
-						// 	//该期已经勾选时
-						// 	if (item.outerControlFeesChecked) {
-						// 		// 由外部控制勾选状态时
-						// 		(feesChecked = item.feesChecked), (riskFeesChecked = item.riskFeesChecked);
-						// 	} else {
-						// 		(feesChecked = item.clearState === '00' || item.clearState === '01'),
-						// 			(riskFeesChecked = item.clearState === '00' || item.clearState === '02');
-						// 	}
-						// }
 						return (
 							<div key={index}>
 								<List.Item

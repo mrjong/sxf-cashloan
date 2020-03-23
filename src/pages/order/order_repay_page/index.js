@@ -344,6 +344,7 @@ export default class order_repay_page extends PureComponent {
 		const {
 			billDesc,
 			repayPerds,
+			repayPerdsTypes,
 			canUseCoupon,
 			actPanelListDatas,
 			overdueDays,
@@ -362,6 +363,7 @@ export default class order_repay_page extends PureComponent {
 				billNo,
 				billDesc,
 				repayPerds,
+				repayPerdsTypes,
 				canUseCoupon,
 				actPanelListDatas,
 				isPayAll: false,
@@ -420,6 +422,15 @@ export default class order_repay_page extends PureComponent {
 			this.props.toast.info('多期还款不支持分单还款');
 			return;
 		}
+		if (type === 'fees') {
+			buriedPointEvent(order.feesClick, {
+				isOverdue: !!this.state.overdueDays
+			});
+		} else {
+			buriedPointEvent(order.riskFeesClick, {
+				isOverdue: !!this.state.overdueDays
+			});
+		}
 		const allChecked = item.feesStatus.every((v) => v);
 		if (allChecked) {
 			this.handleShowSplitOrderTip(item, type);
@@ -471,6 +482,7 @@ export default class order_repay_page extends PureComponent {
 	// 处理温馨提示弹窗按钮点击事件
 	handleSplitOrderTipButtonClick = (type) => {
 		if (type === 'exit') {
+			buriedPointEvent(order.splitOrderTipCancel);
 			const { clickedPerdItem, clickedPerdFeesType } = this.state;
 			let arr = [];
 			if (clickedPerdFeesType === 'fees') {
@@ -482,6 +494,8 @@ export default class order_repay_page extends PureComponent {
 				...clickedPerdItem,
 				feesStatus: arr
 			});
+		} else {
+			buriedPointEvent(order.splitOrderTipOk);
 		}
 		this.setState({
 			isShowSplitOrderTip: false
