@@ -14,11 +14,14 @@ export default class StepTitle extends React.PureComponent {
 		return (
 			<div style={style} className={[classNM.stepTitleWrap, className].join(' ')}>
 				<div className={classNM.titleWrap}>
-					<div className={classNM.stepNumWrap}>
-						<span className={classNM.stepNumBefore} />
-						<span className={classNM.stepNum}>{stepNum}</span>
-						<span className={classNM.stepNumAfter} />
-					</div>
+					{stepNum ? (
+						<div className={classNM.stepNumWrap}>
+							<span className={classNM.stepNumBefore} />
+							<span className={classNM.stepNum}>{stepNum}</span>
+							<span className={classNM.stepNumAfter} />
+						</div>
+					) : null}
+
 					<span className={classNM.title}>{title}</span>
 				</div>
 				<p className={classNM.titleSub}>{titleSub}</p>

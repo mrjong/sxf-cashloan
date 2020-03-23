@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:32:22
+ * @LastEditTime: 2020-03-23 14:03:47
  */
 import { handleActions } from 'redux-actions';
 
@@ -13,7 +13,6 @@ import {
 	COMMON_HOMEMODAL,
 	COMMON_COUPON_DATA,
 	COMMON_SAVE_CONTACT,
-	COMMON_CACHE_CONTACT,
 	COMMON_NEXT_STEP_STATUS,
 	COMMON_OVERDUE_MODAL_INFO,
 	COMMON_BACK_ROUTER,
@@ -59,7 +58,6 @@ export default handleActions(
 		[COMMON_HOMEMODAL]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_COUPON_DATA]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_SAVE_CONTACT]: (state, action) => ({ ...state, ...action.payload }),
-		[COMMON_CACHE_CONTACT]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_NEXT_STEP_STATUS]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_BACK_ROUTER]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_HOME_DATA]: (state, action) => ({ ...state, ...action.payload }),

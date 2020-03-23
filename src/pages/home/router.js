@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-22 15:23:16
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-03-23 13:49:49
  */
 export default [
 	{
@@ -104,28 +104,28 @@ export default [
 		title: '完善补充信息',
 		component: () => import('pages/home/addInfo')
 	},
-	{
-		path: '/home/reco_contact_page',
-		zhName: 'tjlxr',
-		title: '补充联系人',
-		component: () => import('pages/home/reco_contact_page')
-	},
-	{
-		path: '/home/contact_result_page',
-		zhName: 'zdlxr',
-		title: '确认联系人',
-		component: () => import('pages/home/contact_result_page')
-	},
-	{
-		path: '/home/modify_contact_page',
-		zhName: 'xglxr',
-		title: '修改联系人',
-		component: () => import('pages/home/modify_contact_page')
-	},
+	// {
+	// 	path: '/home/reco_contact_page',
+	// 	zhName: 'tjlxr',
+	// 	title: '补充联系人',
+	// 	component: () => import('pages/home/reco_contact_page')
+	// },
+	// {
+	// 	path: '/home/contact_result_page',
+	// 	zhName: 'zdlxr',
+	// 	title: '确认联系人',
+	// 	component: () => import('pages/home/contact_result_page')
+	// },
+	// {
+	// 	path: '/home/modify_contact_page',
+	// 	zhName: 'xglxr',
+	// 	title: '修改联系人',
+	// 	component: () => import('pages/home/modify_contact_page')
+	// },
 	{
 		path: '/home/add_contact_page',
-		zhName: 'kzdlxr',
-		title: '补充联系人',
+		zhName: 'zdlxr',
+		title: '确认联系人',
 		component: () => import('pages/home/add_contact_page')
 	}
 ];

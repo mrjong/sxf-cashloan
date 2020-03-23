@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 15:31:38
+ * @LastEditTime: 2020-03-23 14:02:35
  */
 import { createAction } from 'redux-actions';
 import {
@@ -12,7 +12,6 @@ import {
 	COMMON_HOMEMODAL,
 	COMMON_COUPON_DATA,
 	COMMON_SAVE_CONTACT,
-	COMMON_CACHE_CONTACT,
 	COMMON_NEXT_STEP_STATUS,
 	COMMON_OVERDUE_MODAL_INFO,
 	COMMON_BACK_ROUTER,
@@ -88,13 +87,6 @@ export const setHomeModalAction = createAction(COMMON_HOMEMODAL, (info) => ({ ho
 export const setSaveContactAction = createAction(COMMON_SAVE_CONTACT, (info) => ({
 	saveContact: info || {}
 }));
-
-/**
- * @description: 缓存选中联系人信息
- * @param {type}
- * @return:
- */
-export const setCacheContactAction = createAction(COMMON_CACHE_CONTACT, (info) => ({ cacheContact: info }));
 
 /**
  * @description: 授信是否需要下一步

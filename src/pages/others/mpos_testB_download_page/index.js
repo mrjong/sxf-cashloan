@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-05 11:29:05
+ * @LastEditTime: 2020-03-23 11:22:38
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -72,7 +72,7 @@ export default class mpos_download_page extends PureComponent {
 				<div className={styles.content}>
 					<p className={styles.title}>恭喜，您提交的资料已通过预审</p>
 					<p className={styles.moneyText}>
-						最高可获得额度<span>50000元</span>
+						可获得额度高至<span>50000元</span>
 					</p>
 					<p className={styles.tipsText2}>
 						已领先<span>95%</span>的申请用户

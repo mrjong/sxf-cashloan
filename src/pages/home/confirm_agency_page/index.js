@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-16 10:59:47
+ * @LastEditTime: 2020-03-23 14:02:15
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -37,6 +37,7 @@ import {
 	setConfirmAgencyInfoAction,
 	setCouponDataAction
 } from 'reduxes/actions/commonActions';
+import { setCacheContactAction } from 'reduxes/actions/staticActions';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { cardBillAmtRiskBury } from './riskBuryConfig';
@@ -59,12 +60,13 @@ let closeBtn = true;
 		withholdCardData: state.commonState.withholdCardData,
 		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
 		couponData: state.commonState.couponData,
-		cacheContact: state.commonState.cacheContact,
+		cacheContact: state.staticState.cacheContact,
 		saveContact: state.commonState.saveContact,
 		authId: state.staticState.authId
 	}),
 	{
 		setCardTypeAction,
+		setCacheContactAction,
 		setConfirmAgencyInfoAction,
 		setCouponDataAction
 	}
@@ -756,22 +758,42 @@ export default class confirm_agency_page extends PureComponent {
 	// 选择指定联系人
 	handleClickChooseContact = () => {
 		const { isBtnAble, repayInfo } = this.state;
-		const { cacheContact } = this.props;
 		this.cacheDataHandler();
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
-		if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
-			if (cacheContact && cacheContact.length) {
-				this.props.history.push('/home/contact_result_page');
-			} else {
-				this.props.history.push('/home/reco_contact_page');
+		this.calculationNum();
+		this.props.history.push(
+			`/home/add_contact_page?contactsLength=${(repayInfo.contacts && repayInfo.contacts.length) || 0}`
+		);
+	};
+	/**
+	 * @description: 将后端联系人数据缓存起来  优先取本地 再去后端
+	 * @param {type}
+	 * @return:
+	 */
+
+	calculationNum = () => {
+		const { repayInfo } = this.state;
+		const { cacheContact } = this.props;
+		if (!cacheContact || cacheContact.length === 0) {
+			this.props.setCacheContactAction(repayInfo.contacts);
+			return;
+		}
+		let isNull = true;
+		for (let index = 0; index < cacheContact.length; index++) {
+			const element = cacheContact[index];
+			if (element.name) {
+				isNull = false;
+				break;
 			}
+		}
+		if (isNull) {
+			this.props.setCacheContactAction(repayInfo.contacts);
 		} else {
-			this.props.history.push('/home/add_contact_page');
+			this.props.setCacheContactAction(cacheContact);
 		}
 	};
-
 	// 点击勾选协议
 	checkAgreement = () => {
 		this.setState({ checkBox1: !this.state.checkBox1 });

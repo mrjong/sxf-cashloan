@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-20 18:28:57
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-03-23 14:07:47
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -13,23 +13,25 @@ import { validators, arrCheckDup } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
 import { connect } from 'react-redux';
-import { setCacheContactAction, setSaveContactAction } from 'reduxes/actions/commonActions';
-
+import { setCacheContactAction } from 'reduxes/actions/staticActions';
+import { setSaveContactAction } from 'reduxes/actions/commonActions';
+import { StepTitle } from 'components';
 import { Modal, Progress } from 'antd-mobile';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import fetch from 'sx-fetch';
 import dayjs from 'dayjs';
 import { loan_loanSub } from 'fetch/api.js';
+import qs from 'qs';
 let timer;
 let timerOut;
-
+let queryData = {};
 // @setBackGround('#fff')
 @fetch.inject()
 @createForm()
 @connect(
 	(state) => ({
 		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
-		cacheContact: state.commonState.cacheContact,
+		cacheContact: state.staticState.cacheContact,
 		authId: state.staticState.authId,
 		couponData: state.commonState.couponData,
 		saveContact: state.commonState.saveContact
@@ -48,16 +50,18 @@ export default class add_contact_page extends PureComponent {
 		};
 	}
 	componentWillMount() {
+		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
+
 		const { cacheContact } = this.props;
 		if (cacheContact) {
 			return;
 		}
 		this.props.setCacheContactAction([
-			{ name: '', number: '', uniqMark: 'uniq0' },
-			{ name: '', number: '', uniqMark: 'uniq1' },
-			{ name: '', number: '', uniqMark: 'uniq2' },
-			{ name: '', number: '', uniqMark: 'uniq3' },
-			{ name: '', number: '', uniqMark: 'uniq4' }
+			{ name: '', number: '' },
+			{ name: '', number: '' },
+			{ name: '', number: '' },
+			{ name: '', number: '' },
+			{ name: '', number: '' }
 		]);
 	}
 	componentDidMount() {}
@@ -65,7 +69,12 @@ export default class add_contact_page extends PureComponent {
 
 	// 确认按钮点击
 	confirmHandler = () => {
-		buriedPointEvent(home.speContactConfirmClick);
+		buriedPointEvent(home.speContactConfirmClick, {
+			contactsLength:
+				(queryData.contactsLength && queryData.contactsLength === 5 && '等于5') ||
+				(queryData.contactsLength && queryData.contactsLength > 5 && '大于5') ||
+				(queryData.contactsLength && queryData.contactsLength < 5 && '小于5')
+		});
 		const { cacheContact, confirmAgencyInfo = {} } = this.props;
 		const excConatactList =
 			(confirmAgencyInfo.repayInfo && confirmAgencyInfo.repayInfo.excludedContacts) || [];
@@ -251,10 +260,15 @@ export default class add_contact_page extends PureComponent {
 		let filterList = (cacheContact && cacheContact.filter((item) => !item.name || !item.number)) || [];
 		return (
 			<div className={styles.contact_result_page}>
+				<StepTitle
+					title="请填写联系人信息"
+					titleSub="确认则表示您已授权此联系人信息与我们，在紧急联系人无法联系时，用于与您取得联系时使用"
+				/>
+
 				<ContactResultList isCanSelect={false} changeContact={this.changeContact} toast={this.props.toast} />
 				<div className={styles.confirm_btn_box}>
 					<ButtonCustom onClick={this.confirmHandler} type={filterList.length ? 'default' : 'yellow'}>
-						确认
+						确认并借款
 					</ButtonCustom>
 				</div>
 				<Modal wrapClassName={styles.modalLoading} visible={progressLoading} transparent maskClosable={false}>
