@@ -449,3 +449,5 @@ export {
 	preApproval,
 	preLoan
 };
+
+export const DC_PAYCARD = `${prefix}_PAYCARD`; // 代偿-还款银行卡

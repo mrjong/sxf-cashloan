@@ -3,11 +3,11 @@ import { store } from 'utils/store';
 import { Toast, Modal } from 'antd-mobile';
 import qs from 'qs';
 import { index_getNextStep, bank_card_check, auth_getTencentFaceData } from 'fetch/api';
-// import { getFaceDetect, goToStageLoan } from '@/utils/CommonUtil';
 import storeRedux from 'reduxes';
 import { activeConfigSts } from 'utils';
 
-import { goToStageLoan, handleClickPreLoanSubmit, goToPreLoan } from './commonFunc';
+import { handleClickPreLoanSubmit, goToPreLoan } from './commonFunc';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 /**
  * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
@@ -285,20 +285,21 @@ export const getNextStatus = ({
 					storeRedux.dispatch(setNextStepStatus(false));
 					// 代偿
 					if (nextData.prodType === '01') {
-						let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
-						if (bank_card_check_res === '1') {
-							routeName = '/home/confirm_agency';
-							if (actionType === 'agencyPage') {
-								resolve(nextData.nextStepGramCode);
-							}
-						} else {
-							return;
+						// let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
+						// if (bank_card_check_res === '1') {
+						routeName = '/home/confirm_agency';
+						if (actionType === 'agencyPage') {
+							resolve(nextData.nextStepGramCode);
 						}
+						// } else {
+						// 	return;
+						// }
 					}
 					// 现金分期
 					if (nextData.prodType === '11') {
-						goToStageLoan({ $props });
-						return;
+						// 通付盾 获取设备指纹
+						TFDLogin();
+						routeName = '/home/loan_fenqi';
 					}
 					// 提交预授信借款
 					if (nextData.prodType === '21') {
@@ -324,6 +325,12 @@ export const getNextStatus = ({
 				//   break;
 				case 'AUTH015':
 					routeName = `/home/addInfo`;
+					break;
+				case 'DOWNLOAN':
+					routeName = `/home/deposit_tip`;
+					param = {
+						cashMoney: nextData.curAmt
+					};
 					break;
 				default:
 					routeName = '/home/home';

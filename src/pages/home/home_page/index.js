@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-19 15:23:35
+ * @LastEditTime: 2020-03-24 18:31:38
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -32,7 +32,6 @@ import style from './index.scss';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
-import { TFDLogin } from 'utils/getTongFuDun';
 import {
 	MsgTip,
 	AddCards,
@@ -354,16 +353,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'CN0003':
-				// 通付盾 获取设备指纹
-				TFDLogin();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
-				Toast.hide();
-				if (homeData.cashDataInfo.downloadFlg === '01') {
-					//需要引导下载app
-					this.props.history.push(`/home/deposit_tip?cashMoney=${homeData.cashDataInfo.curAmt}`);
-				} else {
-					this.props.history.push('/home/loan_fenqi');
-				}
+				getNextStatus({
+					RouterType: 'home',
+					$props: this.props
+				});
 				break;
 			case 'CN0004':
 				this.props.toast.info('正在放款中，马上到账');
@@ -487,7 +481,7 @@ export default class home_page extends PureComponent {
 			cardLabel: 'PLUS版',
 			title: 'PLUS版',
 			titleSub: '灵活借款',
-			loanText: '最高可借额度(元)',
+			loanText: '借款高至(元)',
 			loanAmont: '200000',
 			btnText: '查看额度',
 			handleClick: this.handleGoPlusDetail,

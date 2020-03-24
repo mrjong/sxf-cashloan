@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-27 16:45:54
+ * @LastEditTime: 2020-03-24 10:52:20
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -26,7 +26,7 @@ import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
 import { base64Encode } from 'utils/CommonUtil/toolUtil';
 import { msg_slide, msg_sms, signup_sms, download_queryDownloadUrl, index_queryPLPShowSts } from 'fetch/api';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { getH5Channel } from 'utils/common';
 import {
 	buriedPointEvent,
 	pageView,
@@ -97,7 +97,6 @@ export default class login_page extends PureComponent {
 		window.history.pushState(null, null, document.URL);
 		document.title = '登录和注册';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
-		const storeH5Channel = getH5Channel();
 
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
@@ -110,8 +109,6 @@ export default class login_page extends PureComponent {
 		wenjuan && localStorage.setItem('wenjuan', wenjuan);
 		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
 		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);
-
-		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
 

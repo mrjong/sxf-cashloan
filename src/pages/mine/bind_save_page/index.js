@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-09 15:17:51
+ * @LastEditTime: 2020-03-24 18:08:09
  */
 import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
@@ -366,7 +366,8 @@ export default class bind_save_page extends PureComponent {
 	readContract = () => {
 		const formData = this.props.form.getFieldsValue();
 		const params = {
-			cardNo: formData.valueInputCarNumber && base64Encode(formData.valueInputCarNumber.replace(/\s*/g, ''))
+			cardNoCpt:
+				formData.valueInputCarNumber && base64Encode(formData.valueInputCarNumber.replace(/\s*/g, ''))
 		};
 		this.props.$fetch.post(bank_card_protocol_info, params).then((result) => {
 			if (result && result.code === '000000' && result.data !== null) {
@@ -404,7 +405,7 @@ export default class bind_save_page extends PureComponent {
 		const { selectFlag } = this.state;
 		return (
 			<div className={styles.bindSavePage}>
-				<div className={styles.header}>请绑定还款储蓄卡</div>
+				<div className={styles.header}>请绑定储蓄卡</div>
 				<div className="bind_save_page_listBox list-extra">
 					<Item extra={userInfo && userInfo.nameHid}>持卡人</Item>
 					<Item

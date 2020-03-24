@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-03-11 10:28:16
+ * @LastEditTime: 2020-03-23 11:29:39
  */
 import React from 'react';
 import ClockS from 'components/TimeDown/ClockS';
@@ -103,7 +103,7 @@ export default class LimitTimeJoin extends React.PureComponent {
 			case 8:
 				titleDom = (
 					<div className={classNM.loan_cont}>
-						<p className={classNM.card_loan_text}>最高可借金额（元）</p>
+						<p className={classNM.card_loan_text}>借款高至(元)</p>
 						<p className={classNM.card_loan_amout}>{thousandFormatNum(100000)}</p>
 					</div>
 				);
@@ -134,7 +134,7 @@ export default class LimitTimeJoin extends React.PureComponent {
 			default:
 				titleDom = (
 					<div className={classNM.loan_cont}>
-						<p className={classNM.card_loan_text}>最高可借金额（元）</p>
+						<p className={classNM.card_loan_text}>借款高至(元)</p>
 						<p className={classNM.card_loan_amout}>{thousandFormatNum(50000)}</p>
 					</div>
 				);
