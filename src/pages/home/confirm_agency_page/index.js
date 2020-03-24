@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 14:21:50
+ * @LastEditTime: 2020-03-24 15:14:06
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -41,6 +41,7 @@ import { setCacheContactAction } from 'reduxes/actions/staticActions';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { cardBillAmtRiskBury } from './riskBuryConfig';
+import { isMPOS } from 'utils/common';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -776,7 +777,7 @@ export default class confirm_agency_page extends PureComponent {
 	calculationNum = () => {
 		const { repayInfo } = this.state;
 		const { cacheContact } = this.props;
-		if (!cacheContact || cacheContact.length === 0) {
+		if (!cacheContact || cacheContact.length === 0 || isMPOS()) {
 			this.props.setCacheContactAction(repayInfo.contacts.slice(0, 5));
 			return;
 		}
