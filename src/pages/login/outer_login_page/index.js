@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:22:21
+ * @LastEditTime: 2020-03-24 10:52:42
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -19,7 +19,7 @@ import {
 	queryUsrSCOpenId,
 	recordContract
 } from 'utils';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { getH5Channel } from 'utils/common';
 import {
 	buriedPointEvent,
 	pageView,
@@ -88,8 +88,6 @@ export default class login_page extends PureComponent {
 		window.history.pushState(null, null, document.URL);
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
-		const storeH5Channel = getH5Channel();
-
 		let sxfDataLocal = localStorage.getItem('_bp_wqueue');
 		let sxfData_20190815_sdk = localStorage.getItem('sxfData_20190815_sdk');
 		// 移除cookie
@@ -98,8 +96,6 @@ export default class login_page extends PureComponent {
 		// 首页弹窗要用的
 		sxfDataLocal && localStorage.setItem('_bp_wqueue', sxfDataLocal);
 		sxfData_20190815_sdk && localStorage.setItem('sxfData_20190815_sdk', sxfData_20190815_sdk);
-
-		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
 

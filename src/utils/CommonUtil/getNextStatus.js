@@ -288,7 +288,10 @@ export const getNextStatus = ({
 					routeName = `/home/addInfo`;
 					break;
 				case 'DOWNLOAN':
-					routeName = `/home/deposit_tip?cashMoney=${nextData.curAmt}`;
+					routeName = `/home/deposit_tip`;
+					param = {
+						cashMoney: nextData.curAmt
+					};
 					break;
 				default:
 					routeName = '/home/home';

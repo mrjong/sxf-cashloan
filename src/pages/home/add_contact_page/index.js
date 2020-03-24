@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-03-23 14:07:47
+ * @LastEditTime: 2020-03-24 10:36:59
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -53,7 +53,7 @@ export default class add_contact_page extends PureComponent {
 		queryData = qs.parse(location.search, { ignoreQueryPrefix: true });
 
 		const { cacheContact } = this.props;
-		if (cacheContact) {
+		if (cacheContact && cacheContact.length > 0) {
 			return;
 		}
 		this.props.setCacheContactAction([
@@ -71,8 +71,7 @@ export default class add_contact_page extends PureComponent {
 	confirmHandler = () => {
 		buriedPointEvent(home.speContactConfirmClick, {
 			contactsLength:
-				(queryData.contactsLength && queryData.contactsLength === 5 && '等于5') ||
-				(queryData.contactsLength && queryData.contactsLength > 5 && '大于5') ||
+				(queryData.contactsLength && queryData.contactsLength >= 5 && '大于等于5') ||
 				(queryData.contactsLength && queryData.contactsLength < 5 && '小于5')
 		});
 		const { cacheContact, confirmAgencyInfo = {} } = this.props;
@@ -261,7 +260,7 @@ export default class add_contact_page extends PureComponent {
 		return (
 			<div className={styles.contact_result_page}>
 				<StepTitle
-					title="请填写联系人信息"
+					title="请确认联系人信息"
 					titleSub="确认则表示您已授权此联系人信息与我们，在紧急联系人无法联系时，用于与您取得联系时使用"
 				/>
 

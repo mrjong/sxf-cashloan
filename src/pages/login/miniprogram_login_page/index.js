@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-19 15:17:17
+ * @LastEditTime: 2020-03-24 10:51:53
  */
 import qs from 'qs';
 import React, { PureComponent } from 'react';
@@ -10,7 +10,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur, queryUsrSCOpenId } from 'utils';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { getH5Channel } from 'utils/common';
 import { buriedPointEvent, pageView } from 'utils/analytins';
 import styles from './index.scss';
 import bannerImg from './img/login_bg.png';
@@ -65,11 +65,8 @@ export default class miniprogram_login_page extends PureComponent {
 		// 登录页单独处理
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
-		const storeH5Channel = getH5Channel();
 		// 移除cookie
 		logoutClearData();
-
-		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
 

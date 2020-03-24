@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-23 17:49:05
+ * @LastEditTime: 2020-03-24 10:54:20
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
@@ -11,10 +11,9 @@ import { specialClearState } from 'reduxes/actions/specialActions';
 import { setUserInfoAction, staticClearState } from 'reduxes/actions/staticActions';
 import { base64Decode } from './toolUtil';
 import storeRedux from 'reduxes';
-import { isMPOS } from 'utils/common';
+import { isMPOS, getH5Channel, setH5Channel } from 'utils/common';
 import Cookie from 'js-cookie';
 import { isWXOpen } from 'utils';
-
 /**
  * @description: 退出清除数据的方法
  * @param {type}
@@ -26,6 +25,10 @@ export const logoutClearData = () => {
 	storeRedux.dispatch(specialClearState());
 	storeRedux.dispatch(setUserInfoAction({}));
 	Cookie.remove('FIN-HD-AUTH-TOKEN');
+	let h5Channel = getH5Channel();
+	localStorage.clear();
+	sessionStorage.clear();
+	setH5Channel(h5Channel);
 };
 
 /**
@@ -115,7 +118,6 @@ export const logoutApp = () => {
 				result.message && Toast.info(result.message);
 				return;
 			}
-			logoutClearData('LoginSms');
 			if (
 				window.ReactRouterHistory.location &&
 				window.ReactRouterHistory.location.pathname === '/order/order_page' &&
