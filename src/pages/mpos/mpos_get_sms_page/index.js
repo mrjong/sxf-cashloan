@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 16:46:34
+ * @LastEditTime: 2020-03-24 18:58:16
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -23,6 +23,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getH5Channel } from 'utils/common';
 let timmer = '';
 let query = {};
+let BtnDisabled = false;
 @setBackGround('#fff')
 @createForm()
 @fetch.inject()
@@ -155,6 +156,8 @@ export default class mpos_get_sms_page extends PureComponent {
 			this.props.toast.info('验证码输入不正确');
 			return;
 		}
+		if (BtnDisabled) return;
+		BtnDisabled = true;
 		this.props.$fetch
 			.post(signup_mpos_auth, {
 				imei: '',
@@ -170,6 +173,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			})
 			.then(
 				(res) => {
+					BtnDisabled = false;
 					if (res.code === '000000') {
 						if (res.data.authSts === '1') {
 							this.handleSmsCodeClick();
@@ -196,9 +200,13 @@ export default class mpos_get_sms_page extends PureComponent {
 					}
 				},
 				(err) => {
+					BtnDisabled = false;
 					this.props.toast.info(err.msgInfo);
 				}
-			);
+			)
+			.catch(() => {
+				BtnDisabled = false;
+			});
 	};
 
 	showSlideModal = () => {
