@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
 import { Modal, InputItem, Icon } from 'antd-mobile';
-import { ButtonCustom, RepayPlanModal, CheckRadio, ProtocolSmsModal } from 'components';
+import { ButtonCustom, RepayPlanModal, CheckRadio, ProtocolSmsModal, InsuranceModal } from 'components';
 import { store } from 'utils/store';
 import { buriedPointEvent } from 'utils/analytins';
 import { loan_fenqi, home } from 'utils/analytinsType';
@@ -271,6 +271,7 @@ export default class loan_fenqi_page extends PureComponent {
 					loanAmt: loanMoney,
 					prodType: '11',
 					repayType: '0',
+					riskGuarantee: '1',
 					prodId:
 						protocolRes &&
 						protocolRes.data &&
@@ -313,9 +314,17 @@ export default class loan_fenqi_page extends PureComponent {
 			this.props.toast.hide();
 			if (planRes.code === '000000') {
 				this.props.toast.hide();
+				let { contracts = [] } = protocolRes.data || [];
+				let FXBZ_contract = {};
+				contracts.forEach((v, i) => {
+					if (v.contractType === 'FXBZ') {
+						FXBZ_contract = contracts.splice(i, 1);
+					}
+				});
 				this.setState({
 					protocolList: (protocolRes.data && protocolRes.data.contracts) || [],
-					repayPlanInfo: planRes.data
+					repayPlanInfo: planRes.data,
+					FXBZ_contract
 				});
 				buriedPointEvent(loan_fenqi.repayPlan);
 			} else {
@@ -373,7 +382,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	// 选择分期期限
-	selectLoanDate = (item) => {
+	selectLoanDate = (item = {}) => {
 		this.setState(
 			{
 				loanDate: item
@@ -522,9 +531,9 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//验证信息是否填写完整
 	validateFn = () => {
-		const { loanMoney, loanDate, loanUsage } = this.state;
+		const { loanMoney, loanDate, loanUsage, insurancePlanText } = this.state;
 		// if (loanMoney && loanDate && loanDate.prodCount && loanUsage && repayCardNo && resaveCardNo) {
-		if (loanMoney && loanDate && loanDate.prodCount && loanUsage) {
+		if ((loanMoney && loanDate && loanDate.prodCount && loanUsage, insurancePlanText)) {
 			return true;
 		}
 		return false;
@@ -532,7 +541,7 @@ export default class loan_fenqi_page extends PureComponent {
 
 	//借款申请提交
 	loanApplySubmit = () => {
-		const { loanMoney, loanDate, loanUsage, checkBox1 } = this.state;
+		const { loanMoney, loanDate, loanUsage, checkBox1, insurancePlanText } = this.state;
 		if (!loanMoney) {
 			this.props.toast.info('请输入借款金额');
 			return;
@@ -545,8 +554,16 @@ export default class loan_fenqi_page extends PureComponent {
 			this.props.toast.info('请选择借款用途');
 			return;
 		}
+		if (!insurancePlanText) {
+			this.props.toast.info('请选择是否参与风险保障计划');
+			return;
+		}
 		if (!checkBox1) {
 			this.props.toast.info('请先阅读并勾选相关协议，继续签约借款');
+			return;
+		}
+		if (insurancePlanText === '暂不考虑') {
+			this.handleShowTipModal();
 			return;
 		}
 
@@ -606,6 +623,11 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	submitHandler = () => {
+		// 未参加风险保障计划
+		if (!this.state.isJoinInsurancePlan) {
+			this.props.history.push('/home/insurance_result_page');
+			return;
+		}
 		const { couponData } = this.props;
 		// const { loanMoney, loanUsage, repayCardNo, resaveCardNo, prdId, couponInfo } = this.state;
 
@@ -811,6 +833,42 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	//风险保障计划弹窗
+	handleInsuranceModal = () => {
+		buriedPointEvent(home.riskGuaranteePlanClick);
+		const { repayPlanInfo } = this.state;
+		if (!repayPlanInfo || !repayPlanInfo.perdLth) {
+			this.props.toast.info('请输入借款金额');
+			return;
+		}
+		if (repayPlanInfo && repayPlanInfo.perdUnit === 'D') {
+			return;
+		}
+		this.setState({
+			showInsuranceModal: true
+		});
+	};
+
+	handleInsuranceModalClick = (type) => {
+		if (type === 'submit') {
+			buriedPointEvent(home.riskGuaranteeModalOk);
+		} else {
+			buriedPointEvent(home.riskGuaranteeModalCancel);
+		}
+		this.setState(
+			{
+				showInsuranceModal: false,
+				insurancePlanText: type === 'submit' ? '已授权并参与' : '暂不考虑',
+				isJoinInsurancePlan: type === 'submit' ? true : false
+			},
+			() => {
+				buriedPointEvent(home.riskGuaranteeChangePlanText, {
+					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
+				});
+			}
+		);
+	};
+
 	render() {
 		const { userInfo = {} } = this.props;
 		const {
@@ -835,7 +893,11 @@ export default class loan_fenqi_page extends PureComponent {
 			protocolList,
 			isShowTipModal,
 			buttonDisabled,
-			isShowDetail
+			isShowDetail,
+			showInsuranceModal,
+			isJoinInsurancePlan,
+			insurancePlanText,
+			FXBZ_contract = []
 		} = this.state;
 
 		const placeholderText = (priceMin && priceMax && `可借金额${priceMin}～${priceMax}`) || '';
@@ -901,112 +963,130 @@ export default class loan_fenqi_page extends PureComponent {
 						<p className={style.inputTip}>建议全部借出，借款后剩余额度将不可用</p>
 					</div>
 
-					<div className={style.pannel}>
-						<ul>
-							<li
-								className={style.listItem}
+					<ul className={style.pannel}>
+						<li
+							className={style.listItem}
+							onClick={() => {
+								this.showDetail();
+							}}
+						>
+							<label>借多久</label>
+							<div className={[style.listValue, style.hasArrow].join(' ')}>
+								{(!isShowDetail && loanDate && loanDate.prodName) || null}
+								<Icon type={isShowDetail ? 'up' : 'down'} className={style.icon} />
+							</div>
+							{(isShowDetail && this.renderProductListDom()) || null}
+						</li>
+						<li className={style.listItem}>
+							<label>借款用途</label>
+							<div
 								onClick={() => {
-									this.showDetail();
+									this.openModal('usage');
 								}}
+								className={[style.listValue, style.hasArrow].join(' ')}
 							>
-								<label>借多久</label>
-								<div className={style.listValue}>
-									{(!isShowDetail && loanDate && loanDate.prodName) || null}
-									<Icon type={isShowDetail ? 'up' : 'down'} className={style.icon} />
-								</div>
-								{(isShowDetail && this.renderProductListDom()) || null}
-							</li>
+								{loanUsage && loanUsage.loanUseRmk}
+								<Icon type="right" className={style.icon} />
+							</div>
+						</li>
+
+						{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
 							<li className={style.listItem}>
-								<label>借款用途</label>
+								<label>优惠券</label>
 								<div
-									onClick={() => {
-										this.openModal('usage');
-									}}
-									className={style.listValue}
+									className={`${style.listValue} ${style.hasArrow} ${style.couponListValue}`}
+									onClick={this.selectCoupon}
 								>
-									{loanUsage && loanUsage.loanUseRmk}
+									{this.renderListRowCouponValue()}
 									<Icon type="right" className={style.icon} />
 								</div>
 							</li>
-							<li className={style.listItem}>
-								<label>还款计划</label>
-								<span>
-									{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
-										<span
-											className={style.listValue}
-											onClick={() => {
-												this.openModal('plan');
-											}}
-										>
-											点击查看
-											<Icon type="right" className={style.icon} />
-										</span>
-									) : (
-										<span className={style.greyText}>暂无</span>
-									)}
+						) : null}
+					</ul>
+					<ul className={style.pannel}>
+						<li className={style.listItem} onClick={this.handleInsuranceModal}>
+							<div className={style.labelBox}>
+								<label>风险保障计划</label>
+								<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
+							</div>
+
+							<span
+								className={[style.listValue, style.hasArrow, !isJoinInsurancePlan && style.greyText].join(
+									' '
+								)}
+							>
+								{insurancePlanText || '请选择'}
+								<Icon type="right" className={style.icon} />
+							</span>
+						</li>
+						<li className={style.listItem}>
+							<label>还款计划</label>
+							<span>
+								{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
+									<span
+										className={[style.listValue, style.hasArrow].join(' ')}
+										onClick={() => {
+											buriedPointEvent(home.repayPlanClick, {
+												isJoinInsurancePlan
+											});
+											this.openModal('plan');
+										}}
+									>
+										点击查看
+										<Icon type="right" className={style.icon} />
+									</span>
+								) : (
+									<span className={style.greyText}>暂无</span>
+								)}
+							</span>
+						</li>
+					</ul>
+					<ul className={style.pannel}>
+						<li className={style.listItem}>
+							<label>收款银行卡</label>
+							{repayCardLast.length > 0 ? (
+								<span
+									className={[style.listValue, style.hasArrow].join(' ')}
+									onClick={() => {
+										this.selectBankCard(repayCardNo, 'withdraw');
+									}}
+								>
+									{`${repayCardName}(${repayCardLast})`}
+									<Icon type="right" className={style.icon} />
 								</span>
-							</li>
-							{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
-								<li className={style.listItem}>
-									<label>优惠券</label>
-									<div className={`${style.listValue} ${style.couponListValue}`} onClick={this.selectCoupon}>
-										{this.renderListRowCouponValue()}
-										<Icon type="right" className={style.icon} />
-									</div>
-								</li>
-							) : null}
-						</ul>
-					</div>
-					<div className={style.pannel}>
-						<ul>
-							<li className={style.listItem}>
-								<label>收款银行卡</label>
-								{repayCardLast.length > 0 ? (
-									<span
-										className={style.listValue}
-										onClick={() => {
-											this.selectBankCard(repayCardNo, 'withdraw');
-										}}
-									>
-										{`${repayCardName}(${repayCardLast})`}
-										<Icon type="right" className={style.icon} />
-									</span>
-								) : (
-									<span
-										className={style.highlightText}
-										onClick={() => {
-											this.bindBankCard('withdraw');
-										}}
-									>
-										绑定储蓄卡 <i className={style.addIcon}>+</i>
-									</span>
-								)}
-							</li>
-							<li className={style.listItem}>
-								<label>还款银行卡</label>
-								{resaveCardLast.length > 0 ? (
-									<span
-										className={style.listValue}
-										onClick={() => {
-											this.selectBankCard(resaveCardNo, 'withhold');
-										}}
-									>
-										{`${resaveCardName}(${resaveCardLast})`}
-										<Icon type="right" className={style.icon} />
-									</span>
-								) : (
-									<span
-										className={style.highlightText}
-										onClick={() => {
-											this.bindBankCard('withhold');
-										}}
-									>
-										绑定储蓄卡 <i className={style.addIcon}>+</i>
-									</span>
-								)}
-							</li>
-						</ul>
-					</div>
+							) : (
+								<span
+									onClick={() => {
+										this.bindBankCard('withdraw');
+									}}
+								>
+									绑定储蓄卡 <i className={style.addIcon}>+</i>
+								</span>
+							)}
+						</li>
+						<li className={style.listItem}>
+							<label>还款银行卡</label>
+							{resaveCardLast.length > 0 ? (
+								<span
+									className={[style.listValue, style.hasArrow].join(' ')}
+									onClick={() => {
+										this.selectBankCard(resaveCardNo, 'withhold');
+									}}
+								>
+									{`${resaveCardName}(${resaveCardLast})`}
+									<Icon type="right" className={style.icon} />
+								</span>
+							) : (
+								<span
+									onClick={() => {
+										this.bindBankCard('withhold');
+									}}
+								>
+									绑定储蓄卡 <i className={style.addIcon}>+</i>
+								</span>
+							)}
+						</li>
+					</ul>
 
 					{loanMoney &&
 					loanDate &&
@@ -1066,8 +1146,30 @@ export default class loan_fenqi_page extends PureComponent {
 					data={repayPlanInfo.perds}
 					loanMoney={loanMoney}
 					history={this.props.history}
+					isJoinInsurancePlan={isJoinInsurancePlan}
 					goPage={() => {
 						this.props.history.push('/home/payment_notes');
+					}}
+				/>
+
+				<InsuranceModal
+					visible={showInsuranceModal}
+					onButtonClick={(type) => {
+						this.handleInsuranceModalClick(type);
+					}}
+					onClose={() => {
+						this.setState({
+							showInsuranceModal: false
+						});
+					}}
+					data={repayPlanInfo.perds}
+					history={this.props.history}
+					toast={this.props.toast}
+					guaranteeCompany={repayPlanInfo.guaranteeCompany}
+					contact={FXBZ_contract[0]}
+					handleContractClick={(e) => {
+						e.stopPropagation();
+						this.readContract(FXBZ_contract[0]);
 					}}
 				/>
 

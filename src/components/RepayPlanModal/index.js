@@ -98,7 +98,9 @@ export default class RepayPlanModal extends React.PureComponent {
 						<span>查看详情</span>
 						<Icon type="right" className={style.link_bar_close} />
 					</a>
-					<StepBar data={data2} />
+					<div className={style.stepbar_wrap}>
+						<StepBar data={data2} />
+					</div>
 				</div>
 			</div>
 		);
@@ -146,7 +148,9 @@ export default class RepayPlanModal extends React.PureComponent {
 							<span>查看详情</span>
 							<Icon type="right" className={style.link_bar_close} />
 						</a>
-						<StepBar data={data1} />
+						<div className={style.stepbar_wrap}>
+							<StepBar data={data1} />
+						</div>
 					</div>
 				</Drawer>
 				{/* <div className={style.fix_bottom}>

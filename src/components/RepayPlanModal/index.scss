@@ -55,11 +55,11 @@
 	}
 	.money {
 		font-size: 68px;
-    color: #121c32;
-    .moneyUnit {
-      font-size: 36px;
-      margin-right: 10px;
-    }
+		color: #121c32;
+		.moneyUnit {
+			font-size: 36px;
+			margin-right: 10px;
+		}
 
 		.value {
 			font-family: 'DINMitAlt';
@@ -91,6 +91,13 @@
 		position: absolute;
 		right: 15px;
 	}
+}
+
+.stepbar_wrap {
+  padding-bottom: 150px;
+  height: 600px;
+	box-sizing: border-box;
+	overflow: scroll;
 }
 
 .fix_bottom {

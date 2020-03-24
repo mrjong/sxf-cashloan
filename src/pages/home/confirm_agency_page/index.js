@@ -1046,7 +1046,7 @@ export default class confirm_agency_page extends PureComponent {
 										</div>
 									) : (
 										(repayInfo2 && (
-											<span className={[style.listValue, style.grayText2, style.hasArrow].join(' ')}>
+											<span className={[style.listValue, style.grayText, style.hasArrow].join(' ')}>
 												无可用优惠券
 												<Icon type="right" className={style.icon} />
 											</span>
@@ -1067,11 +1067,9 @@ export default class confirm_agency_page extends PureComponent {
 									</div>
 
 									<span
-										className={[
-											style.listValue,
-											style.hasArrow,
-											!isJoinInsurancePlan && style.grayText2
-										].join(' ')}
+										className={[style.listValue, style.hasArrow, !isJoinInsurancePlan && style.grayText].join(
+											' '
+										)}
 									>
 										{insurancePlanText || '请选择'}
 										<Icon type="right" className={style.icon} />

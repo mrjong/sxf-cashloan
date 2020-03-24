@@ -47,9 +47,9 @@ class insurance_result_page extends Component {
 	};
 
 	goBack = () => {
-		// this.props.history.goBack();
 		buriedPointEvent(home.riskGuaranteeResultTry);
-		this.props.history.replace('/home/confirm_agency?showInsuranceModal=true');
+		this.props.history.goBack();
+		// this.props.history.replace('/home/confirm_agency?showInsuranceModal=true');
 	};
 
 	render() {
