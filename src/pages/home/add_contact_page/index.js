@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-03-24 10:36:59
+ * @LastEditTime: 2020-03-24 17:53:25
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -71,8 +71,7 @@ export default class add_contact_page extends PureComponent {
 	confirmHandler = () => {
 		buriedPointEvent(home.speContactConfirmClick, {
 			contactsLength:
-				(queryData.contactsLength && queryData.contactsLength >= 5 && '大于等于5') ||
-				(queryData.contactsLength && queryData.contactsLength < 5 && '小于5')
+				queryData.contactsLength && Number(queryData.contactsLength) >= 5 ? '大于等于5' : '小于5'
 		});
 		const { cacheContact, confirmAgencyInfo = {} } = this.props;
 		const excConatactList =
