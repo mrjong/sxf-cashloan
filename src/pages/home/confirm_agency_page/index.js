@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 15:14:06
+ * @LastEditTime: 2020-03-24 16:32:51
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -778,7 +778,7 @@ export default class confirm_agency_page extends PureComponent {
 		const { repayInfo } = this.state;
 		const { cacheContact } = this.props;
 		if (!cacheContact || cacheContact.length === 0 || isMPOS()) {
-			this.props.setCacheContactAction(repayInfo.contacts.slice(0, 5));
+			this.props.setCacheContactAction((repayInfo.contacts && repayInfo.contacts.slice(0, 5)) || []);
 			return;
 		}
 		let isNull = true;
@@ -790,9 +790,9 @@ export default class confirm_agency_page extends PureComponent {
 			}
 		}
 		if (isNull) {
-			this.props.setCacheContactAction(repayInfo.contacts.slice(0, 5));
+			this.props.setCacheContactAction((repayInfo.contacts && repayInfo.contacts.slice(0, 5)) || []);
 		} else {
-			this.props.setCacheContactAction(cacheContact.slice(0, 5));
+			this.props.setCacheContactAction((cacheContact && cacheContact.slice(0, 5)) || []);
 		}
 	};
 	// 点击勾选协议
