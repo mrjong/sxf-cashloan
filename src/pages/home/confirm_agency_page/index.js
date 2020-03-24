@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 10:41:52
+ * @LastEditTime: 2020-03-24 14:21:50
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
@@ -791,7 +791,7 @@ export default class confirm_agency_page extends PureComponent {
 		if (isNull) {
 			this.props.setCacheContactAction(repayInfo.contacts.slice(0, 5));
 		} else {
-			this.props.setCacheContactAction(cacheContact);
+			this.props.setCacheContactAction(cacheContact.slice(0, 5));
 		}
 	};
 	// 点击勾选协议
