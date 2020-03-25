@@ -1,12 +1,5 @@
 @import '../../../assets/styles/scss/base/fn.scss';
 .confirm_agency {
-	// input::placeholder {
-	// 	color: #999;
-	// 	font-size: 0.6rem;
-	// 	line-height: 0.6rem;
-	// 	padding-top: 20px;
-	// }
-
 	.scrollWrap {
 		padding-bottom: 160px;
 	}
@@ -15,7 +8,6 @@
 		position: relative;
 		padding: 57px 40px 0;
 		box-sizing: border-box;
-
 		.moneyUnit {
 			position: absolute;
 			font-size: 40px;
@@ -40,18 +32,11 @@
 	.billInput {
 		background-color: transparent;
 		input {
-			text-align: left;
-			font-size: 90px;
+			font-size: 80px;
 			font-family: 'DINMitAlt';
 			color: #394259;
 		}
 	}
-	.inputTip {
-		font-size: 24px;
-		color: #868e9e;
-		margin: 20px 0 30px;
-	}
-
 	.pannel {
 		overflow: hidden;
 		margin: 20px 30px;

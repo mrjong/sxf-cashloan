@@ -76,7 +76,9 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveCardLast: '', //还款银行卡后四位
 			resaveCardName: '', //还款银行卡银行
 			isShowDetail: false, // 是否展示产品列表
-			productListCopy: []
+			productListCopy: [],
+			insurancePlanText: '',
+			showInsuranceModal: false
 		};
 	}
 
@@ -233,7 +235,6 @@ export default class loan_fenqi_page extends PureComponent {
 		// 找出prodCount最大对象所在的索引
 		let maxItem = null;
 		let indexOfMax = 0;
-		console.log(loanDate, 'aw');
 		if (loanDate) {
 			maxItem = loanDate;
 		} else {
@@ -486,7 +487,9 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal
+			isShowTipModal,
+			insurancePlanText,
+			showInsuranceModal
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
 			loanMoney,
@@ -507,7 +510,9 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal
+			isShowTipModal,
+			insurancePlanText,
+			showInsuranceModal
 		});
 	};
 
@@ -625,6 +630,15 @@ export default class loan_fenqi_page extends PureComponent {
 	submitHandler = () => {
 		// 未参加风险保障计划
 		if (!this.state.isJoinInsurancePlan) {
+			this.setState(
+				{
+					isShowTipModal: false,
+					showInsuranceModal: true
+				},
+				() => {
+					this.storeTempData();
+				}
+			);
 			this.props.history.push('/home/insurance_result_page');
 			return;
 		}
@@ -785,10 +799,10 @@ export default class loan_fenqi_page extends PureComponent {
 	renderListRowCouponValue() {
 		const { repayPlanInfo = {} } = this.state;
 		if (repayPlanInfo && repayPlanInfo.availableCoupCount && Number(repayPlanInfo.availableCoupCount)) {
-			if (repayPlanInfo.deductAmount) {
+			if (repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt) {
 				return (
 					<span className={style.repayPlan} style={{ color: '#FE6666' }}>
-						{repayPlanInfo.deductAmount}元
+						{repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt}元
 					</span>
 				);
 			}
@@ -960,7 +974,7 @@ export default class loan_fenqi_page extends PureComponent {
 								}}
 							/>
 						</div>
-						<p className={style.inputTip}>建议全部借出，借款后剩余额度将不可用</p>
+						<p className={style.billInpBoxTip}>建议全部借出，借款后剩余额度将不可用</p>
 					</div>
 
 					<ul className={style.pannel}>
