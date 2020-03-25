@@ -133,7 +133,8 @@
 	.leftDesc {
 		font-size: 24px;
 		color: $colorInactiveColor;
-		margin-top: -30px;
+    margin-top: -30px;
+    white-space: pre;
 	}
 	.money {
 		font-size: 64px;
