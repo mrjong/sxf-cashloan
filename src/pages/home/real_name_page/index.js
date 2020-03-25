@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-28 10:24:15
+ * @LastEditTime: 2020-03-12 16:13:34
  */
 import React, { Component } from 'react';
 import fetch from 'sx-fetch';
@@ -293,7 +293,8 @@ export default class real_name_page extends Component {
 					if (this.props.nextStepStatus || (urlQuery && urlQuery.newTitle)) {
 						getNextStatus({
 							RouterType: 'real_name_page',
-							$props: this.props
+							$props: this.props,
+							goBack: true
 						});
 					} else {
 						this.props.history.goBack();
@@ -303,7 +304,8 @@ export default class real_name_page extends Component {
 					if (this.props.nextStepStatus) {
 						getNextStatus({
 							RouterType: 'real_name_page',
-							$props: this.props
+							$props: this.props,
+							goBack: true
 						});
 					} else {
 						this.props.history.goBack();

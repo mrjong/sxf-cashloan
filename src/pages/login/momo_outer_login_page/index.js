@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 09:55:15
+ * @LastEditTime: 2020-03-24 11:02:51
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -19,7 +19,7 @@ import {
 	recordContract,
 	queryUsrSCOpenId
 } from 'utils';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { getH5Channel } from 'utils/common';
 import {
 	buriedPointEvent,
 	pageView,
@@ -97,9 +97,7 @@ export default class momo_outer_login_page extends PureComponent {
 		// window.history.pushState(null, null, document.URL);
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
-		const storeH5Channel = getH5Channel();
 		logoutClearData();
-		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
 

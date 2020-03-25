@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-24 16:46:34
+ * @LastEditTime: 2020-03-24 19:42:40
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -21,11 +21,18 @@ import { TFDLogin } from 'utils/getTongFuDun';
 import { msg_slide, msg_sms, signup_sms, signup_mpos_auth, index_queryPLPShowSts } from 'fetch/api';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { getH5Channel } from 'utils/common';
+import { setUserInfoAction } from 'reduxes/actions/staticActions';
+import { connect } from 'react-redux';
 let timmer = '';
 let query = {};
+let BtnDisabled = false;
 @setBackGround('#fff')
 @createForm()
 @fetch.inject()
+@connect(
+	(state) => state,
+	{ setUserInfoAction }
+)
 export default class mpos_get_sms_page extends PureComponent {
 	constructor(props) {
 		super(props);
@@ -146,6 +153,7 @@ export default class mpos_get_sms_page extends PureComponent {
 	};
 
 	goSubmit = () => {
+		Toast.loading('加载中...', 10);
 		let { codeInput } = this.state;
 		if (!codeInput) {
 			this.props.toast.info('请输入验证码');
@@ -155,6 +163,8 @@ export default class mpos_get_sms_page extends PureComponent {
 			this.props.toast.info('验证码输入不正确');
 			return;
 		}
+		if (BtnDisabled) return;
+		BtnDisabled = true;
 		this.props.$fetch
 			.post(signup_mpos_auth, {
 				imei: '',
@@ -172,6 +182,7 @@ export default class mpos_get_sms_page extends PureComponent {
 				(res) => {
 					if (res.code === '000000') {
 						if (res.data.authSts === '1') {
+							BtnDisabled = false;
 							this.handleSmsCodeClick();
 						} else if (res.data.authSts === '0') {
 							this.props.setUserInfoAction(res.data);
@@ -187,8 +198,10 @@ export default class mpos_get_sms_page extends PureComponent {
 							this.goHome();
 						}
 					} else if (res.code === '000009') {
+						BtnDisabled = false;
 						this.props.toast.info(res.message);
 					} else {
+						BtnDisabled = false;
 						this.props.toast.info('授权失败', 3, () => {
 							// token和手机号取chkAuth的
 							this.props.history.replace(`/login?tokenId=${query.tokenId}&mblNoHid=${query.mblNoHid}`);
@@ -196,9 +209,15 @@ export default class mpos_get_sms_page extends PureComponent {
 					}
 				},
 				(err) => {
+					BtnDisabled = false;
+					Toast.hide();
 					this.props.toast.info(err.msgInfo);
 				}
-			);
+			)
+			.catch(() => {
+				Toast.hide();
+				BtnDisabled = false;
+			});
 	};
 
 	showSlideModal = () => {
@@ -350,6 +369,7 @@ export default class mpos_get_sms_page extends PureComponent {
 			$props: this.props,
 			type: 'A',
 			callback: () => {
+				BtnDisabled = false;
 				getNextStatus({
 					$props: this.props,
 					actionType: 'mpos'

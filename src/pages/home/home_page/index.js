@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-12 14:32:33
+ * @LastEditTime: 2020-03-24 18:31:38
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -21,10 +21,10 @@ import {
 } from 'reduxes/actions/commonActions';
 
 import qs from 'qs';
-import { updateBillInf } from 'utils/CommonUtil/commonFunc';
+import { updateBillInf, goToPreLoan } from 'utils/CommonUtil/commonFunc';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { buriedPointEvent } from 'utils/analytins';
-import { home, mine, loan_fenqi } from 'utils/analytinsType';
+import { home, mine, loan_fenqi, preLoan } from 'utils/analytinsType';
 import fetch from 'sx-fetch';
 import { Carousels, commonPage } from 'components';
 import style from './index.scss';
@@ -32,7 +32,6 @@ import style from './index.scss';
 import linkConf from 'config/link.conf';
 import { createForm } from 'rc-form';
 import { setBackGround } from 'utils/background';
-import { TFDLogin } from 'utils/getTongFuDun';
 import {
 	MsgTip,
 	AddCards,
@@ -354,15 +353,11 @@ export default class home_page extends PureComponent {
 				});
 				break;
 			case 'CN0003':
-				// 通付盾 获取设备指纹
-				TFDLogin();
 				buriedPointEvent(loan_fenqi.fenqiHomeApplyBtn);
-				if (homeData.cashDataInfo.downloadFlg === '01') {
-					//需要引导下载app
-					this.props.history.push(`/home/deposit_tip?cashMoney=${homeData.cashDataInfo.curAmt}`);
-				} else {
-					this.props.history.push('/home/loan_fenqi');
-				}
+				getNextStatus({
+					RouterType: 'home',
+					$props: this.props
+				});
 				break;
 			case 'CN0004':
 				this.props.toast.info('正在放款中，马上到账');
@@ -376,6 +371,40 @@ export default class home_page extends PureComponent {
 					}
 				});
 				break;
+			case 'PA0001':
+				buriedPointEvent(preLoan.homeLoanBtn);
+				goToPreLoan({ $props: this.props });
+				break;
+			case 'PA0002': {
+				buriedPointEvent(preLoan.homeLoaningBtn);
+				Toast.hide();
+				// 放款中
+				let title = `预计60秒完成放款`;
+				let desc = `超过2个工作日没有放款成功，可`;
+				this.props.history.push({
+					pathname: '/home/loan_apply_succ_page',
+					search: `?title=${title}&desc=${desc}&prodType=21`
+				});
+				break;
+			}
+			case 'PA0003': // 预授信 放款成功
+				buriedPointEvent(preLoan.homePrePayBtn);
+				this.props.history.push({
+					pathname: '/order/order_detail_page',
+					search: '?entryFrom=home',
+					state: {
+						billNo: homeData.preApprDataInfo.billNo
+					}
+				});
+				break;
+			case 'PA0004': // 预授信 放款失败
+				Toast.hide();
+				buriedPointEvent(preLoan.homePreRefuseBtn, {
+					medium: 'H5'
+				});
+				store.setCarrierMoxie(true); // 设置去到第三方标示
+				window.location.href = linkConf.MARKET_URL + `&SCOpenId=${store.getQueryUsrSCOpenId()}`;
+				break;
 			default:
 				Toast.hide();
 		}
@@ -385,7 +414,8 @@ export default class home_page extends PureComponent {
 		Toast.loading('加载中...', 10);
 		getNextStatus({
 			RouterType: 'home',
-			$props: this.props
+			$props: this.props,
+			pageParam: '01'
 		});
 	};
 	/**
@@ -451,7 +481,7 @@ export default class home_page extends PureComponent {
 			cardLabel: 'PLUS版',
 			title: 'PLUS版',
 			titleSub: '灵活借款',
-			loanText: '最高可借额度(元)',
+			loanText: '借款高至(元)',
 			loanAmont: '200000',
 			btnText: '查看额度',
 			handleClick: this.handleGoPlusDetail,
@@ -474,10 +504,17 @@ export default class home_page extends PureComponent {
 		const bankNm = !bankName ? '****' : bankName;
 
 		let differDays = '';
+		let differDays2 = '';
 		if (homeData && homeData.dcDataInfo && homeData.dcDataInfo.netAppyDate) {
 			differDays = dateDiffer(
 				dayjs(new Date()).format('YYYY/MM/DD'),
 				dayjs(homeData.dcDataInfo.netAppyDate).format('YYYY/MM/DD')
+			);
+		}
+		if (homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.netAppyDate) {
+			differDays2 = dateDiffer(
+				dayjs(new Date()).format('YYYY/MM/DD'),
+				dayjs(homeData.preApprDataInfo.netAppyDate).format('YYYY/MM/DD')
 			);
 		}
 
@@ -650,6 +687,58 @@ export default class home_page extends PureComponent {
 				plusCardData.btnText = homeData && homeData.indexMsg;
 				plusCardData.handleClick = this.handleSmartClick;
 				plusCardData.handleDetailClick = this.handleGoPlusDetail;
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0001': // 预授信 申请通过有额度
+				plusCardData.topTip =
+					homeData && homeData.preApprDataInfo && homeData.preApprDataInfo.acOverDt
+						? `${homeData.preApprDataInfo.acOverDt}天后失去资格`
+						: '';
+				plusCardData.loanAmont =
+					(homeData.preApprDataInfo.curAmt && parseFloat(homeData.preApprDataInfo.curAmt, 10)) || '';
+
+				plusCardData.handleClick = this.handleSmartClick;
+				plusCardData.titleSub = '直接提现';
+				plusCardData.loanText = '可用额度(元)';
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.detailText = '仅1%用户获得';
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0002': // 预授信 放款中
+				plusCardData.loanAmont =
+					(homeData.preApprDataInfo.curAmt && parseFloat(homeData.preApprDataInfo.curAmt, 10)) || '';
+				plusCardData.titleSub = '直接提现';
+				plusCardData.specialText = '放款中…';
+				plusCardData.specialTextStyle = style.loaningTextStyle;
+				plusCardData.btnText = '查看进度';
+				plusCardData.detailText = '仅1%用户获得';
+				plusCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0003': // 预授信放款成功 去还款
+				plusCardData.loanText = '借款金额(元)';
+				plusCardData.loanAmont =
+					homeData &&
+					homeData.preApprDataInfo &&
+					homeData.preApprDataInfo.orderAmt &&
+					parseFloat(homeData.preApprDataInfo.orderAmt, 10);
+				plusCardData.btnText = homeData && homeData.indexMsg;
+				plusCardData.titleSub = '直接提现';
+				plusCardData.detailText = '仅1%用户获得';
+				plusCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(plusCardData);
+				break;
+			case 'PA0004': // 预授信放款失败 同 LN0005
+				basicCardData.topTip =
+					homeData.preApprDataInfo.netAppyDate &&
+					differDays2 <= 60 &&
+					`${dayjs(homeData.preApprDataInfo.netAppyDate).format('YYYY/MM/DD')}可再次申请`;
+				basicCardData.statusTitle = '非常抱歉,本次审核未通过';
+				basicCardData.statusTitleSub = '去试试其他借款平台';
+				basicCardData.btnText = '去试试';
+				basicCardData.handleClick = this.handleSmartClick;
+				disPlayData.push(basicCardData);
+				this.setPlusCardData(plusCardData);
 				disPlayData.push(plusCardData);
 				break;
 			default:

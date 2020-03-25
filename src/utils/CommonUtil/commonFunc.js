@@ -1,20 +1,21 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-02 09:14:36
+ * @LastEditTime: 2020-03-24 18:32:22
  */
 import React from 'react';
 import { Toast, Modal } from 'antd-mobile';
 import fetch from 'sx-fetch';
-import { loan_queryCashLoanApplInfo, signup_logout, bank_card_contract_info } from 'fetch/api';
+import { signup_logout, bank_card_contract_info, loan_loanSubPreAppr } from 'fetch/api';
 import { commonClearState } from 'reduxes/actions/commonActions';
 import { specialClearState } from 'reduxes/actions/specialActions';
 import { setUserInfoAction, staticClearState } from 'reduxes/actions/staticActions';
 import { base64Decode } from './toolUtil';
 import storeRedux from 'reduxes';
-import { TFDLogin } from 'utils/getTongFuDun';
-import { isMPOS } from 'utils/common';
+import { isMPOS, getH5Channel, setH5Channel } from 'utils/common';
 import Cookie from 'js-cookie';
 import { isWXOpen } from 'utils';
+import { buriedPointEvent } from 'utils/analytins';
+import { preLoan } from 'utils/analytinsType';
 
 /**
  * @description: 退出清除数据的方法
@@ -27,8 +28,10 @@ export const logoutClearData = () => {
 	storeRedux.dispatch(specialClearState());
 	storeRedux.dispatch(setUserInfoAction({}));
 	Cookie.remove('FIN-HD-AUTH-TOKEN');
-	sessionStorage.clear();
+	let h5Channel = getH5Channel();
 	localStorage.clear();
+	sessionStorage.clear();
+	setH5Channel(h5Channel);
 };
 
 /**
@@ -112,60 +115,67 @@ export const updateBillInf = ({ $props, type = '', usrIndexInfo }) => {
 };
 
 /**
- * @description: 跳转现金分期页面
+ * @description: 跳转预授信签约借款页面
  * @param {type}
  * @return:
  */
-export const goToStageLoan = ({ $props }) => {
-	//传设备指纹，不需接口成功即跳转现金分期
-	const { $fetch } = $props;
-	TFDLogin();
-	// const params = { channelType: 'app' };
+export const goToPreLoan = ({ $props }) => {
+	$props.history.push('/home/pre_loan');
+};
 
-	// Toast.loading('', 10);
-	$fetch
-		.post(loan_queryCashLoanApplInfo)
-		.then((res) => {
-			Toast.hide();
-			if (res.code === '000000') {
-				if (!(res.data && res.data.prods && res.data.prods.length)) {
-					Toast.info('无借款产品，请联系客服');
-					return;
-				}
-				if (res.data && res.data.contacts && res.data.contacts.length) {
-					res.data.contacts.map((item, index) => {
-						item.name = base64Decode(item.name);
-						item.number = base64Decode(item.number);
-						if (index < 5) {
-							item.isMarked = true;
-						} else {
-							item.isMarked = false;
-						}
-						item.uniqMark = 'uniq' + index;
-						return item;
+// 预授信借款提交接口
+export const handleClickPreLoanSubmit = ($props, repaymentData, goBack) =>
+	new Promise((resolve, reject) => {
+		const { sendParams = {}, selProduct = {} } = repaymentData;
+		const params = {
+			...sendParams
+		};
+		console.log(repaymentData, 'ssss');
+		$props.$fetch
+			.post(loan_loanSubPreAppr, params)
+			.then((res1) => {
+				Toast.hide();
+				resolve('success');
+				// 提交签约信息返回成功
+				if (res1 && res1.code === '000000') {
+					Toast.info('签约成功，请留意放款通知！', 2, () => {
+						let title = `预计60秒完成放款`;
+						let desc = `超过2个工作日没有放款成功，可`;
+						$props.history.push({
+							pathname: '/home/loan_apply_succ_page',
+							search: `?title=${title}&desc=${desc}&prodType=21`
+						});
 					});
-				}
-				if (res.data && res.data.excludedContacts && res.data.excludedContacts.length) {
-					for (let i = 0; i < res.data.excludedContacts.length; i++) {
-						res.data.excludedContacts[i] = base64Decode(res.data.excludedContacts[i]);
+					buriedPointEvent(preLoan.loanSignResult, {
+						is_success: true,
+						amount_value: sendParams.loanAmt,
+						perd_length: selProduct.prodLth
+					});
+				} else {
+					buriedPointEvent(preLoan.loanSignResult, {
+						is_success: false,
+						fail_reason: res1.message,
+						amount_value: sendParams.loanAmt,
+						perd_length: selProduct.prodLth
+					});
+					Toast.info(res1.message);
+					if (goBack) {
+						setTimeout(() => {
+							$props.history.push('/home/pre_loan');
+						}, 2000);
 					}
 				}
-				$props.history.push('/home/loan_fenqi');
-			} else {
-				Toast.info(res.message);
-				setTimeout(() => {
-					$props.history.push('/home/home');
-				}, 2000);
-			}
-		})
-		.catch(() => {
-			Toast.info('系统开小差,请稍后重试');
-			setTimeout(() => {
-				$props.history.push('/home/home');
-			}, 2000);
-		});
-	// });
-};
+			})
+			.catch(() => {
+				Toast.hide();
+				reject('error');
+				if (goBack) {
+					setTimeout(() => {
+						$props.history.push('/home/pre_loan');
+					}, 2000);
+				}
+			});
+	});
 // 退出功能
 export const logoutApp = () => {
 	fetch.get(signup_logout).then(
@@ -174,7 +184,6 @@ export const logoutApp = () => {
 				result.message && Toast.info(result.message);
 				return;
 			}
-			logoutClearData('LoginSms');
 			if (
 				window.ReactRouterHistory.location &&
 				window.ReactRouterHistory.location.pathname === '/order/order_page' &&

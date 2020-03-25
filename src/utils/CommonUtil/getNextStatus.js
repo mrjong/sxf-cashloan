@@ -3,11 +3,11 @@ import { store } from 'utils/store';
 import { Toast, Modal } from 'antd-mobile';
 import qs from 'qs';
 import { index_getNextStep, bank_card_check, auth_getTencentFaceData } from 'fetch/api';
-// import { getFaceDetect, goToStageLoan } from '@/utils/CommonUtil';
 import storeRedux from 'reduxes';
 import { activeConfigSts } from 'utils';
 
-import { goToStageLoan } from './commonFunc';
+import { handleClickPreLoanSubmit, goToPreLoan } from './commonFunc';
+import { TFDLogin } from 'utils/getTongFuDun';
 
 /**
  * @description: 是否绑定了一张信用卡一张储蓄卡，且是否为授信信用卡
@@ -150,11 +150,13 @@ export const getNextStatus = ({
 	hideLoading,
 	callBack,
 	actionType = '',
-	actionMsg
+	actionMsg,
+	goBack,
+	pageParam
 }) =>
 	new Promise(async (resolve) => {
 		const nextStatusResponse = await $props.$fetch
-			.post(index_getNextStep, {}, { hideToast: !!hideLoading })
+			.post(index_getNextStep, { page: pageParam || '' }, { hideToast: !!hideLoading })
 			.catch(() => {
 				Toast.hide();
 			});
@@ -180,7 +182,7 @@ export const getNextStatus = ({
 				// 		search: '?jumpToBase=true&entry=authorize'
 				// 	});
 				// }
-				if (nextData.nextStepGramCode === 'AUTH015') {
+				if (nextData.nextStepGramCode === 'AUTH015' && nextData.prodType !== '21') {
 					Toast.hide();
 					$props.history.replace({
 						pathname: '/home/addInfo',
@@ -206,6 +208,7 @@ export const getNextStatus = ({
 						param = { newTitle: '实名认证' };
 						routeName = '/home/real_name';
 					}
+					nextData.prodType === '21' && store.setToggleMoxieCard(true);
 					break;
 				case 'AUTH002':
 					$props.$fetch.get(`${auth_getTencentFaceData}`, {}).then((result) => {
@@ -218,8 +221,17 @@ export const getNextStatus = ({
 					});
 					break;
 				case 'AUTH003':
-					resBackMsg = '基本信息认证';
-					routeName = '/home/essential_information';
+					// 预授信
+					if (nextData.prodType === '21') {
+						// 防止返回到签约借款页面,
+						// 选卡的时候返回首页,back js里nextStepStatus
+						store.setToggleMoxieCard(true);
+						resBackMsg = '补充联系人';
+						routeName = '/home/pre_add_contact_page';
+					} else {
+						resBackMsg = '基本信息认证';
+						routeName = '/home/essential_information';
+					}
 					break;
 				case 'AUTH005':
 					resBackMsg = '银行列表';
@@ -233,17 +245,24 @@ export const getNextStatus = ({
 					{
 						let storeData = storeRedux.getState();
 						const { commonState = {} } = storeData;
-						const { applyCreditData } = commonState;
-						if (applyCreditData) {
-							activeConfigSts({
-								$props,
-								type: 'B'
-							});
-							return;
-						} else if (nextData.credCardCount > 1) {
-							routeName = '/mine/credit_list_page';
+						const { preLoanData, applyCreditData } = commonState;
+						// APPL与LOAN在预授信里面是一个
+						if (nextData.prodType === '21') {
+							if (preLoanData) {
+								handleClickPreLoanSubmit($props, preLoanData, goBack);
+							}
 						} else {
-							routeName = '/home/loan_repay_confirm_page';
+							if (applyCreditData) {
+								activeConfigSts({
+									$props,
+									type: 'B'
+								});
+								return;
+							} else if (nextData.credCardCount > 1) {
+								routeName = '/mine/credit_list_page';
+							} else {
+								routeName = '/home/loan_repay_confirm_page';
+							}
 						}
 					}
 					break;
@@ -254,23 +273,42 @@ export const getNextStatus = ({
 					};
 					routeName = '/order/order_detail_page';
 					break;
+				case 'TO-LOAN':
+					// 跳转预授信借款页面
+					storeRedux.dispatch(setNextStepStatus(false));
+					if (nextData.prodType === '21') {
+						goToPreLoan({ $props });
+						return;
+					}
+					break;
 				case 'LOAN':
 					storeRedux.dispatch(setNextStepStatus(false));
 					// 代偿
 					if (nextData.prodType === '01') {
-						let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
-						if (bank_card_check_res === '1') {
-							routeName = '/home/confirm_agency';
-							if (actionType === 'agencyPage') {
-								resolve(nextData.nextStepGramCode);
-							}
-						} else {
-							return;
+						// let bank_card_check_res = await bank_card_check_func({ $props, autId: nextData.autId });
+						// if (bank_card_check_res === '1') {
+						routeName = '/home/confirm_agency';
+						if (actionType === 'agencyPage') {
+							resolve(nextData.nextStepGramCode);
 						}
+						// } else {
+						// 	return;
+						// }
 					}
 					// 现金分期
 					if (nextData.prodType === '11') {
-						goToStageLoan({ $props });
+						// 通付盾 获取设备指纹
+						TFDLogin();
+						routeName = '/home/loan_fenqi';
+					}
+					// 提交预授信借款
+					if (nextData.prodType === '21') {
+						let storeData = storeRedux.getState();
+						const { commonState = {} } = storeData;
+						const { preLoanData } = commonState;
+						if (preLoanData) {
+							handleClickPreLoanSubmit($props, preLoanData, goBack);
+						}
 						return;
 					}
 					break;
@@ -287,6 +325,12 @@ export const getNextStatus = ({
 				//   break;
 				case 'AUTH015':
 					routeName = `/home/addInfo`;
+					break;
+				case 'DOWNLOAN':
+					routeName = `/home/deposit_tip`;
+					param = {
+						cashMoney: nextData.curAmt
+					};
 					break;
 				default:
 					routeName = '/home/home';

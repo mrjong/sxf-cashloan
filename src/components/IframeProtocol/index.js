@@ -1,12 +1,13 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-03 16:12:20
+ * @LastEditTime: 2020-03-10 17:39:43
  */
 import React from 'react';
 import { Modal, Icon } from 'antd-mobile';
 import { connect } from 'react-redux';
 import styles from './index.scss';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
+import { sxfburiedPointEvent } from 'utils/analytins';
 @connect(
 	(state) => ({
 		iframeProtocolData: state.commonState.iframeProtocolData
@@ -23,12 +24,22 @@ export default class IframeProtocol extends React.Component {
 		if (nextProps.iframeProtocolData && nextProps.iframeProtocolData.url) {
 			document.body.style.overflow = 'hidden';
 			document.body.style.position = 'fixed';
+			nextProps.iframeProtocolData.pId &&
+				sxfburiedPointEvent(`protocolModalOpen`, {
+					pageCode: nextProps.iframeProtocolData.pId
+				});
 		} else {
 			document.body.style.overflow = 'scroll';
 			document.body.style.position = 'relative';
 		}
 	}
 	onClose = () => {
+		const { iframeProtocolData = {} } = this.props;
+		iframeProtocolData &&
+			iframeProtocolData.pId &&
+			sxfburiedPointEvent(`protocolModalClose`, {
+				pageCode: iframeProtocolData.pId
+			});
 		this.props.setIframeProtocolShow({
 			url: ''
 		});

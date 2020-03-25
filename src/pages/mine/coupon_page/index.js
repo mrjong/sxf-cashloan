@@ -412,29 +412,25 @@ export default class coupon_page extends PureComponent {
 											免息
 										</span>
 									) : obj && obj.coupCategory === '01' ? (
-										<span
-											className={
-												isInvalid ? [style.couponType3, style.textGray].join(' ') : style.couponType3
-											}
-										>
-											<i>{obj && obj.coupVal}</i>折
-										</span>
-									) : obj && obj.coupCategory === '02' ? (
-										<span
-											className={
-												isInvalid ? [style.couponType4, style.textGray].join(' ') : style.couponType4
-											}
-										>
-											<i className={style.dayNum}>{obj && obj.coupVal}</i>
-											<span className={style.littleFont}>天</span>
-											<p
-												className={
-													isInvalid ? [style.coupon_type, style.textGray].join(' ') : style.coupon_type
-												}
-											>
+										<div className={isInvalid ? [style.leftCont, style.textGray].join(' ') : style.leftCont}>
+											<i className={isInvalid ? [style.money, style.textGray].join(' ') : style.money}>
+												{obj && obj.coupVal}
+											</i>
+											折
+											<p className={isInvalid ? [style.leftDesc, style.textGray].join(' ') : style.leftDesc}>
 												{this.renderCouponType(obj)}
 											</p>
-										</span>
+										</div>
+									) : obj && obj.coupCategory === '02' ? (
+										<div className={isInvalid ? [style.leftCont, style.textGray].join(' ') : style.leftCont}>
+											<i className={isInvalid ? [style.money, style.textGray].join(' ') : style.money}>
+												{obj && obj.coupVal}
+											</i>
+											天
+											<p className={isInvalid ? [style.leftDesc, style.textGray].join(' ') : style.leftDesc}>
+												{this.renderCouponType(obj)}
+											</p>
+										</div>
 									) : null}
 								</div>
 							</div>
@@ -446,7 +442,7 @@ export default class coupon_page extends PureComponent {
 											this.state.msgType === 0
 												? () => {
 														Toast.loading('加载中...');
-														getNextStatus({ $props: this.props });
+														getNextStatus({ $props: this.props, pageParam: '01' });
 												  }
 												: () => {}
 										}

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-25 16:02:46
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-19 16:03:35
  */
 import React, { Component } from 'react';
 import { Modal } from 'antd-mobile';
@@ -102,7 +102,8 @@ export default class HomeModal extends Component {
 		if (nextProps.homeData) {
 			const dcDataInfo = nextProps.homeData.dcDataInfo || {};
 			const cashDataInfo = nextProps.homeData.cashDataInfo || {};
-			this.billNo = dcDataInfo.billNo || cashDataInfo.billNo;
+			const preApprDataInfo = nextProps.homeData.preApprDataInfo || {};
+			this.billNo = dcDataInfo.billNo || cashDataInfo.billNo || preApprDataInfo.billNo;
 		}
 		if (nextProps.userInfo) {
 			this.tokenId = nextProps.userInfo.tokenId;

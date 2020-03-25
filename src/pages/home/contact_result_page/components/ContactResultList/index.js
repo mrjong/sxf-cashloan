@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-08 16:04:57
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-03-23 14:07:58
  */
 import React from 'react';
 import { InputItem } from 'antd-mobile';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 @connect(
 	(state) => ({
-		cacheContact: state.commonState.cacheContact
+		cacheContact: state.staticState.cacheContact
 	}),
 	{}
 )

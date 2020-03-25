@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
- * @LastEditors: sunjiankun
- * @LastEditTime: 2020-02-20 10:55:29
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-03-23 11:36:06
  */
 import React from 'react';
 import style from './index.scss';
@@ -26,8 +26,8 @@ export default class Introduce extends React.Component {
 			},
 			{
 				image: Images.adorn.intro_ico3,
-				title: '支持代还',
-				subTitle: '100+信用卡'
+				title: '支持还款',
+				subTitle: '银行100+'
 			}
 		];
 		return (

@@ -1,7 +1,7 @@
 /*
  * @Author: sunjiankun
  * @LastEditors: sunjiankun
- * @LastEditTime: 2020-03-03 15:44:31
+ * @LastEditTime: 2020-03-13 15:48:44
  */
 // TODO: 添加一个返回监听需要改动三个地方
 // 1、在此文件中加一个 case；
@@ -17,7 +17,7 @@ import { closeCurrentWebView } from 'utils/CommonUtil/commonFunc';
 import PopUp from 'components/PopUp';
 import Dialog from 'components/Dialogs';
 import { buriedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { home, preApproval, preLoan } from 'utils/analytinsType';
 let initDialog = () => {
 	let obj = new PopUp(
 		(
@@ -138,6 +138,14 @@ if (window.history && window.history.pushState) {
 				// 	document.activeElement.blur();
 				// 	obj.show();
 				// }
+				return;
+			}
+
+			// 预授信补充联系人返回
+			if (window.location.pathname === '/home/pre_add_contact_page') {
+				buriedPointEvent(preApproval.addContractBack);
+				window.ReactRouterHistory.push('/home/pre_loan');
+				// history.go(-1);
 				return;
 			}
 
@@ -278,6 +286,10 @@ if (window.history && window.history.pushState) {
 					break;
 				case '/home/loan_person_succ_page':
 				case '/home/loan_robot_succ_page':
+					window.ReactRouterHistory.push('/home/home');
+					break;
+				case '/home/pre_loan':
+					buriedPointEvent(preLoan.loanPageBack);
 					window.ReactRouterHistory.push('/home/home');
 					break;
 				default:

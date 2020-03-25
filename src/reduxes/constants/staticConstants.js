@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-02 09:15:54
+ * @LastEditTime: 2020-03-23 14:03:19
  */
 // 这些要求这种备注，方便reducer直接查看
 
@@ -23,3 +23,10 @@ export const STATIC_CLEAR_STATE = 'STATIC_CLEAR_STATE';
  * @return:
  */
 export const STATIC_AUTH_ID = 'STATIC_AUTH_ID';
+
+/**
+ * @description: 选择联系人
+ * @param {type}
+ * @return:
+ */
+export const STATIC_CACHE_CONTACT = 'STATIC_CACHE_CONTACT';

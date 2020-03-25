@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-22 15:31:38
+ * @LastEditTime: 2020-03-12 15:22:01
  */
 import { createAction } from 'redux-actions';
 import {
@@ -12,7 +12,6 @@ import {
 	COMMON_HOMEMODAL,
 	COMMON_COUPON_DATA,
 	COMMON_SAVE_CONTACT,
-	COMMON_CACHE_CONTACT,
 	COMMON_NEXT_STEP_STATUS,
 	COMMON_OVERDUE_MODAL_INFO,
 	COMMON_BACK_ROUTER,
@@ -22,7 +21,8 @@ import {
 	COMMON_APPLY_CREDIT_DTATA,
 	COMMON_BIND_DEPOSIT_INFO,
 	COMMON_PROTOCOL_SELECT_FLAG,
-	COMMON_IFRAME_PROTOCOL_SHOW
+	COMMON_IFRAME_PROTOCOL_SHOW,
+	COMMON_PRE_LOAN_DATA
 } from '../constants/commonConstants';
 
 /**
@@ -88,13 +88,6 @@ export const setHomeModalAction = createAction(COMMON_HOMEMODAL, (info) => ({ ho
 export const setSaveContactAction = createAction(COMMON_SAVE_CONTACT, (info) => ({
 	saveContact: info || {}
 }));
-
-/**
- * @description: 缓存选中联系人信息
- * @param {type}
- * @return:
- */
-export const setCacheContactAction = createAction(COMMON_CACHE_CONTACT, (info) => ({ cacheContact: info }));
 
 /**
  * @description: 授信是否需要下一步
@@ -174,3 +167,10 @@ export const setProtocolSelFlagAction = createAction(COMMON_PROTOCOL_SELECT_FLAG
 export const setIframeProtocolShow = createAction(COMMON_IFRAME_PROTOCOL_SHOW, (info) => ({
 	iframeProtocolData: info
 }));
+
+/**
+ * @description: 用户提交预授信借款的信息
+ * @param {type}
+ * @return:
+ */
+export const setPreLoanDataAction = createAction(COMMON_PRE_LOAN_DATA, (info) => ({ preLoanData: info }));

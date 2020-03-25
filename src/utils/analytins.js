@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2019-12-24 11:04:07
+ * @LastEditTime: 2020-03-10 17:39:52
  */
 import { store } from 'utils/store';
 import { setH5Channel, getH5Channel, getTestABTag } from 'utils/common';
@@ -101,7 +101,7 @@ export const _addlisten = () => {
  *
  * */
 export const sxfburiedPointEvent = (buriedKey, params) => {
-	SxfData && SxfData.trackEvent(buriedKey, params);
+	SxfData && SxfData.trackEvent(buriedKey, null, null, params);
 };
 /*
  * 随行付埋点事件

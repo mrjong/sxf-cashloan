@@ -1,11 +1,11 @@
 /*
  * @Author: sunjiankun
- * @LastEditors  : sunjiankun
- * @LastEditTime : 2020-02-18 16:29:52
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-12 15:21:17
  */
 // 这些要求这种备注，方便reducer直接查看
 /**
- * @description: 选择银行卡的类型 withdraw:收款银行卡 withhold:还款银行卡
+ * @description: 选择银行卡的类型 withdraw:收款银行卡 withhold:还款银行卡 both:收款银行卡&还款银行卡
  * @param {type}
  * @return:
  */
@@ -125,3 +125,10 @@ export const COMMON_PROTOCOL_SELECT_FLAG = 'COMMON_PROTOCOL_SELECT_FLAG';
  * @return:
  */
 export const COMMON_IFRAME_PROTOCOL_SHOW = 'COMMON_IFRAME_PROTOCOL_SHOW';
+
+/**
+ * @description: 用户提交预授信借款的信息
+ * @param {type}
+ * @return:
+ */
+export const COMMON_PRE_LOAN_DATA = 'COMMON_PRE_LOAN_DATA';

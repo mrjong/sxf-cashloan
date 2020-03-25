@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-20 17:41:38
+ * @LastEditTime: 2020-03-24 10:50:36
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -11,7 +11,7 @@ import Cookie from 'js-cookie';
 import fetch from 'sx-fetch';
 import { store } from 'utils/store';
 import { getDeviceType, getFirstError, validators, handleInputBlur, queryUsrSCOpenId } from 'utils';
-import { setH5Channel, getH5Channel } from 'utils/common';
+import { getH5Channel } from 'utils/common';
 import { logoutClearData } from 'utils/CommonUtil/commonFunc';
 import {
 	buriedPointEvent,
@@ -82,13 +82,8 @@ export default class login_page extends PureComponent {
 		window.history.pushState(null, null, document.URL);
 		document.title = '还到';
 		// 在清除session之前先获取，然后再存到session里，防止h5Channel在登录页丢失
-		const storeH5Channel = getH5Channel();
 		// 移除cookie
 		logoutClearData();
-
-		// 首页弹窗要用的
-
-		setH5Channel(storeH5Channel);
 
 		store.setHistoryRouter(window.location.pathname);
 

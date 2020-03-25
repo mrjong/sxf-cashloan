@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-18 16:32:22
+ * @LastEditTime: 2020-03-24 18:08:18
  */
 import { handleActions } from 'redux-actions';
 
@@ -13,7 +13,6 @@ import {
 	COMMON_HOMEMODAL,
 	COMMON_COUPON_DATA,
 	COMMON_SAVE_CONTACT,
-	COMMON_CACHE_CONTACT,
 	COMMON_NEXT_STEP_STATUS,
 	COMMON_OVERDUE_MODAL_INFO,
 	COMMON_BACK_ROUTER,
@@ -23,7 +22,8 @@ import {
 	COMMON_APPLY_CREDIT_DTATA,
 	COMMON_BIND_DEPOSIT_INFO,
 	COMMON_PROTOCOL_SELECT_FLAG,
-	COMMON_IFRAME_PROTOCOL_SHOW
+	COMMON_IFRAME_PROTOCOL_SHOW,
+	COMMON_PRE_LOAN_DATA
 } from '../constants/commonConstants';
 /**
  * @description: commonState 初始化
@@ -48,7 +48,8 @@ const initState = {
 	backRouter: '',
 	msgCount: 0,
 	bindDepositInfo: {},
-	iframeProtocolData: {}
+	iframeProtocolData: {},
+	preLoanData: {}
 };
 export default handleActions(
 	{
@@ -59,7 +60,6 @@ export default handleActions(
 		[COMMON_HOMEMODAL]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_COUPON_DATA]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_SAVE_CONTACT]: (state, action) => ({ ...state, ...action.payload }),
-		[COMMON_CACHE_CONTACT]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_NEXT_STEP_STATUS]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_BACK_ROUTER]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_HOME_DATA]: (state, action) => ({ ...state, ...action.payload }),
@@ -70,6 +70,7 @@ export default handleActions(
 		[COMMON_BIND_DEPOSIT_INFO]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_PROTOCOL_SELECT_FLAG]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_IFRAME_PROTOCOL_SHOW]: (state, action) => ({ ...state, ...action.payload }),
+		[COMMON_PRE_LOAN_DATA]: (state, action) => ({ ...state, ...action.payload }),
 		[COMMON_CLEAR_STATE]: () => ({})
 	},
 	initState

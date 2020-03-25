@@ -1,12 +1,12 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-02-25 15:53:36
+ * @LastEditTime: 2020-03-24 16:32:51
  */
 import React, { PureComponent } from 'react';
 import { InputItem, Icon } from 'antd-mobile';
 import { store } from 'utils/store';
 import { buriedPointEvent, sxfburiedPointEvent } from 'utils/analytins';
-import { home } from 'utils/analytinsType';
+import { home, DC_PAYCARD } from 'utils/analytinsType';
 import { setBackGround } from 'utils/background';
 import fetch from 'sx-fetch';
 import Cookie from 'js-cookie';
@@ -37,9 +37,11 @@ import {
 	setConfirmAgencyInfoAction,
 	setCouponDataAction
 } from 'reduxes/actions/commonActions';
+import { setCacheContactAction } from 'reduxes/actions/staticActions';
 import { base64Decode } from 'utils/CommonUtil/toolUtil';
 import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { cardBillAmtRiskBury } from './riskBuryConfig';
+import { isMPOS } from 'utils/common';
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -59,12 +61,13 @@ let closeBtn = true;
 		withholdCardData: state.commonState.withholdCardData,
 		confirmAgencyInfo: state.commonState.confirmAgencyInfo,
 		couponData: state.commonState.couponData,
-		cacheContact: state.commonState.cacheContact,
+		cacheContact: state.staticState.cacheContact,
 		saveContact: state.commonState.saveContact,
 		authId: state.staticState.authId
 	}),
 	{
 		setCardTypeAction,
+		setCacheContactAction,
 		setConfirmAgencyInfoAction,
 		setCouponDataAction
 	}
@@ -242,10 +245,23 @@ export default class confirm_agency_page extends PureComponent {
 		});
 		// 将选择的卡类型存储到redux中
 		this.props.setCardTypeAction('withhold');
-		this.props.history.push({
-			pathname: '/mine/select_save_page',
-			search: `?agrNo=${repayInfo.withholdBankAgrNo}`
-		});
+		if (repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0) {
+			buriedPointEvent(DC_PAYCARD, {
+				paycard_type: 'select'
+			});
+			this.props.history.push({
+				pathname: '/mine/select_save_page',
+				search: `?agrNo=${repayInfo.withholdBankAgrNo}`
+			});
+		} else {
+			buriedPointEvent(DC_PAYCARD, {
+				paycard_type: 'add'
+			});
+			this.props.history.push({
+				pathname: '/mine/bind_save_page',
+				search: `?cardType=withhold`
+			});
+		}
 	};
 
 	// 确认按钮点击事件
@@ -280,8 +296,8 @@ export default class confirm_agency_page extends PureComponent {
 				prodCount: repaymentDate.prodCount,
 				prodLth: repaymentDate.prodLth,
 				prodUnit: repaymentDate.prodUnit,
-				withholdBankAgrNo: repayInfo.withholdBankAgrNo,
-				withdrawBankAgrNo: repayInfo.withdrawBankAgrNo,
+				withholdBankAgrNo: repayInfo.withholdBankAgrNo || '',
+				withdrawBankAgrNo: repayInfo.withdrawBankAgrNo || '',
 				wtdwTyp: lendersDate.value,
 				prodType: '01'
 			})
@@ -325,49 +341,6 @@ export default class confirm_agency_page extends PureComponent {
 				if (diff <= 4) {
 					lendersDateListFormat[0].disable = true;
 				}
-				// mock数据
-				// result.data.contacts = [
-				// 	{
-				// 		name: '测试',
-				// 		number: '13512345678'
-				// 	},
-				// 	{
-				// 		name: '发放',
-				// 		number: '12345678901'
-				// 	},
-				// 	{
-				// 		name: '反倒是',
-				// 		number: '13456789012'
-				// 	},
-				// 	{
-				// 		name: '史蒂夫',
-				// 		number: '14567890123'
-				// 	},
-				// 	{
-				// 		name: '骨灰盒',
-				// 		number: '15678901234'
-				// 	},
-				// 	{
-				// 		name: '我去玩',
-				// 		number: '16789012345'
-				// 	},
-				// 	{
-				// 		name: '也同样',
-				// 		number: '17890123456'
-				// 	},
-				// 	{
-				// 		name: '是否',
-				// 		number: '18901234567'
-				// 	},
-				// 	{
-				// 		name: '玩儿',
-				// 		number: '19012345678'
-				// 	},
-				// 	{
-				// 		name: '预约',
-				// 		number: '10123456789'
-				// 	}
-				// ];
 				// base64解密
 				if (result.data.contacts && result.data.contacts.length) {
 					// map 改变引用型数组,值类型数组不改变
@@ -648,9 +621,13 @@ export default class confirm_agency_page extends PureComponent {
 	};
 
 	handleButtonClick = () => {
-		const { checkBox1, insurancePlanText } = this.state;
+		const { checkBox1, repayInfo, insurancePlanText } = this.state;
 		if (!insurancePlanText) {
 			this.props.toast.info('请选择是否参与风险保障计划');
+			return;
+		}
+		if (!(repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0)) {
+			this.props.toast.info('请先绑定还款储蓄卡');
 			return;
 		}
 		if (!checkBox1) {
@@ -806,22 +783,42 @@ export default class confirm_agency_page extends PureComponent {
 	// 选择指定联系人
 	handleClickChooseContact = () => {
 		const { isBtnAble, repayInfo } = this.state;
-		const { cacheContact } = this.props;
 		this.cacheDataHandler();
 		buriedPointEvent(home.selectContactClick, {
 			operation: isBtnAble ? 'edit' : 'select'
 		});
-		if (repayInfo && repayInfo.contacts && repayInfo.contacts.length) {
-			if (cacheContact && cacheContact.length) {
-				this.props.history.push('/home/contact_result_page');
-			} else {
-				this.props.history.push('/home/reco_contact_page');
+		this.calculationNum();
+		this.props.history.push(
+			`/home/add_contact_page?contactsLength=${(repayInfo.contacts && repayInfo.contacts.length) || 0}`
+		);
+	};
+	/**
+	 * @description: 将后端联系人数据缓存起来  优先取本地 再去后端
+	 * @param {type}
+	 * @return:
+	 */
+
+	calculationNum = () => {
+		const { repayInfo } = this.state;
+		const { cacheContact } = this.props;
+		if (!cacheContact || cacheContact.length === 0 || isMPOS()) {
+			this.props.setCacheContactAction((repayInfo.contacts && repayInfo.contacts.slice(0, 5)) || []);
+			return;
+		}
+		let isNull = true;
+		for (let index = 0; index < cacheContact.length; index++) {
+			const element = cacheContact[index];
+			if (element.name) {
+				isNull = false;
+				break;
 			}
+		}
+		if (isNull) {
+			this.props.setCacheContactAction((repayInfo.contacts && repayInfo.contacts.slice(0, 5)) || []);
 		} else {
-			this.props.history.push('/home/add_contact_page');
+			this.props.setCacheContactAction((cacheContact && cacheContact.slice(0, 5)) || []);
 		}
 	};
-
 	// 点击勾选协议
 	checkAgreement = () => {
 		this.setState({ checkBox1: !this.state.checkBox1 });
@@ -1130,11 +1127,19 @@ export default class confirm_agency_page extends PureComponent {
 								</li>
 								<li className={style.listItem} onClick={this.handleClickChoiseBank}>
 									<label>还款银行卡</label>
-									<span className={[style.listValue, style.hasArrow].join(' ')}>
-										{repayInfo && repayInfo.withholdBankName ? repayInfo.withholdBankName : ''}(
-										{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''})
-										<Icon type="right" className={style.icon} />
-									</span>
+
+									{repayInfo && repayInfo.withholdBankLastNo && repayInfo.withholdBankLastNo.length > 0 ? (
+										<span className={[style.listValue, style.hasArrow].join(' ')}>
+											{repayInfo && repayInfo.withholdBankName ? repayInfo.withholdBankName : ''}(
+											{repayInfo && repayInfo.withholdBankLastNo ? repayInfo.withholdBankLastNo : ''})
+											<Icon type="right" className={style.icon} />
+										</span>
+									) : (
+										<span className={style.highlightText}>
+											绑定储蓄卡
+											<Icon type="right" className={style.icon} />
+										</span>
+									)}
 								</li>
 							</ul>
 							<div className={style.protocolBox}>
