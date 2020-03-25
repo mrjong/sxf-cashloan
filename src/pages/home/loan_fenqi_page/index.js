@@ -477,7 +477,8 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal
+			isShowTipModal,
+			productListCopy
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
 			loanMoney,
@@ -498,7 +499,8 @@ export default class loan_fenqi_page extends PureComponent {
 			resaveBankCode,
 			checkBox1,
 			productList,
-			isShowTipModal
+			isShowTipModal,
+			productListCopy
 		});
 	};
 
