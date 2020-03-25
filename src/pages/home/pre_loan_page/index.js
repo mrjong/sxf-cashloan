@@ -227,7 +227,6 @@ export default class pre_loan_page extends PureComponent {
 		// 找出prodCount最大对象所在的索引
 		let maxItem = null;
 		let indexOfMax = 0;
-		console.log(loanDate, 'aw');
 		if (loanDate) {
 			maxItem = loanDate;
 		} else {
@@ -641,6 +640,8 @@ export default class pre_loan_page extends PureComponent {
 	};
 
 	submitHandler = () => {
+		// 关闭弹框,防止补实名和人脸的弹框盖在上面
+		this.handleCloseTipModal('isShowTipModal');
 		this.props.toast.loading('', 10);
 		this.storeTempData();
 		const { couponData } = this.props;
