@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 10:52:42
+ * @LastEditTime: 2020-03-26 14:38:11
  */
 import qs from 'qs';
 import { address } from 'utils/Address';
@@ -517,7 +517,7 @@ export default class login_page extends PureComponent {
 						</span>
 						<span
 							onClick={() => {
-								this.go('privacy_agreement_page');
+								this.go('user_privacy_page');
 							}}
 						>
 							《用户隐私权政策》

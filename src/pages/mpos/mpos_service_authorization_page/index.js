@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-02 10:24:44
+ * @LastEditTime: 2020-03-26 14:38:20
  */
 import React, { PureComponent } from 'react';
 import styles from './index.scss';
@@ -168,7 +168,7 @@ export default class mpos_service_authorization_page extends PureComponent {
 						</a>
 						<a
 							onClick={() => {
-								this.go('privacy_agreement_page');
+								this.go('user_privacy_page');
 							}}
 						>
 							《用户隐私权政策》

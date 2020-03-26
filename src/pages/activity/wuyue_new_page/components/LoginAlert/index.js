@@ -214,7 +214,7 @@ export default class LoginAlert extends Component {
 						</span>
 						<span
 							onClick={() => {
-								this.go('privacy_agreement_page');
+								this.go('user_privacy_page');
 							}}
 						>
 							《用户隐私权政策》

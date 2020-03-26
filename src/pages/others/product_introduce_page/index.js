@@ -73,7 +73,7 @@ class product_introduce_page extends Component {
 						</em>
 						<em
 							onClick={() => {
-								this.go('privacy_agreement_page');
+								this.go('user_privacy_page');
 							}}
 						>
 							《用户隐私协议》

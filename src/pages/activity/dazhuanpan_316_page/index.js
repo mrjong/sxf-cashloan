@@ -539,7 +539,7 @@ export default class dazhuanpan_page extends PureComponent {
 									<span
 										className={styles.xieyi}
 										onClick={() => {
-											this.go('privacy_agreement_page');
+											this.go('user_privacy_page');
 										}}
 									>
 										《用户隐私权政策》
