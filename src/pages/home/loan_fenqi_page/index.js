@@ -110,6 +110,9 @@ export default class loan_fenqi_page extends PureComponent {
 		this.setState({ ...confirmAgencyInfo }, () => {
 			// 初始化数据渲染
 			this.selectMax();
+			if (store.getRiskGuaranteeModalShow()) {
+				this.openInsuranceModal(1500);
+			}
 		});
 	};
 
@@ -489,7 +492,8 @@ export default class loan_fenqi_page extends PureComponent {
 			productList,
 			isShowTipModal,
 			insurancePlanText,
-			showInsuranceModal
+			isJoinInsurancePlan,
+			productListCopy
 		} = this.state;
 		this.props.setConfirmAgencyInfoAction({
 			loanMoney,
@@ -512,7 +516,8 @@ export default class loan_fenqi_page extends PureComponent {
 			productList,
 			isShowTipModal,
 			insurancePlanText,
-			showInsuranceModal
+			isJoinInsurancePlan,
+			productListCopy
 		});
 	};
 
@@ -632,8 +637,7 @@ export default class loan_fenqi_page extends PureComponent {
 		if (!this.state.isJoinInsurancePlan) {
 			this.setState(
 				{
-					isShowTipModal: false,
-					showInsuranceModal: true
+					isShowTipModal: false
 				},
 				() => {
 					this.storeTempData();
@@ -664,7 +668,8 @@ export default class loan_fenqi_page extends PureComponent {
 			repayType: '0', //还款方式
 			coupId: couponId, //优惠劵id
 			loanUsage: loanUsage.usageCd, //借款用途
-			prodType: '11'
+			prodType: '11',
+			riskGuarantee: '1' //参与风险保障计划
 		};
 
 		this.props.$fetch
@@ -847,6 +852,23 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	//打开风险保证金弹窗
+	openInsuranceModal = (delay = 0) => {
+		let timer = setTimeout(() => {
+			this.setState({
+				showInsuranceModal: true
+			});
+			clearTimeout(timer);
+		}, delay);
+	};
+
+	closeInsuranceModal = () => {
+		store.removeRiskGuaranteeModalShow();
+		this.setState({
+			showInsuranceModal: false
+		});
+	};
+
 	//风险保障计划弹窗
 	handleInsuranceModal = () => {
 		buriedPointEvent(home.riskGuaranteePlanClick);
@@ -858,9 +880,7 @@ export default class loan_fenqi_page extends PureComponent {
 		if (repayPlanInfo && repayPlanInfo.perdUnit === 'D') {
 			return;
 		}
-		this.setState({
-			showInsuranceModal: true
-		});
+		this.openInsuranceModal();
 	};
 
 	handleInsuranceModalClick = (type) => {
@@ -871,7 +891,6 @@ export default class loan_fenqi_page extends PureComponent {
 		}
 		this.setState(
 			{
-				showInsuranceModal: false,
 				insurancePlanText: type === 'submit' ? '已授权并参与' : '暂不考虑',
 				isJoinInsurancePlan: type === 'submit' ? true : false
 			},
@@ -879,6 +898,7 @@ export default class loan_fenqi_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
+				this.closeInsuranceModal();
 			}
 		);
 	};
@@ -1023,15 +1043,17 @@ export default class loan_fenqi_page extends PureComponent {
 								<label>风险保障计划</label>
 								<span className={style.labelSub}>风险保障计划由第三方担保公司提供服务</span>
 							</div>
-
 							<span
-								className={[style.listValue, style.hasArrow, !isJoinInsurancePlan && style.greyText].join(
-									' '
-								)}
+								className={[
+									style.listValue,
+									style.hasArrow,
+									store.getRiskGuaranteeModalShow() && style.shakeAnimatedText,
+									!isJoinInsurancePlan && style.greyText
+								].join(' ')}
 							>
 								{insurancePlanText || '请选择'}
-								<Icon type="right" className={style.icon} />
 							</span>
+							<Icon type="right" className={style.icon} />
 						</li>
 						<li className={style.listItem}>
 							<label>还款计划</label>
@@ -1172,9 +1194,7 @@ export default class loan_fenqi_page extends PureComponent {
 						this.handleInsuranceModalClick(type);
 					}}
 					onClose={() => {
-						this.setState({
-							showInsuranceModal: false
-						});
+						this.closeInsuranceModal();
 					}}
 					data={repayPlanInfo.perds}
 					history={this.props.history}

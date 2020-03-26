@@ -4,6 +4,7 @@ import Images from 'assets/image';
 import { ButtonCustom } from 'components';
 import { buriedPointEvent } from 'utils/analytins';
 import { home } from 'utils/analytinsType';
+import { store } from 'utils/store';
 import styles from './index.scss';
 
 let timer = null;
@@ -48,8 +49,8 @@ class insurance_result_page extends Component {
 
 	goBack = () => {
 		buriedPointEvent(home.riskGuaranteeResultTry);
+		store.setRiskGuaranteeModalShow(true);
 		this.props.history.goBack();
-		// this.props.history.replace('/home/confirm_agency?showInsuranceModal=true');
 	};
 
 	render() {

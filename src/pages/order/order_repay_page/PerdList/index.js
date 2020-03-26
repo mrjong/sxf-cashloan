@@ -103,14 +103,16 @@ class PerdList extends Component {
 												onFeesClick(item, 'fees');
 											}}
 										>
-											<img
-												className={styles.perdDetailCheckedIcon}
-												src={
-													item.feesStatus && item.feesStatus[0]
-														? Image.icon.order_detail_checked
-														: Image.icon.order_detail_checked_no
-												}
-											/>
+											{item.isShowCheck && item.clearState !== '02' && (
+												<img
+													className={styles.perdDetailCheckedIcon}
+													src={
+														item.feesStatus && item.feesStatus[0]
+															? Image.icon.order_detail_checked
+															: Image.icon.order_detail_checked_no
+													}
+												/>
+											)}
 											{this.renderPerdDetail(item.fees)}
 										</div>
 										<div
@@ -119,14 +121,16 @@ class PerdList extends Component {
 												onFeesClick(item, 'riskFees');
 											}}
 										>
-											<img
-												className={styles.perdDetailCheckedIcon}
-												src={
-													item.feesStatus && item.feesStatus[1]
-														? Image.icon.order_detail_checked
-														: Image.icon.order_detail_checked_no
-												}
-											/>
+											{item.isShowCheck && item.clearState !== '01' && (
+												<img
+													className={styles.perdDetailCheckedIcon}
+													src={
+														item.feesStatus && item.feesStatus[1]
+															? Image.icon.order_detail_checked
+															: Image.icon.order_detail_checked_no
+													}
+												/>
+											)}
 											{this.renderPerdDetail(item.fees2)}
 										</div>
 									</div>

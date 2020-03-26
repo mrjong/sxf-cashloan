@@ -44,5 +44,6 @@ export const storeTypes = {
 	TFDBack2: 'TFDBack2', // 通付盾报备给后端成功
 	TestABTag: 'TestABTag', // 全局AB测试标志
 	CacheBaseInfo: 'CacheBaseInfo', // 缓存基本信息中的数据
-	HrefFlag: 'HrefFlag'
+	HrefFlag: 'HrefFlag',
+	RiskGuaranteeModalShow: 'RiskGuaranteeModalShow' //缓存返回显示风险保障金弹窗
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Icon, Drawer, NoticeBar } from 'antd-mobile';
+import { Modal, Icon, Drawer } from 'antd-mobile';
 import style from './index.scss';
 import { StepBar } from 'components';
 
@@ -14,9 +14,9 @@ export default class RepayPlanModal extends React.PureComponent {
 	render() {
 		const { openDrawer } = this.state;
 		const { visible, onClose, data, loanMoney, goPage, isJoinInsurancePlan } = this.props;
-		let totalMoney = 0,
-			totalPrincipal = 0,
-			periods = data && data.length;
+		// let totalMoney = 0,
+		// 	totalPrincipal = 0;
+		// periods = data && data.length;
 		const data1 =
 			data &&
 			data.map((item) => {
@@ -29,8 +29,8 @@ export default class RepayPlanModal extends React.PureComponent {
 					perdDeductAmt,
 					riskGuaranteeAmt
 				} = item;
-				totalMoney = totalMoney + Number(perdTotAmt); //总金额
-				totalPrincipal = totalPrincipal + Number(perdPrcpAmt); //总本金
+				// totalMoney = totalMoney + Number(perdTotAmt); //总金额
+				// totalPrincipal = totalPrincipal + Number(perdPrcpAmt); //总本金
 				return {
 					perdNum,
 					perdTotalMoney: perdTotAmt,
