@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime: 2020-03-24 18:31:38
+ * @LastEditTime: 2020-03-27 16:41:17
  */
 import React, { PureComponent } from 'react';
 import Cookie from 'js-cookie';
@@ -470,7 +470,7 @@ export default class home_page extends PureComponent {
 			cardLabel: '新手版',
 			title: '新手版',
 			titleSub: '快速审批',
-			loanText: '最高可申请还款金(元)',
+			loanText: '借款高至(元)',
 			loanAmont: '50000',
 			btnText: '查看额度',
 			handleClick: this.handleApply
@@ -577,7 +577,7 @@ export default class home_page extends PureComponent {
 				basicCardData.title = bankNm;
 				basicCardData.titleSub = `(${cardCode})`;
 				basicCardData.titleSubIsBankNo = true;
-				basicCardData.loanText = '最高可申请还款金(元)';
+				basicCardData.loanText = '可借金额(元)';
 				basicCardData.loanAmont =
 					homeData.dcDataInfo && homeData.dcDataInfo.maxApplAmt
 						? parseFloat(homeData.dcDataInfo.maxApplAmt, 10)

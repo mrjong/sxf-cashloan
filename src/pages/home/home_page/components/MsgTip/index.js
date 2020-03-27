@@ -1,6 +1,6 @@
 /*
  * @Author: shawn
- * @LastEditTime : 2020-02-12 12:41:30
+ * @LastEditTime: 2020-03-27 16:16:58
  */
 import React from 'react';
 import style from './index.scss';
@@ -27,7 +27,7 @@ export default class MsgTip extends React.PureComponent {
 		return (
 			<section className={style.home_header_wrap}>
 				<div className={style.home_header_main}>
-					<span className={style.home_header_title}>想还·就还到</span>
+					<span className={style.home_header_title}>还到</span>
 					{tokenObj && (
 						<div className={style.icon_wrap}>
 							<div className={style.help_center_icon_wrap} onClick={this.handleGoCustomCenter}>
@@ -39,7 +39,7 @@ export default class MsgTip extends React.PureComponent {
 						</div>
 					)}
 				</div>
-				<p className={style.home_header_sub}>随行付金融旗下信贷服务</p>
+				<p className={style.home_header_sub}>借钱还信用卡</p>
 			</section>
 		);
 	}

@@ -1,11 +1,17 @@
+/*
+ * @Author: sunjiankun
+ * @LastEditors: sunjiankun
+ * @LastEditTime: 2020-03-27 17:01:09
+ */
 import React, { Component } from 'react';
 import Image from 'assets/image';
+import styles from './index.scss';
 
 class FooterBar extends Component {
 	render() {
 		return (
-			<div>
-				<img src={Image.bg.navBarBg} style={{ width: '200px', margin: '0 auto', display: 'block' }} />
+			<div className={styles.navBarStyle}>
+				<img src={Image.bg.navBarBg} />
 			</div>
 		);
 	}
