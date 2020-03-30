@@ -41,7 +41,6 @@ export default class order_repay_page extends PureComponent {
 	}
 	componentDidMount = () => {
 		const { billNo } = this.props.history.location.state;
-
 		this.setState(
 			{
 				buttonDisabled: true,
@@ -68,16 +67,17 @@ export default class order_repay_page extends PureComponent {
 				if (!this.viewRef) return;
 				this.viewRef.showDataView();
 				if (res.code === '000000' && res.data) {
-					const { billOvduStartDt, billSts, preds, perdNum, overdueDays, perdLth } = res.data;
+					const { billOvduStartDt, billSts, preds, perdNum, overdueDays, perdLth, riskFlsg } = res.data;
 					const isShowBottomBtn = billSts === '1' || billSts === '-1'; // 主状态
 					this.setState(
 						{
 							perdLth, //分期期数
-							panelList: this.generatePerdList(preds, perdNum, overdueDays, isShowBottomBtn), //被截取逾期的子账单列表
+							panelList: this.generatePerdList({ preds, perdNum, overdueDays, isShowBottomBtn }), //被截取逾期的子账单列表
 							billDesc: res.data, // 详情返回的数据
 							isShowBottomBtn,
 							overdueDays,
-							billOvduStartDt
+							billOvduStartDt,
+							riskFlsg: riskFlsg === '1' //为1风险保障金账单
 						},
 						() => {
 							this.calcPayTotalMoney();
@@ -95,7 +95,7 @@ export default class order_repay_page extends PureComponent {
 	/**
 	 * @description 生成账单列表数据
 	 */
-	generatePerdList = (perdList, perdNum, overdueDays, isShowBottomBtn) => {
+	generatePerdList = ({ preds: perdList, perdNum, overdueDays, isShowBottomBtn }) => {
 		// 在还款计划中添加优惠劵和应还金额字段
 		if (perdList.length) {
 			for (let i = 0; i < perdList.length; i++) {
@@ -132,15 +132,18 @@ export default class order_repay_page extends PureComponent {
 	 * @description 还款金额试算
 	 */
 	getFundPlainInfo = (isPayAll) => {
-		const { billDesc, repayPerds, billNo, repayPerdsTypes } = this.state;
+		const { billDesc, repayPerds, billNo, repayPerdsTypes, riskFlsg } = this.state;
+		let params = {
+			billNo,
+			isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
+			prodType: billDesc.prodType,
+			repayPerds: isPayAll ? [] : repayPerds
+		};
+		if (riskFlsg) {
+			params.repayPerdsTypes = repayPerdsTypes;
+		}
 		this.props.$fetch
-			.post(repay_queryCashRegisterDetail, {
-				billNo,
-				isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
-				prodType: billDesc.prodType,
-				repayPerds: isPayAll ? [] : repayPerds,
-				repayPerdsTypes
-			})
+			.post(repay_queryCashRegisterDetail, params)
 			.then((res) => {
 				if (res.code === '000000' && res.data) {
 					const { totalAmt, totalList = [] } = res.data;
@@ -210,10 +213,10 @@ export default class order_repay_page extends PureComponent {
 	 * @description 更新账单勾选状态并实时计算金额
 	 */
 	updateListCheckedStatus = (clickedItem) => {
-		const { panelList, actPanelListDatas } = this.state;
+		const { panelList, actPanelListDatas, riskFlsg } = this.state;
 		for (let i = 0; i < panelList.length; i++) {
 			let item = panelList[i];
-			if (item.perdNum < clickedItem.perdNum && item.isShowCheck) {
+			if (riskFlsg && item.perdNum < clickedItem.perdNum && item.isShowCheck) {
 				if (this.handleValueByFeesStatus(item.feesStatus) !== item.clearState) {
 					// 勾选多期时,自动把未勾选子部分的勾上并提示
 					this.props.toast.info('多期还款不支持分单还款');
@@ -255,7 +258,8 @@ export default class order_repay_page extends PureComponent {
 			overdueDays,
 			totalAmt,
 			totalList,
-			billNo
+			billNo,
+			riskFlsg
 		} = this.state;
 		buriedPointEvent(order.gotoRepayConfirmPage, {
 			isOverdue: !!overdueDays,
@@ -274,7 +278,8 @@ export default class order_repay_page extends PureComponent {
 				isPayAll: false,
 				overdueDays,
 				totalList,
-				totalAmt
+				totalAmt,
+				riskFlsg
 			}
 		});
 	};
@@ -419,7 +424,8 @@ export default class order_repay_page extends PureComponent {
 			perdLth,
 			buttonDisabled,
 			showOverdueTipModal,
-			isShowSplitOrderTip
+			isShowSplitOrderTip,
+			riskFlsg
 		} = this.state;
 		const isEntryShow = this.props.overdueModalInfo && this.props.overdueModalInfo.olpSts === '1';
 
@@ -453,6 +459,7 @@ export default class order_repay_page extends PureComponent {
 									});
 								}}
 								onFeesClick={this.handleFeesClick}
+								riskFlsg={riskFlsg}
 							/>
 						</Card.Body>
 					</Card>

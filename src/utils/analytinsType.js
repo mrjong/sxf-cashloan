@@ -160,8 +160,8 @@ const order = {
 	payAllOrderBtnClick: `${prefix}_PAYALL_BTN_CLICK`, // 一键结清按钮点击
 	feesClick: `${prefix}_ORDER_DETAIL_FEES_CLICK`, // 账单勾选页-本金勾选
 	riskFeesClick: `${prefix}_ORDER_DETAIL_RISKFEES_CLICK`, // 账单勾选页-风险保障金勾选
-	splitOrderTipOk: `${prefix}_SPLIT_ORDER_TIP_OK`, // 账单勾选页-分单还款提示-ok
-	splitOrderTipCancel: `${prefix}_SPLIT_ORDER_TIP_CANCEL` // 账单勾选页-分单还款提示-cancel
+	splitOrderTipOk: `${prefix}_SPLIT_ORDER_TIP_OK`, // 账单勾选页-合并还款确认
+	splitOrderTipCancel: `${prefix}_SPLIT_ORDER_TIP_CANCEL` // 账单勾选页-分单还款确认
 };
 
 const membership = {

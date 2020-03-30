@@ -60,7 +60,7 @@ class PerdList extends Component {
 	};
 
 	render() {
-		const { perdList, perdLth, onCheckboxClick, onFeesClick } = this.props;
+		const { perdList, perdLth, onCheckboxClick, onFeesClick, riskFlsg } = this.props;
 		return (
 			<List className={styles.antListItem}>
 				{perdList &&
@@ -100,10 +100,11 @@ class PerdList extends Component {
 										<div
 											className={styles.perdDetailWrap}
 											onClick={() => {
+												if (!riskFlsg) return;
 												onFeesClick(item, 'fees');
 											}}
 										>
-											{item.isShowCheck && item.clearState !== '02' && (
+											{riskFlsg && item.isShowCheck && item.clearState !== '02' && (
 												<img
 													className={styles.perdDetailCheckedIcon}
 													src={
@@ -115,24 +116,26 @@ class PerdList extends Component {
 											)}
 											{this.renderPerdDetail(item.fees)}
 										</div>
-										<div
-											className={styles.perdDetailWrap}
-											onClick={() => {
-												onFeesClick(item, 'riskFees');
-											}}
-										>
-											{item.isShowCheck && item.clearState !== '01' && (
-												<img
-													className={styles.perdDetailCheckedIcon}
-													src={
-														item.feesStatus && item.feesStatus[1]
-															? Image.icon.order_detail_checked
-															: Image.icon.order_detail_checked_no
-													}
-												/>
-											)}
-											{this.renderPerdDetail(item.fees2)}
-										</div>
+										{riskFlsg && (
+											<div
+												className={styles.perdDetailWrap}
+												onClick={() => {
+													onFeesClick(item, 'riskFees');
+												}}
+											>
+												{item.isShowCheck && item.clearState !== '01' && (
+													<img
+														className={styles.perdDetailCheckedIcon}
+														src={
+															item.feesStatus && item.feesStatus[1]
+																? Image.icon.order_detail_checked
+																: Image.icon.order_detail_checked_no
+														}
+													/>
+												)}
+												{this.renderPerdDetail(item.fees2)}
+											</div>
+										)}
 									</div>
 								) : null}
 							</div>

@@ -140,14 +140,14 @@ module.exports = function(options) {
 			disableHostCheck: true,
 			proxy: {
 				'/front': {
-					// target: 'https://lns-api-test.vbillbank.com/wap', //目标接口域名
-					target: 'http://172.18.40.173:8080/wap',
+					target: 'https://lns-api-test.vbillbank.com/wap', //目标接口域名
+					// target: 'http://172.18.40.173:8080/wap',
 					pathRewrite: { '^/front': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},
 				'/web/api/v09': {
 					target: 'http://172.16.173.126:8080/web/api/v09', //目标接口域名
-          // target: 'http://172.18.40.62:8080/web/api/v09',
+					// target: 'http://172.18.40.62:8080/web/api/v09',
 					pathRewrite: { '^/web/api/v09': '' }, //重写接口
 					changeOrigin: true //是否跨域
 				},

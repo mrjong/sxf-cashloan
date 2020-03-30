@@ -22,7 +22,7 @@ let isFetching = false;
 	() => ({}),
 	{ setHomeModalAction }
 )
-export default class Cashier extends React.PureComponent {
+export default class order_repay_result_page extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

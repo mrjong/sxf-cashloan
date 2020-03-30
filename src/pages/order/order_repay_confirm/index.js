@@ -85,40 +85,56 @@ export default class order_repay_confirm extends PureComponent {
 
 	//获取可使用优惠券条数
 	queryCouponCount = () => {
-		const { billNo, billDesc = {}, repayPerds } = this.props.history.location.state;
-
-		this.props.$fetch
-			.post(coup_queryUsrRepayUsbCoup, {
-				billNo,
-				repayPerd: Number(repayPerds[0]),
-				prodType: billDesc.prodType,
-				coupSts: '00',
-				startPage: 1,
-				pageRow: 1
-			})
-			.then((res) => {
-				if (res.code === '000000' && res.data) {
-					this.setState({
-						availableCoupNum: res.data.totalRow
-					});
-				}
-			});
+		const {
+			billNo,
+			billDesc = {},
+			repayPerds,
+			repayPerdsTypes,
+			riskFlsg
+		} = this.props.history.location.state;
+		let params = {
+			billNo,
+			repayPerd: Number(repayPerds[0]),
+			prodType: billDesc.prodType,
+			coupSts: '00',
+			startPage: 1,
+			pageRow: 1
+		};
+		if (riskFlsg) {
+			params.repayPerdsTypes = repayPerdsTypes;
+		}
+		this.props.$fetch.post(coup_queryUsrRepayUsbCoup, params).then((res) => {
+			if (res.code === '000000' && res.data) {
+				this.setState({
+					availableCoupNum: res.data.totalRow
+				});
+			}
+		});
 	};
 
 	// 获取弹框明细信息
 	getRepayConfirmInfo = () => {
-		const { billNo, repayPerds, repayPerdsTypes, billDesc, isPayAll } = this.props.history.location.state;
+		const {
+			billNo,
+			repayPerds,
+			repayPerdsTypes,
+			billDesc,
+			isPayAll,
+			riskFlsg
+		} = this.props.history.location.state;
 		const { couponInfo } = this.state;
 
 		let submitParams = {
 			billNo,
 			isSettle: isPayAll ? '1' : '0', // 一键结清isSettle为1， 否则为0
 			prodType: billDesc.prodType,
-			repayPerds: isPayAll ? [] : repayPerds,
-			repayPerdsTypes
+			repayPerds: isPayAll ? [] : repayPerds
 		};
 		if (couponInfo.coupId) {
 			submitParams.coupId = couponInfo.coupId;
+		}
+		if (riskFlsg) {
+			submitParams.repayPerdsTypes = repayPerdsTypes;
 		}
 		this.props.$fetch
 			.post(repay_queryCashRegisterDetail, submitParams)
@@ -287,7 +303,8 @@ export default class order_repay_confirm extends PureComponent {
 			thisPerdNum,
 			billNo,
 			overdueDays,
-			canUseCoupon
+			canUseCoupon,
+			riskFlsg
 		} = this.props.history.location.state;
 
 		const { totalAmt, payType, cardAgrNo, bankNo, bankName, couponInfo } = this.state;
@@ -296,15 +313,13 @@ export default class order_repay_confirm extends PureComponent {
 		if (couponInfo && couponInfo.coupId && couponInfo.coupId !== 'null') {
 			couponId = couponInfo.coupId;
 		}
-
 		let sendParams = {
 			billNo,
 			thisRepTotAmt: totalAmt,
 			cardAgrNo,
 			prodType: billDesc.prodType,
 			isPayOff: isPayAll ? '1' : '0',
-			repayPerds: isPayAll ? [] : repayPerds,
-			repayPerdsTypes
+			repayPerds: isPayAll ? [] : repayPerds
 		};
 
 		//如果勾选多期,则不支持优惠券
@@ -313,6 +328,9 @@ export default class order_repay_confirm extends PureComponent {
 				...sendParams,
 				coupId: couponId
 			};
+		}
+		if (riskFlsg) {
+			sendParams.repayPerdsTypes = repayPerdsTypes;
 		}
 		// 添加微信新增参数
 		switch (payType) {
@@ -466,14 +484,16 @@ export default class order_repay_confirm extends PureComponent {
 	// 选择优惠劵
 	selectCoupon = () => {
 		const { availableCoupNum } = this.state;
-		const { billNo, billDesc, repayPerds } = this.props.history.location.state;
+		const { billNo, billDesc, repayPerds, repayPerdsTypes, riskFlsg } = this.props.history.location.state;
 		let params = {};
 		if (!availableCoupNum) {
 			params.nouseCoupon = true;
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?billNo=${billNo}&perCont=${repayPerds[0]}&prodType=${billDesc.prodType}`,
+			search: `?billNo=${billNo}&perCont=${repayPerds[0]}&repayPerdsTypes=${JSON.stringify(
+				repayPerdsTypes
+			)}&riskFlsg=${riskFlsg}&prodType=${billDesc.prodType}`,
 			state: params
 		});
 	};
