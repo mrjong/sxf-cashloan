@@ -216,7 +216,7 @@ export default class coupon_page extends PureComponent {
 				loanAmt: receiveData.price,
 				prodId: receiveData.prodId,
 				prodType: receiveData.prodType,
-				riskGuarantee: '1' //参与风险保障计划
+				riskGuarantee: receiveData.isJoinInsurancePlan === 'true' ? '1' : '0' //参与风险保障计划
 			};
 			url = coup_queyUsrLoanUsbCoup;
 		} else {

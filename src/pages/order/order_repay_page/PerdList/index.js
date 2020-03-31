@@ -116,7 +116,7 @@ class PerdList extends Component {
 											)}
 											{this.renderPerdDetail(item.fees)}
 										</div>
-										{riskFlsg && (
+										{riskFlsg && item.fees2.length > 0 && (
 											<div
 												className={styles.perdDetailWrap}
 												onClick={() => {

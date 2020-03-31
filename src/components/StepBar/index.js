@@ -22,7 +22,7 @@ export default class StepBar extends Component {
 								<div className={style.top_line}>
 									<span className={style.step_index}>{item.perdNum === 1 ? '首' : item.perdNum}期</span>
 									<span className={style.circle_dot}></span>
-									{riskGuarantee && item.riskGuaranteeAmt > 0 && (
+									{riskGuarantee && (
 										<span className={style.step_title1}>
 											<i>风险保证金 </i>
 											<i className={style.value}>{item.riskGuaranteeAmt}</i>

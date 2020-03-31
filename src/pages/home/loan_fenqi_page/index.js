@@ -27,7 +27,8 @@ import {
 	bank_card_protocol_sms,
 	bank_card_protocol_bind,
 	loan_loanSub,
-	loan_queryCashLoanApplInfo
+	loan_queryCashLoanApplInfo,
+	coup_queyUsrLoanUsbCoup
 } from 'fetch/api.js';
 
 @fetch.inject()
@@ -298,6 +299,7 @@ export default class loan_fenqi_page extends PureComponent {
 					};
 				}
 				this.requestLoanPlan(couponParams, protocolRes);
+				this.queryCouponCount();
 			} else {
 				this.setState(
 					{
@@ -345,9 +347,30 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	//获取可使用优惠券条数
+	queryCouponCount = () => {
+		const { loanMoney, protocolList = [], isJoinInsurancePlan } = this.state;
+		let params = {
+			loanAmt: loanMoney,
+			prodId: protocolList[0].prodId,
+			prodType: '11',
+			coupSts: '00',
+			startPage: 1,
+			pageRow: 1,
+			riskGuarantee: isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
+		};
+		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
+			if (res.code === '000000' && res.data) {
+				this.setState({
+					availableCoupNum: res.data.totalRow
+				});
+			}
+		});
+	};
+
 	// 选择优惠劵
 	selectCoupon = () => {
-		const { protocolList, repayPlanInfo } = this.state;
+		const { protocolList, availableCoupNum, isJoinInsurancePlan } = this.state;
 		this.storeTempData();
 		const { loanMoney, loanDate = {} } = this.state;
 		let prodId = protocolList && protocolList[0] && protocolList[0].prodId ? protocolList[0].prodId : '';
@@ -355,8 +378,8 @@ export default class loan_fenqi_page extends PureComponent {
 
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}`,
-			state: { nouseCoupon: !(repayPlanInfo && repayPlanInfo.availableCoupCount) }
+			search: `?prodType=11&price=${loanMoney}&perCont=${perCont}&prodId=${prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`,
+			state: { nouseCoupon: !availableCoupNum }
 		});
 	};
 
@@ -802,8 +825,8 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	renderListRowCouponValue() {
-		const { repayPlanInfo = {} } = this.state;
-		if (repayPlanInfo && repayPlanInfo.availableCoupCount && Number(repayPlanInfo.availableCoupCount)) {
+		const { availableCoupNum, repayPlanInfo } = this.state;
+		if (availableCoupNum) {
 			if (repayPlanInfo.deductAmount || repayPlanInfo.deductRiskAmt) {
 				return (
 					<span className={style.repayPlan} style={{ color: '#FE6666' }}>
@@ -820,7 +843,7 @@ export default class loan_fenqi_page extends PureComponent {
 					iconsource={Images.adorn.coupon}
 					onClick={this.goSelectCoupon}
 				>
-					{repayPlanInfo.availableCoupCount}个可用
+					{availableCoupNum}个可用
 				</ButtonCustom>
 			);
 		}
@@ -898,6 +921,7 @@ export default class loan_fenqi_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
+				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
 		);

@@ -28,7 +28,8 @@ import {
 	loan_contractPreview,
 	bank_card_protocol_sms,
 	bank_card_protocol_bind,
-	coup_sendLoanCoup
+	coup_sendLoanCoup,
+	coup_queyUsrLoanUsbCoup
 } from 'fetch/api.js';
 import { showModalPlanOutRiskBury, showModalPlanRiskBury } from './riskBuryConfig';
 import { connect } from 'react-redux';
@@ -174,12 +175,12 @@ export default class confirm_agency_page extends PureComponent {
 
 	// 拦截发放优惠券
 	sendCoupon = () => {
-		const { isShowModal, repayInfo2 } = this.state;
+		const { isShowModal, availableCoupNum } = this.state;
 		if (isShowModal) {
 			this.setState({
 				isShowModal: false
 			});
-		} else if (repayInfo2 && Number(repayInfo2.availableCoupCount)) {
+		} else if (availableCoupNum) {
 			this.props.history.push('/home/home');
 		} else {
 			this.props.$fetch
@@ -332,6 +333,7 @@ export default class confirm_agency_page extends PureComponent {
 						},
 						() => {
 							this.requestGetRepayInfo();
+							this.queryCouponCount();
 						}
 					);
 				} else {
@@ -509,7 +511,7 @@ export default class confirm_agency_page extends PureComponent {
 	};
 	// 渲染优惠劵
 	renderCoupon = () => {
-		const { deratePrice, repayInfo2 } = this.state;
+		const { deratePrice, availableCoupNum } = this.state;
 		if (deratePrice) {
 			return <span className={style.redText}>-{deratePrice}元</span>;
 		}
@@ -517,9 +519,29 @@ export default class confirm_agency_page extends PureComponent {
 		return (
 			<div className={style.couNumBox}>
 				<i />
-				{repayInfo2 && repayInfo2.availableCoupCount}个可用
+				{availableCoupNum}个可用
 			</div>
 		);
+	};
+	//获取可使用优惠券条数
+	queryCouponCount = () => {
+		const { cardBillAmt, contractData = [], isJoinInsurancePlan } = this.state;
+		let params = {
+			loanAmt: cardBillAmt,
+			prodId: contractData[0].prodId,
+			prodType: '01',
+			coupSts: '00',
+			startPage: 1,
+			pageRow: 1,
+			riskGuarantee: isJoinInsurancePlan ? '1' : '0' //参与风险保障计划
+		};
+		this.props.$fetch.post(coup_queyUsrLoanUsbCoup, params).then((res) => {
+			if (res.code === '000000' && res.data) {
+				this.setState({
+					availableCoupNum: res.data.totalRow
+				});
+			}
+		});
 	};
 	// 选择优惠劵
 	selectCoupon = (useFlag) => {
@@ -552,14 +574,14 @@ export default class confirm_agency_page extends PureComponent {
 		if (useFlag) {
 			this.props.history.push({
 				pathname: '/mine/coupon_page',
-				search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}`,
+				search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`,
 				state: { nouseCoupon: true }
 			});
 			return;
 		}
 		this.props.history.push({
 			pathname: '/mine/coupon_page',
-			search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}`
+			search: `?prodType=01&price=${this.state.cardBillAmt}&prodId=${contractData[0].prodId}&isJoinInsurancePlan=${isJoinInsurancePlan}`
 		});
 	};
 	// 查看借款合同
@@ -948,6 +970,7 @@ export default class confirm_agency_page extends PureComponent {
 				buriedPointEvent(home.riskGuaranteeChangePlanText, {
 					planText: type === 'submit' ? '已授权并参与' : '暂不考虑'
 				});
+				this.queryCouponCount();
 				this.closeInsuranceModal();
 			}
 		);
@@ -978,10 +1001,9 @@ export default class confirm_agency_page extends PureComponent {
 			isJoinInsurancePlan,
 			insurancePlanText,
 			showInsuranceModal,
-			FXBZ_contract = []
+			FXBZ_contract = [],
+			availableCoupNum
 		} = this.state;
-
-		console.log(isJoinInsurancePlan, '123');
 
 		return (
 			<div>
@@ -1088,11 +1110,11 @@ export default class confirm_agency_page extends PureComponent {
 								<li
 									className={style.listItem}
 									onClick={() => {
-										this.selectCoupon(!(repayInfo2 && Number(repayInfo2.availableCoupCount)));
+										this.selectCoupon(!availableCoupNum);
 									}}
 								>
 									<label>优惠券</label>
-									{repayInfo2 && Number(repayInfo2.availableCoupCount) ? (
+									{availableCoupNum ? (
 										<div className={[style.listValue, style.hasArrow].join(' ')}>
 											{this.renderCoupon()}
 											<Icon type="right" className={style.icon} />
@@ -1302,6 +1324,7 @@ export default class confirm_agency_page extends PureComponent {
 								showCouponAlert: false
 							});
 							this.requestGetRepayInfo();
+							this.queryCouponCount();
 						}}
 					/>
 
