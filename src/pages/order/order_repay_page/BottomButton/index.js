@@ -11,7 +11,7 @@ class BottomButton extends Component {
 				</span>
 				<ButtonCustom
 					onClick={handleClick}
-					loading={!totalAmt || disabled}
+					disabled={!totalAmt || disabled}
 					className={[styles.sxf_btn, (!totalAmt || disabled) && styles.sxf_btn_disabled].join(' ')}
 				>
 					立即还款

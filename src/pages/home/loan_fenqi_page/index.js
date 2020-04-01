@@ -249,7 +249,7 @@ export default class loan_fenqi_page extends PureComponent {
 	};
 
 	/**
-	 * 获取借款合同与优惠券，注意请求报错则清空选中期数termSelected=null
+	 * 获取借款合同
 	 */
 	requestProtocolCoupon = async () => {
 		if (!parseFloat(this.state.loanMoney) > 0 || !this.state.repayCardLast.length > 0) {
@@ -269,81 +269,77 @@ export default class loan_fenqi_page extends PureComponent {
 			wtdwTyp: '0' //还款时间
 		};
 
-		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((protocolRes) => {
-			if (protocolRes.code === '000000') {
-				// 试算传参
-				let couponParams = {
-					loanAmt: loanMoney,
-					prodType: '11',
-					repayType: '0',
-					riskGuarantee: '1',
-					prodId:
-						protocolRes &&
-						protocolRes.data &&
-						protocolRes.data.contracts &&
-						protocolRes.data.contracts[0] &&
-						protocolRes.data.contracts[0].prodId
-				};
-				const { couponData } = this.props;
-				// 不使用优惠券,不传coupId,
-				// 使用优惠券,coupId传优惠券ID
-				if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
-					// 不使用优惠劵的情况
-					couponParams = {
-						...couponParams
-					};
-				} else if (couponData && JSON.stringify(couponData) !== '{}') {
-					couponParams = {
-						...couponParams,
-						coupId: couponData.coupId
-					};
-				}
-				this.requestLoanPlan(couponParams, protocolRes);
-				this.queryCouponCount();
-			} else {
-				this.setState(
-					{
-						protocolList: [],
-						repayPlanInfo: { perds: [] }
-					},
-					() => {
-						this.props.toast.info(protocolRes.message);
-					}
-				);
-			}
-		});
-	};
-
-	// 借款试算
-	requestLoanPlan = (planParam, protocolRes) => {
-		this.props.$fetch.post(loan_loanPlan, planParam).then((planRes) => {
-			this.props.toast.hide();
-			if (planRes.code === '000000') {
-				this.props.toast.hide();
-				let { contracts = [] } = protocolRes.data || [];
+		this.props.$fetch.post(loan_queryContractInfo, protocolParams).then((result) => {
+			if (result.code === '000000') {
+				let { contracts = [] } = result.data;
 				let FXBZ_contract = {};
 				contracts.forEach((v, i) => {
 					if (v.contractType === 'FXBZ') {
 						FXBZ_contract = contracts.splice(i, 1);
 					}
 				});
-				this.setState({
-					protocolList: (protocolRes.data && protocolRes.data.contracts) || [],
-					repayPlanInfo: planRes.data,
-					FXBZ_contract
-				});
-				buriedPointEvent(loan_fenqi.repayPlan);
-			} else {
 				this.setState(
 					{
-						protocolList: [],
-						repayPlanInfo: { perds: [] }
+						protocolList: result.data && result.data.contracts,
+						FXBZ_contract
 					},
 					() => {
-						this.props.toast.info(planRes.message);
+						this.requestLoanPlan();
+						this.queryCouponCount();
 					}
 				);
+			} else {
+				this.props.toast.info(result.message);
 			}
+		});
+	};
+
+	// 借款试算
+	requestLoanPlan = (riskGuaranteeClickFlag) => {
+		const { loanMoney, protocolList = [], isJoinInsurancePlan } = this.state;
+		// 试算传参
+		let params = {
+			loanAmt: loanMoney,
+			prodType: '11',
+			repayType: '0',
+			prodId: protocolList[0] && protocolList[0].prodId,
+			riskGuarantee: riskGuaranteeClickFlag || isJoinInsurancePlan ? '1' : '0'
+		};
+		const { couponData } = this.props;
+		// 不使用优惠券,不传coupId,
+		// 使用优惠券,coupId传优惠券ID
+		if (couponData && (couponData.coupId === 'null' || couponData.coupVal === -1)) {
+			// 不使用优惠劵的情况
+			params = {
+				...params
+			};
+		} else if (couponData && JSON.stringify(couponData) !== '{}') {
+			params = {
+				...params,
+				coupId: couponData.coupId
+			};
+		}
+		return new Promise((resolve, reject) => {
+			this.props.$fetch.post(loan_loanPlan, params).then((result) => {
+				this.props.toast.hide();
+				if (result.code === '000000' && result.data) {
+					this.props.toast.hide();
+					this.setState({
+						repayPlanInfo: result.data
+					});
+					resolve();
+				} else {
+					this.setState(
+						{
+							protocolList: [],
+							repayPlanInfo: { perds: [] }
+						},
+						() => {
+							this.props.toast.info(result.message);
+						}
+					);
+				}
+			});
 		});
 	};
 
@@ -469,14 +465,28 @@ export default class loan_fenqi_page extends PureComponent {
 		});
 	};
 
+	//还款计划点击
+	handleRepayPlanClick = () => {
+		buriedPointEvent(home.repayPlanClick, {
+			isJoinInsurancePlan: this.state.isJoinInsurancePlan
+		});
+		// buriedPointEvent(loan_fenqi.repayPlan);
+		this.requestLoanPlan().then(() => {
+			this.openModal('plan');
+		});
+	};
+
 	//阅读合同详情
 	readContract = (item) => {
 		const { loanMoney, resaveCardNo, repayCardNo, loanUsage } = this.state;
 		this.storeTempData();
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
-
 		const osType = getDeviceType();
 		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?loanUsage=${loanUsage.usageCd}&contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${loanMoney}&prodId=${item.prodId}&withdrawBankAgrNo=${repayCardNo}&withholdBankAgrNo=${resaveCardNo}&tokenId=${tokenId}`;
+		if (item.contractType === 'FXBZ') {
+			//风险保障金合同
+			pathUrl = pathUrl + '&riskGuarantee=1';
+		}
 		if (osType === 'IOS') {
 			store.setHrefFlag(true);
 			window.location.href = pathUrl;
@@ -903,7 +913,9 @@ export default class loan_fenqi_page extends PureComponent {
 		if (repayPlanInfo && repayPlanInfo.perdUnit === 'D') {
 			return;
 		}
-		this.openInsuranceModal();
+		this.requestLoanPlan(true).then(() => {
+			this.this.openInsuranceModal();
+		});
 	};
 
 	handleInsuranceModalClick = (type) => {
@@ -1085,12 +1097,7 @@ export default class loan_fenqi_page extends PureComponent {
 								{loanMoney && loanDate && loanDate.prodCount && replayPlanLength ? (
 									<span
 										className={[style.listValue, style.hasArrow].join(' ')}
-										onClick={() => {
-											buriedPointEvent(home.repayPlanClick, {
-												isJoinInsurancePlan
-											});
-											this.openModal('plan');
-										}}
+										onClick={this.handleRepayPlanClick}
 									>
 										点击查看
 										<Icon type="right" className={style.icon} />

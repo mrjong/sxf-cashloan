@@ -14,7 +14,9 @@
 .moneyShow {
 	font-size: 32px;
 	color: $colorInactiveColor;
-	font-weight: 500;
+  font-weight: 500;
+  display: inline-block;
+  min-width: 200px;
 
 	em {
 		color: $colorTipRed;

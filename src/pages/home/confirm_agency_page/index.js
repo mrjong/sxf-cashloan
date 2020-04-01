@@ -463,8 +463,8 @@ export default class confirm_agency_page extends PureComponent {
 	}
 
 	// 获取确认代还信息
-	requestGetRepayInfo = () => {
-		let { contractData, lendersDate, cardBillAmt } = this.state;
+	requestGetRepayInfo = (riskGuaranteeClickFlag) => {
+		let { contractData, lendersDate, cardBillAmt, isJoinInsurancePlan } = this.state;
 		const { couponData, authId } = this.props;
 		let params = {
 			prodId: contractData[0] && contractData[0].prodId,
@@ -472,7 +472,7 @@ export default class confirm_agency_page extends PureComponent {
 			repayType: lendersDate.value,
 			loanAmt: cardBillAmt,
 			prodType: '01',
-			riskGuarantee: '1'
+			riskGuarantee: riskGuaranteeClickFlag || isJoinInsurancePlan ? '1' : '0'
 		};
 		// 第一次加载(包括无可用的情况),coupId传'0',查最优的优惠券
 		// 不使用优惠券,不传coupId,
@@ -488,26 +488,29 @@ export default class confirm_agency_page extends PureComponent {
 				coupId: couponData.coupId
 			};
 		}
-		this.props.$fetch
-			.post(loan_loanPlan, params)
-			.then((result) => {
-				if (result && result.code === '000000' && result.data !== null) {
-					this.props.toast.hide();
+		return new Promise((resolve, reject) => {
+			this.props.$fetch
+				.post(loan_loanPlan, params)
+				.then((result) => {
+					if (result && result.code === '000000' && result.data !== null) {
+						this.props.toast.hide();
+						this.setState({
+							repayInfo2: result.data,
+							deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
+							showInterestTotal: result.data.showFlag === '1'
+						});
+						this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
+						resolve();
+					} else {
+						this.props.toast.info(result.message);
+					}
+				})
+				.catch(() => {
 					this.setState({
-						repayInfo2: result.data,
-						deratePrice: result.data.deductAmount || result.data.deductRiskAmt,
-						showInterestTotal: result.data.showFlag === '1'
+						deratePrice: ''
 					});
-					this.buriedDucationPoint(result.data.perdUnit, result.data.perdLth);
-				} else {
-					this.props.toast.info(result.message);
-				}
-			})
-			.catch(() => {
-				this.setState({
-					deratePrice: ''
 				});
-			});
+		});
 	};
 	// 渲染优惠劵
 	renderCoupon = () => {
@@ -597,7 +600,6 @@ export default class confirm_agency_page extends PureComponent {
 			isJoinInsurancePlan,
 			insurancePlanText
 		} = this.state;
-		// const { userInfo = {} } = this.props;
 		const billPrcpAmt = this.props.form.getFieldValue('cardBillAmt');
 		this.props.setConfirmAgencyInfoAction({
 			cardBillAmt,
@@ -612,6 +614,10 @@ export default class confirm_agency_page extends PureComponent {
 		const tokenId = Cookie.get('FIN-HD-AUTH-TOKEN') || store.getToken();
 		const osType = getDeviceType();
 		let pathUrl = `${linkConf.PDF_URL}${loan_contractPreview}?contractType=${item.contractType}&contractNo=${item.contractNo}&loanAmount=${billPrcpAmt}&prodId=${contractData[0].prodId}&withholdBankAgrNo=${repayInfo.withholdBankAgrNo}&withdrawBankAgrNo=${repayInfo.withdrawBankAgrNo}&tokenId=${tokenId}`;
+		if (item.contractType === 'FXBZ') {
+			//风险保障金合同
+			pathUrl = pathUrl + '&riskGuarantee=1';
+		}
 		if (osType === 'IOS') {
 			store.setHrefFlag(true);
 			window.location.href = pathUrl;
@@ -634,6 +640,13 @@ export default class confirm_agency_page extends PureComponent {
 		if (repayInfo2 && repayInfo2.perdUnit === 'D') {
 			return;
 		}
+		this.requestGetRepayInfo().then(() => {
+			this.openRepayPlanModal();
+		});
+	};
+
+	//打开还款计划弹窗
+	openRepayPlanModal = () => {
 		this.setState(
 			{
 				isShowModal: true
@@ -952,7 +965,9 @@ export default class confirm_agency_page extends PureComponent {
 		if (repayInfo2 && repayInfo2.perdUnit === 'D') {
 			return;
 		}
-		this.openInsuranceModal();
+		this.requestGetRepayInfo(true).then(() => {
+			this.openInsuranceModal();
+		});
 	};
 
 	handleInsuranceModalClick = (type) => {
