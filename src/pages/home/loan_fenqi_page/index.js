@@ -914,7 +914,7 @@ export default class loan_fenqi_page extends PureComponent {
 			return;
 		}
 		this.requestLoanPlan(true).then(() => {
-			this.this.openInsuranceModal();
+			this.openInsuranceModal();
 		});
 	};
 
