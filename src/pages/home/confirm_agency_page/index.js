@@ -488,7 +488,7 @@ export default class confirm_agency_page extends PureComponent {
 				coupId: couponData.coupId
 			};
 		}
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			this.props.$fetch
 				.post(loan_loanPlan, params)
 				.then((result) => {

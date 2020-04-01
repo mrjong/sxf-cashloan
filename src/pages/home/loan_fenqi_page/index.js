@@ -319,7 +319,7 @@ export default class loan_fenqi_page extends PureComponent {
 				coupId: couponData.coupId
 			};
 		}
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			this.props.$fetch.post(loan_loanPlan, params).then((result) => {
 				this.props.toast.hide();
 				if (result.code === '000000' && result.data) {
