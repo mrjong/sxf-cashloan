@@ -27,6 +27,7 @@ import RepayPlanModal from './RepayPlanModal';
 import CheckRadio from './CheckRadio';
 import CouponModal from './CouponModal';
 import IframeProtocol from './IframeProtocol';
+import ProtocolRead from './ProtocolRead';
 
 export {
 	FooterBar,
@@ -53,5 +54,6 @@ export {
 	RepayPlanModal,
 	CheckRadio,
 	CouponModal,
-	IframeProtocol
+	IframeProtocol,
+	ProtocolRead
 };

@@ -206,23 +206,37 @@
 				background-image: url('../../../assets/images/home/checked_ico.png');
 			}
 		}
-	}
+  }
+  .protocolBox2 {
+    // border: 1px solid red;
+  }
 	.protocolBox {
-		margin-top: -10px;
-		padding: 0 50px;
-		.insureDesc {
-			font-size: 24px;
-			color: #c9cdd5;
-			line-height: 33px;
-			margin-bottom: 40px;
-		}
-	}
-	.protocolLink {
+    position: relative;
+    padding-left: 80px;
+    margin: -20px 34px 24px 0;
 		font-size: 24px;
 		color: #868e9e;
-    margin: 24px 0 24px;
     text-align: justify;
-		em {
+    // border: 1px solid red;
+    .protocolRadio {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      z-index: 5;
+      padding: 24px;
+      border: 1px solid red;
+      background-size: 40%;
+      background-position: center center;
+    }
+    .protocolLink {
+      display: inline-block;
+      padding-top: 34px;
+      line-height: 1.7;
+      font-size: 26px;
+      color: #868e9e;
+      border: 1px solid red;
+    }
+    em {
 			color: #121c32;
 		}
 	}
@@ -276,7 +290,8 @@
 	.buttonWrap {
 		width: 100%;
 		padding: 30px 40px;
-		position: fixed;
+    position: fixed;
+    z-index: 10;
 		bottom: 0;
     left: 0;
     box-sizing: border-box;
