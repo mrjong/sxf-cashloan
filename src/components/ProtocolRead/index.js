@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CheckRadio from '../CheckRadio';
 import classNM from './index.scss';
+
+import radioUnSelected from './img/unselected_ico.png';
+import radioSelected from './img/selected_ico.png';
 
 export default class ProtaocolRead extends React.Component {
 	static propTypes = {
@@ -9,7 +11,11 @@ export default class ProtaocolRead extends React.Component {
 		className: PropTypes.string,
 		isSelect: PropTypes.bool,
 		tip: PropTypes.string,
-		offsetH: PropTypes.string
+		tipLast: PropTypes.string,
+		offsetH: PropTypes.string,
+		radioImg: PropTypes.string,
+		radioImgActive: PropTypes.string,
+		radioActiveBg: PropTypes.string
 	};
 
 	static defaultProps = {
@@ -17,7 +23,10 @@ export default class ProtaocolRead extends React.Component {
 		className: '',
 		isSelect: false,
 		tip: '点击按钮，表示同意',
-		offsetH: '0.3rem'
+		offsetH: '0.3rem',
+		radioImg: radioUnSelected,
+		radioImgActive: radioSelected,
+		radioActiveBg: '#3a4258'
 	};
 
 	constructor(props) {
@@ -36,7 +45,18 @@ export default class ProtaocolRead extends React.Component {
 	};
 
 	render() {
-		const { style, className, isSelect, tip, protocolList, offsetH } = this.props;
+		const {
+			style,
+			className,
+			isSelect,
+			tip,
+			tipLast,
+			protocolList,
+			offsetH,
+			radioImgActive,
+			radioImg,
+			radioActiveBg
+		} = this.props;
 		return (
 			<div style={style} className={[classNM.protocolReadWrap, className].join(' ')}>
 				<div
@@ -44,7 +64,12 @@ export default class ProtaocolRead extends React.Component {
 					onClick={this.handleClickRadio}
 					style={{ paddingLeft: offsetH }}
 				>
-					<CheckRadio isSelect={isSelect} style={{ top: '0.04rem' }} />
+					<img
+						src={isSelect ? radioImgActive : radioImg}
+						className={classNM.checkRadio}
+						style={{ backgroundColor: isSelect ? radioActiveBg : 'transparent' }}
+						alt=""
+					/>
 				</div>
 				<p className={classNM.listWrap} style={{ paddingRight: offsetH }}>
 					<span className={classNM.protocolTip} onClick={this.handleClickRadio}>
@@ -61,6 +86,7 @@ export default class ProtaocolRead extends React.Component {
 							《{item.contractMdlName || item.label}》
 						</span>
 					))}
+					{tipLast ? <span className={classNM.protocolTipLast}>{tipLast}</span> : null}
 				</p>
 			</div>
 		);

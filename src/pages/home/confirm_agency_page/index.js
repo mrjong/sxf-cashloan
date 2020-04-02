@@ -16,7 +16,7 @@ import { getFirstError, handleInputBlur, getDeviceType } from 'utils';
 import TabList from './components/TagList';
 import style from './index.scss';
 import { domListen } from 'utils/domListen';
-import { RepayPlanModal, CheckRadio, ButtonCustom, ProtocolSmsModal, ProtocolRead } from 'components';
+import { RepayPlanModal, ButtonCustom, ProtocolSmsModal, ProtocolRead } from 'components';
 import CouponAlert from './components/CouponAlert';
 import WarningModal from './components/WarningModal';
 
@@ -1063,7 +1063,6 @@ export default class confirm_agency_page extends PureComponent {
 							{contractData.length > 0 ? (
 								<ProtocolRead
 									tip="点击“确定签约”，表示同意"
-									className={style.protocolBox2}
 									isSelect={checkBox1}
 									protocolList={contractData}
 									clickRadio={this.checkAgreement}

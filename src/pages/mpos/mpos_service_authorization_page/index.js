@@ -12,9 +12,9 @@ import fetch from 'sx-fetch';
 import { setBackGround } from 'utils/background';
 import { getDeviceType, activeConfigSts, recordContract } from 'utils';
 import { buriedPointEvent } from 'utils/analytins';
-import { ButtonCustom } from 'components';
+import { ButtonCustom, ProtocolRead } from 'components';
 import { mpos_service_authorization } from 'utils/analytinsType';
-import { Checkbox, Toast } from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import { TFDLogin } from 'utils/getTongFuDun';
 import { setUserInfoAction } from 'reduxes/actions/staticActions';
 import { setIframeProtocolShow } from 'reduxes/actions/commonActions';
@@ -23,7 +23,7 @@ import { getNextStatus } from 'utils/CommonUtil/getNextStatus';
 import { connect } from 'react-redux';
 import { signup_mpos_auth, index_queryPLPShowSts } from 'fetch/api';
 import logo from './img/logo.png';
-const AgreeItem = Checkbox.AgreeItem;
+
 let BtnDisabled = false;
 let query = '';
 @setBackGround('#fff')
@@ -128,6 +128,16 @@ export default class mpos_service_authorization_page extends PureComponent {
 			url
 		});
 	};
+
+	// 点击勾选协议
+	checkAgreement = () => {
+		this.setState({ selectFlag: !this.state.selectFlag });
+	};
+
+	readContract = (item) => {
+		this.go(item.url);
+	};
+
 	render() {
 		const { selectFlag } = this.state;
 		return (
@@ -151,32 +161,27 @@ export default class mpos_service_authorization_page extends PureComponent {
 						</p>
 					)}
 				</div>
+
 				<div className={styles.agreement_box}>
-					<AgreeItem
-						className="mpos_middle_checkbox"
-						checked={selectFlag}
-						data-seed="logId"
-						onChange={(e) => this.setState({ selectFlag: e.target.checked })}
-					>
-						点击授权并登录视为您阅读并同意签署
-						<a
-							onClick={() => {
-								this.go('register_agreement_page');
-							}}
-						>
-							《金融用户注册协议》
-						</a>
-						<a
-							onClick={() => {
-								this.go('privacy_agreement_page');
-							}}
-						>
-							《用户隐私权政策》
-						</a>
-						<span className="agreement_highlight">
-							。您同意授权获取信息（实名信息、注册手机号、商标编号及相关信息）。以上信息仅用于还到用户风险评估。
-						</span>
-					</AgreeItem>
+					<ProtocolRead
+						tip="点击授权并登录视为您阅读并同意签署"
+						tipLast="。您同意授权获取信息（实名信息、注册手机号、商标编号及相关信息）。以上信息仅用于还到用户风险评估。"
+						isSelect={selectFlag}
+						offsetH="0.4rem"
+						protocolList={[
+							{
+								label: '金融用户注册协议',
+								url: 'register_agreement_page'
+							},
+							{
+								label: '用户隐私权政策',
+								url: 'privacy_agreement_page'
+							}
+						]}
+						clickRadio={this.checkAgreement}
+						clickProtocol={this.readContract}
+						radioActiveBg="#4c7afd"
+					/>
 				</div>
 			</div>
 		);
